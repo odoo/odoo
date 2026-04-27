@@ -46,7 +46,7 @@ class TestHttpWebJson_2(TestHttpBase):
             headers=CT_JSON | self.bearer_header,
             dblist=(get_db_name(), 'another-database'),
         )
-        self.assertIn("URL was not found in the server-wide controllers.</p>", res.text)
+        self.assertIn("the requested URL is not server-wide", res.text)
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
         self.assertEqual(res.headers.get('Content-Type'), 'text/html; charset=utf-8')
 
@@ -59,7 +59,7 @@ class TestHttpWebJson_2(TestHttpBase):
             },
             dblist=(get_db_name(), 'another-database'),
         )
-        self.assertIn("URL was not found in the server-wide controllers.</p>", res.text)
+        self.assertIn("the requested URL is not server-wide", res.text)
         self.assertEqual(res.status_code, HTTPStatus.NOT_FOUND)
         self.assertEqual(res.headers.get('Content-Type'), 'text/html; charset=utf-8')
 
