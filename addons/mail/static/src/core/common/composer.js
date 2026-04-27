@@ -191,12 +191,12 @@ export class Composer extends Component {
             (ev) => {
                 if (
                     this.ui.isSmall &&
-                    this.composerActions.activePicker &&
+                    this.composerActions.activeAction &&
                     this.pickerContainerRef.el &&
                     ev.target !== this.pickerContainerRef.el &&
                     !this.pickerContainerRef.el.contains(ev.target)
                 ) {
-                    this.composerActions.activePicker.close?.();
+                    this.composerActions.activeAction.actionPanelClose();
                 }
             },
             { capture: true }
@@ -777,7 +777,7 @@ export class Composer extends Component {
 
     async sendMessage() {
         const composer = toRaw(this.props.composer);
-        this.composerActions.activePicker?.close?.();
+        this.composerActions.activeAction?.actionPanelClose?.();
         if (composer.message) {
             this.editMessage();
             return;

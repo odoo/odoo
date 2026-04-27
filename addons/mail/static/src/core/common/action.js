@@ -27,7 +27,7 @@ export const ACTION_TAGS = Object.freeze({
  */
 
 /**
- * @typedef {{quick: Action[], group: Array<Action[]>, other: Action[]}} PartitionedActions
+ * @typedef {{actionPanels: Action[], quick: Action[], group: Array<Action[]>, other: Action[]}} PartitionedActions
  */
 
 /**
@@ -35,6 +35,7 @@ export const ACTION_TAGS = Object.freeze({
  * @property {(params: Action & ActionPanelCloseSpecificParams) => void} [actionPanelClose]
  * @property {Component} [actionPanelComponent]
  * @property {(action: Action) => Object} [actionPanelComponentProps]
+ * @property {(action: Action) => string} [actionPanelName]
  * @property {(action: Action) => void} [actionPanelOpen]
  * @property {(action: Action) => string} [actionPanelOuterClass]
  * @property {boolean|(action: Action) => boolean} [badge]
@@ -153,6 +154,18 @@ export class Action {
             close: (opts) => this.actionPanelClose(opts),
             ...(this.definition.actionPanelComponentProps?.call(this, this.params) ?? {}),
         };
+    }
+
+    /** @param {Action} action @returns {string|undefined} */
+    _actionPanelName(action) {}
+    /** Name of this action, displayed to the user. */
+    get actionPanelName() {
+        return (
+            this._actionPanelName(this.params) ??
+            (typeof this.definition.actionPanelName === "function"
+                ? this.definition.actionPanelName.call(this, this.params)
+                : this.definition.actionPanelName ?? this.name)
+        );
     }
 
     /**
@@ -645,7 +658,16 @@ export class UseActions extends Reactive {
         const other = actions
             .filter((a) => !a.sequenceQuick && !a.sequenceGroup)
             .sort((a1, a2) => a1.sequence - a2.sequence);
-        return { quick, group, other };
+        const groupedActionPanels = Object.groupBy(
+            actions.filter((a) => a.actionPanel),
+            (a) => (a.sequenceQuick ? "quick" : "other")
+        );
+        groupedActionPanels.quick?.sort((a1, a2) => a1.sequenceQuick - a2.sequenceQuick);
+        groupedActionPanels.other?.sort((a1, a2) => a1.sequence - a2.sequence);
+        const actionPanels = (groupedActionPanels.other ?? []).concat(
+            groupedActionPanels.quick ?? []
+        );
+        return { actionPanels, quick, group, other };
     }
 }
 
