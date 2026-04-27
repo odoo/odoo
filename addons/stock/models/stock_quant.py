@@ -937,6 +937,7 @@ class StockQuant(models.Model):
 
     def _get_quants_by_products_locations(self, product_ids, location_ids, extra_domain=False):
         res = defaultdict(lambda: self.env['stock.quant'])
+        quant_ids = set()
         if product_ids and location_ids:
             domain = [
                 ('product_id', 'in', product_ids.ids),
@@ -950,7 +951,12 @@ class StockQuant(models.Model):
                 ['id:recordset'], order="lot_id"
             )
             for product, loc, lot, package, owner, quants in needed_quants:
+                quant_ids.update(quants.ids)
                 res[product.id, loc.id, lot.id, package.id, owner.id] = quants
+        self.env['stock.quant'].browse(quant_ids).fetch([
+            'product_id', 'location_id', 'lot_id', 'package_id', 'owner_id',
+            'quantity', 'reserved_quantity', 'in_date'
+        ])
         return res
 
     @api.onchange('location_id', 'product_id', 'lot_id', 'package_id', 'owner_id')
