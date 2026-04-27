@@ -3,7 +3,7 @@ from datetime import date, datetime
 from freezegun import freeze_time
 
 from odoo import Command
-from odoo.exceptions import UserError
+from odoo.exceptions import AccessError, UserError
 from odoo.tests import Form, HttpCase, new_test_user
 from odoo.tests.common import tagged
 from odoo.tools import float_compare
@@ -1529,7 +1529,7 @@ class TestHrAttendanceOvertime(HttpCase):
         self.assertEqual(overtime_attendance.worked_hours, 12.0)
         self.assertEqual(overtime_attendance.overtime_hours, 2.0)
 
-    def test_overtime_line_access_rules(self):
+    def test_overtime_access_rules(self):
         """Test ir.rules on hr.attendance.overtime.line per access level:
         - own_reader (base user): can only read their own overtime lines.
         - officer: can read overtime lines of managed employees and their own.
@@ -1560,30 +1560,64 @@ class TestHrAttendanceOvertime(HttpCase):
         self.env['hr.attendance'].create([{
             'employee_id': own_reader_employee.id,
             'check_in': datetime(2021, 1, 4, 8, 0),
-            'check_out': datetime(2021, 1, 4, 20, 0),
+            'check_out': datetime(2021, 1, 4, 19, 0),  # 3h overtime
         }, {
             'employee_id': officer_employee.id,
             'check_in': datetime(2021, 1, 4, 8, 0),
-            'check_out': datetime(2021, 1, 4, 20, 0),
+            'check_out': datetime(2021, 1, 4, 19, 0),
         }, {
             'employee_id': self.other_employee.id,
             'check_in': datetime(2021, 1, 4, 8, 0),
-            'check_out': datetime(2021, 1, 4, 20, 0),
+            'check_out': datetime(2021, 1, 4, 19, 0),
         }])
         overtime_line = self.env['hr.attendance.overtime.line']
         all_lines = overtime_line.search([('employee_id', 'in', (own_reader_employee | officer_employee | self.other_employee).ids)])
         self.assertEqual(len(all_lines.employee_id), 3)
+        self.assertEqual(own_reader_employee.total_overtime, 3)
+        self.assertEqual(self.other_employee.total_overtime, 3)
+        self.assertEqual(officer_employee.total_overtime, 3)
 
+        # Basic user: should only have access to his own overtime_ids and total_overtime
         own_reader_lines = overtime_line.with_user(own_reader_user).search([])
         self.assertEqual(own_reader_lines.employee_id, own_reader_employee)
+        with self.assertRaises(AccessError, msg="Simple user should not have access to others overtime lines"):
+            _ = self.other_employee.with_user(own_reader_user).overtime_ids
+        self.assertEqual(
+            own_reader_employee.with_user(own_reader_user).total_overtime, 3,
+            "Basic user should be able to access his own overtime hours",
+        )
+        self.assertEqual(
+            self.other_employee.with_user(own_reader_user).total_overtime, 0,
+            "Basic user should not have access to others overtime hours",
+        )  # access denied, _compute_total_overtime() silently fails and returns 0
 
+        # Officer: can access his managed employees overtime_ids and total_overtime
         officer_lines = overtime_line.with_user(officer_user).search([])
         self.assertEqual(officer_lines.mapped('employee_id'), officer_employee | self.other_employee)
+        with self.assertRaises(AccessError, msg="Officer user should not have access to non-managed employee overtime lines"):
+            _ = own_reader_employee.with_user(officer_user).overtime_ids
+        self.assertEqual(
+            self.other_employee.with_user(officer_user).total_overtime, 3,
+            "Officer user should be able to access his managed employee overtime hours",
+        )
+        self.assertEqual(
+            own_reader_employee.with_user(officer_user).total_overtime, 0,
+            "Officer user should not have access to non managed employee overtime hours",
+        )
 
+        # Admin: can access all employees overtime_ids and total_overtime
         admin_lines = overtime_line.with_user(self.user).search([])
         self.assertIn(own_reader_employee, admin_lines.employee_id)
         self.assertIn(officer_employee, admin_lines.employee_id)
         self.assertIn(self.other_employee, admin_lines.employee_id)
+        self.assertEqual(
+            self.other_employee.with_user(self.user).total_overtime, 3,
+            "Admin user should be able to access all overtime hours",
+        )
+        self.assertEqual(
+            officer_employee.with_user(self.user).total_overtime, 3,
+            "Admin user should be able to access all overtime hours",
+        )
 
     def test_attendance_expected_hours_compute(self):
         att = self.env['hr.attendance'].create({
