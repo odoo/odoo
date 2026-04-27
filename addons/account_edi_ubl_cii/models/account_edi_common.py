@@ -1141,6 +1141,7 @@ class AccountEdiCommon(models.AbstractModel):
             {'path_type': 'line', 'identifier': 'SerialNumber'},  # VIN in AdditionalItemProperty/Value with AdditionalItemProperty/Name == 'SerialNumber'
             {'path_type': 'line', 'identifier': 'VIN'},  # VIN in AdditionalItemProperty/Value with AdditionalItemProperty/Name == 'VIN'
             {'path_type': 'line', 'identifier': 'PlateNumber', 'linked_field': 'license_plate'},  # LICENSE PLATE in AdditionalItemProperty/Value with AdditionalItemProperty/Name == 'PlateNumber'
+            {'path_type': 'line', 'identifier': 'LCPL-NO', 'linked_field': 'license_plate'},  # LICENSE PLATE in AdditionalItemProperty/Value with AdditionalItemProperty/Name == 'LCPL-NO'
             {
                 # VIN in Item/Description
                 'path_type': 'line',
@@ -1164,6 +1165,14 @@ class AccountEdiCommon(models.AbstractModel):
                 'parent_node_path': './{*}AdditionalDocumentReference',
                 'condition': lambda parent_node, node, value: node.get('schemeID') == 'AKG',
                 'value_path': './{*}ID',
+            },
+            {
+                # LICENSE PLATE in AdditionalDocumentReference/ID with schemeID == 'ABZ' (1 license plate for the whole invoice)
+                'path_type': 'move',
+                'parent_node_path': './{*}AdditionalDocumentReference',
+                'condition': lambda parent_node, node, value: node.get('schemeID') == 'ABZ',
+                'value_path': './{*}ID',
+                'linked_field': 'license_plate',
             },
         ]
 
