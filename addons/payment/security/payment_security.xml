@@ -42,4 +42,10 @@
         <field name="domain_force">[('create_uid', '=', user.id)]</field>
      </record>
 
+    <record id="payment_link_wizard_rule" model="ir.rule">
+        <field name="name">Payment Link Wizard</field>
+        <field name="model_id" ref="model_payment_link_wizard"/>
+        <field name="domain_force">[('create_uid', '=', user.id)]</field>
+     </record>
+
 </odoo>
