@@ -59,15 +59,15 @@
         </attribute>
     </BuilderRow>
     <BuilderRow id="scroll_opt" position="replace"/>
-    <xpath expr="//BuilderRow[*[@id=&quot;'filter_opt'&quot;]]" position="before">
+    <BuilderRow id="this.filter_opt_row" position="before">
         <ProductsDesignPanel
             label.translate="Cards Design"
             recordName="'shop_opt_products_design_classes'"
             showLists="false"
             showSecondaryImage="true"
         />
-    </xpath>
-    <xpath expr="//BuilderRow[*[@id=&quot;'filter_opt'&quot;]]" position="after">
+    </BuilderRow>
+    <BuilderRow id="this.filter_opt_row" position="after">
         <BuilderRow
             label.translate="Category"
             t-if="!this.domState.isAlternative and !isSingleMode"
@@ -97,7 +97,9 @@
             preview="false"
             level="1"
         >
-            <BuilderTextInput dataAttributeAction="'productNames'" id="'product_names_opt'"
+            <BuilderTextInput
+                dataAttributeAction="'productNames'"
+                id="'product_names_opt'"
                 placeholder.translate="e.g. lamp,bin"
                 title.translate="Comma-separated list of parts of product names, barcodes or internal reference"
             />
@@ -112,6 +114,6 @@
                 dataAttributeActionValue="'true'"
             />
         </BuilderRow>
-    </xpath>
+    </BuilderRow>
 </t>
 </templates>
