@@ -7,7 +7,7 @@
     <xpath expr="//BuilderRow[*[@id=&quot;'template_opt'&quot;]]" position="attributes">
         <attribute name="t-if">filteredTemplates.length &gt; 1</attribute>
     </xpath>
-    <BuilderRow id="section_title" position="after">
+    <BuilderRow id="this.section_title" position="after">
         <BuilderRow label.translate="Orientation" t-if="!isSingleMode">
             <BuilderButtonGroup dataAttributeAction="'orientation'">
                 <BuilderButton dataAttributeActionValue="'carousel'" id="'orientation_carousel'">
@@ -42,23 +42,23 @@
             </BuilderSelect>
         </BuilderRow>
     </BuilderRow>
-    <BuilderRow id="arrow_position_opt" position="replace"/>
-    <BuilderRow id="style_opt" position="attributes">
+    <BuilderRow id="this.arrow_position_opt" position="replace"/>
+    <BuilderRow id="this.style_opt" position="attributes">
         <attribute name="t-if">
             !isSingleMode and this.isActiveItem('orientation_carousel')
         </attribute>
     </BuilderRow>
-    <BuilderRow id="color_opt" position="attributes">
+    <BuilderRow id="this.color_opt" position="attributes">
         <attribute name="t-if">
             !isSingleMode and this.isActiveItem('orientation_carousel')
         </attribute>
     </BuilderRow>
-    <BuilderRow id="speed_opt" position="attributes">
+    <BuilderRow id="this.speed_opt" position="attributes">
         <attribute name="t-if">
             !isSingleMode and this.isActiveItem('orientation_carousel')
         </attribute>
     </BuilderRow>
-    <BuilderRow id="scroll_opt" position="replace"/>
+    <BuilderRow id="this.scroll_opt" position="replace"/>
     <BuilderRow id="this.filter_opt_row" position="before">
         <ProductsDesignPanel
             label.translate="Cards Design"
