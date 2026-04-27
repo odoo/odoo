@@ -124,6 +124,7 @@ export class SetCoverBackgroundAction extends BaseCoverPropertiesAction {
     setup() {
         this.classAction = this.dependencies.builderActions.getAction("classAction");
         this.styleAction = this.dependencies.builderActions.getAction("styleAction");
+        this.canTimeout = false;
     }
 
     isApplied({ editingElement, params: { mainParam: setBackground } }) {
