@@ -150,6 +150,48 @@
             <field name="timing_stop">6</field>
             <field name="amount_rate">2</field>
         </record>
-        
+
+<!-- AE : United Arab Emirates -->
+        <record id="l10n_ae_hr_attendance_overtime_ruleset" model="hr.attendance.overtime.ruleset">
+            <field name="name">UAE Ruleset</field>
+            <field name="rate_combination_mode">max</field>
+            <field name="country_id" ref="base.ae"/>
+        </record>
+        <record id="hr_attendance_overtime_rule_1_ae" model="hr.attendance.overtime.rule">
+            <field name="name">Day Time Overtime</field>
+            <field name="base_off">quantity</field>
+            <field name="quantity_period">day</field>
+            <field name="expected_hours_from_contract" eval="True"/>
+            <field name="paid" eval="True"/>
+            <field name="amount_rate">1.25</field>
+            <field name="ruleset_id" ref="l10n_ae_hr_attendance_overtime_ruleset"/>
+        </record>
+        <record id="hr_attendance_overtime_rule_2_ae" model="hr.attendance.overtime.rule">
+            <field name="name">Night Time Overtime</field>
+            <field name="base_off">timing</field>
+            <field name="timing_type">work_days</field>
+            <field name="timing_start">22</field>
+            <field name="timing_stop">24</field>
+            <field name="amount_rate">1.5</field>
+            <field name="ruleset_id" ref="l10n_ae_hr_attendance_overtime_ruleset"/>
+        </record>
+        <record id="hr_attendance_overtime_rule_3_ae" model="hr.attendance.overtime.rule">
+            <field name="name">Night Time Overtime</field>
+            <field name="base_off">timing</field>
+            <field name="timing_type">work_days</field>
+            <field name="timing_start">0</field>
+            <field name="timing_stop">4</field>
+            <field name="amount_rate">1.5</field>
+            <field name="ruleset_id" ref="l10n_ae_hr_attendance_overtime_ruleset"/>
+        </record>
+        <record id="hr_attendance_overtime_rule_4_ae" model="hr.attendance.overtime.rule">
+            <field name="name">Off Days Overtime</field>
+            <field name="base_off">timing</field>
+            <field name="timing_type">non_work_days</field>
+            <field name="timing_start">0</field>
+            <field name="timing_stop">24</field>
+            <field name="amount_rate">1.5</field>
+            <field name="ruleset_id" ref="l10n_ae_hr_attendance_overtime_ruleset"/>
+        </record>
     </data>
 </odoo>
