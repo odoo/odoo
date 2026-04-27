@@ -235,10 +235,15 @@ export function presetTimingSlotHourExists(hour) {
     return { trigger: `.modal button:contains('${hour}')` };
 }
 export function selectSlotDays(d) {
-    return {
-        trigger: `.modal .d-flex.w-100.flex-wrap.gap-2.mt-2 button:nth-of-type(${d})`,
-        run: "click",
-    };
+    return [
+        {
+            trigger: `.modal .d-flex.w-100.flex-wrap.gap-2.mt-2 button:nth-of-type(${d})`,
+            run: "click",
+        },
+        {
+            trigger: `.modal .d-flex.w-100.flex-wrap.gap-2.mt-2 button:nth-of-type(${d}).btn-primary`,
+        },
+    ];
 }
 export function selectPresetTimingSlotIndex(index) {
     return {
