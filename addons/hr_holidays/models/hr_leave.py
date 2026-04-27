@@ -860,7 +860,7 @@ class HrLeave(models.Model):
             date_to_utc = leave.date_to and leave.date_to.astimezone(user_tz).date()
             time_off_type_display = leave.work_entry_type_id.display_code or leave.work_entry_type_id.name
             if self.env.context.get('short_name'):
-                short_leave_name = leave.name or time_off_type_display or _('Time Off')
+                short_leave_name = time_off_type_display or leave.name or _('Time Off')
                 leave.display_name = _("%(name)s: %(duration)s", name=short_leave_name, duration=leave.duration_display)
             else:
                 target = leave.employee_id.name or ""

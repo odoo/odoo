@@ -42,6 +42,7 @@ class HrLeaveReportCalendar(models.Model):
     leave_manager_id = fields.Many2one(related='employee_id.leave_manager_id')
     leave_id = fields.Many2one(comodel_name='hr.leave', readonly=True, groups='hr_holidays.group_hr_holidays_user')
     is_manager = fields.Boolean("Manager", compute="_compute_is_manager")
+    color = fields.Integer(string="Color", related="employee_id.id", readonly=True)
 
     def init(self):
         tools.drop_view_if_exists(self.env.cr, 'hr_leave_report_calendar')
