@@ -3,16 +3,18 @@
 
 import email.message
 import email.policy
+import smtplib
 
 from unittest.mock import patch
 
 import psycopg2.errors
 
 from odoo import tools
+from odoo.addons.base.models.ir_mail_server import MailDeliveryException
 from odoo.addons.base.tests import mail_examples
 from odoo.addons.base.tests.common import MockSmtplibCase
 from odoo.tests import tagged, users
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import Like, TransactionCase
 from odoo.tools import mute_logger
 from odoo.tools import config
 
@@ -300,6 +302,25 @@ class TestIrMailServer(TransactionCase, MockSmtplibCase):
                 message_from='"Name" <test@unknown_domain.com>',
                 from_filter=False,
             )
+
+    def test_mail_server_send_email_error_shows_server_name(self):
+        message = self._build_email(mail_from='specific_user@test.mycompany.com')
+
+        with (
+            self.mock_smtplib_connection(),
+            patch.object(self.testing_smtp_session, 'send_message', side_effect=smtplib.SMTPDataError(550, b'failure')),
+            self.assertRaisesRegex(MailDeliveryException, r"User specific server"),
+            self.assertLogs('odoo.addons.base.models.ir_mail_server', 'INFO') as capture,
+        ):
+            self.env['ir.mail_server'].send_email(message, mail_server_id=self.mail_server_user.id)
+
+        self.assertEqual(capture.output, [
+            Like(
+                "INFO:odoo.addons.base.models.ir_mail_server:"
+                "Mail delivery failed via SMTP server 'User specific server'.\n"
+                "SMTPDataError: ..."
+            ),
+        ])
 
     @mute_logger('odoo.models.unlink', 'odoo.addons.base.models.ir_mail_server')
     def test_mail_server_send_email_context_force(self):
