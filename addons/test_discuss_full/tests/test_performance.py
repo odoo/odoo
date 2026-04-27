@@ -926,6 +926,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         if channel == self.channel_livechat_1:
             return {
                 "ai_agent_id": False,
+                "ai_session_ids": [],
                 "channel_type": "livechat",
                 "chatbot": False,
                 "chatbot_current_step_id": False,
@@ -958,6 +959,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         if channel == self.channel_livechat_2:
             return {
                 "ai_agent_id": False,
+                "ai_session_ids": [],
                 "channel_type": "livechat",
                 "chatbot": False,
                 "chatbot_current_step_id": False,
