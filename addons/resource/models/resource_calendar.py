@@ -596,7 +596,7 @@ class ResourceCalendar(models.Model):
             if resource and resource._is_flexible():
                 leaves = self._leave_intervals_batch(start_dt, end_dt, resource, domain, tz=tz)
                 if res_leaves := leaves.get(resource.id, []):
-                    result[resource.id] = [(i[0].astimezone(utc), i[1].astimezone(utc)) for i in res_leaves]
+                    result[resource.id] = self._get_flexible_leaves_date(res_leaves, resource, tz)
                 continue
             work_intervals = [(start, stop) for start, stop, meta in resources_work_intervals[resource.id]]
             # start + flatten(intervals) + end
@@ -796,6 +796,10 @@ class ResourceCalendar(models.Model):
             final_attendances.append(Command.create(dict(att._copy_attendance_vals(), week_type='0', sequence=idx + 1)))
             final_attendances.append(Command.create(dict(att._copy_attendance_vals(), week_type='1', sequence=idx + 26)))
         return final_attendances
+
+    def _get_flexible_leaves_date(self, res_leaves, resource, tz):
+        return []
+
     # --------------------------------------------------
     # External API
     # --------------------------------------------------
