@@ -70,7 +70,7 @@ class StockMove(models.Model):
 
     def _prepare_procurement_values(self):
         res = super()._prepare_procurement_values()
-        project = self.sale_line_id.order_id.project_id
+        project = self.sale_line_id.order_id.project_id or self.group_id.sale_id.project_id
         if project:
             res['project_id'] = project.id
         return res
