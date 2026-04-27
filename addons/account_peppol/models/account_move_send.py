@@ -49,8 +49,8 @@ class AccountMoveSend(models.AbstractModel):
             if not pdp_info['is_installed']:
                 install_pdp_action = pdp_info['action']
         else:
-            name = self.env._("Why should I use PEPPOL ?")
-            action_text = self.env._("Why should you use it ?")
+            name = self.env._("Why should I use Peppol?")
+            action_text = self.env._("Why should you use it?")
 
         if install_pdp_action:
             action = install_pdp_action
