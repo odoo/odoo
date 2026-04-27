@@ -137,6 +137,21 @@ class TestProduct(AccountTestInvoicingCommon):
         self.assertEqual(bill.invoice_line_ids.account_id, child_expense,
             "Vendor bill line should use child category's expense account")
 
+    def test_product_category_defaults_after_company_account_change(self):
+        """Ensure new product categories pick up the updated expense and income accounts from settings."""
+        old_expense = self.env.company.expense_account_id
+        old_income = self.env.company.income_account_id
+        new_expense = self.copy_account(old_expense)
+        new_income = self.copy_account(old_income)
+
+        with Form(self.env.company) as company_form:
+            company_form.expense_account_id = new_expense
+            company_form.income_account_id = new_income
+
+        fresh_categ = self.env['product.category'].create({'name': 'Category After Account Change'})
+        self.assertEqual(fresh_categ.with_company(self.env.company).property_account_expense_categ_id, new_expense)
+        self.assertEqual(fresh_categ.with_company(self.env.company).property_account_income_categ_id, new_income)
+
     def test_retrieve_product_by_name(self):
         Product = self.env['product.product']
         Product.create({'name': 'Wireless bluetooth speaker battery'})
