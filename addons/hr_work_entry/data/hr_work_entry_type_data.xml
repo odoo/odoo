@@ -81,6 +81,36 @@
         <field name="country_id" ref="base.ae"/>
     </record>
 
+    <record id="uae_work_entry_type_overtime_work_days_daytime" model="hr.work.entry.type">
+        <field name="name">Overtime Weekdays Daytime</field>
+        <field name="code">OVTWD</field>
+        <field name="color">4</field>
+        <field name="count_as">working_time</field>
+        <field name="is_extra_hours" eval="True"/>
+        <field name="amount_rate">1.25</field>
+        <field name="country_id" ref="base.ae"/>
+    </record>
+
+    <record id="uae_work_entry_type_overtime_work_days_nighttime" model="hr.work.entry.type">
+        <field name="name">Overtime Weekdays Nighttime</field>
+        <field name="code">OVTWDN</field>
+        <field name="color">4</field>
+        <field name="count_as">working_time</field>
+        <field name="is_extra_hours" eval="True"/>
+        <field name="amount_rate">1.5</field>
+        <field name="country_id" ref="base.ae"/>
+    </record>
+
+    <record id="uae_work_entry_type_overtime_off_days" model="hr.work.entry.type">
+        <field name="name">Overtime Off-days</field>
+        <field name="code">OVTOD</field>
+        <field name="color">4</field>
+        <field name="count_as">working_time</field>
+        <field name="is_extra_hours" eval="True"/>
+        <field name="amount_rate">1.5</field>
+        <field name="country_id" ref="base.ae"/>
+    </record>
+
     <record id="uae_work_entry_type_overtime" model="hr.work.entry.type">
         <field name="name">Overtime Hours</field>
         <field name="color">4</field>
