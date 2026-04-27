@@ -2,7 +2,7 @@
 
 from odoo.exceptions import ValidationError
 from odoo.addons.sale_timesheet.tests.common import TestCommonSaleTimesheet
-from odoo.tests import tagged
+from odoo.tests import Form, tagged
 
 
 @tagged('-at_install', 'post_install')
@@ -27,3 +27,14 @@ class TestProductTemplate(TestCommonSaleTimesheet):
         self.assertFalse(non_timesheet_product.active)
         non_timesheet_product.unlink()
         self.assertFalse(self.env['product.template'].browse(non_timesheet_product.id).exists())
+
+    def test_product_template_default_uom(self):
+        self.env['ir.default'].set(
+            'product.template',
+            'uom_id',
+            self.env.ref('uom.product_uom_day').id
+        )
+        product_template = self.env['product.template'].create({'name': 'product'})
+        with Form(product_template) as product_template_form:
+            product_template_form.type = 'service'
+            self.assertEqual(product_template_form.uom_id, self.env.ref('uom.product_uom_day'))

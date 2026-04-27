@@ -54,7 +54,12 @@ class ProductTemplate(models.Model):
         for record in self:
             if record.type == 'service' and record.service_type == 'timesheet' and \
                not (record._origin.service_policy and record.service_policy == record._origin.service_policy):
-                record.uom_id = self.env.ref('uom.product_uom_hour')
+                current_default_uom_id = record.default_get(['uom_id']).get('uom_id')
+                # Only set uom_id to hour if the default uom_id hasn't changed
+                if current_default_uom_id == record._get_default_uom_id().id:
+                    record.uom_id = self.env.ref('uom.product_uom_hour')
+                else:
+                    record.uom_id = current_default_uom_id
             elif record._origin.uom_id:
                 record.uom_id = record._origin.uom_id
             else:
