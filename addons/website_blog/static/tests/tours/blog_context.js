@@ -62,8 +62,8 @@ registry.category("web_tour.tours").add("blog_context_and_social_media", {
             run: "click",
         },
         {
-            content: "Check the blog info is available",
-            trigger: ":iframe #o_wblog_post_info",
+            content: "Check the post comment counter is available",
+            trigger: ":iframe .o_wblog_post_info",
         },
     ],
 });

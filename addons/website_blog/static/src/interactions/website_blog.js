@@ -25,12 +25,12 @@ export class WebsiteBlog extends Interaction {
             {
                 "t-on-click.prevent.withTarget": this.onShareArticleClick,
             },
-        ".o_sticky_reactive":
-            {
-                "t-att-style": () => ({
-                    "top": `${this.position || this.defaultPosition}px`,
-                }),
-            }
+        ".o_sticky_reactive": {
+            "t-att-style": () => ({
+                top: `${this.position || this.defaultPosition}px`,
+                transition: "top 0.2s",
+            }),
+        },
     };
 
     onBlogSheetTriggerClick() {
@@ -50,7 +50,9 @@ export class WebsiteBlog extends Interaction {
 
     start() {
         this._adaptToHeaderChange();
-        this.registerCleanup(this.services.website_menus.registerCallback(this._adaptToHeaderChange.bind(this)));
+        this.registerCleanup(
+            this.services.website_menus.registerCallback(this._adaptToHeaderChange.bind(this))
+        );
     }
 
     /**

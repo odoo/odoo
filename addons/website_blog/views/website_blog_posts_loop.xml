@@ -22,6 +22,7 @@ according to the enabled options.
         <t t-set="opt_blog_compact_list_view_tags" t-value="is_view_active('website_blog.opt_blog_compact_list_view_tags')"/>
 
         <!-- Factoring conditions for readability -->
+        <t t-set="show_author_or_date" t-value="opt_posts_loop_show_author or opt_posts_loop_show_date"/>
         <t t-set="is_minimal_list" t-value="opt_blog_simple_list_view or opt_blog_compact_list_view"/>
         <t t-set="is_standard_list" t-value="opt_blog_list_view or opt_blog_large_list_view"/>
         <t t-set="is_any_list" t-value="is_minimal_list or is_standard_list"/>
@@ -95,7 +96,7 @@ according to the enabled options.
                                             _teaser_classes.f="lead"
                                             _tags_classes.f="#{not opt_blog_cards_design and not opt_posts_loop_show_stats and 'mb-3' or ''}"/>
                                     </div>
-                                    <div t-if="opt_posts_loop_show_author or opt_posts_loop_show_date" class="z-1">
+                                    <div t-if="show_author_or_date" class="z-1">
                                         <t t-call="website_blog.post_published_info"
                                             additionnal_classes.f="o_wblog_post_list_author o_list_cover d-flex align-items-center w-100"
                                             extra_classes.f="d-flex gap-1"/>
@@ -137,7 +138,7 @@ according to the enabled options.
                                         </small>
                                         <a t-if="posts_list_show_parent_blog" class="d-block small fw-bold" t-attf-href="/blog/#{slug(blog_post.blog_id)}" t-field="blog_post.blog_id"/>
                                         <t t-call="website_blog.post_heading" _heading_classes.f="h3"/>
-                                        <div t-if="opt_posts_loop_show_author or opt_posts_loop_show_date">
+                                        <div t-if="show_author_or_date">
                                             <t t-call="website_blog.post_published_info"
                                                 additionnal_classes.f="o_wblog_post_list_author o_list_cover d-flex align-items-center w-100"
                                                 extra_classes.f="d-flex gap-1"/>
@@ -173,7 +174,7 @@ according to the enabled options.
                                 _teaser_classes.f="small"
                                 _tags_classes.f="#{not opt_blog_cards_design and not opt_posts_loop_show_stats and 'mb-3' or ''}"/>
                         </div>
-                        <div t-if="opt_posts_loop_show_author or opt_posts_loop_show_date" t-att-class="is_card_grid and 'p-3 pt-0'">
+                        <div t-if="show_author_or_date" t-att-class="is_card_grid and 'p-3 pt-0'">
                             <t t-call="website_blog.post_published_info"
                                 additionnal_classes.f="o_wblog_post_list_author o_list_cover d-flex align-items-center w-100"
                                 extra_classes.f="d-flex gap-1"/>
@@ -206,7 +207,7 @@ according to the enabled options.
                                             _teaser_classes.f="small"
                                             _tags_classes.f="#{not opt_blog_cards_design and not opt_posts_loop_show_stats and 'mb-3' or ''}"/>
                                     </div>
-                                    <div t-if="opt_posts_loop_show_author or opt_posts_loop_show_date" t-att-class="opt_blog_cards_design and 'p-3 pt-0'">
+                                    <div t-if="show_author_or_date" t-att-class="opt_blog_cards_design and 'p-3 pt-0'">
                                         <t t-call="website_blog.post_published_info"
                                             additionnal_classes.f="o_wblog_post_list_author o_list_cover d-flex align-items-center w-100"
                                             extra_classes.f="d-flex gap-1"/>
@@ -278,13 +279,13 @@ according to the enabled options.
                                         <t t-if="posts_list_show_parent_blog and not is_minimal_list">
                                             <a t-attf-href="/blog/#{slug(blog_post.blog_id)}" t-field="blog_post.blog_id" class="d-block small fw-bold"/>
                                         </t>
-                                        <t t-if="opt_blog_simple_list_view and opt_posts_loop_show_date">
-                                            <small t-if="blog_post.published_date" t-field="blog_post.published_date" t-options="{'widget': 'date', 'format': opt_posts_loop_date_format or 'dd.MM', 'date_only': True}" class="text-muted flex-shrink-0"/>
-                                            <small t-elif="blog_post.publish_on" t-field="blog_post.publish_on" t-options="{'widget': 'date', 'format': opt_posts_loop_date_format or 'dd.MM', 'date_only': True}" class="text-muted flex-shrink-0"/>
+                                        <t t-if="opt_blog_simple_list_view">
+                                            <small t-if="blog_post.published_date" t-field="blog_post.published_date" t-options="{'widget': 'date', 'format': 'dd.MM', 'date_only': True}" class="text-muted flex-shrink-0"/>
+                                            <small t-elif="blog_post.publish_on" t-field="blog_post.publish_on" t-options="{'widget': 'date', 'format': 'dd.MM', 'date_only': True}" class="text-muted flex-shrink-0"/>
                                         </t>
-                                        <t t-elif="opt_blog_compact_list_view and opt_posts_loop_show_date">
-                                            <small t-if="blog_post.published_date" t-field="blog_post.published_date" t-options="{'widget': 'date', 'format': opt_posts_loop_date_format or 'dd MMM', 'date_only': True}" class="flex-shrink-0 mt-1"/>
-                                            <small t-elif="blog_post.publish_on" t-field="blog_post.publish_on" t-options="{'widget': 'date', 'format': opt_posts_loop_date_format or 'dd MMM', 'date_only': True}" class="flex-shrink-0 mt-1"/>
+                                        <t t-elif="opt_blog_compact_list_view">
+                                            <small t-if="blog_post.published_date" t-field="blog_post.published_date" t-options="{'widget': 'date', 'format': 'dd MMM', 'date_only': True}" class="o_wblog_post_date flex-shrink-0 mt-1"/>
+                                            <small t-elif="blog_post.publish_on" t-field="blog_post.publish_on" t-options="{'widget': 'date', 'format': 'dd MMM', 'date_only': True}" class="o_wblog_post_date flex-shrink-0 mt-1"/>
                                         </t>
                                         <div t-attf-class="#{opt_blog_simple_list_view and '' or 'd-flex flex-grow-1 justify-content-between flex-wrap gap-1'} #{opt_blog_compact_list_view and 'align-items-start' or ''}">
                                             <t t-if="opt_blog_simple_list_view">
@@ -311,9 +312,9 @@ according to the enabled options.
                                         <t t-if="not is_minimal_list">
                                             <t t-call="website_blog.post_metadata"
                                                 _teaser_classes.f="#{(is_standard_list and 'o_wblog_teaser_list' or '') + (is_standard_list and not opt_posts_loop_show_cover and ' o_wblog_teaser_list_no_cover' or '')}"
-                                                _tags_classes.f="#{not opt_blog_cards_design and not opt_posts_loop_show_stats and 'mb-3' or ''} d-none d-md-flex"
+                                                _tags_classes.f="#{not is_card_grid and not opt_posts_loop_show_stats and 'mb-3' or ''} d-none d-md-flex"
                                                 _info_classes.f="#{opt_blog_list_view and 'flex-grow-0 w-auto mw-100 mb-2 mt-md-2' or 'flex-grow-1 my-2'}"/>
-                                            <t t-if="opt_posts_loop_show_author or opt_posts_loop_show_date" t-call="website_blog.post_published_info"
+                                            <t t-if="show_author_or_date" t-call="website_blog.post_published_info"
                                                 extra_classes.f="d-flex flex-wrap flex-lg-column gap-1"/>
                                         </t>
                                     </div>
@@ -341,13 +342,14 @@ according to the enabled options.
     <t t-set="opt_posts_loop_show_teaser" t-value="opt_posts_loop_show_teaser or is_view_active('website_blog.opt_posts_loop_show_teaser')"/>
     <t t-set="opt_posts_loop_show_tags" t-value="opt_posts_loop_show_tags or is_view_active('website_blog.opt_posts_loop_show_tags')"/>
     <t t-set="is_card_grid" t-value="is_card_grid or (opt_blog_cards_design and opt_blog_grid_view)"/>
+    <t t-set="show_author_or_date" t-value="opt_posts_loop_show_author or opt_posts_loop_show_date"/>
     <article t-attf-class="o_wblog_post position-relative d-flex flex-column h-100 #{'card' if is_card_grid else ''}" name="blog_post">
         <t t-if="opt_posts_loop_show_cover" t-call="website_blog.post_cover_image"
             _cover_classes.f="#{is_card_grid and 'card-img-top' or not opt_blog_bordered_grid_view and 'rounded' or ''} #{not opt_blog_cards_design and not opt_blog_bordered_grid_view and 'mb-3' or ''}"/>
         <small t-if="not blog_post.website_published and not opt_posts_loop_show_cover" class="badge bg-danger align-self-start h-auto mb-2">
             <i class="fa fa-ban me-2" role="presentation"/>Unpublished
         </small>
-        <div t-attf-class="#{opt_blog_cards_design and 'card-body' or ''} #{opt_blog_bordered_grid_view and 'p-3 pb-0' or ''}">
+        <div t-attf-class="#{is_card_grid and 'card-body' or ''} #{opt_blog_bordered_grid_view and 'p-3 pb-0' or ''}">
             <t t-if="posts_list_show_parent_blog">
                 <a t-attf-href="/blog/#{slug(blog_post.blog_id)}" t-field="blog_post.blog_id" class="small fw-bold"/>
             </t>
@@ -355,14 +357,14 @@ according to the enabled options.
             <div t-if="opt_posts_loop_show_teaser or opt_posts_loop_show_tags">
                 <t t-if="opt_posts_loop_show_teaser" t-call="website_blog.post_teaser" _teaser_classes.f="small"/>
                 <t t-if="opt_posts_loop_show_tags" t-call="website_blog.post_tags"
-                    _tags_classes.f="#{not opt_blog_cards_design and not opt_posts_loop_show_stats and 'mb-3' or ''}"/>
+                    _tags_classes.f="#{not is_card_grid and not opt_posts_loop_show_stats and 'mb-3' or ''}"/>
             </div>
         </div>
-        <div t-attf-class="#{opt_blog_cards_design and 'mt-auto p-3 pt-0' or ''} #{opt_blog_bordered_grid_view and 'mt-auto p-3 pt-0' or ''}">
+        <div t-attf-class="#{is_card_grid and 'mt-auto p-3 pt-0' or ''} #{opt_blog_bordered_grid_view and 'mt-auto p-3 pt-0' or ''}">
             <div t-if="opt_posts_loop_show_stats">
                 <t t-call="website_blog.post_info"/>
             </div>
-            <t t-if="opt_posts_loop_show_author or opt_posts_loop_show_date" t-call="website_blog.post_published_info"
+            <t t-if="show_author_or_date" t-call="website_blog.post_published_info"
                 additionnal_classes.f="o_wblog_post_list_author o_list_cover align-items-center"
                 extra_classes.f="d-flex gap-1"/>
         </div>
@@ -390,8 +392,6 @@ according to the enabled options.
 
 <!-- ======   Sub-Template: Posts list : Posts Cover  ====================== -->
 <template id="post_cover_image">
-    <t t-if="opt_blog_cards_design" t-set="classes" t-value="'card-img-top mb-2'"/>
-    <t t-if="not opt_blog_cards_design" t-set="classes" t-value="'o_wblog_post_cover_nocard'"/>
     <a t-attf-href="/blog/#{slug(blog_post.blog_id)}/#{slug(blog_post)}" class="text-reset text-decoration-none">
         <t t-call="website.record_cover"
             _record="blog_post"
@@ -455,11 +455,6 @@ according to the enabled options.
 <!-- (Option) Posts List: Show Date -->
 <template id="opt_posts_loop_show_date" name="Date" inherit_id="website_blog.posts_loop" active="True"/>
 
-<!-- (Option) Posts List: Date format options -->
-<template id="opt_posts_loop_date_format_MMM_dd" name="Date format: MMM DD" inherit_id="website_blog.posts_loop" active="True"/>
-<template id="opt_posts_loop_date_format_dd_MMM" name="Date format: DD MMM" inherit_id="website_blog.posts_loop" active="False"/>
-<template id="opt_posts_loop_date_format_dd_MMM_yyyy" name="Date format: DD MMM YYYY" inherit_id="website_blog.posts_loop" active="False"/>
-<template id="opt_posts_loop_date_format_dd_MM_yyyy" name="Date format: DD/MM/YYYY" inherit_id="website_blog.posts_loop" active="False"/>
 
 <!-- (Option) Grid: Number of columns (mutually exclusive; 3 is the default) -->
 <template id="opt_blog_grid_columns_2" name="Grid: 2 Columns" inherit_id="website_blog.posts_loop" active="False"/>

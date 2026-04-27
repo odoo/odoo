@@ -7,7 +7,7 @@
 <template id="blogs_nav" name="Blogs Bar Template">
     <t t-set="wblog_all_title_string">All Blogs</t>
 
-    <div t-attf-class="#{(opt_blog_fullwidth or is_split_grid_sticky) and 'container-fluid' or 'container'}">
+    <nav t-attf-class="#{(opt_blog_fullwidth or is_split_grid_sticky) and 'container-fluid' or 'container'}" aria-label="Blog navigation">
         <h1 t-if="not website.is_view_active('website_blog.opt_blog_cover_post')" class="visually-hidden">Blog Posts</h1>
         <div class="oe_structure" id="oe_structure_blog_nav_0"/>
         <div t-attf-class="position-relative z-1 d-flex gap-2 flex-nowrap py-4 #{additionnal_classes} #{len(blogs) == 1 and not website.is_view_active('website_blog.opt_blog_cover_post') and 'align-items-center'}">
@@ -65,7 +65,7 @@
                 <input type="hidden" name="date_end" t-att-value="date_end"/>
             </t>
         </div>
-    </div>
+    </nav>
 </template>
 
 <!-- ======   Template: List Tags in inline list    ============================
@@ -76,9 +76,9 @@
         <t t-foreach="tags" t-as="tag">
             <t t-if="tag.post_ids">
                 <span t-if="dismissibleBtn and tag.id in active_tag_ids" t-attf-class="align-items-baseline d-inline-flex ps-2 rounded mb-2 o_filter_tag #{'o_color_%s' % tag.color}">
-                    <i class="fa fa-tag me-2"/>
+                    <i class="fa fa-tag me-2" role="presentation"/>
                     <t t-out="tag.name"/>
-                    <a t-attf-href="#{blog_url(tag=tags_list(active_tag_ids, tag.id))}" class="btn border-0 py-1 post_link text-reset" t-att-rel="len(active_tag_ids) and 'nofollow'">×</a>
+                    <a t-attf-href="#{blog_url(tag=tags_list(active_tag_ids, tag.id))}" class="btn border-0 py-1 post_link text-reset" t-att-rel="len(active_tag_ids) and 'nofollow'"><i class="oi oi-close" role="presentation"/></a>
                 </span>
                 <a t-elif="showInactive" t-attf-href="#{blog_url(tag=tags_list(active_tag_ids, tag.id))}" t-attf-class="badge o_tag o_color_#{tag.color} post_link" t-att-rel="len(active_tag_ids) and 'nofollow'" t-out="tag.name"/>
             </t>
@@ -132,48 +132,44 @@
 </template>
 
 <template id="post_author">
-    <div class="o_not_editable">
-        <t t-out="blog_post.author_name"/><span
-            t-if="opt_posts_loop_show_date and (opt_blog_list_view or opt_blog_large_list_view or opt_blog_grid_view)"
-            t-att-class="(opt_blog_list_view or opt_blog_large_list_view) and 'd-lg-none' or ''"
-        >&#44;</span>
-    </div>
+    <div class="o_not_editable"><t t-out="blog_post.author_name"/><span t-if="opt_blog_list_view or opt_blog_large_list_view" class="d-lg-none">&#44;</span><span t-if="opt_blog_grid_view and not opt_blog_cards_design">&#44;</span></div>
 </template>
 
 <template id="post_date">
-    <span t-if="blog_post.published_date" t-field="blog_post.published_date" t-attf-class="text-muted #{opt_blog_cards_design and 'ms-auto' or ''}" t-options="{'widget': 'date', 'format': opt_posts_loop_date_format or 'MMM dd', 'date_only': True}"/>
-    <span t-elif="blog_post.publish_on" t-field="blog_post.publish_on" t-attf-class="text-muted #{opt_blog_cards_design and 'ms-auto' or ''}" t-options="{'widget': 'date', 'format': opt_posts_loop_date_format or 'MMM dd', 'date_only': True}"/>
+    <t t-set="show_write_date" t-value="is_post_page and blog_post.write_date and (blog_post.published_date or blog_post.publish_on) and blog_post.write_date.date() != (blog_post.published_date or blog_post.publish_on).date()"/>
+    <span t-if="blog_post.published_date" t-field="blog_post.published_date" t-attf-class="text-muted #{opt_blog_cards_design and 'ms-auto' or ''} #{show_write_date and 'small' or ''}" t-options="{'widget': 'date', 'format': 'long', 'date_only': True}"/>
+    <span t-elif="blog_post.publish_on" t-field="blog_post.publish_on" t-attf-class="text-muted #{opt_blog_cards_design and 'ms-auto' or ''} #{show_write_date and 'small' or ''}" t-options="{'widget': 'date', 'format': 'long', 'date_only': True}"/>
+    <span t-if="show_write_date" class="small text-muted">
+        (Updated
+        <span t-field="blog_post.write_date" t-options="{'widget': 'date', 'format': 'long', 'date_only': True}"/>)</span>
 </template>
 
 <!-- ======   Template: Post Breadcrumbs   =====================================
 ============================================================================ -->
 <template id="post_breadcrumbs">
-    <ol t-attf-class="breadcrumb my-4 p-0 #{not opt_blog_post_regular_cover and not opt_blog_post_split_cover and 'mt-0' or ''}">
-        <li t-if="len(blogs) &gt; 1" class="o_not_editable breadcrumb-item d-none d-lg-inline-block"><a href="/blog">All Blogs</a></li>
-        <li class="o_not_editable breadcrumb-item">
-            <a t-attf-href="#{blog_url(tag=None, date_begin=None, date_end=None)}">
-                <i class="oi oi-chevron-left d-lg-none me-1" role="presentation"/><t t-out="blog.name"/>
-            </a>
-        </li>
-        <li class="breadcrumb-item text-truncate active d-none d-lg-inline"><span t-out="blog_post.name"/></li>
-    </ol>
+    <nav aria-label="breadcrumb">
+        <ol t-attf-class="breadcrumb my-4 p-0 #{not opt_blog_post_regular_cover and not opt_blog_post_split_cover and 'mt-0' or ''}">
+            <li t-if="len(blogs) &gt; 1" class="o_not_editable breadcrumb-item d-none d-lg-inline-block"><a href="/blog">All Blogs</a></li>
+            <li class="o_not_editable breadcrumb-item">
+                <a t-attf-href="#{blog_url(tag=None, date_begin=None, date_end=None)}">
+                    <i class="oi oi-chevron-left d-lg-none me-1" role="presentation"/><t t-out="blog.name"/>
+                </a>
+            </li>
+            <li class="breadcrumb-item text-truncate active d-none d-lg-inline"><span t-out="blog_post.name"/></li>
+        </ol>
+    </nav>
 </template>
 
-<!--  Template: Blog Post Information-->
-<template id="blog_post_info" name="Blog Post Info">
-    <div id="o_wblog_post_info" class="text-muted mb-2">
-        <t t-if="is_view_active('website_blog.opt_blog_post_comment')">
-            <span t-if="blog_post.message_ids" class="text-nowrap o_not_editable">|
-            <i class="fa fa-comment ms-1 text-muted"/>
-            <a href="#discussion">
-                <t t-out="len(blog_post.message_ids)"/>
-                <t t-if="len(blog_post.message_ids) > 1">Comments</t>
-                <t t-else="">Comment</t>
-            </a>
-            </span>
-            <span t-else="">| No comments yet</span>
-        </t>
-    </div>
+<!--  Template: Blog post comment counter (header / discussion link) -->
+<template id="blog_post_comment_count" name="Blog Post Comment Count">
+    <a t-if="is_view_active('website_blog.opt_blog_post_comment')" id="o_wblog_post_comment_count" href="#discussion" class="o_not_editable">
+        <i class="fa fa-comment me-1"/>
+        <t t-out="len(blog_post.message_ids)"/>
+        <span class="d-md-none">
+            <t t-if="len(blog_post.message_ids) > 1">Comments</t>
+            <t t-else="">Comment</t>
+        </span>
+    </a>
 </template>
 
 <!-- ======   Template: Sidebar Blog  ==========================================
@@ -210,6 +206,7 @@ Options:
         <div class="o_wblog_sidebar_block pb-4" t-ignore="true">
             <h2 class="h6">Follow Us</h2>
             <t t-snippet-call="website.s_social_media"
+                string="Social Media"
                 _classes.f="no_icon_color"
                 _icon_classes.f="rounded-circle o_sm_custom_size"
                 _style.f="--fa-icon-size: 40px;"/>
@@ -285,8 +282,7 @@ Display a sidebar beside the post content.
                 is_post_page.f="true"
                 additionnal_classes.f="d-flex align-items-center"
                 opt_posts_loop_show_author.f="True"
-                opt_posts_loop_show_date.f="True"
-                opt_posts_loop_date_format.f="'MMM dd'"/>
+                opt_posts_loop_show_date.f="True"/>
         </div>
         <div class="oe_structure" id="oe_structure_blog_post_sidebar_2"/>
     </xpath>
@@ -295,14 +291,15 @@ Display a sidebar beside the post content.
 <!-- (Option) Post Sidebar: Share Links Display -->
 <template id="opt_blog_post_share_links_display" name="Share Links" inherit_id="website_blog.blog_post_sidebar" active="False" priority="2">
     <xpath expr="//div[@id='o_wblog_post_sidebar_sticky']" position="inside">
-        <div class="o_wblog_sidebar_block mb-2 pb-4">
+        <div class="o_wblog_sidebar_block mb-2 pb-4" t-ignore="true">
             <div>
                 <h2 class="mb-3 small">Share this post</h2>
             </div>
 
             <t t-snippet-call="website.s_share"
+                string="Share"
                 _classes.f="no_icon_color"
-                _icon_classes.f="rounded-circle o_sm_custom_size"
+                _icon_classes.f="rounded-circle o_sm_custom_size shadow-sm"
                 _style.f="--fa-icon-size: 40px;"
                 _link_classes.f="o_wblog_share_links"/>
         </div>

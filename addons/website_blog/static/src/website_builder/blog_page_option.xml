@@ -43,6 +43,20 @@
         <BuilderRow label.translate="Bottom">
             <BuilderCheckbox actionParam="{views: ['website_blog.opt_blog_post_read_next']}" id="'next_article_opt'"/>
         </BuilderRow>
+        <BuilderRow label.translate="Recommended Post" tooltip.translate="Promote a post" level="1" t-if="this.isActiveItem('next_article_opt')">
+            <BuilderMany2One
+                action="'setRecommendedNextPost'"
+                applyTo="'#o_wblog_post_footer'"
+                model="'blog.post'"
+                domain="[
+                    ['is_published', '=', true],
+                    ['id', '!=', this.services.website.currentWebsite.metadata.mainObject.id],
+                    ['website_id', 'in', [false, this.services.website.currentWebsite.id]],
+                ]"
+                allowUnselect="this.state.isNextPostRecommended"
+                unselectBtnTitle.translate="Reset to default post"
+            />
+        </BuilderRow>
 
         <!-- Sidebar -->
         <div class="options-container-section-title ps-2 pt-3 pb-1 fw-bold">Sidebar</div>
@@ -83,21 +97,6 @@
             </BuilderSelect>
         </BuilderRow>
     </BuilderContext>
-
-    <BuilderRow label.translate="Recommended Post" tooltip.translate="Promote a post" level="1" t-if="this.isActiveItem('next_article_opt')">
-        <BuilderMany2One
-            action="'setRecommendedNextPost'"
-            applyTo="'#o_wblog_post_footer'"
-            model="'blog.post'"
-            domain="[
-                ['is_published', '=', true],
-                ['id', '!=', this.services.website.currentWebsite.metadata.mainObject.id],
-                ['website_id', 'in', [false, this.services.website.currentWebsite.id]],
-            ]"
-            allowUnselect="this.state.isNextPostRecommended"
-            unselectBtnTitle.translate="Reset to default post"
-        />
-    </BuilderRow>
 </t>
 
 <t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
