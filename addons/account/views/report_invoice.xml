@@ -251,6 +251,9 @@
                                             </t>
                                             <t t-elif="line.display_type in ('line_section', 'line_subsection')">
                                                 <t t-set="section_subtotal" t-value="line.get_section_subtotal()"/>
+                                                <t t-if="section_subtotal == line.get_section_subtotal()"> <!-- To not break views xpath on this expression -->
+                                                    <t t-set="section_subtotal" t-value="line.get_section_subtotal() if o.company_price_include == 'tax_excluded' else line.get_section_total()"/>
+                                                </t>
                                                 <!-- For desktop -->
                                                 <td name="line_name_td"
                                                     t-att-colspan="(1 if is_product else line_colspan)"
