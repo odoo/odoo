@@ -52,8 +52,8 @@ class SaleOrderLine(models.Model):
     def _prepare_base_line_for_taxes_computation(self, **kwargs):
         """Override to add the special_type on coupon lines."""
         self.ensure_one()
-        if self.coupon_id:
-            kwargs['special_type'] = 'loyalty_discount'
+        if self.reward_id and self.reward_id.reward_type == "discount":
+            kwargs["special_type"] = "loyalty_discount"
         return super()._prepare_base_line_for_taxes_computation(**kwargs)
 
     def _get_display_price(self):
