@@ -31,10 +31,13 @@ def qunit_error_checker(message):
     return True  # in other cases, always stop (missing dependency, ...)
 
 
-def _get_filters(test_params):
+def _get_filters(test_params, hoot=True):
     filters = []
     for sign, param in test_params:
-        parts = param.split(',')
+        if hoot:
+            parts = re.split(r',(?=-?@)', param)
+        else:
+            parts = param.split(',')
         for part in parts:
             part = part.strip()
             if not part:
@@ -54,7 +57,7 @@ class QunitCommon(odoo.tests.HttpCase):
         self.qunit_filters = self.get_qunit_filters()
 
     def get_qunit_regex(self, test_params):
-        filters = _get_filters(test_params)
+        filters = _get_filters(test_params, hoot=False)
         positive = [f'({re.escape(f)}.*)' for sign, f in filters if sign == '+']
         negative = [f'({re.escape(f)}.*)' for sign, f in filters if sign == '-']
         filter = ''
@@ -138,6 +141,10 @@ class HOOTCommon(odoo.tests.HttpCase):
         self.assertEqual(self.get_hoot_filters(), '&id=-69a6561d&id=-cb246db5')
         self._test_params = [('-', '-@web/core/autocomplete,-@web/core/autocomplete2')]
         self.assertEqual(self.get_hoot_filters(), '&id=69a6561d&id=cb246db5')
+        self._test_params = [('+', '@web/core/autocomplete,@web/core/autocomplete,with,commas')]
+        self.assertEqual(self.get_hoot_filters(), '&id=69a6561d&id=0df1dad5')
+        self._test_params = [('-', '-@web/core/autocomplete,-@web/core/autocomplete,with,commas')]
+        self.assertEqual(self.get_hoot_filters(), '&id=69a6561d&id=0df1dad5')
 
 @odoo.tests.tagged('post_install', '-at_install')
 class WebSuite(QunitCommon, HOOTCommon):
