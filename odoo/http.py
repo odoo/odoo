@@ -623,7 +623,7 @@ class Stream:
         send_file_kwargs = {
             'mimetype': self.mimetype,
             'as_attachment': as_attachment,
-            'download_name': self.download_name,
+            'download_name': self.download_name and self.download_name.strip(),
             'conditional': self.conditional,
             'etag': self.etag,
             'last_modified': self.last_modified,

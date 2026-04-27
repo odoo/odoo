@@ -95,6 +95,18 @@ class TestImage(HttpCase):
         res.raise_for_status()
         self.assertEqual(res.headers['Content-Disposition'], 'attachment; filename=custom.png')
 
+        # CASE: filename with leading tab (control character) - must not produce
+        # an invalid Content-Disposition header that the JS parser rejects
+        att_tab = self.env['ir.attachment'].create({
+            'datas': b'R0lGODdhAQABAIAAAP///////ywAAAAAAQABAAACAkQBADs=',
+            'name': '\ttabFilename.gif',
+            'public': True,
+            'mimetype': 'image/gif',
+        })
+        res = self.url_open('/web/content/%s?download=true' % att_tab.id)
+        res.raise_for_status()
+        self.assertEqual(res.headers['Content-Disposition'], 'attachment; filename=tabFilename.gif')
+
     def test_04_web_content_filename_secure(self):
         """This test makes sure the Content-Disposition header matches the given filename"""
 
