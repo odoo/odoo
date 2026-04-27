@@ -790,6 +790,9 @@ class StockQuant(models.Model):
         """ if records in self, the records are filtered based on the wanted characteristics passed to this function
             if not, a search is done with all the characteristics passed.
         """
+        if 'quants' in self.env.context:
+            return self.env.context.get('quants')
+
         removal_strategy = self._get_removal_strategy(product_id, location_id)
         domain = self._get_gather_domain(product_id, location_id, lot_id, package_id, owner_id, strict)
         if removal_strategy == 'least_packages' and qty:
@@ -865,8 +868,7 @@ class StockQuant(models.Model):
 
         quants = self._gather(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=strict, qty=quantity)
 
-        # avoid quants with negative qty to not lower available_qty
-        available_quantity = quants._get_available_quantity(product_id, location_id, lot_id, package_id, owner_id, strict)
+        available_quantity = self.with_context(quants=quants)._get_available_quantity(product_id, location_id, lot_id, package_id, owner_id, strict)
 
         # do full packaging reservation when it's needed
         if product_packaging_id and product_id.product_tmpl_id.categ_id.packaging_reserve_method == "full":
