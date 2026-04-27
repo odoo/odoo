@@ -79,10 +79,6 @@ export class CallSettings extends Component {
         this.store.settings.logRtc = ev.target.checked;
     }
 
-    onChangeSelectAudioInput(ev) {
-        this.store.settings.audioInputDeviceId = ev.target.value;
-    }
-
     onClickDownloadLogs() {
         this.rtc.dumpLogs({ download: true });
     }
