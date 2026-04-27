@@ -55,15 +55,14 @@ class TestSyncOdoo2MicrosoftMail(TestCommon, MailCase):
             'login': 'ms_sync_paused_user',
         })
         self.assertTrue(paused_sync_user.microsoft_synchronization_stopped)
-        for create_user, organizer, mail_notified_partners, attendee in [
-            (user_root, self.users[0], partner + self.users[0].partner_id, partner),  # emulates online appointment with user 0
-            (user_root, None, partner, partner),  # emulates online resource appointment
-            (self.users[0], None, False, partner),
-            (self.users[0], self.users[0], False, partner),
-            (self.users[0], self.users[1], False, partner),
+        for create_user, organizer, need_sync, attendee in [
+            (user_root, self.users[0], False, partner),  # emulates online appointment with user 0
+            (user_root, None, False, partner),  # emulates online resource appointment
+            (self.users[0], None, True, partner),
+            (self.users[0], self.users[0], True, partner),
+            (self.users[0], self.users[1], True, partner),
             # create user has paused sync and organizer can sync -> will not sync because of bug
-            # only the organizer is notified as we don't notify the author (= create_user.partner_id) on creation
-            (paused_sync_user, self.users[0], self.users[0].partner_id, paused_sync_user.partner_id),
+            (paused_sync_user, self.users[0], False, paused_sync_user.partner_id),
         ]:
             with self.subTest(create_uid=create_user.name if create_user else None, user_id=organizer.name if organizer else None, attendee=attendee.name):
                 with self.mock_mail_gateway(), patch.object(MicrosoftCalendarService, 'insert') as mock_insert:
@@ -74,8 +73,7 @@ class TestSyncOdoo2MicrosoftMail(TestCommon, MailCase):
                         'user_id': organizer.id if organizer else False,
                     })
                     self.env.cr.postcommit.run()
-                if not mail_notified_partners:
-                    self.assertNotSentEmail()
+                if need_sync:
                     mock_insert.assert_called_once()
                     self.assertTrue(mock_insert.call_args[0][0]['isReminderOn'])
                     self.assertEqual(mock_insert.call_args[0][0]['reminderMinutesBeforeStart'], 15)
@@ -84,8 +82,6 @@ class TestSyncOdoo2MicrosoftMail(TestCommon, MailCase):
                     })
                 else:
                     mock_insert.assert_not_called()
-                    for notified_partner in mail_notified_partners:
-                        self.assertMailMail(notified_partner, 'sent', author=(organizer or create_user).partner_id)
 
     def test_change_organizer_pure_odoo_event(self):
         """

@@ -839,7 +839,8 @@ class CalendarEvent(models.Model):
                 detached_events = event.with_context(skip_contact_description=True)._apply_recurrence_values(recurrence_values)
                 detached_events.active = False
 
-        events.attendee_ids._send_invitation_emails()
+        if not self.env.context.get('block_automatic_invitation_email'):
+            events.attendee_ids._send_invitation_emails()
 
         # update activities based on calendar event data, unless already prepared
         # above manually. Heuristic: a new command (0, 0, vals) is considered as
@@ -978,7 +979,7 @@ class CalendarEvent(models.Model):
         current_attendees = self.filtered('active').attendee_ids
         skip_attendee_notification = self.env.context.get('skip_attendee_notification')
         invited_attendees = self._get_new_invited_attendees(current_attendees, previous_attendees, vals)
-        if not skip_attendee_notification and invited_attendees:
+        if not (skip_attendee_notification or self.env.context.get('block_automatic_invitation_email')) and invited_attendees:
             invited_attendees._send_invitation_emails()
         if not skip_attendee_notification and not self.env.context.get('is_calendar_event_new') and 'start' in values:
             start_date = fields.Datetime.to_datetime(values.get('start'))
@@ -1098,6 +1099,30 @@ class CalendarEvent(models.Model):
         for old_event, new_event in zip(self, new_events):
             new_event.write({'partner_ids': [(Command.set(old_event.partner_ids.ids))]})
         return new_events
+
+    def action_open_invite_wizard(self, partner_ids=None, next_action=None):
+        """If needed, it displays a modal offering to send invitations to the event's attendees.
+
+        :param partner_ids: The ids of the partners to invite. If not set, all the partners of the event are invited.
+        :param next_action: The action to perform once the attendees are invited.
+        :return: Action to display the modal."""
+        self.ensure_one()
+        if not self.partner_ids or self.partner_ids == self.user_id.partner_id or self.user_id._has_any_active_synchronization():
+            return next_action
+        if not partner_ids:
+            partner_ids = self.partner_ids.ids
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'calendar.attendee.invite.wizard',
+            'views': [(False, 'form')],
+            'target': 'new',
+            'name': _('Notify Attendees'),
+            'context': {
+                'default_calendar_attendee_ids': self.attendee_ids.filtered_domain([('partner_id', 'in', partner_ids)]).ids,
+                'dialog_size': 'small',
+                'next_action': next_action,
+            },
+        }
 
     def action_unlink(self, attendee_id=None, next_action=None, recurrence_choice=None):
         """
