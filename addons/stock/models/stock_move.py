@@ -2028,7 +2028,7 @@ Please change the quantity done or the rounding precision in your settings.""",
                 uom_quantity = float_round(uom_quantity, precision_digits=rounding)
                 uom_quantity_back_to_product_uom = to_update.uom_id._compute_quantity(uom_quantity, self.product_id.uom_id, rounding_method='HALF-UP')
             if to_update and float_compare(quantity, uom_quantity_back_to_product_uom, precision_digits=rounding) == 0:
-                to_update.with_context(reserved_quant=reserved_quant).quantity += uom_quantity
+                to_update.quantity += uom_quantity
             else:
                 if self.product_id.tracking == 'serial' and (self.picking_type_id.use_create_lots or self.picking_type_id.use_existing_lots):
                     vals_list = self._add_serial_move_line_to_vals_list(reserved_quant, quantity)
