@@ -105,6 +105,9 @@ const addField = function (
             trigger: "[data-container-title=Form] button:contains('+ Field')",
             run: "click",
         },
+        {
+            trigger: `[data-action-id='setLabelText'] input:value("Custom Text")`,
+        },
         ...selectButtonByData("Text", data),
         {
             content: "Wait for field to load",
