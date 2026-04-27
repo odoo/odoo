@@ -800,7 +800,7 @@ class StockQuant(models.Model):
         order = self._get_removal_strategy_order(removal_strategy)
 
         quants_cache = self.env.context.get('quants_cache')
-        if quants_cache is not None and strict and removal_strategy != 'least_packages':
+        if quants_cache is not None and strict:
             res = self.env['stock.quant']
             if lot_id:
                 res |= quants_cache[product_id.id, location_id.id, lot_id.id, package_id.id, owner_id.id]
