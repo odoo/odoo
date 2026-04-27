@@ -7,9 +7,9 @@ patch(OrderDetailsDialog.prototype, {
         const fields = super.getOrderFields();
 
         const servedBy = fields.find((f) => f.id === "served_by");
-        if (servedBy) {
+        if (servedBy && order.employee_id) {
             Object.assign(servedBy, {
-                value: order.employee_id?.name,
+                value: order.employee_id.name,
                 condition: !!order.employee_id?.name,
             });
         }
