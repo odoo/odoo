@@ -53,6 +53,7 @@ class HrEmployee(models.Model):
         'hr.attendance.overtime.line', 'employee_id', groups="hr_attendance.group_hr_attendance_own,hr_attendance.group_hr_attendance_officer,hr.group_hr_user")
     total_overtime = fields.Float(compute='_compute_total_overtime')
     display_extra_hours = fields.Boolean(related='company_id.hr_attendance_display_overtime')
+    current_month_name = fields.Char(compute='_compute_current_month_name')
 
     ruleset_id = fields.Many2one(readonly=False, related="version_id.ruleset_id", inherited=True, groups="hr.group_hr_manager")
 
@@ -152,6 +153,11 @@ class HrEmployee(models.Model):
                 #     )
                 # )
                 employee.hours_last_month_overtime = round(overtime_hours, 2)
+
+    def _compute_current_month_name(self):
+        now = fields.Datetime.now()
+        for employee in self:
+            employee.current_month_name = now.strftime("%b")
 
     def _compute_hours_today(self):
         now = fields.Datetime.now()
@@ -260,15 +266,27 @@ class HrEmployee(models.Model):
 
     def action_open_last_month_attendances(self):
         self.ensure_one()
+        now = fields.Datetime.now()
+        now_utc = now.replace(tzinfo=datetime.UTC)
+        tz = ZoneInfo(self.tz or 'UTC')
+        now_tz = now_utc.astimezone(tz)
+        start_tz = now_tz.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+        start_naive = start_tz.astimezone(datetime.UTC).replace(tzinfo=None)
+        end_naive = now_utc.replace(tzinfo=None)
         return {
             "type": "ir.actions.act_window",
             "name": _("Attendances This Month"),
             "res_model": "hr.attendance",
-            "views": [[self.env.ref('hr_attendance.hr_attendance_employee_calendar_view').id, "calendar"]],
+            "views": [[False, "list"]],
             "context": {
                 "display_extra_hours": self.display_extra_hours,
+                "group_by": "check_in:week",
             },
-            "domain": [('employee_id', '=', self.id)]
+            "domain": [
+                ('employee_id', '=', self.id),
+                ('check_in', '>=', start_naive),
+                ('check_in', '<=', end_naive),
+            ],
         }
 
     @api.depends("user_id.im_status", "attendance_state")

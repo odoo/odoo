@@ -31,9 +31,9 @@
                             <span class="o_stat_value text-danger" invisible="hours_last_month_overtime &gt;= 0 or not display_extra_hours">
                                 (<field name="hours_last_month_overtime" widget="float_time"/>)
                             </span>
-                        </span>
-                        <span class="o_stat_text">
-                            Monthly Hours
+                            <span class="o_stat_text">
+                                in <field name="current_month_name"/>
+                            </span>
                         </span>
                     </div>
                 </button>
@@ -156,15 +156,6 @@
             <field name="check_out" position="attributes">
                 <attribute name="readonly">1</attribute>
             </field>
-            <field name="validated_overtime_hours" position="attributes">
-                <attribute name="readonly">1</attribute>
-            </field>
-            <button name="action_approve_overtime" position="attributes">
-                <attribute name="invisible">1</attribute>
-            </button>
-            <button name="action_refuse_overtime" position="attributes">
-                <attribute name="invisible">1</attribute>
-            </button>
         </field>
     </record>
 
