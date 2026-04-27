@@ -116,3 +116,23 @@ class TestFreeProductReward(HttpCaseWithUserPortal, WebsiteSaleCommon):
                 cart._get_claimable_and_showable_rewards(),
                 "Rewards should no longer be claimable if already claimed",
             )
+
+    def test_remove_free_product_reward(self):
+        order = self.empty_cart
+        with MockRequest(self.website.env, website=self.website, sale_order_id=order.id):
+            self.WebsiteSaleCartController.add_to_cart(
+                product_template_id=self.sofa.product_tmpl_id.id,
+                product_id=self.sofa.id,
+                quantity=1,
+            )
+            free_product_line = order.order_line.filtered(
+                lambda line: line.product_id == self.carpet and line.is_reward_line
+            )
+            self.assertTrue(free_product_line)
+
+            self.WebsiteSaleCartController.update_cart(line_id=free_product_line.id, quantity=0)
+
+            free_product_line = order.order_line.filtered(
+                lambda line: line.product_id == self.carpet and line.is_reward_line
+            )
+            self.assertFalse(free_product_line)
