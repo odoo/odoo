@@ -1,0 +1,38 @@
+
+<odoo>
+    <!-- Record Rule: Each user sees only their assigned customers -->
+    <!-- <record id="sale_customer_assigned_user_rule" model="ir.rule">
+        <field name="name">Customer - Own Assigned Only</field>
+        <field name="model_id" ref="model_sale_customer"/>
+        <field name="domain_force">[('assigned_user_id', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record> -->
+
+    <!-- <record id="rule_admin_all" model="ir.rule">
+        <field name="name">Admin sees all</field>
+        <field name="model_id" ref="model_sale_customer"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('base.group_system'))]"/>
+    </record> -->
+
+    <!-- List view -->
+    <record id="view_estate_project_list" model="ir.ui.view">
+        <field name="name">estate.project.list</field>
+        <field name="model">estate.project</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="investor"/>
+                <field name="location"/>
+                <field name="area"/>
+                <field name="price_per_m2"/>
+                <field name="legal_status"/>
+                <field name="progress"/>
+            </list>
+        </field>
+    </record>
+</odoo>

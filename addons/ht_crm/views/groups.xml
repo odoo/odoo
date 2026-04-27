@@ -1,0 +1,19 @@
+<odoo>
+    <!-- User cơ bản -->
+    <record id="group_ht_user" model="res.groups">
+        <field name="name">User</field>
+    </record>
+
+    <!-- Trưởng phòng (kế thừa User) -->
+    <record id="group_ht_leader" model="res.groups">
+        <field name="name">Trưởng Phòng</field>
+        <field name="implied_ids" eval="[(4, ref('sale_phones.group_ht_user'))]"/>
+    </record>
+
+    <!-- Ban điều hành (kế thừa Trưởng phòng) -->
+    <record id="group_ht_executive" model="res.groups">
+        <field name="name">Ban Điều Hành</field>
+        <field name="implied_ids" eval="[(4, ref('sale_phones.group_ht_leader'))]"/>
+    </record>
+
+</odoo>

@@ -1,0 +1,129 @@
+<odoo>
+    <!-- Ban Điều Hành -->
+    <record id="rule_employee_exec" model="ir.rule">
+        <field name="name">Ban Điều Hành (Employee)</field>
+        <field name="model_id" ref="model_sale_employee"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('group_ht_executive'))]"/>
+    </record>
+
+    <!-- Trưởng Phòng -->
+    <record id="rule_employee_manager" model="ir.rule">
+        <field name="name">Trưởng Phòng (Employee)</field>
+        <field name="model_id" ref="model_sale_employee"/>
+        <field name="domain_force">
+            [
+                '|',
+                ('user_id', '=', user.id),
+                ('manager_id.user_id', '=', user.id)
+            ]
+        </field>
+        <field name="groups" eval="[(4, ref('group_ht_leader'))]"/>
+    </record>
+
+    <record id="rule_kpi_manager" model="ir.rule">
+        <field name="name">Trưởng Phòng (Employee)</field>
+        <field name="model_id" ref="model_sale_employee_kpi"/>
+        <field name="domain_force">
+            [
+                ('employee_id.user_id', '=', user.id)
+            ]
+        </field>
+        <field name="groups" eval="[(4, ref('group_ht_leader'))]"/>
+    </record>
+
+    <record id="rule_transaction_manager" model="ir.rule">
+        <field name="name">Manager (Transaction)</field>
+        <field name="model_id" ref="model_sale_transaction"/>
+        <field name="domain_force">
+            [
+                ('employee_id.user_id', '=', user.id)
+            ]
+        </field>
+        <field name="groups" eval="[(4, ref('group_ht_leader'))]"/>
+    </record>
+
+    <!-- User -->
+    <record id="rule_transaction_user" model="ir.rule">
+        <field name="name">User (Transaction)</field>
+        <field name="model_id" ref="model_sale_transaction"/>
+        <field name="domain_force">
+            [
+                ('employee_id.user_id', '=', user.id)
+            ]
+        </field>
+        <field name="groups" eval="[(4, ref('group_ht_user'))]"/>
+    </record>
+
+    <record id="view_employee_role_tree" model="ir.ui.view">
+        <field name="name">sale.employee.role.tree</field>
+        <field name="model">sale.employee.role</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_sale_employee_list" model="ir.ui.view">
+        <field name="name">sale.employee.list</field>
+        <field name="model">sale.employee</field>
+        <field name="arch" type="xml">
+            <list string="Danh Sách Nhân Viên" default_order="name">
+                <!-- <field name="code"/> -->
+                <field name="name"/>
+                <field name="phone"/>
+                <!-- <field name="department"/> -->
+                <field name="manager_id"/>
+                <!-- <field name="role_ids" widget="many2many_tags"/> -->
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_sale_transaction_list" model="ir.ui.view">
+        <field name="name">sale.transaction.list</field>
+        <field name="model">sale.transaction</field>
+        <field name="arch" type="xml">
+            <list string="Giao Dịch">
+                <field name="date"/>
+                <field name="employee_id"/>
+                <field name="customer_id"/>
+                <field name="product"/>
+                <field name="value" widget="monetary"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_employee_kpi_list" model="ir.ui.view">
+        <field name="name">sale.employee.kpi.list</field>
+        <field name="model">sale.employee.kpi</field>
+        <field name="arch" type="xml">
+            <list string="KPI Nhân Viên" create="false" default_order="year desc, month desc, total_value desc">
+
+                <field name="employee_id" string="Nhân viên"/>
+
+                <!-- Thời gian -->
+                <field name="month" string="Tháng"/>
+                <field name="quarter" string="Quý"/>
+                <field name="year" string="Năm"/>
+
+                <!-- KPI -->
+                <field name="total_value" string="Doanh thu"
+                    widget="monetary"
+                    options="{'currency_field': 'currency_id'}"/>
+
+                <field name="total_deals" string="Số giao dịch"/>
+
+                <!-- Highlight Best Seller -->
+                <field name="is_best_seller_by_value" readonly="1"/>
+                <field name="is_best_seller_by_quantity" readonly="1"/>
+
+            </list>
+        </field>
+    </record>
+
+</odoo>

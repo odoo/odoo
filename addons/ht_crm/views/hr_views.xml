@@ -1,0 +1,82 @@
+<odoo>
+    <record id="hr_employee_personal_rule" model="ir.rule">
+        <field name="name">Employee: See own record only</field>
+        <field name="model_id" ref="model_hr_employee"/>
+        <field name="domain_force">[('user_id', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
+    </record>
+    
+    <record id="view_hr_employee_form_inherit" model="ir.ui.view">
+        <field name="name">hr.employee.form.inherit</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='department_id']" position="after">
+                <field name="join_date"/>
+                <field name="seniority"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_department_form_inherited" model="ir.ui.view">
+        <field name="name">hr.department.form.inherited</field>
+        <field name="model">hr.department</field>
+        <field name="inherit_id" ref="hr.view_department_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="department_code" placeholder="e.g. SALES-VN"/>
+            </xpath>
+
+            <xpath expr="//field[@name='manager_id']" position="after">
+                <field name="currency_id" invisible="1"/>
+                <field name="budget_limit" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+            </xpath>
+
+            <xpath expr="//sheet" position="inside">
+                <notebook>
+                    <page string="Employees" name="employee_roster">
+                        <field name="employee_ids" readonly="1">
+                            <list>
+                                <field name="name"/>
+                                <field name="parent_id" string="Manager"/>
+                            </list>
+                        </field>
+                    </page>
+                </notebook>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_hr_job_form_inherit" model="ir.ui.view">
+    <field name="name">hr.job.form.inherit</field>
+    <field name="model">hr.job</field>
+    <field name="inherit_id" ref="hr.view_hr_job_form"/>
+    <field name="arch" type="xml">
+        <xpath expr="//field[@name='name']" position="after">
+            <field name="job_code" placeholder="e.g. EXEC-01"/>
+        </xpath>
+
+        <xpath expr="//sheet" position="inside">
+            <notebook>
+                <page string="Job Details" name="job_details">
+                    <group>
+                        <group string="Planning">
+                            <field name="expected_employees"/>
+                            <field name="no_of_employee" string="Current Count"/>
+                        </group>
+                        <group string="Compensation" groups="hr.group_hr_user">
+                            <field name="currency_id" invisible="1"/>
+                            <label for="salary_range_min" string="Salary Range"/>
+                            <div class="o_row">
+                                <field name="salary_range_min" widget="monetary" class="oe_inline"/>
+                                <span> to </span>
+                                <field name="salary_range_max" widget="monetary" class="oe_inline"/>
+                            </div>
+                        </group>
+                    </group>
+                </page>
+            </notebook>
+        </xpath>
+    </field>
+</record>
+</odoo>

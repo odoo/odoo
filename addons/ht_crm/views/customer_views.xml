@@ -1,0 +1,120 @@
+
+<odoo>
+    <!-- Ban Điều Hành -->
+    <record id="rule_customer_exec" model="ir.rule">
+        <field name="name">Ban Điều Hành (Customer)</field>
+        <field name="model_id" ref="model_sale_customer"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('group_ht_executive'))]"/>
+    </record>
+
+    <record id="rule_phonebook_exec" model="ir.rule">
+        <field name="name">Ban Điều Hành (Phonebook)</field>
+        <field name="model_id" ref="model_sale_phonebook"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('group_ht_executive'))]"/>
+    </record>
+
+    <!-- Trưởng Phòng-->
+    <record id="rule_customer_leader" model="ir.rule">
+        <field name="name">Trưởng Phòng (Customer)</field>
+        <field name="model_id" ref="model_sale_customer"/>
+        <field name="domain_force">
+            [
+                '|',
+                ('salesperson_id.user_id', '=', user.id),
+                ('salesperson_id.manager_id.user_id', '=', user.id)
+            ]
+        </field>
+        <field name="groups" eval="[(4, ref('group_ht_leader'))]"/>
+    </record>
+
+    <!-- User -->
+    <record id="rule_customer_user" model="ir.rule">
+        <field name="name">User (Customer)</field>
+        <field name="model_id" ref="model_sale_customer"/>
+        <field name="domain_force">
+            [
+                ('salesperson_id.user_id', '=', user.id)
+            ]
+        </field>
+        <field name="groups" eval="[(4, ref('group_ht_user'))]"/>
+    </record>
+
+    <record id="rule_phonebook_user" model="ir.rule">
+        <field name="name">User (Phonebook)</field>
+        <field name="model_id" ref="model_sale_phonebook"/>
+        <field name="domain_force">
+            [
+                ('customer_id.salesperson_id', '=', user.id)
+            ]
+        </field>
+        <field name="groups" eval="[(4, ref('group_ht_user'))]"/>
+    </record>
+
+    
+    <!-- <record id="view_customer_form" model="ir.ui.view">
+        <field name="name">sale.customer.form</field>
+        <field name="model">sale.customer</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="phone" widget="phone"/>
+                        <field name="salesperson_id"/>
+                        <field name="previous_salesperson_ids" widget="many2many_tags"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record> -->
+
+    <record id="view_phonebook_list" model="ir.ui.view">
+        <field name="name">sale.phonebook.list</field>
+        <field name="model">sale.phonebook</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="customer_id" string="Tên khách hàng" readonly="True"/>
+                <field name="phone" widget="phone"/>
+                <field name="is_called"/>
+                <field name="unreachable"/>
+                <field name="is_primary"/>
+                <field name="note"/>
+
+                <!-- Nút Set Primary -->
+                <button name="set_primary"
+                        type="object"
+                        string="Set Primary"
+                        class="btn-primary"
+                        icon="fa-star"/>
+            </list>  
+        </field>
+    </record>
+
+    <record id="view_customer_list" model="ir.ui.view">
+        <field name="name">sale.customer.list</field>
+        <field name="model">sale.customer</field>
+        <field name="arch" type="xml">
+            <list>
+                <header>
+                    <button name="action_distribute_customers" 
+                            string="Distribute" 
+                            type="object" 
+                            class="oe_highlight"/>
+                        <button name="reverse" 
+                        string="Reverse" 
+                        type="object" 
+                        class="oe_highlight"/>
+                </header>
+                <field name="name" string="Tên khách hàng" readonly="True"/>
+                <field name="phone" string="SĐT Chính" readonly="True"/>
+                <field name="salesperson_id"/>
+                <field name="previous_salesperson_ids" widget="many2many_tags" groups="sale_phones.group_ht_leader,sale_phones.group_ht_executive"/>
+                <field name="ignore" widget="checkbox" groups="sale_phones.group_ht_leader,sale_phones.group_ht_executive"/>
+                <field name="type"/>
+            </list> 
+        </field>
+    </record>
+    
+</odoo>
