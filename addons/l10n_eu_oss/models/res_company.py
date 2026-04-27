@@ -8,6 +8,10 @@ from .eu_field_map import EU_FIELD_MAP
 from .eu_tag_map import EU_TAG_MAP
 from .eu_tax_map import EU_TAX_MAP
 
+STRICT_COA_COUNTRIES = {
+    'LU': 'lu_2020_account_46151',
+}
+
 
 class Company(models.Model):
     _inherit = 'res.company'
@@ -132,13 +136,17 @@ class Company(models.Model):
                 ]).invoice_repartition_line_ids.mapped('account_id')
             if not sales_tax_accounts:
                 return False
-            new_code = self.env['account.account']._search_new_account_code(self, len(sales_tax_accounts[0].code), sales_tax_accounts[0].code[:-2])
-            oss_account = self.env['account.account'].create({
-                'name': f'{sales_tax_accounts[0].name} OSS',
-                'code': new_code,
-                'account_type': sales_tax_accounts[0].account_type,
-                'company_id': self.id,
-                'tag_ids': [(4, tag.id, 0) for tag in sales_tax_accounts[0].tag_ids],
+
+            oss_account = self.account_fiscal_country_id.code in STRICT_COA_COUNTRIES \
+                          and self.env.ref(f"account.{self.id}_{STRICT_COA_COUNTRIES[self.account_fiscal_country_id.code]}", raise_if_not_found=False)
+            if not oss_account:
+                new_code = self.env['account.account']._search_new_account_code(self, len(sales_tax_accounts[0].code), sales_tax_accounts[0].code[:-2])
+                oss_account = self.env['account.account'].create({
+                    'name': f'{sales_tax_accounts[0].name} OSS',
+                    'code': new_code,
+                    'account_type': sales_tax_accounts[0].account_type,
+                    'company_id': self.id,
+                    'tag_ids': [Command.link(tag.id) for tag in sales_tax_accounts[0].tag_ids],
                 })
             self.env['ir.model.data'].create({
                 'name': f'oss_tax_account_company_{self.id}',
