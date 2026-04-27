@@ -95,4 +95,5 @@ class QuotationDocument(models.Model):
         docs = super().create(vals_list)
         for doc in docs:
             doc.write({'res_model': 'quotation.document', 'res_id': doc.id})
+        docs.flush_recordset()
         return docs
