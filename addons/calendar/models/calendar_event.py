@@ -765,8 +765,12 @@ class Meeting(models.Model):
 
         current_attendees = self.filtered('active').attendee_ids
         if 'partner_ids' in values:
-            # we send to all partners and not only the new ones
-            (current_attendees - previous_attendees)._send_mail_to_attendees(
+            ignore_past_event_attendees = current_attendees.filtered(
+                lambda attendee: attendee.event_id.start < fields.Datetime.now()
+            )
+            # we send to all partners and not only the new ones, but ignore attendees
+            # added AFTER the stop/end date of the event
+            (current_attendees - previous_attendees - ignore_past_event_attendees)._send_mail_to_attendees(
                 self.env.ref('calendar.calendar_template_meeting_invitation', raise_if_not_found=False)
             )
         if not self.env.context.get('is_calendar_event_new') and 'start' in values:

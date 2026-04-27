@@ -381,13 +381,13 @@ class TestCalendar(SavepointCaseWithUserDemo):
         Check that mail have extra attachement added by the user
         """
 
-        def _test_one_mail_per_attendee(self, partners):
+        def _test_mail_per_attendee(self, partners, target=1):
             # check that every attendee receive a (single) mail for the event
             for partner in partners:
                 mail = self.env['mail.message'].sudo().search([
                     ('notified_partner_ids', 'in', partner.id),
                     ])
-                self.assertEqual(len(mail), 1)
+                self.assertEqual(len(mail), target, "This attendee has an unexpected amount of mails")
 
         def _test_emails_has_attachment(self, partners, attachments_names=["fileText_attachment.txt"], checksums=None):
             # check that every email has specified extra attachments
@@ -427,7 +427,7 @@ class TestCalendar(SavepointCaseWithUserDemo):
             })
 
         # every partner should have 1 mail sent
-        _test_one_mail_per_attendee(self, partners)
+        _test_mail_per_attendee(self, partners, target=1)
         _test_emails_has_attachment(self, partners, checksums=[attachments[0].checksum])
 
         # adding more partners to the event
@@ -443,10 +443,10 @@ class TestCalendar(SavepointCaseWithUserDemo):
         })
 
         # more email should be sent
-        _test_one_mail_per_attendee(self, partners)
+        _test_mail_per_attendee(self, partners, target=1)
 
         # create a new event in the past
-        self.CalendarEvent.create({
+        past_event = self.CalendarEvent.create({
             'name': "NOmailTest",
             'allday': False,
             'recurrency': False,
@@ -456,7 +456,23 @@ class TestCalendar(SavepointCaseWithUserDemo):
         })
 
         # no more email should be sent
-        _test_one_mail_per_attendee(self, partners)
+        _test_mail_per_attendee(self, partners, target=1)
+
+        # adding more partners to the event in past, SHOULD NOT trigger notification
+        partners_added_after_past_date = [
+            self.env['res.partner'].create({'name': 'testuser5', 'email': 'jean@example.com'}),
+            self.env['res.partner'].create({'name': 'testuser6', 'email': 'claude@example.com'}),
+            self.env['res.partner'].create({'name': 'testuser7', 'email': 'vandamme@example.com'}),
+            ]
+        partners.extend(partners_added_after_past_date)
+        partner_ids = [(6, False, [p.id for p in partners])]
+        past_event.write({
+            'partner_ids': partner_ids,
+        })
+
+        _test_mail_per_attendee(
+            self, list(set(partners) - set(partners_added_after_past_date)), target=1)
+        _test_mail_per_attendee(self, partners_added_after_past_date, target=0)
 
         partner_staff, new_partner = self.env['res.partner'].create([{
             'name': 'partner_staff',
@@ -475,6 +491,7 @@ class TestCalendar(SavepointCaseWithUserDemo):
             self, partners=[partner_staff, new_partner], attachments_names=[a.name for a in attachments], checksums=attachments.mapped('checksum')
         )
 
+    @freezegun.freeze_time('2011-04-29 10:00:00')
     def test_event_creation_internal_user_invitation_ics(self):
         """ Check that internal user can read invitation.ics attachment """
         internal_user = new_test_user(self.env, login='internal_user', groups='base.group_user')
