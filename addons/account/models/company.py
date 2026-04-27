@@ -698,6 +698,14 @@ class ResCompany(models.Model):
         locks.sort()
         return locks
 
+    def _set_category_defaults(self, fields_to_sync):
+        """Keep product.category ir.default rows in sync with company product accounts."""
+        for company in self:
+            if 'expense_account_id' in fields_to_sync:
+                self.env['ir.default'].set('product.category', 'property_account_expense_categ_id', company.expense_account_id.id, company_id=company.id)
+            if 'income_account_id' in fields_to_sync:
+                self.env['ir.default'].set('product.category', 'property_account_income_categ_id', company.income_account_id.id, company_id=company.id)
+
     def write(self, values):
         self._validate_locks(values)
 
@@ -719,6 +727,10 @@ class ResCompany(models.Model):
                     raise UserError(_('You cannot change the currency of the company since some journal items already exist'))
 
         companies = super().write(values)
+
+        product_account_fields = {'expense_account_id', 'income_account_id'} & values.keys()
+        if product_account_fields:
+            self._set_category_defaults(product_account_fields)
 
         # We revoke all active exceptions affecting the changed lock dates and recreate them (with the updated lock dates)
         changed_soft_lock_fields = [field for field in SOFT_LOCK_DATE_FIELDS if field in values]
