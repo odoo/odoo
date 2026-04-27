@@ -20,7 +20,7 @@ def unit_test_error_checker(message):
 def _get_filters(test_params):
     filters = []
     for sign, param in test_params:
-        parts = param.split(',')
+        parts = re.split(r',(?=-?@)', param)
         for part in parts:
             part = part.strip()
             if not part:
@@ -107,6 +107,7 @@ class HootCommon(odoo.tests.HttpCase):
                 match = re.search(r'\[HOOT\] Test "(@([^/]+)/[^"]+)"', message)
                 if match:
                     test = match.group(1)
+                    test = test.replace('\\', '\\\\').replace('[', '\\[').replace(']', '\\]')
                     result['params'] = test
         return result
 
@@ -143,6 +144,10 @@ class HootSuite(HootCommon):
         self.assertEqual(self._get_hoot_param_filters(), ['-69a6561d', '-cb246db5'])
         self._test_params = [('-', '-@web/core/autocomplete,-@web/core/autocomplete2')]
         self.assertEqual(self._get_hoot_param_filters(), ['69a6561d', 'cb246db5'])
+        self._test_params = [('+', '@web/core/autocomplete,@web/core/autocomplete,with,commas')]
+        self.assertEqual(self._get_hoot_param_filters(), ['69a6561d', '0df1dad5'])
+        self._test_params = [('-', '-@web/core/autocomplete,-@web/core/autocomplete,with,commas')]
+        self.assertEqual(self._get_hoot_param_filters(), ['69a6561d', '0df1dad5'])
 
     def test_get_hoot_filters(self):
         addons_from_asset_bundle = self._get_addons_from_asset_bundle('web.assets_unit_tests')
@@ -153,15 +158,27 @@ class HootSuite(HootCommon):
         self.assertEqual(self._get_hoot_filters(addons_from_asset_bundle, ['web']), '&id=001ee314&id=-e39ce9ba', '@web/core explicitly excluded')
 
     def test_canonical_tags(self):
-        message = '''[HOOT] Test "@web/core/some test" failed:
-Failed assertion:
-...
-'''
-        log = logging.LogRecord('', '', '', '', message, None, None)
+        def get_log(test_name):
+            message = f'''[HOOT] Test "{test_name}" failed:
+            Failed assertion:
+            ...
+            '''
+
+            log = logging.LogRecord('', '', '', '', message, None, None)
+            return log
+
         self.addCleanup(delattr, self, '_cross_module')
         self._cross_module = True
-        tag = self.get_canonical_tag(log=log)
-        self.assertEqual(tag, '/web/tests/test_js.py:HootSuite.test_canonical_tags[@web/core/some test]')
+
+        self.assertEqual(
+            self.get_canonical_tag(log=get_log('@web/core/some test')),
+            '/web/tests/test_js.py:HootSuite.test_canonical_tags[@web/core/some test]',
+        )
+        self.assertEqual(
+            self.get_canonical_tag(log=get_log(r'@web/test, with \ backslash and [brackets]')),
+            r'/web/tests/test_js.py:HootSuite.test_canonical_tags[@web/test, with \\ backslash and \[brackets\]]',
+            "Reserved characters should have been escaped",
+        )
         # Note that in theory the file part won't be present in the tag since the test is cross-module,
         # but for the purpose of this test we keep it simple since this class don't inherit from CrossModule
 
