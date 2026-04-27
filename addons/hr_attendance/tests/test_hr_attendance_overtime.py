@@ -1282,7 +1282,7 @@ class TestHrAttendanceOvertime(HttpCase):
                 'rule_ids': [Command.create({
                         'name': 'Rule schedule timing',
                         'base_off': 'timing',
-                        'timing_type': 'non_work_days',
+                        'timing_type': 'public_leave',
                         'timing_start': 0,
                         'timing_stop': 24,
                     })],
@@ -1292,7 +1292,7 @@ class TestHrAttendanceOvertime(HttpCase):
                 'rule_ids': [Command.create({
                         'name': 'Rule schedule timing',
                         'base_off': 'timing',
-                        'timing_type': 'non_work_days',
+                        'timing_type': 'public_leave',
                         'timing_start': 0,
                         'timing_stop': 24,
                     })],
@@ -1690,3 +1690,70 @@ class TestHrAttendanceOvertime(HttpCase):
         self.ruleset.company_id.absence_management = True
         attendances._update_overtime()
         assert_overtime_durations(attendances)
+
+    def test_overtime_public_holiday_exclusion_from_non_work_rule(self):
+        """
+        Test that public holidays are excluded from non-working day overtime rules.
+        Attendances on a public holiday should only trigger the public holiday rule and
+        attendances on a non-working day should only trigger the non-working day rule.
+        """
+        with freeze_time("2026-4-21 12:00:00"):
+            self.env.user.tz = 'UTC'
+            company = self.env['res.company'].create({
+                'name': 'Odoo',
+                'resource_calendar_id': self.calendar_40h.id,
+            })
+
+            with Form(self.env['resource.calendar.leaves'].with_company(company)) as holiday:
+                holiday.name = 'Test Holiday'
+                holiday.date_from = datetime(2026, 4, 21, 0, 0)
+                holiday.save()
+
+            ruleset = self.env['hr.attendance.overtime.ruleset'].with_company(company).create({
+                'name': 'Test Ruleset',
+            })
+            holiday_rule = self.env['hr.attendance.overtime.rule'].with_company(company).create({
+                'name': 'Holiday rule',
+                'base_off': 'timing',
+                'timing_type': 'public_leave',
+                'timing_start': 0,
+                'timing_stop': 24,
+                'ruleset_id': ruleset.id,
+            })
+            non_working_day_rule = self.env['hr.attendance.overtime.rule'].with_company(company).create({
+                'name': 'Non-working day rule',
+                'base_off': 'timing',
+                'timing_type': 'non_work_days',
+                'timing_start': 0,
+                'timing_stop': 24,
+                'ruleset_id': ruleset.id,
+            })
+
+            employee = self.env['hr.employee'].with_company(company).create({
+                'name': 'Test Employee',
+                'ruleset_id': ruleset.id,
+            })
+
+            self.env['hr.attendance'].create([
+                {
+                    'employee_id': employee.id,
+                    'check_in': datetime(2026, 4, 21, 8, 0),
+                    'check_out': datetime(2026, 4, 21, 17, 0),
+                },
+                {
+                    'employee_id': employee.id,
+                    'check_in': datetime(2026, 4, 25, 8, 0),  # Saturday
+                    'check_out': datetime(2026, 4, 25, 17, 0),
+                },
+            ])
+            overtime_holiday = self.env['hr.attendance.overtime.line'].search([('employee_id', '=', employee.id), ('date', '=', date(2026, 4, 21))])
+            self.assertTrue(overtime_holiday, 'Employee should have overtime records for that day')
+            self.assertEqual(len(overtime_holiday), 1, 'Only one overtime record should exist for that employee on that day')
+            self.assertEqual(len(overtime_holiday.rule_ids), 1, 'Only one overtime rule should be linked to the overtime record')
+            self.assertEqual(overtime_holiday.rule_ids.id, holiday_rule.id, 'The overtime should be linked to the public holiday rule and not the non-working day rule')
+
+            overtime_non_work_day = self.env['hr.attendance.overtime.line'].search([('employee_id', '=', employee.id), ('date', '=', date(2026, 4, 25))])
+            self.assertTrue(overtime_non_work_day, 'Employee should have overtime records for that day')
+            self.assertEqual(len(overtime_non_work_day), 1, 'Only one overtime record should exist for that employee on that day')
+            self.assertEqual(len(overtime_non_work_day.rule_ids), 1, 'Only one overtime rule should be linked to the overtime record')
+            self.assertEqual(overtime_non_work_day.rule_ids.id, non_working_day_rule.id, 'The overtime should be linked to the non-working day rule and not the public holiday rule')

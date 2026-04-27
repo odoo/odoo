@@ -1,9 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime
+from datetime import date, datetime
 
 from odoo import Command
-from odoo.tests import new_test_user
+from odoo.tests import Form, new_test_user
 from odoo.tests.common import HttpCase, TransactionCase, tagged
 
 from odoo.exceptions import ValidationError
@@ -466,3 +466,74 @@ class TestHolidaysOvertime(HttpCase, TransactionCase):
 
         leave.action_refuse()
         self.assertEqual(self.employee.total_overtime, 0, 'Should have 0 hours of overtime as the leave has been refused.')
+
+    def test_leave_excludes_public_holiday_overtime(self):
+        """
+        Test that public holidays are excluded from overtime rules for employees on leave,
+        and that the correct rules are applied for both public holidays and leaves when they overlap.
+        """
+        with freeze_time("2026-1-13 12:00:00"):
+            self.env.user.tz = 'UTC'
+
+            with Form(self.env['resource.calendar.leaves'].with_company(self.company)) as holiday:
+                holiday.name = 'Test Holiday'
+                holiday.date_from = datetime(2026, 1, 13, 0, 0)
+                holiday.save()
+
+            ruleset = self.env['hr.attendance.overtime.ruleset'].with_company(self.company).create({
+                'name': 'Test Ruleset',
+            })
+            holiday_rule = self.env['hr.attendance.overtime.rule'].with_company(self.company).create({
+                'name': 'Holiday rule',
+                'base_off': 'timing',
+                'timing_type': 'public_leave',
+                'timing_start': 0,
+                'timing_stop': 24,
+                'ruleset_id': ruleset.id,
+            })
+            leave_rule = self.env['hr.attendance.overtime.rule'].with_company(self.company).create({
+                'name': 'Leave rule',
+                'base_off': 'timing',
+                'timing_type': 'leave',
+                'timing_start': 0,
+                'timing_stop': 24,
+                'ruleset_id': ruleset.id,
+            })
+            employee = self.env['hr.employee'].with_company(self.company).create({
+                'name': 'Test Employee',
+                'ruleset_id': ruleset.id,
+            })
+
+            leave = self.env['hr.leave'].create({
+                'name': 'Personal Day',
+                'employee_id': employee.id,
+                'work_entry_type_id': self.regular_leave_type.id,
+                'request_date_from': datetime(2026, 1, 12),
+                'request_date_to': datetime(2026, 1, 14),
+            })
+            leave.action_approve()
+
+            self.env['hr.attendance'].create([
+                {
+                    'employee_id': employee.id,
+                    'check_in': datetime(2026, 1, 13, 8, 0),
+                    'check_out': datetime(2026, 1, 13, 16, 0),
+                },
+                {
+                    'employee_id': employee.id,
+                    'check_in': datetime(2026, 1, 14, 8, 0),
+                    'check_out': datetime(2026, 1, 14, 16, 0),
+                },
+            ])
+
+            overtime_holiday = self.env['hr.attendance.overtime.line'].search([('employee_id', '=', employee.id), ('date', '=', date(2026, 1, 13))])
+            self.assertTrue(overtime_holiday, 'Employee should have overtime records for that day')
+            self.assertEqual(len(overtime_holiday), 1, 'Only one overtime record should exist for that employee on that day')
+            self.assertEqual(len(overtime_holiday.rule_ids), 1, 'Only one overtime rule should be linked to the overtime record')
+            self.assertEqual(overtime_holiday.rule_ids.id, holiday_rule.id, 'The overtime should be linked to the public holiday rule and not the non-working day rule')
+
+            overtime_leave = self.env['hr.attendance.overtime.line'].search([('employee_id', '=', employee.id), ('date', '=', date(2026, 1, 14))])
+            self.assertTrue(overtime_leave, 'Employee should have overtime records for that day')
+            self.assertEqual(len(overtime_leave), 1, 'Only one overtime record should exist for that employee on that day')
+            self.assertEqual(len(overtime_leave.rule_ids), 1, 'Only one overtime rule should be linked to the overtime record')
+            self.assertEqual(overtime_leave.rule_ids.id, leave_rule.id, 'The overtime should be linked to the leave rule and not the public holiday rule')
