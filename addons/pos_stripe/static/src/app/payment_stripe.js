@@ -185,7 +185,10 @@ export class PaymentStripe extends PaymentInterface {
                     line.card_type = captured_card_type;
                     line.transaction_id = captured_transaction_id;
                 } else {
-                    await this.captureAfterPayment(processPayment, line);
+                    if (!(await this.captureAfterPayment(processPayment, line))) {
+                        line.setPaymentStatus("retry");
+                        return false;
+                    }
                 }
 
                 line.setPaymentStatus("done");
@@ -223,12 +226,16 @@ export class PaymentStripe extends PaymentInterface {
 
     async captureAfterPayment(processPayment, line) {
         const capturePayment = await this.capturePayment(processPayment.paymentIntent.id);
+        if (!capturePayment) {
+            return false;
+        }
         if (capturePayment.charges) {
             line.card_type = this.getCardBrandFromPaymentMethodDetails(
                 capturePayment.charges.data[0].payment_method_details
             );
         }
         line.transaction_id = capturePayment.id;
+        return true;
     }
 
     async capturePayment(paymentIntentId) {
