@@ -352,6 +352,7 @@ class ResCompany(models.Model):
         return fields.Datetime.to_datetime(closing.date)
 
     def _set_category_defaults(self):
+        super()._set_category_defaults()
         for company in self:
             self.env['ir.default'].set('product.category', 'property_valuation', company.inventory_valuation, company_id=company.id)
             self.env['ir.default'].set('product.category', 'property_cost_method', company.cost_method, company_id=company.id)
