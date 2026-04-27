@@ -4,8 +4,16 @@ import { _t } from "@web/core/l10n/translation";
 
 patch(OrderDetailsDialog.prototype, {
     getOrderFields() {
+        const order = this.props.order;
         const fields = super.getOrderFields();
-        fields.find((f) => f.label === _t("Served By")).value = this.props.order.employee_id.name;
+
+        const servedBy = fields.find((f) => f.label === _t("Served By"));
+        if (servedBy && order.employee_id) {
+            Object.assign(servedBy, {
+                value: order.employee_id.name,
+            });
+        }
+
         return fields;
     },
 });
