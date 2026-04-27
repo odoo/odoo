@@ -2390,7 +2390,7 @@ class AccountMove(models.Model):
             invoice_ids=tuple(self.ids),
         ))) if self.ids else {}
         for move in self:
-            move.reconciled_payment_ids = self.env['account.payment'].browse(invoice_payment_links.get(move.id)) | move.matched_payment_ids
+            move.reconciled_payment_ids = self.env['account.payment'].browse(invoice_payment_links.get(move.id))._filtered_access('read') | move.matched_payment_ids
 
     def _search_next_payment_date(self, operator, value):
         if operator not in ('in', '<', '<='):
