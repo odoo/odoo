@@ -241,6 +241,16 @@ class AccountJournal(models.Model):
         self_sudo = self.sudo()
 
         if not self_sudo.l10n_sa_compliance_csid_json or not self_sudo.l10n_sa_compliance_csid_certificate_id or not self_sudo.l10n_sa_compliance_checks_passed:
+            _logger.warning(
+                "ZATCA_ERROR: Production CSID precheck failed for journal=%s (id=%s, company_id=%s): "
+                "has_compliance_json=%s, has_compliance_cert=%s, compliance_checks_passed=%s",
+                self.display_name,
+                self.id,
+                self.company_id.id,
+                bool(self_sudo.l10n_sa_compliance_csid_json),
+                bool(self_sudo.l10n_sa_compliance_csid_certificate_id),
+                self_sudo.l10n_sa_compliance_checks_passed,
+            )
             raise UserError(str(ERROR_MESSAGE))
 
         renew = False
@@ -297,6 +307,12 @@ class AccountJournal(models.Model):
         if self.country_code != 'SA':
             raise UserError(_("Please change the (%s)'s country to Saudi Arabia and try again.", self.company_id.name))
         if not self_sudo.l10n_sa_compliance_csid_json or not self_sudo.l10n_sa_compliance_csid_certificate_id:
+            _logger.warning(
+                "ZATCA_ERROR: Compliance-check precheck failed for journal=%s (id=%s, company_id=%s): missing compliance CSID data",
+                self.display_name,
+                self.id,
+                self.company_id.id,
+            )
             raise UserError(str(ERROR_MESSAGE))
         CCSID_data = json.loads(self_sudo.l10n_sa_compliance_csid_json)
         compliance_files = self._l10n_sa_get_compliance_files()
@@ -307,11 +323,28 @@ class AccountJournal(models.Model):
             prepared_xml = self._l10n_sa_prepare_compliance_xml(fname, fval, self_sudo.l10n_sa_compliance_csid_certificate_id, digital_signature)
             result = self._l10n_sa_api_compliance_checks(prepared_xml.decode(), CCSID_data)
             if result.get('error'):
+                _logger.warning(
+                    "ZATCA_ERROR: Compliance API returned an error for journal=%s (id=%s, company_id=%s, file=%s, error=%s)",
+                    self.display_name,
+                    self.id,
+                    self.company_id.id,
+                    fname,
+                    result.get('error'),
+                )
                 raise UserError(Markup("<p class='mb-0'>%s</p>") % (str(ERROR_MESSAGE)))
             if result['validationResults']['status'] == 'WARNING':
                 warnings = Markup().join(Markup("<li><b>%(code)s</b>: %(message)s </li>") % e for e in result['validationResults']['warningMessages'])
                 self.l10n_sa_csr_errors = Markup("<br/><br/><ul class='pl-3'><b>%s</b>%s</ul>") % (_("Warnings:"), warnings)
             elif result['validationResults']['status'] != 'PASS':
+                _logger.warning(
+                    "ZATCA_ERROR: Compliance validation failed for journal=%s (id=%s, company_id=%s, file=%s, status=%s, error_messages=%s)",
+                    self.display_name,
+                    self.id,
+                    self.company_id.id,
+                    fname,
+                    result['validationResults'].get('status'),
+                    result['validationResults'].get('errorMessages'),
+                )
                 raise UserError(Markup("<p class='mb-0'>%s</p>") % (str(ERROR_MESSAGE)))
         self.l10n_sa_compliance_checks_passed = True
 
@@ -408,6 +441,12 @@ class AccountJournal(models.Model):
         if not otp:
             raise UserError(_("The OTP is invalid. Please try again."))
         if not self.l10n_sa_csr:
+            _logger.warning(
+                "ZATCA_ERROR: CCSID request precheck failed for journal=%s (id=%s, company_id=%s): CSR missing",
+                self.display_name,
+                self.id,
+                self.company_id.id,
+            )
             raise UserError(str(ERROR_MESSAGE))
         request_data = {
             'body': json.dumps({'csr': self.l10n_sa_csr.decode()}),
@@ -522,6 +561,15 @@ class AccountJournal(models.Model):
         self.ensure_one()
         self_sudo = self.sudo()
         if not self_sudo.l10n_sa_production_csid_json or not self_sudo.l10n_sa_production_csid_certificate_id:
+            _logger.info(
+                "ZATCA_ERROR: PCSID retrieval precheck failed for journal=%s (id=%s, company_id=%s): "
+                "has_production_json=%s, has_production_cert=%s",
+                self.display_name,
+                self.id,
+                self.company_id.id,
+                bool(self_sudo.l10n_sa_production_csid_json),
+                bool(self_sudo.l10n_sa_production_csid_certificate_id),
+            )
             raise UserError(str(ERROR_MESSAGE))
         certificate = self_sudo.l10n_sa_production_csid_certificate_id
         if not certificate.is_valid and self.company_id.l10n_sa_api_mode != 'sandbox':
