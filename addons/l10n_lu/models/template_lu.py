@@ -12,7 +12,7 @@ class AccountChartTemplate(models.AbstractModel):
             'property_account_receivable_id': 'lu_2011_account_4011',
             'property_account_payable_id': 'lu_2011_account_44111',
             'property_account_expense_categ_id': 'lu_2011_account_6061',
-            'property_account_income_categ_id': 'lu_2020_account_703001',
+            'property_account_income_categ_id': 'lu_2020_account_703',
             'property_stock_account_input_categ_id': 'lu_2011_account_321',
             'property_stock_account_output_categ_id': 'lu_2011_account_321',
             'property_stock_valuation_account_id': 'lu_2011_account_301',
