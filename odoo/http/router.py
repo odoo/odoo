@@ -37,7 +37,7 @@ from odoo.modules.module import (
     initialize_sys_path,
 )
 from odoo.modules.registry import Registry
-from odoo.tools import config, file_path, profiler, real_time
+from odoo.tools import config, file_open, file_path, profiler, real_time
 from odoo.tools.misc import submap
 
 if typing.TYPE_CHECKING:
@@ -49,16 +49,6 @@ if typing.TYPE_CHECKING:
     from .routing_map import Endpoint
 
 _logger = logging.getLogger('odoo.http')
-
-NOT_FOUND_NODB = """\
-<!DOCTYPE html>
-<title>404 Not Found</title>
-<h1>Not Found</h1>
-<p>No database is selected and the requested URL was not found in the server-wide controllers.</p>
-<p>Please verify the hostname, <a href=/web/login>login</a> and try again.</p>
-
-<!-- Alternatively, use the X-Odoo-Database header. -->
-"""
 
 
 def db_list(force: bool = False, host: str | None = None) -> list[str]:
@@ -359,9 +349,8 @@ def serve_nodb(request: Request) -> Response:
         try:
             rule, args = router.match(return_rule=True)
         except NotFound as exc:
-            exc.response = Response(NOT_FOUND_NODB, status=exc.code, headers=[
-                ('Content-Type', 'text/html; charset=utf-8'),
-            ])
+            with file_open(f'{__file__}/../not_found_nodb.html', 'rb') as f:
+                exc.response = Response(f.read(), status=exc.code, mimetype='text/html')
             raise
         _set_request_dispatcher(request, rule)
         request.dispatcher.pre_dispatch(rule, args)
