@@ -1,35 +1,35 @@
 from odoo import fields, models
 
 
-class TestSearchInitialRelation(models.Model):
-    _name = 'test_search.initial_rel'
-    _description = 'Test Search Model Initial Relation'
+class TestOrmSearchTopRelation(models.Model):
+    _name = 'test_orm.search.top_rel'
+    _description = 'Test Search Model Top Relation'
 
-    m2o_id = fields.Many2one('test_search.intermediate_rel')
-    m2o_required_id = fields.Many2one('test_search.intermediate_rel', required=True)
-
-
-class TestSearchIntermediateRelation(models.Model):
-    _name = 'test_search.intermediate_rel'
-    _description = 'Test Search Model Intermediate Relation'
-
-    name = fields.Char()
-
-    o2m_ids = fields.One2many('test_search.initial_rel', 'm2o_id')
-    o2m_required_ids = fields.One2many('test_search.initial_rel', 'm2o_required_id')
-
-    m2o_id = fields.Many2one('test_search.last_rel')
-    m2o_required_id = fields.Many2one('test_search.last_rel', required=True)
+    mid_rel_id = fields.Many2one('test_orm.search.mid_rel')
+    mid_rel_req_id = fields.Many2one('test_orm.search.mid_rel', required=True)
 
 
-class TestSearchLastRelation(models.Model):
-    _name = 'test_search.last_rel'
-    _description = 'Test Search Model Last Relation'
+class TestOrmSearchMiddleRelation(models.Model):
+    _name = 'test_orm.search.mid_rel'
+    _description = 'Test Search Model Middle Relation'
 
     name = fields.Char()
 
-    o2m_ids = fields.One2many('test_search.intermediate_rel', 'm2o_id')
-    o2m_required_ids = fields.One2many('test_search.intermediate_rel', 'm2o_required_id')
+    top_rel_ids = fields.One2many('test_orm.search.top_rel', 'mid_rel_id')
+    top_rel_req_ids = fields.One2many('test_orm.search.top_rel', 'mid_rel_req_id')
+
+    bot_rel_id = fields.Many2one('test_orm.search.bot_rel')
+    bot_rel_req_id = fields.Many2one('test_orm.search.bot_rel', required=True)
+
+
+class TestOrmSearchBottomRelation(models.Model):
+    _name = 'test_orm.search.bot_rel'
+    _description = 'Test Search Model Bottom Relation'
+
+    name = fields.Char()
+
+    mid_rel_ids = fields.One2many('test_orm.search.mid_rel', 'bot_rel_id')
+    mid_rel_req_ids = fields.One2many('test_orm.search.mid_rel', 'bot_rel_req_id')
 
 
 class TestOrmSearchOrderAlpha(models.Model):

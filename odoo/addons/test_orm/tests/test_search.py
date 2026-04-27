@@ -1966,104 +1966,104 @@ class TestNonIntId(TransactionCase):
 @tagged('at_install', '-post_install')
 class TestMany2oneJoin(TransactionCase):
     def test_many2one_single_join_on_required_field(self):
-        self.assertTrue(self.registry['test_search.initial_rel'].m2o_required_id.required)
+        self.assertTrue(self.registry['test_orm.search.top_rel'].mid_rel_req_id.required)
 
-        # Since `initial_rel.m2o_required_id` is required, it should use a LEFT JOIN.
+        # Since `top_rel.mid_rel_req_id` is required, it should use a LEFT JOIN.
         with self.assertQueries(["""
-              SELECT "test_search_initial_rel"."id"
-                FROM "test_search_initial_rel"
-                JOIN "test_search_intermediate_rel" AS "test_search_initial_rel__m2o_required_id"
-                  ON ("test_search_initial_rel"."m2o_required_id" = "test_search_initial_rel__m2o_required_id"."id")
-               WHERE "test_search_initial_rel__m2o_required_id"."name" LIKE %s
-            ORDER BY "test_search_initial_rel"."id"
+              SELECT "test_orm_search_top_rel"."id"
+                FROM "test_orm_search_top_rel"
+                JOIN "test_orm_search_mid_rel" AS "test_orm_search_top_rel__mid_rel_req_id"
+                  ON ("test_orm_search_top_rel"."mid_rel_req_id" = "test_orm_search_top_rel__mid_rel_req_id"."id")
+               WHERE "test_orm_search_top_rel__mid_rel_req_id"."name" LIKE %s
+            ORDER BY "test_orm_search_top_rel"."id"
         """]):
-            self.env['test_search.initial_rel'].search([('m2o_required_id.name', 'like', 'test')])
+            self.env['test_orm.search.top_rel'].search([('mid_rel_req_id.name', 'like', 'test')])
 
     def test_many2one_single_join_on_optional_field(self):
-        self.assertFalse(self.registry['test_search.initial_rel'].m2o_id.required)
+        self.assertFalse(self.registry['test_orm.search.top_rel'].mid_rel_id.required)
 
-        # Since `initial_rel.m2o_id` is optional, it should use a JOIN.
+        # Since `top_rel.mid_rel_id` is optional, it should use a JOIN.
         with self.assertQueries(["""
-               SELECT "test_search_initial_rel"."id"
-                 FROM "test_search_initial_rel"
-            LEFT JOIN "test_search_intermediate_rel" AS "test_search_initial_rel__m2o_id"
-                   ON ("test_search_initial_rel"."m2o_id" = "test_search_initial_rel__m2o_id"."id")
-                WHERE ("test_search_initial_rel"."m2o_id" IS NOT NULL
-                  AND "test_search_initial_rel__m2o_id"."name" LIKE %s)
-             ORDER BY "test_search_initial_rel"."id"
+               SELECT "test_orm_search_top_rel"."id"
+                 FROM "test_orm_search_top_rel"
+            LEFT JOIN "test_orm_search_mid_rel" AS "test_orm_search_top_rel__mid_rel_id"
+                   ON ("test_orm_search_top_rel"."mid_rel_id" = "test_orm_search_top_rel__mid_rel_id"."id")
+                WHERE ("test_orm_search_top_rel"."mid_rel_id" IS NOT NULL
+                  AND "test_orm_search_top_rel__mid_rel_id"."name" LIKE %s)
+             ORDER BY "test_orm_search_top_rel"."id"
         """]):
-            self.env['test_search.initial_rel'].search([('m2o_id.name', 'like', 'test')])
+            self.env['test_orm.search.top_rel'].search([('mid_rel_id.name', 'like', 'test')])
 
-    def test_many2one_double_join_on_required_fields(self):
-        self.assertTrue(self.registry['test_search.initial_rel'].m2o_required_id.required)
-        self.assertTrue(self.registry['test_search.intermediate_rel'].m2o_required_id.required)
+    def test_many2one_double_join_on_req_fields(self):
+        self.assertTrue(self.registry['test_orm.search.top_rel'].mid_rel_req_id.required)
+        self.assertTrue(self.registry['test_orm.search.mid_rel'].bot_rel_req_id.required)
 
-        # Since both `initial_rel.m2o_required_id` and `intermediate_rel.m2o_required_id` are required, it should use JOIN twice.
+        # Since both `rop_rel.mid_rel_req_id` and `mid_rel.bot_rel_req_id` are required, it should use JOIN twice.
         with self.assertQueries(["""
-              SELECT "test_search_initial_rel"."id"
-                FROM "test_search_initial_rel"
-                JOIN "test_search_intermediate_rel" AS "test_search_initial_rel__m2o_required_id"
-                  ON ("test_search_initial_rel"."m2o_required_id" = "test_search_initial_rel__m2o_required_id"."id")
-                JOIN "test_search_last_rel" AS "test_search_initial_rel__m2o_required_id__m2o_required_id"
-                  ON ("test_search_initial_rel__m2o_required_id"."m2o_required_id" = "test_search_initial_rel__m2o_required_id__m2o_required_id"."id")
-               WHERE "test_search_initial_rel__m2o_required_id__m2o_required_id"."name" ILIKE %s
-            ORDER BY "test_search_initial_rel"."id"
+              SELECT "test_orm_search_top_rel"."id"
+                FROM "test_orm_search_top_rel"
+                JOIN "test_orm_search_mid_rel" AS "test_orm_search_top_rel__mid_rel_req_id"
+                  ON ("test_orm_search_top_rel"."mid_rel_req_id" = "test_orm_search_top_rel__mid_rel_req_id"."id")
+                JOIN "test_orm_search_bot_rel" AS "test_orm_search_top_rel__mid_rel_req_id__bot_rel_req_id"
+                  ON ("test_orm_search_top_rel__mid_rel_req_id"."bot_rel_req_id" = "test_orm_search_top_rel__mid_rel_req_id__bot_rel_req_id"."id")
+               WHERE "test_orm_search_top_rel__mid_rel_req_id__bot_rel_req_id"."name" ILIKE %s
+            ORDER BY "test_orm_search_top_rel"."id"
         """]):
-            self.env['test_search.initial_rel'].search([('m2o_required_id.m2o_required_id.name', 'ilike', 'test')])
+            self.env['test_orm.search.top_rel'].search([('mid_rel_req_id.bot_rel_req_id.name', 'ilike', 'test')])
 
     def test_many2one_double_join_on_mixed_fields(self):
-        self.assertTrue(self.registry['test_search.initial_rel'].m2o_required_id.required)
-        self.assertFalse(self.registry['test_search.intermediate_rel'].m2o_id.required)
+        self.assertTrue(self.registry['test_orm.search.top_rel'].mid_rel_req_id.required)
+        self.assertFalse(self.registry['test_orm.search.mid_rel'].bot_rel_id.required)
 
-        # Since `initial_rel.m2o_required_id` is required and `intermediate_rel.m2o_id` is optional,
+        # Since `top_rel.mid_rel_req_id` is required and `mid_rel.bot_rel_req_id` is optional,
         # it should use a JOIN and then a LEFT JOIN.
         with self.assertQueries(["""
-               SELECT "test_search_initial_rel"."id"
-                 FROM "test_search_initial_rel"
-                 JOIN "test_search_intermediate_rel" AS "test_search_initial_rel__m2o_required_id"
-                   ON ("test_search_initial_rel"."m2o_required_id" = "test_search_initial_rel__m2o_required_id"."id")
-            LEFT JOIN "test_search_last_rel" AS "test_search_initial_rel__m2o_required_id__m2o_id"
-                   ON ("test_search_initial_rel__m2o_required_id"."m2o_id" = "test_search_initial_rel__m2o_required_id__m2o_id"."id")
-                WHERE ("test_search_initial_rel__m2o_required_id"."m2o_id" IS NOT NULL
-                  AND "test_search_initial_rel__m2o_required_id__m2o_id"."name" ILIKE %s)
-             ORDER BY "test_search_initial_rel"."id"
+               SELECT "test_orm_search_top_rel"."id"
+                 FROM "test_orm_search_top_rel"
+                 JOIN "test_orm_search_mid_rel" AS "test_orm_search_top_rel__mid_rel_req_id"
+                   ON ("test_orm_search_top_rel"."mid_rel_req_id" = "test_orm_search_top_rel__mid_rel_req_id"."id")
+            LEFT JOIN "test_orm_search_bot_rel" AS "test_orm_search_top_rel__mid_rel_req_id__bot_rel_id"
+                   ON ("test_orm_search_top_rel__mid_rel_req_id"."bot_rel_id" = "test_orm_search_top_rel__mid_rel_req_id__bot_rel_id"."id")
+                WHERE ("test_orm_search_top_rel__mid_rel_req_id"."bot_rel_id" IS NOT NULL
+                  AND "test_orm_search_top_rel__mid_rel_req_id__bot_rel_id"."name" ILIKE %s)
+             ORDER BY "test_orm_search_top_rel"."id"
         """]):
-            self.env['test_search.initial_rel'].search([('m2o_required_id.m2o_id.name', 'ilike', 'test')])
+            self.env['test_orm.search.top_rel'].search([('mid_rel_req_id.bot_rel_id.name', 'ilike', 'test')])
 
-        self.assertFalse(self.registry['test_search.initial_rel'].m2o_id.required)
-        self.assertTrue(self.registry['test_search.intermediate_rel'].m2o_required_id.required)
+        self.assertFalse(self.registry['test_orm.search.top_rel'].mid_rel_id.required)
+        self.assertTrue(self.registry['test_orm.search.mid_rel'].bot_rel_req_id.required)
 
-        # Since `initial_rel.m2o_required_id` is required and `intermediate_rel.m2o_id` is optional,
+        # Since `top_rel.mid_rel_id` is required and `mid_rel.bot_rel_req_id` is optional,
         # it should use LEFT JOIN twice as we can not optimize the second LEFT JOIN to JOIN.
         # See commit odoo/odoo#239467
         with self.assertQueries(["""
-               SELECT "test_search_initial_rel"."id"
-                 FROM "test_search_initial_rel"
-            LEFT JOIN "test_search_intermediate_rel" AS "test_search_initial_rel__m2o_id"
-                   ON ("test_search_initial_rel"."m2o_id" = "test_search_initial_rel__m2o_id"."id")
-            LEFT JOIN "test_search_last_rel" AS "test_search_initial_rel__m2o_id__m2o_required_id"
-                   ON ("test_search_initial_rel__m2o_id"."m2o_required_id" = "test_search_initial_rel__m2o_id__m2o_required_id"."id")
-                WHERE ("test_search_initial_rel"."m2o_id" IS NOT NULL
-                  AND "test_search_initial_rel__m2o_id__m2o_required_id"."name" ILIKE %s)
-             ORDER BY "test_search_initial_rel"."id"
+               SELECT "test_orm_search_top_rel"."id"
+                 FROM "test_orm_search_top_rel"
+            LEFT JOIN "test_orm_search_mid_rel" AS "test_orm_search_top_rel__mid_rel_id"
+                   ON ("test_orm_search_top_rel"."mid_rel_id" = "test_orm_search_top_rel__mid_rel_id"."id")
+            LEFT JOIN "test_orm_search_bot_rel" AS "test_orm_search_top_rel__mid_rel_id__bot_rel_req_id"
+                   ON ("test_orm_search_top_rel__mid_rel_id"."bot_rel_req_id" = "test_orm_search_top_rel__mid_rel_id__bot_rel_req_id"."id")
+                WHERE ("test_orm_search_top_rel"."mid_rel_id" IS NOT NULL
+                  AND "test_orm_search_top_rel__mid_rel_id__bot_rel_req_id"."name" ILIKE %s)
+             ORDER BY "test_orm_search_top_rel"."id"
         """]):
-            self.env['test_search.initial_rel'].search([('m2o_id.m2o_required_id.name', 'ilike', 'test')])
+            self.env['test_orm.search.top_rel'].search([('mid_rel_id.bot_rel_req_id.name', 'ilike', 'test')])
 
     def test_many2one_double_join_on_optional_fields(self):
-        self.assertFalse(self.registry['test_search.initial_rel'].m2o_id.required)
-        self.assertFalse(self.registry['test_search.intermediate_rel'].m2o_id.required)
+        self.assertFalse(self.registry['test_orm.search.top_rel'].mid_rel_id.required)
+        self.assertFalse(self.registry['test_orm.search.mid_rel'].bot_rel_id.required)
 
-        # Since both `initial_rel.m2o_id` and `intermediate_rel.m2o_id` are optional, it should use LEFT JOIN twice.
+        # Since both `top_rel.mid_rel_id` and `mid_rel.bot_rel_id` are optional, it should use LEFT JOIN twice.
         with self.assertQueries(["""
-               SELECT "test_search_initial_rel"."id"
-                 FROM "test_search_initial_rel"
-            LEFT JOIN "test_search_intermediate_rel" AS "test_search_initial_rel__m2o_id"
-                   ON ("test_search_initial_rel"."m2o_id" = "test_search_initial_rel__m2o_id"."id")
-            LEFT JOIN "test_search_last_rel" AS "test_search_initial_rel__m2o_id__m2o_id"
-                   ON ("test_search_initial_rel__m2o_id"."m2o_id" = "test_search_initial_rel__m2o_id__m2o_id"."id")
-                WHERE ("test_search_initial_rel"."m2o_id" IS NOT NULL
-                  AND ("test_search_initial_rel__m2o_id"."m2o_id" IS NOT NULL
-                      AND "test_search_initial_rel__m2o_id__m2o_id"."name" ILIKE %s))
-             ORDER BY "test_search_initial_rel"."id"
+               SELECT "test_orm_search_top_rel"."id"
+                 FROM "test_orm_search_top_rel"
+            LEFT JOIN "test_orm_search_mid_rel" AS "test_orm_search_top_rel__mid_rel_id"
+                   ON ("test_orm_search_top_rel"."mid_rel_id" = "test_orm_search_top_rel__mid_rel_id"."id")
+            LEFT JOIN "test_orm_search_bot_rel" AS "test_orm_search_top_rel__mid_rel_id__bot_rel_id"
+                   ON ("test_orm_search_top_rel__mid_rel_id"."bot_rel_id" = "test_orm_search_top_rel__mid_rel_id__bot_rel_id"."id")
+                WHERE ("test_orm_search_top_rel"."mid_rel_id" IS NOT NULL
+                  AND ("test_orm_search_top_rel__mid_rel_id"."bot_rel_id" IS NOT NULL
+                      AND "test_orm_search_top_rel__mid_rel_id__bot_rel_id"."name" ILIKE %s))
+             ORDER BY "test_orm_search_top_rel"."id"
         """]):
-            self.env['test_search.initial_rel'].search([('m2o_id.m2o_id.name', 'ilike', 'test')])
+            self.env['test_orm.search.top_rel'].search([('mid_rel_id.bot_rel_id.name', 'ilike', 'test')])
