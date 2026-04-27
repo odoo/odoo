@@ -10,7 +10,7 @@ export class TranslateLinkInlinePlugin extends Plugin {
             this.markTranslateInline(container);
             return container;
         },
-        on_replaced_media_handlers: ({ newMediaEl }) => {
+        on_media_replaced_handlers: ({ newMediaEl }) => {
             this.markTranslateInline(newMediaEl);
         },
     };
