@@ -7,7 +7,7 @@ class TestUblImportBis3InvoiceBEDecodeInvoiceLine(TestUblImportBis3InvoiceBE):
 
     def test_partial_import_invoice_line_name_and_description(self):
         invoice = self._import_invoice_as_attachment_on(test_name='test_partial_import_invoice_line_name_and_description')
-        self.assertRecordValues(invoice.invoice_line_ids, [{'name': 'description value'}])
+        self.assertRecordValues(invoice.invoice_line_ids, [{'name': 'name value\ndescription value'}])
 
     def test_partial_import_invoice_line_empty_description(self):
         invoice = self._import_invoice_as_attachment_on(test_name='test_partial_import_invoice_line_empty_description')
