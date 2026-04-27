@@ -23,7 +23,6 @@ class TestHrAttendancePerformance(TransactionCase):
         cls.env.user.company_id = cls.env['res.company'].create({'name': 'Flower Corporation', 'tz': 'Europe/Brussels'})
         cls.calendar_38h = cls.env['resource.calendar'].create({
             'name': 'Standard 38 hours/week',
-            'company_id': False,
             'hours_per_day': 7.6,
             'attendance_ids': [(5, 0, 0),
                 (0, 0, {'dayofweek': '0', 'hour_from': 8, 'hour_to': 12}),
