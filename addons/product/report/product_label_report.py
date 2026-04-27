@@ -1,6 +1,7 @@
 import markupsafe
 
 from collections import defaultdict
+from types import SimpleNamespace
 
 from odoo import _, models
 from odoo.exceptions import UserError
@@ -213,3 +214,51 @@ class ReportProductReport_Producttemplatelabel_Zpl(models.AbstractModel):
         data['pricelist'] = layout_wizard.pricelist_id
 
         return data
+
+
+class ReportProductPackagingBarcode(models.AbstractModel):
+    _name = 'report.product.report_packagingbarcode'
+    _inherit = 'report.product.label.base'
+    _description = 'Product Packaging Barcode Report'
+
+    def _prepare_label(self, packaging):
+        product = packaging.product_id
+        return {
+            'barcode': packaging.barcode,
+            'identifier_text': packaging.barcode or '',
+            'base_unit_name': '',
+            'base_unit_price': 0,
+            'product_code': product.default_code or '',
+            'currency_id': False,
+            'extra_html': False,
+            'invisible': False,
+            'price': 0,
+            'price_included': False,
+            'title': product.name,
+            'uom_name': packaging.uom_id.name,
+        }
+
+    def _prepare_invisible_label(self):
+        label = super()._prepare_invisible_label()
+        label['uom_name'] = ''
+        return label
+
+    def _prepare_labels(self, docs):
+        return [self._prepare_label(packaging) for packaging in docs]
+
+    def _prepare_data(self, docids, data):
+        docs = self.env['product.uom'].browse(docids)
+        label_pages = self._organize_labels(
+            self._prepare_labels(docs),
+            SimpleNamespace(rows=7, columns=4),
+        )
+        return {
+            'doc_ids': docids,
+            'doc_model': 'product.uom',
+            'docs': docs,
+            'label_pages': label_pages,
+            'page_numbers': len(label_pages),
+        }
+
+    def _get_report_values(self, docids, data):
+        return self._prepare_data(docids, data)
