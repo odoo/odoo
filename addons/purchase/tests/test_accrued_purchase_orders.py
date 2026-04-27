@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo import fields, Command
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
-from odoo.tests import tagged
+from odoo.tests import Form, tagged
 from odoo.exceptions import UserError
 
 
@@ -235,3 +235,9 @@ class TestAccruedPurchaseOrders(AccountTestInvoicingCommon):
             {'debit': 90.0, 'credit': 0.0},
             {'debit': 0.0, 'credit': 90.0},
         ])
+
+    def test_accrued_entries_with_no_date(self):
+        wizard_form = Form(self.wizard)
+        wizard_form.date = False
+        with self.assertRaises(AssertionError):
+            wizard_form.save()
