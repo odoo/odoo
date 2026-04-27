@@ -71,8 +71,8 @@
                 'fade-effect': this.pos.addAnimation and !this.ui.isSmall,
             }">
             <div class="total text-center text-dark"
-                t-att-style="!this.ui.isSmall? 'font-size: 125px;' : ''" >
-                <PriceFormatter price="this.env.utils.formatCurrency(this.currentOrder.totalDue)" />
+                t-att-style="!ui.isSmall? 'font-size: 125px;' : ''" >
+                <PriceFormatter price="this.env.utils.formatCurrency(currentOrder.totalDue * (this.currentCurrency.rate / this.currentOrder.currency.rate), true, this.currentCurrency)" />
             </div>
         </section>
     </t>
@@ -156,7 +156,8 @@
     </t>
 
     <t t-name="point_of_sale.PaymentScreenMethods">
-        <div class="paymentmethods-container" t-att-class="this.ui.isSmall ? 'rounded-3' : 'flex-grow-1'">
+        <t t-set="differentCurrencies" t-value="this.paymentMethodsHaveDifferentCurrencies()" />
+        <div class="paymentmethods-container" t-att-class="ui.isSmall ? 'rounded-3' : 'flex-grow-1'">
         <!-- Add scrollbar if more than 4 payment methods are configured -->
             <div class="paymentmethods gap-1 gap-lg-2" t-att-class="{ 'd-grid p-1 gap-1 overflow-y-auto rounded-3 bg-200': this.ui.isSmall, 'd-flex flex-column gap-lg-2': !this.ui.isSmall }" t-att-style="this.ui.isSmall ? 'max-height: 120px;' : ''">
                 <t t-foreach="this.payment_methods_from_config" t-as="paymentMethod" t-key="paymentMethod.id">
@@ -169,6 +170,7 @@
                             <span class="payment-name" t-out="paymentMethod.name" />
                         </div>
                         <span class="text-muted" t-out="this.pos.getPaymentMethodFmtAmount(paymentMethod, this.currentOrder)"/>
+                        <sapn class="text-muted" t-out="paymentMethod.journal_id.currency_id.name" t-if="paymentMethod.journal_id and paymentMethod.journal_id.currency_id and differentCurrencies" />
                     </div>
                 </t>
             </div>

@@ -77,6 +77,19 @@ export class PosPayment extends Base {
         return this.amount || 0;
     }
 
+    getAmountInCurrency() {
+        if (!this.payment_method_id.journal_id?.currency_id) {
+            return this.amount || 0;
+        }
+        if (!this.amount) {
+            return 0;
+        }
+        return (
+            this.amount *
+            (this.pos_order_id.currency.rate / this.payment_method_id.journal_id.currency_id.rate)
+        );
+    }
+
     getPaymentStatus() {
         return this.payment_status;
     }

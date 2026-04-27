@@ -46,6 +46,13 @@ export class PaymentScreenStatus extends Component {
         return this.props.order;
     }
 
+    get currency() {
+        return (
+            this.order.payment_ids[0]?.payment_method_id.journal_id?.currency_id ||
+            this.order.currency
+        );
+    }
+
     get isRemaining() {
         const isNegative = this.order.totalDue < 0;
         const remainingDue = this.order.remainingDue;
@@ -67,9 +74,17 @@ export class PaymentScreenStatus extends Component {
 
     get amountText() {
         if (!this.isRemaining) {
-            return this.env.utils.formatCurrency(this.order.change);
+            return this.env.utils.formatCurrency(
+                this.order.change * (this.currency.rate / this.order.currency.rate),
+                true,
+                this.currency
+            );
         } else {
-            return this.env.utils.formatCurrency(this.order.remainingDue);
+            return this.env.utils.formatCurrency(
+                this.order.remainingDue * (this.currency.rate / this.order.currency.rate),
+                true,
+                this.currency
+            );
         }
     }
 }
