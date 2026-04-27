@@ -27,4 +27,27 @@
             </group>
         </field>
     </record>
+
+    <record id="hr_attendance_overtime_analysis_list_view" model="ir.ui.view">
+        <field name="name">hr.attendance.overtime.analysis.list</field>
+        <field name="model">hr.attendance.overtime.line</field>
+        <field name="inherit_id" ref="hr_attendance.hr_attendance_overtime_analysis_list_view"/>
+        <field name="arch" type="xml">
+            <field name="rule_ids" position="after">
+                <field name="compensable_as_leave" string="Time Off Eligible" width="200"/>
+            </field>
+        </field>
+    </record>
+
+
+    <record id="hr_attendance_overtime_analysis_view_filter" model="ir.ui.view">
+        <field name="name">hr.attendance.overtime.analysis.view.filter</field>
+        <field name="model">hr.attendance.overtime.line</field>
+        <field name="inherit_id" ref="hr_attendance.hr_attendance_overtime_analysis_view_filter"/>
+        <field name="arch" type="xml">
+            <filter name="pay_rate_gt_0" position="before">
+                <filter string="Time Off Eligible" name="time_off_eligible" domain="[('compensable_as_leave', '=', True)]"/>
+            </filter>
+        </field>
+    </record>
 </odoo>
