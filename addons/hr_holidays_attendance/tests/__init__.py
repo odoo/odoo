@@ -3,3 +3,4 @@
 
 from . import test_holidays_overtime
 from . import test_accrual_allocations
+from . import test_public_leave_time_off_type
