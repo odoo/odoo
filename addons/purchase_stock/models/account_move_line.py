@@ -300,6 +300,7 @@ class AccountMoveLine(models.Model):
                 'account_id': account.id,
                 'analytic_distribution': self.analytic_distribution,
                 'display_type': 'cogs',
+                'tax_ids': [],
             })
         return vals_list
 
