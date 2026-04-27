@@ -183,6 +183,7 @@ test("re-subscribe on reconnect", async () => {
 });
 
 test("pass last notification id on initialization", async () => {
+    patchWithCleanup(session, { bus_info: { last_id: 1 } });
     patchWithCleanup(WebsocketWorker.prototype, {
         _onClientMessage(_client, { action, data }) {
             if (action === "BUS:INITIALIZE_CONNECTION") {
@@ -193,15 +194,7 @@ test("pass last notification id on initialization", async () => {
     });
     const firstEnv = await makeMockEnv();
     startBusService(firstEnv);
-    await expect.waitForSteps(["BUS:INITIALIZE_CONNECTION - 0"]);
-    firstEnv.services.bus_service.addChannel("lambda");
-    await waitForChannels(["lambda"]);
-    MockServer.env["bus.bus"]._sendone("lambda", "notifType", "beta");
-    await waitNotifications([firstEnv, "notifType", "beta"]);
-    restoreRegistry(registry);
-    const secondEnv = await makeMockEnv(null, { makeNew: true });
-    startBusService(secondEnv);
-    await expect.waitForSteps([`BUS:INITIALIZE_CONNECTION - 1`]);
+    await expect.waitForSteps(["BUS:INITIALIZE_CONNECTION - 1"]);
 });
 
 test("websocket disconnects when user logs out", async () => {
@@ -253,7 +246,7 @@ test("websocket connects with URL corresponding to given serverURL", async () =>
     mockWebSocket((ws) => expect.step(ws.url));
     startBusService();
     await expect.waitForSteps([
-        `${serverURL.replace("http", "ws")}/websocket?version=${session.websocket_worker_version}`,
+        `${serverURL.replace("http", "ws")}/websocket?version=${session.bus_info.worker_version}`,
     ]);
 });
 

@@ -4,6 +4,7 @@ import json
 
 from odoo.http import Controller, request, route
 from odoo.http.session import SessionExpiredException
+from odoo.tools.misc import OrderedSet
 
 from ..models.bus import channel_with_db
 from ..websocket import WebsocketConnectionHandler
@@ -37,9 +38,14 @@ class WebsocketController(Controller):
             request.session['is_websocket_session'] = True
         elif 'is_websocket_session' not in request.session:
             raise SessionExpiredException()
-        subscribe_data = request.env["ir.websocket"]._prepare_subscribe_data(channels, last)
-        channels_with_db = [channel_with_db(request.db, c) for c in subscribe_data["channels"]]
-        notifications = request.env["bus.bus"]._poll(channels_with_db, subscribe_data["last"])
+        if not all(isinstance(c, str) for c in channels):
+            e = "bus.Bus only string channels are allowed."
+            raise ValueError(e)
+        channels_with_db = OrderedSet(
+            channel_with_db(request.db, c)
+            for c in self.env["ir.websocket"]._build_bus_channel_list(channels)
+        )
+        notifications = request.env["bus.bus"]._poll(channels_with_db, last)
         return {"channels": channels_with_db, "notifications": notifications}
 
     @route("/websocket/on_closed", type="jsonrpc", auth="public", cors="*")

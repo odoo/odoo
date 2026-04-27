@@ -379,7 +379,7 @@ class ResUsers(models.Model):
 
     def _get_im_status_access_token(self):
         """Return a scoped access token for the `im_status` field. The token is used in
-        `ir_websocket._prepare_subscribe_data` to grant access to presence channels.
+        `ir_websocket._build_bus_channel_list` to grant access to presence channels.
 
         :rtype: str
         """

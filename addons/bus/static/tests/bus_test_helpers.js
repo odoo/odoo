@@ -1,4 +1,4 @@
-import { after, expect, registerDebugInfo } from "@odoo/hoot";
+import { after, before, expect, registerDebugInfo } from "@odoo/hoot";
 import { Deferred } from "@odoo/hoot-mock";
 import {
     MockServer,
@@ -19,6 +19,9 @@ import { on, runAllTimers, waitUntil } from "@odoo/hoot-dom";
 import { registry } from "@web/core/registry";
 import { deepEqual } from "@web/core/utils/objects";
 import { patch } from "@web/core/utils/patch";
+import { session } from "@web/session";
+
+before(() => (session.bus_info = { last_id: 0, worker_version: "saas-19.3" }));
 
 /**
  * @typedef {[

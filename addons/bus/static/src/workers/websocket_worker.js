@@ -59,8 +59,6 @@ export class WebsocketWorker {
      * guaarantee at-most-once delivery.
      */
     seenNotificationIds = new BoundedSet(10_000);
-    /** Number of times the worker has opened a websocket connection */
-    connectCount = 0;
 
     constructor(name) {
         this.active = true;
@@ -292,7 +290,7 @@ export class WebsocketWorker {
         }
         this.newestStartTs = startTs;
         this.websocketURL = websocketURL;
-        this.lastNotificationId = Math.max(this.lastNotificationId, lastNotificationId);
+        this.lastNotificationId ||= lastNotificationId;
         const isCurrentUserKnown = uid !== undefined;
         if (this.isWaitingForNewUID && isCurrentUserKnown) {
             this.isWaitingForNewUID = false;
@@ -422,7 +420,6 @@ export class WebsocketWorker {
      * the connection to open.
      */
     _onWebsocketOpen() {
-        this.connectCount++;
         this._logDebug("_onWebsocketOpen");
         this._updateState(WORKER_STATE.CONNECTED);
         this.broadcast(this.isReconnecting ? "BUS:RECONNECT" : "BUS:CONNECT");
@@ -570,12 +567,10 @@ export class WebsocketWorker {
         const shouldUpdateChannelSubscription =
             allTabsChannelsString !== this.lastChannelSubscription;
         if (force || shouldUpdateChannelSubscription) {
-            // Do not check for outdated state on the first connection: `last_id` comes from
-            // storage, so GC may have already occurred, but this is safe since the page
-            // was actively loaded. Only check on the first subscribe, as notifications
-            // are streamed in real time and cannot be missed during an active connection
-            // (no `lastChannelSubscription`).
-            const check_outdated = this.connectCount > 1 && !this.lastChannelSubscription;
+            // Only check on the first subscribe, as notifications are streamed in real
+            // time and cannot be missed during an active connection (no
+            // `lastChannelSubscription`).
+            const check_outdated = !this.lastChannelSubscription;
             this.lastChannelSubscription = allTabsChannelsString;
             this._sendToServer({
                 event_name: "subscribe",

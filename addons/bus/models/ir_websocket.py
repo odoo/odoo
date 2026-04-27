@@ -36,36 +36,15 @@ class IrWebsocket(models.AbstractModel):
         route and Odoo.sh infrastructure should be updated to reflect it. On top of that, the
         event processing is very time, ressource and error sensitive."""
 
-    def _prepare_subscribe_data(self, channels, last):
-        """
-        Parse the data sent by the client and return the list of channels
-        and the last known notification id. This will be used both by the
-        websocket controller and the websocket request class when the
-        `subscribe` event is received.
-
-        :param typing.List[str] channels: List of channels to subscribe to sent
-            by the client.
-        :param int last: Last known notification sent by the client.
-
-        :return:
-            A dict containing the following keys:
-            - channels (set of str): The list of channels to subscribe to.
-            - last (int): The last known notification id.
-
-        :raise ValueError: If the list of channels is not a list of strings.
-        """
-        if not all(isinstance(c, str) for c in channels):
-            raise ValueError("bus.Bus only string channels are allowed.")
-        # sudo - bus.bus: reading non-sensitive last bus id.
-        last = 0 if last > self.env["bus.bus"].sudo()._bus_last_id() else last
-        return {"channels": OrderedSet(self._build_bus_channel_list(list(channels))), "last": last}
-
-    def _subscribe(self, og_data):
-        data = self._prepare_subscribe_data(og_data["channels"], og_data["last"])
-        dispatch.subscribe(data["channels"], data["last"], self.env.registry.db_name, wsrequest.ws)
+    def _subscribe(self, data):
+        if not all(isinstance(c, str) for c in data["channels"]):
+            e = "bus.Bus only string channels are allowed."
+            raise ValueError(e)
+        all_channels = OrderedSet(self._build_bus_channel_list(data["channels"]))
+        dispatch.subscribe(all_channels, data["last"], self.env.registry.db_name, wsrequest.ws)
         # sudo - bus.bus: checking if last received notification still exists is acceptable.
-        if og_data["check_outdated"] and not self.env["bus.bus"].sudo().search(
-            [("id", "=", og_data["last"])],
+        if data["check_outdated"] and not self.env["bus.bus"].sudo().search(
+            [("id", "=", data["last"])],
         ):
             wsrequest.ws.send_worker_internal_message("bus/subscription_outdated")
 

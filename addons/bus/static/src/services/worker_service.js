@@ -20,8 +20,14 @@ export class WorkerService {
     }
 
     startWorker() {
+        if (!session.bus_info) {
+            console.warn("Worker service cannot start: missing 'session.bus_info'.");
+            this._state = WORKER_STATE.FAILED;
+            this.connectionInitializedDeferred.resolve(false);
+            return;
+        }
         this._state = WORKER_STATE.INITIALIZING;
-        let workerURL = `${this.params.serverURL}/bus/websocket_worker_bundle?v=${session.websocket_worker_version}`;
+        let workerURL = `${this.params.serverURL}/bus/websocket_worker_bundle?v=${session.bus_info.worker_version}`;
         if (this.params.serverURL !== window.origin) {
             // Worker service can be loaded from a different origin than the
             // bundle URL. The Worker expects an URL from this origin, give
@@ -38,7 +44,7 @@ export class WorkerService {
         this._registerHandler((ev) => {
             if (ev.data.type === "BASE:INITIALIZED") {
                 this._state = WORKER_STATE.INITIALIZED;
-                this.connectionInitializedDeferred.resolve();
+                this.connectionInitializedDeferred.resolve(true);
             }
         });
         if (this.isUsingSharedWorker) {
@@ -47,11 +53,11 @@ export class WorkerService {
         this._send("BASE:INIT");
     }
 
-    async ensureWorkerStarted() {
+    ensureWorkerStarted() {
         if (this._state === WORKER_STATE.UNINITIALIZED) {
             this.startWorker();
         }
-        await this.connectionInitializedDeferred;
+        return this.connectionInitializedDeferred;
     }
 
     onInitError(e) {
@@ -63,7 +69,7 @@ export class WorkerService {
             this.startWorker();
         } else if (this._state === WORKER_STATE.INITIALIZING) {
             this._state = WORKER_STATE.FAILED;
-            this.connectionInitializedDeferred.resolve();
+            this.connectionInitializedDeferred.resolve(false);
             console.warn("Worker service failed to initialize: ", e);
         }
     }
@@ -101,6 +107,7 @@ export class WorkerService {
         await this.connectionInitializedDeferred;
         if (this._state === WORKER_STATE.FAILED) {
             console.warn("Worker service failed to initialize, cannot send message.");
+            return;
         }
         this._send(action, data);
     }
@@ -117,6 +124,7 @@ export class WorkerService {
         await this.connectionInitializedDeferred;
         if (this._state === WORKER_STATE.FAILED) {
             console.warn("Worker service failed to initialize, cannot register handler.");
+            return;
         }
         this._registerHandler(handler);
     }
