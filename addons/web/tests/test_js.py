@@ -32,6 +32,253 @@ def _get_filters(test_params):
             filters.append((part_sign, part))
     return sorted(filters)
 
+<<<<<<< d000df0455a4b7f0bf3dd58ed558f3fe6c3aa59e
+||||||| 2744396733bb3ad60813e9e093d67192c0d38b36
+@odoo.tests.tagged('post_install', '-at_install')
+class QunitCommon(odoo.tests.HttpCase):
+
+    def setUp(self):
+        super().setUp()
+        self.qunit_filters = self.get_qunit_filters()
+
+    def get_qunit_regex(self, test_params):
+        filters = _get_filters(test_params)
+        positive = [f'({re.escape(f)}.*)' for sign, f in filters if sign == '+']
+        negative = [f'({re.escape(f)}.*)' for sign, f in filters if sign == '-']
+        filter = ''
+        if filters:
+            positive_re = '|'.join(positive) or '.*'
+            negative_re = '|'.join(negative)
+            negative_re = f'(?!{negative_re})' if negative_re else ''
+            filter = f'^({negative_re})({positive_re})$'
+        return filter
+
+    def get_qunit_filters(self):
+        filter_param = ''
+        filter = self.get_qunit_regex(self._test_params)
+        if filter:
+            url_filter = url_quote_plus(filter)
+            filter_param = f'&filter=/{url_filter}/'
+        return filter_param
+
+    def test_get_qunit_regex(self):
+        f = self.get_qunit_regex([('+', 'utils,mail,-utils > bl1,-utils > bl2')])
+        f2 = self.get_qunit_regex([('+', 'utils'), ('-', 'utils > bl1,utils > bl2'), ('+', 'mail')])
+        self.assertEqual(f, f2)
+        self.assertRegex('utils', f)
+        self.assertRegex('mail', f)
+        self.assertRegex('utils > something', f)
+
+        self.assertNotRegex('utils > bl1', f)
+        self.assertNotRegex('utils > bl2', f)
+        self.assertNotRegex('web', f)
+
+        f2 = self.get_qunit_regex([('+', '-utils > bl1,-utils > bl2')])
+        f3 = self.get_qunit_regex([('-', 'utils > bl1,utils > bl2')])
+        for f in (f2, f3):
+            self.assertRegex('utils', f)
+            self.assertRegex('mail', f)
+            self.assertRegex('utils > something', f)
+            self.assertRegex('web', f)
+
+            self.assertNotRegex('utils > bl1', f)
+            self.assertNotRegex('utils > bl2', f)
+
+@odoo.tests.tagged('post_install', '-at_install')
+class HOOTCommon(odoo.tests.HttpCase):
+
+    def setUp(self):
+        super().setUp()
+        self.hoot_filters = self.get_hoot_filters()
+
+    def _generate_hash(self, test_string):
+        hash = 0
+        for char in test_string:
+            hash = (hash << 5) - hash + ord(char)
+            hash = hash & 0xFFFFFFFF
+        return f'{hash:08x}'
+
+    def get_hoot_filters(self):
+        filters = _get_filters(self._test_params)
+        filter = ''
+        for sign, f in filters:
+            h = self._generate_hash(f)
+            if sign == '-':
+                h = f'-{h}'
+            # Since we don't know if the descriptor we have is a test or a suite, we need to provide the hash for a generic "job"
+            filter += f'&id={h}'
+        return filter
+
+    def test_generate_hoot_hash(self):
+        self.assertEqual(self._generate_hash('@web/core'), 'e39ce9ba')
+        self.assertEqual(self._generate_hash('@web/core/autocomplete'), '69a6561d') # suite
+        self.assertEqual(self._generate_hash('@web/core/autocomplete/open dropdown on input'), 'ee565d54') # test
+
+    def test_get_hoot_filter(self):
+        self._test_params = []
+        self.assertEqual(self.get_hoot_filters(), '')
+        expected = '&id=e39ce9ba&id=-69a6561d'
+        self._test_params = [('+', '@web/core,-@web/core/autocomplete')]
+        self.assertEqual(self.get_hoot_filters(), expected)
+        self._test_params = [('+', '@web/core'), ('-', '@web/core/autocomplete')]
+        self.assertEqual(self.get_hoot_filters(), expected)
+        self._test_params = [('+', '-@web/core/autocomplete,-@web/core/autocomplete2')]
+        self.assertEqual(self.get_hoot_filters(), '&id=-69a6561d&id=-cb246db5')
+        self._test_params = [('-', '-@web/core/autocomplete,-@web/core/autocomplete2')]
+        self.assertEqual(self.get_hoot_filters(), '&id=69a6561d&id=cb246db5')
+
+@odoo.tests.tagged('post_install', '-at_install')
+class WebSuite(QunitCommon, HOOTCommon):
+
+    @odoo.tests.no_retry
+    def test_unit_desktop(self):
+        # Unit tests suite (desktop)
+        self.browser_js(f'/web/tests?headless&loglevel=2&preset=desktop&timeout=15000{self.hoot_filters}', "", "", login='admin', timeout=1800, success_signal="[HOOT] Test suite succeeded", error_checker=unit_test_error_checker)
+
+    @odoo.tests.no_retry
+    def test_hoot(self):
+        # HOOT tests suite
+        self.browser_js(f'/web/static/lib/hoot/tests/index.html?headless&loglevel=2{self.hoot_filters}', "", "", login='admin', timeout=1800, success_signal="[HOOT] Test suite succeeded", error_checker=unit_test_error_checker)
+
+    @odoo.tests.no_retry
+    def test_qunit_desktop(self):
+        # ! DEPRECATED
+        self.browser_js(f'/web/tests/legacy?mod=web{self.qunit_filters}', "", "", login='admin', timeout=1800, success_signal="QUnit test suite done.", error_checker=qunit_error_checker)
+
+    def test_check_suite(self):
+        self._check_forbidden_statements('web.assets_unit_tests')
+        # Checks that no test is using `only` or `debug` as it prevents other tests to be run
+        self._check_only_call('web.qunit_suite_tests')
+=======
+@odoo.tests.tagged('post_install', '-at_install')
+class QunitCommon(odoo.tests.HttpCase):
+
+    def setUp(self):
+        super().setUp()
+        self.qunit_filters = self.get_qunit_filters()
+
+    def get_qunit_regex(self, test_params):
+        filters = _get_filters(test_params)
+        positive = [f'({re.escape(f)}.*)' for sign, f in filters if sign == '+']
+        negative = [f'({re.escape(f)}.*)' for sign, f in filters if sign == '-']
+        filter = ''
+        if filters:
+            positive_re = '|'.join(positive) or '.*'
+            negative_re = '|'.join(negative)
+            negative_re = f'(?!{negative_re})' if negative_re else ''
+            filter = f'^({negative_re})({positive_re})$'
+        return filter
+
+    def get_qunit_filters(self):
+        filter_param = ''
+        filter = self.get_qunit_regex(self._test_params)
+        if filter:
+            url_filter = url_quote_plus(filter)
+            filter_param = f'&filter=/{url_filter}/'
+        return filter_param
+
+    def test_get_qunit_regex(self):
+        f = self.get_qunit_regex([('+', 'utils,mail,-utils > bl1,-utils > bl2')])
+        f2 = self.get_qunit_regex([('+', 'utils'), ('-', 'utils > bl1,utils > bl2'), ('+', 'mail')])
+        self.assertEqual(f, f2)
+        self.assertRegex('utils', f)
+        self.assertRegex('mail', f)
+        self.assertRegex('utils > something', f)
+
+        self.assertNotRegex('utils > bl1', f)
+        self.assertNotRegex('utils > bl2', f)
+        self.assertNotRegex('web', f)
+
+        f2 = self.get_qunit_regex([('+', '-utils > bl1,-utils > bl2')])
+        f3 = self.get_qunit_regex([('-', 'utils > bl1,utils > bl2')])
+        for f in (f2, f3):
+            self.assertRegex('utils', f)
+            self.assertRegex('mail', f)
+            self.assertRegex('utils > something', f)
+            self.assertRegex('web', f)
+
+            self.assertNotRegex('utils > bl1', f)
+            self.assertNotRegex('utils > bl2', f)
+
+@odoo.tests.tagged('post_install', '-at_install')
+class HOOTCommon(odoo.tests.HttpCase):
+
+    def setUp(self):
+        super().setUp()
+        self.hoot_filters = self.get_hoot_filters()
+
+    def _generate_hash(self, test_string):
+        hash = 0
+        for char in test_string:
+            hash = (hash << 5) - hash + ord(char)
+            hash = hash & 0xFFFFFFFF
+        return f'{hash:08x}'
+
+    def get_hoot_filters(self):
+        filters = _get_filters(self._test_params)
+        filter = ''
+        for sign, f in filters:
+            h = self._generate_hash(f)
+            if sign == '-':
+                h = f'-{h}'
+            # Since we don't know if the descriptor we have is a test or a suite, we need to provide the hash for a generic "job"
+            filter += f'&id={h}'
+        return filter
+
+    def _get_canonical_tags_params(self, log=None):
+        result = super()._get_canonical_tags_params(log)
+        if log:
+            message = log.msg
+            if log.args:
+                message = log.msg % log.args
+            if '[HOOT] Test "@' in message:
+                match = re.search(r'\[HOOT\] Test "(@([^/]+)/[^"]+)"', message)
+                if match:
+                    test = match.group(1)
+                    result['params'] = test
+        return result
+
+    def test_generate_hoot_hash(self):
+        self.assertEqual(self._generate_hash('@web/core'), 'e39ce9ba')
+        self.assertEqual(self._generate_hash('@web/core/autocomplete'), '69a6561d') # suite
+        self.assertEqual(self._generate_hash('@web/core/autocomplete/open dropdown on input'), 'ee565d54') # test
+
+    def test_get_hoot_filter(self):
+        self._test_params = []
+        self.assertEqual(self.get_hoot_filters(), '')
+        expected = '&id=e39ce9ba&id=-69a6561d'
+        self._test_params = [('+', '@web/core,-@web/core/autocomplete')]
+        self.assertEqual(self.get_hoot_filters(), expected)
+        self._test_params = [('+', '@web/core'), ('-', '@web/core/autocomplete')]
+        self.assertEqual(self.get_hoot_filters(), expected)
+        self._test_params = [('+', '-@web/core/autocomplete,-@web/core/autocomplete2')]
+        self.assertEqual(self.get_hoot_filters(), '&id=-69a6561d&id=-cb246db5')
+        self._test_params = [('-', '-@web/core/autocomplete,-@web/core/autocomplete2')]
+        self.assertEqual(self.get_hoot_filters(), '&id=69a6561d&id=cb246db5')
+
+@odoo.tests.tagged('post_install', '-at_install')
+class WebSuite(QunitCommon, HOOTCommon):
+
+    @odoo.tests.no_retry
+    def test_unit_desktop(self):
+        # Unit tests suite (desktop)
+        self.browser_js(f'/web/tests?headless&loglevel=2&preset=desktop&timeout=15000{self.hoot_filters}', "", "", login='admin', timeout=1800, success_signal="[HOOT] Test suite succeeded", error_checker=unit_test_error_checker)
+
+    @odoo.tests.no_retry
+    def test_hoot(self):
+        # HOOT tests suite
+        self.browser_js(f'/web/static/lib/hoot/tests/index.html?headless&loglevel=2{self.hoot_filters}', "", "", login='admin', timeout=1800, success_signal="[HOOT] Test suite succeeded", error_checker=unit_test_error_checker)
+
+    @odoo.tests.no_retry
+    def test_qunit_desktop(self):
+        # ! DEPRECATED
+        self.browser_js(f'/web/tests/legacy?mod=web{self.qunit_filters}', "", "", login='admin', timeout=1800, success_signal="QUnit test suite done.", error_checker=qunit_error_checker)
+
+    def test_check_suite(self):
+        self._check_forbidden_statements('web.assets_unit_tests')
+        # Checks that no test is using `only` or `debug` as it prevents other tests to be run
+        self._check_only_call('web.qunit_suite_tests')
+>>>>>>> 79dab02174a9d5c38cf2e51b5b7a90deaa0a421e
 
 class HootCommon(odoo.tests.HttpCase):
     def _check_forbidden_statements(self, bundle):
