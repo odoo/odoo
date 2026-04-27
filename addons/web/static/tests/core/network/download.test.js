@@ -2,10 +2,16 @@ import { after, describe, expect, test } from "@odoo/hoot";
 import { Deferred, mockFetch } from "@odoo/hoot-mock";
 import { allowTranslations } from "@web/../tests/web_test_helpers";
 
-import { download } from "@web/core/network/download";
+import { download, parse } from "@web/core/network/download";
 import { ConnectionLostError, RPCError } from "@web/core/network/rpc";
 
 describe.current.tags("headless");
+
+test("parse: tab character in quoted-string filename is valid per RFC 2616", () => {
+    // HT (\x09) is valid qdtext: TEXT includes LWS which includes HT
+    const result = parse('attachment; filename="\ttabFilename.gif"');
+    expect(result.parameters.filename).toBe("\ttabFilename.gif");
+});
 
 test("handles connection error when behind a server", async () => {
     mockFetch(() => new Response("", { status: 502 }));
