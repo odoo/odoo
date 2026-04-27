@@ -37,6 +37,7 @@ class HrAttendanceOvertimeLine(models.Model):
     is_manager = fields.Boolean(compute="_compute_is_manager")
 
     rule_ids = fields.Many2many("hr.attendance.overtime.rule", string="Applied Rules")
+    ruleset_id = fields.Many2one(related='rule_ids.ruleset_id', string="Applied Rulesets", store=True)
 
     # in payroll: rate, work_entry_type
     # in time_off: convertible_to_time_off
@@ -87,6 +88,16 @@ class HrAttendanceOvertimeLine(models.Model):
 
     def action_refuse(self):
         self.write({'status': 'refused'})
+
+    def action_open_linked_attendance(self):
+        self.ensure_one()
+        return {
+            'name': self.env._('Linked Attendance'),
+            'view_mode': 'form',
+            'res_model': 'hr.attendance',
+            'type': 'ir.actions.act_window',
+            'res_id': self._linked_attendances().id,
+        }
 
     def _linked_attendances(self):
         return self.env['hr.attendance'].search([
