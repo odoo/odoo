@@ -1751,7 +1751,7 @@ class SaleOrderLine(models.Model):
         if not 'accrual_entry_date' in self.env.context:
             return False
         accrual_date = fields.Date.from_string(self.env.context['accrual_entry_date'])
-        return accrual_date < fields.Date.today()
+        return accrual_date and accrual_date < fields.Date.today()
 
     def _get_discounted_price(self):
         self.ensure_one()
