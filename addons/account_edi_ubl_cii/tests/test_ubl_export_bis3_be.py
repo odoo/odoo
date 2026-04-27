@@ -24,6 +24,7 @@ class TestUblExportBis3BE(TestUblBis3Common, TestUblCiiBECommon):
         )
         invoice = self._create_invoice_one_line(
             product_id=product,
+            name='Description of the product',
             partner_id=self.partner_be,
             post=True,
         )
