@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- ── App root ──────────────────────────────────────────────── -->
+    <menuitem id="menu_ksw_commissions_root"
+              name="KSW Commissions"
+              sequence="85"/>
+
+    <!-- ══ 1. Commissions and Other Allowances ══════════════════════ -->
+    <menuitem id="menu_ksw_commissions_section"
+              name="Commissions and Other Allowances"
+              parent="menu_ksw_commissions_root"
+              sequence="10"/>
+
+    <menuitem id="menu_ksw_commissions_my"
+              name="My Subordinates' Sheets"
+              parent="menu_ksw_commissions_section"
+              action="action_ksw_commission_sheet_my"
+              sequence="10"
+              groups="KSW_commissions.group_commission_supervisor"/>
+
+    <menuitem id="menu_ksw_commissions_all"
+              name="All Sheets"
+              parent="menu_ksw_commissions_section"
+              action="action_ksw_commission_sheet_all"
+              sequence="20"
+              groups="KSW_commissions.group_commission_officer"/>
+
+    <menuitem id="menu_ksw_commission_batches"
+              name="Commission Batches"
+              parent="menu_ksw_commissions_section"
+              action="action_ksw_commission_batch"
+              sequence="30"
+              groups="KSW_commissions.group_commission_accountant"/>
+
+    <menuitem id="menu_ksw_commissions_templates"
+              name="Commission Templates"
+              parent="menu_ksw_commissions_section"
+              action="action_ksw_commission_template"
+              sequence="40"
+              groups="KSW_commissions.group_commission_supervisor"/>
+
+    <!-- ══ 2. Driver Commissions ════════════════════════════════════ -->
+    <menuitem id="menu_ksw_driver_section"
+              name="Driver Commissions"
+              parent="menu_ksw_commissions_root"
+              sequence="20"/>
+
+    <menuitem id="menu_ksw_driver_commission"
+              name="Driver Commission Sheets"
+              parent="menu_ksw_driver_section"
+              action="action_ksw_driver_commission_sheet"
+              sequence="10"
+              groups="KSW_commissions.group_commission_supervisor"/>
+
+    <!-- ══ 3. Configuration ══════════════════════════════════════════ -->
+    <menuitem id="menu_ksw_commissions_config"
+              name="Configuration"
+              parent="menu_ksw_commissions_root"
+              sequence="100"
+              groups="KSW_commissions.group_commission_admin"/>
+
+    <menuitem id="menu_ksw_commissions_categories"
+              name="Commission Categories"
+              parent="menu_ksw_commissions_config"
+              action="action_ksw_commission_category"
+              sequence="10"
+              groups="KSW_commissions.group_commission_admin"/>
+
+    <menuitem id="menu_ksw_commissions_sites"
+              name="Work Sites"
+              parent="menu_ksw_commissions_config"
+              action="action_ksw_site"
+              sequence="20"
+              groups="KSW_commissions.group_commission_admin"/>
+
+</odoo>
+
