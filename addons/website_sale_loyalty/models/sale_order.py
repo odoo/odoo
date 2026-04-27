@@ -185,7 +185,6 @@ class SaleOrder(models.Model):
             quantity <= 0
             and order_line.coupon_id
             and order_line.reward_id
-            and order_line.reward_id.reward_type == "discount"
         ):
             # When a reward line is deleted we remove it from the auto claimable rewards
             order_line = order_line.with_context(website_sale_loyalty_delete=True)
