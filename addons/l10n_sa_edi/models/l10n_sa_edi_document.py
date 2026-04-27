@@ -1,3 +1,4 @@
+import logging
 from base64 import b64decode, b64encode
 from datetime import datetime
 from hashlib import sha256
@@ -18,6 +19,8 @@ L10N_SA_DOCUMENT_STATES = [
     ('error', "Error"),
     ('unknown', "Unknown"),
 ]
+
+_logger = logging.getLogger(__name__)
 
 
 class L10nSaEdiDocument(models.Model):
@@ -312,6 +315,15 @@ class L10nSaEdiDocument(models.Model):
         try:
             signed_xml = self._l10n_sa_get_signed_xml(unsigned_xml, certificate_sudo)
         except UserError:
+            _logger.warning(
+                "ZATCA_ERROR: ZATCA signing failed for %s=%s (id=%s, journal_id=%s, company_id=%s, api_mode=%s)",
+                self.res_model,
+                self.resource.display_name,
+                self.res_id,
+                self.journal_id.id,
+                self.company_id.id,
+                self.company_id.l10n_sa_api_mode,
+            )
             return ({
                 'error': self.env._("Something went wrong. Please retry, and if that does not work, then onboard the journal again."),
                 'blocking_level': 'error',
