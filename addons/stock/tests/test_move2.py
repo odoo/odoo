@@ -3476,3 +3476,60 @@ class TestPickShipBackorder(TestStockCommon):
         backorder.action_assign()
         backorder.button_validate()
         self.assertEqual(backorder.state, "done")
+
+    def test_no_internal_note_as_picking_description(self):
+        """ This is to make sure that if a product has an internal note but no description for
+        delivery/receipt/internal pickings, the internal note does not get used as a fallback. """
+        self.productA.write({
+            'description': "THIS SHOULD NEVER APPEAR ON A PICKING",
+            'description_pickingin': "",
+        })
+        picking = self.env['stock.picking'].create({
+            'picking_type_id': self.picking_type_in.id,
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'partner_id': self.partner_1.id,
+            'move_ids': [Command.create({
+                'product_id': self.productA.id,
+                'product_uom_qty': 1,
+                'uom_id': self.productA.uom_id.id,
+                'location_id': self.supplier_location.id,
+                'location_dest_id': self.stock_location.id,
+            })]
+        })
+        self.assertEqual(picking.move_ids.description_picking, self.productA.display_name)
+
+    def test_store_picking_description(self):
+        """ The picking description on each stock move should only be stored in one of 2 conditions:
+        - the picking is done
+        - the description was manually added """
+        self.productA.description_pickingout = "DELIVERY"
+        picking = self.env['stock.picking'].create({
+            'picking_type_id': self.picking_type_out.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'partner_id': self.partner_1.id,
+            'move_ids': [Command.create({
+                'product_id': self.productA.id,
+                'product_uom_qty': 1,
+                'uom_id': self.productA.uom_id.id,
+                'location_id': self.stock_location.id,
+                'location_dest_id': self.customer_location.id,
+            }), Command.create({
+                'product_id': self.productA.id,
+                'product_uom_qty': 1,
+                'uom_id': self.productA.uom_id.id,
+                'location_id': self.stock_location.id,
+                'location_dest_id': self.customer_location.id,
+                'description_picking': "EXTRA DELIVERY",
+            })]
+        })
+        self.assertFalse(picking.move_ids[0].description_picking_manual)
+        self.assertEqual(picking.move_ids[1].description_picking_manual, "EXTRA DELIVERY")
+        picking.action_confirm()
+        self.assertFalse(picking.move_ids[0].description_picking_manual)
+        self.assertEqual(picking.move_ids[1].description_picking_manual, "EXTRA DELIVERY")
+        picking.move_ids.quantity = 1
+        picking.button_validate()
+        self.assertEqual(picking.move_ids[0].description_picking_manual, "DELIVERY")
+        self.assertEqual(picking.move_ids[1].description_picking_manual, "EXTRA DELIVERY")

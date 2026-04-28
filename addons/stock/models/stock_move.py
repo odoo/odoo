@@ -773,6 +773,11 @@ Please change the quantity done or the rounding precision in your settings.""",
                 vals['state'] = 'done'
             if vals.get('state') == 'done':
                 vals['picked'] = True
+            if vals.get('description_picking') and vals.get('product_id') and picking_id.state != 'done':
+                # we don't want the picking description to be stored unless it was manually added or the picking is already done
+                product = self.env['product.product'].browse(vals.get('product_id'))
+                if vals.get('description_picking') == product._get_picking_description(picking_id.picking_type_id):
+                    vals.pop('description_picking')
         res = super().create(vals_list)
         res._update_orderpoints()
         res._set_references()
@@ -2217,6 +2222,7 @@ Please change the quantity done or the rounding precision in your settings.""",
         if moves_todo:
             moves_todo._check_quantity()
             moves_todo._action_synch_order()
+            moves_todo._inverse_description_picking()   # we want to make sure the current description won't change on done pickings if it is changed on the product
         return moves_todo
 
     def _action_synch_order(self):
