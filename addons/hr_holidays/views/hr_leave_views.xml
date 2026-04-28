@@ -451,9 +451,6 @@
         <field name="mode">primary</field>
         <field name="priority">100</field>
         <field name="arch" type="xml">
-            <xpath expr="//group[@name='col_left']/*[1]" position="before">
-                <field name="employee_id" widget="many2one_avatar_employee" readonly="1"/>
-            </xpath>
             <xpath expr="//header" position="attributes">
                 <attribute name="invisible">1</attribute>
             </xpath>
@@ -500,9 +497,6 @@
         <field name="mode">primary</field>
         <field name="priority">17</field>
         <field name="arch" type="xml">
-            <xpath expr="//field[@widget='many2one_avatar_employee']" position="attributes"> 
-                <attribute name="readonly">0</attribute>
-            </xpath>
             <field name="work_entry_type_id" position="before">
                 <field name="user_id" invisible="1"/> <!-- Used in HolidaysFormViewDialog -->
             </field>
@@ -731,7 +725,7 @@
     </record>
 
     <record id="hr_leave_action_new_request" model="ir.actions.act_window">
-        <field name="name">Dashboard</field>
+        <field name="name">My Time Off</field>
         <field name="path">time-off</field>
         <field name="res_model">hr.leave</field>
         <field name="view_mode">calendar,list,form,activity</field>

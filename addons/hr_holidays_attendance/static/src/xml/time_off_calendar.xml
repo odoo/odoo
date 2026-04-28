@@ -5,9 +5,6 @@
         <xpath expr="//t[@t-set='duration']" position="replace">
             <t t-set="duration" t-value="this.props.requires_allocation || this.props.data['overtime_deductible']?this.props.data['virtual_remaining_leaves']:this.props.data['virtual_leaves_taken']" />
         </xpath>
-        <xpath expr="//t[@t-set='show_popover']" position="replace">
-            <t t-set="show_popover" t-value="!this.props.data['overtime_deductible']"/>
-        </xpath>
         <xpath expr="//t[@name='duration_unit']" position="attributes">
             <attribute name="t-if">this.props.data.unit_of_measure == 'hour' || this.props.data['overtime_deductible']</attribute>
         </xpath>

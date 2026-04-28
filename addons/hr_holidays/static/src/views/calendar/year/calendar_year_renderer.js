@@ -12,6 +12,7 @@ export class TimeOffCalendarYearRenderer extends CalendarYearRenderer {
         this.mandatoryDays = useMandatoryDays(this.props);
         this.mandatoryDaysList = [];
         this.mandatoryDayPopover = useCalendarPopover(TimeOffCalendarYearPopover);
+        this.popover = useCalendarPopover(TimeOffCalendarYearPopover);
     }
 
     get options() {
