@@ -880,6 +880,7 @@ class Website(models.CachedModel):
                     {f'o-color-{i}': color for i, color in enumerate(selected_palette, 1)}
                 )
 
+<<<<<<< b2414e539f189fe58d68f8f822d81b9b48428cb3
         # Update CTA
         cta_data = website.get_cta_data(kwargs.get('website_purpose'), kwargs.get('website_type'))
         if cta_data['cta_btn_text']:
@@ -918,12 +919,97 @@ class Website(models.CachedModel):
         # Extension hook: allows installed modules to perform additional setup
         # steps on the generated website.
         website.configurator_addons_apply(**kwargs)
+||||||| c7953a5283e7a07e77b809c521fc372d476c2c67
+        # Update CTA
+        cta_data = website.get_cta_data(kwargs.get('website_purpose'), kwargs.get('website_type'))
+        if cta_data['cta_btn_text']:
+            xpath_view = 'website.snippets'
+            parent_view = self.env['website'].with_context(website_id=website.id).viewref(xpath_view)
+            self.env['ir.ui.view'].create({
+                'name': parent_view.key + ' CTA',
+                'key': parent_view.key + "_cta",
+                'inherit_id': parent_view.id,
+                'website_id': website.id,
+                'type': 'qweb',
+                'priority': 32,
+                'arch_db': """
+                    <data>
+                        <xpath expr="//t[@t-set='cta_btn_href']" position="replace">
+                            <t t-set="cta_btn_href">%s</t>
+                        </xpath>
+                        <xpath expr="//t[@t-set='cta_btn_text']" position="replace">
+                            <t t-set="cta_btn_text">%s</t>
+                        </xpath>
+                    </data>
+                """ % (cta_data['cta_btn_href'], cta_data['cta_btn_text'])
+            })
+            try:
+                view_id = self.env['website'].viewref('website.header_call_to_action')
+                if view_id:
+                    el = etree.fromstring(view_id.arch_db)
+                    btn_cta_el = el.xpath("//a[hasclass('btn_cta')]")
+                    if btn_cta_el:
+                        btn_cta_el[0].attrib['href'] = cta_data['cta_btn_href']
+                        btn_cta_el[0].text = cta_data['cta_btn_text']
+                    view_id.with_context(website_id=website.id).write({'arch_db': etree.tostring(el)})
+            except ValueError as e:
+                logger.warning(e)
+
+        # Configure the features
+        features = self.env['website.configurator.feature'].browse(kwargs.get('selected_features'))
+=======
+        # Configure the features
+        features = self.env['website.configurator.feature'].browse(kwargs.get('selected_features'))
+>>>>>>> aeadfb99568fc922b79e16df739d35e3edfad72f
 
         # Refresh the environment of the website to use addon overrides.
         website = self.env['website'].browse(website.id)
 
+<<<<<<< b2414e539f189fe58d68f8f822d81b9b48428cb3
         # Update footers links after addon setup to go through module overrides
         # of `configurator_get_footer_links`.
+||||||| c7953a5283e7a07e77b809c521fc372d476c2c67
+        # Update footers links, needs to be done after "Features" addition to go
+        # through module overrides of `configurator_get_footer_links`.
+=======
+        # Update CTA
+        cta_data = website.get_cta_data(kwargs.get('website_purpose'), kwargs.get('website_type'))
+        if cta_data['cta_btn_text']:
+            xpath_view = 'website.snippets'
+            parent_view = self.env['website'].with_context(website_id=website.id).viewref(xpath_view)
+            self.env['ir.ui.view'].create({
+                'name': parent_view.key + ' CTA',
+                'key': parent_view.key + "_cta",
+                'inherit_id': parent_view.id,
+                'website_id': website.id,
+                'type': 'qweb',
+                'priority': 32,
+                'arch_db': """
+                    <data>
+                        <xpath expr="//t[@t-set='cta_btn_href']" position="replace">
+                            <t t-set="cta_btn_href">%s</t>
+                        </xpath>
+                        <xpath expr="//t[@t-set='cta_btn_text']" position="replace">
+                            <t t-set="cta_btn_text">%s</t>
+                        </xpath>
+                    </data>
+                """ % (cta_data['cta_btn_href'], cta_data['cta_btn_text']),
+            })
+            try:
+                view_id = self.env['website'].viewref('website.header_call_to_action')
+                if view_id:
+                    el = etree.fromstring(view_id.arch_db)
+                    btn_cta_el = el.xpath("//a[hasclass('btn_cta')]")
+                    if btn_cta_el:
+                        btn_cta_el[0].attrib['href'] = cta_data['cta_btn_href']
+                        btn_cta_el[0].text = cta_data['cta_btn_text']
+                    view_id.with_context(website_id=website.id).write({'arch_db': etree.tostring(el)})
+            except ValueError as e:
+                logger.warning(e)
+
+        # Update footers links, needs to be done after "Features" addition to go
+        # through module overrides of `configurator_get_footer_links`.
+>>>>>>> aeadfb99568fc922b79e16df739d35e3edfad72f
         footer_links = website.configurator_get_footer_links()
         footer_ids = [
             'website.template_footer_contact', 'website.template_footer_headline',
