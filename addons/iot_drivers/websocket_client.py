@@ -45,6 +45,7 @@ class WebsocketClient(Thread):
             'data': {
                 'channels': [self.channel] if self.channel else [],  # TODO: remove when v19 is deprecated
                 'last': self.last_message_id,
+                'check_outdated': False,
                 'iot_token': helpers.get_token(),
                 'mac_address': system.get_mac_address(),  # TODO: remove when v18 is deprecated
                 'identifier': IOT_IDENTIFIER,  # TODO: remove when v19 is deprecated
