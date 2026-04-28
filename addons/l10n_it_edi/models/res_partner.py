@@ -192,12 +192,12 @@ class ResPartner(models.Model):
                     }
         return errors
 
+    @api.depends('l10n_it_codice_fiscale')
     def _compute_is_company(self):
         l10n_it_partners = self.filtered(lambda p: p.vat and p.country_code == 'IT')
         for partner in l10n_it_partners:
-            partner.is_company = False
-            if partner.l10n_it_codice_fiscale and len(partner.l10n_it_codice_fiscale) == 11:
-                partner.is_company = True
+            cf = partner._l10n_it_edi_normalized_codice_fiscale() or ''
+            partner.is_company = len(cf) == 11
 
         super(ResPartner, self - l10n_it_partners)._compute_is_company()
 
