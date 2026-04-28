@@ -59,11 +59,13 @@ import operator
 import types
 import typing
 import warnings
+from collections.abc import Mapping
 from datetime import date, datetime, time, timedelta, timezone, UTC
 
 from odoo.exceptions import AccessError, MissingError, UserError
 from odoo.tools import SQL, OrderedSet, classproperty, partition, str2bool
 from odoo.tools.date_utils import parse_date, parse_iso_date
+from odoo.tools.safe_eval import expr_eval
 from .identifiers import NewId
 from .query import Query, TableSQL
 from .utils import COLLECTION_TYPES, parse_field_expr
@@ -1905,6 +1907,64 @@ def _operator_parent_of_domain(comodel: BaseModel, parent):
             parent_ids.update(comodel._ids)
             comodel = comodel[parent].filtered(lambda p: p.id not in parent_ids)
     return parent_ids
+
+
+class ExprContext(Mapping):
+    def __init__(self, model: BaseModel):
+        self.env = model.env
+
+    def __getitem__(self, key):
+        env = self.env
+        match key:
+            case 'user':
+                value = env.user
+            case 'company':
+                value = env.company
+            case 'companies':
+                value = env.companies
+            case 'partner_id':
+                value = env.user.partner_id
+            case 'groups':
+                value = env.user.all_group_ids
+            case 'context':
+                return env.context
+            case _:
+                raise KeyError(key)
+        return value.with_env(env)
+
+    def __iter__(self):
+        return iter(('user', 'company', 'companies', 'partner_id', 'groups', 'context'))
+
+    def __len__(self):
+        return 6
+
+
+@operator_optimization(['expr'], OptimizationLevel.DYNAMIC_VALUES)
+def _operator_expr_eval(condition, model):
+    """Evaluate a dynamic value given by the expression.
+
+    The value is evaluated using `expr_eval` with context containing:
+    user, company, companies, partner_id, groups, context.
+    """
+    expr = condition.value
+    if not expr or not isinstance(expr, str):
+        condition._raise(f"Invalid expression: {expr!r}")
+    try:
+        value = expr_eval(expr, context=ExprContext(model))
+    except Exception:  # noqa: BLE001
+        condition._raise(f"Invalid expression: {expr!r}")
+        assert False, 'unreachable'
+    if not value:
+        return Domain.FALSE
+    from .models import BaseModel  # noqa: PLC0415
+    if isinstance(value, BaseModel):
+        field = condition._field(model)
+        if (field.model_name if field.name == 'id' else field.comodel_name) != value._name:
+            condition._raise(f"Cannot compare {field} and {value}")
+        value = value.ids
+    elif not isinstance(value, COLLECTION_TYPES):
+        value = [value]
+    return DomainCondition(condition.field_expr, 'in', value)
 
 
 @operator_optimization(['access'], level=OptimizationLevel.DYNAMIC_VALUES)

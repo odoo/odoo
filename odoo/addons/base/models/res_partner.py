@@ -293,8 +293,17 @@ class ResPartner(models.Model):
         'res.partner', string='Commercial Entity',
         compute='_compute_commercial_partner', store=True,
         recursive=True, index=True)
-    commercial_company_name = fields.Char('Company Name Entity', related='commercial_partner_id.name',
-                                          store=True)
+    commercial_company_name = fields.Char(
+        'Company Name Entity',
+        related='commercial_partner_id.name',
+        store=True)
+    commercial_descendant_ids = fields.Many2many(
+        'res.partner', string="Commercial Descdendants",
+        compute='_compute_commercial_descdendants',
+        recursive=True,
+        context={'active_test': False},
+        help="All contacts under the commercial entity",
+    )
     barcode = fields.Char(help="Use a barcode to identify this contact.", copy=False, company_dependent=True)
 
     # hack to allow using plain browse record in qweb views, and used in ir.qweb.field.contact
@@ -508,6 +517,15 @@ class ResPartner(models.Model):
                 partner.commercial_partner_id = partner
             else:
                 partner.commercial_partner_id = partner.parent_id.commercial_partner_id
+
+    @api.depends('commercial_partner_id.child_ids', 'child_ids')
+    def _compute_commercial_descdendants(self):
+        for company, partners in self.grouped('commercial_partner_id').items():
+            descendants = to_check = company
+            while to_check:
+                to_check = to_check.child_ids
+                descendants |= to_check
+            partners.commercial_descendant_ids = descendants
 
     def _compute_company_registry(self):
         # exists to allow overrides
