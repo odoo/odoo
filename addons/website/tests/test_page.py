@@ -244,6 +244,24 @@ class TestPage(common.TransactionCase):
         self.assertTrue(website_id not in pages.mapped('website_id').ids, "The website from which we deleted the generic page should not have a specific one.")
         self.assertTrue(website_id not in View.search([('name', 'in', ('Base', 'Extension'))]).mapped('website_id').ids, "Same for views")
 
+    def test_open_website_url_default_website(self):
+        default_website = self.env.ref('website.default_website')
+        default_website.domain = 'https://mysite.odoo.com'
+        self.page_1.write({'website_id': default_website.id})
+        action = self.page_1.with_context(website_id=default_website.id).open_website_url()
+        self.assertNotEqual(action.get('type'), 'ir.actions.act_url',
+            "Page on default website should not redirect to real domain")
+
+        other_website = self.env['website'].create({
+            'name': 'Other Website',
+            'domain': 'https://example.com',
+            'sequence': 20,
+        })
+        self.page_1.write({'website_id': other_website.id})
+        action = self.page_1.with_context(website_id=default_website.id).open_website_url()
+        self.assertEqual(action.get('type'), 'ir.actions.act_url',
+            "Page on non-default website with domain should redirect to real domain")
+
 
 @tagged('-at_install', 'post_install')
 class WithContext(HttpCase):
