@@ -3440,7 +3440,7 @@ ${issueStrings}`);
     processing = false;
     constructor() {
       this.requestAnimationFrame = _Scheduler.requestAnimationFrame;
-      this.processTasks = this.processTasks.bind(this);
+      // this.processTasks = this.processTasks.bind(this);
     }
     addFiber(fiber) {
       this.tasks.add(fiber.root);
@@ -3448,7 +3448,7 @@ ${issueStrings}`);
     scheduleDestroy(node) {
       this.cancelledNodes.add(node);
       if (this.frame === 0) {
-        this.frame = this.requestAnimationFrame(this.processTasks);
+        this.frame = this.requestAnimationFrame(() => this.processTasks());
       }
     }
     /**
@@ -3466,7 +3466,7 @@ ${issueStrings}`);
         }
       }
       if (this.frame === 0) {
-        this.frame = this.requestAnimationFrame(this.processTasks);
+        this.frame = this.requestAnimationFrame(() => this.processTasks());
       }
     }
     processTasks() {
