@@ -75,6 +75,12 @@ class TestSaleProjectStockProfitability(TestProjectProfitabilityCommon, Valuatio
         invoice = sale_order.invoice_ids[0]
         invoice.invoice_date = fields.Date.today()
         invoice.action_post()
+
+        # Manually remove the analytic account on the stock valuation cogs line (otherwise cogs lines even out and there is no cogs to display in cost section)
+        valuation_acc = avco_product.categ_id.property_stock_valuation_account_id
+        valuation_cogs_lines = invoice.line_ids.filtered(lambda l: l.display_type == "cogs" and l.account_id == valuation_acc)
+        valuation_cogs_lines.analytic_distribution = {}
+
         panel_data = sale_order.project_ids.get_panel_data()
         self.assertEqual(
             panel_data['profitability_items']['costs'],
