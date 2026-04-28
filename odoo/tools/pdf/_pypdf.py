@@ -15,6 +15,7 @@ __all__ = [
 
 
 pypdf.PageObject.mergePage = lambda self, page2: self.merge_page(page2)
+pypdf.PageObject.compressContentStreams = lambda self: self.compress_content_streams()
 pypdf.PageObject.mediaBox = property(lambda self: self.mediabox)
 # use lambdas (rather than copying) to allow overrides of the base method
 generic.PdfObject.getObject = lambda self: self.get_object()
