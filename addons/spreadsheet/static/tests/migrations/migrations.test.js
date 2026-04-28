@@ -29,7 +29,7 @@ test("Odoo formulas are migrated", () => {
     const migratedData = load(data);
     expect(migratedData.sheets[0].cells.A1).toBe(`=PIVOT.VALUE("1")`);
     expect(migratedData.sheets[0].cells.A2).toBe(`=PIVOT.HEADER("1")`);
-    expect(migratedData.sheets[0].cells.A3).toBe(`=ODOO.FILTER.VALUE.V18("1")`);
+    expect(migratedData.sheets[0].cells.A3).toBe(`=ODOO.FILTER.LABEL("1")`);
     expect(migratedData.sheets[0].cells.A4).toBe(`=ODOO.LIST("1")`);
     expect(migratedData.sheets[0].cells.A5).toBe(`=ODOO.LIST.HEADER("1")`);
     expect(migratedData.sheets[0].cells.A6).toBe(`=ODOO.PIVOT.POSITION("1")`);
@@ -497,7 +497,7 @@ test("Pivot formulas using pivot positions are migrated (11 to 12)", () => {
     };
     const migratedData = load(data);
     expect(migratedData.sheets[0].cells.A1).toBe(
-        `=-PIVOT.VALUE("1","balance","#account_id",12,"date:quarter","4/"&ODOO.FILTER.VALUE.V18("Year"))`
+        `=-PIVOT.VALUE("1","balance","#account_id",12,"date:quarter","4/"&ODOO.FILTER.LABEL("Year"))`
     );
     expect(migratedData.sheets[0].cells.A2).toBe(`=PIVOT.HEADER("1","#account_id",14)`);
     expect(migratedData.sheets[0].cells.A3).toBe(`=ODOO.PIVOT.POSITION("1","account_id",14)`);
@@ -872,7 +872,7 @@ test("Odoo geo charts color scales are migrated", () => {
     );
 });
 
-test("18.5.10: ODOO.FILTER.VALUE to ODOO.FILTER.VALUE.V18 in cells", () => {
+test("18.5.10: ODOO.FILTER.VALUE to ODOO.FILTER.LABEL in cells", () => {
     const data = {
         version: "18.4.14",
         sheets: [
@@ -885,6 +885,6 @@ test("18.5.10: ODOO.FILTER.VALUE to ODOO.FILTER.VALUE.V18 in cells", () => {
     };
     const migratedData = load(data);
     expect(migratedData.sheets[0].cells.A1).toBe(
-        `=ODOO.FILTER.VALUE.V18("MyFilter")+ODOO.FILTER.VALUE.V18("AnotherFilter")`
+        `=ODOO.FILTER.LABEL("MyFilter")+ODOO.FILTER.LABEL("AnotherFilter")`
     );
 });
