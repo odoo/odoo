@@ -270,12 +270,28 @@ class HrWorkEntryType(models.Model):
         # when context gets cleaned and 'default_' context keys gets removed
         target_date = self.env.context.get('leave_date_from') or self.env.context.get('default_date_from')
         data_days = self.get_allocation_data(employee, target_date)[employee]
+<<<<<<< a85b22d3908baaacde7ce638a01354576e7a1d83:addons/hr_holidays/models/hr_work_entry_type.py
         for work_entry_type in self:
             result = [item for item in data_days if item[3] == work_entry_type.id]
             work_entry_type_tuple = result[0] if result else ('', {})
             work_entry_type.max_leaves = work_entry_type_tuple[1].get('max_leaves', 0)
             work_entry_type.leaves_taken = work_entry_type_tuple[1].get('leaves_taken', 0)
             work_entry_type.virtual_remaining_leaves = work_entry_type_tuple[1].get('virtual_remaining_leaves', 0)
+||||||| c2ee7b7562c74bd27279d617d02d9c5dfbf03c32:addons/hr_holidays/models/hr_leave_type.py
+        for holiday_status in self:
+            result = [item for item in data_days if item[0] == holiday_status.name]
+            leave_type_tuple = result[0] if result else ('', {})
+            holiday_status.max_leaves = leave_type_tuple[1].get('max_leaves', 0)
+            holiday_status.leaves_taken = leave_type_tuple[1].get('leaves_taken', 0)
+            holiday_status.virtual_remaining_leaves = leave_type_tuple[1].get('virtual_remaining_leaves', 0)
+=======
+        for holiday_status in self:
+            result = [item for item in data_days if item[3] == holiday_status.id]
+            leave_type_tuple = result[0] if result else ('', {})
+            holiday_status.max_leaves = leave_type_tuple[1].get('max_leaves', 0)
+            holiday_status.leaves_taken = leave_type_tuple[1].get('leaves_taken', 0)
+            holiday_status.virtual_remaining_leaves = leave_type_tuple[1].get('virtual_remaining_leaves', 0)
+>>>>>>> dd8cc9d52b15a200c5f6d568843c68fd41917999:addons/hr_holidays/models/hr_leave_type.py
 
     def _compute_allocation_count(self):
         today = fields.Date.to_string(date.today())
