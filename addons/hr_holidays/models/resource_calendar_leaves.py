@@ -1,13 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime, time, UTC
-from zoneinfo import ZoneInfo
+from datetime import UTC, datetime
 
-from odoo import fields, models, api, _
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Domain
-from odoo.tools import babel_locale_parse
-from odoo.tools.date_utils import weeknumber
 
 
 class ResourceCalendarLeaves(models.Model):
@@ -33,9 +30,10 @@ class ResourceCalendarLeaves(models.Model):
                         and record['date_from'] <= leave['date_to']
                         and record['date_to'] >= leave['date_from'])
                 if record.calendar_id:
-                    existing_leaves = existing_leaves.filtered(lambda l: not l.calendar_id or l.calendar_id == record.calendar_id)
+                    existing_leaves = existing_leaves.filtered(
+                        lambda leave: not leave.calendar_id or leave.calendar_id == record.calendar_id)
                 if existing_leaves:
-                    raise ValidationError(_('Two public holidays cannot overlap each other for the same working hours.'))
+                    raise ValidationError(self.env._('Two public holidays cannot overlap each other for the same working hours.'))
 
     def _get_domain(self, time_domain_dict):
         return Domain.OR(
@@ -49,9 +47,9 @@ class ResourceCalendarLeaves(models.Model):
 
     def _get_time_domain_dict(self):
         return [{
-            'company_id' : record.company_id.id,
-            'date_from' : record.date_from,
-            'date_to' : record.date_to
+            'company_id': record.company_id.id,
+            'date_from': record.date_from,
+            'date_to': record.date_to,
         } for record in self if not record.resource_id]
 
     def _reevaluate_leaves(self, time_domain_dict):
@@ -75,10 +73,14 @@ class ResourceCalendarLeaves(models.Model):
             duration_difference = previous_duration - leave.number_of_days
             message = False
             if duration_difference > 0 and leave.work_entry_type_id.requires_allocation:
-                message = _("Due to a change in global time offs, you have been granted %s day(s) back.", duration_difference)
+                message = self.env._(
+                    "Due to a change in global time offs, you have been granted %s day(s) back.",
+                    duration_difference)
             if leave.number_of_days > previous_duration\
                     and (not sick_time_status or leave.work_entry_type_id not in sick_time_status):
-                message = _("Due to a change in global time offs, %s extra day(s) have been taken from your allocation. Please review this leave if you need it to be changed.", -1 * duration_difference)
+                message = self.env._(
+                    "Due to a change in global time offs, %s extra day(s) have been taken from your allocation. Please review this leave if you need it to be changed.",
+                    (-1 * duration_difference))
             try:
                 leave.sudo().write({'state': state})  # sudo in order to skip _check_approval_update
                 leave._check_validity()
@@ -87,7 +89,8 @@ class ResourceCalendarLeaves(models.Model):
                     leaves_to_recreate |= leave
             except ValidationError:
                 leave.action_refuse()
-                message = _("Due to a change in global time offs, this leave no longer has the required amount of available allocation and has been set to refused. Please review this leave.")
+                message = self.env._(
+                    "Due to a change in global time offs, this leave no longer has the required amount of available allocation and has been set to refused. Please review this leave.")
             if message:
                 leave._notify_change(message)
         leaves_to_recreate.sudo()._create_resource_leave()
@@ -105,8 +108,7 @@ class ResourceCalendarLeaves(models.Model):
         """
         naive_datetime_from = utc_naive_datetime.astimezone(tz_from).replace(tzinfo=None)
         aware_datetime_to = naive_datetime_from.replace(tzinfo=tz_to)
-        utc_naive_datetime_to = aware_datetime_to.astimezone(UTC).replace(tzinfo=None)
-        return utc_naive_datetime_to
+        return aware_datetime_to.astimezone(UTC).replace(tzinfo=None)
 
     def _ensure_datetime(self, datetime_representation, date_format=None):
         """
@@ -116,10 +118,9 @@ class ResourceCalendarLeaves(models.Model):
         """
         if isinstance(datetime_representation, datetime):
             return datetime_representation
-        elif isinstance(datetime_representation, str) and date_format:
+        if isinstance(datetime_representation, str) and date_format:
             return datetime.strptime(datetime_representation, date_format)
-        else:
-            return None
+        return None
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -147,61 +148,3 @@ class ResourceCalendarLeaves(models.Model):
     def _compute_company_id(self):
         for leave in self:
             leave.company_id = leave.holiday_id.employee_id.company_id or leave.calendar_id.company_id or self.env.company
-
-
-class ResourceCalendar(models.Model):
-    _inherit = "resource.calendar"
-
-    associated_leaves_count = fields.Integer("Time Off Count", compute='_compute_associated_leaves_count')
-
-    def _compute_associated_leaves_count(self):
-        leaves_read_group = self.env['resource.calendar.leaves']._read_group(
-            [('resource_id', '=', False), '|', ('calendar_id', 'in', self.ids), ('calendar_id', '=', False)],
-            ['calendar_id'],
-            ['__count'],
-        )
-        result = {calendar.id if calendar else 'global': count for calendar, count in leaves_read_group}
-        global_leave_count = result.get('global', 0)
-        for calendar in self:
-            calendar.associated_leaves_count = result.get(calendar.id, 0) + global_leave_count
-
-
-class ResourceResource(models.Model):
-    _inherit = "resource.resource"
-
-    leave_date_to = fields.Date(related="user_id.leave_date_to")
-
-    def _format_leave(self, leave, resource_hours_per_day, resource_hours_per_week, ranges_to_remove, start_day, end_day, locale):
-        leave_start = leave[0]
-        leave_record = leave[2]
-        holiday_id = leave_record.holiday_id
-        tz = ZoneInfo(self.tz or self.env.user.tz)
-
-        if holiday_id.work_entry_type_request_unit == 'half_day':
-            # Half day leaves are limited to half a day within a single day
-            leave_day = leave_start.date()
-            half_start_datetime = datetime.combine(leave_day, datetime.min.time() if holiday_id.request_date_from_period == "am" else time(12), tzinfo=tz)
-            half_end_datetime = datetime.combine(leave_day, time(12) if holiday_id.request_date_from_period == "am" else datetime.max.time(), tzinfo=tz)
-            ranges_to_remove.append((half_start_datetime, half_end_datetime, self.env['resource.calendar.attendance']))
-
-            if not self._is_fully_flexible():
-                # only days inside the original period
-                if start_day <= leave_day <= end_day:
-                    resource_hours_per_day[self.id][leave_day] -= holiday_id.number_of_hours
-                week = weeknumber(babel_locale_parse(locale), leave_day)
-                resource_hours_per_week[self.id][week] -= holiday_id.number_of_hours
-        elif holiday_id.work_entry_type_request_unit == 'hour':
-            # Custom leaves are limited to a specific number of hours within a single day
-            leave_day = leave_start.date()
-            range_start_datetime = leave_record.date_from.replace(tzinfo=UTC).astimezone(tz)
-            range_end_datetime = leave_record.date_to.replace(tzinfo=UTC).astimezone(tz)
-            ranges_to_remove.append((range_start_datetime, range_end_datetime, self.env['resource.calendar.attendance']))
-
-            if not self._is_fully_flexible():
-                # only days inside the original period
-                if start_day <= leave_day <= end_day:
-                    resource_hours_per_day[self.id][leave_day] -= holiday_id.number_of_hours
-                week = weeknumber(babel_locale_parse(locale), leave_day)
-                resource_hours_per_week[self.id][week] -= holiday_id.number_of_hours
-        else:
-            super()._format_leave(leave, resource_hours_per_day, resource_hours_per_week, ranges_to_remove, start_day, end_day, locale)
