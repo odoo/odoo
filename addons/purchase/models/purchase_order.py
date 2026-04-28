@@ -826,9 +826,20 @@ class PurchaseOrder(models.Model):
             # Invoice values.
             invoice_vals = order._prepare_invoice()
             # Invoice line values (keep only necessary sections).
+            has_qty_to_invoice = any(
+                not line.display_type
+                and not float_is_zero(line.qty_to_invoice, precision_digits=precision)
+                for line in order.order_line
+            )
             for line in order.order_line:
                 if line.display_type in ('line_section', 'line_subsection'):
                     pending_section = line
+                    continue
+                if (
+                    has_qty_to_invoice
+                    and not line.display_type
+                    and float_is_zero(line.qty_to_invoice, precision_digits=precision)
+                ):
                     continue
                 if pending_section:
                     line_vals = pending_section._prepare_account_move_line()
