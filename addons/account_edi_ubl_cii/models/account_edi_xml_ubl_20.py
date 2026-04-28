@@ -161,7 +161,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
 
         vals.update({
             'document_type': 'debit_note' if 'debit_origin_id' in self.env['account.move']._fields and invoice.debit_origin_id
-                else 'credit_note' if invoice.move_type == 'out_refund'
+                else 'credit_note' if invoice.move_type in ('out_refund', 'in_refund')
                 else 'invoice',
 
             'process_type': 'billing',
