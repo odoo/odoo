@@ -773,6 +773,7 @@ export function isRelational(field) {
 export function useRecordObserver(callback) {
     const component = useComponent();
     let currentId;
+    let isDestroyed = false;
 
     let hooksSet = false;
     const setHooks = (props) => {
@@ -810,7 +811,7 @@ export function useRecordObserver(callback) {
 
     const batchedCallback = batched(
         (effectId, record, props, resolve, reject) => {
-            if (effectId !== currentId) {
+            if (isDestroyed || effectId !== currentId) {
                 // effect doesn't clean up when the component is unmounted.
                 // We must do it manually.
                 return;
@@ -835,6 +836,9 @@ export function useRecordObserver(callback) {
         const effectId = currentId;
         let firstCall = true;
         disposePreviousEffect = immediateEffect(() => {
+            if (isDestroyed) {
+                return;
+            }
             for (const key in props.record.data) {
                 props.record.data[key]; // consume signal
             }
@@ -850,6 +854,7 @@ export function useRecordObserver(callback) {
         return promise;
     };
     onWillDestroy(() => {
+        isDestroyed = true;
         currentId = uniqueId();
         disposePreviousEffect();
         disposeHooks();

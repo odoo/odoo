@@ -38,26 +38,18 @@ export class PurchaseOrderLineProductField extends ProductLabelSectionAndNoteFie
     }
 
     async _onProductTemplateUpdate() {
-        try {
-            const result = await this.orm.call("product.template", "get_single_product_variant", [
-                this.props.record.data.product_template_id.id,
-            ]);
-            if (result && result.product_id) {
-                if (this.props.record.data.product_id != result.product_id.id) {
-                    this.props.record.update({
-                        // TODO right name get (same problem as configurator)
-                        product_id: { id: result.product_id, display_name: result.product_name },
-                    });
-                }
-            } else {
-                this.matrixConfigurator.open(this.props.record, false);
+        const result = await this.orm.call("product.template", "get_single_product_variant", [
+            this.props.record.data.product_template_id.id,
+        ]);
+        if (result && result.product_id) {
+            if (this.props.record.data.product_id != result.product_id.id) {
+                this.props.record.update({
+                    // TODO right name get (same problem as configurator)
+                    product_id: { id: result.product_id, display_name: result.product_name },
+                });
             }
-        } catch (e) {
-            if (e.message !== "Component is destroyed") {
-                throw e;
-            }
-            // useRecordObserver can fire on a dead component due to an OWL3
-            // timing gap between onWillDestroy and model hook cleanup.
+        } else {
+            this.matrixConfigurator.open(this.props.record, false);
         }
     }
 
