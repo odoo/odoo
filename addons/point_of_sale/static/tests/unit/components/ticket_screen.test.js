@@ -386,3 +386,13 @@ test("isOrderSynced", async () => {
     screen.state.filter = "ACTIVE_ORDERS";
     expect(screen.isOrderSynced).toBe(false);
 });
+
+test("refund order should not have preset_id", async () => {
+    const store = await setupPosEnv();
+
+    const normalOrder = store.createNewOrder();
+    expect(Boolean(normalOrder.preset_id)).toBe(true);
+
+    const refundOrder = store.createNewOrder({ is_refund: true });
+    expect(refundOrder.preset_id).toBeEmpty();
+});

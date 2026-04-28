@@ -1429,7 +1429,7 @@ export class PosStore extends WithLazyGetterTrap {
             order.partner_id = this.getDefaultPartnerId();
         }
 
-        if (this.config.use_presets && !data["preset_id"]) {
+        if (this.config.use_presets && !data["preset_id"] && !order.isRefund) {
             this.selectPreset(this.config.default_preset_id, order, this.shouldSelectPreset(order));
         }
 
