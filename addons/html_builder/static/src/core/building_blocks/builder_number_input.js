@@ -56,7 +56,7 @@ export class BuilderNumberInput extends Component {
         this.domState = state;
         this.state = useState({});
         useEffect(() => {
-            this.state.showUnit = this.state.value?.length > 0;
+            this.state.showUnit = state.value?.length > 0;
         });
         this.inputRef = useChildRef();
         this.debouncedCommitValue = useInputDebouncedCommit(this.inputRef);
