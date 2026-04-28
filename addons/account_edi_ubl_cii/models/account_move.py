@@ -119,8 +119,13 @@ class AccountMove(models.Model):
         files_data = self._to_files_data(self.ubl_cii_xml_id)
         files_data.extend(self._unwrap_attachments(files_data))
         file_data_group = self._group_files_data_into_groups_of_mixed_types(files_data)[0]
+
+        decoder = file_data_group[0].get('decoder_info', {}).get('decoder')
+        if decoder is None:
+            raise UserError(self.env._("Cannot decode origin file, try by importing it again"))
+
         self.invoice_line_ids = [Command.clear()]
-        if self._extend_with_attachments(file_data_group):
+        if decoder(self, file_data_group[0]) is None:
             self._message_log(body=self.env._("Ungrouped lines from %s", file_data_group[0]['attachment'].name))
         else:
             raise UserError(error_message)
