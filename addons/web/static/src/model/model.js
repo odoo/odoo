@@ -1,13 +1,12 @@
+import { EventBus, onWillStart, onWillUpdateProps, signal, status, useListener } from "@odoo/owl";
 import { RPCError } from "@web/core/network/rpc";
 import { user } from "@web/core/user";
 import { Race } from "@web/core/utils/concurrency";
 import { useService } from "@web/core/utils/hooks";
-import { render, useComponent } from "@web/owl2/utils";
+import { onWillRender, render, useComponent } from "@web/owl2/utils";
 import { useSetupAction } from "@web/search/action_hook";
 import { SEARCH_KEYS } from "@web/search/with_search/with_search";
 import { buildSampleORM } from "./sample_server";
-
-import { EventBus, onWillStart, onWillUnmount, onWillUpdateProps, signal, status } from "@odoo/owl";
 
 /**
  * @typedef {import("@web/env").OdooEnv} OdooEnv
@@ -22,6 +21,7 @@ import { EventBus, onWillStart, onWillUnmount, onWillUpdateProps, signal, status
  */
 
 export class Model {
+    /** @type {string[]} */
     static services = [];
 
     /**
@@ -35,10 +35,7 @@ export class Model {
         this.bus = new EventBus();
         this.isReady = signal(false);
         this.whenReady = Promise.withResolvers();
-        this.whenReady.promise.then(() => {
-            this.isReady.set(true);
-            // this.notify();
-        });
+        this.whenReady.promise.then(() => this.isReady.set(true));
         this.setup(params, services);
     }
 
@@ -77,6 +74,9 @@ export class Model {
     }
 
     notify() {
+        signal.trigger(this.isReady);
+
+        // TODO remove
         this.bus.trigger("update");
     }
 }
@@ -108,30 +108,24 @@ function _useModel(ModelClass, params, options) {
     /**
      * @param {Record<any, any>} props
      */
-    async function load(props) {
+    async function loadModelWithProps(props) {
         const searchParams = getSearchParams(props);
         await model.load(searchParams);
-
         if (onLoad) {
             await onLoad(searchParams);
         }
-
-        if (!model.isReady()) {
-            model.whenReady.resolve(); // resolve after the first successful load
-        } else if (status(component) === "mounted") {
-            model.notify();
-        }
-    }
-
-    function onUpdate() {
-        return render(component, true);
     }
 
     /**
      * @param {Record<any, any>} props
      */
-    function raceLoad(props) {
-        return race.add(load(props));
+    async function raceLoad(props) {
+        await race.add(loadModelWithProps(props));
+        if (!model.isReady()) {
+            model.whenReady.resolve(); // resolve after the first successful load
+        } else if (status(component) === "mounted") {
+            model.notify();
+        }
     }
 
     const race = new Race();
@@ -150,9 +144,10 @@ function _useModel(ModelClass, params, options) {
     const env = component.env;
     const model = new ModelClass(env, params, services);
 
-    model.bus.addEventListener("update", onUpdate);
-    onWillUnmount(() => model.bus.removeEventListener("update", onUpdate));
+    // TODO: remove
+    useListener(model.bus, "update", () => render(component, true));
 
+    onWillRender(() => model.isReady());
     onWillStart(async () => {
         if (beforeFirstLoad) {
             await options.beforeFirstLoad();

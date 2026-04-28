@@ -1,20 +1,27 @@
-import { render, useComponent, useEnv, useLayoutEffect, useState, useSubEnv } from "@web/owl2/utils";
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { makeContext } from "@web/core/context";
 import { Dialog } from "@web/core/dialog/dialog";
 import { _t } from "@web/core/l10n/translation";
 import { RPCError } from "@web/core/network/rpc";
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
+import { SIZES } from "@web/core/ui/ui_service";
 import {
-    useBus,
     useChildRef,
     useForwardRefToParent,
     useOwnedDialogs,
     useService,
 } from "@web/core/utils/hooks";
-import { SIZES } from "@web/core/ui/ui_service";
 import { createElement, parseXML } from "@web/core/utils/xml";
 import { extractFieldsFromArchInfo, useRecordObserver } from "@web/model/relational_model/utils";
+import {
+    onWillRender,
+    render,
+    useComponent,
+    useEnv,
+    useLayoutEffect,
+    useState,
+    useSubEnv,
+} from "@web/owl2/utils";
 import { FormArchParser } from "@web/views/form/form_arch_parser";
 import { loadSubViews, useFormViewInDialog } from "@web/views/form/form_controller";
 import { FormRenderer } from "@web/views/form/form_renderer";
@@ -697,7 +704,7 @@ export class X2ManyFieldDialog extends Component {
         useSubEnv({ config: this.props.config });
         this.env.dialogData.dismiss = () => this.discard();
 
-        useBus(this.record.model.bus, "update", () => render(this, true));
+        onWillRender(() => this.record.model.isReady());
 
         this.modalRef = useChildRef();
 
@@ -758,7 +765,7 @@ export class X2ManyFieldDialog extends Component {
             title: this.title,
             withBodyPadding: false,
             modalRef: this.modalRef,
-            contentClass: `${ this.contentClass}  ${ this.ui.size <= SIZES.XS ? " o_xxs_form_view" : ""}`,
+            contentClass: `${this.contentClass}  ${this.ui.size <= SIZES.XS ? " o_xxs_form_view" : ""}`,
         };
         if (!this.record.isNew) {
             props.onExpand = async () => {
