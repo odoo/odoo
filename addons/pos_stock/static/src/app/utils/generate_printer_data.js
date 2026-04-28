@@ -7,10 +7,7 @@ import { GeneratePrinterData } from "@point_of_sale/app/utils/printer/generate_p
 patch(GeneratePrinterData.prototype, {
     generateLineData() {
         return super.generateLineData().map((line, index) => {
-            const orderLine = this.order.lines[index];
-            line.lot_names = orderLine.pack_lot_ids?.length
-                ? orderLine.pack_lot_ids.map((l) => l.lot_name)
-                : false;
+            line.lot_names = this.order.lines[index].packLotLines;
             return line;
         });
     },

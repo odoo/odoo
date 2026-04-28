@@ -21,7 +21,7 @@ registry.category("web_tour.tours").add("test_combo_price_unchanged_with_lot_tra
                 ...StockProductScreen.enterLotNumber("1", "lot"),
                 ...ProductScreen.orderLineHas("Product A", "1.0"),
                 {
-                    trigger: ".info-list:contains('Lot Number 1')",
+                    trigger: ".info-list:contains('Lot 1')",
                 },
             ]),
             ProductScreen.totalAmountIs("8.05"),

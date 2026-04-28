@@ -34,21 +34,22 @@ class PosOrderReceipt(models.AbstractModel):
         return self.currency_id.format(amount).replace('\xa0', ' ')  # Wkhtmltoimage does not support non-breaking spaces
 
     def _order_receipt_generate_taxe_data(self):
+        sign = -1 if self.is_refund else 1
         tax_totals = self._get_order_tax_totals()  # Use account helpers to compute tax totals
-        discount_amount = sum(line._get_discount_amount() for line in self.lines)
+        discount_amount = sum(line._get_discount_amount() for line in self.lines.filtered(lambda l: l.discount > 0))
         rounding = tax_totals.get('cash_rounding_base_amount_currency', 0)
 
         return {
             'same_tax_base': tax_totals['same_tax_base'],
             'discount_amount': self._order_receipt_format_currency(-abs(discount_amount)) if discount_amount else False,
-            'rounding_amount': self._order_receipt_format_currency(rounding) if rounding else False,
-            'tax_amount': self._order_receipt_format_currency(tax_totals['tax_amount_currency']),
-            'total_amount': self._order_receipt_format_currency(tax_totals['total_amount_currency']),
-            'subtotal_amount': self._order_receipt_format_currency(tax_totals['base_amount_currency']),
+            'rounding_amount': self._order_receipt_format_currency(sign * rounding) if rounding else False,
+            'tax_amount': self._order_receipt_format_currency(sign * tax_totals['tax_amount_currency']),
+            'total_amount': self._order_receipt_format_currency(sign * tax_totals['total_amount_currency']),
+            'subtotal_amount': self._order_receipt_format_currency(sign * tax_totals['base_amount_currency']),
             'taxes': [{
                 'name': tax['group_name'],
-                'amount': self._order_receipt_format_currency(tax['tax_amount']),
-                'amount_base': self._order_receipt_format_currency(tax['base_amount_currency']),
+                'amount': self._order_receipt_format_currency(sign * tax['tax_amount']),
+                'amount_base': self._order_receipt_format_currency(sign * tax['base_amount_currency']),
             } for tax in tax_totals['subtotals'][0]['tax_groups']] if len(tax_totals['subtotals']) > 0 else [],
         }
 

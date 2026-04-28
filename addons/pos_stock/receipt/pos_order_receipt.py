@@ -1,4 +1,4 @@
-from odoo import models
+from odoo import _, models
 from odoo.tools.misc import format_date
 
 
@@ -9,7 +9,10 @@ class PosOrderReceipt(models.AbstractModel):
         line_data = super()._order_receipt_generate_line_data()
 
         for data, line in zip(line_data, self.lines):
-            data['lot_names'] = line.pack_lot_ids.mapped('lot_name') if line.pack_lot_ids else False
+            data['lot_names'] = False
+            if line.pack_lot_ids:
+                lot_label = _("Lot") if line.product_id.tracking == "lot" else _("SN")
+                data['lot_names'] = ["%s %s" % (lot_label, lot.lot_name) for lot in line.pack_lot_ids]
 
         return line_data
 

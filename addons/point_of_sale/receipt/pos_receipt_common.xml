@@ -6,16 +6,16 @@
                 <tbody name="company_info">
                     <tr>
                         <td class="text-start top w-60" >
-                            <div t-out="config['name']"/>
-                            <div t-out="config['receipt_address']"/>
+                            <div t-if="config.get('name')" t-out="config['name']"/>
+                            <div t-if="config.get('receipt_address')" t-out="config['receipt_address']"/>
                         </td>
 
                         <td class="text-end top w-40" >
-                            <div t-if="config['phone']">
+                            <div t-if="config.get('phone')">
                                 <div>Tel: <t t-out="config['phone']"/></div>
                             </div>
-                            <div t-if="config['email']" t-out="config['email']"/>
-                            <div t-if="config['website']" t-out="config['website']"/>
+                            <div t-if="config.get('email')" t-out="config['email']"/>
+                            <div t-if="config.get('website')" t-out="config['website']"/>
                         </td>
                     </tr>
                     <tr>
@@ -68,6 +68,7 @@
                 #pos-receipt .me-3 { margin-left: 16px !important; }
                 #pos-receipt .me-4 { margin-left: 24px !important; }
                 #pos-receipt .me-5 { margin-left: 32px !important; }
+                #pos-receipt .ms-auto { margin-left: auto !important; }
                 #pos-receipt .ms-1 { margin-right: 4px !important; }
                 #pos-receipt .ms-2 { margin-right: 8px !important; }
                 #pos-receipt .ms-3 { margin-right: 16px !important; }
@@ -120,11 +121,12 @@
                 #pos-receipt .text-break{ word-wrap: break-word !important; word-break: break-word !important; }
                 #pos-receipt .font-monospace  { font-variant-numeric: tabular-nums !important; }
                 #pos-receipt .text-center { text-align: center !important; }
+                #pos-receipt .text-top { vertical-align: top !important; }
                 #pos-receipt .text-start { text-align: left !important; }
                 #pos-receipt .text-end { text-align: right !important; }
                 #pos-receipt .text-small { font-size: 18px !important; line-height: 26px !important; }
-                #pos-receipt .text-normal { font-size: 22px !important; line-height: 32px !important; }
-                #pos-receipt .text-large { font-size: 26px !important; line-height: 38px !important; }
+                #pos-receipt .text-normal { font-size: 20px !important; line-height: 28px !important; }
+                #pos-receipt .text-large { font-size: 22px !important; line-height: 30px !important; }
                 #pos-receipt .text-huge { font-size: 34px !important; line-height: 50px !important; }
                 #pos-receipt .text-insane { font-size: 50px !important; line-height: 74px !important; }
                 #pos-receipt .text-bold { font-weight: bold !important; }

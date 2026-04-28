@@ -18,8 +18,8 @@
                             </table>
                         </div>
                     </div>
-                    <div class="w-100 text-large mb-3" name="prices" t-if="not conditions['basic_receipt']">
-                        <table class="w-100">
+                    <div class="w-100 mb-3" name="prices" t-if="not conditions['basic_receipt']">
+                        <table class="w-100 text-large">
                             <tbody>
                                 <tr>
                                     <td class="text-start w-70" name="subtotal">Subtotal:</td>
@@ -76,7 +76,7 @@
                                         <img class="invoice-qr-code" t-att-src="image['invoice_qr_code']" />
                                     </td>
                                     <td class="text-start top w-75 ps-1" t-if="conditions['display_url']">
-                                        <p class="text-bold text-normal">Need an invoice?</p>
+                                        <div class="text-bold text-normal">Need an invoice?</div>
                                         <div class="text-small" t-out="extra_data['self_invoicing_url']" />
                                         <div class="text-small">Code: <t t-out="order['ticket_code']"/></div>
                                     </td>
@@ -107,7 +107,7 @@
 
         <template id="point_of_sale.pos_order_receipt_header">
             <div class="w-100 text-center mb-3" name="logo">
-                <img t-if="image['logo']" t-att-src="image['logo']" style="max-height: 75px" />
+                <img t-if="image['logo']" t-att-src="image['logo']" class="w-50" />
             </div>
             <div class="w-100 text-center">
                 <div name="ticket_reference">
@@ -179,7 +179,7 @@
 
         <template id="point_of_sale.pos_orderline_receipt_information">
             <div class="name text-large" t-out="line['product_data']['display_name']" />
-            <span class="text-normal price-unit font-monospace" name="standard-unit-price" t-if="not conditions['basic_receipt'] and not len(line['combo_line_ids'])">
+            <span class="text-small price-unit font-monospace" name="standard-unit-price" t-if="not conditions['basic_receipt'] and not len(line['combo_line_ids'])">
                 <t t-out="line['unit_price']" /> / <t t-out="line['product_uom_name']" />
             </span>
             <div t-if="line['customer_note']" class="text-small">

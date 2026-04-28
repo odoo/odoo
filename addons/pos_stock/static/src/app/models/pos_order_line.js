@@ -125,7 +125,7 @@ patch(PosOrderline.prototype, {
     },
 
     get packLotLines() {
-        const trackingStr = this.product_id.tracking == "lot" ? _t("Lot Number") : _t("SN");
+        const trackingStr = this.product_id.tracking === "lot" ? _t("Lot") : _t("SN");
         return this.pack_lot_ids?.map((l) => `${trackingStr} ${l.lot_name}`);
     },
 });

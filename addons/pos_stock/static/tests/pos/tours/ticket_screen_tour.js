@@ -59,7 +59,7 @@ registry.category("web_tour.tours").add("LotTour", {
             // Check auto assign lot number if there is only one available option
             ProductScreen.clickDisplayedProduct("Product B"),
             inLeftSide({
-                trigger: ".info-list:contains('Lot Number 1001')",
+                trigger: ".info-list:contains('Lot 1001')",
             }),
             ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
