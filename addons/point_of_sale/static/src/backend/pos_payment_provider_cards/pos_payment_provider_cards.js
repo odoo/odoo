@@ -57,14 +57,11 @@ export class PosPaymentProviderCards extends Component {
             });
     }
 
-    async setupProvider(moduleId) {
-        const provider = this.providers.find((p) => p.id === moduleId);
-        if (provider) {
-            this.props.record.update({
-                payment_provider: provider.provider,
-                name: provider.name,
-            });
-        }
+    async setupProvider(provider) {
+        this.props.record.update({
+            payment_provider: provider.provider,
+            name: provider.name,
+        });
     }
 }
 
