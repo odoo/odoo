@@ -113,6 +113,17 @@ class ResConfigSettings(models.TransientModel):
         # even if edi proxy user doesn't exist, we still need to ensure registration_state = 'not_registered'
         company._reset_peppol_configuration()
 
+    def _use_parent_connection(self, company):
+        for parent_company in company.parent_ids[::-1][1:]:
+            if all((
+                parent_company.sudo().account_edi_proxy_client_ids.filtered(lambda u: u.proxy_type == 'peppol'),  # `sudo` needed otherwise empty from no access right
+                parent_company.peppol_eas == company.peppol_eas,
+                parent_company.peppol_endpoint == company.peppol_endpoint,
+            )):
+                return True
+
+        return False
+
     # -------------------------------------------------------------------------
     # ONCHANGE METHODS
     # -------------------------------------------------------------------------
@@ -198,22 +209,6 @@ class ResConfigSettings(models.TransientModel):
         if not self.account_peppol_contact_email:
             raise ValidationError(_("Please enter a primary contact email to verify your application."))
 
-        for parent_company in company.parent_ids[::-1][1:]:
-            if all((
-                parent_company.sudo().account_edi_proxy_client_ids.filtered(lambda u: u.proxy_type == 'peppol'),  # `sudo` needed otherwise empty from no access right
-                parent_company.peppol_eas == company.peppol_eas,
-                parent_company.peppol_endpoint == company.peppol_endpoint,
-            )):
-                # In 17.0 branch peppol support, we strictly restrict branches from registering their own peppol connection IF
-                # their peppol identification is already used by their parent. This is because in order to send by peppol in
-                # 17.0, you must also be a receiver. However, we can't register as receiver if a receiver participant with
-                # same identification is already registered on the peppol network (which, in the database means, the parent
-                # already registered as a receiver).
-                raise ValidationError(_(
-                    "This peppol identification is already used by %(parent_name)s. Please use something else.",
-                    parent_name=parent_company.name,
-                ))
-
         edi_proxy_client = self.env['account_edi_proxy_client.user']
         edi_identification = edi_proxy_client._get_proxy_identification(company, 'peppol')
 
@@ -222,6 +217,22 @@ class ResConfigSettings(models.TransientModel):
             return
 
         company.partner_id._check_peppol_eas()
+
+        if self._use_parent_connection(company):
+            edi_user = edi_proxy_client.sudo()._register_proxy_user(company, 'peppol', self.account_peppol_edi_mode)
+
+            if not tools.config['test_enable'] and not modules.module.current_test:
+                self.env.cr.commit()
+
+            self._call_peppol_proxy(
+                endpoint='/api/peppol/1/register_sender',
+                params={'company_details': edi_user._get_company_details()},
+                edi_user=edi_user,
+            )
+
+            self.account_peppol_proxy_state = 'sender'
+
+            return
 
         participant_info = company.partner_id._check_peppol_participant_exists(edi_identification, check_company=True)
         should_offer_sender_only = bool(participant_info and not self.account_peppol_migration_key)
@@ -245,29 +256,18 @@ class ResConfigSettings(models.TransientModel):
         if not tools.config['test_enable'] and not modules.module.current_test:
             self.env.cr.commit()
 
-        company_details = {
-            'peppol_company_name': company.display_name,
-            'peppol_company_vat': company.vat,
-            'peppol_company_street': company.street,
-            'peppol_company_city': company.city,
-            'peppol_company_zip': company.zip,
-            'peppol_country_code': company.country_id.code,
-            'peppol_phone_number': self.account_peppol_phone_number,
-            'peppol_contact_email': self.account_peppol_contact_email,
-        }
-
         self.account_peppol_proxy_state = 'not_verified'
         if should_offer_sender_only:
             self._call_peppol_proxy(
                 endpoint='/api/peppol/1/register_sender',
-                params={'company_details': company_details},
+                params={'company_details': edi_user._get_company_details()},
                 edi_user=edi_user,
             )
             self.account_peppol_proxy_state = 'sender'
         else:
             params = {
                 'migration_key': self.account_peppol_migration_key,
-                'company_details': company_details,
+                'company_details': edi_user._get_company_details(),
             }
 
             self._call_peppol_proxy(
