@@ -37,7 +37,7 @@ class AccountAccount(models.Model):
     description = fields.Text(translate=True)
     currency_id = fields.Many2one('res.currency', string='Account Currency', tracking=True,
         help="Forces all journal items in this account to have a specific currency (i.e. bank journals). If no currency is set, entries can use any currency.")
-    company_currency_id = fields.Many2one('res.currency', compute='_compute_company_currency_id')
+    company_currency_id = fields.Many2one('res.currency', compute='_compute_company_currency_id', compute_sql='_compute_sql_company_currency_id', compute_sudo=True)
     company_fiscal_country_code = fields.Char(compute='_compute_company_fiscal_country_code')
     code = fields.Char(string="Code", size=64, tracking=True, compute='_compute_code', inverse='_inverse_code', compute_sql='_compute_sql_code', compute_sudo=True)
     code_store = fields.Char(company_dependent=True)
@@ -596,6 +596,9 @@ class AccountAccount(models.Model):
     @api.depends_context('company')
     def _compute_company_currency_id(self):
         self.company_currency_id = self.env.company.currency_id
+
+    def _compute_sql_company_currency_id(self, table):
+        return SQL("%s", self.env.company.currency_id.id)
 
     @api.depends_context('company')
     def _compute_company_fiscal_country_code(self):

@@ -31,6 +31,26 @@ class TestEveryModel(TransactionCase):
                     with self.env.cr.savepoint():
                         model.new()[field.name]
 
+    def test_currency_field_has_sql(self):
+        for model in self.env.values():
+            if model._abstract or model.is_transient() or model._name.startswith('test_'):
+                # skip abstract models, transient models (usually we don't group there) and test models
+                continue
+            currencies = {
+                field.currency_field
+                for field in model._fields.values()
+                if field.type == 'monetary'
+                and field.currency_field
+                and (field.store or field.compute_sql)
+            }
+            if 'currency_id' in model._fields:
+                currencies.add('currency_id')  # always add the default currency field
+            for currency_name in currencies:
+                currency_field = model._fields[currency_name]
+                with self.subTest(msg=f"Currency {currency_field} must have a SQL representation."):
+                    if not (currency_field.store or currency_field.compute_sql):
+                        self.fail("Field with SQL representation uses currency without SQL representation")
+
 
 class TestOverrides(TransactionCase):
 
