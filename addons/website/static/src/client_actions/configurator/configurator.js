@@ -148,6 +148,8 @@ const MAX_NBR_DISPLAY_MAIN_THEMES = 3;
 const PREVIEW_IMAGE_SHAPE_URL_REGEX = /^\/?(html_editor|web_editor)\/image_shape(_url)?\//;
 const PREVIEW_DYNAMIC_IMAGE_URL_REGEX = /^\/?(html_editor|web_editor)\/(image_)?shape(_url)?\//;
 
+const DESKTOP_PREVIEW_WIDTH = 1400;
+
 /**
  * Returns a list of maximum "resultNbrMax" themes that depends on the wanted
  * industry and the color palette.
@@ -830,6 +832,9 @@ export class SetupStyleScreen extends ApplyConfiguratorScreen {
         this.closeGeneratorNotification = null;
         this.previewPalettePrefetchId = 0;
         this.previewPalettePrefetchTimeout = null;
+        this.previewInlineVhConversionTimeout = null;
+
+        useExternalListener(window, "resize", () => this.scalePreviewIframe());
 
         onWillStart(() => {
             this.previewState.initialLoaded = false;
@@ -849,6 +854,10 @@ export class SetupStyleScreen extends ApplyConfiguratorScreen {
         onWillUnmount(() => {
             document.body.classList.remove("o_configurator_notifications_top");
             this.cancelPreviewPalettePrefetch();
+            if (this.previewInlineVhConversionTimeout) {
+                browser.clearTimeout(this.previewInlineVhConversionTimeout);
+                this.previewInlineVhConversionTimeout = null;
+            }
             this.closeGeneratorNotification?.();
             this.closeGeneratorNotification = null;
         });
@@ -1129,6 +1138,7 @@ export class SetupStyleScreen extends ApplyConfiguratorScreen {
             await this.getPreviewDynamicShapeUpdates(iframeDoc, colorValues);
         styleEl.textContent = css;
         this.applyPreviewShapeUpdates(imageSrcUpdates, backgroundImageUpdates);
+        this.convertVhToVw(this.previewIframeRef.el, 10 / 16);
     }
 
     // Rebuild dynamic shape URLs with the current iframe palette colors.
@@ -1368,6 +1378,11 @@ export class SetupStyleScreen extends ApplyConfiguratorScreen {
 
     setPreviewDevice(device) {
         this.previewDevice.value = device;
+        requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+                this.scalePreviewIframe();
+            });
+        });
     }
 
     get isPreviewMobile() {
@@ -1413,6 +1428,118 @@ export class SetupStyleScreen extends ApplyConfiguratorScreen {
         }
         this.previewState.initialLoaded = true;
         this.state.previewIsLoading = false;
+        this.scalePreviewIframe();
+        const iframe = this.previewIframeRef.el;
+        this.convertVhToVw(iframe, 10 / 16);
+    }
+
+    convertVhToVw(iframe, ratio) {
+        const doc = iframe.contentDocument;
+        if (!doc) {
+            return;
+        }
+
+        for (const sheet of doc.styleSheets) {
+            let rules;
+            try {
+                rules = sheet.cssRules;
+            } catch {
+                continue;
+            }
+
+            if (!rules) {
+                continue;
+            }
+
+            for (const rule of rules) {
+                if (!rule.style) {
+                    continue;
+                }
+
+                for (let i = 0; i < rule.style.length; i++) {
+                    const prop = rule.style[i];
+                    const value = rule.style.getPropertyValue(prop);
+
+                    if (!value.includes("vh")) {
+                        continue;
+                    }
+
+                    const newValue = value.replace(/([\d.]+)vh/g, (_, v) => {
+                        const vw = parseFloat(v) * ratio;
+                        return `${vw}vw`;
+                    });
+
+                    const priority = rule.style.getPropertyPriority(prop);
+                    rule.style.setProperty(prop, newValue, priority);
+                }
+            }
+        }
+    }
+
+    convertInlineVhToVw(iframe, ratio) {
+        const doc = iframe.contentDocument;
+        if (!doc) {
+            return;
+        }
+
+        doc.querySelectorAll("*").forEach((el) => {
+            for (let i = 0; i < el.style.length; i++) {
+                const prop = el.style[i];
+                const value = el.style.getPropertyValue(prop);
+                if (!value.includes("vh")) {
+                    continue;
+                }
+                const newValue = value.replace(/([\d.]+)vh/g, (_, v) => {
+                    const vw = parseFloat(v) * ratio;
+                    return `${vw}vw`;
+                });
+                const priority = el.style.getPropertyPriority(prop);
+                el.style.setProperty(prop, newValue, priority);
+            }
+        });
+    }
+
+    scalePreviewIframe() {
+        const iframe = this.previewIframeRef.el;
+        if (!iframe) {
+            return;
+        }
+        if (this.isPreviewMobile) {
+            iframe.style.removeProperty("width");
+            iframe.style.removeProperty("height");
+            iframe.style.removeProperty("transform");
+            iframe.style.removeProperty("transform-origin");
+            iframe.style.removeProperty("flex");
+            return;
+        }
+
+        const previewContainer = iframe.parentElement;
+
+        const topBarHeight =
+            previewContainer.querySelector(".o_configurator_preview_iframe_topbar").offsetHeight ||
+            0;
+
+        const availableWidth = previewContainer.clientWidth;
+        const availableHeight = previewContainer.clientHeight - topBarHeight;
+
+        if (!availableWidth || !availableHeight) {
+            return;
+        }
+
+        const scale = Math.min(1, availableWidth / DESKTOP_PREVIEW_WIDTH);
+
+        iframe.style.setProperty("width", `${DESKTOP_PREVIEW_WIDTH}px`, "important");
+        iframe.style.setProperty("height", `${Math.floor(availableHeight / scale)}px`, "important");
+        iframe.style.setProperty("transform-origin", "top left");
+        iframe.style.setProperty("transform", `scale(${scale})`);
+        iframe.style.setProperty("flex", "0 0 auto", "important");
+        if (this.previewInlineVhConversionTimeout) {
+            browser.clearTimeout(this.previewInlineVhConversionTimeout);
+        }
+        this.previewInlineVhConversionTimeout = browser.setTimeout(() => {
+            this.previewInlineVhConversionTimeout = null;
+            this.convertInlineVhToVw(iframe, 10 / 16);
+        }, 250);
     }
 
     deactivatePreviewInteractions(iframeDoc) {
