@@ -1,6 +1,5 @@
 import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
-import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { PaymentInterface } from "@point_of_sale/app/utils/payment/payment_interface";
 import { registry } from "@web/core/registry";
 
@@ -33,7 +32,8 @@ export class PaymentMollie extends PaymentInterface {
         if (line.amount < 0) {
             const originalPaymentId = this._findOriginalPaymentId(line);
             if (!originalPaymentId) {
-                this._showMollieError(
+                this.showAlert(
+                    _t("Mollie Error"),
                     _t("You can only refund an order that was paid for with Mollie.")
                 );
                 return false;
@@ -53,7 +53,7 @@ export class PaymentMollie extends PaymentInterface {
             ]);
             return true;
         } catch (error) {
-            this._showMollieError(error);
+            this.showAlert(_t("Mollie Error"), this._extractErrorMessage(error));
             return false;
         }
     }
@@ -67,7 +67,10 @@ export class PaymentMollie extends PaymentInterface {
                 this.pos.session.id,
             ]);
             if (!["open", "pending"].includes(data.status)) {
-                this._showMollieError(_t("Failed to initiate payment: %s", data.status));
+                this.showAlert(
+                    _t("Mollie Error"),
+                    _t("Failed to initiate payment: %s", data.status)
+                );
                 return false;
             }
 
@@ -84,7 +87,7 @@ export class PaymentMollie extends PaymentInterface {
 
             return promise;
         } catch (error) {
-            this._showMollieError(error);
+            this.showAlert(_t("Mollie Error"), this._extractErrorMessage(error));
             return false;
         }
     }
@@ -100,14 +103,17 @@ export class PaymentMollie extends PaymentInterface {
             ]);
 
             if (!["queued", "pending"].includes(data.status)) {
-                this._showMollieError(_t("Failed to initiate refund: %s", data.status));
+                this.showAlert(
+                    _t("Mollie Error"),
+                    _t("Failed to initiate refund: %s", data.status)
+                );
                 return false;
             }
 
             refundPaymentLine.transaction_id = data.id;
             return true;
         } catch (error) {
-            this._showMollieError(error);
+            this.showAlert(_t("Mollie Error"), this._extractErrorMessage(error));
             return false;
         }
     }
@@ -138,13 +144,14 @@ export class PaymentMollie extends PaymentInterface {
         }
 
         if (notification.status === "failed") {
-            this._showMollieError(
+            this.showAlert(
+                _t("Mollie Error"),
                 notification.status_reason?.message ??
                     _t("The payment failed for an unknown reason.")
             );
         }
         if (notification.status === "expired") {
-            this._showMollieError(_t("The payment has timed out."));
+            this.showAlert(_t("Mollie Error"), _t("The payment has timed out."));
         }
 
         const resolver = this.paymentLineResolvers?.[paymentLine.uuid];
@@ -164,13 +171,6 @@ export class PaymentMollie extends PaymentInterface {
             return error.data.message;
         }
         return error.message;
-    }
-
-    _showMollieError(error) {
-        this.env.services.dialog.add(AlertDialog, {
-            title: _t("Mollie Error"),
-            body: this._extractErrorMessage(error),
-        });
     }
 }
 

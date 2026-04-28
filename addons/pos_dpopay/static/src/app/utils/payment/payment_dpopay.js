@@ -1,7 +1,6 @@
 import { registry } from "@web/core/registry";
 import { handleRPCError, offlineErrorHandler } from "@point_of_sale/app/utils/error_handlers";
 import { PaymentInterface } from "@point_of_sale/app/utils/payment/payment_interface";
-import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { serializeDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
 import { ConnectionLostError, RPCError } from "@web/core/network/rpc";
@@ -257,7 +256,10 @@ export class PaymentDPOPay extends PaymentInterface {
             return true;
         }
 
-        this._showAlert(response?.errorMessage ?? _t("Failed to cancel payment."));
+        this.showAlert(
+            _t("Dpo Pay Error"),
+            response?.errorMessage ?? _t("Failed to cancel payment.")
+        );
         return !this.pollingInProgress;
     }
 
@@ -301,14 +303,7 @@ export class PaymentDPOPay extends PaymentInterface {
         }
 
         this._removePaymentHandler();
-        this._showAlert(response?.errorMessage ?? fallbackMessage);
-    }
-
-    _showAlert(message, title) {
-        this.pos.dialog.add(AlertDialog, {
-            title: title || _t("Dpo Pay Error"),
-            body: message,
-        });
+        this.showAlert(_t("Dpo Pay Error"), response?.errorMessage ?? fallbackMessage);
     }
 
     _stopPendingPayment() {

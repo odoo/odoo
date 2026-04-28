@@ -15,6 +15,7 @@
  * by overriding the loader_params of the models in the back end
  * in the `pos.session` model
  */
+import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 export class PaymentInterface {
     constructor(pos, payment_method_id) {
         this.setup(pos, payment_method_id);
@@ -132,4 +133,11 @@ export class PaymentInterface {
      * @param {string} uuid - The id of the paymentline
      */
     sendPaymentAdjust(uuid) {}
+
+    showAlert(title, message) {
+        this.dialog.add(AlertDialog, {
+            title: title,
+            body: message,
+        });
+    }
 }

@@ -1,7 +1,6 @@
 import { ask } from "@point_of_sale/app/utils/make_awaitable_dialog";
 import { PaymentInterface } from "@point_of_sale/app/utils/payment/payment_interface";
 import { CashdroService } from "@pos_cashdro/cashdro_service";
-import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
 
@@ -58,7 +57,9 @@ export class PaymentCashdro extends PaymentInterface {
     async isOperationAlreadyExecuting() {
         const executingOperationId = await this.cashdroService
             .getCurrentlyExecutingOperation()
-            .catch((error) => this.showError(_t("Cashdro error: %s", error.message)));
+            .catch((error) =>
+                this.showAlert(_t("Cash Machine Error"), _t("Cashdro error: %s", error.message))
+            );
         if (!executingOperationId) {
             return executingOperationId !== null;
         }
@@ -77,7 +78,7 @@ export class PaymentCashdro extends PaymentInterface {
                 await this.cashdroService.waitForPaymentCompletion(executingOperationId);
                 return false;
             } catch {
-                this.showError(_t("Cancellation failed"));
+                this.showAlert(_t("Cash Machine Error"), _t("Cancellation failed"));
             }
         }
 
@@ -87,7 +88,12 @@ export class PaymentCashdro extends PaymentInterface {
     async waitForPaymentResponse() {
         const paymentResult = await this.cashdroService
             .waitForPaymentCompletion(this.operationId)
-            .catch((error) => this.showError(_t("Cashdro payment failed: %s", error.message)));
+            .catch((error) =>
+                this.showAlert(
+                    _t("Cash Machine Error"),
+                    _t("Cashdro payment failed: %s", error.message)
+                )
+            );
         if (!this.paymentLine || !paymentResult) {
             return false;
         }
@@ -122,7 +128,10 @@ export class PaymentCashdro extends PaymentInterface {
         const operationId = await this.cashdroService
             .sendPaymentRequest(amountInCents)
             .catch(async (error) => {
-                this.showError(_t("Cashdro payment failed: %s", error.message));
+                this.showAlert(
+                    _t("Cash Machine Error"),
+                    _t("Cashdro payment failed: %s", error.message)
+                );
             });
 
         if (!this.paymentLine || !operationId) {
@@ -142,7 +151,10 @@ export class PaymentCashdro extends PaymentInterface {
         }
 
         await this.cashdroService.cancelPayment(this.operationId).catch((error) => {
-            this.showError(_t("Cashdro cancellation failed: %s", error.message));
+            this.showAlert(
+                _t("Cash Machine Error"),
+                _t("Cashdro cancellation failed: %s", error.message)
+            );
         });
         // Don't resolve the cancellation, we want to wait
         return new Promise(() => {});
@@ -158,14 +170,6 @@ export class PaymentCashdro extends PaymentInterface {
         }
         const amount = amountInCents / Math.pow(10, this.pos.currency.decimal_places);
         return this.env.utils.roundCurrency(amount);
-    }
-
-    /** @param {string} message */
-    showError(message) {
-        this.dialog.add(AlertDialog, {
-            title: _t("Cash Machine Error"),
-            body: message,
-        });
     }
 }
 

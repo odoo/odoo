@@ -1,6 +1,5 @@
 import { _t } from "@web/core/l10n/translation";
 import { PaymentInterface } from "@point_of_sale/app/utils/payment/payment_interface";
-import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { registry } from "@web/core/registry";
 import { TextInputPopup } from "@point_of_sale/app/components/popups/text_input_popup/text_input_popup";
 import { makeAwaitable } from "@point_of_sale/app/utils/make_awaitable_dialog";
@@ -32,7 +31,7 @@ export class PaymentSafaricom extends PaymentInterface {
 
     _safaricom_handle_response(response, paymentLine) {
         if (response.error && response.error !== "Success") {
-            this._show_error(response.error);
+            this.showAlert(_t("Safaricom M-Pesa Error"), response.error);
             paymentLine.setPaymentStatus("retry");
             return false;
         }
@@ -66,7 +65,10 @@ export class PaymentSafaricom extends PaymentInterface {
         });
 
         if (!phoneNumber) {
-            this._show_error(_t("Phone number is required for M-Pesa payment."));
+            this.showAlert(
+                _t("Safaricom M-Pesa Error"),
+                _t("Phone number is required for M-Pesa payment.")
+            );
             return Promise.resolve(false);
         }
 
@@ -113,29 +115,23 @@ export class PaymentSafaricom extends PaymentInterface {
         }
     }
 
-    _show_error(msg, title) {
-        if (!title) {
-            title = _t("Safaricom M-Pesa Error");
-        }
-        this.env.services.dialog.add(AlertDialog, {
-            title: title,
-            body: msg,
-        });
-    }
-
     _validatePaymentLine(line) {
         if (!line) {
-            this._show_error(_t("Payment line not found"));
+            this.showAlert(_t("Safaricom M-Pesa Error"), _t("Payment line not found"));
             return false;
         }
 
         if (line.amount < 0) {
-            this._show_error(_t("Cannot process transactions with negative amount."));
+            this.showAlert(
+                _t("Safaricom M-Pesa Error"),
+                _t("Cannot process transactions with negative amount.")
+            );
             return false;
         }
 
         if (!Number.isInteger(line.amount)) {
-            this._show_error(
+            this.showAlert(
+                _t("Safaricom M-Pesa Error"),
                 _t("Cannot process transactions with float numbers. Round it please.")
             );
             return false;
@@ -161,7 +157,10 @@ export class PaymentSafaricom extends PaymentInterface {
         const qrCode = await this._call_safaricom(qrData, "generate_qr_code");
 
         if (!qrCode || qrCode.error) {
-            this._show_error(qrCode?.error || _t("Failed to generate QR code"));
+            this.showAlert(
+                _t("Safaricom M-Pesa Error"),
+                qrCode?.error || _t("Failed to generate QR code")
+            );
             line.setPaymentStatus("retry");
             return false;
         }

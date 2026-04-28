@@ -1,6 +1,5 @@
 import { _t } from "@web/core/l10n/translation";
 import { PaymentInterface } from "@point_of_sale/app/utils/payment/payment_interface";
-import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { registry } from "@web/core/registry";
 import { logPosMessage } from "@point_of_sale/app/utils/pretty_console_log";
 const { DateTime } = luxon;
@@ -67,7 +66,8 @@ export class PaymentAdyen extends PaymentInterface {
         if (line) {
             line.setPaymentStatus("retry");
         }
-        this._show_error(
+        this.showAlert(
+            _t("Adyen Error"),
             _t(
                 "Could not connect to the Odoo server, please check your internet connection and try again."
             )
@@ -172,7 +172,10 @@ export class PaymentAdyen extends PaymentInterface {
         const line = order.payment_ids.find((paymentLine) => paymentLine.uuid === uuid);
 
         if (line.amount < 0 && !line.uiState.adyenRefundTransactionId) {
-            this._show_error(_t("Cannot refund non-Adyen transactions via Adyen."));
+            this.showAlert(
+                _t("Adyen Error"),
+                _t("Cannot refund non-Adyen transactions via Adyen.")
+            );
             return false;
         }
 
@@ -206,7 +209,8 @@ export class PaymentAdyen extends PaymentInterface {
             // Only valid response is a 200 OK HTTP response which is
             // represented by true.
             if (!ignore_error && data !== true) {
-                this._show_error(
+                this.showAlert(
+                    _t("Adyen Error"),
                     _t(
                         "Cancelling the payment failed. Please cancel it manually on the payment terminal."
                     )
@@ -258,7 +262,10 @@ export class PaymentAdyen extends PaymentInterface {
         var line = this.pendingAdyenline();
 
         if (!response || (response.error && response.error.status_code == 401)) {
-            this._show_error(_t("Authentication failed. Please check your Adyen credentials."));
+            this.showAlert(
+                _t("Adyen Error"),
+                _t("Authentication failed. Please check your Adyen credentials.")
+            );
             line.setPaymentStatus("force_done");
             return false;
         }
@@ -275,7 +282,10 @@ export class PaymentAdyen extends PaymentInterface {
                 msg = params.get("message");
             }
 
-            this._show_error(_t("An unexpected error occurred. Message from Adyen: %s", msg));
+            this.showAlert(
+                _t("Adyen Error"),
+                _t("An unexpected error occurred. Message from Adyen: %s", msg)
+            );
             if (line) {
                 line.setPaymentStatus("force_done");
             }
@@ -337,7 +347,10 @@ export class PaymentAdyen extends PaymentInterface {
         if (isPaymentSuccessful) {
             this.handleSuccessResponse(line, paymentResponse, additionalResponse);
         } else {
-            this._show_error(_t("Message from Adyen: %s", additionalResponse.get("message")));
+            this.showAlert(
+                _t("Adyen Error"),
+                _t("Message from Adyen: %s", additionalResponse.get("message"))
+            );
         }
         // when starting to wait for the payment response we create a promise
         // that will be resolved when the payment response is received.
@@ -410,16 +423,6 @@ export class PaymentAdyen extends PaymentInterface {
         line.transaction_id = payment_response.POIData.POITransactionID.TransactionID;
         line.card_type = additional_response.get("cardType");
         line.cardholder_name = additional_response.get("cardHolderName") || "";
-    }
-
-    _show_error(msg, title) {
-        if (!title) {
-            title = _t("Adyen Error");
-        }
-        this.env.services.dialog.add(AlertDialog, {
-            title: title,
-            body: msg,
-        });
     }
 }
 

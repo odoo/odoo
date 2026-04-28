@@ -1,9 +1,8 @@
 import { _t } from "@web/core/l10n/translation";
 import { PaymentInterface } from "@point_of_sale/app/utils/payment/payment_interface";
-import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { registry } from "@web/core/registry";
 
-import { QFPay, QFPayError } from "./qfpay";
+import { QFPay } from "./qfpay";
 
 const { DateTime } = luxon;
 
@@ -13,7 +12,9 @@ export class PaymentQFpay extends PaymentInterface {
         this.orm = this.env.services.orm;
         this.dialog = this.env.services.dialog;
         this.paymentLineResolvers = {};
-        this.qfpay = new QFPay(this.env, this.payment_method_id, this._showError.bind(this));
+        this.qfpay = new QFPay(this.env, this.payment_method_id, (error) =>
+            this.showAlert(_t("QFPay Error"), error.message)
+        );
     }
 
     async sendPaymentRequest(line) {
@@ -26,24 +27,23 @@ export class PaymentQFpay extends PaymentInterface {
                 (l) => l.payment_method_id.id === this.payment_method_id.id
             );
             if (!originalPayment) {
-                this._showError(
-                    new QFPayError(
-                        _t("No payment with %s found for this order.", this.payment_method_id.name)
-                    )
+                this.showAlert(
+                    _t("QFPay Error"),
+                    _t("No payment with %s found for this order.", this.payment_method_id.name)
                 );
                 return false;
             }
             if (this._isCreditCardPayment && originalPayment.amount !== -line.amount) {
-                this._showError(
-                    new QFPayError(_t("Credit card payments refund must be for the full amount."))
+                this.showAlert(
+                    _t("QFPay Error"),
+                    _t("Credit card payments refund must be for the full amount.")
                 );
                 return false;
             }
             if (originalPayment.amount < -line.amount) {
-                this._showError(
-                    new QFPayError(
-                        _t("Refund amount cannot be greater than the original payment amount.")
-                    )
+                this.showAlert(
+                    _t("QFPay Error"),
+                    _t("Refund amount cannot be greater than the original payment amount.")
                 );
                 return false;
             }
@@ -55,11 +55,10 @@ export class PaymentQFpay extends PaymentInterface {
                 !currentDateTime.hasSame(originalPaymentDate, "day") ||
                 currentDateTime.hour >= 23
             ) {
-                this._showError(
-                    new QFPayError(
-                        _t(
-                            "Refunds can only be made on the same day before 23:00 HKT. Use the QFPay portal to perform this refund"
-                        )
+                this.showAlert(
+                    _t("QFPay Error"),
+                    _t(
+                        "Refunds can only be made on the same day before 23:00 HKT. Use the QFPay portal to perform this refund"
                     )
                 );
                 return false;
@@ -127,10 +126,9 @@ export class PaymentQFpay extends PaymentInterface {
             line.payment_ref_no = response.chnlsn;
             line.transaction_id = response.syssn;
         } else {
-            this._showError(
-                new QFPayError(
-                    _t("QFPay payment failed. Please try again or use a different payment method.")
-                )
+            this.showAlert(
+                _t("QFPay Error"),
+                _t("QFPay payment failed. Please try again or use a different payment method.")
             );
         }
         // when starting to wait for the payment response we create a promise
@@ -153,13 +151,6 @@ export class PaymentQFpay extends PaymentInterface {
         return ["card_payment", "unionpay_card", "amex_card"].includes(
             this.payment_method_id.qfpay_payment_type
         );
-    }
-
-    _showError(error) {
-        this.dialog.add(AlertDialog, {
-            title: _t("QFPay Error"),
-            body: error.message,
-        });
     }
 }
 

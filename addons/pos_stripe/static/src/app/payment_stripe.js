@@ -3,7 +3,6 @@
 import { _t } from "@web/core/l10n/translation";
 import { loadJS } from "@web/core/assets";
 import { PaymentInterface } from "@point_of_sale/app/utils/payment/payment_interface";
-import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { registry } from "@web/core/registry";
 import { logPosMessage } from "@point_of_sale/app/utils/pretty_console_log";
 
@@ -15,7 +14,7 @@ export class PaymentStripe extends PaymentInterface {
 
     stripeUnexpectedDisconnect() {
         // Include a way to attempt to reconnect to a reader ?
-        this._showError(_t("Reader disconnected"));
+        this.showAlert(_t("Stripe Error"), _t("Reader disconnected"));
     }
 
     async stripeFetchConnectionToken() {
@@ -28,7 +27,7 @@ export class PaymentStripe extends PaymentInterface {
             return data.secret;
         } catch (error) {
             const { message } = error.data || error;
-            this._showError(message, "Fetch Token");
+            this.showAlert("Fetch Token", message);
             this.terminal = false;
         }
     }
@@ -38,9 +37,9 @@ export class PaymentStripe extends PaymentInterface {
             simulated: this.payment_method_id.stripe_serial_number === "SIMULATOR",
         });
         if (discoverResult.error) {
-            this._showError(_t("Failed to discover: %s", discoverResult.error));
+            this.showAlert(_t("Stripe Error"), _t("Failed to discover: %s", discoverResult.error));
         } else if (discoverResult.discoveredReaders.length === 0) {
-            this._showError(_t("No available Stripe readers."));
+            this.showAlert(_t("Stripe Error"), _t("No available Stripe readers."));
         } else {
             // Need to stringify all Readers to avoid to put the array into a proxy Object not interpretable
             // for the Stripe SDK
@@ -60,7 +59,7 @@ export class PaymentStripe extends PaymentInterface {
             logPosMessage("PaymentStripe", "checkReader", "Error while checking reader", false, [
                 error,
             ]);
-            this._showError(error);
+            this.showAlert(_t("Stripe Error"), error);
             return false;
         }
         const line = this.pos.getOrder().getSelectedPaymentline();
@@ -72,7 +71,7 @@ export class PaymentStripe extends PaymentInterface {
         ) {
             const disconnectResult = await this.terminal.disconnectReader();
             if (disconnectResult.error) {
-                this._showError(disconnectResult.error.message, disconnectResult.error.code);
+                this.showAlert(disconnectResult.error.code, disconnectResult.error.message);
                 line.setPaymentStatus("retry");
                 return false;
             } else {
@@ -108,16 +107,17 @@ export class PaymentStripe extends PaymentInterface {
                         [error]
                     );
                     if (error.error) {
-                        this._showError(error.error.message, error.code);
+                        this.showAlert(error.code, error.error.message);
                     } else {
-                        this._showError(error);
+                        this.showAlert(_t("Stripe Error"), error);
                     }
                     line.setPaymentStatus("retry");
                     return false;
                 }
             }
         }
-        this._showError(
+        this.showAlert(
+            _t("Stripe Error"),
             _t(
                 "Stripe readers %s not listed in your account",
                 this.payment_method_id.stripe_serial_number
@@ -162,7 +162,7 @@ export class PaymentStripe extends PaymentInterface {
         line.setPaymentStatus("waitingCard");
         const collectPaymentMethod = await this.terminal.collectPaymentMethod(clientSecret);
         if (collectPaymentMethod.error) {
-            this._showError(collectPaymentMethod.error.message, collectPaymentMethod.error.code);
+            this.showAlert(collectPaymentMethod.error.code, collectPaymentMethod.error.message);
             line.setPaymentStatus("retry");
             return false;
         } else {
@@ -172,7 +172,7 @@ export class PaymentStripe extends PaymentInterface {
             );
             line.transaction_id = collectPaymentMethod.paymentIntent.id;
             if (processPayment.error) {
-                this._showError(processPayment.error.message, processPayment.error.code);
+                this.showAlert(processPayment.error.code, processPayment.error.message);
                 line.setPaymentStatus("retry");
                 return false;
             } else if (processPayment.paymentIntent) {
@@ -223,7 +223,7 @@ export class PaymentStripe extends PaymentInterface {
             this.discoverReaders();
             return true;
         } catch (error) {
-            this._showError(_t("Failed to load resource: net::ERR_INTERNET_DISCONNECTED."), error);
+            this.showAlert(error, _t("Failed to load resource: net::ERR_INTERNET_DISCONNECTED."));
             this.terminal = false;
             return false;
         }
@@ -286,7 +286,7 @@ export class PaymentStripe extends PaymentInterface {
             return data;
         } catch (error) {
             const { message } = error.data || error;
-            this._showError(message, "Capture Payment");
+            this.showAlert("Capture Payment", message);
             return false;
         }
     }
@@ -303,7 +303,7 @@ export class PaymentStripe extends PaymentInterface {
             return data.client_secret;
         } catch (error) {
             const { message } = error.data || error;
-            this._showError(message, "Fetch Secret");
+            this.showAlert("Fetch Secret", message);
             return false;
         }
     }
@@ -316,7 +316,10 @@ export class PaymentStripe extends PaymentInterface {
         const isRefund = line.amount < 0;
 
         if (isRefund && !line.uiState.stripePaymentIdToRefund) {
-            this._showError(_t("You cannot refund a non-Stripe payment via Stripe"));
+            this.showAlert(
+                _t("Stripe Error"),
+                _t("You cannot refund a non-Stripe payment via Stripe")
+            );
             return false;
         }
 
@@ -337,7 +340,7 @@ export class PaymentStripe extends PaymentInterface {
                 false,
                 [error]
             );
-            this._showError(String(error));
+            this.showAlert(_t("Stripe Error"), String(error));
             return false;
         }
     }
@@ -358,30 +361,21 @@ export class PaymentStripe extends PaymentInterface {
         if (!this.terminal) {
             return true;
         } else if (this.terminal.getConnectionStatus() != "connected") {
-            this._showError(_t("Payment cancelled because not reader connected"));
+            this.showAlert(
+                _t("Stripe Error"),
+                _t("Payment cancelled because not reader connected")
+            );
             return true;
         } else {
             const cancelCollectPaymentMethod = await this.terminal.cancelCollectPaymentMethod();
             if (cancelCollectPaymentMethod.error) {
-                this._showError(
-                    cancelCollectPaymentMethod.error.message,
-                    cancelCollectPaymentMethod.error.code
+                this.showAlert(
+                    cancelCollectPaymentMethod.error.code,
+                    cancelCollectPaymentMethod.error.message
                 );
             }
             return true;
         }
-    }
-
-    // private methods
-
-    _showError(msg, title) {
-        if (!title) {
-            title = _t("Stripe Error");
-        }
-        this.env.services.dialog.add(AlertDialog, {
-            title: title,
-            body: msg,
-        });
     }
 }
 

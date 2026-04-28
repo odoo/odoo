@@ -1,7 +1,6 @@
 import { PaymentInterface } from "@point_of_sale/app/utils/payment/payment_interface";
 import { CancelDialog } from "@pos_glory_cash/app/components/cancel_dialog";
 import { GLORY_STATUS_STRING } from "@pos_glory_cash/utils/constants";
-import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { GloryService } from "@pos_glory_cash/glory_service";
@@ -38,7 +37,8 @@ export class PaymentGlory extends PaymentInterface {
                 return;
             }
             case "DISCONNECTED": {
-                this.showError(
+                this.showAlert(
+                    _t("Cash Machine Error"),
                     _t(
                         "Failed to connect to Glory cash machine, please ensure it is switched on and connected to the network."
                     )
@@ -46,7 +46,8 @@ export class PaymentGlory extends PaymentInterface {
                 return;
             }
             case "BAD_CREDENTIALS": {
-                this.showError(
+                this.showAlert(
+                    _t("Cash Machine Error"),
                     _t(
                         "Failed to login to Glory cash machine, please check the configured username and password."
                     )
@@ -54,7 +55,7 @@ export class PaymentGlory extends PaymentInterface {
                 return;
             }
             case "WAITING_ERROR_RECOVERY": {
-                this.showError(this.currentErrorMessage);
+                this.showAlert(_t("Cash Machine Error"), this.currentErrorMessage);
                 return;
             }
             case "WAITING_CANCEL": {
@@ -121,7 +122,10 @@ export class PaymentGlory extends PaymentInterface {
         }
 
         if (this.paymentLine.amount < 0 && this.pos.getCashier()._role !== "manager") {
-            this.showError(_t("Only managers can withdraw cash from the cash machine."));
+            this.showAlert(
+                _t("Cash Machine Error"),
+                _t("Only managers can withdraw cash from the cash machine.")
+            );
             return false;
         }
 
@@ -143,17 +147,18 @@ export class PaymentGlory extends PaymentInterface {
         switch (paymentResult.status) {
             case "DISCONNECTED":
             case "BAD_CREDENTIALS": {
-                this.showError(_t("The cash machine is disconnected."));
+                this.showAlert(_t("Cash Machine Error"), _t("The cash machine is disconnected."));
                 return false;
             }
             case "ERROR":
             case "WAITING_ERROR_RECOVERY": {
-                this.showError(this.currentErrorMessage);
+                this.showAlert(_t("Cash Machine Error"), this.currentErrorMessage);
                 return false;
             }
             case "COLLECTING":
             case "WAITING_REPLENISHMENT": {
-                this.showError(
+                this.showAlert(
+                    _t("Cash Machine Error"),
                     _t(
                         "The cash machine is currently in collection/replenishment mode, please finish this process on the machine before making a payment."
                     )
@@ -167,10 +172,16 @@ export class PaymentGlory extends PaymentInterface {
             case "CHANGE_SHORTAGE":
                 this.setPaymentInfo(paymentResult, false);
                 await this.pos.printReceipt({ printBillActionTriggered: true });
-                this.showError(_t("There is insufficient cash in the machine to give change."));
+                this.showAlert(
+                    _t("Cash Machine Error"),
+                    _t("There is insufficient cash in the machine to give change.")
+                );
                 return false;
             case "OCCUPIED_BY_OTHER":
-                this.showError(_t("The cash machine is in use by another POS."));
+                this.showAlert(
+                    _t("Cash Machine Error"),
+                    _t("The cash machine is in use by another POS.")
+                );
                 return false;
             case "EXCLUSIVE_ERROR": {
                 this.showCancelDialog(
@@ -179,7 +190,8 @@ export class PaymentGlory extends PaymentInterface {
                 return false;
             }
             case "AUTO_RECOVERY_FAILURE": {
-                this.showError(
+                this.showAlert(
+                    _t("Cash Machine Error"),
                     _t(
                         "The payment failed due to an unrecoverable error - see the cash machine screen for details."
                     )
@@ -190,7 +202,8 @@ export class PaymentGlory extends PaymentInterface {
                 return false;
             }
             default: {
-                this.showError(
+                this.showAlert(
+                    _t("Cash Machine Error"),
                     _t("The payment failed for an unknown reason: %s", paymentResult.status)
                 );
                 return false;
@@ -202,7 +215,7 @@ export class PaymentGlory extends PaymentInterface {
         const cancelResult = await this.gloryService.initiatePaymentCancel();
 
         if (cancelResult === "DISCONNECTED") {
-            this.showError(_t("The cash machine is disconnected."));
+            this.showAlert(_t("Cash Machine Error"), _t("The cash machine is disconnected."));
             return false;
         }
 
@@ -252,16 +265,6 @@ export class PaymentGlory extends PaymentInterface {
     gloryAmountToPosAmount(amountInCents) {
         const amount = amountInCents / Math.pow(10, this.pos.currency.decimal_places);
         return this.env.utils.roundCurrency(amount);
-    }
-
-    showError(msg, title) {
-        if (!title) {
-            title = _t("Cash Machine Error");
-        }
-        this.dialog.add(AlertDialog, {
-            title: title,
-            body: msg,
-        });
     }
 
     showCancelDialog(message) {

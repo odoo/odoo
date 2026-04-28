@@ -1,6 +1,5 @@
 import { _t } from "@web/core/l10n/translation";
 import { PaymentInterface } from "@point_of_sale/app/utils/payment/payment_interface";
-import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { registry } from "@web/core/registry";
 
 export class PaymentMercadoPago extends PaymentInterface {
@@ -76,7 +75,7 @@ export class PaymentMercadoPago extends PaymentInterface {
             // Call Mercado Pago to create a payment intent
             const payment_intent = await this.createPaymentIntent();
             if (!("id" in payment_intent)) {
-                this._showMsg(payment_intent.message, "error");
+                this.showAlert("Mercado Pago error", payment_intent.message);
                 return false;
             }
             // Payment intent creation successfull, save it
@@ -88,7 +87,7 @@ export class PaymentMercadoPago extends PaymentInterface {
                 this.webhook_resolver = resolve;
             });
         } catch (error) {
-            this._showMsg(error, "System error");
+            this.showAlert("Mercado Pago System error", error);
             return false;
         }
     }
@@ -104,7 +103,7 @@ export class PaymentMercadoPago extends PaymentInterface {
                 canceling_status.status === 409
                     ? _t("Payment has to be canceled on terminal")
                     : _t("Payment not found (canceled/finished on terminal)");
-            this._showMsg(message, "info");
+            this.showAlert("Mercado Pago info", message);
             return canceling_status.status !== 409;
         }
         return true;
@@ -117,7 +116,7 @@ export class PaymentMercadoPago extends PaymentInterface {
 
         const showMessageAndResolve = (messageKey, status, resolverValue) => {
             if (!resolverValue) {
-                this._showMsg(messageKey, status);
+                this.showAlert("Mercado Pago " + status, messageKey);
             }
             line.setPaymentStatus("done");
             this.webhook_resolver?.(resolverValue);
@@ -188,14 +187,6 @@ export class PaymentMercadoPago extends PaymentInterface {
                 return showMessageAndResolve(_t("Unknown payment status"), "error", false);
             }
         }
-    }
-
-    // private methods
-    _showMsg(msg, title) {
-        this.env.services.dialog.add(AlertDialog, {
-            title: "Mercado Pago " + title,
-            body: msg,
-        });
     }
 }
 

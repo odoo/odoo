@@ -1,6 +1,5 @@
 import { _t } from "@web/core/l10n/translation";
 import { PaymentInterface } from "@point_of_sale/app/utils/payment/payment_interface";
-import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { serializeDateTime } from "@web/core/l10n/dates";
 import { offlineErrorHandler, handleRPCError } from "@point_of_sale/app/utils/error_handlers";
 import { registry } from "@web/core/registry";
@@ -59,7 +58,10 @@ export class PaymentPineLabs extends PaymentInterface {
         const line = this.pendingPineLabsPaymentLine();
         if (!response || response?.error) {
             line.setPaymentStatus("retry");
-            this._showError(response?.error || _t("Pine Labs make payment request failed"));
+            this.showAlert(
+                _t("Pine Labs Error"),
+                response?.error || _t("Pine Labs make payment request failed")
+            );
             return false;
         }
 
@@ -81,7 +83,10 @@ export class PaymentPineLabs extends PaymentInterface {
         if (!response || response?.error) {
             const status = response ? "retry" : "force_done";
             line.setPaymentStatus(status);
-            this._showError(response?.error || _t("Pine Labs get payment status request failed"));
+            this.showAlert(
+                _t("Pine Labs Error"),
+                response?.error || _t("Pine Labs get payment status request failed")
+            );
             if (response) {
                 return resolve(false);
             }
@@ -123,12 +128,15 @@ export class PaymentPineLabs extends PaymentInterface {
     _paymentCancelRequestHandler(response) {
         const line = this.pendingPineLabsPaymentLine();
         if (!response || response?.error) {
-            this._showError(response?.error || _t("Pine Labs payment cancellation request failed"));
+            this.showAlert(
+                _t("Pine Labs Error"),
+                response?.error || _t("Pine Labs payment cancellation request failed")
+            );
             return false;
         } else if (response.notification) {
             line.setPaymentStatus("retry");
             if (this.payment_stopped) {
-                this._showError(_t("Transaction failed due to inactivity"));
+                this.showAlert(_t("Pine Labs Error"), _t("Transaction failed due to inactivity"));
             } else {
                 this.pos.notification.add(response.notification, {
                     type: "warning",
@@ -164,7 +172,10 @@ export class PaymentPineLabs extends PaymentInterface {
             (pi) => pi.payment_method_id.payment_provider === "pine_labs"
         ).length;
         if (paymentLine.amount < 0) {
-            this._showError(_t("Cannot process transactions with negative amount."));
+            this.showAlert(
+                _t("Pine Labs Error"),
+                _t("Cannot process transactions with negative amount.")
+            );
             return false;
         }
 
@@ -252,13 +263,6 @@ export class PaymentPineLabs extends PaymentInterface {
         clearTimeout(this.pollingTimeout);
         clearTimeout(this.inactivityTimeout);
         this.payment_stopped = false;
-    }
-
-    _showError(error_msg) {
-        this.env.services.dialog.add(AlertDialog, {
-            title: _t("Pine Labs Error"),
-            body: error_msg,
-        });
     }
 }
 

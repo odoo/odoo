@@ -1,6 +1,5 @@
 import { _t } from "@web/core/l10n/translation";
 import { PaymentInterface } from "@point_of_sale/app/utils/payment/payment_interface";
-import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { serializeDateTime } from "@web/core/l10n/dates";
 import { registry } from "@web/core/registry";
 
@@ -42,7 +41,8 @@ export class PaymentRazorpay extends PaymentInterface {
         if (line) {
             line.setPaymentStatus("retry");
         }
-        this._showError(
+        this.showAlert(
+            _t("Razorpay Error"),
             _t(
                 "Could not connect to the Odoo server, please check your internet connection and try again."
             )
@@ -60,8 +60,8 @@ export class PaymentRazorpay extends PaymentInterface {
         if (response.error) {
             line.setPaymentStatus("force_done");
             this.payment_stopped
-                ? this._showError(_t("Transaction failed due to inactivity"))
-                : this._showError(response.error);
+                ? this.showAlert(_t("Razorpay Error"), _t("Transaction failed due to inactivity"))
+                : this.showAlert(_t("Razorpay Error"), response.error);
             if (response.payment_messageCode === "P2P_DEVICE_CANCELED") {
                 line.setPaymentStatus("retry");
             }
@@ -79,7 +79,7 @@ export class PaymentRazorpay extends PaymentInterface {
         return this._callRazorpay(data, "razorpay_cancel_payment_request").then((data) => {
             // This proficiently tackles scenarios where payment initiation is in progress and close to the completion phase
             if (data.errorMessage) {
-                this._showError(data.errorMessage);
+                this.showAlert(_t("Razorpay Error"), data.errorMessage);
                 return Promise.resolve(false);
             }
             this._razorpayHandleResponse(data);
@@ -91,7 +91,7 @@ export class PaymentRazorpay extends PaymentInterface {
         const paymentLine = this.pendingRazorpayline();
         if (response?.error) {
             paymentLine.setPaymentStatus("retry");
-            this._showError(response.error);
+            this.showAlert(_t("Razorpay Error"), response.error);
             this._removePaymentHandler();
             return false;
         }
@@ -132,7 +132,10 @@ export class PaymentRazorpay extends PaymentInterface {
         const line = order.getSelectedPaymentline();
 
         if (line.amount < 0 && !order.isRefund) {
-            this._showError(_t("Cannot process transactions with negative amount."));
+            this.showAlert(
+                _t("Razorpay Error"),
+                _t("Cannot process transactions with negative amount.")
+            );
             return Promise.resolve();
         }
 
@@ -158,7 +161,8 @@ export class PaymentRazorpay extends PaymentInterface {
                         (pi) => pi.transaction_id === line.uiState.transaction_id
                     );
                 if (Math.abs(line.amount) < refundedPaymentLine.amount) {
-                    this._showError(
+                    this.showAlert(
+                        _t("Razorpay Error"),
                         _t(
                             "A partial refund is not allowed because the transaction has not yet been settled."
                         )
@@ -167,7 +171,8 @@ export class PaymentRazorpay extends PaymentInterface {
                 }
                 data.refund_type = "void";
             } else if (paymentSettlementStatus === "SETTLED" && paymentStatus === "VOIDED") {
-                this._showError(
+                this.showAlert(
+                    _t("Razorpay Error"),
                     _t(
                         "Related transaction has already been voided. Please try using another payment method."
                     )
@@ -177,7 +182,8 @@ export class PaymentRazorpay extends PaymentInterface {
                 paymentSettlementStatus === "SETTLED" &&
                 paymentStatus === "AUTHORIZED_REFUNDED"
             ) {
-                this._showError(
+                this.showAlert(
+                    _t("Razorpay Error"),
                     _t(
                         "Related transaction has already been Refunded. Please try using another payment method."
                     )
@@ -249,7 +255,8 @@ export class PaymentRazorpay extends PaymentInterface {
             const resultCode = response?.status;
 
             if (resultCode === "QUEUED" && this.queued === false) {
-                this._showError(
+                this.showAlert(
+                    _t("Razorpay Error"),
                     _t(
                         "Payment has been queued. You may choose to wait for the payment to initiate on terminal or proceed to cancel this transaction"
                     )
@@ -296,13 +303,6 @@ export class PaymentRazorpay extends PaymentInterface {
         clearTimeout(this.pollingTimeout);
         clearTimeout(this.inactivityTimeout);
         this.queued = this.payment_stopped = false;
-    }
-
-    _showError(error_msg, title) {
-        this.env.services.dialog.add(AlertDialog, {
-            title: title || _t("Razorpay Error"),
-            body: error_msg,
-        });
     }
 }
 

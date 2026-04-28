@@ -1,6 +1,5 @@
 import { _t } from "@web/core/l10n/translation";
 import { PaymentInterface } from "@point_of_sale/app/utils/payment/payment_interface";
-import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { roundPrecision } from "@web/core/utils/numbers";
 import { uuidv4 } from "@point_of_sale/utils";
 import { registry } from "@web/core/registry";
@@ -57,7 +56,8 @@ export class PaymentVivaCom extends PaymentInterface {
         if (!paymentLine.isDone()) {
             paymentLine.setPaymentStatus("retry");
         }
-        this._show_error(
+        this.showAlert(
+            _t("Viva.com Error"),
             _t(
                 "Could not connect to the Odoo server, please check your internet connection and try again."
             )
@@ -68,7 +68,7 @@ export class PaymentVivaCom extends PaymentInterface {
 
     _viva_com_handle_response(response, paymentLine) {
         if (response.error) {
-            this._show_error(response.error);
+            this.showAlert(_t("Viva.com Error"), response.error);
             return false;
         }
         return this.waitForPaymentConfirmation(paymentLine);
@@ -112,7 +112,7 @@ export class PaymentVivaCom extends PaymentInterface {
         };
         return this._call_viva_com(data, "viva_com_send_payment_cancel", line).then((data) => {
             if (data.error) {
-                this._show_error(data.error);
+                this.showAlert(_t("Viva.com Error"), data.error);
             }
             return true;
         });
@@ -132,7 +132,10 @@ export class PaymentVivaCom extends PaymentInterface {
         if (isPaymentSuccessful) {
             this.handleSuccessResponse(paymentLine, notification);
         } else {
-            this._show_error(_t("Message from Viva.com: %s", notification.error));
+            this.showAlert(
+                _t("Viva.com Error"),
+                _t("Message from Viva.com: %s", notification.error)
+            );
         }
 
         // when starting to wait for the payment response we create a promise
@@ -177,7 +180,10 @@ export class PaymentVivaCom extends PaymentInterface {
                         this.handleSuccessResponse(paymentLine, result);
                         resolve(true);
                     } else {
-                        this._show_error(_t("Message from Viva.com: %s", result.message));
+                        this.showAlert(
+                            _t("Viva.com Error"),
+                            _t("Message from Viva.com: %s", result.message)
+                        );
                         resolve(false);
                     }
                     this.paymentLineResolvers[paymentLine.uuid] = null;
@@ -190,16 +196,6 @@ export class PaymentVivaCom extends PaymentInterface {
         line.transaction_id = notification.transaction_id;
         line.card_type = notification.card_type;
         line.cardholder_name = notification.cardholder_name;
-    }
-
-    _show_error(msg, title) {
-        if (!title) {
-            title = _t("Viva.com Error");
-        }
-        this.env.services.dialog.add(AlertDialog, {
-            title: title,
-            body: msg,
-        });
     }
 }
 
