@@ -12,7 +12,6 @@ from odoo.exceptions import UserError
 from odoo.fields import Domain
 from odoo.tools import SQL
 from odoo.tools.barcode import check_barcode_encoding
-from odoo.tools.mail import html2plaintext, is_html_empty
 
 PY_OPERATORS = {
     '<': py_operator.lt,
@@ -311,16 +310,9 @@ class ProductProduct(models.Model):
         return self.env['stock.route']
 
     def _get_description(self, picking_type_id):
-        """
-            Return product description based on the picking type:
-            * For outgoing pickings, we always use the product name.
-            * For all other pickings, we try to use the product description (if one has been set),
-              otherwise we fall back to the product name.
-        """
+        """ Hook function meant to be overridden. """
         self.ensure_one()
-        if picking_type_id.code == 'outgoing':
-            return self.display_name
-        return html2plaintext(self.description) if not is_html_empty(self.description) else self.display_name
+        return self.display_name
 
     def _get_picking_description(self, picking_type_id):
         """
