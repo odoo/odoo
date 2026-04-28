@@ -150,11 +150,8 @@
                                 name="action_bill_matching"
                                 type="object"
                                 groups="account.group_account_invoice"
-                                icon="fa-bullseye"
-                                invisible="not partner_id or state != 'purchase' or not partner_bill_count or invoice_status == 'invoiced'">
-                            <div class="o_field_statinfo">
-                                <span class="o_stat_text">Bill Matching</span>
-                            </div>
+                                invisible="not partner_id or state != 'purchase' or not partner_bill_count">
+                            <field name="bill_matched_ratio" string="Bill Matching" widget="percentpie"/>
                         </button>
                         <button type="object"  name="action_view_invoice"
                             class="oe_stat_button"
@@ -776,6 +773,31 @@
             </field>
         </record>
 
+        <record id="purchase_order_line_list_invoice" model="ir.ui.view">
+            <field name="name">purchase.order.line.list.invoice</field>
+            <field name="model">purchase.order.line</field>
+            <field name="arch" type="xml">
+                <list string="Purchase Order Lines" create="false">
+                    <field name="order_id"/>
+                    <field name="product_id"/>
+                    <field name="name"/>
+                    <field name="date_approve" string="Date" options="{'show_time': False}"/>
+                    <field name="partner_id" string="Vendor" optional="hide"/>
+                    <field name="product_qty" string="Quantity" optional="hide"/>
+                    <field name="qty_to_invoice" string="Qty to Invoice"
+                           decoration-info="qty_to_invoice &gt; context.get('invoice_qty', 0)"
+                           decoration-danger="qty_to_invoice &lt; context.get('invoice_qty', 0)"/>
+                    <field name="price_unit" string="Unit Price"
+                           decoration-info="price_unit &gt; context.get('invoice_price_unit', 0)"
+                           decoration-danger="price_unit &lt; context.get('invoice_price_unit', 0)"/>
+                    <field name="price_subtotal" string="Total Untaxed" widget="monetary" optional="hide"/>
+                    <field name="price_subtotal_to_invoice" string="To Invoice" widget="monetary" optional="show"/>
+                    <field name="currency_id" column_invisible="True"/>
+                    <field name="company_id" optional="hide"/>
+                </list>
+            </field>
+        </record>
+
         <record id="purchase_order_line_form2" model="ir.ui.view">
             <field name="name">purchase.order.line.form2</field>
             <field name="model">purchase.order.line</field>
@@ -818,11 +840,66 @@
                 </form>
             </field>
         </record>
+
+        <record id="purchase_order_line_view_form_invoice" model="ir.ui.view">
+            <field name="name">purchase.order.line.view.form.invoice</field>
+            <field name="model">purchase.order.line</field>
+            <field name="arch" type="xml">
+                <form string="Purchase Order Line" create="false">
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button class="oe_stat_button"
+                                    type="object"
+                                    name="action_open_invoices"
+                                    icon="fa-pencil-square-o"
+                                    invisible="not matched_invoice_count">
+                            <field string="Vendor Bills" name="matched_invoice_count" widget="statinfo"/>
+                            </button>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="product_id" readonly="1"/>
+                                <label for="product_qty"/>
+                                <div class="o_row">
+                                    <field name="product_qty" readonly="1"/>
+                                    <field name="uom_id" readonly="1" groups="uom.group_uom"/>
+                                </div>
+                                <label for="qty_received"/>
+                                <div class="o_row">
+                                    <field name="qty_received" readonly="1"/>
+                                    <field name="uom_id" readonly="1" groups="uom.group_uom"/>
+                                </div>
+                                <label for="qty_invoiced"/>
+                                <div class="o_row">
+                                    <field name="qty_invoiced" readonly="1"/>
+                                    <field name="uom_id" readonly="1" groups="uom.group_uom"/>
+                                </div>
+                                <field name="currency_id" invisible="1"/>
+                                <field name="price_unit" widget="monetary" options="{'currencyField': 'currency_id'}" readonly="1"/>
+                                <field name="name" widget="section_and_note_text" readonly="1"/>
+                            </group>
+                            <group>
+                                <field name="partner_id"/>
+                                <field name="order_id" readonly="1"/>
+                                <field name="date_order"/>
+                                <field name="tax_ids" widget="many2many_tax_tags" readonly="1"
+                                       domain="[('type_tax_use', '=', 'purchase')]"/>
+                                <field name="analytic_distribution" widget="analytic_distribution"
+                                       groups="analytic.group_analytic_accounting" readonly="1"
+                                       options="{'product_field': 'product_id', 'business_domain': 'purchase_order'}"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
           <record id="purchase_order_line_search" model="ir.ui.view">
             <field name="name">purchase.order.line.search</field>
             <field name="model">purchase.order.line</field>
             <field name="arch" type="xml">
                 <search string="Search Purchase Order">
+                    <field name="name" string="Description" filter_domain="['|', ('name', 'ilike', self), ('product_id', 'ilike', self)]"/>
                     <field name="order_id"/>
                     <field name="product_id"/>
                     <field name="partner_id" string="Vendor"/>
@@ -847,6 +924,7 @@
     <record id="purchase_history_tree" model="ir.ui.view">
         <field name="name">purchase.history.list</field>
         <field name="model">purchase.order.line</field>
+        <field name="priority" eval="20"/>
         <field name="arch" type="xml">
             <list create="false" default_order="order_id asc"
                     decoration-info="order_id == context.get('active_id')"

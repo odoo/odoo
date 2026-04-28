@@ -125,6 +125,7 @@ class PurchaseOrder(models.Model):
     note = fields.Html('Terms and Conditions')
 
     partner_bill_count = fields.Integer(related='partner_id.supplier_invoice_count')
+    bill_matched_ratio = fields.Float(compute='_compute_bill_matched_ratio', string='Bill Matched Ratio')
     invoice_count = fields.Integer(compute="_compute_invoice", string='Bill Count', copy=False, default=0, store=True)
     invoice_ids = fields.Many2many('account.move', compute="_compute_invoice", string='Bills', copy=False, store=True)
     invoice_status = fields.Selection([
@@ -210,6 +211,17 @@ class PurchaseOrder(models.Model):
         super(PurchaseOrder, self)._compute_access_url()
         for order in self:
             order.access_url = '/my/purchase/%s' % (order.id)
+
+    @api.depends('order_line.qty_invoiced', 'order_line.product_qty', 'order_line.qty_received')
+    def _compute_bill_matched_ratio(self):
+        def get_line_invoiced_ratio(line):
+            base_quantity = line.product_qty if line.product_id.purchase_method == 'purchase' else line.qty_received
+            return line.qty_invoiced / base_quantity if base_quantity else 0
+
+        for order in self:
+            product_lines = order.order_line.filtered(lambda pol: not pol.display_type)
+            invoiced_ratio = [get_line_invoiced_ratio(line) for line in product_lines]
+            order.bill_matched_ratio = sum(invoiced_ratio) / len(product_lines) * 100 if product_lines else 0
 
     @api.depends('state', 'date_order', 'date_approve')
     def _compute_date_calendar_start(self):
@@ -789,10 +801,16 @@ class PurchaseOrder(models.Model):
             'type': 'ir.actions.act_window',
             'name': _("Bill Matching"),
             'res_model': 'purchase.bill.line.match',
+            'context': {
+                'partner_id': self.partner_id.id,
+            },
             'domain': [
                 ('partner_id', 'in', (self.partner_id | self.partner_id.commercial_partner_id).ids),
                 ('company_id', 'in', self.env.company.ids),
-                ('purchase_order_id', 'in', [self.id, False]),
+                '|', '|',
+                ('purchase_order_id', '=', self.id),
+                ('matching_id', '=', 0),
+                ('aml_id.purchase_order_id', '=', self.id),
             ],
             'views': [(self.env.ref('purchase.purchase_bill_line_match_tree').id, 'list')],
         }
