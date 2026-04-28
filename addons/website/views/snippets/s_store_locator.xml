@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template name="Store Locator" id="s_store_locator">
+    <section class="s_store_locator o_cc o_cc1 pt80 pb80">
+        <div class="container">
+            <h2>Visit Us</h2>
+            <p><br/></p>
+            <div class="row s_nb_column_fixed">
+                <div class="o_colored_level o_cc o_cc2 col-lg-4 rounded pt24 pb24" style="border-radius: 9.6px !important;">
+                    <h3 class="h5-fs">Opening hours</h3>
+                    <p><br/></p>
+                    <p class="o_small-fs"><u>Monday</u><br/>8.00am-6.00pm</p>
+                    <p class="o_small-fs"><u>Tuesday</u><br/>8.00am-6.00pm</p>
+                    <p class="o_small-fs"><u>Wednesday</u><br/>8.00am-12.00pm</p>
+                    <p class="o_small-fs"><u>Thursday</u><br/>8.00am-6.00pm</p>
+                    <p><a class="btn btn-primary" href="/contactus">Get direction</a></p>
+                </div>
+                <div class="col-lg-8">
+                    <section class="s_map pt216 pb216 rounded-3 o_not_editable" data-map-type="m" data-map-zoom="12" t-att-data-map-address="' '.join(filter(None, (user_id.company_id.street, user_id.company_id.city, user_id.company_id.state_id.display_name, user_id.company_id.country_id.display_name)))" data-vxml="001" data-snippet="s_map" data-name="Map">
+                        <div class="map_container">
+                            <div class="css_non_editable_mode_hidden">
+                                <div class="missing_option_warning alert alert-info rounded-0 fade show d-none d-print-none">
+                                    An address must be specified for a map to be embedded
+                                </div>
+                            </div>
+                            <iframe t-if="not test_mode_enabled" class="s_map_embedded o_not_editable" src="https://maps.google.com/maps?q=250%20Executive%20Park%20Blvd%2C%20Suite%203400%20San%20Francisco%20California%20(US)%20United%20States&amp;t=m&amp;z=12&amp;ie=UTF8&amp;iwloc=&amp;output=embed" width="100%" height="100%" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" aria-label="Map"/>
+                            <div class="s_map_color_filter"/>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+</odoo>
