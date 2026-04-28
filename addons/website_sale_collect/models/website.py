@@ -38,7 +38,7 @@ class Website(models.Model):
         """
         free_qty = super()._get_product_available_qty(product, **kwargs)
         if self.warehouse_id and self.sudo().in_store_dm_id:  # If warehouse is set on website.
-            order = request and request.cart
+            order = request.cart if request and hasattr(request, "cart") else False
             if not order or not order.carrier_id:
                 # Check free quantities in the in-store warehouses.
                 free_qty = max(free_qty, self._get_max_in_store_product_available_qty(product))
