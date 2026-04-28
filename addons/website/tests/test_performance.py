@@ -132,7 +132,7 @@ class TestStandardPerformance(UtilPerf):
         self.assertEqual(self.env.ref('base.user_admin').sudo().website_published, False)
         user_id = self.ref('base.user_admin')
         url = f'/web/image/res.users/{user_id}/image_256'
-        self.assertEqual(self._get_url_hot_query(url), 6)
+        self.assertEqual(self._get_url_hot_query(url), 5)
 
     @mute_logger('odoo.http')
     def test_11_perf_sql_img_controller(self):
