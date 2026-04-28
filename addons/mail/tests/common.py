@@ -23,6 +23,7 @@ from urllib.parse import urlparse, urlencode, parse_qsl
 
 from odoo import tools, fields
 from odoo.addons.base.models.ir_mail_server import IrMail_Server
+from odoo.addons.base.models.ir_mail_server import MailDeliveryException
 from odoo.addons.base.tests.common import MockSmtplibCase
 from odoo.addons.bus.models.bus import BusBus
 from odoo.addons.bus.tests.common import BusCase, BusResult
@@ -143,6 +144,21 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
             self.mail_mail_private_send_mocked = mail_mail_private_send_mocked
             self.push_to_end_point_mocked = patched_push
             yield
+
+    @contextmanager
+    def mock_send_email_delivery_exception(self, fail_emails, error="OutboundSpamException"):
+        """ Small tooling to simulate a crash at sending (smtp management level)
+        for some specific emails. """
+        send_current = self.send_email_mocked.side_effect
+        self.addCleanup(setattr, self.send_email_mocked, 'side_effect', send_current)
+
+        def _send_email(model, message, **kwargs):
+            if message['To'] in fail_emails:
+                raise MailDeliveryException(error)
+            return send_current(model, message, **kwargs)
+
+        self.send_email_mocked.side_effect = _send_email
+        yield
 
     def _init_mail_mock(self):
         self._mails = []
@@ -353,6 +369,16 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
                 debug_log=debug_log,
             )
         return capture_messages
+
+    def gateway_mail_reply_wmail(self, template, record, mail_mail, debug_log=False):
+        """ Simulate a reply through the mail gateway. Usage: giving an existing
+        mail_mail sent to record, use its message-ID to simulate a reply. """
+        return self._gateway_mail_reply(
+            template, mail=mail_mail,
+            target_field=record._rec_name,
+            target_model=record._name,
+            debug_log=debug_log,
+        )
 
     def gateway_mail_reply_wrecord(self, template, record, use_in_reply_to=True, debug_log=False):
         """ Simulate a reply through the mail gateway. Usage: giving a record,
