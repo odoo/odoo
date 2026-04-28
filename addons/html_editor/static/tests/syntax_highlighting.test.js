@@ -1,7 +1,12 @@
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { getContent, setSelection } from "./_helpers/selection";
 import { animationFrame, click, press, queryOne, waitFor } from "@odoo/hoot-dom";
-import { ensureDistinctHistoryStep, insertText, splitBlock } from "./_helpers/user_actions";
+import {
+    ensureDistinctHistoryStep,
+    insertText,
+    insertSpace,
+    splitBlock,
+} from "./_helpers/user_actions";
 import {
     compareHighlightedContent,
     highlightedPre,
@@ -1262,6 +1267,30 @@ test("should keep textarea focused after copying code content", async () => {
 
     // Ensure focus remains on the textarea after copying
     expect(document.activeElement).toBe(textarea);
+});
+
+test("should focus textarea when creating new code block inside a new list", async () => {
+    const { editor } = await setupEditor(`<p>[]</p>`, {
+        config: configWithEmbeddings,
+    });
+    // Create list
+    await insertText(editor, "1.");
+    await insertSpace(editor);
+    expect(getContent(editor.editable)).toBe(
+        `<ol><li o-we-hint-text="List" class="o-we-hint">[]<br></li></ol>`
+    );
+    // Insert code block
+    await insertPre(editor);
+    await compareHighlightedContent(
+        getContent(editor.editable),
+        "<ol><li>" + highlightedPre({ value: "", textareaRange: 0 }) + "</li></ol>",
+        "The syntax highlighting wrapper was inserted, and the selection is inside the textarea.",
+        editor
+    );
+
+    // Focus should move to textarea
+    const textarea = editor.document.querySelector("textarea");
+    expect(editor.document.activeElement).toBe(textarea);
 });
 
 test.tags("desktop");
