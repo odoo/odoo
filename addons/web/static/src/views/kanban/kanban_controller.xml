@@ -67,6 +67,7 @@
                     </CogMenu>
                 </t>
                 <t t-set-slot="control-panel-actions">
+                    <t t-log="'Offline:', this.offlineService.offline" />
                     <SearchBar t-if="!this.offlineService.offline" toggler="this.searchBarToggler" autofocus="this.firstLoad"/>
                     <OfflineSearchBar t-else="" toggler="this.searchBarToggler" autofocus="this.firstLoad"/>
                 </t>
