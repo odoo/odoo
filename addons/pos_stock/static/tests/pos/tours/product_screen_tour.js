@@ -49,7 +49,7 @@ registry.category("web_tour.tours").add("test_only_existing_lots", {
             StockProductScreen.selectNthLotNumber(1),
             ProductScreen.selectedOrderlineHas("Product with existing lots", "1.0"),
             inLeftSide({
-                trigger: ".order-container .orderline .lot-number:contains('Lot Number 1001')",
+                trigger: ".order-container .orderline .lot-number:contains('Lot 1001')",
             }),
             Chrome.endTour(),
         ].flat(),

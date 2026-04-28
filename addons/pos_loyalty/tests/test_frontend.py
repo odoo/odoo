@@ -316,6 +316,9 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         self.assertEqual(loyalty_program.pos_order_count, 1)
         self.assertAlmostEqual(aaa_loyalty_card.points, 4)
+        histories = aaa_loyalty_card.history_ids.sorted("order_id")
+        self.assertEqual(histories.mapped("issued"), [2.0, 2.0, 4.0])
+        self.assertEqual(histories.mapped("used"), [0.0, 4.0, 0.0])
 
         # Part 2
         self.start_pos_tour("PosLoyaltyLoyaltyProgram2")

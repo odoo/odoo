@@ -4,18 +4,17 @@
         <template id="pos_stock.pos_orderline_receipt_information" inherit_id="point_of_sale.pos_orderline_receipt_information">
             <div name="extra-info" position="before">
                 <div t-if="line['lot_names']" class="text-small">
-                    <strong>Lot number: </strong>
-                    <span t-foreach="line['lot_names']" t-as="lot_name">
-                        <t t-out="lot_name"/>
-                    </span>
+                    <ul t-foreach="line['lot_names']" t-as="lot_name" style="list-style: none; padding: 0; margin: 0;">
+                        <li t-out="lot_name" />
+                    </ul>
                 </div>
             </div>
         </template>
 
         <template id="pos_stock.pos_order_receipt_footer" inherit_id="point_of_sale.pos_order_receipt_footer">
             <xpath expr="//t[@t-call='point_of_sale.company_info_receipt']" position="before">
-                <div class="mt-2 mb-2" t-if="extra_data['formated_shipping_date']">
-                    Expected delivery: <span class="shipping-date" t-out="extra_data['formated_shipping_date']"/>
+                <div t-if="extra_data['formated_shipping_date']" class="mt-2 mb-2 w-100 text-start text-small">
+                    <span>Expected delivery:</span> <span class="shipping-date" style="float:right;" t-out="extra_data['formated_shipping_date']"/>
                 </div>
             </xpath>
         </template>

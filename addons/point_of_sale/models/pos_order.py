@@ -496,7 +496,7 @@ class PosOrder(models.Model):
     def _get_order_tax_totals(self):
         self.ensure_one()
         self.amount_paid = sum(payment.amount for payment in self.payment_ids)
-        self.amount_return = -sum((payment.amount < 0 and payment.amount) or 0 for payment in self.payment_ids)
+        self.amount_return = -sum(payment.amount for payment in self.payment_ids if payment.amount < 0 and not self.is_refund)
         base_lines = self.lines._prepare_tax_base_line_values()
         self.env['account.tax']._add_tax_details_in_base_lines(base_lines, self.company_id)
         self.env['account.tax']._round_base_lines_tax_details(base_lines, self.company_id)
