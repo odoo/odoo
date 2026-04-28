@@ -3,7 +3,7 @@
 
     <t t-name="discuss.Typing">
         <t t-if="this.props.member ? this.props.member.isTyping : this.props.channel.hasOtherMembersTyping">
-            <div t-if="this.showTypingIcon" class="o-discuss-Typing-icon d-flex align-items-center bg-inherit" t-attf-class="{{ this.className }}" t-att-title="this.text">
+            <div t-if="this.showTypingIcon" class="o-discuss-Typing-icon d-flex align-items-center bg-inherit" t-att-class="{ 'o-isBrowserSafari': this.isBrowserSafari() }" t-attf-class="{{ this.className }}" t-att-title="this.text">
                 <span class="o-discuss-Typing-dot d-flex flex-shrink-0 rounded-pill" t-att-class="{
                     'o-sizeMedium': ['medium', 'md'].includes(this.props.size),
                     'o-sizeSmall': ['small', 'sm'].includes(this.props.size),
