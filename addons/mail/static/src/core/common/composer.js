@@ -57,6 +57,13 @@ const EDIT_CLICK_TYPE = {
     SAVE: "save",
 };
 export const MENTION_AMOUNT_WARNING = 50;
+const NO_SUGGESTIONS_LABELS = {
+    Partner: _t("No contacts found"),
+    "discuss.channel": _t("No channels found"),
+    ChannelCommand: _t("No commands found"),
+    "mail.canned.response": _t("No canned responses found"),
+    emoji: _t("No emojis found"),
+};
 
 class FullComposerRecoveryPopover extends Component {
     static props = ["composer", "onClickFullRecover", "onClickTextRecover", "close?"];
@@ -490,10 +497,11 @@ export class Composer extends Component {
     }
 
     get hasSuggestions() {
-        return Boolean(this.suggestion?.state.items);
+        return Boolean(this.suggestion?.state.suggestions?.length);
     }
 
     get navigableListProps() {
+        const isLoading = Boolean(this.suggestion.search.term) && this.suggestion.state.isFetching;
         const props = {
             anchorRef: this.inputContainerRef.el,
             position: this.env.inChatter ? "bottom-fit" : "top-fit",
@@ -501,19 +509,19 @@ export class Composer extends Component {
                 this.suggestion.insert(option);
                 markEventHandled(ev, "composer.selectSuggestion");
             },
-            isLoading: !!this.suggestion.search.term && this.suggestion.state.isFetching,
+            isLoading,
             options: [],
         };
+        const { type, suggestions } = this.suggestion.state;
         if (!this.hasSuggestions) {
+            if (type && !isLoading && !this.suggestion.search.isOutOfBounds) {
+                props.options = [{ label: NO_SUGGESTIONS_LABELS[type], unselectable: true }];
+            }
             return props;
         }
         return {
             ...props,
-            ...mapSuggestionsToOptions(
-                this.suggestion.state.items.type,
-                this.suggestion.state.items.suggestions,
-                { thread: this.thread }
-            ),
+            ...mapSuggestionsToOptions(type, suggestions, { thread: this.thread }),
         };
     }
 
