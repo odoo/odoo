@@ -792,7 +792,7 @@ class MrpWorkorder(models.Model):
                 }
                 if wo.workcenter_id:
                     vals['date_finished'] = datetime.max
-                wo.write(vals)
+                wo.with_context(bypass_duration_calculation=True).write(vals)
                 dec_workorders[idx - 1].sequence = max_seq - idx + 1
         return self.web_read({'date_start': {}, 'date_finished': {}, 'sequence': {}})
 
