@@ -47,7 +47,8 @@ class HrEmployee(models.Model):
     overtime_ids = fields.One2many(
         'hr.attendance.overtime', 'employee_id', groups="hr_attendance.group_hr_attendance_officer,hr.group_hr_user")
     total_overtime = fields.Float(
-        compute='_compute_total_overtime', compute_sudo=True)
+        compute='_compute_total_overtime', compute_sudo=True,
+        groups="hr_attendance.group_hr_attendance_officer,hr.group_hr_user")
 
     @api.model_create_multi
     def create(self, vals_list):
