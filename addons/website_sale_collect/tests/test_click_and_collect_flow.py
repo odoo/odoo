@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from unittest.mock import patch
+
 from odoo.tests import tagged
 from odoo.tests.common import HttpCase
 
@@ -53,3 +55,14 @@ class TestClickAndCollectFlow(HttpCase, ClickAndCollectCommon):
         })
         carrier.delivery_type = "in_store"
         self.assertEqual(carrier.allow_cash_on_delivery, False)
+
+    def test_get_product_available_qty_without_cart_request(self):
+        self.website.warehouse_id = self.warehouse
+
+        with patch(
+            'odoo.addons.website_sale_collect.models.website.request',
+            new=object(),
+        ):
+            qty = self.website._get_product_available_qty(self.storable_product)
+
+        self.assertEqual(qty, 10)
