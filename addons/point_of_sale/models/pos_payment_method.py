@@ -106,7 +106,7 @@ class PosPaymentMethod(models.Model):
     @api.model
     def get_payment_providers(self):
         return [
-            {"type": "terminal", "provider": "axepta_bnpp", "module": "pos_iot_worldline", "name": "Axepta BNP Paribas"},
+            {"type": "terminal", "provider": "worldline", "module": "pos_iot_worldline", "name": "Axepta BNP Paribas"},
             {"type": "terminal", "provider": "six_iot", "module": "pos_iot_six", "name": "SIX"},
             {"type": "terminal", "provider": "adyen", "module": "pos_adyen", "name": "Adyen"},
             {"type": "terminal", "provider": "mercado_pago", "module": "pos_mercado_pago", "name": "Mercado Pago"},
