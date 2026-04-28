@@ -1093,11 +1093,20 @@ patch(PosOrder.prototype, {
                     if (line.reward_id) {
                         continue;
                     }
+                    let discountedAmount = 0;
                     if (lineReward.discount_applicability === "cheapest") {
-                        remainingAmountPerLine[line.uuid] *= 1 - discount / line.getQuantity();
+                        discountedAmount =
+                            (-remainingAmountPerLine[line.uuid] * discount) / line.getQuantity();
                     } else {
-                        remainingAmountPerLine[line.uuid] *= 1 - discount;
+                        discountedAmount = -remainingAmountPerLine[line.uuid] * discount;
                     }
+                    if (lineReward.discount_max_amount && lineReward.discount_max_amount > 0) {
+                        discountedAmount = Math.max(
+                            discountedAmount,
+                            -lineReward.discount_max_amount
+                        );
+                    }
+                    remainingAmountPerLine[line.uuid] += discountedAmount;
                 }
             }
         }
