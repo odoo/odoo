@@ -76,6 +76,7 @@ class IrActionsReport(models.Model):
 
                         page = header_pdf.getPage(0)
                         page.mergePage(qr_pdf.getPage(0))
+                        page.compressContentStreams()
 
                         output_pdf = OdooPdfFileWriter()
                         output_pdf.addPage(page)
