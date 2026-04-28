@@ -4,18 +4,12 @@ from unittest.mock import patch
 from odoo.tests.common import HttpCase, tagged
 
 
-@tagged("-standard", "-at_install", "post_install", "database_breaking")
+@tagged("-at_install", "post_install")
 class TestAuthLDAP(HttpCase):
-    def setUp(self):
-        super().setUp()
-
-        def remove_ldap_user():
-            with self.registry.cursor() as cr:
-                cr.execute("DELETE FROM res_users WHERE login = 'test_ldap_user'")
-        self.addCleanup(remove_ldap_user)
 
     def test_auth_ldap(self):
-        def _get_ldap_dicts(*args, **kwargs):
+        def _get_ldap_dicts(self):
+            template_user = self.env.ref("base.template_portal_user_id")
             return [
                 {
                     "id": 1,
@@ -26,7 +20,7 @@ class TestAuthLDAP(HttpCase):
                     "ldap_password": "admin",
                     "ldap_filter": "cn=%s",
                     "ldap_base": "dc=odoo,dc=com",
-                    "user": (6, "Marc Demo"),
+                    "user": (template_user.id, template_user.name),
                     "create_user": True,
                     "ldap_tls": False,
                 }
@@ -43,9 +37,8 @@ class TestAuthLDAP(HttpCase):
                 },
             )
 
-        with self.registry.cursor() as cr:
-            cr.execute("SELECT id FROM res_users WHERE login = 'test_ldap_user'")
-            self.assertFalse(cr.rowcount, "User should not be present")
+        self.env.cr.execute("SELECT id FROM res_users WHERE login = 'test_ldap_user'")
+        self.assertFalse(self.env.cr.rowcount, "User should not be present")
 
         body = self.url_open("/web/login").text
         csrf = re.search(r'csrf_token: "(\w*?)"', body).group(1)
@@ -64,8 +57,7 @@ class TestAuthLDAP(HttpCase):
 
         self.assertTrue(res.session, "A session must exist at this point")
 
-        with self.registry.cursor() as cr:
-            cr.execute(
-                "SELECT id FROM res_users WHERE login = %s and id = %s",
-                ("test_ldap_user", res.session.uid))
-            self.assertTrue(cr.rowcount, "User should be present")
+        self.env.cr.execute(
+            "SELECT id FROM res_users WHERE login = %s and id = %s",
+            ("test_ldap_user", res.session.uid))
+        self.assertTrue(self.env.cr.rowcount, "User should be present")
