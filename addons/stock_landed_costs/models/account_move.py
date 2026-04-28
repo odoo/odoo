@@ -48,9 +48,10 @@ class AccountMove(models.Model):
         return dict(action, domain=domain, context=context, views=views)
 
     def _post(self, soft=True):
-        posted = super()._post(soft)
+    posted = super()._post(soft=soft)
+    if posted and not self.payment_id:
         posted.sudo().landed_costs_ids.reconcile_landed_cost()
-        return posted
+    return posted
 
 
 class AccountMoveLine(models.Model):
