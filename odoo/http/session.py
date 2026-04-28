@@ -8,6 +8,7 @@ import os
 import re
 import secrets
 import tempfile
+import threading
 import time
 import typing
 from collections.abc import MutableMapping
@@ -540,6 +541,11 @@ class SessionStore:
         else:
             self.delete(session)
             session.sid = self.generate_key()
+            if hasattr(threading.current_thread(), 'sess_id'):
+                _logger.info(
+                    'Session rotated: %s -> %s', threading.current_thread().sess_id, session.sid[:8]
+                )
+            threading.current_thread().sess_id = session.sid[:8]
         if session.uid:
             assert env, "saving this session requires an environment"
             update_session_token(session, env)

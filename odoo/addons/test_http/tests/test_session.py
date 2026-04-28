@@ -256,7 +256,7 @@ class TestHttpSession(TestHttpBase):
                     "csrf_token": self.csrf_token(),
                 },
             ).raise_for_status()
-        self.assertEqual(len(capture.output), 1)
+        self.assertEqual(len(capture.output), 2)
         self.assertRegex(capture.output[0],
             r"^WARNING:odoo.http:<function odoo\.addons\.\w+\.controllers\.\w+\.logout> "
             r"called ignoring args {('session_id', 'debug'|'debug', 'session_id')}$"

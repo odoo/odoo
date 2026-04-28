@@ -252,6 +252,8 @@ class Application:
             del current_thread.dbname
         if hasattr(current_thread, 'uid'):
             del current_thread.uid
+        if hasattr(current_thread, 'sess_id'):
+            del current_thread.sess_id
         current_thread.rpc_model_method = ''
 
         if config['proxy_mode'] and environ.get("HTTP_X_FORWARDED_HOST"):
@@ -524,6 +526,7 @@ def _set_session_and_dbname(request: Request) -> None:
     session.is_dirty = False
     request.session = session
     request.db = dbname
+    threading.current_thread().sess_id = request.session.sid[:8]
 
 
 def _set_request_dispatcher(request: Request, rule: werkzeug.routing.Rule):

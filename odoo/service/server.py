@@ -141,6 +141,16 @@ class CommonRequestHandler(werkzeug.serving.WSGIRequestHandler):
         self._sent_server_header = None
         super().__init__(*args, **kwargs)
 
+    def log(self, type, message, *args):
+        # Common Log Format:
+        #   'ip-address ident auth [timestamp] "method path version" status size'
+        # The message function parameter holds everything after the timestamp
+        # Use the (shortened) session-id as ident, leave auth empty (a dash).
+        ident = getattr(threading.current_thread(), 'sess_id', '-')
+        # Note: `ident` is not the real ident of CLF but we recycle the column
+        CLF_message = f'{self.address_string()} {ident} - [{self.log_date_time_string()}] {message}\n'
+        werkzeug.serving._log(type, CLF_message, *args)
+
     def log_request(self, code='-', size='-'):
         try:
             path = uri_to_iri(self.path)
