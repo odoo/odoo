@@ -98,7 +98,7 @@ class ProjectProject(models.Model):
     partner_phone = fields.Char(related='partner_id.phone', readonly=False, export_string_translation=False)
     partner_email = fields.Char(related='partner_id.email', readonly=False, export_string_translation=False)
     company_id = fields.Many2one('res.company', string='Company', compute="_compute_company_id", inverse="_inverse_company_id", store=True, readonly=False)
-    currency_id = fields.Many2one('res.currency', compute="_compute_currency_id", string="Currency", readonly=True, export_string_translation=False)
+    currency_id = fields.Many2one('res.currency', compute="_compute_currency_id", compute_sql="_compute_sql_currency_id", compute_sudo=True, string="Currency", readonly=True, export_string_translation=False)
     analytic_account_balance = fields.Monetary(related="account_id.balance")
     account_id = fields.Many2one('account.analytic.account', copy=False, domain="['|', ('company_id', '=', False), ('company_id', '=?', company_id)]", ondelete='set null')
 
@@ -366,6 +366,9 @@ class ProjectProject(models.Model):
         default_currency_id = self.env.company.currency_id
         for project in self:
             project.currency_id = project.company_id.currency_id or default_currency_id
+
+    def _compute_sql_currency_id(self, table):
+        return SQL("COALESCE(%s, %s)", table.company_id.currency_id, self.env.company.currency_id.id)
 
     @api.model
     def _search_is_milestone_exceeded(self, operator, value):

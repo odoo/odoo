@@ -1,8 +1,6 @@
-# -*- coding: utf-8 -*-
-
 from odoo import api, fields, models, _, Command
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools import format_date, formatLang, frozendict, date_utils
+from odoo.tools import SQL, format_date, formatLang, frozendict, date_utils
 from odoo.tools.float_utils import float_round
 
 from dateutil.relativedelta import relativedelta
@@ -27,7 +25,7 @@ class AccountPaymentTerm(models.Model):
     company_id = fields.Many2one('res.company', string='Company')
     fiscal_country_codes = fields.Char(compute='_compute_fiscal_country_codes')
     sequence = fields.Integer(required=True, default=10)
-    currency_id = fields.Many2one('res.currency', compute="_compute_currency_id")
+    currency_id = fields.Many2one('res.currency', compute="_compute_currency_id", compute_sql="_compute_sql_currency_id", compute_sudo=True)
 
     display_on_invoice = fields.Boolean(string='Show installment dates', default=True)
     example_amount = fields.Monetary(currency_field='currency_id', default=1000, store=False, readonly=True)
@@ -57,6 +55,9 @@ class AccountPaymentTerm(models.Model):
     def _compute_currency_id(self):
         for payment_term in self:
             payment_term.currency_id = payment_term.company_id.currency_id or self.env.company.currency_id
+
+    def _compute_sql_currency_id(self, table):
+        return SQL("COALESCE(%s, %s)", table.company_id.currency_id, self.env.company.currency_id.id)
 
     def _get_amount_due_after_discount(self, total_amount, tax_amount, currency=False, cash_rounding=False):
         self.ensure_one()
