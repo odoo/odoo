@@ -7,6 +7,8 @@ class TestMatrixCommon(common.HttpCase):
     def setUp(self):
         super().setUp()
 
+        self.env.company.account_price_include = 'tax_excluded'
+
         # Prepare relevant test data
         # This is not included in demo data to avoid useless noise
         product_attributes = self.env["product.attribute"].create([

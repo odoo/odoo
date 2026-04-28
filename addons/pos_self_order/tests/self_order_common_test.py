@@ -18,6 +18,7 @@ class SelfOrderCommonTest(odoo.tests.HttpCase):
     def setUpClass(cls):
         super().setUpClass()
         archive_products(cls.env)
+        cls.env.company.account_price_include = 'tax_excluded'
         cls.pos_user = mail_new_test_user(
             cls.env,
             groups="base.group_user,point_of_sale.group_pos_user",

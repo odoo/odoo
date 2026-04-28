@@ -65,4 +65,5 @@ class TestUi(HttpCase):
             ],
         })
 
+        self.env.company.account_price_include = 'tax_excluded'
         self.start_tour(product.website_url, "website_sale.check_free_delivery", login="admin")

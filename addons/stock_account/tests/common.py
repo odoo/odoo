@@ -10,6 +10,8 @@ class TestStockValuationCommon(BaseCommon):
     # Override
     @classmethod
     def _create_company(cls, **create_values):
+        if 'account_price_include' not in create_values:
+            create_values['account_price_include'] = 'tax_excluded'
         company = super()._create_company(**create_values)
         cls.env["account.chart.template"]._load(
             "generic_coa", company, install_demo=False
@@ -336,6 +338,7 @@ class TestStockValuationCommon(BaseCommon):
         cls.env["account.chart.template"]._load(
             "generic_coa", cls.company, install_demo=False
         )
+        cls.company.account_price_include = 'tax_excluded'
         cls.env.user.company_id = cls.company
         # We use the admin on tour.
         cls.user_admin = cls.env.ref('base.user_admin')

@@ -11,6 +11,7 @@ class TestValuationReconciliationCommon(TestStockValuationCommon, TestSaleStockC
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.env.company.account_price_include = 'tax_excluded'
         cls.other_currency = cls.setup_other_currency('EUR')
         cls.product_standard_auto = cls.env['product.product'].create({
             'name': 'Test product template invoiced on delivery',

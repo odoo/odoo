@@ -26,6 +26,7 @@ class TestWebsiteSaleStockMultilang(HttpCase):
         unavailable_product.update_field_translations(
             "out_of_stock_message", {"fr_FR": {"Out of stock": "Hors-stock"}}
         )
+        self.env.company.account_price_include = 'tax_excluded'
         self.start_tour(
             "/fr/shop?search=unavailable", "website_sale_stock.product_warning_multilang"
         )

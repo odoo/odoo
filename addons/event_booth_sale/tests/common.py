@@ -11,6 +11,8 @@ class TestEventBoothSaleCommon(TestEventBoothCommon):
     def setUpClass(cls):
         super(TestEventBoothSaleCommon, cls).setUpClass()
 
+        cls.env.company.account_price_include = 'tax_excluded'
+
         cls.env['account.tax.group'].create(
             {'name': 'Test Account Tax Group', 'company_id': cls.env.company.id}
         )

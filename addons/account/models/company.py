@@ -290,7 +290,7 @@ class ResCompany(models.Model):
     account_price_include = fields.Selection(
         selection=[('tax_included', 'Tax Included'), ('tax_excluded', 'Tax Excluded')],
         string='Default Sales Price Include',
-        default='tax_excluded',
+        default='tax_included',
         required=True,
         help="Default on whether the sales price used on the product and invoices with this Company includes its taxes."
     )
