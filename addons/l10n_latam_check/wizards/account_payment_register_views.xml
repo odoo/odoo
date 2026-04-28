@@ -41,12 +41,6 @@
                     </page>
                 </notebook>
             </group>
-            <div role="alert" position="after">
-                <div role="alert" class="alert alert-info"
-                        invisible="payment_method_code not in ['new_third_party_checks', 'in_third_party_checks', 'out_third_party_checks', 'return_third_party_checks', 'own_checks'] or can_edit_wizard and (not can_group_payments or can_group_payments and group_payment)">
-                    <p>You can't use checks when paying invoices of different partners or same partner without grouping</p>
-                </div>
-            </div>
         </field>
     </record>
 
