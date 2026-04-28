@@ -1,7 +1,7 @@
 function comboSelector(comboName) {
     return `
         .sale-combo-configurator-dialog
-        [name="sale_combo_configurator_title"]:contains("${comboName}")
+        div:has([name="sale_combo_configurator_title"]:contains("${comboName}"))
     `;
 }
 
@@ -33,7 +33,7 @@ function assertComboItemCount(comboName, count) {
         run({ queryAll }) {
             const selector = `${comboSelector(comboName)} + .row .product-card`;
             if (queryAll(selector).length !== count) {
-                console.error(`Assertion failed`);
+                console.error(`Assertion failed: expected ${count} items, found ${queryAll(selector).length}`);
             }
         },
     };

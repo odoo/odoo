@@ -2,6 +2,7 @@
 # ruff: noqa: PLW0642
 
 import json
+from collections import Counter
 from datetime import timedelta
 from itertools import groupby
 
@@ -1351,15 +1352,33 @@ class SaleOrder(models.Model):
                     ]
             elif line.selected_combo_items:
                 selected_combo_items = json.loads(line.selected_combo_items)
-                if selected_combo_items and len(selected_combo_items) != len(
-                    line.product_template_id.sudo().combo_ids
-                ):
-                    raise ValidationError(
-                        line.env._(
-                            "The number of selected combo items must match the number of available"
-                            " combo choices."
-                        )
-                    )
+                if selected_combo_items:
+                    # Extract all selected combo item IDs
+                    combo_item_ids = list({item["combo_item_id"] for item in selected_combo_items})
+                    # Fetch the corresponding combo items from the db
+                    combo_items = self.env["product.combo.item"].browse(combo_item_ids)
+
+                    # Build a lookup:
+                    # combo_item_id -> parent combo_id
+                    item_to_combo_map = {item.id: item.combo_id.id for item in combo_items}
+
+                    # Count how many selections were made for each combo
+                    combo_counts = Counter()
+                    for item in selected_combo_items:
+                        combo_id = item_to_combo_map.get(item["combo_item_id"])
+                        if combo_id:
+                            combo_counts[combo_id] += item.get("combo_item_ratio")
+
+                    # Validate that the number of selected items matches
+                    # the number of required/free choices for every combo
+                    for combo in line.product_template_id.sudo().combo_ids:
+                        if combo_counts.get(combo.id, 0) != combo.qty_free:
+                            raise ValidationError(
+                                self.env._(
+                                    "The number of selected combo items must match the number of available"
+                                    " combo choices."
+                                )
+                            )
 
                 # Delete any existing combo item lines.
                 delete_commands = [
@@ -1369,8 +1388,9 @@ class SaleOrder(models.Model):
                 create_commands = [
                     Command.create({
                         "product_id": combo_item["product_id"],
-                        "product_uom_qty": line.product_uom_qty,
+                        "product_uom_qty": line.product_uom_qty * combo_item["combo_item_ratio"],
                         "combo_item_id": combo_item["combo_item_id"],
+                        "combo_item_ratio": combo_item.get("combo_item_ratio"),
                         "product_no_variant_attribute_value_ids": [
                             Command.set(combo_item["no_variant_attribute_value_ids"])
                         ],
@@ -1412,10 +1432,12 @@ class SaleOrder(models.Model):
                     )
                 )
                 if lines_to_sync:
-                    lines_to_sync.update({
-                        "product_uom_qty": line.product_uom_qty,
-                        "discount": line.discount,
-                    })
+                    for combo_item_line in combo_item_lines.sudo():
+                        lines_to_sync.update({
+                            "product_uom_qty": line.product_uom_qty
+                            * combo_item_line.selected_combo_item_qty,
+                            "discount": line.discount,
+                        })
 
     # === CRUD METHODS ===#
 

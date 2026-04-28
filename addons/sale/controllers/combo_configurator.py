@@ -75,6 +75,7 @@ class SaleComboConfiguratorController(Controller):
                         for combo_item in combo.combo_item_ids
                         if combo_item.product_id.active
                     ],
+                    "qty_free": combo.qty_free,
                 }
                 for combo in product_template.sudo().combo_ids
             ],
@@ -158,6 +159,7 @@ class SaleComboConfiguratorController(Controller):
             "is_preselected": is_preselected,
             "is_selected": bool(selected_combo_item) or is_preselected,
             "is_configurable": is_configurable,
+            "quantity": selected_combo_item.get("quantity", 1),
             "product": {
                 "id": combo_item.product_id.id,
                 "product_tmpl_id": combo_item.product_id.product_tmpl_id.id,
