@@ -158,12 +158,17 @@ def _mock_peppol_deregister_participant(func, self, *args, **kwargs):
     self.unlink()
 
 
+def _mock_can_receive_self_billing(func, self, *args, **kwargs):
+    return True
+
+
 _demo_behaviour = {
     '_call_peppol_proxy': _mock_call_peppol_proxy,  # account_edi_proxy_client.user
     '_get_peppol_verification_state': _mock_get_peppol_verification_state,  # res.partner
     '_check_peppol_participant_exists': _mock_check_peppol_participant_exists,  # res.partner
     '_register_proxy_user': _mock_register_proxy_user,  # account_edi_proxy_client.user
     '_peppol_deregister_participant': _mock_peppol_deregister_participant,
+    '_can_receive_self_billing': _mock_can_receive_self_billing,
 }
 
 # -------------------------------------------------------------------------
