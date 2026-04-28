@@ -12,7 +12,7 @@ class PosConfig(models.Model):
         help='Employees with minimal POS access, limited to basic order operations')
     basic_employee_ids = fields.Many2many(
         'hr.employee', 'pos_hr_basic_employee_hr_employee', string="Employees with basic access",
-        help='Employees with standard cashier access to the POS')
+        help='If left empty, all employees can log in to PoS')
     advanced_employee_ids = fields.Many2many(
         'hr.employee', 'pos_hr_advanced_employee_hr_employee', string="Employees with manager access",
         help='Employees linked to users with the PoS Manager role are automatically added to this list')
@@ -53,7 +53,7 @@ class PosConfig(models.Model):
 
     def _employee_domain(self, user_id):
         domain = self._check_company_domain(self.company_id)
-        if len(self.basic_employee_ids + self.advanced_employee_ids + self.minimal_employee_ids) > 0:
+        if len(self.basic_employee_ids) > 0:
             domain = AND([
                 domain,
                 ['|', ('user_id', '=', user_id), ('id', 'in', self.basic_employee_ids.ids + self.advanced_employee_ids.ids + self.minimal_employee_ids.ids)]
