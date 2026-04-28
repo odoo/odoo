@@ -22,6 +22,7 @@ const AGGREGATOR_NAMES = {
     min: _t("Minimum"),
     avg: _t("Average"),
     sum: _t("Sum"),
+    sum_currency: _t("Sum (Currency)"),
 };
 
 const NUMBER_AGGREGATORS = ["max", "min", "avg", "sum", "count_distinct", "count"];
@@ -30,7 +31,7 @@ const DATE_AGGREGATORS = ["max", "min", "count_distinct", "count"];
 const AGGREGATORS_BY_FIELD_TYPE = {
     integer: NUMBER_AGGREGATORS,
     float: NUMBER_AGGREGATORS,
-    monetary: NUMBER_AGGREGATORS,
+    monetary: [...NUMBER_AGGREGATORS, "sum_currency"],
     date: DATE_AGGREGATORS,
     datetime: DATE_AGGREGATORS,
     boolean: ["count_distinct", "count", "bool_and", "bool_or"],
