@@ -31,26 +31,26 @@ const ODOO_FILTER_VALUE = /** @satisfies {CustomFunctionDescription} */ ({
     },
 });
 
-// ODOO.FILTER.VALUE.V18
+// ODOO.FILTER.VALUE.V18 / ODOO.FILTER.LABEL
 
-const ODOO_FILTER_VALUE_V18 = /** @satisfies {CustomFunctionDescription} */ ({
-    description: _t("Compatibility version of ODOO.FILTER.VALUE for v18 spreadsheets. Required for date filters. Optional for others."),
+const ODOO_FILTER_LABEL = /** @satisfies {CustomFunctionDescription} */ ({
+    description: _t("Return the label of the current value of a spreadsheet filter."),
     args: [arg("filter_name (string)", _t("The label of the filter whose value to return."))],
     category: "Odoo",
-    hidden: true,
     compute: function (filterName) {
         const filter = this.getters.getGlobalFilterByName(toString(filterName, this.locale));
         const value = this["ODOO.FILTER.VALUE"](filterName);
         if (filter?.type === "relation") {
-            const csvIds = toString(value[0][0])
+            const csvIds = toString(value[0][0]);
             if (!csvIds) {
                 return value;
             }
             const ids = csvIds.split(",").map((id) => parseInt(id, 10));
-            const result =  this.odooDataProvider.serverData.get(filter.modelName, "web_search_read", [
-                [["id", "in", ids]],
-                { display_name: {} },
-            ])
+            const result = this.odooDataProvider.serverData.get(
+                filter.modelName,
+                "web_search_read",
+                [[["id", "in", ids]], { display_name: {} }]
+            );
             return result.records.map((record) => record.display_name).join(", ");
         }
         if (filter?.type !== "date" || !isMatrix(value)) {
@@ -78,6 +78,15 @@ const ODOO_FILTER_VALUE_V18 = /** @satisfies {CustomFunctionDescription} */ ({
     },
 });
 
+const ODOO_FILTER_VALUE_V18 = /** @satisfies {CustomFunctionDescription} */ ({
+    ...ODOO_FILTER_LABEL,
+    description: _t(
+        "Compatibility version of ODOO.FILTER.VALUE for v18 spreadsheets. Required for date filters. Optional for others."
+    ),
+    hidden: true,
+});
+
 functionRegistry
     .add("ODOO.FILTER.VALUE", ODOO_FILTER_VALUE)
-    .add("ODOO.FILTER.VALUE.V18", ODOO_FILTER_VALUE_V18);
+    .add("ODOO.FILTER.VALUE.V18", ODOO_FILTER_VALUE_V18)
+    .add("ODOO.FILTER.LABEL", ODOO_FILTER_LABEL);
