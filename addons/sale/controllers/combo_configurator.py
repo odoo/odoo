@@ -75,6 +75,7 @@ class SaleComboConfiguratorController(Controller):
                         for combo_item in combo.combo_item_ids
                         if combo_item.product_id.active
                     ],
+                    "qty_free": combo.qty_free,
                 }
                 for combo in product_template.sudo().combo_ids
             ],

@@ -9,21 +9,35 @@
                 <attribute name="context">{'default_available_in_pos': True}</attribute>
             </field>
 
-            <xpath expr="//field[@name='company_id']" position="replace">
+            <xpath expr="//group[field[@name='company_id']]" position="replace">
                 <group>
-                    <field name="qty_max" string="Maximum items" />
-                    <field name="qty_free" string="Includes free" invisible="is_upsell"/>
-                    <field name="is_upsell" widget="boolean_toggle"/>
-                </group>
-                <group>
-                    <field name="base_price" widget="monetary" options="{'field_digits': True}"/>
-                    <field
-                        name="company_id"
-                        placeholder="Visible to all"
-                        groups="base.group_multi_company"
-                        options="{'no_create': True}"
-                        class="oe_inline"
-                    />
+                    <group>
+                        <field name="qty_max" string="Maximum items" invisible="not is_from_pos"/>
+                        <field name="qty_free" string="Includes" invisible="is_upsell"/>
+                        <field name="is_upsell" widget="boolean_toggle" invisible="not is_from_pos"/>
+                        <field
+                            name="upsell_warning"
+                            readonly="1"
+                            nolabel="1"
+                            invisible="not is_upsell or is_from_pos"
+                            class="oe_edit_only"
+                        />
+                    </group>
+                    <group>
+                        <field
+                            name="base_price"
+                            widget="monetary"
+                            options="{'field_digits': True}"
+                            invisible="not is_from_pos"
+                        />
+                        <field
+                            name="company_id"
+                            placeholder="Visible to all"
+                            groups="base.group_multi_company"
+                            options="{'no_create': True}"
+                            class="oe_inline"
+                        />
+                    </group>
                 </group>
             </xpath>
         </field>

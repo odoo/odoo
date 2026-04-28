@@ -5,11 +5,13 @@ export class ProductCombo {
      * @param {number} id
      * @param {string} name
      * @param {ProductComboItem[]|object[]} combo_items
+     * @param {number} qty_free
      */
-    constructor({id, name, combo_items}) {
+    constructor({id, name, combo_items, qty_free}) {
         this.id = id;
         this.name = name;
         this.combo_items = combo_items.map(item => new ProductComboItem(item));
+        this.qty_free = qty_free;
     }
 
     /**

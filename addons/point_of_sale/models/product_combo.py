@@ -9,8 +9,9 @@ class ProductCombo(models.Model):
     _inherit = ['product.combo', 'pos.load.mixin']
 
     qty_max = fields.Integer(string="Maximum quantity", default=1, help="Maximum number of items to select in the combo.")
-    qty_free = fields.Integer(string="Free quantity", default=1, help="Number of free items included in the combo.")
     is_upsell = fields.Boolean(string="Is Upsell", default=False, help="Indicates if the combo is an upsell to the customer. This can be compared to a minimum quantity of 0.")
+    is_from_pos = fields.Boolean(compute="_compute_from_pos")
+    upsell_warning = fields.Char(compute="_onchange_is_upsell")
 
     @api.model
     def _load_pos_data_domain(self, data, config):
@@ -22,10 +23,17 @@ class ProductCombo(models.Model):
 
     @api.onchange('is_upsell')
     def _onchange_is_upsell(self):
-        if self.is_upsell:
-            self.qty_free = 0
-        if not self.is_upsell and self.qty_free == 0:
-            self.qty_free = 1
+        for record in self:
+            if record.is_upsell:
+                record.qty_free = 0
+                record.upsell_warning = _(
+                        "⚠️ This item is configured as Upsell. "
+                        "Go to Point of Sale to disable Upsell if you want to modify 'Includes'."
+                    )
+            else:
+                record.upsell_warning = False
+                if record.qty_free == 0:
+                    record.qty_free = 1
 
     @api.constrains('qty_max')
     def _check_qty_max(self):
@@ -43,3 +51,6 @@ class ProductCombo(models.Model):
     def _check_qty_max_greater_than_qty_free(self):
         if any(combo.qty_free > combo.qty_max for combo in self):
             raise ValidationError(_("The free quantity must be smaller or equal to the maximum quantity."))
+
+    def _compute_from_pos(self):
+        self.is_from_pos = self.env.context.get('is_from_pos', False)

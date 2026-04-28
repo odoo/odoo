@@ -18,6 +18,7 @@
                     </h1>
                 </div>
                 <group>
+                    <field name="qty_free" string="Includes"/>
                     <field
                         name="company_id"
                         placeholder="Visible to all"
@@ -30,11 +31,6 @@
                     <list editable="bottom">
                         <field name="currency_id" column_invisible="True"/>
                         <field name="product_id"/>
-                        <field
-                            name="lst_price"
-                            widget="monetary"
-                            options="{'field_digits': True}"
-                        />
                         <field
                             name="extra_price"
                             widget="monetary"
@@ -54,7 +50,6 @@
                 <field name="currency_id" column_invisible="True"/>
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
-                <field name="base_price" widget="monetary" options="{'field_digits': True}"/>
                 <field name="combo_item_count"/>
             </list>
         </field>
