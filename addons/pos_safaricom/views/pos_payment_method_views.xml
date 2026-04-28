@@ -5,6 +5,7 @@
         <field name="model">pos.payment.method</field>
         <field name="inherit_id" ref="point_of_sale.pos_payment_method_view_form"/>
         <field name="arch" type="xml">
+<<<<<<< b378eb1cd862f1cbd4c4206de7401b8e0005ad35
             <xpath expr="//sheet" position="inside">
                 <notebook invisible="payment_provider != 'safaricom'">
                     <page name="settings" string="Safaricom">
@@ -35,6 +36,62 @@
                         </group>
                     </page>
                 </notebook>
+||||||| 90e00db77321474c411de9c8b5c8803de8d1df22
+            <xpath expr="//field[@name='use_payment_terminal']" position="after">
+                <!-- Safaricom M-Pesa -->
+                <group colspan="2" col="2" invisible="use_payment_terminal != 'safaricom'">
+                    <group>
+                        <field name="safaricom_test_mode" widget="boolean_toggle"/>
+                        <field name="safaricom_payment_type" required="use_payment_terminal == 'safaricom'"/>
+                        <field name="consumer_key" password="True" required="use_payment_terminal == 'safaricom'"/>
+                        <field name="consumer_secret" password="True" required="use_payment_terminal == 'safaricom'"/>
+                        <field name="business_short_code" required="use_payment_terminal == 'safaricom'"/>
+                        <field name="passkey" password="True" invisible="safaricom_payment_type != 'mpesa_express'" required="use_payment_terminal == 'safaricom' and safaricom_payment_type == 'mpesa_express'"/>
+                    </group>
+                    <separator string="Lipa na M-PESA Configuration" invisible="safaricom_payment_type != 'lipa_na_mpesa'"/>
+                    <!-- Lipa na M-PESA URL Registration -->
+                    <group colspan="2" col="2" invisible="safaricom_payment_type != 'lipa_na_mpesa'">
+                        <div class="text-muted">
+                            C2B callback URLs must be registered with Safaricom for Lipa na M-PESA to work.
+                            This happens automatically on creation, but you can re-register if you deleted them from the business portal.
+                        </div>
+                    </group>
+                    <group colspan="2" col="1" invisible="safaricom_payment_type != 'lipa_na_mpesa'">
+                        <button name="lipa_na_mpesa_register_urls"
+                                    string="Register URLs"
+                                    type="object"
+                                    class="btn-secondary"
+                                    icon="fa-refresh"
+                                    invisible="id == False"
+                                    help="Register or re-register C2B callback URLs with Safaricom"/>
+                    </group>
+                </group>
+=======
+            <xpath expr="//field[@name='use_payment_terminal']" position="after">
+                <!-- Safaricom M-Pesa -->
+                <field name="safaricom_test_mode" widget="boolean_toggle" invisible="use_payment_terminal != 'safaricom'"/>
+                <field name="safaricom_payment_type" required="use_payment_terminal == 'safaricom'" invisible="use_payment_terminal != 'safaricom'"/>
+                <field name="consumer_key" password="True" required="use_payment_terminal == 'safaricom'" invisible="use_payment_terminal != 'safaricom'"/>
+                <field name="consumer_secret" password="True" required="use_payment_terminal == 'safaricom'" invisible="use_payment_terminal != 'safaricom'"/>
+                <field name="business_short_code" required="use_payment_terminal == 'safaricom'" invisible="use_payment_terminal != 'safaricom'"/>
+                <field name="passkey" password="True" invisible="use_payment_terminal != 'safaricom' or safaricom_payment_type != 'mpesa_express'" required="use_payment_terminal == 'safaricom' and safaricom_payment_type == 'mpesa_express'"/>
+                <separator string="Lipa na M-PESA Configuration" invisible="use_payment_terminal != 'safaricom' or safaricom_payment_type != 'lipa_na_mpesa'"/>
+                <!-- Lipa na M-PESA URL Registration -->
+                <div colspan="2" invisible="use_payment_terminal != 'safaricom' or safaricom_payment_type != 'lipa_na_mpesa'">
+                    <div class="text-muted">
+                        C2B callback URLs must be registered with Safaricom for Lipa na M-PESA to work.
+                        This happens automatically on creation, but you can re-register if you deleted them from the business portal.
+                    </div>
+                </div>
+                <div invisible="use_payment_terminal != 'safaricom' or safaricom_payment_type != 'lipa_na_mpesa' or not id">
+                    <button name="lipa_na_mpesa_register_urls"
+                        string="Register URLs"
+                        type="object"
+                        class="btn-secondary"
+                        icon="fa-refresh"
+                        help="Register or re-register C2B callback URLs with Safaricom"/>
+                </div>
+>>>>>>> 21c13be6a4c23c9c0c7f15cec8c9ace36e63e3b6
             </xpath>
         </field>
     </record>
