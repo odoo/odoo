@@ -6,7 +6,7 @@ export class ChatbotScriptStepAnswer extends Record {
     /** @type {number} */
     id;
     /** @type {string} */
-    label;
+    name;
     /** @type {string|false} */
     redirect_link;
 }

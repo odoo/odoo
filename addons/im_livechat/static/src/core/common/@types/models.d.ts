@@ -1,5 +1,6 @@
 declare module "models" {
     import { Chatbot as ChatbotClass } from "@im_livechat/core/common/chatbot_model";
+    import { ChatbotMessage as ChatbotMessageClass } from "@im_livechat/core/common/chatbot_message_model";
     import { ChatbotScript as ChatbotScriptClass } from "@im_livechat/core/common/chatbot_script_model";
     import { ChatbotScriptStep as ChatbotScriptStepClass } from "@im_livechat/core/common/chatbot_script_step_model";
     import { ChatbotScriptStepAnswer as ChatbotScriptStepAnswerClass } from "@im_livechat/core/common/chatbot_script_step_answer_model";
@@ -10,6 +11,7 @@ declare module "models" {
     import { LivechatExpertise as LivechatExpertiseClass } from "@im_livechat/core/common/livechat_expertise_model";
 
     export interface Chatbot extends ChatbotClass {}
+    export interface ChatbotMessage extends ChatbotMessageClass {}
     export interface ChatbotScript extends ChatbotScriptClass {}
     export interface ChatbotScriptStep extends ChatbotScriptStepClass {}
     export interface ChatbotScriptStepAnswer extends ChatbotScriptStepAnswerClass {}
@@ -67,6 +69,7 @@ declare module "models" {
     }
     export interface Store {
         Chatbot: StaticMailRecord<Chatbot, typeof ChatbotClass>;
+        "chatbot.message": StaticMailRecord<ChatbotMessage, typeof ChatbotMessageClass>;
         "chatbot.script": StaticMailRecord<ChatbotScript, typeof ChatbotScriptClass>;
         "chatbot.script.answer": StaticMailRecord<ChatbotScriptStepAnswer, typeof ChatbotScriptStepAnswerClass>;
         "chatbot.script.step": StaticMailRecord<ChatbotScriptStep, typeof ChatbotScriptStepClass>;
@@ -79,6 +82,7 @@ declare module "models" {
 
     export interface Models {
         Chatbot: Chatbot;
+        "chatbot.message": ChatbotMessage;
         "chatbot.script": ChatbotScript;
         "chatbot.script.answer": ChatbotScriptStepAnswer;
         "chatbot.script.step": ChatbotScriptStep;

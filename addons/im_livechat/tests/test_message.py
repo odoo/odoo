@@ -84,7 +84,10 @@ class TestImLivechatMessage(ChatbotCase, MailCommon):
                     "body": ["markup", "<p>Can you give us your email please?</p>"],
                     "chatbotStep": {
                         "message": chatbot_message.id,
+                        "operatorFound": False,
+                        "rawAnswer": False,
                         "scriptStep": self.step_email.id,
+                        "selectedAnswer": False,
                     },
                     "create_date": fields.Datetime.to_string(chatbot_message.create_date),
                     "date": fields.Datetime.to_string(chatbot_message.date),
