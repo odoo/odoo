@@ -74,6 +74,22 @@
 }
 
 
+// Top-level declarations required so that !global assignments inside
+// o-cc-resolve-colors update existing variables rather than creating new ones
+// (Sass will error in a future version if !global declares an undeclared var).
+$resolved-bg-color:                    null !default;
+$resolved-contrasted:                  null !default;
+$resolved-text-color:                  null !default;
+$resolved-headings-color:              null !default;
+$resolved-link-color:                  null !default;
+$resolved-link-hover-color:            null !default;
+$resolved-btn-primary-color:           null !default;
+$resolved-btn-primary-border-color:    null !default;
+$resolved-btn-primary-outline-color:   null !default;
+$resolved-btn-secondary-color:         null !default;
+$resolved-btn-secondary-border-color:  null !default;
+$resolved-btn-secondary-outline-color: null !default;
+
 /// ════════════════════════════════════════════════════════════════════════════════════
 /// BASE COLOR RESOLUTION MIXIN (shared by o-cc-apply, o-cc-emit-styles, o-bg-color-cc)
 /// ════════════════════════════════════════════════════════════════════════════════════
@@ -271,22 +287,31 @@
         // Also sets --o-cc-* and Bootstrap component vars (dropdowns, navbars…)
         // as global defaults for elements outside any .o_cc{N} wrapper.
         :root {
-            --body-bg:              #{$resolved-bg-color};
-            --body-bg-rgb:          #{to-rgb($resolved-bg-color)};
-            --body-color:           #{$resolved-text-color};
-            --body-color-rgb:       #{to-rgb($resolved-text-color)};
-            --heading-color:        #{$resolved-headings-color};
-            --link-color:           #{$resolved-link-color};
-            --link-color-rgb:       #{to-rgb($resolved-link-color)};
-            --link-hover-color:     #{$resolved-link-hover-color};
+            --body-bg: #{$resolved-bg-color};
+            --body-bg-rgb: #{to-rgb($resolved-bg-color)};
+            --body-color: #{$resolved-text-color};
+            --body-color-rgb: #{to-rgb($resolved-text-color)};
+            --heading-color: #{$resolved-headings-color};
+            --link-color: #{$resolved-link-color};
+            --link-color-rgb: #{to-rgb($resolved-link-color)};
+            --link-hover-color: #{$resolved-link-hover-color};
             --link-hover-color-rgb: #{to-rgb($resolved-link-hover-color)};
-            @include o-cc-variables(
-                    $resolved-bg-color, $resolved-text-color, $resolved-headings-color,
-                    $resolved-link-color, $resolved-link-hover-color,
-                    $resolved-btn-primary-color, $resolved-btn-primary-border-color, $resolved-btn-primary-outline-color,
-                    $resolved-btn-secondary-color, $resolved-btn-secondary-border-color, $resolved-btn-secondary-outline-color
-            );
         }
+
+        @include o-cc-variables(
+            $as-body-defaults: true,
+            $bg-color: $resolved-bg-color,
+            $text-color: $resolved-text-color,
+            $headings-color: $resolved-headings-color,
+            $link-color: $resolved-link-color,
+            $link-color-hover: $resolved-link-hover-color,
+            $btn-primary-color: $resolved-btn-primary-color,
+            $btn-primary-border-color: $resolved-btn-primary-border-color,
+            $btn-primary-outline-color: $resolved-btn-primary-outline-color,
+            $btn-secondary-color: $resolved-btn-secondary-color,
+            $btn-secondary-border-color: $resolved-btn-secondary-border-color,
+            $btn-secondary-outline-color: $resolved-btn-secondary-outline-color
+        );
 
     } @else {
         // ── :root — named CSS vars for builder JS / color pickers ─────────────
@@ -474,15 +499,24 @@
     $text-color,
     $headings-color,
     $link-color,
-    $link-hover-color,
+    $link-color-hover,
     $btn-primary-color,
     $btn-primary-border-color,
     $btn-primary-outline-color,
     $btn-secondary-color,
     $btn-secondary-border-color,
-    $btn-secondary-outline-color
+    $btn-secondary-outline-color,
+    $as-body-defaults: false,
 ) {
-    // ── Derived contextual values ─────────────────────────────────────────────
+
+    // ── Main CSS selector ────────────────────────────────────────────────────
+    // Defines "where" the CSS variables are emitted: either on :root
+    // (if $as-body-defaults) or on the current o_cc selector (&).
+    // This choice controls whether the variables are global defaults or scoped
+    // to .o_cc{N}.
+    $_main_selector: if($as-body-defaults, ':root', '&');
+
+    // ── Derived contextual values ────────────────────────────────────────────
     // These mirror Bootstrap's own body-level derivations, applied to the
     // combination's background instead of $body-bg.
 
@@ -512,35 +546,42 @@
     // readable by JS (e.g., for color pickers), usable as fallbacks inside
     // custom snippets, and independent of Bootstrap's internal naming.
 
-    --o-cc-bg:              #{$bg-color};
-    --o-cc-bg-rgb:          #{to-rgb($bg-color)};
-    --o-cc-text:            #{$text-color};
-    --o-cc-text-rgb:        #{$text-color};
-    --o-cc-headings:        #{$headings-color};
-    --o-cc-link:            #{$link-color};
-    --o-cc-link-hover:      #{$-link-hover};
-    --o-cc-border:          #{$-border-color};
-    --o-cc-hover-bg:        #{$-hover-bg};
-    --o-cc-muted:           #{$-muted-text};
+    #{$_main_selector} {
+        --o-cc-bg: #{$bg-color};
+        --o-cc-bg-rgb: #{to-rgb($bg-color)};
+        --o-cc-text: #{$text-color};
+        --o-cc-text-rgb: #{$text-color};
+        --o-cc-headings: #{$headings-color};
+        --o-cc-link-color: #{$link-color};
+        --o-cc-link-color-rgb: #{to-rgb($link-color)};
+        --o-cc-link-color-hover: #{$link-color-hover};
+        --o-cc-link-color-hover-rgb: #{to-rgb($link-color-hover)};
+        --o-cc-border: #{$-border-color};
+        --o-cc-hover-bg: #{$-hover-bg};
+        --o-cc-muted: #{$-muted-text};
 
-    --o-cc-contrast:        #{color-contrast($bg-color, #000, #fff)};
-    --o-cc-contrast-rgb:    #{to-rgb(color-contrast($bg-color, #000, #fff))};
+        --o-cc-contrast: #{color-contrast($bg-color, #000, #fff)};
+        --o-cc-contrast-rgb: #{to-rgb(color-contrast($bg-color, #000, #fff))};
+    }
 
 
     // ── Buttons ───────────────────────────────────────────────────────────────
-    @include o-cc-btn-fill-variables('primary', $btn-primary-color, $btn-primary-border-color);
-    @include o-cc-btn-fill-variables('secondary', $btn-secondary-color, $btn-secondary-border-color);
-    @include o-cc-btn-outline-variables('primary', $btn-primary-outline-color);
-    @include o-cc-btn-outline-variables('secondary', $btn-secondary-outline-color);
 
-    // btn-close: the filter must be computed at SASS time because CSS has no
-    // runtime lightness() function. 'none' for light backgrounds, the Bootstrap
-    // white-filter value for dark ones.
-    --o-cc-btn-close-filter: #{if(lightness($bg-color) < 50, $btn-close-white-filter, none)};
+    #{$_main_selector} {
+        @include o-cc-btn-fill-variables('primary', $btn-primary-color, $btn-primary-border-color);
+        @include o-cc-btn-fill-variables('secondary', $btn-secondary-color, $btn-secondary-border-color);
+        @include o-cc-btn-outline-variables('primary', $btn-primary-outline-color);
+        @include o-cc-btn-outline-variables('secondary', $btn-secondary-outline-color);
 
-    // Nav active state (shared by nav-pills and list-group-item).
-    --o-cc-nav-active-bg:    #{$btn-primary-color};
-    --o-cc-nav-active-text:  #{color-contrast($btn-primary-color)};
+        // btn-close: the filter must be computed at SASS time because CSS has no
+        // runtime lightness() function. 'none' for light backgrounds, the Bootstrap
+        // white-filter value for dark ones.
+        --o-cc-btn-close-filter: #{if(lightness($bg-color) < 50, $btn-close-white-filter, none)};
+
+        // Nav active state (shared by nav-pills and list-group-item).
+        --o-cc-nav-active-bg:    #{$btn-primary-color};
+        --o-cc-nav-active-text:  #{color-contrast($btn-primary-color)};
+    }
 
 
     // =========================================================================
@@ -549,18 +590,30 @@
     // variables so components adapt to the combination without extra rules.
     // =========================================================================
 
-    // ── Typography ───────────────────────────────────────────────────────────
-    --heading-color:    var(--o-cc-headings);
-    --secondary-color:  var(--o-cc-muted);
+    #{$_main_selector} {
+        // ── Main ─────────────────────────────────────────────────────────────────
+        --body-bg: var(--o-cc-bg);
+        --body-color: var(--o-cc-text);
 
-    // ── Links ────────────────────────────────────────────────────────────
-    --link-color-rgb:       #{to-rgb($link-color)};
-    --link-hover-color-rgb: #{to-rgb($link-hover-color)};
+        // ── Typography ───────────────────────────────────────────────────────────
+        --heading-color:    var(--o-cc-headings);
+        --secondary-color:  var(--o-cc-muted);
+        --emphasis-color:   var(--o-cc-contrast);
+        --emphasis-color-rgb: var(--o-cc-contrast-rgb);
+
+        // ── Links ────────────────────────────────────────────────────────────
+        --link-color:           var(--o-cc-link-color);
+        --link-hover-color:     var(--o-cc-link-color-hover);
+        --link-color-rgb:       var(--o-cc-link-color-color-rgb);
+        --link-hover-color-rgb: var(--o-cc-link-color-hover-color-rgb);
+    }
+
 
     // ── Dropdowns ─────────────────────────────────────────────────────────────
     // Note: the existing .o_cc dropdown-item reset rules in html_editor.common
     // can be removed once components consistently reference these variables.
-    :where(.dropdown-menu) {
+    $_dropdown_colored: if(not $as-body-defaults, '.o_cc & .dropdown-menu', null);
+    .dropdown-menu, #{$_dropdown_colored} {
         --dropdown-color:                 #{$text-color};
         --dropdown-bg:                    #{$bg-color};
         --dropdown-border-color:          #{$-border-color};
@@ -575,13 +628,17 @@
     }
 
 
-        // ── Nav links ────────────────────────────────────────────────────────
-    :where(.nav), :where(.navbar-nav) {
-        --nav-link-color:             #{$text-color};
-        --nav-link-hover-color:       #{$text-color};
-        --nav-link-disabled-color:    #{$-muted-text};
+    // ── Nav links ────────────────────────────────────────────────────────
+    $_nav_colored: if(not $as-body-defaults, '.o_cc & .nav', null);
+    .nav, #{$_nav_colored} {
+        --nav-link-color: #{$text-color};
+        --nav-link-hover-color: #{$text-color};
+        --nav-link-disabled-color: #{$-muted-text};
+    }
 
-        // ── Nav tabs ─────────────────────────────────────────────────────────
+    // ── Nav tabs ─────────────────────────────────────────────────────────
+    $_navTabs_colored: if(not $as-body-defaults, '.o_cc & .nav-tabs', null);
+    .nav-tabs, #{$_navTabs_colored} {
         --nav-tabs-border-color: #{$-border-color};
         --nav-tabs-link-hover-border-color: #{$-border-color};
         --nav-tabs-link-active-color: #{$text-color};
@@ -589,15 +646,19 @@
         // Three-value shorthand matches Bootstrap's default: top/sides use the
         // border color; the bottom is transparent to merge with the tab panel.
         --nav-tabs-link-active-border-color: #{$-border-color} #{$-border-color} #{$bg-color};
+    }
 
-        // ── Nav pills ────────────────────────────────────────────────────────
+    // ── Nav pills ────────────────────────────────────────────────────────
+    $_navPills_colored: if(not $as-body-defaults, '.o_cc & .nav-pills', null);
+    .nav-pills, #{$_navPills_colored} {
         --nav-pills-link-active-bg: #{$-active-bg};
         --nav-pills-link-active-color: #{color-contrast($-active-bg)};
     }
 
 
     // ── Navbar ───────────────────────────────────────────────────────────────
-    :where(.navbar), &:where(.navbar) {
+    $_navbar_colored: if(not $as-body-defaults, '.o_cc & .navbar', null);
+    .navbar, #{$_navbar_colored} {
         // Mirrors the "light" navbar variable pattern: color at reduced opacity,
         // full opacity on active, slightly reduced for hover/brand.
         --navbar-color:               #{rgba($text-color, .55)};
@@ -613,13 +674,12 @@
     }
 
 
-    // ── Cards ─────────────────────────────────────────────────────────────────
-    :where(.card), &:where(.card) {
+    // ── Cards ────────────────────────────────────────────────────────────────
+    $_card_colored: if(not $as-body-defaults, '.o_cc & .card', null);
+    .card, #{$_card_colored} {
         --card-color: #{$text-color};
         --card-bg: #{$bg-color};
         --card-border-color: #{$-border-color};
-        // Cap: a very subtle tint/shade of the background, matching Bootstrap's
-        // rgba(0,0,0,.03) default but derived from the combination contrast color.
         --card-cap-bg: #{rgba(color-contrast($bg-color), .03)};
         --card-cap-color: #{$text-color};
         --card-title-color: #{$headings-color};
@@ -627,7 +687,8 @@
 
 
     // ── List groups ──────────────────────────────────────────────────────────
-    :where(.list-group) {
+    $_listGroup_colored: if(not $as-body-defaults, '.o_cc & .list-group', null);
+    .list-group, #{$_listGroup_colored} {
         --list-group-color:               #{$text-color};
         --list-group-bg:                  #{$bg-color};
         --list-group-border-color:        #{$-border-color};
@@ -645,7 +706,8 @@
 
 
     // ── Accordion ────────────────────────────────────────────────────────────
-    :where(.accordion) {
+    $_accordion_colored: if(not $as-body-defaults, '.o_cc & .accordion', null);
+    .accordion, #{$_accordion_colored} {
         --accordion-color: #{$text-color};
         --accordion-bg: #{$bg-color};
         --accordion-border-color: #{$-border-color};
@@ -741,7 +803,7 @@
     --color:                #{$resolved-text-color};
     --color-rgb:            #{to-rgb($resolved-text-color)};
     // Not !important so that text utilities (.text-white etc.) still override.
-    color: RGBA(var(--color-rgb), var(--text-opacity, 1));
+    color: rgba(var(--color-rgb), var(--text-opacity, 1));
 
     // Full component token set — overrides --heading-color / --secondary-color
     // with better values, and emits Bootstrap component vars (dropdowns, navbars,
