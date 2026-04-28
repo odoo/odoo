@@ -81,6 +81,11 @@
                                     </p>
                                 </div>
                             </div>
+                            <div class="align-self-start w-auto end-0 mt-2 d-flex align-items-center justify-content-end gap-2 o_employee_chat_button_wrapper">
+                                <div invisible="not user_id">
+                                    <widget name="hr_employee_chat" invisible="not context.get('chat_icon')"/>
+                                </div>
+                            </div>
                         </div>
                         <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                         <notebook>
