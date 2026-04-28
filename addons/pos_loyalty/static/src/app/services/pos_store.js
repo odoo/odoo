@@ -757,8 +757,12 @@ patch(PosStore.prototype, {
         const rewardLines = order._get_reward_lines();
         const partner = order.getPartner();
         let couponData = Object.values(order.uiState.couponPointChanges).reduce((agg, pe) => {
+            const netPoints =
+                pe.points - order._getPointsCorrection(ProgramModel.get(pe.program_id));
             agg[pe.coupon_id] = Object.assign({}, pe, {
-                points: pe.points - order._getPointsCorrection(ProgramModel.get(pe.program_id)),
+                points: netPoints,
+                won: netPoints,
+                spent: 0,
             });
             const program = ProgramModel.get(pe.program_id);
             if (
@@ -778,6 +782,8 @@ patch(PosStore.prototype, {
             if (!couponData[couponId]) {
                 couponData[couponId] = {
                     points: 0,
+                    spent: 0,
+                    won: 0,
                     program_id: reward.program_id.id,
                     coupon_id: couponId,
                     barcode: false,
@@ -793,6 +799,7 @@ patch(PosStore.prototype, {
                 !couponData[couponId].line_codes.push(line.reward_identifier_code);
             }
             couponData[couponId].points -= line.points_cost;
+            couponData[couponId].spent += line.points_cost;
         }
         // We actually do not care about coupons for 'current' programs that did not claim any reward, they will be lost if not validated
         couponData = Object.fromEntries(
