@@ -172,6 +172,24 @@ export class LoyaltyProgram extends models.ServerModel {
             rule_ids: [5],
             reward_ids: [4],
         },
+        {
+            id: 9,
+            name: "10% Discount Code Program",
+            trigger: "auto",
+            applies_on: "current",
+            program_type: "promo_code",
+            pricelist_ids: [1],
+            date_from: false,
+            date_to: false,
+            limit_usage: false,
+            max_usage: 0,
+            is_nominative: false,
+            portal_visible: true,
+            portal_point_name: "Points",
+            trigger_product_ids: [],
+            rule_ids: [],
+            reward_ids: [],
+        },
     ];
 }
 
