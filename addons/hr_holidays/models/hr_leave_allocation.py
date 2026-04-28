@@ -525,7 +525,7 @@ class HolidaysAllocation(models.Model):
                 return False
             if allocation.holiday_status_id.request_unit in ["day", "half_day"]:
                 leaves_taken = allocation_data['leaves_taken']
-            else:
+            else:   
                 leaves_taken = allocation_data['leaves_taken'] / (
                     allocation.employee_id.sudo().resource_id.calendar_id.hours_per_day or HOURS_PER_DAY)
             allocation_data['current_level'], allocation_data['current_level_idx'] = \
@@ -555,7 +555,7 @@ class HolidaysAllocation(models.Model):
                 carryover_date = allocation._get_carryover_date(allocation.nextcall)
                 if allocation.nextcall < carryover_date < nextcall:
                     nextcall = min(nextcall, carryover_date)
-                if not allocation.already_accrued:
+                if not allocation.already_accrued and allocation.accrual_plan_id.accrued_gain_time == 'end':
                     allocation._add_days_to_allocation(allocation_data['current_level'], allocation_data['current_level_maximum_leave'],
                         leaves_taken, period_start, period_end)
                 # if it's the carry-over date, adjust days using current level's carry-over policy, then continue
@@ -570,6 +570,9 @@ class HolidaysAllocation(models.Model):
                                     allocation.employee_id.sudo().resource_id.calendar_id.hours_per_day or HOURS_PER_DAY)
                             allocation_max_days = min(postpone_max_days, allocated_days_left)
                         allocation.number_of_days = min(allocation.number_of_days, allocation_max_days) + leaves_taken
+                if not allocation.already_accrued and allocation.accrual_plan_id.accrued_gain_time == 'start':
+                    allocation._add_days_to_allocation(allocation_data['current_level'], allocation_data['current_level_maximum_leave'],
+                        leaves_taken, period_start, period_end)
 
                 allocation.lastcall = allocation.nextcall
                 allocation.nextcall = nextcall
