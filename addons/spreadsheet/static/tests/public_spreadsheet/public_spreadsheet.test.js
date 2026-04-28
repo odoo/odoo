@@ -95,7 +95,7 @@ test("Disable copy button in public spreadsheets", async function () {
     expect(fixture.querySelector(".o-menu-item[data-name='copy']")).toHaveClass("disabled");
 });
 
-describe("sheet_id URL synchronization", () => {
+describe("sheetId URL synchronization", () => {
     beforeEach(async () => {
         const { model } = await createModelWithDataSource({
             spreadsheetData: {
@@ -110,25 +110,25 @@ describe("sheet_id URL synchronization", () => {
 
     test("activates sheet from URL on initialization", async () => {
         patchWithCleanup(browser.location, {
-            href: `${browser.location.href}?sheet_id=sheet2`,
+            href: `${browser.location.href}?sid=sheet2`,
         });
         const { model } = await mountPublicSpreadsheet("dashboardDataUrl", "spreadsheet");
         expect(model.getters.getActiveSheetId()).toBe("sheet2");
     });
 
-    test("falls back to the first sheet and syncs the URL when sheet_id is invalid", async () => {
+    test("falls back to the first sheet and syncs the URL when sid is invalid", async () => {
         patchWithCleanup(browser.location, {
-            href: `${browser.location.href}?sheet_id=unknown`,
+            href: `${browser.location.href}?sid=unknown`,
         });
         const { model } = await mountPublicSpreadsheet("dashboardDataUrl", "spreadsheet");
-        expect(new URL(browser.location.href).searchParams.get("sheet_id")).toBe("sheet1");
+        expect(new URL(browser.location.href).searchParams.get("sid")).toBe("sheet1");
         expect(model.getters.getActiveSheetId()).toBe("sheet1");
     });
 
-    test("falls back to the first sheet and syncs the URL when sheet_id is absent", async () => {
+    test("falls back to the first sheet and syncs the URL when sid is absent", async () => {
         const { model } = await mountPublicSpreadsheet("dashboardDataUrl", "spreadsheet");
         expect(model.getters.getActiveSheetId()).toBe("sheet1");
-        expect(new URL(browser.location.href).searchParams.get("sheet_id")).toBe("sheet1");
+        expect(new URL(browser.location.href).searchParams.get("sid")).toBe("sheet1");
     });
 
     test("syncs the URL when the active sheet changes", async () => {
@@ -137,6 +137,6 @@ describe("sheet_id URL synchronization", () => {
             sheetIdFrom: "sheet1",
             sheetIdTo: "sheet2",
         });
-        expect(new URL(browser.location.href).searchParams.get("sheet_id")).toBe("sheet2");
+        expect(new URL(browser.location.href).searchParams.get("sid")).toBe("sheet2");
     });
 });

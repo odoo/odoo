@@ -21,13 +21,13 @@ spreadsheet.registries.topbarMenuRegistry.addChild("download_public_excel", ["fi
 
 function readSheetIdFromURL() {
     const url = new URL(browser.location.href);
-    return url.searchParams.get("sheet_id");
+    return url.searchParams.get("sid");
 }
 
 function writeSheetIdToURL(sheetId) {
     const url = new URL(browser.location.href);
-    if (url.searchParams.get("sheet_id") !== sheetId) {
-        url.searchParams.set("sheet_id", sheetId);
+    if (url.searchParams.get("sid") !== sheetId) {
+        url.searchParams.set("sid", sheetId);
         browser.history.replaceState(browser.history.state, null, url);
     }
 }
