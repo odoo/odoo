@@ -385,7 +385,8 @@ class TestWebsiteAllPerformanceShop(TestWebsiteAllPerformance):
             queries['uom_uom'] += 1
 
         if self._has_demo_data():
-            query_count += 2
+            query_count += 1
+            queries['ir_attachment'] += -1
             queries['product_template_attribute_value'] += 2
 
         self.assertEqual(sum(queries.values()), query_count, 'Please learn to count.')
