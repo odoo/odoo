@@ -293,16 +293,6 @@ export class SelectionPlugin extends Plugin {
         const container = selection && closestElement(selection.anchorNode, containerSelector);
         const [anchorNode, anchorOffset] = getDeepestEditablePosition(container, 0);
         const [focusNode, focusOffset] = getDeepestEditablePosition(container, nodeSize(container));
-        if (
-            this.delegateTo("select_all_overrides", {
-                anchorNode,
-                anchorOffset,
-                focusNode,
-                focusOffset,
-            })
-        ) {
-            return;
-        }
         this.setSelection({ anchorNode, anchorOffset, focusNode, focusOffset });
     }
 
