@@ -1963,6 +1963,35 @@ class PosSession(models.Model):
     def _get_closed_orders(self):
         return self.order_ids.filtered(lambda o: o.state not in ['draft', 'cancel'])
 
+<<<<<<< c1b025b7b095da2f2fb2374a75575df72381f68c
+||||||| 5ce208c84f3c464addae643c4f81ac6c4e09d3e7
+    @api.autovacuum
+    def _gc_session_sequences(self):
+        sequence_fields = {
+            'pos.session.login_number': 'login_number_seq_id',
+            'pos.order_': 'order_seq_id',
+        }
+        for prefix, field in sequence_fields.items():
+            sequences = self.env['ir.sequence'].search([('code', 'ilike', prefix)])
+            session_ids = [int(seq.code.split(prefix)[-1]) for seq in sequences if seq.code.split(prefix)[-1].isdigit()]
+            sessions = self.env['pos.session'].search([('id', 'in', session_ids), ('state', '=', 'closed')])
+            sequence_to_unlink_ids = sessions.mapped(field)
+            if sequence_to_unlink_ids:
+                sequence_to_unlink_ids.sudo().unlink()
+=======
+    @api.autovacuum
+    def _gc_session_sequences(self):
+        for prefix in ('pos.login_number_', 'pos.order_'):
+            sequences = self.env['ir.sequence'].search([('code', '=like', f'{prefix}%')])
+            # =like uses SQL LIKE where '_' is a wildcard; filter to literal prefix matches only
+            sequences = sequences.filtered(lambda s: s.code.startswith(prefix))
+            session_ids = [int(seq.code.split(prefix)[-1]) for seq in sequences if seq.code.split(prefix)[-1].isdigit()]
+            open_session_ids = self.env['pos.session'].search([('id', 'in', session_ids), ('state', '!=', 'closed')]).ids
+            keep_codes = {f'{prefix}{session_id}' for session_id in open_session_ids}
+            sequence_to_unlink_ids = sequences.filtered(lambda seq: seq.code not in keep_codes)
+            if sequence_to_unlink_ids:
+                sequence_to_unlink_ids.sudo().unlink()
+>>>>>>> f2ab3c83b090eb8fbdefcb664774669a053177c2
 
 class StockRule(models.Model):
     _inherit = 'stock.rule'
