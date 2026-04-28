@@ -54,3 +54,13 @@ test("_onUpdateSelectedOrderline: refund moves to next", async () => {
     ticketScreen._onUpdateSelectedOrderline({ key: "Enter", buffer: "3" });
     expect(ticketScreen.getSelectedOrderlineId()).toBe(line2.id);
 });
+
+test("refund order should not have preset_id", async () => {
+    const store = await setupPosEnv();
+
+    const normalOrder = store.createNewOrder();
+    expect(Boolean(normalOrder.preset_id)).toBe(true);
+
+    const refundOrder = store.createNewOrder({ is_refund: true });
+    expect(refundOrder.preset_id).toBeEmpty();
+});
