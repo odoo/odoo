@@ -62,21 +62,18 @@ export class PosPaymentProviderCards extends Component {
             });
     }
 
-    async setupProvider(moduleId) {
-        const provider = this.state.providers.find((p) => p.id === moduleId);
-        if (provider) {
-            this.props.record.update({
-                payment_method_type: "terminal",
-                use_payment_terminal: provider.selection,
-                name: provider.provider,
-            });
-        }
+    async setupProvider(provider) {
+        this.props.record.update({
+            payment_method_type: "terminal",
+            use_payment_terminal: provider.selection,
+            name: provider.provider,
+        });
     }
 }
 
 // Selection, module_name, friendly name
 const providers = [
-    ["axepta_bnpp", "pos_iot_worldline", "Axepta BNP Paribas"],
+    ["worldline", "pos_iot_worldline", "Axepta BNP Paribas"],
     ["six_iot", "pos_iot_six", "SIX"],
     ["adyen", "pos_adyen", "Adyen"],
     ["mercado_pago", "pos_mercado_pago", "Mercado Pago"],
