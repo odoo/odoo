@@ -3053,3 +3053,22 @@ test("monetary chart rendering with multiple currencies", async () => {
     checkTooltip(view, { title: "Amount", lines: [{ label: "false", value: "1,200.00 €" }] }, 0);
     checkTooltip(view, { title: "Amount", lines: [{ label: "true", value: "1,000.00 €" }] }, 1);
 });
+
+test("graph renders percentage widget measures", async () => {
+    Foo._fields.ratio = fields.Float({ string: "Ratio" });
+    Foo._records = [{ id: 1, ratio: 0.3333333 }];
+
+    const view = await mountView({
+        type: "graph",
+        resModel: "foo",
+        arch: /* xml */ `
+            <graph>
+                <field name="ratio" type="measure" widget="percentage" />
+            </graph>
+        `,
+    });
+
+    expect(".o_graph_canvas_container canvas").toHaveCount(1);
+    checkMeasure("Ratio");
+    checkTooltip(view, { title: "Ratio", lines: [{ label: "Total", value: "33.33%" }] }, 0);
+});
