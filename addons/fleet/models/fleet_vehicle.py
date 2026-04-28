@@ -41,6 +41,7 @@ class FleetVehicle(models.Model):
     manager_id = fields.Many2one(
         'res.users', 'Fleet Manager',
         domain=lambda self: f"[('share', '=', False), ('company_id', 'in', {self.env.companies.ids}), ('all_group_ids', 'in', {self.env.ref('fleet.fleet_group_user').id})]",
+        tracking=True,
     )
     company_id = fields.Many2one(
         'res.company', 'Company',
@@ -69,8 +70,9 @@ class FleetVehicle(models.Model):
     service_count = fields.Integer(compute="_compute_count_all", string='Services')
     odometer_count = fields.Integer(compute="_compute_count_all", string='Odometer')
     history_count = fields.Integer(compute="_compute_count_all", string="Drivers History Count")
-    next_assignation_date = fields.Date('Assignment Date', help='This is the date at which the car will be available, if not set it means available instantly')
-    order_date = fields.Date('Order Date')
+    next_assignation_date = fields.Date('Available From', help='The date from which this vehicle becomes available for assignment. Leave empty if it’s available immediately.',
+        tracking=True)
+    order_date = fields.Date('Order Date', tracking=True)
     acquisition_date = fields.Date('Registration Date', required=False, default=fields.Date.today,
         tracking=True, help='Date of vehicle registration')
     write_off_date = fields.Date('Cancellation Date', tracking=True, help="Date when the vehicle's license plate has been cancelled/removed.")
@@ -89,7 +91,7 @@ class FleetVehicle(models.Model):
         compute='_compute_doors', store=True, readonly=False)
     tag_ids = fields.Many2many('fleet.vehicle.tag', 'fleet_vehicle_vehicle_tag_rel', 'vehicle_tag_id', 'tag_id', 'Tags', copy=False)
     odometer = fields.Float(compute='_get_odometer', inverse='_set_odometer', string='Last Odometer',
-        help='Odometer measure of the vehicle at the moment of this log')
+        help='Odometer measure of the vehicle at the moment of this log', tracking=True)
     odometer_unit = fields.Selection([
         ('kilometers', 'km'),
         ('miles', 'mi')
@@ -113,7 +115,8 @@ class FleetVehicle(models.Model):
     co2_standard = fields.Char('Emission Standard', compute='_compute_co2_standard', store=True, readonly=False,
         help="Emission Standard specifies the regulatory test procedure \
             or guideline under which a vehicle's emissions are measured.")
-    category_id = fields.Many2one('fleet.vehicle.model.category', 'Category', compute='_compute_category', store=True, readonly=False)
+    category_id = fields.Many2one('fleet.vehicle.model.category', 'Category', compute='_compute_category', store=True,
+        readonly=False, tracking=True)
     image_128 = fields.Image(related='model_id.image_128', readonly=True)
     contract_renewal_due_soon = fields.Boolean(compute='_compute_contract_reminder', search='_search_contract_renewal_due_soon',
         string='Has Contracts to renew')

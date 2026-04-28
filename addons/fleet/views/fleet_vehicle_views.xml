@@ -89,7 +89,7 @@
                             <field name="vehicle_type" invisible="1"/>
                             <field name="driver_id" domain="['|', ('company_id', '=', False ), ('company_id', '=', company_id)]" widget="many2one_avatar_user"/>
                             <field name="future_driver_id" widget="many2one_avatar_user"/>
-                            <field name="next_assignation_date"/>
+                            <field name="next_assignation_date" placeholder="Available"/>
                             <field name="company_id" groups="base.group_multi_company" placeholder="Visible to all"/>
                         </group>
                         <group string="Vehicle">
