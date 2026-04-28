@@ -1,6 +1,9 @@
 import { render, useRef, useState } from "@web/owl2/utils";
-import { after, before, expect, test } from "@odoo/hoot";
 import {
+    after,
+    before,
+    expect,
+    test,
     clear,
     click,
     hover,
@@ -10,17 +13,15 @@ import {
     queryAllAttributes,
     queryAllTexts,
     queryFirst,
-    setInputFiles,
-    waitFor,
-} from "@odoo/hoot-dom";
-import {
     animationFrame,
     Deferred,
     mockTimeZone,
     mockTouch,
     runAllTimers,
     tick,
-} from "@odoo/hoot-mock";
+    setInputFiles,
+    waitFor,
+} from "@odoo/hoot";
 import {
     Component,
     EventBus,

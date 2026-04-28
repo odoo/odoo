@@ -1,13 +1,21 @@
-import { onRendered, onWillRender } from "@web/owl2/utils";
-import { after, beforeEach, expect, getFixture, resize, test } from "@odoo/hoot";
 import {
+    Deferred,
+    advanceFrame,
+    advanceTime,
+    after,
+    animationFrame,
+    beforeEach,
     click,
+    disableAnimations,
     drag,
     edit,
+    expect,
+    getFixture,
     hover,
     keyDown,
     keyUp,
     leave,
+    mockTouch,
     pointerDown,
     press,
     queryAll,
@@ -16,19 +24,14 @@ import {
     queryOne,
     queryRect,
     queryText,
-    setInputFiles,
-} from "@odoo/hoot-dom";
-import {
-    Deferred,
-    advanceFrame,
-    advanceTime,
-    animationFrame,
-    disableAnimations,
-    mockTouch,
+    resize,
     runAllTimers,
+    setInputFiles,
+    test,
     tick,
-} from "@odoo/hoot-mock";
+} from "@odoo/hoot";
 import { Component, xml } from "@odoo/owl";
+import { addNewRule } from "@web/../tests/core/tree_editor/condition_tree_editor_test_helpers";
 import {
     MockServer,
     clickKanbanLoadMore,
@@ -40,6 +43,7 @@ import {
     discardKanbanRecord,
     editKanbanColumnName,
     editKanbanRecordQuickCreateInput,
+    editSearch,
     fields,
     getDropdownMenu,
     getFacetTexts,
@@ -51,8 +55,8 @@ import {
     getPagerValue,
     getService,
     makeServerError,
-    mockService,
     mockOffline,
+    mockService,
     models,
     mountView,
     mountWithCleanup,
@@ -75,13 +79,12 @@ import {
     validateKanbanRecord,
     validateSearch,
     webModels,
-    editSearch,
 } from "@web/../tests/web_test_helpers";
-import { addNewRule } from "@web/../tests/core/tree_editor/condition_tree_editor_test_helpers";
+import { onRendered, onWillRender } from "@web/owl2/utils";
 
-import { FileInput } from "@web/core/file_input/file_input";
 import { browser } from "@web/core/browser/browser";
 import { currencies } from "@web/core/currency";
+import { FileInput } from "@web/core/file_input/file_input";
 import { registry } from "@web/core/registry";
 import { user } from "@web/core/user";
 import { RelationalModel } from "@web/model/relational_model/relational_model";
@@ -91,9 +94,9 @@ import { KanbanController } from "@web/views/kanban/kanban_controller";
 import { KanbanRecord } from "@web/views/kanban/kanban_record";
 import { KanbanRenderer } from "@web/views/kanban/kanban_renderer";
 import { kanbanView } from "@web/views/kanban/kanban_view";
+import { TOUCH_SELECTION_THRESHOLD } from "@web/views/utils";
 import { ViewButton } from "@web/views/view_button/view_button";
 import { AnimatedNumber } from "@web/views/view_components/animated_number";
-import { TOUCH_SELECTION_THRESHOLD } from "@web/views/utils";
 import { WebClient } from "@web/webclient/webclient";
 
 const { IrAttachment } = webModels;
