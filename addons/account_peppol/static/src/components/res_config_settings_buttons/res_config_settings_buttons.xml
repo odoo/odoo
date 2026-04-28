@@ -16,7 +16,7 @@
                     <button type="button"
                             class="btn btn-primary me-1"
                             t-on-click="allowReception"
-                            t-if="proxyState === 'sender'">
+                            t-if="proxyState === 'sender' and useParentCompany === false">
                             Allow reception
                     </button>
                 </div>

@@ -39,6 +39,7 @@ class TestPeppolParticipant(TransactionCase):
                 }
             },
             '/api/peppol/1/activate_participant': {'result': {}},
+            '/api/peppol/1/register_sender': {'result': {}},
             '/iap/account_edi/2/create_user': {
                 'result': {
                     'id_client': cls.env.context.get('mock_id_client', ID_CLIENT),
@@ -641,3 +642,41 @@ class TestPeppolParticipant(TransactionCase):
             'peppol_eas': '0208',
             'peppol_endpoint': '0475646428',
         }])
+
+    def test_create_child_company_sender_only(self):
+        """Test that when a child company attempts to register on Peppol using the exact same endpoint as its already active parent company"""
+        vals = self._get_participant_vals()
+        parent_company = self.env['res.company'].create({
+            'name': 'Parent Company',
+            'peppol_eas': vals['account_peppol_eas'],
+            'peppol_endpoint': vals['account_peppol_endpoint'],
+        })
+
+        child_company = self.env['res.company'].create({
+            'name': 'Child Company Connection',
+            'parent_id': parent_company.id,
+            'peppol_eas': vals['account_peppol_eas'],
+            'peppol_endpoint': vals['account_peppol_endpoint'],
+        })
+
+        self.env['account_edi_proxy_client.user'].sudo().create({
+            'id_client': 'parent_client',
+            'company_id': parent_company.id,
+            'proxy_type': 'peppol',
+            'edi_mode': 'test',
+            'edi_identification': f"{vals['account_peppol_eas']}:{vals['account_peppol_endpoint']}",
+            'refresh_token': FAKE_UUID,
+            'private_key': '1234',
+        })
+
+        settings = self.env['res.config.settings'].with_company(child_company).create(vals)
+        settings.button_create_peppol_proxy_user()
+
+        self.assertEqual(child_company.account_peppol_proxy_state, 'sender')
+        self.assertTrue(settings.peppol_use_parent_company)
+
+        child_user = self.env['account_edi_proxy_client.user'].search([
+            ('company_id', '=', child_company.id),
+            ('proxy_type', '=', 'peppol'),
+        ])
+        self.assertEqual(child_user.edi_identification, f"{vals['account_peppol_eas']}:{vals['account_peppol_endpoint']}")

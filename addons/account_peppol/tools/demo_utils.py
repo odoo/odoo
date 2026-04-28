@@ -90,6 +90,10 @@ def _mock_user_creation(func, self, *args, **kwargs):
     self.account_peppol_edi_user.write({
         'private_key': b64encode(file_open(DEMO_PRIVATE_KEY, 'rb').read()),
     })
+    if self.peppol_use_parent_company:
+        self.write({
+            'account_peppol_proxy_state': 'sender',
+        })
 
 def _mock_deregister_participant(func, self, *args, **kwargs):
     # Set documents sent in demo to a state where they can be re-sent

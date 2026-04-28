@@ -333,3 +333,17 @@ class AccountEdiProxyClientUser(models.Model):
                 edi_user.company_id.account_peppol_proxy_state = local_state
             else:
                 _logger.warning("Received unknown Peppol state '%s' for EDI proxy user id=%s", proxy_user.get('peppol_state'), edi_user.id)
+
+    def _get_company_details(self):
+        self.ensure_one()
+        return {
+            'peppol_company_name': self.company_id.display_name,
+            'peppol_company_vat': self.company_id.vat,
+            'peppol_company_street': self.company_id.street,
+            'peppol_company_city': self.company_id.city,
+            'peppol_company_zip': self.company_id.zip,
+            'peppol_country_code': self.company_id.country_id.code,
+            'peppol_phone_number': self.company_id.account_peppol_phone_number,
+            'peppol_contact_email': self.company_id.account_peppol_contact_email,
+            'peppol_migration_key': self.company_id.sudo().account_peppol_migration_key,
+        }
