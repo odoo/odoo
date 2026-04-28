@@ -143,7 +143,7 @@ export class BuilderSelectionRestrictionPlugin extends Plugin {
         });
         // Then correct the selection if some uncrossable elements are crossed
         // on the extended part.
-        this.correctSelectionOnUncrossable();
+        this.ensureUncrossableSelection();
 
         // Get the fixed extended selection after the first step, and then
         // extend it to the end of the element.
@@ -156,22 +156,7 @@ export class BuilderSelectionRestrictionPlugin extends Plugin {
         });
         // Finally correct the selection if some uncrossable elements are
         // crossed on the extended part.
-        this.correctSelectionOnUncrossable();
-
-        // Make sure the selection does not contain uncrossable elements. We
-        // limit this to 5 attempts to not block the editor (it is very unlikely
-        // to have more than 5 nested uncrossable elements, so 5 is acceptable).
-        selection = this.dependencies.selection.getEditableSelection();
-        let attemptsLeft = 5;
-        while (
-            closestElement(selection.anchorNode, this.uncrossableSelectors) !==
-                closestElement(selection.focusNode, this.uncrossableSelectors) &&
-            attemptsLeft
-        ) {
-            this.correctSelectionOnUncrossable();
-            selection = this.dependencies.selection.getEditableSelection();
-            attemptsLeft -= 1;
-        }
+        this.ensureUncrossableSelection();
     }
 
     /**
@@ -223,7 +208,7 @@ export class BuilderSelectionRestrictionPlugin extends Plugin {
         }
         // Finally, we correct the selection if some uncrossable elements are
         // crossed.
-        this.correctSelectionOnUncrossable();
+        this.ensureUncrossableSelection();
     }
 
     /**
@@ -346,7 +331,42 @@ export class BuilderSelectionRestrictionPlugin extends Plugin {
                 tempFocusNode = node;
             }
         }
+    }
 
-        this.shouldUpdateContainersWithSelection = true;
+    /**
+     * Corrects the selection iteratively, to ensure the selection does not
+     * contain uncrossable elements.
+     */
+    ensureUncrossableSelection() {
+        const areSameSelection = (s1, s2) =>
+            s1.focusNode === s2.focusNode || s1.focusOffset === s2.focusOffset;
+
+        // We limit to 5 attempts to not block the editor (it is very unlikely
+        // to have more than 5 nested uncrossable elements, so 5 is acceptable).
+        let attemptsLeft = 5;
+        let previousSelection = this.dependencies.selection.getEditableSelection();
+        while (attemptsLeft) {
+            this.correctSelectionOnUncrossable();
+            const currentSelection = this.dependencies.selection.getEditableSelection();
+            if (areSameSelection(currentSelection, previousSelection)) {
+                // Do not correct again if nothing was corrected.
+                break;
+            }
+            previousSelection = currentSelection;
+            attemptsLeft--;
+        }
+
+        // Only update the containers if the selection has been corrected at
+        // least once.
+        if (attemptsLeft < 5) {
+            this.shouldUpdateContainersWithSelection = true;
+        }
+
+        if (!attemptsLeft) {
+            console.warn(
+                "Too many attempts to correct the selection, something might be wrong with some uncrossable elements:\n",
+                this.uncrossableSelectors
+            );
+        }
     }
 }

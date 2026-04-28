@@ -162,3 +162,53 @@ test("the selection should be restricted when it crosses different div from righ
         )
     );
 });
+
+test("the selection should be restricted to the innermost uncrossable element when it crosses nested uncrossable elements", async () => {
+    const { getEditableContent, getEditor } = await setupWebsiteBuilder(
+        unformat(`
+            <div>
+                <p>Text out of uncrossable element</p>
+                <blockquote class="o_draggable">
+                    <p class="text-in-uncrossable-element">Text in the parent uncrossable element (blockquote)</p>
+                    <div class="s_blockquote_infos">
+                        <span>
+                            <strong>Text in the other uncrossable element (.s_blockquote_infos)</strong>
+                        </span>
+                    </div>
+                </blockquote>
+                <p class="text-out-of-uncrossable-element">Second text out of uncrossable element</p>
+            </div>`)
+    );
+    const editableContent = getEditableContent();
+    const editor = getEditor();
+    const pInUncrossableEl = editor.editable.querySelector("p.text-in-uncrossable-element");
+    const pOutofUncrossableEl = editor.editable.querySelector("p.text-out-of-uncrossable-element");
+
+    // Set the selection across the uncrossable elements.
+    setSelection({
+        anchorNode: pInUncrossableEl.firstChild,
+        anchorOffset: 6,
+        focusNode: pOutofUncrossableEl.firstChild,
+        focusOffset: 4,
+        isMouseEventSimulated: true,
+    });
+    await animationFrame();
+
+    // The selection should be restricted to the innermost uncrossable element.
+    expect(getContent(editableContent)).toBe(
+        unformat(
+            `<div>
+                <p>Text out of uncrossable element</p>
+                <blockquote class="o_draggable">
+                    <p class="text-in-uncrossable-element">Text i[n the parent uncrossable element (blockquote)]</p>
+                    <div class="s_blockquote_infos">
+                        <span>
+                            <strong>Text in the other uncrossable element (.s_blockquote_infos)</strong>
+                        </span>
+                    </div>
+                </blockquote>
+                <p class="text-out-of-uncrossable-element">Second text out of uncrossable element</p>
+            </div>`
+        )
+    );
+});
