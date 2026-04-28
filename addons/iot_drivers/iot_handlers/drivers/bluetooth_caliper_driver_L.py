@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import dbus
+from gi.repository import GLib
 from gatt import Device
 import logging
 
@@ -18,11 +19,46 @@ class SylvacBtDriver(Driver):
         super().__init__(identifier, device)
         self.gatt_device = GattSylvacBtDriver(mac_address=device.mac_address, manager=device.manager)
         self.gatt_device.btdriver = self
-        self.gatt_device.connect()
         self.device_type = 'device'
         self.device_connection = 'bluetooth'
         self.device_name = device.alias()
         self._actions['read_once'] = self._action_read_once
+        _logger.info("Sylvac: Driver loading for %s alias=%s", identifier, device.alias())
+
+        self._pair_then_connect(device.mac_address)
+
+    def _pair_then_connect(self, mac_address):
+        try:
+            bus = dbus.SystemBus()
+            path_mac = mac_address.replace(':', '_').upper()
+            device_obj = bus.get_object('org.bluez', f"/org/bluez/hci0/dev_{path_mac}")
+            props = dbus.Interface(device_obj, 'org.freedesktop.DBus.Properties')
+            device_iface = dbus.Interface(device_obj, 'org.bluez.Device1')
+
+            props.Set('org.bluez.Device1', 'Trusted', dbus.Boolean(True))
+
+            if props.Get('org.bluez.Device1', 'Paired'):
+                self.gatt_device.connect()
+                return
+
+            def on_pair_success():
+                _logger.info("Sylvac: Pairing succeeded for %s", mac_address)
+                GLib.timeout_add(500, self._do_connect)
+
+            def on_pair_error(error):
+                _logger.warning("Pairing error for %s: %s — connecting anyway", mac_address, error)
+                GLib.timeout_add(500, self._do_connect)
+
+            device_iface.Pair(reply_handler=on_pair_success, error_handler=on_pair_error)
+
+        except Exception:  # noqa: BLE001
+            _logger.exception("_pair_then_connect failed. Connecting anyway")
+            self.gatt_device.connect()
+
+    def _do_connect(self):
+        _logger.info("Sylvac: Initiating GATT connect to %s", self.gatt_device.mac_address)
+        self.gatt_device.connect()
+        return False
 
     def _action_read_once(self, _data):
         """Make value available to the longpolling event route"""
@@ -32,7 +68,14 @@ class SylvacBtDriver(Driver):
     def supported(cls, device):
         try:
             if device.alias() in ["SY295", "SY304", "SY276"]:
+                _logger.info("Sylvac: Device %s is supported (alias=%s)", device.mac_address, device.alias())
                 return True
+            elif device.alias() == "SY":
+                _logger.info(
+                    "Sylvac: Device %s should be supported but it appears it's in a faulty state, please reset the bluetooth on the device (alias=%s)",
+                    device.mac_address,
+                    device.alias(),
+                )
         except dbus.exceptions.DBusException as e:
             _logger.warning(e.get_dbus_name())
             _logger.warning(e.get_dbus_message())
