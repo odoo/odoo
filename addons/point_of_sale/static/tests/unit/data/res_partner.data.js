@@ -50,7 +50,6 @@ export class ResPartner extends MailResPartner {
             invoice_emails: "",
             fiscal_position_id: false,
             credit_limit: 0.0,
-            use_partner_credit_limit: false,
         },
         {
             id: 4,
@@ -73,7 +72,6 @@ export class ResPartner extends MailResPartner {
             invoice_emails: "",
             fiscal_position_id: false,
             credit_limit: 0.0,
-            use_partner_credit_limit: false,
         },
     ];
 }

@@ -522,13 +522,9 @@ class ResPartner(models.Model):
         groups='account.group_account_invoice,account.group_account_readonly'
     )
     credit_limit = fields.Float(
-        string='Credit Limit', help='Credit limit specific to this partner.',
+        string='Partner Limit', help='Set a value greater than 0.0 to activate a credit limit check',
         groups='account.group_account_invoice,account.group_account_readonly',
         company_dependent=True, copy=False, readonly=False)
-    use_partner_credit_limit = fields.Boolean(
-        string='Partner Limit', groups='account.group_account_invoice,account.group_account_readonly',
-        compute='_compute_use_partner_credit_limit', inverse='_inverse_use_partner_credit_limit',
-        help='Set a value greater than 0.0 to activate a credit limit check')
     show_credit_limit = fields.Boolean(
         compute='_compute_show_credit_limit', groups='account.group_account_invoice,account.group_account_readonly')
     days_sales_outstanding = fields.Float(
@@ -712,18 +708,6 @@ class ResPartner(models.Model):
                 partner.invoice_edi_format_store = 'none'
             else:
                 partner.invoice_edi_format_store = partner.invoice_edi_format
-
-    @api.depends_context('company')
-    def _compute_use_partner_credit_limit(self):
-        company_limit = self._fields['credit_limit'].get_company_dependent_fallback(self)
-        for partner in self:
-            partner.use_partner_credit_limit = partner.credit_limit != company_limit
-
-    def _inverse_use_partner_credit_limit(self):
-        company_limit = self._fields['credit_limit'].get_company_dependent_fallback(self)
-        for partner in self:
-            if not partner.use_partner_credit_limit:
-                partner.credit_limit = company_limit
 
     @api.depends_context('company')
     def _compute_show_credit_limit(self):
