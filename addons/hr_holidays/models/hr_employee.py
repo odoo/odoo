@@ -419,16 +419,29 @@ class HrEmployee(models.Model):
             'has_future_allocation': self.env['hr.work.entry.type'].has_future_allocation(),
             'has_accrual_allocation': self.env['hr.work.entry.type'].has_accrual_allocation(),
             'allocation_data': self.env['hr.work.entry.type'].get_allocation_data_request(target_date, False),
-            'allocation_request_amount': self.get_allocation_requests_amount(),
+            'allocation_request_days_hours': self.get_allocation_requests_days_hours(),
         }
 
     @api.model
-    def get_allocation_requests_amount(self):
+    def get_allocation_requests_days_hours(self):
         employee = self._get_contextual_employee()
-        return self.env['hr.leave.allocation'].search_count([
+        allocations = self.env['hr.leave.allocation'].search([
             ('employee_id', '=', employee.id),
             ('state', '=', 'confirm'),
         ])
+        days = 0
+        hours = 0
+        for allocation in allocations:
+            if allocation.type_request_unit == 'hour':
+                hours += allocation.number_of_hours_display
+            else:
+                days += allocation.number_of_days_display
+        values = ''
+        if days:
+            values += f"{float_round(days, precision_digits=2):g}{'d ' if hours else ''}"
+        if hours:
+            values += f"{float_round(hours, precision_digits=2):g}h"
+        return values
 
     def _get_public_holidays(self, date_start, date_end):
         domain = [

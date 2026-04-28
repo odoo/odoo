@@ -38,6 +38,8 @@ export class TimeOffCalendarModel extends CalendarModel {
             result.requestDateFromPeriod = rawRecord.request_date_from_period;
             result.requestDateToPeriod = rawRecord.request_date_to_period;
         }
+        const states = Object.fromEntries(this.fields.state.selection);
+        result.stateLabel = states[rawRecord.state];
         return result;
     }
 
