@@ -1,6 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from . import resource
+from . import resource_resource
+from . import resource_calendar
+from . import resource_calendar_leaves
 from . import hr_employee
 from . import hr_employee_departure
 from . import hr_employee_public
