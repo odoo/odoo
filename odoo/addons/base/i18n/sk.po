@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-02-16 16:38+0000\n"
-"PO-Revision-Date: 2026-03-21 09:30+0000\n"
+"PO-Revision-Date: 2026-04-24 07:53+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Slovak <https://translate.odoo.com/projects/odoo-18/base/sk/>"
 "\n"
@@ -27,7 +27,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && "
 "n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_at_reports
@@ -6413,6 +6413,21 @@ msgid ""
 "    * FBM: Delivery notifications are sent to Amazon for each confirmed "
 "picking (partial delivery friendly).\n"
 msgstr ""
+"\n"
+"Importujte svoje objednávky z Amazonu do Odoo a synchronizujte dodávky.\n"
+"============================================================\n"
+"\n"
+"Kľúčové funkcie\n"
+"------------\n"
+"* Importujte objednávky z viacerých účtov a trhovísk.\n"
+"* Objednávky sa spájajú s produktmi Odoo na základe ich interného "
+"referenčného čísla (SKU v Amazon).\n"
+"* Dodávky potvrdené v Odoo sa synchronizujú v Amazon.\n"
+"* Podpora pre Fulfilment by Amazon (FBA) aj Fulfilment by Merchant (FBM):\n"
+"* FBA: Umiestnenie zásob a presuny zásob umožňujú monitorovať vaše zásoby v "
+"Amazon Fulfilment Centres.\n"
+"* FBM: Oznámenia o dodávkach sa posielajú do Amazonu za každé potvrdené "
+"vyzdvihnutie (vhodné pre čiastočné dodávky).\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_shopee
@@ -7582,6 +7597,19 @@ msgid ""
 "aren't imported several times or handle multicurrency.\n"
 "Whenever possible, you should use a more appropriate file format like OFX.\n"
 msgstr ""
+"\n"
+"Modul na importovanie bankových výpisov vo formáte CSV.\n"
+"======================================\n"
+"\n"
+"Tento modul vám umožňuje importovať súbory CSV do Odoo: sú analyzované a "
+"uložené v čitateľnom formáte v\n"
+"Účtovníctvo \\ Banka a hotovosť \\ Bankové výpisy.\n"
+"\n"
+"Dôležitá poznámka\n"
+"---------------------------------------------\n"
+"Vzhľadom na obmedzenia formátu CSV nemôžeme zaručiť, že sa rovnaké "
+"transakcie neimportujú viackrát, ani spracovať viacero mien.\n"
+"Ak je to možné, mali by ste použiť vhodnejší formát súboru, napríklad OFX.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_bank_statement_import_ofx
@@ -8683,6 +8711,11 @@ msgid ""
 "employees when scheduling appointments\n"
 "--------------------------------------------------------------------------------------------------------------\n"
 msgstr ""
+"\n"
+"Pri plánovaní schôdzok zohľadňujte pracovný rozvrh (pracovná neschopnosť, "
+"čiastočný úväzok atď.) zamestnancov.\n"
+"-------------------------------------------------------------------------- ------------------------------------"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_tz_account
@@ -12528,6 +12561,9 @@ msgid ""
 "                            to your user account, it is very important to "
 "store it securely."
 msgstr ""
+"<strong>Dôležité:</strong>\n"
+"Kľúč nie je možné neskôr obnoviť a poskytuje <b>plný prístup</b>\n"
+"k vášmu používateľskému účtu, preto je veľmi dôležité ho bezpečne uchovávať."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -13171,7 +13207,7 @@ msgstr "Import účtu bankového výpisu"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_accountant_batch_payment
 msgid "Account Batch Payment Reconciliation"
-msgstr ""
+msgstr "Párovanie hromadných platieb"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting_localizations_account_charts
@@ -13221,7 +13257,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_qr_code_sepa
 msgid "Account SEPA QR Code"
-msgstr ""
+msgstr "SEPA QR kód"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
@@ -15629,7 +15665,7 @@ msgstr "Antigua a Barbuda"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_asset__directive__append
 msgid "Append"
-msgstr ""
+msgstr "Pridať"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_module_category
@@ -17146,6 +17182,7 @@ msgid ""
 "Banks are the financial institutions at which you and your contacts have "
 "their accounts."
 msgstr ""
+"Banky sú finančné inštitúcie, v ktorých máte vy a vaši kontakty svoje účty."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_bar_industry
@@ -17833,7 +17870,7 @@ msgstr "Most medzi IAP a poštou"
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp_accountant
 msgid "Bridge between Mrp and Accounting"
-msgstr ""
+msgstr "Prepojenie medzi výrobou a účtovníctvom"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_account_accountant
@@ -17999,7 +18036,7 @@ msgstr "Britské indickooceánske územie"
 #: model:ir.model.fields,field_description:base.field_res_device__browser
 #: model:ir.model.fields,field_description:base.field_res_device_log__browser
 msgid "Browser"
-msgstr ""
+msgstr "Prehliadajte"
 
 #. module: base
 #: model:res.country,name:base.bn
@@ -19228,7 +19265,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__company_details
 msgid "Company Details"
-msgstr ""
+msgstr "Údaje o spoločnosti"
 
 #. module: base
 #. odoo-python
@@ -20583,7 +20620,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_cz
 msgid "Czech - Accounting"
-msgstr ""
+msgstr "Účtovníctvo - Česko"
 
 #. module: base
 #: model:res.country,name:base.cz
@@ -20850,6 +20887,8 @@ msgid ""
 "Decimal places taken into account for operations on amounts in this "
 "currency. It is determined by the rounding factor."
 msgstr ""
+"Desatinné miesta zohľadnené pri operáciách s čiastkami v tejto mene. Určuje "
+"ich zaokrúhľovací faktor."
 
 #. module: base
 #. odoo-python
@@ -23930,7 +23969,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__update_path
 #: model:ir.model.fields,field_description:base.field_ir_cron__update_path
 msgid "Field to Update Path"
-msgstr ""
+msgstr "Cesta k poľu na aktualizáciu"
 
 #. module: base
 #. odoo-python
@@ -24321,6 +24360,13 @@ msgid ""
 "For Static values, the value will be used directly without evaluation, "
 "e.g.`42` or `My custom name` or the selected record."
 msgstr ""
+"Pre výrazy v jazyku Python smie toto pole obsahovať výraz v jazyku Python, "
+"ktorý môže používať rovnaké hodnoty ako pole pre kód v akcii servera, napr. "
+"`env.user.name` na nastavenie mena aktuálneho užívateľa ako hodnoty alebo "
+"`record.id` na nastavenie ID záznamu, na ktorom sa akcia vykonáva.\n"
+"\n"
+"V prípade statických hodnôt sa hodnota použije priamo bez vyhodnotenia, "
+"napr. `42` alebo `My custom name` alebo vybraný záznam."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.wizard_lang_export
@@ -24557,6 +24603,8 @@ msgstr "Od"
 msgid ""
 "From here you can manage all bank accounts linked to you and your contacts."
 msgstr ""
+"Odtiaľto môžete spravovať všetky bankové účty prepojené s vami a vašimi "
+"kontaktmi."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_management
@@ -26463,7 +26511,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_account_base_import
 msgid "Improved Import in Accounting"
-msgstr ""
+msgstr "Vylepšený import v účtovníctve"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model__modules
@@ -27260,6 +27308,8 @@ msgid ""
 "Invalid server name!\n"
 " %s"
 msgstr ""
+"Neplatný názov servera!\n"
+" %s"
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_ir_filters_check_sort_json
@@ -30526,7 +30576,7 @@ msgstr "Pán"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_accountant
 msgid "Mrp Accounting"
-msgstr ""
+msgstr "Účtovníctvo výroby"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_repair
@@ -33963,7 +34013,7 @@ msgstr ""
 #: model:ir.model.fields,help:base.field_ir_actions_server__update_path
 #: model:ir.model.fields,help:base.field_ir_cron__update_path
 msgid "Path to the field to update, e.g. 'partner_id.name'"
-msgstr ""
+msgstr "Cesta k poľu, ktoré sa má aktualizovať, napr. 'partner_id.name'"
 
 #. module: base
 #. odoo-python
@@ -35797,7 +35847,7 @@ msgstr "Rekordný čas"
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__crud_model_id
 #: model:ir.model.fields,field_description:base.field_ir_cron__crud_model_id
 msgid "Record to Create"
-msgstr ""
+msgstr "Záznam na vytvorenie"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_human_resources_recruitment
@@ -38386,6 +38436,8 @@ msgid ""
 "Specify a field used to link the newly created record on the record used by "
 "the server action."
 msgstr ""
+"Určite pole, ktoré sa používa na prepojenie novo vytvoreného záznamu so "
+"záznamom používaným akciou servera."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_users__new_password
@@ -38410,6 +38462,8 @@ msgid ""
 "Specify which kind of record should be created. Set this field only to "
 "specify a different model than the base model."
 msgstr ""
+"Určite, aký typ záznamu sa má vytvoriť. Toto pole nastavte len v prípade, ak "
+"chcete určiť iný model ako základný model."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_profile__speedscope
@@ -39397,7 +39451,7 @@ msgstr ""
 #: model:ir.module.category,name:base.module_category_technical_settings
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "Technical Settings"
-msgstr ""
+msgstr "Technické nastavenia"
 
 #. module: base
 #: model:ir.actions.report,name:base.ir_module_reference_print
@@ -39851,7 +39905,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_partner_bank_unique_number
 msgid "The combination Account Number/Partner must be unique."
-msgstr ""
+msgstr "Kombinácia čísla účtu a partnera musí byť jedinečná."
 
 #. module: base
 #. odoo-python
@@ -40360,6 +40414,9 @@ msgid ""
 "The registry number of the company. Use it if it is different from the Tax "
 "ID. It must be unique across all partners of a same country"
 msgstr ""
+"Registračné číslo spoločnosti. Použite ho, ak sa líši od daňového "
+"identifikačného čísla. Musí byť jedinečné pre všetkých partnerov v rámci "
+"jednej krajiny"
 
 #. module: base
 #. odoo-python
@@ -40384,7 +40441,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/base/models/ir_mail_server.py:0
 msgid "The server \"%s\" cannot be used because it is archived."
-msgstr ""
+msgstr "Server „%s “ nie je možné použiť, pretože je archivovaný."
 
 #. module: base
 #. odoo-python
@@ -41784,7 +41841,7 @@ msgstr ""
 #: model:ir.model.fields,help:base.field_ir_actions_server__webhook_url
 #: model:ir.model.fields,help:base.field_ir_cron__webhook_url
 msgid "URL to send the POST request to."
-msgstr ""
+msgstr "URL, na ktorú sa má odoslať požiadavka POST."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_us_reports
@@ -43125,7 +43182,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__webhook_url
 #: model:ir.model.fields,field_description:base.field_ir_cron__webhook_url
 msgid "Webhook URL"
-msgstr ""
+msgstr "URL webhooku"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module__website
@@ -43635,7 +43692,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_rule__perm_write
 #: model_terms:ir.ui.view,arch_db:base.view_rule_search
 msgid "Write"
-msgstr ""
+msgstr "Napísať"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_access__perm_write

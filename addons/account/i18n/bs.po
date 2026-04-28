@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-17 18:36+0000\n"
+"POT-Creation-Date: 2026-04-24 17:38+0000\n"
 "PO-Revision-Date: 2026-04-18 14:03+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Bosnian <https://translate.odoo.com/projects/odoo-18/account/"
@@ -149,8 +149,8 @@ msgid ""
 "%(attachment_name)s (detached by %(user)s on %(date)s)%"
 "(attachment_extension)s"
 msgstr ""
-"%(attachment_name)s (odvojeno od %(user)s na %(date)s)%(attachment_extension)"
-"s"
+"%(attachment_name)s (odvojeno od %(user)s na %(date)s)%"
+"(attachment_extension)s"
 
 #. module: account
 #. odoo-python
@@ -807,8 +807,8 @@ msgid ""
 "<span class=\"o_form_label oe_inline\" invisible=\"amount_type == "
 "'fixed'\">%</span>"
 msgstr ""
-"<span class=\"o_form_label oe_inline\" invisible=\"amount_type == 'fixed'\">"
-"%</span>"
+"<span class=\"o_form_label oe_inline\" invisible=\"amount_type == "
+"'fixed'\">%</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -1371,8 +1371,8 @@ msgid ""
 "A bank account with Account Number %(number)s already exists for Partner %"
 "(partner)s, but is archived. Please unarchive it instead."
 msgstr ""
-"Bankovni račun sa brojem računa %(number)s već postoji za partnera %(partner)"
-"s, ali je arhiviran. Umjesto toga, dearhivirajte ga."
+"Bankovni račun sa brojem računa %(number)s već postoji za partnera %"
+"(partner)s, ali je arhiviran. Umjesto toga, dearhivirajte ga."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_bank_statement_tree
@@ -1442,7 +1442,8 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "A note, whose content usually applies to the section or product above."
-msgstr "Napomena čiji se sadržaj obično odnosi na gornji odjeljak ili proizvod."
+msgstr ""
+"Napomena čiji se sadržaj obično odnosi na gornji odjeljak ili proizvod."
 
 #. module: account
 #. odoo-python
@@ -1495,7 +1496,8 @@ msgstr "Naslov sekcije"
 #. odoo-python
 #: code:addons/account/models/account_lock_exception.py:0
 msgid "A single exception must change exactly one lock date field."
-msgstr "Jedan izuzetak mora promijeniti tačno jedno polje datuma zaključavanja."
+msgstr ""
+"Jedan izuzetak mora promijeniti tačno jedno polje datuma zaključavanja."
 
 #. module: account
 #. odoo-python
@@ -1913,7 +1915,8 @@ msgstr "Računovodstvene grupe"
 msgid ""
 "Account holder name, in case it is different than the name of the Account "
 "Holder"
-msgstr "Ime vlasnika računa, u slučaju da se razlikuje od imena vlasnika računa"
+msgstr ""
+"Ime vlasnika računa, u slučaju da se razlikuje od imena vlasnika računa"
 
 #. module: account
 #: model:ir.model,name:account.model_account_merge_wizard
@@ -4440,7 +4443,8 @@ msgstr "Code Store"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Collect customer payments in one-click using Euro SEPA Service"
-msgstr "Naplatite dugovanja kupaca samo jednim klikom koriteći Euro SEPA servis"
+msgstr ""
+"Naplatite dugovanja kupaca samo jednim klikom koriteći Euro SEPA servis"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -10617,7 +10621,8 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Navigate easily through reports and see what is behind the numbers"
-msgstr "Jednostavno se krećite kroz izvještaje i otkrijte što stoji iza brojeva"
+msgstr ""
+"Jednostavno se krećite kroz izvještaje i otkrijte što stoji iza brojeva"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__half-up
@@ -13120,11 +13125,6 @@ msgid "Responsible User"
 msgstr "Odgovorni korisnik"
 
 #. module: account
-#: model:ir.model.fields,help:account.field_account_tax__tax_scope
-msgid "Restrict the use of taxes to a type of product."
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_same_currency
 msgid ""
 "Restrict to propositions having the same currency as the statement line."
@@ -14959,8 +14959,8 @@ msgstr ""
 "prefiks1, godina, prefiks2, mesec, prefiks3, sekvenca, sufiks.\n"
 "Grupe prefiksa* su separatori između godine, mjeseca i stvarnog rastućeg "
 "broja sekvence (seq).\n"
-"e.g: ^(?P<prefix1>.*?)(?P<year>\\d{4})(?P<prefix2>\\D*?)(?P<month>\\d{2})"
-"(?P<prefix3>\\D+?)(?P<seq>\\d+)(?P<suffix>\\D*?)$ "
+"e.g: ^(?P<prefix1>.*?)(?P<year>\\d{4})(?P<prefix2>\\D*?)(?P<month>\\d{2})(?"
+"P<prefix3>\\D+?)(?P<seq>\\d+)(?P<suffix>\\D*?)$ "
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_fiscal_position__foreign_vat_header_mode__templates_found
@@ -15328,7 +15328,8 @@ msgstr ""
 #: code:addons/account/models/partner.py:0
 msgid ""
 "The commercial partner has been updated for all related accounting entries."
-msgstr "Komercijalni partner je ažuriran za sve povezane računovodstvene unose."
+msgstr ""
+"Komercijalni partner je ažuriran za sve povezane računovodstvene unose."
 
 #. module: account
 #. odoo-python
@@ -15774,7 +15775,8 @@ msgstr "Partner se ne može obrisati jer se već koristi u računovodstvu"
 #: code:addons/account/models/account_journal.py:0
 msgid ""
 "The partners of the journal's company and the related bank account mismatch."
-msgstr "Neusklađenost partnera kompanije časopisa i povezanih bankovnih računa."
+msgstr ""
+"Neusklađenost partnera kompanije časopisa i povezanih bankovnih računa."
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_payment_check_amount_not_negative
@@ -18148,8 +18150,8 @@ msgid ""
 "You can't have two payment method lines of the same payment type (%"
 "(payment_type)s) and with the same name (%(name)s) on a single journal."
 msgstr ""
-"Ne možete imati dva reda načina plaćanja istog tipa plaćanja (%(payment_type)"
-"s) i s istim imenom (%(name)s) u jednom dnevniku."
+"Ne možete imati dva reda načina plaćanja istog tipa plaćanja (%"
+"(payment_type)s) i s istim imenom (%(name)s) u jednom dnevniku."
 
 #. module: account
 #. odoo-python

@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:38+0000\n"
-"PO-Revision-Date: 2026-04-14 08:24+0000\n"
+"POT-Creation-Date: 2026-04-24 17:39+0000\n"
+"PO-Revision-Date: 2026-04-25 18:01+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
 "odoo-18/spreadsheet/es_419/>\n"
@@ -24,7 +24,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == "
 "0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -259,37 +259,21 @@ msgstr "%s coincidencias en todas las hojas"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
-"(0) Exact match. \n"
-"        (-1) Return next smaller item if no match. \n"
-"        (1) Return next greater item if no match. \n"
-"        (2) Wildcard match."
+"(0) Exact match.         (-1) Return next smaller item if no match.         "
+"(1) Return next greater item if no match.         (2) Wildcard match."
 msgstr ""
-"(0) Coincidencia exacta. \n"
-"        (-1) Mostrar resultados del siguiente elemento más pequeño si no hay "
-"coincidencia. \n"
-"        (1) Mostrar resultados del elemento más grande si no hay "
-"coincidencia. \n"
-"        (2) Coincidencia de comodín."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
-"(1) Search starting at first item. \n"
-"      (-1) Search starting at last item. \n"
-"      (2) Perform a binary search that relies on lookup_array being sorted "
-"in ascending order. If not sorted, invalid results will be returned. \n"
-"      (-2) Perform a binary search that relies on lookup_array being sorted "
-"in descending order. If not sorted, invalid results will be returned.\n"
-"      "
+"(1) Search starting at first item.       (-1) Search starting at last "
+"item.       (2) Perform a binary search that relies on lookup_array being "
+"sorted in ascending order. If not sorted, invalid results will be "
+"returned.       (-2) Perform a binary search that relies on lookup_array "
+"being sorted in descending order. If not sorted, invalid results will be "
+"returned.      "
 msgstr ""
-"(1) Buscar a partir del primer elemento. \n"
-"      (-1) Buscar a partir del último elemento. \n"
-"      (2) Realizar una búsqueda binaria basada en lookup_array en orden "
-"ascendente. Si no se ordena, se devolverán los resultados no válidos. \n"
-"      (-2) Realizar una búsqueda binaria basada en lookup_array en orden "
-"descendente. Si no se ordena, se devolverán los resultados no válidos.\n"
-"      "
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1058,17 +1042,6 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "An unexpected error occurred during the image transfer"
 msgstr "Ocurrió un error inesperado durante la transferencia de imagen"
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid ""
-"An unexpected error occurred while pasting content.\n"
-"          This is probably due to a spreadsheet version mismatch."
-msgstr ""
-"Ocurrió un error inesperado al pegar el contenido.\n"
-"          Es probable que haya sucedido debido a la incompatibilidad de "
-"versiones entre las hojas de cálculo."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3721,25 +3694,6 @@ msgstr "La función [[FUNCTION_NAME]] no encontró ningún resultado."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
-"Function [[FUNCTION_NAME]] expects criteria_range and criterion to be in "
-"pairs."
-msgstr ""
-"La función [[FUNCTION_NAME]] espera que criteria_range y criterion sean "
-"pares."
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid ""
-"Function [[FUNCTION_NAME]] expects criteria_range to have the same dimension"
-msgstr ""
-"La función [[FUNCTION_NAME]] espera que criteria_range tenga la misma "
-"dimensión"
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid ""
 "Function [[FUNCTION_NAME]] expects number values for %s, but got a boolean."
 msgstr ""
 "La función [[FUNCTION_NAME]] espera valores numéricos para %s, pero obtuvo "
@@ -4187,12 +4141,8 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
 "In [[FUNCTION_NAME]], the number of columns of the first matrix (%s) must be "
-"equal to the \n"
-"        number of rows of the second matrix (%s)."
+"equal to the         number of rows of the second matrix (%s)."
 msgstr ""
-"En [[FUNCTION_NAME]], el número de columnas de la primera matriz (%s) debe "
-"ser igual al \n"
-"        número de filas de la segunda matriz (%s)."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5365,6 +5315,12 @@ msgstr "Nueva tabla dinámica"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Next coupon date after the settlement date."
 msgstr "Siguiente fecha de cupón después de la fecha de liquidación."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/hooks.js:0
+msgid "No"
+msgstr "No"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11547,15 +11503,9 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
 "Whether or not to remove empty text messages from the split results. The "
-"default behavior is to treat \n"
-"        consecutive delimiters as one (if TRUE). If FALSE, empty cells "
-"values are added between consecutive delimiters."
+"default behavior is to treat         consecutive delimiters as one (if "
+"TRUE). If FALSE, empty cells values are added between consecutive delimiters."
 msgstr ""
-"Eliminar o no los mensajes de texto vacíos de los resultados de la división. "
-"El comportamiento predeterminado es considerar\n"
-"        los delimitadores consecutivos como uno (si es VERDADERO). Si es "
-"falso, los valores de celdas vacías se añaden entre delimitadores "
-"consecutivos."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11569,12 +11519,8 @@ msgstr "Si los pagos vencen al final (0) o al principio (1) de cada periodo."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
 "Whether the array should be scanned by column. True scans the array by "
-"column and false (default) \n"
-"      scans the array by row."
+"column and false (default)       scans the array by row."
 msgstr ""
-"Si la columna debe escanear el conjunto. Activarlo escanea el conjunto por "
-"columna, no activarla (modo predeterminado)\n"
-"      escanea el conjunto por fila."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11737,6 +11683,12 @@ msgstr "Año hasta la fecha"
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/hooks.js:0
+msgid "Yes"
+msgstr "Sí"
+
+#. module: spreadsheet
+#. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "You can't merge cells inside of an existing filter."
 msgstr "No puedes combinar celdas dentro de un filtro existente."
@@ -11746,6 +11698,14 @@ msgstr "No puedes combinar celdas dentro de un filtro existente."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "You cannot create overlapping tables."
 msgstr "No puede crear tablas superpuestas."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid ""
+"You copied content from a different version of the application. Only text "
+"content will be pasted."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -12047,6 +12007,90 @@ msgstr "ayer"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "zero"
 msgstr "cero"
+
+#~ msgid ""
+#~ "(0) Exact match. \n"
+#~ "        (-1) Return next smaller item if no match. \n"
+#~ "        (1) Return next greater item if no match. \n"
+#~ "        (2) Wildcard match."
+#~ msgstr ""
+#~ "(0) Coincidencia exacta. \n"
+#~ "        (-1) Mostrar resultados del siguiente elemento más pequeño si no "
+#~ "hay coincidencia. \n"
+#~ "        (1) Mostrar resultados del elemento más grande si no hay "
+#~ "coincidencia. \n"
+#~ "        (2) Coincidencia de comodín."
+
+#~ msgid ""
+#~ "(1) Search starting at first item. \n"
+#~ "      (-1) Search starting at last item. \n"
+#~ "      (2) Perform a binary search that relies on lookup_array being "
+#~ "sorted in ascending order. If not sorted, invalid results will be "
+#~ "returned. \n"
+#~ "      (-2) Perform a binary search that relies on lookup_array being "
+#~ "sorted in descending order. If not sorted, invalid results will be "
+#~ "returned.\n"
+#~ "      "
+#~ msgstr ""
+#~ "(1) Buscar a partir del primer elemento. \n"
+#~ "      (-1) Buscar a partir del último elemento. \n"
+#~ "      (2) Realizar una búsqueda binaria basada en lookup_array en orden "
+#~ "ascendente. Si no se ordena, se devolverán los resultados no válidos. \n"
+#~ "      (-2) Realizar una búsqueda binaria basada en lookup_array en orden "
+#~ "descendente. Si no se ordena, se devolverán los resultados no válidos.\n"
+#~ "      "
+
+#~ msgid ""
+#~ "An unexpected error occurred while pasting content.\n"
+#~ "          This is probably due to a spreadsheet version mismatch."
+#~ msgstr ""
+#~ "Ocurrió un error inesperado al pegar el contenido.\n"
+#~ "          Es probable que haya sucedido debido a la incompatibilidad de "
+#~ "versiones entre las hojas de cálculo."
+
+#~ msgid ""
+#~ "Function [[FUNCTION_NAME]] expects criteria_range and criterion to be in "
+#~ "pairs."
+#~ msgstr ""
+#~ "La función [[FUNCTION_NAME]] espera que criteria_range y criterion sean "
+#~ "pares."
+
+#~ msgid ""
+#~ "Function [[FUNCTION_NAME]] expects criteria_range to have the same "
+#~ "dimension"
+#~ msgstr ""
+#~ "La función [[FUNCTION_NAME]] espera que criteria_range tenga la misma "
+#~ "dimensión"
+
+#~ msgid ""
+#~ "In [[FUNCTION_NAME]], the number of columns of the first matrix (%s) must "
+#~ "be equal to the \n"
+#~ "        number of rows of the second matrix (%s)."
+#~ msgstr ""
+#~ "En [[FUNCTION_NAME]], el número de columnas de la primera matriz (%s) "
+#~ "debe ser igual al \n"
+#~ "        número de filas de la segunda matriz (%s)."
+
+#~ msgid ""
+#~ "Whether or not to remove empty text messages from the split results. The "
+#~ "default behavior is to treat \n"
+#~ "        consecutive delimiters as one (if TRUE). If FALSE, empty cells "
+#~ "values are added between consecutive delimiters."
+#~ msgstr ""
+#~ "Eliminar o no los mensajes de texto vacíos de los resultados de la "
+#~ "división. El comportamiento predeterminado es considerar\n"
+#~ "        los delimitadores consecutivos como uno (si es VERDADERO). Si es "
+#~ "falso, los valores de celdas vacías se añaden entre delimitadores "
+#~ "consecutivos."
+
+#~ msgid ""
+#~ "Whether the array should be scanned by column. True scans the array by "
+#~ "column and false (default) \n"
+#~ "      scans the array by row."
+#~ msgstr ""
+#~ "Si la columna debe escanear el conjunto. Activarlo escanea el conjunto "
+#~ "por columna, no activarla (modo predeterminado)\n"
+#~ "      escanea el conjunto por fila."
 
 #~ msgid ""
 #~ "Function [[FUNCTION_NAME]] expects number values for %s, but got a %s."

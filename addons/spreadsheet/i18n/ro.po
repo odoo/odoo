@@ -14,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:38+0000\n"
-"PO-Revision-Date: 2026-02-07 18:00+0000\n"
+"POT-Creation-Date: 2026-04-24 17:39+0000\n"
+"PO-Revision-Date: 2026-04-25 18:01+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Romanian <https://translate.odoo.com/projects/odoo-18/"
 "spreadsheet/ro/>\n"
@@ -25,7 +25,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -261,38 +261,21 @@ msgstr "%s potriviri în toate foile"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
-"(0) Exact match. \n"
-"        (-1) Return next smaller item if no match. \n"
-"        (1) Return next greater item if no match. \n"
-"        (2) Wildcard match."
+"(0) Exact match.         (-1) Return next smaller item if no match.         "
+"(1) Return next greater item if no match.         (2) Wildcard match."
 msgstr ""
-"(0) Potrivire exactă. \n"
-"        (-1) Returnează următorul element mai mic dacă nu există "
-"potrivire. \n"
-"        (1) Returnează următorul element mai mare dacă nu există "
-"potrivire. \n"
-"        (2) Potrivire wildcard."
 
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
-"(1) Search starting at first item. \n"
-"      (-1) Search starting at last item. \n"
-"      (2) Perform a binary search that relies on lookup_array being sorted "
-"in ascending order. If not sorted, invalid results will be returned. \n"
-"      (-2) Perform a binary search that relies on lookup_array being sorted "
-"in descending order. If not sorted, invalid results will be returned.\n"
-"      "
+"(1) Search starting at first item.       (-1) Search starting at last "
+"item.       (2) Perform a binary search that relies on lookup_array being "
+"sorted in ascending order. If not sorted, invalid results will be "
+"returned.       (-2) Perform a binary search that relies on lookup_array "
+"being sorted in descending order. If not sorted, invalid results will be "
+"returned.      "
 msgstr ""
-"(1) Căutare începând cu primul element. \n"
-"      (-1) Căutare începând cu ultimul element. \n"
-"      (2) Efectuează o căutare binară care presupune că lookup_array este "
-"sortat crescător. Dacă nu este sortat, se vor returna rezultate invalide. \n"
-"      (-2) Efectuează o căutare binară care presupune că lookup_array este "
-"sortat descrescător. Dacă nu este sortat, se vor returna rezultate "
-"invalide.\n"
-"      "
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1062,17 +1045,6 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "An unexpected error occurred during the image transfer"
 msgstr "A apărut o eroare neașteptată în timpul transferului imaginii"
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid ""
-"An unexpected error occurred while pasting content.\n"
-"          This is probably due to a spreadsheet version mismatch."
-msgstr ""
-"A apărut o eroare neașteptată la lipirea conținutului.\n"
-"          Probabil este cauzată de o nepotrivire de versiune a foii de "
-"calcul."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3700,25 +3672,6 @@ msgstr "Funcția [[FUNCTION_NAME]] nu a găsit niciun rezultat."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
-"Function [[FUNCTION_NAME]] expects criteria_range and criterion to be in "
-"pairs."
-msgstr ""
-"Funcția [[FUNCTION_NAME]] se așteaptă ca intervalul de criterii și criteriul "
-"să fie în perechi."
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid ""
-"Function [[FUNCTION_NAME]] expects criteria_range to have the same dimension"
-msgstr ""
-"Funcția [[FUNCTION_NAME]] se așteaptă ca intervalul de criterii să aibă "
-"aceeași dimensiune"
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid ""
 "Function [[FUNCTION_NAME]] expects number values for %s, but got a boolean."
 msgstr ""
 "Funcția [[FUNCTION_NAME]] așteaptă valori numerice pentru %s, dar a primit o "
@@ -4167,12 +4120,8 @@ msgstr "În evaluarea [[FUNCTION_NAME]], nu se poate găsi '%s' în '%s'."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
 "In [[FUNCTION_NAME]], the number of columns of the first matrix (%s) must be "
-"equal to the \n"
-"        number of rows of the second matrix (%s)."
+"equal to the         number of rows of the second matrix (%s)."
 msgstr ""
-"În [[FUNCTION_NAME]], numărul de coloane al primei matrice (%s) trebuie să "
-"fie egal cu \n"
-"        numărul de rânduri al celei de-a doua matrice (%s)."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5344,6 +5293,12 @@ msgstr "Pivot nou"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Next coupon date after the settlement date."
 msgstr "Următoarea dată a cuponului după data decontării."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/hooks.js:0
+msgid "No"
+msgstr "Nu"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11527,15 +11482,9 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
 "Whether or not to remove empty text messages from the split results. The "
-"default behavior is to treat \n"
-"        consecutive delimiters as one (if TRUE). If FALSE, empty cells "
-"values are added between consecutive delimiters."
+"default behavior is to treat         consecutive delimiters as one (if "
+"TRUE). If FALSE, empty cells values are added between consecutive delimiters."
 msgstr ""
-"Dacă să se elimine sau nu mesajele text goale din rezultatele împărțite. "
-"Comportamentul implicit este să trateze \n"
-"        delimitatorii consecutivi ca unul singur (dacă este ADEVĂRAT). Dacă "
-"este FALS, valorile celulelor goale sunt adăugate între delimitatorii "
-"consecutivi."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11551,12 +11500,8 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
 "Whether the array should be scanned by column. True scans the array by "
-"column and false (default) \n"
-"      scans the array by row."
+"column and false (default)       scans the array by row."
 msgstr ""
-"Dacă matricea trebuie scanată pe coloană. True scanează matricea pe coloană, "
-"iar false (implicit) \n"
-"      scanează matricea pe rând."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11721,6 +11666,12 @@ msgstr "An până la zi"
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/hooks.js:0
+msgid "Yes"
+msgstr "Da"
+
+#. module: spreadsheet
+#. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "You can't merge cells inside of an existing filter."
 msgstr "Nu puteți îmbina celule în interiorul unui filtru existent."
@@ -11730,6 +11681,14 @@ msgstr "Nu puteți îmbina celule în interiorul unui filtru existent."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "You cannot create overlapping tables."
 msgstr "Nu puteți crea tabele suprapuse."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid ""
+"You copied content from a different version of the application. Only text "
+"content will be pasted."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -12029,6 +11988,92 @@ msgstr "ieri"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "zero"
 msgstr "zero"
+
+#~ msgid ""
+#~ "(0) Exact match. \n"
+#~ "        (-1) Return next smaller item if no match. \n"
+#~ "        (1) Return next greater item if no match. \n"
+#~ "        (2) Wildcard match."
+#~ msgstr ""
+#~ "(0) Potrivire exactă. \n"
+#~ "        (-1) Returnează următorul element mai mic dacă nu există "
+#~ "potrivire. \n"
+#~ "        (1) Returnează următorul element mai mare dacă nu există "
+#~ "potrivire. \n"
+#~ "        (2) Potrivire wildcard."
+
+#~ msgid ""
+#~ "(1) Search starting at first item. \n"
+#~ "      (-1) Search starting at last item. \n"
+#~ "      (2) Perform a binary search that relies on lookup_array being "
+#~ "sorted in ascending order. If not sorted, invalid results will be "
+#~ "returned. \n"
+#~ "      (-2) Perform a binary search that relies on lookup_array being "
+#~ "sorted in descending order. If not sorted, invalid results will be "
+#~ "returned.\n"
+#~ "      "
+#~ msgstr ""
+#~ "(1) Căutare începând cu primul element. \n"
+#~ "      (-1) Căutare începând cu ultimul element. \n"
+#~ "      (2) Efectuează o căutare binară care presupune că lookup_array este "
+#~ "sortat crescător. Dacă nu este sortat, se vor returna rezultate "
+#~ "invalide. \n"
+#~ "      (-2) Efectuează o căutare binară care presupune că lookup_array "
+#~ "este sortat descrescător. Dacă nu este sortat, se vor returna rezultate "
+#~ "invalide.\n"
+#~ "      "
+
+#~ msgid ""
+#~ "An unexpected error occurred while pasting content.\n"
+#~ "          This is probably due to a spreadsheet version mismatch."
+#~ msgstr ""
+#~ "A apărut o eroare neașteptată la lipirea conținutului.\n"
+#~ "          Probabil este cauzată de o nepotrivire de versiune a foii de "
+#~ "calcul."
+
+#~ msgid ""
+#~ "Function [[FUNCTION_NAME]] expects criteria_range and criterion to be in "
+#~ "pairs."
+#~ msgstr ""
+#~ "Funcția [[FUNCTION_NAME]] se așteaptă ca intervalul de criterii și "
+#~ "criteriul să fie în perechi."
+
+#~ msgid ""
+#~ "Function [[FUNCTION_NAME]] expects criteria_range to have the same "
+#~ "dimension"
+#~ msgstr ""
+#~ "Funcția [[FUNCTION_NAME]] se așteaptă ca intervalul de criterii să aibă "
+#~ "aceeași dimensiune"
+
+#~ msgid ""
+#~ "In [[FUNCTION_NAME]], the number of columns of the first matrix (%s) must "
+#~ "be equal to the \n"
+#~ "        number of rows of the second matrix (%s)."
+#~ msgstr ""
+#~ "În [[FUNCTION_NAME]], numărul de coloane al primei matrice (%s) trebuie "
+#~ "să fie egal cu \n"
+#~ "        numărul de rânduri al celei de-a doua matrice (%s)."
+
+#~ msgid ""
+#~ "Whether or not to remove empty text messages from the split results. The "
+#~ "default behavior is to treat \n"
+#~ "        consecutive delimiters as one (if TRUE). If FALSE, empty cells "
+#~ "values are added between consecutive delimiters."
+#~ msgstr ""
+#~ "Dacă să se elimine sau nu mesajele text goale din rezultatele împărțite. "
+#~ "Comportamentul implicit este să trateze \n"
+#~ "        delimitatorii consecutivi ca unul singur (dacă este ADEVĂRAT). "
+#~ "Dacă este FALS, valorile celulelor goale sunt adăugate între "
+#~ "delimitatorii consecutivi."
+
+#~ msgid ""
+#~ "Whether the array should be scanned by column. True scans the array by "
+#~ "column and false (default) \n"
+#~ "      scans the array by row."
+#~ msgstr ""
+#~ "Dacă matricea trebuie scanată pe coloană. True scanează matricea pe "
+#~ "coloană, iar false (implicit) \n"
+#~ "      scanează matricea pe rând."
 
 #~ msgid ""
 #~ "Function [[FUNCTION_NAME]] expects number values for %s, but got a %s."

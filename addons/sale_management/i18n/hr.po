@@ -13,13 +13,13 @@
 # Karolina Tonković <karolina.tonkovic@storm.hr>, 2024
 # Vladimir Vrgoč, 2024
 # Karlo Mikešić <karlo@uvid.hr>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2025-11-21 06:42+0000\n"
+"PO-Revision-Date: 2026-04-24 07:52+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Croatian <https://translate.odoo.com/projects/odoo-18/"
 "sale_management/hr/>\n"
@@ -29,7 +29,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_portal_content_inherit_sale_management
@@ -39,7 +39,7 @@ msgstr ""
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "<span invisible=\"not require_payment\">of</span>"
-msgstr ""
+msgstr "<span invisible=\"not require_payment\">od</span>"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.report_saleorder_document_inherit_sale_management
@@ -257,6 +257,8 @@ msgid ""
 "If set, SO with this template will invoice in this journal; otherwise the "
 "sales journal with the lowest sequence is used."
 msgstr ""
+"Ako je postavljeno, prodajni nalozi s ovim predloškom fakturirat će se u "
+"ovom dnevniku; inače se koristi prodajni dnevnik s najnižim redoslijedom."
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__active
@@ -667,6 +669,9 @@ msgid ""
 "Please change the company of your template or remove the products from other "
 "companies."
 msgstr ""
+"Vaš predložak pripada tvrtki %(template_company)s, ali sadrži proizvode iz "
+"tvrtke (%(product_company)s) koji nisu dostupni %(template_company)s.\n"
+"Promijenite tvrtku svog predloška ili uklonite proizvode iz drugih tvrtki."
 
 #. module: sale_management
 #. odoo-python
@@ -678,6 +683,10 @@ msgid ""
 "Please change the company of your template or remove the products from other "
 "companies."
 msgstr ""
+"Vaš predložak pripada tvrtki %(template_company)s, ali sadrži proizvode iz "
+"drugih tvrtki (%(product_company)s) koji nisu dostupni %(template_company)"
+"s.\n"
+"Promijenite tvrtku svog predloška ili uklonite proizvode iz drugih tvrtki."
 
 #. module: sale_management
 #. odoo-python
@@ -687,6 +696,9 @@ msgid ""
 "between companies. Please restrict the template access, or remove those "
 "products."
 msgstr ""
+"Vaš predložak ne može sadržavati proizvode iz određenih tvrtki ako je "
+"dijeljen između tvrtki. Ograničite pristup predlošku ili uklonite te "
+"proizvode."
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
