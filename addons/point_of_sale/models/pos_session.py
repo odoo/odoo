@@ -1944,10 +1944,11 @@ class PosSession(models.Model):
     @api.autovacuum
     def _gc_session_sequences(self):
         for prefix in self._get_gc_sequence_prefix():
-            sequences = self.env['ir.sequence'].search([('code', 'ilike', prefix)])
+            sequences = self.env['ir.sequence'].search([('code', '=like', f'{prefix}%')])
             session_ids = [int(seq.code.split(prefix)[-1]) for seq in sequences if seq.code.split(prefix)[-1].isdigit()]
-            session_ids = self.env['pos.session'].search([('id', 'in', session_ids), ('state', '=', 'closed')]).ids
-            sequence_to_unlink_ids = sequences.filtered(lambda seq: seq.code in [f'{prefix}{session}' for session in session_ids])
+            session_ids = self.env['pos.session'].search([('id', 'in', session_ids), ('state', '!=', 'closed')]).ids
+            keep_codes = {f'{prefix}{session}' for session in session_ids}
+            sequence_to_unlink_ids = sequences.filtered(lambda seq: seq.code not in keep_codes)
             if sequence_to_unlink_ids:
                 sequence_to_unlink_ids.sudo().unlink()
 
