@@ -238,6 +238,7 @@
             <field name="res_model">account.tax</field>
             <field name="path">taxes</field>
             <field name="view_mode">list,kanban,form</field>
+            <field name="domain" eval="[('active', '=', True)]"/>
             <field name="context">{'search_default_sale': True, 'search_default_purchase': True, 'active_test': False}</field>
             <field name="view_id" ref="view_tax_tree"/>
             <field name="help" type="html">
