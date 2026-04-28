@@ -50,8 +50,7 @@ class AccountMove(models.Model):
                 **move._prepare_product_base_line_for_taxes_computation(line),
                 'tax_ids': sales_tax,
             } for line in srca_s_lines]
-            AccountTax._add_tax_details_in_base_lines(base_lines, move.company_id)
-            AccountTax._round_base_lines_tax_details(base_lines, move.company_id)
+            AccountTax._add_tax_details(base_lines, move.company_id)
             tax_totals = AccountTax._get_tax_totals_summary(
                 base_lines=base_lines,
                 currency=move.currency_id,

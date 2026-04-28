@@ -166,20 +166,9 @@ class TestItEdi(AccountTestInvoicingCommon):
         return root
 
     def _assert_export_invoice(self, invoice, filename, pdf_values=None, extra_attachments=None):
-        path = f'{self.module}/tests/export_xmls/{filename}'
-        with tools.file_open(path, mode='rb') as fd:
-            expected_tree = etree.fromstring(fd.read())
-            expected_tree = self._remove_all_namespaces(expected_tree)
-
+        path = f'{self.module}/tests/export_xmls/'
         xml = invoice._l10n_it_edi_render_xml(pdf_values=pdf_values, extra_attachments=extra_attachments)
-        invoice_etree = etree.fromstring(xml)
-        invoice_etree = self._remove_all_namespaces(invoice_etree)
-
-        try:
-            self.assertXmlTreeEqual(invoice_etree, expected_tree)
-        except AssertionError as ae:
-            ae.args = (ae.args[0] + f"\nFile used for comparison: {filename}", )
-            raise
+        self.assert_xml(xml, filename, subfolder=path)
 
     def _assert_import_invoice(self, filename, expected_values_list, xml_to_apply=None, move_type="in_invoice"):
         """ Tests an invoice imported from an XML vendor bill file on the filesystem

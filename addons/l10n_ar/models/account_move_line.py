@@ -15,7 +15,7 @@ class AccountMoveLine(models.Model):
 
         if include_vat:
             base_line['tax_ids'] = self.tax_ids.filtered('tax_group_id.l10n_ar_vat_afip_code')
-        AccountTax._add_tax_details_in_base_line(base_line, self.company_id, rounding_method='round_globally')
+        AccountTax._add_tax_details([base_line], self.company_id, rounding_method='no_round')
 
         tax_details = base_line['tax_details']
         discount = base_line['discount']

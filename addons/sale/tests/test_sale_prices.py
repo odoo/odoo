@@ -37,8 +37,6 @@ class TestSalePrices(SaleCommon):
 
         # Needed when run without demo data
         #   s.t. taxes creation doesn't fail
-        belgium = cls.env.ref("base.be")
-        cls.env.company.sudo().account_fiscal_country_id = belgium
         for model in ("account.tax", "account.tax.group"):
             cls.env.add_to_compute(
                 cls.env[model]._fields["country_id"],
@@ -825,8 +823,12 @@ class TestSalePrices(SaleCommon):
             line.product_id = product_tmpl_c.product_variant_id
             line.product_uom_qty = 1.0
         sale_order = order_form.save()
+        # 6% tax: 100 / 1.06 * 0.06 ≃ 5.66
+        # fixed tax: 10
+        # total tax = 15.66
+        # 100 - 15.66 = 84.34
         self.assertRecordValues(
-            sale_order.order_line, [{"price_unit": 100, "price_subtotal": 84.91}]
+            sale_order.order_line, [{"price_unit": 100, "price_subtotal": 84.34}]
         )
 
         # Test Mapping (excluded,included) to (excluded, excluded)

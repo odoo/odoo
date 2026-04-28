@@ -465,8 +465,7 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
     @api.model
     def _add_base_lines_tax_amounts(self, base_lines, company, tax_lines=None):
         AccountTax = self.env['account.tax']
-        AccountTax._add_tax_details_in_base_lines(base_lines, company)
-        AccountTax._round_base_lines_tax_details(base_lines, company, tax_lines=tax_lines)
+        AccountTax._add_tax_details(base_lines, company)
 
         for base_line in base_lines:
             discount = base_line['discount']

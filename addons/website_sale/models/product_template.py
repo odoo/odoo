@@ -1125,7 +1125,11 @@ class ProductTemplate(models.Model):
             taxes = request.fiscal_position.map_tax(product_taxes)
 
         price = product._get_tax_included_unit_price_from_price(
-            price, product_taxes, product_taxes_after_fp=taxes
+            price,
+            product_taxes,
+            currency,
+            self.env.company,
+            product_taxes_after_fp=taxes
         )
 
         # The list_price is always the price of one.

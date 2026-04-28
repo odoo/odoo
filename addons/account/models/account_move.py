@@ -1868,7 +1868,6 @@ class AccountMove(models.Model):
             base_lines += [self._prepare_cash_rounding_base_line_for_taxes_computation(line) for line in cash_rounding_amls]
             non_deductible_base_lines = self.line_ids.filtered(lambda line: line.display_type in ('non_deductible_product', 'non_deductible_product_total'))
             base_lines += [self._prepare_non_deductible_base_line_for_taxes_computation(line) for line in non_deductible_base_lines]
-            AccountTax._add_tax_details_in_base_lines(base_lines, self.company_id)
             tax_amls = self.line_ids.filtered('tax_repartition_line_id')
             tax_lines = [self._prepare_tax_line_for_taxes_computation(tax_line) for tax_line in tax_amls]
             if round_from_tax_lines == 'reapply_currency_rate':
@@ -1876,13 +1875,11 @@ class AccountMove(models.Model):
                     rate = self.invoice_currency_rate
                     if rate:
                         tax_line['balance'] = self.company_currency_id.round(tax_line['amount_currency'] / rate)
-            AccountTax._round_base_lines_tax_details(base_lines, self.company_id, tax_lines=tax_lines if round_from_tax_lines else [])
         else:
             # The move is not stored yet so the only thing we have is the invoice lines.
             base_lines += self._prepare_epd_base_lines_for_taxes_computation_from_base_lines(base_amls)
             base_lines += self._prepare_non_deductible_base_lines_for_taxes_computation_from_base_lines(base_amls)
-            AccountTax._add_tax_details_in_base_lines(base_lines, self.company_id)
-            AccountTax._round_base_lines_tax_details(base_lines, self.company_id)
+        AccountTax._add_tax_details(base_lines, self.company_id, tax_lines=tax_lines if round_from_tax_lines else [])
         return base_lines, tax_lines
 
     @api.depends_context('lang')
@@ -5069,8 +5066,7 @@ class AccountMove(models.Model):
         base_lines = [self._prepare_product_base_line_for_taxes_computation(x) for x in base_amls]
         tax_amls = self.line_ids.filtered('tax_repartition_line_id')
         tax_lines = [self._prepare_tax_line_for_taxes_computation(x) for x in tax_amls]
-        AccountTax._add_tax_details_in_base_lines(base_lines, self.company_id)
-        AccountTax._round_base_lines_tax_details(base_lines, self.company_id, tax_lines=tax_lines)
+        AccountTax._add_tax_details(base_lines, self.company_id, tax_lines=tax_lines)
 
         def grouping_function(base_line, tax_data):
             ...
@@ -5087,10 +5083,9 @@ class AccountMove(models.Model):
         base_lines = [self._prepare_product_base_line_for_taxes_computation(x) for x in base_amls]
         tax_amls = self.line_ids.filtered('tax_repartition_line_id')
         tax_lines = self._prepare_tax_lines_for_taxes_computation(tax_amls, round_from_tax_lines)
-        AccountTax._add_tax_details_in_base_lines(base_lines, self.company_id)
+        AccountTax._add_tax_details(base_lines, self.company_id, tax_lines=tax_lines)
         if postfix_function:
             postfix_function(base_lines)
-        AccountTax._round_base_lines_tax_details(base_lines, self.company_id, tax_lines=tax_lines)
 
         # Retro-compatibility with previous aggregator.
         results = {
@@ -5219,8 +5214,7 @@ class AccountMove(models.Model):
                 remaining_part_to_consider = (100 - discount_percentage) / 100.0
                 base_line['price_unit'] *= remaining_part_to_consider
         AccountTax = self.env['account.tax']
-        AccountTax._add_tax_details_in_base_lines(base_lines, self.company_id)
-        AccountTax._round_base_lines_tax_details(base_lines, self.company_id)
+        AccountTax._add_tax_details(base_lines, self.company_id)
         AccountTax._add_accounting_data_in_base_lines_tax_details(base_lines, self.company_id)
 
         if self.is_inbound(include_receipts=True):
@@ -6416,6 +6410,8 @@ class AccountMove(models.Model):
                 line.price_unit = line.product_id._get_tax_included_unit_price_from_price(
                     line.price_unit,
                     line.tax_ids,
+                    line.currency_id,
+                    line.company_id,
                     fiscal_position=line.move_id.fiscal_position_id,
                     product_taxes_after_fp=new_taxes,
                     document_tax_mode=line.document_tax_mode,

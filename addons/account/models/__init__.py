@@ -1,5 +1,6 @@
 from . import res_currency_rate_consolidation_mixin
 from . import sequence_mixin
+from . import taxes_engine
 from . import account_document_import_mixin
 from . import partner
 from . import res_partner_bank

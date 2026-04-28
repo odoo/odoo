@@ -3,72 +3,14 @@
 from odoo.exceptions import ValidationError
 from odoo.tests import tagged
 
-from odoo.addons.account.tests.test_taxes_global_discount import TestTaxesGlobalDiscount
+from odoo.addons.account.tests.test_taxes_computation import TestTaxesComputation
 from odoo.addons.sale.tests.common import TestTaxCommonSale
 
 
 @tagged("post_install", "-at_install")
-class TestTaxesGlobalDiscountSale(TestTaxCommonSale, TestTaxesGlobalDiscount):
-    # -------------------------------------------------------------------------
-    # GENERIC TAXES TEST SUITE
-    # -------------------------------------------------------------------------
+class TestTaxesGlobalDiscountSale(TestTaxCommonSale, TestTaxesComputation):
 
     _test_user_groups = None  # FIXME list needed groups
-
-    def test_taxes_l10n_in_sale_orders(self):
-        for (
-            test_mode,
-            document,
-            soft_checking,
-            amount_type,
-            amount,
-            expected_values,
-        ) in self._test_taxes_l10n_in():
-            with self.subTest(test_code=test_mode, amount=amount):
-                sale_order = self.convert_document_to_sale_order(document)
-                sale_order.action_confirm()
-                self._apply_sale_order_discount(sale_order, amount_type, amount)
-                self._assert_tax_totals_summary(
-                    sale_order.tax_totals, expected_values, soft_checking=soft_checking
-                )
-
-    def test_taxes_l10n_br_sale_orders(self):
-        for (
-            test_mode,
-            document,
-            soft_checking,
-            amount_type,
-            amount,
-            expected_values,
-        ) in self._test_taxes_l10n_br():
-            with self.subTest(test_code=test_mode, amount=amount):
-                sale_order = self.convert_document_to_sale_order(document)
-                sale_order.action_confirm()
-                self._apply_sale_order_discount(sale_order, amount_type, amount)
-                self._assert_tax_totals_summary(
-                    sale_order.tax_totals, expected_values, soft_checking=soft_checking
-                )
-
-    def test_taxes_l10n_be_sale_orders(self):
-        for (
-            test_mode,
-            document,
-            soft_checking,
-            amount_type,
-            amount,
-            expected_values,
-        ) in self._test_taxes_l10n_be():
-            with self.subTest(test_code=test_mode, amount=amount):
-                sale_order = self.convert_document_to_sale_order(document)
-                sale_order.action_confirm()
-                self._apply_sale_order_discount(sale_order, amount_type, amount)
-                self._assert_tax_totals_summary(
-                    sale_order.tax_totals, expected_values, soft_checking=soft_checking
-                )
-
-    # -------------------------------------------------------------------------
-    # SPECIFIC TESTS
-    # -------------------------------------------------------------------------
 
     def test_global_discount_with_sol_discount(self):
         product = self.company_data["product_order_cost"]

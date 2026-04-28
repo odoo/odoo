@@ -375,8 +375,7 @@ class PosOrder(models.Model):
 
         order_lines = self.lines
         base_lines = order_lines._prepare_base_lines_for_taxes_computation()
-        self.env['account.tax']._add_tax_details_in_base_lines(base_lines, company)
-        self.env['account.tax']._round_base_lines_tax_details(base_lines, company)
+        self.env['account.tax']._add_tax_details(base_lines, company)
         tax_totals = self.env['account.tax']._get_tax_totals_summary(
             base_lines=base_lines,
             currency=self.currency_id or company.currency_id,
@@ -435,8 +434,7 @@ class PosOrder(models.Model):
             for bl in base_lines:
                 bl['discount'] = 0
 
-        self.env['account.tax']._add_tax_details_in_base_lines(base_lines, self.company_id)
-        self.env['account.tax']._round_base_lines_tax_details(base_lines, self.company_id)
+        self.env['account.tax']._add_tax_details(base_lines, self.company_id)
 
         amount = preset.service_fee_amount
         if preset.service_fee_type == 'percent':

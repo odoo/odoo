@@ -16,6 +16,7 @@ class TestAccountMoveOutRefundOnchanges(AccountTestInvoicingCommon):
         super().setUpClass()
 
         cls.other_currency = cls.setup_other_currency('HRK')
+        cls.tax_armageddon = cls.setup_armageddon_tax('complex_tax', cls.company_data)
 
         cls.invoice = cls.init_invoice('out_refund', products=cls.product_a + cls.product_b)
 
@@ -359,12 +360,18 @@ class TestAccountMoveOutRefundOnchanges(AccountTestInvoicingCommon):
             {
                 **self.product_line_vals_1,
                 'price_unit': 1200.0,
-                'price_subtotal': 1000.0,
-                'price_total': 1470.0,
+                'price_subtotal': 1200.0,
+                'price_total': 1764.0,
                 'tax_ids': (self.tax_sale_a + self.tax_armageddon).ids,
+                'amount_currency': 1200.0,
+                'debit': 1200.0,
             },
             self.product_line_vals_2,
-            self.tax_line_vals_1,
+            {
+                **self.tax_line_vals_1,
+                'amount_currency': 210.0,
+                'debit': 210.0,
+            },
             self.tax_line_vals_2,
             {
                 'name': child_tax_1.name,
@@ -380,8 +387,8 @@ class TestAccountMoveOutRefundOnchanges(AccountTestInvoicingCommon):
                 'tax_ids': child_tax_2.ids,
                 'tax_line_id': child_tax_1.id,
                 'currency_id': self.company_data['currency'].id,
-                'amount_currency': 80.0,
-                'debit': 80.0,
+                'amount_currency': 96.0,
+                'debit': 96.0,
                 'credit': 0.0,
                 'date_maturity': False,
             },
@@ -399,8 +406,8 @@ class TestAccountMoveOutRefundOnchanges(AccountTestInvoicingCommon):
                 'tax_ids': child_tax_2.ids,
                 'tax_line_id': child_tax_1.id,
                 'currency_id': self.company_data['currency'].id,
-                'amount_currency': 120.0,
-                'debit': 120.0,
+                'amount_currency': 144.0,
+                'debit': 144.0,
                 'credit': 0.0,
                 'date_maturity': False,
             },
@@ -418,21 +425,21 @@ class TestAccountMoveOutRefundOnchanges(AccountTestInvoicingCommon):
                 'tax_ids': [],
                 'tax_line_id': child_tax_2.id,
                 'currency_id': self.company_data['currency'].id,
-                'amount_currency': 120.0,
-                'debit': 120.0,
+                'amount_currency': 144.0,
+                'debit': 144.0,
                 'credit': 0.0,
                 'date_maturity': False,
             },
             {
                 **self.term_line_vals_1,
-                'amount_currency': -1730.0,
-                'credit': 1730.0,
+                'amount_currency': -2024.0,
+                'credit': 2024.0,
             },
         ], {
             **self.move_vals,
-            'amount_untaxed': 1200.0,
-            'amount_tax': 530.0,
-            'amount_total': 1730.0,
+            'amount_untaxed': 1400.0,
+            'amount_tax': 624.0,
+            'amount_total': 2024.0,
         })
 
     def test_out_refund_line_onchange_cash_rounding_1(self):

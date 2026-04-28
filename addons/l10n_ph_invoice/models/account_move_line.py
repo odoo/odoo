@@ -31,8 +31,7 @@ class AccountMoveLine(models.Model):
         company = self.company_id or self.env.company
         base_line = self.move_id._prepare_product_base_line_for_taxes_computation(self)
         base_line["discount"] = 0.0
-        self.env["account.tax"]._add_tax_details_in_base_line(base_line, company)
-        self.env["account.tax"]._round_base_lines_tax_details([base_line], company)
+        self.env["account.tax"]._add_tax_details([base_line], company)
         gross_price_subtotal = base_line["tax_details"]["raw_total_excluded_currency"]
         gross_price_total = base_line["tax_details"]["raw_total_included_currency"]
         return (
@@ -68,6 +67,8 @@ class AccountMoveLine(models.Model):
             new_price_unit = tax_ids._adapt_price_unit_to_another_taxes(
                 price_unit=self.l10n_ph_original_price_unit or price_unit,
                 product=None,
+                currency=self.currency_id,
+                company=self.company_id or self.env.company,
                 original_taxes=tax_ids,
                 new_taxes=taxes_after_fp,
                 document_tax_mode=self.document_tax_mode,

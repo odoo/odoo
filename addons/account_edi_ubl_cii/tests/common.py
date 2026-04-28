@@ -175,7 +175,7 @@ class TestUblCiiCommon(AccountTestInvoicingCommon):
         self.assertTrue(invoice.ubl_cii_xml_id)
 
         if 'EXTERNAL_MODE' in config['test_tags']:
-            self._assert_iap_valid_xml(invoice.ubl_cii_xml_id.raw)
+            self._assert_iap_valid_xml(invoice.ubl_cii_xml_id.raw.content)
 
         self.assert_xml(invoice.ubl_cii_xml_id.raw, filename, subfolder=subfolder)
 

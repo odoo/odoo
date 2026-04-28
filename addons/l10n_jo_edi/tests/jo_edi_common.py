@@ -15,14 +15,6 @@ class JoEdiCommon(AccountTestInvoicingCommon):
             'vat': '8000514',
         })
 
-        def _get_general_tax(amount):
-            return cls.env['account.tax'].search([
-                ('amount', '=', amount),
-                ('amount_type', '=', 'percent'),
-                ('type_tax_use', '=', 'sale'),
-                ('company_id', '=', cls.company_data['company'].id)
-            ], limit=1)
-
         def _create_special_tax(amount):
             return cls.env['account.tax'].create(
                 {
@@ -35,10 +27,10 @@ class JoEdiCommon(AccountTestInvoicingCommon):
                     'sequence': 0,
                 })
 
-        cls.jo_general_tax_10 = _get_general_tax(10)
+        cls.jo_general_tax_10 = cls.percent_tax(10.0)
         cls.jo_special_tax_10 = _create_special_tax(10)
         cls.jo_special_tax_5 = _create_special_tax(5)
-        cls.jo_general_tax_16 = _get_general_tax(16)
+        cls.jo_general_tax_16 = cls.percent_tax(16.0)
         cls.jo_general_tax_16_included = cls.jo_general_tax_16.copy({'name': 'Tax 16% included'})
         cls.jo_general_tax_16_included.price_include_override = 'tax_included'
 

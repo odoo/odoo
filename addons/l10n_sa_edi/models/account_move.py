@@ -317,8 +317,7 @@ class AccountMoveLine(models.Model):
                 and line.display_type == 'product'
             ):
                 base_line = line.move_id._prepare_product_base_line_for_taxes_computation(line)
-                AccountTax._add_tax_details_in_base_line(base_line, line.company_id)
-                AccountTax._round_base_lines_tax_details([base_line], line.company_id)
+                AccountTax._add_tax_details([base_line], line.company_id)
                 line.l10n_gcc_invoice_tax_amount = sum(
                     tax_data['tax_amount_currency']
                     for tax_data in base_line['tax_details']['taxes_data']

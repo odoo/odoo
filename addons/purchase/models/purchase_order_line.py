@@ -136,8 +136,7 @@ class PurchaseOrderLine(models.Model):
         for line in self:
             company = line.company_id or self.env.company
             base_line = line._prepare_base_line_for_taxes_computation()
-            AccountTax._add_tax_details_in_base_line(base_line, company)
-            AccountTax._round_base_lines_tax_details([base_line], company)
+            AccountTax._add_tax_details([base_line], company)
             line.price_subtotal = base_line['tax_details']['total_excluded_currency']
             line.price_total = base_line['tax_details']['total_included_currency']
             line.price_tax = line.price_total - line.price_subtotal
@@ -539,8 +538,7 @@ class PurchaseOrderLine(models.Model):
                     line.product_id.supplier_taxes_id,
                     line.uom_id,
                     line.document_tax_mode,
-                    ),
-                )
+                ))
 
             elif line.selected_seller_id:
                 price_unit = line.env['account.tax']._fix_tax_included_price_company(line.selected_seller_id.price, line.product_id.supplier_taxes_id, line.tax_ids, line.company_id, document_tax_mode=line.document_tax_mode) if line.selected_seller_id else 0.0

@@ -275,6 +275,8 @@ class ProductProduct(models.Model):
             product_price_unit = self._get_tax_included_unit_price_from_price(
                 product_price_unit,
                 product_taxes,
+                product_currency,
+                company,
                 fiscal_position=fiscal_position,
                 document_tax_mode=document_tax_mode,
             )
@@ -286,7 +288,7 @@ class ProductProduct(models.Model):
         return product_price_unit
 
     def _get_tax_included_unit_price_from_price(
-        self, product_price_unit, product_taxes,
+        self, product_price_unit, product_taxes, product_currency, company,
         fiscal_position=None,
         product_taxes_after_fp=None,
         document_tax_mode=None,
@@ -303,6 +305,8 @@ class ProductProduct(models.Model):
         return product_taxes._adapt_price_unit_to_another_taxes(
             price_unit=product_price_unit,
             product=self,
+            currency=product_currency,
+            company=company,
             original_taxes=product_taxes,
             new_taxes=product_taxes_after_fp,
             document_tax_mode=document_tax_mode,
@@ -324,24 +328,32 @@ class ProductProduct(models.Model):
     ):
         if document_tax_mode == self.company_id.account_price_include:
             return product_price_unit
-        results = product_taxes._get_tax_details(
+
+        AccountTax = self.env['account.tax']
+        base_line = AccountTax._prepare_base_line_for_taxes_computation(
+            record=None,
             price_unit=product_price_unit,
-            quantity=1.0,
-            rounding_method='round_globally',
-            product=self,
-            product_uom=product_uom,
+            quantity=1,
+            product_id=self,
+            tax_ids=product_taxes,
             document_tax_mode=self.company_id.account_price_include,
         )
+        AccountTax._add_tax_details(
+            base_lines=[base_line],
+            company=self.company_id,
+            rounding_method='no_round',
+        )
+        tax_details = base_line['tax_details']
         if document_tax_mode == 'tax_included':
-            price_unit = results['total_included']
-            for tax in results['taxes_data']:
+            price_unit = tax_details['raw_total_included_currency']
+            for tax in tax_details['taxes_data']:
                 if tax['tax'].price_include_override == 'tax_excluded':
-                    price_unit -= tax['tax_amount']
+                    price_unit -= tax['raw_tax_amount_currency']
         else:
-            price_unit = results['total_excluded']
-            for tax in results['taxes_data']:
+            price_unit = tax_details['raw_total_excluded_currency']
+            for tax in tax_details['taxes_data']:
                 if tax['tax'].price_include_override == 'tax_included':
-                    price_unit += tax['tax_amount']
+                    price_unit += tax['raw_tax_amount_currency']
 
         return price_unit
 

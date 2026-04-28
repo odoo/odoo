@@ -418,7 +418,7 @@ class TestJoEdiPrecision(JoEdiCommon):
     def test_jo_total_tax_and_lines_taxes_rounding_error(self):
         """
         The aim of this test is to ensure that the taxes amounts on lines are calculated using rounded base amounts
-        this would get broken if _add_tax_details_in_base_line uses round_globally
+        this would get broken if _add_tax_details uses round_globally
         """
         self.company.l10n_jo_edi_taxpayer_type = 'sales'
         self.company.l10n_jo_edi_sequence_income_source = '16683693'

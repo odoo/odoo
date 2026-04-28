@@ -422,8 +422,7 @@ class PosOrder(models.Model):
         self.amount_paid = sum(payment.amount for payment in self.payment_ids)
         self.amount_return = -sum((payment.amount < 0 and payment.amount) or 0 for payment in self.payment_ids)
         base_lines = self.lines._prepare_base_lines_for_taxes_computation()
-        self.env['account.tax']._add_tax_details_in_base_lines(base_lines, self.company_id)
-        self.env['account.tax']._round_base_lines_tax_details(base_lines, self.company_id)
+        self.env['account.tax']._add_tax_details(base_lines, self.company_id)
 
         cash_rounding = None
         only_cash = self.config_id.only_round_cash_method
@@ -1375,8 +1374,7 @@ class PosOrder(models.Model):
         # 1. Collect base_lines with PER-ORDER rounding + accounting data
         for order in self:
             lines = order.lines._prepare_base_lines_for_taxes_computation()
-            AccountTax._add_tax_details_in_base_lines(lines, company)
-            AccountTax._round_base_lines_tax_details(lines, company)
+            AccountTax._add_tax_details(lines, company)
             AccountTax._add_accounting_data_in_base_lines_tax_details(
                 lines,
                 company,

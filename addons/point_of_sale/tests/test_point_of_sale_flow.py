@@ -473,7 +473,7 @@ class TestPointOfSaleFlow(CommonPosTest):
         )
         payment_amount = payment_term.mapped('amount_currency')
         self.assertEqual(len(payment_term), 2)
-        self.assertEqual(payment_amount, [500.0, -50.0])
+        self.assertEqual(payment_amount, [-50.0, 500.0])
 
     def test_paid_order_synced_twice_no_duplicate_change(self):
         """A paid order that reaches the server twice (e.g. a retried/duplicated

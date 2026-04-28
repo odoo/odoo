@@ -23,6 +23,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
 
         cls.other_currency = cls.setup_other_currency('HRK', rounding=0.001)
         cls.company_data_2 = cls.setup_other_company()
+        cls.tax_armageddon = cls.setup_armageddon_tax('complex_tax', cls.company_data)
 
         cls.invoice = cls.init_invoice('out_invoice', products=cls.product_a+cls.product_b)
 
@@ -699,12 +700,18 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             {
                 **self.product_line_vals_1,
                 'price_unit': 1200.0,
-                'price_subtotal': 1000.0,
-                'price_total': 1470.0,
+                'price_subtotal': 1200.0,
+                'price_total': 1764.0,
                 'tax_ids': (self.tax_sale_a + self.tax_armageddon).ids,
+                'amount_currency': -1200.0,
+                'credit': 1200.0,
             },
             self.product_line_vals_2,
-            self.tax_line_vals_1,
+            {
+                **self.tax_line_vals_1,
+                'amount_currency': -210.0,
+                'credit': 210.0,
+            },
             self.tax_line_vals_2,
             {
                 'name': child_tax_1.name,
@@ -720,9 +727,9 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 'tax_ids': child_tax_2.ids,
                 'tax_line_id': child_tax_1.id,
                 'currency_id': self.company_data['currency'].id,
-                'amount_currency': -120.0,
+                'amount_currency': -144.0,
                 'debit': 0.0,
-                'credit': 120.0,
+                'credit': 144.0,
                 'date_maturity': False,
             },
             {
@@ -739,9 +746,9 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 'tax_ids': child_tax_2.ids,
                 'tax_line_id': child_tax_1.id,
                 'currency_id': self.company_data['currency'].id,
-                'amount_currency': -80.0,
+                'amount_currency': -96.0,
                 'debit': 0.0,
-                'credit': 80.0,
+                'credit': 96.0,
                 'date_maturity': False,
             },
             {
@@ -758,21 +765,21 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 'tax_ids': [],
                 'tax_line_id': child_tax_2.id,
                 'currency_id': self.company_data['currency'].id,
-                'amount_currency': -120.0,
+                'amount_currency': -144.0,
                 'debit': 0.0,
-                'credit': 120.0,
+                'credit': 144.0,
                 'date_maturity': False,
             },
             {
                 **self.term_line_vals_1,
-                'amount_currency': 1730.0,
-                'debit': 1730.0,
+                'amount_currency': 2024.0,
+                'debit': 2024.0,
             },
         ], {
             **self.move_vals,
-            'amount_untaxed': 1200.0,
-            'amount_tax': 530.0,
-            'amount_total': 1730.0,
+            'amount_untaxed': 1400.0,
+            'amount_tax': 624.0,
+            'amount_total': 2024.0,
         })
 
     def test_out_invoice_line_onchange_rounding_price_subtotal_1(self):
@@ -787,16 +794,14 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                     'quantity': 1.0,
                     'price_unit': 0.025,
                     'price_subtotal': 0.03,
-                    'debit': 0.0,
-                    'credit': 0.01,
+                    'balance': -0.02,
                     'currency_id': self.other_currency.id,
                 },
                 {
                     'quantity': False,
                     'price_unit': 0.0,
                     'price_subtotal': 0.0,
-                    'debit': 0.01,
-                    'credit': 0.0,
+                    'balance': 0.02,
                     'currency_id': self.other_currency.id,
                 },
             ], {
@@ -5064,7 +5069,6 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         """Ensure that when the tax rounding method is set to 'global', changing the currency rate directly
          on the invoice results in journal entries that are rounded globally, not per line. """
 
-        self.env.company.tax_calculation_rounding_method = 'round_globally'
         eur = self.setup_other_currency('EUR')
         invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',
@@ -5081,8 +5085,8 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         invoice.invoice_currency_rate = 1 / 1189.5
 
         self.assertRecordValues(invoice.line_ids, [
-            {'balance': -851053.94},
-            {'balance': 851053.94},
+            {'balance': -851051.57},
+            {'balance': 851051.57},
         ])
 
     def test_tax_recomputed_when_changing_base_lines(self):

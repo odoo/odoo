@@ -21,10 +21,6 @@ class TestUBLCommon(AccountTestInvoicingCommon):
         # Required for `product_uom_id` to be visible in the form views
         cls.env.user.group_ids += cls.env.ref('uom.group_uom')
 
-        # remove this tax, otherwise, at import, this tax with children taxes can be selected and the total is wrong
-        cls.tax_armageddon.children_tax_ids.unlink()
-        cls.tax_armageddon.unlink()
-
         cls.move_template = cls.env['mail.template'].create({
             'auto_delete': True,
             'body_html': '<p>TemplateBody for <t t-out="object.name"></t><t t-out="object.invoice_user_id.signature or \'\'"></t></p>',

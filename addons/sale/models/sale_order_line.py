@@ -769,6 +769,8 @@ class SaleOrderLine(models.Model):
         price_unit = line.product_id._get_tax_included_unit_price_from_price(
             price,
             product_taxes=product_taxes,
+            product_currency=line.currency_id,
+            company=self.company_id,
             fiscal_position=line.order_id.fiscal_position_id,
             document_tax_mode=line.document_tax_mode,
         )
@@ -1012,8 +1014,7 @@ class SaleOrderLine(models.Model):
         for line in self:
             company = line.company_id or self.env.company
             base_line = line._prepare_base_line_for_taxes_computation()
-            AccountTax._add_tax_details_in_base_line(base_line, company)
-            AccountTax._round_base_lines_tax_details([base_line], company)
+            AccountTax._add_tax_details([base_line], company)
             line.price_subtotal = base_line["tax_details"]["total_excluded_currency"]
             line.price_total = base_line["tax_details"]["total_included_currency"]
             line.price_tax = line.price_total - line.price_subtotal

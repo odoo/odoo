@@ -12,11 +12,6 @@ class TestL10nHKEmvQrCode(AccountTestInvoicingCommon):
     _test_user_groups = None  # FIXME list needed groups
 
     @classmethod
-    def setup_armageddon_tax(cls, tax_name, company_data):
-        # Hong Kong doesn't have any tax, so this methods will throw errors if we don't return None
-        return None
-
-    @classmethod
     @AccountTestInvoicingCommon.setup_country('hk')
     def setUpClass(cls):
         super().setUpClass()

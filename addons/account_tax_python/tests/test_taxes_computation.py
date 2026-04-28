@@ -6,138 +6,246 @@ from odoo.addons.account_tax_python.tools.formula_utils import check_formula, no
 
 
 @tagged('post_install', '-at_install')
-class TestTaxesComputation(TestTaxCommonAccountTaxPython):
+class TestTaxesComputationTaxFormula(TestTaxCommonAccountTaxPython):
 
     _test_user_groups = None  # FIXME list needed groups
 
     def test_formula(self):
-        self.assert_python_taxes_computation(
-            "max(quantity * price_unit * 0.21, quantity * 4.17)",
-            130.0,
-            {
-                'total_included': 157.3,
-                'total_excluded': 130.0,
-                'taxes_data': (
-                    (130.0, 27.3),
-                ),
-            },
+        tax = self.python_tax("max(quantity * price_unit * 0.21, quantity * 4.17)")
+        document = self.populate_document(self.init_document(lines=[{'price_unit': 130.0, 'tax_ids': tax}]))
+        self.assert_base_lines_tax_details(
+            document=document,
+            expected_base_lines_tax_details=[{
+                'total_excluded_currency': 130.0,
+                'delta_total_excluded_currency': 0.0,
+                'taxes_data': [
+                    {
+                        'tax_id': tax.id,
+                        'base_amount_currency': 130.0,
+                        'tax_amount_currency': 27.3,
+                    },
+                ],
+            }],
+            expected_base_amount=130.0,
+            expected_tax_amount=27.3,
+            expected_total_amount=157.3,
         )
-        self.assert_python_taxes_computation(
-            "max(quantity * price_unit * 0.21, quantity * 4.17)",
-            130.0,
-            {
-                'total_included': 130.0,
-                'total_excluded': 102.7,
-                'taxes_data': (
-                    (102.7, 27.3),
-                ),
-            },
-            price_include_override='tax_included',
+
+        tax = self.python_tax("max(quantity * price_unit * 0.21, quantity * 4.17)", price_include_override='tax_included')
+        document = self.populate_document(self.init_document(lines=[{'price_unit': 130.0, 'tax_ids': tax}]))
+        self.assert_base_lines_tax_details(
+            document=document,
+            expected_base_lines_tax_details=[{
+                'total_excluded_currency': 102.7,
+                'delta_total_excluded_currency': 0.0,
+                'taxes_data': [
+                    {
+                        'tax_id': tax.id,
+                        'base_amount_currency': 102.7,
+                        'tax_amount_currency': 27.3,
+                    },
+                ],
+            }],
+            expected_base_amount=102.7,
+            expected_tax_amount=27.3,
+            expected_total_amount=130.0,
         )
-        self.assert_python_taxes_computation(
-            "product.volume * quantity * 0.35",
-            100.0,
-            {
-                'total_included': 135.0,
-                'total_excluded': 100.0,
-                'taxes_data': (
-                    (100.0, 35.0),
-                ),
-            },
-            product_values={'volume': 100.0},
+
+        tax = self.python_tax("product.volume * quantity * 0.35")
+        product = self._create_product(volume=100.0)
+        document = self.populate_document(self.init_document(
+            lines=[{'price_unit': 100.0, 'product_id': product, 'tax_ids': tax}],
+        ))
+        self.assert_base_lines_tax_details(
+            document=document,
+            expected_base_lines_tax_details=[{
+                'total_excluded_currency': 100.0,
+                'delta_total_excluded_currency': 0.0,
+                'taxes_data': [
+                    {
+                        'tax_id': tax.id,
+                        'base_amount_currency': 100.0,
+                        'tax_amount_currency': 35.0,
+                    },
+                ],
+            }],
+            expected_base_amount=100.0,
+            expected_tax_amount=35.0,
+            expected_total_amount=135.0,
         )
-        self.assert_python_taxes_computation(
-            'product["volume"] > 100 and 10 or 5',
-            100.0,
-            {
-                'total_included': 110.0,
-                'total_excluded': 100.0,
-                'taxes_data': (
-                    (100.0, 10.0),
-                ),
-            },
-            product_values={'volume': 105.0},
+
+        tax = self.python_tax('product["volume"] > 100 and 10 or 5')
+        product = self._create_product(volume=105.0)
+        document = self.populate_document(self.init_document(
+            lines=[{'price_unit': 100.0, 'product_id': product, 'tax_ids': tax}],
+        ))
+        self.assert_base_lines_tax_details(
+            document=document,
+            expected_base_lines_tax_details=[{
+                'total_excluded_currency': 100.0,
+                'delta_total_excluded_currency': 0.0,
+                'taxes_data': [
+                    {
+                        'tax_id': tax.id,
+                        'base_amount_currency': 100.0,
+                        'tax_amount_currency': 10.0,
+                    },
+                ],
+            }],
+            expected_base_amount=100.0,
+            expected_tax_amount=10.0,
+            expected_total_amount=110.0,
         )
-        self.assert_python_taxes_computation(
-            "product['volume'] > 100 and 10 or 5",
-            100.0,
-            {
-                'total_included': 105.0,
-                'total_excluded': 100.0,
-                'taxes_data': (
-                    (100.0, 5.0),
-                ),
-            },
-            product_values={'volume': 50.0},
+
+        tax = self.python_tax('product["volume"] > 100 and 10 or 5')
+        product = self._create_product(volume=50.0)
+        document = self.populate_document(self.init_document(
+            lines=[{'price_unit': 100.0, 'product_id': product, 'tax_ids': tax}],
+        ))
+        self.assert_base_lines_tax_details(
+            document=document,
+            expected_base_lines_tax_details=[{
+                'total_excluded_currency': 100.0,
+                'delta_total_excluded_currency': 0.0,
+                'taxes_data': [
+                    {
+                        'tax_id': tax.id,
+                        'base_amount_currency': 100.0,
+                        'tax_amount_currency': 5.0,
+                    },
+                ],
+            }],
+            expected_base_amount=100.0,
+            expected_tax_amount=5.0,
+            expected_total_amount=105.0,
         )
-        self.assert_python_taxes_computation(
-            "product.volume > 100 and 5 or None",
-            100.0,
-            {
-                'total_included': 100.0,
-                'total_excluded': 100.0,
+
+        tax = self.python_tax('product.volume > 100 and 5 or None')
+        product = self._create_product(volume=50.0)
+        document = self.populate_document(self.init_document(
+            lines=[{'price_unit': 100.0, 'product_id': product, 'tax_ids': tax}],
+        ))
+        self.assert_base_lines_tax_details(
+            document=document,
+            expected_base_lines_tax_details=[{
+                'total_excluded_currency': 100.0,
+                'delta_total_excluded_currency': 0.0,
                 'taxes_data': [],
-            },
-            product_values={'volume': 50.0},
+            }],
+            expected_base_amount=100.0,
+            expected_tax_amount=0.0,
+            expected_total_amount=100.0,
         )
-        self.assert_python_taxes_computation(
-            "(product.volume or 5.0) and 0.0 or 10.0",
-            100.0,
-            {
-                'total_included': 110.0,
-                'total_excluded': 100.0,
-                'taxes_data': (
-                    (100.0, 10.0),
-                ),
-            },
-            product_values={'volume': 0.0},
+
+        tax = self.python_tax('(product.volume or 5.0) and 0.0 or 10.0')
+        product = self._create_product(volume=0.0)
+        document = self.populate_document(self.init_document(
+            lines=[{'price_unit': 100.0, 'product_id': product, 'tax_ids': tax}],
+        ))
+        self.assert_base_lines_tax_details(
+            document=document,
+            expected_base_lines_tax_details=[{
+                'total_excluded_currency': 100.0,
+                'delta_total_excluded_currency': 0.0,
+                'taxes_data': [
+                    {
+                        'tax_id': tax.id,
+                        'base_amount_currency': 100.0,
+                        'tax_amount_currency': 10.0,
+                    },
+                ],
+            }],
+            expected_base_amount=100.0,
+            expected_tax_amount=10.0,
+            expected_total_amount=110.0,
         )
-        self.assert_python_taxes_computation(
-            "max(product.volume, 5.0) + 0.0 + -.0",
-            100.0,
-            {
-                'total_included': 105.0,
-                'total_excluded': 100.0,
-                'taxes_data': (
-                    (100.0, 5.0),
-                ),
-            },
-            product_values={'volume': 0.0},
+
+        tax = self.python_tax('max(product.volume, 5.0) + 0.0 + -.0')
+        product = self._create_product(volume=0.0)
+        document = self.populate_document(self.init_document(
+            lines=[{'price_unit': 100.0, 'product_id': product, 'tax_ids': tax}],
+        ))
+        self.assert_base_lines_tax_details(
+            document=document,
+            expected_base_lines_tax_details=[{
+                'total_excluded_currency': 100.0,
+                'delta_total_excluded_currency': 0.0,
+                'taxes_data': [
+                    {
+                        'tax_id': tax.id,
+                        'base_amount_currency': 100.0,
+                        'tax_amount_currency': 5.0,
+                    },
+                ],
+            }],
+            expected_base_amount=100.0,
+            expected_tax_amount=5.0,
+            expected_total_amount=105.0,
         )
-        self.assert_python_taxes_computation(
-            "(max(product.volume, 5.0) + base * 0.05) and None",
-            100.0,
-            {
-                "total_included": 100.0,
-                "total_excluded": 100.0,
-                "taxes_data": (),
-            },
-            product_values={"volume": 0.0},
+
+        tax = self.python_tax('(max(product.volume, 5.0) + base * 0.05) and None')
+        product = self._create_product(volume=0.0)
+        document = self.populate_document(self.init_document(
+            lines=[{'price_unit': 100.0, 'product_id': product, 'tax_ids': tax}],
+        ))
+        self.assert_base_lines_tax_details(
+            document=document,
+            expected_base_lines_tax_details=[{
+                'total_excluded_currency': 100.0,
+                'delta_total_excluded_currency': 0.0,
+                'taxes_data': [],
+            }],
+            expected_base_amount=100.0,
+            expected_tax_amount=0.0,
+            expected_total_amount=100.0,
         )
-        self.assert_python_taxes_computation(
-            "min(max(price_unit, quantity), base) * 0.10 + (5 < product['volume'] < 10 and 1.0 or 0.0)",
-            20.0,
-            {
-                "total_excluded": 20.0,
-                "total_included": 23.0,
-                "taxes_data": (
-                    (20.0, 3.0),
-                ),
-            },
-            product_values={"volume": 7.0},
+
+        tax = self.python_tax("min(max(price_unit, quantity), base) * 0.10 + (5 < product['volume'] < 10 and 1.0 or 0.0)")
+        product = self._create_product(volume=7.0)
+        document = self.populate_document(self.init_document(
+            lines=[{'price_unit': 20.0, 'product_id': product, 'tax_ids': tax}],
+        ))
+        self.assert_base_lines_tax_details(
+            document=document,
+            expected_base_lines_tax_details=[{
+                'total_excluded_currency': 20.0,
+                'delta_total_excluded_currency': 0.0,
+                'taxes_data': [
+                    {
+                        'tax_id': tax.id,
+                        'base_amount_currency': 20.0,
+                        'tax_amount_currency': 3.0,
+                    },
+                ],
+            }],
+            expected_base_amount=20.0,
+            expected_tax_amount=3.0,
+            expected_total_amount=23.0,
         )
-        self.assert_python_taxes_computation(
-            "uom.relative_factor",
-            100.0,
-            {
-                'total_included': 142.0,
-                'total_excluded': 100.0,
-                'taxes_data': (
-                    (100.0, 42.0),
-                ),
-            },
-            product_uom_values={'relative_factor': 42.0},
+
+        tax = self.python_tax("uom.relative_factor")
+        uom = self._create_uom('test_tax_formula', relative_factor=42.0)
+        document = self.populate_document(self.init_document(
+            lines=[{'price_unit': 100.0, 'product_uom_id': uom, 'tax_ids': tax}],
+        ))
+        self.assert_base_lines_tax_details(
+            document=document,
+            expected_base_lines_tax_details=[{
+                'total_excluded_currency': 100.0,
+                'delta_total_excluded_currency': 0.0,
+                'taxes_data': [
+                    {
+                        'tax_id': tax.id,
+                        'base_amount_currency': 100.0,
+                        'tax_amount_currency': 42.0,
+                    },
+                ],
+            }],
+            expected_base_amount=100.0,
+            expected_tax_amount=42.0,
+            expected_total_amount=142.0,
         )
+
         self._run_js_tests()
 
     def test_invalid_formula(self):

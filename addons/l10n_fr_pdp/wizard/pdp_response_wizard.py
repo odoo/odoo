@@ -150,8 +150,7 @@ class PdpResponseWizard(models.TransientModel):
         tax_lines = [move._prepare_tax_line_for_taxes_computation(x) for x in tax_amls]
 
         AccountTax = self.env['account.tax']
-        AccountTax._add_tax_details_in_base_lines(base_lines, company)
-        AccountTax._round_base_lines_tax_details(base_lines, company, tax_lines=tax_lines)
+        AccountTax._add_tax_details(base_lines, company)
 
         return base_lines
 

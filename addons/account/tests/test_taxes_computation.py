@@ -8,493 +8,237 @@ class TestTaxesComputation(TestTaxCommon):
 
     _test_user_groups = None  # FIXME list needed groups
 
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.env.company.tax_calculation_rounding_method = 'round_globally'
+        cls.currency = cls.env.company.currency_id
+        cls.foreign_currency = cls.setup_other_currency('EUR')
+        cls.tax_groups = cls.env['account.tax.group'].create([
+            {'name': str(i), 'sequence': str(i)}
+            for i in range(1, 10)
+        ])
+
+    def _reverse_sign(self, tax_details_values):
+        new_tax_details_values = {
+            k: -v
+            for k, v in tax_details_values.items()
+            if k != 'taxes_data'
+        }
+        new_taxes_data = new_tax_details_values['taxes_data'] = []
+        for tax_data in tax_details_values['taxes_data']:
+            new_tax_data = {
+                k: -v
+                for k, v in tax_data.items()
+                if k != 'tax_id'
+            }
+            new_tax_data['tax_id'] = tax_data['tax_id']
+            new_taxes_data.append(new_tax_data)
+        return new_tax_details_values
+
     def test_taxes_ordering(self):
         tax_division = self.division_tax(10.0, sequence=1)
         tax_fixed = self.fixed_tax(10.0, sequence=2)
         tax_percent = self.percent_tax(10.0, sequence=3)
         tax_group = self.group_of_taxes(tax_fixed + tax_percent, sequence=4)
 
-        self.assert_taxes_computation(
-            tax_group | tax_division,
-            200.0,
-            {
-                'total_included': 252.22,
-                'total_excluded': 200.0,
-                'taxes_data': (
-                    (200.0, 22.22),
-                    (200.0, 10.0),
-                    (200.0, 20.0),
-                ),
-            },
+        document = self.populate_document(self.init_document(
+            lines=[{'price_unit': 200, 'tax_ids': tax_group | tax_division}],
+        ))
+        self.assert_base_lines_tax_details(
+            document=document,
+            expected_base_lines_tax_details=[{
+                'total_excluded_currency': 200.0,
+                'delta_total_excluded_currency': 0.0,
+                'taxes_data': [
+                    {
+                        'tax_id': tax_division.id,
+                        'base_amount_currency': 200.0,
+                        'tax_amount_currency': 22.22,
+                    },
+                    {
+                        'tax_id': tax_fixed.id,
+                        'base_amount_currency': 200.0,
+                        'tax_amount_currency': 10.0,
+                    },
+                    {
+                        'tax_id': tax_percent.id,
+                        'base_amount_currency': 200.0,
+                        'tax_amount_currency': 20.0,
+                    },
+                ],
+            }],
+            expected_base_amount=200.0,
+            expected_tax_amount=52.22,
+            expected_total_amount=252.22,
         )
 
         tax_percent1 = self.percent_tax(0.0, price_include_override='tax_included')
         tax_percent2 = self.percent_tax(8.0, price_include_override='tax_included')
         tax_group1 = self.group_of_taxes(tax_percent1, sequence=5)
         tax_group2 = self.group_of_taxes(tax_percent2, sequence=6)
-        self.assert_taxes_computation(
-            tax_group1 | tax_group2,
-            124.4,
-            {
-                'total_included': 124.4,
-                'total_excluded': 115.19,
-                'taxes_data': (
-                    (115.19, 0.0),
-                    (115.19, 9.21),
-                ),
-            },
+
+        document = self.populate_document(self.init_document(
+            lines=[{'price_unit': 124.4, 'tax_ids': tax_group1 | tax_group2}],
+        ))
+        self.assert_base_lines_tax_details(
+            document=document,
+            expected_base_lines_tax_details=[{
+                'total_excluded_currency': 115.19,
+                'delta_total_excluded_currency': 0.0,
+                'taxes_data': [
+                    {
+                        'tax_id': tax_percent1.id,
+                        'base_amount_currency': 115.19,
+                        'tax_amount_currency': 0.0,
+                    },
+                    {
+                        'tax_id': tax_percent2.id,
+                        'base_amount_currency': 115.19,
+                        'tax_amount_currency': 9.21,
+                    },
+                ],
+            }],
+            expected_base_amount=115.19,
+            expected_tax_amount=9.21,
+            expected_total_amount=124.4,
         )
         self._run_js_tests()
 
     def test_taxes_filtering(self):
         tax_percent_1 = self.percent_tax(10.0)
         tax_percent_2 = self.percent_tax(20.0)
-        self.assert_taxes_computation(
-            tax_percent_1 | tax_percent_2,
-            100.0,
-            {
-                'total_included': 110.0,
-                'total_excluded': 100.0,
-                'taxes_data': (
-                    (100.0, 10.0),
-                ),
-            },
-            excluded_tax_ids=tax_percent_2.ids,
+
+        document = self.populate_document(self.init_document(
+            lines=[{
+                'price_unit': 100.0,
+                'tax_ids': tax_percent_1 | tax_percent_2,
+                'excluded_tax_ids': tax_percent_2.ids,
+            }],
+        ))
+        self.assert_base_lines_tax_details(
+            document=document,
+            expected_base_lines_tax_details=[{
+                'total_excluded_currency': 100.0,
+                'delta_total_excluded_currency': 0.0,
+                'taxes_data': [
+                    {
+                        'tax_id': tax_percent_1.id,
+                        'base_amount_currency': 100.0,
+                        'tax_amount_currency': 10.0,
+                    },
+                ],
+            }],
+            expected_base_amount=100.0,
+            expected_tax_amount=10.0,
+            expected_total_amount=110.0,
         )
         self._run_js_tests()
 
-    def test_random_case_1(self):
+    def test_coupling_multiple_included_taxes(self):
         tax_percent_8_price_included = self.percent_tax(8.0, price_include_override='tax_included')
         tax_percent_0_price_included = self.percent_tax(0.0, price_include_override='tax_included')
 
-        self.assert_taxes_computation(
-            tax_percent_8_price_included + tax_percent_0_price_included,
-            124.40,
-            {
-                'total_included': 124.40,
-                'total_excluded': 115.19,
-                'taxes_data': (
-                    (115.19, 9.21),
-                    (115.19, 0.0),
-                ),
-            },
-            rounding_method='round_per_line',
-        )
-        self.assert_taxes_computation(
-            tax_percent_8_price_included + tax_percent_0_price_included,
-            124.40,
-            {
-                'total_included': 124.40,
-                'total_excluded': 115.185185,
-                'taxes_data': (
-                    (115.185185, 9.214815),
-                    (115.185185, 0.0),
-                ),
-            },
-            rounding_method='round_globally',
-        )
-        self._run_js_tests()
-
-    def test_random_case_2(self):
-        tax_percent_5_price_included = self.percent_tax(5.0, price_include_override='tax_included')
-        currency_dp_half = 0.05
-
-        self.assert_taxes_computation(
-            tax_percent_5_price_included,
-            5.0,
-            {
-                'total_included': 5.0,
-                'total_excluded': 4.75,
-                'taxes_data': (
-                    (4.75, 0.25),
-                ),
-            },
-            rounding_method='round_per_line',
-            precision_rounding=currency_dp_half,
-        )
-        self.assert_taxes_computation(
-            tax_percent_5_price_included,
-            10.0,
-            {
-                'total_included': 10.0,
-                'total_excluded': 9.5,
-                'taxes_data': (
-                    (9.5, 0.5),
-                ),
-            },
-            rounding_method='round_per_line',
-            precision_rounding=currency_dp_half,
-        )
-        self.assert_taxes_computation(
-            tax_percent_5_price_included,
-            50.0,
-            {
-                'total_included': 50.0,
-                'total_excluded': 47.6,
-                'taxes_data': (
-                    (47.6, 2.4),
-                ),
-            },
-            rounding_method='round_per_line',
-            precision_rounding=currency_dp_half,
-        )
-        self.assert_taxes_computation(
-            tax_percent_5_price_included,
-            5.0,
-            {
-                'total_included': 5.0,
-                'total_excluded': 4.761905,
-                'taxes_data': (
-                    (4.761905, 0.238095),
-                ),
-            },
-            rounding_method='round_globally',
-        )
-        self.assert_taxes_computation(
-            tax_percent_5_price_included,
-            10.0,
-            {
-                'total_included': 10.0,
-                'total_excluded': 9.52381,
-                'taxes_data': (
-                    (9.52381, 0.47619),
-                ),
-            },
-            rounding_method='round_globally',
-        )
-        self.assert_taxes_computation(
-            tax_percent_5_price_included,
-            50.0,
-            {
-                'total_included': 50.0,
-                'total_excluded': 47.619048,
-                'taxes_data': (
-                    (47.619048, 2.380952),
-                ),
-            },
-            rounding_method='round_globally',
+        document = self.populate_document(self.init_document(
+            lines=[{
+                'price_unit': 124.4,
+                'tax_ids': tax_percent_8_price_included + tax_percent_0_price_included,
+            }],
+        ))
+        self.assert_base_lines_tax_details(
+            document=document,
+            expected_base_lines_tax_details=[{
+                'total_excluded_currency': 115.19,
+                'delta_total_excluded_currency': 0.0,
+                'taxes_data': [
+                    {
+                        'tax_id': tax_percent_8_price_included.id,
+                        'base_amount_currency': 115.19,
+                        'tax_amount_currency': 9.21,
+                    },
+                    {
+                        'tax_id': tax_percent_0_price_included.id,
+                        'base_amount_currency': 115.19,
+                        'tax_amount_currency': 0.0,
+                    },
+                ],
+            }],
+            expected_base_amount=115.19,
+            expected_tax_amount=9.21,
+            expected_total_amount=124.4,
         )
         self._run_js_tests()
 
-    def test_random_case_3(self):
-        tax_percent_15_price_excluded = self.percent_tax(15.0)
-        tax_percent_5_5_price_included = self.percent_tax(5.5, price_include_override='tax_included')
-
-        self.assert_taxes_computation(
-            tax_percent_15_price_excluded + tax_percent_5_5_price_included,
-            2300.0,
-            {
-                'total_included': 2627.01,
-                'total_excluded': 2180.09,
-                'taxes_data': (
-                    (2180.09, 327.01),
-                    (2180.09, 119.91),
-                ),
-            },
-            rounding_method='round_per_line',
-        )
-        self.assert_taxes_computation(
-            tax_percent_15_price_excluded + tax_percent_5_5_price_included,
-            2300.0,
-            {
-                'total_included': 2627.014218,
-                'total_excluded': 2180.094787,
-                'taxes_data': (
-                    (2180.094787, 327.014218),
-                    (2180.094787, 119.905213),
-                ),
-            },
-            rounding_method='round_globally',
-        )
-        self._run_js_tests()
-
-    def test_random_case_4(self):
-        tax_percent_12_price_included = self.percent_tax(12.0, price_include_override='tax_included')
-
-        self.assert_taxes_computation(
-            tax_percent_12_price_included,
-            52.50,
-            {
-                'total_included': 52.50,
-                'total_excluded': 46.87,
-                'taxes_data': (
-                    (46.87, 5.63),
-                ),
-            },
-            rounding_method='round_per_line',
-        )
-        self.assert_taxes_computation(
-            tax_percent_12_price_included,
-            52.50,
-            {
-                'total_included': 52.50,
-                'total_excluded': 46.875,
-                'taxes_data': (
-                    (46.875, 5.625),
-                ),
-            },
-            rounding_method='round_globally',
-        )
-        self._run_js_tests()
-
-    def test_random_case_5(self):
-        tax_percent_19 = self.percent_tax(19.0)
-        tax_percent_19_price_included = self.percent_tax(19.0, price_include_override='tax_included')
-        currency_dp_0 = 1.0
-
-        self.assert_taxes_computation(
-            tax_percent_19,
-            22689.0,
-            {
-                'total_included': 27000.0,
-                'total_excluded': 22689.0,
-                'taxes_data': (
-                    (22689, 4311),
-                ),
-            },
-            rounding_method='round_per_line',
-            precision_rounding=currency_dp_0,
-        )
-        self.assert_taxes_computation(
-            tax_percent_19,
-            9176.0,
-            {
-                'total_included': 10919.0,
-                'total_excluded': 9176.0,
-                'taxes_data': (
-                    (9176, 1743),
-                ),
-            },
-            rounding_method='round_per_line',
-            precision_rounding=currency_dp_0,
-        )
-        self.assert_taxes_computation(
-            tax_percent_19_price_included,
-            27000.0,
-            {
-                'total_included': 27000.0,
-                'total_excluded': 22689.0,
-                'taxes_data': (
-                    (22689.0, 4311.0),
-                ),
-            },
-            rounding_method='round_per_line',
-            precision_rounding=currency_dp_0,
-        )
-        self.assert_taxes_computation(
-            tax_percent_19_price_included,
-            10920.0,
-            {
-                'total_included': 10920.0,
-                'total_excluded': 9176.0,
-                'taxes_data': (
-                    (9176.0, 1744.0),
-                ),
-            },
-            rounding_method='round_per_line',
-            precision_rounding=currency_dp_0,
-        )
-        self.assert_taxes_computation(
-            tax_percent_19,
-            22689.0,
-            {
-                'total_included': 26999.91,
-                'total_excluded': 22689.0,
-                'taxes_data': (
-                    (22689, 4310.91),
-                ),
-            },
-            rounding_method='round_globally',
-        )
-        self.assert_taxes_computation(
-            tax_percent_19,
-            9176.0,
-            {
-                'total_included': 10919.44,
-                'total_excluded': 9176.0,
-                'taxes_data': (
-                    (9176, 1743.44),
-                ),
-            },
-            rounding_method='round_globally',
-        )
-        self.assert_taxes_computation(
-            tax_percent_19_price_included,
-            27000.0,
-            {
-                'total_included': 27000.0,
-                'total_excluded': 22689.07563,
-                'taxes_data': (
-                    (22689.07563, 4310.92437),
-                ),
-            },
-            rounding_method='round_globally',
-        )
-        self.assert_taxes_computation(
-            tax_percent_19_price_included,
-            10920.0,
-            {
-                'total_included': 10920.0,
-                'total_excluded': 9176.470588,
-                'taxes_data': (
-                    (9176.470588, 1743.529412),
-                ),
-            },
-            rounding_method='round_globally',
-        )
-        self._run_js_tests()
-
-    def test_random_case_6(self):
-        tax_percent_20_price_included = self.percent_tax(20.0, price_include_override='tax_included')
-        currency_dp_6 = 0.000001
-
-        self.assert_taxes_computation(
-            tax_percent_20_price_included,
-            399.999999,
-            {
-                'total_included': 399.999999,
-                'total_excluded': 333.333332,
-                'taxes_data': (
-                    # 399.999999 / 1.20 * 0.20 ~= 66.666667
-                    # 399.999999 - 66.666667 = 333.333332
-                    (333.333332, 66.666667),
-                ),
-            },
-            rounding_method='round_per_line',
-            precision_rounding=currency_dp_6,
-        )
-        self.assert_taxes_computation(
-            tax_percent_20_price_included,
-            399.999999,
-            {
-                'total_included': 399.999999,
-                'total_excluded': 333.3333325,
-                'taxes_data': (
-                    (333.3333325, 66.6666665),
-                ),
-            },
-            rounding_method='round_globally',
-        )
-        self._run_js_tests()
-
-    def test_random_case_7(self):
-        tax_percent_21_price_included = self.percent_tax(21.0, price_include_override='tax_included')
-        currency_dp_6 = 0.000001
-
-        self.assert_taxes_computation(
-            tax_percent_21_price_included,
-            11.90,
-            {
-                'total_included': 11.90,
-                'total_excluded': 9.83,
-                'taxes_data': (
-                    (9.83, 2.07),
-                ),
-            },
-            rounding_method='round_per_line',
-        )
-        self.assert_taxes_computation(
-            tax_percent_21_price_included,
-            2.80,
-            {
-                'total_included': 2.80,
-                'total_excluded': 2.31,
-                'taxes_data': (
-                    (2.31, 0.49),
-                ),
-            },
-            rounding_method='round_per_line',
-        )
-        self.assert_taxes_computation(
-            tax_percent_21_price_included,
-            7.0,
-            {
-                'total_included': 7.0,
-                'total_excluded': 5.785124,
-                'taxes_data': (
-                    (5.785124, 1.214876),
-                ),
-            },
-            rounding_method='round_per_line',
-            precision_rounding=currency_dp_6,
-        )
-        self.assert_taxes_computation(
-            tax_percent_21_price_included,
-            11.90,
-            {
-                'total_included': 11.90,
-                'total_excluded': 9.834711,
-                'taxes_data': (
-                    (9.834711, 2.065289),
-                ),
-            },
-            rounding_method='round_globally',
-        )
-        self.assert_taxes_computation(
-            tax_percent_21_price_included,
-            2.80,
-            {
-                'total_included': 2.80,
-                'total_excluded': 2.31405,
-                'taxes_data': (
-                    (2.31405, 0.48595),
-                ),
-            },
-            rounding_method='round_globally',
-        )
-        self.assert_taxes_computation(
-            tax_percent_21_price_included,
-            7.0,
-            {
-                'total_included': 7.0,
-                'total_excluded': 5.785124,
-                'taxes_data': (
-                    (5.785124, 1.214876),
-                ),
-            },
-            rounding_method='round_globally',
-        )
-        self._run_js_tests()
-
-    def test_random_case_8(self):
+    def test_taxes_affecting_the_base_of_others(self):
         tax_percent_20_withholding = self.percent_tax(-20.0)
         tax_percent_4 = self.percent_tax(4.0, include_base_amount=True)
         tax_percent_22 = self.percent_tax(22.0)
         taxes = tax_percent_20_withholding + tax_percent_4 + tax_percent_22
 
-        self.assert_taxes_computation(
-            taxes,
-            50.0,
-            {
-                'total_included': 53.44,
-                'total_excluded': 50.0,
-                'taxes_data': (
-                    (50.0, -10.0),
-                    (50.0, 2.0),
-                    (52.0, 11.44),
-                ),
-            },
+        document = self.populate_document(self.init_document(
+            lines=[{
+                'price_unit': 50.0,
+                'tax_ids': taxes,
+            }],
+        ))
+        self.assert_base_lines_tax_details(
+            document=document,
+            expected_base_lines_tax_details=[{
+                'total_excluded_currency': 50.0,
+                'delta_total_excluded_currency': 0.0,
+                'taxes_data': [
+                    {
+                        'tax_id': tax_percent_20_withholding.id,
+                        'base_amount_currency': 50.0,
+                        'tax_amount_currency': -10.0,
+                    },
+                    {
+                        'tax_id': tax_percent_4.id,
+                        'base_amount_currency': 50.0,
+                        'tax_amount_currency': 2.0,
+                    },
+                    {
+                        'tax_id': tax_percent_22.id,
+                        'base_amount_currency': 52.0,
+                        'tax_amount_currency': 11.44,
+                    },
+                ],
+            }],
+            expected_base_amount=50.0,
+            expected_tax_amount=3.44,
+            expected_total_amount=53.44,
         )
         self._run_js_tests()
 
-    def test_random_case_9(self):
+    def test_tax_division_price_included_100_percent(self):
         tax_division_100 = self.division_tax(100.0, price_include_override='tax_included')
 
-        self.assert_taxes_computation(
-            tax_division_100,
-            100.0,
-            {
-                'total_included': 100.0,
-                'total_excluded': 0.0,
-                'taxes_data': (
-                    (0.0, 100.0),
-                ),
-            },
+        document = self.populate_document(self.init_document(
+            lines=[{
+                'price_unit': 100.0,
+                'tax_ids': tax_division_100,
+            }],
+        ))
+        self.assert_base_lines_tax_details(
+            document=document,
+            expected_base_lines_tax_details=[{
+                'total_excluded_currency': 0.0,
+                'delta_total_excluded_currency': 0.0,
+                'taxes_data': [
+                    {
+                        'tax_id': tax_division_100.id,
+                        'base_amount_currency': 0.0,
+                        'tax_amount_currency': 100.0,
+                    },
+                ],
+            }],
+            expected_base_amount=0.0,
+            expected_tax_amount=100.0,
+            expected_total_amount=100.0,
         )
         self._run_js_tests()
 
-    def test_random_case_10_reverse_charge(self):
-        """ Reverse charge taxes are always price-excluded. """
+    def test_tax_reverse_charge_giving_same_results(self):
         tax = self.percent_tax(
             21.0,
             invoice_repartition_line_ids=[
@@ -509,583 +253,657 @@ class TestTaxesComputation(TestTaxCommon):
             ],
         )
 
-        expected_values = [
-            tax,
-            100.0,
-            {
-                'total_included': 100.0,
-                'total_excluded': 100.0,
-                'taxes_data': (
-                    (100.0, 21.0),
-                    (100.0, -21.0),
-                ),
-            },
-        ]
+        def assert_document():
+            document = self.populate_document(self.init_document(
+                lines=[{'price_unit': 100.0, 'tax_ids': tax}],
+            ))
+            self.assert_base_lines_tax_details(
+                document=document,
+                expected_base_lines_tax_details=[{
+                    'total_excluded_currency': 100.0,
+                    'delta_total_excluded_currency': 0.0,
+                    'taxes_data': [
+                        {
+                            'tax_id': tax.id,
+                            'base_amount_currency': 100.0,
+                            'tax_amount_currency': 21.0,
+                        },
+                        {
+                            'tax_id': tax.id,
+                            'base_amount_currency': 100.0,
+                            'tax_amount_currency': -21.0,
+                        },
+                    ],
+                }],
+                expected_base_amount=100.0,
+                expected_tax_amount=0.0,
+                expected_total_amount=100.0,
+            )
 
-        self.assert_taxes_computation(*expected_values)
+        assert_document()
+        tax.include_base_amount = True
+        assert_document()
         tax.price_include_override = 'tax_included'
-        self.assert_taxes_computation(*expected_values)
+        assert_document()
         self._run_js_tests()
 
     def test_fixed_tax_price_included_affect_base_on_0(self):
         tax = self.fixed_tax(0.05, price_include_override='tax_included', include_base_amount=True)
-        self.assert_taxes_computation(
-            tax,
-            0.0,
-            {
-                'total_included': 0.0,
-                'total_excluded': -0.05,
-                'taxes_data': (
-                    (-0.05, 0.05),
-                ),
-            },
+
+        document = self.populate_document(self.init_document(
+            lines=[{
+                'price_unit': 0.0,
+                'tax_ids': tax,
+            }],
+        ))
+        self.assert_base_lines_tax_details(
+            document=document,
+            expected_base_lines_tax_details=[{
+                'total_excluded_currency': -0.05,
+                'delta_total_excluded_currency': 0.0,
+                'taxes_data': [
+                    {
+                        'tax_id': tax.id,
+                        'base_amount_currency': -0.05,
+                        'tax_amount_currency': 0.05,
+                    },
+                ],
+            }],
+            expected_base_amount=-0.05,
+            expected_tax_amount=0.05,
+            expected_total_amount=0.0,
         )
         self._run_js_tests()
 
-    def test_percent_taxes_for_l10n_in(self):
-        """ Test suite for the complex GST taxes in l10n_in. This case implies 3 percentage taxes:
-        t1: % tax, include_base_amount
-        t2: same % as t1, include_base_amount, not is_base_affected
-        t3: % tax
-
-        This case is complex because the amounts of t1 and t2 must always be the same.
-        Furthermore, it's a complicated setup due to the usage of include_base_amount / is_base_affected.
-        """
-        tax1 = self.percent_tax(6)
-        tax2 = self.percent_tax(6)
-        tax3 = self.percent_tax(3)
-
-        self.assert_taxes_computation(
-            tax1 + tax2 + tax3,
-            100.0,
-            {
-                'total_included': 115.0,
-                'total_excluded': 100.0,
-                'taxes_data': (
-                    (100.0, 6.0),
-                    (100.0, 6.0),
-                    (100.0, 3.0),
-                ),
-            },
-            rounding_method='round_globally',
+    def test_tax_with_zero_total_base(self):
+        """Check that the base line delta still is dispatched if net tax is zero."""
+        tax_19_99 = self.percent_tax(19.99)
+        document = self.populate_document(self.init_document(
+            lines=[
+                {'price_unit': 19.99, 'tax_ids': tax_19_99},
+                {'price_unit': 19.99, 'tax_ids': tax_19_99},
+                {'price_unit': -39.98, 'tax_ids': tax_19_99},
+            ],
+        ))
+        self.assert_base_lines_tax_details(
+            document=document,
+            expected_base_lines_tax_details=[
+                {
+                    'total_excluded_currency': 19.99,
+                    'delta_total_excluded_currency': 0.0,
+                    'taxes_data': [
+                        {
+                            'tax_id': tax_19_99.id,
+                            'base_amount_currency': 19.99,
+                            'tax_amount_currency': 4.0,
+                        },
+                    ],
+                },
+                {
+                    'total_excluded_currency': 19.99,
+                    'delta_total_excluded_currency': 0.0,
+                    'taxes_data': [
+                        {
+                            'tax_id': tax_19_99.id,
+                            'base_amount_currency': 19.99,
+                            'tax_amount_currency': 3.99,
+                        },
+                    ],
+                },
+                {
+                    'total_excluded_currency': -39.98,
+                    'delta_total_excluded_currency': 0.0,
+                    'taxes_data': [
+                        {
+                            'tax_id': tax_19_99.id,
+                            'base_amount_currency': -39.98,
+                            'tax_amount_currency': -7.99,
+                        },
+                    ],
+                },
+            ],
+            expected_base_amount=0.0,
+            expected_tax_amount=0.0,
+            expected_total_amount=0.0,
         )
+
+        tax_7 = self.percent_tax(7.0)
+        document = self.populate_document(self.init_document(
+            lines=[
+                {'price_unit': 2990.4, 'tax_ids': tax_7},
+                {'price_unit': 128.8, 'tax_ids': tax_7},
+                {'price_unit': 128.8, 'tax_ids': tax_7},
+                {'price_unit': 834.4, 'tax_ids': tax_7},
+                {'price_unit': 14.0, 'tax_ids': tax_7},
+                {'price_unit': -4096.4, 'tax_ids': tax_7},
+            ],
+        ))
+        self.assert_base_lines_tax_details(
+            document=document,
+            expected_base_lines_tax_details=[
+                {
+                    'total_excluded_currency': 2990.4,
+                    'delta_total_excluded_currency': 0.0,
+                    'taxes_data': [
+                        {
+                            'tax_id': tax_7.id,
+                            'base_amount_currency': 2990.4,
+                            'tax_amount_currency': 209.33,
+                        },
+                    ],
+                },
+                {
+                    'total_excluded_currency': 128.8,
+                    'delta_total_excluded_currency': 0.0,
+                    'taxes_data': [
+                        {
+                            'tax_id': tax_7.id,
+                            'base_amount_currency': 128.8,
+                            'tax_amount_currency': 9.02,
+                        },
+                    ],
+                },
+                {
+                    'total_excluded_currency': 128.8,
+                    'delta_total_excluded_currency': 0.0,
+                    'taxes_data': [
+                        {
+                            'tax_id': tax_7.id,
+                            'base_amount_currency': 128.8,
+                            'tax_amount_currency': 9.02,
+                        },
+                    ],
+                },
+                {
+                    'total_excluded_currency': 834.4,
+                    'delta_total_excluded_currency': 0.0,
+                    'taxes_data': [
+                        {
+                            'tax_id': tax_7.id,
+                            'base_amount_currency': 834.4,
+                            'tax_amount_currency': 58.41,
+                        },
+                    ],
+                },
+                {
+                    'total_excluded_currency': 14.0,
+                    'delta_total_excluded_currency': 0.0,
+                    'taxes_data': [
+                        {
+                            'tax_id': tax_7.id,
+                            'base_amount_currency': 14.0,
+                            'tax_amount_currency': 0.97,
+                        },
+                    ],
+                },
+                {
+                    'total_excluded_currency': -4096.4,
+                    'delta_total_excluded_currency': 0.0,
+                    'taxes_data': [
+                        {
+                            'tax_id': tax_7.id,
+                            'base_amount_currency': -4096.4,
+                            'tax_amount_currency': -286.75,
+                        },
+                    ],
+                },
+            ],
+            expected_base_amount=0.0,
+            expected_tax_amount=0.0,
+            expected_total_amount=0.0,
+        )
+
+        self._run_js_tests()
+
+    def test_taxes_batches_1(self):
+        tax1 = self.fixed_tax(1, include_base_amount=True)
+        tax2 = self.percent_tax(21)
+
+        default_expected_values_base_affected = {
+            'expected_base_lines_tax_details': [
+                {
+                    'total_excluded_currency': 99.0,
+                    'delta_total_excluded_currency': 0.0,
+                    'taxes_data': [
+                        {
+                            'tax_id': tax1.id,
+                            'base_amount_currency': 99.0,
+                            'tax_amount_currency': 1.0,
+                            'tax_ids': [tax2.id],
+                        },
+                        {
+                            'tax_id': tax2.id,
+                            'base_amount_currency': 100.0,
+                            'tax_amount_currency': 21.0,
+                            'tax_ids': [],
+                        },
+                    ],
+                },
+            ],
+            'expected_base_amount': 99.0,
+            'expected_tax_amount': 22.0,
+            'expected_total_amount': 121.0,
+        }
+        default_expected_values_not_base_affected = {
+            'expected_base_lines_tax_details': [
+                {
+                    'total_excluded_currency': 99.0,
+                    'delta_total_excluded_currency': 0.0,
+                    'taxes_data': [
+                        {
+                            'tax_id': tax1.id,
+                            'base_amount_currency': 99.0,
+                            'tax_amount_currency': 1.0,
+                            'tax_ids': [],
+                        },
+                        {
+                            'tax_id': tax2.id,
+                            'base_amount_currency': 99.0,
+                            'tax_amount_currency': 20.79,
+                            'tax_ids': [],
+                        },
+                    ],
+                },
+            ],
+            'expected_base_amount': 99.0,
+            'expected_tax_amount': 21.79,
+            'expected_total_amount': 120.79,
+        }
 
         # tax       price_incl      incl_base_amount    is_base_affected
         # ----------------------------------------------------------------
         # tax1                      T                   T
         # tax2                                          T
-        # tax3                                          T
-        tax1.include_base_amount = True
-        self.assert_taxes_computation(
-            tax1 + tax2 + tax3,
-            100.0,
-            {
-                'total_included': 115.54,
-                'total_excluded': 100.0,
-                'taxes_data': (
-                    (100.0, 6.0),
-                    (106.0, 6.36),
-                    (106.0, 3.18),
-                ),
-            },
-            rounding_method='round_globally',
-        )
+        document = self.populate_document(self.init_document(
+            lines=[{'price_unit': 99.0, 'tax_ids': tax1 + tax2}],
+        ))
+        self.assert_base_lines_tax_details(document, **default_expected_values_base_affected)
+
+        document = self.populate_document(self.init_document(
+            lines=[{'price_unit': 121.0, 'tax_ids': tax1 + tax2, 'special_mode': 'total_included'}],
+        ))
+        self.assert_base_lines_tax_details(document, **default_expected_values_base_affected)
 
         # tax       price_incl      incl_base_amount    is_base_affected
         # ----------------------------------------------------------------
         # tax1                      T                   T
         # tax2
-        # tax3                                          T
         tax2.is_base_affected = False
-        self.assert_taxes_computation(
-            tax1 + tax2 + tax3,
-            100.0,
-            {
-                'total_included': 115.18,
-                'total_excluded': 100.0,
-                'taxes_data': (
-                    (100.0, 6.0),
-                    (100.0, 6.0),
-                    (106.0, 3.18),
-                ),
-            },
-            rounding_method='round_globally',
-            excluded_special_modes=['total_included'],
-        )
 
-        # tax       price_incl      incl_base_amount    is_base_affected
-        # ----------------------------------------------------------------
-        # tax1                      T                   T
-        # tax2                      T                   T
-        # tax3                                          T
-        tax2.is_base_affected = True
-        tax2.include_base_amount = True
-        self.assert_taxes_computation(
-            tax1 + tax2 + tax3,
-            100.0,
-            {
-                'total_included': 115.7308,
-                'total_excluded': 100.0,
-                'taxes_data': (
-                    (100.0, 6.0),
-                    (106.0, 6.36),
-                    (112.36, 3.3708),
-                ),
-            },
-            rounding_method='round_globally',
-            excluded_special_modes=['total_included'],  # Impossible.
-        )
-
-        # tax       price_incl      incl_base_amount    is_base_affected
-        # ----------------------------------------------------------------
-        # tax1                      T                   T
-        # tax2                      T
-        # tax3                                          T
-        tax2.is_base_affected = False
-        self.assert_taxes_computation(
-            tax1 + tax2 + tax3,
-            100.0,
-            {
-                'total_included': 115.36,
-                'total_excluded': 100.0,
-                'taxes_data': (
-                    (100.0, 6.0),
-                    (100.0, 6.0),
-                    (112.0, 3.36),
-                ),
-            },
-            rounding_method='round_globally',
-        )
-
-        # tax       price_incl      incl_base_amount    is_base_affected
-        # ----------------------------------------------------------------
-        # tax1      T               T                   T
-        # tax2      T               T
-        # tax3                                          T
-        tax1.price_include_override = 'tax_included'
-        tax2.price_include_override = 'tax_included'
-        self.assert_taxes_computation(
-            tax1 + tax2 + tax3,
-            112.0,
-            {
-                'total_included': 115.36,
-                'total_excluded': 100.0,
-                'taxes_data': (
-                    (100.0, 6.0),
-                    (100.0, 6.0),
-                    (112.0, 3.36),
-                ),
-            },
-            rounding_method='round_globally',
-        )
-
-        # Ensure tax1 & tax2 give always the same result.
-        self.assert_taxes_computation(
-            tax1 + tax2,
-            17.79,
-            {
-                'total_included': 17.79,
-                'total_excluded': 15.883929,
-                'taxes_data': (
-                    (15.883929, 0.953036),
-                    (15.883929, 0.953036),
-                ),
-            },
-            rounding_method='round_globally',
-        )
-
-        # tax       price_incl      incl_base_amount    is_base_affected
-        # ----------------------------------------------------------------
-        # tax1      T               T
-        # tax2      T               T
-        tax1.is_base_affected = False
-        self.assert_taxes_computation(
-            tax1 + tax2,
-            200.0,
-            {
-                'total_included': 200.0,
-                'total_excluded': 178.571429,
-                'taxes_data': (
-                    (178.571429, 10.714286),
-                    (178.571429, 10.714286),
-                ),
-            },
-            rounding_method='round_globally',
-        )
-
-        # tax       price_incl      incl_base_amount    is_base_affected
-        # ----------------------------------------------------------------
-        # tax1      T               T                   T
-        # tax2
-        # tax3                                          T
-        tax1.is_base_affected = True
-        tax2.price_include_override = 'tax_excluded'
-        tax2.include_base_amount = False
-        self.assert_taxes_computation(
-            tax1 + tax2 + tax3,
-            106.0,
-            {
-                'total_included': 115.18,
-                'total_excluded': 100.0,
-                'taxes_data': (
-                    (100.0, 6.0),
-                    (100.0, 6.0),
-                    (106.0, 3.18),
-                ),
-            },
-            rounding_method='round_globally',
-            excluded_special_modes=['total_included'],
-        )
-
-        # tax       price_incl      incl_base_amount    is_base_affected
-        # ----------------------------------------------------------------
-        # tax1      T               T                   T
-        # tax2                                          T
-        # tax3                                          T
-        tax2.is_base_affected = True
-        self.assert_taxes_computation(
-            tax1 + tax2 + tax3,
-            106.0,
-            {
-                'total_included': 115.54,
-                'total_excluded': 100.0,
-                'taxes_data': (
-                    (100.0, 6.0),
-                    (106.0, 6.36),
-                    (106.0, 3.18),
-                ),
-            },
-            rounding_method='round_globally',
-        )
+        document = self.populate_document(self.init_document(
+            lines=[{'price_unit': 99.0, 'tax_ids': tax1 + tax2}],
+        ))
+        self.assert_base_lines_tax_details(document, **default_expected_values_not_base_affected)
 
         # tax       price_incl      incl_base_amount    is_base_affected
         # ----------------------------------------------------------------
         # tax1      T                                   T
-        # tax2
-        # tax3                                          T
+        # tax2      T                                   T
         tax1.include_base_amount = False
-        self.assert_taxes_computation(
-            tax1 + tax2 + tax3,
-            106.0,
-            {
-                'total_included': 115.0,
-                'total_excluded': 100.0,
-                'taxes_data': (
-                    (100.0, 6.0),
-                    (100.0, 6.0),
-                    (100.0, 3.0),
-                ),
-            },
-            rounding_method='round_globally',
-        )
-        self._run_js_tests()
-
-    def test_division_taxes_for_l10n_br(self):
-        """ Test suite for the complex division taxes in l10n_be. This case implies 5 division taxes
-        and is quite complicated to handle because they have to be computed all together and are
-        computed as part of the price_unit.
-        """
-        tax1 = self.division_tax(5)
-        tax2 = self.division_tax(3)
-        tax3 = self.division_tax(0.65)
-        tax4 = self.division_tax(9)
-        tax5 = self.division_tax(15)
-
-        # Same of tax4/tax5 except the amount is based on 32% of the base amount.
-        self.assert_taxes_computation(
-            tax1 + tax2 + tax3 + tax4 + tax5,
-            32.33,
-            {
-                'total_included': 48.00297,
-                'total_excluded': 32.33,
-                'taxes_data': (
-                    (32.33, 2.400148),
-                    (32.33, 1.440089),
-                    (32.33, 0.312019),
-                    (32.33, 4.320267),
-                    (32.33, 7.200445),
-                ),
-            },
-            rounding_method='round_globally',
-        )
-
-        (tax1 + tax2 + tax3 + tax4 + tax5).price_include_override = 'tax_included'
-        self.assert_taxes_computation(
-            tax1 + tax2 + tax3 + tax4 + tax5,
-            48.0,
-            {
-                'total_included': 48.0,
-                'total_excluded': 32.328,
-                'taxes_data': (
-                    (32.328, 2.4),
-                    (32.328, 1.44),
-                    (32.328, 0.312),
-                    (32.328, 4.32),
-                    (32.328, 7.2),
-                ),
-            },
-            rounding_method='round_globally',
-        )
-        self._run_js_tests()
-
-    def test_fixed_taxes_for_l10n_be(self):
-        """ Test suite for the mixing of fixed and percentage taxes in l10n_be. This case implies a fixed tax that affect
-        the base of the following percentage tax. We also have to maintain the case in which the fixed tax is after the percentage
-        one.
-        """
-        tax1 = self.fixed_tax(1)
-        tax2 = self.percent_tax(21)
-        tax3 = self.fixed_tax(2)
-
-        self.assert_taxes_computation(
-            tax1 + tax2 + tax3,
-            20.0,
-            {
-                'total_included': 136.0,
-                'total_excluded': 100.0,
-                'taxes_data': (
-                    (100.0, 5.0),
-                    (100.0, 21.0),
-                    (100.0, 10.0),
-                ),
-            },
-            quantity=5,
-            rounding_method='round_globally',
-        )
-
-        # tax       price_incl      incl_base_amount
-        # -----------------------------------------------
-        # tax1                      T
-        # tax2
-        # tax3
-        tax1.include_base_amount = True
-        self.assert_taxes_computation(
-            tax1 + tax2 + tax3,
-            19.0,
-            {
-                'total_included': 131.0,
-                'total_excluded': 95.0,
-                'taxes_data': (
-                    (95.0, 5.0),
-                    (100.0, 21.0),
-                    (100.0, 10.0),
-                ),
-            },
-            quantity=5,
-            rounding_method='round_globally',
-        )
-
-        # tax       price_incl      incl_base_amount
-        # -----------------------------------------------
-        # tax1                      T
-        # tax2      T
-        # tax3
-        tax2.price_include_override = 'tax_included'
-        self.assert_taxes_computation(
-            tax1 + tax2 + tax3,
-            120.0,
-            {
-                'total_included': 123.0,
-                'total_excluded': 99.0,
-                'taxes_data': (
-                    (99.0, 1.0),
-                    (100.0, 21.0),
-                    (100.0, 2.0),
-                ),
-            },
-            rounding_method='round_globally',
-        )
-
-        # tax       price_incl      incl_base_amount
-        # -----------------------------------------------
-        # tax1                      T
-        # tax2      T               T
-        # tax3
-        tax2.include_base_amount = True
-        self.assert_taxes_computation(
-            tax1 + tax2 + tax3,
-            120.0,
-            {
-                'total_included': 123.0,
-                'total_excluded': 99.0,
-                'taxes_data': (
-                    (99.0, 1.0),
-                    (100.0, 21.0),
-                    (121.0, 2.0),
-                ),
-            },
-            rounding_method='round_globally',
-        )
-
-        # tax       price_incl      incl_base_amount
-        # -----------------------------------------------
-        # tax1
-        # tax2      T               T
-        # tax3
-        tax1.include_base_amount = False
-        self.assert_taxes_computation(
-            tax1 + tax2 + tax3,
-            121.0,
-            {
-                'total_included': 124.0,
-                'total_excluded': 100.0,
-                'taxes_data': (
-                    (100.0, 1.0),
-                    (100.0, 21.0),
-                    (121.0, 2.0),
-                ),
-            },
-            rounding_method='round_globally',
-        )
-
-        # tax       price_incl      incl_base_amount
-        # -----------------------------------------------
-        # tax1
-        # tax2                      T
-        # tax3
-        tax2.price_include_override = 'tax_excluded'
-        self.assert_taxes_computation(
-            tax1 + tax2 + tax3,
-            100.0,
-            {
-                'total_included': 124.0,
-                'total_excluded': 100.0,
-                'taxes_data': (
-                    (100.0, 1.0),
-                    (100.0, 21.0),
-                    (121.0, 2.0),
-                ),
-            },
-            rounding_method='round_globally'
-        )
-
-        # tax       price_incl      incl_base_amount
-        # -----------------------------------------------
-        # tax1      T
-        # tax2      T               T
-        # tax3
         tax1.price_include_override = 'tax_included'
+        tax2.is_base_affected = True
         tax2.price_include_override = 'tax_included'
-        self.assert_taxes_computation(
-            tax1 + tax2 + tax3,
-            122.0,
-            {
-                'total_included': 124.0,
-                'total_excluded': 100.0,
-                'taxes_data': (
-                    (100.0, 1.0),
-                    (100.0, 21.0),
-                    (121.0, 2.0),
-                ),
-            },
-            rounding_method='round_globally',
-        )
 
-        # tax       price_incl      incl_base_amount
-        # -----------------------------------------------
-        # tax1      T
+        document = self.populate_document(self.init_document(
+            lines=[{'price_unit': 121.0, 'tax_ids': tax1 + tax2}],
+        ))
+        self.assert_base_lines_tax_details(document, **default_expected_values_base_affected)
+
+        # tax       price_incl      incl_base_amount    is_base_affected
+        # ----------------------------------------------------------------
+        # tax1      T               T                   T
+        # tax2      T                                   T
+        tax1.include_base_amount = True
+
+        document = self.populate_document(self.init_document(
+            lines=[{'price_unit': 121.0, 'tax_ids': tax1 + tax2}],
+        ))
+        self.assert_base_lines_tax_details(document, **default_expected_values_base_affected)
+
+        document = self.populate_document(self.init_document(
+            lines=[{'price_unit': 99.0, 'tax_ids': tax1 + tax2, 'special_mode': 'total_excluded'}],
+        ))
+        self.assert_base_lines_tax_details(document, **default_expected_values_base_affected)
+
+        # tax       price_incl      incl_base_amount    is_base_affected
+        # ----------------------------------------------------------------
+        # tax1      T               T                   T
         # tax2      T
-        # tax3
+        tax2.is_base_affected = False
+
+        document = self.populate_document(self.init_document(
+            lines=[{'price_unit': 121.0, 'tax_ids': tax1 + tax2}],
+        ))
+        self.assert_base_lines_tax_details(document, **default_expected_values_base_affected)
+
+        # tax       price_incl      incl_base_amount    is_base_affected
+        # ----------------------------------------------------------------
+        # tax1      T               T                   T
+        # tax2
+        tax2.price_include_override = 'tax_excluded'
+
+        document = self.populate_document(self.init_document(
+            lines=[{'price_unit': 100.0, 'tax_ids': tax1 + tax2}],
+        ))
+        self.assert_base_lines_tax_details(document, **default_expected_values_not_base_affected)
+
+        self._run_js_tests()
+
+    def test_taxes_batches_2(self):
+        tax1 = self.percent_tax(10, include_base_amount=False, price_include_override='tax_included')
+        tax2 = self.percent_tax(10, include_base_amount=False, price_include_override='tax_included')
+
+        default_expected_values_single_batch = {
+            'expected_base_lines_tax_details': [
+                {
+                    'total_excluded_currency': 83.34,
+                    'delta_total_excluded_currency': 0.0,
+                    'taxes_data': [
+                        {
+                            'tax_id': tax1.id,
+                            'base_amount_currency': 83.34,
+                            'tax_amount_currency': 8.33,
+                            'tax_ids': [],
+                        },
+                        {
+                            'tax_id': tax2.id,
+                            'base_amount_currency': 83.34,
+                            'tax_amount_currency': 8.33,
+                            'tax_ids': [],
+                        },
+                    ],
+                },
+            ],
+            'expected_base_amount': 83.34,
+            'expected_tax_amount': 16.66,
+            'expected_total_amount': 100.0,
+        }
+        default_expected_values_two_batches = {
+            'expected_base_lines_tax_details': [
+                {
+                    'total_excluded_currency': 82.65,
+                    'delta_total_excluded_currency': 0.0,
+                    'taxes_data': [
+                        {
+                            'tax_id': tax1.id,
+                            'base_amount_currency': 82.65,
+                            'tax_amount_currency': 8.26,
+                            'tax_ids': [tax2.id],
+                        },
+                        {
+                            'tax_id': tax2.id,
+                            'base_amount_currency': 90.91,
+                            'tax_amount_currency': 9.09,
+                            'tax_ids': [],
+                        },
+                    ],
+                },
+            ],
+            'expected_base_amount': 82.65,
+            'expected_tax_amount': 17.35,
+            'expected_total_amount': 100.0,
+        }
+
+        # tax       price_incl      incl_base_amount    is_base_affected
+        # ----------------------------------------------------------------
+        # tax1      T                                   T
+        # tax2      T                                   T
+        document = self.populate_document(self.init_document(
+            lines=[{'price_unit': 100.0, 'tax_ids': tax1 + tax2}],
+        ))
+        self.assert_base_lines_tax_details(document, **default_expected_values_single_batch)
+
+        # tax       price_incl      incl_base_amount    is_base_affected
+        # ----------------------------------------------------------------
+        # tax1      T                                   T
+        # tax2      T               T                   T
+        tax2.include_base_amount = True
+
+        document = self.populate_document(self.init_document(
+            lines=[{'price_unit': 100.0, 'tax_ids': tax1 + tax2}],
+        ))
+        self.assert_base_lines_tax_details(document, **default_expected_values_two_batches)
+
+        # tax       price_incl      incl_base_amount    is_base_affected
+        # ----------------------------------------------------------------
+        # tax1      T                                   T
+        # tax2      T               T
+        tax2.is_base_affected = False
+
+        document = self.populate_document(self.init_document(
+            lines=[{'price_unit': 100.0, 'tax_ids': tax1 + tax2}],
+        ))
+        self.assert_base_lines_tax_details(document, **default_expected_values_single_batch)
+
+        # tax       price_incl      incl_base_amount    is_base_affected
+        # ----------------------------------------------------------------
+        # tax1      T                                   T
+        # tax2      T               T
+        tax1.include_base_amount = True
+        tax2.is_base_affected = True
+
+        document = self.populate_document(self.init_document(
+            lines=[{'price_unit': 100.0, 'tax_ids': tax1 + tax2}],
+        ))
+        self.assert_base_lines_tax_details(document, **default_expected_values_two_batches)
+
+        # tax       price_incl      incl_base_amount    is_base_affected
+        # ----------------------------------------------------------------
+        # tax1      T               T                   T
+        # tax2      T                                   T
+        tax1.include_base_amount = True
         tax2.include_base_amount = False
-        self.assert_taxes_computation(
-            tax1 + tax2 + tax3,
-            122.0,
-            {
-                'total_included': 124.0,
-                'total_excluded': 100.0,
-                'taxes_data': (
-                    (100.0, 1.0),
-                    (100.0, 21.0),
-                    (100.0, 2.0),
-                ),
-            },
-            rounding_method='round_globally',
+        tax2.is_base_affected = True
+
+        document = self.populate_document(self.init_document(
+            lines=[{'price_unit': 100.0, 'tax_ids': tax1 + tax2}],
+        ))
+        self.assert_base_lines_tax_details(document, **default_expected_values_two_batches)
+
+        self._run_js_tests()
+
+    def test_taxes_batches_3(self):
+        """ Make sure included taxes are always evaluated first. """
+        tax1 = self.percent_tax(10, include_base_amount=False, price_include_override='tax_excluded')
+        tax2 = self.percent_tax(10, include_base_amount=False, price_include_override='tax_included')
+
+        # tax       price_incl      incl_base_amount    is_base_affected
+        # ----------------------------------------------------------------
+        # tax1                                          T
+        # tax2      T                                   T
+        document = self.populate_document(self.init_document(
+            lines=[{'price_unit': 100.0, 'tax_ids': tax1 + tax2}],
+        ))
+        self.assert_base_lines_tax_details(
+            document,
+            expected_base_lines_tax_details=[
+                {
+                    'total_excluded_currency': 90.91,
+                    'delta_total_excluded_currency': 0.0,
+                    'taxes_data': [
+                        {
+                            'tax_id': tax2.id,
+                            'base_amount_currency': 90.91,
+                            'tax_amount_currency': 9.09,
+                            'tax_ids': [],
+                        },
+                        {
+                            'tax_id': tax1.id,
+                            'base_amount_currency': 90.91,
+                            'tax_amount_currency': 9.09,
+                            'tax_ids': [],
+                        },
+                    ],
+                },
+            ],
+            expected_base_amount=90.91,
+            expected_tax_amount=18.18,
+            expected_total_amount=109.09,
         )
 
-        # tax       price_incl      incl_base_amount
-        # -----------------------------------------------
-        # tax1      T               T
-        # tax2      T               T
-        # tax3
+        # tax       price_incl      incl_base_amount    is_base_affected
+        # ----------------------------------------------------------------
+        # tax1                      T                   T
+        # tax2      T               T                   T
         tax1.include_base_amount = True
         tax2.include_base_amount = True
-        self.assert_taxes_computation(
-            tax1 + tax2 + tax3,
-            121.0,
-            {
-                'total_included': 123.0,
-                'total_excluded': 99.0,
-                'taxes_data': (
-                    (99.0, 1.0),
-                    (100.0, 21.0),
-                    (121.0, 2.0),
-                ),
-            },
-            rounding_method='round_globally',
+
+        document = self.populate_document(self.init_document(
+            lines=[{'price_unit': 100.0, 'tax_ids': tax1 + tax2}],
+        ))
+        self.assert_base_lines_tax_details(
+            document,
+            expected_base_lines_tax_details=[
+                {
+                    'total_excluded_currency': 90.91,
+                    'delta_total_excluded_currency': 0.0,
+                    'taxes_data': [
+                        {
+                            'tax_id': tax2.id,
+                            'base_amount_currency': 90.91,
+                            'tax_amount_currency': 9.09,
+                            'tax_ids': [tax1.id],
+                        },
+                        {
+                            'tax_id': tax1.id,
+                            'base_amount_currency': 100.0,
+                            'tax_amount_currency': 10.0,
+                            'tax_ids': [],
+                        },
+                    ],
+                },
+            ],
+            expected_base_amount=90.91,
+            expected_tax_amount=19.09,
+            expected_total_amount=110.0,
         )
 
-        tax1.include_base_amount = False
-        tax1.price_include_override = False
+        self._run_js_tests()
 
-        # Negative price, negative quantity
-        self.assert_taxes_computation(
-            tax1,
-            -10.0,
-            {
-                'total_included': 22.0,
-                'total_excluded': 20.0,
-                'taxes_data': (
-                    (20.0, 2.0),
-                ),
-            },
-            rounding_method='round_globally',
-            quantity=-2,
+    def test_taxes_batches_4(self):
+        tax1 = self.fixed_tax(1, include_base_amount=True, price_include_override='tax_included')
+        tax2 = self.fixed_tax(5, include_base_amount=False, price_include_override='tax_included')
+        tax3 = self.percent_tax(21, include_base_amount=False, price_include_override='tax_included')
+        taxes = tax1 + tax2 + tax3
+
+        document = self.populate_document(self.init_document(
+            lines=[
+                {'price_unit': 21.53, 'tax_ids': taxes},
+                {'price_unit': 21.53, 'tax_ids': taxes},
+            ],
+        ))
+        expected_base_line_tax_details_values_common = {
+            'total_excluded_currency': 11.80,
+            'taxes_data': [
+                {
+                    'tax_id': tax1.id,
+                    'tax_amount_currency': 1.0,
+                },
+                {
+                    'tax_id': tax2.id,
+                    'tax_amount_currency': 5.0,
+                },
+                {
+                    'tax_id': tax3.id,
+                },
+            ],
+        }
+        expected_base_line_tax_details_values_1 = {
+            **expected_base_line_tax_details_values_common,
+            'delta_total_excluded_currency': -0.01,
+            'taxes_data': [
+                {
+                    **expected_base_line_tax_details_values_common['taxes_data'][0],
+                    'base_amount_currency': 11.79,
+                },
+                {
+                    **expected_base_line_tax_details_values_common['taxes_data'][1],
+                    'base_amount_currency': 12.79,
+                },
+                {
+                    **expected_base_line_tax_details_values_common['taxes_data'][2],
+                    'base_amount_currency': 17.79,
+                    'tax_amount_currency': 3.74,
+                },
+            ],
+        }
+        expected_base_line_tax_details_values_2 = {
+            **expected_base_line_tax_details_values_common,
+            'delta_total_excluded_currency': 0.0,
+            'taxes_data': [
+                {
+                    **expected_base_line_tax_details_values_common['taxes_data'][0],
+                    'base_amount_currency': 11.8,
+                },
+                {
+                    **expected_base_line_tax_details_values_common['taxes_data'][1],
+                    'base_amount_currency': 12.8,
+                },
+                {
+                    **expected_base_line_tax_details_values_common['taxes_data'][2],
+                    'base_amount_currency': 17.80,
+                    'tax_amount_currency': 3.73,
+                },
+            ],
+        }
+        self.assert_base_lines_tax_details(
+            document=document,
+            expected_base_lines_tax_details=[expected_base_line_tax_details_values_1, expected_base_line_tax_details_values_2],
+            expected_base_amount=23.59,
+            expected_tax_amount=19.47,
+            expected_total_amount=43.06,
         )
 
-        # Negative price, positive quantity
-        self.assert_taxes_computation(
-            tax1,
-            -10.0,
-            {
-                'total_included': -22.0,
-                'total_excluded': -20.0,
-                'taxes_data': (
-                    (-20.0, -2.0),
-                ),
-            },
-            rounding_method='round_globally',
-            quantity=2,
+        self._run_js_tests()
+
+
+    def test_reverse_charge_division_tax(self):
+        tax = self.division_tax(
+            21.0,
+            invoice_repartition_line_ids=[
+                Command.create({'repartition_type': 'base', 'factor_percent': 100.0}),
+                Command.create({'repartition_type': 'tax', 'factor_percent': 100.0}),
+                Command.create({'repartition_type': 'tax', 'factor_percent': -100.0}),
+            ],
+            refund_repartition_line_ids=[
+                Command.create({'repartition_type': 'base', 'factor_percent': 100.0}),
+                Command.create({'repartition_type': 'tax', 'factor_percent': 100.0}),
+                Command.create({'repartition_type': 'tax', 'factor_percent': -100.0}),
+            ],
         )
 
-        # Edge case 1: null price, negative quantity
-        self.assert_taxes_computation(
-            tax1,
-            0.0,
-            {
-                'total_included': -1.0,
-                'total_excluded': 0.0,
-                'taxes_data': (
-                    (0.0, -1.0),
-                ),
-            },
-            rounding_method='round_globally',
-            quantity=-1,
-        )
+        expected_values = {
+            'expected_base_lines_tax_details': [{
+                'total_excluded_currency': 79.0,
+                'delta_total_excluded_currency': 0.0,
+                'taxes_data': [
+                    {
+                        'tax_id': tax.id,
+                        'base_amount_currency': 79.0,
+                        'tax_amount_currency': 28.6,
+                    },
+                    {
+                        'tax_id': tax.id,
+                        'base_amount_currency': 79.0,
+                        'tax_amount_currency': -28.6,
+                    },
+                ],
+            }],
+            'expected_base_amount': 79.0,
+            'expected_tax_amount': 0.0,
+            'expected_total_amount': 79.0,
+        }
 
-        # Edge case 2: null price, positive quantity
-        self.assert_taxes_computation(
-            tax1,
-            0.0,
-            {
-                'total_included': 1.0,
-                'total_excluded': 0.0,
-                'taxes_data': (
-                    (0.0, 1.0),
-                ),
-            },
-            rounding_method='round_globally',
-            quantity=1,
-        )
+        document = self.populate_document(self.init_document([
+            {'price_unit': 79.0, 'tax_ids': tax},
+        ]))
+        self.assert_base_lines_tax_details(document, **expected_values)
+
+        tax.price_include_override = 'tax_included'
+        document = self.populate_document(self.init_document([
+            {'price_unit': 79.0, 'tax_ids': tax},
+        ]))
+        self.assert_base_lines_tax_details(document, **expected_values)
 
         self._run_js_tests()
 
@@ -1133,4 +951,204 @@ class TestTaxesComputation(TestTaxCommon):
             tax_fixed_excl + tax_exclude_dst,
             100.0,
         )
+
+        tax_fixed_incl.include_base_amount = True
+        tax_fixed_excl.include_base_amount = True
+
+        self.assert_adapt_price_unit_to_another_taxes(
+            133.1,
+            tax_fixed_incl + tax_include_src,
+            tax_fixed_excl + tax_exclude_dst,
+            100.0,
+        )
+
         self._run_js_tests()
+
+    def test_global_discount_100_percent_cash_rounding_up(self):
+        """A 100% discount + round-up cash rounding must keep the total at 0: the base + tax
+        residue left by the discount must not be inflated into a full rounding step."""
+        tax = self.percent_tax(17)
+        document = self.populate_document(self.init_document(
+            lines=[
+                {'price_unit': 11.752137, 'tax_ids': tax},
+                {'price_unit': 21.367521, 'tax_ids': tax},
+            ],
+            cash_rounding=self.cash_rounding_a,  # add_invoice_line, rounding 0.05, method 'UP'
+        ))
+        self.assert_global_discount_base_lines_tax_details(
+            document=document,
+            amount_type='percent',
+            amount=100,
+            expected_base_lines_tax_details=None,
+            expected_base_amount=0.0,
+            expected_tax_amount=0.0,
+            expected_total_amount=0.0,
+        )
+
+        self._run_js_tests()
+
+    def test_down_payment_taxes_fixed_tax_last_position(self):
+        tax1 = self.percent_tax(20)
+        tax2 = self.fixed_tax(10)
+        taxes = tax1 + tax2
+
+        document_params = self.init_document(lines=[{'price_unit': 100.0, 'tax_ids': taxes}])
+        document = self.populate_document(document_params)
+
+        self.assert_down_payment_base_lines_tax_details(
+            document=document,
+            amount_type='percent',
+            amount=50.0,
+            expected_base_lines_tax_details=None,
+            expected_base_amount=50.0,
+            expected_tax_amount=10.0,
+            expected_total_amount=60.0,
+        )
+
+        tax2.include_base_amount = True
+
+        self.assert_down_payment_base_lines_tax_details(
+            document=document,
+            amount_type='percent',
+            amount=50.0,
+            expected_base_lines_tax_details=None,
+            expected_base_amount=50.0,
+            expected_tax_amount=10.0,
+            expected_total_amount=60.0,
+        )
+
+        self._run_js_tests()
+
+    def test_down_payment_no_tax(self):
+        document_params = self.init_document(lines=[
+            {'price_unit': 35.0},
+            {'price_unit': -5.0},
+            {'price_unit': 30.0},
+            {'price_unit': 15.0},
+            {'price_unit': 15.0},
+        ])
+        document = self.populate_document(document_params)
+
+        self.assert_down_payment_base_lines_tax_details(
+            document=document,
+            amount_type='percent',
+            amount=50.0,
+            expected_base_lines_tax_details=None,
+            expected_base_amount=45.0,
+            expected_tax_amount=0.0,
+            expected_total_amount=45.0,
+        )
+
+        self._run_js_tests()
+
+    def test_down_payment_fixed_amount_reverse_charge_tax(self):
+        tax = self.percent_tax(
+            21,
+            invoice_repartition_line_ids=[
+                Command.create({'factor_percent': 100, 'repartition_type': 'base'}),
+                Command.create({'factor_percent': 100, 'repartition_type': 'tax'}),
+                Command.create({'factor_percent': -100, 'repartition_type': 'tax'}),
+            ],
+            refund_repartition_line_ids=[
+                Command.create({'factor_percent': 100, 'repartition_type': 'base'}),
+                Command.create({'factor_percent': 100, 'repartition_type': 'tax'}),
+                Command.create({'factor_percent': -100, 'repartition_type': 'tax'}),
+            ],
+        )
+
+        document_params = self.init_document(lines=[{'price_unit': 12.0, 'tax_ids': tax}])
+        document = self.populate_document(document_params)
+
+        self.assert_down_payment_base_lines_tax_details(
+            document=document,
+            amount_type='fixed',
+            amount=3.0,
+            expected_base_lines_tax_details=[
+                {
+                    'total_excluded_currency': 3.0,
+                    'delta_total_excluded_currency': 0.0,
+                    'taxes_data': [
+                        {
+                            'tax_id': tax.id,
+                            'tax_amount_currency': 0.63,
+                            'base_amount_currency': 3.0,
+                        },
+                        {
+                            'tax_id': tax.id,
+                            'tax_amount_currency': -0.63,
+                            'base_amount_currency': 3.0,
+                        },
+                    ],
+                }
+            ],
+            expected_base_amount=3.0,
+            expected_tax_amount=0.0,
+            expected_total_amount=3.0,
+        )
+        self._run_js_tests()
+
+    def test_include_base_amount_in_aggregate_base_line_tax_details(self):
+        """ Test that the tax amount from a tax that is affecting the base of subsequent taxes
+        is correctly propagated in '_aggregate_base_line_tax_details'
+        """
+        AccountTax = self.env['account.tax']
+        tax_20 = self.percent_tax(20, include_base_amount=True)
+        tax_18 = self.percent_tax(18)
+        document = self.populate_document(self.init_document(
+            lines=[
+                {'price_unit': 2000.0, 'quantity': 5, 'discount': 20.0, 'tax_ids': tax_20 + tax_18},
+            ],
+        ))
+        AccountTax._add_tax_details(document['lines'], self.env.company)
+
+        def tax_grouping_function(base_line, tax_data):
+            if not tax_data:
+                return None
+            return {
+                'amount': tax_data['tax'].amount,
+            }
+
+        aggregated_data = AccountTax._aggregate_base_line_tax_details(document['lines'][0], tax_grouping_function)
+        expected_values = [{
+            'base_amount': 8000.0,
+            'base_amount_currency': 8000.0,
+            'raw_base_amount': 8000.0,
+            'raw_base_amount_currency': 8000.0,
+            'raw_tax_amount': 1600.0,
+            'raw_tax_amount_currency': 1600.0,
+            'raw_total_excluded': 8000.0,
+            'raw_total_excluded_currency': 8000.0,
+            'target_base_amount': 8000.0,
+            'target_base_amount_currency': 8000.0,
+            'target_tax_amount': 1600.0,
+            'target_tax_amount_currency': 1600.0,
+            'target_total_excluded': 8000.0,
+            'target_total_excluded_currency': 8000.0,
+            'tax_amount': 1600.0,
+            'tax_amount_currency': 1600.0,
+            'total_excluded': 8000.0,
+            'total_excluded_currency': 8000.0,
+        }, {
+            'base_amount': 9600.0,
+            'base_amount_currency': 9600.0,
+            'raw_base_amount': 9600.0,
+            'raw_base_amount_currency': 9600.0,
+            'raw_tax_amount': 1728.0,
+            'raw_tax_amount_currency': 1728.0,
+            'raw_total_excluded': 9600.0,
+            'raw_total_excluded_currency': 9600.0,
+            'target_base_amount': 9600.0,
+            'target_base_amount_currency': 9600.0,
+            'target_tax_amount': 1728.0,
+            'target_tax_amount_currency': 1728.0,
+            'target_total_excluded': 9600.0,
+            'target_total_excluded_currency': 9600.0,
+            'tax_amount': 1728.0,
+            'tax_amount_currency': 1728.0,
+            'total_excluded': 9600.0,
+            'total_excluded_currency': 9600.0,
+        }]
+        for i, data in enumerate(aggregated_data.values()):
+            for key in ('grouping_key', 'taxes_data'):
+                data.pop(key)
+            self.assertDictEqual(expected_values[i], data)

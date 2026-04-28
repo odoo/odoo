@@ -1224,17 +1224,16 @@ class AccountMoveLine(models.Model):
         """
         AccountTax = self.env['account.tax']
         for line in self:
-            # TODO remove the need of cogs lines to have a price_subtotal/price_total
             if line.display_type not in ('product', 'cogs', 'non_deductible_product', 'non_deductible_product_total') or not line.move_id:
                 line.price_total = line.price_subtotal = False
                 continue
 
             company = line.company_id or self.env.company
             base_line = line.move_id._prepare_product_base_line_for_taxes_computation(line)
-            AccountTax._add_tax_details_in_base_line(base_line, company)
-            AccountTax._round_base_lines_tax_details([base_line], company)
-            line.price_subtotal = base_line['tax_details']['total_excluded_currency']
-            line.price_total = base_line['tax_details']['total_included_currency']
+            currency = base_line['currency_id']
+            AccountTax._add_tax_details([base_line], company)
+            line.price_subtotal = currency.round(base_line['tax_details']['total_excluded_currency'])
+            line.price_total = currency.round(base_line['tax_details']['total_included_currency'])
 
     @api.depends('product_id', 'product_uom_id')
     def _compute_price_unit(self):
@@ -1429,8 +1428,7 @@ class AccountMoveLine(models.Model):
                 }
                 for line in invoice_lines
             ]
-            AccountTax._add_tax_details_in_base_lines(base_lines, company)
-            AccountTax._round_base_lines_tax_details(base_lines, company)
+            AccountTax._add_tax_details(base_lines, company)
 
             # store the invoice line record
             for base_line in base_lines:

@@ -101,7 +101,7 @@ class TestAccountAnalyticAccount(AccountTestInvoicingCommon, AnalyticCommon):
         '''Ensures analytic lines are created when the aml has a secondary currency set.'''
         # set up second currency
         self.env.ref('base.PYG').write({
-            'rounding': 1.0,
+            'rounding': 0.01,
             'active': True,
             'rate_ids': [Command.create({
                 'company_rate': 100,
@@ -120,7 +120,6 @@ class TestAccountAnalyticAccount(AccountTestInvoicingCommon, AnalyticCommon):
                 'analytic_distribution': {
                     self.analytic_account_1.id: 100,
                 },
-                'currency_id': self.env.ref('base.PYG').id,
             })],
             'currency_id': self.env.ref('base.PYG').id,
         }])
@@ -1098,7 +1097,7 @@ class TestAccountAnalyticAccount(AccountTestInvoicingCommon, AnalyticCommon):
         foreign_currency = self.env['res.currency'].create({
             'name': "Great Currency",
             'symbol': '🫀',
-            'rounding': 1,
+            'rounding': 0.01,
             'rate_ids': [
                 Command.create({'name': '2025-01-01', 'rate': 3}),
             ],

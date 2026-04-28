@@ -16,7 +16,7 @@ class CiiExportFacturXFR(TestCiiFacturXCommon, TestUblCiiFRCommon):
             'partner_id': cls.partner_fr.id,
             'allow_out_payment': True,
         })
-        cls.tax_20 = cls.percent_tax(cls, 20.0)
+        cls.tax_20 = cls.percent_tax(20.0)
 
     @classmethod
     def _create_company(cls, **create_values):

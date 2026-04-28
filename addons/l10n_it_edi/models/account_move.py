@@ -485,8 +485,9 @@ class AccountMove(models.Model):
     def _l10n_it_edi_add_base_lines_xml_values(self, base_lines_aggregated_values, is_downpayment):
         self.ensure_one()
         quantita_pd = min(self.env['account.move.line']._fields['quantity'].get_digits(self.env)[1], 8)
+        AccountTax = self.env['account.tax']
+        company = self.company_id
         for index, (base_line, aggregated_values) in enumerate(base_lines_aggregated_values, start=1):
-            line = base_line['record']
             tax_details = base_line['tax_details']
             discount = base_line['discount']
             quantity = base_line['quantity']
@@ -497,24 +498,25 @@ class AccountMove(models.Model):
             # Down payment lines:
             # If there was a down paid amount that has been deducted from this move,
             # we need to put a reference to the down payment invoice in the DatiFattureCollegate tag
-            description = line.name
-            if not is_downpayment and price_subtotal < 0:
-                downpayment_moves = line._get_downpayment_lines().move_id
-                if downpayment_moves:
-                    downpayment_moves_description = ', '.join(downpayment_moves.mapped('name'))
-                    sep = ', ' if description else ''
-                    description = f"{description}{sep}{downpayment_moves_description}"
+            if base_line['special_type'] == 'oss':
+                description = base_line['name']
+            else:
+                line = base_line['record']
+                description = line.name
+                if not is_downpayment and price_subtotal < 0:
+                    downpayment_moves = line._get_downpayment_lines().move_id
+                    if downpayment_moves:
+                        downpayment_moves_description = ', '.join(downpayment_moves.mapped('name'))
+                        sep = ', ' if description else ''
+                        description = f"{description}{sep}{downpayment_moves_description}"
             # Workaround: remove line breaks due to Tax Agency portal bug.
             # This deviates from Odoo's standard behavior and must be reviewed if the issue gets fixed.
             description = description and description.replace('\n', ' ').strip() or "NO NAME"
 
             # Price unit.
-            if quantity:
-                it_values['prezzo_unitario'] = base_line['gross_price_subtotal'] / quantity
-            else:
-                it_values['prezzo_unitario'] = 0.0
-            if base_line['currency_id'] != self.company_currency_id:
-                it_values['prezzo_unitario'] = it_values['prezzo_unitario'] / base_line['rate']
+            raw_gross_total_excluded = AccountTax._get_gross_total_without_tax(base_line, company, in_foreign_currency=False)
+            raw_gross_price_unit = AccountTax._get_price_unit_without_tax(base_line, company, raw_gross_total_excluded, in_foreign_currency=False)
+            it_values['prezzo_unitario'] = raw_gross_price_unit
 
             # Discount.
             it_values['sconto_maggiorazione_list'] = []
@@ -660,48 +662,6 @@ class AccountMove(models.Model):
         )
         return not skip
 
-    def _prepare_product_base_line_for_taxes_computation(self, product_line):
-        """
-            Prepares tax base line. Rounding lines must appear in the XML,
-            so they are converted to regular lines with tax exemption code ('N2.2').
-        """
-        base_line = super()._prepare_product_base_line_for_taxes_computation(product_line)
-
-        if product_line.display_type == 'rounding':
-            base_line.update({
-                'quantity': 1,
-                'price_unit': -product_line.amount_currency,
-                'tax_ids': self._l10n_it_edi_search_tax_for_import(self.company_id, 0.0, l10n_it_exempt_reason='N2.2'),
-            })
-
-        return base_line
-
-    def _l10n_it_edi_get_oss_line_values(self, aml, base_line, vat_tax, n7_tax, n22_tax):
-        base_line['tax_ids'] = n7_tax
-        tax_amount = (base_line['price_unit'] * (1 - (base_line['discount'] / 100.0))) * (vat_tax.amount / 100.0)
-
-        oss_description = self.env._(
-            "VAT %(vat_code)s %(tax_amount)s collected via OSS",
-            vat_code=vat_tax.country_id.code,
-            tax_amount=vat_tax.amount
-        )
-
-        vat_line = base_line.copy()
-        vat_line.update({
-            'id': f"{base_line.get('id', aml.id)}_vat",
-            'name': oss_description,
-            'tax_ids': n22_tax,
-            'price_unit': tax_amount,
-            'quantity': base_line['quantity'],
-            'discount': 0.0,
-            'record': aml.new({
-                'name': oss_description,
-                'move_id': aml.move_id.id,
-            }),
-        })
-
-        return [base_line, vat_line]
-
     def _l10n_it_edi_get_values(self, pdf_values=None, extra_attachments=None):
         def grouping_function_withholding(base_line, tax_data):
             if not tax_data:
@@ -732,6 +692,7 @@ class AccountMove(models.Model):
             }
 
         self.ensure_one()
+        AccountTax = self.env['account.tax']
 
         # Flags
         is_self_invoice = self.l10n_it_edi_is_self_invoice
@@ -743,45 +704,85 @@ class AccountMove(models.Model):
         reverse_charge_refund = self.move_type == 'in_refund' and reverse_charge
         convert_to_euros = self.currency_id.name != 'EUR'
 
-        # Base lines.
-        base_amls = self.line_ids.filtered(lambda x: x.display_type == 'product' or x.display_type == 'rounding')
+        # Base lines
+        base_lines, tax_lines = self._get_rounded_base_and_tax_lines()
+        for base_line in base_lines:
+            base_line['_invoice_line'] = base_line['record']
+
+        # In case of refund, all lines should have a negative price unit.
+        if reverse_charge_refund:
+            base_lines = [
+                AccountTax._reverse_base_line_sign(base_line, field='price_unit')
+                for base_line in base_lines
+            ]
+
+        # OSS
+        def is_oss_tax(base_line, tax_data):
+            if not tax_data:
+                return False
+            tax = tax_data['tax']
+            return (
+                tax._l10n_it_filter_kind('vat')
+                and tax.amount >= 0
+                and 'OSS' in tax.invoice_repartition_line_ids.tag_ids.mapped('name')
+            )
+
+        recompute_taxes = False
+        cash_rounding_tax_exempt = self._l10n_it_edi_search_tax_for_import(self.company_id, 0.0, l10n_it_exempt_reason='N2.2')
+        if cash_rounding_tax_exempt:
+            for base_line in base_lines:
+                if base_line['special_type'] == 'cash_rounding':
+                    base_line['tax_ids'] |= cash_rounding_tax_exempt
+                    recompute_taxes = True
 
         n7_tax = self.env['account.chart.template'].ref('00ex7', raise_if_not_found=False)
         n22_tax = self.env['account.chart.template'].ref('00ex', raise_if_not_found=False)
-        base_lines = []
-        for aml in base_amls:
-            base_line = self._prepare_product_base_line_for_taxes_computation(aml)
-            vat_tax = aml.tax_ids.flatten_taxes_hierarchy().filtered(lambda t: t._l10n_it_filter_kind('vat') and t.amount >= 0)[:1]
-            is_oss = vat_tax and 'OSS' in vat_tax.invoice_repartition_line_ids.tag_ids.mapped('name')
-            if is_oss and n7_tax and n22_tax:
-                base_lines += self._l10n_it_edi_get_oss_line_values(aml, base_line, vat_tax, n7_tax, n22_tax)
-            else:
-                base_lines.append(base_line)
-        tax_amls = self.line_ids.filtered('tax_repartition_line_id')
-        tax_lines = [self._prepare_tax_line_for_taxes_computation(x) for x in tax_amls]
+        if n7_tax and n22_tax:
+            new_base_lines = AccountTax._dispatch_taxes_into_new_base_lines(
+                base_lines=base_lines,
+                company=self.company_id,
+                exclude_function=is_oss_tax,
+            )
 
-        if reverse_charge_refund:
+            def grouping_function(base_line):
+                removed_tax_data = base_line['_removed_tax_data']
+                removed_tax = removed_tax_data['tax']
+                oss_description = self.env._(
+                    "VAT %(vat_code)s %(tax_amount)s collected via OSS",
+                    vat_code=removed_tax.country_id.code,
+                    tax_amount=removed_tax.amount
+                )
+                return {
+                    'name': oss_description,
+                    'special_type': 'oss',
+                }
+
+            for base_line in new_base_lines:
+                if base_line['removed_taxes_data_base_lines']:
+                    base_line['tax_ids'] |= n7_tax
+
+            extra_base_lines = AccountTax._turn_removed_taxes_into_new_base_lines(
+                base_lines=new_base_lines,
+                company=self.company_id,
+                grouping_function=grouping_function,
+            )
+            base_lines = new_base_lines + extra_base_lines
             for base_line in base_lines:
-                base_line['price_unit'] *= -1
+                base_line['record'] = base_line['_invoice_line']
 
-        AccountTax = self.env['account.tax']
-        AccountTax._add_tax_details_in_base_lines(base_lines, self.company_id)
+            if extra_base_lines:
+                recompute_taxes = True
+                for base_line in extra_base_lines:
+                    base_line['tax_ids'] |= n22_tax
+
+        if recompute_taxes:
+            AccountTax._add_tax_details(base_lines, self.company_id, tax_lines=tax_lines)
 
         downpayment_lines = []
         for base_line in base_lines:
             tax_details = base_line['tax_details']
-            discount = base_line['discount']
             price_unit = base_line['price_unit']
             quantity = base_line['quantity']
-            price_subtotal = base_line['price_subtotal'] = tax_details['raw_total_excluded_currency']
-
-            if discount == 100.0:
-                gross_price_subtotal_before_discount = price_unit * quantity
-            else:
-                gross_price_subtotal_before_discount = price_subtotal / (1 - discount / 100.0)
-
-            base_line['gross_price_subtotal'] = gross_price_subtotal_before_discount
-            base_line['discount_amount_before_dispatching'] = gross_price_subtotal_before_discount - price_subtotal
 
             # The tax "23% Ritenuta Agenti e Rappresentanti" is not supported because it's supposed to be a tax of 23% based on
             # 50% or 20% of the base amount. It's currently implemented as a -11.5% or -4.6% tax respectively. So on 1000, it
@@ -802,7 +803,7 @@ class AccountMove(models.Model):
             if not is_downpayment:
                 # Negative lines linked to down payment should stay negative
                 line = base_line['record']
-                if line.price_subtotal < 0 and line._get_downpayment_lines():
+                if tax_details['raw_total_excluded_currency'] < 0 and line._get_downpayment_lines():
                     downpayment_lines.append(base_line)
 
             if float_compare(quantity, 0, 2) < 0:
@@ -812,7 +813,6 @@ class AccountMove(models.Model):
                     'price_unit': -price_unit,
                 })
 
-        AccountTax._round_base_lines_tax_details(base_lines, self.company_id, tax_lines=tax_lines)
         base_lines_aggregated_values = AccountTax._aggregate_base_lines_tax_details(base_lines, self._l10n_it_edi_grouping_function_base_lines)
         self._l10n_it_edi_add_base_lines_xml_values(base_lines_aggregated_values, is_downpayment)
         base_lines = sorted(base_lines, key=lambda base_line: base_line['it_values']['numero_linea'])
