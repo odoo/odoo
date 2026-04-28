@@ -108,7 +108,7 @@ export class PaymentVivaCom extends PaymentInterface {
     async _viva_com_cancel(line) {
         var data = {
             sessionId: line.uiState.vivaSessionId,
-            cashRegisterId: this.pos.config.uuid,
+            cashRegisterId: this.pos.config.name,
         };
         return this._call_viva_com(data, "viva_com_send_payment_cancel", line).then((data) => {
             if (data.error) {
