@@ -179,9 +179,10 @@ class StockPickingBatch(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
-            if vals.get('name', '/') == '/':
+            if vals.get('name', '/') in ('/', _('New')):
                 company_id = vals.get('company_id', self.env.company.id)
-                picking_type = self.env['stock.picking.type'].browse(vals.get('picking_type_id'))
+                picking_type_id = vals.get('picking_type_id') or self.env.context.get('default_picking_type_id')
+                picking_type = self.env['stock.picking.type'].browse(picking_type_id)
                 if picking_type:
                     sequence_code = 'picking.wave' if vals.get('is_wave') else 'picking.batch'
                     vals['name'] = self._prepare_name(picking_type, sequence_code, company_id)

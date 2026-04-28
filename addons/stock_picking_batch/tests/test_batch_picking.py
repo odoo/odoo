@@ -90,6 +90,27 @@ class TestBatchPicking(TransactionCase):
             'picking_ids': [(4, cls.picking_client_1.id), (4, cls.picking_client_2.id)]
         })
 
+    def test_batch_name_assigned_with_default_name_or_context(self):
+        """ Sequence-based name must be assigned when vals carries the placeholder 'New'
+        or when picking_type_id comes from default_picking_type_id in context. """
+        Batch = self.env['stock.picking.batch']
+        picking_type = self.env['stock.picking.type'].browse(self.picking_type_out)
+
+        batch_name_in_vals = Batch.create({
+            'name': 'New',
+            'picking_type_id': self.picking_type_out,
+        })
+        batch_pt_in_context = Batch.with_context(default_picking_type_id=self.picking_type_out).create({})
+
+        self.assertRecordValues(batch_name_in_vals + batch_pt_in_context, [
+            {'picking_type_id': self.picking_type_out},
+            {'picking_type_id': self.picking_type_out},
+        ])
+        self.assertNotEqual(batch_name_in_vals.name, 'New')
+        self.assertNotEqual(batch_pt_in_context.name, 'New')
+        self.assertIn(picking_type.sequence_code, batch_name_in_vals.name)
+        self.assertIn(picking_type.sequence_code, batch_pt_in_context.name)
+
     def test_batch_scheduled_date(self):
         """ Test to make sure the correct scheduled date is set for both a batch and its pickings.
         Setting a batch's scheduled date manually has different behavior from when it is automatically
