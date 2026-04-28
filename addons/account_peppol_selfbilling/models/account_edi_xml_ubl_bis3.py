@@ -20,9 +20,13 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
             })
 
             # Set InvoiceTypeCode to 389 for invoices, CreditNoteTypeCode to 261 for credit notes
-            if vals['document_type'] == 'invoice':
+            if invoice.move_type == 'in_invoice':
+                vals['document_type'] = 'invoice'
+                vals['main_template'] = 'account_edi_ubl_cii.ubl_20_Invoice'
                 vals['vals']['document_type_code'] = 389
-            elif vals['document_type'] == 'credit_note':
+            else:  # invoice.move_type == 'in_refund'
+                vals['document_type'] = 'credit_note'
+                vals['main_template'] = 'account_edi_ubl_cii.ubl_20_CreditNote'
                 vals['vals']['document_type_code'] = 261
 
         return vals

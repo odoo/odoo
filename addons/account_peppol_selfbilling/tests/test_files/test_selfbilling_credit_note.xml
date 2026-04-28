@@ -1,11 +1,10 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<Invoice xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2" xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2" xmlns:ext="urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2">
+<CreditNote xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2" xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2" xmlns:ext="urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2">
   <cbc:CustomizationID>urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:selfbilling:3.0</cbc:CustomizationID>
   <cbc:ProfileID>urn:fdc:peppol.eu:2017:poacc:selfbilling:01:1.0</cbc:ProfileID>
   <cbc:ID>___ignore___</cbc:ID>
   <cbc:IssueDate>___ignore___</cbc:IssueDate>
-  <cbc:DueDate>___ignore___</cbc:DueDate>
-  <cbc:InvoiceTypeCode>389</cbc:InvoiceTypeCode>
+  <cbc:CreditNoteTypeCode>261</cbc:CreditNoteTypeCode>
   <cbc:DocumentCurrencyCode>EUR</cbc:DocumentCurrencyCode>
   <cac:OrderReference>
     <cbc:ID>___ignore___</cbc:ID>
@@ -119,9 +118,9 @@
     <cbc:PrepaidAmount currencyID="EUR">0.00</cbc:PrepaidAmount>
     <cbc:PayableAmount currencyID="EUR">121.00</cbc:PayableAmount>
   </cac:LegalMonetaryTotal>
-  <cac:InvoiceLine>
+  <cac:CreditNoteLine>
     <cbc:ID>1</cbc:ID>
-    <cbc:InvoicedQuantity unitCode="C62">1.0</cbc:InvoicedQuantity>
+    <cbc:CreditedQuantity unitCode="C62">1.0</cbc:CreditedQuantity>
     <cbc:LineExtensionAmount currencyID="EUR">100.00</cbc:LineExtensionAmount>
     <cac:Item>
       <cbc:Description>Test Product</cbc:Description>
@@ -137,5 +136,5 @@
     <cac:Price>
       <cbc:PriceAmount currencyID="EUR">100.0</cbc:PriceAmount>
     </cac:Price>
-  </cac:InvoiceLine>
-</Invoice>
+  </cac:CreditNoteLine>
+</CreditNote>

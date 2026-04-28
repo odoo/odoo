@@ -135,6 +135,10 @@ def _mock_register_sender_as_receiver(func, self, *args, **kwargs):
     self.account_peppol_migration_key = False
 
 
+def _mock_can_receive_self_billing(func, self, *args, **kwargs):
+    return True
+
+
 _demo_behaviour = {
     '_make_request_peppol': _mock_make_request,
     'button_account_peppol_check_partner_endpoint': _mock_button_verify_partner_endpoint,
@@ -144,6 +148,7 @@ _demo_behaviour = {
     'button_peppol_register_sender_as_receiver': _mock_register_sender_as_receiver,
     'button_migrate_peppol_registration': _mock_migrate_participant,
     'button_update_peppol_user_data': _mock_update_user_data,
+    '_can_receive_self_billing': _mock_can_receive_self_billing,
 }
 
 # -------------------------------------------------------------------------
