@@ -14,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2026-04-13 18:56+0000\n"
+"POT-Creation-Date: 2026-04-24 17:36+0000\n"
+"PO-Revision-Date: 2026-04-27 09:50+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-s18-4/"
 "point_of_sale/nl/>\n"
@@ -24,7 +24,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order__pos_reference
@@ -623,7 +623,7 @@ msgstr "Actie gevraagd"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "Action cancelled (%(ACTION)s)"
-msgstr ""
+msgstr "Actie geannuleerd (%(ACTION)s)"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1698,7 +1698,7 @@ msgstr "Contant verschil gevonden tijdens het tellen (winst) - sluiting"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "Cash drawer opened (%(ACTION)s)"
-msgstr ""
+msgstr "Kassalade geopend (%(ACTION)s)"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2054,7 +2054,7 @@ msgstr "Afsluitende sessie"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "Closing counted: %s \n"
-msgstr ""
+msgstr "Geteld bij afsluiting: %s \n"
 
 #. module: point_of_sale
 #. odoo-python
@@ -2066,13 +2066,13 @@ msgstr "Kasverschil voor %(payment_method)s (%(session)s)"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "Closing difference: %s \n"
-msgstr ""
+msgstr "Verschil bij afsluiting: %s \n"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "Closing expected: %s \n"
-msgstr ""
+msgstr "Verwacht bij afsluiting: %s \n"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2689,6 +2689,12 @@ msgstr "Dagelijkse verkoopsessies van je kassa."
 #: model:ir.ui.menu,name:point_of_sale.menu_pos_dashboard
 msgid "Dashboard"
 msgstr "Dashboard"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/models/utils/indexed_db.js:0
+msgid "Database Connection Lost"
+msgstr "Verbinding met database verbroken"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3750,7 +3756,7 @@ msgstr "Verberg gebruik betaalterminal"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/loader/critical_pos_error/critical_pos_error.xml:0
 msgid "Hide details"
-msgstr ""
+msgstr "Details verbergen"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__group_pos_preset
@@ -5373,7 +5379,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/loader/critical_pos_error/critical_pos_error.xml:0
 msgid "Oops!"
-msgstr ""
+msgstr "Oeps!"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5475,19 +5481,19 @@ msgstr "Kasgeld opening"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "Opening cash counted: %s \n"
-msgstr ""
+msgstr "Beginsaldo geteld: %s \n"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "Opening cash difference: %s \n"
-msgstr ""
+msgstr "Verschil beginschaldo: %s \n"
 
 #. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "Opening cash expected: %s \n"
-msgstr ""
+msgstr "Verwacht beginsaldo: %s \n"
 
 #. module: point_of_sale
 #. odoo-python
@@ -6181,6 +6187,10 @@ msgid ""
 "the list of printers with errors: %s\n"
 "Do you want to retry ?"
 msgstr ""
+"Met sommige printers kon geen contact worden gemaakt. De wijzigingen worden "
+"lokaal verwerkt, maar er kan een voorbereidingsticket ontbreken. Hier is de "
+"lijst met printers met fouten: %s\n"
+"Wil je het opnieuw proberen?"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7312,6 +7322,12 @@ msgstr "Gerelateerde sessie: %(link)s"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/models/utils/indexed_db.js:0
+msgid "Reload"
+msgstr "Herladen"
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/navbar/navbar.js:0
 #: code:addons/point_of_sale/static/src/app/components/navbar/navbar.xml:0
 #: code:addons/point_of_sale/static/src/app/components/popups/confirmation_dialog/confirmation_dialog.js:0
@@ -7336,7 +7352,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/loader/critical_pos_error/critical_pos_error.xml:0
 msgid "Reload data"
-msgstr ""
+msgstr "Gegevens herladen"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8066,7 +8082,7 @@ msgstr "Categorie afbeeldingen in het kassasysteem weergeven."
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/loader/critical_pos_error/critical_pos_error.xml:0
 msgid "Show details"
-msgstr ""
+msgstr "Details weergeven"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__module_pos_hr
@@ -8181,6 +8197,8 @@ msgid ""
 "Something went wrong... If you really are stuck, share the report with your "
 "friendly support service"
 msgstr ""
+"Er is iets misgegaan... Als je echt vastzit, deel het rapport dan met je "
+"vriendelijke ondersteuningsdienst"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.product_sourdough_loaf_product_template
@@ -8610,6 +8628,17 @@ msgid ""
 msgstr ""
 "De strategie voor het afronden van contact geld van de kassa %(pos)s moet "
 "zijn: '%(value)s'"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/models/utils/indexed_db.js:0
+msgid ""
+"The connection to the local database was lost. Reloading the page will "
+"restore it and prevent any loss of unsaved orders."
+msgstr ""
+"De verbinding met de lokale database is verbroken. Door de pagina opnieuw te "
+"laden, wordt deze hersteld en wordt verlies van niet-opgeslagen bestellingen "
+"voorkomen."
 
 #. module: point_of_sale
 #. odoo-python
@@ -9233,6 +9262,9 @@ msgid ""
 "closing the session. You should rather refund the order or create a credit "
 "note."
 msgstr ""
+"Deze klantfactuur is gelinkt aan een kassaorder. Als je deze terugzet naar "
+"concept, kan de sessie niet gesloten worden. Je kan beter een terugbetaling "
+"maken voor de order of een creditfactuur aanmaken."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__fiscal_position_ids
@@ -9982,7 +10014,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/point_of_sale/models/account_move.py:0
 msgid "Warning: Invoice Reset Risk"
-msgstr ""
+msgstr "Waarschuwing: Risico bij resetten van facturen"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__website_message_ids
@@ -10068,7 +10100,7 @@ msgstr "Werkdetail"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "X"
-msgstr ""
+msgstr "X"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -10180,6 +10212,8 @@ msgid ""
 "You cannot archive a product that is set as a special product in a Point of "
 "Sale configuration. Please change the configuration first."
 msgstr ""
+"Je kunt een product dat in een kassaconfiguratie is ingesteld als speciaal "
+"product niet archiveren. Wijzig eerst de configuratie."
 
 #. module: point_of_sale
 #. odoo-python
@@ -10428,7 +10462,7 @@ msgstr "Je {{ object.config_id.name }} ticket"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "Z"
-msgstr ""
+msgstr "Z"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_pos_category_form_view
@@ -10689,7 +10723,7 @@ msgstr "gebruikende"
 #: code:addons/point_of_sale/static/src/app/components/navbar/sale_details_button/sales_detail_report.xml:0
 #: code:addons/point_of_sale/static/src/customer_display/customer_display.xml:0
 msgid "x"
-msgstr ""
+msgstr "x"
 
 #~ msgid "0.00"
 #~ msgstr "0.00"

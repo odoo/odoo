@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-17 18:34+0000\n"
-"PO-Revision-Date: 2026-04-11 15:10+0000\n"
+"POT-Creation-Date: 2026-04-24 17:35+0000\n"
+"PO-Revision-Date: 2026-04-27 15:26+0000\n"
 "Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-s18-4/"
 "account/fr/>\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
 "1000000 == 0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -78,6 +78,8 @@ msgid ""
 "\n"
 "Please contact your administrator."
 msgstr ""
+"\n"
+"Veuillez contacter votre administrateur."
 
 #. module: account
 #. odoo-python
@@ -2177,6 +2179,8 @@ msgid ""
 "Account Code Mapping cannot be accessed directly. It is designed to be used "
 "only through the Chart of Accounts."
 msgstr ""
+"La correspondance des codes comptables n’est pas accessible directement. "
+"Elle est conçue pour être utilisée uniquement via le plan comptable."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_line__account_codes_formula
@@ -2673,6 +2677,8 @@ msgid ""
 "Accrual entry created on %(date)s: %(accrual_entry)s.                And its "
 "reverse entry: %(reverse_entry)s."
 msgstr ""
+"Écriture d’accumulation créée le %(date)s: %(accrual_entry)s.                "
+"Et son écriture d’inversion : %(reverse_entry)s."
 
 #. module: account
 #. odoo-python
@@ -3669,7 +3675,7 @@ msgstr "Pièces jointes"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__attachments_not_supported
 msgid "Attachments Not Supported"
-msgstr ""
+msgstr "Pièces jointes non prises en charge"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_audit_trail_report
@@ -4105,7 +4111,7 @@ msgstr "Banque d'Odoo"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 msgid "Bank settings"
-msgstr ""
+msgstr "Paramètres bancaires"
 
 #. module: account
 #: model:ir.model,name:account.model_account_setup_bank_manual_config
@@ -4218,6 +4224,8 @@ msgid ""
 "Batch invoice sending is unavailable. Please, activate the cron to enable "
 "batch sending of invoices."
 msgstr ""
+"L’envoi groupé de factures est indisponible. Veuillez activer la tâche "
+"planifiée (cron) pour permettre l’envoi groupé des factures."
 
 #. module: account
 #. odoo-python
@@ -4226,6 +4234,9 @@ msgid ""
 "Batch invoice sending is unavailable. Please, contact your system "
 "administrator to activate the cron to enable batch sending of invoices."
 msgstr ""
+"L’envoi groupé de factures est indisponible. Veuillez contacter votre "
+"administrateur système pour activer la tâche planifiée (cron) permettant "
+"l’envoi groupé des factures."
 
 #. module: account
 #. odoo-javascript
@@ -4416,7 +4427,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 msgid "C"
-msgstr ""
+msgstr "C"
 
 #. module: account
 #. odoo-python
@@ -6184,7 +6195,7 @@ msgstr "Arrêté des comptes {label} {percent}%"
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 msgid "D"
-msgstr ""
+msgstr "D"
 
 #. module: account
 #: model:account.incoterms,name:account.incoterm_DAP
@@ -6866,7 +6877,7 @@ msgstr "Afficher le montant"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_send_wizard__display_attachments_widget
 msgid "Display Attachments Widget"
-msgstr ""
+msgstr "Afficher le widget des pièces jointes"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line__display_days_next_month
@@ -7817,7 +7828,7 @@ msgstr "Expiré"
 #: code:addons/account/models/account_move.py:0
 #: model:ir.actions.server,name:account.action_move_export_zip
 msgid "Export ZIP"
-msgstr ""
+msgstr "Exporter en ZIP"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_column__expression_label
@@ -8504,7 +8515,7 @@ msgstr "Date de verrouillage globale"
 #. odoo-python
 #: code:addons/account/wizard/account_move_send_batch_wizard.py:0
 msgid "Go to cron configuration"
-msgstr ""
+msgstr "Aller à la configuration du cron"
 
 #. module: account
 #. odoo-python
@@ -8640,7 +8651,7 @@ msgstr "Iban a un avertissement"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__has_invalid_analytics
 msgid "Has Invalid Analytics"
-msgstr ""
+msgstr "Contient des analytiques invalides"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__journal_has_invalid_statements
@@ -8786,7 +8797,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "ICE:"
-msgstr ""
+msgstr "ICE :"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__id
@@ -10308,7 +10319,7 @@ msgstr "Écritures comptables"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__journal_line_ids
 #: model:ir.model.fields,field_description:account.field_account_move__journal_line_ids
 msgid "Journal Items (DEPRECATED)"
-msgstr ""
+msgstr "Écritures comptables (OBSOLÈTE)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__name
@@ -11462,7 +11473,7 @@ msgstr "Besoin d'annuler la demande"
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
 msgid "Need to update"
-msgstr ""
+msgstr "À mettre à jour"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__needed_terms
@@ -14023,11 +14034,6 @@ msgid "Responsible User"
 msgstr "Utilisateur responsable"
 
 #. module: account
-#: model:ir.model.fields,help:account.field_account_tax__tax_scope
-msgid "Restrict the use of taxes to a type of product."
-msgstr "Restreindre l'utilisation des taxes à un type de produits."
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
 #: model_terms:ir.ui.view,arch_db:account.view_message_tree_audit_log_search
 msgid "Restricted"
@@ -15940,7 +15946,6 @@ msgstr "C'est la date de la pièce comptable d'initialisation."
 #. module: account
 #. odoo-python
 #: code:addons/account/models/sequence_mixin.py:0
-#, fuzzy
 msgid ""
 "The %(date_field)s (%(date)s) you've entered isn't aligned with the existing "
 "sequence number (%(sequence)s). Clear the sequence number to proceed.\n"
@@ -15950,9 +15955,9 @@ msgstr ""
 "Le %(date_field)s (%(date)s) que vous avez indiqué n'est pas conforme au "
 "numéro de séquence existant (%(sequence)s). Réinitialisez le numéro de "
 "séquence pour continuer.\n"
-"Pour utiliser des séquences basées sur la date, sélectionnez des pièces "
-"comptables et utilisez l'option Reséquencer du menu d'actions, disponible en "
-"mode développeur."
+"Pour utiliser des séquences basées sur la date, sélectionnez des écritures "
+"et utilisez l'option Reséquencer du menu d'actions, disponible en mode "
+"développeur."
 
 #. module: account
 #. odoo-python
@@ -16182,6 +16187,9 @@ msgid ""
 "The bank account of your company is not trusted. Please ask an admin or "
 "someone with approval rights to check it."
 msgstr ""
+"Le compte bancaire de votre entreprise n'est pas fiable. Veuillez demander à "
+"un administrateur ou à une personne disposant des droits d'approbation de le "
+"vérifier."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__statement_id
@@ -16274,6 +16282,10 @@ msgid ""
 "trusted. Go to the Bank Settings, double-check that it is yours or correct "
 "the number, and click on Send Money to trust it."
 msgstr ""
+"Le compte bancaire de l'entreprise (%(account_number)s) associé à cette "
+"facture n'est pas marqué comme fiable. Accédez aux paramètres bancaires, "
+"vérifiez qu'il s'agit bien du vôtre ou corrigez le numéro, puis cliquez sur "
+"''Envoyer de l'argent'' pour le marquer comme fiable."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__company_id
@@ -16450,6 +16462,8 @@ msgid ""
 "The entry is using accounts (%(accounts_codes_names)s) from a different "
 "company."
 msgstr ""
+"Cette écriture utilise des comptes (%(accounts_codes_names)s) provenant "
+"d’une autre société."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_product_category__property_account_expense_categ_id
@@ -16836,6 +16850,8 @@ msgid ""
 "The scheduled action 'Send Invoices automatically' is archived. You won't be "
 "able to send invoices in batch."
 msgstr ""
+"L'action planifiée \"Envoyer automatiquement les factures\" est archivée. "
+"Vous ne pourrez plus envoyer de factures par lots."
 
 #. module: account
 #. odoo-python
@@ -17183,6 +17199,8 @@ msgid ""
 "There was an error while importing the bill, you can find attached the "
 "incoming XML"
 msgstr ""
+"Une erreur s'est produite lors de l'importation de la facture, vous "
+"trouverez ci-joint le fichier XML reçu"
 
 #. module: account
 #. odoo-python
@@ -17505,7 +17523,7 @@ msgstr "Cette pièce récurrente sera comptabilisée jusqu'à cette date (inclue
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "This setting locks once a journal entry is created."
-msgstr ""
+msgstr "Ce paramètre est verrouillé dès qu’une écriture comptable est créée."
 
 #. module: account
 #. odoo-python
@@ -18217,7 +18235,7 @@ msgstr "Mise à jour des conditions générales"
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
 msgid "Update app"
-msgstr ""
+msgstr "Mettre à jour l'app"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -19150,6 +19168,8 @@ msgstr ""
 msgid ""
 "You cannot change the amount of a payment with multiple liquidity lines."
 msgstr ""
+"Vous ne pouvez pas modifier le montant d'un paiement comportant plusieurs "
+"lignes de liquidité."
 
 #. module: account
 #. odoo-python
@@ -19240,6 +19260,8 @@ msgid ""
 "You cannot delete taxes that are currently in use. Consider archiving them "
 "instead."
 msgstr ""
+"Vous ne pouvez pas supprimer des taxes actuellement utilisées. Envisagez "
+"plutôt de les archiver."
 
 #. module: account
 #. odoo-python
@@ -19453,6 +19475,8 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 msgid "You cannot post an entry with an archived analytic account: %s"
 msgstr ""
+"Vous ne pouvez pas publier une écriture avec un compte analytique archivé : "
+"%s"
 
 #. module: account
 #. odoo-python
@@ -19575,6 +19599,8 @@ msgstr ""
 msgid ""
 "You cannot switch the type of a document with an existing sequence number."
 msgstr ""
+"Vous ne pouvez pas modifier le type d'un document dont le numéro de séquence "
+"existe déjà."
 
 #. module: account
 #. odoo-python
@@ -19693,6 +19719,8 @@ msgid ""
 "You may only use samples in demo mode, try uploading one of your invoices "
 "instead."
 msgstr ""
+"Vous ne pouvez utiliser des exemples qu’en mode démo. Essayez plutôt de "
+"télécharger l’une de vos factures."
 
 #. module: account
 #. odoo-python
@@ -20336,6 +20364,9 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Reçu de paiement (Ref {{ object.name or 'n/"
 "a' }})"
+
+#~ msgid "Restrict the use of taxes to a type of product."
+#~ msgstr "Restreindre l'utilisation des taxes à un type de produits."
 
 #~ msgid "1.05"
 #~ msgstr "1.05"
