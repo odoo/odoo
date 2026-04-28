@@ -1719,6 +1719,41 @@ test("changing chart granularity updates the groupBy and preserves the domain", 
     expect(definition.dataSource.searchParams.domain).toEqual([["date", ">=", "2020-01-01"]]);
 });
 
+test("can change chart granularity without losing the customized color", async () => {
+    const { model } = await createSpreadsheetWithChart({
+        type: "bar",
+        definition: {
+            dataSetStyles: {
+                "date:month": {
+                    backgroundColor: "#FF0000",
+                },
+            },
+            dataSource: {
+                type: "odoo",
+                metaData: {
+                    groupBy: ["date:month"],
+                    measure: "probability",
+                    resModel: "partner",
+                },
+            },
+        },
+    });
+    const sheetId = model.getters.getActiveSheetId();
+    const chartId = model.getters.getChartIds(sheetId)[0];
+    model.dispatch("UPDATE_CHART_GRANULARITY", {
+        chartId,
+        granularity: "year",
+    });
+    expect(model.getters.getChartDefinition(chartId).dataSetStyles).toEqual({
+        "date:month": {
+            backgroundColor: "#FF0000",
+        },
+        "date:year": {
+            backgroundColor: "#FF0000",
+        },
+    });
+});
+
 test("changing chart granularity reloads data source once with global filter", async () => {
     onRpc("partner", "formatted_read_group", ({ kwargs }) => {
         expect.step(kwargs.groupby[0]);
