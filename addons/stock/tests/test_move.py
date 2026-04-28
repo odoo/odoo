@@ -4607,36 +4607,45 @@ class TestStockMove(TestStockCommon):
         storable product.
         """
         self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 1)
+        alternate_location = self.env['stock.location'].create({
+            'name': 'alternate_location',
+            'usage': 'inventory',
+        })
         scrap_form = Form(self.env['stock.move'].with_context(default_is_scrap=True), view='stock.view_scrap_move_form')
         scrap_form.product_id = self.productA
         scrap_form.location_id = self.stock_location
-        scrap_form.location_dest_id = self.scrap_location
+        scrap_form.location_dest_id = alternate_location
         scrap_form.quantity = 1
         scrap_form.company_id = self.env.company
         scrap = scrap_form.save()
-        scrap._action_scrap()
+        scrap.action_scrap()
         move = self.env['stock.move'].search([('product_id', '=', self.productA.id), ('is_scrap', '=', True)])
         self.assertEqual(move.state, 'done')
         self.assertEqual(move.quantity, 1)
-        self.assertEqual(move.location_dest_usage, 'inventory')
+        self.assertEqual(move.location_dest_id, alternate_location)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.productA, self.stock_location), 0)
 
     def test_scrap_2(self):
         """ Check the created stock move and the impact on quants when we scrap a
         consumable product.
         """
+        alternate_location = self.env['stock.location'].create({
+            'name': 'alternate_location',
+            'usage': 'internal',
+        })
         scrap = self.env['stock.move'].create({
             'is_scrap': True,
             'product_id': self.product_consu.id,
             'location_id': self.stock_location.id,
-            'location_dest_id': self.scrap_location.id,
+            'location_dest_id': alternate_location.id,
             'quantity': 1,
             'company_id': self.env.company.id,
         })
-        scrap._action_scrap()
+        scrap.action_scrap()
         move = self.env['stock.move'].search([('product_id', '=', self.product_consu.id), ('is_scrap', '=', True)])
         self.assertEqual(move.state, 'done')
         self.assertEqual(move.quantity, 1)
+        self.assertEqual(alternate_location.usage, 'internal')
         self.assertEqual(move.location_dest_usage, 'inventory')
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product_consu, self.stock_location), 0)
 
