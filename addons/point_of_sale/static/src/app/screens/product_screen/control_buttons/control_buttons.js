@@ -144,6 +144,11 @@ export class ControlButtons extends Component {
                 .includes(selectedOrderLine.product_id.product_tmpl_id.id)
         );
     }
+
+    onCancelOrder() {
+        this.props.close();
+        this.pos.onDeleteOrder(this.currentOrder);
+    }
 }
 
 export class ControlButtonsPopup extends Component {
