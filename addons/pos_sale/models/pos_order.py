@@ -88,8 +88,7 @@ class PosOrder(models.Model):
 
                 sale_orders += sale_order
                 down_payment_base_lines = pos_order_lines._prepare_base_lines_for_taxes_computation()
-                AccountTax._add_tax_details_in_base_lines(down_payment_base_lines, sale_order.company_id)
-                AccountTax._round_base_lines_tax_details(down_payment_base_lines, sale_order.company_id)
+                AccountTax._add_tax_details(down_payment_base_lines, sale_order.company_id)
 
                 sale_order_sudo = sale_order.sudo()
                 sale_order_sudo._create_down_payment_section_line_if_needed()

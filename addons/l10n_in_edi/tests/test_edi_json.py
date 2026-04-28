@@ -430,7 +430,7 @@ class TestEdiJson(L10nInTestInvoicingCommon):
 
         # =================================== RCM Tax test =============================================
         with self.subTest(scenario="RCM Tax Invoice"):
-            json_value = self.invoice_with_rcm._l10n_in_edi_generate_invoice_json()
+            json_value = self.invoice_with_rcm.with_context(blu=True)._l10n_in_edi_generate_invoice_json()
             self.assertEqual(
                 json_value['TranDtls'],
                 {

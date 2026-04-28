@@ -100,14 +100,21 @@ class AccountMoveLine(models.Model):
         ]
 
     def _l10n_cn_calculate_total_balance(self):
+        AccountTax = self.env['account.tax']
         account_balances = defaultdict(float)
         total_balance = 0.0
 
         for deduction in self.l10n_cn_balance_deduction_ids:
-            taxes_data = self.tax_ids._get_tax_details(
-                deduction.deduct_amount, 1, document_tax_mode='tax_included',
-            )['taxes_data']
-            balance = sum(tax_data['tax_amount'] for tax_data in taxes_data)
+            new_base_line = AccountTax._prepare_base_line_for_taxes_computation(
+                record=None,
+                price_unit=deduction.deduct_amount,
+                quantity=1.0,
+                currency_id=self.currency_id,
+                tax_ids=self.tax_ids,
+                special_mode='total_included',
+            )
+            AccountTax._add_tax_details([new_base_line], self.company_id)
+            balance = sum(tax_data['tax_amount_currency'] for tax_data in new_base_line['tax_details']['taxes_data'])
             account_balances[deduction.expense_account_id] += balance
             total_balance += balance
 

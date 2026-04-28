@@ -266,8 +266,7 @@ class L10nEsEdiVerifactuDocument(models.Model):
 
         base_lines = [base_line for base_line in base_lines if base_line_filter(base_line)]
 
-        AccountTax._add_tax_details_in_base_lines(base_lines, company)
-        AccountTax._round_base_lines_tax_details(base_lines, company, tax_lines=tax_lines)
+        AccountTax._add_tax_details(base_lines, company)
 
         # Totals
         base_lines_aggregated_values_for_totals = AccountTax._aggregate_base_lines_tax_details(base_lines, total_grouping_function)

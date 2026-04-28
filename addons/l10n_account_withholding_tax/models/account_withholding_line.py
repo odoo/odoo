@@ -178,8 +178,7 @@ class AccountWithholdingLine(models.AbstractModel):
                         currency_id=line_curr,
                         calculate_withholding_taxes=True,
                     )
-                    AccountTax._add_tax_details_in_base_line(base_line, company)
-                    AccountTax._round_base_lines_tax_details([base_line], company)
+                    AccountTax._add_tax_details([base_line], company)
                     tax_amount = -base_line['tax_details']['taxes_data'][0]['tax_amount_currency']
                 else:
                     tax_amount = 0.0
@@ -369,9 +368,8 @@ class AccountWithholdingLine(models.AbstractModel):
                 line.name = line.withholding_sequence_id.next_by_id()
 
             base_line = line._prepare_base_line_for_taxes_computation()
-            AccountTax._add_tax_details_in_base_line(base_line, company)
             base_lines.append(base_line)
-        AccountTax._round_base_lines_tax_details(base_lines, company)
+        AccountTax._add_tax_details(base_lines, company)
         AccountTax._add_accounting_data_in_base_lines_tax_details(base_lines, company)
         tax_results = AccountTax._prepare_tax_lines(base_lines, company)
 
@@ -469,8 +467,7 @@ class AccountWithholdingLine(models.AbstractModel):
                 filter_tax_function=None,
             ))
 
-        AccountTax._add_tax_details_in_base_lines(new_base_lines, company)
-        AccountTax._round_base_lines_tax_details(new_base_lines, company)
+        AccountTax._add_tax_details(new_base_lines, company)
 
         # Map the existing withholding tax lines to their grouping key in order to know which line to update, create or delete.
         existing_withholding_line_map = self.grouped(key=lambda l: l._get_grouping_key())

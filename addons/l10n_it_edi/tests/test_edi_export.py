@@ -313,13 +313,6 @@ class TestItEdiExport(TestItEdi):
         self._assert_export_invoice(credit_note, 'credit_note_refund_no_reconcile.xml')
 
     def test_invoice_negative_price(self):
-        tax_10 = self.env['account.tax'].create({
-            'name': '10% tax',
-            'amount': 10.0,
-            'amount_type': 'percent',
-            'company_id': self.company.id,
-        })
-
         invoice = self.env['account.move'].with_company(self.company).create({
             'move_type': 'out_invoice',
             'invoice_date': '2022-03-24',
@@ -597,7 +590,7 @@ class TestItEdiExport(TestItEdi):
         invoice.action_post()
         self._assert_export_invoice(invoice, 'invoice_with_multiple_product_description_fields.xml')
 
-    def test_export_invoice_with_rounding_lines_value(self):
+    def test_export_invoice_with_cash_rounding(self):
         """Test that invoices with rounding lines are correctly exported with exempt tax 'N2.2'."""
         self.env['res.config.settings'].create({
             'company_id': self.company.id,
@@ -714,16 +707,16 @@ class TestItEdiExport(TestItEdi):
         }])
 
     def test_export_XML_oss_tax(self):
+        self.ensure_installed('l10n_eu_oss')
+
         be_partner = self.env['res.partner'].create({
             'name': 'Alessi',
             'vat': 'BE0477472701',
             'country_id': self.env.ref('base.be').id,
             'is_company': True,
         })
-        oss_tag = self.env.ref('l10n_eu_oss.tag_oss', raise_if_not_found=False)
-        if not oss_tag:
-            raise SkipTest("l10n_eu_oss Module not installed")
 
+        oss_tag = self.env.ref('l10n_eu_oss.tag_oss')
         oss_tax = self.env['account.tax'].create({
             'name': 'OSS Tax',
             'type_tax_use': 'sale',

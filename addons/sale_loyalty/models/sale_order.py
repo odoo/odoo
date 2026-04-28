@@ -423,8 +423,7 @@ class SaleOrder(models.Model):
             base_line["discount_taxes"] = taxes
             base_line["discountable_taxes"] = discountable_taxes
             base_lines.append(base_line)
-        AccountTax._add_tax_details_in_base_lines(base_lines, self.company_id)
-        AccountTax._round_base_lines_tax_details(base_lines, self.company_id)
+        AccountTax._add_tax_details(base_lines, self.company_id)
 
         def grouping_function(base_line, tax_data):
             if not tax_data:

@@ -6,128 +6,22 @@ from freezegun import freeze_time
 from odoo import Command
 from odoo.tests import tagged
 
-from odoo.addons.account.tests.test_taxes_downpayment import TestTaxesDownPayment
+from odoo.addons.account.tests.test_taxes_computation import TestTaxesComputation
 from odoo.addons.sale.tests.common import TestTaxCommonSale
 
 
 @tagged("post_install", "-at_install")
-class TestTaxesDownPaymentSale(TestTaxCommonSale, TestTaxesDownPayment):
+class TestTaxesDownPaymentSale(TestTaxCommonSale, TestTaxesComputation):
     _test_user_groups = None  # FIXME list needed groups
 
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.other_currency = cls.setup_other_currency("EUR")
         cls.company_data["company"].downpayment_account_id = cls.env["account.account"].create({
             "name": "Downpayment account",
             "account_type": "liability_current",
             "code": "TestDownpayment",
         })
-
-    # -------------------------------------------------------------------------
-    # HELPERS
-    # -------------------------------------------------------------------------
-
-    def assert_sale_order_document_down_payment(
-        self, document, amount_type, amount, expected_values, soft_checking=False
-    ):
-        """Assert the expected values for the tax totals summary of the
-        down payment invoice generated from the sale order passed as parameter.
-        Then, generate the final invoice and assert its total is well the original
-        total amount of the sale order minus the previously generated down payment.
-
-        :param document:        The document dictionary to generate the sale.order record.
-        :param amount_type:     The type of the global discount: 'percent' or 'fixed'.
-        :param amount:          The amount to consider.
-                                For 'percent', it should be a percentage [0-100].
-                                For 'fixed', any amount.
-        :param expected_values: The expected values for the tax_total_summary.
-        :param soft_checking:   Limit the asserted values to the ones in 'expected_results'
-                                and don't go deeper inside the tax_total_summary.
-                                It allows to assert only the totals without asserting all the
-                                tax details.
-        """
-        sale_order = self.convert_document_to_sale_order(document)
-        sale_order.action_confirm()
-        original_amount_total = sale_order.amount_total
-        invoice = self._create_down_payment_invoice(sale_order, amount_type, amount)
-        self._assert_tax_totals_summary(
-            invoice.tax_totals, expected_values, soft_checking=soft_checking
-        )
-
-        # Full invoice.
-        invoice = self._create_final_invoice(sale_order)
-        self.assertRecordValues(
-            invoice,
-            [{"amount_total": original_amount_total - expected_values["total_amount_currency"]}],
-        )
-
-    # -------------------------------------------------------------------------
-    # GENERIC TAXES TEST SUITE
-    # -------------------------------------------------------------------------
-
-    def test_taxes_l10n_in_sale_orders(self):
-        for (
-            test_mode,
-            document,
-            soft_checking,
-            amount_type,
-            amount,
-            expected_values,
-        ) in self._test_taxes_l10n_in():
-            with self.subTest(test_code=test_mode, amount=amount):
-                self.assert_sale_order_document_down_payment(
-                    document, amount_type, amount, expected_values, soft_checking=soft_checking
-                )
-
-    def test_taxes_l10n_br_sale_orders(self):
-        for (
-            test_mode,
-            document,
-            soft_checking,
-            amount_type,
-            amount,
-            expected_values,
-        ) in self._test_taxes_l10n_br():
-            with self.subTest(test_code=test_mode, amount=amount):
-                self.assert_sale_order_document_down_payment(
-                    document, amount_type, amount, expected_values, soft_checking=soft_checking
-                )
-
-    def test_taxes_l10n_be_sale_orders(self):
-        for (
-            test_mode,
-            document,
-            soft_checking,
-            amount_type,
-            amount,
-            expected_values,
-        ) in self._test_taxes_l10n_be():
-            with self.subTest(test_code=test_mode, amount=amount):
-                self.assert_sale_order_document_down_payment(
-                    document, amount_type, amount, expected_values, soft_checking=soft_checking
-                )
-
-    def test_taxes_fixed_tax_last_position_sale_orders(self):
-        for (
-            test_mode,
-            document,
-            amount_type,
-            amount,
-            expected_values,
-        ) in self._test_taxes_fixed_tax_last_position():
-            with self.subTest(test_code=test_mode):
-                self.assert_sale_order_document_down_payment(
-                    document, amount_type, amount, expected_values
-                )
-
-    def test_no_taxes_sale_orders(self):
-        document, amount_type, amount, expected_values = self._test_no_taxes()
-        self.assert_sale_order_document_down_payment(document, amount_type, amount, expected_values)
-
-    # -------------------------------------------------------------------------
-    # SPECIFIC TESTS
-    # -------------------------------------------------------------------------
 
     @freeze_time("2017-01-01")
     def test_down_payment_invoice_multiple_taxes_and_accounts(self):
@@ -335,12 +229,12 @@ class TestTaxesDownPaymentSale(TestTaxCommonSale, TestTaxesDownPayment):
         tax_15 = self.percent_tax(15.0)
 
         with freeze_time("2016-01-01"):
-            self.foreign_currency_pricelist.currency_id = self.other_currency
+            self.foreign_currency_pricelist.currency_id = self.foreign_currency
             so = self._create_sale_order_one_line(
                 price_unit=1200.0,
                 product_id=product,
                 tax_ids=tax_15,
-                currency_id=self.other_currency.id,
+                currency_id=self.foreign_currency.id,
                 pricelist_id=self.foreign_currency_pricelist.id,
             )
 
@@ -513,11 +407,11 @@ class TestTaxesDownPaymentSale(TestTaxCommonSale, TestTaxesDownPayment):
         self.env.company.tax_calculation_rounding_method = "round_per_line"
         product = self.company_data["product_order_cost"]
         tax_23 = self.percent_tax(23.0)
-        other_currency = self.setup_other_currency("EUR", rates=[("2017-01-01", 1.2834)])
-        self.foreign_currency_pricelist.currency_id = other_currency
+        foreign_currency = self.setup_other_currency("EUR", rates=[("2017-01-01", 1.2834)])
+        self.foreign_currency_pricelist.currency_id = foreign_currency
 
         so = self._create_sale_order(
-            currency_id=other_currency.id,
+            currency_id=foreign_currency.id,
             pricelist_id=self.foreign_currency_pricelist.id,
             order_line=[
                 self._prepare_order_line(
@@ -540,42 +434,42 @@ class TestTaxesDownPaymentSale(TestTaxCommonSale, TestTaxesDownPayment):
             ],
         )
         self.assertRecordValues(
-            so, [{"amount_untaxed": 1196.87, "amount_tax": 275.27, "amount_total": 1472.14}]
+            so, [{"amount_untaxed": 1196.87, "amount_tax": 275.26, "amount_total": 1472.13}]
         )
 
         # Create a down payment invoice of 100%.
         dp_invoice = self._create_down_payment_invoice(so, "percent", 100, post=True)
         self.assertRecordValues(
-            dp_invoice, [{"amount_untaxed": 1196.87, "amount_tax": 275.27, "amount_total": 1472.14}]
+            dp_invoice, [{"amount_untaxed": 1196.87, "amount_tax": 275.26, "amount_total": 1472.13}]
         )
         self.assert_invoice_tax_totals_summary(
             dp_invoice,
             {
                 "same_tax_base": True,
-                "currency_id": other_currency.id,
+                "currency_id": foreign_currency.id,
                 "company_currency_id": self.env.company.currency_id.id,
                 "base_amount_currency": 1196.87,
-                "base_amount": 932.57,
-                "tax_amount_currency": 275.27,
-                "tax_amount": 214.49,
-                "total_amount_currency": 1472.14,
+                "base_amount": 932.58,
+                "tax_amount_currency": 275.26,
+                "tax_amount": 214.48,
+                "total_amount_currency": 1472.13,
                 "total_amount": 1147.06,
                 "subtotals": [
                     {
                         "name": "Untaxed Amount",
                         "base_amount_currency": 1196.87,
-                        "base_amount": 932.57,
-                        "tax_amount_currency": 275.27,
-                        "tax_amount": 214.49,
+                        "base_amount": 932.58,
+                        "tax_amount_currency": 275.26,
+                        "tax_amount": 214.48,
                         "tax_groups": [
                             {
                                 "id": self.tax_groups[0].id,
                                 "base_amount_currency": 1196.87,
-                                "base_amount": 932.57,
-                                "tax_amount_currency": 275.27,
-                                "tax_amount": 214.49,
+                                "base_amount": 932.58,
+                                "tax_amount_currency": 275.26,
+                                "tax_amount": 214.48,
                                 "display_base_amount_currency": 1196.87,
-                                "display_base_amount": 932.57,
+                                "display_base_amount": 932.58,
                             }
                         ],
                     }
@@ -592,7 +486,7 @@ class TestTaxesDownPaymentSale(TestTaxCommonSale, TestTaxesDownPayment):
             final_invoice,
             {
                 "same_tax_base": True,
-                "currency_id": other_currency.id,
+                "currency_id": foreign_currency.id,
                 "company_currency_id": self.env.company.currency_id.id,
                 "base_amount_currency": 0.0,
                 "base_amount": 0.0,
@@ -628,11 +522,11 @@ class TestTaxesDownPaymentSale(TestTaxCommonSale, TestTaxesDownPayment):
         self.env.company.tax_calculation_rounding_method = "round_globally"
         product = self.company_data["product_order_cost"]
         tax_23 = self.percent_tax(23.0)
-        other_currency = self.setup_other_currency("EUR", rates=[("2017-01-01", 1.2834)])
-        self.foreign_currency_pricelist.currency_id = other_currency
+        foreign_currency = self.setup_other_currency("EUR", rates=[("2017-01-01", 1.2834)])
+        self.foreign_currency_pricelist.currency_id = foreign_currency
 
         so = self._create_sale_order(
-            currency_id=other_currency.id,
+            currency_id=foreign_currency.id,
             pricelist_id=self.foreign_currency_pricelist.id,
             order_line=[
                 self._prepare_order_line(
@@ -655,42 +549,42 @@ class TestTaxesDownPaymentSale(TestTaxCommonSale, TestTaxesDownPayment):
             ],
         )
         self.assertRecordValues(
-            so, [{"amount_untaxed": 1196.89, "amount_tax": 275.28, "amount_total": 1472.17}]
+            so, [{"amount_untaxed": 1196.87, "amount_tax": 275.28, "amount_total": 1472.15}]
         )
 
         # Create a down payment invoice of 100%.
         dp_invoice = self._create_down_payment_invoice(so, "percent", 100, post=True)
         self.assertRecordValues(
-            dp_invoice, [{"amount_untaxed": 1196.89, "amount_tax": 275.28, "amount_total": 1472.17}]
+            dp_invoice, [{"amount_untaxed": 1196.87, "amount_tax": 275.28, "amount_total": 1472.15}]
         )
         self.assert_invoice_tax_totals_summary(
             dp_invoice,
             {
                 "same_tax_base": True,
-                "currency_id": other_currency.id,
+                "currency_id": foreign_currency.id,
                 "company_currency_id": self.env.company.currency_id.id,
-                "base_amount_currency": 1196.89,
-                "base_amount": 932.59,
+                "base_amount_currency": 1196.87,
+                "base_amount": 932.58,
                 "tax_amount_currency": 275.28,
-                "tax_amount": 214.5,
-                "total_amount_currency": 1472.17,
-                "total_amount": 1147.09,
+                "tax_amount": 214.49,
+                "total_amount_currency": 1472.15,
+                "total_amount": 1147.07,
                 "subtotals": [
                     {
                         "name": "Untaxed Amount",
-                        "base_amount_currency": 1196.89,
-                        "base_amount": 932.59,
+                        "base_amount_currency": 1196.87,
+                        "base_amount": 932.58,
                         "tax_amount_currency": 275.28,
-                        "tax_amount": 214.5,
+                        "tax_amount": 214.49,
                         "tax_groups": [
                             {
                                 "id": self.tax_groups[0].id,
-                                "base_amount_currency": 1196.89,
-                                "base_amount": 932.59,
+                                "base_amount_currency": 1196.87,
+                                "base_amount": 932.58,
                                 "tax_amount_currency": 275.28,
-                                "tax_amount": 214.5,
-                                "display_base_amount_currency": 1196.89,
-                                "display_base_amount": 932.59,
+                                "tax_amount": 214.49,
+                                "display_base_amount_currency": 1196.87,
+                                "display_base_amount": 932.58,
                             }
                         ],
                     }
@@ -707,7 +601,7 @@ class TestTaxesDownPaymentSale(TestTaxCommonSale, TestTaxesDownPayment):
             final_invoice,
             {
                 "same_tax_base": True,
-                "currency_id": other_currency.id,
+                "currency_id": foreign_currency.id,
                 "company_currency_id": self.env.company.currency_id.id,
                 "base_amount_currency": 0.0,
                 "base_amount": 0.0,
@@ -868,8 +762,7 @@ class TestTaxesDownPaymentSale(TestTaxCommonSale, TestTaxesDownPayment):
             order_line._prepare_base_line_for_taxes_computation() for order_line in so.order_line
         ]
         AccountTax = self.env["account.tax"]
-        AccountTax._add_tax_details_in_base_lines(so_base_lines, self.env.company)
-        AccountTax._round_base_lines_tax_details(so_base_lines, self.env.company)
+        AccountTax._add_tax_details(so_base_lines, self.env.company)
 
         dp_lines = AccountTax._prepare_down_payment_lines(
             base_lines=so_base_lines,

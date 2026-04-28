@@ -29,8 +29,7 @@ class ProductTemplate(models.Model):
                 price_unit=price,
                 calculate_withholding_taxes=True,
             )
-            company_taxes._add_tax_details_in_base_line(base_line, self.env.company)
-            company_taxes._round_base_lines_tax_details([base_line], self.env.company)
+            company_taxes._add_tax_details([base_line], self.env.company)
             company_taxes._add_accounting_data_to_base_line_tax_details(
                 base_line,
                 self.env.company,

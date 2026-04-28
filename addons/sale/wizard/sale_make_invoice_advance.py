@@ -181,8 +181,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
             )
             for line in order_lines
         ]
-        AccountTax._add_tax_details_in_base_lines(base_lines, order.company_id)
-        AccountTax._round_base_lines_tax_details(base_lines, order.company_id)
+        AccountTax._add_tax_details(base_lines, order.company_id)
 
         if self.advance_payment_method == "percentage":
             amount_type = "percent"

@@ -52,8 +52,7 @@ class AccountMove(models.Model):
                         calculate_withholding_taxes=True,
                     )
 
-                    AccountTax._add_tax_details_in_base_line(base_line, move.company_id)
-                    AccountTax._round_base_lines_tax_details([base_line], move.company_id)
+                    AccountTax._add_tax_details([base_line], move.company_id)
                     tax_details = base_line.get("tax_details", {})
                     taxes_data = tax_details.get("taxes_data", [])
 

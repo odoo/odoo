@@ -113,8 +113,14 @@ class AccountTax(models.Model):
         except ZeroDivisionError:
             return 0.0
 
-    def _eval_tax_amount_fixed_amount(self, batch, raw_base, evaluation_context):
+    @api.model
+    def _get_raw_tax_amount_currency(self, batch, tax_data, base, fix_rate=1.0):
         # EXTENDS 'account'
-        if self.amount_type == 'code':
-            return self._eval_tax_amount_formula(raw_base, evaluation_context)
-        return super()._eval_tax_amount_fixed_amount(batch, raw_base, evaluation_context)
+        tax = tax_data['tax']
+        if tax.amount_type == 'code':
+            evaluation_context = batch['_evaluation_context']
+            tax_amount = tax._eval_tax_amount_formula(base, evaluation_context)
+            if tax_amount is None:
+                tax_data['skip'] = True
+            return (tax_amount or 0.0) * fix_rate
+        return super()._get_raw_tax_amount_currency(batch, tax_data, base)

@@ -150,6 +150,7 @@ class AccountMove(models.Model):
 
         base_lines = AccountTax._reduce_base_lines_with_grouping_function(
             base_lines,
+            self.company_id,
             grouping_function=grouping_function,
             aggregate_function=aggregate_function,
         )

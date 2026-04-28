@@ -146,8 +146,7 @@ class SaleOrderLine(models.Model):
             quantity=1, discount=0, price_unit=price, special_mode="total_excluded"
         )
         company = self.company_id or self.env.company
-        self.env["account.tax"]._add_tax_details_in_base_line(base_line, company)
-        self.env["account.tax"]._round_base_lines_tax_details([base_line], company)
+        self.env["account.tax"]._add_tax_details([base_line], company)
         tax_details = base_line["tax_details"]
         self.price_unit = tax_details["raw_total_excluded_currency"] + sum(
             tax_data["raw_tax_amount_currency"]

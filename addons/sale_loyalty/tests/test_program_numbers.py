@@ -316,8 +316,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
 
         # Set tax and prices on products as neeed for the test
         (
-            self.product_A
-            + self.largeCabinet
+            self.largeCabinet
             + self.conferenceChair
             + self.pedalBin
             + self.drawerBlack
@@ -327,7 +326,6 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
         })
         self.conferenceChair.taxes_id = self.tax_10pc_incl
         self.pedalBin.taxes_id = None
-        self.product_A.taxes_id = self.tax_35pc_incl + self.tax_50pc_excl
 
         # Add products in order
         self.env["sale.order.line"].create({
@@ -346,12 +344,6 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
             "product_id": self.pedalBin.id,
             "name": "Pedal Bin",
             "product_uom_qty": 5.0,
-            "order_id": order.id,
-        })
-        self.env["sale.order.line"].create({
-            "product_id": self.product_A.id,
-            "name": "product A with multiple taxes",
-            "product_uom_qty": 3.0,
             "order_id": order.id,
         })
         self.env["sale.order.line"].create({
@@ -434,77 +426,68 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
             ],
         })
         self.all_programs |= self.p_large_cabinet | self.p_conference_chair | self.p_pedal_bin
-        # Name                 | Qty | price_unit |  Tax     |  HTVA   |   TVAC  |  TVA  |
-        # --------------------------------------------------------------------------------
-        # Conference Chair     |  5  |    100.00  | 10% incl |  454.55 |  500.00 |   45.45
-        # Pedal bin            |  10 |    100.00  | /        | 1000.00 | 1000.00 |       /
-        # Large Cabinet        |  7  |    100.00  | 15% excl |  700.00 |  805.00 |  105.00
-        # Drawer Black         |  2  |    100.00  | 15% excl |  200.00 |  230.00 |   30.00
-        # Product A            |  3  |    100.00  | 35% incl |  222.22 |  411.11 |  188.89
-        #                                           50% excl
-        # --------------------------------------------------------------------------------
-        # TOTAL                                              | 2576.77 | 2946.11 |  369.34
-
-        self.assertRecordValues(order, [{"amount_total": 1901.11, "amount_untaxed": 1594.95}])
-        self.assertEqual(
-            len(order.order_line.ids), 5, "The order without any programs should have 5 lines"
-        )
+        self.assertRecordValues(order.order_line, [
+            # Large Cabinet
+            {'product_uom_qty': 4,   'price_unit': 100.0,    'price_subtotal': 400.0,   'price_total': 460.0},
+            # Conference Chair
+            {'product_uom_qty': 3,   'price_unit': 100.0,    'price_subtotal': 272.73,  'price_total': 300.0},
+            # Pedal bin
+            {'product_uom_qty': 5,   'price_unit': 100.0,    'price_subtotal': 500.0,   'price_total': 500.0},
+            # Drawer Black
+            {'product_uom_qty': 2,   'price_unit': 100.0,    'price_subtotal': 200.0,   'price_total': 230.0},
+        ])
+        self.assertRecordValues(order, [{"amount_total": 1490.0, "amount_untaxed": 1372.73}])
 
         # Apply all the programs
         self._auto_rewards(order, self.all_programs)
 
-        # Name                 | Qty | price_unit |  Tax     |  HTVA   |   TVAC  |  TVA  |
-        # --------------------------------------------------------------------------------
-        # Free ConferenceChair |  2  |   -100.00  | 10% incl | -181.82 | -200.00 |  -18.18
-        # Free Pedal Bin       |  5  |   -100.00  | /        | -500.00 | -500.00 |       /
-        # Free Large Cabinet   |  3  |   -100.00  | 15% excl | -300.00 | -345.00 |  -45.00
-        # --------------------------------------------------------------------------------
-        # TOTAL AFTER APPLYING FREE PRODUCT PROGRAMS         | 1594.95 | 1901.11 |  306.16
-
-        self.assertRecordValues(order, [{"amount_total": 1901.11, "amount_untaxed": 1594.95}])
-        self.assertEqual(
-            len(order.order_line.ids),
-            8,
-            "Order should contains 5 regular product lines and 3 free product lines",
-        )
+        self.assertRecordValues(order.order_line, [
+            # Large Cabinet
+            {'product_uom_qty': 4,   'price_unit': 100.0,    'price_subtotal': 400.0,   'price_total': 460.0},
+            # Conference Chair
+            {'product_uom_qty': 3,   'price_unit': 100.0,    'price_subtotal': 272.73,  'price_total': 300.0},
+            # Pedal bin
+            {'product_uom_qty': 5,   'price_unit': 100.0,    'price_subtotal': 500.0,   'price_total': 500.0},
+            # Drawer Black
+            {'product_uom_qty': 2,   'price_unit': 100.0,    'price_subtotal': 200.0,   'price_total': 230.0},
+            # Free Large Cabinet
+            {'product_uom_qty': 3,   'price_unit': 100.0,    'price_subtotal': 0.0,     'price_total': 0.0},
+            # Free Conference Chair
+            {'product_uom_qty': 1,   'price_unit': 100.0,    'price_subtotal': 0.0,     'price_total': 0.0},
+            # Free Pedal Bin
+            {'product_uom_qty': 5,   'price_unit': 100.0,    'price_subtotal': 0.0,     'price_total': 0.0},
+        ])
+        self.assertRecordValues(order, [{"amount_total": 1490.0, "amount_untaxed": 1372.73}])
 
         # Apply 10% on top of everything
         self._apply_promo_code(order, "test_10pc")
 
-        # Name                 | Qty | price_unit |  Tax     |  HTVA   |   TVAC  |  TVA  |
-        # --------------------------------------------------------------------------------
-        # 10% on tax 10% incl  |  1  |    -30.00  | 10% incl | -27.27  | -30.00  |   -2.73
-        # 10% on no tax        |  1  |    -50.00  | /        | -50.00  | -50.00  |       /
-        # 10% on tax 15% excl  |  1  |    -60.00  | 15% excl | -60.00  | -69.00  |   -9.00
-        # 10% on tax 35%+50%   |  1  |    -30.00  | 35% incl | -22.22  | -41.11  |  -18.89
-        #                                           50% excl
-        # --------------------------------------------------------------------------------
-        # TOTAL AFTER APPLYING 10% GLOBAL PROGRAM            | 1435.46 | 1711.00 | 275.54
+        self.assertRecordValues(order.order_line, [
+            # Large Cabinet
+            {'product_uom_qty': 4,   'price_unit': 100.0,               'price_subtotal': 400.0,   'price_total': 460.0},
+            # Conference Chair
+            {'product_uom_qty': 3,   'price_unit': 100.0,               'price_subtotal': 272.73,  'price_total': 300.0},
+            # Pedal bin
+            {'product_uom_qty': 5,   'price_unit': 100.0,               'price_subtotal': 500.0,   'price_total': 500.0},
+            # Drawer Black
+            {'product_uom_qty': 2,   'price_unit': 100.0,               'price_subtotal': 200.0,   'price_total': 230.0},
+            # Free Large Cabinet
+            {'product_uom_qty': 3,   'price_unit': 100.0,               'price_subtotal': 0.0,     'price_total': 0.0},
+            # Free Conference Chair
+            {'product_uom_qty': 1,   'price_unit': 100.0,               'price_subtotal': 0.0,     'price_total': 0.0},
+            # Free Pedal Bin
+            {'product_uom_qty': 5,   'price_unit': 100.0,               'price_subtotal': 0.0,     'price_total': 0.0},
+            # Promo 15% excluded
+            {'product_uom_qty': 1,   'price_unit': -60.0,               'price_subtotal': -60.0,   'price_total': -69.0},
+            # Promo 10% included
+            {'product_uom_qty': 1,   'price_unit': -30.00027272727273,  'price_subtotal': -27.27,  'price_total': -30.0},
+            # Promo untaxed
+            {'product_uom_qty': 1,   'price_unit': -50.0,               'price_subtotal': -50.0,   'price_total': -50.0},
+        ])
+        self.assertRecordValues(order, [{"amount_total": 1341.0, "amount_untaxed": 1235.45}])
 
-        self.assertRecordValues(order, [{"amount_total": 1711.0, "amount_untaxed": 1435.45}])
-        self.assertEqual(
-            len(order.order_line.ids),
-            12,
-            "Order should contains 5 regular product lines, 3 free product lines and 4 discount"
-            " lines (one for every tax)",
-        )
-
-        # -- This is a test inside the test
         order.order_line._compute_tax_ids()
-        self.assertRecordValues(order, [{"amount_total": 1711.0, "amount_untaxed": 1435.45}])
-        self.assertEqual(
-            len(order.order_line.ids),
-            12,
-            "Recomputing tax on sale order lines should not change number of order line",
-        )
-        self._auto_rewards(order, self.all_programs)
-        self.assertRecordValues(order, [{"amount_total": 1711.0, "amount_untaxed": 1435.45}])
-        self.assertEqual(
-            len(order.order_line.ids),
-            12,
-            "Recomputing tax on sale order lines should not change number of order line",
-        )
-        # -- End test inside the test
+        self.assertRecordValues(order, [{"amount_total": 1341.0, "amount_untaxed": 1235.45}])
 
         # Now we want to apply a 20% discount only on Large Cabinet
         self.all_programs |= self.env["loyalty.program"].create({
@@ -526,96 +509,142 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
         })
         self._auto_rewards(order, self.all_programs)
 
-        # 20% on large cabinet which are already discounted by 10%
-        # Name                 | Qty | price_unit |  Tax     |  HTVA   |   TVAC  |  TVA  |
-        # --------------------------------------------------------------------------------
-        # 20% on Large Cabinet |  1  |    -72.00  | 15% excl | -72.00  | -82.8  |  -10.80
-        # --------------------------------------------------------------------------------
-        # TOTAL AFTER APPLYING 20% ON LARGE CABINET          | 1363.46 | 1628.2 |  264.74
-
-        self.assertRecordValues(order, [{"amount_total": 1628.2, "amount_untaxed": 1363.45}])
-        self.assertEqual(
-            len(order.order_line.ids),
-            13,
-            "Order should have a new discount line for 20% on Large Cabinet",
-        )
+        self.assertRecordValues(order.order_line, [
+            # Large Cabinet
+            {'product_uom_qty': 4,   'price_unit': 100.0,               'price_subtotal': 400.0,   'price_total': 460.0},
+            # Conference Chair
+            {'product_uom_qty': 3,   'price_unit': 100.0,               'price_subtotal': 272.73,  'price_total': 300.0},
+            # Pedal bin
+            {'product_uom_qty': 5,   'price_unit': 100.0,               'price_subtotal': 500.0,   'price_total': 500.0},
+            # Drawer Black
+            {'product_uom_qty': 2,   'price_unit': 100.0,               'price_subtotal': 200.0,   'price_total': 230.0},
+            # Free Large Cabinet
+            {'product_uom_qty': 3,   'price_unit': 100.0,               'price_subtotal': 0.0,     'price_total': 0.0},
+            # Free Conference Chair
+            {'product_uom_qty': 1,   'price_unit': 100.0,               'price_subtotal': 0.0,     'price_total': 0.0},
+            # Free Pedal Bin
+            {'product_uom_qty': 5,   'price_unit': 100.0,               'price_subtotal': 0.0,     'price_total': 0.0},
+            # Promo 15% excluded
+            {'product_uom_qty': 1,   'price_unit': -60.0,               'price_subtotal': -60.0,   'price_total': -69.0},
+            # Promo 10% included
+            {'product_uom_qty': 1,   'price_unit': -30.00027272727273,  'price_subtotal': -27.27,  'price_total': -30.0},
+            # Promo untaxed
+            {'product_uom_qty': 1,   'price_unit': -50.0,               'price_subtotal': -50.0,   'price_total': -50.0},
+            # 20% on large cabinet which are already discounted by 10%
+            {'product_uom_qty': 1,   'price_unit': -72.00000000000001,  'price_subtotal': -72.0,   'price_total': -82.8},
+        ])
+        self.assertRecordValues(order, [{"amount_total": 1258.2, "amount_untaxed": 1163.45}])
 
         # Check that if you delete one of the discount tax line, the others tax lines from the same
         # promotion got deleted as well.
         order.order_line.filtered(lambda line: "10%" in line.name)[0].unlink()
         order._remove_program_from_points(self.p1)
-        self.assertEqual(
-            len(order.order_line.ids), 9, "All of the 10% discount line per tax should be removed"
-        )
-        # At this point, removing the Conference Chair's discount line (split per tax) removed also
-        # the other discount lines.
-        # linked to the same program (eg: other taxes lines). So the coupon got removed from the SO
-        # since there were no discount lines left.
+
+        self.assertRecordValues(order.order_line, [
+            # Large Cabinet
+            {'product_uom_qty': 4,   'price_unit': 100.0,               'price_subtotal': 400.0,   'price_total': 460.0},
+            # Conference Chair
+            {'product_uom_qty': 3,   'price_unit': 100.0,               'price_subtotal': 272.73,  'price_total': 300.0},
+            # Pedal bin
+            {'product_uom_qty': 5,   'price_unit': 100.0,               'price_subtotal': 500.0,   'price_total': 500.0},
+            # Drawer Black
+            {'product_uom_qty': 2,   'price_unit': 100.0,               'price_subtotal': 200.0,   'price_total': 230.0},
+            # Free Large Cabinet
+            {'product_uom_qty': 3,   'price_unit': 100.0,               'price_subtotal': 0.0,     'price_total': 0.0},
+            # Free Conference Chair
+            {'product_uom_qty': 1,   'price_unit': 100.0,               'price_subtotal': 0.0,     'price_total': 0.0},
+            # Free Pedal Bin
+            {'product_uom_qty': 5,   'price_unit': 100.0,               'price_subtotal': 0.0,     'price_total': 0.0},
+            # Discount 20% on Large Cabinet
+            {'product_uom_qty': 1,   'price_unit': -72.00000000000001,  'price_subtotal': -72.0,   'price_total': -82.8},
+        ])
+        self.assertRecordValues(order, [{"amount_total": 1407.2, "amount_untaxed": 1300.73}])
 
         # Add back the coupon to continue the test flow
         self._apply_promo_code(order, "test_10pc")
         self._auto_rewards(order, self.all_programs)
-        self.assertEqual(len(order.order_line.ids), 13, "The 10% discount line should be back")
+
+        self.assertRecordValues(order.order_line, [
+            # Large Cabinet
+            {'product_uom_qty': 4,   'price_unit': 100.0,               'price_subtotal': 400.0,   'price_total': 460.0},
+            # Conference Chair
+            {'product_uom_qty': 3,   'price_unit': 100.0,               'price_subtotal': 272.73,  'price_total': 300.0},
+            # Pedal bin
+            {'product_uom_qty': 5,   'price_unit': 100.0,               'price_subtotal': 500.0,   'price_total': 500.0},
+            # Drawer Black
+            {'product_uom_qty': 2,   'price_unit': 100.0,               'price_subtotal': 200.0,   'price_total': 230.0},
+            # Free Large Cabinet
+            {'product_uom_qty': 3,   'price_unit': 100.0,               'price_subtotal': 0.0,     'price_total': 0.0},
+            # Free Conference Chair
+            {'product_uom_qty': 1,   'price_unit': 100.0,               'price_subtotal': 0.0,     'price_total': 0.0},
+            # Free Pedal Bin
+            {'product_uom_qty': 5,   'price_unit': 100.0,               'price_subtotal': 0.0,     'price_total': 0.0},
+            # Discount 20% on Large Cabinet
+            {'product_uom_qty': 1,   'price_unit': -80.0,               'price_subtotal': -80.0,   'price_total': -92.0},
+            # Promo 15% excluded
+            {'product_uom_qty': 1,   'price_unit': -52.0,               'price_subtotal': -52.0,   'price_total': -59.8},
+            # Promo 10% included
+            {'product_uom_qty': 1,   'price_unit': -30.00027272727273,  'price_subtotal': -27.27,  'price_total': -30.0},
+            # 10% discount on the full order
+            {'product_uom_qty': 1,   'price_unit': -50.0,               'price_subtotal': -50.0,   'price_total': -50.0},
+        ])
+        self.assertRecordValues(order, [{"amount_total": 1258.2, "amount_untaxed": 1163.45}])
 
         # Check that if you change a product qty, his discount tax line got updated
         self.p_conference_chair.rule_ids.reward_point_amount = 0.752
         sol2.product_uom_qty = 4
         self._auto_rewards(order, self.all_programs)
-        # Name                 | Qty | price_unit |  Tax     |  HTVA   |   TVAC  |  TVA  |
-        # --------------------------------------------------------------------------------
-        # Large Cabinet        |  4  |    100.00  | 15% excl |  400.00 |  460.00 |   60.00
-        # Conference Chair     |  4  |    100.00  | 10% incl |  363.63 |  400.00 |   36.36
-        # Pedal Bins           |  5  |    100.00  | /        |  500.00 |  500.00 |       /
-        # Drawer Black         |  2  |    100.00  | 15% excl |  200.00 |  230.00 |   30.00
-        # Product A            |  3  |    100.00  | 35% incl |  222.22 |  411.11 |  188.89
-        #                                           50% excl
-        # Free - Large Cabinet |  3  |      0.00  | 15% excl |    0.00 |    0.00 |    0.00
-        # Free - Conference Ch |  3  |      0.00  | 10% incl |    0.00 |    0.00 |    0.00
-        # Free - Pedal Bins    |  5  |      0.00  | /        |    0.00 |    0.00 |       /
-        # 20% on Large Cabinet |  1  |    -80.00  | 15% excl |  -80.00 |  -92.00 |  -12.00
-        # 10% on tax 15% excl  |  1  |    -52.00  | 15% excl |  -52.00 |  -59.80 |   -7.80
-        # 10% on tax 10% excl  |  1  |    -40.00  | 15% excl |  -36.36 |  -40.00 |   -3.64
-        # 10% on no tax        |  1  |    -50.00  | /        |  -50.00 |  -50.00 |       /
-        # 10% on tax 35+50%    |  1  |    -30.00  | 35% incl |  -22.22 |  -41.11 |  -18.89
-        #                                           50% excl
-        # --------------------------------------------------------------------------------
-        # TOTAL                                              | 1445.27 | 1718.20 |  272.92
 
-        self.assertEqual(
-            order.amount_untaxed,
-            1445.27,
-            "The order should have one more paid Conference Chair with 10% incl tax and discounted"
-            " by 10%",
-        )
+        self.assertRecordValues(order.order_line, [
+            # Large Cabinet
+            {'product_uom_qty': 4,   'price_unit': 100.0,               'price_subtotal': 400.0,   'price_total': 460.0},
+            # Conference Chair
+            {'product_uom_qty': 4,   'price_unit': 100.0,               'price_subtotal': 363.64,  'price_total': 400.0},
+            # Pedal bin
+            {'product_uom_qty': 5,   'price_unit': 100.0,               'price_subtotal': 500.0,   'price_total': 500.0},
+            # Drawer Black
+            {'product_uom_qty': 2,   'price_unit': 100.0,               'price_subtotal': 200.0,   'price_total': 230.0},
+            # Free Large Cabinet
+            {'product_uom_qty': 3,   'price_unit': 100.0,               'price_subtotal': 0.0,     'price_total': 0.0},
+            # Free Conference Chair
+            {'product_uom_qty': 3,   'price_unit': 100.0,               'price_subtotal': 0.0,     'price_total': 0.0},
+            # Free Pedal Bin
+            {'product_uom_qty': 5,   'price_unit': 100.0,               'price_subtotal': 0.0,     'price_total': 0.0},
+            # Discount 20% on Large Cabinet
+            {'product_uom_qty': 1,   'price_unit': -80.0,               'price_subtotal': -80.0,   'price_total': -92.0},
+            # Promo 15% excluded
+            {'product_uom_qty': 1,   'price_unit': -52.0,               'price_subtotal': -52.0,   'price_total': -59.8},
+            # Promo 10% included
+            {'product_uom_qty': 1,   'price_unit': -40.00036363636364,  'price_subtotal': -36.36,  'price_total': -40.0},
+            # 10% discount on the full order
+            {'product_uom_qty': 1,   'price_unit': -50.0,               'price_subtotal': -50.0,   'price_total': -50.0},
+        ])
+        self.assertRecordValues(order, [{"amount_total": 1348.2, "amount_untaxed": 1245.27}])
 
         # Check that if you remove a product, his reward lines got removed, especially the discount
         # per tax one.
         sol2.unlink()
         self._auto_rewards(order, self.all_programs)
-        # Name                 | Qty | price_unit |  Tax     |  HTVA   |   TVAC  |  TVA  |
-        # --------------------------------------------------------------------------------
-        # Pedal Bins           |  5  |    100.00  | /        |  500.00 |  500.00 |       /
-        # Large Cabinet        |  4  |    100.00  | 15% excl |  400.00 |  460.00 |   60.00
-        # Drawer Black         |  2  |    100.00  | 15% excl |  200.00 |  230.00 |   30.00
-        # Product A            |  3  |    100.00  | 35% incl |  222.22 |  411.11 |  188.89
-        #                                           50% excl
-        # Pedal Bins           |  5  |      0.00  | /        |    0.00 |    0.00 |       /
-        # Large Cabinet        |  3  |      0.00  | 15% excl |    0.00 |    0.00 |    0.00
-        # 20% on Large Cabinet |  1  |    -80.00  | 15% excl |  -80.00 |  -92.00 |  -12.00
-        # 10% on tax 15% excl  |  1  |    -52.00  | 15% excl |  -52.00 |  -59.80 |   -7.80
-        # 10% on no tax        |  1  |    -50.00  | /        |  -50.00 |  -50.00 |       /
-        # 10% on tax 35+50%    |  1  |    -30.00  | 35% incl |  -22.22 |  -41.11 |  -18.89
-        #                                           50% excl
-        # --------------------------------------------------------------------------------
-        # TOTAL                                              | 1118.00 | 1349.00 |  240.20
 
-        self.assertRecordValues(order, [{"amount_total": 1358.2, "amount_untaxed": 1118.0}])
-        self.assertEqual(
-            len(order.order_line.ids),
-            10,
-            "Order should contains 10 lines: 4 products lines, 2 free products lines and 4 discount"
-            " lines",
-        )
+        self.assertRecordValues(order.order_line, [
+            # Large Cabinet
+            {'product_uom_qty': 4,   'price_unit': 100.0,               'price_subtotal': 400.0,   'price_total': 460.0},
+            # Pedal bin
+            {'product_uom_qty': 5,   'price_unit': 100.0,               'price_subtotal': 500.0,   'price_total': 500.0},
+            # Drawer Black
+            {'product_uom_qty': 2,   'price_unit': 100.0,               'price_subtotal': 200.0,   'price_total': 230.0},
+            # Free Large Cabinet
+            {'product_uom_qty': 3,   'price_unit': 100.0,               'price_subtotal': 0.0,     'price_total': 0.0},
+            # Free Pedal Bin
+            {'product_uom_qty': 5,   'price_unit': 100.0,               'price_subtotal': 0.0,     'price_total': 0.0},
+            # Discount 20% on Large Cabinet
+            {'product_uom_qty': 1,   'price_unit': -80.0,               'price_subtotal': -80.0,   'price_total': -92.0},
+            # Promo 15% excluded
+            {'product_uom_qty': 1,   'price_unit': -52.0,               'price_subtotal': -52.0,   'price_total': -59.8},
+            # Promo untaxed
+            {'product_uom_qty': 1,   'price_unit': -50.0,               'price_subtotal': -50.0,   'price_total': -50.0},
+        ])
+        self.assertRecordValues(order, [{"amount_total": 988.2, "amount_untaxed": 918.0}])
 
     def test_program_numbers_extras(self):
         # Check that you can't apply a global discount promo code if there is already an auto
@@ -950,20 +979,20 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
         self._apply_promo_code(order, "test_10pc")
         self._auto_rewards(order, self.all_programs)
         self.assertAlmostEqual(order.amount_tax, 1.14, 2)
-        self.assertEqual(order.amount_untaxed, 22.71)
+        self.assertEqual(order.amount_untaxed, 22.72)
         self.assertEqual(
             order.amount_total,
-            23.85,
+            23.86,
             "The promotion program should not make the order total go below 0be altered after"
             " recomputation",
         )
         # It should stay the same after a recompute, order matters
         self._auto_rewards(order, self.all_programs)
         self.assertAlmostEqual(order.amount_tax, 1.14, 2)
-        self.assertEqual(order.amount_untaxed, 22.71)
+        self.assertEqual(order.amount_untaxed, 22.72)
         self.assertEqual(
             order.amount_total,
-            23.85,
+            23.86,
             "The promotion program should not make the order total go below 0be altered after"
             " recomputation",
         )

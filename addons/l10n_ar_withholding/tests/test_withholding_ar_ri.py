@@ -427,11 +427,11 @@ class TestArWithholdingArRi(TestArCommon):
         payment = self.env['account.payment'].browse(action['res_id'])
         self.assertRecordValues(payment.move_id.line_ids.sorted('balance'), [
             # Liquidity line:
-            {'debit': 0.0, 'credit': 181841.35, 'currency_id': wizard.currency_id.id, 'amount_currency': -181841.35, 'reconciled': False},
+            {'debit': 0.0, 'credit': 181841.36, 'currency_id': wizard.currency_id.id, 'amount_currency': -181841.36, 'reconciled': False},
             # base line:
             {'debit': 0.0, 'credit': 156087.0, 'currency_id': wizard.currency_id.id, 'amount_currency': -156087.0, 'reconciled': False},
             # withholding line:
-            {'debit': 0.0, 'credit': 7023.92, 'currency_id': wizard.currency_id.id, 'amount_currency': -7023.92, 'reconciled': False},
+            {'debit': 0.0, 'credit': 7023.91, 'currency_id': wizard.currency_id.id, 'amount_currency': -7023.91, 'reconciled': False},
             # base line:
             {'debit': 156087.0, 'credit': 0.0, 'currency_id': wizard.currency_id.id, 'amount_currency': 156087.0, 'reconciled': False},
             # Receivable line:

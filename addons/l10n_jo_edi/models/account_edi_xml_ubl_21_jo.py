@@ -89,17 +89,16 @@ class AccountEdiXmlUBL21JO(models.AbstractModel):
         AccountTax = self.env['account.tax']
         for base_line in base_lines:
             base_line['currency_id'] = currency_9_dp
-            AccountTax._add_tax_details_in_base_line(base_line, base_line['record'].company_id, 'round_per_line')
 
         # Round to 9 decimals
-        AccountTax._round_base_lines_tax_details(base_lines, company=invoice.company_id)
+        AccountTax._add_tax_details(base_lines, company=invoice.company_id, rounding_method='round_per_line')
 
         # raw_total_* values need to calculated with `round_globally` because these values should not be rounded per line
-        # However, taxes need to be calculated with `round_per_line` so that _round_base_lines_tax_details does not
+        # However, taxes need to be calculated with `round_per_line` so that _add_tax_details does not
         # end up generating lines taxes using unrounded base amounts
         new_base_lines = [base_line.copy() for base_line in base_lines]
         for base_line, new_base_line in zip(base_lines, new_base_lines):
-            AccountTax._add_tax_details_in_base_line(new_base_line, new_base_line['record'].company_id, 'round_globally')
+            AccountTax._add_tax_details([new_base_line], new_base_line['record'].company_id, rounding_method='no_round')
             for key in [
                 'raw_total_excluded_currency',
                 'raw_total_excluded',

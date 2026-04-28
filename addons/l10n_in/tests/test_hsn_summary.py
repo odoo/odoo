@@ -75,6 +75,7 @@ class TestL10nInHSNSummary(TestTaxCommon):
             self.assertDictEqual(item, expected_item)
 
     def _create_py_sub_test_l10n_in_hsn_summary(self, document, display_uom):
+        self.env['account.tax']._add_tax_details(document['lines'], self.env.company)
         return {
             'hsn': self.env['account.tax']._l10n_in_get_hsn_summary_table(document['lines'], display_uom),
         }

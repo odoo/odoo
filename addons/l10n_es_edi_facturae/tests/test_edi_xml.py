@@ -740,16 +740,16 @@ class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
             self.assertXmlTreeEqual(lxml.etree.fromstring(generated_file), expected_xml)
 
     def test_out_invoice_rounding_2(self):
-        company = self.company_data['company']
-        company.tax_calculation_rounding_method = 'round_globally'
         with freeze_time(self.frozen_today):
+            tax = self.percent_tax(21.0, l10n_es_edi_facturae_tax_type='01')
+            product = self._create_product(name='product', taxes_id=tax)
             invoice = self._create_invoice(
                 partner_id=self.partner_a.id,
                 move_type='out_invoice',
                 invoice_line_ids=[
-                    self._prepare_invoice_line(product_id=self.product_a.id, price_unit=2478.1355, quantity=1.0, tax_ids=self.tax),
-                    self._prepare_invoice_line(product_id=self.product_a.id, price_unit=1062.50, quantity=1.0, tax_ids=self.tax),
-                    self._prepare_invoice_line(product_id=self.product_a.id, price_unit=1488.125, quantity=1.0, tax_ids=self.tax),
+                    self._prepare_invoice_line(product_id=product, price_unit=2478.1355),
+                    self._prepare_invoice_line(product_id=product, price_unit=1062.50),
+                    self._prepare_invoice_line(product_id=product, price_unit=1488.125),
                 ],
                 post=True,
             )

@@ -8,7 +8,7 @@ from markupsafe import Markup
 
 from odoo import Command, _, api, fields, models
 from odoo.exceptions import UserError
-from odoo.tools import float_round, float_repr, float_compare, date_utils, SQL
+from odoo.tools import float_repr, float_compare, float_is_zero, date_utils, SQL
 from odoo.tools.xml_utils import cleanup_xml_node, find_xml_value
 from odoo.addons.l10n_es_edi_facturae.xml_utils import (
     NS_MAP,
@@ -328,6 +328,7 @@ class AccountMove(models.Model):
         :return: A tuple containing the Face items, the taxes and the invoice totals data.
         """
         self.ensure_one()
+        AccountTax = self.env['account.tax']
         invoice_ref = self.ref and self.ref[:20]
         line = base_line['record']
         tax_details = base_line['tax_details']
@@ -348,29 +349,34 @@ class AccountMove(models.Model):
             'UnitOfMeasure': line.product_uom_id.l10n_es_edi_facturae_uom_code,
             'DiscountsAndRebates': [],
             'Charges': [],
-            'GrossAmount': float_round(tax_details['raw_total_excluded_currency'], precision_digits=8),
+            'GrossAmount': tax_details['total_excluded_currency'] + tax_details['delta_total_excluded_currency'],
         }
 
-        if line.discount == 100.0:
-            raw_total_cost = line.price_unit * line.quantity
-        else:
-            raw_total_cost = tax_details['raw_total_excluded_currency'] / (1 - (line.discount / 100.0))
-        xml_values['TotalCost'] = float_round(raw_total_cost, precision_digits=8)
-
-        if line.quantity:
-            xml_values['UnitPriceWithoutTax'] = float_round(raw_total_cost / line.quantity, precision_digits=8)
-        else:
-            xml_values['UnitPriceWithoutTax'] = 0.0
-
-        discount_amount = xml_values['TotalCost'] - xml_values['GrossAmount']
-        if float_compare(discount_amount, 0.0, precision_digits=8) > 0:
+        currency = base_line['currency_id']
+        xml_values['TotalCost'] = AccountTax._get_gross_total_without_tax(
+            base_line, line.company_id,
+            precision_digits=currency.decimal_places,
+        )
+        raw_gross_total_excluded = AccountTax._get_gross_total_without_tax(
+            base_line, line.company_id,
+            precision_digits=8,
+        )
+        xml_values['UnitPriceWithoutTax'] = AccountTax._get_price_unit_without_tax(
+            base_line, line.company_id, raw_gross_total_excluded,
+            precision_digits=8,
+        )
+        discount_amount = AccountTax._get_discount_amount_without_tax(
+            base_line, line.company_id, raw_gross_total_excluded,
+            precision_digits=currency.decimal_places,
+        )
+        if float_compare(discount_amount, 0.0, precision_digits=currency.decimal_places) > 0:
             xml_values['DiscountsAndRebates'].append({
                 'DiscountReason': '/',
                 'DiscountRate': f'{line.discount:.2f}',
                 'DiscountAmount': discount_amount,
             })
 
-        if float_compare(discount_amount, 0.0, precision_digits=8) < 0:
+        if float_compare(discount_amount, 0.0, precision_digits=currency.decimal_places) < 0:
             xml_values['Charges'].append({
                 'ChargeReason': '/',
                 'ChargeRate': f'{-line.discount:.2f}',
