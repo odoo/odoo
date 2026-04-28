@@ -794,6 +794,7 @@ class MrpWorkorder(models.Model):
                     vals['date_finished'] = datetime.max
                 wo.with_context(bypass_duration_calculation=True).write(vals)
                 dec_workorders[idx - 1].sequence = max_seq - idx + 1
+        self.production_id.workorder_ids.action_replan()
         return self.web_read({'date_start': {}, 'date_finished': {}, 'sequence': {}})
 
     @api.depends('qty_production', 'qty_reported_from_previous_wo', 'qty_produced', 'production_id.uom_id')
