@@ -1229,7 +1229,10 @@ class PosOrder(models.Model):
 
     @staticmethod
     def _get_order_log_representation(order):
-        return dict((k, order.get(k)) for k in ("name", "uuid"))
+        return {k: order.get(k) for k in ("name", "pos_reference", "uuid")}
+
+    def _should_log_order_data(self):
+        return self.env['ir.config_parameter'].sudo().get_bool('point_of_sale.log_order_data')
 
     @api.model
     def sync_from_ui(self, orders):
@@ -1250,7 +1253,8 @@ class PosOrder(models.Model):
 
         for order in orders:
             order_log_name = self._get_order_log_representation(order)
-            _logger.debug("PoS synchronisation #%d processing order %s order full data: %s", sync_token, order_log_name, pformat(order))
+            if self._should_log_order_data():
+                _logger.info("PoS synchronisation #%d processing order %s order full data:\n%s", sync_token, order_log_name, pformat(order))
 
             refunded_orders = self._get_refunded_orders(order)
             if len(refunded_orders) > 1:
