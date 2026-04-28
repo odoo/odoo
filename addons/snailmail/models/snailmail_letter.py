@@ -552,6 +552,7 @@ class SnailmailLetter(models.Model):
         out = PdfFileWriter()
         for page in curr_pdf.pages:
             page.merge_page(new_pdf.pages[0])
+            page.compress_content_streams()
             out.add_page(page)
         out_stream = io.BytesIO()
         out.write(out_stream)
