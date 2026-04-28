@@ -1153,8 +1153,9 @@ class TestPurchase(AccountTestInvoicingCommon):
         po = po_form.save()
         self.assertEqual(po.order_line.price_unit, 5)
         # Update the price manually and then change the quantity
-        with Form(po.order_line) as line:
-            line.price_unit = 100.0
+        with Form(po) as po_form:
+            with po_form.order_line.edit(0) as po_line:
+                po_line.price_unit = 100.0
         po.order_line.product_qty = 10
         self.assertEqual(po.order_line.price_unit, 100.0, "Price should remain 100.0 after changing the quantity")
 

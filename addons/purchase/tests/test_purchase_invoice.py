@@ -4,7 +4,9 @@ from datetime import timedelta
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.exceptions import UserError
+from odoo.fields import Domain
 from odoo.tests import Form, tagged
+from odoo.tools import mute_logger
 from odoo import Command, fields
 
 
@@ -103,6 +105,22 @@ class TestPurchaseToInvoiceCommon(AccountTestInvoicingCommon):
             rslt.button_confirm()
 
         return rslt
+
+    def get_unmatched_domain(cls):
+        """ Get the domain to only get non-matched purchase.bill.line.match """
+        return Domain.OR([
+            Domain.AND([
+                Domain('aml_id', '!=', False),
+                Domain('matching_id', '=', 0),
+            ]),
+            Domain.AND([
+                Domain('pol_id', '!=', False),
+                Domain.OR([
+                    Domain('pol_id.invoice_lines', '=', False),
+                    Domain('pol_id.qty_to_invoice', '!=', 0),
+                ]),
+            ]),
+        ])
 
 
 @tagged('post_install', '-at_install')
@@ -321,8 +339,9 @@ class TestPurchaseToInvoice(TestPurchaseToInvoiceCommon):
             purchase_orders.append(po)
 
         move_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
-        move_form.purchase_vendor_bill_id = PurchaseBillUnion.browse(-purchase_orders[0].id)
-        move_form.purchase_vendor_bill_id = PurchaseBillUnion.browse(-purchase_orders[1].id)
+        with mute_logger('odoo.tests.form.onchange'):  # Mute "x PO lines added to the bill" notification
+            move_form.purchase_vendor_bill_id = PurchaseBillUnion.browse(-purchase_orders[0].id)
+            move_form.purchase_vendor_bill_id = PurchaseBillUnion.browse(-purchase_orders[1].id)
         move = move_form.save()
 
         self.assertInvoiceValues(move, [
@@ -363,7 +382,8 @@ class TestPurchaseToInvoice(TestPurchaseToInvoiceCommon):
         po.order_line.qty_received = 12
 
         move_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
-        move_form.purchase_vendor_bill_id = self.env['purchase.bill.union'].browse(-po.id)
+        with mute_logger('odoo.tests.form.onchange'):  # Mute "x PO lines added to the bill" notification
+            move_form.purchase_vendor_bill_id = self.env['purchase.bill.union'].browse(-po.id)
         move = move_form.save()
 
         self.assertEqual(move.amount_total, 0.01)
@@ -547,9 +567,10 @@ class TestPurchaseToInvoice(TestPurchaseToInvoiceCommon):
 
         move_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
         PurchaseBillUnion = self.env['purchase.bill.union']
-        move_form.purchase_vendor_bill_id = PurchaseBillUnion.browse(-purchase_orders[0].id)
-        move_form.purchase_vendor_bill_id = PurchaseBillUnion.browse(-purchase_orders[1].id)
-        move_form.purchase_vendor_bill_id = PurchaseBillUnion.browse(-purchase_orders[2].id)
+        with mute_logger('odoo.tests.form.onchange'):  # Mute "x PO lines added to the bill" notification
+            move_form.purchase_vendor_bill_id = PurchaseBillUnion.browse(-purchase_orders[0].id)
+            move_form.purchase_vendor_bill_id = PurchaseBillUnion.browse(-purchase_orders[1].id)
+            move_form.purchase_vendor_bill_id = PurchaseBillUnion.browse(-purchase_orders[2].id)
         invoice = move_form.save()
 
         expected_purchase = [
@@ -802,7 +823,8 @@ class TestPurchaseToInvoice(TestPurchaseToInvoiceCommon):
         purchase_order.order_line.qty_received = 12
 
         move_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
-        move_form.purchase_vendor_bill_id = self.env['purchase.bill.union'].browse(-purchase_order.id)
+        with mute_logger('odoo.tests.form.onchange'):  # Mute "x PO lines added to the bill" notification
+            move_form.purchase_vendor_bill_id = self.env['purchase.bill.union'].browse(-purchase_order.id)
         invoice = move_form.save()
 
         invoice.line_ids[0].account_id = self.cash_rounding_a.profit_account_id
@@ -1000,7 +1022,7 @@ class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
         self.env['account.move.line'].flush_model()  # necessary to get the bill lines
         match_lines = self.env['purchase.bill.line.match'].search([('partner_id', '=', self.partner_a.id)])
 
-        expected_ids = po.order_line.ids + [-lid for lid in bill.invoice_line_ids.ids]
+        expected_ids = [-lid for lid in bill.invoice_line_ids.ids] + po.order_line.ids
         self.assertListEqual(match_lines.ids, expected_ids)
 
         match_lines.action_match_lines()
@@ -1038,13 +1060,13 @@ class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
         self.assertFalse(bill_2.invoice_line_ids[1].purchase_line_id)
         self.assertFalse(self.env['account.move.line'].search([('purchase_line_id', '=', po.order_line[2].id)]))
         self.env['purchase.order.line'].flush_model()
-        match_lines = self.env['purchase.bill.line.match'].search([('partner_id', '=', self.partner_a.id)])
+        match_lines = self.env['purchase.bill.line.match'].search(Domain.AND([self.get_unmatched_domain(), Domain('partner_id', '=', self.partner_a.id)]))
         self.assertEqual(len(match_lines), 2)
 
         match_lines.action_match_lines()  # Can't match by product but delete residual bill line and create new bill line for residual po line as only one bill
         self.assertEqual(po.order_line[2], bill_2.invoice_line_ids[1].purchase_line_id)
         self.env['purchase.order.line'].flush_model()
-        match_lines = self.env['purchase.bill.line.match'].search([('partner_id', '=', self.partner_a.id)])
+        match_lines = self.env['purchase.bill.line.match'].search(Domain.AND([self.get_unmatched_domain(), Domain('partner_id', '=', self.partner_a.id)]))
         self.assertEqual(len(match_lines), 0)
 
     def test_manual_matching_create_bill(self):
@@ -1063,8 +1085,8 @@ class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
         self.assertEqual(new_move.currency_id, self.other_currency)
         self.assertEqual(new_move.partner_id, self.partner_a)
         self.assertRecordValues(new_move.invoice_line_ids, [
-            {'product_id': self.product_order.id},
             {'product_id': self.product_order_var_name.id},
+            {'product_id': self.product_order.id},
         ])
 
     def test_manual_matching_multi_po(self):
@@ -1084,8 +1106,8 @@ class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
         self.assertRecordValues(bill.invoice_line_ids, [
             {'product_id': self.product_order.id},
             {'product_id': self.service_order.id},
-            {'product_id': self.product_order_var_name.id},
             {'product_id': self.service_deliver.id},
+            {'product_id': self.product_order_var_name.id},
         ])
 
     def test_add_bill_to_po(self):
@@ -1253,7 +1275,8 @@ class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
         self.assertFalse(invoice1.invoice_user_id)
         # creating bill with Auto_complete feature
         move_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
-        move_form.purchase_vendor_bill_id = self.env['purchase.bill.union'].browse(-po2.id)
+        with mute_logger('odoo.tests.form.onchange'):  # Mute "x PO lines added to the bill" notification
+            move_form.purchase_vendor_bill_id = self.env['purchase.bill.union'].browse(-po2.id)
         invoice2 = move_form.save()
         self.assertFalse(invoice2.invoice_user_id)
 
@@ -1338,7 +1361,7 @@ class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
         credit_note = self.init_invoice(move_type='in_refund', partner=self.partner_a, amounts=[0])
 
         self.env['purchase.order.line'].flush_model()
-        match_lines = self.env['purchase.bill.line.match'].search([('partner_id', '=', self.partner_a.id)])
+        match_lines = self.env['purchase.bill.line.match'].search(Domain.AND([self.get_unmatched_domain(), Domain('partner_id', '=', self.partner_a.id)]))
         self.assertEqual(match_lines.pol_id, pol)
         self.assertEqual(match_lines.aml_id, credit_note.invoice_line_ids)
 
@@ -1379,26 +1402,20 @@ class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
         bill_matches = self.env['purchase.bill.line.match'].search(bill_1.action_purchase_matching()['domain'])
         self.assertRecordValues(bill_matches, [
             {
-                'product_uom_qty': 4.0,
-                'product_uom_price': 100,
-                'billed_amount_untaxed': 0.0,
-                'aml_id': False,
-            },
-            {
                 'product_uom_qty': 2.0,
                 'product_uom_price': 100,
                 'billed_amount_untaxed': 200.0,
                 'aml_id': bill_1.invoice_line_ids.id,
             },
-        ])
-        po_matches = self.env['purchase.bill.line.match'].search(po.action_bill_matching()['domain'])
-        self.assertRecordValues(po_matches, [
             {
                 'product_uom_qty': 4.0,
                 'product_uom_price': 100,
                 'billed_amount_untaxed': 0.0,
                 'aml_id': False,
             },
+        ])
+        po_matches = self.env['purchase.bill.line.match'].search(po.action_bill_matching()['domain'])
+        self.assertRecordValues(po_matches, [
             {
                 'product_uom_qty': 4.0,
                 'product_uom_price': 100,
@@ -1410,6 +1427,12 @@ class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
                 'product_uom_price': 100,
                 'billed_amount_untaxed': 200.0,
                 'aml_id': bill_1.invoice_line_ids.id,
+            },
+            {
+                'product_uom_qty': 4.0,
+                'product_uom_price': 100,
+                'billed_amount_untaxed': 0.0,
+                'aml_id': False,
             },
         ])
         bill_matches.action_match_lines()
