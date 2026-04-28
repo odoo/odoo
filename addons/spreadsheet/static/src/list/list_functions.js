@@ -45,9 +45,12 @@ const ODOO_LIST_HEADER = {
     category: "Odoo",
     compute: function (listId, fieldName) {
         const id = toString(listId);
-        const field = toString(fieldName);
+        const _fieldName = toString(fieldName);
+        if (!_fieldName) {
+            return new EvaluationError(_t("The field name should not be empty."));
+        }
         assertListsExists(id, this.getters);
-        return this.getters.getListHeaderValue(id, field);
+        return this.getters.getListHeaderValue(id, _fieldName);
     },
     returns: ["NUMBER", "STRING"],
 };
