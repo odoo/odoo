@@ -161,7 +161,7 @@ migrationStepRegistry.add("18.5.10", {
             for (const xc in sheet.cells || {}) {
                 const content = sheet.cells[xc];
                 if (re.test(content)) {
-                    sheet.cells[xc] = content.replaceAll(re, "ODOO.FILTER.VALUE.V18");
+                    sheet.cells[xc] = content.replaceAll(re, "ODOO.FILTER.LABEL");
                 }
             }
         }
