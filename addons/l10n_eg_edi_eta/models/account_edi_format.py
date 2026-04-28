@@ -373,7 +373,7 @@ class AccountEdiFormat(models.Model):
                 'country': partner.country_id.code,
                 'governate': partner.state_id.name or '',
                 'regionCity': partner.city or '',
-                'street': partner.street or '',
+                'street': ' '.join(s for s in [partner.street, partner.street2] if s),
                 'buildingNumber': partner.l10n_eg_building_no or '',
                 'postalCode': partner.zip or '',
             },

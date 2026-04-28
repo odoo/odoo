@@ -932,3 +932,41 @@ class TestEdiJson(TestEGEdiCommon):
                     'response': ETA_TEST_RESPONSE,
                 },
             )
+
+    def test_10_street2_is_concatenated_with_space(self):
+        """Ensure that street and street2 are concatenated with a single space."""
+        with freeze_time(self.frozen_today), patch(
+            'odoo.addons.l10n_eg_edi_eta.models.account_move.AccountMove.action_post_sign_invoices',
+            new=mocked_action_post_sign_invoices,
+        ), patch(
+            'odoo.addons.l10n_eg_edi_eta.models.account_edi_format.AccountEdiFormat._l10n_eg_edi_post_invoice_web_service',
+            new=mocked_l10n_eg_edi_post_invoice_web_service,
+        ):
+            partner = self.env['res.partner'].create({
+                'name': 'Partner Street2',
+                'vat': '999999999',
+                'country_id': self.env.ref('base.eg').id,
+                'city': 'Iswan',
+                'state_id': self.env.ref('base.state_eg_c').id,
+                'l10n_eg_building_no': '99',
+                'street': '12th dec. street',
+                'street2': 'apt 5',
+            })
+            invoice = self._create_invoice_eg(partner_id=partner.id, invoice_line_ids=[
+                {
+                    'product_id': self.product_a.id,
+                    'price_unit': 100.0,
+                    'product_uom_id': self.env.ref('uom.product_uom_unit').id,
+                    'tax_ids': [],
+                },
+            ])
+            invoice.action_post()
+            invoice.action_post_sign_invoices()
+
+            generated_files = self._process_documents_web_services(invoice, {'eg_eta'})
+            self.assertTrue(generated_files)
+            json_file = json.loads(generated_files[0])
+            self.assertEqual(
+                json_file['request']['receiver']['address']['street'],
+                '12th dec. street apt 5',
+            )
