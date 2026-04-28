@@ -56,6 +56,7 @@ class IrActionsReport(models.Model):
 
                     last_page = res_pdf.pages(-1)
                     last_page.merge_page(qr_pdf.pages(0))
+                    last_page.compress_content_streams()
 
                     output_pdf = OdooPdfFileWriter()
 
