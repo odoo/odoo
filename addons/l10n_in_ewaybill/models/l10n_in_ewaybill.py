@@ -638,7 +638,7 @@ class L10nInEwaybill(models.Model):
                 ),
                 "transDistance": str(self.distance),
                 "docNo": self.document_number,
-                "docDate": (self.document_date or fields.Datetime.now()).strftime("%d/%m/%Y"),
+                "docDate": fields.Date.context_today(self.with_context(tz='Asia/Kolkata'), self.document_date).strftime("%d/%m/%Y"),
                 # bill details
                 **prepare_details(
                     key_paired_function={
