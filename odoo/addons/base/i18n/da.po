@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-03-11 16:34+0000\n"
-"PO-Revision-Date: 2026-04-18 13:49+0000\n"
+"PO-Revision-Date: 2026-04-27 15:33+0000\n"
 "Last-Translator: \"Kira Petersen François (peti)\" <peti@odoo.com>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-s18-4/base/"
 "da/>\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_at_reports
@@ -3099,7 +3099,7 @@ msgstr ""
 "\n"
 "* Hurtig betaling ved blot at swipe eller scanne et betalingskort eller en "
 "QR-kode på betalingsskærmen\n"
-"* Understøttede betalingsmetoder: Visa, MasterCard, Rupay og UPI\n"
+"* Understøttede betalingsformer: Visa, MasterCard, Rupay og UPI\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_pine_labs
@@ -8466,7 +8466,7 @@ msgstr ""
 "præferencer:\n"
 "\n"
 "* Forsendelse: Levering af hele ordren eller delleverancer\n"
-"* Fakturering: Valg af betalingsmetode\n"
+"* Fakturering: Valg af betalingsform\n"
 "* Incoterms: Generelle leveringsbetingelser-\n"
 "\n"
 "\n"
@@ -13594,7 +13594,7 @@ msgstr ""
 "Odoo giver besked, hvis et eller flere af disse krav ikke er opfyldt.\n"
 "\n"
 "For at registrere betalinger for åbne fakturaer kan du anvende "
-"betalingsmetoden\n"
+"betalingsformn\n"
 "'SEPA-direkte debitering' ved at vælge en bankkonto i guiden 'Registrér\n"
 "betaling'. Hvis der ikke findes et gyldigt mandat for\n"
 "den valgte faktura, vises en fejlmeddelelse.\n"
@@ -25956,7 +25956,7 @@ msgstr "Visning"
 #: model:ir.model.fields,field_description:base.field_reset_view_arch_wizard__display_name
 #: model:ir.model.fields,field_description:base.field_wizard_ir_model_menu_create__display_name
 msgid "Display Name"
-msgstr "Vis navn"
+msgstr "Visningsnavn"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_restaurant_preparation_display
@@ -31017,8 +31017,7 @@ msgstr "Påvirkede moduler"
 #. module: base
 #: model:ir.module.module,summary:base.module_auth_password_policy
 msgid "Implement basic password policy configuration & check"
-msgstr ""
-"Implementér grundlæggende konfiguration og styring af adgangskoderegler"
+msgstr "Implementér grundlæggende konfiguration og styring af adgangskoderegler"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_sequence__implementation
@@ -38300,7 +38299,7 @@ msgstr ""
 "betalingsproces,\n"
 "få trin og høj brugervenlighed på alle sider.\n"
 "\n"
-"Tilpas betalingsprocessen efter dine forretningsbehov: betalingsmetoder,\n"
+"Tilpas betalingsprocessen efter dine forretningsbehov: betalingsformer,\n"
 "leveringsmetoder, krydssalg, særlige betingelser m.m.\n"
 "\n"
 "Og så meget mere ...\n"
@@ -38376,8 +38375,8 @@ msgid ""
 "contact your system administrator."
 msgstr ""
 "Odoo behandler i øjeblikket en planlagt handling.\n"
-"Moduloperationer er midlertidigt utilgængelige. Prøv igen senere, eller "
-"kontakt din systemadministrator."
+"Moduloperationer er midlertidigt utilgængelige. Prøv venligst igen senere, "
+"eller kontakt din systemadministrator."
 
 #. module: base
 #. odoo-python
@@ -38387,7 +38386,7 @@ msgid ""
 "Please try again later or contact your system administrator."
 msgstr ""
 "Odoo behandler i øjeblikket en anden modulproces.\n"
-"Prøv igen senere, eller kontakt din systemadministrator for hjælp."
+"Prøv venligst igen senere, eller kontakt din systemadministrator for hjælp."
 
 #. module: base
 #. odoo-python
@@ -40148,7 +40147,7 @@ msgstr "Betalingsudbyder: Buckaroo"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment_custom
 msgid "Payment Provider: Custom Payment Modes"
-msgstr "Betalingsudbyder: Tilpassede betalingsmetoder"
+msgstr "Betalingsudbyder: Tilpassede betalingsformer"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment_dpo
@@ -46249,9 +46248,9 @@ msgid ""
 "order to be valid, any derogation must be expressly agreed to in advance in "
 "writing."
 msgstr ""
-"Kunden giver udtrykkeligt afkald på sine egne standardbetingelser, også "
-"selvom disse er udarbejdet efter de almindelige salgsbetingelser. For at "
-"være gyldig skal enhver fravigelse være skriftligt aftalt på forhånd."
+"Kunden giver udtrykkeligt afkald på sine egne standardbetingelser, også selv "
+"om disse er udarbejdet efter de almindelige salgsbetingelser. For at være "
+"gyldig skal enhver fravigelse være skriftligt aftalt på forhånd."
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_country_code_uniq
@@ -50316,7 +50315,7 @@ msgid ""
 msgstr ""
 "Når et talinterval tildeles en post, sikrer ‘no gap’-"
 "sekvensimplementeringen, at alle tidligere sekvensnumre allerede er tildelt. "
-"Selvom denne implementering ikke springer sekvensnumre over ved tildeling, "
+"Selv om denne implementering ikke springer sekvensnumre over ved tildeling, "
 "kan der stadig opstå huller, hvis poster slettes. ‘No gap’-implementeringen "
 "er langsommere end den standardmæssige sekvens."
 
@@ -50862,7 +50861,7 @@ msgid ""
 "You cannot merge contacts linked to more than one user even if only one is "
 "active."
 msgstr ""
-"Du kan ikke flette kontakter, der er knyttet til mere end én bruger, selvom "
+"Du kan ikke flette kontakter, der er knyttet til mere end én bruger, selv om "
 "kun én er aktiv."
 
 #. module: base

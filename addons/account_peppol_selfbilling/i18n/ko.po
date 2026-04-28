@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-03-20 18:35+0000\n"
-"PO-Revision-Date: 2026-01-31 13:14+0000\n"
+"PO-Revision-Date: 2026-04-25 13:22+0000\n"
 "Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-s18-4/"
 "account_peppol_selfbilling/ko/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: account_peppol_selfbilling
 #: model:mail.template,body_html:account_peppol_selfbilling.email_template_edi_self_billing_invoice
@@ -265,7 +265,7 @@ msgstr "자체 청구서 발행용 신용장"
 #. module: account_peppol_selfbilling
 #: model:mail.template,name:account_peppol_selfbilling.email_template_edi_self_billing_credit_note
 msgid "Self-billing credit note: Sending"
-msgstr "자체 발행 신용장: 보내기"
+msgstr "자체 발행 대변전표: 보내기"
 
 #. module: account_peppol_selfbilling
 #: model:mail.template,name:account_peppol_selfbilling.email_template_edi_self_billing_invoice
@@ -275,7 +275,7 @@ msgstr "자체 발행 청구서: 보내기"
 #. module: account_peppol_selfbilling
 #: model:mail.template,description:account_peppol_selfbilling.email_template_edi_self_billing_credit_note
 msgid "Sent to customers with the self-billing credit note in attachment"
-msgstr ""
+msgstr "고객에게 자체 발행 대변전표를 첨부하여 발송합니다"
 
 #. module: account_peppol_selfbilling
 #: model:mail.template,description:account_peppol_selfbilling.email_template_edi_self_billing_invoice
@@ -303,7 +303,7 @@ msgstr "공급업체 청구서"
 #. module: account_peppol_selfbilling
 #: model_terms:ir.ui.view,arch_db:account_peppol_selfbilling.report_invoice_document
 msgid "Vendor Credit Note"
-msgstr "공급업체 신용장"
+msgstr "공급업체 대변전표"
 
 #. module: account_peppol_selfbilling
 #: model:mail.template,subject:account_peppol_selfbilling.email_template_edi_self_billing_credit_note
@@ -311,6 +311,8 @@ msgid ""
 "{{ object.company_id.name }} Self-billing credit note (Ref {{ object.name or "
 "'n/a' }})"
 msgstr ""
+"{{ object.company_id.name }} 자체 발행 대변전표 (Ref {{ object.name or 'n/"
+"a' }})"
 
 #. module: account_peppol_selfbilling
 #: model:mail.template,subject:account_peppol_selfbilling.email_template_edi_self_billing_invoice
