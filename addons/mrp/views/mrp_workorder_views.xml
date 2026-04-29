@@ -91,8 +91,8 @@
                   options="{'no_open': True, 'display': 'badge'}"
                   column_invisible="parent and parent.state == 'draft'"
                   invisible="production_state == 'draft'"/>
-                <field name="has_planning_issues" nolabel="1" readonly="1" widget="mrp_boolean_icon" options="{'icon': 'fa-exclamation-triangle'}" class="text-warning" invisible="not has_planning_issues or has_conflicts"/>
-                <field name="has_conflicts" nolabel="1" readonly="1" widget="mrp_boolean_icon" options="{'icon': 'fa-exclamation-triangle'}" class="text-danger" invisible="not has_conflicts"/>
+                <field name="has_planning_issues" column_invisible="1"/>
+                <field name="has_conflicts" widget="workorder_planning_status" string="" readonly="1"/>
             </list>
         </field>
     </record>
