@@ -359,7 +359,7 @@
                         <field name="name" options="{'line_breaks': False}" widget="text" class="text-truncate w-md-75 w-100 pe-2" placeholder="Workorder Title..."/>
                     </h1>
                     <div class="d-flex justify-content-end align-items-center px-1">
-                        <field name="state" widget="mo_view_list_dropdown" options="{'display': 'badge'}"/>
+                        <field name="state" widget="mo_view_list_dropdown" invisible="production_state == 'draft'" options="{'display': 'badge'}"/>
                     </div>
                 </div>
                 <group>
