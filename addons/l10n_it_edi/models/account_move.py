@@ -1090,7 +1090,7 @@ class AccountMove(models.Model):
                 invoice_data['key'],
                 proxy_user,
             ):
-
+                move.l10n_it_edi_transaction = id_transaction
                 if not modules.module.current_test:
                     self.env.cr.commit()
                 moves |= move
