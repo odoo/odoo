@@ -21,6 +21,19 @@ class StockMove(models.Model):
     _order = 'sequence, id'
     _rec_name = 'reference'
 
+    def _get_lot_domain(self):
+        return """
+            [('product_id', '=', product_id)] + (
+                [('id', 'in', context.get('lot_ids'))]
+                if context.get('lot_ids')
+                else (
+                    [('product_qty', '>', 0), ('quant_ids', 'any', [('location_id', 'child_of', location_id)])]
+                    if location_usage == 'internal'
+                    else []
+                )
+            )
+        """
+
     sequence = fields.Integer('Sequence', default=10)
     priority = fields.Selection(
         PROCUREMENT_PRIORITIES, 'Priority', default='0',
@@ -191,7 +204,7 @@ class StockMove(models.Model):
     orderpoint_id = fields.Many2one('stock.warehouse.orderpoint', 'Original Reordering Rule', index=True)
     forecast_availability = fields.Float('Forecast Availability', compute='_compute_forecast_information', digits='Product Unit', compute_sudo=True)
     forecast_expected_date = fields.Datetime('Forecasted Expected date', compute='_compute_forecast_information', compute_sudo=True)
-    lot_ids = fields.Many2many('stock.lot', compute='_compute_lot_ids', inverse='_set_lot_ids', domain="[('product_id', '=', product_id)]", string='Tracking')
+    lot_ids = fields.Many2many('stock.lot', compute='_compute_lot_ids', inverse='_set_lot_ids', domain=_get_lot_domain, string='Tracking')
     reservation_date = fields.Date('Date to Reserve', compute='_compute_reservation_date', store=True, help="Computes when a move should be reserved")
     packaging_uom_id = fields.Many2one('uom.uom', 'Packaging', help="Packaging unit from sale or purchase orders", compute='_compute_packaging_uom_id', precompute=True, store=True)
     packaging_uom_qty = fields.Float('Packaging Quantity', help="Quantity in the packaging unit", compute='_compute_packaging_uom_qty', store=True)
@@ -1440,6 +1453,7 @@ Please change the quantity done or the rounding precision in your settings.""",
         self.quantity = self.product_id.uom_id._compute_quantity(quantity, self.uom_id, round=False)
         base_location = self.location_id
         quants = self.env['stock.quant'].sudo().search([
+            ('tracking', '=', 'serial'),
             ('product_id', '=', self.product_id.id),
             ('lot_id', 'in', self.lot_ids.ids),
             ('quantity', '!=', 0),
