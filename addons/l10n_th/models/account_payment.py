@@ -36,3 +36,13 @@ class AccountPayment(models.Model):
                 payment.l10n_th_wth_condition = payment.l10n_th_wth_condition or 'at_source'
             else:
                 payment.l10n_th_wth_condition = False
+
+    # --------------
+    # Action methods
+    # --------------
+
+    def action_l10n_th_print_50_tawi(self):
+        """
+        Triggered by the 'Print 50 Tawi' button.
+        """
+        return self.env.ref('l10n_th.action_report_50_tawi').report_action(self, config=False)

@@ -24,6 +24,10 @@ class ResPartner(models.Model):
         ("others", "Others")],
         string="Company Type",
     )
+    l10n_th_address_no_country = fields.Char(
+        compute='_compute_l10n_th_address_no_country',
+        export_string_translation=False,
+    )
 
     def _compute_is_company(self):
         super()._compute_is_company()
@@ -40,3 +44,15 @@ class ResPartner(models.Model):
                 code = partner._get_additional_identifier('TH_BRANCH_CODE')
                 partner.l10n_th_branch_name = partner.env._("Branch %(code)s", code=code) if code and code != "00000" else partner.env._(
                     "Headquarter")
+
+    @api.depends('address_inline')
+    def _compute_l10n_th_address_no_country(self):
+        """
+        Hide country from address if it is Thailand address. If not fallback to address_inline
+        """
+        for partner in self:
+            if partner.country_code != 'TH':
+                partner.l10n_th_address_no_country = partner.address_inline
+                continue
+            address_part_without_country = partner.address_inline.split(', ')[:-1]
+            partner.l10n_th_address_no_country = ', '.join(address_part_without_country)
