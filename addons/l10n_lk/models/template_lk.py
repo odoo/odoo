@@ -51,3 +51,10 @@ class AccountChartTemplate(models.AbstractModel):
                 "default_account_id": "l10n_lk_account_101100",
             },
         }
+
+    def _get_account_parent_xmlid(self, code_prefix, template_code):
+        if template_code == 'lk':
+            return {
+                '10100': 'l10n_lk_account_10',
+            }.get(code_prefix)
+        return super()._get_account_parent_xmlid(code_prefix, template_code)
