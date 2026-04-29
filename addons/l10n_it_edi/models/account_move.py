@@ -1190,8 +1190,14 @@ class AccountMove(models.Model):
                 )
 
             # Extend created moves with the related attachments.
+            file_name_to_transaction_id = {data['filename'].rsplit('.', 1)[0]: transaction_id for transaction_id, data in invoices_data.items()}
             for move, file_data in zip(moves, files_data):
                 move._extend_with_attachments([file_data], new=True)
+                # FatturaPA filenames follow FATTURAPA_FILENAME_RE:
+                #   <identifier>_<progressivo>.<ext>
+                # An extra suffix (e.g. '_2') might be added by _unwrap_attachments before the last '.'.
+                # Taking the first two components retrieves the original filename.
+                move.l10n_it_edi_transaction = file_name_to_transaction_id.get("_".join(move.l10n_it_edi_attachment_id.name.rsplit('.', 1)[0].split('_')[:2]))
 
         return {"retrigger": retrigger, "proxy_acks": proxy_acks}
 
