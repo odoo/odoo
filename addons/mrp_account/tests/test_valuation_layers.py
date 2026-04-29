@@ -349,15 +349,27 @@ class TestMrpValuationStandard(TestBomPriceCommon):
 
     def test_kit_product_valuation(self):
         """
-        Verify that kit products are excluded from inventory valuation
-        and have no effect on valuation upon price change.
+        Verify that kit products are excluded from inventory valuation,
+        do not affect valuation when their price changes, and still appear
+        in the quantity history report with total value of zero.
         """
-        self.assertRecordValues(self.table_head, [{'standard_price': 300, 'total_value': 300}])
+        self.assertRecordValues(self.table_head, [{'standard_price': 300, 'total_value': 0}])
         self.assertTrue(self.table_head not in self.env.company._get_accounts_by_product())
         old_stock_value = sum(self.env.company.stock_value().values())
         self.table_head.action_bom_cost()
-        self.assertRecordValues(self.table_head, [{'standard_price': 468.75, 'total_value': 468.75}])
+        self.assertRecordValues(self.table_head, [{'standard_price': 468.75, 'total_value': 0}])
         self.assertEqual(old_stock_value, sum(self.env.company.stock_value().values()))
+        action = self.env['stock.quantity.history'].create({}).open_at_date()
+        products = self.env[action['res_model']].with_context(action['context']).search(action['domain'])
+        self.assertRecordValues(
+            products & self.table_head,
+            [{
+                'standard_price': 468.75,
+                'qty_available': 1,
+                'total_value': 0,
+                'avg_cost': 0,
+            }],
+        )
 
     def test_mo_valuation_uses_production_company(self):
         """
