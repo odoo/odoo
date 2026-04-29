@@ -4586,20 +4586,22 @@ class AccountTax(models.Model):
             tax_details = base_line['tax_details']
             raw_total_excluded = tax_details[raw_field]
 
+            global_discount_sum = 0.0
+            if account_discount_base_lines:
+                global_discount_sum = sum(
+                    discount_base_line['tax_details'][raw_field]
+                    for discount_base_line in base_line.get('discount_base_lines', [])
+                )
+
             discount_factor = 1 - (base_line['discount'] / 100.0)
             if discount_factor:
-                raw_gross_total_excluded = raw_total_excluded / discount_factor
+                raw_gross_total_excluded = (raw_total_excluded - global_discount_sum) / discount_factor
             elif suffix == '_currency':
                 raw_gross_total_excluded = base_line['price_unit'] * base_line['quantity']
             elif base_line['rate']:
                 raw_gross_total_excluded = base_line['price_unit'] * base_line['quantity'] / base_line['rate']
             else:
                 raw_gross_total_excluded = 0.0
-            if account_discount_base_lines:
-                raw_gross_total_excluded -= sum(
-                    discount_base_line['tax_details'][raw_field]
-                    for discount_base_line in base_line.get('discount_base_lines', [])
-                )
             tax_details[f'raw_gross_total_excluded{suffix}'] = float_round(raw_gross_total_excluded, precision_digits=precision_digits)
 
             # Same as before but per unit.
