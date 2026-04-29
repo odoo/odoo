@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
-    <t t-name="mass_mailing.MassMailingDomainField" t-inherit="web.DomainField">
+    <t t-name="mass_mailing.MassMailingDomainField" t-inherit="mass_mailing.DomainSavableField">
         <xpath expr="//DomainSelector" position="attributes">
             <attribute name="updateUseExclusionList">
                 this.updateUseExclusionList.bind(this)
