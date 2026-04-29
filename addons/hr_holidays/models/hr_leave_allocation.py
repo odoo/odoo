@@ -508,14 +508,40 @@ class HolidaysAllocation(models.Model):
                     allocation._message_log(body=first_allocation)
             (current_level, current_level_idx) = (False, 0)
             current_level_maximum_leave = 0.0
+            # We get the start dates of all relevant time off here. We only need to recalculate the
+            # time off taken if a new leave starts within the current period. This avoids calling
+            # a slow function too many times.
+            leaves_domain = [
+                ('employee_id', '=', allocation.employee_id.id),
+                ('holiday_status_id', '=', allocation.holiday_status_id.id),
+                ('state', 'in', ('confirm', 'validate1', 'validate')),
+                ('date_from', '<=', date_to),
+            ]
+            if self.env.context.get('ignored_leave_ids'):
+                leaves_domain.append(('id', 'not in', self.env.context.get('ignored_leave_ids')))
+            leave_dates = sorted({l.date_from.date() for l in self.env['hr.leave'].search(leaves_domain)})
+            leave_idx = 0
+            # If the employee has no time off, the days taken will always be 0.
+            leaves_taken = 0 if not leave_dates else None
+            was_at_capacity = False
             # all subsequent runs, at every loop:
             # get current level and normal period boundaries, then set nextcall, adjusted for level transition and carryover
             # add days, trimmed if there is a maximum_leave
             while allocation.nextcall <= date_to:
-                if allocation.holiday_status_id.request_unit in ["day", "half_day"]:
-                    leaves_taken = _get_leaves_taken(allocation)
-                else:
-                    leaves_taken = _get_leaves_taken(allocation) / (allocation.employee_id.sudo().resource_id.calendar_id.hours_per_day or HOURS_PER_DAY)
+                # Skip time off that started in the past. We only care about new time off that starts
+                # in the current window.
+                while leave_idx < len(leave_dates) and leave_dates[leave_idx] <= allocation.lastcall:
+                    leave_idx += 1
+                new_leave_in_window = leave_idx < len(leave_dates) and leave_dates[leave_idx] <= allocation.nextcall
+                # We recalculate the time off taken if:
+                # - It is the first time the loop runs (leaves_taken is None).
+                # - A new leave starts in the current window.
+                # - The allocation was at full capacity (adding days might now cover more leaves).
+                if leave_dates and (leaves_taken is None or new_leave_in_window or was_at_capacity):
+                    if allocation.holiday_status_id.request_unit in ["day", "half_day"]:
+                        leaves_taken = _get_leaves_taken(allocation)
+                    else:
+                        leaves_taken = _get_leaves_taken(allocation) / (allocation.employee_id.sudo().resource_id.calendar_id.hours_per_day or HOURS_PER_DAY)
                 (current_level, current_level_idx) = allocation._get_current_accrual_plan_level_id(allocation.nextcall)
                 if not current_level:
                     break
@@ -538,6 +564,8 @@ class HolidaysAllocation(models.Model):
                 carryover_date = allocation._get_carryover_date(allocation.nextcall)
                 if allocation.nextcall < carryover_date < nextcall:
                     nextcall = min(nextcall, carryover_date)
+
+                was_at_capacity = leaves_taken >= allocation.number_of_days
                 if not allocation.already_accrued:
                     allocation._add_days_to_allocation(current_level, current_level_maximum_leave, leaves_taken, period_start, period_end)
                 # if it's the carry-over date, adjust days using current level's carry-over policy, then continue
@@ -589,15 +617,25 @@ class HolidaysAllocation(models.Model):
         # We need to create a temporary copy of that allocation to return the difference in number of days
         # to see how much more days will be allocated from now until that date.
         self.ensure_one()
+        cache = self.env.context.get('_future_leaves_on_cache')
+        cache_key = (self.id, accrual_date)
+        if cache is not None and cache_key in cache:
+            return cache[cache_key]
+
+        def update_cache(value):
+            if cache is not None:
+                cache[cache_key] = value
+            return value
+
         if not accrual_date or accrual_date <= date.today():
-            return 0
+            return update_cache(0)
 
         if not (self.accrual_plan_id
                 and self.state == 'validate'
                 and self.allocation_type == 'accrual'
                 and (not self.date_to or self.date_to > accrual_date)
                 and (not self.nextcall or self.nextcall <= accrual_date)):
-            return 0
+            return update_cache(0)
 
         fake_allocation = self.env['hr.leave.allocation'].new(origin=self)
         fake_allocation.sudo()._process_accrual_plans(accrual_date, log=False)
@@ -606,7 +644,7 @@ class HolidaysAllocation(models.Model):
         else:
             res = round((fake_allocation.number_of_days - self.number_of_days), 2)
         fake_allocation.invalidate_recordset()
-        return res
+        return update_cache(res)
 
     ####################################################
     # ORM Overrides methods
