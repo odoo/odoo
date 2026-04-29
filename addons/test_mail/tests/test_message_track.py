@@ -352,7 +352,7 @@ class TestTrackingAPI(TestTrackingCommon):
                 track_msg, {
                     'author_id': self.partner_employee,
                     'body': '',
-                    'message_type': 'notification',
+                    'message_type': 'tracking',
                     'subtype_id': self.env.ref('mail.mt_note'),
                     'tracking_values': [
                         ('char_field', 'char', False, 'New Track'),
@@ -369,7 +369,7 @@ class TestTrackingAPI(TestTrackingCommon):
                 parent_msg, {
                     'author_id': self.partner_employee,
                     'body': '<p>Manual Tracking</p>',
-                    'message_type': 'notification',
+                    'message_type': 'tracking',
                     'subtype_id': self.env.ref('mail.mt_note'),
                     'tracking_values': [
                         ('char_field', 'char', False, 'New Track'),
@@ -422,7 +422,7 @@ class TestTrackingAPI(TestTrackingCommon):
                 track_msg, {
                     'author_id': self.partner_employee,  # author forced only on parent
                     'body': '',  # body forced only on parent
-                    'message_type': 'notification',
+                    'message_type': 'tracking',
                     'subtype_id': self.env.ref('mail.mt_note'),
                     **add_values,
                 }
@@ -438,7 +438,7 @@ class TestTrackingAPI(TestTrackingCommon):
             self.assertMessageFields(
                 parent_msg, {
                     'author_id': self.partner_admin,
-                    'message_type': 'notification',
+                    'message_type': 'tracking',
                     'subtype_id': self.env.ref('mail.mt_note'),
                     **add_values,
                 }
@@ -810,7 +810,7 @@ class TestTrackingTemplate(TestTrackingCommon):
         )
         self.assertMessageFields(
             track_msg, {
-                'message_type': 'notification',
+                'message_type': 'tracking',
                 'subject': False,
                 'subtype_id': self.env.ref('test_mail.st_mail_test_ticket_container_upd'),
                 'tracking_values': [
