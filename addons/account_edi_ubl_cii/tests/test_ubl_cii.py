@@ -986,6 +986,21 @@ comment-->1000.0</TaxExclusiveAmount></xpath>"""
         self.env['account.edi.common']._import_retrieve_and_fill_partner_bank_details(invoice, [acc_number])
         self.assertEqual(invoice.partner_bank_id, partner_bank)
 
+    def test_import_bill_vat_in_party_identification(self):
+        """ Some Peppol emitters add the supplier VAT only in
+        cac:PartyIdentification/cbc:ID, not in PartyTaxScheme/cbc:CompanyID.
+        """
+        file_path = f"{self.test_module}/tests/test_files/bis3_bill_vat_in_party_identification.xml"
+        with file_open(file_path, 'rb') as file:
+            attachment = self.env['ir.attachment'].create({
+                'mimetype': 'application/xml',
+                'name': 'test_invoice.xml',
+                'raw': file.read(),
+            })
+        bill = self.import_attachment(attachment, self.company_data["default_journal_purchase"])
+        self.assertEqual(bill.partner_id.vat, 'BE0239843188')
+        self.assertEqual(bill.partner_bank_id.partner_id, bill.partner_id)
+
     def test_payment_terms_immediate_in_cii_xml(self):
         self.partner_a.ubl_cii_format = 'facturx'
         invoice = self._create_invoice_one_line(
