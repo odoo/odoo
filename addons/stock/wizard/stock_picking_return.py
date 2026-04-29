@@ -124,12 +124,10 @@ class ReturnPicking(models.TransientModel):
 
     @api.model
     def _prepare_stock_return_picking_line_vals_from_move(self, stock_move):
-        return {
-            'product_id': stock_move.product_id.id,
-            'quantity': 0,
-            'move_id': stock_move.id,
-            'uom_id': stock_move.product_id.uom_id.id,
-        }
+        quantity = stock_move.quantity
+        for move in stock_move.move_dest_ids:
+            if not move.origin_returned_move_id or move.origin_returned_move_id != stock_move:
+                continue
 
     def _prepare_picking_default_values(self):
         return self._prepare_picking_default_values_based_on(self.picking_id)
