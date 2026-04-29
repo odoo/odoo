@@ -358,7 +358,11 @@ class WebsiteAssets(models.AbstractModel):
                 continue
 
             if asset.url.endswith(user_values_url):
-                source = self._get_content_from_url(user_values_url).decode('utf-8')
+                custom_url = self._make_custom_asset_url(user_values_url, 'web.assets_frontend')
+                source = (
+                    self._get_content_from_url(custom_url)
+                    or self._get_content_from_url(user_values_url)
+                ).decode('utf-8')
                 values = user_values
             elif asset.url.endswith(user_color_palette_url):
                 source = self._get_content_from_url(user_color_palette_url).decode('utf-8')
