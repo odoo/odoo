@@ -177,6 +177,7 @@ export class ListDataSource extends OdooViewsDataSource {
      * @returns {string | EvaluationError}
      */
     getListHeaderValue(fieldPath) {
+        this.addFieldPathToFetch(fieldPath);
         if (this.isLoading()) {
             return LOADING_ERROR;
         }
@@ -188,7 +189,6 @@ export class ListDataSource extends OdooViewsDataSource {
             return LOADING_ERROR;
         }
         if (!this.alreadyFetchedFieldPaths.has(fieldPath)) {
-            this.addFieldPathToFetch(fieldPath);
             this._triggerFetching();
             return LOADING_ERROR;
         }
@@ -222,6 +222,7 @@ export class ListDataSource extends OdooViewsDataSource {
      * @returns {string|number|undefined|EvaluationError}
      */
     getListCellValue(position, fieldPath) {
+        this.addFieldPathToFetch(fieldPath);
         if (this.isLoading()) {
             return LOADING_ERROR;
         }
@@ -235,7 +236,6 @@ export class ListDataSource extends OdooViewsDataSource {
             return LOADING_ERROR;
         }
         if (!this.alreadyFetchedFieldPaths.has(fieldPath)) {
-            this.addFieldPathToFetch(fieldPath);
             this._triggerFetching();
             return LOADING_ERROR;
         }
