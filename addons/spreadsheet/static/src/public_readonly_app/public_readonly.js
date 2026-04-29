@@ -20,14 +20,16 @@ spreadsheet.registries.topbarMenuRegistry.addChild("download_public_excel", ["fi
 });
 
 function readSheetIdFromURL() {
-    const url = new URL(browser.location.href);
-    return url.searchParams.get("sid");
+    return new URLSearchParams(browser.location.hash.substring(1)).get("sid") ?? null;
 }
 
 function writeSheetIdToURL(sheetId) {
     const url = new URL(browser.location.href);
-    if (url.searchParams.get("sid") !== sheetId) {
-        url.searchParams.set("sid", sheetId);
+    const hash = new URLSearchParams(browser.location.hash.substring(1));
+
+    if (hash.get("sid") !== sheetId) {
+        hash.set("sid", sheetId);
+        url.hash = hash.toString();
         browser.history.replaceState(browser.history.state, null, url);
     }
 }
