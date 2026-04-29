@@ -17,7 +17,10 @@
     ],
     "post_init_hook": "post_init_hook",
     "uninstall_hook": "uninstall_hook",
-    "assets": {"web.assets_frontend": ["payment_paypal/static/src/**/*"]},
+    "assets": {
+        "web.assets_frontend": ["payment_paypal/static/src/interactions/**/*"],
+        "web.assets_backend": ["payment_paypal/static/src/onboarding/**/*"],
+    },
     "author": "Odoo S.A.",
     "license": "LGPL-3",
 }

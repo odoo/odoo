@@ -1,4 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons.payment.const import SENSITIVE_KEYS as PAYMENT_SENSITIVE_KEYS
+
+SENSITIVE_KEYS = {"client_secret"}
+PAYMENT_SENSITIVE_KEYS.update(SENSITIVE_KEYS)  # Add PayPal-specific keys to the global set.
+
+OAUTH_INIT_ROUTE = "/payment/paypal/oauth/init"
+OAUTH_FINALIZE_ROUTE = "/payment/paypal/oauth/finalize"
 
 # ISO 4217 codes of currencies supported by PayPal
 # See https://developer.paypal.com/docs/reports/reference/paypal-supported-currencies/.
@@ -51,8 +58,15 @@ PAYMENT_STATUS_MAPPING = {
 
 # Events which are handled by the webhook.
 # See https://developer.paypal.com/api/rest/webhooks/event-names/
-HANDLED_WEBHOOK_EVENTS = [
+CHECKOUT_WEBHOOK_EVENTS = [
     "CHECKOUT.ORDER.COMPLETED",
     "CHECKOUT.ORDER.APPROVED",
     "CHECKOUT.PAYMENT-APPROVAL.REVERSED",
 ]
+MERCHANT_WEBHOOK_EVENTS = ["CUSTOMER.MERCHANT-INTEGRATION.SELLER-EMAIL-CONFIRMED"]
+
+# Odoo's public identifiers as a PayPal Partner for OAuth
+OAUTH_ODOO_PARTNER_ID = "QHZVTLZNWGSEW"
+OAUTH_ODOO_CLIENT_ID = (
+    "AUssUsouGEwQ-elJwte7-ullwiRUY3eQyYlWU-1T6iI7-zVw7bveLzjm8ue53fhVFBojRE6RNQZiecp"  # noqa: E501
+)
