@@ -225,7 +225,7 @@ class TestMrpOrder(TestMrpCommon, MailCase):
             self.flush_tracking()
         self.assertMessageFields(self._new_msgs, {
             'body': '',
-            'message_type': 'notification',
+            'message_type': 'tracking',
             'subject': False,
             'subtype_id': self.env.ref('mail.mt_note'),
             'tracking_values': [
