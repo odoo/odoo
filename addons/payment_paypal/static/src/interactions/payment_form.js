@@ -172,7 +172,7 @@ patch(PaymentForm.prototype, {
         await loadJS(paypalSDKURL);
         const paypalSDKs = document.querySelectorAll(`script[src="${paypalSDKURL}"]`);
         [...paypalSDKs].forEach(sdk => {
-            sdk.setAttribute('data-partner-attribution-id', 'OdooInc_SP_EC');
+            sdk.setAttribute('data-partner-attribution-id', 'ODOO_SP_DIRECT');
         });
     },
 
