@@ -182,7 +182,7 @@
                                widget="many2many_avatar_user"/>
                         <field name="tag_ids" widget="many2many_tags"
                                options="{'color_field': 'color', 'on_tag_click': 'edit_color', 'no_create_edit': True}"
-                               context="{'use_user_history': True}"
+                               context="{'project_id': project_id}"
                                placeholder="Choose tags from the selected project"/>
                     </group>
                 </sheet>
