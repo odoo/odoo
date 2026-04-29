@@ -10,9 +10,14 @@ import { SelectTemplateAction } from "../customize_website_plugin";
 export class CountdownOption extends BaseOptionComponent {
     static id = "countdown_option";
     static template = "website.CountdownOption";
+    static dependencies = ["versionError"];
     static cleanForSave = (editingEl) => {
         editingEl.classList.remove("s_countdown_enable_preview");
     };
+    setup() {
+        super.setup();
+        this.dependencies.versionError.checkNotifyOutdatedSnippet(this.env.getEditingElement());
+    }
 }
 
 registry.category("website-options").add(CountdownOption.id, CountdownOption);

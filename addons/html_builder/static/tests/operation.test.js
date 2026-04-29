@@ -417,7 +417,7 @@ describe("Operations failing on outdated snippets", () => {
         await contains("[data-action-id='testAction']").click();
         expect(".o_notification .o_notification_bar.bg-warning").toHaveCount(1);
         expect(".o_notification_content").toHaveText(
-            "This snippet is outdated. It might have caused problem during the editing. Please drag the new version from the snippet panel to update it."
+            "This snippet is outdated. It might cause/have caused problems during the editing. Please drag the new version from the snippet panel to update it."
         );
         expect.verifyErrors([]);
 
@@ -470,7 +470,7 @@ describe("Operations failing on outdated snippets", () => {
         await contains("[data-action-id='testAction']").click();
         expect(".o_notification .o_notification_bar.bg-warning").toHaveCount(1);
         expect(".o_notification_content").toHaveText(
-            "This snippet is outdated. It might have caused problem during the editing. Please drag the new version from the snippet panel to update it."
+            "This snippet is outdated. It might cause/have caused problems during the editing. Please drag the new version from the snippet panel to update it."
         );
         expect.verifyErrors([]);
 
@@ -526,7 +526,7 @@ describe("Operations failing on outdated snippets", () => {
         await contains("[data-action-id='testAction']").click();
         expect(".o_notification .o_notification_bar.bg-warning").toHaveCount(1);
         expect(".o_notification_content").toHaveText(
-            "This snippet is outdated. It might have caused problem during the editing. Please drag the new version from the snippet panel to update it."
+            "This snippet is outdated. It might cause/have caused problems during the editing. Please drag the new version from the snippet panel to update it."
         );
         expect.verifyErrors([]);
 
@@ -567,7 +567,7 @@ describe("Operations failing on outdated snippets", () => {
         await contains(":iframe .s_title h1:contains('Old')").click();
         expect(".o_notification .o_notification_bar.bg-warning").toHaveCount(1);
         expect(".o_notification_content").toHaveText(
-            "This snippet is outdated. It might have caused problem during the editing. Please drag the new version from the snippet panel to update it."
+            "This snippet is outdated. It might cause/have caused problems during the editing. Please drag the new version from the snippet panel to update it."
         );
         expect.verifyErrors([]);
     });
@@ -600,7 +600,7 @@ describe("Operations failing on outdated snippets", () => {
         await contains(":iframe .s_title h1:contains('Old')").click();
         expect(".o_notification .o_notification_bar.bg-warning").toHaveCount(1);
         expect(".o_notification_content").toHaveText(
-            "This snippet is outdated. It might have caused problem during the editing. Please drag the new version from the snippet panel to update it."
+            "This snippet is outdated. It might cause/have caused problems during the editing. Please drag the new version from the snippet panel to update it."
         );
         expect.verifyErrors([]);
     });
@@ -643,7 +643,7 @@ describe("Operations failing on outdated snippets", () => {
         await animationFrame();
         expect(".o_notification .o_notification_bar.bg-warning").toHaveCount(1);
         expect(".o_notification_content").toHaveText(
-            "This snippet is outdated. It might have caused problem during the editing. Please drag the new version from the snippet panel to update it."
+            "This snippet is outdated. It might cause/have caused problems during the editing. Please drag the new version from the snippet panel to update it."
         );
 
         // Close the notification and try to interact with an up-to-date snippet
@@ -684,7 +684,7 @@ describe("Operations failing on outdated snippets", () => {
         await contains("[data-action-id='testAction']").click();
         expect(".o_notification .o_notification_bar.bg-warning").toHaveCount(1);
         expect(".o_notification_content").toHaveText(
-            "This snippet is outdated. It might have caused problem during the editing. Please drag the new version from the snippet panel to update it."
+            "This snippet is outdated. It might cause/have caused problems during the editing. Please drag the new version from the snippet panel to update it."
         );
     });
 });
