@@ -1,0 +1,6 @@
+/* Bring the PayPal ISU popup and its dark overlay in front of Odoo's navbar, statusbar, and
+ * ribbons, but keep them behind the dialogs so that onboarding errors stay visible.
+ */
+.isu-minibrowser-component {
+    z-index: $zindex-modal-backdrop - 1 !important;
+}
