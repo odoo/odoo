@@ -155,16 +155,20 @@
                                 <span><field name="uom_id" groups="uom.group_uom" widget="many2one_uom" readonly="state != 'draft'" nolabel="1" options="{'no_open': True}"/></span>
                             </div>
                         </group>
-                        <group/>
+                        <div>
+                            <div class="mt-1 mb-2 ms-auto d-flex flex-row flex-lg-column gap-2 w-lg-50"
+                                invisible="not display_assign_serial and not display_import_lot">
+                                <widget name="generate_serials" class="flex-grow-1" invisible="not display_assign_serial"/>
+                                <widget name="import_lots" class="flex-grow-1" invisible="not display_import_lot"/>
+                            </div>
+                        </div>
                     </group>
-                    <div class="d-flex">
-                        <widget class="btn btn-link btn-group" name="generate_serials" invisible="not display_assign_serial"/>
-                        <widget class="btn btn-link btn-group" name="import_lots" invisible="not display_import_lot"/>
+                    <div class="mt-3 mx-n3 d-flex flex-column justify-content-center o_stock_move_lines_padded">
+                        <field name="move_line_ids"
+                            readonly="state == 'cancel' or (state == 'done' and is_locked) or not product_id"
+                            context="{'list_view_ref': 'stock.view_stock_move_line_operation_tree', 'form_view_ref': 'stock.view_move_line_mobile_form', 'default_picking_id': picking_id, 'default_move_id': id, 'default_product_id': product_id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id, 'default_company_id': company_id, 'active_picking_id': picking_id}"
+                            widget="sml_x2_many"/>
                     </div>
-                    <field name="move_line_ids"
-                           readonly="state == 'cancel' or (state == 'done' and is_locked) or not product_id"
-                           context="{'list_view_ref': 'stock.view_stock_move_line_operation_tree', 'form_view_ref': 'stock.view_move_line_mobile_form', 'default_picking_id': picking_id, 'default_move_id': id, 'default_product_id': product_id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id, 'default_company_id': company_id, 'active_picking_id': picking_id}"
-                           widget="sml_x2_many"/>
                 </form>
             </field>
         </record>
