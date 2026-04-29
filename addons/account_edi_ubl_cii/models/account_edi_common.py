@@ -237,40 +237,39 @@ class FloatFmt(float):
     """ A float with a given precision.
     The precision is used when formatting the float.
     """
-    def __new__(cls, value, min_dp=None, max_dp=None):
+    def __new__(cls, value, min_dp=2, max_dp=None):
         return super().__new__(cls, value)
 
-    def __init__(self, value, min_dp=None, max_dp=None):
-        if min_dp is None and max_dp is None:
-            self.min_dp = 2
-            self.max_dp = 2
-            return
-        if min_dp is None and max_dp is not None:
-            self.min_dp = self.max_dp = max_dp
-            return
-        if min_dp is not None and max_dp is None:
-            # Determine the most suitable max_dp.
-            # We want 180.74999999999997 to compute a max_dp of 2 but 0.01110515963896 to stay with the full number of decimals.
-            max_dp = max(len(str(float(value or 0.0)).split('.')[1]), min_dp)
-            while True:
-                if max_dp == min_dp:
-                    break
-                if not float_is_zero(round(value, max_dp - 1) - value, precision_digits=11):
-                    break
-                max_dp = max_dp - 1
-
+    def __init__(self, value, min_dp=2, max_dp=None):
         self.min_dp = min_dp
         self.max_dp = max_dp
 
     def __str__(self):
+        if not isinstance(self.min_dp, int) or (self.max_dp is not None and not isinstance(self.max_dp, int)):
+            return "<FloatFmt()>"
         self_float = float(self)
-        amount_str = float_repr(self_float, self.max_dp)
-        num_trailing_zeros = len(amount_str) - len(amount_str.rstrip('0'))
-        return float_repr(self_float, max(self.max_dp - num_trailing_zeros, self.min_dp))
+        min_dp_int = int(self.min_dp)
+        if self.max_dp is None:
+            return float_repr(self_float, min_dp_int)
+        else:
+            # Format the float to between self.min_dp and self.max_dp decimal places.
+            # We start by formatting to self.max_dp, and then remove trailing zeros,
+            # but always keep at least self.min_dp decimal places.
+            max_dp_int = int(self.max_dp)
+            amount_max_dp = float_repr(self_float, max_dp_int)
+            num_trailing_zeros = len(amount_max_dp) - len(amount_max_dp.rstrip('0'))
+            return float_repr(self_float, max(max_dp_int - num_trailing_zeros, min_dp_int))
 
     def __repr__(self):
+        if not isinstance(self.min_dp, int) or (self.max_dp is not None and not isinstance(self.max_dp, int)):
+            return "<FloatFmt()>"
         self_float = float(self)
-        return f"FloatFmt({self_float!r}, {self.min_dp!r}, {self.max_dp!r})"
+        min_dp_int = int(self.min_dp)
+        if self.max_dp is None:
+            return f"FloatFmt({self_float!r}, {min_dp_int!r})"
+        else:
+            max_dp_int = int(self.max_dp)
+            return f"FloatFmt({self_float!r}, {min_dp_int!r}, {max_dp_int!r})"
 
 
 class AccountEdiCommon(models.AbstractModel):
