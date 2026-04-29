@@ -485,8 +485,8 @@ class MailTrackMixin(models.AbstractModel):
                 })
             else:  # float, integer
                 values.update({
-                    'old_value': formatLang(self.env, initial_value or 0),
-                    'new_value': formatLang(self.env, new_value or 0),
+                    'old_value': formatLang(self.env, initial_value or 0, rounding_unit='units' if col_info['type'] == 'integer' else 'decimals'),
+                    'new_value': formatLang(self.env, new_value or 0, rounding_unit='units' if col_info['type'] == 'integer' else 'decimals'),
                 })
 
         elif col_info['type'] == 'monetary':
