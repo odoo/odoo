@@ -177,10 +177,9 @@ class TestReturnPicking(TestStockCommon):
         self.assertEqual(return_picking.move_ids[0].partner_id.id, receipt.partner_id.id)
 
     def test_return_wizard_with_partial_delivery(self):
-        """
-        Create a picking for 10 grams, deliver 0.01, and do not backorder the remaining quantity.
-        Then, attempt to return the quantity that was delivered. The quantity should be properly verified
-        to not be equal to 0 and the return should be created.
+        """Create a picking for 10 kg, deliver 0.01 kg, and do not backorder the remaining quantity.
+        Then, attempt to return the quantity that was delivered. The quantity to return should be
+        equal to 10, as 0.01 kg is converted to grams (the product's default UoM).
         """
         delivery_picking = self.PickingObj.create({
             'picking_type_id': self.picking_type_out,
@@ -190,6 +189,7 @@ class TestReturnPicking(TestStockCommon):
         out_move = self.MoveObj.create({
             'name': "OUT move",
             'product_id': self.gB.id,
+            'product_uom': self.uom_kg.id,
             'product_uom_qty': 10,
             'picking_id': delivery_picking.id,
             'location_id': self.stock_location,
@@ -207,4 +207,5 @@ class TestReturnPicking(TestStockCommon):
             .with_context(active_ids=delivery_picking.ids, active_id=delivery_picking.ids[0],
             active_model='stock.picking'))
         stock_return_picking = stock_return_picking_form.save()
-        self.assertEqual(stock_return_picking.product_return_moves.quantity, 0.01)
+        self.assertEqual(stock_return_picking.product_return_moves.quantity, 10,
+                        "The quantity to return should be 10 g (0.01 kg converted to the product's default UoM)")
