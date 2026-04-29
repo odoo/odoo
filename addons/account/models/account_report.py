@@ -828,7 +828,7 @@ class AccountReportExpression(models.Model):
 
                     if former_tax_tags and all(tag_expr in self for tag_expr in former_tax_tags._get_related_tax_report_expressions()):
                         # If we're changing the formula of all the expressions using that tag, rename the tag
-                        former_tax_tags._update_field_translations('name', {'en_US': vals['formula']})
+                        former_tax_tags._update_field_translations('name', {'en_US': vals['formula'].lstrip('-')})
                     else:
                         # Else, create a new tag. Its the compute functions will make sure it is properly linked to the expressions
                         tag_vals = self.env['account.report.expression']._get_tags_create_vals(vals['formula'], country.id)
