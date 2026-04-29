@@ -28,7 +28,7 @@ export const busLogsService = {
                 state.enabled = JSON.parse(newValue);
             }
         });
-        worker_service.connectionInitializedDeferred.then(() => {
+        worker_service.workerInitPromise.then(() => {
             bus_service.setLoggingEnabled(state.enabled);
         });
         odoo.busLogging = {

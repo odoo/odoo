@@ -1,6 +1,5 @@
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
-import { Deferred } from "@web/core/utils/concurrency";
 import { session } from "@web/session";
 
 export const WORKER_STATE = Object.freeze({
@@ -16,7 +15,9 @@ export class WorkerService {
         this.worker = null;
         this.isUsingSharedWorker = Boolean(browser.SharedWorker);
         this._state = WORKER_STATE.UNINITIALIZED;
-        this.connectionInitializedDeferred = new Deferred();
+        const promWithResolvers = Promise.withResolvers();
+        this.workerInitPromise = promWithResolvers.promise;
+        this._resolveWorkerInit = promWithResolvers.resolve;
     }
 
     startWorker() {
@@ -38,7 +39,7 @@ export class WorkerService {
         this._registerHandler((ev) => {
             if (ev.data.type === "BASE:INITIALIZED") {
                 this._state = WORKER_STATE.INITIALIZED;
-                this.connectionInitializedDeferred.resolve();
+                this._resolveWorkerInit();
             }
         });
         if (this.isUsingSharedWorker) {
@@ -47,11 +48,12 @@ export class WorkerService {
         this._send("BASE:INIT");
     }
 
-    async ensureWorkerStarted() {
+    /** @returns {Promise<void>} */
+    ensureWorkerStarted() {
         if (this._state === WORKER_STATE.UNINITIALIZED) {
             this.startWorker();
         }
-        await this.connectionInitializedDeferred;
+        return this.workerInitPromise;
     }
 
     onInitError(e) {
@@ -63,7 +65,7 @@ export class WorkerService {
             this.startWorker();
         } else if (this._state === WORKER_STATE.INITIALIZING) {
             this._state = WORKER_STATE.FAILED;
-            this.connectionInitializedDeferred.resolve();
+            this._resolveWorkerInit();
             console.warn("Worker service failed to initialize: ", e);
         }
     }
@@ -98,7 +100,7 @@ export class WorkerService {
         if (this._state === WORKER_STATE.UNINITIALIZED) {
             return;
         }
-        await this.connectionInitializedDeferred;
+        await this.workerInitPromise;
         if (this._state === WORKER_STATE.FAILED) {
             console.warn("Worker service failed to initialize, cannot send message.");
         }
@@ -114,7 +116,7 @@ export class WorkerService {
         if (this._state === WORKER_STATE.UNINITIALIZED) {
             this.startWorker();
         }
-        await this.connectionInitializedDeferred;
+        await this.workerInitPromise;
         if (this._state === WORKER_STATE.FAILED) {
             console.warn("Worker service failed to initialize, cannot register handler.");
         }
