@@ -321,6 +321,9 @@ class ResPartnerBank(models.Model):
             or tools.config['test_enable']
         )
 
+    def action_open_business_doc(self):
+        return self._get_records_action()
+
     @api.model_create_multi
     def create(self, vals_list):
         # EXTENDS base res.partner.bank
