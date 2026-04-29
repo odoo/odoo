@@ -447,6 +447,9 @@ export const htmlField = {
         if ("debounceHints" in options) {
             editorConfig.debounceHints = Boolean(options.debounceHints);
         }
+        if ("allowWhiteboard" in options) {
+            editorConfig.allowWhiteboard = Boolean(options.allowWhiteboard);
+        }
 
         const props = {
             editorConfig,
