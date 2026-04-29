@@ -3,6 +3,8 @@ import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { ClassAction, StyleAction } from "@html_builder/core/core_builder_action_plugin";
 import { getElementsWithOption } from "@html_builder/utils/utils";
 import { Plugin } from "@html_editor/plugin";
+import { closestElement } from "@html_editor/utils/dom_traversal";
+import { withSequence } from "@html_editor/utils/resource";
 import { registry } from "@web/core/registry";
 import { renderToElement } from "@web/core/utils/render";
 import { SelectTemplateAction } from "../customize_website_plugin";
@@ -40,6 +42,18 @@ export class CountdownOptionPlugin extends Plugin {
             SelectCountdownTemplateAction,
             SetColorInlineCountdownAction,
         },
+        toolbar_namespace_providers: [
+            withSequence(85, (targetedNodes) => {
+                if (
+                    targetedNodes.length &&
+                    targetedNodes.some((node) =>
+                        closestElement(node, ".s_countdown .s_countdown_metrics")
+                    )
+                ) {
+                    return "text";
+                }
+            }),
+        ],
         on_cloned_handlers: ({ cloneEl }) => {
             const countdownEls = getElementsWithOption(cloneEl, ".s_countdown");
             for (const countdownEl of countdownEls) {
