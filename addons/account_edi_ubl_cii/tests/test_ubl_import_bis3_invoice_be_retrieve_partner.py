@@ -49,3 +49,14 @@ class TestUblImportBis3InvoiceBERetrievePartner(TestUblImportBis3InvoiceBE):
             journal=self.company_data['default_journal_sale'],
         )
         self.assertEqual(self.partner_be, invoice.partner_id, "We find the belgian partner, not his contact")
+
+    def test_import_bill_vat_in_party_identification(self):
+        """ Some Peppol emitters add the supplier VAT only in
+        cac:PartyIdentification/cbc:ID, not in PartyTaxScheme/cbc:CompanyID.
+        """
+        invoice = self._import_invoice_as_attachment_on(
+            test_name='test_import_bill_vat_in_party_identification',
+            journal=self.company_data['default_journal_purchase'],
+        )
+        self.assertEqual(invoice.partner_id.vat, 'BE0239843188')
+        self.assertEqual(invoice.partner_bank_id.partner_id, invoice.partner_id)
