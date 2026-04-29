@@ -529,6 +529,17 @@ test("Can delete an image", async () => {
     expect(".test-image").toHaveCount(0);
 });
 
+test("Can delete an image with display block style applied", async () => {
+    await setupEditor(`
+        <p><img class="img-fluid test-image d-block" src="${base64Img}"></p>
+    `);
+    await click("img");
+    await expectElementCount(".o-we-toolbar button[name='image_delete']", 1);
+    await click("button[name='image_delete']");
+    await animationFrame();
+    await expectElementCount(".test-image", 0);
+});
+
 test("Deleting an image that is alone inside `p` should set selection at start of `p`", async () => {
     const { el } = await setupEditor(`<p><img>[]</p>`);
     await click("img");
