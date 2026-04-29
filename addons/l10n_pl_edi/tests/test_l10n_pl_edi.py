@@ -596,6 +596,14 @@ class TestL10nPlEdi(AccountTestInvoicingCommon, CronMixinCase):
             ).ids,
         )
 
+        created_move_attachment = self.env['ir.attachment'].search([
+            ('res_model', '=', 'account.move'),
+            ('res_id', '=', created_move.id),
+        ], limit=1)
+        self.assertTrue(created_move_attachment)
+        with tools.file_open('l10n_pl_edi/tests/export_xmls/fa3_bill.xml', mode='rb') as file:
+            self.assertEqual(bytes(created_move_attachment.raw), file.read())
+
     def test_l10n_pl_edi_download_bill_retry_after(self):
         """Test that when a rate limit error occurs the progress is preserved and the cron is rescheduled."""
 
@@ -634,6 +642,13 @@ class TestL10nPlEdi(AccountTestInvoicingCommon, CronMixinCase):
 
         bill_1 = self.env['account.move'].search([('l10n_pl_edi_number', '=', 'KSEF-BILL-001')])
         self.assertTrue(bill_1)
+        bill_1_attachment = self.env['ir.attachment'].search([
+            ('res_model', '=', 'account.move'),
+            ('res_id', '=', bill_1.id),
+        ], limit=1)
+        self.assertTrue(bill_1_attachment)
+        with tools.file_open('l10n_pl_edi/tests/export_xmls/fa3_bill.xml', mode='rb') as file:
+            self.assertEqual(bytes(bill_1_attachment.raw), file.read())
 
         bill_2 = self.env['account.move'].search([('l10n_pl_edi_number', '=', 'KSEF-BILL-002')])
         self.assertFalse(bill_2)
