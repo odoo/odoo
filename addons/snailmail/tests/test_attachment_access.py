@@ -101,3 +101,32 @@ class testAttachmentAccess(TransactionCase):
         with self.assertRaises(AccessError):
             letter.write({'attachment_id': attachment_forbidden.id})
             letter.attachment_raw
+
+        with self.assertRaises(AccessError):
+            self.env["snailmail.letter"].with_user(self.user).onchange(
+                {"attachment_id": attachment_forbidden.id},
+                ["attachment_id"],
+                {"attachment_raw": {}},
+            )
+
+        with self.assertRaises(AccessError):
+            self.env["snailmail.letter"].with_user(self.user).with_context(
+                default_attachment_id=attachment_forbidden.id,
+            ).onchange(
+                {},
+                [],
+                {"attachment_id": {}, "attachment_raw": {}},
+            )
+
+        self.env["ir.default"].with_user(self.user).set(
+            "snailmail.letter",
+            "attachment_id",
+            attachment_forbidden.id,
+            user_id=True,
+        )
+        with self.assertRaises(AccessError):
+            self.env["snailmail.letter"].with_user(self.user).onchange(
+                {},
+                [],
+                {"attachment_id": {}, "attachment_raw": {}},
+            )
