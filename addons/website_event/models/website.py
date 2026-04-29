@@ -6,6 +6,8 @@ from lxml import etree, html
 
 from odoo import api, models, _
 
+CTA_PRIORITY_EVENT = 60
+
 
 class Website(models.Model):
     _inherit = "website"
@@ -76,12 +78,14 @@ class Website(models.Model):
         suggested_controllers.append((_('Events'), self.env['ir.http']._url_for('/event'), 'website_event'))
         return suggested_controllers
 
-    def get_cta_data(self, website_purpose, website_type):
-        cta_data = super(Website, self).get_cta_data(website_purpose, website_type)
-        if website_purpose == 'sell_more' and website_type == 'event':
-            cta_btn_text = _('Next Events')
-            return {'cta_btn_text': cta_btn_text, 'cta_btn_href': '/event'}
-        return cta_data
+    def get_cta_candidates(self, website_type):
+        candidates = super().get_cta_candidates(website_type)
+        if website_type == 'event':
+            candidates.append((CTA_PRIORITY_EVENT, {
+                'cta_btn_text': self.env._("Next Events"),
+                'cta_btn_href': '/event',
+            }))
+        return candidates
 
     def _search_get_details(self, search_type, order, options):
         result = super()._search_get_details(search_type, order, options)

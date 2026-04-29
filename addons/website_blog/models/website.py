@@ -3,6 +3,8 @@
 
 from odoo import models, _
 
+CTA_PRIORITY_BLOG = 60
+
 
 class Website(models.Model):
     _inherit = "website"
@@ -11,6 +13,15 @@ class Website(models.Model):
         suggested_controllers = super(Website, self).get_suggested_controllers()
         suggested_controllers.append((_('Blog'), self.env['ir.http']._url_for('/blog'), 'website_blog'))
         return suggested_controllers
+
+    def get_cta_candidates(self, website_type):
+        candidates = super().get_cta_candidates(website_type)
+        if website_type == 'blog':
+            candidates.append((CTA_PRIORITY_BLOG, {
+                'cta_btn_text': self.env._("Read Blog"),
+                'cta_btn_href': '/blog',
+            }))
+        return candidates
 
     def configurator_set_menu_links(self, menu_company, module_data):
         blogs = module_data.get('#blog', [])

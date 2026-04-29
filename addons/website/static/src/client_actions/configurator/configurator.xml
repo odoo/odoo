@@ -190,7 +190,7 @@
                                 </t>
                                 <t t-else="" t-foreach="this.state.positionings" t-as="positioning" t-key="positioning_index">
                                     <button t-on-click="() => this.selectPositioning(positioning)"
-                                            class="dropdown-item o_change_website_purpose"
+                                            class="dropdown-item o_change_website_positioning"
                                             role="menuitem"
                                             t-custom-ref="{{positioning_first ? 'purposeSelection' : positioning}}">
                                         <t t-out="positioning"/>

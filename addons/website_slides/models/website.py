@@ -3,6 +3,8 @@
 
 from odoo import _, api, fields, models
 
+CTA_PRIORITY_ELEARNING = 60
+
 
 class Website(models.Model):
     _inherit = "website"
@@ -13,6 +15,15 @@ class Website(models.Model):
         suggested_controllers = super(Website, self).get_suggested_controllers()
         suggested_controllers.append((_('Courses'), self.env['ir.http']._url_for('/slides'), 'website_slides'))
         return suggested_controllers
+
+    def get_cta_candidates(self, website_type):
+        candidates = super().get_cta_candidates(website_type)
+        if website_type == 'elearning':
+            candidates.append((CTA_PRIORITY_ELEARNING, {
+                'cta_btn_text': self.env._("Browse Courses"),
+                'cta_btn_href': '/slides',
+            }))
+        return candidates
 
     def _search_get_details(self, search_type, order, options):
         result = super()._search_get_details(search_type, order, options)

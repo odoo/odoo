@@ -37,7 +37,7 @@ registry.category("web_tour.tours").add("configurator_flow", {
         },
         {
             content: "choose from the positioning list",
-            trigger: "button.o_change_website_purpose",
+            trigger: "button.o_change_website_positioning",
             run: "click",
         },
         // Palette screen
