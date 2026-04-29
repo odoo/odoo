@@ -23,11 +23,13 @@ Thai accounting chart and localization.
         'data/account_tax_report_data.xml',
         'data/res_country_data.xml',
         'data/account_tax_tags_data.xml',
+        'data/report_paperformat_data.xml',
         'views/account_payment_views.xml',
         'views/account_tax_views.xml',
         'views/report_invoice.xml',
         'views/res_partner_view.xml',
         'wizards/account_payment_register_views.xml',
+        'report/report_tawi.xml',
     ],
     'demo': [
         'demo/demo_company.xml',
