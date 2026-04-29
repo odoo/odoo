@@ -10,6 +10,7 @@ from odoo.exceptions import UserError
 from odoo.fields import Domain
 from odoo.tools import formatLang, frozendict, html2plaintext, html_escape, pdf, unique
 from odoo.addons.account_edi_ubl_cii.models.account_edi_common import (
+    EAS_MAPPING,
     FloatFmt,
     GST_COUNTRY_CODES,
     UOM_TO_UNECE_CODE,
@@ -1713,6 +1714,12 @@ class AccountEdiUBL(models.AbstractModel):
             if peppol_eas := node.attrib.get('schemeID'):
                 customer_values['peppol_eas'] = peppol_eas
 
+        if not customer_values['vat'] and (country_code := customer_values.get('country_code')):
+            for scheme_id, field in EAS_MAPPING.get(country_code, {}).items():
+                if field == 'vat' and (vat := party_node.findtext(f".//{{*}}PartyIdentification/{{*}}ID[@schemeID='{scheme_id}']")):
+                    customer_values['vat'] = vat
+                    break
+
     def _import_ubl_retrieve_customer_search_plan(self, collected_values):
         ResPartner = self.env['res.partner']
         return [
@@ -1838,7 +1845,7 @@ class AccountEdiUBL(models.AbstractModel):
         company = collected_values['company']
         move_type = collected_values['invoice'].move_type
         if move_type in ('out_refund', 'in_invoice'):
-            partner = collected_values.get('customer')
+            partner = collected_values.get('customer_values', {}).get('customer')
         elif move_type in ('out_invoice', 'in_refund'):
             partner = company.partner_id
         else:
