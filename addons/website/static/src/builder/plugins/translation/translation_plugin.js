@@ -75,6 +75,9 @@ export class TranslationPlugin extends Plugin {
     resources = {
         clean_for_save_processors: this.cleanForSave.bind(this),
         dirty_els_providers: this.getDirtyTranslations.bind(this),
+        on_replicated_handlers: ({ sourceEl, targetEl }) => {
+            targetEl.classList.toggle("o_dirty", sourceEl.classList.contains("o_dirty"));
+        },
         after_setup_editor_overrides: () => {
             const translationSavableEls = getTranslationAttributeEls(
                 this.services.website.pageDocument
