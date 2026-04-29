@@ -1097,6 +1097,7 @@ test("fetch all and only required fields", async function () {
                     A1: '=ODOO.LIST.VALUE(1, 1, "foo")', // in the definition
                     A2: '=ODOO.LIST.VALUE(1, 1, "product_id")', // not in the definition
                     A3: '=ODOO.LIST.VALUE(1, 1, "invalid_field")',
+                    A4: '=ODOO.LIST.HEADER(1, "bar")',
                 },
             },
         ],
@@ -1122,6 +1123,7 @@ test("fetch all and only required fields", async function () {
                 expect(args.kwargs.specification).toEqual({
                     id: {},
                     foo: {},
+                    bar: {},
                     product_id: {
                         fields: {
                             display_name: {},
@@ -1131,6 +1133,7 @@ test("fetch all and only required fields", async function () {
             }
         },
     });
+    await animationFrame();
     expect.verifySteps(["data-fetched"]);
 });
 
