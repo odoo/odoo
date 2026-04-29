@@ -834,3 +834,50 @@ class TestItEdiImport(TestItEdi):
                 }
             ],
         }])
+
+    def test_bills_transaction_id(self):
+        invoices_data = {}
+        transaction_ids = [f'{1:0>11}', f'{2:0>11}']
+        for filename, transaction_id in zip(('IT01234567890_FPR03.xml', 'IT01234567890_FPR02.xml.p7m'), transaction_ids):
+            invoices_data.update({
+                transaction_id: {
+                    'filename': filename,
+                    'file': '',
+                    'key': str(uuid.uuid4()),
+            }})
+
+        # import the xml
+        path = f'{self.module}/tests/import_xmls/IT01234567890_FPR03.xml'
+        with tools.file_open(path, mode='rb') as fd:
+            import_content = fd.read()
+
+        def mock_commit(self):
+            pass
+
+        super_create = self.env.registry['account.move'].create
+        created_moves = []
+
+        def mock_create(self, vals_list):
+            moves = super_create(self, vals_list)
+            created_moves.extend(moves)
+            return moves
+
+        with (patch.object(self.proxy_user.__class__, '_decrypt_data', return_value=import_content),
+              patch.object(sql_db.Cursor, "commit", mock_commit),
+              patch.object(self.env.registry['account.move'], 'create', mock_create),
+              freeze_time('2019-01-01')):
+            self.env['account.move'].with_company(self.company)._l10n_it_edi_process_downloads(
+                invoices_data,
+                self.proxy_user,
+            )
+        moves = self.env['account.move']
+        for m in created_moves:
+            moves |= m
+        self.assertRecordValues(moves, [
+            {'l10n_it_edi_transaction': f'{1:0>11}'},
+            {'l10n_it_edi_transaction': f'{2:0>11}'},
+        ])
+        self.assertListEqual(
+            moves.l10n_it_edi_attachment_id.mapped('name'),
+            ['IT01234567890_FPR03.xml', 'IT01234567890_FPR02.xml.p7m']
+        )

@@ -1161,12 +1161,24 @@ class AccountMove(models.Model):
                 invoice_data['key'],
                 proxy_user,
             ):
+<<<<<<< 68d9cd1e3d794404d0647b17cebc95e04bfa240a
                 attachment_vals.append({
                     'name': filename_and_decrypted_content[0],
                     'raw': filename_and_decrypted_content[1],
                     'type': 'binary',
                 })
 
+||||||| 12fc2f2f8a655a770b9cdc6df6a5da3127dcdd4f
+
+                if not modules.module.current_test:
+                    self.env.cr.commit()
+                moves |= move
+=======
+                move.l10n_it_edi_transaction = id_transaction
+                if not modules.module.current_test:
+                    self.env.cr.commit()
+                moves |= move
+>>>>>>> 819376d431aff9725d935f0e329e37abf7f78383
             proxy_acks.append(id_transaction)
 
         if attachment_vals:
