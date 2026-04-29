@@ -96,7 +96,7 @@ class AccountMove(models.Model):
         if decoder is None:
             raise UserError(self.env._("Cannot decode origin file, try by importing it again"))
         self.invoice_line_ids = [Command.clear()]
-        if decoder(self, file_data):
+        if decoder(self.with_context({'ungroup_lines': True}), file_data):
             self._message_log(body=self.env._("Ungrouped lines from %s", file_data['attachment'].name))
         else:
             raise UserError(error_message)
@@ -213,6 +213,7 @@ class AccountMove(models.Model):
 
     @api.model
     def _post_process_link_to_purchase_order(self, invoice):
+        # DEPRECATED, will be removed in master
         # Override account.move
         try:
             invoice._check_move_for_group_ungroup_lines_by_tax()
