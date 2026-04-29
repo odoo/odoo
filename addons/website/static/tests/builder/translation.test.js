@@ -477,6 +477,31 @@ test("TOC navbar translation entry follows the heading translation", async () =>
     expect(navSpan).toHaveClass("o_dirty");
 });
 
+test("replicated translated snippets are marked dirty", async () => {
+    const sourceSha = "replicatedSourceSha";
+    const { getEditor } = await setupSidebarBuilderForTranslation({
+        websiteContent: `
+            ${getTranslateEditable({ inWrap: "Hello", sourceSha, oeId: "1" })}
+            ${getTranslateEditable({ inWrap: "Hello", sourceSha, oeId: "1" })}
+        `,
+    });
+    const editor = getEditor();
+    await contains(".modal .btn:contains(Ok, never show me this again)").click();
+
+    const spans = editor.editable.querySelectorAll(
+        `[data-oe-translation-source-sha="${sourceSha}"]`
+    );
+    const sourceSpan = spans[0];
+    const replicaSpan = spans[1];
+
+    setSelection({ anchorNode: sourceSpan.firstChild, anchorOffset: 0 });
+    await insertText(editor, "X");
+    editor.shared.history.addStep();
+
+    expect([sourceSpan, replicaSpan]).toHaveClass("o_dirty");
+    expect([sourceSpan, replicaSpan]).toHaveText("XHello");
+});
+
 test("table of content snippet headings' translation updates its navbar items", async () => {
     const snippet = "s_table_of_content";
     const websiteContent = (await getStructureSnippet(snippet)).outerHTML;
