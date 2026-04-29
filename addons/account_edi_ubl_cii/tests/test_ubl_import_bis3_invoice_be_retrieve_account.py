@@ -19,7 +19,7 @@ class TestUblImportBis3InvoiceBERetrieveAccount(TestUblImportBis3InvoiceBE):
         # also retrieve the product. This is made that way to avoid the call to
         # '_get_most_frequent_account_for_partner' in '_compute_account_id'.
         self._create_invoice_one_line(
-            name="turlututu",
+            name="turlutututu",
             product_id=product,
             account_id=account.id,
             partner_id=self.partner_be,
