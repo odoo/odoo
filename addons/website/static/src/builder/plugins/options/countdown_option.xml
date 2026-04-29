@@ -136,7 +136,7 @@
             </BuilderRow>
         </t>
     </t>
-    <BuilderRow label.translate="Round Corners" applyTo="'.o_count_item_nbs'" t-if="isActiveItem('template_wrapped_numbers_opt')" level="2">
+    <BuilderRow label.translate="Round Corners" applyTo="'.o_count_item_nbs'" t-if="this.isActiveItem('template_wrapped_numbers_opt')" level="2">
         <BuilderNumberInput styleAction="'border-radius'" unit="'px'" min="0"/>
     </BuilderRow>
     <t t-if="!this.isActiveItem('template_circle_opt')">
@@ -204,7 +204,7 @@
     <div class="s_countdown_title oe_unremovable">
         <h2 style="text-align: center">
             <span class="h3-fs">
-                <font class="text-o-color-1">Sales begins in:</font>
+                <font class="text-o-color-1">Sale begins in:</font>
             </span>
         </h2>
     </div>
