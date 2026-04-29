@@ -870,6 +870,30 @@ class TestTrackingInternals(TestTrackingCommon):
 
         }])
 
+    def test_field_label_translation(self):
+        self.env['res.lang']._activate_lang('gu_IN')
+        mail_test_ticket_id = self.env['ir.model']._get_id('mail.test.ticket')
+        address_field = self.env['ir.model.fields'].create({
+            'name': 'x_address',
+            'model_id': mail_test_ticket_id,
+            'ttype': 'char',
+            'tracking': True,
+            'translate': 'standard',
+        })
+        address_field.update_field_translations('field_description', {'gu_IN': 'સરનામું'})
+        with self.mock_mail_gateway(), self.mock_mail_app():
+            self.record.with_context({'lang': 'gu_IN'}).x_address = "ગોકુલધામ, જેઠાલાલા"
+            self.flush_tracking()
+        self.assertMessageFields(
+            self._new_msgs, {
+                'body': '',
+                'tracking_values': [
+                    ('x_address', 'char', False, 'ગોકુલધામ, જેઠાલાલા', {'html_string': 'સરનામું'}),
+                ],
+            }
+        )
+        address_field.unlink()
+
     @users('employee')
     def test_mail_track_2many(self):
         """ Check result of tracking one2many and many2many fields. Current
@@ -1661,20 +1685,3 @@ class TestTrackingInternals(TestTrackingCommon):
                 for tracking, field_info, values in zip(trackings_all_sorted, fields_info, values_info)
             ]
         )
-
-    def test_tracking_field_label_translation(self):
-        self.env['res.lang']._activate_lang('gu_IN')
-        mail_test_ticket_id = self.env['ir.model']._get_id('mail.test.ticket')
-        address_field = self.env['ir.model.fields'].create({
-            'name': 'x_address',
-            'model_id': mail_test_ticket_id,
-            'ttype': 'char',
-            'tracking': True,
-            'translate': 'standard',
-        })
-        address_field.update_field_translations('field_description', {'gu_IN': 'સરનામું'})
-        self.record.with_context({'lang': 'gu_IN'}).x_address = "ગોકુલધામ, જેઠાલાલા"
-        self.flush_tracking()
-        tracking_body = self.record.message_ids.filtered(lambda m: m.message_type == 'tracking').body
-        self.assertEqual(tracking_body, '<p>None<b>ગોકુલધામ, જેઠાલાલા</b><i>સરનામું</i><br></p>')
-        address_field.unlink()
