@@ -898,6 +898,9 @@ class ResPartner(models.Model):
         country_prefix = re.match('^[a-zA-Z]{2}|^', vat).group()
 
         criteria = [{'domain': [('vat', 'in', (normalized_vat, vat))]}]
+        extra_vat_values = self._get_country_specific_vat_variants(normalized_vat, country_prefix)
+        if extra_vat_values:
+            criteria.append({'domain': [('vat', 'in', extra_vat_values)]})
         if country_prefix:
             criteria.append({
                 'domain': [
@@ -945,6 +948,11 @@ class ResPartner(models.Model):
         return {
             'criteria': criteria,
         }
+
+    @api.model
+    def _get_country_specific_vat_variants(self, normalized_vat, country_prefix):
+        """Return additional formatted VAT values to consider during EDI partner matching."""
+        return []
 
     @api.model
     def _import_retrieve_customer_from_phone(self, customer_values):
