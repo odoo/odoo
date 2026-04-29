@@ -233,6 +233,8 @@ class MailingList(models.Model):
         The opt-out status of the destination list is preffered.
         Otherwise if it is opted out of any list, it is opted out of the final one.
         """
+        if not src_lists:
+            return
         self.ensure_one()
         # Put destination is sources lists if not already the case
         self.env['mailing.contact'].flush_model()
