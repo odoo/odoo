@@ -269,12 +269,12 @@ class HrLeave(models.Model):
         self.request_hour_from = min(max(self.request_hour_from, 0.0), 23.99)
         self.request_hour_to = min(max(self.request_hour_to, 0.0), 24)
 
-    @api.depends('employee_id', 'request_date_from', 'request_date_to', 'work_entry_type_request_unit')
+    @api.depends('employee_id', 'request_date_from', 'request_date_to')
     def _compute_request_hour_from_to(self):
         env_company_calendar = self.env.company.resource_calendar_id
         for leave in self:
             calendar = leave.resource_calendar_id or env_company_calendar
-            if (leave.work_entry_type_request_unit != 'hour'
+            if (leave.work_entry_type_id.request_unit != 'hour'
                     and leave.employee_id
                     and leave.request_date_from
                     and leave.request_date_to
@@ -283,7 +283,7 @@ class HrLeave(models.Model):
                 leave.request_hour_from = hour_from
                 leave.request_hour_to = hour_to
 
-    @api.depends('employee_id', 'work_entry_type_request_unit', 'request_date_from', 'request_date_to',
+    @api.depends('employee_id', 'request_date_from', 'request_date_to',
             'request_hour_from', 'request_hour_to', 'request_date_from_period', 'request_date_to_period')
     def _compute_dashboard_warning_message(self):
         all_leaves = self.search([
@@ -444,7 +444,7 @@ class HrLeave(models.Model):
                       ) for version in versions)))
 
     @api.depends('request_date_from_period', 'request_date_to_period', 'request_hour_from', 'request_hour_to',
-                 'request_date_from', 'request_date_to', 'work_entry_type_request_unit', 'employee_id')
+                 'request_date_from', 'request_date_to', 'employee_id')
     def _compute_date_from_to(self):
         for holiday in self:
             is_calendar_leave = holiday.work_entry_type_id.count_days_as == 'calendar'
@@ -552,7 +552,7 @@ class HrLeave(models.Model):
         else:
             self.has_mandatory_day = False
 
-    @api.depends('work_entry_type_request_unit', 'number_of_days')
+    @api.depends('number_of_days')
     def _compute_work_entry_type_increases_duration(self):
         durations = self._get_durations(check_work_entry_type=False)
         for leave in self:
@@ -730,7 +730,7 @@ class HrLeave(models.Model):
             result[leave.id] = (days, hours)
         return result
 
-    @api.depends('date_from', 'date_to', 'resource_calendar_id', 'work_entry_type_id.request_unit')
+    @api.depends('date_from', 'date_to', 'resource_calendar_id')
     def _compute_duration(self):
         durations = self._get_durations()
         for leave in self:
@@ -762,7 +762,7 @@ class HrLeave(models.Model):
                 tz = leave.employee_id._get_tz(leave.date_from) or tz
             leave.tz = tz
 
-    @api.depends('number_of_hours', 'number_of_days', 'work_entry_type_request_unit')
+    @api.depends('number_of_hours', 'number_of_days')
     def _compute_duration_display(self):
         for leave in self:
             duration = leave.number_of_days
