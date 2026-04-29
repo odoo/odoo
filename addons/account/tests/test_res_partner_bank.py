@@ -85,7 +85,7 @@ class TestResPartnerBank(AccountTestInvoicingCommon, MailCase):
         for msg in partner_msgs:
             self.assertMessageFields(msg, {
                 'body': f'<p>Bank Account <a href="#" data-oe-model="{bank_a._name}" data-oe-id="{bank_a.id}">#{bank_a.id}</a> updated</p>',
-                'message_type': 'notification',
+                'message_type': 'tracking',
                 'model': 'res.partner',
                 'subtype_id': self.env.ref('mail.mt_note'),
                 'tracking_values': [

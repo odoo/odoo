@@ -116,7 +116,7 @@ class TestAuditTrail(AccountTestInvoicingCommon, MailCase):
         self.assertMessageFields(
             self._new_msgs, {
                 'body': '',
-                'message_type': 'notification',
+                'message_type': 'tracking',
                 'tracking_values': [
                     ('name', 'char', False, 'MISC/2021/04/0001'),
                     ('state', 'selection', 'Draft', 'Posted'),
@@ -130,7 +130,7 @@ class TestAuditTrail(AccountTestInvoicingCommon, MailCase):
         self.assertMessageFields(
             self._new_msgs, {
                 'body': '',
-                'message_type': 'notification',
+                'message_type': 'tracking',
                 'tracking_values': [
                     ('state', 'selection', 'Posted', 'Draft'),
                 ],
@@ -143,7 +143,7 @@ class TestAuditTrail(AccountTestInvoicingCommon, MailCase):
         self.assertMessageFields(
             self._new_msgs, {
                 'body': '',
-                'message_type': 'notification',
+                'message_type': 'tracking',
                 'tracking_values': [
                     ('name', 'char', 'MISC/2021/04/0001', 'nawak'),
                 ],
@@ -192,7 +192,7 @@ class TestAuditTrail(AccountTestInvoicingCommon, MailCase):
         ], strict=True):
             self.assertMessageFields(
                 msg, {
-                    'message_type': 'notification',
+                    'message_type': 'tracking',
                     **check_values,
                 }
             )
@@ -229,7 +229,7 @@ class TestAuditTrail(AccountTestInvoicingCommon, MailCase):
         ], strict=True):
             self.assertMessageFields(
                 msg, {
-                    'message_type': 'notification',
+                    'message_type': 'tracking',
                     **check_values,
                 }
             )
@@ -277,7 +277,7 @@ class TestAuditTrail(AccountTestInvoicingCommon, MailCase):
         for msg, check_values in zip(self._new_msgs, exp_results, strict=True):
             self.assertMessageFields(
                 msg, {
-                    'message_type': 'notification',
+                    'message_type': 'tracking',
                     **check_values,
                 }
             )
@@ -289,7 +289,7 @@ class TestAuditTrail(AccountTestInvoicingCommon, MailCase):
             self._new_msgs, {
                 'body_content': '<p>No<b>Yes</b><i>Restrictive Audit Trail</i><br></p>',
                 'body': '',
-                'message_type': 'notification',
+                'message_type': 'tracking',
                 'tracking_values': [('restrictive_audit_trail', 'boolean', False, True)],
             }
         )
@@ -330,6 +330,7 @@ class TestAuditTrail(AccountTestInvoicingCommon, MailCase):
         })
         # similar to domain in action_account_audit_trail_report
         # should raise no error when the user access it
+        # TDE checkme
         self.env['mail.message'].search([
             ('message_type', '=', 'notification'),
             ('model', '=', 'account.account'),
