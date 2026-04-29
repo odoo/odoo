@@ -32,7 +32,7 @@ import { FormErrorDialog } from "./form_error_dialog/form_error_dialog";
 import { FormStatusIndicator } from "./form_status_indicator/form_status_indicator";
 import { FormCogMenu } from "./form_cog_menu/form_cog_menu";
 
-import { Component, onError, onMounted, onWillUnmount, status, useEffect } from "@odoo/owl";
+import { Component, onError, onMounted, onWillUnmount } from "@odoo/owl";
 import { FetchRecordError } from "@web/model/relational_model/errors";
 
 const viewRegistry = registry.category("views");
@@ -206,12 +206,12 @@ export class FormController extends Component {
         };
         this.model = useModel(this.props.Model, this.modelParams, { beforeFirstLoad });
         useSubEnv({ model: this.model });
-        useEffect(() => {
-            this.model.root?.resId; // consume signal
-            if (status(this) === "mounted") {
+        useLayoutEffect(
+            () => {
                 this.props.updateActionState({ resId: this.model.root.resId });
-            }
-        });
+            },
+            () => [this.model.root.resId]
+        );
 
         onError((error) => {
             const suggestedCompany = error.data?.context?.suggested_company;
