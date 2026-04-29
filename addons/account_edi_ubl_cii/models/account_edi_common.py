@@ -18,40 +18,6 @@ from odoo.tools.xml_utils import find_xml_value
 from odoo.addons.base.models.res_country import EUROPEAN_ECONOMIC_AREA_COUNTRY_CODES
 
 # -------------------------------------------------------------------------
-# UNIT OF MEASURE
-# -------------------------------------------------------------------------
-UOM_TO_UNECE_CODE = {
-    'uom.product_uom_unit': 'C62',
-    'uom.product_uom_dozen': 'DZN',
-    'uom.product_uom_kgm': 'KGM',
-    'uom.product_uom_gram': 'GRM',
-    'uom.product_uom_day': 'DAY',
-    'uom.product_uom_hour': 'HUR',
-    'uom.product_uom_minute': 'MIN',
-    'uom.product_uom_ton': 'TNE',
-    'uom.product_uom_meter': 'MTR',
-    'uom.product_uom_km': 'KMT',
-    'uom.product_uom_cm': 'CMT',
-    'uom.product_uom_litre': 'LTR',
-    'uom.product_uom_cubic_meter': 'MTQ',
-    'uom.product_uom_lb': 'LBR',
-    'uom.product_uom_oz': 'ONZ',
-    'uom.product_uom_inch': 'INH',
-    'uom.product_uom_foot': 'FOT',
-    'uom.product_uom_mile': 'SMI',
-    'uom.product_uom_floz': 'OZA',
-    'uom.product_uom_qt': 'QTL',
-    'uom.product_uom_gal': 'GLL',
-    'uom.product_uom_cubic_inch': 'INQ',
-    'uom.product_uom_cubic_foot': 'FTQ',
-    'uom.product_uom_square_meter': 'MTK',
-    'uom.product_uom_square_foot': 'FTK',
-    'uom.product_uom_yard': 'YRD',
-    'uom.product_uom_millimeter': 'MMT',
-    'uom.product_uom_kwh': 'KWH',
-}
-
-# -------------------------------------------------------------------------
 # MAPPING FOR TAX EXEMPTION
 # -------------------------------------------------------------------------
 TAX_EXEMPTION_MAPPING = {
@@ -237,15 +203,6 @@ class AccountEdiCommon(models.AbstractModel):
     def _get_currency_decimal_places(self, currency_id):
         # Allows other documents to easily override in case there is a flat max precision number
         return currency_id.decimal_places
-
-    def _get_uom_unece_code(self, uom):
-        """
-        list of codes: https://docs.peppol.eu/poacc/billing/3.0/codelist/UNECERec20/ (sorted by letter)
-        """
-        xmlid = uom.get_external_id()
-        if xmlid and uom.id in xmlid:
-            return UOM_TO_UNECE_CODE.get(xmlid[uom.id], 'C62')
-        return 'C62'
 
     def _find_value(self, xpaths, tree, nsmap=False):
         """ Iteratively queries the tree using the xpaths and returns a result as soon as one is found """
@@ -990,11 +947,8 @@ class AccountEdiCommon(models.AbstractModel):
         quantity_node = tree.find(xpath_dict['delivered_qty'])
         if quantity_node is not None:
             delivered_qty = float(quantity_node.text)
-            uom_xml = quantity_node.attrib.get('unitCode')
-            if uom_xml:
-                uom_infered_xmlid = {v: k for k, v in UOM_TO_UNECE_CODE.items()}.get(uom_xml)
-                if uom_infered_xmlid:
-                    product_uom = self.env.ref(uom_infered_xmlid, raise_if_not_found=False) or self.env['uom.uom']
+            if unece_code := quantity_node.attrib.get('unitCode'):
+                product_uom = self.env['uom.uom']._get_uom_from_unece_code(unece_code)
         if product and product_uom and not product_uom._has_common_reference(product.product_tmpl_id.uom_id):
             # uom incompatibility
             product_uom = self.env['uom.uom']

@@ -14,7 +14,6 @@ from odoo.addons.base.models.res_partner_bank import sanitize_account_number
 from odoo.addons.account_edi_ubl_cii.models.account_edi_common import (
     FloatFmt,
     GST_COUNTRY_CODES,
-    UOM_TO_UNECE_CODE,
 )
 from odoo.addons.account_edi_ubl_cii.tools.ubl_20_optional_fields import PEPPOL_INVOICE_OPTIONAL_FIELDS, PEPPOL_INVOICE_OPTIONAL_LINE_FIELDS, PEPPOL_CREDIT_NOTE_OPTIONAL_FIELDS, PEPPOL_CREDIT_NOTE_OPTIONAL_LINE_FIELDS
 from odoo.addons.account_edi_ubl_cii.tools import Invoice, CreditNote, DebitNote
@@ -353,28 +352,28 @@ class AccountEdiUBL(models.AbstractModel):
         base_line = vals['line_vals']['base_line']
         vals['line_node']['cbc:Quantity'] = {
             '_text': base_line['quantity'],
-            'unitCode': self._get_uom_unece_code(base_line['product_uom_id']),
+            'unitCode': base_line['product_uom_id']._get_unece_code(),
         }
 
     def _ubl_add_line_invoiced_quantity_node(self, vals):
         base_line = vals['line_vals']['base_line']
         vals['line_node']['cbc:InvoicedQuantity'] = {
             '_text': base_line['quantity'],
-            'unitCode': self._get_uom_unece_code(base_line['product_uom_id']),
+            'unitCode': base_line['product_uom_id']._get_unece_code(),
         }
 
     def _ubl_add_line_credited_quantity_node(self, vals):
         base_line = vals['line_vals']['base_line']
         vals['line_node']['cbc:CreditedQuantity'] = {
             '_text': base_line['quantity'],
-            'unitCode': self._get_uom_unece_code(base_line['product_uom_id']),
+            'unitCode': base_line['product_uom_id']._get_unece_code(),
         }
 
     def _ubl_add_line_debited_quantity_node(self, vals):
         base_line = vals['line_vals']['base_line']
         vals['line_node']['cbc:DebitedQuantity'] = {
             '_text': base_line['quantity'],
-            'unitCode': self._get_uom_unece_code(base_line['product_uom_id']),
+            'unitCode': base_line['product_uom_id']._get_unece_code(),
         }
 
     def _ubl_add_line_item_name_description_nodes(self, vals):
@@ -3054,30 +3053,28 @@ class AccountEdiUBL(models.AbstractModel):
 
             to_write['product_uom_id'] = False
             if uom_code:
-                matched_uom_xmlid = {v: k for k, v in UOM_TO_UNECE_CODE.items()}.get(uom_code)
-                if matched_uom_xmlid:
-                    if matched_uom_xmlid in cache:
-                        uom = cache[matched_uom_xmlid]
-                    else:
-                        uom = cache[matched_uom_xmlid] = self.env.ref(matched_uom_xmlid, raise_if_not_found=False)
-                    if uom:
-                        product = line_collected_values['product_values'].get('product')
-                        product_uom = product.product_tmpl_id.uom_id if product else self.env['uom.uom']
-                        if product and not uom._has_common_reference(product_uom):
-                            logs.append(_(
-                                "The Unit of Measure '%(uom)s' (from unit code '%(code)s') was "
-                                "ignored on the line for product '%(product)s' because it is not "
-                                "compatible with the product's Unit of Measure '%(product_uom)s'. "
-                                "The UoM was left empty.",
-                                uom=uom.name,
-                                code=uom_code,
-                                product=product.display_name,
-                                product_uom=product_uom.name,
-                            ))
-                            product_uom_values['force_empty'] = True
-                            continue
-                        to_write['product_uom_id'] = uom.id
-                        product_uom_values['uom'] = uom
+                if uom_code in cache:
+                    uom = cache[uom_code]
+                else:
+                    uom = cache[uom_code] = self.env['uom.uom']._get_uom_from_unece_code(uom_code)
+                if uom:
+                    product = line_collected_values['product_values'].get('product')
+                    product_uom = product.product_tmpl_id.uom_id if product else self.env['uom.uom']
+                    if product and not uom._has_common_reference(product_uom):
+                        logs.append(_(
+                            "The Unit of Measure '%(uom)s' (from unit code '%(code)s') was "
+                            "ignored on the line for product '%(product)s' because it is not "
+                            "compatible with the product's Unit of Measure '%(product_uom)s'. "
+                            "The UoM was left empty.",
+                            uom=uom.name,
+                            code=uom_code,
+                            product=product.display_name,
+                            product_uom=product_uom.name,
+                        ))
+                        product_uom_values['force_empty'] = True
+                        continue
+                    to_write['product_uom_id'] = uom.id
+                    product_uom_values['uom'] = uom
 
     def _import_ubl_invoice_retrieve_accounts(self, collected_values):
         lines_collected_values = collected_values['lines_collected_values']
