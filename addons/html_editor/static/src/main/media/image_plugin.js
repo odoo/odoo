@@ -234,7 +234,7 @@ export class ImagePlugin extends Plugin {
                 this.setSelectionAroundImage(e.target);
             }
         });
-        this.addDomListener(this.editable, "pointerup", (e) => {
+        this.addDomListener(this.editable, "click", (e) => {
             if (e.target.tagName === "IMG") {
                 this.setSelectionAroundImage(e.target);
             }
