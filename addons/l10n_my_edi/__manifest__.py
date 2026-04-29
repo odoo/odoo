@@ -10,6 +10,7 @@
     """,
     # The export does not depend on the pint format, but we need to reuse the fields defined there.
     'depends': ['l10n_my', 'l10n_my_ubl_pint', 'account_edi_proxy_client'],
+    'auto_install': ['l10n_my'],
     'data': [
         'data/ir_cron.xml',
         'data/l10n_my_edi.industry_classification.csv',
