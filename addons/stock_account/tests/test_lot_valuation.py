@@ -645,3 +645,20 @@ class TestLotValuation(TestStockValuationCommon):
         self.product.standard_price = 12
         self.assertEqual(self.product.standard_price, 12)
         self.assertEqual(self.lot1.standard_price, 12)
+
+    def test_lot_valuation_at_date_fully_consumed_lot(self):
+        """
+        Stock report at date should show correct value for lot valuated
+        AVCO products even if the lot has been fully consumed.
+        """
+        now = fields.Datetime.now()
+        date_1 = now + timedelta(days=1)
+        date_2 = now + timedelta(days=2)
+
+        self._make_in_move(self.product, 10, 5, lot_ids=[self.lot1])
+        self.assertEqual(self.product.total_value, 50)
+        self.assertEqual(self.product.avg_cost, 5)
+
+        with freeze_time(date_2):
+            self._make_out_move(self.product, 10, lot_ids=[self.lot1])
+            self.assertEqual(self.product.with_context(to_date=date_1).total_value, 50)
