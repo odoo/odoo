@@ -941,8 +941,6 @@ export class ApplyConfiguratorScreen extends Component {
             selected_palette: selectedPalette,
             is_dark_palette: this.state.selectedPalette.isDark,
             theme_name: themeName,
-            website_purpose:
-                this.state.selectedPositioning || this.state.formerSelectedPositioning || "general",
             website_type: WEBSITE_TYPES[this.state.selectedType].name,
             logo_attachment_id: this.state.logoAttachmentId,
         };
