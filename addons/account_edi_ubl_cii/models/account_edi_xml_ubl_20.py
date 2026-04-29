@@ -4,6 +4,7 @@ from lxml import etree
 from odoo import _, models, Command
 from odoo.tools import html2plaintext, cleanup_xml_node, float_is_zero, float_repr, float_round
 from odoo.addons.account.tools import dict_to_xml
+from odoo.addons.account_edi_ubl_cii.models.account_edi_common import EAS_MAPPING
 from odoo.addons.account_edi_ubl_cii.tools import Invoice, CreditNote, DebitNote
 from odoo.addons.account_edi_ubl_cii.tools.ubl_20_optional_fields import PEPPOL_INVOICE_OPTIONAL_FIELDS, PEPPOL_INVOICE_OPTIONAL_LINE_FIELDS, PEPPOL_CREDIT_NOTE_OPTIONAL_FIELDS, PEPPOL_CREDIT_NOTE_OPTIONAL_LINE_FIELDS
 
@@ -832,13 +833,19 @@ class AccountEdiXmlUBL20(models.AbstractModel):
 
     def _import_retrieve_partner_vals(self, tree, role):
         """ Returns a dict of values that will be used to retrieve the partner """
+        vat = self._find_value(f'.//cac:{role}Party/cac:Party//cbc:CompanyID[string-length(text()) > 5]', tree)
+        country_code = self._find_value(f'.//cac:{role}Party/cac:Party//cac:Country//cbc:IdentificationCode', tree)
+        if not vat and country_code:
+            for scheme_id, field in EAS_MAPPING.get(country_code, {}).items():
+                if field == 'vat' and (vat := self._find_value(f".//cac:{role}Party/cac:Party/cac:PartyIdentification/cbc:ID[@schemeID='{scheme_id}']", tree)):
+                    break
         return {
-            'vat': self._find_value(f'.//cac:{role}Party/cac:Party//cbc:CompanyID[string-length(text()) > 5]', tree),
+            'vat': vat,
             'phone': self._find_value(f'.//cac:{role}Party/cac:Party//cbc:Telephone', tree),
             'email': self._find_value(f'.//cac:{role}Party/cac:Party//cbc:ElectronicMail', tree),
             'name': self._find_value(f'.//cac:{role}Party/cac:Party//cbc:RegistrationName', tree) or
                     self._find_value(f'.//cac:{role}Party/cac:Party//cbc:Name', tree),
-            'country_code': self._find_value(f'.//cac:{role}Party/cac:Party//cac:Country//cbc:IdentificationCode', tree),
+            'country_code': country_code,
             'street': self._find_value(f'.//cac:{role}Party/cac:Party//cbc:StreetName', tree),
             'street2': self._find_value(f'.//cac:{role}Party/cac:Party//cbc:AdditionalStreetName', tree),
             'city': self._find_value(f'.//cac:{role}Party/cac:Party//cbc:CityName', tree),
