@@ -502,19 +502,18 @@ class MailTrackMixin(models.AbstractModel):
                 'new_value': format_amount(self.env, new_value or 0, currency) if currency else new_value,
             })
         elif col_info['type'] == 'datetime':
-            tz = self.env.user.tz or self.env.company.tz
             values.update({
-                f'old_value_{col_info["type"]}': initial_value,
-                f'new_value_{col_info["type"]}': new_value,
-                'old_value': format_datetime(self.env, initial_value, tz=tz or self.env.company.tz) if initial_value else 'None',
-                'new_value': format_datetime(self.env, new_value, tz=tz or self.env.company.tz) if new_value else 'None',
+                'old_value_datetime': initial_value,
+                'new_value_datetime': new_value,
+                'old_value': format_datetime(self.env, initial_value, tz=self.env.tz) if initial_value else 'None',
+                'new_value': format_datetime(self.env, new_value, tz=self.env.tz) if new_value else 'None',
             })
         elif col_info['type'] == 'date':
             values.update({
-                'old_value': format_date(self.env, initial_value) if initial_value else 'None',
-                'new_value': format_date(self.env, new_value) if new_value else 'None',
                 'old_value_datetime': initial_value and fields.Datetime.to_string(datetime.combine(fields.Date.from_string(initial_value), datetime.min.time())) or False,
                 'new_value_datetime': new_value and fields.Datetime.to_string(datetime.combine(fields.Date.from_string(new_value), datetime.min.time())) or False,
+                'old_value': format_date(self.env, initial_value) if initial_value else 'None',
+                'new_value': format_date(self.env, new_value) if new_value else 'None',
             })
         elif col_info['type'] == 'boolean':
             values.update({
