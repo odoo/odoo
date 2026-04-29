@@ -215,8 +215,8 @@ export class RelationalModel extends Model {
             this.config = config;
         }
         this.hooks.onWillLoadRoot(config);
-        const cachePromise = Promise.withResolvers();
-        const cache = this._getCacheParams(config, cachePromise.promise);
+        const { promise, resolve } = Promise.withResolvers();
+        const cache = this._getCacheParams(config, promise);
         let data;
         try {
             data = await this.keepLast.add(this._loadData(config, cache));
@@ -228,7 +228,7 @@ export class RelationalModel extends Model {
         }
         this.couldNotLoadRootOffline.set(false);
         this.root = this._createRoot(config, data);
-        cachePromise.resolve({ root: this.root, loadId: config.loadId });
+        resolve({ root: this.root, loadId: config.loadId });
         this.config = config;
         await this.hooks.onRootLoaded(this.root);
         if (hasRoot) {

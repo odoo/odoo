@@ -56,26 +56,6 @@ class Component extends owl.Component {
         this.env = useChildEnv();
         this.__owl__ = node;
         currentNode = node;
-
-        const name = node.componentName;
-        if (name.startsWith("Hoot")) {
-            return;
-        }
-        Object.defineProperty(node, "renderFn", {
-            get() {
-                return Reflect.get(node, "renderFn");
-            },
-            set(renderFn) {
-                Object.defineProperty(node, "renderFn", {
-                    value: () => {
-                        const result = renderFn();
-                        console.trace(`${name}::rendered`);
-                        return result;
-                    },
-                    writable: true,
-                });
-            },
-        });
     }
 
     setup() {}
