@@ -190,6 +190,7 @@
         'views/snippets/s_numbers_lite.xml',
         'views/snippets/s_hours_and_place.xml',
         'views/snippets/s_showcase_square.xml',
+        'views/snippets/s_services_grid.xml',
         'views/snippets/s_dynamic_snippet.xml',
         'views/snippets/s_dynamic_snippet_carousel.xml',
         'views/snippets/s_banner_product.xml',
