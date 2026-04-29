@@ -732,7 +732,7 @@ class AccountEdiCommon(models.AbstractModel):
             if line_values is None:
                 continue
 
-            line_values['tax_ids'], tax_logs = self._retrieve_taxes(record, line_values, tax_type)
+            line_values['tax_ids'], tax_logs = self._retrieve_taxes(record, line_values, tax_type, force_fiscal_position=True)
             logs += tax_logs
             if not line_values['product_uom_id']:
                 line_values.pop('product_uom_id')  # if no uom, pop it so it's inferred from the product_id
@@ -998,7 +998,7 @@ class AccountEdiCommon(models.AbstractModel):
                     return tax
         return self.env['account.tax']
 
-    def _retrieve_taxes(self, record, line_values, tax_type, tax_exigibility=False):
+    def _retrieve_taxes(self, record, line_values, tax_type, tax_exigibility=False, force_fiscal_position=False):
         """
         Retrieve the taxes on the document line at import.
 
@@ -1017,6 +1017,8 @@ class AccountEdiCommon(models.AbstractModel):
                 ('type_tax_use', '=', tax_type),
                 ('amount', '=', amount),
             ]
+            if force_fiscal_position:
+                domain += [('fiscal_position_ids', 'in', [False, record.fiscal_position_id.id])]
             tax = self.env['account.tax']
             if hasattr(record, '_get_specific_tax'):
                 tax = record._get_specific_tax(line_values['name'], 'percent', amount, tax_type).filtered_domain(domain)[:1]
