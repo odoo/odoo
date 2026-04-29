@@ -519,7 +519,9 @@ class AccountMove(models.Model):
             }
 
         def get_ksef_bill_vals(data):
-            partner_vat_domain_vals = (data['vendor_nip'], f"{data['vendor_country']}{data['vendor_nip']}")
+            nip = data['vendor_nip']
+            vat = f"PL{nip}"
+            partner_vat_domain_vals = (nip, vat)
             partner = self.env['res.partner'].search(
                 [
                     ('vat', 'in', partner_vat_domain_vals),
@@ -533,7 +535,7 @@ class AccountMove(models.Model):
                 partner = self.env['res.partner'].create(
                     {
                         'name': data['vendor_name'],
-                        'vat': data['vendor_nip'],
+                        'vat': vat,
                         'country_id': self.env['res.country'].search([('code', '=', data['vendor_country'])]).id,
                     },
                 )
