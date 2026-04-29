@@ -4,6 +4,7 @@ import { readonlyTableOfContentEmbedding } from "@html_editor/others/embedded_co
 import { toggleBlockEmbedding } from "@html_editor/others/embedded_components/core/toggle_block/toggle_block";
 import { readonlyVideoEmbedding } from "@html_editor/others/embedded_components/core/video/readonly_video";
 import { readonlyDateEmbedding } from "@html_editor/others/embedded_components/core/date/readonly_date";
+import { whiteboardEmbedding } from "@html_editor/others/embedded_components/core/whiteboard/whiteboard";
 
 export const PUBLIC_EMBEDDINGS = [
     readonlyFileEmbedding,
@@ -12,4 +13,5 @@ export const PUBLIC_EMBEDDINGS = [
     readonlyVideoEmbedding,
     readonlySyntaxHighlightingEmbedding,
     readonlyDateEmbedding,
+    whiteboardEmbedding,
 ];

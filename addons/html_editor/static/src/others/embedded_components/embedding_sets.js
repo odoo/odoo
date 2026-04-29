@@ -11,6 +11,7 @@ import { syntaxHighlightingEmbedding } from "@html_editor/others/embedded_compon
 import { readonlySyntaxHighlightingEmbedding } from "./core/syntax_highlighting/readonly_syntax_highlighting";
 import { dateEmbedding } from "./backend/date/date";
 import { readonlyDateEmbedding } from "./core/date/readonly_date";
+import { whiteboardEmbedding } from "./core/whiteboard/whiteboard";
 
 export const MAIN_EMBEDDINGS = [
     fileEmbedding,
@@ -19,6 +20,7 @@ export const MAIN_EMBEDDINGS = [
     dateEmbedding,
     videoEmbedding,
     syntaxHighlightingEmbedding,
+    whiteboardEmbedding,
 ];
 
 export const READONLY_MAIN_EMBEDDINGS = [
@@ -28,4 +30,5 @@ export const READONLY_MAIN_EMBEDDINGS = [
     toggleBlockEmbedding,
     readonlyVideoEmbedding,
     readonlySyntaxHighlightingEmbedding,
+    whiteboardEmbedding,
 ];
