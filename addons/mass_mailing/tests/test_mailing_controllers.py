@@ -678,7 +678,9 @@ class TestMailingTracking(TestMailingControllersCommon):
     @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.addons.mass_mailing.models.mailing')
     def test_tracking_short_code(self):
         """ Test opening short code linked to a mailing trace: should set the
-        trace as opened and clicked, create a click record. """
+        trace as opened and clicked, create a click record.
+        Mailing contact's stats (eg: last_opened_datetime, etc..) should also be
+        updated."""
         mailing = self.test_mailing_on_lists.with_env(self.env)
         with self.mock_mail_gateway(mail_unlink_sent=False):
             mailing.action_send_mail()
@@ -696,6 +698,10 @@ class TestMailingTracking(TestMailingControllersCommon):
         self.assertFalse(mailing_trace.open_datetime)
         self.assertEqual(mailing_trace.trace_status, 'sent')
 
+        # Mailing Contact
+        self.assertFalse(self.test_contact.last_opened_datetime)
+        self.assertFalse(self.test_contact.last_clicked_datetime)
+
         short_link_url = tools.urls.urljoin(
             mail.get_base_url(),
             f'r/{link_tracker_code.code}/m/{mailing_trace.id}'
@@ -708,6 +714,10 @@ class TestMailingTracking(TestMailingControllersCommon):
         self.assertEqual(mailing_trace.links_click_datetime, self._reference_now)
         self.assertEqual(mailing_trace.open_datetime, self._reference_now)
         self.assertEqual(mailing_trace.trace_status, 'open')
+
+        # Mailing Contact
+        self.assertEqual(self._reference_now, self.test_contact.last_opened_datetime)
+        self.assertEqual(self._reference_now, self.test_contact.last_clicked_datetime)
 
     @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.addons.mass_mailing.models.mailing')
     def test_tracking_url_token(self):

@@ -6,6 +6,7 @@ from markupsafe import Markup
 from odoo import api, fields, models, _
 from odoo.fields import Domain
 
+
 class MailingTrace(models.Model):
     """ MailingTrace models the statistics collected about emails. Those statistics
     are stored in a separated model and table to avoid bloating the mail_mail table
@@ -74,8 +75,8 @@ class MailingTrace(models.Model):
     medium_id = fields.Many2one(related='mass_mailing_id.medium_id')
     source_id = fields.Many2one(related='mass_mailing_id.source_id')
     # document
-    model = fields.Char(string='Document model', required=True)
-    res_id = fields.Many2oneReference(string='Document ID', model_field='model')
+    model = fields.Char(string='Document model', required=True, index=True)
+    res_id = fields.Many2oneReference(string='Document ID', model_field='model', index=True)
     # campaign data
     mass_mailing_id = fields.Many2one('mailing.mailing', string='Mailing', index=True, ondelete='cascade')
     campaign_id = fields.Many2one(
@@ -161,16 +162,34 @@ class MailingTrace(models.Model):
         that are not already opened or replied. """
         traces = self + (self.search(domain) if domain else self.env['mailing.trace'])
         traces.filtered(lambda t: t.trace_status not in ('open', 'reply')).write({'trace_status': 'open', 'open_datetime': fields.Datetime.now()})
+        if contact_traces := traces.filtered(lambda trace: trace.model == 'mailing.contact'):
+            # Apply side effects on `mailing.contact`
+            contacts = self.env['mailing.contact'].search([('id', 'in', contact_traces.mapped('res_id'))])
+            contacts.write({'last_opened_datetime': fields.Datetime.now()})
         return traces
 
     def set_clicked(self, domain=None):
         traces = self + (self.search(domain) if domain else self.env['mailing.trace'])
         traces.write({'links_click_datetime': fields.Datetime.now()})
+        if contact_traces := traces.filtered(lambda trace: trace.model == 'mailing.contact'):
+            # Apply side effects on `mailing.contact`
+            contacts = self.env['mailing.contact'].search([('id', 'in', contact_traces.mapped('res_id'))])
+            contacts.write({
+                'last_clicked_datetime': fields.Datetime.now(),
+                'last_opened_datetime': fields.Datetime.now()}
+            )
         return traces
 
     def set_replied(self, domain=None):
         traces = self + (self.search(domain) if domain else self.env['mailing.trace'])
         traces.write({'trace_status': 'reply', 'reply_datetime': fields.Datetime.now()})
+        if contact_traces := traces.filtered(lambda trace: trace.model == 'mailing.contact'):
+            # Apply side effects on `mailing.contact`
+            contacts = self.env['mailing.contact'].search([('id', 'in', contact_traces.mapped('res_id'))])
+            contacts.write({
+                'last_replied_datetime': fields.Datetime.now(),
+                'last_opened_datetime': fields.Datetime.now()
+            })
         return traces
 
     def set_bounced(self, domain=None, bounce_message=False):

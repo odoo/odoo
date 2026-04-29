@@ -15,7 +15,7 @@
               action="mailing_mailing_action_mail"/>
 
     <!-- Mailing lists -->
-    <menuitem name="Mailing Lists"
+    <menuitem name="Recipients"
               id="mass_mailing_mailing_list_menu"
               parent="mass_mailing_menu_root"
               sequence="2"/>
@@ -24,11 +24,16 @@
               parent="mass_mailing_mailing_list_menu"
               sequence="1"
               action="action_view_mass_mailing_lists"/>
-    <menuitem name="Mailing List Contacts"
+    <menuitem name="Mailing Contacts"
               id="menu_email_mass_mailing_contacts"
               parent="mass_mailing_mailing_list_menu"
               sequence="2"
               action="action_view_mass_mailing_contacts"/>
+    <menuitem name="Dynamic Lists"
+              id="menu_email_mass_mailing_dynamic_lists"
+              parent="mass_mailing_mailing_list_menu"
+              sequence="3"
+              action="mailing_filter_action"/>
 
     <!-- Campaigns -->
     <menuitem name="Campaigns"
@@ -97,11 +102,6 @@
               action="mailing_subscription_optout_action"
               sequence="21"
               parent="mass_mailing_configuration"/>
-    <!-- Configuration / Favorite Filters -->
-    <menuitem id="mailing_filter_menu_action"
-              action="mailing_filter_action"
-              parent="mass_mailing_configuration"
-              sequence="30"/>
 
     <!-- Technical / Mass Mailing -->
     <menuitem id="mailing_mailing_menu_technical"
