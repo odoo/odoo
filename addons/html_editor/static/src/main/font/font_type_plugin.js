@@ -112,7 +112,7 @@ export class FontTypePlugin extends Plugin {
             withSequence(10, {
                 id: "font-type",
                 groupId: "font",
-                namespaces: ["compact", "expanded"],
+                namespaces: ["compact", "expanded", "countdown_text"],
                 description: _t("Select text style"),
                 Component: FontTypeSelector,
                 props: {
