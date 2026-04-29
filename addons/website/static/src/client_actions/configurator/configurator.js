@@ -19,8 +19,6 @@ import { _t } from "@web/core/l10n/translation";
 import { svgToPNG, webpToPNG } from "@website/js/utils";
 import { escapeRegExp } from "@web/core/utils/strings";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
-import { htmlSprintf } from "@web/core/utils/html";
-import { clamp } from "@web/core/utils/numbers";
 import { registry } from "@web/core/registry";
 import { rpc } from "@web/core/network/rpc";
 import { mixCssColors, normalizeCSSColor } from "@web/core/utils/colors";
@@ -510,9 +508,6 @@ export class ApplyConfiguratorScreen extends Component {
         };
 
         if (themeName !== undefined) {
-            const selectedFeatures = Object.values(this.state.features)
-                .filter((feature) => feature.selected)
-                .map((feature) => feature.id);
             const loadingSteps = [
                 {
                     description: _t("Applying your colors and design..."),
@@ -526,10 +521,9 @@ export class ApplyConfiguratorScreen extends Component {
                     description: _t("Generating inspiring text..."),
                     flag: "text",
                 },
-                ...this.getSelectedFeaturesLoadingSteps(selectedFeatures),
                 {
                     title: _t("Finalizing."),
-                    description: _t("Activating the last features."),
+                    description: _t("Applying the last changes."),
                     flag: "generic",
                 },
             ];
@@ -537,9 +531,7 @@ export class ApplyConfiguratorScreen extends Component {
             // Server requests are locked during module installation,
             // uninstallation, or upgrade (when running without `workers`), so
             // real-time progress can't be fetched. We simulate it instead.
-            const stopProgressSimulation = this.startConfiguratorProgressSimulation(
-                selectedFeatures.length
-            );
+            const stopProgressSimulation = this.startConfiguratorProgressSimulation();
             this.websiteService.showLoader({
                 title: _t("Building your website."),
                 loadingSteps,
@@ -593,21 +585,15 @@ export class ApplyConfiguratorScreen extends Component {
      * Simulates the progress for website creation, divided into three phases:
      * 1. Initial Phase (0-30%): Fast progress to give the impression of quick
      *    processing.
-     * 2. Modules Phase (30-90%): Distributes progress evenly across the
-     *    selected features (modules).
+     * 2. Build Phase (30-90%): Steady progress while the website is generated.
      * 3. Final Phase (90-100%): Slow progress to allow any pending operations
      *    to complete before reaching 100%.
      *
-     * @param {number} selectedFeaturesCount - Number of features to simulate
-     *                                         progress for.
      * @returns {Function} A cleanup function that stops the simulation.
      */
-    startConfiguratorProgressSimulation(selectedFeaturesCount) {
+    startConfiguratorProgressSimulation() {
         const INITIAL_PHASE_END = 30;
-        const MODULES_PHASE_END = 90;
-
-        const moduleCount = Math.max(1, selectedFeaturesCount);
-        const progressPerModule = (MODULES_PHASE_END - INITIAL_PHASE_END) / moduleCount;
+        const BUILD_PHASE_END = 90;
 
         let progress = 0;
         let phase = "initial";
@@ -617,24 +603,16 @@ export class ApplyConfiguratorScreen extends Component {
                 case "initial":
                     progress += 2;
                     if (progress >= INITIAL_PHASE_END) {
-                        phase = "modules";
+                        phase = "build";
                     }
                     break;
 
-                case "modules": {
-                    const moduleProgress = (progress - INITIAL_PHASE_END) % progressPerModule;
-                    // Gradually reduce speed within each module so the modules
-                    // phase gets adequate time while keeping progression evenly
-                    // distributed.
-                    const ratio = clamp(moduleProgress / progressPerModule, 0, 1);
-                    const speed = 1.5 + (0.2 - 1.5) * ratio;
-
-                    progress = Math.min(progress + speed, MODULES_PHASE_END);
-                    if (progress >= MODULES_PHASE_END) {
+                case "build":
+                    progress = Math.min(progress + 0.8, BUILD_PHASE_END);
+                    if (progress >= BUILD_PHASE_END) {
                         phase = "final";
                     }
                     break;
-                }
 
                 case "final":
                     progress = Math.min(progress + 0.05, 100);
@@ -645,74 +623,6 @@ export class ApplyConfiguratorScreen extends Component {
         }, 500);
 
         return () => clearInterval(intervalId);
-    }
-
-    /**
-     * Returns the list of feature steps with their loading messages.
-     * Each step maps to a `website.configurator.feature` record ID.
-     *
-     * @returns {Object[]} Array of feature step definitions.
-     */
-    get featureSteps() {
-        return [
-            {
-                id: 5,
-                title: _t("Adding features."),
-                name: _t("blog"),
-                description: _t("Enabling your %s."),
-                flag: "generic",
-            },
-            {
-                id: 7,
-                title: _t("Adding features."),
-                name: _t("recruitment platform"),
-                description: _t("Integrating your %s."),
-                flag: "generic",
-            },
-            {
-                id: 8,
-                title: _t("Adding features."),
-                name: _t("online store"),
-                description: _t("Activating your %s."),
-                flag: "generic",
-            },
-            {
-                id: 9,
-                title: _t("Adding features."),
-                name: _t("online appointment system"),
-                description: _t("Configuring your %s."),
-                flag: "generic",
-            },
-            {
-                id: 10,
-                title: _t("Adding features."),
-                name: _t("forum"),
-                description: _t("Setting up your %s."),
-                flag: "generic",
-            },
-            {
-                id: 12,
-                title: _t("Adding features."),
-                name: _t("e-learning platform"),
-                description: _t("Installing your %s."),
-                flag: "generic",
-            },
-        ];
-    }
-
-    /**
-     * Depending on the features selected, returns the right loading steps.
-     *
-     * @param {number[]} [selectedFeatures=[]]
-     * @returns {Object[]} The loading steps filtered by the selected features.
-     */
-    getSelectedFeaturesLoadingSteps(selectedFeatures = []) {
-        return this.featureSteps
-            .filter((step) => selectedFeatures.includes(step.id))
-            .map((step) => {
-                const highlight = markup`<span class="o_website_loader_text_highlight">${step.name}</span>`;
-                return { ...step, description: htmlSprintf(step.description, highlight) };
-            });
     }
 }
 
