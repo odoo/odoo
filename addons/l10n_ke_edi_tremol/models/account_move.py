@@ -10,9 +10,24 @@ from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
+# Maps the stored l10n_ke.item.code tax_rate to the VAT class byte expected by
+# the fiscal device, according to KRA's Tax Type code table (VSCU Specification
+# Document v2.0, section 4.1).
+#
+# B and E are legacy internal labels and do not match the corresponding KRA
+# bytes. Keep the translation here to avoid changing existing item code selections.
+# Remove this mapping in master once the stored values are corrected.
+L10N_KE_WIRE_TAX_RATE = {
+    'A': 'B',  # Taxable at 16%
+    'B': 'E',  # Taxable at 8%
+    'C': 'C',  # Zero Rated
+    'D': 'D',  # Special Category / Non-VAT
+    'E': 'A',  # Exempted
+}
 
 class AccountMove(models.Model):
     _inherit = 'account.move'
+
 
     l10n_ke_cu_datetime = fields.Datetime(string='CU Signing Date and Time', copy=False)
     l10n_ke_cu_serial_number = fields.Char(string='CU Serial Number', copy=False)
@@ -207,7 +222,7 @@ class AccountMove(models.Model):
 
             line_data = b';'.join([
                 self._l10n_ke_fmt(line.name, 36),                       # 36 symbols for the article's name
-                self._l10n_ke_fmt(item_code.tax_rate or 'A', 1),        # 1 symbol for article's vat class ('A', 'B', 'C', 'D', or 'E')
+                self._l10n_ke_fmt(L10N_KE_WIRE_TAX_RATE.get(item_code.tax_rate, 'A'), 1),  # 1 symbol for article's vat class
                 price[:15].encode('cp1251'),                    # 1 to 15 symbols for article's price with up to 5 digits after decimal point
                 self._l10n_ke_fmt(uom, 3),                              # 3 symbols for unit of measure
                 (item_code.code or '').ljust(10).encode('cp1251'),      # 10 symbols for KRA item code in the format xxxx.xx.xx (can be empty)
