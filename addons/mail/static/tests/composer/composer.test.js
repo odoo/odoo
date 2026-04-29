@@ -173,6 +173,25 @@ test("add an emoji", async () => {
     await contains(".o-mail-Composer-html.odoo-editor-editable:text('😤')");
 });
 
+test.tags("html composer");
+test("press Enter with emoji suggestions inserts emoji and does not send", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "swamp-safari" });
+    await start();
+    const composerService = getService("mail.composer");
+    composerService.setHtmlComposer();
+    await openDiscuss(channelId);
+    await focus(".o-mail-Composer-html.odoo-editor-editable");
+    const editor = {
+        document,
+        editable: document.querySelector(".o-mail-Composer-html.odoo-editor-editable"),
+    };
+    await htmlInsertText(editor, ":smil");
+    await contains(".o-we-SuggestionList .o-navigable:has(:text('😃'))");
+    await press("Enter");
+    await contains(".o-mail-Composer-html.odoo-editor-editable:text('😃')");
+});
+
 test("[text composer] emojis are auto-substituted from text", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "swamp-safari" });
