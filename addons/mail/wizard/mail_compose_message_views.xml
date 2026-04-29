@@ -52,7 +52,8 @@
                                 options="{'on_tag_click': 'open_form'}"
                                 context="{'force_email': True, 'show_email': True, 'form_view_ref': 'base.view_partner_simple_form', 'forward_mode': True}"/>
                         </div>
-                        <field name="subject" placeholder="e.g. Welcome to MyCompany!" required="True"/>
+                        <field name="subject" placeholder="Default Subject" required="0" invisible="composition_mode == 'mass_mail'"/>
+                        <field name="subject" placeholder="e.g. Welcome to MyCompany!" required="1" invisible="composition_mode != 'mass_mail'"/>
                         <field name="reply_to" placeholder="e.g. info@company.com"
                             invisible="reply_to_mode == 'update'"
                             required="reply_to_mode != 'update'"/>
