@@ -55,7 +55,7 @@
                     <t t-name="card" class="flex-row mb-3">
                         <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                         <aside>
-                            <field name="user_id" widget="image" options="{'preview_image': 'avatar_128'}" class="o_image_64_cover" alt="Avatar"/>
+                            <field name="user_id" widget="image" options="{'size': [64, 64], 'preview_image': 'avatar_128', 'img_class': 'border rounded h-100 object-fit-contain'}" class="o_image_64_cover" alt="Avatar"/>
                         </aside>
                         <main class="ms-3">
                             <field name="user_id" class="fw-bold fs-5"/>
@@ -106,7 +106,7 @@
                     <div class="d-flex flex-column flex-md-row align-items-center gap-3">
                         <field name="image_1920" widget='image'
                             invisible="not user_id"
-                            options='{"preview_image": "image_128", "size": [130,130], "img_class": "rounded border"}'/>
+                            options="{'preview_image': 'image_128', 'size': [130,130], 'img_class': 'border rounded h-100 object-fit-contain'}"/>
                         <group class="d-flex flex-column gap-md-0 w-100">
                             <label for="user_id" class="d-md-none"/>
                             <h1>
