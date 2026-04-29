@@ -19,3 +19,9 @@ class TestWebsiteModels(HttpCase):
         rule.domain = "[('website_id', '=', website.id)]"
         res = self.url_open(post.website_url, allow_redirects=False)
         res.raise_for_status()
+
+    def test_highest_priority_cta_button_candidate_wins(self):
+        cta_data = self.env['website'].get_cta_data('blog')
+        self.assertEqual(cta_data['cta_btn_text'], "Test CTA")
+        self.assertEqual(cta_data['cta_btn_href'], '/test_cta')
+        self.assertEqual(cta_data['shop_btn_href'], '/shop')
