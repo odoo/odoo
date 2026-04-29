@@ -1,18 +1,17 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import exceptions
+from odoo.tests.common import users
+
 from odoo.addons.crm.tests.common import TestCrmCommon
 from odoo.addons.crm_iap_mine.tests.common import MockIAPReveal
-from odoo.tests.common import tagged, users
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestLeadMine(TestCrmCommon, MockIAPReveal):
 
     @classmethod
     def setUpClass(cls):
-        super(TestLeadMine, cls).setUpClass()
+        super().setUpClass()
         cls.enterClassContext(cls.registry_test_mode())
 
         cls.test_crm_tags = cls.env['crm.tag'].create([

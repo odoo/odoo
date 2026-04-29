@@ -1,17 +1,16 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from odoo.tests.common import users
 
 from odoo.addons.crm.tests.common import TestCrmCommon
 from odoo.addons.iap.tests.common import MockIAPEnrich
-from odoo.tests.common import tagged, users
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestLeadEnrich(TestCrmCommon, MockIAPEnrich):
 
     @classmethod
     def setUpClass(cls):
-        super(TestLeadEnrich, cls).setUpClass()
+        super().setUpClass()
         cls.enterClassContext(cls.registry_test_mode())
 
         cls.leads = cls.env['crm.lead']

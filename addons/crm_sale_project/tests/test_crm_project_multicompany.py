@@ -1,8 +1,8 @@
+from odoo.tests import users
+
 from odoo.addons.crm.tests.common import TestCrmCommon
-from odoo.tests import tagged, users
 
 
-@tagged('-at_install', 'post_install')
 class TestCrmProjectMultiCompany(TestCrmCommon):
 
     @classmethod

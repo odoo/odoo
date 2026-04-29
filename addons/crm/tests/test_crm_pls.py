@@ -1,12 +1,13 @@
 from datetime import timedelta
 
 from odoo import exceptions, tools
-from odoo.addons.crm.tests.common import TestCrmCommon
-from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.fields import Date
 from odoo.tests import Form, tagged, users
 from odoo.tests.common import TransactionCase
 from odoo.tools import mute_logger
+
+from odoo.addons.crm.tests.common import TestCrmCommon
+from odoo.addons.mail.tests.common import mail_new_test_user
 
 
 class CrmPlsCommon(TransactionCase):
@@ -861,7 +862,7 @@ class TestCrmPlsSides(CrmPlsCommon):
         self.assertEqual(len(existing_noteam), len(final_noteam))
 
 
-@tagged('post_install', '-at_install', 'crm_lead_pls', 'lead_manage')
+@tagged('crm_lead_pls', 'lead_manage')
 class TestLeadLost(TestCrmCommon):
 
     @classmethod

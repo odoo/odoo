@@ -1,17 +1,18 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import date, datetime
-from odoo.addons.mail.tests.common import mail_new_test_user
-from odoo.addons.crm.tests.common import TestCrmCommon
-from odoo.tests.common import tagged, users
 
-@tagged('post_install', '-at_install')
+from odoo.tests.common import users
+
+from odoo.addons.crm.tests.common import TestCrmCommon
+from odoo.addons.mail.tests.common import mail_new_test_user
+
+
 class TestCRMLeadSmartCalendar(TestCrmCommon):
 
     @classmethod
     def setUpClass(cls):
-        super(TestCRMLeadSmartCalendar, cls).setUpClass()
+        super().setUpClass()
         # weekstart index : 7 (sunday), tz : UTC -4 / -5
         cls.user_NY_en_US = mail_new_test_user(
             cls.env, login='user_NY_en_US', lang='en_US', tz='America/New_York',

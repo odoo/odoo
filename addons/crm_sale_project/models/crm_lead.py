@@ -82,6 +82,8 @@ class CrmLead(models.Model):
         context = super()._prepare_opportunity_quotation_context()
         context.update({
             'is_sale_order': True,
-            'default_project_id': self.project_ids[-1].id if self.project_ids else False,
+            # TODO: double check if this is the right fix, just getting the branch green
+            # https://github.com/odoo/odoo/pull/254276/changes#r3162198372
+            'default_project_id': self.sudo().project_ids[-1].id if self.sudo().project_ids else False,
         })
         return context

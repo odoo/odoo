@@ -1,13 +1,13 @@
 from itertools import product
 
 from odoo import SUPERUSER_ID
-from odoo.addons.crm.tests import common as crm_common
 from odoo.fields import Datetime
 from odoo.tests import tagged, users
 
+from odoo.addons.crm.tests import common as crm_common
+
 
 @tagged('lead_manage')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class TestLeadConvert(crm_common.TestLeadConvertCommon):
     """
     TODO: created partner (handle assignment) has team of lead

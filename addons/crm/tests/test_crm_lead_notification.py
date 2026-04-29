@@ -1,20 +1,19 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.crm.tests.common import INCOMING_EMAIL, TestCrmCommon
 from odoo.tests import tagged, users
-from odoo.tools import email_normalize, formataddr, mute_logger
+from odoo.tools import email_normalize, mute_logger
+
+from odoo.addons.crm.tests.common import INCOMING_EMAIL, TestCrmCommon
 
 
 @tagged('mail_thread', 'mail_gateway')
-@tagged('at_install', '-post_install')  # LEGACY at_install
 class NewLeadNotification(TestCrmCommon):
     """ Test mail features support on lead + specific overrides and support """
 
     @classmethod
     def setUpClass(cls):
         """ Activate some langs to test lang propagation in various mail flows """
-        super(NewLeadNotification, cls).setUpClass()
+        super().setUpClass()
         cls._activate_multi_company()
 
         cls.test_email = '"Test Email" <test.email@example.com>'

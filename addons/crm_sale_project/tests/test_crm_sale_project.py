@@ -1,10 +1,8 @@
 from odoo.fields import Command
-from odoo.tests import tagged
 
 from odoo.addons.crm.tests.common import TestCrmCommon
 
 
-@tagged('at_install', '-post_install')
 class TestCrmSaleOrderProject(TestCrmCommon):
 
     def test_sale_order_project_opportunity_link(self):

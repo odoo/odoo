@@ -1,17 +1,17 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from freezegun import freeze_time
 
+from odoo.tests import Form, tagged, users, warmup
+
 from odoo.addons.test_crm_full.tests.common import TestCrmFullCommon
-from odoo.tests import Form, users, warmup, tagged
 
 
-@tagged('crm_performance', 'post_install', '-at_install', '-standard')
+@tagged('crm_performance', '-standard')
 class CrmPerformanceCase(TestCrmFullCommon):
 
     def setUp(self):
-        super(CrmPerformanceCase, self).setUp()
+        super().setUp()
         # patch registry to simulate a ready environment
         self.patch(self.env.registry, 'ready', True)
         # we don't use mock_mail_gateway thus want to mock smtp to test the stack
@@ -33,7 +33,7 @@ class CrmPerformanceCase(TestCrmFullCommon):
         self.cr.flush()
 
 
-@tagged('crm_performance', 'post_install', '-at_install', '-standard')
+@tagged('crm_performance', '-standard')
 class TestCrmPerformance(CrmPerformanceCase):
 
     @users('user_sales_leads')

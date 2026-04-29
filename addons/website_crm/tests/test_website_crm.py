@@ -1,11 +1,10 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import odoo.tests
+
 from odoo.addons.crm.tests.common import TestCrmCommon
 
 
-@odoo.tests.tagged('post_install', '-at_install')
 class TestWebsiteCrm(odoo.tests.HttpCase, TestCrmCommon):
 
     def test_tour(self):
