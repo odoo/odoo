@@ -1,0 +1,9 @@
+// WhiteboardPlugin powerbox icon
+.o_embed_whiteboard_icon {
+    // Inlined icon in order to use correct color for dark mode
+    background-image: str-replace(url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' height='24px' viewBox='0 -960 960 960' width='24px' fill='#{$body-color}'%3E%3Cpath d='M460-420h200v-80H460v80Zm-60 60v-200h320v200H400ZM160-160q-33 0-56.5-23.5T80-240v-480q0-33 23.5-56.5T160-800h640q33 0 56.5 23.5T880-720v480q0 33-23.5 56.5T800-160H160Zm0-80h640v-400H160v400Z'/%3E%3C/svg%3E"), "#", "%23");
+    background-size: 70%;
+    background-repeat: no-repeat;
+    background-position: center;
+    filter: grayscale(1);
+}

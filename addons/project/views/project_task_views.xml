@@ -483,7 +483,7 @@
                         <field name="task_properties" columns="2"/>
                     <notebook>
                         <page name="description_page" string="Description">
-                            <field name="description" type="html" options="{'collaborative': true, 'resizable': false}" placeholder="Add details about this task..."/>
+                            <field name="description" type="html" options="{'collaborative': true, 'resizable': false, 'allowWhiteboard': true}" placeholder="Add details about this task..."/>
                         </page>
                         <page name="sub_tasks_page" string="Sub-tasks" invisible="not project_id and not is_template">
                             <field name="child_ids"
