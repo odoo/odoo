@@ -984,7 +984,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         line_node.update({
             quantity_tag: {
                 '_text': base_line['quantity'],
-                'unitCode': self._get_uom_unece_code(base_line['product_uom_id']),
+                'unitCode': base_line['product_uom_id']._get_unece_code(),
             },
             'cbc:LineExtensionAmount': {
                 '_text': self.format_float(vals[f'total_excluded{currency_suffix}'], vals['currency_dp']),

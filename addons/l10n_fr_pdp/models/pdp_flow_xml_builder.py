@@ -528,7 +528,7 @@ class PdpFlow10XMLBuilder(models.AbstractModel):
             res = {
                 'BilledQuantity': {
                     '_text': line.quantity,
-                    'UnitCode': self._get_uom_unece_code(line.product_uom_id),
+                    'UnitCode': line.product_uom_id._get_unece_code(),
                 },
             }
             if sale_line_ids_in_fields:

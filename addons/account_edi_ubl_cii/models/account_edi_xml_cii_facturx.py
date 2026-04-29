@@ -196,7 +196,7 @@ class AccountEdiXmlCii(models.AbstractModel):
         # data used for IncludedSupplyChainTradeLineItem / SpecifiedLineTradeSettlement
         for line_vals in template_values['invoice_line_vals_list']:
             line = line_vals['line']
-            line_vals['unece_uom_code'] = self._get_uom_unece_code(line.product_uom_id)
+            line_vals['unece_uom_code'] = line.product_uom_id._get_unece_code()
 
             if line._fields.get('deferred_start_date') and (line.deferred_start_date or line.deferred_end_date):
                 line_vals['billing_start'] = line.deferred_start_date
