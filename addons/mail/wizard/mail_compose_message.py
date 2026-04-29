@@ -90,6 +90,7 @@ class MailComposeMessage(models.TransientModel):
     subject = fields.Char(
         'Subject',
         compute='_compute_subject', readonly=False, store=True)
+    subject_placeholder = fields.Char('Subject Placeholder', compute='_compute_subject_placeholder')
     body = fields.Html(
         'Contents',
         render_engine='qweb', render_options={'post_process': True},
@@ -252,6 +253,19 @@ class MailComposeMessage(models.TransientModel):
                     else:
                         subject = ''
                 composer.subject = subject
+
+    @api.depends('composition_mode', 'model', 'res_domain', 'res_ids')
+    def _compute_subject_placeholder(self):
+        """Show what the subject will fallback to in single-recipient mode."""
+        for composer in self:
+            subject = None
+            if composer.composition_mode == 'comment' and not composer.composition_batch:
+                res_ids = composer._evaluate_res_ids()
+                if record := res_ids and self.env[composer.model].browse(res_ids[0]):
+                    subject = record._message_compute_subject() or record.display_name
+            if not subject:
+                subject = _('e.g. Welcome to MyCompany!')
+            composer.subject_placeholder = subject
 
     @api.depends('composition_mode', 'model', 'res_domain', 'res_ids',
                  'template_id')
