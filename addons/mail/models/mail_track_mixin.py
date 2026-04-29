@@ -521,8 +521,8 @@ class MailTrackMixin(models.AbstractModel):
             values.update({
                 'old_value_integer': initial_value,
                 'new_value_integer': new_value,
-                'old_value': 'Yes' if initial_value else 'No',
-                'new_value': 'Yes' if new_value else 'No',
+                'old_value': _('Yes') if initial_value else _('No'),
+                'new_value': _('Yes') if new_value else _('No'),
             })
         elif col_info['type'] == 'selection':
             values.update({
