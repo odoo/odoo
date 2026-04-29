@@ -299,7 +299,7 @@ export class SelectionPlugin extends Plugin {
 
     selectAll() {
         const selection = this.getEditableSelection();
-        const containerSelector = "#wrap > *, .oe_structure > *, [contenteditable]";
+        const containerSelector = '#wrap > *, .oe_structure > *, [contenteditable="true"]';
         const container = selection && closestElement(selection.anchorNode, containerSelector);
         const [anchorNode, anchorOffset] = getDeepestEditablePosition(container, 0);
         const [focusNode, focusOffset] = getDeepestEditablePosition(container, nodeSize(container));
