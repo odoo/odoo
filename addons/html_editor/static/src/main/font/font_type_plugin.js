@@ -106,13 +106,14 @@ export class FontTypePlugin extends Plugin {
         toolbar_groups: [
             withSequence(10, {
                 id: "font",
+                namespaces: ["expanded", "countdown_text"],
             }),
         ],
         toolbar_items: [
             withSequence(10, {
                 id: "font-type",
                 groupId: "font",
-                namespaces: ["compact", "expanded"],
+                namespaces: ["compact", "expanded", "countdown_text"],
                 description: _t("Select font style"),
                 Component: FontTypeSelector,
                 props: {

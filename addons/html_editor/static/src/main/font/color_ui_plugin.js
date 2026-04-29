@@ -25,7 +25,7 @@ export class ColorUIPlugin extends Plugin {
             {
                 id: "forecolor",
                 groupId: "decoration",
-                namespaces: ["compact", "expanded"],
+                namespaces: ["compact", "expanded", "countdown_text"],
                 description: _t("Apply Font Color"),
                 Component: ColorSelector,
                 props: this.getPropsForColorSelector("foreground"),

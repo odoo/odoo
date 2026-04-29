@@ -42,7 +42,7 @@ export class FontSizePlugin extends Plugin {
             withSequence(20, {
                 id: "font-size",
                 groupId: "font",
-                namespaces: ["compact", "expanded"],
+                namespaces: ["compact", "expanded", "countdown_text"],
                 description: _t("Select font size"),
                 Component: FontSizeSelector,
                 props: {
