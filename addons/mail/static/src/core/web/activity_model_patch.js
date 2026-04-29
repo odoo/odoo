@@ -75,6 +75,9 @@ patch(Activity.prototype, {
         return action;
     },
     remove({ broadcast = true } = {}) {
+        if (!this.exists()) {
+            return;
+        }
         this.delete();
         if (broadcast) {
             this.store.activityBroadcastChannel?.postMessage({
