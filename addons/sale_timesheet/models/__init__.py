@@ -4,6 +4,7 @@
 from . import account_analytic_line
 from . import account_move_line
 from . import account_move
+from . import account_move_send
 from . import hr_employee
 from . import product_product
 from . import product_template
