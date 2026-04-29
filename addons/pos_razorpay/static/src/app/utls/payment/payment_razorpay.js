@@ -120,7 +120,7 @@ export class PaymentRazorpay extends PaymentInterface {
             payment_method_payment_mode: response?.paymentMode,
             card_type: response?.paymentCardType,
             card_brand: response?.paymentCardBrand || "",
-            cardholder_name: response?.nameOnCard.replace("/", ""),
+            cardholder_name: response?.nameOnCard?.replace("/", ""),
             razorpay_reverse_ref_no: response?.reverseReferenceNumber,
             transaction_id: response?.txnId,
             payment_ref_no: response?.externalRefNumber,
