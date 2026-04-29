@@ -2,7 +2,6 @@ import { expect, mockFetch, test } from "@odoo/hoot";
 import {
     click,
     dblclick,
-    pointerUp,
     press,
     queryOne,
     waitFor,
@@ -666,7 +665,7 @@ test("image toolbar should open on click even if selection is not in editable", 
     const selectionData = editor.shared.selection.getSelectionData();
     expect(document.activeElement).toBe(el);
     expect(selectionData.documentSelectionIsInEditable).toBe(false);
-    await pointerUp("img");
+    await click("img");
     await expectElementCount(".o-we-toolbar", 1);
 });
 
