@@ -375,6 +375,7 @@ class HrEmployeeBase(models.AbstractModel):
             else:
                 for period in periods[self]:
                     start, end, calendar = period
+                    calendar = calendar or self.company_id.resource_calendar_id
                     work_intervals = calendar._work_intervals_batch(
                         start, end, resources=self.resource_id)
             if work_intervals.get(self.resource_id.id) and work_intervals[self.resource_id.id]._items:
