@@ -140,7 +140,7 @@ class TestUblImportBis3InvoiceBERetrieveTax(TestUblImportBis3InvoiceBE):
         self._create_invoice(
             partner_id=self.partner_be,
             invoice_line_ids=[
-                self._prepare_invoice_line(name="turltututu", price_unit=500.0, tax_ids=tax_21_1),
+                self._prepare_invoice_line(name="turlututu", price_unit=500.0, tax_ids=tax_21_1),
                 self._prepare_invoice_line(name="tsointsoin", price_unit=500.0, tax_ids=tax_21_2),
             ],
             post=True,
