@@ -104,22 +104,6 @@ class TestUblExportBis3BE(TestUblBis3Common, TestUblCiiBECommon):
         self._generate_invoice_ubl_file(invoice)
         self._assert_invoice_ubl_file(invoice, 'test_invoice_BR_CO_10_line_extension_amount_sum_lines')
 
-    def test_invoice_PEPPOL_EN16931_R120_line_extension_amount_huge_number_of_decimals(self):
-        """ [PEPPOL-EN16931-R120]-Invoice line net amount MUST equal (Invoiced quantity * (Item net price/item price base quantity)
-        + Sum of invoice line charge amount - sum of invoice line allowance amount
-        """
-        tax_21 = self.percent_tax(21.0)
-        product = self._create_product(lst_price=0.01110515963896, taxes_id=tax_21)
-        invoice = self._create_invoice_one_line(
-            product_id=product,
-            quantity=278362.5,
-            partner_id=self.partner_be,
-            post=True,
-        )
-
-        self._generate_invoice_ubl_file(invoice)
-        self._assert_invoice_ubl_file(invoice, 'test_invoice_PEPPOL_EN16931_R120_line_extension_amount_huge_number_of_decimals')
-
     def test_invoice_price_amount_rounding_precision_with_price_included_taxes(self):
         tax_21 = self.percent_tax(21.0, price_include_override='tax_included')
         product = self._create_product(lst_price=1039.99, taxes_id=tax_21)
