@@ -2632,6 +2632,8 @@ class MrpProduction(models.Model):
             'uom_id': product_id.uom_id.id,
             'forecasted_location_id': all(mo.forecasted_location_id for mo in self) and len(self.forecasted_location_id) == 1 and self.forecasted_location_id.id,
             'user_id': user_id.id,
+            'date_start': min(self.mapped('date_start')),
+            'date_deadline': min(filter(None, self.mapped('date_deadline')), default=False),
             'reference_ids': [Command.link(r.id) for r in self.reference_ids],
             'origin': ",".join(sorted([production.name for production in self])),
         })
