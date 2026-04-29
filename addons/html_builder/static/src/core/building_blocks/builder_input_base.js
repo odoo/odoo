@@ -51,11 +51,13 @@ export class BuilderInputBase extends Component {
         this.isEditing = false;
         const normalizedDisplayValue = this.props.commit(ev.target.value);
         ev.target.value = normalizedDisplayValue;
+        this.state.value = normalizedDisplayValue;
         this.props.onChange?.(ev);
     }
 
     onInput(ev) {
         this.isEditing = true;
+        this.state.value = ev.target.value;
         this.props.preview(ev.target.value);
         this.props.onInput?.(ev);
     }
