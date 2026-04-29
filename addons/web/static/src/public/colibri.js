@@ -9,6 +9,15 @@ let Markup = null;
 // Return this from event handlers to skip updateContent.
 export const SKIP_IMPLICIT_UPDATE = Symbol();
 
+const ELEMENT_PROPERTIES = {
+    INPUT: new Set(["checked", "indeterminate", "value", "readonly", "readOnly", "disabled"]),
+    OPTION: new Set(["selected", "disabled"]),
+    TEXTAREA: new Set(["value", "readonly", "readOnly", "disabled"]),
+    SELECT: new Set(["value", "disabled"]),
+    BUTTON: new Set(["disabled"]),
+    OPTGROUP: new Set(["disabled"]),
+};
+
 export class Colibri {
     constructor(core, I, el) {
         this.el = el;
@@ -194,6 +203,8 @@ export class Colibri {
                     }
                 }
             }
+        } else if (ELEMENT_PROPERTIES[el.tagName]?.has(attr)) {
+            el[attr] = value;
         } else {
             if ([false, undefined, null].includes(value)) {
                 el.removeAttribute(attr);
@@ -225,7 +236,9 @@ export class Colibri {
     processContent(content) {
         for (const sel in content) {
             if (sel.startsWith("t-")) {
-                throw new Error(`Selector missing for key ${sel} in dynamicContent (interaction '${this.interaction.constructor.name}').`);
+                throw new Error(
+                    `Selector missing for key ${sel} in dynamicContent (interaction '${this.interaction.constructor.name}').`
+                );
             }
             let nodes;
             if (this.dynamicNodes.has(sel)) {
