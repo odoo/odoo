@@ -161,6 +161,17 @@ class ResPartner(models.Model):
                 return '', code_to_check
         return vat_to_return, code_to_check
 
+    @api.model
+    def _get_country_specific_vat_variants(self, normalized_vat, country_prefix):
+        vat_variants = super()._get_country_specific_vat_variants(normalized_vat, country_prefix)
+        if country_prefix.upper() == 'CH':
+            normalized_vat = normalized_vat.replace('-', '')
+            if len(normalized_vat) >= 12:
+                vat_formatted = self._run_vat_checks(self.env.ref('base.ch'), normalized_vat, validation=False)[0]
+                vat_base = re.sub(r"\s*(TVA|IVA|MWST)?$", "", vat_formatted.upper())
+                vat_variants.extend([f'{vat_base} {suffix}' for suffix in ('TVA', 'IVA', 'MWST')])
+        return vat_variants
+
     @api.depends_context('company')
     @api.depends('vat')
     def _compute_perform_vies_validation(self):
