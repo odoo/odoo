@@ -892,3 +892,22 @@ class TestUblExportBis3BE(TestUblBis3Common, TestUblCiiBECommon):
             )
             self._generate_invoice_ubl_file(invoice)
             self._assert_invoice_ubl_file(invoice, f'test_invoice_tax_subtotal_exempt_amount_{rounding_method}')
+
+    def test_invoice_corrupted_currency_by_user(self):
+        """ For some reason, some people are corrupting their entire odoo instance by editing by hand the number of decimals
+        of their currency. In BIS3, it's mandatory to always have 2 decimals.
+        """
+        self.env.company.currency_id.rounding = 0.001
+        tax_21 = self.percent_tax(21.0)
+        product = self._create_product(lst_price=100.025, taxes_id=tax_21)
+        invoice = self._create_invoice(
+            partner_id=self.partner_be,
+            invoice_line_ids=[
+                self._prepare_invoice_line(product_id=product),
+                self._prepare_invoice_line(product_id=product),
+            ],
+            post=True,
+        )
+
+        self._generate_invoice_ubl_file(invoice)
+        self._assert_invoice_ubl_file(invoice, 'test_invoice_corrupted_currency_by_user')

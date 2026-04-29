@@ -141,9 +141,9 @@ class AccountEdiXmlUBLPINTJP(models.AbstractModel):
 
         return tax_subtotal_grouping_key
 
-    def _ubl_get_tax_subtotal_node(self, vals, tax_subtotal):
+    def _ubl_get_tax_subtotal_node(self, vals, tax_subtotal, currency_dp=None):
         # EXTENDS account.edi.xml.ubl_bis3
-        tax_subtotal_node = super()._ubl_get_tax_subtotal_node(vals, tax_subtotal)
+        tax_subtotal_node = super()._ubl_get_tax_subtotal_node(vals, tax_subtotal, currency_dp=currency_dp)
 
         # If there is a TaxTotal section in company currency,
         # its TaxSubtotals nodes should contain a 'Percent' node.

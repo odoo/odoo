@@ -129,9 +129,9 @@ class AccountEdiXmlUBLNL(models.AbstractModel):
 
         return tax_total_keys
 
-    def _ubl_get_line_allowance_charge_discount_node(self, vals, discount_values):
+    def _ubl_get_line_allowance_charge_discount_node(self, vals, discount_values, currency_dp=None):
         # EXTENDS account.edi.xml.ubl_bis3
-        discount_node = super()._ubl_get_line_allowance_charge_discount_node(vals, discount_values)
+        discount_node = super()._ubl_get_line_allowance_charge_discount_node(vals, discount_values, currency_dp=currency_dp)
         discount_node['cbc:AllowanceChargeReasonCode'] = None
         discount_node['cbc:MultiplierFactorNumeric'] = None
         discount_node['cbc:BaseAmount'] = None

@@ -733,9 +733,9 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
                 }
             })
 
-    def _ubl_add_legal_monetary_total_payable_rounding_amount_node(self, vals):
+    def _ubl_add_legal_monetary_total_payable_rounding_amount_node(self, vals, currency_dp=None):
         # EXTENDS account.edi.xml.ubl
-        super()._ubl_add_legal_monetary_total_payable_rounding_amount_node(vals)
+        super()._ubl_add_legal_monetary_total_payable_rounding_amount_node(vals, currency_dp=currency_dp)
         tax_withholding_amount = vals['_ubl_values'].get('tax_withholding_amount')
         node = vals['legal_monetary_total_node']
         payable_rounding_amount = node['cbc:PayableRoundingAmount']['_text']
@@ -749,18 +749,17 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
                 }
             else:
                 node['cbc:PayableRoundingAmount'] = {
-                    '_text': FloatFmt(payable_rounding_amount, min_dp=currency.decimal_places),
+                    '_text': FloatFmt(payable_rounding_amount, max_dp=2),
                     'currencyID': currency.name,
                 }
 
-    def _ubl_add_legal_monetary_total_prepaid_payable_amount_node(self, vals, in_foreign_currency=True):
+    def _ubl_add_legal_monetary_total_prepaid_payable_amount_node(self, vals, in_foreign_currency=True, currency_dp=None):
         # EXTENDS account.edi.xml.ubl
-        super()._ubl_add_legal_monetary_total_prepaid_payable_amount_node(vals, in_foreign_currency=in_foreign_currency)
+        super()._ubl_add_legal_monetary_total_prepaid_payable_amount_node(vals, in_foreign_currency=in_foreign_currency, currency_dp=currency_dp)
         invoice = vals.get('invoice')
         if not invoice:
             return
 
-        currency = vals['currency_id'] if in_foreign_currency else vals['company_currency']
         node = vals['legal_monetary_total_node']
 
         if in_foreign_currency:
@@ -770,10 +769,7 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
             amount_total = invoice.amount_total_signed * -invoice.direction_sign
             amount_residual = invoice.amount_residual_signed * -invoice.direction_sign
 
-        node['cbc:PayableAmount']['_text'] = FloatFmt(
-            amount_residual,
-            max_dp=currency.decimal_places,
-        )
+        node['cbc:PayableAmount']['_text'] = FloatFmt(amount_residual, max_dp=2)
         node['cbc:PrepaidAmount']['_text'] = FloatFmt(
             amount_total
             - amount_residual
@@ -783,7 +779,7 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
             # The super will compute a PrepaidAmount or 0.0 and a PayableAmount or 1000.
             # This extension is there to increase PrepaidAmount to 210 and PayableAmount to 1210.
             + vals['_ubl_values']['tax_withholding_amount'],
-            max_dp=currency.decimal_places,
+            max_dp=2,
         )
 
     def _add_invoice_monetary_total_nodes(self, document_node, vals):
@@ -797,7 +793,7 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
             'document_node': document_node,
             'currency': vals['currency_id'],
         }
-        self._ubl_add_legal_monetary_total_node(sub_vals)
+        self._ubl_add_legal_monetary_total_node(sub_vals, currency_dp=2)
 
     def _ubl_get_payment_means_payee_financial_account_institution_branch_node_from_partner_bank(self, vals, partner_bank):
         # EXTENDS
@@ -1089,10 +1085,6 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
     # EXPORT: Gathering data
     # -------------------------------------------------------------------------
 
-    def _ubl_add_values_company(self, vals, company):
-        # EXTENDS account.edi.ubl
-        super()._ubl_add_values_company(vals, company)
-
     def _add_invoice_config_vals(self, vals):
         # EXTENDS account.edi.ubl
         super()._add_invoice_config_vals(vals)
@@ -1175,16 +1167,16 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
             'line_node': line_node,
             'base_line': vals['line_vals']['base_line'],
         }
-        self._ubl_add_line_allowance_charge_nodes(sub_vals)
+        self._ubl_add_line_allowance_charge_nodes(sub_vals, currency_dp=2)
 
         # Discount.
-        self._ubl_add_line_allowance_charge_nodes_for_discount(sub_vals)
+        self._ubl_add_line_allowance_charge_nodes_for_discount(sub_vals, currency_dp=2)
 
         # Recycling contribution taxes.
-        self._ubl_add_line_allowance_charge_nodes_for_recycling_contribution_taxes(sub_vals)
+        self._ubl_add_line_allowance_charge_nodes_for_recycling_contribution_taxes(sub_vals, currency_dp=2)
 
         # Excise taxes.
-        self._ubl_add_line_allowance_charge_nodes_for_excise_taxes(sub_vals)
+        self._ubl_add_line_allowance_charge_nodes_for_excise_taxes(sub_vals, currency_dp=2)
 
     def _add_invoice_line_amount_nodes(self, line_node, vals):
         # OVERRIDE
@@ -1264,6 +1256,10 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
             'base_line': vals['line_vals']['base_line'],
         }
         self._ubl_add_line_price_node(sub_vals)
+
+    def _ubl_add_line_extension_amount_node(self, vals, in_foreign_currency=True, currency_dp=None):
+        # EXTENDS account.edi.ubl
+        return super()._ubl_add_line_extension_amount_node(vals, in_foreign_currency=True, currency_dp=2)
 
     def _line_nodes_filter_base_lines(self, vals, filter_function=None):
         # EXTENDS account.edi.xml.ubl
@@ -1535,9 +1531,9 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
         # Early payment discount lines are treated as allowances/charges.
         self._ubl_add_allowance_charge_nodes_early_payment_discount(sub_vals)
 
-    def _ubl_get_tax_subtotal_node(self, vals, tax_subtotal):
+    def _ubl_get_tax_subtotal_node(self, vals, tax_subtotal, currency_dp=None):
         # EXTENDS account.edi.xml.ubl
-        node = super()._ubl_get_tax_subtotal_node(vals, tax_subtotal)
+        node = super()._ubl_get_tax_subtotal_node(vals, tax_subtotal, currency_dp=currency_dp)
 
         # [BR-S-08]/[BR-E-08]/[BR-Z-08]/... cac:TaxSubtotal -> cbc:TaxableAmount should be
         # computed based on the cbc:LineExtensionAmount of each line linked to the tax.
@@ -1580,7 +1576,7 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
         ]
         if corresponding_line_node_amounts:
             node['cbc:TaxableAmount'] = {
-                '_text': FloatFmt(sum(corresponding_line_node_amounts), max_dp=currency.decimal_places),
+                '_text': FloatFmt(sum(corresponding_line_node_amounts), max_dp=2),
                 'currencyID': currency.name,
             }
 
@@ -1621,7 +1617,7 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
             'document_node': document_node,
             'currency': vals['currency_id'],
         }
-        self._ubl_add_tax_totals_nodes(sub_vals)
+        self._ubl_add_tax_totals_nodes(sub_vals, currency_dp=2)
 
     def _add_invoice_monetary_total_vals(self, vals):
         # OVERRIDE
