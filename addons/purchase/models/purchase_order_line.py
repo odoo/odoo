@@ -116,13 +116,24 @@ class PurchaseOrderLine(models.Model):
     @api.depends('product_qty', 'price_unit', 'tax_ids', 'discount')
     def _compute_amount(self):
         AccountTax = self.env['account.tax']
+
+        cache = {}
+        for order, lines in self.grouped('order_id').items():
+            if not order:
+                continue
+            company = order.company_id or self.env.company
+            base_lines = [line._prepare_base_line_for_taxes_computation() for line in lines]
+            AccountTax._add_tax_details_in_base_lines(base_lines, company)
+            AccountTax._round_base_lines_tax_details(base_lines, company)
+            cache[order.id] = {base_line['record'].id: base_line for base_line in base_lines}
+
         for line in self:
-            company = line.company_id or self.env.company
-            base_line = line._prepare_base_line_for_taxes_computation()
-            AccountTax._add_tax_details_in_base_line(base_line, company)
-            AccountTax._round_base_lines_tax_details([base_line], company)
-            line.price_subtotal = base_line['tax_details']['total_excluded_currency']
-            line.price_total = base_line['tax_details']['total_included_currency']
+            base_line = cache.get(line.order_id.id, {}).get(line.id)
+            if not base_line:
+                continue
+            tax_details = base_line['tax_details']
+            line.price_subtotal = tax_details['total_excluded_currency'] + tax_details['delta_total_excluded_currency']
+            line.price_total = line.price_subtotal + sum(tax_data['tax_amount_currency'] for tax_data in tax_details['taxes_data'])
             line.price_tax = line.price_total - line.price_subtotal
 
     def _prepare_base_line_for_taxes_computation(self):
