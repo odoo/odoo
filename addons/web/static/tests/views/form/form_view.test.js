@@ -13854,3 +13854,25 @@ test("x2many with same m2o in list (plain) and form (widget with relatedFields)"
     await contains(".o_data_row .o_data_cell").click();
     expect(".o_field_widget[name=product_id] .date").toHaveText("13/02/2023");
 });
+
+test.tags("desktop");
+test("related field tooltip in debug mode", async () => {
+    serverState.debug = "1";
+    Partner._fields.related_product_name = fields.Char({ related: "product_id.name" });
+
+    await mountView({
+        resModel: "partner",
+        type: "form",
+        arch: `
+            <form>
+                <sheet>
+                    <field name="related_product_name"/>
+                </sheet>
+            </form>`,
+    });
+
+    await hover(`[name='related_product_name']`);
+    await runAllTimers();
+    expect(`.o-tooltip--technical > li[data-item="related"]`).toHaveCount(1);
+    expect(`.o-tooltip--technical > li[data-item="related"]`).toHaveText("Related:product_id.name");
+});
