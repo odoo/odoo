@@ -20,6 +20,8 @@ from odoo.tools.misc import SENTINEL
 
 from odoo.addons.hr.models.hr_version import format_date_abbr
 from odoo.addons.mail.tools.discuss import Store
+from odoo.addons.resource.models.utils import extract_comodel_domain, filter_map_domain
+
 
 from .hr_employee_location import DAYS
 
@@ -1289,7 +1291,7 @@ class HrEmployee(models.Model):
 
     @api.model
     def search_fetch(self, domain, field_names=None, offset=0, limit=None, order=None):
-        if self.browse().has_access('read'):
+        if self.has_access('read'):
             return super().search_fetch(domain, field_names, offset, limit, order)
 
         # HACK: retrieve publicly available values from hr.employee.public and
@@ -1300,6 +1302,21 @@ class HrEmployee(models.Model):
         field_names = [f_name for f_name in field_names if f_name != 'current_version_id']
         self._check_private_fields(field_names)
         self.flush_model(field_names)
+
+        def map_condition_to_public_employee(condition):
+            for field in ('version_id', 'current_version_id'):
+                if condition.field_expr == field and condition.operator == 'any!':
+                    condition = extract_comodel_domain(self.env['hr.employee'], Domain(condition.field_expr, condition.operator, condition.value), field)
+                if condition.field_expr == field:
+                    # field has not been explicitly declared in hr.employee.public
+                    return None
+            return condition
+
+        # fields on hr.employee's current_version_id are explicitly declared
+        # on hr.employee.public due to versions being absent on the public
+        # employee, we thus need to map it to avoid getting errors
+        domain = filter_map_domain(domain, map_condition_to_public_employee)
+
         public = self.env['hr.employee.public'].search_fetch(domain, field_names, offset, limit, order)
         employees = self.browse(public._ids)
         employees._copy_cache_from(public, field_names)
