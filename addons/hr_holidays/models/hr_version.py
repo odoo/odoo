@@ -111,10 +111,13 @@ class HrVersion(models.Model):
         return self.env['hr.leave'].search(domain)
 
     def _get_leaves_from_vals(self, vals):
+        contract_date_start = fields.Date.from_string(vals.get('contract_date_start') or vals.get('date_version', fields.Date.today()))
+        version_date_start = fields.Date.from_string(vals.get('date_version', fields.Date.today()))
+        relevant_start_date = max(contract_date_start, version_date_start)
         domain = [
             ('state', 'not in', ['refuse', 'cancel']),
             ('employee_id', 'in', vals['employee_id']),
-            ('date_to', '>=', fields.Date.from_string(vals.get('contract_date_start', vals.get('date_version', fields.Date.today())))),
+            ('date_to', '>=', relevant_start_date),
             ('resource_calendar_id', '!=', vals.get('resource_calendar_id')),
         ]
         if vals.get('contract_date_end'):
