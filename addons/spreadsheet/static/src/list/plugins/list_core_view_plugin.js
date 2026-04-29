@@ -403,8 +403,6 @@ export class ListCoreViewPlugin extends OdooCoreViewPlugin {
      */
     getListCellValueAndFormat(listId, position, path) {
         const dataSource = this.getListDataSource(listId);
-        // shortcut to pre-fill the fetch list (spares a round of server call)
-        dataSource.addFieldPathToFetch(path);
         const value = dataSource.getListCellValue(position, path);
         if (typeof value === "object" && isEvaluationError(value.value)) {
             return value;
