@@ -22,6 +22,7 @@ CART_SESSION_CACHE_KEY = "sale_order_id"
 FISCAL_POSITION_SESSION_CACHE_KEY = "fiscal_position_id"
 PRICELIST_SESSION_CACHE_KEY = "website_sale_current_pl"
 PRICELIST_SELECTED_SESSION_CACHE_KEY = "website_sale_selected_pl_id"
+CTA_PRIORITY_SHOP = 80
 
 
 class Website(models.Model):
@@ -404,10 +405,18 @@ class Website(models.Model):
 
         return super()._render_template(template, values=values)
 
-    def get_cta_data(self, website_purpose, website_type):
-        cta_data = super().get_cta_data(website_purpose, website_type)
+    def get_cta_data(self, website_type):
+        cta_data = super().get_cta_data(website_type)
         cta_data["shop_btn_href"] = "/shop"
         return cta_data
+
+    def _get_cta_candidates(self, website_type):
+        candidates = super()._get_cta_candidates(website_type)
+        candidates.append((CTA_PRIORITY_SHOP, {
+            'cta_btn_text': self.env._("Shop Now"),
+            'cta_btn_href': '/shop',
+        }))
+        return candidates
 
     def _get_configurator_preview_urls(self):
         return super()._get_configurator_preview_urls() | {
