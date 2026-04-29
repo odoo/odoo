@@ -342,7 +342,6 @@ export class ListCoreViewPlugin extends OdooCoreViewPlugin {
      */
     getListCellValueAndFormat(listId, position, path) {
         const dataSource = this.getters.getListDataSource(listId);
-        dataSource.addFieldPathToFetch(path);
         const value = dataSource.getListCellValue(position, path);
         if (typeof value === "object" && isEvaluationError(value.value)) {
             return value;
