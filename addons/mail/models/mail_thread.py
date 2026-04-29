@@ -774,14 +774,6 @@ class MailThread(models.AbstractModel):
         """
         return dict()
 
-    # format tools
-    # ------------------------------------------------------
-
-    def _track_filter_for_display(self, tracking_values: BaseModel) -> BaseModel:
-        """Filter out tracking values from being displayed."""
-        self.ensure_one()
-        return tracking_values
-
     # ------------------------------------------------------
     # MAIL GATEWAY
     # ------------------------------------------------------
