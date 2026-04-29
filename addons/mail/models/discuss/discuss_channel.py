@@ -1295,8 +1295,6 @@ class DiscussChannel(models.Model):
             all_members,
             "_store_member_fields",
         )._build_result()
-        # sudo: bus.bus: reading non-sensitive last id
-        bus_last_id = self.env["bus.bus"].sudo()._bus_last_id()
         res.attr("avatar_cache_key", predicate=is_channel_or_group)
         # sudo: discuss.category - guests can read categories of accessible channels
         res.one("discuss_category_id", "_store_category_fields", sudo=True)
@@ -1333,6 +1331,8 @@ class DiscussChannel(models.Model):
         res.many("rtc_session_ids", "_store_extra_fields", mode="ADD", sudo=True)
         res.attr("uuid")
         if res.is_for_current_user():
+            # sudo: bus.bus: reading non-sensitive last id
+            bus_last_id = self.env["bus.bus"].sudo()._bus_last_id()
             res.attr("fetchChannelInfoState", "fetched")
             res.attr("is_editable")
             res.attr("message_needaction_counter")
