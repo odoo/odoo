@@ -164,7 +164,7 @@ registerComposerAction("start-poll", {
     name: _t("Start a poll"),
     icon: "oi oi-view-cohort",
     condition: ({ composer, store }) => {
-        if (!store.self_user) {
+        if (!store.self_user || composer.message) {
             return false;
         }
         return ["channel", "group"].includes(composer.targetThread?.channel?.channel_type);
