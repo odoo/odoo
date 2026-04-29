@@ -1369,15 +1369,21 @@ class MailMessage(models.Model):
 
     def _filter_empty(self):
         """ Return subset of "void" messages """
-        return self.filtered(lambda message: message._is_empty())
+        return self.filtered_domain(self._get_empty_domain()).filtered(
+            lambda m: tools.is_html_empty(m.body)
+        )
 
-    def _is_empty(self):
-        self.ensure_one()
+    def _get_empty_domain(self):
+        """Return a domain matching messages considered empty."""
         return (
-            (not self.body or tools.is_html_empty(self.body))
-            and (not self.subtype_id or not self.subtype_id.description)
-            and not self.attachment_ids
-            and not self.has_poll
+            Domain("attachment_ids", "=", False)
+            & (
+                Domain("body", "in", [False, ""])
+                | Domain("body", "=like", '<span class="o-mail-Message-edited"%></span>')
+            )
+            & Domain("ended_poll_ids", "=", False)
+            & Domain("started_poll_ids", "=", False)
+            & Domain("subtype_id.description", "=", False)
         )
 
     @api.model

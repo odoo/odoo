@@ -7,10 +7,6 @@ from odoo.addons.portal.controllers.thread import PortalWebClientController
 
 class PortalRatingThreadController(PortalWebClientController):
     @classmethod
-    def _get_non_empty_message_domain(self):
-        return super()._get_non_empty_message_domain() | Domain("rating_value", "!=", False)
-
-    @classmethod
     def _setup_portal_message_fetch_extra_domain(self, data):
         domain = super()._setup_portal_message_fetch_extra_domain(data)
         if data.get('rating_value', False) is not False:

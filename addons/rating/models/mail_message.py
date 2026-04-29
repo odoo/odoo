@@ -67,5 +67,5 @@ class MailMessage(models.Model):
             predicate=lambda m: has_rating_access(records_by_model.get(m.model)),
         )
 
-    def _is_empty(self):
-        return super()._is_empty() and not self.rating_id
+    def _get_empty_domain(self):
+        return super()._get_empty_domain() & Domain("rating_value", "=", 0)

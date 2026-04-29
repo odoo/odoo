@@ -60,7 +60,7 @@ class PortalWebClientController(WebclientController):
                 & Domain(model._fields['website_message_ids'].get_comodel_domain(model))
                 & Domain("res_id", "=", thread.id)
                 & Domain("subtype_id", "=", request.env.ref("mail.mt_comment").id)
-                & self._get_non_empty_message_domain()
+                & ~request.env["mail.message"]._get_empty_domain()
                 & request.env["mail.message"]._get_search_domain_share()
             )
             # sudo: mail.message - thread access is validated above, and domain is massively restricted to share-only messages
@@ -139,17 +139,6 @@ class PortalWebClientController(WebclientController):
             predicate=lambda t: t in portal_partner_by_thread,
             value=portal_partner_by_thread.get,
         )
-
-    @classmethod
-    def _get_non_empty_message_domain(self):
-        return (
-            Domain("body", "!=", False)
-            & Domain(
-                "body",
-                "not =like",
-                '<span class="o-mail-Message-edited" data-o-datetime="%"></span>',
-            )
-        ) | Domain("attachment_ids", "!=", False)
 
     @classmethod
     def _setup_portal_message_fetch_extra_domain(self, data) -> Domain:
