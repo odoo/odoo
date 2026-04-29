@@ -681,8 +681,9 @@ export class FormOptionPlugin extends Plugin {
                 } else {
                     // DependencyEl is a radio or a checkbox
                     const dependencyContainerEl = dependencyEl.closest(".s_website_form_field");
-                    const inputsInDependencyContainer =
-                        dependencyContainerEl.querySelectorAll(".s_website_form_input");
+                    const inputsInDependencyContainer = dependencyContainerEl.querySelectorAll(
+                        ".s_website_form_input:not(.o_other_input)"
+                    );
                     // TODO: @owl-options already wrong in master for e.g. Project/Tags
                     for (const el of inputsInDependencyContainer) {
                         conditionValueList.push({
