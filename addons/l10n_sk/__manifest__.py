@@ -33,7 +33,6 @@ Pre viac informácií kontaktujte info@26house.com alebo navštívte https://www
         'views/res_company_views.xml',
         'views/report_invoice.xml',
         'views/account_move_views.xml',
-        'views/report_template.xml',
     ],
     'demo': [
         'demo/demo_company.xml',
