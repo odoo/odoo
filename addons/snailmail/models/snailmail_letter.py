@@ -129,6 +129,12 @@ class SnailmailLetter(models.Model):
             self.attachment_id.check('read')
         return res
 
+    def onchange(self, values, field_name, field_onchange):
+        names = field_name if isinstance(field_name, list) else [field_name] if field_name else []
+        if 'attachment_id' in names or (not names and 'attachment_id' in field_onchange):
+            self.new(values).attachment_id.check('read')
+        return super().onchange(values, field_name, field_onchange)
+
     def _fetch_attachment(self):
         """
         This method will check if we have any existent attachement matching the model
