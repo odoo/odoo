@@ -1186,7 +1186,7 @@ export class SurveyForm extends Interaction {
         const inputEls =
             this.el
                 .querySelector(".o_survey_question")
-                ?.querySelectorAll("input[type='text'],input[type='number'],textarea") || [];
+                ?.querySelectorAll("input[type='text'],input[type='number'],input[type='email'],textarea") || [];
         let firstTextInputEl = null;
         for (const inputEl of inputEls) {
             if (
