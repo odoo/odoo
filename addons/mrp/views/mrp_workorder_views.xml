@@ -75,7 +75,7 @@
                 <field name="product_id" optional="show"/>
                 <field name="qty_remaining" optional="show" string="Quantity"/>
                 <field name="qty_ready" optional="hide" groups="base.group_no_one"/>
-                <field name="date_start" optional="hide" readonly="state in ['progress', 'done', 'cancel']" decoration-danger="decoration_dates == 'danger'" decoration-warning="decoration_dates == 'warning'"/>
+                <field name="date_start" string="Start date" optional="hide" readonly="state in ['progress', 'done', 'cancel']" decoration-danger="decoration_dates == 'danger'" decoration-warning="decoration_dates == 'warning'"/>
                 <field name="date_finished" optional="hide" readonly="state in ['progress', 'done', 'cancel']"  decoration-danger="decoration_dates == 'danger'" decoration-warning="decoration_dates == 'warning'"/>
                 <field name="duration_expected" widget="float_time" options="{'unit': 'minutes', 'show_seconds': True}" sum="expected duration" readonly="state in ['cancel', 'done']"/>
                 <field name="duration" widget="mrp_timer"
@@ -173,11 +173,10 @@
         <field name="model">mrp.workorder</field>
         <field name="arch" type="xml">
             <search string="Search Work Orders">
+                <field name="production_id"/>
                 <field name="name" string="Work Order"/>
                 <field name="workcenter_id"/>
-                <field name="production_id"/>
                 <field name="product_id"/>
-                <field name="product_variant_attributes"/>
                 <field name="move_raw_ids" string="Component" filter_domain="[('move_raw_ids.product_id', 'ilike', self)]"/>
                 <filter string="To Do" name="ready" domain="[('state', '=', 'ready')]"/>
                 <filter string="Blocked" name="blocked" domain="[('state', '=', 'blocked')]"/>
