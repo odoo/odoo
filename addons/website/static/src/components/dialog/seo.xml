@@ -151,14 +151,25 @@
     </div>
 </t>
 
+<t t-name="website.seoMetaKeywordsDocumentationLink">
+    <a title="Documentation" t-att-class="link_class" target="_blank" href="https://www.odoo.com/documentation/latest/applications/websites/website/structure/seo.html#keywords-and-meta-tags">
+        <i class="fa fa-question-circle"/>
+    </a>
+</t>
+
 <t t-name="website.MetaKeywords">
     <section class="mt-3">
-        <div t-if="!this.seoContext.keywords.length"><label>Keywords</label></div>
+        <div t-if="!this.seoContext.keywords.length">
+            <label>
+                Keywords
+                <t t-call="website.seoMetaKeywordsDocumentationLink"/>
+            </label>
+        </div>
         <div class="table-responsive mt16" t-if="this.seoContext.keywords.length">
             <table class="table table-sm mb-2">
                 <thead>
                     <tr>
-                        <th class="w-25">Keywords</th>
+                        <th class="w-25">Keywords <t t-call="website.seoMetaKeywordsDocumentationLink"/></th>
                         <th class="text-center o_seo_mentioned_keyword"><abbr title="Used in page first level heading">H1</abbr></th>
                         <th class="text-center o_seo_mentioned_keyword"><abbr title="Used in page second level heading">H2</abbr></th>
                         <th class="text-center o_seo_mentioned_keyword"><abbr title="Used in page title">T</abbr></th>
