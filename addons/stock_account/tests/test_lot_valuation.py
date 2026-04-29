@@ -633,3 +633,21 @@ class TestLotValuation(TestStockValuationCommon):
         self._make_in_move(self.product, 1, 10, lot_ids=[self.lot1])
         self.assertEqual(self.lot1.standard_price, 10)
         self.assertEqual(self.product.standard_price, 12)
+
+    def test_lot_valuation_at_date_fully_consumed_lot(self):
+        """Stock report at date should show correct value for
+        lot valuated AVCO products even if the lot has been fully consumed."""
+
+        # Receive 100 units at 10.0 each
+        in_move = self._make_in_move(self.product, 100, lot_ids=[self.lot1], unit_cost=10.0)
+        at_date = in_move.date
+
+        # Consume all 100 units
+        self._make_out_move(self.product, 100, lot_ids=[self.lot1])
+
+        # Check: lot has no stock at current date
+        self.assertEqual(self.lot1.product_qty, 0)
+
+        # Report at date should still show correct value
+        self.assertEqual(self.product.with_context(to_date=at_date).total_value, 1000.0)
+        self.assertEqual(self.product.with_context(to_date=at_date).avg_cost, 10.0)
