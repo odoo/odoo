@@ -1494,3 +1494,32 @@ test("should toggle caption on an image with display:block (add and remove capti
         `)
     );
 });
+
+test.tags("focus required");
+test("should select whole editable on 'ctrl+a' when image with caption is selected", async () => {
+    const captionId = 1;
+    await testEditor({
+        config: configWithEmbeddedCaption,
+        contentBefore: `<p>abc</p><img class="img-fluid test-image" src="${base64Img}"><p>def</p>`,
+        stepFunction: async () => {
+            await toggleCaption();
+            await waitFor("figcaption > input");
+
+            await click("figure > img");
+            await expectElementCount(".o-we-toolbar", 1);
+
+            // Select whole figure with ctrl+a
+            await press(["ctrl", "a"]);
+        },
+        contentAfterEdit: unformat(
+            `<p>[abc</p>
+            <figure contenteditable="false">
+                <img class="img-fluid test-image o_editable_media" src="${base64Img}" data-caption-id="${captionId}" data-caption="">
+                <figcaption ${getFigcaptionAttributes(captionId, "", true)}>
+                    <input ${CAPTION_INPUT_ATTRIBUTES}>
+                </figcaption>
+            </figure>
+            <p>def]</p>`
+        ),
+    });
+});
