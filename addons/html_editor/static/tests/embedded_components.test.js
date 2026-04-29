@@ -1367,9 +1367,9 @@ describe("editable descendants", () => {
                 </div>
             `)
         );
-        addStep(editor);
         // Set the selection before the component is mounted
         plugins.get("selection").setCursorStart(el.querySelector("[data-embedded-editable] p"));
+        addStep(editor);
         expect(getContent(el)).toBe(
             unformat(`
                 <p data-selection-placeholder=""><br></p>
