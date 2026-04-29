@@ -1,0 +1,20 @@
+rules:
+- id: raise-in-unlink
+  languages: [python]
+  severity: HIGH
+  message: >-
+    Raising errors is not allowed inside unlink as it causes breaks uninstallation.
+    Create a method decorated with `@api.ondelete(at_uninstall=False)`.
+    Only use `at_install=True` if you have no other choice and know what you're
+    doing.
+  patterns:
+  - pattern-inside: |
+      class $_($PARENT):
+          ...
+  - pattern-not-inside: |
+      def $_(...):
+          ...
+  - pattern-inside: |
+      def unlink(self):
+          ...
+  - pattern: raise ...

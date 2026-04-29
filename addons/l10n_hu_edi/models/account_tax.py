@@ -63,4 +63,4 @@ class AccountTax(models.Model):
     def _compute_l10n_hu_tax_reason(self):
         for tax in self:
             reason = _DEFAULT_TAX_REASONS.get(tax.l10n_hu_tax_type, '')
-            tax.l10n_hu_tax_reason = self.env._(reason)  # pylint: disable=gettext-variable
+            tax.l10n_hu_tax_reason = self.env._(reason)  # nosem: gettext-variable

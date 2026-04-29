@@ -239,7 +239,7 @@ def verify_db_management_enabled() -> None:
     """
     if not odoo.tools.config['list_db']:
         e = "Database management functions blocked, admin disabled database listing."
-        raise AccessDenied(e)
+        raise AccessDenied(e)  # nosem: missing-gettext
 
 
 def verify_admin_password(passwd: str) -> None:
@@ -253,7 +253,7 @@ def verify_admin_password(passwd: str) -> None:
     """
     if not passwd or not odoo.tools.config.verify_admin_password(passwd):
         e = "Database management function blocked, bad admin password."
-        raise AccessDenied(e)
+        raise AccessDenied(e)  # nosem: missing-gettext
 
 
 @functools.cache

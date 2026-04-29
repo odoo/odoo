@@ -285,7 +285,7 @@ class CertificateCertificate(models.Model):
         self.ensure_one()
         cert = x509.load_pem_x509_certificate(self.pem_certificate.content)
         if hashing_algorithm not in STR_TO_HASH:
-            raise UserError(f"Unsupported hashing algorithm '{hashing_algorithm}'. Currently supported: sha1 and sha256.")  # pylint: disable=missing-gettext
+            raise UserError(f"Unsupported hashing algorithm '{hashing_algorithm}'. Currently supported: sha1 and sha256.")  # nosem: missing-gettext
         return _get_formatted_value(cert.fingerprint(STR_TO_HASH[hashing_algorithm]), formatting=formatting)
 
     def _get_signature_bytes(self, formatting='encodebytes'):

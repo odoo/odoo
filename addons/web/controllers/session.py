@@ -37,7 +37,7 @@ class Session(Controller):
     def authenticate(self, db, login, password, base_location=None):
         if not db_filter([db]):
             e = "Database not found."
-            raise AccessError(e)  # pylint: disable=missing-gettext
+            raise AccessError(e)  # nosem: missing-gettext
 
         with ExitStack() as stack:
             if not request.db or request.db != db:

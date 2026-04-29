@@ -709,7 +709,7 @@ def _domain_asks_for_industries(domain):
                 if 'industries' in condition.value:
                     return True
             else:
-                raise UserError(f'Unsupported domain condition {condition!r}')  # pylint: disable=missing-gettext
+                raise UserError(f'Unsupported domain condition {condition!r}')  # nosem: missing-gettext
     return False
 
 

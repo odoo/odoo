@@ -101,7 +101,7 @@ def execute_cr(cr, uid, obj, method, args, kw):
     env.transaction.default_env = env  # ensure this is the default env for the call
     recs = env.get(obj)
     if recs is None:
-        raise UserError(f"Object {obj} doesn't exist")  # pylint: disable=missing-gettext
+        raise UserError(f"Object {obj} doesn't exist")  # nosem: missing-gettext
     threading.current_thread().rpc_model_method = f'{obj}.{method}'
     result = retrying(partial(call_kw, recs, method, args, kw), env)
     # force evaluation of lazy values before the cursor is closed, as it would

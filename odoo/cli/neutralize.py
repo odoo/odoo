@@ -39,12 +39,9 @@ class Neutralize(Command):
                 if opt.to_stdout:
                     installed_modules = odoo.modules.neutralize.get_installed_modules(cursor)
                     queries = odoo.modules.neutralize.get_neutralization_queries(installed_modules)
-                    # pylint: disable=bad-builtin
                     print('BEGIN;')
                     for query in queries:
-                        # pylint: disable=bad-builtin
                         print(query.rstrip(";") + ";")
-                    # pylint: disable=bad-builtin
                     print("COMMIT;")
                 else:
                     odoo.modules.neutralize.neutralize_database(cursor)

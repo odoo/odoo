@@ -46,36 +46,12 @@ class TestPyLint(TransactionCase):
         options = [
             '--rcfile=%s' % os.devnull,
             '--disable=all,useless-option-value',
-            '--enable=' + ','.join([
-                'used-before-assignment',
-                'undefined-variable',
-                'eval-used',
-                'unreachable',
-                'function-redefined',
-
-                # custom checkers
-                'sql-injection',
-        'missing-gettext',
-                'gettext-variable',
-                'gettext-placeholders',
-                'gettext-repr',
-                'raise-unlink-override',
-            ]),
+            '--enable=sql-injection',
             '--reports=n',
             "--msg-template='{msg} ({msg_id}) at {path}:{line}'",
             '--load-plugins=' + ','.join([
                 "_pylint_path_setup",
-                "pylint.extensions.bad_builtin",
                 "_odoo_checker_sql_injection",
-                "_odoo_checker_gettext",
-                "_odoo_checker_unlink_override",
-            ]),
-            '--bad-functions=input',
-            '--deprecated-modules=' + ','.join([
-                'csv',
-                'urllib',
-                'cgi',
-                *tools.constants.SUPPORTED_DEBUGGER,
             ]),
         ]
 
