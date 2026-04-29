@@ -4,6 +4,8 @@ import { setupPosEnv, getFilledOrder } from "@point_of_sale/../tests/unit/utils"
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { definePosModels } from "@point_of_sale/../tests/unit/data/generate_model_definitions";
 
+const { DateTime } = luxon;
+
 definePosModels();
 
 test("_getSplitOrderName", async () => {
@@ -126,4 +128,24 @@ test("createSplittedOrder", async () => {
     expect(currentOrder.getOrderlines().length).toBe(1);
     expect(currentOrder.getOrderlines()[0].getQuantity()).toBe(2);
     expect(order.getOrderlines()[0].getQuantity()).toBe(1);
+});
+
+test("createSplittedOrder copies preset from original order", async () => {
+    const store = await setupPosEnv();
+    const preset = store.models["pos.preset"].get(1);
+    const presetTime = DateTime.now().plus({ hours: 1 });
+    const order = await getFilledOrder(store, { preset_id: preset.id, preset_time: presetTime });
+    const table = store.models["restaurant.table"].get(2);
+    order.table_id = table;
+    const screen = await mountWithCleanup(SplitBillScreen, {
+        props: {
+            orderUuid: order.uuid,
+        },
+    });
+    const line = order.getOrderlines()[0];
+    screen.qtyTracker[line.uuid] = 2;
+    await screen.createSplittedOrder();
+    const newOrder = store.getOrder();
+    expect(newOrder.preset_id).toBe(preset);
+    expect(newOrder.preset_time.toISO()).toBe(order.preset_time.toISO());
 });
