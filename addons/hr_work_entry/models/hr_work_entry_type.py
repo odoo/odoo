@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
-from odoo.exceptions import UserError
+from odoo import fields, models
 
 
 class HrWorkEntryType(models.Model):
@@ -47,49 +46,3 @@ class HrWorkEntryType(models.Model):
         help="This field decides the behavior of the shortcut in the gantt view of the work entries. Add will always "
              "prompt a duration and will be added to the existing work entries while replace will simply replace all "
              "work entries of that day")
-
-    @api.constrains('code', 'country_id')
-    def _check_code_unicity(self):
-        """
-        There should be maximum one work entry type per code, per country.
-        """
-        # check if self does not already contain duplicates
-        grouped_duplicates = self.grouped(lambda wt: (wt.code, wt.country_id))
-        for code, country_id in grouped_duplicates:
-            if len(grouped_duplicates[code, country_id]) > 1:
-                raise UserError(self.env._(
-                    'You cannot create more than one work entry type of code "%(code)s" for the same country (%(country)s)',
-                    code=code, country=(country_id.name if country_id else self.env._("All")),
-                ))
-
-        related_we_types = self.search([
-            ('code', 'in', self.mapped('code')),
-            ('country_id', 'in', self.country_id.ids + [False]),
-            ('id', 'not in', self.ids),
-        ]).grouped(lambda wt: (wt.code, wt.country_id))
-
-        for we_type in self:
-            if not related_we_types.get((we_type.code, we_type.country_id)):
-                continue  # no duplicate work entry type
-            # we're not supposed to have more than one duplicate
-            duplicate = related_we_types[we_type.code, we_type.country_id][:1]
-            if we_type.country_id:
-                raise UserError(self.env._(
-                    """
-Cannot insert "%(insert_name)s":
-Work entry type "%(name)s" of code "%(code)s" already exists for country "%(country)s".
-                    """,
-                    insert_name=we_type.name,
-                    name=duplicate.name,
-                    code=duplicate.code,
-                    country=duplicate.country_id.name,
-                ))
-            raise UserError(self.env._(
-                    """
-Cannot insert "%(insert_name)s":
-Work entry type "%(name)s" of code "%(code)s", with no country assigned, already exists.
-                    """,
-                insert_name=we_type.name,
-                name=duplicate.name,
-                code=duplicate.code,
-            ))
