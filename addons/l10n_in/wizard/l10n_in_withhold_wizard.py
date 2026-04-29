@@ -120,11 +120,14 @@ class L10n_InWithholdWizard(models.TransientModel):
                 l10n_in_tds_tax_type = 'tds_sale'
             wizard.l10n_in_tds_tax_type = l10n_in_tds_tax_type
 
-    @api.depends('related_move_id', 'related_payment_id')
+    @api.depends('l10n_in_tds_tax_type', 'related_move_id', 'related_payment_id')
     def _compute_tds_deduction(self):
         for wizard in self:
-            related_partner = wizard.related_move_id.commercial_partner_id if wizard.related_move_id else wizard.related_payment_id.partner_id.commercial_partner_id
-            wizard.tds_deduction = related_partner.l10n_in_pan_entity_id.tds_deduction if related_partner and related_partner.l10n_in_pan_entity_id else 'higher'
+            if wizard.l10n_in_tds_tax_type == 'tds_purchase':
+                related_partner = wizard.related_move_id.commercial_partner_id if wizard.related_move_id else wizard.related_payment_id.partner_id.commercial_partner_id
+                wizard.tds_deduction = related_partner.l10n_in_pan_entity_id.tds_deduction if related_partner and related_partner.l10n_in_pan_entity_id else 'higher'
+            else:
+                wizard.tds_deduction = False
 
     @api.depends('related_move_id', 'related_payment_id')
     def _compute_type_name(self):
@@ -145,14 +148,10 @@ class L10n_InWithholdWizard(models.TransientModel):
             wizard.journal_id = wizard.company_id.parent_ids.l10n_in_withholding_journal_id[-1:] or \
                                 wizard.env['account.journal'].search([*self.env['account.journal']._check_company_domain(wizard.company_id), ('type', '=', 'general')], limit=1)
 
-    @api.depends('related_payment_id', 'related_move_id', 'l10n_in_tds_tax_type', 'base', 'tax_id')
+    @api.depends('related_move_id', 'base')
     def _compute_l10n_in_withholding_warning(self):
         for wizard in self:
             warnings = {}
-            if wizard.tax_id and wizard.l10n_in_tds_tax_type == 'tds_purchase' and not wizard.related_move_id.commercial_partner_id.l10n_in_pan_entity_id:
-                warnings['lower_tds_tax'] = {
-                    'message': _("Please deduct TDS at higher rate if PAN is missing. Ignore if already applied.")
-                }
             precision = self.currency_id.decimal_places
             if wizard.related_move_id and float_compare(wizard.related_move_id.amount_untaxed, wizard.base, precision_digits=precision) < 0:
                 message = _("The base amount of TDS is greater than the amount of the %s", wizard.type_name)
