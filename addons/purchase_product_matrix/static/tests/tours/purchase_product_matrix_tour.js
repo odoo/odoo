@@ -51,6 +51,10 @@ registry.category("web_tour.tours").add('purchase_matrix_tour', {
     trigger: '.o_form_button_save',
     run: 'click' // SAVE Sales Order.
 },
+{
+    content: 'Check if the product variant names are being displayed on the fields',
+    trigger: 'div[name="product_template_id"] .o_many2one span:contains("Matrix (PAV12, PAV21, PAV31)")'
+},
 // Open the matrix through the pencil button next to the product in line edit mode.
 {
     trigger: ".o_form_status_indicator_buttons:not(:visible)", // wait for save to be finished

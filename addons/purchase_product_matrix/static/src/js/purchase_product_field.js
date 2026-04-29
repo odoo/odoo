@@ -37,6 +37,16 @@ export class PurchaseOrderLineProductField extends ProductLabelSectionAndNoteFie
         return this.props.record.data.is_configurable_product;
     }
 
+    get productName() {
+        if (this.props.name == "product_template_id") {
+            const product_id_data = this.props.record.data.product_id;
+            if (product_id_data && product_id_data.display_name) {
+                return product_id_data.display_name.split("\n")[0];
+            }
+        }
+        return super.productName;
+    }
+
     async _onProductTemplateUpdate() {
         const result = await this.orm.call(
             'product.template',
@@ -65,4 +75,5 @@ export class PurchaseOrderLineProductField extends ProductLabelSectionAndNoteFie
 registry.category("fields").add("pol_product_many2one", {
     ...productLabelSectionAndNoteField,
     component: PurchaseOrderLineProductField,
+    fieldDependencies: [{ name: 'product_id', type: 'many2one' }],
 });
