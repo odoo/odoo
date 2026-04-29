@@ -384,3 +384,29 @@ class TestHolidaysMultiContract(TestHolidayContract):
         })
 
         self.assertEqual(leave2.number_of_hours, calendar_partial.full_time_required_hours)
+
+    @freeze_time('2024-06-12 10:00:00')
+    def test_compute_leave_status_fully_flexible_contract(self):
+        """Test that reading the leave status of an employee on a fully flexible
+        contract (no working schedule) does not crash when the employee is
+        currently on a validated leave."""
+        employee = self.env['hr.employee'].create({'name': 'Flex Employee'})
+        self.env['hr.contract'].create({
+            'name': 'Fully flexible contract',
+            'employee_id': employee.id,
+            'date_start': date(2024, 1, 1),
+            'resource_calendar_id': False,
+            'wage': 1000.0,
+            'state': 'open',
+        })
+        leave = self.env['hr.leave'].create({
+            'employee_id': employee.id,
+            'holiday_status_id': self.leave_type.id,
+            'request_date_from': '2024-06-10',
+            'request_date_to': '2024-06-14',
+        })
+        leave.action_approve()
+        self.assertRecordValues(employee, [{
+            'is_absent': True,
+            'current_leave_state': 'validate',
+        }])
