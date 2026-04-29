@@ -21,7 +21,6 @@ class AccountMove(models.Model):
             ('sent', 'Sent'),
             # Set when we write on the payment status
             ('payment_state_to_update', 'Payment status to update'),
-            ('canceled', 'Canceled'),
             ('adjusted', 'Adjusted'),
             ('replaced', 'Replaced'),
         ],
@@ -140,12 +139,7 @@ class AccountMove(models.Model):
     def _compute_show_reset_to_draft_button(self):
         # EXTEND 'account'
         super()._compute_show_reset_to_draft_button()
-        self.filtered(lambda m: m._l10n_vn_need_cancel_request()).show_reset_to_draft_button = False
-
-    @api.depends('l10n_vn_edi_invoice_state')
-    def _compute_need_cancel_request(self):
-        # EXTEND 'account' to add dependencies
-        return super()._compute_need_cancel_request()
+        self.filtered(lambda m: m._l10n_vn_edi_is_sent()).show_reset_to_draft_button = False
 
     @api.depends('payment_state')
     def _compute_l10n_vn_edi_invoice_state(self):
@@ -169,21 +163,6 @@ class AccountMove(models.Model):
                 invoice.l10n_vn_edi_invoice_symbol = invoice.journal_id.l10n_vn_edi_default_symbol_id or invoice.company_id.l10n_vn_edi_symbol_id
             else:
                 invoice.l10n_vn_edi_invoice_symbol = False
-
-    def button_request_cancel(self):
-        # EXTEND 'account'
-        if self._l10n_vn_need_cancel_request():
-            return {
-                'name': _('Invoice Cancellation'),
-                'type': 'ir.actions.act_window',
-                'view_type': 'form',
-                'view_mode': 'form',
-                'res_model': 'l10n_vn_edi_viettel.cancellation',
-                'target': 'new',
-                'context': {'default_invoice_id': self.id},
-            }
-
-        return super().button_request_cancel()
 
     def _get_fields_to_detach(self):
         # EXTENDS account
@@ -349,13 +328,6 @@ class AccountMove(models.Model):
             if self._can_commit():
                 self.env.cr.commit()
 
-    def _l10n_vn_need_cancel_request(self):
-        return self._l10n_vn_edi_is_sent() and self.l10n_vn_edi_invoice_state != 'canceled'
-
-    def _need_cancel_request(self):
-        # EXTEND 'account'
-        return super()._need_cancel_request() or self._l10n_vn_need_cancel_request()
-
     def _post(self, soft=True):
         # EXTEND 'account'
         posted = super()._post(soft=soft)
@@ -448,70 +420,6 @@ class AccountMove(models.Model):
 
         if self._can_commit():
             self.env.cr.commit()
-
-    def _l10n_vn_edi_cancel_invoice(self, reason, agreement_document_name, agreement_document_date):
-        """ Send a request to cancel the invoice. """
-        self.ensure_one()
-
-        # == Lock ==
-        self.env['res.company']._with_locked_records(self)
-
-        access_token, error = self.company_id._l10n_vn_edi_get_access_token()
-        if error:
-            raise UserError(error)
-
-        with SInvoiceService(access_token=access_token, vat=self.company_id.vat, env=self.env) as sinvoice:
-            _resp, error_message = sinvoice.cancel_invoice(
-                template_code=self.l10n_vn_edi_invoice_symbol.invoice_template_code,
-                invoice_no=self.l10n_vn_edi_invoice_number,
-                issue_date_ms=SInvoiceService.format_date(self.l10n_vn_edi_issue_date),
-                reason=reason,
-                agreement_desc=agreement_document_name,
-                agreement_date_ms=SInvoiceService.format_date(agreement_document_date),
-            )
-
-        if error_message:
-            raise UserError(error_message)
-
-        self.l10n_vn_edi_invoice_state = 'canceled'
-
-        try:
-            self._check_fiscal_lock_dates()
-            self.line_ids._check_tax_lock_date()
-
-            self.button_cancel()
-
-            self.message_post(
-                body=_('The invoice has been canceled for reason: %(reason)s', reason=reason),
-            )
-        except UserError as e:
-            self.message_post(
-                body=_('The invoice has been canceled on sinvoice for reason: %(reason)s'
-                       'But the cancellation in Odoo failed with error: %(error)s', reason=reason, error=e),
-            )
-
-        if self._can_commit():
-            self.env.cr.commit()
-
-    def button_draft(self):
-        # EXTEND account
-        # When going from canceled => draft, we ensure to clear the edi fields so that the invoice can be resent if required.
-        cancelled_sinvoices = self.filtered(
-            lambda i: i.country_code == 'VN' and i.l10n_vn_edi_invoice_state == 'canceled' and i.state == 'cancel'
-        )
-        res = super().button_draft()
-        cancelled_sinvoices.write({
-            'l10n_vn_edi_invoice_transaction_id': False,
-            'l10n_vn_edi_invoice_number': False,
-            'l10n_vn_edi_reservation_code': False,
-            'l10n_vn_edi_issue_date': False,
-            'l10n_vn_edi_invoice_state': False,
-        })
-        # Cleanup the files as well. They will still be available in the chatter.
-        cancelled_sinvoices.l10n_vn_edi_sinvoice_xml_file_id.unlink()
-        cancelled_sinvoices.l10n_vn_edi_sinvoice_pdf_file_id.unlink()
-        cancelled_sinvoices.l10n_vn_edi_sinvoice_file_id.unlink()
-        return res
 
     def _l10n_vn_edi_generate_invoice_json(self):
         """ Return the dict of data that will be sent to the api in order to create the invoice. """
@@ -751,7 +659,7 @@ class AccountMove(models.Model):
     def _l10n_vn_edi_is_sent(self):
         """ Small helper that returns true if self has been sent to sinvoice. """
         self.ensure_one()
-        sent_statuses = {'sent', 'payment_state_to_update', 'canceled', 'adjusted', 'replaced'}
+        sent_statuses = {'sent', 'payment_state_to_update', 'adjusted', 'replaced'}
         return self.l10n_vn_edi_invoice_state in sent_statuses
 
     def _get_mail_thread_data_attachments(self):

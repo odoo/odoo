@@ -22,7 +22,6 @@ Using SInvoice by Viettel
         "views/sinvoice_views.xml",
         "views/res_config_settings_views.xml",
         "wizard/account_move_reversal_view.xml",
-        "wizard/l10n_vn_edi_cancellation_request_views.xml",
     ],
     "author": "Odoo S.A.",
     "uninstall_hook": "uninstall_hook",
