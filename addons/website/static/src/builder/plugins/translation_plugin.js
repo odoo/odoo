@@ -50,12 +50,8 @@ export class TranslationPlugin extends Plugin {
     resources = {
         clean_for_save_handlers: this.cleanForSave.bind(this),
         get_dirty_els: this.getDirtyTranslations.bind(this),
-        after_replication_handlers: ({ targetEl }) => {
-            // Tag TOC navbar entries explicitly so the replicated
-            // translation reaches the save payload.
-            if (targetEl.classList.contains("o_translation_without_style")) {
-                targetEl.classList.add("o_dirty");
-            }
+        after_replication_handlers: ({ sourceEl, targetEl }) => {
+            targetEl.classList.toggle("o_dirty", sourceEl.classList.contains("o_dirty"));
         },
         after_setup_editor_handlers: () => {
             const translationSavableEls = getTranslationAttributeEls(
