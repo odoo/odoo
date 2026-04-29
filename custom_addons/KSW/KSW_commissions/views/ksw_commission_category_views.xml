@@ -10,6 +10,7 @@
                 <field name="name"/>
                 <field name="code"/>
                 <field name="kind"/>
+                <field name="is_quantity_based" optional="show"/>
                 <field name="is_system"/>
                 <field name="active" widget="boolean_toggle"/>
             </list>
@@ -34,6 +35,23 @@
                             <field name="is_system" readonly="1"/>
                         </group>
                     </group>
+
+                    <group string="Quantity-Based Amount">
+                        <field name="is_quantity_based" widget="boolean_toggle"/>
+                        <field name="formula"
+                               placeholder="result = quantity * 100"
+                               required="is_quantity_based"
+                               invisible="not is_quantity_based"/>
+                        <field name="quantity_label"
+                               placeholder="Days, Trips, Hours…"
+                               invisible="not is_quantity_based"/>
+                        <field name="min_quantity"
+                               invisible="not is_quantity_based"/>
+                        <field name="max_quantity"
+                               invisible="not is_quantity_based"
+                               help="0 means no upper bound."/>
+                    </group>
+
                     <field name="description" placeholder="Description / usage notes…"/>
                 </sheet>
             </form>

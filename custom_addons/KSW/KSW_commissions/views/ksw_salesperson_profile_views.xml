@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- ================================================================ -->
+    <!-- Salesperson Profile — Form / List / Search                       -->
+    <!-- ================================================================ -->
+    <record id="view_ksw_salesperson_profile_form" model="ir.ui.view">
+        <field name="name">ksw.salesperson.profile.form</field>
+        <field name="model">ksw.salesperson.profile</field>
+        <field name="arch" type="xml">
+            <form string="Salesperson Profile">
+                <header>
+                    <button name="action_redistribute_targets"
+                            string="Redistribute Annual → Monthly (Even)"
+                            type="object" class="btn-secondary"
+                            confirm="Overwrite the 12 monthly target rows with an even split of the current annual totals?"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="display_name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="employee_id"
+                                   options="{'no_create': True}"/>
+                            <field name="year"/>
+                            <field name="role"/>
+                            <field name="active"/>
+                        </group>
+                        <group>
+                            <field name="annual_sales_target"/>
+                            <field name="annual_collection_target"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Monthly Targets">
+                            <field name="target_line_ids">
+                                <list editable="bottom">
+                                    <field name="month"/>
+                                    <field name="sales_target"/>
+                                    <field name="collection_target"/>
+                                    <field name="currency_id" column_invisible="True"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Notes">
+                            <field name="note" placeholder="Internal notes…"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_ksw_salesperson_profile_list" model="ir.ui.view">
+        <field name="name">ksw.salesperson.profile.list</field>
+        <field name="model">ksw.salesperson.profile</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="employee_id"/>
+                <field name="year"/>
+                <field name="role"/>
+                <field name="annual_sales_target" sum="Annual Sales Target"/>
+                <field name="annual_collection_target" sum="Annual Collection Target"/>
+                <field name="active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_ksw_salesperson_profile_search" model="ir.ui.view">
+        <field name="name">ksw.salesperson.profile.search</field>
+        <field name="model">ksw.salesperson.profile</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="employee_id"/>
+                <field name="year"/>
+                <filter name="role_sales" string="Salesman"
+                        domain="[('role', '=', 'sales')]"/>
+                <filter name="role_collect" string="Collector"
+                        domain="[('role', '=', 'collect')]"/>
+                <filter name="role_both" string="Both"
+                        domain="[('role', '=', 'both')]"/>
+                <separator/>
+                <filter name="archived" string="Archived"
+                        domain="[('active', '=', False)]"/>
+                <group>
+                    <filter string="Year" name="group_year"
+                            domain="[]" context="{'group_by': 'year'}"/>
+                    <filter string="Role" name="group_role"
+                            domain="[]" context="{'group_by': 'role'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_ksw_salesperson_profile" model="ir.actions.act_window">
+        <field name="name">Salesperson Profiles</field>
+        <field name="res_model">ksw.salesperson.profile</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_ksw_salesperson_profile_search"/>
+        <field name="context">{'search_default_group_year': 1}</field>
+    </record>
+
+</odoo>
+

@@ -110,7 +110,22 @@
                                     <field name="kind" readonly="1" optional="show"/>
                                     <field name="holiday_id"
                                            invisible="kind != 'holiday_bonus'"/>
-                                    <field name="amount"/>
+                                    <!-- Hidden mirrors powering the
+                                         readonly / invisible expressions
+                                         below (column_invisible hides
+                                         from the renderer but keeps the
+                                         value reachable). -->
+                                    <field name="is_quantity_based"
+                                           column_invisible="True"/>
+                                    <field name="min_quantity"
+                                           column_invisible="True"/>
+                                    <field name="max_quantity"
+                                           column_invisible="True"/>
+                                    <field name="quantity"
+                                           string="Qty"
+                                           readonly="not is_quantity_based"/>
+                                    <field name="amount"
+                                           readonly="is_quantity_based"/>
                                     <field name="description" optional="show"/>
                                 </list>
                             </field>
@@ -130,6 +145,19 @@
                         <field name="driver_commission_amount"
                                string="Driver's Commission"
                                readonly="1"/>
+                        <field name="location_allowance_amount"
+                               string="Location Allowance"
+                               readonly="1"/>
+                        <field name="sales_commission_amount"
+                               string="Sales Commission"
+                               readonly="1"/>
+                        <field name="collection_commission_amount"
+                               string="Collection Commission"
+                               readonly="1"/>
+                        <field name="combined_commission_amount"
+                               string="Combined Commission"
+                               readonly="1"
+                               invisible="combined_commission_amount == 0"/>
                         <field name="total"
                                string="Gross Total"
                                readonly="1"/>
@@ -179,6 +207,10 @@
                 <field name="period"/>
                 <field name="lines_subtotal" sum="Lines Subtotal"/>
                 <field name="driver_commission_amount" sum="Driver Commission"/>
+                <field name="location_allowance_amount" sum="Location Allowance" optional="show"/>
+                <field name="sales_commission_amount" sum="Sales Commission" optional="show"/>
+                <field name="collection_commission_amount" sum="Collection Commission" optional="show"/>
+                <field name="combined_commission_amount" sum="Combined Commission" optional="hide"/>
                 <field name="total" sum="Gross Total"/>
                 <field name="x_loans_amount_locked"
                        string="Loans"

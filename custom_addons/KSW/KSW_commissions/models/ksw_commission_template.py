@@ -130,6 +130,7 @@ class KswCommissionTemplate(models.Model):
                 'sequence': tl.sequence,
                 'category_id': tl.category_id.id,
                 'holiday_id': tl.holiday_id,
+                'quantity': tl.quantity,
                 'amount': tl.amount,
                 'description': tl.description,
             })
@@ -184,16 +185,42 @@ class KswCommissionTemplateLine(models.Model):
         HOLIDAY_OPTIONS,
         help='Required when the category is "Holiday Bonus".',
     )
+    is_quantity_based = fields.Boolean(
+        related='category_id.is_quantity_based',
+        store=True, readonly=True,
+    )
+    quantity_label = fields.Char(
+        related='category_id.quantity_label', readonly=True,
+    )
+    quantity = fields.Float(
+        default=0.0,
+        help='Default quantity pre-filled on new sheets when the '
+             'category is Quantity-Based. The supervisor can adjust '
+             'it on each sheet.',
+    )
     amount = fields.Monetary(
         required=True, default=0.0,
-        help='Default amount pre-filled on new sheets. '
-             'The supervisor can change it on each sheet.',
+        compute='_compute_amount', store=True, readonly=False,
+        help='Default amount pre-filled on new sheets. For '
+             'Quantity-Based categories this is auto-computed from '
+             'the formula × default quantity.',
     )
     description = fields.Char()
     currency_id = fields.Many2one(
         'res.currency',
         default=lambda s: s.env.company.currency_id,
     )
+
+    @api.depends('quantity', 'category_id',
+                 'category_id.is_quantity_based',
+                 'category_id.formula')
+    def _compute_amount(self):
+        for rec in self:
+            cat = rec.category_id
+            if cat and cat.is_quantity_based:
+                rec.amount = cat._eval_formula(rec.quantity)
+            else:
+                rec.amount = rec.amount or 0.0
 
     @api.constrains('kind', 'holiday_id')
     def _check_holiday_required(self):

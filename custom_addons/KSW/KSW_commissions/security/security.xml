@@ -46,6 +46,16 @@
         <field name="category_id" ref="module_category_ksw_commissions"/>
     </record>
 
+    <!-- Sales Override — gates the per-line "Override Condition" button on
+         ksw.sales.commission.line so that a sales manager can grant the
+         commission to a salesperson who didn't meet the threshold (with
+         a captured reason and audit trail). -->
+    <record id="privilege_sales_override" model="res.groups.privilege">
+        <field name="name">Sales Override</field>
+        <field name="sequence">40</field>
+        <field name="category_id" ref="module_category_ksw_commissions"/>
+    </record>
+
     <!-- ============================================================ -->
     <!-- Layer 3: Groups — Commission Management (tiered)              -->
     <!-- ============================================================ -->
@@ -100,6 +110,15 @@
         <field name="name">Admin</field>
         <field name="privilege_id" ref="privilege_commission_configuration"/>
         <field name="comment">Manage the commission/allowance category catalog and the site/trip-tier configuration. Independent of the Management/Approval scopes.</field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- Layer 3: Groups — Sales Override                              -->
+    <!-- ============================================================ -->
+    <record id="group_sales_commission_manager" model="res.groups">
+        <field name="name">Sales Manager</field>
+        <field name="privilege_id" ref="privilege_sales_override"/>
+        <field name="comment">Override the commission-rule condition on individual sales/collection commission lines (e.g. grant the commission to a salesperson who fell below the threshold).</field>
     </record>
 
     <!-- ============================================================ -->
@@ -159,6 +178,10 @@
     </function>
     <function model="res.groups" name="write">
         <value eval="[ref('group_commission_admin')]"/>
+        <value eval="{'user_ids': [(4, ref('base.user_root')), (4, ref('base.user_admin'))]}"/>
+    </function>
+    <function model="res.groups" name="write">
+        <value eval="[ref('group_sales_commission_manager')]"/>
         <value eval="{'user_ids': [(4, ref('base.user_root')), (4, ref('base.user_admin'))]}"/>
     </function>
 

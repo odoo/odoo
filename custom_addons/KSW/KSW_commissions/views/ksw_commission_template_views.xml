@@ -46,7 +46,13 @@
                                            optional="show"/>
                                     <field name="holiday_id"
                                            invisible="kind != 'holiday_bonus'"/>
-                                    <field name="amount"/>
+                                    <field name="is_quantity_based"
+                                           column_invisible="True"/>
+                                    <field name="quantity"
+                                           string="Qty"
+                                           readonly="not is_quantity_based"/>
+                                    <field name="amount"
+                                           readonly="is_quantity_based"/>
                                     <field name="description"
                                            optional="show"/>
                                 </list>

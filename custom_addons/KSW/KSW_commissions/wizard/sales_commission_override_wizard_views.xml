@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="view_ksw_sales_commission_override_wizard_form" model="ir.ui.view">
+        <field name="name">ksw.sales.commission.override.wizard.form</field>
+        <field name="model">ksw.sales.commission.override.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Override Commission Condition">
+                <sheet>
+                    <div class="alert alert-warning" role="alert">
+                        <i class="fa fa-exclamation-triangle me-2"
+                           title="Warning" role="img" aria-label="Warning"/>
+                        <strong>You are about to override the
+                        commission-rule condition on this line.</strong>
+                        <br/>
+                        The salesperson will receive the commission
+                        even though the threshold (or formula) was not
+                        met. The reason you provide will be stored on
+                        the line and posted to the sheet chatter for
+                        audit.
+                    </div>
+                    <group>
+                        <field name="line_id" invisible="1"/>
+                        <field name="employee_id" readonly="1"/>
+                        <field name="sales_pct" string="Sales %" readonly="1"/>
+                        <field name="collection_pct" string="Collection %" readonly="1"/>
+                    </group>
+                    <group>
+                        <field name="reason"
+                               placeholder="e.g. Approved by Sales Manager — major customer demobilised mid-month due to project delay; achievement was 63% vs the 65% threshold."/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_apply" string="Apply Override"
+                            type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary"
+                            special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>
+

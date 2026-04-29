@@ -75,11 +75,12 @@
                             <thead class="table-light">
                                 <tr>
                                     <th style="width:4%">#</th>
-                                    <th style="width:30%">Category</th>
-                                    <th style="width:14%">Type</th>
-                                    <th style="width:16%">Holiday</th>
-                                    <th style="width:16%" class="text-end">Amount</th>
-                                    <th style="width:20%">Notes</th>
+                                    <th style="width:26%">Category</th>
+                                    <th style="width:12%">Type</th>
+                                    <th style="width:14%">Holiday</th>
+                                    <th style="width:8%" class="text-end">Qty</th>
+                                    <th style="width:14%" class="text-end">Amount</th>
+                                    <th style="width:22%">Notes</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -95,6 +96,15 @@
                                             <t t-else="">—</t>
                                         </td>
                                         <td class="text-end">
+                                            <t t-if="ln.is_quantity_based">
+                                                <t t-out="'%g' % ln.quantity"/>
+                                                <t t-if="ln.quantity_label">
+                                                    <span class="text-muted ms-1" t-out="ln.quantity_label"/>
+                                                </t>
+                                            </t>
+                                            <t t-else="">—</t>
+                                        </td>
+                                        <td class="text-end">
                                             <t t-out="'%.2f' % ln.amount"/>
                                         </td>
                                         <td t-out="ln.description or ''"/>
@@ -102,7 +112,7 @@
                                 </t>
                                 <t t-if="not o.line_ids">
                                     <tr>
-                                        <td colspan="6" class="text-center text-muted">
+                                        <td colspan="7" class="text-center text-muted">
                                             No lines entered.
                                         </td>
                                     </tr>

@@ -109,6 +109,33 @@ class KswCommissionSheet(models.Model):
              '(per site, per period). Phase A: always 0.',
     )
 
+    # Technician location (meals) allowance — auto-resolved from the
+    # confirmed ksw.location.allowance.line for this employee/period.
+    location_allowance_amount = fields.Monetary(
+        compute='_compute_location_allowance', store=True, readonly=True,
+        help='Auto-resolved from the matching technician '
+             'location-allowance line (per period). Updated when the '
+             'location-allowance sheet is confirmed.',
+    )
+
+    # Sales / Collection / Combined commissions — auto-resolved from
+    # the confirmed ksw.sales.commission.line for this employee/period.
+    sales_commission_amount = fields.Monetary(
+        compute='_compute_sales_commission', store=True, readonly=True,
+        help='Auto-resolved from the confirmed sales-commission '
+             'line for this employee/period.',
+    )
+    collection_commission_amount = fields.Monetary(
+        compute='_compute_sales_commission', store=True, readonly=True,
+        help='Auto-resolved from the confirmed sales-commission '
+             'line for this employee/period.',
+    )
+    combined_commission_amount = fields.Monetary(
+        compute='_compute_sales_commission', store=True, readonly=True,
+        help='Auto-resolved combined sales+collection commission for '
+             'hybrid (Salesman & Collector) employees.',
+    )
+
     # Loans — auto-pulled in draft, frozen on confirm, applied on done.
     loans_amount = fields.Monetary(
         compute='_compute_loans_amount',
@@ -198,12 +225,23 @@ class KswCommissionSheet(models.Model):
             rec.site_id = emp.x_site_id if emp else False
 
     @api.depends('line_ids.amount', 'driver_commission_amount',
+                 'location_allowance_amount',
+                 'sales_commission_amount',
+                 'collection_commission_amount',
+                 'combined_commission_amount',
                  'loans_amount', 'x_loans_amount_locked', 'state')
     def _compute_totals(self):
         for rec in self:
             sub = sum(rec.line_ids.mapped('amount'))
             rec.lines_subtotal = sub
-            rec.total = sub + (rec.driver_commission_amount or 0.0)
+            rec.total = (
+                sub
+                + (rec.driver_commission_amount or 0.0)
+                + (rec.location_allowance_amount or 0.0)
+                + (rec.sales_commission_amount or 0.0)
+                + (rec.collection_commission_amount or 0.0)
+                + (rec.combined_commission_amount or 0.0)
+            )
             # The "active" loans figure depends on state:
             #   - draft: live shortfall
             #   - confirmed/done: locked figure
@@ -244,6 +282,49 @@ class KswCommissionSheet(models.Model):
                 ('sheet_id.state', '=', 'confirmed'),
             ], limit=1)
             rec.driver_commission_amount = line.total_commission if line else 0.0
+
+    @api.depends('employee_id', 'period')
+    def _compute_location_allowance(self):
+        """Pull the matching confirmed location-allowance line for this
+        employee/period.
+        """
+        Line = self.env['ksw.location.allowance.line'].sudo()
+        for rec in self:
+            if not rec.employee_id or not rec.period:
+                rec.location_allowance_amount = 0.0
+                continue
+            line = Line.search([
+                ('employee_id', '=', rec.employee_id.id),
+                ('sheet_id.period', '=', rec.period),
+                ('sheet_id.state', '=', 'confirmed'),
+            ], limit=1)
+            rec.location_allowance_amount = (
+                line.total_allowance if line else 0.0
+            )
+
+    @api.depends('employee_id', 'period')
+    def _compute_sales_commission(self):
+        """Pull the matching confirmed sales/collection commission
+        line for this employee/period.
+        """
+        Line = self.env['ksw.sales.commission.line'].sudo()
+        for rec in self:
+            if not rec.employee_id or not rec.period:
+                rec.sales_commission_amount = 0.0
+                rec.collection_commission_amount = 0.0
+                rec.combined_commission_amount = 0.0
+                continue
+            lines = Line.search([
+                ('employee_id', '=', rec.employee_id.id),
+                ('sheet_id.period', '=', rec.period),
+                ('sheet_id.state', '=', 'confirmed'),
+            ])
+            rec.sales_commission_amount = sum(
+                lines.mapped('sales_commission_amount'))
+            rec.collection_commission_amount = sum(
+                lines.mapped('collection_commission_amount'))
+            rec.combined_commission_amount = sum(
+                lines.mapped('combined_commission_amount'))
 
     # ==================================================================
     # CRUD
@@ -698,6 +779,43 @@ class KswCommissionSheet(models.Model):
         )
         no_dept = [dept_map[0]] if 0 in dept_map else []
         return named + no_dept
+
+    # ------------------------------------------------------------------
+    # "Commissions & Allowances Summary" report helpers
+    # ------------------------------------------------------------------
+    def _report_get_summary_columns(self):
+        """Return the distinct ``ksw.commission.category`` records used by
+        any line on this recordset, ordered by (sequence, id).
+
+        Used to build dynamic per-category columns on the
+        Commissions & Allowances Summary report so each category /
+        commission type appears once across the table.
+        """
+        cats = self.mapped('line_ids.category_id')
+        return cats.sorted(key=lambda c: (c.sequence or 0, c.id))
+
+    def _report_get_summary_cells(self, columns):
+        """For *one* sheet, return a list of amounts aligned to ``columns``.
+
+        Multiple lines under the same category (e.g. multiple holiday
+        bonus entries) are summed into a single cell.
+        """
+        self.ensure_one()
+        by_cat = {}
+        for ln in self.line_ids:
+            cid = ln.category_id.id
+            by_cat[cid] = by_cat.get(cid, 0.0) + (ln.amount or 0.0)
+        return [by_cat.get(c.id, 0.0) for c in columns]
+
+    def _report_get_summary_totals(self, columns):
+        """Return per-category column totals across the whole recordset."""
+        totals = {c.id: 0.0 for c in columns}
+        for o in self:
+            for ln in o.line_ids:
+                cid = ln.category_id.id
+                if cid in totals:
+                    totals[cid] += ln.amount or 0.0
+        return [totals[c.id] for c in columns]
 
 
 
