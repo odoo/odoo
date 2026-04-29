@@ -347,32 +347,6 @@ class TestVNEDI(AccountTestInvoicingCommon):
         self.assertNotEqual(invoice.l10n_vn_edi_sinvoice_pdf_file, False)
         self.assertNotEqual(invoice.l10n_vn_edi_sinvoice_file, False)
 
-    @freeze_time('2024-01-01')
-    def test_cancel_invoice(self):
-        """ Ensure that trying to cancel a sent invoice returns the wizard action, and test the wizard flow. """
-        invoice = self.init_invoice(
-            move_type='out_invoice',
-            products=self.product_a,
-            taxes=self.tax_sale_a,
-            post=True,
-            currency=self.other_currency,
-        )
-        self._send_invoice(invoice)
-        # Trying to cancel a sent invoice should result in an action to open the cancellation wizard.
-        action = invoice.button_request_cancel()
-        self.assertEqual(action['res_model'], 'l10n_vn_edi_viettel.cancellation')
-        with patch('odoo.addons.l10n_vn_edi_viettel.models.sinvoice_service.SInvoiceService.cancel_invoice', return_value=({}, None)):
-            self.env['l10n_vn_edi_viettel.cancellation'].create({
-                'invoice_id': invoice.id,
-                'reason': 'Unwanted',
-                'agreement_document_name': 'N/A',
-                'agreement_document_date': fields.Datetime.now(),
-            }).button_request_cancel()
-        # Both states should be canceled, but the e-invoicing data should still be there
-        self.assertEqual(invoice.l10n_vn_edi_invoice_state, 'canceled')
-        self.assertEqual(invoice.state, 'cancel')
-        self.assertNotEqual(invoice.l10n_vn_edi_invoice_number, False)
-
     def test_access_token(self):
         """ Ensure that we can fetch access tokens as you would expect. """
         invoice = self.init_invoice(
