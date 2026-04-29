@@ -10,6 +10,21 @@ from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
+# Maps l10n_ke.item.code's stored tax_rate value to the VAT class byte actually
+# expected by the fiscal device, per KRA's Tax Type code table (VSCU Specification
+# Document v2.0, section 4.1): A=Exempt, B=16%, C=0% Zero Rated, D=Non-VAT/Special
+# Category, E=8%. The B/E stored keys predate this mapping and don't line up with
+# their real byte (legacy internal labelling); translating here avoids touching
+# any existing l10n_ke.item.code data while still sending the KRA-correct byte.
+# Will be removed in master after fixing the actual l10n_ke.item.code data to match the KRA byte values.
+L10N_KE_WIRE_TAX_RATE = {
+    'A': 'B',  # Taxable at 16%
+    'B': 'E',  # Taxable at 8% (legacy label; real 8% byte is E)
+    'C': 'C',  # Zero Rated
+    'D': 'D',  # Special Category / Non-VAT
+    'E': 'A',  # Exempted (legacy label; real Exempt byte is A)
+}
+
 
 class AccountMove(models.Model):
     _inherit = 'account.move'
@@ -207,7 +222,7 @@ class AccountMove(models.Model):
 
             line_data = b';'.join([
                 self._l10n_ke_fmt(line.name, 36),                       # 36 symbols for the article's name
-                self._l10n_ke_fmt(item_code.tax_rate or 'A', 1),        # 1 symbol for article's vat class ('A', 'B', 'C', 'D', or 'E')
+                self._l10n_ke_fmt(L10N_KE_WIRE_TAX_RATE.get(item_code.tax_rate, 'B'), 1),  # 1 symbol for article's vat class, remapped to the KRA/device byte (see L10N_KE_WIRE_TAX_RATE)
                 price[:15].encode('cp1251'),                    # 1 to 15 symbols for article's price with up to 5 digits after decimal point
                 self._l10n_ke_fmt(uom, 3),                              # 3 symbols for unit of measure
                 (item_code.code or '').ljust(10).encode('cp1251'),      # 10 symbols for KRA item code in the format xxxx.xx.xx (can be empty)
