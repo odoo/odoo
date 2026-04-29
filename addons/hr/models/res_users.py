@@ -91,6 +91,7 @@ class ResUsers(models.Model):
     employee_id = fields.Many2one('hr.employee', string="Company employee",
         compute='_compute_company_employee', search='_search_company_employee', readonly=True)
 
+<<<<<<< 6aedaa473dd59406d0d2d39da66761fb1e7f211b
     job_title = field_employee(fields.Char, 'job_title', user_writeable=True)
     work_phone = field_employee(fields.Char, 'work_phone', user_writeable=True)
     mobile_phone = field_employee(fields.Char, 'mobile_phone', user_writeable=True)
@@ -98,6 +99,23 @@ class ResUsers(models.Model):
     category_ids = field_employee(fields.Many2many, 'category_ids', comodel_name='hr.employee.category', string="Employee Tags", user_writeable=True)
     work_contact_id = field_employee(fields.Many2one, 'work_contact_id', comodel_name='res.partner')
     work_location_id = field_employee(fields.Many2one, 'work_location_id', comodel_name='hr.work.location', user_writeable=True)
+||||||| 616e82d7b3a53b1facf481e783baed3e99393d3c
+    job_title = fields.Char(related='employee_id.job_title')
+    work_phone = fields.Char(related='employee_id.work_phone', readonly=False, related_sudo=False)
+    mobile_phone = fields.Char(related='employee_id.mobile_phone', readonly=False, related_sudo=False)
+    work_email = fields.Char(related='employee_id.work_email', readonly=False, related_sudo=False)
+    category_ids = fields.Many2many(related='employee_id.category_ids', string="Employee Tags", readonly=False, related_sudo=False)
+    work_contact_id = fields.Many2one(related='employee_id.work_contact_id', readonly=False, related_sudo=False)
+    work_location_id = fields.Many2one(related='employee_id.work_location_id', readonly=False, related_sudo=False)
+=======
+    job_title = fields.Char(related='employee_id.job_title')
+    work_phone = fields.Char(related='employee_id.work_phone', readonly=False, related_sudo=False)
+    mobile_phone = fields.Char(related='employee_id.mobile_phone', readonly=False, related_sudo=False)
+    work_email = fields.Char(related='employee_id.work_email', readonly=False, related_sudo=False)
+    category_ids = fields.Many2many(related='employee_id.category_ids', string="Employee Tags", readonly=False, related_sudo=False)
+    work_contact_id = fields.Many2one(related='employee_id.work_contact_id', readonly=False, related_sudo=False)
+    work_location_id = fields.Many2one(related='employee_id.work_location_id', readonly=False, related_sudo=True)
+>>>>>>> 321fda01c99c6497dfd65e0d6f502a98632689ba
     work_location_name = fields.Char(related="employee_id.work_location_name")
     work_location_type = fields.Selection(related="employee_id.work_location_type")
     private_street = field_employee(fields.Char, 'private_street', string="Private Street", user_writeable=True)
