@@ -1090,7 +1090,7 @@
                     <t t-set="isOffcanvas" t-value="True"/>
                 </t>
             </div>
-            <div class="offcanvas-body d-flex justify-content-between flex-grow-0 border-top overflow-hidden">
+            <div class="offcanvas-body d-flex justify-content-between flex-grow-0 flex-shrink-0 border-top overflow-hidden">
                 <a t-attf-class="btn btn-{{navClass}} d-flex py-1 mb-2 {{(not attrib_values and not isFilteringByPrice and not tags) and 'disabled' }}"
                    t-att-aria-disabled="(not attrib_values and not isFilteringByPrice and not tags) and 'true' or 'false'"
                    t-att-href="keep(attribute_values=0, tags=0, min_price=0, max_price=0)"
