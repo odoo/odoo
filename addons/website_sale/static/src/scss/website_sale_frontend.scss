@@ -1,6 +1,12 @@
 //## Website Sale frontent design
 //## ----------------------------
 
+// Fix the Add to Cart button when editing the product page
+body.editor_enable #add_to_cart_wrap span[contenteditable="true"] {
+    display: contents;
+}
+
+
 .o_wsale_image_viewer {
     .o_wsale_image_viewer_control > a > i,
     .o_wsale_image_viewer_header {
