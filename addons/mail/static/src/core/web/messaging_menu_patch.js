@@ -49,7 +49,7 @@ patch(MessagingMenu.prototype, {
     beforeOpen() {
         this.state.searchOpen = false;
         this.store.discuss.searchTerm = "";
-        this.store.isReady.then(() => {
+        this.store.isReadyPromise.then(() => {
             if (
                 !this.store.inbox.isLoaded &&
                 this.store.inbox.status !== "loading" &&

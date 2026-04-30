@@ -18,7 +18,7 @@ export class AutopopupService {
         this.livechatService = livechatService;
         this.ui = ui;
 
-        store.isReady.then(() => {
+        store.isReadyPromise.then(() => {
             browser.setTimeout(async () => {
                 await store.chatHub.initPromise;
                 if (this.allowAutoPopup) {

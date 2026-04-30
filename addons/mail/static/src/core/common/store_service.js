@@ -38,7 +38,7 @@ export class Store extends BaseStore {
     bookmarkBox = fields.One("mail.thread");
     history = fields.One("mail.thread");
     inbox = fields.One("mail.thread");
-    isReady = new Deferred();
+    isReadyPromise = new Promise((resolve) => (this._resolveIsReady = resolve));
     self_guest = fields.One("mail.guest");
     self_user = fields.One("res.users");
     /** This is the current logged partner / guest */
@@ -179,7 +179,7 @@ export class Store extends BaseStore {
     /** Import data received from init_messaging */
     async initialize() {
         await this.fetchStoreData("init_messaging");
-        this.isReady.resolve();
+        this._resolveIsReady();
     }
 
     /**
