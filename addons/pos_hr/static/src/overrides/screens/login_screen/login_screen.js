@@ -2,7 +2,7 @@ import { useCashierSelector } from "@pos_hr/app/select_cashier_mixin";
 import { _t } from "@web/core/l10n/translation";
 import { LoginScreen } from "@point_of_sale/app/screens/login_screen/login_screen";
 import { patch } from "@web/core/utils/patch";
-import { useAutofocus } from "@web/core/utils/hooks";
+import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { onWillUnmount, useExternalListener, useState } from "@odoo/owl";
 
 patch(LoginScreen.prototype, {
@@ -14,6 +14,7 @@ patch(LoginScreen.prototype, {
         });
 
         if (this.pos.config.module_pos_hr) {
+            this.barcodeReader = useService("barcode_reader");
             this.cashierSelector = useCashierSelector({
                 onScan: (employee) => employee && this.selectOneCashier(employee),
                 exclusive: true,
@@ -22,7 +23,15 @@ patch(LoginScreen.prototype, {
             useAutofocus();
             useExternalListener(window, "keypress", async (ev) => {
                 if (this.pos.login && ev.key === "Enter" && this.state.pin) {
-                    await this.selectCashier(this.state.pin, true);
+                    const isBadge = this.pos.models["hr.employee"].some(
+                        (emp) => emp._barcode === Sha1.hash(this.state.pin)
+                    );
+                    if (isBadge) {
+                        this.barcodeReader.scan(this.state.pin);
+                        this.state.pin = "";
+                    } else {
+                        await this.selectCashier(value, true);
+                    }
                 }
             });
         }
