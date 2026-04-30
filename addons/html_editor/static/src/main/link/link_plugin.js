@@ -388,7 +388,8 @@ export class LinkPlugin extends Plugin {
                     const selectionData = this.dependencies.selection.getSelectionData();
                     return (
                         selectionData.documentSelectionIsInEditable &&
-                        isHtmlContentSupported(selectionData.editableSelection)
+                        isHtmlContentSupported(selectionData.editableSelection) &&
+                        this.isLinkAllowedOnSelection()
                     );
                 },
             }
@@ -475,8 +476,9 @@ export class LinkPlugin extends Plugin {
     }
 
     isLinkAllowedOnSelection() {
-        if (this.getResource("link_compatible_selection_predicates").some((p) => p())) {
-            return true;
+        const isLinkCompatible = this.checkPredicates("link_compatible_selection_predicates");
+        if (isLinkCompatible !== undefined) {
+            return isLinkCompatible;
         }
         const targetedNodes = this.dependencies.selection.getTargetedNodes();
         const targetedBlocks = targetedNodes.filter(isBlock);
@@ -526,7 +528,7 @@ export class LinkPlugin extends Plugin {
             linkElement = this.createLink(undefined, selection.textContent());
         }
 
-        const selectionTextContent = selection?.textContent();
+        const selectionTextContent = cleanZWChars(selection?.textContent());
         const isImage = !!findInSelection(selection, "img, .fa");
 
         const applyCallback = (url, label, classes, linkTarget, attachmentId, relValue) => {
