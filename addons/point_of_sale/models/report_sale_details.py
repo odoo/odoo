@@ -165,10 +165,14 @@ class ReportSaleDetails(models.AbstractModel):
                 account_payments = self.env['account.payment'].search([('pos_session_id', '=', session.id)])
                 if payment['session'] == session.id:
                     if not payment['cash']:
+                        payment_method = self.env['pos.payment.method'].browse(payment['id'])
                         ref_value = "Closing difference in %s (%s)" % (payment['name'], session.name)
-                        account_move = self.env['account.move'].search([("ref", "=", ref_value)], limit=1)
+                        # We add the journal to the query to benefit from index `account_move_journal_id_company_id_idx`
+                        account_move = self.env['account.move'].search([
+                            ('ref', '=', ref_value),
+                            ('journal_id', '=', payment_method.journal_id.id),
+                        ], limit=1)
                         if account_move:
-                            payment_method = self.env['pos.payment.method'].browse(payment['id'])
                             is_loss = any(l.account_id == payment_method.journal_id.loss_account_id for l in account_move.line_ids)
                             is_profit = any(l.account_id == payment_method.journal_id.profit_account_id for l in account_move.line_ids)
                             payment['final_count'] = payment['total']
