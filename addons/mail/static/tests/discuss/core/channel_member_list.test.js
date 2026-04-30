@@ -358,3 +358,28 @@ test("Shows owner / admin in members panel + member actions", async () => {
     await contains(".o-dropdown-item", { count: 1 });
     await contains(".o-dropdown-item:has(:text(Remove Member))");
 });
+
+test("Do not open chat / avatar card of archived users", async () => {
+    const pyEnv = await startServer();
+    const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
+        { name: "Active User" },
+        { name: "Archived User" },
+    ]);
+    pyEnv["res.users"].create([
+        { partner_id: partnerId_1, active: true },
+        { partner_id: partnerId_2, active: false },
+    ]);
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "TestChannel",
+        channel_member_ids: [
+            Command.create({ partner_id: partnerId_1 }),
+            Command.create({ partner_id: partnerId_2 }),
+        ],
+        channel_type: "channel",
+    });
+    await start();
+    await openDiscuss(channelId);
+    // This is a shortcut to determine whether the member can open chat or avatar card.
+    await contains(".o-discuss-ChannelMember.cursor-pointer", { text: "Active User" });
+    await contains(".o-discuss-ChannelMember:not(.cursor-pointer)", { text: "Archived User" });
+});
