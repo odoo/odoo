@@ -76,17 +76,12 @@ registerWebsitePreviewTour(
         // dropdown with the search results.
         scrollDownToMediaList(),
         {
-            content: "Open the searchbar by clicking on it",
-            trigger: ":iframe #wrapwrap header .s_searchbar_input input.search-query",
-            run: "click",
-        },
-        {
             content: "Type a search query into the searchbar input",
-            trigger: ":iframe #o_search_modal .o_searchbar_form input.search-query",
+            trigger: ":iframe #wrapwrap header .s_searchbar_input input.search-query",
             run: "edit a",
         },
         checkIfVisibleOnScreen(
-            ":iframe #o_search_modal .o_searchbar_form.show .o_dropdown_menu.show"
+            ":iframe #wrapwrap header .s_searchbar_input.show .o_dropdown_menu.show"
         ),
     ]
 );
