@@ -14,7 +14,7 @@ import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { user } from "@web/core/user";
-import { Deferred, Mutex } from "@web/core/utils/concurrency";
+import { Mutex } from "@web/core/utils/concurrency";
 import { renderToElement } from "@web/core/utils/render";
 import { debounce } from "@web/core/utils/timing";
 import { getOrigin } from "@web/core/utils/urls";
@@ -176,7 +176,7 @@ export class Store extends BaseStore {
 
     /**
      * Create a cacheable version of the `fetchStoreData` method. The result of the
-     * request is cached once acquired. In case of failure, the deferred is
+     * request is cached once acquired. In case of failure, the promise is
      * rejected and the cache is reset allowing to retry the request when
      * calling the function again.
      *
@@ -188,26 +188,26 @@ export class Store extends BaseStore {
      * }}
      */
     makeCachedFetchData(name, params) {
-        let def = null;
+        let promWithResolvers = null;
         const r = reactive({
             status: "not_fetched",
             fetch: () => {
                 if (["fetching", "fetched"].includes(r.status)) {
-                    return def;
+                    return promWithResolvers.promise;
                 }
                 r.status = "fetching";
-                def = new Deferred();
+                promWithResolvers = Promise.withResolvers();
                 this.fetchStoreData(name, params).then(
                     (result) => {
                         r.status = "fetched";
-                        def.resolve(result);
+                        promWithResolvers.resolve(result);
                     },
                     (error) => {
                         r.status = "not_fetched";
-                        def.reject(error);
+                        promWithResolvers.reject(error);
                     }
                 );
-                return def;
+                return promWithResolvers.promise;
             },
         });
         return r;

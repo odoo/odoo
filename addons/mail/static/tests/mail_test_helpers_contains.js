@@ -620,12 +620,11 @@ class Contains {
      *
      * Success or failure messages will be logged with HOOT as well.
      *
-     * @returns {Promise}
+     * @returns {Promise<void>}
      */
     run() {
         this.done = false;
-        const { promise, reject, resolve } = Promise.withResolvers();
-        this.containsPromise = promise;
+        const { promise: containsPromise, reject, resolve } = Promise.withResolvers();
         this._rejectContains = reject;
         this._resolveContains = resolve;
         this.scrollListeners = new Set();
@@ -660,7 +659,7 @@ class Contains {
                 }
             });
         }
-        return this.containsPromise;
+        return containsPromise;
     }
 
     /**

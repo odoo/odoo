@@ -1,7 +1,7 @@
 import { useState } from "@web/owl2/utils";
 import { Component } from "@odoo/owl";
 
-import { Deferred, KeepLast } from "@web/core/utils/concurrency";
+import { KeepLast } from "@web/core/utils/concurrency";
 import { memoize } from "@web/core/utils/functions";
 
 /**
@@ -30,8 +30,9 @@ export class Gif extends Component {
     };
     static components = {};
 
-    generateGifSnapshot = memoize(async (src) => {
-        const deferred = new Deferred();
+    generateGifSnapshot = memoize((src) => {
+        const { promise: gifSnapshotPromise, resolve: resolveGifSnapshot } =
+            Promise.withResolvers();
         const image = document.createElement("img");
         if (new URL(src).origin !== location.origin) {
             image.crossOrigin = "anonymous";
@@ -42,9 +43,9 @@ export class Gif extends Component {
             canvas.width = image.width;
             canvas.height = image.height;
             canvas.getContext("2d").drawImage(image, 0, 0, image.width, image.height);
-            deferred.resolve(canvas.toDataURL("image/gif"));
+            resolveGifSnapshot(canvas.toDataURL("image/gif"));
         };
-        return deferred;
+        return gifSnapshotPromise;
     });
 
     setup() {
