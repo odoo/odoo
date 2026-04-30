@@ -6,7 +6,7 @@
         <table name="cart_total_table" class="table mb-0">
             <tbody>
                 <tr
-                    t-if="this.state.has_deliverable_products"
+                    t-if="this.state.totals.has_deliverable_products"
                     name="o_order_delivery"
                 >
                     <td
@@ -17,19 +17,19 @@
                     <td class="text-end pe-0 pt-0 pb-2 border-0">
                         <span
                             name="o_message_no_dm_set"
-                            t-att-class="this.state.has_carrier ? 'd-none' : ''"
+                            t-att-class="this.state.totals.has_carrier ? 'd-none' : ''"
                             title="Price will be updated after choosing a delivery method"
                         >
                             -
                         </span>
                         <span
-                            t-out="this.formatPrice(this.state.amount_delivery)"
-                            t-att-class="'monetary_field' + (this.state.has_carrier ? '' : ' d-none')"
+                            t-out="this.formatPrice(this.state.totals.amount_delivery)"
+                            t-att-class="'monetary_field' + (this.state.totals.has_carrier ? '' : ' d-none')"
                         />
                     </td>
                 </tr>
                 <tr
-                    t-if="!this.state.tax_included"
+                    t-if="!this.state.totals.tax_included"
                     name="o_order_total_untaxed"
                 >
                     <td
@@ -39,24 +39,24 @@
                     />
                     <td class="text-end border-0 pb-2 pe-0 pt-0">
                         <span
-                            t-out="this.formatPrice(this.state.amount_untaxed)"
+                            t-out="this.formatPrice(this.state.totals.amount_untaxed)"
                             class="monetary_field"
                             style="white-space: nowrap;"
                         />
                     </td>
                 </tr>
             </tbody>
-            <t t-if="showTaxLines and !this.state.tax_included" t-call="website_sale.OrderTaxLines"/>
+            <t t-if="showTaxLines and !this.state.totals.tax_included" t-call="website_sale.OrderTaxLines"/>
             <tbody>
                 <tr name="o_order_total" class="border-top">
                     <td
                         t-out="this.props.templateData.totalLabel"
                         colspan="2"
-                        t-attf-class="fw-bold border-0 ps-0 pt-2 #{this.state.tax_included ? 'pb-1' : 'pb-2'}"
+                        t-attf-class="fw-bold border-0 ps-0 pt-2 #{this.state.totals.tax_included ? 'pb-1' : 'pb-2'}"
                     />
-                    <td t-attf-class="text-end border-0 px-0 pt-2 #{this.state.tax_included ? 'pb-1' : 'pb-2'}">
+                    <td t-attf-class="text-end border-0 px-0 pt-2 #{this.state.totals.tax_included ? 'pb-1' : 'pb-2'}">
                         <strong
-                            t-out="this.formatPrice(this.state.amount_total)"
+                            t-out="this.formatPrice(this.state.totals.amount_total)"
                             class="monetary_field"
                             style="white-space: nowrap;"
                         />
@@ -64,18 +64,24 @@
                 </tr>
             </tbody>
             <!-- Tax included view -->
-            <t t-if="this.state.tax_included" t-call="website_sale.OrderTaxLines"/>
+            <t
+                name="tax_included_lines"
+                t-if="this.state.totals.tax_included"
+                t-call="website_sale.OrderTaxLines"
+            />
+            <!-- promo button -->
+            <t t-if="!this.props.hidePromotions" t-call="website_sale.ReductionCode"/>
         </table>
     </t>
 
     <t t-name="website_sale.OrderTaxLines">
         <tbody id="order_tax_lines_container">
-            <t t-if="this.state.tax_subtotals">
-                <t t-foreach="this.state.tax_subtotals" t-as="line" t-key="line.id">
+            <t t-if="this.state.totals.tax_subtotals">
+                <t t-foreach="this.state.totals.tax_subtotals" t-as="line" t-key="line.id">
                     <t t-foreach="line['tax_groups']" t-as="tax_line" t-key="tax_line.id">
                         <tr name="o_order_total_taxes">
                             <td
-                                t-if="this.state.tax_included"
+                                t-if="this.state.totals.tax_included"
                                 class="border-0 p-0 pb-2 small"
                                 colspan="3"
                             >
@@ -107,6 +113,38 @@
                     </t>
                 </t>
             </t>
+        </tbody>
+    </t>
+
+    <t t-name="website_sale.ReductionCode">
+        <tbody>
+            <tr>
+                <td colspan="3" class="text-end text-xl-end border-0 p-0">
+                    <div class="w-100">
+                        <div class="input-group">
+                            <input
+                                name="promo"
+                                type="text"
+                                t-custom-ref="promoInput"
+                                t-att-placeholder="this.promoInputPlaceholder"
+                                class="form-control"
+                            />
+                            <button
+                                t-out="this.props.templateData.applyPromoLabel"
+                                class="btn btn-light border"
+                                t-on-click="() => this.applyPromoCode()"
+                            />
+                        </div>
+
+                        <div
+                            t-if="this.state.errorMessage"
+                            t-out="this.state.errorMessage"
+                            class="alert alert-danger text-start mt-2 mb-0 py-2"
+                            role="alert"
+                        />
+                    </div>
+                </td>
+            </tr>
         </tbody>
     </t>
 </templates>

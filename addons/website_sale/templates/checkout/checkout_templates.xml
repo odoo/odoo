@@ -5,29 +5,6 @@
         <t t-call="website.step_wizard" wizard_step="website._get_checkout_breadcrumb_steps()"/>
     </template>
 
-    <!-- Called in `website_sale.reduction_code`. -->
-    <template id="website_sale.coupon_form" name="Coupon form">
-        <!-- Checkout context:
-            - redirect: The route to redirect to when a customer enters a coupon; default: `None`.
-            - website_sale_order: The current order.
-        -->
-        <form
-            class="mb-3"
-            t-attf-action="/shop/pricelist#{redirect and '?r=' + redirect or ''}"
-            method="post"
-            name="coupon_code"
-        >
-            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
-            <div class="input-group w-100">
-                <input name="promo" class="form-control" type="text" placeholder="Discount code..."/>
-                <button type="submit" class="btn btn-light border">Apply</button>
-            </div>
-        </form>
-        <t t-if="request.params.get('code_not_available')" name="code_not_available">
-            <div class="alert alert-danger text-start" role="alert">This promo code is not available.</div>
-        </t>
-    </template>
-
     <!-- Called in `website_sale.checkout_layout`. -->
     <template id="navigation_buttons" name="Navigation buttons">
         <!-- Layout customization parameters:
@@ -168,7 +145,6 @@
                             default: `None`.
         -->
         <!-- Checkout context (non exhaustive):
-            - redirect: The route to redirect to when a customer enters a coupon; default: `None`.
             - website_sale_order: The current order.
         -->
         <t t-call="website.layout"
@@ -413,7 +389,7 @@
                 t-set="tax_included"
                 t-value="website_sale_order.website_id.show_line_subtotals_tax_selection == 'tax_included'"
             />
-            <table class="table mb-0">
+            <table class="table mb-0" name="cart_totals_edit_mode_table">
                 <tr name="o_order_delivery">
                     <td class="ps-0 pt-0 pb-2 border-0 text-muted cart_delivery_label" colspan="2">
                         Delivery
@@ -465,29 +441,35 @@
         <!-- Layout customization parameters:
             - _cart_total_classes: CSS classes to append on the root div of the total template;
                                    default `None`.
+            - hide_promotions: Whether to hide coupon code input; default: `None`.
         -->
         <!-- encode order_id for confirmation page where website_sale_order will not be current cart -->
         <div
             id="cart_totals"
             t-attf-class="#{_cart_total_classes}"
             t-att-data-order-id="website_sale_order.id if request.cart != website_sale_order else None"
+            t-att-data-hide-promotions="hide_promotions"
         />
     </template>
 
     <!-- Deactivatable through the website editor. -->
+    <!-- TODO NIPL: Only keep blank template to activate from website editor -->
     <template id="reduction_code" inherit_id="website_sale.total" name="Promo Code">
         <!-- Checkout context:
-            - hide_promotions: Whether to hide promotion input; default: `None`.
-            - redirect: The route to redirect to when a customer enters a coupon; default: `None`.
             - website_sale_order: The current order.
         -->
-        <div id="cart_totals" position="after">
-            <span t-if="not hide_promotions">
-                <div class="coupon_form">
-                    <t t-call="website_sale.coupon_form"/>
-                </div>
-            </span>
-        </div>
+        <table name="cart_totals_edit_mode_table" position="inside">
+            <tr t-if="not hide_promotions">
+                <td colspan="3" class="text-end text-xl-end border-0 p-0">
+                <span>
+                    <div class="input-group w-100">
+                        <input name="promo" class="form-control" type="text" placeholder="Discount code..."/>
+                        <button class="btn btn-light border cart_apply_promo">Apply</button>
+                    </div>
+                </span>
+                </td>
+            </tr>
+        </table>
     </template>
 
     <template id="website_sale.alert_inline">

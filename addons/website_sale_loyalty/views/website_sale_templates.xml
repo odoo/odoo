@@ -1,11 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <template id="website_sale_loyalty.sale_coupon_result" inherit_id="website_sale.coupon_form">
-        <xpath expr="//form[@name='coupon_code']//input[@name='promo']" position="attributes">
-            <attribute name="placeholder">Gift card or discount code...</attribute>
-        </xpath>
-        <xpath expr="//t[@name='code_not_available']" position="replace"/>
-    </template>
 
     <template
         id="website_sale_loyalty.modify_code_form"
@@ -195,38 +189,5 @@
         <xpath expr="//div[@id='oe_structure_website_sale_confirmation_2']" position="after">
             <t t-call="sale_loyalty.sale_purchased_gift_card"/>
         </xpath>
-    </template>
-
-    <template
-        id="website_sale_loyalty.promotion_progress_bar"
-        inherit_id="website_sale.total"
-        name="Promotion Progress Bar"
-    >
-        <div id="cart_totals" position="after">
-            <div t-if="promotion_progress_bars" class="border-0 p-0 pt-2">
-                <t t-foreach="promotion_progress_bars" t-as="bar">
-                    <div class="d-flex justify-content-between mb-1">
-                        <small
-                            t-attf-class="fw-bold #{bar['progress'] == 100 and 'text-success' or ''}"
-                            t-out="bar['reward_name']"
-                        />
-                        <small
-                            t-out="bar['minimum_amount']"
-                            t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}"
-                        />
-                    </div>
-                    <div class="progress mb-3" style="height: 8px; border-radius: var(--btn-border-radius);" >
-                        <div
-                            t-attf-class="progress-bar #{bar['progress'] == 100 and 'bg-success' or ''}"
-                            role="progressbar"
-                            t-attf-style="width: #{bar['progress']}%; border-radius: inherit; #{bar['progress'] == 100 and '' or 'color: inherit; background-color: currentColor;'}"
-                            t-att-aria-valuenow="bar['progress']"
-                            aria-valuemin="0"
-                            aria-valuemax="100"
-                        />
-                    </div>
-                </t>
-            </div>
-        </div>
     </template>
 </odoo>
