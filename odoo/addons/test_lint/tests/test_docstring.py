@@ -16,8 +16,12 @@ logger = logging.getLogger(__name__)
 # There are too many broken docstrings to fix them all in one PR, we use
 # this list to fix one module at a time.
 MODULES_TO_LINT = (
+    'ai_crm_livechat',
+    'ai_livechat',
+    'ai_website_livechat',
     'base',
     'bus',
+    'crm_livechat',
     'documents_fsm',
     'documents_project',
     'documents_project_sale',
@@ -36,7 +40,9 @@ MODULES_TO_LINT = (
     'helpdesk_sale_timesheet',
     'helpdesk_sms',
     'helpdesk_timesheet',
+    'hr_livechat',
     'hr_timesheet',
+    'im_livechat',
     'planning',
     'planning_attendance',
     'planning_calendar',
@@ -66,11 +72,13 @@ MODULES_TO_LINT = (
     'sale_timesheet_account_budget',
     'sale_timesheet_enterprise',
     'sale_timesheet_enterprise_holidays',
+    'spreadsheet_dashboard_im_livechat',
     'test_web_grid',
     'timer',
     'timesheet_grid',
     'timesheet_grid_holidays',
     'web_grid',
+    'website_crm_livechat',
     'website_helpdesk',
     'website_helpdesk_forum',
     'website_helpdesk_knowledge',
@@ -78,6 +86,8 @@ MODULES_TO_LINT = (
     'website_helpdesk_sale_loyalty',
     'website_helpdesk_slides',
     'website_helpdesk_slides_forum',
+    'website_hr_recruitment_livechat',
+    'website_livechat',
     'worksheet',
 )
 MODULES_TO_LINT_ONLY_PUBLIC_METHODS = (

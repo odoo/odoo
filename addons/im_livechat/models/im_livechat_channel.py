@@ -433,7 +433,8 @@ class Im_LivechatChannel(models.Model):
         return {'agent': agent, 'chatbot_script': chatbot_script, 'operator_partner': operator_partner, 'operator_model': operator_model}
 
     def _get_less_active_operator(self, operator_statuses, operators):
-        """ Retrieve the most available operator based on the following criteria:
+        """ Pick the most available operator from a set of candidates.
+
         - Lowest number of active chats.
         - Not in  a call.
         - If an operator is in a call and has two or more active chats, don't
@@ -443,10 +444,10 @@ class Im_LivechatChannel(models.Model):
         :param operator_statuses: list of dictionaries containing the operator's
             id, the number of active chats and a boolean indicating if the
             operator is in a call. The list is ordered by the number of active
-            chats (ascending) and whether the operator is in a call
-            (descending).
-        :param operators: recordset of :class:`ResUsers` operators to choose from.
-        :return: the :class:`ResUsers` record for the chosen operator
+            chats (ascending) and whether the operator is in a call (descending).
+        :param operators: recordset of :class:`ResUsers` operators to choose
+            from.
+        :returns: the :class:`ResUsers` record for the chosen operator
         """
         if not operators:
             return False
@@ -494,8 +495,8 @@ class Im_LivechatChannel(models.Model):
         :param expertises: preferred expertises for filtering operators.
         :param users: recordset of available users to use as candidates instead
             of the users of the livechat channel.
-        :return : user
-        :rtype : res.users
+        :returns: user
+        :rtype: res.users
         """
         self.ensure_one()
         # FIXME: remove inactive call sessions so operators no longer in call are available
