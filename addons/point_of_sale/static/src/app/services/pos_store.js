@@ -472,7 +472,7 @@ export class PosStore extends WithLazyGetterTrap {
         this.checkPreviousLoggedCashier();
 
         // Add Payment Interface to Payment Method
-        for (const pm of this.models["pos.payment.method"].getAll()) {
+        for (const pm of this.config.payment_method_ids) {
             const PaymentInterface = registry
                 .category("electronic_payment_interfaces")
                 .get(pm.use_payment_terminal, null);
