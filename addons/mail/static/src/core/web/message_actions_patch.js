@@ -1,4 +1,4 @@
-import { getNonEditableMentions, parseEmail } from "@mail/utils/common/format";
+import { prepareBodyForEditing, parseEmail } from "@mail/utils/common/format";
 import { registerMessageAction } from "@mail/core/common/message_actions";
 import { _t } from "@web/core/l10n/translation";
 import { renderToMarkup } from "@web/core/utils/render";
@@ -47,7 +47,7 @@ registerMessageAction("reply-all", {
             time: message.datetime.toFormat("hh:mm a"),
         });
         const body = renderToMarkup("mail.Message.bodyInReply", {
-            body: getNonEditableMentions(message.body),
+            body: prepareBodyForEditing(message.body),
             date: datetime,
             email,
             message,
@@ -79,7 +79,7 @@ registerMessageAction("forward", {
             time: message.datetime.toFormat("hh:mm a"),
         });
         const body = renderToMarkup("mail.Message.bodyInForward", {
-            body: getNonEditableMentions(message.body),
+            body: prepareBodyForEditing(message.body),
             date: datetime,
             email,
             message,
