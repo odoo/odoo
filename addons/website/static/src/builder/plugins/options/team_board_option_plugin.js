@@ -5,6 +5,7 @@ import { registry } from "@web/core/registry";
 
 export class TeamBoardOptionPlugin extends Plugin {
     static id = "TeamBoardOption";
+    static dependencies = ["builderOptions"];
     /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_actions: {
@@ -14,8 +15,32 @@ export class TeamBoardOptionPlugin extends Plugin {
             selector: ".s_team_board",
             excludeAncestor: ".s_team_board, .s_popup, .s_table_of_content",
         },
+        options_container_top_buttons_providers: this.getOptionsContainerTopButtons.bind(this),
         remove_disabled_reason_providers: this.getRemoveDisabledReason.bind(this),
     };
+
+    getOptionsContainerTopButtons(el) {
+        if (!el.matches(".s_team_board")) {
+            return [];
+        }
+        return [
+            {
+                class: "fa fa-fw fa-plus btn o-hb-btn btn-success-color-hover",
+                title: _t("Add new team board"),
+                handler: this.addTeamBoard.bind(this),
+            },
+        ];
+    }
+
+    addTeamBoard(teamBoardEl) {
+        const newTeamBoardEl = this.config.snippetModel
+            .getOriginalSnippet("s_team_board")
+            .content.cloneNode(true);
+        this.config.snippetModel.updateSnippetContent(newTeamBoardEl);
+        teamBoardEl.after(newTeamBoardEl);
+        this.dependencies.builderOptions.setNextTarget(newTeamBoardEl);
+        newTeamBoardEl.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
 
     getRemoveDisabledReason(el) {
         if (
