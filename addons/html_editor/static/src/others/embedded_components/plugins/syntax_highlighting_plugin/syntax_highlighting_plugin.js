@@ -51,6 +51,13 @@ export class SyntaxHighlightingPlugin extends Plugin {
         clean_for_save_processors: withSequence(0, (root) => this.cleanForSave(root)),
         normalize_processors: (root) => this.addCodeBlocks(root, true),
         clipboard_content_processors: (clonedContent) => this.cleanForSave(clonedContent),
+
+        /** Predicates */
+        is_link_allowed_on_selection_predicates: () => {
+            if (this.document.activeElement.matches("textarea.o_prism_source")) {
+                return false;
+            }
+        },
     };
 
     setup() {
