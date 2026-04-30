@@ -22,6 +22,7 @@ import { getContent, setSelection } from "./_helpers/selection";
 import { expandToolbar } from "./_helpers/toolbar";
 import { expectElementCount } from "./_helpers/ui_expectations";
 import { execCommand } from "./_helpers/userCommands";
+import { unformat } from "./_helpers/format";
 
 test("can set foreground color", async () => {
     const { el } = await setupEditor("<p>[test]</p>");
@@ -396,6 +397,100 @@ test("Can reset a color", async () => {
     execCommand(editor, "historyUndo");
     expect("font[style='color: rgb(255, 0, 0);']").toHaveCount(1);
     expect(".tested").not.toHaveInnerHTML("test");
+});
+
+test("can reset a font color when both color and background-color are applied", async () => {
+    const { el } = await setupEditor(
+        unformat(`
+            <p>
+                <font style="color: rgb(255, 0, 0);">
+                    <font style="background-color: rgb(0, 0, 255);">[test]</font>
+                </font>
+            </p>
+        `)
+    );
+    await expectElementCount(".o-we-toolbar", 1);
+    await click(".o-we-toolbar .o-select-color-foreground");
+    await contains(".o_font_color_selector button.fa-trash").click();
+    await animationFrame();
+    expect(getContent(el)).toBe(
+        `<p><font style="background-color: rgb(0, 0, 255);">[test]</font></p>`
+    );
+});
+
+test("can reset a text gradient on partial selection when background gradient and text-gradient are applied", async () => {
+    const { el } = await setupEditor(
+        unformat(`
+            <p>
+                <font style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);">
+                    <font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(255, 174, 127) 0%, rgb(109, 204, 0) 100%);">t[es]t</font>
+                </font>
+            </p>
+        `)
+    );
+    await expectElementCount(".o-we-toolbar", 1);
+    await click(".o-we-toolbar .o-select-color-foreground");
+    await contains(".o_font_color_selector button.fa-trash").click();
+    await animationFrame();
+    expect(getContent(el)).toBe(
+        unformat(`
+            <p>
+                <font style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);">
+                    <font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(255, 174, 127) 0%, rgb(109, 204, 0) 100%);">t</font>
+                    [es]
+                    <font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(255, 174, 127) 0%, rgb(109, 204, 0) 100%);">t</font>
+                </font>
+            </p>
+        `)
+    );
+});
+
+test("can reset a background color when both color and background-color are applied", async () => {
+    const { el } = await setupEditor(
+        unformat(`
+            <p>
+                <font style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);">
+                    <font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(255, 174, 127) 0%, rgb(109, 204, 0) 100%);">[test]</font>
+                </font>
+            </p>
+        `)
+    );
+    await expandToolbar();
+    await click(".o-we-toolbar .o-select-color-background");
+    await contains(".o_font_color_selector button.fa-trash").click();
+    await animationFrame();
+    expect(getContent(el)).toBe(
+        `<p><font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(255, 174, 127) 0%, rgb(109, 204, 0) 100%);">[test]</font></p>`
+    );
+});
+
+test("can reset a background gradient on partial selection when background gradient and text-gradient are applied", async () => {
+    const { el } = await setupEditor(
+        unformat(`
+            <p>
+                <font style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);">
+                    <font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(255, 174, 127) 0%, rgb(109, 204, 0) 100%);">t[es]t</font>
+                </font>
+            </p>
+        `)
+    );
+    await expandToolbar();
+    await click(".o-we-toolbar .o-select-color-background");
+    await contains(".o_font_color_selector button.fa-trash").click();
+    await animationFrame();
+    expect(getContent(el)).toBe(
+        unformat(`
+            <p>
+                <font style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);">
+                    <font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(255, 174, 127) 0%, rgb(109, 204, 0) 100%);">t</font>
+                </font>
+                <font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(255, 174, 127) 0%, rgb(109, 204, 0) 100%);">[es]</font>
+                <font style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);">
+                    <font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(255, 174, 127) 0%, rgb(109, 204, 0) 100%);">t</font>
+                </font>
+            </p>
+        `)
+    );
 });
 
 test.tags("desktop");
