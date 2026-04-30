@@ -2,6 +2,7 @@
 
 from datetime import datetime, date, timedelta, UTC
 from unittest.mock import patch
+from zoneinfo import ZoneInfo
 
 from dateutil.relativedelta import relativedelta
 
@@ -162,6 +163,28 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
         self.assertEqual(self.public_partner.name, admin_attendee.partner_id.name)
         self.assertEqual(event.partner_ids, event.attendee_ids.partner_id)
         self.assertEqual('needsAction', admin_attendee.state)
+        self.assertGoogleAPINotCalled()
+
+    @patch_api
+    def test_new_google_allday_event(self):
+        values = {
+            'id': 'oj44nep1ldf8a3ll02uip0c9aa',
+            'organizer': {'email': 'odoocalendarref@gmail.com', 'self': True},
+            'summary': 'All day event',
+            'attendees': [],
+            'reminders': {'useDefault': True},
+            'start': {'date': '2020-01-13'},
+            'end': {'date': '2020-01-14'},
+        }
+        self.env['calendar.event']._sync_google2odoo(GoogleEvent([values]))
+        event = self.env['calendar.event'].search([('google_id', '=', values.get('id'))])
+        self.assertTrue(event)
+        self.assertTrue(event.allday)
+        self.assertEqual(event.start_date, date(2020, 1, 13))
+        self.assertEqual(event.stop_date, date(2020, 1, 13))
+        winnipeg = ZoneInfo('America/Winnipeg')
+        self.assertEqual(event.start.replace(tzinfo=UTC).astimezone(winnipeg).date(), date(2020, 1, 13))
+        self.assertEqual(event.stop.replace(tzinfo=UTC).astimezone(winnipeg).date(), date(2020, 1, 13))
         self.assertGoogleAPINotCalled()
 
     @patch_api
