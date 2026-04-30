@@ -16,6 +16,7 @@ class ResPartnerBank(models.Model):
     _rec_name = 'account_number'
     _description = 'Bank Account'
     _order = 'sequence, id'
+    _check_company_domain = models.check_company_domain_parent_of
 
     active = fields.Boolean(default=True)
     account_type = fields.Selection(
