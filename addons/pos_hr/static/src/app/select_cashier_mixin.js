@@ -15,22 +15,24 @@ export function useCashierSelector(
 ) {
     const popup = useService("popup");
     const pos = usePos();
+    const cashierAction = async function cashierAction(code) {
+        const employee = pos.employees.find((emp) => emp.barcode === Sha1.hash(code.code));
+        if (
+            employee &&
+            employee !== pos.get_cashier() &&
+            (!employee.pin || (await checkPin(employee)))
+        ) {
+            pos.set_cashier(employee);
+            if (onCashierChanged) {
+                onCashierChanged();
+            }
+        }
+        return employee;
+    };
     useBarcodeReader(
         {
-            async cashier(code) {
-                const employee = pos.employees.find((emp) => emp.barcode === Sha1.hash(code.code));
-                if (
-                    employee &&
-                    employee !== pos.get_cashier() &&
-                    (!employee.pin || (await checkPin(employee)))
-                ) {
-                    pos.set_cashier(employee);
-                    if (onCashierChanged) {
-                        onCashierChanged();
-                    }
-                }
-                return employee;
-            },
+            cashier: cashierAction,
+            ...(exclusive && { product: cashierAction }),
         },
         exclusive
     );

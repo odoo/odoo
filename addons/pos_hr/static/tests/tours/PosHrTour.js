@@ -7,6 +7,7 @@ import * as Chrome from "@point_of_sale/../tests/tours/helpers/ChromeTourMethods
 import * as ErrorPopup from "@point_of_sale/../tests/tours/helpers/ErrorPopupTourMethods";
 import * as NumberPopup from "@point_of_sale/../tests/tours/helpers/NumberPopupTourMethods";
 import * as SelectionPopup from "@point_of_sale/../tests/tours/helpers/SelectionPopupTourMethods";
+import { scan_barcode } from "@point_of_sale/../tests/tours/helpers/utils";
 import { registry } from "@web/core/registry";
 import { negate } from "../../../../point_of_sale/static/tests/tours/helpers/utils";
 
@@ -126,6 +127,16 @@ registry.category("web_tour.tours").add("CashierCannotClose", {
             {
                 trigger: negate(".close-button"),
             },
+            PosHr.cashierNameIs("Test Employee 3"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_login_with_non_cashier_pattern_badge", {
+    steps: () =>
+        [
+            PosHr.loginScreenIsShown(),
+            scan_barcode("1234567"),
+            ProductScreen.isShown(),
             PosHr.cashierNameIs("Test Employee 3"),
         ].flat(),
 });

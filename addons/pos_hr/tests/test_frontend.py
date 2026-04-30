@@ -49,6 +49,7 @@ class TestPosHrHttpCommon(TestPointOfSaleHttpCommon):
             'name': 'Test Employee 3',
             "user_id": cls.pos_user.id,
             "company_id": cls.env.company.id,
+            "barcode": "1234567",
         })
 
         cls.main_pos_config.write({
@@ -86,4 +87,17 @@ class TestUi(TestPosHrHttpCommon):
             "/pos/ui?config_id=%d" % self.main_pos_config.id,
             "CashierCannotClose",
             login="pos_user",
+        )
+
+    def test_login_with_non_cashier_pattern_badge(self):
+        """
+        The login screen should recognize employees with badges not starting with "041".
+        Such employees have their badges manually created, not through the 'generate' button.
+        """
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour(
+            "/pos/ui?config_id=%d" % self.main_pos_config.id,
+            "test_login_with_non_cashier_pattern_badge",
+            login = "pos_user",
         )
