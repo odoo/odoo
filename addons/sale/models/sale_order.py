@@ -1938,7 +1938,7 @@ class SaleOrder(models.Model):
         self.ensure_one()
 
     def validate_taxes_on_sales_order(self):
-        # Override for correct taxcloud computation
+        # Override for correct taxcloud or avatax computation
         # when using coupon and delivery
         return True
 
