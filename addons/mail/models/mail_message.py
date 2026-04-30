@@ -21,7 +21,6 @@ from odoo.addons.base.models.ir_attachment import condition_values
 from odoo.addons.mail.tools.discuss import Store
 
 if typing.TYPE_CHECKING:
-    from odoo.models import BaseModel
     from odoo.addons.mail.models.mail_followers import MailFollowers
 
 
@@ -1379,25 +1378,6 @@ class MailMessage(models.Model):
             and not self.attachment_ids
             and not self.has_poll
         )
-
-    @api.model
-    def _message_tracking_value_format(self, tracking_values: BaseModel):
-        """ Return structured formatted data to be used by chatter to display
-        tracking values. It is organized by model.
-
-        :return: for each tracking value in self, their formatted display
-          values given as a dict;
-        :rtype: list[ValuesType]
-        """
-        model_map = {}
-        for tracking in tracking_values:
-            model = tracking.field_id.model or tracking.mail_message_id.model
-            model_map.setdefault(model, tracking_values.browse())
-            model_map[model] += tracking
-        formatted = []
-        for model, trackings in model_map.items():
-            formatted += trackings.env[model]._tracking_value_format_model(trackings)
-        return formatted
 
     @api.model
     def _get_reply_to(self, values):
