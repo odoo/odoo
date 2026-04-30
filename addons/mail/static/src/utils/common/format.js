@@ -329,10 +329,19 @@ function _generateEmojisOnHtml(htmlString) {
 }
 
 /**
+ * @deprecated
  * @param {string|ReturnType<markup>} body
  * @returns {ReturnType<markup>}
  */
 export function getNonEditableMentions(body) {
+    return prepareBodyForEditing(body);
+}
+
+/**
+ * @param {string|ReturnType<markup>} body
+ * @returns {ReturnType<markup>}
+ */
+export function prepareBodyForEditing(body) {
     const doc = createDocumentFragmentFromContent(body);
     for (const block of doc.body.querySelectorAll(".o_mail_reply_hide")) {
         block.classList.remove("o_mail_reply_hide");
@@ -348,6 +357,12 @@ export function getNonEditableMentions(body) {
     // for special mentions
     for (const mention of doc.body.querySelectorAll(".o-discuss-mention")) {
         mention.setAttribute("contenteditable", false);
+    }
+    // The "(edited)" label is added by the server and must never be editable.
+    // Remove it so that CTRL+A does not select it and it is always re-added at
+    // the end by the server upon saving.
+    for (const edited of doc.body.querySelectorAll(".o-mail-Message-edited")) {
+        edited.remove();
     }
     return getInnerHtml(doc.body);
 }
