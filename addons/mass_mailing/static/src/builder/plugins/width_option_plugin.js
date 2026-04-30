@@ -9,7 +9,7 @@ class WidthOptionPlugin extends Plugin {
                 target_name: "widthOption",
                 target_element: "selector",
                 method: "add",
-                value: ".s_mail_alert .s_alert, .s_mail_blockquote, .s_mail_text_highlight",
+                value: ".s_mail_blockquote, .s_mail_text_highlight",
             },
         ],
     };
