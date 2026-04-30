@@ -2472,3 +2472,47 @@ test("context menu should not open on right-click when editing a message", async
     await animationFrame();
     expect.verifySteps([]);
 });
+
+test.tags("html composer");
+test("(edited) label is not included in editor when editing an already-edited message", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "general",
+        channel_type: "channel",
+    });
+    pyEnv["mail.message"].create({
+        author_id: serverState.partnerId,
+        body: "Hello",
+        model: "discuss.channel",
+        res_id: channelId,
+        message_type: "comment",
+    });
+    await start();
+    const composerService = getService("mail.composer");
+    composerService.setHtmlComposer();
+    await openDiscuss(channelId);
+    // First edit to produce an "(edited)" label in the body
+    await click(".o-mail-Message [title='Edit']");
+    await focus(".o-mail-Message  .o-mail-Composer-html.odoo-editor-editable");
+    let editor = {
+        document,
+        editable: document.querySelector(".o-mail-Message .o-mail-Composer-html.odoo-editor-editable"),
+    };
+    await htmlInsertText(editor, " world");
+    await click(".o-mail-Message button:text('save')");
+    await contains(".o-mail-Message-content:text('Hello world (edited)')");
+    // Open editor again — assert (edited) is NOT inside the editable
+    await click(".o-mail-Message [title='Edit']");
+    await focus(".o-mail-Message .o-mail-Composer-html.odoo-editor-editable");
+    editor = {
+        document,
+        editable: document.querySelector(".o-mail-Message .o-mail-Composer-html.odoo-editor-editable"),
+    };
+    expect(editor.editable.querySelectorAll(".o-mail-Message-edited").length).toBe(0);
+    // CTRL+A selects all — then type replacement text
+    await press(["ctrl", "a"]);
+    await htmlInsertText(editor, "a");
+    await click(".o-mail-Message button:text('save')");
+    // New text should be the only content; "(edited)" must be at the very end
+    await contains(".o-mail-Message-content:text('a (edited)')");
+});
