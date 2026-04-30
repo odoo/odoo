@@ -44,7 +44,7 @@ const discussChannelPatch = {
             },
             onUpdate() {
                 const shouldToggle = this._toggleChatbot;
-                this.isLoadedDeferred.then(() => {
+                this.isLoadedPromise.then(() => {
                     if (shouldToggle) {
                         this.channel.chatbot.start();
                     } else {

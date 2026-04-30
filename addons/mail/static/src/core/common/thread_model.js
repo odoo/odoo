@@ -5,7 +5,6 @@ import { compareDatetime } from "@mail/utils/common/misc";
 import { rpc } from "@web/core/network/rpc";
 import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
-import { Deferred } from "@web/core/utils/concurrency";
 
 /**
  * @typedef SuggestedRecipient
@@ -154,16 +153,18 @@ export class Thread extends Record {
         },
     });
     isLoadingAttachments = false;
-    isLoadedDeferred = new Deferred();
+    isLoadedPromise = new Promise((resolve) => (this._resolveIsLoaded = resolve));
     isLoaded = fields.Attr(false, {
         /** @this {import("models").Thread} */
         onUpdate() {
             if (this.isLoaded) {
-                this.isLoadedDeferred.resolve();
+                this._resolveIsLoaded();
             } else {
-                const def = this.isLoadedDeferred;
-                this.isLoadedDeferred = new Deferred();
-                this.isLoadedDeferred.then(() => def.resolve());
+                const { promise, resolve } = Promise.withResolvers();
+                this.isLoadedPromise = promise;
+                // chain the current resolve before overwriting it
+                this.isLoadedPromise.then(this._resolveIsLoaded);
+                this._resolveIsLoaded = resolve;
             }
         },
     });
@@ -689,7 +690,7 @@ export class Thread extends Record {
     markAsRead(options) {
         const newestPersistentMessage = this.newestPersistentOfAllMessage;
         if (!newestPersistentMessage && !this.isLoaded) {
-            this.isLoadedDeferred
+            this.isLoadedPromise
                 .then(() => new Promise(setTimeout))
                 .then(() => this.markAsRead(options));
             return;
