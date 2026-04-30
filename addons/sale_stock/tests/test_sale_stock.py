@@ -740,14 +740,19 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         product with an invoicing policy on 'order', then checks a new SO line was created.
         After that, creates a second sale order and does the same thing but with a product
         with and invoicing policy on 'ordered'.
+
+        Additionally, verifies that the automatically generated Sale Order Line correctly
+        inherits the product's specific sales description
         """
         product_inv_on_delivered = self.company_data['product_delivery_no']
+        product_inv_on_delivered.description_sale = 'product_deliv'
         # Configure a product with invoicing policy on order.
         product_inv_on_order = self.env['product.product'].create({
             'name': 'Shenaniffluffy',
             'type': 'consu',
             'invoice_policy': 'order',
             'list_price': 55.0,
+            'description_sale': 'FluffyShen'
         })
         # Creates a sale order for 3 products invoiced on qty. delivered.
         sale_order = self._get_new_sale_order(amount=3)
@@ -781,6 +786,7 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         self.assertEqual(so_line_2.product_id.id, product_inv_on_order.id)
         self.assertEqual(so_line_2.product_uom_qty, 0)
         self.assertEqual(so_line_2.qty_delivered, 5)
+        self.assertEqual(so_line_2.name, product_inv_on_order.display_name + "\nFluffyShen")
         self.assertEqual(
             so_line_2.price_unit, 0,
             "Shouldn't get the product price as the invoice policy is on qty. ordered")
@@ -822,6 +828,7 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         self.assertEqual(so_line_2.product_id.id, product_inv_on_delivered.id)
         self.assertEqual(so_line_2.product_uom_qty, 0)
         self.assertEqual(so_line_2.qty_delivered, 5)
+        self.assertEqual(so_line_2.name, product_inv_on_delivered.display_name + "\nproduct_deliv")
         self.assertEqual(
             so_line_2.price_unit, 70.0,
             "Should get the product price as the invoice policy is on qty. delivered")
