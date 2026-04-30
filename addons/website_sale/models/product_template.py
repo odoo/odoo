@@ -79,6 +79,12 @@ class ProductTemplate(models.Model):
         sanitize_attributes=False,
         sanitize_form=False,
     )
+    dropzone_above_price = fields.Html(
+        string="Drop Zone Above Price", translate=html_translate, sanitize_overridable=True
+    )
+    dropzone_above_specification = fields.Html(
+        string="Drop Zone Above Specification", translate=html_translate, sanitize_overridable=True
+    )
 
     alternative_product_ids = fields.Many2many(
         string="Alternative Products",
@@ -971,8 +977,7 @@ class ProductTemplate(models.Model):
             stock_notification_email = ""
             if not website.is_public_user():
                 has_stock_notification = product_sudo._has_stock_notification(
-                    self.env.user.partner_id,
-                    website,
+                    self.env.user.partner_id, website
                 )
             elif request:
                 has_stock_notification = product_sudo.id in request.session.get(
@@ -1343,8 +1348,10 @@ class ProductTemplate(models.Model):
     @api.model
     def _search_get_field_domain(self, field, search_term):
         if field == "product_tag_ids.name":
-            return Domain('product_tag_ids', 'any',
-                [('name', 'ilike', search_term), ('visible_to_customers', '=', True)]
+            return Domain(
+                "product_tag_ids",
+                "any",
+                [("name", "ilike", search_term), ("visible_to_customers", "=", True)],
             )
         return super()._search_get_field_domain(field, search_term)
 
@@ -1357,7 +1364,9 @@ class ProductTemplate(models.Model):
             combination_info = product._get_combination_info(only_template=True)
             values = product.mapped("attribute_line_ids.value_ids")
             data["attribute_value_ids"] = values.read(["id", "name"])
-            data["product_tag_ids"] = product.product_tag_ids.filtered('visible_to_customers').read(["name"])
+            data["product_tag_ids"] = product.product_tag_ids.filtered(
+                "visible_to_customers"
+            ).read(["name"])
             price = self._search_render_results_prices(mapping, combination_info)
             if price:
                 data["price"] = price
