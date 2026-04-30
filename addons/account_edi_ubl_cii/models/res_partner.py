@@ -261,6 +261,10 @@ class ResPartner(models.Model):
             if value.isalnum():
                 value = value.removeprefix(country_code)
 
+        # The UAE Peppol participant identifier is the TIN: the first 10 digits of the 15-digit TRN.
+        if country_code == 'AE' and eas == '0235' and value:
+            value = value[:10]
+
         return sanitize_peppol_endpoint(value, eas)
 
     @api.depends('peppol_eas')
@@ -322,6 +326,10 @@ class ResPartner(models.Model):
             return _("The Peppol endpoint is not valid. "
                      "It should contain exactly 10 digits (Company Registry number)."
                      "The expected format is: 1234567890")
+        if eas == '0235' and not re.match(r"^\d{10}$", endpoint):
+            return _("The Peppol endpoint is not valid. "
+                     "It should be the 10-digit Tax Identification Number (TIN), the first 10 digits of the TRN. "
+                     "The expected format is: 1001234567")
         if eas == 'EM' and not single_email_re.match(endpoint):
             return _("The Peppol endpoint is not valid. A valid email is required")
         invalid_chars_re = PEPPOL_ENDPOINT_INVALID_CHARS_RE_BY_EAS.get(eas, PEPPOL_ENDPOINT_INVALIDCHARS_RE)

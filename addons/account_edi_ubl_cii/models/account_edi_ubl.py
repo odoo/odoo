@@ -25,11 +25,20 @@ from odoo.addons.account_edi_ubl_cii.tools.ubl_20_optional_fields import (
 
 _logger = logging.getLogger(__name__)
 
+UBL_NAMESPACES = {
+    'cbc': "urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2",
+    'cac': "urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2",
+}
+
 
 class AccountEdiUBL(models.AbstractModel):
     _name = "account.edi.ubl"
     _inherit = 'account.edi.common'
     _description = "Base helpers for UBL"
+
+    def _find_value(self, xpath, tree, nsmap=False):
+        # EXTENDS account.edi.common
+        return super()._find_value(xpath, tree, UBL_NAMESPACES)
 
     # -------------------------------------------------------------------------
     # BASE LINES HELPERS
@@ -94,6 +103,30 @@ class AccountEdiUBL(models.AbstractModel):
         :return:    True if the 'base_line' is a cash rounding line, False otherwise.
         """
         return base_line['special_type'] == 'cash_rounding'
+
+    def _ubl_should_export_early_payment_discount_as_line(self, vals):
+        """ Indicate if the early payment discount lines are exported as lines, or as document level allowances/charges.
+
+        :param vals:    Some custom data.
+        :return:        True to export them as lines, False as allowances/charges.
+        """
+        return True
+
+    def _ubl_should_export_global_discount_as_line(self, vals):
+        """ Indicate if the global discount lines are exported as lines, or as document level allowances/charges.
+
+        :param vals:    Some custom data.
+        :return:        True to export them as lines, False as allowances/charges.
+        """
+        return True
+
+    def _ubl_should_export_cash_rounding_as_line(self, vals):
+        """ Indicate if the cash rounding lines are exported as lines, or in PayableRoundingAmount.
+
+        :param vals:    Some custom data.
+        :return:        True to export them as lines, False in PayableRoundingAmount.
+        """
+        return True
 
     def _ubl_default_tax_category_grouping_key(self, base_line, tax_data, vals, currency):
         """ Give the values about the tax category for a given tax.
@@ -1344,6 +1377,12 @@ class AccountEdiUBL(models.AbstractModel):
     def _line_nodes_filter_base_lines(self, vals, filter_function=None):
         index = 1
         for base_line in vals['base_lines']:
+            if (
+                (self._ubl_is_early_payment_base_line(base_line) and not self._ubl_should_export_early_payment_discount_as_line(vals))
+                or (self._ubl_is_global_discount_base_line(base_line) and not self._ubl_should_export_global_discount_as_line(vals))
+                or (self._ubl_is_cash_rounding_base_line(base_line) and not self._ubl_should_export_cash_rounding_as_line(vals))
+            ):
+                continue
             if not filter_function or filter_function(base_line):
                 line_vals = {'base_line': base_line, 'index': index}
                 line_node = {}
@@ -2583,6 +2622,34 @@ class AccountEdiUBL(models.AbstractModel):
     def _export_document_node_constraints(self, vals):
         return {}
 
+    def _add_invoice_config_vals(self, vals):
+        # Bridges account_move_send.py's _postprocess_invoice_ubl_xml, which builds its own
+        # minimal {'invoice': invoice} vals and expects this method (only ever defined on the
+        # sibling account.edi.xml.ubl_20 branch, and bridged onto the modern vals shape by
+        # account.edi.xml.ubl_bis3's own override) to populate it - reuse the same
+        # _init_invoice_export_values this hierarchy already uses for its own normal export, so
+        # _get_document_nsmap below (and _get_document_type_code_node) have what they need.
+        vals.update(self._init_invoice_export_values(vals['invoice']))
+
+    def _get_document_nsmap(self, vals):
+        # Needed by account_move_send.py's _postprocess_invoice_ubl_xml.
+        return {
+            None: {
+                'invoice': "urn:oasis:names:specification:ubl:schema:xsd:Invoice-2",
+                'self_invoice': "urn:oasis:names:specification:ubl:schema:xsd:Invoice-2",
+                'credit_note': "urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2",
+                'self_credit_note': "urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2",
+            }[self._get_document_type(vals)],
+            'cac': "urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2",
+            'cbc': "urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2",
+            'ext': "urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2",
+        }
+
+    def _get_document_type_code_node(self, invoice, invoice_data):
+        """Returns the `DocumentTypeCode` node tag"""
+        # To be overriden by custom format if required
+        pass
+
     def _export_document(self, vals):
         vals['document_node'] = {
             '_nsmap': {},
@@ -2610,6 +2677,15 @@ class AccountEdiUBL(models.AbstractModel):
             document_type = 'self_credit_note'
 
         self._define_document_type(vals, document_type)
+
+    def _ubl_get_collapsed_base_line_grouping_key(self, base_line):
+        """ The lines of a collapsed section merged into one: by default, those sharing their taxes.
+        A format extends the key with the values a single line must not mix.
+
+        :param base_line:   A base line of a collapsed section.
+        :return:            A sortable tuple.
+        """
+        return tuple(base_line['tax_ids'].ids)
 
     def _preprocess_base_lines(self, invoice, base_lines):
         """Collapse the base_lines of sections/subsections flagged with 'collapse_composition'.
@@ -2669,9 +2745,9 @@ class AccountEdiUBL(models.AbstractModel):
                 if not section_bls:
                     continue
 
-                for _taxes, lines in groupby(
-                    sorted(section_bls, key=lambda bl: bl['tax_ids'].ids),
-                    key=lambda bl: bl['tax_ids'],
+                for _key, lines in groupby(
+                    sorted(section_bls, key=self._ubl_get_collapsed_base_line_grouping_key),
+                    key=self._ubl_get_collapsed_base_line_grouping_key,
                 ):
                     result.append(_build_collapsed_base_line(list(lines), section))
             return result
@@ -2748,6 +2824,21 @@ class AccountEdiUBL(models.AbstractModel):
 
     def _import_ubl_init_collected_values(self, invoice, collected_values):
         return self._import_init_collected_values(invoice, collected_values)
+
+    def _get_import_document_amount_sign(self, tree):
+        """
+        In UBL, an invoice has tag 'Invoice' and a credit note has tag 'CreditNote'. However, a credit note can be
+        expressed as an invoice with negative amounts. For this case, we need a factor to take the opposite
+        of each quantity in the invoice.
+        """
+        if tree.tag == '{urn:oasis:names:specification:ubl:schema:xsd:Invoice-2}Invoice':
+            amount_node = tree.find('.//{*}LegalMonetaryTotal/{*}TaxInclusiveAmount')
+            if amount_node is not None and float(amount_node.text) < 0:
+                return 'refund', -1
+            return 'invoice', 1
+        if tree.tag == '{urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2}CreditNote':
+            return 'refund', 1
+        return None, None
 
     def _import_ubl_invoice_document_sign(self, collected_values):
         self._import_invoice_document_sign(collected_values)
