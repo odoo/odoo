@@ -816,7 +816,7 @@ class ProductTemplate(models.Model):
         help="Ensure the traceability of a storable product in your warehouse.")
     lot_sequence_id = fields.Many2one(
         'ir.sequence', 'Serial/Lot Numbers Sequence', default=lambda self: self.env.ref('stock.sequence_production_lots', raise_if_not_found=False),
-        help='Technical Field: The Ir.Sequence record that is used to generate serial/lot numbers for this product')
+        help='Technical Field: The Ir.Sequence record that is used to generate serial/lot numbers for this product', index='btree_not_null')
     serial_prefix_format = fields.Char(
         'Custom Lot/Serial', compute='_compute_serial_prefix_format', inverse='_inverse_serial_prefix_format',
         help=SERIAL_PREFIX_FORMAT_HELP_TEXT)

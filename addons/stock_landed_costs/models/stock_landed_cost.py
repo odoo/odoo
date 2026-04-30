@@ -332,9 +332,9 @@ class StockValuationAdjustmentLines(models.Model):
         'stock.landed.cost', 'Landed Cost',
         ondelete='cascade', required=True, index=True)
     cost_line_id = fields.Many2one(
-        'stock.landed.cost.lines', 'Cost Line', readonly=True)
+        'stock.landed.cost.lines', 'Cost Line', readonly=True, index=True)
     move_id = fields.Many2one('stock.move', 'Stock Move', readonly=True)
-    product_id = fields.Many2one('product.product', 'Product', required=True)
+    product_id = fields.Many2one('product.product', 'Product', required=True, index=True)
     quantity = fields.Float(
         'Quantity', default=1.0,
         digits=0, required=True)

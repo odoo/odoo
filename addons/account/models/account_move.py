@@ -465,7 +465,7 @@ class AccountMove(models.Model):
         'account.fiscal.position',
         string='Fiscal Position',
         check_company=True,
-        compute='_compute_fiscal_position_id', store=True, readonly=False, precompute=True,
+        compute='_compute_fiscal_position_id', store=True, readonly=False, index=True, precompute=True,
         ondelete="restrict",
         help="Fiscal positions are used to adapt taxes and accounts for particular "
              "customers or sales orders/invoices. The default value comes from the customer.",

@@ -97,7 +97,8 @@ class AccountPayment(models.Model):
         related='payment_method_line_id.payment_method_id',
         string="Method",
         tracking=True,
-        store=True
+        store=True,
+        index=True,
     )
     available_journal_ids = fields.Many2many(
         comodel_name='account.journal',

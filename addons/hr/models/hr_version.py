@@ -137,7 +137,7 @@ class HrVersion(models.Model):
         check_company=True,
         tracking=1)
     work_location_id = fields.Many2one('hr.work.location', 'Work Location',
-                                       domain="[('address_id', '=', address_id)]", tracking=1)
+                                       domain="[('address_id', '=', address_id)]", index=True, tracking=1)
 
     departure_id = fields.Many2one('hr.employee.departure', string="Departure", copy=False, index='btree_not_null')
     departure_reason_id = fields.Many2one(related='departure_id.departure_reason_id', readonly=False, groups="hr.group_hr_user", tracking=1)
@@ -185,7 +185,7 @@ class HrVersion(models.Model):
     company_country_id = fields.Many2one('res.country', string="Company country",
                                          related='company_id.country_id', readonly=True)
     country_code = fields.Char(related='company_country_id.code', depends=['company_country_id'], readonly=True)
-    employee_type_id = fields.Many2one('hr.employee.type', "Employee Type", tracking=1,
+    employee_type_id = fields.Many2one('hr.employee.type', "Employee Type", tracking=1, index=True,
                                        groups="hr.group_hr_manager")
     additional_note = fields.Text(string='Additional Note', groups="hr.group_hr_user", tracking=1)
 

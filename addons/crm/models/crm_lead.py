@@ -143,7 +143,7 @@ class CrmLead(models.Model):
     expected_revenue = fields.Monetary('Expected Revenue', currency_field='company_currency', tracking=True, default=0.0)
     prorated_revenue = fields.Monetary('Prorated Revenue', currency_field='company_currency', store=True, compute="_compute_prorated_revenue")
     recurring_revenue = fields.Monetary('Recurring Revenues', currency_field='company_currency', tracking=True, default=0.0)
-    recurring_plan = fields.Many2one('crm.recurring.plan', string="Recurring Plan")
+    recurring_plan = fields.Many2one('crm.recurring.plan', string="Recurring Plan", index='btree_not_null')
     recurring_revenue_monthly = fields.Monetary('Expected MRR', currency_field='company_currency', store=True,
                                                 compute="_compute_recurring_revenue_monthly")
     recurring_revenue_monthly_prorated = fields.Monetary('Prorated MRR', currency_field='company_currency', store=True,
@@ -213,7 +213,7 @@ class CrmLead(models.Model):
         domain="[('country_id', '=?', country_id)]", tracking=64)
     country_id = fields.Many2one(
         'res.country', string='Country',
-        compute='_compute_partner_address_values', readonly=False, store=True, tracking=65)
+        compute='_compute_partner_address_values', readonly=False, store=True, index=True, tracking=65)
     # Probability (Opportunity only)
     probability = fields.Float(
         'Probability', aggregator="avg", copy=False,

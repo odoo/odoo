@@ -81,7 +81,7 @@ class ResPartnerBank(models.Model):
     show_clearing_number = fields.Boolean(compute='_compute_show_clearing_number')
 
     sequence = fields.Integer(default=10)
-    company_id = fields.Many2one('res.company', 'Company')
+    company_id = fields.Many2one('res.company', 'Company', index=True)
     note = fields.Text('Notes')
     color = fields.Integer(compute='_compute_color')
 

@@ -95,7 +95,7 @@ class RepairOrder(models.Model):
         compute='_compute_uom_id', store=True, precompute=True, readonly=False)
     lot_id = fields.Many2one(
         'stock.lot', 'Lot/Serial',
-        compute="_compute_lot_id", store=True,
+        compute="_compute_lot_id", store=True, index='btree_not_null',
         domain="[('id', 'in', allowed_lot_ids)]", check_company=True,
         help="Products repaired are all belonging to this lot")
     tracking = fields.Selection(string='Product Tracking', related="product_id.tracking", readonly=False)
