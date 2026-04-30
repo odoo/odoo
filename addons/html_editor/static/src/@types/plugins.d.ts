@@ -27,7 +27,7 @@ declare module "plugins" {
     import { BannerShared } from "@html_editor/main/banner_plugin";
     import { EmojiShared } from "@html_editor/main/emoji_plugin";
     import { feff_providers, FeffShared, would_feff_be_legit_predicates, selectors_for_feff_providers } from "@html_editor/main/feff_plugin";
-    import { apply_background_color_processors, apply_color_style_overrides, apply_color_overrides, color_combination_providers, ColorShared, background_color_processors, on_color_requested_handlers } from "@html_editor/main/font/color_plugin";
+    import { apply_background_color_processors, apply_color_style_overrides, apply_color_overrides, color_combination_providers, ColorShared, background_color_processors, on_color_requested_handlers, before_color_element_processors } from "@html_editor/main/font/color_plugin";
     import { ColorUIShared, selected_background_color_providers } from "@html_editor/main/font/color_ui_plugin";
     import { before_insert_within_pre_processors, font_type_items } from "@html_editor/main/font/font_type_plugin";
     import { before_insert_within_pre_processors } from "@html_editor/main/font/font_size_plugin";
@@ -239,6 +239,7 @@ declare module "plugins" {
         apply_background_color_processors: apply_background_color_processors;
         attributes_mutation_value_processors: attributes_mutation_value_processors;
         background_color_processors: background_color_processors;
+        before_color_element_processors: before_color_element_processors;
         before_insert_processors: before_insert_processors;
         before_insert_within_pre_processors: before_insert_within_pre_processors;
         clean_for_save_processors: clean_for_save_processors;

@@ -19,7 +19,7 @@ const defaultTestConfig = {
     debounceHints: false,
 };
 
-export const PLUGINS_TO_EXCLUDE = [];
+export const PLUGINS_TO_EXCLUDE = ["contrast"];
 export const TEST_PLUGINS = MAIN_PLUGINS.filter((p) => !PLUGINS_TO_EXCLUDE.includes(p.id));
 
 // A generic base64 image for testing
