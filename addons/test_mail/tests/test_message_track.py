@@ -778,7 +778,7 @@ class TestTrackingInternals(TestTrackingCommon):
         })
 
         cls.properties_linked_records = cls.env['mail.test.ticket'].create([{'name': f'Record {i}'} for i in range(3)])
-        cls.properties_parent_1, cls.properties_parent_2 = cls.env['mail.test.track.all.properties.parent'].create([{
+        cls.properties_parent_1, cls.properties_parent_2, cls.properties_parent_monetary = cls.env['mail.test.track.all.properties.parent'].create([{
             'definition_properties': [
                 {'name': 'property_char', 'string': 'Property Char', 'type': 'char', 'default': 'char value'},
                 {'name': 'separator', 'type': 'separator'},
@@ -799,16 +799,27 @@ class TestTrackingInternals(TestTrackingCommon):
                 {'name': 'property_date', 'string': 'Property Date', 'type': 'date', 'default': '2024-01-03'},
             ],
             'name': 'Properties Parent 2',
+        }, {
+            'definition_properties': [
+                {'name': 'property_amount', 'string': 'Property Amount', 'type': 'monetary',
+                 'currency_field': 'currency_id'},
+            ],
+            'name': 'Properties Parent Monetary',
         }])
-        cls.properties_record_1, cls.properties_record_2 = cls.env['mail.test.track.all'].create([{
+        cls.properties_record_1, cls.properties_record_2, cls.properties_record_monetary = cls.env['mail.test.track.all'].create([{
+            'company_id': cls.env.company.id,
             'properties_parent_id': cls.properties_parent_1.id,
             'properties': {
                 'property_signature': 'R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==',
             },
         }, {
+            'company_id': cls.env.company.id,
             'properties_parent_id': cls.properties_parent_2.id,
-
+        }, {
+            'company_id': cls.env.company.id,
+            'properties_parent_id': cls.properties_parent_monetary.id,
         }])
+        cls.properties_record_monetary.properties = {'property_amount': 500.0}
 
     def test_field_label_translation(self):
         self.env['res.lang']._activate_lang('gu_IN')
@@ -1116,6 +1127,26 @@ class TestTrackingInternals(TestTrackingCommon):
         )
         self.assertEqual(properties_record_1._mail_track_get_field_sequence("properties"), 13,
             "Properties field should have the same sequence as their parent")
+
+        # test monetary property tracking when parent changes
+        record = self.properties_record_monetary
+        record.message_ids.unlink()
+        record.properties_parent_id = self.properties_parent_1
+        self.flush_tracking()
+
+        tracking_values = record.message_ids.sudo().tracking_value_ids
+        self.assertEqual(len(tracking_values), 2)
+        monetary_tracking = tracking_values.filtered(lambda t: t.field_id.ttype == 'properties')
+        parent_tracking = tracking_values - monetary_tracking
+        self.assertEqual(len(monetary_tracking), 1)
+        self.assertEqual(len(parent_tracking), 1)
+        self.assertEqual(parent_tracking.field_id.name, 'properties_parent_id')
+        self.assertFalse(parent_tracking.field_info)
+        self.assertEqual(monetary_tracking.field_info.get('type'), 'monetary')
+        self.assertEqual(monetary_tracking.field_info.get('desc'), 'Properties: Property Amount')
+        self.assertEqual(monetary_tracking.field_info.get('currency_id'), self.env.company.currency_id.id)
+        self.assertEqual(monetary_tracking.old_value_float, 500.0)
+        self.assertFalse(monetary_tracking.new_value_float)
 
     @users('employee')
     def test_mail_track_selection_invalid(self):
