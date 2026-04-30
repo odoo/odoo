@@ -19,6 +19,18 @@ body:not(.o_touch_device) .o_settings_container .o_field_selection {
    }
 }
 
+.o_settings_container {
+    display: flex;
+    flex: 0 1 auto;
+    flex-flow: row wrap;
+    padding: 0;
+    margin: auto 0 auto 0;
+
+    .o_form_label.o_light_label, .o_light_label .o_form_label {
+        font-weight: $font-weight-normal;
+    }
+}
+
 .o_enterprise_label {
    position: absolute;
    top: 0px;
