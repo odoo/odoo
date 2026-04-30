@@ -64,8 +64,13 @@
         .page {
             margin-left: 5mm;
             margin-right: 10mm;
-            > h2, h1, #informations, .mt-4 > h2 {
+            > h2, h1, .mt-4 > h2 {
                 display: none;
+            }
+            #informations {
+                > *:not([name=plan]) {
+                    display: none;
+                }
             }
             [name=invoice_line_table], [name=stock_move_table], .o_main_table {
                 margin-top: 8.46mm;
@@ -113,7 +118,7 @@
             &.o_line_section td {
                 background-color: rgba($gray-300, .5);
             }
-    
+
             th {
                 font-weight: bolder;
             }
