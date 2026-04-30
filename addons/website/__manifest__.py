@@ -119,6 +119,7 @@
         'views/snippets/s_masonry_block.xml',
         'views/snippets/s_sidegrid.xml',
         'views/snippets/s_media_list.xml',
+        'views/snippets/s_services_pack.xml',
         'views/snippets/s_showcase.xml',
         'views/snippets/s_faq_horizontal.xml',
         'views/snippets/s_floating_blocks.xml',
