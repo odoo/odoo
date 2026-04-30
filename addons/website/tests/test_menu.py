@@ -72,7 +72,9 @@ class TestMenu(common.TransactionCase):
         # Ensure new website got a top menu
         total_menus = Menu.search_count([])
         Website.create({'name': 'new website'})
-        self.assertEqual(total_menus + 3, Menu.search_count([]), "New website's bootstraping should have duplicate default menu tree (Top/Home/Sub Default Menu)")
+        # Onboarding branch only: the Team Board demo menu is intentionally part of
+        # the default menu tree for CI/demo convenience. This is not an upstream pattern.
+        self.assertEqual(total_menus + 4, Menu.search_count([]), "New website's bootstraping should have duplicate default menu tree (Top/Home/Sub Default Menu/Team Board)")
 
     def test_04_specific_menu_translation(self):
         IrModuleModule = self.env['ir.module.module']

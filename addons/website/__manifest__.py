@@ -91,6 +91,7 @@
         'views/snippets/s_company_team_grid.xml',
         'views/snippets/s_company_team_card.xml',
         'views/snippets/s_team_board.xml',
+        'views/team_board_templates.xml',
         'views/snippets/s_call_to_action.xml',
         'views/snippets/s_references.xml',
         'views/snippets/s_references_social.xml',

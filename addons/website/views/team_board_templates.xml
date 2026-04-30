@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<data noupdate="1">
+    <record id="menu_team_board" model="website.menu">
+        <field name="name">Team Board</field>
+        <field name="url">/team-board</field>
+        <field name="parent_id" ref="website.main_menu"/>
+        <field name="sequence" type="int">45</field>
+    </record>
+</data>
+
+<template id="team_board_page" name="Team Board Page" track="1">
+    <t t-call="website.layout">
+        <div id="wrap">
+            <div id="oe_structure_team_board_page_1" class="oe_structure oe_empty"/>
+            <div class="oe_structure">
+                <section class="s_title pt64 pb24" data-snippet="s_title" data-name="Title">
+                    <div class="container">
+                        <h1>Team Board</h1>
+                        <p class="lead">Meet the people building the next chapter.</p>
+                    </div>
+                </section>
+                <t t-snippet-call="website.s_team_board" string="Team Board"/>
+                <section class="s_call_to_action pt48 pb64" data-snippet="s_call_to_action" data-name="Call to Action">
+                    <div class="container">
+                        <div class="row align-items-center">
+                            <div class="col-lg-8">
+                                <h2 class="h3-fs">Want to work with this team?</h2>
+                                <p class="mb-lg-0">Start a conversation and we will connect you with the right person.</p>
+                            </div>
+                            <div class="col-lg-4 text-lg-end">
+                                <a href="/contactus" class="btn btn-primary">Contact us</a>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            <div id="oe_structure_team_board_page_2" class="oe_structure oe_empty"/>
+        </div>
+    </t>
+</template>
+
+</odoo>
