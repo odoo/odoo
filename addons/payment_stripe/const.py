@@ -36,6 +36,8 @@ PAYMENT_METHODS_MAPPING = {
     "cash_app_pay": "cashapp",
     "mobile_pay": "mobilepay",
     "unknown": "card",  # For express checkout.
+    "apple_pay": "card",
+    "google_pay": "card",
 }
 
 INDIAN_MANDATES_SUPPORTED_CURRENCIES = [
