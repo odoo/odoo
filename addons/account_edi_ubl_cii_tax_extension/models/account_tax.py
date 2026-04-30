@@ -117,6 +117,16 @@ class AccountTax(models.Model):
             ('VATEX-FR-J', 'VATEX-FR-J - Sales of antiques'),
         ]
     )
+    ubl_cii_available_tax_category_codes = fields.Json(compute='_compute_ubl_cii_available_tax_category_codes')
+    ubl_cii_available_tax_exemption_reason_codes = fields.Json(compute='_compute_ubl_cii_available_tax_exemption_reason_codes')
+
+    def _compute_ubl_cii_available_tax_category_codes(self):
+        # TO OVERRIDE
+        self.ubl_cii_available_tax_category_codes = self._fields['ubl_cii_tax_category_code'].get_values(self.env)
+
+    def _compute_ubl_cii_available_tax_exemption_reason_codes(self):
+        # TO OVERRIDE
+        self.ubl_cii_available_tax_exemption_reason_codes = self._fields['ubl_cii_tax_exemption_reason_code'].get_values(self.env)
 
     def _requires_exemption_reason(self):
         self.ensure_one()
