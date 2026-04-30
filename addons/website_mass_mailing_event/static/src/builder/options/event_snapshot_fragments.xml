@@ -15,7 +15,7 @@
                 <p>
                     <font style="color: rgb(99,99,99);" t-out="record.subtitle or 'Add a description...'"/>
                 </p>
-                <p>
+                <p t-if="dateBegin">
                     <strong>
                         <span t-out="dateBegin"/> at
                         <span t-out="timeBegin"/>
@@ -47,7 +47,7 @@
                 <p>
                     <font style="color: rgb(99,99,99);" t-out="record.subtitle or 'Add a description...'"/>
                 </p>
-                <p>
+                <p t-if="dateBegin">
                     <strong>
                         <span t-out="dateBegin"/> at
                         <span t-out="timeBegin"/>
@@ -80,7 +80,7 @@
                 <p>
                     <font style="color: rgb(99,99,99);" t-out="record.subtitle or 'Add a description...'"/>
                 </p>
-                <p>
+                <p t-if="dateBegin">
                     <strong>
                         <span t-out="dateBegin"/> at
                         <span t-out="timeBegin"/>

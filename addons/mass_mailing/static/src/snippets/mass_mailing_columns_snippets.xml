@@ -1,5 +1,5 @@
-<odoo>
-<template id="s_three_columns" name="Columns">
+<templates xml:space="preserve">
+<t t-name="mass_mailing.s_three_columns" name="Columns">
     <section class="s_three_columns o_mail_snippet_general o_cc pt32 pb32" data-vxml="001">
         <div class="container">
             <div class="row">
@@ -39,9 +39,9 @@
             </div>
         </div>
     </section>
-</template>
+</t>
 
-<template name="Big Boxes" id="s_color_blocks_2">
+<t name="Big Boxes" t-name="mass_mailing.s_color_blocks_2">
     <section class="s_mail_color_blocks_2 o_mail_snippet_general" data-vxml="001">
         <div class="container mx-auto my-auto">
             <div class="row">
@@ -58,9 +58,9 @@
             </div>
         </div>
     </section>
-</template>
+</t>
 
-<template name="Media List" id="s_media_list">
+<t name="Media List" t-name="mass_mailing.s_media_list">
     <section class="s_media_list pt32 pb32 o_colored_level o_cc o_mail_snippet_general" data-vcss="001" data-vxml="001">
         <div class="container">
             <div class="row s_nb_column_fixed">
@@ -102,9 +102,9 @@
             </div>
         </div>
     </section>
-</template>
+</t>
 
-<template id="s_attributes_horizontal" name="Horizontal Attributes">
+<t t-name="mass_mailing.s_attributes_horizontal" name="Horizontal Attributes">
     <section class="s_attributes_horizontal pt24 pb24 o_mail_snippet_general" data-vxml="001">
         <div class="container">
             <div class="row">
@@ -165,9 +165,9 @@
             </div>
         </div>
     </section>
-</template>
+</t>
 
-<template id="s_numbers" name="Numbers">
+<t t-name="mass_mailing.s_numbers" name="Numbers">
     <section class="s_numbers o_mail_snippet_general o_cc" data-vxml="001">
         <div class="container">
             <div class="row">
@@ -186,9 +186,9 @@
             </div>
         </div>
     </section>
-</template>
+</t>
 
-<template id="s_product_list" name="Items">
+<t t-name="mass_mailing.s_product_list" name="Items">
     <section class="s_mail_product_list o_mail_snippet_general" data-vxml="001">
         <div class="container pt16">
             <div class="ps-3">
@@ -222,9 +222,9 @@
             </div>
         </div>
     </section>
-</template>
+</t>
 
-<template id="s_features_grid" name="Features Grid">
+<t t-name="mass_mailing.s_features_grid" name="Features Grid">
     <section class="s_mail_features_grid o_mail_snippet_general pt48 pb24" data-vxml="001">
         <div class="container">
             <div class="row">
@@ -305,9 +305,9 @@
             </div>
         </div>
     </section>
-</template>
+</t>
 
-<template id="s_features_showcase" name="Feature Showcase with Image">
+<t t-name="mass_mailing.s_features_showcase" name="Feature Showcase with Image">
     <section class="o_mail_snippet_general s_text_image" data-vxml="001">
         <div class="container">
             <div class="row">
@@ -352,9 +352,9 @@
             </div>
         </div>
     </section>
-</template>
+</t>
 
-<template id="s_membership_advertisement" name="Membership Advertisement">
+<t t-name="mass_mailing.s_membership_advertisement" name="Membership Advertisement">
     <section class="o_mail_snippet_general s_text_image" data-vxml="001">
         <div class="container">
             <div class="row">
@@ -389,9 +389,9 @@
             </div>
         </div>
     </section>
-</template>
+</t>
 
-<template id="s_features_column" name="Features Column">
+<t t-name="mass_mailing.s_features_column" name="Features Column">
     <section class="o_mail_snippet_general pt16 pb16" data-vxml="001">
         <div class="container">
             <div class="row">
@@ -413,11 +413,6 @@
             </div>
         </div>
     </section>
-</template>
+</t>
 
-<record id="mass_mailing.s_features_grid_000_scss" model="ir.asset">
-    <field name="name">Features grid 000 SCSS</field>
-    <field name="bundle">mass_mailing.assets_iframe_style</field>
-    <field name="path">mass_mailing/static/src/snippets/s_features_grid/000.scss</field>
-</record>
-</odoo>
+</templates>

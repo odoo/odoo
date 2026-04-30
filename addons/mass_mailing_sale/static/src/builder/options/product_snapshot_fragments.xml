@@ -5,8 +5,8 @@
                 <img class="img img-fluid o_editable_media rounded mx-auto" style="object-fit: cover; width: 100%;
                     --box-border-bottom-left-radius: 0px; --box-border-bottom-right-radius: 0px; --box-border-top-right-radius: 0px; --box-border-top-left-radius: 0px;"
                     t-attf-data-name="{{record.display_name}} Image"
-                    t-attf-src="/web/image/product.template/{{record.id}}/image_1024" t-attf-alt="{{record.name}} Image"
-                    t-attf-data-original-src="/web/image/product.template/{{record.id}}/image_1024"/>
+                    t-att-src="coverUrl" t-attf-alt="{{record.name}} Image"
+                    t-att-data-original-src="coverUrl"/>
             </div>
             <div class="card-body" aria-label="Product information">
                 <h3 class="card-title text-break" t-out="record.name or 'Product Name'"/>
@@ -19,6 +19,7 @@
                             <t t-out="listPrice"/>
                         </strong>
                         <span> </span>
+                        <!-- todo ^ add space?? -->
                         <s t-if="record.standard_price">
                             <span class="h4-fs">
                                 <font style="color: rgb(108, 117, 125)">
@@ -41,8 +42,8 @@
                 <img class="img img-fluid o_editable_media rounded mx-auto" style="width: 100%;
                     --box-border-bottom-left-radius: 0px; --box-border-bottom-right-radius: 0px; --box-border-top-right-radius: 0px; --box-border-top-left-radius: 0px;"
                     t-attf-data-name="{{record.display_name}} Image"
-                    t-attf-src="/web/image/product.template/{{record.id}}/image_1024" t-attf-alt="{{record.name}} Image"
-                    t-attf-data-original-src="/web/image/product.template/{{record.id}}/image_1024"/>
+                    t-att-src="coverUrl" t-attf-alt="{{record.name}} Image"
+                    t-att-data-original-src="coverUrl"/>
             </div>
             <div class="text-center pt8">
                 <h3 class="text-break" t-out="record.name or 'Product Name'"/>
@@ -54,6 +55,7 @@
                         <t t-out="listPrice"/>
                     </strong>
                     <span> </span>
+                    <!-- todo ^ add space?? -->
                     <s t-if="record.standard_price">
                         <span class="h4-fs">
                             <font style="color: rgb(108, 117, 125)">
@@ -76,8 +78,8 @@
                     <img class="img img-fluid o_editable_media rounded mx-auto" style="object-fit: cover;  width: 100%;
                         --box-border-bottom-left-radius: 0px; --box-border-bottom-right-radius: 0px; --box-border-top-right-radius: 0px; --box-border-top-left-radius: 0px;"
                         t-attf-data-name="{{record.display_name}} Image"
-                        t-attf-src="/web/image/product.template/{{record.id}}/image_1024" t-attf-alt="{{record.name}} Image"
-                        t-attf-data-original-src="/web/image/product.template/{{record.id}}/image_1024"/>
+                        t-att-src="coverUrl" t-attf-alt="{{record.name}} Image"
+                        t-att-data-original-src="coverUrl"/>
                 </div>
             </div>
             <div class="col-md-6 col-12">
@@ -90,6 +92,7 @@
                         <t t-out="listPrice"/>
                     </strong>
                     <span> </span>
+                    <!-- todo ^ add space?? -->
                     <s t-if="record.standard_price">
                         <span class="h4-fs">
                             <font style="color: rgb(108, 117, 125)">
