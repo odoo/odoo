@@ -205,8 +205,19 @@
         <field name="group_ids" eval="[(4,ref('hr_timesheet.group_hr_timesheet_user'))]"/>
         <field name="report_type">qweb-pdf</field>
         <field name="report_name">hr_timesheet.report_project_task_timesheet</field>
-        <field name="binding_model_id" ref="model_project_task"/>
+        <field name="binding_model_id" eval="False"/>
+    </record>
+
+    <record id="action_server_print_task_timesheets" model="ir.actions.server">
+        <field name="name">Timesheets</field>
+        <field name="model_id" ref="project.model_project_task"/>
+        <field name="binding_model_id" ref="project.model_project_task"/>
         <field name="binding_type">report</field>
+        <field name="group_ids" eval="[Command.link(ref('hr_timesheet.group_hr_timesheet_user'))]"/>
+        <field name="state">code</field>
+        <field name="code">
+            action = records.action_print_timesheets()
+        </field>
     </record>
 
     <!-- Project Timesheet Report -->
@@ -221,7 +232,19 @@
         <field name="group_ids" eval="[(4,ref('hr_timesheet.group_hr_timesheet_user'))]"/>
         <field name="report_type">qweb-pdf</field>
         <field name="report_name">hr_timesheet.report_timesheet_project</field>
-        <field name="binding_model_id" ref="model_project_project"/>
+        <field name="binding_model_id" eval="False"/>
+    </record>
+
+    <record id="action_server_print_project_timesheets" model="ir.actions.server">
+        <field name="name">Timesheets</field>
+        <field name="model_id" ref="project.model_project_project"/>
+        <field name="binding_model_id" ref="project.model_project_project"/>
+        <field name="binding_type">report</field>
+        <field name="group_ids" eval="[Command.link(ref('hr_timesheet.group_hr_timesheet_user'))]"/>
+        <field name="state">code</field>
+        <field name="code">
+            action = records.action_print_timesheets()
+        </field>
     </record>
 
     <record id="timesheet_report_task_timesheets" model="ir.actions.report">
