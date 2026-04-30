@@ -659,15 +659,26 @@ describe("Selection collapsed", () => {
             });
         });
 
-        test("should insert a paragraph after an empty h1 with styles and a zero-width space", async () => {
+        test("should insert an empty paragraph after an empty h1", async () => {
             await testEditor({
                 contentBefore:
                     '<h1><font style="color: red;" data-oe-zws-empty-inline="">[]\u200B</font><br></h1>',
                 stepFunction: splitBlock,
                 contentAfterEdit:
                     '<h1><font style="color: red;" data-oe-zws-empty-inline="">\u200b</font><br></h1>' +
-                    `<p o-we-hint-text='Type "/" for commands' class="o-we-hint"><font style="color: red;" data-oe-zws-empty-inline="">[]\u200b</font><br></p>`,
+                    `<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`,
                 contentAfter: "<h1><br></h1><p>[]<br></p>",
+            });
+        });
+
+        test("should insert an empty paragraph when split at end of h1", async () => {
+            await testEditor({
+                contentBefore: '<h1><font style="color: red;">Hello[]</font><br></h1>',
+                stepFunction: splitBlock,
+                contentAfterEdit:
+                    '<h1><font style="color: red;">Hello</font></h1>' +
+                    `<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`,
+                contentAfter: '<h1><font style="color: red;">Hello</font></h1><p>[]<br></p>',
             });
         });
 
