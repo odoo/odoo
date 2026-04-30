@@ -1,6 +1,7 @@
-import { describe, test } from "@odoo/hoot";
+import { describe, expect, test } from "@odoo/hoot";
+import { animationFrame, press } from "@odoo/hoot-dom";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
-import { base64Img, testEditor } from "./_helpers/editor";
+import { base64Img, setupEditor, testEditor } from "./_helpers/editor";
 import { insertSpace, insertText } from "./_helpers/user_actions";
 
 describe("inline code", () => {
@@ -343,6 +344,16 @@ describe("inline code", () => {
             stepFunction: async (editor) => insertText(editor, "`"),
             contentAfter: "<p>a`[]f</p>",
         });
+    });
+
+    test.tags("desktop");
+    test("should not open the odoo global command bar when pressing ctrl+k inside a inline code element", async () => {
+        await setupEditor(`<p><code class="o_inline_code">[test]</code></p>`);
+
+        // Pressing ctrl+k to open odoo global command bar
+        await press(["ctrl", "k"]);
+        await animationFrame();
+        expect('.o_command span[title="Create link"]').toHaveCount(0);
     });
 });
 
