@@ -606,6 +606,11 @@ class AccountEdiUBLPint(models.AbstractModel):
     # IMPORT
     # -------------------------------------------------------------------------
 
+    def _import_invoice_ubl_cii(self, invoice, file_data, new=False):
+        if invoice.invoice_line_ids:
+            return invoice._reason_cannot_decode_has_invoice_lines()
+        return self._ubl_import_invoice(invoice, file_data, new=new)
+
     def _import_prepare_missing_customer_create_values(self, collected_values):
         partner_create_values = super()._import_prepare_missing_customer_create_values(collected_values)
 
