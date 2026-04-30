@@ -10,9 +10,8 @@ class EditableButtonPlugin extends Plugin {
     /**
      * Buttons with `contenteditable="true"` cannot receive spaces because the
      * browser natively triggers a click on them when the space key is pressed.
-     * To work around this, we move the `contenteditable` attribute up to a
-     * wrapping <span>, allowing text editing (including spaces) to work
-     * correctly without triggering the button's click handler.
+     * To work around this, we listen to the keydown event on those buttons and
+     * insert a non-breaking space when the space key is pressed.
      */
     wrapEditableButtons(root) {
         const editableButtons = root.querySelectorAll("button.o_savable[contenteditable='true']");
@@ -25,11 +24,42 @@ class EditableButtonPlugin extends Plugin {
                 continue;
             }
 
-            const span = this.document.createElement("span");
-            span.setAttribute("contenteditable", "true");
-            button.removeAttribute("contenteditable");
-            button.after(span);
-            span.append(button);
+            const onKeyDown = (ev) => {
+                const isSpace = ev.key === ' ' || ev.key === 'Spacebar' || ev.keyCode === 32;
+                if (!isSpace) {
+                    return;
+                }
+                if (ev.shiftKey || ev.altKey || ev.ctrlKey || ev.metaKey) {
+                    return;
+                }
+                ev.preventDefault();
+                ev.stopPropagation();
+                try {
+                    const doc = root.ownerDocument || document;
+                    let sel = doc.getSelection();
+                    if (!sel) {
+                        return;
+                    }
+                    if (sel.rangeCount === 0) {
+                        const range = doc.createRange();
+                        range.selectNodeContents(button);
+                        range.collapse(false);
+                        sel.removeAllRanges();
+                        sel.addRange(range);
+                    }
+                    const range = sel.getRangeAt(0);
+                    range.deleteContents();
+                    const textNode = doc.createTextNode('\u00A0');
+                    range.insertNode(textNode);
+                    range.setStartAfter(textNode);
+                    range.collapse(true);
+                    sel.removeAllRanges();
+                    sel.addRange(range);
+                } catch {
+                    // ignore
+                }
+            };
+            button.addEventListener('keydown', onKeyDown);
         }
     }
 }
