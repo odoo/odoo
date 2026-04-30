@@ -7,6 +7,8 @@ import { _t } from "@web/core/l10n/translation";
 import { renderToString } from "@web/core/utils/render";
 const { DateTime } = luxon;
 
+const EMBEDDED_DATE_SELECTOR = 'span[data-embedded="date"]';
+
 export class DatePlugin extends Plugin {
     static id = "date";
     static dependencies = ["history", "overlay", "dom", "embeddedComponents"];
@@ -71,6 +73,9 @@ export class DatePlugin extends Plugin {
                 categoryId: "date",
             },
         ],
+
+        /** Providers */
+        selectors_for_feff_providers: () => EMBEDDED_DATE_SELECTOR,
     };
 
     setup() {
