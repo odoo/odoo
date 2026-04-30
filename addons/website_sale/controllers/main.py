@@ -17,7 +17,7 @@ from odoo.http import request, route
 from odoo.http.stream import content_disposition
 from odoo.tools import SQL, BinaryBytes, clean_context, float_round, lazy, str2bool
 from odoo.tools.json import scriptsafe as json_scriptsafe
-from odoo.tools.translate import LazyTranslate, _
+from odoo.tools.translate import LazyTranslate
 
 from odoo.addons.html_editor.tools import get_video_thumbnail
 from odoo.addons.payment.controllers import portal as payment_portal
@@ -718,7 +718,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 except Exception:  # noqa: BLE001
                     thumbnail = None
             else:
-                raise ValidationError(_("Invalid video URL provided."))
+                raise ValidationError(self.env._("Invalid video URL provided."))
             media_create_data = [
                 Command.create({
                     "name": video_data.get("name", "Odoo Video"),
@@ -819,11 +819,11 @@ class WebsiteSale(payment_portal.PaymentPortal):
             product_template = product.product_tmpl_id or image_to_resequence.product_tmpl_id
 
         if not product and not product_template:
-            raise ValidationError(_("Product not found"))
+            raise ValidationError(self.env._("Product not found"))
 
         product_images = (product or product_template)._get_images()
         if image_to_resequence not in product_images:
-            raise ValidationError(_("Invalid image"))
+            raise ValidationError(self.env._("Invalid image"))
 
         image_idx = product_images.index(image_to_resequence)
         new_image_idx = 0
@@ -852,7 +852,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
             main_image = product_images[main_image_idx]
             additional_image = product_images[0]
             if additional_image.video_url:
-                raise ValidationError(_("You can't use a video as the product's main image."))
+                raise ValidationError(
+                    self.env._("You can't use a video as the product's main image.")
+                )
             # Swap records.
             product_images[main_image_idx], product_images[0] = additional_image, main_image
             # Swap image data.
@@ -883,9 +885,10 @@ class WebsiteSale(payment_portal.PaymentPortal):
         website = request.website
         ProductCategory = request.env["product.public.category"]
         original_category = category
-        category = category or product.public_categ_ids.filtered(
-            lambda c: c.can_access_from_current_website()
-        )[:1]
+        category = (
+            category
+            or product.public_categ_ids.filtered(lambda c: c.can_access_from_current_website())[:1]
+        )
         markup_data = [
             website._prepare_ecommerce_store_markup_data(),
             product._to_markup_data(website),
@@ -898,8 +901,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         if last_attributes_search := request.session.get("attribute_values", []):
             keep = QueryURL(
-                self._get_shop_path(original_category),
-                attribute_values=last_attributes_search
+                self._get_shop_path(original_category), attribute_values=last_attributes_search
             )
         else:
             keep = QueryURL(self._get_shop_path(original_category))
@@ -936,7 +938,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             "attribute_value_images": attribute_value_images,
             "categories": ProductCategory.search([("parent_id", "=", False)]),
             "category": category,
-            'original_category': original_category,
+            "original_category": original_category,
             "combination_info": combination_info,
             "has_available_uoms": len(product._get_available_uoms()) > 0,
             "keep": keep,
@@ -948,7 +950,8 @@ class WebsiteSale(payment_portal.PaymentPortal):
             "view_track": view_track,
             "markup_data_json": json_scriptsafe.dumps(markup_data, indent=2),
             "shop_path": SHOP_PATH,
-            "user_email": request.env.user.email or request.session.get("stock_notification_email", ""),
+            "user_email": request.env.user.email
+            or request.session.get("stock_notification_email", ""),
         }
 
     def _prepare_breadcrumb_markup_data(self, base_url, category):
@@ -1670,8 +1673,8 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if order._has_deliverable_products():
             if not order._get_delivery_methods():
                 errors.append((
-                    _("Sorry, we are unable to ship your order."),
-                    _(
+                    self.env._("Sorry, we are unable to ship your order."),
+                    self.env._(
                         "No delivery method is available for your current order and shipping"
                         " address. Please contact us for more information."
                     ),
@@ -1684,8 +1687,8 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 and commitment_date.date().isoformat() not in dm_id._get_estimate_delivery_days()
             ):
                 errors.append((
-                    _("Sorry, we are unable to ship your order."),
-                    _(
+                    self.env._("Sorry, we are unable to ship your order."),
+                    self.env._(
                         "The selected delivery date is no longer available."
                         " Please pick another delivery date."
                     ),
@@ -2131,7 +2134,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
             and category
             and not str(category).isdigit()
         ):
-            raise ValidationError(_("Invalid category."))
+            raise ValidationError(request.env._("Invalid category."))
         if (
             category := ProductCategory.browse(category and int(category)).exists()
         ) and category.can_access_from_current_website():

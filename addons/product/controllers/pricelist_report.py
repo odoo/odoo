@@ -4,7 +4,6 @@ import csv
 import io
 import json
 
-from odoo import _
 from odoo.http import Controller, request, route
 from odoo.http.stream import content_disposition
 
@@ -19,11 +18,11 @@ class ProductPricelistExportController(Controller):
         quantities = report_data['quantities']
         products = report_data['products']
         headers = [
-            _("Product"),
-            _("Internal Reference"),
-            _("Barcode"),
-            _("UOM"),
-        ] + [_("Quantity (%s UoM)", qty) for qty in quantities]
+            self.env._("Product"),
+            self.env._("Internal Reference"),
+            self.env._("Barcode"),
+            self.env._("UOM"),
+        ] + [self.env._("Quantity (%s UoM)", qty) for qty in quantities]
         date = report_data['date']
         if export_format == 'csv':
             return self._generate_csv(pricelist_name, quantities, products, headers, date)

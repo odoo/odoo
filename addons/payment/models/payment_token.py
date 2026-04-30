@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 
 
@@ -11,13 +11,19 @@ class PaymentToken(models.Model):
     _check_company_auto = True
     _rec_names_search = ["payment_details", "partner_id", "provider_id"]
 
-    provider_id = fields.Many2one(string="Provider", comodel_name="payment.provider", required=True, index=True)
+    provider_id = fields.Many2one(
+        string="Provider", comodel_name="payment.provider", required=True, index=True
+    )
     provider_code = fields.Selection(string="Provider Code", related="provider_id.code")
     company_id = fields.Many2one(
         related="provider_id.company_id", store=True, index=True
     )  # Indexed to speed-up ORM searches (from ir_rule or others).
     payment_method_id = fields.Many2one(
-        string="Payment Method", comodel_name="payment.method", readonly=True, required=True, index=True,
+        string="Payment Method",
+        comodel_name="payment.method",
+        readonly=True,
+        required=True,
+        index=True,
     )
     payment_method_code = fields.Char(
         string="Payment Method Code", related="payment_method_id.code"
@@ -91,7 +97,7 @@ class PaymentToken(models.Model):
                     for token in self
                 ):
                     raise UserError(
-                        _(
+                        self.env._(
                             "You can't unarchive tokens linked to inactive payment methods or"
                             " disabled providers."
                         )
@@ -107,7 +113,9 @@ class PaymentToken(models.Model):
         """Check that the partner associated with the token is never public."""
         for token in self:
             if token.partner_id.is_public:
-                raise ValidationError(_("No token can be assigned to the public partner."))
+                raise ValidationError(
+                    token.env._("No token can be assigned to the public partner.")
+                )
 
     def _handle_archiving(self):
         """Handle the archiving of tokens.
@@ -176,7 +184,7 @@ class PaymentToken(models.Model):
         padding_length = max_length - len(self.payment_details or "")
         if not self.payment_details:
             create_date_str = self.create_date.strftime("%Y/%m/%d")
-            display_name = _("Payment details saved on %(date)s", date=create_date_str)
+            display_name = self.env._("Payment details saved on %(date)s", date=create_date_str)
         elif padding_length >= 2:  # Enough room for padding.
             padding = "•" * min(padding_length - 1, 4) + " " if should_pad else ""
             display_name = f"{padding}{self.payment_details}"

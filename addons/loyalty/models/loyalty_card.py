@@ -2,7 +2,7 @@
 
 from uuid import uuid4
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.tools import format_amount
 
@@ -57,7 +57,9 @@ class LoyaltyCard(models.Model):
     def _check_expiration_date(self):
         for card in self:
             if card.expiration_date and card.expiration_date < fields.Date.context_today(card):
-                raise ValidationError(self.env._("The expiry date cannot be in the past. Please select a valid date."))
+                raise ValidationError(
+                    card.env._("The expiry date cannot be in the past. Please select a valid date.")
+                )
 
     @api.constrains("code")
     def _contrains_code(self):
@@ -67,7 +69,7 @@ class LoyaltyCard(models.Model):
             ("code", "in", self.mapped("code")),
         ]):
             raise ValidationError(
-                _("A trigger with the same code as one of your coupon already exists.")
+                self.env._("A trigger with the same code as one of your coupon already exists.")
             )
 
     @api.constrains("active", "partner_id", "program_id")
@@ -85,7 +87,7 @@ class LoyaltyCard(models.Model):
             )
             if loyalty_card_count:
                 raise ValidationError(
-                    self.env._("A customer can only have one active loyalty card per program.")
+                    card.env._("A customer can only have one active loyalty card per program.")
                 )
 
     @api.depends("points", "point_name")
@@ -139,7 +141,7 @@ class LoyaltyCard(models.Model):
             force_email=True,
         )
         return {
-            "name": _("Compose Email"),
+            "name": self.env._("Compose Email"),
             "type": "ir.actions.act_window",
             "view_mode": "form",
             "res_model": "mail.compose.message",
@@ -235,7 +237,7 @@ class LoyaltyCard(models.Model):
 
     def action_loyalty_update_balance(self):
         return {
-            "name": _("Update Balance"),
+            "name": self.env._("Update Balance"),
             "type": "ir.actions.act_window",
             "view_mode": "form",
             "res_model": "loyalty.card.update.balance",

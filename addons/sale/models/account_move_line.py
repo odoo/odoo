@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools import float_compare, float_is_zero
 
@@ -113,7 +113,7 @@ class AccountMoveLine(models.Model):
             # raise if the sale order is not currently open
             if sale_order.state in ("draft", "sent"):
                 raise UserError(
-                    _(
+                    move_line.env._(
                         "The Sales Order %(order)s to be reinvoiced must be validated before"
                         " registering expenses.",
                         order=sale_order.name,
@@ -121,7 +121,7 @@ class AccountMoveLine(models.Model):
                 )
             if sale_order.state == "cancel":
                 raise UserError(
-                    _(
+                    move_line.env._(
                         "The Sales Order %(order)s to be reinvoiced is cancelled."
                         " You cannot register an expense on a cancelled Sales Order.",
                         order=sale_order.name,
@@ -129,7 +129,7 @@ class AccountMoveLine(models.Model):
                 )
             if sale_order.locked:
                 raise UserError(
-                    _(
+                    move_line.env._(
                         "The Sales Order %(order)s to be reinvoiced is currently locked."
                         " You cannot register an expense on a locked Sales Order.",
                         order=sale_order.name,
@@ -291,10 +291,12 @@ class AccountMoveLine(models.Model):
     def _get_discount_lines(self):
         lines = super()._get_discount_lines()
         discount_line_ids = []
-        for company, company_lines in self.grouped('company_id').items():
+        for company, company_lines in self.grouped("company_id").items():
             discount_product = company.sudo().sale_discount_product_id
             if discount_product:
-                discount_line_ids.extend(company_lines.filtered(lambda line: line.product_id == discount_product).ids)
+                discount_line_ids.extend(
+                    company_lines.filtered(lambda line: line.product_id == discount_product).ids
+                )
         if discount_line_ids:
             lines |= self.browse(discount_line_ids)
         return lines

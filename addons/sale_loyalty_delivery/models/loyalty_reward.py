@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, fields, models
+from odoo import fields, models
 
 
 class LoyaltyReward(models.Model):
@@ -13,7 +13,7 @@ class LoyaltyReward(models.Model):
     def _compute_description(self):
         shipping_rewards = self.filtered(lambda r: r.reward_type == "shipping")
         super(LoyaltyReward, self - shipping_rewards)._compute_description()
-        shipping_rewards.description = _("Free shipping")
+        shipping_rewards.description = self.env._("Free shipping")
         for reward in shipping_rewards:
             if reward.discount_max_amount:
                 format_string = "%(amount)g %(symbol)s"
@@ -23,4 +23,4 @@ class LoyaltyReward(models.Model):
                     "amount": reward.discount_max_amount,
                     "symbol": reward.currency_id.symbol,
                 }
-                reward.description += _(" (Max %s)", formatted_amount)
+                reward.description += self.env._(" (Max %s)", formatted_amount)

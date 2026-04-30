@@ -1,6 +1,6 @@
 import json
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -23,7 +23,9 @@ class ChooseDeliveryCarrier(models.TransientModel):
             self.is_pickup_required
             and self.partner_shipping_id.pickup_delivery_method_id.id != self.carrier_id.id
         ):
-            raise UserError(_("Please select a pickup point before adding a delivery method"))
+            raise UserError(
+                self.env._("Please select a pickup point before adding a delivery method")
+            )
         super().button_confirm()
         # Update order's shipping partner with the selected one.
         if self.is_pickup_required:

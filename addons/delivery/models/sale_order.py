@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -12,7 +12,7 @@ class SaleOrder(models.Model):
         help="Fill this field if you plan to invoice the shipping based on picking.",
         comodel_name="delivery.carrier",
         check_company=True,
-        index='btree_not_null',
+        index="btree_not_null",
     )
     delivery_message = fields.Char(readonly=True, copy=False)
     delivery_set = fields.Boolean(compute="_compute_delivery_state")
@@ -70,7 +70,7 @@ class SaleOrder(models.Model):
                 for line in delivery_lines
             ])
             raise UserError(
-                _(
+                self.env._(
                     "You can not update the shipping costs on an order where it was already"
                     " invoiced!\n\nThe following delivery lines (product, invoiced quantity and"
                     " price) have already been processed:\n\n%s",
@@ -89,10 +89,10 @@ class SaleOrder(models.Model):
     def action_open_delivery_wizard(self):
         view_id = self.env.ref("delivery.choose_delivery_carrier_view_form").id
         if self.env.context.get("carrier_recompute"):
-            name = _("Update shipping cost")
+            name = self.env._("Update shipping cost")
             carrier = self.carrier_id
         else:
-            name = _("Add a delivery method")
+            name = self.env._("Add a delivery method")
             shipping_partner_id = self.with_company(self.company_id).partner_shipping_id
             carrier_property = (
                 shipping_partner_id.property_delivery_carrier_id
@@ -143,7 +143,7 @@ class SaleOrder(models.Model):
             "is_delivery": True,
         }
         if carrier.free_over and self.currency_id.is_zero(price_unit):
-            values["name"] = _("%s\nFree Shipping", values["name"])
+            values["name"] = self.env._("%s\nFree Shipping", values["name"])
         if self.order_line:
             values["sequence"] = self.order_line[-1].sequence + 1
         del context
@@ -173,7 +173,7 @@ class SaleOrder(models.Model):
         return weight
 
     def _update_order_line_info(self, *args, **kwargs):
-        """ Override of `sale` to recompute the delivery prices.
+        """Override of `sale` to recompute the delivery prices.
 
         :param object product_id: Recordset of `product.product`.
         :return: The unit price of the product, based on the pricelist of the sale order and

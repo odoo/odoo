@@ -2,7 +2,7 @@
 
 from markupsafe import Markup
 
-from odoo import _, models
+from odoo import models
 from odoo.tools import is_html_empty
 
 from odoo.addons.payment.logging import get_payment_logger
@@ -79,7 +79,7 @@ class PaymentTransaction(models.Model):
         """
         message = super()._get_sent_message()
         if self.provider_code == "custom":
-            message = _(
+            message = self.env._(
                 "The customer has selected %(provider_name)s to make the payment.",
                 provider_name=self.provider_id.name,
             )

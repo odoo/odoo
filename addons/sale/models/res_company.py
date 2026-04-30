@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -60,4 +60,6 @@ class ResCompany(models.Model):
     def _check_prepayment_percent(self):
         for company in self:
             if company.portal_confirmation_pay and not (0 < company.prepayment_percent <= 1.0):
-                raise ValidationError(_("Prepayment percentage must be a valid percentage."))
+                raise ValidationError(
+                    company.env._("Prepayment percentage must be a valid percentage.")
+                )

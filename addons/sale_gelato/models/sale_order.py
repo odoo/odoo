@@ -6,7 +6,7 @@ from functools import partial, wraps
 
 from markupsafe import Markup
 
-from odoo import _, api, models
+from odoo import api, models
 from odoo.exceptions import UserError, ValidationError
 
 from odoo.addons.sale_gelato import utils
@@ -50,7 +50,9 @@ class SaleOrder(models.Model):
             )  # Filter out non-saleable (sections, etc.) and non-deliverable products.
             if gelato_lines and non_gelato_lines:
                 raise ValidationError(
-                    _("You cannot mix Gelato products with non-Gelato products in the same order.")
+                    order.env._(
+                        "You cannot mix Gelato products with non-Gelato products in the same order."
+                    )
                 )
 
     # === ONCHANGE METHODS ===#
@@ -65,7 +67,12 @@ class SaleOrder(models.Model):
             try:
                 gelato_order.partner_shipping_id._gelato_validate_address()
             except ValidationError as e:
-                return {"warning": {"title": _("The address is incorrect."), "message": str(e)}}
+                return {
+                    "warning": {
+                        "title": gelato_order.env._("The address is incorrect."),
+                        "message": str(e),
+                    }
+                }
 
     # === ACTION METHODS === #
 
@@ -122,7 +129,7 @@ class SaleOrder(models.Model):
             self.env.cr.postrollback.add(partial(self._delete_order_on_gelato, data["id"]))
         except UserError as exc:
             raise UserError(
-                _(
+                self.env._(
                     "The order with reference %(order_reference)s was not sent to Gelato.\n"
                     "Reason: %(error_message)s",
                     order_reference=self.display_name,
@@ -132,7 +139,7 @@ class SaleOrder(models.Model):
 
         _logger.info("Notification received from Gelato with data:\n%s", pprint.pformat(data))
         self.message_post(
-            body=_("The order has been successfully passed on Gelato."),
+            body=self.env._("The order has been successfully passed on Gelato."),
             author_id=self.env.ref("base.partner_root").id,
         )
 

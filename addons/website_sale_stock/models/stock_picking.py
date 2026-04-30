@@ -2,7 +2,7 @@
 
 import json
 
-from odoo import _, fields, models
+from odoo import fields, models
 from odoo.exceptions import UserError
 
 
@@ -41,7 +41,9 @@ class StockPicking(models.Model):
             and picking.partner_id.pickup_delivery_method_id.id != picking.carrier_id.id
             for picking in self
         ):
-            raise UserError(_("You must select a pickup address with this delivery method."))
+            raise UserError(
+                self.env._("You must select a pickup address with this delivery method.")
+            )
 
     def action_confirm(self):
         self._check_pickup_location()

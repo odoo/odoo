@@ -4,7 +4,7 @@ import hashlib
 import hmac
 import pprint
 
-from odoo import _, http
+from odoo import http
 from odoo.exceptions import ValidationError
 from odoo.http import request
 
@@ -28,12 +28,12 @@ class AuthorizeController(http.Controller):
         """
         # Check that the transaction details have not been altered
         if not payment_utils.check_access_token(access_token, reference, partner_id):
-            raise ValidationError(_("Received tampered payment request data."))
+            raise ValidationError(self.env._("Received tampered payment request data."))
 
         # Retrieve the transaction
         tx_sudo = request.env["payment.transaction"].sudo().search([("reference", "=", reference)])
         if not tx_sudo:
-            raise ValidationError(_("Transaction not found."))
+            raise ValidationError(self.env._("Transaction not found."))
 
         # Lock the transaction row to prevent concurrent updates (e.g., from cron jobs)
         # This prevents sql concurrent updates, which stops ORM from automatically

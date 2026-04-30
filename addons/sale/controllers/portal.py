@@ -2,7 +2,7 @@
 
 import binascii
 
-from odoo import SUPERUSER_ID, _, fields, http
+from odoo import SUPERUSER_ID, fields, http
 from odoo.exceptions import AccessError, MissingError, ValidationError
 from odoo.fields import Command
 from odoo.http import request
@@ -45,7 +45,7 @@ class CustomerPortal(payment_portal.PaymentPortal):
         ]
 
     def _get_sale_searchbar_sortings(self):
-        return {"date": {"label": _("Order Date"), "order": "date_order desc"}}
+        return {"date": {"label": self.env._("Order Date"), "order": "date_order desc"}}
 
     def _prepare_sale_portal_rendering_values(
         self,
@@ -133,8 +133,12 @@ class CustomerPortal(payment_portal.PaymentPortal):
     # ------------------------------------------------------------
     # My Order
     # ------------------------------------------------------------
-    def _sale_order_get_page_view_values(self, order_sudo, access_token, values, history_session_key, **kwargs):
-        return self._get_page_view_values(order_sudo, access_token, values, history_session_key, False, **kwargs)
+    def _sale_order_get_page_view_values(
+        self, order_sudo, access_token, values, history_session_key, **kwargs
+    ):
+        return self._get_page_view_values(
+            order_sudo, access_token, values, history_session_key, False, **kwargs
+        )
 
     @http.route(["/my/orders/<int:order_id>"], type="http", auth="public", website=True)
     def portal_order_page(
@@ -158,7 +162,7 @@ class CustomerPortal(payment_portal.PaymentPortal):
         payment_amount = self._cast_as_float(payment_amount)
         prepayment_amount = order_sudo._get_prepayment_required_amount()
         if payment_amount and payment_amount < prepayment_amount and order_sudo.state != "sale":
-            raise MissingError(_("The amount is lower than the prepayment amount."))
+            raise MissingError(self.env._("The amount is lower than the prepayment amount."))
 
         advantage_tax_excl, advantage_tax_incl = order_sudo._get_advantages()
 
@@ -191,7 +195,7 @@ class CustomerPortal(payment_portal.PaymentPortal):
                     if request.env.user._is_public()
                     else request.env.user.partner_id
                 )
-                msg = _("Quotation viewed by customer %s", author.name)
+                msg = self.env._("Quotation viewed by customer %s", author.name)
                 del context
                 order_sudo.with_user(SUPERUSER_ID).message_post(
                     body=msg, message_type="notification", subtype_xmlid="sale.mt_order_viewed"
@@ -230,7 +234,8 @@ class CustomerPortal(payment_portal.PaymentPortal):
             history_session_key = "my_orders_history"
 
         values = self._sale_order_get_page_view_values(
-            order_sudo, access_token, values, history_session_key, **kw)
+            order_sudo, access_token, values, history_session_key, **kw
+        )
 
         return request.render("sale.sale_order_portal_template", values)
 
@@ -360,12 +365,14 @@ class CustomerPortal(payment_portal.PaymentPortal):
                 "sale.order", order_id, access_token=access_token
             )
         except (AccessError, MissingError):
-            return {"error": _("Invalid order.")}
+            return {"error": self.env._("Invalid order.")}
 
         if not order_sudo._has_to_be_signed():
-            return {"error": _("The order is not in a state requiring customer signature.")}
+            return {
+                "error": self.env._("The order is not in a state requiring customer signature.")
+            }
         if not signature:
-            return {"error": _("Signature is missing.")}
+            return {"error": self.env._("Signature is missing.")}
 
         try:
             order_sudo.write({
@@ -376,7 +383,7 @@ class CustomerPortal(payment_portal.PaymentPortal):
             # flush now to make signature data available to PDF render request
             request.env.cr.flush()
         except (TypeError, binascii.Error):
-            return {"error": _("Invalid signature data.")}
+            return {"error": self.env._("Invalid signature data.")}
 
         if not order_sudo._has_to_be_paid():
             order_sudo._validate_order()
@@ -396,7 +403,7 @@ class CustomerPortal(payment_portal.PaymentPortal):
                 if request.env.user._is_public()
                 else request.env.user.partner_id.id
             ),
-            body=_("Order signed by %s", name),
+            body=self.env._("Order signed by %s", name),
             message_type="comment",
             subtype_xmlid="mail.mt_comment",
         )
@@ -527,7 +534,7 @@ class PaymentPortal(payment_portal.PaymentPortal):
         except MissingError:
             raise
         except AccessError:
-            raise ValidationError(_("The access token is invalid.")) from None
+            raise ValidationError(self.env._("The access token is invalid.")) from None
 
         logged_in = not request.env.user._is_public()
         partner_sudo = request.env.user.partner_id if logged_in else order_sudo.partner_invoice_id

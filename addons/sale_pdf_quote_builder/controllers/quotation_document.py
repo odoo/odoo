@@ -5,7 +5,6 @@ import logging
 import traceback
 from http import HTTPStatus
 
-from odoo import _
 from odoo.exceptions import UserError
 from odoo.http import Controller, request, route
 
@@ -32,7 +31,7 @@ class QuotationDocumentController(Controller):
         else:
             additional_vals = {"company_id": request.env.company.id}
         files = request.httprequest.files.getlist("ufile")
-        result = {"success": _("All files uploaded")}
+        result = {"success": self.env._("All files uploaded")}
         for file in files:
             try:
                 mimetype = ufile.content_type

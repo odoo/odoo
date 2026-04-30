@@ -54,7 +54,7 @@ class TestWebsiteSequence(BaseCommon):
         env = Environment(self.env.cr, self.public_user.id, context)
         with MockRequest(env, website=self.website.with_env(env)) as req:
             product_sort_mapping = req.env["website"]._get_product_sort_mapping()
-            return next(k for k, v in product_sort_mapping if v == label)
+            return next(k for k, v in product_sort_mapping if str(v) == label)
 
     def get_sorted_products(self, order, products=None):
         products = products or self.product_tmpls

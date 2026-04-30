@@ -7,7 +7,6 @@ from odoo.exceptions import UserError
 from odoo.http import request, route
 from odoo.tools import consteq
 from odoo.tools.image import image_data_uri
-from odoo.tools.translate import _
 
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.controllers.portal import PaymentPortal
@@ -127,7 +126,7 @@ class Cart(PaymentPortal):
         product = request.env["product.product"].browse(product_id).exists()
         if not product or not product._is_add_to_cart_allowed():
             raise UserError(
-                _("The given product does not exist therefore it cannot be added to cart.")
+                self.env._("The given product does not exist therefore it cannot be added to cart.")
             )
 
         added_qty_per_line = {}
@@ -166,7 +165,9 @@ class Cart(PaymentPortal):
                     )
                 ):
                     raise UserError(
-                        _("The given product does not exist therefore it cannot be added to cart.")
+                        self.env._(
+                            "The given product does not exist therefore it cannot be added to cart."
+                        )
                     )
 
                 product_values = order_sudo.with_context(skip_cart_verification=True)._cart_add(
