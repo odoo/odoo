@@ -18,7 +18,6 @@ import { browser } from "@web/core/browser/browser";
 
 import { _t } from "@web/core/l10n/translation";
 import { Transition } from "@web/core/transition";
-import { Deferred } from "@web/core/utils/concurrency";
 import { useBus, useRefListener, useService } from "@web/core/utils/hooks";
 import { escape } from "@web/core/utils/strings";
 
@@ -55,8 +54,8 @@ export class Thread extends Component {
     };
     static template = "mail.Thread";
 
-    /** @type {Deferred} */
-    smoothScrollingDeferred;
+    /** @type {Promise|undefined} */
+    smoothScrollingPromise;
     /** @type {number} */
     smoothScrollingTimeout;
     isSmoothScrolling = false;
@@ -113,7 +112,7 @@ export class Thread extends Component {
             async () => {
                 await Promise.all([
                     this.messageHighlight?.scrollPromise,
-                    this.smoothScrollingDeferred,
+                    this.smoothScrollingPromise,
                 ]);
                 if (this.loadOlderState.isVisible) {
                     toRaw(this.props.thread).fetchMoreMessages({
@@ -128,7 +127,7 @@ export class Thread extends Component {
             async () => {
                 await Promise.all([
                     this.messageHighlight?.scrollPromise,
-                    this.smoothScrollingDeferred,
+                    this.smoothScrollingPromise,
                 ]);
                 if (this.loadNewerState.isVisible) {
                     toRaw(this.props.thread).fetchMoreMessages({
@@ -697,10 +696,11 @@ export class Thread extends Component {
         if (smooth) {
             clearTimeout(this.smoothScrollingTimeout);
             this.isSmoothScrolling = true;
-            this.smoothScrollingDeferred = new Deferred();
+            const { promise, resolve: resolveSmoothScrolling } = Promise.withResolvers();
+            this.smoothScrollingPromise = promise;
             const onSmoothScrollingEnd = () => {
-                this.smoothScrollingDeferred.resolve();
-                this.smoothScrollingDeferred = undefined;
+                resolveSmoothScrolling();
+                this.smoothScrollingPromise = undefined;
                 this.isSmoothScrolling = false;
             };
             if ("onscrollend" in window) {
