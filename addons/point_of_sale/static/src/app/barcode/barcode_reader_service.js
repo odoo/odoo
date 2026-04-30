@@ -83,7 +83,7 @@ export class BarcodeReader {
     showNotFoundNotification(code) {
         this.notification.add(
             _t(
-                "The Point of Sale could not find any product, customer, employee or action associated with the scanned barcode."
+                "The Point of Sale could not find any product, customer, or action associated with the scanned barcode."
             ),
             {
                 type: "warning",

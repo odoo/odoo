@@ -206,6 +206,19 @@ class TestUi(TestPosHrHttpCommon):
             login="pos_admin"
         )
 
+    def test_login_with_non_cashier_pattern_badge(self):
+        """
+        The login screen should recognize employees with badges not starting with "041".
+        Such employees have their badges manually created, not through the 'generate' button.
+        """
+        self.emp3.barcode = "1234567"
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour(
+            "/pos/ui?config_id=%d" % self.main_pos_config.id,
+            "test_login_with_non_cashier_pattern_badge",
+            login="pos_user",
+        )
+
     def test_cost_and_margin_visibility(self):
         self.product_a.available_in_pos = True
         self.main_pos_config.write({

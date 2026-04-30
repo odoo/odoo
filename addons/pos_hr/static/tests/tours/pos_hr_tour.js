@@ -319,6 +319,16 @@ registry.category("web_tour.tours").add("test_scan_employee_barcode_with_pos_hr_
         ].flat(),
 });
 
+registry.category("web_tour.tours").add("test_login_with_non_cashier_pattern_badge", {
+    steps: () =>
+        [
+            PosHr.loginScreenIsShown(),
+            scan_barcode("1234567"),
+            ProductScreen.isShown(),
+            PosHr.cashierNameIs("Test Employee 3"),
+        ].flat(),
+});
+
 registry.category("web_tour.tours").add("test_cost_and_margin_visibility", {
     steps: () =>
         [

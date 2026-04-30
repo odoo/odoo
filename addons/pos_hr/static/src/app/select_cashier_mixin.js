@@ -13,21 +13,23 @@ export function useCashierSelector({ exclusive, onScan } = { onScan: () => {}, e
     const pos = usePos();
     const dialog = useService("dialog");
     const notification = useService("notification");
+    const cashierAction = async (code) => {
+        const employee = pos.models["hr.employee"].find(
+            (emp) => emp._barcode === Sha1.hash(code.code)
+        );
+        if (
+            employee &&
+            employee !== pos.get_cashier() &&
+            (!employee._pin || (await checkPin(employee)))
+        ) {
+            onScan && onScan(employee);
+        }
+        return employee;
+    };
     useBarcodeReader(
         {
-            async cashier(code) {
-                const employee = pos.models["hr.employee"].find(
-                    (emp) => emp._barcode === Sha1.hash(code.code)
-                );
-                if (
-                    employee &&
-                    employee !== pos.get_cashier() &&
-                    (!employee._pin || (await checkPin(employee)))
-                ) {
-                    onScan && onScan(employee);
-                }
-                return employee;
-            },
+            cashier: cashierAction,
+            ...(exclusive && { product: cashierAction }),
         },
         exclusive
     );
