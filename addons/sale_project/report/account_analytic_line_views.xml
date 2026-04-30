@@ -7,8 +7,8 @@
         <field name="mode">primary</field>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='date']" position="after">
-                <field name="category" type="row"/>
-                <field name="category_report" type="col"/>
+                <field name="category_report" type="row"/>
+                <field name="billable_type" type="row"/>
             </xpath>
             <xpath expr="//field[@name='date']" position="replace">
                 <field name="account_id" type="col"/>
@@ -23,6 +23,7 @@
         <field name="mode">primary</field>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='date']" position="after">
+                <field name="category_report" type="row"/>
                 <field name="billable_type" type="row"/>
             </xpath>
             <xpath expr="//field[@name='date']" position="replace"/>
