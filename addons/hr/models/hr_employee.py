@@ -141,7 +141,9 @@ class HrEmployee(models.Model):
     work_email = fields.Char('Work Email', compute="_compute_work_contact_details", store=True, inverse='_inverse_work_contact_details')
     work_contact_id = fields.Many2one('res.partner', 'Work Contact', copy=False, index='btree_not_null')
     # private info
-    legal_name = fields.Char(compute='_compute_legal_name', store=True, readonly=False, groups="hr.group_hr_user", help="The employee's official name as per government-issued or legal documents.")
+    legal_first_name = fields.Char(compute='_compute_legal_first_last_names', store=True, readonly=False, tracking=True, groups="hr.group_hr_user", help="The employee's official first name as per government-issued or legal documents.")
+    legal_last_name = fields.Char(compute='_compute_legal_first_last_names', store=True, readonly=False, tracking=True, groups="hr.group_hr_user", help="The employee's official last name as per government-issued or legal documents.")
+    legal_name = fields.Char(compute='_compute_legal_name', store=True, readonly=True, groups="hr.group_hr_user", help="The employee's official name as per government-issued or legal documents.")
     is_user_active = fields.Boolean(related='user_id.active', string="User's active", groups="hr.group_hr_user")
     private_phone = fields.Char(string="Private Phone", groups="hr.group_hr_user")
     private_email = fields.Char(string="Private Email", groups="hr.group_hr_user")
@@ -608,9 +610,21 @@ class HrEmployee(models.Model):
         return min(versions.mapped('contract_date_start')) if versions else False
 
     @api.depends('name')
+    def _compute_legal_first_last_names(self):
+        for employee in self:
+            if employee.name:
+                names = re.sub(r"\([^()]*\)", "", employee.name).strip().split()
+                if not employee.legal_first_name:
+                    employee.legal_first_name = ' '.join(names[:-1])
+                if not employee.legal_last_name:
+                    employee.legal_last_name = names[-1]
+
+    @api.depends('legal_first_name', 'legal_last_name')
     def _compute_legal_name(self):
         for employee in self:
-            if not employee.legal_name:
+            if employee.legal_first_name and employee.legal_last_name:
+                employee.legal_name = f'{employee.legal_first_name} {employee.legal_last_name}'
+            else:
                 employee.legal_name = employee.name
 
     @api.depends('current_version_id')
