@@ -29,7 +29,7 @@ test("no auto-call on joining chat", async () => {
     await start();
     await openDiscuss();
     await click("input[placeholder='Search conversations']");
-    await contains(".o_command_name", { count: 3 });
+    await contains(".o_command_name", { count: 2 });
     await insertText(
         ".o_command_palette_search input[placeholder='Search conversations']",
         "mario"
