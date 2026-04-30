@@ -637,10 +637,21 @@ async function mail_message_update_content(request) {
         const edit_label = `<span class='o-mail-Message-edited' data-o-datetime="${serializeDateTime(
             DateTime.now()
         )}"/>`;
-        msg_values.body =
-            update_data.body === "" && update_data.attachment_ids.length === 0
-                ? ""
-                : update_data.body + edit_label;
+        if (update_data.body === "" && update_data.attachment_ids.length === 0) {
+            msg_values.body = "";
+        } else {
+            const div = document.createElement("div");
+            div.innerHTML = update_data.body;
+            const children = [...div.children];
+            if (children.length > 0) {
+                const lastChild = children[children.length - 1];
+                const target = ["DIV", "P"].includes(lastChild.tagName) ? lastChild : div;
+                target.insertAdjacentHTML("beforeend", edit_label);
+                msg_values.body = div.innerHTML;
+            } else {
+                msg_values.body = update_data.body + edit_label;
+            }
+        }
     }
     if (update_data.attachment_ids.length === 0) {
         IrAttachment.unlink(message.attachment_ids);
