@@ -316,4 +316,7 @@ Price = {
 
 ItemPriceExtension = {
     'cbc:Amount': {},
+    'cac:TaxTotal': {
+        'cbc:TaxAmount': {},
+    },
 }
