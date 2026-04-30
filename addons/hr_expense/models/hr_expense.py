@@ -100,6 +100,7 @@ class HrExpense(models.Model):
         tracking=True,
         check_company=True,
         domain=[('can_be_expensed', '=', True)],
+        index=True,
         ondelete='restrict',
     )
     product_description = fields.Html(compute='_compute_product_description')

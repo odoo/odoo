@@ -80,7 +80,7 @@ class EventTrack(models.Model):
     kanban_state_label = fields.Char(
         string='Kanban State Label', compute='_compute_kanban_state_label', store=True,
         tracking=True)
-    partner_id = fields.Many2one('res.partner', 'Contact')
+    partner_id = fields.Many2one('res.partner', 'Contact', index='btree_not_null')
     # speaker information
     partner_name = fields.Char(
         string='Name', compute='_compute_partner_name',
