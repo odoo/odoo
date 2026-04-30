@@ -176,6 +176,9 @@ Delivery = {
         'cac:Address': Address,
     },
     'cac:DeliveryParty': Party,
+    'cac:DeliveryTerms': {
+        'cbc:ID': {},
+    },
 }
 
 FinancialAccount = {
@@ -190,6 +193,12 @@ FinancialAccount = {
     }
 }
 
+CardAccount = {
+    'cbc:PrimaryAccountNumberID': {},
+    'cbc:NetworkID': {},
+    'cbc:HolderName': {},
+}
+
 PaymentMeans = {
     'cbc:ID': {},
     'cbc:PaymentMeansCode': {},
@@ -197,6 +206,7 @@ PaymentMeans = {
     'cbc:InstructionID': {},
     'cbc:InstructionNote': {},
     'cbc:PaymentID': {},
+    'cac:CardAccount': CardAccount,
     'cac:PayeeFinancialAccount': FinancialAccount,
 }
 
@@ -298,7 +308,10 @@ Item = {
     'cac:BuyersItemIdentification': ItemIdentification,
     'cac:SellersItemIdentification': ItemIdentification,
     'cac:StandardItemIdentification': ItemIdentification,
+    'cac:AdditionalItemIdentification': ItemIdentification,
     'cac:CommodityClassification': {
+        'cbc:NatureCode': {},
+        'cbc:CommodityCode': {},
         'cbc:ItemClassificationCode': {},
     },
     'cac:ClassifiedTaxCategory': TaxCategory,
@@ -317,4 +330,5 @@ Price = {
 
 ItemPriceExtension = {
     'cbc:Amount': {},
+    'cac:TaxTotal': TaxTotal,
 }
