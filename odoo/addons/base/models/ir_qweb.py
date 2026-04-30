@@ -799,15 +799,18 @@ class IrQweb(models.AbstractModel):
                     if params.context:
                         irQweb = irQweb.with_context(**params.context)
 
-                    render_template = loaded_functions.get(params.method)
+                    render_key = params.method or params.view_ref
+                    render_template = loaded_functions.get(render_key)
 
                     # Fetch the compiled function and template options
                     if not render_template:
                         template_functions, def_name, options = irQweb._compile(params.view_ref)
                         loaded_functions.update(template_functions)
                         render_template = template_functions[params.method or def_name]
+                        loaded_functions[render_key] = render_template
+                        loaded_options[render_key] = options
                     else:
-                        options = loaded_options[params.view_ref]
+                        options = loaded_options.get(render_key) or loaded_options[params.view_ref]
 
                     # Apply a new scope if needed
                     if params.scope:
