@@ -22,7 +22,16 @@ import { isEventHandled, markEventHandled } from "@web/core/utils/misc";
 import { browser } from "@web/core/browser/browser";
 import { useDebounced } from "@web/core/utils/timing";
 
-import { Component, markup, onMounted, onWillUnmount, toRaw, EventBus, useEffect } from "@odoo/owl";
+import {
+    Component,
+    markup,
+    onMounted,
+    onWillUnmount,
+    toRaw,
+    EventBus,
+    immediateEffect,
+    onWillDestroy,
+} from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
@@ -296,21 +305,23 @@ export class Composer extends Component {
             this.props.composer.isFocused = false;
         });
         const composerProxy = reactive(this.props.composer);
-        useEffect(() => {
-            if (this.status === 2 /* DESTROYED */) {
-                return;
-            }
-            const composerHtml = composerProxy.composerHtml;
-            if (this.updateFromEditor) {
-                return;
-            }
-            if (!this.editor?.editable) {
-                return;
-            }
-            setElementContent(this.editor.editable, composerHtml);
-            this.setEditorCursorEnd();
-            this.editor.shared.history.addStep();
-        });
+        onWillDestroy(
+            immediateEffect(() => {
+                if (this.status === 2 /* DESTROYED */) {
+                    return;
+                }
+                const composerHtml = composerProxy.composerHtml;
+                if (this.updateFromEditor) {
+                    return;
+                }
+                if (!this.editor?.editable) {
+                    return;
+                }
+                setElementContent(this.editor.editable, composerHtml);
+                this.setEditorCursorEnd();
+                this.editor.shared.history.addStep();
+            })
+        );
     }
 
     setEditorCursorEnd() {
