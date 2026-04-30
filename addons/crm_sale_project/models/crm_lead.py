@@ -82,6 +82,6 @@ class CrmLead(models.Model):
         context = super()._prepare_opportunity_quotation_context()
         context.update({
             'is_sale_order': True,
-            'default_project_id': self.project_ids[-1].id if self.project_ids else False,
+            'default_project_id': self.sudo().project_ids[-1:].id,
         })
         return context
