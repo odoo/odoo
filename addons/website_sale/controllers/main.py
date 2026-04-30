@@ -461,13 +461,23 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
         category_entries = Category
         if category:
-            category_entries = (not search and category.child_id) or category.child_id.filtered(
-                lambda c: c.id in search_categories.ids
+            available_categories = category.child_id.filtered(
+                lambda c: c.can_access_from_current_website()
+            )
+            category_entries = (
+                (not search
+                and available_categories)
+                or available_categories.filtered(lambda c: c.id in search_categories.ids)
             )
             if not category_entries:
                 parent = category.parent_id
-                category_entries = (not search and parent.child_id) or parent.child_id.filtered(
-                    lambda c: c.id in search_categories.ids
+                available_categories = parent.child_id.filtered(
+                    lambda c: c.can_access_from_current_website()
+                )
+                category_entries = (
+                    (not search
+                    and available_categories)
+                    or available_categories.filtered(lambda c: c.id in search_categories.ids)
                 )
             if not search and not request.env.user._is_internal():
                 # We know the user has access to `categs` and `search_categories` because they come
