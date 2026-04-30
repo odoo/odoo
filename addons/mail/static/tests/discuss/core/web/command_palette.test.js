@@ -53,11 +53,10 @@ test("can open channel from @channel_name in command palette", async () => {
     await start();
     triggerHotkey("control+k");
     await insertText(".o_command_palette_search input", "@");
-    await contains(".o_command", { count: 4 });
+    await contains(".o_command", { count: 3 });
     await contains(".o_command:eq(0):text('project')");
     await contains(".o_command:eq(1):text('general')");
-    await contains(".o_command:eq(2):text('OdooBot')");
-    await contains(".o_command:eq(3):text('Mitchell Admin')"); // self-conversation
+    await contains(".o_command:eq(2):text('Mitchell Admin')"); // self-conversation
     await click(".o_command.focused:text('project')");
     await contains(".o-mail-ChatWindow:text('project')");
 });
@@ -123,9 +122,8 @@ test("only partners with dedicated users will be displayed in command palette", 
     await start();
     triggerHotkey("control+k");
     await insertText(".o_command_palette_search input", "@");
-    await contains(".o_command_name", { count: 3 });
+    await contains(".o_command_name", { count: 2 });
     await contains(".o_command_name:text('Demo')");
-    await contains(".o_command_name:text('OdooBot')");
     await contains(".o_command_name:text('Mitchell Admin')"); // self-conversation
     await contains(".o_command_name:text('Portal')", { count: 0 });
 });
