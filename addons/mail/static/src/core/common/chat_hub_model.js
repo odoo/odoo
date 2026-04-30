@@ -1,7 +1,7 @@
 import { browser } from "@web/core/browser/browser";
 import { fields, Record } from "@mail/model/export";
 
-import { Deferred, Mutex } from "@web/core/utils/concurrency";
+import { Mutex } from "@web/core/utils/concurrency";
 
 export const CHAT_HUB_DEFAULT_BUBBLE_START = 15;
 export const CHAT_HUB_KEY = "mail.ChatHub";
@@ -51,7 +51,7 @@ export class ChatHub extends Record {
         });
         chatHub
             .load(browser.localStorage.getItem(CHAT_HUB_KEY) ?? undefined)
-            .then(() => chatHub.initPromise.resolve());
+            .then(() => chatHub._resolveInit());
         return chatHub;
     }
 
@@ -74,8 +74,7 @@ export class ChatHub extends Record {
     });
     /** From top to bottom. Bottom-most will actually be hidden */
     folded = fields.Many("ChatWindow", { inverse: "hubAsFolded" });
-    initPromise = new Deferred();
-    preFirstFetchPromise = new Deferred();
+    initPromise = new Promise((resolve) => (this._resolveInit = resolve));
     loadMutex = new Mutex();
 
     async closeAll() {
@@ -113,7 +112,6 @@ export class ChatHub extends Record {
         const getChannel = (data) => this.store["discuss.channel"].getOrFetch(data.id);
         const openPromises = opened.map(getChannel);
         const foldPromises = folded.map(getChannel);
-        this.preFirstFetchPromise.resolve();
         const foldChannels = await Promise.all(foldPromises);
         const openChannels = await Promise.all(openPromises);
         /** @param {import("models").Channel[]} channels */
