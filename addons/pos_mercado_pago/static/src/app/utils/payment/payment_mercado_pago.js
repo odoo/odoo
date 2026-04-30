@@ -55,14 +55,11 @@ export class PaymentMercadoPago extends PaymentInterface {
         this.payment_intent = {};
 
         this.connectWebSocket("MERCADO_PAGO_LATEST_MESSAGE", (payload) => {
-            if (
-                payload.config_id === this.pos.config.id &&
-                payload.payment_method_id === this.payment_method_id.id
-            ) {
+            if (payload.config_id === this.pos.config.id) {
                 const pendingLine = this.pos.getPendingPaymentLine("mercado_pago");
 
-                if (pendingLine) {
-                    pendingLine.payment_method_id.payment_interface.handleMercadoPagoWebhook();
+                if (pendingLine && pendingLine.payment_method_id.id === payload.payment_method_id) {
+                    pendingLine.payment_method_id.payment_terminal.handleMercadoPagoWebhook();
                 }
             }
         });
