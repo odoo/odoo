@@ -148,6 +148,7 @@ export class ListRenderer extends Component {
 
         this.longTouchTimer = null;
         this.touchStartMs = 0;
+        this.lastOptionalShow = undefined;
 
         /**
          * When resizing columns, it's possible that the pointer is not above the resize
@@ -1276,26 +1277,56 @@ export class ListRenderer extends Component {
     }
 
     computeOptionalActiveFields() {
+        const optionalActiveFields = {};
         const localStorageValue = browser.localStorage.getItem(this.keyOptionalFields);
+
         const optionalColumn = [
             ...this.allColumns.filter((col) => col.optional),
             ...this.allColumns
                 .filter((col) => col.type === "column_group")
                 .flatMap((col) => col.fields.filter((f) => f.optional)),
         ];
-        const optionalActiveFields = {};
+
         if (localStorageValue !== null) {
-            const localStorageOptionalActiveFields = localStorageValue.split(",");
+            const stored = localStorageValue.split(",");
             for (const col of optionalColumn) {
-                optionalActiveFields[col.name] = localStorageOptionalActiveFields.includes(
-                    col.name
-                );
+                optionalActiveFields[col.name] = stored.includes(col.name);
             }
         } else {
             for (const col of optionalColumn) {
                 optionalActiveFields[col.name] = col.optional === "show";
             }
         }
+
+        const optionalShow = this.props.list.context.list_optional_show;
+
+        // if we remove a filter we have to set unset lastOptionalShow so the next time
+        // we apply a filter the optional fields will be enabled
+        if (!optionalShow) {
+            this.lastOptionalShow = undefined;
+            return optionalActiveFields;
+        }
+
+        const optionalShowChanged = JSON.stringify(optionalShow) !== this.lastOptionalShow;
+
+        // only apply list_optional_show once when filter changes to keep it possible
+        // to untoggle optional fields even if they occur in list_optional_show
+        if (optionalShowChanged) {
+            Object.assign(optionalActiveFields, this.optionalActiveFields);
+            this.lastOptionalShow = JSON.stringify(optionalShow);
+            if (optionalShow) {
+                for (const fieldName of optionalShow) {
+                    optionalActiveFields[fieldName] = true;
+                }
+                browser.localStorage.setItem(
+                    this.keyOptionalFields,
+                    Object.keys(optionalActiveFields)
+                        .filter((fieldName) => optionalActiveFields[fieldName])
+                        .join(",")
+                );
+            }
+        }
+
         return optionalActiveFields;
     }
 

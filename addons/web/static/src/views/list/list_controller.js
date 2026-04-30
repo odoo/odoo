@@ -127,6 +127,12 @@ export class ListController extends Component {
                 };
             },
             getOrderBy: () => this.model.root.orderBy,
+            getContext: () => {
+                const optionalShow = Object.keys(this.optionalActiveFields).filter(
+                    (name) => this.optionalActiveFields[name]
+                );
+                return optionalShow.length ? { list_optional_show: optionalShow } : {};
+            },
         });
 
         useLayoutEffect(
