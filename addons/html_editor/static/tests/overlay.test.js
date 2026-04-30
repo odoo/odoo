@@ -15,7 +15,6 @@ import { Plugin } from "@html_editor/plugin";
 import { Component, onMounted, onWillUnmount, xml } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { setupEditor } from "./_helpers/editor";
-import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 import { parseHTML } from "@html_editor/utils/html";
 import { closestScrollableY } from "@web/core/utils/scrolling";
 import { Wysiwyg } from "@html_editor/wysiwyg";
@@ -436,7 +435,7 @@ test("overlay don't close when click on child overlay", async () => {
     }
 
     const { editor } = await setupEditor("<div>edit</div>", {
-        config: { Plugins: [...MAIN_PLUGINS, MyPlugin] },
+        config: { includePlugins: [MyPlugin] },
     });
     await waitFor(".my-overlay");
     await contains(".my-suboverlay").click();
@@ -447,7 +446,7 @@ test("overlay don't close when click on child overlay", async () => {
     await animationFrame();
 
     await setupEditor("<div>edit</div>", {
-        config: { Plugins: [...MAIN_PLUGINS, MyPlugin] },
+        config: { includePlugins: [MyPlugin] },
         props: {
             iframe: true,
         },

@@ -3,7 +3,7 @@ import { setupEditor, testEditor } from "../_helpers/editor";
 import { unformat } from "../_helpers/format";
 import { getContent } from "../_helpers/selection";
 import { deleteForward, insertText, tripleClick } from "../_helpers/user_actions";
-import { EMBEDDED_COMPONENT_PLUGINS, MAIN_PLUGINS } from "@html_editor/plugin_sets";
+import { EMBEDDED_COMPONENT_PLUGINS } from "@html_editor/plugin_sets";
 import { animationFrame, tick } from "@odoo/hoot-dom";
 import {
     compareHighlightedContent,
@@ -768,7 +768,7 @@ describe("Selection collapsed", () => {
     describe("Pre", () => {
         describe("with syntax highlighting", () => {
             const configWithEmbeddings = {
-                Plugins: [...MAIN_PLUGINS, ...EMBEDDED_COMPONENT_PLUGINS],
+                includePlugins: EMBEDDED_COMPONENT_PLUGINS,
                 resources: { embedded_components: MAIN_EMBEDDINGS },
             };
             const testDeleteInCodeBlock = (selectionStart) => async (editor) => {

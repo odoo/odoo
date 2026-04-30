@@ -8,7 +8,6 @@ import { setupEditor } from "./_helpers/editor";
 import { getContent } from "./_helpers/selection";
 
 import { TranslatePlugin } from "@html_editor/main/translate/translate_plugin";
-import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 import { expandToolbar } from "./_helpers/toolbar";
 import { execCommand } from "./_helpers/userCommands";
 
@@ -23,7 +22,7 @@ const translateDropdownFromToolbar = async () => {
 
 test("ChatGPT dialog opens in translate mode when clicked on translate button in toolbar", async () => {
     await setupEditor("<p>te[s]t</p>", {
-        config: { Plugins: [...MAIN_PLUGINS, TranslatePlugin] },
+        config: { includePlugins: [TranslatePlugin] },
     });
 
     await expandToolbar();
@@ -48,7 +47,7 @@ test("ChatGPT dialog opens in translate mode when clicked on translate dropdown 
         ["fr_BE", "French (BE) / Français (BE)"],
     ]);
     await setupEditor("<p>te[s]t</p>", {
-        config: { Plugins: [...MAIN_PLUGINS, TranslatePlugin] },
+        config: { includePlugins: [TranslatePlugin] },
     });
 
     // Expect the toolbar to have translate dropdown.
@@ -102,7 +101,7 @@ test("text should align to the start for RTL language", async () => {
         ["ar_SA", "Arabic (SA) / العربية (SA)"],
     ]);
     await setupEditor("<p>[Hello]</p>", {
-        config: { Plugins: [...MAIN_PLUGINS, TranslatePlugin] },
+        config: { includePlugins: [TranslatePlugin] },
     });
     onRpc("/html_editor/google_translate", () => ({ translated_text: "أهلاً", isError: false }));
 
@@ -125,7 +124,7 @@ test("insert the response from Google translate", async () => {
         ["fr_BE", "French (BE) / Français (BE)"],
     ]);
     const { editor, el } = await setupEditor("<p>[Hello]</p>", {
-        config: { Plugins: [...MAIN_PLUGINS, TranslatePlugin] },
+        config: { includePlugins: [TranslatePlugin] },
     });
     onRpc("/html_editor/google_translate", () => ({ translated_text: "Bonjour", isError: false }));
 
@@ -161,7 +160,7 @@ test("insert the response from ChatGPT translate in debug mode", async () => {
         ["fr_BE", "French (BE) / Français (BE)"],
     ]);
     const { editor, el } = await setupEditor("<p>[Hello]</p>", {
-        config: { Plugins: [...MAIN_PLUGINS, TranslatePlugin] },
+        config: { includePlugins: [TranslatePlugin] },
     });
     onRpc("/html_editor/google_translate", () => ({
         translated_text: "Google's' Bonjour",
@@ -209,7 +208,7 @@ test("Translate dropdown should have the default language at top", async () => {
 
     onRpc("res.lang", "get_installed", () => languages);
     await setupEditor("<p>[test]</p>", {
-        config: { Plugins: [...MAIN_PLUGINS, TranslatePlugin] },
+        config: { includePlugins: [TranslatePlugin] },
     });
     await expandToolbar();
 
@@ -226,7 +225,7 @@ test("Translate dropdown should have the default language at top", async () => {
 
 test("press escape to close translate dialog", async () => {
     await setupEditor("<p>[test]</p>", {
-        config: { Plugins: [...MAIN_PLUGINS, TranslatePlugin] },
+        config: { includePlugins: [TranslatePlugin] },
     });
 
     await expandToolbar();

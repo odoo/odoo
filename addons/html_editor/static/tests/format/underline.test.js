@@ -14,7 +14,6 @@ import {
 } from "../_helpers/user_actions";
 import { unformat } from "../_helpers/format";
 import { QWebPlugin } from "@html_editor/others/qweb_plugin";
-import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 
 test("should make a few characters underline", async () => {
     await testEditor({
@@ -53,7 +52,7 @@ test("should make qweb tag underline", async () => {
         contentBefore: `<div><p t-out="'Test'" contenteditable="false">[Test]</p></div>`,
         stepFunction: underline,
         contentAfter: `<div>[<p t-out="'Test'" style="text-decoration-line: underline;">Test</p>]</div>`,
-        config: { Plugins: [...MAIN_PLUGINS, QWebPlugin] },
+        config: { includePlugins: [QWebPlugin] },
     });
 });
 

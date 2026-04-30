@@ -6,11 +6,11 @@ import { expectElementCount } from "./_helpers/ui_expectations";
 import { expect, test } from "@odoo/hoot";
 import { contains } from "@web/../tests/web_test_helpers";
 import { nodeSize } from "@html_editor/utils/position";
-import { EMBEDDED_COMPONENT_PLUGINS, MAIN_PLUGINS } from "@html_editor/plugin_sets";
+import { EMBEDDED_COMPONENT_PLUGINS } from "@html_editor/plugin_sets";
 import { MAIN_EMBEDDINGS } from "@html_editor/others/embedded_components/embedding_sets";
 
 const configWithEmbeddedTableOfContent = {
-    Plugins: [...MAIN_PLUGINS, ...EMBEDDED_COMPONENT_PLUGINS],
+    includePlugins: EMBEDDED_COMPONENT_PLUGINS,
     resources: { embedded_components: MAIN_EMBEDDINGS },
 };
 

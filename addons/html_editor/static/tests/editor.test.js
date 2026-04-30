@@ -48,7 +48,7 @@ test("processThrough forwards explicitly returned falsy values", async () => {
         };
     }
     const { editor } = await setupEditor("<p>[]</p>", {
-        config: { Plugins: [...MAIN_PLUGINS, TestPlugin] },
+        config: { includePlugins: [TestPlugin] },
     });
     expect(editor.processThrough("test_processors", "initial")).toBe(undefined);
 });
@@ -79,8 +79,9 @@ test("plugin destruction is reverse of instantiation order", async () => {
             }
         };
     }
-    const Plugins = [...MAIN_PLUGINS, makeTestPlugin("first"), makeTestPlugin("second", ["first"])];
-    const { editor } = await setupEditor(`<p>[]</p>`, { config: { Plugins } });
+    const { editor } = await setupEditor(`<p>[]</p>`, {
+        config: { includePlugins: [makeTestPlugin("first"), makeTestPlugin("second", ["first"])] },
+    });
     expect.verifySteps(["setup: first", "setup: second"]);
     editor.destroy();
     expect.verifySteps(["destroy: second", "destroy: first"]);
@@ -96,8 +97,9 @@ test("Remove odoo-editor-editable class after every plugin is destroyed", async 
             }
         }
     }
-    const Plugins = [...MAIN_PLUGINS, TestPlugin];
-    const { editor } = await setupEditor(`<div><p>a</p></div>`, { config: { Plugins } });
+    const { editor } = await setupEditor(`<div><p>a</p></div>`, {
+        config: { includePlugins: [TestPlugin] },
+    });
     editor.destroy();
     expect.verifySteps(["operation"]);
 });
@@ -113,11 +115,10 @@ test("Element is not editable if any plugin marks it non-editable", async () => 
             },
         };
     }
-    const Plugins = [...MAIN_PLUGINS, TestPlugin];
     const { el, plugins } = await setupEditor(
         `<div>[<img class="o-editable-media o-will-break-if-edited">]</div>`,
         {
-            config: { Plugins },
+            config: { includePlugins: [TestPlugin] },
         }
     );
     const img = el.querySelector(".o-editable-media");
@@ -145,9 +146,8 @@ test("clean_for_save_processors is done last", async () => {
             }
         }
     }
-    const Plugins = [...MAIN_PLUGINS, TestPlugin];
     const { editor } = await setupEditor(`<div><c-div>a</c-div><c-div>b</c-div></div>`, {
-        config: { Plugins },
+        config: { includePlugins: [TestPlugin] },
     });
 
     const el = editor.getElContent();

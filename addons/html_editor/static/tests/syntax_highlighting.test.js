@@ -11,7 +11,7 @@ import {
 import { contains, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { browser } from "@web/core/browser/browser";
 import { setupEditor, testEditor } from "./_helpers/editor";
-import { EMBEDDED_COMPONENT_PLUGINS, MAIN_PLUGINS } from "@html_editor/plugin_sets";
+import { EMBEDDED_COMPONENT_PLUGINS } from "@html_editor/plugin_sets";
 import { MAIN_EMBEDDINGS } from "@html_editor/others/embedded_components/embedding_sets";
 import { unformat } from "./_helpers/format";
 import { parseHTML } from "@html_editor/utils/html";
@@ -47,7 +47,7 @@ const changeLanguage = async (textarea, from, to) => {
 };
 
 const configWithEmbeddings = {
-    Plugins: [...MAIN_PLUGINS, ...EMBEDDED_COMPONENT_PLUGINS],
+    includePlugins: EMBEDDED_COMPONENT_PLUGINS,
     resources: { embedded_components: MAIN_EMBEDDINGS },
 };
 const testEditorWithHighlightedContent = async (config) =>

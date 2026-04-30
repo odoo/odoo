@@ -15,7 +15,6 @@ import {
     getEditableDescendants,
     StateChangeManager,
 } from "@html_editor/others/embedded_component_utils";
-import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 import { parseHTML } from "@html_editor/utils/html";
 import { beforeEach, describe, expect, getFixture, test } from "@odoo/hoot";
 import { click, queryFirst, waitFor } from "@odoo/hoot-dom";
@@ -45,7 +44,7 @@ import { nodeToTree } from "@html_editor/core/dom_reference_map_plugin";
 
 function getConfig(components) {
     return {
-        Plugins: [...MAIN_PLUGINS, EmbeddedComponentPlugin],
+        includePlugins: [EmbeddedComponentPlugin],
         resources: {
             embedded_components: components,
         },
@@ -895,7 +894,7 @@ describe("Mount processing", () => {
             }
         }
         const config = getConfig([embedding("embeddedCounter", EmbeddedCounter)]);
-        config.Plugins.push(SimplePlugin);
+        config.includePlugins.push(SimplePlugin);
         const { plugins } = await setupEditor(`<p>[]a</p>`, { config });
         const simplePlugin = plugins.get("simple");
         simplePlugin.insertElement("<div data-embedded='embeddedCounter'/>");

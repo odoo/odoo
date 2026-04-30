@@ -12,7 +12,6 @@ import {
 } from "../_helpers/user_actions";
 import { unformat } from "../_helpers/format";
 import { tick } from "@odoo/hoot-mock";
-import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 import { QWebPlugin } from "@html_editor/others/qweb_plugin";
 
 test("should make a few characters italic", async () => {
@@ -52,7 +51,7 @@ test("should make qweb tag italic", async () => {
         contentBefore: `<div><p t-out="'Test'" contenteditable="false">[Test]</p></div>`,
         stepFunction: italic,
         contentAfter: `<div>[<p t-out="'Test'" style="font-style: italic;">Test</p>]</div>`,
-        config: { Plugins: [...MAIN_PLUGINS, QWebPlugin] },
+        config: { includePlugins: [QWebPlugin] },
     });
 });
 

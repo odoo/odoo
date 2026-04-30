@@ -799,7 +799,7 @@ describe("Collaboration with embedded components", () => {
         const peerInfos = await setupMultiEditor({
             peerIds: ["c1", "c2"],
             contentBefore: "<p>[c1}{c1][c2}{c2]<br></p>",
-            Plugins: [EmbeddedComponentPlugin],
+            includePlugins: [EmbeddedComponentPlugin],
             resources: {
                 embedded_components: [embedding("counter", Counter)],
             },
@@ -864,7 +864,7 @@ describe("Collaboration with embedded components", () => {
         const peerInfos = await setupMultiEditor({
             peerIds: ["c1", "c2"],
             contentBefore: `<p>a[c1}{c1][c2}{c2]</p>`,
-            Plugins: [EmbeddedComponentPlugin],
+            includePlugins: [EmbeddedComponentPlugin],
             resources: {
                 embedded_components: [embedding("counter", Counter)],
             },
@@ -921,7 +921,7 @@ describe("Collaboration with embedded components", () => {
         const peerInfos = await setupMultiEditor({
             peerIds: ["c1", "c2"],
             contentBefore: `<p>a[c1}{c1][c2}{c2]</p>`,
-            Plugins: [EmbeddedComponentPlugin],
+            includePlugins: [EmbeddedComponentPlugin],
             resources: {
                 embedded_components: [embedding("counter", Counter)],
             },
@@ -968,7 +968,7 @@ describe("Collaboration with embedded components", () => {
         const peerInfos = await setupMultiEditor({
             peerIds: ["c1", "c2"],
             contentBefore: `<p>[c1}{c1][c2}{c2]a</p>`,
-            Plugins: [EmbeddedComponentPlugin],
+            includePlugins: [EmbeddedComponentPlugin],
             resources: {
                 embedded_components: [
                     embedding("wrapper", EmbeddedWrapper, (host) => ({ host }), {
@@ -1063,7 +1063,7 @@ describe("Collaboration with embedded components", () => {
         const peerInfos = await setupMultiEditor({
             peerIds: ["c1", "c2"],
             contentBefore: `<p>[c1}{c1][c2}{c2]a</p>`,
-            Plugins: [EmbeddedComponentPlugin],
+            includePlugins: [EmbeddedComponentPlugin],
             resources: {
                 embedded_components: [
                     embedding("wrapper", EmbeddedWrapper, (host) => ({ host }), {
@@ -1143,7 +1143,7 @@ describe("Collaboration with embedded components", () => {
         const peerInfos = await setupMultiEditor({
             peerIds: ["c1", "c2"],
             contentBefore: `<p>[c1}{c1][c2}{c2]a</p>`,
-            Plugins: [EmbeddedComponentPlugin],
+            includePlugins: [EmbeddedComponentPlugin],
             resources: {
                 embedded_components: [
                     embedding("wrapper", SimpleEmbeddedWrapper, (host) => ({ host }), {
@@ -1204,7 +1204,7 @@ describe("Collaboration with embedded components", () => {
         const peerInfos = await setupMultiEditor({
             peerIds: ["c1", "c2"],
             contentBefore: `<p>[c1}{c1][c2}{c2]a</p>`,
-            Plugins: [EmbeddedComponentPlugin],
+            includePlugins: [EmbeddedComponentPlugin],
             resources: {
                 embedded_components: [
                     embedding("wrapper", SimpleEmbeddedWrapper, (host) => ({ host }), {
@@ -1284,7 +1284,7 @@ describe("Collaboration with embedded components", () => {
             const peerInfos = await setupMultiEditor({
                 peerIds: ["c1", "c2"],
                 contentBefore: `<p>a[c1}{c1][c2}{c2]<span data-embedded="counter" data-embedded-props='{"value":1}'></span></p>`,
-                Plugins: [EmbeddedComponentPlugin],
+                includePlugins: [EmbeddedComponentPlugin],
                 resources: {
                     embedded_components: [savedCounter],
                 },
@@ -1340,7 +1340,7 @@ describe("Collaboration with embedded components", () => {
             const peerInfos = await setupMultiEditor({
                 peerIds: ["c1", "c2"],
                 contentBefore: `<p>a[c1}{c1][c2}{c2]<span data-embedded="counter" data-embedded-props='{"value":1}'></span></p>`,
-                Plugins: [EmbeddedComponentPlugin],
+                includePlugins: [EmbeddedComponentPlugin],
                 resources: {
                     embedded_components: [savedCounter],
                 },
@@ -1418,7 +1418,7 @@ describe("Collaboration with embedded components", () => {
             const peerInfos = await setupMultiEditor({
                 peerIds: ["c1", "c2"],
                 contentBefore: `<p>a[c1}{c1][c2}{c2]</p><div data-embedded="obj" data-embedded-props='{"obj":{"1":1}}'></div>`,
-                Plugins: [EmbeddedComponentPlugin],
+                includePlugins: [EmbeddedComponentPlugin],
                 resources: {
                     embedded_components: [collaborativeObject],
                 },
@@ -1495,7 +1495,7 @@ describe("Collaboration with embedded components", () => {
             const peerInfos = await setupMultiEditor({
                 peerIds: ["c1", "c2"],
                 contentBefore: `<p>a[c1}{c1][c2}{c2]</p>`,
-                Plugins: [EmbeddedComponentPlugin],
+                includePlugins: [EmbeddedComponentPlugin],
                 resources: {
                     embedded_components: [savedCounter],
                 },
@@ -1536,7 +1536,7 @@ describe("Collaboration with embedded components", () => {
             const peerInfos = await setupMultiEditor({
                 peerIds: ["c1", "c2"],
                 contentBefore: `<p>a[c1}{c1][c2}{c2]</p><div data-embedded="obj" data-embedded-props='{"obj":{"1":1}}'></div>`,
-                Plugins: [EmbeddedComponentPlugin],
+                includePlugins: [EmbeddedComponentPlugin],
                 resources: {
                     embedded_components: [collaborativeObject],
                 },
@@ -1576,7 +1576,7 @@ describe("Collaboration with embedded components", () => {
             const peerInfos = await setupMultiEditor({
                 peerIds: ["c1", "c2"],
                 contentBefore: `<p>a[c1}{c1][c2}{c2]</p><div data-embedded="obj" data-embedded-props='{"obj":{"1":1}}'></div>`,
-                Plugins: [EmbeddedComponentPlugin],
+                includePlugins: [EmbeddedComponentPlugin],
                 resources: {
                     embedded_components: [collaborativeObject],
                 },
@@ -1610,7 +1610,7 @@ describe("Collaboration with embedded components", () => {
             const peerInfos = await setupMultiEditor({
                 peerIds: ["c1", "c2"],
                 contentBefore: `<p>a[c1}{c1][c2}{c2]<span data-embedded="counter" data-embedded-props='{"value":1}'></span></p>`,
-                Plugins: [EmbeddedComponentPlugin],
+                includePlugins: [EmbeddedComponentPlugin],
                 resources: {
                     embedded_components: [savedCounter],
                 },
@@ -1653,7 +1653,7 @@ describe("Collaboration with embedded components", () => {
             const peerInfos = await setupMultiEditor({
                 peerIds: ["c1", "c2"],
                 contentBefore: `<p>a[c1}{c1][c2}{c2]<span data-embedded="counter" data-embedded-props='{"name":"unnamed","value":1}'></span></p>`,
-                Plugins: [EmbeddedComponentPlugin],
+                includePlugins: [EmbeddedComponentPlugin],
                 resources: {
                     embedded_components: [namedCounter],
                 },
@@ -1689,7 +1689,7 @@ describe("Collaboration with embedded components", () => {
             const peerInfos = await setupMultiEditor({
                 peerIds: ["c1", "c2"],
                 contentBefore: `<p>a[c1}{c1][c2}{c2]<span data-embedded="counter" data-embedded-props='{"value":1}'></span></p>`,
-                Plugins: [EmbeddedComponentPlugin],
+                includePlugins: [EmbeddedComponentPlugin],
                 resources: {
                     embedded_components: [savedCounter],
                 },
@@ -1723,7 +1723,7 @@ describe("Collaboration with embedded components", () => {
             const peerInfos = await setupMultiEditor({
                 peerIds: ["c1", "c2"],
                 contentBefore: `<p>a[c1}{c1][c2}{c2]</p><div data-embedded="obj" data-embedded-props='{"obj":{"1":1}}'></div>`,
-                Plugins: [EmbeddedComponentPlugin],
+                includePlugins: [EmbeddedComponentPlugin],
                 resources: {
                     embedded_components: [collaborativeObject],
                 },
@@ -1756,7 +1756,7 @@ describe("Collaboration with embedded components", () => {
             const peerInfos = await setupMultiEditor({
                 peerIds: ["c1", "c2"],
                 contentBefore: `<p>a[c1}{c1][c2}{c2]<span data-embedded="counter" data-embedded-props='{"baseValue":1}'></span></p>`,
-                Plugins: [EmbeddedComponentPlugin],
+                includePlugins: [EmbeddedComponentPlugin],
                 resources: {
                     embedded_components: [offsetCounter],
                 },
@@ -1797,7 +1797,7 @@ describe("Collaboration with embedded components", () => {
             const peerInfos = await setupMultiEditor({
                 peerIds: ["c1", "c2"],
                 contentBefore: `<p>a[c1}{c1][c2}{c2]</p><div data-embedded="obj"></div>`,
-                Plugins: [EmbeddedComponentPlugin],
+                includePlugins: [EmbeddedComponentPlugin],
                 resources: {
                     embedded_components: [collaborativeObject],
                 },
@@ -1839,7 +1839,7 @@ describe("Collaboration with embedded components", () => {
             const peerInfos = await setupMultiEditor({
                 peerIds: ["c1", "c2"],
                 contentBefore: `<p>a[c1}{c1][c2}{c2]</p>`,
-                Plugins: [EmbeddedComponentPlugin],
+                includePlugins: [EmbeddedComponentPlugin],
                 resources: {
                     embedded_components: [collaborativeObject],
                 },
@@ -1888,7 +1888,7 @@ describe("Collaboration with embedded components", () => {
         const peerInfos = await setupMultiEditor({
             peerIds: ["c1", "c2"],
             contentBefore: '<p>a[c1}{c1][c2}{c2]</p><div data-embedded="obj"></div>',
-            Plugins: [EmbeddedComponentPlugin],
+            includePlugins: [EmbeddedComponentPlugin],
             resources: {
                 embedded_components: [collaborativeObject],
             },

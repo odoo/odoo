@@ -1,5 +1,4 @@
 import { Plugin } from "@html_editor/plugin";
-import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 import { expect, test } from "@odoo/hoot";
 import { click, tick, waitFor } from "@odoo/hoot-dom";
 import { setupEditor, testEditor } from "./_helpers/editor";
@@ -126,7 +125,7 @@ test("event handlers are properly cleaned up after destruction", async () => {
     }
 
     const { editor } = await setupEditor("<p></p>", {
-        config: { Plugins: [...MAIN_PLUGINS, TestHandlerPlugin] },
+        config: { includePlugins: [TestHandlerPlugin] },
     });
     expect(count).toBe(0);
 
@@ -150,7 +149,7 @@ test("can give resources in config", async () => {
 
     await setupEditor("<p></p>", {
         config: {
-            Plugins: [...MAIN_PLUGINS, TestPlugin],
+            includePlugins: [TestPlugin],
             resources: { some: ["value"] },
         },
     });
@@ -181,7 +180,7 @@ test("resource can have sequence", async () => {
 
     await setupEditor("<p></p>", {
         config: {
-            Plugins: [...MAIN_PLUGINS, TestPlugin],
+            includePlugins: [TestPlugin],
         },
     });
 });

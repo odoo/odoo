@@ -14,7 +14,6 @@ import {
     tripleClick,
     undo,
 } from "../_helpers/user_actions";
-import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 import { QWebPlugin } from "@html_editor/others/qweb_plugin";
 import { EDITOR_MUTATION_TYPES } from "@html_editor/core/dom_observer_plugin";
 
@@ -57,7 +56,7 @@ test("should make qweb tag bold (1)", async () => {
         contentBefore: `<div><p t-out="'Test'" contenteditable="false">[Test]</p></div>`,
         stepFunction: bold,
         contentAfter: `<div>[<p t-out="'Test'" style="font-weight: bolder;">Test</p>]</div>`,
-        config: { Plugins: [...MAIN_PLUGINS, QWebPlugin] },
+        config: { includePlugins: [QWebPlugin] },
     });
 });
 
@@ -66,14 +65,14 @@ test("should make qweb tag bold (2)", async () => {
         contentBefore: `<div><p t-field="record.name" contenteditable="false">[Test]</p></div>`,
         stepFunction: bold,
         contentAfter: `<div>[<p t-field="record.name" style="font-weight: bolder;">Test</p>]</div>`,
-        config: { Plugins: [...MAIN_PLUGINS, QWebPlugin] },
+        config: { includePlugins: [QWebPlugin] },
     });
 });
 
 test("should make qweb tag bold and create a commit even with partial selection inside contenteditable false", async () => {
     const { editor, el } = await setupEditor(
         `<div><p t-out="'Test'" contenteditable="false">T[e]st</p></div>`,
-        { config: { Plugins: [...MAIN_PLUGINS, QWebPlugin] } }
+        { config: { includePlugins: [QWebPlugin] } }
     );
     bold(editor);
     expect(getContent(el)).toBe(
@@ -93,7 +92,7 @@ test("should make qweb tag bold and create a commit even with partial selection 
 
 test("bold is active when the selection wraps a bold qweb node", async () => {
     await setupEditor(`<p>[<strong t-out="'Test'" contenteditable="false">Test</strong>]</p>`, {
-        config: { Plugins: [...MAIN_PLUGINS, QWebPlugin] },
+        config: { includePlugins: [QWebPlugin] },
     });
     await animationFrame();
     await expectElementCount('.o-we-toolbar [name="bold"].active', 1);
@@ -102,7 +101,7 @@ test("bold is active when the selection wraps a bold qweb node", async () => {
 test("bold is inactive when the selection contains a non-bold qweb node", async () => {
     await setupEditor(
         `<p>[<span t-out="'Test'" contenteditable="false">Test</span><strong>Y]</strong></p>`,
-        { config: { Plugins: [...MAIN_PLUGINS, QWebPlugin] } }
+        { config: { includePlugins: [QWebPlugin] } }
     );
     await animationFrame();
     await expectElementCount('.o-we-toolbar [name="bold"]:not(.active)', 1);

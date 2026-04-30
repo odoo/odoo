@@ -20,7 +20,7 @@ import {
     tripleClick,
     undo,
 } from "../_helpers/user_actions";
-import { EMBEDDED_COMPONENT_PLUGINS, MAIN_PLUGINS } from "@html_editor/plugin_sets";
+import { EMBEDDED_COMPONENT_PLUGINS } from "@html_editor/plugin_sets";
 import {
     compareHighlightedContent,
     highlightedPre,
@@ -929,7 +929,7 @@ describe("Selection collapsed", () => {
     describe("Pre", () => {
         describe("with syntax highlighting", () => {
             const configWithEmbeddings = {
-                Plugins: [...MAIN_PLUGINS, ...EMBEDDED_COMPONENT_PLUGINS],
+                includePlugins: EMBEDDED_COMPONENT_PLUGINS,
                 resources: { embedded_components: MAIN_EMBEDDINGS },
             };
             const testDeleteInCodeBlock = (selectionStart) => async (editor) => {
