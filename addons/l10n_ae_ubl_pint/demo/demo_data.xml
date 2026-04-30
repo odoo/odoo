@@ -1,0 +1,469 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Use the AE demo company from l10n_ae - give it a Peppol endpoint (own TRN under the AE
+         national TIN/TRN scheme 0235) and set the sale side up for PINT AE export, matching the
+         test suite's own setUpClass. -->
+    <record id="base.partner_demo_company_ae" model="res.partner">
+        <field name="vat">100099099000003</field>
+        <field name="peppol_endpoint">9900000097</field>
+        <field name="peppol_eas">0235</field>
+        <field name="l10n_ae_registration_identifier">78419851234567N</field>
+        <field name="l10n_ae_registration_identifier_type">EID</field>
+    </record>
+
+    <record id="l10n_ae_ubl_pint_demo_partner" model="res.partner">
+        <field name="name">PINT Demo Customer LLC</field>
+        <field name="company_type">company</field>
+        <field name="vat">100501099000003</field>
+        <field name="street">Exit 18, Plot No. S21317 - Mina Jebel Ali</field>
+        <field name="street2">South Freezone</field>
+        <field name="city">Dubai</field>
+        <field name="country_id" ref="base.ae"/>
+        <field name="state_id" ref="base.state_ae_du"/>
+        <field name="zip">261873</field>
+        <field name="invoice_edi_format">pint_ae</field>
+        <field name="l10n_ae_registration_identifier">784198512345678</field>
+        <field name="l10n_ae_registration_identifier_type">TL</field>
+        <field name="l10n_ae_authority_name">Dubai Economy and Tourism</field>
+        <field name="email">demo.customer@pint-ae-example.com</field>
+    </record>
+
+    <record id="l10n_ae_ubl_pint_demo_product" model="product.product" context="{'allowed_company_ids': [ref('base.demo_company_ae')]}">
+        <field name="name">Iron Bars (PINT AE Demo)</field>
+        <field name="type">consu</field>
+        <field name="list_price">100.0</field>
+        <field name="l10n_ae_classification_code">7214</field>
+    </record>
+
+    <function model="product.product" name="write">
+        <value eval="[ref('l10n_ae_ubl_pint_demo_product')]"/>
+        <value model="res.company" eval="{
+            'taxes_id': [Command.set([obj(ref('base.demo_company_ae')).account_sale_tax_id.id])],
+        }"/>
+    </function>
+
+    <record id="l10n_ae_ubl_pint_demo_invoice" model="account.move" context="{'allowed_company_ids': [ref('base.demo_company_ae')]}">
+        <field name="move_type">out_invoice</field>
+        <field name="company_id" ref="base.demo_company_ae"/>
+        <field name="partner_id" ref="l10n_ae_ubl_pint_demo_partner"/>
+        <field name="l10n_ae_invoice_type">tax</field>
+        <field name="invoice_line_ids" eval="[
+            Command.create({
+                'product_id': ref('l10n_ae_ubl_pint_demo_product'),
+                'quantity': 10,
+                'price_unit': 100.0,
+            }),
+        ]"/>
+    </record>
+
+    <function model="account.move" name="action_post">
+        <value eval="[ref('l10n_ae_ubl_pint_demo_invoice')]"/>
+    </function>
+
+    <!-- Standard Tax Credit Note demo - a plain credit note against the Standard Invoice demo
+         above (reversed_entry_id set directly rather than via the reversal wizard - it's a
+         regular Many2one, and the wizard adds nothing a straight demo record needs). -->
+    <record id="l10n_ae_ubl_pint_demo_invoice_standard_credit_note" model="account.move" context="{'allowed_company_ids': [ref('base.demo_company_ae')]}">
+        <field name="move_type">out_refund</field>
+        <field name="company_id" ref="base.demo_company_ae"/>
+        <field name="partner_id" ref="l10n_ae_ubl_pint_demo_partner"/>
+        <field name="reversed_entry_id" ref="l10n_ae_ubl_pint_demo_invoice"/>
+        <field name="l10n_ae_invoice_type">tax</field>
+        <field name="l10n_ae_credit_note_reason">DL8.61.1.A</field>
+        <field name="invoice_line_ids" eval="[
+            Command.create({
+                'product_id': ref('l10n_ae_ubl_pint_demo_product'),
+                'quantity': 10,
+                'price_unit': 100.0,
+            }),
+        ]"/>
+    </record>
+
+    <function model="account.move" name="action_post">
+        <value eval="[ref('l10n_ae_ubl_pint_demo_invoice_standard_credit_note')]"/>
+    </function>
+
+    <!-- Zero Rated Supplies demo - existing 0%/no-exemption-reason handling already produces
+         taxCategory "Z" correctly. uae_sale_tax_0 is the plain 0% sale tax (not per-emirate,
+         unlike the 5% ones) - name filter needed since the AE chart has several other amount=0
+         sale taxes (exports, exempt, out-of-scope). -->
+    <record id="l10n_ae_ubl_pint_demo_product_zero_rated" model="product.product" context="{'allowed_company_ids': [ref('base.demo_company_ae')]}">
+        <field name="name">Non-industrialized Vegetables (Zero Rated Demo)</field>
+        <field name="type">consu</field>
+        <field name="list_price">50.0</field>
+        <field name="l10n_ae_classification_code">0709</field>
+        <field name="taxes_id" search="[('company_id', '=', ref('base.demo_company_ae')), ('type_tax_use', '=', 'sale'), ('name', '=', '0%')]"/>
+    </record>
+
+    <record id="l10n_ae_ubl_pint_demo_invoice_zero_rated" model="account.move" context="{'allowed_company_ids': [ref('base.demo_company_ae')]}">
+        <field name="move_type">out_invoice</field>
+        <field name="company_id" ref="base.demo_company_ae"/>
+        <field name="partner_id" ref="l10n_ae_ubl_pint_demo_partner"/>
+        <field name="l10n_ae_invoice_type">tax</field>
+        <field name="invoice_line_ids" eval="[
+            Command.create({
+                'product_id': ref('l10n_ae_ubl_pint_demo_product_zero_rated'),
+                'quantity': 5000,
+                'price_unit': 50.0,
+            }),
+        ]"/>
+    </record>
+
+    <function model="account.move" name="action_post">
+        <value eval="[ref('l10n_ae_ubl_pint_demo_invoice_zero_rated')]"/>
+    </function>
+
+    <!-- Supply Through E-Commerce demo - exercises the delivery block (partner_shipping_id
+         different from the invoice partner). -->
+    <record id="l10n_ae_ubl_pint_demo_delivery_partner" model="res.partner">
+        <field name="name">PINT Demo Customer LLC - Abu Dhabi Warehouse</field>
+        <field name="type">delivery</field>
+        <field name="parent_id" ref="l10n_ae_ubl_pint_demo_partner"/>
+        <field name="street">Al Bateen Street</field>
+        <field name="city">Abu Dhabi</field>
+        <field name="country_id" ref="base.ae"/>
+        <field name="state_id" ref="base.state_ae_az"/>
+        <field name="email">demo.customer@pint-ae-example.com</field>
+    </record>
+
+    <record id="l10n_ae_ubl_pint_demo_product_ecommerce" model="product.product" context="{'allowed_company_ids': [ref('base.demo_company_ae')]}">
+        <field name="name">Gadget (E-Commerce Demo)</field>
+        <field name="type">consu</field>
+        <field name="list_price">100.0</field>
+        <field name="l10n_ae_classification_code">8517</field>
+    </record>
+
+    <function model="product.product" name="write">
+        <value eval="[ref('l10n_ae_ubl_pint_demo_product_ecommerce')]"/>
+        <value model="res.company" eval="{
+            'taxes_id': [Command.set([obj(ref('base.demo_company_ae')).account_sale_tax_id.id])],
+        }"/>
+    </function>
+
+    <record id="l10n_ae_ubl_pint_demo_invoice_ecommerce" model="account.move" context="{'allowed_company_ids': [ref('base.demo_company_ae')]}">
+        <field name="move_type">out_invoice</field>
+        <field name="company_id" ref="base.demo_company_ae"/>
+        <field name="partner_id" ref="l10n_ae_ubl_pint_demo_partner"/>
+        <field name="partner_shipping_id" ref="l10n_ae_ubl_pint_demo_delivery_partner"/>
+        <field name="l10n_ae_invoice_type">tax</field>
+        <field name="l10n_ae_invoice_transaction_type">00000010</field>
+        <field name="invoice_line_ids" eval="[
+            Command.create({
+                'product_id': ref('l10n_ae_ubl_pint_demo_product_ecommerce'),
+                'quantity': 1,
+                'price_unit': 100.0,
+            }),
+        ]"/>
+    </record>
+
+    <function model="account.move" name="action_post">
+        <value eval="[ref('l10n_ae_ubl_pint_demo_invoice_ecommerce')]"/>
+    </function>
+
+    <!-- Disclosed Agent Billing demo - the demo company bills on behalf of a principal, whose
+         TRN goes in l10n_ae_principal_id. -->
+    <record id="l10n_ae_ubl_pint_demo_product_disclosed_agent" model="product.product" context="{'allowed_company_ids': [ref('base.demo_company_ae')]}">
+        <field name="name">Consulting Services (Disclosed Agent Demo)</field>
+        <field name="type">service</field>
+        <field name="list_price">19.5</field>
+        <field name="l10n_ae_classification_code">998311</field>
+    </record>
+
+    <function model="product.product" name="write">
+        <value eval="[ref('l10n_ae_ubl_pint_demo_product_disclosed_agent')]"/>
+        <value model="res.company" eval="{
+            'taxes_id': [Command.set([obj(ref('base.demo_company_ae')).account_sale_tax_id.id])],
+        }"/>
+    </function>
+
+    <record id="l10n_ae_ubl_pint_demo_invoice_disclosed_agent" model="account.move" context="{'allowed_company_ids': [ref('base.demo_company_ae')]}">
+        <field name="move_type">out_invoice</field>
+        <field name="company_id" ref="base.demo_company_ae"/>
+        <field name="partner_id" ref="l10n_ae_ubl_pint_demo_partner"/>
+        <field name="l10n_ae_invoice_type">tax</field>
+        <field name="l10n_ae_invoice_transaction_type">00000100</field>
+        <field name="l10n_ae_principal_id">155667745601003</field>
+        <field name="invoice_line_ids" eval="[
+            Command.create({
+                'product_id': ref('l10n_ae_ubl_pint_demo_product_disclosed_agent'),
+                'quantity': 50,
+                'price_unit': 19.5,
+            }),
+        ]"/>
+    </record>
+
+    <function model="account.move" name="action_post">
+        <value eval="[ref('l10n_ae_ubl_pint_demo_invoice_disclosed_agent')]"/>
+    </function>
+
+    <!-- Deemed Supply demo - plain standard-rate invoice, only the transaction type flag differs -
+         also exercises the predefined FTA endpoint override (9900000097). -->
+    <record id="l10n_ae_ubl_pint_demo_product_deemed_supply" model="product.product" context="{'allowed_company_ids': [ref('base.demo_company_ae')]}">
+        <field name="name">Sample Stock (Deemed Supply Demo)</field>
+        <field name="type">consu</field>
+        <field name="list_price">266.0</field>
+        <field name="l10n_ae_classification_code">3926</field>
+    </record>
+
+    <function model="product.product" name="write">
+        <value eval="[ref('l10n_ae_ubl_pint_demo_product_deemed_supply')]"/>
+        <value model="res.company" eval="{
+            'taxes_id': [Command.set([obj(ref('base.demo_company_ae')).account_sale_tax_id.id])],
+        }"/>
+    </function>
+
+    <record id="l10n_ae_ubl_pint_demo_invoice_deemed_supply" model="account.move" context="{'allowed_company_ids': [ref('base.demo_company_ae')]}">
+        <field name="move_type">out_invoice</field>
+        <field name="company_id" ref="base.demo_company_ae"/>
+        <field name="partner_id" ref="l10n_ae_ubl_pint_demo_partner"/>
+        <field name="l10n_ae_invoice_type">tax</field>
+        <field name="l10n_ae_invoice_transaction_type">01000000</field>
+        <field name="invoice_line_ids" eval="[
+            Command.create({
+                'product_id': ref('l10n_ae_ubl_pint_demo_product_deemed_supply'),
+                'quantity': 1,
+                'price_unit': 266.0,
+            }),
+        ]"/>
+    </record>
+
+    <function model="account.move" name="action_post">
+        <value eval="[ref('l10n_ae_ubl_pint_demo_invoice_deemed_supply')]"/>
+    </function>
+
+    <!-- Free Trade Zone demo - exercises buyerCustomerParty (l10n_ae_beneficiary_id), the
+         paymentMeansCode 30 + PayeeFinancialAccount pairing (own bank account), the predefined
+         FTA endpoint override (9900000097), and the top-level Note (from narration). -->
+    <record id="l10n_ae_ubl_pint_demo_bank" model="res.partner.bank">
+        <field name="acc_number">AE0000000001</field>
+        <field name="partner_id" ref="base.partner_demo_company_ae"/>
+        <field name="company_id" ref="base.demo_company_ae"/>
+    </record>
+
+    <record id="l10n_ae_ubl_pint_demo_product_ftz" model="product.product" context="{'allowed_company_ids': [ref('base.demo_company_ae')]}">
+        <field name="name">Warehoused Goods (Free Trade Zone Demo)</field>
+        <field name="type">consu</field>
+        <field name="list_price">1000.0</field>
+        <field name="l10n_ae_classification_code">8479</field>
+    </record>
+
+    <function model="product.product" name="write">
+        <value eval="[ref('l10n_ae_ubl_pint_demo_product_ftz')]"/>
+        <value model="res.company" eval="{
+            'taxes_id': [Command.set([obj(ref('base.demo_company_ae')).account_sale_tax_id.id])],
+        }"/>
+    </function>
+
+    <record id="l10n_ae_ubl_pint_demo_invoice_ftz" model="account.move" context="{'allowed_company_ids': [ref('base.demo_company_ae')]}">
+        <field name="move_type">out_invoice</field>
+        <field name="company_id" ref="base.demo_company_ae"/>
+        <field name="partner_id" ref="l10n_ae_ubl_pint_demo_partner"/>
+        <field name="partner_bank_id" ref="l10n_ae_ubl_pint_demo_bank"/>
+        <field name="l10n_ae_invoice_type">tax</field>
+        <field name="l10n_ae_invoice_transaction_type">10000000</field>
+        <field name="l10n_ae_beneficiary_id">189098765401003</field>
+        <field name="narration">&lt;p&gt;Tax invoice&lt;/p&gt;</field><!-- This is for the terms and conditions -->
+        <field name="invoice_line_ids" eval="[
+            Command.create({
+                'product_id': ref('l10n_ae_ubl_pint_demo_product_ftz'),
+                'quantity': 10,
+                'price_unit': 1000.0,
+            }),
+        ]"/>
+    </record>
+
+    <function model="account.move" name="action_post">
+        <value eval="[ref('l10n_ae_ubl_pint_demo_invoice_ftz')]"/>
+    </function>
+
+    <!-- Exports demo - foreign currency (USD) invoice to a foreign customer, exercising the
+         dual-currency TaxTotal entry, the aedtotal-incl-vat AdditionalDocumentReference, and the
+         predefined non-Peppol-receiver endpoint override (9900000099). Adds a demo USD/AED rate
+         matching the real PINT-AE sample's own calculationRate (3.67285) so the converted
+         amounts line up with what the AE example expects. State/region is intentionally left
+         blank on the export customer - no reliable AU state xmlid to depend on, and
+         countrySubentity isn't mandatory outside the UAE. -->
+    <record id="base.USD" model="res.currency">
+        <field name="active" eval="True"/>
+    </record>
+    <record id="l10n_ae_ubl_pint_demo_usd_rate" model="res.currency.rate">
+        <field name="currency_id" ref="base.USD"/>
+        <field name="company_id" ref="base.demo_company_ae"/>
+        <field name="name">2026-01-01</field>
+        <field name="rate">0.272268</field>
+    </record>
+
+    <!-- No VAT/vat set on purpose - a foreign export customer has no UAE VAT registration.
+         peppol_eas/_endpoint carry the Australian Business Number instead (scheme 0151), using
+         the ATO's own published test ABN (51 824 753 556) - same one the official PINT-AE
+         example itself uses - needed to satisfy ibr-120's ABN-format check. -->
+    <record id="l10n_ae_ubl_pint_demo_partner_export" model="res.partner">
+        <field name="name">Export Traders</field>
+        <field name="company_type">company</field>
+        <field name="street">123 St Georges Terrace</field>
+        <field name="city">Perth</field>
+        <field name="country_id" ref="base.au"/>
+        <field name="email">export.traders@pint-ae-example.com</field>
+        <field name="invoice_edi_format">pint_ae</field>
+        <field name="peppol_eas">0151</field>
+        <field name="peppol_endpoint">51824753556</field>
+    </record>
+
+    <record id="l10n_ae_ubl_pint_demo_product_exports" model="product.product" context="{'allowed_company_ids': [ref('base.demo_company_ae')]}">
+        <field name="name">Bulk Goods (Exports Demo)</field>
+        <field name="type">consu</field>
+        <field name="list_price">248750.0</field>
+        <field name="l10n_ae_classification_code">7204</field>
+        <field name="taxes_id" search="[('company_id', '=', ref('base.demo_company_ae')), ('type_tax_use', '=', 'sale'), ('name', '=', '0%')]"/>
+    </record>
+
+    <record id="l10n_ae_ubl_pint_demo_invoice_exports" model="account.move" context="{'allowed_company_ids': [ref('base.demo_company_ae')]}">
+        <field name="move_type">out_invoice</field>
+        <field name="company_id" ref="base.demo_company_ae"/>
+        <field name="partner_id" ref="l10n_ae_ubl_pint_demo_partner_export"/>
+        <field name="currency_id" ref="base.USD"/>
+        <field name="l10n_ae_invoice_type">tax</field>
+        <field name="l10n_ae_invoice_transaction_type">00000001</field>
+        <field name="invoice_line_ids" eval="[
+            Command.create({
+                'product_id': ref('l10n_ae_ubl_pint_demo_product_exports'),
+                'quantity': 1,
+                'price_unit': 248750.0,
+            }),
+        ]"/>
+    </record>
+
+    <function model="account.move" name="action_post">
+        <value eval="[ref('l10n_ae_ubl_pint_demo_invoice_exports')]"/>
+    </function>
+
+    <!-- Commercial demo - a non-fiscal document (customs/informational). Tax category is forced
+         to 'O' regardless of the line's own tax (see _ubl_default_tax_category_grouping_key), but
+         aligned-ibrp-o-09 requires the VAT amount itself to actually be 0 for category 'O' - the
+         product needs a genuinely 0% tax, not the company's real 5% one relabeled at export time. -->
+    <record id="l10n_ae_ubl_pint_demo_out_of_scope_tax" model="account.tax">
+        <field name="name">0% Out of Scope (PINT AE Demo)</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount">0.0</field>
+        <field name="amount_type">percent</field>
+        <field name="company_id" ref="base.demo_company_ae"/>
+        <field name="country_id" ref="base.ae"/>
+        <field name="ubl_cii_tax_category_code">O</field>
+        <field name="tax_group_id" model="res.company" eval="obj(ref('base.demo_company_ae')).account_sale_tax_id.tax_group_id.id"/>
+    </record>
+
+    <record id="l10n_ae_ubl_pint_demo_product_commercial" model="product.product" context="{'allowed_company_ids': [ref('base.demo_company_ae')]}">
+        <field name="name">Sample Goods (Commercial Demo)</field>
+        <field name="type">consu</field>
+        <field name="list_price">4.9</field>
+        <field name="l10n_ae_classification_code">4202</field>
+        <field name="taxes_id" eval="[Command.set([ref('l10n_ae_ubl_pint_demo_out_of_scope_tax')])]"/>
+    </record>
+
+    <record id="l10n_ae_ubl_pint_demo_invoice_commercial" model="account.move" context="{'allowed_company_ids': [ref('base.demo_company_ae')]}">
+        <field name="move_type">out_invoice</field>
+        <field name="company_id" ref="base.demo_company_ae"/>
+        <field name="partner_id" ref="l10n_ae_ubl_pint_demo_partner"/>
+        <field name="l10n_ae_invoice_type">commercial</field>
+        <field name="invoice_line_ids" eval="[
+            Command.create({
+                'product_id': ref('l10n_ae_ubl_pint_demo_product_commercial'),
+                'quantity': 2000,
+                'price_unit': 4.9,
+            }),
+        ]"/>
+    </record>
+
+    <function model="account.move" name="action_post">
+        <value eval="[ref('l10n_ae_ubl_pint_demo_invoice_commercial')]"/>
+    </function>
+
+    <!-- Commercial CREDIT NOTE demo - references the original commercial invoice, so ibr-055-ae
+         requires a real reason code here rather than "VD" (Volume Discount): a BillingReference
+         and reason "VD" can't be combined on the same document. -->
+    <record id="l10n_ae_ubl_pint_demo_invoice_commercial_credit_note" model="account.move" context="{'allowed_company_ids': [ref('base.demo_company_ae')]}">
+        <field name="move_type">out_refund</field>
+        <field name="company_id" ref="base.demo_company_ae"/>
+        <field name="partner_id" ref="l10n_ae_ubl_pint_demo_partner"/>
+        <field name="reversed_entry_id" ref="l10n_ae_ubl_pint_demo_invoice_commercial"/>
+        <field name="l10n_ae_invoice_type">commercial</field>
+        <field name="l10n_ae_credit_note_reason">DL8.61.1.C</field>
+        <field name="invoice_line_ids" eval="[
+            Command.create({
+                'product_id': ref('l10n_ae_ubl_pint_demo_product_commercial'),
+                'quantity': 20,
+                'price_unit': 5.0,
+            }),
+        ]"/>
+    </record>
+
+    <function model="account.move" name="action_post">
+        <value eval="[ref('l10n_ae_ubl_pint_demo_invoice_commercial_credit_note')]"/>
+    </function>
+
+    <!-- Continuous Supply demo - reuses the same 0% tax as Zero Rated Supplies; only the
+         transaction type flag differs. -->
+    <record id="l10n_ae_ubl_pint_demo_product_continuous_supply" model="product.product" context="{'allowed_company_ids': [ref('base.demo_company_ae')]}">
+        <field name="name">Recurring Service (Continuous Supply Demo)</field>
+        <field name="type">service</field>
+        <field name="list_price">100.0</field>
+        <field name="l10n_ae_classification_code">998596</field>
+        <field name="taxes_id" search="[('company_id', '=', ref('base.demo_company_ae')), ('type_tax_use', '=', 'sale'), ('name', '=', '0%')]"/>
+    </record>
+
+    <record id="l10n_ae_ubl_pint_demo_invoice_continuous_supply" model="account.move" context="{'allowed_company_ids': [ref('base.demo_company_ae')]}">
+        <field name="move_type">out_invoice</field>
+        <field name="company_id" ref="base.demo_company_ae"/>
+        <field name="partner_id" ref="l10n_ae_ubl_pint_demo_partner"/>
+        <field name="l10n_ae_invoice_type">tax</field>
+        <field name="l10n_ae_invoice_transaction_type">00001000</field>
+        <field name="invoice_line_ids" eval="[
+            Command.create({
+                'product_id': ref('l10n_ae_ubl_pint_demo_product_continuous_supply'),
+                'quantity': 10,
+                'price_unit': 100.0,
+            }),
+        ]"/>
+    </record>
+
+    <function model="account.move" name="action_post">
+        <value eval="[ref('l10n_ae_ubl_pint_demo_invoice_continuous_supply')]"/>
+    </function>
+
+    <!-- Summary Invoice demo - exercises the startDate/endDate InvoicePeriod (distinct from the
+         description-only one built from a payment term's billing frequency). No
+         deferred_start_date/end_date lines here (account_accountant not a dependency of this
+         module), so it falls back to the invoice's own date for both bounds. -->
+    <record id="l10n_ae_ubl_pint_demo_product_summary_invoice" model="product.product" context="{'allowed_company_ids': [ref('base.demo_company_ae')]}">
+        <field name="name">Weekly Usage (Summary Invoice Demo)</field>
+        <field name="type">service</field>
+        <field name="list_price">200.0</field>
+        <field name="l10n_ae_classification_code">998596</field>
+    </record>
+
+    <function model="product.product" name="write">
+        <value eval="[ref('l10n_ae_ubl_pint_demo_product_summary_invoice')]"/>
+        <value model="res.company" eval="{
+            'taxes_id': [Command.set([obj(ref('base.demo_company_ae')).account_sale_tax_id.id])],
+        }"/>
+    </function>
+
+    <record id="l10n_ae_ubl_pint_demo_invoice_summary_invoice" model="account.move" context="{'allowed_company_ids': [ref('base.demo_company_ae')]}">
+        <field name="move_type">out_invoice</field>
+        <field name="company_id" ref="base.demo_company_ae"/>
+        <field name="partner_id" ref="l10n_ae_ubl_pint_demo_partner"/>
+        <field name="l10n_ae_invoice_type">tax</field>
+        <field name="l10n_ae_invoice_transaction_type">00010000</field>
+        <field name="invoice_line_ids" eval="[
+            Command.create({
+                'product_id': ref('l10n_ae_ubl_pint_demo_product_summary_invoice'),
+                'quantity': 10,
+                'price_unit': 200.0,
+            }),
+        ]"/>
+    </record>
+
+    <function model="account.move" name="action_post">
+        <value eval="[ref('l10n_ae_ubl_pint_demo_invoice_summary_invoice')]"/>
+    </function>
+</odoo>

@@ -31,11 +31,6 @@ class AccountEdiXmlUBL20(models.AbstractModel):
     def _export_invoice_filename(self, invoice):
         return f"{invoice.name.replace('/', '_')}_ubl_20.xml"
 
-    def _get_document_type_code_node(self, invoice, invoice_data):
-        """Returns the `DocumentTypeCode` node tag"""
-        # To be overriden by custom format if required
-        pass
-
     def _export_invoice(self, invoice):
         """ Generates an UBL 2.0 xml for a given invoice. """
         # 1. Validate the structure of the taxes

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="product_template_only_form_view_inherit_l10n_ae_ubl_pint" model="ir.ui.view">
+        <field name="name">product.template.only.form.inherit.l10n_ae_ubl_pint</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_only_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='invoicing']" position="inside">
+                <group string="FTA" invisible="product_variant_count &gt; 1 or (product_variant_count == 0 and valid_product_template_attribute_line_ids) or 'AE' not in fiscal_country_codes">
+                    <field name="l10n_ae_is_good_and_service"/>
+                    <field name="l10n_ae_goods_service_type" invisible="not l10n_ae_is_good_and_service"/>
+                    <field name="l10n_ae_classification_code" string="HS Code" invisible="type == 'service' and not l10n_ae_is_good_and_service"/>
+                    <field name="l10n_ae_classification_code" string="Service Accounting Code" invisible="type != 'service' or l10n_ae_is_good_and_service"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="product_product_form_view_inherit_l10n_ae_ubl_pint" model="ir.ui.view">
+        <field name="name">product.product.form.inherit.l10n_ae_ubl_pint</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_normal_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='invoicing']" position="inside">
+                <group string="FTA" invisible="'AE' not in fiscal_country_codes">
+                    <field name="l10n_ae_is_good_and_service"/>
+                    <field name="l10n_ae_goods_service_type" invisible="not l10n_ae_is_good_and_service"/>
+                    <field name="l10n_ae_classification_code" string="HS Code" invisible="type == 'service' and not l10n_ae_is_good_and_service"/>
+                    <field name="l10n_ae_classification_code" string="Service Accounting Code" invisible="type != 'service' or l10n_ae_is_good_and_service"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+    <record id="product_variant_easy_edit_view_inherit_l10n_ae_ubl_pint" model="ir.ui.view">
+        <field name="name">product.variant.easy.edit.inherit.l10n_ae_ubl_pint</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_variant_easy_edit_view"/>
+        <field name="arch" type="xml">
+            <group name="sales" position="after">
+                <group string="FTA" invisible="'AE' not in fiscal_country_codes">
+                    <field name="l10n_ae_is_good_and_service"/>
+                    <field name="l10n_ae_goods_service_type" invisible="not l10n_ae_is_good_and_service"/>
+                    <field name="l10n_ae_classification_code" string="HS Code" invisible="type == 'service' and not l10n_ae_is_good_and_service"/>
+                    <field name="l10n_ae_classification_code" string="Service Accounting Code" invisible="type != 'service' or l10n_ae_is_good_and_service"/>
+                </group>
+            </group>
+        </field>
+    </record>
+</odoo>

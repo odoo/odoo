@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_tax_form_l10n_ae_ubl_pint" model="ir.ui.view">
+        <field name="name">account.tax.form.l10n.ae.ubl.pint</field>
+        <field name="model">account.tax</field>
+        <field name="priority">20</field>
+        <field name="inherit_id" ref="account.view_tax_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='ubl_cii_tax_exemption_reason_code']" position="before">
+                <field name="l10n_ae_available_exemption_reason_codes" invisible="1"/><!-- This field is used by the widget bellow -->
+            </xpath>
+            <xpath expr="//field[@name='ubl_cii_tax_exemption_reason_code']" position="attributes">
+                <attribute name="widget">filterable_selection</attribute>
+                <attribute name="options">{'whitelist_fname': 'l10n_ae_available_exemption_reason_codes'}</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>
