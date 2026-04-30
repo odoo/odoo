@@ -134,8 +134,9 @@ test("make voice message in chat", async () => {
     });
     patchWithCleanup(VoicePlayer.prototype, {
         async drawWave(...args) {
+            const res = await super.drawWave(...args);
             voicePlayerDrawing.resolve();
-            return super.drawWave(...args);
+            return res;
         },
         async fetchFile() {
             return super.fetchFile("/mail/static/src/audio/call_02_in_.mp3");

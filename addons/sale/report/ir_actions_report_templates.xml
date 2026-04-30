@@ -131,7 +131,8 @@
                                     <span t-out="taxes">Tax 15%</span>
                                 </td>
                                 <td t-if="not line.is_downpayment" name="td_subtotal" class="text-end o_price_total">
-                                    <span t-field="line.price_subtotal">27.00</span>
+                                    <span t-if="doc.company_price_include == 'tax_included'" t-field="line.price_total">27.00</span>
+                                    <span t-else="" t-field="line.price_subtotal">27.00</span>
                                 </td>
                             </t>
                             <t t-elif="line.display_type == 'line_section' or line.product_type == 'combo'">
@@ -188,7 +189,10 @@
             </div>
             <div class="oe_structure"></div>
 
-            <div t-if="not doc.signature" class="oe_structure"></div>
+            <div
+                t-if="not doc.signature or not doc.env.context.get('sale_include_signature')"
+                class="oe_structure"
+            />
             <div t-else="" class="mt-4 ml64 mr4" name="signature">
                 <div class="offset-8">
                     <strong>Signature</strong>

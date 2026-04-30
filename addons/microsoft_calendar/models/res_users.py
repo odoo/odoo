@@ -79,7 +79,6 @@ class User(models.Model):
 
     def _sync_microsoft_calendar(self):
         self.ensure_one()
-        self.sudo().microsoft_last_sync_date = fields.datetime.now()
         if self._get_microsoft_sync_status() != "sync_active":
             return False
 

@@ -20,7 +20,30 @@ class TagsSelector(object):
 
     def __init__(self, spec):
         """ Parse the spec to determine tags to include and exclude. """
-        parts = re.split(r',(?![^\[]*\])', spec)  # split on all comma not inside [] (not followed by ])
+        parts = ['']
+        bracket_level = 0
+        escape_next = False
+        for char in spec:
+            if char == ',' and bracket_level == 0:
+                parts.append('')
+                continue
+
+            if char == '\\':
+                if not escape_next:
+                    escape_next = True
+                    continue
+            elif char == '[':
+                if not escape_next:
+                    bracket_level += 1
+            elif char == ']':
+                if not escape_next:
+                    bracket_level -= 1
+            elif escape_next:  # the previous \ was not escaping anything, put it back
+                parts[-1] += '\\'
+
+            escape_next = False
+            parts[-1] += char
+
         filter_specs = [t.strip() for t in parts if t.strip()]
         self.exclude = set()
         self.include = set()
