@@ -4063,12 +4063,12 @@ class BaseModel(metaclass=MetaModel):
                 elif field.inverse and field not in precomputed:
                     inversed[key] = val
                     determine_inverses[field.inverse].add(field)
-                elif not field.store and not field.compute:
+                elif not field.store and not (field.compute and field.inverse):
                     # cache only fields with `field.inverse` will be handed by `inversed` correctly
                     cached_only[key] = val
                 # protect editable computed fields and precomputed fields
                 # against (re)computation
-                if (field.compute and (not field.readonly or field.precompute)) or key in cached_only:
+                if field.compute and (not field.readonly or field.precompute):
                     protected.update(self.pool.field_computed.get(field, [field]))
 
             data_list.append(data)
@@ -4098,10 +4098,6 @@ class BaseModel(metaclass=MetaModel):
         protected_data = [(data['protected'], data['record']) for data in data_list]
         to_recompute = []
         with self.env.protecting(protected_data):
-            # fill cached_only fields
-            for data in data_list:
-                if vals := data['cached_only']:
-                    data['record']._update_cache(vals)
             # call inverse method for each group of fields
             for fields in determine_inverses.values():
                 # determine which records to inverse for those fields
@@ -4300,7 +4296,11 @@ class BaseModel(metaclass=MetaModel):
         for data, record in zip(data_list, records):
             data['record'] = record
             # DLE P104: test_inherit.py, test_50_search_one2many
-            vals = dict({k: v for d in data['inherited'].values() for k, v in d.items()}, **data['stored'])
+            vals = dict(
+                {k: v for d in data['inherited'].values() for k, v in d.items()},
+                **data['stored'],
+                **data['cached_only'],
+            )
             set_vals = common_set_vals.union(vals)
 
             # put None in cache for all fields that are not part of the INSERT
