@@ -11,7 +11,7 @@
     'version': '1.2',
     'countries': [
         # !!! KEEP ALIGNED WITH ACCOUNT/MODELS/COMPANY.PEPPOL_DEFAULT_COUNTRIES
-        'at', 'be', 'ch', 'cy', 'cz', 'de', 'dk', 'ee', 'es', 'fi',
+        'ae', 'at', 'be', 'ch', 'cy', 'cz', 'de', 'dk', 'ee', 'es', 'fi',
         'fr', 'ie', 'is', 'lt', 'lu', 'lv', 'mt', 'nl', 'no', 'se',
         'si',
     ],
