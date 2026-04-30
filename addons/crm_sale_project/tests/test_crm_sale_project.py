@@ -18,7 +18,9 @@ class TestCrmSaleOrderProject(TestCrmCommon):
         })
         partner = self.env['res.partner'].create({'name': 'test partner'})
         self.lead_1.partner_id = partner
-        sale_order_action = self.lead_1.action_sale_quotations_new()
+        # user with out project access to generate a sales quotation
+        self.user_sales_leads.group_ids -= (self.env.ref('project.group_project_user') + self.env.ref('project.group_project_manager'))
+        sale_order_action = self.lead_1.with_user(self.user_sales_leads).action_sale_quotations_new()
         so1, so2 = self.env['sale.order'].with_context(sale_order_action['context']).create([{
             'partner_id': partner.id,
             'order_line': [Command.create({'product_id': product.id})],
