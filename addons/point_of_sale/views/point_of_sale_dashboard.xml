@@ -114,7 +114,7 @@
                             <div name="card_left" class="col-12 col-md-6 d-flex flex-wrap align-items-start gap-2 mb-2 mb-md-0">
                                 <div class="d-flex flex-column gap-2">
                                     <div t-if="record.current_session_state.raw_value != 'closing_control'">
-                                        <widget name="pos_open_ui_button" action="open_ui"/>
+                                        <widget name="pos_open_ui_button" action="action_open_ui"/>
                                     </div>
                                     <button t-else="" class="btn btn-secondary" name="open_existing_session_cb" type="object">Close</button>
                                     <field class="mt-2" name="current_user_id" widget="many2one_avatar_user" />
