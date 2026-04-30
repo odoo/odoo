@@ -1,27 +1,26 @@
-import { Component, onWillStart } from "@odoo/owl";
+import { Component, onWillStart, proxy, t, useProps } from "@odoo/owl";
 import { CartLine } from "./cart_line/cart_line";
 import { CartAccessories } from "./cart_accessories/cart_accessories";
 import wishlistUtils from "@website_sale/js/wishlist_utils";
 import { formatCurrency } from "@web/core/currency";
 import { rpc } from "@web/core/network/rpc";
 import { useService, useBus } from "@web/core/utils/hooks";
-import { useState, useSubEnv } from "@web/owl2/utils";
+import { useSubEnv } from "@web/owl2/utils";
 
 export class CartLines extends Component {
     static template = "website_sale.CartLines";
-    static props = { templateData: Object };
     static components = { CartLine, CartAccessories };
+    props = useProps({ templateData: t.object() });
 
     setup() {
         this.cartService = useService("cart");
-        this.state = useState({
+        this.state = proxy({
             currency_id: null,
             cart_lines: [],
             accessories: [],
             is_quantity_view_active: false,
             is_wishlist_view_active: false,
-            is_uom_feature_enabled: false,
-            is_accessories_view_active: false,
+            show_product_reference_price: false,
         });
 
         onWillStart(async () => {
@@ -63,7 +62,7 @@ export class CartLines extends Component {
         return {
             isQuantityViewActive: this.state.is_quantity_view_active,
             isWishlistViewActive: this.state.is_wishlist_view_active,
-            isUomFeatureEnabled: this.state.is_uom_feature_enabled,
+            showProductReferencePrice: this.state.show_product_reference_price,
             templateData: this.props.templateData,
         };
     }

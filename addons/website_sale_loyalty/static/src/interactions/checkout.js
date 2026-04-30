@@ -1,5 +1,4 @@
 import { markup } from '@odoo/owl';
-import { setElementContent } from '@web/core/utils/html';
 import { patch } from '@web/core/utils/patch';
 import { Checkout } from '@website_sale/interactions/checkout';
 
@@ -17,7 +16,7 @@ patch(Checkout.prototype, {
             if (_result.amount_delivery_discounted) {
                 // Update discount of the order
                 const cart_summary_shipping_reward = targetEl.querySelector(
-                    '[data-reward-type="shipping"]'
+                    "[data-reward-type=shipping]"
                 );
                 if (cart_summary_shipping_reward) {
                     cart_summary_shipping_reward.innerHTML = _result.amount_delivery_discounted;

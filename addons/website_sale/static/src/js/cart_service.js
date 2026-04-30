@@ -1,5 +1,4 @@
-import { EventBus, markup } from "@odoo/owl";
-import { reactive } from "@web/owl2/utils";
+import { EventBus, markup, proxy } from "@odoo/owl";
 import {
     ComboConfiguratorDialog
 } from '@sale/js/combo_configurator_dialog/combo_configurator_dialog';
@@ -290,6 +289,13 @@ export class CartService {
         this.showWarning(data.warning);
         this.bus.trigger("cart_update");
         this.bus.trigger("cart_amount_changed", [data.amount, data.minor_amount]);
+
+        if (data.tracking_info?.length) {
+            wSaleUtils.dispatchTrackingEvent("update_cart_event", {
+                currency: data.currency,
+                items: data.tracking_info,
+            });
+        }
     }
 
     /**

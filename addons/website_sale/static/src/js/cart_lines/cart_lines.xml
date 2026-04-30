@@ -7,7 +7,7 @@
                 <CartLine line="line" t-props="this.cartLinesProps"/>
             </t>
             <CartAccessories
-                t-if="this.state.is_accessories_view_active and this.state.accessories.lines.length"
+                t-if="this.state.accessories.lines.length"
                 t-props="this.cartAccessoriesProps"
             />
         </div>

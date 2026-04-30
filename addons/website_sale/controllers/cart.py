@@ -404,10 +404,6 @@ class Cart(PaymentPortal):
             ),
         }
 
-    def _total_values(self):
-        """Pass additional values when rendering the 'website_sale.total' template."""
-        return {}
-
     @route(route="/shop/cart/history", type="jsonrpc", auth="public", website=True, readonly=True)
     def cart_history(self):
         """Prepare the order history of the current user.
@@ -612,21 +608,15 @@ class Cart(PaymentPortal):
         is_wishlist_view_active = request.env["website"].is_view_active(
             "website_sale.wishlist_cart_lines"
         )
-        is_base_uom_feature_enabled = request.env["res.groups"]._is_feature_enabled(
-            "product.group_show_uom_price"
-        )
-        is_accessories_view_active = request.env["website"].is_view_active(
-            "website_sale.suggested_products_list"
-        )
+        show_product_reference_price = self.env.website.show_product_reference_price
 
         values = {
             "currency_id": order_sudo.currency_id.id,
             "cart_lines": [],
             "is_quantity_view_active": is_quantity_view_active,
             "is_wishlist_view_active": is_wishlist_view_active,
-            "is_uom_feature_enabled": is_base_uom_feature_enabled,
-            "is_accessories_view_active": is_accessories_view_active,
-            "accessories": self._cart_accessories() if is_accessories_view_active else [],
+            "show_product_reference_price": show_product_reference_price,
+            "accessories": self._cart_accessories(),
         }
 
         for line in order_sudo.website_order_line:
@@ -664,6 +654,8 @@ class Cart(PaymentPortal):
             "alert_message": line._join_alert_messages(),
             "alert_level": line._get_max_alert_level(),
             "max_quantity": line._get_max_line_qty(),
+            "min_quantity": line._get_minimum_line_quantity(),
+            "min_qty_message": line._get_minimum_qty_reached_message(),
         }
 
         if line.product_type == "combo":
@@ -706,9 +698,9 @@ class Cart(PaymentPortal):
                 else False
             ),
             "amount_total": order_sudo.amount_total,
-            "tax_included": (
-                order_sudo.website_id.tax_display == "tax_included"
-            ),
+            "tax_included": (order_sudo.website_id.tax_display == "tax_included"),
+            "is_paid": order_sudo._is_paid(),
+            "amount_paid": order_sudo.amount_paid,
         }
 
     def _cart_accessories(self):

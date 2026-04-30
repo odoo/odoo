@@ -10,18 +10,20 @@ export class CartTotal extends Interaction {
             "t-component": (el) => {
                 const root = el.parentElement;
                 const orderId = parseInt(el.dataset.orderId);
+                const hidePromotions = Boolean(el.dataset.hidePromotions);
 
                 const selectors = {
                     deliveryLabel: "#cart_totals_edit_mode .cart_delivery_label",
                     untaxedLabel: "#cart_totals_edit_mode .cart_untaxed_label",
                     totalLabel: "#cart_totals_edit_mode .cart_total_label",
+                    applyPromoLabel: "#cart_totals_edit_mode .cart_apply_promo",
                 };
 
                 const templateData = wSaleUtils.extractEditModeText(root, selectors);
 
                 return [
                     CartTotalComponent,
-                    { templateData, ...(Number.isInteger(orderId) && { orderId }) },
+                    { templateData, hidePromotions, ...(Number.isInteger(orderId) && { orderId }) },
                 ];
             },
         },
