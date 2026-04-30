@@ -597,7 +597,7 @@ class HrAttendance(models.Model):
     def _cron_auto_check_out(self):
         def check_in_tz(attendance):
             """Returns check-in time in calendar's timezone."""
-            return attendance.check_in.astimezone(ZoneInfo(attendance.employee_id._get_tz()))
+            return attendance.check_in.astimezone(ZoneInfo(attendance.employee_id._get_tz(attendance.date)))
 
         to_verify = self.env['hr.attendance'].search(
             [('check_out', '=', False),
@@ -627,7 +627,7 @@ class HrAttendance(models.Model):
 
             for att in to_verify_company:
 
-                employee_timezone = ZoneInfo(att.employee_id._get_tz())
+                employee_timezone = ZoneInfo(att.employee_id._get_tz(att.date))
                 check_in_datetime = check_in_tz(att)
                 now_datetime = fields.Datetime.now().astimezone(employee_timezone)
                 current_attendance_duration = (now_datetime - check_in_datetime).total_seconds() / 3600
@@ -639,7 +639,7 @@ class HrAttendance(models.Model):
 
                 # Attendances where Last open attendance time + previously worked time on that day + tolerance greater than the attendances hours (including lunch) in his calendar
                 if (current_attendance_duration + previous_attendances_duration - max_tol) > expected_worked_hours:
-                    att.check_out = att.check_in.replace(hour=23, minute=59, second=59)
+                    att.check_out = check_in_datetime.replace(hour=23, minute=59, second=59).astimezone(UTC).replace(tzinfo=None)
                     excess_hours = att.worked_hours - (expected_worked_hours + max_tol - previous_attendances_duration)
                     att.write({
                         "check_out": max(att.check_out - relativedelta(hours=excess_hours), att.check_in + relativedelta(seconds=1)),
