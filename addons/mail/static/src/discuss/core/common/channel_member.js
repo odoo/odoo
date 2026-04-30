@@ -32,13 +32,7 @@ export class ChannelMember extends Component {
     }
 
     get canOpenChat() {
-        if (this.store.inPublicPage) {
-            return false;
-        }
-        if (this.member.partner_id) {
-            return true;
-        }
-        return false;
+        return !this.store.inPublicPage && this.member.partner_id?.main_user_id;
     }
 
     onClickAvatar(ev) {

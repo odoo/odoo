@@ -2556,7 +2556,7 @@ test("Newly created chat is at the top of the DM list", async () => {
     await start();
     await openDiscuss();
     await click("input[placeholder='Search conversations']");
-    await contains(".o_command_name", { count: 6 });
+    await contains(".o_command_name", { count: 5 });
     await insertText("input[placeholder='Search a conversation']", "Jer");
     await contains(".o_command_name", { count: 3 });
     await click(".o_command_name:text('Jerry Golay')");
