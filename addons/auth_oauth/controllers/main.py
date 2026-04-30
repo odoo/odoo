@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import base64
-import functools
 import json
 import logging
 import os
@@ -12,7 +11,7 @@ from werkzeug.exceptions import BadRequest
 
 from odoo import api, http, SUPERUSER_ID, _
 from odoo.exceptions import AccessDenied
-from odoo.http import request, Response
+from odoo.http import fragment_to_query_string, request
 from odoo.modules.registry import Registry
 from odoo.tools.misc import clean_context
 
@@ -21,31 +20,6 @@ from odoo.addons.web.controllers.utils import ensure_db, _get_login_redirect_url
 
 
 _logger = logging.getLogger(__name__)
-
-
-#----------------------------------------------------------
-# helpers
-#----------------------------------------------------------
-def fragment_to_query_string(func):
-    @functools.wraps(func)
-    def wrapper(self, *a, **kw):
-        kw.pop('debug', False)
-        if not kw:
-            return Response("""<html><head><script>
-                var l = window.location;
-                var q = l.hash.substring(1);
-                var r = l.pathname + l.search;
-                if(q.length !== 0) {
-                    var s = l.search ? (l.search === '?' ? '' : '&') : '?';
-                    r = l.pathname + l.search + s + q;
-                }
-                if (r == l.pathname) {
-                    r = '/';
-                }
-                window.location = r;
-            </script></head><body></body></html>""")
-        return func(self, *a, **kw)
-    return wrapper
 
 
 #----------------------------------------------------------
