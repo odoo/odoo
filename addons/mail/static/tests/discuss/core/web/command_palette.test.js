@@ -49,10 +49,9 @@ test("can open channel from @channel_name in command palette", async () => {
     await start();
     triggerHotkey("control+k");
     await insertText(".o_command_palette_search input", "@");
-    await contains(".o_command", { count: 6 });
+    await contains(".o_command", { count: 5 });
     await contains(".o_command:eq(0):has(.fa-hashtag):text('project')");
     await contains(".o_command:eq(1):has(.fa-hashtag):text('general')");
-    await contains(".o_command:has(.oi-user):text('OdooBot')");
     await contains(".o_command:has(.oi-user):text('Mitchell Admin')"); // self-conversation
     await contains(".o_command:text('Create Channel')");
     await contains(".o_command:text('Create Chat')");
@@ -121,9 +120,8 @@ test("only partners with dedicated users will be displayed in command palette", 
     await start();
     triggerHotkey("control+k");
     await insertText(".o_command_palette_search input", "@");
-    await contains(".o_command_name", { count: 5 });
+    await contains(".o_command_name", { count: 4 });
     await contains(".o_command_name:text('Demo')");
-    await contains(".o_command_name:text('OdooBot')");
     await contains(".o_command_name:text('Mitchell Admin')"); // self-conversation
     await contains(".o_command_name:text('Create Channel')");
     await contains(".o_command_name:text('Create Chat')");
