@@ -183,12 +183,14 @@ class CalendarEvent(models.Model):
             stop = parse(google_event.end.get('dateTime')).astimezone(datetime.UTC).replace(tzinfo=None)
             values['allday'] = False
         else:
-            start = parse(google_event.start.get('date'))
-            stop = parse(google_event.end.get('date')) - relativedelta(days=1)
+            # Set the inverse of start_date manually to avoid going through the inverse and setting need_sync.
+            # Regular day hours prevent weird results when the start datetime is shown in list views and the likes.
+            start = parse(google_event.start.get('date')).replace(hour=8)
+            stop = (parse(google_event.end.get('date')) - relativedelta(days=1)).replace(hour=18)
             # Stop date should be exclusive as defined here https://developers.google.com/calendar/v3/reference/events#resource
             # but it seems that's not always the case for old event
             if stop < start:
-                stop = parse(google_event.end.get('date'))
+                stop = parse(google_event.end.get('date')).replace(hour=18)
             values['allday'] = True
         if related_event['start'] != start:
             values['start'] = start
