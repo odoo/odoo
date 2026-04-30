@@ -1,5 +1,4 @@
-import { EventBus, markup } from "@odoo/owl";
-import { reactive } from "@web/owl2/utils";
+import { EventBus, markup, proxy } from "@odoo/owl";
 import {
     ComboConfiguratorDialog
 } from '@sale/js/combo_configurator_dialog/combo_configurator_dialog';

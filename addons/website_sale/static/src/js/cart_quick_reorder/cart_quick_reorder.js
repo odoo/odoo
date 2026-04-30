@@ -57,7 +57,7 @@ export class CartQuickReorder extends Component {
             {
                 isBuyNow: true,
                 source: "quick_reorder",
-            },
+            }
         );
     }
 
