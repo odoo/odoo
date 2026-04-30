@@ -53,7 +53,7 @@ patch(Thread.prototype, {
             if (!channel) {
                 return;
             }
-            await channel.isLoadedDeferred;
+            await channel.isLoadedPromise;
             return channel.post(...arguments).then(() => channel.resolveReadyToSwap());
         }
         const message = await super.post(...arguments);
