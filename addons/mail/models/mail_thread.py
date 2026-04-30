@@ -2279,6 +2279,8 @@ class MailThread(models.AbstractModel):
             raise ValueError(_("Posting a message should be done on a business document. Use message_notify to send a notification to an user."))
         if message_type == 'user_notification':
             raise ValueError(_("Use message_notify to send a notification to an user."))
+        if message_type != 'tracking' and tracking_values:
+            raise ValueError(_('Posting with tracking should be done using tracking message type'))
         if attachments:
             # attachments should be a list (or tuples) of 3-elements list (or tuple)
             format_error = not is_list_of(attachments, list) and not is_list_of(attachments, tuple)
@@ -2961,6 +2963,8 @@ class MailThread(models.AbstractModel):
         # protect against side-effect prone usage
         if len(self) > 1 and (attachment_ids or tracking_values):
             raise ValueError(_('Batch log cannot support attachments or tracking values on more than 1 document'))
+        if message_type != 'tracking' and tracking_values:
+            raise ValueError(_('Posting with tracking should be done using tracking message type'))
 
         author_id, email_from = self._message_compute_author(author_id, email_from)
 
