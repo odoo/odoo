@@ -4098,7 +4098,7 @@ class MailThread(models.AbstractModel):
         res_id = msg_vals['res_id'] if 'res_id' in msg_vals else message.res_id
         body = msg_vals['body'] if 'body' in msg_vals else message.body
         if message.message_type == 'tracking':
-            body = "\n%s\n%s%s" % (message.subtype_id.description, body, message.body)
+            body = "\n%s\n%s" % (message.subtype_id.description, body)
 
         if author_id:
             author_name = self.env['res.partner'].browse(author_id).name
