@@ -1,6 +1,7 @@
 import { expect, test } from "@odoo/hoot";
 import {
     click,
+    dblclick,
     hover,
     queryAll,
     queryAllAttributes,
@@ -56,6 +57,52 @@ test("should display the table ui menu only if hover on first row/col", async ()
 
     await hover(el.querySelector("td.d"));
     await waitForNone(".o-we-table-menu");
+});
+
+test("should not display the table ui menu when one or more cells are selected", async () => {
+    const { el } = await setupEditor(`
+        <table>
+            <tbody>
+            <tr><td class="a o_selected_td">1[]</td><td class="b">2</td></tr>
+            <tr><td class="c">3</td><td class="d">4</td></tr>
+            </tbody>
+        </table>`);
+    await expectElementCount(".o-we-table-menu", 0);
+
+    await hover(el.querySelector("td.a"));
+    await animationFrame();
+    await expectElementCount(".o-we-table-menu", 0);
+
+    await hover(el.querySelector("td.b"));
+    await animationFrame();
+    await expectElementCount(".o-we-table-menu", 0);
+
+    await hover(el.querySelector("td.c"));
+    await animationFrame();
+    await expectElementCount(".o-we-table-menu", 0);
+});
+
+test.tags("desktop");
+test("should not display the table ui menu after selecting one or more cells", async () => {
+    const { el } = await setupEditor(`
+        <table class="table table-bordered o_table">
+            <tbody>
+            <tr><td class="a">[]<br></td><td class="b">2</td></tr>
+            <tr><td class="c">3</td><td class="d">4</td></tr>
+            </tbody>
+        </table>`);
+    await expectElementCount(".o-we-table-menu", 0);
+
+    const firstTd = el.querySelector("td.a");
+
+    await hover(firstTd);
+    await waitFor(".o-we-table-menu");
+    expect("[data-type='column'].o-we-table-menu").toHaveCount(1);
+    expect("[data-type='row'].o-we-table-menu").toHaveCount(1);
+
+    dblclick(firstTd);
+    await animationFrame();
+    await expectElementCount(".o-we-table-menu", 0);
 });
 
 test("should not display the table UI menu when hovering over non-first row/col cells", async () => {
