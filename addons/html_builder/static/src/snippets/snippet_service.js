@@ -159,7 +159,10 @@ export class SnippetModel extends Reactive {
                 this.snippetsDocument = new DOMParser().parseFromString(html, "text/html");
                 const processors = registry.category("html_builder.snippetsPreprocessor").getAll();
                 for (const processor of Object.values(processors)) {
-                    processor(this.snippetsName, this.snippetsDocument);
+                    await processor(this.snippetsName, this.snippetsDocument, {
+                        orm: this.orm,
+                        context,
+                    });
                 }
                 this.computeSnippetTemplates(this.snippetsDocument);
                 this.setSnippetName(this.snippetsDocument);

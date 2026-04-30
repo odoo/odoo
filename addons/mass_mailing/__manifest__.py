@@ -120,6 +120,7 @@
             ('include', 'mass_mailing.assets_mail_themes'),
             'mass_mailing/static/src/scss/mass_mailing_mail.scss',
             'mass_mailing/static/src/iframe_assets/**/*',
+            'mass_mailing/static/src/snippets/**/*.scss',
         ],
         # Complete style assets required to view the mail content.
         # convert_inline ONLY uses this and inline styles.
@@ -191,9 +192,8 @@
         ],
         'web.assets_unit_tests': [
             ('include', 'mass_mailing.assets_builder'),
-            'mass_mailing/static/tests/mailing_contact_to_list.test.js',
-            'mass_mailing/static/tests/mass_mailing_html_field.test.js',
-            'mass_mailing/static/tests/mass_mailing_link_plugin.test.js',
+            'mass_mailing/static/tests/**/*',
+            ('remove', 'mass_mailing/static/tests/tours/**/*'),
         ],
     },
     'post_init_hook': '_update_demo_data',
