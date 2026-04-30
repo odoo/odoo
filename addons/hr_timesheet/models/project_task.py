@@ -212,6 +212,19 @@ class ProjectTask(models.Model):
         })
         return action
 
+    def action_print_timesheets(self):
+        if not self.timesheet_ids:
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'message': self.env._('There are no timesheets to print for this task'),
+                    'type': 'warning',
+                    'sticky': False,
+                }
+            }
+        return self.env.ref('hr_timesheet.timesheet_report_task').report_action(self)
+
     def _get_timesheet(self):
         # Is override in sale_timesheet
         return self.timesheet_ids

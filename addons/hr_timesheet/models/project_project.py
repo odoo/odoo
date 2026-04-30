@@ -171,6 +171,19 @@ class ProjectProject(models.Model):
             total_time /= project.timesheet_encode_uom_id.factor
             project.total_timesheet_time = float_round(total_time, precision_digits=2)
 
+    def action_print_timesheets(self):
+        if not self.timesheet_ids:
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'message': self.env._('There are no timesheets to print for this project'),
+                    'type': 'warning',
+                    'sticky': False,
+                }
+            }
+        return self.env.ref('hr_timesheet.timesheet_report_project').report_action(self)
+
     @api.model_create_multi
     def create(self, vals_list):
         """ Create an analytic account if project allow timesheet and don't provide one
