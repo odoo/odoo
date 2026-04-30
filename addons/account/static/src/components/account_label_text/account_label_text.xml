@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="account.AccountLabelTextField">
+        <t t-if="props.readonly">
+            <span style="white-space: pre-wrap" t-esc="props.record.data[props.name] or ''"/>
+        </t>
+        <t t-else="">
+            <div class="o_account_label_text" t-ref="root">
+                <div class="d-flex align-items-start">
+                    <div class="flex-grow-1 position-relative">
+                        <textarea
+                            class="o_input w-100"
+                            t-att-class="{'o_has_product': productId}"
+                            t-att-id="props.id"
+                            t-att-placeholder="props.placeholder"
+                            t-att-rows="rowCount"
+                            t-ref="textarea"
+                            t-on-blur="onBlur"
+                            t-on-input="onLabelInput"
+                            t-on-keydown="onLabelKeydown"
+                        />
+                        <div class="o_m2o_overlay position-absolute top-0 start-0 end-0 bottom-0">
+                            <Many2XAutocomplete t-props="m2xAutocompleteProps"/>
+                        </div>
+                    </div>
+                    <button t-if="productId"
+                        class="o_external_button btn btn-link text-action px-1 flex-shrink-0"
+                        type="button"
+                        tabindex="-1"
+                        draggable="false"
+                        aria-label="Internal link"
+                        data-tooltip="Internal link"
+                        t-custom-click="(_, isMiddleClick) => this.openProduct(isMiddleClick)">
+                        <i class="oi oi-arrow-right"/>
+                    </button>
+                </div>
+            </div>
+        </t>
+    </t>
+
+    <t t-name="account.AccountLabelSectionAndNoteText">
+        <t t-component="componentToUse" t-props="props"/>
+    </t>
+
+</templates>

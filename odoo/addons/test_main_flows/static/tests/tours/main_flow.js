@@ -1,6 +1,7 @@
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_utils";
+import { showProductColumn } from "@account/js/tours/tour_utils";
 
 import { markup } from "@odoo/owl";
 
@@ -724,6 +725,7 @@ stepUtils.autoExpandMoreButtons(),
 },
 // Create a quotation
 ...stepUtils.statusbarButtonsSteps('New Quotation', markup(_t('<p><b>Create a quotation</p>'))),
+...showProductColumn("product_template_id"),
 {
     isActive: ["desktop"],
     trigger: ".o_field_widget[name=order_line] .o_field_x2many_list_row_add > button",
