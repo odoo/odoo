@@ -71,22 +71,22 @@ class HrVersion(models.Model):
             all_new_leave_origin = []
             all_new_leave_vals = []
             leaves_state = {}
+            for contract in self:
+                resource_calendar_id = vals.get('resource_calendar_id', contract.resource_calendar_id.id)
+                extra_domain = [('resource_calendar_id', '!=', resource_calendar_id)] if resource_calendar_id else None
+                leaves = contract._get_leaves(
+                    extra_domain=extra_domain
+                )
+                for leave in leaves:
+                    super(HrVersion, contract).write(vals)
+                    overlapping_contracts = self._check_overlapping_contract(leave)
+                    if not overlapping_contracts:
+                        continue
+                    leaves_state = self._update_leave_state(leave, leaves_state, True)
+                    specific_contracts += contract
+                    all_new_leave_origin, all_new_leave_vals = self._populate_all_new_leave_vals_from_split_leave(
+                        all_new_leave_origin, all_new_leave_vals, overlapping_contracts, leave, leaves_state)
             try:
-                for contract in self:
-                    resource_calendar_id = vals.get('resource_calendar_id', contract.resource_calendar_id.id)
-                    extra_domain = [('resource_calendar_id', '!=', resource_calendar_id)] if resource_calendar_id else None
-                    leaves = contract._get_leaves(
-                        extra_domain=extra_domain
-                    )
-                    for leave in leaves:
-                        super(HrVersion, contract).write(vals)
-                        overlapping_contracts = self._check_overlapping_contract(leave)
-                        if not overlapping_contracts:
-                            continue
-                        leaves_state = self._update_leave_state(leave, leaves_state, True)
-                        specific_contracts += contract
-                        all_new_leave_origin, all_new_leave_vals = self._populate_all_new_leave_vals_from_split_leave(
-                            all_new_leave_origin, all_new_leave_vals, overlapping_contracts, leave, leaves_state)
                 if all_new_leave_vals:
                     self._create_all_new_leave(all_new_leave_origin, all_new_leave_vals)
             except ValidationError as e:
