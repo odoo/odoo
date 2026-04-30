@@ -887,7 +887,7 @@ class SaleOrderLine(models.Model):
             if not line.product_id or line.display_type:
                 line.discount = 0.0
 
-            if not (line.order_id.pricelist_id and discount_enabled):
+            if not (line.order_id.pricelist_id and discount_enabled and line.product_uom_id):
                 continue
 
             if line.combo_item_id:
