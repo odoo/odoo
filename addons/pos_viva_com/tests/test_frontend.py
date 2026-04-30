@@ -28,14 +28,29 @@ class TestVivaComHttpCommon(TestPointOfSaleHttpCommon):
         payment_methods = cls.main_pos_config.payment_method_ids | viva_payment_method
         cls.main_pos_config.write({'payment_method_ids': [Command.set(payment_methods.ids)]})
 
-    def test_vw_request_data(self):
+    def test_viva_payment_and_refund(self):
+        viva_session_id = ''
+
         def mocked_call_viva_com_check_post_data(self, endpoint, action, data=None, should_retry=True):
-            if data is None:
-                return {}
-            if not isinstance(data['amount'], int):
-                raise TypeError(f"Expected 'amount' to be an integer, but got {data['amount']}.")
-            if not data['terminalId'] == '01234543210':
-                raise Exception(f"Expected 'terminalId' to be 01234543210, but got {data['terminalId']}")
+            nonlocal viva_session_id
+            if endpoint == 'transactions:sale' and action == 'post':
+                if not isinstance(data['amount'], int):
+                    raise TypeError(f"Expected 'amount' to be an integer, but got {data['amount']}.")
+                if not data['terminalId'] == '01234543210':
+                    raise Exception(f"Expected 'terminalId' to be 01234543210, but got {data['terminalId']}")
+                if not data.get('sessionId'):
+                    raise Exception("Expected 'sessionId' to be present")
+                viva_session_id = data['sessionId']
+            elif endpoint == 'transactions:refund' and action == 'post':
+                if not data['parentSessionId'] == viva_session_id:
+                    raise Exception(f"Expected 'parentSessionId' to be {viva_session_id}, but got {data['parentSessionId']}")
+                if not data.get('sessionId'):
+                    raise Exception("Expected 'sessionId' to be present")
+                viva_session_id = data['sessionId']
+            elif endpoint == 'sessions/123' and action == 'get':
+                return {"success": True, "sessionId": viva_session_id}
+            else:
+                raise Exception(f"Unexpected Viva request: endpoint='{endpoint}', method='{action}'")
             return {}
 
         with patch.object(PosPaymentMethod, '_call_viva_com', mocked_call_viva_com_check_post_data):
