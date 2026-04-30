@@ -1064,11 +1064,14 @@ class WebsocketConnectionHandler:
 
     @classmethod
     def _get_handshake_response(cls, headers):
-        """
-        :return: Response indicating the server performed a connection
-        upgrade.
-        :raise: BadRequest
-        :raise: UpgradeRequired
+        """Build the WebSocket handshake response for a client upgrade request.
+
+        :param headers: Request headers from the client.
+        :returns: Response indicating the server performed a connection
+            upgrade.
+        :raises BadRequest: If the handshake request is invalid.
+        :raises UpgradeRequired: If the client requested version is not
+            supported.
         """
         cls._assert_handshake_validity(headers)
         # sha-1 is used as it is required by
@@ -1105,9 +1108,10 @@ class WebsocketConnectionHandler:
 
     @classmethod
     def _assert_handshake_validity(cls, headers):
-        """
+        """Validate a WebSocket handshake request.
+
         :raise: UpgradeRequired if there is no intersection between
-        the version the client supports and those we support.
+            the version the client supports and those we support.
         :raise: BadRequest in case of invalid handshake.
         """
         missing_or_empty_headers = {

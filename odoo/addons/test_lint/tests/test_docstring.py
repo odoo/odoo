@@ -17,6 +17,7 @@ logger = logging.getLogger(__name__)
 # this list to fix one module at a time.
 MODULES_TO_LINT = (
     'base',
+    'bus',
     'documents_fsm',
     'documents_project',
     'documents_project_sale',

@@ -6,11 +6,14 @@ import odoo.tests
 class BusWebTests(odoo.tests.HttpCase):
 
     def test_bundle_sends_bus(self):
-        """
-        Tests two things:
-        - Messages are posted to the bus when assets change
-          i.e. their hash has been recomputed and differ from the attachment's
-        - The interface deals with those bus messages by displaying one notification
+        """Test that asset bundle changes emit bus notifications.
+
+        Verify that:
+
+        - When an asset bundle's hash is recomputed and differs from the stored
+          attachment's hash, a message is posted to the bus.
+        - The interface handles those bus messages by displaying a single
+          notification to the user.
         """
         # start from a clean slate
         self.env['ir.attachment'].search([('name', 'ilike', 'web.assets_%')]).unlink()

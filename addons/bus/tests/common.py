@@ -130,12 +130,15 @@ class BusCase(BaseCase):
     @contextlib.contextmanager
     def assertBus(self, notifications, *, show_store_versioning=False):
         """Check content of bus notifications.
+
         `notifications` is a :class:`BusResult` instance or a list of them, e.g.:
+
             BusResult(self.user_employee, "mail.record/insert", {...})
             BusResult(self.user_employee)
             BusResult(self.user_employee, "mail.message/inbox")
             BusResult(self.user_employee, payload={"key": val})
             BusResult(self.user_employee, "mail.record/insert", {"key": val})
+
         A single :class:`BusResult` may be passed directly instead of a one-element list.
         Notifications are matched in emitted order.
         `notifications` may be either a :class:`BusResult`, a list of them,
@@ -151,6 +154,7 @@ class BusCase(BaseCase):
 
         :param notifications: expected notifications as :class:`BusResult`, list,
             or callable returning one of those forms.
+
         Expected notifications must appear in order.
         """
         self.maxDiff = None
