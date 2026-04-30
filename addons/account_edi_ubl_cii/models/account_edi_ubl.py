@@ -3062,6 +3062,7 @@ class AccountEdiUBL(models.AbstractModel):
             taxes_to_tax_amount_currency[taxes] = global_tax_values['tax_amount_currency']
 
         # If we are too far away from the total retrieved in the xml, don't fix anything: the error is elsewhere.
+        collected_values['are_taxes_complete'] = is_complete
         if (
             not is_complete
             or currency.compare_amounts(abs(invoice.amount_tax - total_tax_amount) - tolerance, 0.0) > 0
@@ -3116,6 +3117,9 @@ class AccountEdiUBL(models.AbstractModel):
             invoice.line_ids = line_ids_commands
 
     def _import_ubl_invoice_fix_untaxed_amount(self, collected_values):
+        if not collected_values['are_taxes_complete']:
+            return
+
         tree = collected_values['tree']
         file_document_sign = collected_values['file_document_sign']
         currency = collected_values['currency_values']['currency']
