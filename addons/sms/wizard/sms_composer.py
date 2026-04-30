@@ -184,7 +184,17 @@ class SmsComposer(models.TransientModel):
             if self.comment_single_recipient and not self.recipient_single_valid:
                 raise UserError(_('Invalid recipient number. Please update it.'))
             elif not self.comment_single_recipient and self.recipient_invalid_count:
-                raise UserError(_('%s invalid recipients', self.recipient_invalid_count))
+                records = self._get_records()
+                res = records._sms_get_recipients_info(force_field=self.number_field_name, partner_fallback=not self.comment_single_recipient)
+                invalid_record_names = ', '.join(
+                    res[r.id]['partner'].display_name
+                    for r in records
+                    if not res[r.id]['sanitized'] and res[r.id].get('partner')
+                )
+                raise UserError(_(
+                    'The following %(count)s recipients have missing or invalid numbers, update or remove them:\n%(record_list)s',
+                    count=self.recipient_invalid_count,
+                    record_list=invalid_record_names))
         self._action_send_sms()
         return False
 
