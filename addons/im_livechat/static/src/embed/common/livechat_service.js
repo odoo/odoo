@@ -82,7 +82,7 @@ export class LivechatService {
             }
             savedChannel.fetchNewMessages();
             this.env.services["mail.store"].initialize();
-            savedChannel.readyToSwapDeferred.then(async () => {
+            savedChannel.readyToSwapPromise.then(() => {
                 if (!savedChannel?.exists()) {
                     return;
                 }

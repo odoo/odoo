@@ -3,19 +3,20 @@ import "@mail/discuss/core/common/thread_model_patch";
 import { generateEmojisOnHtml } from "@mail/utils/common/format";
 
 import { patch } from "@web/core/utils/patch";
-import { Deferred } from "@web/core/utils/concurrency";
 
 patch(Thread.prototype, {
     setup() {
         super.setup();
+        const { promise, resolve } = Promise.withResolvers();
         /**
-         * Deferred that resolves once a newly persisted thread is ready to swap
+         * Promise that resolves once a newly persisted thread is ready to swap
          * with its temporary counterpart (i.e. when the actions following the
          * persist call are done to avoid flickering).
          *
-         * @type {Deferred}
+         * @type {Promise<void>}
          */
-        this.readyToSwapDeferred = new Deferred();
+        this.readyToSwapPromise = promise;
+        this.resolveReadyToSwap = resolve;
         this._prevComposerDisabled = false;
     },
     /** @returns {Promise<import("models").Message} */
@@ -53,7 +54,7 @@ patch(Thread.prototype, {
                 return;
             }
             await channel.isLoadedDeferred;
-            return channel.post(...arguments).then(() => channel.readyToSwapDeferred.resolve());
+            return channel.post(...arguments).then(() => channel.resolveReadyToSwap());
         }
         const message = await super.post(...arguments);
         await this.channel?.chatbot?.processAnswer(message);

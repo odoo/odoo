@@ -18,6 +18,7 @@ declare module "models" {
     }
     export interface Thread {
         _prevComposerDisabled: boolean;
-        readyToSwapDeferred: Deferred;
+        readyToSwapPromise: Promise<void>;
+        resolveReadyToSwap: (value?: void) => void;
     }
 }
