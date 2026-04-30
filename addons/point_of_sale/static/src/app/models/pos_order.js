@@ -64,6 +64,14 @@ export class PosOrder extends PosOrderAccounting {
         if (!this.config_id) {
             this.config_id = this.config;
         }
+
+        if (!this.pricelist_id && this.config.pricelist_id) {
+            this.setPricelist(this.config.pricelist_id);
+        }
+
+        if (this.config.use_presets && !this.preset_id && this.config.default_preset_id) {
+            this.setPreset(this.config.default_preset_id);
+        }
     }
 
     initState() {
