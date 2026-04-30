@@ -1054,12 +1054,23 @@ class AccountEdiUBL(models.AbstractModel):
     def _ubl_add_line_price_node(self, vals, in_foreign_currency=True):
         line_node = vals['line_node']
         base_line = vals['line_vals']['base_line']
-        suffix = '_currency' if in_foreign_currency else ''
         currency = base_line['currency_id'] if in_foreign_currency else vals['company_currency']
+
+        raw_gross_total_excluded = self.env['account.tax']._get_gross_total_without_tax(
+            base_line=base_line,
+            company=vals['company'],
+            in_foreign_currency=in_foreign_currency,
+        )
+        raw_gross_price_unit = self.env['account.tax']._get_price_unit_without_tax(
+            base_line=base_line,
+            company=vals['company'],
+            raw_gross_total_excluded=raw_gross_total_excluded,
+            in_foreign_currency=in_foreign_currency,
+        )
 
         line_node['cac:Price'] = {
             'cbc:PriceAmount': {
-                '_text': FloatFmt(base_line['tax_details'][f'raw_gross_price_unit{suffix}'], min_dp=1, max_dp=6),
+                '_text': FloatFmt(raw_gross_price_unit, min_dp=1, max_dp=10),
                 'currencyID': currency.name,
             },
         }
