@@ -56,9 +56,10 @@ export class JournalDashboardGraphField extends Component {
         });
 
         const color10 = getColor(3, cookie.get("color_scheme"), "odoo");
-        const borderColor = this.data[0].is_sample_data ? hexToRGBA(color10, 0.1) : color10;
+        const sampleColor = getCustomColor(colorScheme, "#d8dadd", "#495057");
+        const borderColor = this.data[0].is_sample_data ? hexToRGBA(sampleColor, 0.225) : color10;
         const backgroundColor = this.data[0].is_sample_data
-            ? hexToRGBA(color10, 0.05)
+            ? hexToRGBA(sampleColor, 0.05)
             : hexToRGBA(color10, 0.2);
         return {
             type: "line",
