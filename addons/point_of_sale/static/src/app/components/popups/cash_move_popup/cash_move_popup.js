@@ -86,6 +86,7 @@ export class CashMovePopup extends Component {
             tracking_number: "",
             sequence_number: 0,
             pos_reference: "",
+            state: "cancel", // transient receipt-only order, must never reach IndexedDB
         });
         await this.pos.ticketPrinter.printCashMoveReceipt({
             reason,
