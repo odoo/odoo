@@ -958,17 +958,22 @@ class DiscussChannel(models.Model):
         return True
 
     def _forward_human_operator(self, chatbot_script_step=None, users=None):
-        """ Add a human operator to the conversation. The conversation with the chatbot (scripted chatbot or ai agent) is stopped
-        the visitor will continue the conversation with a real person.
+        """Hand the conversation off from the bot to a human operator.
 
-        In case we don't find any operator (e.g: no-one is available) we don't post any messages.
-        The chat with the chatbot will continue normally, which allows to add extra steps when it's the case
-        (e.g: ask for the visitor's email and create a lead).
+        The conversation with the chatbot (scripted chatbot or AI agent) is
+        stopped and the visitor continues with a real person. If no operator is
+        available, no message is posted and the chat with the bot continues
+        normally, which allows extra steps to run afterwards (e.g. asking for
+        the visitor's email and creating a lead).
 
-        :param chatbot_script_step: the forward to operator chatbot script step if the forwarding is done through
-        a scripted chatbot (not used if the forwarding is done through an AI Agent).
-        :param users: recordset of candidate operators, if not provided the currently available
-            users of the livechat channel are used as candidates instead.
+        :param chatbot_script_step: The "forward to operator" chatbot script
+            step, when forwarding is done through a scripted chatbot. Unused
+            when forwarding is done through an AI agent.
+        :type chatbot_script_step: chatbot.script.step or None
+        :param users: Recordset of candidate operators. If not provided, the
+            currently available users of the livechat channel are used as
+            candidates instead.
+        :type users: res.users or None
         """
 
         human_operator = False
