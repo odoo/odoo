@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~19.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-24 17:37+0000\n"
-"PO-Revision-Date: 2026-04-24 17:37+0000\n"
+"POT-Creation-Date: 2026-04-29 17:37+0000\n"
+"PO-Revision-Date: 2026-04-29 17:37+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -42,8 +42,8 @@ msgid "(as of opening)"
 msgstr ""
 
 #. module: pos_stock
-#: model_terms:ir.ui.view,arch_db:pos_stock.pos_orderline_receipt_information
-msgid "<strong>Lot number: </strong>"
+#: model_terms:ir.ui.view,arch_db:pos_stock.pos_order_receipt_footer
+msgid "<span>Expected delivery:</span>"
 msgstr ""
 
 #. module: pos_stock
@@ -149,11 +149,6 @@ msgid "Display Name"
 msgstr ""
 
 #. module: pos_stock
-#: model_terms:ir.ui.view,arch_db:pos_stock.pos_order_receipt_footer
-msgid "Expected delivery:"
-msgstr ""
-
-#. module: pos_stock
 #: model:ir.model.fields,field_description:pos_stock.field_pos_order__failed_pickings
 #: model:ir.model.fields,field_description:pos_stock.field_pos_session__failed_pickings
 msgid "Failed Pickings"
@@ -233,14 +228,16 @@ msgid "Last Updated on"
 msgstr ""
 
 #. module: pos_stock
-#: model:ir.model.fields,field_description:pos_stock.field_pos_pack_operation_lot__lot_name
-msgid "Lot Name"
+#. odoo-javascript
+#. odoo-python
+#: code:addons/pos_stock/receipt/pos_order_receipt.py:0
+#: code:addons/pos_stock/static/src/app/models/pos_order_line.js:0
+msgid "Lot"
 msgstr ""
 
 #. module: pos_stock
-#. odoo-javascript
-#: code:addons/pos_stock/static/src/app/models/pos_order_line.js:0
-msgid "Lot Number"
+#: model:ir.model.fields,field_description:pos_stock.field_pos_pack_operation_lot__lot_name
+msgid "Lot Name"
 msgstr ""
 
 #. module: pos_stock
@@ -416,6 +413,8 @@ msgstr ""
 
 #. module: pos_stock
 #. odoo-javascript
+#. odoo-python
+#: code:addons/pos_stock/receipt/pos_order_receipt.py:0
 #: code:addons/pos_stock/static/src/app/models/pos_order_line.js:0
 msgid "SN"
 msgstr ""
