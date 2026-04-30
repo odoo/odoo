@@ -1974,9 +1974,16 @@ class Website(models.CachedModel):
         record.check_access('write')
 
     def _disable_unused_snippets_assets(self):
+        # todo @ validation/review:
+        # As we move snippets to frontend/owl, some scss assets are "orphaned" from their templates
+        # (see in views/snippets_themes.xml in which I moved the assets, such as "mass_mailing.s_rating_000_scss")
+        # If website is installed, this method (which runs on a weekly CRON)
+        # will disable stylesheets matching the snippets that have been removed
+        # Not sure what purpose this serves, as it mostly seems to affect versioned snippets
+        # & this logic isn't active unless Website is installed
         snippet_assets = self.env['ir.asset'].with_context(active_test=False).search_fetch(
             [('path', 'like', '/static%/snippets/')],
-            ['active', 'path'], order='id')
+            ['active', 'path', 'bundle'], order='id')
         snippet_re = re.compile(r'(\w*)\/.*\/snippets\/(\w*)\/(\d{3})(?:_\w*)?\.(js|scss)')
         # regex will match /module/static/[.../]/snippets/snippet_id/XXX[_variable].asset_type
         # _variable is not kept since only module, snippet_id, asset_version (XXX), asset_type are relevant
@@ -1984,7 +1991,7 @@ class Website(models.CachedModel):
         snippet_used = {}
         for snippet_asset in snippet_assets:
             match = snippet_re.match(snippet_asset.path)
-            if not match:
+            if not match or snippet_asset.bundle == 'mass_mailing.assets_iframe_style':
                 continue
             (snippet_module, snippet_id, asset_version, asset_type) = match.groups()
             if asset_type == 'scss':
