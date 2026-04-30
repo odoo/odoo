@@ -7,7 +7,7 @@ patch(PosStore.prototype, {
         this.data.connectWebSocket("VIVA_COM_LATEST_RESPONSE", (payload) => {
             if (payload.config_id === this.config.id) {
                 const paymentLine = this.models["pos.payment"].find(
-                    (line) => line.uiState.vivaSessionId === payload.session_id
+                    (line) => line.viva_com_session_id === payload.session_id
                 );
 
                 if (
