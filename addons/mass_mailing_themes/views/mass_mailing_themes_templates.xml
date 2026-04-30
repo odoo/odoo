@@ -118,7 +118,11 @@
                         style="background-image: url('/mass_mailing_themes/static/src/img/theme_event/s_cover_default_image.jpg');">
                         <div class="o_we_bg_filter bg-black-50"/>
                         <p><font class="text-white"><strong>SEPT 24-26, 2026</strong></font></p>
-                        <h1 style="font-size: 48px;"><font class="text-white">Join us at the<br/>Odoo Experience.</font></h1>
+                        <h1>
+                            <span class="display-1-fs"><font class="text-white">Join us at the</font></span>
+                            <font class="text-white"><br/></font>
+                            <span class="display-1-fs"><font class="text-white">Odoo Experience.</font></span>
+                        </h1>
                         <p class="lead"><font class="text-white">Join us for a 2-day event filled with tech and business talks,<br/>workshops, and networking opportunities.</font></p>
                         <p><a class="btn btn-lg btn-primary" href="https://www.example.com">Grab your ticket!</a></p>
                     </div>
@@ -1099,7 +1103,7 @@
                         <p><span style="font-weight: bolder;">Mark</span> will be helping our beloved HR team, he'll be taking care of your payroll, so be nice!</p>
                         <p>You'll be seeing <span style="font-weight: bolder;">Armando</span> around the kitchen since he's our new <span style="font-weight: bolder;">chef's assistant</span>!</p>
                         <p><span style="font-weight: bolder;">Martin</span> is currently doing his onboarding in our remote office but you'll be seeing him in the R&amp;D department very soon.</p>
-                        <p style="text-align: center; font-size: 14px;"><strong>Give them a warm welcome!</strong></p>
+                        <p><strong>Give them a warm welcome!</strong></p>
                     </div>
                 </div>
             </div>
@@ -1914,9 +1918,9 @@
             data-snippet="s_text_block" data-name="Text">
             <div class="container s_allow_columns">
                 <h2>What's changing</h2>
-                <p><strong>Data retention period shortened.</strong> <strong>YourCompany</strong> is reducing the default data retention period from 5 years to 2 years. This aligns with current privacy best practices and gives you more control over your personal data. Archived accounts will be subject to the new timeline starting June 1.</p>
-                <p><strong>Updated third-party sharing clause.</strong> <strong>YourCompany</strong> has clarified and limited the scope of data shared with third-party partners. Going forward, only anonymized, aggregated usage data may be shared for analytics purposes — no personally identifiable information, ever.</p>
-                <p><strong>Revised payment and refund terms.</strong> The refund window for annual subscriptions changes from 30 to 14 days from the billing date. Monthly subscriptions are unaffected. <strong>YourCompany</strong> has also added clearer language around failed payment retries and grace periods.</p>
+                <p><strong>Data retention period shortened.</strong> <em t-out="company_id.name">YourCompany</em> is reducing the default data retention period from 5 years to 2 years. This aligns with current privacy best practices and gives you more control over your personal data. Archived accounts will be subject to the new timeline starting June 1.</p>
+                <p><strong>Updated third-party sharing clause.</strong> <em t-out="company_id.name">YourCompany</em> has clarified and limited the scope of data shared with third-party partners. Going forward, only anonymized, aggregated usage data may be shared for analytics purposes; no personally identifiable information, ever.</p>
+                <p><strong>Revised payment and refund terms.</strong> The refund window for annual subscriptions changes from 30 to 14 days from the billing date. Monthly subscriptions are unaffected. <em t-out="company_id.name">YourCompany</em> has also added clearer language around failed payment retries and grace periods.</p>
                 <p>
                     <a class="btn btn-lg btn-primary" href="#">Read more</a>
                 </p>
@@ -1966,7 +1970,7 @@
                     <li>Your ability to cancel your subscription at any time</li>
                     <li>Our SLA and uptime commitments</li>
                 </ul>
-                <p><strong>YourCompany</strong> believes good terms should be readable. If anything in the updated document is unclear, reach out to us directly.</p>
+                <p><em t-out="company_id.name">YourCompany</em> believes good terms should be readable. If anything in the updated document is unclear, reach out to us directly.</p>
                 <p>
                     <a class="btn btn-lg btn-primary" href="#">Read more</a>
                 </p>
@@ -1988,7 +1992,7 @@
             style="padding-left: 48px; padding-right: 48px;" data-vxml="001"
             data-snippet="s_text_block" data-name="Text">
             <div class="container s_allow_columns">
-                <p>To continue using <strong>YourCompany</strong>'s services, you'll need to accept the updated Terms &amp; Conditions. Logging into your account will prompt you automatically — or you can review them now at your own pace.</p>
+                <p>To continue using <em t-out="company_id.name">YourCompany</em>'s services, you'll need to accept the updated Terms &amp; Conditions. Logging into your account will prompt you automatically — or you can review them now at your own pace.</p>
                 <p>If you do not accept the new terms by the end of June, your account will be paused until you do so. No data will be deleted immediately; you'll have an additional 30-day window to accept or export your data.</p>
                 <p>
                     <a class="btn btn-lg btn-primary" href="#">Review now</a>

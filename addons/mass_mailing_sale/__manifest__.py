@@ -9,12 +9,11 @@
     'assets': {
         'mass_mailing.assets_builder': [
             'mass_mailing_sale/static/src/builder/**/*',
+            'mass_mailing_sale/static/src/snippets/**/*',
         ],
     },
     'data': [
         'views/mailing_mailing_views.xml',
-        'views/snippets_themes.xml',
-        'views/templates/snippets/s_product_snapshot.xml',
     ],
     'demo': [
         'demo/mailing_mailing.xml',

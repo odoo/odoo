@@ -1,5 +1,5 @@
-<odoo>
-<template id="s_mail_block_footer_social" name="Social + Footer">
+<templates xml:space="preserve">
+<t t-name="mass_mailing.s_mail_block_footer_social" name="Social + Footer">
     <section class="s_footer_social o_mail_block_footer_social o_mail_footer_social_center o_mail_snippet_general pt16 pb16" data-name="Footer Center" data-vxml="001">
         <div class="container">
             <div class="row">
@@ -9,22 +9,22 @@
                             <t t-call="mass_mailing.s_mail_company_logo" class="'img img-fluid o_editable_media mx-auto'" style="'width: 25% !important;'"/>
                         </a>
                     </div>
-                    <t t-call="mass_mailing.s_social_media_template" optionalTextPosition.f="text-center" optionalSnippetClass.f="o_mail_footer_social pb16"/>
-                    <p style="text-align: center"><t t-if="company_id"><strong>© <t t-out="company_id.partner_id.name"/></strong><br/><t t-out="company_id.partner_id._display_address()"/><br/></t>You're seeing this because you've shopped with us or joined our mailing list.</p>
+                    <t t-call="mass_mailing.s_social_media_template" optionalTextPosition="'text-center'" optionalSnippetClass="'o_mail_footer_social pb16'"/>
+                    <p style="text-align: center"><t t-if="company_id"><strong>© <t t-out="company_id.name"/></strong><br/><t t-out="company_id.display_address"/><br/></t>You're seeing this because you've shopped with us or joined our mailing list.</p>
                     <p style="text-align: center"><a class="btn btn-link" role="button" href="/unsubscribe_from_list">Unsubscribe</a></p>
                 </div>
             </div>
         </div>
     </section>
-</template>
+</t>
 
-<template id="s_mail_block_footer_social_left" name="Social + Footer">
+<t t-name="mass_mailing.s_mail_block_footer_social_left" name="Social + Footer">
     <section class="s_footer_social o_mail_block_footer_social o_mail_footer_social_left o_mail_snippet_general pt16 pb16" data-name="Footer Left" data-vxml="001">
         <div class="container">
             <div class="row">
                 <div class="col-md-6 col-12">
-                    <p t-if="company_id"><strong>© <t t-out="company_id.partner_id.name"/></strong><br/><t t-out="company_id.partner_id._display_address()"/></p>
-                    <t t-call="mass_mailing.s_social_media_template" optionalTextPosition.f="text-start" optionalSnippetClass.f="o_mail_footer_social pb16"/>
+                    <p t-if="company_id"><strong>© <t t-out="company_id.name"/></strong><br/><t t-out="company_id.display_address"/></p>
+                    <t t-call="mass_mailing.s_social_media_template" optionalTextPosition="'text-start'" optionalSnippetClass="'o_mail_footer_social pb16'"/>
                 </div>
                 <div class="col-md-6 col-12">
                     <p class="text-muted">You're seeing this because you've shopped with us or joined our mailing list.</p>
@@ -33,14 +33,14 @@
             </div>
         </div>
     </section>
-</template>
+</t>
 
-<template id="s_mail_block_footer_one_liner" name="Social + Footer + Separator">
+<t t-name="mass_mailing.s_mail_block_footer_one_liner" name="Social + Footer + Separator">
     <section class="s_footer_one_liner o_mail_block_footer o_mail_snippet_general pt16 pb16" data-name="One Liner">
         <div class="container">
             <div class="row">
                 <div class="col-md-12 col-12">
-                    <p class="mb-0"><t t-if="company_id"><strong>© <t t-out="company_id.partner_id.name"/></strong><br/></t>You're seeing this because you've shopped with us or joined our mailing list. <a class="btn btn-link" role="button" href="/unsubscribe_from_list">Unsubscribe</a></p>
+                    <p class="mb-0"><t t-if="company_id"><strong>© <t t-out="company_id.name"/></strong><br/></t>You're seeing this because you've shopped with us or joined our mailing list. <a class="btn btn-link" role="button" href="/unsubscribe_from_list">Unsubscribe</a></p>
                 </div>
             </div>
             <div class="s_hr o_mail_snippet_general pt8 pb8">
@@ -48,15 +48,15 @@
             </div>
             <div class="row">
                 <div class="col-md-6 col-12">
-                    <p><font t-out="company_id.partner_id._display_address()"/></p>
+                    <p><font t-out="company_id.display_address"/></p>
                 </div>
-                <t t-call="mass_mailing.s_social_media_template" optionalTextPosition.f="text-end" optionalSnippetClass.f="o_mail_footer_social pb16 col-md-6 col-12"/>
+                <t t-call="mass_mailing.s_social_media_template" optionalTextPosition="'text-end'" optionalSnippetClass="'o_mail_footer_social pb16 col-md-6 col-12'"/>
             </div>
         </div>
     </section>
-</template>
+</t>
 
-<template id="s_mail_block_footer_social_and_logo" name="Social + Logo">
+<t t-name="mass_mailing.s_mail_block_footer_social_and_logo" name="Social + Logo">
     <section class="o_mail_snippet_general pt16 pb16">
         <div class="container">
             <div class="row">
@@ -67,46 +67,45 @@
                         </a>
                     </div>
                 </div>
-                <t t-call="mass_mailing.s_social_media_template" optionalTextPosition.f="text-end" optionalSnippetClass.f="o_mail_footer_social pb16 col-md-8 col-12"/>
+                <t t-call="mass_mailing.s_social_media_template" optionalTextPosition="'text-end'" optionalSnippetClass="'o_mail_footer_social pb16 col-md-8 col-12'"/>
             </div>
             <div class="row">
                 <div class="col-md-12 col-12">
-                    <p><t t-if="company_id"><strong>© <t t-out="company_id.partner_id.name"/></strong><br/><t t-out="company_id.partner_id.contact_address"/><br/></t>You're seeing this because you've shopped with us or joined our mailing list. <a class="btn btn-link" role="button" href="/unsubscribe_from_list">Unsubscribe</a></p>
+                    <p><t t-if="company_id"><strong>© <t t-out="company_id.name"/></strong><br/><t t-out="company_id.contact_address"/><br/></t>You're seeing this because you've shopped with us or joined our mailing list. <a class="btn btn-link" role="button" href="/unsubscribe_from_list">Unsubscribe</a></p>
                 </div>
             </div>
         </div>
     </section>
-</template>
+</t>
 
-<template id="s_mail_block_footer_links_social" name="Links + Social">
+<t t-name="mass_mailing.s_mail_block_footer_links_social" name="Links + Social">
     <section class="s_footer_social o_mail_block_footer_social o_mail_footer_social_center o_mail_snippet_general pt40 pb40"
         data-name="Links + Social">
-        <t t-set="now" t-value="datetime.datetime.now()"/>
         <div class="container">
             <div class="row">
                 <div class="col-md-12 col-12">
                     <h3 style="text-align: center">YOUR COMPANY</h3>
                     <p style="text-align: center">
                         <span class="o_small-fs">
-                            <a href="#">Visit</a>&#160;&#160;|&#160;&#160;
-                            <a href="#">New</a>&#160;&#160;|&#160;&#160;
-                            <a href="#">Women</a>&#160;&#160;|&#160;&#160;
-                            <a href="#">Men</a>&#160;&#160;|&#160;&#160;
+                            <a href="#">Visit</a><t t-out="nbsp + nbsp + '|' + nbsp + nbsp"/>
+                            <a href="#">New</a><t t-out="nbsp + nbsp + '|' + nbsp + nbsp"/>
+                            <a href="#">Women</a><t t-out="nbsp + nbsp + '|' + nbsp + nbsp"/>
+                            <a href="#">Men</a><t t-out="nbsp + nbsp + '|' + nbsp + nbsp"/>
                             <a href="#">Gifts</a>
                         </span>
                     </p>
                     <t t-call="mass_mailing.s_social_media_template"
-                        optionalTextPosition.f="text-center"
-                        optionalSnippetClass.f="o_mail_footer_social pb16 no_icon_color"
-                        optionalTextStyle.f="color: #111827 !important;"
-                        optionalIconLayout.f="fa-stack"/>
+                        optionalTextPosition="'text-center'"
+                        optionalSnippetClass="'o_mail_footer_social pb16 no_icon_color'"
+                        optionalTextStyle="'color: #111827 !important;'"
+                        optionalIconLayout="'fa-stack'"/>
                     <p style="text-align: center">
                         <a class="btn btn-link" role="button" href="/unsubscribe_from_list">Unsubscribe</a>
-                        <span class="o_small-fs"><br/>© <t t-out="now.strftime('%Y')"/> All Rights Reserved</span>
+                        <span class="o_small-fs"><br/>© <t t-out="now.toFormat('y')"/> All Rights Reserved</span>
                     </p>
                 </div>
             </div>
         </div>
     </section>
-</template>
-</odoo>
+</t>
+</templates>

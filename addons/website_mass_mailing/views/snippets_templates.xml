@@ -383,16 +383,10 @@ database, without the s_newsletter_list class. See fixNewsletterListClass.
     </section>
 </template>
 
-<!-- Extend default mass_mailing snippets with website feature -->
+<!-- Extend default mass_mailing template with website feature -->
 
-<template id="s_mail_block_footer_social" inherit_id="mass_mailing.s_mail_block_footer_social">
-    <xpath expr='//a[@href="/unsubscribe_from_list"]' position="after">
-        <t> | <a role="button" href="/contactus" class="btn btn-link">Contact</a></t>
-    </xpath>
-</template>
-
-<template id="s_mail_block_footer_social_left" inherit_id="mass_mailing.s_mail_block_footer_social_left">
-    <xpath expr='//a[@href="/unsubscribe_from_list"]' position="after">
+<template id="theme_default_template" inherit_id="mass_mailing.theme_default_template">
+    <xpath expr='//section[@data-snippet="s_mail_block_footer_social_left"]//a[@href="/unsubscribe_from_list"]' position="after">
         <t> | <a role="button" href="/contactus" class="btn btn-link">Contact</a></t>
     </xpath>
 </template>

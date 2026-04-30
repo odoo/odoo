@@ -34,6 +34,7 @@ export const productSnapshotSnippetInfo = {
             currencyId: record.currency_id[0],
             trailingZeros: false,
         }),
+        coverUrl: `/web/image/product.template/${record.id}/image_1024`,
     }),
 };
 

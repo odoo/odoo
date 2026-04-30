@@ -46,6 +46,9 @@ On a simple click, your visitors can subscribe to mailing lists managed in the E
         'html_builder.iframe_add_dialog': [
             'website_mass_mailing/static/src/snippets/**/*.preview.scss',
         ],
+        'mass_mailing.assets_builder': [
+            'website_mass_mailing/static/snippets/**/*',
+        ],
     },
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',

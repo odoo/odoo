@@ -1,5 +1,5 @@
-<odoo>
-<template id="s_cover" name="Cover">
+<templates xml:space="preserve">
+<t t-name="mass_mailing.s_cover" name="Cover">
     <section class="s_cover o_mail_snippet_general" data-vxml="001">
         <div class="container">
             <div class="row">
@@ -11,9 +11,9 @@
             </div>
         </div>
     </section>
-</template>
+</t>
 
-<template id="s_image_text" name="Image - Text">
+<t t-name="mass_mailing.s_image_text" name="Image - Text">
     <section class="s_text_image o_mail_snippet_general pt24 pb24" data-vxml="001">
         <div class="container">
             <div class="row align-items-start">
@@ -31,9 +31,9 @@
             </div>
         </div>
     </section>
-</template>
+</t>
 
-<template id="s_text_image" name="Text - Image">
+<t t-name="mass_mailing.s_text_image" name="Text - Image">
     <section class="s_text_image o_mail_snippet_general pt24 pb24" data-vxml="001">
         <div class="container">
             <div class="row align-items-start">
@@ -51,9 +51,9 @@
             </div>
         </div>
     </section>
-</template>
+</t>
 
-<template id="s_picture" name="Picture">
+<t t-name="mass_mailing.s_picture" name="Picture">
     <section class="s_picture o_mail_snippet_general pt40 pb40 o_cc o_cc2" style="padding-left: 15px; padding-right: 15px;" data-vxml="001">
         <div class="container s_allow_columns">
             <h2 style="text-align: center;">Step Up Your Game</h2>
@@ -68,9 +68,9 @@
             </div>
         </div>
     </section>
-</template>
+</t>
 
-<template id="mass_mailing.s_mailing_list_advertisement" name="Mailing List">
+<t t-name="mass_mailing.s_mailing_list_advertisement" name="Mailing List">
     <section class="o_mail_snippet_general s_text_image" data-vxml="001">
         <div class="container">
             <div class="row align-items-center">
@@ -86,17 +86,17 @@
                 <div class="col-md-6 col-12 pt40 pb40">
                     <h2>Stay Ahead with weekly insights &amp; updates</h2>
                     <p>Join our mailing list to receive carefully curated resources, tips, and updates straight to your inbox.</p>
-                    <p><span class="oi text-o-color-1" data-icon="check" role="img"/>&#160;&#160;Curated Industry Insights</p>
-                    <p><span class="oi text-o-color-1" data-icon="check" role="img"/>&#160;&#160;Expert Tips &amp; How-Tos</p>
-                    <p><span class="oi text-o-color-1" data-icon="check" role="img"/>&#160;&#160;Guides &amp; Resources</p>
+                    <p><span class="oi text-o-color-1" data-icon="check" role="img"/><t t-out="nbsp + nbsp"/>Curated Industry Insights</p>
+                    <p><span class="oi text-o-color-1" data-icon="check" role="img"/><t t-out="nbsp + nbsp"/>Expert Tips &amp; How-Tos</p>
+                    <p><span class="oi text-o-color-1" data-icon="check" role="img"/><t t-out="nbsp + nbsp"/>Guides &amp; Resources</p>
                     <p><a href="#" class="btn btn-primary">Subscribe</a></p>
                 </div>
             </div>
         </div>
     </section>
-</template>
+</t>
 
-<template id="mass_mailing.s_content_card_1" name="Content card">
+<t t-name="mass_mailing.s_content_card_1" name="Content card">
     <section class="o_mail_snippet_general pt40 pb40" data-vxml="001">
         <div class="container">
             <div class="row">
@@ -123,9 +123,9 @@
             </div>
         </div>
     </section>
-</template>
+</t>
 
-<template id="mass_mailing.s_content_card_2" name="Content card">
+<t t-name="mass_mailing.s_content_card_2" name="Content card">
     <section class="o_mail_snippet_general pt40 pb40" data-vxml="001">
         <div class="container">
             <div class="row">
@@ -152,9 +152,9 @@
             </div>
         </div>
     </section>
-</template>
+</t>
 
-<template id="s_image_hero_title" name="Hero Image + Title">
+<t t-name="mass_mailing.s_image_hero_title" name="Hero Image + Title">
     <section class="s_image_hero_title o_mail_snippet_general pt16 pb16" data-vxml="001">
         <div class="container pt16">
             <p style="text-align: center;"><span class="o_small-fs">PREORDER ONLINE</span></p>
@@ -176,9 +176,9 @@
             </div>
         </div>
     </section>
-</template>
+</t>
 
-<template id="mass_mailing.s_content_card_3" name="Content card">
+<t t-name="mass_mailing.s_content_card_3" name="Content card">
     <section class="o_mail_snippet_general pt40 pb40" data-vxml="001">
         <div class="container">
             <div class="row">
@@ -198,9 +198,9 @@
             </div>
         </div>
     </section>
-</template>
+</t>
 
-<template id="mass_mailing.s_content_card_4" name="Content card">
+<t t-name="mass_mailing.s_content_card_4" name="Content card">
     <section class="o_mail_snippet_general pt40 pb40" data-vxml="001">
         <div class="container">
             <div class="row">
@@ -223,7 +223,7 @@
                     </div>
                 </div>
                 <div class="col-md-10 col-10" style="padding-left: 8px !important;">
-                    <p class="mb-0"><strong>John DOE</strong><br/><t t-out="datetime.datetime.now().strftime('%b %d, %Y')"/></p>
+                    <p class="mb-0"><strong>John DOE</strong><br/><t t-out="now.toFormat('LLL dd, y')"/></p>
                 </div>
             </div>
         </div>
@@ -252,9 +252,9 @@
             </div>
         </div>
     </section>
-</template>
+</t>
 
-<template id="mass_mailing.s_content_card_5" name="Content card">
+<t t-name="mass_mailing.s_content_card_5" name="Content card">
     <section class="o_mail_snippet_general s_cover" data-vxml="001">
         <div class="container">
             <div class="row">
@@ -271,9 +271,9 @@
             </div>
         </div>
     </section>
-</template>
+</t>
 
-<template id="mass_mailing.s_content_card_6" name="Content card">
+<t t-name="mass_mailing.s_content_card_6" name="Content card">
     <section class="o_mail_snippet_general s_text_image pt16 pb16" data-vxml="001">
         <div class="container">
             <div class="row align-items-center">
@@ -296,10 +296,10 @@
             </div>
         </div>
     </section>
-</template>
+</t>
 
-<template id="mass_mailing.s_content_card_7" name="Content card">
-    <section class="o_mail_snippet_general s_text_image pb40 pt40" data-vxml="001">
+<t t-name="mass_mailing.s_content_card_7" name="Content card">
+    <section class="o_mail_snippet_general s_text_image pt40 pb40" data-vxml="001">
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-md-6 col-12">
@@ -319,9 +319,9 @@
             </div>
         </div>
     </section>
-</template>
+</t>
 
-<template id="s_images_grid" name="Image Grid">
+<t t-name="mass_mailing.s_images_grid" name="Image Grid">
     <section class="s_images_grid o_mail_snippet_general pt40 pb40">
         <div class="container">
             <div class="row">
@@ -364,6 +364,6 @@
             </div>
         </div>
     </section>
-</template>
+</t>
 
-</odoo>
+</templates>

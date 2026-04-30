@@ -54,6 +54,19 @@
                 </p>
             </div>
         </section>
-        <t t-call="mass_mailing.s_mail_block_footer_social_left"/>
+        <section class="s_footer_social o_mail_block_footer_social o_mail_footer_social_left o_mail_snippet_general pt16 pb16" data-name="Footer Left" data-vxml="001" data-snippet="s_mail_block_footer_social_left">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6 col-12">
+                        <p t-if="company_id"><strong>© <t t-out="company_id.partner_id.name"/></strong><br/><t t-out="company_id.partner_id._display_address()"/></p>
+                        <t t-call="mass_mailing.s_social_media_template" optionalTextPosition.f="text-end" optionalSnippetClass.f="o_mail_footer_social pb16"/>
+                    </div>
+                    <div class="col-md-6 col-12">
+                        <p class="text-muted">You're seeing this because you've shopped with us or joined our mailing list.</p>
+                        <p><a class="btn btn-link" role="button" href="/unsubscribe_from_list">Unsubscribe</a></p>
+                    </div>
+                </div>
+            </div>
+        </section>
     </template>
 </odoo>
