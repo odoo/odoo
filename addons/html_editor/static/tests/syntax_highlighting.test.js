@@ -1256,6 +1256,33 @@ test("should keep textarea focused after copying code content", async () => {
     expect(document.activeElement).toBe(textarea);
 });
 
+test.tags("desktop");
+test("should not open the odoo global command bar when pressing ctrl+k inside a syntax-highlighted code block", async () => {
+    const { editor } = await setupEditor(`<p>a[]b</p><pre>xy</pre>`, {
+        config: configWithEmbeddings,
+    });
+    await compareHighlightedContent(
+        getContent(editor.editable),
+        unformat(
+            `<p>a[]b</p>
+            ${highlightedPre({ value: "xy" })}
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
+        ),
+        "Initial code block is highlighted",
+        editor
+    );
+
+    // Focus the textarea inside the code block
+    const textarea = editor.document.querySelector("textarea");
+    await click(textarea);
+    expect(editor.document.activeElement).toBe(textarea);
+
+    // Pressing ctrl+k to open odoo global command bar
+    await press(["ctrl", "k"]);
+    await animationFrame();
+    expect('.o_command span[title="Create link"]').toHaveCount(0);
+});
+
 describe("Arrow navigation (up/down) across syntax-highlighted code blocks", () => {
     test("ArrowUp from start of paragraph moves caret to end of previous code block", async () => {
         await testEditorWithHighlightedContent({

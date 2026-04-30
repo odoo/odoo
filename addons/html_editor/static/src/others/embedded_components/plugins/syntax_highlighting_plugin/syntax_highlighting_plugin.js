@@ -48,6 +48,13 @@ export class SyntaxHighlightingPlugin extends Plugin {
 
         /** Processors */
         clipboard_content_processors: (clonedContent) => this.cleanForSave(clonedContent),
+
+        /** Predicates */
+        link_compatible_selection_predicates: () => {
+            if (this.document.activeElement.matches("textarea.o_prism_source")) {
+                return false;
+            }
+        },
     };
 
     setup() {
