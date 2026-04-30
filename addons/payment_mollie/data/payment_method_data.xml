@@ -385,6 +385,14 @@
         <field name="image" type="bytes" file="payment/static/img/amex.png"/>
     </record>
 
+    <record id="payment_method_apple_pay" model="payment.method">
+        <field name="name">Apple Pay</field>
+        <field name="code">apple_pay</field>
+        <field name="primary_payment_method_id" eval="ref('payment_mollie.payment_method_card')"/>
+        <field name="provider_id" ref="payment.payment_provider_mollie"/>
+        <field name="image" type="bytes" file="payment/static/img/apple_pay.png"/>
+    </record>
+
     <record id="payment_method_cartes_bancaires" model="payment.method">
         <field name="name">Cartes Bancaires</field>
         <field name="code">cartes_bancaires</field>
@@ -399,6 +407,14 @@
         <field name="primary_payment_method_id" eval="ref('payment_mollie.payment_method_card')"/>
         <field name="provider_id" ref="payment.payment_provider_mollie"/>
         <field name="image" type="bytes" file="payment/static/img/discover.png"/>
+    </record>
+
+    <record id="payment_method_google_pay" model="payment.method">
+        <field name="name">Google Pay</field>
+        <field name="code">google_pay</field>
+        <field name="primary_payment_method_id" eval="ref('payment_mollie.payment_method_card')"/>
+        <field name="provider_id" ref="payment.payment_provider_mollie"/>
+        <field name="image" type="bytes" file="payment/static/img/google_pay.png"/>
     </record>
 
     <record id="payment_method_ideal_brand" model="payment.method">
