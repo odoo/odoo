@@ -11,7 +11,7 @@ import {
 import { animationFrame } from "@odoo/hoot-mock";
 import { contains, makeMockEnv, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { CaptionPlugin } from "@html_editor/others/embedded_components/plugins/caption_plugin/caption_plugin";
-import { MAIN_PLUGINS, EMBEDDED_COMPONENT_PLUGINS } from "@html_editor/plugin_sets";
+import { EMBEDDED_COMPONENT_PLUGINS } from "@html_editor/plugin_sets";
 import { MAIN_EMBEDDINGS } from "@html_editor/others/embedded_components/embedding_sets";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 import { setupEditor, testEditor } from "./_helpers/editor";
@@ -36,11 +36,8 @@ class CaptionPluginWithPredictableId extends CaptionPlugin {
 const base64Img =
     "data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAUA\n        AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO\n            9TXL0Y4OHwAAAABJRU5ErkJggg==";
 const configWithEmbeddedCaption = {
-    Plugins: [
-        ...MAIN_PLUGINS,
-        CaptionPluginWithPredictableId,
-        ...EMBEDDED_COMPONENT_PLUGINS.filter((plugin) => plugin.id !== "caption"),
-    ],
+    includePlugins: [CaptionPluginWithPredictableId, ...EMBEDDED_COMPONENT_PLUGINS],
+    excludePlugins: [CaptionPlugin],
     resources: {
         embedded_components: [
             CaptionPluginWithPredictableId,

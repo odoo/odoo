@@ -5,7 +5,6 @@ import { setupEditor } from "@html_editor/../tests/_helpers/editor";
 import { defineMailModels } from "@mail/../tests/mail_test_helpers";
 import { expandToolbar } from "@html_editor/../tests/_helpers/toolbar";
 import { HighlightPlugin } from "@website/builder/plugins/highlight/highlight_plugin";
-import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 import { contains } from "@web/../tests/web_test_helpers";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 import { Plugin } from "@html_editor/plugin";
@@ -30,7 +29,7 @@ function checkHighlightColor(highlightStyle) {
 
 test("Can highlight a selected text", async () => {
     await setupEditor("<p>This is [highlighted]</p>", {
-        config: { Plugins: [...MAIN_PLUGINS, HighlightPlugin, FakeEditInteractionPlugin] },
+        config: { includePlugins: [HighlightPlugin, FakeEditInteractionPlugin] },
     });
 
     await expandToolbar();
@@ -51,7 +50,7 @@ test("Check no highlight color is displayed in colorpicker when text with multip
         `<p>
             [This is <span class="o_text_highlight o_text_highlight_underline" style="--text-highlight-color: #FFFF00;">first</span> and <span class="o_text_highlight o_text_highlight_freehand_2">second</span>]
         </p>`,
-        { config: { Plugins: [...MAIN_PLUGINS, HighlightPlugin, FakeEditInteractionPlugin] } }
+        { config: { includePlugins: [HighlightPlugin, FakeEditInteractionPlugin] } }
     );
 
     // Open highlight toolbar
@@ -67,7 +66,7 @@ test("Can set a color to a highlight", async () => {
         <p>
             <span class="o_text_highlight o_text_highlight_freehand_2">[highlight 3]</span>
         </p>`,
-        { config: { Plugins: [...MAIN_PLUGINS, HighlightPlugin, FakeEditInteractionPlugin] } }
+        { config: { includePlugins: [HighlightPlugin, FakeEditInteractionPlugin] } }
     );
     await expandToolbar();
     expect(".o-select-highlight").toHaveCount(1);
@@ -88,7 +87,7 @@ test("Changing highlight keep the color and the width", async () => {
         `<p>
             <span class="o_text_highlight o_text_highlight_freehand_2" style="--text-highlight-color: #E79C9C; --text-highlight-width: 2px;">[highlight 3]</span>
         </p>`,
-        { config: { Plugins: [...MAIN_PLUGINS, HighlightPlugin, FakeEditInteractionPlugin] } }
+        { config: { includePlugins: [HighlightPlugin, FakeEditInteractionPlugin] } }
     );
     await expandToolbar();
     expect(".o-select-highlight").toHaveCount(1);
@@ -110,7 +109,7 @@ test("Selecting partially a highlight select all the highlight", async () => {
         <p>
             <span class="o_text_highlight o_text_highlight_freehand_2" style="--text-highlight-color: #E79C9C; --text-highlight-width: 2px;">h[i]ghlight</span>
         </p>`,
-        { config: { Plugins: [...MAIN_PLUGINS, HighlightPlugin, FakeEditInteractionPlugin] } }
+        { config: { includePlugins: [HighlightPlugin, FakeEditInteractionPlugin] } }
     );
     await expandToolbar();
     expect(".o-select-highlight").toHaveCount(1);
@@ -129,7 +128,7 @@ test("Can remove an highlight with the trash button", async () => {
         <p>
             <span class="o_text_highlight o_text_highlight_freehand_2" style="--text-highlight-color: #E79C9C; --text-highlight-width: 2px;">h[i]ghlight</span>
         </p>`,
-        { config: { Plugins: [...MAIN_PLUGINS, HighlightPlugin, FakeEditInteractionPlugin] } }
+        { config: { includePlugins: [HighlightPlugin, FakeEditInteractionPlugin] } }
     );
     await expandToolbar();
     expect(".o-select-highlight").toHaveCount(1);
@@ -146,7 +145,7 @@ test("Similar adjacent highlights are merged", async () => {
         `<p>
             <span class="o_text_highlight o_text_highlight_freehand_2" style="--text-highlight-width: 1px;">highlight</span><span class="o_text_highlight o_text_highlight_freehand_1">[highlight2]</span>
         </p>`,
-        { config: { Plugins: [...MAIN_PLUGINS, HighlightPlugin, FakeEditInteractionPlugin] } }
+        { config: { includePlugins: [HighlightPlugin, FakeEditInteractionPlugin] } }
     );
     await expandToolbar();
     expect(".o-select-highlight").toHaveCount(1);
@@ -165,7 +164,7 @@ test("Remove format on highlight does not create an empty node", async () => {
         `<p>
             <span class="o_text_highlight o_text_highlight_freehand_2" style="--text-highlight-color: #E79C9C; --text-highlight-width: 2px;">highligh[t]</span>
         </p>`,
-        { config: { Plugins: [...MAIN_PLUGINS, HighlightPlugin, FakeEditInteractionPlugin] } }
+        { config: { includePlugins: [HighlightPlugin, FakeEditInteractionPlugin] } }
     );
     await expandToolbar();
     const selectedHighlights = (editor) =>
@@ -187,7 +186,7 @@ test("Can modify multiple highlights", async () => {
             <span class="o_text_highlight o_text_highlight_freehand_2" style="--text-highlight-color: #E79C9C; --text-highlight-width: 3px;">highlight</span>
             ]
         </p>`,
-        { config: { Plugins: [...MAIN_PLUGINS, HighlightPlugin, FakeEditInteractionPlugin] } }
+        { config: { includePlugins: [HighlightPlugin, FakeEditInteractionPlugin] } }
     );
     await expandToolbar();
     expect(".o-select-highlight").toHaveCount(1);
@@ -223,7 +222,7 @@ test("Should override existing highlight", async () => {
                 c]
             </p>`
         ),
-        { config: { Plugins: [...MAIN_PLUGINS, HighlightPlugin, FakeEditInteractionPlugin] } }
+        { config: { includePlugins: [HighlightPlugin, FakeEditInteractionPlugin] } }
     );
     await expandToolbar();
     await contains(".o-we-toolbar .o-select-highlight").click();

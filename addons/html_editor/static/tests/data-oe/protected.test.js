@@ -10,13 +10,13 @@ import {
 } from "../_helpers/user_actions";
 import { parseHTML } from "@html_editor/utils/html";
 import { Plugin } from "@html_editor/plugin";
-import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 import { execCommand } from "../_helpers/userCommands";
 import { expectElementCount } from "../_helpers/ui_expectations";
 import {
     EDITOR_MUTATION_TYPES,
     NATIVE_MUTATION_TYPES,
 } from "@html_editor/core/dom_observer_plugin";
+import { SelectionPlaceholderPlugin } from "@html_editor/main/selection_placeholder_plugin";
 
 test("should ignore protected elements children mutations (true)", async () => {
     await testEditor({
@@ -301,7 +301,7 @@ test("select a protected element shouldn't open the toolbar", async () => {
 });
 
 const configWithoutSelectionPlaceholder = {
-    config: { Plugins: MAIN_PLUGINS.filter((p) => p.id !== "selectionPlaceholder") },
+    config: { excludePlugins: [SelectionPlaceholderPlugin] },
 };
 
 test("should protect disconnected nodes", async () => {
@@ -678,7 +678,7 @@ test("protected plugin is robust against other plugins which can filter mutation
         `),
         // Put FilterPlugin as the first plugin, so that its filter is applied before
         // protected_node_plugin.
-        { config: { Plugins: [FilterPlugin, ...MAIN_PLUGINS] } }
+        { config: { includePlugins: [FilterPlugin] } }
     );
     const domObserverPlugin = plugins.get("domObserver");
     expect(editor.shared.history.getCommits().length).toBe(1);

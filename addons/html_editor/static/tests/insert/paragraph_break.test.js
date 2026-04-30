@@ -4,7 +4,7 @@ import { tick } from "@odoo/hoot-mock";
 import { testEditor } from "../_helpers/editor";
 import { insertText, splitBlock } from "../_helpers/user_actions";
 import { unformat } from "../_helpers/format";
-import { EMBEDDED_COMPONENT_PLUGINS, MAIN_PLUGINS } from "@html_editor/plugin_sets";
+import { EMBEDDED_COMPONENT_PLUGINS } from "@html_editor/plugin_sets";
 import { QWebPlugin } from "@html_editor/others/qweb_plugin";
 import { findInSelection } from "@html_editor/utils/selection";
 import {
@@ -130,7 +130,7 @@ describe("Selection collapsed", () => {
                         []<t t-out="World"></t>
                     </h1>
                 `),
-                config: { Plugins: [...MAIN_PLUGINS, QWebPlugin] },
+                config: { includePlugins: [QWebPlugin] },
             });
         });
     });
@@ -138,7 +138,7 @@ describe("Selection collapsed", () => {
     describe("Pre", () => {
         describe("with syntax highlighting", () => {
             const configWithEmbeddings = {
-                Plugins: [...MAIN_PLUGINS, ...EMBEDDED_COMPONENT_PLUGINS],
+                includePlugins: EMBEDDED_COMPONENT_PLUGINS,
                 resources: { embedded_components: MAIN_EMBEDDINGS },
             };
             const testEnterInCodeBlock = (selectionStart) => async (editor) => {

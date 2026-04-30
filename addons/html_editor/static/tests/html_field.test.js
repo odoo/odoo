@@ -54,6 +54,7 @@ import {
 import { unformat } from "./_helpers/format";
 import { expandToolbar } from "./_helpers/toolbar";
 import { expectElementCount } from "./_helpers/ui_expectations";
+import { PLUGINS_TO_EXCLUDE } from "./_helpers/editor";
 
 class Partner extends models.Model {
     txt = fields.Html({ trim: true });
@@ -144,7 +145,9 @@ beforeEach(() => {
         },
         getConfig() {
             const config = super.getConfig();
-            config.Plugins = config.Plugins.filter((Plugin) => Plugin.id !== "editorVersion");
+            config.Plugins = config.Plugins.filter(
+                (Plugin) => !["editorVersion", ...PLUGINS_TO_EXCLUDE].includes(Plugin.id)
+            );
             return config;
         },
     });

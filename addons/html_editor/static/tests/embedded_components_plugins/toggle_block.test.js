@@ -20,7 +20,6 @@ import {
 import { onMounted } from "@odoo/owl";
 import { animationFrame, press, queryOne, tick, waitFor } from "@odoo/hoot-dom";
 import { browser } from "@web/core/browser/browser";
-import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 import { EmbeddedComponentPlugin } from "@html_editor/others/embedded_component_plugin";
 import { ToggleBlockPlugin } from "@html_editor/others/embedded_components/plugins/toggle_block_plugin/toggle_block_plugin";
 import { parseHTML } from "@html_editor/utils/html";
@@ -29,7 +28,7 @@ let embeddedToggleMountedPromise;
 
 function getConfig(components) {
     return {
-        Plugins: [...MAIN_PLUGINS, EmbeddedComponentPlugin, ToggleBlockPlugin],
+        includePlugins: [EmbeddedComponentPlugin, ToggleBlockPlugin],
         resources: {
             embedded_components: components,
         },

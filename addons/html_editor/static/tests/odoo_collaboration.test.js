@@ -1,6 +1,6 @@
 import { stripHistoryIds } from "@html_editor/others/collaboration/collaboration_odoo_plugin";
 import { HISTORY_SNAPSHOT_INTERVAL } from "@html_editor/others/collaboration/collaboration_plugin";
-import { COLLABORATION_PLUGINS, MAIN_PLUGINS } from "@html_editor/plugin_sets";
+import { COLLABORATION_PLUGINS } from "@html_editor/plugin_sets";
 import { normalizeHTML } from "@html_editor/utils/html";
 import { htmlReplaceAll } from "@web/core/utils/html";
 import { Wysiwyg } from "@html_editor/wysiwyg";
@@ -12,6 +12,7 @@ import { Mutex } from "@web/core/utils/concurrency";
 import { patch } from "@web/core/utils/patch";
 import { getContent, getSelection, setSelection } from "./_helpers/selection";
 import { insertText } from "./_helpers/user_actions";
+import { TEST_PLUGINS } from "./_helpers/editor";
 
 /**
  * @typedef PeerPool
@@ -164,7 +165,7 @@ class Wysiwygs extends Component {
             deleteChannel: () => {},
         };
         return {
-            Plugins: [...MAIN_PLUGINS, ...COLLABORATION_PLUGINS],
+            Plugins: [...TEST_PLUGINS, ...COLLABORATION_PLUGINS],
             content: htmlReplaceAll(content, "[]", ""),
             collaboration: {
                 peerId,
