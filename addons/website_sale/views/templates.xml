@@ -840,11 +840,13 @@
     <!-- Top-Nav Categories -->
     <template id="website_sale.filmstrip_categories" name="Categories Filmstrip">
         <t t-if="category.id">
-            <t t-set="entries" t-value="not search and category.child_id or category.child_id.filtered(lambda c: category.id in search_categories_ids)"/>
+            <t t-set="available_categories" t-value="category.child_id.filtered(lambda c: c.can_access_from_current_website())"/>
+            <t t-set="entries" t-value="not search and available_categories or available_categories.filtered(lambda c: c.id in search_categories_ids)"/>
 
             <t t-if="not entries">
                 <t t-set="parent" t-value="category.parent_id"/>
-                <t t-set="entries" t-value="not search and parent.child_id or parent.child_id.filtered(lambda c: parent.id in search_categories_ids)"/>
+                <t t-set="available_categories" t-value="parent.child_id.filtered(lambda c: c.can_access_from_current_website())"/>
+                <t t-set="entries" t-value="not search and available_categories or available_categories.filtered(lambda c: c.id in search_categories_ids)"/>
             </t>
         </t>
         <t t-else="">
