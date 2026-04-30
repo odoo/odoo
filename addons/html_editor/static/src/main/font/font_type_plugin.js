@@ -366,6 +366,7 @@ export class FontTypePlugin extends Plugin {
                     baseContainer.setAttribute("dir", dir);
                 }
                 newElement.replaceWith(baseContainer);
+                baseContainer.replaceChildren(this.document.createElement("br"));
                 this.dependencies.selection.setCursorStart(baseContainer);
             }
             return true;
