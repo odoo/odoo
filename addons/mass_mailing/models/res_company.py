@@ -35,3 +35,14 @@ class ResCompany(models.Model):
             if authorized_keys.get(key) is None:
                 raise UserError(_("%(key)s is not a valid social link field name, use `write` instead.", key=key))
         self.write({**social_links})
+
+    def get_mailing_snippet_info(self):
+        self.ensure_one()
+        return {
+            "has_logo": "True" if self.logo else "False",
+            "website": self.website,
+            "email": self.email,
+            "contact_address": self.partner_id.contact_address,
+            "display_address": self.partner_id._display_address(),
+            "social_links": self._get_social_media_links(),
+        }

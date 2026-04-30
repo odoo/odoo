@@ -1,4 +1,4 @@
-import { defineMailModels } from "@mail/../tests/mail_test_helpers";
+import { defineMailModels, mailModels } from "@mail/../tests/mail_test_helpers";
 import { beforeEach, describe, expect, test, waitUntil } from "@odoo/hoot";
 import { click, waitFor } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
@@ -183,8 +183,26 @@ class Event extends models.Model {
     _records = [{ id: 1, name: "BE Event", country: "be" }];
 }
 
+class ResCompany extends models.Model {
+    _name = "res.company";
+
+    description = fields.Text();
+
+    _records = mailModels.ResCompany._records;
+
+    get_mailing_snippet_info() {
+        return {
+            has_logo: false,
+            website: "https://www.odoo.com",
+            email: "admin@example.com",
+            contact_address: "Rue des Ursulines, 1000 Bruxelles",
+            display_address: "Rue des Ursulines, 1000 Bruxelles",
+            social_links: {},
+        };
+    }
+}
 defineMailModels();
-defineModels([IrModel, IrUiView, Mailing, Event]);
+defineModels([IrModel, IrUiView, Mailing, Event, ResCompany]);
 
 const mailViewArch = `
 <form>

@@ -143,6 +143,10 @@ export class SnippetModel extends Reactive {
         return AddSnippetDialog;
     }
 
+    async completeSnippetsDocument(document, context) {
+        return document;
+    }
+
     load() {
         if (!this.loadProm) {
             this.loadProm = (async () => {
@@ -162,6 +166,7 @@ export class SnippetModel extends Reactive {
                 for (const processor of Object.values(processors)) {
                     processor(this.snippetsName, this.snippetsDocument);
                 }
+                this.document = await this.completeSnippetsDocument(document, context);
                 this.computeSnippetTemplates(this.snippetsDocument);
                 this.setSnippetName(this.snippetsDocument);
             })();
