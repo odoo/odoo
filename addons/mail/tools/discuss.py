@@ -286,7 +286,7 @@ class Store:
 
         Use case: to add global values."""
         assert not field_fn or not values
-        self.add_singleton_values("Store", field_fn or values)
+        self.add_model_values("Store", field_fn or values)
         return self
 
     @store_enqueue
@@ -337,19 +337,6 @@ class Store:
                 as_thread=as_thread,
                 ignore_empty=ignore_empty,
             )
-        return self
-
-    @store_enqueue
-    def add_singleton_values(self, model_name, values):
-        """Add values to the store for a singleton model."""
-        if not values:
-            return self
-        data_list = []
-        self._add_abstract_fields_value(self._format_fields(values), data_list)
-        ids = ids_by_model[model_name]
-        assert ids == ()
-        for data in data_list:
-            self._add_values(data, model_name, ids)
         return self
 
     @store_enqueue

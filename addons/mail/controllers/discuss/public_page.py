@@ -114,7 +114,7 @@ class PublicPageController(http.Controller):
             inPublicPage=True,
         )
         store.add(channel, "_store_channel_fields")
-        store.add_singleton_values(
+        store.add_model_values(
             "DiscussApp",
             lambda res: res.one("thread", [], as_thread=True, value=channel),
         )
