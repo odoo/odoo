@@ -2196,3 +2196,40 @@ class TestAccountPaymentRegister(AccountTestInvoicingWithBanksCommon, PaymentCom
 
         self.assertRecordValues(payment_a, [{'amount': 1100.0, 'partner_id': self.partner_a.id}])
         self.assertRecordValues(payment_b, [{'amount': 3000.0, 'partner_id': self.partner_b.id}])
+
+    def test_payment_from_branch_with_bank_account(self):
+        """
+        Test payment from branch company on parent company journal with a bank account
+        """
+        def assert_payment():
+            branch_invoice = self.init_invoice('out_invoice', products=self.product_a, company=self.branch)
+            branch_invoice.action_post()
+
+            with self.with_user('user_branch'):
+                wizard = (
+                    self.env['account.payment.register']
+                    .with_context({'active_ids': branch_invoice.ids, 'active_model': 'account.move'})
+                    .create({
+                        'journal_id': parent_bank_journal.id,
+                        'payment_method_line_id': parent_bank_journal.inbound_payment_method_line_ids[0].id,
+                    })
+                )
+                action = wizard.action_create_payments()
+                payment = self.env['account.payment'].browse(action['res_id'])
+                self.assertRecordValues(payment, [{
+                    'company_id': self.branch.id,
+                    'journal_id': parent_bank_journal.id,
+                    'partner_bank_id': bank_account.id,
+                }])
+
+        parent_company = self.branch.parent_id
+        bank_account = parent_company.bank_ids[0]
+        # Set a bank account without company on the journal
+        bank_account.company_id = False
+        parent_bank_journal = parent_company.bank_journal_ids[0]
+        parent_bank_journal.bank_account_id = bank_account
+        assert_payment()
+
+        # Set the parent company as company of the bank account
+        bank_account.company_id = parent_company
+        assert_payment()
