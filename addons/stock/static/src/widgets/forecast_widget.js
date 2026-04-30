@@ -22,9 +22,8 @@ export class ForecastWidgetField extends FloatField {
         const digits = fields.forecast_availability.digits;
         const options = { digits, thousandsSep: "", decimalPoint: "." };
         const forecast_availability = parseFloat(formatFloat(data.forecast_availability, options));
-        const product_qty = parseFloat(formatFloat(data.product_qty, options));
-        this.willBeFulfilled = forecast_availability >= product_qty;
-        this.state = data.state;
+        this.product_qty = parseFloat(formatFloat(data.product_qty, options));
+        this.willBeFulfilled = forecast_availability >= this.product_qty;
     }
 
     //--------------------------------------------------------------------------
@@ -37,7 +36,7 @@ export class ForecastWidgetField extends FloatField {
     async _openReport(ev) {
         ev.preventDefault();
         ev.stopPropagation();
-        if (!this.resId || !this.props.record.data.is_storable) {
+        if (!this.props.record.data.is_storable) {
             return;
         }
         const action = await this.orm.call("stock.move", "action_product_forecast_report", [
