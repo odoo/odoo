@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.fields import Command
 
@@ -13,7 +13,11 @@ class QuotationDocument(models.Model):
     _check_company_auto = True
 
     ir_attachment_id = fields.Many2one(
-        string="Related attachment", comodel_name="ir.attachment", ondelete="cascade", required=True, index=True
+        string="Related attachment",
+        comodel_name="ir.attachment",
+        ondelete="cascade",
+        required=True,
+        index=True,
     )
     document_type = fields.Selection(
         string="Document Type",
@@ -61,7 +65,9 @@ class QuotationDocument(models.Model):
     def _check_pdf_validity(self):
         for doc in self:
             if doc.raw and not doc.mimetype.endswith("pdf"):
-                raise ValidationError(_("Only PDF documents can be used as header or footer."))
+                raise ValidationError(
+                    self.env._("Only PDF documents can be used as header or footer.")
+                )
             if doc.raw:
                 self.env["sale.pdf.form.field"]._ensure_document_not_encrypted(doc.raw)
 
@@ -83,7 +89,7 @@ class QuotationDocument(models.Model):
     def action_open_pdf_form_fields(self):
         self.ensure_one()
         return {
-            "name": _("Form Fields"),
+            "name": self.env._("Form Fields"),
             "type": "ir.actions.act_window",
             "res_model": "sale.pdf.form.field",
             "view_mode": "list",

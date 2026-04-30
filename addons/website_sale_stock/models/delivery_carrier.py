@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -39,7 +39,9 @@ class DeliveryCarrier(models.Model):
                 "zip": zip_code,
             })
         try:
-            error = {"error": _("No pick-up points are available for this delivery address.")}
+            error = {
+                "error": self.env._("No pick-up points are available for this delivery address.")
+            }
             function_name = f"_{self.delivery_type}_get_close_locations"
             if not hasattr(self, function_name):
                 return error

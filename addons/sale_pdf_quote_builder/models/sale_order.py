@@ -2,7 +2,7 @@
 
 import json
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 
 
 class SaleOrder(models.Model):
@@ -100,7 +100,7 @@ class SaleOrder(models.Model):
         selected_footers = selected_documents - selected_headers
         lines_params = [
             {
-                "name": _("Product > %s", line.name.splitlines()[0]),
+                "name": self.env._("Product > %s", line.name.splitlines()[0]),
                 "id": line.id,
                 "files": [
                     {
@@ -131,7 +131,7 @@ class SaleOrder(models.Model):
         ]
         return {
             "headers": {
-                "name": _("Header"),
+                "name": self.env._("Header"),
                 "files": [
                     {
                         "id": header.id,
@@ -156,7 +156,7 @@ class SaleOrder(models.Model):
             },
             "lines": lines_params,
             "footers": {
-                "name": _("Footer"),
+                "name": self.env._("Footer"),
                 "files": [
                     {
                         "id": footer.id,

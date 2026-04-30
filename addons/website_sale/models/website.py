@@ -15,12 +15,10 @@ from odoo.fields import Domain
 from odoo.http import request
 from odoo.tools import BinaryBytes, file_open, ormcache
 from odoo.tools.json import scriptsafe as json_scriptsafe
-from odoo.tools.translate import LazyTranslate, _
 
 from odoo.addons.website_sale import const
 
 logger = logging.getLogger(__name__)
-_lt = LazyTranslate(__name__)
 
 
 CART_SESSION_CACHE_KEY = "sale_order_id"
@@ -134,7 +132,15 @@ class Website(models.Model):
     )
 
     shop_default_sort = fields.Selection(
-        selection="_get_product_sort_mapping", required=True, default="website_sequence asc"
+        selection=[
+            ("website_sequence asc", "Featured"),
+            ("publish_date desc", "Newest Arrivals"),
+            ("name asc", "Name (A-Z)"),
+            ("list_price asc", "Price - Low to High"),
+            ("list_price desc", "Price - High to Low"),
+        ],
+        required=True,
+        default="website_sequence asc",
     )
 
     shop_extra_field_ids = fields.One2many(
@@ -308,21 +314,14 @@ class Website(models.Model):
 
     # === SELECTION METHODS ===#
 
-    @staticmethod
-    def _get_product_sort_mapping():
-        return [
-            ("website_sequence asc", _("Featured")),
-            ("publish_date desc", _("Newest Arrivals")),
-            ("name asc", _("Name (A-Z)")),
-            ("list_price asc", _("Price - Low to High")),
-            ("list_price desc", _("Price - High to Low")),
-        ]
+    def _get_product_sort_mapping(self):
+        return self._fields["shop_default_sort"]._description_selection(self.env)
 
     # === BUSINESS METHODS ===#
 
     def get_cta_data(self, website_purpose, website_type):
         cta_data = super().get_cta_data(website_purpose, website_type)
-        cta_data['shop_btn_href'] = '/shop'
+        cta_data["shop_btn_href"] = "/shop"
         return cta_data
 
     @api.model
@@ -907,7 +906,7 @@ class Website(models.Model):
     def get_suggested_controllers(self):
         suggested_controllers = super().get_suggested_controllers()
         suggested_controllers.append((
-            _("eCommerce"),
+            self.env._("eCommerce"),
             self.env["ir.http"]._url_for("/shop"),
             "website_sale",
         ))
@@ -918,7 +917,9 @@ class Website(models.Model):
         if not self.has_ecommerce_access():
             return result
         if search_type in ["products", "product_public_category", "all"]:
-            result.append(self.env["product.public.category"]._search_get_detail(self, order, options))
+            result.append(
+                self.env["product.public.category"]._search_get_detail(self, order, options)
+            )
         if search_type in ["products", "product_template", "all"]:
             result.append(self.env["product.template"]._search_get_detail(self, order, options))
         return result

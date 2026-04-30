@@ -2,7 +2,7 @@
 
 import pprint
 
-from odoo import _, http
+from odoo import http
 from odoo.exceptions import ValidationError
 from odoo.http import request
 from odoo.tools import str2bool
@@ -19,7 +19,7 @@ class XenditController(http.Controller):
 
     @http.route("/payment/xendit/payment", type="jsonrpc", auth="public")
     def xendit_payment(self, reference, token_ref, access_token, auth_id=None):
-        """ Make a payment by token request and handle the response.
+        """Make a payment by token request and handle the response.
 
         :param str reference: The reference of the transaction.
         :param str token_ref: The reference of the Xendit token to use to make the payment.
@@ -29,7 +29,9 @@ class XenditController(http.Controller):
         """
         tx_sudo = request.env["payment.transaction"].sudo().search([("reference", "=", reference)])
         if not payment_utils.check_access_token(access_token, reference):
-            raise ValidationError(_("The access token doesn't match the transaction reference."))
+            raise ValidationError(
+                self.env._("The access token doesn't match the transaction reference.")
+            )
         tx_sudo._xendit_create_charge(token_ref, auth_id=auth_id)
 
     @http.route(_webhook_url, type="http", methods=["POST"], auth="public", csrf=False)

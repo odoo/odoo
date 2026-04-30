@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command, Domain
 
@@ -149,8 +149,8 @@ class PaymentMethod(models.Model):
             if related_tokens:
                 return {
                     "warning": {
-                        "title": _("Warning"),
-                        "message": _(
+                        "title": self.env._("Warning"),
+                        "message": self.env._(
                             "This action will also archive %s tokens that are registered with this"
                             " payment method.",
                             len(related_tokens),
@@ -171,8 +171,8 @@ class PaymentMethod(models.Model):
         if attached_providers:
             return {
                 "warning": {
-                    "title": _("Warning"),
-                    "message": _(
+                    "title": self.env._("Warning"),
+                    "message": self.env._(
                         "Please make sure that %(payment_method)s is supported by %(provider)s.",
                         payment_method=self.name,
                         provider=", ".join(attached_providers.mapped("name")),
@@ -193,7 +193,7 @@ class PaymentMethod(models.Model):
         )
         if incompatible_pms:
             raise ValidationError(
-                _(
+                self.env._(
                     "The following payment methods cannot be enabled because their payment provider"
                     " has manual capture activated: %s",
                     ", ".join(incompatible_pms.mapped("name")),
@@ -233,7 +233,7 @@ class PaymentMethod(models.Model):
                     and all(p.state == "disabled" for p in primary_pm.provider_ids)
                 ):
                     raise UserError(
-                        _(
+                        pm.env._(
                             "This payment method needs a partner in crime; you should enable a"
                             " payment provider supporting this method first."
                         )
@@ -245,12 +245,12 @@ class PaymentMethod(models.Model):
     def _unlink_if_not_default_payment_method(self):
         payment_method_unknown = self.env.ref("payment.payment_method_unknown")
         if payment_method_unknown in self:
-            raise UserError(_("You cannot delete the default payment method."))
+            raise UserError(self.env._("You cannot delete the default payment method."))
 
     @api.ondelete(at_uninstall=False)
     def _unlink_if_not_linked_to_providers(self):
         if any(record.provider_ids for record in self):
-            raise UserError(_("You cannot delete a payment method linked to a provider."))
+            raise UserError(self.env._("You cannot delete a payment method linked to a provider."))
 
     # === BUSINESS METHODS === #
 

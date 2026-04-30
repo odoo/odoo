@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, models
+from odoo import api, models
 from odoo.exceptions import ValidationError
 from odoo.tools import urls
 
@@ -177,14 +177,16 @@ class PaymentTransaction(models.Model):
         elif payment_status == "paid":
             self._set_done()
         elif payment_status in ["expired", "canceled", "failed"]:
-            self._set_canceled(_("Cancelled payment with status: %s", payment_status))
+            self._set_canceled(self.env._("Cancelled payment with status: %s", payment_status))
         else:
             _logger.info(
                 "Received data with invalid payment status (%s) for transaction %s.",
                 payment_status,
                 self.reference,
             )
-            self._set_error(_("Received data with invalid payment status: %s.", payment_status))
+            self._set_error(
+                self.env._("Received data with invalid payment status: %s.", payment_status)
+            )
 
     def _extract_amount_data(self, payment_data):
         """Override of `payment` to extract the amount and currency from the payment data."""

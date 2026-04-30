@@ -1,6 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _
 from odoo.exceptions import UserError, ValidationError
 from odoo.http import request, route
 
@@ -50,7 +49,7 @@ class Delivery(WebsiteSale):
             for tx_sudo in order_sudo.transaction_ids:
                 if tx_sudo.state not in {"draft", "cancel", "error"}:
                     raise UserError(
-                        _(
+                        self.env._(
                             "It seems that there is already a transaction for your order; you can't"
                             " change the delivery method anymore."
                         )
@@ -98,11 +97,11 @@ class Delivery(WebsiteSale):
         :rtype: dict
         """
         if not (order_sudo := request.cart):
-            raise ValidationError(_("Your cart is empty."))
+            raise ValidationError(self.env._("Your cart is empty."))
 
         if int(dm_id) not in order_sudo._get_delivery_methods().ids:
             raise UserError(
-                _(
+                self.env._(
                     "It seems that a delivery method is not compatible with your address. Please"
                     " refresh the page and try again."
                 )
@@ -144,7 +143,7 @@ class Delivery(WebsiteSale):
             # The partner_shipping_id and partner_invoice_id will be automatically computed when
             # changing the partner_id of the SO. This allows website_sale to avoid creating
             # duplicates.
-            partial_delivery_address["name"] = _(
+            partial_delivery_address["name"] = self.env._(
                 "Anonymous express checkout partner for order %s", order_sudo.name
             )
             new_partner_sudo = self._create_new_address(
@@ -170,7 +169,7 @@ class Delivery(WebsiteSale):
             child_partner_id = self._find_child_partner(
                 order_sudo.partner_id.commercial_partner_id.id, partial_delivery_address
             )
-            partial_delivery_address["name"] = _(
+            partial_delivery_address["name"] = self.env._(
                 "Anonymous express checkout partner for order %s", order_sudo.name
             )
             order_sudo.partner_shipping_id = child_partner_id or self._create_new_address(

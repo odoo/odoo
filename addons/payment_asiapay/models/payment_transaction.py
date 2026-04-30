@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, models
+from odoo import api, models
 from odoo.exceptions import ValidationError
 from odoo.tools import urls
 
@@ -126,12 +126,12 @@ class PaymentTransaction(models.Model):
         success_code = payment_data.get("successcode")
         primary_response_code = payment_data.get("prc")
         if not success_code:
-            raise ValidationError(_("Received data with missing success code."))
+            raise ValidationError(self.env._("Received data with missing success code."))
         if success_code in const.SUCCESS_CODE_MAPPING["done"]:
             self._set_done()
         elif success_code in const.SUCCESS_CODE_MAPPING["error"]:
             self._set_error(
-                _(
+                self.env._(
                     "An error occurred during the processing of your payment (success code"
                     " %(success_code)s; primary response code %(response_code)s). Please try"
                     " again.",
@@ -147,7 +147,7 @@ class PaymentTransaction(models.Model):
                 primary_response_code,
                 self.reference,
             )
-            self._set_error(_("Unknown success code: %s", success_code))
+            self._set_error(self.env._("Unknown success code: %s", success_code))
 
     def _extract_amount_data(self, payment_data):
         """Override of `payment` to extract the amount and currency from the payment data."""

@@ -7,7 +7,7 @@ import json
 import random
 import string
 
-from odoo import _, fields, models
+from odoo import fields, models
 from odoo.exceptions import ValidationError
 from odoo.tools.urls import urljoin
 
@@ -114,6 +114,8 @@ class PaymentProvider(models.Model):
 
         if response_content.get("status") != "success":
             error_msg = response_content.get("errorMessage")
-            raise ValidationError(_("The payment provider rejected the request.\n%s", error_msg))
+            raise ValidationError(
+                self.env._("The payment provider rejected the request.\n%s", error_msg)
+            )
 
         return response_content

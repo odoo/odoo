@@ -2,7 +2,7 @@
 
 from hashlib import new as hashnew
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 
 from odoo.addons.payment_asiapay import const
@@ -55,7 +55,9 @@ class PaymentProvider(models.Model):
         allowed_codes = set(const.CURRENCY_MAPPING.keys())
         for provider in self.filtered(lambda p: p.code == "asiapay"):
             if len(provider.available_currency_ids) > 1 and provider.state != "disabled":
-                raise ValidationError(_("Only one currency can be selected by AsiaPay account."))
+                raise ValidationError(
+                    provider.env._("Only one currency can be selected by AsiaPay account.")
+                )
 
             unsupported_currency_codes = [
                 currency.name
@@ -64,7 +66,7 @@ class PaymentProvider(models.Model):
             ]
             if provider.available_currency_ids.filtered(lambda c: c.name not in allowed_codes):
                 raise ValidationError(
-                    _(
+                    provider.env._(
                         "AsiaPay does not support the following currencies: %(currencies)s.",
                         currencies=", ".join(unsupported_currency_codes),
                     )

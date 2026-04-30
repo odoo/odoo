@@ -2,7 +2,7 @@
 
 from urllib.parse import quote as url_quote
 
-from odoo import _, api, models
+from odoo import api, models
 from odoo.exceptions import ValidationError
 from odoo.tools import float_round
 from odoo.tools.urls import urljoin
@@ -193,7 +193,7 @@ class PaymentTransaction(models.Model):
         # Update the provider reference.
         payment_id = payment_data.get("id")
         if not payment_id:
-            self._set_error(_("Received data with missing payment id."))
+            self._set_error(self.env._("Received data with missing payment id."))
             return
         self.provider_reference = payment_id
 
@@ -219,7 +219,7 @@ class PaymentTransaction(models.Model):
         # Update the payment state.
         payment_status = payment_data.get("status")
         if not payment_status:
-            self._set_error(_("Received data with missing status."))
+            self._set_error(self.env._("Received data with missing status."))
             return
 
         if payment_status in const.TRANSACTION_STATUS_MAPPING["pending"]:
@@ -244,7 +244,7 @@ class PaymentTransaction(models.Model):
                 self.reference,
                 payment_status,
             )
-            self._set_error(_("Received data with invalid status: %s.", payment_status))
+            self._set_error(self.env._("Received data with invalid status: %s.", payment_status))
 
     def _extract_amount_data(self, payment_data):
         """Override of payment to extract the amount and currency from the payment data."""
@@ -267,7 +267,7 @@ class PaymentTransaction(models.Model):
         if self.provider_code != "mercado_pago":
             return super()._extract_token_values(payment_data)
 
-        if not payment_data.get('token'):
+        if not payment_data.get("token"):
             return {}
 
         # Fetch the customer id or create a new one.

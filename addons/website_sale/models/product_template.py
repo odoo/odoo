@@ -6,7 +6,7 @@ from collections import defaultdict
 
 from werkzeug import urls
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.fields import Domain
 from odoo.http import request
 from odoo.tools import float_is_zero, float_round, is_html_empty, lazy
@@ -788,7 +788,7 @@ class ProductTemplate(models.Model):
                 for tax in product_or_template.sudo().combo_ids.combo_item_ids.product_id.taxes_id
             )
         ):
-            combination_info["tax_disclaimer"] = _("Taxes calculated at checkout.")
+            combination_info["tax_disclaimer"] = self.env._("Taxes calculated at checkout.")
 
         return combination_info
 
@@ -958,7 +958,7 @@ class ProductTemplate(models.Model):
                     request.cart._get_cart_qty(product_sudo.id), to_unit=uom
                 )
             digits = self.env["decimal.precision"].precision_get("Product Unit")
-            rounding = 10 ** -digits
+            rounding = 10**-digits
             combination_info.update({
                 "free_qty": free_qty,
                 "cart_qty": cart_quantity,
@@ -1245,12 +1245,31 @@ class ProductTemplate(models.Model):
         mapping = {
             "name": {"name": "name", "type": "text", "match": True},
             "website_url": {"name": "website_url", "type": "text", "truncate": False},
-            "search_item_metadata": {"name": "price", "type": "html", "display_currency": options["display_currency"]},
+            "search_item_metadata": {
+                "name": "price",
+                "type": "html",
+                "display_currency": options["display_currency"],
+            },
             "image_url": {"name": "image_url", "type": "html"},
-            "description": {"name": "description_ecommerce", "type": "text", "html": True, "match": True},
+            "description": {
+                "name": "description_ecommerce",
+                "type": "text",
+                "html": True,
+                "match": True,
+            },
             "tags": {"name": "product_tag_ids", "type": "tags", "match": True},
-            "attribute_value_ids": {"name": "attribute_value_ids", "type": "tags", "match": True, "force_show": True},
-            "description_sale": {"name": "description_sale", "type": "text", "html": True, "match": True},
+            "attribute_value_ids": {
+                "name": "attribute_value_ids",
+                "type": "tags",
+                "match": True,
+                "force_show": True,
+            },
+            "description_sale": {
+                "name": "description_sale",
+                "type": "text",
+                "html": True,
+                "match": True,
+            },
         }
         return {
             "model": "product.template",
@@ -1270,9 +1289,7 @@ class ProductTemplate(models.Model):
             values = product.mapped("attribute_line_ids.value_ids")
             data["attribute_value_ids"] = values.read(["id", "name"])
             data["product_tag_ids"] = product.product_tag_ids.read(["name"])
-            price = self._search_render_results_prices(
-                mapping, combination_info
-            )
+            price = self._search_render_results_prices(mapping, combination_info)
             if price:
                 data["price"] = price
             data["image_url"] = "/web/image/product.template/%s/image_128" % data["id"]
@@ -1532,7 +1549,7 @@ class ProductTemplate(models.Model):
 
     @api.model
     def _get_additional_configurator_data(
-            self, product_or_template, date, currency, pricelist, *, uom=None, **kwargs
+        self, product_or_template, date, currency, pricelist, *, uom=None, **kwargs
     ):
         """Override of `sale` to append basic stock data.
 

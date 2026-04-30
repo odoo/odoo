@@ -2,7 +2,7 @@
 
 from werkzeug import urls
 
-from odoo import _, api, models
+from odoo import api, models
 from odoo.exceptions import ValidationError
 from odoo.tools import float_round
 from odoo.tools.urls import urljoin
@@ -32,7 +32,7 @@ class PaymentTransaction(models.Model):
 
         return {
             "rounded_amount": self._get_rounded_amount(),
-            "access_token": payment_utils.generate_access_token(self.reference)
+            "access_token": payment_utils.generate_access_token(self.reference),
         }
 
     def _get_specific_rendering_values(self, processing_values):
@@ -188,7 +188,7 @@ class PaymentTransaction(models.Model):
         elif payment_status in const.PAYMENT_STATUS_MAPPING["error"]:
             failure_reason = payment_data.get("failure_reason")
             self._set_error(
-                _(
+                self.env._(
                     "An error occurred during the processing of your payment (%s). Please try"
                     " again.",
                     failure_reason,

@@ -4,7 +4,7 @@ import pprint
 
 from werkzeug.exceptions import Forbidden
 
-from odoo import _, http
+from odoo import http
 from odoo.exceptions import ValidationError
 from odoo.http import request
 
@@ -101,7 +101,7 @@ class PaypalController(http.Controller):
         elif captured := purchase_unit.get("payments", {}).get("captures"):
             result.update({**captured[0], "txn_type": "CAPTURE"})
         else:
-            _logger.warning(_("Invalid response format, can't normalize."))
+            _logger.warning(self.env._("Invalid response format, can't normalize."))
         return result
 
     def _verify_notification_origin(self, payment_data, tx_sudo):
@@ -129,7 +129,7 @@ class PaypalController(http.Controller):
                 "POST", "/v1/notifications/verify-webhook-signature", json=data
             )
         except ValidationError:
-            tx_sudo._set_error(_("Unable to verify the payment data"))
+            tx_sudo._set_error(self.env._("Unable to verify the payment data"))
             return
 
         if verification.get("verification_status") != "SUCCESS":

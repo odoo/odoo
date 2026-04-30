@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.tools import BinaryBytes
 from odoo.tools.image import is_image_size_above
@@ -61,7 +61,7 @@ class ProductImage(models.Model):
         for image in self:
             if image.video_url and not image.embed_code:
                 raise ValidationError(
-                    _(
+                    image.env._(
                         "Provided video URL for '%s' is not valid. Please enter a valid video URL.",
                         image.name,
                     )

@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -74,7 +74,9 @@ class SaleOrderTemplateLine(models.Model):
 
     # === COMPUTE METHODS ===#
 
-    @api.depends("product_id", "product_id.uom_id", "product_id.uom_ids", "product_id.extra_uom_ids")
+    @api.depends(
+        "product_id", "product_id.uom_id", "product_id.uom_ids", "product_id.extra_uom_ids"
+    )
     def _compute_allowed_uom_ids(self):
         for option in self:
             option.allowed_uom_ids = option.product_id._get_available_uoms()
@@ -119,7 +121,7 @@ class SaleOrderTemplateLine(models.Model):
             lambda line: line.display_type != vals.get("display_type")
         ):
             raise UserError(
-                _(
+                self.env._(
                     "You cannot change the type of a sale quote line. Instead you should delete the"
                     " current line and create a new line of the proper type."
                 )

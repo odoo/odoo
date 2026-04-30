@@ -7,7 +7,6 @@ from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command, Domain
 from odoo.tools import float_compare, float_is_zero, format_date, groupby
-from odoo.tools.translate import _
 
 
 class SaleOrderLine(models.Model):
@@ -490,7 +489,7 @@ class SaleOrderLine(models.Model):
             + self._get_sale_order_line_multiline_description_variants()
         )
         if self.linked_line_id and not self.combo_item_id:
-            description += "\n" + _(
+            description += "\n" + self.env._(
                 "Option for: %s",
                 self.linked_line_id.product_id.with_context(
                     display_default_code=False
@@ -527,7 +526,7 @@ class SaleOrderLine(models.Model):
 
         # display the selected values per attribute on a single for a multi checkbox
         for pta, ptavs in groupby(multi_ptavs, lambda ptav: ptav.attribute_id):
-            name += "\n" + _(
+            name += "\n" + self.env._(
                 "%(attribute)s: %(values)s",
                 attribute=pta.name,
                 values=", ".join(ptav.name for ptav in ptavs),
@@ -547,17 +546,17 @@ class SaleOrderLine(models.Model):
     def _get_downpayment_description(self):
         self.ensure_one()
         if self.display_type:
-            return _("Down Payments")
+            return self.env._("Down Payments")
 
         dp_state = self._get_downpayment_state()
-        name = _("Down Payment")
+        name = self.env._("Down Payment")
         if dp_state == "draft":
-            name = _(
+            name = self.env._(
                 "Down Payment: %(date)s (Draft)",
                 date=format_date(self.env, self.create_date.date()),
             )
         elif dp_state == "cancel":
-            name = _("Down Payment (Cancelled)")
+            name = self.env._("Down Payment (Cancelled)")
         else:
             invoice = (
                 self
@@ -566,7 +565,7 @@ class SaleOrderLine(models.Model):
                 .move_id.filtered(lambda move: move.move_type == "out_invoice")
             )
             if len(invoice) == 1 and invoice.payment_reference and invoice.invoice_date:
-                name = _(
+                name = self.env._(
                     "Down Payment (ref: %(reference)s on %(date)s)",
                     reference=invoice.payment_reference,
                     date=format_date(self.env, invoice.invoice_date),
@@ -601,7 +600,9 @@ class SaleOrderLine(models.Model):
                 line.product_id.sale_line_warn_msg if has_warning_group else ""
             )
 
-    @api.depends("product_id", "product_id.uom_id", "product_id.uom_ids", "product_id.extra_uom_ids")
+    @api.depends(
+        "product_id", "product_id.uom_id", "product_id.uom_ids", "product_id.extra_uom_ids"
+    )
     def _compute_allowed_uom_ids(self):
         for line in self:
             line.allowed_uom_ids = line.product_id._get_available_uoms()
@@ -969,7 +970,7 @@ class SaleOrderLine(models.Model):
                 line.price_total / line.product_uom_qty if line.product_uom_qty else 0.0
             )
 
-    @api.depends('product_id', 'company_id')
+    @api.depends("product_id", "company_id")
     def _compute_customer_lead(self):
         for line in self:
             line.customer_lead = line.product_id.with_company(line.company_id).sale_delay
@@ -1496,14 +1497,14 @@ class SaleOrderLine(models.Model):
             allowed_combo_items = linked_line.product_template_id.combo_ids.combo_item_ids
             if line.combo_item_id and line.combo_item_id not in allowed_combo_items:
                 raise ValidationError(
-                    _(
+                    line.env._(
                         "A sale order line's combo item must be among its linked line's available"
                         " combo items."
                     )
                 )
             if line.combo_item_id and line.combo_item_id.product_id != line.product_id:
                 raise ValidationError(
-                    _("A sale order line's product must match its combo item's product.")
+                    line.env._("A sale order line's product must match its combo item's product.")
                 )
 
     # === ONCHANGE METHODS ===#
@@ -1545,7 +1546,7 @@ class SaleOrderLine(models.Model):
                     skip_qty_available_update=True
                 ).qty_available -= qty_delivered
             if line.product_id and line.state == "sale":
-                msg = _("Extra line with %s", line.product_id.display_name)
+                msg = self.env._("Extra line with %s", line.product_id.display_name)
                 line.order_id.message_post(body=msg)
 
         return lines
@@ -1568,7 +1569,7 @@ class SaleOrderLine(models.Model):
             )
             if invalid_lines:
                 raise UserError(
-                    _(
+                    self.env._(
                         "You cannot change the type of a sale order line. Instead you should "
                         "delete the current line and create a new line of the proper type."
                     )
@@ -1577,7 +1578,7 @@ class SaleOrderLine(models.Model):
         if "product_id" in values and any(
             sol.product_id.id != values["product_id"] and not sol.product_updatable for sol in self
         ):
-            raise UserError(_("You cannot modify the product of this order line."))
+            raise UserError(self.env._("You cannot modify the product of this order line."))
 
         if "product_uom_qty" in values:
             precision = self.env["decimal.precision"].precision_get("Product Unit")
@@ -1629,7 +1630,7 @@ class SaleOrderLine(models.Model):
             )
             if fields:
                 raise UserError(
-                    _(
+                    self.env._(
                         "It is forbidden to modify the following fields in a locked order:\n%s",
                         "\n".join(fields.mapped("field_description")),
                     )
@@ -1659,20 +1660,22 @@ class SaleOrderLine(models.Model):
         orders = self.mapped("order_id")
         for order in orders:
             order_lines = self.filtered(lambda x: x.order_id == order)
-            msg = Markup("<b>%s</b><ul>") % _("The ordered quantity has been updated.")
+            msg = Markup("<b>%s</b><ul>") % self.env._("The ordered quantity has been updated.")
             for line in order_lines:
                 if "product_id" in values and values["product_id"] != line.product_id.id:
                     # tracking is meaningless if the product is changed as well.
                     continue
                 msg += Markup("<li> %s: <br/>") % line.product_id.display_name
-                msg += _(
+                msg += self.env._(
                     "Ordered Quantity: %(old_qty)s -> %(new_qty)s",
                     old_qty=line.product_uom_qty,
                     new_qty=values["product_uom_qty"],
                 ) + Markup("<br/>")
                 if line.product_id.type == "consu":
-                    msg += _("Delivered Quantity: %s", line.qty_delivered) + Markup("<br/>")
-                msg += _("Invoiced Quantity: %s", line.qty_invoiced) + Markup("<br/>")
+                    msg += self.env._("Delivered Quantity: %s", line.qty_delivered) + Markup(
+                        "<br/>"
+                    )
+                msg += self.env._("Invoiced Quantity: %s", line.qty_invoiced) + Markup("<br/>")
             msg += Markup("</ul>")
             order.message_post(body=msg)
 
@@ -1706,7 +1709,7 @@ class SaleOrderLine(models.Model):
     def _unlink_except_confirmed(self):
         if self._check_line_unlink():
             raise UserError(
-                _(
+                self.env._(
                     "Once a sales order is confirmed, you can't remove one of its lines (we need to"
                     " track if something gets invoiced or delivered).\nSet the quantity to 0"
                     "instead."

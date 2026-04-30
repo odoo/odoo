@@ -4,7 +4,7 @@ from pprint import pformat
 
 import requests
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 
 from odoo.addons.payment import utils as payment_utils
@@ -321,8 +321,8 @@ class PaymentProvider(models.Model):
             if related_tokens:
                 return {
                     "warning": {
-                        "title": _("Warning"),
-                        "message": _(
+                        "title": self.env._("Warning"),
+                        "message": self.env._(
                             "This action will also archive %s tokens that are registered with this"
                             " provider.",
                             len(related_tokens),
@@ -342,7 +342,10 @@ class PaymentProvider(models.Model):
             [("provider_id", "=", self._origin.id)], limit=1
         ):
             raise UserError(
-                _("You cannot change the company of a payment provider with existing transactions.")
+                self.env._(
+                    "You cannot change the company of a payment provider"
+                    " with existing transactions."
+                )
             )
 
     # === CONSTRAINT METHODS === #
@@ -355,7 +358,7 @@ class PaymentProvider(models.Model):
             )
             if incompatible_pms:
                 raise ValidationError(
-                    _(
+                    self.env._(
                         "The following payment methods must be disabled in order to enable manual"
                         " capture: %s",
                         ", ".join(incompatible_pms.mapped("name")),
@@ -420,7 +423,7 @@ class PaymentProvider(models.Model):
                 field_names.append(ir_field.field_description)
         if field_names:
             raise ValidationError(
-                _("The following fields must be filled: %s", ", ".join(field_names))
+                self.env._("The following fields must be filled: %s", ", ".join(field_names))
             )
 
     @api.model
@@ -499,7 +502,7 @@ class PaymentProvider(models.Model):
             external_id = external_ids[provider.id]
             if external_id and not external_id.startswith("__export__"):
                 raise UserError(
-                    _(
+                    provider.env._(
                         "You cannot delete the payment provider %s; disable it or uninstall it"
                         " instead.",
                         provider.name,
@@ -563,14 +566,14 @@ class PaymentProvider(models.Model):
         :raise UserError: If the provider is disabled.
         """
         if self.state == "disabled" and not self.is_published:
-            raise UserError(_("You cannot publish a disabled provider."))
+            raise UserError(self.env._("You cannot publish a disabled provider."))
         self.is_published = not self.is_published
 
     def action_view_payment_methods(self):
         self.ensure_one()
         return {
             "type": "ir.actions.act_window",
-            "name": _("Payment Methods"),
+            "name": self.env._("Payment Methods"),
             "res_model": "payment.method",
             "view_mode": "list,kanban,form",
             "domain": [("id", "in", self.with_context(active_test=False).payment_method_ids.ids)],
@@ -828,7 +831,7 @@ class PaymentProvider(models.Model):
             )
         except (requests.exceptions.ConnectionError, requests.exceptions.Timeout):
             raise ValidationError(
-                _("Could not establish the connection to the payment provider.")
+                self.env._("Could not establish the connection to the payment provider.")
             ) from None
 
         # Log the response.
@@ -843,7 +846,7 @@ class PaymentProvider(models.Model):
             except requests.exceptions.JSONDecodeError:  # The provider failed to parse plain text.
                 error_msg = response.text
             raise ValidationError(
-                _("The payment provider rejected the request.\n%s", error_msg)
+                self.env._("The payment provider rejected the request.\n%s", error_msg)
             ) from None
         return self._parse_response_content(response, **kwargs)
 

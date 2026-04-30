@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, models
+from odoo import api, models
 from odoo.exceptions import UserError
 from odoo.tools import BinaryBytes, file_open
 
@@ -25,7 +25,7 @@ class ProductTemplate(models.Model):
         ]
         for product in self.filtered(lambda p: p.product_variant_id in product_data):
             raise UserError(
-                _(
+                product.env._(
                     "You cannot delete %(name)s as it is used in 'Coupons & Loyalty'."
                     " Please archive it instead.",
                     name=product.with_context(display_default_code=False).display_name,

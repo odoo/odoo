@@ -1,6 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _
 from odoo.exceptions import ValidationError
 from odoo.fields import Command
 from odoo.tests import Form, common
@@ -211,7 +210,7 @@ class TestLoyaltyDeliveryCost(common.TransactionCase):
             raise ValidationError(status["error"])
         if not status and no_reward_fail:
             # Can happen if global discount got filtered out in `_get_claimable_rewards`
-            raise ValidationError(_("No reward to claim with this coupon"))
+            raise ValidationError(self.env._("No reward to claim with this coupon"))
         coupons = self.env["loyalty.card"]
         rewards = self.env["loyalty.reward"]
         for coupon, coupon_rewards in status.items():
