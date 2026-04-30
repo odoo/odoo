@@ -270,7 +270,7 @@ export class Builder extends Component {
             editShadow: this.editShadow.bind(this),
         });
         onWillDestroy(() => {
-            this.resizeObserver.disconnect();
+            this.resizeObserver?.disconnect();
             this.editor.destroy();
         });
 
