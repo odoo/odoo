@@ -81,7 +81,7 @@ _ref_vat = {
     'tr': _lt('11111111111 (NIN) or 2222222222 (VKN)'),
     'ua': _lt('12345678 or UA12345678 (EDRPOU), 1234567890 (RNOPP) or 123456789012 (IPN)'),
     'uy': _lt("Example: '219999830019' (format: 12 digits, all numbers, valid check digit)"),
-    'uz': _lt('XXXXXXXXX [9 digits]'),
+    'uz': _lt('XXXXXXXXX [9 digits] or XXXXXXXXXXXX [12 digits]'),
     've': 'V-12345678-1, V123456781, V-12.345.678-1',
     'xi': 'XI123456782',
     'sa': _lt('310175397400003 [Fifteen digits, first and last digits should be "3"]'),
@@ -657,7 +657,7 @@ class ResPartner(models.Model):
         )
 
     def check_vat_uz(self, vat):
-        return len(vat) == 9 and vat.isdigit()
+        return len(vat) in {9, 12} and vat.isdigit()
 
     def check_vat_ve(self, vat):
         # https://tin-check.com/en/venezuela/

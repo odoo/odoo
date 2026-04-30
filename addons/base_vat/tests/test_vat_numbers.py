@@ -277,6 +277,13 @@ class TestStructure(TransactionCase):
         in_partner = self.env["res.partner"].create({"name": "IN Company", "country_id": self.env.ref("base.in").id})
         in_partner.vat = "9922JPN29001OSU"
 
+    def test_vat_uz(self):
+        uz_partner = self.env["res.partner"].create({"name": "UZ Company", "country_id": self.env.ref("base.uz").id})
+        uz_partner.vat = "012345678"
+        uz_partner.vat = "012345678901"
+        with self.assertRaises(ValidationError):
+            uz_partner.vat = "0123456789"
+
 
 @tagged('-standard', 'external')
 class TestStructureVIES(TestStructure):
