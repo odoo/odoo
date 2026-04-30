@@ -459,7 +459,7 @@ class DiscussChannelMember(models.Model):
                 "_store_rtc_update_fields",
                 fields_params={"added": rtc_updates[0], "removed": rtc_updates[1]},
             )
-            store.add_singleton_values(
+            store.add_model_values(
                 "Rtc",
                 lambda res: (
                     res.attr("iceServers", ice_servers or False),
