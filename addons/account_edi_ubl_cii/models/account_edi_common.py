@@ -1,3 +1,4 @@
+from datetime import datetime
 from markupsafe import Markup
 
 from odoo import _, api, models
@@ -7,7 +8,6 @@ from odoo.tools import float_compare, float_is_zero, float_repr
 from odoo.tools.float_utils import float_round
 from odoo.tools.misc import clean_context, formatLang, html_escape
 from odoo.tools.xml_utils import find_xml_value
-from datetime import datetime
 
 # -------------------------------------------------------------------------
 # UNIT OF MEASURE
@@ -254,29 +254,29 @@ class FloatFmt(float):
     def __str__(self):
         if not isinstance(self.min_dp, int) or (self.max_dp is not None and not isinstance(self.max_dp, int)):
             return "<FloatFmt()>"
-        self_float = float(self)
-        min_dp_int = int(self.min_dp)
+        # why do we round ?
+        # imagine we have: 0.499 and max_dp = 2.
+        # The best representation for 0.499 with max_dp = 2 is 0.50 not 0.49
+        # rounding with max_dp precision ensure we have the best representation with max_dp decimal places.
+        self_float = float_round(float(self), self.min_dp if self.max_dp is None else self.max_dp)
         if self.max_dp is None:
-            return float_repr(self_float, min_dp_int)
+            return float_repr(self_float, self.min_dp)
         else:
             # Format the float to between self.min_dp and self.max_dp decimal places.
             # We start by formatting to self.max_dp, and then remove trailing zeros,
             # but always keep at least self.min_dp decimal places.
-            max_dp_int = int(self.max_dp)
-            amount_max_dp = float_repr(self_float, max_dp_int)
+            amount_max_dp = float_repr(self_float, self.max_dp)
             num_trailing_zeros = len(amount_max_dp) - len(amount_max_dp.rstrip('0'))
-            return float_repr(self_float, max(max_dp_int - num_trailing_zeros, min_dp_int))
+            return float_repr(self_float, max(self.max_dp - num_trailing_zeros, self.min_dp))
 
     def __repr__(self):
         if not isinstance(self.min_dp, int) or (self.max_dp is not None and not isinstance(self.max_dp, int)):
             return "<FloatFmt()>"
         self_float = float(self)
-        min_dp_int = int(self.min_dp)
         if self.max_dp is None:
-            return f"FloatFmt({self_float!r}, {min_dp_int!r})"
+            return f"FloatFmt({self_float!r}, {self.min_dp!r})"
         else:
-            max_dp_int = int(self.max_dp)
-            return f"FloatFmt({self_float!r}, {min_dp_int!r}, {max_dp_int!r})"
+            return f"FloatFmt({self_float!r}, {self.min_dp!r}, {self.max_dp!r})"
 
 
 class AccountEdiCommon(models.AbstractModel):
