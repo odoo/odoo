@@ -432,7 +432,7 @@
                         t-on-click.stop="hasDeleteButton ? (ev) => this.onRemoveCellClicked(record, ev) : () => {}"
                         tabindex="-1"
                     >
-                        <button class="fa d-print-none"
+                        <button class="fa d-print-none btn btn-link text-danger"
                             t-if="hasDeleteButton"
                             t-att-class="{
                                 'fa-trash-o': !useUnlink and this.activeActions.delete,
