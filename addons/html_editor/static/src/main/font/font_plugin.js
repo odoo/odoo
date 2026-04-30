@@ -538,8 +538,8 @@ export class FontPlugin extends Plugin {
                 if (dir) {
                     baseContainer.setAttribute("dir", dir);
                 }
-                baseContainer.replaceChildren(...newElement.childNodes);
                 newElement.replaceWith(baseContainer);
+                baseContainer.replaceChildren(this.document.createElement("br"));
                 this.dependencies.selection.setCursorStart(baseContainer);
             }
             return true;
