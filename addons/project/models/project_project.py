@@ -1187,7 +1187,7 @@ class ProjectProject(models.Model):
     def _store_thread_fields(self, res: Store.FieldList, *, request_list, **kwargs):
         super()._store_thread_fields(res, request_list=request_list, **kwargs)
         if "followers" in request_list:
-            res.many("collaborator_ids", [], value=lambda p: p.collaborator_ids.partner_id)
+            res.many("collaborator_ids", [], value=lambda p: p.sudo().collaborator_ids.partner_id)
 
     @api.depends('task_count', 'open_task_count')
     def _compute_task_completion_percentage(self):
