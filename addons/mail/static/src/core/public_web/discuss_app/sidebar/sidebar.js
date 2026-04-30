@@ -42,5 +42,10 @@ export class DiscussSidebar extends Component {
             return; // ignore resize from mount not triggered by user
         }
         this.store.discuss.isSidebarCompact = width <= 100;
+
+        // Save sidebar width
+        if (!this.store.discuss.isSidebarCompact) {
+            this.store.discuss.sidebarWidth = width;
+        }
     }
 }

@@ -20,6 +20,7 @@ export class DiscussApp extends Record {
         },
     });
     hasRestoredThread = false;
+    sidebarWidth = fields.Attr(undefined, { localStorage: true });
 
     /** @param {import("@mail/core/common/action").Action} [nextActiveAction] */
     shouldDisableMemberPanelAutoOpenFromClose(nextActiveAction) {
