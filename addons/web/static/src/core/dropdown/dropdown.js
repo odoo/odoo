@@ -1,11 +1,12 @@
 import { onRendered, reactive, useChildEnv, useLayoutEffect } from "@web/owl2/utils";
 import {
     Component,
+    immediateEffect,
     onMounted,
+    onWillDestroy,
     onWillUpdateProps,
     status,
     untrack,
-    useEffect,
     xml,
 } from "@odoo/owl";
 import { useDropdownGroup } from "@web/core/dropdown/_behaviours/dropdown_group_hook";
@@ -187,13 +188,15 @@ export class Dropdown extends Component {
             mounted = true;
             this.onStateChanged(this.state);
         });
-        useEffect(() => {
-            if (!mounted) {
-                this.state.isOpen; // subscribe to signal
-                return;
-            }
-            this.onStateChanged(this.state);
-        });
+        onWillDestroy(
+            immediateEffect(() => {
+                if (!mounted) {
+                    this.state.isOpen; // subscribe to signal
+                    return;
+                }
+                this.onStateChanged(this.state);
+            })
+        );
 
         useLayoutEffect(
             (target) => this.setTargetElement(target),
