@@ -192,12 +192,10 @@ test("will let handlers from the registry handle errors first", async () => {
 
 test("originalError is the root cause of the error chain", async () => {
     await makeMockEnv();
-    const error = new Error();
-    error.name = "boom";
     errorHandlerRegistry.add("__test_handler__", (env, err, originalError) => {
         expect(err).toBeInstanceOf(UncaughtPromiseError); // Wrapped by error service
-        expect(err.cause).toBeInstanceOf(Error); // Wrapped by owl
-        expect(err.cause.cause).toBe(originalError); // original error
+        // owl no longer wraps lifecycle errors in OwlError, so the cause is the original error directly
+        expect(err.cause).toBe(originalError);
         expect.step("in handler");
         return true;
     });
@@ -207,10 +205,13 @@ test("originalError is the root cause of the error chain", async () => {
 
         props = props();
     }
+
+    const error1 = new Error();
+    error1.name = "boom";
     class ThrowInSetup extends Component {
         static template = xml``;
         setup() {
-            throw error;
+            throw error1;
         }
     }
 
@@ -219,12 +220,14 @@ test("originalError is the root cause of the error chain", async () => {
     await expect.waitForSteps(["in handler"]);
     expect.verifyErrors(["boom"]);
 
+    const error2 = new Error();
+    error2.name = "boom";
     class ThrowInWillStart extends Component {
         static template = xml``;
         static props = ["*"];
         setup() {
             onWillStart(() => {
-                throw error;
+                throw error2;
             });
         }
     }
