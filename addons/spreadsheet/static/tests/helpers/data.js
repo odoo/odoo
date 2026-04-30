@@ -81,49 +81,6 @@ export function getBasicServerData() {
     };
 }
 
-function getField(model, fieldPath) {
-    const path = fieldPath.split(".");
-    let currentNode = model._fields;
-    for (const part of path) {
-        if (!currentNode[part]) {
-            throw new Error(`Field ${fieldPath} not found in model ${model._name}`);
-        }
-        currentNode = currentNode[part];
-    }
-    return currentNode;
-}
-
-/**
- *
- * @param {string} model
- * @param {Array<string>} columns
- * @param {{name: string, asc: boolean}[]} orderBy
- *
- * @returns { {definition: Object, columns: Array<Object>}}
- */
-export function generateListDefinition(model, columns, actionXmlId, orderBy = [], name = "List") {
-    const cols = [];
-    for (let { name, string } of columns) {
-        if (!string) {
-            const PyModel = Object.values(SpreadsheetModels).find((m) => m._name === model);
-            string = getField(PyModel, name);
-        }
-        cols.push({
-            name,
-            string,
-        });
-    }
-    return {
-        model,
-        columns: cols,
-        domain: [],
-        context: {},
-        orderBy,
-        actionXmlId,
-        name,
-    };
-}
-
 export function getBasicListArchs() {
     return {
         "partner,false,list": getBasicListArch(),
