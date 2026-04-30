@@ -212,8 +212,6 @@ export class TableUIPlugin extends Plugin {
             clearColumnContent: withCommit(this.dependencies.table.clearColumnContent),
             clearRowContent: withCommit(this.dependencies.table.clearRowContent),
             toggleAlternatingRows: withCommit(this.dependencies.table.toggleAlternatingRows),
-            mergeSelectedCells: withCommit(this.dependencies.table.mergeSelectedCells),
-            unmergeSelectedCell: withCommit(this.dependencies.table.unmergeSelectedCell),
             buildTableGrid: this.dependencies.table.buildTableGrid,
         };
         const grid = this.dependencies.table.buildTableGrid(closestElement(td, "table"));
