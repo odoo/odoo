@@ -1,5 +1,4 @@
 import { fields, Record } from "@mail/model/export";
-import { Deferred } from "@web/core/utils/concurrency";
 
 /**
  * @typedef {object} ServerSessionInfo
@@ -21,30 +20,36 @@ import { Deferred } from "@web/core/utils/concurrency";
 
 export class RtcSession extends Record {
     static _name = "discuss.channel.rtc.session";
+    /** @type {Map<number, PromiseWithResolvers<import("models").RtcSession|undefined>>} */
     static awaitedRecords = new Map();
+
     static _insert() {
         /** @type {import("models").RtcSession} */
         const session = super._insert(...arguments);
         session.channel?.rtc_session_ids.add(session);
         return session;
     }
+
     /** @returns {Promise<import("models").RtcSession>} */
     static async getWhenReady(id) {
         const session = this.get(id);
-        if (!session) {
-            let deferred = this.awaitedRecords.get(id);
-            if (!deferred) {
-                deferred = new Deferred();
-                this.awaitedRecords.set(id, deferred);
-                setTimeout(() => {
-                    deferred.resolve();
-                    this.awaitedRecords.delete(id);
-                }, 120_000);
-            }
-            return deferred;
+        if (session) {
+            return session;
         }
-        return session;
+        const sessionPromise = this.awaitedRecords.get(id)?.promise;
+        if (sessionPromise) {
+            return sessionPromise;
+        }
+        const promiseWithResolvers = Promise.withResolvers();
+        this.awaitedRecords.set(id, promiseWithResolvers);
+        const timeout = setTimeout(() => {
+            promiseWithResolvers.resolve();
+            this.awaitedRecords.delete(id);
+        }, 120_000);
+        promiseWithResolvers.promise.then(() => clearTimeout(timeout));
+        return promiseWithResolvers.promise;
     }
+
     /** @returns {import("models").RtcSession} */
     static new() {
         const record = super.new(...arguments);

@@ -1,7 +1,6 @@
 import { EventBus } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { Deferred } from "@web/core/utils/concurrency";
 
 export class AttachmentUploadService {
     constructor(env, services) {
@@ -17,7 +16,8 @@ export class AttachmentUploadService {
 
         this.nextId = -1;
         this.abortByAttachmentId = new Map();
-        this.deferredByAttachmentId = new Map();
+        /** @type {Map<number, (value?: void) => void} */
+        this.resolveUploadByAttachmentId = new Map();
         this.uploadingAttachmentIds = new Set();
         this._fileUploadBus = new EventBus();
         /** @type {Map<number, {composer: import("models").Composer, thread: import("models").Thread}>} */
@@ -45,28 +45,28 @@ export class AttachmentUploadService {
                 if (!this.uploadingAttachmentIds.has(tmpId)) {
                     return;
                 }
-                const def = this.deferredByAttachmentId.get(tmpId);
+                const resolveUpload = this.resolveUploadByAttachmentId.get(tmpId);
                 if (upload.xhr.status === 413) {
                     this.notificationService.add(_t("File too large"), { type: "danger" });
-                    def.resolve();
+                    resolveUpload();
                     this._cleanupUploading(tmpId);
                     return;
                 }
                 if (upload.xhr.status !== 200) {
                     this.notificationService.add(_t("Server error"), { type: "danger" });
-                    def.resolve();
+                    resolveUpload();
                     this._cleanupUploading(tmpId);
                     return;
                 }
                 const response = JSON.parse(upload.xhr.response);
                 if (response.error) {
                     this.notificationService.add(response.error, { type: "danger" });
-                    def.resolve();
+                    resolveUpload();
                     this._cleanupUploading(tmpId);
                     return;
                 }
                 const { thread, composer } = this.targetsByTmpId.get(tmpId);
-                this._processLoaded(thread, composer, response, tmpId, def);
+                this._processLoaded(thread, composer, response, tmpId, resolveUpload);
             }
         );
         this.fileUploadService.bus.addEventListener(
@@ -76,13 +76,14 @@ export class AttachmentUploadService {
                 if (!this.uploadingAttachmentIds.has(tmpId)) {
                     return;
                 }
-                this.deferredByAttachmentId.get(tmpId).resolve();
+                const resolveUpload = this.resolveUploadByAttachmentId.get(tmpId);
+                resolveUpload();
                 this._cleanupUploading(tmpId);
             }
         );
     }
 
-    _processLoaded(thread, composer, { data }, tmpId, def) {
+    _processLoaded(thread, composer, { data }, tmpId, resolveUpload) {
         const { store_data, attachment_id } = data;
         this.store.insert(store_data);
         /** @type {import("models").Attachment} */
@@ -95,14 +96,14 @@ export class AttachmentUploadService {
                 composer.attachments.push(attachment);
             }
         }
-        def.resolve(attachment);
+        resolveUpload(attachment);
         this._fileUploadBus.trigger("UPLOAD", thread);
         this._cleanupUploading(tmpId);
     }
 
     _cleanupUploading(tmpId) {
         this.abortByAttachmentId.delete(tmpId);
-        this.deferredByAttachmentId.delete(tmpId);
+        this.resolveUploadByAttachmentId.delete(tmpId);
         this.uploadingAttachmentIds.delete(tmpId);
         this.targetsByTmpId.delete(tmpId);
         this.store["ir.attachment"].get(tmpId)?.remove();
@@ -114,10 +115,10 @@ export class AttachmentUploadService {
 
     async unlink(attachment) {
         if (this.uploadingAttachmentIds.has(attachment.id)) {
-            const deferred = this.deferredByAttachmentId.get(attachment.id);
+            const resolveUpload = this.resolveUploadByAttachmentId.get(attachment.id);
             const abort = this.abortByAttachmentId.get(attachment.id);
             this._cleanupUploading(attachment.id);
-            deferred.resolve();
+            resolveUpload();
             abort();
             return;
         }
@@ -144,9 +145,9 @@ export class AttachmentUploadService {
                     throw e;
                 }
             });
-        const uploadDoneDeferred = new Deferred();
-        this.deferredByAttachmentId.set(tmpId, uploadDoneDeferred);
-        return uploadDoneDeferred;
+        const { promise: uploadPromise, resolve: resolveUpload } = Promise.withResolvers();
+        this.resolveUploadByAttachmentId.set(tmpId, resolveUpload);
+        return uploadPromise;
     }
 
     /**
