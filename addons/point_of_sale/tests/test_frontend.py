@@ -3891,6 +3891,7 @@ class TestUi(TestPointOfSaleHttpCommon):
 
     def test_pos_open_ui_button(self):
         """ Test the Open Register button click behavior in the dashboard. """
+        self.env['pos.session'].create({'name': 'Test Session', 'config_id': self.main_pos_config.id, 'user_id': self.pos_user.id})  # Skip the tax inclusion selection if not the first session opening
         self.start_tour("/odoo/point-of-sale", 'test_pos_open_ui_button', login="pos_user")
 
     def test_customer_search_prefilled_on_create(self):
