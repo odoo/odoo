@@ -14,9 +14,11 @@ export class MassMailingSnippetModel extends SnippetModel {
         });
         snippetCopyEl.removeAttribute("data-filter-domain");
     }
+
     getTechnicalUsage() {
         return "mass_mailing";
     }
+
     getAddSnippetDialogClass() {
         return AddSnippetDialogSandboxed;
     }
