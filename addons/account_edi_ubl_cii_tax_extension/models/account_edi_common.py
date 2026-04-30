@@ -92,6 +92,10 @@ TAX_EXEMPTION_MAPPING = {
     'VATEX-FR-F': 'VATEX-FR-F - Second-hand sales',
     'VATEX-FR-I': 'VATEX-FR-I - Sales of works of art',
     'VATEX-FR-J': 'VATEX-FR-J - Sales of antiques',
+    'DL8.46.1': 'Certain financial services',
+    'DL8.46.2': 'Supply of residential units (lease or sale)',
+    'DL8.46.3': 'Bare land',
+    'DL8.46.4': 'Local passenger transport',
 }
 
 # Some codes were added with _ instead of -, this is a fix for stable version to add them correctly in XML files.
