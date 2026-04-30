@@ -32,6 +32,10 @@ test("RemainingDaysField on a date field in list view", async () => {
         { id: 6, date: "2018-02-08" }, // + 4 months (diff >= 100 days)
         { id: 7, date: "2017-06-08" }, // - 4 months (diff >= 100 days)
         { id: 8, date: false },
+        { id: 9, date: "2017-11-01" }, // + 24 days
+        { id: 10, date: "2017-11-08" }, // + 31 days
+        { id: 11, date: "2017-09-15" }, // - 23 days
+        { id: 12, date: "2017-09-07" }, // - 31 days
     ];
 
     await mountView({
@@ -49,6 +53,10 @@ test("RemainingDaysField on a date field in list view", async () => {
     expect(cells[5]).toHaveText("Feb 8, 2018");
     expect(cells[6]).toHaveText("Jun 8");
     expect(cells[7]).toHaveText("");
+    expect(cells[8]).toHaveText("In 24 days");
+    expect(cells[9]).toHaveText("Next month");
+    expect(cells[10]).toHaveText("23 days ago");
+    expect(cells[11]).toHaveText("Last month");
 
     expect(queryOne(".o_field_widget > div", { root: cells[0] })).toHaveAttribute(
         "title",
@@ -82,6 +90,24 @@ test("RemainingDaysField on a date field in list view", async () => {
         "text-danger",
     ]);
     expect(queryOne(".o_field_widget > div", { root: cells[6] })).toHaveClass([
+        "fw-bold",
+        "text-danger",
+    ]);
+    expect(queryOne(".o_field_widget > div", { root: cells[8] })).not.toHaveClass([
+        "fw-bold",
+        "text-warning",
+        "text-danger",
+    ]);
+    expect(queryOne(".o_field_widget > div", { root: cells[9] })).not.toHaveClass([
+        "fw-bold",
+        "text-warning",
+        "text-danger",
+    ]);
+    expect(queryOne(".o_field_widget > div", { root: cells[10] })).toHaveClass([
+        "fw-bold",
+        "text-danger",
+    ]);
+    expect(queryOne(".o_field_widget > div", { root: cells[11] })).toHaveClass([
         "fw-bold",
         "text-danger",
     ]);
