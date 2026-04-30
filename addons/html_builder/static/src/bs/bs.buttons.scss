@@ -80,4 +80,10 @@
             --btn-active-border-color: #{$o-we-bg-darker};
         }
     }
+
+    @each $-name, $-color in $o-we-colors {
+        &.text-#{$-name} {
+            --color: #{scale-color($-color, $lightness: 5%, $saturation: 100%)};
+        }
+    }
 }
