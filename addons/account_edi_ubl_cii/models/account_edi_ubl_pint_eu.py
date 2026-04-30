@@ -8,6 +8,18 @@ class AccountEdiUBLPintEU(models.AbstractModel):
     _inherit = ['account.edi.ubl_pint', 'account.edi.ubl_cen_en16931']
     _description = "UBL PINT-EU Layer"
 
+    def _ubl_should_export_early_payment_discount_as_line(self, vals):
+        # Not twice: account.edi.ubl_cen_en16931 already exports them as allowances/charges.
+        return True
+
+    def _ubl_should_export_global_discount_as_line(self, vals):
+        # Not twice: account.edi.ubl_cen_en16931 already exports them as allowances/charges.
+        return True
+
+    def _ubl_should_export_cash_rounding_as_line(self, vals):
+        # account.edi.ubl_cen_en16931 already exports them in PayableRoundingAmount.
+        return True
+
     def _ubl_add_customization_id_node(self, vals):
         super()._ubl_add_customization_id_node(vals)
         if self._is_document(vals, 'invoice', 'credit_note'):

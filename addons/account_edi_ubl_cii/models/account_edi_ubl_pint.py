@@ -13,6 +13,16 @@ class AccountEdiUBLPint(models.AbstractModel):
     # EXPORT: NODES
     # -------------------------------------------------------------------------
 
+    def _ubl_add_profile_id_node(self, vals):
+        # Business process type (IBT-023), shared by every PINT jurisdiction.
+        # https://docs.peppol.eu/poac/pint/pint/trn-invoice/semantic-model/ibt-023/
+        super()._ubl_add_profile_id_node(vals)
+
+        if self._is_document(vals, 'invoice', 'credit_note'):
+            vals['document_node']['cbc:ProfileID']['_text'] = 'urn:peppol:bis:billing'
+        elif self._is_document(vals, 'self_invoice', 'self_credit_note'):
+            vals['document_node']['cbc:ProfileID']['_text'] = 'urn:peppol:bis:selfbilling'
+
     def _ubl_add_invoice_type_code_node(self, vals):
         super()._ubl_add_invoice_type_code_node(vals)
 
@@ -137,6 +147,18 @@ class AccountEdiUBLPint(models.AbstractModel):
                         'cbc:ID': {'_text': preceding_invoice_name},
                     }
                 })
+
+    def _ubl_should_export_early_payment_discount_as_line(self, vals):
+        # Early payment discount lines should not appear as lines but as allowances/charges.
+        return False
+
+    def _ubl_should_export_global_discount_as_line(self, vals):
+        # Global discount lines should not appear as lines but as allowances/charges ([ibr-027] no negative net price).
+        return False
+
+    def _ubl_should_export_cash_rounding_as_line(self, vals):
+        # Cash rounding lines should not appear as lines but in PayableRoundingAmount.
+        return False
 
     def _ubl_get_partner_address_node(self, vals, partner):
         node = super()._ubl_get_partner_address_node(vals, partner)
@@ -605,6 +627,11 @@ class AccountEdiUBLPint(models.AbstractModel):
     # -------------------------------------------------------------------------
     # IMPORT
     # -------------------------------------------------------------------------
+
+    def _import_invoice_ubl_cii(self, invoice, file_data, new=False):
+        if invoice.invoice_line_ids:
+            return invoice._reason_cannot_decode_has_invoice_lines()
+        return self._ubl_import_invoice(invoice, file_data, new=new)
 
     def _import_prepare_missing_customer_create_values(self, collected_values):
         partner_create_values = super()._import_prepare_missing_customer_create_values(collected_values)
