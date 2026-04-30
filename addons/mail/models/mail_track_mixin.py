@@ -605,14 +605,11 @@ class MailTrackMixin(models.AbstractModel):
         """ Like '_create_mail_tracking_values' but for a given property of a property
         field. """
         col_info = col_info | {'type': initial_value['type'], 'selection': initial_value.get('selection')}
+        if initial_value['type'] == 'monetary' and 'currency_field' not in col_info:
+            col_info = col_info | {'currency_field': initial_value.get('currency_field')}
         # custom label / description for property field
         field_label = f"{col_info['string']}: {initial_value['string']}"
 
-        field_info = {
-            'desc': field_label,
-            'name': col_name,
-            'type': initial_value['type'],
-        }
         value = initial_value.get('value', False)
         if value and initial_value['type'] == 'tags':
             value = [t for t in initial_value.get('tags', []) if t[0] in value]
@@ -620,4 +617,10 @@ class MailTrackMixin(models.AbstractModel):
         tracking_values = self._create_mail_tracking_values(
             value, False, col_name, col_info,
         )
+        field_info = {
+            **(tracking_values.get('field_info') or {}),
+            'desc': f"{col_info['string']}: {initial_value['string']}",
+            'name': col_name,
+            'type': initial_value['type'],
+        }
         return {**tracking_values, 'field_info': field_info, 'field_label': field_label}
