@@ -16,7 +16,12 @@ import {
     isZWS,
     PROTECTED_QWEB_SELECTOR,
 } from "@html_editor/utils/dom_info";
-import { closestElement, descendants, selectElements } from "@html_editor/utils/dom_traversal";
+import {
+    closestElement,
+    descendants,
+    findUpTo,
+    selectElements,
+} from "@html_editor/utils/dom_traversal";
 import { isColorGradient, normalizeCSSColor, rgbaToHex } from "@web/core/utils/colors";
 import { backgroundImageCssToParts, backgroundImagePartsToCss } from "@html_editor/utils/image";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
@@ -243,25 +248,28 @@ export class ColorPlugin extends Plugin {
                 if (alreadyWithinFont.has(node)) {
                     return [];
                 }
+                // Background gradient cannot be applied within text gradient.
+                const shouldBreakGradient = (node) =>
+                    mode === "backgroundColor" &&
+                    isColorGradient(color) &&
+                    node.classList.contains("text-gradient");
                 let font = closestElement(
                     node,
                     (node) =>
-                        (hasColor(node, "color") || hasColor(node, "backgroundColor")) &&
+                        (hasColor(node, mode) || shouldBreakGradient(node)) &&
                         node.nodeName !== "LI"
                 );
                 if (
                     color &&
                     font &&
-                    (!hasColor(font, mode) ||
-                        (isColorGradient(font.style["background-image"]) &&
-                            !this.dependencies.selection.areNodeContentsFullySelected(font))) &&
-                    // Background gradient cannot be applied within text
-                    // gradient.
-                    !(
-                        font.classList.contains("text-gradient") &&
-                        mode === "backgroundColor" &&
-                        isColorGradient(color)
-                    )
+                    !shouldBreakGradient(font) &&
+                    // Partially selected gradient font
+                    ((isColorGradient(font.style["background-image"]) &&
+                        !this.dependencies.selection.areNodeContentsFullySelected(font)) ||
+                        // Gradient found between node uptil font
+                        findUpTo(node, font, (ancestor) =>
+                            isColorGradient(ancestor.style?.["background-image"])
+                        ))
                 ) {
                     font = null;
                 }
