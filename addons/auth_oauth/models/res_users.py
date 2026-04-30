@@ -167,4 +167,4 @@ class ResUsers(models.Model):
             raise
 
     def _get_session_token_fields(self):
-        return super()._get_session_token_fields() | {'oauth_access_token'}
+        return super()._get_session_token_fields()
