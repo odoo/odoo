@@ -14,6 +14,7 @@ patch(PaymentScreen.prototype, {
                     paymentLine.getPaymentStatus() !== "pending"
             );
             if (pendingPaymentLine) {
+                pendingPaymentLine.setPaymentStatus("waitingCard");
                 const payment_status =
                     await pendingPaymentLine.payment_method_id.payment_interface._waitForPaymentConfirmation();
                 if (payment_status?.status === "AUTHORIZED") {
