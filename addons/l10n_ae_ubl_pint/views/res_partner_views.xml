@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_partner_form_inherit_l10n_ae_ubl_pint" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit.l10n_ae_ubl_pint</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('o_address_format')]" position="after">
+                <field name="l10n_ae_registration_identifier_type"
+                       invisible="'AE' not in fiscal_country_codes"/>
+                <field name="l10n_ae_registration_identifier"
+                       invisible="'AE' not in fiscal_country_codes"/>
+                <field name="l10n_ae_authority_name"
+                       invisible="'AE' not in fiscal_country_codes or l10n_ae_registration_identifier_type != 'TL'"/>
+                <field name="l10n_ae_passport_issuing_country_id"
+                       invisible="'AE' not in fiscal_country_codes or l10n_ae_registration_identifier_type != 'PAS'"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
