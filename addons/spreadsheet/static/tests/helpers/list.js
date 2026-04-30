@@ -1,5 +1,4 @@
 import { waitForDataLoaded } from "@spreadsheet/helpers/model";
-import { generateListDefinition } from "@spreadsheet/../tests/helpers/data";
 import { createModelWithDataSource } from "@spreadsheet/../tests/helpers/model";
 
 /**
@@ -21,13 +20,15 @@ import { createModelWithDataSource } from "@spreadsheet/../tests/helpers/model";
  * @param { "static" | "dynamic"} [mode]
  */
 export function insertListInSpreadsheet(model, params, mode = "static") {
-    const definition = generateListDefinition(
-        params.model,
-        params.columns,
-        params.actionXmlId,
-        params.orderBy,
-        params.name
-    );
+    const definition = {
+        model: params.model,
+        columns: params.columns,
+        domain: [],
+        context: {},
+        orderBy: params.orderBy || [],
+        actionXmlId: params.actionXmlId,
+        name: params.name || "List",
+    };
     const listId = model.getters.getNextListId();
     const [col, row] = params.position || [0, 0];
 
