@@ -23,14 +23,14 @@
                     </t>
                     <t t-else="">
                         <span class="o_tax_group_edit" t-on-click.prevent="() => this.setState('edit')">
-                            <span class="o_tax_group_amount_value o_list_monetary">
+                            <span class="o_tax_group_amount_value o_list_monetary d-block">
                                 <i class="fa fa-pencil me-2"/> <t t-out="this.formatMonetary(this.props.taxGroup.tax_amount_currency)"/>
                             </span>
                         </span>
                     </t>
                 </t>
                 <t t-else="">
-                    <span class="o_tax_group_amount_value o_list_monetary">
+                    <span class="o_tax_group_amount_value o_list_monetary d-block">
                         <t t-out="this.formatMonetary(this.props.taxGroup.tax_amount_currency)" style="white-space: nowrap;"/>
                     </span>
                 </t>
