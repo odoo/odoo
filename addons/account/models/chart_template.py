@@ -27,6 +27,7 @@ TEMPLATE_MODELS = (
     'account.tax',
     'account.journal',
     'account.reconcile.model',
+    'account.cash.rounding',
 )
 
 TAX_TAG_DELIMITER = '||'
