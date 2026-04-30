@@ -20,12 +20,24 @@
                         </div>
                     </div>
                     <footer class="modal-footer bg-transparent border-0 px-4 pt-0 pb-4 justify-content-start">
-                        <button type="button" class="btn btn-primary s_team_board_contact_button">
-                            Send a message
-                        </button>
+                        <div class="d-flex flex-wrap gap-2 s_team_board_contact_methods">
+                            <button type="button" class="btn btn-primary s_team_board_contact_method_button" data-contact-method-id="sendMessage">
+                                Send a message
+                            </button>
+                            <div class="d-flex flex-wrap gap-2 s_team_board_extra_contact_methods"/>
+                        </div>
                     </footer>
                 </article>
             </div>
         </div>
+    </t>
+
+    <t t-name="website.s_team_board.extra_contact_methods">
+        <t t-foreach="contactMethods" t-as="contactMethod" t-key="contactMethod.id">
+            <button type="button"
+                    class="btn btn-outline-primary s_team_board_contact_method_button"
+                    t-att-data-contact-method-id="contactMethod.id"
+                    t-out="contactMethod.label"/>
+        </t>
     </t>
 </templates>
