@@ -115,9 +115,11 @@
                                 />
 
                                 <article t-if="is_add_to_cart_possible">
+                                    <t t-call="website_sale.container_dropzone_above_product_details"/>
+
                                     <!-- Product title (purchase available)-->
                                     <t t-call="website_sale.product_title"/>
-
+                                    <t t-call="website_sale.container_dropzone_above_price"/>
                                     <div
                                         t-if="not is_view_active('website_sale.cta_wrapper_boxed')"
                                         class="o_wsale_product_details_content_section o_wsale_product_details_content_section_price mb-4"
@@ -145,7 +147,7 @@
                                     >
                                         <t t-call="website_sale.cta_wrapper"/>
                                     </div>
-
+                                    <t t-call="website_sale.container_dropzone_above_specification"/>
                                     <div
                                         class="o_wsale_product_details_content_section o_wsale_product_details_content_section_accordion mb-4"
                                         t-if="is_view_active('website_sale.accordion_specs_item') or is_view_active('website_sale.accordion_more_information')"
@@ -183,6 +185,7 @@
                                             </t>
                                         </div>
                                     </div>
+                                    <t t-call="website_sale.container_dropzone_below_product_details"/>
                                 </article>
                             </div>
                         </div>
@@ -804,24 +807,6 @@
                     </div>
                 </section>
             </div>
-        </div>
-    </template>
-
-    <template
-        id="website_sale.product_terms_and_conditions"
-        name="Terms and Conditions"
-        inherit_id="website_sale.product"
-        active="True"
-        priority="21"
-    >
-        <div id="o_wsale_product_cta_section" position="inside">
-            <small class="text-muted mb-0">
-                <a href="/terms" class="o_translate_inline text-muted">
-                    <u>Terms and Conditions</u>
-                </a><br/>
-                30-day money-back guarantee<br/>
-                Shipping: 2-3 Business Days
-            </small>
         </div>
     </template>
 
@@ -1477,6 +1462,38 @@
                 </td>
             </tr>
         </table>
+    </template>
+
+    <!-- Drop zones for all products -->
+    <template id="website_sale.container_dropzone_above_product_details">
+        <div
+            class="o_drop_inner_empty oe_empty"
+            data-editor-message.translate="Add elements to all products"
+        />
+    </template>
+
+    <template id="website_sale.container_dropzone_below_product_details">
+        <div
+            class="o_drop_inner_empty oe_empty"
+            data-editor-message.translate="Add elements to all products"
+        />
+    </template>
+
+    <!-- Drop zones for this product -->
+    <template id="website_sale.container_dropzone_above_price">
+        <div
+            class="o_drop_inner_empty"
+            data-editor-message=""
+            t-field="product.dropzone_above_price"
+        />
+    </template>
+
+    <template id="website_sale.container_dropzone_above_specification">
+        <div
+            class="o_drop_inner_empty"
+            data-editor-message=""
+            t-field="product.dropzone_above_specification"
+        />
     </template>
 
 </odoo>

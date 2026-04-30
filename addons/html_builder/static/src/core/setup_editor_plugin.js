@@ -1,5 +1,6 @@
 import { Plugin } from "@html_editor/plugin";
 import { selectElements } from "@html_editor/utils/dom_traversal";
+import { isEmptyBlock } from "@html_editor/utils/dom_info";
 import { withSequence } from "@html_editor/utils/resource";
 import { _t } from "@web/core/l10n/translation";
 
@@ -69,6 +70,14 @@ export class SetupEditorPlugin extends Plugin {
     }
 
     cleanForSave(root) {
+        for (const dropInnerEmpty of selectElements(root, ".o_drop_inner_empty")) {
+            if (dropInnerEmpty.children.length === 1) {
+                const child = dropInnerEmpty.children[0];
+                if (isEmptyBlock(child)) {
+                    child.remove();
+                }
+            }
+        }
         for (const savableEl of selectElements(root, ".o_savable")) {
             savableEl.classList.remove("o_savable");
         }
