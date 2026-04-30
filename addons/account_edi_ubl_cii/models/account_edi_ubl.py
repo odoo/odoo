@@ -2917,6 +2917,9 @@ class AccountEdiUBL(models.AbstractModel):
                     else:
                         uom = cache[matched_uom_xmlid] = self.env.ref(matched_uom_xmlid, raise_if_not_found=False)
                     if uom:
+                        product = line_collected_values['product_values'].get('product')
+                        if product and uom.category_id != product.product_tmpl_id.uom_id.category_id:
+                            uom = self.env['uom.uom']
                         to_write['product_uom_id'] = uom.id
                         product_uom_values['uom'] = uom
 
