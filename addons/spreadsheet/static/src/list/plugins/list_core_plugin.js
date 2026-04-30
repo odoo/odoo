@@ -7,7 +7,8 @@ const { getMaxObjectId, deepEquals, deepCopy } = helpers;
 /**
  * @typedef {Object} ListColumn
  * @property {string} name The technical field path of the column
- * @property {string} string The custom display name of the column
+ * @property {string} [string] Optional explicit header label. When absent, the
+ *   header falls back to the translated field display name.
  * @property {boolean} [hidden] Whether the column is hidden or not
  */
 
@@ -299,10 +300,7 @@ export class ListCorePlugin extends OdooCorePlugin {
     }
 
     _checkDefinition(definition) {
-        if (
-            !definition.columns ||
-            definition.columns.some((column) => !column.name || !column.string)
-        ) {
+        if (!definition.columns || definition.columns.some((column) => !column.name)) {
             return CommandResult.InvalidListDefinition;
         }
         return CommandResult.Success;

@@ -56,7 +56,7 @@ declare module "@spreadsheet" {
         domain: Array<Array<string>>;
         orderBy: Array<string>;
         context: Record<string, any>;
-        columns: { name: string; string: string }[];
+        columns: { name: string; string?: string }[];
     }
 
     // CORE
@@ -172,7 +172,7 @@ declare module "@spreadsheet" {
         col: number;
         row: number;
         linesNumber: number;
-        columns: { name: string; string: string }[];
+        columns: { name: string; string?: string }[];
         mode: "static" | "dynamic";
     }
 
