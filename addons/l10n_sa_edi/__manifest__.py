@@ -25,7 +25,6 @@ E-invoice implementation for Saudi Arabia; Integration with ZATCA
         'wizard/l10n_sa_edi_otp_wizard.xml',
         'views/account_tax_views.xml',
         'views/account_journal_views.xml',
-        'views/res_partner_views.xml',
         'views/res_company_views.xml',
         'views/res_config_settings_view.xml',
         'views/report_invoice.xml',
@@ -34,7 +33,7 @@ E-invoice implementation for Saudi Arabia; Integration with ZATCA
     ],
     'assets': {
         'web.assets_backend': [
-            'l10n_sa_edi/static/src/scss/form_view.scss',
+            'l10n_sa_edi/static/src/**',
         ]
     }
 }
