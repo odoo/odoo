@@ -1,7 +1,7 @@
 import { fields, OR, Record } from "@mail/model/export";
 import {
     convertBrToLineBreak,
-    getNonEditableMentions,
+    prepareBodyForEditing,
     prettifyMessageText,
 } from "@mail/utils/common/format";
 import { markup } from "@odoo/owl";
@@ -75,7 +75,7 @@ export class Composer extends Record {
         compute() {
             if (this.syncHtmlWithMessage) {
                 return (
-                    getNonEditableMentions(this.message.body) ||
+                    prepareBodyForEditing(this.message.body) ||
                     markup("<div class='o-paragraph'><br></div>")
                 );
             }

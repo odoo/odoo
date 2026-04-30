@@ -6,7 +6,7 @@ import {
     decorateEmojis,
     EMOJI_REGEX,
     generateEmojisOnHtml,
-    getNonEditableMentions,
+    prepareBodyForEditing,
     htmlToTextContentInline,
 } from "@mail/utils/common/format";
 
@@ -704,7 +704,7 @@ export class Message extends Record {
             thread.messageInEdition.composer = undefined;
         }
         this.composer = {
-            composerHtml: getNonEditableMentions(this.body),
+            composerHtml: prepareBodyForEditing(this.body),
             mentionedChannels: validChannels,
             mentionedPartners: this.partner_ids,
             mentionedRoles: validRoles,
