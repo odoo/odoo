@@ -133,7 +133,7 @@ test("can make a DM chat", async () => {
     await contains(".o-mail-Discuss");
     await contains(".o-mail-DiscussSidebarChannel-itemName:text('Mario')", { count: 0 });
     await click("input[placeholder='Search conversations']");
-    await contains(".o_command_name", { count: 3 });
+    await contains(".o_command_name", { count: 2 });
     await insertText(
         ".o_command_palette_search input[placeholder='Search conversations']",
         "mario"
@@ -194,7 +194,7 @@ test("Chat is pinned on other tabs when joined", async () => {
     await openDiscuss(undefined, { target: env1 });
     await openDiscuss(undefined, { target: env2 });
     await click(`${env1.selector} input[placeholder='Search conversations']`);
-    await contains(`${env1.selector} .o_command_name`, { count: 3 });
+    await contains(`${env1.selector} .o_command_name`, { count: 2 });
     await insertText(
         `${env1.selector} .o_command_palette_search input[placeholder='Search conversations']`,
         "Jer"

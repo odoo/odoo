@@ -35,7 +35,7 @@ test("can make DM chat in mobile", async () => {
     await contains("button.active:text('Notifications')");
     await click("button:text('Chats')");
     await click(".o-mail-DiscussSearch-inputContainer");
-    await contains(".o_command_name", { count: 3 });
+    await contains(".o_command_name", { count: 2 });
     await insertText(
         ".o_command_palette_search input[placeholder='Search conversations']",
         "Gandalf"
@@ -54,7 +54,7 @@ test("can search channel in mobile", async () => {
     await contains("button.active:text('Notifications')");
     await click("button:text('Channels')");
     await click(".o-mail-DiscussSearch-inputContainer");
-    await contains(".o_command_name", { count: 3 });
+    await contains(".o_command_name", { count: 2 });
     await insertText(
         ".o_command_palette_search input[placeholder='Search conversations']",
         "Gryff"
