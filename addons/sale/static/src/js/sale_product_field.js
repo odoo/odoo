@@ -144,6 +144,14 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
             label = label.slice(this.translatedProductName.length + 1);  // + "\n"
         } else {
             label = super.label;
+            // If super.label stripped nothing but name has no product prefix, preserve as-is.
+            if (
+                !label &&
+                this.props.record.data.name &&
+                !this.props.record.data.name.startsWith(this.productName)
+            ) {
+                label = this.props.record.data.name;
+            }
         }
         return label;
     }
