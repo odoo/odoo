@@ -1,7 +1,7 @@
 import { getBaseContainerSelector } from "@html_editor/utils/base_container";
 import { getIframeAdjustedBoundingRect, isEmpty, isTableCell } from "@html_editor/utils/dom_info";
 import { closestElement } from "@html_editor/utils/dom_traversal";
-import { getRowIndex, getSelectedCellsMergeInfo } from "@html_editor/utils/table";
+import { getRowIndex } from "@html_editor/utils/table";
 import { Component, onMounted, onWillUnmount, useProps, signal, t, useListener } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -25,8 +25,6 @@ export class TableMenu extends Component {
         resetRowHeight: t.function().optional(),
         resetColumnWidth: t.function().optional(),
         clearColumnContent: t.function(),
-        mergeSelectedCells: t.function(),
-        unmergeSelectedCell: t.function(),
         clearRowContent: t.function(),
         toggleAlternatingRows: t.function(),
         buildTableGrid: t.function(),
@@ -231,11 +229,6 @@ export class TableMenu extends Component {
 
     colItems() {
         const ltr = this.props.direction === "ltr";
-        const { canMerge, canUnmerge, cells, spanType } = getSelectedCellsMergeInfo(
-            this.editableDocument,
-            this.tableGrid,
-            this.anchorCell
-        );
         return [
             !this.isFirst && {
                 name: "move_left",
@@ -319,31 +312,12 @@ export class TableMenu extends Component {
                 text: _t("Clear content"),
                 action: this.props.clearColumnContent.bind(this),
             },
-            cells.length > 1 && {
-                name: "merge_cell",
-                icon: "close_fullscreen",
-                text: _t("Merge Cells"),
-                disable: !canMerge,
-                tooltip: _t("Only rows or cells selection can be merged"),
-                action: () => this.props.mergeSelectedCells(cells, spanType),
-            },
-            canUnmerge && {
-                name: "unmerge_cell",
-                icon: "close_fullscreen",
-                text: _t("Unmerge Cells"),
-                action: this.props.unmergeSelectedCell.bind(this),
-            },
         ].filter(Boolean);
     }
 
     rowItems() {
         const table = closestElement(this.anchorCell, "table");
         const hasAlternatingRowClass = table.classList.contains("o_alternating_rows");
-        const { canMerge, canUnmerge, cells, spanType } = getSelectedCellsMergeInfo(
-            this.editableDocument,
-            this.tableGrid,
-            this.anchorCell
-        );
         return [
             this.isFirst &&
                 !this.isTableHeader && {
@@ -432,20 +406,6 @@ export class TableMenu extends Component {
                 iconClass: "oi-filled",
                 text: _t("Clear content"),
                 action: (target) => this.props.clearRowContent(target.parentElement),
-            },
-            cells.length > 1 && {
-                name: "merge_cell",
-                icon: "close_fullscreen",
-                text: _t("Merge Cells"),
-                disable: !canMerge,
-                tooltip: _t("Only rows or cells selection can be merged"),
-                action: () => this.props.mergeSelectedCells(cells, spanType),
-            },
-            canUnmerge && {
-                name: "unmerge_cell",
-                icon: "close_fullscreen",
-                text: _t("Unmerge Cells"),
-                action: this.props.unmergeSelectedCell.bind(this),
             },
         ].filter(Boolean);
     }

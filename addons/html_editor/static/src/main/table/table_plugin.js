@@ -23,12 +23,18 @@ import { parseHTML } from "@html_editor/utils/html";
 import { DIRECTIONS, leftPos, rightPos, nodeSize } from "@html_editor/utils/position";
 import { withSequence } from "@html_editor/utils/resource";
 import { findInSelection } from "@html_editor/utils/selection";
-import { getColumnIndex, getRowIndex, getTableCells } from "@html_editor/utils/table";
+import {
+    getColumnIndex,
+    getRowIndex,
+    getTableCells,
+    getSelectedCellsMergeInfo,
+} from "@html_editor/utils/table";
 import { isBrowserFirefox } from "@web/core/browser/feature_detection";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_utils";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { BG_CLASSES_REGEX } from "@html_editor/utils/color";
 import { rgbaToHex } from "@web/core/utils/colors";
+import { _t } from "@web/core/l10n/translation";
 
 export const BORDER_SENSITIVITY = 5;
 const LONG_PRESS_DELAY = 200;
@@ -109,6 +115,34 @@ export class TablePlugin extends Plugin {
                 },
                 isAvailable: isHtmlContentSupported,
             },
+            {
+                id: "mergeTableCells",
+                title: _t("Merge Cells"),
+                description: _t("Merge selected table cells"),
+                icon: "fa-compress",
+                run: this.mergeCellsCommand.bind(this),
+                isAvailable: this.isMergeCellsAvailable.bind(this),
+            },
+            {
+                id: "unmergeTableCells",
+                title: _t("Unmerge Cells"),
+                description: _t("Unmerge selected table cells"),
+                icon: "fa-expand",
+                run: this.unmergeCellsCommand.bind(this),
+                isAvailable: this.isUnmergeCellsAvailable.bind(this),
+            },
+        ],
+        toolbar_items: [
+            {
+                id: "mergeCells",
+                groupId: "table_cell_merge",
+                commandId: "mergeTableCells",
+            },
+            {
+                id: "unmergeCells",
+                groupId: "table_cell_merge",
+                commandId: "unmergeTableCells",
+            },
         ],
         table_menu_commands: [
             {
@@ -123,12 +157,13 @@ export class TablePlugin extends Plugin {
                 clearColumnContent: this.clearColumnContent.bind(this),
                 clearRowContent: this.clearRowContent.bind(this),
                 toggleAlternatingRows: this.toggleAlternatingRows.bind(this),
-                mergeSelectedCells: this.mergeSelectedCells.bind(this),
-                unmergeSelectedCell: this.unmergeSelectedCell.bind(this),
                 buildTableGrid: this.buildTableGrid.bind(this),
             },
         ],
-        toolbar_groups: withSequence(25, { id: "table" }),
+        toolbar_groups: [
+            withSequence(25, { id: "table" }),
+            withSequence(35, { id: "table_cell_merge", namespaces: ["expanded"] }),
+        ],
 
         /** Providers */
         toolbar_namespace_providers: [
@@ -855,6 +890,79 @@ export class TablePlugin extends Plugin {
         table.before(baseContainer);
         table.remove();
         this.dependencies.selection.setCursorStart(baseContainer);
+    }
+
+    /**
+     * Checks if merge is available for the current selection
+     * @returns {boolean}
+     */
+    isMergeCellsAvailable() {
+        const selectedTds = this.document.querySelectorAll(".o_selected_td");
+        if (selectedTds.length < 2) {
+            return false;
+        }
+        const firstTd = selectedTds[0];
+        const table = closestElement(firstTd, "table");
+        if (!table) {
+            return false;
+        }
+        const grid = this.buildTableGrid(table);
+        const { canMerge, cells, spanType } = getSelectedCellsMergeInfo(
+            this.document,
+            grid,
+            firstTd
+        );
+
+        if (canMerge) {
+            this.canMergeCells = canMerge;
+            this.cellsToMerge = cells;
+            this.mergeSpanType = spanType;
+        } else {
+            this.canMergeCells = null;
+            this.cellsToMerge = null;
+            this.mergeSpanType = null;
+        }
+        return canMerge;
+    }
+
+    /**
+     * Checks if unmerge is available for the current selection
+     * @returns {boolean}
+     */
+    isUnmergeCellsAvailable() {
+        const selectedTds = this.document.querySelectorAll(".o_selected_td");
+        if (selectedTds.length === 0) {
+            return false;
+        }
+        const firstTd = selectedTds[0];
+        const table = closestElement(firstTd, "table");
+        if (!table) {
+            return false;
+        }
+        const grid = this.buildTableGrid(table);
+        const { canUnmerge } = getSelectedCellsMergeInfo(this.document, grid, firstTd);
+        return canUnmerge;
+    }
+
+    /**
+     * Command handler for merging table cells
+     */
+    mergeCellsCommand() {
+        if (this?.canMergeCells && this?.mergeSpanType) {
+            this.mergeSelectedCells(this.cellsToMerge, this.mergeSpanType);
+            this.canMergeCells = null;
+            this.cellsToMerge = null;
+            this.mergeSpanType = null;
+            this.dependencies.history.commit();
+        }
+    }
+
+    /**
+     * Command handler for unmerging table cells
+     */
+    unmergeCellsCommand() {
+        this.unmergeSelectedCell();
+        this.dependencies.history.commit();
     }
 
     /**
