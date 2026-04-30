@@ -828,11 +828,21 @@ class TestChartTemplate(AccountTestInvoicingCommon):
                 Command.create({'company_id': other_company.id, 'code': '180001'}),
             ],
         }])
+        old_cash_rounding = self.env['account.cash.rounding'].create({
+            'name': 'Old Cash Rounding',
+            'rounding': 0.05,
+            'strategy': 'add_invoice_line',
+            'rounding_method': 'HALF-UP',
+            'company_id': self.company.id,
+            'profit_account_id': self.company.default_cash_difference_income_account_id.id,
+            'loss_account_id': self.company.default_cash_difference_expense_account_id.id,
+        })
 
         with patch.object(AccountChartTemplate, '_get_chart_template_data', side_effect=test_get_data, autospec=True):
             self.env['account.chart.template'].try_loading('test', company=self.company, install_demo=True)
         self.assertEqual(self.company.chart_template, 'test')
         self.assertEqual(branch.chart_template, 'test')
+        self.assertFalse(old_cash_rounding.exists())
 
         # Check that the shared account was not deleted, but just unlinked from the company and the branch.
         self.assertEqual(shared_account.company_ids, other_company)

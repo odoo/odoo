@@ -22,6 +22,7 @@ _logger = logging.getLogger(__name__)
 TEMPLATE_MODELS = (
     'account.group',
     'account.account',
+    'account.cash.rounding',
     'account.fiscal.position',
     'account.tax.group',
     'account.tax',
