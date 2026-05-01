@@ -25,7 +25,7 @@ test("displayableOptions", async () => {
     //To shows all employees set visibleOptions to 0
     comp.state.showAll = true;
     const allEmp = comp.displayableOptions;
-    expect(allEmp.length).toBe(2);
+    expect(allEmp.length).toBe(employees.length);
 });
 test("lock", async () => {
     const store = await setupPosEnv();
