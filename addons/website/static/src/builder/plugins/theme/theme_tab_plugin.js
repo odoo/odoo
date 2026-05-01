@@ -348,8 +348,9 @@ export class ConfigureApiKeyAction extends BuilderAction {
     setup() {
         this.canTimeout = false;
     }
-    apply() {
-        this.dependencies.googleMapsOption.configureGMapsAPI("", true);
+    async apply() {
+        const apiKey = await this.services.google_maps.getGMapsAPIKey(false);
+        this.dependencies.googleMapsOption.configureGMapsAPI(apiKey);
     }
 }
 
