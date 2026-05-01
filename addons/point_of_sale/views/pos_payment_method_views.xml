@@ -21,6 +21,10 @@
                             <field name="outstanding_account_id" groups="account.group_account_readonly" invisible="type != 'bank'" required="type == 'bank'" placeholder="Leave empty to use the default account from the company setting" />
                             <field name="receivable_account_id" groups="account.group_account_readonly" invisible="split_transactions" placeholder="Leave empty to use the default account from the company setting" />
                             <field name="company_id" readonly="1" groups="base.group_multi_company" />
+<<<<<<< Updated upstream
+=======
+                            <field name="config_ids" widget="many2many_tags" placeholder="No Point of Sale" />
+>>>>>>> Stashed changes
                         </group>
                         <group>
                             <field name="hide_use_payment_terminal" invisible="1"/>
