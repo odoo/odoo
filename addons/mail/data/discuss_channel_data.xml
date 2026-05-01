@@ -28,7 +28,7 @@
 
         <!-- link group after creating the members to avoid autosubscribe too early -->
         <record model="discuss.channel" id="mail.channel_all_employees">
-            <field name="group_ids" eval="[Command.link(ref('base.group_user'))]"/>
+            <field name="auto_subscribe_group_ids" eval="[Command.link(ref('base.group_user'))]"/>
         </record>
 
         <record model="discuss.channel.member" id="channel_member_channel_admin_partner_admin">
@@ -38,7 +38,7 @@
 
         <!-- link group after creating the members to avoid autosubscribe too early -->
         <record model="discuss.channel" id="mail.channel_admin">
-            <field name="group_ids" eval="[Command.link(ref('base.group_system'))]"/>
+            <field name="auto_subscribe_group_ids" eval="[Command.link(ref('base.group_system'))]"/>
         </record>
     </data>
 </odoo>

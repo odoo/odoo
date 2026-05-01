@@ -118,6 +118,7 @@ export class DiscussChannel extends Record {
     get areAllMembersLoaded() {
         return this.member_count === this.channel_member_ids.length;
     }
+    auto_subscribe_group_ids = fields.Many("res.groups");
     /** @type {string} */
     avatar_cache_key;
     get avatarUrl() {
@@ -260,7 +261,6 @@ export class DiscussChannel extends Record {
             : this.displayName;
         return text;
     }
-    group_ids = fields.Many("res.groups");
     get memberListTypes() {
         return ["channel", "group"];
     }
