@@ -33,7 +33,7 @@ class APSController(http.Controller):
         """
         _logger.info("Handling redirection from APS with data:\n%s", pprint.pformat(data))
 
-        tx_sudo = request.env["payment.transaction"].sudo()._search_by_reference("aps", data)
+        tx_sudo = self.env["payment.transaction"].sudo()._search_by_reference("aps", data)
         if tx_sudo:
             received_signature = data.get("signature")
             expected_signature = tx_sudo.provider_id._aps_calculate_signature(data, incoming=True)
@@ -52,7 +52,7 @@ class APSController(http.Controller):
         :rtype: str
         """
         _logger.info("Notification received from APS with data:\n%s", pprint.pformat(data))
-        tx_sudo = request.env["payment.transaction"].sudo()._search_by_reference("aps", data)
+        tx_sudo = self.env["payment.transaction"].sudo()._search_by_reference("aps", data)
         if tx_sudo:
             received_signature = data.get("signature")
             expected_signature = tx_sudo.provider_id._aps_calculate_signature(data, incoming=True)

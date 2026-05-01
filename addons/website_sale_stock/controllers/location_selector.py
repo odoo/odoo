@@ -19,8 +19,8 @@ class LocationSelector(Delivery):
             delivery_method = order_sudo.carrier_id
             country = order_sudo.partner_shipping_id.country_id
         else:  # From the backend
-            delivery_method = request.env["delivery.carrier"].sudo().browse(delivery_method_id)
-            country = request.env["res.country"].browse(country_id)
+            delivery_method = self.env["delivery.carrier"].sudo().browse(delivery_method_id)
+            country = self.env["res.country"].browse(country_id)
 
         if not delivery_method:
             return {}

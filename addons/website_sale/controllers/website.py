@@ -20,7 +20,7 @@ class WebsiteSaleForm(WebsiteForm):
         "/website/form/shop.sale.order", type="http", auth="public", methods=["POST"], website=True
     )
     def website_form_saleorder(self, **kwargs):
-        model_record = request.env.ref("sale.model_sale_order").sudo()
+        model_record = self.env.ref("sale.model_sale_order").sudo()
         try:
             data = self.extract_data(model_record, kwargs)
         except ValidationError as e:
@@ -68,7 +68,7 @@ class Website(main.Website):
     @route()
     def change_lang(self, lang, **kwargs):
         if cart := request.cart:
-            request.env.add_to_compute(
+            self.env.add_to_compute(
                 cart.order_line._fields["name"], cart.order_line.with_context(lang=lang)
             )
         return super().change_lang(lang, **kwargs)

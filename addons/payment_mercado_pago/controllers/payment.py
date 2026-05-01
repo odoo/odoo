@@ -29,7 +29,7 @@ class MercadoPagoPaymentController(http.Controller):
         :rtype: None
         """
         tx_sudo = (
-            request
+            self
             .env["payment.transaction"]
             .sudo()
             ._search_by_reference("mercado_pago", {"external_reference": reference})

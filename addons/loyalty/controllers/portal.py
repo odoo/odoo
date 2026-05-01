@@ -13,12 +13,12 @@ class CustomerPortalLoyalty(CustomerPortal):
         if not counters:
             # we want those data to be added to the /my/home page only, and always computed
             values["cards_per_programs"] = dict(
-                request
+                self
                 .env["loyalty.card"]
                 .sudo()
                 ._read_group(
                     domain=[
-                        ("partner_id", "=", request.env.user.partner_id.id),
+                        ("partner_id", "=", self.env.user.partner_id.id),
                         ("program_id.active", "=", True),
                         ("program_id.program_type", "in", ["loyalty", "ewallet"]),
                         "|",
@@ -51,18 +51,15 @@ class CustomerPortalLoyalty(CustomerPortal):
     )
     def portal_my_loyalty_card_history(self, card_id, page=1, sortby="date", **_kwargs):
         card_sudo = (
-            request
+            self
             .env["loyalty.card"]
             .sudo()
-            .search([
-                ("id", "=", int(card_id)),
-                ("partner_id", "=", request.env.user.partner_id.id),
-            ])
+            .search([("id", "=", int(card_id)), ("partner_id", "=", self.env.user.partner_id.id)])
         )
         if not card_sudo:
             return request.redirect("/my")
 
-        LoyaltyHistorySudo = request.env["loyalty.history"].sudo()
+        LoyaltyHistorySudo = self.env["loyalty.history"].sudo()
         searchbar_sortings = self._get_loyalty_searchbar_sortings()
         order = searchbar_sortings[sortby]["order"]
         lines_count = LoyaltyHistorySudo.search_count([("card_id", "=", card_id)])
@@ -76,7 +73,7 @@ class CustomerPortalLoyalty(CustomerPortal):
         history_lines = LoyaltyHistorySudo.search(
             domain=[
                 ("card_id", "=", card_id),
-                ("card_id.partner_id", "=", request.env.user.partner_id.id),
+                ("card_id.partner_id", "=", self.env.user.partner_id.id),
             ],
             order=order,
             limit=self._items_per_page,
@@ -100,20 +97,17 @@ class CustomerPortalLoyalty(CustomerPortal):
         :return(dict): A dictionary with card history values.
         """
         card_sudo = (
-            request
+            self
             .env["loyalty.card"]
             .sudo()
-            .search([
-                ("id", "=", int(card_id)),
-                ("partner_id", "=", request.env.user.partner_id.id),
-            ])
+            .search([("id", "=", int(card_id)), ("partner_id", "=", self.env.user.partner_id.id)])
         )
         if not card_sudo:
             return {}
 
         program_type = card_sudo.program_id.program_type
         rewards = (
-            request
+            self
             .env["loyalty.reward"]
             .sudo()
             .search(

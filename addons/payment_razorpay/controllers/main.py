@@ -37,7 +37,7 @@ class RazorpayController(http.Controller):
         if all(f"razorpay_{key}" in data for key in ("order_id", "payment_id", "signature")):
             # Check the integrity of the notification.
             tx_sudo = (
-                request
+                self
                 .env["payment.transaction"]
                 .sudo()
                 ._search_by_reference("razorpay", {"description": reference})
@@ -70,10 +70,7 @@ class RazorpayController(http.Controller):
             entity_data.update(entity_type=entity_type)
             received_signature = request.httprequest.headers.get("X-Razorpay-Signature")
             tx_sudo = (
-                request
-                .env["payment.transaction"]
-                .sudo()
-                ._search_by_reference("razorpay", entity_data)
+                self.env["payment.transaction"].sudo()._search_by_reference("razorpay", entity_data)
             )
             if tx_sudo:
                 expected_signature = tx_sudo.provider_id._razorpay_calculate_signature(

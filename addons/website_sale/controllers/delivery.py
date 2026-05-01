@@ -24,7 +24,7 @@ class Delivery(WebsiteSale):
             "order": order_sudo,  # Needed for accessing default values for pickup points.
         }
         values |= self._get_additional_delivery_context()
-        return request.env["ir.ui.view"]._render_template("website_sale.delivery_form", values)
+        return self.env["ir.ui.view"]._render_template("website_sale.delivery_form", values)
 
     def _get_additional_delivery_context(self):
         """Update values used for rendering the website_sale.delivery_form template."""
@@ -55,7 +55,7 @@ class Delivery(WebsiteSale):
                         )
                     )
 
-            delivery_method_sudo = request.env["delivery.carrier"].sudo().browse(dm_id).exists()
+            delivery_method_sudo = self.env["delivery.carrier"].sudo().browse(dm_id).exists()
             order_sudo._set_delivery_method(delivery_method_sudo)
         return self._order_summary_values(order_sudo, **kwargs)
 
@@ -67,9 +67,9 @@ class Delivery(WebsiteSale):
         :return: The order summary values.
         :rtype: dict
         """
-        Monetary = request.env["ir.qweb.field.monetary"]
+        Monetary = self.env["ir.qweb.field.monetary"]
         currency = order.currency_id
-        rendered_tax_lines = request.env["ir.ui.view"]._render_template(
+        rendered_tax_lines = self.env["ir.ui.view"]._render_template(
             "website_sale.order_tax_lines", {"website_sale_order": order}
         )
         return {
@@ -107,8 +107,8 @@ class Delivery(WebsiteSale):
                 )
             )
 
-        Monetary = request.env["ir.qweb.field.monetary"]
-        delivery_method = request.env["delivery.carrier"].sudo().browse(int(dm_id)).exists()
+        Monetary = self.env["ir.qweb.field.monetary"]
+        delivery_method = self.env["delivery.carrier"].sudo().browse(int(dm_id)).exists()
         rate = Delivery._get_rate(delivery_method, order_sudo)
         if rate["success"]:
             rate["amount_delivery"] = Monetary.value_to_html(
@@ -155,7 +155,7 @@ class Delivery(WebsiteSale):
             # Pricelists are recomputed every time the partner is changed. We don't want to
             # recompute the price with another pricelist at this state since the customer has
             # already accepted the amount and validated the payment.
-            with request.env.protecting([order_sudo._fields["pricelist_id"]], order_sudo):
+            with self.env.protecting([order_sudo._fields["pricelist_id"]], order_sudo):
                 order_sudo.partner_id = new_partner_sudo
         elif order_sudo.name in order_sudo.partner_shipping_id.name:
             order_sudo.partner_shipping_id.write(partial_delivery_address)

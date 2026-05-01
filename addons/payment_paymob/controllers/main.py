@@ -26,7 +26,7 @@ class PaymobController(http.Controller):
         :param dict data: The payment data.
         """
         _logger.info("Handling redirection from Paymob with data:\n%s", pprint.pformat(data))
-        tx_sudo = request.env["payment.transaction"].sudo()._search_by_reference("paymob", data)
+        tx_sudo = self.env["payment.transaction"].sudo()._search_by_reference("paymob", data)
         if tx_sudo:
             received_signature = data.get("hmac", "")
             hmac_key = tx_sudo.provider_id.paymob_hmac_key
@@ -49,10 +49,7 @@ class PaymobController(http.Controller):
         )
         normalized_data = self._normalize_response(payment_data, data.get("hmac"))
         tx_sudo = (
-            request
-            .env["payment.transaction"]
-            .sudo()
-            ._search_by_reference("paymob", normalized_data)
+            self.env["payment.transaction"].sudo()._search_by_reference("paymob", normalized_data)
         )
         if tx_sudo:
             received_signature = data.get("hmac", "")

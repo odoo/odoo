@@ -10,16 +10,16 @@ from odoo.tools.mail import email_re
 class ProductWishlist(Controller):
     @route("/shop/wishlist/add", type="jsonrpc", auth="public", website=True)
     def add_to_wishlist(self, product_id, **_kw):
-        product = request.env["product.product"].browse(product_id)
+        product = self.env["product.product"].browse(product_id)
 
         price = product._get_combination_info_variant()["price"]
 
-        Wishlist = request.env["product.wishlist"]
+        Wishlist = self.env["product.wishlist"]
         if request.website.is_public_user():
             Wishlist = Wishlist.sudo()
             partner_id = False
         else:
-            partner_id = request.env.user.partner_id.id
+            partner_id = self.env.user.partner_id.id
 
         wish = Wishlist._add_to_wishlist(
             request.pricelist.id,
@@ -37,7 +37,7 @@ class ProductWishlist(Controller):
 
     @route("/shop/wishlist", type="http", auth="public", website=True, readonly=True, sitemap=False)
     def shop_wishlist(self, **_kw):
-        wishes = request.env["product.wishlist"].current()
+        wishes = self.env["product.wishlist"].current()
 
         return request.render(
             "website_sale.product_wishlist",
@@ -46,7 +46,7 @@ class ProductWishlist(Controller):
 
     @route("/shop/wishlist/remove/<int:wish_id>", type="jsonrpc", auth="public", website=True)
     def remove_from_wishlist(self, wish_id, **_kw):
-        wish = request.env["product.wishlist"].browse(wish_id)
+        wish = self.env["product.wishlist"].browse(wish_id)
         if request.website.is_public_user():
             wish_ids = request.session.get("wishlist_ids") or []
             if wish_id in wish_ids:
@@ -61,7 +61,7 @@ class ProductWishlist(Controller):
         "/shop/wishlist/get_product_ids", type="jsonrpc", auth="public", website=True, readonly=True
     )
     def shop_wishlist_get_product_ids(self):
-        return request.env["product.wishlist"].current().product_id.ids
+        return self.env["product.wishlist"].current().product_id.ids
 
     @route("/shop/add/stock_notification", type="jsonrpc", auth="public", website=True)
     def add_stock_email_notification(self, email, product_id):
@@ -69,8 +69,8 @@ class ProductWishlist(Controller):
         if not email_re.match(email):
             raise BadRequest(self.env._("Invalid Email"))
 
-        product = request.env["product.product"].browse(int(product_id))
-        partner = request.env["mail.thread"].sudo()._partner_find_from_emails_single([email])
+        product = self.env["product.product"].browse(int(product_id))
+        partner = self.env["mail.thread"].sudo()._partner_find_from_emails_single([email])
 
         if not product._has_stock_notification(partner):
             product.sudo().stock_notification_partner_ids += partner

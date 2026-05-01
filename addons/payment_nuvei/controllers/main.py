@@ -31,7 +31,7 @@ class NuveiController(http.Controller):
             _logger.warning("Nuvei errored on transaction: %s.", tx_ref)
 
         tx_data = data or {"invoice_id": tx_ref}
-        tx_sudo = request.env["payment.transaction"].sudo()._search_by_reference("nuvei", tx_data)
+        tx_sudo = self.env["payment.transaction"].sudo()._search_by_reference("nuvei", tx_data)
         if tx_sudo:
             if error_access_token:  # The access token is not included when the payment goes through
                 # Verify the request based on the provided access token.

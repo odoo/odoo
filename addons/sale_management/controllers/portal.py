@@ -39,7 +39,7 @@ class CustomerPortal(portal.CustomerPortal):
         if not order_sudo._can_be_edited_on_portal():
             return None
 
-        order_line = request.env["sale.order.line"].sudo().browse(int(line_id)).exists()
+        order_line = self.env["sale.order.line"].sudo().browse(int(line_id)).exists()
         if (
             not order_line
             or order_line.order_id != order_sudo

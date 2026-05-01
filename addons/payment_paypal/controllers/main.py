@@ -29,7 +29,7 @@ class PaypalController(http.Controller):
         :return: None
         """
         tx_sudo = (
-            request
+            self
             .env["payment.transaction"]
             .sudo()
             ._search_by_reference("paypal", {"reference_id": reference})
@@ -43,7 +43,7 @@ class PaypalController(http.Controller):
             )
             normalized_response = self._normalize_paypal_data(response)
             tx_sudo = (
-                request
+                self
                 .env["payment.transaction"]
                 .sudo()
                 ._search_by_reference("paypal", normalized_response)
@@ -65,7 +65,7 @@ class PaypalController(http.Controller):
             normalized_data = self._normalize_paypal_data(data.get("resource"), from_webhook=True)
             # Check the origin and integrity of the notification.
             tx_sudo = (
-                request
+                self
                 .env["payment.transaction"]
                 .sudo()
                 ._search_by_reference("paypal", normalized_data)

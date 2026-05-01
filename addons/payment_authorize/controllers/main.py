@@ -31,7 +31,7 @@ class AuthorizeController(http.Controller):
             raise ValidationError(self.env._("Received tampered payment request data."))
 
         # Retrieve the transaction
-        tx_sudo = request.env["payment.transaction"].sudo().search([("reference", "=", reference)])
+        tx_sudo = self.env["payment.transaction"].sudo().search([("reference", "=", reference)])
         if not tx_sudo:
             raise ValidationError(self.env._("Transaction not found."))
 
@@ -68,9 +68,7 @@ class AuthorizeController(http.Controller):
         )
         event_type = data.get("eventType")
         if event_type in const.HANDLED_WEBHOOK_EVENTS:
-            tx_sudo = (
-                request.env["payment.transaction"].sudo()._search_by_reference("authorize", data)
-            )
+            tx_sudo = self.env["payment.transaction"].sudo()._search_by_reference("authorize", data)
             if tx_sudo and data.get("webhookId") == tx_sudo.provider_id.authorize_webhook_id:
                 # Check the integrity of the notification
                 signature_header = request.httprequest.headers.get("X-ANET-Signature")

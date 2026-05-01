@@ -31,14 +31,14 @@ class AdyenController(http.Controller):
         :return: The JSON-formatted content of the response
         :rtype: dict
         """
-        provider_sudo = request.env["payment.provider"].sudo().browse(provider_id)
-        partner_sudo = partner_id and request.env["res.partner"].sudo().browse(partner_id).exists()
+        provider_sudo = self.env["payment.provider"].sudo().browse(provider_id)
+        partner_sudo = partner_id and self.env["res.partner"].sudo().browse(partner_id).exists()
         # The lang is taken from the context rather than from the partner because it is not required
         # to be logged in to make a payment, and because the lang is not always set on the partner.
         # Adyen only supports a limited set of languages but, instead of looking for the closest
         # match in https://docs.adyen.com/checkout/components-web/localization-components, we simply
         # provide the lang string as is (after adapting the format) and let Adyen find the best fit.
-        lang_code = py_to_js_locale(request.env.context.get("lang")) or "en-US"
+        lang_code = py_to_js_locale(self.env.context.get("lang")) or "en-US"
         shopper_reference = partner_sudo and f"ODOO_PARTNER_{partner_sudo.id}"
         partner_country_code = (
             partner_sudo.country_id.code or provider_sudo.company_id.country_id.code or "NL"
@@ -88,9 +88,9 @@ class AdyenController(http.Controller):
             raise ValidationError(self.env._("Received tampered payment request data."))
 
         # Prepare the payment request to Adyen
-        provider_sudo = request.env["payment.provider"].sudo().browse(provider_id).exists()
+        provider_sudo = self.env["payment.provider"].sudo().browse(provider_id).exists()
         tx_sudo = (
-            request
+            self
             .env["payment.transaction"]
             .sudo()
             .search([("provider_id", "=", provider_sudo.id), ("reference", "=", reference)])
@@ -102,7 +102,7 @@ class AdyenController(http.Controller):
             "merchantAccount": provider_sudo.adyen_merchant_account,
             "amount": {
                 "value": converted_amount,
-                "currency": request.env["res.currency"].browse(currency_id).name,  # ISO 4217
+                "currency": self.env["res.currency"].browse(currency_id).name,  # ISO 4217
             },
             "applicationInfo": {
                 "externalPlatform": {
@@ -174,9 +174,9 @@ class AdyenController(http.Controller):
         :rtype: dict
         """
         # Make the payment details request to Adyen
-        provider_sudo = request.env["payment.provider"].browse(provider_id).sudo()
+        provider_sudo = self.env["payment.provider"].browse(provider_id).sudo()
         tx_sudo = (
-            request
+            self
             .env["payment.transaction"]
             .sudo()
             .search([("provider_id", "=", provider_sudo.id), ("reference", "=", reference)])
@@ -191,7 +191,7 @@ class AdyenController(http.Controller):
         )
 
         # Process the payment data request response.
-        request.env["payment.transaction"].sudo()._process(
+        self.env["payment.transaction"].sudo()._process(
             "adyen", dict(response_content, merchantReference=reference)
         )
 
@@ -213,7 +213,7 @@ class AdyenController(http.Controller):
                           the request to allow matching the transaction when redirected here.
         """
         # Retrieve the transaction based on the reference included in the return url
-        tx_sudo = request.env["payment.transaction"].sudo()._search_by_reference("adyen", data)
+        tx_sudo = self.env["payment.transaction"].sudo()._search_by_reference("adyen", data)
         if not tx_sudo:
             return request.redirect("/payment/status")
 
@@ -257,10 +257,7 @@ class AdyenController(http.Controller):
             )
             # Check the integrity of the notification.
             tx_sudo = (
-                request
-                .env["payment.transaction"]
-                .sudo()
-                ._search_by_reference("adyen", payment_data)
+                self.env["payment.transaction"].sudo()._search_by_reference("adyen", payment_data)
             )
             if tx_sudo:
                 received_signature = payment_data.get("additionalData", {}).get("hmacSignature")
