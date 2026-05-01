@@ -38,7 +38,7 @@ export class OrderDetailsDialog extends Component {
     }
 
     formatCurrency(amount) {
-        return formatCurrency(amount, this.props.order.currency_id);
+        return formatCurrency(amount, this.props.order.currency);
     }
 
     getOrderFields() {
