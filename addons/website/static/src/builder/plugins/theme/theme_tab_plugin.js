@@ -326,8 +326,9 @@ export class EditCustomCodeAction extends BuilderAction {
 export class ConfigureApiKeyAction extends BuilderAction {
     static id = "configureApiKey";
     static dependencies = ["googleMapsOption"];
-    apply() {
-        this.dependencies.googleMapsOption.configureGMapsAPI("", true);
+    async apply() {
+        const apiKey = await this.services.google_maps.getGMapsAPIKey(false);
+        this.dependencies.googleMapsOption.configureGMapsAPI(apiKey);
     }
 }
 
