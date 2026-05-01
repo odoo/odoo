@@ -43,6 +43,12 @@
                  <t t-set="tableContentStyle" t-value="kanbanMode ? '' : element.getTableContentStyle()"/>
                  <t t-set="data" t-value="this.getChangeCount(element.id)"/>
                  <div t-if="data.changes > 0" t-out="this.env.utils.formatProductQty(data.changes, false)" t-att-style="tableContentStyle" class="order-count text-bg-danger d-flex align-items-center justify-content-center position-absolute top-0 end-0 rounded-3 smaller fw-bolder z-2 badge"/>
+                 <div t-if="this.state.tableTimer[table.id]"
+                    class="table-timer-badge position-absolute bottom-0 mb-1 lh-sm rounded px-1"
+                    t-attf-class="{{ this.getTimerClasses(table) }}"
+                    style="font-size: 0.775rem;">
+                    <t t-out="this.state.tableTimer[table.id]"/>
+                </div>
              </div>
         </t>
         <t t-else="">
