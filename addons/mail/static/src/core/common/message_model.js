@@ -233,7 +233,7 @@ export class Message extends Record {
     }
 
     get bubbleColor() {
-        if (this.message_type === "notification") {
+        if (["notification", "tracking"].includes(this.message_type)) {
             return undefined;
         }
         if (!this.isSelfAuthored && !this.isNote && !this.isHighlightedFromMention) {

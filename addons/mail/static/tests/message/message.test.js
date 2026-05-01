@@ -2524,3 +2524,17 @@ test("(edited) label is not included in editor when editing an already-edited me
     // New text should be the only content; "(edited)" must be at the very end
     await contains(".o-mail-Message-content:text('a (edited)')");
 });
+
+test("show actions of 'tracking' in message header", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
+    pyEnv["mail.message"].create({
+        body: "Stage changed",
+        message_type: "tracking",
+        model: "res.partner",
+        res_id: partnerId,
+    });
+    await start();
+    await openFormView("res.partner", partnerId);
+    await contains(".o-mail-Message-header .o-mail-Message-actions");
+});
