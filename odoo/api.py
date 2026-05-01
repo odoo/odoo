@@ -583,7 +583,8 @@ class Environment(Mapping):
             transaction = cr.transaction = Transaction(Registry(cr.dbname))
 
         # if env already exists, return it
-        for env in transaction.envs:
+        # (convert to list to avoid modifying the `WeakSet` while iterating)
+        for env in list(transaction.envs):
             if (env.cr, env.uid, env.su, env.uid_origin, env.context) == (cr, uid, su, uid_origin, context):
                 return env
 
