@@ -3,6 +3,8 @@
 import logging
 import pprint
 
+from werkzeug.exceptions import Forbidden
+
 from odoo import http
 from odoo.exceptions import ValidationError
 from odoo.http import request
@@ -74,4 +76,8 @@ class MercadoPagoController(http.Controller):
         verified_data = tx_sudo.provider_id._mercado_pago_make_request(
             f'/v1/payments/{data.get("payment_id")}', method='GET'
         )
+        if tx_sudo.reference != verified_data["external_reference"]:
+            _logger.warning("Received payment data with incorrect reference")
+            raise Forbidden()
+
         tx_sudo._handle_notification_data('mercado_pago', verified_data)
