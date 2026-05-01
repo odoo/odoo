@@ -86,6 +86,7 @@ class AccountMove(models.Model):
             render_context['peppol_info'] = {
                 'peppol_country': invoice_country,
                 'is_peppol_sent': invoice.peppol_move_state in ('processing', 'done'),
+                'is_partner_b2c': len(invoice.commercial_partner_id.vat or '') <= 1,
                 'partner_on_peppol': invoice.commercial_partner_id.account_peppol_is_endpoint_valid,
             }
         return render_context
