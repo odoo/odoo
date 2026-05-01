@@ -1384,7 +1384,7 @@ test("Editing a message to clear its composer opens message delete dialog.", asy
     triggerHotkey("Enter");
     await contains(".o-mail-Message:has(:text('not empty'))");
     await contains(
-        ".modal-body p:text('Are you sure you want to bid farewell to this message forever?')"
+        ".modal-body p:text('Are you sure you want to permanently delete this message?')"
     );
 });
 
@@ -1412,7 +1412,7 @@ test("Clear message body should not open message delete dialog if it has attachm
     await contains(".o-mail-Message-textContent:has(:text('not empty'))", { count: 0 });
     // weak test, no guarantee that we waited long enough for the potential dialog to show
     await contains(
-        ".modal-body p:text('Are you sure you want to bid farewell to this message forever?')",
+        ".modal-body p:text('Are you sure you want to permanently delete this message?')",
         {
             count: 0,
         }

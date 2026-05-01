@@ -2,8 +2,8 @@
 <templates xml:space="preserve">
 
 <t t-name="mail.MessageDeleteDialog">
-    <Dialog size="'md'" title.translate="Send this message to the great trash can in the sky?" contentClass="'o-bg-body'">
-        <p class="mx-3">Are you sure you want to bid farewell to this message forever?</p>
+    <Dialog size="'md'" title.translate="Delete Message" contentClass="'o-bg-body'">
+        <p class="mx-3">Are you sure you want to permanently delete this message?</p>
         <blockquote class="mx-3 fst-normal pe-none">
             <t t-component="this.messageComponent" message="this.props.message" isReadOnly="true" hasActions="false"/>
         </blockquote>
