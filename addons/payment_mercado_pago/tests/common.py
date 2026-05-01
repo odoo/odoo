@@ -23,5 +23,5 @@ class MercadoPagoCommon(PaymentCommon):
             "payment_id": cls.payment_id,
         }
         cls.webhook_payment_data = {"action": "payment.created", "data": {"id": cls.payment_id}}
-        cls.verification_data = {"id": cls.payment_id, "status": "approved"}
+        cls.verification_data = {"id": cls.payment_id, "status": "approved", "external_reference": cls.reference}
         cls.verification_data_for_error_state = {"id": cls.payment_id, "status": 404}
