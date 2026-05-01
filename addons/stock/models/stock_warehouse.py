@@ -216,13 +216,13 @@ class Warehouse(models.Model):
 
         for warehouse in warehouses:
             # check if we need to delete and recreate route
-            depends = [depend for depends in [value.get('depends', []) for value in warehouse._get_routes_values().values()] for depend in depends]
+            depends = [depend for depends in [value.get('depends', []) for value in warehouse._get_routes_values().values()] for depend in depends if depend in vals]
             if 'code' in vals or any(depend in vals for depend in depends):
                 picking_type_vals = warehouse._create_or_update_sequences_and_picking_types()
                 if picking_type_vals:
                     warehouse.write(picking_type_vals)
             if any(depend in vals for depend in depends):
-                route_vals = warehouse._create_or_update_route()
+                route_vals = warehouse._create_or_update_route(depends=depends)
                 if route_vals:
                     warehouse.write(route_vals)
             # Check if a global rule(mto, buy, ...) need to be modify.
@@ -469,7 +469,7 @@ class Warehouse(models.Model):
             }
         }
 
-    def _create_or_update_route(self):
+    def _create_or_update_route(self, depends=None):
         """ Create or update the warehouse's routes.
         _get_routes_values method return a dict with:
             - route field name (e.g: crossdock_route_id).
@@ -491,7 +491,12 @@ class Warehouse(models.Model):
         # Create routes and active/create their related rules.
         routes = []
         rules_dict = self.get_rules_dict()
+        if depends is None:
+            depends = []
         for route_field, route_data in self._get_routes_values().items():
+            if depends and route_field not in depends:
+                # Don't do anything on routes and rules not concerned by warehouse modification
+                continue
             # If the route exists update it
             if self[route_field]:
                 route = self[route_field]
