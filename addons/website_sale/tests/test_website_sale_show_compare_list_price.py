@@ -115,6 +115,32 @@ class WebsiteSaleShopPriceListCompareListPriceDispayTests(AccountTestInvoicingHt
             'fixed_price': 3500,
         })
 
+    def test_compare_list_price_strikethrough_visibility(self):
+        self.env.user.write({
+            "groups_id": [
+                Command.link(self.env.ref("website_sale.group_product_price_comparison").id)
+            ]
+        })
+        mapping = {"detail": {"display_currency": self.env.company.currency_id}}
+
+        # compare_list_price == price: no strikethrough
+        self.test_product_with_compare_list_price.compare_list_price = 2000
+        combination_info = self.test_product_with_compare_list_price._get_combination_info()
+        _, list_price = self.test_product_with_compare_list_price._search_render_results_prices(
+            mapping, combination_info
+        )
+        self.assertFalse(list_price, "No strikethrough when compare_list_price equals price")
+
+        # compare_list_price > price: strikethrough shown
+        self.test_product_with_compare_list_price.compare_list_price = 2500
+        combination_info = self.test_product_with_compare_list_price._get_combination_info()
+        _, list_price = self.test_product_with_compare_list_price._search_render_results_prices(
+            mapping, combination_info
+        )
+        self.assertTrue(
+            list_price, "Strikethrough shown when compare_list_price is greater than price"
+        )
+
     def test_compare_list_price_price_list_display(self):
         self.env.user.write({
             'groups_id': [Command.link(
