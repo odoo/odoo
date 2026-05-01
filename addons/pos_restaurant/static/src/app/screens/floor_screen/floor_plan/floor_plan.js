@@ -1,6 +1,6 @@
 import { useLayoutEffect } from "@web/owl2/utils";
 import { FloorPlanBase } from "@pos_restaurant/app/screens/floor_screen/floor_plan_base";
-import { markRaw, onWillUnmount, useListener } from "@odoo/owl";
+import { markRaw, onWillUnmount, useListener, proxy } from "@odoo/owl";
 import { useDebounced } from "@web/core/utils/timing";
 import { makeDraggableHook } from "@web/core/utils/draggable_hook_builder_owl";
 import { setElementTransform } from "@pos_restaurant/app/services/floor_plan/utils/utils";
@@ -9,6 +9,7 @@ import { useService } from "@web/core/utils/hooks";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 
 const TABLE_LINKING_DELAY = 400;
+const TIMER_INTERVAL = 60000;
 
 export class FloorPlan extends FloorPlanBase {
     static template = "pos_restaurant.floor_plan";
@@ -22,16 +23,34 @@ export class FloorPlan extends FloorPlanBase {
         this.ui = useService("ui");
         useListener(window, "resize", useDebounced(this.handleWindowResize, 100));
         this.scrollFloorId = null;
+
+        this.state = proxy({ tableTimer: {} });
+        this._updateTimer();
+        const timerInterval = setInterval(() => this._updateTimer(), TIMER_INTERVAL);
         useLayoutEffect(
             (selectedFloor, isKanban) => {
                 this.onFloorChange(selectedFloor, isKanban);
+                this._updateTimer();
             },
             () => [this.floorPlanStore.selectedFloor, this.floorPlanStore.isKanban()]
         );
+
         this.initTableLinkDND();
         onWillUnmount(() => {
             this.saveScrollPosition();
+            clearInterval(timerInterval);
         });
+    }
+
+    getTimerClasses(table) {
+        return "text-bg-light bg-opacity-50";
+    }
+
+    _updateTimer() {
+        const tables = this.floorPlanStore.getFloorTables();
+        for (const table of tables) {
+            this.state.tableTimer[table.id] = table.record.orderDuration();
+        }
     }
 
     onFloorChange(selectedFloor, isKanban) {
@@ -171,6 +190,7 @@ export class FloorPlan extends FloorPlanBase {
             parent_side: newTableMOParent ? parentSide : null,
             config_id: this.pos.config.id,
         });
+        this.state.tableTimer[table.id] = false;
         return parentTable;
     }
 

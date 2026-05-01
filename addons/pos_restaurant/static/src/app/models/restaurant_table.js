@@ -1,5 +1,6 @@
 import { registry } from "@web/core/registry";
 import { Base } from "@point_of_sale/app/models/related_models";
+import { _t } from "@web/core/l10n/translation";
 
 export class RestaurantTable extends Base {
     static pythonModel = "restaurant.table";
@@ -47,6 +48,38 @@ export class RestaurantTable extends Base {
             table = table.parent_id;
         }
         return table;
+    }
+    get startDateForDuration() {
+        const order = this.getOrder();
+        return order ? order.create_date : null;
+    }
+    orderDuration() {
+        const startTime = this.startDateForDuration;
+        if (!startTime) {
+            return false;
+        }
+
+        const order = this.getOrder();
+        const endTime = order && order.state !== "draft" ? order.date_order : luxon.DateTime.now();
+        if (!startTime || !endTime) {
+            return false;
+        }
+
+        const diff = endTime.diff(startTime, ["hours", "minutes"]).toObject();
+        const hours = Math.floor(diff.hours || 0);
+        const minutes = Math.floor(diff.minutes || 0);
+
+        if ((!hours && !minutes) || hours < 0 || minutes < 0) {
+            return false;
+        }
+
+        if (hours && minutes) {
+            return _t("%sh%s'", hours, minutes);
+        } else if (hours) {
+            return _t("%sh", hours);
+        }
+
+        return _t("%s'", minutes);
     }
     setParent(parent) {
         if (parent && (parent.id === this.id || parent.isParent(this))) {

@@ -1202,7 +1202,7 @@ class PosOrder(models.Model):
                 raise UserError(_('This order has already been paid. You cannot set it back to draft or edit it.'))
 
         if draft_orders:
-            draft_orders.write({'state': 'cancel'})
+            draft_orders.write({'state': 'cancel', 'date_order': fields.Datetime.now()})
             author_id = self.session_id._get_message_author().id
             draft_orders._post_cancel_message(author_id=author_id)
             for config in draft_orders.mapped('config_id'):
@@ -1214,7 +1214,7 @@ class PosOrder(models.Model):
 
     def action_pos_order_cancel(self):
         orders = self.browse(self.env.context.get('active_ids'))
-        orders.write({'state': 'cancel'})
+        orders.write({'state': 'cancel', 'date_order': fields.Datetime.now()})
         orders._post_cancel_message()
         for config in orders.config_id:
             config.notify_synchronisation(config.current_session_id.id, 0)
