@@ -39,7 +39,9 @@ def _create_pickings_for_open_sale_orders(env):
     ])
     open_sale_orders = env['sale.order'].search([to_adjust])
     partial_orders = open_sale_orders.filtered(lambda o: o.delivery_status == 'partial')
-    empty_lines = open_sale_orders.order_line.filtered(lambda l: l.product_uom_id.is_zero(l.qty_delivered))
+    empty_lines = open_sale_orders.order_line.filtered(
+        lambda l: not l.display_type and not l.is_downpayment and l.product_uom_id.is_zero(l.qty_delivered)
+    )
     if empty_lines:
         empty_lines._compute_qty_delivered_method()
         empty_lines._action_launch_stock_rule()
