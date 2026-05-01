@@ -661,3 +661,25 @@ class TestPurchaseOrderSuggest(PurchaseTestCommon, HttpCase):
             [(test_product, 1)], date=today - relativedelta(days=1), warehouse=other_warehouse
         )
         self.start_tour('/odoo/purchase', "test_purchase_order_suggest_search_panel_ux", login='admin')
+
+    def test_monthly_demand_interwarehouse_two_step_delivery(self):
+        """Ensure that monthly demand is correctly counted for waiting outgoing
+        moves in inter-warehouse transfers using two-step delivery routes.
+        """
+        warehouse = self.warehouse
+        warehouse.delivery_steps = 'pick_ship'
+        product = self.product_1
+        other_warehouse = self.other_warehouse
+        other_warehouse.resupply_wh_ids = [Command.set([warehouse.id])]
+
+        orderpoint = self.env['stock.warehouse.orderpoint'].create({
+            'product_id': product.id,
+            'location_id': other_warehouse.lot_stock_id.id,
+            'qty_to_order': 20,
+            'route_id': other_warehouse.resupply_route_ids.id,
+        })
+        orderpoint.action_replenish()
+
+        # Monthly demand should be 20.0 as only the outgoing move is counted with two-step delivery.
+        self.assertEqual(product.with_context(warehouse_id=warehouse.id).monthly_demand, 20.0)
+        self.assertEqual(product.monthly_demand, 20.0)

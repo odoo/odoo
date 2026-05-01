@@ -1428,3 +1428,23 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
         self.assertEqual(mo.reference_ids.move_ids.created_purchase_line_ids.product_qty, 5)
         mo.move_raw_ids.product_uom_qty = 2
         self.assertEqual(mo.reference_ids.move_ids.created_purchase_line_ids.product_qty, 2)
+
+    def test_monthly_demand_multistep_manufacturing(self):
+        """Ensure that monthly demand is correctly counted for waiting raw
+        material consumption moves in multi-step (2-step/3-step) manufacturing.
+        """
+        self.warehouse.manufacture_steps = 'pbm'
+        component = self.component_a
+
+        mo = self.env['mrp.production'].create({
+            'product_id': self.product.id,
+            'move_raw_ids': [Command.create({
+                'product_id': component.id,
+                'product_uom_qty': 20,
+            })],
+        })
+        mo.action_confirm()
+
+        # Monthly demand of the raw material(component) should be 20.0 with and without warehouse.
+        self.assertEqual(component.with_context(warehouse_id=self.warehouse.id).monthly_demand, 20.0)
+        self.assertEqual(component.monthly_demand, 20.0)
