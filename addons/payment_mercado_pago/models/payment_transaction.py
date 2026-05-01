@@ -5,6 +5,7 @@ import pprint
 from urllib.parse import quote as url_quote
 
 from werkzeug import urls
+from werkzeug.exceptions import Forbidden
 
 from odoo import _, api, models
 from odoo.exceptions import UserError, ValidationError
@@ -151,6 +152,9 @@ class PaymentTransaction(models.Model):
         verified_payment_data = self.provider_id._mercado_pago_make_request(
             f'/v1/payments/{self.provider_reference}', method='GET'
         )
+        if self.reference != verified_payment_data["external_reference"]:
+            _logger.warning("Received payment data with incorrect reference")
+            raise Forbidden()
 
         payment_status = verified_payment_data.get('status')
         if not payment_status:
