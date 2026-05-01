@@ -2,6 +2,8 @@
 
 import pprint
 
+from werkzeug.exceptions import Forbidden
+
 from odoo import http
 from odoo.exceptions import ValidationError
 from odoo.http import request
@@ -115,4 +117,7 @@ class MercadoPagoPaymentController(http.Controller):
         except ValidationError:
             _logger.error("Unable to verify the payment data")
         else:
+            if tx_sudo.reference != verified_data["external_reference"]:
+                _logger.warning("Received payment data with incorrect reference")
+                raise Forbidden()
             tx_sudo._record(verified_data)
