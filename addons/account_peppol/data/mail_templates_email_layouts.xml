@@ -13,7 +13,7 @@
                             This invoice has also been <b t-attf-style="color: {{company.email_secondary_color or '#875A7B'}}">sent via Peppol</b>.
                         </i>
                     </t>
-                    <t t-if="not peppol_info['is_peppol_sent'] and not peppol_info['partner_on_peppol']">
+                    <t t-if="not peppol_info['is_peppol_sent'] and not peppol_info['partner_on_peppol'] and not peppol_info['is_partner_b2c']">
                         <i style="color: #777">
                             <t t-out="company.name"/> uses <a target="_blank" href="https://www.odoo.com/app/invoicing">Odoo</a> to send invoices, but this one <b t-attf-style="color: {{company.email_secondary_color or '#875A7B'}}">could not be sent via Peppol</b>.
                             <t t-if="peppol_info['peppol_country'] == 'BE'">
