@@ -82,7 +82,7 @@ class PaymentPortal(portal.CustomerPortal):
             if not payment_utils.check_access_token(access_token, partner_id, amount, currency_id):
                 raise NotFound  # Don't leak information about ids.
 
-        user_sudo = request.env.user
+        user_sudo = self.env.user
         logged_in = not user_sudo._is_public()
         # If the user is logged in, take their partner rather than the partner set in the params.
         # This is something that we want, since security rules are based on the partner, and created
@@ -94,7 +94,7 @@ class PaymentPortal(portal.CustomerPortal):
             partner_is_different = partner_id and partner_id != user_sudo.partner_id.id
             partner_sudo = user_sudo.partner_id
         else:
-            partner_sudo = request.env["res.partner"].sudo().browse(partner_id).exists()
+            partner_sudo = self.env["res.partner"].sudo().browse(partner_id).exists()
             if not partner_sudo:
                 return request.redirect(
                     # Escape special characters to avoid loosing original params when redirected
@@ -105,18 +105,18 @@ class PaymentPortal(portal.CustomerPortal):
         reference = reference or payment_utils.singularize_reference_prefix(prefix="tx")
         amount = amount or 0.0  # If the amount is invalid, set it to 0 to stop the payment flow
         company_id = company_id or partner_sudo.company_id.id or user_sudo.company_id.id
-        company = request.env["res.company"].sudo().browse(company_id)
+        company = self.env["res.company"].sudo().browse(company_id)
         currency_id = currency_id or company.currency_id.id
 
         # Make sure that the currency exists and is active
-        currency = request.env["res.currency"].browse(currency_id).exists()
+        currency = self.env["res.currency"].browse(currency_id).exists()
         if not currency or not currency.active:
             raise NotFound  # The currency must exist and be active.
 
         availability_report = {}
         # Select all the payment methods and tokens that match the payment context.
         providers_sudo = (
-            request
+            self
             .env["payment.provider"]
             .sudo()  # In sudo mode to read the fields of providers and partner (if logged out).
             ._get_compatible_providers(
@@ -129,7 +129,7 @@ class PaymentPortal(portal.CustomerPortal):
             )
         )
         payment_methods_sudo = (
-            request
+            self
             .env["payment.method"]
             .sudo()  # In sudo mode to read the fields of providers.
             ._get_compatible_payment_methods(
@@ -141,7 +141,7 @@ class PaymentPortal(portal.CustomerPortal):
             )
         )
         tokens_sudo = (
-            request
+            self
             .env["payment.token"]
             .sudo()  # In sudo mode to read tokens of other partners and the fields of providers.
             ._get_available_tokens(providers_sudo.ids, partner_sudo.id)
@@ -218,16 +218,16 @@ class PaymentPortal(portal.CustomerPortal):
         :return: The rendered manage form
         :rtype: str
         """
-        partner_sudo = request.env.user.partner_id  # env.user is always sudoed
+        partner_sudo = self.env.user.partner_id  # env.user is always sudoed
 
         availability_report = {}
         # Select all the payment methods and tokens that match the payment context.
         providers_sudo = (
-            request
+            self
             .env["payment.provider"]
             .sudo()  # In sudo mode to read the fields of providers and partner (if logged out).
             ._get_compatible_providers(
-                request.env.company.id,
+                self.env.company.id,
                 partner_sudo.id,
                 0.0,  # There is no amount to pay with validation transactions.
                 force_tokenization=True,
@@ -237,7 +237,7 @@ class PaymentPortal(portal.CustomerPortal):
             )
         )
         payment_methods_sudo = (
-            request
+            self
             .env["payment.method"]
             .sudo()  # In sudo mode to read the fields of providers.
             ._get_compatible_payment_methods(
@@ -248,7 +248,7 @@ class PaymentPortal(portal.CustomerPortal):
             )
         )
         tokens_sudo = (
-            request
+            self
             .env["payment.token"]
             .sudo()  # In sudo mode to read the commercial partner's and providers' fields.
             ._get_available_tokens(None, partner_sudo.id, is_validation=True)
@@ -353,10 +353,10 @@ class PaymentPortal(portal.CustomerPortal):
         :rtype: payment.transaction
         """
         # Prepare the create values.
-        provider_sudo = request.env["payment.provider"].sudo().browse(provider_id)
+        provider_sudo = self.env["payment.provider"].sudo().browse(provider_id)
         tokenize = False
         if flow in ["redirect", "direct"]:  # Direct payment or payment with redirection
-            payment_method_sudo = request.env["payment.method"].sudo().browse(payment_method_id)
+            payment_method_sudo = self.env["payment.method"].sudo().browse(payment_method_id)
             token_id = None
             tokenize = bool(
                 # Don't tokenize if the user tried to force it through the browser's developer tools
@@ -366,23 +366,23 @@ class PaymentPortal(portal.CustomerPortal):
                 and (provider_sudo._is_tokenization_required(**kwargs) or tokenization_requested)
             )
         elif flow == "token":  # Payment by token
-            token_sudo = request.env["payment.token"].sudo().browse(token_id)
+            token_sudo = self.env["payment.token"].sudo().browse(token_id)
 
             # Prevent from paying with a token that doesn't belong to the current partner (either
             # the current user's partner if logged in, or the partner on behalf of whom the payment
             # is being made).
-            partner_sudo = request.env["res.partner"].sudo().browse(partner_id)
+            partner_sudo = self.env["res.partner"].sudo().browse(partner_id)
             if partner_sudo.commercial_partner_id != token_sudo.partner_id.commercial_partner_id:
                 raise AccessError(self.env._("You do not have access to this payment token."))
 
             payment_method_id = token_sudo.payment_method_id.id
 
-        reference = request.env["payment.transaction"]._compute_reference(
+        reference = self.env["payment.transaction"]._compute_reference(
             provider_sudo.code, prefix=reference_prefix, **(custom_create_values or {}), **kwargs
         )
         if is_validation:  # Providers determine the amount and currency in validation operations
             amount = provider_sudo._get_validation_amount()
-            payment_method = request.env["payment.method"].browse(payment_method_id)
+            payment_method = self.env["payment.method"].browse(payment_method_id)
             currency_id = (
                 provider_sudo
                 .with_context(
@@ -394,7 +394,7 @@ class PaymentPortal(portal.CustomerPortal):
 
         # Create the transaction
         tx_sudo = (
-            request
+            self
             .env["payment.transaction"]
             .sudo()  # In sudo mode to write on callback fields
             .create({
@@ -414,7 +414,7 @@ class PaymentPortal(portal.CustomerPortal):
 
         if flow != "token":
             tx_sudo._log_sent_message()  # Direct/Redirect payments go through the payment form.
-        elif not request.env.context.get("delay_token_charge"):
+        elif not self.env.context.get("delay_token_charge"):
             tx_sudo._charge_with_token()  # Token payments are charged immediately.
 
         # Monitor the transaction to make it available in the portal.
@@ -454,7 +454,7 @@ class PaymentPortal(portal.CustomerPortal):
         """
         tx_id = self._cast_as_int(tx_id)
         if tx_id:
-            tx_sudo = request.env["payment.transaction"].sudo().browse(tx_id)
+            tx_sudo = self.env["payment.transaction"].sudo().browse(tx_id)
 
             # Raise an HTTP 404 if the access token is invalid
             if not payment_utils.check_access_token(
@@ -475,9 +475,9 @@ class PaymentPortal(portal.CustomerPortal):
         :param int token_id: The token to archive, as a `payment.token` id
         :return: None
         """
-        partner_sudo = request.env.user.partner_id
+        partner_sudo = self.env.user.partner_id
         token_sudo = (
-            request
+            self
             .env["payment.token"]
             .sudo()
             .search([

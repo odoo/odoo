@@ -31,7 +31,7 @@ class WorldlineController(http.Controller):
         _logger.info("Handling redirection from Worldline with data:\n%s", pprint.pformat(data))
 
         provider_id = int(data["provider_id"])
-        provider_sudo = request.env["payment.provider"].sudo().browse(provider_id).exists()
+        provider_sudo = self.env["payment.provider"].sudo().browse(provider_id).exists()
         if not provider_sudo or provider_sudo.code != "worldline":
             _logger.warning("Received payment data with invalid provider id.")
             raise Forbidden
@@ -45,7 +45,7 @@ class WorldlineController(http.Controller):
             _logger.error("Unable to process the payment data")
         else:
             payment_data = checkout_session_data.get("createdPaymentOutput", {})
-            request.env["payment.transaction"].sudo()._process("worldline", payment_data)
+            self.env["payment.transaction"].sudo()._process("worldline", payment_data)
         return request.redirect("/payment/status")
 
     @http.route(_webhook_url, type="http", auth="public", methods=["POST"], csrf=False)
@@ -61,7 +61,7 @@ class WorldlineController(http.Controller):
         _logger.info("Notification received from Worldline with data:\n%s", pprint.pformat(data))
 
         # Check the integrity of the notification.
-        tx_sudo = request.env["payment.transaction"].sudo()._search_by_reference("worldline", data)
+        tx_sudo = self.env["payment.transaction"].sudo()._search_by_reference("worldline", data)
         if tx_sudo:
             received_signature = request.httprequest.headers.get("X-GCS-Signature")
             request_data = request.httprequest.data

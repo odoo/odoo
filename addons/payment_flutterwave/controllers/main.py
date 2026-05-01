@@ -56,7 +56,7 @@ class FlutterwaveController(http.Controller):
         if data["event"] == "charge.completed":
             payment_data = data["data"]
             tx_sudo = (
-                request
+                self
                 .env["payment.transaction"]
                 .sudo()
                 ._search_by_reference("flutterwave", payment_data)

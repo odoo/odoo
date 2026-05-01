@@ -26,7 +26,7 @@ class WebsiteSale(main.WebsiteSale):
                     reward = rewards
                 else:
                     reward = reward_id in rewards.ids and rewards.browse(reward_id)
-                if reward and (not reward.multi_product or request.env.context.get("product_id")):
+                if reward and (not reward.multi_product or self.env.context.get("product_id")):
                     reward_successfully_applied = self._apply_reward(order_sudo, reward, coupon)
 
             if reward_successfully_applied:
@@ -67,7 +67,7 @@ class WebsiteSale(main.WebsiteSale):
         except ValueError:
             reward_id = None
 
-        reward_sudo = request.env["loyalty.reward"].sudo().browse(reward_id).exists()
+        reward_sudo = self.env["loyalty.reward"].sudo().browse(reward_id).exists()
         if not reward_sudo:
             return request.redirect(redirect)
 
@@ -78,7 +78,7 @@ class WebsiteSale(main.WebsiteSale):
 
         program_sudo = reward_sudo.program_id
         claimable_rewards = order_sudo._get_claimable_and_showable_rewards()
-        coupon = request.env["loyalty.card"]
+        coupon = self.env["loyalty.card"]
         for coupon_, rewards in claimable_rewards.items():
             if reward_sudo in rewards:
                 coupon = coupon_
@@ -104,8 +104,8 @@ class WebsiteSale(main.WebsiteSale):
         :returns: whether the reward was successfully applied
         :rtype: bool
         """
-        product_id = request.env.context.get("product_id")
-        product = product_id and request.env["product.product"].sudo().browse(product_id)
+        product_id = self.env.context.get("product_id")
+        product = product_id and self.env["product.product"].sudo().browse(product_id)
         try:
             reward_status = order._apply_program_reward(reward, coupon, product=product)
         except UserError as e:

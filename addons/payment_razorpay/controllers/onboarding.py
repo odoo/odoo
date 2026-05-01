@@ -32,7 +32,7 @@ class RazorpayController(Controller):
         provider_id = int(data["provider_id"])
         authorization_code = data.get("authorization_code")
         csrf_token = data["csrf_token"]
-        provider_sudo = request.env["payment.provider"].sudo().browse(provider_id).exists()
+        provider_sudo = self.env["payment.provider"].sudo().browse(provider_id).exists()
         if not provider_sudo or provider_sudo.code != "razorpay":
             raise ValidationError(
                 self.env._("Could not find Razorpay provider with id %s", provider_sudo)
@@ -44,7 +44,7 @@ class RazorpayController(Controller):
             raise Forbidden
 
         # Request and set the OAuth tokens on the provider.
-        action = request.env.ref("payment.action_payment_provider")
+        action = self.env.ref("payment.action_payment_provider")
         redirect_url = f"/odoo/action-{action.id}/{int(provider_sudo.id)}"
         if not authorization_code:  # The user cancelled the authorization.
             return request.redirect(redirect_url)

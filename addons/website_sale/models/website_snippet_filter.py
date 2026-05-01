@@ -166,7 +166,7 @@ class WebsiteSnippetFilter(models.Model):
         :return: List of dictionaries containing category ID, name, and cover image URL.
         :rtype: list[dict]
         """
-        CategorySudo = request.env["product.public.category"].sudo()
+        CategorySudo = self.env["product.public.category"].sudo()
         domain = CategorySudo._get_available_category_domain(request.website.id)
         if parent_id:
             parent_category = CategorySudo.browse(parent_id)
@@ -175,7 +175,7 @@ class WebsiteSnippetFilter(models.Model):
         else:  # Only top-level categories
             categories = CategorySudo.search(domain & Domain("parent_id", "=", False))
 
-        default_img_path = request.env["product.template"]._get_product_placeholder_filename()
+        default_img_path = self.env["product.template"]._get_product_placeholder_filename()
         default_img_url = f"/{default_img_path}"
         return [
             {

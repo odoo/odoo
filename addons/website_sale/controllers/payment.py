@@ -37,7 +37,7 @@ class PaymentPortal(payment_portal.PaymentPortal):
         # Then lock it during the transaction to prevent concurrent payments
         try:
             order_sudo = self._document_check_access("sale.order", order_id, access_token)
-            request.env.cr.execute(
+            self.env.cr.execute(
                 SQL("SELECT 1 FROM sale_order WHERE id = %s FOR NO KEY UPDATE NOWAIT", order_id)
             )
         except MissingError:

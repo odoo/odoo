@@ -35,7 +35,7 @@ class BuckarooController(http.Controller):
         data = self._normalize_data_keys(raw_data)
 
         received_signature = data.get("brq_signature")
-        tx_sudo = request.env["payment.transaction"].sudo()._search_by_reference("buckaroo", data)
+        tx_sudo = self.env["payment.transaction"].sudo()._search_by_reference("buckaroo", data)
         if tx_sudo:
             expected_signature = tx_sudo.provider_id._buckaroo_generate_digital_sign(
                 raw_data, incoming=True
@@ -57,7 +57,7 @@ class BuckarooController(http.Controller):
         _logger.info("notification received from Buckaroo with data:\n%s", pprint.pformat(raw_data))
         data = self._normalize_data_keys(raw_data)
         received_signature = data.get("brq_signature")
-        tx_sudo = request.env["payment.transaction"].sudo()._search_by_reference("buckaroo", data)
+        tx_sudo = self.env["payment.transaction"].sudo()._search_by_reference("buckaroo", data)
         if tx_sudo:
             # Check the integrity of the payment data
             expected_signature = tx_sudo.provider_id._buckaroo_generate_digital_sign(

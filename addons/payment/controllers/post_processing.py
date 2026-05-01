@@ -71,7 +71,7 @@ class PaymentPostProcessing(http.Controller):
         _logger.info("Post-processing tx with id %s.", monitored_tx.id)
         if monitored_tx and not monitored_tx.is_post_processed:
             try:
-                post_processing_cron = request.env.ref("payment.cron_post_process_payment_tx")
+                post_processing_cron = self.env.ref("payment.cron_post_process_payment_tx")
                 post_processing_cron.lock_for_update(allow_referencing=True)
             except LockError:  # The cron is already running.
                 # Schedule it to run ASAP in case it missed the current tx.
@@ -79,7 +79,7 @@ class PaymentPostProcessing(http.Controller):
             else:
                 post_processing_cron.sudo().method_direct_trigger()  # Run synchronously.
                 # Commit to see the updated values as cron runs in a separate cursor.
-                request.env.cr.commit()
+                self.env.cr.commit()
 
         return {
             "state": monitored_tx.state,
@@ -103,7 +103,7 @@ class PaymentPostProcessing(http.Controller):
         :rtype: payment.transaction
         """
         return (
-            request
+            self
             .env["payment.transaction"]
             .sudo()
             .browse(request.session.get(self.MONITORED_TX_ID_KEY))

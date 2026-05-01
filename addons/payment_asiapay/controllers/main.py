@@ -34,7 +34,7 @@ class AsiaPayController(http.Controller):
         :rtype: str
         """
         _logger.info("Notification received from AsiaPay with data:\n%s", pprint.pformat(data))
-        tx_sudo = request.env["payment.transaction"].sudo()._search_by_reference("asiapay", data)
+        tx_sudo = self.env["payment.transaction"].sudo()._search_by_reference("asiapay", data)
         if tx_sudo:
             received_signature = data.get("secureHash")
             expected_signature = tx_sudo.provider_id._asiapay_calculate_signature(

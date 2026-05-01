@@ -759,7 +759,7 @@ class Website(models.Model):
                 return pricelist_sudo.sudo()
 
         if cart_sudo := request.cart:
-            if not request.env.cr.readonly:
+            if not self.env.cr.readonly:
                 # If there is a cart, recompute on the cart and take it from there
                 cart_sudo._compute_pricelist_id()
             pricelist_sudo = cart_sudo.pricelist_id
@@ -850,7 +850,7 @@ class Website(models.Model):
                 sale_order_sudo
                 and not self.env.user._is_public()
                 and self.env.user.partner_id.id != sale_order_sudo.partner_id.id
-                and not request.env.cr.readonly
+                and not self.env.cr.readonly
             ):
                 sale_order_sudo._update_address(self.env.user.partner_id.id, ["partner_id"])
         elif (
@@ -873,7 +873,7 @@ class Website(models.Model):
                 limit=1,
             )
             if abandonned_cart_sudo:
-                if not request.env.cr.readonly:
+                if not self.env.cr.readonly:
                     # Force the recomputation of the pricelist and fiscal position when resurrecting
                     # an abandonned cart
                     abandonned_cart_sudo._update_address(partner_sudo.id, ["partner_id"])
@@ -1031,7 +1031,7 @@ class Website(models.Model):
             href = rewrite("/shop/checkout")
 
         allowed_steps_domain = self._get_allowed_steps_domain()
-        current_step = request.env["website.checkout.step"].sudo()
+        current_step = self.env["website.checkout.step"].sudo()
         for step in current_step.search(allowed_steps_domain):
             if rewrite(step.step_href) == href:
                 current_step = step

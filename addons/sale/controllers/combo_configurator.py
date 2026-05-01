@@ -44,9 +44,9 @@ class SaleComboConfiguratorController(Controller):
         """
         if company_id:
             request.update_context(allowed_company_ids=[company_id])
-        product_template = request.env["product.template"].browse(product_tmpl_id)
-        currency = request.env["res.currency"].browse(currency_id)
-        pricelist = request.env["product.pricelist"].browse(pricelist_id)
+        product_template = self.env["product.template"].browse(product_tmpl_id)
+        currency = self.env["res.currency"].browse(currency_id)
+        pricelist = self.env["product.pricelist"].browse(pricelist_id)
         date = datetime.fromisoformat(date)
         selected_combo_item_dict = {item["id"]: item for item in selected_combo_items or []}
 
@@ -112,9 +112,9 @@ class SaleComboConfiguratorController(Controller):
         """
         if company_id:
             request.update_context(allowed_company_ids=[company_id])
-        product_template = request.env["product.template"].browse(product_tmpl_id)
-        currency = request.env["res.currency"].browse(currency_id)
-        pricelist = request.env["product.pricelist"].browse(pricelist_id)
+        product_template = self.env["product.template"].browse(product_tmpl_id)
+        currency = self.env["res.currency"].browse(currency_id)
+        pricelist = self.env["product.pricelist"].browse(pricelist_id)
         date = datetime.fromisoformat(date)
 
         return product_template._get_configurator_display_price(
@@ -159,7 +159,7 @@ class SaleComboConfiguratorController(Controller):
                 "display_name": combo_item.product_id.display_name,
                 "ptals": self._get_ptals_data(combo_item.product_id, selected_combo_item),
                 "description": combo_item.product_id.description_sale,
-                **request.env["product.template"]._get_additional_configurator_data(
+                **self.env["product.template"]._get_additional_configurator_data(
                     combo_item.product_id, date, currency, pricelist, **kwargs
                 ),
             },
@@ -182,7 +182,7 @@ class SaleComboConfiguratorController(Controller):
         :return: A list of dicts containing data about the specified product's PTALs.
         """
         variant_ptavs = product.product_template_attribute_value_ids
-        no_variant_ptavs = request.env["product.template.attribute.value"].browse(
+        no_variant_ptavs = self.env["product.template.attribute.value"].browse(
             selected_combo_item.get("no_variant_ptav_ids")
         )
         preselected_ptavs = product.attribute_line_ids.filtered(

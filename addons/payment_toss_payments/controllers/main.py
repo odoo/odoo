@@ -19,9 +19,7 @@ class TossPaymentsController(http.Controller):
         :param dict data: The payment data. Expected keys: orderId, paymentKey, amount.
         """
         _logger.info("Handling redirection from Toss Payments with data:\n%s", pprint.pformat(data))
-        tx_sudo = (
-            request.env["payment.transaction"].sudo()._search_by_reference("toss_payments", data)
-        )
+        tx_sudo = self.env["payment.transaction"].sudo()._search_by_reference("toss_payments", data)
         if not tx_sudo:
             return request.redirect("/payment/status")
 
@@ -49,9 +47,7 @@ class TossPaymentsController(http.Controller):
         :param dict data: The payment data. Expected keys: access_token, code, message, orderId.
         """
         _logger.info("Handling redirection from Toss Payments with data:\n%s", pprint.pformat(data))
-        tx_sudo = (
-            request.env["payment.transaction"].sudo()._search_by_reference("toss_payments", data)
-        )
+        tx_sudo = self.env["payment.transaction"].sudo()._search_by_reference("toss_payments", data)
         if not tx_sudo:
             return request.redirect("/payment/status")
 
@@ -83,7 +79,7 @@ class TossPaymentsController(http.Controller):
         if event_type in const.HANDLED_WEBHOOK_EVENTS:
             payment_data = event_data.get("data")
             tx_sudo = (
-                request
+                self
                 .env["payment.transaction"]
                 .sudo()
                 ._search_by_reference("toss_payments", payment_data)

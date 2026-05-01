@@ -24,7 +24,7 @@ class WebsiteSaleProductConfiguratorController(SaleProductConfiguratorController
         :rtype: bool
         :return: Whether the product configurator dialog should be shown.
         """
-        product_template = request.env["product.template"].browse(product_template_id)
+        product_template = self.env["product.template"].browse(product_template_id)
         single_product_variant = product_template.get_single_product_variant()
         has_optional_products = bool(
             product_template.optional_product_ids.filtered(self._should_show_product)
@@ -38,16 +38,16 @@ class WebsiteSaleProductConfiguratorController(SaleProductConfiguratorController
     def _get_product_template(self, product_template_id):
         if request.is_frontend:
             combo_item = (
-                request
+                self
                 .env["product.combo.item"]
                 .sudo()
                 .search([("product_id.product_tmpl_id.id", "=", product_template_id)])
             )
-            if combo_item and request.env["product.template"].sudo().search_count([
+            if combo_item and self.env["product.template"].sudo().search_count([
                 ("combo_ids", "in", combo_item.mapped("combo_id.id")),
                 ("website_published", "=", True),
             ]):
-                return request.env["product.template"].sudo().browse(product_template_id)
+                return self.env["product.template"].sudo().browse(product_template_id)
         return super()._get_product_template(product_template_id)
 
     @route(
@@ -193,7 +193,7 @@ class WebsiteSaleProductConfiguratorController(SaleProductConfiguratorController
         :rtype: float|None
         :return: The strikethrough price of the product, if there is one.
         """
-        pricelist_rule = request.env["product.pricelist.item"].browse(pricelist_rule_id)
+        pricelist_rule = self.env["product.pricelist.item"].browse(pricelist_rule_id)
 
         # First, try to use the base price as the strikethrough price.
         # Apply taxes before comparing it to the actual price.
@@ -216,7 +216,7 @@ class WebsiteSaleProductConfiguratorController(SaleProductConfiguratorController
         # Second, try to use `compare_list_price` as the strikethrough price.
         # Don't apply taxes since this price should always be displayed as is.
         if (
-            request.env["res.groups"]._is_feature_enabled(
+            self.env["res.groups"]._is_feature_enabled(
                 "website_sale.group_product_price_comparison"
             )
             and product_or_template.compare_list_price
@@ -224,7 +224,7 @@ class WebsiteSaleProductConfiguratorController(SaleProductConfiguratorController
             compare_list_price = product_or_template.currency_id._convert(
                 from_amount=product_or_template.compare_list_price,
                 to_currency=currency,
-                company=request.env.company,
+                company=self.env.company,
                 date=date,
                 round=False,
             )

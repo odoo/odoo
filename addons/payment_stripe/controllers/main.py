@@ -37,7 +37,7 @@ class StripeController(http.Controller):
                           `_get_specific_processing_values`.
         """
         # Retrieve the transaction based on the reference included in the return url.
-        tx_sudo = request.env["payment.transaction"].sudo()._search_by_reference("stripe", data)
+        tx_sudo = self.env["payment.transaction"].sudo()._search_by_reference("stripe", data)
         endpoint = (
             f"payment_intents/{data.get('payment_intent')}"  # Fetch the PaymentIntent.
             if tx_sudo.operation != "validation"
@@ -83,7 +83,7 @@ class StripeController(http.Controller):
                     "object_id": stripe_object["id"],
                 }
                 tx_sudo = (
-                    request.env["payment.transaction"].sudo()._search_by_reference("stripe", data)
+                    self.env["payment.transaction"].sudo()._search_by_reference("stripe", data)
                 )
 
                 if not tx_sudo:

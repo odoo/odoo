@@ -25,7 +25,7 @@ class RedsysController(http.Controller):
         """
         data = json.loads(base64.b64decode(encoded_data["Ds_MerchantParameters"]).decode())
         _logger.info("Handling redirection from Redsys with data:\n%s", pprint.pformat(data))
-        tx_sudo = request.env["payment.transaction"].sudo()._search_by_reference("redsys", data)
+        tx_sudo = self.env["payment.transaction"].sudo()._search_by_reference("redsys", data)
         if tx_sudo:
             received_signature = encoded_data.get("Ds_Signature")
             expected_signature = tx_sudo.provider_id._redsys_calculate_signature(
@@ -47,7 +47,7 @@ class RedsysController(http.Controller):
         """
         data = json.loads(base64.b64decode(encoded_data.get("Ds_MerchantParameters")).decode())
         _logger.info("Received webhook notification from Redsys:\n%s", pprint.pformat(data))
-        tx_sudo = request.env["payment.transaction"].sudo()._search_by_reference("redsys", data)
+        tx_sudo = self.env["payment.transaction"].sudo()._search_by_reference("redsys", data)
         if tx_sudo:
             received_signature = encoded_data.get("Ds_Signature")
             expected_signature = tx_sudo.provider_id._redsys_calculate_signature(

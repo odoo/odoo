@@ -22,7 +22,7 @@ class WebsiteSaleLoyaltyDelivery(Delivery):
 
     def _order_summary_values(self, order, **post):
         to_html = partial(
-            request.env["ir.qweb.field.monetary"].value_to_html,
+            self.env["ir.qweb.field.monetary"].value_to_html,
             options={"display_currency": order.currency_id},
         )
         res = super()._order_summary_values(order, **post)

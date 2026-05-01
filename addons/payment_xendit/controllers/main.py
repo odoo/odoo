@@ -27,7 +27,7 @@ class XenditController(http.Controller):
         :param str auth_id: The authentication id to use to make the payment.
         :return: None
         """
-        tx_sudo = request.env["payment.transaction"].sudo().search([("reference", "=", reference)])
+        tx_sudo = self.env["payment.transaction"].sudo().search([("reference", "=", reference)])
         if not payment_utils.check_access_token(access_token, reference):
             raise ValidationError(
                 self.env._("The access token doesn't match the transaction reference.")
@@ -43,7 +43,7 @@ class XenditController(http.Controller):
         data = request.get_json_data()
         _logger.info("Notification received from Xendit with data:\n%s", pprint.pformat(data))
 
-        tx_sudo = request.env["payment.transaction"].sudo()._search_by_reference("xendit", data)
+        tx_sudo = self.env["payment.transaction"].sudo()._search_by_reference("xendit", data)
         if tx_sudo:
             received_token = request.httprequest.headers.get("x-callback-token")
             expected_token = tx_sudo.provider_id.xendit_webhook_token
@@ -57,7 +57,7 @@ class XenditController(http.Controller):
         """Set draft transaction to pending after successfully returning from Xendit."""
         if access_token and str2bool(success, default=False):
             tx_sudo = (
-                request
+                self
                 .env["payment.transaction"]
                 .sudo()
                 .search(

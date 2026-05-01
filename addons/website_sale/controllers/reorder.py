@@ -26,11 +26,11 @@ class CustomerPortal(sale_portal.CustomerPortal):
 
         lines_to_reorder = sale_order.order_line.filtered(
             # Skip section headers, deliveries, event tickets, ...
-            lambda line: line.with_user(request.env.user).sudo()._is_reorder_allowed()
+            lambda line: line.with_user(self.env.user).sudo()._is_reorder_allowed()
         )
 
         if not lines_to_reorder:
-            raise ValidationError(request.env._("Nothing can be reordered in this order"))
+            raise ValidationError(self.env._("Nothing can be reordered in this order"))
 
         Cart_controller = Cart()
         order_sudo = request.cart or request.website._create_cart()

@@ -35,7 +35,7 @@ class Cart(PaymentPortal):
 
         values = {}
         if id and access_token:
-            abandoned_order = request.env["sale.order"].sudo().browse(int(id)).exists()
+            abandoned_order = self.env["sale.order"].sudo().browse(int(id)).exists()
             if not abandoned_order or not consteq(
                 abandoned_order.access_token, access_token
             ):  # wrong token (or SO has been deleted)
@@ -123,7 +123,7 @@ class Cart(PaymentPortal):
         # Do not allow float values in ecommerce by default
         quantity = (quantity and int(quantity)) or 1
 
-        product = request.env["product.product"].browse(product_id).exists()
+        product = self.env["product.product"].browse(product_id).exists()
         if not product or not product._is_add_to_cart_allowed():
             raise UserError(
                 self.env._("The given product does not exist therefore it cannot be added to cart.")
@@ -149,11 +149,7 @@ class Cart(PaymentPortal):
         if linked_products and values["line_id"]:
             for product_data in linked_products:
                 product_sudo = (
-                    request
-                    .env["product.product"]
-                    .sudo()
-                    .browse(product_data["product_id"])
-                    .exists()
+                    self.env["product.product"].sudo().browse(product_data["product_id"]).exists()
                 )
                 if product_data["quantity"] and (
                     not product_sudo
@@ -221,7 +217,7 @@ class Cart(PaymentPortal):
 
         # The validity of a combo product line can only be checked after creating all of its combo
         # item lines.
-        main_product_line = request.env["sale.order.line"].browse(values["line_id"])
+        main_product_line = self.env["sale.order.line"].browse(values["line_id"])
         if main_product_line.product_type == "combo":
             main_product_line._check_validity()
 
@@ -251,7 +247,7 @@ class Cart(PaymentPortal):
     def quick_add(self, product_template_id, product_id, quantity=1.0, **kwargs):
         values = self.add_to_cart(product_template_id, product_id, quantity=quantity, **kwargs)
 
-        IrUiView = request.env["ir.ui.view"]
+        IrUiView = self.env["ir.ui.view"]
         order_sudo = request.cart
         values["website_sale.cart_lines"] = IrUiView._render_template(
             "website_sale.cart_lines",
@@ -291,7 +287,7 @@ class Cart(PaymentPortal):
             "transaction_route": f"/shop/payment/transaction/{order.id}",
             "express_checkout_route": WebsiteSale._express_checkout_route,
             "landing_route": "/shop/payment/validate",
-            "payment_method_unknown_id": request.env.ref("payment.payment_method_unknown").id,
+            "payment_method_unknown_id": self.env.ref("payment.payment_method_unknown").id,
             "shipping_info_required": order._has_deliverable_products(),
             # Todo: remove in master
             "delivery_amount": payment_utils.to_minor_currency_units(
@@ -325,7 +321,7 @@ class Cart(PaymentPortal):
         """
         order_sudo = request.cart
         quantity = int(quantity)  # Do not allow float values in ecommerce by default
-        IrUiView = request.env["ir.ui.view"]
+        IrUiView = self.env["ir.ui.view"]
 
         # This method must be only called from the cart page BUT in some advanced logic
         # eg. website_sale_loyalty, a cart line could be a temporary record without id.
@@ -392,12 +388,12 @@ class Cart(PaymentPortal):
 
         # Get the last 10 confirmed orders from the current website user.
         previous_orders_lines_sudo = (
-            request
+            self
             .env["sale.order"]
             .sudo()
             .search(
                 [
-                    ("partner_id", "=", request.env.user.partner_id.id),
+                    ("partner_id", "=", self.env.user.partner_id.id),
                     ("state", "=", "sale"),
                     ("website_id", "=", request.website.id),
                 ],
@@ -408,7 +404,7 @@ class Cart(PaymentPortal):
         )
 
         # Prepare the order history.
-        SaleOrderLineSudo = request.env["sale.order.line"].sudo()
+        SaleOrderLineSudo = self.env["sale.order.line"].sudo()
         cart_lines_sudo = request.cart.order_line if request.cart else SaleOrderLineSudo
         seen_lines_sudo = SaleOrderLineSudo
         lines_per_order_date = {}
