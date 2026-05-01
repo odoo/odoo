@@ -105,7 +105,14 @@ export const mountPosDialog = async (component, props) => {
 };
 
 export const patchDialogComponent = (component) => {
-    component.props = [...component.props, "onMounted?"];
+    if (Array.isArray(component.props)) {
+        component.props = [...component.props, "onMounted?"];
+    } else {
+        component.props = {
+            ...component.props,
+            onMounted: { optional: true },
+        };
+    }
     patch(component.prototype, {
         setup() {
             super.setup();
