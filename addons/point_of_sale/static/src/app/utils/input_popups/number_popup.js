@@ -3,6 +3,7 @@ import { useBus, useService } from "@web/core/utils/hooks";
 import { Component, useState } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { Numpad, buttonsType } from "@point_of_sale/app/generic_components/numpad/numpad";
+import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 
 export class NumberPopup extends Component {
     static template = "point_of_sale.NumberPopup";
@@ -30,10 +31,9 @@ export class NumberPopup extends Component {
 
     setup() {
         this.numberBuffer = useService("number_buffer");
-        this.numberBuffer.use({
-            triggerAtEnter: () => this.confirm(),
-            triggerAtEscape: () => this.cancel(),
-        });
+        this.numberBuffer.use({});
+        useHotkey("enter", () => this.confirm());
+        useHotkey("escape", () => this.cancel());
         this.state = useState({
             buffer: this.props.startingValue,
         });
