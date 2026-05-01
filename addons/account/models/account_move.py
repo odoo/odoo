@@ -2965,7 +2965,7 @@ class AccountMove(models.Model):
         fake_base_line = AccountTax._prepare_base_line_for_taxes_computation(None)
 
         def get_base_lines(move):
-            return move.line_ids.filtered(lambda line: line.display_type in ('product', 'epd', 'rounding', 'cogs'))
+            return move.line_ids.filtered(lambda line: line.display_type in ('product', 'epd', 'rounding'))
 
         def get_tax_lines(move):
             return move.line_ids.filtered('tax_repartition_line_id')
