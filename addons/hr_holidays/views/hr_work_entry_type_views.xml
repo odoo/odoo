@@ -51,8 +51,9 @@
                 <field name="unit_of_measure" widget="radio" options="{'horizontal': True}"/>
                 <field name="request_unit" widget="radio" options="{'horizontal': True}"/>
             </xpath>
-            <notebook position="inside">
+            <page id="work_entry_payroll_tab" position="before">
                 <page string="Time Off" invisible="not time_off_selectable">
+                    <span class="text-muted fst-italic">Configure how time off requests are approved, allocated and managed for this time type.</span>
                     <group>
                         <group name="leave_validation" id="time_off_requests" string="Time Off Requests">
                             <field name="active" invisible="1"/>
@@ -97,7 +98,7 @@
                         </group>
                     </group>
                 </page>
-            </notebook>
+            </page>
         </field>
     </record>
 
@@ -142,6 +143,9 @@
         <field name="name">Time Types</field>
         <field name="res_model">hr.work.entry.type</field>
         <field name="view_mode">list,kanban,form</field>
+        <field name="context">
+            {'default_count_as': 'absence'}
+        </field>
     </record>
 
 </odoo>

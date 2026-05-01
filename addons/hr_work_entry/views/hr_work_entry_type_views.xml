@@ -57,7 +57,7 @@
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                     <div class="oe_title">
                         <h1>
-                            <field name="name" placeholder="Time Type Name"/>
+                            <field name="name" placeholder="e.g. Paid Time Off, Sick Leave, Work From Home"/>
                         </h1>
                     </div>
                     <group name="main_group">
@@ -75,10 +75,11 @@
                     </group>
 
                     <notebook>
-                        <page string="Payroll">
+                        <page id="work_entry_payroll_tab" string="Payroll">
+                            <span class="text-muted fst-italic">Define how this time type affects payslips and salary computation.</span>
                             <group string="Computation">
                                 <group name='computation'>
-                                    <label for="amount_rate"/>
+                                    <label for="amount_rate" string="Pay Rate"/>
                                     <div name="amount_rate">
                                         <field style='width: 4em;' name="amount_rate" widget="percentage"/>
                                     </div>
