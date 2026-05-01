@@ -1,12 +1,14 @@
 from odoo import Command
 from odoo.tests import tagged
 from odoo.addons.l10n_jo_edi_pos.tests.jo_edi_pos_common import JoEdiPosCommon
+from freezegun import freeze_time
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestJoEdiPosTypes(JoEdiPosCommon):
     _test_user_groups = None  # FIXME list needed groups
 
+    @freeze_time('2022-09-27')
     def test_jo_pos_income_invoice(self):
         self.company.l10n_jo_edi_taxpayer_type = 'income'
         self.company.l10n_jo_edi_sequence_income_source = '4419618'
@@ -33,6 +35,7 @@ class TestJoEdiPosTypes(JoEdiPosCommon):
             self.get_xml_tree_from_string(expected_file)
         )
 
+    @freeze_time('2022-09-27')
     def test_jo_pos_income_refund(self):
         self.company.l10n_jo_edi_taxpayer_type = 'income'
         self.company.l10n_jo_edi_sequence_income_source = '4419618'
@@ -70,6 +73,7 @@ class TestJoEdiPosTypes(JoEdiPosCommon):
             self.get_xml_tree_from_string(expected_file)
         )
 
+    @freeze_time('2023-11-10')
     def test_jo_pos_sales_invoice(self):
         self.company.l10n_jo_edi_taxpayer_type = 'sales'
         self.company.l10n_jo_edi_sequence_income_source = '16683693'
@@ -97,6 +101,7 @@ class TestJoEdiPosTypes(JoEdiPosCommon):
             self.get_xml_tree_from_string(expected_file)
         )
 
+    @freeze_time('2023-11-10')
     def test_jo_pos_sales_refund(self):
         self.company.l10n_jo_edi_taxpayer_type = 'sales'
         self.company.l10n_jo_edi_sequence_income_source = '16683693'
@@ -129,6 +134,7 @@ class TestJoEdiPosTypes(JoEdiPosCommon):
             self.get_xml_tree_from_string(expected_file)
         )
 
+    @freeze_time('2023-11-10')
     def test_jo_pos_special_invoice(self):
         self.company.l10n_jo_edi_taxpayer_type = 'special'
         self.company.l10n_jo_edi_sequence_income_source = '16683696'
@@ -155,6 +161,7 @@ class TestJoEdiPosTypes(JoEdiPosCommon):
             self.get_xml_tree_from_string(expected_file)
         )
 
+    @freeze_time('2023-11-10')
     def test_jo_pos_special_refund(self):
         self.company.l10n_jo_edi_taxpayer_type = 'special'
         self.company.l10n_jo_edi_sequence_income_source = '16683696'
@@ -213,6 +220,7 @@ class TestJoEdiPosTypes(JoEdiPosCommon):
             self.get_xml_tree_from_string(expected_file)
         )
 
+    @freeze_time('2022-09-27')
     def test_jo_pos_no_country_customer(self):
         self.company.l10n_jo_edi_taxpayer_type = 'income'
         self.company.l10n_jo_edi_sequence_income_source = '4419618'
