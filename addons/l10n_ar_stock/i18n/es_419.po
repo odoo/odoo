@@ -8,16 +8,16 @@ msgstr ""
 "Project-Id-Version: Odoo Server 18.4a1+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-22 19:23+0000\n"
-"PO-Revision-Date: 2026-03-14 12:49+0000\n"
+"PO-Revision-Date: 2026-04-30 07:15+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
-"odoo-s19-2-l10n/l10n_ar_stock/es_419/>\n"
+"odoo-s19-3-l10n/l10n_ar_stock/es_419/>\n"
 "Language: es_419\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: l10n_ar_stock
 #. odoo-python
@@ -44,13 +44,13 @@ msgstr "'Remito - %s' % (object.l10n_ar_delivery_guide_number or 's/n')"
 #. odoo-python
 #: code:addons/l10n_ar_stock/models/stock_picking.py:0
 msgid "- %(names)s already have a delivery guide."
-msgstr ""
+msgstr "- %(names)s ya tienen un remito."
 
 #. module: l10n_ar_stock
 #. odoo-python
 #: code:addons/l10n_ar_stock/models/stock_picking.py:0
 msgid "- %(names)s must be validated before generating a delivery guide."
-msgstr ""
+msgstr "- %(names)s deben estar validadas antes de generar un remito."
 
 #. module: l10n_ar_stock
 #. odoo-python
@@ -58,7 +58,7 @@ msgstr ""
 msgid ""
 "- No delivery guide has been generated yet for the following deliveries: %"
 "(names)s."
-msgstr ""
+msgstr "- Aún no se generó un remito para las siguientes entregas: %(names)s."
 
 #. module: l10n_ar_stock
 #. odoo-python
@@ -66,12 +66,14 @@ msgstr ""
 msgid ""
 "- The contacts on the following deliveries have no email address: %(names)s."
 msgstr ""
+"- Los contactos de las siguientes entregas no tienen una dirección de correo "
+"electrónico: %(names)s."
 
 #. module: l10n_ar_stock
 #. odoo-python
 #: code:addons/l10n_ar_stock/models/stock_picking.py:0
 msgid "- The following deliveries are already queued for sending: %(names)s."
-msgstr ""
+msgstr "- Las siguientes entregas ya están en fila para su envío: %(names)s."
 
 #. module: l10n_ar_stock
 #. odoo-python
@@ -80,6 +82,8 @@ msgid ""
 "- The operation types on the deliveries are not configured for delivery "
 "guides: %(names)s."
 msgstr ""
+"- Los tipos de operación de las entregas no están configurados para los "
+"remitos: %(names)s."
 
 #. module: l10n_ar_stock
 #: model:mail.template,body_html:l10n_ar_stock.email_template_ar_remitos_delivery_guide
@@ -214,7 +218,7 @@ msgstr ""
 #. module: l10n_ar_stock
 #: model:ir.actions.server,name:l10n_ar_stock.ir_cron_l10n_ar_send_delivery_guide_ir_actions_server
 msgid "Argentina: Send queued delivery guides"
-msgstr ""
+msgstr "Enviar remitos en la fila"
 
 #. module: l10n_ar_stock
 #: model:ir.model.fields,field_description:l10n_ar_stock.field_stock_picking_type__l10n_ar_cai_authorization_code
@@ -248,6 +252,8 @@ msgid ""
 "Cannot generate delivery guides for the following transfers:\n"
 "%(transfers)s"
 msgstr ""
+"No puedes generar remitos para los siguientes traslados:\n"
+"%(transfers)s"
 
 #. module: l10n_ar_stock
 #. odoo-python
@@ -256,6 +262,8 @@ msgid ""
 "Cannot send delivery guides for the following transfers:\n"
 "%(transfers)s"
 msgstr ""
+"No puedes enviar remitos para los siguientes traslados:\n"
+"%(transfers)s"
 
 #. module: l10n_ar_stock
 #: model:ir.actions.report,name:l10n_ar_stock.action_delivery_guide_report_pdf
@@ -291,13 +299,13 @@ msgstr "Prefijo de la Remito"
 #. odoo-python
 #: code:addons/l10n_ar_stock/models/stock_picking.py:0
 msgid "Delivery Guide Send Failed"
-msgstr ""
+msgstr "Ocurrió un error al enviar el remito"
 
 #. module: l10n_ar_stock
 #. odoo-python
 #: code:addons/l10n_ar_stock/models/stock_picking.py:0
 msgid "Delivery Guides Sent"
-msgstr ""
+msgstr "Remitos enviados"
 
 #. module: l10n_ar_stock
 #. odoo-python
@@ -305,13 +313,15 @@ msgstr ""
 msgid ""
 "Delivery guide could not be sent: no delivery guide number has been "
 "generated."
-msgstr ""
+msgstr "No es posible enviar el remito: No se generó el número del remito."
 
 #. module: l10n_ar_stock
 #. odoo-python
 #: code:addons/l10n_ar_stock/models/stock_picking.py:0
 msgid "Delivery guide could not be sent: the contact has no email address."
 msgstr ""
+"No es posible enviar el remito: El contacto no tiene una dirección de correo "
+"electrónico configurada."
 
 #. module: l10n_ar_stock
 #. odoo-python
@@ -320,6 +330,8 @@ msgid ""
 "Delivery guide could not be sent: the operation type is not configured for "
 "delivery guides."
 msgstr ""
+"No es posible enviar el remito: El tipo de operación no está configurado "
+"para los remitos."
 
 #. module: l10n_ar_stock
 #: model:mail.template,name:l10n_ar_stock.email_template_ar_remitos_delivery_guide
@@ -330,7 +342,7 @@ msgstr "Remito: Enviar por correo electrónico"
 #. odoo-python
 #: code:addons/l10n_ar_stock/models/stock_picking.py:0
 msgid "Delivery guides are being sent in the background."
-msgstr ""
+msgstr "El envío de los remitos está ocurriendo en segundo plano."
 
 #. module: l10n_ar_stock
 #: model:ir.model.fields,field_description:l10n_ar_stock.field_stock_picking__display_name
@@ -347,7 +359,7 @@ msgstr "Tipo de Documento"
 #. odoo-python
 #: code:addons/l10n_ar_stock/models/stock_picking.py:0
 msgid "Failed Delivery Guides"
-msgstr ""
+msgstr "Remitos con error"
 
 #. module: l10n_ar_stock
 #: model:ir.actions.server,name:l10n_ar_stock.action_generate_delivery_guide
@@ -374,7 +386,7 @@ msgstr "L10N Ar Permitir Enviar Remito"
 #. module: l10n_ar_stock
 #: model:ir.model.fields,field_description:l10n_ar_stock.field_stock_picking__l10n_ar_delivery_guide_cron_user_id
 msgid "L10N Ar Delivery Guide Cron User"
-msgstr ""
+msgstr "Usuario cron de los remitos"
 
 #. module: l10n_ar_stock
 #: model:ir.model.fields,field_description:l10n_ar_stock.field_stock_picking_type__l10n_ar_next_delivery_number
@@ -385,7 +397,7 @@ msgstr "Siguiente Número de Remito"
 #. odoo-python
 #: code:addons/l10n_ar_stock/models/stock_picking.py:0
 msgid "Open"
-msgstr ""
+msgstr "Abrir"
 
 #. module: l10n_ar_stock
 #: model_terms:ir.ui.view,arch_db:l10n_ar_stock.report_delivery_document
@@ -401,7 +413,7 @@ msgstr "Tipo de albarán"
 #. odoo-python
 #: code:addons/l10n_ar_stock/models/stock_picking.py:0
 msgid "Processing Delivery Guides"
-msgstr ""
+msgstr "Remitos en proceso"
 
 #. module: l10n_ar_stock
 #: model:ir.actions.server,name:l10n_ar_stock.action_send_delivery_guide
@@ -413,7 +425,7 @@ msgstr "Enviar Remito"
 #. odoo-python
 #: code:addons/l10n_ar_stock/models/stock_picking.py:0
 msgid "Sent Delivery Guides"
-msgstr ""
+msgstr "Remitos enviados"
 
 #. module: l10n_ar_stock
 #: model:ir.model.fields,field_description:l10n_ar_stock.field_stock_picking_type__l10n_ar_sequence_number_start
@@ -449,7 +461,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_ar_stock/models/stock_picking.py:0
 msgid "The following Delivery Guide emails have been sent successfully."
-msgstr ""
+msgstr "Los siguientes correos de remitos se enviaron con éxito."
 
 #. module: l10n_ar_stock
 #. odoo-python
@@ -458,6 +470,9 @@ msgid ""
 "The following Delivery Guides could not be sent due to validation errors:\n"
 "%(errors)s"
 msgstr ""
+"No fue posible enviar los siguientes remitos debido a los errores de "
+"validación:\n"
+"%(errors)s"
 
 #. module: l10n_ar_stock
 #: model_terms:ir.ui.view,arch_db:l10n_ar_stock.report_delivery_document
