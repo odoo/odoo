@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:37+0000\n"
-"PO-Revision-Date: 2026-04-24 07:53+0000\n"
+"POT-Creation-Date: 2026-05-01 17:37+0000\n"
+"PO-Revision-Date: 2026-05-02 09:18+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
 "odoo-18/point_of_sale/es_419/>\n"
@@ -38,9 +38,9 @@ msgid ""
 msgstr ""
 "\n"
 "Este error ocurre porque la cantidad se convierte en cero luego de redondear "
-"durante la conversión. Para solucionarlo, ajuste los factores de conversión "
+"durante la conversión. Para solucionarlo, ajusta los factores de conversión "
 "o el método de redondeo para garantizar que ninguna unidad original se "
-"redondee a cero en la unidad de objetivo."
+"redondee a cero en la unidad de destino."
 
 #. module: point_of_sale
 #. odoo-python
@@ -625,7 +625,7 @@ msgstr "Icono del tipo de actividad"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/store/product_configurator_popup/product_configurator_popup.xml:0
 msgid "Add"
-msgstr "Añadir"
+msgstr "Agregar"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -989,9 +989,9 @@ msgid ""
 "it's closed\n"
 " In real time: Each order sent to the server create its own picking"
 msgstr ""
-"Al cierre de la sesión: se crea una recolección para la sesión entera cuando "
-"se cierra\n"
-" En tiempo real: cada orden enviada al servidor crea su propia recolección"
+"Al cierre de la sesión: El sistema crea una recolección para la sesión "
+"entera al cerrarla\n"
+" En tiempo real: Cada orden enviada al servidor crea su propia recolección"
 
 #. module: point_of_sale
 #: model:product.template,description_sale:point_of_sale.sport_shoes_product_template
@@ -1505,6 +1505,11 @@ msgstr "Redondeo de efectivo"
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_cash_rounding
 msgid "Cash Rounding (PoS)"
 msgstr "Redondeo de efectivo (PdV)"
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
+msgid "Cash Rounding:"
+msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -4429,7 +4434,7 @@ msgstr "No"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_order.py:0
 msgid "No PoS configuration found"
-msgstr "No se encontró una configuración PdV"
+msgstr "No encontramos ninguna configuración para el PdV"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -4841,7 +4846,7 @@ msgstr "Tipo de operación"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Operation types show up in the Inventory dashboard."
-msgstr "Tipos de operación que se muestran en el tablero de Inventario."
+msgstr "Los tipos de operación aparecen en el tablero de Inventario."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5772,7 +5777,7 @@ msgstr "Número de órdenes de PdV"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_pack_operation_lot__pos_order_line_id
 msgid "Pos Order Line"
-msgstr "Línea de orden de PdV"
+msgstr "Línea de la orden del PdV"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement_line__pos_payment_ids
@@ -6916,7 +6921,7 @@ msgstr "Seleccione los productos a reembolsar y establezca la cantidad"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/payment_screen/payment_screen.js:0
 msgid "Select the shipping date"
-msgstr "Seleccione la fecha de envío "
+msgstr "Selecciona la fecha de envío"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__attribute_value_ids
@@ -6937,7 +6942,7 @@ msgstr "Autofacturación"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Sell products and deliver them later."
-msgstr "Enviar productos y entregarlos después."
+msgstr "Vende productos y entrégalos después."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -9139,9 +9144,9 @@ msgid ""
 "are not set.\n"
 "Would you like to proceed anyway?"
 msgstr ""
-"Está tratando de vender productos con números de serie o de lote, pero "
-"algunos no se han establecido.\n"
-"¿Desea continuar?"
+"Estás intentando vender productos con números de serie o lote, pero algunos "
+"de ellos no están configurados.\n"
+"¿Quieres continuar de todos modos?"
 
 #. module: point_of_sale
 #. odoo-python
