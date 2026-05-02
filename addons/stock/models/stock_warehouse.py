@@ -222,7 +222,8 @@ class Warehouse(models.Model):
                 if picking_type_vals:
                     warehouse.write(picking_type_vals)
             if any(depend in vals for depend in depends):
-                route_vals = warehouse._create_or_update_route(depends=depends)
+                # TODO: The context value should be included in function signature in further version
+                route_vals = warehouse.with_context(route_depends=depends)._create_or_update_route()
                 if route_vals:
                     warehouse.write(route_vals)
             # Check if a global rule(mto, buy, ...) need to be modify.
@@ -469,7 +470,7 @@ class Warehouse(models.Model):
             }
         }
 
-    def _create_or_update_route(self, depends=None):
+    def _create_or_update_route(self):
         """ Create or update the warehouse's routes.
         _get_routes_values method return a dict with:
             - route field name (e.g: crossdock_route_id).
@@ -491,10 +492,9 @@ class Warehouse(models.Model):
         # Create routes and active/create their related rules.
         routes = []
         rules_dict = self.get_rules_dict()
-        if depends is None:
-            depends = []
+        route_depends = self.env.context.get("route_depends", [])
         for route_field, route_data in self._get_routes_values().items():
-            if depends and route_field not in depends:
+            if route_depends and route_field not in route_depends:
                 # Don't do anything on routes and rules not concerned by warehouse modification
                 continue
             # If the route exists update it
