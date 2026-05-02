@@ -3988,3 +3988,63 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
             {'quantity': 5.0, 'unit_cost': 1.0, 'value': 5},
             {'quantity': 100.0, 'unit_cost': 1.0, 'value': 100},
         ])
+
+    def test_pdiff_no_reset_tax(self):
+        """ Check that confirming a Bill for a perpetual product from a PO with a different price
+        where some quantities are already out stock (so in a situation where pdiff
+        compensation amls are created) does not reset a manually set total tax on the Bill."""
+
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        stock_location = warehouse.lot_stock_id
+        customer_location = self.env.ref('stock.stock_location_customers')
+        self.product1.product_tmpl_id.categ_id.property_cost_method = 'average'
+        self.product1.product_tmpl_id.categ_id.property_valuation = 'real_time'
+        self.product1.supplier_taxes_id = self.company.account_purchase_tax_id
+
+        # PO for 30 @ 0
+        po = self.env['purchase.order'].create({
+            'partner_id': self.partner_id.id,
+            'order_line': [
+                Command.create({
+                    'name': self.product1.name,
+                    'product_id': self.product1.id,
+                    'product_qty': 30.0,
+                    'price_unit': 0.0,
+                }),
+            ],
+        })
+        po.button_confirm()
+        receipt = po.picking_ids
+        receipt.move_ids.move_line_ids.quantity = 30
+        receipt.button_validate()
+
+        # deliver 10
+        delivery = self.env['stock.picking'].create({
+            'location_id': stock_location.id,
+            'location_dest_id': customer_location.id,
+            'picking_type_id': warehouse.out_type_id.id,
+            'move_ids': [(0, 0, {
+                'name': self.product1.name,
+                'product_id': self.product1.id,
+                'product_uom_qty': 10,
+                'product_uom': self.product1.uom_id.id,
+                'location_id': stock_location.id,
+                'location_dest_id': customer_location.id,
+            })],
+        })
+        delivery.action_confirm()
+        delivery.move_ids.quantity = 10.0
+        delivery.button_validate()
+
+        # create bill with price 100
+        action = po.action_create_invoice()
+        bill = self.env["account.move"].browse(action["res_id"])
+        bill.invoice_date = fields.Date.today()
+        bill.invoice_line_ids.price_unit = 100
+
+        # set tax amount as 500 and confirm bill
+        bill.line_ids.filtered(lambda l: l.display_type == "tax").balance = 500
+        bill.action_post()
+
+        # check bill total tax has not changed
+        self.assertEqual(bill.amount_tax, 500)
