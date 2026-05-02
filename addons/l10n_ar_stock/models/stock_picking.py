@@ -8,7 +8,6 @@ class StockPicking(models.Model):
     l10n_ar_delivery_guide_number = fields.Char(
         string="Delivery Guide No.",
         copy=False,
-        readonly=True,
     )
     l10n_ar_cai_data = fields.Json(string="CAI Data", copy=False)
     l10n_ar_allow_generate_delivery_guide = fields.Boolean(
@@ -25,19 +24,19 @@ class StockPicking(models.Model):
 
     # === COMPUTE METHODS === #
 
-    @api.depends('state', 'l10n_ar_delivery_guide_number', 'picking_type_id.l10n_ar_document_type_id')
+    @api.depends('state', 'l10n_ar_delivery_guide_number', 'picking_type_id.l10n_ar_document_type_id', 'picking_type_id.code')
     def _compute_l10n_ar_delivery_guide_flags(self):
         """
         Compute flags for allowing delivery guide generation and sending.
         - Generation allowed if: state is 'done', document type exists, and no guide number.
-        - Send allowed if: guide number exists.
+        - Send allowed if: guide number exists on outgoing pickings.
         """
         for picking in self:
             has_doc_type = bool(picking.picking_type_id.l10n_ar_document_type_id)
             picking.l10n_ar_allow_generate_delivery_guide = (
                 picking.state == 'done' and has_doc_type and not picking.l10n_ar_delivery_guide_number
             )
-            picking.l10n_ar_allow_send_delivery_guide = bool(picking.l10n_ar_delivery_guide_number)
+            picking.l10n_ar_allow_send_delivery_guide = picking.l10n_ar_delivery_guide_number and picking.picking_type_id.code == 'outgoing'
 
     # === BUSINESS METHODS === #
 
