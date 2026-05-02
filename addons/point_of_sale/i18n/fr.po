@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-24 17:36+0000\n"
-"PO-Revision-Date: 2026-04-27 15:32+0000\n"
+"POT-Creation-Date: 2026-05-01 17:35+0000\n"
+"PO-Revision-Date: 2026-05-02 13:01+0000\n"
 "Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-s18-4/"
 "point_of_sale/fr/>\n"
@@ -1674,6 +1674,11 @@ msgid "Cash Rounding (PoS)"
 msgstr "Arrondi des paiements en espèces (PdV)"
 
 #. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
+msgid "Cash Rounding:"
+msgstr ""
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Cash Roundings"
 msgstr "Arrondi des paiements en espèces"
@@ -2714,7 +2719,7 @@ msgstr "Tableau de bord"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/models/utils/indexed_db.js:0
 msgid "Database Connection Lost"
-msgstr ""
+msgstr "Connexion à la base de données perdue"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4601,6 +4606,9 @@ msgid ""
 "Chromium-based. Please use a Chromium-based browser to benefit from this "
 "feature."
 msgstr ""
+"La configuration de l'accès au réseau local est activée, mais votre "
+"navigateur n'est pas basé sur Chromium. Veuillez utiliser un navigateur basé "
+"sur Chromium pour bénéficier de cette fonctionnalité."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4653,7 +4661,7 @@ msgstr "Logo"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
 msgid "Logs"
-msgstr ""
+msgstr "Journaux"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_pack_operation_lot__lot_name
@@ -6231,6 +6239,11 @@ msgid ""
 "the list of printers with errors: %s\n"
 "Do you want to retry ?"
 msgstr ""
+"Veuillez noter que certaines imprimantes n’ont pas pu être contactées. Les "
+"modifications seront prises en compte localement, mais un ticket de "
+"préparation peut être manquant. Voici la liste des imprimantes en erreur : "
+"%s\n"
+"Voulez-vous réessayer ?"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7364,7 +7377,7 @@ msgstr "Session associée : %(link)s"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/models/utils/indexed_db.js:0
 msgid "Reload"
-msgstr ""
+msgstr "Recharger"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8681,6 +8694,8 @@ msgid ""
 "The connection to the local database was lost. Reloading the page will "
 "restore it and prevent any loss of unsaved orders."
 msgstr ""
+"La connexion à la base de données locale a été perdue. Rechargez la page "
+"pour la rétablir et éviter toute perte de commandes non enregistrées."
 
 #. module: point_of_sale
 #. odoo-python

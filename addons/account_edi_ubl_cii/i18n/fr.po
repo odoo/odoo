@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-24 17:36+0000\n"
-"PO-Revision-Date: 2026-04-27 15:26+0000\n"
+"POT-Creation-Date: 2026-05-01 17:35+0000\n"
+"PO-Revision-Date: 2026-05-02 13:01+0000\n"
 "Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-s18-4/"
 "account_edi_ubl_cii/fr/>\n"
@@ -46,7 +46,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 msgid "%s should have a valid KBO/BCE number in the Company ID field"
-msgstr "%s doit avoir un numéro KBO/BCE valide dans le champ ID de l'entreprise"
+msgstr ""
+"%s doit avoir un numéro KBO/BCE valide dans le champ ID de l'entreprise"
 
 #. module: account_edi_ubl_cii
 #: model:ir.actions.server,name:account_edi_ubl_cii.action_group_ungroup_lines_by_tax
@@ -56,12 +57,12 @@ msgstr "(Dé)grouper les lignes par taxe"
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.report_invoice_document
 msgid "<span class=\"text-muted\">FROM</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">DE</span>"
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.report_invoice_document
 msgid "<span class=\"text-muted\">TO</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">À</span>"
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
@@ -78,7 +79,6 @@ msgstr "Un paiement de %s a été détecté."
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
-#: code:addons/account_edi_ubl_cii/models/account_edi_ubl.py:0
 msgid "A rounding amount of %s was detected."
 msgstr "Un montant d'arrondi de %s a été détecté."
 
@@ -187,6 +187,12 @@ msgstr "TVA Bulgarie"
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9913
 msgid "Business Registers Network"
 msgstr "Business Registers Network"
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_move.py:0
+msgid "Cannot decode origin file, try by importing it again"
+msgstr ""
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -967,7 +973,7 @@ msgstr "La taxe' %(tax_name)s' est invalide : %(error_message)s"
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.report_invoice_document
 msgid "Tax ID"
-msgstr ""
+msgstr "N° TVA"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -1087,7 +1093,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 msgid "The prepaid amount of %s corresponds to the withholding tax applied."
-msgstr "Le montant prépayé de %s correspond à la retenue à la source appliquée."
+msgstr ""
+"Le montant prépayé de %s correspond à la retenue à la source appliquée."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__9952
@@ -1177,7 +1184,7 @@ msgstr "TVA Vatican"
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.report_invoice_document
 msgid "Vendor Bill"
-msgstr ""
+msgstr "Facture fournisseur"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
