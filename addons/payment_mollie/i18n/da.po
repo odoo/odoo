@@ -6,13 +6,13 @@
 # Martin Trigaux, 2024
 # lhmflexerp <lhm@flexerp.dk>, 2024
 # Kira Petersen, 2025
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.1alpha1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:38+0000\n"
-"PO-Revision-Date: 2025-11-21 02:31+0000\n"
+"PO-Revision-Date: 2026-05-02 09:11+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-18/"
 "payment_mollie/da/>\n"
@@ -21,7 +21,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: payment_mollie
 #: model_terms:ir.ui.view,arch_db:payment_mollie.payment_provider_form
@@ -32,7 +32,7 @@ msgstr "API nøgle"
 #. odoo-python
 #: code:addons/payment_mollie/models/payment_transaction.py:0
 msgid "Cancelled payment with status: %s"
-msgstr ""
+msgstr "Annulleret betaling med status: %s"
 
 #. module: payment_mollie
 #: model:ir.model.fields,field_description:payment_mollie.field_payment_provider__code
@@ -53,13 +53,13 @@ msgstr "Mollie"
 #. module: payment_mollie
 #: model:ir.model.fields,field_description:payment_mollie.field_payment_provider__mollie_api_key
 msgid "Mollie API Key"
-msgstr ""
+msgstr "Mollie API-nøgle"
 
 #. module: payment_mollie
 #. odoo-python
 #: code:addons/payment_mollie/models/payment_transaction.py:0
 msgid "No transaction found matching reference %s."
-msgstr ""
+msgstr "Der blev ikke fundet nogen transaktion, der matcher referencen %s."
 
 #. module: payment_mollie
 #: model:ir.model,name:payment_mollie.model_payment_provider
@@ -75,12 +75,12 @@ msgstr "Betalingstransaktion"
 #. odoo-python
 #: code:addons/payment_mollie/models/payment_transaction.py:0
 msgid "Received data with invalid payment status: %s"
-msgstr ""
+msgstr "Modtagne data med ugyldig betalingsstatus: %s"
 
 #. module: payment_mollie
 #: model:ir.model.fields,help:payment_mollie.field_payment_provider__mollie_api_key
 msgid "The Test or Live API Key depending on the configuration of the provider"
-msgstr ""
+msgstr "Test- eller live-API-nøglen afhængigt af udbyderens konfiguration"
 
 #. module: payment_mollie
 #. odoo-python
@@ -89,8 +89,10 @@ msgid ""
 "The communication with the API failed. Mollie gave us the following "
 "information: %s"
 msgstr ""
+"Kommunikationen med API'en mislykkedes. Mollie gav os følgende oplysninger: "
+"%s"
 
 #. module: payment_mollie
 #: model:ir.model.fields,help:payment_mollie.field_payment_provider__code
 msgid "The technical code of this payment provider."
-msgstr ""
+msgstr "Betalingsudbyderens tekniske kode."
