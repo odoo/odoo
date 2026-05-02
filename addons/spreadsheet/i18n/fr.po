@@ -14,8 +14,8 @@ msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-24 17:38+0000\n"
-"PO-Revision-Date: 2026-04-15 15:03+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2026-05-02 08:09+0000\n"
+"Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-17/"
 "spreadsheet/fr/>\n"
 "Language: fr\n"
@@ -24,7 +24,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
 "1000000 == 0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -128,6 +128,11 @@ msgid ""
 "being sorted in descending order. If not sorted, invalid results will be "
 "returned.      "
 msgstr ""
+"(1) Rechercher à partir du premier élément. (-1) Rechercher à partir du "
+"dernier élément. (2) Effectuer une recherche binaire basée sur un tri "
+"croissant de lookup_array. Si non trié, des résultats invalides seront "
+"retournés. (-2) Effectuer une recherche binaire basée sur un tri décroissant "
+"de lookup_array. Si non trié, des résultats invalides seront retournés. "
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3654,6 +3659,8 @@ msgid ""
 "In [[FUNCTION_NAME]], the number of columns of the first matrix (%s) must be "
 "equal to the         number of rows of the second matrix (%s)."
 msgstr ""
+"Dans [[FUNCTION_NAME]] , le nombre de colonnes de la première matrice (%s) "
+"doit être égal au nombre de lignes de la deuxième matrice (%s)."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11157,6 +11164,10 @@ msgid ""
 "default behavior is to treat         consecutive delimiters as one (if "
 "TRUE). If FALSE, empty cells values are added between consecutive delimiters."
 msgstr ""
+"Indique s’il faut supprimer ou non les textes vides des résultats de "
+"fractionnement. Le comportement par défaut consiste à traiter les "
+"délimiteurs consécutifs comme un seul (si TRUE). Si FALSE, des cellules "
+"vides sont ajoutées entre les délimiteurs consécutifs."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -11175,6 +11186,8 @@ msgid ""
 "Whether the array should be scanned by column. True scans the array by "
 "column and false (default)       scans the array by row."
 msgstr ""
+"Indique si le tableau doit être parcouru par colonne. TRUE parcourt le "
+"tableau par colonne et FALSE (par défaut) parcourt le tableau par ligne."
 
 #. module: spreadsheet
 #. odoo-javascript

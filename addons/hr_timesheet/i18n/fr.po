@@ -9,13 +9,14 @@
 # Camille Dantinne <cmd@odoo.com>, 2024
 # Manon Rondou, 2025
 # Weblate <noreply-mt-weblate@weblate.org>, 2026.
+# "Manon Rondou (ronm)" <ronm@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-03 18:38+0000\n"
-"PO-Revision-Date: 2026-03-07 08:21+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2026-05-02 08:11+0000\n"
+"Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-17/"
 "hr_timesheet/fr/>\n"
 "Language: fr\n"
@@ -24,7 +25,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
 "1000000 == 0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.16.1\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
@@ -1525,6 +1526,11 @@ msgid ""
 "delete all of their timesheets.\n"
 "                        </span>"
 msgstr ""
+"Vous ne pouvez pas supprimer des employés ayant des feuilles de temps.\n"
+"<span invisible=\"not has_active_employee\">\n"
+"    Vous pouvez soit archiver ces employés, soit supprimer au préalable "
+"toutes leurs feuilles de temps.\n"
+"</span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
