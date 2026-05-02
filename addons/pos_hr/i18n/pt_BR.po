@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-13 18:38+0000\n"
+"POT-Creation-Date: 2026-05-01 17:37+0000\n"
 "PO-Revision-Date: 2025-05-06 12:03+0000\n"
 "Last-Translator: Maitê Dietze, 2025\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/"
@@ -43,12 +43,6 @@ msgstr "Adicionar um relatório para cada funcionário"
 #: model_terms:ir.ui.view,arch_db:pos_hr.res_config_settings_view_form
 msgid "Advanced rights"
 msgstr "Direitos avançados"
-
-#. module: pos_hr
-#: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
-#: model_terms:ir.ui.view,arch_db:pos_hr.res_config_settings_view_form
-msgid "All Employees"
-msgstr "Todos os funcionários"
 
 #. module: pos_hr
 #: model:ir.model,name:pos_hr.model_account_bank_statement_line
@@ -191,10 +185,22 @@ msgid "Employees with manager access"
 msgstr "Funcionários com acesso gerencial"
 
 #. module: pos_hr
+#: model:ir.model.fields,help:pos_hr.field_pos_config__minimal_employee_ids
+#: model:ir.model.fields,help:pos_hr.field_res_config_settings__pos_minimal_employee_ids
+msgid "Employees with minimal POS access, limited to basic order operations"
+msgstr ""
+
+#. module: pos_hr
 #: model:ir.model.fields,field_description:pos_hr.field_pos_config__minimal_employee_ids
 #: model:ir.model.fields,field_description:pos_hr.field_res_config_settings__pos_minimal_employee_ids
 msgid "Employees with minimal access"
 msgstr "Funcionários com acesso mínimo"
+
+#. module: pos_hr
+#: model:ir.model.fields,help:pos_hr.field_pos_config__basic_employee_ids
+#: model:ir.model.fields,help:pos_hr.field_res_config_settings__pos_basic_employee_ids
+msgid "Employees with standard cashier access to the POS"
+msgstr ""
 
 #. module: pos_hr
 #. odoo-javascript
@@ -216,14 +222,6 @@ msgstr "Insira seu PIN"
 #: model:ir.model.fields,field_description:pos_hr.field_res_config_settings__id
 msgid "ID"
 msgstr "ID"
-
-#. module: pos_hr
-#: model:ir.model.fields,help:pos_hr.field_pos_config__basic_employee_ids
-#: model:ir.model.fields,help:pos_hr.field_pos_config__minimal_employee_ids
-#: model:ir.model.fields,help:pos_hr.field_res_config_settings__pos_basic_employee_ids
-#: model:ir.model.fields,help:pos_hr.field_res_config_settings__pos_minimal_employee_ids
-msgid "If left empty, all employees can log in to PoS"
-msgstr "Se deixado em branco, todos os funcionários poderão fazer login no PDV"
 
 #. module: pos_hr
 #. odoo-javascript
@@ -394,6 +392,13 @@ msgid ""
 msgstr ""
 "Não é possível excluir um funcionário que pode estar sendo usado em uma "
 "sessão de PDV ativa. Encerre as sessões primeiro: \n"
+
+#~ msgid "All Employees"
+#~ msgstr "Todos os funcionários"
+
+#~ msgid "If left empty, all employees can log in to PoS"
+#~ msgstr ""
+#~ "Se deixado em branco, todos os funcionários poderão fazer login no PDV"
 
 #~ msgid "If left empty, only Odoo users have extended rights in PoS"
 #~ msgstr ""
