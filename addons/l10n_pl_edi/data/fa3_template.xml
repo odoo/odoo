@@ -181,8 +181,8 @@
           <!-- P_15: Total gross amount of the invoice (including all taxes). -->
         <P_15 t-out="float_repr(invoice.amount_total_in_currency_signed, 2)"/>
 
-          <!-- KursWalutyZ: Exchange rate of the currency to PLN on the invoice date. TO-CHECK -->
-          <KursWalutyZ t-out="float_repr(1 / (invoice.invoice_currency_rate or 1), 5)"/>
+          <!-- KursWalutyZ: Exchange rate of the currency to PLN on the invoice date. -->
+          <KursWalutyZ t-if="invoice.currency_id.name != 'PLN'" t-out="float_repr(1 / (invoice.invoice_currency_rate or 1), 5)"/>
         <!--
           ======================================================================
           Adnotacje (Annotations)
@@ -205,21 +205,21 @@
             <P_18A t-out="2"/>
             <!-- Zwolnienie: Tax exemption details. -->
             <Zwolnienie>
-                <!-- P_19N: Flag indicating if the invoice contains tax-exempt items. 1=No, 2=Yes -->
+                <!-- P_19N: Flag indicating if the invoice contains tax-exempt items. 1=No -->
                 <!-- This seems to be hardcoded to "No" (1) and might need adjustment based on specific business logic for exemptions. -->
                 <!-- https://ksef.podatki.gov.pl/media/4u1bmhx4/information-sheet-on-the-fa-3-logical-structure.pdf, pages 58-59 -->
                 <P_19N t-out="1"/>
             </Zwolnienie>
             <!-- NoweSrodkiTransportu: New means of transport. -->
             <NoweSrodkiTransportu>
-                <!-- P_22N: Flag for new means of transport. 1=No, 2=Yes. -->
+                <!-- P_22N: Flag for new means of transport. 1=No -->
                 <P_22N t-out="1"/>
             </NoweSrodkiTransportu>
             <!-- P_23: Triangular transaction flag. 1=Yes, 2=No. -->
             <P_23 t-out="triangular_transaction"/>
             <!-- PMarzy: Margin scheme (e.g., for used goods, tourism). -->
             <PMarzy>
-                <!-- P_PMarzyN: Flag for margin scheme. 1=No, 2=Yes. -->
+                <!-- P_PMarzyN: Flag for margin scheme. 1=No -->
                 <P_PMarzyN t-out="1"/>
             </PMarzy>
         </Adnotacje>
