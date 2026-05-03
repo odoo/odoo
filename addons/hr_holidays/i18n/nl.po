@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-17 18:37+0000\n"
-"PO-Revision-Date: 2026-04-13 19:24+0000\n"
+"POT-Creation-Date: 2026-05-01 17:37+0000\n"
+"PO-Revision-Date: 2026-04-28 14:39+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-s19-2/"
 "hr_holidays/nl/>\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: hr_holidays
 #. odoo-python
@@ -203,7 +203,7 @@ msgstr "%(work_entry_type)s: %(duration)s (%(start)s)"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "%s"
-msgstr ""
+msgstr "%s"
 
 #. module: hr_holidays
 #. odoo-python
@@ -266,7 +266,7 @@ msgstr "samenvatting in deze periode"
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
 msgid "(s)"
-msgstr ""
+msgstr "(s)"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -282,7 +282,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
 msgid "(s)."
-msgstr ""
+msgstr "(s)."
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -1009,7 +1009,7 @@ msgstr "Extra aanvragen toestaan"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation_generate_multi_wizard__allowed_work_entry_type_ids
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_generate_multi_wizard__allowed_work_entry_type_ids
 msgid "Allowed Work Entry Type"
-msgstr ""
+msgstr "Toegelaten werkboekingstype"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__already_accrued
@@ -1372,13 +1372,10 @@ msgid ""
 "period they already took leaves. Changing this working schedule changes the "
 "duration of these leaves in such a way the employee no longer has the "
 "required allocation for them. Please review these leaves and/or allocations "
-"before changing the contract."
+"before changing the contract.\n"
+"\n"
+"This error has been triggered by:\n"
 msgstr ""
-"Als het contrat van deze werknemer wordt gewijzigd, veranderd zijn "
-"werkschema in een periode waarin hij al verlof heeft genomen. Door dit "
-"werkschema te wijzigen, verandert de duur van dit verlof zodanig dat de "
-"werknemer niet langer de vereiste toewijzing hiervoor heeft. Controleer dit "
-"verlof en/of deze toewijzingen voordat je het contract wijzigt."
 
 #. module: hr_holidays
 #. odoo-python
@@ -2156,7 +2153,7 @@ msgstr "Verlof genereren"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_work_entry_type.py:0
 msgid "Generic"
-msgstr ""
+msgstr "Generiek"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -2654,7 +2651,7 @@ msgstr "Afspraak"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__member_of_department
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report_calendar__member_of_department
 msgid "Member of Department"
-msgstr ""
+msgstr "Lid van afdeling"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_has_error
@@ -5258,6 +5255,19 @@ msgstr "geldig t/m"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_calendar_view_search
 msgid "validate"
 msgstr "bevestigen"
+
+#~ msgid ""
+#~ "Changing the contract on this employee changes their working schedule in "
+#~ "a period they already took leaves. Changing this working schedule changes "
+#~ "the duration of these leaves in such a way the employee no longer has the "
+#~ "required allocation for them. Please review these leaves and/or "
+#~ "allocations before changing the contract."
+#~ msgstr ""
+#~ "Als het contrat van deze werknemer wordt gewijzigd, veranderd zijn "
+#~ "werkschema in een periode waarin hij al verlof heeft genomen. Door dit "
+#~ "werkschema te wijzigen, verandert de duur van dit verlof zodanig dat de "
+#~ "werknemer niet langer de vereiste toewijzing hiervoor heeft. Controleer "
+#~ "dit verlof en/of deze toewijzingen voordat je het contract wijzigt."
 
 #~ msgid "Parental Leaves"
 #~ msgstr "Ouderschapsverlof"

@@ -17,7 +17,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-10 18:35+0000\n"
-"PO-Revision-Date: 2026-04-23 11:53+0000\n"
+"PO-Revision-Date: 2026-04-30 08:27+0000\n"
 "Last-Translator: \"Nurul Aini Akrima Sabila (nuaas)\" <nuaas@odoo.com>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-s19-2/"
 "stock/id/>\n"
@@ -620,6 +620,48 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Halo <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>"
+",<br/><br/>\n"
+"        Dengan bahagia kami menginformasikan Anda bahwa pesanan Anda sudah "
+"mulai dikirim.\n"
+"        <t t-if=\"hasattr(object, 'carrier_tracking_ref') and "
+"object.carrier_tracking_ref\">\n"
+"            Referensi pelacakan Anda adalah\n"
+"            <strong>\n"
+"            <t t-if=\"object.carrier_tracking_url\">\n"
+"                <t t-set=\"multiple_carrier_tracking\" t-"
+"value=\"object.get_multiple_carrier_tracking()\"/>\n"
+"                <t t-if=\"multiple_carrier_tracking\">\n"
+"                    <t t-foreach=\"multiple_carrier_tracking\" t-as=\"line\">"
+"\n"
+"                        <br/><a t-att-href=\"line[1]\" target=\"_blank\" t-"
+"out=\"line[0] or ''\"/>\n"
+"                    </t>\n"
+"                </t>\n"
+"                <t t-else=\"\">\n"
+"                    <a t-attf-href=\"{{ object.carrier_tracking_url }}\" "
+"target=\"_blank\" t-out=\"object.carrier_tracking_ref or ''\"/>.\n"
+"                </t>\n"
+"            </t>\n"
+"            <t t-else=\"\">\n"
+"                <t t-out=\"object.carrier_tracking_ref or ''\"/>.\n"
+"            </t>\n"
+"            </strong>\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"        Silakan temukan pesanan pengiriman Anda terlampir untuk detail lebih "
+"lanjut.<br/><br/>\n"
+"        Terima kasih,\n"
+"        <t t-if=\"user.signature\">\n"
+"            <br/>\n"
+"            <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
+"out=\"user.signature or ''\">Mitchell Admin</t></div>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"        "
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -4768,7 +4810,7 @@ msgstr "Kuantitas yang Diinventarisasi"
 #: model_terms:ir.ui.view,arch_db:stock.view_production_lot_form
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_pivot
 msgid "Inventory"
-msgstr "Stok Persediaan"
+msgstr "Inventaris"
 
 #. module: stock
 #. odoo-python
@@ -4776,7 +4818,7 @@ msgstr "Stok Persediaan"
 #: model:ir.model.fields,field_description:stock.field_product_product__property_stock_inventory
 #: model:ir.model.fields,field_description:stock.field_product_template__property_stock_inventory
 msgid "Inventory Adjustment"
-msgstr "Penyesuaian Stok Persediaan"
+msgstr "Penyesuaian Inventaris"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_inventory_adjustment_name
@@ -4791,7 +4833,7 @@ msgstr "Peringatan Inventory Adjustment"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
 msgid "Inventory Adjustments"
-msgstr "Penyesuaian Stok Persediaan"
+msgstr "Penyesuaian Inventaris"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
@@ -4808,13 +4850,13 @@ msgstr "Frekuensi Inventaris"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_location
 msgid "Inventory Location"
-msgstr "Lokasi Stok Persediaan"
+msgstr "Lokasi Inventaris"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_location__usage__inventory
 #: model_terms:ir.ui.view,arch_db:stock.view_location_search
 msgid "Inventory Loss"
-msgstr "Stok Persediaan Hilang"
+msgstr "Inventaris Hilang"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_search
@@ -4854,14 +4896,14 @@ msgstr "Rute Inventaris"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_form_editable
 msgid "Inventory Valuation"
-msgstr "Penilaian Stok Persediaan"
+msgstr "Penilaian Inventaris"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_inventory_at_date
 #: model:ir.model.fields,field_description:stock.field_stock_quantity_history__inventory_datetime
 #: model_terms:ir.ui.view,arch_db:stock.product_product_stock_tree
 msgid "Inventory at Date"
-msgstr "Stok Persediaan pada Tanggal"
+msgstr "Inventaris pada Tanggal"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__is_date_editable
@@ -5613,7 +5655,7 @@ msgstr "Kelola Pengemasan"
 #. module: stock
 #: model:res.groups,name:stock.group_adv_location
 msgid "Manage Push and Pull inventory flows"
-msgstr "Kelola Alur Dorong dan Tarik Stok Persediaan"
+msgstr "Kelola Alur Dorong dan Tarik Inventaris"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse_orderpoint__trigger__manual
@@ -5755,7 +5797,7 @@ msgstr "Kuantitas Maksimal"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_warehouse_orderpoint
 msgid "Minimum Inventory Rule"
-msgstr "Aturan Stok Persediaan Minimum"
+msgstr "Aturan Inventaris Minimum"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__orderpoint_ids

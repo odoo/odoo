@@ -42,7 +42,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-24 17:37+0000\n"
+"POT-Creation-Date: 2026-05-01 17:37+0000\n"
 "PO-Revision-Date: 2026-04-13 19:29+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-s19-2/"
@@ -473,6 +473,11 @@ msgid "<span>Date</span>"
 msgstr "<span>Päivämäärä</span>"
 
 #. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_order_receipt_footer
+msgid "<span>Expected delivery:</span>"
+msgstr ""
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "<span>Ongoing</span>"
 msgstr "<span>Käynnissä</span>"
@@ -531,11 +536,6 @@ msgstr "<strong>Istunnon loppuhuomautus:</strong>"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_order_change_receipt
 msgid "<strong>INTERNAL NOTE</strong>"
 msgstr "<strong>SISÄINEN VIESTI</strong>"
-
-#. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_orderline_receipt_information
-msgid "<strong>Lot number: </strong>"
-msgstr "<strong>Eränumero: </strong>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_orderline_receipt_information
@@ -1965,6 +1965,11 @@ msgstr "Käteinen ulos"
 #: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
 msgid "Cash Receipt"
 msgstr "Kassakuitti"
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
+msgid "Cash Rounding:"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3808,11 +3813,6 @@ msgid "Expected"
 msgstr "Odotettu"
 
 #. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_order_receipt_footer
-msgid "Expected delivery:"
-msgstr "Odotettu toimitusaika:"
-
-#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
 msgid "Export PoS data"
@@ -5291,6 +5291,14 @@ msgstr "Logo"
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_custom_logo_name
 msgid "Logo Name"
 msgstr "Logon nimi"
+
+#. module: point_of_sale
+#. odoo-javascript
+#. odoo-python
+#: code:addons/point_of_sale/receipt/pos_order_receipt.py:0
+#: code:addons/point_of_sale/static/src/app/models/pos_order_line.js:0
+msgid "Lot"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_pack_operation_lot__lot_name
@@ -8498,6 +8506,14 @@ msgstr "Tekstiviestin toimitusvirhe"
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_module_pos_sms
 msgid "SMS Enabled"
 msgstr "Tekstiviestit käytössä"
+
+#. module: point_of_sale
+#. odoo-javascript
+#. odoo-python
+#: code:addons/point_of_sale/receipt/pos_order_receipt.py:0
+#: code:addons/point_of_sale/static/src/app/models/pos_order_line.js:0
+msgid "SN"
+msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_sale_details_receipt
@@ -11907,6 +11923,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_sale_details_receipt_product_line
 msgid "x"
 msgstr ""
+
+#~ msgid "<strong>Lot number: </strong>"
+#~ msgstr "<strong>Eränumero: </strong>"
+
+#~ msgid "Expected delivery:"
+#~ msgstr "Odotettu toimitusaika:"
 
 #~ msgid "0.00"
 #~ msgstr "0.00"

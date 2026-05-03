@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-24 17:37+0000\n"
+"POT-Creation-Date: 2026-05-01 17:37+0000\n"
 "PO-Revision-Date: 2026-04-13 19:31+0000\n"
 "Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
@@ -436,6 +436,11 @@ msgid "<span>Date</span>"
 msgstr "<span>日期</span>"
 
 #. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_order_receipt_footer
+msgid "<span>Expected delivery:</span>"
+msgstr ""
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "<span>Ongoing</span>"
 msgstr ""
@@ -493,11 +498,6 @@ msgstr "<strong>会议结束说明：</strong>"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_order_change_receipt
 msgid "<strong>INTERNAL NOTE</strong>"
-msgstr ""
-
-#. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_orderline_receipt_information
-msgid "<strong>Lot number: </strong>"
 msgstr ""
 
 #. module: point_of_sale
@@ -1882,6 +1882,11 @@ msgstr "现金支出"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
 msgid "Cash Receipt"
+msgstr ""
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
+msgid "Cash Rounding:"
 msgstr ""
 
 #. module: point_of_sale
@@ -3693,11 +3698,6 @@ msgid "Expected"
 msgstr "预计"
 
 #. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_order_receipt_footer
-msgid "Expected delivery:"
-msgstr "预计交付："
-
-#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
 msgid "Export PoS data"
@@ -5130,6 +5130,14 @@ msgstr "标识"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__custom_logo_name
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_custom_logo_name
 msgid "Logo Name"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
+#. odoo-python
+#: code:addons/point_of_sale/receipt/pos_order_receipt.py:0
+#: code:addons/point_of_sale/static/src/app/models/pos_order_line.js:0
+msgid "Lot"
 msgstr ""
 
 #. module: point_of_sale
@@ -8290,6 +8298,14 @@ msgstr "短信发送错误"
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_module_pos_sms
 msgid "SMS Enabled"
 msgstr "已启用短信"
+
+#. module: point_of_sale
+#. odoo-javascript
+#. odoo-python
+#: code:addons/point_of_sale/receipt/pos_order_receipt.py:0
+#: code:addons/point_of_sale/static/src/app/models/pos_order_line.js:0
+msgid "SN"
+msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_sale_details_receipt
@@ -11548,6 +11564,9 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_sale_details_receipt_product_line
 msgid "x"
 msgstr ""
+
+#~ msgid "Expected delivery:"
+#~ msgstr "预计交付："
 
 #~ msgid "0.00"
 #~ msgstr "0.00"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-03 18:37+0000\n"
+"POT-Creation-Date: 2026-05-01 17:37+0000\n"
 "PO-Revision-Date: 2025-11-28 16:15+0000\n"
 "Last-Translator: Busoi Cristina <elena.busoi@capps.ai>\n"
 "Language-Team: Romanian <https://translate.odoo.com/projects/odoo-19/"
@@ -153,8 +153,8 @@ msgid "Available rewards"
 msgstr "Recompense disponibile"
 
 #. module: pos_loyalty
-#. odoo-javascript
-#: code:addons/pos_loyalty/static/src/app/utils/printer/generate_printer_data.js:0
+#. odoo-python
+#: code:addons/pos_loyalty/receipt/pos_order_receipt.py:0
 msgid "Balance:"
 msgstr ""
 
@@ -603,10 +603,8 @@ msgstr ""
 "rugăm să verificați comanda."
 
 #. module: pos_loyalty
-#. odoo-javascript
 #. odoo-python
 #: code:addons/pos_loyalty/receipt/pos_order_receipt.py:0
-#: code:addons/pos_loyalty/static/src/app/utils/printer/generate_printer_data.js:0
 msgid "Spent:"
 msgstr "Cheltuit:"
 
@@ -824,6 +822,11 @@ msgid "Unpaid gift card rejected."
 msgstr "Card cadou neachitat respins."
 
 #. module: pos_loyalty
+#: model_terms:ir.ui.view,arch_db:pos_loyalty.pos_order_receipt
+msgid "Until:"
+msgstr ""
+
+#. module: pos_loyalty
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/app/screens/product_screen/control_buttons/control_buttons.js:0
 msgid "Use eWallet to pay"
@@ -846,10 +849,8 @@ msgid "Whether this line is part of a reward or not."
 msgstr "Dacă această linie face parte dintr-o recompensă sau nu."
 
 #. module: pos_loyalty
-#. odoo-javascript
 #. odoo-python
 #: code:addons/pos_loyalty/receipt/pos_order_receipt.py:0
-#: code:addons/pos_loyalty/static/src/app/utils/printer/generate_printer_data.js:0
 msgid "Won:"
 msgstr "Câștigător:"
 
@@ -902,6 +903,17 @@ msgstr "Rambursare portofel electronic"
 #: code:addons/pos_loyalty/static/src/app/services/pos_store.js:0
 msgid "eWallet requires a customer to be selected"
 msgstr "Portofelul electronic necesitǎ selectarea unui client"
+
+#. module: pos_loyalty
+#: model_terms:ir.ui.view,arch_db:pos_loyalty.pos_order_receipt
+msgid "no expiration"
+msgstr ""
+
+#. module: pos_loyalty
+#. odoo-python
+#: code:addons/pos_loyalty/receipt/pos_order_receipt.py:0
+msgid "used"
+msgstr ""
 
 #~ msgid ""
 #~ "Gift Card: %s\n"

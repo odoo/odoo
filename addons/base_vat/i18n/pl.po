@@ -17,9 +17,9 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-17 18:38+0000\n"
-"PO-Revision-Date: 2026-02-14 12:05+0000\n"
+"PO-Revision-Date: 2026-04-29 14:16+0000\n"
 "Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
-"Language-Team: Polish <https://translate.odoo.com/projects/odoo-s19-1/"
+"Language-Team: Polish <https://translate.odoo.com/projects/odoo-s19-2/"
 "base_vat/pl/>\n"
 "Language: pl\n"
 "MIME-Version: 1.0\n"
@@ -28,7 +28,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
 "(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
 "n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: base_vat
 #. odoo-python
@@ -47,7 +47,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "11111111111 (NIN) or 2222222222 (VKN)"
-msgstr ""
+msgstr "11111111111 (NIN) lub 2222222222 (VKN)"
 
 #. module: base_vat
 #. odoo-python
@@ -78,7 +78,7 @@ msgstr "49-098-576 lub 49098576"
 #. module: base_vat
 #: model:ir.actions.server,name:base_vat.vies_iap_check_update_ir_actions_server
 msgid "Base VAT: Sync updates from IAP VIES"
-msgstr ""
+msgstr "Podstawowa stawka VAT: Zsynchronizuj aktualizacje z IAP VIES"
 
 #. module: base_vat
 #. odoo-python
@@ -94,7 +94,7 @@ msgstr "Firma"
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_config_settings
 msgid "Config Settings"
-msgstr "Ustawienia konfiguracji"
+msgstr "Konfiguracja ustawień"
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_partner
@@ -131,8 +131,7 @@ msgstr "Nazwa wyświetlana"
 #: model:ir.model.fields,help:base_vat.field_res_partner__vies_valid
 #: model:ir.model.fields,help:base_vat.field_res_users__vies_valid
 msgid "European VAT numbers are automatically checked on the VIES database."
-msgstr ""
-"Europejskie numery VAT są automatycznie sprawdzane w bazie danych VIES."
+msgstr "Europejskie numery VAT są automatycznie sprawdzane w bazie danych VIES."
 
 #. module: base_vat
 #. odoo-python
@@ -164,7 +163,7 @@ msgstr "HU12345676 lub 12345678-1-11 lub 8071592153"
 #. module: base_vat
 #: model:ir.model.fields,field_description:base_vat.field_res_country__has_foreign_fiscal_position
 msgid "Has Foreign Fiscal Position"
-msgstr "Ma zagraniczną pozycję fiskalną"
+msgstr "Ma zagraniczny obszar podatkowy"
 
 #. module: base_vat
 #: model:ir.model.fields,field_description:base_vat.field_res_company__id
@@ -194,13 +193,13 @@ msgstr "Jeśli próbujesz wprowadzić Europejski numer, oto poprawny format: "
 #: model:ir.model.fields,field_description:base_vat.field_res_partner__vies_valid
 #: model:ir.model.fields,field_description:base_vat.field_res_users__vies_valid
 msgid "Intra-Community Valid"
-msgstr "Ważne wewnątrz Wspólnoty"
+msgstr "Ważne wewnątrz wspólnoty"
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "Invalid IAP VIES endpoint"
-msgstr ""
+msgstr "Nieprawidłowy punkt końcowy IAP VIES"
 
 #. module: base_vat
 #. odoo-python
@@ -212,7 +211,7 @@ msgstr "Uwaga: oczekiwany format to %(expected_format)s"
 #: model:ir.model.fields,field_description:base_vat.field_res_partner__perform_vies_validation
 #: model:ir.model.fields,field_description:base_vat.field_res_users__perform_vies_validation
 msgid "Perform Vies Validation"
-msgstr "Przeprowadź walidację Vies"
+msgstr "Przeprowadź walidację VIES"
 
 #. module: base_vat
 #: model:ir.model.fields,field_description:base_vat.field_res_partner__vat
@@ -244,7 +243,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "The Intra-Community validity has been updated."
-msgstr ""
+msgstr "Zaktualizowano ważność wewnątrzwspólnotową."
 
 #. module: base_vat
 #: model:ir.model.fields,help:base_vat.field_res_partner__vat
@@ -263,18 +262,22 @@ msgstr ""
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "The VIES check failed. Please check the Tax ID manually."
 msgstr ""
+"Kontrola VIES zakończyła się niepowodzeniem. Sprawdź numer identyfikacji "
+"podatkowej ręcznie."
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "The VIES check is pending. The status will be updated soon."
-msgstr ""
+msgstr "Kontrola VIES jest w toku. Status zostanie zaktualizowany wkrótce."
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "To explicitly indicate no (valid) VAT, use '/', 'na' or 'NA' instead. "
 msgstr ""
+"Aby wyraźnie zaznaczyć brak (ważnego) VAT, użyj '/', 'na' lub 'NA' zamiast "
+"tego. "
 
 #. module: base_vat
 #. odoo-python
@@ -297,7 +300,7 @@ msgstr "Weryfikuj numery NIP za pomocą europejskiej usługi VIES"
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "XXXXXXXXX [9 digits]"
-msgstr ""
+msgstr "XXXXXXXXX [9 cyfr]"
 
 #. module: base_vat
 #. odoo-python

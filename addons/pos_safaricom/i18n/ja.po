@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~19.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-13 18:36+0000\n"
+"POT-Creation-Date: 2026-05-01 17:38+0000\n"
 "PO-Revision-Date: 2026-04-18 13:41+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-2/"
@@ -18,6 +18,18 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Weblate 5.16.2\n"
+
+#. module: pos_safaricom
+#. odoo-javascript
+#: code:addons/pos_safaricom/static/src/app/components/popups/mpesa_transaction_popup.xml:0
+msgid "'Search by name or phone or transaction id...'"
+msgstr ""
+
+#. module: pos_safaricom
+#. odoo-javascript
+#: code:addons/pos_safaricom/static/src/app/components/popups/mpesa_transaction_popup.xml:0
+msgid "'Select M-Pesa Transaction'"
+msgstr ""
 
 #. module: pos_safaricom
 #. odoo-javascript
@@ -46,13 +58,11 @@ msgstr "ビジネス用ショートコード"
 #. module: pos_safaricom
 #: model_terms:ir.ui.view,arch_db:pos_safaricom.pos_payment_method_view_form_inherit_pos_safaricom
 msgid ""
-"C2B callback URLs must be registered with Safaricom for Lipa na M-PESA to work.\n"
-"                            This happens automatically on creation, but you can re-register if you deleted them from the business portal."
+"C2B callback URLs must be registered with Safaricom for Lipa na M-PESA to "
+"work.\n"
+"                        This happens automatically on creation, but you can "
+"re-register if you deleted them from the business portal."
 msgstr ""
-"Lipa na M-PESA を機能させるには、C2B コールバック URLをSafaricomに登録する必"
-"要があります。\n"
-"                            これは作成時に自動的に行われますが、"
-"ビジネスポータルから削除した場合は再登録できます。"
 
 #. module: pos_safaricom
 #. odoo-javascript
@@ -64,7 +74,8 @@ msgstr "キャンセル"
 #. odoo-javascript
 #: code:addons/pos_safaricom/static/src/app/payment_safaricom.js:0
 msgid "Cannot process transactions with float numbers. Round it please."
-msgstr "浮動小数点数(小数点以下)を含む取引は処理できません。数値を丸めてください。"
+msgstr ""
+"浮動小数点数(小数点以下)を含む取引は処理できません。数値を丸めてください。"
 
 #. module: pos_safaricom
 #. odoo-javascript
@@ -81,12 +92,20 @@ msgstr "コンシューマキー"
 #. odoo-python
 #: code:addons/pos_safaricom/models/pos_payment_method.py:0
 msgid "Consumer Key and Consumer Secret are required for Safaricom M-Pesa"
-msgstr "Safaricom M-Pesaを利用するには、Consumer KeyおよびConsumer Secretが必要です"
+msgstr ""
+"Safaricom M-Pesaを利用するには、Consumer KeyおよびConsumer Secretが必要です"
 
 #. module: pos_safaricom
 #: model:ir.model.fields,field_description:pos_safaricom.field_pos_payment_method__consumer_secret
 msgid "Consumer Secret"
 msgstr "Consumer Secret"
+
+#. module: pos_safaricom
+#. odoo-python
+#: code:addons/pos_safaricom/models/pos_payment_method.py:0
+msgid ""
+"Could not find base url. Please set up web.base.url to a valid https address"
+msgstr ""
 
 #. module: pos_safaricom
 #: model:ir.model.fields,field_description:pos_safaricom.field_transaction_lipa_na_mpesa__create_uid
@@ -113,14 +132,14 @@ msgstr "QRコードの生成に失敗しました"
 #. module: pos_safaricom
 #. odoo-python
 #: code:addons/pos_safaricom/models/pos_payment_method.py:0
-msgid "Failed to register URLs"
-msgstr "URLの登録に失敗しました"
+msgid "Failed to register URLs. Check your credentials and try again."
+msgstr "URLの登録に失敗しました。認証情報を確認して、もう一度お試しください。"
 
 #. module: pos_safaricom
 #. odoo-python
 #: code:addons/pos_safaricom/models/pos_payment_method.py:0
-msgid "Failed to register URLs. Check your credentials and try again."
-msgstr "URLの登録に失敗しました。認証情報を確認して、もう一度お試しください。"
+msgid "Failed to register URLs: %s"
+msgstr ""
 
 #. module: pos_safaricom
 #. odoo-python
@@ -129,6 +148,8 @@ msgid "Failed to retrieve access token from Safaricom"
 msgstr "Safaricomからのアクセストークンの取得に失敗しました"
 
 #. module: pos_safaricom
+#. odoo-javascript
+#: code:addons/pos_safaricom/static/src/app/components/popups/mpesa_transaction_popup.xml:0
 #: model:ir.model.fields,field_description:pos_safaricom.field_pos_payment_method__id
 #: model:ir.model.fields,field_description:pos_safaricom.field_transaction_lipa_na_mpesa__id
 msgid "ID"
@@ -273,6 +294,13 @@ msgid "Test Mode"
 msgstr "テストモード"
 
 #. module: pos_safaricom
+#: model:ir.model.fields,help:pos_safaricom.field_pos_payment_method__business_short_code
+msgid ""
+"The business short code and till number combination as 'shortcode-"
+"tillnumber' (ex: 123456-789012)"
+msgstr ""
+
+#. module: pos_safaricom
 #: model:ir.model.fields,help:pos_safaricom.field_pos_payment_method__passkey
 msgid "The passkey is used to generate the password for the STK Push"
 msgstr "パスキーは、STK Pushのパスワードを生成するために使用されます"
@@ -291,3 +319,17 @@ msgstr "Lipa na M-PESA取引"
 #: model:ir.model.fields,help:pos_safaricom.field_pos_payment_method__safaricom_test_mode
 msgid "Use sandbox environment"
 msgstr "サンドボックス環境を使用"
+
+#~ msgid ""
+#~ "C2B callback URLs must be registered with Safaricom for Lipa na M-PESA to "
+#~ "work.\n"
+#~ "                            This happens automatically on creation, but "
+#~ "you can re-register if you deleted them from the business portal."
+#~ msgstr ""
+#~ "Lipa na M-PESA を機能させるには、C2B コールバック URLをSafaricomに登録する"
+#~ "必要があります。\n"
+#~ "                            これは作成時に自動的に行われますが、ビジネス"
+#~ "ポータルから削除した場合は再登録できます。"
+
+#~ msgid "Failed to register URLs"
+#~ msgstr "URLの登録に失敗しました"
