@@ -11,10 +11,10 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-22 18:36+0000\n"
-"PO-Revision-Date: 2026-04-23 11:53+0000\n"
-"Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
+"PO-Revision-Date: 2026-04-30 07:27+0000\n"
+"Last-Translator: \"Patricia Gutiérrez (pagc)\" <pagc@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
-"odoo-s19-2/hr_expense/es_419/>\n"
+"odoo-s19-3/hr_expense/es_419/>\n"
 "Language: es_419\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,6 +30,9 @@ msgid ""
 "                Approve\n"
 "            "
 msgstr ""
+"\n"
+"                Aprobar\n"
+"            "
 
 #. module: hr_expense
 #. odoo-javascript
@@ -39,6 +42,9 @@ msgid ""
 "                Post Entries\n"
 "            "
 msgstr ""
+"\n"
+"                Registrar entradas\n"
+"            "
 
 #. module: hr_expense
 #. odoo-javascript
@@ -48,6 +54,9 @@ msgid ""
 "                Refuse\n"
 "            "
 msgstr ""
+"\n"
+"                Rechazar\n"
+"            "
 
 #. module: hr_expense
 #. odoo-javascript
@@ -58,6 +67,9 @@ msgid ""
 "                Scan\n"
 "            "
 msgstr ""
+"\n"
+"                Escanear\n"
+"            "
 
 #. module: hr_expense
 #. odoo-javascript
@@ -67,6 +79,9 @@ msgid ""
 "                Submit\n"
 "            "
 msgstr ""
+"\n"
+"                Enviar\n"
+"            "
 
 #. module: hr_expense
 #. odoo-javascript
@@ -77,6 +92,9 @@ msgid ""
 "                Upload\n"
 "            "
 msgstr ""
+"\n"
+"                Subir\n"
+"            "
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__has_existing_bill
@@ -87,6 +105,11 @@ msgid ""
 "directly on the expense account, as usual.\n"
 "            "
 msgstr ""
+" - Cuando ya exista una factura de proveedor, el pago usará la cuenta por "
+"pagar del proveedor para conciliarla con la factura.\n"
+"           - Cuando no exista una factura de proveedor, el pago se "
+"registrará directo en la cuenta de gastos, como siempre.\n"
+"      "
 
 #. module: hr_expense
 #. odoo-python
@@ -163,7 +186,7 @@ msgstr "<i class=\"oi oi-arrow-right\"/> Configura el dominio de tu alias"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_split
 msgid "<span class=\"mx-1\" invisible=\"split_possible\">/</span>"
-msgstr ""
+msgstr "<span class=\"mx-1\" invisible=\"split_possible\">/</span>"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_payment_form_inherit_expense
@@ -2061,6 +2084,9 @@ msgid ""
 "The first word of the email subject did not correspond to any product code. "
 "You'll have to set the product manually on the expense."
 msgstr ""
+"La primera palabra del asunto del correo electrónico no corresponde con "
+"ningún código de producto. Debes establecer la categoría en el producto de "
+"forma manual."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_approve_duplicate_view_form
@@ -2069,6 +2095,9 @@ msgid ""
 "than some expenses of this report. Please verify this report does not "
 "contain duplicates."
 msgstr ""
+"Los siguientes gastos aprobados tienen un empleado, un importe y un producto "
+"similares a los de algunos gastos de este reporte. Verifica que este reporte "
+"no contenga duplicados."
 
 #. module: hr_expense
 #. odoo-python
@@ -2122,6 +2151,9 @@ msgid ""
 "There are draft expenses linked to this product. Updating the product cost "
 "will change expense amounts. Make sure it is what you want to do."
 msgstr ""
+"Hay gastos en borrador vinculados a este producto. Actualizar el monto del "
+"producto cambiará el monto de los gastos. Asegúrate de que esto es lo que "
+"quieres hacer."
 
 #. module: hr_expense
 #: model_terms:web_tour.tour,rainbow_man_message:hr_expense.hr_expense_tour
@@ -2197,7 +2229,7 @@ msgstr "Importe total sin impuestos en la moneda"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "Total With Conversion"
-msgstr ""
+msgstr "Total con conversión"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_split_wizard__total_amount_currency_original
@@ -2318,6 +2350,13 @@ msgid ""
 "like allowances for mileage, per diem, "
 "accommodation                                             or meal."
 msgstr ""
+"Cuando el costo de un producto de gasto no es 0, el usuario"
+"                                             que lo utiliza no podrá cambiar "
+"el importe del gasto,                                             solo la "
+"cantidad. Utiliza un costo distinto a 0 para los productos de gastos "
+"financiadas por                                             la empresa a "
+"costo fijo, como los subsidios por kilometraje, alojamiento"
+"                                             o comida."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__product_has_tax
@@ -2333,7 +2372,7 @@ msgstr "Asistente"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "Yes (Match to Bill)"
-msgstr ""
+msgstr "Sí (coincidir con la factura)"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register

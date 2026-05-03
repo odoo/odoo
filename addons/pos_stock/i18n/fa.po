@@ -6,10 +6,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~19.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-24 17:37+0000\n"
+"POT-Creation-Date: 2026-04-29 17:37+0000\n"
 "PO-Revision-Date: 2026-04-24 17:37+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -20,7 +21,10 @@ msgstr ""
 #: code:addons/pos_stock/models/stock_move.py:0
 msgid ""
 "\n"
-"This issue occurs because the quantity becomes zero after rounding during the conversion. To fix this, adjust the conversion factors or rounding method to ensure that even the smallest quantity in the original unit does not round down to zero in the target unit."
+"This issue occurs because the quantity becomes zero after rounding during "
+"the conversion. To fix this, adjust the conversion factors or rounding "
+"method to ensure that even the smallest quantity in the original unit does "
+"not round down to zero in the target unit."
 msgstr ""
 
 #. module: pos_stock
@@ -42,8 +46,8 @@ msgid "(as of opening)"
 msgstr ""
 
 #. module: pos_stock
-#: model_terms:ir.ui.view,arch_db:pos_stock.pos_orderline_receipt_information
-msgid "<strong>Lot number: </strong>"
+#: model_terms:ir.ui.view,arch_db:pos_stock.pos_order_receipt_footer
+msgid "<span>Expected delivery:</span>"
 msgstr ""
 
 #. module: pos_stock
@@ -71,7 +75,8 @@ msgstr ""
 #: model:ir.model.fields,help:pos_stock.field_res_company__point_of_sale_update_stock_quantities
 #: model:ir.model.fields,help:pos_stock.field_res_config_settings__update_stock_quantities
 msgid ""
-"At the session closing: A picking is created for the entire session when it's closed\n"
+"At the session closing: A picking is created for the entire session when "
+"it's closed\n"
 " In real time: Each order sent to the server create its own picking"
 msgstr ""
 
@@ -95,8 +100,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/pos_stock/models/stock_move.py:0
 msgid ""
-"Conversion Error: The following unit of measure conversions result in a zero"
-" quantity due to rounding:"
+"Conversion Error: The following unit of measure conversions result in a zero "
+"quantity due to rounding:"
 msgstr ""
 
 #. module: pos_stock
@@ -146,11 +151,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_stock.field_stock_rule__display_name
 #: model:ir.model.fields,field_description:pos_stock.field_stock_warehouse__display_name
 msgid "Display Name"
-msgstr ""
-
-#. module: pos_stock
-#: model_terms:ir.ui.view,arch_db:pos_stock.pos_order_receipt_footer
-msgid "Expected delivery:"
 msgstr ""
 
 #. module: pos_stock
@@ -233,14 +233,16 @@ msgid "Last Updated on"
 msgstr ""
 
 #. module: pos_stock
-#: model:ir.model.fields,field_description:pos_stock.field_pos_pack_operation_lot__lot_name
-msgid "Lot Name"
+#. odoo-javascript
+#. odoo-python
+#: code:addons/pos_stock/receipt/pos_order_receipt.py:0
+#: code:addons/pos_stock/static/src/app/models/pos_order_line.js:0
+msgid "Lot"
 msgstr ""
 
 #. module: pos_stock
-#. odoo-javascript
-#: code:addons/pos_stock/static/src/app/models/pos_order_line.js:0
-msgid "Lot Number"
+#: model:ir.model.fields,field_description:pos_stock.field_pos_pack_operation_lot__lot_name
+msgid "Lot Name"
 msgstr ""
 
 #. module: pos_stock
@@ -416,6 +418,8 @@ msgstr ""
 
 #. module: pos_stock
 #. odoo-javascript
+#. odoo-python
+#: code:addons/pos_stock/receipt/pos_order_receipt.py:0
 #: code:addons/pos_stock/static/src/app/models/pos_order_line.js:0
 msgid "SN"
 msgstr ""
@@ -591,7 +595,8 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_stock/static/src/app/services/pos_store.js:0
 msgid ""
-"You are trying to sell products with serial/lot numbers, but some of them are not set.\n"
+"You are trying to sell products with serial/lot numbers, but some of them "
+"are not set.\n"
 "Would you like to proceed anyway?"
 msgstr ""
 
@@ -599,8 +604,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/pos_stock/models/stock_picking.py:0
 msgid ""
-"You cannot archive '%(picking_type)s' as it is used by POS configuration "
-"'%(config)s'."
+"You cannot archive '%(picking_type)s' as it is used by POS configuration '%"
+"(config)s'."
 msgstr ""
 
 #. module: pos_stock

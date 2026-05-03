@@ -32,7 +32,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-22 18:38+0000\n"
+"POT-Creation-Date: 2026-04-29 17:37+0000\n"
 "PO-Revision-Date: 2026-01-16 05:49+0000\n"
 "Last-Translator: Odoo Translation Bot <c3p@odoo.com>\n"
 "Language-Team: Estonian <https://translate.odoo.com/projects/odoo-s19-1/sale/"
@@ -43,78 +43,6 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 5.14.3\n"
-
-#. module: sale
-#. odoo-javascript
-#: code:addons/sale/static/src/js/combo_configurator_dialog/combo_configurator_dialog.xml:0
-msgid ""
-"\n"
-"                            Add to order\n"
-"                        "
-msgstr ""
-
-#. module: sale
-#. odoo-javascript
-#: code:addons/sale/static/src/js/combo_configurator_dialog/combo_configurator_dialog.xml:0
-msgid ""
-"\n"
-"                            Discard\n"
-"                        "
-msgstr ""
-
-#. module: sale
-#. odoo-javascript
-#: code:addons/sale/static/src/js/product_configurator_dialog/product_configurator_dialog.xml:0
-msgid ""
-"\n"
-"                    Confirm\n"
-"                "
-msgstr ""
-
-#. module: sale
-#. odoo-javascript
-#: code:addons/sale/static/src/js/product_configurator_dialog/product_configurator_dialog.xml:0
-msgid ""
-"\n"
-"                    Discard\n"
-"                "
-msgstr ""
-
-#. module: sale
-#. odoo-javascript
-#: code:addons/sale/static/src/js/combo_configurator_dialog/combo_configurator_dialog.xml:0
-msgid ""
-"\n"
-"                    Included\n"
-"                "
-msgstr ""
-
-#. module: sale
-#. odoo-javascript
-#: code:addons/sale/static/src/js/product/product.xml:0
-msgid ""
-"\n"
-"                    Remove\n"
-"                "
-msgstr ""
-
-#. module: sale
-#. odoo-javascript
-#: code:addons/sale/static/src/js/sale_action_helper/sale_action_helper_dialog.xml:0
-msgid ""
-"\n"
-"                    Your browser does not support iframe.\n"
-"                "
-msgstr ""
-
-#. module: sale
-#. odoo-javascript
-#: code:addons/sale/static/src/xml/sales_team_progress_bar_template.xml:0
-msgid ""
-"\n"
-"                Click to define an invoicing target\n"
-"            "
-msgstr ""
 
 #. module: sale
 #. odoo-javascript
@@ -545,28 +473,27 @@ msgid ""
 "10.00</td>\n"
 "                                </tr>\n"
 "                            </table>\n"
+"                            <t t-if=\"object.tax_totals and "
+"object.tax_totals['subtotals']\">\n"
+"                                <t t-set=\"all_tax_lines\" t-value=\"[tax "
+"for line in object.tax_totals['subtotals'] for tax in line['tax_groups']]\"/"
+">\n"
+"                                <table width=\"100%\" t-if=\"all_tax_lines\" "
+"style=\"max-width: 590px; font-size: 14px; border-spacing: 0px; white-space: "
+"nowrap;\" role=\"presentation\">\n"
+"                                    <tr t-foreach=\"all_tax_lines\" t-"
+"as=\"tax_line\">\n"
+"                                        <td style=\"width: 20%; padding-"
+"bottom: 8px;\" align=\"left\"><span t-out=\"tax_line['group_name']\"/></td>\n"
+"                                        <td style=\"width: 80%;\" "
+"align=\"right\" t-out=\"format_amount(tax_line['tax_amount_currency'], "
+"object.currency_id) or ''\">$ 0.00</td>\n"
+"                                    </tr>\n"
+"                                </table>\n"
+"                            </t>\n"
 "                            <table width=\"100%\" style=\"max-width: 590px; "
 "font-size: 14px; border-spacing: 0px; white-space: nowrap;\" "
 "role=\"presentation\">\n"
-"                                <tr>\n"
-"                                    <t t-if=\"object.tax_totals and "
-"object.tax_totals['subtotals']\">\n"
-"                                        <t t-"
-"foreach=\"object.tax_totals['subtotals']\" t-as=\"line\">\n"
-"                                            <t t-foreach=\"line['tax_groups']"
-"\" t-as=\"tax_line\">\n"
-"                                                <tr>\n"
-"                                                    <td style=\"width: 20%; "
-"padding-bottom: 8px;\" align=\"left\"><span t-out=\"tax_line['group_name']\"/"
-"></td>\n"
-"                                                    <td style=\"width: 80%;"
-"\" align=\"right\" t-out=\"format_amount(tax_line['tax_amount_currency'], "
-"object.currency_id) or ''\">$ 0.00</td>\n"
-"                                                </tr>\n"
-"                                            </t>\n"
-"                                        </t>\n"
-"                                    </t>\n"
-"                                </tr>\n"
 "                                <tr>\n"
 "                                    <td style=\"width: 20%; padding-top: "
 "4px; border-top: 1px solid #343a40; opacity: 0.9;\" "
@@ -1222,6 +1149,12 @@ msgid "Add several variants to an order from a grid"
 msgstr "Lisa tellimusele mitu variatsiooni võrgustikust"
 
 #. module: sale
+#. odoo-javascript
+#: code:addons/sale/static/src/js/combo_configurator_dialog/combo_configurator_dialog.xml:0
+msgid "Add to order"
+msgstr ""
+
+#. module: sale
 #: model:ir.actions.act_window,name:sale.mail_followers_edit_action_from_sale
 msgid "Add/Remove Followers"
 msgstr "Lisa/eemalda jälgijad"
@@ -1653,6 +1586,12 @@ msgid "Click to configure"
 msgstr "Vajuta seadistuste muutmiseks"
 
 #. module: sale
+#. odoo-javascript
+#: code:addons/sale/static/src/xml/sales_team_progress_bar_template.xml:0
+msgid "Click to define an invoicing target"
+msgstr ""
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form_sale_inherit
 msgid "Client's most used account"
 msgstr ""
@@ -1761,6 +1700,8 @@ msgid "Configure your product"
 msgstr "Seadista oma toode"
 
 #. module: sale
+#. odoo-javascript
+#: code:addons/sale/static/src/js/product_configurator_dialog/product_configurator_dialog.xml:0
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Confirm"
 msgstr "Kinnita"
@@ -2193,6 +2134,9 @@ msgid "Disc.%"
 msgstr "Allah. %"
 
 #. module: sale
+#. odoo-javascript
+#: code:addons/sale/static/src/js/combo_configurator_dialog/combo_configurator_dialog.xml:0
+#: code:addons/sale/static/src/js/product_configurator_dialog/product_configurator_dialog.xml:0
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Discard"
 msgstr "Loobu"
@@ -2848,6 +2792,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.product_view_search_catalog
 msgid "In the Order"
 msgstr "Tellimuses"
+
+#. module: sale
+#. odoo-javascript
+#: code:addons/sale/static/src/js/combo_configurator_dialog/combo_configurator_dialog.xml:0
+msgid "Included"
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_partner__incoterm_id
@@ -3522,7 +3472,7 @@ msgstr "Kontoritoolid võivad teie põrandat kahjustada: kaitske seda"
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/quantity_availability/qty_at_date_widget.xml:0
-msgid "On "
+msgid "On"
 msgstr ""
 
 #. module: sale
@@ -4329,6 +4279,12 @@ msgstr "Keeldu sellest pakkumisest"
 
 #. module: sale
 #. odoo-javascript
+#: code:addons/sale/static/src/js/product/product.xml:0
+msgid "Remove"
+msgstr ""
+
+#. module: sale
+#. odoo-javascript
 #: code:addons/sale/static/src/js/quantity_buttons/quantity_buttons.xml:0
 msgid "Remove one"
 msgstr "Eemalda üks"
@@ -4888,7 +4844,6 @@ msgstr "Allkirjasta veebis"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__signature
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Signature"
 msgstr "Allkiri"
 
@@ -6033,6 +5988,12 @@ msgstr "Sinu tellimused"
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Your Reference:"
 msgstr "Sinu viide:"
+
+#. module: sale
+#. odoo-javascript
+#: code:addons/sale/static/src/js/sale_action_helper/sale_action_helper_dialog.xml:0
+msgid "Your browser does not support iframe."
+msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template

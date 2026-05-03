@@ -9,89 +9,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-22 18:38+0000\n"
-"PO-Revision-Date: 2026-03-14 13:04+0000\n"
-"Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
+"POT-Creation-Date: 2026-04-29 17:37+0000\n"
+"PO-Revision-Date: 2026-05-01 04:02+0000\n"
+"Last-Translator: \"Patricia Gutiérrez (pagc)\" <pagc@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
-"odoo-s19-2/sale/es_419/>\n"
+"odoo-s19-3/sale/es_419/>\n"
 "Language: es_419\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.16.2\n"
-
-#. module: sale
-#. odoo-javascript
-#: code:addons/sale/static/src/js/combo_configurator_dialog/combo_configurator_dialog.xml:0
-msgid ""
-"\n"
-"                            Add to order\n"
-"                        "
-msgstr ""
-
-#. module: sale
-#. odoo-javascript
-#: code:addons/sale/static/src/js/combo_configurator_dialog/combo_configurator_dialog.xml:0
-msgid ""
-"\n"
-"                            Discard\n"
-"                        "
-msgstr ""
-
-#. module: sale
-#. odoo-javascript
-#: code:addons/sale/static/src/js/product_configurator_dialog/product_configurator_dialog.xml:0
-msgid ""
-"\n"
-"                    Confirm\n"
-"                "
-msgstr ""
-
-#. module: sale
-#. odoo-javascript
-#: code:addons/sale/static/src/js/product_configurator_dialog/product_configurator_dialog.xml:0
-msgid ""
-"\n"
-"                    Discard\n"
-"                "
-msgstr ""
-
-#. module: sale
-#. odoo-javascript
-#: code:addons/sale/static/src/js/combo_configurator_dialog/combo_configurator_dialog.xml:0
-msgid ""
-"\n"
-"                    Included\n"
-"                "
-msgstr ""
-
-#. module: sale
-#. odoo-javascript
-#: code:addons/sale/static/src/js/product/product.xml:0
-msgid ""
-"\n"
-"                    Remove\n"
-"                "
-msgstr ""
-
-#. module: sale
-#. odoo-javascript
-#: code:addons/sale/static/src/js/sale_action_helper/sale_action_helper_dialog.xml:0
-msgid ""
-"\n"
-"                    Your browser does not support iframe.\n"
-"                "
-msgstr ""
-
-#. module: sale
-#. odoo-javascript
-#: code:addons/sale/static/src/xml/sales_team_progress_bar_template.xml:0
-msgid ""
-"\n"
-"                Click to define an invoicing target\n"
-"            "
-msgstr ""
+"X-Generator: Weblate 5.17\n"
 
 #. module: sale
 #. odoo-javascript
@@ -132,7 +60,7 @@ msgstr "Número de órdenes de venta"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_delivered_percent
 msgid "% Delivered"
-msgstr ""
+msgstr "% entregado"
 
 #. module: sale
 #. odoo-python
@@ -528,28 +456,27 @@ msgid ""
 "10.00</td>\n"
 "                                </tr>\n"
 "                            </table>\n"
+"                            <t t-if=\"object.tax_totals and "
+"object.tax_totals['subtotals']\">\n"
+"                                <t t-set=\"all_tax_lines\" t-value=\"[tax "
+"for line in object.tax_totals['subtotals'] for tax in line['tax_groups']]\"/"
+">\n"
+"                                <table width=\"100%\" t-if=\"all_tax_lines\" "
+"style=\"max-width: 590px; font-size: 14px; border-spacing: 0px; white-space: "
+"nowrap;\" role=\"presentation\">\n"
+"                                    <tr t-foreach=\"all_tax_lines\" t-"
+"as=\"tax_line\">\n"
+"                                        <td style=\"width: 20%; padding-"
+"bottom: 8px;\" align=\"left\"><span t-out=\"tax_line['group_name']\"/></td>\n"
+"                                        <td style=\"width: 80%;\" "
+"align=\"right\" t-out=\"format_amount(tax_line['tax_amount_currency'], "
+"object.currency_id) or ''\">$ 0.00</td>\n"
+"                                    </tr>\n"
+"                                </table>\n"
+"                            </t>\n"
 "                            <table width=\"100%\" style=\"max-width: 590px; "
 "font-size: 14px; border-spacing: 0px; white-space: nowrap;\" "
 "role=\"presentation\">\n"
-"                                <tr>\n"
-"                                    <t t-if=\"object.tax_totals and "
-"object.tax_totals['subtotals']\">\n"
-"                                        <t t-"
-"foreach=\"object.tax_totals['subtotals']\" t-as=\"line\">\n"
-"                                            <t t-foreach=\"line['tax_groups']"
-"\" t-as=\"tax_line\">\n"
-"                                                <tr>\n"
-"                                                    <td style=\"width: 20%; "
-"padding-bottom: 8px;\" align=\"left\"><span t-out=\"tax_line['group_name']\"/"
-"></td>\n"
-"                                                    <td style=\"width: 80%;"
-"\" align=\"right\" t-out=\"format_amount(tax_line['tax_amount_currency'], "
-"object.currency_id) or ''\">$ 0.00</td>\n"
-"                                                </tr>\n"
-"                                            </t>\n"
-"                                        </t>\n"
-"                                    </t>\n"
-"                                </tr>\n"
 "                                <tr>\n"
 "                                    <td style=\"width: 20%; padding-top: "
 "4px; border-top: 1px solid #343a40; opacity: 0.9;\" "
@@ -1339,6 +1266,12 @@ msgid "Add several variants to an order from a grid"
 msgstr "Agregar varias variantes a una orden desde una tabla"
 
 #. module: sale
+#. odoo-javascript
+#: code:addons/sale/static/src/js/combo_configurator_dialog/combo_configurator_dialog.xml:0
+msgid "Add to order"
+msgstr ""
+
+#. module: sale
 #: model:ir.actions.act_window,name:sale.mail_followers_edit_action_from_sale
 msgid "Add/Remove Followers"
 msgstr "Agregar o eliminar seguidores"
@@ -1786,6 +1719,12 @@ msgid "Click to configure"
 msgstr "Haz clic para configurar"
 
 #. module: sale
+#. odoo-javascript
+#: code:addons/sale/static/src/xml/sales_team_progress_bar_template.xml:0
+msgid "Click to define an invoicing target"
+msgstr ""
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form_sale_inherit
 msgid "Client's most used account"
 msgstr "La cuenta más usada del cliente"
@@ -1894,6 +1833,8 @@ msgid "Configure your product"
 msgstr "Configure su producto"
 
 #. module: sale
+#. odoo-javascript
+#: code:addons/sale/static/src/js/product_configurator_dialog/product_configurator_dialog.xml:0
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Confirm"
 msgstr "Confirmar"
@@ -2328,6 +2269,9 @@ msgid "Disc.%"
 msgstr "% de desc."
 
 #. module: sale
+#. odoo-javascript
+#: code:addons/sale/static/src/js/combo_configurator_dialog/combo_configurator_dialog.xml:0
+#: code:addons/sale/static/src/js/product_configurator_dialog/product_configurator_dialog.xml:0
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Discard"
 msgstr "Descartar"
@@ -2714,6 +2658,8 @@ msgid ""
 "For formula or fixed pricing, the original price isn’t shown in\n"
 "                            sale orders."
 msgstr ""
+"Por fórmula o precio fijo, el precio original no se muestra en\n"
+"                            órdenes de ventas."
 
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_sale_order_line_non_accountable_null_fields
@@ -2985,11 +2931,20 @@ msgid ""
 "In sale order line original price is unit price and discount is in\n"
 "                            discount column."
 msgstr ""
+"En la línea de la orden de venta, el precio original es el precio unitario y "
+"el descuento está en\n"
+"                            la columna Descuento."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_view_search_catalog
 msgid "In the Order"
 msgstr "En la orden"
+
+#. module: sale
+#. odoo-javascript
+#: code:addons/sale/static/src/js/combo_configurator_dialog/combo_configurator_dialog.xml:0
+msgid "Included"
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_partner__incoterm_id
@@ -3643,6 +3598,8 @@ msgid ""
 "Number of days between the order confirmation and the shipping of the "
 "products"
 msgstr ""
+"Número de días entre la confirmación de la orden y la entrega de los "
+"productos"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_has_error_counter
@@ -3672,7 +3629,7 @@ msgstr "Las sillas de oficina pueden dañar tu piso: protégelo"
 #. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/quantity_availability/qty_at_date_widget.xml:0
-msgid "On "
+msgid "On"
 msgstr ""
 
 #. module: sale
@@ -3698,6 +3655,9 @@ msgid ""
 "to track if something gets invoiced or delivered).\n"
 "Set the quantity to 0instead."
 msgstr ""
+"Una vez confirmada la orden de venta ya no es posible quitar ninguna de las "
+"líneas (son necesarias para determinar si algo se factura o se entrega).\n"
+"En su lugar, establezca la cantidad en 0."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
@@ -4340,7 +4300,7 @@ msgstr "Número de cotización"
 #. module: sale
 #: model:ir.actions.report,name:sale.action_report_saleorder
 msgid "Quotation / Order"
-msgstr ""
+msgstr "Cotización/orden"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_utm_campaign__quotation_count
@@ -4483,6 +4443,12 @@ msgstr "Factura normal"
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Reject This Quotation"
 msgstr "Rechazar esta cotización"
+
+#. module: sale
+#. odoo-javascript
+#: code:addons/sale/static/src/js/product/product.xml:0
+msgid "Remove"
+msgstr ""
 
 #. module: sale
 #. odoo-javascript
@@ -4979,7 +4945,7 @@ msgstr "Servicios y material"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__group_services_and_material
 msgid "Services & Materials"
-msgstr ""
+msgstr "Servicios y materiales"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -5037,6 +5003,7 @@ msgstr "Mostrar márgenes en órdenes"
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Show product images on your PDF and online quotes."
 msgstr ""
+"Muestra las imágenes de los productos en tu PDF y cotizaciones en línea."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -5050,7 +5017,6 @@ msgstr "Firmar en línea"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__signature
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Signature"
 msgstr "Firma"
 
@@ -5314,7 +5280,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 msgid "Template for Quotations"
-msgstr ""
+msgstr "Plantilla para cotizaciones"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__terms_type
@@ -5450,6 +5416,8 @@ msgid ""
 "The following sale orders %(invalid_orders)s can't be delivered. Cancelled "
 "all deliveries."
 msgstr ""
+"Las siguientes órdenes de venta %(invalid_orders)s no se pueden entregar. Se "
+"cancelaron todas las entregas."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__automatic_invoice
@@ -5539,6 +5507,7 @@ msgid ""
 "The percentage of the amount that must be paid by the customer to confirm "
 "the order."
 msgstr ""
+"El porcentaje del importe que el cliente debe pagar para confirmar la orden."
 
 #. module: sale
 #. odoo-python
@@ -6218,6 +6187,12 @@ msgid "Your Reference:"
 msgstr "Su referencia:"
 
 #. module: sale
+#. odoo-javascript
+#: code:addons/sale/static/src/js/sale_action_helper/sale_action_helper_dialog.xml:0
+msgid "Your browser does not support iframe."
+msgstr ""
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Your feedback..."
 msgstr "Sus comentarios..."
@@ -6385,3 +6360,78 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order' }} {{ object.name or 'n/a' }}"
+
+#~ msgid ""
+#~ "\n"
+#~ "                            Add to order\n"
+#~ "                        "
+#~ msgstr ""
+#~ "\n"
+#~ "                            Agregar a la orden\n"
+#~ "                        "
+
+#~ msgid ""
+#~ "\n"
+#~ "                            Discard\n"
+#~ "                        "
+#~ msgstr ""
+#~ "\n"
+#~ "                            Descartar\n"
+#~ "                        "
+
+#~ msgid ""
+#~ "\n"
+#~ "                    Confirm\n"
+#~ "                "
+#~ msgstr ""
+#~ "\n"
+#~ "                    Confirmar\n"
+#~ "                "
+
+#~ msgid ""
+#~ "\n"
+#~ "                    Discard\n"
+#~ "                "
+#~ msgstr ""
+#~ "\n"
+#~ "                    Descartar\n"
+#~ "                "
+
+#~ msgid ""
+#~ "\n"
+#~ "                    Included\n"
+#~ "                "
+#~ msgstr ""
+#~ "\n"
+#~ "                    Incluido\n"
+#~ "                "
+
+#~ msgid ""
+#~ "\n"
+#~ "                    Remove\n"
+#~ "                "
+#~ msgstr ""
+#~ "\n"
+#~ "                Eliminar\n"
+#~ "            "
+
+#~ msgid ""
+#~ "\n"
+#~ "                    Your browser does not support iframe.\n"
+#~ "                "
+#~ msgstr ""
+#~ "\n"
+#~ "                    Tu navegador no es compatible con iframes.\n"
+#~ "                "
+
+#~ msgid ""
+#~ "\n"
+#~ "                Click to define an invoicing target\n"
+#~ "            "
+#~ msgstr ""
+#~ "\n"
+#~ "                Haz clic para definir un objetivo de facturación\n"
+#~ "            "
+
+#~ msgid "On "
+#~ msgstr "En "

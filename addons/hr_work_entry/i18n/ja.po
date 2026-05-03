@@ -10,9 +10,9 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-22 18:37+0000\n"
-"PO-Revision-Date: 2026-04-23 11:50+0000\n"
+"PO-Revision-Date: 2026-04-30 07:27+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
-"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-2/"
+"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-3/"
 "hr_work_entry/ja/>\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
@@ -31,6 +31,11 @@ msgid ""
 "(country)s\".\n"
 "                    "
 msgstr ""
+"\n"
+"「%(insert_name)s 」を挿入できません：\n"
+"コード「%(code)s 」のタイムタイプ「%(name)s 」は、国「%(country)s 」に対して"
+"既に存在します。\n"
+"                    "
 
 #. module: hr_work_entry
 #. odoo-python
@@ -42,6 +47,11 @@ msgid ""
 "already exists.\n"
 "                    "
 msgstr ""
+"\n"
+"「%(insert_name)s 」を挿入できません：\n"
+"コード「%(code)s 」のタイムタイプ「%(name)s 」は、国が割り当てられていない状"
+"態で既に存在します。\n"
+"                    "
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.au_work_entry_type_attendance
@@ -2364,7 +2374,7 @@ msgstr "正当性のない理由"
 #: model:hr.work.entry.type,name:hr_work_entry.uae_work_entry_type_unpaid_leave
 #: model:hr.work.entry.type,name:hr_work_entry.us_work_entry_type_unpaid_leave
 msgid "Unpaid"
-msgstr "未払い"
+msgstr "無給"
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ch_swissdec_unpaid_wt
