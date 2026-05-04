@@ -239,11 +239,9 @@ export class MediaPlugin extends Plugin {
                     ? selection
                     : [selection]
                 : [];
-            await Promise.all(
-                this.trigger("on_will_save_media_dialog_handlers", elements, {
-                    node: args[3] || params.node,
-                })
-            );
+            await this.triggerAsync("on_will_save_media_dialog_handlers", elements, {
+                node: args[3] || params.node,
+            });
             return oldSave(...args);
         };
         const { resModel, resId, field, type } = this.getRecordInfo(editableEl);
