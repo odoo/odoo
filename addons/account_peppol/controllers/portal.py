@@ -4,7 +4,6 @@ from odoo import _
 from odoo.http import request
 
 from odoo.addons.account.controllers.portal import PortalAccount as CustomerPortal
-from odoo.addons.account.models.company import PEPPOL_LIST
 
 
 class PortalAccount(CustomerPortal):
@@ -41,7 +40,7 @@ class PortalAccount(CustomerPortal):
             peppol_eas = address_values.get('peppol_eas')
             peppol_endpoint = address_values.get('peppol_endpoint')
             edi_format = address_values.get('invoice_edi_format')
-            if request.env['res.country'].browse(int(address_values.get('country_id'))).code not in PEPPOL_LIST:
+            if 'PEPPOL' not in request.env['res.country'].browse(int(address_values.get('country_id'))).country_group_codes:
                 invalid_fields.add('country_id')
                 address_values['country_id'] = 'error'
                 error_messages.append(_("That country is not available for Peppol."))

@@ -8,7 +8,6 @@ from urllib import parse
 
 from odoo import api, fields, models
 from odoo.addons.account_peppol.tools.demo_utils import handle_demo
-from odoo.addons.account.models.company import PEPPOL_LIST
 
 TIMEOUT = 10
 _logger = logging.getLogger(__name__)
@@ -50,7 +49,7 @@ class ResPartner(models.Model):
     @api.depends('company_id')
     def _compute_available_peppol_sending_methods(self):
         methods = dict(self._fields['invoice_sending_method'].selection)
-        if self.env.company.country_code not in PEPPOL_LIST:
+        if self.env.company.country_id and 'PEPPOL' not in self.env.company.country_id.country_group_codes:
             methods.pop('peppol')
         self.available_peppol_sending_methods = list(methods)
 
@@ -164,9 +163,14 @@ class ResPartner(models.Model):
     def _update_peppol_state_per_company(self, vals=None):
         partners = self.env['res.partner']
         if vals is None:
-            partners = self.filtered(lambda p: all([p.peppol_eas, p.peppol_endpoint, p.is_ubl_format, p.country_code in PEPPOL_LIST]))
+            partners = self.filtered(lambda p: all([
+                p.peppol_eas,
+                p.peppol_endpoint,
+                p.is_ubl_format,
+                p.country_id and 'PEPPOL' in p.country_id.country_group_codes,
+            ]))
         elif {'peppol_eas', 'peppol_endpoint', 'invoice_edi_format'}.intersection(vals.keys()):
-            partners = self.filtered(lambda p: p.country_code in PEPPOL_LIST)
+            partners = self.filtered(lambda p: p.country_id and 'PEPPOL' in p.country_id.country_group_codes)
 
         all_companies = None
         for partner in partners.sudo():

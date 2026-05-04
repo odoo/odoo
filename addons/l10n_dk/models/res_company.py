@@ -3,8 +3,6 @@ from urllib.parse import urljoin
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
-from odoo.addons.account.models.company import PEPPOL_LIST
-
 try:
     import phonenumbers
 except ImportError:
@@ -79,7 +77,7 @@ class ResCompany(models.Model):
             raise ValidationError(error_message)
 
         country_code = phonenumbers.phonenumberutil.region_code_for_number(phone_nbr)
-        if country_code not in PEPPOL_LIST or not phonenumbers.is_valid_number(phone_nbr):
+        if country_code not in self.env.ref('account.peppol').country_ids.mapped('code') or not phonenumbers.is_valid_number(phone_nbr):
             raise ValidationError(error_message)
 
     # -------------------------------------------------------------------------
