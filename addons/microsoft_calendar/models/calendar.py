@@ -525,11 +525,15 @@ class CalendarEvent(models.Model):
 
         if any(x in fields_to_sync for x in ['allday', 'start', 'date_end', 'stop']):
             if self.allday:
-                start = {'dateTime': self.start_date.isoformat(), 'timeZone': 'Europe/London'}
-                end = {'dateTime': (self.stop_date + relativedelta(days=1)).isoformat(), 'timeZone': 'Europe/London'}
+                start = {'dateTime': self.start_date.isoformat(), 'timeZone': 'UTC'}
+                end = {'dateTime': (self.stop_date + relativedelta(days=1)).isoformat(), 'timeZone': 'UTC'}
             else:
-                start = {'dateTime': pytz.utc.localize(self.start).isoformat(), 'timeZone': 'Europe/London'}
-                end = {'dateTime': pytz.utc.localize(self.stop).isoformat(), 'timeZone': 'Europe/London'}
+                user_tz = self.user_id.tz or self.env.user.tz or 'UTC'
+                tz = pytz.timezone(user_tz)
+                start_local = pytz.utc.localize(self.start).astimezone(tz)
+                stop_local = pytz.utc.localize(self.stop).astimezone(tz)
+                start = {'dateTime': start_local.strftime('%Y-%m-%dT%H:%M:%S'), 'timeZone': user_tz}
+                end = {'dateTime': stop_local.strftime('%Y-%m-%dT%H:%M:%S'), 'timeZone': user_tz}
 
             values['start'] = start
             values['end'] = end
@@ -663,11 +667,15 @@ class CalendarEvent(models.Model):
         values['type'] = 'occurrence'
 
         if self.allday:
-            start = {'dateTime': self.start_date.isoformat(), 'timeZone': 'Europe/London'}
-            end = {'dateTime': (self.stop_date + relativedelta(days=1)).isoformat(), 'timeZone': 'Europe/London'}
+            start = {'dateTime': self.start_date.isoformat(), 'timeZone': 'UTC'}
+            end = {'dateTime': (self.stop_date + relativedelta(days=1)).isoformat(), 'timeZone': 'UTC'}
         else:
-            start = {'dateTime': pytz.utc.localize(self.start).isoformat(), 'timeZone': 'Europe/London'}
-            end = {'dateTime': pytz.utc.localize(self.stop).isoformat(), 'timeZone': 'Europe/London'}
+            user_tz = self.user_id.tz or self.env.user.tz or 'UTC'
+            tz = pytz.timezone(user_tz)
+            start_local = pytz.utc.localize(self.start).astimezone(tz)
+            stop_local = pytz.utc.localize(self.stop).astimezone(tz)
+            start = {'dateTime': start_local.strftime('%Y-%m-%dT%H:%M:%S'), 'timeZone': user_tz}
+            end = {'dateTime': stop_local.strftime('%Y-%m-%dT%H:%M:%S'), 'timeZone': user_tz}
 
         values['start'] = start
         values['end'] = end
