@@ -185,3 +185,19 @@ class TestWebsiteSaleProductTemplate(WebsiteSaleCommon):
         self.assertEqual(len(uoms), 1)
         self.assertFalse(result)
         self.assertEqual(main_uom, template.uom_id)
+
+    def test_base_unit_count_supports_high_precision_values(self):
+        base_unit = self.env["product.base.unit"].create({"name": "box of 10000"})
+        product = self._create_product(
+            name="Screws", list_price=1.0, base_unit_count=0.0001, base_unit_id=base_unit.id
+        )
+        product_template = product.product_tmpl_id
+
+        self.assertEqual(product.fields_get(["base_unit_count"])["base_unit_count"]["digits"], 0)
+        self.assertEqual(
+            product_template.fields_get(["base_unit_count"])["base_unit_count"]["digits"], 0
+        )
+        self.assertEqual(product.base_unit_count, 0.0001)
+        self.assertEqual(product_template.base_unit_count, 0.0001)
+        self.assertEqual(product.base_unit_price, 10000.0)
+        self.assertEqual(product_template.base_unit_price, 10000.0)
