@@ -22,6 +22,8 @@ class ChatbotMessage(models.Model):
     user_script_answer_id = fields.Many2one('chatbot.script.answer', string="User's answer", ondelete="set null")
     user_raw_script_answer_id = fields.Integer(help="Id of the script answer. Useful for statistics when answer is deleted.")
     user_raw_answer = fields.Html(string="User's raw answer")
+    question_chatbot_message_id = fields.Many2one("chatbot.message", index="btree_not_null")
+    user_answer_chatbot_message_ids = fields.One2many("chatbot.message", "question_chatbot_message_id")
 
     _unique_mail_message_id = models.Constraint(
         'unique (mail_message_id)',

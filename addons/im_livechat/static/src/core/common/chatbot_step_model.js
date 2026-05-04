@@ -20,6 +20,9 @@ export class ChatbotStep extends Record {
         },
     });
     isLast = false;
+    user_answer_chatbot_message_ids = fields.Many("chatbot.message", {
+        sort: (c1, c2) => c1.id - c2.id,
+    });
 
     get expectAnswer() {
         return [

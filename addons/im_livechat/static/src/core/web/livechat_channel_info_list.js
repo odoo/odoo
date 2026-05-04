@@ -39,7 +39,9 @@ export class LivechatChannelInfoList extends Component {
 
     get expectAnswerSteps() {
         return this.props.thread.messages
-            .filter((m) => m.chatbotStep?.expectAnswer && m.chatbotStep.answer)
+            .filter(
+                (m) => m.chatbotStep?.expectAnswer && m.chatbotStep.user_answer_chatbot_message_ids
+            )
             .map((m) => m.chatbotStep);
     }
 
