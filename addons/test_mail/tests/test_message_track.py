@@ -152,7 +152,7 @@ class TestTrackingAPI(TestTrackingCommon):
                 'false_field_char': {'string': 'False Field Char', 'type': 'char'},
                 'false_field_int': {'string': 'False Field Int', 'type': 'integer'},
                 'false_field_monetary': {'string': 'False Field Monetary', 'type': 'monetary', 'currency_id': self.env.ref('base.USD').id},
-                'false_field_m2o_from_ticket': {'field_id': ticket_customer_field.id, 'type': 'many2one'},
+                'false_field_m2o_from_ticket': {'string': 'False Field M2O From Ticket', 'field_id': ticket_customer_field.id, 'type': 'many2one'},
                 'false_field_m2o_cd': {'company_dependent': True, 'string': 'False Field M2O Company Dependent', 'type': 'many2one'},
             },
             author=self.partner_admin,
@@ -1411,19 +1411,27 @@ class TestTrackingInternals(TestTrackingCommon):
         # some custom code generates tracking values on main_track
         new_message = main_track.message_post(
             body='Custom Log with Tracking',
-            tracking_value_ids=[
-                (0, 0, {
+            message_type='tracking',
+            tracking_values=[
+                {
                     'field_id': self.env['ir.model.fields']._get(sub_track._name, 'secret').id,
+                    'field_label': 'Secret',
                     'new_value_char': 'secret',
                     'old_value_char': False,
-                }),
-                (0, 0, {
+                    'new_value': 'secret',
+                    'old_value': 'None',
+                },
+                {
                     'field_id': False,
+                    'field_label': 'CustomInt',
                     'new_value_integer': self.env.uid,
                     'old_value_integer': False,
-                }),
-                (0, 0, {
+                    'new_value': self.env.uid,
+                    'old_value': '0',
+                },
+                {
                     'field_id': False,
+                    'field_label': 'Old integer',
                     'field_info': {
                         'desc': 'Old integer',
                         'name': 'Removed',
@@ -1432,13 +1440,13 @@ class TestTrackingInternals(TestTrackingCommon):
                     },
                     'new_value_integer': 35,
                     'old_value_integer': 30,
-                    'new_value': 35,
-                    'old_value': 30,
+                    'new_value': '35',
+                    'old_value': '30',
                 },
             ],
         )
         self.assertMessageFields(new_message, {'tracking_values': [
-            ('secret', 'char', False, 'secret'),
+            ('secret', 'char', False, 'secret', {'html_string': 'Secret'}),
             ('', 'integer', 0, self.env.uid, {'html_string': 'CustomInt'}),
             ('', 'integer', 30, 35, {'field_info': {'desc': 'Old integer', 'name': 'Removed', 'sequence': 35, 'type': 'integer'}}),
         ]})

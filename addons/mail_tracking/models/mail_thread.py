@@ -1,5 +1,5 @@
 from odoo.exceptions import UserError
-from odoo import fields, models
+from odoo import models
 
 
 class MailThread(models.AbstractModel):
@@ -16,10 +16,10 @@ class MailThread(models.AbstractModel):
         if messages.tracking_value_ids:
             raise UserError(self.env._("Messages with tracking values cannot be modified"))
 
-    def _message_create(self, values_list, tracking_values=None):
-        if tracking_values:
-            for values in values_list:
-                values.setdefault('tracking_value_ids', [])
-                for tracking_value in tracking_values:
-                    values['tracking_value_ids'].extend([fields.Command.create(tracking_value)])
-        return super()._message_create(values_list, tracking_values)
+    def _message_create(self, values_list):
+        for values in values_list:
+            values['tracking_value_ids'] = [
+                (0, 0, tracking_values)
+                for tracking_values in values.get('tracking_values') or []
+            ]
+        return super()._message_create(values_list)
