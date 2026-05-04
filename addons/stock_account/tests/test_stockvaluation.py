@@ -2972,11 +2972,9 @@ class TestStockValuation(TestStockValuationCommon):
             ]
         )
 
-    def test_stock_valuation_revaluation_avco_rounding_2_digits(self):
-        """
-        Check that the rounding of the new price (cost) is equivalent to the rounding of the standard price (cost)
-        The check is done indirectly via the layers valuations.
-        If correct => rounding method is correct too
+    def test_stock_valuation_revaluation_avco_2_digits(self):
+        """Check that a manual standard_price revaluation on an AVCO product
+        propagates to total_value when product price precision is 2 digits.
         """
         product = self.product_avco
         self.env['decimal.precision'].search([
@@ -2988,14 +2986,15 @@ class TestStockValuation(TestStockValuationCommon):
 
         self.assertEqual(product.standard_price, 0.022)
         self.assertEqual(product.qty_available, 10000)
+        self.assertEqual(product.total_value, 220)
 
         # Second Move
         with freeze_time(Datetime.now() + timedelta(seconds=1)):
             product.write({'standard_price': 0.053})
 
-        self.assertEqual(product.standard_price, 0.05)
+        self.assertEqual(product.standard_price, 0.053)
         self.assertEqual(product.qty_available, 10000)
-        self.assertEqual(product.total_value, 500)
+        self.assertEqual(product.total_value, 530)
 
     def test_stock_valuation_revaluation_avco_rounding_5_digits(self):
         """
