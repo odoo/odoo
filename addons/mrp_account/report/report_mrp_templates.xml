@@ -10,7 +10,7 @@
                         <div class="col-lg-12">
                             <h2>
                                 <span>WIP Report for
-                                    <t t-out="', '.join(docs.account_id.mapped('name'))">Acme Corp.</t>
+                                    <t t-out="', '.join(docs.account_id.mapped('name'))" data-oe-demo="Acme Corp."/>
                                 </span>
                             </h2>
                         </div>
@@ -32,29 +32,29 @@
                                    <tbody>
                                         <tr t-foreach="docs" t-as="line" t-att-style="'background-color: #F1F1F1;' if line_index % 2 == 0 else ''">
                                             <td class="align-middle">
-                                               <span t-field="line.date">2023-08-15</span>
+                                               <span t-field="line.date" data-oe-demo="2023-08-15"/>
                                             </td>
                                             <td class="align-middle">
-                                               <span t-field="line.ref">REF123</span>
+                                               <span t-field="line.ref" data-oe-demo="REF123"/>
                                             </td>
                                             <td class="align-middle">
-                                                <span t-field="line.product_id">Laptop</span>
+                                                <span t-field="line.product_id" data-oe-demo="Laptop"/>
                                             </td>
                                             <td class="align-middle">
-                                                <span t-field="line.unit_amount">5</span>
+                                                <span t-field="line.unit_amount" data-oe-demo="5"/>
                                             </td>
                                             <td class="align-middle">
-                                                <span t-field="line.product_uom_id">Units</span>
+                                                <span t-field="line.product_uom_id" data-oe-demo="Units"/>
                                             </td>
                                             <td class="text-end align-middle">
-                                                <span t-field="line.amount">$1000</span>
+                                                <span t-field="line.amount" data-oe-demo="$1000"/>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="text-end" t-attf-colspan="6">
                                                 <strong>
                                                     <span style="margin-right: 15px;">Total</span>
-                                                    <span t-out="sum(docs.mapped('amount'))">$5000</span>
+                                                    <span t-out="sum(docs.mapped('amount'))" data-oe-demo="$5000"/>
                                                 </strong>
                                             </td>
                                         </tr>
