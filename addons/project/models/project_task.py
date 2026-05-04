@@ -223,7 +223,7 @@ class ProjectTask(models.Model):
     personal_stage_type_id = fields.Many2one('project.task.type', string='Personal Stage',
         related='personal_stage_id.stage_id',
         readonly=False, store=False,
-        help="The current user's personal task stage.", domain="[('user_id', '=', uid)]",
+        domain="[('user_id', '=', uid)]",
         group_expand='_read_group_personal_stage_type_ids')
     partner_id = fields.Many2one('res.partner',
         string='Customer', recursive=True, tracking=True, compute='_compute_partner_id', store=True, readonly=False, index='btree_not_null',
