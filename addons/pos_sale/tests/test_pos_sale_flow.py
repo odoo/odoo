@@ -1225,7 +1225,7 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         self.assertEqual(order.order_line.qty_delivered, 1)
 
         pos_order = self.main_pos_config.session_ids.order_ids
-        self.assertEqual(pos_order.picking_ids.move_line_ids.qty_done, 1)
+        self.assertEqual(pos_order.picking_ids.move_line_ids.quantity, 1)
         refund_action = pos_order.refund()
         refund_order = self.env['pos.order'].browse(refund_action['res_id'])
 
@@ -1236,7 +1236,7 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         })
         refund_payment.with_context(**payment_context).check()
 
-        self.assertEqual(refund_order.picking_ids.move_line_ids.qty_done, 1)
+        self.assertEqual(refund_order.picking_ids.move_line_ids.quantity, 1)
 
     def test_pos_order_and_invoice_amounts(self):
         payment_term = self.env['account.payment.term'].create({
