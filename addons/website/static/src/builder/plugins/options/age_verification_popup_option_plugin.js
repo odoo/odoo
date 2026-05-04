@@ -2,6 +2,12 @@ import { BuilderAction } from "@html_builder/core/builder_action";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 import { renderToElement } from "@web/core/utils/render";
+import { PopupOption } from "./popup_option_plugin";
+
+export class AgeVerificationOption extends PopupOption {
+    static id = "age_verification_option";
+    static template = "website.AgeVerificationOption";
+}
 
 class AgeVerificationOptionPlugin extends Plugin {
     static id = "AgeVerificationOption";
@@ -35,3 +41,5 @@ export class SetAgeConfirmationTemplateAction extends BuilderAction {
 registry
     .category("website-plugins")
     .add(AgeVerificationOptionPlugin.id, AgeVerificationOptionPlugin);
+
+registry.category("website-options").add(AgeVerificationOption.id, AgeVerificationOption);

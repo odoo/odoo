@@ -6,6 +6,8 @@ import { isImageCorsProtected } from "@html_editor/utils/image";
 import { WebsiteConfigAction, PreviewableWebsiteConfigAction } from "@website/builder/plugins/customize_website_plugin";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { generateImageVariants } from "@web/core/utils/image_library";
+import { withSequence } from "@html_editor/utils/resource";
+import { _t } from "@web/core/l10n/translation";
 import wSaleUtils from "@website_sale/js/website_sale_utils";
 import { getDataURLFromFile } from "@web/core/utils/urls";
 
@@ -68,7 +70,31 @@ export class ProductPageOptionPlugin extends Plugin {
         },
         builder_options_render_context: {
             productPageOptionSelector: PRODUCT_PAGE_OPTION_SELECTOR,
-        }
+        },
+        floating_snippet_scope_providers: [
+            withSequence(30, {
+                label: _t("This product"),
+                containerSelector: "#product_full_description",
+                isThisPage: true,
+            }),
+            withSequence(30, {
+                label: _t("This page"),
+                containerSelector: "#oe_structure_products_header_shop",
+                isThisPage: true,
+            }),
+            withSequence(20, {
+                label: _t("This category"),
+                containerSelector: "#category_header, #category_footer",
+            }),
+            withSequence(10, {
+                label: _t("All categories"),
+                containerSelector: "#oe_structure_website_sale_products_2, #oe_structure_website_sale_products_1",
+            }),
+            withSequence(5, {
+                label: _t("All products"),
+                containerSelector: "#oe_structure_website_sale_product_2, #oe_structure_website_sale_product_1",
+            }),
+        ],
     };
 
     setup() {
