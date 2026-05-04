@@ -52,7 +52,7 @@
                 </button>
                 <button
                     t-if="this.pos.cashier._role != 'minimal'"
-                    t-att-class="buttonClass" t-on-click="() => this.pos.onDeleteOrder(this.pos.getOrder())"
+                    t-att-class="buttonClass" t-on-click="this.onCancelOrder"
                     t-att-disabled="!pos.getOrder()?.getOrderlines()?.length"
                 >
                     <i class="fa fa-trash me-1" role="img" /> Cancel Order

@@ -150,6 +150,11 @@ export class ControlButtons extends Component {
         const selectedOrderline = this.currentOrder?.getSelectedOrderline();
         return this.pos.isSelectedLineCombo && this.pos.breakCombo(selectedOrderline.parentLine);
     }
+
+    onCancelOrder() {
+        this.props.close();
+        this.pos.onDeleteOrder(this.currentOrder);
+    }
 }
 
 export class ControlButtonsPopup extends Component {
