@@ -19,6 +19,7 @@ from . import (
     product_image,
     product_pricelist,
     product_pricelist_item,
+    website_quick_add_mixin,
     product_product,
     product_public_category,
     product_ribbon,

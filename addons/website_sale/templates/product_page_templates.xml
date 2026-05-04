@@ -108,7 +108,7 @@
                                 t-attf-class="js_product o_wsale_content_contained container"
                             >
                                 <!-- Product title (purchase not available)-->
-                                <t t-set="is_add_to_cart_possible" t-value="product._is_add_to_cart_possible()"/>
+                                <t t-set="is_add_to_cart_possible" t-value="product._has_purchasable_variants()"/>
                                 <t
                                     t-if="not is_add_to_cart_possible"
                                     t-call="website_sale.product_title"
