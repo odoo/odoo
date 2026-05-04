@@ -2067,14 +2067,12 @@ class TestMrpOrder(TestMrpCommon, MailCase):
             'production_id': mo.id,
             'location_id': self.shelf_1.id,
             'location_dest_id': self.scrap_location.id,
-            'lot_ids': sn2.ids,
             'company_id': self.env.company.id,
         })
 
         warning = False
-        warning = scrap._onchange_lot_ids()
-        self.assertTrue(warning, 'Use of wrong serial number location not detected')
-        self.assertEqual(list(warning.keys())[0], 'warning', 'Warning message was not returned')
+        warning = scrap.onchange({'lot_ids': [Command.link(sn2.id)]}, ['lot_ids'], {'lot_ids': {'context': {}}})
+        self.assertIn('Unavailable Serial numbers. Please correct the serial numbers encoded', warning.get('warning', {}).get('message'))
 
     def test_mo_assign_producing_lot(self):
         """ Checks that in an MO tracked by Lot the reservations of the raws are not
