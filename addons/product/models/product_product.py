@@ -165,6 +165,9 @@ class ProductProduct(models.Model):
         help="Display base unit price. Set to 0 to hide it for this product.",
         required=True,
         default=1,
+        # Force NUMERIC with unlimited precision, as for `uom.uom.relative_factor`,
+        # to support very small ratios, e.g. one unit in a box of 10000.
+        digits=0,
     )
     base_unit_id = fields.Many2one(
         string="Custom Unit of Measure",
