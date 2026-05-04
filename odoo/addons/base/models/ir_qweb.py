@@ -388,6 +388,7 @@ from lxml import etree
 from dateutil.relativedelta import relativedelta
 from os.path import join as opj
 from psycopg2.extensions import TransactionRollbackError
+from urllib.parse import unquote_plus
 
 from odoo import api, models, tools
 from odoo.modules import get_module_path, registry
@@ -482,7 +483,8 @@ T_CALL_SLOT = '0'
 
 
 # Only allow a javascript scheme if it is followed by [ ][window.]history.back()
-MALICIOUS_SCHEMES = re.compile(r'javascript:(?!( ?)((window\.)?)history\.back\(\)$)', re.I).findall
+MALICIOUS_SCHEMES = re.compile(r'javascript:(?!((window\.)?)history\.back\(\)$)', re.I).findall
+WHITESPACE_REGEX = re.compile(r'[\s\x00-\x08\x0B\x0C\x0E-\x19]+')
 
 
 def indent_code(code, level):
@@ -2419,7 +2421,10 @@ class IrQWeb(models.AbstractModel):
 
             @returns dict
         """
-        if not atts.pop('__is_static_node', False) and (href := atts.get('href')) and MALICIOUS_SCHEMES(str(href)):
+        if atts.pop('__is_static_node', False):
+            return atts
+        href = str(atts.get('href') or '')
+        if MALICIOUS_SCHEMES(WHITESPACE_REGEX.sub('', unquote_plus(href))):
             atts['href'] = ""
         return atts
 
