@@ -1052,11 +1052,13 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
         # retrieve information from body, standard html-based tracking
         body_html = message.sudo().body
         tracking_values_html = []
-        track_re = re.compile(r'(?:^|<br>)(?P<pre>.*?)<b>(?P<post>.*?)</b><i>(?P<key>.*?)</i>')
+        # previous without div / beginning string
+        # track_re = re.compile(r'(?:^|<br>)(?P<pre>.*?)<b>(?P<post>.*?)</b><i>(?P<key>.*?)</i>')
+        track_re = re.compile(
+            r'(?:<em>(?P<company>[^>]+)</em>)?(?P<pre>[^<>]+)<b>(?P<post>.*?)</b><i>(?P<key>.*?)</i><br>'
+        )
         for match in track_re.finditer(body_html):
-            pre, post, key = match.group('pre'), match.group('post'), match.group('key')
-            if pre.startswith('<p>'):  # meh regex to gix
-                pre = pre[3:]
+            _company, pre, post, key = match.group('company'), match.group('pre'), match.group('post'), match.group('key')
             tracking_values_html.append((key, pre, post))
         tracking_info_html = '\n'.join(
             f'{t[0]}: {t[1]} -> {t[2]}'

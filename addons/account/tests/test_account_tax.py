@@ -187,7 +187,7 @@ class TestAccountTax(AccountTestInvoicingCommon, MailCase):
 
         # tracking done using _track_add
         self.assertEqual(len(self._new_msgs), 2)
-        for msg, exp_values in zip(self._new_msgs.sorted(lambda m: m.body, reverse=True), [
+        for msg, exp_values in zip(self._new_msgs.sorted(lambda m: m.body), [
             {
                 'body_content': '<b>Invoice</b> repartition line 3',
                 'tracking_values': [
