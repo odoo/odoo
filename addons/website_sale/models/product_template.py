@@ -134,6 +134,9 @@ class ProductTemplate(models.Model):
         compute='_compute_base_unit_count',
         inverse='_set_base_unit_count',
         store=True,
+        # Force NUMERIC with unlimited precision, as for `uom.uom.relative_factor`,
+        # to support very small ratios, e.g. one unit in a box of 10000.
+        digits=0,
         required=True,
         default=0,
     )
