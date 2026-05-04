@@ -48,7 +48,6 @@ class TestSnippets(HttpCase):
         product = self.env["product.product"].create({
             "name": "Storage Box",
             "website_published": True,
-            "image_512": b"/product/static/img/product_product_9-image.jpg",
             "display_name": "Bin",
             "description_sale": "Pedal-based opening system",
         })
