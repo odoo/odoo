@@ -8,6 +8,36 @@ from odoo.addons.pos_restaurant.tests.test_frontend import TestFrontendCommon
 @tagged('post_install', '-at_install')
 class TestPosRestaurantFlow(TestFrontendCommon):
 
+    def test_table_parent_circular_relation_is_rejected(self):
+        table_a, table_b = self.env['restaurant.table'].create([
+            {
+                'table_number': 91,
+                'floor_id': self.main_floor.id,
+                'seats': 4,
+                'position_h': 10,
+                'position_v': 10,
+            },
+            {
+                'table_number': 92,
+                'floor_id': self.main_floor.id,
+                'seats': 4,
+                'position_h': 20,
+                'position_v': 20,
+            },
+        ])
+
+        table_b.set_parent_id(table_a.id, self.pos_config.id)
+        table_b.flush_recordset(['parent_id'])
+        self.assertEqual(table_b.parent_id, table_a, "Table B should be attached to table A")
+
+        table_a.set_parent_id(table_b.id, self.pos_config.id)
+        table_a.flush_recordset(['parent_id'])
+        table_b.flush_recordset(['parent_id'])
+
+        self.assertFalse(table_a.parent_id, "Table A should not get table B as parent because this creates a loop")
+        self.assertEqual(table_b.parent_id, table_a, "Table B should keep its valid parent")
+        self.assertFalse((table_a + table_b)._has_cycle('parent_id'), "Table hierarchy should remain acyclic")
+
     def test_floor_plans_archive(self):
         floors = self.main_floor + self.second_floor
         floors.action_archive()
