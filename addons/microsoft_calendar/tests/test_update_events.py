@@ -164,11 +164,11 @@ class TestUpdateEvents(TestCommon):
                 'type': 'exception',
                 'start': {
                     'dateTime': pytz.utc.localize(new_date).isoformat(),
-                    'timeZone': 'Europe/London'
+                    'timeZone': 'UTC'
                 },
                 'end': {
                     'dateTime': pytz.utc.localize(new_date + timedelta(hours=1)).isoformat(),
-                    'timeZone': 'Europe/London'
+                    'timeZone': 'UTC'
                 },
                 'isAllDay': False
             },
@@ -344,11 +344,11 @@ class TestUpdateEvents(TestCommon):
                 'type': 'exception',
                 'start': {
                     'dateTime': pytz.utc.localize(new_date).isoformat(),
-                    'timeZone': 'Europe/London'
+                    'timeZone': 'UTC'
                 },
                 'end': {
                     'dateTime': pytz.utc.localize(new_date + timedelta(hours=1)).isoformat(),
-                    'timeZone': 'Europe/London'
+                    'timeZone': 'UTC'
                 },
                 'isAllDay': False
             },
@@ -417,11 +417,11 @@ class TestUpdateEvents(TestCommon):
                 'type': 'exception',
                 'start': {
                     'dateTime': pytz.utc.localize(new_date).isoformat(),
-                    'timeZone': 'Europe/London'
+                    'timeZone': 'UTC'
                 },
                 'end': {
                     'dateTime': pytz.utc.localize(new_date + timedelta(hours=1)).isoformat(),
-                    'timeZone': 'Europe/London'
+                    'timeZone': 'UTC'
                 },
                 'isAllDay': False
             },
@@ -485,11 +485,11 @@ class TestUpdateEvents(TestCommon):
                 'type': 'exception',
                 'start': {
                     'dateTime': pytz.utc.localize(new_date).isoformat(),
-                    'timeZone': 'Europe/London'
+                    'timeZone': 'UTC'
                 },
                 'end': {
                     'dateTime': pytz.utc.localize(new_date + timedelta(hours=1)).isoformat(),
-                    'timeZone': 'Europe/London'
+                    'timeZone': 'UTC'
                 },
                 'isAllDay': False
             },
@@ -578,11 +578,11 @@ class TestUpdateEvents(TestCommon):
                 'type': 'exception',
                 'start': {
                     'dateTime': pytz.utc.localize(new_date).isoformat(),
-                    'timeZone': 'Europe/London'
+                    'timeZone': 'UTC'
                 },
                 'end': {
                     'dateTime': pytz.utc.localize(new_date + timedelta(hours=1)).isoformat(),
-                    'timeZone': 'Europe/London'
+                    'timeZone': 'UTC'
                 },
                 'isAllDay': False
             },
@@ -642,11 +642,11 @@ class TestUpdateEvents(TestCommon):
                 'type': 'exception',
                 'start': {
                     'dateTime': pytz.utc.localize(new_date).isoformat(),
-                    'timeZone': 'Europe/London'
+                    'timeZone': 'UTC'
                 },
                 'end': {
                     'dateTime': pytz.utc.localize(new_date + timedelta(hours=1)).isoformat(),
-                    'timeZone': 'Europe/London'
+                    'timeZone': 'UTC'
                 },
                 'isAllDay': False
             },
