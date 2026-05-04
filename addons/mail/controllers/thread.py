@@ -111,7 +111,10 @@ class ThreadController(http.Controller):
 
     @mail_route("/mail/read_subscription_data", methods=["POST"], type="jsonrpc", auth="user")
     def read_subscription_data(self, follower_id):
-        """Computes:
+        """Get subscription data for a follower.
+
+        Computes:
+
         - message_subtype_data: data about document subtypes: which are
             available, which are followed if any"""
         # limited to internal, who can read all followers

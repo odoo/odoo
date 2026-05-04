@@ -84,43 +84,51 @@ class MailFollowers(models.Model):
         return res
 
     def _get_recipient_data(self, records, message_type, subtype_id, pids=None):
-        """ Private method allowing to fetch recipients data based on a subtype.
-        Purpose of this method is to fetch all data necessary to notify recipients
-        in a single query. It fetches data from
+        """Private method allowing to fetch recipients data based on a subtype.
 
-         * followers of records that follow the given subtype if records and
-           subtype are set;
-         * partners if pids is given;
+        The purpose of this method is to fetch all data necessary to notify
+        recipients in a single query. It fetches data from:
+
+        * followers of records that follow the given subtype, if ``records``
+          and ``subtype_id`` are set;
+        * partners if ``pids`` is given.
 
         :param records: fetch data from followers of ``records`` that follow
-          ``subtype_id``;
-        :param str message_type: mail.message.message_type in order to allow custom
-          behavior depending on it (SMS for example);
-        :param int subtype_id: mail.message.subtype to check against followers;
-        :param pids: additional set of partner IDs from which to fetch recipient
-          data independently from following status;
+            ``subtype_id``.
+        :param str message_type: ``mail.message.message_type``, in order to
+            allow custom behavior depending on it (SMS for example).
+        :param int subtype_id: ``mail.message.subtype`` to check against
+            followers.
+        :param pids: additional set of partner IDs from which to fetch
+            recipient data independently from following status.
 
-        :returns: recipients data based on record.ids if given, else a generic
-          '0' key to keep a dict-like return format. Each item is a dict based on
-          recipients partner ids formatted like {
-            'active': partner.active;
-            'email_normalized': partner.email_normalized;
-            'id': res.partner ID;
-            'is_follower': True if linked to a record and if partner is a follower;
-            'lang': partner.lang;
-            'name': partner.name;
-            'groups': groups of the partner's user (see 'uid'). If several users
-                of the same kind (e.g. several internal users) exist groups are
-                concatenated;
-            'notif': notification type ('inbox' or 'email'). Overrides may change
-                this value (e.g. 'sms' in sms module);
-            'share': if partner is a customer (no user or share user);
-            'ushare': if partner has users, whether all are shared (public or portal);
-            'type': summary of partner 'usage' (a string among 'portal', 'customer',
-                'internal user');
-            'uid': linked 'res.users' ID. If several users exist preference is
-                given to internal user, then share users;
-          }
+        :returns: recipients data based on ``record.ids`` if given, else a
+            generic ``0`` key to keep a dict-like return format. Each item
+            is a dict keyed by recipient partner IDs, with the following
+            keys:
+
+            * ``active`` -- ``partner.active``;
+            * ``email_normalized`` -- ``partner.email_normalized``;
+            * ``id`` -- ``res.partner`` ID;
+            * ``is_follower`` -- ``True`` if linked to a record and if the
+              partner is a follower;
+            * ``lang`` -- ``partner.lang``;
+            * ``name`` -- ``partner.name``;
+            * ``groups`` -- groups of the partner's user (see ``uid``). If
+              several users of the same kind (e.g. several internal users)
+              exist, groups are concatenated;
+            * ``notif`` -- notification type (``'inbox'`` or ``'email'``).
+              Overrides may change this value (e.g. ``'sms'`` in the SMS
+              module);
+            * ``share`` -- whether the partner is a customer (no user or
+              share user);
+            * ``ushare`` -- if the partner has users, whether all are
+              shared (public or portal);
+            * ``type`` -- summary of partner usage (a string among
+              ``'portal'``, ``'customer'``, ``'internal user'``);
+            * ``uid`` -- linked ``res.users`` ID. If several users exist,
+              preference is given to internal user, then share users.
+
         :rtype: dict
         """
         self.env['mail.followers'].flush_model(['partner_id', 'subtype_ids'])

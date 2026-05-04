@@ -876,18 +876,22 @@ class MailThread(models.AbstractModel):
 
     @api.model
     def _routing_check_route(self, message, message_dict, route, raise_exception=True):
-        """ Verify route validity. Check and rules:
-            1 - if thread_id -> check that document effectively exists; otherwise
-                fallback on a message_new by resetting thread_id
-            2 - check that message_update exists if thread_id is set; or at least
-                that message_new exist
-            3 - if there is an alias, check alias_contact:
-                'followers' and thread_id:
-                    check on target document that the author is in the followers
-                'followers' and alias_parent_thread_id:
-                    check on alias parent document that the author is in the
-                    followers
-                'partners': check that author_id id set
+        """Verify route validity.
+
+        Check and rules:
+
+        1. If ``thread_id`` is set, check that the document effectively
+           exists; otherwise fall back on ``message_new`` by resetting
+           ``thread_id``.
+        2. Check that ``message_update`` exists if ``thread_id`` is set;
+           or at least that ``message_new`` exists.
+        3. If there is an alias, check ``alias_contact``:
+
+           * ``'followers'`` and ``thread_id``: check on the target
+             document that the author is in the followers.
+           * ``'followers'`` and ``alias_parent_thread_id``: check on the
+             alias parent document that the author is in the followers.
+           * ``'partners'``: check that ``author_id`` is set.
 
         Note that this method also updates 'author_id' of message_dict as route
         links an incoming message to a record and linking email to partner is
@@ -990,11 +994,11 @@ class MailThread(models.AbstractModel):
     def _detect_is_bounce(self, message, message_dict):
         """Return True if the given email is a bounce email.
 
-        Bounce alias: if any To contains bounce_alias@domain
-        Bounce message (not alias)
-            See http://datatracker.ietf.org/doc/rfc3462/?include_text=1
-            As all MTA does not respect this RFC (googlemail is one of them),
-            we also need to verify if the message come from "mailer-daemon"
+        - Bounce alias: if any To contains bounce_alias@domain
+        - Bounce message (not alias):
+          See http://datatracker.ietf.org/doc/rfc3462/?include_text=1.
+          As all MTA does not respect this RFC (googlemail is one of them),
+          we also need to verify if the message come from "mailer-daemon"
         """
         # detection based on email_to
         bounce_aliases = self.env['mail.alias.domain'].search([]).mapped('bounce_email')
@@ -2243,7 +2247,7 @@ class MailThread(models.AbstractModel):
             by incoming email;
         :param str incoming_email_cc: comma-separated list of emails, already notified
             by incoming email;
-        :param list(tuple(str, bytes), tuple(str, bytes, dict)) attachments : list of attachment
+        :param list(tuple(str, bytes), tuple(str, bytes, dict)) attachments: list of attachment
             tuples in the form ``(name, content)`` or ``(name, content, info)`` where content
             is NOT base64 encoded;
         :param list attachment_ids: list of existing attachments to link to this message
@@ -2773,7 +2777,7 @@ class MailThread(models.AbstractModel):
           notification mechanism;
         :param list(int) partner_ids: partner_ids to notify in addition to partners
             computed based on subtype / followers matching;
-        :param list(tuple(str,str), tuple(str,str, dict)) attachments : list of attachment
+        :param list(tuple(str,str), tuple(str,str, dict)) attachments: list of attachment
             tuples in the form ``(name,content)`` or ``(name,content, info)`` where content
             is NOT base64 encoded;
         :param list attachment_ids: list of existing attachments to link to this message
@@ -3106,12 +3110,15 @@ class MailThread(models.AbstractModel):
         return textwrap.shorten(self.display_name or '', width=100, placeholder="...")
 
     def _message_create(self, values_list):
-        """ Low-level helper to create mail.message records. It is mainly used
-        to hide the cleanup of given values, for mail gateway or helpers.
+        """Low-level helper to create mail.message records.
 
-        values_list: List of dictionaries containing the values
-            to create mail.message records.
-        return: Created mail.message records """
+        It is mainly used to hide the cleanup of given values, for mail gateway
+        or helpers.
+
+        :param values_list: list of dictionaries containing the values to create
+            ``mail.message`` records.
+        :return: created ``mail.message`` records.
+        """
         values_list = [
             {
                 key: val
@@ -3645,10 +3652,12 @@ class MailThread(models.AbstractModel):
             model_description=False, force_email_company=False, force_email_lang=False,  # rendering
             force_record_name=False,  # rendering
             force_header=False, force_footer=False, subtitles=None):
-        """ Make groups of recipients, based on 'recipients_data' which is a list
-        of recipients informations. Purpose of this method is to group them by
-        main usage ('user', 'portal_user', 'follower', 'customer', ... see
-        @_notify_get_recipients_classify) and lang. Each group is linked to
+        """Make groups of recipients, based on 'recipients_data' which is a
+        list of recipients information.
+
+        Purpose of this method is to group them by main usage ('user',
+        'portal_user', 'follower', 'customer', ... see
+        ``@_notify_get_recipients_classify``) and lang. Each group is linked to
         an evaluation context to render the notification layout.
 
         :param message: ``mail.message`` record to notify;
@@ -3672,31 +3681,34 @@ class MailThread(models.AbstractModel):
         :param list subtitles: optional list set as template value "subtitles";
 
         :return: iterator based on recipients classified by lang, with their
-          rendering evaluation context. Each item is a tuple containing (
-            lang: used for rendering (customer language, forced email, default
-              environment language,
-            render_values: used to render the notification layout and translated
-              using lang,
-            recipients_group: a recipients group is a dict containing data
-              defined in "_notify_get_recipients_groups" like {
-              'active': if not, it is skipped in notification process (ease
-                        inheritance to be already present);
-              'button_access': main access document button information, {'url'
-                               link of the access, 'title': link or button
-                               string};
-              'has_button_access': display access document main button in email;
-              'notification_group_name': name of the group, to ease usage;
-              'recipients_data': list of recipients data, following format used
-                                 in '_notify_get_recipients'. It is fillup when
-                                 evaluating groups;
-              'recipients_ids': list of partner IDs, based on partner ID present in
-                                recipients_data (allows mainly to speedup some
-                                data computation);
-              'recipients_emails': list of additional external emails, when not
-                                   linked to existing partners. Support is still
-                                   limited and considered as experimental as of v19;
-           }
-          );
+          rendering evaluation context. Each item is a tuple
+          ``(lang, render_values, recipients_group)`` where:
+
+            * ``lang`` -- used for rendering (customer language, forced
+              email, default environment language);
+            * ``render_values`` -- used to render the notification layout
+              and translated using ``lang``;
+            * ``recipients_group`` -- a dict containing data defined in
+              ``_notify_get_recipients_groups``, with the following keys:
+
+              * ``active`` -- if not, it is skipped in the notification
+                process (eases inheritance, to be already present);
+              * ``button_access`` -- main access document button
+                information, ``{'url': link of the access, 'title': link or
+                button string}``;
+              * ``has_button_access`` -- display access document main button
+                in email;
+              * ``notification_group_name`` -- name of the group, to ease
+                usage;
+              * ``recipients_data`` -- list of recipients data, following
+                the format used in ``_notify_get_recipients``. It is filled
+                up when evaluating groups;
+              * ``recipients_ids`` -- list of partner IDs, based on partner
+                IDs present in ``recipients_data`` (allows mainly to speed
+                up some data computation);
+              * ``recipients_emails`` -- list of additional external emails,
+                when not linked to existing partners. Support is still
+                limited and considered as experimental as of v19.
         """
         lang_to_recipients = {}
         for data in recipients_data:
@@ -4040,9 +4052,10 @@ class MailThread(models.AbstractModel):
         return devices_su.search([("partner_id", "in", partner_ids)]), vapid_private_key, vapid_public_key
 
     def _web_push_send_notification(self, devices, private_key, public_key, payload_by_lang=None, payload=None):
-        """
-        :param payload: JSON serializable dict following the notification api specs https://notifications.spec.whatwg.org/#api
-        :param payload_by_lang a dict mapping payload by lang, either this or payload must be provided
+        """Send a push notification to the given devices.
+
+        :param payload: JSON serializable dict following the notification API specs (https://notifications.spec.whatwg.org/#api)
+        :param payload_by_lang: a dict mapping payload by lang, either this or payload must be provided
         """
         if len(devices) < MAX_DIRECT_PUSH:
             session = Session()
@@ -4139,8 +4152,9 @@ class MailThread(models.AbstractModel):
         }
 
     def _notify_get_recipients(self, message, msg_vals=False, **kwargs):
-        """ Compute recipients to notify based on subtype and followers. This
-        method returns data structured as expected for ``_notify_recipients``.
+        """Compute recipients to notify based on subtype and followers.
+
+        This method returns data structured as expected for ``_notify_recipients``.
 
         :param record message: <mail.message> record being notified. May be
           void as 'msg_vals' superseeds it;
@@ -4168,23 +4182,26 @@ class MailThread(models.AbstractModel):
 
         :return: list of recipients information (see
           ``MailFollowers._get_recipient_data()`` for more details) formatted
-          like [
-          {
-            'active': partner.active;
-            'email_normalized': partner.email_normalized;
-            'id': id of the res.partner being recipient to notify;
-            'is_follower': follows the message related document;
-            'name': partner name;
-            'lang': partner lang;
-            'groups': res.group IDs if linked to a user;
-            'notif': notification type, one of 'inbox', 'email', 'sms' (SMS App),
-                'whatsapp (WhatsAapp);
-            'share': is partner a customer (partner.partner_share);
-            'type': partner usage ('customer', 'portal', 'user');
-            'uid': user ID (in case of multiple users, internal then first found
-                by ID);)
-            'ushare': are users shared (if users, all users are shared);
-          }, {...}]
+          like::
+
+            [
+                {
+                    'active': partner.active;
+                    'email_normalized': partner.email_normalized;
+                    'id': id of the res.partner being recipient to notify;
+                    'is_follower': follows the message related document;
+                    'name': partner name;
+                    'lang': partner lang;
+                    'groups': res.group IDs if linked to a user;
+                    'notif': notification type, one of 'inbox', 'email', 'sms' (SMS App),
+                        'whatsapp (WhatsAapp);
+                    'share': is partner a customer (partner.partner_share);
+                    'type': partner usage ('customer', 'portal', 'user');
+                    'uid': user ID (in case of multiple users, internal then first found
+                        by ID);)
+                    'ushare': are users shared (if users, all users are shared);
+                }, {...}]
+
         :rtype: list[dict]
         """
         msg_vals = msg_vals or {}
@@ -4281,21 +4298,22 @@ class MailThread(models.AbstractModel):
            the group. Only first matching group is kept, iterating on the
            group list in order.
          * 'group_data' is a dict containing parameters used in notification
-           process like {
-            'active': if not, it is skipped in notification process (ease
-                      inheritance to be already present);
-            'button_access': main access document button information, {'url'
-                             link of the access, 'title': link or button
-                             string};
-            'has_button_access': display access document main button in email;
-            'notification_group_name': name of the group, to ease usage;
-            'recipients_data': list of recipients data, following format used
-                               in '_notify_get_recipients'. It is fillup when
-                               evaluating groups;
-            'recipients_ids': list of partner IDs, based on partner ID present in
-                              recipients_data (allows mainly to speedup some
-                              data computation);
-           }
+           process with the following keys:
+
+            * ``active`` -- if not, it is skipped in the notification process
+              (eases inheritance, to be already present);
+            * ``button_access`` -- main access document button information,
+              ``{'url': link of the access, 'title': link or button string}``;
+            * ``has_button_access`` -- display access document main button
+              in email;
+            * ``notification_group_name`` -- name of the group, to ease
+              usage;
+            * ``recipients_data`` -- list of recipients data, following the
+              format used in ``_notify_get_recipients``. It is filled up
+              when evaluating groups;
+            * ``recipients_ids`` -- list of partner IDs, based on partner
+              IDs present in ``recipients_data`` (allows mainly to speed up
+              some data computation).
 
         Default groups:
 
@@ -4389,11 +4407,14 @@ class MailThread(models.AbstractModel):
 
     def _notify_get_recipients_classify(self, message, recipients_data,
                                         model_description, msg_vals=False):
-        """ Classify recipients to be notified of a message in groups to have
-        specific rendering depending on their group. For example users could
-        have access to buttons customers should not have in their emails.
-        Module-specific grouping should be done by overriding ``_notify_get_recipients_groups``
-        method defined here-under.
+        """Classify recipients to be notified of a message in groups to have
+        specific rendering depending on their group.
+
+        For example users could have access to buttons customers should not have
+        in their emails.
+
+        Module-specific grouping should be done by overriding
+          ``_notify_get_recipients_groups`` method defined here-under.
 
         :param record message: <mail.message> record being notified. May be
           void as 'msg_vals' superseeds it;
@@ -4406,7 +4427,8 @@ class MailThread(models.AbstractModel):
           skip message usage and spare some queries if given;
 
         :return: list of groups (see '_notify_get_recipients_groups')
-          with 'recipients' key filled with matching partners, like
+          with 'recipients' key filled with matching partners, like::
+
             [{
                 'active': True,
                 'button_access': {'url': 'https://odoo.com/url', 'title': 'Title'},
@@ -4415,6 +4437,7 @@ class MailThread(models.AbstractModel):
                 'recipients_data': [{...}],
                 'recipients_ids': [11],
              }, {...}]
+
         :rtype: list[dict]
         """
         # keep a local copy of msg_vals as it may be modified to include more
@@ -4700,10 +4723,12 @@ class MailThread(models.AbstractModel):
         """Define the maximum length we want for the payload.
 
         This limit is derived from:
+
             - the maximum encrypted payload size we may send to web push servers.
             - the header required using AES128GCM encryption.
-            - the overhead of encrypting one block. Payload will not exceed 1 block
-            as the point here is to keep everything within the default (and max) block size.
+            - the overhead of encrypting one block. Payload will not exceed 1 block as the point
+              here is to keep everything within the default (and max) block size.
+
         For details about encryption overhead sizes, see variable definition in web_push.
         Currently all of these values are payload-independent.
         """
@@ -4785,13 +4810,16 @@ class MailThread(models.AbstractModel):
         ]).unlink()
 
     def _message_auto_subscribe_followers(self, updated_values, default_subtype_ids):
-        """ Optional method to override in addons inheriting from mail.thread.
-        Return a list tuples containing (
-          partner ID,
-          subtype IDs (or False if model-based default subtypes),
-          QWeb template XML ID for notification (or False is no specific
-            notification is required),
-          ), aka partners and their subtype and possible notification to send
+        """Optional method to override in addons inheriting from mail.thread.
+
+        Return a list of tuples containing:
+
+        * partner ID
+        * subtype IDs (or ``False`` if model-based default subtypes)
+        * QWeb template XML ID for notification (or ``False`` if no specific
+          notification is required);
+
+        i.e. partners and their subtype and possible notification to send
         using the auto subscription mechanism linked to updated values.
 
         Default value of this method is to return the new responsible of

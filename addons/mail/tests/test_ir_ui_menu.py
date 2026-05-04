@@ -19,7 +19,8 @@ class TestMenuRootLookupByModel(MailCommon):
     """
     @classmethod
     def setUpClass(cls):
-        """ Setup data for the tests, especially this menu hierarchy:
+        """Setup data for the tests, especially this menu hierarchy:
+
         - Contacts
             - Contacts (res.partner)
         - Invoicing

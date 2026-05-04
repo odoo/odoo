@@ -536,6 +536,7 @@ class DiscussChannelMember(models.Model):
 
     def _rtc_sync_sessions(self, check_rtc_session_ids=None):
         """Synchronize the RTC sessions for self channel member.
+
             - Inactive sessions of the channel are deleted.
             - Current sessions are returned.
             - Sessions given in check_rtc_session_ids that no longer exists

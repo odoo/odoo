@@ -33,6 +33,7 @@ class MailComposeMessage(models.TransientModel):
         at model and view levels to provide specific features.
 
         The behavior of the wizard depends on the composition_mode field:
+
         - 'comment': post on a record.
         - 'mass_mail': wizard in mass mailing mode where the mail details can
             contain template placeholders that will be merged with actual data
@@ -729,7 +730,10 @@ class MailComposeMessage(models.TransientModel):
 
     @api.autovacuum
     def _gc_lost_attachments(self):
-        """ Garbage collect lost mail attachments. Those are attachments
+        """Garbage collect lost mail attachments.
+
+        Those are attachments:
+
             - linked to res_model 'mail.compose.message', the composer wizard
             - with res_id 0, because they were created outside of an existing
                 wizard (typically user input through Chatter or reports
@@ -802,10 +806,12 @@ class MailComposeMessage(models.TransientModel):
         """ Process the wizard content and proceed with sending the related
             email(s), rendering any template patterns on the fly if needed.
 
-        :return: (
-            result_mails_su: in mass mode, sent emails (as sudo),
-            result_messages: in comment mode, posted messages
-        )
+        :return: a tuple ``(result_mails_su, result_messages)`` where:
+
+            * ``result_mails_su`` -- in mass mode, sent emails (as sudo)
+            * ``result_messages`` -- in comment mode, posted messages
+
+        :rtype: tuple
         """
         result_mails_su, result_messages = self.env['mail.mail'].sudo(), self.env['mail.message']
 

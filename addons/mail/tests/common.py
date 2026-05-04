@@ -600,8 +600,8 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
 
         :param mail: a ``mail.mail`` record;
         :param recipients_list: an ``res.partner`` recordset or a list of
-          emails (both are supported, see ``_find_mail_mail_wpartners`` and
-          ``_find_mail_mail_wemail``);
+            emails (both are supported, see ``_find_mail_mail_wpartners`` and
+            ``_find_mail_mail_wemail``);
         :param status: mail.mail state used to filter mails. If ``sent`` this method
           also check that emails have been sent trough gateway;
         :param email_to_recipients: used for assertSentEmail to find email based
@@ -610,8 +610,8 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
         :param author: see ``_find_mail_mail_wpartners``;
         :param content: if given, check it is contained within mail html body;
         :param email_to_all: list of email addresses used in email_to, checking
-        all of them are in the same email. This is in addition to checking recipients
-        individually.;
+          all of them are in the same email. This is in addition to checking recipients
+          individually.;
         :param fields_values: if given, should be a dictionary of field names /
           values allowing to check ``mail.mail`` additional values (subject,
           reply_to, ...);
@@ -1241,15 +1241,16 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
 
 
 class MailCase(common.TransactionCase, MockEmail, BusCase):
-    """ Tools, helpers and asserts for mail-related tests, including mail
-    gateway mock and helpers (see ´´MockEmail´´).
+    """Tools, helpers and asserts for mail-related tests, including mail
+    gateway mock and helpers (see ``MockEmail``).
 
-    Useful reminders
-        Notif type:  ('inbox', 'Inbox'), ('email', 'Email')
-        Notif status: ('ready', 'Ready to Send'), ('sent', 'Sent'),
+    Useful reminders:
+
+        - Notif type:  ('inbox', 'Inbox'), ('email', 'Email')
+        - Notif status: ('ready', 'Ready to Send'), ('sent', 'Sent'),
                       ('bounce', 'Bounced'), ('exception', 'Exception'),
                       ('canceled', 'Canceled')
-        Notif failure type: ("SMTP", "Connection failed (outgoing mail server problem)"),
+        - Notif failure type: ("SMTP", "Connection failed (outgoing mail server problem)"),
                             ("RECIPIENT", "Invalid email address"),
                             ("BOUNCE", "Email address rejected by destination"),
                             ("UNKNOWN", "Unknown error")
@@ -1563,48 +1564,49 @@ class MailCase(common.TransactionCase, MockEmail, BusCase):
     # ------------------------------------------------------------
 
     def assertMailNotifications(self, messages, recipients_info, bus_notif_count=1):
-        """ Check bus notifications content. Mandatory and basic check is about
-        channels being notified. Content check is optional.
+        """Check bus notifications content.
 
-        GENERATED INPUT
-        :param <mail.message> messages: generated messages to check, coming
-          notably from the 'self._new_msgs' filled during the mock;
+        Mandatory and basic check is about channels being notified. Content check is optional.
 
-        EXPECTED
-        :param list recipients_info: list of data dict: [
-          {
-            # message values
-            'content': message content that should be present in message 'body'
-              field;
-            'message_type': 'message_type' value (default: 'comment'),
-            'subtype': xml id of message subtype (default: 'mail.mt_comment'),
-            # notifications values
-            'email_values': values to check in outgoing emails, check 'assertMailMail'
-              and 'assertSentEmail';
-            'mail_mail_values': values to check in generated <mail.mail>, check
-              'assertMailMail';
-            'message_values': values to check in found <mail.message>, check
-              'assertMessageFields';
-            'notif': list of notified recipients: [
-              {
-                'check_send': whether outgoing stuff has to be checked;
-                'email_to': email if sent without partner,
-                'email_to_recipients': propagated to 'assertMailMail';
-                'failure_type': 'failure_type' on mail.notification;
-                'is_read': 'is_read' on mail.notification;
-                'partner': res.partner record (may be empty),
-                'status': 'notification_status' on mail.notification;
-                'type': 'notification_type' on mail.notification;
-              },
-              { ... }
-            ],
-          },
-          {...}
-        ]
+        **GENERATED INPUT**
 
-        PARAMETERS
-        :param mail_unlink_sent: mock parameter, tells if mails are unlinked
-          and therefore we are able to check outgoing emails;
+        :param <mail.message> messages: generated messages to check, coming notably from the
+            ``self._new_msgs`` filled during the mock.
+
+        **EXPECTED**
+
+        :param recipients_info: list of data dicts. Each dict describes a message and its expected
+            notifications, with the following keys:
+
+            Message values:
+
+            * ``content`` -- message content that should be present in the message's ``body`` field
+            * ``message_type`` -- ``message_type`` value (default: ``'comment'``)
+            * ``subtype`` -- XML id of the message subtype (default: ``'mail.mt_comment'``)
+
+            Notifications values:
+
+            * ``email_values`` -- values to check in outgoing emails, check ``assertMailMail`` and
+                ``assertSentEmail``
+            * ``mail_mail_values`` -- values to check in the generated ``mail.mail``, check
+                ``assertMailMail``
+            * ``message_values`` -- values to check in the found ``mail.message``, check
+                ``assertMessageFields``
+            * ``notif`` -- list of notified recipients. Each entry is a dict with:
+
+              * ``check_send`` -- whether outgoing stuff has to be checked
+              * ``email_to`` -- email if sent without partner
+              * ``email_to_recipients`` -- propagated to ``assertMailMail``
+              * ``failure_type`` -- ``failure_type`` on ``mail.notification``
+              * ``is_read`` -- ``is_read`` on ``mail.notification``
+              * ``partner`` -- ``res.partner`` record (may be empty)
+              * ``status`` -- ``notification_status`` on ``mail.notification``
+              * ``type`` -- ``notification_type`` on ``mail.notification``
+
+        **PARAMETERS**
+
+        :param mail_unlink_sent: mock parameter, tells if mails are unlinked and therefore whether
+            we are able to check outgoing emails.
         """
         partners = self.env['res.partner'].sudo().concat(p['partner'] for i in recipients_info for p in i['notif'] if p.get('partner'))
         email_addrs = [email for i in recipients_info for p in i['notif'] for email in p.get('email_to', []) if not p.get('partner')]
@@ -1817,15 +1819,17 @@ class MailCase(common.TransactionCase, MockEmail, BusCase):
         return done_msgs, done_notifs
 
     def assertNotified(self, message, recipients_info, is_complete=False):
-        """ Lightweight check for notifications (mail.notification).
+        """Lightweight check for notifications (``mail.notification``).
 
         All recipient info should define either a partner or an email.
-        :param recipients_info: list notified recipients: [
-          {'partner': res.partner record (may be empty or unset),
-           'email': single normalized email address as string (may be empty or unset),
-           'type': notification_type to check,
-           'is_read': is_read to check,
-          }, {...}]
+
+        :param recipients_info: list of notified recipients. Each entry is a dict with the
+            following keys:
+
+            * ``partner`` -- ``res.partner`` record (may be empty or unset)
+            * ``email`` -- single normalized email address as a string (may be empty or unset)
+            * ``type`` -- ``notification_type`` to check
+            * ``is_read`` -- ``is_read`` to check
         """
         notifications = self._new_notifs.filtered(lambda notif: notif in message.notification_ids)
         if is_complete:
@@ -2006,20 +2010,36 @@ class MailCommon(MailCase):
 
     @classmethod
     def _activate_multi_lang(cls, lang_code='es_ES', layout_arch_db=None, test_record=False, test_template=False):
-        """ Summary of es_ES matching done here (a bit hardcoded to ease tests)
+        """Summary of ``es_ES`` matching done here (a bit hardcoded to ease tests).
 
-          * layout
-            * 'English Layout for' -> Spanish Layout para
-          * model
-            * description: English:    Lang Chatter Model (depends on test_record._name)
-                           translated: Spanish Model Description
-          * module
-            * _('View %s') -> SpanishView %s
-          * template
-            * body: English:    <p>EnglishBody for <t t-out="object.name"/></p> (depends on test_template.body)
-                    translated: <p>SpanishBody for <t t-out="object.name" /></p>
-            * subject: English:    EnglishSubject for {{ object.name }} (depends on test_template.subject)
-                       translated: SpanishSubject for {{ object.name }}
+        * layout
+
+          * ``'English Layout for'`` -> ``Spanish Layout para``
+
+        * model
+
+          * ``description``:
+
+            * English: ``Lang Chatter Model`` (depends on ``test_record._name``)
+            * translated: ``Spanish Model Description``
+
+        * module
+
+          * ``_('View %s')`` -> ``SpanishView %s``
+
+        * template
+
+          * ``body``:
+
+            * English: ``<p>EnglishBody for <t t-out="object.name"/></p>``
+              (depends on ``test_template.body``)
+            * translated: ``<p>SpanishBody for <t t-out="object.name" /></p>``
+
+          * ``subject``:
+
+            * English: ``EnglishSubject for {{ object.name }}``
+              (depends on ``test_template.subject``)
+            * translated: ``SpanishSubject for {{ object.name }}``
         """
         # activate translations
         cls.env['res.lang']._activate_lang(lang_code)

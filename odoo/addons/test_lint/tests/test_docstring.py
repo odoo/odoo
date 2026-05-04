@@ -47,6 +47,7 @@ MODULES_TO_LINT = (
     'hr_timesheet',
     'im_livechat',
     'iot',
+    'mail',
     'mrp_iot',
     'planning',
     'planning_attendance',
