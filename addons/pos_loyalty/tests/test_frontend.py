@@ -565,11 +565,6 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.create_programs([('arbitrary_name', 'ewallet')])
         partner_aaa = self.env['res.partner'].create({'name': 'Ewal'})
 
-        self.pos_user.write({
-            'group_ids': [
-                (4, self.env.ref('stock.group_stock_user').id),
-            ],
-        })
         self.start_pos_tour("EWalletRefundCreditNoteQtyTour")
 
         refund_orders = self.main_pos_config.current_session_id.order_ids.filtered(
