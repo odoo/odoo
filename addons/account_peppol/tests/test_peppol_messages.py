@@ -669,13 +669,24 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
                 'refresh_token': FAKE_UUID[1],
             }
         ])
+        branch_user = self.env['res.users'].create({
+            'name': 'User With Unprivileged Branch',
+            'login': 'branch_user',
+            'company_ids': [branch_spoiled.id],
+            'company_id': branch_spoiled.id,
+            'group_ids': self.get_default_groups().ids,
+        })
 
         # Branch uses parent's active peppol connection
-        spoiled_move = self.create_move(self.valid_partner, company=branch_spoiled)
-        spoiled_move.action_post()
-        wizard = self.create_send_and_print(spoiled_move, sending_methods=['peppol'])
-        wizard.action_send_and_print()
-        self.assertEqual(spoiled_move.peppol_move_state, 'processing')
+        with self.with_user(branch_user.login):
+            spoiled_move = self.create_move(self.valid_partner, company=branch_spoiled)
+            spoiled_move.action_post()
+            spoiled_move.action_send_and_print()
+            wizard = self.env['account.move.send.wizard']\
+                .with_context(active_model='account.move', active_ids=spoiled_move.ids)\
+                .create({'sending_methods': ['peppol']})
+            wizard.action_send_and_print()
+            self.assertEqual(spoiled_move.peppol_move_state, 'processing')
 
         # Check that the supplier is the parent company in the xml (and not the branch company)
         tree = etree.fromstring(spoiled_move.ubl_cii_xml_id.raw)
@@ -684,7 +695,7 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
             'cbc': "urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
         }
         supplier_name = tree.xpath('//cac:AccountingSupplierParty/cac:Party/cac:PartyName/cbc:Name/text()', namespaces=namespaces)
-        self.assertEqual(supplier_name[0], self.env.company.name)
+        self.assertEqual(supplier_name[0], branch_spoiled.parent_id.name)
 
         # Branch uses peppol configuration independent of their parent
         independent_move = self.create_move(self.valid_partner, company=branch_independent)
