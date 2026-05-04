@@ -417,14 +417,9 @@
                 pointer-events: none;
             }
 
-            // These widgets enable the checkbox if there is no readonly modifier.
-            &.o_boolean_button_cell,
-            &.o_boolean_favorite_cell,
-            &.o_boolean_toggle_cell,
-            &.o_toggle_button_cell {
-                > .o_field_widget:not(.o_readonly_modifier) .form-check {
-                    pointer-events: auto;
-                }
+            // Fields with the additional class o_boolean_interactive enable their checkbox if there is no readonly modifier
+            > .o_field_widget.o_boolean_interactive:not(.o_readonly_modifier) .form-check {
+                pointer-events: auto;
             }
         }
 

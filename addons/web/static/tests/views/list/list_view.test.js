@@ -3792,7 +3792,7 @@ test(`editable list view: line with no active element`, async () => {
         `,
         resId: 1,
     });
-    expect(`.o_data_cell:eq(1)`).toHaveClass("o_boolean_toggle_cell");
+    expect(`.o_data_cell:eq(1) .o_field_widget`).toHaveClass("o_boolean_interactive");
 
     await contains(`.o_data_cell`).click();
     expect(`.o_data_row:eq(0)`).toHaveClass("o_selected_row");
