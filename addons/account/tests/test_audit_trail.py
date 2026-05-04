@@ -168,7 +168,7 @@ class TestAuditTrail(AccountTestInvoicingCommon, MailCase):
                 'model': 'account.move',
                 'res_id': move.id,
                 'subtype_id': self.env.ref('mail.mt_note'),
-                'tracking_values': [('balance', 'monetary', 100, 300, {'currency': self.env.ref('base.USD')})],
+                'tracking_values': [('balance', 'monetary', 100, 300, {'currency': self.env.ref('base.USD'), 'html_string': 'Balance'})],
             },
             # update 2
             {
@@ -176,7 +176,7 @@ class TestAuditTrail(AccountTestInvoicingCommon, MailCase):
                 'model': 'account.move',
                 'res_id': move.id,
                 'subtype_id': self.env.ref('mail.mt_note'),
-                'tracking_values': [('balance', 'monetary', -100, -200, {'currency': self.env.ref('base.USD')})],
+                'tracking_values': [('balance', 'monetary', -100, -200, {'currency': self.env.ref('base.USD'), 'html_string': 'Balance'})],
             },
             # new line
             {
@@ -185,8 +185,8 @@ class TestAuditTrail(AccountTestInvoicingCommon, MailCase):
                 'res_id': move.id,
                 'subtype_id': self.env.ref('mail.mt_note'),
                 'tracking_values': [
-                    ('balance', 'monetary', 0, -100, {'currency': self.env.ref('base.USD')}),
-                    ('account_id', 'many2one', False, self.company_data['default_account_revenue']),
+                    ('balance', 'monetary', 0, -100, {'currency': self.env.ref('base.USD'), 'html_string': 'Balance'}),
+                    ('account_id', 'many2one', False, self.company_data['default_account_revenue'], {'html_string': 'Account'}),
                 ],
             },
         ], strict=True):
@@ -206,24 +206,24 @@ class TestAuditTrail(AccountTestInvoicingCommon, MailCase):
             # update 1
             {
                 'body': f'<p>Journal Item <a href="#" data-oe-model="account.move.line" data-oe-id="{move.line_ids[0].id}">#{move.line_ids[0].id}</a> updated</p>',
-                'tracking_values': [('tax_ids', 'many2many', '', '15%')],
+                'tracking_values': [('tax_ids', 'many2many', '', '15%', {'html_string': 'Taxes'})],
             },
             # new line
             {
                 'body': f'<p>Journal Item <a href="#" data-oe-model="account.move.line" data-oe-id="{move.line_ids[3].id}">#{move.line_ids[3].id}</a> created</p>',
                 'tracking_values': [
-                    ('name', 'char', False, '15%'),
-                    ('balance', 'monetary', 0, 45, {'currency': self.env.ref('base.USD')}),
-                    ('account_id', 'many2one', False, self.company_data['default_account_tax_purchase']),
+                    ('name', 'char', False, '15%', {'html_string': 'Label'}),
+                    ('balance', 'monetary', 0, 45, {'currency': self.env.ref('base.USD'), 'html_string': 'Balance'}),
+                    ('account_id', 'many2one', False, self.company_data['default_account_tax_purchase'], {'html_string': 'Account'}),
                 ],
             },
             # new line
             {
                 'body': f'<p>Journal Item <a href="#" data-oe-model="account.move.line" data-oe-id="{move.line_ids[4].id}">#{move.line_ids[4].id}</a> created</p>',
                 'tracking_values': [
-                    ('name', 'char', False, "Automatic Balancing Line"),
-                    ('balance', 'monetary', 0, -45, {'currency': self.env.ref('base.USD')}),
-                    ('account_id', 'many2one', False, suspense_account),
+                    ('name', 'char', False, "Automatic Balancing Line", {'html_string': 'Label'}),
+                    ('balance', 'monetary', 0, -45, {'currency': self.env.ref('base.USD'), 'html_string': 'Balance'}),
+                    ('account_id', 'many2one', False, suspense_account, {'html_string': 'Account'}),
                 ],
             },
         ], strict=True):
@@ -238,35 +238,35 @@ class TestAuditTrail(AccountTestInvoicingCommon, MailCase):
             {
                 'body': f'<p>Journal Item <a href="#" data-oe-model="account.move.line" data-oe-id="{move.line_ids[0].id}">#{move.line_ids[0].id}</a> deleted</p>',
                 'tracking_values': [
-                    ('account_id', 'many2one', self.company_data['default_account_revenue'], False),
-                    ('balance', 'monetary', 300, 0, {'currency': self.env.ref('base.USD')}),
-                    ('tax_ids', 'many2many', '15%', ''),
+                    ('account_id', 'many2one', self.company_data['default_account_revenue'], False, {'html_string': 'Account'}),
+                    ('balance', 'monetary', 300, 0, {'currency': self.env.ref('base.USD'), 'html_string': 'Balance'}),
+                    ('tax_ids', 'many2many', '15%', '', {'html_string': 'Taxes'}),
                 ],
             }, {
                 'body': f'<p>Journal Item <a href="#" data-oe-model="account.move.line" data-oe-id="{move.line_ids[1].id}">#{move.line_ids[1].id}</a> deleted</p>',
                 'tracking_values': [
-                    ('account_id', 'many2one', self.company_data['default_account_revenue'], False),
-                    ('balance', 'monetary', -200, 0, {'currency': self.env.ref('base.USD')}),
+                    ('account_id', 'many2one', self.company_data['default_account_revenue'], False, {'html_string': 'Account'}),
+                    ('balance', 'monetary', -200, 0, {'currency': self.env.ref('base.USD'), 'html_string': 'Balance'}),
                 ],
             }, {
                 'body': f'<p>Journal Item <a href="#" data-oe-model="account.move.line" data-oe-id="{move.line_ids[2].id}">#{move.line_ids[2].id}</a> deleted</p>',
                 'tracking_values': [
-                    ('account_id', 'many2one', self.company_data['default_account_revenue'], False),
-                    ('balance', 'monetary', -100, 0, {'currency': self.env.ref('base.USD')}),
+                    ('account_id', 'many2one', self.company_data['default_account_revenue'], False, {'html_string': 'Account'}),
+                    ('balance', 'monetary', -100, 0, {'currency': self.env.ref('base.USD'), 'html_string': 'Balance'}),
                 ],
             }, {
                 'body': f'<p>Journal Item <a href="#" data-oe-model="account.move.line" data-oe-id="{move.line_ids[3].id}">#{move.line_ids[3].id}</a> deleted</p>',
                 'tracking_values': [
-                    ('account_id', 'many2one', self.company_data['default_account_tax_purchase'], False),
-                    ('balance', 'monetary', 45, 0, {'currency': self.env.ref('base.USD')}),
-                    ('name', 'char', '15%', False),
+                    ('account_id', 'many2one', self.company_data['default_account_tax_purchase'], False, {'html_string': 'Account'}),
+                    ('balance', 'monetary', 45, 0, {'currency': self.env.ref('base.USD'), 'html_string': 'Balance'}),
+                    ('name', 'char', '15%', False, {'html_string': 'Label'}),
                 ],
             }, {
                 'body': f'<p>Journal Item <a href="#" data-oe-model="account.move.line" data-oe-id="{move.line_ids[4].id}">#{move.line_ids[4].id}</a> deleted</p>',
                 'tracking_values': [
-                    ('account_id', 'many2one', suspense_account, False),
-                    ('balance', 'monetary', -45, -0, {'currency': self.env.ref('base.USD')}),
-                    ('name', 'char', "Automatic Balancing Line", False),
+                    ('account_id', 'many2one', suspense_account, False, {'html_string': 'Account'}),
+                    ('balance', 'monetary', -45, -0, {'currency': self.env.ref('base.USD'), 'html_string': 'Balance'}),
+                    ('name', 'char', "Automatic Balancing Line", False, {'html_string': 'Label'}),
                 ],
             },
         ]

@@ -40,7 +40,7 @@ class TestTracking(AccountTestInvoicingCommon, MailCase):
         self.assertMessageFields(
             tracking_msg, {
                 'tracking_values': [
-                    ('account_id', 'many2one', old_value, new_value),
+                    ('account_id', 'many2one', old_value, new_value, {'html_string': 'Account'}),
                 ],
             }
         )
