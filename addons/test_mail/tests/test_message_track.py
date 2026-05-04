@@ -180,11 +180,13 @@ class TestTrackingAPI(TestTrackingCommon):
                                 'desc': 'False Field Int', 'name': 'false_field_int', 'type': 'integer'
                             },
                         }),
-                        ('customer_id', 'many2one', self.env['res.partner'], self.partner_admin),
+                        ('customer_id', 'many2one', self.env['res.partner'], self.partner_admin, {
+                            'html_string': 'False Field M2O From Ticket',
+                        }),
                         (False, 'many2one', self.env['res.partner'], self.partner_employee, {
                             'company': self.company_admin,
                             'field_info': {
-                                'desc': 'False Field M2O Company Dependent', 'name': 'false_field_m2o_cd', 'type': 'many2one'
+                                'desc': 'False Field M2O Company Dependent', 'name': 'false_field_m2o_cd', 'type': 'many2one',
                             },
                         }),
                         (False, 'monetary', 43.3, 98.7, {
@@ -372,8 +374,8 @@ class TestTrackingAPI(TestTrackingCommon):
                     'message_type': 'tracking',
                     'subtype_id': self.env.ref('mail.mt_note'),
                     'tracking_values': [
-                        ('char_field', 'char', False, 'New Track'),
-                        ('datetime_field', 'datetime', self.dt_ref, self.dt_ref + timedelta(days=1)),
+                        ('char_field', 'char', False, 'New Track', {'html_string': 'Char'}),
+                        ('datetime_field', 'datetime', self.dt_ref, self.dt_ref + timedelta(days=1), {'html_string': 'Datetime'}),
                     ],
                 }
             )
@@ -406,14 +408,14 @@ class TestTrackingAPI(TestTrackingCommon):
         msg_values = [
             {
                 'tracking_values': [
-                    ('char_field', 'char', 'ForcedInitChar', 'Another Track'),
-                    ('datetime_field', 'datetime', self.dt_ref - timedelta(days=10), self.dt_ref + timedelta(days=1)),
-                    ('selection_field', 'selection', 'SECOND', 'FIRST'),
+                    ('char_field', 'char', 'ForcedInitChar', 'Another Track', {'html_string': 'Char'}),
+                    ('datetime_field', 'datetime', self.dt_ref - timedelta(days=10), self.dt_ref + timedelta(days=1), {'html_string': 'Datetime'}),
+                    ('selection_field', 'selection', 'SECOND', 'FIRST', {'html_string': 'Selection'}),
                 ],
             }, {
                 'tracking_values': [  # no selection_field, as not in forced init_values (takes priority on track_fnames)
-                    ('char_field', 'char', 'ForcedInitChar', 'ForcedEndChar'),  # forced both values
-                    ('selection_field', 'selection', 'SECOND', ''),  # forced end value
+                    ('char_field', 'char', 'ForcedInitChar', 'ForcedEndChar', {'html_string': 'Char'}),  # forced both values
+                    ('selection_field', 'selection', 'SECOND', '', {'html_string': 'Selection'}),  # forced end value
                 ],
             },
         ]
@@ -1430,12 +1432,14 @@ class TestTrackingInternals(TestTrackingCommon):
                     },
                     'new_value_integer': 35,
                     'old_value_integer': 30,
-                }),
+                    'new_value': 35,
+                    'old_value': 30,
+                },
             ],
         )
         self.assertMessageFields(new_message, {'tracking_values': [
             ('secret', 'char', False, 'secret'),
-            ('', 'integer', 0, self.env.uid),
+            ('', 'integer', 0, self.env.uid, {'html_string': 'CustomInt'}),
             ('', 'integer', 30, 35, {'field_info': {'desc': 'Old integer', 'name': 'Removed', 'sequence': 35, 'type': 'integer'}}),
         ]})
         trackings = new_message.sudo().tracking_value_ids
