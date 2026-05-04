@@ -2854,7 +2854,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
 
         # --- Registered payment (in_payment) ---
         self._register_payment(self.invoice)
-        self.assertIn(self.invoice.id, get_ids('in_payment'))
+        self.assertIn(self.invoice.id, get_ids(self.invoice._get_invoice_in_payment_state()))
         self.assertNotIn(self.invoice.id, get_ids('not_paid'))
         self.assertIn(self.invoice.id, get_ids(['in_payment', 'paid'], 'in'))
         self.assertNotIn(self.invoice.id, get_ids(['in_payment', 'paid'], 'not in'))
