@@ -82,6 +82,10 @@ export class GoogleMapsOptionPlugin extends Plugin {
         this.document.querySelectorAll(".s_google_map").forEach((mapSnippetEl) => {
             mapSnippetEl.classList.remove("o_not_editable");
             mapSnippetEl.dataset.vxml = "001";
+            if (!mapSnippetEl.style.getPropertyValue("--GoogleMap-height")) {
+                mapSnippetEl.classList.remove("pt256", "pb256");
+                mapSnippetEl.style.setProperty("--GoogleMap-height", "512px");
+            }
         });
     }
 
