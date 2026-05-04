@@ -62,6 +62,11 @@ export class ImageGalleryOptionPlugin extends Plugin {
         // versions).
         content_editable_providers: this.getContentEditableEls.bind(this),
         content_not_editable_providers: this.getContentNotEditableEls.bind(this),
+        dropzone_selectors: {
+            selector: ".s_image_gallery .row > div",
+            dropNear: ".s_image_gallery .row > div",
+            dropLockWithin: ".s_image_gallery",
+        },
     };
 
     setup() {
