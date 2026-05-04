@@ -166,11 +166,11 @@ class TestUpdateEvents(TestCommon):
                 'type': 'exception',
                 'start': {
                     'dateTime': new_date.replace(tzinfo=UTC).isoformat(),
-                    'timeZone': 'Europe/London'
+                    'timeZone': 'UTC'
                 },
                 'end': {
                     'dateTime': (new_date + timedelta(hours=1)).replace(tzinfo=UTC).isoformat(),
-                    'timeZone': 'Europe/London'
+                    'timeZone': 'UTC'
                 },
                 'isAllDay': False
             },
@@ -346,11 +346,11 @@ class TestUpdateEvents(TestCommon):
                 'type': 'exception',
                 'start': {
                     'dateTime': new_date.replace(tzinfo=UTC).isoformat(),
-                    'timeZone': 'Europe/London'
+                    'timeZone': 'UTC'
                 },
                 'end': {
                     'dateTime': (new_date + timedelta(hours=1)).replace(tzinfo=UTC).isoformat(),
-                    'timeZone': 'Europe/London'
+                    'timeZone': 'UTC'
                 },
                 'isAllDay': False
             },
@@ -419,11 +419,11 @@ class TestUpdateEvents(TestCommon):
                 'type': 'exception',
                 'start': {
                     'dateTime': new_date.replace(tzinfo=UTC).isoformat(),
-                    'timeZone': 'Europe/London'
+                    'timeZone': 'UTC'
                 },
                 'end': {
                     'dateTime': (new_date + timedelta(hours=1)).replace(tzinfo=UTC).isoformat(),
-                    'timeZone': 'Europe/London'
+                    'timeZone': 'UTC'
                 },
                 'isAllDay': False
             },
@@ -487,11 +487,11 @@ class TestUpdateEvents(TestCommon):
                 'type': 'exception',
                 'start': {
                     'dateTime': new_date.replace(tzinfo=UTC).isoformat(),
-                    'timeZone': 'Europe/London'
+                    'timeZone': 'UTC'
                 },
                 'end': {
                     'dateTime': (new_date + timedelta(hours=1)).replace(tzinfo=UTC).isoformat(),
-                    'timeZone': 'Europe/London'
+                    'timeZone': 'UTC'
                 },
                 'isAllDay': False
             },
@@ -580,11 +580,11 @@ class TestUpdateEvents(TestCommon):
                 'type': 'exception',
                 'start': {
                     'dateTime': new_date.replace(tzinfo=UTC).isoformat(),
-                    'timeZone': 'Europe/London'
+                    'timeZone': 'UTC'
                 },
                 'end': {
                     'dateTime': (new_date + timedelta(hours=1)).replace(tzinfo=UTC).isoformat(),
-                    'timeZone': 'Europe/London'
+                    'timeZone': 'UTC'
                 },
                 'isAllDay': False
             },
@@ -644,11 +644,11 @@ class TestUpdateEvents(TestCommon):
                 'type': 'exception',
                 'start': {
                     'dateTime': new_date.replace(tzinfo=UTC).isoformat(),
-                    'timeZone': 'Europe/London'
+                    'timeZone': 'UTC'
                 },
                 'end': {
                     'dateTime': (new_date + timedelta(hours=1)).replace(tzinfo=UTC).isoformat(),
-                    'timeZone': 'Europe/London'
+                    'timeZone': 'UTC'
                 },
                 'isAllDay': False
             },
