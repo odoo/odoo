@@ -899,8 +899,10 @@ class TestChannelInternals(MailCommon, HttpCase):
         self.assertEqual(len(nothing_notif), 1, "mute + nothing + mention message = needaction")
 
     def test_mail_message_bookmark_group(self):
-        """ Test bookmarked message computation for a group. A bookmarked
-        message in a group should be considered only if:
+        """Test bookmarked message computation for a group.
+
+        A bookmarked message in a group should be considered only if:
+
             - It's our message
             - OR we have access to the channel
         """

@@ -253,7 +253,9 @@ class TestIrMailServer(MailCommon):
     @mute_logger('odoo.models.unlink')
     def test_mail_server_priorities(self):
         """ Test if we choose the right mail server to send an email.
-        Priorities are
+
+        Priorities are:
+
         1. Forced mail server (e.g.: in mass mailing)
             - If the "from_filter" of the mail server match the notification email
               use the notifications email in the "From header"

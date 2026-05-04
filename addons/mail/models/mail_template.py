@@ -584,6 +584,7 @@ class MailTemplate(models.Model):
         :param list render_fields: list of fields to render on template;
 
         # recipients generation
+
         :param boolean recipients_allow_suggested: when computing default
           recipients, include suggested recipients in addition to minimal
           defaults;

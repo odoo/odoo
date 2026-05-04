@@ -119,9 +119,10 @@ class StoreVersion:
 
 
 def mail_route(*route_args, **route_kwargs):
-    """Thin wrapper around `route` that adds guest context.
+    """Thin wrapper around ``route`` that adds guest context.
 
-    This decorator is equivalent to applying, in order:
+    This decorator is equivalent to applying, in order::
+
         @route(*route_args, **route_kwargs)
         @add_guest_to_context
     """
@@ -249,6 +250,7 @@ class Store:
         """Add records to the store.
 
         Fields can be defined in multiple ways:
+
         - as a string: the name of a method on the records that will be called with a Store.FieldList
           as first argument, and optional fields_params as other arguments.
         - as a callable: a function that will be called with a Store.FieldList as first argument.
@@ -967,11 +969,15 @@ class Store:
         record depending on the result of _bus_channels()."""
 
         def __init__(self, stores, records, bus_target):
-            """bus_target is expected in the following format:
-            - single bus_subchannel (which can be None), where bus_channel is implied as being the
-              record on which it is called.
-            - tuple of (field_name, bus_subchannel), where bus_channel is the record pointed by
-              field_name on the record on which it is called"""
+            """Initialize field lists by record for the given bus target.
+
+            ``bus_target`` is expected in the following format:
+
+            - single bus_subchannel (which can be ``None``), where bus_channel is implied as being
+              the record on which it is called.
+            - tuple of ``(field_name, bus_subchannel)``, where ``bus_channel`` is the record
+              pointed by ``field_name`` on the record on which it is called
+            """
             self._field_lists_by_record = {}
             if isinstance(bus_target, tuple):
                 field_name, bus_subchannel = bus_target

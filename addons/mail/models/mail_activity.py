@@ -733,37 +733,51 @@ class MailActivity(models.Model):
     @api.readonly
     @api.model
     def get_activity_data(self, res_model, domain, limit=None, offset=0, fetch_done=False):
-        """ Get aggregate data about records and their activities.
+        """Get aggregate data about records and their activities.
 
-        The goal is to fetch and compute aggregated data about records and their
-        activities to display them in the activity views and the chatter. For example,
-        the activity view displays it as a table with columns and rows being respectively
-        the activity_types and the activity_res_ids, and the grouped_activities being the
-        table entries with the aggregated data.
+        The goal is to fetch and compute aggregated data about records and
+        their activities to display them in the activity views and the
+        chatter. For example, the activity view displays it as a table with
+        columns and rows being respectively the activity types and the
+        activity ``res_ids``, and the grouped activities being the table
+        entries with the aggregated data.
 
-        :param str res_model: model of the records to fetch
-        :param list domain: record search domain
-        :param int limit: maximum number of records to fetch
-        :param int offset: offset of the first record to fetch
-        :param bool fetch_done: determines if "done" activities are integrated in the
-            aggregated data or not.
-        :returns: {'activity_types': dict of activity type info
-                            {id: int, name: str, mail_template: list of {id:int, name:str}}
-                       'activity_res_ids': list<int> of record id ordered by closest date
-                            (deadline for ongoing activities, and done date for done activities)
-                       'grouped_activities': dict<dict>
-                            res_id -> activity_type_id -> aggregated info as:
-                                count_by_state dict: mapping state to count (ex.: 'planned': 2)
-                                ids list: activity ids for the res_id and activity_type_id
-                                reporting_date str: aggregated date of the related activities as
-                                    oldest deadline of ongoing activities if there are any
-                                    or most recent date done of completed activities
-                                state dict: aggregated state of the related activities
-                                user_assigned_ids list: activity responsible id ordered
-                                    by closest deadline of the related activities
-                                attachments_info: dict with information about the attachments
-                                    {'count': int, 'most_recent_id': int, 'most_recent_name': str}
-                       }
+        :param str res_model: model of the records to fetch.
+        :param list domain: record search domain.
+        :param int limit: maximum number of records to fetch.
+        :param int offset: offset of the first record to fetch.
+        :param bool fetch_done: determines whether "done" activities are
+            integrated in the aggregated data or not.
+
+        :returns: a dict with the following keys:
+
+            * ``activity_types`` -- dict of activity type info::
+
+                {id: int, name: str, mail_template: list of {id: int, name: str}}
+
+            * ``activity_res_ids`` -- ``list[int]`` of record IDs ordered
+              by closest date (deadline for ongoing activities, and done
+              date for done activities).
+            * ``grouped_activities`` -- ``dict[dict]`` mapping
+              ``res_id -> activity_type_id -> aggregated info``, where the
+              aggregated info contains:
+
+              * ``count_by_state`` (dict) -- mapping state to count
+                (e.g. ``'planned': 2``);
+              * ``ids`` (list) -- activity IDs for the ``res_id`` and
+                ``activity_type_id``;
+              * ``reporting_date`` (str) -- aggregated date of the related
+                activities, as the oldest deadline of ongoing activities
+                if there are any, or the most recent done date of
+                completed activities;
+              * ``state`` (dict) -- aggregated state of the related
+                activities;
+              * ``user_assigned_ids`` (list) -- activity responsible IDs
+                ordered by closest deadline of the related activities;
+              * ``attachments_info`` (dict) -- information about the
+                attachments, ``{'count': int, 'most_recent_id': int,
+                'most_recent_name': str}``.
+
         :rtype: dict
         """
         user_tz = self.user_id.sudo().tz
@@ -878,6 +892,7 @@ class MailActivity(models.Model):
 
         :returns: for each model having at least one activity in self, have
           a sub-dict containing
+
             * activities: activities related to that model;
             * record IDs: record linked to the activities of that model, in same
               order;

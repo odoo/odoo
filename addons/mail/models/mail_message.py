@@ -54,18 +54,21 @@ def exists_in_cache(records, *, hint_field=''):
 
 
 def _find_allowed_doc_ids(env, model_ids, operation):
-    """ Filter out communication records (messages, activities) that user cannot
-    read due to missing document access.
+    """Filter out communication records (messages, activities) that the user
+    cannot read due to missing document access.
 
-    :param dict model_ids: dictionary giving messages IDs per model / doc ids {
-        'document_model_name': {
-            document_id_1: set(message IDs),
-            document_id_2: set(message IDs),
-        },
-        [...]
-    }
+    :param model_ids: dictionary giving message IDs per model / document
+        IDs, structured as::
 
-    :return: set of allowed message IDs to read, based on document check
+            {
+                'document_model_name': {
+                    document_id_1: set(message IDs),
+                    document_id_2: set(message IDs),
+                },
+                ...
+            }
+
+    :return: set of allowed message IDs to read, based on document check.
     :rtype: set
     """
     allowed_ids = set()
@@ -90,6 +93,7 @@ class MailMessage(models.Model):
     Note:: State management / Error codes / Failure types summary
 
     * mail.notification
+
       * notification_status
         'ready', 'sent', 'bounce', 'exception', 'canceled'
       * notification_type
@@ -109,11 +113,13 @@ class MailMessage(models.Model):
         'sn_format', 'sn_error'
 
     * mail.mail
+
       * state
         'outgoing', 'sent', 'received', 'exception', 'cancel'
       * failure_reason: text
 
     * sms.sms (SMS addon)
+
       * state
         'outgoing', 'sent', 'error', 'canceled'
       * error_code
@@ -123,6 +129,7 @@ class MailMessage(models.Model):
         'sms_blacklist', 'sms_duplicate'
 
     * snailmail.letter (snailmail addon)
+
       * state
         'pending', 'sent', 'error', 'canceled'
       * error_code

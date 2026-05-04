@@ -195,6 +195,7 @@ class MailController(http.Controller):
 
          - find a public URL
          - if none found
+
           - users with a read access are redirected to the document
           - users without read access are redirected to the Messaging
           - not logged users are redirected to the login page

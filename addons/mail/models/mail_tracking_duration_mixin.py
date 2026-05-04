@@ -26,19 +26,21 @@ class MailTrackingDurationMixin(models.AbstractModel):
     @api.depends(lambda self: [self._track_duration_field])
     def _compute_duration_tracking(self):
         """
-        Tracks how long a record stays in different stages.
+        Track how long a record stays in different stages.
 
         This method calculates elapsed time since the last stage change and stores the
         information in the `duration_tracking` dictionary.
 
         The dictionary keys are:
+
         *   d (datetime):
                 The exact UTC datetime the record added the current state.
         *   s (stage id):
                 The unique ID of the *current* stage the record is in.
+
         <stage_id> (int):
                 A running total of accumulated time (in minutes) spent in previous states, mapping
-            stage IDs to minutes.
+                  stage IDs to minutes.
 
         Example:
             {"d":"2025-11-21 15:34:28","s":3, "1":172814,"2":86401 , '0': 12 }

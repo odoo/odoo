@@ -305,20 +305,20 @@ class TestDiscussChannelAccess(MailCommon):
 
     def _test_discuss_channel_access(self, cases, for_sub_channel):
         """
-        Executes a list of operations on channels in various setups and checks whether the outcomes
+        Execute a list of operations on channels in various setups and check whether the outcomes
         match the expected results.
 
         :param cases: A list of test cases, where each tuple contains:
 
             - user_key (``"portal"`` | ``"public"`` | ``"user"``): The user performing the operation.
             - group_key (``"chat"`` | ``"group"`` | ``"no_group"`` | ``"group_matching"`` |
-            ``"group_failing"``): The group specification to use. ``chat`` and ``group`` define the
-            channel type, while the others configure group setups for the channels.
+              ``"group_failing"``): The group specification to use. ``chat`` and ``group`` define the
+              channel type, while the others configure group setups for the channels.
             - membership (``"member"`` | ``"outside"``): Whether the user is a member of the channel.
             - operation (``"create"`` | ``"read"`` | ``"write"`` | ``"unlink"``): The action being tested.
             - expected_result (bool): Whether the action is expected to be allowed (``True``) or denied
-            (``False``).
-        :type cases: List[Tuple[str, str, str, str, bool]]
+              (``False``).
+        :type cases: list[tuple[str, str, str, str, bool]]
         :param for_sub_channel: Whether the operation is being tested on a sub-channel. In this case, the
             ``cases`` parameter is used to configure the parent channel.
         """
@@ -384,24 +384,26 @@ class TestDiscussChannelAccess(MailCommon):
         Executes a list of operations on channel members in various setups and checks whether the
         outcomes match the expected results.
 
-        :param cases: A list of test cases, where each tuple contains:
-            - user_key (``"portal"`` | ``"public"`` | ``"user"``):
-                The user performing the operation.
-            - group_key (``"chat"`` | ``"group"`` | ``"no_group"`` | ``"group_matching"`` |
-            ``"group_failing"``):
-                The group specification to use. ``chat`` and ``group`` define the channel type, while the
-                others configure group setups for the channels.
-            - membership (``"member"`` | ``"outside"``):
-                Whether the user is a member of the channel.
-            - target (``"self"`` | ``"other"``):
-                Whether the operation is executed on the self-member or another member.
-            - operation (``"create"`` | ``"read"`` | ``"write"`` | ``"unlink"``):
-                The action being tested.
-            - expected_result (bool):
-                Whether the action is expected to be allowed (``True``) or denied (``False``).
-        :type cases: List[Tuple[str, str, str, str, str, bool]]
-        :param for_sub_channel: Whether the operation is being tested on a sub-channel. In this case, the
-            ``cases`` parameter is used to configure the parent channel's member.
+        :param cases: a list of test cases, where each tuple contains:
+
+            * ``user_key`` (``"portal"`` | ``"public"`` | ``"user"``) -- the user performing the
+              operation
+            * ``group_key`` (``"chat"`` | ``"group"`` | ``"no_group"`` | ``"group_matching"`` |
+              ``"group_failing"``) -- the group specification to use. ``chat`` and ``group`` define
+              the channel type, while the others configure group setups for the channels
+            * ``membership`` (``"member"`` | ``"outside"``) -- whether the user is a member of the
+              channel
+            * ``target`` (``"self"`` | ``"other"``) -- whether the operation is executed on the
+              self-member or another member;
+            * ``operation`` (``"create"`` | ``"read"`` | ``"write"`` | ``"unlink"``) -- the action
+              being tested
+            * ``expected_result`` (``bool``) -- whether the action is expected to be allowed
+              (``True``) or denied (``False``).
+
+        :type cases: list[tuple[str, str, str, str, str, bool]]
+        :param bool for_sub_channel: whether the operation is being tested on
+            a sub-channel. In this case, the ``cases`` parameter is used to
+            configure the parent channel's member.
         """
         for user_key, channel_key, membership, target, operation, result in cases:
             channel_id = self._get_channel_id(user_key, channel_key, membership, for_sub_channel)

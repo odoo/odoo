@@ -355,6 +355,7 @@ class MailRenderMixin(models.AbstractModel):
 
         In addition to the generic evaluation context available, some other
         variables are added:
+
           * ``object``: record based on which the template is rendered;
 
         :param str template_src: raw QWeb template to render;
@@ -509,6 +510,7 @@ class MailRenderMixin(models.AbstractModel):
 
         In addition to the generic evaluation context available, some other
         variables are added:
+
           * ``object``: record based on which the template is rendered;
 
         :param str/int/record view_ref: source QWeb template. It should be an
@@ -563,6 +565,7 @@ class MailRenderMixin(models.AbstractModel):
 
         In addition to the generic evaluation context available, some other
         variables are added:
+
           * ``object``: record based on which the template is rendered;
 
         :param str template_txt: template text to render
