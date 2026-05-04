@@ -107,7 +107,7 @@ test("replying to message should only render relevant part", async () => {
     replying = false;
     const result = stopObserve();
     expect(result.get(Composer)).toBeLessThan(2);
-    expect(result.get(Message)).toBeLessThan(2);
+    expect(result.get(Message) || 0).toBeLessThan(2);
 });
 
 test("right-click message selection should only render relevant part", async () => {
