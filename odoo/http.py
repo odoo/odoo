@@ -480,22 +480,28 @@ def serialize_exception(exception, *, message=None, arguments=None):
 
 
 def fragment_to_query_string(func):
+    """
+    Decorate a controller method to force the client to write fragment into the query
+    in case there isn't any query.
+    """
     @functools.wraps(func)
     def wrapper(self, *a, **kw):
-        kw.pop('debug', False)
-        if not kw:
-            return Response("""<html><head><script>
-                var l = window.location;
-                var q = l.hash.substring(1);
-                var r = l.pathname + l.search;
-                if(q.length !== 0) {
-                    var s = l.search ? (l.search === '?' ? '' : '&') : '?';
-                    r = l.pathname + l.search + s + q;
-                }
-                if (r == l.pathname) {
-                    r = '/';
-                }
-                window.location = r;
+        if not (kw.keys() - {'debug'}):
+            return Response("""<!DOCTYPE html>
+            <html><head><script>
+                (function() {
+                    const url = window.location;
+                    const fragment = url.hash.substring(1);  // remove the leading "#"
+                    let new_url = url.pathname + url.search;
+                    if(fragment.length !== 0) {
+                        const separator = url.search ? (url.search === '?' ? '' : '&') : '?';
+                        new_url = url.pathname + url.search + separator + fragment;
+                    }
+                    if (new_url == url.pathname) {
+                        new_url = '/';
+                    }
+                    window.location = new_url;
+                })()
             </script></head><body></body></html>""")
         return func(self, *a, **kw)
     return wrapper
