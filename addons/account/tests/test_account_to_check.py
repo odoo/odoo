@@ -2,7 +2,7 @@ from dateutil.relativedelta import relativedelta
 from freezegun import freeze_time
 
 from odoo import Command, fields
-from odoo.exceptions import ValidationError
+from odoo.exceptions import AccessError
 from odoo.tests import tagged
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
@@ -20,7 +20,7 @@ class TestCheckAccountMoves(AccountTestInvoicingCommon):
     def test_try_check_move_with_invoicing_user(self):
         invoice = self._create_invoice(review_state='todo')
         invoice.action_post()
-        with self.assertRaisesRegex(ValidationError, 'This entry has already been reviewed.'):
+        with self.assertRaisesRegex(AccessError, "This entry has been reviewed, You need the bookkeeper role to change it."):
             invoice.with_user(self.simple_accountman).button_draft()
 
         invoice.button_draft()
@@ -35,7 +35,7 @@ class TestCheckAccountMoves(AccountTestInvoicingCommon):
     def test_sales_change_invoice_from_accountant(self):
         invoice = self._create_invoice()
         invoice.action_post()
-        with self.assertRaisesRegex(ValidationError, 'This entry has already been reviewed.'):
+        with self.assertRaisesRegex(AccessError, "You don't have the access rights to perform this action."):
             invoice.with_user(self.simple_accountman).button_draft()
 
     def test_sales_modify_draft_reviewed(self):
@@ -147,7 +147,7 @@ class TestCheckAccountMoves(AccountTestInvoicingCommon):
         }])
         bank_line_1._try_auto_reconcile_statement_lines()
         self.assertFalse(bank_line_1.move_id.review_state)
-        with self.assertRaisesRegex(ValidationError, 'Validated entries can only be changed by your accountant.'):
+        with self.assertRaisesRegex(AccessError, "You don't have the access rights to perform this action."):
             bank_line_1.with_user(self.simple_accountman).delete_reconciled_line(payment.move_id.line_ids[0].id)
 
     def test_auto_post_invoicing_only(self):
