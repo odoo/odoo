@@ -70,7 +70,6 @@
 <t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
     <xpath expr="//t[@id='snippet_specific_options']" position="after">
         <age_verification_option
-            template="website.AgeVerificationOption"
             selector=".s_popup.s_age_verification_popup"
             applyTo=".modal"/>
     </xpath>

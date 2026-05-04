@@ -98,13 +98,13 @@ registerWebsitePreviewTour(
         toggleBackdrop("Popup"), // show Popup backdrop
         {
             content: "Close the Popup that has now backdrop.",
-            trigger: ".o_we_invisible_el_panel .o_we_invisible_entry:first",
+            trigger: ".o_we_invisible_el_panel .o_we_invisible_entry:contains('Popup')",
             run: "click",
         },
         checkScrollbar(true),
         {
             content: "Open the Cookies Bar.",
-            trigger: ".o_we_invisible_el_panel .o_we_invisible_entry:last",
+            trigger: ".o_we_invisible_el_panel .o_we_invisible_entry:contains('Cookies Bar')",
             run: "click",
         },
         checkScrollbar(true),
@@ -113,7 +113,7 @@ registerWebsitePreviewTour(
         checkScrollbar(true),
         {
             content: "Open the Popup that has backdrop.",
-            trigger: ".o_we_invisible_el_panel .o_we_invisible_entry:first",
+            trigger: ".o_we_invisible_el_panel .o_we_invisible_entry:contains('Popup')",
             run: "click",
         },
         goBackToBlocks(),
@@ -144,7 +144,8 @@ registerWebsitePreviewTour(
         checkScrollbar(true),
         {
             content: "Open the Cookie Bar.",
-            trigger: ".o_we_invisible_el_panel .o_we_invisible_entry:has(.fa-eye-slash)",
+            trigger:
+                ".o_we_invisible_el_panel .o_we_invisible_entry:contains('Cookies Bar'):has(.fa-eye-slash)",
             run: "click",
         },
         goBackToBlocks(),

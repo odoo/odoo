@@ -38,3 +38,16 @@ class TestUi(HttpCaseGamification):
             'forum_cover_dropzone',
             login='admin',
         )
+
+    def test_04_floating_snippets(self):
+        self.env['forum.forum'].create({
+            'name': 'Floating Snippets Forum B',
+            'description': 'Forum used by floating snippets tour',
+            'privacy': 'public',
+        })
+        forum_url = f"/forum/help-{self.forum_id}"
+        self.start_tour(
+            self.env['website'].get_client_action_url(forum_url, True),
+            'website_forum_floating_snippets',
+            login='admin',
+        )

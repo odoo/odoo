@@ -196,3 +196,6 @@ class TestSnippets(HttpCase):
 
     def test_clickable_card(self):
         self.start_tour(self.env['website'].get_client_action_url('/', True), 'clickable_card', login='admin')
+
+    def test_floating_snippets(self):
+        self.start_tour(self.env['website'].get_client_action_url('/', True), 'website_floating_snippets', login='admin')
