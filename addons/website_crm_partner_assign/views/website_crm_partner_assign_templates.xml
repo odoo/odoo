@@ -167,17 +167,11 @@
     </xpath>
 </template>
 
-<template id="partner" inherit_id="website_partnership.partner_page">
-    <xpath expr="//t[@t-call='website_partnership.partner_detail']" position="inside">
+<template id="partner" inherit_id="website_partner.partner_page">
+    <xpath expr="//t[@t-call='website_partner.partner_detail']" position="inside">
         <t t-set="right_column">
             <div id="right_column"><t t-call="website_crm_partner_assign.references_block"/></div>
         </t>
-    </xpath>
-</template>
-
-<template id="contact_details" inherit_id="website_crm_partner_assign.partner" name="Contact Details">
-    <xpath expr="//t[@t-call='website_partnership.partner_detail']" position="attributes">
-        <attribute name="contact_details">True</attribute>
     </xpath>
 </template>
 

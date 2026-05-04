@@ -15,6 +15,11 @@ This is a base module. It holds website-related stuff for Contact model (res.par
         'data/website_partner_data.xml',
     ],
     'demo': ['data/website_partner_demo.xml'],
+    'assets': {
+        'website.website_builder_assets': [
+            'website_partner/static/src/website_builder/**/*',
+        ],
+    },
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

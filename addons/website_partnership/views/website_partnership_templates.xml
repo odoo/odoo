@@ -112,23 +112,8 @@
     </div>
 </template>
 
-<template id="partner_page" name="Partner Page">
-    <t t-call="website.layout">
-        <div id="wrap">
-            <div class="oe_structure oe_empty" id="oe_structure_website_partnership_partner_1" data-editor-message.translate="Drag blocks here to add them on all partners"/>
-            <div class="container">
-                <div class="row">
-                    <t t-call="website_partnership.partner_detail"/>
-                </div>
-            </div>
-            <div class="oe_structure oe_empty" id="oe_structure_website_partnership_partner_2" data-editor-message.translate="Drag blocks here to add them on all partners"/>
-        </div>
-    </t>
-</template>
-
 <template id="partner_detail" inherit_id="website_partner.partner_detail" name="Partner Details">
     <xpath expr="//div" position="before">
-        <t t-set="contact_details" t-value="False"/>
         <div t-if="not edit_page" class="mt-4 mb-3">
             <a id="link_back_to_partners" t-attf-href="/partners#{ current_grade and '/grade/%s' % slug(current_grade) or '' }" aria-label="Back to partners list"><i class="oi oi-chevron-left me-2"/>Back</a>
         </div>
@@ -191,12 +176,6 @@
             }"
             class="py-2"
         />
-    </xpath>
-</template>
-
-<template id="contact_details" inherit_id="website_partnership.partner_detail" name="Contact Details">
-    <xpath expr="//t[@t-set='contact_details']" position="replace">
-        <t t-set="contact_details" t-value="True"/>
     </xpath>
 </template>
 
