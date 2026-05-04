@@ -3271,3 +3271,59 @@ class TestStockValuation(TestStockValuationCommon):
         consigned_quant = quants.filtered(lambda q: q.location_id == self.stock_location and q.owner_id)
         self.assertEqual(regular_quant.value, 10)
         self.assertEqual(consigned_quant.value, 0)
+
+    def test_standard_price_with_lot_valuated_fifo(self):
+        lot_product = self.env['product.product'].create([
+            {
+                'name': 'Product LOT',
+                'is_storable': True,
+                'tracking': 'lot',
+                'categ_id': self.category_fifo.id,
+                'lot_valuated': True,
+                'standard_price': 10,
+            }
+        ])
+
+        lot = self.env['stock.lot'].create({
+            'name': 'lot',
+            'product_id': lot_product.id,
+            'product_qty': 0,
+            'total_value': 0,
+            'standard_price': 5,
+        })
+        self.assertEqual(lot.standard_price, 5)
+
+        # Move out to make product quantity negative
+        move_out = self.env['stock.move'].create({
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': lot_product.id,
+            'uom_id': self.uom.id,
+            'product_uom_qty': 30.0,
+            'lot_ids': [Command.set([lot.id])],
+        })
+        move_out._action_confirm()
+        move_out._action_assign()
+        move_out.move_line_ids.quantity = 30.0
+        move_out.picked = True
+        move_out._action_done()
+
+        # Purchase 1 unit
+        move_in = self.env['stock.move'].create({
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': lot_product.id,
+            'uom_id': self.uom.id,
+            'product_uom_qty': 1.0,
+            'price_unit': 15.50,
+            'lot_ids': [Command.set([lot.id])],
+            'is_in': True,
+        })
+        move_in._action_confirm()
+        move_in._action_assign()
+        move_in.move_line_ids.quantity = 1.0
+        move_in.picked = True
+        move_in._action_done()
+
+        # Old code would have set the standard price to the product's standard price (10)
+        self.assertEqual(lot.standard_price, 5)
