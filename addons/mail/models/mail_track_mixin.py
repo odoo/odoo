@@ -483,7 +483,7 @@ class MailTrackMixin(models.AbstractModel):
                     'old_value': initial_value or 'None',
                     'new_value': new_value or 'None',
                 })
-            else:
+            else:  # float, integer
                 values.update({
                     'old_value': formatLang(self.env, initial_value or 0),
                     'new_value': formatLang(self.env, new_value or 0),
@@ -600,13 +600,14 @@ class MailTrackMixin(models.AbstractModel):
     def _create_mail_tracking_values_property(
         self, initial_value: typing.Any, col_name: str, col_info: ValuesType,
     ) -> ValuesType:
-        """Generate the values for the <mail.tracking.values> corresponding to a property."""
+        """ Like '_create_mail_tracking_values' but for a given property of a property
+        field. """
         col_info = col_info | {'type': initial_value['type'], 'selection': initial_value.get('selection')}
-
+        # custom label / description for property field
         field_label = f"{col_info['string']}: {initial_value['string']}"
 
         field_info = {
-            'desc': f"{col_info['string']}: {initial_value['string']}",
+            'desc': field_label,
             'name': col_name,
             'type': initial_value['type'],
         }
