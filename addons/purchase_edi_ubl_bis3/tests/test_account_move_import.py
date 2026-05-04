@@ -23,10 +23,18 @@ class TestAccountMoveImport(AccountTestInvoicingCommon):
             'standard_price': 40.0,
         })
 
+        cls.env['ir.sequence'].create({
+            'name': 'TEST SEQUENCE',
+            'code': 'purchase.order',
+            'prefix': 'TESTPO',
+            'padding': 5,
+            'number_increment': 1,
+            'company_id': cls.env.company.id,
+        })
+
         cls.purchase_order = cls.env['purchase.order'].create({
             'partner_id': cls.partner_open_wood.id,
             'date_order': fields.Date.today(),
-            'name': 'test_purchase_order',
             'order_line': [Command.create({
                 'product_id': cls.product.id,
                 'name': cls.product.name,
@@ -80,7 +88,7 @@ class TestAccountMoveImport(AccountTestInvoicingCommon):
         # Test with reference
         bill = self.env['account.move'].create({
             'move_type': 'in_invoice',
-            'invoice_origin': 'TEST multiple references test_purchase_order and other refs',
+            'invoice_origin': f'{self.purchase_order.name} TESTPO99932 TESTPO00001',
             'partner_id': self.partner_a.id,
             'invoice_line_ids': [Command.create({
                 'quantity': 1,
@@ -88,13 +96,13 @@ class TestAccountMoveImport(AccountTestInvoicingCommon):
             })]
         })
         bill._link_bill_origin_to_purchase_orders()
-        self.assertEqual(bill.invoice_origin, 'test_purchase_order')
+        self.assertEqual(bill.invoice_origin, self.purchase_order.name)
         self.assertTrue(all(line.purchase_order_id == self.purchase_order for line in bill.line_ids if line.purchase_order_id))
 
         # Test without ref
         bill_2 = self.env['account.move'].create({
             'move_type': 'in_invoice',
-            'invoice_origin': 'TEST multiple references and other refs',
+            'invoice_origin': 'TESTPO99932 TESTPO09876',
             'partner_id': self.partner_a.id,
             'invoice_line_ids': [Command.create({
                 'quantity': 1,
