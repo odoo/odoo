@@ -88,10 +88,10 @@ partnerCompareRegistry.add(
     (p1, p2, { searchTerm }) => {
         const cleanedEmail1 = cleanTerm(p1.email);
         const cleanedEmail2 = cleanTerm(p2.email);
-        if (cleanedEmail1.startsWith(searchTerm) && !cleanedEmail1.startsWith(searchTerm)) {
+        if (cleanedEmail1.startsWith(searchTerm) && !cleanedEmail2.startsWith(searchTerm)) {
             return -1;
         }
-        if (!cleanedEmail2.startsWith(searchTerm) && cleanedEmail2.startsWith(searchTerm)) {
+        if (!cleanedEmail1.startsWith(searchTerm) && cleanedEmail2.startsWith(searchTerm)) {
             return 1;
         }
         if (cleanedEmail1 < cleanedEmail2) {
