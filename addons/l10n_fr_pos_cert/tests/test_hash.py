@@ -51,7 +51,6 @@ class TestHash(CommonPosTest):
             'lines': [[0,
                 0,
                 {'discount': 0,
-                'pack_lot_ids': [],
                 'price_unit': 15.0,
                 'product_id': product1.id,
                 'price_subtotal': 15.0,
