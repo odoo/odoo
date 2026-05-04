@@ -126,7 +126,7 @@ class StockMove(models.Model):
             for move in moves:
                 move.remaining_qty = remaining_by_product.get(move.product_id, {}).get(move, 0)
 
-    @api.depends('value', 'remaining_qty')
+    @api.depends('value', 'remaining_qty', 'product_id.standard_price')
     def _compute_remaining_value(self):
         for move in self:
             if not move.is_in:
@@ -174,7 +174,7 @@ class StockMove(models.Model):
         moves = super()._action_done(cancel_backorder=cancel_backorder)
         moves_out = moves_out.exists()
         moves_in = moves.filtered(lambda m: m.is_in or m.is_dropship)
-        moves_in._set_value()
+        moves_in.with_context(std_price_incremental_recompute=not moves_out)._set_value()
         moves._create_account_move()
         # Update standard price on outgoing fifo or lot valuated average products
         moves_out.product_id.filtered(lambda p: p.cost_method == 'fifo' or (p.cost_method == 'average' and p.lot_valuated))._update_standard_price()
@@ -283,48 +283,59 @@ class StockMove(models.Model):
         lots_to_recompute = set()
         fifo_qty_processed = defaultdict(float)
 
-        for move in self:
-            move = move.with_company(move.company_id)
-            # Incoming moves
-            if move.is_dropship or move.is_in:
-                products_to_recompute.add(move.product_id.id)
+        for company, moves in self.grouped('company_id').items():
+            extra_value_by_product = defaultdict(float)
+            extra_qty_by_product = defaultdict(float)
+
+            for move in moves:
+                move = move.with_company(company.id)
+                # Incoming moves
+                if move.is_dropship or move.is_in:
+                    products_to_recompute.add(move.product_id.id)
+                    if move.product_id.lot_valuated:
+                        if any(not ml.lot_id for ml in move.move_line_ids):
+                            raise UserError(self.env._(
+                                "A lot/serial number is required for product '%s' as it has lot valuation enabled.",
+                                move.product_id.display_name))
+                        lots_to_recompute.update(move.move_line_ids.lot_id.ids)
+                if move.is_in:
+                    move.value = move.sudo()._get_value()
+                    if self.env.context.get('std_price_incremental_recompute') and move.product_id.is_storable:
+                        # fast path: add extra_value/extra_qty to standard price (only realtime)
+                        extra_value_by_product[move.product_id] += move.value
+                        extra_qty_by_product[move.product_id] += move._get_valued_qty()
+                    continue
+                # Outgoing moves
+                if not move._is_out():
+                    continue
+                if correction_quantity:
+                    previous_qty = move.quantity - correction_quantity
+                    ratio = correction_quantity / previous_qty if previous_qty else 0
+                    move.value += ratio * move.value
+                    continue
                 if move.product_id.lot_valuated:
-                    if any(not ml.lot_id for ml in move.move_line_ids):
-                        raise UserError(self.env._(
-                            "A lot/serial number is required for product '%s' as it has lot valuation enabled.",
-                            move.product_id.display_name))
-                    lots_to_recompute.update(move.move_line_ids.lot_id.ids)
-            if move.is_in:
-                move.value = move.sudo()._get_value()
-                continue
-            # Outgoing moves
-            if not move._is_out():
-                continue
-            if correction_quantity:
-                previous_qty = move.quantity - correction_quantity
-                ratio = correction_quantity / previous_qty if previous_qty else 0
-                move.value += ratio * move.value
-                continue
-            if move.product_id.lot_valuated:
-                value = 0.0
-                for move_line in move.move_line_ids:
-                    if move_line.lot_id:
-                        value += move_line.lot_id.standard_price * move_line.quantity_product_uom
-                    else:
-                        value += move.product_id.standard_price * move_line.quantity_product_uom
-                move.value = value
-                continue
+                    value = 0.0
+                    for move_line in move.move_line_ids:
+                        if move_line.lot_id:
+                            value += move_line.lot_id.standard_price * move_line.quantity_product_uom
+                        else:
+                            value += move.product_id.standard_price * move_line.quantity_product_uom
+                    move.value = value
+                    continue
 
-            if move.product_id.cost_method == 'fifo':
-                valued_qty = move._get_valued_qty()
-                move.value = move.product_id.with_context(fifo_qty_already_processed=fifo_qty_processed[move.product_id])._run_fifo(valued_qty)
-                fifo_qty_processed[move.product_id] += valued_qty
-            else:
-                move.value = move.product_id.standard_price * move._get_valued_qty()
+                if move.product_id.cost_method == 'fifo':
+                    valued_qty = move._get_valued_qty()
+                    move.value = move.product_id.with_context(fifo_qty_already_processed=fifo_qty_processed[move.product_id])._run_fifo(valued_qty)
+                    fifo_qty_processed[move.product_id] += valued_qty
+                else:
+                    move.value = move.product_id.standard_price * move._get_valued_qty()
 
-        # Recompute the standard price
-        self.env['product.product'].browse(products_to_recompute)._update_standard_price()
-        self.env['stock.lot'].browse(lots_to_recompute)._update_standard_price()
+            # Recompute the standard price
+            self.env['product.product'].browse(products_to_recompute).with_company(company)._update_standard_price(
+                extra_value=extra_value_by_product,
+                extra_quantity=extra_qty_by_product,
+            )
+            self.env['stock.lot'].browse(lots_to_recompute).with_company(company)._update_standard_price()
 
     def _get_value(self, forced_std_price=False, at_date=False, ignore_manual_update=False):
         return self._get_value_data(forced_std_price, at_date, ignore_manual_update)['value']
