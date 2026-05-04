@@ -1,10 +1,9 @@
+import { COMPOSER_TYPES } from "@mail/core/common/composer";
 import { partnerCompareRegistry } from "@mail/core/common/partner_compare";
-import { COMPOSER_TYPES } from "./composer";
 import { SUGGESTION_DELIMITERS } from "@mail/core/common/suggestion_hook";
-import { cleanTerm } from "@mail/utils/common/format";
-import { emojiLoader } from "@web/core/emoji_picker/emoji_loader";
 
-import { localeCompare } from "@web/core/l10n/utils";
+import { emojiLoader } from "@web/core/emoji_picker/emoji_loader";
+import { localeCompare, normalize } from "@web/core/l10n/utils";
 import { registry } from "@web/core/registry";
 import { fuzzyLookup } from "@web/core/utils/search";
 
@@ -54,7 +53,7 @@ export class SuggestionService {
      * @param {COMPOSER_TYPES} [options.composerType]
      */
     async fetchSuggestions({ delimiter, term }, { thread, abortSignal, composerType } = {}) {
-        const cleanedSearchTerm = cleanTerm(term);
+        const cleanedSearchTerm = normalize(term);
         switch (delimiter) {
             case SUGGESTION_DELIMITERS.PARTNER:
                 await this.fetchPartnersRoles(cleanedSearchTerm, {
@@ -126,11 +125,11 @@ export class SuggestionService {
 
     searchCannedResponseSuggestions(cleanedSearchTerm) {
         const cannedResponses = Object.values(this.store["mail.canned.response"].records).filter(
-            (cannedResponse) => cleanTerm(cannedResponse.source).includes(cleanedSearchTerm)
+            (cannedResponse) => normalize(cannedResponse.source).includes(cleanedSearchTerm)
         );
         const sortFunc = (c1, c2) => {
-            const cleanedName1 = cleanTerm(c1.source);
-            const cleanedName2 = cleanTerm(c2.source);
+            const cleanedName1 = normalize(c1.source);
+            const cleanedName2 = normalize(c2.source);
             if (
                 cleanedName1.startsWith(cleanedSearchTerm) &&
                 !cleanedName2.startsWith(cleanedSearchTerm)
@@ -179,7 +178,7 @@ export class SuggestionService {
      * @returns {{ type: String, suggestions: Array }}
      */
     searchSuggestions({ delimiter, term }, { composerType, thread } = {}) {
-        const cleanedSearchTerm = cleanTerm(term);
+        const cleanedSearchTerm = normalize(term);
         switch (delimiter) {
             case SUGGESTION_DELIMITERS.PARTNER: {
                 const partners = this.searchPartnerSuggestions(cleanedSearchTerm, {
@@ -205,11 +204,11 @@ export class SuggestionService {
 
     searchRoleSuggestions(cleanedSearchTerm) {
         const roles = Object.values(this.store["res.role"].records).filter((role) =>
-            cleanTerm(role.name).includes(cleanedSearchTerm)
+            normalize(role.name).includes(cleanedSearchTerm)
         );
         const sortFunc = (r1, r2) => {
-            const cleanedName1 = cleanTerm(r1.name);
-            const cleanedName2 = cleanTerm(r2.name);
+            const cleanedName1 = normalize(r1.name);
+            const cleanedName2 = normalize(r2.name);
             if (
                 cleanedName1.startsWith(cleanedSearchTerm) &&
                 !cleanedName2.startsWith(cleanedSearchTerm)
@@ -269,12 +268,11 @@ export class SuggestionService {
         const partners = this.getPartnerSuggestions({ composerType, thread });
         const suggestions = [];
         for (const partner of partners) {
-            if (!partner.name) {
-                continue;
-            }
+            const name = thread?.getPersonaName(partner) ?? partner.displayName;
             if (
-                cleanTerm(partner.name).includes(cleanedSearchTerm) ||
-                (partner.email && cleanTerm(partner.email).includes(cleanedSearchTerm))
+                name &&
+                (normalize(name).includes(cleanedSearchTerm) ||
+                    (partner.email && normalize(partner.email).includes(cleanedSearchTerm)))
             ) {
                 suggestions.push(partner);
             }
@@ -286,7 +284,7 @@ export class SuggestionService {
                     special.channel_types.includes(thread.channel?.channel_type) &&
                     cleanedSearchTerm.length >= Math.min(4, special.label.length) &&
                     (special.label.startsWith(cleanedSearchTerm) ||
-                        cleanTerm(special.description.toString()).includes(cleanedSearchTerm))
+                        normalize(special.description.toString()).includes(cleanedSearchTerm))
             )
         );
         return {
@@ -302,7 +300,7 @@ export class SuggestionService {
      * @returns {[import("models").Persona]}
      */
     sortPartnerSuggestions(partners, searchTerm = "", thread = undefined) {
-        const cleanedSearchTerm = cleanTerm(searchTerm);
+        const cleanedSearchTerm = normalize(searchTerm);
         const compareFunctions = partnerCompareRegistry.getAll();
         const context = this.sortPartnerSuggestionsContext(thread);
         return partners.sort((p1, p2) => {
@@ -320,6 +318,7 @@ export class SuggestionService {
                     return result;
                 }
             }
+            return 0;
         });
     }
 

@@ -1,10 +1,9 @@
-import { cleanTerm } from "@mail/utils/common/format";
-
 import { Component, props, proxy, types } from "@odoo/owl";
 
 import { DiscussAvatar } from "@mail/core/common/discuss_avatar";
 import { Dialog } from "@web/core/dialog/dialog";
 import { _t } from "@web/core/l10n/translation";
+import { normalize } from "@web/core/l10n/utils";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { highlightText } from "@web/core/utils/html";
@@ -134,7 +133,7 @@ export class DiscussCommandPalette {
         this.ui = env.services.ui;
         this.commands = [];
         this.options = options;
-        this.cleanedTerm = cleanTerm(this.options.searchValue);
+        this.cleanedTerm = normalize(this.options.searchValue);
     }
 
     async fetch() {
@@ -151,8 +150,8 @@ export class DiscussCommandPalette {
             partners = Object.values(this.store["res.partner"].records).filter(
                 (partner) =>
                     partner.main_user_id?.share === false &&
-                    (cleanTerm(partner.displayName).includes(this.cleanedTerm) ||
-                        cleanTerm(partner.email).includes(this.cleanedTerm)) &&
+                    (normalize(partner.displayName || "").includes(this.cleanedTerm) ||
+                        normalize(partner.email || "").includes(this.cleanedTerm)) &&
                     (!filtered || !filtered.has(partner))
             );
             partners = this.suggestion
@@ -171,7 +170,8 @@ export class DiscussCommandPalette {
                 (channel) =>
                     channel.channel_type &&
                     channel.channel_type !== "chat" &&
-                    cleanTerm(channel.displayName).includes(this.cleanedTerm) &&
+                    channel.displayName &&
+                    normalize(channel.displayName).includes(this.cleanedTerm) &&
                     (!filtered || !filtered.has(channel))
             )
             .sort((c1, c2) => {

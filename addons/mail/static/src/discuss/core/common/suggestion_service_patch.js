@@ -1,8 +1,7 @@
 import { SUGGESTION_DELIMITERS } from "@mail/core/common/suggestion_hook";
 import { SuggestionService } from "@mail/core/common/suggestion_service";
-import { cleanTerm } from "@mail/utils/common/format";
-import { localeCompare } from "@web/core/l10n/utils";
 
+import { localeCompare, normalize } from "@web/core/l10n/utils";
 import { registry } from "@web/core/registry";
 import { patch } from "@web/core/utils/patch";
 
@@ -75,7 +74,7 @@ const suggestionServicePatch = {
      */
     searchSuggestions({ delimiter, term }, { composerType, thread } = {}) {
         if (delimiter === SUGGESTION_DELIMITERS.CHANNEL_COMMAND) {
-            return this.searchChannelCommand(cleanTerm(term), thread.channel);
+            return this.searchChannelCommand(normalize(term), thread.channel);
         }
         return super.searchSuggestions(...arguments);
     },
@@ -85,11 +84,11 @@ const suggestionServicePatch = {
             return;
         }
         const commands = this.getChannelCommands(channel).filter(({ name }) =>
-            cleanTerm(name).includes(cleanedSearchTerm)
+            normalize(name).includes(cleanedSearchTerm)
         );
         const sortFunc = (c1, c2) => {
-            const cleanedName1 = cleanTerm(c1.name);
-            const cleanedName2 = cleanTerm(c2.name);
+            const cleanedName1 = normalize(c1.name);
+            const cleanedName2 = normalize(c2.name);
             if (
                 cleanedName1.startsWith(cleanedSearchTerm) &&
                 !cleanedName2.startsWith(cleanedSearchTerm)
