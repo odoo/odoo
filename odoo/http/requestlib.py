@@ -32,7 +32,7 @@ from .session import DEFAULT_LANG, STORED_SESSION_BYTES, get_default_session
 
 from ._facade import DEFAULT_MAX_CONTENT_LENGTH, MAX_FORM_SIZE, HTTPRequest  # noqa: F401
 if typing.TYPE_CHECKING:
-    from collections.abc import Iterable, Mapping
+    from collections.abc import Iterable, Set as AbstractSet, Mapping
 
     from odoo.api import Environment
     from odoo.models import BaseModel
@@ -64,31 +64,42 @@ def borrow_request():
         request_var.reset(token)
 
 
-def fragment_to_query_string(func=None, *, ignore=None):
+def fragment_to_query_string(func=None, /, *, ignore: AbstractSet = frozenset()):
+    """
+    Decorate a controller method to redirect the client transforming the fragment
+    into the query string if no relevant query parameters can be found.
+
+    :param ignore: set of query parameter keys that should be ignored in
+        addition to ``debug`` (which is always ignored) when checking if
+        the query is empty. e.g., ``/page.html?debug=1`` is considered
+        empty and triggers the "fragment to query" redirection.
+    """
     def decorator(func):
         @functools.wraps(func)
         def wrapper(self, *a, **kw):
-            kw.pop("debug", False)
-
-            if not kw or (len(kw) == 1 and ignore in kw):
-                return Response("""<html><head><script>
-                    var l = window.location;
-                    var q = l.hash.substring(1);
-                    var r = l.pathname + l.search;
-                    if(q.length !== 0) {
-                        var s = l.search ? (l.search === '?' ? '' : '&') : '?';
-                        r = l.pathname + l.search + s + q;
-                    }
-                    if (r == l.pathname) {
-                        r = '/';
-                    }
-                    window.location = r;
+            if not (kw.keys() - {'debug'} - ignore):
+                return Response("""<!DOCTYPE html>
+                <html><head><script>
+                    (function() {
+                        const url = window.location;
+                        const fragment = url.hash.substring(1);  // remove the leading "#"
+                        let new_url = url.pathname + url.search;
+                        if(fragment.length !== 0) {
+                            const separator = url.search ? (url.search === '?' ? '' : '&') : '?';
+                            new_url = url.pathname + url.search + separator + fragment;
+                        }
+                        if (new_url == url.pathname) {
+                            new_url = '/';
+                        }
+                        window.location = new_url;
+                    })()
                 </script></head><body></body></html>""")
 
             return func(self, *a, **kw)
 
         return wrapper
 
+    # allow to use it both as a simple decorator or a decorator factory
     if func is None:
         return decorator
 
