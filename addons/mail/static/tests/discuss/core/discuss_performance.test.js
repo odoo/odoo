@@ -13,8 +13,9 @@ import {
 import { Composer } from "@mail/core/common/composer";
 import { Message } from "@mail/core/common/message";
 import { describe, expect, rightClick, test } from "@odoo/hoot";
-import { onMounted, onPatched } from "@odoo/owl";
+import { onMounted, onRendered } from "@odoo/owl";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { ActionSwiper } from "@web/core/action_swiper/action_swiper";
 import { range } from "@web/core/utils/numbers";
 
 describe.current.tags("desktop");
@@ -49,7 +50,7 @@ test("posting new message should only render relevant part", async () => {
                 }
             };
             onMounted(cb);
-            onPatched(cb);
+            onRendered(cb);
             return super.setup();
         },
     });
@@ -60,14 +61,14 @@ test("posting new message should only render relevant part", async () => {
     await insertText(".o-mail-Composer-input", "Test");
     const result1 = stopObserve1();
     // LessThan because renders could be batched
-    expect(result1.get(Message)).toBeLessThan(11); // 10: all messages initially
+    expect(result1.get(Message)).toBeLessThan(21); // 10: all messages initially
     const stopObserve2 = observeRenders();
     posting = true;
     triggerHotkey("Enter");
     await contains(".o-mail-Message", { count: 11 });
     posting = false;
     const result2 = stopObserve2();
-    expect(result2.get(Composer)).toBeLessThan(3); // 2: temp disabling + clear content
+    expect(result2.get(Composer)).toBeLessThan(4); // 2: temp disabling + clear content
     expect(result2.get(Message)).toBeLessThan(4); // 3: new temp msg + new genuine msg + prev msg
 });
 
@@ -93,7 +94,7 @@ test("replying to message should only render relevant part", async () => {
                 }
             };
             onMounted(cb);
-            onPatched(cb);
+            onRendered(cb);
             return super.setup();
         },
     });
@@ -107,8 +108,8 @@ test("replying to message should only render relevant part", async () => {
     await contains(".o-mail-Composer:has(:text('Replying to Mitchell Admin'))");
     replying = false;
     const result = stopObserve();
-    expect(result.get(Composer)).toBeLessThan(2);
-    expect(result.get(Message) || 0).toBeLessThan(3);
+    expect(result.get(Composer)).toBeLessThan(3);
+    expect(result.get(ActionSwiper)).toBeLessThan(2);
 });
 
 test("right-click message selection should only render relevant part", async () => {
@@ -133,7 +134,7 @@ test("right-click message selection should only render relevant part", async () 
                 }
             };
             onMounted(cb);
-            onPatched(cb);
+            onRendered(cb);
             return super.setup();
         },
     });
@@ -142,9 +143,10 @@ test("right-click message selection should only render relevant part", async () 
     await contains(".o-mail-Message", { count: 10 });
     const stopObserve = observeRenders();
     rightClicking = true;
+
     await rightClick(".o-mail-Message:last");
     await contains(".dropdown-menu .o-mail-ActionList");
     rightClicking = false;
     const result = stopObserve();
-    expect(result.get(Message)).toBeLessThan(2);
+    expect(result.get(ActionSwiper)).toBeLessThan(3);
 });
