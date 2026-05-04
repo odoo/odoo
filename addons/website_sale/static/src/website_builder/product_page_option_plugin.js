@@ -7,6 +7,7 @@ import { TABS } from "@html_editor/main/media/media_dialog/media_dialog_utils";
 import { WebsiteConfigAction, PreviewableWebsiteConfigAction } from "@website/builder/plugins/customize_website_plugin";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { withSequence } from "@html_editor/utils/resource";
+import { _t } from "@web/core/l10n/translation";
 import wSaleUtils from "@website_sale/js/website_sale_utils";
 
 export class ProductPageOptionPlugin extends Plugin {
@@ -72,6 +73,15 @@ export class ProductPageOptionPlugin extends Plugin {
             productPageOptionSelector: PRODUCT_PAGE_OPTION_SELECTOR,
         },
         popup_container_selectors: withSequence(5, "#product_full_description"),
+        popup_show_on_options: withSequence(30, {
+            value: "allProducts",
+            label: _t("All products"),
+            pageSelector: "main:has(.o_wsale_product_page)",
+        }),
+        popup_show_on_dropzones: withSequence(30, {
+            selector: "[id^='oe_structure_website_sale_product_'].oe_structure_not_nearest",
+            value: "allProducts",
+        }),
     };
 
     setup() {

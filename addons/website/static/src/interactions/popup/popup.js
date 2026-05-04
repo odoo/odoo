@@ -94,7 +94,11 @@ export class Popup extends Interaction {
     }
 
     canShowPopup() {
-        return true;
+        const selector = this.el.dataset.showOnSelector;
+        if (!selector) {
+            return true;
+        }
+        return !!this.el.ownerDocument.querySelector(selector);
     }
 
     hidePopup() {

@@ -1,6 +1,8 @@
 import { Plugin } from "@html_editor/plugin";
+import { withSequence } from "@html_editor/utils/resource";
 import { registry } from "@web/core/registry";
 import { BuilderAction } from "@html_builder/core/builder_action";
+import { _t } from "@web/core/l10n/translation";
 
 export class EventPageOptionPlugin extends Plugin {
     static id = "eventPageOption";
@@ -8,6 +10,11 @@ export class EventPageOptionPlugin extends Plugin {
         builder_actions: {
             DisplaySubMenuAction,
         },
+        popup_show_on_options: withSequence(40, {
+            value: "allEvents",
+            label: _t("All events"),
+            pageSelector: "main:has(.o_wevent_event)",
+        }),
     };
 }
 
@@ -19,7 +26,7 @@ export class DisplaySubMenuAction extends BuilderAction {
         this.eventId = this.getEventObjectId();
         this.reload = {
             getReloadUrl: () => this.eventData["website_url"],
-        }
+        };
     }
 
     async toggleWebsiteMenu(value) {

@@ -51,9 +51,16 @@
     </BuilderRow>
     <BuilderRow label.translate="Show on">
         <BuilderSelect action="'moveBlock'" preview="false">
-            <BuilderSelectItem actionValue="'currentPage'">This page</BuilderSelectItem>
-            <BuilderSelectItem actionValue="'allPages'">All pages</BuilderSelectItem>
+            <t t-foreach="this.showOnOptions" t-as="option" t-key="option.value">
+                <BuilderSelectItem actionValue="option.value" t-out="option.label"/>
+            </t>
         </BuilderSelect>
+    </BuilderRow>
+    <BuilderRow label="' '" level="1" t-if="this.isShowOnOptionUnavailable()">
+        <div class="small text-warning ps-1">
+            <i class="fa fa-exclamation-triangle me-1"/>
+            <t t-out="this.unavailableShowOnWarningMessage"/>
+        </div>
     </BuilderRow>
 </t>
 
@@ -66,7 +73,6 @@
 <t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
     <xpath expr="//t[@id='snippet_specific_options']" position="after">
         <popup_option
-            template="website.PopupOption"
             selector=".s_popup"
             exclude="#website_cookies_bar, .s_age_verification_popup"
             applyTo=".modal"/>
