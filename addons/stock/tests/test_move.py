@@ -5967,11 +5967,14 @@ class TestStockMove(TestStockCommon):
         self.assertEqual(list(warning.keys())[0], 'warning', 'Warning message was not returned')
         self.assertEqual(move_line.location_id, self.pack_location, 'Location was not auto-corrected')
 
-        move.lot_ids = lot1
+        move_line.write({
+            'lot_name': False,
+            'lot_id': False,
+        })
         warning = False
-        warning = move._onchange_lot_ids()
+        warning = move.onchange({'lot_ids': [Command.link(lot1.id)]}, ['lot_ids'], {'lot_ids': {'context': {}}})
         self.assertTrue(warning, 'Reuse of existing serial number (record) not detected')
-        self.assertEqual(list(warning.keys())[0], 'warning', 'Warning message was not returned')
+        self.assertIn('Unavailable Serial numbers. Please correct the serial numbers encoded', warning.get('warning', {}).get('message'))
 
     def test_forecast_availability(self):
         """ Make an outgoing picking in dozens for a product stored in units.
