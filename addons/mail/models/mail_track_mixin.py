@@ -458,7 +458,7 @@ class MailTrackMixin(models.AbstractModel):
         values = {
             'field_id': field.id,
             'field_name': col_name,
-            'field_label': col_info.get('string'),
+            'field_label': col_info.get('string') if 'string' in col_info else field.field_description,
             'field_type': col_info['type'],
             'old_value': initial_value,
             'new_value': new_value,
