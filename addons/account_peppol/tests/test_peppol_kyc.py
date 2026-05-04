@@ -35,12 +35,10 @@ class TestPeppolKYC(HttpCase):
             wizard = self.env['peppol.registration'].create({
                 'peppol_eas': eas,
                 'peppol_endpoint': endpoint,
-                'phone_number': '+32483123456',
                 'contact_email': 'yourcompany@example.com',
             })
             self.assertTrue(wizard.smp_registration)
             self.assertEqual(wizard.peppol_can_connect_data, {'auth_required': False})
-            self.assertFalse(wizard.display_itsme_login)
             self.assertTrue(wizard.display_no_auth_buttons)
             wizard.button_register_peppol_participant()
         self.assertEqual(company.account_peppol_proxy_state, 'smp_registration')
@@ -61,7 +59,6 @@ class TestPeppolKYC(HttpCase):
             wizard = self.env['peppol.registration'].create({
                 'peppol_eas': '0208',
                 'peppol_endpoint': '0239843188',
-                'phone_number': '+32483123456',
                 'contact_email': 'yourcompany@example.com',
             })
             self.assertTrue(wizard.smp_registration)
@@ -71,7 +68,6 @@ class TestPeppolKYC(HttpCase):
                     'itsme': {'authorization_url': 'test_authorization_url'},
                 },
             })
-            self.assertTrue(wizard.display_itsme_login)
             self.assertFalse(wizard.display_no_auth_buttons)
             result = wizard.button_register_peppol_participant(selected_auth='itsme')
             connect_token = mocked_can_connect.call_args.kwargs['connect_token']
@@ -109,7 +105,6 @@ class TestPeppolKYC(HttpCase):
             wizard = self.env['peppol.registration'].create({
                 'peppol_eas': '0208',
                 'peppol_endpoint': '0239843188',
-                'phone_number': '+32483123456',
                 'contact_email': 'yourcompany@example.com',
             })
             self.assertTrue(wizard.smp_registration)
@@ -119,7 +114,6 @@ class TestPeppolKYC(HttpCase):
                     'itsme': {'authorization_url': 'test_authorization_url'},
                 },
             })
-            self.assertTrue(wizard.display_itsme_login)
             self.assertFalse(wizard.display_no_auth_buttons)
             with self.assertRaisesRegex(UserError, "You need to authenticate to continue."):
                 wizard.button_register_peppol_participant()
@@ -133,7 +127,6 @@ class TestPeppolKYC(HttpCase):
         wizard = self.env['peppol.registration'].create({
             'peppol_eas': '0208',
             'peppol_endpoint': '0239843188',
-            'phone_number': '+32483123456',
             'contact_email': 'yourcompany@example.com',
         })
         with mock_lookup_not_found('0208:0239843188'):
@@ -147,7 +140,6 @@ class TestPeppolKYC(HttpCase):
                 },
             })
         connect_token = mocked_can_connect.call_args.kwargs['connect_token']
-        self.assertTrue(wizard.display_itsme_login)
         self.assertFalse(wizard.display_no_auth_buttons)
 
         result = wizard.button_register_peppol_participant(selected_auth='itsme')

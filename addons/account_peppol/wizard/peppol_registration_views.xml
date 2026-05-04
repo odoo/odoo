@@ -40,18 +40,17 @@
                                 <field name="contact_email"
                                        readonly="use_parent_connection"
                                        string="Email"/>
-                                <field name="phone_number"
-                                       required="edi_mode not in ('demo', 'test')"
-                                       readonly="use_parent_connection"
-                                       string="Phone"/>
                             </group>
                         </group>
                     </div>
                 </sheet>
                 <footer>
 
-                    <button class="btn btn-primary" name="kyb_button" type="object" invisible="edi_mode in ('demo')">
+                    <button class="btn btn-primary" name="kyb_button" type="object" invisible="edi_mode != 'prod' or display_no_auth_buttons">
                             <b>Continue</b>
+                    </button>
+                    <button class="btn btn-primary" name="kyb_button" type="object" invisible="edi_mode != 'test' or display_no_auth_buttons">
+                            <b>Continue (Test)</b>
                     </button>
 
                     <!-- No auth buttons -->

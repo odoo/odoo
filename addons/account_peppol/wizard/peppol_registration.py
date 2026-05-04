@@ -1,5 +1,4 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import contextlib
 import logging
 try:
     import phonenumbers
@@ -8,6 +7,7 @@ except ImportError:
 
 from odoo import _, api, fields, models, tools
 from odoo.exceptions import UserError, ValidationError
+from odoo.tools import hash_sign
 
 from odoo.addons.account_peppol.tools.demo_utils import handle_demo
 from odoo.addons.account_peppol.tools.peppol_iap_connector import PeppolIAPConnector
@@ -76,7 +76,6 @@ class PeppolRegistration(models.TransientModel):
         readonly=False,
         required=True,
     )
-    phone_number = fields.Char(related='selected_company_id.account_peppol_phone_number', readonly=False)
     peppol_eas = fields.Selection(related='selected_company_id.peppol_eas', readonly=False, required=True)
     peppol_endpoint = fields.Char(related='selected_company_id.peppol_endpoint', readonly=False, required=True)
     smp_registration = fields.Boolean(  # you're registering to SMP when you register as a sender+receiver
@@ -85,7 +84,6 @@ class PeppolRegistration(models.TransientModel):
     )
     peppol_external_provider = fields.Char(compute='_compute_smp_registration_external_provider')
     peppol_can_connect_data = fields.Json(compute='_compute_peppol_can_connect_data')
-    display_itsme_login = fields.Boolean(compute='_compute_peppol_can_connect_data')
     display_no_auth_buttons = fields.Boolean(compute='_compute_peppol_can_connect_data')
 
     # -------------------------------------------------------------------------
@@ -97,22 +95,6 @@ class PeppolRegistration(models.TransientModel):
         for wizard in self:
             if wizard.peppol_endpoint:
                 wizard.peppol_endpoint = ''.join(char for char in wizard.peppol_endpoint if char.isalnum())
-
-    @api.onchange('phone_number')
-    def _onchange_phone_number(self):
-        self.env['res.company']._check_phonenumbers_import()
-        for wizard in self:
-            if wizard.phone_number:
-                # The `phone_number` we set is not necessarily valid (may fail `_sanitize_peppol_phone_number`)
-                with contextlib.suppress(phonenumbers.NumberParseException):
-                    parsed_phone_number = phonenumbers.parse(
-                        wizard.phone_number,
-                        region=wizard.selected_company_id.country_code,
-                    )
-                    wizard.phone_number = phonenumbers.format_number(
-                        parsed_phone_number,
-                        phonenumbers.PhoneNumberFormat.E164,
-                    )
 
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
@@ -213,7 +195,6 @@ class PeppolRegistration(models.TransientModel):
         for wizard in self:
             connect_vals = wizard.company_id._can_connect()
             wizard.peppol_can_connect_data = connect_vals
-            wizard.display_itsme_login = bool(connect_vals.get('available_auths', {}).get('itsme'))
             wizard.display_no_auth_buttons = not bool(connect_vals.get('auth_required'))
 
     # -------------------------------------------------------------------------
@@ -232,8 +213,8 @@ class PeppolRegistration(models.TransientModel):
     def _ensure_mandatory_fields(self):
         if not self.selected_company_id.account_fiscal_country_id.code:
             raise ValidationError(_("Please select a country for your company."))
-        if not self.contact_email or not self.phone_number:
-            raise ValidationError(_("Contact email and phone number are required."))
+        if not self.contact_email:
+            raise ValidationError(_("Contact email is required."))
         if not self.peppol_eas or not self.peppol_endpoint:
             raise ValidationError(_("Peppol Address should be provided."))
         if self._branch_with_same_address():
@@ -361,7 +342,6 @@ class PeppolRegistration(models.TransientModel):
             'peppol_company_city': company.city,
             'peppol_company_zip': company.zip,
             'peppol_country_code': company.country_id.code,
-            'peppol_phone_number': company.account_peppol_phone_number,
             'peppol_contact_email': company.account_peppol_contact_email,
             'peppol_migration_key': company.sudo().account_peppol_migration_key,
             'peppol_webhook_endpoint': company._get_peppol_webhook_endpoint(),
@@ -371,20 +351,24 @@ class PeppolRegistration(models.TransientModel):
     def kyb_button(self):
         self.ensure_one()
         self._ensure_mandatory_fields()
-
-        if self.peppol_eas in {'0208', '9925'}:
-            res = PeppolIAPConnector(self.company_id).kyb_cbe(self.peppol_eas, self.peppol_endpoint, self.company_id.account_peppol_phone_number)
-            if res["status"] != 200:
-                raise ValidationError(_("Error registering user, %s", res["message"]))
-
         self.archive_users()
         base_url = self.env['ir.config_parameter'].sudo().get_str('web.base.url')
-        portal_hash = self.company_id._get_portal_hash()
+
+        payload = {
+            'company_id': self.company_id.id,
+        }
+
+        url_hash = hash_sign(
+            env=self.env(su=True),
+            scope='peppol_activation',
+            message_values=payload,
+            expiration_hours=24,
+        )
 
         auth_type = next(iter(self.peppol_can_connect_data["available_auths"]))
         return {
             'type': 'ir.actions.act_url',
-            'url': f"{base_url}/peppol/activate/{auth_type}/{portal_hash}/0",
+            'url': f"{base_url}/peppol/activate/{auth_type}/{url_hash}/0",
             'target': 'new',
         }
 
@@ -441,5 +425,4 @@ class PeppolRegistration(models.TransientModel):
                 'peppol_eas': self.peppol_eas,
                 'peppol_endpoint': self.peppol_endpoint,
                 'account_peppol_contact_email': self.contact_email,
-                'account_peppol_phone_number': self.phone_number,
             })

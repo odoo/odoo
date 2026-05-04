@@ -11,24 +11,34 @@
                 <t t-if="error">
                     <div class="alert alert-danger d-inline-block text-start p-4 rounded fs-5">
                         <h5 class="alert-heading">Unable to activate peppol !</h5>
-                        <div class="mb-2">You don't seem to be a legal representative of <t t-out="company_name"/>.</div>
-                        <div>
-                            - <span class="text-info"
-                                  style="cursor: pointer;"
-                                  t-attf-onclick="navigator.clipboard.writeText('#{no_error_url}'); this.innerText='URL Copied!'; setTimeout(() => { this.innerText='Copy this url' }, 2000);">
-                                <strong>Copy this url</strong>
+                        <t t-if="reason == 'not_legal_rep'">
+                            <div class="mb-2">You don't seem to be a legal representative of <t t-out="company_name"/>.</div>
+                            <div>
+                                - <span class="text-info"
+                                      style="cursor: pointer;"
+                                      t-attf-onclick="navigator.clipboard.writeText('#{no_error_url}'); this.innerText='URL Copied!'; setTimeout(() => { this.innerText='Copy this url' }, 2000);">
+                                    <strong>Copy this url</strong>
+                                </span>
+                                and send it to someone listed on the
+                                <a t-att-href="cbe_url"
+                                   target="_blank"
+                                   class="text-info">
+                                   <strong>BCE.</strong>
+                                </a>
+                            </div>
+                            <div>
+                                - Or, add your phone in the contact data section on
+                                <a class="text-info" href="https://www.myenterprise.be" target="_blank"><strong>myenterprise.be</strong></a>
+                            </div>
+                        </t>
+                        <t t-else="">
+                            <span class="mb-2" t-out="error_msg" />
+                            <span t-if="reason == 'cbe_fail'">For further assistance,
+                                <a class="text-info" href="https://www.odoo.com/help-form" target="_blank">
+                                    <strong>Contact us</strong>
+                                </a>
                             </span>
-                            and send it to someone listed on the
-                            <a t-att-href="cbe_url"
-                               target="_blank"
-                               class="text-info">
-                               <strong>BCE.</strong>
-                            </a>
-                        </div>
-                        <div>
-                            - Or, add your phone in the contact data section on
-                            <a class="text-info" href="https://www.myenterprise.be" target="_blank"><strong>myenterprise.be</strong></a>
-                        </div>
+                        </t>
                     </div>
                 </t>
                 <br/>
@@ -59,7 +69,7 @@
                        class="text-info">
                        <strong>(click here to check the list)</strong>
                     </a>
-                    <br/>Have issues ?
+                    <br/>Having issues ?
                     <a class="text-info" href="https://www.odoo.com/help-form" target="_blank"><strong>Contact us</strong></a> for a manual verification.
                 </p>
             </div>

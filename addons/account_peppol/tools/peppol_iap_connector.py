@@ -45,8 +45,8 @@ class PeppolIAPConnector:
         params = {'dbuuid': db_uuid, 'peppol_identifier': peppol_identifier, 'callback_url': callback_url, 'connect_token': connect_token, 'flow': flow}
         return self.request_public_http('GET', '/api/peppol/2/can_connect', params=params)
 
-    def kyb_cbe(self, peppol_eas, peppol_endpoint, phone_number):
-        params = {'peppol_eas': peppol_eas, 'peppol_endpoint': peppol_endpoint, 'phone_number': phone_number}
+    def kyb_cbe(self, peppol_eas, peppol_endpoint):
+        params = {'peppol_eas': peppol_eas, 'peppol_endpoint': peppol_endpoint}
         return self.request_public_http('POST', '/api/peppol/1/kyb_cbe', data=params)
 
     def create_connection(self, *, peppol_identifier, db_uuid, public_key, auth_token=None, **company_details):
