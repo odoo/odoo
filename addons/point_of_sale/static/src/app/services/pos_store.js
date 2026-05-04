@@ -2315,7 +2315,7 @@ export class PosStore extends WithLazyGetterTrap {
             order.preset_time = data.slot.datetime;
             if (data.slot.datetime > DateTime.now()) {
                 this.addPendingOrder([order.id]);
-                await this.syncAllOrders({ orders: [order] });
+                await this.syncAllOrders();
             }
         }
     }
