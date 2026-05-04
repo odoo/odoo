@@ -41,3 +41,14 @@ class PosSession(models.Model):
             command[2]["product_uom_id"] = line.product_uom_id.id
 
         return commands
+
+    def _validate_session_accounting(self, check_validity=True):
+        result = super()._validate_session_accounting(check_validity=check_validity)
+        gst_sessions = self.filtered(
+            lambda session: session.company_id.l10n_in_is_gst_registered
+            and (session.sales_move_id or session.refunds_move_id)
+        )
+        if gst_sessions:
+            tax_tags_dict = self.env['account.move.line']._get_l10n_in_tax_tag_ids()
+            (gst_sessions.sales_move_id | gst_sessions.refunds_move_id).line_ids._set_l10n_in_gstr_section(tax_tags_dict)
+        return result

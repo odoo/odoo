@@ -1099,6 +1099,7 @@ class PosSession(models.Model):
                 'balance': -line.amount_currency,
                 'display_type': line.display_type,
                 'tax_ids': [(6, 0, line.tax_ids.ids)],
+                'tax_tag_ids': [(6, 0, line.tax_tag_ids.ids)],
             }))
         return reverse_move_lines
 
@@ -1130,14 +1131,15 @@ class PosSession(models.Model):
                 lambda line: line.tax_line_id == tax_line.tax_line_id and line.display_type == 'tax',
             )
             reverse_move_lines.append(Command.create({
-                'name': _("Partial reversal of %s", matching_line.name),
-                'account_id': matching_line.account_id.id,
-                'partner_id': matching_line.partner_id.id,
+                'name': _("Partial reversal of %s", matching_line[0].name),
+                'account_id': matching_line[0].account_id.id,
+                'partner_id': matching_line[0].partner_id.id,
                 'currency_id': order.company_id.currency_id.id,
                 'amount_currency': -tax_line.amount_currency,
                 'balance': -tax_line.balance,
-                'display_type': matching_line.display_type,
+                'display_type': matching_line[0].display_type,
                 'tax_ids': [(6, 0, tax_line.tax_ids.ids)],
+                'tax_tag_ids': [(6, 0, tax_line.tax_tag_ids.ids)],
             }))
 
         rounding_line = invoice_to_reverse.line_ids.filtered(

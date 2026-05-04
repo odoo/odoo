@@ -865,6 +865,7 @@ class PosOrder(models.Model):
             if len(refunded_orders) > 1:
                 raise ValidationError(_('You can only refund products from the same order.'))
             if len(refunded_orders) == 1:
+                order.setdefault('is_refund', True)
                 order_ids.append(refunded_orders[0].id)
 
             existing_order = self._get_open_order(order)
@@ -1179,7 +1180,7 @@ class PosOrder(models.Model):
                 'account.move.line': {
                     'name': name,
                     'product_id': product_id,
-                    'quantity': 1.0,
+                    'quantity': base_line['quantity'],
                     'price_unit': base_line['price_unit'],
                     'display_type': 'product',
                     'extra_tax_data': AccountTax._export_base_line_extra_tax_data(base_line),
