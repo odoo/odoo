@@ -22,10 +22,11 @@ class TestKioskFrontend(TestFrontend):
             'self_ordering_pay_after': 'each',
             'payment_method_ids': [Command.clear(), Command.link(cls.payment_method_display.id)],
             'self_ordering_available_language_ids': [Command.link(lang.id) for lang in cls.env['res.lang'].search([])],
+            'self_ordering_default_user_id': cls.pos_admin.id,
         })
 
     def start_kiosk_tour(self, tour_name, **kwargs):
-        self.bancontact_kiosk.with_user(self.pos_admin).open_ui()
+        self.bancontact_kiosk.with_user(self.pos_user).open_ui()
         self.bancontact_kiosk.current_session_id.set_opening_control(0, "")
         self_route = self.bancontact_kiosk._get_self_order_route()
         self.start_tour(self_route, tour_name, **kwargs)
