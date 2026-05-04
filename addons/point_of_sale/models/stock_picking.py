@@ -282,7 +282,7 @@ class StockMove(models.Model):
                 move.move_line_ids.quantity = 0
                 for line in lines_data[move.product_id.id]['order_lines']:
                     for lot in line.pack_lot_ids.filtered(lambda l: l.lot_name):
-                        qty = 1 if line.product_id.tracking == 'serial' else abs(line.qty)
+                        qty = self._get_lot_line_qty(line, move, lines_data)
                         if existing_lots:
                             existing_lot = existing_lots.filtered_domain([('product_id', '=', line.product_id.id), ('name', '=', lot.lot_name)])
                             quants = self.env['stock.quant']
@@ -319,12 +319,12 @@ class StockMove(models.Model):
             for move in moves_remaining:
                 for line in lines_data[move.product_id.id]['order_lines']:
                     for lot in line.pack_lot_ids.filtered(lambda l: l.lot_name):
-                        if line.product_id.tracking == 'serial':
-                            qty = 1
-                        else:
-                            qty = abs(line.qty)
+                        qty = self._get_lot_line_qty(line, move, lines_data)
                         if existing_lots:
                             existing_lot = existing_lots.filtered_domain([('product_id', '=', line.product_id.id), ('name', '=', lot.lot_name)])
                             if existing_lot:
                                 move._update_reserved_quantity(qty, move.location_id, lot_id=existing_lot)
                                 continue
+
+    def _get_lot_line_qty(self, line, move, lines_data):
+        return 1 if line.product_id.tracking == 'serial' else abs(line.qty)
