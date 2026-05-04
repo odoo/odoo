@@ -8,11 +8,11 @@ from werkzeug.exceptions import BadRequest
 from odoo import SUPERUSER_ID, _, api
 from odoo.exceptions import AccessDenied
 from odoo.http import Controller, request, route
+from odoo.http.requestlib import fragment_to_query_string
 from odoo.http.router import db_filter
 from odoo.http.session import authenticate
 from odoo.modules.registry import Registry
 from odoo.tools.misc import clean_context
-from odoo.http.requestlib import fragment_to_query_string
 
 from odoo.addons.auth_signup.controllers.main import AuthSignupHome as Home
 from odoo.addons.web.controllers.utils import _get_login_redirect_url, ensure_db
