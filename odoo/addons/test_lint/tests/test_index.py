@@ -99,6 +99,10 @@ class TestIndexMeta(TransactionCase):
         missing_table_objects = []
         for field_full_name, table_object in BTREE_INDEX_IGNORE_FIELDS.items():
             model_name, field_name = field_full_name.rsplit('.', 1)
+            # single app testing: the model might not be present in the current registry
+            if model_name not in self.registry:
+                continue
+
             model_class = self.registry[model_name]
             if field_name not in model_class._fields:
                 missing_fields.append(field_full_name)
