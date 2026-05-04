@@ -1411,6 +1411,9 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
             if country_code == 'HU' and not vat.upper().startswith('HU'):
                 vat = 'HU' + vat[:8]
 
+            if country_code == 'DK' and not vat.upper().startswith('DK'):
+                vat = 'DK' + vat
+
             nodes.append({
                 'cbc:CompanyID': {'_text': vat},
                 'cac:TaxScheme': {
