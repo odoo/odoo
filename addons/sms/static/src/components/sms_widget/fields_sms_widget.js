@@ -5,6 +5,7 @@ import {
 } from "@mail/views/web/fields/emojis_text_field/emojis_text_field";
 import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
+import { useEffect } from "@odoo/owl";
 
 /**
  * SmsWidget is a widget to display a textarea (the body) and a text representing
@@ -17,6 +18,13 @@ export class SmsWidget extends EmojisTextField {
         super.setup();
         this._emojiAdded = () => this.props.record.update({ [this.props.name]: this.targetEditElement.el.value });
         this.notification = useService('notification');
+
+        useEffect(
+            (val) => {
+                this._updateFooter(val);
+            },
+            () => [this.props.record.data[this.props.name]]
+        );
     }
 
     get encoding() {
@@ -31,6 +39,31 @@ export class SmsWidget extends EmojisTextField {
     }
     get nbrSMS() {
         return this._countSMS(this.nbrChar, this.encoding);
+    }
+
+    _updateFooter(currentValue = null) {
+        const footer = document.querySelector('.o_sms_footer_stats');
+        if (!footer) return;
+
+        const content = currentValue || "";
+        const charCount = content.length + (content.match(/\n/g) || []).length;
+        const encoding = this._extractEncoding(content);
+        const nbrSMS = this._countSMS(charCount, encoding);
+
+        if (charCount > 0) {
+            footer.classList.remove('d-none');
+            
+            let maxChar = (encoding === 'UNICODE') 
+                ? (charCount <= 70 ? 70 : 67 * nbrSMS)
+                : (charCount <= 160 ? 160 : 153 * nbrSMS);
+
+            footer.querySelector('.o_sms_char_count').textContent = charCount;
+            footer.querySelector('.o_sms_max_char').textContent = maxChar;
+            footer.querySelector('.o_sms_count').textContent = nbrSMS;
+            footer.querySelector('.o_sms_encoding').textContent = encoding;
+        } else {
+            footer.classList.add('d-none');
+        }
     }
 
     //--------------------------------------------------------------------------
