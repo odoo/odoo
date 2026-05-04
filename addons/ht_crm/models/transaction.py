@@ -4,7 +4,7 @@ class Transaction(models.Model):
     _name = 'sale.transaction'
     _description = "Transaction Information"
 
-    employee_id = fields.Many2one('sale.employee')
+    employee_id = fields.Many2one('sale.employee', domain=[('role_ids.code', '=', 'sales')])
     customer_id = fields.Many2one("sale.customer")
     product = fields.Char(string="Tên SP")
     value = fields.Float(default=0)
@@ -130,5 +130,4 @@ class Transaction(models.Model):
                 )
 
         return res
-    
     

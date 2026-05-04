@@ -1,2 +1,2 @@
 @echo off
-python odoo-bin -r odoo -w admin --addons-path=addons -d htland -i base
+python odoo-bin -r odoo -w admin --addons-path=addons -d htland

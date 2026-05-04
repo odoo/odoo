@@ -110,8 +110,8 @@
                 <field name="name" string="Tên khách hàng" readonly="True"/>
                 <field name="phone" string="SĐT Chính" readonly="True"/>
                 <field name="salesperson_id"/>
-                <field name="previous_salesperson_ids" widget="many2many_tags" groups="sale_phones.group_ht_leader,sale_phones.group_ht_executive"/>
-                <field name="ignore" widget="checkbox" groups="sale_phones.group_ht_leader,sale_phones.group_ht_executive"/>
+                <field name="previous_salesperson_ids" widget="many2many_tags" groups="ht_crm.group_ht_leader,ht_crm.group_ht_executive"/>
+                <field name="ignore" widget="checkbox" groups="ht_crm.group_ht_leader,ht_crm.group_ht_executive"/>
                 <field name="type"/>
             </list> 
         </field>

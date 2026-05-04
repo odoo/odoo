@@ -10,7 +10,7 @@ class Customer(models.Model):
     phonebook_ids = fields.One2many(
         "sale.phonebook",
         "customer_id",
-        string="Phonebook Entries"
+        string="Số Điện Thoại"
     )
 
     # Sales đang chăm 
@@ -50,7 +50,7 @@ class Customer(models.Model):
         ('blocked', 'Blocked'),
         ('potential', 'Tiềm năng'),
         ('vip', 'Nét'),
-    ], default='active')
+    ], string="Trạng Thái", default='active')
     
     # Biến đánh dấu khách chăm thất bại
     ignore = fields.Boolean(
