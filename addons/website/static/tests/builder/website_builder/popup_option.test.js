@@ -8,6 +8,11 @@ import {
     setupWebsiteBuilder,
     setupWebsiteBuilderWithSnippet,
 } from "@website/../tests/builder/website_helpers";
+import {
+    confirmAddSnippet,
+    getDragHelper,
+    waitForEndOfOperation,
+} from "@html_builder/../tests/helpers";
 import { Plugin } from "@html_editor/plugin";
 import { insertText, redo, undo } from "@html_editor/../tests/_helpers/user_actions";
 import { setSelection } from "@html_editor/../tests/_helpers/selection";
@@ -64,6 +69,23 @@ describe("Popup options: empty page before edit", () => {
         });
     });
 });
+
+test("dropping the popup snippet appends it to the end of the container", async () => {
+    await setupWebsiteBuilder("<section class='first-snippet'>First snippet</section>", {
+        loadIframeBundles: true,
+        loadAssetsFrontendJS: true,
+    });
+    const { moveTo, drop } = await contains(
+        ".o-website-builder_sidebar [data-snippet-group='content'] .o_snippet_thumbnail"
+    ).drag();
+    // Drop the snippet in the first dropzone.
+    await moveTo(":iframe .oe_drop_zone:first");
+    await drop(getDragHelper());
+    await confirmAddSnippet("s_popup");
+    await waitForEndOfOperation();
+    expect(":iframe #wrap.o_savable > .s_popup:last-child").toHaveCount(1);
+});
+
 describe("Popup options: popup in page before edit", () => {
     let builder;
     // Done in `beforeEach` because frontend JS takes too much time to load.

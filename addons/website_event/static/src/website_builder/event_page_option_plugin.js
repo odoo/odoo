@@ -1,6 +1,8 @@
 import { Plugin } from "@html_editor/plugin";
+import { withSequence } from "@html_editor/utils/resource";
 import { registry } from "@web/core/registry";
 import { BuilderAction } from "@html_builder/core/builder_action";
+import { _t } from "@web/core/l10n/translation";
 
 export class EventPageOptionPlugin extends Plugin {
     static id = "eventPageOption";
@@ -8,6 +10,12 @@ export class EventPageOptionPlugin extends Plugin {
         builder_actions: {
             DisplaySubMenuAction,
         },
+        floating_snippet_scope_providers: [
+            withSequence(5, {
+                label: _t("All events"),
+                containerSelector: "#oe_structure_website_event_layout_1, #oe_structure_website_event_layout_0",
+            }),
+        ],
     };
 }
 
@@ -19,7 +27,7 @@ export class DisplaySubMenuAction extends BuilderAction {
         this.eventId = this.getEventObjectId();
         this.reload = {
             getReloadUrl: () => this.eventData["website_url"],
-        }
+        };
     }
 
     async toggleWebsiteMenu(value) {

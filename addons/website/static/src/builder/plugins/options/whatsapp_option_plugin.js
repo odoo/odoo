@@ -3,10 +3,12 @@ import { BuilderAction } from "@html_builder/core/builder_action";
 import { useDomState } from "@html_builder/core/utils";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
+import { ShowOnOption } from "../floating_snippets_plugin";
 
 export class WhatsappOption extends BaseOptionComponent {
     static id = "whatsapp_option";
     static template = "website.WhatsappOption";
+    static components = { ShowOnOption };
     setup() {
         super.setup();
         this.state = useDomState((editingElement) => ({
@@ -24,6 +26,7 @@ class WhatsappOptionPlugin extends Plugin {
             ReplaceAgentAvatarAction,
             WhatsappNumberAction,
         },
+        floating_snippets_selectors: ".s_whatsapp",
         system_attributes: ["data-should-show-chatbox"],
         should_remove_overlay_options_predicates: (el) => {
             if (el.matches(".s_whatsapp")) {
