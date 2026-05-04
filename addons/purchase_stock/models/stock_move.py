@@ -59,12 +59,13 @@ class StockMove(models.Model):
             move_layer = line.move_ids.sudo().stock_valuation_layer_ids
             invoiced_layer = line.sudo().invoice_lines.stock_valuation_layer_ids
             # value on valuation layer is in company's currency, while value on invoice line is in order's currency
+            convert_date = self._get_currency_convert_date()
             receipt_value = 0
             for layer in move_layer:
                 if not layer._should_impact_price_unit_receipt_value():
                     continue
                 receipt_value += layer.currency_id._convert(
-                    layer.value, order.currency_id, order.company_id, layer.create_date, round=False)
+                    layer.value, order.currency_id, order.company_id, convert_date, round=False)
             if invoiced_layer:
                 receipt_value += sum(invoiced_layer.mapped(lambda l: l.currency_id._convert(
                     l.value, order.currency_id, order.company_id, l.create_date, round=False)))
