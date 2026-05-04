@@ -168,9 +168,10 @@ export class FloorPlan extends FloorPlanBase {
             }
         }
 
-        this.pos.data.write("restaurant.table", [tableMO.id], {
+        this.pos.data.callRelated("restaurant.table", "set_parent_id", [tableMO.id], {
             parent_id: newTableMOParent ? newTableMOParent.id : null,
             parent_side: newTableMOParent ? parentSide : null,
+            config_id: this.pos.config.id,
         });
         return parentTable;
     }
