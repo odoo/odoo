@@ -32,7 +32,7 @@ import { CHAT_HUB_KEY } from "@mail/core/common/chat_hub_model";
 import { click, contains } from "./mail_test_helpers_contains";
 
 import { closeStream, mailGlobal } from "@mail/utils/common/misc";
-import { Component, onMounted, onPatched, onWillDestroy, status } from "@odoo/owl";
+import { Component, onRendered, onWillDestroy, status } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { emojiLoader } from "@web/core/emoji_picker/emoji_loader";
 import { registry } from "@web/core/registry";
@@ -689,8 +689,7 @@ export function prepareObserveRenders() {
                     result.set(this.constructor, result.get(this.constructor) + 1);
                 }
             };
-            onMounted(cb);
-            onPatched(cb);
+            onRendered(cb);
             onWillDestroy(() => {
                 for (const result of observeRenderResults.values()) {
                     // owl could invoke onrendered and cancel immediately to re-render, so should compensate
