@@ -220,14 +220,12 @@ class TestCalendar(SavepointCaseWithUserDemo):
         partner_ids = [(6, False, [p.id for p in partners])]
         past_event.write({
             'partner_ids': partner_ids,
-            'recurrence_update': 'all_events',
         })
 
         _test_mail_per_attendee(
             self, list(set(partners) - set(partners_added_after_past_date)), target=1
         )
         _test_mail_per_attendee(self, partners_added_after_past_date, target=0)
-
 
         partner_staff, new_partner = self.env['res.partner'].create([{
             'name': 'partner_staff',
