@@ -314,6 +314,32 @@ class ProductProduct(models.Model):
         if default_code:
             return {'criteria': [{'domain': [('default_code', '=', default_code)]}]}
 
+    def _import_retrieve_product_from_supplierinfo(self, product_values):
+        vendor_partner_id = product_values.get('vendor_partner_id')
+        if not vendor_partner_id:
+            return {}
+        product_codes = [
+            code for code in [
+                product_values.get('sellers_item_id'),
+                product_values.get('standard_item_id'),
+                product_values.get('buyers_item_id'),
+            ]
+            if code
+        ]
+        if not product_codes:
+            return {}
+
+        return {
+            'criteria': [{
+                'domain': [(
+                    'product_tmpl_id.seller_ids', 'any', [
+                        ('partner_id', '=', vendor_partner_id),
+                        ('product_code', 'in', product_codes),
+                    ],
+                )]
+            }]
+        }
+
     def _import_retrieve_product_from_name(self, product_values):
 
         name = product_values.get('name')
@@ -486,9 +512,10 @@ class ProductProduct(models.Model):
 
     def _get_retrieval_product_search_plan(self):
         return [
-            (5, self._import_retrieve_product_from_barcode),
-            (10, self._import_retrieve_product_from_default_code),
-            (15, self._import_retrieve_product_from_name),
+            (5, self._import_retrieve_product_from_supplierinfo),
+            (10, self._import_retrieve_product_from_barcode),
+            (15, self._import_retrieve_product_from_default_code),
+            (20, self._import_retrieve_product_from_name),
         ]
 
     def _retrieve_product(self, company=None, extra_domain=None, **product_vals):
