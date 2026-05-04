@@ -102,6 +102,7 @@
             <field name="priority">32</field>
             <field name="arch" type="xml">
                 <search string="Opportunities Analysis">
+                    <field name="name" string="Opportunity"/>
                     <filter string="My Pipeline" name="my"
                             domain="[('user_id', '=', uid)]"/>
                     <separator/>
