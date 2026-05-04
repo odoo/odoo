@@ -253,12 +253,11 @@ class ResUsers(models.Model):
                 message = _('A reset password link was sent by email')
             else:
                 _logger.info("Signup email sent for user <%s> to <%s>", user.login, user.email)
-                message = _('A signup link was sent by email')
+                message = _('Sign-up link sent by email!')
         return {
             'type': 'ir.actions.client',
             'tag': 'display_notification',
             'params': {
-                'title': 'Notification',
                 'message': message,
                 'sticky': False
             }

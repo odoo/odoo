@@ -1169,27 +1169,16 @@ class ResUsers(models.Model):
         return self.with_context({}).all_group_ids._ids
 
     def _action_show(self):
-        """If self is a singleton, directly access the form view. If it is a recordset, open a list view"""
-        view_id = self.env.ref('base.view_users_form').id
-        action = {
+        """Directly access the form view"""
+        return {
             'type': 'ir.actions.act_window',
             'res_model': 'res.users',
             'context': {'create': False},
+            'name': _('Users'),
+            'view_mode': 'form',
+            'views': [[self.env.ref('base.view_users_form').id, 'form']],
+            'domain': [('id', 'in', self.ids)],
         }
-        if len(self) > 1:
-            action.update({
-                'name': _('Users'),
-                'view_mode': 'list,form',
-                'views': [[None, 'list'], [view_id, 'form']],
-                'domain': [('id', 'in', self.ids)],
-            })
-        else:
-            action.update({
-                'view_mode': 'form',
-                'views': [[view_id, 'form']],
-                'res_id': self.id,
-            })
-        return action
 
     def action_show_groups(self):
         self.ensure_one()
