@@ -219,19 +219,21 @@ class TestMessageValues(MailCommon):
         self.assertEqual(message.notified_partner_ids, self.partner_admin)  # message still notified (albeit content is removed)
         self.assertEqual(message.bookmarked_partner_ids, self.partner_admin)  # bookmarked messages stay (albeit content is removed)
 
-        # test tracking values
+        # test tracking values model only (no body content)
         record.write({'user_id': self.user_admin.id})
         self.flush_tracking()
         tracking_message = record.message_ids[0]
+        tracking_message.sudo().write({'body': False})
         self.assertFalse(tracking_message.attachment_ids)
-        self.assertEqual(
-            f'<p>None<b>{self.user_admin.name}</b><i>{record.fields_get('user_id')['user_id']['string']}</i><br></p>',
-            tracking_message.body
-        )
+        self.assertTrue(is_html_empty(tracking_message.body))
         self.assertFalse(tracking_message.subtype_id.description)
-        self.assertFalse(tracking_message.sudo()._filter_empty(), 'Has tracking values')
+        self.assertFalse(tracking_message._filter_empty(), 'Has tracking values')
         with self.assertRaises(UserError, msg='Tracking values prevent from updating content'):
             record._message_update_content(tracking_message, body="", attachment_ids=[])
+
+        # be sure removing them correcly set it as empty
+        tracking_message.sudo().write({'tracking_value_ids': [(5, 0)]})
+        self.assertEqual(tracking_message._filter_empty(), tracking_message, 'No tracking values a anymore')
 
     @mute_logger('odoo.models.unlink')
     def test_mail_message_store_access(self):
