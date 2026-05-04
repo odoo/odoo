@@ -150,6 +150,23 @@ registerWebsitePreviewTour(
             trigger: "a[data-menu-xmlid='website.menu_page_properties']",
             run: "click",
         },
+        // The next three steps verify whether the duplicate and delete buttons
+        // are present, and whether clicking the delete button opens the delete
+        // confirmation dialog.
+        {
+            content: "Verify that the duplicate button is present",
+            trigger: "footer button:contains('Duplicate Page')",
+        },
+        {
+            content: "Click on delete button",
+            trigger: "footer button:contains('Delete Page')",
+            run: "click",
+        },
+        {
+            content: "Verify and close delete confirmation dialog",
+            trigger: ".modal-header:has(.modal-title:contains('Delete Page')) button.btn-close",
+            run: "click",
+        },
         {
             content: "Enable the Parent Page Option",
             trigger: "div[name='has_parent_page'] input",
