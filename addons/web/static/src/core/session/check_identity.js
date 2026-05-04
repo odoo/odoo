@@ -44,7 +44,7 @@ export class CheckIdentityForm extends Component {
             const data = await this.checkIdentityService.getInitData();
 
             // Attempting to verify the identity of the device using its fingerprint
-            if (data.fingerprint_check && await this.checkIdentityService.updateFingerprint()) {
+            if (data.fingerprint_check && (await this.checkIdentityService.updateFingerprint())) {
                 // There is no need to re-authenticate the user explicitly via the form
                 this.checkIdentityService.checkSignaling();
             }
@@ -107,7 +107,6 @@ export class CheckIdentityForm extends Component {
             redirect(this.props.redirect);
         }
     }
-
 }
 
 /**
@@ -132,14 +131,13 @@ export class CheckIdentityDialog extends Component {
             close: this.props.close,
         };
         this.env.dialogData.dismiss = async () => {
-            const url = await post('/web/session/logout', { csrf_token: odoo.csrf_token }, "url");
+            const url = await post("/web/session/logout", { csrf_token: odoo.csrf_token }, "url");
             redirect(url);
         };
     }
 }
 
 export class CheckIdentity {
-
     constructor(env, services) {
         this.env = env;
         this.setup(env, services);
@@ -152,32 +150,34 @@ export class CheckIdentity {
         this.started = false;
         this.fingerprint = null;
 
-        this.bus.addEventListener("start", () => { this.started = true; });
-        this.bus.addEventListener("stop", () => { this.started = false; });
+        this.bus.addEventListener("start", () => {
+            this.started = true;
+        });
+        this.bus.addEventListener("stop", () => {
+            this.started = false;
+        });
         this.channel.addEventListener("message", (event) => {
             if (event.data === "identityChecked") {
                 this.bus.trigger("identityChecked");
             }
         });
 
-        registry.category("error_handlers").add(
-            "verifyUserErrorHandler",
-            this.verifyUserErrorHandler.bind(this),
-            { force: true },
-        );
+        registry
+            .category("error_handlers")
+            .add("verifyUserErrorHandler", this.verifyUserErrorHandler.bind(this), { force: true });
 
         // Check the fingerprint each time webclient is loaded
         // Only for internal user
         env.bus.addEventListener("WEB_CLIENT_READY", () => {
             if (session.device_salt) {
                 this.updateFingerprint()
-                    .then(result => !result && this.run())
+                    .then((result) => !result && this.run())
                     .catch(() => {});
-                    // Swallows the error because the goal is to update backend
-                    // information. If we have already continued the flow (page
-                    // change or other), the request will be closed on the
-                    // client side and the error will be `TypeError: Failed to
-                    // fetch`. This is a false positive.
+                // Swallows the error because the goal is to update backend
+                // information. If we have already continued the flow (page
+                // change or other), the request will be closed on the
+                // client side and the error will be `TypeError: Failed to
+                // fetch`. This is a false positive.
             }
         });
     }
@@ -188,7 +188,7 @@ export class CheckIdentity {
         }
         // Ask the machine to generate an image (canvas).
         const canvas = new OffscreenCanvas(325, 25);
-        const context = canvas.getContext('2d');
+        const context = canvas.getContext("2d");
         const txt = session.device_salt;
         context.textBaseline = "top";
         context.font = "14px 'Arial'";
@@ -197,8 +197,8 @@ export class CheckIdentity {
         const txtX = 2;
         const txtY = 15;
         context.fillStyle = "#f60";
-        context.fillRect(2 + txtWidth / 2, 1, txtWidth / 2, 20);  // X, Y, width, height
-        context.rotate(0.0174533);  // 1 * Math.PI / 180
+        context.fillRect(2 + txtWidth / 2, 1, txtWidth / 2, 20); // X, Y, width, height
+        context.rotate(0.0174533); // 1 * Math.PI / 180
         context.fillStyle = "rgba(0, 100, 0, 0.6)";
         context.fillText(txt, txtX + 1, txtY + 1);
         context.fillStyle = "#069";
@@ -212,7 +212,7 @@ export class CheckIdentity {
         try {
             hashBuffer = await window.crypto.subtle.digest("SHA-256", buffer);
         } catch {
-            return this.fingerprint;  // `null` by default
+            return this.fingerprint; // `null` by default
         }
 
         try {
@@ -220,7 +220,7 @@ export class CheckIdentity {
         } catch {
             // Fallback if `Uint8Array` is not available.
             const uint16array = new Uint16Array(hashBuffer);
-            let binary = '';
+            let binary = "";
             for (let i = 0; i < uint16array.length; i++) {
                 const value = uint16array[i];
                 binary += String.fromCharCode(value & 0xff, value >> 8);
@@ -233,11 +233,13 @@ export class CheckIdentity {
 
     async getInitData() {
         return await rpc("/web/session/identity/check");
-    };
+    }
 
     async updateFingerprint() {
         const fingerprint = await this.getFingerprint();
-        if (!fingerprint) return false;
+        if (!fingerprint) {
+            return false;
+        }
 
         const response = await fetch("/web/session/fingerprint/check", {
             method: "POST",
@@ -245,7 +247,7 @@ export class CheckIdentity {
                 "Content-Type": "application/x-www-form-urlencoded",
             },
             body: new URLSearchParams({ fingerprint: fingerprint }),
-        })
+        });
         return response.ok;
     }
 
@@ -255,7 +257,7 @@ export class CheckIdentity {
             return { success: false, mfa: result.mfa, auth_methods: result.auth_methods };
         }
         this.checkSignaling();
-    };
+    }
 
     checkSignaling() {
         this.bus.trigger("identityChecked");
@@ -285,7 +287,7 @@ export class CheckIdentity {
                 this.env.services.action.doAction("reload");
             }
         }
-    };
+    }
 
     verifyUserErrorHandler(env, error, originalError) {
         if (originalError instanceof RPCError) {
@@ -294,7 +296,7 @@ export class CheckIdentity {
                 return true;
             }
         }
-    };
+    }
 }
 
 /**
