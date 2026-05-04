@@ -40,40 +40,7 @@ export class ImageToolOptionPlugin extends Plugin {
             SetNewWindowAction,
             AltAction,
         },
-        on_will_save_media_dialog_handlers: async (elements, { node }) => {
-            for (const image of elements) {
-                if (image && image.tagName === "IMG") {
-                    const imgInfo = await loadImageInfo(image);
-                    if (!imgInfo.originalSrc || !imgInfo.originalId) {
-                        continue;
-                    }
-                    const isImgSupportedForProcessing = await isImageSupportedForProcessing(
-                        image,
-                        await getMimetype(image, imgInfo)
-                    );
-                    const newDataset = {};
-                    if (isImgSupportedForProcessing) {
-                        newDataset.formatMimetype =
-                            this.config.defaultImageMimetype ?? "image/webp";
-                        const original = await loadImage(imgInfo.originalSrc);
-                        const maxWidth = image.dataset.width
-                            ? image.naturalWidth
-                            : original.naturalWidth;
-                        const optimizedWidth = Math.min(
-                            maxWidth,
-                            computeMaxDisplayWidth(node || this.editable)
-                        );
-                        newDataset.resizeWidth = optimizedWidth;
-                    }
-                    const updateImageAttributes =
-                        await this.dependencies.imagePostProcess.processImage({
-                            img: image,
-                            newDataset,
-                        });
-                    updateImageAttributes();
-                }
-            }
-        },
+        on_will_save_media_dialog_handlers: this.onWillSaveMediaDialogHandlers.bind(this),
         normalize_processors: this.migrateImages.bind(this),
     };
     setup() {
@@ -105,6 +72,40 @@ export class ImageToolOptionPlugin extends Plugin {
             return color;
         }
         return getCSSVariableValue(color, this.htmlStyle);
+    }
+    async onWillSaveMediaDialogHandlers(elements, { node }) {
+        for (const image of elements) {
+            if (image && image.tagName === "IMG") {
+                const imgInfo = await loadImageInfo(image);
+                if (!imgInfo.originalSrc || !imgInfo.originalId) {
+                    continue;
+                }
+                const isImgSupportedForProcessing = await isImageSupportedForProcessing(
+                    image,
+                    await getMimetype(image, imgInfo)
+                );
+                const newDataset = {};
+                if (isImgSupportedForProcessing) {
+                    newDataset.formatMimetype = this.config.defaultImageMimetype ?? "image/webp";
+                    const original = await loadImage(imgInfo.originalSrc);
+                    const maxWidth = image.dataset.width
+                        ? image.naturalWidth
+                        : original.naturalWidth;
+                    const optimizedWidth = Math.min(
+                        maxWidth,
+                        computeMaxDisplayWidth(node || this.editable)
+                    );
+                    newDataset.resizeWidth = optimizedWidth;
+                }
+                const updateImageAttributes = await this.dependencies.imagePostProcess.processImage(
+                    {
+                        img: image,
+                        newDataset,
+                    }
+                );
+                updateImageAttributes();
+            }
+        }
     }
 }
 
