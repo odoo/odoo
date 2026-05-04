@@ -2931,5 +2931,71 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
         with move_form.line_ids.new() as line_form:
             line_form.account_id = self.company_data['default_account_payable']
 
+<<<<<<< 13964987d643c00b2bb7d0b275e549d71e6d649b
         with self.assertRaisesRegex(UserError, 'Any journal item on a payable account must have a due date and vice versa.'):
             move_form.save()
+||||||| f0fa79fa21d2005dd5cd132c18b2be45424166a6
+        # --- is set / is not set (bool domain) ---
+        self.assertIn(self.invoice.id, get_ids(False, '!='))
+        self.assertNotIn(self.invoice.id, get_ids(False, '='))
+
+        # not in / != checks
+        self.assertIn(self.invoice.id, get_ids('not_paid', '!='))
+        self.assertIn(self.invoice.id, get_ids(['not_paid', 'paid'], 'not in'))
+        self.assertNotIn(self.invoice.id, get_ids('draft', '!='))
+
+        # --- Posted (not_paid) ---
+        self.invoice.action_post()
+        self.assertNotIn(self.invoice.id, get_ids('draft'))
+        self.assertIn(self.invoice.id, get_ids('not_paid'))
+
+        # in/not in operator
+        self.assertIn(self.invoice.id, get_ids(['not_paid', 'paid'], 'in'))
+        self.assertNotIn(self.invoice.id, get_ids(['paid', 'in_payment'], 'in'))
+        self.assertNotIn(self.invoice.id, get_ids(['not_paid', 'paid'], 'not in'))
+        self.assertIn(self.invoice.id, get_ids(['paid', 'in_payment'], 'not in'))
+
+        # --- Registered payment (in_payment) ---
+        self._register_payment(self.invoice)
+        self.assertIn(self.invoice.id, get_ids('in_payment'))
+        self.assertNotIn(self.invoice.id, get_ids('not_paid'))
+        self.assertIn(self.invoice.id, get_ids(['in_payment', 'paid'], 'in'))
+        self.assertNotIn(self.invoice.id, get_ids(['in_payment', 'paid'], 'not in'))
+
+        # --- Cancelled state ---
+        self.invoice.button_cancel()
+        self.assertIn(self.invoice.id, get_ids('cancel'))
+        self.assertIn(self.invoice.id, get_ids(['not_paid', 'paid'], 'not in'))
+=======
+        # --- is set / is not set (bool domain) ---
+        self.assertIn(self.invoice.id, get_ids(False, '!='))
+        self.assertNotIn(self.invoice.id, get_ids(False, '='))
+
+        # not in / != checks
+        self.assertIn(self.invoice.id, get_ids('not_paid', '!='))
+        self.assertIn(self.invoice.id, get_ids(['not_paid', 'paid'], 'not in'))
+        self.assertNotIn(self.invoice.id, get_ids('draft', '!='))
+
+        # --- Posted (not_paid) ---
+        self.invoice.action_post()
+        self.assertNotIn(self.invoice.id, get_ids('draft'))
+        self.assertIn(self.invoice.id, get_ids('not_paid'))
+
+        # in/not in operator
+        self.assertIn(self.invoice.id, get_ids(['not_paid', 'paid'], 'in'))
+        self.assertNotIn(self.invoice.id, get_ids(['paid', 'in_payment'], 'in'))
+        self.assertNotIn(self.invoice.id, get_ids(['not_paid', 'paid'], 'not in'))
+        self.assertIn(self.invoice.id, get_ids(['paid', 'in_payment'], 'not in'))
+
+        # --- Registered payment (in_payment) ---
+        self._register_payment(self.invoice)
+        self.assertIn(self.invoice.id, get_ids(self.invoice._get_invoice_in_payment_state()))
+        self.assertNotIn(self.invoice.id, get_ids('not_paid'))
+        self.assertIn(self.invoice.id, get_ids(['in_payment', 'paid'], 'in'))
+        self.assertNotIn(self.invoice.id, get_ids(['in_payment', 'paid'], 'not in'))
+
+        # --- Cancelled state ---
+        self.invoice.button_cancel()
+        self.assertIn(self.invoice.id, get_ids('cancel'))
+        self.assertIn(self.invoice.id, get_ids(['not_paid', 'paid'], 'not in'))
+>>>>>>> 08b17800de7c25d1fb7470d0f5fecd1b87ff5c02
