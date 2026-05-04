@@ -388,6 +388,14 @@ IDENTIFIERS_METADATA = {
         'category': 'TIN',
         'countries': ['ID'],
     },
+    'ID_TKU': {
+        'sequence': 12,
+        'label': _lt('TKU'),
+        'help': _lt('Branch Number of your company, leave empty for headquarters.'),
+        'placeholder': '000000',
+        'category': 'EN',
+        'countries': ['ID'],
+    },
     'IE_VAT': {
         'scheme': '9935',
         'placeholder': 'IE1234567FA',
