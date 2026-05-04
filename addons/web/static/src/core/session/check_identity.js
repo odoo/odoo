@@ -2,7 +2,7 @@ import { Component, EventBus, onWillDestroy, onWillStart, proxy } from "@odoo/ow
 import { Dialog } from "@web/core/dialog/dialog";
 import { rpc, RPCError } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
-import { useService } from "@web/core/utils/hooks";
+import { useBus, useService } from "@web/core/utils/hooks";
 import { redirect } from "@web/core/utils/urls";
 import { post } from "@web/core/network/http_service";
 import { session } from "@web/session";
@@ -58,9 +58,8 @@ export class CheckIdentityForm extends Component {
         onWillDestroy(() => {
             this.checkIdentityService.bus.trigger("stop");
         });
-        this.checkIdentityService.bus.addEventListener("identityChecked", () => {
-            this.close();
-        });
+
+        useBus(this.checkIdentityService.bus, "identityChecked", () => this.close());
     }
 
     setAuthMethods(authMethods) {
@@ -264,16 +263,27 @@ export class CheckIdentity {
         this.channel.postMessage("identityChecked");
     }
 
-    async run() {
+    async checkIdentity() {
         if (!this.started) {
             this.dialogService.add(CheckIdentityDialog);
         }
-        // Empty the current view, to not let any confidential data displayed
-        // not even inspecting the dom or through the console using Javascript.
-        this.env.services.action && this.env.bus.trigger("ACTION_MANAGER:UPDATE", {});
+        // Mutex
         await new Promise((resolve) => {
             this.bus.addEventListener("identityChecked", resolve, { once: true });
         });
+    }
+
+    async run() {
+        // If there is an action service (i.e. backend), empty the current view
+        // so confidential data is no longer displayed, even when inspecting the
+        // DOM or using the browser console. In frontend-only contexts, there is
+        // no action service.
+        if (this.env.services.action) {
+            this.env.bus.trigger("ACTION_MANAGER:UPDATE", {});
+        }
+
+        await this.checkIdentity();
+
         // Reload the view to display back the data that was displayed before.
         if (this.env.services.action) {
             if (this.env.services.action.currentController) {
@@ -322,3 +332,19 @@ export const checkIdentityService = {
 
 registry.category("public_components").add("web.check_identity_form", CheckIdentityForm);
 registry.category("services").add("check_identity", checkIdentityService);
+
+// Patch RPC to replay it automatically when the identity is verified
+const originalRpc = rpc._rpc;
+rpc._originalRpc = originalRpc;
+rpc._rpc = function (...args) {
+    const originalPromise = originalRpc(...args);
+    const promise = originalPromise.catch(async (error) => {
+        if (error.data?.name === "odoo.http.session.CheckIdentityException") {
+            await odoo.__WOWL_DEBUG__.root.env.services["check_identity"].checkIdentity();
+            return originalRpc(...args);
+        }
+        throw error;
+    });
+    promise.abort = originalPromise.abort;
+    return promise;
+};

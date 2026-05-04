@@ -14,6 +14,7 @@ import { makeEnv, startServices } from "@web/env";
 import { MockServer, makeMockServer, onRpc } from "./mock_server/mock_server";
 import { App } from "@odoo/owl";
 import { services } from "@web/core/services";
+import { rpc } from "@web/core/network/rpc";
 
 /**
  * @typedef {Record<keyof Services, any>} Dependencies
@@ -137,6 +138,13 @@ export async function makeMockEnv(partialEnv, options = {}) {
             // This is done to remove the observer that disables the buttons.
             if (currentEnv.services.offline) {
                 currentEnv.services.offline.offline = false;
+            }
+
+            // cleanup the rpc patch done in check_identity.js
+            // TODO: in master, the patch can be done in a Plugin, which has a cleanup function
+            if (rpc._originalRpc) {
+                rpc._rpc = rpc._originalRpc;
+                delete rpc._originalRpc;
             }
 
             currentEnv = null;
