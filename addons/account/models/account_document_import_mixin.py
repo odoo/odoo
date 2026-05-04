@@ -316,21 +316,7 @@ class AccountDocumentImportMixin(models.AbstractModel):
 
         self.ensure_one()
 
-        for file_data in files_data:
-            if 'decoder_info' not in file_data:
-                file_data['decoder_info'] = self._get_edi_decoder(file_data, new=new)
-
-        # Identify the attachment to decode.
-        sorted_files_data = sorted(
-            files_data,
-            key=lambda file_data: (
-                file_data['decoder_info'] is not None,
-                (file_data['decoder_info'] or {}).get('priority', 0),
-            ),
-            reverse=True,
-        )
-
-        file_data = sorted_files_data[0]
+        file_data = self._get_selected_import_file_data(files_data, new=new)
 
         if file_data['decoder_info'] is None or file_data['decoder_info'].get('priority', 0) == 0:
             _logger.info(
@@ -452,6 +438,30 @@ class AccountDocumentImportMixin(models.AbstractModel):
         """ Method to be overridden to identify a file's format. """
         if 'pdf' in file_data['mimetype'] or file_data['name'].endswith('.pdf'):
             return 'pdf'
+
+    @api.model
+    def _get_selected_import_file_data(self, files_data, new=False):
+        """
+        Return the file data selected for import according to decoder priority.
+
+        :param list[dict] files_data: The file data dictionaries considered for the
+            import.
+        :param bool new: Whether the import is creating a new business document instead
+            of updating an existing one.
+        :return: The selected file data dictionary.
+        """
+        for file_data in files_data:
+            if 'decoder_info' not in file_data:
+                file_data['decoder_info'] = self._get_edi_decoder(file_data, new=new)
+
+        return sorted(
+            files_data,
+            key=lambda file_data: (
+                file_data['decoder_info'] is not None,
+                (file_data['decoder_info'] or {}).get('priority', 0),
+            ),
+            reverse=True,
+        )[0]
 
     @api.model
     def _get_xml_tree(self, file_data):
