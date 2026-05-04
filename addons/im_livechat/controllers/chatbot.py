@@ -64,6 +64,7 @@ class LivechatChatbotScriptController(http.Controller):
                 ("author_id", "!=", chatbot.operator_partner_id.id),
                 ("model", "=", "discuss.channel"),
                 ("res_id", "=", channel_id),
+                ("message_type", "=", "comment")
             ]
             # sudo: mail.message - accessing last message to process answer is allowed
             user_answer = self.env["mail.message"].sudo().search(domain, order="id desc", limit=1)
