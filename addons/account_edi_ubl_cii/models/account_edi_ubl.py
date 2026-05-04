@@ -1762,11 +1762,19 @@ class AccountEdiUBL(models.AbstractModel):
 
     def _import_ubl_invoice_add_invoice_origin(self, collected_values):
         tree = collected_values['tree']
-        if invoice_origin := (
-            tree.findtext('./{*}OrderReference/{*}ID')
-            or ' '.join([desc.text for desc in tree.findall('.//{*}Item/{*}Description') if desc.text])
-            or None
-        ):
+        invoice_origin = tree.findtext('./{*}OrderReference/{*}ID')
+        if not invoice_origin and self.module_installed('purchase'):
+            sequence = self.env['ir.sequence'].search([
+                ('code', '=', 'purchase.order'),
+                ('company_id', 'in', [collected_values['company'].id, False]),
+            ], order='company_id', limit=1)
+            if sequence:
+                prefix, suffix = sequence._get_prefix_suffix()
+                pattern = f'{prefix}\\d{{{sequence.padding}}}{suffix}'
+                refs = re.findall(pattern, ' '.join([desc.text for desc in tree.findall('.//{*}Item/{*}Description') if desc.text]))
+                invoice_origin = ' '.join(refs)
+
+        if invoice_origin:
             collected_values['to_write']['invoice_origin'] = invoice_origin
 
     def _import_ubl_invoice_add_narration(self, collected_values):
