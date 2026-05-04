@@ -88,8 +88,6 @@ class TestWebsiteSalePerformanceNoPricelist(WebsiteSaleCommon, UtilPerf, Product
                 res["product_template"] += 1
                 # Out of Stock Ribbon in demo data
                 res["product_ribbon"] += 1
-        if "website_sale_renting" in self.installed_modules:
-            res["product_product"] += 1
         if "website_helpdesk" in self.installed_modules:
             # Additional query used to check whether "Helpdesk" menu should be visible
             res["helpdesk_team"] += 1
@@ -245,9 +243,8 @@ class TestWebsiteSalePerformanceWithPricelist(TestWebsiteSalePerformanceWithPric
     def _get_shop_page_queries(self):
         res = super()._get_shop_page_queries()
         res["product_pricelist_item"] += 1
-        if "website_sale_renting" not in self.installed_modules:
-            # FIXME VFE find where this one is coming from
-            res["product_product"] += 1
+        # FIXME VFE find where this one is coming from
+        res["product_product"] += 1
         return res
 
     def test_shop_page_generation(self):
@@ -339,8 +336,6 @@ class TestWebsiteSalePerformanceWithTrackedProducts(TestWebsiteSalePerformanceNo
 
     def _get_shop_page_queries(self):
         res = super()._get_shop_page_queries()
-        if "website_sale_renting" not in self.installed_modules:
-            res["product_product"] += 1
         if "website_sale_stock" in self.installed_modules:
             res["stock_warehouse"] += 2
             res["stock_move"] += 2
@@ -393,3 +388,4 @@ class TestWebsiteSalePerformanceWithTrackedProducts(TestWebsiteSalePerformanceNo
 
 # TODO test when heavy product is set as rental/recurring
 # TODO test with enable uoms (& multiple uoms on products)
+# TODO test with prevent zero price sale

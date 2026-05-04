@@ -131,7 +131,7 @@ class ProductTemplate(models.Model):
         string="Website Sequence",
         help="Determine the display order in the Website E-commerce",
         default=_default_website_sequence,
-        init_storage='_init_column_website_sequence',
+        init_storage="_init_column_website_sequence",
         copy=False,
         index=True,
     )
@@ -166,7 +166,7 @@ class ProductTemplate(models.Model):
     variants_default_code = fields.Char(
         compute="_compute_variants_default_code",
         store=True,
-        init_storage='_init_column_variants_default_code',
+        init_storage="_init_column_variants_default_code",
         index="trigram",
         help="Technical field to enhance performance when looking up default code of product"
         "variants (LIKE/ILIKE)",
@@ -692,24 +692,22 @@ class ProductTemplate(models.Model):
 
         return res
 
-    def _can_be_added_to_cart(self):
-        """Pre-check to `_is_add_to_cart_possible` to know if product can be sold."""
+    def _is_purchasable(self, product=None) -> bool:  # noqa: ARG002
+        """Determine whether the given product can be sold through the eCommerce shop."""
         self.ensure_one()
-        return bool(self.filtered_domain(self.env["website"]._product_domain()))
+        return (product or self).active and bool(
+            self.filtered_domain(self.env.website._product_domain())
+        )
 
-    def _is_add_to_cart_possible(self):
-        """
-        It's possible to add to cart (potentially after configuration) if
-        there is at least one possible combination.
+    def _is_published(self) -> bool:
+        return self.website_published or self.env.user.has_group("base.group_system")
 
-        :return: True if it's possible to add to cart, else False
-        :rtype: bool
-        """
+    def _has_ecommerce_sellable_variants(self) -> bool:
+        """Determine whether the product has at least one valid, configurable variant available."""
         self.ensure_one()
-        if not self.active or not self._can_be_added_to_cart():
-            # for performance: avoid calling `_get_possible_combinations`
-            return False
-        return next(self._get_possible_combinations(), False) is not False
+        return (
+            self._is_purchasable() and next(self._get_possible_combinations(), False) is not False
+        )
 
     def _get_combination_info(
         self,
@@ -1134,9 +1132,11 @@ class ProductTemplate(models.Model):
         _logger.debug(
             "Table '%s': setting default value of new column %s to unique values for each row",
             self._table,
-            'website_sequence',
+            "website_sequence",
         )
-        self.env.cr.execute(SQL("SELECT id FROM %s WHERE website_sequence IS NULL", SQL.identifier(self._table)))
+        self.env.cr.execute(
+            SQL("SELECT id FROM %s WHERE website_sequence IS NULL", SQL.identifier(self._table))
+        )
         prod_tmpl_ids = self.env.cr.dictfetchall()
         max_seq = self._default_website_sequence()
         query = f"""
@@ -1406,15 +1406,21 @@ class ProductTemplate(models.Model):
             return request.pricelist.with_context(self.env.context)
         return pricelist
 
-    def _website_show_quick_add(self):
+    def _website_show_quick_add(self, product=None):
         self.ensure_one()
-        if self._is_sold_out() or not self.filtered_domain(self.env["website"]._product_domain()):
-            return False
-        if not self._get_available_uoms():
-            return False
-        return not (
-            self.env.website.prevent_sale
-            and self.env.website._prevent_product_sale(self, not self._get_contextual_price())
+        website = self.env.website
+        product_or_template = product or self
+        return (
+            product_or_template._is_purchasable()
+            and product_or_template._is_published()
+            and bool(product_or_template._get_available_uoms())
+            and (
+                not website.prevent_sale
+                or not website._prevent_product_sale(
+                    product_or_template, not product_or_template._get_contextual_price()
+                )
+            )
+            and not product_or_template._is_sold_out()
         )
 
     @api.model

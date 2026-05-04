@@ -8,7 +8,7 @@ from odoo.http import request
 
 
 class ProductProduct(models.Model):
-    _name = 'product.product'
+    _name = "product.product"
     _inherit = ["product.product", "website.structured_data.mixin"]
     _mail_post_access = "read"
 
@@ -90,33 +90,32 @@ class ProductProduct(models.Model):
 
     def _website_show_quick_add(self):
         self.ensure_one()
-        if self._is_sold_out() or not self.filtered_domain(self.env["website"]._product_domain()):
-            return False
-        if not self._get_available_uoms():
-            return False
-        return not (
-            self.env.website.prevent_sale
-            and self.env.website._prevent_product_sale(self, not self._get_contextual_price())
-        )
+        return self.product_tmpl_id._website_show_quick_add(self)
 
-    def _is_add_to_cart_allowed(self):
+    def _is_add_to_cart_allowed(self) -> bool:
+        """Determine whether the current user is permitted to buy the product."""
         self.ensure_one()
         if self._is_donation():
             return True
 
-        if not self.active or not self._is_published():
-            return False
-        if not self.filtered_domain(self.env["website"]._product_domain()):
-            return False
         website = self.env.website
-        if website.prevent_sale and website._prevent_product_sale(
-            self, not self._get_contextual_price()
-        ):
-            return False
-        return website.has_ecommerce_access()
+        return (
+            website.has_ecommerce_access()
+            and self._is_purchasable()
+            and self._is_published()
+            and (
+                not website.prevent_sale
+                or not website._prevent_product_sale(self, not self._get_contextual_price())
+            )
+        )
 
-    def _is_published(self):
-        return self.website_published or self.env.user.has_group("base.group_system")
+    def _is_published(self) -> bool:
+        return self.product_tmpl_id._is_published()
+
+    def _is_purchasable(self) -> bool:
+        """Determine whether the given product can be sold through the eCommerce shop."""
+        self.ensure_one()
+        return self.product_tmpl_id._is_purchasable(product=self)
 
     @api.onchange("public_categ_ids")
     def _onchange_public_categ_ids(self):
@@ -129,7 +128,7 @@ class ProductProduct(models.Model):
         """JSON-LD payload describing the variant as a https://schema.org/Product."""
         self.ensure_one()
 
-        website = self.env.website or self.env['website'].browse(self.env.context.get('host_id'))
+        website = self.env.website or self.env["website"].browse(self.env.context.get("host_id"))
         base_url = website.get_base_url()
         product_price = request.pricelist._get_product_price(
             self, quantity=1, currency=website.currency_id
@@ -137,14 +136,11 @@ class ProductProduct(models.Model):
         # Use sudo to access cross-company taxes.
         price = self._apply_taxes_to_price(product_price, website.currency_id, website=website)
 
-        offer = {
-            "@type": "Offer",
-            "price": price,
-            "priceCurrency": website.currency_id.name,
-        }
+        offer = {"@type": "Offer", "price": price, "priceCurrency": website.currency_id.name}
         if self.is_product_variant and self.is_storable:
             offer["availability"] = (
-                "https://schema.org/OutOfStock" if self._is_sold_out()
+                "https://schema.org/OutOfStock"
+                if self._is_sold_out()
                 else "https://schema.org/InStock"
             )
 

@@ -257,7 +257,7 @@ class WebsiteSaleProductConfiguratorController(SaleProductConfiguratorController
         if request.is_frontend:
             return (
                 should_show_product
-                and product_template._is_add_to_cart_possible()
+                and product_template._has_ecommerce_sellable_variants()
                 and product_template.filtered_domain(self.env.website.website_domain())
             )
         return should_show_product
