@@ -642,7 +642,7 @@ patch(PosStore.prototype, {
     computePartnerCouponIds(loyaltyCards = null) {
         const cards = loyaltyCards || this.models["loyalty.card"].getAll();
         for (const card of cards) {
-            if (!card.partner_id || card.id < 0) {
+            if (!card.partner_id || card.id < 0 || !card.program_id) {
                 continue;
             }
 
