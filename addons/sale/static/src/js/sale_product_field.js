@@ -142,8 +142,6 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
         if (this.translatedProductName && label.startsWith(this.translatedProductName)) {
             // Remove the translated name as it is already shown to the salesman on the SOL.
             label = label.slice(this.translatedProductName.length + 1);  // + "\n"
-        } else {
-            label = super.label;
         }
         return label;
     }
