@@ -6,6 +6,9 @@ class Customer(models.Model):
     _name = 'sale.customer'
     _description = 'Customer Information'
 
+    name = fields.Char(string="Tên khách")
+    email = fields.Char(string="Email")
+
     # Liên kết 1:N với bảng SĐT
     phonebook_ids = fields.One2many(
         "sale.phonebook",
@@ -25,9 +28,6 @@ class Customer(models.Model):
         string="Từng Được Chăm Bởi",
         groups="sale_phones.group_ht_executive"
     )
-
-    name = fields.Char(string="Tên khách")
-    email = fields.Char(string="Email")
 
     source = fields.Selection([
         ('facebook', 'Facebook'),
