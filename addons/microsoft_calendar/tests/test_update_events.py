@@ -163,11 +163,11 @@ class TestUpdateEvents(TestCommon):
                 'seriesMasterId': 'REC123',
                 'type': 'exception',
                 'start': {
-                    'dateTime': pytz.utc.localize(new_date).isoformat(),
+                    'dateTime': pytz.utc.localize(new_date).astimezone(pytz.timezone('Europe/London')).replace(tzinfo=None).isoformat(),
                     'timeZone': 'Europe/London'
                 },
                 'end': {
-                    'dateTime': pytz.utc.localize(new_date + timedelta(hours=1)).isoformat(),
+                    'dateTime': pytz.utc.localize(new_date + timedelta(hours=1)).astimezone(pytz.timezone('Europe/London')).replace(tzinfo=None).isoformat(),
                     'timeZone': 'Europe/London'
                 },
                 'isAllDay': False
@@ -343,11 +343,11 @@ class TestUpdateEvents(TestCommon):
                 'seriesMasterId': 'REC123',
                 'type': 'exception',
                 'start': {
-                    'dateTime': pytz.utc.localize(new_date).isoformat(),
+                    'dateTime': pytz.utc.localize(new_date).astimezone(pytz.timezone('Europe/London')).replace(tzinfo=None).isoformat(),
                     'timeZone': 'Europe/London'
                 },
                 'end': {
-                    'dateTime': pytz.utc.localize(new_date + timedelta(hours=1)).isoformat(),
+                    'dateTime': pytz.utc.localize(new_date + timedelta(hours=1)).astimezone(pytz.timezone('Europe/London')).replace(tzinfo=None).isoformat(),
                     'timeZone': 'Europe/London'
                 },
                 'isAllDay': False
@@ -416,11 +416,11 @@ class TestUpdateEvents(TestCommon):
                 'seriesMasterId': 'REC123',
                 'type': 'exception',
                 'start': {
-                    'dateTime': pytz.utc.localize(new_date).isoformat(),
+                    'dateTime': pytz.utc.localize(new_date).astimezone(pytz.timezone('Europe/London')).replace(tzinfo=None).isoformat(),
                     'timeZone': 'Europe/London'
                 },
                 'end': {
-                    'dateTime': pytz.utc.localize(new_date + timedelta(hours=1)).isoformat(),
+                    'dateTime': pytz.utc.localize(new_date + timedelta(hours=1)).astimezone(pytz.timezone('Europe/London')).replace(tzinfo=None).isoformat(),
                     'timeZone': 'Europe/London'
                 },
                 'isAllDay': False
@@ -484,11 +484,11 @@ class TestUpdateEvents(TestCommon):
                 'seriesMasterId': 'REC123',
                 'type': 'exception',
                 'start': {
-                    'dateTime': pytz.utc.localize(new_date).isoformat(),
+                    'dateTime': pytz.utc.localize(new_date).astimezone(pytz.timezone('Europe/London')).replace(tzinfo=None).isoformat(),
                     'timeZone': 'Europe/London'
                 },
                 'end': {
-                    'dateTime': pytz.utc.localize(new_date + timedelta(hours=1)).isoformat(),
+                    'dateTime': pytz.utc.localize(new_date + timedelta(hours=1)).astimezone(pytz.timezone('Europe/London')).replace(tzinfo=None).isoformat(),
                     'timeZone': 'Europe/London'
                 },
                 'isAllDay': False
@@ -577,11 +577,11 @@ class TestUpdateEvents(TestCommon):
                 'seriesMasterId': 'REC123',
                 'type': 'exception',
                 'start': {
-                    'dateTime': pytz.utc.localize(new_date).isoformat(),
+                    'dateTime': pytz.utc.localize(new_date).astimezone(pytz.timezone('Europe/London')).replace(tzinfo=None).isoformat(),
                     'timeZone': 'Europe/London'
                 },
                 'end': {
-                    'dateTime': pytz.utc.localize(new_date + timedelta(hours=1)).isoformat(),
+                    'dateTime': pytz.utc.localize(new_date + timedelta(hours=1)).astimezone(pytz.timezone('Europe/London')).replace(tzinfo=None).isoformat(),
                     'timeZone': 'Europe/London'
                 },
                 'isAllDay': False
@@ -641,11 +641,11 @@ class TestUpdateEvents(TestCommon):
                 'seriesMasterId': 'REC123',
                 'type': 'exception',
                 'start': {
-                    'dateTime': pytz.utc.localize(new_date).isoformat(),
+                    'dateTime': pytz.utc.localize(new_date).astimezone(pytz.timezone('Europe/London')).replace(tzinfo=None).isoformat(),
                     'timeZone': 'Europe/London'
                 },
                 'end': {
-                    'dateTime': pytz.utc.localize(new_date + timedelta(hours=1)).isoformat(),
+                    'dateTime': pytz.utc.localize(new_date + timedelta(hours=1)).astimezone(pytz.timezone('Europe/London')).replace(tzinfo=None).isoformat(),
                     'timeZone': 'Europe/London'
                 },
                 'isAllDay': False

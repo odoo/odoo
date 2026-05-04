@@ -1,6 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import pytz
 from datetime import datetime, timedelta
 from markupsafe import Markup
 from unittest.mock import patch, MagicMock
@@ -124,12 +123,12 @@ class TestCommon(HttpCase):
                 'contentType': "text",
             },
             "start": {
-                'dateTime': pytz.utc.localize(self.simple_event_values["start"]).isoformat(),
-                'timeZone': 'Europe/London'
+                'dateTime': self.simple_event_values["start"].isoformat(),
+                'timeZone': 'UTC',
             },
             "end": {
-                'dateTime': pytz.utc.localize(self.simple_event_values["stop"]).isoformat(),
-                'timeZone': 'Europe/London'
+                'dateTime': self.simple_event_values["stop"].isoformat(),
+                'timeZone': 'UTC',
             },
             "isAllDay": False,
             "organizer": {
