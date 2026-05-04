@@ -199,3 +199,24 @@ test("No description should be shown if there does not exist one apart from the 
 
     expect(".o_field_product_label_section_and_note_cell .o_input").not.toBeVisible();
 });
+
+test("Show full description if SOL name is not started with product name", async () => {
+    const { env } = await makeMockServer();
+    const product = env["product.product"][0];
+    const soId = env["sale.order"].create({
+        partner_id: serverState.partnerId,
+        order_line: [
+            Command.create({
+                product_id: product.id,
+                name: "A description",
+            }),
+        ],
+    });
+    await mountView({
+        type: "form",
+        resModel: "sale.order",
+        resId: soId,
+    });
+
+    expect(".o_field_product_label_section_and_note_cell .o_input").toHaveText("A description");
+});
