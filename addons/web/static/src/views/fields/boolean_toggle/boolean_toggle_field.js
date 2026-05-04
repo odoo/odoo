@@ -23,6 +23,7 @@ export const booleanToggleField = {
     ...booleanField,
     component: BooleanToggleField,
     displayName: _t("Toggle"),
+    additionalClasses: ["o_boolean_interactive"],
     supportedOptions: [
         {
             label: _t("Autosave"),
