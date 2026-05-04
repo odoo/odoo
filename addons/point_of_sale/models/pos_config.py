@@ -803,6 +803,9 @@ class PosConfig(models.Model):
         self._check_profit_loss_cash_journal()
         self._check_payment_method_ids()
 
+    def _get_allowed_payment_methods(self):
+        return self.payment_method_ids
+
     def open_ui(self):
         """Open the pos interface with config_id as an extra argument.
 
