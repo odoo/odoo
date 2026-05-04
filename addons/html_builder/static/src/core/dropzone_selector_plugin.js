@@ -46,16 +46,14 @@ export class DropZoneSelectorPlugin extends Plugin {
                         .join(", ")}, .s_card:not(${special_cards_selector})`;
                 },
                 excludeNearParent: so_snippet_addition_drop_in,
+                excludeAncestor: ".s_image_gallery",
             },
             {
                 selector: ".row > div",
-                exclude: ".s_col_no_resize.row > div, .s_col_no_resize",
-                dropNear: ".row:not(.s_col_no_resize) > div",
-            },
-            {
-                selector: ".row > div",
-                exclude: ".s_col_no_resize.row > div, .s_col_no_resize",
-                dropNear: ".row.o_grid_mode > div",
+                exclude:
+                    ".s_col_no_resize.row > div, .s_col_no_resize, .s_image_gallery .row > div",
+                dropNear: ".row:not(.s_col_no_resize) > div, .row.o_grid_mode > div",
+                excludeAncestor: ".s_image_gallery",
             },
         ],
         so_snippet_addition_selectors: ["section", ".parallax", ".s_hr"],
