@@ -64,7 +64,7 @@ export class PaymentScreen extends Component {
 
         for (const payment of order.payment_ids) {
             const pmid = payment.payment_method_id.id;
-            if (!this.pos.config.payment_method_ids.map((pm) => pm.id).includes(pmid)) {
+            if (!this.allowedPaymentMethods.map((pm) => pm.id).includes(pmid)) {
                 payment.delete({ backend: true });
             }
         }
@@ -80,6 +80,10 @@ export class PaymentScreen extends Component {
         ) {
             this.currentOrder.setToInvoice(true);
         }
+    }
+
+    get allowedPaymentMethods() {
+        return this.pos.config.payment_method_ids;
     }
 
     getNumpadButtons() {
