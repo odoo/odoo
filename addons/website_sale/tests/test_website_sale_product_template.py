@@ -133,3 +133,26 @@ class TestWebsiteSaleProductTemplate(WebsiteSaleCommon):
             date=Date.from_string('2020-01-01'),
         )
         self.assertAlmostEqual(result['price'], expected_price, places=2)
+
+    def test_base_unit_count_supports_high_precision_values(self):
+        base_unit = self.env['website.base.unit'].create({'name': 'box of 10000'})
+        product = self._create_product(
+            name='Screws',
+            list_price=1.0,
+            base_unit_count=0.0001,
+            base_unit_id=base_unit.id,
+        )
+        product_template = product.product_tmpl_id
+
+        self.assertEqual(
+            product.fields_get(['base_unit_count'])['base_unit_count']['digits'],
+            0,
+        )
+        self.assertEqual(
+            product_template.fields_get(['base_unit_count'])['base_unit_count']['digits'],
+            0,
+        )
+        self.assertEqual(product.base_unit_count, 0.0001)
+        self.assertEqual(product_template.base_unit_count, 0.0001)
+        self.assertEqual(product.base_unit_price, 10000.0)
+        self.assertEqual(product_template.base_unit_price, 10000.0)
