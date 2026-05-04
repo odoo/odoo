@@ -4124,3 +4124,91 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
             {'account_id': self.stock_input_account.id,                            'credit': 0.0,     'debit': 20.0},
             {'account_id': self.company_data['default_account_tax_purchase'].id,   'credit': 0.0,     'debit': 100.0},
         ])
+
+    def test_fifo_multi_currency_bill_before_receive_backorder(self):
+        """
+        FIFO auto, anglo-saxon accounting
+        PO in EUR, company currency USD
+        Two different EUR/USD rates: one at bill date, one at receipt date
+        Bill posted before any receipt (invoice before receive)
+        Receive half the qty, create backorder, receive the rest
+        Both receipts should have identical unit cost in USD
+        """
+        self.env['res.currency.rate'].search([]).unlink()
+        self.product1.categ_id.property_cost_method = 'fifo'
+        self.product1.categ_id.property_valuation = 'real_time'
+        self.product1.purchase_method = 'purchase'
+        self.env.ref('base.EUR').active = True
+        euro_id = self.env.ref('base.EUR').id
+
+        # Bill date rate: 1 EUR = 1 USD (rate=1.0)
+        # Receipt date rate: 1 EUR = 2 USD (rate=0.5)
+        today = fields.Date.today()
+        bill_date = today - timedelta(days=30)
+        receipt_date = today - timedelta(days=15)
+
+        self.env['res.currency.rate'].create([
+            {
+                'currency_id': euro_id,
+                'rate': 1.0,
+                'name': bill_date,
+                'company_id': self.env.company.id,
+            },
+            {
+                'currency_id': euro_id,
+                'rate': 0.5,
+                'name': receipt_date,
+                'company_id': self.env.company.id,
+            },
+        ])
+
+        purchase_order = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'currency_id': euro_id,
+            'order_line': [Command.create({
+                'product_id': self.product1.id,
+                'product_qty': 20,
+                'price_unit': 10000.0,
+                'taxes_id': False,
+            })],
+        })
+        purchase_order.button_confirm()
+
+        # Create and post bill before receipt
+        purchase_order.action_create_invoice()
+        bill = purchase_order.invoice_ids
+        bill.invoice_date = bill_date
+        bill.action_post()
+
+        # Receive first 10 and create a backorder
+        receipt01 = purchase_order.picking_ids
+        receipt01.move_ids.quantity = 10
+        with freeze_time(receipt_date):
+            action = receipt01.button_validate()
+        backorder_wizard = Form(self.env['stock.backorder.confirmation'].with_context(action['context'])).save()
+        backorder_wizard.process()
+
+        # Receive the remaining 10 from the backorder
+        receipt02 = receipt01.backorder_ids
+        receipt02.move_ids.quantity = 10
+        with freeze_time(receipt_date):
+            receipt02.button_validate()
+
+        # Both receipts: 10 units @ 10,000 EUR at bill date rate (1:1) = $100,000 each
+        in_stock_amls = self.env['account.move.line'].search(
+            [('account_id', '=', self.stock_input_account.id)], order='id'
+        )
+        self.assertRecordValues(in_stock_amls, [
+            # Bill: 20,000 EUR @ 1.0 = $200,000
+            {'debit': 200000.0, 'credit': 0.0},
+            # Receipt 1: 10 units @ $10,000 = $100,000
+            {'debit': 0.0, 'credit': 100000.0},
+            # Receipt 2 (backorder): should also be $100,000, not $150,000
+            {'debit': 0.0, 'credit': 100000.0},
+        ])
+
+        # SVL unit costs should also be identical
+        svl1 = receipt01.move_ids.stock_valuation_layer_ids
+        svl2 = receipt02.move_ids.stock_valuation_layer_ids
+        self.assertEqual(
+            svl1.unit_cost, svl2.unit_cost)
