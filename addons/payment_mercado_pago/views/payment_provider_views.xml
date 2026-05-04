@@ -31,22 +31,20 @@
                     name="mercado_pago_account_country_id"
                     invisible="code != 'mercado_pago'"
                     required="is_live"
-                    readonly="mercado_pago_access_token and mercado_pago_account_country_id"
                     options="{'no_create': True}"
                 />
                 <label
                     for="mercado_pago_access_token"
-                    invisible="code != 'mercado_pago' or not mercado_pago_access_token"
+                    invisible="code != 'mercado_pago'"
                 />
                 <div
                     class="o_row"
-                    invisible="code != 'mercado_pago' or not mercado_pago_access_token"
+                    invisible="code != 'mercado_pago'"
                 >
                     <field
                         string="Access Token"
                         name="mercado_pago_access_token"
                         invisible="code != 'mercado_pago'"
-                        readonly="True"
                         password="True"
                     />
                     <button
