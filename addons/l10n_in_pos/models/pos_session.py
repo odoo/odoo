@@ -42,6 +42,12 @@ class PosSession(models.Model):
 
         return commands
 
+    def _create_partial_reversal_move_from_session_closing(self, order):
+        move = super()._create_partial_reversal_move_from_session_closing(order)
+        tax_tags_dict = self.env['account.move.line']._get_l10n_in_tax_tag_ids()
+        move.line_ids._set_l10n_in_gstr_section(tax_tags_dict)
+        return move
+
     def _validate_session_accounting(self, check_validity=True):
         result = super()._validate_session_accounting(check_validity=check_validity)
         gst_sessions = self.filtered(
