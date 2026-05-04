@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import uuid
-from json.decoder import JSONDecodeError
 from pprint import pformat
 
 import requests
@@ -805,7 +804,11 @@ class PaymentProvider(models.Model):
         except requests.exceptions.HTTPError:
             try:
                 error_msg = self._parse_response_error(response)
-            except JSONDecodeError:  # The provider failed to parse plain text.
+            except Exception:  # Catch any error during error parsing to avoid the conflicting JSONDecodeError classes in simplejosn and stdlib json.
+                _logger.exception(
+                    "An error occurred while parsing the error message of the response from "
+                    "provider %s. The original error message will be used instead.", self.name
+                )
                 error_msg = response.text
             raise ValidationError(_("The payment provider rejected the request.\n%s", error_msg))
         return self._parse_response_content(response, **kwargs)
