@@ -3827,17 +3827,33 @@ class AccountMove(models.Model):
         """
         return _('This entry has been reversed from %s', self._get_html_link()) if default.get('reversed_entry_id') else _('This entry has been duplicated from %s', self._get_html_link())
 
-    def _check_user_access(self, vals_list):
-        if self.env.su:
-            return
+    def _get_review_state_access_groups(self):
+        """Return a tuple (is_user_able_to_review, is_user_able_to_supervise) for the current user."""
         is_user_able_to_supervise = self.env.user.has_group('account.group_account_manager')
         is_user_able_to_review = self.env.user.has_group('account.group_account_user') or is_user_able_to_supervise
+        return is_user_able_to_review, is_user_able_to_supervise
+
+    def _check_review_state_access(self, review_state):
+        """Raise a AccessError if the current user cannot modify a record with the given review_state.
+
+        - 'supervised': requires account.group_account_manager
+        - 'reviewed', 'no_review' or falsy: requires account.group_account_user or account.group_account_manager
+        - 'todo', 'anomaly': no restriction
+        """
+        if self.env.su:
+            return
+        is_user_able_to_review, is_user_able_to_supervise = self._get_review_state_access_groups()
+        if review_state == 'supervised' and not is_user_able_to_supervise:
+            raise AccessError(_("This entry has already been supervised. You need the accounting manager role to change it."))
+        if (review_state == 'reviewed') and not is_user_able_to_review:
+            raise AccessError(_("This entry has been reviewed, You need the bookkeeper role to change it."))
+        if (review_state == 'no_review' or not review_state) and not is_user_able_to_review:
+            raise AccessError(_("You don't have the access rights to perform this action."))
+
+    def _check_user_access(self, vals_list):
         for vals in vals_list:
-            if (
-                ((vals.get('review_state') == 'reviewed' or not vals.get('review_state', True)) and not is_user_able_to_review)
-                or (vals.get('review_state') == 'supervised' and not is_user_able_to_supervise)
-            ):
-                raise AccessError(_("You don't have the access rights to perform this action."))
+            if 'review_state' in vals:
+                self._check_review_state_access(vals['review_state'])
 
     def _sanitize_vals(self, vals):
         if vals.get('invoice_line_ids') and vals.get('line_ids'):
@@ -3911,17 +3927,13 @@ class AccountMove(models.Model):
             'invoice_cash_rounding_id',
         ]
 
-        is_user_able_to_supervise = self.env.user.has_group('account.group_account_manager')
-        is_user_able_to_review = self.env.user.has_group('account.group_account_user') or is_user_able_to_supervise
+        is_user_able_to_review, _unused = self._get_review_state_access_groups()
         move_ids_review_done = []
         move_ids_review_todo = []
         for move in self:
             modified_accounting_fields = self._field_will_change_list(move, vals, unmodifiable_fields)
-            if vals.get('state') == 'draft' and (
-                (move.review_state in {'reviewed', 'no_review'} and not is_user_able_to_review)
-                or (move.review_state == 'supervised' and not is_user_able_to_supervise)
-            ):
-                raise ValidationError(_("This entry has already been reviewed. You need the bookkeeper role to change it."))
+            if vals.get('state') == 'draft':
+                move._check_review_state_access(move.review_state)
             if (vals.get('state') == 'posted' and move.auto_post == 'no') or vals.get('auto_post', 'no') != 'no':
                 if is_user_able_to_review:
                     if move.review_state != 'no_review':
