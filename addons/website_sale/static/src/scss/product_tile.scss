@@ -672,7 +672,7 @@
 }
 .o_wsale_products_opt_design_grid {
     --o-wsale-card-height: 100%;
-    --o-wsale-card-border-width: 0 #{$border-width $border-width} 0;
+    --o-wsale-card-border-width: 0 #{$border-width $border-width} 0 #{"/*rtl: 0 0 " + $border-width $border-width + "*/"};
     --o-wsale-card-info-padding: #{map-get($spacers, 2)};
     --o-wsale-card-info-grow: 1;
     --o-wsale-card-border-radius: 0px !important;
