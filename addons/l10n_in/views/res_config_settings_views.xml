@@ -160,6 +160,15 @@
                     <field name="l10n_in_upi_id" placeholder="Add UPI ID"/>
                 </setting>
             </block>
+            <xpath expr="//block[@id='account_reports_settings']//setting" position="attributes">
+                <attribute name="invisible" separator="and" add="country_code != 'IN'"/>
+            </xpath>
+            <xpath expr="//field[@name='restrictive_audit_trail']" position="after">
+                <div class="alert alert-info" role="alert" invisible="country_code != 'IN' or not restrictive_audit_trail">
+                    Once enabled, the Audit Trail cannot be disabled for companies in India,
+                    in accordance with the requirements of the Ministry of Corporate Affairs, Government of India.
+                </div>
+            </xpath>
         </field>
     </record>
 </odoo>
