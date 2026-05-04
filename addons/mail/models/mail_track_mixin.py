@@ -492,9 +492,11 @@ class MailTrackMixin(models.AbstractModel):
         elif col_info['type'] == 'monetary':
             currency_id = col_info.get('currency_id')
             if not currency_id:
+                currency = self[col_info['currency_field']]
                 currency_id = self[col_info['currency_field']].id
+            else:
+                currency = self.env['res.currency'].browse(currency_id)
             field_info['currency_id'] = currency_id
-            currency = col_info.get('currency_field') and self[col_info['currency_field']]
             values.update({
                 'old_value_float': initial_value,
                 'new_value_float': new_value,
