@@ -39,3 +39,12 @@ class MailMessage(models.Model):
                 self.env['mail.tracking.value'].sudo().create(track_vals_lst)
             if other_cmd:
                 message.sudo().write({'tracking_value_ids': tracking_values_cmd})
+
+    def _is_empty(self):
+        # override to support mail.tracking.value records in addition to tracking
+        # in body
+        is_empty = super()._is_empty()
+        return is_empty and not (
+            self.has_field_access(self._fields["tracking_value_ids"], "read")
+            and self.tracking_value_ids
+        )
