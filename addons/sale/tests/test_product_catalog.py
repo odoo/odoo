@@ -156,6 +156,32 @@ class TestProductCatalog(HttpCase, SaleCommon):
         self.assertEqual(update_data, sol.price_unit)
         self.assertEqual(update_data, product.lst_price)
 
+    def test_update_with_sections(self):
+        """Tests that updating a sale order with sections keeps the lines in the correct sequence"""
+        self.assertFalse(self.empty_order.order_line)
+        section = self.env['sale.order.line'].create({
+            'order_id': self.empty_order.id,
+            'display_type': 'line_section',
+            'name': 'Our section',
+        })
+        self.request_update_order_line_info(product=self.product, section_id=section.id)
+        self.request_update_order_line_info(product=self.service_product, section_id=section.id)
+        other_products = self.env['product.product'].create([
+            {'name': 'product #3'}, {'name': 'product #4'}
+        ])
+        self.env['sale.order.line'].create({
+            'order_id': self.empty_order.id,
+            'display_type': 'line_section',
+            'name': 'Other section',
+            'sequence': 1000,
+        })
+        self.request_update_order_line_info(product=other_products[0], section_id=section.id)
+        self.request_update_order_line_info(product=other_products[1], section_id=section.id)
+        ordered_lines = self.empty_order.order_line.sorted('sequence')
+        self.assertEqual(ordered_lines[0].display_type, 'line_section')
+        self.assertEqual(ordered_lines[-1].display_type, 'line_section')
+        self.assertListEqual(ordered_lines[1:-1].mapped('product_id.id'), [self.product.id, self.service_product.id] + other_products.mapped('id'))
+
     def test_update_with_pricelist_rules(self):
         self._create_pricelist_discount_rules()
 
