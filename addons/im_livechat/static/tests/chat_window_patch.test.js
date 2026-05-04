@@ -3,6 +3,7 @@ import {
     contains,
     openDiscuss,
     openFormView,
+    patchUiSize,
     setupChatHub,
     start,
     startServer,
@@ -207,5 +208,46 @@ test("livechat: non-member can close immediately", async () => {
     setupChatHub({ opened: [channelId] });
     await contains(".o-mail-ChatWindow");
     await click("[title*='Close Chat Window']");
+    await contains(".o-mail-ChatWindow", { count: 0 });
+});
+
+test("Can close all livechat chat windows at once", async () => {
+    const pyEnv = await startServer();
+    const guestId_1 = pyEnv["mail.guest"].create({ name: "Visitor #1" });
+    const guestId_2 = pyEnv["mail.guest"].create({ name: "Visitor #2" });
+    const channelIds = pyEnv["discuss.channel"].create([
+        {
+            channel_member_ids: [
+                Command.create({
+                    partner_id: serverState.partnerId,
+                    livechat_member_type: "agent",
+                }),
+                Command.create({ guest_id: guestId_1, livechat_member_type: "visitor" }),
+            ],
+            channel_type: "livechat",
+        },
+        {
+            channel_member_ids: [
+                Command.create({
+                    partner_id: serverState.partnerId,
+                    livechat_member_type: "agent",
+                }),
+                Command.create({ guest_id: guestId_2, livechat_member_type: "visitor" }),
+            ],
+            channel_type: "livechat",
+        },
+    ]);
+    patchUiSize({ width: 1920 });
+    setupChatHub({ opened: channelIds });
+    await start();
+    await contains(".o-mail-ChatWindow", { count: 2 });
+    await click("button[title='Chat Options']");
+    await click(".o-dropdown-item:text('Close all conversations')");
+    await click("button:text('Yes, leave conversation')", {
+        parent: [".o-mail-ChatWindow:contains('Visitor #1')"],
+    });
+    await click("button:text('Yes, leave conversation')", {
+        parent: [".o-mail-ChatWindow:contains('Visitor #2')"],
+    });
     await contains(".o-mail-ChatWindow", { count: 0 });
 });
