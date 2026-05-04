@@ -53,6 +53,7 @@ function checkEyesIconAfterSave(footerIsHidden = true) {
     }
     return eyeIconChecks;
 }
+
 registerWebsitePreviewTour(
     "conditional_visibility_1",
     {

@@ -63,6 +63,18 @@ describe("Popup options: empty page before edit", () => {
         });
     });
 });
+
+test("dropping the popup snippet appends it to the page popup container", async () => {
+    await setupWebsiteBuilder("", {
+        headerContent: "<main>",
+        footerContent: "</main>",
+        loadIframeBundles: true,
+        loadAssetsFrontendJS: true,
+    });
+    await insertCategorySnippet({ group: "content", snippet: "s_popup" });
+    expect(":iframe main .oe_structure.o_savable > .s_popup:last-child").toHaveCount(1);
+});
+
 describe("Popup options: popup in page before edit", () => {
     let builder;
     // Done in `beforeEach` because frontend JS takes too much time to load.
