@@ -28,7 +28,7 @@ class TestPaymentTransaction(TossPaymentsCommon):
         tx = self._create_transaction("direct")
         amount_data = tx._extract_amount_data(self.payment_result_data)
         self.assertDictEqual(
-            amount_data, {"amount": self.amount, "currency_code": self.currency_krw.name}
+            amount_data, {"amount": tx.amount, "currency_code": tx.currency_id.name}
         )
 
     def test_apply_updates_sets_provider_reference(self):
