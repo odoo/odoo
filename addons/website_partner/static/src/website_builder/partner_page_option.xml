@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <t t-name="website_partnership.PartnerPageOption">
+    <t t-name="website_partner.PartnerPageOption">
         <BuilderRow label.translate="Contact Details">
-            <BuilderCheckbox action="'websiteConfig'" actionParam="{views: ['website_partnership.o_wcrm_partner_address', 'website_partnership.contact_details']}" />
+            <BuilderCheckbox action="'websiteConfig'" actionParam="{views: ['website_partner.contact_details']}" />
         </BuilderRow>
     </t>
 
     <t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
         <xpath expr="//t[@id='page_options_hook']" position="after">
             <partner_page_option
-                template="website_partnership.PartnerPageOption"
-                selector="main:has(#oe_structure_website_partnership_partner_1):not(:has(.o_wcrm_filters_top))"
+                template="website_partner.PartnerPageOption"
+                selector="main:has(#oe_structure_website_partner_partner_1):not(:has(.o_wcrm_filters_top))"
                 title="Partner Page"
                 groups='["website.group_website_designer"]'
                 editableOnly="false"/>
