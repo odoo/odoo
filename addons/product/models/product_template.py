@@ -241,6 +241,9 @@ class ProductTemplate(models.Model):
         store=True,
         required=True,
         default=0,
+        # Force NUMERIC with unlimited precision, as for `uom.uom.relative_factor`,
+        # to support very small ratios, e.g. one unit in a box of 10000.
+        digits=0,
     )
     base_unit_id = fields.Many2one(
         string="Custom Unit of Measure",
