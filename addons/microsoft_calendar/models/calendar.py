@@ -545,11 +545,11 @@ class CalendarEvent(models.Model):
 
         if any(x in fields_to_sync for x in ['allday', 'start', 'date_end', 'stop']):
             if self.allday:
-                start = {'dateTime': self.start_date.isoformat(), 'timeZone': 'Europe/London'}
-                end = {'dateTime': (self.stop_date + relativedelta(days=1)).isoformat(), 'timeZone': 'Europe/London'}
+                start = {'dateTime': self.start_date.isoformat(), 'timeZone': 'UTC'}
+                end = {'dateTime': (self.stop_date + relativedelta(days=1)).isoformat(), 'timeZone': 'UTC'}
             else:
-                start = {'dateTime': self.start.replace(tzinfo=UTC).isoformat(), 'timeZone': 'Europe/London'}
-                end = {'dateTime': self.stop.replace(tzinfo=UTC).isoformat(), 'timeZone': 'Europe/London'}
+                start = {'dateTime': self.start.replace(tzinfo=UTC).isoformat(), 'timeZone': 'UTC'}
+                end = {'dateTime': self.stop.replace(tzinfo=UTC).isoformat(), 'timeZone': 'UTC'}
 
             values['start'] = start
             values['end'] = end
@@ -686,11 +686,11 @@ class CalendarEvent(models.Model):
         values['type'] = 'occurrence'
 
         if self.allday:
-            start = {'dateTime': self.start_date.isoformat(), 'timeZone': 'Europe/London'}
-            end = {'dateTime': (self.stop_date + relativedelta(days=1)).isoformat(), 'timeZone': 'Europe/London'}
+            start = {'dateTime': self.start_date.isoformat(), 'timeZone': 'UTC'}
+            end = {'dateTime': (self.stop_date + relativedelta(days=1)).isoformat(), 'timeZone': 'UTC'}
         else:
-            start = {'dateTime': self.start.replace(tzinfo=UTC).isoformat(), 'timeZone': 'Europe/London'}
-            end = {'dateTime': self.stop.replace(tzinfo=UTC).isoformat(), 'timeZone': 'Europe/London'}
+            start = {'dateTime': self.start.replace(tzinfo=UTC).isoformat(), 'timeZone': 'UTC'}
+            end = {'dateTime': self.stop.replace(tzinfo=UTC).isoformat(), 'timeZone': 'UTC'}
 
         values['start'] = start
         values['end'] = end
