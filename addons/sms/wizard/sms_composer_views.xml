@@ -66,6 +66,16 @@
                     <button string="Send now" type="object" name="action_send_sms_mass_now" data-hotkey="w"
                         invisible="composition_mode != 'mass'"/>
                     <button class="btn btn-secondary" special="cancel" data-hotkey="x"/>
+                    <field name="scheduled_date" widget="text_scheduled_date" invisible="composition_mode != 'comment'"/>
+                    <field name="template_id" widget="mail_composer_template_selector" options="{'no_label': True}"/>
+                    <div class="ms-auto text-muted d-flex align-items-center o_sms_footer_stats d-none">
+                        <span class="o_sms_char_count">0</span>/<span class="o_sms_max_char">160</span>
+                        <span class="mx-2">|</span>
+                        <span class="o_sms_count">0</span>
+                        <span class="ms-1">SMS</span>
+                        <span class="ms-1 o_sms_encoding_container">(<span class="o_sms_encoding">GSM7</span>)</span>
+                        <a href="https://iap-services.odoo.com/iap/sms/pricing" target="_blank" title="SMS Pricing" aria-label="SMS Pricing" class="fa fa-lg fa-info-circle text-info ms-2"/>
+                    </div>
                 </footer>
             </form>
         </field>
