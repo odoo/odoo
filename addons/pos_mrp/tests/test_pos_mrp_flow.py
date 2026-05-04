@@ -440,3 +440,73 @@ class TestPosMrp(CommonPosMrpTest):
 
         self.assertEqual(expense_line.debit, 1000.0)
         self.assertEqual(interim_line.credit, 1000.0)
+
+    def test_pos_picking_kit_qty(self):
+        """
+        Tests that when ordering a kit and its component, the move quantity in the generated
+        picking is the kit's quantity and not the component's.
+        """
+        kit, component = self.env['product.template'].create([
+            {
+                'name': 'Kit Product',
+                'available_in_pos': True,
+                'list_price': 10.0,
+                'type': 'consu',
+                'is_storable': True,
+            },
+            {
+                'name': 'Kit Component',
+                'available_in_pos': True,
+                'list_price': 5.0,
+                'tracking': 'lot',
+                'type': 'consu',
+                'is_storable': True,
+            }
+        ])
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': kit.id,
+            'product_qty': 1.0,
+            'type': 'phantom',
+            'bom_line_ids': [Command.create({
+                'product_id': component.product_variant_id.id,
+                'product_qty': 0.5,
+            })],
+        })
+        self.pos_config_usd.open_ui()
+        order = self.env['pos.order'].create({
+            'company_id': self.env.company.id,
+            'session_id': self.pos_config_usd.current_session_id.id,
+            'partner_id': self.partner.id,
+            'lines': [
+                Command.create({
+                    'product_id': kit.product_variant_id.id,
+                    'price_unit': 10.0,
+                    'qty': 1.0,
+                    'price_subtotal': 10.0,
+                    'price_subtotal_incl': 10.0,
+                }),
+                Command.create({
+                    'product_id': component.product_variant_id.id,
+                    'price_unit': 5.0,
+                    'qty': 2.0,
+                    'price_subtotal': 10.0,
+                    'price_subtotal_incl': 10.0,
+                    'pack_lot_ids': [Command.create({
+                        'lot_name': 'lot',
+                    })],
+                }),
+            ],
+            'amount_total': 20.0,
+            'amount_tax': 0.0,
+            'amount_paid': 20.0,
+            'amount_return': 0.0,
+        })
+        payment_context = {"active_ids": order.ids, "active_id": order.id}
+        order_payment = self.env['pos.make.payment'].with_context(**payment_context).create({
+            'amount': order.amount_total,
+            'payment_method_id': self.cash_payment_method.id,
+        })
+        order_payment.with_context(**payment_context).check()
+
+        self.assertEqual(order.picking_ids.move_ids[0].quantity, 2)
+        self.assertEqual(order.picking_ids.move_ids[1].quantity, 0.5)
