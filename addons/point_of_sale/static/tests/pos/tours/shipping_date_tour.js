@@ -51,11 +51,41 @@ registry.category("web_tour.tours").add("test_pos_order_shipping_date", {
                 },
             },
             PaymentScreen.clickValidate(),
+<<<<<<< 1418a93d2ab681fde70ccfcab7a62e80ad18a265
             Dialog.confirm(),
             PartnerList.clickPartner("Partner Test with Address"),
             FeedbackScreen.isShown(),
             FeedbackScreen.checkTicketData({
                 is_shipping_date: true,
             }),
+||||||| a311303a6ad59db45b4762365aac51d081cc163b
+            {
+                content: "Assert shipping date in receipt",
+                trigger: ".pos-receipt-order-data",
+                run: () => {
+                    const dateDiv = document.querySelector(".pos-receipt-order-data div");
+                    const nextYear = new Date().getFullYear() + 1;
+                    const expectedDate = `5/30/${nextYear}`;
+                    if (dateDiv.innerText !== expectedDate) {
+                        throw new Error("Expected shipping date is not set in receipt");
+                    }
+                },
+            },
+=======
+            {
+                content: "Assert shipping date in receipt",
+                trigger: ".pos-receipt-order-data",
+                run: () => {
+                    const dateDiv = document.querySelector(
+                        ".pos-receipt-order-data .shipping-date"
+                    );
+                    const nextYear = new Date().getFullYear() + 1;
+                    const expectedDate = `5/30/${nextYear}`;
+                    if (dateDiv.innerText !== expectedDate) {
+                        throw new Error("Expected shipping date is not set in receipt");
+                    }
+                },
+            },
+>>>>>>> f945623249aaad7478e16774869277466349ea2e
         ].flat(),
 });
