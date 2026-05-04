@@ -15,7 +15,7 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
     @AccountTestInvoicingCommon.setup_country('id')
     def setUpClass(cls):
         """
-        1) contact with l10n_id_pkp with l10n_id_kode_transaksi=04
+        1) Indonesian contact with l10n_id_kode_transaksi=04
         2) use 11% tax
         """
         super().setUpClass()
@@ -26,7 +26,7 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
 
         cls.company_data_2 = cls.setup_other_company()
 
-        cls.partner_a.write({"l10n_id_pkp": True, "l10n_id_kode_transaksi": "04", "vat": "1234567890123457", "country_id": cls.env.ref('base.id').id})
+        cls.partner_a.write({"l10n_id_kode_transaksi": "04", "vat": "1234567890123457", "country_id": cls.env.ref('base.id').id})
         cls.tax_sale_a.amount = 11.0
         cls.tax_incl = cls.env['account.tax'].create({"name": "tax include 11", "type_tax_use": "sale", "amount": 11.0, "price_include_override": "tax_included"})
 
@@ -258,13 +258,12 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
         })
         out_invoice.action_post()
 
-        for msg in ["NPWP for customer", "is not taxable", "No country is set"]:
+        for msg in ["NPWP for customer", "No country is set"]:
             with self.assertRaisesRegex(ValidationError, msg):
                 out_invoice.download_efaktur()
 
-        # activate PKP, fill in VAT, change document type to passport
+        # fill in VAT and country, change document type to passport (document number still required)
         partner.vat = "1234567890123478"
-        partner.l10n_id_pkp = True
         partner.l10n_id_buyer_document_type = 'Passport'
         partner.country_id = self.env.ref('base.id')
 
@@ -312,10 +311,12 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
         """ Test the effect of changing customer information/fields towards the generated XML content"""
         self.partner_a.write({
             "vat": "1234567890999999",
-            "l10n_id_tku": "222222",
+            "additional_identifiers": {
+                **(self.partner_a.additional_identifiers or {}),
+                "ID_TKU": "222222",
+            },
             "l10n_id_buyer_document_type": "Passport",
             "l10n_id_buyer_document_number": "A123456",
-            "l10n_id_pkp": True,
         })
 
         out_invoice = self.env["account.move"].create({
@@ -372,6 +373,37 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
 
         result_tree = etree.fromstring(out_invoice.l10n_id_coretax_document._generate_efaktur_invoice())
         expected_tree = etree.fromstring(self.sample_xml)
+
+        self.assertXmlTreeEqual(result_tree, expected_tree)
+
+    def test_efaktur_xml_buyer_document_number_when_tin(self):
+        """When BuyerDocument is TIN, BuyerDocumentNumber must come from l10n_id_buyer_document_number."""
+        self.partner_a.write({
+            'l10n_id_buyer_document_type': 'TIN',
+            'l10n_id_buyer_document_number': 'TIN-DOC-999',
+        })
+        out_invoice = self.env["account.move"].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2019-05-01',
+            'date': '2019-05-01',
+            'invoice_line_ids': [
+                Command.create({'product_id': self.product_a.id, 'name': 'line1', 'price_unit': 100000})
+            ],
+            'l10n_id_kode_transaksi': '04',
+        })
+        out_invoice.action_post()
+        out_invoice.download_efaktur()
+
+        result_tree = etree.fromstring(out_invoice.l10n_id_coretax_document._generate_efaktur_invoice())
+        expected_tree = self.with_applied_xpath(
+            etree.fromstring(self.sample_xml),
+            '''
+            <xpath expr="//BuyerDocumentNumber" position="replace">
+                <BuyerDocumentNumber>TIN-DOC-999</BuyerDocumentNumber>
+            </xpath>
+            '''
+        )
 
         self.assertXmlTreeEqual(result_tree, expected_tree)
 

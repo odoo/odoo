@@ -17,7 +17,6 @@ class L10nIDPartnerCompanyTest(AccountTestInvoicingCommon):
             'name': 'ID Parent Company',
             'country_id': indonesia.id,
             'vat': '1000000000014256',
-            'l10n_id_tku': '000000',
         })
 
         # Parent Contact - Company (rule: starts with 0X)
@@ -25,7 +24,6 @@ class L10nIDPartnerCompanyTest(AccountTestInvoicingCommon):
             'name': 'ID Parent Company 0X',
             'country_id': indonesia.id,
             'vat': '0864099064063000',
-            'l10n_id_tku': '000000',
         })
 
         # Parent Contact - Individual
@@ -34,7 +32,7 @@ class L10nIDPartnerCompanyTest(AccountTestInvoicingCommon):
             'name': 'ID Parent Individual',
             'country_id': indonesia.id,
             'vat': '3273061809970002',
-            'l10n_id_tku': '000000',
+            'additional_identifiers': {'ID_TKU': '000000'},
             'parent_id': False,
         })
 
@@ -43,7 +41,7 @@ class L10nIDPartnerCompanyTest(AccountTestInvoicingCommon):
             'name': 'ID Branch',
             'country_id': indonesia.id,
             'parent_id': cls.partner_company.id,
-            'l10n_id_tku': '123456',
+            'additional_identifiers': {'ID_TKU': '123456'},
         })
 
         # Child Contact - Individual
