@@ -41,6 +41,7 @@ class HrLeaveEmployeeTypeReport(models.Model):
                 /* Validated leaves */
                 validated_leaves as (
                     SELECT
+						l.id as leave_id,
 						l.employee_id as employee_id,
 						l.number_of_days as number_of_days,
 						l.number_of_hours as number_of_hours,
@@ -106,6 +107,7 @@ class HrLeaveEmployeeTypeReport(models.Model):
 						ga.date_from as date_from,
 						ga.date_to as date_to,
 						ga.company_id as company_id,
+						ga.overlap_group as overlap_group,
 						ROW_NUMBER() OVER (
 							PARTITION BY ga.employee_id, ga.work_entry_type_id, ga.overlap_group
 							ORDER BY ga.date_from, ga.allocation_id
@@ -123,45 +125,66 @@ class HrLeaveEmployeeTypeReport(models.Model):
                     FROM grouped_allocations ga
                 ),
 
-                /* Leaves applicable to each allocation */
-                taken_per_allocation as (
+                /* Identify the EARLIEST valid allocation for each leave */
+                leave_entry_points as (
                     SELECT
-                        oa.allocation_id,
-                        SUM(vl.number_of_days) as taken_days,
-						SUM(vl.number_of_hours) as taken_hours
-                    FROM ordered_allocations oa
-                    LEFT JOIN validated_leaves vl
-                        ON vl.employee_id = oa.employee_id
+                        vl.leave_id,
+                        vl.number_of_days,
+                        vl.number_of_hours,
+                        vl.employee_id,
+                        vl.work_entry_type_id,
+                        oa.overlap_group,
+                        MIN(oa.fifo_rank) as entry_rank
+                    FROM validated_leaves vl
+                    JOIN ordered_allocations oa
+                        ON  vl.employee_id = oa.employee_id
                         AND vl.work_entry_type_id = oa.work_entry_type_id
                         AND vl.date_from <= COALESCE(oa.date_to, 'infinity')
-                        AND (
-                            oa.date_to IS NULL
-                            OR
-                            vl.date_to >= oa.date_from
-                        )
-                    GROUP BY oa.allocation_id
+                        AND (oa.date_to IS NULL OR vl.date_to >= oa.date_from)
+                    GROUP BY vl.leave_id, vl.number_of_days, vl.number_of_hours,
+                             vl.employee_id, vl.work_entry_type_id, oa.overlap_group
+                ),
+
+                /* Aggregate entry points by rank for cumulative summing */
+                taken_by_rank as (
+                    SELECT
+                        employee_id,
+                        work_entry_type_id,
+                        overlap_group,
+                        entry_rank,
+                        SUM(number_of_days) as rank_days,
+                        SUM(number_of_hours) as rank_hours
+                    FROM leave_entry_points
+                    GROUP BY employee_id, work_entry_type_id, overlap_group, entry_rank
                 ),
 
                 /* FIFO remaining balance per allocation */
                 fifo_balances as (
                     SELECT
-                        oa.employee_id as employee_id,
-                        oa.active_employee as active_employee,
-                        GREATEST(oa.number_of_days - GREATEST(
-							COALESCE(tpa.taken_days, 0) - (oa.cumulative_allocated_days - oa.number_of_days), 0),
-						0) as number_of_days,
-						GREATEST(oa.number_of_hours - GREATEST(
-							COALESCE(tpa.taken_hours, 0) - (oa.cumulative_allocated_hours - oa.number_of_hours), 0),
-						0) as number_of_hours,
-                        oa.department_id as department_id,
-                        oa.work_entry_type_id as work_entry_type_id,
-                        oa.state as state,
-                        oa.date_from as date_from,
-                        oa.date_to as date_to,
-                        oa.company_id as company_id
-                    FROM ordered_allocations oa
-                    LEFT JOIN taken_per_allocation tpa
-                        ON tpa.allocation_id = oa.allocation_id
+                        sub.employee_id,
+                        sub.active_employee,
+                        GREATEST(sub.cumul_rem_days - COALESCE(LAG(sub.cumul_rem_days) OVER w, 0), 0) as number_of_days,
+                        GREATEST(sub.cumul_rem_hours - COALESCE(LAG(sub.cumul_rem_hours) OVER w, 0), 0) as number_of_hours,
+                        sub.department_id,
+                        sub.work_entry_type_id,
+                        sub.state,
+                        sub.date_from,
+                        sub.date_to,
+                        sub.company_id
+                    FROM (
+                        SELECT
+                            oa.*,
+                            GREATEST(oa.cumulative_allocated_days - SUM(COALESCE(tbr.rank_days, 0)) OVER w, 0) as cumul_rem_days,
+                            GREATEST(oa.cumulative_allocated_hours - SUM(COALESCE(tbr.rank_hours, 0)) OVER w, 0) as cumul_rem_hours
+                        FROM ordered_allocations oa
+                        LEFT JOIN taken_by_rank tbr
+                            ON  tbr.employee_id = oa.employee_id
+                            AND tbr.work_entry_type_id = oa.work_entry_type_id
+                            AND tbr.overlap_group = oa.overlap_group
+                            AND tbr.entry_rank = oa.fifo_rank
+                        WINDOW w AS (PARTITION BY oa.employee_id, oa.work_entry_type_id, oa.overlap_group ORDER BY oa.fifo_rank)
+                    ) sub
+                    WINDOW w AS (PARTITION BY sub.employee_id, sub.work_entry_type_id, sub.overlap_group ORDER BY sub.fifo_rank)
                 )
 
                 /* Final unified result */
