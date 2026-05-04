@@ -11,6 +11,7 @@ import { renderToFragment } from "@web/core/utils/render";
 import { Component, onWillDestroy, xml } from "@odoo/owl";
 import { FormController } from "@web/views/form/form_controller";
 import { registry } from "@web/core/registry";
+import { addLoadingEffect } from "@web/core/utils/ui";
 
 export class PageDependencies extends Component {
     static template = "website.PageDependencies";
@@ -241,7 +242,7 @@ export class PagePropertiesDialog extends FormViewDialog {
             ),
             ...(this.isPage
                 ? {
-                      buttonTemplate: "website.PagePropertiesDialogButtons",
+                      buttonDialogTemplate: "website.PagePropertiesDialogButtons",
                       clonePage: this.clonePage.bind(this),
                       deletePage: this.deletePage.bind(this),
                   }
@@ -283,7 +284,8 @@ export class PagePropertiesDialog extends FormViewDialog {
         });
     }
 
-    async deletePage() {
+    async deletePage(ev) {
+        const restoreButton = addLoadingEffect(ev.currentTarget);
         const pageIds = [this.targetId];
         const newPageTemplateFields = await this.orm.read("website.page", pageIds, [
             "is_new_page_template",
@@ -299,5 +301,6 @@ export class PagePropertiesDialog extends FormViewDialog {
             },
             hasNewPageTemplate: newPageTemplateFields[0].is_new_page_template,
         });
+        restoreButton();
     }
 }
