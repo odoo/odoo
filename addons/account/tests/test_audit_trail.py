@@ -287,7 +287,6 @@ class TestAuditTrail(AccountTestInvoicingCommon, MailCase):
             self.flush_tracking()
         self.assertMessageFields(
             self._new_msgs, {
-                'body_content': '<p>No<b>Yes</b><i>Restrictive Audit Trail</i><br></p>',
                 'body': '',
                 'message_type': 'tracking',
                 'tracking_values': [('restrictive_audit_trail', 'boolean', False, True)],

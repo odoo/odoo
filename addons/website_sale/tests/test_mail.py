@@ -121,7 +121,7 @@ class TestWebsiteSaleMails(MailCommon, WebsiteSaleCommon):
             patcher.assert_called()
 
             order, msg_values = None, {}
-            for (record, call_args, _tracking_args), _whatever in patcher.call_args_list:
+            for (record, call_args), _whatever in patcher.call_args_list:
                 if record._name == "sale.order":
                     order = record
                     msg_values = call_args[0]
@@ -143,7 +143,7 @@ class TestWebsiteSaleMails(MailCommon, WebsiteSaleCommon):
             patcher.assert_called()
 
             order, msg_values = None, {}
-            for (record, call_args, _tracking_args), _whatever in patcher.call_args_list:
+            for (record, call_args), _whatever in patcher.call_args_list:
                 if record._name == "sale.order":
                     order = record
                     msg_values = call_args[0]

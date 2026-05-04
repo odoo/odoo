@@ -74,10 +74,12 @@
             </div>
         </template>
 
+        <!-- Format tracking values in a minimal blob. No left indent is intended. -->
         <template id="mail_tracking_template">
-            <t t-foreach="trackingValues" t-as="val">
-                <em t-if="val.get('company_name')" t-out="val['company_name'] + ': '"/><t t-out="val['old_value']" t-if="val['old_value']"/><b t-out="val['new_value']"/><i t-out="val['field_label']"/><br/>
-            </t>
-        </template>
+<div t-if="trackingValues">
+    <t t-foreach="trackingValues" t-as="val">
+        <em t-if="val.get('company_name')" t-out="val['company_name'] + ': '"/><t t-out="val['old_value']" t-if="val['old_value']"/><b t-out="val['new_value']"/><i t-out="val['field_label']"/><br/>
+    </t>
+</div></template>
     </data>
 </odoo>
