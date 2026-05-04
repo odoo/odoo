@@ -1,11 +1,9 @@
 import { registry } from "@web/core/registry";
+import { stepUtils } from "@web_tour/tour_utils";
 
 registry.category("web_tour.tours").add("test_basic_stock_flow_with_minimal_access_rights", {
     steps: () => [
-        {
-            trigger: ".o_menuitem[href='/odoo/inventory']",
-            run: "click",
-        },
+        ...stepUtils.goToAppSteps("stock.menu_stock_root", "Open the inventory app"),
         {
             trigger: "button[data-menu-xmlid='stock.menu_stock_warehouse_mgmt']",
             run: "click",
