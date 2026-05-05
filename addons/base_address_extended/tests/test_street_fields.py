@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
+from odoo.tests import Form
 from odoo.tests.common import tagged, TransactionCase
 
 
@@ -59,4 +60,36 @@ class TestStreetFields(TransactionCase):
             'name': 'Child Contact',
             'country_id': usa.id,
             'city_id': new_york_city.id,
+        }])
+
+    def test_parent_zip(self):
+        """
+        Test using the Form simulator that the onchange function
+        _onchange_city_id does not overwrite the parent's zip.
+        """
+        usa = self.env.ref('base.us')
+        hampton_bays = self.env['res.city'].create({
+            'name': 'Hampton Bays',
+            'country_id': usa.id,
+            'zipcode': '11946'
+        })
+        parent = self.env['res.partner'].create({
+            'name': 'Parent Company',
+            'country_id': usa.id,
+            'city_id': hampton_bays.id,
+        })
+        parent.write({
+            'zip': '11946000'
+        })
+
+        with Form(self.env['res.partner']) as child_form:
+            child_form.name = 'Child Contact'
+            child_form.parent_id = parent
+        child = child_form.save()
+
+        self.assertRecordValues(child, [{
+            'name': 'Child Contact',
+            'country_id': usa.id,
+            'city_id': hampton_bays.id,
+            'zip': '11946000',
         }])
