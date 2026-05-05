@@ -717,6 +717,7 @@
                 <search string="Search Production">
                     <field name="name" string="Manufacturing Order" filter_domain="['|', ('name', 'ilike', self), ('origin', 'ilike', self)]"/>
                     <field name="product_id"/>
+                    <field name="lot_producing_ids"/>
                     <field name="product_variant_attributes"/>
                     <field name="move_raw_ids" string="Component" filter_domain="[('move_raw_ids.product_id', 'ilike', self)]"/>
                     <field name="workcenter_id" string="Work Center" filter_domain="[('workorder_ids.workcenter_id', 'ilike', self)]"/>
