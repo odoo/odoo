@@ -43,6 +43,7 @@ class MrpWorkorder(models.Model):
     uom_id = fields.Many2one(related='production_id.uom_id')
     product_variant_attributes = fields.Many2many('product.template.attribute.value', related='product_id.product_template_attribute_value_ids')
     production_id = fields.Many2one('mrp.production', 'Manufacturing Order', required=True, check_company=True, readonly=True, index='btree')
+    production_lot_producing_id = fields.Many2many('stock.lot', related="production_id.lot_producing_ids")
     production_availability = fields.Selection(
         string='Stock Availability', readonly=True,
         related='production_id.reservation_state', store=True) # Technical: used in views and domains only

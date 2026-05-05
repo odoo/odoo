@@ -177,6 +177,7 @@
                 <field name="name" string="Work Order"/>
                 <field name="workcenter_id"/>
                 <field name="product_id"/>
+                <field name="production_lot_producing_id"/>
                 <field name="move_raw_ids" string="Component" filter_domain="[('move_raw_ids.product_id', 'ilike', self)]"/>
                 <filter string="To Do" name="ready" domain="[('state', '=', 'ready')]"/>
                 <filter string="Blocked" name="blocked" domain="[('state', '=', 'blocked')]"/>
