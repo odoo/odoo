@@ -4,6 +4,7 @@ from markupsafe import Markup
 from werkzeug.exceptions import NotFound
 
 from odoo import fields, http
+from odoo.fields import Domain
 from odoo.http import request
 from odoo.addons.mail.controllers.webclient import WebclientController, WRITE_FETCH_PARAMS
 from odoo.addons.mail.tools.discuss import mail_route, Store
@@ -80,11 +81,16 @@ class DiscussChannelWebclientController(WebclientController):
         if name == "/discuss/channel/members":
             channel = request.env["discuss.channel"].search([("id", "=", params["channel_id"])])
             if channel:
-                unknown_members = request.env["discuss.channel.member"].search(
-                    domain=[
-                        ("id", "not in", params["known_member_ids"]),
-                        ("channel_id", "=", channel.id),
-                    ],
+                search_term = params.get("search_term")
+                known_member_ids = params.get("known_member_ids", [])
+                domain = Domain("channel_id", "=", channel.id) & Domain("id", "not in", known_member_ids)
+                if search_term:
+                    domain &= (
+                        Domain("partner_id.name", "ilike", search_term)
+                        | Domain("guest_id.name", "ilike", search_term)
+                    )
+                unknown_members = request.env["discuss.channel.member"].search_fetch(
+                    domain,
                     limit=100,
                 )
                 store.add(channel, ["member_count"]).add(unknown_members, "_store_member_fields")
