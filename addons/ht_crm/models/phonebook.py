@@ -2,30 +2,23 @@ from odoo import models, fields, api, exceptions
 
 class PhoneBook(models.Model):
     _name = 'sale.phonebook'
-    _description = 'Sales Phonebook for Managing Customer Contacts'
+    _description = 'Danh bạ chăm sóc khách hàng'
 
     customer_id = fields.Many2one(
         'sale.customer',
-        string="Tên KH",
-        ondelete='cascade', # Sửa thành restrict sau
+        string="Khách hàng",
+        ondelete='cascade',  # Có thể đổi thành restrict nếu cần bảo toàn dữ liệu
         store=True
     )
 
-    # interaction_ids = fields.One2many(
-    #     'sale.phonebook.interaction',
-    #     'phone_id',
-    #     string="Interactions"
-    # )
-
-    phone = fields.Char(string="SĐT")
-    is_called = fields.Boolean(string="Đã gọi?", default=False, store=True)
-    unreachable = fields.Boolean(string="Cúp máy?", default=False, store=True)
+    phone = fields.Char(string="Số điện thoại")
+    is_called = fields.Boolean(string="Đã gọi", default=False, store=True)
+    unreachable = fields.Boolean(string="Không liên lạc được", default=False, store=True)
     note = fields.Text(string="Ghi chú")
     is_primary = fields.Boolean(string="Số chính")
 
-
     _sql_constraints = [
-        ('unique_phone', 'unique(phone)', 'Phone number already exists!')
+        ('unique_phone', 'unique(phone)', 'Số điện thoại đã tồn tại!')
     ]
 
     @api.constrains('is_primary', 'customer_id')
@@ -37,8 +30,8 @@ class PhoneBook(models.Model):
                     ('is_primary', '=', True),
                     ('id', '!=', rec.id)
                 ]):
-                    raise exceptions.ValidationError("Mỗi khách hàng chỉ được chọn 1 số chính!")
-    
+                    raise exceptions.ValidationError("Mỗi khách hàng chỉ được có 1 số chính!")
+
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
@@ -49,14 +42,14 @@ class PhoneBook(models.Model):
                     ('is_primary', '=', True)
                 ], limit=1)
 
-                # nếu chưa có primary thì record đầu tiên = primary
+                # Nếu chưa có số chính → set số đầu tiên là số chính
                 if not existing_primary:
                     vals['is_primary'] = True
                 else:
                     vals['is_primary'] = False
 
         return super().create(vals_list)
-    
+
     def set_primary(self):
         for rec in self:
             self.search([

@@ -19,7 +19,6 @@
     'depends': ['base'],
 
     # always loaded
-    ''
     'data': [
         'views/groups.xml',
         'security/ir.model.access.csv',     

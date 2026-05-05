@@ -9,24 +9,24 @@ class Customer(models.Model):
     name = fields.Char(string="Tên khách")
     email = fields.Char(string="Email")
 
-    # Liên kết 1:N với bảng SĐT
+    # Liên kết 1:N với danh sách số điện thoại
     phonebook_ids = fields.One2many(
         "sale.phonebook",
         "customer_id",
-        string="Số Điện Thoại"
+        string="Số điện thoại"
     )
 
-    # Sales đang chăm 
+    # Nhân viên đang phụ trách
     salesperson_id = fields.Many2one(
-        'sale.employee', 
-        string="Được Chăm Bởi"
+        'sale.employee',
+        string="Nhân viên phụ trách"
     )
 
-    # Danh sách các Sales đã được gán
+    # Danh sách nhân viên đã từng phụ trách
     previous_salesperson_ids = fields.Many2many(
         'sale.employee',
-        string="Từng Được Chăm Bởi",
-        groups="sale_phones.group_ht_executive"
+        string="Lịch sử phụ trách",
+        groups="ht_crm.group_ht_executive"
     )
 
     source = fields.Selection([
@@ -42,29 +42,28 @@ class Customer(models.Model):
         ('broker', 'Môi giới'),
         ('investor', 'Nhà đầu tư'),
         ('company', 'Doanh nghiệp'),
-    ], string="Loại khách")
+    ], string="Phân loại khách")
 
     state = fields.Selection([
-        ('active', 'Đang sử dụng'),
-        ('inactive', 'Không liên hệ'),
-        ('blocked', 'Blocked'),
+        ('active', 'Đang chăm sóc'),
+        ('inactive', 'Ngừng liên hệ'),
+        ('blocked', 'Chặn'),
         ('potential', 'Tiềm năng'),
-        ('vip', 'Nét'),
-    ], string="Trạng Thái", default='active')
-    
-    # Biến đánh dấu khách chăm thất bại
+        ('vip', 'Khách VIP'),
+    ], string="Trạng thái", default='active')
+
+    # Đánh dấu khách chăm sóc không thành công
     ignore = fields.Boolean(
-        string="Chăm Không Thành",
+        string="Chăm sóc không thành",
         default=False,
         store=True,
-        groups="sale_phones.group_ht_leader,sale_phones.group_ht_executive"
+        groups="base.group_system,ht_crm.group_ht_leader,ht_crm.group_ht_executive"
     )
 
-
-    # Dự án quan tâm
+    # Dự án khách hàng quan tâm
     project_ids = fields.Many2many(
         'estate.project',
-        string="Đang quan tâm"
+        string="Dự án quan tâm"
     )
 
     # Hàm đảo ngược quá trình phân KH (dùng tạm)

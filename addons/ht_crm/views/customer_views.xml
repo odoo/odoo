@@ -46,7 +46,7 @@
         <field name="model_id" ref="model_sale_phonebook"/>
         <field name="domain_force">
             [
-                ('customer_id.salesperson_id', '=', user.id)
+                ('customer_id.salesperson_id.user_id', '=', user.id)
             ]
         </field>
         <field name="groups" eval="[(4, ref('group_ht_user'))]"/>
@@ -101,11 +101,13 @@
                     <button name="action_distribute_customers" 
                             string="Distribute" 
                             type="object" 
-                            class="oe_highlight"/>
-                        <button name="reverse" 
+                            class="oe_highlight"
+                            groups="ht_crm.group_ht_leader,ht_crm.group_ht_executive"/>
+                    <button name="reverse" 
                         string="Reverse" 
                         type="object" 
-                        class="oe_highlight"/>
+                        class="oe_highlight"
+                        groups="ht_crm.group_ht_leader,ht_crm.group_ht_executive"/>
                 </header>
                 <field name="name" string="Tên khách hàng" readonly="True"/>
                 <field name="phone" string="SĐT Chính" readonly="True"/>
