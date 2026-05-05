@@ -3,7 +3,7 @@ import { BuilderComponent } from "@html_builder/core/building_blocks/builder_com
 import { BuilderListDialog } from "@html_builder/core/building_blocks/builder_list_dialog";
 import { useBuilderComponent, useInputBuilderComponent } from "@html_builder/core/utils";
 import { isSmallInteger } from "@html_builder/utils/utils";
-import { Component, onWillUpdateProps, onPatched, props, types as t } from "@odoo/owl";
+import { Component, onWillUpdateProps, onPatched, prop, props, types as t, xml } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { SelectMenu } from "@web/core/select_menu/select_menu";
 import { useSortable } from "@web/core/utils/sortable_owl";
@@ -37,9 +37,19 @@ export function useAutoFocusNewItem(refName) {
     onPatched(autofocus);
 }
 
+class SortableContainer extends Component {
+    static template = xml`<t t-call-slot="default"/>`;
+
+    setupLayoutEffect = prop("setupLayoutEffect", t.function());
+
+    setup() {
+        this.setupLayoutEffect();
+    }
+}
+
 export class BuilderList extends Component {
     static template = "html_builder.BuilderList";
-    static components = { BuilderComponent, SelectMenu };
+    static components = { BuilderComponent, SortableContainer, SelectMenu };
 
     props = props(
         {
@@ -116,7 +126,17 @@ export class BuilderList extends Component {
         onWillUpdateProps((props) => {
             this.allRecords = this.formatRawValue(props.records);
         });
+    }
 
+    get cappedItems() {
+        return this.getIncludedRecords().slice(0, this.visibilityState.limit);
+    }
+
+    get hasMoreItems() {
+        return this.cappedItems.length < this.getIncludedRecords().length;
+    }
+
+    setupSortable() {
         if (this.props.sortable) {
             useSortable({
                 enable: () => this.props.sortable,
@@ -131,14 +151,6 @@ export class BuilderList extends Component {
                 },
             });
         }
-    }
-
-    get cappedItems() {
-        return this.getIncludedRecords().slice(0, this.visibilityState.limit);
-    }
-
-    get hasMoreItems() {
-        return this.cappedItems.length < this.getIncludedRecords().length;
     }
 
     loadMoreItems() {

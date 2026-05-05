@@ -107,7 +107,7 @@ test("delete an item", async () => {
     expect(":iframe .test-options-target").toHaveAttribute("data-list", JSON.stringify([]));
 });
 
-test.todo("reorder items", async () => {
+test("reorder items", async () => {
     addBuilderOption({
         selector: ".test-options-target",
         template: xml`
