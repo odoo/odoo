@@ -4,7 +4,7 @@ import typing
 
 from datetime import datetime
 
-from odoo import _, api, fields, models
+from odoo import _, fields, models
 from odoo.exceptions import MissingError
 from odoo.tools import clean_context, format_datetime, format_date, format_amount, formatLang, ormcache
 
@@ -458,7 +458,7 @@ class MailTrackMixin(models.AbstractModel):
         values = {
             'field_id': field.id,
             'field_name': col_name,
-            'field_label': col_info.get('string'),
+            'field_label': col_info.get('string') if 'string' in col_info else field.field_description,
             'field_type': col_info['type'],
             'old_value': initial_value,
             'new_value': new_value,
@@ -483,18 +483,20 @@ class MailTrackMixin(models.AbstractModel):
                     'old_value': initial_value or 'None',
                     'new_value': new_value or 'None',
                 })
-            else:
+            else:  # float, integer
                 values.update({
-                    'old_value': formatLang(self.env, initial_value or 0),
-                    'new_value': formatLang(self.env, new_value or 0),
+                    'old_value': formatLang(self.env, initial_value or 0, rounding_unit='units' if col_info['type'] == 'integer' else 'decimals'),
+                    'new_value': formatLang(self.env, new_value or 0, rounding_unit='units' if col_info['type'] == 'integer' else 'decimals'),
                 })
 
         elif col_info['type'] == 'monetary':
             currency_id = col_info.get('currency_id')
             if not currency_id:
+                currency = self[col_info['currency_field']]
                 currency_id = self[col_info['currency_field']].id
+            else:
+                currency = self.env['res.currency'].browse(currency_id)
             field_info['currency_id'] = currency_id
-            currency = col_info.get('currency_field') and self[col_info['currency_field']]
             values.update({
                 'old_value_float': initial_value,
                 'new_value_float': new_value,
@@ -502,26 +504,25 @@ class MailTrackMixin(models.AbstractModel):
                 'new_value': format_amount(self.env, new_value or 0, currency) if currency else new_value,
             })
         elif col_info['type'] == 'datetime':
-            tz = self.env.user.tz or self.env.company.tz
             values.update({
-                f'old_value_{col_info["type"]}': initial_value,
-                f'new_value_{col_info["type"]}': new_value,
-                'old_value': format_datetime(self.env, initial_value, tz=tz or self.env.company.tz) if initial_value else 'None',
-                'new_value': format_datetime(self.env, new_value, tz=tz or self.env.company.tz) if new_value else 'None',
+                'old_value_datetime': initial_value,
+                'new_value_datetime': new_value,
+                'old_value': format_datetime(self.env, initial_value, tz=self.env.tz) if initial_value else 'None',
+                'new_value': format_datetime(self.env, new_value, tz=self.env.tz) if new_value else 'None',
             })
         elif col_info['type'] == 'date':
             values.update({
-                'old_value': format_date(self.env, initial_value) if initial_value else 'None',
-                'new_value': format_date(self.env, new_value) if new_value else 'None',
                 'old_value_datetime': initial_value and fields.Datetime.to_string(datetime.combine(fields.Date.from_string(initial_value), datetime.min.time())) or False,
                 'new_value_datetime': new_value and fields.Datetime.to_string(datetime.combine(fields.Date.from_string(new_value), datetime.min.time())) or False,
+                'old_value': format_date(self.env, initial_value) if initial_value else 'None',
+                'new_value': format_date(self.env, new_value) if new_value else 'None',
             })
         elif col_info['type'] == 'boolean':
             values.update({
                 'old_value_integer': initial_value,
                 'new_value_integer': new_value,
-                'old_value': 'Yes' if initial_value else 'No',
-                'new_value': 'Yes' if new_value else 'No',
+                'old_value': _('Yes') if initial_value else _('No'),
+                'new_value': _('Yes') if new_value else _('No'),
             })
         elif col_info['type'] == 'selection':
             values.update({
@@ -601,13 +602,14 @@ class MailTrackMixin(models.AbstractModel):
     def _create_mail_tracking_values_property(
         self, initial_value: typing.Any, col_name: str, col_info: ValuesType,
     ) -> ValuesType:
-        """Generate the values for the <mail.tracking.values> corresponding to a property."""
+        """ Like '_create_mail_tracking_values' but for a given property of a property
+        field. """
         col_info = col_info | {'type': initial_value['type'], 'selection': initial_value.get('selection')}
-
+        # custom label / description for property field
         field_label = f"{col_info['string']}: {initial_value['string']}"
 
         field_info = {
-            'desc': f"{col_info['string']}: {initial_value['string']}",
+            'desc': field_label,
             'name': col_name,
             'type': initial_value['type'],
         }
@@ -619,114 +621,3 @@ class MailTrackMixin(models.AbstractModel):
             value, False, col_name, col_info,
         )
         return {**tracking_values, 'field_info': field_info, 'field_label': field_label}
-
-    # track value formatting
-    # ------------------------------------------------------
-
-    @api.model
-    def _tracking_value_format_model(self, tracking_values: BaseModel) -> list[ValuesType]:
-        """ Return structured formatted data to be used by chatter to display
-        tracking values on a single model. Order it based on ascending sequence
-        then field name. Property fields are always last.
-
-        :returns: for each tracking value in self, their formatted display
-          values given as a dict;
-        :rtype: list[ValuesType]
-        """
-        if not tracking_values:
-            return []
-
-        # fetch model-based information
-        if self._name not in ('mail.thread', 'mail.track.mixin'):
-            tracked_fields = self.fields_get(tracking_values.field_id.mapped('name'), attributes={'digits', 'string', 'type'})
-            model_sequence_info = dict(self._mail_track_order_fields(tracked_fields))
-        else:
-            tracked_fields, model_sequence_info = {}, {}
-
-        # generate sequence of trackings
-        fields_sequence_map = dict(
-            {
-                tracking.field_info['name']: tracking.field_info.get('sequence', 100)
-                for tracking in tracking_values.filtered(
-                    lambda t: t.field_info and 'name' in t.field_info
-                )  # could contain only currency_id info
-            },
-            **model_sequence_info,
-        )
-        # generate dict of field information, if available
-        fields_col_info = (
-            tracking.field_id.ttype != 'properties'
-            and tracked_fields.get(tracking.field_id.name)
-            or {
-                'string': tracking.field_info['desc'] if tracking.field_info else tracking_values.env._('Unknown'),
-                'type': tracking.field_info['type'] if tracking.field_info else 'char',
-            } for tracking in tracking_values
-        )
-
-        def sort_tracking_info(tracking_info_tuple):
-            tracking = tracking_info_tuple[0]
-            field_name = tracking.field_id.name or (tracking.field_info['name'] if tracking.field_info else 'unknown')
-            return (
-                fields_sequence_map.get(field_name, 100),
-                tracking.field_id.ttype == 'properties',
-                field_name,
-            )
-
-        formatted = [
-            {
-                'id': tracking.id,
-                'fieldInfo': {
-                    'changedField': col_info['string'],
-                    'companyId': (tracking.field_info or {}).get('company_id', False),
-                    'currencyId': (tracking.field_info or {}).get('currency_id', False),
-                    'floatPrecision': col_info.get('digits'),
-                    'fieldType': col_info['type'],
-                    'isPropertyField': tracking.field_id.ttype == 'properties',
-                },
-                'newValue': self._format_display_value(tracking, col_info['type'], new=True)[0],
-                'oldValue': self._format_display_value(tracking, col_info['type'], new=False)[0],
-            }
-            for tracking, col_info in sorted(zip(tracking_values, fields_col_info), key=sort_tracking_info)
-        ]
-        return formatted
-
-    @api.model
-    def _format_display_value(self, trackings, field_type: str, new: bool = True) -> str:
-        """ Format value of 'mail.tracking.value', according to the field type.
-
-        :param str field_type: Odoo field type;
-        :param bool new: if True, display the 'new' value. Otherwise display
-          the 'old' one.
-        """
-        field_mapping = {
-            'boolean': ('old_value_integer', 'new_value_integer'),
-            'date': ('old_value_datetime', 'new_value_datetime'),
-            'datetime': ('old_value_datetime', 'new_value_datetime'),
-            'char': ('old_value_char', 'new_value_char'),
-            'float': ('old_value_float', 'new_value_float'),
-            'integer': ('old_value_integer', 'new_value_integer'),
-            'monetary': ('old_value_float', 'new_value_float'),
-            'text': ('old_value_text', 'new_value_text'),
-        }
-
-        result = []
-        for record in trackings:
-            value_fname = field_mapping.get(
-                field_type, ('old_value_char', 'new_value_char')
-            )[bool(new)]
-            value = record[value_fname]
-
-            if field_type in {'integer', 'float', 'char', 'text', 'monetary'}:
-                result.append(value)
-            elif field_type in {'date', 'datetime'}:
-                if not record[value_fname]:
-                    result.append(value)
-                elif field_type == 'date':
-                    result.append(fields.Date.to_string(value))
-                else:
-                    result.append(f'{value}Z')
-            elif field_type == 'boolean':
-                result.append(bool(value))
-            else:
-                result.append(value)
-        return result
