@@ -52,7 +52,7 @@
                                             </div>
                                         </div>
                                     </setting>
-                                    <setting id="other_devices" string="Receipt Printers" help="Connect device to your PoS">
+                                    <setting id="other_devices" string="Receipt Printers" help="Connect printers to your PoS">
                                         <field name="other_devices" />
                                         <div class="content-group" invisible="not other_devices">
                                             <div class="row mb-2">
@@ -63,7 +63,8 @@
                                                     <field name="receipt_printer_ids"
                                                         class="w-100 pt-1"
                                                         widget="many2many_tags"
-                                                        context="{'default_use_type': 'receipt'}"/>
+                                                        context="{'default_use_type': 'receipt'}"
+                                                        options="{'no_quick_create': True}"/>
                                                 </div>
                                                 <div class="col-lg-5">
                                                     <widget name="point_of_sale_test_epos"/>
@@ -82,7 +83,8 @@
                                                     <field name="preparation_printer_ids"
                                                         class="w-100 pt-1"
                                                         widget="many2many_tags"
-                                                        context="{'default_use_type': 'preparation'}"/>
+                                                        context="{'default_use_type': 'preparation'}"
+                                                        options="{'no_quick_create': True}"/>
                                                 </div>
                                             </div>
                                         </div>
