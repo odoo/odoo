@@ -12,7 +12,6 @@ from odoo import api, fields, models, tools, _
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Domain
 from odoo.tools import is_html_empty
-from odoo.tools.translate import adapt_translated_field_value
 from odoo.tools.misc import format_duration
 
 _logger = logging.getLogger(__name__)
@@ -498,14 +497,17 @@ class SlideChannel(models.Model):
         if not vals.get('description'):
             return
         description_dict = v if isinstance((v := vals.get('description')), dict) else {self.env.lang or 'en_US': v}
-        vals['description_short'] = adapt_translated_field_value(
-            self.env, vals.get('description_short', False),
-            lambda lang, v: (
-                description_dict[lang]
-                if is_html_empty(v) and not is_html_empty(description_dict.get(lang))
+        description_short_dict = v if isinstance((v := vals.get('description_short', {})), dict) else {self.env.lang or 'en_US': v or ''}
+        for lang, description in description_dict.items():
+            if (
+                is_html_empty(description_short_dict.get(lang)) and not is_html_empty(description)
                 and (self.with_context(lang=lang).description == self.with_context(lang=lang).description_short)
-                else v
-            )
+            ):
+                description_short_dict[lang] = description
+        vals['description_short'] = (
+            description_short_dict[lang]
+            if len(description_short_dict) == 1 and lang in description_short_dict
+            else description_short_dict
         )
 
     @api.model_create_multi
