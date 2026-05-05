@@ -1,13 +1,19 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, models, fields
-from odoo.tools.float_utils import float_is_zero, float_round
+from odoo import _, api, models
 from odoo.exceptions import UserError
 
 
 class StockMove(models.Model):
     _inherit = 'stock.move'
+
+    @api.depends('bom_line_id')
+    def _compute_packaging_uom_id(self):
+        super()._compute_packaging_uom_id()
+        for move in self:
+            if move.bom_line_id and move.bom_line_id.bom_id.type == 'phantom':
+                move.packaging_uom_id = move.product_uom
 
     def _get_cost_ratio(self, quantity):
         self.ensure_one()

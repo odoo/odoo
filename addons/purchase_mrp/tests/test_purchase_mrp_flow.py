@@ -224,6 +224,27 @@ class TestPurchaseMrpFlow(AccountTestInvoicingCommon):
 
         self.assertAlmostEqual(sum(k.standard_price * k.qty_available for k in components), 120 * 1260, delta=0.5)
 
+    def test_kit_component_packaging_uom_not_converted_po(self):
+        """ The receipt move of a kit component must keep the component's own
+        UoM as packaging UoM."""
+        kit, component = self.env['product.product'].create([
+            {'name': 'Kit UoM', 'uom_id': self.uom_unit.id},
+            {'name': 'Comp Kg', 'is_storable': True, 'uom_id': self.uom_kg.id},
+        ])
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': kit.product_tmpl_id.id,
+            'type': 'phantom',
+            'bom_line_ids': [Command.create({'product_id': component.id, 'product_qty': 1.0})],
+        })
+        po = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({'product_id': kit.id, 'product_qty': 1.0})],
+        })
+        po.button_confirm()
+        component_move = po.picking_ids.move_ids
+        self.assertEqual(component_move.product_uom, self.uom_kg)
+        self.assertEqual(component_move.packaging_uom_id, self.uom_kg)
+
     def test_kit_component_cost_multi_currency(self):
         # Set kit and component product to automated FIFO
         kit = self._create_product_with_form('Kit', self.uom_unit)
