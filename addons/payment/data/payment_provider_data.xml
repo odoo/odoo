@@ -428,6 +428,20 @@
         />
     </record>
 
+    <record id="payment_provider_sslcommerz" model="payment.provider">
+        <field name="name">SSLCOMMERZ</field>
+        <field name="image_128" type="bytes" file="payment_sslcommerz/static/description/icon.png"/>
+        <field name="module_id" ref="base.module_payment_sslcommerz"/>
+        <field
+            name="payment_method_ids"
+            eval="[Command.set([
+                    ref('payment.payment_method_card'),
+                    ref('payment.payment_method_bkash'),
+                    ref('payment.payment_method_nagad'),
+                ])]"
+        />
+    </record>
+
     <record id="payment_provider_stripe" model="payment.provider">
         <field name="name">Stripe</field>
         <field name="image_128" type="bytes" file="payment_stripe/static/description/icon.png"/>
