@@ -9,7 +9,7 @@ import {
     Component,
     onMounted,
     onWillDestroy,
-    onWillPatch,
+    onRendered,
     onWillUnmount,
     onWillUpdateProps,
     toRaw,
@@ -72,7 +72,7 @@ export class Thread extends Component {
         this.onWheel = this.onWheel.bind(this);
         this.messageRefs = useChildRefs();
         useEffect(() => {
-            this.messageRefs; // trigger effect only when messageRefs changes
+            this.messageRefs.size; // trigger effect only when messageRefs changes
             untrack(() => this.scrollToHighlighted());
         });
         this.store = useService("mail.store");
@@ -362,7 +362,7 @@ export class Thread extends Component {
             }
         });
         onWillDestroy(() => stopOnChange());
-        onWillPatch(() => {
+        onRendered(() => {
             if (!this.loadedAndPatched) {
                 return;
             }
