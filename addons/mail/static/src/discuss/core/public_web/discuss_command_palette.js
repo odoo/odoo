@@ -102,7 +102,7 @@ async function makeNewChannel(name, store, is_readonly = false) {
     const { channel } = await store.fetchStoreData(
         "/discuss/create_channel",
         { name, group_id: store.internalUserGroupId, is_readonly },
-        { readonly: false, requestData: true }
+        { requestData: true }
     );
     channel.open({ focus: true, bypassCompact: true });
 }

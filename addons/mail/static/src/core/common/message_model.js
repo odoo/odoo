@@ -504,9 +504,9 @@ export class Message extends Record {
     get canToggleBookmark() {
         return Boolean(
             !this.is_transient &&
-            !this.isPending &&
-            this.store.self_user?.share === false &&
-            this.persistent
+                !this.isPending &&
+                this.store.self_user?.share === false &&
+                this.persistent
         );
     }
 
@@ -589,10 +589,10 @@ export class Message extends Record {
     canAddReaction(thread) {
         return Boolean(
             !this.is_transient &&
-            !this.isPending &&
-            this.thread?.can_react &&
-            !this.thread.isTransient &&
-            this.thread.has_mail_thread
+                !this.isPending &&
+                this.thread?.can_react &&
+                !this.thread.isTransient &&
+                this.thread.has_mail_thread
         );
     }
 
@@ -838,19 +838,11 @@ export class Message extends Record {
     }
 
     async addBookmark() {
-        await this.store.fetchStoreData(
-            "add_bookmark",
-            { message_id: this.id },
-            { readonly: false }
-        );
+        await this.store.fetchStoreData("add_bookmark", { message_id: this.id });
     }
 
     async removeBookmark(thread) {
-        await this.store.fetchStoreData(
-            "remove_bookmark",
-            { message_id: this.id },
-            { readonly: false }
-        );
+        await this.store.fetchStoreData("remove_bookmark", { message_id: this.id });
         this.closeNotificationFn?.();
         if (thread?.eq(this.store.bookmarkBox)) {
             this.closeNotificationFn = this.store.env.services.notification.add(

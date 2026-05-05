@@ -80,7 +80,7 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
 
         # Retrieve channels information, visitor info should be there
         init_messaging = self.make_jsonrpc_request(
-            f"{self.livechat_base_url}/mail/data", {"fetch_params": ["channels_as_member"]}
+            f"{self.livechat_base_url}/mail/store", {"fetch_params": ["channels_as_member"]}
         )
         livechat_info = next(c for c in init_messaging["discuss.channel"] if c["id"] == channel.id)
         self.assertIn("livechat_visitor_id", livechat_info)
@@ -88,7 +88,7 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
         # Remove access to visitors and try again, visitors info shouldn't be included
         self.operator.group_ids -= self.group_livechat_user
         init_messaging = self.make_jsonrpc_request(
-            f"{self.livechat_base_url}/mail/data", {"fetch_params": ["channels_as_member"]}
+            f"{self.livechat_base_url}/mail/store", {"fetch_params": ["channels_as_member"]}
         )
         livechat_info = next(c for c in init_messaging["discuss.channel"] if c["id"] == channel.id)
         self.assertNotIn("livechat_visitor_id", livechat_info)
@@ -407,13 +407,13 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
             },
         ])
         result = self.make_jsonrpc_request(
-            "/mail/action",
+            "/mail/store",
             {"fetch_params": [["init_livechat", self.livechat_channel.id]]},
             headers={"Referer": "/show"},
         )
         self.assertEqual(result["Store"]["livechat_available"], True)
         result = self.make_jsonrpc_request(
-            "/mail/action",
+            "/mail/store",
             {"fetch_params": [["init_livechat", self.livechat_channel.id]]},
             headers={"Referer": "/hide"},
         )

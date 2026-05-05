@@ -6,23 +6,25 @@ from odoo.http import request
 from odoo.addons.mail.controllers.thread import ThreadController
 from odoo.addons.mail.tools.discuss import mail_route, Store
 
+# fetch_param names that require a write.
+# Modules that add write-capable fetch_param handlers should extend this set.
+WRITE_FETCH_PARAMS: set[str] = {"/mail/thread/messages"}
+
 
 class WebclientController(ThreadController):
     """Routes for the web client."""
 
-    @mail_route("/mail/action", methods=["POST"], type="jsonrpc", auth="public")
-    def mail_action(self, fetch_params, context=None):
-        """Execute actions and returns data depending on request parameters.
-        This is similar to /mail/data except this method can have side effects.
-        """
+    @mail_route("/mail/store", methods=["POST"], type="jsonrpc", auth="public", readonly=lambda self, *_: self._is_mail_fetch_readonly())
+    def mail_store(self, fetch_params, context=None):
+        """Returns store data for the given fetch_params. Fetch params that do write must register themselves in WRITE_FETCH_PARAMS."""
         return self._process_request(fetch_params, context=context)
 
-    @mail_route("/mail/data", methods=["POST"], type="jsonrpc", auth="public", readonly=True)
-    def mail_data(self, fetch_params, context=None):
-        """Returns data depending on request parameters.
-        This is similar to /mail/action except this method should be read-only.
-        """
-        return self._process_request(fetch_params, context=context)
+    def _is_mail_fetch_readonly(self):
+        fetch_params = request.get_json_data().get("params", {}).get("fetch_params", [])
+        return not any(
+            (fp if isinstance(fp, str) else fp[0]) in WRITE_FETCH_PARAMS
+            for fp in fetch_params
+        )
 
     @classmethod
     def _process_request(self, fetch_params, context):
@@ -138,7 +140,7 @@ class WebclientController(ThreadController):
                 lambda n: n.mail_message_id.res_id in existing[n.mail_message_id.model]
             )
             lost = notifications - valid
-            # might break readonly status of mail/data, but in really rare cases
+            # might break readonly status of mail/store, but in really rare cases
             # and solves it by removing useless notifications
             if lost:
                 lost.sudo().unlink()  # no unlink right except admin, ok to remove as lost anyway

@@ -77,7 +77,6 @@ export class Store extends BaseStore {
 
     /** @type {[[string, any, import("models").DataResponse]]} */
     fetchParams = [];
-    fetchReadonly = true;
     fetchSilent = true;
 
     cannedReponses = this.makeCachedFetchData("mail.canned.response");
@@ -157,20 +156,13 @@ export class Store extends BaseStore {
      *  RPC or a bus notification for example). When set to false (the default), the return promise
      *  will resolve as soon as the RPC is done. This is intended to be true only for requests that
      *  will be resolved server side with `resolve_data_request`.
-     * @param {boolean} [options.readonly=true] when set to false, the server will open a read-write
-     *  cursor to process this request which is necessary if the request is expected to change data.
      * @param {boolean} [options.silent=true]
      */
-    async fetchStoreData(
-        name,
-        params,
-        { requestData = false, readonly = true, silent = true } = {}
-    ) {
+    async fetchStoreData(name, params, { requestData = false, silent = true } = {}) {
         /** @type {import("models").DataResponse} */
         const dataRequest = this.DataResponse.createRequest();
         dataRequest._autoResolve = !requestData;
         this.fetchParams.push([name, params, dataRequest]);
-        this.fetchReadonly = this.fetchReadonly && readonly;
         this.fetchSilent = this.fetchSilent && silent;
         this._fetchStoreDataDebounced();
         return dataRequest._resultResolvers.promise;
@@ -257,13 +249,12 @@ export class Store extends BaseStore {
             }
         );
         this.fetchParams = [];
-        this.fetchReadonly = true;
         this.fetchSilent = true;
     }
 
     _fetchStoreDataRpc(fetchParams) {
         return rpc(
-            this.fetchReadonly ? "/mail/data" : "/mail/action",
+            "/mail/store",
             { fetch_params: fetchParams, context: user.context },
             { silent: this.fetchSilent }
         );
@@ -613,7 +604,7 @@ export class Store extends BaseStore {
         const { channel } = await this.fetchStoreData(
             "/discuss/get_or_create_chat",
             { partners_to: [id] },
-            { readonly: false, requestData: true }
+            { requestData: true }
         );
         if (forceOpen) {
             channel.open({ focus: true });

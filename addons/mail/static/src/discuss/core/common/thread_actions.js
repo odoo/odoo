@@ -59,7 +59,7 @@ registerThreadAction("add-to-favorites", {
         store.fetchStoreData(
             "/discuss/channel/favorite",
             { channel_id: channel.id, is_favorite: true },
-            { readonly: false, silent: false }
+            { silent: false }
         );
         if (owner.env.inDiscussApp && !owner.env.isSmall) {
             return;
@@ -90,7 +90,7 @@ registerThreadAction("remove-from-favorites", {
         store.fetchStoreData(
             "/discuss/channel/favorite",
             { channel_id: channel.id, is_favorite: false },
-            { readonly: false, silent: false }
+            { silent: false }
         );
         if (owner.env.inDiscussApp && !owner.env.isSmall) {
             return;

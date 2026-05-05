@@ -21,10 +21,10 @@ class TestMailMessage(common.MailCommon, HttpCase):
         self.env.user.group_ids -= self.env.ref("base.group_partner_manager")
         self.assertFalse(message.has_access("write"))
         self.make_jsonrpc_request(
-            "/mail/action", {"fetch_params": [["add_bookmark", {"message_id": message.id}]]},
+            "/mail/store", {"fetch_params": [["add_bookmark", {"message_id": message.id}]]},
         )
         self.assertIn(self.env.user.partner_id, message.bookmarked_partner_ids)
-        self.make_jsonrpc_request("/mail/action", {"fetch_params": ["remove_all_bookmarks"]})
+        self.make_jsonrpc_request("/mail/store", {"fetch_params": ["remove_all_bookmarks"]})
         self.assertNotIn(self.env.user.partner_id, message.bookmarked_partner_ids)
 
     def test_mail_message_read_inexisting(self):

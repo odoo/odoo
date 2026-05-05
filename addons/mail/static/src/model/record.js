@@ -52,7 +52,7 @@ export class Record {
     /**
      * Gets a record by id, fetching it from the server if it doesn't exist in the store or if some
      * of the specified fields are missing.
-     * Only works for models that are explicitly supported in /mail/data controller.
+     * Only works for models that are explicitly supported in /mail/store controller.
      *
      * @param {number} id
      * @param {string[]} field_names

@@ -96,7 +96,7 @@ test("Enable/disable looking for help when category is opened/folded", async () 
             }
         },
     });
-    onRpc("/mail/data", async (req) => {
+    onRpc("/mail/store", async (req) => {
         const { params } = await req.json();
         if (params.fetch_params.includes("/im_livechat/looking_for_help")) {
             expect.step("fetch looking_for_help");

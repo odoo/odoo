@@ -781,16 +781,9 @@ async function mail_thread_update_suggested_recipients(request) {
     return [];
 }
 
-registerRoute("/mail/action", mail_action);
+registerRoute("/mail/store", mail_store);
 /** @type {RouteCallback} */
-async function mail_action(request) {
-    const args = await parseRequestParams(request);
-    return processRequest.call(this, args.fetch_params, args.context).get_result();
-}
-
-registerRoute("/mail/data", mail_data);
-/** @type {RouteCallback} */
-export async function mail_data(request) {
+export async function mail_store(request) {
     const args = await parseRequestParams(request);
     return processRequest.call(this, args.fetch_params, args.context).get_result();
 }
@@ -1019,7 +1012,9 @@ function _process_request_for_all(store, name, params, context = {}) {
             ],
             makeKwArgs({ limit: 100 })
         );
-        const memberCount = DiscussChannelMember.search_count([["channel_id", "=", params.channel_id]]);
+        const memberCount = DiscussChannelMember.search_count([
+            ["channel_id", "=", params.channel_id],
+        ]);
         store.add(DiscussChannel.browse(params.channel_id), { member_count: memberCount });
         store.add(DiscussChannelMember.browse(memberIds));
     }

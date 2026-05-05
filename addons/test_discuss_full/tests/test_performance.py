@@ -390,7 +390,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         """Test performance of `init_messaging`."""
         self._run_test(
             fn=lambda: self.make_jsonrpc_request(
-                "/mail/data",
+                "/mail/store",
                 {"fetch_params": [["discuss.channel", [self.channel_chat_1.id]], "init_messaging"]},
             ),
             count=self._query_count_init_messaging,
@@ -401,10 +401,10 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     @users("emp")
     @warmup
     def test_30_discuss_channels(self):
-        """Test performance of `/mail/data` with `channels_as_member`."""
+        """Test performance of `/mail/store` with `channels_as_member`."""
         self._run_test(
             fn=lambda: self.make_jsonrpc_request(
-                "/mail/data", {"fetch_params": ["channels_as_member"]},
+                "/mail/store", {"fetch_params": ["channels_as_member"]},
             ),
             count=self._query_count_discuss_channels,
             results=self._get_discuss_channels_result(),
@@ -556,7 +556,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         }
 
     def _get_discuss_channels_result(self):
-        """Returns the result of a call to `/mail/data` with `channels_as_member`.
+        """Returns the result of a call to `/mail/store` with `channels_as_member`.
         The point of having a separate getter is to allow it to be overriden.
         """
         return {

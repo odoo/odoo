@@ -2,8 +2,10 @@
 
 from odoo.fields import Command, Domain
 from odoo.http import request
-from odoo.addons.mail.controllers.webclient import WebclientController
+from odoo.addons.mail.controllers.webclient import WebclientController, WRITE_FETCH_PARAMS
 from odoo.addons.mail.tools.discuss import Store
+
+WRITE_FETCH_PARAMS |= {"add_bookmark", "remove_bookmark", "remove_all_bookmarks"}
 
 
 class MailboxController(WebclientController):
