@@ -288,7 +288,7 @@
             <field name="res_model">mrp.bom.line</field>
             <field name="path">used_in_boms</field>
             <field name="domain">[]</field>
-            <field name="view_mode">list</field>
+            <field name="view_mode">list,pivot</field>
         </record>
 
         <record id="mrp_bom_line_view_list" model="ir.ui.view">
@@ -296,13 +296,27 @@
             <field name="model">mrp.bom.line</field>
             <field name="arch" type="xml">
                 <list create="0" multi_edit="1" action="action_open_parent_bom" type="object">
-                    <field name="bom_id" readonly="1" string="Bill of Material"/>
-                    <field name="product_id" string="Component" context="{'default_is_storable': True}"/>
+                    <field name="bom_product_tmpl_id" readonly="1" string="Final Product" optional="show" /> 
+                    <field name="bom_id" readonly="1" string="Bill of Material" optional="hide"/>
+                    <field name="product_id" string="Component" optional="show" context="{'default_is_storable': True}"/>
                     <field name="product_qty"/>
                     <field name="uom_id" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom" widget="many2one_uom"/>
-                    <field name="operation_id" readonly="1" optional="hide" groups="mrp.group_mrp_routings"/>
-                    <field name="bom_product_template_attribute_value_ids" readonly="1" optional="hide" groups="product.group_product_variant" widget="many2many_tags"/>
+                    <field name="operation_id" optional="hide" options="{'no_create': True}" groups="mrp.group_mrp_routings"/>
+                    <field name="bom_product_template_attribute_value_ids" optional="hide" options="{'no_create': True}" groups="product.group_product_variant" widget="many2many_tags"/>
                 </list>
+            </field>
+        </record>
+
+        <record id="mrp_bom_line_view_pivot" model="ir.ui.view">
+            <field name="name">mrp.bom.line.view.pivot</field>
+            <field name="model">mrp.bom.line</field>
+            <field name="arch" type="xml">
+                <pivot display_quantity="0" default_order="product_id asc">
+                    <field name="bom_product_tmpl_id" string="Final Product"/>
+                    <field name="bom_id" string="Bill of Material" type="col"/>
+                    <field name="product_id" string="Component" type="row"/>
+                    <field name="product_qty" type="measure"/>
+                </pivot>
             </field>
         </record>
 
@@ -312,7 +326,10 @@
             <field name="arch" type="xml">
                 <search string="Search BoM Line">
                     <field name="bom_code" string="Bill of Materials" filter_domain="['|', ('bom_code', 'ilike', self), ('bom_product_tmpl_id', 'ilike', self)]"/>
-                    <field name="product_id" string="Product"/>
+                    <field name="product_id" string="Component"/>
+                    <field name="bom_product_tmpl_id" string="Final Product"/>
+                    <field name="operation_id" groups="mrp.group_mrp_routings"/>
+                    <field name="bom_product_template_attribute_value_ids"/>
                     <filter string="Manufacturing" name="normal" domain="[('bom_type', '=', 'normal')]"/>
                     <filter string="Kit" name="phantom" domain="[('bom_type', '=', 'phantom')]"/>
                     <separator/>
@@ -379,16 +396,17 @@
         </record>
 
         <record id="action_open_bom_lines" model="ir.actions.server">
-            <field name="name">Show BoM Lines</field>
+            <field name="name">Compare BoMs</field>
             <field name="model_id" ref="mrp.model_mrp_bom"/>
             <field name="binding_model_id" ref="mrp.model_mrp_bom"/>
+            <field name="binding_view_types">list</field>
             <field name="state">code</field>
             <field name="code">
                 action = {
                     'type': 'ir.actions.act_window',
                     'name': 'BoM Lines',
                     'res_model': 'mrp.bom.line',
-                    'views': [(env.ref('mrp.mrp_bom_line_view_list').id, 'list')],
+                    'views': [(env.ref('mrp.mrp_bom_line_view_pivot').id, 'pivot'), (env.ref('mrp.mrp_bom_line_view_list').id, 'list')],
                     'domain': [('bom_id', 'in', env.context.get('active_ids'))],
                 }
             </field>

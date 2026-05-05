@@ -10,4 +10,15 @@
             </xpath>
         </field>
     </record>
+
+    <record id="mrp_bom_line_view_pivot" model="ir.ui.view">
+        <field name="name">mrp.bom.byproduct.pivot.inherited.bom.line</field>
+        <field name="model">mrp.bom.line</field>
+        <field name="inherit_id" ref="mrp.mrp_bom_line_view_pivot"/>
+        <field name="arch" type="xml">
+        <field name="product_qty" position="after">
+            <field name="cost_share" invisible="1"/>
+        </field>
+        </field>
+    </record>
 </data></odoo>

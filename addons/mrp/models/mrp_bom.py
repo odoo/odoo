@@ -722,6 +722,17 @@ class MrpBomLine(models.Model):
         for line in self:
             line.child_line_ids = line.child_bom_id.bom_line_ids.ids or False
 
+    @api.constrains('bom_product_template_attribute_value_ids')
+    def _check_bom_product_template_attribute_value_ids(self):
+        errors = defaultdict(set)
+        for record in self:
+            invalid_variants = [v.name for v in record.bom_product_template_attribute_value_ids if v not in record.possible_bom_product_template_attribute_value_ids]
+            if invalid_variants:
+                errors[record.bom_product_tmpl_id.name].update(invalid_variants)
+        if errors:
+            error_lines = '\n\t'.join((f'{p}: {', '.join(v)}' for p, v in errors.items()))
+            raise ValidationError(_('Some product have invalid variants.\n\t%(error_message)s', error_message=error_lines))
+
     @api.onchange('product_id')
     def onchange_product_id(self):
         if self.product_id:
