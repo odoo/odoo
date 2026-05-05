@@ -39,10 +39,14 @@ export class SyntaxHighlightingPlugin extends Plugin {
         post_undo_handlers: () => this.addCodeBlocks(this.editable, true),
         post_redo_handlers: () => this.addCodeBlocks(this.editable, true),
         clean_for_save_handlers: withSequence(0, ({ root }) => this.cleanForSave(root)),
-        before_set_tag_handlers: (el, newTagName, cursors) => {
-            if (newTagName.toLowerCase() === "pre") {
+        before_set_tag_handlers: (params) => {
+            const { block, tagName, cursors } = params;
+            if (tagName.toLowerCase() === "pre") {
                 // Remove invisible whitespace that would become visible in a `<pre>` element.
-                removeInvisibleWhitespace(el, cursors);
+                removeInvisibleWhitespace(params.block, cursors);
+            }
+            if (block.nodeName === "TEXTAREA" && block.classList.contains("o_prism_source")) {
+                params.block = this.convertToParagraph(block);
             }
         },
 
@@ -165,19 +169,24 @@ export class SyntaxHighlightingPlugin extends Plugin {
             Object.assign(props, {
                 onTextareaFocus: () => this.dependencies.history.stageFocus(),
                 convertToParagraph: ({ target }) => {
-                    this.dependencies.history.stageSelection();
-                    const component = target.closest(`[data-embedded='${name}']`);
-                    const embeddedProps = getEmbeddedProps(component);
-                    const baseContainer = this.dependencies.baseContainer.createBaseContainer();
-                    baseContainer.textContent = embeddedProps.value;
-                    component.replaceWith(baseContainer);
-                    newlinesToLineBreaks(baseContainer);
-                    this.dependencies.selection.setCursorStart(baseContainer);
+                    this.convertToParagraph(target);
                     this.dependencies.history.addStep();
                 },
                 setSelection: (selection) => this.dependencies.selection.setSelection(selection),
             });
             props.host.removeAttribute("data-syntax-highlighting-autofocus");
         }
+    }
+
+    convertToParagraph(target) {
+        this.dependencies.history.stageSelection();
+        const component = target.closest(`[data-embedded]`);
+        const embeddedProps = getEmbeddedProps(component);
+        const baseContainer = this.dependencies.baseContainer.createBaseContainer();
+        baseContainer.textContent = embeddedProps.value;
+        component.replaceWith(baseContainer);
+        newlinesToLineBreaks(baseContainer);
+        this.dependencies.selection.setCursorStart(baseContainer);
+        return baseContainer;
     }
 }
