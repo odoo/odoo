@@ -50,7 +50,7 @@ class ResPartner(models.Model):
             self.city = self.city_id.name
             if self.city_id.state_id:
                 self.state_id = self.city_id.state_id
-            if self.city_id.zipcode:
+            if not (self.parent_id and self.city_id == self.parent_id.city_id and self.zip == self.parent_id.zip) and self.city_id.zipcode:
                 self.zip = self.city_id.zipcode
         elif self._origin:
             self.city = False
