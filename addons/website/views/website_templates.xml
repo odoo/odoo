@@ -243,36 +243,61 @@
 
     <xpath expr="//head" position="inside">
         <t t-if="website.google_analytics_key and not editable">
-            <script id="tracking_code" t-attf-src="https://www.googletagmanager.com/gtag/js?id={{ website.google_analytics_key }}" async="async"/>
-            <script id="tracking_code_config">
-                window.dataLayer = window.dataLayer || [];
-                function gtag(){dataLayer.push(arguments);}
-                gtag('consent', 'default', {
-                    'ad_storage': 'denied',
-                    'ad_user_data': 'denied',
-                    'ad_personalization': 'denied',
-                    'analytics_storage': 'denied',
-                });
-                gtag('js', new Date());
-                gtag('config', '<t t-out="website.google_analytics_key"/>');
-                function updateConsents(consentState) {
-                    gtag("consent", "update", {
-                        "ad_storage": consentState,
-                        "ad_user_data": consentState,
-                        "ad_personalization": consentState,
-                        "analytics_storage": consentState,
+            <t t-set="is_google_analytics" t-value="website.google_analytics_key.startswith('G-')"/>
+            <t t-set="is_google_tag_manager" t-value="website.google_analytics_key.startswith('GTM-')"/>
+            <t t-if="is_google_analytics or is_google_tag_manager">
+                <script id="tracking_code_config">
+                    window.dataLayer = window.dataLayer || [];
+                    function gtag(){dataLayer.push(arguments);}
+
+                    gtag('consent', 'default', {
+                        'ad_storage': 'denied',
+                        'ad_user_data': 'denied',
+                        'ad_personalization': 'denied',
+                        'analytics_storage': 'denied'
                     });
-                }
-                document.addEventListener("optionalCookiesAccepted", () =&gt; {
-                    updateConsents("granted");
-                });
-                document.addEventListener("optionalCookiesDenied", () =&gt; {
-                    updateConsents("denied");
-                });
-                <t t-if="website._allConsentsGranted()">
-                    updateConsents("granted");
-                </t>
-            </script>
+                </script>
+            </t>
+            <t t-if="is_google_analytics">
+                <!-- Google tag (gtag.js) -->
+                <script id="tracking_code" t-attf-src="https://www.googletagmanager.com/gtag/js?id={{ website.google_analytics_key }}" async="async"/>
+                <script>
+                    gtag('js', new Date());
+                    gtag('config', <t t-out="json.dumps(website.google_analytics_key)"/>);
+                </script>
+            </t>
+            <t t-elif="is_google_tag_manager">
+                <!-- Google Tag Manager -->
+                <script id="tracking_code">
+                    (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+                    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+                    j=d.createElement(s),dl=l!='dataLayer'?'&amp;l='+l:'';j.async=true;j.src=
+                    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+                    })(window,document,'script','dataLayer',<t t-out="json.dumps(website.google_analytics_key)"/>);
+                </script>
+                <!-- End Google Tag Manager -->
+            </t>
+            <t t-if="is_google_analytics or is_google_tag_manager">
+                <script id="update_consent">
+                    function updateConsents(consentState) {
+                        gtag("consent", "update", {
+                            "ad_storage": consentState,
+                            "ad_user_data": consentState,
+                            "ad_personalization": consentState,
+                            "analytics_storage": consentState,
+                        });
+                    }
+                    document.addEventListener("optionalCookiesAccepted", () =&gt; {
+                        updateConsents("granted");
+                    });
+                    document.addEventListener("optionalCookiesDenied", () =&gt; {
+                        updateConsents("denied");
+                    });
+                    <t t-if="website._allConsentsGranted()">
+                        updateConsents("granted");
+                    </t>
+                </script>
+            </t>
         </t>
         <t t-if="website.plausible_shared_key and not editable">
             <script id="plausible_script" name="plausible" defer="defer" t-att-data-domain="website.plausible_site" t-att-src="website._get_plausible_script_url()"></script>
