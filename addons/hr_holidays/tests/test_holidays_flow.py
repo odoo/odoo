@@ -255,7 +255,7 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
             'request_hour_from': 13,
             'request_hour_to': 15,
         }])
-        leave1.action_approve()
+        leave2.action_back_to_approval()
         self.assertEqual(leave1.state, 'validate')
         self.assertEqual(leave2.state, 'confirm')
         self.assertEqual(leave1.number_of_hours, 2)
