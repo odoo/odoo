@@ -795,9 +795,13 @@ class TestConfigManager(TransactionCase):
             _, options = self.parse_reset(['--addons-path', os.path.join(temp_dir, '*')])
             self.assertEqual(options['addons_path'], sorted([valid1, valid2]))
 
-            # A literal path to a non-addons directory is still accepted as-is
-            _, options = self.parse_reset(['--addons-path', not_addons])
-            self.assertEqual(options['addons_path'], [not_addons])
+            # A literal path to a non-addons directory is skipped with a warning
+            with self.assertLogs('odoo.tools.config') as capture:
+                _, options = self.parse_reset(['--addons-path', not_addons])
+            self.assertEqual(options['addons_path'], [])
+            self.assertEqual(capture.output, [
+                f"WARNING:odoo.tools.config:option --addons-path, invalid addons directory {not_addons!r}, skipped"
+            ])
 
             # A glob with no matches silently resolves to an empty list
             _, options = self.parse_reset(['--addons-path', os.path.join(temp_dir, 'no_match_*')])
