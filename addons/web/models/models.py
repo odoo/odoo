@@ -1218,9 +1218,7 @@ class RecordSnapshot(dict):
             if 'context' in self.fields_spec[field_name]:
                 lines = lines.with_context(**self.fields_spec[field_name]['context'])
             sub_fields_spec = self.fields_spec[field_name].get('fields') or {}
-            limit = self.fields_spec[field_name].get('limit')
-            limited_lines = lines[:limit] if limit else lines
-            self[field_name] = {line.id: RecordSnapshot(line, sub_fields_spec) for line in limited_lines}
+            self[field_name] = {line.id: RecordSnapshot(line, sub_fields_spec) for line in lines}
         else:
             self[field_name] = self.record[field_name]
 
