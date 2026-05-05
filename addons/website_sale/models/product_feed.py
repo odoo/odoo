@@ -292,12 +292,8 @@ class ProductFeed(models.Model):
         )
         combination_info = product.with_context(
             **price_context
-        ).product_tmpl_id._get_additionnal_combination_info(
-            product,
-            quantity=1.0,
-            uom=product.uom_id,
-            date=fields.Date.context_today(self),
-            website=self.website_id,
+        ).product_tmpl_id._get_additional_combination_info(
+            product, quantity=1.0, uom=product.uom_id, website=self.website_id
         )
         if combination_info["prevent_sale"]:
             return {}

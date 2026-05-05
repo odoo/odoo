@@ -116,7 +116,7 @@ class TestWebsiteSaleProductTemplate(WebsiteSaleCommon):
             "All products from archived product templates should be removed from the cart.",
         )
 
-    def test_get_additionnal_combination_info_converts_price_to_website_currency(self):
+    def test_get_additional_combination_info_converts_price_to_website_currency(self):
         company_currency = self.env.company.currency_id
         # Find a currency different from the company currency.
         self.website.currency_id = (
@@ -126,15 +126,12 @@ class TestWebsiteSaleProductTemplate(WebsiteSaleCommon):
             .search([("name", "!=", company_currency.name)], limit=1)
         )
         with self.mock_request():
-            result = self.env["product.template"]._get_additionnal_combination_info(
-                self.product, 1.0, self.product.uom_id, Date.from_string("2020-01-01"), self.website
+            result = self.env["product.template"]._get_additional_combination_info(
+                self.product, 1.0, self.product.uom_id, self.website
             )
         # Expected converted price
         expected_price = company_currency._convert(
-            self.product.list_price,
-            self.website.currency_id,
-            company=self.env.company,
-            date=Date.from_string("2020-01-01"),
+            self.product.list_price, self.website.currency_id, company=self.env.company
         )
         self.assertAlmostEqual(result["price"], expected_price, places=2)
 
@@ -143,7 +140,7 @@ class TestWebsiteSaleProductTemplate(WebsiteSaleCommon):
         template = self.product.product_tmpl_id
         template.uom_ids = [self.uom_dozen.id, self.uom_ton.id]
 
-        uoms = template.with_context({'website_id': self.website.id})._get_available_uoms()
+        uoms = template.with_context({"website_id": self.website.id})._get_available_uoms()
 
         self.assertEqual(len(uoms), 3)
 
@@ -153,7 +150,7 @@ class TestWebsiteSaleProductTemplate(WebsiteSaleCommon):
         template.uom_ids = [self.uom_dozen.id, self.uom_ton.id]
         self.website.restricted_uom_ids = [self.uom_dozen.id]
 
-        uoms = template.with_context({'website_id': self.website.id})._get_available_uoms()
+        uoms = template.with_context({"website_id": self.website.id})._get_available_uoms()
 
         self.assertEqual(len(uoms), 2)
         self.assertTrue(self.uom_dozen not in uoms)
@@ -164,9 +161,9 @@ class TestWebsiteSaleProductTemplate(WebsiteSaleCommon):
         template.uom_ids = [self.uom_dozen.id]
         self.website.restricted_uom_ids = [template.uom_id.id]
 
-        result = template.with_context({'website_id': self.website.id})._has_multiple_uoms()
-        uoms = template.with_context({'website_id': self.website.id})._get_available_uoms()
-        main_uom = template.with_context({'website_id': self.website.id})._get_main_uom()
+        result = template.with_context({"website_id": self.website.id})._has_multiple_uoms()
+        uoms = template.with_context({"website_id": self.website.id})._get_available_uoms()
+        main_uom = template.with_context({"website_id": self.website.id})._get_main_uom()
 
         self.assertEqual(len(uoms), 1)
         self.assertTrue(result)
@@ -178,9 +175,9 @@ class TestWebsiteSaleProductTemplate(WebsiteSaleCommon):
         template.uom_ids = [self.uom_dozen.id]
         self.website.restricted_uom_ids = [self.uom_dozen.id]
 
-        result = template.with_context({'website_id': self.website.id})._has_multiple_uoms()
-        uoms = template.with_context({'website_id': self.website.id})._get_available_uoms()
-        main_uom = template.with_context({'website_id': self.website.id})._get_main_uom()
+        result = template.with_context({"website_id": self.website.id})._has_multiple_uoms()
+        uoms = template.with_context({"website_id": self.website.id})._get_available_uoms()
+        main_uom = template.with_context({"website_id": self.website.id})._get_main_uom()
 
         self.assertEqual(len(uoms), 1)
         self.assertFalse(result)

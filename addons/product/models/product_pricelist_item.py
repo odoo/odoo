@@ -590,7 +590,7 @@ class ProductPricelistItem(models.Model):
 
         return res
 
-    def _compute_price(self, product, quantity, uom, date, currency=None, **kwargs):
+    def _compute_price(self, product, quantity, uom, *, currency=None, **kwargs):
         """Compute the unit price of a product in the context of a pricelist application.
 
         Note: self and self.ensure_one()
@@ -624,10 +624,10 @@ class ProductPricelistItem(models.Model):
         if self.compute_price == 'fixed':
             price = convert(self.fixed_price)
         elif self.compute_price == 'percentage':
-            base_price = self._compute_base_price(product, quantity, uom, date, currency, **kwargs)
+            base_price = self._compute_base_price(product, quantity, uom, currency, **kwargs)
             price = (base_price - (base_price * (self.percent_price / 100))) or 0.0
         elif self.compute_price == 'formula':
-            base_price = self._compute_base_price(product, quantity, uom, date, currency, **kwargs)
+            base_price = self._compute_base_price(product, quantity, uom, currency, **kwargs)
             # complete formula
             price_limit = base_price
             discount = self.price_discount if self.base != 'standard_price' else -self.price_markup
@@ -644,11 +644,13 @@ class ProductPricelistItem(models.Model):
             if self.price_max_margin:
                 price = min(price, price_limit + convert(self.price_max_margin))
         else:  # empty self, or extended pricelist price computation logic
-            price = self._compute_base_price(product, quantity, uom, date, currency, **kwargs)
+            price = self._compute_base_price(product, quantity, uom, currency, **kwargs)
 
         return price
 
-    def _compute_base_price(self, product, quantity, uom, date, currency, *, depth=0, **kwargs):
+    def _compute_base_price(
+        self, product, quantity, uom, currency, *, date=False, depth=0, **kwargs
+    ):
         """Compute the base price for a given rule.
 
         :param product: recordset of product (product.product/product.template)
@@ -677,13 +679,13 @@ class ProductPricelistItem(models.Model):
             src_currency = self.base_pricelist_id.currency_id
         elif rule_base == "standard_price":
             src_currency = product.cost_currency_id
-            price = product._price_compute(rule_base, uom=uom, date=date)[product.id]
+            price = product._price_compute(rule_base, uom=uom)[product.id]
         else: # list_price
             src_currency = product.currency_id
-            price = product._price_compute(rule_base, uom=uom, date=date)[product.id]
+            price = product._price_compute(rule_base, uom=uom)[product.id]
 
         if src_currency != currency:
-            price = src_currency._convert(price, currency, self.env.company, date, round=False)
+            price = src_currency._convert(price, currency, date=date, round=False)
 
         return price
 

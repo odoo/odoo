@@ -35,7 +35,6 @@ class WebsiteSaleVariantController(Controller):
             "product_taxes",
             "taxes",
             "currency",
-            "date",
             "combination",
             # Only used in Google Merchant Center logic, not client-side.
             "discount_start_date",

@@ -550,7 +550,12 @@ class WebsiteSale(payment_portal.PaymentPortal):
             attributes = ProductAttribute.union(pavs_per_attribute.keys())
         else:
             attributes = ProductAttribute.browse(attribute_ids).sorted()
-        products_prices = products._get_sales_prices(website)
+        products_prices = products._get_sales_prices(
+            # Make sure latest context is applied (see update_context calls in overrides)
+            request.pricelist.with_context(self.env.context),
+            request.fiscal_position.with_context(self.env.context),
+            website.with_context(self.env.context),
+        )
         product_query_params = self._get_product_query_params(**post)
 
         grouped_attributes_values = (

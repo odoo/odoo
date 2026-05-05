@@ -1,4 +1,4 @@
-from odoo.fields import Command, Datetime
+from odoo.fields import Command
 from odoo.tests import tagged
 
 from odoo.addons.l10n_ar.tests.common import TestArCommon
@@ -50,11 +50,10 @@ class TestL10nArWebsiteSale(TestArCommon):
     def _get_combination_info(self, product_id=None, quantity=1):
         """Helper method to retrieve combination info for a product."""
         with MockRequest(self.env, website=self.ar_website):
-            return self.product_1._get_additionnal_combination_info(
+            return self.product_1._get_additional_combination_info(
                 product_or_template=product_id or self.product_1,
                 quantity=quantity,
                 uom=self.uom_unit,
-                date=Datetime.today(),
                 website=self.ar_website,
             )
 

@@ -301,6 +301,9 @@ class ProductPricelist(models.Model):
         """
         self and self.ensure_one()  # self is at most one record
 
+        if not products:
+            return Domain(False)
+
         if products._name == "product.template":
             templates_domain = Domain("product_tmpl_id", "in", products.ids)
             products_domain = Domain("product_id.product_tmpl_id", "in", products.ids)
