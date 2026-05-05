@@ -1,5 +1,6 @@
 import { onWillRender, useExternalListener, useRef, useState } from "@web/owl2/utils";
 import { Component } from "@odoo/owl";
+import { localeCompare } from "@web/core/l10n/utils";
 
 export const TABLE_TYPES = {
     Id: "id",
@@ -106,9 +107,9 @@ export class DocTable extends Component {
                 const a = this.getValue(itemA[this.state.sortBy]);
                 const b = this.getValue(itemB[this.state.sortBy]);
                 if (this.state.sortOrder === "asc") {
-                    return b.localeCompare(a);
+                    return localeCompare(b, a);
                 } else {
-                    return a.localeCompare(b);
+                    return localeCompare(a, b);
                 }
             });
             return items;

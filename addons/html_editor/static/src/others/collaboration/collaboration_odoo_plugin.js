@@ -6,6 +6,7 @@ import { debounce } from "@web/core/utils/timing";
 import { PeerToPeer, RequestError } from "./PeerToPeer";
 import { ancestors } from "@html_editor/utils/dom_traversal";
 import { childNodeIndex } from "@html_editor/utils/position";
+import { localeCompare } from "@web/core/l10n/utils";
 
 /**
  * @typedef {Object} CollaborationSelection
@@ -838,7 +839,7 @@ export class CollaborationOdooPlugin extends Plugin {
  */
 function isPeerFirst(peerA, peerB) {
     if (peerA.startTime === peerB.startTime) {
-        return peerA.id.localeCompare(peerB.id) === -1;
+        return localeCompare(peerA.id, peerB.id) < 0;
     }
     if (peerA.startTime === undefined || peerB.startTime === undefined) {
         return Boolean(peerA.startTime);

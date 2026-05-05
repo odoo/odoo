@@ -22,6 +22,7 @@ import {
 } from "@web/../tests/web_test_helpers";
 
 import { ModelFieldSelector } from "@web/core/model_field_selector/model_field_selector";
+import { localeCompare } from "@web/core/l10n/utils";
 
 class Partner extends models.Model {
     foo = fields.Char();
@@ -196,7 +197,7 @@ test("use the sort option", async () => {
             resModel: "partner",
             sort: (fields) =>
                 Object.keys(fields).sort((a, b) =>
-                    fields[b].string.localeCompare(fields[a].string)
+                    localeCompare(fields[b].string, fields[a].string)
                 ),
         },
     });

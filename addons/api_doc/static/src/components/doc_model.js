@@ -6,6 +6,7 @@ import { DocMethod } from "@api_doc/components/doc_method";
 import { DocLoadingIndicator } from "@api_doc/components/doc_loading_indicator";
 import { useDocUI } from "@api_doc/utils/doc_ui_store";
 import { DocErrorDialog } from "@api_doc/components/doc_error_dialog";
+import { localeCompare } from "@web/core/l10n/utils";
 
 const TYPE_COLORS = {
     "text-success": ["integer", "char", "boolean", "selection", "float"],
@@ -170,7 +171,7 @@ export class DocModel extends Component {
         Object.values(model.methods).forEach((m) => m.module && modules.add(m.module));
 
         modules = [...modules];
-        modules.sort((a, b) => (a === "core" ? -1 : b === "core" ? 1 : a.localeCompare(b)));
+        modules.sort((a, b) => (a === "core" ? -1 : b === "core" ? 1 : localeCompare(a, b)));
         this.state.modules = modules;
     }
 
@@ -212,7 +213,7 @@ export class DocModel extends Component {
             } else if (bIndex >= 0) {
                 return 1;
             }
-            return a.name.localeCompare(b.name)
+            return localeCompare(a.name, b.name)
         });
         this.state.methods = methods;
     }
@@ -252,7 +253,7 @@ export class DocModel extends Component {
                 ]
             });
 
-        fields.sort((a, b) => a[0].value.localeCompare(b[0].value));
+        fields.sort((a, b) => localeCompare(a[0].value, b[0].value));
 
         this.state.fields = {
             activeIndex,

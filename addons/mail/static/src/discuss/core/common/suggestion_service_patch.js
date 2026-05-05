@@ -1,5 +1,6 @@
 import { SuggestionService } from "@mail/core/common/suggestion_service";
 import { cleanTerm } from "@mail/utils/common/format";
+import { localeCompare } from "@web/core/l10n/utils";
 
 import { registry } from "@web/core/registry";
 import { patch } from "@web/core/utils/patch";
@@ -100,13 +101,7 @@ const suggestionServicePatch = {
             ) {
                 return 1;
             }
-            if (cleanedName1 < cleanedName2) {
-                return -1;
-            }
-            if (cleanedName1 > cleanedName2) {
-                return 1;
-            }
-            return c1.id - c2.id;
+            return localeCompare(c1.name, c2.name) || c1.id - c2.id;
         };
         return {
             type: "ChannelCommand",

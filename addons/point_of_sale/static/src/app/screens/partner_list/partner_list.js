@@ -7,7 +7,7 @@ import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { Input } from "@point_of_sale/app/components/inputs/input/input";
 import { Component } from "@odoo/owl";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
-import { normalize } from "@web/core/l10n/utils";
+import { localeCompare, normalize } from "@web/core/l10n/utils";
 import { debounce } from "@web/core/utils/timing";
 
 export class PartnerList extends Component {
@@ -154,7 +154,7 @@ export class PartnerList extends Component {
                           ? -1
                           : this.props.partner?.id === b.id
                           ? 1
-                          : (a.name || "").localeCompare(b.name || "")
+                          : localeCompare(a.name, b.name)
                   );
 
         return availablePartners;

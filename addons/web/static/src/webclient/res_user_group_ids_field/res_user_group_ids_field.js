@@ -10,6 +10,7 @@ import { FormArchParser } from "@web/views/form/form_arch_parser";
 import { FormRenderer } from "@web/views/form/form_renderer";
 
 import { Component, toRaw } from "@odoo/owl";
+import { localeCompare } from "@web/core/l10n/utils";
 
 /**
  * This widget is only used for the 'group_ids' field of the 'res.users'
@@ -54,7 +55,7 @@ class ResUserGroupIdsField extends Component {
                     privilege.groupFieldName = this.getFieldName(privilege);
                     return privilege;
                 })
-                .sort((p1, p2) => p1.name.localeCompare(p2.name)),
+                .sort((p1, p2) => localeCompare(p1.name, p2.name)),
         };
 
         // Generate selection (for privileges) and boolean (for extra right groups) fields

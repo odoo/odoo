@@ -13,6 +13,7 @@ import { SelectMenu } from "@web/core/select_menu/select_menu";
 import { useSortable } from "@web/core/utils/sortable_owl";
 import { useService } from "@web/core/utils/hooks";
 import { useThrottleForAnimation } from "@web/core/utils/timing";
+import { localeCompare } from "@web/core/l10n/utils";
 
 /**
  * Focus the last added input item to a list container.
@@ -213,7 +214,7 @@ export class BuilderList extends Component {
         );
         const newRecords = this.allRecords
             .map((record) => selectedRecordsMap.get(record.id) || record)
-            .sort((a, b) => (a.display_name || "").localeCompare(b.display_name || ""));
+            .sort((a, b) => localeCompare(a.display_name, b.display_name));
         this.commit(newRecords);
     }
 

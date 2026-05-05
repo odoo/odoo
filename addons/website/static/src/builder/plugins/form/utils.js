@@ -1,4 +1,5 @@
 import { _t } from "@web/core/l10n/translation";
+import { localeCompare } from "@web/core/l10n/utils";
 import { renderToElement } from "@web/core/utils/render";
 import { generateHTMLId } from "@web/core/utils/strings";
 import { isSmallInteger } from "@html_builder/utils/utils";
@@ -523,7 +524,7 @@ export function getFormCacheKey(formEl) {
     const propertyOrigins = {};
     const parts = [model];
     for (const hiddenInputEl of [...formEl.querySelectorAll("input[type=hidden]")].sort(
-        (firstEl, secondEl) => firstEl.name.localeCompare(secondEl.name)
+        (firstEl, secondEl) => localeCompare(firstEl.name, secondEl.name)
     )) {
         // Pushing using the name order to avoid being impacted by the
         // order of hidden fields within the DOM.

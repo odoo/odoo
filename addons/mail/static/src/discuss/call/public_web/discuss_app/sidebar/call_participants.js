@@ -7,6 +7,7 @@ import { useHover } from "@mail/utils/common/hooks";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { _t } from "@web/core/l10n/translation";
+import { localeCompare } from "@web/core/l10n/utils";
 
 /**
  * @typedef {Object} Props
@@ -80,13 +81,25 @@ export class DiscussSidebarCallParticipants extends Component {
     get sessions() {
         const sessions = [...this.props.channel.rtc_session_ids];
         return sessions.sort((s1, s2) => {
-            const persona1 = s1.channel_member_id?.persona;
-            const persona2 = s2.channel_member_id?.persona;
-            return (
-                persona1?.name?.localeCompare(persona2?.name) ||
-                s1.channel_member_id?.id - s2.channel_member_id?.id ||
-                s1.id - s2.id
-            );
+            const member1 = s1.channel_member_id;
+            const member2 = s2.channel_member_id;
+            const name1 = member1?.persona?.displayName;
+            const name2 = member2?.persona?.displayName;
+            const nameDiff = localeCompare(name1, name2);
+            if (nameDiff !== 0) {
+                return nameDiff;
+            }
+            if (member1?.id && !member2?.id) {
+                return -1;
+            }
+            if (!member1?.id && member2?.id) {
+                return 1;
+            }
+            const memberDiff = member1?.id - member2?.id;
+            if (memberDiff !== 0) {
+                return memberDiff;
+            }
+            return s1.id - s2.id;
         });
     }
 

@@ -1,6 +1,7 @@
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { MassMailingBuilderSelectLabel } from "./components/mass_mailing_builder_select_label";
 import { _t } from "@web/core/l10n/translation";
+import { localeCompare } from "@web/core/l10n/utils";
 import { GOOGLE_FONTS } from "../iframe/mass_mailing_iframe_utils";
 
 const EMAIL_SAFE_FONTS = {
@@ -23,7 +24,7 @@ const WEB_SUPPORTED_FONTS = {
 const LIMITED_SUPPORT_FONTS = Object.fromEntries(
     Object.entries(WEB_SUPPORTED_FONTS)
         .concat(Object.entries(GOOGLE_FONTS))
-        .sort(([fontA], [fontB]) => fontA.localeCompare(fontB))
+        .sort(([fontA], [fontB]) => localeCompare(fontA, fontB))
 );
 
 export const FONT_FAMILIES = {
