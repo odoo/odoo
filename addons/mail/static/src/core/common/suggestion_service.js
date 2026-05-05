@@ -270,9 +270,8 @@ export class SuggestionService {
         for (const partner of partners) {
             const name = thread?.getPersonaName(partner) ?? partner.displayName;
             if (
-                name &&
-                (normalize(name).includes(cleanedSearchTerm) ||
-                    (partner.email && normalize(partner.email).includes(cleanedSearchTerm)))
+                (name && normalize(name).includes(cleanedSearchTerm)) ||
+                (partner.email && normalize(partner.email).includes(cleanedSearchTerm))
             ) {
                 suggestions.push(partner);
             }
@@ -284,7 +283,7 @@ export class SuggestionService {
                     special.channel_types.includes(thread.channel?.channel_type) &&
                     cleanedSearchTerm.length >= Math.min(4, special.label.length) &&
                     (special.label.startsWith(cleanedSearchTerm) ||
-                        normalize(special.description.toString()).includes(cleanedSearchTerm))
+                        normalize(special.description).includes(cleanedSearchTerm))
             )
         );
         return {

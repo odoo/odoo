@@ -531,9 +531,13 @@ export class Store extends BaseStore {
               )
             : [body];
         validMentions.partners = mentionedPartners.filter((partner) =>
-            segments.some((segment) =>
-                segment.includes(`@${thread?.getPersonaName(partner) ?? partner.name}`)
-            )
+            segments.some((segment) => {
+                const name = thread?.getPersonaName(partner) ?? partner.displayName;
+                return Boolean(
+                    (name && segment.includes(`@${name}`)) ||
+                        (partner.email && segment.includes(`@${partner.email}`))
+                );
+            })
         );
         validMentions.roles = mentionedRoles.filter((role) =>
             segments.some((segment) => segment.includes(`@${role.name}`))
