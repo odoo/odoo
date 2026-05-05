@@ -581,6 +581,8 @@
 
     <template id="external_layout_folder">
         <t t-set="header_shape_height" t-value="'174'"/>
+        <t t-set="is_rtl" t-value="env['res.lang']._get_data(code=lang or env.user.lang).direction == 'rtl'"/>
+
         <div t-attf-class="o_company_#{company.id}_layout header {{report_type != 'pdf' and 'h-0'}}">
             <div class="o_folder_header_container position-absolute start-0 top-0 z-n1 w-100">
                 <svg xmlns="http://www.w3.org/2000/svg" width="100%" t-att-height="header_shape_height" fill="none" preserveAspectRatio="none">
@@ -590,8 +592,9 @@
                     <svg xmlns="http://www.w3.org/2000/svg" class="d-block flex-grow-1" fill="none" height="100%">
                         <rect width="100%" height="100%"/>
                     </svg>
-                    <svg xmlns="http://www.w3.org/2000/svg" class="o_folder_angle_shape" width="80" height="100%" viewBox="0 0 80 48" fill="none">
-                        <path d="M5.70364 48H0V0.00100806H73.5404L80 0C74.2028 0.665869 68.7417 3.06684 64.332 6.88852L25.3513 40.6709C19.8969 45.3979 12.9212 48 5.70364 48Z"/>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="o_folder_angle_shape position-relative" width="80" height="100%" viewBox="0 0 80 48" fill="none">
+                        <path t-if="is_rtl" d="M74.296 48H80V0.001H6.46L0 0C5.7973 0.665925 11.2584 3.06708 15.668 6.889L54.648 40.67C60.1026 45.3976 67.0778 48.0001 74.296 48Z" fill="black"/>
+                        <path t-else="" d="M5.70364 48H0V0.00100806H73.5404L80 0C74.2028 0.665869 68.7417 3.06684 64.332 6.88852L25.3513 40.6709C19.8969 45.3979 12.9212 48 5.70364 48Z"/>
                     </svg>
                     <h2 t-attf-class="{{layout_document_title and 'o_folder_title mt-2 text-nowrap' or 'w-25'}}">
                         <t t-out="layout_document_title"/>
