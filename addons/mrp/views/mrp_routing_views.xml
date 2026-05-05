@@ -17,7 +17,7 @@
                     <field name="company_id" optional="hide" groups="base.group_multi_company"/>
                     <field name="possible_bom_product_template_attribute_value_ids" column_invisible="True"/>
                     <field name="bom_product_template_attribute_value_ids" optional="hide" widget="many2many_tags" options="{'no_create': True}" groups="product.group_product_variant"/>
-                    <field name="blocked_by_operation_ids" widget="many2many_tags" optional="hide" groups="mrp.group_mrp_workorder_dependencies"/>
+                    <field name="blocked_by_operation_ids" widget="many2many_tags" optional="hide"/>
                 </list>
             </field>
         </record>
