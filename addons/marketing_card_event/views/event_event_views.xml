@@ -4,7 +4,7 @@
         <field name="model">event.event</field>
         <field name="inherit_id" ref="event.view_event_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//button[@name='action_mass_mailing_attendees']" position="before">
+            <xpath expr="//field[@name='stage_id']" position="before">
                 <button name="action_open_card_mailing" type="object" class="btn btn-secondary"
                         groups="marketing_card.marketing_card_group_user">
                     Send Cards
