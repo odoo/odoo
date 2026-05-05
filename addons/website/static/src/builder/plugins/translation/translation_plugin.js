@@ -54,6 +54,13 @@ export class TranslationPlugin extends Plugin {
     resources = {
         clean_for_save_handlers: this.cleanForSave.bind(this),
         get_dirty_els: this.getDirtyTranslations.bind(this),
+        after_replication_handlers: ({ targetEl }) => {
+            // Tag TOC navbar entries explicitly so the replicated
+            // translation reaches the save payload.
+            if (targetEl.classList.contains("o_translation_without_style")) {
+                targetEl.classList.add("o_dirty");
+            }
+        },
         after_setup_editor_handlers: () => {
             const translationSavableEls = getTranslationAttributeEls(
                 this.services.website.pageDocument
@@ -135,7 +142,14 @@ export class TranslationPlugin extends Plugin {
                 sticky: false,
             });
         };
-        for (const translateEl of this.editableEls) {
+        // The TOC navbar lives under `.o_not_editable`, so its translation
+        // spans are excluded from `findOEditable`. Iterate them explicitly
+        // so `handleToC` can align their source SHA with the matching
+        // heading and tag them with `o_translation_without_style`.
+        const tocNavTranslationEls = this.editable.querySelectorAll(
+            ".s_table_of_content_navbar_wrap [data-oe-translation-source-sha]"
+        );
+        for (const translateEl of new Set([...this.editableEls, ...tocNavTranslationEls])) {
             this.handleToC(translateEl);
         }
         const savableInsideNotEditableEls = this.editable.querySelectorAll(
@@ -262,7 +276,6 @@ export class TranslationPlugin extends Plugin {
                     translateEl.dataset.oeTranslationSourceSha =
                         headerEl.dataset.oeTranslationSourceSha;
                 }
-                // TODO: handle o_translation_without_style
                 translateEl.classList.add("o_translation_without_style");
             }
         }
