@@ -240,8 +240,8 @@ export class FormatPlugin extends Plugin {
         this.dependencies.history.addStep();
     }
 
-    removeFontSizeFormat(el) {
-        for (const node of [el, ...descendants(el)]) {
+    removeFontSizeFormat({ block }) {
+        for (const node of [block, ...descendants(block)]) {
             removeFormat(node, formatsSpecs.fontSize);
             removeFormat(node, formatsSpecs.setFontSizeClassName);
         }
