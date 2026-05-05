@@ -228,6 +228,34 @@ class SmsComposer(models.TransientModel):
             self.write({'mass_force_send': True})
         return self.action_send_sms()
 
+    def action_schedule_message(self):
+        self._action_schedule_message()
+        return {'type': 'ir.actions.act_window_close'}
+
+    def _prepare_sms_scheduled_values(self, res_id):
+        self.ensure_one()
+        return {
+            'body': self.body,
+            'number': self.recipient_single_number_itf or self.recipient_single_number,
+            'scheduled_date': self.scheduled_date,
+            'state': 'outgoing',
+            'partner_id': self._get_records()._mail_get_partners()[res_id].id if self.res_model == 'res.partner' else False,
+        }
+
+    def _action_schedule_message(self):
+        if any(wizard.composition_mode != 'comment' for wizard in self):
+            raise UserError(_("A message can only be scheduled in monocomment mode"))
+
+        create_values = []
+        for wizard in self:
+            if not wizard.scheduled_date:
+                raise UserError(_("A scheduled date is needed to schedule a message"))
+
+            res_id = wizard.res_id
+            create_values.append(wizard._prepare_sms_scheduled_values(res_id))
+
+        return self.env['sms.sms'].sudo().create(create_values)
+
     def _action_send_sms(self):
         records = self._get_records()
         if self.composition_mode == 'numbers':
@@ -246,13 +274,17 @@ class SmsComposer(models.TransientModel):
         sms_values = [
             {
                 'body': self.body,
-                'number': number
+                'number': number,
+                'scheduled_date': self.scheduled_date,
             } for number in (
                 self.sanitized_numbers.split(',') if self.sanitized_numbers else [self.recipient_single_number_itf or self.recipient_single_number or '']
             )
         ]
         sms_su = self.env['sms.sms'].sudo().create(sms_values)
-        sms_su.send()
+
+        if not self.scheduled_date:
+            sms_su.send()
+
         return sms_su
 
     def _action_send_sms_comment_single(self, records=None):

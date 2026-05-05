@@ -61,6 +61,8 @@
                             invisible="composition_mode not in ('comment', 'numbers') or not recipient_single_valid"/>
                     <button string="Send" type="object" class="oe_highlight" name="action_send_sms" data-hotkey="q"
                             invisible="composition_mode not in ('comment', 'numbers') or recipient_single_valid" disabled='1'/>
+                    <button string="Schedule" type="object" class="btn-primary" name="action_schedule_message" data-hotkey="q"
+                            invisible="not scheduled_date or not recipient_single_valid"/>
                     <button string="Put in queue" type="object" class="oe_highlight" name="action_send_sms" data-hotkey="q"
                         invisible="composition_mode != 'mass'"/>
                     <button string="Send now" type="object" name="action_send_sms_mass_now" data-hotkey="w"
