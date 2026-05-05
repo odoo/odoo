@@ -880,11 +880,13 @@ patch(PosStore.prototype, {
             // Assign order lines to the first course
             order.lines.forEach((line) => (line.course_id = course));
             // Create a second empty course
-            selectedCourse = this.data.models["restaurant.order.course"].create({
-                order_id: order,
-                index: order.getNextCourseIndex(),
-                name: _t("Course ") + order.getNextCourseIndex(),
-            });
+            if (!this.config.use_course_allocation) {
+                selectedCourse = this.data.models["restaurant.order.course"].create({
+                    order_id: order,
+                    index: order.getNextCourseIndex(),
+                    name: _t("Course ") + order.getNextCourseIndex(),
+                });
+            }
         }
         order.selectCourse(selectedCourse);
         return course;
