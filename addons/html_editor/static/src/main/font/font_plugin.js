@@ -650,7 +650,8 @@ export class FontPlugin extends Plugin {
         return insertContainer;
     }
 
-    handleSetBlock(newEl, block) {
+    handleSetBlock(params) {
+        const { block, newEl } = params;
         if (
             ["BLOCKQUOTE", "PRE"].includes(newEl?.nodeName) &&
             block.parentElement === newEl.parentElement
