@@ -95,10 +95,7 @@ class TestMessageController(HttpCaseWithUserDemo, MailCommon):
         )
         self.assertEqual(res2.status_code, 200)
         data1 = res2.json()["result"]
-        self.assertEqual(
-            data1["store_data"]["ir.attachment"],
-            self._filter_attachments_fields(
-                {
+        attachments_fields = {
                     "checksum": False,
                     "create_date": fields.Datetime.to_string(self.attachments[0].create_date),
                     "file_size": 0,
@@ -123,9 +120,12 @@ class TestMessageController(HttpCaseWithUserDemo, MailCommon):
                     "original_id": False,
                     "public": False,
                     "res_id": self.attachments[0].res_id,
-                    "linked_document_id": self.attachments[0].linked_document_id.id,
-                },
-            ),
+                }
+        if "documents.document" in self.env:
+            attachments_fields["linked_document_id"] = self.attachments[0].linked_document_id.id
+        self.assertEqual(
+            data1["store_data"]["ir.attachment"],
+            self._filter_attachments_fields(attachments_fields),
             "guest should be allowed to add attachment with token when posting message",
         )
         # test message update: token error
