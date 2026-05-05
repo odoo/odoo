@@ -1620,8 +1620,16 @@ def load_server_wide_modules():
                 _logger.exception('Failed to load server-wide module `%s`.%s', m, msg)
 
 
+_RELOAD_EXIT_CODE = 75  # EX_TEMPFAIL from sysexits.h: child asks supervisor to respawn
+
+
 def _reexec(updated_modules=None):
-    """reexecute openerp-server process with (nearly) the same arguments"""
+    """reexecute openerp-server process with (nearly) the same arguments.
+
+    Uses `os.execve` by default for pycharm environments. For debugpy
+    environments, use a supervisor/subprocess design to respawn the server
+    as a subprocess on each reload which matches debugpy's requirements.
+    """
     if osutil.is_running_as_nt_service():
         subprocess.call(f'net stop {nt_service_name} && net start {nt_service_name}', shell=True)
     exe = os.path.basename(sys.executable)
@@ -1630,6 +1638,27 @@ def _reexec(updated_modules=None):
         args += ["-u", ','.join(updated_modules)]
     if not args or args[0] not in (sys.executable, exe):
         args.insert(0, sys.executable)
+
+    # debugpy sets this environment variable at the start of debug sessions.
+    # We can use that to make sure we are in that environment
+    if os.environ.get('DEBUGPY_RUNNING') == 'true':
+        import odoo  # noqa: PLC0415
+        if not odoo.evented:
+            # Subprocess: kill on reload to trigger a respawn by the supervisor.
+            if os.environ.get('ODOO_RELOAD_CHILD'):
+                os._exit(_RELOAD_EXIT_CODE)
+            # First generation: become a supervisor that respawns the actual
+            # server on each reload. Each supervised child runs as a debugger
+            # sub-session via debugpy's subProcess hook.
+            sock_fd = os.environ.get('ODOO_HTTP_SOCKET_FD')
+            pass_fds = (int(sock_fd),) if sock_fd else ()
+            env = os.environ.copy()
+            env['ODOO_RELOAD_CHILD'] = '1'
+            rc = _RELOAD_EXIT_CODE
+            while rc == _RELOAD_EXIT_CODE:
+                rc = subprocess.Popen(args, env=env, pass_fds=pass_fds).wait()
+            sys.exit(rc)
+
     # We should keep the LISTEN_* environment variabled in order to support socket activation on reexec
     os.execve(sys.executable, args, os.environ)
 
