@@ -950,6 +950,18 @@ ADDITIONAL_IDENTIFIERS_METADATA = {
         'category': 'EN',
         'countries': ['TR'],
     },
+    'TR_MERSIS': {
+        'label': _lt('Mersis Number'),
+        'countries': ['TR'],
+    },
+    'TR_TICARET_SICIL': {
+        'label': _lt('Trade Registry Number'),
+        'countries': ['TR'],
+    },
+    'TR_SUBE': {
+        'label': _lt('Branch Number'),
+        'countries': ['TR'],
+    },
     'UZ_EN': {
         'sequence': 20,
         'label': _lt('VAT Registry (VAT ID)'),

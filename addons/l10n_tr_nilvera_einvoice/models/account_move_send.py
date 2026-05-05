@@ -57,11 +57,15 @@ class AccountMoveSend(models.AbstractModel):
         if not tr_nilvera_moves:
             return alerts
 
-        if tr_companies_missing_required_codes := tr_nilvera_moves.company_id.filtered(lambda c: c.country_code == 'TR' and not (c.partner_id.category_id.parent_id and self.env["res.partner.category"]._get_l10n_tr_official_mandatory_categories())):
+        if tr_companies_missing_required_codes := tr_nilvera_moves.company_id.filtered(
+            lambda c: c.country_code == 'TR'
+            and not c.partner_id._get_additional_identifier('TR_MERSIS')
+            and not c.partner_id._get_additional_identifier('TR_TICARET_SICIL')
+        ):
             alerts["tr_companies_missing_required_codes"] = {
-                "message": _("Please ensure that your company contact has either the 'MERSISNO' or 'TICARETSICILNO' tag with a value assigned."),
+                "message": _("Please ensure that your company contact has either the 'Mersis Number' or 'Trade Registry Number' has a value."),
                 "action_text": _("View Company(s)"),
-                "action": tr_companies_missing_required_codes.partner_id._get_records_action(name=_("Check tags on company(s)")),
+                "action": tr_companies_missing_required_codes.partner_id._get_records_action(name=_("Check company(s)")),
                 "level": "danger",
             }
 
