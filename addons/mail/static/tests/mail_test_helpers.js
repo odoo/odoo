@@ -803,7 +803,7 @@ export function assertChatHub({ opened = [], folded = [] }) {
     expect(browser.localStorage.getItem(CHAT_HUB_KEY)).toEqual(toChatHubData(opened, folded));
 }
 
-export const STORE_FETCH_ROUTES = ["/mail/action", "/mail/data"];
+export const STORE_FETCH_ROUTES = ["/mail/store"];
 
 /**
  * Prepares listeners for the various ways a store fetch could be triggered. It is important to call
@@ -843,15 +843,7 @@ export function listenStoreFetch(nameOrNames = [], { logParams = [], onRpc: onRp
         }
         return res;
     }
-    /**
-     * The fetch could happen through any of those routes depending on various conditions.
-     * Most tests don't care about which route is used, so we just listen to all of them.
-     */
-    onRpc("/mail/action", async (request) => {
-        const { params } = await request.json();
-        return registerSteps(request, params.fetch_params);
-    });
-    onRpc("/mail/data", async (request) => {
+    onRpc("/mail/store", async (request) => {
         const { params } = await request.json();
         return registerSteps(request, params.fetch_params);
     });

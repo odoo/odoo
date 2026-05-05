@@ -705,11 +705,7 @@ export class DiscussChannel extends Record {
     }
 
     pinRpc({ pinned = true } = {}) {
-        return this.store.fetchStoreData(
-            "/discuss/channel/pin",
-            { channel_id: this.id, pinned },
-            { readonly: false }
-        );
+        return this.store.fetchStoreData("/discuss/channel/pin", { channel_id: this.id, pinned });
     }
 
     /** @param {string} name */

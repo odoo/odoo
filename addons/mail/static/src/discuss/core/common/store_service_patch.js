@@ -40,7 +40,7 @@ const storeServicePatch = {
         const { channel } = await this.fetchStoreData(
             "/discuss/create_group",
             { default_display_mode, partners_to, name },
-            { readonly: false, requestData: true }
+            { requestData: true }
         );
         channel.open({ focus: true });
         return channel;

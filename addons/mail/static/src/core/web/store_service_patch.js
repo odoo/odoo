@@ -157,7 +157,7 @@ const StorePatch = {
         // apply the change immediately for faster feedback
         this.store.bookmarkBox.counter = 0;
         this.store.bookmarkBox.messages = [];
-        await this.store.fetchStoreData("remove_all_bookmarks", undefined, { readonly: false });
+        await this.store.fetchStoreData("remove_all_bookmarks");
     },
     handleClickOnLink(ev, thread) {
         const model = ev.target.dataset.oeModel;

@@ -78,7 +78,7 @@ class TestMessageHelpersRobustness(MailCommon, HttpCase):
     def test_load_message_failures(self):
         self.authenticate(self.user_employee.login, self.user_employee.login)
         with contextlib.suppress(Exception), mute_logger('odoo.http', 'odoo.sql_db'):  # suppress logged error due to readonly route doing an update
-            result = self.make_jsonrpc_request("/mail/data", {"fetch_params": ["failures"]})
+            result = self.make_jsonrpc_request("/mail/store", {"fetch_params": ["failures"]})
         self.assertEqual(sorted(r['thread']['id'] for r in result['mail.message']), sorted(self.test_records_simple[:2].ids))
         self.assertEqual(
             sorted(self.env['mail.notification'].search([('author_id', '=', self.partner_employee.id)]).mapped('mail_message_id.res_id')),
@@ -102,7 +102,7 @@ class TestMessageHelpersRobustness(MailCommon, HttpCase):
             'failure_type': 'mail_email_invalid',
         })
         with contextlib.suppress(Exception), mute_logger('odoo.http', 'odoo.sql_db'):  # suppress logged error due to readonly route doing an update
-            res = self.make_jsonrpc_request("/mail/data", {"fetch_params": ["failures"]})
+            res = self.make_jsonrpc_request("/mail/store", {"fetch_params": ["failures"]})
             self.assertEqual(
                 sorted(t["name"] for t in res["mail.thread"]),
                 sorted(['Some description'] + (self.test_records_simple - self.deleted_record).mapped('display_name'))
@@ -113,14 +113,14 @@ class TestMessageHelpersRobustness(MailCommon, HttpCase):
         p2_notifications = self.env['mail.notification'].search([('res_partner_id', '=', self.partner_employee_2.id)])
         p2_notifications.is_read = False
         self.authenticate(self.user_employee_2.login, self.user_employee_2.login)
-        data = self.make_jsonrpc_request("/mail/data", {"fetch_params": ["/mail/inbox/messages"]})
+        data = self.make_jsonrpc_request("/mail/store", {"fetch_params": ["/mail/inbox/messages"]})
         self.assertEqual(
             {r["thread"]["id"] for r in data["mail.message"]},
             set(self.test_records_simple.ids),
             "Currently reading message on missing record, crash avoided",
         )
         p2_notifications.with_user(self.user_employee_2).mail_message_id.set_message_done()
-        data = self.make_jsonrpc_request("/mail/data", {"fetch_params": ["/mail/history/messages"]})
+        data = self.make_jsonrpc_request("/mail/store", {"fetch_params": ["/mail/history/messages"]})
         self.assertEqual(
             {r["thread"]["id"] for r in data["mail.message"]},
             set(self.test_records_simple.ids),

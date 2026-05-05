@@ -905,7 +905,7 @@ class TestChannelInternals(MailCommon, HttpCase):
             - OR we have access to the channel
         """
         self.authenticate(self.user_employee.login, self.user_employee.login)
-        data = self.make_jsonrpc_request("/mail/data", {"fetch_params": ["init_messaging"]})
+        data = self.make_jsonrpc_request("/mail/store", {"fetch_params": ["init_messaging"]})
         self.assertEqual(data["Store"]["bookmarkBox"]["counter"], 0)
         test_group = self.env['discuss.channel'].create({
             'name': 'Private Channel',
@@ -915,16 +915,16 @@ class TestChannelInternals(MailCommon, HttpCase):
 
         test_group_own_message = test_group.with_user(self.user_employee.id).message_post(body='TestingMessage')
         test_group_own_message.write({'bookmarked_partner_ids': [(6, 0, self.partner_employee.ids)]})
-        data = self.make_jsonrpc_request("/mail/data", {"fetch_params": ["init_messaging"]})
+        data = self.make_jsonrpc_request("/mail/store", {"fetch_params": ["init_messaging"]})
         self.assertEqual(data["Store"]["bookmarkBox"]["counter"], 1)
 
         test_group_message = test_group.message_post(body='TestingMessage')
         test_group_message.write({'bookmarked_partner_ids': [(6, 0, self.partner_employee.ids)]})
-        data = self.make_jsonrpc_request("/mail/data", {"fetch_params": ["init_messaging"]})
+        data = self.make_jsonrpc_request("/mail/store", {"fetch_params": ["init_messaging"]})
         self.assertEqual(data["Store"]["bookmarkBox"]["counter"], 2)
 
         test_group.write({'channel_partner_ids': False})
-        data = self.make_jsonrpc_request("/mail/data", {"fetch_params": ["init_messaging"]})
+        data = self.make_jsonrpc_request("/mail/store", {"fetch_params": ["init_messaging"]})
         self.assertEqual(data["Store"]["bookmarkBox"]["counter"], 1)
 
     def test_multi_company_chat(self):

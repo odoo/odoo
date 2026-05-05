@@ -17,7 +17,7 @@ class WebClient(WebclientController):
         """ Check if there is an opened chat request for the website livechat
         channel and the current visitor (from request). If so, link the visitor
         to the chat request channel. Channel will then be returned as part of
-        the mail store initialization (/mail/data).
+        the mail store initialization (/mail/store).
         """
         visitor = request.env['ir.http']._get_visitor_from_request()
         if not visitor:

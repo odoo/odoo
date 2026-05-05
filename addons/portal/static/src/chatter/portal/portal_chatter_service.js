@@ -53,15 +53,11 @@ export class PortalChatterService {
             hash: chatterEl.getAttribute("data-hash"),
             pid: parseInt(chatterEl.getAttribute("data-pid")),
         });
-        await this.store.fetchStoreData(
-            "/portal/chatter_init",
-            {
-                access_params: thread.rpcParams,
-                thread_id: props.resId,
-                thread_model: props.resModel,
-            },
-            { readonly: false }
-        );
+        await this.store.fetchStoreData("/portal/chatter_init", {
+            access_params: thread.rpcParams,
+            thread_id: props.resId,
+            thread_model: props.resModel,
+        });
         odoo.portalChatterReady.resolve(true);
     }
 }

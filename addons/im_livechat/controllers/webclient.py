@@ -1,8 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.http import request, route
-from odoo.addons.mail.controllers.webclient import WebclientController
+from odoo.addons.mail.controllers.webclient import WebclientController, WRITE_FETCH_PARAMS
 from odoo.addons.mail.tools.discuss import Store
+
+WRITE_FETCH_PARAMS |= {"init_livechat"}
 
 
 class WebClient(WebclientController):

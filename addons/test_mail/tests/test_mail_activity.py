@@ -515,7 +515,7 @@ class TestActivitySystray(TestActivityCommon, HttpCase):
 
         self.authenticate(self.user_employee.login, self.user_employee.login)
         with freeze_time(self.dt_reference):
-            groups_data = self.make_jsonrpc_request("/mail/data", {"fetch_params": ["systray_get_activities"]}).get('Store', {}).get('activityGroups', [])
+            groups_data = self.make_jsonrpc_request("/mail/store", {"fetch_params": ["systray_get_activities"]}).get('Store', {}).get('activityGroups', [])
         self.assertEqual(len(groups_data), 3, 'Should have activities for 2 test models + generic for non accessible')
 
         for model_name, msg, (exp_total, exp_today, exp_planned, exp_overdue), exp_domain in [
@@ -599,7 +599,7 @@ class TestActivitySystray(TestActivityCommon, HttpCase):
 
         self.authenticate(self.user_employee.login, self.user_employee.login)
         with freeze_time(self.dt_reference):
-            groups_data = self.make_jsonrpc_request("/mail/data", {"fetch_params": ["systray_get_activities"]}).get('Store', {}).get('activityGroups', [])
+            groups_data = self.make_jsonrpc_request("/mail/store", {"fetch_params": ["systray_get_activities"]}).get('Store', {}).get('activityGroups', [])
 
         for model_name, msg, (exp_total, exp_today, exp_planned, exp_overdue) in [
             ('mail.activity', 'Non accessible: deleted', (1, 1, 2, 0)),
@@ -619,7 +619,7 @@ class TestActivitySystray(TestActivityCommon, HttpCase):
         # removed from systray, considering you have to log into the right company
         # to see them (change in 18+)
         with freeze_time(self.dt_reference):
-            groups_data = self.make_jsonrpc_request("/mail/data", {
+            groups_data = self.make_jsonrpc_request("/mail/store", {
                 "fetch_params": ["systray_get_activities"],
                 "context": {"allowed_company_ids": self.company_admin.ids},
             }).get('Store', {}).get('activityGroups', [])
@@ -641,7 +641,7 @@ class TestActivitySystray(TestActivityCommon, HttpCase):
         # now not having accessible to company 2 records: tread like forbidden
         self.user_employee.write({'company_ids': [(3, self.company_2.id)]})
         with freeze_time(self.dt_reference):
-            groups_data = self.make_jsonrpc_request("/mail/data", {
+            groups_data = self.make_jsonrpc_request("/mail/store", {
                 "fetch_params": ["systray_get_activities"],
                 "context": {"allowed_company_ids": self.company_admin.ids},
             }).get('Store', {}).get('activityGroups', [])

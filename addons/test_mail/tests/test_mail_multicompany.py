@@ -287,7 +287,7 @@ class TestMultiCompanyControllers(TestMailMCCommon, HttpCase):
 
         self.authenticate(self.user_employee_c2.login, self.user_employee_c2.login)
         result = self.make_jsonrpc_request(
-            "/mail/data", {"fetch_params": [["mail.thread", {
+            "/mail/store", {"fetch_params": [["mail.thread", {
                 "thread_id": record.id,
                 "thread_model": record._name,
                 "request_list": ["followers"],
@@ -316,7 +316,7 @@ class TestMultiCompanyControllers(TestMailMCCommon, HttpCase):
                 if test_user in self.user_portal + self.user_portal_c2:
                     with self.assertRaises(JsonRpcException):
                         result = self.make_jsonrpc_request(
-                            "/mail/data", {"fetch_params": [["mail.thread", {
+                            "/mail/store", {"fetch_params": [["mail.thread", {
                                 "thread_id": record.id,
                                 "thread_model": record._name,
                                 "request_list": ["followers"],
@@ -324,7 +324,7 @@ class TestMultiCompanyControllers(TestMailMCCommon, HttpCase):
                         )
                 else:
                     result = self.make_jsonrpc_request(
-                        "/mail/data", {"fetch_params": [["mail.thread", {
+                        "/mail/store", {"fetch_params": [["mail.thread", {
                             "thread_id": record.id,
                             "thread_model": record._name,
                             "request_list": ["followers"],
@@ -342,7 +342,7 @@ class TestMultiCompanyControllers(TestMailMCCommon, HttpCase):
             partner_ids=[self.partner_employee_c2.id, customer_c3.id],
         )
         self.authenticate(self.user_employee_c2.login, self.user_employee_c2.login)
-        messages = self.make_jsonrpc_request("/mail/data", {"fetch_params": ["/mail/inbox/messages"]})
+        messages = self.make_jsonrpc_request("/mail/store", {"fetch_params": ["/mail/inbox/messages"]})
         self.assertEqual(len(messages["mail.message"]), 1)
 
     def test_redirect_to_records(self):

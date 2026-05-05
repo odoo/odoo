@@ -5,9 +5,18 @@ from werkzeug.exceptions import NotFound
 
 from odoo import fields, http
 from odoo.http import request
-from odoo.addons.mail.controllers.webclient import WebclientController
+from odoo.addons.mail.controllers.webclient import WebclientController, WRITE_FETCH_PARAMS
 from odoo.addons.mail.tools.discuss import mail_route, Store
 from odoo.exceptions import AccessError
+
+WRITE_FETCH_PARAMS |= {
+    "/discuss/channel/favorite",
+    "/discuss/channel/messages",
+    "/discuss/channel/pin",
+    "/discuss/create_channel",
+    "/discuss/create_group",
+    "/discuss/get_or_create_chat",
+}
 
 
 class DiscussChannelWebclientController(WebclientController):
