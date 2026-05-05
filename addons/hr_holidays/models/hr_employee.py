@@ -46,6 +46,7 @@ class HrEmployee(models.Model):
         ('presence_holiday_absent', 'On leave'),
         ('presence_holiday_present', 'Present but on leave')])
     member_of_department = fields.Boolean('Member of Department', compute='_compute_member_of_department', search='_search_part_of_department')
+    hr_responsible_id = fields.Many2one(domain=lambda self: self.env['hr.version']._get_hr_responsible_domain())
 
     def _compute_current_work_entry_type_id(self):
         self.current_work_entry_type_id = False

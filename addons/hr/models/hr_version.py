@@ -51,6 +51,9 @@ class HrVersion(models.Model):
                 or self.env['hr.payroll.structure.type'].sudo().search([('country_id', '=', False)], limit=1)
         )
 
+    def _get_hr_responsible_domain(self):
+        return "[('share', '=', False), ('company_ids', 'in', company_id), ('all_group_ids', 'in', %s)]" % self.env.ref('hr.group_hr_user').id
+
     company_id = fields.Many2one('res.company', compute='_compute_company_id', readonly=False,
                                  store=True, index=True, default=lambda self: self.env.company, tracking=1)
     employee_id = fields.Many2one(
@@ -186,9 +189,6 @@ class HrVersion(models.Model):
                                        groups="hr.group_hr_manager")
     additional_note = fields.Text(string='Additional Note', groups="hr.group_hr_user", tracking=1)
 
-    def _get_hr_responsible_domain(self):
-        return "[('share', '=', False), ('company_ids', 'in', company_id), ('all_group_ids', 'in', %s)]" % self.env.ref('hr.group_hr_user').id
-
     hr_responsible_id = fields.Many2one(
         'res.users', 'HR Responsible', tracking=1,
         help='Person responsible for validating the employee\'s contracts.', domain=_get_hr_responsible_domain,
@@ -305,6 +305,18 @@ class HrVersion(models.Model):
                 )
 
     def write(self, vals):
+        if 'hr_responsible_id' in vals:
+            new_responsible = self.env['res.users'].browse(vals['hr_responsible_id'])
+            for version in self:
+                if version.hr_responsible_id.id != vals['hr_responsible_id'] and version.employee_id:
+                    recipient = version.employee_id.user_id.partner_id or version.employee_id.work_contact_id
+                    if recipient:
+                        self.env['mail.thread'].sudo().message_notify(
+                            body=self.env._("Your HR Responsible has been updated to %s.", new_responsible.name),
+                            partner_ids=recipient.ids,
+                            subject=self.env._('HR Responsible Update'),
+                        )
+
         # Employee Versions Validation
         if 'employee_id' in vals:
             if self.filtered(lambda v: v.employee_id and v.employee_id.version_ids <= self and vals['employee_id'] != v.employee_id.id):

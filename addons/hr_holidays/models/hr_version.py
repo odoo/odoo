@@ -19,6 +19,10 @@ class HrVersion(models.Model):
     _inherit = 'hr.version'
     _description = 'Employee Contract'
 
+    def _get_hr_responsible_domain(self):
+        return "[('share', '=', False), ('company_ids', 'in', company_id), ('all_group_ids', 'in', %s)]" % self.env.ref('hr_holidays.group_hr_holidays_user').id
+    hr_responsible_id = fields.Many2one(domain=_get_hr_responsible_domain)
+
     @api.constrains('contract_date_start', 'contract_date_end')
     def _check_contracts(self):
         self._get_leaves()._check_contracts()
