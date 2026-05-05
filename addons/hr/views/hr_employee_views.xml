@@ -262,17 +262,17 @@
                                                 </span>
                                                 <button
                                                     title="Trust Bank Account"
-                                                    class="pt-0" 
-                                                    icon="fa-toggle-off fa-lg"  
-                                                    type="object" 
-                                                    name="action_toggle_primary_bank_account_trust" 
+                                                    class="pt-0"
+                                                    icon="fa-toggle-off fa-lg"
+                                                    type="object"
+                                                    name="action_toggle_primary_bank_account_trust"
                                                     invisible="is_trusted_bank_account"/>
-                                                <button 
+                                                <button
                                                     title="Untrust Bank Account"
-                                                    class="button-on pt-0" 
-                                                    icon="fa-toggle-on fa-lg"   
-                                                    type="object" 
-                                                    name="action_toggle_primary_bank_account_trust" 
+                                                    class="button-on pt-0"
+                                                    icon="fa-toggle-on fa-lg"
+                                                    type="object"
+                                                    name="action_toggle_primary_bank_account_trust"
                                                     invisible="not is_trusted_bank_account"/>
                                             </div>
                                         </div>
@@ -325,7 +325,7 @@
                                             <field name="private_street" placeholder="Street..." class="o_address_street"/>
                                             <field name="private_street2" placeholder="Street 2..." class="o_address_street"/>
                                             <field name="private_city" placeholder="City" class="o_address_city"/>
-                                            <field name="private_state_id" class="o_address_state" placeholder="State" 
+                                            <field name="private_state_id" class="o_address_state" placeholder="State"
                                                 options='{"no_open": True, "no_create": True}' context="{'default_country_id': private_country_id}"
                                                 domain="[('id', 'in', allowed_country_state_ids)]"/>
                                             <field name="private_zip" placeholder="ZIP" class="o_address_zip"/>
@@ -375,7 +375,7 @@
                                             <span invisible="not contract_date_start">to</span>
                                             <field name="contract_date_end" string="End Date" placeholder="Indefinite" widget="date_dynamic_min" options="{'min_date_field': 'contract_date_start'}"
                                                 class="o_hr_narrow_field ms-3" invisible="not contract_date_start" required="fixed_term"/>
-                                            <widget name="button_new_contract"/>
+                                            <widget name="button_new_contract" invisible="not contract_date_start"/>
                                         </div>
                                         <field name="fixed_term" string="Fixed Term"/>
                                         <label for="wage"/>
