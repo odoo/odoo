@@ -3,7 +3,7 @@ import { BuilderComponent } from "@html_builder/core/building_blocks/builder_com
 import { BuilderListDialog } from "@html_builder/core/building_blocks/builder_list_dialog";
 import { useBuilderComponent, useInputBuilderComponent } from "@html_builder/core/utils";
 import { isSmallInteger } from "@html_builder/utils/utils";
-import { Component, onWillUpdateProps, prop, props, types as t, xml } from "@odoo/owl";
+import { Component, onWillUpdateProps, props, types as t, xml } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { SelectMenu } from "@web/core/select_menu/select_menu";
 import { useSortable } from "@web/core/utils/sortable_owl";
@@ -12,10 +12,12 @@ import { useService } from "@web/core/utils/hooks";
 class SortableContainer extends Component {
     static template = xml`<t t-call-slot="default"/>`;
 
-    setupLayoutEffect = prop("setupLayoutEffect", t.function());
+    props = props({
+        setupLayoutEffect: t.function(),
+    });
 
     setup() {
-        this.setupLayoutEffect();
+        this.props.setupLayoutEffect();
     }
 }
 
