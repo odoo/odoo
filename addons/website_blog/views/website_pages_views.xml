@@ -130,6 +130,7 @@
             <field name="write_uid" optional="hide"/>
             <field name="write_date" optional="hide"/>
 
+            <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="show"/>
             <field name="is_seo_optimized"/>
             <field name="website_published" invisible="publish_on and website_published"/>
             <field name="publish_on" string="Scheduled" invisible="not publish_on"/>
