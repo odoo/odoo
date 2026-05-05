@@ -225,8 +225,10 @@ class SurveyInvite(models.TransientModel):
         email_from = self.template_id._render_field('email_from', answer.ids)[answer.id] if self.template_id.email_from else self.author_id.email_formatted
         if not email_from:
             raise UserError(_("Unable to post message, please configure the sender's email address."))
-        subject = self._render_field('subject', answer.ids, compute_lang=True)[answer.id]
-        body = self._render_field('body', answer.ids, compute_lang=True)[answer.id]
+        # Synchronize language of subject/body for each recipient
+        compute_lang = self.subject == self.template_id['subject'] and self.body == self.template_id['body_html'] if self.template_id else False
+        subject = self._render_field('subject', answer.ids, compute_lang=compute_lang)[answer.id]
+        body = self._render_field('body', answer.ids, compute_lang=compute_lang)[answer.id]
         # post the message
         mail_values = {
             'attachment_ids': [(4, att.id) for att in self.attachment_ids],
