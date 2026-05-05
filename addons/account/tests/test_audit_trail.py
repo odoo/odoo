@@ -97,6 +97,10 @@ class TestAuditTrail(AccountTestInvoicingCommon, MailCase):
         )
         with self.assertRaisesRegex(UserError, "Messages with tracking values cannot be modified"):
             self.move._message_update_content(audit_trail, body="")
+        with self.assertRaisesRegex(UserError, "You cannot remove parts of a restricted audit trail. Archive the record instead."):
+            audit_trail.write({'body': 'Remove tracking'})
+        with self.assertRaisesRegex(UserError, "You cannot remove parts of a restricted audit trail. Archive the record instead."):
+            audit_trail.unlink()
 
     def test_content(self):
         with self.mock_mail_gateway(), self.mock_mail_app():
