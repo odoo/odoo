@@ -13,7 +13,7 @@ import {
 import { Composer } from "@mail/core/common/composer";
 import { Message } from "@mail/core/common/message";
 import { describe, expect, rightClick, test } from "@odoo/hoot";
-import { onMounted, onRendered } from "@odoo/owl";
+import { onRendered } from "@odoo/owl";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { ActionSwiper } from "@web/core/action_swiper/action_swiper";
 import { range } from "@web/core/utils/numbers";
@@ -49,7 +49,6 @@ test("posting new message should only render relevant part", async () => {
                     }
                 }
             };
-            onMounted(cb);
             onRendered(cb);
             return super.setup();
         },
@@ -93,7 +92,6 @@ test("replying to message should only render relevant part", async () => {
                     }
                 }
             };
-            onMounted(cb);
             onRendered(cb);
             return super.setup();
         },
@@ -132,7 +130,6 @@ test("right-click message selection should only render relevant part", async () 
                     }
                 }
             };
-            onMounted(cb);
             onRendered(cb);
             return super.setup();
         },
