@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, models
+from odoo import _, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -13,8 +13,11 @@ class StockMove(models.Model):
 
     def _prepare_analytic_line_values(self, account_field_values, amount, unit_amount):
         res = super()._prepare_analytic_line_values(account_field_values, amount, unit_amount)
-        if self.raw_material_production_id:
+        production = self.raw_material_production_id
+        if production:
             res['category'] = 'manufacturing_order'
+            if production.state == 'done' and production.date_finished:
+                res['date'] = fields.Date.context_today(production, timestamp=production.date_finished)
         return res
 
     def _prepare_analytic_lines(self):
