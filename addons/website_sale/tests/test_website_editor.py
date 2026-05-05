@@ -2,6 +2,7 @@
 
 import base64
 import logging
+from unittest.mock import patch
 
 from odoo.exceptions import ValidationError
 from odoo.fields import Command
@@ -117,6 +118,37 @@ class TestProductPictureController(HttpCase):
                 [product_template_attribute_line.product_template_value_ids[0].id],
             )
         self.assertEqual(1, len(product_template.product_variant_ids))
+
+    def test_extra_images_from_remote_urls(self):
+        url_attachments = self.env["ir.attachment"].create([
+            {"name": "image.png", "public": True, "url": url}
+            for url in (
+                "https://example.com/timeout_image.png",
+                "https://example.com/remote_image.png",
+            )
+        ])
+        remote_image = ATTACHMENT_DATA[0]
+        load_remote_url_responses = {"https://example.com/remote_image.png": remote_image}
+
+        with (
+            patch.object(
+                self.env.registry["ir.qweb.field.image"],
+                "load_remote_url",
+                new=lambda _self, url_: load_remote_url_responses.get(url_),
+            ),
+            MockRequest(self.product.env, website=self.website),
+        ):
+            self.WebsiteSaleController.add_product_media(
+                [{"id": id_} for id_ in url_attachments.ids],
+                "image",
+                self.product.id,
+                self.product.product_tmpl_id.id,
+            )
+
+        self.assertRecordValues(
+            self.product.product_template_image_ids[-2:],
+            [{"image_1920": False}, {"image_1920": remote_image.content}],
+        )  # All images should be saved, except for invalid or timed out urls
 
     def test_resequence_image_first(self):
         self._create_product_images()
