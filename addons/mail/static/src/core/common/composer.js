@@ -505,6 +505,7 @@ export class Composer extends Component {
             },
             isLoading: !!this.suggestion.search.term && this.suggestion.state.isFetching,
             options: [],
+            rememberPosition: false,
         };
         if (!this.hasSuggestions) {
             return props;
