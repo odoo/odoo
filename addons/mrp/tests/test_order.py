@@ -4311,6 +4311,18 @@ class TestMrpOrder(TestMrpCommon):
 
         self.assertEqual(production.workorder_ids.duration_expected, init_duration_expected + 5)
 
+    def test_workorder_duration_recomputed_after_changing_mo_uom(self):
+        """Ensure that workorder expected duration is recomputed when changing the MO UoM.
+        """
+        # Remove the workcenter capacity so _get_capacity() falls back to the default BoM capacity.
+        self.workcenter_2.capacity_ids.unlink()
+        mo = self.env['mrp.production'].create({
+            'bom_id': self.bom_4.id,
+        })
+        self.assertEqual(mo.workorder_ids.duration_expected, 60, "Initial workorder duration should be 60 minutes.")
+        mo.product_uom_id = self.uom_dozen
+        self.assertEqual(mo.workorder_ids.duration_expected, 720, "Workorder duration should be 720 minutes after changing the MO UoM.")
+
     def test_batch_production_01(self):
         """ Test the wizard mrp.batch.produce without tracked components."""
         self.product_4.tracking = 'serial'
