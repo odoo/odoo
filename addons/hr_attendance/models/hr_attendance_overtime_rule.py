@@ -260,7 +260,7 @@ class HrAttendanceOvertimeRule(models.Model):
         timing_type_set = set(timing_rule_by_timing_type.keys())
 
         intervals_by_timing_type = {
-            'leave': schedules_intervals_by_employee['leave'],
+            'leave': defaultdict(),
             'schedule': defaultdict(lambda: defaultdict(Intervals)),
             'work_days': defaultdict(),
             'non_work_days': defaultdict(),
@@ -268,18 +268,18 @@ class HrAttendanceOvertimeRule(models.Model):
         }
 
         for employee in employees:
+            intervals_by_timing_type['leave'][employee] = _generate_days_intervals(schedules_intervals_by_employee['leave'][employee] - schedules_intervals_by_employee['public_leave'][employee])
             if {'work_days', 'non_work_days'} & timing_type_set:
                 intervals_by_timing_type['work_days'][employee] = _generate_days_intervals(
                     schedules_intervals_by_employee['schedule'][employee] - schedules_intervals_by_employee['leave'][employee]
                 )
             if 'non_work_days' in timing_type_set:
-                intervals_by_timing_type['non_work_days'][employee] = _generate_days_intervals(
-                    _invert_intervals(
+                non_working_intervals = _invert_intervals(
                         intervals_by_timing_type['work_days'][employee],
                         datetime.combine(min_check_in, datetime.min.time()),
                         datetime.combine(max_check_out, datetime.max.time())
                     )
-                )
+                intervals_by_timing_type['non_work_days'][employee] = _generate_days_intervals(non_working_intervals - schedules_intervals_by_employee['public_leave'][employee])
             if 'public_leave' in timing_type_set:
                 intervals_by_timing_type['public_leave'][employee] = _generate_days_intervals(schedules_intervals_by_employee['public_leave'][employee])
 
