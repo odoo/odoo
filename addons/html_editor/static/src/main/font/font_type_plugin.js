@@ -433,7 +433,8 @@ export class FontTypePlugin extends Plugin {
         return clonedContents;
     }
 
-    handleSetBlock(newEl, block) {
+    handleSetBlock(params) {
+        const { block, newEl } = params;
         if (
             ["BLOCKQUOTE", "PRE"].includes(newEl?.nodeName) &&
             block.parentElement === newEl.parentElement
