@@ -309,15 +309,14 @@ export class OrderSummary extends Component {
         if (selectedLine.combo_parent_id) {
             selectedLine = selectedLine.combo_parent_id;
         }
-        let current_saved_quantity = 0;
-        for (const line of this.currentOrder.lines) {
-            if (line === selectedLine) {
-                current_saved_quantity += line.uiState.savedQuantity;
-            } else if (
-                line.product_id.id === selectedLine.product_id.id &&
-                line.prices.total_excluded_currency === selectedLine.prices.total_excluded_currency
-            ) {
-                current_saved_quantity += line.qty;
+        let current_saved_quantity = selectedLine.uiState.savedQuantity;
+        const decreaseLineUuid = selectedLine.uiState.decreaseLineUuid;
+        if (decreaseLineUuid) {
+            const decreaseLine = this.currentOrder.lines.find(
+                (line) => line.uuid === decreaseLineUuid
+            );
+            if (decreaseLine) {
+                current_saved_quantity += decreaseLine.qty;
             }
         }
         const newLine = this.getNewLine();
@@ -338,18 +337,15 @@ export class OrderSummary extends Component {
         if (selectedLine.combo_parent_id) {
             selectedLine = selectedLine.combo_parent_id;
         }
-        const sign = selectedLine.getQuantity() > 0 ? 1 : -1;
         let newLine = selectedLine;
         if (selectedLine.uiState.savedQuantity != 0) {
-            for (const line of selectedLine.order_id.lines) {
-                if (
-                    line.product_id.id === selectedLine.product_id.id &&
-                    line.prices.total_excluded_currency ===
-                        selectedLine.prices.total_excluded_currency &&
-                    line.getQuantity() * sign < 0 &&
-                    line !== selectedLine
-                ) {
-                    return line;
+            const existingUuid = selectedLine.uiState.decreaseLineUuid;
+            if (existingUuid) {
+                const existing = selectedLine.order_id.lines.find(
+                    (line) => line.uuid === existingUuid
+                );
+                if (existing) {
+                    return existing;
                 }
             }
             const data = selectedLine.serializeForORM({ keepCommands: true });
@@ -364,6 +360,7 @@ export class OrderSummary extends Component {
                 true
             );
             newLine.setQuantity(0);
+            selectedLine.uiState.decreaseLineUuid = newLine.uuid;
         }
         return newLine;
     }
