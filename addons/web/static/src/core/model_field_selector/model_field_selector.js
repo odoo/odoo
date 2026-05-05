@@ -24,6 +24,7 @@ export class ModelFieldSelector extends Component {
         sort: { type: Function, optional: true },
         followRelation: { type: [Boolean, Function], optional: true },
         showDebugInput: { type: Boolean, optional: true },
+        placeholder: { type: String, optional: true },
     };
     static defaultProps = {
         readonly: true,
