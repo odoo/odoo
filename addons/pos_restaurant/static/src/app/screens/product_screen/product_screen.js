@@ -85,7 +85,12 @@ patch(ProductScreen.prototype, {
             return await super.addProductToOrder(product);
         }
 
-        const courseCandidate = product.pos_categ_ids
+        const categories = product.pos_categ_ids
+            .map((c) => c.id)
+            .includes(this.pos.selectedCategory?.id)
+            ? [this.pos.selectedCategory]
+            : product.pos_categ_ids;
+        const courseCandidate = categories
             .map((c) => c.course_id)
             .filter(Boolean)
             .sort((a, b) => a.sequence - b.sequence);

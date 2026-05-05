@@ -482,6 +482,21 @@ describe("restaurant pos_store.js", () => {
             expect(order.course_ids.length).toBe(2);
             expect(course1).not.toBe(course2);
             expect(order.lines[0].course_id).toBe(course1);
+            expect(order.getOrderlines().length).toBe(1);
+        });
+
+        test("do not create second course if use_course_allocation", async () => {
+            const store = await setupPosEnv();
+            store.config.use_course_allocation = true;
+
+            const order = store.addNewOrder();
+            const product = store.models["product.template"].get(5);
+            await store.addLineToOrder({ product_tmpl_id: product, qty: 1 }, order);
+            const course = store.addCourse();
+            expect(order.course_ids.length).toBe(1);
+            expect(course.order_id).toBe(order);
+            expect(order.getSelectedCourse()).toBe(course);
+            expect(order.getOrderlines().length).toBe(1);
         });
     });
 });
