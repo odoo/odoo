@@ -1219,7 +1219,6 @@ class ProductProduct(models.Model):
 
     def _price_compute(self, price_type, uom=None, currency=None, company=None, date=False):
         company = company or self.env.company
-        date = date or fields.Date.context_today(self)
 
         self = self.with_company(company)
         if price_type == 'standard_price':
@@ -1243,7 +1242,7 @@ class ProductProduct(models.Model):
             # Convert from current user company currency to asked one
             # This is right cause a field cannot be in more than one currency
             if currency:
-                price = price_currency._convert(price, currency, company, date)
+                price = price_currency._convert(price, currency, company, date=date)
 
             prices[product.id] = price
 

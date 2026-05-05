@@ -132,11 +132,7 @@ class ProductProduct(models.Model):
             self, quantity=1, currency=website.currency_id
         )
         # Use sudo to access cross-company taxes.
-        product_taxes_sudo = self.sudo().taxes_id._filter_taxes_by_company(self.env.company)
-        taxes = request.fiscal_position.map_tax(product_taxes_sudo)
-        price = self.product_tmpl_id._apply_taxes_to_price(
-            product_price, website.currency_id, product_taxes_sudo, taxes, self, website=website
-        )
+        price = self._apply_taxes_to_price(product_price, website.currency_id, website=website)
 
         base_url = website.get_base_url()
         markup_data = {
@@ -299,11 +295,8 @@ class ProductProduct(models.Model):
 
     def _get_extra_tracking_values(self, **kwargs):
         extra_tracking_values = {}
-        if (
-            kwargs.get('res_model') == self._name
-            and (res_id := kwargs.get('res_id'))
-        ):
-            extra_tracking_values['product_id'] = res_id
+        if kwargs.get("res_model") == self._name and (res_id := kwargs.get("res_id")):
+            extra_tracking_values["product_id"] = res_id
         return extra_tracking_values
 
     def _is_sold_out(self):
@@ -398,3 +391,7 @@ class ProductProduct(models.Model):
             elif external_id:
                 others[external_id] = value
         return direct, others
+
+    def _apply_taxes_to_price(self, *args, **kwargs):
+        self.ensure_one()
+        return self.product_tmpl_id._apply_taxes_to_price(*args, product=self, **kwargs)

@@ -74,11 +74,10 @@ class TestWebsiteSaleStockProductTemplate(HttpCase, WebsiteSaleStockCommon):
                 self
                 .env["product.template"]
                 .with_context(website_sale_product_page=True)
-                ._get_additionnal_combination_info(
+                ._get_additional_combination_info(
                     combo_product,
                     quantity=3,
                     uom=combo_product.uom_id,
-                    date=datetime(2000, 1, 1),
                     website=self.website,
                 )
             )
@@ -98,11 +97,10 @@ class TestWebsiteSaleStockProductTemplate(HttpCase, WebsiteSaleStockCommon):
                 self
                 .env["product.template"]
                 .with_context(website_sale_product_page=True)
-                ._get_additionnal_combination_info(
+                ._get_additional_combination_info(
                     combo_product,
                     quantity=3,
                     uom=combo_product.uom_id,
-                    date=datetime(2000, 1, 1),
                     website=self.website,
                 )
             )
@@ -118,11 +116,10 @@ class TestWebsiteSaleStockProductTemplate(HttpCase, WebsiteSaleStockCommon):
                 self
                 .env["product.template"]
                 .with_context(website_sale_product_page=True)
-                ._get_additionnal_combination_info(
+                ._get_additional_combination_info(
                     self.product_oos_order_not_allowed,
                     quantity=9,
                     uom=self.env.ref("uom.product_uom_pack_6"),
-                    date=datetime(2000, 1, 1),
                     website=self.website,
                 )
             )

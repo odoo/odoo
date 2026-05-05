@@ -612,16 +612,12 @@ class ProductTemplate(models.Model):
                     }
         return res
 
-    def _get_sales_prices(self, website):
+    def _get_sales_prices(self, pricelist_sudo, fiscal_position_sudo, website):
         if not self:
             return {}
 
-        pricelist = request.pricelist.with_context(self.env.context)
         currency = website.currency_id
-        fiscal_position_sudo = request.fiscal_position
-        date = fields.Date.context_today(self)
-
-        pricelist_prices = pricelist._compute_price_rule(self, 1.0)
+        pricelist_prices = pricelist_sudo._compute_price_rule(self, 1.0)
         comparison_prices_enabled = self.env["res.groups"]._is_feature_enabled(
             "website_sale.group_product_price_comparison"
         )
@@ -635,28 +631,36 @@ class ProductTemplate(models.Model):
 
             base_price = None
             template_price_vals = {
-                "price_reduce": self._apply_taxes_to_price(
-                    pricelist_price, currency, product_taxes, taxes, template, website=website
-                )
+                "raw_pricelist_price": pricelist_price,
+                "pricelist_rule_id": pricelist_rule_id,
+                "price_reduce": template._apply_taxes_to_price(
+                    pricelist_price,
+                    currency,
+                    product_taxes=product_taxes,
+                    taxes=taxes,
+                    website=website,
+                ),
             }
-            pricelist_item = template.env["product.pricelist.item"].browse(pricelist_rule_id)
-            if pricelist_item._show_discount_on_shop():
-                pricelist_base_price = pricelist_item._compute_price_before_discount(
-                    product=template,
-                    quantity=1.0,
-                    date=date,
-                    uom=template._get_main_uom(),
-                    currency=currency,
+            pricelist_item_sudo = (
+                template.env["product.pricelist.item"].sudo().browse(pricelist_rule_id)
+            )
+            if pricelist_item_sudo._show_discount_on_shop():
+                pricelist_base_price = pricelist_item_sudo._compute_price_before_discount(
+                    product=template, quantity=1.0, uom=template._get_main_uom(), currency=currency
                 )
                 if currency.compare_amounts(pricelist_base_price, pricelist_price) == 1:
                     base_price = pricelist_base_price
-                    template_price_vals["base_price"] = self._apply_taxes_to_price(
-                        base_price, currency, product_taxes, taxes, template, website=website
+                    template_price_vals["base_price"] = template._apply_taxes_to_price(
+                        base_price,
+                        currency,
+                        product_taxes=product_taxes,
+                        taxes=taxes,
+                        website=website,
                     )
 
             if not base_price and comparison_prices_enabled and template.compare_list_price:
                 template_price_vals["base_price"] = template.currency_id._convert(
-                    template.compare_list_price, currency, self.env.company, date, round=False
+                    template.compare_list_price, currency, self.env.company, round=False
                 )
 
             res[template.id] = template_price_vals
@@ -766,11 +770,10 @@ class ProductTemplate(models.Model):
             "product_template_id": self.id,
             "display_name": display_name,
             "is_combination_possible": self._is_combination_possible(combination=combination),
-            **self._get_additionnal_combination_info(
+            **self.with_context(**price_context)._get_additional_combination_info(
                 product_or_template=product_or_template,
                 quantity=add_qty or 1.0,
                 uom=uom,
-                date=fields.Date.context_today(self),
                 website=website,
             ),
         }
@@ -781,26 +784,24 @@ class ProductTemplate(models.Model):
             )
 
         if (
-            product_or_template.type == "combo"
+            self.type == "combo"
             and website.show_line_subtotals_tax_selection == "tax_included"
             and not all(
                 tax.price_include
-                for tax in product_or_template.sudo().combo_ids.combo_item_ids.product_id.taxes_id
+                for tax in self.sudo().combo_ids.combo_item_ids.product_id.taxes_id
             )
         ):
             combination_info["tax_disclaimer"] = _("Taxes calculated at checkout.")
 
         return combination_info
 
-    def _get_additionnal_combination_info(self, product_or_template, quantity, uom, date, website):
+    def _get_additional_combination_info(self, product_or_template, quantity, uom, website):
         """Compute additional combination info, based on given parameters.
 
         :param product_or_template: `product.product` or `product.template` record
             as variant values must take precedence over template values (when we have a variant)
         :param float quantity: requested quantity
         :param uom: `uom.uom` record
-        :param date date: today's date, avoids useless calls to today/context_today and harmonize
-            behavior
         :param website: `website` record holding the current website of the request (if any),
             or the contextual website (tests, ...)
         :returns: additional product/template information
@@ -818,17 +819,14 @@ class ProductTemplate(models.Model):
         pricelist_item = self.env["product.pricelist.item"].browse(pricelist_rule_id)
         if pricelist_item._show_discount_on_shop():
             price_before_discount = pricelist_item._compute_price_before_discount(
-                product=product_or_template,
-                quantity=quantity or 1.0,
-                date=date,
-                uom=uom,
-                currency=currency,
+                product=product_or_template, quantity=quantity or 1.0, uom=uom, currency=currency
             )
 
         has_discounted_price = currency.compare_amounts(price_before_discount, pricelist_price) == 1
         combination_info = {
             "list_price": max(pricelist_price, price_before_discount),
             "price": pricelist_price,
+            "raw_pricelist_price": pricelist_price,
             "has_discounted_price": has_discounted_price,
             "discount_start_date": pricelist_item.date_start,
             "discount_end_date": pricelist_item.date_end,
@@ -844,11 +842,7 @@ class ProductTemplate(models.Model):
             # TODO VCR comparison price only depends on the product template, but is shown/hidden
             # depending on product price, should be removed from combination info in the future
             combination_info["compare_list_price"] = product_or_template.currency_id._convert(
-                from_amount=product_or_template.compare_list_price,
-                to_currency=currency,
-                company=self.env.company,
-                date=date,
-                round=False,
+                from_amount=self.compare_list_price, to_currency=currency, round=False
             )
 
         # Apply taxes
@@ -861,12 +855,11 @@ class ProductTemplate(models.Model):
             # We do not apply taxes on the compare_list_price value because it's meant to be
             # a strict value displayed as is.
             for price_key in ("price", "list_price"):
-                combination_info[price_key] = self._apply_taxes_to_price(
+                combination_info[price_key] = product_or_template._apply_taxes_to_price(
                     combination_info[price_key],
                     currency,
-                    product_taxes,
-                    taxes,
-                    product_or_template,
+                    product_taxes=product_taxes,
+                    taxes=taxes,
                     website=website,
                 )
         is_zero_price = float_is_zero(
@@ -880,7 +873,6 @@ class ProductTemplate(models.Model):
             "hide_price": prevent_sale and is_zero_price,
             # additional info to simplify overrides
             "currency": currency,  # displayed currency
-            "date": date,
             "product_taxes": product_taxes,  # taxes before fpos mapping
             "taxes": taxes,  # taxes after fpos mapping
         })
@@ -945,9 +937,9 @@ class ProductTemplate(models.Model):
             has_stock_notification = product_sudo._has_stock_notification(
                 self.env.user.partner_id
             ) or (
-                    request
-                    and product_sudo.id
-                    in request.session.get("product_with_stock_notification_enabled", set())
+                request
+                and product_sudo.id
+                in request.session.get("product_with_stock_notification_enabled", set())
             )
             stock_notification_email = request and request.session.get(
                 "stock_notification_email", ""
@@ -958,7 +950,7 @@ class ProductTemplate(models.Model):
                     request.cart._get_cart_qty(product_sudo.id), to_unit=uom
                 )
             digits = self.env["decimal.precision"].precision_get("Product Unit")
-            rounding = 10 ** -digits
+            rounding = 10**-digits
             combination_info.update({
                 "free_qty": free_qty,
                 "cart_qty": cart_quantity,
@@ -968,13 +960,10 @@ class ProductTemplate(models.Model):
                 "out_of_stock_message": product_sudo.out_of_stock_message,
                 "has_stock_notification": has_stock_notification,
                 "stock_notification_email": stock_notification_email,
+                "is_in_wishlist": product_sudo._is_in_wishlist(),
             })
         else:
             combination_info.update({"free_qty": 0, "cart_qty": 0})
-
-        if product_or_template.is_product_variant:
-            product_sudo = product_or_template.sudo()
-            combination_info["is_in_wishlist"] = product_sudo._is_in_wishlist()
 
         return combination_info
 
@@ -1006,21 +995,45 @@ class ProductTemplate(models.Model):
 
         return attr_images
 
-    @api.model
     def _apply_taxes_to_price(
-        self, price, currency, product_taxes, taxes, product_or_template, website=None
+        self,
+        price,
+        currency,
+        *,
+        product=None,
+        product_taxes=None,
+        taxes=None,
+        tax_display=None,
+        website=None,
     ):
-        website = website or self.env["website"].get_current_website()
-        price = self.env["product.product"]._get_tax_included_unit_price_from_price(
+        product = product or self.env["product.product"]
+
+        if product_taxes is None:
+            product_taxes = self.sudo().taxes_id._filter_taxes_by_company(request.env.company)
+
+        if not product_taxes:
+            # No taxes to apply
+            return price
+
+        if taxes is None:
+            taxes = request.fiscal_position.map_tax(product_taxes)
+
+        price = product._get_tax_included_unit_price_from_price(
             price, product_taxes, product_taxes_after_fp=taxes
         )
-        show_tax = website.show_line_subtotals_tax_selection
-        tax_display = "total_excluded" if show_tax == "tax_excluded" else "total_included"
 
         # The list_price is always the price of one.
-        return taxes.compute_all(price, currency, 1, product_or_template, self.env.user.partner_id)[
-            tax_display
-        ]
+        tax_details = taxes.compute_all(
+            price, currency, 1, product or self, self.env.user.partner_id
+        )
+
+        if not tax_display:
+            show_tax = (
+                website or self.env["website"].get_current_website()
+            ).show_line_subtotals_tax_selection
+            tax_display = "total_excluded" if show_tax == "tax_excluded" else "total_included"
+
+        return tax_details[tax_display]
 
     def create_product_variant(self, product_template_attribute_value_ids):
         """Create if necessary and possible and return the id of the product
@@ -1245,12 +1258,31 @@ class ProductTemplate(models.Model):
         mapping = {
             "name": {"name": "name", "type": "text", "match": True},
             "website_url": {"name": "website_url", "type": "text", "truncate": False},
-            "search_item_metadata": {"name": "price", "type": "html", "display_currency": options["display_currency"]},
+            "search_item_metadata": {
+                "name": "price",
+                "type": "html",
+                "display_currency": options["display_currency"],
+            },
             "image_url": {"name": "image_url", "type": "html"},
-            "description": {"name": "description_ecommerce", "type": "text", "html": True, "match": True},
+            "description": {
+                "name": "description_ecommerce",
+                "type": "text",
+                "html": True,
+                "match": True,
+            },
             "tags": {"name": "product_tag_ids", "type": "tags", "match": True},
-            "attribute_value_ids": {"name": "attribute_value_ids", "type": "tags", "match": True, "force_show": True},
-            "description_sale": {"name": "description_sale", "type": "text", "html": True, "match": True},
+            "attribute_value_ids": {
+                "name": "attribute_value_ids",
+                "type": "tags",
+                "match": True,
+                "force_show": True,
+            },
+            "description_sale": {
+                "name": "description_sale",
+                "type": "text",
+                "html": True,
+                "match": True,
+            },
         }
         return {
             "model": "product.template",
@@ -1270,9 +1302,7 @@ class ProductTemplate(models.Model):
             values = product.mapped("attribute_line_ids.value_ids")
             data["attribute_value_ids"] = values.read(["id", "name"])
             data["product_tag_ids"] = product.product_tag_ids.read(["name"])
-            price = self._search_render_results_prices(
-                mapping, combination_info
-            )
+            price = self._search_render_results_prices(mapping, combination_info)
             if price:
                 data["price"] = price
             data["image_url"] = "/web/image/product.template/%s/image_128" % data["id"]
@@ -1283,10 +1313,9 @@ class ProductTemplate(models.Model):
             return None
 
         monetary_options = {"display_currency": mapping["search_item_metadata"]["display_currency"]}
-        price = self.env["ir.qweb.field.monetary"].value_to_html(
+        return self.env["ir.qweb.field.monetary"].value_to_html(
             combination_info["price"], monetary_options
         )
-        return price
 
     def _get_google_analytics_data(self, product, combination_info):
         self.ensure_one()
@@ -1317,7 +1346,7 @@ class ProductTemplate(models.Model):
         """Override to fallback on website current pricelist."""
         pricelist = super()._get_contextual_pricelist()
         if request and request.is_frontend and not pricelist:
-            return request.pricelist
+            return request.pricelist.with_context(self.env.context)
         return pricelist
 
     def _website_show_quick_add(self):
@@ -1353,14 +1382,8 @@ class ProductTemplate(models.Model):
         )
 
         if website := ir_http.get_request_website():
-            product_taxes = product_or_template.sudo().taxes_id._filter_taxes_by_company(
-                self.env.company
-            )
-            if product_taxes:
-                taxes = request.fiscal_position.map_tax(product_taxes)
-                return self._apply_taxes_to_price(
-                    price, currency, product_taxes, taxes, product_or_template, website=website
-                ), pricelist_rule_id
+            price = product_or_template._apply_taxes_to_price(price, currency, website=website)
+
         return price, pricelist_rule_id
 
     def _to_markup_data(self, website):
@@ -1547,7 +1570,7 @@ class ProductTemplate(models.Model):
 
     @api.model
     def _get_additional_configurator_data(
-            self, product_or_template, date, currency, pricelist, *, uom=None, **kwargs
+        self, product_or_template, date, currency, pricelist, *, uom=None, **kwargs
     ):
         """Override of `sale` to append basic stock data.
 

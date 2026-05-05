@@ -292,7 +292,7 @@ class TestWebsiteAllPerformance(TestWebsitePerformanceCommon, TestWebsitePriceLi
         self.assertIn(f'<img src="/web/image/product.template/{self.productA.product_tmpl_id.id}/', html)
         self.assertIn(f'<img src="/web/image/product.image/{self.product_images.ids[1]}/', html)
 
-        query_count = 41  # To increase this number you must ask the permission to al
+        # To add queries here you must ask the permission to al
         queries = {
             'website': 1,
             'res_company': 2,
@@ -308,7 +308,6 @@ class TestWebsiteAllPerformance(TestWebsitePerformanceCommon, TestWebsitePriceLi
             'product_pricelist_item': 1,
             'account_tax': 1,
             'res_currency': 1,
-            'account_account_tag': 1,
             'product_ribbon': 1,
             'product_attribute_value': 3,
             'product_attribute': 1,
@@ -322,51 +321,43 @@ class TestWebsiteAllPerformance(TestWebsitePerformanceCommon, TestWebsitePriceLi
 
         addons = tuple(self.env.registry._init_modules) + (self.env.context.get('install_module'),)
         if 'website_helpdesk' in addons:
-            query_count += 1
             queries['helpdesk_team'] = 1
         if 'website_sale_subscription' in addons:
-            query_count += 1
             queries['product_product'] += 1
 
         tax = self.env.ref(f'account.{self.env.company.id}_sale_tax_template', raise_if_not_found=False)
         if tax and tax.name == '15%':
-            query_count += 2
             queries['account_tax_repartition_line'] = 2
 
         if self._has_demo_data():
-            query_count += 5
             queries['product_product'] += 2
             queries['ir_attachment'] += 1
             queries['product_ribbon'] += 1
             queries['res_company'] += 1
         else:
-            query_count += 3
             queries['product_template_attribute_value'] += 3
 
         if self.env['res.groups']._is_feature_enabled('uom.group_uom'):
-            query_count += 1
             queries['uom_uom'] = 1
 
-        # To increase the query count you must ask the permission to al
-        return query_count, queries
+        # To add queries count you must ask the permission to al
+        return queries
 
     def _has_demo_data(self):
         return bool(self.env['ir.module.module'].search_count([('demo', '=', True)]))
 
     def test_perf_sql_queries_shop(self):
         # To increase the query count you must ask the permission to al
-        query_count, queries = self._get_queries_shop()
+        queries = self._get_queries_shop()
 
         if self._has_demo_data():
-            query_count += 2
             queries['account_tax'] += 1
-            queries['account_account_tag'] += 1
+            queries['account_account_tag'] = 1
             queries['ir_attachment'] += -1
             queries['product_ribbon'] += -1
             queries['product_template_attribute_value'] += 2
 
-        self.assertEqual(sum(queries.values()), query_count, 'Please learn to count.')
-        self._check_url_hot_query('/shop', query_count, queries)
+        self._check_url_hot_query('/shop', sum(queries.values()), queries)
 
 
 @tagged('post_install', '-at_install')
@@ -374,20 +365,16 @@ class TestWebsiteAllPerformanceShop(TestWebsiteAllPerformance):
 
     def test_perf_sql_queries_shop(self):
         # To increase the query count you must ask the permission to al
-        query_count, queries = self._get_queries_shop()
+        queries = self._get_queries_shop()
 
-        query_count += 2
         queries['account_tax'] += 1
-        queries['account_account_tag'] += 1
+        queries['account_account_tag'] = 2
 
         if self.env['res.groups']._is_feature_enabled('uom.group_uom'):
-            query_count += 1
             queries['uom_uom'] += 1
 
         if self._has_demo_data():
-            query_count += 1
             queries['ir_attachment'] += -1
             queries['product_template_attribute_value'] += 2
 
-        self.assertEqual(sum(queries.values()), query_count, 'Please learn to count.')
-        self._check_url_hot_query('/shop', query_count, queries)
+        self._check_url_hot_query('/shop', sum(queries.values()), queries)
