@@ -12,13 +12,10 @@ class AccountChartTemplate(models.AbstractModel):
             sa_sale_journal = self.env['account.journal'].search([('type', '=', 'sale'), ('company_id', '=', self.env.company.id)], limit=1)
             sa_sale_journal._l10n_sa_api_onboard_journal('123345')
 
-            demo_invoices = (
-                self.ref('demo_sa_invoice_1', raise_if_not_found=False)
-                + self.ref('demo_sa_invoice_2', raise_if_not_found=False)
-                + self.ref('demo_sa_invoice_3', raise_if_not_found=False)
-                + self.ref('demo_sa_invoice_4', raise_if_not_found=False)
-            )
-            for invoice in demo_invoices:
+            for i in range(1, 5):
+                invoice = self.ref(f'demo_sa_invoice_{i}', raise_if_not_found=False)
+                if not invoice:
+                    continue
                 invoice.update({
                     "edi_document_ids": [
                         Command.clear(),
