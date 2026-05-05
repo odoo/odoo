@@ -2080,6 +2080,29 @@ describe("components", () => {
         );
     });
 
+    test("can insert a component inside a shadow root", async () => {
+        class C extends Component {
+            static template = xml`component`;
+            static props = {};
+        }
+        class Test extends Interaction {
+            static selector = ".test";
+            setup() {
+                const host = document.createElement("div");
+                host.classList.add("my-host");
+                this.insert(host, this.el);
+                const shadow = host.attachShadow({ mode: "open" });
+                this.mountComponent(shadow, C);
+            }
+        }
+        await startInteraction(Test, `<div class="test"></div>`);
+        expect(".test").toHaveOuterHTML(`<div class="test"><div class="my-host"></div></div>`);
+        await animationFrame();
+        expect(queryOne(".my-host").shadowRoot.innerHTML).toBe(
+            `<owl-root contenteditable="false" data-oe-protected="true" style="display: contents;">component</owl-root>`
+        );
+    });
+
     test("can insert a component with mountComponent", async () => {
         class C extends Component {
             static template = xml`component`;
