@@ -2378,6 +2378,7 @@ class IrModelData(models.Model):
 
         # query xml_ids by prefix
         result = []
+        self.flush_model()
         cr = self.env.cr
         for prefix, suffixes in bymodule.items():
             query = """
