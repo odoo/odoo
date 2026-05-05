@@ -20,6 +20,7 @@ export class NavigableList extends Component {
         position: { type: String, optional: true },
         closeOnSelect: { type: Boolean, optional: true },
         isLoading: { type: Boolean, optional: true },
+        rememberPosition: { type: Boolean, optional: true }
     };
     static defaultProps = {
         position: "bottom",
@@ -48,7 +49,7 @@ export class NavigableList extends Component {
             this.close();
         });
         // position and size
-        usePosition("root", () => this.props.anchorRef, { position: this.props.position });
+        usePosition("root", () => this.props.anchorRef, { position: this.props.position, rememberPosition: this.props.rememberPosition });
         useEffect(
             () => {
                 this.open();
