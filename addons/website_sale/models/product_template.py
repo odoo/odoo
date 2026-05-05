@@ -626,7 +626,7 @@ class ProductTemplate(models.Model):
         for template in self:
             pricelist_price, pricelist_rule_id = pricelist_prices[template.id]
 
-            product_taxes = template.sudo().taxes_id._filter_taxes_by_company(self.env.company)
+            product_taxes = template.sudo().taxes_id._filter_taxes_by_company()
             taxes = fiscal_position_sudo.map_tax(product_taxes)
 
             base_price = None
@@ -846,9 +846,7 @@ class ProductTemplate(models.Model):
             )
 
         # Apply taxes
-        product_taxes = product_or_template.sudo().taxes_id._filter_taxes_by_company(
-            self.env.company
-        )
+        product_taxes = product_or_template.sudo().taxes_id._filter_taxes_by_company()
         taxes = self.env["account.tax"]
         if product_taxes:
             taxes = request.fiscal_position.map_tax(product_taxes)
@@ -1009,7 +1007,7 @@ class ProductTemplate(models.Model):
         product = product or self.env["product.product"]
 
         if product_taxes is None:
-            product_taxes = self.sudo().taxes_id._filter_taxes_by_company(request.env.company)
+            product_taxes = self.sudo().taxes_id._filter_taxes_by_company()
 
         if not product_taxes:
             # No taxes to apply

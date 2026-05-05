@@ -4857,13 +4857,15 @@ class AccountTax(models.Model):
             'total_void': total_void,
         }
 
-    def _filter_taxes_by_company(self, company_id):
+    def _filter_taxes_by_company(self, company=None):
         """ Filter taxes by the given company
             It goes through the company hierarchy until a tax is found
         """
         if not self:
             return self
-        taxes, company = self.env['account.tax'], company_id
+
+        company = company or self.env.company
+        taxes = self.env['account.tax']
         while not taxes and company:
             taxes = self.filtered(lambda t: t.company_id == company)
             company = company.sudo().parent_id

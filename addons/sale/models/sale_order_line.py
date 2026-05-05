@@ -620,7 +620,7 @@ class SaleOrderLine(models.Model):
             for line in lines.with_company(company):
                 taxes = None
                 if line.product_id:
-                    taxes = line.product_id.taxes_id._filter_taxes_by_company(company)
+                    taxes = line.product_id.taxes_id._filter_taxes_by_company()
                 if not line.product_id or not taxes:
                     # Nothing to map
                     line.tax_ids = False
