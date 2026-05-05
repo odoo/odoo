@@ -1630,8 +1630,17 @@ class AccountMove(models.Model):
         )
 
     def _get_base_and_tax_lines(self):
+        """ Extract the base and tax lines for the taxes computation from the current move
+        without applying '_round_base_lines_tax_details'.
+
+        Suitable for taking a "before" snapshot prior to a write, since rounding would already
+        bake in the existing tax-line amounts and erase the signal '_sync_tax_lines' relies on
+        to detect manual edits. Use '_get_rounded_base_and_tax_lines' for the read-side flows
+        that need rounded values.
+
+        :return: A tuple <base_lines, tax_lines> for the taxes computation.
+        """
         self.ensure_one()
-        AccountTax = self.env['account.tax']
         is_invoice = self.is_invoice(include_receipts=True)
 
         if self.id or not is_invoice:

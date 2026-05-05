@@ -1,18 +1,13 @@
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
-from odoo.tests import Form, tagged
-from odoo import fields, Command
-from odoo.exceptions import UserError, ValidationError
+from odoo.tests import tagged
+from odoo import Command
 
-from collections import defaultdict
-from unittest.mock import patch
-from datetime import timedelta
 from freezegun import freeze_time
-
 
 
 @tagged('post_install', '-at_install')
 class TestAccountMoveSyncTaxLines(AccountTestInvoicingCommon):
-    
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -27,7 +22,7 @@ class TestAccountMoveSyncTaxLines(AccountTestInvoicingCommon):
     @freeze_time('2017-01-01')
     def test_manual_tax_amount_foreign_currency_flow(self):
         invoice = self._create_invoice_one_line(price_unit=100, tax_ids=self.tax_21)
-    
+
         tax_line = invoice.line_ids.filtered('tax_line_id')
         invoice.line_ids = [Command.update(tax_line.id, {'amount_currency': -30})]
 
@@ -68,7 +63,7 @@ class TestAccountMoveSyncTaxLines(AccountTestInvoicingCommon):
             self._prepare_invoice_line(price_unit=100, tax_ids=self.tax_6),
             self._prepare_invoice_line(price_unit=100),
         ])
-    
+
         tax_line_6 = invoice.line_ids.filtered(lambda line: line.tax_line_id == self.tax_6)
         tax_line_21 = invoice.line_ids.filtered(lambda line: line.tax_line_id == self.tax_21)
         invoice.line_ids = [
@@ -177,7 +172,7 @@ class TestAccountMoveSyncTaxLines(AccountTestInvoicingCommon):
         # Changing the analytic accounts should not recompute the tax line.
         base_line_b = invoice.invoice_line_ids.filtered(lambda line: line.analytic_distribution == anal_distr_b)
         base_line_c = invoice.invoice_line_ids.filtered(lambda line: line.analytic_distribution == anal_distr_c)
-        invoice.with_context(blu=True).line_ids = [
+        invoice.line_ids = [
             Command.update(base_line_b.id, {'analytic_distribution': anal_distr_a}),
             Command.update(base_line_c.id, {'analytic_distribution': anal_distr_a}),
         ]
@@ -207,3 +202,59 @@ class TestAccountMoveSyncTaxLines(AccountTestInvoicingCommon):
             {'amount_currency': 363, 'analytic_distribution': None},
         ])
 
+    @freeze_time('2017-01-01')
+    def test_currency_rate_change_only(self):
+        # Regression for the rate-only path inside _sync_tax_lines: when only the currency rate
+        # changes, a manually-edited tax line keeps its 'amount_currency' and 'balance' is re-rated.
+        invoice = self._create_invoice_one_line(
+            price_unit=100,
+            tax_ids=self.tax_21,
+            currency_id=self.eur.id,
+        )
+        self.assertRecordValues(invoice.line_ids.sorted('amount_currency'), [
+            {'amount_currency': -100, 'balance': -50},
+            {'amount_currency': -21, 'balance': -10.5},
+            {'amount_currency': 121, 'balance': 60.5},
+        ])
+
+        tax_line = invoice.line_ids.filtered('tax_line_id')
+        invoice.line_ids = [Command.update(tax_line.id, {'amount_currency': -19})]
+        self.assertRecordValues(invoice.line_ids.sorted('amount_currency'), [
+            {'amount_currency': -100, 'balance': -50},
+            {'amount_currency': -19, 'balance': -9.5},
+            {'amount_currency': 119, 'balance': 59.5},
+        ])
+
+        invoice.invoice_date = '2018-01-01'
+        self.assertRecordValues(invoice.line_ids.sorted('amount_currency'), [
+            {'amount_currency': -100, 'balance': -25},
+            {'amount_currency': -19, 'balance': -4.75},
+            {'amount_currency': 119, 'balance': 29.75},
+        ])
+
+    def test_python_tax_and_regular_tax_on_same_line(self):
+        # Smoke test for the multi-tax bucketing path in _sync_tax_lines.track_base_lines_values:
+        # a base line carrying both a python_tax (depends on the product) and a percent_tax
+        # (does not) must bucket consistently across snapshots regardless of tax order, so a
+        # neutral edit doesn't recompute manually-set tax amounts.
+        self.ensure_installed('account_tax_python')
+        py_tax = self.python_tax(formula="product.list_price * 0.1")
+
+        invoice = self._create_invoice_one_line(
+            price_unit=100,
+            product_id=self.product_a.id,
+            tax_ids=py_tax + self.tax_21,
+        )
+
+        py_tax_line = invoice.line_ids.filtered(lambda l: l.tax_line_id == py_tax)
+        invoice.line_ids = [Command.update(py_tax_line.id, {'amount_currency': -7})]
+
+        py_tax_line = invoice.line_ids.filtered(lambda l: l.tax_line_id == py_tax)
+        self.assertEqual(py_tax_line.amount_currency, -7, "manual tax amount should be set")
+
+        # Neutral edit: change the product label. Manual tax amount must survive.
+        base_line = invoice.invoice_line_ids
+        invoice.line_ids = [Command.update(base_line.id, {'name': 'renamed'})]
+
+        py_tax_line = invoice.line_ids.filtered(lambda l: l.tax_line_id == py_tax)
+        self.assertEqual(py_tax_line.amount_currency, -7, "manual tax amount must be preserved on neutral edit")

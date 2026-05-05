@@ -3132,6 +3132,31 @@ class AccountTax(models.Model):
 
     @api.model
     def _sync_tax_lines(self, company, old_base_lines, old_tax_lines, new_base_lines, new_tax_lines):
+        """ Diff-aware variant of '_prepare_tax_lines' that preserves manually-edited tax amounts
+        whenever the change to the move would not legitimately alter them.
+
+        Compares the base lines and tax lines as they were before the write ('old_*') against the
+        ones produced after ('new_*')
+        Three types of behaviours:
+
+            - tax_keys_recompute_amounts: a base line input that affects the tax amount
+              (price_unit / quantity / discount, or a product/uom for a formula tax) changed.
+              The tax line is fully recomputed.
+            - tax_keys_recompute_rates: only the currency rate changed for that bucket. The
+              'amount_currency' on the existing tax line is preserved and only 'balance' is
+              recomputed using the new rate.
+            - tax_line_protected_keys: the tax line itself was edited manually between the two
+              snapshots. Both 'amount_currency' and 'balance' are preserved.
+
+        :param company: Company
+        :param old_base_lines:  Base lines snapshot taken before the write (unrounded; see
+                                'AccountMove._get_base_and_tax_lines').
+        :param old_tax_lines:   Tax lines snapshot taken before the write.
+        :param new_base_lines:  Base lines after the write, with tax_details/grouping_key already
+                                populated by '_add_accounting_data_in_base_lines_tax_details'.
+        :param new_tax_lines:   Tax lines after the write.
+        :return: The dict returned by '_prepare_tax_lines' with 'tax_lines_to_update' adjusted.
+        """
 
         # Track base lines values.
 
@@ -3142,7 +3167,9 @@ class AccountTax(models.Model):
                 'rates': set(),
             })
             for base_line in base_lines:
-                base_line_key = self._prepare_base_line_grouping_key(base_line)
+                # Reuse the grouping key cached by '_add_accounting_data_in_base_lines_tax_details'
+                # when present; fall back to recomputing it for the unrounded "before" snapshot.
+                base_line_key = dict(base_line.get('grouping_key') or self._prepare_base_line_grouping_key(base_line))
 
                 # Changing the currency is handled by 'rates' because it won't necessarily
                 # change the taxes amounts.
@@ -3153,16 +3180,20 @@ class AccountTax(models.Model):
                 # are 'use_in_tax_closing' or not.
                 base_line_key.pop('analytic_distribution')
 
-                # Manage formula taxes.
-                for tax in base_line['tax_ids']._flatten_taxes_and_sort_them()[0]:
-                    if tax._eval_taxes_computation_prepare_product_fields():
-                        base_line_key['product_id'] = base_line['product_id']
-                    else:
-                        base_line_key['product_id'] = None
-                    if tax._eval_taxes_computation_prepare_product_uom_fields():
-                        base_line_key['product_uom_id'] = base_line['product_uom_id']
-                    else:
-                        base_line_key['product_uom_id'] = None
+                # Manage formula taxes: include product / uom in the key as soon as ANY tax on
+                # the line depends on them, so old/new snapshots bucket consistently regardless
+                # of the order returned by '_flatten_taxes_and_sort_them'.
+                flat_taxes = base_line['tax_ids']._flatten_taxes_and_sort_them()[0]
+                base_line_key['product_id'] = (
+                    base_line['product_id']
+                    if any(t._eval_taxes_computation_prepare_product_fields() for t in flat_taxes)
+                    else None
+                )
+                base_line_key['product_uom_id'] = (
+                    base_line['product_uom_id']
+                    if any(t._eval_taxes_computation_prepare_product_uom_fields() for t in flat_taxes)
+                    else None
+                )
 
                 amounts = (
                     base_line['price_unit'],
