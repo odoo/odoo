@@ -1343,6 +1343,8 @@ class PosSession(models.Model):
     def _update_amounts(self, old_amounts, amounts_to_add, date, round=True, force_company_currency=False):
         """Responsible for adding `amounts_to_add` to `old_amounts` considering the currency of the session.
 
+        ::
+
             old_amounts {                                                       new_amounts {
                 amount                         amounts_to_add {                     amount
                 amount_converted        +          amount               ->          amount_converted
@@ -1402,7 +1404,7 @@ class PosSession(models.Model):
         return new_amounts
 
     def _credit_amounts(self, partial_move_line_vals, amount, amount_converted, force_company_currency=False):
-        """ `partial_move_line_vals` is completed by `credit`ing the given amounts.
+        """ `partial_move_line_vals` is completed by `crediting` the given amounts.
 
         NOTE Amounts in PoS are in the currency of journal_id in the session.config_id.
         This means that amount fields in any pos record are actually equivalent to amount_currency
@@ -1434,7 +1436,7 @@ class PosSession(models.Model):
         }
 
     def _debit_amounts(self, partial_move_line_vals, amount, amount_converted, force_company_currency=False):
-        """ `partial_move_line_vals` is completed by `debit`ing the given amounts.
+        """ `partial_move_line_vals` is completed by `debiting` the given amounts.
 
         See _credit_amounts docs for more details.
         """
