@@ -1,6 +1,6 @@
 from collections.abc import Iterable
 
-from odoo import models, api, fields
+from odoo import models, fields
 from odoo.fields import Domain
 from odoo.tools import SQL
 
@@ -10,6 +10,10 @@ class PropertiesBaseDefinitionMixin(models.AbstractModel):
 
     _name = "properties.base.definition.mixin"
     _description = "Properties Base Definition Mixin"
+
+    def _get_properties_base_definition_id(self):
+        return self.env["properties.base.definition"].sudo() \
+            ._get_definition_id_for_property_field(self._name, "properties")
 
     properties = fields.Properties(
         string="Properties",
@@ -21,34 +25,24 @@ class PropertiesBaseDefinitionMixin(models.AbstractModel):
         compute="_compute_properties_base_definition_id",
         compute_sql="_compute_sql_properties_base_definition_id",
         compute_sudo=True,
+        # needed to add the default properties values
+        default=_get_properties_base_definition_id,
     )
 
     def _compute_properties_base_definition_id(self):
-        self.properties_base_definition_id = self.env["properties.base.definition"] \
-            ._get_definition_for_property_field(self._name, "properties")
+        self.properties_base_definition_id = self._get_properties_base_definition_id()
 
     def _compute_sql_properties_base_definition_id(self, table):
         # Allow the export to work
-        parent = self.env["properties.base.definition"] \
-            ._get_definition_id_for_property_field(self._name, "properties")
+        parent = self._get_properties_base_definition_id()
         return SQL("%s", parent)
 
     def _search_properties_base_definition_id(self, operator, value):
         if operator != "in":
             return NotImplemented
 
-        properties_base_definition_id = self.env["properties.base.definition"] \
-            .sudo()._get_definition_id_for_property_field(self._name, "properties")
+        properties_base_definition_id = self._get_properties_base_definition_id()
 
         if not isinstance(value, Iterable):
             value = (value,)
         return Domain.TRUE if properties_base_definition_id in value else Domain.FALSE
-
-    @api.model_create_multi
-    def create(self, vals_list):
-        parent = self.env["properties.base.definition"] \
-            ._get_definition_id_for_property_field(self._name, "properties")
-        for vals in vals_list:
-            # Needed to add the default properties values
-            vals["properties_base_definition_id"] = parent
-        return super().create(vals_list)
