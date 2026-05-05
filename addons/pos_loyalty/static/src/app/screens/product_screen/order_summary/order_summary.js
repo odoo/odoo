@@ -36,7 +36,6 @@ patch(OrderSummary.prototype, {
         if (
             selectedLine &&
             selectedLine.is_reward_line &&
-            !selectedLine.manual_reward &&
             (key === "Backspace" || key === "Delete")
         ) {
             const reward = selectedLine.reward_id;

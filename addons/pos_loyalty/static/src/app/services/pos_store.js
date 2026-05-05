@@ -267,11 +267,14 @@ patch(PosStore.prototype, {
             const date_order = DateTime.fromSQL(order.date_order);
             if (
                 rule.program_id.date_from &&
-                date_order < rule.program_id.date_from.startOf("day")
+                date_order.ts < rule.program_id.date_from.startOf("day").ts
             ) {
                 return _t("That promo code program is not yet valid.");
             }
-            if (rule.program_id.date_to && date_order > rule.program_id.date_to.endOf("day")) {
+            if (
+                rule.program_id.date_to &&
+                date_order.ts > rule.program_id.date_to.endOf("day").ts
+            ) {
                 return _t("That promo code program is expired.");
             }
             const program_pricelists = rule.program_id.pricelist_ids;

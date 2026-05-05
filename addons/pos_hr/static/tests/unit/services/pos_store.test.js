@@ -23,6 +23,7 @@ test("_getConnectedCashier", async () => {
 });
 test("shouldShowOpeningControl", async () => {
     const store = await setupPosEnv();
+    store.models["pos.session"].getFirst().state = "opening_control";
     const emp = store.models["hr.employee"].get(2);
     store.setCashier(emp);
     store.hasLoggedIn = true;

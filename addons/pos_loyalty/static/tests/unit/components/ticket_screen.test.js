@@ -2,7 +2,7 @@ import { test, expect } from "@odoo/hoot";
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { definePosModels } from "@point_of_sale/../tests/unit/data/generate_model_definitions";
 import { setupPosEnv } from "@point_of_sale/../tests/unit/utils";
-import { addProductLineToOrder } from "@pos_loyalty/../tests/unit/utils";
+import { createOrderWithLoyalty } from "@pos_loyalty/../tests/unit/utils";
 import { TicketScreen } from "@point_of_sale/app/screens/ticket_screen/ticket_screen";
 
 definePosModels();
@@ -11,18 +11,23 @@ test("TicketScreen.setOrder keeps reward line and triggers pos.updateRewards", a
     const store = await setupPosEnv();
     const models = store.models;
 
-    const order = store.addNewOrder();
+    const order = await createOrderWithLoyalty(store, []);
     const reward = models["loyalty.reward"].get(1);
     const coupon = models["loyalty.card"].get(1);
 
-    await addProductLineToOrder(store, order, {
+    models["pos.order.line"].create({
+        order_id: order,
+        product_id: models["product.product"].get(20),
+        qty: 1,
+        price_unit: -10,
         is_reward_line: true,
         reward_id: reward,
         coupon_id: coupon,
         reward_identifier_code: "LOAD-ORDER-REWARD",
         points_cost: 10,
+        price_type: "manual",
     });
-    order.uiState.couponPointChanges = {};
+
     store.selectedOrderUuid = null;
 
     let updateRewardsCalled = false;
@@ -39,6 +44,7 @@ test("TicketScreen.setOrder keeps reward line and triggers pos.updateRewards", a
     expect(currentOrder).toBe(order);
     const rewardLines = currentOrder.lines.filter((l) => l.is_reward_line);
     expect(rewardLines.length).toBe(1);
-    expect(rewardLines[0].reward_id.id).toBe(reward.id);
-    expect(rewardLines[0].coupon_id.id).toBe(coupon.id);
+    const loadedReward = rewardLines.find((l) => l.reward_identifier_code === "LOAD-ORDER-REWARD");
+    expect(loadedReward.reward_id.id).toBe(reward.id);
+    expect(loadedReward.coupon_id.id).toBe(coupon.id);
 });

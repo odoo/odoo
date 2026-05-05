@@ -11,16 +11,34 @@ test("_getLoyaltyPointsRepr", async () => {
     const models = store.models;
 
     const partner = models["res.partner"].get(1);
-    // Get first 3 loyalty cards and map them with program
-    const loyaltyCards = models["loyalty.card"]
-        .getAll()
-        .slice(0, 3)
-        .map((element) => ({
-            id: element.id,
-            points: element.points,
-            partner_id: partner.id,
-            program_id: models["loyalty.program"].get(element.id),
-        }));
+
+    const loyaltyCards = [
+        {
+            points: 10,
+            program_id: {
+                program_type: "loyalty",
+                portal_point_name: "Points",
+                name: "Loyalty Program",
+            },
+        },
+        {
+            points: 25,
+            program_id: {
+                program_type: "ewallet",
+                portal_point_name: "Points",
+                name: "E-Wallet Program",
+            },
+        },
+        {
+            points: 15,
+            program_id: {
+                program_type: "gift_card",
+                portal_visible: true,
+                portal_point_name: "Gift Card Points",
+                name: "GC Program",
+            },
+        },
+    ];
 
     const component = await mountWithCleanup(PartnerLine, {
         props: {

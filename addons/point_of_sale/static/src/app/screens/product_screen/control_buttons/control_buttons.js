@@ -151,4 +151,5 @@ export class ControlButtons extends Component {
 export class ControlButtonsPopup extends Component {
     static components = { Dialog, ControlButtons };
     static template = "point_of_sale.ControlButtonsPopup";
+    static props = { "*": { optional: true } };
 }

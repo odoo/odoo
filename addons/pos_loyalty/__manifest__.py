@@ -35,14 +35,14 @@
         'point_of_sale.customer_display_assets': [
             'pos_loyalty/static/src/overrides/customer_display_overrides/customer_display.xml',
         ],
-        'point_of_sale.customer_display_assets_test': [
-            'pos_loyalty/static/tests/tours/customer_display_tour.js',
-        ],
         'web.assets_tests': [
             'pos_loyalty/static/tests/tours/**/*',
         ],
         'web.assets_unit_tests': [
             'pos_loyalty/static/tests/unit/**/*'
+        ],
+        'web.assets_unit_tests_setup': [
+            'pos_loyalty/static/src/overrides/customer_display_overrides/customer_display.xml',
         ],
     },
     'uninstall_hook': 'uninstall_hook',

@@ -1,7 +1,8 @@
 import { test, expect } from "@odoo/hoot";
 import { mockDate } from "@odoo/hoot-mock";
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
-import { getFilledOrder, setupPosEnv } from "@point_of_sale/../tests/unit/utils";
+import { setupPosEnv } from "@point_of_sale/../tests/unit/utils";
+import { createOrderWithLoyalty } from "@pos_loyalty/../tests/unit/utils";
 import { definePosModels } from "@point_of_sale/../tests/unit/data/generate_model_definitions";
 import { ManageGiftCardPopup } from "@pos_loyalty/app/components/popups/manage_giftcard_popup/manage_giftcard_popup";
 
@@ -10,12 +11,14 @@ definePosModels();
 test("addBalance", async () => {
     const store = await setupPosEnv();
 
-    // Freeze current date so luxon.DateTime.now() is fixed
-    mockDate("2025-01-01");
+    mockDate("2025-02-01 00:00:00");
 
     let payloadResult = null;
 
-    const order = await getFilledOrder(store);
+    const order = await createOrderWithLoyalty(store, [
+        { product: store.models["product.product"].get(5), qty: 1, price: 10 },
+    ]);
+
     const popup = await mountWithCleanup(ManageGiftCardPopup, {
         props: {
             line: order.lines[0],
@@ -36,13 +39,10 @@ test("addBalance", async () => {
 
     popup.state.inputValue = "101";
     popup.state.amountValue = "100";
-    popup.state.error = false;
-    popup.state.amountError = false;
 
     await popup.addBalance();
 
     expect(payloadResult.code).toBe("101");
     expect(payloadResult.amount).toBe(100);
-    // expiration is +1 year
-    expect(payloadResult.expDate).toBe("2026-01-01");
+    expect(payloadResult.expDate).toBe("2026-02-01");
 });
