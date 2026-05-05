@@ -1,8 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models, fields
-from odoo.tools import groupby
-from odoo.addons.mail.tools.discuss import Store
+from odoo import fields, models
 
 
 class MailMessageReaction(models.Model):
@@ -23,27 +21,3 @@ class MailMessageReaction(models.Model):
         'CHECK((partner_id IS NOT NULL AND guest_id IS NULL) OR (partner_id IS NULL AND guest_id IS NOT NULL))',
         'A message reaction must be from a partner or from a guest.',
     )
-
-    def _to_store(self, store: Store, res: Store.FieldList):
-        if res:
-            raise NotImplementedError("Fields are not supported for reactions.")
-        for (message, content), reactions in groupby(self, lambda r: (r.message_id, r.content)):
-            reactions = self.env["mail.message.reaction"].union(reactions)
-            store.add_model_values(
-                "MessageReactions",
-                lambda res, content=content, message=message, reactions=reactions: (
-                    res.attr("content", content),
-                    res.attr("count", len(reactions)),
-                    res.many("guests", "_store_avatar_fields", value=reactions.guest_id),
-                    res.attr("message", message.id),
-                    res.many(
-                        "partners",
-                        lambda res: (
-                            res.from_method("_store_avatar_fields"),
-                            message._store_partner_name_dynamic_fields(res),
-                        ),
-                        value=reactions.partner_id,
-                    ),
-                    res.attr("sequence", min(reactions.ids)),
-                ),
-            )

@@ -293,17 +293,17 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         })
         # add needaction messages
         self.users[0].notification_type = 'inbox'
-        message_0 = self.channel_channel_public_1.message_post(
+        self.message_0 = self.channel_channel_public_1.message_post(
             body="test",
             message_type="comment",
             author_id=self.users[2].partner_id.id,
             partner_ids=self.users[0].partner_id.ids,
         )
         self.channel_channel_public_1.with_user(self.users[0]).self_member_id._mark_as_read(
-            message_0.id,
+            self.message_0.id,
         )
         # add bookmark
-        message_0.bookmarked_partner_ids = [Command.link(self.users[0].partner_id.id)]
+        self.message_0.bookmarked_partner_ids = [Command.link(self.users[0].partner_id.id)]
         self.env.company.sudo().name = 'YourCompany'
         # add unread messages
         self.channel_channel_group_3.with_user(self.users[2]).message_post(
@@ -325,18 +325,18 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         session = self.env["discuss.channel.rtc.session"].sudo().create(data)
         member_0.rtc_inviting_session_id = session
         # add some reactions with different users on different messages
-        message_1 = self.channel_general.message_post(
+        self.message_1 = self.channel_general.message_post(
             body="test", message_type="comment", author_id=self.users[0].partner_id.id
         )
         self.authenticate(self.users[0].login, self.password)
-        self._add_reactions(message_0, ["😊", "😏"])
-        self._add_reactions(message_1, ["😊"])
+        self._add_reactions(self.message_0, ["😊", "😏"])
+        self._add_reactions(self.message_1, ["😊"])
         self.authenticate(self.users[1].login, self.password)
-        self._add_reactions(message_0, ["😊", "😏"])
-        self._add_reactions(message_1, ["😊", "😁"])
+        self._add_reactions(self.message_0, ["😊", "😏"])
+        self._add_reactions(self.message_1, ["😊", "😁"])
         self.authenticate(self.users[2].login, self.password)
-        self._add_reactions(message_0, ["😊", "😁"])
-        self._add_reactions(message_1, ["😊", "😁", "👍"])
+        self._add_reactions(self.message_0, ["😊", "😁"])
+        self._add_reactions(self.message_1, ["😊", "😁", "👍"])
         # add archive / muted on channels
         self.channel_channel_group_3.active = False
         self.channel_channel_group_4.with_user(
@@ -645,10 +645,6 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 self._expected_result_for_thread(self.channel_livechat_1),
                 self._expected_result_for_thread(self.channel_livechat_2),
             ),
-            "MessageReactions": [
-                *self._expected_result_for_message_reactions(self.channel_general),
-                *self._expected_result_for_message_reactions(self.channel_channel_public_1),
-            ],
             "res.country": [
                 {"code": "IN", "id": self.env.ref("base.in").id, "name": "India"},
                 {"code": "BE", "id": self.env.ref("base.be").id, "name": "Belgium"},
@@ -1441,11 +1437,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "partner_ids": [],
                 "pinned_at": False,
                 "rating_id": False,
-                "reactions": [
-                    {"content": "👍", "message": last_message.id},
-                    {"content": "😁", "message": last_message.id},
-                    {"content": "😊", "message": last_message.id},
-                ],
+                "reactions": self._expected_result_for_message_reactions(last_message),
                 "record_name": "General",
                 "reply_to": '"Ernest Employee" <catchall.test@test.mycompany.com>',
                 "res_id": self.channel_general.id,
@@ -1479,11 +1471,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "partner_ids": [self.users[0].partner_id.id],
                 "pinned_at": False,
                 "rating_id": False,
-                "reactions": [
-                    {"content": "😁", "message": last_message.id},
-                    {"content": "😊", "message": last_message.id},
-                    {"content": "😏", "message": last_message.id},
-                ],
+                "reactions": self._expected_result_for_message_reactions(last_message),
                 "record_name": "public channel 1",
                 "res_id": channel.id,
                 "reply_to": '"test2" <catchall.test@test.mycompany.com>',
@@ -1703,22 +1691,21 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             }
         return {}
 
-    def _expected_result_for_message_reactions(self, channel):
-        last_message = channel._get_last_messages()
+    def _expected_result_for_message_reactions(self, message):
         partner_0 = self.users[0].partner_id.id
         partner_1 = self.users[1].partner_id.id
         partner_2 = self.users[2].partner_id.id
-        reactions_0 = last_message.sudo().reaction_ids.filtered(lambda r: r.content == "👍")
-        reactions_1 = last_message.sudo().reaction_ids.filtered(lambda r: r.content == "😁")
-        reactions_2 = last_message.sudo().reaction_ids.filtered(lambda r: r.content == "😊")
-        reactions_3 = last_message.sudo().reaction_ids.filtered(lambda r: r.content == "😏")
-        if channel == self.channel_general:
+        reactions_0 = message.sudo().reaction_ids.filtered(lambda r: r.content == "👍")
+        reactions_1 = message.sudo().reaction_ids.filtered(lambda r: r.content == "😁")
+        reactions_2 = message.sudo().reaction_ids.filtered(lambda r: r.content == "😊")
+        reactions_3 = message.sudo().reaction_ids.filtered(lambda r: r.content == "😏")
+        if message == self.message_1:
             return [
                 {
                     "content": "👍",
                     "count": 1,
                     "guests": [],
-                    "message": last_message.id,
+                    "message": message.id,
                     "partners": [partner_2],
                     "sequence": min(reactions_0.ids),
                 },
@@ -1726,7 +1713,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                     "content": "😁",
                     "count": 2,
                     "guests": [],
-                    "message": last_message.id,
+                    "message": message.id,
                     "partners": [partner_2, partner_1],
                     "sequence": min(reactions_1.ids),
                 },
@@ -1734,18 +1721,18 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                     "content": "😊",
                     "count": 3,
                     "guests": [],
-                    "message": last_message.id,
+                    "message": message.id,
                     "partners": [partner_2, partner_1, partner_0],
                     "sequence": min(reactions_2.ids),
                 },
             ]
-        if channel == self.channel_channel_public_1:
+        if message == self.message_0:
             return [
                 {
                     "content": "😁",
                     "count": 1,
                     "guests": [],
-                    "message": last_message.id,
+                    "message": message.id,
                     "partners": [partner_2],
                     "sequence": min(reactions_1.ids),
                 },
@@ -1753,7 +1740,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                     "content": "😊",
                     "count": 3,
                     "guests": [],
-                    "message": last_message.id,
+                    "message": message.id,
                     "partners": [partner_2, partner_1, partner_0],
                     "sequence": min(reactions_2.ids),
                 },
@@ -1761,7 +1748,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                     "content": "😏",
                     "count": 2,
                     "guests": [],
-                    "message": last_message.id,
+                    "message": message.id,
                     "partners": [partner_1, partner_0],
                     "sequence": min(reactions_3.ids),
                 },

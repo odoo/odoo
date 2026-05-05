@@ -16,7 +16,7 @@ import odoo
 from odoo import models
 from odoo.exceptions import MissingError
 from odoo.http import request, route
-from odoo.tools import OrderedSet, groupby
+from odoo.tools import OrderedSet
 
 from odoo.addons.bus.websocket import wsrequest
 
@@ -168,7 +168,6 @@ ids_by_model.update(
     {
         "DiscussApp": (),
         "mail.thread": ("model", "id"),
-        "MessageReactions": ("message", "content"),
         "Rtc": (),
         "Store": (),
     }
@@ -216,7 +215,7 @@ class Store:
     ):
         self.add_depth = 0
         self.already_done = set()
-        self.data = {}
+        self.data = defaultdict(lambda: defaultdict(dict))
         self.data_id = None
         self.is_executing_operation_queue = False
         self.operation_queue = []
@@ -246,15 +245,16 @@ class Store:
             self.__version = StoreVersion.ensure_version(records.env)
 
     @store_enqueue
-    def add(self, records, fields, *, as_thread=False, fields_params=None):
-        """Add records to the store. Data is coming from _to_store() method of the model if it is
-        defined, and fallbacks to _read_format() otherwise.
+    def add(self, records, fields, *, as_thread=False, fields_params=None, ignore_empty=False):
+        """Add records to the store.
+
         Fields can be defined in multiple ways:
         - as a string: the name of a method on the records that will be called with a Store.FieldList
           as first argument, and optional fields_params as other arguments.
         - as a callable: a function that will be called with a Store.FieldList as first argument.
-        - as a list: list of field names.
+        - as a list: list of field names. Data for fields are coming from _read_format().
         - as a dict: mapping of field names to static values.
+
         Relations are defined with StoreField.one() or StoreField.many() instead of a field name as
         string. Non-relation fields can also be defined with StoreField.attr() rather than simple
         string to provide extra parameters.
@@ -272,10 +272,7 @@ class Store:
         self.already_done.add(identifier)
         self.add_depth += 1
         try:
-            if not as_thread and hasattr(records, "_to_store"):
-                records._to_store(self, field_list)
-            else:
-                self.add_records_fields(field_list, as_thread=as_thread)
+            self._add_field_list(field_list, as_thread=as_thread, ignore_empty=ignore_empty)
             return self
         finally:
             self.add_depth -= 1
@@ -293,7 +290,7 @@ class Store:
         return self
 
     @store_enqueue
-    def add_model_values(self, model_name, values):
+    def add_model_values(self, model_name, values, *, id_data=None, ignore_empty=False):
         """Add values to a model in the store.
 
         Use case: to add values to JS records that don't have a corresponding Python record.
@@ -303,33 +300,43 @@ class Store:
             return self
         data_list = []
         self._add_abstract_fields_value(self._format_fields(values), data_list)
-        index = self._get_record_index(model_name, data_list)
-        self._ensure_record_at_index(model_name, index)
+        index = self._get_record_index(model_name, [id_data or {}] + data_list)
         for data in data_list:
             self._add_values(data, model_name, index)
+        if id_data and (self.data[model_name][index] or not ignore_empty):
+            self._add_values(id_data, model_name, index)
         if "_DELETE" in self.data[model_name][index]:
             del self.data[model_name][index]["_DELETE"]
         return self
 
-    @store_enqueue
-    def add_records_fields(self, field_list, as_thread=False):
-        """Same as Store.add() but without calling _to_store().
-
-        Use case: to add fields from inside _to_store() methods to avoid recursive code.
-        Note: in all other cases, Store.add() should be called instead.
+    def _add_field_list(self, field_list, *, as_thread=False, ignore_empty):
+        """Add the given field list to the store. This is an internal implementation method.
+        In business code, Store.add() should be called instead.
         """
         self.__try_update_version_from_records(field_list.records)
         if field_list and field_list.records:
-            for record, record_data_list in self._get_records_data_list(field_list).items():
+            for record, record_data_list in self._get_records_data_list(
+                field_list,
+                ignore_empty=ignore_empty,
+            ).items():
                 for record_data in record_data_list:
+                    model_name = record._name
+                    id_data = {"id": record.id}
                     if as_thread:
-                        self.add_model_values(
-                            "mail.thread", {"id": record.id, "model": record._name, **record_data},
-                        )
-                    else:
-                        self.add_model_values(record._name, {"id": record.id, **record_data})
+                        model_name = "mail.thread"
+                        id_data["model"] = record._name
+                    self.add_model_values(
+                        model_name,
+                        record_data,
+                        id_data=id_data,
+                        ignore_empty=ignore_empty,
+                    )
         if self._internal_store:
-            self._internal_store.add_records_fields(field_list._internal_field_list, as_thread)
+            self._internal_store._add_field_list(
+                field_list._internal_field_list,
+                as_thread=as_thread,
+                ignore_empty=ignore_empty,
+            )
         return self
 
     @store_enqueue
@@ -340,11 +347,9 @@ class Store:
         data_list = []
         self._add_abstract_fields_value(self._format_fields(values), data_list)
         ids = ids_by_model[model_name]
-        assert not ids
-        if model_name not in self.data:
-            self.data[model_name] = {}
+        assert ids == ()
         for data in data_list:
-            self._add_values(data, model_name)
+            self._add_values(data, model_name, ids)
         return self
 
     @store_enqueue
@@ -359,7 +364,6 @@ class Store:
                 {"id": record.id} if not as_thread else {"id": record.id, "model": record._name}
             )
             index = self._get_record_index(model_name, [values])
-            self._ensure_record_at_index(model_name, index)
             self._add_values(values, model_name, index)
             self.data[model_name][index]["_DELETE"] = True
         return self
@@ -403,10 +407,12 @@ class Store:
             self.is_executing_operation_queue = False
         res = {}
         for model_name, records in sorted(self.data.items()):
-            if not ids_by_model[model_name]:  # singleton
-                res[model_name] = dict(sorted(records.items()))
-            else:
-                res[model_name] = [dict(sorted(record.items())) for record in records.values()]
+            if not ids_by_model[model_name]:
+                # singleton have a single item (the empty tuple), the wrapping list can be omitted
+                res[model_name] = dict(sorted(records[()].items()))
+            elif vals := [dict(sorted(record.items())) for record in records.values() if record]:
+                # skip empty records and empty models
+                res[model_name] = vals
         return res
 
     @store_enqueue
@@ -422,9 +428,9 @@ class Store:
             self.add_model_values("DataResponse", {"id": data_id, "_resolve": True, **data})
         return self
 
-    def _add_values(self, values, model_name, index=None):
+    def _add_values(self, values: dict, model_name: str, index: tuple):
         """Adds values to the store for a given model name and index."""
-        target = self.data[model_name][index] if index else self.data[model_name]
+        target = self.data[model_name][index]
         for key, val in values.items():
             assert key != "_DELETE", f"invalid key {key} in {model_name}: {values}"
             if isinstance(val, Store.Relation):
@@ -437,12 +443,6 @@ class Store:
                 target[key] = ["markup", str(val)]
             else:
                 target[key] = val
-
-    def _ensure_record_at_index(self, model_name, index):
-        if model_name not in self.data:
-            self.data[model_name] = {}
-        if index not in self.data[model_name]:
-            self.data[model_name][index] = {}
 
     def _format_fields(self, fields, records=None, fields_params=None):
         field_list = Store.FieldList(self, records)
@@ -472,18 +472,16 @@ class Store:
             return getattr(records, method_name)
         return None
 
-    def _get_records_data_list(self, field_list):
+    def _get_records_data_list(self, field_list, *, ignore_empty):
         abstract_fields = [field for field in field_list if isinstance(field, (dict, Store.Attr))]
-        records_data_list = {
-            record: [data]
+        standard_fields = [f for f in field_list if f not in abstract_fields]
+        records_data_list = {record: [] for record in field_list.records}
+        if standard_fields or not ignore_empty:
             for record, data in zip(
                 field_list.records,
-                field_list.records._read_format(
-                    [f for f in field_list if f not in abstract_fields],
-                    load=False,
-                ),
-            )
-        }
+                field_list.records._read_format(standard_fields, load=False),
+            ):
+                records_data_list[record].append(data)
         for record, record_data_list in records_data_list.items():
             self._add_abstract_fields_value(abstract_fields, record_data_list, record)
         return records_data_list
@@ -638,7 +636,10 @@ class Store:
             assert (
                 not records_or_field_name
                 or isinstance(records_or_field_name, (str, models.Model))
-            ), f"expected recordset, field name, or empty value for Relation: {records_or_field_name}"
+                or value is not NO_VALUE
+            ), (
+                f"expected recordset, field name, explicit value, or empty value for Relation: {records_or_field_name}"
+            )
             self.records = (
                 records_or_field_name if isinstance(records_or_field_name, models.Model) else None
             )
@@ -663,6 +664,8 @@ class Store:
                 if self.field_name == "thread" and "thread" not in record._fields:
                     if (res_model := record[res_model_field]) and (res_id := record["res_id"]):
                         records = record.env[res_model].browse(res_id)
+            if self.value is not NO_VALUE and not isinstance(records, models.Model):
+                return records  # for a fake field, return the value as it is
             return self._copy_with_records(records, calling_record=record)
 
         def _copy_with_records(self, records, calling_record):
@@ -694,8 +697,13 @@ class Store:
             )
 
         def _add_to_store(self, store, target, key):
-            """Add the current relation to the given store at target[key]."""
-            store.add(self.records, self.fields, as_thread=self.as_thread)
+            """Add the current relation to the given store at target[key].
+
+            Don't explicitly add the target records to the store if there are no
+            fields to add for them to avoid top-level records with only ids.
+            This prevents duplication as the ids are already sent through the
+            relation itself if necessary."""
+            store.add(self.records, self.fields, as_thread=self.as_thread, ignore_empty=True)
 
         def _identity(self):
             return (
@@ -782,6 +790,13 @@ class Store:
             self.mode = mode
             self.sort = sort
 
+        def _get_value(self, record):
+            res = super()._get_value(record)
+            if self.value is not NO_VALUE and not isinstance(res, (models.Model, Store.Attr)):
+                # for a fake field, immediately wrap the value with the mode
+                return self._prepend_mode(res)
+            return res
+
         def _copy_with_records(self, records, calling_record):
             if records is None:
                 records = []
@@ -805,15 +820,10 @@ class Store:
         def _get_id(self):
             """Return the ids that can be used to insert the current relation in the store."""
             self._sort_records()
-            if self.records._name == "mail.message.reaction":
-                res = [
-                    {"message": message.id, "content": content}
-                    for (message, content), _ in groupby(
-                        self.records, lambda r: (r.message_id, r.content)
-                    )
-                ]
-            else:
-                res = [Store._get_one_id(record, self.as_thread) for record in self.records]
+            res = [Store._get_one_id(record, self.as_thread) for record in self.records]
+            return self._prepend_mode(res)
+
+        def _prepend_mode(self, res):
             if self.mode == "ADD":
                 res = [("ADD", res)]
             elif self.mode == "DELETE":
@@ -831,6 +841,7 @@ class Store:
     class FieldList(UserList):
         """Helper to provide short syntax for building a list of field definitions for a specific
         store.add call (with given records and target)."""
+
         def __init__(self, store, records):
             super().__init__()
             # records for which the field list will apply. Useful to pre-compute values in batch.
