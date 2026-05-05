@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <!-- === PRIMARY PAYMENT METHODS === -->
+
+    <record id="payment_method_bkash" model="payment.method">
+        <field name="name">bKash</field>
+        <field name="code">bkash</field>
+        <field name="provider_id" ref="payment.payment_provider_sslcommerz"/>
+        <field name="image" type="bytes" file="payment/static/img/bkash.png"/>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.bd')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.BDT')])]"/>
+    </record>
+
+    <record id="payment_method_card" model="payment.method">
+        <field name="name">Card</field>
+        <field name="code">card</field>
+        <field name="sequence">10</field>
+        <field name="provider_id" ref="payment.payment_provider_sslcommerz"/>
+        <field name="image" type="bytes" file="payment/static/img/card.png"/>
+    </record>
+
+    <record id="payment_method_netbanking" model="payment.method">
+        <field name="name">Netbanking</field>
+        <field name="code">netbanking</field>
+        <field name="provider_id" ref="payment.payment_provider_sslcommerz"/>
+        <field name="image" type="bytes" file="payment/static/img/bank.png"/>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.bd')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.BDT')])]"/>
+    </record>
+
+    <!-- === PAYMENT METHOD BRANDS === -->
+
+    <record id="payment_method_amex" model="payment.method">
+        <field name="name">American Express</field>
+        <field name="code">amex</field>
+        <field
+            name="primary_payment_method_id"
+            eval="ref('payment_sslcommerz.payment_method_card')"
+        />
+        <field name="provider_id" ref="payment.payment_provider_sslcommerz"/>
+        <field name="image" type="bytes" file="payment/static/img/amex.png"/>
+    </record>
+
+    <record id="payment_method_mastercard" model="payment.method">
+        <field name="name">MasterCard</field>
+        <field name="code">mastercard</field>
+        <field name="sequence">50</field>
+        <field
+            name="primary_payment_method_id"
+            eval="ref('payment_sslcommerz.payment_method_card')"
+        />
+        <field name="provider_id" ref="payment.payment_provider_sslcommerz"/>
+        <field name="image" type="bytes" file="payment/static/img/mastercard.png"/>
+    </record>
+
+    <record id="payment_method_visa" model="payment.method">
+        <field name="name">VISA</field>
+        <field name="code">visa</field>
+        <field name="sequence">50</field>
+        <field
+            name="primary_payment_method_id"
+            eval="ref('payment_sslcommerz.payment_method_card')"
+        />
+        <field name="provider_id" ref="payment.payment_provider_sslcommerz"/>
+        <field name="image" type="bytes" file="payment/static/img/visa.png"/>
+    </record>
+
+</odoo>
