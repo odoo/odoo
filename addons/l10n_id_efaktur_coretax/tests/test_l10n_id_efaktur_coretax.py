@@ -36,6 +36,7 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
         cls.non_luxury_tax = ChartTemplate.ref(f'account.{company_id}_tax_ST4')
         cls.stlg_tax = ChartTemplate.ref(f'account.{company_id}_tax_luxury_sales')
         cls.zero_tax = ChartTemplate.ref(f'account.{company_id}_tax_ST0')
+        cls.pemungut_ppn_tax = ChartTemplate.ref(f'account.{company_id}_tax_pemungut_ppn')
 
         path = "l10n_id_efaktur_coretax/tests/results/sample.xml"
         with tools.file_open(path, mode='rb') as test_file:
@@ -678,6 +679,38 @@ class TestEfakturCoretax(AccountTestInvoicingCommon):
                 <STLG>20000.00</STLG>
             </xpath>
             '''
+        )
+        self.assertXmlTreeEqual(result_tree, expected_tree)
+
+    def test_efaktur_xml_pemungut_ppn(self):
+        """ Test the data of the generated eFaktur XML when invoice line includes the Pemungut PPN tax."""
+        out_invoice = self.env["account.move"].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2019-05-01',
+            'date': '2019-05-01',
+            'invoice_line_ids': [
+                (0, 0, {'product_id': self.product_a.id, 'price_unit': 100000, 'quantity': 1, 'tax_ids': [self.pemungut_ppn_tax.id]}),
+            ],
+            'l10n_id_kode_transaksi': '04',
+        })
+        out_invoice.action_post()
+        out_invoice.download_efaktur()
+
+        result_tree = etree.fromstring(out_invoice.l10n_id_coretax_document._generate_efaktur_invoice())
+        expected_tree = self.with_applied_xpath(
+            etree.fromstring(self.sample_xml),
+            '''
+            <xpath expr="//OtherTaxBase" position="replace">
+                <OtherTaxBase>91666.67</OtherTaxBase>
+            </xpath>
+            <xpath expr="//VAT" position="replace">
+                <VAT>11000.00</VAT>
+            </xpath>
+            <xpath expr="//VATRate" position="replace">
+                <VATRate>12</VATRate>
+            </xpath>
+            ''',
         )
         self.assertXmlTreeEqual(result_tree, expected_tree)
 
