@@ -1,8 +1,44 @@
 <odoo>
+    <!-- Hệ Thống -->
+    <record id="rule_employee_admin" model="ir.rule">
+        <field name="name">Hệ Thống (Employee)</field>
+        <field name="model_id" ref="model_sale_employee"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('base.group_system'))]"/>
+    </record>
+
+    <record id="rule_kpi_admin" model="ir.rule">
+        <field name="name">Hệ Thống (KPI)</field>
+        <field name="model_id" ref="model_sale_employee_kpi"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('base.group_system'))]"/>
+    </record>
+
+    <record id="rule_kpi_adminc" model="ir.rule">
+        <field name="name">Hệ Thống (Transaction)</field>
+        <field name="model_id" ref="model_sale_transaction"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('base.group_system'))]"/>
+    </record>
+    
     <!-- Ban Điều Hành -->
     <record id="rule_employee_exec" model="ir.rule">
         <field name="name">Ban Điều Hành (Employee)</field>
         <field name="model_id" ref="model_sale_employee"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('group_ht_executive'))]"/>
+    </record>
+
+    <record id="rule_kpi_exec" model="ir.rule">
+        <field name="name">Ban Điều Hành (KPI)</field>
+        <field name="model_id" ref="model_sale_employee_kpi"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('group_ht_executive'))]"/>
+    </record>
+
+    <record id="rule_transaction_exec" model="ir.rule">
+        <field name="name">Ban Điều Hành (Transaction)</field>
+        <field name="model_id" ref="model_sale_transaction"/>
         <field name="domain_force">[(1, '=', 1)]</field>
         <field name="groups" eval="[(4, ref('group_ht_executive'))]"/>
     </record>
@@ -26,7 +62,9 @@
         <field name="model_id" ref="model_sale_employee_kpi"/>
         <field name="domain_force">
             [
-                ('employee_id.user_id', '=', user.id)
+                '|',
+                ('employee_id.user_id', '=', user.id),
+                ('employee_id.manager_id.user_id', '=', user.id)
             ]
         </field>
         <field name="groups" eval="[(4, ref('group_ht_leader'))]"/>
@@ -37,7 +75,9 @@
         <field name="model_id" ref="model_sale_transaction"/>
         <field name="domain_force">
             [
-                ('employee_id.user_id', '=', user.id)
+                '|',
+                ('employee_id.user_id', '=', user.id),
+                ('employee_id.manager_id.user_id', '=', user.id)
             ]
         </field>
         <field name="groups" eval="[(4, ref('group_ht_leader'))]"/>

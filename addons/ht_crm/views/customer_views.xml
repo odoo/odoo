@@ -1,5 +1,20 @@
 
 <odoo>
+    <!-- Hệ Thống -->
+    <record id="rule_customer_admin" model="ir.rule">
+        <field name="name">Hệ Thống (Customer)</field>
+        <field name="model_id" ref="model_sale_customer"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('group_ht_executive'))]"/>
+    </record>
+
+    <record id="rule_phonebook_admin" model="ir.rule">
+        <field name="name">Hệ Thống (Phonebook)</field>
+        <field name="model_id" ref="model_sale_phonebook"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('group_ht_executive'))]"/>
+    </record>
+
     <!-- Ban Điều Hành -->
     <record id="rule_customer_exec" model="ir.rule">
         <field name="name">Ban Điều Hành (Customer)</field>
@@ -75,7 +90,7 @@
         <field name="model">sale.phonebook</field>
         <field name="arch" type="xml">
             <list>
-                <field name="customer_id" string="Tên khách hàng" readonly="True"/>
+                <field name="customer_id" string="Tên khách hàng" readonly="True" width="auto"/>
                 <field name="phone" widget="phone"/>
                 <field name="is_called"/>
                 <field name="unreachable"/>
