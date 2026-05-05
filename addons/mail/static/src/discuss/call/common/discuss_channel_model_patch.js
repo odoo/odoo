@@ -1,6 +1,7 @@
 import { fields } from "@mail/model/export";
 import { DiscussChannel } from "@mail/discuss/core/common/discuss_channel_model";
 
+import { localeCompare } from "@web/core/l10n/utils";
 import { patch } from "@web/core/utils/patch";
 
 /** @import { AwaitChatHubInit } from "@mail/core/common/chat_hub_model" */
@@ -122,15 +123,32 @@ const DiscussChannelPatch = {
                     }
                 }
                 raisingHandCards.sort((c1, c2) => c1.session.raisingHand - c2.session.raisingHand);
-                sessionCards.sort(
-                    (c1, c2) =>
-                        c1.session.channel_member_id?.persona?.name?.localeCompare(
-                            c2.session.channel_member_id?.persona?.name
-                        ) ?? 1
-                );
-                invitationCards.sort(
-                    (c1, c2) => c1.member.persona?.name?.localeCompare(c2.member.persona?.name) ?? 1
-                );
+                sessionCards.sort((c1, c2) => {
+                    const member1 = c1.session.channel_member_id;
+                    const member2 = c2.session.channel_member_id;
+                    const name1 = member1?.persona?.displayName;
+                    const name2 = member2?.persona?.displayName;
+                    const nameDiff = localeCompare(name1, name2);
+                    if (nameDiff !== 0) {
+                        return nameDiff;
+                    }
+                    if (member1?.id && !member2?.id) {
+                        return -1;
+                    }
+                    if (!member1?.id && member2?.id) {
+                        return 1;
+                    }
+                    const memberDiff = member1?.id - member2?.id;
+                    if (memberDiff !== 0) {
+                        return memberDiff;
+                    }
+                    return c1.session.id - c2.session.id;
+                });
+                invitationCards.sort((c1, c2) => {
+                    const name1 = c1.member.persona?.displayName;
+                    const name2 = c2.member.persona?.displayName;
+                    return localeCompare(name1, name2) || c1.member.id - c2.member.id;
+                });
                 return raisingHandCards.concat(sessionCards, invitationCards);
             },
         });

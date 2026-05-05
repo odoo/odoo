@@ -8,6 +8,7 @@ import { OrderDisplay } from "@point_of_sale/app/components/order_display/order_
 import { useRouterParamsChecker } from "@point_of_sale/app/hooks/pos_router_hook";
 import { PriceFormatter } from "@point_of_sale/app/components/price_formatter/price_formatter";
 import { _t } from "@web/core/l10n/translation";
+import { localeCompare } from "@web/core/l10n/utils";
 
 export class SplitBillScreen extends Component {
     static template = "pos_restaurant.SplitBillScreen";
@@ -71,7 +72,7 @@ export class SplitBillScreen extends Component {
                 .getOpenOrders()
                 .map((order) => this._getOrderName(order))
                 .filter((orderName) => orderName.slice(0, -1) === name)
-                .sort((a, b) => a.slice(-1).localeCompare(b.slice(-1)))
+                .sort((a, b) => localeCompare(a.slice(-1), b.slice(-1)))
                 .at(-1) || name
         );
     }

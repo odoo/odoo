@@ -3,6 +3,7 @@ import { cleanTerm } from "@mail/utils/common/format";
 import { toRaw } from "@odoo/owl";
 import { emojiLoader } from "@web/core/emoji_picker/emoji_loader";
 
+import { localeCompare } from "@web/core/l10n/utils";
 import { registry } from "@web/core/registry";
 import { fuzzyLookup } from "@web/core/utils/search";
 
@@ -135,13 +136,7 @@ export class SuggestionService {
             ) {
                 return 1;
             }
-            if (cleanedName1 < cleanedName2) {
-                return -1;
-            }
-            if (cleanedName1 > cleanedName2) {
-                return 1;
-            }
-            return c1.id - c2.id;
+            return localeCompare(c1.source, c2.source) || c1.id - c2.id;
         };
         return {
             type: "mail.canned.response",
@@ -219,13 +214,7 @@ export class SuggestionService {
             ) {
                 return 1;
             }
-            if (cleanedName1 < cleanedName2) {
-                return -1;
-            }
-            if (cleanedName1 > cleanedName2) {
-                return 1;
-            }
-            return r1.id - r2.id;
+            return localeCompare(r1.name, r2.name) || r1.id - r2.id;
         };
         return {
             suggestions: roles.sort(sortFunc),
@@ -352,13 +341,7 @@ export class SuggestionService {
             ) {
                 return 1;
             }
-            if (cleanedDisplayName1 < cleanedDisplayName2) {
-                return -1;
-            }
-            if (cleanedDisplayName1 > cleanedDisplayName2) {
-                return 1;
-            }
-            return c1.id - c2.id;
+            return localeCompare(c1.displayName, c2.displayName) || c1.id - c2.id;
         };
         return {
             type: "discuss.channel",

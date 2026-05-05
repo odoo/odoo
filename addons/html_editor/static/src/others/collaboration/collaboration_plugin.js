@@ -1,4 +1,5 @@
 import { Plugin } from "@html_editor/plugin";
+import { localeCompare } from "@web/core/l10n/utils";
 
 // 60 seconds
 export const HISTORY_SNAPSHOT_INTERVAL = 1000 * 60;
@@ -199,7 +200,7 @@ export class CollaborationPlugin extends Plugin {
         index++;
         while (index < steps.length) {
             if (steps[index].previousStepId === newStep.previousStepId) {
-                if (steps[index].id.localeCompare(newStep.id) === 1) {
+                if (localeCompare(steps[index].id, newStep.id) > 0) {
                     break;
                 } else {
                     concurentSteps = [steps[index].id];

@@ -5,6 +5,7 @@ import { createDOMPathGenerator } from "@html_editor/utils/dom_traversal";
 import { DIRECTIONS } from "@html_editor/utils/position";
 import { after, expect } from "@odoo/hoot";
 import { setupEditor } from "./editor";
+import { localeCompare } from "@web/core/l10n/utils";
 
 /**
  *
@@ -220,7 +221,7 @@ export function renderTextualSelection(peerInfos) {
 
     for (const nodeId of Object.keys(cursorNodes)) {
         cursorNodes[nodeId] = cursorNodes[nodeId].sort(
-            (a, b) => b.offset - a.offset || b.peerId.localeCompare(a.peerId)
+            (a, b) => b.offset - a.offset || localeCompare(b.peerId, a.peerId)
         );
     }
 

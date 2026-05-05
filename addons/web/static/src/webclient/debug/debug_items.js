@@ -2,6 +2,7 @@ import { Component, onWillStart } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { Dialog } from "@web/core/dialog/dialog";
 import { _t } from "@web/core/l10n/translation";
+import { localeCompare } from "@web/core/l10n/utils";
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
 import { user } from "@web/core/user";
@@ -105,7 +106,7 @@ class ClocReport extends Component {
         const compare = (a, b) =>
             b.billable - a.billable ||
             b.code_lines - a.code_lines ||
-            (a.model || a.display_name).localeCompare(b.model || b.display_name);
+            localeCompare(a.model || a.display_name, b.model || b.display_name);
         return records.toSorted(compare);
     }
 

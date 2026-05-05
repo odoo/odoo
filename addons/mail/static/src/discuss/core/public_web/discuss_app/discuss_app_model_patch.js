@@ -2,6 +2,7 @@ import { fields } from "@mail/model/export";
 import { DiscussApp } from "@mail/core/public_web/discuss_app/discuss_app_model";
 
 import { _t } from "@web/core/l10n/translation";
+import { localeCompare } from "@web/core/l10n/utils";
 import { patch } from "@web/core/utils/patch";
 
 const discussAppPatch = {
@@ -25,7 +26,7 @@ const discussAppPatch = {
                 const c2Sequence = c2.discussCategoryAsAppCategory?.sequence ?? c2.sequence;
                 return c1Sequence !== c2Sequence
                     ? c1Sequence - c2Sequence
-                    : c1.name.localeCompare(c2.name);
+                    : localeCompare(c1.name, c2.name) || c1.id - c2.id;
             },
         });
         this.channelCategory = fields.One("DiscussAppCategory", {

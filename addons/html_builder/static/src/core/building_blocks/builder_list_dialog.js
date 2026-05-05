@@ -2,6 +2,7 @@ import { useState } from "@web/owl2/utils";
 import { Component } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { fuzzyLookup } from "@web/core/utils/search";
+import { localeCompare } from "@web/core/l10n/utils";
 
 export class BuilderListDialog extends Component {
     static template = "html_builder.BuilderListDialog";
@@ -73,8 +74,6 @@ export class BuilderListDialog extends Component {
     }
 
     sortExcluded() {
-        this.state.excludedRecords.sort((a, b) =>
-            (a.display_name || "").localeCompare(b.display_name || "")
-        );
+        this.state.excludedRecords.sort((a, b) => localeCompare(a.display_name, b.display_name));
     }
 }

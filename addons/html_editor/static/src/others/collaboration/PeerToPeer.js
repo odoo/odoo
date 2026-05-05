@@ -1,3 +1,5 @@
+import { localeCompare } from "@web/core/l10n/utils";
+
 const urlParams = new URLSearchParams(window.location.search);
 const collaborationDebug = urlParams.get("collaborationDebug");
 const COLLABORATION_LOCALSTORAGE_KEY = "odoo_editor_collaboration_debug";
@@ -104,8 +106,7 @@ const baseNotificationMethods = {
         // rollbacking to a stable signaling state where the other is
         // continuing the process. The peer that is polite is the one that
         // will rollback.
-        const isPolite =
-            ("" + notification.fromPeerId).localeCompare("" + this._currentPeerId) === 1;
+        const isPolite = localeCompare("" + notification.fromPeerId, "" + this._currentPeerId) > 0;
         if (debugShowLog) {
             console.log(
                 `%cisPolite: %c${isPolite}`,

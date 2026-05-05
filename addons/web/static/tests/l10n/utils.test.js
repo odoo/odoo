@@ -3,6 +3,7 @@ import { describe, expect, test } from "@odoo/hoot";
 import {
     formatList,
     jsToPyLocale,
+    localeCompare,
     normalize,
     normalizedMatch,
     pyToJsLocale,
@@ -11,6 +12,29 @@ import { user } from "@web/core/user";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("headless");
+
+describe("localeCompare", () => {
+    test("basic comparisons", () => {
+        expect(localeCompare("Agahnim", "Zant")).toBeLessThan(0);
+        expect(localeCompare("Zithromax", "Azithromycin")).toBeGreaterThan(0);
+        expect(localeCompare("identical", "identical")).toBe(0);
+    });
+    test("performs a dictionary sort instead of an ASCII sort", () => {
+        expect(localeCompare("Z (90)", "a (97)")).toBeGreaterThan(0);
+        expect(localeCompare("é", "F")).toBeLessThan(0);
+    });
+    test("compares numbers by value", () => {
+        expect(localeCompare("Guest 9", "Guest 100000")).toBeLessThan(0);
+        expect(localeCompare("Guest 2", "Guest 1")).toBeGreaterThan(0);
+    });
+    test("treats same text with different normalization forms as equal", () => {
+        expect(localeCompare("é".normalize("NFC"), "é".normalize("NFD"))).toBe(0);
+    });
+    test("puts empty strings at the end when emptyLast option is true", () => {
+        expect(localeCompare("", "a", { emptyLast: false })).toBeLessThan(0);
+        expect(localeCompare("", "a", { emptyLast: true })).toBeGreaterThan(0);
+    });
+});
 
 describe("formatList", () => {
     test("defaults to the current user's locale", () => {

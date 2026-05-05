@@ -4,7 +4,7 @@ import { hasTouch } from "@web/core/browser/feature_detection";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { normalize } from "@web/core/l10n/utils";
+import { localeCompare, normalize } from "@web/core/l10n/utils";
 import { BadgeTag } from "@web/core/tags_list/badge_tag";
 import { mergeClasses } from "@web/core/utils/classname";
 import { useChildRef } from "@web/core/utils/hooks";
@@ -418,7 +418,7 @@ export class SelectMenu extends Component {
 
         const _choices = [];
         const _sections = new Set();
-        groupsList.sort((a, b) => (a.section || "").localeCompare(b.section || ""));
+        groupsList.sort((a, b) => localeCompare(a.section, b.section, { emptyLast: false }));
 
         for (const group of groupsList) {
             let filteredOptions = group.choices || [];
@@ -437,7 +437,7 @@ export class SelectMenu extends Component {
             } else {
                 if (this.props.autoSort) {
                     filteredOptions.sort((optionA, optionB) =>
-                        optionA.label.localeCompare(optionB.label)
+                        localeCompare(optionA.label, optionB.label)
                     );
                 }
             }

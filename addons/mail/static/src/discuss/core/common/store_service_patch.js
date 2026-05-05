@@ -2,6 +2,7 @@ import { Store } from "@mail/core/common/store_service";
 import { fields } from "@mail/model/misc";
 import { compareDatetime } from "@mail/utils/common/misc";
 
+import { localeCompare } from "@web/core/l10n/utils";
 import { patch } from "@web/core/utils/patch";
 import { debounce } from "@web/core/utils/timing";
 
@@ -75,7 +76,7 @@ const storeServicePatch = {
      * @param {import("models").ChannelMember} m2
      */
     sortMembers(m1, m2) {
-        return m1.name?.localeCompare(m2.name) || m1.id - m2.id;
+        return localeCompare(m1.name, m2.name) || m1.id - m2.id;
     },
     /** @param {number[]} partnerIds */
     async startChat(partnerIds) {

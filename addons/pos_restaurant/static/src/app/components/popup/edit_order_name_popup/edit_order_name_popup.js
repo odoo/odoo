@@ -1,6 +1,7 @@
 import { ListContainer } from "@point_of_sale/app/components/list_container/list_container";
 import { TextInputPopup } from "@point_of_sale/app/components/popups/text_input_popup/text_input_popup";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
+import { localeCompare } from "@web/core/l10n/utils";
 import { useService } from "@web/core/utils/hooks";
 
 export class EditOrderNamePopup extends TextInputPopup {
@@ -23,6 +24,6 @@ export class EditOrderNamePopup extends TextInputPopup {
         return this.pos
             .getOpenOrders()
             .filter((o) => !o.table_id && o.uuid != this.currentOrder.uuid)
-            .toSorted((a, b) => a.getName().localeCompare(b.getName()));
+            .toSorted((a, b) => localeCompare(a.getName(), b.getName()));
     }
 }
