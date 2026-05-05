@@ -268,6 +268,14 @@ registry.category("web_tour.tours").add("test_pos_restaurant_course", {
             Chrome.closePrintingWarning(),
             FloorScreen.clickTable("5"),
             negateStep(ProductScreen.checkCourseAtIndex(2, "Course 3")),
+            // Check all courses are removed when all orderlines are deleted
+            ProductScreen.clickLine("Coca-Cola"),
+            ProductScreen.clickNumpad("⌫"),
+            ProductScreen.clickNumpad("⌫"),
+            ProductScreen.clickNumpad("⌫"),
+            ProductScreen.clickNumpad("⌫"),
+            ProductScreen.orderIsEmpty(),
+            negateStep(ProductScreen.checkCourseAtIndex(0, "Course 1")),
         ].flat(),
 });
 

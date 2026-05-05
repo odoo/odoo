@@ -77,6 +77,12 @@ patch(PosOrder.prototype, {
         }
         return super.setPartner(...arguments);
     },
+    removeOrderline(line, deep = true) {
+        super.removeOrderline(...arguments);
+        if (this.lines.length === 0 && this.hasCourses()) {
+            this.course_ids.forEach((course) => course.delete());
+        }
+    },
     cleanCourses() {
         if (!this.hasCourses()) {
             return;
