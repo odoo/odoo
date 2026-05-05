@@ -374,7 +374,7 @@ class MrpBom(models.Model):
 
         # Performance optimization, allow usage of limit and avoid the for loop `bom.product_tmpl_id.product_variant_ids`
         if len(products) == 1:
-            bom = self.search(domain, order='sequence, product_id, id', limit=1)
+            bom = self.with_env(self.env(su=False)).search(domain, order='sequence, product_id, id', limit=1)
             if bom:
                 bom_by_product[products] = bom
             return bom_by_product
