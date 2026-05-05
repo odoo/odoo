@@ -15,6 +15,7 @@ export class FieldSelectorField extends Component {
         allowProperties: t.boolean().optional(),
         followRelation: t.or([t.boolean(), t.function()]).optional(),
         required: t.boolean().optional(),
+        placeholder: t.string().optional(),
     });
 
     debugMode = usePlugin(DebugModePlugin);
@@ -56,6 +57,7 @@ export class FieldSelectorField extends Component {
             isDebugMode: this.debugMode.isActive(),
             filter: this.filter.bind(this),
             followRelation: this.props.followRelation,
+            placeholder: this.props.placeholder,
         };
     }
 }
@@ -77,11 +79,12 @@ export const fieldSelectorField = {
             type: "string",
         },
     ],
-    extractProps({ options }) {
+    extractProps({ options, placeholder }) {
         return {
             allowProperties: options.allow_properties ?? true,
             followRelation: options.follow_relations ?? true,
             model: options.model,
+            placeholder,
         };
     },
 };
