@@ -2,6 +2,8 @@ import {
     click,
     contains,
     defineMailModels,
+    editInput,
+    insertText,
     listenStoreFetch,
     openDiscuss,
     start,
@@ -9,7 +11,8 @@ import {
     waitStoreFetch,
 } from "@mail/../tests/mail_test_helpers";
 import { AvatarCard } from "@mail/core/web/avatar_card/avatar_card";
-import { animationFrame, describe, test } from "@odoo/hoot";
+import { animationFrame, describe, expect, test } from "@odoo/hoot";
+import { press } from "@odoo/hoot-dom";
 import { mockDate } from "@odoo/hoot-mock";
 
 import {
@@ -262,6 +265,91 @@ test("Channel member count update after user left", async () => {
         getService("orm").call("discuss.channel", "action_unfollow", [channelId])
     );
     await contains(".o-discuss-ChannelMember", { count: 1 });
+});
+
+test("Can search member", async () => {
+    const pyEnv = await startServer();
+    const [partnerId1, partnerId2] = pyEnv["res.partner"].create([
+        { name: "Alice" },
+        { name: "Bob" },
+    ]);
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "TestChannel",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId1 }),
+            Command.create({ partner_id: partnerId2 }),
+        ],
+        channel_type: "channel",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-discuss-ChannelMemberList"); // This is from auto-open of member list panel
+    await contains(".o-discuss-ChannelMember", { count: 3 });
+    await insertText("input[placeholder='Search members']", "Alice");
+    await contains(".o-discuss-ChannelMember", { count: 1 });
+    await contains(".o-discuss-ChannelMember:text('Alice')");
+});
+
+test("Search does not fetch when term is more specific after empty result", async () => {
+    const pyEnv = await startServer();
+    const [partnerId1, partnerId2] = pyEnv["res.partner"].create([
+        { name: "Alice" },
+        { name: "Bob" },
+    ]);
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "TestChannel",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId1 }),
+            Command.create({ partner_id: partnerId2 }),
+        ],
+        channel_type: "channel",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-discuss-ChannelMemberList");
+    listenStoreFetch("/discuss/channel/members");
+    await editInput(document.body, "input[placeholder='Search members']", "zzzz");
+    await waitStoreFetch("/discuss/channel/members");
+    await contains(".o-discuss-ChannelMember", { count: 0 });
+    await contains(".o-discuss-ChannelMemberList span:text('No members found.')");
+    await press("backspace");
+    await waitStoreFetch("/discuss/channel/members");
+    await contains(".o-discuss-ChannelMember", { count: 0 });
+    await insertText("input[placeholder='Search members']", "zz");
+    await contains(".o-discuss-ChannelMemberList span:text('No members found.')");
+    await expect.waitForSteps([]);
+});
+
+test("Shows a hint to narrow member search when there's more than 100 matches", async () => {
+    const pyEnv = await startServer();
+    const channel_member_ids = [Command.create({ partner_id: serverState.partnerId })];
+    for (let i = 0; i < 120; i++) {
+        const partnerId = pyEnv["res.partner"].create({ name: `Alice ${i}` });
+        channel_member_ids.push(Command.create({ partner_id: partnerId }));
+    }
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "TestChannel",
+        channel_member_ids,
+        channel_type: "channel",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-discuss-ChannelMemberList");
+    await contains(
+        ".o-mail-ActionPanel:has(.o-mail-ActionPanel-header:contains('Members')) button:text('Load more')"
+    );
+    await contains(".o-discuss-ChannelMember", { count: 101 });
+    await insertText("input[placeholder='Search members']", "Alice");
+    await contains(".o-discuss-ChannelMember", { count: 100 });
+    await contains(
+        ".o-discuss-ChannelMemberList span:text('Showing first 100 members. Narrow your search to see more.')"
+    );
+    await contains(
+        ".o-mail-ActionPanel:has(.o-mail-ActionPanel-header:contains('Members')) button:text('Load more')",
+        { count: 0 }
+    );
 });
 
 test("Members are partitioned by online/offline", async () => {

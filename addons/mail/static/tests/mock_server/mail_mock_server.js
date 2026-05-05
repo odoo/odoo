@@ -1005,17 +1005,32 @@ function _process_request_for_all(store, name, params, context = {}) {
         store.add(ResUsers.browse(userId));
     }
     if (name === "/discuss/channel/members") {
-        const memberIds = DiscussChannelMember.search(
+        const { channel_id, known_member_ids = [], search_term } = params;
+        let memberIds = DiscussChannelMember.search(
             [
-                ["id", "not in", params.known_member_ids || []],
-                ["channel_id", "=", params.channel_id],
+                ["id", "not in", known_member_ids],
+                ["channel_id", "=", channel_id],
             ],
             makeKwArgs({ limit: 100 })
         );
-        const memberCount = DiscussChannelMember.search_count([
-            ["channel_id", "=", params.channel_id],
-        ]);
-        store.add(DiscussChannel.browse(params.channel_id), { member_count: memberCount });
+        if (search_term) {
+            const lowerTerm = search_term.toLowerCase();
+            memberIds = DiscussChannelMember.browse(memberIds)
+                .filter((member) => {
+                    if (member.partner_id) {
+                        const [partner] = ResPartner.browse(member.partner_id);
+                        return partner?.name?.toLowerCase().includes(lowerTerm);
+                    }
+                    if (member.guest_id) {
+                        const [guest] = MailGuest.browse(member.guest_id);
+                        return guest?.name?.toLowerCase().includes(lowerTerm);
+                    }
+                    return false;
+                })
+                .map((member) => member.id);
+        }
+        const memberCount = DiscussChannelMember.search_count([["channel_id", "=", channel_id]]);
+        store.add(DiscussChannel.browse(channel_id), { member_count: memberCount });
         store.add(DiscussChannelMember.browse(memberIds));
     }
     if (name === "/discuss/channel/messages") {

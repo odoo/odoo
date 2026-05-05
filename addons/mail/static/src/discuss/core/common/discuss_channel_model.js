@@ -602,6 +602,16 @@ export class DiscussChannel extends Record {
         this.fetchMembersState = "fetched";
     }
 
+    /* @param {string} searchTerm */
+    async searchChannelMembers(searchTerm) {
+        const known_member_ids = this.channel_member_ids.map((channelMember) => channelMember.id);
+        await this.store.fetchStoreData("/discuss/channel/members", {
+            channel_id: this.id,
+            known_member_ids,
+            search_term: searchTerm,
+        });
+    }
+
     async fetchPinnedMessages() {
         if (["loaded", "loading"].includes(this.pinnedMessagesState)) {
             return;
