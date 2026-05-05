@@ -30,7 +30,6 @@ class HrEmployeePublic(models.Model):
     work_email = fields.Char(readonly=True)
     share = fields.Boolean(related='employee_id.share')
     phone = fields.Char(related='employee_id.phone')
-    im_status = fields.Char(related='employee_id.im_status')
     email = fields.Char(related='employee_id.email')
     work_contact_id = fields.Many2one('res.partner', readonly=True)
     work_location_id = fields.Many2one('hr.work.location', readonly=True)

@@ -325,7 +325,7 @@ class TestHrEmployee(TestHrCommon):
             'name': 'Test employee',
             'user_id': user.id,
         }])
-        user_fields = ['email', 'phone', 'im_status']
+        user_fields = ['email', 'phone']
         for field in user_fields:
             self.assertEqual(employee[field], user[field])
 

@@ -127,7 +127,7 @@ class TestResource(TestHrCommon):
             'work_phone': '+32800100100',
             'resource_id': resource.id,
         }])
-        for field in 'email', 'phone', 'im_status':
+        for field in 'email', 'phone':
             self.assertEqual(resource[field], user[field])
         for field in 'job_title', 'department_id', 'work_email', 'work_phone', 'show_hr_icon_display', 'hr_icon_display':
             self.assertEqual(resource[field], employee[field])

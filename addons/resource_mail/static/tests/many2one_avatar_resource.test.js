@@ -39,6 +39,7 @@ beforeEach(async () => {
         phone: "+32487898933",
     });
     data.userPierreId = pyEnv["res.users"].create({
+        im_status: "online",
         name: "Pierre",
         partner_id: data.partnerPierreId,
     });
@@ -59,7 +60,6 @@ beforeEach(async () => {
             name: "Pierre",
             resource_type: "user",
             user_id: data.userPierreId,
-            im_status: "online",
         },
     ]);
 

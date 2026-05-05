@@ -34,7 +34,16 @@ class MailGuest(models.Model):
     channel_ids = fields.Many2many(string="Channels", comodel_name='discuss.channel', relation='discuss_channel_member', column1='guest_id', column2='channel_id', copy=False)
     presence_ids = fields.One2many("mail.presence", "guest_id", groups="base.group_system")
     # sudo: mail.guest - can access presence of accessible guest
-    im_status = fields.Char("IM Status", compute="_compute_im_status", compute_sudo=True)
+    im_status = fields.Selection(
+        [
+            ("online", "Online"),
+            ("away", "Away"),
+            ("offline", "Offline"),
+        ],
+        "IM Status",
+        compute="_compute_im_status",
+        compute_sudo=True,
+    )
     offline_since = fields.Datetime("Offline since", compute="_compute_im_status", compute_sudo=True)
 
     @api.depends("presence_ids.status")

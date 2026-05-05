@@ -114,7 +114,6 @@ class HrEmployee(models.Model):
     user_partner_id = fields.Many2one(related="user_id.partner_id", related_sudo=False, string="User's partner")
     share = fields.Boolean(related="user_id.share")
     phone = fields.Char(related="user_id.phone")
-    im_status = fields.Char(related="user_id.im_status")
     email = fields.Char(related="user_id.email")
     hr_presence_state = fields.Selection([
         ('present', 'Present'),

@@ -13,7 +13,6 @@ class ResourceResource(models.Model):
         return randint(1, 11)
 
     color = fields.Integer(default=_default_color)
-    im_status = fields.Char(related='user_id.im_status')
 
     def _store_avatar_card_fields(self, res: Store.FieldList):
         res.one("user_id", "_store_avatar_card_fields")

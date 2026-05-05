@@ -43,7 +43,17 @@ class ResUsers(models.Model):
     out_of_office_message = fields.Html('Vacation Responder', user_writeable=True)
     is_out_of_office = fields.Boolean('Out of Office', compute='_compute_is_out_of_office')
     # sudo: res.users - can access presence of accessible user
-    im_status = fields.Char("IM Status", compute="_compute_im_status", compute_sudo=True)
+    im_status = fields.Selection(
+        [
+            ("online", "Online"),
+            ("away", "Away"),
+            ("busy", "Do Not Disturb"),
+            ("offline", "Offline"),
+        ],
+        "IM Status",
+        compute="_compute_im_status",
+        compute_sudo=True,
+    )
     offline_since = fields.Datetime("Offline since", compute="_compute_im_status", compute_sudo=True)
     manual_im_status = fields.Selection(
         [("away", "Away"), ("busy", "Do Not Disturb"), ("offline", "Offline")],
