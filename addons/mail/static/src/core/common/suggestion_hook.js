@@ -327,7 +327,10 @@ export function mapSuggestionsToOptions(type, suggestions, { thread } = {}) {
                     }
                     return {
                         group: 1,
-                        label: thread?.getPersonaName(suggestion) ?? suggestion.name,
+                        label:
+                            thread?.getPersonaName(suggestion) ||
+                            suggestion.displayName ||
+                            suggestion.email,
                         partner: suggestion,
                         thread,
                         classList,
