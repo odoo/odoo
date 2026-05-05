@@ -459,7 +459,6 @@
         <field name="name">Work Orders Planning</field>
         <field name="res_model">mrp.workorder</field>
         <field name="path">production-planning</field>
-        <field name="domain">[('production_state','not in',('done','cancel'))]</field>
         <field name="view_mode">list,form,calendar,pivot,graph</field>
         <field name="search_view_id" ref="view_mrp_production_workorder_form_view_filter"/>
         <field name="context">{'search_default_ready': True, 'search_default_blocked': True, 'search_default_progress': True}</field>
