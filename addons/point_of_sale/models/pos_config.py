@@ -630,12 +630,20 @@ class PosConfig(models.Model):
 
     def open_opened_rescue_session_form(self):
         self.ensure_one()
-        return {
+        rescue_sessions = self.session_ids.filtered(lambda s: s.state != 'closed' and s.rescue)
+        action = {
             'res_model': 'pos.session',
-            'view_mode': 'form',
-            'res_id': self.session_ids.filtered(lambda s: s.state != 'closed' and s.rescue).id,
             'type': 'ir.actions.act_window',
         }
+        if len(rescue_sessions) == 1:
+            action.update({'view_mode': 'form', 'res_id': rescue_sessions.id})
+        else:
+            action.update({
+                'name': _('Rescue Sessions'),
+                'view_mode': 'list,form',
+                'domain': [('id', 'in', rescue_sessions.ids), ('state', '!=', 'closed')]
+            })
+        return action
 
     # All following methods are made to create data needed in POS, when a localisation
     # is installed, or if POS is installed on database having companies that already have
