@@ -454,6 +454,10 @@ class TestDomainOptimize(TransactionCase):
         model = self.env['test_new_api.mixed']
         domain = Domain('id', 'in', range(5))._optimize(model)
         self.assertIsInstance(domain.value, OrderedSet)
+
+        # check that the optimized domain is hashable anyway
+        hash(domain)
+
         domain = Domain('id', 'in', [9, 99])._optimize(model)
         self.assertIsInstance(domain.value, list)
         self.assertIs(domain._optimize(model), domain, "Idempotent")

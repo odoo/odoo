@@ -59,6 +59,7 @@ from datetime import date, datetime, time, timedelta
 
 from odoo.exceptions import MissingError
 from odoo.tools import SQL, OrderedSet, Query, classproperty, partition, str2bool
+from odoo.tools.misc import freehash
 from .identifiers import NewId
 from .utils import COLLECTION_TYPES
 
@@ -740,7 +741,8 @@ class DomainCondition(Domain):
         )
 
     def __hash__(self):
-        return hash(self.field_expr) ^ hash(self.operator) ^ hash(self.value)
+        # optimizations introduce OrderedSet in values; use freehash() to enables hashing
+        return hash(self.field_expr) ^ hash(self.operator) ^ freehash(self.value)
 
     def iter_conditions(self):
         yield self
