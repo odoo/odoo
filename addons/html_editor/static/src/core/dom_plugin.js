@@ -666,12 +666,13 @@ export class DomPlugin extends Plugin {
                 if (newCandidate.matches(baseContainerGlobalSelector) && isListItemElement(block)) {
                     continue;
                 }
-                this.dispatchTo("before_set_tag_handlers", block, tagName, cursors);
-                if (this.delegateTo("set_block_overrides", newEl, block)) {
+                const params = { block, newEl, tagName, cursors };
+                this.dispatchTo("before_set_tag_handlers", params);
+                if (this.delegateTo("set_block_overrides", params)) {
                     continue;
                 }
-                newEl = this.setTagName(block, tagName);
-                cursors.remapNode(block, newEl);
+                newEl = this.setTagName(params.block, tagName);
+                cursors.remapNode(params.block, newEl);
                 // We want to be able to edit the case `<h2 class="h3">`
                 // but in that case, we want to display "Header 2" and
                 // not "Header 3" as it is more important to display
