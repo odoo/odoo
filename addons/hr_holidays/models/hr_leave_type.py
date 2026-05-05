@@ -567,8 +567,9 @@ class HrLeaveType(models.Model):
                 if closest_expiration_date:
                     closest_allocation_expire = format_date(self.env, closest_expiration_date)
                     calendar = employee.resource_calendar_id
-                    start_datetime = datetime.combine(target_date, time.min).replace(tzinfo=pytz.UTC)
-                    end_datetime = datetime.combine(closest_expiration_date, time.max).replace(tzinfo=pytz.UTC)
+                    employee_tz = pytz.timezone(employee._get_tz())
+                    start_datetime = employee_tz.localize(datetime.combine(target_date, time.min)).astimezone(pytz.UTC)
+                    end_datetime = employee_tz.localize(datetime.combine(closest_expiration_date, time.max)).astimezone(pytz.UTC)
                     closest_allocation_dict = {}
                     if not calendar:
                         closest_allocation_dict['hours'] = float_round((end_datetime - start_datetime).total_seconds() / 3600, precision_rounding=0.001)
