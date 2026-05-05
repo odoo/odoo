@@ -242,3 +242,13 @@ class StockPicking(models.Model):
             'carrier_id': False,
             'carrier_price': 0.0,
         })
+
+    def _get_carrier_name(self):
+        """Return the carrier name used by the shipping provider."""
+        self.ensure_one()
+        if not self.carrier_id:
+            return None
+        carrier_key = self.carrier_id._get_delivery_type()
+        if carrier_key in ("fixed", "base_on_rule"):
+            carrier_key = self.carrier_id.name
+        return carrier_key
