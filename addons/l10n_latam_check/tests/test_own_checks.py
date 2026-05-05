@@ -96,6 +96,7 @@ class TestOwnChecks(L10nLatamCheckTest):
         self.assertEqual(len(payment.move_id.line_ids), 4)
 
     def test_invoice_status_after_voided_check(self):
+        self.ensure_installed('l10n_ar')
         invoice = self._create_invoice(
             company_id=self.company_data_3['company'].id,
             partner_id=self.partner_a.id,
