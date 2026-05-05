@@ -553,6 +553,7 @@ export class Composer extends Component {
             },
             isLoading: !!searchTerm && loading,
             options: [],
+            rememberPosition: false,
         };
         if (!this.hasSuggestions) {
             return props;

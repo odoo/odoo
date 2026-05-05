@@ -24,6 +24,7 @@ export class NavigableList extends Component {
                 options: types.array(types.object()),
                 "optionTemplate?": types.string(),
                 "position?": types.string(),
+                "rememberPosition?": types.boolean(),
             },
             {
                 closeOnSelect: true,
@@ -49,7 +50,7 @@ export class NavigableList extends Component {
             this.close();
         });
         // position and size
-        usePosition("root", () => this.props.anchorRef?.(), { position: this.props.position });
+        usePosition("root", () => this.props.anchorRef?.(), { position: this.props.position, rememberPosition: this.props.rememberPosition });
         useLayoutEffect(
             () => {
                 this.open();
