@@ -25,6 +25,7 @@ import { createSpreadsheetWithList } from "@spreadsheet/../tests/helpers/list";
 import { createModelWithDataSource } from "@spreadsheet/../tests/helpers/model";
 import { CommandResult } from "@spreadsheet/o_spreadsheet/cancelled_reason";
 import { LoadingDataError } from "@spreadsheet/o_spreadsheet/errors";
+import { toRangeData } from "@spreadsheet/../tests/helpers/zones";
 
 import { animationFrame } from "@odoo/hoot-mock";
 import * as spreadsheet from "@odoo/o-spreadsheet";
@@ -1431,6 +1432,27 @@ test("isListUnused getter", async () => {
     expect(model.getters.isListUnused("1")).toBe(true);
 
     setCellContent(model, "A2", "[ds](odoo-data-source://list/1)");
+    expect(model.getters.isListUnused("1")).toBe(false);
+});
+
+test("isListUnused getter also checks for list used outside of cells", async () => {
+    const { model } = await createSpreadsheetWithList();
+    const sheetId = model.getters.getActiveSheetId();
+    expect(model.getters.isListUnused("1")).toBe(false);
+
+    createSheet(model, { sheetId: "sh2" });
+    deleteSheet(model, sheetId);
+    expect(model.getters.isListUnused("1")).toBe(true);
+
+    model.dispatch("ADD_DATA_VALIDATION_RULE", {
+        sheetId: "sh2",
+        ranges: [toRangeData("sh2", "A1:A2")],
+        rule: {
+            id: "dvId",
+            criterion: { type: "isEqual", values: [`=ODOO.LIST.VALUE(1,1,"active")`] },
+            isBlocking: false,
+        },
+    });
     expect(model.getters.isListUnused("1")).toBe(false);
 });
 
