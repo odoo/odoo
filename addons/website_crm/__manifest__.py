@@ -26,11 +26,15 @@ This module includes contact phone and mobile numbers validation.""",
         'website.website_builder_assets': [
             'website_crm/static/src/js/website_crm_editor.js',
         ],
+        "website.assets_inside_builder_iframe": [
+            'website_crm/static/src/js/*.edit.js',
+        ],
         'web.assets_tests': [
             'website_crm/static/tests/**/*',
         ],
         'web.assets_backend': [
             'website_crm/static/src/**/*',
+            ('remove', 'website_crm/static/src/js/website_crm_editor.*'),
         ]
     },
     'author': 'Odoo S.A.',

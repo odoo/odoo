@@ -353,7 +353,7 @@ export class CustomizeWebsitePlugin extends Plugin {
             this.activeTemplateViews[key] = await this.services.orm.call(
                 "ir.ui.view",
                 "render_public_asset",
-                [`${key}`, {}]
+                [`${key}`, {}],
             );
         }
         return this.getTemplateKey(key);
