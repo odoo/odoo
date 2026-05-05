@@ -16,6 +16,7 @@ export class AceField extends Component {
         ...standardFieldProps,
         mode: { type: String, optional: true },
         lineWrapping: { type: Boolean, optional: true },
+        minLines: { type: Number, optional: true },
     };
     static defaultProps = {
         mode: "qweb",
@@ -85,6 +86,7 @@ export const aceField = {
     extractProps: ({ options }) => ({
         mode: options.mode,
         lineWrapping: options.lineWrapping,
+        minLines: options.min_lines ?? 3,
     }),
 };
 

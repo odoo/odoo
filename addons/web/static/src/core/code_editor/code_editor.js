@@ -22,6 +22,7 @@ export class CodeEditor extends Component {
             optional: true,
             validate: (theme) => CodeEditor.THEMES.includes(theme),
         },
+        minLines: { type: Number, optional: true },
         maxLines: { type: Number, optional: true },
         sessionId: { type: [Number, String], optional: true },
         initialCursorPosition: { type: Object, optional: true },
@@ -67,6 +68,7 @@ export class CodeEditor extends Component {
                 this.aceEditor = aceEditor;
 
                 this.aceEditor.setOptions({
+                    minLines: this.props.minLines,
                     maxLines: this.props.maxLines,
                     showPrintMargin: false,
                     useWorker: false,
