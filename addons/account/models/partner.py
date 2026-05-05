@@ -1112,7 +1112,7 @@ class ResPartner(models.Model):
 
         return {
             'criteria': [{
-                'domain': [('phone', '=', email)],
+                'domain': [('email', '=', email)],
             }],
         }
 
