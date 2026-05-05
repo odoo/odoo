@@ -58,6 +58,12 @@ class IrModel(models.Model):
             'definition_record', 'definition_record_field', 'string', 'selection',
         ])
 
+        field_details_translated = {}
+        if (with_lang := self.env.context.get('additional_lang')) and with_lang != self.env.context.get('lang'):
+            field_details_translated = self.env[model_name].with_context(lang=with_lang).fields_get(
+                attributes=['string', 'selection'],
+            )
+
         for val in model._inherits.values():
             fields_get.pop(val, None)
 
@@ -71,6 +77,10 @@ class IrModel(models.Model):
         # (e.g. "[('product_id', '=', product_id)]")
         # Expand properties fields
         for field in list(fields_get):
+            if field_translations := field_details_translated.get(field):
+                fields_get[field]['string_in_website_lang'] = field_translations.get('string')
+                if fields_get[field].get('selection'):
+                    fields_get[field]['selection'] = field_translations.get('selection')
             if 'domain' in fields_get[field] and isinstance(fields_get[field]['domain'], str):
                 del fields_get[field]['domain']
             if fields_get[field].get('readonly') or field in models.MAGIC_COLUMNS or \

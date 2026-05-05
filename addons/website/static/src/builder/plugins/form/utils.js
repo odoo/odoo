@@ -113,6 +113,10 @@ export function renderField(field, resetId = false) {
     if (field.custom && !field.string) {
         params.field.string = field.name;
     }
+    if (field.string_in_website_lang && !field.modelRequired) {
+        // avoid changing strings in the original form definition
+        params.field.string = field.string_in_website_lang;
+    }
     if (field.description) {
         params.default_description =
             field.type === "boolean"
