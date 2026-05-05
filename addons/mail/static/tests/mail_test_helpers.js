@@ -671,7 +671,7 @@ export function prepareRegistriesWithCleanup() {
 const observeRenderResults = new Map();
 let nextObserveRenderResults = 0;
 /**
- * Patch component `onWillRender` to track amount of renders.
+ * Patch component `onRendered` to track amount of renders.
  * This only prepares with the patching. To effectively observe the amount of renders,
  * should call @see observeRenders
  * Having both function allow to track renders as side-effect on specific actions, rather
@@ -681,15 +681,14 @@ let nextObserveRenderResults = 0;
 export function prepareObserveRenders() {
     patchWithCleanup(Component.prototype, {
         setup(...args) {
-            const cb = () => {
+            onRendered(() => {
                 for (const result of observeRenderResults.values()) {
                     if (!result.has(this.constructor)) {
                         result.set(this.constructor, 0);
                     }
                     result.set(this.constructor, result.get(this.constructor) + 1);
                 }
-            };
-            onRendered(cb);
+            });
             onWillDestroy(() => {
                 for (const result of observeRenderResults.values()) {
                     // owl could invoke onrendered and cancel immediately to re-render, so should compensate
