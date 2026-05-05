@@ -2,6 +2,7 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
+from odoo.tools import Query, SQL
 
 
 class AccountAnalyticLine(models.Model):
@@ -45,6 +46,16 @@ class AccountAnalyticLine(models.Model):
     code = fields.Char(size=8)
     ref = fields.Char(string='Ref.')
     category = fields.Selection(selection_add=[('invoice', 'Customer Invoice'), ('vendor_bill', 'Vendor Bill')])
+    analytic_profitability = fields.Selection(
+        string='Profitability',
+        selection=[
+            ('uncategorized', 'Uncategorized'),
+            ('revenue', 'Revenue'),
+            ('loss', 'Loss'),
+        ],
+        compute='_compute_analytic_profitability',
+        search='_search_analytic_profitability',
+    )
 
     @api.depends('move_line_id')
     def _compute_general_account_id(self):
@@ -61,6 +72,26 @@ class AccountAnalyticLine(models.Model):
     def _compute_partner_id(self):
         for line in self:
             line.partner_id = line.move_line_id.partner_id or line.partner_id
+
+    @api.depends('general_account_id', 'category', 'amount')
+    def _compute_analytic_profitability(self):
+        # Please keep this method aligned with _field_to_sql
+        for line in self:
+            account_type = line.general_account_id.account_type or ''
+            if (
+                account_type.split('_')[0] == 'expense'
+                or account_type in ['asset_current', 'asset_non_current', 'asset_fixed']
+                or (not account_type and line.category not in ['invoice', 'other'])
+                or (not account_type and line.category == 'other' and line.amount < 0)
+            ):
+                line.analytic_profitablity = 'loss'
+            elif (
+                account_type.split('_')[0] == 'income'
+                or (not account_type and line.category == 'other' and line.amount > 0)
+            ):
+                line.analytic_profitability = 'revenue'
+            else:
+                line.analytic_profitability = 'uncategorized'
 
     @api.onchange('product_id', 'product_uom_id', 'unit_amount', 'currency_id')
     def on_change_unit_amount(self):
@@ -95,6 +126,46 @@ class AccountAnalyticLine(models.Model):
         analytic_lines = super().create(vals_list)
         analytic_lines.move_line_id._update_analytic_distribution()
         return analytic_lines
+
+    def _field_to_sql(self, alias: str, field_expr: str, query: (Query | None) = None) -> SQL:
+        # Please keep this method aligned with _compute_analytic_profitability
+        if field_expr != 'analytic_profitability':
+            return super()._field_to_sql(alias, field_expr, query)
+
+        account_alias = query.left_join(alias, 'general_account_id', 'account_account', 'id', 'account_account')
+
+        return SQL("""
+            CASE
+                WHEN (
+                    SPLIT_PART(%(account_type)s, '_', 1) = 'expense'
+                    OR %(account_type)s IN ('asset_current', 'asset_non_current', 'asset_fixed')
+                    OR (%(account_type)s IS NULL AND %(analytic_line_category)s NOT IN ('invoice', 'other'))
+                    OR (%(account_type)s IS NULL AND %(analytic_line_category)s = 'other' AND %(analytic_line_amount)s < 0)
+                ) THEN 'loss'
+                WHEN (
+                    SPLIT_PART(%(account_type)s, '_', 1) = 'income'
+                    OR (%(account_type)s IS NULL AND %(analytic_line_category)s = 'other' AND %(analytic_line_amount)s > 0)
+                ) THEN 'revenue'
+                ELSE 'uncategorized'
+            END
+        """,
+            account_type=SQL.identifier(account_alias, 'account_type'),
+            analytic_line_category=SQL.identifier(alias, 'category'),
+            analytic_line_amount=SQL.identifier(alias, 'amount'),
+        )
+
+    def _search_analytic_profitability(self, operator, value):
+        if operator != 'in':
+            return NotImplemented
+
+        query = Query(self.env, alias='account_analytic_line', table=SQL.identifier('account_analytic_line'))
+        query.add_where(SQL("%(profitability)s IN %(val)s",
+            profitability=self._field_to_sql('account_analytic_line', 'analytic_profitability', query=query),
+            val=tuple(value),
+        ))
+        lines = self.browse(query)
+
+        return [('id', 'in', lines.ids)]
 
     def write(self, vals):
         affected_move_lines = self.move_line_id
