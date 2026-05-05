@@ -5178,7 +5178,7 @@ class AccountTax(models.Model):
         criteria = []
         if not price_include:
             criteria.append({'domain': [('price_include', '=', False)]})
-        elif price_include is None or price_include:
+        if price_include is None or price_include:
             criteria.append({'domain': [('price_include', '=', True)]})
 
         return {'criteria': criteria}
