@@ -516,7 +516,7 @@ var owl = (() => {
     };
   }
   function makeIteratorObserver(methodName, target, atom) {
-    return function* () {
+    return function*() {
       onReadTargetKey(target, KEYCHANGES, atom);
       const keys = target.keys();
       for (const item of target[methodName]()) {
@@ -3724,12 +3724,13 @@ ${issueStrings}`);
           if (node.patched.length) parentRoot.patched.push(fiber);
           let promises;
           if (hooks.length) {
+            let nextProps = props2;
             const defaultProps = node.defaultProps;
             if (defaultProps) {
-              props2 = Object.assign({}, props2);
+              nextProps = Object.assign({}, props2);
               for (const k in defaultProps) {
-                if (props2[k] === void 0) {
-                  props2[k] = defaultProps[k];
+                if (nextProps[k] === void 0) {
+                  nextProps[k] = defaultProps[k];
                 }
               }
             }
@@ -3737,7 +3738,7 @@ ${issueStrings}`);
             const prev = getCurrentComputation();
             setComputation(void 0);
             for (const f of hooks) {
-              const r = f.call(component, props2);
+              const r = f.call(component, nextProps);
               if (r && typeof r.then === "function") {
                 (promises ||= []).push(r);
               }
@@ -6562,4 +6563,4 @@ ${code}
   return __toCommonJS(index_exports);
 })();
 
-owl = {...owl};
+owl = { ...owl };
