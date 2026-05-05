@@ -55,6 +55,8 @@
                     </xpath>
                     <xpath expr="//filter[@name='month']" position="after">
                         <filter name="fiscal_date" string="From last fiscal year" domain="[('fiscal_year_search', '=', True)]" invisible="1"/>
+                        <separator/>
+                        <filter name="profit_loss_accounts" string="P&amp;L Accounts" domain="[('general_account_id.internal_group', 'in', ['income', 'expense'])]"/>
                     </xpath>
                     <xpath expr="//filter[@name='month']" position="inside">
                         <filter string="For the Last 365 Days" name="last_365_days" domain="[('date', '&gt;=', 'today -365d')]"/>
@@ -88,6 +90,7 @@
             <field name="context">{
                 'search_default_group_by_analytic_account': 1,
                 'search_default_fiscal_date': 1,
+                'search_default_profit_loss_accounts': 1,
             }</field>
         </record>
 
@@ -99,6 +102,7 @@
             <field name="context">{
                 'search_default_group_by_analytic_account': 1,
                 'search_default_fiscal_date': 1,
+                'search_default_profit_loss_accounts': 1,
             }</field>
         </record>
 
