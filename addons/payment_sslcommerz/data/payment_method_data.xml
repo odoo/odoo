@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <!-- === PRIMARY PAYMENT METHODS === -->
+
+    <record id="payment_method_alarafahbank" model="payment.method">
+        <field name="name">Al-Arafah Bank</field>
+        <field name="code">alarafahbank</field>
+        <field name="provider_id" ref="payment.payment_provider_sslcommerz"/>
+        <field name="image" type="bytes" file="payment/static/img/alarafahbank.png"/>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.bd')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.BDT')])]"/>
+    </record>
+
+    <record id="payment_method_bkash" model="payment.method">
+        <field name="name">bKash</field>
+        <field name="code">bkash</field>
+        <field name="provider_id" ref="payment.payment_provider_sslcommerz"/>
+        <field name="image" type="bytes" file="payment/static/img/bkash.png"/>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.bd')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.BDT')])]"/>
+    </record>
+
+    <record id="payment_method_card" model="payment.method">
+        <field name="name">Card</field>
+        <field name="code">card</field>
+        <field name="sequence">10</field>
+        <field name="provider_id" ref="payment.payment_provider_sslcommerz"/>
+        <field name="image" type="bytes" file="payment/static/img/card.png"/>
+    </record>
+
+    <record id="payment_method_cashbaba" model="payment.method">
+        <field name="name">Cash Baba</field>
+        <field name="code">cashbaba</field>
+        <field name="provider_id" ref="payment.payment_provider_sslcommerz"/>
+        <field name="image" type="bytes" file="payment/static/img/cashbaba.png"/>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.bd')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.BDT')])]"/>
+    </record>
+
+    <record id="payment_method_cellfine" model="payment.method">
+        <field name="name">Cellfin</field>
+        <field name="code">cellfine</field>
+        <field name="provider_id" ref="payment.payment_provider_sslcommerz"/>
+        <field name="image" type="bytes" file="payment/static/img/cellfin.png"/>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.bd')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.BDT')])]"/>
+    </record>
+
+    <record id="payment_method_ibbl_m" model="payment.method">
+        <field name="name">mCash</field>
+        <field name="code">ibbl_m</field>
+        <field name="provider_id" ref="payment.payment_provider_sslcommerz"/>
+        <field name="image" type="bytes" file="payment/static/img/mcash.png"/>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.bd')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.BDT')])]"/>
+    </record>
+
+    <record id="payment_method_meghnapay" model="payment.method">
+        <field name="name">MeghnaPay</field>
+        <field name="code">meghnapay</field>
+        <field name="provider_id" ref="payment.payment_provider_sslcommerz"/>
+        <field name="image" type="bytes" file="payment/static/img/meghnapay.png"/>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.bd')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.BDT')])]"/>
+    </record>
+
+    <record id="payment_method_mycash" model="payment.method">
+        <field name="name">MYCash</field>
+        <field name="code">mycash</field>
+        <field name="provider_id" ref="payment.payment_provider_sslcommerz"/>
+        <field name="image" type="bytes" file="payment/static/img/mycash.png"/>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.bd')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.BDT')])]"/>
+    </record>
+
+    <record id="payment_method_nagad" model="payment.method">
+        <field name="name">Nagad</field>
+        <field name="code">nagad</field>
+        <field name="provider_id" ref="payment.payment_provider_sslcommerz"/>
+        <field name="image" type="bytes" file="payment/static/img/nagad.png"/>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.bd')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.BDT')])]"/>
+    </record>
+
+    <record id="payment_method_netbanking" model="payment.method">
+        <field name="name">Netbanking</field>
+        <field name="code">netbanking</field>
+        <field name="provider_id" ref="payment.payment_provider_sslcommerz"/>
+        <field name="image" type="bytes" file="payment/static/img/bank.png"/>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.bd')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.BDT')])]"/>
+    </record>
+
+    <record id="payment_method_okaywallet" model="payment.method">
+        <field name="name">OK Wallet</field>
+        <field name="code">okaywallet</field>
+        <field name="provider_id" ref="payment.payment_provider_sslcommerz"/>
+        <field name="image" type="bytes" file="payment/static/img/okaywallet.png"/>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.bd')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.BDT')])]"/>
+    </record>
+
+    <record id="payment_method_pathaopay" model="payment.method">
+        <field name="name">Pathao Pay</field>
+        <field name="code">pathaopay</field>
+        <field name="provider_id" ref="payment.payment_provider_sslcommerz"/>
+        <field name="image" type="bytes" file="payment/static/img/pathaopay.png"/>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.bd')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.BDT')])]"/>
+    </record>
+
+    <record id="payment_method_pocket" model="payment.method">
+        <field name="name">Pocket</field>
+        <field name="code">pocket</field>
+        <field name="provider_id" ref="payment.payment_provider_sslcommerz"/>
+        <field name="image" type="bytes" file="payment/static/img/pocket.png"/>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.bd')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.BDT')])]"/>
+    </record>
+
+    <record id="payment_method_rainbow" model="payment.method">
+        <field name="name">Rainbow</field>
+        <field name="code">rainbow</field>
+        <field name="provider_id" ref="payment.payment_provider_sslcommerz"/>
+        <field name="image" type="bytes" file="payment/static/img/rainbow.png"/>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.bd')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.BDT')])]"/>
+    </record>
+
+    <record id="payment_method_rocket" model="payment.method">
+        <field name="name">Rocket</field>
+        <field name="code">dbblmobilebanking</field>
+        <field name="provider_id" ref="payment.payment_provider_sslcommerz"/>
+        <field name="image" type="bytes" file="payment/static/img/rocket.png"/>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.bd')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.BDT')])]"/>
+    </record>
+
+    <record id="payment_method_stpay" model="payment.method">
+        <field name="name">STPay</field>
+        <field name="code">stpay</field>
+        <field name="provider_id" ref="payment.payment_provider_sslcommerz"/>
+        <field name="image" type="bytes" file="payment/static/img/stpay.png"/>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.bd')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.BDT')])]"/>
+    </record>
+
+    <record id="payment_method_mobilemoney" model="payment.method">
+        <field name="name">TAP</field>
+        <field name="code">mobilemoney</field>
+        <field name="provider_id" ref="payment.payment_provider_sslcommerz"/>
+        <field name="image" type="bytes" file="payment/static/img/tap.png"/>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.bd')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.BDT')])]"/>
+    </record>
+
+    <record id="payment_method_upay" model="payment.method">
+        <field name="name">Upay</field>
+        <field name="code">upay</field>
+        <field name="provider_id" ref="payment.payment_provider_sslcommerz"/>
+        <field name="image" type="bytes" file="payment/static/img/upay.png"/>
+        <field name="supported_country_ids" eval="[Command.set([ref('base.bd')])]"/>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.BDT')])]"/>
+    </record>
+
+    <!-- === PAYMENT METHOD BRANDS === -->
+
+    <record id="payment_method_amex" model="payment.method">
+        <field name="name">American Express</field>
+        <field name="code">amex</field>
+        <field
+            name="primary_payment_method_id"
+            eval="ref('payment_sslcommerz.payment_method_card')"
+        />
+        <field name="provider_id" ref="payment.payment_provider_sslcommerz"/>
+        <field name="image" type="bytes" file="payment/static/img/amex.png"/>
+    </record>
+
+    <record id="payment_method_mastercard" model="payment.method">
+        <field name="name">MasterCard</field>
+        <field name="code">mastercard</field>
+        <field name="sequence">50</field>
+        <field
+            name="primary_payment_method_id"
+            eval="ref('payment_sslcommerz.payment_method_card')"
+        />
+        <field name="provider_id" ref="payment.payment_provider_sslcommerz"/>
+        <field name="image" type="bytes" file="payment/static/img/mastercard.png"/>
+    </record>
+
+    <record id="payment_method_visa" model="payment.method">
+        <field name="name">VISA</field>
+        <field name="code">visa</field>
+        <field name="sequence">50</field>
+        <field
+            name="primary_payment_method_id"
+            eval="ref('payment_sslcommerz.payment_method_card')"
+        />
+        <field name="provider_id" ref="payment.payment_provider_sslcommerz"/>
+        <field name="image" type="bytes" file="payment/static/img/visa.png"/>
+    </record>
+
+</odoo>
