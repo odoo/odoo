@@ -1,5 +1,5 @@
 import { OdooCoreViewPlugin } from "@spreadsheet/plugins";
-import { links } from "@odoo/o-spreadsheet";
+import { links, isCoreCommand } from "@odoo/o-spreadsheet";
 import { isDataSourceUrl, parseDataSourceUrl } from "../../data_sources/data_source_link";
 
 const { isMarkdownLink, parseMarkdownLink } = links;
@@ -12,17 +12,8 @@ export class PivotOdooCoreViewPlugin extends OdooCoreViewPlugin {
      * @param {Object} cmd Command
      */
     handle(cmd) {
-        switch (cmd.type) {
-            case "DELETE_SHEET":
-                this.unusedPivots = undefined;
-                break;
-            case "UPDATE_CELL":
-                this.unusedPivots = undefined;
-                break;
-            case "UNDO":
-            case "REDO":
-                this.unusedPivots = undefined;
-                break;
+        if (isCoreCommand(cmd) || cmd.type === "UNDO" || cmd.type === "REDO") {
+            this.unusedPivots = undefined;
         }
     }
 
