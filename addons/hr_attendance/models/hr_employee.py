@@ -304,6 +304,7 @@ class HrEmployee(models.Model):
                 start,
                 stop,
                 resources=employees.resource_id,
+                domain=[('time_type', 'in', ('leave', 'other'))],
             )
             for resource, leave_intervals in cal_leave_intervals_by_resource.items():
                 naive_leave_intervals = Intervals([(

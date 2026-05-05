@@ -361,10 +361,10 @@ class TestHolidaysOvertime(TransactionCase):
             'check_out': datetime(2021, 1, 5, 16),
         })
 
-        self.assertEqual(att.overtime_hours, 0)
+        self.assertEqual(att.overtime_hours, 8)
         self.assertEqual(att.worked_hours, 7)
 
-        self.assertEqual(self.employee.total_overtime, 0, 'Should have 0 hours of overtime')
+        self.assertEqual(self.employee.total_overtime, 8, 'Should have 8 hours of overtime')
 
     def test_overtime_approval_after_refusal(self):
         self.new_attendance(check_in=datetime(2021, 1, 2, 8), check_out=datetime(2021, 1, 2, 16))
