@@ -747,7 +747,33 @@ class PosConfig(models.Model):
         }
 
     def open_opened_rescue_session_form(self):
+<<<<<<< c6f43f1419b81f5c23b80dc13bd5ed7408fa7941
         rescue_session_ids = self.session_ids.filtered(lambda s: s.state != 'closed' and s.rescue)
+||||||| 595d0de50d177b6b15dfa3917e367fb91a9f46c5
+        self.ensure_one()
+        return {
+            'res_model': 'pos.session',
+            'view_mode': 'form',
+            'res_id': self.session_ids.filtered(lambda s: s.state != 'closed' and s.rescue).id,
+            'type': 'ir.actions.act_window',
+        }
+=======
+        self.ensure_one()
+        rescue_sessions = self.session_ids.filtered(lambda s: s.state != 'closed' and s.rescue)
+        action = {
+            'res_model': 'pos.session',
+            'type': 'ir.actions.act_window',
+        }
+        if len(rescue_sessions) == 1:
+            action.update({'view_mode': 'form', 'res_id': rescue_sessions.id})
+        else:
+            action.update({
+                'name': _('Rescue Sessions'),
+                'view_mode': 'list,form',
+                'domain': [('id', 'in', rescue_sessions.ids), ('state', '!=', 'closed')]
+            })
+        return action
+>>>>>>> 63200afa1c7d3ea44350c9ced73f0a644171d57e
 
         if len(rescue_session_ids) == 1:
             return {
