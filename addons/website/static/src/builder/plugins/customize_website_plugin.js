@@ -42,7 +42,7 @@ export const NO_IMAGE_SELECTION = Symbol.for("NoImageSelection");
 
 export class CustomizeWebsitePlugin extends Plugin {
     static id = "customizeWebsite";
-    static dependencies = ["builderActions", "domObserver", "savePlugin", "edit_interaction"];
+    static dependencies = ["builderActions", "domObserver", "savePlugin", "edit_interaction", "websiteBridge"];
     static shared = [
         "customizeWebsiteColors",
         "customizeWebsiteVariables",
@@ -354,6 +354,7 @@ export class CustomizeWebsitePlugin extends Plugin {
                 "ir.ui.view",
                 "render_public_asset",
                 [`${key}`, {}],
+                { context: this.dependencies.websiteBridge.getWebsiteContextLang() },
             );
         }
         return this.getTemplateKey(key);
