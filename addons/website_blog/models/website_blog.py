@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime
+from collections import defaultdict
 import random
 
 from odoo import api, models, fields, _
@@ -289,7 +290,14 @@ class BlogPost(models.Model):
         if tags:
             active_tag_ids = [self.env['ir.http']._unslug(tag)[1] for tag in tags.split(',')] or []
             if active_tag_ids:
-                domain.append([('tag_ids', 'in', active_tag_ids)])
+                tags = self.env['blog.tag'].browse(active_tag_ids)
+                tags_by_category = defaultdict(list)
+                for tag in tags:
+                    tags_by_category[tag.category_id.id].append(tag.id)
+                domain.extend([
+                    [('tag_ids', 'in', ids)]
+                    for ids in tags_by_category.values()
+                ])
         if date_begin and date_end:
             domain.append([("published_date", ">=", date_begin), ("published_date", "<=", date_end)])
         if self.env.user.has_group('website.group_website_designer'):
