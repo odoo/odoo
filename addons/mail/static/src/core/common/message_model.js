@@ -13,6 +13,7 @@ import {
 import { browser } from "@web/core/browser/browser";
 import { router } from "@web/core/browser/router";
 import { loadEmoji } from "@web/core/emoji_picker/emoji_picker";
+import { formatDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { user } from "@web/core/user";
@@ -268,7 +269,7 @@ export class Message extends Record {
     }
 
     get datetimeShort() {
-        return this.datetime.toLocaleString(DateTime.DATETIME_SHORT_WITH_SECONDS);
+        return formatDateTime(this.datetime);
     }
 
     get isSelfMentioned() {
