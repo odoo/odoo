@@ -580,6 +580,7 @@ export class StaticList extends DataPoint {
         // the end, we filter once this.records and this._currentIds to remove them.
         const removedIds = {};
         const recordsToLoad = [];
+        const currentIdsSet = new Set(this._currentIds);
         for (const command of commands) {
             switch (command[0]) {
                 case CREATE: {
@@ -589,6 +590,7 @@ export class StaticList extends DataPoint {
                     addOwnCommand([CREATE, virtualId]);
                     const index = this.offset + this.limit;
                     this._currentIds.splice(index, 0, virtualId);
+                    currentIdsSet.add(virtualId);
                     this._tmpIncreaseLimit = Math.max(this.records.length - this.limit, 0);
                     const nextLimit = this.limit + this._tmpIncreaseLimit;
                     this.model._updateConfig(this.config, { limit: nextLimit }, { reload: false });
@@ -680,7 +682,7 @@ export class StaticList extends DataPoint {
                     } else {
                         record = this._createRecordDatapoint({ ...command[2], id: command[1] });
                     }
-                    if (this._currentIds.includes(record.resId) && !removedIds[record.resId]) {
+                    if (currentIdsSet.has(record.resId) && !removedIds[record.resId]) {
                         break;
                     }
                     if (!this.limit || this.records.length < this.limit || canAddOverLimit) {
@@ -699,6 +701,7 @@ export class StaticList extends DataPoint {
                         }
                     }
                     this._currentIds.push(record.resId);
+                    currentIdsSet.add(record.resId);
                     addOwnCommand([command[0], command[1]]);
                     this.count++;
                     break;
