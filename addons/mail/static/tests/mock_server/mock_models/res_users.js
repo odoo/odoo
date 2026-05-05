@@ -4,7 +4,15 @@ import { fields, makeKwArgs, serverState, webModels } from "@web/../tests/web_te
 import { serializeDate, today } from "@web/core/l10n/dates";
 
 export class ResUsers extends webModels.ResUsers {
-    im_status = fields.Char({ default: "online" });
+    im_status = fields.Selection({
+        selection: [
+            ["online", "Online"],
+            ["away", "Away"],
+            ["busy", "Do Not Disturb"],
+            ["offline", "Offline"],
+        ],
+        default: "online",
+    });
     notification_type = fields.Selection({
         selection: [
             ["email", "Handle by Emails"],
