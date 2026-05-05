@@ -703,25 +703,18 @@ class AccountEdiXmlUblTr(models.AbstractModel):
         return party_node
 
     def _get_party_identification_node_list(self, partner):
-        official_categories = partner.category_id._get_l10n_tr_official_categories()
-        return [
+        nodes = [
             {
                 'cbc:ID': {
                     '_text': partner.vat,
                     'schemeID': 'VKN' if partner.is_company else 'TCKN',
                 },
             },
-            *(
-                {
-                    'cbc:ID': {
-                        '_text': category.name,
-                        'schemeID': category.parent_id.name,
-                    },
-                }
-                for category in partner.category_id
-                if category.parent_id in official_categories
-            ),
         ]
+        for key, scheme_id in [('TR_MERSIS', 'MERSISNO'), ('TR_TICARET_SICIL', 'TICARETSICILNO'), ('TR_SUBE', 'SUBENO')]:
+            if value := partner._get_additional_identifier(key):
+                nodes.append({'cbc:ID': {'_text': value, 'schemeID': scheme_id}})
+        return nodes
 
     def _get_tax_category_node(self, vals):
         """Overrides UBL 21 to returns the tax category node for a line or invoice, including TR-specific fields.

@@ -94,3 +94,22 @@ class TestTRAccountMoveSend(TestAccountMoveSendCommon, TestUBLTRCommon):
         bank.bank_name = 'Test Bank'
         bank.bank_bic = 'TESTTRISXXX'
         self.assertTrue(self._generate_invoice_xml(self.einvoice_partner), "XML generation failed")
+
+    def test_missing_mersis_and_trade_registry_blocks_send(self):
+        company_partner = self.company_data['company'].partner_id
+        company_partner.additional_identifiers = {}
+
+        invoice = self._generate_invoice(self.einvoice_partner)
+
+        # Block if no Identifier
+        wizard = self.create_send_and_print(invoice)
+        self.assertIn('tr_companies_missing_required_codes', wizard.alerts)
+
+        # Allow if TR_MERSIS or TR_TICARET_SICIL is there
+        company_partner.additional_identifiers = {'TR_MERSIS': '0-123456780100019'}
+        wizard = self.create_send_and_print(invoice)
+        self.assertNotIn('tr_companies_missing_required_codes', wizard.alerts)
+
+        company_partner.additional_identifiers = {'TR_TICARET_SICIL': '12345'}
+        wizard = self.create_send_and_print(invoice)
+        self.assertNotIn('tr_companies_missing_required_codes', wizard.alerts)

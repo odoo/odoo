@@ -3,3 +3,4 @@ from . import account_journal
 from . import account_move_line
 from . import product
 from . import template_tr
+from . import res_partner
