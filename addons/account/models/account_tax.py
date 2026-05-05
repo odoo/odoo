@@ -5071,7 +5071,7 @@ class AccountTax(models.Model):
             if fiscal_position:
                 criteria.append({'domain': [('price_include', '=', False)] + fpos_domain})
             criteria.append({'domain': [('price_include', '=', False)]})
-        elif price_include is None or price_include:
+        if price_include is None or price_include:
             if fiscal_position:
                 criteria.append({'domain': [('price_include', '=', True)] + fpos_domain})
             criteria.append({'domain': [('price_include', '=', True)]})
