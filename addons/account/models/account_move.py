@@ -2874,7 +2874,7 @@ class AccountMove(models.Model):
             rounding_line_vals = {
                 'balance': diff_balance,
                 'amount_currency': diff_amount_currency,
-                'partner_id': self.partner_id.id,
+                'partner_id': self.commercial_partner_id.id,
                 'move_id': self.id,
                 'currency_id': self.currency_id.id,
                 'company_id': self.company_id.id,
