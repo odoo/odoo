@@ -1036,21 +1036,70 @@ class MailMessage(models.Model):
         store = Store(bus_channel=self)
         store.add(self, "_store_reaction_group_fields", fields_params={"content": content})
 
-    def _store_reaction_group_fields(self, res: Store.FieldList, *, content):
-        group_domain = [("message_id", "in", self.ids), ("content", "=", content)]
-        reactions = self.env["mail.message.reaction"].search(group_domain)
-        reactions_by_message = reactions.grouped("message_id")
+    def _store_reaction_group_fields(self, res: Store.FieldList, *, content=None):
+        """Build field list to group reactions by content for each message.
+
+        This is an optimization to avoid sending all reactions individually,
+        which does not scale. The group is described by the model
+        MessageReactions in the JS side, and it is linked through the field
+        reactions of the message model.
+
+        When content is empty, all reactions are included. When content is
+        given, only the reactions matching this content are included. This is
+        useful to avoid re-sending all groups in flows where only one group is
+        impacted, like when adding or removing a reaction.
+        """
+        # sudo: mail.message - reading reactions on accessible message is allowed
+        messages_sudo = res.records.sudo()
+        filter_content = content is not None
+        if filter_content:
+            group_domain = [("message_id", "in", messages_sudo.ids), ("content", "=", content)]
+            reactions = messages_sudo.env["mail.message.reaction"].search_fetch(group_domain)
+        else:
+            reactions = messages_sudo.reaction_ids
+        reactions_by_message = defaultdict(self.env["mail.message.reaction"].browse)
+        reactions_by_message.update(reactions.grouped("message_id"))
         res.many(
             "reactions",
             [],
-            mode="ADD",
-            predicate=lambda m: m in reactions_by_message,
-            value=reactions_by_message.get,
+            mode="ADD" if filter_content else "REPLACE",
+            predicate=lambda m: not filter_content or m in reactions_by_message,
+            value=lambda m: [
+                {
+                    "content": content,
+                    "count": len(reactions),
+                    "guests": reactions.guest_id.ids,
+                    "message": reactions.message_id.id,
+                    "partners": reactions.partner_id.ids,
+                    "sequence": min(reactions.ids),
+                }
+                for content, reactions in reactions_by_message[m].grouped("content").items()
+            ],
         )
-        res.attr(
-            "reactions",
-            [("DELETE", {"message": self.id, "content": content})],
-            predicate=lambda m: m not in reactions_by_message,
+        if filter_content:
+            res.many(
+                "reactions",
+                [],
+                mode="DELETE",
+                predicate=lambda m: m not in reactions_by_message,
+                value=lambda m: {"message": m.id, "content": content},
+            )
+        res.many(
+            "reaction_ids",
+            lambda res: (
+                res.one(
+                    "partner_id",
+                    "_store_avatar_fields",
+                    dynamic_fields=lambda res, reaction: (
+                        reaction.message_id._store_partner_name_dynamic_fields(res),
+                    ),
+                    only_data=True,
+                ),
+                res.one("guest_id", "_store_avatar_fields", only_data=True),
+            ),
+            only_data=True,
+            predicate=lambda m: m in reactions_by_message,
+            value=lambda m: reactions_by_message[m],
         )
 
     # ------------------------------------------------------
@@ -1125,8 +1174,7 @@ class MailMessage(models.Model):
             sudo=True,
         )
         res.attr("pinned_at")
-        # sudo: mail.message - reading reactions on accessible message is allowed
-        res.many("reactions", [], value=lambda m: m.sudo().reaction_ids)
+        res.from_method("_store_reaction_group_fields")
         res.attr(
             "reply_to",
             predicate=lambda m: res.is_for_internal_users()
@@ -1259,9 +1307,6 @@ class MailMessage(models.Model):
         # needs to be after the current message (client code assuming the first received message is
         # the one just posted for example, and not the message being replied to).
         self._store_extra_fields(res, format_reply=format_reply)
-
-    def _to_store(self, store: Store, res: Store.FieldList):
-        store.add_records_fields(res)
 
     def _store_message_link_previews_fields(self, res: Store.FieldList):
         res.many(

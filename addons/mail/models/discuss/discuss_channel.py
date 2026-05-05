@@ -1352,9 +1352,6 @@ class DiscussChannel(models.Model):
                 only_data=True,
             )
 
-    def _to_store(self, store: Store, res: Store.FieldList):
-        store.add_records_fields(res)
-
     # User methods
 
     @api.model
