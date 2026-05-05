@@ -1161,11 +1161,17 @@ class PosOrder(models.Model):
         })
 
     def _aggregate_base_line_and_prepare_account_move_line_data(self, base_lines):
+
+        def aggregate_function(target_base_line, base_line):
+            target_base_line.setdefault('_aggregated_quantity', 0.0)
+            target_base_line['_aggregated_quantity'] += base_line['quantity']
+
         AccountTax = self.env['account.tax']
         company = self.company_id
         aggregated = AccountTax._reduce_base_lines_with_grouping_function(
             base_lines,
             grouping_function=self._grouping_function,
+            aggregate_function=aggregate_function,
         )
         AccountTax._fix_base_lines_tax_details_on_manual_tax_amounts(
             aggregated,
@@ -1176,12 +1182,19 @@ class PosOrder(models.Model):
             product = base_line['product_id']
             name = product.display_name if product else _("PoS Miscellaneous")
             product_id = product.id if product else False
+
+            if self.config_id._is_quantities_set():
+                quantity = base_line['_aggregated_quantity']
+                price_unit = base_line['price_unit'] / quantity if quantity else base_line['price_unit']
+            else:
+                quantity, price_unit = 1.0, base_line['price_unit']
+
             to_create.append({
                 'account.move.line': {
                     'name': name,
                     'product_id': product_id,
-                    'quantity': base_line['quantity'],
-                    'price_unit': base_line['price_unit'],
+                    'quantity': quantity,
+                    'price_unit': price_unit,
                     'display_type': 'product',
                     'extra_tax_data': AccountTax._export_base_line_extra_tax_data(base_line),
                     **base_line['_grouping_key'],

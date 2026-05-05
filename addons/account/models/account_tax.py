@@ -3462,7 +3462,7 @@ class AccountTax(models.Model):
             new_base_line = self._prepare_base_line_for_taxes_computation(
                 base_line,
                 price_unit=base_line['quantity'] * price_unit_after_discount,
-                quantity=base_line['quantity'],
+                quantity=1.0,
                 discount=0.0,
             )
             grouping_key = {'tax_ids': new_base_line['tax_ids']}
