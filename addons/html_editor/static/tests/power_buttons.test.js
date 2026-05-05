@@ -129,7 +129,7 @@ describe("visibility", () => {
         await expectElementCount(".o_we_power_buttons:not(.invisible)", 1);
         expect(".o_we_power_buttons").toBeVisible();
         await simulateArrowKeyPress(editor, "ArrowDown");
-        await advanceTime(20);
+        await animationFrame();
         expect(".o_we_power_buttons").not.toBeVisible();
         await simulateArrowKeyPress(editor, "ArrowDown");
         await advanceTime(20);
