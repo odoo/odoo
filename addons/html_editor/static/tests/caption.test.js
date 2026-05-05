@@ -1,5 +1,5 @@
 import { expect, test } from "@odoo/hoot";
-import { manuallyDispatchProgrammaticEvent, click, press, queryOne, waitFor } from "@odoo/hoot-dom";
+import { manuallyDispatchProgrammaticEvent, click, press, queryAll, queryOne, waitFor } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { contains, makeMockEnv, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { CaptionPlugin } from "@html_editor/others/embedded_components/plugins/caption_plugin/caption_plugin";
@@ -56,9 +56,8 @@ const toggleCaption = async (captionText) => {
 };
 const addLinkToImage = async (url) => {
     await click("img");
-    await waitFor(".o-we-toolbar button[name='link']");
-    await click(".o-we-toolbar");
-    await click("button[name='link']");
+    await waitFor(".o-we-toolbar button[name='link']:not([disabled])");
+    await click(".o-we-toolbar button[name='link']");
     if (url) {
         await waitFor(".o-we-linkpopover");
         await contains(".o-we-linkpopover input.o_we_href_input_link", { timeout: 1500 }).edit(
@@ -828,12 +827,14 @@ test("add a link then a caption to an image surrounded by text", async () => {
     await testEditor({
         config: configWithEmbeddedCaption,
         contentBefore: `<p>ab<img class="img-fluid test-image" src="${base64Img}">cd</p>`,
-        stepFunction: async () => {
+        stepFunction: async (editor) => {
             await addLinkToImage("odoo.com");
             await animationFrame();
             await toggleCaption("Hello");
             // Blur the input to commit the caption.
-            await click("p");
+            const p = queryAll("p")[1];
+            await click(p);
+            editor.shared.selection.setCursorStart(p);
             await animationFrame(); // Wait for the selection to change.
         },
         contentAfter: unformat(
