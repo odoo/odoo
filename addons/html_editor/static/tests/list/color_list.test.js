@@ -43,6 +43,42 @@ test("should apply text color class to fully selected multiple list items", asyn
     });
 });
 
+test("should color a fully selected list item with trailing empty line (1)", async () => {
+    await testEditor({
+        contentBefore: "<ul><li>[abc</li><li>]<br></li></ul>",
+        stepFunction: setColor("rgb(255, 0, 0)", "color"),
+        contentAfter:
+            '<ul><li style="color: rgb(255, 0, 0);">[abc</li><li style="color: rgb(255, 0, 0);">]<br></li></ul>',
+    });
+});
+
+test("should color a fully selected list item with trailing empty line (2)", async () => {
+    await testEditor({
+        contentBefore: "<ul><li>[abc</li><li><br>]<br></li></ul>",
+        stepFunction: setColor("rgb(255, 0, 0)", "color"),
+        contentAfter:
+            '<ul><li style="color: rgb(255, 0, 0);">[abc</li><li style="color: rgb(255, 0, 0);"><br>]<br></li></ul>',
+    });
+});
+
+test("should color a fully selected list item with trailing empty line (3)", async () => {
+    await testEditor({
+        contentBefore: "<ul><li>[abc</li><li>abcd<br>]<br></li></ul>",
+        stepFunction: setColor("rgb(255, 0, 0)", "color"),
+        contentAfter:
+            '<ul><li style="color: rgb(255, 0, 0);">[abc</li><li style="color: rgb(255, 0, 0);">abcd<br>]<br></li></ul>',
+    });
+});
+
+test("should not color list item when selection excludes trailing empty line", async () => {
+    await testEditor({
+        contentBefore: "<ul><li>[abc</li><li>abcd]<br><br></li></ul>",
+        stepFunction: setColor("rgb(255, 0, 0)", "color"),
+        contentAfter:
+            '<ul><li style="color: rgb(255, 0, 0);">[abc</li><li><font style="color: rgb(255, 0, 0);">abcd]</font><br><br></li></ul>',
+    });
+});
+
 test("should apply color to completely selected and partially selected list items", async () => {
     await testEditor({
         contentBefore: "<ol><li>[abc</li><li>def</li><li>gh]i</li></ol>",

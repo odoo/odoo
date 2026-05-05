@@ -618,15 +618,15 @@ test("should not apply bold to selection placeholder nodes", async () => {
     await press(["ctrl", "b"]);
     expect(getContent(el)).toBe(
         unformat(`
-            <p data-selection-placeholder=""><br></p>
+            <p data-selection-placeholder="">[<br></p>
             <table class="o_selected_table">
                 <tbody>
                     <tr>
-                        <td class="o_selected_td"><strong>[1]</strong></td>
+                        <td class="o_selected_td"><strong>1</strong></td>
                     </tr>
                 </tbody>
             </table>
-            <p data-selection-placeholder=""><br></p>
+            <p data-selection-placeholder="">]<br></p>
         `)
     );
 });

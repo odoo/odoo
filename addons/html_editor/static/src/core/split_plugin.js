@@ -1,3 +1,4 @@
+import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
 import { isListItem } from "@html_editor/main/list/utils";
 import { Plugin } from "../plugin";
 import { isBlock, closestBlock } from "../utils/blocks";
@@ -220,10 +221,15 @@ export class SplitPlugin extends Plugin {
      * @returns {[HTMLElement, HTMLElement]}
      */
     splitElement(element, offset) {
+        const cursor = this.dependencies.selection.preserveSelection();
         /** @type {HTMLElement} **/
         const secondPart = element.cloneNode();
         const children = childNodes(element);
-        secondPart.append(...children.slice(offset));
+        for (const node of children.slice(offset)) {
+            cursor.update(callbacksForCursorUpdate.append(secondPart, node));
+            secondPart.appendChild(node);
+        }
+        cursor.update(callbacksForCursorUpdate.after(element, secondPart));
         element.after(secondPart);
         this.dispatchTo("after_split_element_handlers", { element, secondPart });
         return [element, secondPart];
