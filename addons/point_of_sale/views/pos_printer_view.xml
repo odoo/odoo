@@ -21,7 +21,7 @@
                             <field name="paper_size_keys" invisible="True"/>
                             <field name="paper_size" widget="dynamic_selection" options="{'available_field': 'paper_size_keys'}" groups="base.group_no_one"/>
                             <field name="timeout" widget="integer" options="{'type': 'number', 'step': 1000}" placeholder="3000" groups="base.group_no_one"/>
-                            <field name="product_categories_ids" invisible="use_type != 'preparation'" widget="many2many_tags" required="use_type == 'preparation'"/>
+                            <field name="product_categories_ids" invisible="use_type != 'preparation'" widget="many2many_tags" required="use_type == 'preparation'" placeholder="None"/>
                         </group>
                     </group>
                 </sheet>
