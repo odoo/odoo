@@ -128,4 +128,20 @@ class TestUblImportBis3InvoiceBEDecodeInvoiceLine(TestUblImportBis3InvoiceBE):
             'price_subtotal': 1.5,
             'price_unit': 2.0,
             'discount': 25.0,
+         }])
+
+    def test_partial_import_invoice_line_price_include_quantity(self):
+        """The importer must not inflate price_unit when the matched tax is
+        price-included and the invoiced quantity is greater than 1."""
+        tax_21 = self.percent_tax(21.0, type_tax_use='purchase', price_include_override='tax_included')
+        invoice = self._import_invoice_as_attachment_on(test_name='test_partial_import_invoice_line_price_include_quantity')
+        self.assertRecordValues(invoice.invoice_line_ids, [{
+            'quantity': 2.0,
+            'price_unit': 1.21,
+            'tax_ids': tax_21.ids,
+        }])
+        self.assertRecordValues(invoice, [{
+            'amount_untaxed': 2.0,
+            'amount_tax': 0.42,
+            'amount_total': 2.42,
         }])
