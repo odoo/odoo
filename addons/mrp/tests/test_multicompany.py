@@ -339,3 +339,52 @@ class TestMrpMulticompany(common.TransactionCase):
         self.assertFalse(bom_report["docs"][0]["availability_delay"])
         self.assertEqual("unavailable", bom_overview["lines"]["availability_state"])
         self.assertEqual("unavailable", bom_report["docs"][0]["availability_state"])
+
+    def test_bom_leak(self):
+        """
+        Checks that the kit search filters out companies that are not selected
+        Scenario:
+        - Product is global (visible to all companies).
+        - Company A: Normal BoM (Manufacture). Stock = 50, Components = 0 units
+        - Company B: Phantom BoM (Kit). Stock = 100
+        - Company B's Kit BoM should not override Company A's stock calculation.
+        """
+        test_product = self.env['product.product'].create({
+            'name': 'Test Product',
+            'type': 'consu',
+            'is_storable': True,
+            'company_id': False
+        })
+        self.env['mrp.bom'].with_company(self.company_a).create({
+            'product_tmpl_id': test_product.product_tmpl_id.id,
+            'company_id': self.company_a.id,
+            'type': 'normal',
+        })
+        self.env['stock.quant'].with_company(self.company_a)._update_available_quantity(test_product, self.stock_location_a, 50)
+        component_b = self.env['product.product'].create({
+            'name': 'Comp B',
+            'type': 'consu',
+            'is_storable': True,
+            'company_id': self.company_b.id,
+        })
+        self.env['mrp.bom'].with_company(self.company_b).create({
+            'product_tmpl_id': test_product.product_tmpl_id.id,
+            'company_id': self.company_b.id,
+            'type': 'phantom',
+            'bom_line_ids': [Command.create({
+                'product_id': component_b.id,
+                'product_qty': 1,
+            })]
+        })
+        self.env['stock.quant'].with_company(self.company_b)._update_available_quantity(
+            component_b, self.stock_location_b, 100
+        )
+        product_with_context = test_product.with_user(self.user_a).with_context(allowed_company_ids=[self.company_a.id, self.company_b.id])
+        self.assertEqual(
+            product_with_context.with_company(self.company_a).qty_available, 50.0,
+            "Quantity should be 50 (from Company A's stock), not 100 (from Company B's Kit components)."
+        )
+        self.assertEqual(
+            product_with_context.with_company(self.company_b).qty_available, 100.0,
+            "Quantity should be 100 when logged into Company B."
+        )
