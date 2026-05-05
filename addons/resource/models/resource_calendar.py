@@ -449,8 +449,9 @@ class ResourceCalendar(models.Model):
                     # For flexible Calendars, we create intervals to fill in the weekly intervals with the average daily hours
                     # until the full time required hours are met. This gives us the most correct approximation when looking at a daily
                     # and weekly range for time offs and overtime calculations and work entry generation
-                    start_date = start_dt.date()
-                    end_date = (end_dt - relativedelta(seconds=1)).date()
+                    start_date = start_datetime
+                    end_datetime_adjusted = end_datetime - relativedelta(seconds=1)
+                    end_date = end_datetime_adjusted
 
                     calendar = resource_calendars[resource] if resource else self
 
@@ -475,8 +476,9 @@ class ResourceCalendar(models.Model):
                         remaining_hours = max(0, full_time_required_hours - prior_hours)
                         remaining_hours = min(remaining_hours, (end_dt - start_dt).total_seconds() / 3600)
 
-                        current_day = week_start
-                        while current_day <= week_end:
+                        current_day = week_start.date()
+                        week_end_date = week_end.date()
+                        while current_day <= week_end_date:
                             if remaining_hours > 0:
                                 day_start = tz.localize(datetime.combine(current_day, time.min))
                                 day_end = tz.localize(datetime.combine(current_day, time.max))
