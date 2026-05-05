@@ -105,7 +105,7 @@ class ResConfigSettings(models.TransientModel):
         "Multi-website",
         implied_group="website.group_multi_website")
     has_google_analytics = fields.Boolean(
-        "Google Analytics",
+        "Google Tag Manager/Google Analytics",
         compute='_compute_has_google_analytics',
         inverse='_inverse_has_google_analytics')
     has_google_search_console = fields.Boolean(

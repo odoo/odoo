@@ -131,13 +131,13 @@
                         </setting>
                         <setting
                             id="google_analytics_setting"
-                            help="Track visits using Google Analytics or Google Tag Manager"
-                            documentation="/applications/websites/website/reporting/analytics.html#analytics-google-analytics"
+                            help="Track your users, using Google Analytics or Google Tag Manager"
+                            documentation="/applications/websites/website/reporting/analytics.html#google-tag-manager"
                         >
                             <field name="has_google_analytics"/>
                             <div class="content-group" invisible="not has_google_analytics">
                                 <div class="row mt16">
-                                    <label class="col-lg-3 o_light_label" string="Measurement ID or Tag" for="google_analytics_key"/>
+                                    <label class="col-lg-3 o_light_label" string="Identifier" for="google_analytics_key"/>
                                     <field name="google_analytics_key" placeholder="G-XXXXXXXXXX or GTM-XXXXXXX"
                                         required="has_google_analytics"/>
                                 </div>
@@ -146,8 +146,8 @@
                                 <widget
                                     class="oe_link"
                                     name="documentation_link"
-                                    path="/applications/websites/website/reporting/analytics.html#analytics-google-analytics"
-                                    label=" How to get my Measurement ID"
+                                    path="/applications/websites/website/reporting/analytics.html#google-tag-manager"
+                                    label=" How does GTM work?"
                                     icon="oi oi-arrow-right"
                                 />
                             </div>
