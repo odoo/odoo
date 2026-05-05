@@ -2,7 +2,7 @@
 import json
 
 from odoo.exceptions import UserError, ValidationError
-from odoo.tests.common import users, HttpCase, tagged
+from odoo.tests.common import users, HttpCase, tagged, TransactionCase
 from odoo.addons.http_routing.tests.common import MockRequest
 from odoo.addons.website_blog.tests.common import TestWebsiteBlogCommon
 from odoo.addons.mail.controllers.thread import ThreadController
@@ -286,3 +286,91 @@ class TestWebsiteBlogTranslationFlow(HttpCase, TestWebsiteBlogCommon):
             self.test_field.unlink()
 
         self.assertTrue(self.test_field.exists())
+
+
+@tagged("-at_install", "post_install")
+class TestBlogSearch(TransactionCase):
+
+    def setUp(self):
+        super().setUp()
+        self.website = self.env.ref("base.default_website")
+        # Blog
+        self.blog = self.env['blog.blog'].create({
+            'name': 'Test Blog',
+        })
+        # Categories
+        self.cat_a = self.env['blog.tag.category'].create({'name': 'Cat A'})
+        self.cat_b = self.env['blog.tag.category'].create({'name': 'Cat B'})
+        # Tags
+        self.tag_a1 = self.env['blog.tag'].create({
+            'name': 'A1',
+            'category_id': self.cat_a.id,
+        })
+        self.tag_a2 = self.env['blog.tag'].create({
+            'name': 'A2',
+            'category_id': self.cat_a.id,
+        })
+        self.tag_b1 = self.env['blog.tag'].create({
+            'name': 'B1',
+            'category_id': self.cat_b.id,
+        })
+        # Posts
+        self.post_a1 = self.env['blog.post'].create({
+            'name': 'Post A1',
+            'blog_id': self.blog.id,
+            'tag_ids': [(6, 0, [self.tag_a1.id])],
+            'website_published': True,
+        })
+        self.post_a2 = self.env['blog.post'].create({
+            'name': 'Post A2',
+            'blog_id': self.blog.id,
+            'tag_ids': [(6, 0, [self.tag_a2.id])],
+            'website_published': True,
+        })
+        self.post_a1_b1 = self.env['blog.post'].create({
+            'name': 'Post A1 B1',
+            'blog_id': self.blog.id,
+            'tag_ids': [(6, 0, [self.tag_a1.id, self.tag_b1.id])],
+            'website_published': True,
+        })
+
+    def test_tag_same_category_or(self):
+        """A1 + A2 => OR logic"""
+        options = {
+            "tag": f"{self.tag_a1.id},{self.tag_a2.id}",
+        }
+        results_count, details, _ = self.website._search_with_fuzzy(
+            "blog_post", "", 0, 10, "name asc", options
+        )
+        results = details[0].get('results', [])
+        self.assertEqual(results_count, 3, "Should return all posts with A1 or A2")
+        self.assertIn(self.post_a1, results)
+        self.assertIn(self.post_a2, results)
+        self.assertIn(self.post_a1_b1, results)
+
+    def test_tag_cross_category_and(self):
+        """A1 + B1 => AND logic"""
+        options = {
+            "tag": f"{self.tag_a1.id},{self.tag_b1.id}",
+        }
+        results_count, details, _ = self.website._search_with_fuzzy(
+            "blog_post", "", 0, 10, "name asc", options
+        )
+        results = details[0].get('results', [])
+        self.assertEqual(results_count, 1, "Should return only posts matching both categories")
+        self.assertNotIn(self.post_a1, results)
+        self.assertNotIn(self.post_a2, results)
+        self.assertIn(self.post_a1_b1, results)
+
+    def test_tag_single(self):
+        options = {
+            "tag": f"{self.tag_a1.id}",
+        }
+        results_count, details, _ = self.website._search_with_fuzzy(
+            "blog_post", "", 0, 10, "name asc", options
+        )
+        results = details[0].get('results', [])
+        self.assertEqual(results_count, 2)
+        self.assertIn(self.post_a1, results)
+        self.assertNotIn(self.post_a2, results)
+        self.assertIn(self.post_a1_b1, results)
