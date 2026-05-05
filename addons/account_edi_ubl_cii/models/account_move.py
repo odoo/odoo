@@ -51,6 +51,39 @@ class AccountMove(models.Model):
             'target': 'download',
         }
 
+    def action_post(self):
+        # EXTENDS account
+        res = super().action_post()
+        for move in self:
+            if not move.ubl_cii_xml_id:
+                continue
+
+            vendor_partner_id = move.commercial_partner_id
+            for line in move.invoice_line_ids:
+                if not (product := line.product_id):
+                    continue
+
+                product_code = product.seller_item_identification or product.buyer_item_identification or product.standard_item_identification
+                if not product_code:
+                    continue
+
+                if self.env['product.supplierinfo'].search([
+                    ('partner_id', '=', vendor_partner_id.id),
+                    ('product_tmpl_id', '=', line.product_id.product_tmpl_id.id),
+                    ('product_code', '=', product_code),
+                ], limit=1):
+                    continue
+
+                self.env['product.supplierinfo'].create({
+                    'product_tmpl_id': line.product_id.product_tmpl_id.id,
+                    'product_id': line.product_id.id,
+                    'partner_id': vendor_partner_id.id,
+                    'product_name': line.product_id.name,
+                    'product_code': product_code,
+                    'price': line.price_unit,
+                })
+        return res
+
     # -------------------------------------------------------------------------
     # BUSINESS
     # -------------------------------------------------------------------------
