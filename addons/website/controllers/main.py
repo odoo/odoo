@@ -17,7 +17,7 @@ import requests
 import werkzeug.urls
 import werkzeug.wrappers
 from lxml import etree, html
-from markupsafe import escape as markup_escape
+from markupsafe import Markup, escape as markup_escape
 from werkzeug.exceptions import NotFound
 
 from odoo import _, fields, http, models, release, tools
@@ -404,6 +404,30 @@ class Website(Home):
         if step > 1:
             action_url += '&step=' + str(step)
         return request.redirect(action_url)
+
+    @http.route('/website/configurator/preview', type='http', auth="user", website=True, multilang=False)
+    def website_configurator_preview(self, industry, theme_name=None, install_theme=False, generate_content=False, user_prompt=None, tone=None, with_images=False, industry_id=0, **kwargs):
+        if not request.env.user.has_group('website.group_website_designer'):
+            raise werkzeug.exceptions.NotFound()
+        website = request.website
+        request.update_context(
+            website_id=website.id,
+            lang=website.default_lang_id.code,
+        )
+        website = request.env['website'].get_current_website()
+        response = request.render('website.theme_configurator_preview', {
+            'preview_body': request.env['website'].theme_configurator_preview_body(
+                theme_name or website.theme_id.name or 'theme_default',
+                industry,
+                install_theme=str(install_theme).lower() in ('1', 'true'),
+                generate_content=str(generate_content).lower() in ('1', 'true'),
+                user_prompt=user_prompt,
+                tone=tone,
+                with_images=str(with_images).lower() in ('1', 'true'),
+                industry_id=int(industry_id),
+            ),
+        })
+        return response
 
     @http.route('/website/get_suggested_links', type='jsonrpc', auth="user", website=True, readonly=True)
     def get_suggested_link(self, needle, limit=10):

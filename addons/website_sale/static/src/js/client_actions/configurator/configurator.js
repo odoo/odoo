@@ -3,8 +3,8 @@ import { patch } from '@web/core/utils/patch';
 import {
     ApplyConfiguratorScreen,
     Configurator,
-    FeaturesSelectionScreen,
     ROUTES,
+    SetupStyleScreen,
 } from '@website/client_actions/configurator/configurator';
 import {
     ProductPageSelectionScreen,
@@ -31,15 +31,10 @@ patch(ApplyConfiguratorScreen.prototype, {
 
 })
 
-patch(FeaturesSelectionScreen, {
-
-    /**
-     * @override to redirect to the shop page selection screen.
-     */
+patch(SetupStyleScreen.prototype, {
     nextStep() {
-        return ROUTES.shopPageSelectionScreen;
+        this.props.navigate(ROUTES.shopPageSelectionScreen);
     },
-
 });
 
 patch(Configurator, {
@@ -65,6 +60,14 @@ patch(Configurator.prototype, {
             return ProductPageSelectionScreen;
         }
         return super.currentComponent;
+    },
+
+    get componentProps() {
+        const props = super.componentProps;
+        if (this.state.currentStep === ROUTES.productPageSelectionScreen) {
+            props.clearStorage = this.clearStorage.bind(this);
+        }
+        return props;
     },
 
     /**
