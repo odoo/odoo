@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
 <t t-name="website.DynamicSvgOption">
-    <BuilderRow label.translate="Dynamic Colors" action="'svgColor'">
+    <BuilderRow label.translate="Illustration Colors" tooltip.translate="Define your illustration's main colors" action="'svgColor'">
         <t t-foreach="Object.keys(this.domState.colors)" t-as="colorName" t-key="colorName">
             <BuilderColorPicker title="this.title[colorName]" actionParam="colorName" enabledTabs="['solid', 'custom']"/>
         </t>

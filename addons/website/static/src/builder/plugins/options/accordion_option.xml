@@ -35,12 +35,12 @@
             </BuilderSelect>
         </BuilderRow>
         <BuilderRow label.translate="Active" level="1" t-if="this.isActiveItem('accordion_icons_custom_opt')">
-            <BuilderButton action="'defineCustomIcon'" actionParam="{ isActiveIcon: true }" preview="false">
+            <BuilderButton action="'defineCustomIcon'" actionParam="{ isActiveIcon: true }" type="'success'" preview="false">
                 <i class="fa fa-fw fa-refresh me-1"/> Replace Icon
             </BuilderButton>
         </BuilderRow>
         <BuilderRow label.translate="Inactive" level="1" t-if="this.isActiveItem('accordion_icons_custom_opt')">
-            <BuilderButton action="'defineCustomIcon'" actionParam="{ isActiveIcon: false }" preview="false">
+            <BuilderButton action="'defineCustomIcon'" actionParam="{ isActiveIcon: false }" type="'success'" preview="false">
                 <i class="fa fa-fw fa-refresh me-1"/> Replace Icon
             </BuilderButton>
         </BuilderRow>
