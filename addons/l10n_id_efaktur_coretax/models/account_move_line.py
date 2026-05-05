@@ -26,7 +26,8 @@ class AccountMoveLine(models.Model):
         ChartTemplate = self.env['account.chart.template'].with_company(self.company_id)
         default_tax_group = ChartTemplate.ref('default_tax_group', raise_if_not_found=False)
         non_luxury_tax_group = ChartTemplate.ref('l10n_id_tax_group_non_luxury_goods', raise_if_not_found=False)
-        regular_tax_groups = {default_tax_group, non_luxury_tax_group}
+        vat_collector_group = ChartTemplate.ref('l10n_id_tax_group_vat_collector', raise_if_not_found=False)
+        regular_tax_groups = {default_tax_group, non_luxury_tax_group, vat_collector_group}
         regular_tax_groups.discard(False)
         luxury_tax_group = ChartTemplate.ref('l10n_id_tax_group_luxury_goods', raise_if_not_found=False)
         stlg_tax_group = ChartTemplate.ref('l10n_id_tax_group_stlg', raise_if_not_found=False)
