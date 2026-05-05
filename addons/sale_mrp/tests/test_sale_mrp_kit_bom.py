@@ -766,3 +766,26 @@ class TestSaleMrpKitBom(BaseCommon):
         picking.button_validate()
 
         self.assertEqual(so.order_line.qty_delivered, 1)
+
+    def test_kit_component_packaging_uom_not_converted_so(self):
+        """ The delivery move of a kit component must keep the component's own
+        UoM as packaging UoM."""
+        uom_unit = self.env.ref('uom.product_uom_unit')
+        uom_kg = self.env.ref('uom.product_uom_kgm')
+        kit, component = self.env['product.product'].create([
+            {'name': 'Kit UoM', 'uom_id': uom_unit.id},
+            {'name': 'Comp Kg', 'is_storable': True, 'uom_id': uom_kg.id},
+        ])
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': kit.product_tmpl_id.id,
+            'type': 'phantom',
+            'bom_line_ids': [Command.create({'product_id': component.id, 'product_qty': 1.0})],
+        })
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [Command.create({'product_id': kit.id, 'product_uom_qty': 1.0})],
+        })
+        so.action_confirm()
+        component_move = so.picking_ids.move_ids
+        self.assertEqual(component_move.uom_id, uom_kg)
+        self.assertEqual(component_move.packaging_uom_id, uom_kg)
