@@ -352,9 +352,11 @@ export function splitTextNode(textNode, offset, originalNodeSide = DIRECTIONS.RI
  * @param {import("@html_editor/core/selection_plugin").Cursors} [cursors]
  */
 export function removeInvisibleWhitespace(el, cursors) {
-    const [countLeadingWhitespace, countTrailingWhitespace] = [/^\s+/, /\s+$/].map(
-        (regex) => (node) => node?.textContent.match(regex)?.[0]?.length || 0
-    );
+    const whitespaceRegex = /[^\S\u00A0\uFEFF]/;
+    const [countLeadingWhitespace, countTrailingWhitespace] = [
+        new RegExp(`^${whitespaceRegex.source}+`),
+        new RegExp(`${whitespaceRegex.source}+$`),
+    ].map((regex) => (node) => node?.textContent.match(regex)?.[0]?.length || 0);
     const isInlineElement = (node) => node?.nodeType === Node.ELEMENT_NODE && !isBlock(node);
     const textChildren = descendants(el).filter((child) => child.nodeType === Node.TEXT_NODE);
     let removedTrailingSpaceBefore = false;
@@ -386,8 +388,8 @@ export function removeInvisibleWhitespace(el, cursors) {
                 leadingWhitespace,
                 child.textContent.length - trailingWhitespace || leadingWhitespace
             )
-            .replace(/^\s+/, " ")
-            .replace(/\s+$/, " ");
+            .replace(new RegExp(`^${whitespaceRegex.source}+`), " ")
+            .replace(new RegExp(`${whitespaceRegex.source}+$`), " ");
         if (!child.textContent) {
             child.remove();
         }
