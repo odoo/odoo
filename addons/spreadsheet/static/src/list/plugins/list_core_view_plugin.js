@@ -1,12 +1,17 @@
 import * as spreadsheet from "@odoo/o-spreadsheet";
-import { getFirstListFunction } from "../list_helpers";
+import { getFirstListFunction, getListFunctions } from "../list_helpers";
 import { Domain } from "@web/core/domain";
 import { ListDataSource } from "../list_data_source";
 import { OdooCoreViewPlugin } from "@spreadsheet/plugins";
 import { isDataSourceUrl, parseDataSourceUrl } from "../../data_sources/data_source_link";
 
-const { astToFormula, NotAvailableError, CircularDependencyError, invalidateEvaluationCommands } =
-    spreadsheet;
+const {
+    astToFormula,
+    NotAvailableError,
+    CircularDependencyError,
+    invalidateEvaluationCommands,
+    isCoreCommand,
+} = spreadsheet;
 const { isMarkdownLink, parseMarkdownLink } = spreadsheet.links;
 const { unquote, isMatrix, isEvaluationError, PositionMap } = spreadsheet.helpers;
 
@@ -60,6 +65,9 @@ export class ListCoreViewPlugin extends OdooCoreViewPlugin {
      * @param {Object} cmd Command
      */
     handle(cmd) {
+        if (isCoreCommand(cmd) || cmd.type === "UNDO" || cmd.type === "REDO") {
+            this.unusedLists = undefined;
+        }
         if (invalidateEvaluationCommands.has(cmd.type)) {
             this.shouldInvalidateCache = true;
         }
@@ -93,15 +101,8 @@ export class ListCoreViewPlugin extends OdooCoreViewPlugin {
                 this._addDomain(cmd.listId);
                 break;
             }
-            case "DELETE_SHEET":
-                this.unusedLists = undefined;
-                break;
-            case "UPDATE_CELL":
-                this.unusedLists = undefined;
-                break;
             case "UNDO":
             case "REDO": {
-                this.unusedLists = undefined;
                 if (
                     cmd.commands.find((command) =>
                         [
@@ -208,17 +209,19 @@ export class ListCoreViewPlugin extends OdooCoreViewPlugin {
             return this.unusedLists;
         }
         const unusedLists = new Set(this.getters.getListIds());
+
+        for (const formula of this.getters.getAllFormulas()) {
+            for (const listId of this.getListIdsFromFormula(formula)) {
+                unusedLists.delete(listId);
+                if (!unusedLists.size) {
+                    this.unusedLists = [];
+                    return this.unusedLists;
+                }
+            }
+        }
+
         for (const sheetId of this.getters.getSheetIds()) {
             for (const cell of this.getters.getCells(sheetId)) {
-                const position = this.getters.getCellPosition(cell.id);
-                const listId = this.getListIdFromPosition(position);
-                if (listId) {
-                    unusedLists.delete(listId);
-                    if (!unusedLists.size) {
-                        this.unusedLists = [];
-                        return this.unusedLists;
-                    }
-                }
                 if (isMarkdownLink(cell.content)) {
                     const { url } = parseMarkdownLink(cell.content);
                     if (isDataSourceUrl(url)) {
@@ -350,20 +353,12 @@ export class ListCoreViewPlugin extends OdooCoreViewPlugin {
     getListIdFromPosition(position) {
         if (!this.listPositionCache.has(position)) {
             const cell = this.getters.getCorrespondingFormulaCell(position);
-            const sheetId = position.sheetId;
             if (cell && cell.isFormula) {
-                const listFunction = getFirstListFunction(cell.compiledFormula, this.getters);
-                if (listFunction) {
-                    const content = astToFormula(listFunction.args[0]);
-                    const listId =
-                        this.getters.evaluateFormula(sheetId, content)?.toString() || false;
-                    this.listPositionCache.set(position, listId);
-                    return listId;
-                }
+                const listIds = this.getListIdsFromFormula(cell.compiledFormula);
+                this.listPositionCache.set(position, listIds);
             }
-            this.listPositionCache.set(position, undefined);
         }
-        return this.listPositionCache.get(position) || undefined;
+        return this.listPositionCache.get(position)?.[0] || undefined;
     }
 
     isDynamicList(position) {
@@ -375,6 +370,14 @@ export class ListCoreViewPlugin extends OdooCoreViewPlugin {
             }
         }
         return false;
+    }
+
+    getListIdsFromFormula(compiledFormula) {
+        const listFunctions = getListFunctions(compiledFormula, this.getters);
+        return listFunctions.map((listFunction) => {
+            const content = astToFormula(listFunction.args[0]);
+            return this.getters.evaluateFormula(compiledFormula.sheetId, content)?.toString();
+        });
     }
 
     getListFieldFromPosition(position) {

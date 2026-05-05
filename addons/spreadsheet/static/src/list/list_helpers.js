@@ -31,6 +31,10 @@ export function getFirstListFunction(compiledFormula, getters) {
     return compiledFormula.getFunctionsFromTokens(ALL_LIST_FUNCTIONS, getters)[0];
 }
 
+export function getListFunctions(compiledFormula, getters) {
+    return compiledFormula.getFunctionsFromTokens(ALL_LIST_FUNCTIONS, getters);
+}
+
 export function addListDependencies(evalContext, listId, columns) {
     const dependencies = [];
     for (const column of columns) {
