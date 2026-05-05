@@ -259,6 +259,8 @@ class AccountMoveSend(models.AbstractModel):
         })
 
         for attachment_values in attachments_to_embed:
+            # Some XML validator need a strict embed content without ligne break and whitespace
+            embed_content = base64.b64encode(attachment_values['raw']).decode()
             to_inject = f'''
                 <cac:AdditionalDocumentReference
                     {attachment_values.get("xmlns", "")}
@@ -269,9 +271,7 @@ class AccountMoveSend(models.AbstractModel):
                     <cac:Attachment>
                         <cbc:EmbeddedDocumentBinaryObject
                             mimeCode={quoteattr(attachment_values["mimetype"])}
-                            filename={quoteattr(attachment_values['filename'])}>
-                            {base64.b64encode(attachment_values['raw']).decode()}
-                        </cbc:EmbeddedDocumentBinaryObject>
+                            filename={quoteattr(attachment_values['filename'])}>{embed_content}</cbc:EmbeddedDocumentBinaryObject>
                     </cac:Attachment>
                 </cac:AdditionalDocumentReference>
             '''

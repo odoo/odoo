@@ -767,7 +767,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             vals['document_type'] = 'debit_note'
             vals['main_template'] = 'account_edi_ubl_cii.ubl_20_DebitNote'
             vals['vals']['document_type_code'] = 383
-        elif invoice.move_type == 'out_refund':
+        elif invoice.move_type in ('out_refund', 'in_refund'):
             vals['document_type'] = 'credit_note'
             vals['main_template'] = 'account_edi_ubl_cii.ubl_20_CreditNote'
             vals['vals']['document_type_code'] = 381
@@ -1119,7 +1119,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
 
         vals.update({
             'document_type': 'debit_note' if 'debit_origin_id' in self.env['account.move']._fields and invoice.debit_origin_id
-                else 'credit_note' if invoice.move_type == 'out_refund'
+                else 'credit_note' if invoice.move_type in ('out_refund', 'in_refund')
                 else 'invoice',
 
             'company': invoice.company_id,
