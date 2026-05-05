@@ -12,6 +12,8 @@ import { EventBus, onWillDestroy } from "@odoo/owl";
  * @property {(popperElement: HTMLElement, solution: PositioningSolution) => void} [onPositioned]
  *  callback called when the positioning is done.
  * @typedef {ComputePositionOptions & UsePositionOptionsExtensionType} UsePositionOptions
+ * @property {boolean} [rememberPosition=true]
+ *  keep the last position as the preferred one
  *
  * @typedef PositioningControl
  * @property {() => void} lock prevents further positioning updates
@@ -42,6 +44,7 @@ export const POSITION_BUS = Symbol("position-bus");
  *  control object to lock/unlock the positioning.
  */
 export function usePosition(popperRef, getTarget, options = {}) {
+    const rememberPosition = options.rememberPosition ?? true;
     // Transitional shim (Owl 2 -> 3): `popperRef` may be either a legacy
     // ref-name string (resolved through `useRef`) or an Owl 3 signal (a
     // function returning the element). Resolve "the current popper element"
@@ -67,7 +70,7 @@ export function usePosition(popperRef, getTarget, options = {}) {
         const repositionOptions = omit(options, "onPositioned");
         const solution = reposition(popperEl, targetEl, repositionOptions);
         // Don't memorize center position because it's a fallback that we don't want to keep if possible
-        if (solution.direction !== "center") {
+        if (rememberPosition && solution.direction !== "center") {
             options.position = `${solution.direction}-${solution.variant}`; // memorize last position
         }
         options.onPositioned?.(popperEl, solution);
