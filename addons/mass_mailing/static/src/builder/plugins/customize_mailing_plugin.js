@@ -73,10 +73,11 @@ export class CustomizeMailingPlugin extends Plugin {
         const newStyleSheet = new contentDocument.defaultView.CSSStyleSheet();
         for (const cssRule of cssRules) {
             let previewRule = cssRule.cssText.replace(this.cssPrefix, ".o_add_snippets_preview");
+            // Prevent nested `[data-snippet]` nodes (e.g. s_rating) from getting wrapper styles.
             if (previewRule.includes("> [data-snippet]")) {
                 previewRule = previewRule.replace(
                     "> [data-snippet]",
-                    ".o_snippet_preview_wrap [data-snippet]"
+                    ".o_snippet_preview_wrap > div > [data-snippet]"
                 );
             }
             newStyleSheet.insertRule(previewRule);

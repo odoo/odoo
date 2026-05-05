@@ -1,6 +1,6 @@
 <odoo>
 <template id="s_text_block" name="Text">
-    <section class="s_text_block o_mail_snippet_general pt24 pb24" style="padding-left: 15px; padding-right: 15px;" data-vxml="001">
+    <section class="s_text_block o_mail_snippet_general pt40 pb40" style="padding-left: 15px; padding-right: 15px;" data-vxml="001">
         <div class="container s_allow_columns">
             <p>Great stories have a <strong>personality</strong>. Consider telling a great story that provides personality. Writing a story with personality for potential clients will assist with making a relationship connection. This shows up in small quirks like word choices or phrases. Write from your point of view, not from someone else's experience.</p>
             <p>Great stories are <strong>for everyone</strong> even when only written <strong>for just one person</strong>. If you try to write with a wide, general audience in mind, your story will sound fake and lack emotion. No one will be interested. Write for one person. If it's genuine for the one, it's genuine for the rest.</p>
@@ -9,11 +9,11 @@
 </template>
 
 <template id="s_link_list" name="Link List">
-    <section class="s_link_list o_mail_snippet_general pt16 pb16" data-vxml="001">
+    <section class="s_link_list o_mail_snippet_general pt40 pb40" data-vxml="001">
         <div class="container">
             <div class="row">
                 <div class="col-md-12 col-12">
-                    <h1>Popular Links</h1>
+                    <h2>Popular Links</h2>
                     <ul>
                         <li><a href="#" target="_blank" data-original-title="" title="">7 Design Secrets of the World's Most Beautiful Homes</a></li>
                         <li><a href="#" target="_blank" data-original-title="" title="">The Interior Trend You Can't Afford to Miss</a></li>
@@ -27,11 +27,11 @@
     </section>
 </template>
 <template id="s_schedule" name="Schedule">
-    <section class="s_schedule o_mail_snippet_general pt16 pb16">
+    <section class="s_schedule o_mail_snippet_general pt40 pb40">
         <div class="container">
             <div class="row s_nb_column_fixed">
                 <div class="col-md-12 col-12">
-                    <h3 class="text-center">Schedule</h3>
+                    <h2 class="text-center">Schedule</h2>
                     <div class="s_hr o_mail_snippet_general o_not_editable pt4 pb16 o_colored_level" data-name="Separator">
                         <hr class="w-50 mx-auto"/>
                     </div>
@@ -41,20 +41,20 @@
         <div class="container">
             <div class="row">
                 <div class="col-12 col-md-12">
-                    <table class="mx-auto">
-                        <tr style="vertical-align:top">
-                            <td style="text-align:right;" class="p-2">
+                    <table class="mx-auto" data-name="Schedule Table">
+                        <tr style="vertical-align:top" data-name="Schedule Item">
+                            <td style="text-align:right;" class="p-2" data-name="Time">
                                 <p><strong>8h:</strong></p>
                             </td>
-                            <td class="p-2">
+                            <td class="p-2" data-name="Activity">
                                 <p><strong>Welcome</strong></p>
                             </td>
                         </tr>
-                        <tr style="vertical-align:top">
-                            <td style="text-align:right;" class="p-2">
+                        <tr style="vertical-align:top" data-name="Schedule Item">
+                            <td style="text-align:right;" class="p-2" data-name="Time">
                                 <p><strong>18h30:</strong></p>
                             </td>
-                            <td class="p-2">
+                            <td class="p-2" data-name="Activity">
                                 <p><strong>[speaker] &amp; [speaker]'s conference</strong></p>
                                 <ul>
                                     <li>Interactive Odoo demo</li>
@@ -62,11 +62,11 @@
                                 </ul>
                             </td>
                         </tr>
-                        <tr style="vertical-align:top">
-                            <td style="text-align:right;" class="p-2">
+                        <tr style="vertical-align:top" data-name="Schedule Item">
+                            <td style="text-align:right;" class="p-2" data-name="Time">
                                 <p><strong>19h00:</strong></p>
                             </td>
-                            <td class="p-2">
+                            <td class="p-2" data-name="Activity">
                                 <p><strong>Table Ronde</strong></p>
                                 <ul>
                                     <li>Business Case</li>
@@ -74,11 +74,11 @@
                                 </ul>
                             </td>
                         </tr>
-                        <tr style="vertical-align:top">
-                            <td style="text-align:right;" class="p-2">
+                        <tr style="vertical-align:top" data-name="Schedule Item">
+                            <td style="text-align:right;" class="p-2" data-name="Time">
                                 <p><strong>19h30: </strong></p>
                             </td>
-                            <td class="p-2">
+                            <td class="p-2" data-name="Activity">
                                 <p><strong>Networking: Walking Dinner &amp; Drinks</strong></p>
                             </td>
                         </tr>
@@ -172,12 +172,12 @@
 </template>
 
 <template id="s_text_describing_benefits" name="Benefits">
-    <section class="o_mail_snippet_general pt16 pb16" data-vxml="001">
+    <section class="o_mail_snippet_general pt40 pb40" data-vxml="001">
         <div class="container">
             <div class="row">
-                <div class="col-md-12 col-12">
+                <div class="col-md-12 col-12 pb32">
                     <p><span class="fa fa-asterisk me-2" contenteditable="false"/>What We Offer</p>
-                    <h1><span class="display-3-fs">Discover our main three benefits</span></h1>
+                    <h2><span class="display-4-fs">Discover our main<br/>three benefits</span></h2>
                 </div>
                 <div class="col-md-4 col-12">
                     <p><span class="display-4-fs">1</span></p>
@@ -203,11 +203,11 @@
 </template>
 
 <template id="s_title_with_side_text" name="Title with Side Text">
-    <section class="o_mail_snippet_general pt16 pb16" data-vxml="001">
+    <section class="o_mail_snippet_general pt40 pb40" data-vxml="001">
         <div class="container">
             <div class="row">
                 <div class="col-md-6 col-12">
-                    <h1><strong>Unveil Our Exclusive Collections</strong></h1>
+                    <h2>Unveil Our Exclusive Collections</h2>
                 </div>
                 <div class="col-md-6 col-12">
                     <p>Write one or two paragraphs describing your product or services. To be successful your content needs to be useful to your readers.</p>
@@ -218,11 +218,11 @@
 </template>
 
 <template id="s_text_card" name="Card with Text">
-    <section class="o_mail_snippet_general pt16 pb16 bg-light" data-vxml="001">
+    <section class="o_mail_snippet_general pt40 pb40 bg-light" data-vxml="001">
         <div class="container">
             <div class="row">
                 <div class="col-md-12 col-12">
-                    <h1>Unlock your full potential</h1>
+                    <h2>Unlock your full potential</h2>
                     <p><strong>Why settle for a generic solution?</strong><br/>We don't just offer tools; we provide a competitive advantage. Our platform is engineered to streamline your workflow, eliminate bottlenecks, and help you scale faster than ever before.</p>
                     <ul>
                         <li>Automate your daily tasks. <a href="#">See how</a></li>
@@ -236,26 +236,26 @@
 </template>
 
 <template id="s_text_need_help" name="Need Help?">
-    <section class="o_mail_snippet_general pt16 pb16" data-vxml="001">
+    <section class="o_mail_snippet_general pt40 pb40" data-vxml="001">
         <div class="container">
             <div class="row">
-                <div class="col-md-12 col-12">
-                    <h1>Need help?</h1>
+                <div class="col-md-12 col-12 pb24">
+                    <h2>Need help?</h2>
                     <p>In this section, you can address common questions efficiently.</p>
                 </div>
-                <div class="col-md-6 col-12">
+                <div class="col-md-6 col-12 pb16">
                     <h3>What sets us apart?</h3>
                     <p>We deliver personalized solutions, ensuring that every customer receives top-tier service tailored to their needs.</p>
                 </div>
-                <div class="col-md-6 col-12">
+                <div class="col-md-6 col-12 pb16">
                     <h3>Is the website user-friendly?</h3>
                     <p>Our website is designed for easy navigation, allowing you to find the information you need quickly and efficiently.</p>
                 </div>
-                <div class="col-md-6 col-12">
+                <div class="col-md-6 col-12 pb16">
                     <h3>What support do we offer?</h3>
                     <p>We provide 24/7 support through various channels, including live chat, email, and phone, to assist with any queries.</p>
                 </div>
-                <div class="col-md-6 col-12">
+                <div class="col-md-6 col-12 pb16">
                     <h3>How is your data secured?</h3>
                     <p>Your data is protected by advanced encryption and security protocols, keeping your personal information safe.</p>
                 </div>
@@ -265,11 +265,11 @@
 </template>
 
 <template id="s_text_product_description" name="Product Description">
-    <section class="o_mail_snippet_general pt16 pb16" data-vxml="001">
+    <section class="o_mail_snippet_general pt40 pb40" data-vxml="001">
         <div class="container">
             <div class="row">
                 <div class="col-md-12 col-12">
-                    <h1>A great product</h1>
+                    <h2>A great product</h2>
                     <p>Starting from $29.99</p>
                     <p><strong>Replace this block with the authentic, singular story of your product.</strong> Focus on the unique spark that gave it personality. <strong>Be short, be specific, and let your brand's voice shine</strong> through unique work choices. This explains the <em>soul</em> behind the product, inspiring a deeper connection beyond simple features.</p>
                 </div>
@@ -282,19 +282,19 @@
     <section class="o_mail_snippet_general" data-vxml="001">
         <div class="container">
             <div class="row">
-                <div class="col-md-12 col-12 pt16 pb16">
-                    <h2>Design for the Soul: Why Your Home Should Be a Reflection of Your Best Self</h2>
+                <div class="col-md-12 col-12 pt40 pb48">
+                    <h2>Design for the soul</h2>
                     <p>Great design is about more than just filling a room; it is about creating a lifestyle that feels both luxurious and meaningful. Our pieces are carefully made to bring soul to your space, blending modern ideas with the warmth of traditional craftsmanship. Every detail is a deliberate choice, intended to turn your house into a personal gallery where you can truly relax in style.</p>
                     <a href="#">Read More</a>
                 </div>
                 <div class="col-md-6 col-12 pt16 pb16">
-                    <h2>Built to Last: The Beauty of Choosing Quality Materials</h2>
-                    <p>True elegance is something you can feel, rooted in high-quality materials that only get better with time. By using the finest woods and textiles, we create furniture that doesn't just sit in a room—it grows with it. These pieces are designed to be your home's future heirlooms, crafted with such care that they will remain as beautiful and relevant years from now as they are today.</p>
+                    <h2>Built to last</h2>
+                    <p>True elegance is something you can feel, rooted in high-quality materials that only get better with time. By using the finest woods and textiles, we create furniture that doesn't just sit in a room—it grows with it.</p>
                     <a href="#">Read More</a>
                 </div>
-                <div class="col-md-6 col-12 pt16 pb16">
-                    <h2>The Art of the Escape: Creating a Quiet Sanctuary in a Busy World</h2>
-                    <p>In a fast-paced world, your home should be your ultimate escape—a private place that brings you a sense of calm and clarity. Our collection focuses on clean lines and comfortable shapes, providing a sophisticated backdrop for your most important moments. We believe your surroundings should be a testament to your taste, offering the perfect l ease you need to unwind.</p>
+                <div class="col-md-6 col-12 pt16 pb40">
+                    <h2>The art of the escape</h2>
+                    <p>In a fast-paced world, your home should be your ultimate escape—a private place that brings you a sense of calm and clarity. Our collection focuses on clean lines and comfortable shapes.</p>
                     <a href="#">Read More</a>
                 </div>
             </div>
@@ -303,11 +303,11 @@
 </template>
 
 <template id="s_text_contact" name="Contact and Schedule">
-    <section class="o_mail_snippet_general pt16 pb16" data-vxml="001">
+    <section class="o_mail_snippet_general pt40 pb40" data-vxml="001">
         <div class="container">
             <div class="row">
                 <div class="col-md-6 col-12">
-                    <h1>Let's get in touch</h1>
+                    <h2>Let's get in touch</h2>
                     <p t-if="env.company.email"><a t-if="env.company.email" t-attf-href="mailto:#{env.company.email}" t-out="env.company.email"/></p>
                     <p><a href="#" class="btn btn-primary">Contact us</a></p>
                 </div>
@@ -335,7 +335,7 @@
 </template>
 
 <template id="s_text_signature" name="Mail Structure">
-    <section class="o_mail_snippet_general pt16 pb16" data-vxml="001">
+    <section class="o_mail_snippet_general pt40 pb40" data-vxml="001">
         <div class="container">
             <div class="row">
                 <div class="col-md-12 col-12">
@@ -353,11 +353,11 @@
 </template>
 
 <template id="s_text_left_cta" name="Call To Action with Text">
-    <section class="o_mail_snippet_general pt16 pb16" data-vxml="001">
+    <section class="o_mail_snippet_general pt40 pb40" data-vxml="001">
         <div class="container">
             <div class="row">
                 <div class="col-md-12 col-12">
-                    <h3>The Mastery of Making</h3>
+                    <h2>The Mastery of Making</h2>
                     <p>Don't settle for the ordinary. Our artisans obsess over every detail to create the perfection your home demands. Own a masterpiece today.</p>
                     <a href="#" class="btn btn-primary">Buy Now</a>
                 </div>
@@ -367,11 +367,11 @@
 </template>
 
 <template id="s_text_center_cta" name="Call To Action with Centered Text">
-    <section class="o_mail_snippet_general pt16 pb16" data-vxml="001">
+    <section class="o_mail_snippet_general pt40 pb40" data-vxml="001">
         <div class="container">
             <div class="row">
                 <div class="col-md-12 col-12">
-                    <h3 style="text-align: center">Invest in the Future</h3>
+                    <h2 style="text-align: center">Invest in the Future</h2>
                     <p style="text-align: center">True luxury is measured in decades.<br/>We blend heritage craft with the finest materials.<br/>Discover pieces that age beautifully.</p>
                     <p style="text-align: center"><a href="#" class="btn btn-primary">Shop now</a></p>
                 </div>

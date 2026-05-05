@@ -37,7 +37,9 @@ export class ThemeModel extends Reactive {
         for (const theme of children(themesEl)) {
             this.preProcessImages(theme);
             const themeOptions = {
-                className: getClassName(theme.dataset.name),
+                className: [getClassName(theme.dataset.name), theme.dataset.layoutClass]
+                    .filter(Boolean)
+                    .join(" "),
                 hideFromMobile: hasDataOption(theme, "hide-from-mobile"),
                 html: htmlTrim(getInnerHtml(theme)),
                 imgPath: theme.dataset.img || "",
@@ -46,7 +48,10 @@ export class ThemeModel extends Reactive {
                 nowrap: hasDataOption(theme, "nowrap"),
                 title: theme.getAttribute("title") || "",
             };
-            if (!themeOptions.layoutStyles.includes("background-color")) {
+            if (
+                !themeOptions.layoutStyles.includes("background-color") &&
+                !themeOptions.className.includes("bg-")
+            ) {
                 themeOptions.layoutStyles += "background-color: #F7F7F7;";
             }
             if (hasDataOption(theme, "images-info")) {
