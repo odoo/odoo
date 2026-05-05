@@ -5412,12 +5412,17 @@ class TestMrpOrder(TestMrpCommon, MailCase):
 
     def test_consumption_issue_only_for_compatible_variant(self):
         """A consumption issue should not be triggered for components that are not compatible with the produced variant."""
-        # Case 1: Product variant = red
-        self.product_4.product_template_attribute_value_ids = self.color_attribute.template_value_ids[0]
+        self.product_4.product_tmpl_id.attribute_line_ids = [Command.create({
+            'attribute_id': self.color_attribute.id,
+            'value_ids': [Command.set(self.color_attribute.value_ids[0:2].ids)],
+        })]
+        product_red, product_blue = self.product_4.product_variant_ids
         # First BoM line applies only to Blue variant
-        self.bom_1.bom_line_ids[0].bom_product_template_attribute_value_ids = self.color_attribute.template_value_ids[1]
+        self.bom_1.bom_line_ids[0].bom_product_template_attribute_value_ids = self.product_4.attribute_line_ids.product_template_value_ids[1]
+        # Case 1: Product variant = red
         mo = self.env['mrp.production'].create({
             'bom_id': self.bom_1.id,
+            'product_id': product_red.id,
         })
         # The BoM contains 2 lines but only 1 raw move should be created
         self.assertEqual(len(self.bom_1.bom_line_ids), 2)
@@ -5426,9 +5431,9 @@ class TestMrpOrder(TestMrpCommon, MailCase):
         mo.button_mark_done()
         self.assertEqual(mo.state, 'done', "The MO should be completed without any consumption issue since the missing component is not compatible with the variant to produce.")
         # Case 2: Blue variant
-        self.product_4.product_template_attribute_value_ids = self.color_attribute.template_value_ids[1]
         mo_2 = self.env['mrp.production'].create({
             'bom_id': self.bom_1.id,
+            'product_id': product_blue.id,
         })
         self.assertEqual(len(mo_2.move_raw_ids), 2)
         mo_2.move_raw_ids[0].unlink()  # Remove one component to simulate missing consumption
