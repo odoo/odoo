@@ -1058,20 +1058,20 @@ class MrpWorkorder(models.Model):
     def _get_product_catalog_domain(self):
         return super()._get_product_catalog_domain() & Domain('type', '=', 'consu')
 
-    def _update_order_line_info(self, product_id, quantity, uom, **kwargs):
-        move = self.move_raw_ids.filtered(lambda m: m.product_id.id == product_id)
+    def _update_order_line_info(self, product, quantity, uom, **kwargs):
+        move = self.move_raw_ids.filtered(lambda m: m.product_id.id == product.id)
         if move:
             if quantity != 0:
                 self._update_catalog_line_quantity(move, quantity, **kwargs)
             else:
                 move.unlink()
         elif quantity > 0:
-            new_line_vals = self._get_new_catalog_line_values(product_id, quantity, child_field='move_raw_ids', **kwargs)
+            new_line_vals = self._get_new_catalog_line_values(product.id, quantity, uom, **kwargs)
             self.production_id.move_raw_ids = [Command.create(new_line_vals)]
-            new_line = self.move_raw_ids.filtered(lambda mv: mv.product_id.id == product_id)[-1:]
+            new_line = self.move_raw_ids.filtered(lambda mv: mv.product_id.id == product.id)[-1:]
             self._update_catalog_line_quantity(new_line, quantity, **kwargs)
 
-        return self.env['product.product'].browse(product_id).standard_price
+        return self.env['product.product'].browse(product.id).standard_price
 
     def _update_catalog_line_quantity(self, line, quantity, **kwargs):
         line.product_uom_qty = quantity
@@ -1079,8 +1079,8 @@ class MrpWorkorder(models.Model):
     def _is_display_stock_in_catalog(self):
         return True
 
-    def _get_new_catalog_line_values(self, product_id, quantity, **kwargs):
-        values = self.production_id._get_new_catalog_line_values(product_id, quantity, **kwargs)
+    def _get_new_catalog_line_values(self, product_id, quantity, uom, **kwargs):
+        values = self.production_id._get_new_catalog_line_values(product_id, quantity, uom, **kwargs)
         values.update({
             'workorder_id': self.id,
         })
