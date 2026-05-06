@@ -19,12 +19,12 @@
     </t>
     <t t-name="mail.SubChannelPreview.message">
         <div class="o-mail-SubChannelPreview-lastMessage text-muted fw-normal smaller overflow-hidden d-flex align-items-center bg-inherit">
-            <img class="rounded object-fit-cover" t-att-src="this.message.author.avatarUrl" t-att-title="this.message.authorName" alt="Avatar" style="width: 20px; height: 20px;"/>
+            <img class="rounded object-fit-cover" t-att-src="message.author.avatarUrl" t-att-title="message.authorName" alt="Avatar" style="width: 20px; height: 20px;"/>
             <span class="ms-1 fw-bold flex-shrink-0">
-                <t t-if="this.message.isSelfAuthored">You</t>
-                <t t-else="" t-out="this.message.authorName"/>:
+                <t t-if="message.isSelfAuthored">You</t>
+                <t t-else="" t-out="message.authorName"/>:
             </span>
-            <span class="text-truncate ms-1" t-att-title="this.bodyText(this.message)" t-out="this.message.bodyPreview"/>
+            <span class="text-truncate ms-1" t-att-title="this.bodyText(message)" t-out="message.bodyPreview"/>
             <span class="flex-grow-1"/>
             <AvatarStack t-if="!this.env.inMessage" containerClass="'ms-1'" personas="this.props.channel.channel_member_ids.map((m) => m.persona)" size="22" spacing="10" total="this.props.channel.member_count"/>
             <span t-elif="this.props.channel.message_count" class="text-primary smaller flex-shrink-0 d-flex fw-bold align-items-center ms-1">
