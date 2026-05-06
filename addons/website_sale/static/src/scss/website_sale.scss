@@ -2093,3 +2093,12 @@ body.modal-open:has(.o_wsale_product_page) {
 .o_wsale_alternative_products:not(:has(.s_dynamic_snippet_row)) {
     display: none;
 }
+
+div[name="order_confirmation"] {
+    .alert {
+        padding: #{$alert-padding-y} #{$alert-padding-x} !important; // TODO remove in master
+        p:last-child {
+            margin-bottom: 0;
+        }
+    }
+}
