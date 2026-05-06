@@ -373,7 +373,7 @@ describe("restaurant pos_store.js", () => {
         store.alert = {
             dismiss: () => {},
         };
-        const result = store.prepareOrderTransfer(order, tableDst);
+        const result = await store.prepareOrderTransfer(order, tableDst);
         expect(result).toBe(false);
         expect(order.table_id).toBe(tableDst);
         expect(store.getOrder()).toBe(order);

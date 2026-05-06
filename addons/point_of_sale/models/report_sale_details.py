@@ -346,6 +346,7 @@ class ReportPoint_Of_SaleReport_Saledetails(models.AbstractModel):
                     payments_per_method[payment['id']]['total'] += payment['total']
                 else:
                     payments_per_method[payment['id']] = {
+                        'id': payment['id'],
                         'name': method_name,
                         'total': payment['total'],
                     }

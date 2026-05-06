@@ -411,6 +411,13 @@ export class PosOrder extends PosOrderAccounting {
         return { childLineFree, childLineExtra };
     }
 
+    removeOrderLines() {
+        const linesToRemove = this.lines.filter((line) => line.canBeRemoved);
+        for (const line of linesToRemove) {
+            this.removeOrderline(line);
+        }
+    }
+
     /**
      * A wrapper around line.delete() that may potentially remove multiple orderlines.
      * In core pos, it removes the linked combo lines. In other modules, it may remove
@@ -720,7 +727,7 @@ export class PosOrder extends PosOrderAccounting {
     }
 
     get floatingOrderName() {
-        return this.floating_order_name || this.tracking_number.toString() || "";
+        return this.floating_order_name || this.tracking_number?.toString() || "";
     }
 
     sortBySequenceAndCategory(a, b) {

@@ -253,7 +253,9 @@ export class PosOrderAccounting extends Base {
      */
     _constructPriceData(opts = {}) {
         const data = this._computeAllPrices(opts);
-        const noDiscount = this._computeAllPrices({ baseLineOpts: { discount: 0.0 }, ...opts });
+        const addedBlOpts = opts.baseLineOpts || {};
+        const ndBaseLineOpts = { ...addedBlOpts, discount: 0.0 };
+        const noDiscount = this._computeAllPrices({ ...opts, baseLineOpts: ndBaseLineOpts });
         const currency = this.currency;
 
         for (const key of Object.keys(data.baseLineByLineUuids)) {

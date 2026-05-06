@@ -82,4 +82,8 @@ patch(ActionpadWidget.prototype, {
         await this.pos.fireCourse(course);
         this.pos.showDefault();
     },
+    async clickNew() {
+        await this.pos.syncAllOrders({ orders: [this.pos.getOrder()] });
+        this.pos.showDefault();
+    },
 });
