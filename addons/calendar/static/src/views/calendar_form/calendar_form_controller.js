@@ -1,6 +1,7 @@
+import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { FormController } from "@web/views/form/form_controller";
+import { useArchiveOrUnlinkCalendarEvent } from "@calendar/views/hooks";
 import { useAskRecurrenceUpdatePolicy } from "@calendar/views/ask_recurrence_update_policy_hook";
-import { useUnlinkCalendarEvent } from "@calendar/views/hooks";
 import { useService } from "@web/core/utils/hooks";
 
 export class CalendarFormController extends FormController {
@@ -8,7 +9,32 @@ export class CalendarFormController extends FormController {
         super.setup();
         this.actionService = useService("action");
         this.askRecurrenceUpdatePolicy = useAskRecurrenceUpdatePolicy();
-        this.unlinkCalendarEvent = useUnlinkCalendarEvent();
+        this.archiveOrUnlinkCalendarEvent = useArchiveOrUnlinkCalendarEvent();
+    }
+
+    /**
+     * This method is meant to be overridden.
+     */
+    shouldUseArchiveWizard() {
+        return true;
+    }
+
+    getStaticActionMenuItems() {
+        const actionMenuItems = super.getStaticActionMenuItems(...arguments);
+        if (actionMenuItems.archive.isAvailable && this.shouldUseArchiveWizard()) {
+            actionMenuItems.archive.callback = async () => {
+                const record = this.model.root;
+                await this.archiveOrUnlinkCalendarEvent({
+                    requestedAction: "archive",
+                    resId: record.resId,
+                    partnerIds: record.data.partner_ids.resIds,
+                    recurrency: record.data.recurrency,
+                    start: record.data.start,
+                    defaultAction: () => this.dialogService.add(ConfirmationDialog, this.archiveDialogProps),
+                });
+            };
+        }
+        return actionMenuItems;
     }
 
     /**
@@ -35,7 +61,8 @@ export class CalendarFormController extends FormController {
         if (rootValues.attendees_count == 1 && rootValues.user_id.id !== rootValues.partner_ids._currentIds[0]) {
             await this._archiveRecord(record);
         } else {
-            await this.unlinkCalendarEvent({
+            await this.archiveOrUnlinkCalendarEvent({
+                requestedAction: "unlink",
                 resId: record.resId,
                 partnerIds: record.data.partner_ids.resIds,
                 recurrency: record.data.recurrency,

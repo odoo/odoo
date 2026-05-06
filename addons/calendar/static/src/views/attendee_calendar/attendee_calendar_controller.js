@@ -2,7 +2,7 @@ import { _t } from "@web/core/l10n/translation";
 import { AttendeeCalendarSidePanel } from "@calendar/views/attendee_calendar/side_panel/attendee_calendar_side_panel";
 import { CalendarController } from "@web/views/calendar/calendar_controller";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { useUnlinkCalendarEvent } from "@calendar/views/hooks";
+import { useArchiveOrUnlinkCalendarEvent } from "@calendar/views/hooks";
 import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
 import { onWillStart } from "@odoo/owl";
@@ -18,7 +18,7 @@ export class AttendeeCalendarController extends CalendarController {
     setup() {
         super.setup();
         this.actionService = useService("action");
-        this.unlinkCalendarEvent = useUnlinkCalendarEvent();
+        this.archiveOrUnlinkCalendarEvent = useArchiveOrUnlinkCalendarEvent();
         this.orm = useService("orm");
         onWillStart(async () => {
             this.isSystemUser = await user.hasGroup("base.group_system");
@@ -93,7 +93,8 @@ export class AttendeeCalendarController extends CalendarController {
             user.partnerId === record.attendeeId &&
             user.partnerId === record.rawRecord.partner_id[0]
         ) {
-            await this.unlinkCalendarEvent({
+            await this.archiveOrUnlinkCalendarEvent({
+                requestedAction: "unlink",
                 resId: record.id,
                 partnerIds: record.rawRecord.partner_ids,
                 recurrency: record.rawRecord.recurrency,

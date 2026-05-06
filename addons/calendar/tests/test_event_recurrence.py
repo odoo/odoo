@@ -762,16 +762,16 @@ class TestUpdateRecurrentEvents(TestRecurrentEvents):
         event = self.events[1]
 
         # Step 1: Use the unlink wizard to unlink the next occurrence of the event.
-        wizard = self.env['calendar.event.unlink.wizard'].with_context(
-            form_view_ref='calendar.calendar_event_unlink_wizard_view_form_recurrence_choice').create({'calendar_event_id': event.id})
+        wizard = self.env['calendar.event.archive.or.unlink.wizard'].with_context(
+            form_view_ref='calendar.calendar_event_archive_or_unlink_wizard_view_form_recurrence_choice').create({'calendar_event_id': event.id})
         form = Form(wizard)
         form.recurrence_choice = 'future_events'
         form.save()
         wizard.action_proceed_recurrence_choice()
 
         # Step 2: Use another unlink wizard to handle the unlinking of the next occurrence.
-        wizard_unlink = self.env['calendar.event.unlink.wizard'].with_context(
-            form_view_ref='calendar.calendar_event_unlink_wizard_view_form',
+        wizard_unlink = self.env['calendar.event.archive.or.unlink.wizard'].with_context(
+            form_view_ref='calendar.calendar_event_archive_or_unlink_wizard_view_form',
             default_recurrence='future_events'
         ).create({'calendar_event_id': event.id})
         form_unlink = Form(wizard_unlink)
@@ -789,16 +789,16 @@ class TestUpdateRecurrentEvents(TestRecurrentEvents):
         event = self.events[1]
 
         # Step 1: Use the unlink wizard to unlink all occurrences of the event.
-        wizard = self.env['calendar.event.unlink.wizard'].with_context(
-            form_view_ref='calendar.calendar_event_unlink_wizard_view_form_recurrence_choice').create({'calendar_event_id': event.id})
+        wizard = self.env['calendar.event.archive.or.unlink.wizard'].with_context(
+            form_view_ref='calendar.calendar_event_archive_or_unlink_wizard_view_form_recurrence_choice').create({'calendar_event_id': event.id})
         form = Form(wizard)
         form.recurrence_choice = 'all_events'
         form.save()
         wizard.action_proceed_recurrence_choice()
 
         # Step 2: Use another unlink wizard to handle the unlinking of the event recurrence.
-        wizard_unlink = self.env['calendar.event.unlink.wizard'].with_context(
-            form_view_ref='calendar.calendar_event_unlink_wizard_view_form',
+        wizard_unlink = self.env['calendar.event.archive.or.unlink.wizard'].with_context(
+            form_view_ref='calendar.calendar_event_archive_or_unlink_wizard_view_form',
             default_recurrence='all_events'
         ).create({'calendar_event_id': event.id})
         form_unlink = Form(wizard_unlink)

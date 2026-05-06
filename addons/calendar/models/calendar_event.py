@@ -1151,19 +1151,21 @@ class CalendarEvent(models.Model):
             new_event.write({'partner_ids': [(Command.set(old_event.partner_ids.ids))]})
         return new_events
 
-    def action_open_unlink_wizard(self, next_action=None, recurrence_choice=None):
+    def action_open_archive_or_unlink_wizard(self, requested_action, next_action=None, recurrence_choice=None, send_email=True):
         """
-        This method allows users to manage some actions related to the deletion from the frontend. If the event belongs to a recurrence,
-        then it shows a form offering to select which event of this one must be deleted. If needed, it displays a wizard to approve the
-        sending of the cancellation emails to the attendees. This wizard also allows to edit the cancellation email if only one event has
-        been selected.
+        This method allows users to manage some actions related to the archiving or deletion from the frontend. If the event belongs to a recurrence,
+        then it shows a form offering to select which event of this one must be archived or deleted. If needed, it displays a wizard to approve the
+        sending of the cancellation emails to the attendees. This wizard also allows to edit the cancellation email if only one event has been selected.
 
-        :param next_action: The action to perform once the events are unlink
-        :param recurrence_choice: The value specifying which events of the selected event's recurrence must be unlinked. The value can be any of the fallowing:
+        :param requested_action: The action requested from the interface triggering the method and can be "archive" or "unlink"
+        :param next_action: The action to perform once the events are unlinked or archived
+        :param recurrence_choice: The value specifying which events of the selected event's recurrence must be archived or unlinked
+            The value can be any of the fallowing:
             - 'self_only' or None if the "Select Recurring events" has not be submitted: only the selected event
             - 'future_events': the selected event and future ones
             - 'all_events': all events in the recurrence
-        :return: Action to unlink the event(s)
+        :param send_email: If false, the method performs directly the action requested from the interface and do not offer to send cancellation emails
+        :return: Action to archive or unlink the event(s)
         """
         if not next_action:
             next_action = {'type': 'ir.actions.client', 'tag': 'soft_reload'}
@@ -1173,50 +1175,57 @@ class CalendarEvent(models.Model):
 
         if (
             self.user_id._has_any_active_synchronization()
-            # Prevent uninking a recurring event without displaying the "Delete Recurring Events" form
-            # and specifying which events of the recurrence must be unlinked.
+            # Prevent archiving or unlinking a recurring event without displaying the "Select Recurring Events" form
+            # and specifying which events of the recurrence must be archived or unlinked.
             and not (len(self.ids) == 1 and self.recurrency and not recurrence_choice)
+            or not send_email
         ):
-            self._unlink_with_sync_and_recurrence_check(recurrence_choice)
+            if requested_action == 'archive':
+                self.write({'active': False})
+            elif requested_action == 'unlink':
+                self._unlink_with_sync_and_recurrence_check(recurrence_choice)
             return next_action
 
-        action_open_unlink_wizard = {
+        action_open_archive_or_unlink_wizard = {
             'type': 'ir.actions.act_window',
             'views': [(False, 'form')],
             'target': 'new',
         }
         if len(self) > 1:
-            action_open_unlink_wizard.update({
-                'name': _('Delete Events'),
-                'res_model': 'calendar.event.multi.unlink.wizard',
+            action_open_archive_or_unlink_wizard.update({
+                'name': _('Notify attendees'),
+                'res_model': 'calendar.event.multi.archive.or.unlink.wizard',
                 'context': {
                     'default_calendar_event_ids': self.ids,
+                    'default_requested_action': requested_action,
                     'dialog_size': 'small',
                     'next_action': next_action,
                 },
             })
-        elif self.recurrency and not recurrence_choice:
-            action_open_unlink_wizard.update({
-                'name': _('Delete Recurring Event'),
-                'res_model': 'calendar.event.unlink.wizard',
+        elif self.recurrency and not recurrence_choice and requested_action:
+            action_open_archive_or_unlink_wizard.update({
+                'name': _('Select Recurring Event'),
+                'res_model': 'calendar.event.archive.or.unlink.wizard',
                 'context': {
                     'default_calendar_event_id': self.id,
-                    'form_view_ref': 'calendar.calendar_event_unlink_wizard_view_form_recurrence_choice',
+                    'default_requested_action': requested_action,
+                    'form_view_ref': 'calendar.calendar_event_archive_or_unlink_wizard_view_form_recurrence_choice',
                     'next_action': next_action,
                 },
             })
         else:
-            action_open_unlink_wizard.update({
-                'name': _('Delete Event'),
-                'res_model': 'calendar.event.unlink.wizard',
+            action_open_archive_or_unlink_wizard.update({
+                'name': _('Notify attendees'),
+                'res_model': 'calendar.event.archive.or.unlink.wizard',
                 'context': {
                     'default_calendar_event_id': self.id,
                     'default_recurrence_choice': recurrence_choice,
-                    'form_view_ref': 'calendar.calendar_event_delete_unlink_view_form',
+                    'default_requested_action': requested_action,
+                    'form_view_ref': 'calendar.calendar_event_archive_or_unlink_wizard_view_form',
                     'next_action': next_action,
                 },
             })
-        return action_open_unlink_wizard
+        return action_open_archive_or_unlink_wizard
 
     def _mail_get_operation_for_mail_message_operation(self, message_operation):
         # reading messages on private events requires write access, not just read access

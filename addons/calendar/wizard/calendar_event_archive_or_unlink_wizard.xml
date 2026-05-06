@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
-    <record id="calendar_event_unlink_wizard_view_form_recurrence_choice" model="ir.ui.view">
-        <field name="name">calendar.event.unlink.wizard.view.form.recurrence.choice</field>
-        <field name="model">calendar.event.unlink.wizard</field>
+    <record id="calendar_event_archive_or_unlink_wizard_view_form_recurrence_choice" model="ir.ui.view">
+        <field name="name">calendar.event.archive.or.unlink.wizard.view.form.recurrence.choice</field>
+        <field name="model">calendar.event.archive.or.unlink.wizard</field>
         <field name="arch" type="xml">
             <form string="Select Recurring Events">
                 <field name="recurrence_choice" widget="radio"/>
@@ -14,14 +14,15 @@
         </field>
     </record>
 
-    <record id="calendar_event_unlink_wizard_view_form" model="ir.ui.view">
-        <field name="name">calendar.event.unlink.wizard.view.form</field>
-        <field name="model">calendar.event.unlink.wizard</field>
+    <record id="calendar_event_archive_or_unlink_wizard_view_form" model="ir.ui.view">
+        <field name="name">calendar.event.archive.or.unlink.wizard.view.form</field>
+        <field name="model">calendar.event.archive.or.unlink.wizard</field>
         <field name="arch" type="xml">
-            <form string="Delete Event">
+            <form string="Archive or Delete Event">
                 <field name="calendar_event_id" invisible="1"/>
                 <div col="2" class="alert alert-warning" role="alert">
-                    <span>Are you sure you want to delete this event? <br/></span>
+                    <span invisible="requested_action != 'unlink'">Are you sure you want to delete this event?</span>
+                    <span invisible="requested_action != 'archive'">Are you sure you want to archive this event?</span>
                 </div>
                 <group col="2">
                     <field name="recipient_ids"
@@ -39,10 +40,22 @@
                     <button string="Send and delete"
                             name="action_send_mail_and_unlink"
                             type="object"
+                            invisible="requested_action != 'unlink'"
                             class="btn-primary o_cw_send_notify_delete"/>
                     <button string="Delete"
                             name="action_unlink"
                             type="object"
+                            invisible="requested_action != 'unlink'"
+                            class="btn-primary mx-1"/>
+                    <button string="Send and archive"
+                            name="action_send_mail_and_archive"
+                            type="object"
+                            invisible="requested_action != 'archive'"
+                            class="btn-primary"/>
+                    <button string="Archive"
+                            name="action_archive"
+                            type="object"
+                            invisible="requested_action != 'archive'"
                             class="btn-primary mx-1"/>
                     <button class="btn-secondary"
                             special="cancel"/>

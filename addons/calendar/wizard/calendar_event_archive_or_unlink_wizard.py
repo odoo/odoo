@@ -4,10 +4,10 @@ from odoo import api, fields, models
 from odoo.orm.decorators import readonly
 
 
-class CalendarEventUnlinkWizard(models.TransientModel):
-    _name = 'calendar.event.unlink.wizard'
+class CalendarEventArchiveOrUnlinkWizard(models.TransientModel):
+    _name = 'calendar.event.archive.or.unlink.wizard'
     _inherit = ['mail.composer.mixin']
-    _description = 'Calendar Event Unlink Wizard'
+    _description = 'Calendar Event Archive Or Unlink Wizard'
 
     calendar_event_id = fields.Many2one('calendar.event', 'Calendar Event', required=True)
     recipient_ids = fields.Many2many(
@@ -17,10 +17,14 @@ class CalendarEventUnlinkWizard(models.TransientModel):
         readonly=False,
     )
     recurrence_choice = fields.Selection([
-        ('self_only', 'Delete this event'),
-        ('future_events', 'Delete this and following events'),
-        ('all_events', 'Delete all the events'),
+        ('self_only', 'This event'),
+        ('future_events', 'This and following events'),
+        ('all_events', 'All the events'),
     ], default='self_only')
+    requested_action = fields.Selection([
+        ('archive', 'archive'),
+        ('unlink', 'delete'),
+    ], default='archive', required=True)
     template_id = fields.Many2one(compute='_compute_template_id')
 
     @api.depends('calendar_event_id')
@@ -54,22 +58,33 @@ class CalendarEventUnlinkWizard(models.TransientModel):
                 options={'post_process': True},
             )[wizard.calendar_event_id.id]
 
+    def action_archive(self):
+        self.ensure_one()
+        self._get_calendar_events().write({'active': False})
+        return self.env.context.get('next_action')
+
     def action_proceed_recurrence_choice(self):
+        wizard_parameters = {
+            'next_action': self.env.context.get('next_action'),
+            'requested_action': self.requested_action,
+        }
         # Return if there are multiple attendees or if the organizer's partner_id differs.
         if self.calendar_event_id.attendees_count != 1 or self.calendar_event_id.user_id.partner_id != self.calendar_event_id.partner_ids:
-            return self.calendar_event_id.action_open_unlink_wizard(self.env.context.get('next_action'), self.recurrence_choice)
-        return self.action_unlink()
+            return self.calendar_event_id.action_open_archive_or_unlink_wizard(
+                recurrence_choice=self.recurrence_choice,
+                **wizard_parameters
+            )
+        return self._get_calendar_events().action_open_archive_or_unlink_wizard(send_email=False, **wizard_parameters)
+
+    def action_send_mail_and_archive(self):
+        self.ensure_one()
+        self._send_mail()
+        return self.action_archive()
 
     def action_send_mail_and_unlink(self):
         """Send the composed email and delete the event based on the specified deletion type."""
         self.ensure_one()
-        self.calendar_event_id.sudo().message_notify(
-            body=self.body,
-            email_from=self.env.user.email_formatted,
-            email_layout_xmlid='mail.mail_notification_light',
-            partner_ids=self.recipient_ids.ids,
-            subject=self.subject,
-        )
+        self._send_mail()
         return self.action_unlink()
 
     def action_unlink(self):
@@ -81,3 +96,21 @@ class CalendarEventUnlinkWizard(models.TransientModel):
         self.ensure_one()
         self.calendar_event_id._unlink_with_sync_and_recurrence_check(self.recurrence_choice)
         return self.env.context.get('next_action')
+
+    def _get_calendar_events(self):
+        if self.recurrence_choice in ['self_only', False]:
+            return self.calendar_event_id
+        elif self.recurrence_choice == 'future_events':
+            return self.calendar_event_id.recurrence_id.calendar_event_ids.filtered(lambda event: event.start >= self.calendar_event_id.start)
+        elif self.recurrence_choice == 'all_events':
+            return self.calendar_event_id.recurrence_id.calendar_event_ids
+
+    def _send_mail(self):
+        self.ensure_one()
+        self.calendar_event_id.sudo().message_notify(
+            body=self.body,
+            email_from=self.env.user.email_formatted,
+            email_layout_xmlid='mail.mail_notification_light',
+            partner_ids=self.recipient_ids.ids,
+            subject=self.subject,
+        )
