@@ -12,7 +12,7 @@ const messagePatch = {
     canReplyTo(thread) {
         return (
             super.canReplyTo(thread) &&
-            (thread?.channel_type !== "livechat" || !thread.composerDisabled)
+            (this.thread?.channel_type !== "livechat" || !this.thread.composerDisabled)
         );
     },
     isTranslatable(thread) {

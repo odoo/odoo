@@ -643,6 +643,7 @@ export class Store extends BaseStore {
             mentionedChannels,
             mentionedPartners,
             mentionedRoles,
+            message_id,
         } = postData;
         const subtype = isNote ? "mail.mt_note" : "mail.mt_comment";
         const validMentions = this.getMentionsFromText(body, {
@@ -671,6 +672,7 @@ export class Store extends BaseStore {
             email_add_signature: emailAddSignature,
             message_type: "comment",
             subtype_xmlid: subtype,
+            message_id,
         };
         if (attachments.length) {
             postData.attachment_ids = attachments.map(({ id }) => id);

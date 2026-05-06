@@ -13,17 +13,18 @@ class MailboxController(http.Controller):
         messages = res.pop("messages")
         # sudo: bus.bus: reading non-sensitive last id
         bus_last_id = request.env["bus.bus"].sudo()._bus_last_id()
-        store = Store().add(
-            messages,
-            extra_fields=[
-                Store.One("thread", [
+        store = Store().add(messages, extra_fields=["message_id"], add_followers=True)
+        for records in messages._records_by_model_name().values():
+            store.add(
+                records,
+                [
                     # sudo: mail.thread: users can read their own message_needaction_counter on the thread
                     Store.Attr("message_needaction_counter", sudo=True),
-                    Store.Attr("message_needaction_counter_bus_id", bus_last_id)
-                ], as_thread=True)
-            ],
-            add_followers=True
-        )
+                    Store.Attr("message_needaction_counter_bus_id", bus_last_id),
+                ],
+                request_list=[],
+                as_thread=True,
+            )
         return {
             **res,
             "data": store.get_result(),
@@ -35,9 +36,12 @@ class MailboxController(http.Controller):
         domain = [("needaction", "=", False)]
         res = request.env["mail.message"]._message_fetch(domain, **(fetch_params or {}))
         messages = res.pop("messages")
+        store = Store().add(messages)
+        for records in messages._records_by_model_name().values():
+            store.add(records, request_list=[], as_thread=True)
         return {
             **res,
-            "data": Store().add(messages).get_result(),
+            "data": store.get_result(),
             "messages": messages.ids,
         }
 

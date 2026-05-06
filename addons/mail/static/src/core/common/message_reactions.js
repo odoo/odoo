@@ -31,4 +31,8 @@ export class MessageReactions extends Component {
             },
         });
     }
+
+    get addReactionAction() {
+        return this.messageActions.actions.find((action) => action.id === "reaction");
+    }
 }
