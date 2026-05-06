@@ -382,8 +382,10 @@ export function useProgressBar(progressAttributes, model, aggregateFields, activ
     model.hooks.onRootLoaded = async (root) => {
         await onRootLoaded(root);
         if (model.isReady()) {
-            // do not wait for the progressbar on first load, to show the kanban view asap
-            return prom;
+            // Do not block the re-render on the progress bar RPC so that the view
+            // (including search facets) updates immediately. A second notify() is
+            // triggered once the progress bar data arrives.
+            prom.then(() => model.notify());
         }
     };
 
