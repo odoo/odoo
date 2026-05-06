@@ -30,6 +30,8 @@ export class MegaMenuOptionPlugin extends Plugin {
                 return false;
             }
         },
+        content_editable_selectors:
+            ".s_mega_menu_thumbnails_footer, .s_mega_menu_menus_logos_wrapper",
     };
 
     getTemplatePrefix() {
