@@ -117,7 +117,7 @@
             <div class="container py-5">
                 <div t-attf-class="card border-0 mx-auto bg-100 {{login_card_classes}} o_database_list" style="max-width: 300px;">
                     <div class="card-body">
-                        <div class="text-center pb-3 border-bottom mb-4">
+                        <div class="text-center pb-3 border-bottom mb-4" t-if="not res_company.uses_default_logo">
                             <img t-attf-src="/web/binary/company_logo{{ '?dbname='+db if db else '' }}" alt="Logo" style="max-height:120px; max-width: 100%; width:auto"/>
                         </div>
                         <t t-out="0"/>
