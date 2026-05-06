@@ -704,3 +704,17 @@ class TestL10nPlEdi(AccountTestInvoicingCommon, CronMixinCase):
             invoice = self.env['account.move'].create(invoice_data)
         self.assertEqual(invoice.partner_id.name, "LU Company")
         self.assertIn("7492091229", invoice.partner_id.vat)
+
+    @freeze_time('2026-01-23')
+    def test_ksef_export_vat_without_country_code(self):
+        """ Ensure VAT numbers do not include the country code in NrVatUE/NrID fields """
+        # non-Polish VAT
+        foreign_partner = self.partner_a.copy({'vat': 'GB298357641'})
+        invoice = self._create_invoice(partner_id=foreign_partner.id, post=True)
+        xml = invoice._l10n_pl_edi_render_xml()
+        self.assertEqual(self._get_xml_value(xml, "//ns:Podmiot2/ns:DaneIdentyfikacyjne/ns:NrID"), '298357641')
+
+        # Polish VAT
+        invoice = self._create_invoice(partner_id=self.partner_pl.id, post=True)
+        xml = invoice._l10n_pl_edi_render_xml()
+        self.assertEqual(self._get_xml_value(xml, "//ns:Podmiot2/ns:DaneIdentyfikacyjne/ns:NIP"), '1111111111')
