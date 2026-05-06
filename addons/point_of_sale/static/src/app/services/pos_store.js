@@ -1929,14 +1929,14 @@ export class PosStore extends WithLazyGetterTrap {
 
                 let shouldPrint = true;
                 if (!hasChanges) {
-                    if (opts.explicitReprint && order.uiState.lastPrints) {
-                        orderChange = [order.uiState.lastPrints.at(-1)];
+                    if (opts.explicitReprint && order.lastPrints.length) {
+                        orderChange = [order.lastPrints.at(-1)];
                         reprint = true;
                     } else {
                         shouldPrint = false;
                     }
                 } else {
-                    order.uiState.lastPrints.push(orderChange);
+                    order.pushLastPrints(orderChange);
                     orderChange = [orderChange];
                 }
 
