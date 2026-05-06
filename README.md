@@ -1,4 +1,4 @@
-<h1>Proyecto: SCRUM y DevOps aplicado a Odoo</h1>
+
 
 <h2>1. Información del Equipo</h2>
 <ul>
