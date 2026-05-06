@@ -362,3 +362,27 @@ test("Click reply to note again preserves composer content", async () => {
     );
     expect(editor.editable.textContent).toBe("\uFEFF@Batman\uFEFF\u00A0Strong Text");
 });
+
+test("preserve the link formatting for message in reply", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    const messageId = pyEnv["mail.message"].create({
+        body: `<p>Test Message <a href="https://odoo.com/">https://odoo.com/</a></p>`,
+        message_type: "comment",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    pyEnv["mail.message"].create({
+        body: "Message in Reply",
+        message_type: "comment",
+        model: "discuss.channel",
+        author_id: serverState.partnerId,
+        parent_id: messageId,
+        res_id: channelId,
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-Message", { count: 2 });
+    await contains(`.o-mail-Message-richBody a[href="https://odoo.com/"]`);
+    await contains(`.o-mail-MessageInReply-message a[href="https://odoo.com/"]`);
+});

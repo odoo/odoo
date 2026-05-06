@@ -1,4 +1,4 @@
-import { addLink, parseAndTransform } from "@mail/utils/common/format";
+import { addLink, htmlToHtmlInline, parseAndTransform } from "@mail/utils/common/format";
 import { useSequential } from "@mail/utils/common/hooks";
 import {
     contains,
@@ -238,4 +238,14 @@ test("isSequential doesn't execute intermediate call.", async () => {
     const result = await Promise.all([sequence(), sequence(), sequence(), sequence(), sequence()]);
     expect(result).toEqual([1, undefined, undefined, undefined, 5]);
     expect.verifySteps(["1", "5"]);
+});
+
+test("htmlToHtmlInline replaces br with spaces", () => {
+    expect(htmlToHtmlInline(markup`a<br/>b`).toString()).toBe("a\u00a0b");
+});
+
+test("htmlToHtmlInline inserts spaces between adjacent block elements", () => {
+    expect(htmlToHtmlInline(markup`<div>Before</div><p>After</p>`).toString()).toBe(
+        "Before\u00a0After"
+    );
 });
