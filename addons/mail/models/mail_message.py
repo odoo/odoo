@@ -22,6 +22,7 @@ _logger = logging.getLogger(__name__)
 _image_dataurl = re.compile(r'(data:image/[a-z]+?);base64,([a-z0-9+/\n]{3,}=*)\n*([\'"])(?: data-filename="([^"]*)")?', re.I)
 
 MAX_COMODELS_FOR_DOMAIN = 5
+SHARE_DOMAIN = Domain("is_internal", "=", False) & Domain("subtype_id.internal", "=", False)
 
 
 def exists_in_cache(records, *, hint_field=''):
@@ -477,7 +478,7 @@ class MailMessage(models.Model):
     def _get_search_domain_share(self):
         if self.env.user._is_internal():
             return Domain.TRUE
-        return Domain('is_internal', '=', False) & Domain('subtype_id.internal', '=', False)
+        return SHARE_DOMAIN
 
     def _check_access(self, operation: str) -> tuple | None:
         """ Access rules of mail.message:
