@@ -285,14 +285,44 @@ class PurchaseOrderLine(models.Model):
         location_final = self.location_final_id or self.order_id._get_final_location_record()
         if location_final and location_final._child_of(location_dest):
             location_dest = location_final
+        # Align the new move with an open pending move on the same picking
+        # so ``_merge_moves`` can absorb a negative leftover produced on a
+        # quantity decrease, instead of letting ``_action_confirm`` convert
+        # it into a spurious return. Two fields are realigned:
+        #
+        # * ``location_dest_id``: the user may have rerouted the pending
+        #   move to a sub-location of the final destination (e.g. a
+        #   reception bay), and the merge would otherwise fail on this
+        #   distinct field.
+        # * ``price_unit``: the unit price on the line may have been edited
+        #   between the creation of the pending move and this call (e.g.
+        #   external integrations writing ``product_qty`` and ``price_unit``
+        #   in separate calls), and the merge would otherwise fail on this
+        #   distinct field.
+        # * ``date`` and ``date_deadline``: writing ``product_qty`` alone
+        #   retriggers ``_compute_price_unit_and_date_planned_and_name``
+        #   (which depends on ``product_qty``). When no seller matches the
+        #   new quantity (typically ``product_qty=0``), the compute resets
+        #   ``line.date_planned`` to the order-level default. The new move
+        #   then inherits the drifted date and the merge fails on
+        #   ``date_deadline``.
+        candidate = self.move_ids.filtered(
+            lambda m: m.picking_id == picking
+            and m.state not in ('done', 'cancel')
+            and not m._is_purchase_return()
+        )[:1]
+        if candidate:
+            if candidate.location_dest_id and location_final and candidate.location_dest_id._child_of(location_final):
+                location_dest = candidate.location_dest_id
+            price_unit = candidate.price_unit
         date_planned = self.date_planned or self.order_id.date_planned
         return {
             # truncate to 2000 to avoid triggering index limit error
             # TODO: remove index in master?
             'name': (self.product_id.display_name or '')[:2000],
             'product_id': self.product_id.id,
-            'date': date_planned,
-            'date_deadline': date_planned,
+            'date': candidate.date if candidate else date_planned,
+            'date_deadline': candidate.date_deadline if candidate else date_planned,
             'location_id': self.order_id.partner_id.property_stock_supplier.id,
             'location_dest_id': location_dest.id,
             'location_final_id': location_final.id,
