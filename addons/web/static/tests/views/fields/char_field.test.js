@@ -91,6 +91,8 @@ class Partner extends models.Model {
 }
 
 class PartnerType extends models.Model {
+    _name = "partner.type";
+
     color = fields.Integer({ string: "Color index" });
     name = fields.Char({ string: "Partner Type" });
 
@@ -934,4 +936,61 @@ test("edit a char field should display the status indicator buttons without flic
         message: "form view is dirty",
     });
     expect.verifySteps(["onchange"]);
+});
+
+test("translating a char field inside one2many saves the parent record", async () => {
+    Partner._fields.type_id = fields.Many2one({
+        relation: "partner.type",
+    });
+    PartnerType._fields.partner_ids = fields.One2many({
+        string: "Partners",
+        relation: "res.partner",
+        relation_field: "type_id",
+    });
+    Partner._fields.name.translate = true;
+
+    PartnerType._records[0].partner_ids = [1];
+
+    serverState.lang = "en_US";
+    serverState.multiLang = true;
+
+    onRpc("res.lang", "get_installed", () => [
+        ["en_US", "English"],
+        ["fr_BE", "French (Belgium)"],
+    ]);
+
+    onRpc("res.partner", "get_field_translations", () => [
+        [
+            { lang: "en_US", source: "move things", value: "move things" },
+            { lang: "fr_BE", source: "move things", value: "breakfast" },
+        ],
+        {
+            translation_type: "char",
+            translation_show_source: false,
+        },
+    ]);
+
+    onRpc("web_save", ({ model }) => {
+        expect.step(model);
+    });
+
+    await mountView({
+        type: "form",
+        resModel: "partner.type",
+        resId: 12,
+        arch: `
+        <form>
+            <field name="partner_ids">
+                <list editable="bottom">
+                    <field name="name"/>
+                </list>
+            </field>
+        </form>`,
+    });
+
+    await contains(".o_list_char").click();
+    await fieldInput("name").edit("move things", { confirm: false });
+    await contains(".o_selected_row .o_field_char .btn.o_field_translate").click();
+
+    expect.verifySteps(["partner.type"]);
 });
