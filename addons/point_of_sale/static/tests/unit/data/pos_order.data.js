@@ -52,6 +52,12 @@ export class PosOrder extends models.ServerModel {
     }
 
     sync_from_ui(data) {
+        for (const order of data) {
+            if (order.to_invoice) {
+                order.invoice_status = "invoiced";
+            }
+        }
+
         const orderIds = [];
         for (const record of data) {
             record.write_date = DateTime.now().toFormat("yyyy-MM-dd HH:mm:ss");
