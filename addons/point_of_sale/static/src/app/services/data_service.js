@@ -48,9 +48,7 @@ export class PosData {
         // Used by the beforeunload guard to prevent data loss on accidental page close/reload.
         this.localUnsyncedPaidOrderUuids = new Set();
 
-        if (!navigator.onLine) {
-            await this.checkConnectivity();
-        }
+        await this.checkConnectivity();
 
         this.initializeWebsocket();
         await this.initializeDeviceIdentifier();
