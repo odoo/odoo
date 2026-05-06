@@ -1,5 +1,5 @@
-import { useExternalListener, useRef, useState } from "@web/owl2/utils";
-import { Component, useEffect } from "@odoo/owl";
+import { useExternalListener, useLayoutEffect, useRef, useState } from "@web/owl2/utils";
+import { Component } from "@odoo/owl";
 
 export class MobileTablePicker extends Component {
     static template = "html_editor.MobileTablePicker";
@@ -18,7 +18,7 @@ export class MobileTablePicker extends Component {
         });
         this.rowCountRef = useRef("rowCount");
         this.columnCountRef = useRef("columnCount");
-        useEffect(
+        useLayoutEffect(
             (el) => {
                 if (el) {
                     el.focus();

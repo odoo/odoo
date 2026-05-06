@@ -1,7 +1,7 @@
 <templates id="template" xml:space="preserve">
     <t t-name="point_of_sale.OrderDetailsDialog">
         <Dialog size="'md'" title="this.title">
-            <t t-set="order" t-value="props.order"/>
+            <t t-set="order" t-value="this.props.order"/>
             <div class="d-flex flex-column gap-3 rounded-2">
                 <div class="card border bg-secondary-subtle rounded-2 pb-2">
                     <div class="card-header bg-secondary-subtle border-0 pt-2 pb-0 px-3">
@@ -11,18 +11,18 @@
                                 <h5>Order Info</h5>
                             </div>
                             <div class="d-flex position-absolute top-0 end-0">
-                                <span class="o_tag position-relative d-inline-flex align-items-center user-select-none mw-100 o_badge badge lh-1" t-attf-class="o_tag_color_{{states[order.state].color}}">
-                                    <div class="o_tag_badge_text o_badge_text" t-out="states[order.state].label"/>
+                                <span class="o_tag position-relative d-inline-flex align-items-center user-select-none mw-100 o_badge badge lh-1" t-attf-class="o_tag_color_{{this.states[order.state].color}}">
+                                    <div class="o_tag_badge_text o_badge_text" t-out="this.states[order.state].label"/>
                                 </span>
                             </div>
                         </div>
                     </div>
                     <div class="px-3">
                         <div class="row g-3">
-                            <t t-foreach="getOrderFields()" t-as="field" t-key="field.id">
+                            <t t-foreach="this.getOrderFields()" t-as="field" t-key="field.id">
                                 <div class="col-sm-6 d-flex field-details flex-column" t-if="field.condition">
-                                    <div class="text-muted small" t-esc="field.label"/>
-                                    <div class="fw-medium" t-esc="field.value"/>
+                                    <div class="text-muted small" t-out="field.label"/>
+                                    <div class="fw-medium" t-out="field.value"/>
                                 </div>
                             </t>
                         </div>
@@ -40,10 +40,10 @@
                     </div>
                     <div class="px-3">
                         <div class="row g-3">
-                            <t t-foreach="getCustomerFields()" t-as="field" t-key="field.id">
+                            <t t-foreach="this.getCustomerFields()" t-as="field" t-key="field.id">
                                 <div class="col-sm-6 d-flex field-details flex-column" t-if="field.condition">
-                                    <div class="text-muted small" t-esc="field.label"/>
-                                    <div class="fw-medium" t-esc="field.value"/>
+                                    <div class="text-muted small" t-out="field.label"/>
+                                    <div class="fw-medium" t-out="field.value"/>
                                 </div>
                             </t>
                         </div>
@@ -58,11 +58,11 @@
                                     <i class="fa fa-credit-card fs-6 mb-2 me-1" aria-hidden="true"/>
                                     <h5>Payment Info</h5>
                                 </div>
-                                <p class="h2 text-success" t-out="formatCurrency(order.amount_total)"/>
+                                <p class="h2 text-success" t-out="this.formatCurrency(order.amount_total)"/>
                             </div>
-                            <button t-if="pos.canEditPayment(order)" t-on-click="props.editPayment" class="btn btn-secondary d-flex align-items-center justify-content-center position-absolute top-0 end-0 bg-secondary-subtle">
+                            <button t-if="this.pos.canEditPayment(order)" t-on-click="this.props.editPayment" class="btn btn-secondary d-flex align-items-center justify-content-center position-absolute top-0 end-0 bg-secondary-subtle">
                                 <i class="fa fa-pencil me-1" aria-hidden="true"/>
-                                <span t-if="!ui.isSmall">Edit Payment</span>
+                                <span t-if="!this.ui.isSmall">Edit Payment</span>
                             </button>
                         </div>
                     </div>
@@ -71,9 +71,9 @@
                         <div class="col-4 text-muted small text-center">Mode</div>
                         <div class="col-4 text-muted small text-center">Amount</div>
                         <t t-foreach="order.payment_ids" t-as="payment" t-key="payment.id">
-                            <div class="col-4 fw-medium text-center" t-esc="formatDateTime(payment.payment_date) or ''"/>
-                            <div class="col-4 fw-medium text-center" t-esc="payment.payment_method_id?.name or ''"/>
-                            <div class="col-4 fw-medium text-center" t-esc="payment.amount ? formatCurrency(payment.amount) : ''"/>
+                            <div class="col-4 fw-medium text-center" t-out="this.formatDateTime(payment.payment_date) or ''"/>
+                            <div class="col-4 fw-medium text-center" t-out="payment.payment_method_id?.name or ''"/>
+                            <div class="col-4 fw-medium text-center" t-out="payment.amount ? this.formatCurrency(payment.amount) : ''"/>
                         </t>
                     </div>
                 </div>

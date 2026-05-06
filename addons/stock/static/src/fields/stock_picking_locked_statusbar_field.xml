@@ -2,8 +2,8 @@
 <templates xml:space="preserve">
     <!-- Display a "lock/unlock" icon for the picking in the done and cancelled states -->
     <t t-name="stock.PickingLockedStatusBarField.ItemLabel">
-        <span t-out="item.label"/>
-        <t t-if="['done', 'cancel'].includes(item.value) and item.isSelected">
+        <span t-out="this.item.label"/>
+        <t t-if="['done', 'cancel'].includes(this.item.value) and this.item.isSelected">
             <i t-attf-class="fa fa-fw ms-1 #{this.isLocked ? 'fa-lock text-success' : 'fa-unlock text-warning'}"/>
         </t>
     </t>

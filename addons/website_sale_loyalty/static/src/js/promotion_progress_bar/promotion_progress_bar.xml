@@ -5,17 +5,17 @@
         <div class="pb-2 mt-2">
             <div class="d-flex justify-content-between mb-1">
                 <small
-                    t-attf-class="fw-bold #{props.progress === 100 ? 'text-success' : ''}"
-                    t-out="props.reward_name"
+                    t-attf-class="fw-bold #{this.props.progress === 100 ? 'text-success' : ''}"
+                    t-out="this.props.reward_name"
                 />
-                <small t-out="getFormattedMinAmount()"/>
+                <small t-out="this.getFormattedMinAmount()"/>
             </div>
             <div class="progress" style="height: 8px; border-radius: var(--btn-border-radius);">
                 <div
-                    t-attf-class="progress-bar #{props.progress === 100 ? 'bg-success' : ''}"
+                    t-attf-class="progress-bar #{this.props.progress === 100 ? 'bg-success' : ''}"
                     role="progressbar"
-                    t-attf-style="width: #{props.progress}%; border-radius: inherit; #{props.progress === 100 ? '' : 'color: inherit; background-color: currentColor;'}"
-                    t-att-aria-valuenow="props.progress"
+                    t-attf-style="width: #{this.props.progress}%; border-radius: inherit; #{this.props.progress === 100 ? '' : 'color: inherit; background-color: currentColor;'}"
+                    t-att-aria-valuenow="this.props.progress"
                     aria-valuemin="0"
                     aria-valuemax="100"
                 />

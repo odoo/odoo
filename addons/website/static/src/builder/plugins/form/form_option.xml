@@ -21,7 +21,7 @@
     <BuilderRow label.translate="Marker" level="1">
         <BuilderTextInput action="'setMark'" default="''" t-if="this.isActiveItem('form_required_opt') || this.isActiveItem('form_optional_opt')"/>
     </BuilderRow>
-    <BuilderRow t-if="canChangeFieldsLayout" label.translate="Labels Position">
+    <BuilderRow t-if="this.canChangeFieldsLayout" label.translate="Labels Position">
         <BuilderButtonGroup action="'selectLabelsPosition'">
             <BuilderButton title.translate="Hide" actionValue="'none'" id="'label_position_hide_opt'">
                 <i class="fa fa-eye-slash"/>
@@ -31,7 +31,7 @@
             <BuilderButton ltrRtlMapping="'left-right'" title.translate="Right" actionValue="'right'" iconImg="'/website/static/src/img/snippets_options/pos_right.svg'"/>
         </BuilderButtonGroup>
     </BuilderRow>
-    <BuilderRow label.translate="Labels Width" level="1" t-if="!isActiveItem('label_position_hide_opt') and !isActiveItem('label_position_top_opt')">
+    <BuilderRow label.translate="Labels Width" level="1" t-if="!this.isActiveItem('label_position_hide_opt') and !this.isActiveItem('label_position_top_opt')">
         <BuilderNumberInput
             styleAction="'width'"
             unit="'px'" applyTo="'[data-name=Field]:not(.s_website_form_dnone) .s_website_form_label'"/>
@@ -171,7 +171,7 @@
     </BuilderRow>
     <BuilderRow label.translate="Label">
         <BuilderTextInput action="'setLabelText'" default="this.domState.fieldTranslatedName"/>
-        <BuilderButton title.translate="Hide" action="'toggleCheckboxLabel'" t-if="isActiveItem('custom_field_boolean_opt')" icon="'fa-eye-slash'" preview="false"/>
+        <BuilderButton title.translate="Hide" action="'toggleCheckboxLabel'" t-if="this.isActiveItem('custom_field_boolean_opt')" icon="'fa-eye-slash'" preview="false"/>
     </BuilderRow>
     <BuilderRow label.translate="Required">
         <BuilderCheckbox t-if="!this.domState.elClassList.includes('s_website_form_model_required')"
@@ -185,7 +185,7 @@
     </BuilderRow>
     <BuilderRow label.translate="Description" tooltip.translate="Add a description on your field">
         <!-- Use position options only when the target field is a "Checkbox" -->
-        <BuilderSelect t-if="isActiveItem('custom_field_boolean_opt')" action="'setDescription'">
+        <BuilderSelect t-if="this.isActiveItem('custom_field_boolean_opt')" action="'setDescription'">
             <BuilderSelectItem actionValue="'none'">None</BuilderSelectItem>
             <BuilderSelectItem actionValue="'top'">Top (Inline)</BuilderSelectItem>
             <BuilderSelectItem actionValue="'center'">Center (Inline)</BuilderSelectItem>

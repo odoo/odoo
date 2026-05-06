@@ -24,7 +24,7 @@
     <!-- Generic Field Layout -->
     <!-- Changes made here needs to be reflected in the different Form view (Contact Us, Jobs, ...) -->
     <t t-name="website.form_field">
-        <div t-attf-class="s_website_form_field mb-3 #{this.field.formatInfo.col or 'col-12'} #{this.field.formatInfo.offset} #{this.field.custom and 's_website_form_custom' or ''} #{(this.field.required and 's_website_form_required' or '') or (this.field.modelRequired and 's_website_form_model_required' or '')} #{this.field.hidden and 's_website_form_field_hidden' or ''} #{this.field.dnone and 's_website_form_dnone' or ''} #{fieldTypeClasses or ''}"
+        <div t-attf-class="s_website_form_field mb-3 #{this.field.formatInfo.col or 'col-12'} #{this.field.formatInfo.offset} #{this.field.custom and 's_website_form_custom' or ''} #{(this.field.required and 's_website_form_required' or '') or (this.field.modelRequired and 's_website_form_model_required' or '')} #{this.field.hidden and 's_website_form_field_hidden' or ''} #{this.field.dnone and 's_website_form_dnone' or ''} #{this.fieldTypeClasses or ''}"
             t-att-data-type="this.field.type"
             data-name="Field"
             t-att-data-translated-name="this.defaultName">
@@ -261,12 +261,12 @@
                     class="s_website_form_input form-check-input"
                     t-att-id="recordId"
                     t-att-name="this.field.name"
-                    t-att="{checked: record.selected and 'checked' or None}"
-                    t-att-value="record.id"
+                    t-att="{checked: this.record.selected and 'checked' or None}"
+                    t-att-value="this.record.id"
                     t-att-required="this.field.required || this.field.modelRequired || None"
                 />
                 <label class="form-check-label s_website_form_check_label" t-att-for="recordId">
-                    <t t-out="record.display_name"/>
+                    <t t-out="this.record.display_name"/>
                 </label>
             </div>
         </div>
@@ -349,12 +349,12 @@
                     class="s_website_form_input form-check-input"
                     t-att-id="recordId"
                     t-att-name="this.field.name"
-                    t-att="{checked: record.selected and 'checked' or None}"
-                    t-att-value="record.id"
+                    t-att="{checked: this.record.selected and 'checked' or None}"
+                    t-att-value="this.record.id"
                     t-att-required="this.field.required || this.field.modelRequired || None"
                 />
                 <label class="form-check-label s_website_form_check_label" t-att-for="recordId">
-                    <t t-out="record.display_name"/>
+                    <t t-out="this.record.display_name"/>
                 </label>
             </div>
         </div>

@@ -1,5 +1,5 @@
-import { useState } from "@web/owl2/utils";
-import { Component, useEffect } from "@odoo/owl";
+import { useLayoutEffect, useState } from "@web/owl2/utils";
+import { Component } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 
@@ -16,7 +16,7 @@ export class AttendanceCalendarOverview extends Component {
             workedHours: 0,
             extraHours: 0,
         });
-        useEffect(
+        useLayoutEffect(
             () => { this.loadData(); },
             () => [this.props.dateRange]
         );

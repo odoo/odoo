@@ -1,5 +1,5 @@
-import { useState } from "@web/owl2/utils";
-import { Component, useEffect } from "@odoo/owl";
+import { useLayoutEffect, useState } from "@web/owl2/utils";
+import { Component } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { useService } from "@web/core/utils/hooks";
@@ -23,7 +23,7 @@ export class MpesaTransactionPopup extends Component {
         });
         this.ui = useService("ui");
         this.tx = null;
-        useEffect(
+        useLayoutEffect(
             () => {
                 this.updateTransactions();
             },
