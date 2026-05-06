@@ -11,7 +11,7 @@ patch(OrderDetailsDialog.prototype, {
         });
     },
     getOrderFields() {
-        const table = this.props.order.getTable();
+        const table = this.getTableInfo();
         return [
             ...super.getOrderFields(),
             {
@@ -20,5 +20,8 @@ patch(OrderDetailsDialog.prototype, {
             },
             { label: _t("Guests"), value: this.props.order.getCustomerCount() },
         ];
+    },
+    getTableInfo() {
+        return this.props.order.table_id;
     },
 });
