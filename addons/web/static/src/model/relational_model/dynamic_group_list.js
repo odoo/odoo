@@ -16,6 +16,9 @@ export const MOVABLE_RECORD_TYPES = ["char", "boolean", "integer", "selection", 
 export class DynamicGroupList extends DynamicList {
     static type = "DynamicGroupList";
 
+    /** @readonly */
+    isGrouped = true;
+
     /**
      * @type {DynamicList["setup"]}
      */
@@ -23,11 +26,11 @@ export class DynamicGroupList extends DynamicList {
         super.setup(...arguments);
 
         this.groups = [];
-        this.isGrouped = true;
         this._nbRecordsMatchingDomain = null;
         this._setData(data);
 
         makeReactive(this, "groups", signal.Array);
+        makeReactive(this, "_nbRecordsMatchingDomain");
     }
 
     /**
@@ -65,10 +68,7 @@ export class DynamicGroupList extends DynamicList {
      * @returns {RelationalRecord[]}
      */
     get records() {
-        return this.groups
-            .filter((group) => !group.isFolded)
-            .map((group) => group.records)
-            .flat();
+        return this.groups.filter((group) => !group.isFolded).flatMap((group) => group.records);
     }
 
     /**
