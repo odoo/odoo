@@ -26,6 +26,9 @@ class TestMessagePostCommon(MailCommon, TestRecipients):
     def setUpClass(cls):
         super().setUpClass()
 
+        # avoid mobile rewriting links
+        cls.env["ir.config_parameter"].sudo().set_bool("mail_mobile.disable_redirect_firebase_dynamic_link", True)
+
         # portal user, notably for ACLS / notifications
         cls.user_portal = cls._create_portal_user()
         cls.partner_portal = cls.user_portal.partner_id
@@ -404,7 +407,6 @@ class TestMailNotifyAPI(TestMessagePostCommon):
 
 
 @tagged('mail_post', 'mail_notify')
-@tagged('at_install', '-post_install')  # LEGACY at_install Fails in post install
 class TestMessageNotify(TestMessagePostCommon):
 
     @users('employee')
