@@ -32,7 +32,7 @@ export const getStrNotes = (note) => {
 export const filterChangeByCategories = (categories, currentOrderChange, models) => {
     const matchesCategories = (change) => {
         const product = models["product.product"].get(change["product_id"]);
-        const categoryIds = product.parentPosCategIds;
+        const categoryIds = parentPosCategIds(product);
         for (const categoryId of categoryIds) {
             if (categories.includes(categoryId)) {
                 return true;
@@ -57,8 +57,8 @@ export const filterChangeByCategories = (categories, currentOrderChange, models)
 
     return {
         new: filterChanges(currentOrderChange["new"]),
-        cancelled: filterChanges(currentOrderChange["cancelled"]),
-        noteUpdate: filterChanges(currentOrderChange["noteUpdate"]),
+        cancelled: filterChanges(currentOrderChange["cancelled"] || []),
+        noteUpdate: filterChanges(currentOrderChange["noteUpdate"] || []),
     };
 };
 
@@ -90,6 +90,25 @@ export const changesToOrder = (order, orderPreparationCategories, cancelled = fa
     };
 };
 
+export const parentPosCategIds = (product) => {
+    const current = [];
+    const categories = product.pos_categ_ids;
+
+    const getParent = (categ) => {
+        const parentCat = categ.parent_id;
+        if (parentCat) {
+            current.push(parentCat.id);
+            getParent(parentCat);
+        }
+    };
+
+    for (const category of categories) {
+        current.push(category.id);
+        getParent(category);
+    }
+
+    return current;
+};
 /**
  * @returns {{ [lineKey: string]: { product_id: number, name: string, note: string, quantity: number } }}
  * This function recalculates the information to be sent to the preparation tools,
@@ -108,7 +127,7 @@ export const getOrderChanges = (order, orderPreparationCategories) => {
         if (!product) {
             return false;
         }
-        return product.parentPosCategIds.some((id) => prepaCategoryIds.has(id));
+        return parentPosCategIds(product).some((id) => prepaCategoryIds.has(id));
     };
 
     // Compares the orderlines of the order with the last ones sent.
@@ -239,4 +258,26 @@ export const receiptLineGrouper = {
     getGroup(orderLine) {
         // To be overridden
     },
+};
+
+export const generateOrderChange = (order, orderChange, categories, models, reprint = false) => {
+    const productModel = models["product.product"];
+    const isPartOfCombo = (line) =>
+        line.isCombo || line.combo_parent_uuid || productModel.get(line.product_id).type == "combo";
+
+    const comboChanges = orderChange.new.filter(isPartOfCombo);
+    const normalChanges = orderChange.new.filter((line) => !isPartOfCombo(line));
+    normalChanges.sort((a, b) => {
+        const sequenceA = a.pos_categ_sequence;
+        const sequenceB = b.pos_categ_sequence;
+        if (sequenceA === 0 && sequenceB === 0) {
+            return a.pos_categ_id - b.pos_categ_id;
+        }
+
+        return sequenceA - sequenceB;
+    });
+    orderChange.new = [...comboChanges, ...normalChanges];
+
+    const changes = filterChangeByCategories(categories, orderChange, models);
+    return changes;
 };

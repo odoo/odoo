@@ -74,28 +74,6 @@ export class ProductTemplate extends ProductTemplateAccounting {
         });
     }
 
-    get parentPosCategIds() {
-        return this.cacheValues("parentPosCategIds", () => {
-            const current = [];
-            const categories = this.pos_categ_ids;
-
-            const getParent = (categ) => {
-                const parentCat = categ.parent_id;
-                if (parentCat) {
-                    current.push(parentCat.id);
-                    getParent(parentCat);
-                }
-            };
-
-            for (const category of categories) {
-                current.push(category.id);
-                getParent(category);
-            }
-
-            return current;
-        });
-    }
-
     getImageUrl() {
         return `/web/image?model=product.template&field=image_128&id=${this.id}&unique=${this.write_date}`;
     }

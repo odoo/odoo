@@ -7,6 +7,7 @@ import { imageUrl } from "@web/core/utils/urls";
 import {
     getStrNotes,
     filterChangeByCategories,
+    generateOrderChange,
 } from "@point_of_sale/app/models/utils/order_change";
 import { prepareRoundingVals } from "../accounting/utils";
 const { DateTime } = luxon;
@@ -267,11 +268,12 @@ describe("pos_store.js", () => {
 
         order.lines[0].setCustomerNote("Test Orderline Customer Note");
         const orderChange = store.changesToOrder(order, new Set([...pos_categories]), false);
-
-        const { orderData, changes } = store.generateOrderChange(
+        const orderData = order.getOrderData();
+        const changes = generateOrderChange(
             order,
             orderChange,
             pos_categories,
+            store.models,
             false
         );
 

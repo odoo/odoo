@@ -93,6 +93,8 @@
             'barcodes/static/tests/legacy/helpers.js',
             'point_of_sale/static/tests/pos/tours/**/*',
             'point_of_sale/static/tests/generic_helpers/**/*',
+            'point_of_sale/static/src/app/models/utils/order_change.js',
+            'point_of_sale/static/src/app/utils/pretty_console_log.js',
             'point_of_sale/static/tests/customer_display/**/*',
             'point_of_sale/static/src/utils.js',
         ],

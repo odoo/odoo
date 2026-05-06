@@ -20,11 +20,7 @@ import {
 } from "@point_of_sale/app/utils/make_awaitable_dialog";
 import { PartnerList } from "../screens/partner_list/partner_list";
 import { computeComboItems } from "../models/utils/compute_combo_items";
-import {
-    changesToOrder,
-    getOrderChanges,
-    filterChangeByCategories,
-} from "../models/utils/order_change";
+import { changesToOrder, getOrderChanges, generateOrderChange } from "../models/utils/order_change";
 import { QRPopup } from "@point_of_sale/app/components/popups/qr_code_popup/qr_code_popup";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 import { CashMovePopup } from "@point_of_sale/app/components/popups/cash_move_popup/cash_move_popup";
@@ -1974,30 +1970,6 @@ export class PosStore extends WithLazyGetterTrap {
         await this.checkPreparationStateAndSentOrderInPreparation(o, opts);
     }
 
-    generateOrderChange(order, orderChange, categories, reprint = false) {
-        const isPartOfCombo = (line) =>
-            line.isCombo ||
-            line.combo_parent_uuid ||
-            this.models["product.product"].get(line.product_id).type == "combo";
-        const comboChanges = orderChange.new.filter(isPartOfCombo);
-        const normalChanges = orderChange.new.filter((line) => !isPartOfCombo(line));
-        normalChanges.sort((a, b) => {
-            const sequenceA = a.pos_categ_sequence;
-            const sequenceB = b.pos_categ_sequence;
-            if (sequenceA === 0 && sequenceB === 0) {
-                return a.pos_categ_id - b.pos_categ_id;
-            }
-
-            return sequenceA - sequenceB;
-        });
-        orderChange.new = [...comboChanges, ...normalChanges];
-
-        const orderData = order.getOrderData(reprint);
-
-        const changes = filterChangeByCategories(categories, orderChange, this.models);
-        return { orderData, changes };
-    }
-
     async generateReceiptsDataToPrint(orderData, changes, orderChange) {
         const receiptsData = [];
         if (changes.new.length) {
@@ -2044,10 +2016,12 @@ export class PosStore extends WithLazyGetterTrap {
 
         for (const printer of printers) {
             for (const change of orderChange) {
-                const { orderData, changes } = this.generateOrderChange(
+                const orderData = order.getOrderData(reprint);
+                const changes = generateOrderChange(
                     order,
                     change,
                     printer.config.product_categories_ids,
+                    this.models,
                     reprint
                 );
                 const receiptsData = await this.generateReceiptsDataToPrint(

@@ -2,12 +2,15 @@
 
 import { _t } from "@web/core/l10n/translation";
 import { renderToElement } from "@web/core/utils/render";
+import { generateOrderChange } from "@point_of_sale/app/models/utils/order_change";
 
 export async function generateReceiptsToPrint(order, orderChange) {
-    const { orderData, changes } = posmodel.generateOrderChange(
+    const orderData = order.getOrderData();
+    const changes = generateOrderChange(
         order,
         orderChange,
         Array.from(posmodel.config.printerCategories),
+        posmodel.models,
         false
     );
     const receiptsData = await posmodel.generateReceiptsDataToPrint(
