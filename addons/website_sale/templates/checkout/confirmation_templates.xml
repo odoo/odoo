@@ -89,12 +89,12 @@
                     <span class="align-middle">to follow your order.</span>
                 </p>
             </t>
-            <div class="oe_structure clearfix mt-3" id="oe_structure_website_sale_confirmation_1"/>
             <t t-call="website_sale.payment_confirmation_status"/>
-            <div class="mt-3">
+            <div class="oe_structure clearfix mt-3" id="oe_structure_website_sale_confirmation_1"/>
+            <div class="oe_structure mt-3" id="oe_structure_website_sale_confirmation_2"/>
+            <div class="mt-3" id="oe_website_sale_address">
                 <t t-call="website_sale.address_on_checkout"/>
             </div>
-            <div class="oe_structure mt-3" id="oe_structure_website_sale_confirmation_2"/>
             <input t-if='website.plausible_shared_key' type='hidden' class='js_plausible_push' data-event-name='Shop' t-attf-data-event-params='{"CTA": "Order Confirmed", "amount": "#{"%3s-%3s" % (max(0, round(website_sale_order.amount_total/100)*100 - 50), round(website_sale_order.amount_total/100)*100 + 50)}"}' />
             <div class="d-lg-none">
                 <t t-call="website_sale.cart_summary_content"/>
