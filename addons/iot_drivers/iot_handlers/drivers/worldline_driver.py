@@ -15,7 +15,7 @@ _logger = logging.getLogger(__name__)
 
 
 class WorldlineDriver(CtypesTerminalDriver):
-    connection_type = 'ctep'
+    connection_type = "ctep"
 
     def __init__(self, identifier, device):
         super().__init__(identifier, device, manufacturer="Worldline")
@@ -98,8 +98,7 @@ class WorldlineDriver(CtypesTerminalDriver):
             )
 
     def cancel_transaction(self, transaction):
-        # Ignore cancel request if no transaction is running
-        if self.data['result']['Stage'] != 'WaitingForCard':
+        if not self.terminal_busy:
             _logger.warning("Cancel request ignored because no transaction is running to avoid crashes")
             return
 
