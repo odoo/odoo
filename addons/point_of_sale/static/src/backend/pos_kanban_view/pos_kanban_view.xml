@@ -45,12 +45,12 @@
         <button
             type="button"
             class="pos-scenario-card card flex-row flex-md-column align-items-center w-100 h-100 gap-4 gap-md-3 p-3 border rounded"
-            t-on-click="() => this.clickLoadScenario(this.item)"
-            t-attf-aria-label="Select {{this.item.name}} scenario">
-            <img t-attf-src="/point_of_sale/static/img/{{this.item.iconFile}}" t-attf-alt="{{this.item.name}}" class="o_image_64_contain mx-auto" />
+            t-on-click="() => this.clickLoadScenario(item)"
+            t-attf-aria-label="Select {{item.name}} scenario">
+            <img t-attf-src="/point_of_sale/static/img/{{item.iconFile}}" t-attf-alt="{{item.name}}" class="o_image_64_contain mx-auto" />
             <div class="card-body p-0 text-start text-md-center">
-                <h3 class="card-title" t-out="this.item.name"/>
-                <p class="card-text" t-out="this.item.description"/>
+                <h3 class="card-title" t-out="item.name"/>
+                <p class="card-text" t-out="item.description"/>
             </div>
         </button>
     </t>

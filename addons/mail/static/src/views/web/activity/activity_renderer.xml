@@ -63,9 +63,9 @@
 </t>
 
 <t t-name="mail.ActivityViewRow">
-    <t t-set="record" t-value="this.getRecord(this.resId)"/>
+    <t t-set="record" t-value="this.getRecord(resId)"/>
     <t t-if="record">
-        <tr class="o_data_row h-100" t-attf-class="{{ this.activeFilter.resIds.has(this.resId) ? 'o_activity_filter_' + this.activeFilter.progressValue.active : '' }}">
+        <tr class="o_data_row h-100" t-attf-class="{{ this.activeFilter.resIds.has(resId) ? 'o_activity_filter_' + this.activeFilter.progressValue.active : '' }}">
                 <ActivityRecord archInfo="this.props.archInfo" record="record" openRecord="this.props.openRecord" />
                 <t t-foreach="this.activeColumns" t-as="type" t-key="type.id">
                     <t t-call="mail.ActivityViewCell"/>
@@ -76,24 +76,24 @@
 </t>
 
 <t t-name="mail.ActivityViewCell">
-    <t t-set="activityGroup" t-value="this.props.groupedActivities[resId] and this.props.groupedActivities[resId][this.type.id] or {count: 0, ids: [], state: false}"/>
-    <t t-set="isCellHidden" t-value="!this.activeFilter.resIds.has(resId) and this.activeFilter.activityTypeId === this.type.id"/>
+    <t t-set="activityGroup" t-value="this.props.groupedActivities[resId] and this.props.groupedActivities[resId][type.id] or {count: 0, ids: [], state: false}"/>
+    <t t-set="isCellHidden" t-value="!this.activeFilter.resIds.has(resId) and this.activeFilter.activityTypeId === type.id"/>
     <td t-if="activityGroup.state and !isCellHidden"
         t-attf-class="o_activity_summary_cell p-0 h-100 {{activityGroup.state}} {{ this.activeFilter.resIds.has(resId) ? 'o_activity_filter_' + this.activeFilter.progressValue.active : '' }}">
-        <ActivityCell activityIds="activityGroup.ids" activityTypeId="this.type.id"
+        <ActivityCell activityIds="activityGroup.ids" activityTypeId="type.id"
                       attachmentsInfo="activityGroup.attachments_info"
                       reportingDate="activityGroup.reporting_date"
                       countByState="activityGroup.count_by_state"
                       summaries="activityGroup.summaries"
                       reloadFunc="this.props.onReloadData"
-                      resId="this.record.resId" resModel="this.record.resModel"
+                      resId="record.resId" resModel="record.resModel"
                       userAssignedIds="activityGroup.user_assigned_ids"
         />
     </td>
     <td t-else=""
         class="o_activity_summary_cell o_activity_empty_cell cursor-pointer"
         t-attf-class="{{ this.activeFilter.resIds.has(resId) ? 'o_activity_filter_' + this.activeFilter.progressValue.active : '' }}"
-        t-on-click.prevent.stop="() => this.props.onEmptyCell(resId, this.type.id)">
+        t-on-click.prevent.stop="() => this.props.onEmptyCell(resId, type.id)">
         <i data-tooltip="Create" class="text-center fa fa-plus mt-2 align-items-center justify-content-center h-100"/>
     </td>
 </t>
