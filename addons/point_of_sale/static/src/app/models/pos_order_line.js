@@ -341,6 +341,11 @@ export class PosOrderline extends PosOrderlineAccounting {
         return tipProduct && this.product_id.id === tipProduct.id;
     }
 
+    isGlobalDiscountLine() {
+        const discountProduct = this.config.discount_product_id;
+        return discountProduct && this.product_id.id === discountProduct.id;
+    }
+
     getAllLinesInCombo() {
         if (this.combo_parent_id) {
             // having a `combo_parent_id` means that we are not

@@ -197,6 +197,9 @@ class TestPosOrderReceipt(TestPointOfSaleHttpCommon, CommonPosTest):
             self.comparator(pm_data1, pm_data2)
             self.comparator(payments[0], payments[1], 'pos.payment')
 
+    def start_receipt_data_tour(self):
+        self.start_pos_tour("test_receipt_data")
+
     def test_receipt_data(self):
         image = """<?xml version='1.0' encoding='UTF-8' ?>
         <svg height='180' width='180' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
@@ -221,7 +224,7 @@ class TestPosOrderReceipt(TestPointOfSaleHttpCommon, CommonPosTest):
 
         def run_tour_and_compare():
             with patch.object(self.env.registry['pos.order'], 'get_order_frontend_receipt_data', get_order_frontend_receipt_data, create=True):
-                self.start_pos_tour("test_receipt_data")
+                self.start_receipt_data_tour()
                 self.compare_receipt_data(data['frontend_data'], data['backend_data'])
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
