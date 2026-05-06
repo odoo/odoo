@@ -33,6 +33,8 @@ class Menu(models.Model):
     def _set_field_is_mega_menu(self):
         for menu in self:
             if menu.is_mega_menu:
+                if menu.child_id:
+                    raise UserError(_("A mega menu cannot have a parent or child menu."))
                 if not menu.mega_menu_content:
                     menu.mega_menu_content = self.env['ir.ui.view']._render_template('website.s_mega_menu_odoo_menu')
             else:
