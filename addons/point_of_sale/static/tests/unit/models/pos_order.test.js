@@ -10,7 +10,6 @@ test("uiState", async () => {
 
     expect(order.uiState).toEqual({
         unmerge: {},
-        lastPrints: [],
         lineToRefund: {},
         displayed: true,
         booked: false,

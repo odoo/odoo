@@ -49,7 +49,7 @@
                 <button
                     class="button w-50 btn btn-secondary btn-lg d-flex flex-row align-items-center justify-content-center"
                     t-on-click="() => this.doReprintOrder.call()"
-                    t-elif="!this.ui.isSmall and this.pos.ticketPrinter.hasPreparationPrinters and this.currentOrder.uiState.lastPrints.length"
+                    t-elif="!this.ui.isSmall and this.pos.ticketPrinter.hasPreparationPrinters and this.currentOrder.lastPrints.length"
                     t-att-disabled="this.doReprintOrder.status === 'loading'">
                     Reprint
                 </button>
@@ -91,7 +91,7 @@
                     </button>
                 </t>
                 <button t-if="!this.currentOrder.isEmpty() and this.pos.numpadMode != 'table'"
-                    t-on-click="() => this.pos.pay()" 
+                    t-on-click="() => this.pos.pay()"
                     class="button pay-order-button pay-order-button-restaurant btn btn-lg w-50"
                     t-attf-class="{{ this.highlightPay ? 'highlight btn-primary' : 'btn-secondary' }}"
                 >
