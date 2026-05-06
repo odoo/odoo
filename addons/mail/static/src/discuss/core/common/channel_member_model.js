@@ -169,7 +169,7 @@ export class ChannelMember extends Record {
 
     get name() {
         if (this.guest_id) {
-            return this.guest_id.name;
+            return this.guest_id.name || _t("Guest");
         }
         return this.channel_id.getPersonaName(this.partner_id);
     }
