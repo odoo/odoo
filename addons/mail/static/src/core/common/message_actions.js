@@ -65,16 +65,7 @@ registerMessageAction("reaction", {
     sequence: 10,
 });
 registerMessageAction("reply-to", {
-    condition: ({ message: msg, thread: thr }) => {
-        const message = toRaw(msg);
-        const thread = toRaw(thr);
-        return (
-            message.canReplyTo(thread) ||
-            (!["discuss.channel", "mail.box"].includes(thread?.model) &&
-                message.isNote &&
-                !message.isSelfAuthored)
-        );
-    },
+    condition: ({ message, thread }) => message.canReplyTo(thread),
     icon: "fa fa-reply",
     name: _t("Reply"),
     onSelected: ({ message: msg, owner, thread: thr }) => {

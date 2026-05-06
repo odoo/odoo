@@ -22,4 +22,7 @@ patch(Thread.prototype, {
             ...(this.pid ? { pid: this.pid } : {}),
         };
     },
+    get canPostMessage() {
+        return super.canPostMessage || this.access_token;
+    },
 });

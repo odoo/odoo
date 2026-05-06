@@ -2,6 +2,7 @@
 
 import ast
 import base64
+import contextlib
 import datetime
 import dateutil
 import email
@@ -5021,7 +5022,8 @@ class MailThread(models.AbstractModel):
         is_request = request_list is not None
         request_list = request_list or []
         store.add_records_fields(self, fields, as_thread=True)
-        for thread in self:
+
+        def add_data(thread):
             res = {}
             if is_request and store.target.is_current_user(self.env):
                 res["hasReadAccess"] = thread.sudo(False).has_access("read")
@@ -5075,6 +5077,10 @@ class MailThread(models.AbstractModel):
                 )
             if res:
                 store.add(thread, res, as_thread=True)
+
+        for thread in self:
+            with contextlib.suppress(MissingError):
+                add_data(thread)
 
     def _get_mail_thread_data_attachments(self):
         self.ensure_one()

@@ -218,11 +218,18 @@ class ThreadController(http.Controller):
                 'last_used': datetime.now(),
                 'ids': canned_response_ids,
             })
-        thread = self._get_thread_with_access_for_post(thread_model, thread_id, **kwargs)
+        thread = None
+        if post_data.get("message_id"):
+            inbox_reply = self.env["mail.message"].sudo().search(
+                [("message_id", "=", post_data["message_id"])], limit=1, order="id desc"
+            )
+            thread = self.env[inbox_reply.model].search([("id", "=", inbox_reply.res_id)])
         if not thread:
-            raise NotFound()
-        if not self._get_thread_with_access(thread_model, thread_id, mode="write"):
-            thread = thread.with_context(mail_post_autofollow_author_skip=True, mail_post_autofollow=False)
+            thread = self._get_thread_with_access_for_post(thread_model, thread_id, **kwargs)
+            if not thread:
+                raise NotFound()
+            if not self._get_thread_with_access(thread_model, thread_id, mode="write"):
+                thread = thread.with_context(mail_post_autofollow_author_skip=True, mail_post_autofollow=False)
         # sudo: mail.thread - users can post on accessible threads
         message = thread.sudo().message_post(
             **self._prepare_message_data(post_data, thread=thread, from_create=True, **kwargs),
