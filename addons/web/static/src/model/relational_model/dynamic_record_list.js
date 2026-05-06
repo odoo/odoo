@@ -1,5 +1,3 @@
-import { signal } from "@odoo/owl";
-import { makeReactive } from "@web/owl2/utils";
 import { DynamicList } from "./dynamic_list";
 
 /**
@@ -18,8 +16,6 @@ export class DynamicRecordList extends DynamicList {
 
         this.records = [];
         this._setData(data);
-
-        makeReactive(this, "records", signal.Array);
     }
 
     _setData(data) {

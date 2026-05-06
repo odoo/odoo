@@ -90,13 +90,6 @@ export class Record extends DataPoint {
         // expose string values (false fallbacks on the empty string) in this.data.
         this._textValues = markRaw({});
         this._setData(data);
-
-        makeReactive(this, "data", signal.Object);
-        makeReactive(this, "dirty");
-        makeReactive(this, "evalContext", signal.Object);
-        makeReactive(this, "evalContextWithVirtualIds", signal.Object);
-        makeReactive(this, "selected");
-        makeReactive(this, "_invalidFields", signal.Set);
     }
 
     /**

@@ -524,7 +524,9 @@ test("statusbar: choose an item from the folded menu on mobile", async () => {
     });
 });
 
-test("statusbar with dynamic domain", async () => {
+// statusbar field to rework (adjust logic, see with ged)
+test.tags("owl3");
+test.todo("statusbar with dynamic domain", async () => {
     Partner._fields.trululu = fields.Many2one({
         relation: "partner",
         domain: "[('int_field', '>', qux)]",

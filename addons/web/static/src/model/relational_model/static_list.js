@@ -112,9 +112,6 @@ export class StaticList extends DataPoint {
         this.records = data
             .slice(this.offset, this.limit)
             .map((r) => this._createRecordDatapoint(r));
-
-        makeReactive(this, "count");
-        makeReactive(this, "records", signal.Array);
     }
 
     // -------------------------------------------------------------------------

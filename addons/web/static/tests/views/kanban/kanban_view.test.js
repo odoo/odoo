@@ -7470,8 +7470,8 @@ test.todo("Can't use KanbanRecord implementation details in arch", async () => {
     expect(".o_kanban_record:first").toHaveInnerHTML("<div></div>");
 });
 
-test.tags("desktop", "owl3");
-test.todo("rerenders only once after resequencing records", async () => {
+test.tags("desktop");
+test("rerenders only once after resequencing records", async () => {
     // Actually it's not once, because we must render directly after the drag&drop s.t. the dropped
     // record remains where it has been dropped, once again after saving/reloading the record as
     // we rebuild record.data, and finally after the call to resequence, to re-enable the resequence

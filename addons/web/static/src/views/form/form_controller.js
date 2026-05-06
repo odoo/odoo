@@ -32,7 +32,7 @@ import { FormErrorDialog } from "./form_error_dialog/form_error_dialog";
 import { FormStatusIndicator } from "./form_status_indicator/form_status_indicator";
 import { FormCogMenu } from "./form_cog_menu/form_cog_menu";
 
-import { Component, onError, onMounted, onWillUnmount } from "@odoo/owl";
+import { Component, onError, onMounted, onWillUnmount, proxy } from "@odoo/owl";
 import { FetchRecordError } from "@web/model/relational_model/errors";
 
 const viewRegistry = registry.category("views");
@@ -204,7 +204,7 @@ export class FormController extends Component {
             this.model.config.activeFields = activeFields;
             this.model.config.fields = fields;
         };
-        this.model = useModel(this.props.Model, this.modelParams, { beforeFirstLoad });
+        this.model = proxy(useModel(this.props.Model, this.modelParams, { beforeFirstLoad }));
         useSubEnv({ model: this.model });
         useLayoutEffect(
             () => {

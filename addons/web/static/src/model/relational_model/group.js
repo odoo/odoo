@@ -1,5 +1,4 @@
 import { Domain } from "@web/core/domain";
-import { makeReactive } from "@web/owl2/utils";
 import { DataPoint } from "./datapoint";
 
 /**
@@ -38,8 +37,6 @@ export class Group extends DataPoint {
             config.record.context = { ...config.record.context, ...config.context };
             this.record = new this.model.constructor.Record(this.model, config.record, data.values);
         }
-
-        makeReactive(this, "count");
     }
 
     // -------------------------------------------------------------------------

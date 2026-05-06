@@ -92,7 +92,7 @@
                     optionalActiveFields="this.optionalActiveFields"
                     readonly="this.props.readonly"
                 />
-                <t t-elif="this.model.couldNotLoadRootOffline()">
+                <t t-elif="this.model.couldNotLoadRootOffline">
                     <OfflineActionHelper/>
                 </t>
             </Layout>
