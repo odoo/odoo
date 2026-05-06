@@ -461,11 +461,7 @@
                   "domain": [
                     "&",
                     ["state", "!=", "cancel"],
-                    [
-                      "config_id",
-                      "in",
-                      [4, 5]
-                    ]
+                    ["config_id.module_pos_restaurant", "=", true]
                   ],
                   "groupBy": ["product_categ_id"],
                   "orderBy": []
