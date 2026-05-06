@@ -284,6 +284,7 @@ class L10nMyEDITestFileGeneration(L10nMyEDITestFileGenerationCommon):
                 'tax_ids': [Command.set(self.company_data['default_tax_sale'].ids)],
             })],
         }).sudo(False)
+        self.env.user.group_ids |= self.env.ref("sales_team.group_sale_salesman")
         sale_order.action_confirm()
 
         payment = self.env['sale.advance.payment.inv'].with_context({

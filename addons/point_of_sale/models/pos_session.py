@@ -1749,6 +1749,7 @@ class PosSession(models.Model):
         invoice_list = []
         for order in self.order_ids.filtered(lambda o: o.is_invoiced):
             invoice = {
+                'id': order.account_move.id,
                 'total': order.account_move.amount_total_signed,
                 'name': order.account_move.name,
                 'order_ref': order.pos_reference,

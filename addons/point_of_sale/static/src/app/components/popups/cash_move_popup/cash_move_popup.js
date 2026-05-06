@@ -144,4 +144,7 @@ export class CashMovePopup extends Component {
     handleAmountBlur() {
         this.state.amount = this.env.utils.parseAndFormatCurrency(this.state.amount);
     }
+    async cancel() {
+        this.props.close();
+    }
 }

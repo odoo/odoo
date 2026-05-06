@@ -109,6 +109,9 @@ export class CashierSelector {
         }
 
         if (login && employee) {
+            if (!this.pos.canLoginCashier(employee)) {
+                return false;
+            }
             this.pos.hasLoggedIn = true;
             this.pos.setCashier(employee);
         }
