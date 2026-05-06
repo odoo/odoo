@@ -26,7 +26,6 @@ Thai accounting chart and localization.
         'views/account_tax_views.xml',
         'views/report_invoice.xml',
         'views/res_partner_view.xml',
-        'views/res_company_view.xml',
         'wizards/account_payment_register_views.xml',
     ],
     'demo': [
