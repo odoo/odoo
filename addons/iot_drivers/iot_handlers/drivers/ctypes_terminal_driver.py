@@ -220,8 +220,6 @@ class CtypesTerminalDriver(Driver, ABC):
                 request_data=transaction
             )
             return False
-
-        self.send_status(stage='WaitingForCard', request_data=transaction)
         return True
 
     @abstractmethod
