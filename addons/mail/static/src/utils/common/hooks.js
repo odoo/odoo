@@ -430,9 +430,10 @@ export function useMessageScrolling({
             }
             thread.scrollTop = messageScrollDirection === "top" ? "bottom" : undefined;
             if (thread.scrollTop === "bottom") {
-                state.startupDeferred = new Deferred();
-                await state.startupDeferred;
-                state.startupDeferred = null;
+                state.startupPromise = new Promise((resolve) => (state.resolveStartup = resolve));
+                await state.startupPromise;
+                state.startupPromise = null;
+                state.resolveStartup = null;
             }
             state.highlightedMessageId = message.id;
             state.initiated = false;
@@ -440,10 +441,12 @@ export function useMessageScrolling({
         },
         initiated: false,
         /**
-         * Deferred during highlight startup, i.e. highlight is initiated but isn't scrolling yet
+         * Promise during highlight startup, i.e. highlight is initiated but isn't scrolling yet
          * Useful to set correct starting condition to initiate scroll to highlight, like scroll to bottom.
          */
-        startupDeferred: null,
+        startupPromise: null,
+        /** @type {(value?: void) => void | null}  */
+        resolveStartup: null,
         /** Deferred during scrolling to highlight */
         scrollPromise: null,
         /**
