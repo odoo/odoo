@@ -129,4 +129,7 @@ export class CashMovePopup extends Component {
             this.state.amount = result;
         }
     }
+    async cancel() {
+        this.props.close();
+    }
 }

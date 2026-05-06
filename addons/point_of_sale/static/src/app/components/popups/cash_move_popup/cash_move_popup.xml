@@ -36,7 +36,7 @@
                             t-att-disabled="!isValidCashMove()">
                             Confirm
                         </button>
-                        <button class="button cancel btn btn-lg lh-lg btn-secondary" t-on-click="props.close">
+                        <button class="button cancel btn btn-lg lh-lg btn-secondary" t-on-click="() => this.cancel()">
                             Discard
                         </button>
                     </div>

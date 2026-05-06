@@ -29,9 +29,6 @@ following:
         'web.assets_tests': [
             'pos_razorpay/static/tests/tours/**/*',
         ],
-        'web.assets_unit_tests': [
-            'pos_razorpay/static/tests/unit/data/**/*'
-        ],
     },
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
