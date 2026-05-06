@@ -85,16 +85,16 @@ class TestResPartnerBank(AccountTestInvoicingCommon, MailCase):
         for msg in partner_msgs:
             self.assertMessageFields(msg, {
                 'body': f'<p>Bank Account <a href="#" data-oe-model="{bank_a._name}" data-oe-id="{bank_a.id}">#{bank_a.id}</a> updated</p>',
-                'message_type': 'notification',
+                'message_type': 'tracking',
                 'model': 'res.partner',
                 'subtype_id': self.env.ref('mail.mt_note'),
                 'tracking_values': [
-                    ('active', 'boolean', True, False),
-                    ('allow_out_payment', 'boolean', False, True),
-                    ('account_number', 'char', '12345', '99999'),
-                    ('clearing_number', 'char', False, '123456789'),
-                    ('bank_bic', 'char', False, '9999'),
-                    ('holder_name', 'char', 'PartnerA', 'Marcel Offane'),
-                    ('partner_id', 'many2one', self.partner_a, self.partner_b),
+                    ('active', 'boolean', True, False, {'html_string': 'Active'}),
+                    ('allow_out_payment', 'boolean', False, True, {'html_string': 'Send Money'}),
+                    ('account_number', 'char', '12345', '99999', {'html_string': 'Account Number'}),
+                    ('clearing_number', 'char', False, '123456789', {'html_string': 'Clearing Number'}),
+                    ('bank_bic', 'char', False, '9999', {'html_string': 'BIC/SWIFT'}),
+                    ('holder_name', 'char', 'PartnerA', 'Marcel Offane', {'html_string': 'Holder Name'}),
+                    ('partner_id', 'many2one', self.partner_a, self.partner_b, {'html_string': 'Partner'}),
                 ],
             })

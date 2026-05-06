@@ -115,11 +115,6 @@ class MailTestTrack(models.Model):
     track_enable_default_log = fields.Boolean(default=False)
     parent_id = fields.Many2one('mail.test.track', string='Parent')
 
-    def _track_filter_for_display(self, tracking_values):
-        values = super()._track_filter_for_display(tracking_values)
-        filtered_fields = set(self.track_fields_tofilter.split(',') if self.track_fields_tofilter else '')
-        return values.filtered(lambda val: val.field_id.name not in filtered_fields)
-
     def _track_log_get_default_body(self, track_init_values):
         tracked_fields = set(track_init_values.keys())
         filtered_fields = set(self.track_fields_tofilter.split(',') if self.track_fields_tofilter else '')

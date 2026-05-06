@@ -664,15 +664,15 @@ class MailThread(models.AbstractModel):
                     body=body,
                     author_id=author_id,
                     subtype_id=subtype.id,
-                    message_tracking_values=tracking_values,
                     message_type="tracking",
+                    tracking_values=tracking_values,
                 )
             elif tracking_values:
                 record._message_log(
                     body=body,
                     author_id=author_id,
-                    message_tracking_values=tracking_values,
                     message_type="tracking",
+                    tracking_values=tracking_values,
                 )
 
     def _track_log_get_default_body(self, track_init_values: ValuesType) -> str | Markup:
@@ -773,14 +773,6 @@ class MailThread(models.AbstractModel):
             to send. Second are values to give to composer / sender.
         """
         return dict()
-
-    # format tools
-    # ------------------------------------------------------
-
-    def _track_filter_for_display(self, tracking_values: BaseModel) -> BaseModel:
-        """Filter out tracking values from being displayed."""
-        self.ensure_one()
-        return tracking_values
 
     # ------------------------------------------------------
     # MAIL GATEWAY
@@ -2225,7 +2217,7 @@ class MailThread(models.AbstractModel):
                      partner_ids=None, outgoing_email_to=False,
                      incoming_email_to=False, incoming_email_cc=False,
                      attachments=None, attachment_ids=None, body_is_html=False,
-                     message_tracking_values=None,
+                     tracking_values=None,
                      **kwargs):
         """ Post a new message in an existing thread, returning the new mail.message.
 
@@ -2259,7 +2251,7 @@ class MailThread(models.AbstractModel):
             composer will be attached to the related document.
         :param bool body_is_html: indicates body should be threated as HTML even if str
             to be used only for RPC calls
-        :param message_tracking_values: optional list of tracking values
+        :param tracking_values: optional list of tracking values
 
         Extra keyword arguments will be used either
           * as default column values for the new mail.message record if they match
@@ -2279,6 +2271,8 @@ class MailThread(models.AbstractModel):
             raise ValueError(_("Posting a message should be done on a business document. Use message_notify to send a notification to an user."))
         if message_type == 'user_notification':
             raise ValueError(_("Use message_notify to send a notification to an user."))
+        if message_type != 'tracking' and tracking_values:
+            raise ValueError(_('Posting with tracking should be done using tracking message type'))
         if attachments:
             # attachments should be a list (or tuples) of 3-elements list (or tuple)
             format_error = not is_list_of(attachments, list) and not is_list_of(attachments, tuple)
@@ -2358,6 +2352,7 @@ class MailThread(models.AbstractModel):
             'parent_id': self._message_compute_parent_id(parent_id),
             'subject': subject or False,
             'subtype_id': subtype_id,
+            'tracking_values': tracking_values,
             # recipients
             'partner_ids': partner_ids,
             'incoming_email_to': incoming_email_to,
@@ -2375,7 +2370,9 @@ class MailThread(models.AbstractModel):
         msg_values.update(
             self._process_attachments_for_post(attachments, attachment_ids, msg_values)
         )  # attachement_ids, body
-        new_message = self._message_create([msg_values], message_tracking_values)
+        if tracking_values:  # generate trackings in body so that 'body' is reliable in msg_vals
+            msg_values['body'] = self._message_compute_body_with_trackings(msg_values['body'], tracking_values)
+        new_message = self._message_create([msg_values])
 
         # subscribe author(s) so that they receive answers; do it only when it is
         # a manual post by the author (aka not a system notification, not a message
@@ -2921,7 +2918,8 @@ class MailThread(models.AbstractModel):
                      author_id=None, email_from=None,
                      message_type='notification',
                      partner_ids=False,
-                     attachment_ids=False, message_tracking_values=False):
+                     attachment_ids=False,
+                     tracking_values=False):
         """ Shortcut allowing to post note on a document. See ``_message_log_batch``
         for more details. """
         self.ensure_one()
@@ -2931,14 +2929,16 @@ class MailThread(models.AbstractModel):
             author_id=author_id, email_from=email_from,
             message_type=message_type,
             partner_ids=partner_ids,
-            attachment_ids=attachment_ids, message_tracking_values=message_tracking_values
+            attachment_ids=attachment_ids,
+            tracking_values=tracking_values,
         )
 
     def _message_log_batch(self, bodies, subject=False,
                            author_id=None, email_from=None,
                            message_type='notification',
                            partner_ids=False,
-                           attachment_ids=False, message_tracking_values=False):
+                           attachment_ids=False,
+                           tracking_values=False):
         """ Shortcut allowing to post notes on a batch of documents. It does not
         perform any notification and pre-computes some values to have a short code
         as optimized as possible. This method is private as it does not check
@@ -2953,8 +2953,10 @@ class MailThread(models.AbstractModel):
         :return: created messages (as sudo)
         """
         # protect against side-effect prone usage
-        if len(self) > 1 and (attachment_ids or message_tracking_values):
+        if len(self) > 1 and (attachment_ids or tracking_values):
             raise ValueError(_('Batch log cannot support attachments or tracking values on more than 1 document'))
+        if message_type != 'tracking' and tracking_values:
+            raise ValueError(_('Posting with tracking should be done using tracking message type'))
 
         author_id, email_from = self._message_compute_author(author_id, email_from)
 
@@ -2972,6 +2974,7 @@ class MailThread(models.AbstractModel):
             'is_internal': True,
             'subject': subject,
             'subtype_id': self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note'),
+            'tracking_values': tracking_values,
             # recipients
             'email_add_signature': False,  # False as no notification -> no need to compute signature
             'message_id': generate_tracking_message_id('message-notify'),  # why? this is all but a notify
@@ -2983,7 +2986,9 @@ class MailThread(models.AbstractModel):
                             res_id=record.id,
                             body=escape(bodies.get(record.id, '')))
                        for record in self]
-        return self.sudo()._message_create(values_list, message_tracking_values)
+        if tracking_values:  # generate trackings in body so that 'body' is reliable in msg_vals
+            values_list[0]['body'] = self._message_compute_body_with_trackings(values_list[0]['body'], tracking_values)
+        return self.sudo()._message_create(values_list)
 
     def set_message_pin(self, message_id, pinned):
         """(Un)pin a message on the thread.
@@ -3041,6 +3046,16 @@ class MailThread(models.AbstractModel):
 
         return author_id, email_from
 
+    def _message_compute_body_with_trackings(self, body, tracking_values):
+        tracking_html = self.env['ir.qweb']._render(
+            "mail.mail_tracking_template", {'trackingValues': tracking_values}
+        ).strip()
+        return append_content_to_html(
+            body, tracking_html,
+            plaintext=False,
+            add_line_breaks=False,
+        )
+
     def _message_compute_real_author(self, author_id):
         real_author = self.env['res.partner']
         # if current user is active, they are the one doing the action and should
@@ -3090,31 +3105,12 @@ class MailThread(models.AbstractModel):
         self.ensure_one()
         return textwrap.shorten(self.display_name or '', width=100, placeholder="...")
 
-    def _messages_format_tracking(self, tracking_values: list[dict[str, any]]) -> str:  # html
-        """ Format tracking values for mail messages.
-
-        This low-level helper is used to render tracking lines (field changes)
-        on the main model using the QWeb tracking template.
-
-        tracking_values: List of dictionaries representing tracked
-            field changes. Each dictionary typically contains information such as:
-            - old_value: previous value of the field
-            - new_value: updated value of the field
-            - field_desc: human-readable field label
-        return: Rendered HTML content of the tracking values """
-
-        return self.env['ir.qweb']._render(
-            "mail.mail_tracking_template", {'trackingValues': tracking_values}
-        )
-
-    def _message_create(self, values_list, tracking_values=None):
+    def _message_create(self, values_list):
         """ Low-level helper to create mail.message records. It is mainly used
         to hide the cleanup of given values, for mail gateway or helpers.
 
         values_list: List of dictionaries containing the values
             to create mail.message records.
-        tracking_values: Optional list of dictionaries containing
-            tracking information for field changes.
         return: Created mail.message records """
         values_list = [
             {
@@ -3135,10 +3131,6 @@ class MailThread(models.AbstractModel):
         for values in values_list:
             create_values = dict(values)
             create_values['partner_ids'] = [(4, pid) for pid in (create_values.get('partner_ids') or [])]
-            if tracking_values:
-                tracking_body = self._messages_format_tracking(tracking_values)
-                create_values['body'] = tracking_body + values['body'] if values.get('body') else tracking_body
-
             create_values_list.append(create_values)
 
         # remove context, notably for default keys, as this thread method is not
@@ -3186,7 +3178,7 @@ class MailThread(models.AbstractModel):
         """Some fields should be silently ignored when creating a mail.message,
         without raising an exception. Those fields are generally handled in
         _message_post_after_hook, which also receives message values."""
-        return set()
+        return {'tracking_values'}
 
     def _get_source_from_ref(self, source_ref):
         """ From a source_reference, return either a mail template, either
@@ -4102,7 +4094,7 @@ class MailThread(models.AbstractModel):
         res_id = msg_vals['res_id'] if 'res_id' in msg_vals else message.res_id
         body = msg_vals['body'] if 'body' in msg_vals else message.body
         if message.message_type == 'tracking':
-            body = "\n%s\n%s%s" % (message.subtype_id.description, body, message.body)
+            body = "\n%s\n%s" % (message.subtype_id.description, body)
 
         if author_id:
             author_name = self.env['res.partner'].browse(author_id).name
