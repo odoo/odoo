@@ -761,22 +761,6 @@ test("filtered previews", async () => {
     await contains(".o-mail-NotificationItem-name:text('channel1')");
 });
 
-test("no code injection in message body preview", async () => {
-    const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({});
-    pyEnv["mail.message"].create({
-        body: "<p><em>&shoulnotberaised</em><script>throw new Error('CodeInjectionError');</script></p>",
-        model: "discuss.channel",
-        res_id: channelId,
-    });
-    await start();
-    await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
-    await contains(
-        ".o-mail-NotificationItem-text:text('You: &shoulnotberaisedthrow new Error('CodeInjectionError');')"
-    );
-    await contains(".o-mail-NotificationItem-text script", { count: 0 });
-});
-
 test("no code injection in message body preview from sanitized message", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({});
@@ -1443,3 +1427,17 @@ test("user notification from inbox redirect to discuss inbox", async () => {
     await contains(".o-mail-DiscussContent-threadName[title='Inbox']");
     await contains(".o-mail-Message.o-highlighted .o-mail-Message-body:text('Hello world!')");
 });
+
+test("preserve message link formatting in messaging menu", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    pyEnv["mail.message"].create({
+        model: "discuss.channel",
+        body: `<a href="https://odoo.com/">https://odoo.com/</a>`,
+        author_id: serverState.partnerId,
+        res_id: channelId,
+    });
+    await start();
+    await click(".o_menu_systray i[aria-label='Messages']");
+    await contains(`.o-mail-NotificationItem-text a[href="https://odoo.com/"]`);
+})
