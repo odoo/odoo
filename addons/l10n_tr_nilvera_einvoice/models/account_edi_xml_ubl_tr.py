@@ -814,10 +814,10 @@ class AccountEdiXmlUblTr(models.AbstractModel):
         :param invoice: account.move record (the invoice).
         :return: str, TR profile ID to be used in E-invoicing.
         """
-        if (is_einvoice := invoice.l10n_tr_nilvera_customer_status == 'einvoice') and invoice.l10n_tr_gib_invoice_scenario:
-            return invoice.l10n_tr_gib_invoice_scenario
         if invoice.l10n_tr_is_export_invoice:
             return 'IHRACAT'
+        if (is_einvoice := invoice.l10n_tr_nilvera_customer_status == 'einvoice') and invoice.l10n_tr_gib_invoice_scenario:
+            return invoice.l10n_tr_gib_invoice_scenario
         return 'TEMELFATURA' if is_einvoice else 'EARSIVFATURA'
 
     @api.model

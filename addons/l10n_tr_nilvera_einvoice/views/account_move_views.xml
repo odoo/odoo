@@ -31,7 +31,7 @@
                         icon="fa-refresh"/>
                     </div>
                 <field name="l10n_tr_is_export_invoice"
-                       invisible="l10n_tr_nilvera_customer_status != 'earchive'"
+                       invisible="l10n_tr_nilvera_customer_status not in ('einvoice', 'earchive')"
                        readonly="state in ['cancel', 'posted']"/>
                 <div class="o_td_label"
                      invisible="l10n_tr_is_export_invoice
@@ -66,7 +66,7 @@
                 <field name="l10n_tr_shipping_type"
                        required="l10n_tr_is_export_invoice"
                        invisible="not l10n_tr_exemption_code_domain_list
-                                  or l10n_tr_nilvera_customer_status != 'earchive'
+                                  or l10n_tr_nilvera_customer_status not in ('einvoice', 'earchive')
                                   or not l10n_tr_is_export_invoice"
                        readonly="state in ['cancel', 'posted']"/>
             </xpath>
