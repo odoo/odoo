@@ -23,6 +23,7 @@ import {
     triggerHotkey,
     waitStoreFetch,
 } from "@mail/../tests/mail_test_helpers";
+import { MailMessage } from "@mail/../tests/mock_server/mock_models/mail_message";
 import { Message } from "@mail/core/common/message";
 import { LONG_PRESS_DELAY } from "@mail/utils/common/hooks";
 import { describe, expect, test } from "@odoo/hoot";
@@ -1362,22 +1363,28 @@ test("click on message edit button should open edit composer", async () => {
 
 test("Notification Sent", async () => {
     const pyEnv = await startServer();
-    const [threadId, partnerId] = pyEnv["res.partner"].create([
+    const [threadId, partnerId, partnerCcId] = pyEnv["res.partner"].create([
         {},
         { name: "Someone", partner_share: true },
+        { name: "SomeoneInCc", partner_share: true },
     ]);
     const messageId = pyEnv["mail.message"].create({
         body: "not empty",
         message_type: "email",
         model: "res.partner",
         res_id: threadId,
+        partner_ids: [partnerId],
+        partner_cc_ids: [partnerCcId],
     });
-    pyEnv["mail.notification"].create({
+    const baseNotification = {
         mail_message_id: messageId,
         notification_status: "sent",
         notification_type: "email",
-        res_partner_id: partnerId,
-    });
+    };
+    pyEnv["mail.notification"].create([
+        { ...baseNotification, res_partner_id: partnerId },
+        { ...baseNotification, res_partner_id: partnerCcId },
+    ]);
     await start();
     await openFormView("res.partner", threadId);
     await contains(".o-mail-Message");
@@ -1386,9 +1393,78 @@ test("Notification Sent", async () => {
     expect(".o-mail-Message-notification i:first").toHaveClass("fa-envelope-o");
     await click(".o-mail-Message-notification");
     await contains(".o-mail-MessageNotificationPopover");
-    await contains(".o-mail-MessageNotificationPopover i");
-    expect(".o-mail-MessageNotificationPopover i:first").toHaveClass("fa-check");
-    await contains(".o-mail-MessageNotificationPopover:text('Someone')");
+    await contains(".o-mail-MessageNotificationPopover i", { count: 2 });
+    expect(".o-mail-MessageNotificationPopover i:first.fa-check").toHaveClass("fa-check");
+    expect(".o-mail-MessageNotificationPopover i:last.fa-check").toHaveClass("fa-check");
+    await contains(".o-mail-MessageNotificationPopover:text('ToSomeone CcSomeoneInCc')");
+});
+
+test("Check notification popover for incoming messages", async () => {
+    const pyEnv = await startServer();
+    const [threadId, partnerId] = pyEnv["res.partner"].create([
+        {},
+        { name: "Someone", partner_share: true },
+    ]);
+    const baseMessage = {
+        body: "not empty",
+        message_type: "email",
+        model: "res.partner",
+        res_id: threadId,
+        partner_ids: [partnerId],
+    };
+    const emailTo = "incomingTo@ex.com",
+        emailCc = "incomingCc@ex.com";
+    const [messageToId, messageCcId] = pyEnv["mail.message"].create([
+        { ...baseMessage, incoming_email_to: emailTo },
+        { ...baseMessage, incoming_email_cc: emailCc },
+    ]);
+    const baseNotification = {
+        notification_status: "sent",
+        notification_type: "email",
+        res_partner_id: partnerId,
+    };
+    pyEnv["mail.notification"].create([
+        { ...baseNotification, mail_message_id: messageToId },
+        { ...baseNotification, mail_message_id: messageCcId },
+    ]);
+    // We patch the store mock as it doesn't support incoming_email_to and incoming_email_cc.
+    const originalToStore = MailMessage.prototype._to_store;
+    patchWithCleanup(MailMessage.prototype, {
+        _to_store(store, fields, for_current_user, add_followers) {
+            originalToStore.call(this, store, fields, for_current_user, add_followers);
+            for (const message of this) {
+                if (message.id === messageToId) {
+                    store._add_record_fields(this.browse(message.id), {
+                        incoming_email_to: [["incomingTo", emailTo]],
+                    });
+                }
+                if (message.id === messageCcId) {
+                    store._add_record_fields(this.browse(message.id), {
+                        incoming_email_cc: [["incomingCc", emailCc]],
+                    });
+                }
+            }
+        },
+    });
+    await start();
+    await openFormView("res.partner", threadId);
+    await contains(".o-mail-Message", { count: 2 });
+    await click(".o-mail-Message-notification:first");
+    await contains(".o-mail-MessageNotificationPopover");
+    await contains(".o-mail-MessageNotificationPopover i", { count: 2 });
+    expect(".o-mail-MessageNotificationPopover div:first i.fa-check").toHaveClass("fa-check");
+    expect(".o-mail-MessageNotificationPopover div:last i.fa-send-o").toHaveClass("fa-send-o");
+    await contains(
+        ".o-mail-MessageNotificationPopover:text('ToSomeone CcincomingCc(incomingCc@ex.com)')"
+    );
+    await click(".o-mail-Message-notification:last");
+    await contains(".o-mail-MessageNotificationPopover");
+    await contains(".o-mail-MessageNotificationPopover i", { count: 2 });
+    expect(".o-mail-MessageNotificationPopover div:first i.fa-check").toHaveClass("fa-check");
+    expect(".o-mail-MessageNotificationPopover div:last i.fa-send-o").toHaveClass("fa-send-o");
+    await contains(
+        ".o-mail-MessageNotificationPopover:text('ToSomeone ToincomingTo(incomingTo@ex.com)')"
+    );
 });
 
 test("Notification Error", async () => {

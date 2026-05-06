@@ -6670,7 +6670,7 @@ class AccountMove(models.Model):
         self.ensure_one()
 
         if self.move_type != 'entry':
-            partner_ids = message.partner_ids.ids
+            partner_ids = (message.partner_ids | message.partner_cc_ids).ids
             self._portal_ensure_token()
             access_link = self._notify_get_action_link('view', access_token=self.access_token)
 

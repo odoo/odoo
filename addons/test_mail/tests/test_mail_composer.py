@@ -5,7 +5,7 @@ import lxml.html
 
 from ast import literal_eval
 from datetime import timedelta
-from itertools import chain, product
+from itertools import chain, product, repeat
 from unittest.mock import patch
 
 from odoo.addons.base.tests.test_ir_cron import CronMixinCase
@@ -1136,12 +1136,14 @@ class TestComposerInternals(TestMailComposer):
                 # values come from template
                 if composition_mode == 'comment' and not batch:
                     self.assertEqual(len(new_partners), 2)
-                    self.assertEqual(composer.partner_ids, self.partner_1 + new_partners, 'Template took customer_id as set on record')
+                    self.assertEqual(composer.partner_ids, self.partner_1, 'Template took customer_id as set on record')
+                    self.assertEqual(composer.partner_cc_ids, new_partners)
                     self.assertEqual(composer.reply_to, 'info@test.example.com', 'Template was rendered')
                     self.assertTrue(composer.reply_to_force_new)
                 else:
                     self.assertEqual(len(new_partners), 0)
                     self.assertEqual(composer.partner_ids, base_recipients, 'Mass mode: kept original values')
+                    self.assertFalse(composer.partner_cc_ids)
                     self.assertEqual(composer.reply_to, self.template.reply_to, 'Mass mode: raw template value')
                     self.assertTrue(composer.reply_to_force_new, 'Mass mode: reply_to -> consider this is for new threads')
 
@@ -1170,7 +1172,8 @@ class TestComposerInternals(TestMailComposer):
 
                 # values come from template
                 if composition_mode == 'comment' and not batch:
-                    self.assertEqual(composer.partner_ids, self.partner_1 + new_partners)
+                    self.assertEqual(composer.partner_ids, self.partner_1)
+                    self.assertEqual(composer.partner_cc_ids, new_partners)
                 else:
                     self.assertFalse(composer.partner_ids)
                 if composition_mode == 'comment' and not batch:
@@ -1188,7 +1191,8 @@ class TestComposerInternals(TestMailComposer):
 
                 # values come from template
                 if composition_mode == 'comment' and not batch:
-                    self.assertEqual(composer.partner_ids, self.partner_1 + new_partners)
+                    self.assertEqual(composer.partner_ids, self.partner_1)
+                    self.assertEqual(composer.partner_cc_ids, new_partners)
                 else:
                     self.assertFalse(composer.partner_ids)
                 if composition_mode == 'comment' and not batch:
@@ -1217,6 +1221,48 @@ class TestComposerInternals(TestMailComposer):
                     ('email_normalized', 'in', ['test.cc.1@test.example.com',
                                                 'test.cc.2@test.example.com'])
                 ]).unlink()
+
+    @users('employee')
+    def test_mail_composer_compute_recipient_partners(self):
+        partner_to = self.partner_1
+        partner_cc = self.partner_2
+        composer_base_vals = {
+            'model': self.test_record._name,
+            'composition_mode': 'comment',
+            'res_ids': self.test_record.ids,
+        }
+        template_with_cc = self.template.copy({
+            'partner_to': str(partner_to.id),
+            'partner_cc': str(partner_cc.id),
+        })
+
+        # recipients from template
+        composer = self.env['mail.compose.message'].create({
+            **composer_base_vals,
+            'template_id': template_with_cc.id,
+        })
+        self.assertEqual(composer.partner_ids, partner_to)
+        self.assertEqual(composer.partner_cc_ids, partner_cc)
+        _, message = composer._action_send_mail()
+
+        # recipients from parent message
+        composer = self.env['mail.compose.message'].create({
+            **composer_base_vals,
+            'parent_id': message.id,
+        })
+        self.assertEqual(composer.partner_ids, partner_to)
+        self.assertEqual(composer.partner_cc_ids, partner_cc)
+
+        # no recipients
+        composer = self.env['mail.compose.message'].create({
+            **composer_base_vals,
+            'template_id': template_with_cc.id,
+        })
+        self.assertEqual(composer.partner_ids, partner_to)
+        self.assertEqual(composer.partner_cc_ids, partner_cc)
+        composer.template_id = False
+        self.assertFalse(composer.partner_ids)
+        self.assertFalse(composer.partner_cc_ids)
 
     @users('employee')
     @mute_logger('odoo.tests', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
@@ -1384,6 +1430,7 @@ class TestComposerInternals(TestMailComposer):
                 'subject': 'Test Subject',
                 'attachment_ids': [(0, 0, attachment_data)],
                 'partner_ids': [(4, self.test_record.customer_id.id)],
+                'partner_cc_ids': [(4, self.partner_2.id)],
             })
         # cannot schedule a message without a scheduled date
         with self.assertRaises(UserError):
@@ -1406,6 +1453,7 @@ class TestComposerInternals(TestMailComposer):
         self.assertEqual(scheduled_message.res_id, self.test_record.id)
         self.assertEqual(scheduled_message.author_id, self.partner_employee)
         self.assertEqual(scheduled_message.partner_ids, self.test_record.customer_id)
+        self.assertEqual(scheduled_message.partner_cc_ids, self.partner_2)
         self.assertFalse(scheduled_message.is_note)
         self.assertEqual(scheduled_message.send_context, {'additional_ctx_key': True})
         # attachment transfer
@@ -1776,20 +1824,36 @@ class TestComposerResultsComment(TestMailComposer, CronMixinCase):
     @mute_logger('odoo.tests', 'odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
     def test_mail_composer_recipients(self):
         """ Test partner_ids given to composer are given to the final message. """
+        partners_to = self.partner_1 | self.partner_2
+        partners_cc = partner_3, partner_4 = self.env['res.partner'].sudo().create(
+            [{"name": f"partner_{idx}", "email": f"partner_{idx}@ex.com"} for idx in (3, 4)])
         composer = self.env['mail.compose.message'].with_context(
             self._get_web_context(self.test_record)
         ).create({
             'body': '<p>Test Body</p>',
-            'partner_ids': [(4, self.partner_1.id), (4, self.partner_2.id)]
+            'partner_ids': [(4, partner.id) for partner in partners_to],
+            'partner_cc_ids': [(4, partner.id) for partner in partners_cc],
         })
-        composer._action_send_mail()
+        with self.mock_mail_gateway(mail_unlink_sent=False):
+            composer._action_send_mail()
 
-        message = self.test_record.message_ids[0]
-        self.assertEqual(message.author_id, self.user_employee.partner_id)
-        self.assertEqual(message.body, '<p>Test Body</p>')
-        self.assertEqual(message.subject, self.test_record._message_compute_subject())
-        self.assertEqual(message.subtype_id, self.env.ref('mail.mt_comment'))
-        self.assertEqual(message.partner_ids, self.partner_1 | self.partner_2)
+        self.assertMailMail(
+            partners_to, 'sent',
+            author=self.user_employee.partner_id,
+            recipients_cc=partners_cc,
+            email_values={
+                'headers': {
+                    'X-Msg-To-Add': ','.join(partners_to.mapped('email_formatted')),
+                    'X-Msg-Cc-Add': ','.join(partners_cc.mapped('email_formatted')),
+                },
+            },
+            fields_values={
+                'body': '<p>Test Body</p>',
+                'subject': self.test_record._message_compute_subject(),
+                'subtype_id': self.env.ref('mail.mt_comment'),
+                'partner_ids': self.partner_1 | self.partner_2,
+                'partner_cc_ids': partner_3 | partner_4,
+            })
 
     def test_mail_composer_recipients_email_only(self):
         """Check that messages can be sent to standalone emails, with no associated partner."""
@@ -2113,16 +2177,19 @@ class TestComposerResultsComment(TestMailComposer, CronMixinCase):
                     self.assertFalse(capt.records)
 
                 # check new partners have been created based on emails given
-                new_partners = self.env['res.partner'].search([
-                    ('email', 'in', [email_to_1, email_to_2, email_to_3, email_cc_1])
+                new_partners_cc = self.env['res.partner'].search([('email', '=', email_cc_1)])
+                new_partners_to = self.env['res.partner'].search([
+                    ('email', 'in', [email_to_1, email_to_2, email_to_3])
                 ])
-                self.assertEqual(len(new_partners), 3)
+                self.assertEqual(len(new_partners_to), 2)
+                self.assertEqual(len(new_partners_cc), 1)
                 self.assertEqual(
-                    set(new_partners.mapped('email')),
-                    {'test.to.1@test.example.com', 'test.to.2@test.example.com', 'test.cc.1@test.example.com'},
+                    set(new_partners_to.mapped('email')),
+                    {'test.to.1@test.example.com', 'test.to.2@test.example.com'},
                 )
+                self.assertEqual(new_partners_cc.email, 'test.cc.1@test.example.com')
                 self.assertEqual(
-                    set(new_partners.mapped('lang')),
+                    set(new_partners_to.mapped('lang') + new_partners_cc.mapped('lang')),
                     {'en_US'},
                 )
 
@@ -2219,14 +2286,17 @@ class TestComposerResultsComment(TestMailComposer, CronMixinCase):
                         # in this case, we are in a multi-lang customers testing
                         emails_recipients = [
                             test_record.customer_id,  # es_ES
-                            new_partners  # en_US (default lang of new customers)
+                            new_partners_to  # en_US (default lang of new customers)
                         ]
                     else:
                         # all recipients have same language, one email
-                        emails_recipients = [test_record.customer_id + new_partners]
+                        emails_recipients = [test_record.customer_id + new_partners_to]
+                    emails_recipients_cc = [new_partners_cc]
 
-                    for recipients in emails_recipients:
-                        self.assertMailMail(recipients, 'sent',
+                    for recipients, is_cc in chain(zip(emails_recipients, repeat(False)),
+                                                   zip(emails_recipients_cc, repeat(True))):
+                        self.assertMailMail(recipients if not is_cc else self.env['res.partner'], 'sent',
+                                            recipients_cc=recipients if is_cc else self.env['res.partner'],
                                             mail_message=message,
                                             author=author,  # author is different in batch and monorecord mode (raw or rendered email_from)
                                             email_values={
@@ -2360,6 +2430,7 @@ class TestComposerResultsComment(TestMailComposer, CronMixinCase):
                                     'Return-Path': f'{exp_alias_domain.bounce_email}',
                                     'X-Odoo-Objects': f'{record._name}-{record.id}',
                                     'X-Msg-To-Add': headers_recipients,
+                                    'X-Msg-Cc-Add': '',
                                 },
                                 'subject': f'TemplateSubject {record.name}',
                             },
@@ -2368,6 +2439,7 @@ class TestComposerResultsComment(TestMailComposer, CronMixinCase):
                                     'Return-Path': f'{exp_alias_domain.bounce_email}',
                                     'X-Odoo-Objects': f'{record._name}-{record.id}',
                                     'X-Msg-To-Add': headers_recipients,
+                                    'X-Msg-Cc-Add': '',
                                 },
                                 'mail_server_id': self.env['ir.mail_server'],
                                 'record_alias_domain_id': exp_alias_domain,
@@ -2451,6 +2523,8 @@ class TestComposerResultsComment(TestMailComposer, CronMixinCase):
         # FIXME: currently email finding based on formatted / multi emails does
         # not work
         new_partners = self.env['res.partner'].search([]).search([('id', 'not in', existing_partners.ids)])
+        new_partners_to = new_partners.filtered(lambda p: '.cc.' not in p.email)
+        new_partners_cc = new_partners.filtered(lambda p: '.cc.' in p.email)
         self.assertEqual(len(new_partners), 9,
                          'Mail (FIXME): multiple partner creation due to formatted / multi emails: 1 extra partner')
         self.assertIn(partner_format_tofind, new_partners)
@@ -2458,17 +2532,19 @@ class TestComposerResultsComment(TestMailComposer, CronMixinCase):
         self.assertIn(partner_at_tofind, new_partners)
         self.assertEqual(new_partners[0:3].ids, (partner_format_tofind + partner_multi_tofind + partner_at_tofind).ids)
         self.assertEqual(
-            sorted(new_partners.mapped('email')),
+            sorted(new_partners_to.mapped('email')),
             sorted(['"Bike@Home" <find.me.at@test.example.com>',
-                    '"FindMe Format" <find.me.format@test.example.com>',
-                    'find.me.multi.1@test.example.com, "FindMe Multi" <find.me.multi.2@test.example.com>',
-                    'find.me.multi.2@test.example.com',
-                    'test.cc.1@example.com',
-                    'test.cc.2@example.com',
-                    'test.cc.2.2@example.com',
-                    'test.to.1@example.com',
-                    'test.to.2@example.com']),
+             '"FindMe Format" <find.me.format@test.example.com>',
+             'find.me.multi.1@test.example.com, "FindMe Multi" <find.me.multi.2@test.example.com>',
+             'find.me.multi.2@test.example.com',
+             'test.to.1@example.com',
+             'test.to.2@example.com']),
             'Mail: created partners for valid emails (wrong / invalid not taken into account) + did not find corner cases (FIXME)'
+        )
+        self.assertEqual(
+            sorted(new_partners_cc.mapped('email')),
+            sorted(['test.cc.1@example.com', 'test.cc.2@example.com', 'test.cc.2.2@example.com']),
+            'Mail: created partners for valid emails (wrong / invalid not taken into account)'
         )
         self.assertEqual(
             sorted(new_partners.mapped('email_formatted')),
@@ -2522,17 +2598,20 @@ class TestComposerResultsComment(TestMailComposer, CronMixinCase):
             },
             mail_message=self.test_record.message_ids[0],
         )
-        recipients = self.partner_1 + self.partner_2 + new_partners
+        recipients_to = self.partner_1 + self.partner_2 + new_partners_to
+        recipients_cc = new_partners_cc
         self.assertMailMail(
-            recipients,
+            recipients_to,
             'sent',
+            recipients_cc=recipients_cc,
             author=self.partner_employee,
             email_to_recipients=[
                 [self.partner_1.email_formatted],
                 [f'"{self.partner_2.name}" <valid.other.1@agrolait.com>', f'"{self.partner_2.name}" <valid.other.cc@agrolait.com>'],
-            ] + [[new_partners[0]['email_formatted']],
+            ] + [[new_partners_to[0]['email_formatted']],
                  ['"FindMe Multi" <find.me.multi.1@test.example.com>', '"FindMe Multi" <find.me.multi.2@test.example.com>']
-            ] + [[email] for email in new_partners[2:].mapped('email_formatted')],
+            ] + [[email] for email in new_partners_to[2:].mapped('email_formatted')],
+            email_cc_recipients=[[email] for email in new_partners_cc.mapped('email_formatted')],
             email_values={
                 'body_content': f'TemplateBody {self.test_record.name}',
                 # single email event if email field is multi-email
@@ -2546,7 +2625,7 @@ class TestComposerResultsComment(TestMailComposer, CronMixinCase):
             mail_message=self.test_record.message_ids[0],
         )
         # actual emails sent through smtp
-        for recipient in recipients:
+        for recipient in recipients_to | recipients_cc:
             # multi emails -> send multiple emails (smart)
             if recipient == self.partner_2:
                 smtp_to_list = ['valid.other.1@agrolait.com', 'valid.other.cc@agrolait.com']
@@ -3105,9 +3184,11 @@ class TestComposerResultsMass(TestMailComposer):
                     composer._action_send_mail()
 
                     # partners created from raw emails
-                    new_partners = self.env['res.partner'].search([
-                        ('email', 'in', [email_to_1, email_to_2, email_to_3, email_cc_1])
+                    new_partners_to = self.env['res.partner'].search([
+                        ('email', 'in', [email_to_1, email_to_2, email_to_3])
                     ])
+                    new_partners_cc = self.env['res.partner'].search([('email', '=', email_cc_1)])
+                    new_partners = new_partners_to | new_partners_cc
                     self.assertEqual(len(new_partners), 3)
                     self.assertEqual(new_partners.mapped('lang'), ['en_US'] * 3,
                                      'New partners lang is always the default DB one, whatever the context')
@@ -3151,8 +3232,9 @@ class TestComposerResultsMass(TestMailComposer):
                             f'{self.alias_catchall}@{self.alias_domain}',
                         ))
                     # template is sent only to partners (email_to are transformed)
-                    self.assertMailMail(record.customer_id + new_partners + self.partner_admin,
+                    self.assertMailMail(record.customer_id + new_partners_to + self.partner_admin,
                                         'sent',
+                                        recipients_cc=new_partners_cc,
                                         mail_message=message,
                                         author=author,
                                         email_values={
@@ -3553,6 +3635,8 @@ class TestComposerResultsMass(TestMailComposer):
         # FIXME: currently email finding based on formatted / multi emails does
         # not work
         new_partners = self.env['res.partner'].search([]).search([('id', 'not in', existing_partners.ids)])
+        new_partners_to = new_partners.filtered(lambda p: '.cc.' not in p.email)
+        new_partners_cc = new_partners.filtered(lambda p: '.cc.' in p.email)
         self.assertEqual(len(new_partners), 9,
                          'Mail (FIXME): did not find existing partners for formatted / multi emails: 1 extra partner')
         self.assertIn(partner_format_tofind, new_partners)
@@ -3607,18 +3691,21 @@ class TestComposerResultsMass(TestMailComposer):
         self.assertEqual(
             len(self._mails), (len(new_partners) + 2) * 2,
             f'Should have sent {(len(new_partners) + 2) * 2} emails, one / recipient ({len(new_partners)} mailed partners + partner_1 + partner_2) * 2 records')
+        recipients_to = self.partner_1 + self.partner_2 + new_partners_to
+        recipients_cc = new_partners_cc
         for record in self.test_records:
-            recipients = self.partner_1 + self.partner_2 + new_partners
             self.assertMailMail(
-                recipients,
+                recipients_to,
                 'sent',
+                recipients_cc=recipients_cc,
                 author=self.partner_employee,
                 email_to_recipients=[
                     [self.partner_1.email_formatted],
                     [f'"{self.partner_2.name}" <valid.other.1@agrolait.com>', f'"{self.partner_2.name}" <valid.other.cc@agrolait.com>'],
-                ] + [[new_partners[0]['email_formatted']],
+                ] + [[new_partners_to[0]['email_formatted']],
                      ['"FindMe Multi" <find.me.multi.1@test.example.com>', '"FindMe Multi" <find.me.multi.2@test.example.com>']
-                ] + [[email] for email in new_partners[2:].mapped('email_formatted')],
+                ] + [[email] for email in new_partners_to[2:].mapped('email_formatted')],
+                email_cc_recipients=new_partners_cc,
                 email_values={
                     'body_content': f'TemplateBody {record.name}',
                     # single email event if email field is multi-email
@@ -3641,7 +3728,7 @@ class TestComposerResultsMass(TestMailComposer):
             )
 
             # actual emails sent through smtp
-            for recipient in recipients:
+            for recipient in recipients_to | recipients_cc:
                 # multi emails -> send multiple emails (smart)
                 if recipient == self.partner_2:
                     smtp_to_list = ['valid.other.1@agrolait.com', 'valid.other.cc@agrolait.com']

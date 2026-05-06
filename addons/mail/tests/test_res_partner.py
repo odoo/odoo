@@ -493,6 +493,7 @@ class TestPartner(MailCommon):
                     'email': partner.email_normalized,
                     'name': partner.name,
                     'partner_id': partner.id,
+                    'recipient_type': 'to',
                 }])
 
     def test_log_portal_group(self):

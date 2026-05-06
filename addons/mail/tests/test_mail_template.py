@@ -453,8 +453,8 @@ class TestMailTemplate(MailCommon):
         self.assertEqual(original_attachments.mapped('res_id'), self.mail_template.ids * 2)
         self.assertEqual(original_attachments.mapped('res_model'), [self.mail_template._name] * 2)
 
-    def test_mail_template_parse_partner_to(self):
-        for partner_to, expected in [
+    def test_mail_template_parse_partner_list_ids(self):
+        for partner_list_ids, expected in [
             ('1', [1]),
             ('1,2,3', [1, 2, 3]),
             ('1, 2,  3', [1, 2, 3]),  # remove spaces
@@ -464,8 +464,8 @@ class TestMailTemplate(MailCommon):
             ('(1, "wrong", 2, "partner_name", "3")', [1, 2, 3]),  # fault tolerant
             ('res.partner(1, 2, 3)', [2]),  # invalid input but avoid crash
         ]:
-            with self.subTest(partner_to=partner_to):
-                parsed = self.mail_template._parse_partner_to(partner_to)
+            with self.subTest(partner_to=partner_list_ids):
+                parsed = self.mail_template._parse_partner_list_ids(partner_list_ids)
                 self.assertListEqual(parsed, expected)
 
     def test_server_archived_usage_protection(self):

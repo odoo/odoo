@@ -185,6 +185,7 @@ export class MailMessage extends models.ServerModel {
             "notification_ids",
             mailDataHelpers.Store.one("parent_id", makeKwArgs({ format_reply: false })),
             mailDataHelpers.Store.many("partner_ids", makeKwArgs({ fields: ["name"] })),
+            mailDataHelpers.Store.many("partner_cc_ids", makeKwArgs({ fields: ["name"] })),
             "pinned_at",
             mailDataHelpers.Store.attr("reactions", (m) =>
                 mailDataHelpers.Store.many(this.env["mail.message.reaction"].browse(m.reaction_ids))
@@ -315,7 +316,7 @@ export class MailMessage extends models.ServerModel {
     unlink() {
         const messageByPartnerId = {};
         for (const message of this) {
-            for (const partnerId of message.partner_ids) {
+            for (const partnerId of [...message.partner_ids, ...message.partner_cc_ids]) {
                 messageByPartnerId[partnerId] ??= [];
                 messageByPartnerId[partnerId].push(message);
             }

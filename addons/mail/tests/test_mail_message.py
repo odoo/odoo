@@ -38,6 +38,15 @@ class TestMailMessage(common.MailCommon, HttpCase):
         self.env['res.company'].invalidate_model(['name'])
         message_c1 = self._add_messages(self.env.company, "Company Note 1", author=self.user_employee.partner_id)
         message_c2 = self._add_messages(self.company_2, "Company Note 2", author=self.user_employee_c2.partner_id)
+        message_not_author_but_in_to = self._add_messages(
+            self.company_2, "Company Note 3",
+            author=self.user_employee_c2.partner_id, partner_ids=self.user_employee.partner_id)
+        message_not_author_but_in_cc = self._add_messages(
+            self.company_2, "Company Note 4",
+            author=self.user_employee_c2.partner_id, partner_cc_ids=self.user_employee.partner_id)
+        message_not_author_nor_in_recipients = self._add_messages(
+            self.company_2, "Company Note 5",
+            author=self.user_employee_c2.partner_id, partner_cc_ids=self.user_employee_c3.partner_id)
         search_result = (
             self.env["mail.message"]
             .with_context(allowed_company_ids=[self.env.company.id])
@@ -46,6 +55,9 @@ class TestMailMessage(common.MailCommon, HttpCase):
         )
         self.assertIn(message_c1, search_result)
         self.assertNotIn(message_c2, search_result)
+        self.assertIn(message_not_author_but_in_to, search_result)
+        self.assertIn(message_not_author_but_in_cc, search_result)
+        self.assertNotIn(message_not_author_nor_in_recipients, search_result)
 
     @users("employee")
     def test_unlink_failure_message_notify_author(self):

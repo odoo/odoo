@@ -105,16 +105,19 @@ class TestCalendarMail(CalendarMailCommon):
                 'email': self.customers[0].email_normalized,
                 'name': self.customers[0].name,
                 'partner_id': self.customers[0].id,
+                'recipient_type': 'to',
             }, {  # wrong email suggested, can be corrected ?
                 'create_values': {},
                 'email': self.customers[1].email_normalized,
                 'name': self.customers[1].name,
                 'partner_id': self.customers[1].id,
+                'recipient_type': 'to',
             }, {
                 'create_values': {},
                 'email': self.user_employee_2.partner_id.email_normalized,
                 'name': self.user_employee_2.partner_id.name,
                 'partner_id': self.user_employee_2.partner_id.id,
+                'recipient_type': 'to',
             },
         ], 'Correctly filters out robodoo and aliases')
 

@@ -320,6 +320,7 @@ export class MailThread extends models.ServerModel {
                 lang,
                 reason,
                 create_values: {},
+                recipient_type: 'to',
             });
         } else {
             const partnerCreateValues = this._get_customer_information(id);
@@ -329,6 +330,7 @@ export class MailThread extends models.ServerModel {
                 lang,
                 reason,
                 create_values: partnerCreateValues,
+                recipient_type: 'to',
             });
         }
         return result;
@@ -440,6 +442,7 @@ export class MailThread extends models.ServerModel {
                             email: partner.email,
                             partner: user.partner_id,
                             reason,
+                            recipient_type: "to",
                         })
                     );
                 }
