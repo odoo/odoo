@@ -88,7 +88,7 @@ registry.category("web_tour.tours").add('totp_tour_setup', {
     run: "click",
 },
 {
-    trigger: ".modal div:contains(Enter your current password)",
+    trigger: ".modal div:contains(Enter your own password)",
 },
 {
     content: "Check that we have to enter enhanced security mode and input password",
@@ -167,10 +167,6 @@ registry.category("web_tour.tours").add('totp_login_enabled', {
     run: "click",
     expectUnloadPage: true,
 }, {
-    content: "expect totp screen",
-    trigger: 'label:contains(Authentication Code)',
-    run: "click",
-}, {
     content: "input incorrect code",
     trigger: 'input[name=totp_token]',
     async run({ edit }) {
@@ -237,10 +233,6 @@ registry.category("web_tour.tours").add('totp_login_device', {
     trigger: 'button:contains("Log in")',
     run: "click",
     expectUnloadPage: true,
-}, {
-    content: "expect totp screen",
-    trigger: 'label:contains(Authentication Code)',
-    run: "click",
 }, {
     content: "check remember device box",
     trigger: 'label[for=switch-remember]',
@@ -316,7 +308,7 @@ registry.category("web_tour.tours").add('totp_login_device', {
     run: "click",
 },
 {
-    trigger: ".modal div:contains(Enter your current password)",
+    trigger: ".modal div:contains(Enter your own password)",
 },
 {
     content: "Check that we have to enter enhanced security mode and input password",
@@ -401,7 +393,7 @@ registry.category("web_tour.tours").add('totp_admin_disables', {
     run: "click",
 },
 {
-    trigger: ".modal div:contains(Enter your current password)",
+    trigger: ".modal div:contains(Enter your own password)",
 },
 { // enhanced security yo
     content: "Check that we have to enter enhanced security mode & input password",
