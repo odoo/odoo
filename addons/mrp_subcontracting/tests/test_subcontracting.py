@@ -1216,7 +1216,7 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
 
     def test_subcontracting_component_line_deletion(self):
         '''
-        Ensure lines manually deleted are correctly unlinked.
+        Ensure lines manually deleted are correctly unlinked and new ones can be added.
         '''
         self.bom.consumption = 'flexible'
         # Subcontractor has the components in stock
@@ -1239,9 +1239,14 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         action = receipt.move_ids.action_show_details()
         mo = self.env['mrp.production'].browse(action['res_id'])
         line_to_remove = mo.move_line_raw_ids[1]
+        alternate_product = self.env['product.product'].create({'name': 'Alternate product'})
         with Form(mo.with_context(action['context']), view=action['view_id']) as mo_form:
             mo_form.move_line_raw_ids.remove(1)
+            with mo_form.move_line_raw_ids.new() as ml:
+                ml.product_id = alternate_product
+                ml.quantity = 1
         mo.subcontracting_record_component()
+        self.assertTrue(any(ml.product_id == alternate_product for ml in mo.move_line_raw_ids))
         self.assertFalse(line_to_remove.exists())
 
     def test_subcontracted_product_return_locations(self):
