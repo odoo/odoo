@@ -116,12 +116,22 @@ class HrWorkEntryType(models.Model):
     max_allowed_negative = fields.Integer(string="Maximum Excess Amount",
         tracking=True,
         help="Define the maximum level of negative days this kind of time off can reach. Value must be at least 1.")
+    time_off_selectable = fields.Boolean(string="Selectable in Time Off", default=True, tracking=True)
+    allows_positive_cap = fields.Boolean(string='Allow Positive Cap',
+        help="If enabled, employees can take this time off without allocation but up to a maximum cap. "
+            "The cap resets on January 1st for each employee.")
+    max_allowed_positive = fields.Float(string="Maximum Positive Amount",
+        help="Maximum number of days or hours an employee can take for this time off type within a year. "
+            "This limit resets on January 1st.")
 
     _check_negative = models.Constraint(
         'CHECK(NOT allows_negative OR max_allowed_negative > 0)',
         'The maximum excess amount should be greater than 0. If you want to set 0, disable the negative cap instead.'
     )
-    time_off_selectable = fields.Boolean(string="Selectable in Time Off", default=True, tracking=True)
+    _check_positive = models.Constraint(
+        'CHECK(NOT allows_positive_cap OR max_allowed_positive > 0)',
+        'The maximum allowed amount should be greater than 0. Disable the positive cap if no limit is required.',
+    )
 
     @api.model
     def _search_valid(self, operator, value):
@@ -155,6 +165,32 @@ class HrWorkEntryType(models.Model):
             ('date_to', '>=', date_from),
             ('date_to', '=', False),
         ]).work_entry_type_id
+
+        current_year_start = fields.Date.today().replace(month=1, day=1)
+        current_year_end = fields.Date.today().replace(month=12, day=31)
+        if current_year_start <= date_from <= current_year_end:
+            positive_cap_types = self.env['hr.work.entry.type'].search([
+                ('requires_allocation', '=', False),
+                ('allows_positive_cap', '=', True),
+            ])
+            if positive_cap_types:
+                leaves_taken = self.env['hr.leave']._read_group(
+                    domain=[
+                        ('work_entry_type_id', 'in', positive_cap_types.ids),
+                        ('employee_id', '=', employee_id),
+                        ('state', 'in', ['confirm', 'validate1', 'validate']),
+                        ('date_from', '>=', current_year_start),
+                        ('date_from', '<=', current_year_end),
+                    ],
+                    groupby=['work_entry_type_id'],
+                    aggregates=['number_of_days:sum', 'number_of_hours:sum'],
+                )
+                taken_per_type = {work_entry_type.id: (days, hours) for work_entry_type, days, hours in leaves_taken}
+                for positive_cap_type in positive_cap_types:
+                    days_taken, hours_taken = taken_per_type.get(positive_cap_type.id, (0.0, 0.0))
+                    taken = hours_taken if positive_cap_type.unit_of_measure == 'hour' else days_taken
+                    if taken < positive_cap_type.max_allowed_positive:
+                        work_entry_types |= positive_cap_type
 
         return [('id', operator, work_entry_types.ids)]
 
@@ -236,7 +272,14 @@ class HrWorkEntryType(models.Model):
                 if allocations:
                     valid_types += work_entry_type
             else:
-                valid_types += work_entry_type
+                if work_entry_type.allows_positive_cap:
+                    current_year_start = fields.Date.today().replace(month=1, day=1)
+                    current_year_end = fields.Date.today().replace(month=12, day=31)
+                    request_date = fields.Date.to_date(date_from)
+                    if current_year_start <= request_date <= current_year_end:
+                        valid_types += work_entry_type
+                else:
+                    valid_types += work_entry_type
         return valid_types
 
     @api.depends('requires_allocation', 'max_leaves', 'virtual_remaining_leaves')
@@ -369,9 +412,14 @@ class HrWorkEntryType(models.Model):
     def requested_display_name(self):
         return self.env.context.get('work_entry_type_display_name', True) and self.env.context.get('employee_id')
 
-    @api.depends('requires_allocation', 'virtual_remaining_leaves', 'max_leaves', 'unit_of_measure', 'country_id')
+    @api.depends('requires_allocation', 'virtual_remaining_leaves', 'max_leaves', 'unit_of_measure', 'country_id', 'allows_positive_cap', 'max_allowed_positive')
     @api.depends_context('work_entry_type_display_name', 'employee_id', 'company')
     def _compute_display_name(self):
+        if not self.requested_display_name():
+            # leave counts is based on employee_id, would be inaccurate if not based on correct employee
+            return super()._compute_display_name()
+        employee = self.env['hr.employee'].browse(self.env.context.get('employee_id'))
+        taken_days_map, taken_hours_map = self._get_positive_cap_leaves_taken(employee)
         for record in self:
             if not record.requested_display_name():
                 # leave counts is based on employee_id, would be inaccurate if not based on correct employee
@@ -386,6 +434,17 @@ class HrWorkEntryType(models.Model):
                     name = self.env._("%(name)s (%(time)g remaining out of %(maximum)g hours)", name=record.name, time=remaining_time, maximum=maximum)
                 else:
                     name = self.env._("%(name)s (%(time)g remaining out of %(maximum)g days)", name=record.name, time=remaining_time, maximum=maximum)
+            elif record.allows_positive_cap and not record.requires_allocation and self.env.context.get('default_date_from'):
+                if record.unit_of_measure == 'hour':
+                    taken = taken_hours_map.get((employee.id, record.id), 0.0)
+                else:
+                    taken = taken_days_map.get((employee.id, record.id), 0.0)
+                remaining = float_round(record.max_allowed_positive - taken, precision_digits=2)
+                maximum = float_round(record.max_allowed_positive, precision_digits=2)
+                if record.unit_of_measure == "hour":
+                    name = self.env._("%(name)s (%(time)g remaining out of %(maximum)g hours)", name=record.name, time=remaining, maximum=maximum)
+                else:
+                    name = self.env._("%(name)s (%(time)g remaining out of %(maximum)g days)", name=record.name, time=remaining, maximum=maximum)
             record.display_name = f"{name} ({record.country_id.name or self.env._("Generic")})"
         return None
 
@@ -393,6 +452,25 @@ class HrWorkEntryType(models.Model):
     def _compute_eligible_for_accrual_rate(self):
         for work_entry_type in self:
             work_entry_type.elligible_for_accrual_rate = work_entry_type.count_as != 'absence'
+
+    def _get_positive_cap_leaves_taken(self, employees=None):
+        if not employees:
+            employees = self.env['hr.employee'].browse(self.env.context.get('employee_id'))
+        positive_cap_type_ids = self.filtered(lambda t: t.allows_positive_cap and not t.requires_allocation).ids
+        if not positive_cap_type_ids:
+            return {}, {}
+        current_year_start = fields.Date.today().replace(month=1, day=1)
+        current_year_end = fields.Date.today().replace(month=12, day=31)
+        domain = [
+            ('work_entry_type_id', 'in', positive_cap_type_ids),
+            ('employee_id', '=', employees.ids),
+            ('state', 'in', ['confirm', 'validate', 'validate1']),
+            ('date_from', '>=', current_year_start),
+            ('date_from', '<=', current_year_end),
+        ]
+        combined_data = self.env['hr.leave']._read_group(domain, groupby=['employee_id', 'work_entry_type_id'], aggregates=['number_of_days:sum', 'number_of_hours:sum'])
+        return ({(emp.id, wet.id): days for emp, wet, days, _ in combined_data},
+                {(emp.id, wet.id): hours for emp, wet, _, hours in combined_data})
 
     @api.model
     def _search(self, domain, offset=0, limit=None, order=None, **kwargs):
@@ -493,6 +571,7 @@ class HrWorkEntryType(models.Model):
             work_entry_type_info
             for work_entry_type_info in employee_work_entry_type_infos
             if work_entry_type_info[1]["max_leaves"]
+            or work_entry_type_info[1]["show_positive_cap"]
         ]
         return filtered_employee_work_entry_type_infos
 
@@ -509,6 +588,7 @@ class HrWorkEntryType(models.Model):
             ignored_leave_ids=self.env.context.get('ignored_leave_ids')
         )._get_consumed_leaves(self, target_date)
 
+        taken_days_map, taken_hours_map = self._get_positive_cap_leaves_taken(employees)
         for employee in employees:
             for work_entry_type in self:
                 lt_info = (
@@ -532,6 +612,11 @@ class HrWorkEntryType(models.Model):
                         'unit_of_measure': work_entry_type.unit_of_measure,
                         'allows_negative': work_entry_type.allows_negative,
                         'max_allowed_negative': work_entry_type.max_allowed_negative,
+                        'allows_positive_cap': work_entry_type.allows_positive_cap,
+                        'max_allowed_positive': work_entry_type.max_allowed_positive,
+                        'positive_cap_remaining': 0,
+                        'show_positive_cap': False,
+                        'positive_cap_valid_until': False,
                         'employee_company': employee.company_id.id,
                         'employee_country': employee.company_id.country_id.id,
                     },
@@ -624,6 +709,14 @@ class HrWorkEntryType(models.Model):
                 for key, value in lt_info[1].items():
                     if isinstance(value, float):
                         lt_info[1][key] = round(value, 2)
+                if work_entry_type.allows_positive_cap and not work_entry_type.requires_allocation:
+                    if work_entry_type.unit_of_measure == 'hour':
+                        virtual_leaves_taken = taken_hours_map.get((employee.id, work_entry_type.id), 0.0)
+                    else:
+                        virtual_leaves_taken = taken_days_map.get((employee.id, work_entry_type.id), 0.0)
+                    lt_info[1]['positive_cap_remaining'] = round(work_entry_type.max_allowed_positive - virtual_leaves_taken, 2)
+                    lt_info[1]['show_positive_cap'] = virtual_leaves_taken > 0
+                    lt_info[1]['positive_cap_valid_until'] = format_date(self.env, fields.Date.today().replace(month=12, day=31))
                 allocation_data[employee].append(lt_info)
         return allocation_data
 

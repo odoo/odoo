@@ -95,6 +95,20 @@
                                 </div>
                             </div>
                         </group>
+                        <group>
+                            <group name="cap" id="cap" string="Cap" colspan="2">
+                                <div class="o_row o_cell o_wrap_label text-break text-900" colspan="2">
+                                    <label for="allows_positive_cap" class="me-4" readonly="0"/>
+                                    <field name="allows_positive_cap" nolabel="1"/>
+                                    <div invisible="not allows_positive_cap">
+                                        <span class="mx-2">up to</span>
+                                        <field name="max_allowed_positive" class="oe_inline"/>
+                                        <span class="mx-2" invisible="unit_of_measure == 'hour'">days</span>
+                                        <span class="mx-2" invisible="unit_of_measure != 'hour'">hours</span>
+                                    </div>
+                                </div>
+                            </group>
+                        </group>
                     </group>
                 </page>
             </notebook>

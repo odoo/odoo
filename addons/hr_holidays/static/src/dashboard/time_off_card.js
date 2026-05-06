@@ -143,11 +143,11 @@ export class TimeOffCard extends Component {
     onClickInfo(ev) {
         const { data, holidayStatusId, employeeId } = this.props;
         this.popover.open(ev.target, {
-            allocated: formatNumber(this.lang, data.max_leaves),
+            allocated: formatNumber(this.lang, data.show_positive_cap ? data.max_allowed_positive : data.max_leaves),
             accrual_bonus: formatNumber(this.lang, data.accrual_bonus),
             approved: formatNumber(this.lang, data.leaves_approved),
             planned: formatNumber(this.lang, data.leaves_requested),
-            left: formatNumber(this.lang, data.virtual_remaining_leaves),
+            left: formatNumber(this.lang, data.show_positive_cap ? data.positive_cap_remaining : data.virtual_remaining_leaves),
             warning: this.warning,
             closest: data.closest_allocation_duration,
             unit_of_measure: data.unit_of_measure,

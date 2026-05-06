@@ -335,6 +335,41 @@ class HrLeaveAllocation(models.Model):
                     unit='hours' if is_hour_allocation else 'days',
                 ))
 
+    @api.constrains('number_of_days', 'work_entry_type_id', 'employee_id')
+    def _check_positive_cap_allocation(self):
+        for allocation in self:
+            leave_type = allocation.work_entry_type_id
+            if not leave_type.allows_positive_cap or not leave_type.requires_allocation:
+                continue
+            is_hour = allocation.type_request_unit == 'hour'
+            unit = 'hour(s)' if is_hour else 'day(s)'
+            aggregate_field = 'number_of_hours_display:sum' if is_hour else 'number_of_days:sum'
+            taken_time = allocation.number_of_hours_display if is_hour else allocation.number_of_days
+            allocation_date = allocation.date_from or fields.Date.today()
+            current_year_start = allocation_date.replace(month=1, day=1)
+            current_year_end = allocation_date.replace(month=12, day=31)
+            allocation_per_employee = self.env['hr.leave.allocation']._read_group(
+                domain=[
+                    ('work_entry_type_id', '=', leave_type.id),
+                    ('employee_id', '=', allocation.employee_id.id),
+                    ('state', 'in', ['validate', 'validate1']),
+                    ('id', '!=', allocation.id),
+                    ('date_from', '>=', current_year_start),
+                    ('date_from', '<=', current_year_end),
+                ],
+                groupby=[],
+                aggregates=[aggregate_field],
+            )
+            already_allocated = allocation_per_employee[0][0] or 0.0
+            if already_allocated + taken_time > leave_type.max_allowed_positive:
+                raise ValidationError(self.env._(
+                    "%(leave_type)s: Allocation exceeds the allowed positive cap. "
+                    "You cannot allocate more than %(cap)s %(unit)s per year.",
+                    leave_type=leave_type.name,
+                    cap=leave_type.max_allowed_positive,
+                    unit=unit,
+                ))
+
     @api.depends('allocation_type')
     def _compute_accrual_plan_id(self):
         for allocation in self:
@@ -918,6 +953,7 @@ class HrLeaveAllocation(models.Model):
         return True
 
     def _action_validate(self):
+        self._check_positive_cap_allocation()
         current_employee = self.env.user.employee_id
 
         allocation_both = self.filtered(lambda allocation: allocation.validation_type == 'both')
