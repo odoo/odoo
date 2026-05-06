@@ -1235,4 +1235,73 @@ QUnit.module("Fields", (hooks) => {
             );
         }
     );
+
+    QUnit.test(
+        "translating a char field inside one2many saves the parent record",
+        async function (assert) {
+            assert.expect(2);
+
+            serverData.models.partner.fields.foo.translate = true;
+            serviceRegistry.add("localization", makeFakeLocalizationService({ multiLang: true }), {
+                force: true,
+            });
+
+            patchWithCleanup(session.user_context, {
+                lang: "en_US",
+            });
+
+            let parentSaveCalled = false;
+            let childSaveCalled = false;
+
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                resId: 1,
+                serverData,
+                arch: `
+                    <form>
+                        <field name="p">
+                            <tree editable="bottom">
+                                <field name="foo"/>
+                            </tree>
+                        </field>
+                    </form>`,
+                mockRPC(route, { method, model }) {
+                    if (route === "/web/dataset/call_kw/res.lang/get_installed") {
+                        return Promise.resolve([
+                            ["en_US", "English"],
+                            ["fr_BE", "French (Belgium)"],
+                        ]);
+                    }
+
+                    if (route === "/web/dataset/call_kw/partner/get_field_translations") {
+                        return Promise.resolve([
+                            [
+                                { lang: "en_US", source: "move things", value: "move things" },
+                                { lang: "fr_BE", source: "move things", value: "breakfast" },
+                            ],
+                            { translation_type: "char", translation_show_source: false },
+                        ]);
+                    }
+
+                    if (method === "web_save") {
+                        if (model === "partner") {
+                            parentSaveCalled = true;
+                        } else {
+                            childSaveCalled = true;
+                        }
+                    }
+                },
+            });
+
+            await click(target, ".o_field_x2many_list_row_add a");
+
+            await editInput(target, ".o_field_widget[name='foo'] input", "move things");
+
+            await click(target, ".o_field_char .btn.o_field_translate");
+
+            assert.ok(parentSaveCalled, "parent record should be saved");
+            assert.notOk(childSaveCalled, "child record should not be saved");
+        }
+    );
 });
