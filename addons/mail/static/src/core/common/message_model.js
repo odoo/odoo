@@ -8,6 +8,7 @@ import {
     generateEmojisOnHtml,
     prepareBodyForEditing,
     htmlToTextContentInline,
+    htmlToHtmlInline,
 } from "@mail/utils/common/format";
 
 import { browser } from "@web/core/browser/browser";
@@ -480,7 +481,7 @@ export class Message extends Record {
             if (!this.body) {
                 return "";
             }
-            return decorateEmojis(htmlToTextContentInline(this.body));
+            return decorateEmojis(htmlToHtmlInline(this.body));
         },
     });
 
