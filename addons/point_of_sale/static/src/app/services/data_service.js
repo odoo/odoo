@@ -42,9 +42,7 @@ export class PosData {
             unsyncData: [],
         });
 
-        if (!navigator.onLine) {
-            await this.checkConnectivity();
-        }
+        await this.checkConnectivity();
 
         this.initializeWebsocket();
         await this.initializeDeviceIdentifier();
