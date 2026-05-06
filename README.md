@@ -1,37 +1,29 @@
-# Odoo
+<h1>Proyecto: SCRUM y DevOps aplicado a Odoo</h1>
 
-[![Build Status](https://runbot.odoo.com/runbot/badge/flat/1/master.svg)](https://runbot.odoo.com/runbot)
-[![Tech Doc](https://img.shields.io/badge/master-docs-875A7B.svg?style=flat&colorA=8F8F8F)](https://www.odoo.com/documentation/master)
-[![Help](https://img.shields.io/badge/master-help-875A7B.svg?style=flat&colorA=8F8F8F)](https://www.odoo.com/forum/help-1)
-[![Nightly Builds](https://img.shields.io/badge/master-nightly-875A7B.svg?style=flat&colorA=8F8F8F)](https://nightly.odoo.com/)
+<h2>1. Información del Equipo</h2>
+<ul>
+  <li><strong>Universidad:</strong> Universidad Nacional de San Agustín (UNSA)</li>
+  <li><strong>Facultad:</strong> Ingeniería de Producción y Servicios</li>
+  <li><strong>Escuela:</strong> Ingeniería de Sistemas</li>
+  <li><strong>Curso:</strong> Ingeniería y Procesos de Software 2026-A</li>
+  <li><strong>Grupo:</strong> [Tu número de grupo aquí]</li>
+</ul>
 
-Odoo is a suite of web based open source business apps.
+<h2>2. Integrantes</h2>
+<ul>
+  <li>Integrante 1 (Líder Sprint 0): [Tu Nombre]</li>
+  <li>Integrante 2: [Nombre de tu compañero]</li>
+  <li>Integrante 3: [Nombre de tu compañero]</li>
+  <li>Integrante 4: [Nombre de tu compañero]</li>
+  <li>Integrante 5: [Nombre de tu compañero]</li>
+</ul>
 
-The main Odoo Apps include an [Open Source CRM](https://www.odoo.com/page/crm),
-[Website Builder](https://www.odoo.com/app/website),
-[eCommerce](https://www.odoo.com/app/ecommerce),
-[Warehouse Management](https://www.odoo.com/app/inventory),
-[Project Management](https://www.odoo.com/app/project),
-[Billing &amp; Accounting](https://www.odoo.com/app/accounting),
-[Point of Sale](https://www.odoo.com/app/point-of-sale-shop),
-[Human Resources](https://www.odoo.com/app/employees),
-[Marketing](https://www.odoo.com/app/social-marketing),
-[Manufacturing](https://www.odoo.com/app/manufacturing),
-[...](https://www.odoo.com/)
+<h2>3. Objetivo del Proyecto</h2>
+<p>Implementar un proceso de desarrollo de software que integre la metodología ágil Scrum con prácticas DevOps automatizadas sobre Odoo, analizando y ejecutando las fases del ciclo de vida del software.</p>
 
-Odoo Apps can be used as stand-alone applications, but they also integrate seamlessly so you get
-a full-featured [Open Source ERP](https://www.odoo.com) when you install several Apps.
-
-## Getting started with Odoo
-
-For a standard installation please follow the [Setup instructions](https://www.odoo.com/documentation/master/administration/install/install.html)
-from the documentation.
-
-To learn the software, we recommend the [Odoo eLearning](https://www.odoo.com/slides),
-or [Scale-up, the business game](https://www.odoo.com/page/scale-up-business-game).
-Developers can start with [the developer tutorials](https://www.odoo.com/documentation/master/developer/howtos.html).
-
-## Security
-
-If you believe you have found a security issue, check our [Responsible Disclosure page](https://www.odoo.com/security-report)
-for details and get in touch with us via email.
+<h2>4. Producto Seleccionado: Odoo</h2>
+<ul>
+  <li><strong>Dominio:</strong> ERP / Sistema empresarial.</li>
+  <li><strong>Licencia:</strong> LGPL v3 (Versión Community).</li>
+  <li><strong>Stack:</strong> Python, JavaScript, PostgreSQL, Docker.</li>
+</ul>
