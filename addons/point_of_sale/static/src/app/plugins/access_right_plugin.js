@@ -38,6 +38,10 @@ export class PosAccessRightPlugin extends Plugin {
 
     resetCashier() {
         this.cashier = false;
+        this.forgetConnectedCashier();
+    }
+
+    forgetConnectedCashier() {
         sessionStorage.removeItem(`connected_cashier_${this.config.id}`);
     }
 

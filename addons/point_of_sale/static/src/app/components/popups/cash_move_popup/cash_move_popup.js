@@ -156,4 +156,7 @@ export class CashMovePopup extends Component {
             { noSymbol: true }
         );
     }
+    async cancel() {
+        this.props.close();
+    }
 }
