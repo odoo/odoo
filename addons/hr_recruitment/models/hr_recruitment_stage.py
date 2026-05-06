@@ -27,6 +27,10 @@ class HrRecruitmentStage(models.Model):
     rotting_threshold_days = fields.Integer('Days to rot', default=0, help='Day count before applicants in this stage become stale. \
         Set to 0 to disable.  Changing this parameter will not affect the rotting status/date of resources last updated before this change.')
     is_warning_visible = fields.Boolean(compute='_compute_is_warning_visible')
+    company_id = fields.Many2one(
+        'res.company', string='Company',
+        domain=lambda self: [('id', 'in', self.env.companies.ids)],
+        help="The company this stage is available to. If not set, it is available to all companies.")
 
     @api.model
     def default_get(self, fields):
