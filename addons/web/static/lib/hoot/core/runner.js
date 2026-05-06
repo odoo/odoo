@@ -490,8 +490,10 @@ export class Runner {
             internalRandom.seed = this.config.random();
         }
 
-        on(window, "error", this._handleError.bind(this));
-        on(window, "unhandledrejection", this._handleError.bind(this));
+        this._handleError = this._handleError.bind(this);
+
+        on(window, "error", this._handleError);
+        on(window, "unhandledrejection", this._handleError);
     }
 
     /**
@@ -1023,9 +1025,6 @@ export class Runner {
         this.status.set("running");
         this._startTime ||= $now();
 
-        /** @type {Runner["_handleError"]} */
-        const handleError = this._handleError.bind(this);
-
         let job = this._nextJob(jobs);
         while (job && this.status() === "running") {
             const callbackChain = this._getCallbackChain(job);
@@ -1041,16 +1040,16 @@ export class Runner {
                         this.suiteStack.push(suite);
 
                         suite.before();
-                        await this._callbacks.call("before-suite", suite, handleError);
-                        await suite.callbacks.call("before-suite", suite, handleError);
+                        await this._callbacks.call("before-suite", suite, this._handleError);
+                        await suite.callbacks.call("before-suite", suite, this._handleError);
                     }
                     if (suite.currentJobIndex >= suite.currentJobs.length) {
                         // after suite code
                         this.suiteStack.pop();
 
                         await this._execAfterCallback(async () => {
-                            await suite.callbacks.call("after-suite", suite, handleError);
-                            await this._callbacks.call("after-suite", suite, handleError);
+                            await suite.callbacks.call("after-suite", suite, this._handleError);
+                            await this._callbacks.call("after-suite", suite, this._handleError);
                         });
                         suite.after();
 
@@ -1100,7 +1099,7 @@ export class Runner {
             this.expectHooks.before(test);
             test.before();
             for (const callbackRegistry of [...callbackChain].reverse()) {
-                await callbackRegistry.call("before-test", test, handleError);
+                await callbackRegistry.call("before-test", test, this._handleError);
             }
 
             let timeoutId = 0;
@@ -1120,7 +1119,7 @@ export class Runner {
                         const msg = `test ${stringify(
                             test.name
                         )} timed out after ${timeout} milliseconds`;
-                        reject(new HootError(msg, { level: "global" }));
+                        reject(new HootError(msg));
                     }, timeout);
                 }
             }).then(() => {
@@ -1130,13 +1129,7 @@ export class Runner {
 
             // Run test
             await Promise.race([testPromise, timeoutPromise])
-                .catch((error) => {
-                    if (handleError) {
-                        return handleError(error);
-                    } else {
-                        throw error;
-                    }
-                })
+                .catch(this._handleError)
                 .finally(() => {
                     this._resolveCurrent = null;
 
@@ -1149,7 +1142,7 @@ export class Runner {
             const { lastResults } = test;
             await this._execAfterCallback(async () => {
                 for (const callbackRegistry of callbackChain) {
-                    await callbackRegistry.call("after-test", test, handleError);
+                    await callbackRegistry.call("after-test", test, this._handleError);
                 }
             });
             test.after();
@@ -1198,7 +1191,7 @@ export class Runner {
                 storageSet(STORAGE.failed, [...this.failedIds()]);
             }
 
-            await this._callbacks.call("after-post-test", test, handleError);
+            await this._callbacks.call("after-post-test", test, this._handleError);
 
             this._pushTest(test);
             this.totalTime = formatTime($now() - this._startTime);
