@@ -66,7 +66,7 @@ export class FeedbackScreen extends Component {
         if (this.isAutoSkip && !this.ignoreTimeout) {
             this.timeout.set(
                 setTimeout(() => {
-                    this.pos.orderDone(this.currentOrder);
+                    this.goNext();
                 }, this.pos.feedbackScreenAutoSkipDelay)
             );
         }

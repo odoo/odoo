@@ -41,6 +41,7 @@ import { OptionalProductPopup } from "@point_of_sale/app/components/popups/optio
 import { useRouterParamsChecker } from "@point_of_sale/app/hooks/pos_router_hook";
 import { debounce } from "@web/core/utils/timing";
 import { useSortable } from "@web/core/utils/sortable_owl";
+import { capitalize } from "@web/core/utils/strings";
 
 const { DateTime } = luxon;
 
@@ -244,7 +245,9 @@ export class ProductScreen extends Component {
             {
                 value: "price",
                 text: _t("Price"),
-                disabled: !this.pos.accessRight.disablePriceButton,
+                disabled:
+                    !this.pos.accessRight.disablePriceButton ||
+                    order?.getSelectedOrderline()?.isPartOfCombo(),
             },
             {
                 ...BACKSPACE,
@@ -278,7 +281,7 @@ export class ProductScreen extends Component {
         }
         if (this.pos.getOrder().isRefund && buttonValue !== "Backspace") {
             return this.dialog.add(AlertDialog, {
-                title: _t("%s update not allowed", this.pos.numpadMode),
+                title: _t("%s update not allowed", capitalize(this.pos.numpadMode)),
                 body: _t("You can not change the %s of the refund order.", this.pos.numpadMode),
             });
         }

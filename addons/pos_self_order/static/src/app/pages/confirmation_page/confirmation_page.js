@@ -86,6 +86,12 @@ export class ConfirmationPage extends Component {
         );
     }
 
+    //TODO-manv: this was removed , need to do it an other way
+    async beforePrintOrder() {
+        // meant to be overriden.
+        return true;
+    }
+
     /**
      * Two call are performed to update-last-changes.
      *

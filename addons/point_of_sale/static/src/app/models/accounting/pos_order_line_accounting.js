@@ -69,6 +69,9 @@ export class PosOrderlineAccounting extends Base {
             ? this.unitPrices.total_included
             : this.unitPrices.total_excluded;
     }
+    get displayPriceUnitIncl() {
+        return this.unitPrices.total_included;
+    }
     get displayPriceUnitExcl() {
         return this.unitPrices.total_excluded;
     }
@@ -83,6 +86,11 @@ export class PosOrderlineAccounting extends Base {
     }
     get priceExcl() {
         return this.currency.round(this.prices.total_excluded * this.order_id.orderSign);
+    }
+    get priceUnitInclNoDiscount() {
+        return this.currency.round(
+            this.unitPrices.no_discount_total_included * this.order_id.orderSign
+        );
     }
     get priceInclNoDiscount() {
         return this.currency.round(
