@@ -3,7 +3,7 @@
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
-from odoo.tools.float_utils import float_is_zero
+from odoo.tools.float_utils import float_compare, float_is_zero
 
 
 class ReturnPickingLine(models.TransientModel):
@@ -127,8 +127,25 @@ class ReturnPicking(models.TransientModel):
         return vals
 
     def _create_returns(self):
-        for return_move in self.product_return_moves.mapped('move_id'):
-            return_move.move_dest_ids.filtered(lambda m: m.state not in ('done', 'cancel'))._do_unreserve()
+        for return_line in self.product_return_moves.filtered(
+            lambda l: not float_is_zero(l.quantity, precision_rounding=l.uom_id.rounding)
+        ):
+            for dest_move in return_line.move_id.move_dest_ids.filtered(lambda m: m.state not in ('done', 'cancel')):
+                qty_to_free = return_line.uom_id._compute_quantity(return_line.quantity, dest_move.product_uom)
+                rounding = dest_move.product_uom.rounding
+                for ml in dest_move.move_line_ids.sorted(key=lambda l: -l.quantity):
+                    if float_is_zero(qty_to_free, precision_rounding=rounding):
+                        break
+                    if ml.picked:
+                        continue
+                    ml_qty = ml.product_uom_id._compute_quantity(ml.quantity, dest_move.product_uom)
+                    if float_compare(ml_qty, qty_to_free, precision_rounding=rounding) <= 0:
+                        qty_to_free -= ml_qty
+                        ml.unlink()
+                    else:
+                        ml.quantity -= dest_move.product_uom._compute_quantity(qty_to_free, ml.product_uom_id)
+                        qty_to_free = 0
+                dest_move._recompute_state()
 
         # create new picking for returned products
         new_picking = self.picking_id.copy(self._prepare_picking_default_values())

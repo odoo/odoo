@@ -303,8 +303,10 @@ class TestPickShip(TestStockCommon):
         return_pick.move_ids[0].move_line_ids[0].quantity = 2.0
         return_pick.move_ids[0].picked = True
         return_pick._action_done()
-        # the client picking should not be assigned anymore, as we returned partially what we took
-        self.assertEqual(picking_client.state, 'confirmed')
+        # 8 of 10 units are still reserved on the OUT move
+        self.assertEqual(picking_client.state, 'assigned')
+        self.assertEqual(picking_client.move_ids.state, 'partially_available')
+        self.assertEqual(picking_client.move_ids.quantity, 8.0)
 
     def test_mto_moves_extra_qty(self):
         """ Ensure that a move in MTO will support an extra quantity. The extra
@@ -356,6 +358,69 @@ class TestPickShip(TestStockCommon):
         # Verify the extra move has been merged with the original move
         self.assertAlmostEqual(return_pick.move_ids.product_uom_qty, 12.0)
         self.assertAlmostEqual(return_pick.move_ids.quantity, 10.0)
+
+    def test_return_only_unreserves_returned_quantity(self):
+        """Test that returning products from a 2-step delivery only impacts the
+        OUT move reservations for the quantity actually being returned: a partial
+        return keeps the remaining quantity reserved, a full return drops the
+        reservation entirely, and a line removed from the wizard leaves the OUT
+        move untouched.
+        """
+        stock_location = self.env['stock.location'].browse(self.stock_location)
+        pack_location = self.env['stock.location'].browse(self.pack_location)
+        customer_location = self.env['stock.location'].browse(self.customer_location)
+        products = [self.productA, self.productB, self.productC]
+        for product in products:
+            self.env['stock.quant']._update_available_quantity(product, stock_location, 8.0)
+
+        picking_client = self.PickingObj.create({
+            'picking_type_id': self.picking_type_out,
+            'location_id': pack_location.id,
+            'location_dest_id': customer_location.id,
+        })
+        out_moves = self.MoveObj.create([{
+            'name': product.name,
+            'product_id': product.id,
+            'product_uom_qty': 8,
+            'product_uom': product.uom_id.id,
+            'picking_id': picking_client.id,
+            'location_id': pack_location.id,
+            'location_dest_id': customer_location.id,
+        } for product in products])
+        picking_pick = self.PickingObj.create({
+            'picking_type_id': self.picking_type_out,
+            'location_id': stock_location.id,
+            'location_dest_id': pack_location.id,
+        })
+        self.MoveObj.create([{
+            'name': product.name,
+            'product_id': product.id,
+            'product_uom_qty': 8,
+            'product_uom': product.uom_id.id,
+            'picking_id': picking_pick.id,
+            'location_id': stock_location.id,
+            'location_dest_id': pack_location.id,
+            'move_dest_ids': [Command.link(out_moves[i].id)],
+        } for i, product in enumerate(products)])
+        picking_client.action_confirm()
+        picking_pick.action_assign()
+        picking_pick.move_ids.move_line_ids.quantity = 8.0
+        picking_pick.move_ids.picked = True
+        picking_pick._action_done()
+
+        return_wizard = Form(self.env['stock.return.picking'].with_context(
+            active_id=picking_pick.id, active_ids=picking_pick.ids,
+            active_model='stock.picking',
+        )).save()
+        return_wizard.product_return_moves.filtered(lambda l: l.product_id == self.productA).quantity = 1.0
+        return_wizard.product_return_moves.filtered(lambda l: l.product_id == self.productC).unlink()
+        return_wizard.create_returns()
+
+        self.assertRecordValues(out_moves, [
+            {'state': 'partially_available', 'quantity': 7},
+            {'state': 'confirmed', 'quantity': 0},
+            {'state': 'assigned', 'quantity': 8},
+        ])
 
     def test_mto_resupply_cancel_ship(self):
         """ This test simulates a pick pack ship with a resupply route
