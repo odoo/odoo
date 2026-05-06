@@ -20,7 +20,7 @@ from odoo.addons.l10n_es_edi_tbai.models.xml_utils import (
     cleanup_xml_signature,
 )
 from odoo.exceptions import UserError
-from odoo.tools import BinaryBytes, get_lang
+from odoo.tools import get_lang
 from odoo.tools.float_utils import float_repr, float_round
 from odoo.tools.xml_utils import cleanup_xml_node
 
@@ -237,7 +237,7 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
             'url': get_key(self.company_id.l10n_es_tbai_tax_agency, 'cancel_url_' if self.is_cancel else 'post_url_', company.l10n_es_tbai_test_env),
             'headers': {"Content-Type": "application/xml; charset=utf-8"},
             'pkcs12_data': company.l10n_es_tbai_certificate_id,
-            'data': self.xml_attachment_id.raw,
+            'data': self.xml_attachment_id.raw.content,
         }
 
     @api.model
@@ -306,7 +306,7 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
             'freelancer': freelancer,
             'epigrafe': self.env['ir.config_parameter'].sudo().get_str('l10n_es_edi_tbai.epigrafe')
         }
-        lroe_values.update({'tbai_b64_list': [base64.b64encode(self.xml_attachment_id.raw).decode()]})
+        lroe_values.update({'tbai_b64_list': [base64.b64encode(self.xml_attachment_id.raw.content).decode()]})
         lroe_str = self.env['ir.qweb']._render('l10n_es_edi_tbai.template_LROE_240_main', lroe_values)
         lroe_xml = cleanup_xml_node(lroe_str)
 
@@ -710,7 +710,7 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
         values = {
             'dsig': {
                 'document_id': document_id,
-                'x509_certificate': BinaryBytes(base64.b64decode(certificate_sudo._get_der_certificate_bytes())),
+                'x509_certificate': base64.encodebytes(base64.b64decode(certificate_sudo._get_der_certificate_bytes())).decode(),
                 'public_modulus': n.decode(),
                 'public_exponent': e.decode(),
                 'iso_now': datetime.now().isoformat(),
@@ -720,10 +720,10 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
                 'reference_uri': "Reference-" + document_id,
                 'sigpolicy_url': get_key(company.l10n_es_tbai_tax_agency, 'sigpolicy_url'),
                 'sigpolicy_digest': get_key(company.l10n_es_tbai_tax_agency, 'sigpolicy_digest'),
-                'sigcertif_digest': BinaryBytes(certificate_sudo._get_fingerprint_bytes(formatting='raw')),
+                'sigcertif_digest': certificate_sudo._get_fingerprint_bytes(formatting='base64').decode(),
                 'x509_issuer_description': issuer,
                 'x509_serial_number': int(certificate_sudo.serial_number),
-            }
+            },
         }
         xml_sig_str = self.env['ir.qweb']._render('l10n_es_edi_tbai.template_digital_signature', values)
         xml_sig = cleanup_xml_signature(xml_sig_str)
