@@ -1,6 +1,6 @@
-import { useLayoutEffect, useRef, useState } from "@web/owl2/utils";
+import { onWillRender, useLayoutEffect, useRef, useState } from "@web/owl2/utils";
 
-import { Component, onWillRender } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";

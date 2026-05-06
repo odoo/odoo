@@ -28,40 +28,40 @@
                 class="form-check-input"
                 type="checkbox"
                 id="lna_chromium"
-                t-att-checked="checked('lna_chromium')"
-                t-on-click="toggle" />
+                t-att-checked="this.checked('lna_chromium')"
+                t-on-click="this.toggle" />
             <label class="form-check-label ms-2" for="lna_chromium"> My browser is chromium based (Chrome, Edge, Brave, etc.) </label>
             <br />
             <input
                 class="form-check-input"
                 type="checkbox"
                 id="lna_browser_version"
-                t-att-checked="checked('lna_browser_version')"
-                t-on-click="toggle" />
+                t-att-checked="this.checked('lna_browser_version')"
+                t-on-click="this.toggle" />
             <label class="form-check-label ms-2" for="lna_browser_version"> My browser is above version 142 </label>
             <br />
             <input
                 class="form-check-input"
                 type="checkbox"
                 id="lna_router"
-                t-att-checked="checked('lna_router')"
-                t-on-click="toggle" />
+                t-att-checked="this.checked('lna_router')"
+                t-on-click="this.toggle" />
             <label class="form-check-label ms-2" for="lna_router"> I have access to my router configuration (To fix device IP addresses) </label>
             <br />
             <input
                 class="form-check-input"
                 type="checkbox"
                 id="lna_epson"
-                t-att-checked="checked('lna_epson')"
-                t-on-click="toggle" />
+                t-att-checked="this.checked('lna_epson')"
+                t-on-click="this.toggle" />
             <label class="form-check-label ms-2" for="lna_router"> I use an Epson printer (Check supported printers in Odoo documentation) </label>
             <br />
             <input
                 class="form-check-input ms-3"
                 type="checkbox"
                 id="lna_ethernet"
-                t-att-checked="checked('lna_ethernet')"
-                t-on-click="toggle" />
+                t-att-checked="this.checked('lna_ethernet')"
+                t-on-click="this.toggle" />
             <label class="form-check-label ms-2" for="lna_ethernet"> My printer can be connected through ethernet cables (recommended) </label>
             <br />
 
@@ -70,24 +70,24 @@
                 class="form-check-input"
                 type="checkbox"
                 id="lna_internet"
-                t-att-checked="checked('lna_internet')"
-                t-on-click="toggle" />
+                t-att-checked="this.checked('lna_internet')"
+                t-on-click="this.toggle" />
             <label class="form-check-label ms-2" for="lna_internet"> Connect printer to internet (Ethernet cable recommended) </label>
             <br />
             <input
                 class="form-check-input"
                 type="checkbox"
                 id="lna_ip"
-                t-att-checked="checked('lna_ip')"
-                t-on-click="toggle" />
+                t-att-checked="this.checked('lna_ip')"
+                t-on-click="this.toggle" />
             <label class="form-check-label ms-2" for="lna_ip"> Printer's local IP address is printerd </label>
             <br />
             <input
                 class="form-check-input"
                 type="checkbox"
                 id="lna_printer_config"
-                t-att-checked="checked('lna_printer_config')"
-                t-on-click="toggle" />
+                t-att-checked="this.checked('lna_printer_config')"
+                t-on-click="this.toggle" />
             <label class="form-check-label ms-2" for="lna_printer_config"> Access printer configuration panel by puttin this URL in your search bar: </label>
                 <p style="text-indent:1em;">(Replace [printer_ip] with the printer IP address)</p>
                 <p><code>http://[printer_ip]/cgi-bin/epos/service.cgi?devid=local_printer</code></p>
@@ -95,8 +95,8 @@
                 class="form-check-input"
                 type="checkbox"
                 id="lna_printer_firmware"
-                t-att-checked="checked('lna_printer_firmware')"
-                t-on-click="toggle" />
+                t-att-checked="this.checked('lna_printer_firmware')"
+                t-on-click="this.toggle" />
             <label class="form-check-label ms-2" for="lna_printer_firmware"> Update the printer firmware </label>
                 <p><em> The password is located on the back of the printer (remove covers). </em></p>
                 <img class="img-fluid" src="/point_of_sale/static/img/lna_config/image.png" alt="Printer Password Location"/>
@@ -106,8 +106,8 @@
                 class="form-check-input"
                 type="checkbox"
                 id="lna_printer_check"
-                t-att-checked="checked('lna_printer_check')"
-                t-on-click="toggle" />
+                t-att-checked="this.checked('lna_printer_check')"
+                t-on-click="this.toggle" />
             <label class="form-check-label ms-2" for="lna_printer_check"> Access the below URL but replace [printer_ip] with your current Pritner IP address </label>
             <p><code>http://[printer_ip]/cgi-bin/epos/service.cgi?devid=local_printer</code></p>
             <p>If this endpoint does not returan a 404 error and displays a blank page, everything is ready.</p>
@@ -117,8 +117,8 @@
                 class="form-check-input"
                 type="checkbox"
                 id="lna_tls"
-                t-att-checked="checked('lna_tls')"
-                t-on-click="toggle" />
+                t-att-checked="this.checked('lna_tls')"
+                t-on-click="this.toggle" />
             <label class="form-check-label ms-2" for="lna_tls"> <strong> Disable "Redirect HTTP to HTTPS" </strong> </label>
             <p> Keep TLS settings enabled, otherwise the printer will not work with HTTPS. </p>
             <img class="img-fluid" src="/point_of_sale/static/img/lna_config/image_1.png" alt="SSL Settings"/>
@@ -128,8 +128,8 @@
                 class="form-check-input"
                 type="checkbox"
                 id="lna_epos_print"
-                t-att-checked="checked('lna_epos_print')"
-                t-on-click="toggle" />
+                t-att-checked="this.checked('lna_epos_print')"
+                t-on-click="this.toggle" />
             <label class="form-check-label ms-2" for="lna_epos_print"> Check if <strong> ePOS-print </strong> is enabled </label>
             <img class="img-fluid" src="/point_of_sale/static/img/lna_config/image_2.png" alt="ePOS print enabled"/>
 
@@ -138,8 +138,8 @@
                 class="form-check-input"
                 type="checkbox"
                 id="lna_secure_print"
-                t-att-checked="checked('lna_secure_print')"
-                t-on-click="toggle" />
+                t-att-checked="this.checked('lna_secure_print')"
+                t-on-click="this.toggle" />
             <label class="form-check-label ms-2" for="lna_secure_print"> If you have the secure printing setting, disable it </label>
             <li> If you have the secure printing setting, disable it </li>
             <img class="img-fluid" src="/point_of_sale/static/img/lna_config/image_3.png" alt="ePOS print enabled"/>
@@ -165,24 +165,24 @@
                 class="form-check-input"
                 type="checkbox"
                 id="lna_pos_link"
-                t-att-checked="checked('lna_pos_link')"
-                t-on-click="toggle" />
+                t-att-checked="this.checked('lna_pos_link')"
+                t-on-click="this.toggle" />
             <label class="form-check-label ms-2" for="lna_pos_link"> Link your printers to your POS (ePOS) </label>
             <br />
             <input
                 class="form-check-input"
                 type="checkbox"
                 id="lna_print"
-                t-att-checked="checked('lna_print')"
-                t-on-click="toggle" />
+                t-att-checked="this.checked('lna_print')"
+                t-on-click="this.toggle" />
             <label class="form-check-label ms-2" for="lna_print"> Open your POS and try to print a ticket </label>
             <br />
             <input
                 class="form-check-input"
                 type="checkbox"
                 id="lna_prompt"
-                t-att-checked="checked('lna_prompt')"
-                t-on-click="toggle" />
+                t-att-checked="this.checked('lna_prompt')"
+                t-on-click="this.toggle" />
             <label class="form-check-label ms-2" for="lna_prompt"> The message will appear from the browser. <strong> Allow </strong> access </label>
             <img class="img-fluid" src="/point_of_sale/static/img/lna_config/image_6.png" alt="Browser LNA Prompt"/>
 

@@ -591,5 +591,4 @@ def upgrade(file_manager) -> str:
     collector.run_sub("Migrating t-esc", upgrade_t_esc)
     collector.run_sub("Migrating t-ref", upgrade_t_ref)
     collector.run_sub("Migrating t-model", upgrade_t_model)
-
     collector.finalize()

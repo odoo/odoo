@@ -12,25 +12,25 @@
                 </div>
                 <div class="d-flex flex-column gap-3 overflow-y-auto overflow-x-hidden flex-grow-1">
                     <input t-if="this.preset.needsName || this.preset.needsPartner"
-                        t-ref="autofocus"
+                        t-custom-ref="autofocus"
                         type="text"
                         class="form-control form-control-lg"
                         placeholder="Name"
-                        t-custom-model="state.name"/>
+                        t-custom-model="this.state.name"/>
                     <input t-if="this.preset.needsEmail || this.preset.needsPartner"
                         type="text"
                         class="form-control form-control-lg"
                         placeholder="Email"
-                        t-custom-model="state.email"/>
+                        t-custom-model="this.state.email"/>
                     <t t-if="this.preset.needsName || this.preset.needsPartner">
                         <div class="input-group">
                             <div class="position-relative w-25 me-3">
                                 <div class="form-control form-control-lg d-flex align-items-center gap-1 pe-none">
                                     <t t-out="this.flagEmoji(this.selectedCountry?.code || '')"/>
-                                    <span>+<t t-out="state.phoneCode"/></span>
+                                    <span>+<t t-out="this.state.phoneCode"/></span>
                                 </div>
                                 <select class="position-absolute top-0 start-0 w-100 h-100 opacity-0"
-                                        t-custom-model.number="state.phoneCode">
+                                        t-custom-model.number="this.state.phoneCode">
                                     <option t-foreach="this.selfOrder.models['res.country'].getAll()" t-as="c" t-key="c.id" t-att-value="c.phone_code">
                                         <t t-out="this.flagEmoji(c.code)"/> +<t t-out="c.phone_code"/> <t t-out="c.name"/>
                                     </option>
@@ -39,12 +39,12 @@
                             <input type="tel"
                                 class="form-control form-control-lg"
                                 placeholder="Phone"
-                                t-custom-model="state.phoneLocal" />
+                                t-custom-model="this.state.phoneLocal" />
                         </div>
                         <p t-if="!this.checkPhoneFormat()" class="text-danger">Enter a valid phone number</p>
                     </t>
                     <t t-if="this.preset.needsPartner">
-                        <div t-att-class="'o_field_widget o_field_google_address_autocomplete' + (state.validationError?.type === 'delivery' ? ' address-delivery-error' : '')">
+                        <div t-att-class="'o_field_widget o_field_google_address_autocomplete' + (this.state.validationError?.type === 'delivery' ? ' address-delivery-error' : '')">
                             <AddressAutoComplete t-props="this.addressAutoCompleteProps" />
                             <div class="d-flex justify-content-end mt-1">
                                 <img src="/google_address_autocomplete/static/src/img/powered_by_google_on_white.png"
@@ -52,9 +52,9 @@
                                     style="height: 18px;"/>
                             </div>
                         </div>
-                        <t t-if="state.validationError">
-                            <p class="text-danger mb-0" t-esc="state.validationError.message"/>
-                            <div t-if="state.validationError.type === 'delivery' and this.otherPresets.length" class="d-flex gap-2 flex-wrap justify-content-center">
+                        <t t-if="this.state.validationError">
+                            <p class="text-danger mb-0" t-out="this.state.validationError.message"/>
+                            <div t-if="this.state.validationError.type === 'delivery' and this.otherPresets.length" class="d-flex gap-2 flex-wrap justify-content-center">
                                 <button t-foreach="this.otherPresets" t-as="altPreset" t-key="altPreset.id"
                                     type="button"
                                     class="btn btn-light btn-sm"
@@ -72,8 +72,8 @@
                     </button>
                     <button class="btn btn-primary flex-grow-1 ms-1"
                         t-on-click="this.setInformations"
-                        t-att-disabled="!this.validSelection || state.isSubmitting">
-                        <t t-if="state.isSubmitting">
+                        t-att-disabled="!this.validSelection || this.state.isSubmitting">
+                        <t t-if="this.state.isSubmitting">
                             <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true" />
                             Validating...
                         </t>

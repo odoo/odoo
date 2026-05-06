@@ -78,7 +78,7 @@ export class HootConfigMenu extends Component {
                         type="text"
                         autofocus=""
                         class="w-full outline-none border-b border-primary px-1"
-                        t-model.number="config.random"
+                        t-model.number="this.config.random"
                     />
                     <button
                         type="button"
@@ -98,7 +98,7 @@ export class HootConfigMenu extends Component {
                 <input
                     type="text"
                     class="outline-none border-b border-primary px-1 w-full"
-                    t-model.number="config.timeout"
+                    t-model.number="this.config.timeout"
                 />
             </label>
             <label
@@ -142,7 +142,7 @@ export class HootConfigMenu extends Component {
                         type="text"
                         autofocus=""
                         class="outline-none w-full border-b border-primary px-1"
-                        t-model.number="config.bail"
+                        t-model.number="this.config.bail"
                     />
                 </small>
             </t>
@@ -164,7 +164,7 @@ export class HootConfigMenu extends Component {
                     <select
                         autofocus=""
                         class="outline-none w-full bg-base text-base border-b border-primary px-1"
-                        t-model.number="config.loglevel"
+                        t-model.number="this.config.loglevel"
                     >
                         <t t-foreach="this.LOG_LEVELS" t-as="level" t-key="level.value">
                             <option

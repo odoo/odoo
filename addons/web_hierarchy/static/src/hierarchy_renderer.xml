@@ -10,8 +10,8 @@
                         <div t-if="row.parentNode and previousRow.nodes.length > 1"
                             class="o_hierarchy_parent_node_container d-flex justify-content-center align-items-center"
                         >
-                            <img t-if="props.archInfo.avatarField"
-                                t-att-src="'/web/image/' + row.parentNode.model.resModel + '/' + row.parentNode.resId + '/' + props.archInfo.avatarField"
+                            <img t-if="this.props.archInfo.avatarField"
+                                t-att-src="'/web/image/' + row.parentNode.model.resModel + '/' + row.parentNode.resId + '/' + this.props.archInfo.avatarField"
                                 t-on-error="(ev) => ev.target.style.display = 'none'" class="o_avatar rounded me-2"/>
                             <span t-out="row.parentNode.data.display_name || row.parentNode.data.name"/>
                         </div>

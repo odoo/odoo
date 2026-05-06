@@ -5,7 +5,7 @@
             <div class="d-flex flex-column flex-grow-1 overflow-y-auto" t-custom-ref="scrollContainer">
                <div class="container o_self_container my-auto">
                    <h1 class="text-center mt-4">
-                       <t t-if="selfOrder.config.module_pos_restaurant">Where do you want to eat?</t>
+                       <t t-if="this.selfOrder.config.module_pos_restaurant">Where do you want to eat?</t>
                        <t t-else="">Select your preferred option</t>
                    </h1>
                    <div class="grid py-3 py-lg-4 gap-3 gap-sm-4" t-att-class="{'d-flex justify-content-center': this.presets.length === 1}">
@@ -26,19 +26,19 @@
                                         <img class="object-fit-cover" t-attf-src="/web/image/pos.preset/#{preset.id}/image_512?unique=#{preset.write_date} "/>
                                     </div>
                                     <span t-if="this.ui.size gt this.SIZES.XS and preset.use_timing" class="badge text-bg-secondary rounded-pill p-2 m-2 bg-opacity-75 position-absolute bottom-0 end-0">
-                                        Average time: <t t-esc="preset.interval_time"/> minutes
+                                        Average time: <t t-out="preset.interval_time"/> minutes
                                     </span>
                                 </div>
                             </t>
                             <t t-elif="this.ui.size gt this.SIZES.XS and preset.use_timing">
                                 <span class="badge text-bg-secondary rounded-pill p-2 m-2 bg-opacity-75 position-absolute bottom-0 end-0">
-                                    Average time: <t t-esc="preset.interval_time"/> minutes
+                                    Average time: <t t-out="preset.interval_time"/> minutes
                                 </span>
                             </t>
                             <span class="px-3 py-3 fw-bold"  t-out="preset.name"/>
                             <span t-if="this.ui.size lte this.SIZES.XS and preset.use_timing" class="badge text-bg-secondary rounded-pill p-2 m-2 bg-opacity-75 position-absolute end-0">
                                 <i class="fa fa-clock-o pe-1" />
-                                <t t-esc="preset.interval_time"/> min
+                                <t t-out="preset.interval_time"/> min
                             </span>
                        </article>
                    </div>

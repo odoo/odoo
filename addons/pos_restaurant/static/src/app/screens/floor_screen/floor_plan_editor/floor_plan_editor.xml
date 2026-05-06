@@ -38,24 +38,24 @@
     </t>
 
      <t t-name="pos.floor_screen_shape">
-         <div t-attf-class="o_fp_shape {{shape.isTable?'o_fp_table':'o_fp_decor' }} {{shape.shape}} {{shape.hasTransparentArea?'o_fp_transparent_area':''}} {{this.floorPlanStore.selectedElement == shape ? 'selected' :'' }}" t-att-style="shape.getCssStyle()"
-              t-attf-id="fpe-{{shape.uuid}}" t-on-mousedown.synthetic.stop="(ev)=>this.startDrag(ev, shape.uuid)" t-on-dblclick.synthetic.stop="(ev)=>this.onDblclick(ev, shape.uuid)"  t-on-touchstart.synthetic.stop="(ev)=>this.startDrag(ev, shape.uuid)"  >
-              <t t-if="shape.isTable">
-                <span t-out="shape.tableNumber" class="o_fp_table_number fs-4 fw-bolder" t-att-style="shape.getTableContentStyle()"/>
+         <div t-attf-class="o_fp_shape {{this.shape.isTable?'o_fp_table':'o_fp_decor' }} {{this.shape.shape}} {{this.shape.hasTransparentArea?'o_fp_transparent_area':''}} {{this.floorPlanStore.selectedElement == this.shape ? 'selected' :'' }}" t-att-style="this.shape.getCssStyle()"
+              t-attf-id="fpe-{{this.shape.uuid}}" t-on-mousedown.synthetic.stop="(ev)=>this.startDrag(ev, this.shape.uuid)" t-on-dblclick.synthetic.stop="(ev)=>this.onDblclick(ev, this.shape.uuid)"  t-on-touchstart.synthetic.stop="(ev)=>this.startDrag(ev, this.shape.uuid)"  >
+              <t t-if="this.shape.isTable">
+                <span t-out="this.shape.tableNumber" class="o_fp_table_number fs-4 fw-bolder" t-att-style="this.shape.getTableContentStyle()"/>
               </t>
-               <t t-elif="shape.isText">
+               <t t-elif="this.shape.isText">
                      <!-- Use a separate contenteditable element to avoid reactive glitches where text renders twice with trailing \n -->
-                   <span t-if="shape.textEditing and this.floorPlanStore.isContentEditableTextEnabled()" _text="1" class="o_fp_text_content" t-out="shape.initialText" t-att-style="shape.getTextCssStyle()"
+                   <span t-if="this.shape.textEditing and this.floorPlanStore.isContentEditableTextEnabled()" _text="1" class="o_fp_text_content" t-out="this.shape.initialText" t-att-style="this.shape.getTextCssStyle()"
                          contenteditable="true"
-                         t-on-input="(ev) => this.onTextInput(ev, shape)"
+                         t-on-input="(ev) => this.onTextInput(ev, this.shape)"
                          t-on-paste="(ev) => this.onTextPaste(ev)"
                          t-on-mousedown.stop="(ev) => this.onTextMouseDown(ev)"
                          />
-                   <span t-else="" class="o_fp_text_content" _text="1" t-out="shape.text" t-att-style="shape.getTextCssStyle()"/>
+                   <span t-else="" class="o_fp_text_content" _text="1" t-out="this.shape.text" t-att-style="this.shape.getTextCssStyle()"/>
                 </t>
-                 <t t-elif="shape.allowText and shape.text">
+                 <t t-elif="this.shape.allowText and this.shape.text">
                      <div class="h-100 w-100 d-flex align-items-center" >
-                         <span  class="o_fp_text_content" t-out="shape.text" t-att-style="shape.getTextCssStyle()"/>
+                         <span  class="o_fp_text_content" t-out="this.shape.text" t-att-style="this.shape.getTextCssStyle()"/>
                      </div>
                  </t>
          </div>
