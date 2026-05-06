@@ -41,6 +41,7 @@ export class PosOrder extends PosOrderAccounting {
                 general_customer_note: "",
                 internal_note: "",
                 sittingMode: 0,
+                print_history: [],
             };
         } else {
             this.last_order_preparation_change =
@@ -69,7 +70,6 @@ export class PosOrder extends PosOrderAccounting {
         // !!Keep all uiState in one object!!
         this.uiState = {
             unmerge: {},
-            lastPrints: [],
             lineToRefund: {},
             displayed: this.state !== "cancel",
             booked: false,
@@ -745,6 +745,16 @@ export class PosOrder extends PosOrderAccounting {
     }
     setInternalNote(note) {
         this.internal_note = note || "";
+    }
+
+    get lastPrints() {
+        return this.last_order_preparation_change.print_history || [];
+    }
+    pushLastPrints(data) {
+        if (!this.last_order_preparation_change.print_history) {
+            this.last_order_preparation_change.print_history = [];
+        }
+        this.last_order_preparation_change.print_history.push(data);
     }
 
     get showChange() {
