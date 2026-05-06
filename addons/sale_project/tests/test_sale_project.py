@@ -685,6 +685,11 @@ class TestSaleProject(TestSaleProjectCommon):
             product_context = sol_form._get_context('product_id')
             product = sol_form.product_id.with_context(product_context).new({
                 'name': 'Test product',
+                # `new()` skips `default_get` of `expense_policy` since its not a dependency of
+                # `_compute_qty_delivered_method`, so it must be correct before the first
+                # compute run or it will never hold right value in memory since the record is not
+                # yet committed to DB
+                'expense_policy': 'no',
             })
             self.assertEqual(product.type, 'service')
             self.assertEqual(product.type, 'service')
