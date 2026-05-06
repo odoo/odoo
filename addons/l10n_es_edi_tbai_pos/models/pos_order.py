@@ -104,7 +104,10 @@ class PosOrder(models.Model):
         if len(set(mapped_tbai_req)) > 1:
             raise UserError(self.env._("You cannot mix orders that require TicketBAI with those that don't."))
         if mapped_tbai_req[0]:
-            vals['l10n_es_tbai_refund_reason'] = self.l10n_es_tbai_refund_reason
+            refund_reasons = set(self.mapped('l10n_es_tbai_refund_reason'))
+            if len(refund_reasons) > 1:
+                raise UserError(self.env._("You cannot consolidate orders with different TicketBAI refund reasons."))
+            vals['l10n_es_tbai_refund_reason'] = refund_reasons.pop()
 
         return vals
 
