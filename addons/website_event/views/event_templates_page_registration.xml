@@ -194,17 +194,17 @@
 
 <!-- Event - Calendar Links -->
 <template id="event_calendar_links">
-    <h5>Add to your calendar</h5>
-    <div id="add_to_calendar" class="o_event_add_to_calendar_btns d-flex flex-wrap gap-3 mt-2">
+    <h5 class="fs-6">Add to</h5>
+    <div id="add_to_calendar" class="o_event_add_to_calendar_btns d-flex flex-wrap gap-2 mt-2">
         <a role="button" class="o_outlook_calendar btn bg-white"
             t-att-href="iCal_url">
             <img src="/event/static/src/img/outlook-calendar.svg" alt="Outlook" loading="lazy"/>
-            Add to iCal/Outlook
+            iCal/Outlook
         </a>
         <a role="button" class="o_google_calendar btn bg-white"
             t-att-href="google_url">
             <img src="/event/static/src/img/google-calendar.svg" alt="Google Agenda" loading="lazy"/>
-            Add to Google Agenda
+            Google Agenda
         </a>
     </div>
 </template>
@@ -387,55 +387,50 @@
 <template id="registration_complete" name="Registration Completed">
     <t t-call="website_event.layout">
         <div class="container my-5 o_wereg_confirmed">
-            <div class="row mb-3">
-                <div class="col-12">
+            <div class="row mx-0 mb-3">
+                <div class="col-12 px-0">
                     <h1 class="h3-fs">Registration confirmed!</h1>
-                    <u><a class="h4 text-primary" t-out="event.name" t-att-href="event.website_url" /></u>
                 </div>
             </div>
-            <div class="d-flex flex-column justify-content-between flex-lg-row">
-                <div>
-                    <t t-if="attendees" t-call="website_event.registration_ticket_access"/>
-                    <div class="mt-4">
-                        <t t-call="website_event.event_calendar_links"/>
-                    </div>
+            <div class="row mx-0 mw-75 border rounded">
+                <div class="position-relative col-5 p-0">
+                    <t t-call="website.record_cover"
+                        _record="event"
+                        use_size="True"
+                        use_text_align="True"
+                        additionnal_classes.f="d-block h-100 w-100 overflow-hidden ratio ratio-4x3 rounded-start">
+                    </t>
                 </div>
-                <div class="mt-4 mt-lg-0">
-                    <h5>Event Details</h5>
-                    <div class="row">
-                        <div class="col-auto">
-                            <b>Start</b>
+                <div class="col-7 d-flex flex-column align-items-start my-3">
+                    <a class="h4 text-primary" t-out="event.name" t-att-href="event.website_url" />
+                    <div>
+                        <div class="row">
+                            <div class="col-2">
+                                <b>Start</b>
+                            </div>
+                            <div class="col-auto ps-0">
+                                <span t-out="slot.start_datetime if event.is_multi_slots else event.date_begin"
+                                    t-options='{"widget": "datetime", "show_seconds": False, "tz_name": event.date_tz, "format": "medium"}'/>
+                            </div>
                         </div>
-                        <div class="col-auto ps-0">
-                            <span t-out="slot.start_datetime if event.is_multi_slots else event.date_begin"
-                                t-options='{"widget": "datetime", "show_seconds": False, "tz_name": event.date_tz, "format": "medium"}'/>
+                        <div class="row">
+                            <div class="col-2">
+                                <b>End</b>
+                            </div>
+                            <div class="col-auto ps-0">
+                                <span t-out="slot.end_datetime if event.is_multi_slots else event.date_end"
+                                    t-options='{"widget": "datetime", "show_seconds": False, "tz_name": event.date_tz, "format": "medium"}'/>
+                            </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-auto">
-                            <b>End</b>
+                        <div class="row">
+                            <span t-if="website_visitor_timezone != event.date_tz" class="smaller opacity-75">(<t t-out="event.date_tz"/>)</span>
                         </div>
-                        <div class="col-auto ps-0">
-                            <span t-out="slot.end_datetime if event.is_multi_slots else event.date_end"
-                                t-options='{"widget": "datetime", "show_seconds": False, "tz_name": event.date_tz, "format": "medium"}'/>
+                        <div t-if="attendees" class="mt-2 mb-3">
+                            <t  t-call="website_event.registration_ticket_access" />
                         </div>
-                    </div>
-                    <div class="row">
-                        <span t-if="website_visitor_timezone != event.date_tz">(<t t-out="event.date_tz"/>)</span>
-                    </div>
-                    <div class="mt-4">
-                        <h5 t-field="event.address_id" class="text-secondary fw-bold" t-options='{
-                            "widget": "contact",
-                            "fields": ["name"]
-                            }'/>
-                        <a t-att-href="event.google_map_link()" target="_BLANK" t-field="event.address_id" t-options='{
-                            "widget": "contact",
-                            "fields": ["address"]
-                            }'/>
-                        <div t-field="event.organizer_id" t-options='{
-                            "widget": "contact",
-                            "fields": ["phone", "mobile", "email"]
-                            }'/>
+                        <div class="mt-4">
+                            <t t-call="website_event.event_calendar_links"/>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -445,17 +440,12 @@
 </template>
 
 <template id="registration_ticket_access" name="Registration Ticket Access">
-    <div class="row mb-2 o_wevent_registration_ticket_access">
-        <div class="col-12 mb-2 d-flex flex-column flex-md-row align-items-stretch align-items-md-baseline justify-content-md-start">
-            <a t-if="event.address_id" class="btn btn-primary" title="Download All Tickets" target="_blank"
-                t-attf-href="/event/{{ event.id }}/my_tickets?registration_ids={{ attendees.ids }}&amp;tickets_hash={{ event._get_tickets_access_hash(attendees.ids) }}">
-                Download Tickets
-            </a>
-            <a t-else="" class="btn btn-primary" title="Join online" target="_blank"
-                t-att-href="event.event_url or event.website_url">
-                Join online <i class="ms-1 fa fa-globe"/>
-            </a>
-        </div>
+    <div class="o_wevent_registration_ticket_access">
+        <a t-if="event.address_id" class="btn btn-primary text-nowrap" title="Download All Tickets" target="_blank"
+            t-attf-href="/event/{{ event.id }}/my_tickets?registration_ids={{ attendees.ids }}&amp;tickets_hash={{ event._get_tickets_access_hash(attendees.ids) }}">
+            <i class="fa fa-download me-1"/>
+            Tickets
+        </a>
     </div>
 </template>
 
