@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
+import platform
 import requests
 import schedule
 import subprocess
@@ -7,7 +8,7 @@ from threading import Thread
 import time
 
 from odoo.addons.iot_drivers.tools import certificate, helpers, upgrade, wifi
-from odoo.addons.iot_drivers.tools.system import IS_RPI
+from odoo.addons.iot_drivers.tools.system import IS_RPI, IS_WINDOWS
 from odoo.addons.iot_drivers.websocket_client import WebsocketClient
 
 if IS_RPI:
@@ -138,6 +139,8 @@ class Manager(Thread):
 
         helpers.start_nginx_server()
         _logger.info("IoT Box Image version: %s", helpers.get_version(detailed_version=True))
+        if IS_WINDOWS:
+            _logger.info("Windows version: %s", platform.platform())
         upgrade.check_git_branch()
 
         if IS_RPI and helpers.get_odoo_server_url():
