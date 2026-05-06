@@ -558,8 +558,7 @@ test("implied groups rendering: exclusive (debug)", async () => {
     ]);
 });
 
-test.tags("owl3");
-test.todo("implied groups: lower level groups no longer available", async () => {
+test("implied groups: lower level groups no longer available", async () => {
     await mountView({
         type: "form",
         arch: `
@@ -691,8 +690,7 @@ test("do not keep shadowed group if higher level group is set", async () => {
     expect.verifySteps(["web_save"]);
 });
 
-test.tags("owl3");
-test.todo("disjoint groups", async () => {
+test("disjoint groups", async () => {
     serverState.debug = "1";
     await mountView({
         type: "form",
@@ -793,8 +791,7 @@ test("privileges without category", async () => {
     expect.verifySteps(["web_save"]);
 });
 
-test.tags("owl3");
-test.todo("privileges with placeholder", async () => {
+test("privileges with placeholder", async () => {
     ResUsers._records[0].group_ids = [];
     await mountView({
         type: "form",
