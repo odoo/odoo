@@ -115,7 +115,7 @@ class ResPartner(models.Model):
 
     def _get_suggested_invoice_edi_format(self):
         # EXTENDS 'account'
-        if self.country_code == 'DK':
+        if self.country_code == 'DK' and self.vat:
             return 'oioubl_21'
         return super()._get_suggested_invoice_edi_format()
 
