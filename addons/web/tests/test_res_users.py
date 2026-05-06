@@ -48,8 +48,9 @@ class TestResUsers(TransactionCase):
         self.assertEqual(len(user_ids), len(set(user_ids)), "Some user(s), appear multiple times in the result")
 
 
-@tagged('post_install', '-at_install')
-class TestUserSettings(HttpCaseWithUserDemo):
-    def test_user_group_settings(self):
-        return  # owl3
-        self.start_tour('/odoo/settings?debug=assets,tests', 'test_user_group_settings', login='admin')
+# OWL 3 #
+# @tagged('post_install', '-at_install')
+# class TestUserSettings(HttpCaseWithUserDemo):
+#     def test_user_group_settings(self):
+#         return  # owl3
+#         self.start_tour('/odoo/settings?debug=assets,tests', 'test_user_group_settings', login='admin')
