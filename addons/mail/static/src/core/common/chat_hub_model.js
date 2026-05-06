@@ -5,7 +5,6 @@ import { Mutex } from "@web/core/utils/concurrency";
 
 export const CHAT_HUB_DEFAULT_BUBBLE_START = 15;
 export const CHAT_HUB_KEY = "mail.ChatHub";
-export const CHAT_HUB_COMPACT_LS = "mail.user_setting.chathub_compact";
 
 /**
  * @typedef AwaitChatHubInit
@@ -45,9 +44,6 @@ export class ChatHub extends Record {
             } else if (ev.key === null) {
                 chatHub.load();
             }
-            if (ev.key === CHAT_HUB_COMPACT_LS) {
-                chatHub._recomputeCompact++;
-            }
         });
         chatHub
             .load(browser.localStorage.getItem(CHAT_HUB_KEY) ?? undefined)
@@ -55,13 +51,7 @@ export class ChatHub extends Record {
         return chatHub;
     }
 
-    _recomputeCompact = 0;
-    compact = fields.Attr(false, {
-        compute() {
-            void this._recomputeCompact;
-            return browser.localStorage.getItem(CHAT_HUB_COMPACT_LS) === "true";
-        },
-    });
+    compact = fields.Attr(false, { localStorage: true });
     canShowOpened = fields.Many("ChatWindow");
     canShowFolded = fields.Many("ChatWindow");
     /** From left to right. Right-most will actually be folded */
@@ -91,8 +81,7 @@ export class ChatHub extends Record {
         for (const chatWindow of this.opened) {
             chatWindow.bypassCompact = false;
         }
-        browser.localStorage.setItem(CHAT_HUB_COMPACT_LS, true);
-        this._recomputeCompact++;
+        this.compact = true;
     }
 
     onRecompute() {
