@@ -67,6 +67,12 @@ export class PosSession extends models.ServerModel {
         ];
     }
 
+    set_opening_control(self, openingCash, notes) {
+        this.write(self, {
+            state: "opened",
+        });
+    }
+
     // These methods are designed to be overridden to customize the POS data loading behavior using the provided `opts`.
     getModelsToLoad(opts) {
         return this._load_pos_data_models();
@@ -155,6 +161,14 @@ export class PosSession extends models.ServerModel {
 
     filter_local_data() {
         return {};
+    }
+
+    try_cash_in_out() {
+        return true;
+    }
+
+    log_partner_message() {
+        return true;
     }
 
     _records = [

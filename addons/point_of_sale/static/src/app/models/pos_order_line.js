@@ -236,7 +236,6 @@ export class PosOrderline extends PosOrderlineAccounting {
             quantity = -Math.abs(quantity);
         }
 
-        this.order_id.assertEditable();
         const quant =
             typeof quantity === "number" ? quantity : parseFloat("" + (quantity ? quantity : 0));
 
@@ -426,6 +425,11 @@ export class PosOrderline extends PosOrderlineAccounting {
     isTipLine() {
         const tipProduct = this.config.tip_product_id;
         return tipProduct && this.product_id.id === tipProduct.id;
+    }
+
+    isGlobalDiscountLine() {
+        const discountProduct = this.config.discount_product_id;
+        return discountProduct && this.product_id.id === discountProduct.id;
     }
 
     getAllLinesInCombo() {
