@@ -2,6 +2,7 @@
 import logging
 import socket
 
+import platform
 import requests
 import schedule
 import subprocess
@@ -140,6 +141,8 @@ class Manager(Thread):
 
         system.start_nginx_server()
         _logger.info("IoT Box Image version: %s", system.get_version(detailed_version=True))
+        if system.IS_WINDOWS:
+            _logger.info("Windows version: %s", platform.platform())
 
         if system.IS_RPI and helpers.get_odoo_server_url():
             system.generate_password()
