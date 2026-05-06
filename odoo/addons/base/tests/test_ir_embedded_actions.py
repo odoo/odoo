@@ -159,3 +159,34 @@ class TestEmbeddedActionsBase(TransactionCaseWithUserDemo):
         self.assertFalse(embedded_action1.action_id)
         self.assertEqual(embedded_action2.action_id, self.env['ir.actions.actions'].browse(self.action_2.id))
         self.assertFalse(embedded_action2.python_method)
+
+    def test_embedded_action_display_name_delegates_to_linked_action(self):
+        """Embedded action display_name must delegate to linked action display_name."""
+        server_action = self.env['ir.actions.server'].create({
+            'name': 'Create Activity',
+            'model_id': self.env['ir.model']._get_id('res.partner'),
+            'code': 'result = {}',
+        })
+        embedded_action = self.env['ir.embedded.actions'].create({
+            'name': 'Stored Embedded Name',
+            'parent_res_model': 'res.partner',
+            'parent_action_id': self.parent_action.id,
+            'action_id': server_action.id,
+        })
+        linked_action = embedded_action.action_id
+
+        # display_name delegates to the linked action, ignoring the stored name
+        self.assertEqual(embedded_action.name, 'Stored Embedded Name')
+        self.assertEqual(embedded_action.display_name, linked_action.display_name)
+
+        # display_name stays in sync when the linked action is renamed
+        linked_action.name = 'Updated Action Name'
+        self.assertEqual(embedded_action.display_name, linked_action.display_name)
+
+        # display_name uses the linked action's translation in any active language
+        self.env['res.lang']._activate_lang('fr_FR')
+        linked_action.with_context(lang='fr_FR').name = 'Créer une activité'
+        self.assertEqual(
+            embedded_action.with_context(lang='fr_FR').display_name,
+            linked_action.with_context(lang='fr_FR').display_name,
+        )
