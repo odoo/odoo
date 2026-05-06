@@ -375,7 +375,7 @@ class PosSession(models.Model):
             # It is not yet possible to close a rescue session through the front end, see `close_session_from_ui`
             if session.rescue and session.config_id.cash_control:
                 default_cash_payment_method_id = self.payment_method_ids.filtered(lambda pm: pm.type == 'cash')[0]
-                orders = self._get_closed_orders()
+                orders = self._get_order_for_session_closing()
                 total_cash = sum(
                     orders.payment_ids.filtered(lambda p: p.payment_method_id == default_cash_payment_method_id).mapped('amount')
                 ) + self.cash_register_balance_start
@@ -812,7 +812,7 @@ class PosSession(models.Model):
         split_inv_payment_receivable_lines = defaultdict(lambda: self.env['account.move.line'])
         pos_receivable_account = self.company_id.account_default_pos_receivable_account_id
         currency_rounding = self.currency_id.rounding
-        closed_orders = self._get_closed_orders()
+        closed_orders = self._get_order_for_session_closing()
         for order in closed_orders:
             order_is_invoiced = order.is_invoiced
             for payment in order.payment_ids:
@@ -1696,3 +1696,6 @@ class PosSession(models.Model):
 
     def _get_closed_orders(self):
         return self.order_ids.filtered(lambda o: o.state not in ['draft', 'cancel'])
+
+    def _get_order_for_session_closing(self):
+        return self._get_closed_orders()

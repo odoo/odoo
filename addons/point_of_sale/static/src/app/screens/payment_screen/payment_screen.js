@@ -132,7 +132,7 @@ export class PaymentScreen extends Component {
         this.pos.addAnimation = true;
         setTimeout(() => (this.pos.addAnimation = false), 1000);
     }
-    async addNewPaymentLine(paymentMethod) {
+    async addNewPaymentLine(paymentMethod, args = {}) {
         const { status: canSend, message } = paymentMethod.getPaymentInterfaceStates();
         if (!canSend) {
             this.dialog.add(AlertDialog, { title: _t("Oh snap !"), body: message });
@@ -143,7 +143,7 @@ export class PaymentScreen extends Component {
             this.makeAnimation();
         }
 
-        const result = this.currentOrder.addPaymentline(paymentMethod);
+        const result = this.currentOrder.addPaymentline(paymentMethod, args);
         if (result.status) {
             this.numberBuffer.set(result.data.amount.toString());
             if (
