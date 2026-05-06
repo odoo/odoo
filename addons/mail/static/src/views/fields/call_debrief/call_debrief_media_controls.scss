@@ -1,113 +1,83 @@
-.o-CallDebrief-media-controls {
-    position: relative; // positioned ancestor for feedback_indicator
-
-    .o_media_controls_spacer {
-        flex: 1 1 0;
+@keyframes o-CallDebrief-mediaControlsFeedbackPop {
+    0% {
+        transform: scale(0.75);
     }
-
-    .o_volume_button {
-        width: 2rem;
+    50% {
+        transform: scale(1.1);
     }
-
-    .o_volume_slider_container {
-        left: 100%;
-        top: 50%;
-        transform: translateY(-50%);
-        z-index: 10;
-        background-color: var(--o-view-background-color);
-        padding: 0.25rem;
-        border-radius: $border-radius-sm;
-        box-shadow: var(--o-shadow-lg);
-
-        .form-range {
-            width: 6.25rem;
-        }
-    }
-
-    .btn.o-CallDebrief-btn {
-        --btn-line-height: 1;
-        --btn-font-size: 0.75rem;
-        height: 1.125rem;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .o-CallDebrief-settings-inline {
-        height: 1.6rem; // Match the thickness you liked earlier
-        font-size: 0.75rem;
-        background-color: var(--o-view-background-color) !important; // override bootstrap bg-secondary
-        border: 1px solid var(--border-color);
-
-        .o_speed_selector_group {
-            .form-label {
-                font-size: 0.65rem;
-                text-transform: uppercase;
-                font-weight: bold;
-                color: var(--text-muted);
-            }
-
-            .form-select {
-                width: auto;
-                height: 1.25rem;
-                padding-top: 0;
-                padding-bottom: 0;
-                padding-right: 1.5rem; // Room for chevron
-                font-size: 0.75rem;
-                border: none;
-                background-color: transparent;
-                cursor: pointer;
-
-                &:focus {
-                    box-shadow: none;
-                }
-            }
-        }
-
-        .o-CallDebrief-download-separator {
-            border-left: 1px solid var(--border-color);
-            padding-left: map-get($spacers, 2);
-            display: flex;
-            align-items: center;
-            height: 1rem; // Visual separator height
-        }
-    }
-
-    .o_feedback_indicator {
-        position: absolute;
-        right: 50%;
-        margin-right: 8.75rem; /* Position to the left of the centered buttons (~200px wide) */
-        top: 50%;
-        transform: translateY(-50%);
-        pointer-events: none;
-        font-weight: bold;
-        color: var(--text-muted);
-        z-index: 5;
-        white-space: nowrap;
-
-        .o_animate_fade {
-            display: inline-block;
-            animation: o-CallDebrief-feedback-pop 0.75s forwards ease-out;
-        }
+    100% {
+        transform: scale(1);
     }
 }
 
-@keyframes o-CallDebrief-feedback-pop {
-    0% {
-        opacity: 0;
-        transform: scale(0.5);
+.o-CallDebriefMediaControls {
+    @container callDebrief-mediaPlayer (max-width: 475px) {
+        --CallDebriefMediaControls__timeLabel-order: -1;
+        --CallDebriefMediaControls__timeLabel-width: 100%;
     }
-    15% {
-        opacity: 1;
-        transform: scale(1.1);
+
+    .o-CallDebrief-control {
+        @include media-breakpoint-up(md) {
+            --#{$prefix}btn-bg: transparent;
+            --#{$prefix}btn-border-color: transparent;
+            --#{$prefix}btn-disabled-bg: transparent;
+            --#{$prefix}btn-disabled-border-color: transparent;
+
+            &.o-CallDebrief-hotkeyFeedback {
+                --btn-bg: #{$o-component-active-bg};
+
+                animation: o-CallDebrief-mediaControlsFeedbackPop .2s ease-out;
+            }
+        }
     }
-    30% {
-        transform: scale(1);
+
+    .o-CallDebrief-select {
+        background-image: none;
+        // Center selected value on Safari
+        text-align-last: center;
     }
-    70% {
-        opacity: 1;
+
+    .o-CallDebriefMediaControls-timeLabel, .o-CallDebriefMediaControls-playbackRate {
+        font-variant-numeric: tabular-nums;
+        user-select: none;
     }
-    100% {
-        opacity: 0;
+
+    .o-CallDebriefMediaControls-timeLabel {
+        order: var(--CallDebriefMediaControls__timeLabel-order);
+        width: var(--CallDebriefMediaControls__timeLabel-width, auto);
+    }
+
+    .o-CallDebriefMediaControls-playbackRate {
+        --#{$prefix}box-shadow-inset: none;
+
+        @include media-breakpoint-up(md) {
+            --#{$prefix}bg-opacity: 0;
+        }
+
+        &:hover, &:focus {
+            --#{$prefix}bg-opacity: 1;
+        }
+
+        &:focus-visible {
+            box-shadow: $focus-ring-box-shadow;
+        }
+    }
+
+    .o-CallDebriefMediaControls-volumeWrapper {
+        &:hover .o-CallDebriefMediaControls-volumeRange {
+            --CallDebriefMediaControls__volumeRange-display: block;
+        }
+    }
+
+    .o-CallDebriefMediaControls-volumeRange {
+        display: var(--CallDebriefMediaControls__volumeRange-display, none);
+        width: map-get($spacers, 5) * 2;
+        transform: rotate(-90deg);
+        transform-origin: calc((1em + #{map-get($spacers, 1)} + #{$border-width}) * -1) center;
+    }
+
+    .o-CallDebrief-playbackRateLabel {
+        width: 5ch;
+        height: 2em;
     }
 }
