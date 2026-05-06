@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import json
+
 from odoo.fields import Command
 from odoo.exceptions import ValidationError
 from odoo.tests import tagged
@@ -131,3 +133,24 @@ class TestSaleOrder(ClickAndCollectCommon):
         )
         unavailable_ol = cart._get_unavailable_order_lines(self.warehouse_2.id)
         self.assertIn(self.storable_product.id, unavailable_ol.product_id.ids)
+
+    def test_partner_email_confirmation(self):
+        """Partner receives email confirmation for in_store delivery."""
+        self.company.stock_move_email_validation = True
+        wh_partner = self.warehouse.partner_id
+        new_so = self._create_in_store_delivery_order()
+        new_so._set_pickup_location(json.dumps({
+            'id': self.warehouse.id,
+            'name': wh_partner.name,
+            'street': "New test street",
+            'zip_code': wh_partner.zip,
+            'city': "New test city",
+            'state': wh_partner.state_id.code,
+            'country_code': wh_partner.country_code,
+        }))
+        new_so.action_confirm()
+        new_so.picking_ids.button_validate()
+        self.assertTrue(
+            any(partner.email == self.partner.email
+            for partner in new_so.picking_ids.message_ids.notified_partner_ids
+        ))
