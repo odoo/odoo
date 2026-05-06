@@ -23,13 +23,19 @@ import {
     isHtmlEmpty,
     setElementContent,
 } from "@web/core/utils/html";
-import { escapeRegExp } from "@web/core/utils/strings";
+import { escapeRegExp, nbsp } from "@web/core/utils/strings";
 import { getOrigin } from "@web/core/utils/urls";
 import { setAttributes } from "@web/core/utils/xml";
 
 const urlRegexp =
     /\b(?:https?:\/\/\d{1,3}(?:\.\d{1,3}){3}|(?:https?:\/\/|(?:www\.))[-a-z0-9@:%._+~#=\u00C0-\u024F\u1E00-\u1EFF]{1,256}\.[a-z]{2,13})\b(?:[-a-z0-9@:%_+~#?&[\]^|{}`\\'$//=\u00C0-\u024F\u1E00-\u1EFF]|[.]*[-a-z0-9@:%_+~#?&[\]^|{}`\\'$//=\u00C0-\u024F\u1E00-\u1EFF]|,(?!$| )|\.(?!$| |\.)|;(?!$| ))*/gi;
 const messageUrlRegExp = new RegExp(`^${escapeRegExp(getOrigin())}/mail/message/(\\d+)$`);
+const MENTION_CLASSNAMES = new Set([
+    "o_mail_redirect",
+    "o_message_redirect",
+    "o_channel_redirect",
+    "o-discuss-mention",
+]);
 
 /**
  * @param {string|ReturnType<markup>} rawBody
@@ -475,6 +481,83 @@ export function trimEmptyBlocksAround(content) {
     trimBoundaryParagraph("start");
     trimBoundaryParagraph("end");
     return changed ? getInnerHtml(body) : content;
+}
+
+/**
+ * Converts an html string to inline representation.
+ * - Links and mentions are preserved
+ * - For the rest: text content of nodes
+ *
+ * @param {string|ReturnType<markup>} htmlString
+ * @returns {ReturnType<markup>}
+ */
+export function htmlToHtmlInline(htmlString) {
+    const doc = createDocumentFragmentFromContent(htmlString || "");
+    const body = doc.body;
+    const previewBody = body.ownerDocument.createElement("body");
+
+    /** @param {HTMLElement} [node] */
+    const isBlock = (node) =>
+        node?.nodeType === Node.ELEMENT_NODE && ["DIV", "P"].includes(node?.tagName);
+
+    /**
+     * @param {HTMLElement} parent
+     * @param {string} [text]
+     */
+    const appendText = (parent, text) => {
+        if (text) {
+            parent.append(body.ownerDocument.createTextNode(text));
+        }
+    };
+
+    /**
+     * @param {HTMLElement} parent
+     * @param {HTMLElement[]} nodes
+     */
+    const appendInlinePreviewChildren = (parent, nodes) => {
+        for (let index = 0; index < nodes.length; index++) {
+            const node = nodes[index];
+            appendInlinePreview(parent, node);
+            if (isBlock(node) && isBlock(nodes[index + 1])) {
+                appendText(parent, nbsp);
+            }
+        }
+    };
+
+    /**
+     * @param {HTMLElement} parent
+     * @param {HTMLElement} node
+     */
+    const appendInlinePreview = (parent, node) => {
+        if (node.nodeType === Node.TEXT_NODE) {
+            appendText(parent, node.textContent);
+            return;
+        }
+        if (node.nodeType !== Node.ELEMENT_NODE) {
+            return;
+        }
+        if (node.tagName === "BR") {
+            appendText(parent, nbsp);
+            return;
+        }
+        if (node.tagName === "A") {
+            const href = node.getAttribute("href");
+            if ([...node.classList].some((cls) => MENTION_CLASSNAMES.has(cls))) {
+                parent.append(node);
+            } else if (href) {
+                const link = body.ownerDocument.createElement("a");
+                link.setAttribute("href", href);
+                link.append(body.ownerDocument.createTextNode(href));
+                parent.append(link);
+            }
+            return;
+        }
+        appendInlinePreviewChildren(parent, [...node.childNodes]);
+    };
+
+    appendInlinePreviewChildren(previewBody, [...body.childNodes]);
+
+    return htmlTrim(getInnerHtml(previewBody)) ?? "";
 }
 
 export function cleanTerm(term) {
