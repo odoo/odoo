@@ -21,7 +21,7 @@ from stdnum.se import orgnr as se_en
 from stdnum.sg import uen as sg_en
 
 from odoo.tools.translate import LazyTranslate
-from odoo.addons.account.tools.partner_identifier_validation import nl_kvk_validate, nl_oin_validate
+from odoo.addons.account.tools.partner_identifier_validation import nl_kvk_validate, nl_oin_validate, th_branch_code_validate
 from odoo.addons.account.tools.country_groups import FR_AND_DOM_TOM, SEPA_COUNTRIES
 
 
@@ -720,6 +720,15 @@ IDENTIFIERS_METADATA = {
     'TH_VAT': {
         'placeholder': '1234545678781',
         'category': 'VAT',
+        'countries': ['TH'],
+    },
+    'TH_BRANCH_CODE': {
+        'sequence': 20,
+        'label': _lt('Branch Code'),
+        'help': _lt('The 5-digit branch code as registered with the Revenue Department. Leave empty for Head Office.'),
+        'placeholder': '00000',
+        'category': 'EN',
+        'validation_function': th_branch_code_validate,
         'countries': ['TH'],
     },
     'TR_VAT': {

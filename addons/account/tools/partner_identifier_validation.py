@@ -6,6 +6,8 @@ NON_DIGIT_RE = re.compile(r'\D')
 NL_KVK_RE = re.compile(r'\d{8}')
 # OIN: 20-digit
 NL_OIN_RE = re.compile(r'\d{20}')
+# TH Branch Code: 5-digit
+TH_BRANCH_CODE_RE = re.compile(r'\d{5}')
 
 
 # ===========================================================
@@ -23,5 +25,12 @@ def nl_oin_validate(value):
     """Normalize and validate a Dutch OIN."""
     value = NON_DIGIT_RE.sub('', value)
     if not NL_OIN_RE.fullmatch(value):
+        raise InvalidFormat()
+    return value
+
+
+def th_branch_code_validate(value):
+    """Validate a Thai branch code (exactly 5 digits)."""
+    if not TH_BRANCH_CODE_RE.fullmatch(value):
         raise InvalidFormat()
     return value

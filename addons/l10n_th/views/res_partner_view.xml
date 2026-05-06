@@ -7,17 +7,6 @@
             <field name="priority">14</field>
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
-                <field name="company_registry" position="attributes">
-                    <attribute name="invisible" add="(is_company and country_code == 'TH')" separator=" or "/>
-                </field>
-                <field name="vat" position="after">
-                    <field name="company_registry"
-                           string="Branch Code"
-                           placeholder="Empty for Head Office"
-                           invisible="parent_id or not (is_company and country_code == 'TH')"
-                           help="The 5-digit branch code as registered with the Revenue Department."/>
-                </field>
-
                 <xpath expr="//field[@name='category_id']" position="after">
                     <field name="l10n_th_title" invisible="country_code != 'TH' or 'TH' not in fiscal_country_codes or is_company"/>
                     <field name="l10n_th_company_type" invisible="country_code != 'TH' or 'TH' not in fiscal_country_codes or not is_company"/>
