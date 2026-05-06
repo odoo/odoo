@@ -2,7 +2,7 @@
 
 import { signal } from "@odoo/owl";
 import { Domain } from "@web/core/domain";
-import { makeReactive } from "@web/owl2/utils";
+import { makeComputed, makeReactive } from "@web/owl2/utils";
 import { DynamicList } from "./dynamic_list";
 import { getGroupServerValue } from "./utils";
 
@@ -16,18 +16,40 @@ export const MOVABLE_RECORD_TYPES = ["char", "boolean", "integer", "selection", 
 export class DynamicGroupList extends DynamicList {
     static type = "DynamicGroupList";
 
+    /** @readonly */
+    isGrouped = true;
+
     /**
      * @type {DynamicList["setup"]}
      */
     setup(_config, data) {
         super.setup(...arguments);
 
+        /** @type {import("@web/search/search_model").Field | null} */
+        this.groupByField = null;
+        /** @type {Group[]} */
         this.groups = [];
-        this.isGrouped = true;
+        this.hasData = false;
+        this.recordCount = 0;
+        this.records = [];
+        /** @type {number | null} */
         this._nbRecordsMatchingDomain = null;
         this._setData(data);
 
         makeReactive(this, "groups", signal.Array);
+        makeReactive(this, "_nbRecordsMatchingDomain");
+
+        makeComputed(this, "groupByField", () => this.fields[this.groupBy[0].split(":")[0]]);
+        makeComputed(this, "hasData", () => this.groups.some((group) => group.hasData));
+        makeComputed(this, "recordCount", () => {
+            if (this._nbRecordsMatchingDomain !== null) {
+                return this._nbRecordsMatchingDomain;
+            }
+            return this.groups.reduce((acc, group) => acc + group.count, 0);
+        });
+        makeComputed(this, "records", () =>
+            this.groups.filter((group) => !group.isFolded).flatMap((group) => group.records)
+        );
     }
 
     /**
@@ -48,37 +70,8 @@ export class DynamicGroupList extends DynamicList {
         return this.config.groupBy;
     }
 
-    get groupByField() {
-        return this.fields[this.groupBy[0].split(":")[0]];
-    }
-
-    get hasData() {
-        return this.groups.some((group) => group.hasData);
-    }
-
     get isRecordCountTrustable() {
         return this.count <= this.limit || this._nbRecordsMatchingDomain !== null;
-    }
-
-    /**
-     * List of loaded records inside groups.
-     * @returns {RelationalRecord[]}
-     */
-    get records() {
-        return this.groups
-            .filter((group) => !group.isFolded)
-            .map((group) => group.records)
-            .flat();
-    }
-
-    /**
-     * @returns {number}
-     */
-    get recordCount() {
-        if (this._nbRecordsMatchingDomain !== null) {
-            return this._nbRecordsMatchingDomain;
-        }
-        return this.groups.reduce((acc, group) => acc + group.count, 0);
     }
 
     // -------------------------------------------------------------------------
