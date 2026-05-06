@@ -94,6 +94,36 @@ class TestSaleOrder(SaleCommon):
         self.assertTrue(self.sale_order.state == 'sale')
         self.assertTrue(self.sale_order.invoice_status == 'to invoice')
 
+    def test_action_quotation_send_template_selection(self):
+        """Verify action_quotation_send picks the right template in its returned context."""
+        sale_order = self.env['sale.order'].create({'partner_id': self.partner.id})
+
+        standard_template = self.env.ref('sale.email_template_edi_sale', raise_if_not_found=False)
+        standard_template_id = standard_template.id if standard_template else None
+
+        valid_template = self.env['mail.template'].create({
+            'name': 'Test Valid SO Template',
+            'model_id': self.env['ir.model']._get('sale.order').id,
+        })
+        wrong_model_template = self.env['mail.template'].create({
+            'name': 'Test Wrong Model Template',
+            'model_id': self.env['ir.model']._get('res.partner').id,
+        })
+
+        cases = [
+            (valid_template.id, valid_template.id),
+            (wrong_model_template.id, standard_template_id),
+            (False, standard_template_id),
+        ]
+
+        for default_template_id, expected_template_id in cases:
+            action = sale_order.with_context(
+                default_template_id=default_template_id
+            ).action_quotation_send()
+            self.assertEqual(
+                action.get('context', {}).get('default_template_id'), expected_template_id
+            )
+
     def test_sale_order_send_to_self(self):
         # when sender(logged in user) is also present in recipients of the mail composer,
         # user should receive mail.

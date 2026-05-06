@@ -900,13 +900,19 @@ class SaleOrder(models.Model):
     def _find_mail_template(self):
         """ Get the appropriate mail template for the current sales order based on its state.
 
-        If the SO is confirmed, we return the mail template for the sale confirmation.
+        If a default template for sale orders exists, it will be used first.
+        Otherwise, if the SO is confirmed, we return the mail template for the sale confirmation.
         Otherwise, we return the quotation email template.
 
         :return: The correct mail template based on the current status
         :rtype: record of `mail.template` or `None` if not found
         """
         self.ensure_one()
+        template = self.env['mail.template'].browse(
+            self.env['mail.compose.message'].default_get(['template_id']).get('template_id')
+        ).exists()
+        if template.model == self._name:
+            return template
         if self.env.context.get('proforma') or self.state != 'sale':
             return self.env.ref('sale.email_template_edi_sale', raise_if_not_found=False)
         else:
