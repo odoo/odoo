@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
     <t t-name="pos_restaurant.ControlButtons" t-inherit="point_of_sale.ControlButtons" t-inherit-mode="extension">
        <xpath expr="//button[hasclass('more-btn')]" position="before">
-           <button class="course-btn btn btn-lg btn-secondary lh-lg" t-if="this.pos.config.module_pos_restaurant and !this.props.showRemainingButtons and !this.pos.getOrder()?.isRefund" t-on-click="()=>this.pos.addCourse()">
+           <button class="course-btn btn btn-lg btn-secondary lh-lg" t-if="this.showAddCourse" t-on-click="()=>this.pos.addCourse()">
                 <span>Course</span>
            </button>
        </xpath>

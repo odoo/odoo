@@ -86,4 +86,11 @@ patch(ActionpadWidget.prototype, {
         await this.pos.fireCourse(course);
         this.pos.showDefault();
     },
+    get showAddCourse() {
+        return (
+            this.pos.config.module_pos_restaurant &&
+            !this.currentOrder.isRefund &&
+            !this.pos.config.use_course_allocation
+        );
+    },
 });
