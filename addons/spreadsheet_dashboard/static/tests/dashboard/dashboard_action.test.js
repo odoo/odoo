@@ -731,4 +731,27 @@ describe("Quick search bar", () => {
         filterValue = model.getters.getGlobalFilterValue(productFilter.id);
         expect(filterValue).toEqual(undefined);
     });
+
+    test("Clicking the search input wrapper or a facet button will focus the quick search input", async function () {
+        const filter = { ...productFilter, defaultValue: { operator: "in", ids: [37] } };
+        const spreadsheetData = { globalFilters: [filter] };
+        const serverData = getServerData(spreadsheetData);
+        await createSpreadsheetDashboard({ serverData });
+
+        await contains(document.body).click(); // click outside to lost focus from autofocus
+        expect(document.activeElement).toBe(document.body);
+        expect(".o_popover .o-filter-item").toHaveCount(0);
+
+        await contains(".o_searchview.form-control").click();
+        expect(document.activeElement).toHaveClass("o_searchview_input");
+        expect(".o_popover .o-filter-item").toHaveCount(1);
+
+        await contains(document.body).click(); // click outside to close the popover and lose focus
+        expect(document.activeElement).toBe(document.body);
+        expect(".o_popover .o-filter-item").toHaveCount(0);
+
+        await contains(".o_searchview_facet_label").click();
+        expect(document.activeElement).toHaveClass("o_searchview_input");
+        expect(".o_popover .o-filter-item").toHaveCount(1);
+    });
 });

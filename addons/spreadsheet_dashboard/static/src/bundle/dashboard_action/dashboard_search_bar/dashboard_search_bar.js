@@ -55,10 +55,6 @@ export class DashboardSearchBar extends Component {
         onWillUpdateProps(this.computeState.bind(this));
     }
 
-    openFilterValueDropdown() {
-        this.filtersValuesDropdown.open();
-    }
-
     closeFilterValueDropdown() {
         this.filtersValuesDropdown.close();
     }
@@ -85,6 +81,12 @@ export class DashboardSearchBar extends Component {
             return undefined;
         }
         return this.props.model.getters.getGlobalFilterValue(this.firstDateFilter.id);
+    }
+
+    onInputContainerClick(ev) {
+        if (ev.target === ev.currentTarget) {
+            this.onSearchClick();
+        }
     }
 
     onSearchClick() {
