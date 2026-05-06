@@ -9,7 +9,7 @@ import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { FormArchParser } from "@web/views/form/form_arch_parser";
 import { FormRenderer } from "@web/views/form/form_renderer";
 
-import { Component, toRaw } from "@odoo/owl";
+import { Component, signal, toRaw } from "@odoo/owl";
 
 /**
  * This widget is only used for the 'group_ids' field of the 'res.users'
@@ -115,7 +115,9 @@ class ResUserGroupIdsField extends Component {
         useChildSubEnv({
             resUserGroupsInfo: this.info, // computed in onWillRender
         });
+        this.rev = signal(0);
         onWillRender(() => {
+            this.rev();
             // Generate groups information based on current ids, i.e.
             //  - `id`, `name`, `privilege_id`, `comment` are kept as in the static definition
             //  - `selected` is true iff the group is explicitely selected (!= implied)
@@ -235,7 +237,7 @@ class ResUserGroupIdsField extends Component {
             </group>`;
     }
 
-    onRecordChanged(_, values) {
+    async onRecordChanged(_, values) {
         let selectedGroupIds = Object.entries(values)
             .filter(([fieldName, gid]) => this.fields[fieldName].type === "selection" && gid)
             .map(([_, gid]) => gid);
@@ -251,9 +253,10 @@ class ResUserGroupIdsField extends Component {
                 selectedGroupIds.push(privilege.groupId);
             }
         }
-        return this.props.record.update({
+        await this.props.record.update({
             [this.props.name]: [x2ManyCommands.set(selectedGroupIds)],
         });
+        this.rev.set(this.rev() + 1);
     }
 }
 
