@@ -223,11 +223,20 @@ export class DeletePlugin extends Plugin {
         // targeted nodes here to be sure to include a partial text node
         // selection.
         const selectedNodes = this.dependencies.selection.getTargetedNodes();
-        const canBeDeleted = (node) =>
-            this.dependencies.selection.isNodeEditable(node) ||
-            selectedNodes.includes(
-                closestElement(node, (node) => this.dependencies.selection.isNodeEditable(node))
+        const canBeDeleted = (node) => {
+            const isEditableOrFullySelected = (a) =>
+                this.dependencies.selection.isNodeEditable(a) ||
+                (this.dependencies.selection.areNodeContentsFullySelected(a) &&
+                    isContentEditable(a.parentElement));
+
+            return (
+                isEditableOrFullySelected(node) ||
+                selectedNodes.includes(
+                    closestElement(node, (node) => isEditableOrFullySelected(node))
+                )
             );
+        };
+
         if (selectedNodes.some((node) => !canBeDeleted(node))) {
             return;
         }
