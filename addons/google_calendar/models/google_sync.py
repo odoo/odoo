@@ -359,7 +359,9 @@ class GoogleCalendarSync(models.AbstractModel):
     @api.model
     def _get_sync_partner(self, emails):
         normalized_emails = [email_normalize(contact) for contact in emails if email_normalize(contact)]
-        partners = self.env['mail.thread']._partner_find_from_emails_single(normalized_emails)
+        partners = self.env['mail.thread'].with_context(
+            mail_create_log_from_calendar_sync=True,
+        )._partner_find_from_emails_single(normalized_emails)
         # partners needs to be sorted according to the emails order provided by google
         k = {value: idx for idx, value in enumerate(emails)}
         return partners.sorted(key=lambda p: k.get(p.email_normalized, -1))
