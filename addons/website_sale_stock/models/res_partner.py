@@ -69,5 +69,4 @@ class ResPartner(models.Model):
             "phone": phone,
             "pickup_delivery_method_id": pickup_delivery_method_id,
             "pickup_location_data": json_location_data,
-            "active": False,
         })
