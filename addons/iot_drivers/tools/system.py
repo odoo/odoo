@@ -92,8 +92,12 @@ def get_version(detailed_version=False):
         with open('/var/odoo/iotbox_version', encoding='utf-8') as f:
             image_version = f.readline().strip()
     elif IS_WINDOWS:
-        # updated manually when big changes are made to the windows virtual IoT
-        image_version = '23.11'
+        version_path = path_file('VERSION')
+        if not version_path.exists():
+            image_version = '23.11'
+        else:
+            with version_path.open(encoding='utf-8') as f:
+                image_version = f.readline().strip()
     else:
         image_version = 'test'
 
