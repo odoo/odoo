@@ -305,8 +305,15 @@ export class SuggestionService {
         });
     }
 
-    sortPartnerSuggestionsContext() {
-        return {};
+    /** @param {import("models").Thread} thread The thread from which the suggestions are triggered. */
+    sortPartnerSuggestionsContext(thread) {
+        const latestMessageIdByAuthorId = new Map();
+        for (const { author_id, id } of thread?.messages || []) {
+            if (author_id && !latestMessageIdByAuthorId.has(author_id.id)) {
+                latestMessageIdByAuthorId.set(author_id.id, id);
+            }
+        }
+        return { latestMessageIdByAuthorId };
     }
 
     searchChannelSuggestions(cleanedSearchTerm) {
