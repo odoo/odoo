@@ -124,7 +124,7 @@
             <div
                 id="order_confirmation_banner"
                 t-if="tx_sudo"
-                t-attf-class="alert pb-0 #{alert_class}"
+                t-attf-class="alert #{alert_class}"
                 role="alert"
             >
                 <t t-out="tx_sudo._get_status_message(order=order)"/>
