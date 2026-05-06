@@ -42,8 +42,7 @@ test("can highlight messages that are not yet loaded", async () => {
     await isInViewportOf(".o-mail-Message:contains(message 100)", ".o-mail-Thread");
 });
 
-test.tags("owl3");
-test.todo("can highlight message (slow ref registration)", async () => {
+test("can highlight message (slow ref registration)", async () => {
     disableAnimations();
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "general" });
