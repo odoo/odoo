@@ -3,27 +3,29 @@
 from odoo import api, fields, models
 
 
-class CalendarEventUnlinkWizard(models.TransientModel):
-    _name = 'calendar.event.unlink.wizard'
+class CalendarEventArchiveOrUnlinkWizard(models.TransientModel):
+    _name = 'calendar.event.archive.or.unlink.wizard'
     _inherit = ['mail.composer.mixin']
-    _description = 'Calendar Event Unlink Wizard'
+    _description = 'Calendar Event Archive Or Unlink Wizard'
 
     calendar_event_id = fields.Many2one('calendar.event', 'Calendar Event')
-    recurrence_choice = fields.Selection([('self_only', 'Delete this event'), ('future_events', 'Delete this and following events'), ('all_events', 'Delete all the events')], default='self_only')
-    multi_unlink_wizard_id = fields.Many2one('calendar.event.multi.unlink.wizard', ondelete='cascade')
+    multi_archive_or_unlink_wizard_id = fields.Many2one('calendar.event.multi.archive.or.unlink.wizard', ondelete='cascade')
     recipient_ids = fields.Many2many(
         'res.partner',
         string="Recipients",
         compute='_compute_recipient_ids',
         readonly=False,
     )
+    recurrence_choice = fields.Selection([('self_only', 'This event'), ('future_events', 'This and following events'), ('all_events', 'All the events')], default='self_only')
+    requested_action = fields.Selection([('archive', 'archive'), ('unlink', 'delete')], default='archive', required=True)
     template_id = fields.Many2one('mail.template', compute='_compute_template_id')
 
     def action_proceed_recurrence_choice(self):
+        wizard_parameters = {'next_action': self.env.context.get('next_action'), 'requested_action': self.requested_action}
         # Return if there are multiple attendees or if the organizer's partner_id differs
         if self.calendar_event_id.attendees_count != 1 or self.calendar_event_id.user_id.partner_id != self.calendar_event_id.partner_ids:
-            return self.calendar_event_id.action_open_unlink_wizard(self.env.context.get('next_action'), self.recurrence_choice)
-        return self.action_unlink()
+            return self.calendar_event_id.action_open_archive_or_unlink_wizard(recurrence_choice=self.recurrence_choice, **wizard_parameters)
+        return self._get_calendar_events().action_open_archive_or_unlink_wizard(send_email=False, **wizard_parameters)
 
     def _compute_template_id(self):
         self.template_id = self.env.ref('calendar.calendar_template_delete_event', raise_if_not_found=False)
@@ -56,6 +58,19 @@ class CalendarEventUnlinkWizard(models.TransientModel):
                 options={'post_process': True},
             )[wizard.calendar_event_id.id]
 
+    def _get_calendar_events(self):
+        if self.recurrence_choice in ['self_only', False]:
+            return self.calendar_event_id
+        elif self.recurrence_choice == 'future_events':
+            return self.calendar_event_id.recurrence_id.calendar_event_ids.filtered(lambda event: event.start >= self.calendar_event_id.start)
+        elif self.recurrence_choice == 'all_events':
+            return self.calendar_event_id.recurrence_id.calendar_event_ids
+
+    def action_archive(self):
+        self.ensure_one()
+        self._get_calendar_events().with_context(disable_auto_send_cancellation_emails=True).write({'active': False})
+        return self.env.context.get('next_action')
+
     def action_unlink(self):
         """
         Delete the events specified with recurrence_choice field.
@@ -76,8 +91,17 @@ class CalendarEventUnlinkWizard(models.TransientModel):
             'subject': self.subject,
         }
 
+    def action_send_mail(self):
+        self.ensure_one()
+        self.env['mail.mail'].sudo().create([self._prepare_mail_values()]).send_after_commit()
+
+    def action_send_mail_and_archive(self):
+        self.ensure_one()
+        self.action_send_mail()
+        return self.action_archive()
+
     def action_send_mail_and_unlink(self):
         """Send the composed email and delete the event based on the specified deletion type."""
         self.ensure_one()
-        self.env['mail.mail'].sudo().create([self._prepare_mail_values()]).send_after_commit()
+        self.action_send_mail()
         return self.action_unlink()

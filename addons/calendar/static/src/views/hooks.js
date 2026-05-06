@@ -1,8 +1,7 @@
-import { useDeleteRecords } from "@web/views/view_hook";
 import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
 
-function shouldUseUnlinkWizard(now, partnerIds, recurrency, start) {
+function shouldUseArchiveOrUnlinkWizard(now, partnerIds, recurrency, start) {
     return (
         start >= now
         && (recurrency || !(partnerIds.length === 1 && partnerIds[0] === user.partnerId))
@@ -10,19 +9,19 @@ function shouldUseUnlinkWizard(now, partnerIds, recurrency, start) {
 }
 
 /**
- * If required, this method allows to handle steps related to the event's deletion from the frontend. It opens either a form
- * to edit and send the cancellation email or a form allowing to select which events of the event's recurrence must be deleted.
+ * If required, this method allows to handle steps related to the event's archiving or deletion from the frontend. It opens either a form
+ * to edit and send the cancellation email or a form allowing to select which events of the event's recurrence must be archived or deleted.
  */
-export function useUnlinkCalendarEvent() {
+export function useArchiveOrUnlinkCalendarEvent() {
     const actionService = useService("action");
     const orm = useService("orm");
 
-    return async ({ resId, partnerIds, recurrency, start, defaultAction, nextAction }) => {
-        if (shouldUseUnlinkWizard(luxon.DateTime.now(), partnerIds, recurrency, start)) {
-            const actionOpenUnlinkWizard = await orm.call("calendar.event", "action_open_unlink_wizard", [resId, nextAction]);
-            if (actionOpenUnlinkWizard?.type) {
-                actionService.doAction(actionOpenUnlinkWizard);
-            };
+    return async ({ requestedAction, resId, partnerIds, recurrency, start, defaultAction, nextAction }) => {
+        if (shouldUseArchiveOrUnlinkWizard(luxon.DateTime.now(), partnerIds, recurrency, start)) {
+            const actionOpenArchiveOrUnlinkWizard = await orm.call("calendar.event", "action_open_archive_or_unlink_wizard", [resId, requestedAction, nextAction]);
+            if (actionOpenArchiveOrUnlinkWizard?.type) {
+                actionService.doAction(actionOpenArchiveOrUnlinkWizard);
+            }
         } else {
             defaultAction();
         }
@@ -30,25 +29,25 @@ export function useUnlinkCalendarEvent() {
 }
 
 /**
- * Display modals to send cancellation emails or chose the deletion type for recurring events.
+ * Display modals to send cancellation emails or select the events to delete or archive in the recurrency.
  */
-export function useUnlinkCalendarEvents() {
+export function useArchiveOrUnlinkCalendarEvents() {
     const actionService = useService("action");
     const orm = useService("orm");
 
-    return async ({ records, defaultAction }) => {
-        let isUnlinkWizardRequired = false;
+    return async ({ requestedAction, records, defaultAction }) => {
+        let isArchiveOrUnlinkWizardRequired = false;
         const now = luxon.DateTime.now();
         for (const record of records) {
-            if (shouldUseUnlinkWizard(now, record.data.partner_ids.resIds, record.data.recurrency, record.data.start)) {
-                isUnlinkWizardRequired = true;
+            if (shouldUseArchiveOrUnlinkWizard(now, record.data.partner_ids.resIds, record.data.recurrency, record.data.start)) {
+                isArchiveOrUnlinkWizardRequired = true;
                 break;
             }
         }
-        if (isUnlinkWizardRequired) {
-            const actionOpenUnlinkWizard = await orm.call("calendar.event", "action_open_unlink_wizard", [records.map(record => record.resId)]);
-            if (actionOpenUnlinkWizard?.type) {
-                actionService.doAction(actionOpenUnlinkWizard);
+        if (isArchiveOrUnlinkWizardRequired) {
+            const actionOpenArchiveOrUnlinkWizard = await orm.call("calendar.event", "action_open_archive_or_unlink_wizard", [records.map(record => record.resId), requestedAction]);
+            if (actionOpenArchiveOrUnlinkWizard?.type) {
+                actionService.doAction(actionOpenArchiveOrUnlinkWizard);
             }
         } else {
             defaultAction();

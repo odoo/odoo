@@ -1,6 +1,7 @@
+import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { FormController } from "@web/views/form/form_controller";
+import { useArchiveOrUnlinkCalendarEvent } from "@calendar/views/hooks";
 import { useAskRecurrenceUpdatePolicy } from "@calendar/views/ask_recurrence_update_policy_hook";
-import { useUnlinkCalendarEvent } from "@calendar/views/hooks";
 import { useService } from "@web/core/utils/hooks";
 import { user } from "@web/core/user";
 
@@ -11,7 +12,25 @@ export class CalendarFormController extends FormController {
         this.askRecurrenceUpdatePolicy = useAskRecurrenceUpdatePolicy();
         this.isPostSaveNotificationModal = false;
         this.redirectionObj = null;
-        this.unlinkCalendarEvent = useUnlinkCalendarEvent({ model: this.model });
+        this.archiveOrUnlinkCalendarEvent = useArchiveOrUnlinkCalendarEvent();
+    }
+
+    getStaticActionMenuItems() {
+        const actionMenuItems = super.getStaticActionMenuItems(...arguments);
+        if (actionMenuItems.archive.isAvailable) {
+            actionMenuItems.archive.callback = async () => {
+                const record = this.model.root;
+                await this.archiveOrUnlinkCalendarEvent({
+                    requestedAction: "archive",
+                    resId: record.resId,
+                    partnerIds: record.data.partner_ids.resIds,
+                    recurrency: record.data.recurrency,
+                    start: record.data.start,
+                    defaultAction: () => this.dialogService.add(ConfirmationDialog, this.archiveDialogProps),
+                });
+            };
+        }
+        return actionMenuItems;
     }
 
     /**
@@ -38,7 +57,8 @@ export class CalendarFormController extends FormController {
         if (rootValues.attendees_count == 1 && rootValues.user_id.id !== rootValues.partner_ids._currentIds[0]) {
             await this._archiveRecord(record);
         } else {
-            await this.unlinkCalendarEvent({
+            await this.archiveOrUnlinkCalendarEvent({
+                requestedAction: "unlink",
                 resId: record.resId,
                 partnerIds: record.data.partner_ids.resIds,
                 recurrency: record.data.recurrency,
@@ -76,23 +96,30 @@ export class CalendarFormController extends FormController {
     }
 
     /**
+     * This method is meant to be overridden.
+     */
+    async notifyAttendees(record, changes) {
+        const invitedAttendees = this.getInvitedAttendees(record, changes);
+        if (invitedAttendees.length > 0) {
+            const actionOpenInviteWizard = await this.orm.call("calendar.event", "action_open_invite_wizard", [
+                record.resId,
+                invitedAttendees,
+                this.redirectionObj ? { "type": "ir.actions.act_url", "url": this.redirectionObj.url, "target": "self" } : null,
+            ]);
+            if (actionOpenInviteWizard && actionOpenInviteWizard.type) {
+                this.isPostSaveNotificationModal = true; // To not perform the redirection at the end of the saving but after the notification modal submission.
+                this.actionService.doAction(actionOpenInviteWizard);
+            }
+        }
+    }
+
+    /**
      * @override
      */
     async onRecordSaved(record, changes) {
         await super.onRecordSaved(...arguments);
         if (record.data.start >= luxon.DateTime.now()) {
-            const invitedAttendees = this.getInvitedAttendees(record, changes);
-            if (invitedAttendees.length > 0) {
-                const actionOpenInviteWizard = await this.orm.call("calendar.event", "action_open_invite_wizard", [
-                    record.resId,
-                    invitedAttendees,
-                    this.redirectionObj ? { "type": "ir.actions.act_url", "url": this.redirectionObj.url, "target": "self" } : null,
-                ]);
-                if (actionOpenInviteWizard && actionOpenInviteWizard.type) {
-                    this.isPostSaveNotificationModal = true; // To not perform the redirection at the end of the saving but after the notification modal submission.
-                    this.actionService.doAction(actionOpenInviteWizard);
-                }
-            }
+            await this.notifyAttendees(record, changes);
         }
     }
 
