@@ -136,3 +136,21 @@ class TestSaleOrder(ClickAndCollectCommon):
         new_so._action_confirm()
         self.assertTrue(new_so.partner_shipping_id)
         self.assertFalse(new_so.partner_shipping_id.active)
+
+    def test_picking_follower_is_active_parent_partner(self):
+        """Parent partner is subscribed to in_store delivery."""
+        wh_partner = self.warehouse.partner_id
+        new_so = self._create_in_store_delivery_order()
+        new_so._set_pickup_location(json.dumps({
+            'id': self.warehouse.id,
+            'name': wh_partner.name,
+            'street': "New test street",
+            'zip_code': wh_partner.zip,
+            'city': "New test city",
+            'state': wh_partner.state_id.code,
+            'country_code': wh_partner.country_code,
+        }))
+        new_so.action_confirm()
+        self.assertEqual(
+            new_so.picking_ids.message_partner_ids, new_so.picking_ids.partner_id.parent_id
+        )
