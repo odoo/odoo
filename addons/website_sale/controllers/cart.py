@@ -16,15 +16,13 @@ from odoo.addons.website_sale.controllers.main import WebsiteSale
 
 class Cart(PaymentPortal):
     @route(route="/shop/cart", type="http", auth="public", website=True, sitemap=False)
-    def cart(self, id=None, access_token=None, revive_method="", **post):
+    def cart(self, id=None, access_token=None, **post):
         """Display the cart page.
 
         This route is responsible for the main cart management and abandoned cart revival logic.
 
         :param str id: The abandoned cart's id.
         :param str access_token: The abandoned cart's access token.
-        :param str revive_method: The revival method for abandoned carts. Can be 'merge' or
-                                'squash'.
         :return: The rendered cart page.
         :rtype: str
         """
@@ -40,24 +38,13 @@ class Cart(PaymentPortal):
                 abandoned_order.access_token, access_token
             ):  # wrong token (or SO has been deleted)
                 raise NotFound
-            if abandoned_order.state not in ("draft", "sent"):  # abandoned cart already finished
-                values.update({"abandoned_proceed": True})
-            elif revive_method == "squash" or (
-                revive_method == "merge" and not request.session.get("sale_order_id")
-            ):  # restore old cart or merge with unexistant
+            if not request.session.get("sale_order_id"):
                 request.session["sale_order_id"] = abandoned_order.id
                 request.cart = abandoned_order
                 order_sudo = abandoned_order
-            elif revive_method == "merge":
+            if abandoned_order.id != request.session.get("sale_order_id"):
                 abandoned_order.order_line.write({"order_id": request.session["sale_order_id"]})
                 abandoned_order.action_cancel()
-            elif abandoned_order.id != request.session.get(
-                "sale_order_id"
-            ):  # abandoned cart found, user have to choose what to do
-                values.update({
-                    "id": abandoned_order.id,
-                    "access_token": abandoned_order.access_token,
-                })
 
         values.update({
             "website_sale_order": order_sudo,

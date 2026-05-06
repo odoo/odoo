@@ -318,25 +318,6 @@
                     <h4 class="mb-0">Order summary</h4>
                     <div class="ms-3 border-start ps-2"><t t-call="website_sale.quick_reorder_button"/></div>
                 </div>
-                <div t-if="abandoned_proceed or access_token" class="alert alert-info mt8 mb8" role="alert"> <!-- abandoned cart choices -->
-                    <t t-if="abandoned_proceed">
-                        <p>Your previous cart has already been completed.</p>
-                        <p t-if="website_sale_order">Please proceed your current cart.</p>
-                    </t>
-                    <t t-if="access_token">
-                        <p>This is your current cart.</p>
-                        <p>
-                            <strong>
-                                <a class="o_translate_inline" t-attf-href="/shop/cart/?id={{id}}&amp;access_token={{access_token}}&amp;revive_method=squash">Click here</a>
-                            </strong> if you want to restore your previous cart. Your current cart will be replaced with your previous cart.
-                        </p>
-                        <p>
-                            <strong>
-                                <a class="o_translate_inline" t-attf-href="/shop/cart/?id={{id}}&amp;access_token={{access_token}}&amp;revive_method=merge">Click here</a>
-                            </strong> if you want to merge your previous cart into current cart.
-                        </p>
-                    </t>
-                </div>
                 <t t-call="website_sale.cart_lines"/>
                 <div class="clearfix" />
                 <div class="oe_structure" id="oe_structure_website_sale_cart_1"/>
