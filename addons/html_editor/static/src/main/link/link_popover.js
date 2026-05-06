@@ -1,4 +1,5 @@
-import { useExternalListener, useLayoutEffect, useRef, useState } from "@web/owl2/utils";
+import { useLayoutEffect, useRef, useState } from "@web/owl2/utils";
+import { useCrossDocumentListener } from "../../utils/hooks";
 import { session } from "@web/session";
 import { _t } from "@web/core/l10n/translation";
 import { Component } from "@odoo/owl";
@@ -138,11 +139,7 @@ export class LinkPopover extends Component {
                 this.onClickApply();
             }
         };
-        useExternalListener(this.props.document, "pointerdown", onPointerDown);
-        if (this.props.document !== document) {
-            // Listen to pointerdown outside the iframe
-            useExternalListener(document, "pointerdown", onPointerDown);
-        }
+        useCrossDocumentListener(this.props.document, "pointerdown", onPointerDown);
     }
 
     toggleAdvancedOptions() {

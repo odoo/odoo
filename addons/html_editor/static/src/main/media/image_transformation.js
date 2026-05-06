@@ -24,6 +24,7 @@ OTHER DEALINGS IN THE SOFTWARE.
 */
 
 import { useExternalListener, useRef } from "@web/owl2/utils";
+import { useCrossDocumentListener } from "../../utils/hooks";
 import { Component, onMounted } from "@odoo/owl";
 import { usePositionHook } from "@html_editor/position_hook";
 import { closestElement } from "@html_editor/utils/dom_traversal";
@@ -58,13 +59,9 @@ export class ImageTransformation extends Component {
             this.positionTransfoContainer();
             this.props.onComponentMounted();
         });
-        useExternalListener(window, "mousemove", this.mouseMove);
-        useExternalListener(window, "mouseup", this.mouseUp);
-        if (this.document.defaultView.frameElement) {
-            const iframeWindow = this.document.defaultView;
-            useExternalListener(iframeWindow, "mousemove", this.mouseMove);
-            useExternalListener(iframeWindow, "mouseup", this.mouseUp);
-        }
+        const iframeWindow = this.document.defaultView;
+        useCrossDocumentListener(iframeWindow, "mousemove", this.mouseMove);
+        useCrossDocumentListener(iframeWindow, "mouseup", this.mouseUp);
         // When a character key is pressed and the image gets deleted,
         // close the image transform via selectionchange.
         useExternalListener(this.document, "selectionchange", () => this.destroy());

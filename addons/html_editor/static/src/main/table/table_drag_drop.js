@@ -1,4 +1,5 @@
-import { useExternalListener, useRef } from "@web/owl2/utils";
+import { useRef } from "@web/owl2/utils";
+import { useCrossDocumentListener } from "../../utils/hooks";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 import { getColumnIndex, getRowIndex } from "@html_editor/utils/table";
 import { Component, onMounted, onWillUnmount } from "@odoo/owl";
@@ -40,13 +41,8 @@ export class TableDragDrop extends Component {
                 ? [...this.tableElement.rows].map((r) => r.getBoundingClientRect())
                 : [...this.props.tableGrid[0]].map((c) => c.getBoundingClientRect());
 
-        useExternalListener(this.props.document, "pointermove", this.onPointerMove);
-        useExternalListener(this.props.document, "pointerup", this.onPointerUp);
-        if (this.props.document !== document) {
-            // Listen outside the iframe.
-            useExternalListener(document, "pointermove", this.onPointerMove);
-            useExternalListener(document, "pointerup", this.onPointerUp);
-        }
+        useCrossDocumentListener(this.props.document, "pointermove", this.onPointerMove);
+        useCrossDocumentListener(this.props.document, "pointerup", this.onPointerUp);
 
         onMounted(() => {
             this.props.editable.classList.add("o-we-table-dragging");
