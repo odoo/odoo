@@ -1102,3 +1102,33 @@ test("Readonly chat window as admin shows composer", async () => {
     await contains(".o-mail-ChatWindow .o-mail-Composer-input");
     await contains(".o-mail-ChatWindow span:text('This channel is read-only.')", { count: 0 });
 });
+
+test("preserve link formatting in chat bubble message preview", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    pyEnv["mail.message"].create({
+        model: "discuss.channel",
+        body: `<a href="https://odoo.com/">https://odoo.com</a>`,
+        author_id: serverState.partnerId,
+        res_id: channelId,
+    });
+    setupChatHub({ folded: [channelId] });
+    await start();
+    await hover(".o-mail-ChatBubble[name='General']");
+    await contains(`.o-mail-ChatBubble-preview a[href="https://odoo.com/"]`);
+});
+
+test("decorate emojis in chat bubble message preview", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    pyEnv["mail.message"].create({
+        model: "discuss.channel",
+        body: "Hello 😇",
+        author_id: serverState.partnerId,
+        res_id: channelId,
+    });
+    setupChatHub({ folded: [channelId] });
+    await start();
+    await hover(".o-mail-ChatBubble[name='General']");
+    await contains(`.o-mail-ChatBubble-preview .o-mail-emoji[title=":innocent: :halo:"]`);
+});
