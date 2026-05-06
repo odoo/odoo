@@ -329,15 +329,6 @@ function _generateEmojisOnHtml(htmlString) {
 }
 
 /**
- * @deprecated
- * @param {string|ReturnType<markup>} body
- * @returns {ReturnType<markup>}
- */
-export function getNonEditableMentions(body) {
-    return prepareBodyForEditing(body);
-}
-
-/**
  * @param {string|ReturnType<markup>} body
  * @returns {ReturnType<markup>}
  */
