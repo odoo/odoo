@@ -3,6 +3,16 @@
 <templates xml:space="preserve">
     <t t-name="sms.SmsWidget" t-inherit="mail.EmojisTextField" t-inherit-mode="primary">
         <xpath expr="//div[hasclass('o_field_input_buttons')]/button[hasclass('fa-magic')]" position="replace"/>
+        <xpath expr="//div[hasclass('o_field_input_buttons')]" position="inside">
+            <div class="d-inline-flex align-items-center justify-content-center">
+                <button t-if="this.props.dynamicPlaceholder"
+                        class="btn btn-link end-0 bottom-0"
+                        title="Insert Field"
+                        t-on-click="this.onDynamicPlaceholderOpen">
+                    <i class="fa fa-magic me-1"/>
+                </button>
+            </div>
+        </xpath>
         <xpath expr="/*[last()]/*[last()]" position="after">
             <div class="o_sms_container mt-3">
                 <span class="text-muted o_sms_count me-1" t-if="this.nbrChar != 0">
@@ -10,13 +20,6 @@
                     <a href="https://iap-services.odoo.com/iap/sms/pricing" target="_blank"
                         title="SMS Pricing" aria-label="SMS Pricing" class="fa fa-lg fa-info-circle align-middle"/>
                 </span>
-            </div>
-            <div class="o_sms_container mt-3">
-                <button t-if="this.props.dynamicPlaceholder"
-                    class="btn btn-link py-0 border-0"
-                    title="Insert Field"
-                    t-on-click="this.onDynamicPlaceholderOpen"
-                ><span class="fa fa-magic me-1"/><span>Insert Field</span></button>
             </div>
         </xpath>
     </t>

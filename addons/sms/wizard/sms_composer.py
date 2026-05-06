@@ -190,7 +190,10 @@ class SmsComposer(models.TransientModel):
             if composer.template_id and 'scheduled_date' in composer.template_id._fields:
                 composer.scheduled_date = composer.template_id.scheduled_date
             else:
-                composer.scheduled_date = False
+                if composer.scheduled_date:
+                    composer.scheduled_date = composer.scheduled_date
+                else:
+                    composer.scheduled_date = False
 
     @api.depends('res_model')
     def _compute_render_model(self):
@@ -232,15 +235,44 @@ class SmsComposer(models.TransientModel):
         self._action_schedule_message()
         return {'type': 'ir.actions.act_window_close'}
 
+    def action_sms_template_dropdown(self):
+        return {
+            'name': _('Select a Template'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'sms.template',
+            'view_mode': 'list',
+            'views': [[False, 'list']],
+            'target': 'new',
+            'domain': [('model_id.model', '=', self.res_model)],
+            'context': {'sms_composer_id': self.id},
+        }
+
+    def action_create_sms_template(self):
+        self.ensure_one()
+
+        ir_model_record = self.env['ir.model'].search([('model', '=', self.res_model)], limit=1)
+        if not ir_model_record:
+            raise UserError(_("Impossible to determine the model for the template."))
+        self.env['sms.template'].create({
+            'name': self.template_name,
+            'body': self.body,
+            'model_id': ir_model_record.id,
+        })
+        return {'type': 'ir.actions.act_window_close'}
+
     def _prepare_sms_scheduled_values(self, res_id):
         self.ensure_one()
-        return {
+        vals = {
             'body': self.body,
             'number': self.recipient_single_number_itf or self.recipient_single_number,
             'scheduled_date': self.scheduled_date,
             'state': 'outgoing',
-            'partner_id': self._get_records()._mail_get_partners()[res_id].id if self.res_model == 'res.partner' else False,
         }
+
+        if self.res_model == 'res.partner':
+            vals['partner_id'] = res_id
+
+        return vals
 
     def _action_schedule_message(self):
         if any(wizard.composition_mode != 'comment' for wizard in self):

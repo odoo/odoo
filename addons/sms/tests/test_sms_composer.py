@@ -1,9 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from unittest.mock import patch
+from datetime import timedelta
 
 from odoo.addons.sms.models.mail_thread import MailThread
 from odoo.addons.sms.tests.common import SMSCommon, SMSCase
+from odoo.fields import Datetime
 from odoo.tests import tagged
 
 
@@ -82,3 +84,62 @@ class TestSMSComposerComment(SMSCommon, SMSCase):
                     [{'partner': self.partner_employee}], sms_content, messages,
                     mail_message_values={"body": expected_notification_content},
                 )
+
+    def test_sms_composer_schedule_action(self):
+        """ Test that simulates the correct working of the 'Schedule' button in the wizard """
+
+        # Create the user
+        test_partner = self.env['res.partner'].create({
+            'name': 'Test User',
+            'phone': '+393331234567',
+        })
+
+        # Fix tomorrow as the date
+        future_date = Datetime.now() + timedelta(days=1)
+
+        # Create the wizard
+        composer = self.env['sms.composer'].with_context(
+            active_model='res.partner',
+            active_id=test_partner.id,
+        ).create({
+            'body': 'Scheduled Message',
+            'composition_mode': 'comment',
+            'scheduled_date': future_date,
+        })
+
+        # Action
+        with self.mockSMSGateway():
+            composer.action_schedule_message()
+
+        # Check if the SMS is correctly created
+        sms = self.env['sms.sms'].search([
+            ('number', '=', '+393331234567'),
+            ('state', '=', 'outgoing')
+        ], limit=1)
+
+        self.assertTrue(sms, "The SMS should be created in the 'outgoing' state")
+        self.assertEqual(sms.body, 'Scheduled Message')
+
+        # Check the date
+        self.assertEqual(
+            sms.scheduled_date.replace(microsecond=0),
+            future_date.replace(microsecond=0),
+            "The scheduled date is note the same."
+        )
+
+    def test_sms_composer_action_create_template(self):
+        """ Test to save new SMS template """
+        composer = self.env['sms.composer'].with_context(
+            active_model='res.partner',
+            active_id=self.partner_employee.id
+        ).create({
+            'body': 'SMS Template new body',
+            'template_name': 'Test SMS Template',
+        })
+
+        composer.action_create_sms_template()
+
+        template = self.env['sms.template'].search([('name', '=', 'Test SMS Template')], limit=1)
+        self.assertTrue(template, 'New SMS Template must be created')
+        self.assertEqual(template.body, 'SMS Template new body')
+        self.assertEqual(template.model_id.model, 'res.partner')

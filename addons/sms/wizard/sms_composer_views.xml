@@ -31,6 +31,8 @@
                         <field name="res_id" invisible="1"/>
                         <field name="res_ids" invisible="1"/>
                         <field name="res_model" invisible="1"/>
+                        <field name="can_edit_body" invisible="1"/>
+                        <field name="render_model" invisible="1"/>
                         <field name="mass_force_send" invisible="1"/>
                         <field name="recipient_single_valid" invisible="1"/>
                         <field name="recipient_single_number" invisible="1"/>
@@ -58,9 +60,9 @@
                 <footer>
                     <!-- attrs doesn't work for 'disabled'-->
                     <button string="Send" type="object" class="oe_highlight" name="action_send_sms" data-hotkey="q"
-                            invisible="composition_mode not in ('comment', 'numbers') or not recipient_single_valid"/>
+                            invisible="composition_mode not in ('comment', 'numbers') or not recipient_single_valid or scheduled_date"/>
                     <button string="Send" type="object" class="oe_highlight" name="action_send_sms" data-hotkey="q"
-                            invisible="composition_mode not in ('comment', 'numbers') or recipient_single_valid" disabled='1'/>
+                            invisible="composition_mode not in ('comment', 'numbers') or recipient_single_valid or scheduled_date" disabled='1'/>
                     <button string="Schedule" type="object" class="btn-primary" name="action_schedule_message" data-hotkey="q"
                             invisible="not scheduled_date or not recipient_single_valid"/>
                     <button string="Put in queue" type="object" class="oe_highlight" name="action_send_sms" data-hotkey="q"
@@ -78,6 +80,22 @@
                         <span class="ms-1 o_sms_encoding_container">(<span class="o_sms_encoding">GSM7</span>)</span>
                         <a href="https://iap-services.odoo.com/iap/sms/pricing" target="_blank" title="SMS Pricing" aria-label="SMS Pricing" class="fa fa-lg fa-info-circle text-info ms-2"/>
                     </div>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="sms_composer_view_form_template_save" model="ir.ui.view">
+        <field name="name">sms.composer.view.form.template.save</field>
+        <field name="model">sms.composer</field>
+        <field name="arch" type="xml">
+            <form string="Save as SMS Template">
+                <group>
+                    <field name="template_name" placeholder="e.g: Send order confirmation" required="1"/>
+                </group>
+                <footer>
+                    <button name="action_create_sms_template" type="object" class="btn btn-primary" string="Save Template"/>
+                    <button class="btn btn-secondary" special="cancel"/>
                 </footer>
             </form>
         </field>
