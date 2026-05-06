@@ -1,4 +1,5 @@
 import { Composer } from "@mail/core/common/composer";
+import { _t } from "@web/core/l10n/translation";
 
 import { patch } from "@web/core/utils/patch";
 import { onWillStart } from "@odoo/owl";
@@ -11,6 +12,13 @@ patch(Composer.prototype, {
                 this.state.active = false;
             }
         });
+    },
+
+    get placeholder() {
+        if (this.env.projectSharingId) {
+            return _t("Write a message…");
+        }
+        return super.placeholder;
     },
 
     get extraData() {
