@@ -8,9 +8,6 @@
             <field name="priority" eval="10"/>
             <field name="arch" type="xml">
                 <kanban default_order="last_interest_dt desc" action="open_chat_window_action" type="object">
-                    <field name="is_member"/>
-                    <field name="group_ids"/>
-                    <field name="active"/>
                     <templates>
                         <t t-name="menu">
                             <a type="open" class="dropdown-item" role="menuitem">Advanced Settings</a>
