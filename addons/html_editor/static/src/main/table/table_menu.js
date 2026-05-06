@@ -1,4 +1,5 @@
 import { useExternalListener, useLayoutEffect, useRef } from "@web/owl2/utils";
+import { useCrossDocumentListener } from "../../utils/hooks";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 import { Component, onMounted, onWillUnmount } from "@odoo/owl";
 import { getRowIndex, getSelectedCellsMergeInfo } from "@html_editor/utils/table";
@@ -51,11 +52,7 @@ export class TableMenu extends Component {
         onWillUnmount(() => {
             this.menuRef?.el.removeEventListener("pointerdown", onPointerDown);
         });
-        useExternalListener(this.props.document, "pointerup", this.onPointerUp);
-        if (this.props.document !== document) {
-            // Listen outside the iframe.
-            useExternalListener(document, "pointerup", this.onPointerUp);
-        }
+        useCrossDocumentListener(this.props.document, "pointerup", this.onPointerUp);
         useLayoutEffect(
             () => {
                 const { type, target } = this.props;

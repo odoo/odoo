@@ -1,4 +1,5 @@
 import { useExternalListener, useLayoutEffect, useRef, useState, useSubEnv } from "@web/owl2/utils";
+import { useCrossDocumentListener } from "../utils/hooks";
 import { Component, onWillDestroy, xml } from "@odoo/owl";
 import { OVERLAY_SYMBOL } from "@web/core/overlay/overlay_container";
 import { usePosition } from "@web/core/position/position_hook";
@@ -79,12 +80,7 @@ export class EditorOverlay extends Component {
                     this.props.close();
                 }
             };
-            const editableDocument = this.props.editable.ownerDocument;
-            useExternalListener(editableDocument, "pointerdown", clickAway);
-            // Listen to pointerdown outside the iframe
-            if (editableDocument !== document) {
-                useExternalListener(document, "pointerdown", clickAway);
-            }
+            useCrossDocumentListener(this.props.editable.ownerDocument, "pointerdown", clickAway);
         }
 
         if (this.props.hasAutofocus) {
