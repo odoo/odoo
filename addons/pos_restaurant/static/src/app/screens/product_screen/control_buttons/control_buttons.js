@@ -15,6 +15,14 @@ patch(ControlButtons.prototype, {
         this.dialog.closeAll();
         this.pos.startTransferOrder();
     },
+    get showAddCourse() {
+        return (
+            this.pos.config.module_pos_restaurant &&
+            !this.props.showRemainingButtons &&
+            !this.pos.getOrder()?.isRefund &&
+            !this.pos.config.use_course_allocation
+        );
+    },
     showTransferCourse() {
         const order = this.currentOrder;
         if (!order || !order.hasCourses()) {
