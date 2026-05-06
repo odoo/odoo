@@ -107,4 +107,10 @@
         <field name="perm_unlink" eval="False"/>
     </record>
 
+    <record id="ir_rule_hr_recruitment_stage_multi_company" model="ir.rule">
+        <field name="name">HR Recruitment Stage: Multi Company</field>
+        <field name="model_id" ref="model_hr_recruitment_stage"/>
+        <field name="domain_force">[('company_id', 'in', user.env.companies.ids + [False])]</field>
+    </record>
+
 </odoo>
