@@ -24,10 +24,11 @@ class PosOrderLine(models.Model):
             params += ['l10n_in_hsn_code']
         return params
 
-    def _prepare_base_line_for_taxes_computation(self):
-        res = super()._prepare_base_line_for_taxes_computation()
+    def _prepare_base_lines_for_taxes_computation(self):
+        base_lines = super()._prepare_base_lines_for_taxes_computation()
         if self.company_id.l10n_in_is_gst_registered:
-            res.update({
-                'l10n_in_hsn_code': self.l10n_in_hsn_code,
-            })
-        return res
+            for index, line in enumerate(self):
+                base_lines[index].update({
+                    'l10n_in_hsn_code': line.l10n_in_hsn_code,
+                })
+        return base_lines

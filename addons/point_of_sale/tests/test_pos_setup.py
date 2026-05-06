@@ -75,7 +75,8 @@ class TestPoSSetup(TestPoSCommon):
             'invoice_reference_type': 'invoice',
             'invoice_reference_model': 'odoo'
         })
-        payment_method = self.env['pos.payment.method'].create({'name': 'Lets Pay for Tests', 'journal_id': journal.id})
+        payment_method = self.env['pos.payment.method'].create({
+            'name': 'Lets Pay for Tests', 'journal_id': journal.id, 'type': 'bank'})
         self.basic_config.write({'payment_method_ids': [payment_method.id]})
         journal.write({'pos_payment_method_ids': [payment_method.id]})
         session = self.env['pos.session'].create(

@@ -13,6 +13,7 @@ class TestSelfOrderPaymentMethod(SelfOrderCommonTest):
         self.terminal_payment_method = self.env['pos.payment.method'].create({
             'name': 'Terminal',
             'journal_id': self.bank_journal.id,
+            'type': 'bank',
             'payment_provider': 'stripe',
         })
         self.cash_journal = self.env['account.journal'].create({
@@ -23,6 +24,7 @@ class TestSelfOrderPaymentMethod(SelfOrderCommonTest):
         })
         self.cash_payment_method = self.env['pos.payment.method'].create({
             'name': 'Cash',
+            'type': 'cash',
             'journal_id': self.cash_journal.id
         })
 

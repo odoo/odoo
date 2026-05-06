@@ -10,7 +10,6 @@
                     <field name="active" invisible="1"/>
                     <field name="type" invisible="1"/>
                     <field name="all_providers_installed" invisible="1"/>
-                    <field name="default_pos_receivable_account_name" invisible="1" />
                     <div class="d-flex justify-content-between">
                         <div class="oe_title">
                             <label for="name"/>
@@ -18,12 +17,14 @@
                         </div>
                         <field name="image" class="oe_avatar" widget='image'/>
                     </div>
+                    <group>
+                        <field name="type" widget="radio" options="{'horizontal': True}" />
+                    </group>
                     <group name="Payment methods">
                         <group>
-                            <field name="split_transactions"/>
-                            <field name="journal_id" required="not split_transactions" placeholder="Leave empty to use the receivable account of customer" />
+                            <field name="journal_id" invisible="type not in ['cash', 'bank']" required="type in ['cash', 'bank']" placeholder="Leave empty to use the receivable account of customer" />
                             <field name="outstanding_account_id" groups="account.group_account_readonly" invisible="type != 'bank'" required="type == 'bank'" placeholder="Selection of outstanding account is required" />
-                            <field name="receivable_account_id" groups="account.group_account_readonly" invisible="split_transactions" widget="many2one" options="{'placeholder_field': 'default_pos_receivable_account_name'}"/>
+                            <field name="receivable_account_id" groups="account.group_account_readonly" invisible="type == 'pay_later'" widget="many2one" placeholder="PoS Config default partner receivable"/>
                             <field name="company_id" readonly="1" groups="base.group_multi_company" />
                             <field name="config_ids" widget="many2many_tags" placeholder="No Point of Sale" />
                         </group>
@@ -50,10 +51,9 @@
                 <field name="type" column_invisible="True"/>
                 <field name="sequence" widget="handle"/>
                 <field name="name" />
-                <field name="split_transactions" optional="hide" />
-                <field name="journal_id" required="not split_transactions" />
+                <field name="journal_id" required="type != 'pay_later'" />
                 <field name="outstanding_account_id" groups="account.group_account_readonly" optional="hide" invisible="type != 'bank'" />
-                <field name="receivable_account_id" groups="account.group_account_readonly" optional="hide" invisible="split_transactions" />
+                <field name="receivable_account_id" groups="account.group_account_readonly" optional="hide" invisible="type == 'pay_later'" />
                 <field name="company_id" groups="base.group_multi_company" />
                 <field name="config_ids" widget="many2many_tags"/>
             </list>

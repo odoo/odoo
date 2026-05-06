@@ -168,17 +168,16 @@ test("canBeAdjusted", async () => {
     const paymentline = createPaymentLine(store, order, card);
 
     // no payment interface + is cash
-    card.is_cash_count = true;
+    card.type = "cash";
     card.payment_method_type = "none";
     expect(paymentline.canBeAdjusted()).toBe(false);
 
     // no payment interface + is bank qr code
-    card.is_cash_count = false;
+    card.type = "bank";
     card.payment_method_type = "bank_qr_code";
     expect(paymentline.canBeAdjusted()).toBe(false);
 
     // no payment interface + is not cash or bank qr code
-    card.is_cash_count = false;
     card.payment_method_type = "none";
     expect(paymentline.canBeAdjusted()).toBe(true);
 

@@ -728,7 +728,7 @@ patch(PosStore.prototype, {
         }
     },
     async postSyncAllOrders(orders) {
-        super.postSyncAllOrders(orders);
+        await super.postSyncAllOrders(orders);
 
         for (const order of orders) {
             for (const line of order.lines) {

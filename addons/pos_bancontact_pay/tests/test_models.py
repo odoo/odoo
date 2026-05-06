@@ -109,6 +109,7 @@ class TestModels(TestBancontactPay, CommonPosTest):
                 "payment_method_type": "external_qr",
                 "payment_provider": "bancontact_pay",
                 "bancontact_usage": "sticker",
+                "type": "bank",
                 "company_id": self.company.id,
                 "journal_id": self.bancontact_journal.id,
                 "bancontact_api_key": "sticker_api_key",

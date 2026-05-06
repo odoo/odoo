@@ -203,9 +203,8 @@ class PosOrder(models.Model):
             'preferred_payment_method_line_id': self.env['account.payment.method.line'].search([], limit=1).id,
         }
 
-    def _create_invoice(self, move_vals):
-        # EXTENDS 'point_of_sale'
-        invoice = super()._create_invoice(move_vals)
+    def _generate_pos_order_invoice(self):
+        invoice = super()._generate_pos_order_invoice()
         self._link_xml_and_qr_to_invoice(invoice)
         return invoice
 

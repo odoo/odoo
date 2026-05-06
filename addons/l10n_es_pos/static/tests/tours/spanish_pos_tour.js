@@ -93,17 +93,9 @@ registry.category("web_tour.tours").add("l10n_es_pos_settle_account_due", {
             Dialog.confirm("Open Register"),
             ProductScreen.clickPartnerButton(),
             PartnerList.settleCustomerAccount("Partner Test 1", "10.0", "TSJ/", "/00001", true),
-            ProductScreen.clickPayButton(),
             PaymentScreen.clickPaymentMethod("Bank"),
             PaymentScreen.clickValidate(),
-            Chrome.confirmPopup(),
-            FeedbackScreen.isShown(),
-            FeedbackScreen.checkTicketData({
-                payment_lines: [
-                    { name: "Bank", amount: "10.0" },
-                    { name: "Customer Account", amount: "-10.0" },
-                ],
-            }),
+            ProductScreen.isShown(),
             Chrome.endTour(),
         ].flat(),
 });

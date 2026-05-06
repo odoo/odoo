@@ -53,7 +53,11 @@ class AccountJournal(models.Model):
             journal = self.create({
                 'name': _('Point of Sale'),
                 'code': 'POSS',
-                'type': 'general',
+                'type': 'sale',
                 'company_id': self.env.company.id,
             })
+        elif journal.type != 'sale':
+            # Migrate existing POSS journals that were created as 'general'
+            # before the spec required a sale journal for out_receipt documents.
+            journal.type = 'sale'
         return journal

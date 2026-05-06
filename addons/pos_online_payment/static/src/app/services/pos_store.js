@@ -65,7 +65,7 @@ patch(PosStore.prototype, {
 
         if (opData["deleted"] === true) {
             const onlinePm = order.payment_ids.filter(
-                (line) => line.payment_method_id.is_online_payment
+                (line) => line.payment_method_id.type === "online"
             );
 
             for (const line of onlinePm) {
@@ -79,7 +79,7 @@ patch(PosStore.prototype, {
 
         const opLinesToUpdate = order.payment_ids.filter(
             (line) =>
-                line.payment_method_id.is_online_payment &&
+                line.payment_method_id.type === "online" &&
                 ["waiting", "done"].includes(line.getPaymentStatus())
         );
         for (const op of opData.online_payments) {

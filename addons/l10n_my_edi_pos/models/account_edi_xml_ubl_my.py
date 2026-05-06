@@ -126,7 +126,7 @@ class AccountEdiXmlUBLMyInvoisMY(models.AbstractModel):
         for index, orders in enumerate(orders_per_line):
             base_lines = []
             for order in orders:
-                order_base_lines = order._prepare_tax_base_line_values()
+                order_base_lines = order.lines._prepare_base_lines_for_taxes_computation()
                 AccountTax._add_tax_details_in_base_lines(order_base_lines, consolidated_invoice.company_id)
                 AccountTax._round_base_lines_tax_details(order_base_lines, consolidated_invoice.company_id)
                 base_lines += order_base_lines

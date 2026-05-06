@@ -12,7 +12,7 @@ class PosPaymentMethod(models.Model):
         online_payment_domain = None
         if config.self_ordering_mode == 'kiosk':
             online_payment_domain = Domain.AND([
-                Domain('is_online_payment', '=', True),
+                Domain('type', '=', 'online'),
                 Domain('id', 'in', config.payment_method_ids.ids)
             ])
         elif config.self_order_online_payment_method_id:

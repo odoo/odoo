@@ -74,8 +74,10 @@ class TestInPosBase(TestPoSCommon):
         """Opens a new POS session and ensures it is closed properly."""
         session = self.open_new_session(0.0)
         yield session
-        session.post_closing_cash_details(0.0)
-        session.close_session_from_ui()
+        cash_pm = self.config._get_cash_payment_method()
+        session.close_session_from_ui({
+            cash_pm.id: 0,
+        })
 
     def _create_order(self, ui_data):
         """Helper to create a POS order from UI data."""

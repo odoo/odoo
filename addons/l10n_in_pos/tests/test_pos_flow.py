@@ -50,7 +50,6 @@ class TestPosFlow(TestInPosBase):
         # with self.with_pos_session() as session2:
         pos_order_going_to_invoice.partner_id = self.partner_a
         pos_order_going_to_invoice.action_pos_order_invoice()
-        # session2.action_pos_session_closing_control()
 
         # Confirm that reversal move(s) are now set
         reversal_moves = self.env['account.move'].search([('reversed_pos_order_id', '=', pos_order_going_to_invoice.id)])
