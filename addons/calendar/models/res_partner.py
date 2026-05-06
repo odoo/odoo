@@ -87,6 +87,12 @@ class ResPartner(models.Model):
             })
         return attendees_details
 
+    def _creation_message(self):
+        self.ensure_one()
+        if self.env.context.get('mail_create_log_from_calendar_sync'):
+            return _('Contact created through Calendar sync.')
+        return super()._creation_message()
+
     @api.model
     def _set_calendar_last_notif_ack(self):
         partner = self.env['res.users'].browse(self.env.context.get('uid', self.env.uid)).partner_id
