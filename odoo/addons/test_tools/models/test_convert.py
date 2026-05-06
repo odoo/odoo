@@ -1,14 +1,12 @@
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 from odoo import api, fields, models
 
 
-class Test_ConvertTest_Model(models.Model):
-    _name = 'test_convert.test_model'
-    _description = "Test Convert Model"
+class TestToolsConvert(models.Model):
+    _name = 'test_tools.convert'
+    _description = 'Test Tools Convert'
 
     name = fields.Char(translate=True)
-    usered_ids = fields.One2many('test_convert.usered', 'test_id')
+    usered_ids = fields.One2many('test_tools.convert.usered', 'test_id')
 
     @api.model
     def action_test_date(self, today_date):
@@ -23,13 +21,13 @@ class Test_ConvertTest_Model(models.Model):
         return True
 
 
-class Test_ConvertUsered(models.Model):
-    _name = 'test_convert.usered'
-    _description = "z test model ignore"
+class TestToolsConvertUsered(models.Model):
+    _name = 'test_tools.convert.usered'
+    _description = 'Test Tools Convert Usered'
 
     name = fields.Char()
     user_id = fields.Many2one('res.users', default=lambda self: self.env.user)
-    test_id = fields.Many2one('test_convert.test_model')
+    test_id = fields.Many2one('test_tools.convert')
     tz = fields.Char(default=lambda self: self.env.context.get('tz') or self.env.user.tz)
 
     @api.model

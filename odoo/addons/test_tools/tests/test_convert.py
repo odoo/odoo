@@ -1,39 +1,35 @@
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-import unittest
 import collections
+import os.path
+import unittest
 
 from lxml import etree as ET
 from lxml.builder import E
 
 from odoo.tests import common, tagged
+from odoo.tools import config
 from odoo.tools.convert import _eval_xml, convert_file, xml_import
 from odoo.tools.misc import file_path
 
+Data = E.data
 Field = E.field
+Function = E.function
+Odoo = E.odoo
+Record = E.record
 Value = E.value
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
+@tagged('at_install', '-post_install')
 class TestEvalXML(common.TransactionCase):
     def eval_xml(self, node, obj=None):
         return _eval_xml(obj, node, self.env)
 
     def test_char(self):
-        self.assertEqual(
-            self.eval_xml(Field("foo")),
-            "foo")
-        self.assertEqual(
-            self.eval_xml(Field("None")),
-            "None")
+        self.assertEqual(self.eval_xml(Field("foo")), "foo")
+        self.assertEqual(self.eval_xml(Field("None")), "None")
 
     def test_int(self):
-        self.assertIsNone(
-            self.eval_xml(Field("None", type='int')),
-            "what the fuck?")
-        self.assertEqual(
-            self.eval_xml(Field(" 42  ", type="int")),
-            42)
+        self.assertIsNone(self.eval_xml(Field("None", type='int')), "what the fuck?")
+        self.assertEqual(self.eval_xml(Field(" 42  ", type="int")), 42)
 
         with self.assertRaises(ValueError):
             self.eval_xml(Field("4.82", type="int"))
@@ -42,9 +38,7 @@ class TestEvalXML(common.TransactionCase):
             self.eval_xml(Field("Whelp", type="int"))
 
     def test_float(self):
-        self.assertEqual(
-            self.eval_xml(Field("4.78", type="float")),
-            4.78)
+        self.assertEqual(self.eval_xml(Field("4.78", type="float")), 4.78)
 
         with self.assertRaises(ValueError):
             self.eval_xml(Field("None", type="float"))
@@ -53,9 +47,7 @@ class TestEvalXML(common.TransactionCase):
             self.eval_xml(Field("Foo", type="float"))
 
     def test_list(self):
-        self.assertEqual(
-            self.eval_xml(Field(type="list")),
-            [])
+        self.assertEqual(self.eval_xml(Field(type="list")), [])
 
         self.assertEqual(
             self.eval_xml(Field(
@@ -69,10 +61,8 @@ class TestEvalXML(common.TransactionCase):
 
     def test_file(self):
         Obj = collections.namedtuple('Obj', ['module', 'idref'])  # noqa: PYI024
-        obj = Obj('test_orm', None)
-        self.assertEqual(
-            self.eval_xml(Field('test_file.txt', type='file'), obj),
-            'test_orm,test_file.txt')
+        obj = Obj('test_tools', None)
+        self.assertEqual(self.eval_xml(Field('test_file.txt', type='file'), obj), 'test_tools,test_file.txt')
 
         with self.assertRaises(IOError):
             self.eval_xml(Field('test_nofile.txt', type='file'), obj)
@@ -82,7 +72,7 @@ class TestEvalXML(common.TransactionCase):
 
         # pass args in eval
         xml = E.function(
-            model="test_convert.usered",
+            model="test_tools.convert.usered",
             name="model_method",
             eval="[1, 2]",
         )
@@ -93,7 +83,7 @@ class TestEvalXML(common.TransactionCase):
         self.assertEqual(kwargs, {})
 
         xml = E.function(
-            model="test_convert.usered",
+            model="test_tools.convert.usered",
             name="method",
             eval="[1, 2]",
         )
@@ -106,7 +96,7 @@ class TestEvalXML(common.TransactionCase):
         # pass args in child elements
         xml = E.function(
             E.value(eval="1"), E.value(eval="2"),
-            model="test_convert.usered",
+            model="test_tools.convert.usered",
             name="model_method",
         )
         rec, args, kwargs = self.eval_xml(xml, obj)
@@ -117,7 +107,7 @@ class TestEvalXML(common.TransactionCase):
 
         xml = E.function(
             E.value(eval="1"), E.value(eval="2"),
-            model="test_convert.usered",
+            model="test_tools.convert.usered",
             name="method",
         )
         rec, args, kwargs = self.eval_xml(xml, obj)
@@ -132,7 +122,7 @@ class TestEvalXML(common.TransactionCase):
         # pass args and kwargs in child elements
         xml = E.function(
             E.value(eval="1"), E.value(name="foo", eval="2"),
-            model="test_convert.usered",
+            model="test_tools.convert.usered",
             name="model_method",
         )
         rec, args, kwargs = self.eval_xml(xml, obj)
@@ -143,7 +133,7 @@ class TestEvalXML(common.TransactionCase):
 
         xml = E.function(
             E.value(eval="1"), E.value(name="foo", eval="2"),
-            model="test_convert.usered",
+            model="test_tools.convert.usered",
             name="method",
         )
         rec, args, kwargs = self.eval_xml(xml, obj)
@@ -155,7 +145,7 @@ class TestEvalXML(common.TransactionCase):
         # pass args and context in kwargs
         xml = E.function(
             E.value(eval="1"), E.value(name="context", eval="{'foo': 2}"),
-            model="test_convert.usered",
+            model="test_tools.convert.usered",
             name="model_method",
         )
         rec, args, kwargs = self.eval_xml(xml, obj)
@@ -166,7 +156,7 @@ class TestEvalXML(common.TransactionCase):
 
         xml = E.function(
             E.value(eval="1"), E.value(name="context", eval="{'foo': 2}"),
-            model="test_convert.usered",
+            model="test_tools.convert.usered",
             name="method",
         )
         rec, args, kwargs = self.eval_xml(xml, obj)
@@ -179,8 +169,8 @@ class TestEvalXML(common.TransactionCase):
         obj = xml_import(self.env, 'test_convert', None, 'init')
 
         xml = E.function(
-            E.function(model="test_convert.usered", name="search", eval="[[]]"),
-            model="test_convert.usered",
+            E.function(model="test_tools.convert.usered", name="search", eval="[[]]"),
+            model="test_tools.convert.usered",
             name="method",
         )
         rec, args, kwargs = self.eval_xml(xml, obj)
@@ -191,7 +181,7 @@ class TestEvalXML(common.TransactionCase):
 
     def test_o2m_sub_records(self):
         # patch the model's class with a proxy that copies the argument
-        Model = self.registry['test_convert.test_model']
+        Model = self.registry['test_tools.convert']
         call_args = []
 
         def _load_records(self, data_list, update=False):
@@ -203,9 +193,9 @@ class TestEvalXML(common.TransactionCase):
 
         # import a record with a subrecord
         xml = ET.fromstring("""
-            <record id="test_convert.test_o2m_record" model="test_convert.test_model">
+            <record id="test_convert.test_o2m_record" model="test_tools.convert">
                 <field name="usered_ids">
-                    <record id="test_convert.test_o2m_subrecord" model="test_convert.usered">
+                    <record id="test_convert.test_o2m_subrecord" model="test_tools.convert.usered">
                         <field name="name">subrecord</field>
                     </record>
                 </field>
@@ -217,15 +207,14 @@ class TestEvalXML(common.TransactionCase):
         # check that field 'usered_ids' is not passed
         self.assertEqual(len(call_args), 1)
         for data in call_args[0]:
-            self.assertNotIn('usered_ids', data['values'],
-                             "Unexpected value in O2M When loading XML with sub records")
+            self.assertNotIn('usered_ids', data['values'], "Unexpected value in O2M When loading XML with sub records")
 
     def test_o2m_sub_records_noupdate(self):
         xml = ET.fromstring("""
             <data noupdate="1">
-              <record id="test_convert.test_o2m_record_noup" model="test_convert.test_model">
+              <record id="test_convert.test_o2m_record_noup" model="test_tools.convert">
                 <field name="usered_ids">
-                    <record id="test_convert.test_o2m_subrecord_noup" model="test_convert.usered">
+                    <record id="test_convert.test_o2m_subrecord_noup" model="test_tools.convert.usered">
                         <field name="name">subrecord</field>
                     </record>
                 </field>
@@ -257,7 +246,7 @@ class TestEvalXML(common.TransactionCase):
         """
         self.env['res.lang']._activate_lang('fr_FR')
         env_fr = self.env(context=dict(self.env.context, lang='fr_FR'))
-        record = self.env.ref('test_orm.test_translated_field')
+        record = self.env.ref('test_tools.test_translated_field')
 
         # 1. Test xml_import, which is sometimes imported and used directly in addons' code
         # Change the value of the record `name` field
@@ -265,9 +254,9 @@ class TestEvalXML(common.TransactionCase):
         self.assertEqual(record.name, 'bar')
         # Reset the value to the one from the XML data file,
         # with a lang passed in the environment.
-        filepath = file_path('test_orm/data/test_translated_field/test_model_data.xml')
+        filepath = file_path('test_tools/data/test_translated_field/test_model_data.xml')
         doc = ET.parse(filepath)
-        obj = xml_import(env_fr, 'test_orm', {}, mode='init', xml_filename=filepath)
+        obj = xml_import(env_fr, 'test_tools', {}, mode='init', xml_filename=filepath)
         obj.parse(doc.getroot())
         self.assertEqual(record.with_context(lang=None).name, 'foo')
 
@@ -277,7 +266,7 @@ class TestEvalXML(common.TransactionCase):
         self.assertEqual(record.name, 'bar')
         # Reset the value to the one from the XML data file,
         # with a lang passed in the environment.
-        convert_file(env_fr, 'test_orm', 'data/test_translated_field/test_model_data.xml', {})
+        convert_file(env_fr, 'test_tools', 'data/test_translated_field/test_model_data.xml', {})
         self.assertEqual(record.with_context(lang=None).name, 'foo')
 
         # 3. Test convert_file with a CSV
@@ -286,7 +275,7 @@ class TestEvalXML(common.TransactionCase):
         self.assertEqual(record.name, 'bar')
         # Reset the value to the one from the XML data file,
         # with a lang passed in the environment.
-        convert_file(env_fr, 'test_orm', 'data/test_translated_field/test_convert.test_model.csv', {})
+        convert_file(env_fr, 'test_tools', 'data/test_translated_field/test_tools.convert.csv', {})
         self.assertEqual(record.with_context(lang=None).name, 'foo')
 
     @unittest.skip("not tested")
@@ -314,3 +303,156 @@ class TestEvalXML(common.TransactionCase):
             </parent>""",
             "Evaluating an HTML field should give empty nodes instead of self-closing tags",
         )
+
+
+@tagged('at_install', '-post_install')
+class TestEnv(common.TransactionCase):
+    """
+    Tests the ability to update environmental information on various nodes (e.g.
+    change user, add context keys, ...)
+    """
+
+    def setUp(self):
+        super().setUp()
+        self._importer = xml_import(self.env, 'test_convert', None, 'init')
+
+    def importer(self, doc):
+        ET.RelaxNG(
+            ET.parse(
+                os.path.join(config.root_path, 'import_xml.rng'),
+            ),
+        ).assert_(doc)
+        self._importer.parse(doc)
+
+    def test_uid_data_record(self):
+        self.importer(
+            Odoo(
+                Record(
+                    Field("a", name="name"),
+                    model="test_tools.convert.usered",
+                    id="test_convert.testing",
+                ),
+                uid="base.user_admin",
+            ),
+        )
+
+        r = self.env.ref('test_convert.testing')
+        self.assertEqual(r.name, 'a')
+        self.assertEqual(r.create_uid, self.env.ref('base.user_admin'))
+        self.assertEqual(r.user_id, self.env.ref('base.user_admin'))
+
+    def test_uid_data_function(self):
+        self.importer(
+            Odoo(
+                Function(
+                    model="test_tools.convert.usered",
+                    name="create",
+                    eval="[[{'name': 'b'}]]",
+                ),
+                uid="base.user_admin",
+            ),
+        )
+
+        r = self.env['test_tools.convert.usered'].search([])
+        self.assertEqual(r.name, 'b')
+        self.assertEqual(r.create_uid, self.env.ref('base.user_admin'))
+        self.assertEqual(r.user_id, self.env.ref('base.user_admin'))
+
+    def test_uid_record(self):
+        self.importer(
+            Odoo(
+                Record(
+                    Field('c', name="name"),
+                    model="test_tools.convert.usered",
+                    id="test_convert.testing",
+                    uid="base.user_admin",
+                ),
+                uid="base.user_root",
+            ),
+        )
+
+        r = self.env.ref('test_convert.testing')
+        self.assertEqual(r.name, 'c')
+        self.assertEqual(r.create_uid, self.env.ref('base.user_admin'))
+        self.assertEqual(r.user_id, self.env.ref('base.user_admin'))
+
+    def test_uid_function(self):
+        self.importer(
+            Odoo(
+                Function(
+                    model="test_tools.convert.usered",
+                    name="create",
+                    uid="base.user_admin",
+                    eval="[[{'name': 'd'}]]",
+                ),
+                uid="base.user_root",
+            ),
+        )
+        r = self.env['test_tools.convert.usered'].search([])
+        self.assertEqual(r.name, 'd')
+        self.assertEqual(r.create_uid, self.env.ref('base.user_admin'))
+        self.assertEqual(r.user_id, self.env.ref('base.user_admin'))
+
+    def test_context_data_function(self):
+        self.env.user.tz = 'UTC'
+        self.importer(
+            Odoo(
+                Function(
+                    model="test_tools.convert.usered",
+                    name="create",
+                    eval="[[{'name': 'e'}]]",
+                ),
+                context="{'tz': 'Asia/Kabul'}",
+            ),
+        )
+        r = self.env['test_tools.convert.usered'].search([])
+        self.assertEqual(r.name, 'e')
+        self.assertEqual(r.tz, 'Asia/Kabul')
+
+    def test_context_function(self):
+        self.env.user.tz = 'UTC'
+        self.importer(
+            Odoo(
+                Function(
+                    model="test_tools.convert.usered",
+                    name="create",
+                    context="{'tz': 'Pacific/Apia'}",
+                    eval="[[{'name': 'e'}]]",
+                ),
+                context="{'tz': 'Asia/Kabul'}",
+            ),
+        )
+        r = self.env['test_tools.convert.usered'].search([])
+        self.assertEqual(r.name, 'e')
+        self.assertEqual(r.tz, 'Pacific/Apia')
+
+    def test_context_data_record(self):
+        self.env.user.tz = 'UTC'
+        self.importer(
+            Odoo(
+                Record(
+                    Field("f", name="name"),
+                    model="test_tools.convert.usered",
+                ),
+                context="{'tz': 'America/Knox_IN'}",
+            ),
+        )
+        r = self.env['test_tools.convert.usered'].search([])
+        self.assertEqual(r.name, 'f')
+        self.assertEqual(r.tz, 'America/Knox_IN')
+
+    def test_context_record(self):
+        self.env.user.tz = 'UTC'
+        self.importer(
+            Odoo(
+                Record(
+                    Field("f", name="name"),
+                    model="test_tools.convert.usered",
+                    context="{'tz': 'America/Adak'}",
+                ),
+                context="{'tz': 'America/Knox_IN'}",
+            ),
+        )
+        r = self.env['test_tools.convert.usered'].search([])
+        self.assertEqual(r.name, 'f')
+        self.assertEqual(r.tz, 'America/Adak')

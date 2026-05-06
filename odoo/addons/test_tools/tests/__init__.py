@@ -1,21 +1,24 @@
-from . import test_barcode
-from . import test_binary
-from . import test_cloc
-from . import test_config
-from . import test_date_utils
-from . import test_float_utils
-from . import test_func
-from . import test_i18n
-from . import test_image
-from . import test_intervals
-from . import test_mail
-from . import test_mimetypes
-from . import test_misc
-from . import test_pdf
-from . import test_profiler
-from . import test_safe_eval
-from . import test_safe_eval_expr
-from . import test_set_expression
-from . import test_sql
-from . import test_translate
-from . import test_xml_utils
+from . import (
+    test_barcode,
+    test_binary,
+    test_cloc,
+    test_config,
+    test_convert,
+    test_date_utils,
+    test_float_utils,
+    test_func,
+    test_i18n,
+    test_image,
+    test_intervals,
+    test_mail,
+    test_mimetypes,
+    test_misc,
+    test_pdf,
+    test_profiler,
+    test_safe_eval,
+    test_safe_eval_expr,
+    test_set_expression,
+    test_sql,
+    test_translate,
+    test_xml_utils,
+)
