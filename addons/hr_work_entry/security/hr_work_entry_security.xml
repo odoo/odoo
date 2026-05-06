@@ -16,4 +16,10 @@
         <field name="model_id" ref="model_hr_work_entry_type"/>
         <field name="domain_force">[('country_id', 'in', user.env.companies.mapped('country_id').ids + [False])]</field>
     </record>
+
+    <record id="ir_rule_hr_export_work_entry_multi_company" model="ir.rule">
+        <field name="name">HR Export Work Entry: Multi Company</field>
+        <field name="model_id" ref="model_hr_export_work_entries"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
 </odoo>

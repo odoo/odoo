@@ -1,21 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <t t-name="hr_presence.cogmenu" t-inherit="web.FormCogMenu" t-inherit-mode="primary">
-        <xpath expr="//t[@t-if='this.state.printItems.length']" position="after">
-            <t t-if="this.PresenceActionItems.length">
-                <t t-call="hr_presence.menu" is_actionmenu="''"/>
-            </t>
-        </xpath>
-    </t>
-
-    <t t-name="hr_presence.menu">
+    <t t-name="hr_presence.PresenceCogMenu">
         <Dropdown>
             <button t-attf-class="{{ is_actionmenu ? 'btn btn-secondary' : '' }}">
                 <i class="fa fa-clock-o me-1"/>
-                <span class="o_dropdown_title">Presence Control</span>
+                Presence Control
             </button>
             <t t-set-slot="content">
+                <t t-set="currentGroup" t-value="null"/>
                 <t t-foreach="this.PresenceActionItems" t-as="item" t-key="item.key">
                     <t t-if="currentGroup !== null and currentGroup !== item.groupNumber">
                         <div role="separator" class="dropdown-divider"/>

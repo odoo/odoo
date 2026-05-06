@@ -1,4 +1,4 @@
-import { HrPresenceActionMenus } from "../search/hr_presence_action_menus/hr_presence_action_menus";
+import { HrActionMenus } from "../search/hr_action_menus/hr_action_menus";
 
 import { registry } from '@web/core/registry';
 
@@ -8,7 +8,7 @@ import { ListController } from '@web/views/list/list_controller';
 export class EmployeeListController extends ListController {
     static components = {
         ...ListController.components,
-        ActionMenus: HrPresenceActionMenus,
+        ActionMenus: HrActionMenus,
     }
 }
 
