@@ -5,6 +5,7 @@ from odoo.http import request
 
 from odoo.addons.mail.controllers.thread import ThreadController
 from odoo.addons.mail.controllers.webclient import WebclientController
+from odoo.addons.mail.models.mail_message import SHARE_DOMAIN
 from odoo.addons.mail.tools.discuss import Store
 from odoo.addons.mail.tools.store_handler import store_handler
 from odoo.addons.portal.utils import get_portal_partner
@@ -40,8 +41,7 @@ class PortalWebClientController(WebclientController):
         fetch_params=None,
         **params,
     ):
-        # Only search into website_message_ids, so apply the same domain to perform only one search
-        # extract domain from the 'website_message_ids' field
+        # Extract the domain from the `website_message_ids` field to restrict the visible messages according to the model.
         model = request.env[thread_model]
         thread = ThreadController._get_thread_with_access(
             model._name,
@@ -59,15 +59,15 @@ class PortalWebClientController(WebclientController):
             request.update_context(
                 portal_data={"portal_partner": portal_partner, "portal_thread": thread},
             )
-        # Non-employee see only messages with not internal subtype (aka, no internal logs), internal users are
-        # supposed to see the portal as it is for the portal user, so they also have the same restriction.
+        # All users in the portal see only non-internal messages; internal users are supposed to see
+        # the portal as portal users do, so they have the same restriction.
         domain = (
             Domain(self._setup_portal_message_fetch_extra_domain(params))
             & Domain(model._fields['website_message_ids'].get_comodel_domain(model))
             & Domain("res_id", "=", thread.id)
-            & Domain("subtype_id", "=", request.env.ref("mail.mt_comment").id)
             & ~request.env["mail.message"]._get_empty_domain()
             & request.env["mail.message"]._get_search_domain_share()
+            & SHARE_DOMAIN
         )
         # sudo: mail.message - thread access is validated above, and domain is massively restricted to share-only messages
         messages = self._resolve_messages(

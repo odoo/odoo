@@ -29,6 +29,11 @@ _image_dataurl = re.compile(r'(data:image/[a-z]+?);base64,([a-z0-9+/\n]{3,}=*)\n
 
 MAX_COMODELS_FOR_DOMAIN = 5
 MAX_SEARCH_LIMIT = PREFETCH_MAX * 10
+SHARE_DOMAIN = (
+    Domain("message_type", "!=", "tracking")
+    & Domain("is_internal", "=", False)
+    & Domain("subtype_id.internal", "=", False)
+)
 
 
 def exists_in_cache(records, *, hint_field=''):
@@ -524,7 +529,7 @@ class MailMessage(models.Model):
     def _get_search_domain_share(self):
         if self.env.user._is_internal():
             return Domain.TRUE
-        return Domain('message_type', '!=', 'tracking') & Domain('is_internal', '=', False) & Domain('subtype_id.internal', '=', False)
+        return SHARE_DOMAIN
 
     def _filter_accessible_from_query(self, query: models.Query, operation: str) -> Self:
         """ Return the subset of ``self`` that satisfies the specific conditions
