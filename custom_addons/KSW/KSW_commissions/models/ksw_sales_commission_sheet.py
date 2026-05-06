@@ -109,6 +109,20 @@ class KswSalesCommissionSheet(models.Model):
             rec.write({'state': 'draft', 'is_locked': False})
             rec._sync_to_commission_sheets()
 
+    def action_open_import_wizard(self):
+        """Open the Excel import wizard pre-filled with this sheet."""
+        self.ensure_one()
+        return {
+            'name': _("Import Sales & Collection from Excel"),
+            'type': 'ir.actions.act_window',
+            'res_model': 'ksw.sales.commission.import.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {
+                'default_sheet_id': self.id,
+            },
+        }
+
     # ------------------------------------------------------------------
     # Commission-sheet sync
     # ------------------------------------------------------------------
@@ -165,10 +179,22 @@ class KswSalesCommissionLine(models.Model):
         help='Defaults to the salesperson profile role for the year. '
              'May be overridden per line if needed.',
     )
-    product_id = fields.Many2one(
-        'product.product', ondelete='restrict',
-        help='Optional. When set, product-specific commission rules '
+    partner_id = fields.Many2one(
+        'res.partner', string='Client', ondelete='restrict',
+        domain=[('customer_rank', '>', 0)],
+        help='Optional. When set, client-specific commission rules '
              'will be matched first by the resolver.',
+    )
+    split_id = fields.Many2one(
+        'ksw.salesperson.profile.client.split',
+        string='Client Split', ondelete='set null',
+        help='When set, this line covers only the clients defined in the '
+             'split rule. The general line (split blank) receives the '
+             'remaining totals.',
+    )
+    split_label = fields.Char(
+        related='split_id.label', store=True, readonly=True,
+        string='Split',
     )
 
     # Targets — computed from the salesperson profile, but editable so
@@ -249,15 +275,34 @@ class KswSalesCommissionLine(models.Model):
         related='sheet_id.currency_id', store=True, readonly=True,
     )
 
-    _unique_employee_per_sheet = models.Constraint(
-        'UNIQUE(sheet_id, employee_id, product_id)',
-        'A salesperson can only appear once per sheet (per product).',
-    )
+    # Uniqueness enforced in Python (see _check_unique_line) because
+    # a DB UNIQUE on (sheet_id, employee_id, split_id) does not prevent
+    # duplicate NULL split_id rows in PostgreSQL.
 
     # ------------------------------------------------------------------
     # Computes
     # ------------------------------------------------------------------
-    @api.depends('employee_id', 'sheet_id.period')
+    @api.constrains('sheet_id', 'employee_id', 'split_id')
+    def _check_unique_line(self):
+        for rec in self:
+            domain = [
+                ('sheet_id', '=', rec.sheet_id.id),
+                ('employee_id', '=', rec.employee_id.id),
+                ('id', '!=', rec.id),
+                ('split_id', '=', rec.split_id.id if rec.split_id else False),
+            ]
+            if self.search_count(domain):
+                if rec.split_id:
+                    raise ValidationError(_(
+                        "A split line '%(s)s' already exists for %(e)s on this sheet.",
+                        s=rec.split_id.label, e=rec.employee_id.name,
+                    ))
+                else:
+                    raise ValidationError(_(
+                        "A general commission line for %(e)s already exists "
+                        "on this sheet.", e=rec.employee_id.name,
+                    ))
+    @api.depends('employee_id', 'sheet_id.period', 'split_id')
     def _compute_role_and_targets(self):
         Profile = self.env['ksw.salesperson.profile']
         for rec in self:
@@ -266,15 +311,62 @@ class KswSalesCommissionLine(models.Model):
                 rec.target_sales = 0.0
                 rec.target_collection = 0.0
                 continue
-            sales_t, coll_t, profile = Profile._get_targets(
-                rec.employee_id, rec.sheet_id.period)
-            rec.role = profile.role if profile else (rec.role or 'sales')
-            rec.target_sales = sales_t
-            rec.target_collection = coll_t
+            if rec.split_id:
+                # Split lines take their role from the split definition.
+                # Targets default to 0 (set manually or via import).
+                rec.role = rec.split_id.role
+                rec.target_sales = 0.0
+                rec.target_collection = 0.0
+            else:
+                sales_t, coll_t, profile = Profile._get_targets(
+                    rec.employee_id, rec.sheet_id.period)
+                rec.role = profile.role if profile else (rec.role or 'sales')
+                rec.target_sales = sales_t
+                rec.target_collection = coll_t
+
+    def _get_profile_rule(self, rec, kind):
+        """Return the commission rule for this line, using the priority:
+
+        For **split lines** (``split_id`` is set):
+            The rule is always ``split_id.rule_id`` if its kind matches.
+            No profile/scope resolution is done for split lines.
+
+        For **general lines** (``split_id`` blank):
+        1. Explicit rule set on the employee's salesperson profile
+           (``sales_rule_id`` / ``collection_rule_id`` / ``combined_rule_id``).
+        2. Auto-resolved rule via ``_resolve_rule`` scope matching
+           (most-specific active rule for the employee/kind/client).
+        """
+        Rule = self.env['ksw.sales.commission.rule']
+        # --- Split line: rule comes directly from the split definition ---
+        if rec.split_id:
+            split_rule = rec.split_id.rule_id
+            if split_rule and split_rule.kind == kind:
+                return split_rule
+            return Rule  # kind mismatch → no commission for that kind
+        # --- General line: profile explicit rule → scope resolver ---------
+        if rec.employee_id and rec.sheet_id.period:
+            Profile = self.env['ksw.salesperson.profile']
+            profile = Profile.sudo().search([
+                ('employee_id', '=', rec.employee_id.id),
+                ('year', '=', fields.Date.to_date(rec.sheet_id.period).year),
+                ('active', '=', True),
+            ], limit=1)
+            if profile:
+                explicit = {
+                    'sales': profile.sales_rule_id,
+                    'collection': profile.collection_rule_id,
+                    'combined': profile.combined_rule_id,
+                }.get(kind)
+                if explicit:
+                    return explicit
+        # Fall back to generic scope-based resolution.
+        return Rule._resolve_rule(rec.employee_id, kind, rec.partner_id)
 
     @api.depends('role', 'target_sales', 'target_collection',
                  'achieved_sales', 'achieved_collection',
-                 'employee_id', 'product_id', 'x_condition_override')
+                 'employee_id', 'partner_id', 'split_id', 'sheet_id.period',
+                 'x_condition_override')
     def _compute_commission(self):
         Rule = self.env['ksw.sales.commission.rule']
         for rec in self:
@@ -296,33 +388,30 @@ class KswSalesCommissionLine(models.Model):
             )
 
             if rec.role in ('sales', 'both'):
-                sales_rule = Rule._resolve_rule(
-                    rec.employee_id, 'sales', rec.product_id)
+                sales_rule = self._get_profile_rule(rec, 'sales')
                 if sales_rule:
                     sales_amt, _t, _p = sales_rule._evaluate(
                         rec.target_sales, rec.target_collection,
                         rec.achieved_sales, rec.achieved_collection,
-                        employee=rec.employee_id, product=rec.product_id,
+                        employee=rec.employee_id, partner=rec.partner_id,
                         force_pass=force,
                     )
             if rec.role in ('collect', 'both'):
-                coll_rule = Rule._resolve_rule(
-                    rec.employee_id, 'collection', rec.product_id)
+                coll_rule = self._get_profile_rule(rec, 'collection')
                 if coll_rule:
                     coll_amt, _t, _p = coll_rule._evaluate(
                         rec.target_sales, rec.target_collection,
                         rec.achieved_sales, rec.achieved_collection,
-                        employee=rec.employee_id, product=rec.product_id,
+                        employee=rec.employee_id, partner=rec.partner_id,
                         force_pass=force,
                     )
             if rec.role == 'both':
-                comb_rule = Rule._resolve_rule(
-                    rec.employee_id, 'combined', rec.product_id)
+                comb_rule = self._get_profile_rule(rec, 'combined')
                 if comb_rule:
                     comb_amt, _t, _p = comb_rule._evaluate(
                         rec.target_sales, rec.target_collection,
                         rec.achieved_sales, rec.achieved_collection,
-                        employee=rec.employee_id, product=rec.product_id,
+                        employee=rec.employee_id, partner=rec.partner_id,
                         force_pass=force,
                     )
                     # When a combined rule fires, it replaces the
@@ -356,7 +445,7 @@ class KswSalesCommissionLine(models.Model):
         watched = {
             'achieved_sales', 'achieved_collection',
             'target_sales', 'target_collection',
-            'employee_id', 'product_id', 'role',
+            'employee_id', 'partner_id', 'split_id', 'role',
         }
         if watched & set(vals):
             confirmed = self.mapped('sheet_id').filtered(

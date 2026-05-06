@@ -14,6 +14,15 @@ class HrEmployee(models.Model):
              'sub-form. Site change mid-month: the driver line is '
              'recorded on the month-end site only.',
     )
+    x_commission_import_name = fields.Char(
+        string='Commission Import Name',
+        groups='hr.group_hr_user',
+        help='Name exactly as it appears in the accountant\'s monthly '
+             'Sales / Collection Excel files (column "البائع" / '
+             '"مندوب التحصيل"). Used by the Excel import wizard to '
+             'auto-match rows to this employee. Leave blank to fall back '
+             'to the employee\'s regular name.',
+    )
 
     # ------------------------------------------------------------------
     # Auto-create the current-month commission sheet when an HR officer

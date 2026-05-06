@@ -51,6 +51,48 @@ class KswSalespersonProfile(models.Model):
     target_line_ids = fields.One2many(
         'ksw.salesperson.target.line', 'profile_id', copy=True,
     )
+    # ------------------------------------------------------------------
+    # Explicit rule assignments — override auto-resolution per kind
+    # ------------------------------------------------------------------
+    sales_rule_id = fields.Many2one(
+        'ksw.sales.commission.rule',
+        domain=[('kind', '=', 'sales')],
+        string='Sales Commission Rule',
+        help='Rule used to calculate sales commission for this employee. '
+             'If blank, the system auto-selects the most specific active '
+             'rule that matches this employee (scope matching).',
+    )
+    collection_rule_id = fields.Many2one(
+        'ksw.sales.commission.rule',
+        domain=[('kind', '=', 'collection')],
+        string='Collection Commission Rule',
+        help='Rule used to calculate collection commission for this employee. '
+             'If blank, auto-selected by scope matching.',
+    )
+    combined_rule_id = fields.Many2one(
+        'ksw.sales.commission.rule',
+        domain=[('kind', '=', 'combined')],
+        string='Combined Commission Rule',
+        help='Combined (sales + collection) rule for this employee. '
+             'If blank, auto-selected by scope matching.',
+    )
+    split_ids = fields.One2many(
+        'ksw.salesperson.profile.client.split', 'profile_id',
+        string='Client Splits',
+    )
+    # ------------------------------------------------------------------
+    # Collection Manager special flag
+    # ------------------------------------------------------------------
+    x_collection_based_on_total = fields.Boolean(
+        string='Collection Based on Total',
+        tracking=True,
+        help='When enabled, the Excel import sets this employee\'s '
+             'Achieved Collection to the grand total of ALL collections '
+             'across every rep in the Excel file — not just the rows '
+             'labelled with this employee\'s name. '
+             'Use for the Collection Manager whose commission is driven '
+             'by overall company collection performance.',
+    )
     active = fields.Boolean(default=True)
     note = fields.Text()
 
@@ -177,6 +219,67 @@ class KswSalespersonTargetLine(models.Model):
                     or (rec.collection_target or 0.0) < 0:
                 raise ValidationError(_(
                     "Monthly targets must be zero or positive."))
+
+
+class KswSalespersonProfileClientSplit(models.Model):
+    """A named client-bucket on a salesperson profile.
+
+    Each split defines a GROUP of clients (taken from the commission
+    rule's ``partner_ids``) whose sales/collection are isolated into
+    a dedicated commission sheet line and evaluated with their own rule.
+
+    The main (general) sheet line for the same employee will receive
+    the REMAINDER — i.e. total achieved minus the sum of all splits.
+
+    Example:
+        Employee "Noufal" has:
+          • General rule: Sales & Collection for all regular clients
+          • Split "Special Clients Sales": rule = "Noufal Special Clients"
+            (scope=employee_client, partner_ids=[Client A, Client B, Client C])
+            role = 'sales'  → sales commission only, no collection
+
+        On the commission sheet, Noufal will have two lines:
+          1. General line  — achieved_sales = total − (A+B+C); + collection
+          2. "Special Clients Sales" line — achieved_sales = A+B+C; no collection
+    """
+    _name = 'ksw.salesperson.profile.client.split'
+    _description = 'KSW Salesperson Profile — Client Split Rule'
+    _order = 'profile_id, sequence, id'
+
+    profile_id = fields.Many2one(
+        'ksw.salesperson.profile', required=True, ondelete='cascade',
+    )
+    sequence = fields.Integer(default=10)
+    label = fields.Char(
+        required=True,
+        help='Short description of this bucket, '
+             'e.g. "Special Clients — Sales Only".',
+    )
+    rule_id = fields.Many2one(
+        'ksw.sales.commission.rule',
+        required=True, ondelete='restrict',
+        domain=[('scope', 'in', ['client', 'employee_client']),
+                ('active', '=', True)],
+        string='Commission Rule',
+        help='Rule for this client group. Its Clients list (partner_ids) '
+             'defines which customers belong to this split bucket. '
+             'Must have scope "Client-specific" or "Employee + Client".',
+    )
+    role = fields.Selection(
+        ROLE_SELECTION, required=True, default='sales',
+        help='Commission type applied to this client bucket (sales-only '
+             'is the most common for special-client splits).',
+    )
+    client_names = fields.Char(
+        compute='_compute_client_names', string='Clients',
+        help='Names of clients from the rule, shown for quick reference.',
+    )
+
+    @api.depends('rule_id', 'rule_id.partner_ids')
+    def _compute_client_names(self):
+        for rec in self:
+            names = rec.rule_id.partner_ids.mapped('name')
+            rec.client_names = ', '.join(names) if names else '—'
 
 
 

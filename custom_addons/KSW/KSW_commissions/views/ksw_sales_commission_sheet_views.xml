@@ -22,6 +22,12 @@
                             type="object" class="btn-secondary"
                             invisible="state == 'draft'"
                             groups="KSW_commissions.group_commission_accountant"/>
+                    <button name="action_open_import_wizard"
+                            string="Import from Excel"
+                            type="object" class="btn-secondary"
+                            icon="fa-upload"
+                            invisible="state != 'draft'"
+                            title="Import achieved sales &amp; collection amounts from the accountant's Excel files"/>
                     <statusbar statusfield="state"
                                statusbar_visible="draft,confirmed"/>
                 </header>
@@ -44,13 +50,19 @@
                                    readonly="state != 'draft'"
                                    widget="one2many">
                                 <list editable="bottom">
-                                    <field name="sequence" widget="handle"/>
-                                    <field name="employee_id"
-                                           options="{'no_create': True}"/>
-                                    <field name="role"/>
-                                    <field name="product_id"
-                                           optional="hide"
-                                           options="{'no_create': True}"/>
+                                     <field name="sequence" widget="handle"/>
+                                     <field name="employee_id"
+                                            options="{'no_create': True}"/>
+                                     <field name="split_label"
+                                            string="Split"
+                                            optional="show"
+                                            readonly="1"/>
+                                     <field name="role"/>
+                                     <field name="partner_id"
+                                            string="Client"
+                                            optional="hide"
+                                            domain="[('customer_rank', '>', 0)]"
+                                            options="{'no_create': True}"/>
                                     <field name="target_sales"/>
                                     <field name="achieved_sales"/>
                                     <field name="sales_pct" string="Sales %"/>
@@ -128,11 +140,15 @@
                                         </div>
                                         <field name="x_condition_override" invisible="1"/>
                                         <group>
-                                            <group string="Salesperson">
+                                             <group string="Salesperson">
                                                 <field name="employee_id"
                                                        options="{'no_create': True}"/>
                                                 <field name="role"/>
-                                                <field name="product_id"
+                                                <field name="split_id"
+                                                       options="{'no_create': True}"/>
+                                                <field name="partner_id"
+                                                       string="Client"
+                                                       domain="[('customer_rank', '>', 0)]"
                                                        options="{'no_create': True}"/>
                                             </group>
                                             <group string="Targets &amp; Achieved">
@@ -182,7 +198,8 @@
         <field name="model">ksw.sales.commission.sheet</field>
         <field name="arch" type="xml">
             <list decoration-info="state == 'confirmed'"
-                  decoration-muted="state == 'draft'">
+                  decoration-muted="state == 'draft'"
+                  import="0">
                 <field name="name"/>
                 <field name="period"/>
                 <field name="total_sales_commission" sum="Sales"/>

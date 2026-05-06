@@ -6,9 +6,12 @@
         <field name="model">hr.employee</field>
         <field name="inherit_id" ref="hr.view_employee_form"/>
         <field name="arch" type="xml">
-            <!-- Add work-site field next to the attendance-sheet toggle -->
+            <!-- Add work-site and import-alias fields next to the attendance-sheet toggle -->
             <field name="x_is_attendance_sheet" position="after">
                 <field name="x_site_id"
+                       groups="hr.group_hr_user"
+                       invisible="not x_is_attendance_sheet"/>
+                <field name="x_commission_import_name"
                        groups="hr.group_hr_user"
                        invisible="not x_is_attendance_sheet"/>
             </field>

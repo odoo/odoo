@@ -24,11 +24,16 @@ class TestDriverCommission(TransactionCase):
         v = dict(site_id=self.site.id, period=self.period)
         v.update(kw)
         return self.env['ksw.driver.commission.sheet'].sudo().create(v)
-    def _line(self, sheet, emp, worked, trips, factor=1.0):
+    def _line(self, sheet, emp, worked, trips, multiplied=None):
+        """Create a driver commission line.
+
+        ``multiplied`` sets ``multiplied_trips`` directly.
+        When omitted it defaults to ``trips`` (actual = multiplied, no factor).
+        """
         return self.env['ksw.driver.commission.line'].sudo().create({
             'sheet_id': sheet.id, 'employee_id': emp.id,
             'worked_days': worked, 'actual_trips': trips,
-            'multiple_factor': factor,
+            'multiplied_trips': multiplied if multiplied is not None else trips,
         })
     def test_01_required_trips_full_month(self):
         ds = self._ds(); l = self._line(ds, self.emp1, 30, 0)
@@ -53,8 +58,11 @@ class TestDriverCommission(TransactionCase):
         self.assertEqual(l.tier5_trips, 20)
         self.assertAlmostEqual(l.total_commission, 40*10+40*15+40*20+20*25)
     def test_07_multiplier_applied(self):
-        ds = self._ds(); l = self._line(ds, self.emp1, 30, 40, factor=1.5)
+        """Setting multiplied_trips independently of actual_trips works."""
+        ds = self._ds()
+        l = self._line(ds, self.emp1, 30, 40, multiplied=60)
         self.assertEqual(l.multiplied_trips, 60)
+        # required=50, above=max(60-50,0)=10, tier2 rate=10 → 1 tier-2 trip × 10 = 100
         self.assertAlmostEqual(l.total_commission, 100.0)
     def test_08_confirm_sets_state(self):
         ds = self._ds(); self._line(ds, self.emp1, 30, 60)

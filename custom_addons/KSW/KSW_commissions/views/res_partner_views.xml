@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Add Commission Import Name to the customer/partner form -->
+    <record id="view_partner_form_ksw_commission" model="ir.ui.view">
+        <field name="name">res.partner.form.ksw.commission</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <!-- Insert after the "Job Position" field in the contact tab -->
+            <xpath expr="//field[@name='function']" position="after">
+                <field name="x_client_account_number"
+                       string="Client Account Number"
+                       placeholder="Account no. as in col 0 of the Excel Sales file (primary match key)"/>
+                <field name="x_commission_import_name"
+                       string="Commission Import Name"
+                       placeholder="Customer name as in col 1 of the Excel Sales file (fallback if account# blank)"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
+
+
+

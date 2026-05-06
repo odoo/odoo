@@ -19,23 +19,28 @@
                             <field name="scope"/>
                             <field name="employee_id"
                                    options="{'no_create': True}"
-                                   invisible="scope not in ('employee', 'employee_product')"
-                                   required="scope in ('employee', 'employee_product')"/>
-                            <field name="product_id"
+                                   invisible="scope not in ('employee', 'employee_client')"
+                                   required="scope in ('employee', 'employee_client')"/>
+                            <field name="partner_ids"
+                                   string="Clients"
+                                   widget="many2many_tags"
                                    options="{'no_create': True}"
-                                   invisible="scope not in ('product', 'employee_product')"
-                                   required="scope in ('product', 'employee_product')"/>
+                                   domain="[('customer_rank', '>', 0)]"
+                                   invisible="scope not in ('client', 'employee_client')"
+                                   required="scope in ('client', 'employee_client')"/>
                             <field name="priority"/>
                             <field name="active" widget="boolean_toggle"/>
                         </group>
                         <group string="Condition">
                             <field name="condition_type"/>
+                            <field name="single_threshold_metric"
+                                   invisible="condition_type != 'single_threshold'"/>
                             <field name="sales_min_pct"
                                    string="Sales Min %"
-                                   invisible="condition_type == 'formula' or (condition_type == 'single_threshold' and kind == 'collection')"/>
+                                   invisible="condition_type == 'formula' or (condition_type == 'single_threshold' and single_threshold_metric != 'sales')"/>
                             <field name="collection_min_pct"
                                    string="Collection Min %"
-                                   invisible="condition_type == 'formula' or (condition_type == 'single_threshold' and kind != 'collection')"/>
+                                   invisible="condition_type == 'formula' or (condition_type == 'single_threshold' and single_threshold_metric != 'collection')"/>
                             <field name="condition_formula"
                                    placeholder="result = sales_pct >= 50 and collection_pct >= 60"
                                    invisible="condition_type != 'formula'"/>
@@ -50,15 +55,24 @@
                                     <field name="to_pct"/>
                                     <field name="rate_pct"/>
                                     <field name="base"/>
+                                    <field name="reduced_rate_max_pct" optional="show"/>
+                                    <field name="reduced_rate_multiplier" optional="show"/>
                                     <field name="description"/>
                                 </list>
                             </field>
                             <p class="text-muted">
                                 Each tier maps an achievement-percentage range
                                 (<i>From %</i>–<i>To %</i>) to a commission
-                                <i>Rate %</i> applied to either the salesperson's
-                                target amount or actual achieved amount.
+                                <i>Rate %</i>.  The <i>Base</i> column controls
+                                which monetary amount the rate is multiplied against.
                                 Leave <i>To %</i> at 0 for an unbounded top tier.
+                                <br/>
+                                <b>Reduced Rate:</b> Set <i>Reduced Rate Up To %</i>
+                                and <i>Reduced Rate Multiplier</i> on a tier to apply
+                                a discounted rate when the final achievement falls at or
+                                below that bound.  Example: Rate = 1%, Reduced Up To = 69,
+                                Multiplier = 0.7 → employees achieving 50–69% earn 0.7%
+                                instead of the full 1%.
                             </p>
                         </page>
                         <page string="Description">
@@ -81,7 +95,7 @@
                 <field name="kind"/>
                 <field name="scope"/>
                 <field name="employee_id" optional="show"/>
-                <field name="product_id" optional="hide"/>
+                <field name="partner_ids" string="Clients" widget="many2many_tags" optional="hide"/>
                 <field name="condition_type"/>
                 <field name="priority"/>
                 <field name="active" widget="boolean_toggle"/>
@@ -96,7 +110,7 @@
             <search>
                 <field name="name"/>
                 <field name="employee_id"/>
-                <field name="product_id"/>
+                <field name="partner_ids" string="Client"/>
                 <filter name="kind_sales" string="Sales"
                         domain="[('kind', '=', 'sales')]"/>
                 <filter name="kind_collection" string="Collection"

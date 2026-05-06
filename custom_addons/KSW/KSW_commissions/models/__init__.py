@@ -5,9 +5,10 @@ from . import hr_employee
 from . import ksw_driver_commission    # site driver commission sheet + line
 from . import ksw_location_allowance   # technician meals (breakfast/lunch/dinner) sheet
 from . import ksw_meal_settings        # res.config.settings: meal unit prices
-from . import ksw_salesperson_profile  # yearly target with monthly breakdown
+from . import ksw_salesperson_profile  # yearly target + client splits
 from . import ksw_sales_commission_rule  # rule + tier catalog
 from . import ksw_sales_commission_sheet  # monthly accountant entry sheet
+from . import res_partner               # commission import name alias
 from . import ksw_commission_batch     # commission batch (payslip.run mirror)
 from . import ksw_deduction            # adds awaiting-commission helpers
 from . import ksw_deduction_line       # adds x_original_amount / x_awaiting_commission / paid-via-commission link
