@@ -7,6 +7,7 @@ import {
     proxy,
     signal,
     useEffect,
+    useListener,
 } from "@odoo/owl";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
 import { CallDebriefTimeline } from "@mail/views/fields/call_debrief/call_debrief_timeline";
@@ -38,6 +39,7 @@ export class CallDebrief extends Component {
         this.isSwitchingSegment = false;
 
         this.mediaPlayer = signal(null);
+        this.rootElement = signal(null);
 
         this.orm = useService("orm");
         this.state = proxy({
@@ -46,10 +48,11 @@ export class CallDebrief extends Component {
             currentSegment: undefined,
             error: "",
             isPlaying: false,
+            isFullscreen: false,
             playbackRate: 1,
             volume: 1,
             isMuted: false,
-            feedback: { text: "", id: Date.now() },
+            feedback: { icon: "", text: "", id: Date.now() },
         });
 
         this.onMediaLoadedCallback = null;
@@ -71,13 +74,21 @@ export class CallDebrief extends Component {
 
         useHotkey("k", () => this.togglePlay(), { global: true });
         useHotkey("space", () => this.togglePlay(), { global: true });
-        useHotkey("j", () => this.seekRelative(-5), { global: true, allowRepeat: true });
-        useHotkey("l", () => this.seekRelative(5), { global: true, allowRepeat: true });
-        useHotkey("arrowleft", () => this.seekRelative(-5), { global: true, allowRepeat: true });
-        useHotkey("arrowright", () => this.seekRelative(5), { global: true, allowRepeat: true });
-        useHotkey("m", () => this.toggleMute(), { global: true });
-        useHotkey("shift+>", () => this.adjustPlaybackRate(1), { global: true });
-        useHotkey("shift+<", () => this.adjustPlaybackRate(-1), { global: true });
+        useHotkey("j", () => { this.seekRelative(-5), this.showMediaControlsFeedback("skip-backward"); }, { global: true, allowRepeat: true });
+        useHotkey("l", () => { this.seekRelative(5), this.showMediaControlsFeedback("skip-forward"); }, { global: true, allowRepeat: true });
+        useHotkey("arrowleft", () => { this.seekRelative(-5), this.showMediaControlsFeedback("skip-backward"); }, { global: true, allowRepeat: true });
+        useHotkey("arrowright", () => { this.seekRelative(5), this.showMediaControlsFeedback("skip-forward"); }, { global: true, allowRepeat: true });
+        useHotkey("m", () => { this.toggleMute(); this.showMediaControlsFeedback("mute"); }, { global: true });
+        // Supports AZERTY keyboard layouts
+        useHotkey("shift+.", () => { this.adjustPlaybackRate(1); this.showMediaControlsFeedback("playback-speed"); }, { global: true });
+        useHotkey("shift+?", () => { this.adjustPlaybackRate(-1); this.showMediaControlsFeedback("playback-speed"); }, { global: true });
+        // Supports QWERTY keyboard layouts
+        useHotkey("shift+>", () => { this.adjustPlaybackRate(1); this.showMediaControlsFeedback("playback-speed"); }, { global: true });
+        useHotkey("shift+<", () => { this.adjustPlaybackRate(-1); this.showMediaControlsFeedback("playback-speed"); }, { global: true });
+        useHotkey("f", () => { this.toggleFullscreen(); this.showMediaControlsFeedback("fullscreen"); }, { global: true });
+        useListener(document, "fullscreenchange", () => {
+            this.state.isFullscreen = !!document.fullscreenElement;
+        });
 
         onWillUnmount(() => {
             clearTimeout(this.feedbackTimeout);
@@ -107,7 +118,7 @@ export class CallDebrief extends Component {
     }
 
     onMediaError() {
-        this.showFeedback(_t("Media Error"));
+        this.showVideoFeedback(_t("Media Error"));
         console.warn("Media playback error. The format might not be supported by your browser.");
     }
 
@@ -338,16 +349,16 @@ export class CallDebrief extends Component {
 
     /**
      * Pauses the media element and optionally displays a feedback message.
-     * @param {string|false} feedback - The text to display. Pass false to suppress feedback.
+     * @param {string|boolean} feedback - Optional text to display alongside the pause icon. Pass false to suppress feedback.
      */
-    _pause(feedback = _t("Pause")) {
+    _pause(feedback = true) {
         const mediaPlayer = this.mediaPlayer();
         if (mediaPlayer) {
             mediaPlayer.pause();
         }
         this.state.isPlaying = false;
-        if (feedback) {
-            this.showFeedback(feedback);
+        if (feedback !== false) {
+            this.showVideoFeedback(typeof feedback === "string" ? feedback : undefined, "fa-pause");
         }
     }
 
@@ -432,17 +443,28 @@ export class CallDebrief extends Component {
 
         const newRate = this.playbackRates[newIndex];
         this.state.playbackRate = newRate;
-        this.showFeedback(`${newRate}x`);
+        this.showVideoFeedback(`${newRate}x`);
     }
 
-    showFeedback(text) {
-        this.state.feedback = { text, id: Date.now() };
+    showVideoFeedback(text, icon) {
+        this.state.feedback = { text, icon, id: Date.now() };
         if (this.feedbackTimeout) {
             clearTimeout(this.feedbackTimeout);
         }
         this.feedbackTimeout = setTimeout(() => {
-            this.state.feedback.text = "";
+            this.state.feedback = null;
         }, 750);
+    }
+
+    showMediaControlsFeedback(action) {
+        const el = this.rootElement()?.querySelector(`[data-control-feedback="${action}"]`);
+        if (!el) {
+            return;
+        }
+        el.classList.remove("o-CallDebrief-hotkeyFeedback");
+        void el.offsetWidth; // Force reflow to restart animation
+        el.classList.add("o-CallDebrief-hotkeyFeedback");
+        el.addEventListener("animationend", () => el.classList.remove("o-CallDebrief-hotkeyFeedback"), { once: true });
     }
 
     togglePlay() {
@@ -451,7 +473,7 @@ export class CallDebrief extends Component {
             return;
         }
         if (this.state.currentTime >= this.callDurationSeconds - 0.5) {
-            this.showFeedback(_t("End of Media"));
+            this.showVideoFeedback(_t("End of Media"));
             return;
         }
         if (this.state.isPlaying) {
@@ -459,10 +481,10 @@ export class CallDebrief extends Component {
         } else {
             media.play().catch((e) => {
                 this.state.isPlaying = false;
-                this.showFeedback(_t("Playback Error"));
+                this.showVideoFeedback(_t("Playback Error"));
             });
             this.state.isPlaying = true;
-            this.showFeedback(_t("Play"));
+            this.showVideoFeedback(undefined, "fa-play");
         }
     }
 
@@ -472,8 +494,8 @@ export class CallDebrief extends Component {
             Math.min(this.callDurationSeconds, this.state.currentTime + delta)
         );
         this.setPlaybackTime({ timestamp: newTime });
-        const direction = delta > 0 ? "+" : "-";
-        this.showFeedback(`${direction} ${Math.abs(delta)}s`);
+        const direction = delta > 0 ? "fa-forward" : "fa-backward";
+        this.showVideoFeedback(undefined, direction);
     }
 
     setPlaybackRate(ev) {
@@ -491,12 +513,33 @@ export class CallDebrief extends Component {
         this.state.isMuted = this.state.volume === 0;
     }
 
+    onVolumeChange(ev) {
+        this.state.volume = ev.target.volume;
+        this.state.isMuted = ev.target.muted;
+    }
+
+    onRateChange(ev) {
+        this.state.playbackRate = ev.target.playbackRate;
+    }
+
     toggleMute() {
         this.state.isMuted = !this.state.isMuted;
         if (!this.state.isMuted && this.state.volume === 0) {
             this.state.volume = 0.5;
         }
-        this.showFeedback(this.state.isMuted ? _t("Muted") : _t("Unmuted"));
+        this.showVideoFeedback(undefined, this.state.isMuted ? "fa-volume-off" : "fa-volume-up");
+    }
+
+    toggleFullscreen() {
+        const rootEl = this.rootElement();
+        if (!rootEl || !this.hasVideo) {
+            return;
+        }
+        if (!document.fullscreenElement) {
+            rootEl.requestFullscreen();
+        } else {
+            document.exitFullscreen();
+        }
     }
 }
 

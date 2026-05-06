@@ -99,7 +99,7 @@ test("CallDebrief: renders video with playback", async () => {
     expect(".o-CallDebrief-video video").toHaveCount(1);
 
     // Mute first to avoid noise
-    await click("button[title*='Mute']");
+    await click("button.o-CallDebrief-muteBtn");
 
     // Start playback
     const video = queryOne("video");
@@ -143,7 +143,7 @@ test("CallDebrief: timeline-media synchronization", async () => {
     queryOne("audio").dispatchEvent(new Event("loadeddata"));
     await animationFrame();
 
-    const timestampText = queryOne(".o-CallDebriefTimeline-playhead-timestamp").innerText;
+    const timestampText = queryOne(".o-CallDebriefTimeline-timestamp").innerText;
     const [minutes, seconds] = timestampText.split(":").map(Number);
     const totalSeconds = minutes * 60 + seconds;
     expect(Math.abs(totalSeconds - 90) <= 2).toBe(true, {
@@ -164,7 +164,7 @@ test("CallDebrief: timeline-media synchronization", async () => {
     audio.dispatchEvent(new Event("timeupdate"));
     await animationFrame();
 
-    const finalTimestampText = queryOne(".o-CallDebriefTimeline-playhead-timestamp").innerText;
+    const finalTimestampText = queryOne(".o-CallDebriefMediaControls-timeLabel .o_current_time").innerText;
     const [finalM, finalS] = finalTimestampText.split(":").map(Number);
     const finalTotalSeconds = finalM * 60 + finalS;
     // Segment 2 starts at 60s, so 60 + 6 = 66s (01:06)
