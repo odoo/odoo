@@ -327,6 +327,28 @@ test("interactions are stopped in reverse order", async () => {
     expect.verifySteps(["destroy 2", "destroy 1"]);
 });
 
+test("stop interactions continues after a destroy crash", async () => {
+    class Boom extends Interaction {
+        static selector = ".test";
+
+        destroy() {
+            expect.step("destroy boom");
+            throw new Error("boom");
+        }
+    }
+    class NotBoom extends Interaction {
+        static selector = ".test";
+
+        destroy() {
+            expect.step("destroy notboom");
+        }
+    }
+
+    const { core } = await startInteraction([NotBoom, Boom], `<div class="test"></div>`);
+    expect(() => core.stopInteractions()).toThrow("Could not destroy interaction Boom");
+    expect.verifySteps(["destroy boom", "destroy notboom"]);
+});
+
 test("can mount a component", async () => {
     class Test extends Component {
         static selector = ".test";
