@@ -54,6 +54,47 @@ class TestPortalControllers(TestPortal):
 
         self.assertIn('Test', messages[0].body)
 
+    def test_portal_message_fetch(self):
+        """Test that portal message fetch result includes share-only messages."""
+        msg_custom, msg_comment, msg_note = self.env["mail.message"].create(
+            [
+                {
+                    "body": "Test",
+                    "message_type": "comment",
+                    "model": self.record_portal._name,
+                    "res_id": self.record_portal.id,
+                    "subtype_id": subtype.id,
+                }
+                for subtype in (
+                    self.env["mail.message.subtype"].create({"internal": False, "name": "Custom"}),
+                    self.env.ref("mail.mt_comment"),
+                    self.env.ref("mail.mt_note"),
+                )
+            ]
+        )
+        self.authenticate(None, None)
+        chatter_fetch_params = {
+            "thread_id": self.record_portal.id,
+            "thread_model": self.record_portal._name,
+            "token": self.record_portal.access_token,
+        }
+        result = self.make_jsonrpc_request(
+            "/mail/store",
+            {"fetch_params": [["/mail/chatter_fetch", chatter_fetch_params]]},
+        )
+        fetched_ids = [msg["id"] for msg in result["mail.message"]]
+        self.assertIn(
+            msg_custom.id,
+            fetched_ids,
+            "Non-internal non-comment subtype should be included.",
+        )
+        self.assertIn(
+            msg_comment.id,
+            fetched_ids,
+            "Non-internal comment subtype should be included.",
+        )
+        self.assertNotIn(msg_note.id, fetched_ids, "Internal subtype should be excluded.")
+
 
 @tagged('-at_install', 'post_install', 'portal', 'mail_controller')
 class TestPortalFlow(MailCommon, HttpCase):
