@@ -258,8 +258,7 @@ class TestNemhandelMessage(TestAccountMoveSendCommon):
             'move_id': move.id,
         })
         self.assertEqual(self.invalid_partner.nemhandel_verification_state, 'not_valid')  # not on nemhandel at all
-        self.assertFalse(wizard.sending_methods and 'nemhandel' in wizard.sending_methods)  # nemhandel is not checked by default
-        self.assertTrue(wizard.sending_method_checkboxes['nemhandel']['readonly'])  # can't select nemhandel
+        self.assertFalse(wizard.sending_methods)  # nemhandel is not there at all
         self.assertFalse(wizard.alerts)  # there is no alerts
 
     def test_resend_error_nemhandel_message(self):
