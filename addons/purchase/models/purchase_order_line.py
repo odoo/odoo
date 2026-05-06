@@ -775,3 +775,18 @@ class PurchaseOrderLine(models.Model):
     def _get_rounding(self):
         self.ensure_one()
         return self.uom_id.rounding
+
+    def _get_section_totals(self):
+        section_lines = self.order_id.order_line.filtered(self._is_line_in_section)
+        return sum(section_lines.mapped('price_subtotal'))
+
+    def _is_line_in_section(self, line):
+        if line.display_type:
+            return False
+        if line.parent_id == self:
+            return True
+        return (
+            self.display_type == 'line_section'
+            and line.parent_id.display_type == 'line_subsection'
+            and line.parent_id.parent_id == self
+        )
