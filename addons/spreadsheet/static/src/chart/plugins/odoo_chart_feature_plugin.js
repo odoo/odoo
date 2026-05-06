@@ -68,6 +68,7 @@ export class OdooChartFeaturePlugin extends OdooUIPlugin {
             const bestGranularity = getBestGranularity(cmd.value, fieldMatching, this.getters);
             const validGranularities = getValidGranularities(cmd.value, this.getters);
             const shouldAutoUpdate =
+                bestGranularity &&
                 fieldMatching?.chain === fieldName &&
                 !validGranularities.includes(this.overwrittenGranularities[chartId]) &&
                 bestGranularity !== currentGranularity;
