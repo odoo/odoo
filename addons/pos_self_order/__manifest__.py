@@ -114,7 +114,8 @@
             "pos_self_order/static/src/app/**/*",
             "web/static/src/core/utils/render.js",
             "account/static/src/helpers/*.js",
-            'web/static/src/model/relational_model/operation.js',
+            "web/static/src/model/**/*",
+            "web/static/src/search/**/*",
             "web/static/src/views/fields/parsers.js",
 
             # Related models from point_of_sale
