@@ -26,7 +26,7 @@ patch(PaymentScreen.prototype, {
             await this.vivaApp.process();
         });
     },
-    async addNewPaymentLine(pm) {
+    async addNewPaymentLine(pm, args = {}) {
         if (this.vivaApp.use(pm)) {
             let previousAnswer = window.localStorage.getItem("vivawallet_app_answer");
             if (previousAnswer === null) {
@@ -72,7 +72,7 @@ patch(PaymentScreen.prototype, {
                     line.amount === amountDue
             );
             if (matchedPaymentLine) {
-                const paymentLineAddedSuccessfully = await super.addNewPaymentLine(pm);
+                const paymentLineAddedSuccessfully = await super.addNewPaymentLine(pm, args);
                 if (paymentLineAddedSuccessfully) {
                     const newPaymentLine = this.paymentLines.at(-1);
                     newPaymentLine.updateRefundPaymentLine(matchedPaymentLine);
@@ -81,7 +81,7 @@ patch(PaymentScreen.prototype, {
             }
         }
 
-        return await super.addNewPaymentLine(pm);
+        return await super.addNewPaymentLine(pm, args);
     },
     deletePaymentLine(lineUuid) {
         const line = this.currentOrder.getPaymentlineByUuid(lineUuid);

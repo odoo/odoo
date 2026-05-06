@@ -14,7 +14,7 @@
 
                     <!-- Payment Info -->
                     <div class="payment-infos d-flex align-items-center justify-content-between flex-grow-1 px-3 py-3 text-truncate cursor-pointer fs-2" t-on-click="() => this.selectLine(line)">
-                        <span class="payment-name" t-out="line.payment_method_id.name"/>
+                        <span class="payment-name" t-out="line.displayName"/>
                         <div class="payment-amount px-3">
                             <PriceFormatter price="this.env.utils.formatCurrency(line.getAmount())" />
                         </div>

@@ -66,6 +66,10 @@ export class PosPayment extends Base {
         return this.payment_method_id.useBankQrCode;
     }
 
+    get displayName() {
+        return this.payment_method_id.name;
+    }
+
     isSelected() {
         return this.pos_order_id?.uiState?.selected_paymentline_uuid === this.uuid;
     }
