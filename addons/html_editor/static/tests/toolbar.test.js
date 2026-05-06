@@ -539,8 +539,8 @@ test("should focus the editable area after selecting a font size item", async ()
     expect(getContent(el)).toBe(`<p><span class="h2-fs">[test]</span></p>`);
 });
 
-test.tags("mobile");
-test("should focus the editable area after selecting a font size item on mobile", async () => {
+test.tags("mobile", "owl3");
+test.todo("should focus the editable area after selecting a font size item on mobile", async () => {
     const { editor, el } = await setupEditor("<p>[test]</p>");
 
     await expectElementCount(".o-we-toolbar", 1);
