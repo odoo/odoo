@@ -21,8 +21,8 @@ class TestFormattedReadGroup(common.TransactionCase):
 
     def test_simple_formatted_read_group(self):
         Model = self.env['test_read_group.aggregate']
-        partner_1 = self.env['res.partner'].create({'name': 'z_one'})
-        partner_2 = self.env['res.partner'].create({'name': 'a_two'})
+        partner_1 = self.env['test_read_group.partner'].create({'name': 'z_one'})
+        partner_2 = self.env['test_read_group.partner'].create({'name': 'a_two'})
         Model.create({'key': 1, 'partner_id': partner_1.id, 'value': 1})
         Model.create({'key': 1, 'partner_id': partner_1.id, 'value': 2})
         Model.create({'key': 1, 'partner_id': partner_2.id, 'value': 3})
@@ -42,7 +42,7 @@ class TestFormattedReadGroup(common.TransactionCase):
             ]
         )
 
-        # groupby on many2one, the order use the order of the comodel (res.partner)
+        # groupby on many2one, the order use the order of the comodel (test_read_group.partner)
         self.assertEqual(
             Model.formatted_read_group([], groupby=['key', 'partner_id'], aggregates=['value:sum']),
             [

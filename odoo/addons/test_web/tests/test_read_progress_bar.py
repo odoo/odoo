@@ -9,7 +9,7 @@ class TestReadProgressBar(common.TransactionCase):
 
     def setUp(self):
         super().setUp()
-        self.Model = self.env['res.partner']
+        self.Model = self.env['test_read_group.partner']
 
     def test_read_progress_bar_m2m(self):
         """ Test that read_progress_bar works with m2m field grouping """

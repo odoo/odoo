@@ -12,8 +12,8 @@ class TestPrivateReadGroup(common.TransactionCase):
 
     def test_simple_private_read_group(self):
         Model = self.env['test_read_group.aggregate']
-        partner_1 = self.env['res.partner'].create({'name': 'z_one'})
-        partner_2 = self.env['res.partner'].create({'name': 'a_two'})
+        partner_1 = self.env['test_read_group.partner'].create({'name': 'z_one'})
+        partner_2 = self.env['test_read_group.partner'].create({'name': 'a_two'})
         Model.create({'key': 1, 'partner_id': partner_1.id, 'value': 1})
         Model.create({'key': 1, 'partner_id': partner_1.id, 'value': 2})
         Model.create({'key': 1, 'partner_id': partner_2.id, 'value': 3})
@@ -40,20 +40,20 @@ class TestPrivateReadGroup(common.TransactionCase):
                 ],
             )
 
-        # Forcing order with many2one, traverse use the order of the comodel (res.partner)
+        # Forcing order with many2one, traverse use the order of the comodel (test_read_group.partner)
         with self.assertQueries(["""
             SELECT "test_read_group_aggregate"."key",
                    "test_read_group_aggregate"."partner_id",
                    SUM("test_read_group_aggregate"."value")
             FROM "test_read_group_aggregate"
-            LEFT JOIN "res_partner" AS "test_read_group_aggregate__partner_id"
+            LEFT JOIN "test_read_group_partner" AS "test_read_group_aggregate__partner_id"
                 ON ("test_read_group_aggregate"."partner_id" = "test_read_group_aggregate__partner_id"."id")
             GROUP BY "test_read_group_aggregate"."key",
                      "test_read_group_aggregate"."partner_id",
-                     "test_read_group_aggregate__partner_id"."complete_name",
+                     "test_read_group_aggregate__partner_id"."name",
                      "test_read_group_aggregate__partner_id"."id"
             ORDER BY "test_read_group_aggregate"."key" ASC,
-                     "test_read_group_aggregate__partner_id"."complete_name" ASC,
+                     "test_read_group_aggregate__partner_id"."name" ASC,
                      "test_read_group_aggregate__partner_id"."id" DESC
         """]):
             self.assertEqual(
@@ -62,9 +62,9 @@ class TestPrivateReadGroup(common.TransactionCase):
                     (1, partner_2, 3),
                     (1, partner_1, 1 + 2),
                     (2, partner_2, 4),
-                    (2, self.env['res.partner'], 5),
+                    (2, self.env['test_read_group.partner'], 5),
                     (False, partner_2, 5),
-                    (False, self.env['res.partner'], 6),
+                    (False, self.env['test_read_group.partner'], 6),
                 ],
             )
 
@@ -86,9 +86,9 @@ class TestPrivateReadGroup(common.TransactionCase):
                     (1, partner_1, 1 + 2),
                     (1, partner_2, 3),
                     (2, partner_2, 4),
-                    (2, self.env['res.partner'], 5),
+                    (2, self.env['test_read_group.partner'], 5),
                     (False, partner_2, 5),
-                    (False, self.env['res.partner'], 6),
+                    (False, self.env['test_read_group.partner'], 6),
                 ],
             )
 
@@ -147,7 +147,7 @@ class TestPrivateReadGroup(common.TransactionCase):
 
     def test_prefetch_for_records(self):
         Model = self.env['test_read_group.aggregate']
-        Partner = self.env['res.partner']
+        Partner = self.env['test_read_group.partner']
         partner_1 = Partner.create({'name': 'z_one'})
         partner_2 = Partner.create({'name': 'a_two'})
         Model.create({'key': 1, 'partner_id': partner_1.id})
@@ -179,7 +179,7 @@ class TestPrivateReadGroup(common.TransactionCase):
         """ Check that _read_group doesn't generate ambiguous (display_name) alias for PostgreSQL
         """
         Model = self.env['test_read_group.aggregate']
-        partner_1 = self.env['res.partner'].create({'name': 'z_one'})
+        partner_1 = self.env['test_read_group.partner'].create({'name': 'z_one'})
         Model.create({'key': 1, 'partner_id': partner_1.id, 'value': 1, 'display_name': 'blabla'})
 
         with self.assertQueries(["""
@@ -187,13 +187,13 @@ class TestPrivateReadGroup(common.TransactionCase):
                    "test_read_group_aggregate"."partner_id",
                    COUNT(*)
             FROM "test_read_group_aggregate"
-            LEFT JOIN "res_partner" AS "test_read_group_aggregate__partner_id"
+            LEFT JOIN "test_read_group_partner" AS "test_read_group_aggregate__partner_id"
                 ON ("test_read_group_aggregate"."partner_id" = "test_read_group_aggregate__partner_id"."id")
             GROUP BY "test_read_group_aggregate"."display_name",
                      "test_read_group_aggregate"."partner_id",
-                     "test_read_group_aggregate__partner_id"."complete_name",
+                     "test_read_group_aggregate__partner_id"."name",
                      "test_read_group_aggregate__partner_id"."id"
-            ORDER BY "test_read_group_aggregate__partner_id"."complete_name" DESC,
+            ORDER BY "test_read_group_aggregate__partner_id"."name" DESC,
                      "test_read_group_aggregate__partner_id"."id" ASC
         """]):
             result = Model._read_group(
@@ -248,7 +248,8 @@ class TestPrivateReadGroup(common.TransactionCase):
 
     def test_array_read_groups(self):
         Model = self.env['test_read_group.aggregate']
-        p1, p2 = self.ref('base.partner_root'), self.ref('base.partner_admin')
+        p1 = self.env['test_read_group.partner'].create({'name': 'partner_root'}).id
+        p2 = self.env['test_read_group.partner'].create({'name': 'partner_admin'}).id
         Model.create({'partner_id': p1})
         Model.create({'partner_id': p1})
         Model.create({'partner_id': p2})
@@ -260,7 +261,7 @@ class TestPrivateReadGroup(common.TransactionCase):
 
         self.assertEqual(
             Model._read_group([], aggregates=['partner_id:recordset']),
-            [(self.env['res.partner'].browse([p1, p2]),)],
+            [(self.env['test_read_group.partner'].browse([p1, p2]),)],
         )
 
     def test_flush_read_group(self):
