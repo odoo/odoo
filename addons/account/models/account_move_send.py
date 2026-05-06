@@ -196,7 +196,7 @@ class AccountMoveSend(models.AbstractModel):
         partners = self.env['res.partner'].with_company(move.company_id)
         if mail_template.use_default_to:
             defaults = move._message_get_default_recipients()[move.id]
-            email_cc = defaults['email_to']
+            email_cc = defaults['email_cc']
             email_to = defaults['email_to']
             partners |= partners.browse(defaults['partner_ids'])
         else:
@@ -214,10 +214,11 @@ class AccountMoveSend(models.AbstractModel):
             no_create=False,
         )
 
-        if not mail_template.use_default_to and mail_template.partner_to:
-            partner_to = self._get_mail_default_field_value_from_template(mail_template, mail_lang, move, 'partner_to')
-            partner_ids = mail_template._parse_partner_to(partner_to)
-            partners |= self.env['res.partner'].sudo().browse(partner_ids).exists()
+        if not mail_template.use_default_to and (mail_template.partner_to or mail_template.partner_cc):
+            for field in ('partner_to', 'partner_cc'):
+                field_partners = self._get_mail_default_field_value_from_template(mail_template, mail_lang, move, field)
+                partner_ids = mail_template._parse_partner_list_ids(field_partners)
+                partners |= self.env['res.partner'].sudo().browse(partner_ids).exists()
         return partners if self.env.context.get('allow_partners_without_mail') else partners.filtered('email')
 
     # -------------------------------------------------------------------------

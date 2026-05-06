@@ -21,7 +21,11 @@ export class RecipientsInput extends Component {
     setup() {
         this.orm = useService("orm");
         this.store = useService("mail.store");
-        this.props = props({ thread: types.instanceOf(this.store["mail.thread"].Class) });
+        this.props = props({
+            thread: types.instanceOf(this.store["mail.thread"].Class),
+            recipientType: types.string(),
+            placeholder: types.string(),
+        });
         this.tags = computed(() => this.getTagsFromMailThread());
         this.recipientCheckerBus = useRecipientChecker(this.tags);
         useTagNavigation("recipientsInputRef", {
@@ -216,11 +220,12 @@ export class RecipientsInput extends Component {
                 bus: this.recipientCheckerBus,
             });
         };
-        for (const recipient of this.props.thread.suggestedRecipients) {
-            createTagForRecipient(recipient, "suggestedRecipients");
-        }
-        for (const recipient of this.props.thread.additionalRecipients) {
-            createTagForRecipient(recipient, "additionalRecipients");
+        for (const recipientField of ["suggestedRecipients", "additionalRecipients"]) {
+            for (const recipient of this.props.thread[recipientField].filter(
+                (r) => r.recipient_type === this.props.recipientType
+            )) {
+                createTagForRecipient(recipient, recipientField);
+            }
         }
         return tags;
     }
@@ -230,7 +235,7 @@ export class RecipientsInput extends Component {
         return [
             ...this.props.thread.suggestedRecipients,
             ...this.props.thread.additionalRecipients,
-        ];
+        ].filter((r) => r.recipient_type === this.props.recipientType);
     }
 
     /**
@@ -253,14 +258,14 @@ export class RecipientsInput extends Component {
 
     /** @param {SuggestedRecipient} recipient */
     insertAdditionalRecipient(recipient) {
-        this.props.thread.additionalRecipients.push(recipient);
+        this.props.thread.additionalRecipients.push({
+            ...recipient,
+            recipient_type: this.props.recipientType,
+        });
     }
 
     /** @returns {string} */
     getPlaceholder() {
-        const hasRecipients =
-            this.props.thread.suggestedRecipients.length ||
-            this.props.thread.additionalRecipients.length;
-        return hasRecipients ? "" : _t("Followers only");
+        return this.getAllMailThreadRecipients().length ? "" : this.props.placeholder;
     }
 }

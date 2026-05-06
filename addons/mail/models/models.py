@@ -419,7 +419,9 @@ class Base(models.AbstractModel):
         for record in self:
             suggested[record.id] = {
                 'email_to_lst': suggested_record[record.id]['email_to_lst'].copy(),
+                'email_cc_lst': [],
                 'partners': suggested_record[record.id]['partners'] + (additional_partners or self.env['res.partner']),
+                'cc_partners': self.env['res.partner'],
             }
 
         # find last relevant message
@@ -437,8 +439,11 @@ class Base(models.AbstractModel):
                     continue
                 # direct recipients, and author if not archived / root
                 suggested[record.id]['partners'] += (record_msg.partner_ids | record_msg.author_id).filtered(lambda p: p.active)
+                suggested[record.id]['cc_partners'] += record_msg.partner_cc_ids.filtered(lambda p: p.active)
                 # To and Cc emails (mainly for incoming email), and email_from if not linked to hereabove author
-                suggested[record.id]['email_to_lst'] += [record_msg.incoming_email_to or '', record_msg.incoming_email_cc or '', record_msg.email_from or '']
+                suggested[record.id]['email_to_lst'] += (email_split_and_format(record_msg.incoming_email_to) +
+                                                         ([record_msg.email_from] if record_msg.email_from else []))
+                suggested[record.id]['email_cc_lst'] += email_split_and_format(record_msg.incoming_email_cc or '')
                 from_normalized = email_normalize(record_msg.email_from)
                 if from_normalized and from_normalized != record_msg.author_id.email_normalized:
                     suggested[record.id]['email_to_lst'].append(record_msg.email_from)
@@ -447,16 +452,19 @@ class Base(models.AbstractModel):
         records_emails = {}
         all_emails = set()
         for record in self:
-            email_to_lst, partners = suggested[record.id]['email_to_lst'], suggested[record.id]['partners']
+            partners = suggested[record.id]['partners']
+            cc_partners = suggested[record.id]['cc_partners']
             # organize and deduplicate partners, exclude followers, keep ordering
             followers = record.message_partner_ids if is_mail_thread else record.env['res.partner']
             # sanitize email inputs, exclude followers and aliases, add some banned emails, keep ordering, then link to partners
-            skip_emails_normalized = (followers | partners).mapped('email_normalized') + (followers | partners).mapped('email')
+            skip_emails_normalized = (followers | partners | cc_partners).mapped('email_normalized') + (followers | partners | cc_partners).mapped('email')
+            email_lst = suggested[record.id]['email_to_lst'] + suggested[record.id]['email_cc_lst']
             records_emails[record] = [
-                e for email_input in email_to_lst for e in email_split_and_format(email_input)
+                e for email_input in email_lst for e in email_split_and_format(email_input)
                 if e and e.strip() and email_key(e) not in skip_emails_normalized
             ]
-            all_emails |= set(records_emails[record]) | set(partners.mapped('email_normalized'))
+            all_emails |= (set(records_emails[record]) | set(partners.mapped('email_normalized'))
+                           | set(cc_partners.mapped('email_normalized')))
         # ban emails: never propose odoobot nor aliases
         ban_emails = [self.env.ref('base.partner_root').email_normalized]
         ban_emails += self.env['mail.alias.domain'].sudo()._find_aliases(
@@ -476,7 +484,9 @@ class Base(models.AbstractModel):
         for record in self:
             followers = record.message_partner_ids if is_mail_thread else record.env['res.partner']
             partners = self.env['res.partner'].browse(tools.misc.unique(
-                p.id for p in (suggested[record.id]['partners'] + records_partners[record.id])
+                p.id for p in (suggested[record.id]['partners']
+                               + suggested[record.id]['cc_partners']
+                               + records_partners[record.id])
                 if (
                     # skip followers, unless being a customer suggested by record (mostly defaults)
                     (
@@ -488,35 +498,47 @@ class Base(models.AbstractModel):
                     not p.is_public
                 )
             ))
+            # Add partner to cc_partners_filter if it was always sent in "cc" and not in "to"
+            cc_partners_filter = suggested[record.id]['cc_partners']
+            partner_by_email = {key: p for p in partners if p.email and (key := email_key(p.email))}
+            for email in ({email_key(e) for e in suggested[record.id]['email_cc_lst']}
+                          - {email_key(e) for e in suggested[record.id]['partners'].mapped('email') if e}
+                          - {email_key(e) for e in suggested[record.id]['email_to_lst']}):
+                if partner := partner_by_email.get(email_normalize(email, False)):
+                    cc_partners_filter |= partner
+
             existing_mails = {
                 email_key(e)
                 for rec in (followers | partners)
                 for e in ([rec.email_normalized] if rec.email_normalized else []) + email_split_and_format(rec.email or '')
             }
-            email_to_lst = list(tools.misc.unique(
-                e for email_input in suggested[record.id]['email_to_lst'] for e in email_split_and_format(email_input)
-                if (
-                    e and e.strip() and
-                    email_key(e) not in ban_emails and
-                    email_key(e) not in existing_mails
-                )
-            ))
-
             recipients = [{
                 **({'display_name': partner.display_name} if not partner.name else {}),
                 'email': partner.email_normalized,
                 'name': partner.name,
                 'partner_id': partner.id,
                 'create_values': {},
+                'recipient_type': 'cc' if partner in cc_partners_filter else 'to',
             } for partner in partners]
-            for email_input in email_to_lst:
-                name, email_normalized = parse_contact_from_email(email_input)
-                recipients.append({
-                    'email': email_normalized,
-                    'name': emails_normalized_info.get(email_normalized, {}).pop('name', False) or name,
-                    'partner_id': False,
-                    'create_values': emails_normalized_info.get(email_normalized, {}),
-                })
+            for lst_field, recipient_type in (('email_to_lst', 'to'), ('email_cc_lst', 'cc')):
+                email_lst = list(tools.misc.unique(
+                    e for email_input in suggested[record.id][lst_field] for e in email_split_and_format(email_input)
+                    if (
+                        e.strip() and
+                        email_key(e) not in ban_emails and
+                        email_key(e) not in existing_mails
+                    )
+                ))
+                for email_input in email_lst:
+                    name, email_normalized = parse_contact_from_email(email_input)
+                    existing_mails.add(email_key(email_input))
+                    recipients.append({
+                        'email': email_normalized,
+                        'name': emails_normalized_info.get(email_normalized, {}).pop('name', False) or name,
+                        'partner_id': False,
+                        'create_values': emails_normalized_info.get(email_normalized, {}),
+                        'recipient_type': recipient_type,
+                    })
             suggested_recipients[record.id] = recipients
         return suggested_recipients
 

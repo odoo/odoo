@@ -220,7 +220,7 @@ export class Thread extends Record {
     scrollTop = "bottom";
     transientMessages = fields.Many("mail.message");
     /* The additional recipients are the recipients that are manually added
-     * by the user by using the "To" field of the Chatter. */
+     * by the user by using the "To" or "Cc" fields of the Chatter. */
     additionalRecipients = fields.Attr([]);
     /** @type {number|undefined} */
     recipients = fields.Many("mail.followers");

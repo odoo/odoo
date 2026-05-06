@@ -84,6 +84,7 @@ class NewLeadNotification(TestCrmCommon):
                         'type': 'contact',
                         'user_id': self.user_sales_leads.id,
                     },
+                    'recipient_type': 'to',
                 },
             ], [
                 # here no contact name, just a partner name -> use email and set company_name
@@ -96,11 +97,13 @@ class NewLeadNotification(TestCrmCommon):
                         'type': 'contact',
                         'user_id': self.user_sales_leads.id,
                     },
+                    'recipient_type': 'to',
                 }, {
                     'name': '',
                     'email': 'new.customer.2@test.example.com',  # second found creates another contact
                     'partner_id': False,
                     'create_values': {},  # not targeted as primary lead customer hence no values
+                    'recipient_type': 'to',
                 },
             ], [
                 # here contact name -> individual
@@ -112,6 +115,7 @@ class NewLeadNotification(TestCrmCommon):
                         'type': 'contact',
                         'user_id': self.user_sales_leads.id,
                     },
+                    'recipient_type': 'to',
                 },
             ], [
                 # here check lang is in create_values
@@ -123,6 +127,7 @@ class NewLeadNotification(TestCrmCommon):
                         'lang': 'en_US',
                         'type': 'contact',
                     },
+                    'recipient_type': 'to',
                 },
             ], [
                 {
@@ -130,6 +135,7 @@ class NewLeadNotification(TestCrmCommon):
                     'name': 'Philip J Fry',
                     'email': 'philip.j.fry@test.example.com',
                     'create_values': {},
+                    'recipient_type': 'to',
                 },
             ], [
                 {
@@ -137,6 +143,7 @@ class NewLeadNotification(TestCrmCommon):
                     'name': 'Test Partner',
                     'email': False,
                     'create_values': {},
+                    'recipient_type': 'to',
                 },
             ], [
                 {
@@ -144,6 +151,7 @@ class NewLeadNotification(TestCrmCommon):
                     'email': False,
                     'name': 'Test Partner',
                     'create_values': {},
+                    'recipient_type': 'to',
                 },
             ],
         ]):

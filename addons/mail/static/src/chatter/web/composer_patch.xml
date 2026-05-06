@@ -5,7 +5,17 @@
             <div t-if="this.props.withMessageFields and this.props.type === 'message'" class="py-1">
                 <div class="d-flex">
                     <span class="flex-shrink-0 text-end fw-bold" style="width:55px">To: </span>
-                    <RecipientsInput thread="this.props.thread"/>
+                    <RecipientsInput thread="this.props.thread"
+                        recipientType="'to'"
+                        placeholder.translate="Followers only"/>
+                    <button class="btn btn-sm" t-if="!this.chatterState.isCcEnabled"
+                        t-on-click="() => (this.chatterState.isCcEnabled = true)">Cc</button>
+                </div>
+                <div t-if="this.chatterState.isCcEnabled" class="d-flex">
+                    <span class="flex-shrink-0 text-end fw-bold" style="width:55px">Cc: </span>
+                    <RecipientsInput thread="this.props.thread"
+                        recipientType="'cc'"
+                        placeholder.translate="Cc recipients"/>
                 </div>
                 <div class="d-flex" t-if="this.props.thread.showSubjectInSmallComposer">
                     <span class="flex-shrink-0 text-end fw-bold me-1" style="width:55px">Subject: </span>

@@ -207,6 +207,7 @@ const chatterPatch = {
             email: result.email,
             partner_id: result.partner_id,
             name: result.name || result.email,
+            recipient_type: result.recipient_type,
         }));
         this.state.thread.additionalRecipients = this.state.thread.additionalRecipients.filter(
             (additionalRecipient) =>
