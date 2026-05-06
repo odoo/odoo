@@ -8,4 +8,4 @@ declaration.
 
 Signed,
 
-Pepito Piscinas tech@ethichub.com https://github.com/mUniKeS
+mUniKeS munikes@members.fsf.org https://github.com/mUniKeS
