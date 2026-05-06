@@ -21,7 +21,7 @@ patch(OrderDetailsDialog.prototype, {
             });
         }
 
-        const table = order.getTable();
+        const table = this.getTableInfo();
         const orderTimeIdx = fields.findIndex((f) => f.id === "order_time");
         fields.splice(
             orderTimeIdx + 1,
@@ -41,5 +41,8 @@ patch(OrderDetailsDialog.prototype, {
         );
 
         return fields;
+    },
+    getTableInfo() {
+        return this.props.order.table_id;
     },
 });
