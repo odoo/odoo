@@ -311,6 +311,14 @@ class TestMenu(common.TransactionCase):
         with self.assertRaises(UserError):
             self.main_menu.parent_id = self.another_menu.id
 
+    def test_08_top_level_menu_as_mega_menu(self):
+        top_menu = self.env.ref('website.main_menu')
+        self.assertFalse(top_menu.parent_id)
+        self.assertTrue(top_menu.child_id)
+
+        with self.assertRaises(UserError):
+            top_menu.is_mega_menu = True
+
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
 class TestMenuHttp(common.HttpCase):
