@@ -89,11 +89,7 @@ export class SelfOrder extends Reactive {
             await this.initMobileData();
         }
 
-        this.data.connectWebSocket("SESSION_STATE_CHANGED", () => {
-            if (!session.test_mode) {
-                window.location.reload();
-            }
-        });
+        this.data.connectWebSocket("SESSION_STATE_CHANGED", () => this.onSessionStateChanged());
         this.data.connectWebSocket("ORDER_STATE_CHANGED", () => this.getUserDataFromServer());
         this.data.connectWebSocket("SNOOZE_CHANGED", async (payload) => {
             const { deleted_ids, records } = payload;
@@ -120,14 +116,8 @@ export class SelfOrder extends Reactive {
             }
         });
         if (this.config.self_ordering_mode === "kiosk") {
-            this.data.connectWebSocket("STATUS", ({ status }) => {
-                if (status === "closed") {
-                    this.ordering = false;
-                } else {
-                    // reload to get potential new settings
-                    // more easier than RPC for now
-                    window.location.reload();
-                }
+            this.data.connectWebSocket("STATUS", async ({ status }) => {
+                await this.handleKioskSessionStatusChange(status);
             });
             this.data.connectWebSocket("PAYMENT_STATUS", ({ payment_result, data }) => {
                 if (payment_result === "Success") {
@@ -183,6 +173,22 @@ export class SelfOrder extends Reactive {
             this.addToCart(productTemplate, 1, "", {}, {});
             this.router.navigate("cart");
         });
+    }
+
+    async onSessionStateChanged() {
+        if (!session.test_mode) {
+            window.location.reload();
+        }
+    }
+    async handleKioskSessionStatusChange(status) {
+        if (status === "closed") {
+            this.pos_session = [];
+            this.ordering = false;
+        } else {
+            // reload to get potential new settings
+            // more easier than RPC for now
+            window.location.reload();
+        }
     }
 
     /**

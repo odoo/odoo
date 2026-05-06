@@ -43,7 +43,8 @@ patch(LoginScreen.prototype, {
         if (
             employee &&
             employee !== this.loggedCashier &&
-            (!employee._pin || (await this.pos.accessRight.checkPin(employee)))
+            (!employee._pin || (await this.pos.accessRight.checkPin(employee))) &&
+            this.pos.canLoginCashier(employee)
         ) {
             this.pos.setCashier(employee);
             this.cashierLogIn();
