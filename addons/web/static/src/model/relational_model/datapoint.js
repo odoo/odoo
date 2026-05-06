@@ -1,5 +1,5 @@
 import { markRaw, signal } from "@odoo/owl";
-import { makeComputed, makeReactive } from "@web/owl2/utils";
+import { makeReactive } from "@web/owl2/utils";
 import { getId } from "./utils";
 
 /**
@@ -24,18 +24,10 @@ export class DataPoint {
 
         /** @type {RelationalModelConfig} */
         this._config = config;
-        /** @type {string[]} */
-        this.fieldNames = [];
 
         this.setup(config, data, options);
 
         makeReactive(this, "_config", signal.Object);
-
-        makeComputed(this, "fieldNames", () =>
-            Object.keys(this.activeFields).filter(
-                (fieldName) => !this.fields[fieldName].relatedPropertyField
-            )
-        );
     }
 
     /**
@@ -53,6 +45,12 @@ export class DataPoint {
 
     get fields() {
         return this.config.fields;
+    }
+
+    get fieldNames() {
+        return Object.keys(this.activeFields).filter(
+            (fieldName) => !this.fields[fieldName].relatedPropertyField
+        );
     }
 
     get resModel() {

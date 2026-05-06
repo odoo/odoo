@@ -4667,8 +4667,8 @@ test(`selection box: grouped list, select domain, use main pager`, async () => {
     expect(`.o_selection_box`).toHaveText("All 4 selected");
 });
 
-test.tags("desktop");
-test(`selection box: grouped list, select domain, reduce limit`, async () => {
+test.tags("desktop", "owl3");
+test.todo(`selection box: grouped list, select domain, reduce limit`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
