@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from ast import literal_eval
 import random
 
 from odoo import api, fields, models, _
@@ -40,6 +41,7 @@ class PosCategory(models.Model):
     # During loading of data, the image is not loaded so we expose a lighter
     # field to determine whether a pos.category has an image or not.
     has_image = fields.Boolean(compute='_compute_has_image')
+    product_count = fields.Integer(compute="_compute_product_count")
 
     @api.model
     def _load_pos_data_domain(self, data, config):
@@ -97,3 +99,34 @@ class PosCategory(models.Model):
             for pos_category, vals in zip(self, vals_list):
                 vals['name'] = _("%s (copy)", pos_category.name)
         return vals_list
+
+    def _compute_product_count(self):
+        all_categories = self.search_fetch(
+            [('id', 'child_of', self.ids)],
+            ['parent_id'],
+        )
+        product_data = self.env['product.template']._read_group(
+            [('pos_categ_ids', 'in', all_categories.ids)],
+            ['pos_categ_ids'],
+            ['id:array_agg'],
+        )
+        self_ids = set(self._ids)
+        category_products = {categ.id: set() for categ in self}
+        for categ, product_ids in product_data:
+            while categ:
+                if categ.id in self_ids:
+                    category_products[categ.id].update(product_ids)
+                categ = categ.parent_id
+        for categ in self:
+            categ.product_count = len(category_products[categ.id])
+
+    def action_open_associated_products(self):
+        self.ensure_one()
+        action = self.env['ir.actions.act_window']._for_xml_id('point_of_sale.product_template_action_pos_product')
+        action['context'] = dict(
+            literal_eval(action.get('context', '{}')),
+            search_default_pos_categ_ids=[self.id],
+            default_pos_categ_ids=[self.id]
+        )
+        action['views'] = [(False, 'kanban'), (False, 'list'), (False, 'form')]
+        return action
