@@ -340,6 +340,14 @@ class TestMenu(common.TransactionCase):
         res = Menu.search([('url', '=', page_url)])
         self.assertEqual(res, page_specific_menu)
 
+    def test_08_top_level_menu_as_mega_menu(self):
+        top_menu = self.env.ref('base.default_website').menu_id
+        self.assertFalse(top_menu.parent_id)
+        self.assertTrue(top_menu.child_id)
+
+        with self.assertRaises(UserError):
+            top_menu.is_mega_menu = True
+
 
 class TestMenuHttp(common.HttpCase):
     def setUp(self):
