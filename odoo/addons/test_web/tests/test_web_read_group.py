@@ -293,7 +293,7 @@ class TestWebReadGroup(common.TransactionCase):
 
     def test_unfolded_specific_groups(self):
         Model = self.env["test_read_group.aggregate"]
-        partner_1, partner_2 = self.env["res.partner"].create(
+        partner_1, partner_2 = self.env["test_read_group.partner"].create(
             [
                 {"name": "P1"},
                 {"name": "P2"},
@@ -477,7 +477,7 @@ class TestWebReadGroup(common.TransactionCase):
     def test_auto_unfolded(self):
         """Test unfolded groups when no __fold exists"""
         Model = self.env["test_read_group.aggregate"]
-        partner_1, partner_2 = self.env["res.partner"].create(
+        partner_1, partner_2 = self.env["test_read_group.partner"].create(
             [
                 {"name": "P1"},
                 {"name": "P2"},
@@ -1199,10 +1199,10 @@ class TestWebReadGroup(common.TransactionCase):
 
     def test_read_extra_info_groupby_value(self):
         Model = self.env["test_read_group.aggregate"]
-        partner_1, partner_2 = self.env["res.partner"].create(
+        partner_1, partner_2 = self.env["test_read_group.partner"].create(
             [
-                {"name": "P1", "ref": "P1-REF"},
-                {"name": "P2", "ref": "P2-REF"},
+                {"name": "P1", "email": "P1_EMAIL@example.com"},
+                {"name": "P2", "email": "P2_EMAIL@example.com"},
             ],
         )
         Model.create(
@@ -1223,13 +1223,13 @@ class TestWebReadGroup(common.TransactionCase):
             domain=[],
             groupby=["partner_id"],
             aggregates=["value:sum"],
-            groupby_read_specification={"partner_id": {"ref": {}}},
+            groupby_read_specification={"partner_id": {"email": {}}},
         )
         self.env.invalidate_all()
 
-        Partner = self.registry["res.partner"]
+        Partner = self.registry["test_read_group.partner"]
         # One query for the _read_group
-        # One query to read ref/display_name of partners
+        # One query to read email/display_name of partners
         with (
             self.assertQueryCount(2),
             patch.object(
@@ -1244,7 +1244,7 @@ class TestWebReadGroup(common.TransactionCase):
                     domain=[],
                     groupby=["partner_id"],
                     aggregates=["value:sum"],
-                    groupby_read_specification={"partner_id": {"ref": {}}},
+                    groupby_read_specification={"partner_id": {"email": {}}},
                 ),
                 {
                     "groups": [
@@ -1253,14 +1253,14 @@ class TestWebReadGroup(common.TransactionCase):
                             "partner_id": (partner_1.id, "P1"),
                             "__count": 3,
                             "value:sum": 1 + 2 + 3,
-                            "__values": {"id": partner_1.id, "ref": "P1-REF"},
+                            "__values": {"id": partner_1.id, "email": "P1_EMAIL@example.com"},
                         },
                         {
                             "__extra_domain": [("partner_id", "=", partner_2.id)],
                             "partner_id": (partner_2.id, "P2"),
                             "__count": 3,
                             "value:sum": 4 + 5,
-                            "__values": {"id": partner_2.id, "ref": "P2-REF"},
+                            "__values": {"id": partner_2.id, "email": "P2_EMAIL@example.com"},
                         },
                         {
                             "__extra_domain": [("partner_id", "=", False)],

@@ -1,7 +1,7 @@
 from odoo import fields, models
 
 
-class ResPartner(models.Model):
-    _inherit = 'res.partner'
+class TestReadGroupPartner(models.Model):
+    _inherit = 'test_read_group.partner'
 
     datetime = fields.Datetime()  # for test_read_progress_bar
