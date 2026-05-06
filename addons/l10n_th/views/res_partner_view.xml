@@ -10,18 +10,24 @@
                 <field name="company_registry" position="attributes">
                     <attribute name="invisible" add="(is_company and country_code == 'TH')" separator=" or "/>
                 </field>
-                <field name="vat" position="after">
+                <div id="vat_div" position="after">
                     <field name="company_registry"
                            string="Branch Code"
                            placeholder="Empty for Head Office"
                            invisible="parent_id or not (is_company and country_code == 'TH')"
                            help="The 5-digit branch code as registered with the Revenue Department."/>
+<<<<<<< 0ab7281a6bd027a687c3e8ad26470a5a8403bf41
                 </field>
 
                 <xpath expr="//field[@name='category_id']" position="after">
                     <field name="l10n_th_title" invisible="country_code != 'TH' or 'TH' not in fiscal_country_codes or is_company"/>
                     <field name="l10n_th_company_type" invisible="country_code != 'TH' or 'TH' not in fiscal_country_codes or not is_company"/>
                 </xpath>
+||||||| edc806288e609d905509915317b8e152aee0a487
+                </field>
+=======
+                </div>
+>>>>>>> a8933c22e028029b3b1c6f7b0e50165ca8037016
             </field>
         </record>
     </data>
