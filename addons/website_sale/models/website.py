@@ -650,7 +650,8 @@ class Website(models.Model):
         return request and request.geoip.country_code or False
 
     def sale_product_domain(self):
-        website_domain = self.get_current_website().website_domain()
+        website = self or self.get_current_website()
+        website_domain = website.website_domain()
         if self.env.user._is_internal():
             user_domain = Domain.TRUE
         else:
@@ -658,7 +659,7 @@ class Website(models.Model):
                 ('is_published', '=', True),
                 ('service_tracking', 'in', self.env['product.template']._get_saleable_tracking_types()),
             ]
-        company_domain = [('company_id', 'in', [False, self.company_id.id])]
+        company_domain = [('company_id', 'in', [False, website.company_id.id])]
         return Domain.AND([self._product_domain(), website_domain, user_domain, company_domain])
 
     def _product_domain(self):
