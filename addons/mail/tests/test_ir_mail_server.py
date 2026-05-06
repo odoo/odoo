@@ -639,7 +639,8 @@ class TestPersonalServer(MailCommon):
                 'email_cc': '"Named Cc1" <cc.1@test.com>, "Named Cc2" <cc.2@test.com>',
                 'email_to': email_to,
                 'headers': '{"test": "test header"}',
-                'recipient_ids': partners.ids,
+                'recipient_ids': partners[:8].ids,
+                'recipient_cc_ids': partners[8:].ids,
                 'state': 'outgoing',
             })
 
@@ -666,7 +667,8 @@ class TestPersonalServer(MailCommon):
         self.assertFalse(outgoing.email_to)
         self.assertEqual(outgoing.state, 'outgoing')
         self.assertEqual(outgoing.create_uid, self.user_employee)
-        self.assertEqual(len(outgoing.recipient_ids), 16 - TEST_LIMIT)
+        self.assertEqual(len(outgoing.recipient_ids) + len(outgoing.recipient_cc_ids), 16 - TEST_LIMIT)
+        self.assertEqual(len(outgoing.recipient_cc_ids), 8)
 
         # Re-send the same minute, nothing change
         with self.mock_smtplib_connection(), self.mock_datetime_and_now("2025-01-01 20:31:33"):
@@ -676,7 +678,8 @@ class TestPersonalServer(MailCommon):
         self.assertEqual(len(mails), 2)
         self.assertEqual(outgoing.state, 'outgoing')
         self.assertEqual(outgoing.create_uid, self.user_employee)
-        self.assertEqual(len(outgoing.recipient_ids), 16 - TEST_LIMIT)
+        self.assertEqual(len(outgoing.recipient_ids) + len(outgoing.recipient_cc_ids), 16 - TEST_LIMIT)
+        self.assertEqual(len(outgoing.recipient_cc_ids), 8)
 
         # Re-send one minute later
         with self.mock_smtplib_connection(), self.mock_datetime_and_now("2025-01-01 20:32:27"):
@@ -689,7 +692,8 @@ class TestPersonalServer(MailCommon):
         self.assertFalse(outgoing.email_to)
         self.assertEqual(outgoing.state, 'outgoing')
         self.assertEqual(outgoing.create_uid, self.user_employee)
-        self.assertEqual(len(outgoing.recipient_ids), 16 - 2 * TEST_LIMIT)
+        self.assertEqual(len(outgoing.recipient_ids) + len(outgoing.recipient_cc_ids), 16 - 2 * TEST_LIMIT)
+        self.assertEqual(len(outgoing.recipient_ids), 0)
 
         # The user re-send emails, while some emails are still in the queue
         # We have now 2 mails with many recipients to process in the queue
@@ -715,12 +719,14 @@ class TestPersonalServer(MailCommon):
         self.assertFalse(outgoing_1.email_to)
         self.assertEqual(outgoing_1.state, 'outgoing')
         self.assertEqual(outgoing_1.create_uid, self.user_employee)
-        self.assertEqual(len(outgoing_1.recipient_ids), 16 - 3 * TEST_LIMIT)  # 1 recipient left
+        self.assertEqual(len(outgoing_1.recipient_ids) + len(outgoing_1.recipient_cc_ids), 16 - 3 * TEST_LIMIT)  # 1 recipient left
+        self.assertEqual(len(outgoing_1.recipient_cc_ids), 1)
 
         outgoing_2 = mails[1]
         self.assertEqual(outgoing_2.email_to, 'target@test.com')
         self.assertEqual(outgoing_2.state, 'outgoing')
         self.assertEqual(outgoing_2.create_uid, self.user_employee)
+        self.assertEqual(len(outgoing_2.recipient_ids) + len(outgoing_2.recipient_cc_ids), 7)
         self.assertEqual(len(outgoing_2.recipient_ids), 7)
 
         # The next CRON will send all remaining emails of the first mail (1), and 4 mails for the second one
@@ -739,7 +745,9 @@ class TestPersonalServer(MailCommon):
         self.assertFalse(outgoing.email_to)
         self.assertEqual(outgoing.state, 'outgoing')
         self.assertEqual(outgoing.create_uid, self.user_employee)
+        self.assertEqual(len(outgoing.recipient_ids) + len(outgoing.recipient_cc_ids), 3)
         self.assertEqual(len(outgoing.recipient_ids), 3)
+        self.assertEqual(len(outgoing.recipient_cc_ids), 0)
 
         # Send the last email
         with self.mock_smtplib_connection(), self.mock_datetime_and_now("2025-01-01 20:42:29"):

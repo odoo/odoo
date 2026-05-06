@@ -860,6 +860,7 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
             'X-Custom': 'Done',  # mail.test.simple override
             # contains external people: partner_1 (follower) and asked outgoing email
             'X-Msg-To-Add': f'{additional_to},{self.partner_1.email_formatted}',
+            'X-Msg-Cc-Add': '',
             'X-Odoo-Objects': f'{test_record._name}-{test_record.id}',
         }
         with self.assertSinglePostNotifications(
@@ -1988,10 +1989,13 @@ class TestMessagePostHelpers(TestMessagePostCommon):
 
         # sent emails (mass mail mode)
         for test_record in test_records:
-            all_partners = new_partners + self.partner_1 + self.partner_2 + test_record.customer_id
+            partners_to = new_partners + self.partner_2 + test_record.customer_id
+            partners_cc = self.partner_1
+            all_partners = partners_to + partners_cc
             self.assertMailMail(
-                all_partners,
+                partners_to,
                 'sent',
+                recipients_cc=partners_cc,
                 author=self.user_employee.partner_id,
                 email_values={
                     'attachments': [

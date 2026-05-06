@@ -252,7 +252,9 @@ class MailMessage(models.Model):
     is_current_user_or_guest_author = fields.Boolean(compute='_compute_is_current_user_or_guest_author')
     # recipients: include inactive partners (they may have been archived after
     # the message was sent, but they should remain visible in the relation)
-    partner_ids = fields.Many2many('res.partner', string='Recipients', context={'active_test': False})
+    partner_ids = fields.Many2many('res.partner', string='Recipients (To)', context={'active_test': False})
+    partner_cc_ids = fields.Many2many('res.partner', relation='mail_message_res_partner_cc_rel',
+                                      string='Recipients (Cc)', context={'active_test': False})
     # email recipients of incoming emails: comma separated list of emails (not necessarily normalized)
     incoming_email_to = fields.Text('Emails To')
     incoming_email_cc = fields.Char('Emails Cc')
@@ -517,6 +519,7 @@ class MailMessage(models.Model):
             Domain('create_uid', '=', self.env.uid),
             # force an IN condition with a list of values
             Domain('partner_ids', 'any!', partner._as_query()),
+            Domain('partner_cc_ids', 'any!', partner._as_query()),
             Domain('notified_partner_ids', 'any!', partner._as_query()),
             # User_notification notified relevant partners, hence covered by
             # 'partner_ids' domain part (which is why it is ok to exclude them
@@ -539,12 +542,12 @@ class MailMessage(models.Model):
             - read: if any
                 - author_id == pid, uid is the author
                 - create_uid == uid, uid is the creator
-                - pid is in the recipients (partner_ids)
+                - pid is in the recipients (partner_ids + partner_cc_ids)
                 - pid has been notified (needaction)
                 - uid has access on the related document
             - write: if any
                 - author_id == pid, uid is the author
-                - pid is in the recipients (partner_ids)
+                - pid is in the recipients (partner_ids + partner_cc_ids)
                 - pid has been notified (needaction)
                 - uid has access on the related document
             - create: if any
@@ -570,9 +573,9 @@ class MailMessage(models.Model):
         # once we know they are accessible. At the end, the remaining entries
         # are the invalid ones.
         if self:
-            self.flush_recordset(['model', 'res_id', 'author_id', 'create_uid', 'parent_id', 'message_type', 'partner_ids'])
+            self.flush_recordset(['model', 'res_id', 'author_id', 'create_uid', 'parent_id', 'message_type', 'partner_ids', 'partner_cc_ids'])
         else:
-            self.flush_model(['model', 'res_id', 'author_id', 'create_uid', 'parent_id', 'message_type', 'partner_ids'])
+            self.flush_model(['model', 'res_id', 'author_id', 'create_uid', 'parent_id', 'message_type', 'partner_ids', 'partner_cc_ids'])
         self.env['mail.notification'].flush_model(['mail_message_id', 'res_partner_id'])
         pid = self.env.user.partner_id.id
 
@@ -583,15 +586,18 @@ class MailMessage(models.Model):
         if operation in ('read', 'write'):
             id_sql = table.id
             query.groupby = id_sql
-            # notified: partner_ids or needaction
+            # notified: partner_ids or partner_cc_ids or needaction
             query.add_join('LEFT JOIN', 'partner_rel', 'mail_message_res_partner_rel',
                 SQL('partner_rel.mail_message_id = %s AND partner_rel.res_partner_id = %s', id_sql, pid))
+            query.add_join('LEFT JOIN', 'partner_cc_rel', 'mail_message_res_partner_cc_rel',
+                SQL('partner_cc_rel.mail_message_id = %s AND partner_cc_rel.res_partner_id = %s', id_sql, pid))
             query.add_join('LEFT JOIN', 'needaction_rel', 'mail_notification',
                 SQL('needaction_rel.mail_message_id = %s AND needaction_rel.res_partner_id = %s', id_sql, pid))
             query = query.select(*(
                 table[fname]
                 for fname in ('id', 'model', 'res_id', 'author_id', 'parent_id', 'message_type', 'create_uid')
-            ), SQL('bool_or(partner_rel.res_partner_id IS NOT NULL OR needaction_rel.res_partner_id IS NOT NULL) AS notified'))
+            ), SQL('bool_or(partner_rel.res_partner_id IS NOT NULL OR partner_cc_rel.res_partner_id IS NOT NULL '
+                   'OR needaction_rel.res_partner_id IS NOT NULL) AS notified'))
         elif operation in ('create', 'unlink'):
             query = query.select(*(
                 table[fname]
@@ -673,12 +679,16 @@ class MailMessage(models.Model):
                     parent_ids_msg_ids[message['parent_id']].append(mid)
             if parent_ids_msg_ids:
                 query = SQL(
-                    """ SELECT m.id
-                        FROM "mail_message" m
-                        JOIN "mail_message_res_partner_rel" partner_rel
-                            ON partner_rel.mail_message_id = m.id AND partner_rel.res_partner_id = %s
-                        WHERE m.id = ANY(%s) """,
-                    pid, list(parent_ids_msg_ids),
+                    """ SELECT mail_message_id
+                          FROM mail_message_res_partner_rel
+                         WHERE res_partner_id = %s
+                           AND mail_message_id = ANY (%s)
+                         UNION
+                        SELECT mail_message_id
+                          FROM mail_message_res_partner_cc_rel
+                         WHERE res_partner_id = %s
+                           AND mail_message_id = ANY (%s) """,
+                    pid, list(parent_ids_msg_ids), pid, list(parent_ids_msg_ids),
                 )
                 for [parent_id] in self.env.execute_query(query):
                     for mid in parent_ids_msg_ids[parent_id]:
@@ -842,10 +852,10 @@ class MailMessage(models.Model):
             lambda attach: attach.res_model == self._name and (attach.res_id in self.ids or attach.res_id == 0)
         ).unlink()
         messages_by_partner = defaultdict(lambda: self.env['mail.message'])
-        partners_with_user = self.partner_ids.filtered('user_ids')
+        partners_with_user = (self.partner_ids | self.partner_cc_ids).filtered('user_ids')
         for elem in self:
             for partner in (
-                elem.partner_ids & partners_with_user | elem.notification_ids.author_id
+                (elem.partner_ids | elem.partner_cc_ids) & partners_with_user | elem.notification_ids.author_id
             ):
                 messages_by_partner[partner] |= elem
         # Notify front-end of messages deletion for partners having a user
@@ -1175,6 +1185,14 @@ class MailMessage(models.Model):
             "partner_ids",
             lambda res: res.from_method("_store_avatar_fields"),
             dynamic_fields="_store_partner_name_dynamic_fields",
+            sort="id",
+            sudo=True,
+        )
+        res.many(
+            "partner_cc_ids",
+            lambda res: res.from_method("_store_avatar_fields"),
+            dynamic_fields="_store_partner_name_dynamic_fields",
+            predicate=lambda m: m.model != "discuss.channel",
             sort="id",
             sudo=True,
         )

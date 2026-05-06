@@ -708,7 +708,15 @@ export class Composer extends Component {
             default_partner_ids:
                 this.props.type === "note"
                     ? []
-                    : allRecipients.map((recipient) => recipient.partner_id),
+                    : allRecipients
+                          .filter((r) => r.recipient_type !== "cc")
+                          .map((r) => r.partner_id),
+            default_partner_cc_ids:
+                this.props.type === "note"
+                    ? []
+                    : allRecipients
+                          .filter((r) => r.recipient_type === "cc")
+                          .map((r) => r.partner_id),
             default_res_ids: [this.thread.id],
             default_subtype_xmlid: this.props.type === "note" ? "mail.mt_note" : "mail.mt_comment",
             clicked_on_full_composer: true,

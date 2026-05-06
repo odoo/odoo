@@ -95,6 +95,7 @@ class CalendarAttendee(models.Model):
             "email_from": "{{ (object.event_id.user_id.email_formatted or user.email_formatted or '') }}",
             "email_to": False,
             "partner_to": False,
+            "partner_cc": False,
             "lang": "{{ object.partner_id.lang }}",
             "use_default_to": True,
         }

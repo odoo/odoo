@@ -64,24 +64,30 @@ class MailFollowers(models.Model):
         """
         if not mail_ids:
             return {}
-        self.env['mail.mail'].flush_model(['mail_message_id', 'recipient_ids'])
+        self.env['mail.mail'].flush_model(['mail_message_id', 'recipient_ids', 'recipient_cc_ids'])
         self.env['mail.followers'].flush_model(['partner_id', 'res_model', 'res_id'])
         self.env['mail.message'].flush_model(['model', 'res_id'])
-        # mail_mail_res_partner_rel is the join table for the m2m recipient_ids field
+        # mail_mail_res_partner_rel and mail_mail_res_partner_cc_rel are the join tables
+        # for the m2m recipient_ids and recipient_cc_ids fields
         self.env.cr.execute("""
+              WITH mail_partner AS (
+                    SELECT mail_mail_id, res_partner_id FROM mail_mail_res_partner_rel
+                 UNION ALL
+                    SELECT mail_mail_id, res_partner_id FROM mail_mail_res_partner_cc_rel)
             SELECT message.model, message.res_id, mail_partner.res_partner_id
               FROM mail_mail mail
-              JOIN mail_mail_res_partner_rel mail_partner ON mail_partner.mail_mail_id = mail.id
+              JOIN mail_partner ON mail_partner.mail_mail_id = mail.id
               JOIN mail_message message ON mail.mail_message_id = message.id
               JOIN mail_followers follower ON message.model = follower.res_model
                AND message.res_id = follower.res_id
                AND mail_partner.res_partner_id = follower.partner_id
              WHERE mail.id IN %(mail_ids)s
         """, {'mail_ids': tuple(mail_ids)})
-        res = defaultdict(list)
+        # Using a set because of the union all that could return duplicate partner if send in "To" and "Cc".
+        res = defaultdict(set)
         for model, doc_id, partner_id in self.env.cr.fetchall():
-            res[(model, doc_id)].append(partner_id)
-        return res
+            res[model, doc_id].add(partner_id)
+        return {k: list(v) for k, v in res.items()}
 
     def _get_recipient_data(self, records, message_type, subtype_id, pids=None):
         """Private method allowing to fetch recipients data based on a subtype.
@@ -322,6 +328,7 @@ class MailFollowers(models.Model):
                     'active': is_active,
                     'email_normalized': email_normalized,
                     'id': partner_id,
+                    'is_cc': False,
                     'is_follower': is_follower,
                     'lang': lang,
                     'name': name,

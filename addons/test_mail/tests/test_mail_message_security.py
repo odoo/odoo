@@ -149,8 +149,9 @@ class TestMailMessageAccess(MessageAccessCommon):
     def test_access_create(self):
         """ Test 'group_user' creation rules """
         # prepare 'notified of parent' condition
-        admin_msg = self.record_admin.message_ids[-1]
+        admin_msg, admin_msg_cc = self.record_admin.message_ids[-1], self.record_admin.message_ids[-2]
         admin_msg.write({'partner_ids': [(4, self.user_employee.partner_id.id)]})
+        admin_msg_cc.write({'partner_cc_ids': [(4, self.user_employee.partner_id.id)]})
 
         # prepare 'followers' condition
         record_admin_fol = self.env['mail.test.access'].create({
@@ -173,6 +174,9 @@ class TestMailMessageAccess(MessageAccessCommon):
             # parent based
             (self.record_admin, {  # note: force reply_to normally computed by message_post avoiding ACLs issues
                 'parent_id': admin_msg.id,
+            }, False, 'No access on record but reply to notified parent'),
+            (self.record_admin, {
+                'parent_id': admin_msg_cc.id,
             }, False, 'No access on record but reply to notified parent'),
         ]:
             with self.subTest(record=record, msg_vals=msg_vals, reason=reason):
@@ -462,7 +466,10 @@ class TestMailMessageAccess(MessageAccessCommon):
             }, False, 'Notified > no access on record'),
             (self.record_admin.message_ids[0], {
                 'partner_ids': [(4, self.user_employee.partner_id.id)],
-            }, False, 'Recipients > no access on record'),
+            }, False, 'Recipients To > no access on record'),
+            (self.record_admin.message_ids[0], {
+                'partner_cc_ids': [(4, self.user_employee.partner_id.id)],
+            }, False, 'Recipients Cc > no access on record'),
         ]:
             original_vals = {
                 'author_id': msg.author_id.id,
@@ -530,6 +537,14 @@ class TestMailMessageAccess(MessageAccessCommon):
                     'res_partner_id': self.user_portal.partner_id.id,
                 })],
             }, False, 'Notified > no access on record'),
+            # Recipients To
+            (self.record_admin.message_ids[0], {
+                'partner_ids': [(4, self.user_portal.partner_id.id)],
+            }, False, 'Recipients To > no access on record'),
+            # Recipients Cc
+            (self.record_admin.message_ids[0], {
+                'partner_cc_ids': [(4, self.user_portal.partner_id.id)],
+            }, False, 'Recipients Cc > no access on record'),
             # forbidden: internal (subtype / message)
             (self.record_portal.message_ids[0], {
                 'subtype_id': self.env.ref('mail.mt_note').id,
@@ -585,16 +600,19 @@ class TestMailMessageAccess(MessageAccessCommon):
             # document based
             (self.record_public.message_ids[0], {}, False, 'Access on record'),
             (self.record_portal.message_ids[0], {}, True, 'No access on record'),
+            (self.record_admin.message_ids[0], {}, True, 'No access on record'),
             # author
             (self.record_internal.message_ids[0], {
                 'author_id': self.user_public.partner_id.id,
             }, False, 'Author > no access on record'),
-            # notified
+            # Recipient To
             (self.record_admin.message_ids[0], {
-                'notification_ids': [(0, 0, {
-                    'res_partner_id': self.user_public.partner_id.id,
-                })],
-            }, False, 'Notified > no access on record'),
+                'partner_ids': [(4, self.user_public.partner_id.id)],
+            }, False, 'Recipients To > no access on record'),
+            # Recipients Cc
+            (self.record_admin.message_ids[0], {
+                'partner_cc_ids': [(4, self.user_public.partner_id.id)],
+            }, False, 'Recipients Cc > no access on record'),
             # forbidden
             (self.record_public.message_ids[0], {
                 'subtype_id': self.env.ref('mail.mt_note').id,
@@ -602,6 +620,12 @@ class TestMailMessageAccess(MessageAccessCommon):
             (self.record_public.message_ids[0], {
                 'is_internal': True,
             }, True, 'Internal message cannot be read by public users'),
+            # notified
+            (self.record_admin.message_ids[0], {
+                'notification_ids': [(0, 0, {
+                    'res_partner_id': self.user_public.partner_id.id,
+                })],
+            }, False, 'Notified > no access on record'),
         ]:
             original_vals = {
                 'author_id': msg.author_id.id,
@@ -693,6 +717,14 @@ class TestMailMessageAccess(MessageAccessCommon):
             (self.record_admin.message_ids[0], {
                 'author_id': self.user_employee.partner_id.id,
             }, False, 'Author > no access on record'),
+            # Recipients To
+            (self.record_admin.message_ids[0], {
+                'partner_ids': [(4, self.user_employee.partner_id.id)],
+            }, False, 'Recipients To > no access on record'),
+            # Recipients Cc
+            (self.record_admin.message_ids[0], {
+                'partner_cc_ids': [(4, self.user_employee.partner_id.id)],
+            }, False, 'Recipients Cc > no access on record'),
             # notified
             (self.record_admin.message_ids[0], {
                 'notification_ids': [(0, 0, {

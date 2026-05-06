@@ -720,14 +720,24 @@ class IrMail_Server(models.Model):
             to = message['To'] or ''
             to_normalized = tools.mail.email_normalize_all(to)
             message.replace_header(
-                'To', ', '.join([
-                    to,
-                    ', '.join(
-                        address for address in tools.mail.email_split_and_format(x_msg_add_to)
-                        if tools.mail.email_normalize(address, strict=False) not in to_normalized
-                    ),
-                ]
+                'To', ', '.join(
+                    ([to] if to else []) +
+                    [address for address in tools.mail.email_split_and_format(x_msg_add_to)
+                     if tools.mail.email_normalize(address, strict=False) not in to_normalized]
                 ))
+        # `Cc:` header extended similarly
+        if x_msg_add_cc := message.get('X-Msg-Cc-Add'):
+            cc = message.get('Cc') or ''
+            exclude_cc = tools.mail.email_normalize_all(cc) + tools.mail.email_normalize_all(message.get('To') or '')
+            new_cc = ', '.join(
+                ([cc] if cc else []) +
+                [address for address in tools.mail.email_split_and_format(x_msg_add_cc)
+                 if tools.mail.email_normalize(address, strict=False) not in exclude_cc]
+            )
+            try:
+                message.replace_header('Cc', new_cc)
+            except KeyError:
+                message.add_header('Cc', new_cc)
 
         if message['From'] != smtp_from:
             message.replace_header('From', smtp_from)
@@ -735,6 +745,7 @@ class IrMail_Server(models.Model):
         # cleanup unwanted headers
         del message['Bcc']                   # see odoo/odoo@2445f9e3c22db810d61996afde883e4ca608f15b
         del message['X-Forge-To']
+        del message['X-Msg-Cc-Add']
         del message['X-Msg-To-Add']
         del message['X-Msg-To-Consolidate']
 

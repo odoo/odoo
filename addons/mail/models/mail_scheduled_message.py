@@ -52,7 +52,9 @@ class MailScheduledMessage(models.Model):
     # origin
     author_id = fields.Many2one('res.partner', 'Author', required=True)
     # recipients
-    partner_ids = fields.Many2many('res.partner', string='Recipients')
+    partner_ids = fields.Many2many('res.partner', string='Recipients (To)')
+    partner_cc_ids = fields.Many2many('res.partner', relation='mail_scheduled_message_res_partner_cc_rel',
+                                      string='Recipients (Cc)', context={'active_test': False})
     # characteristics
     is_note = fields.Boolean('Is a note', default=False, help="If the message will be posted as a Note.")
     # notify parameters (email_from, mail_server_id, force_email_lang,...)
@@ -196,6 +198,7 @@ class MailScheduledMessage(models.Model):
                     subject=scheduled_message.subject,
                     body=scheduled_message.body,
                     partner_ids=list(scheduled_message.partner_ids.ids),
+                    partner_cc_ids=list(scheduled_message.partner_cc_ids.ids),
                     subtype_xmlid='mail.mt_note' if scheduled_message.is_note else 'mail.mt_comment',
                     **{k: v for k, v in json.loads(scheduled_message.notification_parameters or '{}').items() if k in notification_parameters_whitelist},
                 )

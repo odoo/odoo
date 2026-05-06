@@ -1,3 +1,4 @@
+import { proxy, useEffect } from "@odoo/owl";
 import { useLayoutEffect, useRef } from "@web/owl2/utils";
 
 import { patch } from "@web/core/utils/patch";
@@ -47,6 +48,20 @@ patch(Composer.prototype, {
                 this.subjectInputRef?.el,
             ]
         );
+        this.chatterState = proxy({
+            isCcEnabled: false,
+        });
+        useEffect(
+            () => {
+                const allRecipients = (this.props.thread?.suggestedRecipients || []).concat(
+                    this.props.thread?.additionalRecipients || []
+                );
+                if (allRecipients.some((r) => r.recipient_type === "cc")) {
+                    this.chatterState.isCcEnabled = true;
+                }
+            },
+            () => [this.props.thread?.suggestedRecipients, this.props.thread?.additionalRecipients]
+        );
         return super.setup();
     },
 
@@ -63,6 +78,7 @@ patch(Composer.prototype, {
         if (this.subject) {
             postData.subject = this.subject;
         }
+        postData.isCcEnabled = this.chatterState.isCcEnabled;
         return postData;
     },
 

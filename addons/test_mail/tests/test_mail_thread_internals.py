@@ -602,6 +602,7 @@ class TestAPI(ThreadRecipients):
             'email': self.user_employee.email_normalized,
             'name': self.user_employee.name,
             'partner_id': self.partner_employee.id,
+            'recipient_type': 'to',
         }, {
             'create_values': {
                 'company_id': self.env.user.company_id.id,
@@ -610,6 +611,7 @@ class TestAPI(ThreadRecipients):
             'email': 'paulette@test.example.com',
             'name': 'Paulette Vachette',
             'partner_id': False,
+            'recipient_type': 'to',
         }], strict=True):
             self.assertDictEqual(suggestion, expected)
 
@@ -664,6 +666,7 @@ class TestAPI(ThreadRecipients):
                             'email': sugg_partner.email_normalized,
                             'name': sugg_partner.name,
                             'partner_id': sugg_partner.id,
+                            'recipient_type': 'to',
                         }
                     )
                 else:
@@ -730,6 +733,7 @@ class TestAPI(ThreadRecipients):
                     'email': self.test_partner.email_normalized,
                     'name': self.test_partner.name,
                     'partner_id': self.test_partner.id,
+                    'recipient_type': 'to',
                 },
             ],
             # only valid is the customer (and not aliases nor partner with alias email)
@@ -739,6 +743,7 @@ class TestAPI(ThreadRecipients):
                     'email': self.test_partner_archived.email_normalized,
                     'name': self.test_partner_archived.name,
                     'partner_id': self.test_partner_archived.id,
+                    'recipient_type': 'to',
                 },
             ],
         ]
@@ -803,16 +808,19 @@ class TestAPI(ThreadRecipients):
                 'email': self.user_portal.email_normalized,
                 'name': self.user_portal.name,
                 'partner_id': self.user_portal.partner_id.id,
+                'recipient_type': 'to',
             }, {  # replying message to
                 'create_values': {},
                 'email': test_to_tuples[0][1],
                 'name': test_to_tuples[0][0],
                 'partner_id': False,
+                'recipient_type': 'to',
             }, {  # replying message  cc
                 'create_values': {},
                 'email': test_cc_tuples[1][1],
                 'name': test_cc_tuples[1][0],
                 'partner_id': False,
+                'recipient_type': 'cc',
             },
         ], strict=True):
             with self.subTest():
@@ -825,6 +833,7 @@ class TestAPI(ThreadRecipients):
                 'email': self.user_portal.email_normalized,
                 'name': self.user_portal.name,
                 'partner_id': self.user_portal.partner_id.id,
+                'recipient_type': 'to',
             },  # and not author, as it is odoobot's email
         ], strict=True):
             with self.subTest():
@@ -838,11 +847,13 @@ class TestAPI(ThreadRecipients):
                 'email': test_to_tuples[1][1],
                 'name': test_to_tuples[1][0],
                 'partner_id': False,
+                'recipient_type': 'to',
             }, {  # replying message  cc
                 'create_values': {},
                 'email': test_cc_tuples[2][1],
                 'name': test_cc_tuples[2][0],
                 'partner_id': False,
+                'recipient_type': 'cc',
             },  # and not author as he is already follower
         ], strict=True):
             with self.subTest():
@@ -859,16 +870,19 @@ class TestAPI(ThreadRecipients):
                 'email': self.user_portal.email_normalized,
                 'name': self.user_portal.name,
                 'partner_id': self.user_portal.partner_id.id,
+                'recipient_type': 'to',
             }, {  # replying message to
                 'email': test_to_tuples[0][1],
                 'name': test_to_tuples[0][0],
                 'partner_id': new_to.id,
                 'create_values': {},
+                'recipient_type': 'to',
             }, {  # replying message  cc
                 'email': test_cc_tuples[1][1],
                 'name': test_cc_tuples[1][0],
                 'partner_id': new_cc_0.id,
                 'create_values': {},
+                'recipient_type': 'cc',
             },
         ], strict=True):
             with self.subTest():
@@ -908,6 +922,7 @@ class TestAPI(ThreadRecipients):
                     'email': 'outdated@test.example.com',
                     'name': 'Outdated',
                     'partner_id': False,
+                    'recipient_type': 'to',
                 }],
                 'Increase order quantity',
             ), (
@@ -924,11 +939,13 @@ class TestAPI(ThreadRecipients):
                     'email': self.user_portal.email_normalized,
                     'name': self.user_portal.name,
                     'partner_id': self.user_portal.partner_id.id,
+                    'recipient_type': 'to',
                 }, {
                     'create_values': {},
                     'email': self.user_employee.email_normalized,
                     'name': self.user_employee.name,
                     'partner_id': self.user_employee.partner_id.id,
+                    'recipient_type': 'to',
                 }],
                 'Order for 100 chairs',
             ), (
@@ -945,11 +962,13 @@ class TestAPI(ThreadRecipients):
                     'email': self.user_portal.email_normalized,
                     'name': self.user_portal.name,
                     'partner_id': self.user_portal.partner_id.id,
+                    'recipient_type': 'to',
                 }, {
                     'create_values': {},
                     'email': self.user_employee.email_normalized,
                     'name': self.user_employee.name,
                     'partner_id': self.user_employee.partner_id.id,
+                    'recipient_type': 'to',
                 }],
                 'Order for 100 chairs',
             ),
@@ -1080,6 +1099,7 @@ class TestChatterTweaks(ThreadRecipients):
             }
             if has_header:
                 headers['X-Msg-To-Add'] = f'{self.test_partner.email_formatted},{self.test_partner_catchall.email_formatted}'
+                headers['X-Msg-Cc-Add'] = ''
             for recipient in self.test_partner + self.test_partner_catchall:
                 self.assertMailMail(
                     recipient,

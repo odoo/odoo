@@ -478,7 +478,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
                 composer_form.attachment_ids.add(attachment)
             composer = composer_form.save()
 
-        with self.assertQueryCount(admin=57, employee=57):  # tm 55/55
+        with self.assertQueryCount(admin=58, employee=58):  # tm 57/57
             composer._action_send_mail()
 
         # notifications
@@ -600,7 +600,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
             )
             composer = composer_form.save()
 
-        with self.assertQueryCount(admin=55, employee=54):
+        with self.assertQueryCount(admin=56, employee=55):
             composer._action_send_mail()
 
         # notifications
@@ -630,7 +630,7 @@ class TestBaseAPIPerformance(BaseMailPerformance):
             )
             composer = composer_form.save()
 
-        with self.assertQueryCount(admin=70, employee=69):
+        with self.assertQueryCount(admin=71, employee=70):
             composer._action_send_mail()
 
         # notifications
@@ -1004,6 +1004,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
             'name': 'only.email.1@test.example.com',
             'partner_id': new_partner.id,
             'create_values': {},
+            'recipient_type': 'to',
         })
 
     @users('employee')
@@ -1028,7 +1029,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
         record = self.container.with_user(self.env.user)
 
         # about 20 (19?) queries per additional customer group
-        with self.assertQueryCount(admin=55, employee=57):
+        with self.assertQueryCount(admin=56, employee=58):
             record.message_post(
                 body=Markup('<p>Test Post Performances</p>'),
                 message_type='comment',
@@ -1046,7 +1047,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
         template = self.env.ref('test_mail.mail_test_container_tpl')
 
         # about 20 (19 ?) queries per additional customer group
-        with self.assertQueryCount(admin=69, employee=71):
+        with self.assertQueryCount(admin=70, employee=72):
             record.message_post_with_source(
                 template,
                 message_type='comment',
@@ -1182,7 +1183,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
         customer_id = self.customer.id
         user_id = self.user_portal.id
 
-        with self.assertQueryCount(admin=94, employee=94):
+        with self.assertQueryCount(admin=95, employee=95):
             rec = self.env['mail.test.ticket'].create({
                 'name': 'Test',
                 'container_id': container_id,
@@ -1212,7 +1213,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
         self.assertEqual(rec1.message_partner_ids, self.user_portal.partner_id | self.env.user.partner_id)
         self.assertEqual(len(rec1.message_ids), 1)
 
-        with self.assertQueryCount(admin=53, employee=53):
+        with self.assertQueryCount(admin=54, employee=54):
             rec.write({
                 'name': 'Test2',
                 'container_id': self.container.id,
@@ -1249,7 +1250,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
         rec1 = rec.with_context(active_test=False)      # to see inactive records
         self.assertEqual(rec1.message_partner_ids, self.user_portal.partner_id | self.env.user.partner_id)
 
-        with self.assertQueryCount(admin=60, employee=60):
+        with self.assertQueryCount(admin=61, employee=61):
             rec.write({
                 'name': 'Test2',
                 'container_id': container_id,
@@ -1671,6 +1672,7 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                                     "model": "mail.test.simple",
                                     "needaction": True,
                                     "notification_ids": [notif_1.id, notif_2.id],
+                                    "partner_cc_ids": [],
                                     "partner_ids": [],
                                     "pinned_at": False,
                                     "rating_id": False,
@@ -1788,6 +1790,7 @@ class TestMessageToStorePerformance(BaseMailPerformance):
                                     "model": "mail.test.simple",
                                     "needaction": True,
                                     "notification_ids": [notif_1.id, notif_2.id],
+                                    "partner_cc_ids": [],
                                     "partner_ids": [],
                                     "pinned_at": False,
                                     "rating_id": False,
@@ -2013,7 +2016,7 @@ class TestPerformance(BaseMailPostPerformance):
         self.push_to_end_point_mocked.reset_mock()  # reset as executed twice
         self.flush_tracking()
 
-        with self.assertQueryCount(employee=827):  # tm: ??
+        with self.assertQueryCount(employee=836):  # tm: ??
             for ticket, attachments in zip(tickets, attachments_all, strict=True):
                 ticket.message_post(
                     attachments=attachments_vals,

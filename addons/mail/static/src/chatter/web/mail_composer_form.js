@@ -84,7 +84,9 @@ export class MailComposerFormRenderer extends formView.Renderer {
                 // otherwise will remove all suggested recipients since there are no recipients
                 return;
             }
-            const selectedPartnerIds = this.props.record.data.partner_ids.currentIds;
+            const partnerCcIds = this.props.record.data.partner_cc_ids.currentIds;
+            const selectedPartnerIds =
+                this.props.record.data.partner_ids.currentIds.concat(partnerCcIds);
             const selectedPartners = await this.orm.searchRead(
                 "res.partner",
                 [["id", "in", selectedPartnerIds]],
@@ -106,6 +108,7 @@ export class MailComposerFormRenderer extends formView.Renderer {
                         lang: partner.lang,
                         name: partner.name,
                         partner_id: partner.id,
+                        recipient_type: partnerCcIds.includes(partner.id) ? "cc" : "to",
                     };
                 }
                 return recipient;
@@ -148,6 +151,7 @@ export class MailComposerFormRenderer extends formView.Renderer {
                             lang: partner.lang,
                             name: partner.name,
                             partner_id: partner.id,
+                            recipient_type: partnerCcIds.includes(partner.id) ? "cc" : "to",
                         });
                     }
                 }

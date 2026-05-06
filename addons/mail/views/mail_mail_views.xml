@@ -40,6 +40,8 @@
                             <field name="email_to"/>
                             <field name="recipient_ids" widget="many2many_tags"
                                 domain="[('active', '=', True)]"/>
+                            <field name="recipient_cc_ids" widget="many2many_tags"
+                                domain="[('active', '=', True)]"/>
                             <field name="email_cc"/>
                             <field name="reply_to"/>
                             <field name="scheduled_date" placeholder="YYYY-MM-DD HH:MM:SS"/>
@@ -98,6 +100,7 @@
                     <field name="author_id" string="User"/>
                     <field name="message_id" column_invisible="True"/>
                     <field name="recipient_ids" column_invisible="True"/>
+                    <field name="recipient_cc_ids" column_invisible="True"/>
                     <field name="model" column_invisible="True"/>
                     <field name="res_id" column_invisible="True"/>
                     <field name="email_from" column_invisible="True"/>
@@ -134,6 +137,7 @@
                     <group>
                         <field name="author_id"/>
                         <field name="recipient_ids"/>
+                        <field name="recipient_cc_ids"/>
                         <field name="model"/>
                         <field name="res_id"/>
                     </group>

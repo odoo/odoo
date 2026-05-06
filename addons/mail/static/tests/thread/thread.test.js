@@ -529,7 +529,7 @@ test("basic rendering of canceled notification", async () => {
     await click(".o-mail-Message-notification");
     await contains(".o-mail-MessageNotificationPopover");
     await contains(".o-mail-MessageNotificationPopover .fa-trash-o");
-    await contains(".o-mail-MessageNotificationPopover:text('Someone (test@test.be)')");
+    await contains(".o-mail-MessageNotificationPopover:text('ToSomeone(test@test.be)')");
 });
 
 test("first unseen message should be directly preceded by the new message separator if there is a transient message just before it while composer is not focused", async () => {

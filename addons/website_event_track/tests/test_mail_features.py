@@ -99,6 +99,7 @@ class TestTrackMailFeatures(TestEventOnlineCommon, MailCase):
                     'email': 'not.partner@test.example.com',
                     'name': '',
                     'partner_id': False,
+                    'recipient_type': 'to',
                 },
             ],
             # event with a partner, use it
@@ -108,6 +109,7 @@ class TestTrackMailFeatures(TestEventOnlineCommon, MailCase):
                     'email': self.event_customer.email_normalized,
                     'name': self.event_customer.name,
                     'partner_id': self.event_customer.id,
+                    'recipient_type': 'to',
                 },
             ],
             # suggested take both partner and contact_email, as they are different
@@ -117,11 +119,13 @@ class TestTrackMailFeatures(TestEventOnlineCommon, MailCase):
                     'email': self.event_customer.email_normalized,
                     'name': self.event_customer.name,
                     'partner_id': self.event_customer.id,
+                    'recipient_type': 'to',
                 }, {
                     'create_values': {},
                     'email': 'contact@test.example.com',
                     'name': 'Contact',
                     'partner_id': False,
+                    'recipient_type': 'to',
                 },
             ],
             # contact wins (whatever email)
@@ -131,11 +135,13 @@ class TestTrackMailFeatures(TestEventOnlineCommon, MailCase):
                     'email': self.event_customer.email_normalized,
                     'name': self.event_customer.name,
                     'partner_id': self.event_customer.id,
+                    'recipient_type': 'to',
                 }, {
                     'create_values': {},
                     'email': 'speaker@test.example.com',
                     'name': 'Speaker',
                     'partner_id': False,
+                    'recipient_type': 'to',
                 },
             ],
             # partner with wrong email: add speaker as fallback
@@ -145,11 +151,13 @@ class TestTrackMailFeatures(TestEventOnlineCommon, MailCase):
                     'email': self.event_customer_wrongemail.email_normalized,
                     'name': self.event_customer_wrongemail.name,
                     'partner_id': self.event_customer_wrongemail.id,
+                    'recipient_type': 'to',
                 }, {
                     'create_values': {},
                     'email': 'speaker@test.example.com',
                     'name': 'Speaker',
                     'partner_id': False,
+                    'recipient_type': 'to',
                 },
             ],
             # no partner: contact then speaker
@@ -159,6 +167,7 @@ class TestTrackMailFeatures(TestEventOnlineCommon, MailCase):
                     'email': 'contact@test.example.com',
                     'name': 'Contact',
                     'partner_id': False,
+                    'recipient_type': 'to',
                 },
             ],
         ]
