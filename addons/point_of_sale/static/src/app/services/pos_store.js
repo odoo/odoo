@@ -2805,7 +2805,10 @@ export class PosStore extends WithLazyGetterTrap {
 
         const results = [];
         const searchWord = this.searchProductWord.trim();
-        const byCateg = this.models["product.template"].toRaw().getAllBy("pos_categ_ids");
+        const excludedProductIds = new Set(this.getExcludedProductIds());
+        const byCateg = this.models["product.template"]
+            .toRaw()
+            .getAllBy("pos_categ_ids", (p) => p.canBeDisplayed && !excludedProductIds.has(p.id));
         const selectedCategoryIds = !this.selectedCategory
             ? this.models["pos.category"].map((c) => c.id)
             : this.selectedCategory.getAllChildren().map((c) => c.id);

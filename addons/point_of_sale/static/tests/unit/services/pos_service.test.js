@@ -654,4 +654,41 @@ describe("pos_store.js", () => {
             expect(order.lines[1].price_subtotal_incl).toEqual(7.5);
         });
     });
+
+    test("productToDisplayByCateg hides unavailable products", async () => {
+        const store = await setupPosEnv();
+        store.config.iface_group_by_categ = true;
+
+        store.models["product.template"].create({
+            name: "Unavailable Product",
+            available_in_pos: false,
+            active: true,
+            pos_categ_ids: [1],
+        });
+
+        const grouped = store.productToDisplayByCateg;
+        const categEntry = grouped.find(([catId]) => catId == 1);
+        expect(categEntry[1].map((p) => p.name)).not.toInclude("Unavailable Product");
+    });
+
+    test("productToDisplayByCateg hides excluded products", async () => {
+        const store = await setupPosEnv();
+        store.config.iface_group_by_categ = true;
+
+        const product = store.models["product.template"].create({
+            name: "Excluded Product",
+            available_in_pos: true,
+            active: true,
+            pos_categ_ids: [1],
+        });
+
+        let grouped = store.productToDisplayByCateg;
+        let categEntry = grouped.find(([catId]) => catId == 1);
+        expect(categEntry[1].map((p) => p.name)).toInclude("Excluded Product");
+
+        store.getExcludedProductIds = () => [product.id];
+        grouped = store.productToDisplayByCateg;
+        categEntry = grouped.find(([catId]) => catId == 1);
+        expect(categEntry[1].map((p) => p.name)).not.toInclude("Excluded Product");
+    });
 });
