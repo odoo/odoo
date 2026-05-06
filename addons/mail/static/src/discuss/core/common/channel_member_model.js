@@ -24,6 +24,8 @@ export class ChannelMember extends Record {
     /** @type {number} */
     id;
     /** @type {boolean} */
+    is_invitation_pending = false;
+    /** @type {boolean} */
     is_favorite;
     is_pinned = fields.Attr(undefined, {
         compute() {

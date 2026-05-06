@@ -91,6 +91,21 @@ class PublicPageController(http.Controller):
         if group_public_id and group_public_id not in request.env.user.all_group_ids:
             raise request.not_found()
         guest_already_known = channel.env["mail.guest"]._get_guest_from_context()
+        if guest_email and not guest_already_known:
+            # sudo: discuss.channel.member - searching pending members with sudo to get access rights as guest won't have access to.
+            pending_member_sudo = request.env["discuss.channel.member"].sudo().search_fetch(
+                [
+                    ("channel_id", "=", channel.id),
+                    ("is_invitation_pending", "=", True),
+                    ("guest_id.email", "=", guest_email),
+                ],
+                limit=1,
+            )
+            if pending_member_sudo:
+                pending_guest_sudo = pending_member_sudo.guest_id
+                pending_guest_sudo._set_auth_cookie()
+                guest_from_context = pending_guest_sudo.sudo(False)
+                channel = channel.with_context(guest=guest_from_context)
         with replace_exceptions(UserError, by=NotFound()):
             # sudo: mail.guest - creating a guest and its member inside a channel of which they have the token
             __, guest = channel.sudo()._find_or_create_persona_for_channel(
