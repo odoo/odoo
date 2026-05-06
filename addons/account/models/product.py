@@ -273,11 +273,11 @@ class ProductProduct(models.Model):
         product_taxes_after_fp=None,
     ):
         if not product_taxes:
-            return product_price_unit
+            return self.currency_id.round(product_price_unit)
 
         if product_taxes_after_fp is None:
             if not fiscal_position:
-                return product_price_unit
+                return self.currency_id.round(product_price_unit)
 
             product_taxes_after_fp = fiscal_position.map_tax(product_taxes)
 

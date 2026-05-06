@@ -235,13 +235,13 @@ class TestSalePrices(SaleCommon):
 
     def test_negative_discounts(self):
         """aka surcharges"""
-        self.discount = -10
+        self.discount = -35
         rule = self._create_discount_pricelist_rule()
         order_line = self.env['sale.order.line'].create({
             'order_id': self.empty_order.id,
             'product_id': self.product.id,
         })
-        self.assertEqual(order_line.price_unit, 22.0)
+        self.assertEqual(order_line.price_unit, 27.0)
         self.assertEqual(order_line.pricelist_item_id, rule)
 
         # Even when the discount is supposed to be shown
@@ -250,8 +250,18 @@ class TestSalePrices(SaleCommon):
             'order_id': self.empty_order.id,
             'product_id': self.product.id,
         })
-        self.assertEqual(order_line.price_unit, 22.0)
+        self.assertEqual(order_line.price_unit, 27.0)
         self.assertEqual(order_line.pricelist_item_id, rule)
+
+        product = self._create_product(
+            name="Test Product Rounding",
+            list_price=208.05,
+        )
+        order_line2 = self.env['sale.order.line'].create({
+            'order_id': self.empty_order.id,
+            'product_id': product.id,
+        })
+        self.assertEqual(order_line2.price_unit, 280.87)
 
     def test_pricelist_based_on_another(self):
         """ Test price and discount are correctly applied with a pricelist based on an other one"""
