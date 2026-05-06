@@ -15,7 +15,7 @@ test("Total on receipt always incl", async () => {
         props: { orderUuid: order.uuid },
     });
     let total = queryOne(".feedback-screen .amount-container .amount");
-    expect(total).toHaveText("17.85");
+    expect(total).toHaveText("$17.85");
     destroy(feedbackScreen);
 
     // create new feedback screen with tax excluded
@@ -24,7 +24,7 @@ test("Total on receipt always incl", async () => {
         props: { orderUuid: order.uuid },
     });
     total = queryOne(".feedback-screen .amount-container .amount");
-    expect(total).toHaveText("17.85");
+    expect(total).toHaveText("$17.85");
 });
 
 test("canEditPayment", async () => {
