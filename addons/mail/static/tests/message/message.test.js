@@ -1164,21 +1164,21 @@ test("add and remove bookmark from message", async () => {
     await openDiscuss(channelId);
     await contains(".o-mail-Message");
     await rightClick(".o-mail-Message");
-    await contains(".o-dropdown-item:contains('Bookmark')");
-    await contains(".o-dropdown-item:contains('Bookmark')" + " i.fa-bookmark-o");
+    await contains(".o-dropdown-item:text('Bookmark')");
+    await contains(".o-dropdown-item:text('Bookmark') i.fa-bookmark-o");
     await contains("button:has(:text('Bookmarks'))", { contains: [".badge", { count: 0 }] });
-    await click(".o-dropdown-item:contains('Bookmark')");
+    await click(".o-dropdown-item:text('Bookmark')");
     await contains("button:has(:text('Bookmarks'))", { contains: [".badge:text('1')"] });
     await waitStoreFetch([["add_bookmark", { message_id: messageId }]]);
-    await contains(".o-mail-Message");
+    await contains(".o-mail-Message [title='Bookmarked']");
     await rightClick(".o-mail-Message");
-    await contains(".o-dropdown-item:contains('Remove from Bookmarks')" + " i.fa-bookmark");
-    await click(".o-dropdown-item:contains('Remove from Bookmarks')");
+    await contains(".o-dropdown-item:text('Remove from Bookmarks') i.fa-bookmark");
+    await click(".o-dropdown-item:text('Remove from Bookmarks')");
     await contains("button:has(:text('Bookmarks'))", { contains: [".badge", { count: 0 }] });
     await waitStoreFetch([["remove_bookmark", { message_id: messageId }]]);
-    await contains(".o-mail-Message");
+    await contains(".o-mail-Message:not(:has([title='Bookmarked']))");
     await rightClick(".o-mail-Message");
-    await contains(".o-dropdown-item:contains('Bookmark')" + " i.fa-bookmark-o");
+    await contains(".o-dropdown-item:text('Bookmark') i.fa-bookmark-o");
 });
 
 test("can bookmark a persistent message without thread", async () => {
@@ -2504,7 +2504,9 @@ test("(edited) label is not included in editor when editing an already-edited me
     await focus(".o-mail-Message  .o-mail-Composer-html.odoo-editor-editable");
     let editor = {
         document,
-        editable: document.querySelector(".o-mail-Message .o-mail-Composer-html.odoo-editor-editable"),
+        editable: document.querySelector(
+            ".o-mail-Message .o-mail-Composer-html.odoo-editor-editable"
+        ),
     };
     await htmlInsertText(editor, " world");
     await click(".o-mail-Message button:text('save')");
@@ -2514,7 +2516,9 @@ test("(edited) label is not included in editor when editing an already-edited me
     await focus(".o-mail-Message .o-mail-Composer-html.odoo-editor-editable");
     editor = {
         document,
-        editable: document.querySelector(".o-mail-Message .o-mail-Composer-html.odoo-editor-editable"),
+        editable: document.querySelector(
+            ".o-mail-Message .o-mail-Composer-html.odoo-editor-editable"
+        ),
     };
     expect(editor.editable.querySelectorAll(".o-mail-Message-edited").length).toBe(0);
     // CTRL+A selects all — then type replacement text
