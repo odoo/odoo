@@ -3,27 +3,33 @@
 from odoo import api, fields, models
 
 
-class CalendarEventDeleteWizard(models.TransientModel):
-    _name = 'calendar.event.delete.wizard'
+class CalendarEventCancelWizard(models.TransientModel):
+    _name = 'calendar.event.cancel.wizard'
     _inherit = ['mail.composer.mixin']
-    _description = 'Calendar Event Delete Wizard'
+    _description = 'Calendar Event Cancel Wizard'
 
     calendar_event_id = fields.Many2one('calendar.event', 'Calendar Event')
-    delete = fields.Selection([('self_only', 'Delete this event'), ('future_events', 'Delete this and following events'), ('all_events', 'Delete all the events')], default='self_only')
-    multi_delete_wizard_id = fields.Many2one('calendar.event.multi.delete.wizard', ondelete='cascade')
+    multi_cancel_wizard_id = fields.Many2one('calendar.event.multi.cancel.wizard', ondelete='cascade')
     recipient_ids = fields.Many2many(
         'res.partner',
         string="Recipients",
         compute='_compute_recipient_ids',
         readonly=False,
     )
+    recurrence_choice = fields.Selection([('self_only', 'This event'), ('future_events', 'This and following events'), ('all_events', 'All the events')], default='self_only')
+    requested_action = fields.Selection([('cancel', 'cancel'), ('delete', 'delete')])
     template_id = fields.Many2one('mail.template', default=lambda self: self.env.ref('calendar.calendar_template_delete_event', raise_if_not_found=False))
 
-    def action_proceed_delete_choice(self):
+    def action_proceed_recurrence_choice(self):
         # Return if there are multiple attendees or if the organizer's partner_id differs
+        cancellation_parameters = {
+            'attendee_id': self.calendar_event_id.partner_id.id,
+            'next_action': self.env.context.get('next_action'),
+            'requested_action': self.requested_action,
+        }
         if self.calendar_event_id.attendees_count != 1 or self.calendar_event_id.user_id.partner_id != self.calendar_event_id.partner_ids:
-            return self.calendar_event_id.action_unlink(self.calendar_event_id.partner_id.id, self.env.context.get('next_action'), self.delete)
-        return self.action_delete()
+            return self.calendar_event_id.action_open_cancel_wizard(recurrence_choice=self.recurrence_choice, **cancellation_parameters)
+        return self._get_calendar_events().action_open_cancel_wizard(send_email=False, **cancellation_parameters)
 
     @api.depends('calendar_event_id')
     def _compute_recipient_ids(self):
@@ -53,6 +59,21 @@ class CalendarEventDeleteWizard(models.TransientModel):
                 options={'post_process': True},
             )[wizard.calendar_event_id.id]
 
+    def _get_calendar_events(self):
+        calendar_events = self.env['calendar.event']
+        if self.recurrence_choice in ['self_only', False]:
+            calendar_events += self.calendar_event_id
+        elif self.recurrence_choice == 'future_events':
+            calendar_events += self.calendar_event_id.recurrence_id.calendar_event_ids.filtered(lambda event: event.start >= self.calendar_event_id.start)
+        elif self.recurrence_choice == 'all_events':
+            calendar_events += self.calendar_event_id.recurrence_id.calendar_event_ids
+        return calendar_events
+
+    def action_cancel(self):
+        self.ensure_one()
+        self._get_calendar_events().with_context(block_automatic_cancellation_email=True).write({'active': False})
+        return self.env.context.get('next_action')
+
     def action_delete(self):
         """
         Delete the event based on the specified deletion type.
@@ -60,7 +81,7 @@ class CalendarEventDeleteWizard(models.TransientModel):
         :return: Client action to reload the page.
         """
         self.ensure_one()
-        self.calendar_event_id._unlink_or_archive(self.delete)
+        self.calendar_event_id._action_unlink(self.recurrence_choice)
         return self.env.context.get('next_action')
 
     def _prepare_mail_values(self):
@@ -73,8 +94,17 @@ class CalendarEventDeleteWizard(models.TransientModel):
             'subject': self.subject,
         }
 
+    def action_send_mail(self):
+        self.ensure_one()
+        self.env['mail.mail'].sudo().create([self._prepare_mail_values()])
+
+    def action_send_mail_and_cancel(self):
+        self.ensure_one()
+        self.action_send_mail()
+        return self.action_cancel()
+
     def action_send_mail_and_delete(self):
         """Send the composed email and delete the event based on the specified deletion type."""
         self.ensure_one()
-        self.env['mail.mail'].sudo().create([self._prepare_mail_values()])
+        self.action_send_mail()
         return self.action_delete()

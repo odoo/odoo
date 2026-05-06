@@ -1,30 +1,25 @@
-import { useDeleteRecords } from "@web/views/view_hook";
 import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
 
 /**
  * Display a composer containing the cancellation template email if required. The event is declined if the user is a regular attendee.
  */
-export function useDeleteCalendarEvent({ model }) {
+export function useCancelCalendarEvent() {
     const actionService = useService("action");
-    if (!model.dialog) {
-        model.dialog = useService("dialog");  // To get the default values of the delete confirmation dialog.
-    }
-    const deleteRecordWithConfirmation = useDeleteRecords(model);
     const orm = useService("orm");
 
-    return async ({ resId, currentAttendeeId, currentStatus, organizerId, partnerIds, recurrency, start, deleteConfirmationDialogProps, nextAction }) => {
+    return async ({ requestedAction, resId, currentAttendeeId, currentStatus, organizerId, partnerIds, recurrency, start, fallback, nextAction }) => {
         if (user.isAdmin || user.userId === organizerId) {
             if (
                 start >= luxon.DateTime.now()
                 && (recurrency || !(partnerIds.length === 1 && partnerIds[0] === user.partnerId))
             ) {
-                const actionUnlink = await orm.call("calendar.event", "action_unlink", [resId, currentAttendeeId, nextAction]);
-                if (actionUnlink && actionUnlink.type) {
-                    return actionService.doAction(actionUnlink);
-                };
+                const actionOpenCancelWizard = await orm.call("calendar.event", "action_open_cancel_wizard", [resId, requestedAction, currentAttendeeId, nextAction]);
+                if (actionOpenCancelWizard && actionOpenCancelWizard.type) {
+                    return actionService.doAction(actionOpenCancelWizard);
+                }
             } else {
-                deleteRecordWithConfirmation(deleteConfirmationDialogProps);
+                fallback();
             }
         } else if (currentAttendeeId && currentStatus !== "declined") {
             await orm.call("calendar.attendee", "do_decline", [currentAttendeeId]);
@@ -36,28 +31,24 @@ export function useDeleteCalendarEvent({ model }) {
 /**
  * Display modals to send cancellation emails or chose the deletion type for recurring events.
  */
-export function useDeleteCalendarEvents({ model }) {
+export function useCancelCalendarEvents() {
     const actionService = useService("action");
-    if (!model.dialog) {
-        model.dialog = useService("dialog");  // To get the default values of the delete confirmation dialog.
-    }
-    const deleteRecordWithConfirmation = useDeleteRecords(model);
     const orm = useService("orm");
 
-    return async ({ records, deleteConfirmationDialogProps }) => {
+    return async ({ requestedAction, records, fallback }) => {
         const declinedAttendeeIds = [];
-        let isUnlinkActionRequired = false;
-        const unlinkActionEventIds = [];
+        let isCancelWizardRequired = false;
+        const cancelWizardEventIds = [];
         const now = luxon.DateTime.now();
         for (const record of records) {
             if (user.isAdmin || user.userId === record.data.user_id.id) {
-                unlinkActionEventIds.push(record.resId);
+                cancelWizardEventIds.push(record.resId);
                 const partnerIds = record.data.partner_ids.resIds;
                 if (
                     record.data.start >= now
                     && (record.data.recurrency || !(partnerIds.length === 1 && partnerIds[0] === user.partnerId))
                 ) {
-                    isUnlinkActionRequired = true;
+                    isCancelWizardRequired = true;
                 }
             } else {
                 record.selected = false;
@@ -69,13 +60,13 @@ export function useDeleteCalendarEvents({ model }) {
         if (declinedAttendeeIds.length > 0) {
             await orm.call("calendar.attendee", "do_decline", [declinedAttendeeIds]);
         }
-        if (isUnlinkActionRequired) {
-            const actionUnlink = await orm.call("calendar.event", "action_unlink", [unlinkActionEventIds]);
-            if (actionUnlink && actionUnlink.type) {
-                actionService.doAction(actionUnlink);
+        if (isCancelWizardRequired) {
+            const actionOpenCancelWizard = await orm.call("calendar.event", "action_open_cancel_wizard", [cancelWizardEventIds, requestedAction]);
+            if (actionOpenCancelWizard && actionOpenCancelWizard.type) {
+                actionService.doAction(actionOpenCancelWizard);
             }
         } else if (records.length > 0) {
-            deleteRecordWithConfirmation(deleteConfirmationDialogProps);
+            fallback();
         } else {
             actionService.doAction("soft_reload");
         }

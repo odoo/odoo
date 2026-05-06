@@ -1,7 +1,8 @@
 import { _t } from "@web/core/l10n/translation";
 import { AttendeeCalendarSidePanel } from "@calendar/views/attendee_calendar/side_panel/attendee_calendar_side_panel";
 import { CalendarController } from "@web/views/calendar/calendar_controller";
-import { useDeleteCalendarEvent } from "@calendar/views/hooks";
+import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { useCancelCalendarEvent } from "@calendar/views/hooks";
 import { user } from "@web/core/user";
 import { useService } from "@web/core/utils/hooks";
 import { onWillStart } from "@odoo/owl";
@@ -17,7 +18,7 @@ export class AttendeeCalendarController extends CalendarController {
     setup() {
         super.setup();
         this.actionService = useService("action");
-        this.deleteCalendarEvent = useDeleteCalendarEvent({ model: this.model });
+        this.cancelCalendarEvent = useCancelCalendarEvent();
         this.orm = useService("orm");
         onWillStart(async () => {
             this.isSystemUser = await user.hasGroup("base.group_system");
@@ -89,7 +90,8 @@ export class AttendeeCalendarController extends CalendarController {
      * @override
      */
     async deleteRecord(record) {
-        await this.deleteCalendarEvent({
+        await this.cancelCalendarEvent({
+            requestedAction: "delete",
             resId: record.id,
             currentAttendeeId: record.calendarAttendeeId,
             currentStatus: record.attendeeStatus,
@@ -97,7 +99,7 @@ export class AttendeeCalendarController extends CalendarController {
             partnerIds: record.rawRecord.partner_ids,
             recurrency: record.rawRecord.recurrency,
             start: record.start,
-            deleteConfirmationDialogProps: this.deleteConfirmationDialogProps(record),
+            fallback: () => this.displayDialog(ConfirmationDialog, this.deleteConfirmationDialogProps(record)),
         });
     }
 

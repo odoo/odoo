@@ -1,12 +1,26 @@
 /** @odoo-module **/
 
 import { ListController } from "@web/views/list/list_controller";
-import { useDeleteCalendarEvents } from "@calendar/views/hooks";
+import { useCancelCalendarEvents } from "@calendar/views/hooks";
 
 export class CaledarListController extends ListController {
     setup() {
         super.setup();
-        this.deleteCalendarEvents = useDeleteCalendarEvents({ model: this.model });
+        this.cancelCalendarEvents = useCancelCalendarEvents();
+    }
+
+    getStaticActionMenuItems() {
+        const actionMenuItems = super.getStaticActionMenuItems(...arguments);
+        if (actionMenuItems.archive.isAvailable) {
+            actionMenuItems.archive.callback = async () => {
+                this.cancelCalendarEvents({
+                    requestedAction: "cancel",
+                    records: this.model.root.selection,
+                    fallback: () => this.model.root.toggleArchiveWithConfirmation(true, this.archiveDialogProps),
+                });
+            };
+        }
+        return actionMenuItems;
     }
 
     get modelOptions() {
@@ -17,9 +31,10 @@ export class CaledarListController extends ListController {
     }
 
     async onDeleteSelectedRecords() {
-        this.deleteCalendarEvents({
+        this.cancelCalendarEvents({
+            requestedAction: "delete",
             records: this.model.root.selection,
-            deleteConfirmationDialogProps: this.deleteConfirmationDialogProps,
+            fallback: () => this.deleteRecordsWithConfirmation(this.deleteConfirmationDialogProps),
         });
     }
 }
