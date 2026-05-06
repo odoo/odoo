@@ -16,7 +16,8 @@
                 >
 
                     <div
-                        class="o_searchview form-control d-flex align-items-center py-1 border-end-0 gap-1">
+                        class="o_searchview form-control d-flex align-items-center py-1 border-end-0 gap-1"
+                        t-on-click="this.onInputContainerClick">
                         <button class="btn border-0 p-0" t-on-click="this.onSearchClick">
                             <i class="oi oi-search me-2"></i>
                         </button>
@@ -25,7 +26,7 @@
                             <t t-foreach="this.facets" t-as="facet" t-key="facet.id">
                                 <DashboardFacet facet="facet"
                                     clearFilter="() => this.clearFilter(facet.id)"
-                                    onClick.bind="this.openFilterValueDropdown" />
+                                    onClick.bind="this.onSearchClick" />
                             </t>
                             <input type="text"
                                 class="o_searchview_input o_input d-print-none flex-grow-1 w-auto border-0"
