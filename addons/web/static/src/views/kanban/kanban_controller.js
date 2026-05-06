@@ -25,7 +25,7 @@ import { KanbanRenderer } from "./kanban_renderer";
 import { useProgressBar } from "./progress_bar_hook";
 import { SelectionBox } from "@web/views/view_components/selection_box";
 
-import { Component, onMounted, onWillStart, useEffect } from "@odoo/owl";
+import { Component, onMounted, onWillStart, proxy, useEffect } from "@odoo/owl";
 import { QuickCreateState } from "./kanban_record_quick_create";
 
 const QUICK_CREATE_FIELD_TYPES = ["char", "boolean", "many2one", "selection", "many2many"];
@@ -100,7 +100,9 @@ export class KanbanController extends Component {
             }
         }
 
-        this.model = useModelWithSampleData(KanbanSampleModel, this.modelParams, this.modelOptions);
+        this.model = proxy(
+            useModelWithSampleData(KanbanSampleModel, this.modelParams, this.modelOptions)
+        );
         if (archInfo.progressAttributes) {
             const { activeBars } = this.props.state || {};
             this.progressBarState = useProgressBar(
@@ -216,8 +218,8 @@ export class KanbanController extends Component {
             "active" in this.props.fields
                 ? !this.props.fields.active.readonly
                 : "x_active" in this.props.fields
-                  ? !this.props.fields.x_active.readonly
-                  : false;
+                ? !this.props.fields.x_active.readonly
+                : false;
         useSubEnv({ model: this.model });
         this.exportRecords = useExportRecords(this.env, this.props.context, () =>
             this.getExportableFields()

@@ -1,4 +1,4 @@
-import { expect, queryAllTexts, test } from "@odoo/hoot";
+import { animationFrame, expect, queryAllTexts, test } from "@odoo/hoot";
 import {
     clickSave,
     contains,
@@ -140,6 +140,7 @@ test("BadgesMany2OneField: with domain and badge_limit option", async () => {
     expect(".o_select_menu").toHaveCount(0);
 
     await contains(".o_field_widget[name=product_min_id] input").edit("0");
+    await animationFrame();
     expect("span.o_selection_badge").toHaveCount(0);
     expect(".o_select_menu").toHaveCount(1);
 

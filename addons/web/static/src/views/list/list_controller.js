@@ -27,7 +27,7 @@ import { OfflineActionHelper } from "@web/views/offline_action_helper";
 import { SelectionBox } from "@web/views/view_components/selection_box";
 import { useExportRecords, useDeleteRecords } from "@web/views/view_hook";
 
-import { Component, onWillPatch, onWillStart } from "@odoo/owl";
+import { Component, onWillPatch, onWillStart, proxy } from "@odoo/owl";
 
 // -----------------------------------------------------------------------------
 
@@ -75,7 +75,9 @@ export class ListController extends Component {
         this.onOpenFormView = this.openRecord.bind(this);
         this.editable = (!this.props.readonly && this.archInfo.editable) || false;
         this.hasOpenFormViewButton = this.editable ? this.archInfo.openFormView : false;
-        this.model = useModelWithSampleData(this.props.Model, this.modelParams, this.modelOptions);
+        this.model = proxy(
+            useModelWithSampleData(this.props.Model, this.modelParams, this.modelOptions)
+        );
 
         // In multi edition, we save or notify invalidity directly when a field is updated, which
         // occurs on the change event for input fields. But we don't want to do it when clicking on
@@ -102,8 +104,8 @@ export class ListController extends Component {
             "active" in this.props.fields
                 ? !this.props.fields.active.readonly
                 : "x_active" in this.props.fields
-                  ? !this.props.fields.x_active.readonly
-                  : false;
+                ? !this.props.fields.x_active.readonly
+                : false;
         useSubEnv({ model: this.model }); // do this in useModelWithSampleData?
         useViewButtons(this.rootRef, {
             beforeExecuteAction: this.beforeExecuteActionButton.bind(this),

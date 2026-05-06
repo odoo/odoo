@@ -90,7 +90,7 @@
                     quickCreateState="this.quickCreateState"
                     progressBarState="this.progressBarState"
                 />
-                <t t-elif="this.model.couldNotLoadRootOffline()">
+                <t t-elif="this.model.couldNotLoadRootOffline">
                     <OfflineActionHelper/>
                 </t>
             </Layout>

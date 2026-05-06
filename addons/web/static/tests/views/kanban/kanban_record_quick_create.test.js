@@ -2796,8 +2796,7 @@ test("nocontent helper is displayed again after canceling quick create", async (
     });
 });
 
-test.tags("owl3");
-test.todo("empty grouped kanban with sample data and click quick create", async () => {
+test("empty grouped kanban with sample data and click quick create", async () => {
     onRpc("web_read_group", function ({ kwargs, parent }) {
         // override web_read_group to return empty groups, as this is
         // the case for several models (e.g. project.task grouped

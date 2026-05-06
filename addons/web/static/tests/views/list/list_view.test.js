@@ -20467,8 +20467,7 @@ For example, if the date is Mar 11 and you enter "+=2d", it will be updated to M
     ]);
 });
 
-test.tags("owl3");
-test.todo(`custom button that creates record in list with sample data`, async () => {
+test(`custom button that creates record in list with sample data`, async () => {
     Foo._records = [];
     onRpc("custom_create", () => {
         MockServer.env.foo.create({ foo: "new record" });

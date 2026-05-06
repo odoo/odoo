@@ -28,9 +28,6 @@ export class DynamicGroupList extends DynamicList {
         this.groups = [];
         this._nbRecordsMatchingDomain = null;
         this._setData(data);
-
-        makeReactive(this, "groups", signal.Array);
-        makeReactive(this, "_nbRecordsMatchingDomain");
     }
 
     /**

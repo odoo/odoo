@@ -171,7 +171,7 @@ export class RelationalModel extends Model {
         this.initialSampleGroups = undefined; // real groups to populate with sample records
 
         this._urgentSave = false;
-        this.couldNotLoadRootOffline = signal(false);
+        this.couldNotLoadRootOffline = false;
     }
 
     // -------------------------------------------------------------------------
@@ -204,7 +204,6 @@ export class RelationalModel extends Model {
             this.orm.setGroups(this.initialSampleGroups);
         }
         const config = this._getNextConfig(this.config, params);
-        const hasRoot = !!this.root;
         if (!this.isReady()) {
             // We want the control panel to be displayed directly, without waiting for data to be
             // loaded, for instance to be able to interact with the search view. For that reason, we
@@ -222,18 +221,16 @@ export class RelationalModel extends Model {
             data = await this.keepLast.add(this._loadData(config, cache));
         } catch (e) {
             if (e instanceof ConnectionLostError) {
-                this.couldNotLoadRootOffline.set(true);
+                this.couldNotLoadRootOffline = true;
+                this.notify();
             }
             throw e;
         }
-        this.couldNotLoadRootOffline.set(false);
+        this.couldNotLoadRootOffline = false;
         this.root = this._createRoot(config, data);
         resolve({ root: this.root, loadId: config.loadId });
         this.config = config;
         await this.hooks.onRootLoaded(this.root);
-        if (hasRoot) {
-            this.notify();
-        }
     }
 
     // -------------------------------------------------------------------------

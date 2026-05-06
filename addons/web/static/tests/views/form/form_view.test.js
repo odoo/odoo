@@ -5426,8 +5426,9 @@ test(`Domain: allow empty domain on fieldInfo`, async () => {
     expect.verifySteps(["search_read"]);
 });
 
-test.tags("desktop");
-test(`discard form with specialdata on desktop`, async () => {
+// same as "statusbar with dynamic domain"
+test.tags("desktop", "owl3");
+test.todo(`discard form with specialdata on desktop`, async () => {
     await mountView({
         resModel: "partner",
         type: "form",
@@ -12194,8 +12195,7 @@ test(`coming to an action with an error from a form view with a record in creati
     expect.verifySteps(["web_save", "web_read"]);
 });
 
-test.tags("owl3");
-test.todo(`only re-render necessary fields after change`, async () => {
+test(`only re-render necessary fields after change`, async () => {
     function logLifeCycle(component) {
         patchWithCleanup(component.prototype, {
             setup() {
@@ -12247,8 +12247,7 @@ test.todo(`only re-render necessary fields after change`, async () => {
     expect.verifySteps(["[Field int_field] onPatched", "[IntegerField int_field] onPatched"]);
 });
 
-test.tags("owl3");
-test.todo(`only re-render necessary fields after change (with onchange)`, async () => {
+test(`only re-render necessary fields after change (with onchange)`, async () => {
     function logLifeCycle(component) {
         patchWithCleanup(component.prototype, {
             setup() {

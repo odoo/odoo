@@ -3,7 +3,6 @@ import { _t } from "@web/core/l10n/translation";
 import { ConnectionLostError } from "@web/core/network/rpc";
 import { x2ManyCommands } from "@web/core/orm_service";
 import { unique } from "@web/core/utils/arrays";
-import { makeReactive } from "@web/owl2/utils";
 import { DataPoint } from "./datapoint";
 import { Operation } from "./operation";
 import { Record as RelationalRecord } from "./record";
@@ -31,9 +30,6 @@ export class DynamicList extends DataPoint {
         this.count = 0;
         this.isDomainSelected = false;
         this.evalContext = this.context;
-
-        makeReactive(this, "count");
-        makeReactive(this, "isDomainSelected");
     }
 
     // -------------------------------------------------------------------------
