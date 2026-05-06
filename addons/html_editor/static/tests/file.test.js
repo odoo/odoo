@@ -389,3 +389,14 @@ describe("zero width no-break space", () => {
         );
     });
 });
+
+test("Should delete the file box", async () => {
+    const { el } = await setupEditor(
+        '<p>[ab<span data-embedded="file" class="o_file_box" contenteditable="false"></span>x<span data-embedded="file" class="o_file_box" contenteditable="false"></span>]</p>',
+        { config: { ...configWithEmbeddedFile, resources: {} } } // disable embedded component rendering
+    );
+    press("Backspace");
+    expect(getContent(el)).toBe(
+        `<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`
+    );
+});
