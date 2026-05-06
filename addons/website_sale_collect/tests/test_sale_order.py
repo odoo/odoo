@@ -240,3 +240,28 @@ class TestSaleOrder(ClickAndCollectCommon):
         })
         so.set_pickup_location(pickup_location_data)
         self.assertEqual(so.fiscal_position_id, fp_company_2)
+
+    def test_partner_email_confirmation(self):
+        """Partner receives email confirmation for in_store delivery."""
+        self.company.stock_move_email_validation = True
+        wh_partner = self.warehouse.partner_id
+        new_so = self._create_in_store_delivery_order()
+        new_so.set_pickup_location(
+            json.dumps({
+                "id": self.warehouse.id,
+                "name": wh_partner.name,
+                "street": "New test street",
+                "zip_code": wh_partner.zip,
+                "city": "New test city",
+                "state": wh_partner.state_id.code,
+                "country_code": wh_partner.country_code,
+            })
+        )
+        new_so.action_confirm()
+        new_so.picking_ids.button_validate()
+        self.assertTrue(
+            any(
+                partner.email == self.partner.email
+                for partner in new_so.picking_ids.message_ids.notified_partner_ids
+            )
+        )
