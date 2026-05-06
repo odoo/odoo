@@ -53,7 +53,6 @@ export class PosOrder extends PosOrderAccounting {
         super.initState();
         // !!Keep all uiState in one object!!
         this.uiState = {
-            lastPrints: [],
             lineToRefund: {},
             displayed: this.state !== "cancel",
             booked: false,
@@ -681,6 +680,21 @@ export class PosOrder extends PosOrderAccounting {
     }
     setInternalNote(note) {
         this.internal_note = note || "";
+    }
+
+    get lastPrints() {
+        return this.print_history || [];
+    }
+    pushLastPrints(data) {
+        if (!this.print_history) {
+            this.print_history = [];
+        }
+        this.print_history.push({
+            addedQuantity: data.addedQuantity,
+            noteChange: data.noteChange,
+            noteUpdate: data.noteUpdate,
+            removedQuantity: data.removedQuantity,
+        });
     }
 
     get showChange() {

@@ -339,12 +339,12 @@ export class GeneratePrinterData {
             !orderChange.noteUpdate.length &&
             !orderChange.internal_note &&
             !orderChange.general_customer_note &&
-            order.uiState.lastPrints
+            order.lastPrints.length
         ) {
-            orderChange = [order.uiState.lastPrints.at(-1)];
+            orderChange = [order.lastPrints.at(-1)];
             reprint = true;
         } else {
-            order.uiState.lastPrints.push(orderChange);
+            order.pushLastPrints(orderChange);
             orderChange = [orderChange];
         }
 

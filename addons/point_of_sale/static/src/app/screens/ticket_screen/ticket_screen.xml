@@ -214,7 +214,7 @@
                                 <BackButton t-if="this.ui.isSmall" onClick="() => this.pos.onClickBackButton()"/>
                                 <button class="button btn btn-secondary btn-lg d-flex flex-row align-items-center justify-content-center"
                                     t-on-click="() => this.onClickReprintAll(_selectedSyncedOrder)"
-                                    t-if="this.pos.ticketPrinter.hasPreparationPrinters and _selectedSyncedOrder.uiState.lastPrints.length">
+                                    t-if="this.pos.ticketPrinter.hasPreparationPrinters and _selectedSyncedOrder.lastPrints.length">
                                     <i class="fa fa-cutlery" aria-hidden="true"/>
                                 </button>
                                 <button class="button validation load-order-button w-100 btn btn-lg btn-primary py-3"
