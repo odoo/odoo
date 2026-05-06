@@ -3,7 +3,7 @@ import { x2ManyCommands } from "@web/core/orm_service";
 import { intersection } from "@web/core/utils/arrays";
 import { omit, pick } from "@web/core/utils/objects";
 import { completeActiveFields } from "@web/model/relational_model/utils";
-import { makeReactive } from "@web/owl2/utils";
+import { makeComputed, makeReactive } from "@web/owl2/utils";
 import { DataPoint } from "./datapoint";
 import { fromUnityToServerValues, getBasicEvalContext, getId, patchActiveFields } from "./utils";
 import { ConnectionLostError } from "@web/core/network/rpc";
@@ -104,6 +104,10 @@ export class StaticList extends DataPoint {
         this._extendedRecords = new Set();
 
         this.count = this.resIds.length;
+        /** @type {RelationalRecord | null} */
+        this.editedRecord = null;
+        /** @type {import("@web/core/context").Context} */
+        this.evalContext = {};
         this.handleField = Object.keys(this.activeFields).find(
             (fieldName) => this.activeFields[fieldName].isHandle
         );
@@ -115,6 +119,13 @@ export class StaticList extends DataPoint {
 
         makeReactive(this, "count");
         makeReactive(this, "records", signal.Array);
+
+        makeComputed(this, "editedRecord", () => this.records.find((record) => record.isInEdition));
+        makeComputed(this, "evalContext", () => {
+            const evalContext = getBasicEvalContext(this.config);
+            evalContext.parent = this._parent.evalContext;
+            return evalContext;
+        });
     }
 
     // -------------------------------------------------------------------------
@@ -123,16 +134,6 @@ export class StaticList extends DataPoint {
 
     get currentIds() {
         return this._currentIds;
-    }
-
-    get editedRecord() {
-        return this.records.find((record) => record.isInEdition);
-    }
-
-    get evalContext() {
-        const evalContext = getBasicEvalContext(this.config);
-        evalContext.parent = this._parent.evalContext;
-        return evalContext;
     }
 
     get limit() {

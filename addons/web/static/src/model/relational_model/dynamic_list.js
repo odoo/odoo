@@ -3,7 +3,7 @@ import { _t } from "@web/core/l10n/translation";
 import { ConnectionLostError } from "@web/core/network/rpc";
 import { x2ManyCommands } from "@web/core/orm_service";
 import { unique } from "@web/core/utils/arrays";
-import { makeReactive } from "@web/owl2/utils";
+import { makeComputed, makeReactive } from "@web/owl2/utils";
 import { DataPoint } from "./datapoint";
 import { Operation } from "./operation";
 import { Record as RelationalRecord } from "./record";
@@ -19,8 +19,6 @@ export class DynamicList extends DataPoint {
      * @type {DataPoint["setup"]}
      */
     setup() {
-        super.setup(...arguments);
-
         this.handleField = Object.keys(this.activeFields).find(
             (fieldName) => this.activeFields[fieldName].isHandle
         );
@@ -31,9 +29,14 @@ export class DynamicList extends DataPoint {
         this.count = 0;
         this.isDomainSelected = false;
         this.evalContext = this.context;
+        this.editedRecord = null;
+        this.selection = [];
 
         makeReactive(this, "count");
         makeReactive(this, "isDomainSelected");
+
+        makeComputed(this, "editedRecord", () => this.records.find((record) => record.isInEdition));
+        makeComputed(this, "selection", () => this.records.filter((record) => record.selected));
     }
 
     // -------------------------------------------------------------------------
@@ -52,14 +55,6 @@ export class DynamicList extends DataPoint {
         return this.config.domain;
     }
 
-    /**
-     * Be careful that this getter is costly, as it iterates over the whole list
-     * of records. This property should not be accessed in a loop.
-     */
-    get editedRecord() {
-        return this.records.find((record) => record.isInEdition);
-    }
-
     get isRecordCountTrustable() {
         return true;
     }
@@ -70,14 +65,6 @@ export class DynamicList extends DataPoint {
 
     get offset() {
         return this.config.offset;
-    }
-
-    /**
-     * Be careful that this getter is costly, as it iterates over the whole list
-     * of records. This property should not be accessed in a loop.
-     */
-    get selection() {
-        return this.records.filter((record) => record.selected);
     }
 
     // -------------------------------------------------------------------------

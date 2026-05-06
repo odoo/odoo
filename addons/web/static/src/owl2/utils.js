@@ -5,6 +5,21 @@ const owl = globalThis.owl;
  * @template T
  * @param {T} target
  * @param {keyof T} name
+ * @param {() => T[keyof T]} getter
+ * @deprecated use Owl reactivity {@link https://github.com/odoo/owl/blob/master/doc/v3/owl/reference/reactivity.md}
+ */
+export function makeComputed(target, name, getter) {
+    const _computed = owl.computed(getter);
+    Object.defineProperty(target, name, {
+        get: _computed,
+        set: _computed.set,
+    });
+}
+
+/**
+ * @template T
+ * @param {T} target
+ * @param {keyof T} name
  * @param {typeof owl.signal} [signalFn]
  * @deprecated use Owl reactivity {@link https://github.com/odoo/owl/blob/master/doc/v3/owl/reference/reactivity.md}
  */
