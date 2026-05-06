@@ -918,6 +918,7 @@ patch(PosStore.prototype, {
     },
     async printCourseTicket(course) {
         try {
+            const order = this.getOrder();
             const changes = {
                 new: [],
                 cancelled: [],
@@ -925,8 +926,8 @@ patch(PosStore.prototype, {
                 noteUpdateTitle: `${course.name} ${_t("fired")}`,
                 printNoteUpdateData: false,
             };
-            this.getOrder().uiState.lastPrints.push(changes);
-            await this.printChanges(this.getOrder(), [changes], false);
+            order.pushLastPrints(changes);
+            await this.printChanges(order, [changes], false);
         } catch (e) {
             logPosMessage("Store", "printCourseTicket", "Unable to print course", CONSOLE_COLOR, [
                 e,
