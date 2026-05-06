@@ -145,7 +145,7 @@ class HrLeave(models.Model):
                         holidays_days_list.append(current)
                         current += relativedelta(days=1)
                 for leave in leaves:
-                    if leave.request_unit_half:
+                    if leave.request_unit_half and leave.request_date_from_period == leave.request_date_to_period:
                         duration_by_leave_id.update(leave._get_durations(resource_calendar=company_cal))
                         continue
                     # Extend the end date to next working day

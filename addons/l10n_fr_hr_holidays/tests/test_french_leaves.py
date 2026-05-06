@@ -581,3 +581,59 @@ class TestFrenchLeaves(TransactionCase):
         self.assertEqual(leave.date_from.date(), date(2026, 1, 12))
         self.assertEqual(leave.date_to.date(), date(2026, 1, 12))
         self.assertEqual(leave.number_of_hours, 8.0, 'Duration should be 8 hours (one working day)')
+
+    def test_leave_type_half_day_different_working_hours_with_full_day_period(self):
+        """
+        Test that leave duration is correctly computed for half-day time off types
+        when the employee has a different working schedule than the company.
+
+        Setup:
+        - Company calendar: 40h/week (8h/day, Mon-Fri)
+        - Employee calendar: 21h/week (7h/day, Mon-Wed)
+
+        Scenarios:
+        1. Full-day request: Should return 1.0 day (not 0.875), even if hours per day differ.
+        2. Actual half-day request: Should remain 0.5 days using standard logic.
+        3. End-of-contract-week request: Should apply French legal extension, counting
+           from the last work day (Wed) until the company's next work day (Fri).
+        """
+        company_calendar = self.env['resource.calendar'].create({
+            'name': 'Flexible 40h/week',
+            'hours_per_day': 8,
+            'hours_per_week': 40.0,
+            'full_time_required_hours': 40.0,
+            'flexible_hours': True,
+        })
+        employee_calendar = self.env['resource.calendar'].create({
+            'name': 'Employee Calendar',
+            'attendance_ids': [
+                (0, 0, {'name': 'Monday', 'dayofweek': '0', 'hour_from': 8, 'hour_to': 15, 'day_period': 'full_day'}),
+                (0, 0, {'name': 'Tuesday', 'dayofweek': '1', 'hour_from': 8, 'hour_to': 15, 'day_period': 'full_day'}),
+                (0, 0, {'name': 'Wednesday', 'dayofweek': '2', 'hour_from': 8, 'hour_to': 15, 'day_period': 'full_day'}),
+            ],
+        })
+
+        self.company.resource_calendar_id = company_calendar
+        self.employee.resource_calendar_id = employee_calendar
+
+        leave = self.env['hr.leave'].create({
+            'name': 'Test leave',
+            'holiday_status_id': self.time_off_type.id,
+            'employee_id': self.employee.id,
+            'request_date_from': '2026-05-04',
+            'request_date_to': '2026-05-04',
+        })
+        self.assertEqual(leave.number_of_days, 1, 'The duration should be 1 day.')
+
+        leave.request_date_from_period = 'am'
+        leave.request_date_to_period = 'am'
+        self.assertEqual(leave.number_of_days, 0.5, 'The duration should be 0.5 day.')
+
+        last_day_leave = self.env['hr.leave'].create({
+            'name': 'Test last day leave',
+            'holiday_status_id': self.time_off_type.id,
+            'employee_id': self.employee.id,
+            'request_date_from': '2026-05-06',
+            'request_date_to': '2026-05-06',
+        })
+        self.assertEqual(last_day_leave.number_of_days, 3, 'The duration should be 3 days.')
