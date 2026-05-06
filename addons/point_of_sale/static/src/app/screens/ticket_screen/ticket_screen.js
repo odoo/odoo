@@ -255,8 +255,8 @@ export class TicketScreen extends Component {
         });
     }
     async onClickReprintAll(order) {
-        const printingChanges = order.uiState?.lastPrints;
-        if (printingChanges) {
+        const printingChanges = order.lastPrints;
+        if (printingChanges.length) {
             await this.pos.ticketPrinter.printOrderChanges({ order, opts: printingChanges });
         }
     }

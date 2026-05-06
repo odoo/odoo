@@ -1,4 +1,4 @@
-import { test, expect } from "@odoo/hoot";
+import { describe, test, expect } from "@odoo/hoot";
 import { getFilledOrder, setupPosEnv } from "../utils";
 import { definePosModels } from "../data/generate_model_definitions";
 
@@ -22,7 +22,6 @@ test("uiState", async () => {
         tip: { type: false, value: false },
         last_general_customer_note: "",
         last_internal_note: "",
-        lastPrints: [],
     });
 });
 
@@ -565,4 +564,54 @@ test("priceDoesntChangeWhenChangingPreset", async () => {
     order4.setPreset(otherPreset);
     order4.setOrderPrices();
     expect(order4.amount_total).toBe(total);
+});
+
+describe("print history", () => {
+    test("lastPrints", async () => {
+        const store = await setupPosEnv();
+        const order = store.addNewOrder();
+
+        order.print_history = false;
+        expect(order.lastPrints).toEqual([]);
+
+        order.print_history = [
+            {
+                addedQuantity: [{ product_id: 1, quantity: 2 }],
+                noteChange: [{ product_id: 1, note: "New note" }],
+                noteUpdate: [{ product_id: 1, note: "Updated note" }],
+                removedQuantity: [{ product_id: 1, quantity: -1 }],
+            },
+        ];
+        expect(order.lastPrints).toEqual([
+            {
+                addedQuantity: [{ product_id: 1, quantity: 2 }],
+                noteChange: [{ product_id: 1, note: "New note" }],
+                noteUpdate: [{ product_id: 1, note: "Updated note" }],
+                removedQuantity: [{ product_id: 1, quantity: -1 }],
+            },
+        ]);
+    });
+
+    test("pushLastPrints", async () => {
+        const store = await setupPosEnv();
+        const order = store.addNewOrder();
+        const printData = {
+            addedQuantity: [{ product_id: 1, quantity: 2 }],
+            noteChange: [{ product_id: 1, note: "New note" }],
+            noteUpdate: [{ product_id: 1, note: "Updated note" }],
+            removedQuantity: [{ product_id: 1, quantity: -1 }],
+            quanity: 5,
+            categoryCount: 3,
+        };
+
+        order.pushLastPrints(printData);
+        expect(order.lastPrints).toEqual([
+            {
+                addedQuantity: [{ product_id: 1, quantity: 2 }],
+                noteChange: [{ product_id: 1, note: "New note" }],
+                noteUpdate: [{ product_id: 1, note: "Updated note" }],
+                removedQuantity: [{ product_id: 1, quantity: -1 }],
+            },
+        ]);
+    });
 });

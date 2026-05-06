@@ -343,6 +343,7 @@ class PosOrder(models.Model):
     general_customer_note = fields.Text(string='General Customer Note')
     internal_note = fields.Text(string='Internal Note')
     nb_print = fields.Integer(string='Number of Print', readonly=True, copy=False, default=0)
+    print_history = fields.Json('Print History', copy=False)
     pos_reference = fields.Char(string='Receipt Number', readonly=True, copy=False, index=True)
     sale_journal = fields.Many2one('account.journal', related='session_id.config_id.journal_id', string='Sales Journal', store=True, readonly=True, ondelete='restrict')
     fiscal_position_id = fields.Many2one(
@@ -566,6 +567,8 @@ class PosOrder(models.Model):
             allowed_vals = ['paid', 'done', 'invoiced']
             if vals.get('state') and vals['state'] not in allowed_vals and order.state in allowed_vals:
                 raise UserError(_('This order has already been paid. You cannot set it back to draft or edit it.'))
+            if vals.get('state') and vals['state'] in ('cancel', 'paid', 'done') and order.print_history:
+                vals['print_history'] = False
 
         list_line = self._create_pm_change_log(vals)
         res = super().write(vals)
