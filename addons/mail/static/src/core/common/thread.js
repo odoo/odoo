@@ -668,8 +668,7 @@ export class Thread extends Component {
         const el = this.messageRefs.get(this.messageHighlight.highlightedMessageId)?.el;
         if (el) {
             this.scrollingToHighlight = true;
-
-            await this.messageHighlight.startupDeferred;
+            await this.messageHighlight.startupPromise;
             this.messageHighlight
                 .scrollTo(el.querySelector(".o-mail-Message-jumpTarget"))
                 .then(() => (this.scrollingToHighlight = false));
@@ -715,7 +714,7 @@ export class Thread extends Component {
         }
         this.scrollableRef.el.scrollTo({ behavior: smooth ? "smooth" : undefined, top: value });
         this.lastSetValue = value;
-        this.messageHighlight?.startupDeferred?.resolve();
+        this.messageHighlight?.resolveStartup?.();
         this.saveScroll();
     }
 
