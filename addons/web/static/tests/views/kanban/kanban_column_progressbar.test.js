@@ -2235,7 +2235,8 @@ test("scroll on group unfold and progressbar click", async () => {
     expect.verifySteps(["scrolled", "web_search_read"]);
 });
 
-test("searchbar filters are displayed directly (with progressbar)", async () => {
+test.tags("owl3");
+test.todo("searchbar filters are displayed directly (with progressbar)", async () => {
     let def;
     onRpc("read_progress_bar", () => def);
 

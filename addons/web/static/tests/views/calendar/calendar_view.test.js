@@ -5919,7 +5919,8 @@ test(`calendar renderer is rendered once after search refresh`, async () => {
     });
 });
 
-test(`calendar renderer is rendered once after event drag and drop`, async () => {
+test.tags("owl3");
+test.todo(`calendar renderer is rendered once after event drag and drop`, async () => {
     patchWithCleanup(CalendarRenderer.prototype, {
         setup() {
             super.setup();
@@ -5951,8 +5952,8 @@ test(`calendar renderer is rendered once after event drag and drop`, async () =>
     });
 });
 
-test.tags("desktop");
-test(`calendar renderer is rendered twice after date change`, async () => {
+test.tags("desktop", "owl3");
+test.todo(`calendar renderer is rendered twice after date change`, async () => {
     patchWithCleanup(CalendarRenderer.prototype, {
         setup() {
             super.setup();

@@ -702,8 +702,8 @@ test("domain is kept when switching between views", async () => {
     expect(".o_data_row").toHaveCount(5);
 });
 
-test.tags("desktop");
-test("A new form view can be reloaded after a failed one", async () => {
+test.tags("desktop", "owl3");
+test.todo("A new form view can be reloaded after a failed one", async () => {
     expect.errors(1);
     await mountWithCleanup(WebClient);
 

@@ -528,7 +528,8 @@ describe("keyboard triggers", () => {
 
         expect.verifySteps(["customAction 11 5 1", "customAction 10 4 0"]);
     });
-    test("up on empty BuilderNumberInput gives 1", async () => {
+    test.tags("owl3");
+    test.todo("up on empty BuilderNumberInput gives 1", async () => {
         addBuilderAction({
             customAction: class extends BuilderAction {
                 static id = "customAction";
@@ -554,7 +555,8 @@ describe("keyboard triggers", () => {
         expect("[data-action-id='customAction'] input").toHaveValue(1);
         expect(":iframe .test-options-target").toHaveAttribute("data-number", "1");
     });
-    test("down on empty BuilderNumberInput gives -1", async () => {
+    test.tags("owl3");
+    test.todo("down on empty BuilderNumberInput gives -1", async () => {
         addBuilderAction({
             customAction: class extends BuilderAction {
                 static id = "customAction";

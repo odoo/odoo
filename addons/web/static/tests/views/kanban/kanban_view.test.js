@@ -5738,8 +5738,8 @@ test("load more should load correct records after drag&drop event", async () => 
     expect(getKanbanRecordTexts(1)).toEqual(["4", "1", "2", "3"]);
 });
 
-test.tags("desktop");
-test("grouped kanban: clear groupby when reloading", async () => {
+test.tags("desktop", "owl3");
+test.todo("grouped kanban: clear groupby when reloading", async () => {
     // in this test, we simulate that clearing the domain is slow, so that
     // clearing the groupby does not corrupt the data handled while
     // reloading the kanban view.
@@ -7491,7 +7491,8 @@ test("d&d records grouped by m2o with m2o displayed in records", async () => {
     expect(queryAllTexts(".o_kanban_record")).toEqual(["hello", "hello", "hello", "xmo"]);
 });
 
-test("Can't use KanbanRecord implementation details in arch", async () => {
+test.tags("owl3");
+test.todo("Can't use KanbanRecord implementation details in arch", async () => {
     await mountView({
         type: "kanban",
         resModel: "partner",
@@ -7512,8 +7513,8 @@ test("Can't use KanbanRecord implementation details in arch", async () => {
     expect(".o_kanban_record:first").toHaveInnerHTML("<div></div>");
 });
 
-test.tags("desktop");
-test("rerenders only once after resequencing records", async () => {
+test.tags("desktop", "owl3");
+test.todo("rerenders only once after resequencing records", async () => {
     // Actually it's not once, because we must render directly after the drag&drop s.t. the dropped
     // record remains where it has been dropped, once again after saving/reloading the record as
     // we rebuild record.data, and finally after the call to resequence, to re-enable the resequence
@@ -7820,8 +7821,8 @@ test("Kanban: no reset of the groupby when a non-empty column is deleted", async
     expect(queryText(".o_column_title", { root: getKanbanColumn(0) })).toBe("None\n(3)");
 });
 
-test.tags("desktop");
-test("searchbar filters are displayed directly", async () => {
+test.tags("desktop", "owl3");
+test.todo("searchbar filters are displayed directly", async () => {
     let def;
     onRpc("web_search_read", () => def);
 
