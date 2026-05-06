@@ -87,6 +87,7 @@ export class PosStore extends WithLazyGetterTrap {
         "mail.sound_effects",
         "iot_longpolling",
     ];
+    orderReceiptComponent = OrderReceipt;
 
     constructor() {
         super({});
@@ -184,8 +185,7 @@ export class PosStore extends WithLazyGetterTrap {
         }
 
         window.addEventListener("pos-network-online", () => {
-            // Sync should be done before websocket connection when going online
-            this.syncAllOrdersDebounced();
+            this.posBackOnline();
         });
 
         this.lnaState = {
@@ -195,6 +195,11 @@ export class PosStore extends WithLazyGetterTrap {
         initLNA(this.notification, (type, message) => {
             this.lnaState = { type, message };
         });
+    }
+
+    async posBackOnline() {
+        // Sync should be done before websocket connection when going online
+        this.syncAllOrdersDebounced();
     }
 
     navigate(routeName, routeParams = {}) {
@@ -302,11 +307,12 @@ export class PosStore extends WithLazyGetterTrap {
 
     setCashier(user) {
         if (!user) {
-            return;
+            return false;
         }
 
         this.cashier = user;
         this._storeConnectedCashier(user);
+        return true;
     }
 
     _getConnectedCashier() {
@@ -457,8 +463,11 @@ export class PosStore extends WithLazyGetterTrap {
         await this.processProductAttributes();
         await this.config.cacheReceiptLogo();
     }
+    async openCashbox(action) {
+        this.hardwareProxy.openCashbox(action);
+    }
     cashMove() {
-        this.hardwareProxy.openCashbox(_t("Cash in / out"));
+        this.openCashbox(_t("Cash in / out"));
         return makeAwaitable(this.dialog, CashMovePopup);
     }
     async closeSession() {
@@ -1460,6 +1469,7 @@ export class PosStore extends WithLazyGetterTrap {
         for (const order of orders) {
             order.setOrderPrices();
         }
+        return orders;
     }
 
     postSyncAllOrders(orders) {}
@@ -1500,7 +1510,10 @@ export class PosStore extends WithLazyGetterTrap {
 
         for (const order of orders) {
             const context = this.getSyncAllOrdersContext([order], options);
-            await this.preSyncAllOrders([order]);
+            const preSyncOrder = await this.preSyncAllOrders([order]);
+            if (!preSyncOrder) {
+                continue;
+            }
             this.syncingOrders.add(order.id);
 
             try {
@@ -1879,6 +1892,11 @@ export class PosStore extends WithLazyGetterTrap {
         }
 
         return this.sendOrderInPreparation(order, opts);
+    }
+    // Used to override inside `l10n_be_pos_blackbox`
+    async getSelfOrderToPrint(orderId) {
+        const result = await this.data.callRelated("pos.order", "get_order_to_print", [orderId]);
+        return result["pos.order"][0];
     }
     // Now the printer should work in PoS without restaurant
     async sendOrderInPreparation(order, opts = {}) {
@@ -2285,7 +2303,7 @@ export class PosStore extends WithLazyGetterTrap {
         this.dialog.add(FormViewDialog, this.orderDetailsProps(order));
     }
     async closePos() {
-        this._resetConnectedCashier();
+        this.resetCashier();
         // If pos is not properly loaded, we just go back to /web without
         // doing anything in the order data.
         if (!this) {

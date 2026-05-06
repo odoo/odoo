@@ -56,7 +56,7 @@
                 </button>
                 <button
                     class="button btn btn-secondary btn-lg d-flex flex-row align-items-center justify-content-center w-50"
-                    t-on-click="() => this.pos.showDefault()"
+                    t-on-click="() => this.clickNew()"
                     t-elif="!this.currentOrder.isDirectSale and !this.displayCategoryCount.length and !this.currentOrder.isEmpty()"
                 >
                     <span>New</span>

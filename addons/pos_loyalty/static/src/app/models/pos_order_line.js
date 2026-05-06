@@ -94,4 +94,16 @@ patch(PosOrderline.prototype, {
             this._e_wallet_program_id === orderline._e_wallet_program_id
         );
     },
+    get displayPrice() {
+        const res = super.displayPrice;
+        // Gift card displayPrice should always be positive (even when refunding order with a gift card)
+        if (
+            this.models["loyalty.program"]
+                .filter((p) => p.program_type === "gift_card")
+                .some((p) => p.trigger_product_ids.includes(this.product_id))
+        ) {
+            return Math.abs(res);
+        }
+        return res;
+    },
 });
