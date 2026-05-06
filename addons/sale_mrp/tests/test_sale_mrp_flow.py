@@ -2549,6 +2549,7 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         route_manufacture = self.company_data['default_warehouse'].manufacture_pull_id.route_id
         route_mto = self.company_data['default_warehouse'].mto_pull_id.route_id
         self.product_a.route_ids = [Command.set([route_manufacture.id, route_mto.id])]
+        self.env['mrp.bom'].create({'product_tmpl_id': self.product_a.product_tmpl_id.id})
         # Set the procure method to 'mts_else_mto'
         route_mto.rule_ids.filtered(lambda r: r.location_dest_id.usage == 'production').procure_method = 'mts_else_mto'
         # Create and confirm a Sale Order
