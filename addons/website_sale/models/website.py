@@ -365,13 +365,14 @@ class Website(models.Model):
         return pricelist
 
     def sale_product_domain(self):
-        website_domain = self.get_current_website().website_domain()
+        website = self or self.get_current_website()
+        website_domain = website.website_domain()
         if not self.env.user._is_internal():
             website_domain = expression.AND([website_domain, [
                 ('is_published', '=', True),
                 ('service_tracking', 'in', self.env['product.template']._get_saleable_tracking_types()),
             ]])
-        company_domain = [('company_id', 'in', [False, self.company_id.id])]
+        company_domain = [('company_id', 'in', [False, website.company_id.id])]
         return expression.AND([self._product_domain(), website_domain, company_domain])
 
     def _product_domain(self):
