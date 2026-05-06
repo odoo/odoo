@@ -28,13 +28,16 @@ const { DateTime, Interval } = luxon;
 /**
  * @param {DateValue} dateFilterValue
  * @param {{ chain: string, type: string }} [fieldMatching]
- * @returns {string}
+ * @returns {string | undefined}
  */
 export function getBestGranularity(dateFilterValue, fieldMatching, getters) {
     if (!dateFilterValue) {
         return "year";
     }
     const { from, to } = getDateRange(dateFilterValue, 0, DateTime.local(), getters);
+    if (!from || !to) {
+        return undefined;
+    }
     const numberOfDays = Math.round(to.diff(from, "days").days);
     if (numberOfDays <= 1) {
         return fieldMatching?.type === "datetime" ? "hour" : "day";
@@ -56,6 +59,9 @@ export function getValidGranularities(dateFilterValue, getters) {
         return ["day", "week", "month", "quarter", "year"];
     }
     const { from, to } = getDateRange(dateFilterValue, 0, DateTime.local(), getters);
+    if (!from || !to) {
+        return ["day", "week", "month", "quarter", "year"];
+    }
     const numberOfDays = Math.round(to.diff(from, "days").days);
     if (numberOfDays <= 1) {
         return ["hour", "day"];
