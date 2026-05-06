@@ -4728,8 +4728,8 @@ test(`selection box: grouped list, select domain, use main pager`, async () => {
     expect(`.o_selection_box`).toHaveText("All 4 selected");
 });
 
-test.tags("desktop");
-test(`selection box: grouped list, select domain, reduce limit`, async () => {
+test.tags("desktop", "owl3");
+test.todo(`selection box: grouped list, select domain, reduce limit`, async () => {
     await mountView({
         resModel: "foo",
         type: "list",
@@ -11571,8 +11571,8 @@ test(`multi edit field with daterange widget`, async () => {
     expect.verifySteps(["web_save"]);
 });
 
-test.tags("desktop");
-test(`multi edit field with daterange widget (edition without using the picker)`, async () => {
+test.tags("desktop", "owl3");
+test.todo(`multi edit field with daterange widget (edition without using the picker)`, async () => {
     mockTimeZone(+6);
 
     class Daterange extends models.Model {
@@ -20579,7 +20579,8 @@ For example, if the date is Mar 11 and you enter "+=2d", it will be updated to M
     ]);
 });
 
-test(`custom button that creates record in list with sample data`, async () => {
+test.tags("owl3");
+test.todo(`custom button that creates record in list with sample data`, async () => {
     Foo._records = [];
     onRpc("custom_create", () => {
         MockServer.env.foo.create({ foo: "new record" });

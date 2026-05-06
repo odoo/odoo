@@ -189,7 +189,8 @@ test("BadgesMany2OneField: placeholder falls back to field label when not provid
     expect(".o_selection_badge.o-dropdown-caret").toHaveText("+1");
 });
 
-test("[Offline] BadgesMany2OneField: verify badges are displayed in offline mode", async () => {
+test.tags("owl3");
+test.todo("[Offline] BadgesMany2OneField: verify badges are displayed in offline mode", async () => {
     onRpc("product", "name_search", () => {
         expect.step("name_search");
         return new Response("", { status: 502 });

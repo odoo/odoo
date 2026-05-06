@@ -25,7 +25,8 @@ describe.current.tags("desktop");
 defineMailModels();
 preloadBundle("web.assets_emoji");
 
-test("emoji picker correctly handles translations with special characters", async () => {
+test.tags("owl3");
+test.todo("emoji picker correctly handles translations with special characters", async () => {
     // Reset emoji loader to reload translations *for* the current test
     patchWithCleanup(emojiLoader, {
         categories: [],

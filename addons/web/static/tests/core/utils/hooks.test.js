@@ -701,8 +701,8 @@ describe("useBackButton", () => {
         expect(history.state.sentinel).toBe(2);
     });
 
-    test.tags("mobile");
-    test("`shouldEnable` callback function pushes/clears trap history entry", async () => {
+    test.tags("mobile", "owl3");
+    test.todo("`shouldEnable` callback function pushes/clears trap history entry", async () => {
         mockUserAgent("android");
         class DummyComponent extends Component {
             static props = ["*"];

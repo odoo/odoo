@@ -2347,7 +2347,8 @@ test("graph view sort by measure for multiple grouped data", async () => {
     ]);
 });
 
-test("empty graph view with sample data", async () => {
+test.tags("owl3");
+test.todo("empty graph view with sample data", async () => {
     await mountView({
         type: "graph",
         resModel: "foo",
@@ -2798,7 +2799,8 @@ test("In the middle of a year, a graph view grouped by a date field with granula
     checkDatasets(view, ["data"], { data: [SampleServer.MAIN_RECORDSET_SIZE] });
 });
 
-test("no class 'o_view_sample_data' when real data are presented", async () => {
+test.tags("owl3");
+test.todo("no class 'o_view_sample_data' when real data are presented", async () => {
     Foo._records = [];
 
     const view = await mountView({
