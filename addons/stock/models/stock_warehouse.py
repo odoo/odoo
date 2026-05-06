@@ -216,13 +216,14 @@ class Warehouse(models.Model):
 
         for warehouse in warehouses:
             # check if we need to delete and recreate route
-            depends = [depend for depends in [value.get('depends', []) for value in warehouse._get_routes_values().values()] for depend in depends]
+            depends = [depend for depends in [value.get('depends', []) for value in warehouse._get_routes_values().values()] for depend in depends if depend in vals]
             if 'code' in vals or any(depend in vals for depend in depends):
                 picking_type_vals = warehouse._create_or_update_sequences_and_picking_types()
                 if picking_type_vals:
                     warehouse.write(picking_type_vals)
             if any(depend in vals for depend in depends):
-                route_vals = warehouse._create_or_update_route()
+                # TODO: The context value should be included in function signature in further version
+                route_vals = warehouse.with_context(route_depends=depends)._create_or_update_route()
                 if route_vals:
                     warehouse.write(route_vals)
             # Check if a global rule(mto, buy, ...) need to be modify.
@@ -491,7 +492,11 @@ class Warehouse(models.Model):
         # Create routes and active/create their related rules.
         routes = []
         rules_dict = self.get_rules_dict()
+        route_depends = self.env.context.get("route_depends", [])
         for route_field, route_data in self._get_routes_values().items():
+            if route_depends and route_field not in route_depends:
+                # Don't do anything on routes and rules not concerned by warehouse modification
+                continue
             # If the route exists update it
             if self[route_field]:
                 route = self[route_field]
