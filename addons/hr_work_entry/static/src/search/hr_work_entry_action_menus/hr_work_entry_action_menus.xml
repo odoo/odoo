@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="hr_work_entry.actionmenu" t-inherit="hr.actionmenu" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('o_cp_action_menus')]" position="before">
+            <t t-call="hr_work_entry.ExportWorkEntriesCogMenu">
+                <t t-set="is_actionmenu" t-value="'True'"/>
+            </t>
+        </xpath>
+    </t>
+</templates>

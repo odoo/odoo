@@ -47,7 +47,6 @@
         'views/hr_templates.xml',
         'views/resource_resource_views.xml',
         'data/hr_data.xml',
-        'views/hr_export_mixin_views.xml',
         'data/ir_cron_data.xml',
         'data/hr_employee_type_data.xml',
     ],

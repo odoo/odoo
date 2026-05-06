@@ -5053,7 +5053,6 @@ class TestInvisibleField(TransactionCaseWithUserDemo):
             'l10n_uk_reports',
             'l10n_uk_reports_cis',
             'l10n_us_hr_payroll',
-            'l10n_us_hr_payroll_adp',
             'l10n_uy_edi',
             'loyalty',
             'lunch',
