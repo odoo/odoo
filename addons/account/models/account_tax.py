@@ -4408,6 +4408,7 @@ class AccountTax(models.Model):
                ('amount_type', '=', tax_values['amount_type']),
                ('type_tax_use', '=', tax_values['type_tax_use']),
                ('amount', '=', tax_values['amount']),
+               *([('country_id', '=', tax_values['invoice_predictive']['invoice'].tax_country_id.id)] if 'invoice_predictive' in tax_values else []),
             ]
             orders = ['sequence', 'id']
             if name := tax_values.get('name'):
