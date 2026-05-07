@@ -838,6 +838,40 @@ class AccountEdiUBL(models.AbstractModel):
         self._ubl_add_accounting_customer_party_legal_entity_nodes(sub_vals)
         self._ubl_add_accounting_customer_party_contact_node(sub_vals)
 
+    def _ubl_add_agent_party_node(self, vals):
+        # AgentParty is of UBL PartyType: its children are the Party fields directly,
+        # without an inner cac:Party wrapper (contrast with SupplierPartyType).
+        party_node = vals['document_node']['cac:AgentParty'] = {}
+        sub_vals = {
+            **vals,
+            'party_vals': {'partner': vals['supplier']},
+            'party_node': party_node,
+        }
+        self._ubl_add_accounting_supplier_party_endpoint_id_node(sub_vals)
+        self._ubl_add_accounting_supplier_party_identification_nodes(sub_vals)
+        self._ubl_add_accounting_supplier_party_name_node(sub_vals)
+        self._ubl_add_accounting_supplier_party_postal_address_node(sub_vals)
+        self._ubl_add_accounting_supplier_party_tax_scheme_nodes(sub_vals)
+        self._ubl_add_accounting_supplier_party_legal_entity_nodes(sub_vals)
+        self._ubl_add_accounting_supplier_party_contact_node(sub_vals)
+
+    def _ubl_add_receiver_party_node(self, vals):
+        # ReceiverParty is of UBL PartyType: its children are the Party fields directly,
+        # without an inner cac:Party wrapper (contrast with CustomerPartyType).
+        party_node = vals['document_node']['cac:ReceiverParty'] = {}
+        sub_vals = {
+            **vals,
+            'party_vals': {'partner': vals['customer']},
+            'party_node': party_node,
+        }
+        self._ubl_add_accounting_customer_party_endpoint_id_node(sub_vals)
+        self._ubl_add_accounting_customer_party_identification_nodes(sub_vals)
+        self._ubl_add_accounting_customer_party_name_node(sub_vals)
+        self._ubl_add_accounting_customer_party_postal_address_node(sub_vals)
+        self._ubl_add_accounting_customer_party_tax_scheme_nodes(sub_vals)
+        self._ubl_add_accounting_customer_party_legal_entity_nodes(sub_vals)
+        self._ubl_add_accounting_customer_party_contact_node(sub_vals)
+
     def _ubl_add_delivery_party_endpoint_id_node(self, vals):
         self._ubl_add_party_endpoint_id_node(vals)
 

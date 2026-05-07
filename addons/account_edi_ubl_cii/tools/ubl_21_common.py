@@ -213,6 +213,7 @@ PrepaidPayment = {
     'cbc:ID': {},
     'cbc:PaidAmount': {},
     'cbc:ReceivedDate': {},
+    'cbc:PaidDate': {},
 }
 
 ExchangeRate = {
