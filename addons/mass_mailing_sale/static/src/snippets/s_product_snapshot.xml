@@ -1,0 +1,66 @@
+<templates>
+    <t t-name="mass_mailing_sale.s_product_columns">
+        <section class="s_mail_block_event o_mail_snippet_general">
+            <div class="container">
+                <div class="row align-items-stretch">
+                    <t t-foreach="[1,2,3]" t-as="key" t-key="key">
+                        <div class="col-md-4 col-12 s_record_snapshot pt16 pb16"
+                            data-model="product.template" data-fragment-key="columns"
+                            style="padding-left: 16px !important; padding-right: 16px !important;">
+                            <t t-call="mass_mailing_sale.s_product_snapshot_columns_fragment" t-call-context="{
+                                record: {
+                                    id: 0,
+                                    name: 'Example ' + key,
+                                    display_name: 'Select the products you want to display!',
+                                    description_sale: 'Click on this block, then select products using the panel on the right.',
+                                    standard_price: '$25',
+                                },
+                                listPrice: '$20',
+                                standardPrice: '$25',
+                                coverUrl: '/website_sale/static/src/img/product_previews/product_' + key + '.jpg',
+                            }"/>
+                        </div>
+                    </t>
+                </div>
+            </div>
+        </section>
+    </t>
+
+    <t t-name="mass_mailing_sale.s_product_card">
+        <section class="s_text_image o_mail_snippet_general pt24 pb24">
+            <div class="container s_record_snapshot s_text_block o_cc" data-model="product.template" data-fragment-key="card">
+                <t t-call="mass_mailing_sale.s_product_snapshot_card_fragment" t-call-context="{
+                    record: {
+                        id: 0,
+                        name: 'Example Product',
+                        display_name: 'Select the products you want to display!',
+                        description_sale: 'Click on this block, then select products using the panel on the right.',
+                        standard_price: '$25',
+                    },
+                    listPrice: '$20',
+                    standardPrice: '$25',
+                    coverUrl: '/website_sale/static/src/img/product_previews/product_1.jpg',
+                }"/>
+            </div>
+        </section>
+    </t>
+
+    <t t-name="mass_mailing_sale.s_product_aside">
+        <section class="s_text_image o_mail_snippet_general o_colored_level pt24 pb24">
+            <div class="container s_record_snapshot s_text_block o_cc" contenteditable="true" data-model="product.template" data-fragment-key="aside">
+                <t t-call="mass_mailing_sale.s_product_snapshot_aside_fragment" t-call-context="{
+                    record: {
+                        id: 0,
+                        name: 'Example Product',
+                        display_name: 'Select the products you want to display!',
+                        description_sale: 'Click on this block, then select products using the panel on the right.',
+                        standard_price: '$25',
+                    },
+                    listPrice: '$20',
+                    standardPrice: '$25',
+                    coverUrl: '/website_sale/static/src/img/product_previews/product_2.jpg',
+                }"/>
+            </div>
+        </section>
+    </t>
+</templates>

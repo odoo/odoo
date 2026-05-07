@@ -1,14 +1,14 @@
-<odoo>
-<template id="s_text_block" name="Text">
+<templates xml:space="preserve">
+<t t-name="mass_mailing.s_text_block" name="Text">
     <section class="s_text_block o_mail_snippet_general pt24 pb24" style="padding-left: 15px; padding-right: 15px;" data-vxml="001">
         <div class="container s_allow_columns">
             <p>Great stories have a <strong>personality</strong>. Consider telling a great story that provides personality. Writing a story with personality for potential clients will assist with making a relationship connection. This shows up in small quirks like word choices or phrases. Write from your point of view, not from someone else's experience.</p>
             <p>Great stories are <strong>for everyone</strong> even when only written <strong>for just one person</strong>. If you try to write with a wide, general audience in mind, your story will sound fake and lack emotion. No one will be interested. Write for one person. If it's genuine for the one, it's genuine for the rest.</p>
         </div>
     </section>
-</template>
+</t>
 
-<template id="s_link_list" name="Link List">
+<t t-name="mass_mailing.s_link_list" name="Link List">
     <section class="s_link_list o_mail_snippet_general pt16 pb16" data-vxml="001">
         <div class="container">
             <div class="row">
@@ -25,8 +25,8 @@
             </div>
         </div>
     </section>
-</template>
-<template id="s_schedule" name="Schedule">
+</t>
+<t t-name="mass_mailing.s_schedule" name="Schedule">
     <section class="s_schedule o_mail_snippet_general pt16 pb16">
         <div class="container">
             <div class="row s_nb_column_fixed">
@@ -87,9 +87,9 @@
             </div>
         </div>
     </section>
-</template>
+</t>
 
-<template id="s_pricelist_boxed" name="Pricelist Boxed">
+<t t-name="mass_mailing.s_pricelist_boxed" name="Pricelist Boxed">
     <section class="s_pricelist_boxed o_mail_snippet_general pt72 pb72 o_colored_level">
         <div class="container">
             <div class="row">
@@ -97,58 +97,64 @@
                     <div class="row mx-auto">
                         <div class="col-md-12" data-name="Menu Heading">
                             <h2 style="text-align:center;">Our Menu</h2>
-                            <p style="text-align:center;">Savor our fresh, local cuisine with a modern twist.<br/>Deliciously crafted for every taste!</p>
+                            <p style="text-align:center;">Savor our fresh, loc  al cuisine with a modern twist.<br/>Deliciously crafted for every taste!</p>
                         </div>
                         <div class="s_pricelist_boxed_section col-md-12 pt48 col-12" data-name="Menu Section">
-                            <h3>✽&#160;&#160;Pizzas</h3>
-                            <t t-call="mass_mailing.s_pricelist_boxed_item"
-                                name.translate="Margherita"
-                                mobileSize="4"
-                                size="3"
-                                price.translate="$12.00"
-                                description.translate="Classic pizza with fresh mozzarella, San Marzano tomatoes, and basil leaves, drizzled with extra virgin olive oil."/>
-                            <t t-call="mass_mailing.s_pricelist_boxed_item"
-                                name.translate="Quattro Stagioni"
-                                mobileSize="6"
-                                size="4"
-                                price.translate="$14.50"
-                                description.translate="A delicious mix of four toppings: mushrooms, artichokes, ham, and olives, all on a bed of mozzarella and tomato sauce."/>
-                            <t t-call="mass_mailing.s_pricelist_boxed_item"
-                                name.translate="Diavola"
-                                mobileSize="4"
-                                size="3"
-                                price.translate="$13.50"
-                                description.translate="Spicy pepperoni paired with fiery chili flakes, mozzarella, and tomato sauce for a flavorful kick."/>
+                            <h3>✽<t t-out="nbsp + nbsp"/>Pizzas</h3>
+                            <t t-call="mass_mailing.s_pricelist_boxed_item" t-call-context="{
+                                    name: 'Margherita',
+                                    mobileSize: 4,
+                                    size: 3,
+                                    price: '$12.00',
+                                    description: 'Classic pizza with fresh mozzarella, San Marzano tomatoes, and basil leaves, drizzled with extra virgin olive oil.',
+                                }"/>
+                            <t t-call="mass_mailing.s_pricelist_boxed_item" t-call-context="{
+                                    name: 'Quattro Stagioni',
+                                    mobileSize: 6,
+                                    size: 4,
+                                    price: '$14.50',
+                                    description: 'A delicious mix of four toppings: mushrooms, artichokes, ham, and olives, all on a bed of mozzarella and tomato sauce.',
+                                }"/>
+                            <t t-call="mass_mailing.s_pricelist_boxed_item" t-call-context="{
+                                name: 'Diavola',
+                                mobileSize: 4,
+                                size: 3,
+                                price: '$13.50',
+                                description: 'Spicy pepperoni paired with fiery chili flakes, mozzarella, and tomato sauce for a flavorful kick.',
+                                }"/>
                         </div>
                         <div class="s_pricelist_boxed_section col-md-12 pt48 col-12" data-name="Menu Section">
-                            <h3>✽&#160;&#160;Pastas</h3>
-                            <t t-call="mass_mailing.s_pricelist_boxed_item"
-                                name.translate="Spaghetti Carbonara"
-                                mobileSize="7"
-                                size="5"
-                                price.translate="$15.00"
-                                description.translate="Traditional Roman dish with creamy egg, crispy pancetta, and Pecorino Romano, topped with black pepper."/>
-                            <t t-call="mass_mailing.s_pricelist_boxed_item"
-                                name.translate="Penne all'Arrabbiata"
-                                mobileSize="7"
-                                size="5"
-                                price.translate="$13.00"
-                                description.translate="Penne pasta tossed in a spicy tomato and garlic sauce with a hint of chili peppers, finished with fresh parsley."/>
-                            <t t-call="mass_mailing.s_pricelist_boxed_item"
-                                name.translate="Lasagna al Forno"
-                                mobileSize="6"
-                                size="5"
-                                price.translate="$16.00"
-                                description.translate="Layers of pasta, rich meat ragu, béchamel sauce, and melted mozzarella, baked to perfection."/>
+                            <h3>✽<t t-out="nbsp + nbsp"/>Pastas</h3>
+                            <t t-call="mass_mailing.s_pricelist_boxed_item" t-call-context="{
+                                name: 'Spaghetti Carbonara',
+                                mobileSize: 7,
+                                size: 5,
+                                price: '$15.00',
+                                description: 'Traditional Roman dish with creamy egg, crispy pancetta, and Pecorino Romano, topped with black pepper.',
+                                }"/>
+                            <t t-call="mass_mailing.s_pricelist_boxed_item" t-call-context="{
+                                name: 'Penne all\'Arrabbiata',
+                                mobileSize: 7,
+                                size: 5,
+                                price: '$13.00',
+                                description: 'Penne pasta tossed in a spicy tomato and garlic sauce with a hint of chili peppers, finished with fresh parsley.',
+                                }"/>
+                            <t t-call="mass_mailing.s_pricelist_boxed_item" t-call-context="{
+                                name: 'Lasagna al Forno',
+                                mobileSize: 6,
+                                size: 5,
+                                price: '$16.00',
+                                description: 'Layers of pasta, rich meat ragu, béchamel sauce, and melted mozzarella, baked to perfection.',
+                                }"/>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
-</template>
+</t>
 
-<template id="s_pricelist_boxed_item">
+<t t-name="mass_mailing.s_pricelist_boxed_item">
     <div class="container">
         <div class="row">
             <div t-attf-class="col-md-{{size}} col-{{mobileSize}}" style="padding-right: 0px;">
@@ -169,9 +175,9 @@
             </div>
         </div>
     </div>
-</template>
+</t>
 
-<template id="s_text_describing_benefits" name="Benefits">
+<t t-name="mass_mailing.s_text_describing_benefits" name="Benefits">
     <section class="o_mail_snippet_general pt16 pb16" data-vxml="001">
         <div class="container">
             <div class="row">
@@ -200,9 +206,9 @@
             </div>
         </div>
     </section>
-</template>
+</t>
 
-<template id="s_title_with_side_text" name="Title with Side Text">
+<t t-name="mass_mailing.s_title_with_side_text" name="Title with Side Text">
     <section class="o_mail_snippet_general pt16 pb16" data-vxml="001">
         <div class="container">
             <div class="row">
@@ -215,9 +221,9 @@
             </div>
         </div>
     </section>
-</template>
+</t>
 
-<template id="s_text_card" name="Card with Text">
+<t t-name="mass_mailing.s_text_card" name="Card with Text">
     <section class="o_mail_snippet_general pt16 pb16 bg-light" data-vxml="001">
         <div class="container">
             <div class="row">
@@ -233,9 +239,9 @@
             </div>
         </div>
     </section>
-</template>
+</t>
 
-<template id="s_text_need_help" name="Need Help?">
+<t t-name="mass_mailing.s_text_need_help" name="Need Help?">
     <section class="o_mail_snippet_general pt16 pb16" data-vxml="001">
         <div class="container">
             <div class="row">
@@ -262,9 +268,9 @@
             </div>
         </div>
     </section>
-</template>
+</t>
 
-<template id="s_text_product_description" name="Product Description">
+<t t-name="mass_mailing.s_text_product_description" name="Product Description">
     <section class="o_mail_snippet_general pt16 pb16" data-vxml="001">
         <div class="container">
             <div class="row">
@@ -276,9 +282,9 @@
             </div>
         </div>
     </section>
-</template>
+</t>
 
-<template id="s_text_product_showcase" name="Product Showcase">
+<t t-name="mass_mailing.s_text_product_showcase" name="Product Showcase">
     <section class="o_mail_snippet_general" data-vxml="001">
         <div class="container">
             <div class="row">
@@ -300,15 +306,15 @@
             </div>
         </div>
     </section>
-</template>
+</t>
 
-<template id="s_text_contact" name="Contact and Schedule">
+<t t-name="mass_mailing.s_text_contact" name="Contact and Schedule">
     <section class="o_mail_snippet_general pt16 pb16" data-vxml="001">
         <div class="container">
             <div class="row">
                 <div class="col-md-6 col-12">
                     <h1>Let's get in touch</h1>
-                    <p t-if="env.company.email"><a t-if="env.company.email" t-attf-href="mailto:#{env.company.email}" t-out="env.company.email"/></p>
+                    <p t-if="company_id.email"><a t-if="company_id.email" t-attf-href="mailto:#{company_id.email}" t-out="company_id.email"/></p>
                     <p><a href="#" class="btn btn-primary">Contact us</a></p>
                 </div>
                 <div class="col-md-3 col-12">
@@ -332,15 +338,15 @@
             </div>
         </div>
     </section>
-</template>
+</t>
 
-<template id="s_text_signature" name="Mail Structure">
+<t t-name="mass_mailing.s_text_signature" name="Mail Structure">
     <section class="o_mail_snippet_general pt16 pb16" data-vxml="001">
         <div class="container">
             <div class="row">
                 <div class="col-md-12 col-12">
                     <p>Best,</p>
-                    <p t-out="env.user.name"/>
+                    <p t-out="user_id.name"/>
                     <p><em>Customer Service</em></p>
                     <p><img src="/mass_mailing/static/src/img/theme_default/signature.png"
                             class="img img-fluid o_we_custom_image o_mail_signature_image"
@@ -350,9 +356,9 @@
             </div>
         </div>
     </section>
-</template>
+</t>
 
-<template id="s_text_left_cta" name="Call To Action with Text">
+<t t-name="mass_mailing.s_text_left_cta" name="Call To Action with Text">
     <section class="o_mail_snippet_general pt16 pb16" data-vxml="001">
         <div class="container">
             <div class="row">
@@ -364,9 +370,9 @@
             </div>
         </div>
     </section>
-</template>
+</t>
 
-<template id="s_text_center_cta" name="Call To Action with Centered Text">
+<t t-name="mass_mailing.s_text_center_cta" name="Call To Action with Centered Text">
     <section class="o_mail_snippet_general pt16 pb16" data-vxml="001">
         <div class="container">
             <div class="row">
@@ -378,9 +384,9 @@
             </div>
         </div>
     </section>
-</template>
+</t>
 
-<template id="s_text_cta_card" name="Call To Action Card">
+<t t-name="mass_mailing.s_text_cta_card" name="Call To Action Card">
     <section class="o_mail_snippet_general pt16 pb16" data-vxml="001">
         <div class="container">
             <div class="row">
@@ -392,5 +398,5 @@
             </div>
         </div>
     </section>
-</template>
-</odoo>
+</t>
+</templates>

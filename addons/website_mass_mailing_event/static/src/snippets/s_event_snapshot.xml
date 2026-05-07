@@ -1,0 +1,59 @@
+<templates xml:space="preserve">
+    <t t-name="website_mass_mailing_event.s_event_columns">
+        <section class="s_mail_block_event o_mail_snippet_general">
+            <div class="container">
+                <div class="row align-items-stretch">
+                    <t t-foreach="[1,2]" t-as="key" t-key="key">
+                        <div class="col-md-6 col-12 pt32 pb32 s_record_snapshot"
+                            data-model="event.event" data-fragment-key="columns"
+                            style="padding-left: 16px !important; padding-right: 16px !important;">
+                            <t t-call="website_mass_mailing_event.s_event_snapshot_columns_fragment" t-call-context="{
+                                coverUrl: '/web/image/mass_mailing.s_event_default_image_' + key,
+                                record: {
+                                    name: 'Example ' + key,
+                                    display_name:'Pick an event to promote it.',
+                                    subtitle: 'Click on this block and select your events in the right-hand menu. Details will appear here.',
+                                    event_share_url: '#',
+                                }
+                            }"/>
+                        </div>
+                    </t>
+                </div>
+            </div>
+        </section>
+    </t>
+
+    <t t-name="website_mass_mailing_event.s_event_card">
+        <section class="s_text_image o_mail_snippet_general pt24 pb24">
+            <div class="container s_record_snapshot s_text_block o_cc" data-model="event.event" data-fragment-key="card">
+                <t t-call="website_mass_mailing_event.s_event_snapshot_card_fragment" t-call-context="{
+                    coverUrl: '/web/image/mass_mailing.s_event_default_image_2',
+                    record: {
+                        name: 'Example Event',
+                        display_name:'Pick an event to promote it.',
+                        subtitle: 'Click on this block and select your events in the right-hand menu. Details will appear here.',
+                        event_share_url: '#',
+                    }
+                }"/>
+            </div>
+        </section>
+    </t>
+
+    <t t-name="website_mass_mailing_event.s_event_aside">
+        <section class="s_text_image o_mail_snippet_general pt24 pb24">
+            <div class="container s_record_snapshot s_text_block o_cc" data-model="event.event" data-fragment-key="aside">
+                <div class="row align-items-center">
+                    <t t-call="website_mass_mailing_event.s_event_snapshot_aside_fragment" t-call-context="{
+                        coverUrl: '/web/image/mass_mailing.s_event_default_image_1',
+                        record: {
+                            name: 'Example Event',
+                            display_name:'Pick an event to promote it.',
+                            subtitle: 'Click on this block and select your events in the right-hand menu. Details will appear here.',
+                            event_share_url: '#',
+                        }
+                    }"/>
+                </div>
+            </div>
+        </section>
+    </t>
+</templates>
