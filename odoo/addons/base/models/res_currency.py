@@ -274,6 +274,8 @@ class ResCurrency(models.Model):
         if from_currency == to_currency:
             return 1
         company = company or self.env.company
+        if company.root_id in self.env['res.company'].browse(self.env.user._get_company_ids()).root_id:
+            from_currency = from_currency.sudo()
         date = date or fields.Date.context_today(self)
         return from_currency.with_company(company).with_context(to_currency=to_currency.id, date=str(date)).inverse_rate
 
