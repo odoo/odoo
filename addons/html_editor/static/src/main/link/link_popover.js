@@ -165,6 +165,11 @@ export class LinkPopover extends Component {
         option.isChecked = !option.isChecked;
     }
 
+    discard() {
+        this.props.onDiscard();
+        this.cancelUpload?.();
+    }
+
     onChange() {
         // Apply changes to update the link preview.
         this.props.onChange(
@@ -491,7 +496,14 @@ export class LinkPopover extends Component {
     async uploadFile() {
         const { upload, getURL } = this.uploadService;
         const { resModel, resId } = this.props.recordInfo;
-        const [attachment] = await upload({ resModel, resId }, { accessToken: true });
+        const setAbortCallback = (abortFn) => {
+            this.cancelUpload = abortFn;
+        };
+        const [attachment] = await upload(
+            { resModel, resId },
+            { accessToken: true, setAbortCallback }
+        );
+        delete this.cancelUpload;
         if (!attachment) {
             // No file selected or upload failed
             return;
