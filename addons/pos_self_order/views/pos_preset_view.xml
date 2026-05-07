@@ -26,9 +26,9 @@
                             <field name="delivery_product_price" invisible="not available_in_self or service_at != 'delivery'" />
                             <field name="free_delivery_min_amount" invisible="not available_in_self or service_at != 'delivery'" />
                             <label for="delivery_max_distance_km" invisible="not available_in_self or service_at != 'delivery'"/>
-                            <div class="o_input_box" style="max-width: 10rem;" invisible="not available_in_self or service_at != 'delivery'">
-                                <field name="delivery_max_distance_km" nolabel="1"/>
-                                <field name="delivery_distance_unit" nolabel="1"/>
+                            <div class="d-flex" invisible="not available_in_self or service_at != 'delivery'">
+                                <field name="delivery_max_distance_km" nolabel="1" class="oe_inline"/>
+                                <field name="delivery_distance_unit" nolabel="1" class="oe_inline"/>
                             </div>
                             <field name="delivery_product_id" invisible="not available_in_self or service_at != 'delivery'" />
                         </group>
