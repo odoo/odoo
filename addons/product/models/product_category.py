@@ -84,12 +84,12 @@ class ProductCategory(models.Model):
                     raise ValidationError(self.env._(
                         "You cannot change the company of %(categories)s as they hold products"
                         " shared between companies or belonging to other companies.",
-                        categories=categories.display_name,
+                        categories=', '.join(categories.mapped('display_name')),
                     ))
                 raise ValidationError(self.env._(
                     "You cannot change the company of %(category)s as it holds products shared"
                     " between companies or belonging to other companies.",
-                    category=', '.join(categories.mapped('display_name'))
+                    category=categories.display_name,
                 ))
 
     # === CRUD METHODS === #

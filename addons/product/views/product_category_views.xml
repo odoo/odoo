@@ -24,9 +24,10 @@
                         <h1><field name="name" placeholder="e.g. Lamps"/></h1>
                     </div>
                     <group name="first" col="2">
-                        <field name="parent_id" class="oe_inline"/>
-                        <field name="company_id" groups="base.group_multi_company" class="oe_inline"/>
+                        <field name="parent_id" class="oe_inline" string="Parent" placeholder="None"/>
+                        <field name="company_id" groups="base.group_multi_company" class="oe_inline" placeholder="All Companies"/>
                     </group>
+                    <notebook/>
                 </sheet>
                 <chatter/>
             </form>
