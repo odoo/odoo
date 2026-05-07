@@ -25,9 +25,9 @@ export const iapNotificationService = {
 
         function displayCreditErrorNotification(params) {
             const message = markup`
-                <a class='btn btn-link' href='${params.get_credits_url}' target='_blank'>
+                <a class='btn btn-link' href='${params.get_credits_url}' target='_blank' style="vertical-align: baseline;">
                     <i class='oi oi-arrow-right'></i>
-                    ${_t("Buy more credits")}
+                    ${_t("Buy")}
                 </a>`;
             notification.add(message, {
                 title: params.title,
