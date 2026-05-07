@@ -22,16 +22,21 @@
         <field name="arch" type="xml">
             <form string="Guest">
                 <sheet>
+                    <div class="oe_title mb-4 d-flex align-items-center">
+                        <field name="image_128" widget="image" class="oe_avatar me-3"
+                            options="{'preview_image': 'image_128', 'size': [128, 128]}"/>
+                        <div class="flex-grow-1">
+                            <label for="name"/>
+                            <h1 class="mb-0">
+                                <field name="name"/>
+                            </h1>
+                        </div>
+                    </div>
                     <group>
-                        <group>
-                            <field name="name"/>
-                            <field name="country_id"/>
-                        </group>
-                        <group>
-                            <field name="lang"/>
-                            <field name="timezone"/>
-                            <field name="channel_ids" widget="many2many_tags"/>
-                        </group>
+                        <field name="country_id"/>
+                        <field name="lang"/>
+                        <field name="timezone"/>
+                        <field name="channel_ids" widget="many2many_tags"/>
                     </group>
                 </sheet>
             </form>
