@@ -163,3 +163,21 @@ test("minWidth props can be updated", async () => {
     });
     expect(".o_resizable_panel").toHaveRect({ width: 40 });
 });
+
+test("default to minWidth if initialWidth is smaller than minWidth", async () => {
+    class Parent extends Component {
+        static components = { ResizablePanel };
+        static props = ["*"];
+        static template = xml`
+            <div class="d-flex">
+                <ResizablePanel minWidth="200" initialWidth="100">
+                    <div style="width: 10px;" class="text-break">
+                        A cool paragraph
+                    </div>
+                </ResizablePanel>
+            </div>
+        `;
+    }
+    await mountWithCleanup(Parent);
+    expect(".o_resizable_panel").toHaveRect({ width: 200 });
+});

@@ -1,10 +1,5 @@
 import { useComponent, useExternalListener, useLayoutEffect, useRef } from "@web/owl2/utils";
-import {
-    Component,
-    onMounted,
-    onWillUpdateProps,
-    onWillUnmount,
-} from "@odoo/owl";
+import { Component, onMounted, onWillUpdateProps, onWillUnmount } from "@odoo/owl";
 
 function useResizable({
     containerRef,
@@ -145,7 +140,7 @@ export class ResizablePanel extends Component {
             containerRef: "containerRef",
             handleRef: "handleRef",
             onResize: this.props.onResize,
-            initialWidth: this.props.initialWidth,
+            initialWidth: Math.max(this.props.minWidth, this.props.initialWidth || 400),
             getMinWidth: (props) => props.minWidth,
             getResizeSide: (props) => props.handleSide,
         });
