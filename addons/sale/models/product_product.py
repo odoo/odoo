@@ -58,7 +58,7 @@ class ProductProduct(models.Model):
                 domain,
                 [("order_id.commitment_date", "<=", self.env.context.get("to_date").date())],
             ])
-        order_lines = self.env["sale.order.line"]._read_group(
+        order_lines = self.env["sale.order.line"].sudo()._read_group(
             domain, ["product_id", "product_uom_id"], ["product_uom_qty:sum", "qty_delivered:sum"]
         )
         for product, line_uom, qty_sold, qty_delivered in order_lines:

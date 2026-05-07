@@ -449,13 +449,15 @@ class TestSalePurchase(TestCommonSalePurchaseNoChart):
         self.assertEqual(self.product.outgoing_qty, 10.0)
         self.assertEqual(sale_order_1.order_line[0].virtual_available_at_date, 15.0)
         self.assertEqual(sale_order_2.order_line[0].virtual_available_at_date, 15.0)
+        self.assertEqual(sale_order_2.order_line[0].qty_available_today, 15.0)  # 25 on_hand - 10 reserved
 
-        # Valildating purchase should show up on incoming qty ANd forecasted at_date ONLY on SOs with date > day + 10
+        # Validating purchase should show up on incoming qty ANd forecasted at_date ONLY on SOs with date > day + 10
         po.button_confirm()
         self.env.invalidate_all()
         self.assertEqual(self.product.incoming_qty, 50.0)
         self.assertEqual(sale_order_1.order_line[0].virtual_available_at_date, 15.0)
         self.assertEqual(sale_order_2.order_line[0].virtual_available_at_date, 65.0)
+        self.assertEqual(sale_order_2.order_line[0].qty_available_today, 15.0)
 
         # confirming order 2 should show up on incoming qty ANd forecasted at_date ONLY on SOs with date > day + 12
         sale_order_2.action_confirm()
@@ -463,19 +465,20 @@ class TestSalePurchase(TestCommonSalePurchaseNoChart):
         self.assertEqual(self.product.outgoing_qty, 30.0)
         self.assertEqual(sale_order_1.order_line[0].virtual_available_at_date, 15.0)
         self.assertEqual(sale_order_2.order_line[0].virtual_available_at_date, 45.0)
+        self.assertEqual(sale_order_2.order_line[0].qty_available_today, 0.0)  # 25 on_hand - 30 reserved, min 0
 
         sale_order_1.deliver_sold_quantity()
         self.env.invalidate_all()
         self.assertEqual(self.product.qty_available, 15.0)  # 25 on_hand - 10 sold
         self.assertEqual(self.product.outgoing_qty, 20.0)  # 30 outgoing - 10 sold
-        self.assertEqual(sale_order_2.order_line[0].qty_available_today, 15.0)
+        self.assertEqual(sale_order_2.order_line[0].qty_available_today, 0.0)  # 15 on_hand - 20 reserved, min 0
         self.assertEqual(sale_order_2.order_line[0].virtual_available_at_date, 45.0)
 
         po.action_receive()
         self.env.invalidate_all()
         self.assertEqual(self.product.qty_available, 65.0)  # 15 on_hand + 50 received
         self.assertEqual(self.product.incoming_qty, 0)
-        self.assertEqual(sale_order_2.order_line[0].qty_available_today, 65.0)
+        self.assertEqual(sale_order_2.order_line[0].qty_available_today, 45.0)
         self.assertEqual(sale_order_2.order_line[0].virtual_available_at_date, 45.0)
 
         sale_order_2.deliver_sold_quantity()
