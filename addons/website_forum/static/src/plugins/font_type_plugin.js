@@ -1,7 +1,6 @@
-import { FontTypePlugin } from "@html_editor/main/font/font_type_plugin";
+import { FontTypePlugin, headingTags } from "@html_editor/main/font/font_type_plugin";
 
 const excludedPowerboxCommands = ["setTagHeading1", "setTagHeading2", "setTagHeading3"];
-const excludedFontItems = ["h1", "h2", "h3"];
 
 export class ForumFontTypePlugin extends FontTypePlugin {
     resources = {
@@ -10,7 +9,7 @@ export class ForumFontTypePlugin extends FontTypePlugin {
             (item) => !excludedPowerboxCommands.includes(item.commandId)
         ),
         font_type_items: this.resources.font_type_items.filter(
-            (item) => !excludedFontItems.includes(item.object.tagName)
+            (item) => !headingTags.includes(item.object.tagName.toUpperCase())
         ),
     };
 }
