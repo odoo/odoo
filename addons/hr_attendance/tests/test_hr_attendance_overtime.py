@@ -1569,3 +1569,38 @@ class TestHrAttendanceOvertime(HttpCase):
         self.ruleset.company_id.absence_management = True
         attendances._update_overtime()
         assert_overtime_durations(attendances)
+
+    def test_regenerate_weekly_overtime_flexible_employee(self):
+        self.ruleset.rule_ids.write({
+            'expected_hours_from_contract': True,
+            'quantity_period': 'week'
+        })
+        attendances = self.env['hr.attendance'].create([
+            {
+                "employee_id": self.flexible_employee.id,
+                "check_in": datetime(2026, 5, 5, 8, 15, 0),
+                "check_out": datetime(2026, 5, 5, 16, 15, 0),
+            },
+            {
+                "employee_id": self.flexible_employee.id,
+                "check_in": datetime(2026, 5, 6, 8, 15, 0),
+                "check_out": datetime(2026, 5, 6, 18, 15, 0),
+            },
+            {
+                "employee_id": self.flexible_employee.id,
+                "check_in": datetime(2026, 5, 7, 8, 15, 0),
+                "check_out": datetime(2026, 5, 7, 13, 15, 0),
+            },
+            {
+                "employee_id": self.flexible_employee.id,
+                "check_in": datetime(2026, 5, 8, 8, 15, 0),
+                "check_out": datetime(2026, 5, 8, 23, 15, 0),
+            },
+            {
+                "employee_id": self.flexible_employee.id,
+                "check_in": datetime(2026, 5, 9, 8, 15, 0),
+                "check_out": datetime(2026, 5, 9, 20, 15, 0),
+            },
+        ])
+        self.ruleset.action_regenerate_overtimes()
+        self.assertEqual(sum(attendances.mapped('overtime_hours')), 10)
