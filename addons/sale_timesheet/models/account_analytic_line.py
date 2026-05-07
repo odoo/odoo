@@ -6,8 +6,6 @@ from odoo import api, fields, models, _
 from odoo.fields import Domain
 from odoo.tools.misc import unquote
 
-from odoo.addons.sale_project.models.account_analytic_line import BILLABLE_TYPES
-
 TIMESHEET_BILLABLE_TYPES = [
     ('02_billable_fixed', 'Timesheets (Fixed Price)'),
     ('03_timesheet_revenues', 'Revenues (Time & Material)'),
@@ -16,8 +14,6 @@ TIMESHEET_BILLABLE_TYPES = [
     ('08_billable_manual', 'Timesheets (Manual) '),
     ('09_non_billable', 'Timesheets (Non-Billable)'),
 ]
-
-BILLABLE_TYPES += TIMESHEET_BILLABLE_TYPES
 
 
 class AccountAnalyticLine(models.Model):
