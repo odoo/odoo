@@ -216,7 +216,7 @@ class UoM(models.Model):
                 - if true, raise an exception if the conversion is not possible (different UoM category),
                 - otherwise, return the initial quantity
         """
-        if not self or not qty:
+        if not (self and qty and to_unit):
             return qty
         self.ensure_one()
 
