@@ -157,4 +157,5 @@ class TestOrmCountryState(models.Model):
     _description = 'Test ORM  Country State'
 
     name = fields.Char(required=True)
+    code = fields.Char()
     country_id = fields.Many2one('test_orm.country')
