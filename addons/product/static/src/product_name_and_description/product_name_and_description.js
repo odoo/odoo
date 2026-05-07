@@ -55,7 +55,6 @@ export class ProductNameAndDescriptionField extends Component {
         useProductAndLabelAutoresize(this.labelNode, { targetParentName: this.props.name });
         this.productNode = useRef("productNodeRef");
         useProductAndLabelAutoresize(this.productNode, { targetParentName: this.props.name });
-        this.currentProductName = "";
 
         this.descriptionColumn = this.constructor.descriptionColumn;
         useInputField({
@@ -108,15 +107,9 @@ export class ProductNameAndDescriptionField extends Component {
 
     get label() {
         let label = this.props.record.data[this.descriptionColumn];
-        this.currentProductName = this.productName ? label.split("\n")[0] : "";
-
-        if(this.productName && label.startsWith(this.productName)){
-            label = label.slice(this.productName.length + 1);
+        if (label.includes(this.productName)) {
+            label = label.replace(this.productName, "");
         }
-        else if(this.currentProductName && label.startsWith(this.currentProductName)){
-            label = label.slice(this.currentProductName.length + 1);
-        }
-
         return label.trim();
     }
 
