@@ -208,13 +208,45 @@ export class EpsonPrinter extends BasePrinter {
             );
         } else if (errorCode === ERROR_CODE_PRINTER_NOT_REACHABLE) {
             message = _t("The printer is not reachable.");
+        } else if (errorCode === "EPTR_AUTOMATICAL") {
+            message = _t(
+                "Continuous printing of high-density content caused a printing error. Please retry later."
+            );
+        } else if (errorCode === "EPTR_BATTERY_LOW") {
+            message = _t("The printer battery has run out, please charge or connect to power.");
         } else if (errorCode === "EPTR_COVER_OPEN") {
             message = _t("Printer cover is open. Please close it and try again!");
+        } else if (errorCode === "EPTR_CUTTER") {
+            message = _t("Auto cutter error occurred. Please check the cutter mechanism.");
+        } else if (errorCode === "EPTR_MECHANICAL") {
+            message = _t("Mechanical error occurred. Please check the printer.");
         } else if (
             errorCode === "EPTR_REC_EMPTY" ||
             this.hasStatus(status, STATUS_ROLL_PAPER_HAS_RUN_OUT)
         ) {
             message = _t("It seems that the printer runs out of paper.");
+        } else if (errorCode === "EPTR_UNRECOVERABLE") {
+            message = _t("Unrecoverable error occurred. Please check the printer.");
+        } else if (errorCode === "ERROR_WAIT_EJECT") {
+            message = _t("Waiting for paper removal. Please remove the ejected paper.");
+        } else if (errorCode === "EX_BADPORT") {
+            message = _t(
+                "Communication port error. Please check the printer connection and power."
+            );
+        } else if (errorCode === "EX_SPOOLER") {
+            message = _t("The print queue is full. Please try again later.");
+        } else if (errorCode === "EX_TIMEOUT") {
+            message = _t("Print timeout occurred. Please try again.");
+        } else if (errorCode === "JobNotFound") {
+            message = _t("The specified print job was not found.");
+        } else if (errorCode === "PrintSystemError") {
+            message = _t("A printing system error occurred. Please check the printer.");
+        } else if (errorCode === "RequestEntityTooLarge") {
+            message = _t("The print data is too large for the printer.");
+        } else if (errorCode === "SchemaError") {
+            message = _t("Invalid print request syntax. Please contact support.");
+        } else if (errorCode === "TooManyRequests") {
+            message = _t("Too many print requests sent to the printer. Please try again later.");
         } else {
             message = _t(
                 "The following error code was given by the printer: %s \nTo find more details on the error reason, please search online for: Epson Server Direct Print %s ",
