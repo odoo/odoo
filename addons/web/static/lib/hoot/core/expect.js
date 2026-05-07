@@ -1645,7 +1645,7 @@ export class Matcher {
             predicate: (checked) => !!checked,
             message: options?.message,
             onPass: () => [this._received, r`[is%are][! not] ${prop}`],
-            onFail: () => [r`expected`, this._received, r`[! not] to be ${prop}`],
+            onFail: () => [r`expected`, this._received, r`[!not ]to be ${prop}`],
             getFailedDetails: (checked) => detailsFromEntries([["Checked:", checked]]),
         }));
     }
@@ -1671,7 +1671,7 @@ export class Matcher {
             predicate: (displayed) => !!displayed,
             message: options?.message,
             onPass: () => [this._received, r`[is%are][! not] displayed`],
-            onFail: () => [r`expected`, this._received, r`[! not] to be displayed`],
+            onFail: () => [r`expected`, this._received, r`[!not ]to be displayed`],
             getFailedDetails: (displayed) => detailsFromEntries([["Displayed:", displayed]]),
         }));
     }
@@ -2052,7 +2052,7 @@ export class Matcher {
             predicate: (elText) => (expectsText ? valueMatches(elText, text) : elText.length > 0),
             message: options?.message,
             onPass: () => [this._received, r`[[has%have]![does%do] not have] text`, text],
-            onFail: () => [r`expected`, this._received, r`[! not] to have the given text`],
+            onFail: () => [r`expected`, this._received, r`[!not ]to have the given text`],
             getFailedDetails: (elText) => detailsFromValuesWithDiff(text, elText),
         }));
     }
@@ -2109,7 +2109,7 @@ export class Matcher {
             },
             message: options?.message,
             onPass: () => [this._received, r`[[has%have]![does%do] not have] value`, value],
-            onFail: () => [r`expected`, this._received, r`[! not] to have the given value`],
+            onFail: () => [r`expected`, this._received, r`[!not ]to have the given value`],
             getFailedDetails: (elValue) => detailsFromValuesWithDiff(value, elValue),
         }));
     }
