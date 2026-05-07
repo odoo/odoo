@@ -317,3 +317,71 @@ class TestPoSProductVariants(ProductVariantsCommon, TestPointOfSaleHttpCommon):
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_variants_merge_line_barcode', login="pos_user")
+
+    def test_mo_custom_description_ship_later(self):
+        """
+        Tests that a custom attribute is shown on the MO when being
+        processed through the PoS, in the custom description field
+        """
+        self.test_product_1 = self.env['product.template'].create({
+            'name': 'Custom Product',
+            'available_in_pos': True,
+            'list_price': 10.0,
+            'attribute_line_ids': [
+                Command.create({
+                    'attribute_id': self.custom_attribute.id,
+                    'value_ids': [Command.set([self.custom_attribute_value.id])],
+                }),
+                Command.create({
+                    'attribute_id': self.no_variant_attribute.id,
+                    'value_ids': [Command.set([self.no_variant_attribute_extra.id])],
+                }),
+                Command.create({
+                    'attribute_id': self.color_attribute.id,
+                    'value_ids': [Command.set([self.color_attribute_red.id])],
+                }),
+            ],
+        })
+        product_variant = self.test_product_1.product_variant_id
+        ptavs = self.test_product_1.attribute_line_ids.product_template_value_ids
+        ptav_custom = ptavs.filtered(lambda p: p.attribute_id == self.custom_attribute)
+        ptav_never = ptavs.filtered(lambda p: p.attribute_id == self.no_variant_attribute)
+        ptav_always = ptavs.filtered(lambda p: p.attribute_id == self.color_attribute)
+        self.main_pos_config.open_ui()
+
+        order = self.env['pos.order'].create({
+            'name': 'Order 12345-123-1234',
+            'company_id': self.env.company.id,
+            'session_id': self.main_pos_config.current_session_id.id,
+            'partner_id': self.partner_test_1.id,
+            'lines': [Command.create({
+                'product_id': product_variant.id,
+                'price_unit': 10.0,
+                'qty': 1.0,
+                'price_subtotal': 10.0,
+                'price_subtotal_incl': 10.0,
+                'attribute_value_ids': [Command.set([
+                    ptav_custom.id,
+                    ptav_never.id,
+                    ptav_always.id
+                ])],
+                'custom_attribute_value_ids': [Command.create({
+                    'custom_product_template_attribute_value_id': ptav_custom.id,
+                    'custom_value': 'White',
+                })],
+            })],
+            'amount_total': 10.0,
+            'amount_tax': 0.0,
+            'amount_paid': 10.0,
+            'amount_return': 0.0,
+        })
+        order._create_order_picking()
+        move = order.picking_ids.move_ids[0]
+        self.env['stock.reference'].create({
+            'name': order.name,
+            'move_ids': [Command.link(move.id)],
+            'pos_order_ids': [Command.link(order.id)],
+        })
+
+        move.invalidate_recordset(['description_picking'])
+        self.assertEqual(order.picking_ids.move_ids.description_picking, 'No variant: extra\nCustom: Custom: White')
