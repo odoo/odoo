@@ -70,7 +70,7 @@ class ResCompany(models.Model):
             'line_ids': [Command.create(aml_vals) for aml_vals in aml_vals_list],
         }
         account_move = self.env['account.move'].create(moves_vals)
-        self._save_closing_id(account_move.id)
+        account_move.company_id._save_closing_id(account_move.id)
         if auto_post:
             account_move._post()
 
