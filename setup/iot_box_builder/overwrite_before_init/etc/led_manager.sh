@@ -4,6 +4,7 @@ STATUS_UPDATE_DELAY_SECONDS=10
 
 GREEN_LED="/sys/class/leds/ACT/trigger"
 RED_LED="/sys/class/leds/PWR/trigger"
+TEST_FLAG="/tmp_ram/led_manager_test"
 
 IS_PI5=false
 if grep -q "Raspberry Pi 5" /proc/device-tree/model 2>/dev/null; then
@@ -30,11 +31,24 @@ led_blink() {
     echo "heartbeat" > "$1"
 }
 
+led_test() {
+    echo "timer" > "$1"
+    sleep 0.5
+    echo "timer" > "$2"
+}
+
 # Disable both LEDs initially
 led_off "$GREEN_LED"
 led_off "$RED_LED"
 
 while true; do
+    # Test mode: blink red and green LEDs for 30 seconds, then continue normal operation
+    if [ -f "$TEST_FLAG" ]; then
+        rm -f "$TEST_FLAG"
+        led_test "$GREEN_LED" "$RED_LED"
+        sleep 30
+        continue
+    fi
     sleep $STATUS_UPDATE_DELAY_SECONDS
     if ! ping -q -c 1 -W 2 1.1.1.1 >/dev/null; then
         # No network: blink red LED, (green stays off)

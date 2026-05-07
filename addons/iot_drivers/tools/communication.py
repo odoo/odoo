@@ -80,6 +80,7 @@ def handle_message(message_type: str, communication_type: str, **kwargs: dict) -
                 'status': 'success',
             }
         case "test_connection":
+            helpers.flash_leds()
             return {
                 **base_response,
                 'status': 'success',
