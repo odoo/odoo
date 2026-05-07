@@ -16,6 +16,7 @@ from odoo.http.session import (
     SESSION_DELETION_TIMER,
     SESSION_LIFETIME,
     SESSION_ROTATION_INTERVAL,
+    SESSION_ROTATION_INTERVAL_HEADER_SKIP,
     STORED_SESSION_BYTES,
     _session_identifier_re,
     get_session_max_inactivity,
@@ -475,3 +476,33 @@ class TestSessionRotation(HttpCase):
         self.logout()
         session_store().delete_from_identifiers([session_three[:STORED_SESSION_BYTES]])
         self.assertEqual(get_amount_sessions(session_three), 0)
+
+    def test_session_rotation_interval_skip_header(self):
+        """Test temporarily skipping interval-based session rotation for a request.
+
+        This is used by the mobile app when making requests through a webview, where a rotated ``session_id`` cookie
+        would not be propagated back to the mobile app.
+
+        Without this header, the user could be logged out if the automatic session rotation happens during such a
+        request.
+
+        For instance, the mobile app uses a webview to download attachments. This avoids rotating the session during
+        the download request.
+        """
+        # Obtain a session
+        self.authenticate("admin", "admin")
+        self.url_open("/odoo")
+        session_id = self.opener.cookies["session_id"]
+
+        # Expire the session to trigger the automatic soft rotation
+        session = session_store().get(session_id)
+        session["create_time"] -= SESSION_ROTATION_INTERVAL
+        session_store().save(session)
+
+        # Check the session doesn't rotate while using the skip header flag
+        self.url_open("/odoo", headers={SESSION_ROTATION_INTERVAL_HEADER_SKIP: "1"})
+        self.assertEqual(self.opener.cookies["session_id"], session_id)
+
+        # Check the session rotates while not using the skip header flag
+        self.url_open("/odoo")
+        self.assertNotEqual(self.opener.cookies["session_id"], session_id)
