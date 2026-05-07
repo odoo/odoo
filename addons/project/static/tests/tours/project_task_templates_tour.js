@@ -33,14 +33,7 @@ registry.category("web_tour.tours").add("project_task_templates_tour", {
         {
             trigger: ".o_form_dirty",
         },
-        {
-            trigger: "button.o_form_button_save",
-            run: "click",
-        },
-        {
-            content: "Wait for save completion",
-            trigger: ".o_form_readonly, .o_form_saved",
-        },
+        ...stepUtils.saveForm(),
         {
             trigger: 'div.note-editable.odoo-editor-editable:contains("Template description")',
             content: "Check that the created task has copied the description of the template",
