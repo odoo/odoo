@@ -107,6 +107,10 @@ class ResPartner(models.Model):
     # We put on inverse because a compute with a dependency to itself is not well managed in the ORM (it should be triggered first)
 
     @api.model
+    def _commercial_fields(self):
+        return super()._commercial_fields() + ['vies_valid']
+
+    @api.model
     def _run_vat_checks(self, country, vat, partner_name='', validation='error'):
         """ OVERRIDE """
         if not country or not vat:
