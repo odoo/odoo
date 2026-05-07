@@ -196,7 +196,7 @@ class TestEventFullCommon(EventCrmCase, TestSalesCommon, MockVisitor):
                         [(0, 0, {'name': 'Q2-Answer1'}),
                          (0, 0, {'name': 'Q2-Answer2'}),
                         ],
-                        'question_type': 'simple_choice',
+                        'question_type': 'radio',
                         'once_per_order': False,
                         'title': 'Question2',
                        }
@@ -204,6 +204,15 @@ class TestEventFullCommon(EventCrmCase, TestSalesCommon, MockVisitor):
                 (0, 0, {'question_type': 'text_box',
                         'once_per_order': True,
                         'title': 'Question3',
+                       }
+                ),
+                (0, 0, {'answer_ids':
+                        [(0, 0, {'name': 'Q4-Answer1'}),
+                         (0, 0, {'name': 'Q4-Answer2'}),
+                        ],
+                        'question_type': 'checkbox',
+                        'once_per_order': True,
+                        'title': 'Question4',
                        }
                 ),
             ],
@@ -296,7 +305,7 @@ class TestEventFullCommon(EventCrmCase, TestSalesCommon, MockVisitor):
                 continue
             for answer in registration.registration_answer_ids:
                 self.assertIn(answer.question_id.title, lead.description)
-                if answer.question_type == 'simple_choice':
+                if answer.question_type in ['simple_choice', 'radio', 'checkbox']:
                     self.assertIn(answer.value_answer_id.name, lead.description)
                 else:
                     self.assertIn(answer.value_text_box, lead.description)  # better: check multi line

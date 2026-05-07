@@ -1,17 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="pos_event.QuestionInputs">
-        <div t-foreach="questions" t-as="question" t-key="question.id" class="global_question input-group mt-3">
+        <div t-foreach="questions" t-as="question" t-key="question.id"
+            t-attf-class="global_question input-group mt-3 {{question.question_type === 'radio' ? 'flex-nowrap' : ''}}">
             <span class="input-group-text">
                 <t t-out="question.title"/>
                 <span t-if="question.is_mandatory_answer" class="text-danger">*</span>
             </span>
-            <select t-if="question.question_type === 'simple_choice'" t-custom-model="stateObject[question.id]" class="form-select">
+            <select t-if="question.question_type === 'simple_choice'" t-custom-model="stateObject[question.id]" class="form-select"
+                t-att-class="this.getValidationClass(question, stateObject, ticketIndex)"
+                t-on-blur="() => this.markTouched(question.id, ticketIndex)">
                 <option value="">--- Select ---</option>
                 <option t-foreach="question.answer_ids" t-as="choice" t-key="choice.id" t-att-value="choice.id">
                     <t t-out="choice.name"/>
                 </option>
             </select>
+            <div t-elif="question.question_type === 'radio'" class="d-flex flex-wrap mt-2 ms-2">
+                <div t-foreach="question.answer_ids" t-as="answer" t-key="answer.id" class="form-check me-3">
+                    <input type="radio" class="form-check-input"
+                        t-att-value="answer.id"
+                        t-attf-name="registration_{{data_index}}-question_{{question.id}}"
+                        t-custom-model="stateObject[question.id]"
+                        t-att-class="this.getValidationClass(question, stateObject, ticketIndex)"/>
+                    <span t-out="answer.name"/>
+                </div>
+            </div>
+            <div t-elif="question.question_type === 'checkbox'" class="ms-2">
+                <div t-foreach="question.answer_ids" t-as="answer" t-key="answer.id" class="d-flex form-check">
+                    <input type="checkbox" class="form-check-input"
+                        t-custom-model="stateObject[question.id][answer.id]"
+                        t-att-class="this.getValidationClass(question, stateObject, ticketIndex)"
+                        t-on-blur="() => this.markTouched(question.id, ticketIndex)"/>
+                    <span class="ms-2" t-out="answer.name"/>
+                </div>
+            </div>
             <input t-else="" class="form-control flex-grow-1" t-att-class="this.getValidationClass(question, stateObject, ticketIndex)" t-custom-model="stateObject[question.id]"
                 t-on-blur="() => this.markTouched(question.id, ticketIndex)"/>
         </div>

@@ -22,6 +22,30 @@ export class EventQuestionAnswer extends models.ServerModel {
             name: "Female",
             sequence: 2,
         },
+        {
+            id: 3,
+            question_id: 6,
+            name: "Regular",
+            sequence: 1,
+        },
+        {
+            id: 4,
+            question_id: 6,
+            name: "Vegetarian",
+            sequence: 2,
+        },
+        {
+            id: 5,
+            question_id: 7,
+            name: "2024 edition",
+            sequence: 1,
+        },
+        {
+            id: 6,
+            question_id: 7,
+            name: "2025 edition",
+            sequence: 2,
+        },
     ];
 }
 

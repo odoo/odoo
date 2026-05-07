@@ -197,16 +197,22 @@ patch(ProductScreen.prototype, {
         }
     },
     createRegistrationAnswer(textAnswers) {
-        return textAnswers.map(([questionId, answer]) => {
-            const ansId = this.pos.models["event.question.answer"].get(parseInt(answer));
-            return [
-                "create",
-                {
-                    question_id: this.pos.models["event.question"].get(parseInt(questionId)),
-                    ...(ansId ? { value_answer_id: ansId } : { value_text_box: answer }),
-                },
-            ];
-        });
+        return textAnswers.reduce(
+            (acc, [questionId, answer]) => {
+                const question = this.pos.models["event.question"].get(parseInt(questionId));
+                const answers = question?.question_type === "checkbox" ? answer : [answer];
+                answers.forEach((ans) => {
+                    const ansId = this.pos.models["event.question.answer"].get(parseInt(ans));
+                    acc.push([
+                        "create",
+                        {
+                            question_id: question,
+                            ...(ansId ? { value_answer_id: ansId } : { value_text_box: ans }),
+                        },
+                    ]);
+                })
+            return acc
+        }, []);
     },
     extractRegistrationData(questions, userData = {}) {
         const IDENTIFICATION_QUESTION_TYPES = new Set(["name", "email", "phone", "company_name"]);
@@ -222,9 +228,21 @@ patch(ProductScreen.prototype, {
                     return acc;
                 }
 
-                acc.textAnswer[qId] = answer;
-                if (IDENTIFICATION_QUESTION_TYPES.has(question.question_type)) {
-                    userData[question.question_type] ??= answer;
+                if (question.question_type === "checkbox") {
+                    acc.textAnswer[qId] = [];
+                    for (const [answerId, isChecked] of Object.entries(answer)) {
+                        if (
+                            isChecked &&
+                            this.pos.models["event.question.answer"].get(parseInt(answerId))
+                        ) {
+                            acc.textAnswer[qId].push(answerId);
+                        }
+                    }
+                } else {
+                    acc.textAnswer[qId] = answer;
+                    if (IDENTIFICATION_QUESTION_TYPES.has(question.question_type)) {
+                        userData[question.question_type] ??= answer;
+                    }
                 }
 
                 return acc;

@@ -1,4 +1,5 @@
 import { ReCaptcha } from "@google_recaptcha/js/recaptcha";
+import { addLoadingEffect } from "@web/core/utils/ui";
 import { registry } from "@web/core/registry";
 import { session } from "@web/session";
 import { Interaction } from "@web/public/interaction";
@@ -6,8 +7,8 @@ import { Interaction } from "@web/public/interaction";
 export class ModalRegistration extends Interaction {
     static selector = "#modal_attendees_registration,.o_wevent_modal_slot_ticket_registration";
     dynamicContent = {
-        "form": {
-            "t-on-submit": this.onSubmit,
+        ".o_event_registration_validate_submit_btn": {
+            "t-on-click": this.onClickConfirmButton,
         },
         ".js_goto_event, .btn-close": {
             "t-on-click": this.onClick,
@@ -80,10 +81,14 @@ export class ModalRegistration extends Interaction {
     /**
      * @param {SubmitEvent} ev
      */
-    async onSubmit(ev) {
-        ev.preventDefault();
+    async onClickConfirmButton(ev) {
+        this.toggleRequiredCheckboxes();
 
-        const form = ev.currentTarget;
+        const form = this.el.querySelector("form#attendee_registration");
+        if (!form.reportValidity()) {
+            return;
+        }
+
         this.recaptchaToken = await this.recaptcha.getToken("website_event_registration");
         if (this.recaptchaToken.error) {
             this.services.notification.add(this.recaptchaToken.error, {
@@ -103,7 +108,21 @@ export class ModalRegistration extends Interaction {
             tokenInput.setAttribute("value", this.recaptchaToken.token);
             this.insert(tokenInput, form);
         }
+
         form.submit();
+        addLoadingEffect(ev.target);
+    }
+
+    toggleRequiredCheckboxes() {
+        this.el.querySelectorAll(".checkbox-group.required").forEach((groupEl) => {
+            const checkboxEls = groupEl.querySelectorAll(".checkbox input");
+            checkboxEls.forEach(
+                (checkboxEl) =>
+                    (checkboxEl.required = ![...checkboxEls].some(
+                        (checkboxEl) => checkboxEl.checked
+                    ))
+            );
+        });
     }
 }
 

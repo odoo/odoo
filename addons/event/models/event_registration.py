@@ -81,7 +81,7 @@ class EventRegistration(models.Model):
     # questions
     registration_answer_ids = fields.One2many('event.registration.answer', 'registration_id', string='Attendee Answers')
     registration_answer_choice_ids = fields.One2many('event.registration.answer', 'registration_id', string='Attendee Selection Answers',
-        domain=[('question_type', '=', 'simple_choice')])
+        domain=[('question_type', 'in', ['simple_choice', 'radio', 'checkbox'])])
     # scheduled mails
     mail_registration_ids = fields.One2many(
         'event.mail.registration', 'registration_id',

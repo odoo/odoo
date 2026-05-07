@@ -137,7 +137,7 @@ const registerSteps = [
     },
     {
         content: "Validate attendees details",
-        trigger: ".modal button[type=submit]:enabled",
+        trigger: ".modal#modal_attendees_registration:not(.o_inactive_modal) .o_event_registration_validate_submit_btn",
         run: "click",
         expectUnloadPage: true,
     },
