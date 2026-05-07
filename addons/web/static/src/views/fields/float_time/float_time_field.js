@@ -4,7 +4,7 @@ import { formatFloatTime } from "../formatters";
 import { useInputField } from "../input_field_hook";
 import { standardFieldProps } from "../standard_field_props";
 import { useNumpadDecimal } from "../numpad_decimal_hook";
-import { parseFloatTime } from "../parsers";
+import { DurationParseError, InvalidNumberError, parseFloatTime } from "../parsers";
 
 import { Component, props, proxy, t } from "@odoo/owl";
 import { usePopover } from "@web/core/popover/popover_hook";
@@ -46,29 +46,49 @@ export class FloatTimeField extends Component {
 
     onValueChange(ev) {
         const currentInput = ev.target.value;
-        this.state.formattedResult = formatFloatTime(
-            parseFloatTime(currentInput, this.props.unit),
-            this.formatOptions
-        );
-        if (currentInput === this.state.formattedResult && this.resultPopover.isOpen) {
+        const parsedValue = this.parseOrClosePopover(currentInput);
+
+        if (parsedValue || parsedValue === 0) {
+            this.state.formattedResult = formatFloatTime(parsedValue, this.formatOptions);
+            if (currentInput === this.state.formattedResult && this.resultPopover.isOpen) {
+                this.resultPopover.close();
+            } else if (currentInput !== this.state.formattedResult && !this.resultPopover.isOpen) {
+                this.resultPopover.open(this.inputFloatTimeRef.el, {
+                    state: this.state,
+                });
+            }
+        } else {
             this.resultPopover.close();
-        } else if (currentInput !== this.state.formattedResult && !this.resultPopover.isOpen) {
+        }
+    }
+
+    openPopover() {
+        const duration = this.parseOrClosePopover(this.inputFloatTimeRef.el.value);
+        if (duration || duration === 0) {
+            this.state.formattedResult = formatFloatTime(duration, this.formatOptions);
             this.resultPopover.open(this.inputFloatTimeRef.el, {
                 state: this.state,
             });
         }
     }
 
-    openPopover() {
-        const duration = parseFloatTime(this.inputFloatTimeRef.el.value, this.props.unit);
-        this.state.formattedResult = formatFloatTime(duration, this.formatOptions);
-        this.resultPopover.open(this.inputFloatTimeRef.el, {
-            state: this.state,
-        });
-    }
-
     closePopover() {
         this.resultPopover.close();
+    }
+
+    parseOrClosePopover(value) {
+        try {
+            return parseFloatTime(value, this.props.unit);
+        } catch (error) {
+            if (
+                [EvalError, InvalidNumberError, DurationParseError].every(
+                    (e) => !(error instanceof e)
+                )
+            ) {
+                throw error;
+            }
+            this.closePopover();
+        }
     }
 
     get formattedValue() {

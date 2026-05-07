@@ -1,4 +1,5 @@
 import { expect, test } from "@odoo/hoot";
+import { press } from "@odoo/hoot-dom";
 import {
     clickSave,
     contains,
@@ -101,13 +102,38 @@ test("FloatTimeField with invalid value", async () => {
     });
 
     await contains(".o_field_float_time[name=qux] input").edit("blabla");
-    expect(".o_duration_popover").toHaveText("0h");
-    await clickSave();
-    expect(".o_field_float_time[name=qux] input").toHaveValue("0h");
-    
+    expect(".o_duration_popover").toHaveCount(0);
+    await press("enter");
+    expect(".o_field_float_time.o_field_invalid").toHaveCount(1);
     
     await contains(".o_field_float_time[name=qux] input").edit("6.5");
     expect(".o_duration_popover").toHaveText("6h 30m");
+});
+
+test("FloatTimeField with formula", async () => {
+    await mountView({
+        type: "form",
+        resModel: "foo",
+        arch: `
+            <form>
+                <field name="qux" widget="float_time"/>
+            </form>`,
+    });
+
+    await contains(".o_field_float_time[name=qux] input").edit("=2*3");
+    expect(".o_duration_popover").toHaveText("6h");
+    await clickSave();
+    expect(".o_field_float_time[name=qux] input").toHaveValue("6h");
+    
+    await contains(".o_field_float_time[name=qux] input").edit("=2*");
+    expect(".o_duration_popover").toHaveCount(0);
+    await press("enter");
+    expect(".o_field_float_time.o_field_invalid").toHaveCount(1);
+    
+    await contains(".o_field_float_time[name=qux] input").edit("=2l");
+    expect(".o_duration_popover").toHaveCount(0);
+    await press("enter");
+    expect(".o_field_float_time.o_field_invalid").toHaveCount(1);
 });
 
 test("float_time field does not have an inputmode attribute", async () => {
