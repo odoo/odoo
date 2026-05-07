@@ -1049,6 +1049,10 @@ class TestPosStockFlow(CommonPosStockTest):
                         "price_subtotal": 20,
                         "price_subtotal_incl": 20,
                         "total_cost": 20,
+                        'custom_attribute_value_ids': [Command.create({
+                            'custom_product_template_attribute_value_id': ptavs[1].id,
+                            'custom_value': 'Test Instructions',
+                        })],
                     }]],
             'payment_ids': [(0, 0, {
                 'amount': 20,
@@ -1066,4 +1070,97 @@ class TestPosStockFlow(CommonPosStockTest):
         self.env["pos.order"].sync_from_ui([order_data])
 
         moves = self.pos_config_usd.current_session_id.order_ids[0].picking_ids.move_ids
-        self.assertEqual(["\n(Leather)", "\n(Fabrics: Custom: Test Instructions)"], moves.mapped("description_picking"))
+        self.assertEqual(["Fabrics: Leather", "Fabrics: Custom: Test Instructions"], moves.mapped("description_picking"))
+
+    def test_mo_custom_description_ship_later(self):
+        """
+        Tests that a custom attribute is shown on the MO when being
+        processed through the PoS, in the custom description field
+        """
+        no_variant_attribute, custom_attribute, color_attribute = self.env['product.attribute'].create([
+            {
+                'name': 'No variant',
+                'create_variant': 'no_variant',
+                'value_ids': [
+                    Command.create({'name': 'extra'}),
+                ]
+            },
+            {
+                'name': 'Custom',
+                'create_variant': 'no_variant',
+                'value_ids': [
+                    Command.create({'name': 'Custom', 'is_custom': True}),
+                ]
+            },
+            {
+                'name': 'Color',
+                'value_ids': [
+                    Command.create({'name': 'red'}),
+                ],
+            }
+        ])
+        no_variant_attribute_extra = no_variant_attribute.value_ids[0]
+        custom_attribute_value = custom_attribute.value_ids[0]
+        color_attribute_red = color_attribute.value_ids[0]
+
+        self.test_product_1 = self.env['product.template'].create({
+            'name': 'Custom Product',
+            'available_in_pos': True,
+            'list_price': 10.0,
+            'attribute_line_ids': [
+                Command.create({
+                    'attribute_id': custom_attribute.id,
+                    'value_ids': [Command.set([custom_attribute_value.id])],
+                }),
+                Command.create({
+                    'attribute_id': no_variant_attribute.id,
+                    'value_ids': [Command.set([no_variant_attribute_extra.id])],
+                }),
+                Command.create({
+                    'attribute_id': color_attribute.id,
+                    'value_ids': [Command.set([color_attribute_red.id])],
+                }),
+            ],
+        })
+        product_variant = self.test_product_1.product_variant_id
+        ptavs = self.test_product_1.attribute_line_ids.product_template_value_ids
+        ptav_custom = ptavs.filtered(lambda p: p.attribute_id == custom_attribute)
+        ptav_never = ptavs.filtered(lambda p: p.attribute_id == no_variant_attribute)
+        ptav_always = ptavs.filtered(lambda p: p.attribute_id == color_attribute)
+        self.pos_config_usd.open_ui()
+
+        order = {
+            'name': 'Order 12345-123-1234',
+            'company_id': self.env.company.id,
+            'session_id': self.pos_config_usd.current_session_id.id,
+            'partner_id': self.partner.id,
+            'lines': [Command.create({
+                'product_id': product_variant.id,
+                'price_unit': 10.0,
+                'qty': 1.0,
+                'price_subtotal': 10.0,
+                'price_subtotal_incl': 10.0,
+                'attribute_value_ids': [Command.set([
+                    ptav_custom.id,
+                    ptav_never.id,
+                    ptav_always.id
+                ])],
+                'custom_attribute_value_ids': [Command.create({
+                    'custom_product_template_attribute_value_id': ptav_custom.id,
+                    'custom_value': 'White',
+                })],
+            })],
+            'payment_ids': [Command.create({
+                'amount': 10,
+                'name': fields.Datetime.now(),
+                'payment_method_id': self.cash_payment_method.id
+            })],
+            'amount_paid': 10.0,
+            'amount_total': 10.0,
+            'amount_tax': 0.0,
+            'amount_return': 0.0,
+            'shipping_date': fields.Date.today(),
+        }
+        self.env["pos.order"].sync_from_ui([order])
+        moves = self.pos_config_usd.current_session_id.order_ids[0].picking_ids.move_ids
+        self.assertEqual(moves.mapped('description_picking'), ['No variant: extra\nCustom: Custom: White'])
