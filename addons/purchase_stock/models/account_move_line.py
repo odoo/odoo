@@ -366,3 +366,10 @@ class AccountMoveLine(models.Model):
             relevant_qty = self._get_out_and_not_invoiced_qty(valuation_stock_moves)
 
         return price_unit_val_dif, relevant_qty
+
+    def _related_analytic_distribution(self):
+        # EXTENDS 'account'
+        vals = super()._related_analytic_distribution()
+        if not self.purchase_line_id and not self.analytic_distribution and self.move_id.stock_move_id.purchase_line_id:
+            vals |= self.move_id.stock_move_id.purchase_line_id.analytic_distribution or {}
+        return vals
