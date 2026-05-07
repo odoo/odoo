@@ -187,6 +187,20 @@ export class WebsiteTranslator extends WebsiteEditorComponent {
             });
             $edited = $edited.add(attrEdit);
         });
+        // Placeholder attributes on non-form elements (i.e. not input, select,
+        // textarea) are intended for content editors, not visible text
+        // for end-users. Example of such a placeholder: a blog post title.
+        const nodesToEditEls = Array.from($editable).filter(
+            (nodeEl) =>
+                nodeEl.matches('[placeholder*="data-oe-translation-initial-sha="]') &&
+                !nodeEl.matches(":empty, input, select, textarea")
+        );
+        for (const nodeEl of nodesToEditEls) {
+            const trans = nodeEl.getAttribute("placeholder");
+            const match = trans.match(translationRegex);
+            nodeEl.setAttribute("placeholder", match[2]);
+        }
+
         const textEdit = $editable.filter('textarea:contains(data-oe-translation-initial-sha)');
         textEdit.each(function () {
             var $node = $(this);
