@@ -76,7 +76,6 @@ export class WebsiteForumWysiwyg extends Wysiwyg {
             dropImageAsAttachment: true,
             height: this.props.height,
             allowImageResize: false,
-            allowFontFamily: false,
         };
     }
 
