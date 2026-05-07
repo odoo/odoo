@@ -678,6 +678,10 @@ class TestPointOfSaleFlow(CommonPosTest):
                         "price_subtotal": 20,
                         "price_subtotal_incl": 20,
                         "total_cost": 20,
+                        'custom_attribute_value_ids': [Command.create({
+                            'custom_product_template_attribute_value_id': ptavs[1].id,
+                            'custom_value': 'Test Instructions',
+                        })],
                     }]],
             'payment_ids': [(0, 0, {
                 'amount': 20,
@@ -695,7 +699,7 @@ class TestPointOfSaleFlow(CommonPosTest):
         self.env["pos.order"].sync_from_ui([order_data])
 
         moves = self.pos_config_usd.current_session_id.order_ids[0].picking_ids.move_ids
-        self.assertEqual(["\n(Leather)", "\n(Fabrics: Custom: Test Instructions)"], moves.mapped("description_picking"))
+        self.assertEqual(["Fabrics: Leather", "Fabrics: Custom: Test Instructions"], moves.mapped("description_picking"))
 
     def test_pos_order_invoice_payment_term(self):
         """ Test that when invoicing a POS order paid with customer account, the partner's payment term is then applied to the invoice. """
