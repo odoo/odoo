@@ -1,5 +1,5 @@
 import { useSubEnv } from "@web/owl2/utils";
-import { Component, onMounted, proxy } from "@odoo/owl";
+import { Component, onMounted, proxy, useEffect, useListener } from "@odoo/owl";
 import { ModelStore } from "@api_doc/doc_model_store";
 import { useDocUI } from "@api_doc/utils/doc_ui_store";
 import { ApiKeyModal } from "@api_doc/components/doc_modal_api_key";
@@ -26,16 +26,29 @@ export class DocClient extends Component {
         this.modelStore = proxy(new ModelStore());
         useSubEnv({ modelStore: this.modelStore });
 
-        this.state = proxy({ showSearchModal: false });
+        this.state = proxy({
+            showSearchModal: false,
+            showSidebar: true,
+            showAside: true,
+        });
+
+        useEffect(() => {
+            const isSmall = this.ui.isSmall;
+            this.state.showAside = !isSmall;
+            this.state.showSidebar = !isSmall;
+        });
 
         onMounted(async () => {
             await this.modelStore.loadModels();
             this.selectUrlModel();
         });
 
-        window.addEventListener("popstate", () => {
-            this.selectUrlModel();
-        });
+        useListener(window, "popstate", () => this.selectUrlModel());
+    }
+
+    closePanels() {
+        this.state.showAside = false;
+        this.state.showSidebar = false;
     }
 
     selectUrlModel() {

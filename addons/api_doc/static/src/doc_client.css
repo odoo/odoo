@@ -137,27 +137,21 @@
     }
 
     pre {
-        margin-bottom: 0 !important;
-        padding: .15rem .3rem;
-        background-color: var(--background-2);
+        margin: 0;
+        padding: .5rem .75rem;
+        background-color: var(--background);
         border: 1px solid var(--border) !important;
         color: var(--text);
         border-radius: 5px;
+        font-size: .9em;
+        white-space: pre-wrap;
+        word-break: break-word;
         overflow: auto;
 
         code {
             padding: 0;
             background: none;
             border-radius: 0;
-        }
-
-        i {
-            color: #fff;
-            opacity: 1;
-        }
-        i::before {
-            color: #fff;
-            opacity: 1;
         }
     }
     /* #endregion */
@@ -246,11 +240,12 @@
             margin-bottom: 0.5rem;
         }
 
-        tt {
-            background-color: rgba(0, 0, 0, 0.05);
+        tt, .docutils.literal {
+            background-color: rgb(from var(--text) r g b / 0.08);
             padding: 0.1rem 0.3rem;
             border-radius: 3px;
-            font-family: monospace;
+            font-family: var(--bs-font-monospace);
+            font-size: 1em;
         }
 
         dl {
@@ -421,7 +416,7 @@
     .o-doc-sidebar {
         --sidebar-pe: 1rem;
         min-width: 20rem;
-        max-width: 30rem;
+        max-width: 25rem;
         top: var(--header-size);
         padding: 1rem 0 0 1rem;
         height: calc(100vh - var(--header-size));
@@ -471,11 +466,32 @@
         background-color: var(--btn);
     }
 
+    .o-doc-copyable pre {
+        padding-right: 5rem;
+    }
+
+    .o-doc-copy-btn {
+        background: none;
+        color: var(--text);
+        font-size: .85em;
+        padding: .25rem;
+        opacity: 0;
+        transition: opacity .15s ease-in-out;
+    }
+
+    .o-doc-copyable:hover .o-doc-copy-btn, .o-doc-copy-btn:focus-visible {
+        opacity: .6;
+    }
+
+    .o-doc-copy-btn:hover {
+        opacity: 1 !important;
+    }
+
     .o-doc-method {
         scroll-margin-top: 5rem;
 
         .o-doc-method-header {
-            padding: 1rem 1.5rem;
+            padding: .75rem 1.5rem .75rem 1rem;
             top: var(--header-size);
             z-index: 10;
 
@@ -486,9 +502,52 @@
         }
 
         .o-doc-method-content {
+            gap: var(--size-3);
+            padding: var(--size-3);
             border-bottom-left-radius: 5px;
             border-bottom-right-radius: 5px;
         }
+
+        .o-doc-method-doc, .o_doc_request {
+            display: flex;
+            flex-direction: column;
+            gap: var(--size-3);
+        }
+
+        section h4 {
+            font-size: 1.3em;
+            font-weight: 500;
+            margin-bottom: var(--size-1);
+        }
+    }
+
+    /* On small screen we display the asides as overlay */
+    &.o-doc-small {
+        .o-doc-sidebar, .o-doc-model-aside {
+            position: fixed !important;
+            top: var(--header-size);
+            height: calc(100dvh - var(--header-size));
+            max-height: none;
+            width: min(20rem, 85vw);
+            min-width: 0;
+            z-index: 70;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .o-doc-sidebar {
+            left: 0;
+        }
+
+        .o-doc-model-aside {
+            right: 0;
+        }
+    }
+
+    .o-doc-panel-backdrop {
+        position: fixed;
+        inset: var(--header-size) 0 0 0;
+        z-index: 60;
+        background: rgba(0, 0, 0, 0.3);
     }
 
     .o-doc-spinner {
