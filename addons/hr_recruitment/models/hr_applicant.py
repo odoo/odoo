@@ -301,6 +301,90 @@ class Applicant(models.Model):
         for applicant in self:
             applicant.user_id = applicant.job_id.user_id.id
 
+<<<<<<< 9267b2d1a9b2d2d6a33eceab07d572406c68c723
+||||||| 2fde70e450a36a258bdb67dcb0bd6646b60a26ff
+    @api.depends('partner_id')
+    def _compute_partner_phone_email(self):
+        for applicant in self:
+            if not applicant.partner_id:
+                continue
+            applicant.email_from = applicant.partner_id.email
+            if not applicant.partner_phone:
+                applicant.partner_phone = applicant.partner_id.phone
+            if not applicant.partner_mobile:
+                applicant.partner_mobile = applicant.partner_id.mobile
+
+    def _inverse_partner_email(self):
+        for applicant in self:
+            if not applicant.email_from:
+                continue
+            if not applicant.partner_id:
+                if not applicant.partner_name:
+                    raise UserError(_('You must define a Contact Name for this applicant.'))
+                applicant.partner_id = self.env['res.partner'].with_context(default_lang=self.env.lang).find_or_create(applicant.email_from)
+            if applicant.partner_name and not applicant.partner_id.name:
+                applicant.partner_id.name = applicant.partner_name
+            if tools.email_normalize(applicant.email_from) != tools.email_normalize(applicant.partner_id.email):
+                # change email on a partner will trigger other heavy code, so avoid to change the email when
+                # it is the same. E.g. "email@example.com" vs "My Email" <email@example.com>""
+                applicant.partner_id.email = applicant.email_from
+            if applicant.partner_mobile:
+                applicant.partner_id.mobile = applicant.partner_mobile
+            if applicant.partner_phone:
+                applicant.partner_id.phone = applicant.partner_phone
+
+    @api.depends('partner_phone')
+    def _compute_partner_phone_sanitized(self):
+        for applicant in self:
+            applicant.partner_phone_sanitized = applicant._phone_format(fname='partner_phone') or applicant.partner_phone
+
+    @api.depends('partner_mobile')
+    def _compute_partner_mobile_sanitized(self):
+        for applicant in self:
+            applicant.partner_mobile_sanitized = applicant._phone_format(fname='partner_mobile') or applicant.partner_mobile
+
+=======
+    @api.depends('partner_id')
+    def _compute_partner_phone_email(self):
+        for applicant in self:
+            if not applicant.partner_id:
+                continue
+            applicant.email_from = applicant.partner_id.email
+            if not applicant.partner_phone:
+                applicant.partner_phone = applicant.partner_id.phone
+            if not applicant.partner_mobile:
+                applicant.partner_mobile = applicant.partner_id.mobile
+
+    def _inverse_partner_email(self):
+        for applicant in self:
+            if not applicant.email_from:
+                continue
+            if not applicant.partner_id:
+                if not applicant.partner_name:
+                    raise UserError(_('You must define a Contact Name for this applicant.'))
+                applicant.partner_id = self.env['res.partner'].with_context(default_lang=self.env.lang).find_or_create(f"{applicant.partner_name} <{applicant.email_from}>")
+            if applicant.partner_name and not applicant.partner_id.name:
+                applicant.partner_id.name = applicant.partner_name
+            if tools.email_normalize(applicant.email_from) != tools.email_normalize(applicant.partner_id.email):
+                # change email on a partner will trigger other heavy code, so avoid to change the email when
+                # it is the same. E.g. "email@example.com" vs "My Email" <email@example.com>""
+                applicant.partner_id.email = applicant.email_from
+            if applicant.partner_mobile:
+                applicant.partner_id.mobile = applicant.partner_mobile
+            if applicant.partner_phone:
+                applicant.partner_id.phone = applicant.partner_phone
+
+    @api.depends('partner_phone')
+    def _compute_partner_phone_sanitized(self):
+        for applicant in self:
+            applicant.partner_phone_sanitized = applicant._phone_format(fname='partner_phone') or applicant.partner_phone
+
+    @api.depends('partner_mobile')
+    def _compute_partner_mobile_sanitized(self):
+        for applicant in self:
+            applicant.partner_mobile_sanitized = applicant._phone_format(fname='partner_mobile') or applicant.partner_mobile
+
+>>>>>>> 0d67679d8cfb6f8c9f3226e4d977607845bdf3dd
     def _phone_get_number_fields(self):
         """ This method returns the fields to use to find the number to use to
         send an SMS on a record. """

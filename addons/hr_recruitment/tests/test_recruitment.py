@@ -102,7 +102,8 @@ class TestRecruitment(TransactionCase):
 
     def test_application_no_partner_duplicate(self):
         """ Test that when applying, the existing partner
-            doesn't get duplicated.
+            doesn't get duplicated, and their name is set
+            properly.
         """
         applicant_data = {
             'candidate_id': self.env['hr.candidate'].create({'partner_name': 'Test - CEO'}).id,
@@ -111,8 +112,9 @@ class TestRecruitment(TransactionCase):
         }
         # First application, a partner should be created
         self.env['hr.applicant'].create(applicant_data)
-        partner_count = self.env['res.partner'].search_count([('email', '=', 'test@thisisatest.com')])
-        self.assertEqual(partner_count, 1)
+        partner = self.env['res.partner'].search([('email', '=', 'test@thisisatest.com')])
+        self.assertEqual(len(partner), 1)
+        self.assertEqual(partner.name, 'Test')
         # Second application, no partner should be created
         self.env['hr.applicant'].create(applicant_data)
         partner_count = self.env['res.partner'].search_count([('email', '=', 'test@thisisatest.com')])

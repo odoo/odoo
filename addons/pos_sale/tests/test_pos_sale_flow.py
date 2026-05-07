@@ -611,10 +611,16 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         self.product_a.lst_price = 150
         self.product_a.taxes_id = None
         self.product_a.available_in_pos = True
+<<<<<<< 9267b2d1a9b2d2d6a33eceab07d572406c68c723
         self.product_a.name = 'Product A'
         self.env['res.partner'].create({'name': 'A Test Partner AAA'})
+||||||| 2fde70e450a36a258bdb67dcb0bd6646b60a26ff
+        self.env['res.partner'].create({'name': 'Test Partner AAA'})
+=======
+        self.env['res.partner'].create({'name': 'AAA Test Partner'})
+>>>>>>> 0d67679d8cfb6f8c9f3226e4d977607845bdf3dd
         sale_order = self.env['sale.order'].create({
-            'partner_id': self.env['res.partner'].create({'name': 'Test Partner BBB'}).id,
+            'partner_id': self.env['res.partner'].create({'name': 'BBB Test Partner'}).id,
             'order_line': [(0, 0, {
                 'product_id': self.product_a.id,
                 'name': self.product_a.name,

@@ -24,10 +24,26 @@ registry.category("web_tour.tours").add("PosLoyaltyLoyaltyProgram1", {
 
             // Order2: Consumes points to get free product.
             ProductScreen.clickPartnerButton(),
+<<<<<<< 9267b2d1a9b2d2d6a33eceab07d572406c68c723:addons/pos_loyalty/static/tests/tours/pos_loyalty_loyalty_program_tour.js
             ProductScreen.clickCustomer("AAA Test Partner"),
             ProductScreen.clickDisplayedProduct("Whiteboard Pen", true, "1.00"),
             ProductScreen.clickDisplayedProduct("Whiteboard Pen", true, "2.00"),
             // At this point, AAA Test Partner has 4 points.
+||||||| 2fde70e450a36a258bdb67dcb0bd6646b60a26ff:addons/pos_loyalty/static/tests/tours/PosLoyaltyLoyaltyProgramTour.js
+            ProductScreen.clickCustomer("Test Partner AAA"),
+            ProductScreen.clickDisplayedProduct("Whiteboard Pen"),
+            ProductScreen.selectedOrderlineHas("Whiteboard Pen", "1.00"),
+            ProductScreen.clickDisplayedProduct("Whiteboard Pen"),
+            ProductScreen.selectedOrderlineHas("Whiteboard Pen", "2.00"),
+            // At this point, Test Partner AAA has 4 points.
+=======
+            ProductScreen.clickCustomer("AAA Test Partner"),
+            ProductScreen.clickDisplayedProduct("Whiteboard Pen"),
+            ProductScreen.selectedOrderlineHas("Whiteboard Pen", "1.00"),
+            ProductScreen.clickDisplayedProduct("Whiteboard Pen"),
+            ProductScreen.selectedOrderlineHas("Whiteboard Pen", "2.00"),
+            // At this point, AAA Test Partner has 4 points.
+>>>>>>> 0d67679d8cfb6f8c9f3226e4d977607845bdf3dd:addons/pos_loyalty/static/tests/tours/PosLoyaltyLoyaltyProgramTour.js
             PosLoyalty.isRewardButtonHighlighted(true),
             ProductScreen.clickDisplayedProduct("Whiteboard Pen", true, "3.00"),
             PosLoyalty.hasRewardLine("Free Product - Whiteboard Pen", "-3.20", "1.00"),
@@ -69,7 +85,17 @@ registry.category("web_tour.tours").add("PosLoyaltyLoyaltyProgram1", {
 registry.category("web_tour.tours").add("PosLoyaltyLoyaltyProgram2", {
     steps: () =>
         [
+<<<<<<< 9267b2d1a9b2d2d6a33eceab07d572406c68c723:addons/pos_loyalty/static/tests/tours/pos_loyalty_loyalty_program_tour.js
             // Order1: Immediately set the customer to Test Partner AAA which has 4 points.
+||||||| 2fde70e450a36a258bdb67dcb0bd6646b60a26ff:addons/pos_loyalty/static/tests/tours/PosLoyaltyLoyaltyProgramTour.js
+            ProductScreen.clickHomeCategory(),
+
+            // Order1: Immediately set the customer to Test Partner AAA which has 4 points.
+=======
+            ProductScreen.clickHomeCategory(),
+
+            // Order1: Immediately set the customer to AAA Test Partner which has 4 points.
+>>>>>>> 0d67679d8cfb6f8c9f3226e4d977607845bdf3dd:addons/pos_loyalty/static/tests/tours/PosLoyaltyLoyaltyProgramTour.js
             // - He has enough points to purchase a free product but since there is still
             //   no product in the order, reward button should not yet be highlighted.
             // - Furthermore, clicking the reward product should not add it as reward product.
@@ -140,8 +166,14 @@ registry.category("web_tour.tours").add("PosLoyaltyChangeRewardQty", {
         [
             Chrome.startPoS(),
             ProductScreen.clickPartnerButton(),
+<<<<<<< 9267b2d1a9b2d2d6a33eceab07d572406c68c723:addons/pos_loyalty/static/tests/tours/pos_loyalty_loyalty_program_tour.js
             PartnerList.searchCustomerValue("DDD Test Partner"),
             ProductScreen.clickCustomer("DDD Test Partner"),
+||||||| 2fde70e450a36a258bdb67dcb0bd6646b60a26ff:addons/pos_loyalty/static/tests/tours/PosLoyaltyLoyaltyProgramTour.js
+            ProductScreen.clickCustomer("Test Partner DDD"),
+=======
+            ProductScreen.clickCustomer("DDD Test Partner"),
+>>>>>>> 0d67679d8cfb6f8c9f3226e4d977607845bdf3dd:addons/pos_loyalty/static/tests/tours/PosLoyaltyLoyaltyProgramTour.js
             ProductScreen.addOrderline("Desk Organizer", "1"),
             PosLoyalty.isRewardButtonHighlighted(true),
             PosLoyalty.claimReward("Free Product - Whiteboard Pen"),
@@ -193,7 +225,13 @@ registry.category("web_tour.tours").add("PosLoyaltyDontGrantPointsForRewardOrder
             Dialog.confirm("Open Register"),
 
             ProductScreen.clickPartnerButton(),
+<<<<<<< 9267b2d1a9b2d2d6a33eceab07d572406c68c723:addons/pos_loyalty/static/tests/tours/pos_loyalty_loyalty_program_tour.js
             ProductScreen.clickCustomer("A Test Partner"),
+||||||| 2fde70e450a36a258bdb67dcb0bd6646b60a26ff:addons/pos_loyalty/static/tests/tours/PosLoyaltyLoyaltyProgramTour.js
+            ProductScreen.clickCustomer("Test Partner"),
+=======
+            ProductScreen.clickCustomer("AAA Test Partner"),
+>>>>>>> 0d67679d8cfb6f8c9f3226e4d977607845bdf3dd:addons/pos_loyalty/static/tests/tours/PosLoyaltyLoyaltyProgramTour.js
 
             ProductScreen.addOrderline("Desk Organizer", "1"),
             ProductScreen.addOrderline("Whiteboard Pen", "1"),
@@ -277,7 +315,13 @@ registry.category("web_tour.tours").add("test_not_create_loyalty_card_expired_pr
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
             ProductScreen.clickPartnerButton(),
+<<<<<<< 9267b2d1a9b2d2d6a33eceab07d572406c68c723:addons/pos_loyalty/static/tests/tours/pos_loyalty_loyalty_program_tour.js
             ProductScreen.clickCustomer("A Test Partner"),
+||||||| 2fde70e450a36a258bdb67dcb0bd6646b60a26ff:addons/pos_loyalty/static/tests/tours/PosLoyaltyLoyaltyProgramTour.js
+            ProductScreen.clickCustomer("Test Partner"),
+=======
+            ProductScreen.clickCustomer("AAA Test Partner"),
+>>>>>>> 0d67679d8cfb6f8c9f3226e4d977607845bdf3dd:addons/pos_loyalty/static/tests/tours/PosLoyaltyLoyaltyProgramTour.js
             ProductScreen.addOrderline("Desk Organizer", "3"),
             PosLoyalty.finalizeOrder("Cash", "15.3"),
         ].flat(),
@@ -289,7 +333,7 @@ registry.category("web_tour.tours").add("PosOrderClaimReward", {
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
             ProductScreen.clickPartnerButton(),
-            ProductScreen.clickCustomer("Test Partner"),
+            ProductScreen.clickCustomer("AAA Test Partner"),
             ProductScreen.addOrderline("Desk Organizer", "3"),
             PosLoyalty.isPointsDisplayed(true),
             PosLoyalty.claimReward("Free Product - Whiteboard Pen"),
@@ -303,7 +347,13 @@ registry.category("web_tour.tours").add("PosOrderNoPoints", {
         [
             Chrome.startPoS(),
             ProductScreen.clickPartnerButton(),
+<<<<<<< 9267b2d1a9b2d2d6a33eceab07d572406c68c723:addons/pos_loyalty/static/tests/tours/pos_loyalty_loyalty_program_tour.js
             ProductScreen.clickCustomer("AAA Test Partner 2"),
+||||||| 2fde70e450a36a258bdb67dcb0bd6646b60a26ff:addons/pos_loyalty/static/tests/tours/PosLoyaltyLoyaltyProgramTour.js
+            ProductScreen.clickCustomer("Test Partner 2"),
+=======
+            ProductScreen.clickCustomer("BBB Test Partner"),
+>>>>>>> 0d67679d8cfb6f8c9f3226e4d977607845bdf3dd:addons/pos_loyalty/static/tests/tours/PosLoyaltyLoyaltyProgramTour.js
             ProductScreen.addOrderline("Desk Organizer", "3"),
             PosLoyalty.isPointsDisplayed(false),
             PosLoyalty.finalizeOrder("Cash", "15.3"),
@@ -374,12 +424,24 @@ registry.category("web_tour.tours").add("test_max_usage_partner_with_point", {
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
             ProductScreen.clickPartnerButton(),
+<<<<<<< 9267b2d1a9b2d2d6a33eceab07d572406c68c723:addons/pos_loyalty/static/tests/tours/pos_loyalty_loyalty_program_tour.js
             ProductScreen.clickCustomer("AAA Test Partner 2"),
+||||||| 2fde70e450a36a258bdb67dcb0bd6646b60a26ff:addons/pos_loyalty/static/tests/tours/PosLoyaltyLoyaltyProgramTour.js
+            ProductScreen.clickCustomer("Test Partner 2"),
+=======
+            ProductScreen.clickCustomer("BBB Test Partner"),
+>>>>>>> 0d67679d8cfb6f8c9f3226e4d977607845bdf3dd:addons/pos_loyalty/static/tests/tours/PosLoyaltyLoyaltyProgramTour.js
             ProductScreen.addOrderline("Desk Organizer", "3"),
             PosLoyalty.claimReward("100% on your order"),
             PosLoyalty.finalizeOrder("Cash", "0"),
             ProductScreen.clickPartnerButton(),
+<<<<<<< 9267b2d1a9b2d2d6a33eceab07d572406c68c723:addons/pos_loyalty/static/tests/tours/pos_loyalty_loyalty_program_tour.js
             ProductScreen.clickCustomer("AAA Test Partner 3"),
+||||||| 2fde70e450a36a258bdb67dcb0bd6646b60a26ff:addons/pos_loyalty/static/tests/tours/PosLoyaltyLoyaltyProgramTour.js
+            ProductScreen.clickCustomer("Test Partner"),
+=======
+            ProductScreen.clickCustomer("AAA Test Partner"),
+>>>>>>> 0d67679d8cfb6f8c9f3226e4d977607845bdf3dd:addons/pos_loyalty/static/tests/tours/PosLoyaltyLoyaltyProgramTour.js
             ProductScreen.addOrderline("Desk Organizer", "3"),
             PosLoyalty.isRewardButtonHighlighted(false),
         ].flat(),
