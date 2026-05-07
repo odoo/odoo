@@ -920,6 +920,10 @@ export class TablePlugin extends Plugin {
             } else {
                 ev.preventDefault();
                 this.selectTableCells(this.dependencies.selection.getEditableSelection());
+                // For an empty cell with a div inside, we need to use setSelection to trigger the selectionchange event.
+                this.dependencies.selection.setSelection(
+                    this.dependencies.selection.getEditableSelection()
+                );
             }
             return;
         }
@@ -1084,6 +1088,13 @@ export class TablePlugin extends Plugin {
                     // which deselects the single cell. Hence, we need a label
                     // to keep it selected.
                     this._isFirefoxDoubleMousedown = true;
+                }
+                if (ev.detail === 2) {
+                    // Specifically for double click on empty cell, to trigger
+                    // selectionchange event and update the toolbar button states.
+                    this.dependencies.selection.setSelection(
+                        this.dependencies.selection.getEditableSelection()
+                    );
                 }
                 if (ev.detail === 3) {
                     // Doing a tripleclick on a text will change the selection.
