@@ -1748,7 +1748,7 @@ describe("symmetrical selection", () => {
             el,
             `<table class="table table-bordered o_table o_selected_table">
                 <tbody>
-                    <tr><td class="o_selected_td">[ab<br>]</td><td><br></td><td><br></td></tr>
+                    <tr><td class="o_selected_td">[ab]<br></td><td><br></td><td><br></td></tr>
                     <tr><td><br></td><td><br></td><td><br></td></tr>
                 </tbody>
             </table>`
