@@ -5187,14 +5187,6 @@ class AccountMove(models.Model):
             if move.journal_id.autocheck_on_post:
                 move.checked = move.journal_id.autocheck_on_post
 
-            move_company_and_parents = move.company_id.sudo().parent_ids
-            mismatched_accounts = move.line_ids.mapped('account_id').filtered(lambda account: not move_company_and_parents & account.sudo().company_ids)
-            if mismatched_accounts:
-                validation_msgs.add(self.env._(
-                    "The entry is using accounts (%(accounts_codes_names)s) from a different company.",
-                    accounts_codes_names=format_list(self.env, mismatched_accounts.mapped('display_name'))
-                ))
-
         if validation_msgs:
             msg = "\n".join([line for line in validation_msgs])
             raise UserError(msg)
