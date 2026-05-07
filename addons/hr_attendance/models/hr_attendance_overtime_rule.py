@@ -152,12 +152,16 @@ class HrAttendanceOvertimeRule(models.Model):
                 Intervals([(start, stop, self.env['resource.calendar'])])
             attendances_interval.extend(intervals_attendance_by_attendance[attendance]._items)
 
+        employee = attendances.employee_id
         if self.expected_hours_from_contract:
-            period_schedule = schedule & Intervals([(start, stop, self.env['resource.calendar'])])
-            expected_duration = sum_intervals(period_schedule)
+            if employee.version_id.is_flexible:
+                duration = employee.version_id.hours_per_week if self.quantity_period == 'week' else employee.version_id.hours_per_day
+                expected_duration = max(duration, 0)
+            else:
+                period_schedule = schedule & Intervals([(start, stop, self.env['resource.calendar'])])
+                expected_duration = sum_intervals(period_schedule)
 
         overtime_amount = sum_intervals(Intervals(attendances_interval)) - expected_duration
-        employee = attendances.employee_id
         company = self.company_id or employee.company_id
         if company.absence_management and float_compare(overtime_amount, -self.employee_tolerance, 5) == -1:
             if not intervals_attendance_by_attendance:
