@@ -162,10 +162,16 @@ class StockMove(models.Model):
             line = pos_order.lines.filtered(
                 lambda l: l.product_id == product
                 and l.id not in seen
-                and any(av.attribute_id.create_variant == "no_variant" for av in l.attribute_value_ids)
+                and any(av.attribute_id.create_variant == "no_variant" or av.is_custom for av in l.attribute_value_ids)
             )[:1]
 
             if line and move.description_picking == product.display_name:
-                extra = line.full_product_name.replace(product.name, "", 1).strip()
-                move.description_picking = f"\n{extra}" if extra else ""
+                never_values = line.attribute_value_ids.filtered(
+                    lambda av: av.attribute_id.create_variant == 'no_variant' and not av.is_custom
+                )
+                descriptions = never_values.mapped("display_name")
+                for custom_value in line.custom_attribute_value_ids:
+                    descriptions.append(f"{custom_value.display_name}")
+
+                move.description_picking = "\n".join(descriptions) if descriptions else ""
                 seen.add(line.id)

@@ -156,3 +156,13 @@ class ProductVariantsCommon(ProductCommon):
                 ==
                 cls.color_attribute_green
         )
+        cls.custom_attribute = cls.env['product.attribute'].create({
+            'name': 'Custom',
+            'display_type': 'radio',
+            'create_variant': 'no_variant',
+        })
+        cls.custom_attribute_value = cls.env['product.attribute.value'].create({
+            'name': 'Custom',
+            'attribute_id': cls.custom_attribute.id,
+            'is_custom': True,
+        })
