@@ -24,7 +24,7 @@ const {
     DEFAULT_FIELD_VALUES,
     DEFAULT_RELATIONAL_FIELD_VALUES,
     DEFAULT_SELECTION_FIELD_VALUES,
-    S_FIELD,
+    S_FIELD_REQUIRED_KEYS,
     copyFields,
     isComputed,
 } = fields;
@@ -412,7 +412,8 @@ function getModelDefinition(previous, constructor) {
 
     // Fields declared as JS class fields (do not override explicit fields)
     for (const [fieldName, fieldDef] of Object.entries(model)) {
-        if (!fieldDef?.[S_FIELD]) {
+        if (!fieldDef?.[S_FIELD_REQUIRED_KEYS]) {
+            // Not a field
             continue;
         }
         model._fields[fieldName] ||= validateFieldDefinition(fieldName, fieldDef);
@@ -1296,12 +1297,11 @@ function updateComodelRelationalFields(model, record, originalRecord, writeOptio
  * @param {FieldDefinition} fieldDef
  */
 function validateFieldDefinition(fieldName, fieldDef) {
-    if (fieldDef[S_FIELD] && fieldDef.name) {
+    if (S_FIELD_REQUIRED_KEYS in fieldDef && fieldDef.name) {
         throw new MockServerError(
             `Cannot set the name of field "${fieldName}" from its definition: got "${fieldDef.name}"`
         );
     }
-    delete fieldDef[S_FIELD];
     return fieldDef;
 }
 
