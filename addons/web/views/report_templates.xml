@@ -528,12 +528,12 @@
             <table class="o_ignore_layout_styling table table-borderless mb-0">
                 <tbody>
                     <tr>
-                        <td t-if="company.report_header" class="o_company_tagline fw-bold p-0 pe-2">
+                        <td t-if="company.report_header" class="o_company_tagline w-50 fw-bold p-0 pe-2">
                             <span t-field="company.report_header">
                                 Company tagline
                             </span>
                         </td>
-                        <td class="p-0 text-end">
+                        <td class="w-50 p-0 text-end">
                             <img t-if="company.logo" class="o_company_logo mb-2" t-att-src="image_data_uri(company.logo)" alt="Logo"/>
                             <div name="company_address">
                                 <t t-call="web.company_address_list"/>
