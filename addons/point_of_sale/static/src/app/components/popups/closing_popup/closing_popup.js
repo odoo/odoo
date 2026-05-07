@@ -311,7 +311,7 @@ export class ClosePosPopup extends Component {
     }
     get validPms() {
         return this.props.non_cash_payment_methods.filter(
-            (item) => item.number == 1 && (item.type === "bank" || item.type === "cash")
+            (pm) => pm.number !== 0 && (pm.type === "bank" || pm.type === "cash")
         );
     }
     isTheLastPM(pm) {
