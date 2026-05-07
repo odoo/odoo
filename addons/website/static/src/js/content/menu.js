@@ -659,11 +659,10 @@ publicWidget.registry.hoverableDropdown = animations.Animation.extend({
         this.$dropdownMenus.attr('data-bs-popper', 'none');
         if (uiUtils.getSize() >= SIZES.LG) {
             this.$dropdownMenus.css('margin-top', '0');
-            this.$dropdownMenus.css('top', 'unset');
         } else {
             this.$dropdownMenus.css('margin-top', '');
-            this.$dropdownMenus.css('top', '');
         }
+        this.$dropdownMenus.css('top', '');
     },
     /**
      * Hides all opened dropdowns.

@@ -1246,6 +1246,7 @@ header {
         // TODO in master: remove the `#o_main_nav` selector.
         #o_main_nav,.o_main_nav {
             > .container {
+                position: relative;
                 // TODO: remove in master and add "align-items-center" in the XML.
                 align-items: center;
             }
@@ -1281,6 +1282,9 @@ header {
     header#top > nav:not(.o_header_mobile) {
         // TODO in master: remove the `#o_main_nav` selector.
         #o_main_nav, .o_main_nav {
+            > .container:first-child {
+                position: relative;
+            }
             .navbar-nav {
                 // TODO: remove in master and add "align-items-center" in the XML.
                 align-items: center;
@@ -1315,7 +1319,7 @@ header {
 
 // Mega menu
 .o_mega_menu {
-    width: 100%;
+    width: if(index(('sales_one', 'sales_four'), o-website-value('header-template')), 100vw, 100%);
     padding: 0;
     margin-top: 0 !important;
     border-radius: 0;
@@ -1331,11 +1335,17 @@ header {
     }
 }
 
+.o_header_sales_four_top .dropdown-menu.o_mega_menu, .navbar:has(.o_header_sales_one_right_col) .dropdown-menu.o_mega_menu {
+    @include media-breakpoint-up(lg) {
+        left: 50%;
+        transform: translateX(-50%);
+    }
+}
+
 .dropdown-menu.o_mega_menu_container_size {
     $-header-template: o-website-value('header-template');
     @if not index(('sidebar', 'hamburger'), $-header-template) {
-        $bp: if($-header-template == 'minimalist', md, lg);
-        @include media-breakpoint-up($bp) {
+        @include media-breakpoint-up(lg) {
             left: 50%;
             transform: translateX(-50%);
         }
