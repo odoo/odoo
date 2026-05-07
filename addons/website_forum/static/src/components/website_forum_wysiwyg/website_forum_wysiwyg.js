@@ -56,7 +56,9 @@ export class WebsiteForumWysiwyg extends Wysiwyg {
 
     /** @override */
     getEditorConfig() {
+        const config = super.getEditorConfig();
         return {
+            localOverlayContainers: config.localOverlayContainers,
             getRecordInfo: this.props.getRecordInfo,
             Plugins: this.props.fullEdit ? FULL_EDIT_PLUGINS : BASIC_PLUGINS,
             content: this.getTextAreaContent(),
