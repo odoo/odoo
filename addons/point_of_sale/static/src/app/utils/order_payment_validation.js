@@ -111,10 +111,6 @@ export default class OrderPaymentValidation {
         if (!this.checkCashRoundingHasBeenWellApplied()) {
             return false;
         }
-        const linesToRemove = this.order.lines.filter((line) => line.canBeRemoved);
-        for (const line of linesToRemove) {
-            this.order.removeOrderline(line);
-        }
         if (await this.isOrderValid(isForceValidate)) {
             // remove pending payments before finalizing the validation
             const toRemove = [];
