@@ -646,6 +646,15 @@ export class PosOrder extends PosOrderAccounting {
         return false;
     }
 
+    findFiscalPosition(fiscalPosition) {
+        if (fiscalPosition) {
+            return this.models["account.fiscal.position"].find(
+                (position) => position.id === fiscalPosition.id
+            );
+        }
+        return false;
+    }
+
     updatePricelistAndFiscalPosition(newPartner) {
         let newPartnerPricelist, newPartnerFiscalPosition;
         const defaultFiscalPosition = this.models["account.fiscal.position"].find(
@@ -653,11 +662,8 @@ export class PosOrder extends PosOrderAccounting {
         );
 
         if (newPartner) {
-            newPartnerFiscalPosition = newPartner.fiscal_position_id
-                ? this.models["account.fiscal.position"].find(
-                      (position) => position.id === newPartner.fiscal_position_id?.id
-                  )
-                : defaultFiscalPosition;
+            newPartnerFiscalPosition =
+                this.findFiscalPosition(newPartner.fiscal_position_id) || defaultFiscalPosition;
             newPartnerPricelist =
                 this.config.available_pricelist_ids.find(
                     (pricelist) => pricelist.id === newPartner.property_product_pricelist?.id
