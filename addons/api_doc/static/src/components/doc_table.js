@@ -135,10 +135,6 @@ export class DocTable extends Component {
         return values.find((v) => v.type === TABLE_TYPES.Id)?.value;
     }
 
-    getTag(row) {
-        return row && typeof row === "object" && row.type === "code" ? "pre" : "span";
-    }
-
     getValue(row) {
         return String(row && typeof row === "object" ? row.value : row);
     }

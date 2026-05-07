@@ -54,7 +54,7 @@
                             t-on-mouseleave="(ev) => this.scheduleHide(ev)"
                         ></i>
                     </t>
-                    <t t-else="" t-tag="this.getTag(row)" t-att-class="this.getClass(row)" t-out="this.getValue(row)"/>
+                    <span t-else="" t-att-class="this.getClass(row)" t-out="this.getValue(row)"/>
 
                     <a
                         t-if="row.relation"
