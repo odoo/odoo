@@ -657,9 +657,18 @@ class Website(models.Model):
             user_domain = [
                 ('is_published', '=', True),
                 ('service_tracking', 'in', self.env['product.template']._get_saleable_tracking_types()),
+<<<<<<< e17bcf65dcf0d9db3f8c7decff794c4e6c44e3b8
             ]
         company_domain = [('company_id', 'in', [False, self.company_id.id])]
         return Domain.AND([self._product_domain(), website_domain, user_domain, company_domain])
+||||||| 4cc1e6884be673523f768d5ec471a1ffa19c5fb4
+            ]])
+        company_domain = [('company_id', 'in', [False, self.company_id.id])]
+        return expression.AND([self._product_domain(), website_domain, company_domain])
+=======
+            ]])
+        return expression.AND([self._product_domain(), website_domain])
+>>>>>>> 794e91e16d21b8c0bd2652d49e7f572b73bec090
 
     def _product_domain(self):
         return [('sale_ok', '=', True)]
