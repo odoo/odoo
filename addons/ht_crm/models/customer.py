@@ -28,7 +28,8 @@ class Customer(models.Model):
     # Nhân viên đang phụ trách
     salesperson_id = fields.Many2one(
         'sale.employee',
-        string="Nhân viên phụ trách"
+        string="Nhân viên phụ trách",
+        domain=[('role_ids.code', '=', 'sales')]
     )
 
     # Danh sách nhân viên đã từng phụ trách
@@ -72,6 +73,9 @@ class Customer(models.Model):
     # Dự án khách hàng quan tâm
     project_ids = fields.Many2many(
         'estate.project',
+        'estate_project_interested_rel',
+        'customer_id',
+        'project_id',
         string="Dự án quan tâm"
     )
 

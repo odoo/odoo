@@ -6,12 +6,34 @@ class Transaction(models.Model):
 
     employee_id = fields.Many2one('sale.employee', domain=[('role_ids.code', '=', 'sales')])
     customer_id = fields.Many2one("sale.customer")
-    product = fields.Char(string="Tên SP")
-    value = fields.Float(default=0)
+    product_id = fields.Many2one('estate.property.unit', domain=[('state', 'in', ['available', 'resale'])])
     date = fields.Date(default=fields.Date.today)
 
+    value = fields.Float(
+        string="Giá giao dịch",
+        compute="_compute_value",
+        store=True,
+        digits=(16, 0)
+    )
+    listed_price = fields.Float(string="Giá niêm yết")
+    discount = fields.Float(
+        string="Chiết khấu (%)",
+        default=0,
+        digits=(16, 1)
+    )
 
     _tracking = True
+
+    @api.onchange('product_id')
+    def _onchange_product_id(self):
+        for rec in self:
+            rec.listed_price = rec.product_id.price
+
+    @api.depends('listed_price', 'discount')
+    def _compute_value(self):
+        for rec in self:
+            discount_amount = rec.listed_price * (rec.discount / 100)
+            rec.value = rec.listed_price - discount_amount
 
     @api.constrains('value')
     def _check_value(self):

@@ -84,6 +84,19 @@
     </record>
 
     <!-- User -->
+    <record id="rule_employee_user" model="ir.rule">
+        <field name="name">User (Employee)</field>
+        <field name="model_id" ref="model_sale_employee"/>
+        <field name="domain_force">
+        [
+            '|',
+            ('user_id', '=', user.id),
+            ('project_ids.sales_ids.user_id', '=', user.id)
+        ]
+        </field>
+        <field name="groups" eval="[(4, ref('group_ht_user'))]"/>
+    </record>
+
     <record id="rule_transaction_user" model="ir.rule">
         <field name="name">User (Transaction)</field>
         <field name="model_id" ref="model_sale_transaction"/>
@@ -132,7 +145,7 @@
                 <field name="date"/>
                 <field name="employee_id"/>
                 <field name="customer_id"/>
-                <field name="product"/>
+                <field name="product_id"/>
                 <field name="value" widget="monetary"/>
             </list>
         </field>

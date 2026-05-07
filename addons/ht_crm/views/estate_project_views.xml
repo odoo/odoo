@@ -18,7 +18,35 @@
         <field name="domain_force">[(1, '=', 1)]</field>
         <field name="groups" eval="[(4, ref('base.group_system'))]"/>
     </record> -->
+    <record id="rule_estate_project_user" model="ir.rule">
+        <field name="name">User - (Estate Project)</field>
+        <field name="model_id" ref="model_estate_project"/>
+        <field name="domain_force">
+            [
+                (
+                    'sales_ids.user_id',
+                    'in',
+                    [user.id]
+                )
+            ]
+        </field>
+        <field name="groups" eval="[(4, ref('group_ht_user'))]"/>
+    </record>
 
+    <record id="rule_estate_property_unit_user" model="ir.rule">
+        <field name="name">User - (Property Unit)</field>
+        <field name="model_id" ref="model_estate_property_unit"/>
+        <field name="domain_force">
+            [
+                (
+                    'project_id.sales_ids.user_id',
+                    'in',
+                    [user.id]
+                )
+            ]
+        </field>
+        <field name="groups" eval="[(4, ref('group_ht_user'))]"/>
+    </record>
 
     <record id="view_estate_project_form" model="ir.ui.view">
         <field name="name">estate.project.form</field>
@@ -90,7 +118,7 @@
 
                         <page string="Sales phụ trách">
                             <group>
-                                <field name="sales_ids">
+                                <field name="sales_ids" string="">
                                     <list editable="bottom" limit="5">
                                         <field name="name"/>
                                     </list>
@@ -152,6 +180,7 @@
             <list>
 
                 <field name="product_code"/>
+                <field name="project_id"/>
                 <field name="block"/>
                 <field name="floor"/>
                 <field name="unit_number"/>

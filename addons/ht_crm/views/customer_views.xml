@@ -110,62 +110,86 @@
     <record id="view_sale_customer_form" model="ir.ui.view">
         <field name="name">sale.customer.form</field>
         <field name="model">sale.customer</field>
+
         <field name="arch" type="xml">
             <form string="Customer">
 
-                <!-- Header: trạng thái -->
+                <!-- HEADER -->
                 <header>
-                    <field name="state" widget="statusbar"
+                    <field name="state"
+                        widget="statusbar"
                         statusbar_visible="potential,active,vip,inactive,blocked"/>
                 </header>
 
                 <sheet>
 
-                    <!-- Tên + thông tin cơ bản -->
+                    <!-- TITLE -->
                     <div class="oe_title">
                         <h1>
                             <field name="name" placeholder="Tên khách hàng..."/>
                         </h1>
                     </div>
 
-                    <group>
+                    <!-- 🔹 THÔNG TIN CHÍNH -->
+                    <group string="Thông tin khách hàng">
+
                         <group>
+
+                            <field name="partner_platform"/>
                             <field name="email"/>
                             <field name="source"/>
                             <field name="type"/>
+
                         </group>
 
                         <group>
+
                             <field name="salesperson_id"/>
+
                             <field name="ignore"
                                 groups="base.group_system,ht_crm.group_ht_leader,ht_crm.group_ht_executive"/>
+
                         </group>
+
                     </group>
 
-                    <!-- Tabs -->
+                    <!-- 🔹 THÔNG TIN CÁ NHÂN -->
+                    <group string="Thông tin cá nhân">
+
+                        <group>
+                            <field name="date_of_birth"/>
+                            <field name="id_number"/>
+                        </group>
+
+                        <group>
+                            <field name="issue_date"/>
+                            <field name="issue_place"/>
+                        </group>
+
+                    </group>
+
+                    <!-- 🔹 ĐỊA CHỈ -->
+                    <group string="Địa chỉ">
+
+                        <field name="permanent_address"/>
+
+                        <field name="contact_address"/>
+
+                    </group>
+
+                    <!-- NOTEBOOK -->
                     <notebook>
 
-                        <!-- 📞 PHONEBOOK -->
+                        <!-- PHONEBOOK -->
                         <page string="Số điện thoại">
 
                             <field name="phonebook_ids">
-
                                 <list editable="bottom">
 
-                                    <!-- Ẩn vì đang ở customer -->
-                                    <!-- <field name="customer_id" column_invisible="1"/> -->
-
-                                    <!-- Chính -->
                                     <field name="phone" required="1"/>
-
-                                    <!-- Trạng thái -->
+                                    <field name="is_primary"/>
                                     <field name="is_called"/>
                                     <field name="unreachable"/>
-
-                                    <!-- Số chính -->
-                                    <field name="is_primary"/>
-
-                                    <!-- Ghi chú -->
                                     <field name="note"/>
 
                                 </list>
@@ -173,20 +197,27 @@
 
                         </page>
 
-                        <!-- 👥 SALES HISTORY -->
-                        <page string="Lịch sử phụ trách"
-                            groups="ht_crm.group_ht_executive">
-                            <field name="previous_salesperson_ids" widget="many2many_tags"/>
+                        <!-- PROJECT -->
+                        <page string="Dự án quan tâm">
+
+                            <field name="project_ids"
+                                widget="many2many_tags"/>
+
                         </page>
 
-                        <!-- 📁 PROJECT (placeholder vì bạn chưa define full) -->
-                        <page string="Dự án quan tâm">
-                            <field name="project_ids" widget="many2many_tags"/>
+                        <!-- SALES HISTORY -->
+                        <page string="Lịch sử phụ trách"
+                            groups="ht_crm.group_ht_executive">
+
+                            <field name="previous_salesperson_ids"
+                                widget="many2many_tags"/>
+
                         </page>
 
                     </notebook>
 
                 </sheet>
+
             </form>
         </field>
     </record>

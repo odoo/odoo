@@ -26,32 +26,32 @@
 
     <!-- Dự án -->
     <record id="action_estate_project" model="ir.actions.act_window">
-        <field name="name">Estate Projects</field>
+        <field name="name">Dự án bất động sản</field>
         <field name="res_model">estate.project</field>
         <field name="view_mode">list,form</field>
     </record>
 
     <record id="action_estate_property_unit" model="ir.actions.act_window">
-        <field name="name">Estate Property Unit</field>
+        <field name="name">Căn hộ / Sản phẩm bất động sản</field>
         <field name="res_model">estate.property.unit</field>
         <field name="view_mode">list,form</field>
     </record>
 
     <record id="action_estate_property_unit_type" model="ir.actions.act_window">
-        <field name="name">Estate Property Unit Type</field>
+        <field name="name">Loại căn hộ / sản phẩm</field>
         <field name="res_model">estate.property.unit.type</field>
         <field name="view_mode">list,form</field>
     </record>
 
     <!-- Nhân sự -->
     <record id="action_employee" model="ir.actions.act_window">
-        <field name="name">Employee</field>
+        <field name="name">Nhân Sự</field>
         <field name="res_model">sale.employee</field>
         <field name="view_mode">list,form</field>
     </record>
 
     <record id="action_employee_kpi" model="ir.actions.act_window">
-        <field name="name">KPI</field>
+        <field name="name">Sales KPI</field>
         <field name="res_model">sale.employee.kpi</field>
         <field name="view_mode">list,form</field>
     </record>
@@ -66,14 +66,8 @@
     </record>
 
     <record id="action_employee_role" model="ir.actions.act_window">
-        <field name="name">Employee Role</field>
+        <field name="name">Chức Vụ</field>
         <field name="res_model">sale.employee.role</field>
-        <field name="view_mode">list,form</field>
-    </record>
-
-    <record id="action_transaction" model="ir.actions.act_window">
-        <field name="name">Transaction</field>
-        <field name="res_model">sale.transaction</field>
         <field name="view_mode">list,form</field>
     </record>
 
@@ -96,13 +90,13 @@
         </menuitem>
 
         <!-- ORGANIZATION -->
-        <menuitem id="menu_org_root" name="Tổ Chức" sequence="30">
+        <menuitem id="menu_org_root" name="Tổ Chức" sequence="30" groups="group_ht_leader,group_ht_executive,base.group_system">
             <menuitem id="menu_employee" action="action_employee"/>
             <menuitem id="menu_role" action="action_employee_role"/>
         </menuitem>
 
         <!-- SYSTEM -->
-        <menuitem id="menu_system_root" name="Hệ Thống" sequence="40">
+        <menuitem id="menu_system_root" name="Hệ Thống" sequence="40" groups="base.group_system">
             <menuitem id="menu_users" action="action_users"/>
         </menuitem>
 

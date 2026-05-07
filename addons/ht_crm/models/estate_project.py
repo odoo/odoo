@@ -13,6 +13,18 @@ class EstatePropertyUnit(models.Model):
     _name = 'estate.property.unit'
     _description = 'Căn hộ / Sản phẩm bất động sản'
 
+    name = fields.Char(
+        related='product_code',
+        store=True,
+        string='Sản phẩm'
+    )
+    project_id = fields.Many2one(
+        'estate.project',
+        string="Dự án",
+        required=True,
+        ondelete='cascade'
+    )
+
     block = fields.Char(string="Block", size=5)
     floor = fields.Integer(string="Tầng")
     unit_number = fields.Integer(string="Căn hộ số", required=True)
@@ -42,6 +54,7 @@ class EstatePropertyUnit(models.Model):
         ('available', 'Còn trống'),
         ('reserved', 'Giữ chỗ'),
         ('sold', 'Đã bán'),
+        ('resale', 'Bán lại'),
         ('blocked', 'Khoá')
     ], default='available', string="Trạng thái")
 
@@ -138,15 +151,15 @@ class EstateProject(models.Model):
         'estate_project_employee_rel',
         'project_id',
         'employee_id',
-        string="Sales phụ trách"
+        string="Sales phụ trách",
+        domain=[('role_ids.code', '=', 'sales')]
     )
 
-    unit_ids = fields.Many2many(
+    unit_ids = fields.One2many(
         'estate.property.unit',
-        'estate_project_property_unit_rel',
         'project_id',
-        'unit_id',
-        string="Rổ hàng"
+        string="Rổ hàng",
+        domain=[('state', 'in', ['available', 'resale'])]
     )
 
     def action_clear_interested_customers(self):
