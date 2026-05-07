@@ -189,6 +189,21 @@ export class TranslationPlugin extends Plugin {
             /<span [^>]*data-oe-translation-source-sha="([^"]+)"[^>]*>([\s\S]*?)<\/span>/;
         const isEmpty = (el) => !el.hasChildNodes() || el.innerHTML.trim() === "";
         const matchTag = (el) => el.matches("input, select, textarea, img");
+
+        // Placeholder attributes on non-form elements (i.e. not input, select,
+        // textarea) are intended for content editors, not visible text
+        // for end-users. For example, blog post title is such a placeholder.
+        const placeholderEls = editableEls.filter(
+            (el) =>
+                el.getAttribute("placeholder")?.includes("data-oe-translation-source-sha=") &&
+                !matchTag(el)
+        );
+        for (const el of placeholderEls) {
+            const translation = el.getAttribute("placeholder");
+            const match = translation.match(translationRegex);
+            el.setAttribute("placeholder", match[2]);
+        }
+
         for (const translatedAttr of translatedAttrs) {
             const filteredEditableEls = editableEls.filter(
                 (editableEl) =>
