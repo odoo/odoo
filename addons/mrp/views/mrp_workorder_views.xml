@@ -368,10 +368,7 @@
                             options="{'end_date_field': 'date_finished', 'always_range': True}"
                             readonly="state in ['cancel', 'done']"
                         />
-                        <label for="duration_expected"/>
-                        <div class="o_input_box">
-                            <field name="duration_expected" widget="float_time" options="{'unit': 'minutes', 'show_seconds': True}" readonly="state in ['cancel', 'done']"/>
-                        </div>
+                        <field name="duration_expected" widget="float_time" options="{'unit': 'minutes', 'show_seconds': True}" readonly="state in ['cancel', 'done']"/>
                         <field name="remaining_time" decoration-danger="remaining_time &lt; 0"
                                 string="Time Remaining" widget="float_time" options="{'unit': 'minutes', 'show_seconds': True}" readonly="1"
                                 invisible="state in ['cancel', 'done']"/>
