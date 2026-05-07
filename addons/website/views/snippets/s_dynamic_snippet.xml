@@ -12,6 +12,9 @@
             t-att-data-s_dynamic_snippet-vcss="s_dynamic_snippet_vcss"
             t-att-data-s_dynamic_snippet_carousel-vcss="s_dynamic_snippet_carousel_vcss">
             <div t-attf-class="s_dynamic_snippet_container {{container_classes or 'container'}}">
+                <t t-set="placeholder_content">
+                    <span class="placeholder col-12 rounded" style="height: 250px;"/>
+                </t>
                 <div class="row s_nb_column_fixed">
                     <!-- Dynamic snippet loading effect -->
                     <section class="s_dynamic_snippet_holder d-none px-4 placeholder-glow">
@@ -21,7 +24,7 @@
                             <span class="placeholder mt-3 col-6 rounded"/>
                         </div>
                         <div class="row mt-4">
-                            <span class="placeholder col-12 rounded" style="height: 250px;"/>
+                            <t t-out="placeholder_content"/>
                         </div>
                     </section>
                     <section t-attf-class="{{is_single_record and 'd-none' or 'd-flex'}} {{snippet_heading_extra_classes or 'justify-content-between flex-column flex-md-row'}} s_dynamic_snippet_title oe_unremovable oe_unmovable mb-lg-0 pb-3 pb-md-0 s_col_no_resize">
@@ -31,6 +34,11 @@
                         </div>
                         <div t-if="main_page_url">
                             <a t-att-class="snippet_button_classes" t-att-href="main_page_url" t-out="snippet_button_text or snippet_button_text_default"/>
+                        </div>
+                    </section>
+                    <section class="s_dynamic_content_holder d-none px-4 placeholder-glow col">
+                        <div class="row mt-4">
+                            <t t-out="placeholder_content"/>
                         </div>
                     </section>
                     <section t-attf-class="s_dynamic_snippet_content oe_unremovable oe_unmovable o_not_editable col s_col_no_resize #{content_classes}">
