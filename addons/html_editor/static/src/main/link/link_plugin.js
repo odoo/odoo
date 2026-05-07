@@ -1229,7 +1229,7 @@ export class LinkPlugin extends Plugin {
             const textNodeSplitted = textSliced.split(/\s/);
             const potentialUrl = textNodeSplitted.pop();
             // In case of multiple matches, only the last one will be converted.
-            const match = [...potentialUrl.matchAll(new RegExp(URL_REGEX, "g"))].pop();
+            const match = [...potentialUrl.matchAll(new RegExp(URL_REGEX.source, URL_REGEX.flags + "g"))].pop();
 
             if (match) {
                 const nodeForSelectionRestore = selection.anchorNode.splitText(
