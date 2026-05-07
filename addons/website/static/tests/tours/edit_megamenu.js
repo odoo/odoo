@@ -98,12 +98,12 @@ registry.category("web_tour.tours").add("edit_megamenu", {
         },
         {
             content: "Click on the first title item.",
-            trigger: ":iframe .o_mega_menu h4",
+            trigger: ":iframe .o_mega_menu .h5",
             run: "click",
         },
         {
             content: "Press enter.",
-            trigger: ":iframe .o_mega_menu h4",
+            trigger: ":iframe .o_mega_menu .h5",
             run() {
                 this.anchor.dispatchEvent(
                     new window.InputEvent("input", { bubbles: true, inputType: "insertParagraph" })
@@ -112,14 +112,14 @@ registry.category("web_tour.tours").add("edit_megamenu", {
         },
         {
             content: "The menu should still be visible. Edit a menu item.",
-            trigger: ":iframe .o_mega_menu h4",
+            trigger: ":iframe .o_mega_menu .h5",
             // The content is removed in the previous step so it's now invisible.
             run: "editor New Menu Item",
         },
         {
             // If this step fails, it means that a patch inside bootstrap was lost.
             content: "Press the 'down arrow' key.",
-            trigger: ":iframe .o_mega_menu h4",
+            trigger: ":iframe .o_mega_menu .h5",
             run: "press ArrowDown",
         },
         ...clickOnSave(),
@@ -127,7 +127,7 @@ registry.category("web_tour.tours").add("edit_megamenu", {
         toggleMegaMenu(),
         {
             content: "The menu item should have been renamed.",
-            trigger: ':iframe .o_mega_menu h4:contains("New Menu Item")',
+            trigger: ':iframe .o_mega_menu .h5:contains("New Menu Item")',
         },
     ],
 });
@@ -259,7 +259,7 @@ registry.category("web_tour.tours").add("edit_megamenu_big_icons_subtitles", {
         ...changeOptionInPopover("Mega Menu", "Template", "Big Icons Subtitles"),
         ...clickToolbarButton(
             "h4 of first menu link of the first column",
-            ".s_mega_menu_big_icons_subtitles .row > div:first-child .nav > :first-child h4",
+            ".s_mega_menu_big_icons_subtitles .row > div:first-child .nav > :first-child .h4",
             "Bold (Ctrl + B)"
         ),
         ...clickOnSave(),
