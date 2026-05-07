@@ -41,9 +41,7 @@ export class PosData {
             unsyncData: [],
         });
 
-        if (!navigator.onLine) {
-            await this.checkConnectivity();
-        }
+        await this.checkConnectivity();
 
         this.initializeWebsocket();
         await this.initializeDeviceIdentifier();
@@ -147,7 +145,7 @@ export class PosData {
         });
 
         return new Promise((resolve) => {
-            this.indexedDB = new IndexedDB(this.databaseName, false, models, resolve);
+            this.indexedDB = new IndexedDB(this.databaseName, false, models, resolve, this.dialog);
         });
     }
 

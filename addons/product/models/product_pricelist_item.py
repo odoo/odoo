@@ -320,23 +320,36 @@ class ProductPricelistItem(models.Model):
 
     @api.constrains('base_pricelist_id', 'pricelist_id', 'base')
     def _check_pricelist_recursion(self):
-        def dfs_path(from_item, path, seen=set()):
-            if from_item.base_pricelist_id in path:
-                return path + from_item.base_pricelist_id
-            for to_item in from_item.base_pricelist_id.item_ids:
-                if to_item.base != 'pricelist' or to_item.id in seen:
-                    continue
-                seen.add(to_item.id)
-                if res := dfs_path(to_item, path + from_item.base_pricelist_id):
+        def dfs_path(from_pl, to_pl, path, seen):
+            if (from_pl, to_pl) in seen:
+                # If another pricelist rule from the same pricelist has the same target,
+                # there is no need to test that path again.
+                return path.browse()
+
+            if to_pl in path:
+                return path + to_pl
+
+            seen.add((from_pl, to_pl))
+            pricelist_based_items = self.env["product.pricelist.item"]._read_group(
+                domain=[("pricelist_id", "=", to_pl.id), ("base", "=", "pricelist")],
+                groupby=["base_pricelist_id"],
+                aggregates=["id:recordset"],
+            )
+            new_path = path + to_pl
+            for pricelist, _to_items in pricelist_based_items:
+                if res := dfs_path(to_pl, pricelist, new_path, seen):
                     return res
             return path.browse()
 
+        seen = set()
         for item in self:
-            if path := dfs_path(item, item.pricelist_id):
-                raise ValidationError(_(
-                    "Recursive pricelist rules detected: %s",
-                    " ⇒ ".join(path.mapped('name')),
-                ))
+            # Skip validation for rules not based on other pricelists.
+            if item.base != "pricelist" or not item.base_pricelist_id or not item.pricelist_id:
+                continue
+            if path := dfs_path(item.pricelist_id, item.base_pricelist_id, item.pricelist_id, seen):
+                raise ValidationError(
+                    _("Recursive pricelist rules detected: %s", " ⇒ ".join(path.mapped("name")))
+                )
 
     @api.constrains('date_start', 'date_end')
     def _check_date_range(self):

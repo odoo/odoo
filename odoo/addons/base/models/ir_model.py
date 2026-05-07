@@ -666,20 +666,26 @@ class IrModelFields(models.Model):
                     field_name=name,
                     related_field=self.related,
                 ))
-            model_name = field.relation
             if index < last and not field.relation:
                 raise UserError(_(
                     'Non-relational field name "%(field_name)s" in related field "%(related_field)s"',
                     field_name=name,
                     related_field=self.related,
                 ))
-            if not field.store and index < last:
+            if index < last and self.env.registry.ready and not (
+                field.store or (
+                    (model := self.env.get(model_name)) is not None
+                    and (model_field := model._fields.get(field.name))
+                    and model_field._description_searchable
+                )
+            ):
                 raise UserError(_(
-                    'Field "%(field_name)s" in related path "%(related_field)s" is not stored. '
-                    'Non-stored fields cannot be used in related fields.',
+                    'Field "%(field_name)s" in related path "%(related_field)s" is not searchable. '
+                    'Non-searchable fields cannot be used in related fields.',
                     field_name=name,
                     related_field=self.related,
                 ))
+            model_name = field.relation
         return field
 
     @api.constrains('related')

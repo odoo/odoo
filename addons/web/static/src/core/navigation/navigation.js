@@ -239,7 +239,9 @@ export class Navigator {
                 oldActiveItem && oldActiveItem.el.isConnected
                     ? this.items.findIndex((item) => item.el === oldActiveItem.el)
                     : -1;
-            const focusedElementIndex = this.items.findIndex((item) => item.el === document.activeElement);
+            const focusedElementIndex = this.items.findIndex(
+                (item) => item.el === document.activeElement
+            );
             if (activeItemIndex > -1) {
                 this._updateActiveItemIndex(activeItemIndex);
             } else if (this.activeItemIndex >= 0) {
@@ -336,7 +338,8 @@ export class Navigator {
      */
     _updateActiveItemIndex(index) {
         if (this.items[index]) {
-            this.items[index].setActive();
+            const shouldFocus = !this.items.some((item) => item.target === document.activeElement);
+            this.items[index].setActive(shouldFocus);
         } else {
             this.activeItemIndex = -1;
             this.activeItem = null;

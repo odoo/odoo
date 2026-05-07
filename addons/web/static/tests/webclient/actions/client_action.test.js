@@ -522,3 +522,35 @@ test("test display_exception client action", async () => {
     expect("header .modal-title").toHaveText("Invalid Operation");
     expect.verifyErrors([/RPC_ERROR/]);
 });
+
+test("discarded dialogs has special=true in onClose params", async () => {
+    Partner._views = {
+        form: /* xml */ `
+            <form>
+                <footer>
+                    <button class="btn-secondary" special="cancel" data-hotkey="x"/>
+                </footer>
+            </form>
+        `,
+    };
+
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction(
+        {
+            name: "Partners",
+            res_model: "partner",
+            views: [[false, "form"]],
+            target: "new",
+            type: "ir.actions.act_window",
+        },
+        {
+            onClose: (params) => {
+                expect.step(`special:${params?.special}`);
+            },
+        }
+    );
+
+    await contains(".modal footer .btn[special=cancel]").click();
+    expect(".modal .test_client_action").toHaveCount(0);
+    expect.verifySteps(["special:true"]);
+});

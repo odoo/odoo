@@ -128,6 +128,29 @@ class TestFlexibleResourceCalendar(TransactionCase):
             (datetime(2025, 8, 4, 0, 0, tzinfo=UTC), datetime(2025, 8, 4, 23, 59, 59, 999999, tzinfo=UTC), self.env['resource.calendar.attendance']),
         ], "fully flex resource doesn't have a calendar, he should not follow the flex calendar public holiday, he follows holidays without a calendar")
 
+    def test_flexible_resource_work_intervals_with_public_holiday_different_company(self):
+        company_2 = self.env["res.company"].create({"name": "Company 2"})
+        leave = self.env['resource.calendar.leaves'].create([{
+            'name': "Public Holiday for different company",
+            'company_id': company_2.id,
+            'date_from': datetime(2025, 8, 29, 0, 0, 0),
+            'date_to': datetime(2025, 8, 30, 0, 0, 0),
+            'resource_id': False,
+            'time_type': "leave",
+        }])
+        leave.company_id = company_2
+
+        start_dt = datetime(2025, 8, 28).astimezone(UTC)
+        end_dt = datetime(2025, 8, 31, 17, 0).astimezone(UTC)
+
+        work_intervals, _, _ = self.fully_flex_resource._get_flexible_resource_valid_work_intervals(start_dt, end_dt)
+        self.assertEqual(work_intervals[self.fully_flex_resource.id]._items, [
+                (datetime(2025, 8, 28, 0, 0, tzinfo=UTC), datetime(2025, 8, 28, 23, 59, 59, 999999, tzinfo=UTC), self.env['resource.calendar.attendance']),
+                (datetime(2025, 8, 29, 0, 0, tzinfo=UTC), datetime(2025, 8, 29, 23, 59, 59, 999999, tzinfo=UTC), self.env['resource.calendar.attendance']),
+                (datetime(2025, 8, 30, 0, 0, tzinfo=UTC), datetime(2025, 8, 30, 23, 59, 59, 999999, tzinfo=UTC), self.env['resource.calendar.attendance']),
+                (datetime(2025, 8, 31, 0, 0, tzinfo=UTC), datetime(2025, 8, 31, 17, 0, 0, tzinfo=UTC), self.env['resource.calendar.attendance']),
+            ])
+
     def test_hours_per_week_for_different_years(self):
         start_dt = datetime(2025, 12, 26).astimezone(UTC)
         end_dt = datetime(2026, 1, 1, 17).astimezone(UTC)

@@ -96,6 +96,7 @@ class AccountPaymentMethodLine(models.Model):
     _name = 'account.payment.method.line'
     _description = "Payment Methods"
     _order = 'sequence, id'
+    _check_company_domain = models.check_company_domain_parent_of
 
     # == Business fields ==
     name = fields.Char(compute='_compute_name', readonly=False, store=True)

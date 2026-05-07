@@ -436,3 +436,118 @@ class TestReportSession(TestPoSCommon):
         report = self.env['report.point_of_sale.report_saledetails'].get_sale_details()
         self.assertEqual(report["discount_amount"], 12.0, "Discount amount should be equal to 12.0")
         self.assertEqual(report["taxes_info"]["base_amount"], 90.0, "Base amount should be equal to 90.0")
+
+    def test_report_header_reflects_actual_order_sessions(self):
+        """A date-range report whose orders span multiple sessions (e.g. one
+        closed and one still open) must show state='multiple' rather than
+        displaying the closed session's name as if it were a single-session Z
+        report.
+        """
+        product = self.create_product('Test Product', self.categ_basic, 100)
+        order_vals = {
+            'company_id': self.env.company.id,
+            'pricelist_id': self.config.pricelist_id.id,
+            'partner_id': self.partner_a.id,
+            'lines': [(0, 0, {
+                'name': 'OL/0001',
+                'product_id': product.id,
+                'price_unit': 100,
+                'discount': 0,
+                'qty': 1,
+                'tax_ids': [],
+                'price_subtotal': 100,
+                'price_subtotal_incl': 100,
+            })],
+            'amount_paid': 100.0,
+            'amount_total': 100.0,
+            'amount_tax': 0.0,
+            'amount_return': 0.0,
+            'to_invoice': False,
+        }
+
+        # Session 1: open, create an order, close.
+        self.config.open_ui()
+        session1 = self.config.current_session_id
+        order1 = self.env['pos.order'].create({**order_vals, 'session_id': session1.id})
+        self.make_payment(order1, self.bank_pm1, 100)
+        session1.action_pos_session_closing_control()
+
+        # Session 2: open, create an order, intentionally leave open.
+        self.config.open_ui()
+        session2 = self.config.current_session_id
+        order2 = self.env['pos.order'].create({**order_vals, 'session_id': session2.id})
+        self.make_payment(order2, self.bank_pm1, 100)
+
+        # Run the report via date range (config_ids only, no session_ids).
+        # Both sessions' orders fall in the default date range (today).
+        report = self.env['report.point_of_sale.report_saledetails'].get_sale_details(
+            config_ids=self.config.ids,
+        )
+
+        self.assertEqual(report['state'], 'multiple',
+            "Header state must be 'multiple' when orders span more than one session")
+        self.assertFalse(report['session_name'],
+            "session_name must be False when orders come from multiple sessions")
+        self.assertEqual(report['nbr_orders'], 2,
+            "Both sessions' orders should be included in the report body")
+
+        session2.action_pos_session_closing_control()
+        report2 = self.env['report.point_of_sale.report_saledetails'].get_sale_details(
+            config_ids=self.config.ids,
+        )
+        self.assertEqual(report2['state'], 'multiple',
+            "Two closed sessions in range must still produce state='multiple'")
+        self.assertEqual(report2['nbr_orders'], 2)
+
+    def test_report_sale_details_total_with_cash_rounding(self):
+        """Test that the sale details report shows the cash rounding amount."""
+        rounding_method = self.env['account.cash.rounding'].create({
+            'name': 'Rounding 0.05',
+            'rounding': 0.05,
+            'profit_account_id': self.company_data['default_account_revenue'].id,
+            'loss_account_id': self.company_data['default_account_expense'].id,
+        })
+        self.config.write({
+            'cash_rounding': True,
+            'rounding_method': rounding_method.id,
+            'only_round_cash_method': False,
+        })
+
+        tax = self.env['account.tax'].create({
+            'name': 'Tax 1',
+            'amount': 10,
+        })
+        # 10.42 + 10% tax = 11.462 → rounded to 11.45
+        product = self.create_product('Product Rounding', self.categ_basic, 10.42, tax.id)
+
+        self.config.open_ui()
+        session = self.config.current_session_id
+
+        order = self.env['pos.order'].create({
+            'company_id': self.env.company.id,
+            'session_id': session.id,
+            'lines': [(0, 0, {
+                'name': "OL/0001",
+                'product_id': product.id,
+                'price_unit': 10.42,
+                'qty': 1,
+                'tax_ids': [[6, False, [tax.id]]],
+                'price_subtotal': 10.42,
+                'price_subtotal_incl': 11.46,
+            })],
+            'pricelist_id': self.config.pricelist_id.id,
+            'amount_paid': 11.45,
+            'amount_total': 11.46,
+            'amount_tax': 1.04,
+            'amount_return': 0.0,
+            'last_order_preparation_change': '{}',
+            'to_invoice': False,
+        })
+        self.make_payment(order, self.cash_pm1, 11.45)
+        session.action_pos_session_closing_control()
+
+        report = self.env['report.point_of_sale.report_saledetails'].get_sale_details(session_ids=[session.id])
+        self.assertAlmostEqual(
+            report['cash_rounding_total'], 11.45 - 11.46, places=2,
+            msg="Cash rounding total should equal sum of (amount_paid - amount_total) across orders"
+        )

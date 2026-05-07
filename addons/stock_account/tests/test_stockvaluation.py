@@ -3293,3 +3293,91 @@ class TestStockValuation(TestStockValuationCommon):
         consigned_quant = quants.filtered(lambda q: q.location_id == self.stock_location and q.owner_id)
         self.assertEqual(regular_quant.value, 10)
         self.assertEqual(consigned_quant.value, 0)
+
+    def test_standard_price_with_lot_valuated_fifo(self):
+        lot_product = self.env['product.product'].create([
+            {
+                'name': 'Product LOT',
+                'is_storable': True,
+                'tracking': 'lot',
+                'categ_id': self.category_fifo.id,
+                'lot_valuated': True,
+                'standard_price': 10,
+            }
+        ])
+
+        lot = self.env['stock.lot'].create({
+            'name': 'lot',
+            'product_id': lot_product.id,
+            'product_qty': 0,
+            'total_value': 0,
+            'standard_price': 5,
+        })
+        self.assertEqual(lot.standard_price, 5)
+
+        # Move out to make product quantity negative
+        move_out = self.env['stock.move'].create({
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': lot_product.id,
+            'product_uom': self.uom.id,
+            'product_uom_qty': 30.0,
+            'lot_ids': [Command.set([lot.id])],
+        })
+        move_out._action_confirm()
+        move_out._action_assign()
+        move_out.move_line_ids.quantity = 30.0
+        move_out.picked = True
+        move_out._action_done()
+
+        # Purchase 1 unit
+        move_in = self.env['stock.move'].create({
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': lot_product.id,
+            'product_uom': self.uom.id,
+            'product_uom_qty': 1.0,
+            'price_unit': 15.50,
+            'lot_ids': [Command.set([lot.id])],
+            'is_in': True,
+        })
+        move_in._action_confirm()
+        move_in._action_assign()
+        move_in.move_line_ids.quantity = 1.0
+        move_in.picked = True
+        move_in._action_done()
+
+        # Old code would have set the standard price to the product's standard price (10)
+        self.assertEqual(lot.standard_price, 5)
+
+    def test_archived_location_valuation(self):
+        # Ensure that an archive location is still considered as valued when computing the total_value and avg_cost
+        location = self.env['stock.location'].create({
+            'name': 'Sub Loc 1',
+            'usage': 'internal',
+            'location_id': self.stock_location.id,
+        })
+        # Receipt
+        m1 = self._make_in_move(self.product_avco, 2, 10, location_dest_id=location.id)
+        # Internal
+        m2 = self._make_out_move(self.product_avco, 1, location_id=location.id, location_dest_id=self.stock_location.id)
+        # Delivery
+        m3 = self._make_out_move(self.product_avco, 1)
+
+        # Archive receipt dest location
+        location.active = False
+
+        self.assertTrue(m1.is_in)
+        self.assertFalse(m2.is_in or m2.is_out)
+        self.assertTrue(m3.is_out)
+
+        date_1 = Date.today() + timedelta(days=1)
+        date_2 = Date.today() + timedelta(days=2)
+        with freeze_time(date_2):
+            # Check current values 2 days later
+            self.assertEqual(self.product_avco.total_value, 10)
+            self.assertEqual(self.product_avco.avg_cost, 10)
+
+            # Check values 1 day after the moves
+            self.assertEqual(self.product_avco.with_context(to_date=date_1).avg_cost, 10)
+            self.assertEqual(self.product_avco.with_context(to_date=date_1).total_value, 10)

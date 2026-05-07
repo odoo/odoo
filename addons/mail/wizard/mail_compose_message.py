@@ -54,8 +54,9 @@ class MailComposeMessage(models.TransientModel):
         may have to give a huge list of IDs that won't fit into res_ids field.
         """
         # support subtype xmlid, like ``message_post``, when easier than using ``ref``
+        composer = self
         if self.env.context.get('default_subtype_xmlid'):
-            self = self.with_context(
+            composer = composer.with_context(
                 default_subtype_id=self.env['ir.model.data']._xmlid_to_res_id(
                     self.env.context['default_subtype_xmlid']
                 )
@@ -63,8 +64,17 @@ class MailComposeMessage(models.TransientModel):
         # deprecated record context management
         if 'default_res_id' in self.env.context:
             raise ValueError(_("Deprecated usage of 'default_res_id', should use 'default_res_ids'."))
+        if (
+            'body' in fields
+            and self.env.context.get('default_body')
+            and self.env.context.get('body_contains_signature_only')
+            and super().default_get(['template_id']).get('template_id')
+        ):
+            ctx = dict(composer.env.context)
+            ctx.pop('default_body', None)
+            composer = composer.with_context(ctx)
 
-        result = super().default_get(fields)
+        result = super(MailComposeMessage, composer).default_get(fields)
 
         # when being in new mode, create_uid is not granted -> ACLs issue may arise
         if 'create_uid' in fields and 'create_uid' not in result:
@@ -755,7 +765,17 @@ class MailComposeMessage(models.TransientModel):
     def action_send_mail(self):
         """ Used for action button that do not accept arguments. """
         self._action_send_mail(auto_commit=False)
-        return {'type': 'ir.actions.act_window_close'}
+        res_ids = self._evaluate_res_ids()
+        record_name = False
+        if self.model and len(res_ids) == 1 and self.composition_mode == 'comment':
+            record_name = self.env[self.model].browse(res_ids[0]).display_name
+        return {
+            "type": "ir.actions.client",
+            "tag": "action_send_mail_callback",
+            "params": {
+                "record_name": record_name,
+            },
+        }
 
     def _action_send_mail(self, auto_commit=False):
         """ Process the wizard content and proceed with sending the related

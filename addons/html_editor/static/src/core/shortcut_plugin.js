@@ -1,8 +1,6 @@
 import { Plugin, isValidTargetForDomListener } from "../plugin";
 import { closestBlock } from "@html_editor/utils/blocks";
-import { fillEmpty } from "@html_editor/utils/dom";
 import { leftLeafOnlyNotBlockPath } from "@html_editor/utils/dom_state";
-import { closestElement } from "@html_editor/utils/dom_traversal";
 
 /**
  * @typedef {Object} Shortcut
@@ -37,7 +35,7 @@ import { closestElement } from "@html_editor/utils/dom_traversal";
 
 export class ShortCutPlugin extends Plugin {
     static id = "shortcut";
-    static dependencies = ["userCommand", "selection"];
+    static dependencies = ["userCommand", "selection", "delete"];
 
     /** @type {import("plugins").EditorResources} */
     resources = {
@@ -133,10 +131,7 @@ export class ShortCutPlugin extends Plugin {
                     focusNode: selection.focusNode,
                     focusOffset: selection.focusOffset,
                 });
-                this.dependencies.selection.extractContent(
-                    this.dependencies.selection.getEditableSelection()
-                );
-                fillEmpty(closestElement(selection.focusNode));
+                this.dependencies.delete.deleteSelection();
                 command.run(matchedShortcut.commandParams);
             }
         }

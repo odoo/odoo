@@ -104,8 +104,12 @@ export const tourService = {
                 throw new Error(`Tour '${tourName}' is not found in the database.`);
             }
 
-            if (!tour.steps.length && tourRegistry.contains(tour.name)) {
-                tour.steps = tourRegistry.get(tour.name).steps();
+            if (!tour.steps.length) {
+                if (tourRegistry.contains(tour.name)) {
+                    tour.steps = tourRegistry.get(tour.name).steps();
+                } else {
+                    tour.onHold = true;
+                }
             }
 
             return tour;

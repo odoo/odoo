@@ -433,8 +433,8 @@ class ProjectProject(models.Model):
         res = self._check_project_group_with_field('allow_task_dependencies', 'project.group_project_task_dependencies')
         # Hide/Show task waiting subtype when task dependencies feature is disabled/enabled
         if res or res is False:
-            self.env.ref('project.mt_task_waiting').hidden = not res
-            self.env.ref('project.mt_project_task_waiting').hidden = not res
+            self.env.ref('project.mt_task_waiting').sudo().hidden = not res
+            self.env.ref('project.mt_project_task_waiting').sudo().hidden = not res
 
     def _inverse_allow_milestones(self):
         self._check_project_group_with_field('allow_milestones', 'project.group_project_milestone')
@@ -788,7 +788,7 @@ class ProjectProject(models.Model):
         has_user_group = bool(self.env.user.has_group(group_name))
         group = self.env.ref(group_name)
         base_group_user = self.env.ref('base.group_user')
-        has_project_field_set = bool(self.env['project.project'].search_count([(field_name, '=', True)], limit=1))
+        has_project_field_set = bool(self.env['project.project'].sudo().search_count([(field_name, '=', True)], limit=1))
         res = None
 
         if not has_user_group and has_project_field_set:
@@ -1284,7 +1284,7 @@ class ProjectProject(models.Model):
         if request_list and "followers" in request_list:
             store.add(
                 self,
-                {"collaborator_ids": Store.Many(self.collaborator_ids.partner_id, [])},
+                {"collaborator_ids": Store.Many(self.sudo().collaborator_ids.partner_id, [])},
                 as_thread=True,
             )
 

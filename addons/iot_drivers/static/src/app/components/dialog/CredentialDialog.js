@@ -73,6 +73,10 @@ export class CredentialDialog extends Component {
                     <input type="text" class="form-control" placeholder="Database UUID" t-model="form.db_uuid"/>
                     <input type="text" class="form-control" placeholder="Odoo contract number" t-model="form.enterprise_code"/>
                 </div>
+                <div class="d-flex flex-column gap-2 mt-3" t-if="!store.isLinux">
+                    <p class="m-0">Proxy Access Token (for Egypt only)</p>
+                    <input type="text" class="form-control" t-att-value="store.base.l10n_eg_proxy_token" disabled="disabled"/>
+                </div>
             </t>
             <t t-set-slot="footer">
                 <button type="submit" class="btn btn-primary btn-sm" t-att-disabled="!form.db_uuid" t-on-click="connectToServer">Connect</button>

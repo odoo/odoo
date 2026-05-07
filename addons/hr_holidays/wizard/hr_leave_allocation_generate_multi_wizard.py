@@ -115,14 +115,13 @@ class HrLeaveAllocationGenerateMultiWizard(models.TransientModel):
                 mail_notify_force_send=False,
                 mail_activity_automation_skip=True,
             ).create(vals_list)
-            allocations.filtered(lambda c: c.validation_type not in ('no_validation', 'hr')).action_approve()
             accrual_allocations = allocations.filtered(lambda a: a.allocation_type == 'accrual')
             for date_to, allocation in accrual_allocations.grouped('date_to').items():
                 date_to = min(date_to, date.today()) if date_to else False
                 allocation._process_accrual_plans(date_to)
+            allocations.filtered(lambda c: c.validation_type not in ('no_validation', 'hr')).action_approve()
             if self.env.user.has_group('hr_holidays.group_hr_holidays_user'):
                 allocations.filtered(lambda c: c.validation_type == 'hr').action_approve()
-            allocations.filtered(lambda c: c.validation_type != 'no_validation').action_approve()
 
             return {
                 'type': 'ir.actions.act_window',

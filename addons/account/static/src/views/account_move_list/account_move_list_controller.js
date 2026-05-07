@@ -19,19 +19,17 @@ export class AccountMoveListController extends FileUploadListController {
     }
 
     get actionMenuProps() {
-        const actionMenuProps = {
+        return {
             ...super.actionMenuProps,
             printDropdownTitle: _t("Print"),
+            loadExtraPrintItems: this.loadExtraPrintItems.bind(this),
         };
-        if (this.props.resModel === "account.move") {
-            actionMenuProps.loadExtraPrintItems = this.loadExtraPrintItems.bind(this);
-        }
-        return actionMenuProps;
     }
 
     async loadExtraPrintItems() {
         if (this.actionMenuProps.resModel === "account.move") {
-            return this.orm.call("account.move", "get_extra_print_items", [this.actionMenuProps.getActiveIds()]);
+            const selectedResIds = await this.model.root.getResIds(true);
+            return this.orm.call("account.move", "get_extra_print_items", [selectedResIds]);
         }
         return []
     }

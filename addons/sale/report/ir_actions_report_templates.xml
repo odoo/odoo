@@ -106,7 +106,8 @@
 
                     <t t-set="current_section" t-value="None"/>
                     <t t-set="current_subsection" t-value="None"/>
-                    <t t-set="price_field" t-value="'price_total' if hide_taxes_details else 'price_subtotal'"/>
+                    <t t-set="price_field" t-value="'price_total' if (hide_taxes_details or doc.company_price_include == 'tax_included') else 'price_subtotal'"/>
+
 
                     <t t-foreach="lines_to_report" t-as="line">
 
@@ -333,7 +334,10 @@
             </div>
             <div class="oe_structure"></div>
 
-            <div t-if="not doc.signature" class="oe_structure"></div>
+            <div
+                t-if="not doc.signature or not doc.env.context.get('sale_include_signature')"
+                class="oe_structure"
+            />
             <div t-else="" class="mt-4 ml64 mr4" name="signature">
                 <div class="offset-8">
                     <strong>Signature</strong>

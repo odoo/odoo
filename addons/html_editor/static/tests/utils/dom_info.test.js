@@ -590,7 +590,7 @@ describe("isEmptyBlock", () => {
 
     test("should return false for a p containing media element", () => {
         const [p] = insertTestHtml(
-            '<p><a href="#" title="document" data-mimetype="application/pdf" class="o_image" contenteditable="false"></a></p>'
+            '<p><span class="o_file_box" contenteditable="false"><a href="#" title="document" data-mimetype="application/pdf"></a></span></p>'
         );
         const result = isEmptyBlock(p);
         expect(result).toBe(false);

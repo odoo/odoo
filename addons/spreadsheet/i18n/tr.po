@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-10 18:39+0000\n"
+"POT-Creation-Date: 2026-04-24 17:37+0000\n"
 "PO-Revision-Date: 2026-04-13 20:51+0000\n"
 "Last-Translator: \"Deniz Guvener Unal (degu)\" <degu@odoo.com>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-19/"
@@ -258,6 +258,12 @@ msgstr "%s geçerli bir hafta değil (0 ile 53 arasında bir sayı olmalı)"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "%s matches in all sheets"
 msgstr "üm sayfalarda %s eşleşmesi"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid "'${str}'"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1142,27 +1148,6 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "An unexpected error occurred during the image transfer"
 msgstr "Görüntü aktarımı sırasında beklenmeyen bir hata oluştu"
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid ""
-"An unexpected error occurred while pasting content.\n"
-"          Additional information can be found in the browser console."
-msgstr ""
-"İçerik yapıştırılırken beklenmeyen bir hata oluştu.\n"
-"          Ek bilgiler tarayıcı konsolunda bulunabilir."
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid ""
-"An unexpected error occurred while pasting content.\n"
-"          This is probably due to a spreadsheet version mismatch."
-msgstr ""
-"İçeriği yapıştırırken beklenmeyen bir hata oluştu.\n"
-"          Bu muhtemelen elektronik çizelge sürüm uyuşmazlığından "
-"kaynaklanıyor."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -4255,24 +4240,6 @@ msgstr "Fonksiyon [[FONKSİYON_ADI]] herhangi bir sonuç bulamadı."
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
-"Function [[FUNCTION_NAME]] expects criteria_range and criterion to be in "
-"pairs."
-msgstr ""
-"[[FUNCTION_NAME]] işlevi, ölçüt_aralığı ve ölçütün çiftler halinde olmasını "
-"bekliyor."
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid ""
-"Function [[FUNCTION_NAME]] expects criteria_range to have the same dimension"
-msgstr ""
-"[[FUNCTION_NAME]] işlevi ölçüt_aralığının aynı boyuta sahip olmasını bekliyor"
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-msgid ""
 "Function [[FUNCTION_NAME]] expects number values for %s, but got a boolean."
 msgstr ""
 "Fonksiyon [[FUNCTION_NAME]], %s için sayı değerleri bekliyor, ancak boolean "
@@ -4886,12 +4853,8 @@ msgstr "[[FUNCTION_NAME]] değerlendirmesinde, '%s' içinde '%s' bulunamıyor."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
 "In [[FUNCTION_NAME]], the number of columns of the first matrix (%s) must be "
-"equal to the \n"
-"          number of rows of the second matrix (%s)."
+"equal to the           number of rows of the second matrix (%s)."
 msgstr ""
-"FUNCTION_NAME]]'de, ilk matrisin sütun sayısı (%s), [[FUNCTION_NAME]]'e eşit "
-"olmalıdır. \n"
-"          ikinci matrisin satır sayısı (%s)."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -6179,6 +6142,12 @@ msgstr "Yeni pivot"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "Next coupon date after the settlement date."
 msgstr "İtfa tarihinden sonraki kupon tarihi."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/hooks.js:0
+msgid "No"
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -13332,14 +13301,9 @@ msgstr ""
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid ""
 "Whether or not to remove empty text messages from the split results. The "
-"default behavior is to treat \n"
-"        consecutive delimiters as one (if TRUE). If FALSE, empty cells "
-"values are added between consecutive delimiters."
+"default behavior is to treat         consecutive delimiters as one (if "
+"TRUE). If FALSE, empty cells values are added between consecutive delimiters."
 msgstr ""
-"Bölme sonuçlarından boş metinlerin kaldırılıp kaldırılmayacağı. Varsayılan "
-"davranış, \n"
-"        ardışık ayırıcıların tek bir ayırıcı olarak kabul edilmesidir (DOĞRU "
-"ise). YANLIŞ ise, ardışık ayırıcıların arasına boş hücre değerleri eklenir."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -13565,6 +13529,12 @@ msgstr "Yıllar"
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/hooks.js:0
+msgid "Yes"
+msgstr ""
+
+#. module: spreadsheet
+#. odoo-javascript
 #: code:addons/spreadsheet/static/src/global_filters/helpers.js:0
 msgid "Yesterday"
 msgstr "Dün"
@@ -13580,6 +13550,14 @@ msgstr "Mevcut bir filtrenin içindeki hücreler birleştirilemez."
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "You cannot create overlapping tables."
 msgstr "Çakışan tablolar oluşturamazsınız."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+msgid ""
+"You copied content from a different version of the application. Only text "
+"and image content will be pasted."
+msgstr ""
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -13990,6 +13968,56 @@ msgstr "dün"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 msgid "zero"
 msgstr "sıfır"
+
+#~ msgid ""
+#~ "An unexpected error occurred while pasting content.\n"
+#~ "          Additional information can be found in the browser console."
+#~ msgstr ""
+#~ "İçerik yapıştırılırken beklenmeyen bir hata oluştu.\n"
+#~ "          Ek bilgiler tarayıcı konsolunda bulunabilir."
+
+#~ msgid ""
+#~ "An unexpected error occurred while pasting content.\n"
+#~ "          This is probably due to a spreadsheet version mismatch."
+#~ msgstr ""
+#~ "İçeriği yapıştırırken beklenmeyen bir hata oluştu.\n"
+#~ "          Bu muhtemelen elektronik çizelge sürüm uyuşmazlığından "
+#~ "kaynaklanıyor."
+
+#~ msgid ""
+#~ "Function [[FUNCTION_NAME]] expects criteria_range and criterion to be in "
+#~ "pairs."
+#~ msgstr ""
+#~ "[[FUNCTION_NAME]] işlevi, ölçüt_aralığı ve ölçütün çiftler halinde "
+#~ "olmasını bekliyor."
+
+#~ msgid ""
+#~ "Function [[FUNCTION_NAME]] expects criteria_range to have the same "
+#~ "dimension"
+#~ msgstr ""
+#~ "[[FUNCTION_NAME]] işlevi ölçüt_aralığının aynı boyuta sahip olmasını "
+#~ "bekliyor"
+
+#~ msgid ""
+#~ "In [[FUNCTION_NAME]], the number of columns of the first matrix (%s) must "
+#~ "be equal to the \n"
+#~ "          number of rows of the second matrix (%s)."
+#~ msgstr ""
+#~ "FUNCTION_NAME]]'de, ilk matrisin sütun sayısı (%s), [[FUNCTION_NAME]]'e "
+#~ "eşit olmalıdır. \n"
+#~ "          ikinci matrisin satır sayısı (%s)."
+
+#~ msgid ""
+#~ "Whether or not to remove empty text messages from the split results. The "
+#~ "default behavior is to treat \n"
+#~ "        consecutive delimiters as one (if TRUE). If FALSE, empty cells "
+#~ "values are added between consecutive delimiters."
+#~ msgstr ""
+#~ "Bölme sonuçlarından boş metinlerin kaldırılıp kaldırılmayacağı. "
+#~ "Varsayılan davranış, \n"
+#~ "        ardışık ayırıcıların tek bir ayırıcı olarak kabul edilmesidir "
+#~ "(DOĞRU ise). YANLIŞ ise, ardışık ayırıcıların arasına boş hücre değerleri "
+#~ "eklenir."
 
 #~ msgid ""
 #~ "Function [[FUNCTION_NAME]] expects number values for %s, but got a %s."
