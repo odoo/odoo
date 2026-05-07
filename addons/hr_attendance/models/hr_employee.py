@@ -6,6 +6,7 @@ from dateutil.relativedelta import relativedelta
 from collections import defaultdict
 from odoo.tools.intervals import Intervals
 from odoo import SUPERUSER_ID, models, fields, api, exceptions, _
+from odoo.fields import Domain
 from odoo.tools import BinaryBytes
 
 
@@ -328,6 +329,17 @@ class HrEmployee(models.Model):
             "name": "Badge Scanner"
         }
 
+    def _get_calendar_attendance_domain(self):
+        """Return the domain to filter attendances when computing calendar attendance intervals.
+
+        This method can be overridden to customize which attendances are considered
+        for calendar scheduling calculations.
+
+        Returns:
+            Domain: The domain expression to filter hr.attendance records.
+        """
+        return Domain.TRUE
+
     def _get_schedules_by_employee_by_work_type(self, start, stop, version_periods_by_employee):
         employees_by_calendar = defaultdict(lambda: self.env['hr.employee'])
         leave_intervals_by_cal_by_resource = defaultdict(lambda: defaultdict(Intervals))
@@ -375,6 +387,7 @@ class HrEmployee(models.Model):
                 start,
                 stop,
                 resources_per_tz=resources_per_tz,
+                domain=self._get_calendar_attendance_domain() if cal else None,
             )
             for employee in employees:
                 attendance_intervals_by_employee[employee] = Intervals([(
