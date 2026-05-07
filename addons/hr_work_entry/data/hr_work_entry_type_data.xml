@@ -187,6 +187,13 @@
         <field name="country_id" ref="base.ae"/>
     </record>
 
+    <record id="l10n_ae_work_entry_type_weekend" model="hr.work.entry.type">
+        <field name="name">Weekend</field>
+        <field name="code">AEWEEKEND</field>
+        <field name="country_id" ref="base.ae"/>
+        <field name="count_as">absence</field>
+    </record>
+
 <!-- AU : Australia -->
     <!-- Time Off Entries -->
     <!-- We need a unique work entry type for each time off -->
@@ -1858,6 +1865,13 @@
         <field name="is_extra_hours" eval="True"/>
         <field name="amount_rate">2</field>
         <field name="country_id" ref="base.eg"/>
+    </record>
+
+    <record id="l10n_eg_work_entry_type_weekend" model="hr.work.entry.type">
+        <field name="name">Weekend</field>
+        <field name="code">EGWEEKEND</field>
+        <field name="country_id" ref="base.eg"/>
+        <field name="count_as">absence</field>
     </record>
 
 <!-- FR : France -->
@@ -3745,6 +3759,13 @@
         <field name="is_extra_hours" eval="True"/>
         <field name="amount_rate">1.5</field>
         <field name="country_id" ref="base.sa"/>
+    </record>
+
+    <record id="l10n_sa_work_entry_type_weekend" model="hr.work.entry.type">
+        <field name="name">Weekend</field>
+        <field name="code">SAWEEKEND</field>
+        <field name="country_id" ref="base.sa"/>
+        <field name="count_as">absence</field>
     </record>
 
 <!-- SK : Slovakia -->
