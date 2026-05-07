@@ -266,6 +266,14 @@ describe("Link creation", () => {
             await insertText(editor, " ");
             expect(cleanLinkArtifacts(getContent(el))).toBe("<p>www.odoo []</p>");
         });
+        test("typing uppercase URL + space should convert to link", async () => {
+            const { editor, el } = await setupEditor("<p>[]</p>");
+            await insertText(editor, "http://ODOO.COM");
+            await insertSpace(editor);
+            expect(cleanLinkArtifacts(getContent(el))).toBe(
+                '<p><a href="http://ODOO.COM">http://ODOO.COM</a>&nbsp;[]</p>'
+            );
+        });
     });
     describe("Creation by powerbox", () => {
         test("click on link command in powerbox should create a link element and open the linkpopover", async () => {
