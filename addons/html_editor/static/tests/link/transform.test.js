@@ -70,6 +70,15 @@ describe("transform on space", () => {
         expect(cleanLinkArtifacts(getContent(el))).toBe("<p>www.odoo&nbsp;[]</p>");
     });
 
+    test("typing uppercase URL + space should convert to link", async () => {
+        const { editor, el } = await setupEditor("<p>[]</p>");
+        await insertText(editor, "http://ODOO.COM");
+        await insertSpace(editor);
+        expect(cleanLinkArtifacts(getContent(el))).toBe(
+            '<p><a href="http://ODOO.COM">http://ODOO.COM</a>&nbsp;[]</p>'
+        );
+    });
+
     test("should transform url followed by punctuation characters after space (1)", async () => {
         await testEditor({
             contentBefore: "<p>http://test.com.[]</p>",
