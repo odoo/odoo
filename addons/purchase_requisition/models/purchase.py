@@ -49,6 +49,9 @@ class PurchaseOrder(models.Model):
             return
         order_lines = []
         for line in requisition.line_ids:
+            if line.display_type:
+                order_lines.append((0, 0, line._prepare_purchase_order_line(name=False)))
+                continue
             # Compute name
             product_lang = line.product_id.with_context(
                 lang=partner.lang or self.env.user.lang,
@@ -103,7 +106,7 @@ class PurchaseOrderLine(models.Model):
     def _compute_price_unit_and_date_planned_and_name(self):
         po_lines_without_requisition = self.env['purchase.order.line']
         for pol in self:
-            if pol.product_id.id not in pol.order_id.requisition_id.line_ids.product_id.ids:
+            if pol.display_type or pol.product_id.id not in pol.order_id.requisition_id.line_ids.product_id.ids:
                 po_lines_without_requisition |= pol
                 continue
 
