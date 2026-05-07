@@ -23,6 +23,10 @@ class ResPartner(models.Model):
     # Field representing whether vies_valid is relevant for selecting a fiscal position on this partner
     perform_vies_validation = fields.Boolean(compute='_compute_perform_vies_validation')
 
+    @api.model
+    def _commercial_fields(self):
+        return super()._commercial_fields() + ['vies_valid']
+
     @api.depends_context('company')
     @api.depends('vat')
     def _compute_perform_vies_validation(self):
