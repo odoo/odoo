@@ -17,8 +17,8 @@ export class MailActivity extends models.ServerModel {
         },
     });
     user_id = fields.Many2one({ relation: "res.users", default: () => serverState.userId });
-    chaining_type = fields.Generic({ default: "suggest" });
-    activity_category = fields.Generic({ related: false }); // removes related from server to ease creating activities
+    chaining_type = fields.Selection({ default: "suggest" });
+    activity_category = fields.Selection({ related: false }); // removes related from server to ease creating activities
     res_model = fields.Char({ string: "Related Document Model", related: false }); // removes related from server to ease creating activities
 
     /** @param {number[]} ids */
