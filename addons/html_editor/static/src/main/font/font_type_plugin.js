@@ -34,7 +34,7 @@ import { weakMemoize } from "@html_editor/utils/functions";
  * @typedef {{ name: LazyTranslatedString; tagName: string; extraClass?: string; }[]} font_type_items
  */
 
-const headingTags = ["H1", "H2", "H3", "H4", "H5", "H6"];
+export const headingTags = ["H1", "H2", "H3", "H4", "H5", "H6"];
 const handledElemSelector = [...headingTags, "BLOCKQUOTE"].join(", ");
 
 export class FontTypePlugin extends Plugin {
