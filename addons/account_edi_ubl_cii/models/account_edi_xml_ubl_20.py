@@ -319,6 +319,27 @@ class AccountEdiXmlUBL20(models.AbstractModel):
                     'tax_exemption_reason': _("Exempt from tax"),
                 },
             })
+
+        def tax_subtotal_grouping_function(tax_subtotal_vals):
+            return {
+                'currency': tax_subtotal_vals['currency'],
+                'tax_category_id': tax_subtotal_vals['tax_category_vals']['id'],
+                'percent': tax_subtotal_vals['tax_category_vals']['percent'],
+                'tax_scheme_id': tax_subtotal_vals['tax_category_vals']['tax_scheme_vals']['id'],
+                'tax_exemption_reason': tax_subtotal_vals['tax_category_vals']['tax_exemption_reason'],
+            }
+
+        merged_subtotal = defaultdict(lambda: {'tax_amount': 0.0, 'taxable_amount': 0.0})
+        for subtotal in tax_totals_vals['tax_subtotal_vals']:
+            grouping_key = frozenset(tax_subtotal_grouping_function(subtotal).items())
+            if grouping_key not in merged_subtotal:
+                merged_subtotal[grouping_key] = subtotal.copy()
+            else:
+                merged_subtotal[grouping_key]['tax_amount'] += subtotal['tax_amount']
+                merged_subtotal[grouping_key]['taxable_amount'] += subtotal['taxable_amount']
+
+        tax_totals_vals['tax_subtotal_vals'] = list(merged_subtotal.values())
+
         return [tax_totals_vals]
 
     def _get_invoice_line_item_vals(self, line, taxes_vals):
@@ -366,7 +387,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
                     'currency_dp': 2,
                     'currency_name': invoice.currency_id.name,
                     'tax_category_vals': [{
-                        'id': 'S',
+                        'id': 'S' if tax_amount else 'E',
                         'percent': tax_amount,
                         'tax_scheme_vals': {'id': 'VAT'},
                     }],
