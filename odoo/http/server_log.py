@@ -1,3 +1,4 @@
+import contextlib
 import functools
 import logging
 import pprint
@@ -73,6 +74,29 @@ def reset_thread_info():
     current_thread.cursor_mode = None
     current_thread.rpc_model_method = None
     current_thread.sess_id = None
+
+
+@contextlib.contextmanager
+def push_thread_info():
+    current_thread = threading.current_thread()
+    query_count = current_thread.query_count
+    query_time = current_thread.query_time
+    perf_t0 = current_thread.perf_t0
+    cursor_mode = current_thread.cursor_mode
+    rpc_model_method = current_thread.rpc_model_method
+    sess_id = current_thread.sess_id
+
+    reset_thread_info()
+
+    try:
+        yield
+    finally:
+        current_thread.query_count += query_count  # +=
+        current_thread.query_time += query_time  # +=
+        current_thread.perf_t0 = perf_t0
+        current_thread.cursor_mode = cursor_mode
+        current_thread.rpc_model_method = rpc_model_method
+        current_thread.sess_id = sess_id
 
 
 def http_log(
