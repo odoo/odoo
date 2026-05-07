@@ -178,9 +178,14 @@ export const uploadService = {
                         }
                     };
                     const onLoad = () => (file.progress = 100);
+                    const onFileAbort = () => {
+                        deleteFile(file.id);
+                        file.aborted = true;
+                    };
 
                     currentXHR.upload.addEventListener("progress", onProgress);
                     currentXHR.upload.addEventListener("load", onLoad);
+                    currentXHR.addEventListener("abort", onFileAbort);
 
                     try {
                         addAttachmentRpc = rpc(
@@ -198,7 +203,7 @@ export const uploadService = {
                         );
 
                         const attachment = await addAttachmentRpc;
-                        if (signal.aborted) {
+                        if (signal.aborted || file.aborted) {
                             break;
                         }
 
