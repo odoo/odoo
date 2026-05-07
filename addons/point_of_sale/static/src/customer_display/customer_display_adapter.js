@@ -56,7 +56,7 @@ export class CustomerDisplayPosAdapter {
             finalized: order.finalized,
             general_customer_note: order.general_customer_note,
             amount: formatCurrency(order.getTotalWithTax() || 0, order.currency),
-            change: order.getChange() && formatCurrency(order.getChange(), order.currency),
+            change: order.getChange() && formatCurrency(-order.getChange(), order.currency),
             paymentLines: order.payment_ids.map((pl) => this.getPaymentData(pl)),
             lines: order.lines.map((l) => this.getOrderlineData(l)),
             qrPaymentData: toRaw(order.getSelectedPaymentline()?.qrPaymentData),

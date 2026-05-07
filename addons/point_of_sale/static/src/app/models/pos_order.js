@@ -1057,7 +1057,7 @@ export class PosOrder extends Base {
                 name: pl.payment_method_id.name,
                 amount: formatCurrency(pl.getAmount(), this.currency),
             })),
-            change: this.getChange() && formatCurrency(this.getChange(), this.currency),
+            change: this.getChange() && formatCurrency(-this.getChange(), this.currency),
             generalCustomerNote: this.general_customer_note || "",
         };
     }
