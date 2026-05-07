@@ -516,6 +516,7 @@ class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
         partner = self.env.ref('l10n_es.partner_simplified')
         partner.vat = 'ES05601522X'  # Make sure VAT represents an Individual
         partner.country_id = self.env['res.country'].search([('code', '=', 'ES')])
+        partner.is_company = True  # Our example had a LegalEntityType
 
         # We need to patch dates and uuid to ensure the signature's consistency
         with freeze_time(datetime(2023, 1, 1)):

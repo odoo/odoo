@@ -1,5 +1,6 @@
 from odoo import models
 
+import re
 
 class ResPartner(models.Model):
     _inherit = 'res.partner'
@@ -42,9 +43,15 @@ class ResPartner(models.Model):
         CIF = 1 letter + 7 digits + checksum (digit or letter) (e.g., A1234567Y)
         """
         super()._compute_is_company()
-        for partner in self:
-            country_code, vat_number = self._split_vat(partner.vat or '')
-            if country_code in ('ES', '') and len(vat_number) == 9\
-                and vat_number[0].upper() in 'ABCDEFGHJNPQRSUVW'\
-                and vat_number[1:-1].isdigit():
-                partner.is_company = True
+        for partner in self.filtered('vat'):
+            vat_number, country_code = partner._run_vat_checks(partner.country_id, partner.vat, validation=False)
+            if vat_number.startswith('ES'):
+                vat_number = vat_number[2:]
+            if country_code in ('ES', ''):
+                if len(vat_number) == 9\
+                    and vat_number[0].upper() in 'ABCDEFGHJNPQRSUVW'\
+                    and vat_number[1:-1].isdigit():
+                    partner.is_company = True
+                elif re.fullmatch(r"(\d{8}[TRWAGMYFPDXBNJZSQVHLCKE]|[XYZ]\d{7}[TRWAGMYFPDXBNJZSQVHLCKE]|E\d{7}[A-J0-9])", vat_number) or False:
+                    partner.is_company = False
+
