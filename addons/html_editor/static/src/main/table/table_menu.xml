@@ -2,6 +2,7 @@
     <t t-name="html_editor.TableMenu">
         <Dropdown menuClass="'m-0'" position="props.type === 'column' ? 'bottom' : 'right'" state="props.dropdownState" bottomSheet="false">
             <button
+                type="button"
                 t-on-pointerdown.prevent="() => {}"
                 t-ref="menuRef"
                 t-att-data-type="props.type"
