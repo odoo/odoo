@@ -1,5 +1,5 @@
 import { useSubEnv } from "@web/owl2/utils";
-import { Component, onMounted, proxy } from "@odoo/owl";
+import { Component, onMounted, proxy, useEffect, useListener } from "@odoo/owl";
 import { ModelStore } from "@api_doc/doc_model_store";
 import { useDocUI } from "@api_doc/utils/doc_ui_store";
 import { ApiKeyModal } from "@api_doc/components/doc_modal_api_key";
@@ -26,16 +26,58 @@ export class DocClient extends Component {
         this.modelStore = proxy(new ModelStore());
         useSubEnv({ modelStore: this.modelStore });
 
-        this.state = proxy({ showSearchModal: false });
+        this.state = proxy({
+            showSearchModal: false,
+            showSidebar: true,
+            showAside: true,
+        });
+
+        useEffect(() => {
+            this.state.showSidebar = !this.ui.isSmall;
+        });
+
+        useEffect(() => {
+            this.state.showAside = !this.ui.isMedium;
+        });
 
         onMounted(async () => {
             await this.modelStore.loadModels();
             this.selectUrlModel();
         });
 
-        window.addEventListener("popstate", () => {
-            this.selectUrlModel();
+        useListener(window, "popstate", () => this.selectUrlModel());
+        useListener(window, "keydown", (event) => {
+            // Modals close themselves on Escape, only close panels without one
+            const hasModalOpen = this.state.showSearchModal || this.modelStore.showApiKeyModal;
+            if (event.key === "Escape" && this.hasOverlayOpen && !hasModalOpen) {
+                this.closePanels();
+            }
         });
+    }
+
+    onSidebarModelSelected() {
+        if (this.ui.isSmall) {
+            this.state.showSidebar = false;
+        }
+    }
+
+    onAsideMethodSelected() {
+        if (this.ui.isMedium) {
+            this.state.showAside = false;
+        }
+    }
+
+    get hasOverlayOpen() {
+        return (this.ui.isSmall && this.state.showSidebar) || (this.ui.isMedium && this.state.showAside);
+    }
+
+    closePanels() {
+        if (this.ui.isSmall) {
+            this.state.showSidebar = false;
+        }
+        if (this.ui.isMedium){
+            this.state.showAside = false;
+        }
     }
 
     selectUrlModel() {

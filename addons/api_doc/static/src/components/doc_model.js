@@ -1,6 +1,7 @@
-import { Component, onPatched, markup, useEffect, proxy } from "@odoo/owl";
+import { Component, onPatched, markup, useEffect, proxy, t, useProps } from "@odoo/owl";
 import { DocTable, TABLE_TYPES } from "@api_doc/components/doc_table";
 import { getCrudMethodsExamples } from "@api_doc/utils/doc_model_utils";
+import { DocCopyablePre } from "@api_doc/components/doc_copyable_pre";
 import { DocMethod } from "@api_doc/components/doc_method";
 import { DocLoadingIndicator } from "@api_doc/components/doc_loading_indicator";
 import { useDocUI } from "@api_doc/utils/doc_ui_store";
@@ -45,16 +46,20 @@ function getTypeData(fieldData) {
 export class DocModel extends Component {
     static template = "web.DocModel";
     static components = {
+        DocCopyablePre,
         DocTable,
         DocMethod,
         DocLoadingIndicator,
         DocErrorDialog,
     };
+    props = useProps({
+        showAside: t.boolean().optional(),
+        onMethodSelected: t.function().optional(),
+    });
 
     setup() {
         this.state = proxy({
             model: undefined,
-            modelData: { items: [] },
             crudMethods: [],
             methods: [],
             fields: { data: { items: [] }},
@@ -90,8 +95,20 @@ export class DocModel extends Component {
         });
     }
 
+    get showDescription() {
+        return !!this.state.model?.doc;
+    }
+
     get modelName() {
         return this.state.model?.name ?? "";
+    }
+
+    get modelTechnicalName() {
+        return this.state.model?.model ?? "";
+    }
+
+    selectMethod() {
+        this.props.onMethodSelected?.();
     }
 
     async update() {
@@ -112,7 +129,6 @@ export class DocModel extends Component {
             fields: null,
             error: null,
         };
-        this.state.modelData = { items: [] };
         this.state.methods = [];
         this.state.modules = [];
 
@@ -123,12 +139,6 @@ export class DocModel extends Component {
                 }
 
                 this.state.model = model;
-                this.state.modelData = {
-                    items: [
-                        ["Model Name", { type: "code", value: model.model }],
-                        ...(model.doc ? [["Description", model.doc]] : []),
-                    ]
-                };
 
                 this.updateModules();
                 this.updateMethods();

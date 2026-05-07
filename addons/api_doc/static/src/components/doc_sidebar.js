@@ -1,10 +1,14 @@
-import { Component, proxy, signal, useOnChange } from "@odoo/owl";
+import { Component, proxy, signal, t, useOnChange, useProps } from "@odoo/owl";
 import { simplifyString } from "@api_doc/utils/doc_model_search";
 
 export class DocSidebar extends Component {
     static template = "web.DocSidebar";
 
     static components = {};
+
+    props = useProps({
+        onModelSelected: t.function().optional(),
+    });
 
     containerRef = signal.ref();
 
@@ -27,6 +31,11 @@ export class DocSidebar extends Component {
                 this.state.collapseAddons[addon.name] = false;
             }
         }
+    }
+
+    selectModel(model) {
+        this.modelStore.setActiveModel({ model });
+        this.props.onModelSelected?.();
     }
 
     onSearchInput(event) {
