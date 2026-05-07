@@ -33,7 +33,7 @@
                     <h2 class="qr-title text-center mb-2">
                         Scan the QR for payment
                     </h2>
-                    <img t-att-src="qrData.qrCode" alt="QR Code" class="qr-image p-4" t-attf-style="{{ !env.isSmall ? 'width: 300px' : ''}}"/>
+                    <img t-att-src="qrData.qrCode" alt="QR Code" class="qr-image p-4" t-attf-style="{{ !this.env.isSmall ? 'width: 300px' : ''}}"/>
                     <h3 class="qr-amount text-center mt-2">
                         Amount:
                         <t t-out="qrData.amount"/>

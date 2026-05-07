@@ -16,7 +16,7 @@
                         t-foreach="this.selfOrder.config._self_ordering_image_home_ids"
                         t-as="attachment"
                         t-key="attachment.id"
-                        t-attf-class="carousel-item h-100 w-100 {{activeImage}}">
+                        t-attf-class="carousel-item h-100 w-100 {{this.activeImage}}">
                         <video 
                             t-if="attachment.mimetype.startsWith('video/')"
                             class="w-100 h-100 object-fit-contain"

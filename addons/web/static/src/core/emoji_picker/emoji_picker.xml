@@ -29,7 +29,7 @@
             <div
                 class="o-EmojiPicker-content overflow-auto d-flex flex-grow-1 w-100 flex-wrap align-items-center user-select-none mt-1"
                 t-att-class="!hasEmojisFromSearch ? 'flex-column justify-content-center' : 'align-content-start'"
-                t-ref="emoji-grid"
+                t-custom-ref="emoji-grid"
                 t-on-scroll="this.highlightActiveCategory"
             >
                 <t t-if="this.searchTerm and !hasEmojisFromSearch" class="d-flex flex-column">
@@ -66,7 +66,7 @@
             <div
                 class="o-EmojiPicker-navbar d-flex flex-shrink-0 w-100 align-items-center justify-content-center overflow-auto px-1 gap-1 border-top border-secondary"
                 t-att-class="{ 'opacity-0': !this.state.emojiNavbarRepr }"
-                t-ref="navbar"
+                t-custom-ref="navbar"
             >
                 <t t-set="currentNavbarPanel" t-value="this.getCurrentNavbarPanel(_recentEmojis)" />
                 <t t-if="currentNavbarPanel">
@@ -166,7 +166,7 @@
         class="form-control border-0 flex-grow-1 rounded-3 rounded-end-0 o-active lh-1"
         t-att-placeholder="this.placeholder"
         t-custom-model="localState.searchTerm"
-        t-ref="autofocus"
+        t-custom-ref="autofocus"
         t-att-model="localState.searchTerm"
         t-att-tabindex="this.isMobileOS ? -1 : 0"
         t-on-input="() => this.state.activeEmojiIndex = 0"

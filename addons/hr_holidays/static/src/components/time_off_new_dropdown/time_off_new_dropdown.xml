@@ -6,10 +6,10 @@
                 New
             </button>
             <t t-set-slot="content">
-                <DropdownItem tag="'button'" class="'btn btn-link'" onSelected="props.onNewTimeOffRequest">
+                <DropdownItem tag="'button'" class="'btn btn-link'" onSelected="this.props.onNewTimeOffRequest">
                     New Time Off
                 </DropdownItem>
-                <DropdownItem tag="'button'" class="'btn btn-link'" onSelected="props.onNewAllocationRequest">
+                <DropdownItem tag="'button'" class="'btn btn-link'" onSelected="this.props.onNewAllocationRequest">
                     New Allocation Request
                 </DropdownItem>
             </t>

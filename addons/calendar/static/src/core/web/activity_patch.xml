@@ -6,23 +6,23 @@
             <attribute name="t-if">!this.props.activity.calendar_event_id</attribute>
         </xpath>
         <xpath expr="//div[hasclass('o-mail-Activity-note')]" position="after">
-            <div t-if="meeting" class="mt-1">
-                <t t-set="startToday" t-value="this.isToday(meeting.start)"/>
-                <t t-set="stopToday" t-value="this.isToday(meeting.stop)"/>
+            <div t-if="this.meeting" class="mt-1">
+                <t t-set="startToday" t-value="this.isToday(this.meeting.start)"/>
+                <t t-set="stopToday" t-value="this.isToday(this.meeting.stop)"/>
                 <div t-if="!startToday || !stopToday">
                     <t t-if="startToday">Today</t>
-                    <t t-else="" t-out="meeting.start.toLocaleString(this.dateFormat)"/>
-                    <t t-if="meeting.stop > meeting.start.startOf('day').plus({days: 1})">
+                    <t t-else="" t-out="this.meeting.start.toLocaleString(this.dateFormat)"/>
+                    <t t-if="this.meeting.stop > this.meeting.start.startOf('day').plus({days: 1})">
                         -
                         <t t-if="stopToday">Today</t>
-                        <t t-else="" t-out="meeting.stop.toLocaleString(this.dateFormat)"/>
+                        <t t-else="" t-out="this.meeting.stop.toLocaleString(this.dateFormat)"/>
                     </t>
                 </div>
                 <div class="d-flex flex-nowrap gap-4">
-                    <t t-out="meeting.start.toLocaleString(this.timeFormat)"/> - <t t-out="meeting.stop.toLocaleString(this.timeFormat)"/>
-                    <span t-if="attendeeNames" t-out="truncatedAttendeeNames" t-att-title="attendeeNames" class="text-muted"/>
+                    <t t-out="this.meeting.start.toLocaleString(this.timeFormat)"/> - <t t-out="this.meeting.stop.toLocaleString(this.timeFormat)"/>
+                    <span t-if="this.attendeeNames" t-out="this.truncatedAttendeeNames" t-att-title="this.attendeeNames" class="text-muted"/>
                 </div>
-                <t t-if="meeting.location" t-out="meeting.location"/>
+                <t t-if="this.meeting.location" t-out="this.meeting.location"/>
                 <t t-else="">Online</t>
             </div>
         </xpath>

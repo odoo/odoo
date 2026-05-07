@@ -10,7 +10,7 @@
         </BuilderSelect>
     </BuilderRow>
 
-    <t t-if="isActiveItem('transition_slide') || isActiveItem('transition_fade')">
+    <t t-if="this.isActiveItem('transition_slide') || this.isActiveItem('transition_fade')">
         <BuilderRow label.translate="Duration" tooltip.translate="Adjust how long the animation effect to change slide takes" level="1">
             <BuilderRange
                 action="'setCarouselDuration'"
@@ -31,7 +31,7 @@
         </BuilderSelect>
     </BuilderRow>
 
-    <t t-if="isActiveItem('auto_after_first_hover') || isActiveItem('auto_always')">
+    <t t-if="this.isActiveItem('auto_after_first_hover') || this.isActiveItem('auto_always')">
         <BuilderRow label.translate="Timespan" tooltip.translate="Adjust how long each slide stays on screen" level="1">
             <BuilderNumberInput
                 action="'setCarouselTimespan'"

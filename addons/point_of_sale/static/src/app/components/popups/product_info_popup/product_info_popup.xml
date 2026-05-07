@@ -37,7 +37,7 @@
                     </button>
                 </div>
             </div>
-            <div class="section-supplier mt-3 mb-4 pb-4 border-bottom text-start" t-if="props.info?.productInfo?.suppliers?.length">
+            <div class="section-supplier mt-3 mb-4 pb-4 border-bottom text-start" t-if="this.props.info?.productInfo?.suppliers?.length">
                 <h3 class="section-title">Replenishment</h3>
                 <div class="section-supplier-body">
                     <t t-foreach="this.props.info.productInfo.suppliers" t-as="supplier" t-key="supplier.id">

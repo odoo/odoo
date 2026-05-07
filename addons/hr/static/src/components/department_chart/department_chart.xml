@@ -30,7 +30,7 @@
 
     <t t-name="hr.DepartmentChart.Department">
         <t t-if="dept">
-            <div t-attf-class="#{hideTree?'':'o_treeEntry'}">
+            <div t-attf-class="#{this.hideTree?'':'o_treeEntry'}">
                 <div class="d-flex justify-content-between align-items-center">
                     <span class="department_name ms-1 mb-1">
                         <t t-out="dept.name"/>

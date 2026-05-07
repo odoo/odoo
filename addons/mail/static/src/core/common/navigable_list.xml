@@ -16,7 +16,7 @@
                         t-on-mouseenter="() => this.onOptionMouseEnter(option_index)"
                         t-on-click="(ev) => this.selectOption(ev, option_index)"
                     >
-                        <a role="button" class="d-flex align-items-center w-100 px-3 py-1 small" t-att-class="{ 'o-mail-NavigableList-active': state.activeIndex === option_index }" t-attf-class="{{ option.buttonClass }}">
+                        <a role="button" class="d-flex align-items-center w-100 px-3 py-1 small" t-att-class="{ 'o-mail-NavigableList-active': this.state.activeIndex === option_index }" t-attf-class="{{ option.buttonClass }}">
                             <t t-if="option.optionTemplate" t-call="{{ option.optionTemplate }}"/>
                             <t t-elif="this.props.optionTemplate" t-call="{{ this.props.optionTemplate }}"/>
                             <t t-else="" t-out="option.label"/>
