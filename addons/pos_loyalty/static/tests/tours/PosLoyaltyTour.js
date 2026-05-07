@@ -561,7 +561,7 @@ registry.category("web_tour.tours").add("test_min_qty_points_awarded", {
             ProductScreen.confirmOpeningPopup(),
             ProductScreen.clickHomeCategory(),
             ProductScreen.clickPartnerButton(),
-            ProductScreen.clickCustomer("Test Partner"),
+            ProductScreen.clickCustomer("AAA Test Partner"),
             ProductScreen.clickDisplayedProduct("Whiteboard Pen"),
             PosLoyalty.clickRewardButton(),
             SelectionPopup.clickItem("Free Product"),

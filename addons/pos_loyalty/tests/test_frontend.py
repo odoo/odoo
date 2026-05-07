@@ -343,9 +343,9 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         (self.promo_programs | self.coupon_program).write({'active': False})
 
-        partner_aaa = self.env['res.partner'].create({'name': 'Test Partner AAA'})
-        partner_bbb = self.env['res.partner'].create({'name': 'Test Partner BBB'})
-        partner_ccc = self.env['res.partner'].create({'name': 'Test Partner CCC'})
+        partner_aaa = self.env['res.partner'].create({'name': 'AAA Test Partner'})
+        partner_bbb = self.env['res.partner'].create({'name': 'BBB Test Partner'})
+        partner_ccc = self.env['res.partner'].create({'name': 'CCC Test Partner'})
 
         # Part 1
         self.start_tour(
@@ -379,7 +379,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.assertEqual(len(reward_orderline.ids), 0, msg='Reference: Order4_no_reward. Last order should have no reward line.')
 
         # Part 3
-        partner_ddd = self.env['res.partner'].create({'name': 'Test Partner DDD'})
+        partner_ddd = self.env['res.partner'].create({'name': 'DDD Test Partner'})
         self.env['loyalty.card'].create({
             'partner_id': partner_ddd.id,
             'program_id': loyalty_program.id,
@@ -423,7 +423,7 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         (self.promo_programs | self.coupon_program).write({'active': False})
 
-        partner_aaa = self.env['res.partner'].create({'name': 'Test Partner AAA'})
+        partner_aaa = self.env['res.partner'].create({'name': 'AAA Test Partner'})
 
         self.start_tour(
             "/pos/web?config_id=%d" % self.main_pos_config.id,
@@ -1800,7 +1800,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             })],
         })
 
-        partner = self.env['res.partner'].create({'name': 'Test Partner'})
+        partner = self.env['res.partner'].create({'name': 'AAA Test Partner'})
 
         self.pos_user.write({
             'groups_id': [
@@ -2479,7 +2479,7 @@ class TestUi(TestPointOfSaleHttpCommon):
 
     def test_not_create_loyalty_card_expired_program(self):
         self.env['loyalty.program'].search([]).write({'active': False})
-        self.env['res.partner'].create({'name': 'Test Partner'})
+        self.env['res.partner'].create({'name': 'AAA Test Partner'})
 
         LoyaltyProgram = self.env['loyalty.program']
         loyalty_program = LoyaltyProgram.create(LoyaltyProgram._get_template_values()['loyalty'])
@@ -2499,8 +2499,8 @@ class TestUi(TestPointOfSaleHttpCommon):
 
     def test_not_create_loyalty_card_max_usage_program(self):
         self.env['loyalty.program'].search([]).write({'active': False})
-        self.env['res.partner'].create({'name': 'Test Partner'})
-        self.env['res.partner'].create({'name': 'Test Partner 2'})
+        self.env['res.partner'].create({'name': 'AAA Test Partner'})
+        self.env['res.partner'].create({'name': 'BBB Test Partner'})
 
         loyalty_program = self.env['loyalty.program'].create({
             'name': 'Loyalty Program',
@@ -2606,8 +2606,8 @@ class TestUi(TestPointOfSaleHttpCommon):
         partners that already have points in the loyalty program cannot claim rewards anymore."""
 
         self.env['loyalty.program'].search([]).write({'active': False})
-        test_partner = self.env['res.partner'].create({'name': 'Test Partner'})
-        self.env['res.partner'].create({'name': 'Test Partner 2'})
+        test_partner = self.env['res.partner'].create({'name': 'AAA Test Partner'})
+        self.env['res.partner'].create({'name': 'BBB Test Partner'})
 
         loyalty_program = self.env['loyalty.program'].create({
             'name': 'Loyalty Program',
@@ -2646,7 +2646,7 @@ class TestUi(TestPointOfSaleHttpCommon):
 
     def test_min_qty_points_awarded(self):
         self.env['loyalty.program'].search([]).write({'active': False})
-        test_partner = self.env['res.partner'].create({'name': 'Test Partner'})
+        test_partner = self.env['res.partner'].create({'name': 'AAA Test Partner'})
         program = self.env['loyalty.program'].create({
             'name': 'Loyalty Program',
             'program_type': 'loyalty',
