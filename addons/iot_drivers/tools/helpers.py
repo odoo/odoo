@@ -324,6 +324,12 @@ def reset_log_level():
         })
 
 
+def flash_leds():
+    """Create a file used by odoo-led-manager to flash the LEDs on Raspberry Pi"""
+    if IS_RPI:
+        open('/tmp_ram/led_manager_test', 'w', encoding="utf-8").close()
+
+
 def check_network(host=None):
     host = host or system.get_gateway()
     if not host:
