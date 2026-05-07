@@ -393,12 +393,12 @@ export class NumberOfRecordsAction extends BuilderAction {
         this.modelName = this.utils.getSnippetModelName(editingElement.dataset);
         this.defaultRecordId = await this.utils.getDefaultSnippetRecordId(this.modelName);
     }
-    isApplied({ editingElement: el, params }) {
-        return el.dataset.numberOfRecords === params.mainParam;
+    getValue({ editingElement }) {
+        return editingElement.dataset.numberOfRecords;
     }
-    apply({ editingElement: el, params }) {
+    apply({ editingElement: el, value }) {
         const isSingleModeBefore = this.utils.isSingleModeSnippet(el.dataset);
-        el.dataset.numberOfRecords = params.mainParam;
+        el.dataset.numberOfRecords = value;
         // Changing the number of records should automatically switch to a
         // "single record" filter mode if only one record is selected, and
         // conversely, revert to the default filter mode when more than one
