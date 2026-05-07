@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="report_stock_body_print" inherit_id="stock.report_stock_body_print">
+        <xpath expr="//table" position="before">
+            <t t-set="has_expiration_date" t-value="any(column['name'] == 'expiration_date' and column['value'] for line in lines for column in line['columns'])"/>
+        </xpath>
+        <xpath expr="//thead/tr/th[@data-column='lot_name']" position="after">
+            <th t-if="has_expiration_date" class="o_report_line_header" data-column="expiration_date">Expiration Date</th>
+        </xpath>
+        <xpath expr="//tbody//t[@t-foreach=&quot;a['columns']&quot;]/td" position="attributes">
+            <attribute name="t-if">has_expiration_date or c['name'] != 'expiration_date'</attribute>
+        </xpath>
+    </template>
+
+</odoo>
