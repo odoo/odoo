@@ -343,3 +343,27 @@ class TestCompanyBranch(AccountTestInvoicingCommon):
             .filtered(lambda line: line.account_type == 'asset_receivable')\
             .reconcile()
         self.assertIn(invoice.payment_state, ('paid', 'in_payment'), "Invoice not marked as paid after assigning credit.")
+
+    def test_branch_user_bank_statement_foreign_currency(self):
+        self.branch_user.write({"company_ids": self.branch_a.ids, "groups_id": [Command.link(self.env.ref('account.group_account_manager').id)]})
+
+        journal = self.env['account.journal'].create({
+            'name': "Bank (Gol)",
+            'code': "GBNK",
+            'type': "bank",
+            'company_id': self.root_company.id,
+            'currency_id': self.currency_data['currency'].id,
+        })
+
+        statement_line = self.env['account.bank.statement.line'].with_user(self.branch_user.id).create({
+            'date': '2019-01-01',
+            'journal_id': journal.id,
+            'payment_ref': 'line_1',
+            'partner_id': False,
+            'foreign_currency_id': False,
+            'amount': 25,
+            'amount_currency': 0,
+            'company_id': self.branch_a.id
+        })
+
+        self.assertTrue(statement_line)
