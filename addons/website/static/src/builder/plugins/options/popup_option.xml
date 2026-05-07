@@ -49,14 +49,14 @@
                 unit.translate="days"
                 saveUnit="''"/>
     </BuilderRow>
-    <BuilderRow label.translate="Show on">
+    <BuilderRow label.translate="Show on" t-if="this.showOnOptions">
         <BuilderSelect action="'moveBlock'" preview="false">
             <t t-foreach="this.showOnOptions" t-as="option" t-key="option.value">
                 <BuilderSelectItem actionValue="option.value" t-out="option.label"/>
             </t>
         </BuilderSelect>
     </BuilderRow>
-    <BuilderRow label="' '" level="1" t-if="this.isShowOnOptionUnavailable()">
+    <BuilderRow label="' '" level="1" t-if="this.showOnOptions and this.isShowOnOptionUnavailable()">
         <div class="small text-warning ps-1">
             <i class="fa fa-exclamation-triangle me-1"/>
             <t t-out="this.unavailableShowOnWarningMessage"/>
