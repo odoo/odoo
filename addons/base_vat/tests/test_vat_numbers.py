@@ -138,6 +138,12 @@ class TestStructure(TransactionCase):
             self.assertEqual(partner.parent_id.name, 'My Company')
             self.assertEqual(partner.parent_id.vies_valid, True)
 
+    def test_vies_valid_propagates_to_children(self):
+        company = self.env['res.partner'].create({'name': 'Company', 'vat': 'BE0477472701'})
+        contact = self.env['res.partner'].create({'name': 'Contact', 'parent_id': company.id})
+        company.vies_valid = True
+        self.assertTrue(contact.vies_valid)
+
     def test_rut_uy(self):
         test_partner = self.env["res.partner"].create({"name": "UY Company", "country_id": self.env.ref("base.uy").id})
         # Set a valid Number
