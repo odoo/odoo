@@ -5,6 +5,10 @@ function isSmall() {
     return window.innerWidth < 960;
 }
 
+function isMedium() {
+    return window.innerWidth < 1200;
+}
+
 export function useDocUI() {
     const env = useEnv();
     if (env.ui) {
@@ -12,6 +16,7 @@ export function useDocUI() {
     }
     const ui = proxy({
         isSmall: isSmall(),
+        isMedium: isMedium(),
         size: window.innerWidth,
     });
 
@@ -19,6 +24,7 @@ export function useDocUI() {
     useListener(window, "resize", () => {
         ui.size = window.innerWidth;
         ui.isSmall = isSmall();
+        ui.isMedium = isMedium();
     });
 
     return ui;
