@@ -265,6 +265,27 @@ class TestPartner(TransactionCaseWithUserDemo):
         self.assertEqual(partner.name, 'Raoulette Vachette')
         self.assertEqual(partner.email, 'John.Wick@example.com')
 
+        # ensure default_lang and lang in context are properly handled
+        partner = self.env['res.partner'].browse(
+            self.env['res.partner'].with_context(
+                default_email='John.Wick@example.com',
+                default_lang='en_US',
+                lang=False
+            ).name_create('Raoulette Vachette')[0]
+        )
+        self.assertEqual(partner.name, 'Raoulette Vachette')
+        self.assertEqual(partner.lang, 'en_US')
+
+        partner = self.env['res.partner'].browse(
+            self.env['res.partner'].with_context(
+                default_email='John.Wick@example.com',
+                default_lang=False,
+                lang='en_US'
+            ).name_create('Raoulette Vachette')[0]
+        )
+        self.assertEqual(partner.name, 'Raoulette Vachette')
+        self.assertEqual(partner.lang, 'en_US')
+
     def test_name_search(self):
         res_partner = self.env['res.partner']
         sources = [
