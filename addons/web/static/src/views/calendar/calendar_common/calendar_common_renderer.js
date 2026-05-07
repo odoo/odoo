@@ -393,12 +393,15 @@ export class CalendarCommonRenderer extends Component {
     onEventDragStop(info) {
         this.ref.el.classList.remove("o_interacting", "o_grabbing");
         if (!this.env.isSmall) {
-            const x = info.jsEvent.clientX;
-            const y = info.jsEvent.clientY;
-            const dropTarget = document.elementFromPoint(x, y);
-            if (dropTarget && dropTarget.closest(".o_calendar_unschedule_zone")) {
-                info.event.remove();
-                this.props.model.unscheduleEvent(Number(info.event.id));
+            const point = info.jsEvent.changedTouches?.[0] ?? info.jsEvent;
+            const x = point.clientX;
+            const y = point.clientY;
+            if (Number.isFinite(x) && Number.isFinite(y)) {
+                const dropTarget = document.elementFromPoint(x, y);
+                if (dropTarget && dropTarget.closest(".o_calendar_unschedule_zone")) {
+                    info.event.remove();
+                    this.props.model.unscheduleEvent(Number(info.event.id));
+                }
             }
             this.props.model.bus.trigger("CALENDAR_EVENT_DRAG", { dragging: false });
         }
