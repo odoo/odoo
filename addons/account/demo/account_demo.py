@@ -164,7 +164,7 @@ class AccountChartTemplate(models.AbstractModel):
             self.company_xmlid('demo_invoice_3'): {
                 'move_type': 'out_invoice',
                 'partner_id': 'base.res_partner_2',
-                'invoice_user_id': False,
+                'invoice_user_id': 'base.user_demo',
                 'invoice_date': (fields.Date.today() + timedelta(days=-3)).strftime('%Y-%m-%d'),
                 'delivery_date': (fields.Date.today() + timedelta(days=-3)).strftime('%Y-%m-%d'),
                 'invoice_line_ids': [
