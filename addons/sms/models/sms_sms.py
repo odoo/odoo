@@ -237,6 +237,12 @@ class SmsSms(models.Model):
 
     def _handle_call_result_hook(self, results):
         """Further process SMS sending API results."""
+        for result in results:
+            if result["state"] == "insufficient_credit":
+                self.env["iap.account"]._send_no_credit_notification(
+                    service_name="sms",
+                    title=_("Not enough credits to send SMS"),
+                )
         pass
 
     @api.autovacuum
