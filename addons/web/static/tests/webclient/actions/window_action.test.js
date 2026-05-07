@@ -1,6 +1,6 @@
 import { expect, test } from "@odoo/hoot";
 import { click, queryAllTexts, waitFor } from "@odoo/hoot-dom";
-import { Deferred, animationFrame } from "@odoo/hoot-mock";
+import { Deferred, animationFrame, runAllTimers } from "@odoo/hoot-mock";
 import { Component, xml } from "@odoo/owl";
 import {
     MockServer,
@@ -702,8 +702,8 @@ test("domain is kept when switching between views", async () => {
     expect(".o_data_row").toHaveCount(5);
 });
 
-test.tags("desktop", "owl3");
-test.todo("A new form view can be reloaded after a failed one", async () => {
+test.tags("desktop");
+test("A new form view can be reloaded after a failed one", async () => {
     expect.errors(1);
     await mountWithCleanup(WebClient);
 
@@ -733,6 +733,7 @@ test.todo("A new form view can be reloaded after a failed one", async () => {
     await contains(".modal-footer button.btn-danger").click();
     // The form view is automatically switched to the next record
     expect(".o_last_breadcrumb_item").toHaveText("Second record");
+    await runAllTimers();
     expect(browser.location.pathname).toBe("/odoo/action-3/2");
 
     // Go back to the previous (now deleted) record
