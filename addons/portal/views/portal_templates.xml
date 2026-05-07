@@ -56,6 +56,25 @@
                 <meta name="twitter:card" content="summary_large_image"/>
             </t>
         </xpath>
+        <head position="inside">
+            <t t-if="not website">
+                <style>
+                    :root {
+                        --portal-primary-color: <t t-out="request.env.company.email_secondary_color"/>;
+                        --portal-text-color: <t t-out="request.env.company.email_primary_color"/>;
+                    }
+                    a, .text-primary {
+                        color: var(--portal-primary-color) !important;
+                    }
+
+                    .btn-primary {
+                        background-color: var(--portal-primary-color) !important;
+                        border-color: var(--portal-primary-color) !important;
+                        color: var(--portal-text-color) !important;
+                    }
+                </style>
+            </t>
+        </head>
     </template>
 
     <!-- Added by another template so that it can be disabled if needed -->
