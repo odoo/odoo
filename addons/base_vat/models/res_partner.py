@@ -104,6 +104,10 @@ class ResPartner(models.Model):
     vat = fields.Char(inverse="_inverse_vat", store=True)
 
     @api.model
+    def _commercial_fields(self):
+        return super()._commercial_fields() + ['vies_valid']
+
+    @api.model
     def _run_vat_checks(self, country, vat, partner_name='', validation='error'):
         """ OVERRIDE """
         if not country or not vat:
