@@ -22,6 +22,7 @@
                 <field name="location_id" decoration-muted="location_usage not in ('internal', 'transit')"/>
                 <field name="location_dest_id" decoration-muted="location_dest_usage not in ('internal', 'transit')"/>
                 <field name="picking_partner_id" optional="hide"/>
+                <field name="owner_id" optional="hide" string="Owner"/>
                 <field name="company_id" optional="hide" groups="base.group_multi_company" force_save="1"/>
                 <field name="quantity" string="Quantity" class="fw-bolder"
                     decoration-danger="(location_usage in ('internal','transit')) and (location_dest_usage not in ('internal','transit')) and quantity != 0"
