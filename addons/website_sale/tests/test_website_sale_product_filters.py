@@ -412,9 +412,9 @@ class TestWebsiteSaleProductFilters(WebsiteSaleCommon, TestProductAttributeValue
         result = self.url_open("/website/snippet/filters", json={"params": {
             "template_key": "website_sale.dynamic_filter_template_product_public_category_default",
             "filter_id": product_public_category_filter.id,
-            "res_model": "product.category",
+            "res_model": "product.template",
             "search_domain": [],
-            "res_id": self.mac.categ_id.id,
+            "res_id": self.computer.id,
             "limit": 1,
         }}).json().get('result', [])
         self.assertEqual(len(result), 0)
