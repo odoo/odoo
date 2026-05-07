@@ -570,9 +570,9 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         self.product_a.lst_price = 150
         self.product_a.taxes_id = None
         self.product_a.available_in_pos = True
-        self.env['res.partner'].create({'name': 'Test Partner AAA'})
+        self.env['res.partner'].create({'name': 'AAA Test Partner'})
         sale_order = self.env['sale.order'].create({
-            'partner_id': self.env['res.partner'].create({'name': 'Test Partner BBB'}).id,
+            'partner_id': self.env['res.partner'].create({'name': 'BBB Test Partner'}).id,
             'order_line': [(0, 0, {
                 'product_id': self.product_a.id,
                 'name': self.product_a.name,
