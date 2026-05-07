@@ -28,6 +28,17 @@ class AccountMoveLine(models.Model):
         relevant_qty = self.quantity
 
         return price_unit_val_dif, relevant_qty
+<<<<<<< 441fe49cf07ed32e50baba08f62c2b1cf7f7fff8
 
     def _get_stock_moves(self):
         return super()._get_stock_moves() | self.purchase_line_id.move_ids
+||||||| 2080b7d78380585430147845a64d94321a3d5da4
+=======
+
+    def _related_analytic_distribution(self):
+        # EXTENDS 'account'
+        vals = super()._related_analytic_distribution()
+        if not self.purchase_line_id and not self.analytic_distribution and self.move_id.stock_move_id.purchase_line_id:
+            vals |= self.move_id.stock_move_id.purchase_line_id.analytic_distribution or {}
+        return vals
+>>>>>>> e83acd214f8633f21b4cfa76082cb1b7001ae2eb
