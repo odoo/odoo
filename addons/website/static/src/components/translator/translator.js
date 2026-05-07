@@ -202,6 +202,20 @@ export class WebsiteTranslator extends WebsiteEditorComponent {
             $edited = $edited.add(attrEdit);
         });
         const textEdit = $editable.filter('textarea:contains(data-oe-translation-source-sha)');
+        // Placeholder attributes on non-form elements (i.e. not input, select,
+        // textarea) are intended for content editors, not visible text
+        // for end-users. Example of such a placeholder: a blog post title.
+        const nodesToEditEls = Array.from($editable).filter(
+            (nodeEl) =>
+                nodeEl.matches('[placeholder*="data-oe-translation-source-sha="]') &&
+                !nodeEl.matches(":empty, input, select, textarea")
+        );
+        for (const nodeEl of nodesToEditEls) {
+            const trans = nodeEl.getAttribute("placeholder");
+            const match = trans.match(translationRegex);
+            nodeEl.setAttribute("placeholder", match[2]);
+        }
+
         textEdit.each(function () {
             var $node = $(this);
             var translation = $node.data('translation') || {};
