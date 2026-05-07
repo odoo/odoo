@@ -245,7 +245,7 @@ export class MassMailingHtmlField extends HtmlField {
             ...config,
             onEditorReady: () => this.commitChanges(),
             Plugins: [...MAIN_EDITOR_PLUGINS, ...DYNAMIC_FIELD_PLUGINS]
-                .filter((P) => !["banner", "prompt", "link"].includes(P.id))
+                .filter((P) => !["link"].includes(P.id))
                 .concat(registry.category("basic-editor-plugins").getAll()),
         };
     }
