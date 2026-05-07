@@ -11,7 +11,7 @@ import {
     preventResizeObserverError,
 } from "@web/../tests/web_test_helpers";
 
-import { CodeEditor } from "@web/core/code_editor/code_editor";
+import { CodeEditor, useCodeEditorState } from "@web/core/code_editor/code_editor";
 import { pick } from "@web/core/utils/objects";
 import { debounce } from "@web/core/utils/timing";
 
@@ -433,4 +433,32 @@ test("qweb mode readonly attributes", async () => {
         </form>
         `.replace(/^\s*/gm, "")
     );
+});
+
+test("get undo/redo state using editorState prop", async () => {
+    class Parent extends Component {
+        static components = { CodeEditor };
+        static template = xml`<CodeEditor value="'my first string'" editorState="this.editorState"/>`;
+        static props = ["*"];
+        setup() {
+            this.editorState = useCodeEditorState();
+        }
+    }
+
+    const comp = await mountWithCleanup(Parent);
+    await animationFrame();
+
+    expect(comp.editorState.canUndo).toBe(false);
+    expect(comp.editorState.canRedo).toBe(false);
+
+    await editAce("Some Text");
+
+    expect(comp.editorState.canUndo).toBe(true);
+    expect(comp.editorState.canRedo).toBe(false);
+
+    comp.editorState.undo();
+    await animationFrame();
+
+    expect(comp.editorState.canUndo).toBe(false);
+    expect(comp.editorState.canRedo).toBe(true);
 });
