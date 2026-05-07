@@ -35,6 +35,20 @@ from odoo.tools.translate import _
 
 logger = logging.getLogger(__name__)
 
+CONFIGURATOR_PREVIEW_FONT_MAX_LENGTH = 200
+CONFIGURATOR_PREVIEW_COLOR_KEYS = tuple(
+    f'configurator_preview_color_{index}' for index in range(1, 6)
+)
+CONFIGURATOR_PREVIEW_KEYS = CONFIGURATOR_PREVIEW_COLOR_KEYS + (
+    'configurator_preview_font',
+    'configurator_preview_headings_font',
+)
+CONFIGURATOR_PREVIEW_COLOR_PATTERN = re.compile(r'^#?(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$')
+
+
+def _escape_scss_string(value):
+    return value.replace('\\', '\\\\').replace("'", "\\'")
+
 
 DEFAULT_CDN_FILTERS = [
     "^/[^/]+/static/",
@@ -664,6 +678,98 @@ class Website(models.CachedModel):
         return [
             {'text': _("Privacy Policy"), 'href': '/privacy'},
         ]
+
+    @api.model
+    def _sanitize_configurator_color(self, color_value):
+        if not isinstance(color_value, str):
+            return False
+        color_value = color_value.strip()
+        if not CONFIGURATOR_PREVIEW_COLOR_PATTERN.fullmatch(color_value):
+            return False
+        return color_value.lstrip('#').lower()
+
+    @api.model
+    def _sanitize_configurator_font_name(self, font_name):
+        if not isinstance(font_name, str):
+            return False
+        font_name = font_name.strip()
+        if not font_name or font_name.lower() == 'null':
+            return False
+        if len(font_name) > CONFIGURATOR_PREVIEW_FONT_MAX_LENGTH:
+            return False
+        if any(char in font_name for char in '\r\n\x00'):
+            return False
+        return font_name
+
+    @api.model
+    def _get_configurator_preview_values(self, values):
+        preview_values = {}
+        for key in CONFIGURATOR_PREVIEW_COLOR_KEYS:
+            if color_value := self._sanitize_configurator_color(values.get(key)):
+                preview_values[key] = color_value
+        for key in ('configurator_preview_font', 'configurator_preview_headings_font'):
+            if font_name := self._sanitize_configurator_font_name(values.get(key)):
+                preview_values[key] = font_name
+        return preview_values
+
+    @api.model
+    def _get_request_configurator_preview_values(self):
+        if not request:
+            return {}
+        values = {}
+        for key in CONFIGURATOR_PREVIEW_KEYS:
+            values[key] = (
+                self.env.context.get(key)
+                or getattr(request, key, None)
+                or request.httprequest.args.get(key)
+            )
+        return self._get_configurator_preview_values(values)
+
+    @api.model
+    def _get_configurator_preview_scss(self, values):
+        preview_values = self._get_configurator_preview_values(values)
+        preview_blocks = []
+        preview_color_lines = [
+            f"    'o-color-{index}': #{preview_values[f'configurator_preview_color_{index}']},"
+            for index in range(1, 6)
+            if f'configurator_preview_color_{index}' in preview_values
+        ]
+        if preview_color_lines:
+            preview_blocks.extend([
+                '$o-user-color-palette: o-map-omit((',
+                *preview_color_lines,
+                '));',
+            ])
+
+        preview_website_values = {}
+        if preview_color_lines:
+            preview_website_values.update({
+                'menu-gradient': 'null',
+                'menu-secondary-gradient': 'null',
+                'footer-gradient': 'null',
+                'copyright-gradient': 'null',
+                'breadcrumb-gradient': 'null',
+                'o-cc1-bg-gradient': 'null',
+                'o-cc2-bg-gradient': 'null',
+                'o-cc3-bg-gradient': 'null',
+                'o-cc4-bg-gradient': 'null',
+                'o-cc5-bg-gradient': 'null',
+            })
+        for key, website_key in (
+            ('configurator_preview_font', 'font'),
+            ('configurator_preview_headings_font', 'headings-font'),
+        ):
+            if font_name := preview_values.get(key):
+                preview_website_values[website_key] = f"'{_escape_scss_string(font_name)}'"
+        if preview_website_values:
+            preview_blocks.extend([
+                '$o-user-website-values: map-merge($o-user-website-values, (',
+                *[f"    '{key}': {value}," for key, value in preview_website_values.items()],
+                '));',
+            ])
+        if not preview_blocks:
+            return False
+        return '\n'.join(preview_blocks)
 
     @api.model
     def configurator_init(self):

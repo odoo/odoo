@@ -409,6 +409,11 @@ class IrHttp(models.AbstractModel):
                 'website_company_id': request.website.company_id.id,
             })
         session_info['bundle_params']['website_id'] = request.website.id
+        preview_values = request.env['website']._get_request_configurator_preview_values()
+        if preview_values:
+            session_info['bundle_params'].update(preview_values)
+            session_info['tour_enabled'] = False
+            session_info['current_tour'] = False
         return session_info
 
     @classmethod

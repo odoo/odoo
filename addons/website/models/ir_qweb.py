@@ -12,6 +12,7 @@ from odoo.exceptions import AccessError
 
 
 re_background_image = re.compile(r"(background-image\s*:\s*url\(\s*['\"]?\s*)([^)'\"]+)")
+USER_THEME_COLOR_PALETTE_SCSS_PATH = '/website/static/src/scss/options/colors/user_theme_color_palette.scss'
 
 
 class IrQweb(models.AbstractModel):
@@ -51,6 +52,39 @@ class IrQweb(models.AbstractModel):
     def _get_template_cache_keys(self):
         """ Return the list of context keys to use for caching ``_compile``. """
         return super()._get_template_cache_keys() + ['website_id', 'cookies_allowed']
+
+    def _get_asset_content(self, bundle, assets_params=None):
+        files, external_assets = super()._get_asset_content(bundle, assets_params=assets_params)
+        preview_scss = self.env['website']._get_configurator_preview_scss(assets_params or {})
+        if not preview_scss:
+            return files, external_assets
+
+        preview_file = {
+            'url': '/website/static/src/scss/configurator_preview.scss',
+            'filename': '',
+            'content': preview_scss,
+            'last_modified': None,
+            'definition_bundle': bundle,
+        }
+        for index, file_data in enumerate(files):
+            if file_data['url'].endswith(USER_THEME_COLOR_PALETTE_SCSS_PATH):
+                files.insert(index + 1, preview_file)
+                break
+        else:
+            files.insert(0, preview_file)
+        return files, external_assets
+
+    def _link_to_node(self, path, defer_load=False, lazy_load=False, media=None):
+        if not path or '?' not in path:
+            return super()._link_to_node(path, defer_load=defer_load, lazy_load=lazy_load, media=media)
+        node = super()._link_to_node(path.split('?', 1)[0], defer_load=defer_load, lazy_load=lazy_load, media=media)
+        if not node:
+            return None
+        tag_name, attributes = node
+        for key in ('href', 'src', 'data-src'):
+            if key in attributes:
+                attributes[key] = path
+        return tag_name, attributes
 
     def _prepare_frontend_environment(self, values):
         """ Update the values and context with website specific value

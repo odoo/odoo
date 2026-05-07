@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from urllib.parse import urlencode
+
 from odoo import fields, models
 from odoo.fields import Domain
 
@@ -13,6 +15,7 @@ class IrAsset(models.Model):
     def _get_asset_params(self):
         params = super()._get_asset_params()
         params['website_id'] = self.env['website'].get_current_website(fallback=False).id
+        params.update(self.env['website']._get_request_configurator_preview_values())
         return params
 
     def _get_asset_bundle_url(self, filename, unique, assets_params, ignore_params=False):
@@ -21,7 +24,11 @@ class IrAsset(models.Model):
             route_prefix = '/web/assets%'
         elif website_id := assets_params.get('website_id', None):
             route_prefix = f'/web/assets/{website_id}'
-        return f'{route_prefix}/{unique}/{filename}'
+        url = f'{route_prefix}/{unique}/{filename}'
+        preview_values = self.env['website']._get_configurator_preview_values(assets_params)
+        if ignore_params or not preview_values:
+            return url
+        return f"{url}?{urlencode(preview_values)}"
 
     def _get_related_assets(self, domain, *, website_id=None, **params):
         if website_id:

@@ -405,6 +405,43 @@ class Website(Home):
             action_url += '&step=' + str(step)
         return request.redirect(action_url)
 
+    @http.route('/website/configurator/preview', type='http', auth="public", website=True, sitemap=False, multilang=False, readonly=True)
+    def website_configurator_preview(self, path=None, **kwargs):
+        preview_values = request.env['website']._get_configurator_preview_values({
+            **{
+                f'configurator_preview_color_{index}': kwargs.get(f'color{index}') or kwargs.get(f'color_{index}')
+                for index in range(1, 6)
+            },
+            'configurator_preview_font': kwargs.get('body_font') or kwargs.get('font'),
+            'configurator_preview_headings_font': kwargs.get('heading_font') or kwargs.get('headings_font'),
+        })
+        if not all(f'configurator_preview_color_{index}' in preview_values for index in range(1, 6)):
+            raise NotFound()
+
+        target_url = path or request.website.homepage_url or '/'
+        target_path, _, _, target_query, _ = urllib.parse.urlsplit(target_url)
+        target_query = target_query or None
+        if not target_path.startswith('/'):
+            target_path = f'/{target_path}'
+        if target_path.startswith('/website/configurator/preview'):
+            target_path = '/'
+            target_query = None
+
+        for key, value in preview_values.items():
+            setattr(request, key, value)
+        request.update_context(**preview_values)
+        request.reroute(target_path, target_query)
+
+        website_page = request.env['ir.http']._serve_page()
+        if website_page:
+            return website_page
+
+        try:
+            rule, args = request.env['ir.http']._match(target_path)
+            return serve_ir_http(request, rule, args)
+        except (AccessError, NotFound, SessionExpiredException):
+            raise request.not_found()
+
     @http.route('/website/get_suggested_links', type='jsonrpc', auth="user", website=True, readonly=True)
     def get_suggested_link(self, needle, limit=10):
         current_website = request.website
