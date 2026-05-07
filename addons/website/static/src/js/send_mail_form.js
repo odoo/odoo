@@ -29,7 +29,7 @@ FormEditorRegistry.add('send_mail', {
         string: _t('Your Company'),
     }, {
         type: 'char',
-        modelRequired: true,
+        required: true,
         name: 'subject',
         string: _t('Subject'),
     }, {

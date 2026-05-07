@@ -719,17 +719,17 @@ registerWebsitePreviewTour("website_form_editor_tour", {
     ...clickOnEditAndWaitEditMode(),
     ...addCustomField("char", "text", "Philippe of Belgium", false),
     {
-        content: "Select the 'Subject' field",
-        trigger: ':iframe .s_website_form_field.s_website_form_model_required:has(label:contains("Subject"))',
+        content: "Select the 'Your Email' field",
+        trigger: ':iframe .s_website_form_field.s_website_form_model_required:has(label:contains("Your Email"))',
         run: "click",
     },
     ...selectButtonByText(CONDITIONALVISIBILITY),
     ...selectButtonByData('data-set-visibility-dependency="Philippe of Belgium"'),
     ...selectButtonByData('data-select-data-attribute="set"'),
     {
-        content: "Set a default value to the 'Subject' field",
+        content: "Set a default value to the 'Your Email' field",
         trigger: 'we-input[data-attribute-name="value"] input',
-        run: "edit Default Subject",
+        run: "edit default@example.com",
     },
     {
         content: "Select the 'Your Message' field",
@@ -744,9 +744,9 @@ registerWebsitePreviewTour("website_form_editor_tour", {
     // Ensure that a field required for a model is not disabled when
     // conditionally hidden.
     {
-        content: "Check that the 'Subject' field is not disabled",
+        content: "Check that the 'Your Email' field is not disabled",
         trigger: `:iframe .s_website_form:has(.s_website_form_model_required ` +
-            `.s_website_form_input[value="Default Subject"]:not([disabled]):not(:visible))`,
+            `.s_website_form_input[value="default@example.com"]:not([disabled]):not(:visible))`,
     },
     // Ensure that a required field (but not for a model) is disabled when
     // conditionally hidden.
@@ -758,13 +758,13 @@ registerWebsitePreviewTour("website_form_editor_tour", {
 
     ...clickOnEditAndWaitEditMode(),
     {
-        content: "Select the 'Subject' field",
-        trigger: ':iframe .s_website_form_field.s_website_form_model_required:has(label:contains("Subject"))',
+        content: "Select the 'Your Email' field",
+        trigger: ':iframe .s_website_form_field.s_website_form_model_required:has(label:contains("Your Email"))',
         run: "click",
     },
     ...selectButtonByData("data-set-visibility='visible'"),
     {
-        content: "Empty the default value of the 'Subject' field",
+        content: "Empty the default value of the 'Your Email' field",
         trigger: 'we-input[data-attribute-name="value"] input',
         run: "clear",
     },
