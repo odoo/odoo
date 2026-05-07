@@ -13,16 +13,19 @@
                         icon="fa-random" name="%(category_open_putaway)d" type="action"
                         groups="stock.group_stock_multi_locations"/>
                 </div>
-                <group name="first" position="after">
-                    <group>
-                        <group name="logistics" string="Logistics">
-                            <field name="route_ids" widget="many2many_tags" groups="stock.group_adv_location"/>
-                            <field name="parent_route_ids" widget="many2many_tags" groups="stock.group_adv_location" invisible="not parent_route_ids"/>
-                            <field name="removal_strategy_id" options="{'no_create': True}"/>
-                            <field name="packaging_reserve_method" widget="radio" groups="uom.group_uom"/>
+                <notebook position="inside">
+                    <page name="stock" string="Logistics">
+                        <group>
+                            <group>
+                                <field name="route_ids" widget="many2many_tags" groups="stock.group_adv_location"/>
+                                <field name="parent_route_ids" widget="many2many_tags" groups="stock.group_adv_location" invisible="not parent_route_ids"/>
+                                <label for="removal_strategy_id" class="text-nowrap mr4"/>
+                                <field name="removal_strategy_id" nolabel="1" class="oe_inline"/>
+                                <field name="packaging_reserve_method" widget="radio" groups="uom.group_uom"/>
+                            </group>
                         </group>
-                    </group>
-                </group>
+                    </page>
+                </notebook>
             </field>
         </record>
 

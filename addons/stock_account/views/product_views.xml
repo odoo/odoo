@@ -17,12 +17,16 @@
             <field name="model">product.category</field>
             <field name="inherit_id" ref="stock.product_category_form_view_inherit"/>
             <field name="arch" type="xml">
-                <group name="logistics" position="after">
-                    <group string="Inventory Valuation">
-                        <field name="property_cost_method" required="True"/>
-                        <field name="property_valuation" groups="account.group_account_readonly,stock.group_stock_manager"/>
-                    </group>
-                </group>
+                <page name="stock" position="after">
+                    <page name="stock_valuation" string="Inventory Valuation">
+                        <group>
+                            <group>
+                                <field name="property_cost_method" required="True"/>
+                                <field name="property_valuation" groups="account.group_account_readonly,stock.group_stock_manager"/>
+                            </group>
+                        </group>
+                    </page>
+                </page>
             </field>
         </record>
 
