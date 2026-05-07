@@ -29,16 +29,21 @@
 
             <t t-if="this.props.label">
                 <div
-                    class="hb-row-label d-flex align-items-center"
+                    class="hb-row-label"
                     t-att-class="{'hb-row-label-actionable': this.props.slots.collapse, 'bg-transparent': !this.props.label.trim()}"
                     t-attf-class="#{this.props.extraLabelClass || ''}"
                     t-on-pointerover="this.openTooltip"
                     t-on-pointerleave="this.closeTooltip"
                     t-on-click="this.toggleCollapseContent"
                     >
-
-                    <span class="text-nowrap text-truncate" t-out="this.props.label" t-custom-ref="label"/>
-                    <i t-if="this.props.tooltip" class="fa fa-question icon-sup" t-att-class="this.env.langDir.builder === 'rtl' ? 'fa-flip-horizontal' : ''"/>
+                    <div class="d-inline-flex align-items-center mw-100" t-custom-ref="label-wrapper">
+                        <span class="text-nowrap text-truncate" t-out="this.props.label" t-custom-ref="label"/>
+                        <i
+                            t-if="this.props.tooltip"
+                            class="fa fa-question icon-sup"
+                            t-att-class="this.env.langDir.builder === 'rtl' ? 'fa-flip-horizontal' : ''"
+                        />
+                    </div>
                 </div>
                 <div
                     class="hb-row-content d-flex"

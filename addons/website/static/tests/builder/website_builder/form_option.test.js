@@ -78,18 +78,18 @@ test("change action of form changes available options", async () => {
     await setupWebsiteBuilderWithSnippet("s_website_form");
 
     await contains(":iframe section").click();
-    await contains("div:has(>span:contains('Action')) + div button").click();
+    await contains(".hb-row[data-label='Action'] button").click();
     await contains("div.o-dropdown-item:contains('Apply for a Job')").click();
 
     await animationFrame();
     expect("span:contains('Applied Job')").toHaveCount(1);
-    expect("div:has(>span:contains('URL')) + div input").toHaveValue("/job-thank-you");
+    expect(".hb-row[data-label='URL'] input").toHaveValue("/job-thank-you");
 
-    await contains("div:has(>span:contains('Action')) + div button").click();
+    await contains(".hb-row[data-label='Action'] button").click();
     await contains("div.o-dropdown-item:contains('Create a Customer')").click();
 
     expect("span:contains('Applied Job')").toHaveCount(0);
-    expect("div:has(>span:contains('URL')) + div input").toHaveValue("/contactus-thank-you");
+    expect(".hb-row[data-label='URL'] input").toHaveValue("/contactus-thank-you");
 });
 
 test("'Author' field's type stays selected when you modify the option list", async () => {
@@ -485,7 +485,7 @@ test("Form using the Outgoing Mails model includes hidden email_to field", async
     );
 
     await contains(":iframe section").click();
-    await contains("div:has(>span:contains('Action')) + div button").click();
+    await contains(".hb-row[data-label='Action'] button").click();
     await contains("div.o-dropdown-item:contains('Send an E-mail')").click();
 
     expect(":iframe input[type='hidden'][name='email_to']").toHaveCount(1);
@@ -515,7 +515,7 @@ test("Saving outgoing mail form without company email uses editor email fallback
     );
 
     await contains(":iframe section").click();
-    await contains("div:has(>span:contains('Action')) + div button").click();
+    await contains(".hb-row[data-label='Action'] button").click();
     await contains("div.o-dropdown-item:contains('Send an E-mail')").click();
 
     expect(":iframe input[type='hidden'][name='email_to']").toHaveValue("user@mail.com");

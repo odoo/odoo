@@ -44,6 +44,7 @@ export class BuilderRow extends Component {
             this.collapseContentId = uniqueId("builder_collapse_content_");
         }
 
+        this.labelWrapperRef = useRef("label-wrapper");
         this.labelRef = useRef("label");
         this.rootRef = useRef("root");
         this.collapseContentRef = useRef("collapse-content");
@@ -143,7 +144,7 @@ export class BuilderRow extends Component {
             }
         }
         if (this.tooltipText) {
-            this.removeTooltip = this.tooltip.add(labelEl, {
+            this.removeTooltip = this.tooltip.add(this.labelWrapperRef.el, {
                 tooltip: this.tooltipText,
             });
         }
