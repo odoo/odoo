@@ -72,7 +72,6 @@ export class WebsiteForumWysiwyg extends Wysiwyg {
             allowImageTransform: false,
             height: this.props.height,
             allowImageResize: false,
-            allowFontFamily: false,
         };
     }
 
