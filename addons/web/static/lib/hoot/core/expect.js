@@ -1764,7 +1764,7 @@ export class Matcher {
             predicate: (checked) => !!checked,
             message: options?.message,
             onPass: () => [this._received, r`[is%are][! not] ${prop}`],
-            onFail: () => [r`expected`, this._received, r`[!not ] to be ${prop}`],
+            onFail: () => [r`expected`, this._received, r`[!not ]to be ${prop}`],
             getFailedDetails: (checked) => detailsFromEntries([["Checked:", checked]]),
         }));
     }
