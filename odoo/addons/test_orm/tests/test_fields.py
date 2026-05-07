@@ -1232,7 +1232,7 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
     def test_22_selection(self):
         """ test selection fields """
         record_list = self.env['test_orm.selection'].create({})
-        self.assertIsInstance(record_list._fields['state'].selection, list)
+        self.assertIsInstance(record_list._fields['state'].selection, tuple)
 
         # the following selection is defined by a callable (method name)
         record_call = self.env['test_orm.mixed'].create({})

@@ -684,7 +684,7 @@ class TestCustomFields(TestCommonCustomFields):
 
         x_sel = Model._fields['x_sel']
         self.assertEqual(x_sel.type, 'selection')
-        self.assertEqual(x_sel.selection, [('foo', 'Foo'), ('bar', 'Bar')])
+        self.assertEqual(x_sel.selection, (('foo', 'Foo'), ('bar', 'Bar')))
 
         # add selection value 'baz'
         field.selection_ids.create({
@@ -692,7 +692,7 @@ class TestCustomFields(TestCommonCustomFields):
         })
         x_sel = Model._fields['x_sel']
         self.assertEqual(x_sel.type, 'selection')
-        self.assertEqual(x_sel.selection, [('foo', 'Foo'), ('bar', 'Bar'), ('baz', 'Baz')])
+        self.assertEqual(x_sel.selection, (('foo', 'Foo'), ('bar', 'Bar'), ('baz', 'Baz')))
 
         # assign values to records
         rec1 = Model.create({'name': 'Rec1', 'x_sel': 'foo'})
@@ -706,7 +706,7 @@ class TestCustomFields(TestCommonCustomFields):
         field.selection_ids[0].unlink()
         x_sel = Model._fields['x_sel']
         self.assertEqual(x_sel.type, 'selection')
-        self.assertEqual(x_sel.selection, [('bar', 'Bar'), ('baz', 'Baz')])
+        self.assertEqual(x_sel.selection, (('bar', 'Bar'), ('baz', 'Baz')))
 
         self.assertEqual(rec1.x_sel, False)
         self.assertEqual(rec2.x_sel, 'bar')
@@ -716,7 +716,7 @@ class TestCustomFields(TestCommonCustomFields):
         field.selection_ids[0].value = 'quux'
         x_sel = Model._fields['x_sel']
         self.assertEqual(x_sel.type, 'selection')
-        self.assertEqual(x_sel.selection, [('quux', 'Bar'), ('baz', 'Baz')])
+        self.assertEqual(x_sel.selection, (('quux', 'Bar'), ('baz', 'Baz')))
 
         self.assertEqual(rec1.x_sel, False)
         self.assertEqual(rec2.x_sel, 'quux')

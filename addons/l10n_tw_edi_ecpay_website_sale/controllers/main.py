@@ -59,7 +59,7 @@ class WebsiteSaleL10nTW(WebsiteSale):
 
     def _get_render_context(self, order_sudo, default_vals, errors=None):
         carrier_field = request.env['sale.order']._fields['l10n_tw_edi_carrier_type']
-        carrier_choices = [('0', '')] + carrier_field.selection
+        carrier_choices = [('0', '')] + list(carrier_field.selection)
         return {
             'website_sale_order': order_sudo,
             'l10n_tw_show_extra_info': True,

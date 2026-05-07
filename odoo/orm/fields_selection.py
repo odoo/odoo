@@ -69,6 +69,8 @@ class Selection(Field[str | typing.Literal[False]]):
     _selection: dict[str, str] | None = None
 
     def __init__(self, selection=SENTINEL, string: str | Sentinel = SENTINEL, **kwargs):
+        if isinstance(selection, list):
+            selection = tuple(selection)
         super().__init__(selection=selection, string=string, **kwargs)
 
     def setup_nonrelated(self, model):
@@ -123,8 +125,8 @@ class Selection(Field[str | typing.Literal[False]]):
                     _logger.warning("%s: selection_add attribute will be ignored as the field is related", self)
                     continue
                 selection_add = field._args__['selection_add']
-                assert isinstance(selection_add, list), \
-                    "%s: selection_add=%r must be a list" % (self, selection_add)
+                assert isinstance(selection_add, (list, tuple)), \
+                    "%s: selection_add=%r must be a list or tuple" % (self, selection_add)
                 assert values is not None, \
                     "%s: selection_add=%r on non-list selection %r" % (self, selection_add, self.selection)
 
@@ -172,7 +174,7 @@ class Selection(Field[str | typing.Literal[False]]):
                 self.ondelete.update(ondelete)
 
         if values is not None:
-            self.selection = list(values.items())
+            self.selection = tuple(values.items())
             assert all(isinstance(key, str) and isinstance(val, str) for key, val in values.items()), \
                 "Field %s with non-str key or value in selection" % self
 
@@ -180,7 +182,7 @@ class Selection(Field[str | typing.Literal[False]]):
 
     def _selection_modules(self, model):
         """ Return a mapping from selection values to modules defining each value. """
-        if not isinstance(self.selection, list):
+        if not isinstance(self.selection, tuple):
             return {}
         value_modules = defaultdict(set)
         for field in reversed(resolve_mro(model, self.name, type(self).__instancecheck__)):
@@ -189,7 +191,7 @@ class Selection(Field[str | typing.Literal[False]]):
                 continue
             if 'selection' in field._args__:
                 value_modules.clear()
-                if isinstance(field._args__['selection'], list):
+                if isinstance(field._args__['selection'], tuple):
                     for value, _label in field._args__['selection']:
                         value_modules[value].add(module)
             if 'selection_add' in field._args__:
@@ -205,10 +207,10 @@ class Selection(Field[str | typing.Literal[False]]):
         selection = self.selection
         if isinstance(selection, str) or callable(selection):
             selection = determine(selection, env[self.model_name])
-            return [(str(key), str(label)) for key, label in selection]
+            return tuple((str(key), str(label)) for key, label in selection)
 
         translations = dict(env['ir.model.fields'].get_field_selection(self.model_name, self.name))
-        return [(key, translations.get(key, label)) for key, label in selection]
+        return tuple((key, translations.get(key, label)) for key, label in selection)
 
     def _default_group_expand(self, records, groups, domain):
         # return a group per selection option, in definition order

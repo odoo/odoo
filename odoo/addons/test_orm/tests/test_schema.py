@@ -72,11 +72,11 @@ class TestReflection(common.TransactionCase):
                             self.assertTrue(relation)
                             self.assertIn(relation.model.model, [field.model_name, field.comodel_name])
                         if field.type == 'selection':
-                            selection = [(sel.value, sel.name) for sel in ir_field.selection_ids]
-                            if isinstance(field.selection, list):
+                            selection = tuple((sel.value, sel.name) for sel in ir_field.selection_ids)
+                            if isinstance(field.selection, tuple):
                                 self.assertEqual(selection, field.selection)
                             else:
-                                self.assertEqual(selection, [])
+                                self.assertEqual(selection, ())
                             for sel in ir_field.selection_ids:
                                 self.assertSelectionXID(sel)
 

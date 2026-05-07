@@ -1091,7 +1091,7 @@ class TestTranslationWrite(TransactionCase):
 
         fg = self.env['ir.model'].with_context(lang='fr_FR').fields_get(['state'])
         self.assertEqual(fg['state']['selection'],
-                         [('manual', 'Custo'), ('base', 'Pas touche!')])
+                         (('manual', 'Custo'), ('base', 'Pas touche!')))
 
     def test_load_views(self):
         """ Test translations of field descriptions in get_view(). """

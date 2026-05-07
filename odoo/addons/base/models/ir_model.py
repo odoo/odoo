@@ -1607,7 +1607,7 @@ class IrModelFieldsSelection(models.Model):
             for model_name in model_names
             for field_name, field in self.env[model_name]._fields.items()
             if field.type in ('selection', 'reference')
-            if isinstance(field.selection, list)
+            if isinstance(field.selection, tuple)
         ]
         if not fields:
             return
