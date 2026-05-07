@@ -163,6 +163,9 @@
                             <span>
                                 Price: <field name="list_price" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}"/>
                             </span>
+                            <span>
+                                Periodicity: <field name="rent_periodicity"/>
+                            </span>
                             <field name="product_properties" widget="properties"/>
                             <span name="on_hand_qty_kanban" t-if="record.is_storable.raw_value">
                                 On hand: <field name="qty_available"/> <field name="uom_id" groups="uom.group_uom"/>
