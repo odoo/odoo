@@ -32,7 +32,7 @@
         <div style="min-height: 30vh"/>
     </div>
 
-    <aside t-if="!this.ui.isSmall and !this.state.error" class="o-doc-model-aside overflow-auto position-sticky d-block flex-fill bg-default pt-2 pb-2 ps-3 pe-3 border-start">
+    <aside t-if="this.props.showAside and !this.state.error" class="o-doc-model-aside overflow-auto position-sticky d-block flex-fill bg-default pt-2 pb-2 ps-3 pe-3 border-start">
         <div
             class="d-flex flex-nowrap w-100 cursor-pointer text-capitalize align-items-center"
             t-on-click="() => this.state.showModulesFilter = !this.state.showModulesFilter"
