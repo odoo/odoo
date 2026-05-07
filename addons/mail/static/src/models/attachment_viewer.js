@@ -153,26 +153,12 @@ registerModel({
          * Prompt the browser print of this attachment.
          */
         print() {
-            const printWindow = window.open('about:blank', '_new');
-            printWindow.document.open();
-            printWindow.document.write(`
-                <html>
-                    <head>
-                        <script>
-                            function onloadImage() {
-                                setTimeout('printImage()', 10);
-                            }
-                            function printImage() {
-                                window.print();
-                                window.close();
-                            }
-                        </script>
-                    </head>
-                    <body onload='onloadImage()'>
-                        <img src="${this.attachmentViewerViewable.imageUrl}" alt=""/>
-                    </body>
-                </html>`);
-            printWindow.document.close();
+            const printWindow = window.open();
+            const image = printWindow.document.createElement("img");
+            image.setAttribute("onload", "window.print(); setTimeout(window.close, 10)");
+            image.setAttribute("onerror", "window.print(); setTimeout(window.close, 10)");
+            image.src = this.attachmentViewerViewable.imageUrl;
+            printWindow.document.body.appendChild(image);
         },
         /**
          * Rotate the image by 90 degrees to the right.
