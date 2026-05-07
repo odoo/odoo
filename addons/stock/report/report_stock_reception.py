@@ -96,12 +96,9 @@ class ReportStockReport_Reception(models.AbstractModel):
         # show potential moves that can be assigned
         for product_id, outs in products_to_outs.items():
             for out in outs:
-                # we expect len(source) = 2 when picking + origin [e.g. SO] and len() = 1 otherwise [e.g. MO]
-                source = (out._get_source_document(),)
+                source = self._get_report_source(out)
                 if not source:
                     continue
-                if out.picking_id and source[0] != out.picking_id:
-                    source = (out.picking_id, source[0])
 
                 qty_to_reserve = out.product_qty
                 product_uom = out.product_id.uom_id
@@ -146,11 +143,9 @@ class ReportStockReport_Reception(models.AbstractModel):
                     # it is possible there are different in moves linked to the same out moves due to batch
                     # => we guess as to which outs correspond to this report...
                     continue
-                source = (out_move._get_source_document(),)
+                source = self._get_report_source(out_move)
                 if not source:
                     continue
-                if out_move.picking_id and source[0] != out_move.picking_id:
-                    source = (out_move.picking_id, source[0])
                 qty_assigned = min(total_assigned, out_move.product_qty)
                 sources_to_lines[source].append(
                     self._prepare_report_line(qty_assigned, product_id, out_move, source[0], is_assigned=True, move_ins=moves_in))
@@ -184,6 +179,15 @@ class ReportStockReport_Reception(models.AbstractModel):
             'is_assigned': is_assigned,
             'move_ins': move_ins and move_ins.ids or False,
         }
+
+    def _get_report_source(self, move):
+        # We expect len(source) = 2 when picking + origin [e.g. SO] and len() = 1 otherwise [e.g. MO].
+        source = move._get_source_document()
+        if not source:
+            return False
+        if move.picking_id and source != move.picking_id:
+            return (move.picking_id, source)
+        return (source,)
 
     def _get_docs(self, docids):
         docids = self.env.context.get('default_picking_ids', docids)
@@ -339,17 +343,23 @@ class ReportStockReport_Reception(models.AbstractModel):
         """ share reference across source documents """
         in_ref = in_move.reference_ids
         out_ref = out_move.reference_ids
-        if out_ref:
-            in_move._get_source_document()._add_reference(out_ref)
-        if in_ref:
-            out_move._get_source_document()._add_reference(in_ref)
+        in_source = in_move._get_source_document()
+        out_source = out_move._get_source_document()
+        if out_ref and in_source:
+            in_source._add_reference(out_ref)
+        if in_ref and out_source:
+            out_source._add_reference(in_ref)
 
     def _action_unassign(self, in_move, out_move):
         """ remove shared reference across source documents if any"""
         in_ref = in_move.reference_ids
         out_ref = out_move.reference_ids
-        in_move._get_source_document()._remove_reference(out_ref)
-        out_move._get_source_document()._remove_reference(in_ref)
+        in_source = in_move._get_source_document()
+        out_source = out_move._get_source_document()
+        if out_ref and in_source:
+            in_source._remove_reference(out_ref)
+        if in_ref and out_source:
+            out_source._remove_reference(in_ref)
 
     def _format_html_docs(self, docs):
         """ Format docs to be sent in an html request. """
