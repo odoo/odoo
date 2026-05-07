@@ -22,7 +22,9 @@ class SaleOrder(models.Model):
         for sale in self:
             # We want only manufacturing orders of first level
             mos = sale.stock_reference_ids.production_ids
-            sale.mrp_production_ids = mos.filtered(lambda mo: not mo.production_group_id.parent_ids and mo.state != 'cancel')
+            sale.mrp_production_ids = mos.filtered(lambda mo:
+                                                   not mo.production_group_id.parent_ids and mo.state != 'cancel'
+                                                   and mo.picking_type_id.active)
             sale.mrp_production_count = len(sale.mrp_production_ids)
 
     def action_view_mrp_production(self):
