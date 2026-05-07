@@ -90,7 +90,7 @@
         <field name="model">sale.phonebook</field>
         <field name="arch" type="xml">
             <list>
-                <field name="customer_id" string="Tên khách hàng" readonly="True" width="auto"/>
+                <field name="customer_id" string="Tên khách hàng" readonly="True"/>
                 <field name="phone" widget="phone"/>
                 <field name="is_called"/>
                 <field name="unreachable"/>
@@ -208,8 +208,18 @@
                         class="oe_highlight"
                         groups="ht_crm.group_ht_leader,ht_crm.group_ht_executive"/>
                 </header>
-                <field name="name" string="Tên khách hàng" readonly="True"/>
-                <field name="phone" string="SĐT Chính" readonly="True"/>
+                <!-- TRƯỜNG CƠ BẢN -->
+                <field name="name"/>
+                <field name="partner_platform"/>
+                <field name="email"/>
+                <field name="date_of_birth"/>
+                <field name="id_number"/>
+                <field name="issue_date"/>
+                <field name="issue_place"/>
+                <field name="permanent_address"/>
+                <field name="contact_address"/>
+
+                <!-- TRƯỜNG BỔ SUNG -->
                 <field name="salesperson_id"/>
                 <field name="previous_salesperson_ids" widget="many2many_tags" groups="ht_crm.group_ht_leader,ht_crm.group_ht_executive"/>
                 <field name="ignore" widget="checkbox" groups="ht_crm.group_ht_leader,ht_crm.group_ht_executive"/>

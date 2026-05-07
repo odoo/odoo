@@ -1,4 +1,94 @@
-from odoo import models, fields, api
+from odoo import models, fields, api, exceptions
+
+class EstatePropertyUnitType(models.Model):
+    _name = 'estate.property.unit.type'
+    _description = 'Loại căn hộ'
+
+    name = fields.Char(string="Tên loại", required=True)
+    code = fields.Char(string="Mã")
+
+    description = fields.Text(string="Mô tả")
+
+class EstatePropertyUnit(models.Model):
+    _name = 'estate.property.unit'
+    _description = 'Căn hộ / Sản phẩm bất động sản'
+
+    block = fields.Char(string="Block", size=5)
+    floor = fields.Integer(string="Tầng")
+    unit_number = fields.Integer(string="Căn hộ số", required=True)
+
+    product_code = fields.Char(
+        string="Mã sản phẩm",
+        compute="_compute_product_code",
+        store=False,
+        required=True
+    )
+
+    unit_type_id = fields.Many2one(
+        'estate.property.unit.type',
+        string="Loại căn hộ"
+    )
+
+    net_area = fields.Float(string="DTTT (m²)")   # diện tích thông thủy
+    gross_area = fields.Float(string="DTLL (m²)") # diện tích tim tường
+
+    priority = fields.Integer(string="Ưu tiên", default=1)
+
+    booking_code = fields.Char(string="Mã VBTT đặt mua")
+
+    # Trường bổ sung
+    price = fields.Float(string="Giá bán")
+    state = fields.Selection([
+        ('available', 'Còn trống'),
+        ('reserved', 'Giữ chỗ'),
+        ('sold', 'Đã bán'),
+        ('blocked', 'Khoá')
+    ], default='available', string="Trạng thái")
+
+
+    @api.depends('unit_type_id', 'unit_number')
+    def _compute_product_code(self):
+        for rec in self:
+            unit_block = rec.block or ""
+
+            unit_floor = f"{rec.floor:02d}"
+            unit_no = f"{rec.unit_number:02d}"
+
+            if unit_block and unit_floor and unit_no:
+                rec.product_code = f"{unit_block}{unit_floor}{unit_no}"
+            else:
+                rec.product_code = ""
+
+    # Ràng buộc
+    _sql_constraints = [
+        ('product_code_unique', 'unique(product_code)', 'Mã sản phẩm phải duy nhất!')
+    ]
+    
+    @api.constrains('floor')
+    def _check_floor_non_negative(self):
+        for rec in self:
+            if rec.floor is not None and rec.floor < 0 and rec.floor > 99:
+                raise exceptions.ValidationError("Tầng phải nằm trong khoảng 0 tới 99!")
+            
+    @api.constrains('price')
+    def _check_price_non_negative(self):
+        for rec in self:
+            if rec.price is not None and rec.price < 0:
+                raise exceptions.ValidationError("Giá trị không được nhỏ hơn 0!")
+            
+    @api.constrains('net_area', 'gross_area')
+    def _check_area_valid(self):
+        for rec in self:
+            if rec.net_area < 0:
+                raise exceptions.ValidationError("Diện tích thông thủy không được nhỏ hơn 0!")
+
+            if rec.gross_area < 0:
+                raise exceptions.ValidationError("Diện tích tim tường không được nhỏ hơn 0!")
+
+            if rec.gross_area and rec.net_area and rec.gross_area < rec.net_area:
+                raise exceptions.ValidationError(
+                    "Diện tích tim tường phải lớn hơn hoặc bằng diện tích thông thủy!"
+                )
 
 class EstateProject(models.Model):
     _name = 'estate.project'
@@ -27,7 +117,43 @@ class EstateProject(models.Model):
 
     note = fields.Text(string="Ghi chú")
 
-    customer_ids = fields.Many2many(
+    purchased_customer_ids = fields.Many2many(
         'sale.customer',
+        'estate_project_purchased_rel',
+        'project_id',
+        'customer_id',
+        string="Khách hàng đã mua"
+    )
+
+    interested_customer_ids = fields.Many2many(
+        'sale.customer',
+        'estate_project_interested_rel',
+        'project_id',
+        'customer_id',
         string="Khách hàng quan tâm"
     )
+
+    sales_ids = fields.Many2many(
+        'sale.employee',
+        'estate_project_employee_rel',
+        'project_id',
+        'employee_id',
+        string="Sales phụ trách"
+    )
+
+    unit_ids = fields.Many2many(
+        'estate.property.unit',
+        'estate_project_property_unit_rel',
+        'project_id',
+        'unit_id',
+        string="Rổ hàng"
+    )
+
+    def action_clear_interested_customers(self):
+        for rec in self:
+            rec.interested_customer_ids = [(5, 0, 0)]
+
+
+    def action_clear_purchased_customers(self):
+        for rec in self:
+            rec.purchased_customer_ids = [(5, 0, 0)]
