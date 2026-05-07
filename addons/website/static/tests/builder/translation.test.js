@@ -810,6 +810,24 @@ test("it should be possible to translate the attribute of an image that has the 
     ).toHaveCount(1);
 });
 
+test("placeholders aren't translated on elements that aren't input or textarea", async () => {
+    await setupSidebarBuilderForTranslation({
+        websiteContent: `
+            <div class="div-target o_editable" placeholder="<span data-oe-model=&quot;ir.ui.view&quot; data-oe-id=&quot;544&quot; data-oe-field=&quot;arch_db&quot; data-oe-translation-state=&quot;to_translate&quot; data-oe-translation-source-sha=&quot;sourceSha&quot;>placeholder</span>">Text</div>
+            <input class="input-target" placeholder="<span data-oe-model=&quot;ir.ui.view&quot; data-oe-id=&quot;544&quot; data-oe-field=&quot;arch_db&quot; data-oe-translation-state=&quot;to_translate&quot; data-oe-translation-source-sha=&quot;sourceSha&quot;>placeholder</span>"></input>
+        `,
+    });
+    await contains(".modal .btn:contains(Ok, never show me this again)").click();
+    expect(":iframe .div-target").not.toHaveClass("o_translatable_attribute");
+    await contains(":iframe .div-target").click();
+    await animationFrame();
+    expect(".hb-row [data-action-id='translateAttribute']").toHaveCount(0);
+    expect(":iframe .input-target").toHaveClass("o_translatable_attribute");
+    await contains(":iframe .input-target").click();
+    await animationFrame();
+    expect(".hb-row [data-action-id='translateAttribute']").toHaveCount(1);
+});
+
 test("Ensure the contenteditable attributes have been set before the TranslationPlugin checks for the node to be translated", async () => {
     patchWithCleanup(TranslationPlugin.prototype, {
         prepareTranslation() {
