@@ -30,6 +30,7 @@ class DiscussChannelMember(models.Model):
     partner_id = fields.Many2one("res.partner", "Partner", ondelete="cascade", index=True)
     guest_id = fields.Many2one("mail.guest", "Guest", ondelete="cascade", index=True)
     is_self = fields.Boolean(compute="_compute_is_self", search="_search_is_self")
+    can_unlink = fields.Boolean(compute="_compute_can_unlink")
     # channel
     channel_id = fields.Many2one("discuss.channel", "Channel", ondelete="cascade", required=True, bypass_search_access=True)
     channel_role = fields.Selection(
@@ -121,6 +122,10 @@ class DiscussChannelMember(models.Model):
                         channel_type=member.channel_id.channel_type,
                     )
                 )
+
+    def _compute_can_unlink(self):
+        for member in self:
+            member.can_unlink = member.has_access("unlink")
 
     @api.depends_context("uid", "guest")
     def _compute_is_self(self):
