@@ -33,10 +33,7 @@ patch(PosStore.prototype, {
 
     async printSelfOrderReceipt(orderId) {
         try {
-            const result = await this.data.callRelated("pos.order", "get_order_to_print", [
-                orderId,
-            ]);
-            const order = result["pos.order"][0];
+            const order = await this.getSelfOrderToPrint(orderId);
             await this.sendOrderInPreparation(order, { bypassPdis: true });
             await this.printReceipt({ order });
         } catch {
