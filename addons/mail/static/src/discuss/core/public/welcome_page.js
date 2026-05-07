@@ -16,7 +16,6 @@ export class WelcomePage extends Component {
 
     setup() {
         super.setup();
-        this.isClosed = false;
         this.store = useService("mail.store");
         this.ui = useService("ui");
         this.rtc = useService("discuss.rtc");
