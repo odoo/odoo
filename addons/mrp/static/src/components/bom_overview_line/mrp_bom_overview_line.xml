@@ -29,8 +29,8 @@
             </t>
         </td>
         <td t-if="forecastMode" class="text-center">
-            <div t-if="data.hasOwnProperty('status')" class="o_field_badge" role="button"> 
-                <span t-attf-class="badge rounded-pill o_mrp_overview_badge {{statusBackgroundClass}}" t-out="data.status"/>
+            <div t-if="data.is_storable" class="o_field_badge" role="button" t-on-click.prevent="goToForecast">
+                <span t-attf-class="badge rounded-pill o_mrp_overview_badge {{statusBackgroundClass}}" t-out="statusData"/>
             </div>
         </td>
         <td t-if="forecastMode" class="text-end">

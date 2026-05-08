@@ -22,7 +22,7 @@ export class BomOverviewLine extends Component {
     };
     static defaultProps = {
         isFolded: true,
-        toggleFolded: () => {},
+        toggleFolded: () => { },
     };
 
     setup() {
@@ -76,12 +76,12 @@ export class BomOverviewLine extends Component {
             type: "ir.actions.act_window",
             res_model: "product.document",
             domain: ['&', ["attached_on_mrp", "=", "bom"], '|',
-                '&',["res_model", "=", "product.product"],["res_id", "in", [this.data.product_id]],
-                '&',["res_model", "=", "product.template"],["res_id", "in", [this.data.product_template_id]]],
+                '&', ["res_model", "=", "product.product"], ["res_id", "in", [this.data.product_id]],
+                '&', ["res_model", "=", "product.template"], ["res_id", "in", [this.data.product_template_id]]],
             views: [[false, "kanban"], [false, "list"], [false, "form"]],
             view_mode: "kanban,list,form",
             target: "current",
-            context:{
+            context: {
                 'bom_id': true,
                 'default_res_id': this.data.product_id,
                 'default_res_model': "product.product"
@@ -139,27 +139,6 @@ export class BomOverviewLine extends Component {
         return this.props.showOptions.attachments;
     }
 
-    get availabilityColorClass() {
-        // For first line, another rule applies : green if doable now, red otherwise.
-        if (this.data.hasOwnProperty('components_available')) {
-            if (this.data.components_available && this.data.availability_state != 'unavailable') {
-                return "text-success";
-            } else {
-                return "text-danger";
-            }
-        }
-        switch (this.data.availability_state) {
-            case "available":
-                return "text-success";
-            case "expected":
-                return "text-warning";
-            case "unavailable":
-                return "text-danger";
-            default:
-                return "";
-        }
-    }
-
     get forecastAction() {
         switch (this.data.link_model) {
             case "product.product":
@@ -169,9 +148,31 @@ export class BomOverviewLine extends Component {
         }
     }
 
+    get statusData() {
+        if (this.data.hasOwnProperty('components_available') && this.data.status && this.data.status !== "No Ready To Produce") {
+            return this.data.status;
+        }
+        if (this.data.status === "No Ready To Produce" && this.data.availability_display) {
+            return this.data.availability_display;
+        }
+        if (this.data.availability_display) {
+            return this.data.availability_display;
+        }
+        return 'Not Available';
+    }
+
     get statusBackgroundClass() {
-        if(this.data.status?.includes('Ready To Produce')) {
+        if (!this.statusData) {
+            return "text-bg-danger";
+        }
+        if (this.statusData === 'Available' || this.statusData.includes('Ready To Produce')) {
             return "text-bg-success";
+        }
+        if (this.statusData.includes('Expected')) {
+            return "text-bg-warning";
+        }
+        if (this.statusData.includes('Estimated')) {
+            return "text-bg-dark";
         }
         return "text-bg-danger";
     }
