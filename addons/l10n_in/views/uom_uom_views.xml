@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="product_uom_form_view_inherit_l10n_in" model="ir.ui.view">
-        <field name="name">uom.uom.form</field>
+    <record id="uom_uom_view_form" model="ir.ui.view">
+        <field name="name">uom.uom.view.form.inherit.l10n.in</field>
         <field name="model">uom.uom</field>
-        <field name="inherit_id" ref="uom.product_uom_form_view"/>
+        <field name="inherit_id" ref="uom.uom_uom_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='name']" position="after">
                 <field name="l10n_in_code" invisible="'IN' not in fiscal_country_codes"/>

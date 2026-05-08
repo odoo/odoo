@@ -1,9 +1,9 @@
 <odoo>
     <data>
-        <record id="product_uom_form_view_inherit" model="ir.ui.view">
-            <field name="name">product_uom_form_view_inherit</field>
+        <record id="uom_uom_view_form" model="ir.ui.view">
+            <field name="name">uom.uom.view.form.inherit.account</field>
             <field name="model">uom.uom</field>
-            <field name="inherit_id" ref="uom.product_uom_form_view"/>
+            <field name="inherit_id" ref="uom.uom_uom_view_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='name']" position="before">
                     <field name="fiscal_country_codes" invisible="1"/>

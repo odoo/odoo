@@ -1,5 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <record id="product_uom_view_form" model="ir.ui.view">
+        <field name="name">product.uom.form</field>
+        <field name="model">product.uom</field>
+        <field name="arch" type="xml">
+           <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="uom_id" readonly="True"/>
+                            <field name="barcode"/>
+                        </group>
+                        <group>
+                            <field name="product_id" readonly="True"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
     <record id="product_uom_list_view" model="ir.ui.view">
         <field name="name">product.uom.list</field>
         <field name="model">product.uom</field>
@@ -12,10 +32,10 @@
         </field>
     </record>
 
-    <record id="uom_uom_form_view_inherit" model="ir.ui.view">
-        <field name="name">uom.uom.form.inherit</field>
+    <record id="uom_uom_view_form" model="ir.ui.view">
+        <field name="name">uom.uom.view.form.inherit.product</field>
         <field name="model">uom.uom</field>
-        <field name="inherit_id" ref="uom.product_uom_form_view"/>
+        <field name="inherit_id" ref="uom.uom_uom_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//sheet" position="inside">
                 <div class="oe_button_box" name="button_box">
