@@ -220,6 +220,19 @@ class PaymentProvider(models.Model):
         inline_form_values = {"email": partner.email, "public_key": self.mercado_pago_public_key}
         return json.dumps(inline_form_values)
 
+    def _get_amount_precision(self, currency, **kwargs):
+        """Override of `payment` to return the amount precision for Mercado Pago.
+
+        :param recordset currency: The currency of the transaction, as a `res.currency` record.
+        :return: The number of decimal places.
+        :rtype: int
+        """
+        precision = super()._get_amount_precision(currency, **kwargs)
+        if self.code != "mercado_pago":
+            return precision
+
+        return const.CURRENCY_DECIMALS.get(currency.name, precision)
+
     # === REQUEST HELPERS === #
 
     def _build_request_url(self, endpoint, *, is_proxy_request=False, **kwargs):

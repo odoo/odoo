@@ -26,7 +26,7 @@ class StripeCommon(PaymentCommon):
             "amount": payment_utils.to_minor_currency_units(
                 cls.amount,
                 cls.currency,
-                arbitrary_decimal_number=const.CURRENCY_DECIMALS.get(cls.currency.name),
+                arbitrary_decimal_number=cls.provider._get_amount_precision(cls.currency),
             ),
             "currency": cls.currency.name.lower(),
         }
@@ -54,10 +54,7 @@ class StripeCommon(PaymentCommon):
             **cls.notification_amount_and_currency,
         }
         cls.void_payment_data = {
-            "data": {
-                "captured": False,
-                "object": cls.refund_object,
-            },
+            "data": {"captured": False, "object": cls.refund_object},
             "type": "charge.refunded",
         }
         cls.refund_payment_data = {

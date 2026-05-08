@@ -120,7 +120,7 @@ class PaymentTransaction(models.Model):
             "amount": payment_utils.to_minor_currency_units(
                 self.amount,
                 self.currency_id,
-                arbitrary_decimal_number=const.CURRENCY_DECIMALS.get(self.currency_id.name),
+                arbitrary_decimal_number=self.provider_id._get_amount_precision(self.currency_id),
             ),
             "currency": self.currency_id.name.lower(),
             "description": self.reference,
@@ -188,7 +188,7 @@ class PaymentTransaction(models.Model):
             f"{OPTION_PATH_PREFIX}[amount]": payment_utils.to_minor_currency_units(
                 mandate_values.get("amount", 15000),
                 self.currency_id,
-                arbitrary_decimal_number=const.CURRENCY_DECIMALS.get(self.currency_id.name),
+                arbitrary_decimal_number=self.provider_id._get_amount_precision(self.currency_id),
             ),  # Use the specified amount, if any, or define the maximum amount of 15.000 INR.
             f"{OPTION_PATH_PREFIX}[start_date]": round(
                 (mandate_values.get("start_datetime") or fields.Datetime.now()).timestamp()
@@ -232,7 +232,9 @@ class PaymentTransaction(models.Model):
                 "amount": payment_utils.to_minor_currency_units(
                     -self.amount,  # Refund transactions' amount is negative, inverse it.
                     self.currency_id,
-                    arbitrary_decimal_number=const.CURRENCY_DECIMALS.get(self.currency_id.name),
+                    arbitrary_decimal_number=self.provider_id._get_amount_precision(
+                        self.currency_id
+                    ),
                 ),
             },
         )
@@ -385,14 +387,10 @@ class PaymentTransaction(models.Model):
         amount = payment_utils.to_major_currency_units(
             payment_data.get("amount", 0),
             self.currency_id,
-            arbitrary_decimal_number=const.CURRENCY_DECIMALS.get(self.currency_id.name),
+            arbitrary_decimal_number=self.provider_id._get_amount_precision(self.currency_id),
         )
         currency_code = payment_data.get("currency", "").upper()
-        return {
-            "amount": amount,
-            "currency_code": currency_code,
-            "precision_digits": const.CURRENCY_DECIMALS.get(self.currency_id.name),
-        }
+        return {"amount": amount, "currency_code": currency_code}
 
     def _extract_token_values(self, payment_data):
         """Override of `payment` to return token data based on Stripe data.
