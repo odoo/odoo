@@ -44,7 +44,7 @@ class AuthSignupHome(Home):
                 if not request.env['ir.http']._verify_request_recaptcha_token('signup'):
                     raise UserError(_("Suspicious activity detected by Google reCaptcha."))
 
-                self.do_signup(qcontext, validate_email=True)
+                self.do_signup(qcontext)
 
                 # Set user to public if they were not signed in by do_signup
                 # (mfa enabled)
@@ -92,7 +92,7 @@ class AuthSignupHome(Home):
                 if not request.env['ir.http']._verify_request_recaptcha_token('password_reset'):
                     raise UserError(_("Suspicious activity detected by Google reCaptcha."))
                 if qcontext.get('token'):
-                    self.do_signup(qcontext, validate_email=False)
+                    self.do_signup(qcontext)
                     return self.web_login(*args, **kw)
                 else:
                     login = qcontext.get('login')
@@ -147,24 +147,21 @@ class AuthSignupHome(Home):
                 qcontext['invalid_token'] = True
         return qcontext
 
-    def _prepare_signup_values(self, qcontext, *, validate_email=False):
+    def _prepare_signup_values(self, qcontext):
         values = { key: qcontext.get(key) for key in ('login', 'name', 'password') }
-        login = values.get('login')
         if not values:
             raise UserError(_("The form was not properly filled in."))
         if values.get('password') != qcontext.get('confirm_password'):
             raise UserError(_("Passwords do not match; please retype them."))
-        if validate_email and (not login or not tools.single_email_re.match(login)):
-            raise UserError(_("Invalid email; please enter a valid email address."))
         supported_lang_codes = [code for code, _ in request.env['res.lang'].get_installed()]
         lang = request.context.get('lang', '')
         if lang in supported_lang_codes:
             values['lang'] = lang
         return values
 
-    def do_signup(self, qcontext, *, validate_email=False):
+    def do_signup(self, qcontext):
         """ Shared helper that creates a res.partner out of a token """
-        values = self._prepare_signup_values(qcontext, validate_email=validate_email)
+        values = self._prepare_signup_values(qcontext)
         self._signup_with_values(qcontext.get('token'), values)
         request.env.cr.commit()
 
