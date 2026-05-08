@@ -8,7 +8,7 @@ from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 
 from odoo.addons.payment import utils as payment_utils
-from odoo.addons.payment.const import REPORT_REASONS_MAPPING, SENSITIVE_KEYS
+from odoo.addons.payment.const import CURRENCY_MINOR_UNITS, REPORT_REASONS_MAPPING, SENSITIVE_KEYS
 from odoo.addons.payment.logging import get_payment_logger
 
 # Pass the possibly empty set of sensitive keys to the logger in case a provider module extends it.
@@ -953,6 +953,21 @@ class PaymentProvider(models.Model):
         """
         self.ensure_one()
         return self.redirect_form_view_id
+
+    def _get_amount_precision(self, currency, **_kwargs):
+        """Return the precision of the transaction amount for the given currency.
+
+        The precision is determined by the currency's `decimal_places` field. For a provider to
+        enforce different precision, it must override this method and return the desired number of
+        decimal places.
+
+        :param recordset currency: The currency of the transaction, as a `res.currency` record.
+        :return: The number of decimal places.
+        :rtype: int
+        """
+        if not currency.name:
+            return None
+        return CURRENCY_MINOR_UNITS.get(currency.name, currency.decimal_places)
 
     # === REQUEST HELPERS === #
 

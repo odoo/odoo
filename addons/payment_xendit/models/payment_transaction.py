@@ -4,7 +4,6 @@ from werkzeug import urls
 
 from odoo import api, models
 from odoo.exceptions import ValidationError
-from odoo.tools import float_round
 from odoo.tools.urls import urljoin
 
 from odoo.addons.payment import utils as payment_utils
@@ -31,7 +30,7 @@ class PaymentTransaction(models.Model):
             return super()._get_specific_processing_values(processing_values)
 
         return {
-            "rounded_amount": self._get_rounded_amount(),
+            "rounded_amount": self.amount,
             "access_token": payment_utils.generate_access_token(self.reference),
         }
 
@@ -74,7 +73,7 @@ class PaymentTransaction(models.Model):
         })
         payload = {
             "external_id": self.reference,
-            "amount": self._get_rounded_amount(),
+            "amount": self.amount,
             "description": self.reference,
             "customer": {"given_names": self.partner_name},
             "success_redirect_url": f"{redirect_url}?{success_url_params}",
@@ -127,7 +126,7 @@ class PaymentTransaction(models.Model):
         payload = {
             "token_id": token_ref,
             "external_id": self.reference,
-            "amount": self._get_rounded_amount(),
+            "amount": self.amount,
             "currency": self.currency_id.name,
         }
         if auth_id:  # The payment goes through an authentication.
@@ -146,12 +145,6 @@ class PaymentTransaction(models.Model):
             )._set_error(str(error))
         else:
             self._record(charge_payment_data)
-
-    def _get_rounded_amount(self):
-        decimal_places = const.CURRENCY_DECIMALS.get(
-            self.currency_id.name, self.currency_id.decimal_places
-        )
-        return float_round(self.amount, decimal_places, rounding_method="DOWN")
 
     @api.model
     def _extract_reference(self, provider_code, payment_data):
@@ -205,11 +198,7 @@ class PaymentTransaction(models.Model):
 
         amount = payment_data.get("amount") or payment_data.get("authorized_amount")
         currency_code = payment_data.get("currency")
-        return {
-            "amount": float(amount),
-            "currency_code": currency_code,
-            "precision_digits": const.CURRENCY_DECIMALS.get(currency_code),
-        }
+        return {"amount": float(amount), "currency_code": currency_code}
 
     def _extract_token_values(self, payment_data):
         """Override of `payment` to return token data based on Xendit data.

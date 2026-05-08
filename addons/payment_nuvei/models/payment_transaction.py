@@ -5,7 +5,6 @@ from uuid import uuid4
 
 from odoo import api, models
 from odoo.exceptions import UserError
-from odoo.tools import float_round
 
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.logging import get_payment_logger
@@ -40,12 +39,6 @@ class PaymentTransaction(models.Model):
                 )
             )
 
-        # Some payment methods don't support float values, even for currencies that does. Therefore,
-        # we must round them.
-        is_mandatory_integer_pm = self.payment_method_code in const.INTEGER_METHODS
-        rounding = 0 if is_mandatory_integer_pm else self.currency_id.decimal_places
-        rounded_amount = float_round(self.amount, rounding, rounding_method="DOWN")
-
         # Phone numbers need to be standardized and validated.
         phone_number = self.partner_phone and self._phone_format(
             number=self.partner_phone, country=self.partner_country_id, raise_exception=False
@@ -69,7 +62,7 @@ class PaymentTransaction(models.Model):
             "email": self.partner_email or "",
             "encoding": "UTF-8",
             "first_name": first_name[:30],
-            "item_amount_1": rounded_amount,
+            "item_amount_1": self.amount,
             "item_name_1": self.reference,
             "item_quantity_1": 1,
             "invoice_id": self.reference,
@@ -85,7 +78,7 @@ class PaymentTransaction(models.Model):
             "state": self.partner_state_id.code or "",
             "user_token_id": uuid4(),  # Random string due to some PMs requiring it but not used.
             "time_stamp": self.create_date.strftime("%Y-%m-%d.%H:%M:%S"),
-            "total_amount": rounded_amount,
+            "total_amount": self.amount,
             "version": "4.0.0",
             "zip": self.partner_zip or "",
             "back_url": cancel_error_url,
@@ -164,13 +157,6 @@ class PaymentTransaction(models.Model):
         if self.provider_code != "nuvei":
             return super()._extract_amount_data(payment_data)
 
-        is_mandatory_integer_pm = self.payment_method_code in const.INTEGER_METHODS
-        rounding = 0 if is_mandatory_integer_pm else self.currency_id.decimal_places
-
         amount = payment_data.get("totalAmount")
         currency_code = payment_data.get("currency")
-        return {
-            "amount": float(amount),
-            "currency_code": currency_code,
-            "precision_digits": rounding,
-        }
+        return {"amount": float(amount), "currency_code": currency_code}
