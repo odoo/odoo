@@ -9,6 +9,15 @@
             margin-bottom: 0 !important;
         }
     }
+    // Show discuss videocall creation button only when input is focused
+    div[name="videocall_location_div"] {
+        button[name="set_discuss_videocall_location"] {
+            display: none;
+        }
+        &:focus-within button[name="set_discuss_videocall_location"] {
+            display: block;
+        }
+    }
 }
 
 /*                 Quick-Edit Form View
@@ -19,6 +28,20 @@
 }
 
 .o_calendar_event_form_quick_create {
+    .o_outlined {
+        > i {
+            // Make every suffix icons gray, aligned and take same width
+            color: $o-gray-600;
+            text-align: center;
+            width: 1rem;
+        }
+        @include media-breakpoint-up(sm) {
+            // Align icon with notes html field
+            i:has(+ .o_field_calendar_event_notes_html) {
+                margin-top: 3px;
+            }
+        }
+    }
     .o_form_nosheet {
         padding-bottom: map-get($spacers, 2);
     }
@@ -28,14 +51,9 @@
     .o_field_CopyClipboardChar {
         padding-left: 0 !important;
     }
-    .o_field_calendar_event_notes_html {
-        @include media-breakpoint-up(sm) {
-            margin-top: -2px;
-        }
-        .note-editable {
-            border: 0;
-            padding-left: 0 !important;
-        }
+    .o_field_calendar_event_notes_html .note-editable {
+        border: 0;
+        padding: 0 !important;
     }
 
 }

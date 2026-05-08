@@ -129,24 +129,31 @@
                             <field name="stop_date" required="allday" invisible="1"/>
                             <field name="stop" required="not allday" invisible="1" />
                             <field name="unavailable_partner_ids" invisible="1" /> <!-- this field will be used in many2many_attendees widget -->
-                            <field name="allday" widget="boolean_toggle" force_save="1" options="{'autosave': False}" readonly="not user_can_edit"/>
-                            <field name="duration" widget="float_time" string="Duration" invisible="allday" readonly="(id and recurrency) or not user_can_edit"/>
+                            <label for="duration"/>
+                            <div class="d-flex gap-2">
+                                <field name="duration" class="oe_inline" widget="float_time" string="Duration" invisible="allday" readonly="(id and recurrency) or not user_can_edit"/>
+                                <span invisible="allday"> or </span>
+                                <div class="d-flex flex-nowrap gap-2">
+                                    <label for="allday" string="All Day" class="text-nowrap"/>
+                                    <field name="allday" class="oe_inline" widget="boolean_toggle" force_save="1" options="{'autosave': False}" readonly="not user_can_edit"/>
+                                </div>
+                            </div>
                             <field name="location" placeholder="Online Meeting" readonly="not user_can_edit"/>
                             <label for="videocall_location" class="opacity-100"/>
                             <div name="videocall_location_div" class="d-flex flex-nowrap align-items-baseline">
                                 <field name="videocall_location" string="Video Link" widget="CopyClipboardChar"
                                     force_save="1" class="d-inline-flex text-truncate" readonly="videocall_source == 'discuss' or not user_can_edit"/>
-                                <button name="clear_videocall_location" type="object" class="btn btn-link"
+                                <button name="clear_videocall_location" type="object" class="btn btn-link py-0"
                                     invisible="not videocall_location or not user_can_edit" context="{'recurrence_update': recurrence_update}">
                                     <i title="Clear meeting" data-tooltip="Clear meeting" class="fa fa-times"/>
                                 </button>
-                                <button name="action_join_video_call" class="btn btn-link" type="object"
+                                <button name="action_join_video_call" class="btn btn-link py-0" type="object"
                                     invisible="not videocall_location or not user_can_edit">
                                     <i title="Join Video Call" data-tooltip="Join video call" class="fa fa-sign-in"/>
                                 </button>
-                                <button name="set_discuss_videocall_location" type="object" class="btn btn-link text-nowrap"
+                                <button name="set_discuss_videocall_location" type="object" class="btn btn-link text-nowrap py-0"
                                     invisible="videocall_location or not user_can_edit" context="{'recurrence_update': recurrence_update}">
-                                    <span class="mx-1"><i class="fa fa-plus me-1"/>Odoo meeting</span>
+                                    <span class="mx-1"><i class="fa fa-plus me-1"/>Video conference</span>
                                 </button>
                             </div>
                             <field name="res_record"/>
@@ -165,12 +172,10 @@
                                     help="Set whether you're available for other simultaneous events and the privacy of this event to others. Manage your default privacy in your user preferences."/>
                             </div>
                             <field name="should_show_status" invisible="1"/>
-                            <div class="o_form_label">
-                                <field name="attendees_count" class="w-auto oe_inline" nolabel="1"/><span> guests</span>
-                            </div>
-                            <div class="w-100 p-2">
-                                <div class="d-flex text-muted fw-normal w-100 p-3">
-                                    <span invisible="not accepted_count and not tentative_count and not declined_count and not awaiting_count">
+                            <div class="w-100 py-2" colspan="2">
+                                <div class="d-flex flex-nowrap gap-2 fw-normal w-100">
+                                    <span><field name="attendees_count" class="w-auto oe_inline" nolabel="1"/> guests</span>
+                                    <span class="text-muted" invisible="not accepted_count and not tentative_count and not declined_count and not awaiting_count">
                                         <span invisible="not accepted_count" class="me-1">
                                             <field name="accepted_count" class="w-auto oe_inline" nolabel="1"/> Yes
                                         </span>
@@ -184,9 +189,9 @@
                                             <field name="awaiting_count" class="w-auto oe_inline" nolabel="1"/> Awaiting
                                         </span>
                                     </span>
-                                    <div name="send_buttons" class="d-flex gap-2 mb-auto ms-4" invisible="not attendees_count">
-                                        <button name="action_open_composer" help="Send Email to attendees" type="object" string=" EMAIL" icon="fa-envelope" invisible="not user_can_edit"/>
-                                    </div>
+                                </div>
+                                <div name="send_buttons" class="d-flex gap-2 pt-2 pb-3" invisible="not attendees_count">
+                                    <button name="action_open_composer" class="btn btn-sm btn-secondary" help="Send Email to attendees" type="object" string=" EMAIL" icon="fa-envelope" invisible="not user_can_edit"/>
                                 </div>
                                 <label for="partner_ids" class="d-none d-touch-block" invisible="not accepted_count and not tentative_count and not declined_count and not awaiting_count"/>
                                 <field name="partner_ids" widget="many2manyattendee"
@@ -335,8 +340,8 @@
                     <span class="text-nowrap w-auto">
                         <!-- This is needed so that show_as can be set as 'free' when creating all day events -->
                         <field name="show_as" invisible="1"/>
-                        <label for="allday" string="All day" class="ms-md-3"/>
-                        <field name="allday" widget="boolean_toggle" options="{'autosave': False}" title="All Day" nolabel="1"/>
+                        <label for="allday" string="All day" class="fw-normal me-md-2"/>
+                        <field name="allday" nolabel="1"/>
                     </span>
                     <field name="stop" invisible="1"/>
                 </div>
@@ -376,7 +381,7 @@
                     <i class="fa fa-circle" title="Show as"/>
                     <field name="show_as" nolabel="1" class="w-100"/>
                 </div>
-                <div class="o_outlined d-flex align-items-center mb-3 gap-2">
+                <div class="o_outlined d-flex align-items-start mb-3 gap-2">
                     <i class="fa fa-sticky-note" title="Notes"/>
                     <field name="notes" nolabel="1" class="w-100" placeholder="Notes" widget="calendar_event_notes_html"/>
                 </div>
