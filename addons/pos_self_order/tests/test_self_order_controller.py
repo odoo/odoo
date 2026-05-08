@@ -4,6 +4,8 @@ import json
 import uuid
 from datetime import timedelta
 
+from odoo import Command, fields
+
 import odoo.tests
 from odoo.addons.pos_self_order.tests.self_order_common_test import SelfOrderCommonTest
 
@@ -286,6 +288,52 @@ class TestSelfOrderController(SelfOrderCommonTest):
         self.assertIn(stva_categ.id, loaded_category_ids, "The category linked to the printer should be loaded")
         self.assertNotIn(lowe_categ.id, loaded_category_ids, "The category not linked to any printer should not be loaded")
         self.start_tour(self_route, "test_preparation_categories_are_loaded")
+
+    def test_generate_return_values_includes_payment_method(self):
+        self.pos_config.write({
+            'self_ordering_mode': 'mobile',
+            'self_ordering_pay_after': 'each',
+        })
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.pos_config.current_session_id.set_opening_control(0, '')
+
+        payment_method = self.pos_config.payment_method_ids[0]
+        order = self.env['pos.order'].create({
+            'amount_total': 2.2,
+            'amount_paid': 0,
+            'amount_tax': 0,
+            'amount_return': 0,
+            'date_order': fields.Datetime.to_string(fields.Datetime.now()),
+            'company_id': self.env.company.id,
+            'session_id': self.pos_config.current_session_id.id,
+            'lines': [Command.create({
+                'product_id': self.cola.id,
+                'qty': 1,
+                'price_unit': 2.2,
+                'price_subtotal': 2.2,
+                'price_subtotal_incl': 2.2,
+            })],
+        })
+        order.lines._onchange_amount_line_all()
+        order._compute_prices()
+
+        payment_context = {"active_ids": order.ids, "active_id": order.id}
+        order_payment = self.env['pos.make.payment'].with_context(**payment_context).create({
+            'payment_method_id': payment_method.id,
+        })
+        order_payment.with_context(**payment_context).check()
+
+        params = {
+            'access_token': self.pos_config.access_token,
+            'order_access_tokens': [{
+                'access_token': order.access_token,
+            }],
+        }
+        data = self.make_request_to_controller('/pos-self-order/get-user-data', params)
+
+        self.assertIn('pos.payment.method', data)
+        returned_pm_ids = {pm['id'] for pm in data['pos.payment.method']}
+        self.assertIn(payment_method.id, returned_pm_ids)
 
     def test_config_session_loaded_fields(self):
         self.pos_config.write({

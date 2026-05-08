@@ -47,6 +47,10 @@ export class PaymentPage extends Component {
         this.startPayment();
     }
 
+    get paymentMethods() {
+        return this.selfOrder.models["pos.payment.method"].filter((pm) => !pm.is_cash_count);
+    }
+
     get selectedPaymentMethod() {
         return this.selfOrder.models["pos.payment.method"].find(
             (p) => p.id === this.state.paymentMethodId
