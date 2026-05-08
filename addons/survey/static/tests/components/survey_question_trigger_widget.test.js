@@ -73,8 +73,7 @@ class SurveyQuestionAnswer extends models.Model {
 defineModels([Survey, SurveyQuestion, SurveyQuestionAnswer]);
 defineMailModels();
 
-test.tags("owl3");
-test.todo("dynamic rendering of surveyQuestionTriggerError rows", async () => {
+test("dynamic rendering of surveyQuestionTriggerError rows", async () => {
     await mountView({
         type: "form",
         resModel: "survey",
