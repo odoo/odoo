@@ -1,24 +1,18 @@
+import { render, useComponent } from "@web/owl2/utils";
 import { RPCError } from "@web/core/network/rpc";
 import { user } from "@web/core/user";
 import { Race } from "@web/core/utils/concurrency";
 import { useService } from "@web/core/utils/hooks";
-import { render, useComponent } from "@web/owl2/utils";
 import { useSetupAction } from "@web/search/action_hook";
 import { SEARCH_KEYS } from "@web/search/with_search/with_search";
 import { buildSampleORM } from "./sample_server";
 
-import { EventBus, onWillStart, onWillUnmount, onWillUpdateProps, signal, status } from "@odoo/owl";
+import { EventBus, onWillStart, onWillUnmount, onWillUpdateProps, status } from "@odoo/owl";
 
 /**
  * @typedef {import("@web/env").OdooEnv} OdooEnv
  * @typedef {import("@web/search/search_model").SearchParams} SearchParams
  * @typedef {import("services").ServiceFactories} Services
- *
- * @typedef {{
- *  beforeFirstLoad?: () => any;
- *  lazy?: boolean;
- *  onLoad?: (searchParams: SearchParams) => any;
- * }} UseModelOptions
  */
 
 export class Model {
@@ -33,11 +27,11 @@ export class Model {
         this.env = env;
         this.orm = services.orm;
         this.bus = new EventBus();
-        this.isReady = signal(false);
+        this.isReady = false;
         this.whenReady = Promise.withResolvers();
         this.whenReady.promise.then(() => {
-            this.isReady.set(true);
-            // this.notify();
+            this.isReady = true;
+            this.notify();
         });
         this.setup(params, services);
     }
@@ -96,143 +90,69 @@ function getSearchParams(props) {
 /**
  * @template {typeof Model} T
  * @param {T} ModelClass
- * @param {SearchParams} params
- * @param {UseModelOptions} [options]
+ * @param {Object} params
+ * @param {Object} [options]
+ * @param {Function} [options.beforeFirstLoad]
  * @returns {InstanceType<T>}
  */
-function _useModel(ModelClass, params, options) {
-    if (!(ModelClass.prototype instanceof Model)) {
-        throw new Error(`the model class should extend Model`);
-    }
-
-    /**
-     * @param {Record<any, any>} props
-     */
-    async function load(props) {
-        const searchParams = getSearchParams(props);
-        await model.load(searchParams);
-
-        if (onLoad) {
-            await onLoad(searchParams);
-        }
-
-        if (!model.isReady()) {
-            model.whenReady.resolve(); // resolve after the first successful load
-        } else if (status(component) === "mounted") {
-            model.notify();
-        }
-    }
-
-    function onUpdate() {
-        return render(component, true);
-    }
-
-    /**
-     * @param {Record<any, any>} props
-     */
-    function raceLoad(props) {
-        return race.add(load(props));
-    }
-
-    const race = new Race();
+export function useModel(ModelClass, params, options = {}) {
     const component = useComponent();
     const services = {};
     for (const key of ModelClass.services) {
         services[key] = useService(key);
     }
-    services.orm ||= useService("orm");
-
-    params.isAlive ??= function isAlive() {
-        return status(component) !== "destroyed";
-    };
-
-    const { beforeFirstLoad, onLoad, lazy } = options || {};
-    const env = component.env;
-    const model = new ModelClass(env, params, services);
-
-    model.bus.addEventListener("update", onUpdate);
-    onWillUnmount(() => model.bus.removeEventListener("update", onUpdate));
-
+    services.orm = services.orm || useService("orm");
+    const model = new ModelClass(component.env, params, services);
     onWillStart(async () => {
-        if (beforeFirstLoad) {
-            await options.beforeFirstLoad();
-        }
-        const promise = raceLoad(component.props);
-        if (lazy) {
-            // in-house error handling as we're out of willStart
-            promise.catch((e) => {
-                if (e instanceof RPCError) {
-                    env.config.historyBack();
-                }
-                throw e;
-            });
-        } else {
-            await promise;
-        }
+        await options.beforeFirstLoad?.();
+        await model.load(getSearchParams(component.props));
+        model.whenReady.resolve();
     });
-    onWillUpdateProps(raceLoad);
-
+    onWillUpdateProps((nextProps) => model.load(getSearchParams(nextProps)));
     return model;
 }
 
 /**
  * @template {typeof Model} T
  * @param {T} ModelClass
- * @param {SearchParams} params
- * @param {UseModelOptions} [options]
+ * @param {Object} params
+ * @param {Object} [options]
+ * @param {Function} [options.lazy=false]
  * @returns {InstanceType<T>}
  */
-export function useModel(ModelClass, params, options) {
-    return _useModel(ModelClass, params, options);
-}
-
-/**
- * @template {typeof Model} T
- * @param {T} ModelClass
- * @param {SearchParams} params
- * @param {UseModelOptions} [options]
- * @returns {InstanceType<T>}
- */
-export function useModelWithSampleData(ModelClass, params, options) {
+export function useModelWithSampleData(ModelClass, params, options = {}) {
     const component = useComponent();
+    if (!(ModelClass.prototype instanceof Model)) {
+        throw new Error(`the model class should extend Model`);
+    }
+    const services = {};
+    for (const key of ModelClass.services) {
+        services[key] = useService(key);
+    }
+    services.orm = services.orm || useService("orm");
+
+    if (!("isAlive" in params)) {
+        params.isAlive = () => status(component) !== "destroyed";
+    }
+
+    const model = new ModelClass(component.env, params, services);
+
+    const onUpdate = () => render(component, true);
+    model.bus.addEventListener("update", onUpdate);
+    onWillUnmount(() => model.bus.removeEventListener("update", onUpdate));
 
     const globalState = component.props.globalState || {};
     const localState = component.props.state || {};
-
     let useSampleModel =
         component.props.useSampleModel &&
         (!("useSampleModel" in globalState) || globalState.useSampleModel);
-
-    onWillUpdateProps(() => {
-        useSampleModel = false;
-    });
-
-    const model = _useModel(ModelClass, params, {
-        ...options,
-        async onLoad(searchParams) {
-            if (useSampleModel && !model.hasData()) {
-                sampleORM =
-                    sampleORM ||
-                    buildSampleORM(component.props.resModel, component.props.fields, user);
-                // Load data with sampleORM then restore real ORM.
-                model.orm = sampleORM;
-                await model.load(searchParams);
-                model.orm = orm;
-                model.useSampleModel = true;
-            } else {
-                useSampleModel = false;
-                model.useSampleModel = useSampleModel;
-            }
-        },
-    });
-    const orm = model.orm;
-
     model.useSampleModel = false;
+    const orm = model.orm;
     let sampleORM = localState.sampleORM;
 
     // Always disable the sample model when `load` is called (can be called by the view itself).
     // Note: the only case where the sample mode should be kept after a load is handled below (see
-    // @load), and in that case, the flag is directly set to true afterwards.
+    // @_load), and in that case, the flag is directly set to true afterwards.
     if (useSampleModel) {
         const originalLoad = model.load;
         model.load = async function () {
@@ -241,6 +161,50 @@ export function useModelWithSampleData(ModelClass, params, options) {
             return result;
         };
     }
+
+    /**
+     * @param {Record<string, unknown>} props
+     */
+    async function _load(props) {
+        const searchParams = getSearchParams(props);
+        await model.load(searchParams);
+        if (useSampleModel && !model.hasData()) {
+            sampleORM =
+                sampleORM || buildSampleORM(component.props.resModel, component.props.fields, user);
+            // Load data with sampleORM then restore real ORM.
+            model.orm = sampleORM;
+            await model.load(searchParams);
+            model.orm = orm;
+            model.useSampleModel = true;
+        } else {
+            useSampleModel = false;
+            model.useSampleModel = useSampleModel;
+        }
+        model.whenReady.resolve(); // resolve after the first successful load
+        if (status(component) === "mounted") {
+            model.notify();
+        }
+    }
+    const race = new Race();
+    const load = (props) => race.add(_load(props));
+    onWillStart(() => {
+        const prom = load(component.props);
+        if (options.lazy) {
+            // in-house error handling as we're out of willStart
+            prom.catch((e) => {
+                if (e instanceof RPCError) {
+                    component.env.config.historyBack();
+                }
+                throw e;
+            });
+        } else {
+            return prom;
+        }
+    });
+    onWillUpdateProps((nextProps) => {
+        useSampleModel = false;
+        load(nextProps);
+    });
 
     useSetupAction({
         getGlobalState() {
