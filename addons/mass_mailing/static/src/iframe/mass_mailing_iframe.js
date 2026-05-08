@@ -11,32 +11,10 @@ import { useChildRef, useForwardRefToParent } from "@web/core/utils/hooks";
 import { renderToFragment } from "@web/core/utils/render";
 import { closestScrollableY } from "@web/core/utils/scrolling";
 import { useThrottleForAnimation } from "@web/core/utils/timing";
-import { useComponent, useLayoutEffect, useRef, useState, useSubEnv } from "@web/owl2/utils";
+import { useLayoutEffect, useRef, useState, useSubEnv } from "@web/owl2/utils";
 import { loadGoogleFonts } from "./mass_mailing_iframe_utils";
 
 const IFRAME_VALUE_SELECTOR = ".o_mass_mailing_value";
-
-/**
- * The MassMailingIframe will use this modified overlay service that will guarantee:
- * 1. Internal ordering of its different overlays
- * 2. To not mess up with owl's reconciliation of foreach when adding/removing overlays
- * This is a sub-optimal fix to the more general issue of owl displacing nodes that contain
- * an iframe, in which the iframe effectively unloads.
- */
-export function useOverlayServiceOffset() {
-    const comp = useComponent();
-    const originalOverlay = comp.env.services.overlay;
-    const subServices = Object.create(comp.env.services);
-    subServices.overlay = Object.create(originalOverlay);
-    subServices.overlay.add = (C, props, opts = {}) => {
-        opts = {
-            ...opts,
-            sequence: (opts.sequence ?? 50) + 1000,
-        };
-        return originalOverlay.add(C, props, opts);
-    };
-    useSubEnv({ services: subServices });
-}
 
 export class MassMailingIframe extends Component {
     static template = "mass_mailing.MassMailingIframe";
@@ -63,7 +41,6 @@ export class MassMailingIframe extends Component {
     };
 
     setup() {
-        useOverlayServiceOffset();
         this.overlayRef = useChildRef();
         this.iframeRef = useForwardRefToParent("iframeRef");
         this.iframeWrapperRef = useForwardRefToParent("iframeWrapperRef");
