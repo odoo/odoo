@@ -129,3 +129,22 @@ class TestSurveyController(common.TestSurveyCommon, HttpCase):
         session_manage_url = f'/survey/session/manage/{survey.access_token}'
         response = self.url_open(session_manage_url)
         self.assertEqual(response.status_code, 200, "Should be able to open live session manage page")
+
+    def test_partner_check_skipped_for_survey_officer(self):
+        """A survey officer may open an answer that belongs to another partner
+        (e.g. testing an invitation or previewing a mail template link), while a
+        regular user whose partner differs from `answer.partner_id` is refused."""
+        answer = self.survey._create_answer(partner=self.customer)
+        url = f'/survey/start/{self.survey.access_token}?answer_token={answer.access_token}'
+
+        # Regular internal user (no survey rights): partner mismatch is enforced.
+        self.authenticate(self.user_emp.login, 'user_emp')
+        self.assertNotEqual(self.user_emp.partner_id, self.customer)
+        response = self.url_open(url)
+        self.assertIn('Survey Access Error', response.text)
+
+        # Survey officer: allowed through even though the partner differs.
+        self.authenticate(self.survey_user.login, self.survey_user.login)
+        self.assertNotEqual(self.survey_user.partner_id, self.customer)
+        response = self.url_open(url)
+        self.assertNotIn('Survey Access Error', response.text)
