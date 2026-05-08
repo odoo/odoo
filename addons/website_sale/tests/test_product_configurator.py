@@ -404,6 +404,24 @@ class TestWebsiteSaleProductConfigurator(HttpCase, WebsiteSaleCommon):
             main_product.website_url, "website_sale.product_configurator_strikethrough_price"
         )
 
+    def test_product_configurator_strikethrough_price_uom_change(self):
+        """Test that the strikethrough price is updated when changing the packaging."""
+        self.env["res.config.settings"].create({
+            "group_product_price_comparison": True,
+            "group_uom": True,
+        }).execute()
+        self.env["product.template"].create({
+            "name": "Packaged product",
+            "website_published": True,
+            "list_price": 100,
+            "compare_list_price": 200,
+            "uom_ids": [Command.set(self.env.ref("uom.product_uom_pack_6").ids)],
+        })
+        self.start_tour(
+            "/shop?search=Packaged product",
+            "website_sale.product_configurator_strikethrough_price_uom_change",
+        )
+
     def test_get_product_combination_multi_attribute_with_archived_variant_and_inactive_ptav(self):
         """
         This test covers a case where a product has multiple attributes and one

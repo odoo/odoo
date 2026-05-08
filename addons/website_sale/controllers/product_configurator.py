@@ -141,6 +141,7 @@ class WebsiteSaleProductConfiguratorController(SaleProductConfiguratorController
             strikethrough_price = (
                 self._get_strikethrough_price(
                     product_or_template.with_context(
+                        uom=kwargs.get("uom"),
                         **product_or_template._get_product_price_context(combination)
                     ),
                     currency,
@@ -185,6 +186,7 @@ class WebsiteSaleProductConfiguratorController(SaleProductConfiguratorController
         :rtype: float|None
         :return: The strikethrough price of the product, if there is one.
         """
+        uom = product_or_template.env.context.get("uom")
         pricelist_rule = request.env["product.pricelist.item"].browse(pricelist_rule_id)
 
         # First, try to use the base price as the strikethrough price.
@@ -194,7 +196,7 @@ class WebsiteSaleProductConfiguratorController(SaleProductConfiguratorController
                 pricelist_rule._compute_price_before_discount(
                     product=product_or_template,
                     quantity=1.0,
-                    uom=product_or_template.uom_id,
+                    uom=uom or product_or_template.uom_id,
                     date=date,
                     currency=currency,
                 ),
@@ -220,6 +222,10 @@ class WebsiteSaleProductConfiguratorController(SaleProductConfiguratorController
                 date=date,
                 round=False,
             )
+            if uom and uom != product_or_template.uom_id:
+                compare_list_price = product_or_template.uom_id._compute_price(
+                    compare_list_price, uom,
+                )
             # Only show `compare_list_price` if it's greater than the actual price.
             if currency.compare_amounts(compare_list_price, price) == 1:
                 return compare_list_price
