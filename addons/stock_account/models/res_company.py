@@ -69,6 +69,7 @@ class ResCompany(models.Model):
             'ref': _('Stock Closing'),
             'inventory_closing': True,
             'line_ids': [Command.create(aml_vals) for aml_vals in aml_vals_list],
+            'company_id': self.env.company.id,
         }
         account_move = self.env['account.move'].create(moves_vals)
         if auto_post:
