@@ -73,10 +73,6 @@ class LivechatController(http.Controller):
         info = channel.get_livechat_info(username=username)
         return request.render('im_livechat.loader', {'info': info}, headers=[('Content-Type', 'application/javascript')])
 
-    def _process_extra_channel_params(self, **kwargs):
-        # non_persisted_channel_params, persisted_channel_params
-        return {}, {}
-
     def _get_guest_name(self):
         return _("Visitor")
 
@@ -112,7 +108,7 @@ class LivechatController(http.Controller):
 
         chatbot_script = operator_info['chatbot_script']
         is_chatbot_script = operator_info['operator_model'] == 'chatbot.script'
-        non_persisted_channel_params, persisted_channel_params = self._process_extra_channel_params(**kwargs)
+        non_persisted_channel_params, persisted_channel_params = self.env['discuss.channel']._process_extra_channel_params(**kwargs)
 
         if not persisted:
             channel_id = -1  # only one temporary thread at a time, id does not matter.

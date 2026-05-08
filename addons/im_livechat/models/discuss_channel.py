@@ -1121,3 +1121,8 @@ class DiscussChannel(models.Model):
                 "isLast": True,
             },
         )
+
+    @api.model
+    def _process_extra_channel_params(self, **kwargs):
+        # non_persisted_channel_params, persisted_channel_params
+        return {}, {}
