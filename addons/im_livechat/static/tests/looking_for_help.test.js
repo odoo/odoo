@@ -203,6 +203,7 @@ test("Hide 'help already received' notification when channel is not visible", as
     await openDiscuss(channel);
     await contains(".o-livechat-LivechatStatusSelection .active", { text: "Looking for help" });
     await click("button[name='join-channel']");
+    await tick();
     expect.waitForSteps(["warning - Someone has already joined this conversation"]);
     const { promise, resolve: resolveJoinChannel } = Promise.withResolvers();
     joinChannelPromise = promise;
@@ -211,7 +212,7 @@ test("Hide 'help already received' notification when channel is not visible", as
     await contains(".o-mail-DiscussContent-threadName[title='Inbox']");
     resolveJoinChannel();
     await tick();
-    await expect.waitForSteps([]);
+    expect.waitForSteps([]);
 });
 
 test("Expertise matching hint is shown in the sidebar when chat is looking for help", async () => {
