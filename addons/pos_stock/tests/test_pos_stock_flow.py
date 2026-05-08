@@ -781,6 +781,49 @@ class TestPosStockFlow(CommonPosStockTest):
         current_session.close_session_from_ui()
         self.assertEqual(current_session.picking_ids.mapped('state'), ['done', 'done'])
 
+    def test_invoiced_lot_values_use_stock_lot_for_pos_lot(self):
+        self.stock_location = self.company_data['default_warehouse'].lot_stock_id
+        product = self.twenty_dollars_no_tax.product_variant_id
+        product.write({
+            'tracking': 'serial',
+            'is_storable': True,
+        })
+        lot = self.env['stock.lot'].create({
+            'name': '1001',
+            'product_id': product.id,
+            'company_id': self.env.company.id,
+        })
+        lot.lot_properties = [{
+            'name': 'prop1',
+            'string': 'Test',
+            'type': 'char',
+            'value': 'abc',
+            'definition_changed': True,
+        }]
+        self.env['stock.quant']._update_available_quantity(product, self.stock_location, 1, lot_id=lot)
+
+        order, _ = self.create_backend_pos_order({
+            'order_data': {
+                'partner_id': self.partner_adgu.id,
+                'to_invoice': True,
+            },
+            'line_data': [{
+                'product_id': product.id,
+                'pack_lot_ids': [Command.create({'lot_name': lot.name})],
+            }],
+            'payment_data': [
+                {'payment_method_id': self.cash_payment_method.id, 'amount': product.lst_price},
+            ],
+        })
+
+        lot_values = order.account_move._get_invoiced_lot_values()
+
+        self.assertEqual(len(lot_values), 1)
+        self.assertEqual(lot_values[0]['lot_name'], lot.name)
+        self.assertEqual(lot_values[0]['pos_lot_id'], order.lines.pack_lot_ids.id)
+        self.assertEqual(lot_values[0]['lot_id'], lot.id)
+        self.assertEqual(lot_values[0]['lot_properties'][0]['value'], 'abc')
+
     def test_search_paid_order_ids(self):
         """ Test if the orders from other configs are excluded in search_paid_order_ids """
         other_pos_config = self.env['pos.config'].create({
