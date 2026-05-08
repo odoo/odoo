@@ -4,6 +4,12 @@ import { _t } from "@web/core/l10n/translation";
 import { generateQRCodeDataUrl } from "@point_of_sale/utils";
 
 patch(PaymentPage.prototype, {
+    get paymentMethods() {
+        if (this.selfOrder.config.self_ordering_mode === "mobile") {
+            return [this.selfOrder.config.self_order_online_payment_method_id].filter(Boolean);
+        }
+        return super.paymentMethods;
+    },
     async startPayment() {
         let order = this.selfOrder.currentOrder;
         const pm = this.selectedPaymentMethod;
