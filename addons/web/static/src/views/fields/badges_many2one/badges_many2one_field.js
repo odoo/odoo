@@ -20,10 +20,9 @@ export class BadgesMany2oneField extends Component {
     static components = { BaseBadgesField };
 
     setup() {
-        const { record, name, domain: propDomain, relatedIconField, defaultIcon } = this.props;
-        const field = record.fields[name];
-
-        this.specialData = useSpecialData(async (orm) => {
+        this.specialData = useSpecialData(async (orm, props) => {
+            const { record, name, domain: propDomain, relatedIconField, defaultIcon } = props;
+            const field = record.fields[name];
             const domain = getFieldDomain(record, name, propDomain);
             const { relation } = field;
             try {
@@ -52,7 +51,7 @@ export class BadgesMany2oneField extends Component {
         });
 
         this.selectCreate = useSelectCreate({
-            resModel: field.relation,
+            resModel: this.props.record.fields[this.props.name].relation,
             activeActions: { create: false },
             onSelected: (resIds) => {
                 this.props.record.update({ [this.props.name]: { id: resIds[0] } });
