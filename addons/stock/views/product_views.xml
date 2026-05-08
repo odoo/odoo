@@ -129,6 +129,17 @@
                     <attribute name="invisible">not show_on_hand_qty_status_button</attribute>
                     <attribute name="groups">stock.group_stock_user</attribute>
                 </xpath>
+                <field name="virtual_available" position="after">
+                    <button
+                        title="View Forecast"
+                        name="action_product_tmpl_forecast_report"
+                        type="object"
+                        icon="fa-area-chart"
+                        invisible="not show_on_hand_qty_status_button"
+                        context="{'default_product_tmpl_id': id}"
+                        groups="stock.group_stock_user"
+                    />
+                </field>
                 <field name="default_code" position="after">
                     <field name="responsible_id" widget="many2one_avatar_user" optional="hide" groups="stock.group_stock_user"/>
                 </field>

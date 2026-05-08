@@ -43,9 +43,6 @@
             <field name="default_code" position="after">
                 <field name="website_id" groups="website.group_multi_website" optional="hide"/>
             </field>
-            <field name="product_tag_ids" position="after">
-                <field name="website_ribbon_id" optional="hide"/>
-            </field>
         </field>
     </record>
 
@@ -65,6 +62,7 @@
             <field name="website_id" position="after">
                 <field name="public_categ_ids" widget="many2many_tags" string="Categories" optional="show"/>
                 <field name="is_published" string="Is Published" optional="hide"/>
+                <field name="website_ribbon_id" optional="hide"/>
             </field>
         </field>
     </record>
