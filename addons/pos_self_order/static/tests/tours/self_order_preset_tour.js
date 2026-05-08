@@ -3,6 +3,8 @@ import * as Utils from "@pos_self_order/../tests/tours/utils/common";
 import * as CartPage from "@pos_self_order/../tests/tours/utils/cart_page_util";
 import * as LandingPage from "@pos_self_order/../tests/tours/utils/landing_page_util";
 import * as ProductPage from "@pos_self_order/../tests/tours/utils/product_page_util";
+import { today } from "@web/core/l10n/dates";
+import * as Chrome from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
 
 registry.category("web_tour.tours").add("self_order_preset_dine_in_tour", {
     steps: () => [
@@ -72,36 +74,26 @@ registry.category("web_tour.tours").add("self_order_preset_slot_tour", {
 });
 
 registry.category("web_tour.tours").add("test_slot_limit_orders", {
-    steps: () => [
-        Utils.checkIsNoBtn("My Order"),
-        Utils.clickBtn("Order Now"),
-        LandingPage.selectLocation("Takeaway"),
-        ProductPage.clickProduct("Free"),
-        Utils.clickBtn("Checkout"),
-        Utils.clickBtn("Order"),
-        ...CartPage.selectTimeSlot(),
-        CartPage.fillInput("Name", "Dr Dre"),
-        Utils.clickBtn("Continue"),
-        Utils.clickBtn("Ok"),
-        Utils.clickBtn("Order Now"),
-        LandingPage.selectLocation("Takeaway"),
-        ProductPage.clickProduct("Free"),
-        Utils.clickBtn("Checkout"),
-        Utils.clickBtn("Order"),
-        {
-            content: `Check that the 00:00 slot is not available`,
-            trigger: `.self_order_pills_selection_popup`,
-            run: () => {
-                const slots = Array.from(
-                    document.querySelectorAll(".self_order_pills_selection_popup .option-item")
-                );
-                const firstSlotText = slots[0]?.textContent.trim();
-                if (firstSlotText === "00:00") {
-                    throw new Error(`00:00 should not be available`);
-                }
-            },
-        },
-    ],
+    steps: () =>
+        [
+            Chrome.freezeDateTime(today().ts),
+            Utils.checkIsNoBtn("My Order"),
+            Utils.clickBtn("Order Now"),
+            LandingPage.selectLocation("Takeaway"),
+            ProductPage.clickProduct("Free"),
+            Utils.clickBtn("Checkout"),
+            Utils.clickBtn("Order"),
+            CartPage.selectSpecificSlot("6:00pm"),
+            CartPage.fillInput("Name", "Dr Dre"),
+            Utils.clickBtn("Continue"),
+            Utils.clickBtn("Ok"),
+            Utils.clickBtn("Order Now"),
+            LandingPage.selectLocation("Takeaway"),
+            ProductPage.clickProduct("Free"),
+            Utils.clickBtn("Checkout"),
+            Utils.clickBtn("Order"),
+            CartPage.checkSlotUnavailable("6:00pm"),
+        ].flat(),
 });
 
 registry.category("web_tour.tours").add("test_preset_takeaway_email_tour", {
