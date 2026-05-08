@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="product_uom_tree_view" model="ir.ui.view">
+    <record id="uom_uom_view_list" model="ir.ui.view">
         <field name="name">uom.uom.list</field>
         <field name="model">uom.uom</field>
         <field name="arch" type="xml">
@@ -13,7 +13,7 @@
         </field>
     </record>
 
-    <record id="product_uom_form_view" model="ir.ui.view">
+    <record id="uom_uom_view_form" model="ir.ui.view">
         <field name="name">uom.uom.form</field>
         <field name="model">uom.uom</field>
         <field name="arch" type="xml">
@@ -48,10 +48,10 @@
         </field>
     </record>
 
-    <record id="product_uom_form_action" model="ir.actions.act_window">
+    <record id="uom_uom_action_list" model="ir.actions.act_window">
         <field name="name">Units &amp; Packagings</field>
         <field name="res_model">uom.uom</field>
-        <field name="view_id" ref="product_uom_tree_view"/>
+        <field name="view_id" ref="uom_uom_view_list"/>
         <field name="search_view_id" ref="uom_uom_view_search"/>
         <field name="help" type="html">
           <p class="o_view_nocontent_smiling_face">

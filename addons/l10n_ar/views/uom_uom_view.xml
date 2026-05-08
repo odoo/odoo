@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <record id="product_uom_tree_view" model="ir.ui.view">
-        <field name="name">uom.uom.list</field>
+    <record id="uom_uom_view_list" model="ir.ui.view">
+        <field name="name">uom.uom.view.list.inherit.l10n.ar</field>
         <field name="model">uom.uom</field>
-        <field name="inherit_id" ref="uom.product_uom_tree_view"/>
+        <field name="inherit_id" ref="uom.uom_uom_view_list"/>
         <field name="arch" type="xml">
             <list>
                 <field name="l10n_ar_afip_code" optional="hide"/>
@@ -12,10 +12,10 @@
         </field>
     </record>
 
-    <record id="product_uom_form_view" model="ir.ui.view">
-        <field name="name">uom.uom.form</field>
+    <record id="uom_uom_view_form" model="ir.ui.view">
+        <field name="name">uom.uom.view.form.inherit.l10n.ar</field>
         <field name="model">uom.uom</field>
-        <field name="inherit_id" ref="uom.product_uom_form_view"/>
+        <field name="inherit_id" ref="uom.uom_uom_view_form"/>
         <field name="arch" type="xml">
             <div name="relative_factor" position="after">
                 <field name="l10n_ar_afip_code" invisible="'AR' not in fiscal_country_codes"/>
