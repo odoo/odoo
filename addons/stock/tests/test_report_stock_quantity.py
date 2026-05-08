@@ -237,12 +237,8 @@ class TestReportStockQuantity(tests.TransactionCase):
         when using multi-step receipt/delivery.
         """
         def get_inv_qty_at_date(product_id, inv_datetime):
-            inventory_at_date_wizard = self.env['stock.quantity.history'].create({'inventory_datetime': inv_datetime})
-            r = inventory_at_date_wizard.open_at_date()
-            return next((product['qty_available'], product['virtual_available']) for product in self.env[r['res_model']].with_context(r['context']).search_read(
-                    domain=(r['domain'] + [('id', '=', product_id)]),
-                    fields=['qty_available', 'virtual_available']
-                ))
+            product = self.env['product.product'].with_context(to_date=inv_datetime).browse(product_id)
+            return (product.qty_available, product.virtual_available)
         # We add a second warehouse and put the resuplying flow in push mechanic to test receipt in 2 steps with an external transfer
         warehouse, warehouse_2 = self.wh, self.env['stock.warehouse'].create({
             'name': 'Resupplier warehouse',
