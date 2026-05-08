@@ -1,6 +1,6 @@
 import { _t } from "@web/core/l10n/translation";
 
-import { Component } from "@odoo/owl";
+import { Component, proxy } from "@odoo/owl";
 
 import { useService } from "@web/core/utils/hooks";
 import { useModel } from "@web/model/model";
@@ -23,7 +23,7 @@ export class ActivityController extends Component {
     static template = "mail.ActivityController";
 
     setup() {
-        this.model = useModel(this.props.Model, this.modelParams);
+        this.model = proxy(useModel(this.props.Model, this.modelParams));
 
         this.dialog = useService("dialog");
         this.action = useService("action");
@@ -114,7 +114,7 @@ export class ActivityController extends Component {
     }
 
     sendMailTemplate(templateID, activityTypeID) {
-        const groupedActivities = this.model.activityData().grouped_activities;
+        const groupedActivities = this.model.activityData.grouped_activities;
         const resIds = [];
         for (const resId in groupedActivities) {
             const activityByType = groupedActivities[resId];
@@ -132,15 +132,14 @@ export class ActivityController extends Component {
     }
 
     get rendererProps() {
-        const { activity_types, activity_res_ids, grouped_activities } = this.model.activityData();
         return {
-            activityTypes: activity_types,
-            activityResIds: activity_res_ids,
+            activityTypes: this.model.activityData.activity_types,
+            activityResIds: this.model.activityData.activity_res_ids,
             fields: this.model.root.fields,
             records: this.model.root.records,
             resModel: this.props.resModel,
             archInfo: this.props.archInfo,
-            groupedActivities: grouped_activities,
+            groupedActivities: this.model.activityData.grouped_activities,
             scheduleActivity: this.scheduleActivity.bind(this),
             onReloadData: () => this.model.load(this.getSearchProps()),
             onEmptyCell: this.openActivityFormView.bind(this),

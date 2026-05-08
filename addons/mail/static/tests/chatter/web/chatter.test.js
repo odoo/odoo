@@ -591,8 +591,7 @@ test.todo("chatter updating", async () => {
     await contains(".o-mail-Message");
 });
 
-test.tags("owl3");
-test.todo("chatter message actions appear only after saving the form", async () => {
+test("chatter message actions appear only after saving the form", async () => {
     await start();
     await openFormView("res.partner");
     await contains(".o-mail-Message");

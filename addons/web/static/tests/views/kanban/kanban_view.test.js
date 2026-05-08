@@ -5695,8 +5695,8 @@ test("load more should load correct records after drag&drop event", async () => 
     expect(getKanbanRecordTexts(1)).toEqual(["4", "1", "2", "3"]);
 });
 
-test.tags("desktop", "owl3");
-test.todo("grouped kanban: clear groupby when reloading", async () => {
+test.tags("desktop");
+test("grouped kanban: clear groupby when reloading", async () => {
     // in this test, we simulate that clearing the domain is slow, so that
     // clearing the groupby does not corrupt the data handled while
     // reloading the kanban view.
@@ -7777,8 +7777,8 @@ test("Kanban: no reset of the groupby when a non-empty column is deleted", async
     expect(queryText(".o_column_title", { root: getKanbanColumn(0) })).toBe("None\n(3)");
 });
 
-test.tags("desktop", "owl3");
-test.todo("searchbar filters are displayed directly", async () => {
+test.tags("desktop");
+test("searchbar filters are displayed directly", async () => {
     let def;
     onRpc("web_search_read", () => def);
 
