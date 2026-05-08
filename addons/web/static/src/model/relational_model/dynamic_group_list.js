@@ -1,8 +1,6 @@
 //@ts-check
 
-import { signal } from "@odoo/owl";
 import { Domain } from "@web/core/domain";
-import { makeReactive } from "@web/owl2/utils";
 import { DynamicList } from "./dynamic_list";
 import { getGroupServerValue } from "./utils";
 

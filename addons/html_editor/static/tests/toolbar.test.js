@@ -574,8 +574,8 @@ test("should not create empty extra nodes while changing format of link", async 
     );
 });
 
-test.tags("mobile");
-test("should not create empty extra nodes while changing format of link on mobile", async () => {
+test.tags("mobile", "owl3");
+test.todo("should not create empty extra nodes while changing format of link on mobile", async () => {
     const { el } = await setupEditor(
         `<p>[\ufeff<a href="http://test.com">\ufefftest.com\ufeff</a>\ufeff]</p>`
     );

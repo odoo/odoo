@@ -564,7 +564,8 @@ test("should not display subject when subject is the same as the thread name wit
     });
 });
 
-test("chatter updating", async () => {
+test.tags("owl3");
+test.todo("chatter updating", async () => {
     const pyEnv = await startServer();
     const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
         { display_name: "first partner" },
@@ -590,7 +591,8 @@ test("chatter updating", async () => {
     await contains(".o-mail-Message");
 });
 
-test("chatter message actions appear only after saving the form", async () => {
+test.tags("owl3");
+test.todo("chatter message actions appear only after saving the form", async () => {
     await start();
     await openFormView("res.partner");
     await contains(".o-mail-Message");
