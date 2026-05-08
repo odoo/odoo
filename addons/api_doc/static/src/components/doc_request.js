@@ -1,5 +1,5 @@
 import { useState } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { Component, signal } from "@odoo/owl";
 import { LANGUAGES, createRequestCode } from "@api_doc/utils/doc_code_gen";
 import { CodeEditor } from "@web/core/code_editor/code_editor";
 import { browser } from "@web/core/browser/browser";
