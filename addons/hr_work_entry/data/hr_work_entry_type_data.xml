@@ -1874,6 +1874,30 @@
         <field name="count_as">absence</field>
     </record>
 
+<!-- ID : Indonesia -->
+
+    <record id="l10n_id_work_entry_type_overtime_1" model="hr.work.entry.type">
+        <field name="name">Overtime 1</field>
+        <field name="code">OVERTIMEID1</field>
+        <field name="display_code">OT</field>
+        <field name="color">10</field>
+        <field name="count_as">working_time</field>
+        <field name="is_extra_hours" eval="True"/>
+        <field name="amount_rate">1.5</field>
+        <field name="country_id" ref="base.id"/>
+    </record>
+
+    <record id="l10n_id_work_entry_type_overtime_2" model="hr.work.entry.type">
+        <field name="name">Overtime 2</field>
+        <field name="code">OVERTIMEID2</field>
+        <field name="display_code">OT</field>
+        <field name="color">10</field>
+        <field name="count_as">working_time</field>
+        <field name="is_extra_hours" eval="True"/>
+        <field name="amount_rate">2.0</field>
+        <field name="country_id" ref="base.id"/>
+    </record>
+
 <!-- FR : France -->
 
     <record id="fr_work_entry_type_attendance" model="hr.work.entry.type">

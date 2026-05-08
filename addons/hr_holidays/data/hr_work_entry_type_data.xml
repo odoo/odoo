@@ -713,6 +713,18 @@
         <field name="country_id" ref="base.id"/>
     </record>
 
+    <record id="hr_work_entry.l10n_id_work_entry_type_overtime_1" model="hr.work.entry.type">
+        <field name="requires_allocation">False</field>
+        <field name="request_unit">hour</field>
+        <field name="time_off_selectable">False</field>
+    </record>
+
+    <record id="hr_work_entry.l10n_id_work_entry_type_overtime_2" model="hr.work.entry.type">
+        <field name="requires_allocation">False</field>
+        <field name="request_unit">hour</field>
+        <field name="time_off_selectable">False</field>
+    </record>
+
 <!-- IQ : Iraq -->
     <record id="hr_work_entry.iq_work_entry_type_day_overtime" model="hr.work.entry.type">
         <field name="count_days_as">calendar</field>
