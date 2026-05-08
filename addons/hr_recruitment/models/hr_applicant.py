@@ -520,7 +520,7 @@ class HrApplicant(models.Model):
         domains = []
         # Map statuses to domain filters
         if 'refused' in value:
-            domains.append([('active', '=', True), ('refuse_reason_id', '!=', None)])
+            domains.append([('active', '=', False), ('refuse_reason_id', '!=', None)])
         if 'hired' in value:
             domains.append([('active', '=', True), ('date_closed', '!=', False)])
         if 'archived' in value or False in value:
