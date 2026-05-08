@@ -106,11 +106,11 @@ registerThreadAction("remove-from-favorites", {
 registerThreadAction("notification-settings", {
     actionPanelComponent: NotificationSettings,
     actionPanelComponentProps: ({ channel }) => ({ channel }),
-    actionPanelOpen({ channel, owner, store }) {
+    actionPanelOpen({ owner }) {
         if (owner.isDiscussContent) {
             this.popover?.open(owner.root.el.querySelector(`[name="${this.id}"]`), {
                 hasSizeConstraints: true,
-                channel,
+                ...this.actionPanelComponentProps,
             });
         }
     },
@@ -168,7 +168,7 @@ registerThreadAction("invite-people", {
         } else if (!owner.env.inMeetingView) {
             this.popover?.open(owner.root.el.querySelector(`[name="${this.id}"]`), {
                 hasSizeConstraints: true,
-                channel,
+                ...this.actionPanelComponentProps,
             });
         }
     },
