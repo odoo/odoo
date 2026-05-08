@@ -10,8 +10,8 @@ const storeServicePatch = {
     /** @override */
     setup() {
         super.setup();
-        /** @type {Map<number, Deferred>} */
-        this.channelIdsFetchingDeferred = new Map();
+        /** @type {Map<number, Promise<DiscussChannel|void>>} */
+        this.fetchChannelPromiseByChannelId = new Map();
         /**
          * Defines channel types that have the message seen indicator/info feature.
          * @see `discuss.channel`._types_allowing_seen_infos()
