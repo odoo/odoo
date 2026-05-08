@@ -167,6 +167,9 @@ class HrVersion(models.Model):
     is_future = fields.Boolean(compute='_compute_is_future', groups="hr.group_hr_manager")
     is_in_contract = fields.Boolean(compute='_compute_is_in_contract', groups="hr.group_hr_manager")
 
+    previous_version_id = fields.Many2one('hr.version', compute='_compute_versions_linked_list', groups="hr.group_hr_manager")
+    next_version_id = fields.Many2one('hr.version', compute='_compute_versions_linked_list', groups="hr.group_hr_manager")
+
     contract_template_id = fields.Many2one(
         'hr.version', string="Contract Template", groups="hr.group_hr_user",
         domain="[('company_id', '=', company_id), ('employee_id', '=', False)]", tracking=1,
@@ -395,6 +398,18 @@ class HrVersion(models.Model):
         for version in self:
             version.display_name = version.name if not version.employee_id else format_date_abbr(version.env, version.date_version)
 
+    @api.depends('employee_id.version_ids.date_version', 'employee_id.version_ids.active')
+    def _compute_versions_linked_list(self):
+        active_employee_versions = self.filtered(lambda v: v.active and v.employee_id)
+        all_versions = active_employee_versions.employee_id.version_ids
+        other_versions = self - active_employee_versions
+        other_versions.previous_version_id, other_versions.next_version_id = False, False
+        for _, versions in all_versions.grouped('employee_id').items():
+            sorted_versions = versions.sorted('date_version')
+            for i, version in enumerate(sorted_versions):
+                version.previous_version_id = sorted_versions[i - 1] if i > 0 else False
+                version.next_version_id = sorted_versions[i + 1] if i < len(sorted_versions) - 1 else False
+
     def _compute_is_current(self):
         today = fields.Date.today()
         for version in self:
@@ -552,26 +567,13 @@ class HrVersion(models.Model):
         for version in self:
             version.distance_home_work = version.km_home_work / 1.609 if version.distance_home_work_unit == "miles" else version.km_home_work
 
-    @api.depends(
-        'contract_date_start', 'contract_date_end', 'date_version', 'employee_id',
-        'employee_id.version_ids.date_version', 'departure_date')
+    @api.depends('contract_date_start', 'contract_date_end', 'date_version', 'employee_id', 'next_version_id', 'departure_date')
     def _compute_dates(self):
         for version in self:
-            version.date_start = max(version.date_version, version.contract_date_start) \
-                if version.contract_date_start \
-                else version.date_version
-
-        all_versions = self.search_fetch([
-            ('employee_id', 'in', self.employee_id.ids),
-            ('date_version', '>', min(self.mapped('date_start'), default=date.today())),
-        ], ['employee_id', 'date_version'], order='date_version').grouped('employee_id')
-        for version in self:
+            version.date_start = max(version.date_version, version.contract_date_start or date.min)
             date_version_end = False
-            if next_versions := all_versions.get(version.employee_id):
-                date_version_end = next((d for d in next_versions.mapped('date_version') if d > version.date_version), None)
-                if date_version_end:
-                    date_version_end -= relativedelta(days=1)
-
+            if date_version_end := version.next_version_id.date_version:
+                date_version_end -= relativedelta(days=1)
             date_version_end = date_version_end or date.max
             date_contract_end = version.contract_date_end or date.max
             date_departure = version.departure_date or date.max
@@ -735,24 +737,17 @@ class HrVersion(models.Model):
         """
         self.ensure_one()
         current_value = self[field_name]
-        if not current_value:
+        if not current_value or not self.contract_date_start:
             return None
 
-        versions = self.employee_id.version_ids.sorted(key=lambda v: v.contract_date_start or date.min)
+        current_version = self
+        while current_version[field_name] == current_value:
+            previous_version = current_version.previous_version_id
+            if not previous_version or not previous_version.contract_date_start:
+                return current_version.contract_date_start
+            current_version = previous_version
 
-        try:
-            idx = next(i for i, v in enumerate(versions) if v.id == self.id)
-        except StopIteration:
-            idx = len(versions) - 1
-
-        start_version = versions[idx]
-        for j in range(idx - 1, -1, -1):
-            prev = versions[j]
-            if prev[field_name] != current_value:
-                break
-            start_version = prev
-
-        return start_version.contract_date_start
+        return current_version.next_version_id.contract_date_start
 
     def action_open_version(self):
         self.ensure_one()
