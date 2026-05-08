@@ -132,7 +132,7 @@ class AccountMove(models.Model):
         Only applies for Croatian sales invoices/credit notes. Expected name
         pattern is produced by the overridden `sequence.mixin` logic.
         """
-        name_regex = r'.*?(?P<seq>\d+)/(?P<premises_label>\d+)/(?P<device_label>\d+)'
+        name_regex = r'.*?(?P<seq>\d+)/(?P<premises_label>[a-zA-Z0-9]+)/(?P<device_label>\d+)'
         if match := re.match(name_regex, name):
             return f"{int(match.group('seq'))}/{match.group('premises_label')}/{match.group('device_label')}"
         else:
