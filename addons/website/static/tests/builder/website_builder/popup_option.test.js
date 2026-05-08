@@ -179,6 +179,7 @@ describe("Popup options: popup in page before edit", () => {
         expect(":iframe .s_popup .modal").not.toBeVisible();
         expect(editor.shared.history.canUndo()).toBe(true);
         await expectToTriggerEvent(":iframe .s_popup .modal", "shown.bs.modal", () => undo(editor));
+        await builder.waitSidebarUpdated();
         expect(".o_we_invisible_entry .oi").toHaveAttribute("data-icon", "visibility");
         expect(":iframe .s_popup .modal").toBeVisible();
     });
