@@ -609,7 +609,7 @@ test("dragging element in iframe offset", async () => {
 test("Dragging cancels previous drag sequences", async () => {
     class List extends Component {
         static template = xml`
-                <div t-ref="root" class="root">
+                <div t-custom-ref="root" class="root">
                     <ul class="list">
                         <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-out="i" class="item" />
                     </ul>
