@@ -105,6 +105,18 @@ export function convertHslToRgb(h, s, l) {
     var huePrime = h / 60;
     var saturation = s / 100;
     var lightness = l / 100;
+    
+    // When saturation is 0 (or extremely close to 0), return true grayscale
+    // to avoid floating-point precision issues that can cause slight color tints.
+    if (saturation < 0.0001) {
+        var grayValue = Math.round(lightness * 255);
+        return {
+            red: grayValue,
+            green: grayValue,
+            blue: grayValue,
+        };
+    }
+    
     var chroma = saturation * (1 - Math.abs(2 * lightness - 1));
     var secondComponent = chroma * (1 - Math.abs((huePrime % 2) - 1));
     var lightnessAdjustment = lightness - chroma / 2;

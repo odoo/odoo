@@ -1,3 +1,45 @@
+// Align :root CSS vars with combination 1's contrast-checked design tokens.
+// bootstrap_overridden.scss sets $body-bg / $body-color etc. from raw palette
+// values; Bootstrap's _root.scss emits those as --body-* CSS vars — but without
+// our contrast checks. This call corrects them and sets --o-cc-* component vars
+// as global defaults for elements outside any .o_cc{N} wrapper.
+//
+// Uses o-cc-apply($as-body-defaults: true) so the resolution logic and
+// thresholds are shared with the @for loop in html_editor.common.scss —
+// a threshold change in the mixin is automatically reflected here too.
+//
+// Placed here (not in html_editor.common.scss) because html_editor.common.scss
+// is also loaded in backend and report contexts where body defaults must not be
+// overridden.
+@include o-cc-apply(1, $as-body-defaults: true);
+
+// Extend bg-* utility classes with the full o-cc-* component token set so that
+// buttons, dropdowns, navbars, cards, etc. remain readable when a user applies
+// one of these classes to a block in the website builder.
+//
+// Placed here (not in bootstrap_review_frontend.scss) because o-bg-color-cc is
+// defined in html_editor.common.scss, which loads after bootstrap_review_frontend.scss
+// in the asset bundle and would therefore be unavailable there.
+//
+// Gray classes (.bg-100 … .bg-900): bg-variant in bootstrap_review_frontend.scss
+// already sets background-color and basic --color/--heading-color via o-bg-color.
+// These blocks add the full component vars on top; the later declaration wins for
+// shared properties (same selector, same specificity, source order wins).
+@each $color, $value in $grays {
+    .bg-#{$color} {
+        @include o-bg-color-cc($value);
+    }
+}
+
+// Theme-color classes (.bg-success, .bg-primary, …): Bootstrap's utilities API
+// only sets background-color:; o-bg-color-cc adds --color/--background-color
+// compat vars, a readable text color, and all component token vars.
+@each $color, $value in $theme-colors {
+    .bg-#{$color} {
+        @include o-bg-color-cc($value);
+    }
+}
+
 .o_wysiwyg_loader {
     @extend :disabled;
     pointer-events: none;

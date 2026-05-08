@@ -26,10 +26,14 @@ import { ImageSize } from "@html_builder/plugins/image/image_size";
 /**
  * @typedef { Object } ThemeTabShared
  * @property { ThemeTabPlugin['buildGray'] } buildGray
+ * @property { ThemeTabPlugin['buildPolarGray'] } buildPolarGray
+ * @property { ThemeTabPlugin['refreshGrays'] } refreshGrays
  * @property { ThemeTabPlugin['getGrays'] } getGrays
  * @property { ThemeTabPlugin['getGrayParams'] } getGrayParams
  * @property { ThemeTabPlugin['setGrays'] } setGrays
  * @property { ThemeTabPlugin['setGrayParams'] } setGrayParams
+ * @property { ThemeTabPlugin['isGrayscaleCustomMode'] } isGrayscaleCustomMode
+ * @property { ThemeTabPlugin['setGrayscaleCustomMode'] } setGrayscaleCustomMode
  */
 
 /**
@@ -55,14 +59,20 @@ export const OPTION_POSITIONS = {
 
 export class ThemeTabPlugin extends Plugin {
     static id = "themeTab";
-    static shared = ["getGrayParams", "getGrays", "setGrays", "setGrayParams", "buildGray"];
+    static shared = [
+        "getGrayParams", "getGrays", "setGrays", "setGrayParams",
+        "buildGray", "buildPolarGray", "refreshGrays",
+        "isGrayscaleCustomMode", "setGrayscaleCustomMode",
+    ];
     grayParams = {};
     grays = reactive({});
+    grayscaleCustomMode = reactive({ value: false });
 
     /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_actions: {
             CustomizeGrayAction,
+            ToggleGrayscaleCustomAction,
             ChangeColorPaletteAction,
             EditCustomCodeAction,
             ConfigureApiKeyAction,
@@ -202,6 +212,10 @@ export class ThemeTabPlugin extends Plugin {
             : oneHasNoSaturation
             ? -100
             : 100;
+
+        // Initialize grayscale custom mode from the compiled CSS var.
+        this.grayscaleCustomMode.value =
+            getCSSVariableValue("grayscale-custom", style) === "true";
     }
     getGrayParams() {
         return this.grayParams;
@@ -214,6 +228,21 @@ export class ThemeTabPlugin extends Plugin {
     }
     setGrays(key, value) {
         this.grays[key] = value;
+    }
+    refreshGrays() {
+        // Re-read 100-900 CSS vars from the compiled bundle and sync the
+        // reactive grays object so the preview strip updates immediately.
+        const style = this.window.getComputedStyle(this.document.body);
+        for (let i = 1; i < 10; i++) {
+            const key = (100 * i).toString();
+            this.grays[key] = getCSSVariableValue(key, style);
+        }
+    }
+    isGrayscaleCustomMode() {
+        return this.grayscaleCustomMode.value;
+    }
+    setGrayscaleCustomMode(value) {
+        this.grayscaleCustomMode.value = value;
     }
     buildGray(id) {
         // Getting base grays defined in color_palette.scss
@@ -232,6 +261,26 @@ export class ThemeTabPlugin extends Plugin {
             adjustedGrayRGB.red,
             adjustedGrayRGB.green,
             adjustedGrayRGB.blue
+        );
+    }
+    buildPolarGray(id) {
+        // Compute the gray step for the given id (100-900) by linearly
+        // interpolating between the palette's two polar colors (o-color-4 and
+        // o-color-5), ordered by lightness so id=100 is always the lightest shade.
+        // Use hb-cp- vars which are guaranteed to be set by setBuilderCSSVariables.
+        const style = getComputedStyle(document.documentElement);
+        const c4 = getCSSVariableValue("hb-cp-o-color-4", style);
+        const c5 = getCSSVariableValue("hb-cp-o-color-5", style);
+        const c4RGB = convertCSSColorToRgba(c4);
+        const c5RGB = convertCSSColorToRgba(c5);
+        const c4L = convertRgbToHsl(c4RGB.red, c4RGB.green, c4RGB.blue).lightness;
+        const c5L = convertRgbToHsl(c5RGB.red, c5RGB.green, c5RGB.blue).lightness;
+        const [lightRGB, darkRGB] = c4L >= c5L ? [c4RGB, c5RGB] : [c5RGB, c4RGB];
+        const t = parseInt(id) / 1000; // 0.1 (100) … 0.9 (900)
+        return convertRgbaToCSSColor(
+            Math.round(lightRGB.red   * (1 - t) + darkRGB.red   * t),
+            Math.round(lightRGB.green * (1 - t) + darkRGB.green * t),
+            Math.round(lightRGB.blue  * (1 - t) + darkRGB.blue  * t)
         );
     }
 
@@ -299,9 +348,55 @@ export class CustomizeGrayAction extends BuilderAction {
         setBuilderCSSVariables(getHtmlStyle(this.document));
     }
 }
+export class ToggleGrayscaleCustomAction extends BuilderAction {
+    static id = "toggleGrayscaleCustom";
+    static dependencies = ["customizeWebsite", "themeTab"];
+    setup() {
+        this.preview = false;
+        this.dependencies.customizeWebsite.withCustomHistory(this);
+    }
+    isApplied() {
+        // Read from the compiled CSS var so the builder framework's re-evaluation
+        // cycle (triggered after every bundle reload) picks up the correct state.
+        // --grayscale-custom is set to true/false by $o-grayscale-is-custom in SCSS.
+        return this.dependencies.customizeWebsite.getWebsiteVariableValue("grayscale-custom") === "true";
+    }
+    async apply() {
+        // Switching TO custom mode: seed the DB with polar-derived grays so the
+        // hue/sat sliders have a meaningful starting point.
+        const grays = {};
+        for (let i = 1; i < 10; i++) {
+            const key = (100 * i).toString();
+            const color = this.dependencies.themeTab.buildPolarGray(key);
+            grays[key] = color;
+            this.dependencies.themeTab.setGrays(key, color);
+        }
+        await this.dependencies.customizeWebsite.customizeWebsiteColors(grays, {
+            colorType: "gray",
+        });
+        this.dependencies.themeTab.setGrayscaleCustomMode(true);
+        setBuilderCSSVariables(getHtmlStyle(this.document));
+    }
+    async clean() {
+        // Switching TO polar mode: clear all saved grays so SCSS derives them
+        // from the palette's polar colors again.
+        const grays = {};
+        for (let i = 1; i < 10; i++) {
+            const key = (100 * i).toString();
+            grays[key] = null;
+        }
+        await this.dependencies.customizeWebsite.customizeWebsiteColors(grays, {
+            colorType: "gray",
+        });
+        // Sync the reactive grays object so the preview strip re-renders.
+        this.dependencies.themeTab.refreshGrays();
+        setBuilderCSSVariables(getHtmlStyle(this.document));
+    }
+}
 export class ChangeColorPaletteAction extends CustomizeWebsiteVariableAction {
     static id = "changeColorPalette";
-    static dependencies = ["customizeWebsite"];
+    // themeTab is needed to refresh the gray preview after palette reset.
+    static dependencies = ["customizeWebsite", "themeTab"];
     setup() {
         this.preview = false;
         this.dependencies.customizeWebsite.withCustomHistory(this);
@@ -328,6 +423,10 @@ export class ChangeColorPaletteAction extends CustomizeWebsiteVariableAction {
             return;
         }
         await super.apply(context);
+        // Palette change resets user_gray_color_palette → polar mode is restored.
+        // Refresh preview so the strip immediately reflects the new palette colors.
+        this.dependencies.themeTab.setGrayscaleCustomMode(false);
+        this.dependencies.themeTab.refreshGrays();
         setBuilderCSSVariables(getHtmlStyle(this.document));
     }
 }

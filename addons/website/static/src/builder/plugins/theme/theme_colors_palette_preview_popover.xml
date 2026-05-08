@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+<t t-name="website.ThemeColorsPalettePreviewPopover">
+    <div class="overflow-hidden position-relative"
+         t-attf-style="background-color: #{props.palette.colors[3]}"
+    >
+        <div class="o-hb-palette-preview-popover-triangle position-static w-0 h-0 top-0 start-0"
+             t-attf-style="--triangle-color: #{props.palette.colors[2]}"
+        />
+        <div
+                class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-between gap-3 p-3"
+        >
+            <div class="lh-1"
+                 t-attf-style="color: #{props.palette.colors[4]}; font-size: 1.4rem"
+            >
+                Text
+            </div>
+            <div class="d-flex align-items-center gap-1" t-attf-style="color: #{props.palette.colors[4]}">
+                <span class="rounded p-3 border" t-attf-style="background-color: #{props.palette.colors[0]}"/>
+                <span class="rounded p-3 border" t-attf-style="background-color: #{props.palette.colors[1]}"/>
+                <span class="rounded p-3 border" t-attf-style="background-color: #{props.palette.colors[2]}"/>
+                <span class="rounded p-3 border" t-attf-style="background-color: #{props.palette.colors[4]}"/>
+            </div>
+        </div>
+    </div>
+</t>
+</templates>

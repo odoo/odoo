@@ -41,7 +41,6 @@ $o-theme-color-palette: map-merge($o-base-theme-color-palette, $o-theme-color-pa
 // Extend grays with transparent ones (for some reason, BS4 create black-50 and
 // white-50 but does not allow overridding that with variables).
 $o-gray-color-palette: map-get($o-gray-color-palettes, $o-gray-color-palette-name) or () !default;
-$o-gray-color-palette: map-merge($o-transparent-grays, $o-gray-color-palette);
 $o-gray-color-palette: map-merge($o-base-gray-color-palette, $o-gray-color-palette);
 
 $o-color-system-initialized: false;
@@ -117,6 +116,18 @@ $o-color-system-initialized: false;
 
     // If not initialized, search the css color value in selected color palettes
     @return o-related-color($name, $max-recursions: 10, $use-cc-bg: true);
+}
+
+// Returns the raw color-name string (e.g. 'o-color-5') declared for $element in
+// the $index-th color combination of the selected preset. Returns null when the
+// preset does not explicitly specify that slot. Reads from $o-color-combinations
+// BEFORE base-combination defaults are merged, so only intentionally set values
+// are returned — this is what separates a "preset suggestion" from a null default.
+@function o-preset-color-key($element, $index) {
+    @if $index < 1 or $index > length($o-color-combinations) {
+        @return null;
+    }
+    @return map-get(nth($o-color-combinations, $index), $element);
 }
 
 // Same as 'increase-contrast' except that the color is not changed if the given

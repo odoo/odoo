@@ -1,0 +1,15 @@
+.o-hb-palette-preview-popover {
+    $_h: 4rem;
+    $_w: 16rem;
+
+    right: CALC(#{$o-we-sidebar-width} + #{map-get($spacers, 4)});
+    left: auto!important;
+    width: $_w;
+    height: $_h;
+
+    .o-hb-palette-preview-popover-triangle {
+        border-left: $_w solid transparent;
+        border-right: $_w solid transparent;
+        border-bottom: ($_h + 0.1rem) solid var(--triangle-color);
+    }
+}

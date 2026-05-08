@@ -17,6 +17,9 @@ $rounded-sizes: map-merge(
 $utilities-opacity: () !default;
 $utilities-opacity: map-merge($utilities-opacity, $o-opacities);
 
+$utilities-opacity-bg: () !default;
+$utilities-opacity-bg: map-merge($utilities-opacity-bg, $o-opacities-bg);
+
 $utilities-sizes: () !default;
 $utilities-sizes: map-merge(
     $utilities-sizes,
@@ -181,6 +184,26 @@ $utilities: map-merge(
         ),
     )
 );
+
+// Generate bg-black and bg-white utility classes with opacity variants
+@each $-opacity-key, $-opacity-level in $utilities-opacity-bg {
+    .bg-black-#{$-opacity-key} {
+        --#{$variable-prefix}bg-opacity: #{$-opacity-level};
+        background-color: rgba($o-black, var(--#{$variable-prefix}bg-opacity)) !important;
+    }
+    .bg-white-#{$-opacity-key} {
+        --#{$variable-prefix}bg-opacity: #{$-opacity-level};
+        background-color: rgba($o-white, var(--#{$variable-prefix}bg-opacity)) !important;
+    }
+    .text-black-#{$-opacity-key} {
+        --#{$variable-prefix}text-opacity: #{$-opacity-level};
+        color: rgba($o-black, var(--#{$variable-prefix}text-opacity)) !important;
+    }
+    .text-white-#{$-opacity-key} {
+        --#{$variable-prefix}text-opacity: #{$-opacity-level};
+        color: rgba($o-white, var(--#{$variable-prefix}text-opacity)) !important;
+    }
+}
 
 
 // Define opacity:hover classes while defining the triggerer behavior.

@@ -20,7 +20,7 @@
                 t-att-data-color="this.props.currentColorPreview"/>
         </div>
         <t t-foreach="Object.values(this.props.grayscales)" t-as="grayscaleColors" t-key="grayscaleColors">
-            <div class="o_colorpicker_section" t-on-click="this.props.onColorClick"
+            <div class="o_colorpicker_section o_colorpicker_section_grayscale" t-on-click="this.props.onColorClick"
                 t-on-mouseover="this.props.onColorPointerOver"
                 t-on-mouseout="this.props.onColorPointerOut"
                 t-on-focusin="this.props.onFocusin"

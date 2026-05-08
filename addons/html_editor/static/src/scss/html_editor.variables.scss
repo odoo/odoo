@@ -170,19 +170,17 @@ $o-base-gray-color-palette: (
     '900': #212529,
     'black': #000000,
 ) !default;
-$o-transparent-grays: (
-    'black-15': rgba(black, 0.15),
-    'black-25': rgba(black, 0.25),
-    'black-50': rgba(black, 0.5),
-    'black-75': rgba(black, 0.75),
-    'white-25': rgba(white, 0.25),
-    'white-50': rgba(white, 0.5),
-    'white-75': rgba(white, 0.75),
-    'white-85': rgba(white, 0.85),
-) !default;
+
 $o-gray-color-palettes: () !default;
-$o-gray-color-palettes: map-merge($o-transparent-grays, $o-gray-color-palettes);
 $o-gray-color-palette-name: '' !default;
+
+$o-transparent-polar-colors: (
+    '15': 0.15,
+    '25': 0.25,
+    '50': 0.5,
+    '75': 0.75,
+    '85': 0.85,
+) !default;
 
 // Color combinations
 $o-base-color-combination: (
@@ -202,39 +200,50 @@ $o-base-color-combination: (
 );
 $o-color-combinations-presets: (
     (
+        // Preset - 1
         (
             'bg': 'o-color-4',
+            'headings': 'o-color-5',
+            'text': 'o-color-5',
+            'link': 'o-color-2',
+            'btn-primary': 'o-color-1',
+            'btn-secondary': 'o-color-2',
+
         ),
+        // Preset - 2
         (
             'bg': 'o-color-3',
             'headings': 'o-color-5',
+            'text': 'o-color-5',
+            'link': 'o-color-1',
+            'btn-primary': 'o-color-1',
+            'btn-secondary': 'o-color-2',
         ),
+        // Preset - 3
         (
             'bg': 'o-color-2',
-            'btn-secondary': 'o-color-3',
-        ),
-        (
-            'bg': 'o-color-1',
-            'link': 'o-color-5',
+            'headings': 'o-color-4',
             'btn-primary': 'o-color-5',
             'btn-secondary': 'o-color-3',
         ),
+        // Preset - 4
+        (
+            'bg': 'o-color-1',
+            'link': 'o-color-2',
+            'btn-primary': 'o-color-5',
+            'btn-secondary': 'o-color-3',
+        ),
+        // Preset - 5
         (
             'bg': 'o-color-5',
             'headings': 'o-color-4',
+            'link': 'o-color-2',
+            'btn-primary': 'o-color-4',
             'btn-secondary': 'o-color-3',
         ),
     ),
 ) !default;
 $o-color-combinations-preset-number: 1;
-
-// We allow snippets to be colored and elements like card and columns to be
-// colored as well. We need components targeted by those colored classes to
-// use the deepest coloring element config. We only allow here for this to
-// work for one level of nesting. Note: snippets which can contain other
-// snippets will have problem because of this; this is a limitation of the
-// system until a better solution is found.
-$o-color-extras-nesting-selector: '&, .o_colored_level &';
 
 // Function which returns if a color has contrast enough in comparaison to
 // another given color.

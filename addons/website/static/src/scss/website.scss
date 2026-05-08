@@ -180,6 +180,8 @@ $-seen-urls: ();
 
     @include print-variable('has-customized-colors', $o-has-customized-colors);
 
+    @include print-variable('grayscale-custom', $o-grayscale-is-custom);
+
     // 6) Get list of colorpalette custom colors
     $custom-colors: ();
     @each $key, $value in $o-color-palette {
@@ -452,33 +454,10 @@ body {
 }
 
 .navbar-light {
-    // Style only navbar-light which Odoo is only supposed to use in standard
-    // anyway. Automatically mimic navbar-dark if the user's menu color is dark.
-    // Note: this only works because navbar-light is defined before navbar-dark,
-    // we may want to use a safest way when possible.
     @include o-apply-colors('menu');
     @include o-apply-colors('menu-custom');
     $-menu-color: o-color('menu-custom') or o-color('menu');
-    @if ($-menu-color and color-contrast($-menu-color) != $color-contrast-dark) {
-        --NavLinkWithBackground-bg-color: #{rgba($navbar-dark-active-color, .1)};
-        --NavLinkWithBackground-bg-color--hover: #{rgba($navbar-dark-active-color, .2)};
-        --NavStretch-placeholder-color: #{rgba($navbar-dark-active-color, .3)};
-        --HeaderSeparator-bg-color: #{rgba($navbar-dark-active-color, .15)};
-
-        @extend .navbar-dark;
-
-        .btn-close {
-            filter: $btn-close-white-filter;
-        }
-    }
     @include o-add-gradient('menu-gradient');
-
-    a.nav-link {
-        color: var(--#{$variable-prefix}nav-link-color);
-        &:hover {
-            color: var(--#{$variable-prefix}nav-link-hover-color);
-        }
-    }
 }
 
 .navbar-light .o_navbar_mobile {
@@ -491,17 +470,6 @@ body {
     // change once the fix is applied for users who tried the option when it
     // wasn't working.
     @return if(str-index(inspect($color), '"') == 1 or str-index(inspect($color), "'") == 1, o-color($color), $color);
-}
-
-// TODO this should be reviewed. While it allowed to choose a color for the
-// navbar text, there is no :hover effect, the active item is not visible and
-// the selector is probably too specific and should rather be about extending
-// bootstrap if possible.
-#wrapwrap:not(.o_header_overlay) header, header.o_header_is_scrolled, header .o_navbar_mobile {
-    .nav-item > .nav-link > *, .nav-item > .nav-link::after, .js_language_selector span, .badge, .nav-item > .accordion-item * {
-        $header-text-color: o-website-value('header-text-color');
-        color: format-color($header-text-color) !important;
-    }
 }
 
 .o_navlink_background {
@@ -633,20 +601,30 @@ $-header-nav-link-height: $nav-link-height;
     }
 }
 
-h2 {
-    color: map-get($colors, 'o-cc1-h2');
+@if (map-get($colors, 'o-cc1-h2')) {
+    h2 {
+        --heading-color: #{map-get($colors, 'o-cc1-h2')};
+    }
 }
-h3 {
-    color: map-get($colors, 'o-cc1-h3');
+@if (map-get($colors, 'o-cc1-h3')) {
+    h3 {
+        --heading-color: #{map-get($colors, 'o-cc1-h3')};
+    }
 }
-h4 {
-    color: map-get($colors, 'o-cc1-h4');
+@if (map-get($colors, 'o-cc1-h4')) {
+    h4 {
+        --heading-color: #{map-get($colors, 'o-cc1-h4')};
+    }
 }
-h5 {
-    color: map-get($colors, 'o-cc1-h5');
+@if (map-get($colors, 'o-cc1-h5')) {
+    h5 {
+        --heading-color: #{map-get($colors, 'o-cc1-h5')};
+    }
 }
-h6 {
-    color: map-get($colors, 'o-cc1-h6');
+@if (map-get($colors, 'o-cc1-h6')) {
+    h6 {
+        --heading-color: #{map-get($colors, 'o-cc1-h6')};
+    }
 }
 
 $heading-font-families: () !default;
@@ -2160,14 +2138,13 @@ header {
 
 @if index(('block', 'border-bottom'), o-website-value('header-links-style')) {
     @include media-breakpoint-up(md) {
-        .navbar,
-        .navbar-nav {
+        :where(header#top) .navbar {
             padding-top: 0;
             padding-bottom: 0;
         }
     }
 }
-:where(header#top) .navbar-nav:where([role="menu"]) {
+:where(header#top) .nav:where([role="menu"]) {
     .nav-link:not(.o_nav-link_secondary) {
         // Desktop Only
         @include media-breakpoint-up(lg) {

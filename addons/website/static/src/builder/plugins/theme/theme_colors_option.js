@@ -3,6 +3,18 @@ import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { useDomState } from "@html_builder/core/utils";
 import { getCSSVariableValue } from "@html_editor/utils/formatting";
 import { _t } from "@web/core/l10n/translation";
+import { usePopover } from "@web/core/popover/popover_hook";
+import { ThemeColorsPalettePreviewPopover } from "./theme_colors_palette_preview_popover";
+
+const CATEGORIES = {
+    'theme': _t('Theme'),
+    'soft': _t('Soft & Pastel'),
+    'elegant': _t('Elegant & Professional'),
+    'vibrant': _t('Vibrant'),
+    'earthy': _t('Earthy & Nature'),
+    'inverted': _t('Dark'),
+    'base': _t('Base'),
+}
 
 export class ThemeColorsOption extends BaseOptionComponent {
     static template = "website.ThemeColorsOption";
@@ -10,8 +22,15 @@ export class ThemeColorsOption extends BaseOptionComponent {
     setup() {
         super.setup();
         this.palettes = this.getPalettes();
+        this.palettesByCategory = this.groupPalettesByCategory(this.palettes);
         this.colorPresetToShow = this.env.colorPresetToShow;
         this.grays = this.dependencies.themeTab.getGrays();
+        this.palettePopover = usePopover(ThemeColorsPalettePreviewPopover, {
+            position: "right-middle",
+            animation: false,
+            arrow: false,
+            popoverClass: "o-hb-palette-preview-popover overflow-hidden",
+        });
         this.state = useDomState(() => ({
             presets: this.getPresets(),
         }));
@@ -32,14 +51,46 @@ export class ThemeColorsOption extends BaseOptionComponent {
             const palette = {
                 name: paletteName,
                 colors: [],
+                category:
+                    getCSSVariableValue(`o-palette-${paletteName}-category`, style).replace(
+                        /'/g,
+                        ""
+                    ) || "Default",
             };
-            [1, 3, 2].forEach((c) => {
+            [1, 2, 3, 4, 5].forEach((c) => {
                 const color = getCSSVariableValue(`o-palette-${paletteName}-o-color-${c}`, style);
                 palette.colors.push(color);
             });
             palettes.push(palette);
         }
         return palettes;
+    }
+
+    groupPalettesByCategory(palettes) {
+        const grouped = new Map();
+        const result = [];
+        for (const palette of palettes) {
+            const catId = palette.category.toLowerCase().trim();
+            if (!grouped.has(catId)) {
+                grouped.set(catId, []);
+            }
+            grouped.get(catId).push(palette);
+        }
+        for (const catId in CATEGORIES) {
+            if (grouped.has(catId)) {
+                result.push({
+                    title: CATEGORIES[catId],
+                    palettes: grouped.get(catId)
+                });
+                grouped.delete(catId);
+            }
+        }
+        // Append any categories found in CSS that aren't defined in our
+        // CATEGORIES map
+        for (const [catId, pals] of grouped) {
+            result.push({ title: catId, palettes: pals });
+        }
+        return result;
     }
 
     getGrayTitle(grayCode) {
@@ -83,5 +134,14 @@ export class ThemeColorsOption extends BaseOptionComponent {
             );
         }
         return getCSSVariableValue(color, this.iframeStyle);
+    }
+
+    onPaletteHover(ev, palette) {
+        const target = ev.currentTarget;
+        this.palettePopover.open(target, { palette });
+    }
+
+    onPaletteLeave() {
+        this.palettePopover.close();
     }
 }

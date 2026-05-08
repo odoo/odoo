@@ -65,16 +65,18 @@ for (let i = 100; i <= 900; i += 100) {
 // by the backend "Dark Mode".
 EDITOR_COLOR_CSS_VARIABLES.push(
     "black",
-    "black-15",
-    "black-25",
-    "black-50",
-    "black-75",
     "white",
-    "white-25",
-    "white-50",
-    "white-75",
-    "white-85"
+    "bg-opacity",
+    "text-opacity"
 );
+
+// Add black and white opacity variant classes (bg-black-*, bg-white-*, text-black-*, text-white-*)
+for (const opacity of [15, 25, 50, 75, 85]) {
+    EDITOR_COLOR_CSS_VARIABLES.push(
+        `black-${opacity}`,
+        `white-${opacity}`
+    );
+}
 
 /**
  * @param {string|number} name
@@ -175,4 +177,36 @@ export function getTextColorOrClass(node) {
         return { type: "class", value: textColorClass };
     }
     return null;
+}
+
+/**
+ * Extracts the bg-black-* or bg-white-* class from an element.
+ *
+ * @param {Element} element
+ * @returns {string|null} The class name or null if not found
+ */
+export function getBgBlackWhiteClass(element) {
+    if (!element || !isElement(element)) {
+        return null;
+    }
+    return [...element.classList].find((cls) => /^bg-(black|white)-\d+$/.test(cls)) || null;
+}
+
+/**
+ * Replaces any bg-black-* or bg-white-* class with a new one.
+ *
+ * @param {Element} element
+ * @param {string} newClass - The new class to apply (e.g., 'bg-black-50')
+ */
+export function replaceBgBlackWhiteClass(element, newClass) {
+    if (!element || !isElement(element)) {
+        return;
+    }
+    const existingClass = getBgBlackWhiteClass(element);
+    if (existingClass) {
+        element.classList.remove(existingClass);
+    }
+    if (newClass) {
+        element.classList.add(newClass);
+    }
 }
