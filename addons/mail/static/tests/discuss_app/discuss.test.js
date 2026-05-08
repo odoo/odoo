@@ -836,7 +836,14 @@ test("Can right-click on message to opens message actions dropdown", async () =>
             res_id: partnerId,
         },
         {
-            body: "message-body-3",
+            body: "msg-body-3 <a href='#'>Test link</a><a href='#'><font>Test link 2</font></a>",
+            message_type: "email",
+            model: "res.partner",
+            needaction: true,
+            res_id: partnerId,
+        },
+        {
+            body: "message-body-4",
             model: "discuss.channel",
             pinned_at: "2023-03-30 11:27:11",
             res_id: channelId,
@@ -858,7 +865,7 @@ test("Can right-click on message to opens message actions dropdown", async () =>
     ]);
     await start();
     await openDiscuss("mail.box_inbox");
-    await contains(".o-mail-Message", { count: 2 });
+    await contains(".o-mail-Message", { count: 3 });
     await rightClick(".o-mail-Message:eq(0)");
     await animationFrame();
     await expect.waitForSteps(["Message.onContextMenu", "Message.showRightClickMessageActions"]);
@@ -886,6 +893,17 @@ test("Can right-click on message to opens message actions dropdown", async () =>
     await animationFrame();
     expect.verifySteps([]);
     await rightClick(".o-mail-Message-body:eq(1) a:eq(1) font");
+    await expect.waitForSteps(["Message.onContextMenu"]);
+    await animationFrame();
+    expect.verifySteps([]);
+    // ...also inside shadow DOM (messages of type 'email')
+    await click(".o-mail-Thread");
+    await contains(".o-dropdown-item", { count: 0 });
+    await rightClick(".o-mail-Message-body:eq(2) .o-mail-Message-shadowBody:shadow a:eq(0)");
+    await expect.waitForSteps(["Message.onContextMenu"]);
+    await animationFrame();
+    expect.verifySteps([]);
+    await rightClick(".o-mail-Message-body:eq(2) .o-mail-Message-shadowBody:shadow a:eq(1) font");
     await expect.waitForSteps(["Message.onContextMenu"]);
     await animationFrame();
     expect.verifySteps([]);
