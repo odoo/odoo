@@ -63,7 +63,9 @@ test("Show 'back on' in mention list", async () => {
     await start();
     await openDiscuss(channelId);
     await insertTextInComposer(".o-mail-Composer", "@");
-    await contains(".o-mail-NavigableList-item span", { text: "Back on Apr 11" });
+    await waitFor(
+        ".o-mail-NavigableList-item .o-mail-Composer-suggestionPartner-statusSubtitle:text('Back on Apr 11'):count(1)"
+    );
 });
 
 test("Show year when 'back on' is on different year than now", async () => {
