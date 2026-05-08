@@ -3883,9 +3883,11 @@ class BaseModel(metaclass=MetaModel):
         # recompute fields after inverse in case the new computed values are different from the assigned ones
         recompute_fnames = [field.name for fields in determine_inverses.values() for field in fields if not field.store and field.compute]
         recompute_vals_before = {fname: [r[fname] for r in real_recs] for fname in recompute_fnames}
+        real_recs.modified(recompute_fnames, before=True)
         for fname in recompute_fnames:
             protected = self.env._protected.get(self._fields[fname], ())
-            real_recs.browse(id_ for id_ in real_recs._ids if id_ not in protected).invalidate_recordset([fname])
+            unprotected_real_recs = real_recs.browse(id_ for id_ in real_recs._ids if id_ not in protected)
+            unprotected_real_recs.invalidate_recordset([fname])
         real_recs.modified([
             fname for fname in recompute_fnames
             if any(r[fname] != val_before for r, val_before in zip(real_recs, recompute_vals_before[fname], strict=True))
@@ -4136,9 +4138,10 @@ class BaseModel(metaclass=MetaModel):
             for fname in field_names
         }
         for inv_records, field_names in to_recompute:
-            for fname in field_names:
-                protected = self.env._protected.get(self._fields[fname], ())
-                inv_records.browse(id_ for id_ in inv_records._ids if id_ not in protected).invalidate_recordset([fname])
+            inv_records.modified(field_names, before=True)
+        for inv_records, field_names in to_recompute:
+            # new created records shouldn't be protected
+            inv_records.invalidate_recordset(field_names)
         for inv_records, field_names in to_recompute:
             inv_records.modified([
                 fname for fname in field_names
