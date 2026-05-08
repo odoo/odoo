@@ -11748,8 +11748,7 @@ test(`don't exec a valid save with onWillSaveRecord in a form view`, async () =>
     expect.verifySteps(["onWillSaveRecord 1"]);
 });
 
-test.tags("owl3");
-test.todo(`Can't use FormRenderer implementation details in arch`, async () => {
+test(`Can't use FormRenderer implementation details in arch`, async () => {
     // using t-out in form view archs isn't accepted, so it displays a warning
     // in the console
     patchWithCleanup(console, {
@@ -13498,8 +13497,7 @@ test(`pager is up to date`, async () => {
     expect(".o_pager_indicator").toHaveText("2 / 2");
 });
 
-test.tags("owl3");
-test.todo(`cached web_read`, async () => {
+test(`cached web_read`, async () => {
     let def = null;
     onRpc("web_read", async () => {
         expect.step("web_read");
@@ -13614,8 +13612,7 @@ test(`cached web_read: don't cache if action have cache:false`, async () => {
     expect.verifySteps(["web_read", "web_read", "web_read"]);
 });
 
-test.tags("owl3");
-test.todo(`cached web_read - don't loose changes`, async () => {
+test(`cached web_read - don't loose changes`, async () => {
     let def = null;
     onRpc("web_read", async () => {
         expect.step("web_read");
