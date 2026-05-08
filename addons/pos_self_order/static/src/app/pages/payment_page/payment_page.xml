@@ -7,7 +7,7 @@
                <div class="container o_self_container ">
                     <div t-if="state.selection"  class="grid gap-4 align-items-center justify-content-center p-3 ">
                         <button
-                            t-foreach="selfOrder.models['pos.payment.method'].getAll()"
+                            t-foreach="selfOrder.filterPaymentMethods(selfOrder.models['pos.payment.method'].getAll())"
                             t-as="payment_method"
                             t-key="payment_method.id"
                             role="button"

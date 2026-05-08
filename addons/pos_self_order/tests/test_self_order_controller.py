@@ -232,6 +232,32 @@ class TestSelfOrderController(SelfOrderCommonTest):
         self.assertNotIn(lowe_categ.id, loaded_category_ids, "The category not linked to any printer should not be loaded")
         self.start_tour(self_route, "test_preparation_categories_are_loaded")
 
+    def test_generate_return_values_includes_payment_method(self):
+        self.pos_config.write({
+            'self_ordering_mode': 'mobile',
+            'self_ordering_pay_after': 'each',
+        })
+        self.pos_config.with_user(self.pos_user).open_ui()
+        self.pos_config.current_session_id.set_opening_control(0, '')
+
+        payment_method = self.pos_config.payment_method_ids[0]
+        order, _ = self.create_backend_pos_order({
+            'line_data': [{'qty': 1, 'price_unit': 2.2, 'product_id': self.cola.id}],
+            'payment_data': [{'payment_method_id': payment_method.id}],
+        })
+
+        params = {
+            'access_token': self.pos_config.access_token,
+            'order_access_tokens': [{
+                'access_token': order.access_token,
+            }],
+        }
+        data = self.make_request_to_controller('/pos-self-order/get-user-data', params)
+
+        self.assertIn('pos.payment.method', data)
+        returned_pm_ids = {pm['id'] for pm in data['pos.payment.method']}
+        self.assertIn(payment_method.id, returned_pm_ids)
+
     def test_config_session_loaded_fields(self):
         self.pos_config.write({
             'use_presets': False,
