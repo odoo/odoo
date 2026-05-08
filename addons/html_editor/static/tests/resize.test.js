@@ -283,6 +283,10 @@ describe("table resize", () => {
             expect(Math.abs(column2After - (columnWidthBefore - dragDelta)) <= TOLERANCE).toBe(
                 true
             );
+
+            // Width should be applied to <col> elements, not <td> elements
+            columns.forEach((col) => expect(col.style.width).not.toBe(""));
+            table.querySelectorAll("td").forEach((td) => expect(td.style.width).toBe(""));
         });
 
         test.tags("desktop");
@@ -366,6 +370,10 @@ describe("table resize", () => {
             // Table shifts using margin-left
             const marginLeftAfter = parseFloat(table.style.marginLeft);
             expect(Math.abs(marginLeftAfter - dragDelta) <= TOLERANCE).toBe(true);
+
+            // Width should be applied to <col> elements, not <td> elements
+            columns.forEach((col) => expect(col.style.width).not.toBe(""));
+            table.querySelectorAll("td").forEach((td) => expect(td.style.width).toBe(""));
         });
 
         test.tags("desktop");
@@ -445,6 +453,10 @@ describe("table resize", () => {
 
             // First column remains unchanged
             expect(parseFloat(column1.style.width)).toBe(columnWidthBefore);
+
+            // Width should be applied to <col> elements, not <td> elements
+            columns.forEach((col) => expect(col.style.width).not.toBe(""));
+            table.querySelectorAll("td").forEach((td) => expect(td.style.width).toBe(""));
         });
 
         test.tags("desktop");
@@ -526,6 +538,10 @@ describe("table resize", () => {
 
             // First column unchanged
             expect(parseFloat(column1.style.width)).toBe(parseFloat(columnWidthBefore));
+
+            // Width should be applied to <col> elements, not <td> elements
+            columns.forEach((col) => expect(col.style.width).not.toBe(""));
+            table.querySelectorAll("td").forEach((td) => expect(td.style.width).toBe(""));
         });
 
         test.tags("desktop");
@@ -607,6 +623,10 @@ describe("table resize", () => {
 
             // First column unchanged
             expect(parseFloat(column1.style.width)).toBe(columnWidthBefore);
+
+            // Width should be applied to <col> elements, not <td> elements
+            columns.forEach((col) => expect(col.style.width).not.toBe(""));
+            table.querySelectorAll("td").forEach((td) => expect(td.style.width).toBe(""));
         });
 
         test.tags("desktop");
@@ -678,6 +698,10 @@ describe("table resize", () => {
 
             expect(Math.abs(columnWidthAfter - expectedColumnWidth) <= TOLERANCE).toBe(true);
             expect(Math.abs(tableWidthAfter - expectedTableWidth) <= TOLERANCE).toBe(true);
+
+            // Width should be applied to <col> elements, not <td> elements
+            columns.forEach((col) => expect(col.style.width).not.toBe(""));
+            table.querySelectorAll("td").forEach((td) => expect(td.style.width).toBe(""));
         });
     });
 });

@@ -130,7 +130,10 @@ export class TablePlugin extends Plugin {
         /** Resizing Parameters */
         resizing_parameters: [
             {
+                // Visually, users resize table cells, but in practice they
+                // actually resize the col element.
                 resizableElementsSelector: "td, th",
+                resizeTargetSelector: "col",
                 parentContainerSelector: "table",
                 allowedEdges: ["left", "right"],
                 minSize: 33,
