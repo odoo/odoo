@@ -66,7 +66,7 @@ class MailMessageSubtype(models.Model):
         child_ids, def_ids = list(), list()
         all_int_ids = list()
         parent, relation = dict(), dict()
-        subtypes = self.sudo().search([
+        subtypes = self.sudo().search_fetch([
             '|', '|', ('res_model', '=', False),
             ('res_model', '=', model_name),
             ('parent_id.res_model', '=', model_name)
@@ -94,6 +94,6 @@ class MailMessageSubtype(models.Model):
     def _default_subtypes(self, model_name):
         domain = [('default', '=', True),
                   '|', ('res_model', '=', model_name), ('res_model', '=', False)]
-        subtypes = self.search(domain)
+        subtypes = self.search_fetch(domain)
         internal = subtypes.filtered('internal')
         return subtypes.ids, internal.ids, (subtypes - internal).ids

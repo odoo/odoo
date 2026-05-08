@@ -26,7 +26,9 @@ class Im_LivechatChannel(models.Model):
                 ("livechat_visitor_id", "=", visitor_sudo.id),
                 ("livechat_end_dt", "=", False),
             ]
-            for discuss_channel in self.env["discuss.channel"].sudo().search(pending_chats_domain):
+            for discuss_channel in (
+                self.env["discuss.channel"].sudo().search_fetch(pending_chats_domain)
+            ):
                 correspondents = (
                     discuss_channel.livechat_agent_partner_ids
                     or discuss_channel.livechat_bot_partner_ids

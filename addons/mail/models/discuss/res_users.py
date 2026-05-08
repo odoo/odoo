@@ -13,7 +13,9 @@ class ResUsers(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         users = super().create(vals_list)
-        self.env["discuss.channel"].search([("group_ids", "in", users.all_group_ids.ids)])._subscribe_users_automatically()
+        self.env["discuss.channel"].search_fetch(
+            [("group_ids", "in", users.all_group_ids.ids)]
+        )._subscribe_users_automatically()
         return users
 
     def write(self, vals):
@@ -25,7 +27,9 @@ class ResUsers(models.Model):
             user_group_ids = [command[1] for command in vals["group_ids"] if command[0] == 4]
             user_group_ids += [id for command in vals["group_ids"] if command[0] == 6 for id in command[2]]
             user_group_ids = self.env['res.groups'].browse(user_group_ids).all_implied_ids._ids
-            self.env["discuss.channel"].search([("group_ids", "in", user_group_ids)])._subscribe_users_automatically()
+            self.env["discuss.channel"].search_fetch(
+                [("group_ids", "in", user_group_ids)]
+            )._subscribe_users_automatically()
         return res
 
     def unlink(self):
@@ -38,7 +42,7 @@ class ResUsers(models.Model):
         """
         domain = [("partner_id", "in", self.partner_id.ids)]
         # sudo: discuss.channel.member - removing member of other users based on channel restrictions
-        current_cm = self.env["discuss.channel.member"].sudo().search(domain)
+        current_cm = self.env["discuss.channel.member"].sudo().search_fetch(domain)
         if reset_role:
             current_cm.filtered("channel_role").write({"channel_role": False})
         current_cm.filtered(

@@ -90,7 +90,7 @@ class DiscussChannelRtcSession(models.Model):
         # sudo - dicuss.rtc.call.history: setting the end date of the call
         # after it ends is allowed.
         domain = [("channel_id", "in", call_ended_channels.ids), ("end_dt", "=", False)]
-        for history in self.env["discuss.call.history"].sudo().search(domain):
+        for history in self.env["discuss.call.history"].sudo().search_fetch(domain):
             history.end_dt = fields.Datetime.now()
             stores[history.channel_id].add(history, ["duration_hour", "end_dt"])
         return super().unlink()
@@ -116,7 +116,7 @@ class DiscussChannelRtcSession(models.Model):
             this can happen when the server or the user's browser crash
             or when the user's odoo session ends.
         """
-        self.search(self._inactive_rtc_session_domain()).unlink()
+        self.search_fetch(self._inactive_rtc_session_domain()).unlink()
 
     def action_disconnect(self):
         session_ids_by_channel_by_url = defaultdict(lambda: defaultdict(list))

@@ -8,7 +8,7 @@ from odoo.addons.mail.tools.discuss import mail_route, Store
 class LivechatChatbotScriptController(http.Controller):
     @mail_route("/chatbot/restart", type="jsonrpc", auth="public")
     def chatbot_restart(self, channel_id, chatbot_script_id):
-        discuss_channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
+        discuss_channel = request.env["discuss.channel"].search_fetch([("id", "=", channel_id)])
         chatbot = request.env['chatbot.script'].browse(chatbot_script_id)
         if not discuss_channel or not chatbot.exists():
             return None
@@ -20,7 +20,7 @@ class LivechatChatbotScriptController(http.Controller):
     @mail_route("/chatbot/answer/save", type="jsonrpc", auth="public")
     def chatbot_save_answer(self, channel_id, message_id, selected_answer_id):
         discuss_channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
-        chatbot_message = request.env['chatbot.message'].sudo().search([
+        chatbot_message = request.env['chatbot.message'].sudo().search_fetch([
             ('mail_message_id', '=', message_id),
             ('discuss_channel_id', '=', discuss_channel.id),
         ], limit=1)
@@ -35,7 +35,11 @@ class LivechatChatbotScriptController(http.Controller):
     @mail_route("/chatbot/step/trigger", type="jsonrpc", auth="public")
     def chatbot_trigger_step(self, channel_id, chatbot_script_id=None, data_id=None):
         chatbot_language = self.env["chatbot.script"]._get_chatbot_language()
-        discuss_channel = request.env["discuss.channel"].with_context(lang=chatbot_language).search([("id", "=", channel_id)])
+        discuss_channel = (
+            request.env["discuss.channel"]
+            .with_context(lang=chatbot_language)
+            .search_fetch([("id", "=", channel_id)])
+        )
         if not discuss_channel:
             return None
 
@@ -66,7 +70,7 @@ class LivechatChatbotScriptController(http.Controller):
                 ("res_id", "=", channel_id),
             ]
             # sudo: mail.message - accessing last message to process answer is allowed
-            user_answer = self.env["mail.message"].sudo().search(domain, order="id desc", limit=1)
+            user_answer = self.env["mail.message"].sudo().search_fetch(domain, order="id desc", limit=1)
             next_step = current_step._process_answer(discuss_channel, user_answer.body)
         elif chatbot_script_id:  # when restarting, we don't have a "current step" -> set "next" as first step of the script
             chatbot = request.env['chatbot.script'].sudo().browse(chatbot_script_id).with_context(lang=chatbot_language)
@@ -126,7 +130,7 @@ class LivechatChatbotScriptController(http.Controller):
     def chatbot_validate_contact_info(self, channel_id):
         discuss_channel = (
             request.env["discuss.channel"]
-            .search([("id", "=", channel_id)])
+            .search_fetch([("id", "=", channel_id)])
             .with_context(lang=self.env["chatbot.script"]._get_chatbot_language())
         )
         if not discuss_channel or not discuss_channel.chatbot_current_step_id:
@@ -140,7 +144,9 @@ class LivechatChatbotScriptController(http.Controller):
             ("res_id", "=", channel_id),
         ]
         # sudo: mail.message - accessing last message to validate phone or email is allowed
-        last_user_message = self.env["mail.message"].sudo().search(domain, order="id desc", limit=1)
+        last_user_message = (
+            self.env["mail.message"].sudo().search_fetch(domain, order="id desc", limit=1)
+        )
         step_type = discuss_channel.chatbot_current_step_id.step_type
         result = {}
         if last_user_message:

@@ -26,7 +26,7 @@ class WebClient(WebclientController):
         chat_request_channel = (
             request.env["discuss.channel"]
             .sudo()
-            .search(
+            .search_fetch(
                 [
                     ("channel_type", "=", "livechat"),
                     ("livechat_visitor_id", "=", visitor.id),

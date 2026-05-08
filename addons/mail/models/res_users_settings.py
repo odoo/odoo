@@ -39,7 +39,7 @@ class ResUsersSettings(models.Model):
         :param int guest_id:
         """
         self.ensure_one()
-        volume_setting = self.env['res.users.settings.volumes'].search([
+        volume_setting = self.env['res.users.settings.volumes'].search_fetch([
             ('user_setting_id', '=', self.id), ('partner_id', '=', partner_id), ('guest_id', '=', guest_id)
         ])
         if volume_setting:

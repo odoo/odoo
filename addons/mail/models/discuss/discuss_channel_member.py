@@ -98,7 +98,7 @@ class DiscussChannelMember(models.Model):
             """,
             {"outdated_dt": outdated_dt},
         )
-        members = self.env["discuss.channel.member"].search(
+        members = self.env["discuss.channel.member"].search_fetch(
             [("id", "in", [row[0] for row in self.env.cr.fetchall()])],
         )
         members.unpin_dt = fields.Datetime.now()
@@ -304,7 +304,7 @@ class DiscussChannelMember(models.Model):
             ]
             for member in self
         ]
-        for member in self.env["discuss.channel.member"].search(Domain.OR(domains)):
+        for member in self.env["discuss.channel.member"].search_fetch(Domain.OR(domains)):
             member.channel_id._action_unfollow(partner=member.partner_id, guest=member.guest_id)
         # sudo - discuss.channel: allowed to access channels to update member-based naming
         name_members_by_channel = {
@@ -356,7 +356,7 @@ class DiscussChannelMember(models.Model):
         """
         Cron job for cleanup expired unmute by resetting mute_until_dt
         """
-        members = self.search([("mute_until_dt", "<=", fields.Datetime.now())])
+        members = self.search_fetch([("mute_until_dt", "<=", fields.Datetime.now())])
         members.write({"mute_until_dt": False})
 
     def _get_member_store_list(self):
@@ -446,10 +446,10 @@ class DiscussChannelMember(models.Model):
         self.ensure_one()
         session_domain = []
         if self.partner_id:
-            session_domain = [("partner_id", "=", self.partner_id.id)]
+            session_domain = [("channel_member_id.partner_id", "=", self.partner_id.id)]
         elif self.guest_id:
-            session_domain = [("guest_id", "=", self.guest_id.id)]
-        user_sessions = self.search(session_domain).rtc_session_ids
+            session_domain = [("channel_member_id.guest_id", "=", self.guest_id.id)]
+        user_sessions = self.env['discuss.channel.rtc.session'].search_fetch(session_domain)
         check_rtc_session_ids = (check_rtc_session_ids or []) + user_sessions.ids
         self.channel_id._rtc_cancel_invitations(member_ids=self.ids)
         user_sessions.unlink()
@@ -583,7 +583,7 @@ class DiscussChannelMember(models.Model):
             :param list member_ids: list of the partner ids to invite
         """
         self.ensure_one()
-        members = self.env["discuss.channel.member"].search(
+        members = self.env["discuss.channel.member"].search_fetch(
             self._get_rtc_invite_members_domain(member_ids)
         )
         if members:

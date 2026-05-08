@@ -15,7 +15,7 @@ class WebsiteLivechatChatbotScriptController(http.Controller):
         As we don't have a im_livechat.channel linked to it, we pre-emptively create a discuss.channel
         that will hold the conversation between the bot and the user testing the script. """
         store = Store()
-        channels = request.env["discuss.channel"].search([
+        channels = request.env["discuss.channel"].search_fetch([
             ["is_member", "=", True],
             ["livechat_end_dt", "=", False],
             ["chatbot_current_step_id.chatbot_script_id", "=", chatbot_script.id],

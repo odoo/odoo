@@ -90,7 +90,7 @@ class AttachmentController(ThreadController):
         if not attachment or not attachment._has_attachments_ownership([access_token]):
             request.env.user._bus_send("ir.attachment/delete", {"id": attachment_id})
             raise NotFound()
-        message = request.env["mail.message"].sudo().search(
+        message = request.env["mail.message"].sudo().search_fetch(
             [("attachment_ids", "in", attachment.ids)], limit=1)
         if message:
             thread = request.env[message.model].browse(message.res_id)

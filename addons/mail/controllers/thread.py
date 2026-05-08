@@ -92,7 +92,9 @@ class ThreadController(http.Controller):
         :param main_email: New email edited on the frontend linked to the @see _mail_get_primary_email_field
         """
         thread = self._get_thread_with_access(thread_model, thread_id)
-        partner_ids = request.env['res.partner'].search([('id', 'in', partner_ids)])
+        partner_ids = request.env["res.partner"].search_fetch(
+            [("id", "in", partner_ids)], ["name", "email", "partner_id"]
+        )
         recipients = thread._message_get_suggested_recipients(reply_discussion=True, additional_partners=partner_ids, primary_email=main_email)
         if partner_ids:
             old_customer_ids = set(thread._mail_get_partners()[thread.id].ids) - set(partner_ids.ids)

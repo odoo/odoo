@@ -47,7 +47,9 @@ class WebsiteVisitor(models.Model):
 
     @api.depends('discuss_channel_ids')
     def _compute_session_count(self):
-        sessions = self.env['discuss.channel'].search([('livechat_visitor_id', 'in', self.ids)])
+        sessions = self.env["discuss.channel"].search_fetch(
+            [("livechat_visitor_id", "in", self.ids)]
+        )
         session_count = dict.fromkeys(self.ids, 0)
         for session in sessions.filtered(lambda c: c.message_ids):
             session_count[session.livechat_visitor_id.id] += 1

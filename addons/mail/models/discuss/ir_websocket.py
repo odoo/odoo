@@ -36,7 +36,7 @@ class IrWebsocket(models.AbstractModel):
         if guest:
             channels.append(guest)
         domain = ["|", ("is_member", "=", True), ("id", "in", discuss_channel_ids)]
-        all_user_channels = self.env["discuss.channel"].search(domain)
+        all_user_channels = self.env["discuss.channel"].search_fetch(domain)
         internal_specific_channels = [
             (c, "internal_users")
             for c in all_user_channels

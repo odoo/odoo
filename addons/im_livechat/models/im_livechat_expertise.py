@@ -43,7 +43,7 @@ class Im_LivechatExpertise(models.Model):
         users_by_expertise = defaultdict(lambda: self.env["res.users"])
         settings_domain = [("livechat_expertise_ids", "in", self.ids)]
         # sudo: res.users.settings: livechat manager can read expertise on users
-        user_settings = self.env["res.users.settings"].sudo().search(settings_domain)
+        user_settings = self.env["res.users.settings"].sudo().search_fetch(settings_domain)
         for user_setting in user_settings:
             for expertise in user_setting.livechat_expertise_ids:
                 users_by_expertise[expertise] |= user_setting.user_id

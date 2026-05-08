@@ -179,7 +179,7 @@ class WebclientController(ThreadController):
             "active_test": False,
             "allowed_company_ids": request.env.user._get_company_ids(),
         }
-        record = request.env[model].with_context(**context).search([("id", "=", id)])
+        record = request.env[model].with_context(**context).search_fetch([("id", "=", id)])
         store.add(record, "_store_avatar_card_fields")
 
     @classmethod

@@ -608,7 +608,7 @@ class DiscussChannel(models.Model):
         if guest is None:
             guest = self.env["mail.guest"]
         self.message_unsubscribe(partner.ids)
-        member = self.env["discuss.channel.member"].search(
+        member = self.env["discuss.channel.member"].search_fetch(
             [
                 ("channel_id", "=", self.id),
                 ("partner_id", "=", partner.id) if partner else ("guest_id", "=", guest.id),
@@ -670,7 +670,7 @@ class DiscussChannel(models.Model):
         last_message_by_channel = self._get_last_messages().grouped("channel_id")
         for channel in self:
             members_to_create = []
-            existing_members = self.env['discuss.channel.member'].search(
+            existing_members = self.env['discuss.channel.member'].search_fetch(
                 Domain('channel_id', '=', channel.id)
                 & (Domain('partner_id', 'in', partners.ids) | Domain('guest_id', 'in', guests.ids))
             )
@@ -836,7 +836,7 @@ class DiscussChannel(models.Model):
         ])
         if member_ids:
             channel_member_domain &= Domain('id', 'in', member_ids)
-        members = self.env['discuss.channel.member'].search(channel_member_domain)
+        members = self.env['discuss.channel.member'].search_fetch(channel_member_domain)
         members.rtc_inviting_session_id = False
         if members:
             Store(bus_channel=self).add(
@@ -952,7 +952,7 @@ class DiscussChannel(models.Model):
             ]),
         ])
         # sudo: discuss.channel.member - read to get the members of the channel and res.users.settings of the partners
-        members = self.env["discuss.channel.member"].sudo().search(domain)
+        members = self.env["discuss.channel.member"].sudo().search_fetch(domain)
         for member in members:
             recipients_data.append({
                 "active": True,
@@ -1087,7 +1087,7 @@ class DiscussChannel(models.Model):
             self.self_member_id._set_new_message_separator(message.id + 1)
         # Invite mentioned partners to sub-channel.
         if self.parent_channel_id and message.partner_ids:
-            members = self.env["discuss.channel.member"].search([
+            members = self.env["discuss.channel.member"].search_fetch([
                 ("channel_id", "=", self.parent_channel_id.id),
                 ("partner_id", "in", message.partner_ids.ids),
             ])
@@ -1368,7 +1368,7 @@ class DiscussChannel(models.Model):
         partners = (
             self.env["res.partner"]
             .with_context(active_test=False)
-            .search([("id", "in", partners_to)])
+            .search_fetch([("id", "in", partners_to)], field_names=["name"])
         ) | self.env.user.partner_id
         if len(partners) > 2:
             raise UserError(_("A chat should not be created with more than 2 persons. Create a group instead."))
@@ -1490,7 +1490,7 @@ class DiscussChannel(models.Model):
             'is_readonly': is_readonly,
         }
         new_channel = self.create(vals)
-        group = self.env['res.groups'].search([('id', '=', group_id)]) if group_id else None
+        group = self.env['res.groups'].search_fetch([('id', '=', group_id)]) if group_id else None
         new_channel.group_public_id = group.id if group else None
         notification = Markup('<div class="o_mail_notification">%s</div>') % _("created this channel.")
         new_channel.message_post(body=notification, message_type="notification", subtype_xmlid="mail.mt_comment")
@@ -1532,7 +1532,10 @@ class DiscussChannel(models.Model):
         self.ensure_one()
         message = self.env["mail.message"]
         if from_message_id:
-            message = self.env["mail.message"].search([("id", "=", from_message_id)])
+            message = self.env["mail.message"].search_fetch(
+                [("id", "=", from_message_id)],
+                field_names=["author_id"] if name else ["author_id", "body"],
+            )
         if not name:
             name = self.env._("New Thread")
             if message:
@@ -1579,7 +1582,7 @@ class DiscussChannel(models.Model):
             name matches a 'search' string. Exclude channels of type chat (DM) and group.
         """
         return Store().add(
-            self.search([("name", "ilike", search), ("channel_type", "=", "channel")], limit=limit),
+            self.search_fetch([("name", "ilike", search), ("channel_type", "=", "channel")], limit=limit),
             lambda res: (
                 res.extend(["name", "channel_type"]),
                 res.one("group_public_id", ["full_name"]),

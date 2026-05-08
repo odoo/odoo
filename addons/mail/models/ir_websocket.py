@@ -60,7 +60,7 @@ class IrWebsocket(models.AbstractModel):
             self.env["res.users"]
             .with_context(active_test=False)
             .sudo()
-            .search([("id", "in", user_ids)])
+            .search_fetch([("id", "in", user_ids)])
             .sudo(False)
         )
         user, guest = self.env["res.users"]._get_current_persona()
@@ -74,7 +74,7 @@ class IrWebsocket(models.AbstractModel):
             | user
         )
         guest_ids = model_ids_to_token["mail.guest"].keys()
-        guests = self.env["mail.guest"].sudo().search([("id", "in", guest_ids)]).sudo(False)
+        guests = self.env["mail.guest"].sudo().search_fetch([("id", "in", guest_ids)]).sudo(False)
         allowed_guests = (
             guests.filtered(
                 lambda g: verify_limited_field_access_token(

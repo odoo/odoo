@@ -16,7 +16,7 @@ class LivechatChannelController(ChannelController):
         """Internal users having the rights to read the session can update its note."""
         if self.env.user.share:
             raise NotFound()
-        channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
+        channel = request.env["discuss.channel"].search_fetch([("id", "=", channel_id)])
         if not channel:
             raise NotFound()
         # sudo: discuss.channel - internal users having the rights to read the session can update its note
@@ -28,7 +28,7 @@ class LivechatChannelController(ChannelController):
         """Internal users having the rights to read the session can update its status."""
         if self.env.user.share:
             raise NotFound()
-        channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
+        channel = request.env["discuss.channel"].search_fetch([("id", "=", channel_id)])
         if not channel:
             raise NotFound()
         # sudo: discuss.channel - internal users having the rights to read the session can update its status
@@ -44,7 +44,7 @@ class LivechatChannelController(ChannelController):
             )
         if not self.env.user.has_group("im_livechat.im_livechat_group_user"):
             return
-        if channel := request.env["discuss.channel"].search(
+        if channel := request.env["discuss.channel"].search_fetch(
             [("id", "=", channel_id), ("channel_type", "=", "livechat")]
         ):
             # sudo: discuss.channel - live chat users can update the expertises of any live chat.
@@ -57,7 +57,7 @@ class LivechatChannelController(ChannelController):
         type="jsonrpc",
     )
     def livechat_conversation_create_and_link_expertise(self, channel_id, expertise_name):
-        channel = request.env["discuss.channel"].search(
+        channel = request.env["discuss.channel"].search_fetch(
             [("id", "=", channel_id), ("channel_type", "=", "livechat")]
         )
         if not channel:

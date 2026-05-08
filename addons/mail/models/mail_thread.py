@@ -3450,7 +3450,7 @@ class MailThread(models.AbstractModel):
                 lambda: (
                     self.env["mail.followers"]
                     .sudo()
-                    .search(
+                    .search_fetch(
                         [
                             ("res_model", "=", message.model),
                             ("res_id", "=", message.res_id),
@@ -5265,7 +5265,9 @@ class MailThread(models.AbstractModel):
 
     def _get_mail_thread_data_attachments(self):
         self.ensure_one()
-        res = self.env['ir.attachment'].search([('res_id', '=', self.id), ('res_model', '=', self._name)], order='id desc')
+        res = self.env["ir.attachment"].search(
+            [("res_id", "=", self.id), ("res_model", "=", self._name)], order="id desc"
+        )
         if 'original_id' in self.env['ir.attachment']._fields:
             # If the image is SVG: We take the png version if exist otherwise we take the svg
             # If the image is not SVG: We take the original one if exist otherwise we take it
