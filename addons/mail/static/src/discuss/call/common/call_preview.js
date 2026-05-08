@@ -39,6 +39,7 @@ export class CallPreview extends Component {
         this.notification = useService("notification");
         this.rtc = useService("discuss.rtc");
         this.store = useService("mail.store");
+        this.ui = useService("ui");
         this.state = useState({ audioStream: null, blurManager: null, videoStream: null });
         this.audioRef = useRef("audio");
         this.videoRef = useRef("video");
@@ -126,6 +127,10 @@ export class CallPreview extends Component {
         return Boolean(
             navigator.mediaDevices && navigator.mediaDevices.getUserMedia && window.MediaStream
         );
+    }
+
+    get inWelcomePageMobile() {
+        return this.env.inWelcomePage && this.ui.isSmall;
     }
 
     get actions() {
