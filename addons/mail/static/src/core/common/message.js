@@ -490,7 +490,7 @@ export class Message extends Component {
             return;
         }
         if (
-            ev.target.closest("a") ||
+            ev.composedPath()[0].closest("a") ||
             !this.props.hasActions ||
             this.isEditing ||
             this.rightClickDropdownState.isOpen ||
