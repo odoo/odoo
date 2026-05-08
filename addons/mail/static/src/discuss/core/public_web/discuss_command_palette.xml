@@ -11,6 +11,7 @@
                 </t>
                 <t t-slot="name" />
             </span>
+            <span t-if="this.props.persona?.statusSubtitle" t-att-class="'text-truncate smaller ms-2 ' + this.props.persona.statusSubtitleClass" t-out="this.props.persona.statusSubtitle"/>
             <span t-if="this.email" class="text-truncate text-muted smaller opacity-75" t-att-title="this.email">
                 <span class="pe-1">-</span>
                 <t t-out="this.formattedEmail"/>

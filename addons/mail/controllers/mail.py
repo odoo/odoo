@@ -14,7 +14,7 @@ from odoo.http.stream import STATIC_CACHE
 from odoo.tools import consteq
 from odoo.tools.misc import file_open
 
-from odoo.addons.mail.tools.discuss import add_guest_to_context
+from odoo.addons.mail.tools.discuss import add_guest_to_context, Store
 
 try:
     from werkzeug.utils import send_file
@@ -242,6 +242,13 @@ class MailController(http.Controller):
             'model_name': request.env['ir.model'].sudo()._get(model).display_name,
             'access_url': record._notify_get_action_link('view', model=model, res_id=res_id) if display_link else False,
         })
+
+    @http.route("/mail/set_status_message", methods=["POST"], type="jsonrpc", auth="user")
+    def mail_action_set_status_message(self, message):
+        request.env.user.status_message = message
+        Store(bus_channel=request.env.user, bus_subchannel="presence").add(
+            request.env.user, ["status_message"]
+        )
 
     @http.route('/mail/message/<int:message_id>', type='http', auth='public')
     @add_guest_to_context

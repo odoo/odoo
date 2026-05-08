@@ -90,6 +90,14 @@ export class ResPartner extends Record {
     get isBot() {
         return this.eq(this.store.odoobot);
     }
+
+    get statusSubtitle() {
+        return this.main_user_id?.status_message ?? "";
+    }
+
+    get statusSubtitleClass() {
+        return "text-muted";
+    }
 }
 
 ResPartner.register();

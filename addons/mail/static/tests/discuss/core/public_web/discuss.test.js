@@ -84,3 +84,19 @@ test("show correspondent local time in DM header when timezones differ", async (
     await openDiscuss(channelId);
     await contains(".o-mail-DiscussContent-header:has(:text('17:30 local time'))");
 });
+
+test("show correspondent status message in DM header", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
+    pyEnv["res.users"].create({ partner_id: partnerId, status_message: "Off on Wednesdays" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        channel_type: "chat",
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-DiscussContent-header:text('Off on Wednesdays')");
+});

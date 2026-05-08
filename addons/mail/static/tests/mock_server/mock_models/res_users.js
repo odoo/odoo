@@ -61,7 +61,10 @@ export class ResUsers extends webModels.ResUsers {
                                         "active",
                                         "avatar_128",
                                         "is_admin",
-                                        mailDataHelpers.Store.one("main_user_id", ["partner_id"]),
+                                        mailDataHelpers.Store.one(
+                                            "main_user_id",
+                                            ResUsers._get_store_main_user_fields()
+                                        ),
                                         "name",
                                         "tz",
                                         "user",
@@ -237,6 +240,10 @@ export class ResUsers extends webModels.ResUsers {
             mailDataHelpers.Store.attr("im_status_access_token", (p) => p.id),
             "partner_id",
         ];
+    }
+
+    _get_store_main_user_fields() {
+        return ["active", "partner_id", "share", "status_message"];
     }
 
     get _to_store_defaults() {

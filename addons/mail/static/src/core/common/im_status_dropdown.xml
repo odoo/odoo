@@ -14,6 +14,14 @@
                     <div class="small text-muted">You will not receive any notifications</div>
                 </DropdownItem>
                 <DropdownItem class="{ 'active': this.store.self_user.imStatusUI === 'offline' }" onSelected="() => this.setManualImStatus('offline')"><i class="fa fa-circle-o text-700 opacity-75 me-1" title="Offline" role="img"/> Offline</DropdownItem>
+                <hr class="my-1"/>
+                <div class="px-3 py-0">
+                    <label t-attf-for="o_mail_im_status_dropdown_status_message_{{ this.store.self_user.id }}" class="form-label text-muted smaller fw-bold mb-1">Status message</label>
+                    <input t-attf-id="o_mail_im_status_dropdown_status_message_{{ this.store.self_user.id }}" type="text" class="form-control border"
+                        placeholder="e.g. Off on Wednesdays"
+                        t-att-value="this.store.self_user.status_message or ''"
+                        t-on-change="(ev) => this.setStatusMessage(ev.target.value)"/>
+                </div>
             </t>
         </Dropdown>
     </t>
