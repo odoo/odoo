@@ -222,6 +222,33 @@
             <field name="amount_rate">2</field>
         </record>
 
+<!-- ID : Indonesia -->
+        <record id="l10n_id_overtime_ruleset" model="hr.attendance.overtime.ruleset">
+            <field name="name">Indonesia Overtime</field>
+            <field name="rate_combination_mode">max</field>
+            <field name="country_id" ref="base.id"/>
+        </record>
+        <record id="l10n_id_overtime_rule_first_hour" model="hr.attendance.overtime.rule">
+            <field name="name">First One Hour</field>
+            <field name="sequence">1</field>
+            <field name="ruleset_id" ref="l10n_id_overtime_ruleset"/>
+            <field name="base_off">quantity</field>
+            <field name="quantity_period">day</field>
+            <field name="expected_hours_from_contract" eval="False"/>
+            <field name="expected_hours">8.0</field>
+            <field name="amount_rate">1.5</field>
+        </record>
+        <record id="l10n_id_overtime_rule_more_than_one_hour" model="hr.attendance.overtime.rule">
+            <field name="name">More than One Hour</field>
+            <field name="sequence">2</field>
+            <field name="ruleset_id" ref="l10n_id_overtime_ruleset"/>
+            <field name="base_off">quantity</field>
+            <field name="quantity_period">day</field>
+            <field name="expected_hours_from_contract" eval="False"/>
+            <field name="expected_hours">9.0</field>
+            <field name="amount_rate">2.0</field>
+        </record>
+
 <!-- AE : United Arab Emirates -->
         <record id="l10n_ae_hr_attendance_overtime_ruleset" model="hr.attendance.overtime.ruleset">
             <field name="name">UAE Ruleset</field>
