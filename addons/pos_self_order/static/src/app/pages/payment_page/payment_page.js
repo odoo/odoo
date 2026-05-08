@@ -65,6 +65,10 @@ export class PaymentPage extends Component {
         this.startPayment();
     }
 
+    get paymentMethods() {
+        return this.selfOrder.models["pos.payment.method"].getAll();
+    }
+
     get selectedPaymentMethod() {
         return this.selfOrder.models["pos.payment.method"].find(
             (p) => p.id === this.state.paymentMethodId

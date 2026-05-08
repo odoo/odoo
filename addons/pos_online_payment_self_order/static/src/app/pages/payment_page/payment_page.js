@@ -10,6 +10,12 @@ patch(PaymentPage.prototype, {
             (this.selectedPaymentIsOnline && this.selfOrder.config.self_ordering_mode === "kiosk")
         );
     },
+    get paymentMethods() {
+        if (this.selfOrder.config.self_ordering_mode === "mobile") {
+            return [this.selfOrder.config.self_order_online_payment_method_id].filter(Boolean);
+        }
+        return super.paymentMethods;
+    },
     async startPayment() {
         let order = this.selfOrder.currentOrder;
         const pm = this.selectedPaymentMethod;

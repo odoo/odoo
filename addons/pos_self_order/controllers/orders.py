@@ -63,7 +63,7 @@ class PosSelfOrderController(http.Controller):
             del o['email']
             del o['mobile']
 
-        return {
+        result = {
             'pos.order': orders,
             'pos.order.line': self.env['pos.order.line']._load_pos_self_data_read(order.lines, config),
             'pos.payment': self.env['pos.payment']._load_pos_self_data_read(order.payment_ids, config),
@@ -71,6 +71,9 @@ class PosSelfOrderController(http.Controller):
             'pos.prep.order': self.env['pos.prep.order']._load_pos_data_read(order.prep_order_ids, config) if config else [],
             'pos.prep.line': self.env['pos.prep.line']._load_pos_data_read(order.prep_order_ids.prep_line_ids, config) if config else [],
         }
+        if config.self_ordering_mode == 'mobile':
+            result['pos.payment.method'] = self.env['pos.payment.method']._load_pos_self_data_read(order.payment_ids.payment_method_id, config)
+        return result
 
     def _ensure_delivery_fee(self, order, preset):
         """Add or remove the delivery fee line based on the order total and preset configuration."""
