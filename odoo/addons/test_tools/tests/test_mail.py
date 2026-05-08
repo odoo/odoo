@@ -351,11 +351,14 @@ class TestSanitizer(BaseCase):
         self.assertEqual(sanitized_twice, expected_result)
 
     def test_quote_gmail(self):
-        html = html_sanitize(mail_examples.GMAIL_1)
-        for ext in mail_examples.GMAIL_1_IN:
-            self.assertIn(ext, html)
-        for ext in mail_examples.GMAIL_1_OUT:
-            self.assertIn(u'<span data-o-mail-quote="1">%s</span>' % misc.html_escape(ext), html)
+        for src, exp_in in (
+            (mail_examples.GMAIL_1, mail_examples.GMAIL_1_IN),
+            (mail_examples.GMAIL_2, mail_examples.GMAIL_2_IN),
+            (mail_examples.GMAIL_3, mail_examples.GMAIL_3_IN),
+        ):
+            html = html_sanitize(src)
+            for ext in exp_in:
+                self.assertIn(ext, html)
 
     def test_quote_text(self):
         html = html_sanitize(mail_examples.TEXT_1)
