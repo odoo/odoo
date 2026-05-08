@@ -79,7 +79,7 @@ class TestHrAttendancePerformance(TransactionCase):
 
     def test_regenerate_overtime_line(self):
         t0 = time.time()
-        with self.assertQueryCount(1700):
+        with self.assertQueryCount(300):
             self.ruleset.action_regenerate_overtimes()
         t1 = time.time()
         _logger.info("Regenerated overtime for %s hr.attendance records in %s seconds.",

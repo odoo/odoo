@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from datetime import date, datetime
+from datetime import date, datetime, time
 from freezegun import freeze_time
 
 from odoo import Command
@@ -1261,27 +1261,30 @@ class TestHrAttendanceOvertime(HttpCase):
         """Validate that multiple overtime lines for today are summed correctly
         and that the entire attendance_employee_data response is consistent.
         """
-        domain = {
+        attendance_id = self.env['hr.attendance'].create({
             'employee_id': self.employee.id,
+            'check_in': datetime.combine(date.today(), time(7, 0)),
+            'check_out': datetime.combine(date.today(), time(12, 0)),
+        })
+        domain = {
+            'attendance_id': attendance_id.id,
             'date': date.today(),
-            'duration': 5
+            'duration': 5,
         }
         if 'compensable_as_leave' in self.env['hr.attendance.overtime.line']._fields:
             domain.update({
                 'compensable_as_leave': True,
                 'leave_compensation_rate': 1.0,
             })
-        for _ in range(2):
-            self.env['hr.attendance.overtime.line'].create(domain)
-
+        self.env['hr.attendance.overtime.line'].create([domain for _ in range(2)])
         token = self.employee.company_id.attendance_kiosk_key
         response = self.make_jsonrpc_request(
             '/hr_attendance/attendance_employee_data',
             {'token': token, 'employee_id': self.employee.id},
         )
         self.assertEqual(response.get('hours_previously_today'), 0)
-        self.assertEqual(response.get('hours_today'), 0)
-        self.assertEqual(response.get('last_attendance_worked_hours'), 0)
+        self.assertEqual(response.get('hours_today'), 5)
+        self.assertEqual(response.get('last_attendance_worked_hours'), 5)
         self.assertEqual(response.get('overtime_today'), 10)
         self.assertEqual(response.get('total_overtime'), 10)
 
@@ -1562,7 +1565,7 @@ class TestHrAttendanceOvertime(HttpCase):
         # The overtime line is linked to the afternoon attendance
         self.assertTrue(afternoon_att.linked_overtime_ids)
         # Should be the same as it's the reverse checking
-        self.assertEqual(overtime_lines._linked_attendances(), afternoon_att)
+        self.assertEqual(overtime_lines.attendance_id, afternoon_att)
 
     def test_overtime_across_midnight_in_utc_timezone(self):
         self.europe_employee.tz = 'UTC'

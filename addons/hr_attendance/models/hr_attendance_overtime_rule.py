@@ -419,10 +419,8 @@ class HrAttendanceOvertimeRule(models.Model):
             for day, duration_by_rules in duration_by_day_by_rules.items():
                 for rules, duration in duration_by_rules.items():
                     vals.append({
-                        'time_start': attendance.check_in,
-                        'time_stop': attendance.check_out,
+                        'attendance_id': attendance.id,
                         'duration': round(duration, 3),
-                        'employee_id': employee.id,
                         'date': day,
                         'rule_ids': rules.ids,
                         **rules._extra_overtime_vals(),

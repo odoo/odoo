@@ -80,7 +80,7 @@ class HrAttendance(models.Model):
                                 default='manual')
     expected_hours = fields.Float(string="Theoretical Hours", compute="_compute_expected_hours", store=True, aggregator="sum")
     device_tracking_enabled = fields.Boolean(related="employee_id.company_id.attendance_device_tracking")
-    linked_overtime_ids = fields.Many2many('hr.attendance.overtime.line', compute='_compute_linked_overtime_ids', readonly=False)
+    linked_overtime_ids = fields.One2many('hr.attendance.overtime.line', 'attendance_id', readonly=False)
     day_of_date = fields.Selection(
         compute='_compute_day_of_date',
         store=True,
@@ -119,7 +119,7 @@ class HrAttendance(models.Model):
             else:
                 attendance.color = 1 if attendance.check_in < (datetime.today() - timedelta(days=1)) else 10
 
-    @api.depends('check_in', 'check_out', 'employee_id')
+    @api.depends('linked_overtime_ids.status')
     def _compute_overtime_status(self):
         for attendance in self:
             if not attendance.linked_overtime_ids:
@@ -131,21 +131,15 @@ class HrAttendance(models.Model):
             else:
                 attendance.overtime_status = 'to_approve'
 
-    @api.depends('check_in', 'check_out', 'employee_id')
+    @api.depends('linked_overtime_ids.duration')
     def _compute_overtime_hours(self):
         for attendance in self:
             attendance.overtime_hours = sum(attendance.linked_overtime_ids.mapped('duration'))
 
-    @api.depends('check_in', 'check_out', 'employee_id')
+    @api.depends('linked_overtime_ids.status', 'linked_overtime_ids.manual_duration')
     def _compute_validated_overtime_hours(self):
         for attendance in self:
             attendance.validated_overtime_hours = sum(attendance.linked_overtime_ids.filtered_domain([('status', '=', 'approved')]).mapped('manual_duration'))
-
-    @api.depends('check_in', 'check_out', 'employee_id')
-    def _compute_linked_overtime_ids(self):
-        overtimes_by_attendance = self._linked_overtimes().grouped(lambda ot: (ot.employee_id, ot.time_start))
-        for attendance in self:
-            attendance.linked_overtime_ids = overtimes_by_attendance.get((attendance.employee_id, attendance.check_in), False)
 
     @api.depends('employee_id', 'check_in', 'check_out')
     def _compute_display_name(self):
@@ -320,14 +314,14 @@ class HrAttendance(models.Model):
     def _update_overtime(self, attendance_domain=None):
         if not attendance_domain:
             attendance_domain = self._get_overtimes_to_update_domain()
-        all_overtime_lines = self.env['hr.attendance.overtime.line'].search(attendance_domain)
-        manual_overtimes = set(all_overtime_lines.filtered(
-            lambda l: l.manual_duration != l.duration or l.status == 'to_approve'
-        ).mapped(lambda l: (l.employee_id.id, l.date)))
-        all_overtime_lines.unlink()
         all_attendances = (self | self.env['hr.attendance'].search(attendance_domain)).filtered_domain([('check_out', '!=', False)])
         if not all_attendances:
             return
+        all_overtime_lines = all_attendances.linked_overtime_ids
+        manual_overtimes = set(all_overtime_lines.filtered(
+            lambda l: l.manual_duration != l.duration or l.status == 'to_approve'
+        ).mapped(lambda l: (l.attendance_id.id, l.date)))
+        all_overtime_lines.unlink()
 
         start_check_in = min(all_attendances.mapped('check_in')).date() - relativedelta(days=1)  # for timezone
         min_check_in = datetime.combine(start_check_in, time.min).replace(tzinfo=UTC)
@@ -372,14 +366,10 @@ class HrAttendance(models.Model):
                 {
                     **val,
                     'status': 'to_approve'
-                } if (val['employee_id'], val['date']) in manual_overtimes else val
+                } if (val['attendance_id'], val['date']) in manual_overtimes else val
                 for val in ruleset.rule_ids._generate_overtime_vals(min(attendances_dates), max(attendances_dates), ruleset_attendances, schedules_intervals_by_employee)
             ])
         self.env['hr.attendance.overtime.line'].create(overtime_vals_list)
-        self.env.add_to_compute(self._fields['overtime_hours'], all_attendances)
-        self.env.add_to_compute(self._fields['expected_hours'], all_attendances)
-        self.env.add_to_compute(self._fields['validated_overtime_hours'], all_attendances)
-        self.env.add_to_compute(self._fields['overtime_status'], all_attendances)
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -581,12 +571,6 @@ class HrAttendance(models.Model):
             'target': 'self',
             'url': self.env.company.attendance_kiosk_url + '?from_trial_mode=True'
         }
-
-    def _linked_overtimes(self):
-        return self.env['hr.attendance.overtime.line'].search([
-            ('time_start', 'in', self.mapped('check_in')),
-            ('employee_id', 'in', self.employee_id.ids),
-        ])
 
     def action_approve_overtime(self):
         self.linked_overtime_ids.action_approve()
