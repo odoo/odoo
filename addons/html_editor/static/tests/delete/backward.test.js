@@ -10,7 +10,7 @@ import {
     test,
     tick,
 } from "@odoo/hoot";
-import { setupEditor, testEditor } from "../_helpers/editor";
+import { base64Img, setupEditor, testEditor } from "../_helpers/editor";
 import { unformat } from "../_helpers/format";
 import { getContent, setSelection } from "../_helpers/selection";
 import { deleteBackward, insertText, tripleClick, undo } from "../_helpers/user_actions";
@@ -596,6 +596,14 @@ describe("Selection collapsed", () => {
                 stepFunction: deleteBackward,
                 contentAfterEdit: `<p><strong>abc</strong></p><p><strong data-oe-zws-empty-inline="">\u200B</strong><br></p><p o-we-hint-text='Type "/" for commands' class="o-we-hint"><strong data-oe-zws-empty-inline="">\u200B[]</strong><br></p>`,
                 contentAfter: `<p><strong>abc</strong></p><p><br></p><p>[]<br></p>`,
+            });
+        });
+
+        test("should not teleport cursor after image", async () => {
+            await testEditor({
+                contentBefore: `<div>a[]<img style="display: block" src="${base64Img}">b</div>`,
+                stepFunction: deleteBackward,
+                contentAfter: `<div>[]<img style="display: block" src="${base64Img}">b</div>`,
             });
         });
     });
