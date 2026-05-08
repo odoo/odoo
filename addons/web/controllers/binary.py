@@ -130,6 +130,8 @@ class Binary(http.Controller):
                     js = asset_type == 'js'
                     binary = asset_type == 'binary'
                     extension = '' if '.' not in filename else filename.split('.')[-1]
+                    if binary:
+                        asset_type = extension
                     bundle = rw_env['ir.qweb']._get_asset_bundle(
                         bundle_name,
                         css=css,
@@ -141,8 +143,7 @@ class Binary(http.Controller):
                         assets_params=assets_params,
                     )
                     # check if the version matches. If not, redirect to the last version
-                    if not debug_assets and unique != ANY_UNIQUE \
-                            and unique != bundle.get_version(extension if binary else asset_type):
+                    if not debug_assets and unique != ANY_UNIQUE and unique != bundle.get_version(asset_type):
                         return request.redirect(bundle.get_link(asset_type))
                     attachment = None
                     if css and bundle.stylesheets:
