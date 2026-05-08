@@ -371,6 +371,7 @@ export class FormController extends Component {
                 onRecordSaved: this.onRecordSaved.bind(this),
                 onWillDisplayOnchangeWarning: this.onWillDisplayOnchangeWarning.bind(this),
                 onRootLoaded: this.onRootLoaded.bind(this),
+                onRootUpdated: this.onRootUpdated.bind(this),
             },
             useSendBeaconToSaveUrgently: true,
         };
@@ -387,6 +388,10 @@ export class FormController extends Component {
 
     async onRootLoaded() {
         await this.model.root.setOfflineChanges(this.props.offlineId);
+        this.env.config.setDisplayName(this.displayName());
+    }
+
+    onRootUpdated() {
         this.env.config.setDisplayName(this.displayName());
     }
 

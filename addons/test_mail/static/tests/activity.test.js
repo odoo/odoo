@@ -777,8 +777,7 @@ test("activity view: 'onClose' of 'openActivityFormView' does not add activity_i
     await expect.waitForSteps([[]]);
 });
 
-test.tags("owl3");
-test.todo("activity view: 'onReloadData' does not add activity_ids condition as selectCreateDialog domain", async () => {
+test("activity view: 'onReloadData' does not add activity_ids condition as selectCreateDialog domain", async () => {
     patchWithCleanup(ActivityController.prototype, {
         get rendererProps() {
             const rendererProps = { ...super.rendererProps };
@@ -1100,8 +1099,7 @@ test("test node visibility depends on invisible attribute on the node and in the
     await contains(".invisible_node", { count: 0 });
 });
 
-test.tags("owl3");
-test.todo("update activity view after creating multiple activities", async () => {
+test("update activity view after creating multiple activities", async () => {
     registerArchs(archs);
     MailTestActivity._views.list =
         '<list string="MailTestActivity"><field name="name"/><field name="activity_ids" widget="list_activity"/></list>';

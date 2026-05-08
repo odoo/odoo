@@ -89,6 +89,8 @@ const DEFAULT_HOOKS = {
     onWillLoadRoot: () => {},
     /** @type {(root: DataPoint) => any} */
     onRootLoaded: () => {},
+    /** @type {(root: DataPoint) => any} */
+    onRootUpdated: () => {},
     /** @type {(record: RelationalRecord) => any} */
     onWillSaveRecord: () => {},
     /** @type {(record: RelationalRecord) => any} */
@@ -337,6 +339,7 @@ export class RelationalModel extends Model {
                             result = await this._postprocessReadGroup(this.root.config, result);
                         }
                         this.root._setData(result);
+                        this.hooks.onRootUpdated(this.root);
                     }
                     return;
                 }
@@ -347,14 +350,18 @@ export class RelationalModel extends Model {
                 if (root.config.isMonoRecord) {
                     if (!root.config.resId) {
                         // result is the response of the onchange rpc
-                        return root._setData(result.value, { keepChanges: true });
+                        root._setData(result.value, { keepChanges: true });
+                        this.hooks.onRootUpdated(this.root);
+                        return;
                     }
                     // result is the response of a web_read rpc
                     if (!result.length) {
                         // we read a record that no longer exists
                         throw new FetchRecordError([root.config.resId]);
                     }
-                    return root._setData(result[0], { keepChanges: true });
+                    root._setData(result[0], { keepChanges: true });
+                    this.hooks.onRootUpdated(this.root);
+                    return;
                 }
 
                 // multi record case: either grouped or ungrouped
@@ -369,6 +376,7 @@ export class RelationalModel extends Model {
                     result = await this._postprocessReadGroup(root.config, result);
                 }
                 root._setData(result);
+                this.hooks.onRootUpdated(this.root);
             },
         };
     }
