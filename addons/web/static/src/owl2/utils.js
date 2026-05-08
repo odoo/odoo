@@ -2,21 +2,6 @@
 const owl = globalThis.owl;
 
 /**
- * @template T
- * @param {T} target
- * @param {keyof T} name
- * @param {typeof owl.signal} [signalFn]
- * @deprecated use Owl reactivity {@link https://github.com/odoo/owl/blob/master/doc/v3/owl/reference/reactivity.md}
- */
-export function makeReactive(target, name, signalFn = owl.signal) {
-    const _signal = signalFn(target[name]);
-    Object.defineProperty(target, name, {
-        get: _signal,
-        set: _signal.set,
-    });
-}
-
-/**
  * @param {any} component
  * @param {boolean} [deep]
  * @deprecated use Owl reactivity {@link https://github.com/odoo/owl/blob/master/doc/v3/owl/reference/reactivity.md}
