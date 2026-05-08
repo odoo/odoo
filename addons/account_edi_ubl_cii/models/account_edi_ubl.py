@@ -8,7 +8,7 @@ from markupsafe import Markup
 from odoo import _, fields, models, Command
 from odoo.exceptions import UserError
 from odoo.fields import Domain
-from odoo.tools import formatLang, frozendict, html2plaintext, html_escape, pdf
+from odoo.tools import formatLang, frozendict, html2plaintext, html_escape, pdf, unique
 from odoo.addons.account_edi_ubl_cii.models.account_edi_common import (
     FloatFmt,
     GST_COUNTRY_CODES,
@@ -1772,7 +1772,7 @@ class AccountEdiUBL(models.AbstractModel):
             if note := node.text:
                 payment_references.append(note)
 
-        if payment_reference := ','.join(payment_references):
+        if payment_reference := ','.join(unique(payment_references)):
             collected_values['to_write']['payment_reference'] = payment_reference
 
     def _import_ubl_invoice_add_delivery(self, collected_values):
