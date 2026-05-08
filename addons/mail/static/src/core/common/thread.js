@@ -1,4 +1,4 @@
-import { useChildSubEnv, useLayoutEffect, useRef, useState } from "@web/owl2/utils";
+import { onRendered, useChildSubEnv, useLayoutEffect, useRef, useState } from "@web/owl2/utils";
 import { DateSection } from "@mail/core/common/date_section";
 import { Message } from "@mail/core/common/message";
 import { NotificationMessage } from "./notification_message";
@@ -9,7 +9,6 @@ import {
     Component,
     onMounted,
     onWillDestroy,
-    onRendered,
     onWillUnmount,
     onWillUpdateProps,
     toRaw,
