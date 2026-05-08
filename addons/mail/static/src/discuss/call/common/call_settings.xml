@@ -43,11 +43,10 @@
                             <div class="d-flex flex-column gap-2">
                                 <span t-if="this.store.settings.usePushToTalk and !this.isMobileOS and !this.pttExtService.isEnabled" class="small text-muted fst-italic alert alert-warning px-3 py-2 m-0" t-out="this.pttExtService.downloadText"/>
                                 <div class="d-flex flex-column border rounded">
-                                    <t t-call="discuss.CallSettings.textToggler">
-                                        <t t-set="text">Enable Push-to-talk</t>
-                                        <t t-set="value" t-value="this.store.settings.usePushToTalk"/>
-                                        <t t-set="onchange" t-value="this.onChangePushToTalk"/>
-                                    </t>
+                                    <t t-call="discuss.CallSettings.textToggler"
+                                        text.translate="Enable Push-to-talk"
+                                        value="this.store.settings.usePushToTalk"
+                                        onchange="this.onChangePushToTalk"/>
                                     <hr class="my-0 border-secondary opacity-75"/>
                                     <div class="o-pb-2_5 pt-1 o-px-2_5">
                                         <t t-if="!this.store.settings.usePushToTalk">
@@ -102,12 +101,11 @@
                             <hr class="my-3 border-secondary opacity-75"/>
                             <div class="d-flex flex-column border rounded">
                                 <t t-if="this.store.settings.hasCanvasFilterSupport">
-                                    <t t-call="discuss.CallSettings.textToggler">
-                                        <t t-set="text">Blur video background</t>
-                                        <t t-set="description">Apply a privacy blur to your surroundings.</t>
-                                        <t t-set="value" t-value="this.store.settings.useBlur"/>
-                                        <t t-set="onchange" t-value="this.onChangeBlur"/>
-                                    </t>
+                                    <t t-call="discuss.CallSettings.textToggler"
+                                        text.translate="Blur video background"
+                                        description.translate="Apply a privacy blur to your surroundings."
+                                        value="this.store.settings.useBlur"
+                                        onchange="this.onChangeBlur"/>
                                 </t>
                                 <t t-if="this.store.settings.useBlur">
                                     <div class="d-flex gap-3 o-py-2_5 px-3" t-att-class="this.props.isCompact or this.isMobileOS ? 'flex-column' : 'flex-row'">
@@ -128,31 +126,28 @@
                                     </div>
                                 </t>
                                 <hr class="border-secondary opacity-75 m-0"/>
-                                <t t-call="discuss.CallSettings.textToggler">
-                                    <t t-set="text">Show video participants only</t>
-                                    <t t-set="description">Hide participants who have turned off their camera.</t>
-                                    <t t-set="value" t-value="this.store.settings.showOnlyVideo"/>
-                                    <t t-set="onchange" t-value="this.onChangeShowOnlyVideo"/>
-                                </t>
+                                <t t-call="discuss.CallSettings.textToggler"
+                                    text.translate="Show video participants only"
+                                    description.translate="Hide participants who have turned off their camera."
+                                    value="this.store.settings.showOnlyVideo"
+                                    onchange="this.onChangeShowOnlyVideo"/>
                                 <hr class="border-secondary opacity-75 m-0"/>
-                                <t t-call="discuss.CallSettings.textToggler">
-                                    <t t-set="text">Auto-focus speaker</t>
-                                    <t t-set="description">Automatically enlarge the person currently speaking.</t>
-                                    <t t-set="value" t-value="this.store.settings.useCallAutoFocus"/>
-                                    <t t-set="onchange" t-value="this.onChangeCallAutoFocus"/>
-                                </t>
+                                <t t-call="discuss.CallSettings.textToggler"
+                                    text.translate="Auto-focus speaker"
+                                    description.translate="Automatically enlarge the person currently speaking."
+                                    value="this.store.settings.useCallAutoFocus"
+                                    onchange="this.onChangeCallAutoFocus"/>
                             </div>
                         </div>
                     </TabPanel>
                     <TabPanel id="'technical'">
                         <div class="d-flex flex-column my-2 p-1">
                             <div class="d-flex flex-column border rounded">
-                                <t t-call="discuss.CallSettings.textToggler">
-                                    <t t-set="text">Log RTC events</t>
-                                    <t t-set="description">Save detailed RTC connection logs for troubleshooting.</t>
-                                    <t t-set="value" t-value="this.store.settings.logRtc"/>
-                                    <t t-set="onchange" t-value="this.onChangeLogRtc"/>
-                                </t>
+                                <t t-call="discuss.CallSettings.textToggler"
+                                    text.translate="Log RTC events"
+                                    description.translate="Save detailed RTC connection logs for troubleshooting."
+                                    value="this.store.settings.logRtc"
+                                    onchange="this.onChangeLogRtc"/>
                                 <button class="btn btn-secondary rounded-top-0" t-on-click="this.onClickDownloadLogs"><i class="fa fa-download me-2"/><span>Download Logs</span></button>
                             </div>
                         </div>

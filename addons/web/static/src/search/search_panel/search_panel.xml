@@ -86,9 +86,8 @@
         <span><t t-out="section.errorMsg"/></span>
     </div>
     <ul t-else="" class="list-group d-block o_search_panel_field">
-        <t t-if="section.type === 'category'" t-call="{{ this.constructor.subTemplates.category }}">
-            <t t-set="values" t-value="section.rootIds"/>
-        </t>
+        <t t-if="section.type === 'category'" t-call="{{ this.constructor.subTemplates.category }}"
+            values="section.rootIds"/>
         <t t-elif="section.groups">
             <li
                 t-foreach="section.sortedGroupIds" t-as="groupId" t-key="groupId"
