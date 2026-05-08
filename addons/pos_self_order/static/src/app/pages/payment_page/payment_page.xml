@@ -7,7 +7,7 @@
                <div class="container o_self_container ">
                     <div t-if="state.selection" class="row align-items-center justify-content-center p-3 ">
                         <button
-                            t-foreach="selfOrder.models['pos.payment.method'].filter((pm) => !pm.is_cash_count)"
+                            t-foreach="paymentMethods"
                             t-as="payment_method"
                             t-key="payment_method.id"
                             role="button"
