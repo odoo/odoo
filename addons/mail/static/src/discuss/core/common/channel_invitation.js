@@ -12,15 +12,7 @@ import { useDebounced } from "@web/core/utils/timing";
 
 export class ChannelInvitation extends Component {
     static components = { ActionPanel, DiscussAvatar };
-    static defaultProps = { hasSizeConstraints: false };
-    static props = [
-        "autofocus?",
-        "hasSizeConstraints?",
-        "channel?",
-        "close?",
-        "className?",
-        "state?",
-    ];
+    static props = ["autofocus?", "channel?", "className?", "close?", "state?"];
     static template = "discuss.ChannelInvitation";
 
     setup() {

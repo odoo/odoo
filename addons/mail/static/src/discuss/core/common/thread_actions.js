@@ -108,10 +108,10 @@ registerThreadAction("notification-settings", {
     actionPanelComponentProps: ({ channel }) => ({ channel }),
     actionPanelOpen({ owner }) {
         if (owner.isDiscussContent) {
-            this.popover?.open(owner.root.el.querySelector(`[name="${this.id}"]`), {
-                hasSizeConstraints: true,
-                ...this.actionPanelComponentProps,
-            });
+            this.popover?.open(
+                owner.root.el.querySelector(`[name="${this.id}"]`),
+                this.actionPanelComponentProps
+            );
         }
     },
     actionPanelOuterClass: ({ owner, store }) => store.discussDropdownMenuClass(owner),
@@ -166,10 +166,10 @@ registerThreadAction("invite-people", {
                 },
             });
         } else if (!owner.env.inMeetingView) {
-            this.popover?.open(owner.root.el.querySelector(`[name="${this.id}"]`), {
-                hasSizeConstraints: true,
-                ...this.actionPanelComponentProps,
-            });
+            this.popover?.open(
+                owner.root.el.querySelector(`[name="${this.id}"]`),
+                this.actionPanelComponentProps
+            );
         }
     },
     actionPanelOuterClass: ({ owner, store }) =>

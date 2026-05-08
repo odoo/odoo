@@ -21,7 +21,7 @@ class NotificationDialog extends Component {
 
 export class NotificationSettings extends Component {
     static components = { ActionPanel, Dropdown, DropdownItem };
-    static props = ["channel", "close?", "className?", "hasSizeConstraints?"];
+    static props = ["channel", "className?", "close?"];
     static template = "discuss.NotificationSettings";
 
     setup() {
