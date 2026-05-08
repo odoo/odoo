@@ -22,7 +22,9 @@ class SaleOrderLine(models.Model):
         with_remaining_hours = self.env.context.get('with_remaining_hours') and not self.env.context.get('skip_remaining_hours', False)
         if with_remaining_hours and any(line.remaining_hours_available for line in self):
             company = self.env.company
-            encoding_uom = company.timesheet_encode_uom_id
+            uom_day = self.env.ref('uom.product_uom_day', raise_if_not_found=False)
+            uom_hour = self.env.ref('uom.product_uom_hour', raise_if_not_found=False)
+            encoding_uom = uom_hour if self.env['ir.config_parameter'].sudo().get_str('hr_timesheet.timesheet_encode_method', 'hours') == 'hours' else uom_day
             is_hour = is_day = False
             unit_label = ''
             if encoding_uom == self.env.ref('uom.product_uom_hour'):

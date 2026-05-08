@@ -713,7 +713,7 @@ class TestSaleService(TestCommonSaleTimesheet):
         self.assertEqual(16 + 8, allocated_hours,
                          "Project's allocated hours should add up correctly.")
 
-        self.env.company.timesheet_encode_uom_id = self.env.ref('uom.product_uom_day')
+        self.env['res.config.settings'].create({'timesheet_encode_method': 'days'}).execute()
         so_copy = self.sale_order.copy()
         so_copy.action_confirm()
         self.assertEqual(allocated_hours, so_copy.project_ids.allocated_hours,

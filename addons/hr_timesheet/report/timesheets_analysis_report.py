@@ -1,8 +1,7 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
-from odoo.tools.sql import drop_view_if_exists, SQL
+from odoo.tools.sql import SQL, drop_view_if_exists
 
 
 class TimesheetsAnalysisReport(models.Model):
@@ -27,6 +26,7 @@ class TimesheetsAnalysisReport(models.Model):
     milestone_id = fields.Many2one('project.milestone', related='task_id.milestone_id')
     message_partner_ids = fields.Many2many('res.partner', compute='_compute_message_partner_ids',
                                            search='_search_message_partner_ids', readonly=True)
+    timesheet_encode_method = fields.Char("Timesheet Encode UoM", readonly=True)
 
     @api.depends('project_id.message_partner_ids', 'task_id.message_partner_ids')
     def _compute_message_partner_ids(self):
@@ -58,7 +58,11 @@ class TimesheetsAnalysisReport(models.Model):
                 A.date AS date,
                 A.amount AS amount,
                 A.unit_amount AS unit_amount,
-                A.partner_id AS partner_id
+                A.partner_id AS partner_id,
+                COALESCE(
+                    (SELECT value FROM ir_config_parameter WHERE key = 'hr_timesheet.timesheet_encode_method'),
+                    'hours'
+                ) AS timesheet_encode_method
         """
 
     @api.model

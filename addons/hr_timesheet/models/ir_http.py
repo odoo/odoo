@@ -16,11 +16,14 @@ class IrHttp(models.AbstractModel):
             company_ids = self.env.user.company_ids
 
             for company in company_ids:
+                uom_day = self.env.ref('uom.product_uom_day', raise_if_not_found=False)
+                uom_hour = self.env.ref('uom.product_uom_hour', raise_if_not_found=False)
+                encode_uom = uom_hour if self.env['ir.config_parameter'].sudo().get_str('hr_timesheet.timesheet_encode_method', 'hours') == 'hours' else uom_day
                 result["user_companies"]["allowed_companies"][company.id].update({
-                    "timesheet_uom_id": company.timesheet_encode_uom_id.id,
+                    "timesheet_uom_id": encode_uom.id,
                     "timesheet_uom_factor": company.project_time_mode_id._compute_quantity(
                         1.0,
-                        company.timesheet_encode_uom_id,
+                        encode_uom,
                         round=False
                     ),
                 })
@@ -29,9 +32,11 @@ class IrHttp(models.AbstractModel):
 
     @api.model
     def get_timesheet_uoms(self):
+        uom_day = self.env.ref('uom.product_uom_day', raise_if_not_found=False)
+        uom_hour = self.env.ref('uom.product_uom_hour', raise_if_not_found=False)
+        timesheet_encode_method = uom_hour if self.env['ir.config_parameter'].sudo().get_str('hr_timesheet.timesheet_encode_method', 'hours') == 'hours' else uom_day
         company_ids = self.env.user.company_ids
-        uom_ids = company_ids.mapped('timesheet_encode_uom_id') | \
-                  company_ids.mapped('project_time_mode_id')
+        uom_ids = timesheet_encode_method | company_ids.mapped('project_time_mode_id')
         return {
             uom.id:
                 {

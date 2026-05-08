@@ -12,12 +12,18 @@ class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
     timesheet_count = fields.Float(string='Timesheet activities', compute='_compute_timesheet_count', groups="hr_timesheet.group_hr_timesheet_user", export_string_translation=False)
-    timesheet_encode_uom_id = fields.Many2one('uom.uom', related='company_id.timesheet_encode_uom_id', export_string_translation=False)
+    timesheet_encode_uom_id = fields.Many2one('uom.uom', compute="_compute_timesheet_encode_uom_id", export_string_translation=False)
     timesheet_total_duration = fields.Integer("Timesheet Total Duration", compute='_compute_timesheet_total_duration',
         help="Total recorded duration, expressed in the encoding UoM, and rounded to the unit", compute_sudo=True,
         groups="hr_timesheet.group_hr_timesheet_user", export_string_translation=False)
     show_hours_recorded_button = fields.Boolean(compute="_compute_show_hours_recorded_button", groups="hr_timesheet.group_hr_timesheet_user", export_string_translation=False, compute_sudo=True)
 
+    def _compute_timesheet_encode_uom_id(self):
+        uom_day = self.env.ref('uom.product_uom_day', raise_if_not_found=False)
+        uom_hour = self.env.ref('uom.product_uom_hour', raise_if_not_found=False)
+        for team in self:
+            timesheet_encode_method = self.env['ir.config_parameter'].sudo().get_str('hr_timesheet.timesheet_encode_method', 'hours')
+            team.timesheet_encode_uom_id = uom_day if timesheet_encode_method == 'days' else uom_hour
 
     def _compute_timesheet_count(self):
         timesheets_per_so = {
@@ -32,7 +38,7 @@ class SaleOrder(models.Model):
         for order in self:
             order.timesheet_count = timesheets_per_so.get(order.id, 0)
 
-    @api.depends('company_id.project_time_mode_id', 'company_id.timesheet_encode_uom_id', 'order_line.timesheet_ids')
+    @api.depends('company_id.project_time_mode_id', 'order_line.timesheet_ids')
     def _compute_timesheet_total_duration(self):
         group_data = self.env['account.analytic.line']._read_group([
             ('order_id', 'in', self.ids), ('project_id', '!=', False)
