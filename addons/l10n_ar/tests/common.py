@@ -629,6 +629,7 @@ class TestArCommon(AccountTestInvoicingCommon):
                   'l10n_latam_use_documents': True,
                   'company_id': cls.env.company.id,
                   'l10n_ar_afip_pos_partner_id': cls.partner_ri.id,
+                  'default_account_id': cls.env['account.chart.template'].ref('sale').default_account_id.id,
                   'sequence': 1}
         values.update(data)
 
