@@ -183,6 +183,7 @@
         'views/snippets/s_title_split.xml',
         'views/snippets/s_hero_maintenance.xml',
         'views/snippets/s_hero_minimalist.xml',
+        'views/snippets/s_launch_countdown.xml',
         'views/snippets/s_projects_grid_minimal.xml',
         'views/snippets/s_features_cards.xml',
         'views/snippets/s_achievements_list.xml',
