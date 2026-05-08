@@ -140,6 +140,7 @@
             "point_of_sale/static/tests/generic_helpers/numpad_util.js",
             "point_of_sale/static/tests/generic_helpers/dialog_util.js",
             "point_of_sale/static/tests/generic_helpers/utils.js",
+            "point_of_sale/static/tests/pos/tours/utils/chrome_util.js",
         ],
         'web.assets_tests': [
             'pos_self_order/static/tests/pos/**/*',
