@@ -95,6 +95,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                     "id": self.user_root.id,
                     "partner_id": self.partner_root.id,
                     "share": False,
+                    "status_message": False,
                 },
             ),
         )
@@ -174,6 +175,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                     "id": self.user_root.id,
                     "partner_id": self.partner_root.id,
                     "share": False,
+                    "status_message": False,
                 },
                 {
                     "all_employee_ids": [],
@@ -319,6 +321,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                     "id": self.user_root.id,
                     "partner_id": self.partner_root.id,
                     "share": False,
+                    "status_message": False,
                 },
                 {
                     "all_employee_ids": [],

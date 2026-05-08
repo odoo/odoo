@@ -940,6 +940,23 @@ async function mail_thread_subscribe(request) {
         .as_dict();
 }
 
+registerRoute("/mail/set_status_message", mail_set_status_message);
+/** @type {RouteCallback} */
+async function mail_set_status_message(request) {
+    /** @type {import("mock_models").BusBus} */
+    const BusBus = this.env["bus.bus"];
+    /** @type {import("mock_models").ResUsers} */
+    const ResUsers = this.env["res.users"];
+    const { message } = await parseRequestParams(request);
+    ResUsers.write([this.env.uid], { status_message: message });
+    const [user] = ResUsers.browse(this.env.uid);
+    BusBus._sendone(
+        [user, "presence"],
+        "mail.record/insert",
+        new Store().add(ResUsers.browse(this.env.uid), ["status_message"]).as_dict()
+    );
+}
+
 function processRequest(fetchParams) {
     /** @type {import("mock_models").DiscussChannel} */
     const DiscussChannel = this.env["discuss.channel"];
