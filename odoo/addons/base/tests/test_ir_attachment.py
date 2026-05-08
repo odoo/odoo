@@ -9,7 +9,7 @@ from unittest.mock import patch
 from PIL import Image
 
 import odoo
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, ValidationError
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 from odoo.tools import mute_logger
 from odoo.tools.image import image_to_base64
@@ -419,3 +419,16 @@ class TestPermissions(TransactionCaseWithUserDemo):
         # even from a record with write permissions
         with self.assertRaises(AccessError):
             copied.copy({'res_model': unwritable._name, 'res_id': unwritable.id})
+
+    def test_circular_attachment(self):
+        """An ir.attachment should not be attached to itself with
+        its res_id. Upon write a UserError should be thrown.
+        """
+
+        Attachment = self.env['ir.attachment']
+        document = Attachment.create({'name': 'document'})
+        with self.assertRaises(ValidationError):
+            document.write({
+                'res_model': 'ir.attachment',
+                'res_id': document.id
+            })
