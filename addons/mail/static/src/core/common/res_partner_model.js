@@ -113,6 +113,17 @@ export class ResPartner extends Record {
     get isBot() {
         return this.eq(this.store.odoobot);
     }
+
+    statusSubtitle() {
+        return this.statusSubtitleParts()
+            .map((part) => part.text)
+            .join(" · ");
+    }
+
+    statusSubtitleParts() {
+        const statusMessage = this.main_user_id?.status_message;
+        return statusMessage ? [{ class: "text-muted", text: statusMessage }] : [];
+    }
 }
 
 ResPartner.register();

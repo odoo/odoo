@@ -164,6 +164,7 @@
                 "<t t-out="option.thread.getPersonaName(partner)"/>"
             </t>
         </strong>
+        <span t-if="partner.statusSubtitle()" class="o-mail-Composer-suggestionPartner-statusSubtitle me-1 smaller text-truncate align-self-center"><t t-call="mail.statusSubtitle" partner="partner"/></span>
         <span t-if="partnerEmail" class="o-mail-Composer-suggestionPartner-email text-600 text-truncate align-self-center opacity-75" t-att-title="title">(<t t-out="partnerEmail"/>)</span>
     </t>
 

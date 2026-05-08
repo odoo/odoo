@@ -8,5 +8,16 @@ const resPartnerPatch = {
         const employee = this.employee_id || this.main_user_id?.employee_id;
         return employee?.outOfOfficeDateEndText ?? "";
     },
+
+    statusSubtitleParts() {
+        const parts = super.statusSubtitleParts();
+        if (!this.outOfOfficeDateEndText) {
+            return parts;
+        }
+        return [
+            { class: "text-warning fw-bold opacity-75", text: this.outOfOfficeDateEndText },
+            ...parts,
+        ];
+    },
 };
 patch(ResPartner.prototype, resPartnerPatch);

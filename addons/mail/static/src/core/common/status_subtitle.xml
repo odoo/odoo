@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="mail.statusSubtitle">
+        <t t-foreach="partner.statusSubtitleParts()" t-as="part" t-key="part_index">
+            <t t-if="!part_first"> · </t><span t-att-class="part.class" t-out="part.text"/>
+        </t>
+    </t>
+</templates>
