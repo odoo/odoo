@@ -3,7 +3,7 @@ import { ChannelMember } from "@mail/discuss/core/common/channel_member";
 import { ChannelActionDialog } from "@mail/discuss/core/common/channel_action_dialog";
 import { ChannelInvitation } from "@mail/discuss/core/common/channel_invitation";
 
-import { Component, onWillUpdateProps, onWillStart } from "@odoo/owl";
+import { Component, onWillRender, onWillUpdateProps, onWillStart } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { useState } from "@web/owl2/utils";
 
@@ -11,6 +11,22 @@ import { useService } from "@web/core/utils/hooks";
 import { useSequential } from "@mail/utils/common/hooks";
 
 let nextId = 0;
+const SEARCH_RESULT_LIMIT = 100;
+
+/**
+ * @typedef {Object} MemberCategory
+ * @property {number} sequence sort key; lower is rendered first.
+ * @property {(channel: import("models").DiscussChannel) => import("models").ChannelMember[]} getMembers
+ * @property {string} label
+ * @property {boolean} [showCount=true] whether to append the member count to the label.
+ */
+
+/** @type {MemberCategory[]} */
+export const MEMBER_CATEGORIES = [
+    { sequence: 10, getMembers: (ch) => ch.onlineMembers, label: _t("Online") },
+    { sequence: 20, getMembers: (ch) => ch.offlineMembers, label: _t("Offline") },
+    { sequence: 30, getMembers: (ch) => ch.unknownStatusMembers, label: _t("Others") },
+];
 
 /**
  * @typedef {Object} Props
@@ -33,6 +49,10 @@ export class ChannelMemberList extends Component {
         this.state = useState({ searchTerm: "", isSearching: false });
         this.lastFetchedSearch = undefined;
         this.sequential = useSequential();
+        this.categories = [];
+        onWillRender(() => {
+            this.categories = this.computeCategories(this.state.searchTerm);
+        });
         onWillStart(() => {
             if (this.props.channel.fetchMembersState === "not_fetched") {
                 this.props.channel.fetchChannelMembers();
@@ -52,67 +72,9 @@ export class ChannelMemberList extends Component {
         });
     }
 
-    /* @param {import("models").ChannelMember[]} members */
-    _getFilteredByTerm(members) {
-        if (!this.state.searchTerm) {
-            return members;
-        }
-        const term = this.state.searchTerm.toLowerCase();
-        return members.filter((m) => m.name?.toLowerCase().includes(term));
-    }
-
-    get matchingOnlineMembers() {
-        return this._getFilteredByTerm(this.props.channel.onlineMembers);
-    }
-
-    get matchingOfflineMembers() {
-        return this._getFilteredByTerm(this.props.channel.offlineMembers);
-    }
-
-    get matchingUnknownStatusMembers() {
-        return this._getFilteredByTerm(this.props.channel.unknownStatusMembers);
-    }
-
-    get filteredOnlineMembers() {
-        if (!this.state.searchTerm) {
-            return this.matchingOnlineMembers;
-        }
-        return this.matchingOnlineMembers.slice(0, 100);
-    }
-
-    get filteredOfflineMembers() {
-        if (!this.state.searchTerm) {
-            return this.matchingOfflineMembers;
-        }
-        const remaining = 100 - this.filteredOnlineMembers.length;
-        return this.matchingOfflineMembers.slice(0, Math.max(0, remaining));
-    }
-
-    get filteredUnknownStatusMembers() {
-        if (!this.state.searchTerm) {
-            return this.matchingUnknownStatusMembers;
-        }
-        const remaining =
-            100 - this.filteredOnlineMembers.length - this.filteredOfflineMembers.length;
-        return this.matchingUnknownStatusMembers.slice(0, Math.max(0, remaining));
-    }
-
-    get onlineSectionText() {
-        return _t("Online - %(online_count)s", {
-            online_count: this.filteredOnlineMembers.length,
-        });
-    }
-
-    get offlineSectionText() {
-        return _t("Offline - %(offline_count)s", {
-            offline_count: this.filteredOfflineMembers.length,
-        });
-    }
-
-    get unknownStatusSectionText() {
-        return _t("Others - %(unknown_status_count)s", {
-            unknown_status_count: this.filteredUnknownStatusMembers.length,
-        });
+    /** @param {ReturnType<typeof ChannelMemberList.prototype.computeCategories>} categories */
+    hasFilteredMembers(categories) {
+        return categories.some((c) => c.filtered.length > 0);
     }
 
     get isSearchResultCapped() {
@@ -120,27 +82,31 @@ export class ChannelMemberList extends Component {
             return false;
         }
         return (
-            this.matchingOnlineMembers.length +
-                this.matchingOfflineMembers.length +
-                this.matchingUnknownStatusMembers.length >=
-            100
+            this.categories.reduce((sum, c) => sum + c.matching.length, 0) >= SEARCH_RESULT_LIMIT
         );
     }
 
-    get hasFilteredMembers() {
-        return (
-            this.filteredOnlineMembers.length > 0 ||
-            this.filteredOfflineMembers.length > 0 ||
-            this.filteredUnknownStatusMembers.length > 0
-        );
+    get searchResultCapHint() {
+        return _t("Showing first %(limit)s members. Narrow your search to see more.", {
+            limit: SEARCH_RESULT_LIMIT,
+        });
     }
 
-    get filteredMembersCount() {
-        return (
-            this.filteredOnlineMembers.length +
-            this.filteredOfflineMembers.length +
-            this.filteredUnknownStatusMembers.length
-        );
+    /** @param {string} searchTerm */
+    computeCategories(searchTerm) {
+        const term = searchTerm.toLowerCase();
+        let remaining = SEARCH_RESULT_LIMIT;
+        return [...MEMBER_CATEGORIES]
+            .sort((a, b) => a.sequence - b.sequence)
+            .map(({ getMembers, label, showCount = true }) => {
+                const all = getMembers(this.props.channel);
+                const matching = term
+                    ? all.filter((m) => m.name?.toLowerCase().includes(term))
+                    : all;
+                const filtered = term ? matching.slice(0, Math.max(0, remaining)) : matching;
+                remaining -= filtered.length;
+                return { label, matching, filtered, showCount };
+            });
     }
 
     isSearchMoreSpecificThanLastFetch(searchTerm) {
@@ -148,10 +114,6 @@ export class ChannelMemberList extends Component {
             this.lastFetchedSearch?.channelId === this.props.channel.id &&
             searchTerm.startsWith(this.lastFetchedSearch.searchTerm)
         );
-    }
-
-    get searchResultCapHint() {
-        return _t("Showing first 100 members. Narrow your search to see more.");
     }
 
     /** @param {KeyboardEvent} ev */
@@ -164,7 +126,7 @@ export class ChannelMemberList extends Component {
             return;
         }
         if (
-            this.lastFetchedSearch?.count === 0 &&
+            !this.lastFetchedSearch?.hasResults &&
             this.isSearchMoreSpecificThanLastFetch(searchTerm)
         ) {
             this.state.isSearching = false;
@@ -178,7 +140,7 @@ export class ChannelMemberList extends Component {
                     this.lastFetchedSearch = {
                         channelId: this.props.channel.id,
                         searchTerm,
-                        count: this.filteredMembersCount,
+                        hasResults: this.hasFilteredMembers(this.computeCategories(searchTerm)),
                     };
                 }
             } finally {
