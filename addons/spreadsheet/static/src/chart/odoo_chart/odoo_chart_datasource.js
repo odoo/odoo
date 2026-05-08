@@ -12,7 +12,7 @@ const { chartDataSourceRegistry } = registries;
 const { CHART_TYPES } = constants;
 
 // Types not supported by odoo charts (at least for now)
-const EXCLUDED_CHART_TYPES = ["scorecard", "gauge", "calendar"];
+const EXCLUDED_CHART_TYPES = ["scorecard", "gauge", "calendar", "bubble"];
 
 function generateDataSetId(dataSource, dataSet) {
     const identifiers = JSON.parse([...dataSet.identifiers][0] ?? "[]");
