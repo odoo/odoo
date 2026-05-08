@@ -381,6 +381,7 @@ export class GeneratePrinterData {
                     conditions: {
                         module_pos_restaurant: this.config.module_pos_restaurant,
                     },
+                    _rawChange: reprint ? null : changes[0],
                 });
             }
         }

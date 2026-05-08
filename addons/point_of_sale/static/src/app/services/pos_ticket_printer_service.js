@@ -233,6 +233,7 @@ export class PosTicketPrinterService {
         let isPrinted = false;
         const unsuccessfulPrints = [];
         const retryPrinters = new Set();
+        let rawChangeForRetry = null;
 
         for (const printer of printers) {
             const template = "point_of_sale.pos_order_change_receipt";
@@ -241,6 +242,7 @@ export class PosTicketPrinterService {
             const changes = generator.generatePreparationData(categoryIds, opts);
 
             for (const ticket of changes) {
+                rawChangeForRetry = rawChangeForRetry || ticket._rawChange;
                 if (ticket.extra_data.reprint && !opts.explicitReprint) {
                     continue;
                 }
@@ -272,7 +274,17 @@ export class PosTicketPrinterService {
                 title: _t("Printing failed"),
                 body: unsuccessfulPrints.join("\n"),
             };
-            this.showPrinterErrorDialog(message, () => this.printOrderChanges(...arguments));
+            this.showPrinterErrorDialog(
+                message,
+                this.printOrderChanges.bind(this, {
+                    order,
+                    opts: {
+                        ...opts,
+                        orderChange: rawChangeForRetry,
+                    },
+                    retryPrinters,
+                })
+            );
         }
 
         return isPrinted;
