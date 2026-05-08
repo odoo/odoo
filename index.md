@@ -10,10 +10,9 @@ Implementar un proceso de desarrollo de software que integre la metodología ág
 ## 2. Información del Software Seleccionado
 * **Nombre del Producto:** Odoo ERP (Open Source).
 * **Repositorio:** [https://github.com/roydanpe/odooIPS](https://github.com/roydanpe/odooIPS)
-* **Licencia:** **MIT** verificada, permitiendo fork, modificación y uso académico sin restricciones.
 * **Dominio:** Sistema empresarial (ERP/CRM) aplicado al rubro comercial.
-* **Complejidad:** Mediana. Se trabajará con el **Módulo de Ventas**, el cual cuenta con más de 10,000 líneas de código (> 10 KLOC).
-* **Infraestructura DevOps:** El proyecto incluye **Docker Compose**, lo que facilita la configuración del pipeline de automatización solicitado.
+* **Complejidad:** Mediana. Se trabajará con el [**Módulo de Ventas**](arquitectura.md), el cual cuenta con más de 10,000 líneas de código (> 10 KLOC).
+* [**Viabilidad Técnica y Legal:**](arquitectura.md) Licencia MIT (verificada para uso académico) e infraestructura compatible con Docker Compose, facilitando la implementación del pipeline de automatización solicitado.
 
 ## 3. Equipo y Metodología de Trabajo
 El equipo de trabajo está formado por 5 estudiantes. El rol de **Líder de Equipo** será rotativo por cada Sprint para desarrollar habilidades de liderazgo y responsabilidad.
