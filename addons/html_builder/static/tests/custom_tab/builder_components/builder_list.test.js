@@ -464,8 +464,7 @@ test("drops blank textual entries", async () => {
     expect(".we-bg-options-container input").toHaveCount(1);
 });
 
-test.tags("owl3");
-test.todo("loads more items when the last row intersects", async () => {
+test("loads more items when the last row intersects", async () => {
     addBuilderAction({
         customAction: class extends BuilderAction {
             static id = "customAction";
