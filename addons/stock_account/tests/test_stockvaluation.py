@@ -3354,3 +3354,17 @@ class TestStockValuation(TestStockValuationCommon):
             {'account_id': self.product_avco_auto.categ_id.account_stock_variation_id.id, 'debit': 0, 'credit': 10},
             {'account_id': self.product_avco_auto.categ_id.property_stock_valuation_account_id.id, 'debit': 10, 'credit': 0}
         ])
+
+    def test_generate_entry_branch_correct_account(self):
+        """ When generating entry on a branch and the main company is also selected, the account move is
+        linked to the branch
+        """
+        # Unbilled inventory move in branch
+        self.product_avco_auto.with_company(self.branch).categ_id.property_cost_method = 'average'
+        self.product_avco_auto.with_company(self.branch).categ_id.property_valuation = 'real_time'
+        self._make_in_move(self.product_avco_auto, 2, unit_cost=50, company=self.branch)
+
+        # generate entry on branch with main comp also selected
+        closing = self.branch.with_context(allowed_company_ids=[self.branch.id, self.company.id]).action_close_stock_valuation()
+        closing_lines = self.env['account.move'].browse(closing['res_id']).line_ids
+        self.assertEqual(closing_lines.move_id.company_id.id, self.branch.id)
