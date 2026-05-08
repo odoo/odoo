@@ -1,3 +1,7 @@
+---
+layout: default
+title: Plan de Proyecto
+---
 # Plan de Proyecto: Scrum y DevOps – Odoo (Módulo Ventas)
 
 ## 1. Objetivo del Proyecto
