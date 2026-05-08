@@ -458,6 +458,15 @@ class IrAttachment(models.Model):
                 if not any(has_group(g) for g in attachment.get_serving_groups()):
                     raise ValidationError(_("Sorry, you are not allowed to write on this document"))
 
+    @api.constrains('res_model', 'res_id')
+    def _check_circular_attachment(self):
+        for record in self.sudo():
+            if record.res_model == 'ir.attachment' and record.id == record.res_id:
+                raise ValidationError(_(
+                    "You cannot attach an attachment to itself.\n"
+                    "Attachment %(record)s cannot have res_id: %(res_id)s",
+                    record=record, res_id=record))
+
     @api.model
     def check(self, mode, values=None):
         """ Restricts the access to an ir.attachment, according to referred mode """
