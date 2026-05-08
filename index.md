@@ -1,7 +1,7 @@
 # Plan de Proyecto: Scrum y DevOps – Odoo (Módulo Ventas)
 
 ## 1. Objetivo del Proyecto
-[cite_start]Implementar un proceso de desarrollo de software que integre la metodología ágil **Scrum** con prácticas **DevOps** automatizadas sobre el proyecto de código abierto **Odoo (Módulo Ventas)**[cite: 7, 8]. [cite_start]El propósito es que el equipo comprenda, analice y ejecute las fases del ciclo de vida del software mediante la refactorización o mejora de este producto[cite: 8].
+Implementar un proceso de desarrollo de software que integre la metodología ágil **Scrum** con prácticas **DevOps** automatizadas sobre el proyecto de código abierto **Odoo (Módulo Ventas)**[cite: 7, 8]. [cite_start]El propósito es que el equipo comprenda, analice y ejecute las fases del ciclo de vida del software mediante la refactorización o mejora de este producto[cite: 8].
 
 ## 2. Información del Software Seleccionado
 * [cite_start]**Nombre del Producto:** Odoo ERP (Open Source)[cite: 10, 15].
