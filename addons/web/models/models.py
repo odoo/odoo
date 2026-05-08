@@ -219,11 +219,18 @@ class Base(models.AbstractModel):
                 if field_spec_has_fields:
                     limit = field_spec.get('limit')
                     if limit is not None:
-                        ids_to_read = OrderedSet(
-                            id_
-                            for values in values_list
-                            for id_ in values[field_name][:limit]
-                        )
+                        # Virtual records (NewId) created during onchange must
+                        # never be truncated: they have no persisted source, so
+                        # any virtual id dropped here is silently lost when the
+                        # client saves the parent record. Only paginate real
+                        # (persisted) records.
+                        ids_to_read = OrderedSet()
+                        for values in values_list:
+                            x2m_ids = values[field_name]
+                            virtual_ids = [id_ for id_ in x2m_ids if isinstance(id_, NewId)]
+                            real_ids = [id_ for id_ in x2m_ids if not isinstance(id_, NewId)]
+                            ids_to_read.update(virtual_ids)
+                            ids_to_read.update(real_ids[:limit])
                         co_records = co_records.browse(ids_to_read)
 
                     x2many_data = {
