@@ -52,6 +52,7 @@ class AccountPaymentRegister(models.TransientModel):
         compute='_compute_partner_bank_id',
         domain="[('id', 'in', available_partner_bank_ids)]",
     )
+    allow_out_payment = fields.Boolean(related='partner_bank_id.allow_out_payment')
     company_currency_id = fields.Many2one('res.currency', string="Company Currency",
         related='company_id.currency_id')
     qr_code = fields.Html(
