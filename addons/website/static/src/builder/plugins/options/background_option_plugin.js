@@ -71,7 +71,6 @@ class WebsiteBackgroundVideoPlugin extends Plugin {
                                 "397142251",
                                 "763851966",
                                 "486931161",
-                                "499761556",
                                 "1092009120",
                                 "728584384",
                                 "865314310",
