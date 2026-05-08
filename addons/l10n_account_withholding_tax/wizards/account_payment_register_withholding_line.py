@@ -98,21 +98,23 @@ class AccountPaymentRegisterWithholdingLine(models.TransientModel):
     def _compute_withholding_account_ids(self):
         for line in self:
             accounts = line.payment_register_id.line_ids.move_id._get_withhold_account_by_sum().keys()
-            line.withholding_account_ids = [acc._origin.id for acc in accounts]
+            if accounts:
+                line.withholding_account_ids = [acc._origin.id for acc in accounts]
+            else:
+                line.withholding_account_ids = False
 
     @api.depends('withholding_account_ids')
     def _compute_withholding_tax_ids(self):
         for line in self:
-            line.withholding_tax_ids = line.withholding_account_ids.withholding_tax_section_id.tax_ids
+            if line.withholding_account_ids:
+                line.withholding_tax_ids = line.withholding_account_ids.withholding_tax_section_id.tax_ids
+            else:
+                domain = self._get_withholding_tax_domain(line.company_id, line.payment_register_id.payment_type)
+                line.withholding_tax_ids = self.env['account.tax'].search(domain)
 
     @api.depends('tax_id', 'payment_register_id.line_ids.move_id')
     def _compute_base_amount(self):
-        for line in self:
-            if line.tax_id:
-                withhold_account_by_sum = line.payment_register_id.line_ids.move_id._get_withhold_account_by_sum()
-                for account, amount in withhold_account_by_sum.items():
-                    if line.tax_id in account.withholding_tax_section_id.tax_ids:
-                        line.base_amount = amount
+        super()._compute_base_amount()
 
     # -----------------------
     # CRUD, inherited methods

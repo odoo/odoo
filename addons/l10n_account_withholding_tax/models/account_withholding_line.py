@@ -51,7 +51,8 @@ class AccountWithholdingLine(models.AbstractModel):
         index=True,
         domain="[('type_tax_use', '=', type_tax_use), ('is_withholding_tax_on_payment', '=', True)]",
     )
-    withholding_sequence_id = fields.Many2one(related='tax_id.withholding_sequence_id')
+    withholding_tax_section_id = fields.Many2one(related='tax_id.withholding_tax_section_id')
+    withholding_sequence_id = fields.Many2one(related='withholding_tax_section_id.withholding_sequence_id')
     source_base_amount_currency = fields.Monetary(currency_field='source_currency_id')
     source_base_amount = fields.Monetary(currency_field='comodel_company_currency_id')
     source_tax_amount_currency = fields.Monetary(currency_field='source_currency_id')
@@ -371,8 +372,7 @@ class AccountWithholdingLine(models.AbstractModel):
         base_lines = []
         for line in self:
             if not line.name:
-                line.name = line.tax_id.withholding_sequence_id.next_by_id()
-
+                line.name = line.tax_id.withholding_tax_section_id.withholding_sequence_id.next_by_id()
             base_line = line._prepare_base_line_for_taxes_computation()
             AccountTax._add_tax_details_in_base_line(base_line, company)
             base_lines.append(base_line)
@@ -501,17 +501,22 @@ class AccountWithholdingLine(models.AbstractModel):
         existing_withholding_line_map = self.grouped(key=lambda l: l._get_grouping_key())
 
         def grouping_function(base_line_data, tax_data):
-            if not tax_data:
+            account = base_line_data['account_id']
+            section = account.withholding_tax_section_id
+
+            if not section or not section.tax_ids:
                 return None
-            account = company.withholding_tax_base_account_id or base_line_data['account_id']
-            tax = tax_data['tax']
-            # Note: keep this aligned with _get_grouping_key
+
+            tax = section.tax_ids[:1]
+
+            account_id = company.withholding_tax_base_account_id or account
+
             return {
                 'name': base_line_data.get('manual_tax_line_name', tax.name),
                 'analytic_distribution': base_line_data['analytic_distribution'],
-                'account': account.id,
-                'tax_id': tax_data['tax'].id,
-                'skip': not tax_data['tax'].is_withholding_tax_on_payment,
+                'account': account_id.id,
+                'tax_id': tax.id,
+                'skip': not tax.is_withholding_tax_on_payment,
                 'currency_id': base_line_data['currency_id'].id,
             }
 
@@ -521,6 +526,22 @@ class AccountWithholdingLine(models.AbstractModel):
         for grouping_key, values in values_per_grouping_key.items():
             if not grouping_key or grouping_key['skip']:
                 continue
+
+            tax = self.env['account.tax'].browse(grouping_key['tax_id'])
+            base_amount = values['base_amount']
+            base_amount_currency = values['base_amount_currency']
+            for base_line in new_base_lines:
+                for tax_data in base_line.get('tax_details', {}).get('taxes_data', []):
+
+                    if tax_data['tax'].include_base_amount:
+                        base_amount += tax_data['tax_amount']  # or -= depending on sign
+                        base_amount_currency += tax_data['tax_amount_currency']  # or -= depending on sign
+
+            values['base_amount'] = base_amount
+            values['base_amount_currency'] = base_amount_currency
+            # recompute tax manually
+            values['tax_amount'] = values['base_amount'] * tax.amount / 100
+            values['tax_amount_currency'] = values['base_amount_currency'] * tax.amount / 100
 
             existing_line = existing_withholding_line_map.get(grouping_key)
 

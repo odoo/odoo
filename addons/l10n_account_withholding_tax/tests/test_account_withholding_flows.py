@@ -5,40 +5,22 @@ from odoo import Command, fields
 from odoo.exceptions import UserError
 from odoo.tests import tagged, Form
 
-from odoo.addons.account.tests.common import TestTaxCommon
+from odoo.addons.l10n_account_withholding_tax.tests.common import TestWithholdTaxCommon
 from odoo.addons.analytic.tests.common import AnalyticCommon
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
-class TestL10nAccountWithholdingTaxesFlows(TestTaxCommon, AnalyticCommon):
+class TestL10nAccountWithholdingTaxesFlows(TestWithholdTaxCommon, AnalyticCommon):
 
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        # Set the withholding account so that we don't have to worry about it.
-        cls.company_data['company'].withholding_tax_base_account_id = cls.env['account.account'].create({
-            'code': 'WITHB',
-            'name': 'Withholding Tax Base Account',
-            'account_type': 'asset_current',
-        })
-        # We create a sequence for the same reason, so that we can forget about it.
-        cls.withholding_sequence = cls.env['ir.sequence'].create({
-            'implementation': 'no_gap',
-            'name': 'Withholding Sequence',
-            'padding': 4,
-            'number_increment': 1,
-        })
         cls.foreign_currency = cls.setup_other_currency('EUR')
-        cls.outstanding_account = cls.env['account.account'].create({
-            'name': "Outstanding Payments",
-            'code': 'OSTP420',
-            'account_type': 'asset_current'
-        })
 
     def test_no_withholding_tax_invoice_but_included_one_on_payment(self):
         """ Test a flow where not withholding tax is set on the invoice line, but one is added to the payment register. """
         invoice_tax = self.percent_tax(15)
-        withholding_tax = self.percent_tax(-1, is_withholding_tax_on_payment=True, withholding_sequence_id=self.withholding_sequence.id)
+        withholding_tax = self.percent_tax(-1, is_withholding_tax_on_payment=True)
 
         invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',
@@ -84,7 +66,7 @@ class TestL10nAccountWithholdingTaxesFlows(TestTaxCommon, AnalyticCommon):
         Afterward, register the payment separately.
         """
         invoice_tax = self.percent_tax(15)
-        withholding_tax = self.percent_tax(-1, is_withholding_tax_on_payment=True, withholding_sequence_id=self.withholding_sequence.id)
+        withholding_tax = self.percent_tax(-1, is_withholding_tax_on_payment=True)
 
         invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',
@@ -166,15 +148,13 @@ class TestL10nAccountWithholdingTaxesFlows(TestTaxCommon, AnalyticCommon):
         foreign_curr = self.foreign_currency
 
         invoice_tax = self.percent_tax(15)
-        withholding_tax1 = self.percent_tax(
+        self.percent_tax(
             amount=-1,
             is_withholding_tax_on_payment=True,
-            withholding_sequence_id=self.withholding_sequence.id,
         )
         withholding_tax2 = self.percent_tax(
             amount=-2,
             is_withholding_tax_on_payment=True,
-            withholding_sequence_id=self.withholding_sequence.id,
         )
 
         invoice = self.env['account.move'].create({
@@ -183,7 +163,8 @@ class TestL10nAccountWithholdingTaxesFlows(TestTaxCommon, AnalyticCommon):
             'currency_id': foreign_curr.id,
             'invoice_line_ids': [Command.create({
                 'product_id': self.product_a.id,
-                'tax_ids': [Command.set((invoice_tax + withholding_tax1).ids)],
+                'account_id': self.purchase_account.id,
+                'tax_ids': [Command.set(invoice_tax.ids)],
             })],
         })
         invoice.action_post()
@@ -348,7 +329,9 @@ class TestL10nAccountWithholdingTaxesFlows(TestTaxCommon, AnalyticCommon):
         Simply test that an invoice having a product with a default withholding tax will cause
         that tax to appear on a default line in the wizard.
         """
-        self.product_b.taxes_id = self.percent_tax(-1, is_withholding_tax_on_payment=True, withholding_sequence_id=self.withholding_sequence.id)
+        self.percent_tax(-1, is_withholding_tax_on_payment=True)
+        self.product_b.property_account_income_id = self.purchase_account
+        self.product_b.taxes_id = False
 
         invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',
@@ -380,7 +363,7 @@ class TestL10nAccountWithholdingTaxesFlows(TestTaxCommon, AnalyticCommon):
     def test_withholding_not_payment_account_on_method_line(self):
         """ Test that when no payment account is set on the payment method line, the one from the wizard is used. """
         invoice_tax = self.percent_tax(15)
-        withholding_tax = self.percent_tax(-1, is_withholding_tax_on_payment=True, withholding_sequence_id=self.withholding_sequence.id)
+        withholding_tax = self.percent_tax(-1, is_withholding_tax_on_payment=True)
         self.company_data['default_journal_bank'].inbound_payment_method_line_ids.payment_account_id = False
 
         invoice = self.env['account.move'].create({
@@ -444,7 +427,6 @@ class TestL10nAccountWithholdingTaxesFlows(TestTaxCommon, AnalyticCommon):
         withholding_tax = self.percent_tax(
             amount=-1,
             is_withholding_tax_on_payment=True,
-            withholding_sequence_id=self.withholding_sequence.id,
             invoice_repartition_line_ids=[
                 Command.create({'repartition_type': 'base', 'factor_percent': 100.0, 'tag_ids': base_tag_1.ids}),
                 Command.create({'repartition_type': 'tax', 'factor_percent': 100.0, 'tag_ids': tax_tag_1.ids}),
@@ -457,7 +439,6 @@ class TestL10nAccountWithholdingTaxesFlows(TestTaxCommon, AnalyticCommon):
         withholding_tax_2 = self.percent_tax(
             amount=-2,
             is_withholding_tax_on_payment=True,
-            withholding_sequence_id=self.withholding_sequence.id,
             invoice_repartition_line_ids=[
                 Command.create({'repartition_type': 'base', 'factor_percent': 100.0, 'tag_ids': base_tag_2.ids}),
                 Command.create({'repartition_type': 'tax', 'factor_percent': 100.0, 'tag_ids': tax_tag_2.ids}),
@@ -511,12 +492,12 @@ class TestL10nAccountWithholdingTaxesFlows(TestTaxCommon, AnalyticCommon):
     @freeze_time('2024-01-01')
     def test_register_payment__with_installments(self):
         """ When registering a payment with payment terms, the withholding amount should follow the terms. """
-        withholding_tax = self.percent_tax(
+        self.percent_tax(
             amount=-3,
             is_withholding_tax_on_payment=True,
-            withholding_sequence_id=self.withholding_sequence.id,
         )
-        self.product_a.taxes_id = withholding_tax
+        self.product_a.property_account_income_id = self.purchase_account
+        self.product_a.taxes_id = False
 
         invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',
@@ -558,10 +539,9 @@ class TestL10nAccountWithholdingTaxesFlows(TestTaxCommon, AnalyticCommon):
         """ Ensure that a withholding tax with multiple tax repartition line triggers multiple lines in the final entry
         with correct tax tag, amount and account.
         """
-        withholding_tax = self.percent_tax(
+        self.percent_tax(
             -1,
             is_withholding_tax_on_payment=True,
-            withholding_sequence_id=self.withholding_sequence.id,
             invoice_repartition_line_ids=[
                 Command.create({'repartition_type': 'base', 'factor_percent': 100.0}),
                 Command.create({'repartition_type': 'tax', 'factor_percent': 60.0}),
@@ -573,7 +553,8 @@ class TestL10nAccountWithholdingTaxesFlows(TestTaxCommon, AnalyticCommon):
                 Command.create({'repartition_type': 'tax', 'factor_percent': 40.0}),
             ],
         )
-        self.product_b.taxes_id = withholding_tax
+        self.product_b.property_account_income_id = self.purchase_account
+        self.product_b.taxes_id = False
         invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',
             'partner_id': self.partner_a.id,
@@ -617,18 +598,18 @@ class TestL10nAccountWithholdingTaxesFlows(TestTaxCommon, AnalyticCommon):
         """ Ensure that the analytic distribution set on an invoice line is correctly applied to the final entry if the
         withholding tax is set to affect analytics.
         """
-        withholding_tax = self.percent_tax(
+        self.percent_tax(
             amount=-1,
             is_withholding_tax_on_payment=True,
-            withholding_sequence_id=self.withholding_sequence.id,
             analytic=True,
         )
+        self.product_b.taxes_id = False
         invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',
             'partner_id': self.partner_a.id,
             'invoice_line_ids': [Command.create({
                 'product_id': self.product_b.id,
-                'tax_ids': withholding_tax.ids,
+                'account_id': self.purchase_account.id,
                 'analytic_distribution': {
                     self.analytic_account_3.id: 50,
                     self.analytic_account_4.id: 50,
@@ -679,18 +660,18 @@ class TestL10nAccountWithholdingTaxesFlows(TestTaxCommon, AnalyticCommon):
         """ Test that two invoice line with the same product/taxes but different analytic distribution will result in two
         withholding tax lines.
         """
-        withholding_tax = self.percent_tax(
+        self.percent_tax(
             amount=-1,
             is_withholding_tax_on_payment=True,
-            withholding_sequence_id=self.withholding_sequence.id,
             analytic=True,
         )
+        self.product_b.taxes_id = False
         invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',
             'partner_id': self.partner_a.id,
             'invoice_line_ids': [Command.create({
                 'product_id': self.product_b.id,
-                'tax_ids': withholding_tax.ids,
+                'account_id': self.purchase_account.id,
                 'analytic_distribution': {
                     self.analytic_account_3.id: 50.0,
                     self.analytic_account_4.id: 50.0,
@@ -698,7 +679,7 @@ class TestL10nAccountWithholdingTaxesFlows(TestTaxCommon, AnalyticCommon):
             }),
             Command.create({
                 'product_id': self.product_b.id,
-                'tax_ids': withholding_tax.ids,
+                'account_id': self.purchase_account.id,
                 'analytic_distribution': {
                     self.analytic_account_3.id: 25.0,
                     self.analytic_account_4.id: 75.0,
@@ -764,10 +745,9 @@ class TestL10nAccountWithholdingTaxesFlows(TestTaxCommon, AnalyticCommon):
 
     def test_outstanding_account_marked_as_reconcilable(self):
         """ Ensure that an account set as outstanding account in the wizard will be marked as reconcilable if it is not yet done. """
-        tax = self.percent_tax(
+        self.percent_tax(
             amount=-1,
             is_withholding_tax_on_payment=True,
-            withholding_sequence_id=self.withholding_sequence.id,
         )
         invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',
@@ -775,7 +755,7 @@ class TestL10nAccountWithholdingTaxesFlows(TestTaxCommon, AnalyticCommon):
             'currency_id': self.foreign_currency.id,
             'invoice_line_ids': [Command.create({
                 'product_id': self.product_a.id,
-                'tax_ids': [Command.set(tax.ids)],
+                'account_id': self.purchase_account.id,
             })],
         })
         invoice.action_post()
@@ -789,7 +769,7 @@ class TestL10nAccountWithholdingTaxesFlows(TestTaxCommon, AnalyticCommon):
     def test_payment_synchronize_to_moves(self):
         """ Test that the payment and the journal entry behind it are synchronized as expected when the payment record is updated. """
         invoice_tax = self.percent_tax(15)
-        withholding_tax = self.percent_tax(-1, is_withholding_tax_on_payment=True, withholding_sequence_id=self.withholding_sequence.id)
+        withholding_tax = self.percent_tax(-1, is_withholding_tax_on_payment=True)
 
         invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',
@@ -847,7 +827,7 @@ class TestL10nAccountWithholdingTaxesFlows(TestTaxCommon, AnalyticCommon):
 
     def test_display_withholding(self):
         """ Simple test that checks if display_withholding is set or not depending on the state of the database. """
-        available_withholding_taxes = self.percent_tax(-1, is_withholding_tax_on_payment=True, withholding_sequence_id=self.withholding_sequence.id)
+        available_withholding_taxes = self.percent_tax(-1, is_withholding_tax_on_payment=True)
         payment = self.env['account.payment'].create({
             'amount': 50.0,
             'payment_type': 'inbound',
@@ -864,7 +844,8 @@ class TestL10nAccountWithholdingTaxesFlows(TestTaxCommon, AnalyticCommon):
 
     def test_withholding_line_base_amount(self):
         """ Test that a withholding line base amount cannot be less than or equal to 0 """
-        self.product_a.taxes_id = self.percent_tax(-1, is_withholding_tax_on_payment=True, withholding_sequence_id=self.withholding_sequence.id)
+        self.percent_tax(-1, is_withholding_tax_on_payment=True)
+        self.product_a.property_account_income_id = self.purchase_account
 
         invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',
@@ -890,10 +871,9 @@ class TestL10nAccountWithholdingTaxesFlows(TestTaxCommon, AnalyticCommon):
         The second time, the register payment wizard should find the previous outstanding account and use it as default.
         """
         self.company_data['default_journal_bank'].inbound_payment_method_line_ids.payment_account_id = False
-        withholding_tax = self.percent_tax(
+        self.percent_tax(
             amount=-1,
             is_withholding_tax_on_payment=True,
-            withholding_sequence_id=self.withholding_sequence.id,
         )
 
         invoice = self.env['account.move'].create({
@@ -902,7 +882,7 @@ class TestL10nAccountWithholdingTaxesFlows(TestTaxCommon, AnalyticCommon):
             'invoice_line_ids': [Command.create({
                 'product_id': self.product_a.id,
                 'price_unit': 1000.0,
-                'tax_ids': [Command.set(withholding_tax.ids)],
+                'account_id': self.purchase_account.id,
             })],
         })
         invoice.action_post()
@@ -923,7 +903,7 @@ class TestL10nAccountWithholdingTaxesFlows(TestTaxCommon, AnalyticCommon):
 
     def test_cannot_register_negative_payment(self):
         """ Test that you cannot register a payment where the withholding amount is higher than the payment amount. """
-        withholding_tax = self.percent_tax(-1, is_withholding_tax_on_payment=True, withholding_sequence_id=self.withholding_sequence.id)
+        withholding_tax = self.percent_tax(-1, is_withholding_tax_on_payment=True)
 
         invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',
@@ -931,7 +911,7 @@ class TestL10nAccountWithholdingTaxesFlows(TestTaxCommon, AnalyticCommon):
             'invoice_line_ids': [Command.create({
                 'product_id': self.product_a.id,
                 'price_unit': 1000.0,
-                'tax_ids': [Command.set(withholding_tax.ids)],
+                'account_id': self.purchase_account.id,
             })],
         })
         invoice.action_post()
@@ -948,18 +928,30 @@ class TestL10nAccountWithholdingTaxesFlows(TestTaxCommon, AnalyticCommon):
 
     def test_placeholder_computation(self):
         """ Ensure that the placeholder computation is working as expected when changed in the form view.. """
-        withholding_tax = self.percent_tax(
+        self.percent_tax(
             -1,
             is_withholding_tax_on_payment=True,
-            withholding_sequence_id=self.withholding_sequence.id,
         )
-        withholding_tax_2 = self.percent_tax(
+        self.witthold_tax_section1 = self.env['account.withholding.tax.section'].create({
+            'name': 'Withholding Tax Section 1',
+            'company_id': self.company_data['company'].id,
+            'withholding_sequence_id': self.withholding_sequence.id,
+        })
+        self.purchase_account1 = self.env['account.account'].create({
+            'code': '900001',
+            'name': 'Product Sales 1',
+            'account_type': 'income',
+            'withholding_tax_section_id': self.witthold_tax_section1.id,
+        })
+        self.percent_tax(
             -2,
+            withholding_tax_section_id=self.witthold_tax_section1.id,
             is_withholding_tax_on_payment=True,
-            withholding_sequence_id=self.withholding_sequence.id,
         )
-        self.product_a.taxes_id = withholding_tax
-        self.product_b.taxes_id = withholding_tax_2
+        self.product_a.taxes_id = False
+        self.product_a.property_account_income_id = self.purchase_account
+        self.product_b.taxes_id = False
+        self.product_b.property_account_income_id = self.purchase_account1
 
         invoice = self.env["account.move"].create(
             {
@@ -1007,7 +999,7 @@ class TestL10nAccountWithholdingTaxesFlows(TestTaxCommon, AnalyticCommon):
 
     def test_manual_adjustments(self):
         """ Ensure that when manually adjusting the base or tax amount of a line, the manually set amount is saved. """
-        withholding_tax = self.percent_tax(-2, is_withholding_tax_on_payment=True, withholding_sequence_id=self.withholding_sequence.id)
+        self.percent_tax(-2, is_withholding_tax_on_payment=True)
 
         invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',
@@ -1015,7 +1007,7 @@ class TestL10nAccountWithholdingTaxesFlows(TestTaxCommon, AnalyticCommon):
             'invoice_line_ids': [Command.create({
                 'product_id': self.product_a.id,
                 'price_unit': 1000.0,
-                'tax_ids': [Command.set(withholding_tax.ids)],
+                'account_id': self.purchase_account.id,
             })],
         })
         invoice.action_post()
@@ -1039,7 +1031,8 @@ class TestL10nAccountWithholdingTaxesFlows(TestTaxCommon, AnalyticCommon):
 
     def test_partner_is_set_on_lines(self):
         """ Test that the partner is set on the lines generated by the withholding tax on payment system. """
-        withholding_tax = self.percent_tax(-10, is_withholding_tax_on_payment=True, withholding_sequence_id=self.withholding_sequence.id)
+        withholding_tax = self.percent_tax(-10, is_withholding_tax_on_payment=True)
+        self.product_a.taxes_id = False
 
         invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',
@@ -1047,7 +1040,7 @@ class TestL10nAccountWithholdingTaxesFlows(TestTaxCommon, AnalyticCommon):
             'invoice_line_ids': [Command.create({
                 'product_id': self.product_a.id,
                 'price_unit': 1000.0,
-                'tax_ids': [Command.set(withholding_tax.ids)],
+                'account_id': self.purchase_account.id,
             })],
         })
         invoice.action_post()
@@ -1076,11 +1069,10 @@ class TestL10nAccountWithholdingTaxesFlows(TestTaxCommon, AnalyticCommon):
             "name": "Tax Tag",
             "applicability": "taxes",
         })
-        withholding_tax = self.percent_tax(
+        self.percent_tax(
             amount=-1,
             type_tax_use="purchase",
             is_withholding_tax_on_payment=True,
-            withholding_sequence_id=self.withholding_sequence.id,
             invoice_repartition_line_ids=[
                 Command.create({"repartition_type": "base", "factor_percent": 100.0, "tag_ids": base_tag.ids}),
                 Command.create({"repartition_type": "tax", "factor_percent": 100.0, "tag_ids": tax_tag.ids}),
@@ -1099,7 +1091,7 @@ class TestL10nAccountWithholdingTaxesFlows(TestTaxCommon, AnalyticCommon):
                     {
                         "name": "WTH Line",
                         "price_unit": 1000.0,
-                        "tax_ids": [Command.set(withholding_tax.ids)],
+                        'account_id': self.purchase_account.id,
                     }
                 )
             ],
@@ -1149,10 +1141,9 @@ class TestL10nAccountWithholdingTaxesFlows(TestTaxCommon, AnalyticCommon):
 
     def test_payment_register_non_withholding_tax(self):
         """ Test the flow of registering a payment on an invoice with non-withholding taxes. """
-        tax_a = self.percent_tax(
+        self.percent_tax(
             -5,
             is_withholding_tax_on_payment=True,
-            withholding_sequence_id=self.withholding_sequence.id,
             type_tax_use='purchase',
         )
         tax_b = self.percent_tax(12, type_tax_use='purchase')
@@ -1164,8 +1155,9 @@ class TestL10nAccountWithholdingTaxesFlows(TestTaxCommon, AnalyticCommon):
             'invoice_date': '2024-01-01',
             'invoice_line_ids': [Command.create({
                 'product_id': self.product_a.id,
+                'account_id': self.purchase_account.id,
                 'price_unit': 1000.0,
-                'tax_ids': [Command.set((tax_a | tax_b | tax_c).ids)],
+                'tax_ids': [Command.set((tax_b | tax_c).ids)],
             })],
         })
         bill.action_post()

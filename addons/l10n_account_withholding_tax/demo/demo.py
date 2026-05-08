@@ -46,7 +46,6 @@ class AccountChartTemplate(models.AbstractModel):
                         'account_id': account_ref,
                     }),
                 ],
-                'withholding_sequence_id': 'purchase_wth_sequence',
             },
             'withholding_demo_tax_5': {
                 'name': '5% WTH',
@@ -75,7 +74,6 @@ class AccountChartTemplate(models.AbstractModel):
                         'account_id': account_ref,
                     }),
                 ],
-                'withholding_sequence_id': 'purchase_wth_sequence',
             },
             'withholding_demo_tax_10': {
                 'name': '10% WTH',
@@ -104,7 +102,6 @@ class AccountChartTemplate(models.AbstractModel):
                         'account_id': account_ref,
                     }),
                 ],
-                'withholding_sequence_id': 'purchase_wth_sequence',
             },
             'withholding_demo_tax_20': {
                 'name': '20% WTH',
@@ -133,7 +130,6 @@ class AccountChartTemplate(models.AbstractModel):
                         'account_id': account_ref,
                     }),
                 ],
-                'withholding_sequence_id': 'purchase_wth_sequence',
             },
         }
 
@@ -145,10 +141,12 @@ class AccountChartTemplate(models.AbstractModel):
             'withholding_demo_tax_section_a': {
                 'name': 'section A',
                 'company_id': self.env.company.id,
+                'withholding_sequence_id': 'purchase_wth_sequence',
             },
             'withholding_demo_tax_section_b': {
                 'name': 'section B',
                 'company_id': self.env.company.id,
+                'withholding_sequence_id': 'purchase_wth_sequence',
             },
         }
 

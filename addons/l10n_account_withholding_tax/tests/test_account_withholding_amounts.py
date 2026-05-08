@@ -2,47 +2,30 @@
 from odoo import Command
 from odoo.tests import tagged
 
-from odoo.addons.account.tests.common import TestTaxCommon
+from odoo.addons.l10n_account_withholding_tax.tests.common import TestWithholdTaxCommon
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
-class TestL10nAccountWithholdingTaxesAmounts(TestTaxCommon):
+class TestL10nAccountWithholdingTaxesAmounts(TestWithholdTaxCommon):
     """ This test file focuses solely on testing taxes amounts in various use cases (vat, wth, base affected,...). """
 
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        # Set the withholding account so that we don't have to worry about it.
-        cls.company_data['company'].withholding_tax_base_account_id = cls.env['account.account'].create({
-            'code': 'WITHB',
-            'name': 'Withholding Tax Base Account',
-            'account_type': 'asset_current',
-        })
-        # We create a sequence for the same reason, so that we can forget about it.
-        cls.withholding_sequence = cls.env['ir.sequence'].create({
-            'implementation': 'no_gap',
-            'name': 'Withholding Sequence',
-            'padding': 4,
-            'number_increment': 1,
-        })
-        cls.outstanding_account = cls.env['account.account'].create({
-            'name': "Outstanding Payments",
-            'code': 'OSTP420',
-            'account_type': 'asset_current'
-        })
         cls.company_data['company'].tax_calculation_rounding_method = 'round_per_line'
 
     def test_case_a(self):
         vat_tax_incl_affecting = self.percent_tax(15, price_include_override='tax_included', include_base_amount=True)
-        wth_tax_affecting = self.percent_tax(-10, include_base_amount=True, is_withholding_tax_on_payment=True, withholding_sequence_id=self.withholding_sequence.id)
+        wth_tax_affecting = self.percent_tax(-10, include_base_amount=True, is_withholding_tax_on_payment=True)
 
         invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',
             'partner_id': self.partner_a.id,
             'invoice_line_ids': [Command.create({
                 'name': 'Product Line',
+                'account_id': self.purchase_account.id,
                 'price_unit': 1000.0,
-                'tax_ids': [Command.set((vat_tax_incl_affecting | wth_tax_affecting).ids)],
+                'tax_ids': [Command.set(vat_tax_incl_affecting.ids)],
             })],
         })
         invoice.action_post()
@@ -70,15 +53,16 @@ class TestL10nAccountWithholdingTaxesAmounts(TestTaxCommon):
 
     def test_case_b(self):
         vat_tax_incl = self.percent_tax(15, price_include_override='tax_included')
-        wth_tax_affecting = self.percent_tax(-10, include_base_amount=True, is_withholding_tax_on_payment=True, withholding_sequence_id=self.withholding_sequence.id)
+        wth_tax_affecting = self.percent_tax(-10, include_base_amount=True, is_withholding_tax_on_payment=True)
 
         invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',
             'partner_id': self.partner_a.id,
             'invoice_line_ids': [Command.create({
                 'name': 'Product Line',
+                'account_id': self.purchase_account.id,
                 'price_unit': 1000.0,
-                'tax_ids': [Command.set((vat_tax_incl | wth_tax_affecting).ids)],
+                'tax_ids': [Command.set(vat_tax_incl.ids)],
             })],
         })
         invoice.action_post()
@@ -106,15 +90,16 @@ class TestL10nAccountWithholdingTaxesAmounts(TestTaxCommon):
 
     def test_case_c(self):
         vat_tax_affecting = self.percent_tax(15, include_base_amount=True)
-        wth_tax_affecting = self.percent_tax(-10, include_base_amount=True, is_withholding_tax_on_payment=True, withholding_sequence_id=self.withholding_sequence.id)
+        wth_tax_affecting = self.percent_tax(-10, include_base_amount=True, is_withholding_tax_on_payment=True)
 
         invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',
             'partner_id': self.partner_a.id,
             'invoice_line_ids': [Command.create({
                 'name': 'Product Line',
+                'account_id': self.purchase_account.id,
                 'price_unit': 1000.0,
-                'tax_ids': [Command.set((vat_tax_affecting | wth_tax_affecting).ids)],
+                'tax_ids': [Command.set(vat_tax_affecting.ids)],
             })],
         })
         invoice.action_post()
@@ -142,15 +127,16 @@ class TestL10nAccountWithholdingTaxesAmounts(TestTaxCommon):
 
     def test_case_d(self):
         vat_tax = self.percent_tax(15)
-        wth_tax_affecting = self.percent_tax(-10, include_base_amount=True, is_withholding_tax_on_payment=True, withholding_sequence_id=self.withholding_sequence.id)
+        wth_tax_affecting = self.percent_tax(-10, include_base_amount=True, is_withholding_tax_on_payment=True)
 
         invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',
             'partner_id': self.partner_a.id,
             'invoice_line_ids': [Command.create({
                 'name': 'Product Line',
+                'account_id': self.purchase_account.id,
                 'price_unit': 1000.0,
-                'tax_ids': [Command.set((vat_tax | wth_tax_affecting).ids)],
+                'tax_ids': [Command.set(vat_tax.ids)],
             })],
         })
         invoice.action_post()
@@ -179,15 +165,16 @@ class TestL10nAccountWithholdingTaxesAmounts(TestTaxCommon):
     def test_case_e(self):
         vat_tax_incl_affecting = self.percent_tax(15, price_include_override='tax_included', include_base_amount=True)
         vat_tax_affecting = self.percent_tax(15, include_base_amount=True)
-        wth_tax_affecting = self.percent_tax(-10, include_base_amount=True, is_withholding_tax_on_payment=True, withholding_sequence_id=self.withholding_sequence.id)
+        wth_tax_affecting = self.percent_tax(-10, include_base_amount=True, is_withholding_tax_on_payment=True)
 
         invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',
             'partner_id': self.partner_a.id,
             'invoice_line_ids': [Command.create({
                 'name': 'Product Line',
+                'account_id': self.purchase_account.id,
                 'price_unit': 1000.0,
-                'tax_ids': [Command.set((vat_tax_incl_affecting | vat_tax_affecting | wth_tax_affecting).ids)],
+                'tax_ids': [Command.set((vat_tax_incl_affecting | vat_tax_affecting).ids)],
             })],
         })
         invoice.action_post()
@@ -216,15 +203,15 @@ class TestL10nAccountWithholdingTaxesAmounts(TestTaxCommon):
     def test_case_f(self):
         vat_tax_incl_affecting = self.percent_tax(15, price_include_override='tax_included', include_base_amount=True)
         vat_tax = self.percent_tax(15)
-        wth_tax_affecting = self.percent_tax(-10, include_base_amount=True, is_withholding_tax_on_payment=True, withholding_sequence_id=self.withholding_sequence.id)
-
+        wth_tax_affecting = self.percent_tax(-10, include_base_amount=True, is_withholding_tax_on_payment=True)
         invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',
             'partner_id': self.partner_a.id,
             'invoice_line_ids': [Command.create({
                 'name': 'Product Line',
+                'account_id': self.purchase_account.id,
                 'price_unit': 1000.0,
-                'tax_ids': [Command.set((vat_tax_incl_affecting | vat_tax | wth_tax_affecting).ids)],
+                'tax_ids': [Command.set((vat_tax_incl_affecting | vat_tax).ids)],
             })],
         })
         invoice.action_post()
@@ -253,15 +240,16 @@ class TestL10nAccountWithholdingTaxesAmounts(TestTaxCommon):
     def test_case_g(self):
         vat_tax_incl_affecting = self.percent_tax(15, price_include_override='tax_included', include_base_amount=True)
         vat_tax_affecting_affected = self.percent_tax(15, include_base_amount=True, is_base_affected=False)
-        wth_tax_affecting = self.percent_tax(-10, include_base_amount=True, is_withholding_tax_on_payment=True, withholding_sequence_id=self.withholding_sequence.id)
+        wth_tax_affecting = self.percent_tax(-10, include_base_amount=True, is_withholding_tax_on_payment=True)
 
         invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',
             'partner_id': self.partner_a.id,
             'invoice_line_ids': [Command.create({
                 'name': 'Product Line',
+                'account_id': self.purchase_account.id,
                 'price_unit': 1000.0,
-                'tax_ids': [Command.set((vat_tax_incl_affecting | vat_tax_affecting_affected | wth_tax_affecting).ids)],
+                'tax_ids': [Command.set((vat_tax_incl_affecting | vat_tax_affecting_affected).ids)],
             })],
         })
         invoice.action_post()
@@ -290,15 +278,16 @@ class TestL10nAccountWithholdingTaxesAmounts(TestTaxCommon):
     def test_case_h(self):
         vat_tax_incl_affecting = self.percent_tax(15, price_include_override='tax_included', include_base_amount=True)
         vat_tax_affected = self.percent_tax(15, is_base_affected=False)
-        wth_tax_affecting = self.percent_tax(-10, include_base_amount=True, is_withholding_tax_on_payment=True, withholding_sequence_id=self.withholding_sequence.id)
+        wth_tax_affecting = self.percent_tax(-10, include_base_amount=True, is_withholding_tax_on_payment=True)
 
         invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',
             'partner_id': self.partner_a.id,
             'invoice_line_ids': [Command.create({
                 'name': 'Product Line',
+                'account_id': self.purchase_account.id,
                 'price_unit': 1000.0,
-                'tax_ids': [Command.set((vat_tax_incl_affecting | vat_tax_affected | wth_tax_affecting).ids)],
+                'tax_ids': [Command.set((vat_tax_incl_affecting | vat_tax_affected).ids)],
             })],
         })
         invoice.action_post()
@@ -327,15 +316,16 @@ class TestL10nAccountWithholdingTaxesAmounts(TestTaxCommon):
     def test_case_i(self):
         vat_tax_incl = self.percent_tax(15, price_include_override='tax_included')
         vat_tax_affecting = self.percent_tax(15, include_base_amount=True)
-        wth_tax_affecting = self.percent_tax(-10, include_base_amount=True, is_withholding_tax_on_payment=True, withholding_sequence_id=self.withholding_sequence.id)
+        wth_tax_affecting = self.percent_tax(-10, include_base_amount=True, is_withholding_tax_on_payment=True)
 
         invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',
             'partner_id': self.partner_a.id,
             'invoice_line_ids': [Command.create({
                 'name': 'Product Line',
+                'account_id': self.purchase_account.id,
                 'price_unit': 1000.0,
-                'tax_ids': [Command.set((vat_tax_incl | vat_tax_affecting | wth_tax_affecting).ids)],
+                'tax_ids': [Command.set((vat_tax_incl | vat_tax_affecting).ids)],
             })],
         })
         invoice.action_post()
@@ -364,15 +354,16 @@ class TestL10nAccountWithholdingTaxesAmounts(TestTaxCommon):
     def test_case_j(self):
         vat_tax_incl = self.percent_tax(15, price_include_override='tax_included')
         vat_tax = self.percent_tax(15)
-        wth_tax_affecting = self.percent_tax(-10, include_base_amount=True, is_withholding_tax_on_payment=True, withholding_sequence_id=self.withholding_sequence.id)
+        wth_tax_affecting = self.percent_tax(-10, include_base_amount=True, is_withholding_tax_on_payment=True)
 
         invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',
             'partner_id': self.partner_a.id,
             'invoice_line_ids': [Command.create({
                 'name': 'Product Line',
+                'account_id': self.purchase_account.id,
                 'price_unit': 1000.0,
-                'tax_ids': [Command.set((vat_tax_incl | vat_tax | wth_tax_affecting).ids)],
+                'tax_ids': [Command.set((vat_tax_incl | vat_tax).ids)],
             })],
         })
         invoice.action_post()
@@ -402,7 +393,7 @@ class TestL10nAccountWithholdingTaxesAmounts(TestTaxCommon):
 
     def test_case_l(self):
         vat_tax_incl_affecting = self.percent_tax(15, price_include_override='tax_included', include_base_amount=True)
-        wth_tax_affecting = self.percent_tax(-10, include_base_amount=True, is_withholding_tax_on_payment=True, withholding_sequence_id=self.withholding_sequence.id)
+        wth_tax_affecting = self.percent_tax(-10, include_base_amount=True, is_withholding_tax_on_payment=True)
         vat_tax_affecting = self.percent_tax(15, include_base_amount=True)
 
         invoice = self.env['account.move'].create({
@@ -410,6 +401,7 @@ class TestL10nAccountWithholdingTaxesAmounts(TestTaxCommon):
             'partner_id': self.partner_a.id,
             'invoice_line_ids': [Command.create({
                 'name': 'Product Line',
+                'account_id': self.purchase_account.id,
                 'price_unit': 1000.0,
                 'tax_ids': [Command.set((vat_tax_incl_affecting | wth_tax_affecting | vat_tax_affecting).ids)],
             })],
@@ -423,6 +415,7 @@ class TestL10nAccountWithholdingTaxesAmounts(TestTaxCommon):
             'base_amount': 1000.00,
             'amount': 100.00,
         }])
+
         self.assertRecordValues(wizard, [{'withholding_net_amount': 1050.00}])
 
         payment = wizard._create_payments()
@@ -437,106 +430,19 @@ class TestL10nAccountWithholdingTaxesAmounts(TestTaxCommon):
             {'balance': -1000.00,    'tax_ids': wth_tax_affecting.ids},
         ])
 
-    def test_case_m(self):
-        vat_tax_affecting = self.percent_tax(15, include_base_amount=True)
-        wth_tax_affecting = self.percent_tax(-10, include_base_amount=True, is_withholding_tax_on_payment=True, withholding_sequence_id=self.withholding_sequence.id)
-        wth_tax = self.percent_tax(-10, is_withholding_tax_on_payment=True, withholding_sequence_id=self.withholding_sequence.id)
-
-        invoice = self.env['account.move'].create({
-            'move_type': 'out_invoice',
-            'partner_id': self.partner_a.id,
-            'invoice_line_ids': [Command.create({
-                'name': 'Product Line',
-                'price_unit': 1000.0,
-                'tax_ids': [Command.set((vat_tax_affecting | wth_tax_affecting | wth_tax).ids)],
-            })],
-        })
-        invoice.action_post()
-        wizard = self.env['account.payment.register']\
-            .with_context(active_model='account.move', active_ids=invoice.ids)\
-            .create({})
-        self.assertRecordValues(wizard.withholding_line_ids, [{
-            'original_base_amount': 1150.00,
-            'base_amount': 1150.00,
-            'amount': 115.00,
-        }, {
-            'original_base_amount': 1035.00,
-            'base_amount': 1035.00,
-            'amount': 103.50,
-        }])
-        self.assertRecordValues(wizard, [{'withholding_net_amount': 931.50}])
-
-        payment = wizard._create_payments()
-        self.assertRecordValues(payment, [{
-            'amount': 1150.0,
-        }])
-        self.assertRecordValues(payment.move_id.line_ids, [
-            {'balance': 931.50,     'tax_ids': []},
-            {'balance': -1150.00,   'tax_ids': []},
-            {'balance': 115.00,     'tax_ids': []},
-            {'balance': 103.50,     'tax_ids': []},
-            {'balance': 1150.00,    'tax_ids': []},
-            {'balance': -1150.00,   'tax_ids': wth_tax_affecting.ids},
-            {'balance': 1035.00,    'tax_ids': []},
-            {'balance': -1035.00,   'tax_ids': wth_tax.ids},
-        ])
-
-    def test_case_n(self):
-        vat_tax_affecting = self.percent_tax(15, include_base_amount=True)
-        wth_tax_affecting = self.percent_tax(-10, include_base_amount=True, is_withholding_tax_on_payment=True, withholding_sequence_id=self.withholding_sequence.id)
-        wth_tax_affected = self.percent_tax(-10, is_withholding_tax_on_payment=True, is_base_affected=False, withholding_sequence_id=self.withholding_sequence.id)
-
-        invoice = self.env['account.move'].create({
-            'move_type': 'out_invoice',
-            'partner_id': self.partner_a.id,
-            'invoice_line_ids': [Command.create({
-                'name': 'Product Line',
-                'price_unit': 1000.0,
-                'tax_ids': [Command.set((vat_tax_affecting | wth_tax_affecting | wth_tax_affected).ids)],
-            })],
-        })
-        invoice.action_post()
-        wizard = self.env['account.payment.register']\
-            .with_context(active_model='account.move', active_ids=invoice.ids)\
-            .create({})
-        self.assertRecordValues(wizard.withholding_line_ids, [{
-            'original_base_amount': 1150.00,
-            'base_amount': 1150.00,
-            'amount': 115.00,
-        }, {
-            'original_base_amount': 1000.00,
-            'base_amount': 1000.00,
-            'amount': 100.00,
-        }])
-        self.assertRecordValues(wizard, [{'withholding_net_amount': 935.00}])
-
-        payment = wizard._create_payments()
-        self.assertRecordValues(payment, [{
-            'amount': 1150.00,
-        }])
-        self.assertRecordValues(payment.move_id.line_ids, [
-            {'balance': 935.00,      'tax_ids': []},
-            {'balance': -1150.00,    'tax_ids': []},
-            {'balance': 115.00,      'tax_ids': []},
-            {'balance': 100.00,      'tax_ids': []},
-            {'balance': 1150.00,     'tax_ids': []},
-            {'balance': -1150.00,    'tax_ids': wth_tax_affecting.ids},
-            {'balance': 1000.00,     'tax_ids': []},
-            {'balance': -1000.00,    'tax_ids': wth_tax_affected.ids},
-        ])
-
     def test_invoice_total_unaffected(self):
         """ Ensure that the invoice total is not affected by a withholding tax set on the line. """
         vat_tax = self.percent_tax(15)
-        wth_tax_affecting = self.percent_tax(-10, include_base_amount=True, is_withholding_tax_on_payment=True, withholding_sequence_id=self.withholding_sequence.id)
+        self.percent_tax(-10, include_base_amount=True, is_withholding_tax_on_payment=True)
 
         invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',
             'partner_id': self.partner_a.id,
             'invoice_line_ids': [Command.create({
                 'name': 'Product Line',
+                'account_id': self.purchase_account.id,
                 'price_unit': 1000.0,
-                'tax_ids': [Command.set((vat_tax | wth_tax_affecting).ids)],
+                'tax_ids': [Command.set(vat_tax.ids)],
             })],
         })
         invoice.action_post()

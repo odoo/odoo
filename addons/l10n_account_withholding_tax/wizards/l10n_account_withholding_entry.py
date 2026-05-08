@@ -59,9 +59,29 @@ class L10nAccountWithholdingEntry(models.TransientModel):
 
     def _compute_withholding_line_ids(self):
         for wizard in self:
+            # Compute the lines themselves once; when opening the wizard.
             if not wizard.withholding_line_ids:
-                commands = wizard.related_move_id.get_withholding_lines()
-                wizard.withholding_line_ids = commands
+                base_lines = []
+                for move in wizard.related_move_id:
+                    move_base_lines, _move_tax_lines = move._get_rounded_base_and_tax_lines()
+                    base_lines += move_base_lines
+
+                wizard.withholding_line_ids = wizard.withholding_line_ids._prepare_withholding_lines_commands(
+                    base_lines=base_lines,
+                    company=wizard.company_id or self.env.company,
+                )
+
+    @api.onchange('withholding_line_ids')
+    def _onchange_withholding_line_ids(self):
+        """
+        Any time a line is edited, we want to check if we need to recompute the placeholders.
+        The idea is to try and display accurate placeholders on lines whose tax have a sequence set.
+        """
+        self.ensure_one()
+        if not self.withholding_line_ids._need_update_withholding_lines_placeholder():
+            return
+
+        self.withholding_line_ids._update_placeholders()
 
     def _get_withhold_type(self):
         move_type = self.related_move_id.move_type

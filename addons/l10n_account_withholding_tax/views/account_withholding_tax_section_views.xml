@@ -24,6 +24,8 @@
                         <h1>
                             <field name="name"/>
                         </h1>
+                        <label for="withholding_sequence_id" string="Withholding Sequence"/>
+                        <field name="withholding_sequence_id" context="{'default_name': name}"/>
                     </div>
                     <group class="w-50" string="Threshold limits">
                         <label for="consider_amount"/>

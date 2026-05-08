@@ -14,13 +14,6 @@ class AccountTax(models.Model):
         string="Withhold On Payment",
         help="If enabled, this tax will not affect your accounts until the registration of payments.",
     )
-    withholding_sequence_id = fields.Many2one(
-        string='Withholding Sequence',
-        help='This sequence will be used to generate default numbers on payment withholding lines.',
-        comodel_name='ir.sequence',
-        copy=False,
-        check_company=True,
-    )
     withholding_tax_section_id = fields.Many2one(
         string="Withholding Section",
         comodel_name='account.withholding.tax.section',

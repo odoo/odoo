@@ -1,6 +1,6 @@
 <odoo>
     <template inherit_id="account.report_payment_receipt_document" id="report_payment_receipt_document">
-        <xpath expr="//div[@class='row'][.//div[@t-if='o.amount']]" position="inside">
+        <xpath expr="//div[hasclass('row')][.//div[@t-if='o.amount']]" position="inside">
             <div t-if="o.withholding_total_tax_amount">
                 Tax Amount:
                 <span t-field="o.withholding_total_tax_amount"

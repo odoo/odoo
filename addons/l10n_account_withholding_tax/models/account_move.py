@@ -1,4 +1,4 @@
-from odoo import api, fields, models, Command
+from odoo import api, fields, models
 from odoo.tools import SQL
 from odoo.tools.date_utils import get_month
 
@@ -205,42 +205,3 @@ class AccountMove(models.Model):
         if self.l10n_withholding_ref_move_id:
             reverse_moves.write({'l10n_withholding_ref_move_id': self.l10n_withholding_ref_move_id.id})
         return reverse_moves
-
-    def get_withholding_lines(self):
-        section_map = {}
-
-        for line in self.line_ids:
-            if line.display_type != 'product':
-                continue
-
-            section = line.account_id.withholding_tax_section_id
-            if not section:
-                continue
-
-            values = section_map.setdefault(section, {
-                'base_amount': 0.0,
-                'analytic_distribution': {},
-            })
-
-            values['base_amount'] += line.amount_residual
-
-            if line.analytic_distribution:
-                analytic_dist = values['analytic_distribution']
-                for analytic_id, percentage in line.analytic_distribution.items():
-                    analytic_dist[analytic_id] = analytic_dist.get(analytic_id, 0.0) + percentage
-
-        commands = [Command.clear()]
-
-        for section, values in section_map.items():
-            taxes = section.tax_ids
-            if not taxes:
-                continue
-
-            tax = taxes.sorted('sequence')[0]
-
-            commands.append(Command.create({
-                'tax_id': tax.id,
-                'analytic_distribution': values['analytic_distribution'],
-            }))
-
-        return commands

@@ -20,6 +20,13 @@ class AccountWithholdingTaxSection(models.Model):
             ('fiscal_yearly', 'Financial Yearly'),
         ], string="Aggregate Period", default='fiscal_yearly')
     tax_ids = fields.One2many("account.tax", "withholding_tax_section_id", string="Taxes")
+    withholding_sequence_id = fields.Many2one(
+        string='Withholding Sequence',
+        help='This sequence will be used to generate default numbers on payment withholding lines.',
+        comodel_name='ir.sequence',
+        copy=False,
+        check_company=True,
+    )
     company_id = fields.Many2one(
         comodel_name='res.company',
         string='Company',

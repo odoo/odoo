@@ -8,9 +8,6 @@
             <xpath expr="//sheet/group//group[last()]" position="inside">
                 <field name="is_withholding_tax_on_payment" invisible="type_tax_use not in ['sale', 'purchase'] or amount >= 0"/>
             </xpath>
-            <field name="hide_tax_exigibility" position="after">
-                <field name="withholding_sequence_id" context="{'default_name': name}" invisible="type_tax_use == 'sale' or not is_withholding_tax_on_payment"/>
-            </field>
             <field name="tax_exigibility" position="attributes">
                 <attribute name="invisible" add="is_withholding_tax_on_payment" separator=" or "/>
             </field>
