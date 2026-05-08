@@ -52,9 +52,13 @@ class Base(models.AbstractModel):
     @api.readonly
     def web_name_search(self, name, specification, domain=None, operator='ilike', limit=100):
         id_name_pairs = self.name_search(name, domain, operator, limit)
-        if len(specification) == 1 and 'display_name' in specification:
-            return [{'id': id, 'display_name': name, '__formatted_display_name': self.with_context(formatted_display_name=True).browse(id).display_name} for id, name in id_name_pairs]
         records = self.browse([id for id, _ in id_name_pairs])
+        if len(specification) == 1 and 'display_name' in specification:
+            return [{
+                'id': record.id,
+                'display_name': record.display_name,
+                '__formatted_display_name': record.with_context(formatted_display_name=True).display_name,
+            } for record in records]
         return records.web_read(specification)
 
     @api.model
