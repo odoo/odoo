@@ -37,6 +37,7 @@ class ResPartner(models.Model):
             partner.is_company = bool(
                 partner.l10n_latam_identification_type_id.country_id.code == partner.country_code
                 and partner.l10n_latam_identification_type_id.is_vat
+                and partner.commercial_partner_id == partner
             )
         super(ResPartner, self - latam_partners)._compute_is_company()
 
