@@ -111,7 +111,7 @@
                             'active': action.isActive
                         }"/>
                     </div>
-                    <div t-if="ui.isSmall and this.composerActions.activeAction?.actionPanelComponentCondition" t-attf-class="{{ this.composerActions.activeAction.actionPanelOuterClass }}" class="print-none w-100">
+                    <div t-if="this.ui.isSmall and this.composerActions.activeAction?.actionPanelComponentCondition" t-attf-class="{{ this.composerActions.activeAction.actionPanelOuterClass }}" class="print-none w-100">
                         <t t-component="this.composerActions.activeAction.actionPanelComponent" t-props="this.composerActions.activeAction.actionPanelComponentProps"/>
                     </div>
                 </div>
