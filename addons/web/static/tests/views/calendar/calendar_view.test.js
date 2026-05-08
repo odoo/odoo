@@ -14,7 +14,7 @@ import {
     runAllTimers,
 } from "@odoo/hoot-dom";
 import { mockDate, mockTimeZone, mockTouch } from "@odoo/hoot-mock";
-import { Component, onWillStart, xml } from "@odoo/owl";
+import { Component, onMounted, onPatched, onWillStart, xml } from "@odoo/owl";
 import {
     MockServer,
     contains,
@@ -5891,7 +5891,8 @@ test(`calendar renderer is rendered once after search refresh`, async () => {
     patchWithCleanup(CalendarRenderer.prototype, {
         setup() {
             super.setup();
-            onRendered(() => expect.step("rendered"));
+            onMounted(() => expect.step("mounted"));
+            onPatched(() => expect.step("patched"));
         },
     });
     patchWithCleanup(CalendarModel.prototype, {
@@ -5910,11 +5911,11 @@ test(`calendar renderer is rendered once after search refresh`, async () => {
             </calendar>
         `,
     });
-    expect.verifySteps(["before load", "after load", "rendered"], {
+    expect.verifySteps(["before load", "after load", "mounted"], {
         message: "no additional notify",
     });
     await validateSearch();
-    expect.verifySteps(["before load", "after load", "rendered"], {
+    expect.verifySteps(["before load", "after load", "patched"], {
         message: "no additional notify",
     });
 });
