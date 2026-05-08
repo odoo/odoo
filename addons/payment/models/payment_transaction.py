@@ -14,7 +14,7 @@ from odoo.fields import Domain
 from odoo.tools import email_normalize_all, float_round
 
 from odoo.addons.payment import utils as payment_utils
-from odoo.addons.payment.const import CURRENCY_MINOR_UNITS, SENSITIVE_KEYS
+from odoo.addons.payment.const import SENSITIVE_KEYS
 from odoo.addons.payment.logging import get_payment_logger
 
 _logger = get_payment_logger(__name__, sensitive_keys=SENSITIVE_KEYS)
@@ -234,6 +234,17 @@ class PaymentTransaction(models.Model):
                 values["reference"] = self._compute_reference(provider.code, **values)
 
             values["is_live"] = provider.is_live
+
+            # Round the amount to the currency's precision.
+            currency = self.env["res.currency"].browse(values["currency_id"])
+            payment_method = self.env["payment.method"].browse(values["payment_method_id"])
+            values["amount"] = float_round(
+                values["amount"],
+                precision_digits=provider._get_amount_precision(
+                    currency, payment_method_code=payment_method.code
+                ),
+                rounding_method="DOWN",
+            )
 
             # Duplicate partner values.
             partner = self.env["res.partner"].browse(values["partner_id"])
@@ -985,7 +996,6 @@ class PaymentTransaction(models.Model):
 
         amount = amount_data["amount"]
         currency_code = amount_data["currency_code"]
-        precision_digits = amount_data.get("precision_digits")
 
         if not amount or not currency_code:
             error_message = self.env._("The amount or currency is missing from the payment data.")
@@ -996,14 +1006,7 @@ class PaymentTransaction(models.Model):
         # providers send a positive one.
         if self.operation == "refund":
             amount = -amount
-        if precision_digits is None:
-            precision_digits = CURRENCY_MINOR_UNITS.get(
-                self.currency_id.name, self.currency_id.decimal_places
-            )
-        tx_amount = float_round(
-            self.amount, precision_digits=precision_digits, rounding_method="DOWN"
-        )
-        if self.currency_id.compare_amounts(amount, tx_amount) != 0:
+        if self.currency_id.compare_amounts(amount, self.amount) != 0:
             error_message = self.env._(
                 "The amount from the payment data doesn't match the one from the transaction."
             )

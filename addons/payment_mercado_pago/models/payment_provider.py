@@ -240,6 +240,19 @@ class PaymentProvider(models.Model):
         country_code = self.company_id.country_id.code if lang == "es_419" else lang.split("_")[-1]
         return const.COUNTRY_LOCALES.get(country_code, "en-US")
 
+    def _get_amount_precision(self, currency, **kwargs):
+        """Override of `payment` to return the amount precision for Mercado Pago.
+
+        :param recordset currency: The currency of the transaction, as a `res.currency` record.
+        :return: The number of decimal places.
+        :rtype: int
+        """
+        precision = super()._get_amount_precision(currency, **kwargs)
+        if self.code != "mercado_pago":
+            return precision
+
+        return const.CURRENCY_DECIMALS.get(currency.name, precision)
+
     # === REQUEST HELPERS === #
 
     def _build_request_url(self, endpoint, *, is_proxy_request=False, **kwargs):

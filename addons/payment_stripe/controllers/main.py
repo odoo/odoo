@@ -183,7 +183,9 @@ class StripeController(http.Controller):
         converted_amount = payment_utils.to_major_currency_units(
             amount_to_refund,
             source_tx_sudo.currency_id,
-            arbitrary_decimal_number=const.CURRENCY_DECIMALS.get(source_tx_sudo.currency_id.name),
+            arbitrary_decimal_number=source_tx_sudo.provider_id._get_amount_precision(
+                source_tx_sudo.currency_id
+            ),
         )
         return source_tx_sudo._create_child_transaction(converted_amount, is_refund=True)
 
