@@ -170,8 +170,8 @@ export class BomOverviewLine extends Component {
     }
 
     get statusBackgroundClass() {
-        if(this.data.index == "0") {
-            return "text-bg-info";
+        if(this.data.status?.includes('Ready To Produce')) {
+            return "text-bg-success";
         }
         return "text-bg-danger";
     }

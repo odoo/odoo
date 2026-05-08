@@ -295,7 +295,7 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
 
         if level == 0:
             if bom_report_line['producible_qty'] > 0:
-                bom_report_line['status'] = _("%(qty)s Ready To Produce", qty=bom_report_line['producible_qty'])
+                bom_report_line['status'] = _("%(qty)s Ready To Produce", qty=int(bom_report_line['producible_qty']))
             else:
                 bom_report_line['status'] = _("No Ready To Produce")
         elif missing_qty := max(bom_report_line['quantity'] - bom_report_line['quantity_available'], 0):
