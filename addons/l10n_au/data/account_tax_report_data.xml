@@ -235,15 +235,10 @@
                         <field name="name">W2: Amounts withheld from salaries or wages and other payments shown at W1</field>
                         <field name="code">W2</field>
                         <field name="expression_ids">
-                            <record id="account_tax_report_payg_w2_tag" model="account.report.expression">
-                                <field name="label">sub_balance</field>
-                                <field name="engine">tax_tags</field>
-                                <field name="formula">W2</field>
-                            </record>
                             <record id="account_tax_report_payg_w2_balance" model="account.report.expression">
                                 <field name="label">balance</field>
-                                <field name="engine">aggregation</field>
-                                <field name="formula">-W2.sub_balance</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">-W2</field>
                             </record>
                         </field>
                     </record>
