@@ -219,17 +219,13 @@ class WebsiteHrRecruitment(WebsiteForm):
             'email': [('email_normalized', '=', email_normalize(value))],
             'phone': [('partner_phone', '=', value)],
             'linkedin': [('linkedin_profile', '=ilike', escape_psql(value))],
-        }.get(field, [])
+        }.get(field, Domain.FALSE)
 
         applications_by_status = http.request.env['hr.applicant'].sudo().search(Domain.AND([
             field_domain,
             [
                 ('job_id.website_id', 'in', [http.request.website.id, False]),
-                '|',
-                    ('application_status', '=', 'ongoing'),
-                    '&',
-                        ('application_status', '=', 'refused'),
-                        ('active', '=', False),
+                ('application_status', 'in', ['ongoing', 'refused']),
             ]
         ]), order='create_date DESC').grouped('application_status')
         refused_applicants = applications_by_status.get('refused', http.request.env['hr.applicant'])
