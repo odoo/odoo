@@ -1,4 +1,4 @@
-import { onWillRender, useLayoutEffect, useRef, useState } from "@web/owl2/utils";
+import { onWillRender, useRef, useState } from "@web/owl2/utils";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { useTrackedAsync } from "@point_of_sale/app/hooks/hooks";
