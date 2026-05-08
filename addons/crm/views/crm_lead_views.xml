@@ -65,22 +65,24 @@
                                 <field name="type" widget="badge"/>
                             </div>
                         </div>
-                        <h2 class="d-none d-sm-flex d-touch-none align-items-end">
+                        <h2 class="d-none d-sm-flex d-touch-none align-items-end mb-4">
                             <!-- in this view, we want to have a different desktop UI, so we have two different 'touch' and 'desktop' templates -->
                             <div class="col-3 d-flex flex-column justify-content-between"  invisible="type == 'lead'">
                                 <field name="company_currency" invisible="1"/>
-                                <label for="expected_revenue" class="oe_edit_only"/>
-                                <field name="expected_revenue" widget='monetary' options="{'currency_field': 'company_currency'}"/>
-                                <div groups="crm.group_use_recurring_revenues">
-                                    <span> + </span>
-                                    <field name="recurring_revenue" widget="monetary" options="{'currency_field': 'company_currency'}"/>
+                                <label for="expected_revenue" class="oe_edit_only mb-2"/>
+                                <div class="d-flex flex-wrap align-items-baseline">
+                                    <field name="expected_revenue" widget="monetary" options="{'currency_field': 'company_currency'}"/>
+                                    <span groups="crm.group_use_recurring_revenues" class="opacity-50 ms-3 me-1"> + </span>
+                                    <field name="recurring_revenue" widget="monetary" options="{'currency_field': 'company_currency'}"
+                                        groups="crm.group_use_recurring_revenues"/>
                                 </div>
                             </div>
                             <div style="width: 15ch;" groups="crm.group_use_recurring_revenues">
                                 <field name="recurring_plan" placeholder='e.g. "Monthly"'
                                     required="recurring_revenue != 0" options="{'no_create': True, 'no_open': True}"/>
                             </div>
-                            <div class="col-auto d-flex flex-column">
+                            <span class="ms-2 mb-1"> at</span>
+                            <div class="col-auto d-flex flex-column ms-3">
                                 <div>
                                     <label for="probability" class="d-inline-block"/>
                                     <a class="border-0 mx-1 p-0 mb-1 mb-md-0 btn btn-light"
@@ -99,10 +101,9 @@
                                         ~ <field class="w-auto" name="automated_probability" force_save="1"/> %
                                     </small>
                                 </div>
-                                <div id="probability" class="d-flex" style="width: 10ch;">
+                                <div id="probability" class="d-flex" style="width: 8ch;">
                                     <field name="is_automated_probability" invisible="1"/>
-                                    <span>at</span>
-                                    <field name="probability" widget="float" class="text-center"
+                                    <field name="probability" widget="float"
                                         readonly="won_status != 'pending'"/>
                                     <span>%</span>
                                 </div>
@@ -119,27 +120,31 @@
                             <group>
                                 <!-- probability -->
                                 <label for="probability"/>
-                                <div class="d-flex align-items-baseline">
-                                    <field name="probability" widget="float" readonly="won_status != 'pending'"/>
-                                    <span>%</span>
-                                    <widget name="pls_tooltip_button" invisible="won_status != 'pending' or not is_automated_probability" />
-                                </div>
-                                <!-- IA -->
-                                <label for="automated_probability" invisible="is_automated_probability or won_status == 'lost'"/>
-                                <div class="d-flex align-items-baseline" invisible="is_automated_probability or won_status == 'lost'">
-                                    <span>~ </span>
-                                    <field name="automated_probability" force_save="1"/>
-                                    <span> %</span>
-                                    <a class="btn btn-link"
-                                       name="action_set_automated_probability"
-                                       role="button" type="object"
-                                       invisible="is_automated_probability or won_status == 'lost'">
-                                        <img class="o_lead_opportunity_form_AI_switch_img"
-                                             title="Switch to AI-computed probabilities"
-                                             aria-label="Switch to AI-computed probabilities"
-                                             src="/crm/static/src/img/pls-tooltip-ai-icon.png"
-                                             alt="AI"/>
-                                    </a>
+                                <div class="d-flex align-items-baseline gap-2 flex-nowrap w-100">
+                                    <!-- probability field -->
+                                    <div class="d-flex align-items-baseline">
+                                        <div style="width: 6ch;">
+                                            <field name="probability" widget="float" readonly="won_status != 'pending'"/>
+                                        </div>
+                                        <span>%</span>
+                                        <widget name="pls_tooltip_button" invisible="won_status != 'pending' or not is_automated_probability" />
+                                    </div>
+                                    <!-- IA -->
+                                    <div class="d-flex align-items-baseline ms-auto text-muted" invisible="is_automated_probability or won_status == 'lost'">
+                                        <span>~ </span>
+                                        <field name="automated_probability" force_save="1" style="width: 5ch;"/>
+                                        <span> %</span>
+                                        <a class="btn btn-link"
+                                            name="action_set_automated_probability"
+                                            role="button" type="object"
+                                            invisible="is_automated_probability or won_status == 'lost'">
+                                            <img class="o_lead_opportunity_form_AI_switch_img mx-2"
+                                                title="Switch to AI-computed probabilities"
+                                                aria-label="Switch to AI-computed probabilities"
+                                                src="/crm/static/src/img/pls-tooltip-ai-icon.png"
+                                                alt="AI"/>
+                                        </a>
+                                    </div>
                                 </div>
                             </group>
                         </group>
