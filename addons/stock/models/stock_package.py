@@ -144,7 +144,7 @@ class StockPackage(models.Model):
         # location_id in depends to force the recompute of the move_line_ids if the package moves to another location.
         children_by_dest_pack, all_pack_ids = self._get_all_children_package_dest_ids()
         groups = self.env['stock.move.line']._read_group(
-            domain=[('state', 'not in', ['done', 'cancel']), ('result_package_id', 'in', all_pack_ids)],
+            domain=['|', ('state', 'not in', ['done', 'cancel']), ('move_id.picking_id.is_locked', '=', False), ('result_package_id', 'in', all_pack_ids)],
             groupby=['result_package_id'], aggregates=['id:array_agg'])
         move_lines_by_package = {package.id: move_line_ids for package, move_line_ids in groups}
 
@@ -172,7 +172,7 @@ class StockPackage(models.Model):
     def _compute_picking_ids(self):
         children_by_dest_pack, all_pack_ids = self._get_all_children_package_dest_ids()
         groups = self.env['stock.move.line']._read_group(
-            domain=[('state', 'not in', ['done', 'cancel']), ('result_package_id', 'in', all_pack_ids)],
+            domain=['|', ('state', 'not in', ['done', 'cancel']), ('move_id.picking_id.is_locked', '=', False), ('result_package_id', 'in', all_pack_ids)],
             groupby=['result_package_id'], aggregates=['picking_id:array_agg'])
         pickings_by_package = {package.id: picking_ids for package, picking_ids in groups}
 

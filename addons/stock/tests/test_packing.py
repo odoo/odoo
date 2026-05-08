@@ -2227,3 +2227,31 @@ class TestPackagePropagation(TestPackingCommon):
         self.assertFalse(pack2.quant_ids)
         self.assertEqual(pack2.location_id, self.stock_location)
         self.assertEqual(pack2.company_id, self.stock_location.company_id)
+
+    def test_package_ids_on_done_move_with_manual_destination_package(self):
+        """Test Packages set on an unlocked done picking should still appear on the move."""
+        package = self.env['stock.package'].create({'name': 'PACK01'})
+        picking = self.env['stock.picking'].create({
+            'picking_type_id': self.warehouse.out_type_id.id,
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'move_ids': [
+                Command.create({
+                    'product_id': self.productA.id,
+                    'product_uom_qty': 1.0,
+                    'location_id': self.stock_location.id,
+                    'location_dest_id': self.customer_location.id,
+                }),
+            ],
+        })
+        picking.button_validate()
+        picking.action_toggle_is_locked()
+        self.assertFalse(picking.is_locked)
+        picking.move_line_ids.result_package_id = package
+        picking.action_toggle_is_locked()
+        self.assertTrue(picking.is_locked)
+        self.assertEqual(picking.move_ids.package_ids.id, package.id)
+        self.assertRecordValues(picking.package_history_ids, [{
+            'move_line_ids': picking.move_line_ids.ids,
+            'outermost_dest_id': package.id
+        }])

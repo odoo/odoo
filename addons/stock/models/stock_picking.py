@@ -1525,8 +1525,19 @@ class StockPicking(models.Model):
 
     def action_toggle_is_locked(self):
         self.ensure_one()
+        if not self.is_locked and self.state in ('done', 'cancel'):
+            self._create_package_history()
         self.is_locked = not self.is_locked
         return True
+
+    def _create_package_history(self):
+        self.ensure_one()
+        if not self.env.context.get('ignore_dest_packages'):
+            if self.package_history_ids:
+                self.package_history_ids.unlink()
+            package_history_vals = self.move_line_ids._prepare_package_history_vals()
+            if package_history_vals:
+                self.env['stock.package.history'].create(package_history_vals)
 
     def _check_backorder(self):
         prec = self.env["decimal.precision"].precision_get("Product Unit")
