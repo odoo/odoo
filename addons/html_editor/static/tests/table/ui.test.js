@@ -2301,9 +2301,9 @@ test("applies alternating row colors when 'Insert Alternate Colors' option is cl
     );
     await expectElementCount(".o-we-table-menu", 0);
     const cells = queryAll("tr > :first-child");
-    const firstRowCellColor = getComputedStyle(cells[0]).backgroundColor;
+    const secondRowCellColor = getComputedStyle(cells[1]).backgroundColor;
     expect(
-        cells.every((cell) => getComputedStyle(cell).backgroundColor === firstRowCellColor)
+        cells.every((cell) => getComputedStyle(cell).backgroundColor === secondRowCellColor)
     ).toBe(true);
 
     await hover(el.querySelector("td.a"));
@@ -2328,8 +2328,8 @@ test("applies alternating row colors when 'Insert Alternate Colors' option is cl
             </table>
             <p data-selection-placeholder=""><br></p>`)
     );
+    const firstRowCellColor = getComputedStyle(cells[0]).backgroundColor;
     expect(getComputedStyle(cells[2]).backgroundColor).toBe(firstRowCellColor);
-    const secondRowCellColor = getComputedStyle(cells[1]).backgroundColor;
     expect(secondRowCellColor).not.toBe(firstRowCellColor);
     expect(getComputedStyle(cells[3]).backgroundColor).toBe(secondRowCellColor);
 });
@@ -2378,7 +2378,7 @@ test("removes alternating row colors when 'Clear Alternate Colors' option is cli
             <p data-selection-placeholder=""><br></p>`)
     );
     expect(
-        cells.every((cell) => getComputedStyle(cell).backgroundColor === firstRowCellColor)
+        cells.every((cell) => getComputedStyle(cell).backgroundColor === secondRowCellColor)
     ).toBe(true);
 });
 
