@@ -124,6 +124,7 @@ export class Action {
      * @param {boolean} [param0.closeAll] When true, all action panels in the stack are closed without returning to a previous panel
      */
     actionPanelClose({ nextActiveAction, closeAll = false } = {}) {
+        this.popover?.close();
         if (this.actions) {
             if (closeAll) {
                 this.actions.actionStack = [];

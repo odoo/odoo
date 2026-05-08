@@ -79,7 +79,6 @@ registerComposerAction("send-message", {
     tags: ({ action }) => (action.isActive ? ACTION_TAGS.PRIMARY : undefined),
 });
 registerComposerAction("add-emoji", {
-    actionPanelClose: ({ action }) => action.popover?.close(),
     actionPanelComponent: EmojiPicker,
     actionPanelComponentProps: ({ action, owner }) => ({
         onSelect: (emoji) => owner.addEmoji(emoji),
