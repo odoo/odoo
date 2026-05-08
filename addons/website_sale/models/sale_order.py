@@ -25,6 +25,7 @@ class SaleOrder(models.Model):
         help="Website through which this order was placed for eCommerce orders.",
         comodel_name="website",
         readonly=True,
+        check_company=True,
     )
 
     cart_recovery_email_sent = fields.Boolean(string="Cart recovery email already sent")
