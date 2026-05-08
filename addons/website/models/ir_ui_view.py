@@ -286,9 +286,21 @@ class IrUiView(models.Model):
         # get_related_views can be called through website=False routes
         # (e.g. /website/get_assets_editor_resources), so website
         # dispatch_parameters may not be added. Manually set
+<<<<<<< f5e7f51e6d372155663158d7ceba12e89fdb393e
         # website_id. (It will then always fallback on a website, this
         # method should never be called in a generic context, even for
         # tests)
+||||||| 39224c9f21ce5c09e12a469770ba575318bb11a0
+        # website_id. (It will then always fallback on a website, this
+        # method should never be called in a generic context, even for
+        # tests)
+        current_website = self.env['website'].get_current_website()
+=======
+        # website_id. (In the website environment, this method should
+        # never be called in a generic context, even for tests)
+        is_customization_code = self.env.context.get('is_customization_code', True)
+        current_website = self.env['website'].get_current_website(fallback=is_customization_code)
+>>>>>>> b46c2b9dd67fd06aff7a1137d6afb3aa63155ef9
         return super(IrUiView, self.with_context(
             website_id=self.env.website.id
         )).get_related_views(key, bundles=bundles).with_context(
