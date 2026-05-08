@@ -402,11 +402,8 @@ const chatterPatch = {
         this.load(thread, ["suggestedRecipients"]);
     },
 
-    /**
-     * @param {string} data deprecated, passing thread is enough
-     * @param {import("models").Thread} thread
-     */
-    onUploaded(data, { thread } = {}) {
+    /** @param {import("models").Thread} thread */
+    onUploaded({ thread } = {}) {
         const threadLocalId = thread.localId;
         if (!this.uploadHandlers.has(threadLocalId)) {
             const self = this;
