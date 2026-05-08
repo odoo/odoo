@@ -133,7 +133,7 @@ export class ChatWindow extends Component {
 
     /** Whether an extra line is shown below the display name in the header. */
     get hasNameSubline() {
-        return false;
+        return Boolean(this.channel?.correspondent?.partner_id?.statusSubtitle());
     }
 
     get displayNameFontSizeClass() {

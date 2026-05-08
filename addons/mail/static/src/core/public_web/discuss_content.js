@@ -116,6 +116,11 @@ export class DiscussContent extends Component {
         this.correspondentLocalDateTimeFormatted = computed(() =>
             this.store.localTimeIn(this.thread?.channel?.correspondent?.persona?.tz)
         );
+        this.correspondentStatusSubtitle = computed(() =>
+            this.thread?.channel?.channel_type === "chat"
+                ? this.thread.channel.correspondent?.partner_id?.statusSubtitle()
+                : undefined
+        );
         // The header and the panel on the side make room for the panel actions over them.
         useEffect(() => {
             const actionsEl = this.panelActionsRef();

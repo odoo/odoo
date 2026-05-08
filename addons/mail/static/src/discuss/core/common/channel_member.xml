@@ -11,6 +11,7 @@
                     <i t-if="this.member().channel_role === 'owner'" class="oi ms-1 text-warning lh-sm" data-icon="crown_f" role="img" title="Owner" aria-label="Owner"/>
                     <i t-if="this.member().channel_role === 'admin'" class="oi ms-1 opacity-75 lh-sm" data-icon="crown" role="img" title="Admin" aria-label="Admin"/>
                 </div>
+                <span t-if="this.member().partner_id?.statusSubtitle()" class="ms-2 smaller text-truncate" t-att-class="this.member().partner_id.statusSubtitleClass()" t-out="this.member().partner_id.statusSubtitle()"/>
                 <span t-if="this.member().isInvitationPending" class="ms-2 pe-1 text-truncate smaller fst-italic text-muted">Invitation Pending</span>
             </div>
             <span class="o-discuss-ChannelMember-callIndicators ms-auto d-flex align-items-center o-gap-0_5 ps-2">

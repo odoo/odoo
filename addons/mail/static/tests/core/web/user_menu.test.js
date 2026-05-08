@@ -1,8 +1,14 @@
-import { defineMailModels, start } from "@mail/../tests/mail_test_helpers";
+import {
+    click,
+    defineMailModels,
+    hover,
+    insertText,
+    start,
+    startServer,
+} from "@mail/../tests/mail_test_helpers";
 import { describe, expect, getFixture, test, waitFor } from "@odoo/hoot";
-import { queryOne } from "@odoo/hoot-dom";
-import { defineParams } from "@web/../tests/web_test_helpers";
-
+import { animationFrame, press, queryOne } from "@odoo/hoot-dom";
+import { defineParams, serverState } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -53,4 +59,38 @@ test("user menu IM status is on the bottom-left corner in RTL", async () => {
     expect(holeCenter).toBeLessThan(16);
     expect(iconCenter).toBeCloseTo(holeCenter, { margin: 1 });
     expect(isIconMirrored).toBe(false);
+});
+
+test("set status message writes field on user", async () => {
+    const pyEnv = await startServer();
+    await start();
+    await click(".o_user_menu");
+    await hover(".dropdown-menu a:has(.o-mail-ImStatus)");
+    await insertText(
+        ".o-mail-ImStatusDropdown input[placeholder='Set a status message']",
+        "I am busy"
+    );
+    await animationFrame();
+    expect(
+        pyEnv["res.users"].read([serverState.userId], ["status_message"])[0].status_message
+    ).toBe("I am busy");
+});
+
+test("Enter in the status message keeps the IM status", async () => {
+    const pyEnv = await startServer();
+    pyEnv["res.users"].write([serverState.userId], { im_status: "busy" });
+    await start();
+    await click(".o_user_menu");
+    await hover(".dropdown-menu a:has(.o-mail-ImStatus)");
+    await waitFor(".dropdown-item.active:contains('Do Not Disturb'):count(1)");
+    await insertText(
+        ".o-mail-ImStatusDropdown input[placeholder='Set a status message']",
+        "In a meeting"
+    );
+    await press("Enter");
+    await animationFrame();
+    await waitFor(".dropdown-item.active:contains('Do Not Disturb'):count(1)");
+    expect(
+        pyEnv["res.users"].read([serverState.userId], ["status_message"])[0].status_message
+    ).toBe("In a meeting");
 });

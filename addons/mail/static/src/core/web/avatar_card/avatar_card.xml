@@ -11,6 +11,9 @@
                 </span>
                 <div class="d-flex flex-column o_card_user_infos overflow-hidden">
                     <span t-if="this.name" class="o-mail-avatar-card-name fw-bold" t-out="this.name"/>
+                    <small t-if="this.user?.status_message" class="o-mail-AvatarCard-statusMessage text-muted text-break">
+                        <i class="oi oi-fw oi-filled me-1" data-icon="chat_bubble" title="Status message"/><t t-out="this.user.status_message"/>
+                    </small>
                     <a t-if="this.email" t-att-href="'mailto:'+this.email" t-att-title="this.email" class="text-truncate">
                         <i class="oi oi-fw oi-filled me-1" data-icon="mail"/><t t-out="this.email"/>
                     </a>

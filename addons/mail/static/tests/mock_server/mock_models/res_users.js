@@ -170,6 +170,7 @@ export class ResUsers extends webModels.ResUsers {
         res.attr("share");
         res.one("partner_id", "_store_avatar_card_fields");
         res.attr("is_public", (u) => this._is_public(u.id));
+        res.attr("status_message", undefined, { internal: true });
         res.from_method("_store_im_status_fields", { internal: true });
     }
 
@@ -185,6 +186,7 @@ export class ResUsers extends webModels.ResUsers {
 
     _store_main_user_fields(res) {
         res.extend(["active", "partner_id", "share"]);
+        res.attr("status_message", undefined, { internal: true });
     }
 
     _store_init_fields(res) {
@@ -195,7 +197,7 @@ export class ResUsers extends webModels.ResUsers {
             r.from_method("_store_avatar_fields");
         });
         res.attr("is_admin", () => this._is_admin());
-        res.extend(["notification_type", "share", "signature"]);
+        res.extend(["notification_type", "share", "signature", "status_message"]);
         /** @type {import("mock_models").ResUsersSettings} */
         const ResUsersSettings = this.env["res.users.settings"];
         // mock simplification: res_users_settings_id is computed on the server
