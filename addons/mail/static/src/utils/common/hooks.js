@@ -12,7 +12,6 @@ import { CallPermissionDeniedDialog } from "@mail/discuss/call/common/call_permi
 import { monitorAudio } from "@mail/utils/common/media_monitoring";
 import { browser } from "@web/core/browser/browser";
 import { OVERLAY_SYMBOL } from "@web/core/overlay/overlay_container";
-import { Deferred } from "@web/core/utils/concurrency";
 import { makeDraggableHook } from "@web/core/utils/draggable_hook_builder_owl";
 import { useService } from "@web/core/utils/hooks";
 
@@ -447,8 +446,10 @@ export function useMessageScrolling({
         startupPromise: null,
         /** @type {(value?: void) => void | null}  */
         resolveStartup: null,
-        /** Deferred during scrolling to highlight */
+        /** @type {?Promise<void>} Promise during scrolling to highlight */
         scrollPromise: null,
+        /** @type {(value?: void) => void | null}  */
+        resolveScroll: null,
         /**
          * Scroll the element into view and expose a promise that will resolved
          * once the scroll is done.
@@ -456,17 +457,18 @@ export function useMessageScrolling({
          * @param {Element} el
          */
         scrollTo(el) {
-            state.scrollPromise?.resolve();
-            const scrollPromise = new Deferred();
+            state.resolveScroll?.();
+            const { promise: scrollPromise, resolve: resolveScroll } = Promise.withResolvers();
             state.scrollPromise = scrollPromise;
+            state.resolveScroll = resolveScroll;
             if ("onscrollend" in window) {
-                document.addEventListener("scrollend", scrollPromise.resolve, {
+                document.addEventListener("scrollend", resolveScroll, {
                     capture: true,
                     once: true,
                 });
             } else {
                 // To remove when safari will support the "scrollend" event.
-                setTimeout(scrollPromise.resolve, 250);
+                setTimeout(resolveScroll, 250);
             }
             el.scrollIntoView({ behavior: "smooth", block: "center" });
             return scrollPromise;
