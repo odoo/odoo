@@ -98,7 +98,7 @@ class MailMessage(models.Model):
             related_attachments = {
                 att_read_values['id']: att_read_values
                 for att_read_values in attachments_sudo.read(
-                    ["checksum", "id", "mimetype", "name", "res_id", "res_model"]
+                    ["checksum", "has_thumbnail", "id", "mimetype", "name", "res_id", "res_model"],
                 )
             }
             message_to_attachments = {
@@ -184,6 +184,7 @@ class MailMessage(models.Model):
             else attachment_values["mimetype"])
         attachment = self.env['ir.attachment'].browse(attachment_values['id'])
         attachment_values["raw_access_token"] = attachment._get_raw_access_token()
+        attachment_values["thumbnail_access_token"] = attachment._get_thumbnail_token()
         if self.is_current_user_or_guest_author:
             attachment_values["ownership_token"] = attachment._get_ownership_token()
         return attachment_values
