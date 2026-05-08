@@ -3531,6 +3531,7 @@ class AccountMoveLine(models.Model):
         section_total = sum(l.price_total for l in children_lines)
         result = [{
             'name': self.name,
+            'product': False,
             'taxes': [tax.tax_label for tax in children_lines.tax_ids if tax.tax_label] if not self.collapse_prices else [],
             'price_subtotal': section_subtotal,
             'price_total': section_total,
@@ -3546,6 +3547,7 @@ class AccountMoveLine(models.Model):
         for line in direct_children_lines:
             result.append({
                 'name': line.name,
+                'product': line.product_id,
                 'taxes': [tax.tax_label for tax in line.tax_ids if tax.tax_label],
                 'price_subtotal': line.price_subtotal,
                 'price_total': line.price_total,
@@ -3568,6 +3570,7 @@ class AccountMoveLine(models.Model):
                 if subsection_line.collapse_composition:
                     result.append({
                         'name': subsection_line.name,
+                        'product': False,
                         'taxes': tax_labels,
                         'price_subtotal': subtotal,
                         'price_total': total,
@@ -3581,6 +3584,7 @@ class AccountMoveLine(models.Model):
                     for line in subsection_line | lines_for_tax_group:
                         result.append({
                             'name': line.name,
+                            'product': line.product_id,
                             'taxes': tax_labels if (line == subsection_line and not self.collapse_prices) or (line != subsection_line and self.collapse_prices) else [],
                             'price_subtotal': subtotal if line == subsection_line else line.price_subtotal,
                             'price_total': total if line == subsection_line else line.price_total,
