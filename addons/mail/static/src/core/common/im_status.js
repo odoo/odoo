@@ -22,7 +22,10 @@ export function getImStatusData({ member, persona, user }) {
     return /** @type {ImStatusData} */ (
         Object.fromEntries(
             ["icon", "iconClass", "title"].map((key) => {
-                const value = data[key];
+                const value =
+                    typeof data[key] === "function"
+                        ? data[key]({ member, persona, user })
+                        : data[key];
                 return [
                     key,
                     typeof value === "string" || value instanceof String

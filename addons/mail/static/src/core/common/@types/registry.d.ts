@@ -36,7 +36,14 @@ declare module "registries" {
         }) => boolean;
         icon: IconInfo | string;
         iconClass: IconInfo | string;
-        title: TitleInfo | TranslatableString;
+        title:
+            | TitleInfo
+            | TranslatableString
+            | ((data: {
+                  persona: MailGuest | ResPartner,
+                  member?: ChannelMember,
+                  user?: ResUsers,
+              }) => TitleInfo | TranslatableString);
     }
 
     interface PartnerCompareDataItemShape {

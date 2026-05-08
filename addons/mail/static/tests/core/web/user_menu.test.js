@@ -1,7 +1,14 @@
-import { defineMailModels, start } from "@mail/../tests/mail_test_helpers";
+import {
+    click,
+    defineMailModels,
+    hover,
+    insertText,
+    start,
+    startServer,
+} from "@mail/../tests/mail_test_helpers";
 import { describe, expect, getFixture, test, waitFor } from "@odoo/hoot";
-import { queryOne } from "@odoo/hoot-dom";
-import { defineParams } from "@web/../tests/web_test_helpers";
+import { animationFrame, press, queryOne } from "@odoo/hoot-dom";
+import { defineParams, serverState } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -71,4 +78,75 @@ test("user menu IM status is on the bottom-left corner in RTL", async () => {
     expect(iconCenter.x).toBeCloseTo(holeCenter.x, { margin: 1 });
     expect(iconCenter.y).toBeCloseTo(holeCenter.y, { margin: 1 });
     expect(isIconMirrored).toBe(false);
+});
+
+test("user menu shows own status message", async () => {
+    const pyEnv = await startServer();
+    pyEnv["res.users"].write([serverState.userId], { status_message: "Off on Wednesdays" });
+    await start();
+    await click(".o_user_menu");
+    await waitFor(
+        ".dropdown-menu a:has(.o-mail-ImStatus) .o-mail-ImStatusDropdown-ownStatusMessage:text('Off on Wednesdays')"
+    );
+});
+
+test("user menu avatar shows own status message on the top-right corner", async () => {
+    const pyEnv = await startServer();
+    pyEnv["res.users"].write([serverState.userId], { status_message: "Off on Wednesdays" });
+    await start();
+    await waitFor(".o_user_menu[data-tooltip='Off on Wednesdays']");
+    // mask is fitted to the icon once it is laid out
+    await waitFor(".o_user_menu .o-mail-DiscussAvatar mask use[href$='.statusMessage'][transform]");
+    const avatar = queryOne(".o_user_menu .o-mail-DiscussAvatar");
+    const icon = queryOne(".o-mail-DiscussAvatar-statusMessageIcon [data-icon='chat_bubble']", {
+        root: avatar,
+    });
+    const hole = queryOne("mask use[href$='.statusMessage']", { root: avatar });
+    const avatarRect = avatar.getBoundingClientRect();
+    const iconRect = icon.getBoundingClientRect();
+    const holeMatrix = hole.transform.baseVal.consolidate().matrix;
+    // avatar units go from 0 to 32, the mask is in CSS pixels of the avatar
+    const toAvatarUnits = 32 / avatarRect.width;
+    const maskToAvatarUnits = 32 / avatar.offsetWidth;
+    const iconLeft = (iconRect.left - avatarRect.left) * toAvatarUnits;
+    const iconCenterY = (iconRect.top - avatarRect.top + iconRect.height / 2) * toAvatarUnits;
+    expect(iconLeft + (iconRect.width / 2) * toAvatarUnits).toBeGreaterThan(16);
+    expect(iconCenterY).toBeLessThan(16);
+    // the masked glyph starts at its translation and is vertically centered on it
+    expect(holeMatrix.e * maskToAvatarUnits).toBeCloseTo(iconLeft, { margin: 1 });
+    expect(holeMatrix.f * maskToAvatarUnits).toBeCloseTo(iconCenterY, { margin: 1 });
+});
+
+test("set status message writes field on user", async () => {
+    const pyEnv = await startServer();
+    await start();
+    await click(".o_user_menu");
+    await hover(".dropdown-menu a:has(.o-mail-ImStatus)");
+    await insertText(
+        ".o-mail-ImStatusDropdown input[placeholder='Set a status message']",
+        "I am busy"
+    );
+    await animationFrame();
+    expect(
+        pyEnv["res.users"].read([serverState.userId], ["status_message"])[0].status_message
+    ).toBe("I am busy");
+});
+
+test("Enter in the status message keeps the IM status", async () => {
+    const pyEnv = await startServer();
+    pyEnv["res.users"].write([serverState.userId], { im_status: "busy" });
+    await start();
+    await click(".o_user_menu");
+    await hover(".dropdown-menu a:has(.o-mail-ImStatus)");
+    await waitFor(".dropdown-item.active:contains('Do Not Disturb'):count(1)");
+    await insertText(
+        ".o-mail-ImStatusDropdown input[placeholder='Set a status message']",
+        "In a meeting"
+    );
+    await press("Enter");
+    await animationFrame();
+    await waitFor(".dropdown-item.active:contains('Do Not Disturb'):count(1)");
+    expect(
+        pyEnv["res.users"].read([serverState.userId], ["status_message"])[0].status_message
+    ).toBe("In a meeting");
 });
