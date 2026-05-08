@@ -1000,7 +1000,7 @@ export class PosOrder extends Base {
                 name: pl.payment_method_id.name,
                 amount: formatCurrency(pl.getAmount()),
             })),
-            change: this.getChange() && formatCurrency(this.getChange()),
+            change: this.getChange() && formatCurrency(-this.getChange()),
             generalCustomerNote: this.general_customer_note || "",
         };
     }
