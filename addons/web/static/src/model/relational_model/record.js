@@ -1,10 +1,9 @@
-import { markRaw, markup, signal, toRaw } from "@odoo/owl";
+import { markRaw, markup, toRaw } from "@odoo/owl";
 import { serializeDate, serializeDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
 import { ConnectionLostError, RPCError } from "@web/core/network/rpc";
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { pick } from "@web/core/utils/objects";
-import { makeReactive } from "@web/owl2/utils";
 import { DataPoint } from "./datapoint";
 import { FetchRecordError } from "./errors";
 import { Operation } from "./operation";

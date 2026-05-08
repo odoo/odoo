@@ -1,6 +1,6 @@
 // @ts-check
 
-import { EventBus, markRaw, signal, toRaw } from "@odoo/owl";
+import { EventBus, markRaw, toRaw } from "@odoo/owl";
 import { makeContext } from "@web/core/context";
 import { Domain } from "@web/core/domain";
 import { WarningDialog } from "@web/core/errors/error_dialogs";

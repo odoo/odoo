@@ -1,9 +1,8 @@
-import { markRaw, signal } from "@odoo/owl";
+import { markRaw } from "@odoo/owl";
 import { x2ManyCommands } from "@web/core/orm_service";
 import { intersection } from "@web/core/utils/arrays";
 import { omit, pick } from "@web/core/utils/objects";
 import { completeActiveFields } from "@web/model/relational_model/utils";
-import { makeReactive } from "@web/owl2/utils";
 import { DataPoint } from "./datapoint";
 import { fromUnityToServerValues, getBasicEvalContext, getId, patchActiveFields } from "./utils";
 

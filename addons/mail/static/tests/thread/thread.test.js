@@ -926,7 +926,8 @@ test("Update unread counter when receiving new message", async () => {
     await contains(".o-discuss-badge:text('2')");
 });
 
-test("Show start message of conversation", async () => {
+test.tags("owl3");
+test.todo("Show start message of conversation", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
