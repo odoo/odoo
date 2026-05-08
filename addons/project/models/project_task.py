@@ -1730,8 +1730,7 @@ class ProjectTask(models.Model):
             doc = html.fromstring(source_html)
 
             signature_xpath = (
-                '//*[@id="Signature"] | '
-                '//*[@data-smartmail="gmail_signature"] | '
+                '//*[@data-o-mail-quote="1"] | '
                 '//span[normalize-space(.) = "--"]'
             )
 
