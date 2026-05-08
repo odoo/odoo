@@ -36,8 +36,7 @@
             <t t-if="!this.state.collapsed">
                 <div class="o_calendar_filter_items d-flex flex-column gap-1">
                     <t t-foreach="this.getSortedFilters()" t-as="filter" t-key="filter.value">
-                        <t t-set="filterId" t-value="this.nextFilterId"/>
-                        <t t-call="{{ this.constructor.subTemplates.filter }}"/>
+                        <t t-call="{{ this.constructor.subTemplates.filter }}" filterId="this.nextFilterId"/>
                     </t>
                 </div>
                 <AutoComplete t-if="this.section.canAddFilter" t-props="this.autoCompleteProps">
