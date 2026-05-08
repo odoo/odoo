@@ -968,10 +968,10 @@ class Website(models.Model):
             (all_abandoned_carts - abandoned_carts).cart_recovery_email_sent = True
             for sale_order in abandoned_carts:
                 template = self.env.ref("website_sale.mail_template_sale_cart_recovery")
-                # fallback email_vals in case partner_to and email_to were emptied
+                # fallback email_vals in case partner_to,email_to were emptied or default recipients is false
                 email_vals = (
                     {}
-                    if template.email_to or template.partner_to
+                    if template.email_to or template.partner_to or template.use_default_to
                     else {"email_to": sale_order.partner_id.email_formatted}
                 )
                 template.send_mail(sale_order.id, email_values=email_vals)
