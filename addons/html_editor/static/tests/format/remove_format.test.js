@@ -904,6 +904,14 @@ test("Remove format not remove text color if applied on .btn element", async () 
     });
 });
 
+test("should remove format of a editable text within contenteditable false block", async () => {
+    await testEditor({
+        contentBefore: `<div contenteditable="false"><div contenteditable="true"><p><font style="background-color: red;"><font style="background-color: blue;">ab[cd]ef</font></font></p></div></div>`,
+        stepFunction: (editor) => execCommand(editor, "removeFormat"),
+        contentAfter: `<div contenteditable="false"><div contenteditable="true"><p><font style="background-color: red;"><font style="background-color: blue;">ab</font></font>[cd]<font style="background-color: red;"><font style="background-color: blue;">ef</font></font></p></div></div>`,
+    });
+});
+
 describe("Toolbar", () => {
     async function removeFormatClick() {
         await expandToolbar();
