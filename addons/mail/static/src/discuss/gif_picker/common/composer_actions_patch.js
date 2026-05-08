@@ -10,7 +10,6 @@ import { GifPicker } from "./gif_picker";
 import { usePopover } from "@web/core/popover/popover_hook";
 
 registerComposerAction("add-gif", {
-    actionPanelClose: ({ action }) => action.popover?.close(),
     actionPanelComponent: GifPicker,
     actionPanelComponentProps: ({ action, owner }) => ({
         onSelect: async (gif) => {

@@ -6,7 +6,6 @@ import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
 
 registerThreadAction("show-threads", {
-    actionPanelClose: ({ action }) => action.popover?.close(),
     actionPanelComponent: SubChannelList,
     actionPanelComponentProps: ({ channel }) => ({ channel }),
     actionPanelOpen({ channel, owner }) {

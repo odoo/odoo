@@ -104,7 +104,6 @@ registerThreadAction("remove-from-favorites", {
     sequenceGroup: 20,
 });
 registerThreadAction("notification-settings", {
-    actionPanelClose: ({ action }) => action.popover?.close(),
     actionPanelComponent: NotificationSettings,
     actionPanelComponentProps: ({ channel }) => ({ channel }),
     actionPanelOpen({ channel, owner, store }) {
@@ -153,7 +152,6 @@ registerThreadAction("attachments", {
     sequenceGroup: 10,
 });
 registerThreadAction("invite-people", {
-    actionPanelClose: ({ action }) => action.popover?.close(),
     actionPanelComponent: ChannelInvitation,
     actionPanelComponentProps: ({ channel }) => ({ channel }),
     actionPanelOpen({ owner, store, channel }) {
@@ -305,7 +303,6 @@ registerThreadAction("leave", {
 });
 
 registerThreadAction("delete-thread", {
-    actionPanelClose: ({ action }) => action.popover?.close(),
     actionPanelComponent: DeleteThreadDialog,
     actionPanelComponentProps: ({ channel }) => ({ channel }),
     actionPanelOuterClass: "bg-100",
