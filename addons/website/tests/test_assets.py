@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import re
+from urllib.parse import urlsplit
 
 import odoo.tests
 
@@ -149,6 +150,14 @@ class TestWebsiteAssets(odoo.tests.HttpCase):
         font = self.url_open('/web/assets/_______/web.fontawesome.min.woff')
         self.assertEqual('font/woff', font.headers.get('Content-Type'), "Should be woff")
         self.assertEqual(b'wOFF', font.content[:4])
+
+        # Verify that links actually return expected binary for latest version
+        old_version = 'aaaaaaa'  # dummy version unrelated to the actual one
+        font = self.url_open(f'/web/assets/{old_version}/web.fontawesome.min.woff')
+        self.assertEqual('font/woff', font.headers.get('Content-Type'), "Should be woff")
+        self.assertEqual(b'wOFF', font.content[:4])
+        new_version = urlsplit(font.url).path.split("/assets/")[1].split("/")[0]
+        self.assertNotEqual(old_version, new_version)
 
     def test_binary_asset_website(self):
         # Make website 1's CSS distinct from base one
