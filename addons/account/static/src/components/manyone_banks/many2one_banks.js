@@ -37,6 +37,10 @@ function extractDataBank(record) {
 
 export class Many2OneBank extends Many2One {
     static template = "account.Many2OneBank";
+    static props = {
+        ...Many2One.props,
+        bankAllowOutPayment: { type: Boolean, optional: true },
+    };
     static components = {
         ...Many2One.components,
         Many2XAutocomplete: Many2XAutocompleteBank,
@@ -63,6 +67,10 @@ export class Many2OneBankField extends Many2OneField {
     get m2oProps() {
         const props = super.m2oProps;
         props.cssClass = `${props.cssClass ?? ''} d-flex`;
+        props.bankAllowOutPayment =
+            "allow_out_payment" in this.props.record.data
+                ? this.props.record.data.allow_out_payment
+                : props.value?.allow_out_payment || false;
         return props;
     }
 }
