@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 19.3a1\n"
+"Project-Id-Version: Odoo Server 19.4a1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-12 18:37+0000\n"
-"PO-Revision-Date: 2026-03-12 18:37+0000\n"
+"POT-Creation-Date: 2026-05-07 17:36+0000\n"
+"PO-Revision-Date: 2026-05-07 17:36+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -49,11 +49,6 @@ msgid "Access denied. Please check your Bancontact permissions."
 msgstr ""
 
 #. module: pos_bancontact_pay
-#: model_terms:ir.ui.view,arch_db:pos_bancontact_pay.pos_payment_method_view_form_inherit_bancontact_pay
-msgid "Adyen"
-msgstr ""
-
-#. module: pos_bancontact_pay
 #. odoo-python
 #: code:addons/pos_bancontact_pay/errors/http.py:0
 msgid "Authentication with Bancontact failed. Please verify your API key."
@@ -72,6 +67,17 @@ msgstr ""
 #. module: pos_bancontact_pay
 #: model:ir.model.fields,field_description:pos_bancontact_pay.field_pos_payment_method__bancontact_ppid
 msgid "Bancontact PPID"
+msgstr ""
+
+#. module: pos_bancontact_pay
+#. odoo-python
+#: code:addons/pos_bancontact_pay/models/pos_payment_method.py:0
+msgid "Bancontact PPID must be set to generate the sticker URL."
+msgstr ""
+
+#. module: pos_bancontact_pay
+#: model_terms:ir.ui.view,arch_db:pos_bancontact_pay.pos_payment_method_view_form_inherit_bancontact_pay
+msgid "Bancontact Pay"
 msgstr ""
 
 #. module: pos_bancontact_pay
@@ -96,7 +102,33 @@ msgstr ""
 #. module: pos_bancontact_pay
 #. odoo-python
 #: code:addons/pos_bancontact_pay/models/pos_payment_method.py:0
-msgid "Bancontact payment not found."
+msgid ""
+"Bancontact payments can only be cancelled for payment methods using "
+"Bancontact Pay as provider."
+msgstr ""
+
+#. module: pos_bancontact_pay
+#. odoo-python
+#: code:addons/pos_bancontact_pay/models/pos_payment_method.py:0
+msgid ""
+"Bancontact payments can only be created for payment methods using Bancontact"
+" Pay as provider."
+msgstr ""
+
+#. module: pos_bancontact_pay
+#. odoo-python
+#: code:addons/pos_bancontact_pay/models/pos_payment_method.py:0
+msgid ""
+"Bancontact sticker URL can only be generated for payment methods configured "
+"with 'Static Sticker' usage."
+msgstr ""
+
+#. module: pos_bancontact_pay
+#. odoo-python
+#: code:addons/pos_bancontact_pay/models/pos_payment_method.py:0
+msgid ""
+"Bancontact sticker URL can only be generated for payment methods using "
+"Bancontact Pay as provider."
 msgstr ""
 
 #. module: pos_bancontact_pay
@@ -133,11 +165,6 @@ msgid "Download Sticker"
 msgstr ""
 
 #. module: pos_bancontact_pay
-#: model:ir.model.fields.selection,name:pos_bancontact_pay.selection__pos_payment_method__bancontact_sticker_size__xl
-msgid "Extra Large (800x800)"
-msgstr ""
-
-#. module: pos_bancontact_pay
 #. odoo-javascript
 #: code:addons/pos_bancontact_pay/static/src/app/payment_bancontact.js:0
 msgid "Force Cancel"
@@ -155,16 +182,6 @@ msgstr ""
 #. module: pos_bancontact_pay
 #: model:ir.model,name:pos_bancontact_pay.model_account_journal
 msgid "Journal"
-msgstr ""
-
-#. module: pos_bancontact_pay
-#: model:ir.model.fields.selection,name:pos_bancontact_pay.selection__pos_payment_method__bancontact_sticker_size__l
-msgid "Large (400x400)"
-msgstr ""
-
-#. module: pos_bancontact_pay
-#: model:ir.model.fields.selection,name:pos_bancontact_pay.selection__pos_payment_method__bancontact_sticker_size__m
-msgid "Medium (250x250)"
 msgstr ""
 
 #. module: pos_bancontact_pay
@@ -242,6 +259,13 @@ msgid "Point of Sale Payment Method"
 msgstr ""
 
 #. module: pos_bancontact_pay
+#. odoo-javascript
+#: code:addons/pos_bancontact_pay/static/src/app/qr_code_popup/qr_code_popup.xml:0
+#: code:addons/pos_bancontact_pay/static/src/customer_display/customer_display.xml:0
+msgid "QR Code"
+msgstr ""
+
+#. module: pos_bancontact_pay
 #: model:ir.model.fields,field_description:pos_bancontact_pay.field_pos_payment_method__bancontact_usage
 msgid "QR Usage"
 msgstr ""
@@ -258,23 +282,8 @@ msgid "Run transactions in the test environment."
 msgstr ""
 
 #. module: pos_bancontact_pay
-#: model:ir.model.fields.selection,name:pos_bancontact_pay.selection__pos_payment_method__bancontact_sticker_size__s
-msgid "Small (180x180)"
-msgstr ""
-
-#. module: pos_bancontact_pay
 #: model:ir.model.fields.selection,name:pos_bancontact_pay.selection__pos_payment_method__bancontact_usage__sticker
 msgid "Static Sticker"
-msgstr ""
-
-#. module: pos_bancontact_pay
-#: model:ir.model.fields,field_description:pos_bancontact_pay.field_pos_payment_method__bancontact_sticker_size
-msgid "Sticker Size"
-msgstr ""
-
-#. module: pos_bancontact_pay
-#: model:ir.model.fields,field_description:pos_bancontact_pay.field_pos_payment_method__bancontact_sticker_url
-msgid "Sticker URL"
 msgstr ""
 
 #. module: pos_bancontact_pay
@@ -290,6 +299,12 @@ msgstr ""
 #: code:addons/pos_bancontact_pay/errors/http.py:0
 msgid ""
 "The action could not be completed. Please try again or contact support."
+msgstr ""
+
+#. module: pos_bancontact_pay
+#. odoo-javascript
+#: code:addons/pos_bancontact_pay/static/src/app/pos_payment_method.js:0
+msgid "The amount must be positive to use this payment method."
 msgstr ""
 
 #. module: pos_bancontact_pay

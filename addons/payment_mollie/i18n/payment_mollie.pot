@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 19.0\n"
+"Project-Id-Version: Odoo Server 19.4a1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 13:58+0000\n"
-"PO-Revision-Date: 2025-09-11 13:58+0000\n"
+"POT-Creation-Date: 2026-05-07 17:37+0000\n"
+"PO-Revision-Date: 2026-05-07 17:37+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -33,12 +33,14 @@ msgstr ""
 
 #. module: payment_mollie
 #: model:ir.model.fields,field_description:payment_mollie.field_payment_provider__display_name
+#: model:ir.model.fields,field_description:payment_mollie.field_payment_token__display_name
 #: model:ir.model.fields,field_description:payment_mollie.field_payment_transaction__display_name
 msgid "Display Name"
 msgstr ""
 
 #. module: payment_mollie
 #: model:ir.model.fields,field_description:payment_mollie.field_payment_provider__id
+#: model:ir.model.fields,field_description:payment_mollie.field_payment_token__id
 #: model:ir.model.fields,field_description:payment_mollie.field_payment_transaction__id
 msgid "ID"
 msgstr ""
@@ -54,8 +56,18 @@ msgid "Mollie API Key"
 msgstr ""
 
 #. module: payment_mollie
+#: model:ir.model.fields,field_description:payment_mollie.field_payment_token__mollie_customer_id
+msgid "Mollie Customer ID"
+msgstr ""
+
+#. module: payment_mollie
 #: model:ir.model,name:payment_mollie.model_payment_provider
 msgid "Payment Provider"
+msgstr ""
+
+#. module: payment_mollie
+#: model:ir.model,name:payment_mollie.model_payment_token
+msgid "Payment Token"
 msgstr ""
 
 #. module: payment_mollie

@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 19.0\n"
+"Project-Id-Version: Odoo Server 19.4a1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-11 13:58+0000\n"
-"PO-Revision-Date: 2025-09-11 13:58+0000\n"
+"POT-Creation-Date: 2026-05-07 17:37+0000\n"
+"PO-Revision-Date: 2026-05-07 17:37+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -61,6 +61,11 @@ msgstr ""
 #. odoo-python
 #: code:addons/payment_razorpay/controllers/onboarding.py:0
 msgid "Could not find Razorpay provider with id %s"
+msgstr ""
+
+#. module: payment_razorpay
+#: model_terms:ir.ui.view,arch_db:payment_razorpay.payment_provider_form_razorpay
+msgid "Disconnect"
 msgstr ""
 
 #. module: payment_razorpay
@@ -145,6 +150,11 @@ msgid "Razorpay Account ID"
 msgstr ""
 
 #. module: payment_razorpay
+#: model:ir.model.fields,field_description:payment_razorpay.field_payment_provider__razorpay_is_oauth_supported
+msgid "Razorpay Is Oauth Supported"
+msgstr ""
+
+#. module: payment_razorpay
 #: model:ir.model.fields,field_description:payment_razorpay.field_payment_provider__razorpay_key_id
 msgid "Razorpay Key Id"
 msgstr ""
@@ -173,8 +183,15 @@ msgstr ""
 #. odoo-python
 #: code:addons/payment_razorpay/models/payment_provider.py:0
 msgid ""
-"Razorpay credentials are missing. Click the \"Connect\" button to set up "
-"your account."
+"Razorpay credentials are missing. Please fill them to set up your account."
+msgstr ""
+
+#. module: payment_razorpay
+#. odoo-python
+#: code:addons/payment_razorpay/models/payment_provider.py:0
+msgid ""
+"Razorpay credentials are missing. Please set the state back to 'Disabled' "
+"and click the \"Connect\" button to set up your account."
 msgstr ""
 
 #. module: payment_razorpay
@@ -207,11 +224,6 @@ msgstr ""
 #. odoo-python
 #: code:addons/payment_razorpay/models/payment_transaction.py:0
 msgid "Received incomplete refund data."
-msgstr ""
-
-#. module: payment_razorpay
-#: model_terms:ir.ui.view,arch_db:payment_razorpay.payment_provider_form_razorpay
-msgid "Reset Your Razorpay Account"
 msgstr ""
 
 #. module: payment_razorpay
@@ -256,7 +268,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment_razorpay.payment_provider_form_razorpay
 msgid ""
 "You are currently connected to Razorpay through the credentials method, which is\n"
-"                    deprecated. Click the \"Connect\" button below to use the recommended OAuth\n"
+"                    deprecated. Click the \"Connect\" button above to use the recommended OAuth\n"
 "                    method."
 msgstr ""
 

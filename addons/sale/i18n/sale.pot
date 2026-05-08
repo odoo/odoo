@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 19.3a1\n"
+"Project-Id-Version: Odoo Server 19.4a1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-12 18:37+0000\n"
-"PO-Revision-Date: 2026-03-12 18:37+0000\n"
+"POT-Creation-Date: 2026-05-07 17:37+0000\n"
+"PO-Revision-Date: 2026-05-07 17:37+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -40,6 +40,11 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_transaction__sale_order_ids_nbr
 msgid "# of Sales Orders"
+msgstr ""
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_delivered_percent
+msgid "% Delivered"
 msgstr ""
 
 #. module: sale
@@ -79,32 +84,6 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
-msgid "2023-12-31"
-msgstr ""
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
-msgid "25.00"
-msgstr ""
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
-msgid "27.00"
-msgstr ""
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
-msgid "30.00"
-msgstr ""
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
-msgid "31.05"
-msgstr ""
-
-#. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
 msgid ""
@@ -125,7 +104,18 @@ msgid ""
 "                        <t t-set=\"tx_sudo\" t-value=\"object.get_portal_last_transaction()\"/>\n"
 "                        Your order <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">S00049</span>\n"
 "                        <t t-if=\"object.state == 'sale' or (tx_sudo and tx_sudo.state in ('done', 'authorized'))\">\n"
-"                            has been confirmed.<br/>\n"
+"                            <t t-if=\"hasattr(object, 'carrier_id') and object.carrier_id.delivery_type == 'in_store'\">\n"
+"                                <t t-if=\"object.commitment_date and object.commitment_date.date() != object.date_order.date()\">\n"
+"                                    has been confirmed and will be ready on\n"
+"                                    <span t-field=\"object.commitment_date\" t-options=\"{&quot;widget&quot;: &quot;date&quot;}\"/>.<br/>\n"
+"                                </t>\n"
+"                                <t t-else=\"\">\n"
+"                                    has been confirmed and will be ready soon.<br/>\n"
+"                                </t>\n"
+"                            </t>\n"
+"                            <t t-else=\"\">\n"
+"                                has been confirmed.<br/>\n"
+"                            </t>\n"
 "                            Thank you for your trust.\n"
 "                        </t>\n"
 "                        <t t-elif=\"tx_sudo and tx_sudo.state == 'pending'\">\n"
@@ -293,24 +283,20 @@ msgid ""
 "                                    <td style=\"width: 50%; border-top: 1px solid #dee2e6;\" align=\"right\" t-out=\"format_amount(object.amount_untaxed, object.currency_id) or ''\">$ 10.00</td>\n"
 "                                </tr>\n"
 "                            </table>\n"
+"                            <t t-if=\"object.tax_totals and object.tax_totals['subtotals']\">\n"
+"                                <t t-set=\"all_tax_lines\" t-value=\"[tax for line in object.tax_totals['subtotals'] for tax in line['tax_groups']]\"/>\n"
+"                                <table width=\"100%\" t-if=\"all_tax_lines\" style=\"max-width: 590px; font-size: 14px; border-spacing: 0px; white-space: nowrap;\" role=\"presentation\">\n"
+"                                    <tr t-foreach=\"all_tax_lines\" t-as=\"tax_line\">\n"
+"                                        <td style=\"width: 20%; padding-bottom: 8px;\" align=\"left\"><span t-out=\"tax_line['group_name']\"/></td>\n"
+"                                        <td style=\"width: 80%;\" align=\"right\" t-out=\"format_amount(tax_line['tax_amount_currency'], object.currency_id) or ''\">$ 0.00</td>\n"
+"                                    </tr>\n"
+"                                </table>\n"
+"                            </t>\n"
 "                            <table width=\"100%\" style=\"max-width: 590px; font-size: 14px; border-spacing: 0px; white-space: nowrap;\" role=\"presentation\">\n"
-"                                <tr>\n"
-"                                    <t t-if=\"object.tax_totals and object.tax_totals['subtotals']\">\n"
-"                                        <t t-foreach=\"object.tax_totals['subtotals']\" t-as=\"line\">\n"
-"                                            <t t-foreach=\"line['tax_groups']\" t-as=\"tax_line\">\n"
-"                                                <tr>\n"
-"                                                    <td style=\"width: 20%; padding-bottom: 8px;\" align=\"left\"><span t-out=\"tax_line['group_name']\"/></td>\n"
-"                                                    <td style=\"width: 80%;\" align=\"right\" t-out=\"format_amount(tax_line['tax_amount_currency'], object.currency_id) or ''\">$ 0.00</td>\n"
-"                                                </tr>\n"
-"                                            </t>\n"
-"                                        </t>\n"
-"                                    </t>\n"
-"                                </tr>\n"
 "                                <tr>\n"
 "                                    <td style=\"width: 20%; padding-top: 4px; border-top: 1px solid #343a40; opacity: 0.9;\" align=\"left\"><strong>Total</strong></td>\n"
 "                                    <td style=\"width: 80%; padding-top: 4px; border-top: 1px solid #343a40; font-weight: bold; \" align=\"right\">\n"
 "                                        <span style=\"display: inline-block; margin-right: 4px; padding: 4px 8px; border: 1px solid #dee2e6; border-radius: 4px;\">\n"
-"                                            <span style=\"opacity: 0.9;\">Paid with</span>\n"
 "                                            <span t-attf-style=\"color: #{color}; font-weight: bold;\">\n"
 "                                                <t t-out=\"tx_sudo.provider_id.sudo().name or ''\"/>\n"
 "                                            </span>\n"
@@ -323,7 +309,9 @@ msgid ""
 "                        <table t-if=\"object.partner_shipping_id and not object.only_services\" width=\"295\" style=\"vertical-align: top; font-size: 14px; margin-bottom: 12px;\" align=\"left\" role=\"presentation\">\n"
 "                            <tr>\n"
 "                                <td style=\"padding-bottom: 4px; font-weight: bold;\">\n"
-"                                    <span style=\"opacity: 0.9;\">Delivery with</span>\n"
+"                                    <t t-if=\"not (hasattr(object, 'carrier_id') and object.carrier_id.delivery_type == 'in_store')\">\n"
+"                                        <span style=\"opacity: 0.9;\">Delivery with</span>\n"
+"                                    </t>\n"
 "                                    <span t-attf-style=\"color: {{color}}; opacity: 1;\"><t t-out=\"object.carrier_id.name or ''\"/></span>\n"
 "                                </td>\n"
 "                            </tr>\n"
@@ -526,20 +514,6 @@ msgid "<i class=\"fa fa-print me-1\"/>View Details"
 msgstr ""
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.view_order_form
-msgid ""
-"<i class=\"fa fa-refresh\"/>\n"
-"                                        <span class=\"d-touch-none ms-1\">Update Taxes</span>"
-msgstr ""
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.view_order_form
-msgid ""
-"<i class=\"fa fa-refresh\"/>\n"
-"                                <span class=\"d-touch-none ms-1\">Update Prices</span>"
-msgstr ""
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<i class=\"fa fa-times\"/> Reject"
 msgstr ""
@@ -575,19 +549,6 @@ msgid "<span class=\"flex-grow-1\">/ Month</span>"
 msgstr ""
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.view_order_form
-msgid ""
-"<span class=\"o_input_box_overlay_end o_input_box_overlay_inline\">%</span>"
-msgstr ""
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.view_order_form
-msgid ""
-"<span class=\"o_input_box_overlay_end "
-"o_input_box_overlay_inline\">days</span>"
-msgstr ""
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_form_view_sale_order_button
 #: model_terms:ir.ui.view,arch_db:sale.product_template_form_view_sale_order_button
 msgid "<span class=\"o_stat_text\">Sold</span>"
@@ -611,7 +572,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid ""
 "<span invisible=\"advance_payment_method != 'percentage'\" "
-"class=\"o_input_box_overlay_end\">%</span>"
+"class=\"oe_inline\">% </span>"
 msgstr ""
 
 #. module: sale
@@ -964,18 +925,8 @@ msgid "Amount"
 msgstr ""
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order__amount_undiscounted
-msgid "Amount Before Discount"
-msgstr ""
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Amount paid:"
-msgstr ""
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.view_orders_to_invoice_tree
-msgid "Amount to invoice"
 msgstr ""
 
 #. module: sale
@@ -1065,7 +1016,12 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: model:ir.model.fields.selection,name:sale.selection__product_template__expense_policy__cost
+#: model:ir.model.fields.selection,name:sale.selection__product_template__reinvoice_policy__sales_price
+msgid "At Sales price"
+msgstr ""
+
+#. module: sale
+#: model:ir.model.fields.selection,name:sale.selection__product_template__reinvoice_policy__cost
 msgid "At cost"
 msgstr ""
 
@@ -1283,12 +1239,6 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: model_terms:ir.actions.act_window,help:sale.action_quotations
-#: model_terms:ir.actions.act_window,help:sale.action_quotations_with_onboarding
-msgid "Check a sample. It's clean!"
-msgstr ""
-
-#. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/tours/sale.js:0
 msgid "Click here to add some products or services to your quotation."
@@ -1382,69 +1332,6 @@ msgid "Company Document Layout"
 msgstr ""
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid ""
-"Compute shipping costs and ship with DHL<br/>\n"
-"                                    <strong>(please go to Home&gt;Apps to install)</strong>"
-msgstr ""
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid "Compute shipping costs and ship with Easypost"
-msgstr ""
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid "Compute shipping costs and ship with Envia.com"
-msgstr ""
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid ""
-"Compute shipping costs and ship with FedEx<br/>\n"
-"                                    <strong>(please go to Home&gt;Apps to install)</strong>"
-msgstr ""
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid "Compute shipping costs and ship with Sendcloud"
-msgstr ""
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid "Compute shipping costs and ship with Shiprocket"
-msgstr ""
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid "Compute shipping costs and ship with Starshipit"
-msgstr ""
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid ""
-"Compute shipping costs and ship with UPS<br/>\n"
-"                                    <strong>(please go to Home&gt;Apps to install)</strong>"
-msgstr ""
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid ""
-"Compute shipping costs and ship with USPS<br/>\n"
-"                                    <strong>(please go to Home&gt;Apps to install)</strong>"
-msgstr ""
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid "Compute shipping costs and ship with bpost"
-msgstr ""
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid "Compute shipping costs on orders"
-msgstr ""
-
-#. module: sale
 #: model:ir.model,name:sale.model_res_config_settings
 msgid "Config Settings"
 msgstr ""
@@ -1457,6 +1344,18 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Configure"
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+msgid "Configure Delivery Methods"
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+msgid ""
+"Configure delivery methods or work with delivery providers using existing "
+"integrations."
 msgstr ""
 
 #. module: sale
@@ -1700,11 +1599,6 @@ msgid "Customer Reference"
 msgstr ""
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.view_order_form
-msgid "Customer Signature"
-msgstr ""
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__state_id
 msgid "Customer State"
 msgstr ""
@@ -1724,16 +1618,6 @@ msgstr ""
 #: model:ir.ui.menu,name:sale.menu_reporting_customer
 #: model:ir.ui.menu,name:sale.res_partner_menu
 msgid "Customers"
-msgstr ""
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid "DHL Connector"
-msgstr ""
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_dhl
-msgid "DHL Express Connector"
 msgstr ""
 
 #. module: sale
@@ -1807,11 +1691,6 @@ msgid "Deliver"
 msgstr ""
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid "Deliver Content by Email"
-msgstr ""
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_delivered_at_date
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Delivered"
@@ -1862,12 +1741,26 @@ msgid "Delivery Status"
 msgstr ""
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_product_product__sale_delay
+#: model:ir.model.fields,field_description:sale.field_product_template__sale_delay
+msgid "Delivery Time"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__expected_date
 msgid ""
 "Delivery date you can promise to the customer, computed from the minimum "
 "lead time of the order lines in case of Service products. In case of "
 "shipping, the shipping policy of the order will be taken into account to "
 "either use the minimum or maximum lead time of the order lines."
+msgstr ""
+
+#. module: sale
+#: model:ir.model.fields,help:sale.field_product_product__sale_delay
+#: model:ir.model.fields,help:sale.field_product_template__sale_delay
+msgid ""
+"Delivery lead time, in days. It's the number of days, promised to the "
+"customer, between the confirmation of the sales order and the delivery."
 msgstr ""
 
 #. module: sale
@@ -2007,6 +1900,13 @@ msgid "Display Name"
 msgstr ""
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_res_company__display_product_images_on_so
+#: model:ir.model.fields,field_description:sale.field_res_config_settings__display_product_images_on_so
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+msgid "Display Product Images"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__display_qty_widget
 msgid "Display Qty Widget"
 msgstr ""
@@ -2019,11 +1919,6 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__distribution_analytic_account_ids
 msgid "Distribution Analytic Account"
-msgstr ""
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid "Documentation"
 msgstr ""
 
 #. module: sale
@@ -2095,6 +1990,11 @@ msgid "Down payment <br/>"
 msgstr ""
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_res_config_settings__downpayment_account_active
+msgid "Down payment Account Active"
+msgstr ""
+
+#. module: sale
 #. odoo-python
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
 msgid "Down payment invoice"
@@ -2144,11 +2044,6 @@ msgid "Duplicated Order"
 msgstr ""
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_easypost
-msgid "Easypost Connector"
-msgstr ""
-
-#. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/sale_product_field.js:0
 msgid "Edit Configuration"
@@ -2165,14 +2060,19 @@ msgid "Email sent to the customer once the invoice is available."
 msgstr ""
 
 #. module: sale
+#: model:res.groups,name:sale.group_services_and_material
+msgid "Enable Services and Materials in Sales"
+msgstr ""
+
+#. module: sale
 #. odoo-javascript
 #: code:addons/sale/static/src/js/product_template_attribute_line/product_template_attribute_line.js:0
 msgid "Enter a customized value"
 msgstr ""
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_envia
-msgid "Envia.com Connector"
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
+msgid "Excl. Tax)"
 msgstr ""
 
 #. module: sale
@@ -2182,7 +2082,7 @@ msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_template_form_view
-msgid "Expense"
+msgid "Expenses, Services & Materials"
 msgstr ""
 
 #. module: sale
@@ -2214,12 +2114,6 @@ msgstr ""
 #. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 msgid "Extra line with %s"
-msgstr ""
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_fedex_rest
-#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid "FedEx Connector"
 msgstr ""
 
 #. module: sale
@@ -2269,7 +2163,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.product_pricelist_item_form
 msgid ""
 "For formula or fixed pricing, the original price isn’t shown in\n"
-"                                sale orders."
+"                            sale orders."
 msgstr ""
 
 #. module: sale
@@ -2529,17 +2423,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.product_pricelist_item_form
 msgid ""
 "In sale order line original price is unit price and discount is in\n"
-"                                discount column."
+"                            discount column."
 msgstr ""
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_view_search_catalog
 msgid "In the Order"
-msgstr ""
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
-msgid "Incl. tax)"
 msgstr ""
 
 #. module: sale
@@ -3017,11 +2906,6 @@ msgid "Method to update delivered qty"
 msgstr ""
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.product_pricelist_item_form
-msgid "Min Qty"
-msgstr ""
-
-#. module: sale
 #: model:ir.model.constraint,message:sale.constraint_sale_order_line_accountable_required_fields
 msgid "Missing required fields on accountable sale order line."
 msgstr ""
@@ -3105,7 +2989,7 @@ msgid "Next Activity Type"
 msgstr ""
 
 #. module: sale
-#: model:ir.model.fields.selection,name:sale.selection__product_template__expense_policy__no
+#: model:ir.model.fields.selection,name:sale.selection__product_template__reinvoice_policy__no
 msgid "No"
 msgstr ""
 
@@ -3435,11 +3319,6 @@ msgid "Other Info"
 msgstr ""
 
 #. module: sale
-#: model:ir.actions.report,name:sale.action_report_saleorder
-msgid "PDF Quote"
-msgstr ""
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_pdf_quote_builder
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "PDF Quote builder"
@@ -3555,6 +3434,11 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Payment terms"
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
+msgid "Payments"
 msgstr ""
 
 #. module: sale
@@ -3747,11 +3631,6 @@ msgid "Product Variant"
 msgstr ""
 
 #. module: sale
-#: model:ir.ui.menu,name:sale.menu_products
-msgid "Product Variants"
-msgstr ""
-
-#. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 msgid "Product prices have been recomputed according to pricelist %s."
@@ -3863,6 +3742,11 @@ msgid "Quotation #"
 msgstr ""
 
 #. module: sale
+#: model:ir.actions.report,name:sale.action_report_saleorder
+msgid "Quotation / Order"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_utm_campaign__quotation_count
 msgid "Quotation Count"
 msgstr ""
@@ -3951,14 +3835,14 @@ msgid "Ratings"
 msgstr ""
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_product_product__expense_policy
-#: model:ir.model.fields,field_description:sale.field_product_template__expense_policy
+#: model:ir.model.fields,field_description:sale.field_product_product__reinvoice_policy
+#: model:ir.model.fields,field_description:sale.field_product_template__reinvoice_policy
 msgid "Re-Invoice Costs"
 msgstr ""
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_product_product__visible_expense_policy
-#: model:ir.model.fields,field_description:sale.field_product_template__visible_expense_policy
+#: model:ir.model.fields,field_description:sale.field_product_product__visible_reinvoice_policy
+#: model:ir.model.fields,field_description:sale.field_product_template__visible_reinvoice_policy
 msgid "Re-Invoice Policy visible"
 msgstr ""
 
@@ -4297,7 +4181,6 @@ msgid "Sales Order(s)"
 msgstr ""
 
 #. module: sale
-#: model:account.analytic.plan,name:sale.analytic_plan_sale_orders
 #: model:ir.actions.act_window,name:sale.action_orders
 #: model:ir.actions.act_window,name:sale.action_orders_salesteams
 #: model:ir.actions.act_window,name:sale.action_orders_to_invoice_salesteams
@@ -4341,11 +4224,6 @@ msgid ""
 "Sales order item to which the time spent will be added in order to be "
 "invoiced to your customer. Remove the sales order item for the timesheet "
 "entry to be non-billable."
-msgstr ""
-
-#. module: sale
-#: model:ir.model.fields.selection,name:sale.selection__product_template__expense_policy__sales_price
-msgid "Sales price"
 msgstr ""
 
 #. module: sale
@@ -4455,26 +4333,8 @@ msgid "Send PRO FORMA Invoice"
 msgstr ""
 
 #. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid "Send a product-specific email once the invoice is validated"
-msgstr ""
-
-#. module: sale
 #: model:ir.actions.server,name:sale.model_sale_order_send_mail
 msgid "Send an email"
-msgstr ""
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_sendcloud
-msgid "Sendcloud Connector"
-msgstr ""
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid ""
-"Sending an email is useful if you need to share specific information or "
-"content about a product (instructions, rules, links, media, etc.). Create "
-"and set the email template from the product detail form (in Accounting tab)."
 msgstr ""
 
 #. module: sale
@@ -4513,6 +4373,11 @@ msgid "Services & Material"
 msgstr ""
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_res_config_settings__group_services_and_material
+msgid "Services & Materials"
+msgstr ""
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Set multiple prices per product, automated discounts, etc."
 msgstr ""
@@ -4545,11 +4410,6 @@ msgid "Shipping Address"
 msgstr ""
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_shiprocket
-msgid "Shiprocket Connector"
-msgstr ""
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_shopee
 msgid "Shopee Sync"
 msgstr ""
@@ -4570,6 +4430,11 @@ msgid "Show margins on orders"
 msgstr ""
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+msgid "Show product images on your PDF and online quotes."
+msgstr ""
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Sign &amp; Pay"
 msgstr ""
@@ -4581,7 +4446,6 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__signature
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Signature"
 msgstr ""
 
@@ -4661,11 +4525,6 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_product_email_template
 msgid "Specific Email"
-msgstr ""
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_starshipit
-msgid "Starshipit Connector"
 msgstr ""
 
 #. module: sale
@@ -5247,6 +5106,11 @@ msgid "Tracking"
 msgstr ""
 
 #. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order__transaction_count
+msgid "Transaction Count"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__transaction_ids
 msgid "Transactions"
 msgstr ""
@@ -5274,18 +5138,6 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Type to find a product..."
-msgstr ""
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_ups_rest
-#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid "UPS Connector"
-msgstr ""
-
-#. module: sale
-#: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_usps_rest
-#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
-msgid "USPS Connector"
 msgstr ""
 
 #. module: sale
@@ -5398,6 +5250,11 @@ msgid "Upselling Opportunity"
 msgstr ""
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+msgid "Use fixed-price and cost-based services and materials for re-invoicing"
+msgstr ""
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid ""
 "Use the above REST URL to get structured data of the purchase order in UBL "
@@ -5425,16 +5282,11 @@ msgid "Validate Order"
 msgstr ""
 
 #. module: sale
-#: model:ir.model.fields,help:sale.field_product_product__expense_policy
-#: model:ir.model.fields,help:sale.field_product_template__expense_policy
+#: model:ir.model.fields,help:sale.field_product_product__reinvoice_policy
+#: model:ir.model.fields,help:sale.field_product_template__reinvoice_policy
 msgid ""
 "Validated expenses, vendor bills, or stock pickings (set up to track costs) "
 "can be invoiced to the customer at either cost or sales price."
-msgstr ""
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.product_pricelist_item_form
-msgid "Validity"
 msgstr ""
 
 #. module: sale
@@ -5696,17 +5548,14 @@ msgid "automatic invoicing: send ready invoice"
 msgstr ""
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_bpost
-msgid "bpost Connector"
-msgstr ""
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "close"
 msgstr ""
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.product_template_form_view_sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "days"
 msgstr ""
 
