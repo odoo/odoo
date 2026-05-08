@@ -27,7 +27,10 @@ export class ResizePlugin extends Plugin {
                 .join(", ");
 
             // Precompute selectors for items without inline width/height.
-            const resizableSelectors = resizingParameter.resizableElementsSelector
+            const resizableSelectors = (
+                resizingParameter.resizeTargetSelector ??
+                resizingParameter.resizableElementsSelector
+            )
                 .split(",")
                 .map((sel) => sel.trim());
 
