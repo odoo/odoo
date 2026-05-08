@@ -223,7 +223,6 @@ class InteractionService {
 }
 
 export const publicInteractionService = {
-    dependencies: ["localization"],
     async start(env) {
         // fallback if #wrapwrap is not present in the dom
         const el = document.querySelector("#wrapwrap") || document.querySelector("body");
