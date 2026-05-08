@@ -138,13 +138,6 @@ class TestTimesheet(TestCommonTimesheet):
         # Make sure to clean the plan fields
         self.env.transaction.will_change_registry()
 
-        # Crappy hack to disable the rule from timesheet grid, if it exists
-        # The registry doesn't contain the field timesheet_manager_id.
-        # but there is an ir.rule about it, crashing during its evaluation
-        rule = self.env.ref('timesheet_grid.timesheet_line_rule_user_update-unlink', raise_if_not_found=False)
-        if rule:
-            rule.active = False
-
     def test_log_timesheet(self):
         """ Test when log timesheet: check analytic account, user and employee are correctly set. """
         Timesheet = self.env['account.analytic.line']
