@@ -516,7 +516,7 @@ var owl = (() => {
     };
   }
   function makeIteratorObserver(methodName, target, atom) {
-    return function*() {
+    return function* () {
       onReadTargetKey(target, KEYCHANGES, atom);
       const keys = target.keys();
       for (const item of target[methodName]()) {
@@ -3440,7 +3440,6 @@ ${issueStrings}`);
     processing = false;
     constructor() {
       this.requestAnimationFrame = _Scheduler.requestAnimationFrame;
-      // this.processTasks = this.processTasks.bind(this);
     }
     addFiber(fiber) {
       this.tasks.add(fiber.root);
@@ -3858,9 +3857,7 @@ ${issueStrings}`);
           return;
         }
         const rawTemplate = this.rawTemplates[name];
-        const currentAsString = typeof rawTemplate === "string" ? rawTemplate : rawTemplate instanceof Element ? rawTemplate.outerHTML : rawTemplate.toString();
-        const newAsString = typeof template === "string" ? template : template.outerHTML;
-        if (currentAsString === newAsString) {
+        if (areTemplatesEqual(rawTemplate, template)) {
           return;
         }
         throw new OwlError(`Template ${name} already defined with different content`);
@@ -3917,6 +3914,17 @@ ${issueStrings}`);
     return name;
   }
   xml.nextId = 1;
+  function areTemplatesEqual(t1, t2) {
+    if (t1 === t2) {
+      return true;
+    }
+    if (typeof t1 === "function" !== (typeof t2 === "function")) {
+      return false;
+    }
+    const s1 = t1 instanceof Element ? t1.outerHTML : String(t1);
+    const s2 = t2 instanceof Element ? t2.outerHTML : String(t2);
+    return s1 === s2;
+  }
   var hasBeenLogged = false;
   var apps = /* @__PURE__ */ new Set();
   if (typeof window !== "undefined") {
@@ -4396,8 +4404,8 @@ ${issueStrings}`);
   };
   var __info__ = {
     version: App.version,
-    date: "2026-04-23T14:41:10.930Z",
-    hash: "f4319859",
+    date: "2026-05-08T09:33:52.109Z",
+    hash: "35c1f255",
     url: "https://github.com/odoo/owl"
   };
 
@@ -6192,7 +6200,7 @@ ${code}`;
         if (ast.attrs) {
           ctxExpr = `Object.assign({}, ${dynCtxVar}, {this: ${dynCtxVar}}${attrs.length ? ", " + ctxString : ""})`;
         } else {
-          const thisCtx = `{this: ${dynCtxVar}, __owl__: this.__owl__}`;
+          const thisCtx = `{this: ${dynCtxVar}}`;
           ctxExpr = `Object.assign({}, ${dynCtxVar}, ${thisCtx}${attrs.length ? ", " + ctxString : ""})`;
         }
       } else {
@@ -6563,4 +6571,4 @@ ${code}
   return __toCommonJS(index_exports);
 })();
 
-owl = { ...owl };
+owl = {...owl};

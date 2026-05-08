@@ -271,7 +271,7 @@ export class FormCompiler extends ViewCompiler {
             footer.append(
                 createElement("t", {
                     "t-call": "web.DefaultButtonsSlot",
-                    "t-call-context": "{ props: __comp__.props }",
+                    "t-call-context": "{ __owl__: __comp__.__owl__ }",
                 })
             );
         }

@@ -7491,8 +7491,7 @@ test("d&d records grouped by m2o with m2o displayed in records", async () => {
     expect(queryAllTexts(".o_kanban_record")).toEqual(["hello", "hello", "hello", "xmo"]);
 });
 
-test.tags("owl3");
-test.todo("Can't use KanbanRecord implementation details in arch", async () => {
+test("Can't use KanbanRecord implementation details in arch", async () => {
     await mountView({
         type: "kanban",
         resModel: "partner",
