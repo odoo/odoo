@@ -1,4 +1,7 @@
-
+---
+layout: default
+title: Plan de Proyecto
+---
 # Plan de Proyecto: SCRUM y DevOps – Odoo (Módulo Ventas)
 
 ## 1. Objetivo del Proyecto
@@ -22,6 +25,14 @@ El equipo de trabajo está formado por 5 estudiantes. El rol de **Líder de Equi
 * **Diego (Gestión de Backlog):** Creación del **Product Backlog** inicial en GitHub Issues.
 * **Nero (Cronograma Maestro):** Planificación de los Sprints de 15 días alineados a los hitos del curso.
 
+### Roles y Responsabilidades (Sprint 1):
+
+### Roles y Responsabilidades (Sprint 2):
+
+### Roles y Responsabilidades (Sprint 3):
+
+### Roles y Responsabilidades (Sprint 4):
+
 ## 4. Herramientas Tecnológicas
 | Herramienta | Uso en el Proyecto |
 | :--- | :--- |
@@ -31,13 +42,4 @@ El equipo de trabajo está formado por 5 estudiantes. El rol de **Líder de Equi
 | **GitHub Pages** | Publicar el entorno de staging, la documentación técnica y el burndown chart. |
 
 ## 5. Cronograma de Sprints e Hitos
-Cada Sprint tiene una duración establecida de **15 días calendario**.
 
-### 🚩 Hito 1 (15% del avance): 13 de mayo de 2026
-* **Entregable (Sprint 0):** Plan de proyecto, cronograma y presentación del producto seleccionado vía GitHub Projects y Pages.
-
-### 🚩 Hito 2 (60% del avance): 10 de junio de 2026
-* **Entregable (Sprint 1-2):** Software funcionando con integración CI/CD DevOps y marco Scrum activo.
-
-### 🚩 Hito 3 (100% del avance): 13 de julio de 2026
-* **Entregable (Sprint 3-4):** Mejoras al software, documentación técnica completa y artículo final en formato IEEE.
