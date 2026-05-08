@@ -341,7 +341,7 @@ class DiscussChannelMember(models.Model):
                 ),
             )
 
-    def _notify_mute(self):
+    def _set_cron_for_unmute(self):
         for member in self:
             if member.mute_until_dt and member.mute_until_dt != -1:
                 self.env.ref("mail.ir_cron_discuss_channel_member_unmute")._trigger(member.mute_until_dt)
@@ -349,11 +349,10 @@ class DiscussChannelMember(models.Model):
     @api.model
     def _cleanup_expired_mutes(self):
         """
-        Cron job for cleanup expired unmute by resetting mute_until_dt and sending bus notifications.
+        Cron job for cleanup expired unmute by resetting mute_until_dt
         """
         members = self.search([("mute_until_dt", "<=", fields.Datetime.now())])
         members.write({"mute_until_dt": False})
-        members._notify_mute()
 
     def _get_member_store_list(self):
         """Returns the list of (member, store) combinations.
