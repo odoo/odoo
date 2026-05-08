@@ -115,7 +115,7 @@
                                                     <Composer t-elif="this.isEditing" autofocus="true" composer="this.message.composer" onDiscardCallback.bind="this.exitEditMode" onPostCallback.bind="this.exitEditMode" mode="'compact'" sidebar="false"/>
                                                     <t t-else="">
                                                         <em t-if="this.showSubject" class="d-block text-muted smaller" t-att-class="{ 'mb-2': !this.message.bubbleColor }">Subject: <t t-out="this.props.messageSearch?.highlight(this.message.subject) ?? this.message.subject"/></em>
-                                                        <div class="overflow-x-auto" t-if="this.message.message_type and this.message.message_type.includes('email')" t-custom-ref="shadowBody"/>
+                                                        <div class="o-mail-Message-shadowBody overflow-x-auto" t-if="this.message.message_type and this.message.message_type.includes('email')" t-custom-ref="shadowBody"/>
                                                         <t t-elif="this.message.showTranslation" t-out="this.message.richTranslationValue"/>
                                                         <div class="o-mail-Message-richBody overflow-x-auto" t-elif="this.message.hasTextContent and this.message.richBody and !this.message.linkPreviewSquash" t-out="this.props.messageSearch?.highlight(this.message.richBody) ?? this.message.richBody"/>
                                                         <p class="fst-italic text-muted small" t-if="this.message.showTranslation">
