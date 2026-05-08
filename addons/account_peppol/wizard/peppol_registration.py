@@ -392,6 +392,7 @@ class PeppolRegistration(models.TransientModel):
             'peppol_migration_key': company.sudo().account_peppol_migration_key,
             'peppol_webhook_endpoint': company._get_peppol_webhook_endpoint(),
             'peppol_webhook_token': self.env['account_edi_proxy_client.user']._generate_webhook_token(company),
+            'supported_identifiers':  company._peppol_supported_document_types(),
         }
 
     def button_register_with_itsme(self):
