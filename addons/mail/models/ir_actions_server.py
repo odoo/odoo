@@ -407,6 +407,7 @@ class IrActionsServer(models.Model):
     def _run_action_next_activity_multi(self, eval_context=None):
         base_date = fields.Date.context_today(self) + relativedelta(**{
                 self.activity_date_deadline_range_type or 'days': self.activity_date_deadline_range})
+<<<<<<< 3b8f0184982ad463aad8037913e939429d432ba4
 
         if self.activity_plan_id:
             self.env['mail.activity.schedule'].create({
@@ -424,6 +425,31 @@ class IrActionsServer(models.Model):
                 "summary": self.activity_summary,
                 "activity_user_id_fname": self.activity_user_field_name,
             }).action_schedule_activities()
+||||||| bfa39854e56da4bf23295d62f63d66973ad0d78e
+        for record in records:
+            user = False
+            if self.activity_user_type == 'specific':
+                user = self.activity_user_id
+            elif self.activity_user_type == 'generic' and self.activity_user_field_name in record:
+                user = record[self.activity_user_field_name]
+            if user:
+                # if x2m field, assign to the first user found
+                # (same behavior as Field.traverse_related)
+                vals['user_id'] = user.ids[0]
+            record.activity_schedule(**vals)
+=======
+        for record in records:
+            user = False
+            if self.activity_user_type == 'specific':
+                user = self.activity_user_id
+            elif self.activity_user_type == 'generic' and self.activity_user_field_name:
+                user = record.mapped(self.activity_user_field_name)
+            if user:
+                # if x2m field, assign to the first user found
+                # (same behavior as Field.traverse_related)
+                vals['user_id'] = user.ids[0]
+            record.activity_schedule(**vals)
+>>>>>>> e3f7c07cdec3554177eb30956dd036169b130f46
         return False
 
     @api.model

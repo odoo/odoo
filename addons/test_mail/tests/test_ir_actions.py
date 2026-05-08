@@ -183,6 +183,7 @@ class TestServerActionsEmail(MailCommon, TestServerActionsBase):
             }],
         )
 
+<<<<<<< 3b8f0184982ad463aad8037913e939429d432ba4
     def test_action_next_activity_formview(self):
         """ Test the form view's onchanges/computed of next activity server actions. """
         email_activity_type = self.env.ref('mail.mail_activity_data_email')
@@ -339,6 +340,30 @@ class TestServerActionsEmail(MailCommon, TestServerActionsBase):
             }
         ])
 
+||||||| bfa39854e56da4bf23295d62f63d66973ad0d78e
+=======
+        # Test dotted field path (e.g. 'parent_id.user_id') which traverses a relational chain.
+        parent_partner = self.env['res.partner'].create({
+            'name': 'ParentPartner',
+            'user_id': self.user_admin.id,
+        })
+        self.test_partner.write({'parent_id': parent_partner.id})
+        self.action.write({
+            'activity_user_field_name': 'parent_id.user_id',
+            'activity_summary': 'TestDottedField',
+        })
+        before_count = self.env['mail.activity'].search_count([])
+        run_res = self.action.with_context(self.context).run()
+        self.assertEqual(self.env['mail.activity'].search_count([]), before_count + 1)
+        self.assertRecordValues(
+            self.env['mail.activity'].search([('res_model', '=', 'res.partner'), ('res_id', '=', self.test_partner.id), ('user_id', '=', self.user_admin.id)]),
+            [{
+                'summary': 'TestDottedField',
+                'user_id': self.user_admin.id,
+            }],
+        )
+
+>>>>>>> e3f7c07cdec3554177eb30956dd036169b130f46
     @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
     def test_action_send_mail_without_mail_thread(self):
         """ Check running a server action to send an email with custom layout on a non mail.thread model """
