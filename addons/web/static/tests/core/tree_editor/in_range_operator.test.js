@@ -265,22 +265,22 @@ test(`"in range" operator: introduction/elimination for datetime fields (generat
                     "datetime_1",
                     ">=",
                     expression(
-                        `datetime.datetime.combine(context_today() + relativedelta(days = -7), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")`
+                        `datetime.datetime.combine(context_today() + relativedelta(days = -6), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")`
                     )
                 ),
                 condition(
                     "datetime_1",
                     "<",
                     expression(
-                        `datetime.datetime.combine(context_today(), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")`
+                        `datetime.datetime.combine(context_today() + relativedelta(days = 1), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")`
                     )
                 ),
             ]),
             tree: condition("datetime_1", "in range", ["datetime", "last 7 days", false, false]),
             domain: [
                 "&",
-                ["datetime_1", ">=", "2025-06-25 23:00:00"],
-                ["datetime_1", "<", "2025-07-02 23:00:00"],
+                ["datetime_1", ">=", "2025-06-26 23:00:00"],
+                ["datetime_1", "<", "2025-07-03 23:00:00"],
             ],
         },
         {
@@ -289,22 +289,22 @@ test(`"in range" operator: introduction/elimination for datetime fields (generat
                     "datetime_1",
                     ">=",
                     expression(
-                        `datetime.datetime.combine(context_today() + relativedelta(days = -30), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")`
+                        `datetime.datetime.combine(context_today() + relativedelta(days = -29), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")`
                     )
                 ),
                 condition(
                     "datetime_1",
                     "<",
                     expression(
-                        `datetime.datetime.combine(context_today(), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")`
+                        `datetime.datetime.combine(context_today() + relativedelta(days = 1), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")`
                     )
                 ),
             ]),
             tree: condition("datetime_1", "in range", ["datetime", "last 30 days", false, false]),
             domain: [
                 "&",
-                ["datetime_1", ">=", "2025-06-02 23:00:00"],
-                ["datetime_1", "<", "2025-07-02 23:00:00"],
+                ["datetime_1", ">=", "2025-06-03 23:00:00"],
+                ["datetime_1", "<", "2025-07-03 23:00:00"],
             ],
         },
         {
@@ -558,24 +558,32 @@ test(`"in range" operator: introduction/elimination for date fields (generateSma
                 condition(
                     "date_1",
                     ">=",
-                    expression(`(context_today() + relativedelta(days = -7)).strftime('%Y-%m-%d')`)
+                    expression(`(context_today() + relativedelta(days = -6)).strftime('%Y-%m-%d')`)
                 ),
-                condition("date_1", "<", expression(`context_today().strftime("%Y-%m-%d")`)),
+                condition(
+                    "date_1",
+                    "<",
+                    expression(`(context_today() + relativedelta(days = 1)).strftime('%Y-%m-%d')`)
+                ),
             ]),
             tree: condition("date_1", "in range", ["date", "last 7 days", false, false]),
-            domain: ["&", ["date_1", ">=", "2025-06-26"], ["date_1", "<", "2025-07-03"]],
+            domain: ["&", ["date_1", ">=", "2025-06-27"], ["date_1", "<", "2025-07-04"]],
         },
         {
             tree_py: connector("&", [
                 condition(
                     "date_1",
                     ">=",
-                    expression(`(context_today() + relativedelta(days = -30)).strftime('%Y-%m-%d')`)
+                    expression(`(context_today() + relativedelta(days = -29)).strftime('%Y-%m-%d')`)
                 ),
-                condition("date_1", "<", expression(`context_today().strftime("%Y-%m-%d")`)),
+                condition(
+                    "date_1",
+                    "<",
+                    expression(`(context_today() + relativedelta(days = 1)).strftime('%Y-%m-%d')`)
+                ),
             ]),
             tree: condition("date_1", "in range", ["date", "last 30 days", false, false]),
-            domain: ["&", ["date_1", ">=", "2025-06-03"], ["date_1", "<", "2025-07-03"]],
+            domain: ["&", ["date_1", ">=", "2025-06-04"], ["date_1", "<", "2025-07-04"]],
         },
         {
             tree_py: connector("&", [
@@ -908,19 +916,19 @@ test(`"in range" operator: introduction/elimination for datetime fields`, async 
         },
         {
             tree_py: connector("&", [
-                condition("datetime_1", ">=", "today -7d"),
-                condition("datetime_1", "<", "today"),
+                condition("datetime_1", ">=", "today -6d"),
+                condition("datetime_1", "<", "today +1d"),
             ]),
             tree: condition("datetime_1", "in range", ["datetime", "last 7 days", false, false]),
-            domain: ["&", ["datetime_1", ">=", "today -7d"], ["datetime_1", "<", "today"]],
+            domain: ["&", ["datetime_1", ">=", "today -6d"], ["datetime_1", "<", "today +1d"]],
         },
         {
             tree_py: connector("&", [
-                condition("datetime_1", ">=", "today -30d"),
-                condition("datetime_1", "<", "today"),
+                condition("datetime_1", ">=", "today -29d"),
+                condition("datetime_1", "<", "today +1d"),
             ]),
             tree: condition("datetime_1", "in range", ["datetime", "last 30 days", false, false]),
-            domain: ["&", ["datetime_1", ">=", "today -30d"], ["datetime_1", "<", "today"]],
+            domain: ["&", ["datetime_1", ">=", "today -29d"], ["datetime_1", "<", "today +1d"]],
         },
         {
             tree_py: connector("&", [
@@ -1085,19 +1093,19 @@ test(`"in range" operator: introduction/elimination for date fields`, async () =
         },
         {
             tree_py: connector("&", [
-                condition("date_1", ">=", "today -7d"),
-                condition("date_1", "<", "today"),
+                condition("date_1", ">=", "today -6d"),
+                condition("date_1", "<", "today +1d"),
             ]),
             tree: condition("date_1", "in range", ["date", "last 7 days", false, false]),
-            domain: ["&", ["date_1", ">=", "today -7d"], ["date_1", "<", "today"]],
+            domain: ["&", ["date_1", ">=", "today -6d"], ["date_1", "<", "today +1d"]],
         },
         {
             tree_py: connector("&", [
-                condition("date_1", ">=", "today -30d"),
-                condition("date_1", "<", "today"),
+                condition("date_1", ">=", "today -29d"),
+                condition("date_1", "<", "today +1d"),
             ]),
             tree: condition("date_1", "in range", ["date", "last 30 days", false, false]),
-            domain: ["&", ["date_1", ">=", "today -30d"], ["date_1", "<", "today"]],
+            domain: ["&", ["date_1", ">=", "today -29d"], ["date_1", "<", "today +1d"]],
         },
         {
             tree_py: connector("&", [

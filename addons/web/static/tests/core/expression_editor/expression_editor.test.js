@@ -506,7 +506,7 @@ test(`date: "in range" operator`, async () => {
     expect(getCurrentValue()).toBe("Last 7 days");
     expect.verifySteps([
         formatExpr(
-            `date >= (context_today() + relativedelta(days = -7)).strftime("%Y-%m-%d") and date < context_today().strftime("%Y-%m-%d")`
+            `date >= (context_today() + relativedelta(days = -6)).strftime("%Y-%m-%d") and date < (context_today() + relativedelta(days = 1)).strftime("%Y-%m-%d")`
         ),
     ]);
 
@@ -514,7 +514,7 @@ test(`date: "in range" operator`, async () => {
     expect(getCurrentValue()).toBe("Last 30 days");
     expect.verifySteps([
         formatExpr(
-            `date >= (context_today() + relativedelta(days = -30)).strftime("%Y-%m-%d") and date < context_today().strftime("%Y-%m-%d")`
+            `date >= (context_today() + relativedelta(days = -29)).strftime("%Y-%m-%d") and date < (context_today() + relativedelta(days = 1)).strftime("%Y-%m-%d")`
         ),
     ]);
 
@@ -610,9 +610,9 @@ test(`datetime: "in range" operator`, async () => {
     expect.verifySteps([
         formatExpr(
             `
-                datetime >= datetime.datetime.combine(context_today() + relativedelta(days = -7), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")
+                datetime >= datetime.datetime.combine(context_today() + relativedelta(days = -6), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")
                     and
-                datetime < datetime.datetime.combine(context_today(), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")
+                datetime < datetime.datetime.combine(context_today() + relativedelta(days = 1), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")
             `
         ),
     ]);
@@ -622,9 +622,9 @@ test(`datetime: "in range" operator`, async () => {
     expect.verifySteps([
         formatExpr(
             `
-                datetime >= datetime.datetime.combine(context_today() + relativedelta(days = -30), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")
+                datetime >= datetime.datetime.combine(context_today() + relativedelta(days = -29), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")
                     and
-                datetime < datetime.datetime.combine(context_today(), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")
+                datetime < datetime.datetime.combine(context_today() + relativedelta(days = 1), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")
             `
         ),
     ]);

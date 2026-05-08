@@ -2502,11 +2502,13 @@ test(`datetime: "in range" operator`, async () => {
 
     await selectValue("last 7 days");
     expect(getCurrentValue()).toBe("Last 7 days");
-    expect.verifySteps([`["&", ("datetime", ">=", "today -7d"), ("datetime", "<", "today")]`]);
+    expect.verifySteps([`["&", ("datetime", ">=", "today -6d"), ("datetime", "<", "today +1d")]`]);
 
     await selectValue("last 30 days");
     expect(getCurrentValue()).toBe("Last 30 days");
-    expect.verifySteps([`["&", ("datetime", ">=", "today -30d"), ("datetime", "<", "today")]`]);
+    expect.verifySteps([
+        `["&", ("datetime", ">=", "today -29d"), ("datetime", "<", "today +1d")]`,
+    ]);
 
     await selectValue("month to date");
     expect(getCurrentValue()).toBe("Month to date");
@@ -2579,11 +2581,11 @@ test(`date: "in range" operator`, async () => {
 
     await selectValue("last 7 days");
     expect(getCurrentValue()).toBe("Last 7 days");
-    expect.verifySteps([`["&", ("date", ">=", "today -7d"), ("date", "<", "today")]`]);
+    expect.verifySteps([`["&", ("date", ">=", "today -6d"), ("date", "<", "today +1d")]`]);
 
     await selectValue("last 30 days");
     expect(getCurrentValue()).toBe("Last 30 days");
-    expect.verifySteps([`["&", ("date", ">=", "today -30d"), ("date", "<", "today")]`]);
+    expect.verifySteps([`["&", ("date", ">=", "today -29d"), ("date", "<", "today +1d")]`]);
 
     await selectValue("month to date");
     expect(getCurrentValue()).toBe("Month to date");

@@ -177,8 +177,8 @@ function boundDatetime(delta) {
 
 const BOUNDS_SMART_DATES = [
     ["today", "today", "today +1d"],
-    ["last 7 days", "today -7d", "today"],
-    ["last 30 days", "today -30d", "today"],
+    ["last 7 days", "today -6d", "today +1d"],
+    ["last 30 days", "today -29d", "today +1d"],
     ["month to date", "today =1d", "today +1d"],
     ["last month", "today =1d -1m", "today =1d"],
     ["year to date", "today =1m =1d", "today +1d"],
@@ -186,8 +186,8 @@ const BOUNDS_SMART_DATES = [
 ];
 const DELTAS = [
     ["today", "", "days = 1"],
-    ["last 7 days", "days = -7", ""],
-    ["last 30 days", "days = -30", ""],
+    ["last 7 days", "days = -6", "days = 1"],
+    ["last 30 days", "days = -29", "days = 1"],
     ["month to date", "day = 1", "days = 1"],
     ["last month", "day = 1, months = -1", "day = 1"],
     ["year to date", "day = 1, month = 1", "days = 1"],
