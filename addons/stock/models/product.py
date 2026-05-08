@@ -1039,7 +1039,7 @@ class ProductTemplate(models.Model):
         return action
 
     def action_open_routes_diagram(self):
-        products = False
+        products = self.env['product.product']
         if self.env.context.get('default_product_id'):
             products = self.env['product.product'].browse(self.env.context['default_product_id'])
         if not products and self.env.context.get('default_product_tmpl_id'):
