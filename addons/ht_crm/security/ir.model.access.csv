@@ -1,6 +1,6 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_phonebook_system,sale.phonebook.system,model_sale_phonebook,base.group_system,1,1,1,1
-access_interaction_system,sale.phonebook.interaction.system,model_sale_phonebook_interaction,base.group_system,1,1,1,1
+access_phonebook_log_system,sale.phonebook.log.system,model_sale_phonebook_log,base.group_system,1,1,1,1
 access_customer_system,sale.customer.system,model_sale_customer,base.group_system,1,1,1,1
 access_estate_project_system,estate.project.system,model_estate_project,base.group_system,1,1,1,1
 access_estate_property_unit_system,estate.property.unit.system,model_estate_property_unit,base.group_system,1,1,1,1
@@ -13,6 +13,10 @@ access_transaction_system,sale.transaction.system,model_sale_transaction,base.gr
 access_phonebook_user,sale.phonebook.user,model_sale_phonebook,group_ht_user,1,1,1,0
 access_phonebook_manager,sale.phonebook.manager,model_sale_phonebook,group_ht_leader,1,1,1,1
 access_phonebook_executive,sale.phonebook.executive,model_sale_phonebook,group_ht_executive,1,0,0,0
+
+access_phonebook_log_user,sale.phonebook.user,model_sale_phonebook_log,group_ht_user,1,1,1,0
+access_phonebook_log_manager,sale.phonebook.manager,model_sale_phonebook_log,group_ht_leader,1,1,1,1
+access_phonebook_log_executive,sale.phonebook.executive,model_sale_phonebook_log,group_ht_executive,1,0,0,0
 
 access_customer_user,sale.customer.user,model_sale_customer,group_ht_user,1,1,1,0
 access_customer_manager,sale.customer.manager,model_sale_customer,group_ht_leader,1,1,1,1

@@ -85,6 +85,17 @@
                     <!-- RELATIONS -->
                     <notebook>
 
+                        <page string="Data">
+                            <group>
+                                <field name="phonebook_ids" string="">
+                                    <list editable="bottom" limit="20">
+                                        <field name="name"/>
+                                        <field name="phone"/>
+                                    </list>
+                                </field>
+                            </group>
+                        </page>
+                        
                         <page string="Khách Hàng">
                             <header>
                                 <button name="action_clear_interested_customers"

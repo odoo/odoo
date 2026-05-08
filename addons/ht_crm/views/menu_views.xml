@@ -6,9 +6,9 @@
         <field name="view_mode">list,form</field>
     </record>
     
-    <record id="action_phone_interaction" model="ir.actions.act_window">
-        <field name="name">Phone Interactions</field>
-        <field name="res_model">sale.phonebook.interaction</field>
+    <record id="action_phone_log" model="ir.actions.act_window">
+        <field name="name">Phone Log</field>
+        <field name="res_model">sale.phonebook.log</field>
         <field name="view_mode">list,form</field>
     </record>
 
@@ -78,6 +78,7 @@
         <menuitem id="menu_customer_root" name="Khách Hàng" sequence="10">
             <menuitem id="menu_customer" action="action_customer"/>
             <menuitem id="menu_phonebook" action="action_phonebook"/>
+            <menuitem id="menu_phonebook_log" action="action_phone_log"/>
             <menuitem id="menu_project" action="action_estate_project"/>
             <menuitem id="menu_property_unit" action="action_estate_property_unit"/>
             <menuitem id="menu_property_unit_type" action="action_estate_property_unit_type"/>

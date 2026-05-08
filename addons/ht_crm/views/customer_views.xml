@@ -56,33 +56,12 @@
         <field name="groups" eval="[(4, ref('group_ht_user'))]"/>
     </record>
 
-    <record id="rule_phonebook_user" model="ir.rule">
-        <field name="name">User (Phonebook)</field>
+    <!-- <record id="ir_cron_cool_down_data" model="ir.cron">
+        <field name="name">Cool Down Hot Data</field>
         <field name="model_id" ref="model_sale_phonebook"/>
-        <field name="domain_force">
-            [
-                ('customer_id.salesperson_id.user_id', '=', user.id)
-            ]
-        </field>
-        <field name="groups" eval="[(4, ref('group_ht_user'))]"/>
-    </record>
-
-    
-    <!-- <record id="view_customer_form" model="ir.ui.view">
-        <field name="name">sale.customer.form</field>
-        <field name="model">sale.customer</field>
-        <field name="arch" type="xml">
-            <form>
-                <sheet>
-                    <group>
-                        <field name="name"/>
-                        <field name="phone" widget="phone"/>
-                        <field name="salesperson_id"/>
-                        <field name="previous_salesperson_ids" widget="many2many_tags"/>
-                    </group>
-                </sheet>
-            </form>
-        </field>
+        <field name="code">model._cron_cool_down_data()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">minutes</field>
     </record> -->
 
     <record id="view_phonebook_list" model="ir.ui.view">
@@ -90,20 +69,39 @@
         <field name="model">sale.phonebook</field>
         <field name="arch" type="xml">
             <list>
-                <field name="customer_id" string="Tên khách hàng" readonly="True"/>
-                <field name="phone" widget="phone"/>
-                <field name="is_called"/>
-                <field name="unreachable"/>
-                <field name="is_primary"/>
-                <field name="note"/>
+                <header>
+                    <button name="action_distribute_numbers" 
+                            string="Distribute" 
+                            type="object" 
+                            class="oe_highlight"
+                            groups="ht_crm.group_ht_executive,base.group_system"/>
+                    <!-- <button name="reverse" 
+                        string="Reverse" 
+                        type="object" 
+                        class="oe_highlight"
+                        groups="ht_crm.group_ht_executive"/> -->
+                </header>
 
-                <!-- Nút Set Primary -->
-                <button name="set_primary"
-                        type="object"
-                        string="Set Primary"
-                        class="btn-primary"
-                        icon="fa-star"/>
+                <field name="name" readonly="True"/>
+                <field name="project_id"/>
+                <field name="phone" widget="phone"/>
+                <field name="status"/>
+                <field name="note"/>
             </list>  
+        </field>
+    </record>
+
+    <record id="view_sale_phonebook_log_list" model="ir.ui.view">
+        <field name="name">sale.phonebook.log.list</field>
+        <field name="model">sale.phonebook.log</field>
+        <field name="arch" type="xml">
+            <list string="Logs" create="false">
+                <field name="create_date" string="Thời gian"/>
+                <field name="user_id" string="Người thao tác"/>
+                <field name="phonebook_id" string="Bị tác động"/>
+                <field name="action" string="Hành động"/>
+                <field name="note" string="Ghi chú"/>
+            </list>
         </field>
     </record>
 
@@ -136,6 +134,7 @@
                         <group>
 
                             <field name="partner_platform"/>
+                            <field name="phone"/>
                             <field name="email"/>
                             <field name="source"/>
                             <field name="type"/>
@@ -180,23 +179,6 @@
                     <!-- NOTEBOOK -->
                     <notebook>
 
-                        <!-- PHONEBOOK -->
-                        <page string="Số điện thoại">
-
-                            <field name="phonebook_ids">
-                                <list editable="bottom">
-
-                                    <field name="phone" required="1"/>
-                                    <field name="is_primary"/>
-                                    <field name="is_called"/>
-                                    <field name="unreachable"/>
-                                    <field name="note"/>
-
-                                </list>
-                            </field>
-
-                        </page>
-
                         <!-- PROJECT -->
                         <page string="Dự án quan tâm">
 
@@ -227,7 +209,7 @@
         <field name="model">sale.customer</field>
         <field name="arch" type="xml">
             <list>
-                <header>
+                <!-- <header>
                     <button name="action_distribute_customers" 
                             string="Distribute" 
                             type="object" 
@@ -238,7 +220,7 @@
                         type="object" 
                         class="oe_highlight"
                         groups="ht_crm.group_ht_leader,ht_crm.group_ht_executive"/>
-                </header>
+                </header> -->
                 <!-- TRƯỜNG CƠ BẢN -->
                 <field name="name"/>
                 <field name="partner_platform"/>

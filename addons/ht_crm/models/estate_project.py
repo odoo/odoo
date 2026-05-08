@@ -107,6 +107,7 @@ class EstateProject(models.Model):
     _name = 'estate.project'
     _description = 'Dự án Bất động sản'
 
+    # Trường cơ bản
     name = fields.Char(string="Tên dự án", required=True)
     investor = fields.Char(string="Chủ đầu tư")
     location = fields.Char(string="Vị trí")
@@ -114,6 +115,7 @@ class EstateProject(models.Model):
     area = fields.Float(string="Diện tích (ha)")
     price_per_m2 = fields.Float(string="Giá bán (VND/m²)")
 
+    # Trường bổ sung
     legal_status = fields.Selection([
         ('pink_book', 'Sổ hồng'),
         ('red_book', 'Sổ đỏ'),
@@ -129,6 +131,14 @@ class EstateProject(models.Model):
     ], string="Tiến độ")
 
     note = fields.Text(string="Ghi chú")
+
+
+    # Các trường liên kết
+    phonebook_ids = fields.One2many(
+        "sale.phonebook",
+        "project_id",
+        string="Data thuộc dự án"
+    )
 
     purchased_customer_ids = fields.Many2many(
         'sale.customer',
