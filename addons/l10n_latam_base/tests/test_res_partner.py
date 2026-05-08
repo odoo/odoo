@@ -39,7 +39,13 @@ class TestResPartner(TransactionCase):
                     'vat': False,
                 },
             ])
+            latam_contact = self.env['res.partner'].create({
+                'name': "LATAM Contact",
+                'country_id': latam_fake_country.id,
+                'parent_id': latam_company.id,
+            })
             self.assertTrue(latam_company.is_company)
+            self.assertFalse(latam_contact.is_company)
             self.assertFalse(latam_person.is_company)
             self.assertTrue(foreign_company.is_company)
             self.assertFalse(foreign_person.is_company)
