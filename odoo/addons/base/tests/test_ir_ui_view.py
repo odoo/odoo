@@ -4900,7 +4900,6 @@ class TestInvisibleField(TransactionCaseWithUserDemo):
             'documents',
             'documents_account',
             'documents_approvals',
-            'documents_fleet',
             'documents_spreadsheet',
             'event',
             'event_booth',
