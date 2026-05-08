@@ -97,6 +97,7 @@ export class Composer extends Component {
         Wysiwyg,
     };
     static defaultProps = {
+        autofocus: 0,
         mode: "normal",
         className: "",
         sidebar: true,
