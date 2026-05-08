@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import Command
+from odoo.exceptions import UserError
 from odoo.tests import tagged
 
 from odoo.addons.website_sale.tests.common import WebsiteSaleCommon
@@ -95,3 +96,9 @@ class TestSaleOrder(WebsiteSaleCommon):
         self.assertTrue(
             self.cart.partner_id.active, "Registered company shouldn't be archived if any contact has a user"
         )
+
+    def test_change_company_on_sale_order(self):
+        company = self.env['res.company'].create({'name': 'Test Company'})
+        self.cart.action_confirm()
+        with self.assertRaises(UserError):
+            self.cart.write({'company_id': company.id})
