@@ -56,6 +56,13 @@ patch(ProductConfiguratorDialog.prototype, {
         return this.props.isFrontend && !this.props.edit;
     },
 
+    _handleUnitOfMeasureUpdate(product, combination, uomId) {
+        super._handleUnitOfMeasureUpdate(...arguments);
+        if (this.props.isFrontend && combination.strikethrough_price) {
+            product.strikethrough_price = parseFloat(combination.strikethrough_price);
+        }
+    },
+
     get totalMessage() {
         if (this.env.isFrontend) {
             // To be translated, the title must be repeated here. Indeed, only

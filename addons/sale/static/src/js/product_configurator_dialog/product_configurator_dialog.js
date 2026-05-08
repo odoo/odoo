@@ -287,11 +287,22 @@ export class ProductConfiguratorDialog extends Component {
         if (product.uom.id === uomId) {
             return false;
         }
-        const { price } = await this._updateCombination(product, product.quantity, uomId);
-        product.price = parseFloat(price);
-        product.uom = product.available_uoms.find((uom) => uom.id === uomId);
+        const combination = await this._updateCombination(product, product.quantity, uomId);
+        this._handleUnitOfMeasureUpdate(product, combination, uomId);
 
         return true;
+    }
+
+    /**
+     * Apply the update after changing the product uom.
+     *
+     * @param {Object} product - The product for which the uom was changed.
+     * @param {Object} combination - The result of the `_updateCombination`.
+     * @param {Number} uomId - The new uom of the product, as an `uom.uom` id.
+     */
+    _handleUnitOfMeasureUpdate(product, combination, uomId) {
+        product.price = parseFloat(combination.price);
+        product.uom = product.available_uoms.find((uom) => uom.id === uomId);
     }
 
     /**
