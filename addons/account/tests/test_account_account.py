@@ -470,12 +470,13 @@ class TestAccountAccount(TestAccountMergeCommon):
         """
         partner = self.env['res.partner'].create({'name': 'partner_test_generate_account_suggestions'})
         account = self.company_data['default_account_revenue']
-        self.env['account.move'].create({
+        move = self.env['account.move'].create({
             'move_type': 'out_invoice',
             'partner_id': partner.id,
             'invoice_date': '2023-09-30',
             'line_ids': [Command.create({'price_unit': 100, 'account_id': account.id})]
         })
+        move.action_post()
 
         results_1 = self.env['account.account']._get_most_frequent_accounts_for_partner(
             company_id=self.env.company.id,
