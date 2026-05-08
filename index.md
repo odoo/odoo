@@ -5,7 +5,7 @@ Implementar un proceso de desarrollo de software que integre la metodología ág
 
 ## 2. Información del Software Seleccionado
 * **Nombre del Producto:** Odoo ERP (Open Source).
-* **Repositorio:** [Insertar Link del Fork de GitHub aquí].
+* **Repositorio:** https://roydanpe.github.io/odooIPS/.
 * **Licencia:** MIT verificada, permitiendo fork, modificación y uso académico sin restricciones.
 * **Dominio:** Sistema empresarial (ERP/CRM) aplicado al rubro comercial.
 * **Complejidad:** Mediana. Se trabajará con el Módulo de Ventas, el cual cuenta con más de 10,000 líneas de código (> 10 KLOC).
@@ -16,14 +16,17 @@ El equipo de trabajo está formado por 5 estudiantes. El rol de Líder de Equipo
 
 ### Roles y Responsabilidades (Sprint 0):
 * **Apaza Anahua Roydan (Lider):** Coordinación general, integración del documento final y configuración de herramientas GitHub.
-* **Aarón (Verificación Técnica):** Validación de docker-compose.yml y cumplimiento de los criterios de licencia MIT.
+* **Aron (Verificación Técnica):** Validación de docker-compose.yml y cumplimiento de los criterios de licencia MIT.
 * **Daniel (Arquitectura de Código):** Delimitación del módulo de Ventas y verificación técnica de la complejidad (>10 KLOC).
 * **Diego (Gestión de Backlog):** Creación del Product Backlog inicial con 10-15 Historias de Usuario en GitHub Issues.
 * **Nero (Cronograma Maestro):** Planificación de los Sprints de 15 días alineados a los hitos del curso.
+### Roles y Responsabilidades (Sprint 1):
+### Roles y Responsabilidades (Sprint 2):
+### Roles y Responsabilidades (Sprint 3):
+### Roles y Responsabilidades (Sprint 4):
 
 ## 4. Herramientas Tecnológicas
-| Herramienta | ¿Para qué sirve en el proyecto? |
-| :--- | :--- |
+
 | **GitHub Projects** | Gestionar el Product Backlog, armar Sprints y ver el progreso en tiempo real. |
 | **GitHub Issues** | Registrar historias de usuario, reportar bugs y documentar decisiones técnicas. |
 | **GitHub Actions** | Automatización CI/CD: compilar código, correr pruebas y desplegar a staging. |
