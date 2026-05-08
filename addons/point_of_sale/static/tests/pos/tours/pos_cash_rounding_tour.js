@@ -247,3 +247,159 @@ registry
                 ReceiptScreen.clickNextOrder(),
             ].flat(),
     });
+<<<<<<< b575bdc8cb71bf33a94ae2090e847bc37488364a
+||||||| 3eb3393c7a19de483ba3afefeb207401fe45218c
+
+registry.category("web_tour.tours").add("test_cash_rounding_with_change", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+
+            ProductScreen.addOrderline("random_product", "1"),
+            ProductScreen.checkTaxAmount("2.05"),
+            ProductScreen.checkTotalAmount("15.72"),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("AAAAAA"),
+            ProductScreen.clickPayButton(),
+
+            PaymentScreen.totalIs("15.72"),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickNumpad("2 0"),
+            PaymentScreen.fillPaymentLineAmountMobile("Bank", "20.00"),
+            PaymentScreen.changeIs("4.30"),
+            PaymentScreen.clickInvoiceButton(),
+            PaymentScreen.clickValidate(),
+
+            ReceiptScreen.receiptAmountTotalIs("15.72"),
+            ReceiptScreen.receiptRoundingAmountIs("-0.02"),
+            ReceiptScreen.receiptToPayAmountIs("15.70"),
+            ReceiptScreen.receiptChangeAmountIs("4.30"),
+            ReceiptScreen.clickNextOrder(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_cash_rounding_up_with_change", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+
+            ProductScreen.addOrderline("product_a", "1"),
+            ProductScreen.addOrderline("product_b", "2"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.totalIs("179"),
+            PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.clickNumpad("2 0 0"),
+
+            PaymentScreen.changeIs("21"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_cash_rounding_only_cash_method_with_change", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+
+            ProductScreen.addOrderline("random_product", "1"),
+            ProductScreen.checkTaxAmount("2.05"),
+            ProductScreen.checkTotalAmount("15.72"),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("AAAAAA"),
+            ProductScreen.clickPayButton(),
+
+            PaymentScreen.totalIs("15.72"),
+            PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.clickNumpad("2 0"),
+            PaymentScreen.fillPaymentLineAmountMobile("Cash", "20.00"),
+            PaymentScreen.changeIs("4.30"),
+
+            PaymentScreen.clickInvoiceButton(),
+            PaymentScreen.clickValidate(),
+
+            ReceiptScreen.receiptAmountTotalIs("15.72"),
+            ReceiptScreen.receiptRoundingAmountIs("-0.02"),
+            ReceiptScreen.receiptToPayAmountIs("15.70"),
+            ReceiptScreen.receiptChangeAmountIs("4.30"),
+            ReceiptScreen.clickNextOrder(),
+        ].flat(),
+});
+=======
+
+registry.category("web_tour.tours").add("test_cash_rounding_with_change", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+
+            ProductScreen.addOrderline("random_product", "1"),
+            ProductScreen.checkTaxAmount("2.05"),
+            ProductScreen.checkTotalAmount("15.72"),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("AAAAAA"),
+            ProductScreen.clickPayButton(),
+
+            PaymentScreen.totalIs("15.72"),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickNumpad("2 0"),
+            PaymentScreen.fillPaymentLineAmountMobile("Bank", "20.00"),
+            PaymentScreen.changeIs("-4.30"),
+            PaymentScreen.clickInvoiceButton(),
+            PaymentScreen.clickValidate(),
+
+            ReceiptScreen.receiptAmountTotalIs("15.72"),
+            ReceiptScreen.receiptRoundingAmountIs("-0.02"),
+            ReceiptScreen.receiptToPayAmountIs("15.70"),
+            ReceiptScreen.receiptChangeAmountIs("4.30"),
+            ReceiptScreen.clickNextOrder(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_cash_rounding_up_with_change", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+
+            ProductScreen.addOrderline("product_a", "1"),
+            ProductScreen.addOrderline("product_b", "2"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.totalIs("179"),
+            PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.clickNumpad("2 0 0"),
+
+            PaymentScreen.changeIs("-21"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_cash_rounding_only_cash_method_with_change", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+
+            ProductScreen.addOrderline("random_product", "1"),
+            ProductScreen.checkTaxAmount("2.05"),
+            ProductScreen.checkTotalAmount("15.72"),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("AAAAAA"),
+            ProductScreen.clickPayButton(),
+
+            PaymentScreen.totalIs("15.72"),
+            PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.clickNumpad("2 0"),
+            PaymentScreen.fillPaymentLineAmountMobile("Cash", "20.00"),
+            PaymentScreen.changeIs("-4.30"),
+
+            PaymentScreen.clickInvoiceButton(),
+            PaymentScreen.clickValidate(),
+
+            ReceiptScreen.receiptAmountTotalIs("15.72"),
+            ReceiptScreen.receiptRoundingAmountIs("-0.02"),
+            ReceiptScreen.receiptToPayAmountIs("15.70"),
+            ReceiptScreen.receiptChangeAmountIs("4.30"),
+            ReceiptScreen.clickNextOrder(),
+        ].flat(),
+});
+>>>>>>> 53b9245a20deac9e17eec78356371aaca0ec8add

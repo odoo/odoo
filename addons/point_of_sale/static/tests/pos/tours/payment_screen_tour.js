@@ -50,11 +50,11 @@ registry.category("web_tour.tours").add("PaymentScreenTour", {
             PaymentScreen.validateButtonIsHighlighted(false),
             PaymentScreen.clickNumpad("5"),
             PaymentScreen.fillPaymentLineAmountMobile("Cash", "105"),
-            PaymentScreen.changeIs("52.2"),
+            PaymentScreen.changeIs("-52.2"),
             PaymentScreen.validateButtonIsHighlighted(true),
             PaymentScreen.clickNumpad("+50"),
             PaymentScreen.fillPaymentLineAmountMobile("Cash", "155"),
-            PaymentScreen.changeIs("102.2"),
+            PaymentScreen.changeIs("-102.2"),
             PaymentScreen.validateButtonIsHighlighted(true),
             PaymentScreen.clickPaymentlineDelButton("Cash", "155.0"),
 
@@ -149,6 +149,98 @@ registry.category("web_tour.tours").add("PaymentScreenRoundingDown", {
         ].flat(),
 });
 
+<<<<<<< b575bdc8cb71bf33a94ae2090e847bc37488364a
+||||||| 3eb3393c7a19de483ba3afefeb207401fe45218c
+registry.category("web_tour.tours").add("PaymentScreenRoundingHalfUp", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.addOrderline("Product Test 1.20", "1"),
+            ProductScreen.clickPayButton(),
+
+            PaymentScreen.totalIs("1.20"),
+            PaymentScreen.clickPaymentMethod("Cash", true, { remaining: "0.0", amount: "1.00" }),
+
+            Chrome.clickOrders(),
+            Chrome.createFloatingOrder(),
+
+            ProductScreen.addOrderline("Product Test 1.25", "1"),
+            ProductScreen.clickPayButton(),
+
+            PaymentScreen.totalIs("1.25"),
+            PaymentScreen.clickPaymentMethod("Cash", true, { remaining: "0.0", amount: "1.50" }),
+
+            Chrome.clickOrders(),
+            Chrome.createFloatingOrder(),
+
+            ProductScreen.addOrderline("Product Test 1.4", "1"),
+            ProductScreen.clickPayButton(),
+
+            PaymentScreen.totalIs("1.4"),
+            PaymentScreen.clickPaymentMethod("Cash", true, { remaining: "0.0", amount: "1.50" }),
+
+            Chrome.clickOrders(),
+            Chrome.createFloatingOrder(),
+
+            ProductScreen.addOrderline("Product Test 1.20", "1"),
+            ProductScreen.clickPayButton(),
+
+            PaymentScreen.totalIs("1.20"),
+            PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.clickNumpad("2"),
+            PaymentScreen.fillPaymentLineAmountMobile("Cash", "2"),
+
+            PaymentScreen.changeIs("1.0"),
+        ].flat(),
+});
+
+=======
+registry.category("web_tour.tours").add("PaymentScreenRoundingHalfUp", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.addOrderline("Product Test 1.20", "1"),
+            ProductScreen.clickPayButton(),
+
+            PaymentScreen.totalIs("1.20"),
+            PaymentScreen.clickPaymentMethod("Cash", true, { remaining: "0.0", amount: "1.00" }),
+
+            Chrome.clickOrders(),
+            Chrome.createFloatingOrder(),
+
+            ProductScreen.addOrderline("Product Test 1.25", "1"),
+            ProductScreen.clickPayButton(),
+
+            PaymentScreen.totalIs("1.25"),
+            PaymentScreen.clickPaymentMethod("Cash", true, { remaining: "0.0", amount: "1.50" }),
+
+            Chrome.clickOrders(),
+            Chrome.createFloatingOrder(),
+
+            ProductScreen.addOrderline("Product Test 1.4", "1"),
+            ProductScreen.clickPayButton(),
+
+            PaymentScreen.totalIs("1.4"),
+            PaymentScreen.clickPaymentMethod("Cash", true, { remaining: "0.0", amount: "1.50" }),
+
+            Chrome.clickOrders(),
+            Chrome.createFloatingOrder(),
+
+            ProductScreen.addOrderline("Product Test 1.20", "1"),
+            ProductScreen.clickPayButton(),
+
+            PaymentScreen.totalIs("1.20"),
+            PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.clickNumpad("2"),
+            PaymentScreen.fillPaymentLineAmountMobile("Cash", "2"),
+
+            PaymentScreen.changeIs("-1.0"),
+        ].flat(),
+});
+
+>>>>>>> 53b9245a20deac9e17eec78356371aaca0ec8add
 registry.category("web_tour.tours").add("PaymentScreenTotalDueWithOverPayment", {
     steps: () =>
         [
@@ -159,7 +251,13 @@ registry.category("web_tour.tours").add("PaymentScreenTotalDueWithOverPayment", 
             PaymentScreen.totalIs("1.98"),
             PaymentScreen.clickPaymentMethod("Cash"),
             PaymentScreen.enterPaymentLineAmount("Cash", "5", true, {
+<<<<<<< b575bdc8cb71bf33a94ae2090e847bc37488364a
                 change: "3",
+||||||| 3eb3393c7a19de483ba3afefeb207401fe45218c
+                change: "3.05",
+=======
+                change: "-3.05",
+>>>>>>> 53b9245a20deac9e17eec78356371aaca0ec8add
             }),
         ].flat(),
 });
