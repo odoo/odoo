@@ -180,7 +180,9 @@ class AccountMoveSend(models.AbstractModel):
 
         # Read pdf content.
         pdf_values = (not self.env.context.get('custom_template_facturx') and invoice.invoice_pdf_report_id) or \
-            invoice_data.get('pdf_attachment_values') or invoice_data['proforma_pdf_attachment_values']
+            invoice_data.get('pdf_attachment_values') or invoice_data.get('proforma_pdf_attachment_values')
+        if not pdf_values:
+            return
         reader_buffer = io.BytesIO(pdf_values['raw'])
         reader = OdooPdfFileReader(reader_buffer, strict=False)
 
@@ -256,7 +258,9 @@ class AccountMoveSend(models.AbstractModel):
             return
 
         anchor_index = tree.index(anchor_elements[0])
-        pdf_values = invoice.invoice_pdf_report_id or invoice_data.get('pdf_attachment_values') or invoice_data['proforma_pdf_attachment_values']
+        pdf_values = invoice.invoice_pdf_report_id or invoice_data.get('pdf_attachment_values') or invoice_data.get('proforma_pdf_attachment_values')
+        if not pdf_values:
+            return
 
         edi_model = invoice_data["ubl_cii_xml_options"]["builder"]
         doc_type_code_node = edi_model._get_document_type_code_node(invoice, invoice_data)

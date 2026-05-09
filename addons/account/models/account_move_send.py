@@ -854,6 +854,6 @@ class AccountMoveSend(models.AbstractModel):
         # Return generated attachments.
         attachments = self.env['ir.attachment']
         for move, move_data in success.items():
-            attachments += self._get_invoice_extra_attachments(move) or move_data['proforma_pdf_attachment']
+            attachments += self._get_invoice_extra_attachments(move) or move_data.get('proforma_pdf_attachment', self.env['ir.attachment'])
 
         return attachments
