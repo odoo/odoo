@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-01 17:37+0000\n"
+"POT-Creation-Date: 2026-05-08 17:39+0000\n"
 "PO-Revision-Date: 2025-05-06 12:03+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
@@ -40,6 +40,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:pos_hr.res_config_settings_view_form
 msgid "Advanced rights"
 msgstr "สิทธิขั้นสูง"
+
+#. module: pos_hr
+#: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
+#: model_terms:ir.ui.view,arch_db:pos_hr.res_config_settings_view_form
+msgid "All employees"
+msgstr ""
 
 #. module: pos_hr
 #: model:ir.model,name:pos_hr.model_account_bank_statement_line
@@ -193,12 +199,6 @@ msgid "Employees with minimal access"
 msgstr ""
 
 #. module: pos_hr
-#: model:ir.model.fields,help:pos_hr.field_pos_config__basic_employee_ids
-#: model:ir.model.fields,help:pos_hr.field_res_config_settings__pos_basic_employee_ids
-msgid "Employees with standard cashier access to the POS"
-msgstr ""
-
-#. module: pos_hr
 #. odoo-javascript
 #: code:addons/pos_hr/static/src/app/screens/login_screen/login_screen.xml:0
 msgid "Enter your PIN"
@@ -218,6 +218,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_hr.field_res_config_settings__id
 msgid "ID"
 msgstr "ไอดี"
+
+#. module: pos_hr
+#: model:ir.model.fields,help:pos_hr.field_pos_config__basic_employee_ids
+#: model:ir.model.fields,help:pos_hr.field_res_config_settings__pos_basic_employee_ids
+msgid "If left empty, all employees can log in to PoS"
+msgstr "หากเว้นว่างไว้ พนักงานทุกคนสามารถเข้าสู่ระบบ PoS ได้"
 
 #. module: pos_hr
 #. odoo-javascript
@@ -386,9 +392,6 @@ msgid ""
 "You cannot delete an employee that may be used in an active PoS session, "
 "close the session(s) first: \n"
 msgstr "คุณไม่สามารถลบพนักงานที่อาจใช้ในเซสชั่น PoS ที่ใช้งานอยู่ ปิดเซสชั่นก่อน:\n"
-
-#~ msgid "If left empty, all employees can log in to PoS"
-#~ msgstr "หากเว้นว่างไว้ พนักงานทุกคนสามารถเข้าสู่ระบบ PoS ได้"
 
 #~ msgid "If left empty, only Odoo users have extended rights in PoS"
 #~ msgstr "หากเว้นว่างไว้ มีเพียงผู้ใช้ Odoo เท่านั้นที่สามารถขยายสิทธิ์ใน PoS ได้"

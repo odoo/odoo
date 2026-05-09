@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-01 17:37+0000\n"
+"POT-Creation-Date: 2026-05-08 17:39+0000\n"
 "PO-Revision-Date: 2026-03-28 22:09+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-s18-3/"
@@ -44,6 +44,12 @@ msgstr "Lisää raportti kutakin työntekijää kohden"
 #: model_terms:ir.ui.view,arch_db:pos_hr.res_config_settings_view_form
 msgid "Advanced rights"
 msgstr "Edistyneet oikeudet"
+
+#. module: pos_hr
+#: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
+#: model_terms:ir.ui.view,arch_db:pos_hr.res_config_settings_view_form
+msgid "All employees"
+msgstr ""
 
 #. module: pos_hr
 #: model:ir.model,name:pos_hr.model_account_bank_statement_line
@@ -198,12 +204,6 @@ msgid "Employees with minimal access"
 msgstr "Työntekijät, joilla on vähimmäisoikeudet"
 
 #. module: pos_hr
-#: model:ir.model.fields,help:pos_hr.field_pos_config__basic_employee_ids
-#: model:ir.model.fields,help:pos_hr.field_res_config_settings__pos_basic_employee_ids
-msgid "Employees with standard cashier access to the POS"
-msgstr ""
-
-#. module: pos_hr
 #. odoo-javascript
 #: code:addons/pos_hr/static/src/app/screens/login_screen/login_screen.xml:0
 msgid "Enter your PIN"
@@ -223,6 +223,12 @@ msgstr "Anna PIN-koodi"
 #: model:ir.model.fields,field_description:pos_hr.field_res_config_settings__id
 msgid "ID"
 msgstr "Tunnus"
+
+#. module: pos_hr
+#: model:ir.model.fields,help:pos_hr.field_pos_config__basic_employee_ids
+#: model:ir.model.fields,help:pos_hr.field_res_config_settings__pos_basic_employee_ids
+msgid "If left empty, all employees can log in to PoS"
+msgstr "Jos tyhjä, kaikki työntekijät voivat kirjautua kassaan"
 
 #. module: pos_hr
 #. odoo-javascript
@@ -396,9 +402,6 @@ msgstr ""
 
 #~ msgid "All Employees"
 #~ msgstr "Kaikki työntekijät"
-
-#~ msgid "If left empty, all employees can log in to PoS"
-#~ msgstr "Jos tyhjä, kaikki työntekijät voivat kirjautua kassaan"
 
 #~ msgid "If left empty, only Odoo users have extended rights in PoS"
 #~ msgstr "Jos tyhjä, vain Odoo-käyttäjillä on laajennetut oikeudet kassassa"

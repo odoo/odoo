@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-01 17:37+0000\n"
+"POT-Creation-Date: 2026-05-08 17:39+0000\n"
 "PO-Revision-Date: 2024-09-25 09:41+0000\n"
 "Last-Translator: Wil Odoo, 2025\n"
 "Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
@@ -45,6 +45,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:pos_hr.res_config_settings_view_form
 msgid "Advanced rights"
 msgstr "Розширені права"
+
+#. module: pos_hr
+#: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
+#: model_terms:ir.ui.view,arch_db:pos_hr.res_config_settings_view_form
+msgid "All employees"
+msgstr ""
 
 #. module: pos_hr
 #: model:ir.model,name:pos_hr.model_account_bank_statement_line
@@ -197,12 +203,6 @@ msgid "Employees with minimal access"
 msgstr ""
 
 #. module: pos_hr
-#: model:ir.model.fields,help:pos_hr.field_pos_config__basic_employee_ids
-#: model:ir.model.fields,help:pos_hr.field_res_config_settings__pos_basic_employee_ids
-msgid "Employees with standard cashier access to the POS"
-msgstr ""
-
-#. module: pos_hr
 #. odoo-javascript
 #: code:addons/pos_hr/static/src/app/screens/login_screen/login_screen.xml:0
 msgid "Enter your PIN"
@@ -222,6 +222,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_hr.field_res_config_settings__id
 msgid "ID"
 msgstr ""
+
+#. module: pos_hr
+#: model:ir.model.fields,help:pos_hr.field_pos_config__basic_employee_ids
+#: model:ir.model.fields,help:pos_hr.field_res_config_settings__pos_basic_employee_ids
+msgid "If left empty, all employees can log in to PoS"
+msgstr "Якщо залишити пустим, усі співробітники зможуть увійти в точку продажу"
 
 #. module: pos_hr
 #. odoo-javascript
@@ -392,10 +398,6 @@ msgid ""
 msgstr ""
 "Ви не можете видалити співробітника, який може бути задіяним в активній "
 "сесії точки продажу, спершу закрийте сесію: \n"
-
-#~ msgid "If left empty, all employees can log in to PoS"
-#~ msgstr ""
-#~ "Якщо залишити пустим, усі співробітники зможуть увійти в точку продажу"
 
 #~ msgid "If left empty, only Odoo users have extended rights in PoS"
 #~ msgstr ""
