@@ -20,7 +20,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-01 17:37+0000\n"
+"POT-Creation-Date: 2026-05-08 17:35+0000\n"
 "PO-Revision-Date: 2026-04-13 19:31+0000\n"
 "Last-Translator: \"Maitê Dietze (madi)\" <madi@odoo.com>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/odoo-"
@@ -2629,12 +2629,6 @@ msgid "Confirmation Wizard"
 msgstr "Assistente de confirmação"
 
 #. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
-#: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
-msgid "Connect device to your PoS"
-msgstr "Conecte o dispositivo ao seu PDV"
-
-#. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__preparation_devices
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_preparation_devices
 msgid "Connect preparation printers to print to the bar, kitchen,..."
@@ -2648,16 +2642,22 @@ msgid "Connect preparation printers to your PoS"
 msgstr "Conecte as impressoras de preparação ao seu PDV"
 
 #. module: point_of_sale
-#: model:ir.model.fields,help:point_of_sale.field_pos_config__other_devices
-#: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_other_devices
-msgid "Connect printer devices to your PoS."
-msgstr "Conecte dispositivos de impressão ao seu PDV."
-
-#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "Connect printer to internet (Ethernet cable recommended)"
 msgstr "Conecte a impressora à internet (recomenda-se o uso de cabo Ethernet)"
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
+#: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
+msgid "Connect printers to your PoS"
+msgstr ""
+
+#. module: point_of_sale
+#: model:ir.model.fields,help:point_of_sale.field_pos_config__other_devices
+#: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_other_devices
+msgid "Connect printers to your PoS."
+msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -5953,6 +5953,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__barcode_nomenclature_id
 msgid "Nomenclature"
 msgstr "Nomenclatura"
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_printer_form
+msgid "None"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
@@ -12036,6 +12041,12 @@ msgstr "com um valor de"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_sale_details_receipt_product_line
 msgid "x"
 msgstr "x"
+
+#~ msgid "Connect device to your PoS"
+#~ msgstr "Conecte o dispositivo ao seu PDV"
+
+#~ msgid "Connect printer devices to your PoS."
+#~ msgstr "Conecte dispositivos de impressão ao seu PDV."
 
 #~ msgid "<strong>Lot number: </strong>"
 #~ msgstr "<strong>Número do lote: </strong>"
