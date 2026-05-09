@@ -9,13 +9,14 @@
 # Wil Odoo, 2025
 #
 # "Manon Rondou (ronm)" <ronm@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 18:36+0000\n"
-"PO-Revision-Date: 2026-05-02 08:08+0000\n"
-"Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
+"POT-Creation-Date: 2026-05-08 17:36+0000\n"
+"PO-Revision-Date: 2026-05-09 17:01+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-17/"
 "website_slides/fr/>\n"
 "Language: fr\n"
@@ -4365,6 +4366,11 @@ msgid "Menu Entry"
 msgstr "Entrée de menu"
 
 #. module: website_slides
+#: model:ir.model,name:website_slides.model_base_partner_merge_automatic_wizard
+msgid "Merge Partner Wizard"
+msgstr "Assistant de fusion des partenaires"
+
+#. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_has_error
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__message_has_error
 msgid "Message Delivery error"
@@ -7074,6 +7080,15 @@ msgid ""
 msgstr ""
 "Vous ne pouvez pas marquer un quiz de diapositives comme non achevé si vous "
 "ne faites pas partie de ses membres ou s'il n'est pas publié."
+
+#. module: website_slides
+#. odoo-python
+#: code:addons/website_slides/models/base_partner_merge.py:0
+#, python-format
+msgid ""
+"You cannot merge these contacts because multiple contacts are enrolled in "
+"the same courses: %s"
+msgstr ""
 
 #. module: website_slides
 #. odoo-python

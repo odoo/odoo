@@ -14,13 +14,13 @@
 # Vladimir Olujić <olujic.vladimir@storm.hr>, 2024
 # Martin Trigaux, 2024
 # Luka Carević <luka@uvid.hr>, 2025
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:37+0000\n"
-"PO-Revision-Date: 2025-11-20 14:47+0000\n"
+"PO-Revision-Date: 2026-05-09 08:09+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Croatian <https://translate.odoo.com/projects/odoo-17/"
 "base_automation/hr/>\n"
@@ -30,7 +30,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: base_automation
 #. odoo-javascript
@@ -40,13 +40,15 @@ msgid ""
 "\"\n"
 "                (ID:"
 msgstr ""
+"\"\n"
+"                (ID:"
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/kanban_header_patch.js:0
 #, python-format
 msgid "\"%s\" tag is added"
-msgstr ""
+msgstr "Dodana je oznaka \"%s\""
 
 #. module: base_automation
 #. odoo-python
@@ -56,25 +58,27 @@ msgid ""
 "\"On live update\" automation rules can only be used with \"Execute Python "
 "Code\" action type."
 msgstr ""
+"Pravila automatizacije \"Pri izmjeni uživo\" mogu se koristiti samo s vrstom "
+"radnje \"Izvrši Python kod\"."
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
 #, python-format
 msgid "%s actions"
-msgstr ""
+msgstr "%s radnji"
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
 #, python-format
 msgid "1 action"
-msgstr ""
+msgstr "1 radnja"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "<code>env</code>: environment on which the action is triggered"
-msgstr ""
+msgstr "<code>env</code>: okruženje u kojem se radnja pokreće"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -82,6 +86,8 @@ msgid ""
 "<code>model</code>: model of the record on which the action is triggered; is "
 "a void recordset"
 msgstr ""
+"<code>model</code>: model zapisa nad kojim se radnja pokreće; prazan je "
+"recordset"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -89,6 +95,8 @@ msgid ""
 "<code>payload</code>: the payload of the call (GET parameters, JSON body), "
 "as a dict."
 msgstr ""
+"<code>payload</code>: sadržaj poziva (GET parametri, JSON tijelo), kao "
+"rječnik."
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -96,11 +104,13 @@ msgid ""
 "<code>time</code>, <code>datetime</code>, <code>dateutil</code>, "
 "<code>timezone</code>: useful Python libraries"
 msgstr ""
+"<code>time</code>, <code>datetime</code>, <code>dateutil</code>, <code>"
+"timezone</code>: korisne Python biblioteke"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_kanban
 msgid "<i class=\"fa fa-2x fa-arrow-right text-primary\" title=\"Actions\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-2x fa-arrow-right text-primary\" title=\"Radnje\"/>"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -108,6 +118,8 @@ msgid ""
 "<i class=\"fa fa-info-circle\"/> The default target record getter will work "
 "out-of-the-box for any webhook coming from another Odoo instance."
 msgstr ""
+"<i class=\"fa fa-info-circle\"/> Zadani getter ciljanog zapisa radit će "
+"odmah za bilo koji webhook koji dolazi s druge Odoo instance."
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -116,11 +128,14 @@ msgid ""
 "be executed <em>every time</em> the watched fields change, <em>whether you "
 "save or not</em>."
 msgstr ""
+"<i class=\"fa fa-warning\"/> Pravila automatizacije pokrenuta izmjenama u "
+"sučelju izvršit će se <em>svaki put</em> kada se promatrana polja promijene, "
+"<em>bez obzira spremate li ili ne</em>."
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "<span class=\"text-muted\"> Available variables: </span>"
-msgstr ""
+msgstr "<span class=\"text-muted\"> Dostupne varijable: </span>"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -180,7 +195,7 @@ msgstr "Akcije"
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Actions To Do"
-msgstr ""
+msgstr "Radnje za izvršiti"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__active
@@ -190,14 +205,14 @@ msgstr "Aktivan"
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Add an action"
-msgstr ""
+msgstr "Dodaj akciju"
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
 #, python-format
 msgid "Add followers"
-msgstr ""
+msgstr "Dodaj pratitelje"
 
 #. module: base_automation
 #. odoo-python
@@ -209,12 +224,12 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_time_created
 msgid "After creation"
-msgstr ""
+msgstr "Nakon kreiranja"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_time_updated
 msgid "After last update"
-msgstr ""
+msgstr "Nakon posljednjeg ažuriranja"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__filter_domain
@@ -231,7 +246,7 @@ msgstr "Arhivirano"
 #. module: base_automation
 #: model_terms:ir.actions.act_window,help:base_automation.base_automation_act
 msgid "Automate <em>everything</em> with Automation Rules"
-msgstr ""
+msgstr "Automatizirajte <em>sve</em> s pravilima automatizacije"
 
 #. module: base_automation
 #: model:ir.model,name:base_automation.model_base_automation
@@ -258,7 +273,7 @@ msgstr "Pravila automatizacije"
 #. module: base_automation
 #: model:ir.actions.server,name:base_automation.ir_cron_data_base_automation_check_ir_actions_server
 msgid "Automation Rules: check and execute"
-msgstr ""
+msgstr "Pravila automatizacije: provjera i izvršavanje"
 
 #. module: base_automation
 #. odoo-javascript
@@ -270,7 +285,7 @@ msgstr "Automatizacija"
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_time
 msgid "Based on date field"
-msgstr ""
+msgstr "Na temelju polja s datumom"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__filter_pre_domain
@@ -375,14 +390,14 @@ msgstr "Tip kašnjenja"
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Delete Action"
-msgstr ""
+msgstr "Akcija brisanja"
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_trigger_selection_field.js:0
 #, python-format
 msgid "Deprecated (do not use)"
-msgstr ""
+msgstr "Zastarjelo (ne koristiti)"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__description
@@ -433,7 +448,7 @@ msgstr "E-pošta"
 #: code:addons/base_automation/static/src/base_automation_trigger_selection_field.js:0
 #, python-format
 msgid "Email Events"
-msgstr ""
+msgstr "Događaji e-pošte"
 
 #. module: base_automation
 #. odoo-python
@@ -443,6 +458,9 @@ msgid ""
 "Email, follower or activity action types cannot be used when deleting "
 "records, as there are no more records to apply these changes to!"
 msgstr ""
+"Vrste radnji e-pošte, pratitelja ili aktivnosti ne mogu se koristiti "
+"prilikom brisanja zapisa jer više ne postoje zapisi na koje bi se promjene "
+"mogle primijeniti!"
 
 #. module: base_automation
 #. odoo-javascript
@@ -473,7 +491,7 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__on_change_field_ids
 msgid "Fields that trigger the onchange."
-msgstr ""
+msgstr "Polja koja pokreću onchange."
 
 #. module: base_automation
 #. odoo-javascript
@@ -503,6 +521,8 @@ msgid ""
 "If present, this condition must be satisfied before executing the automation "
 "rule."
 msgstr ""
+"Ako postoji, ovaj uvjet mora biti zadovoljen prije izvršavanja pravila "
+"automatizacije."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__filter_pre_domain
@@ -510,11 +530,13 @@ msgid ""
 "If present, this condition must be satisfied before the update of the "
 "record. Not checked on record creation."
 msgstr ""
+"Ako postoji, ovaj uvjet mora biti zadovoljen prije ažuriranja zapisa. Ne "
+"provjerava se pri kreiranju zapisa."
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Keep track of what this automation does and why it exists..."
-msgstr ""
+msgstr "Vodite evidenciju o tome što ova automatizacija radi i zašto postoji..."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__last_run
@@ -554,6 +576,8 @@ msgid ""
 "Mail event can not be configured on model %s. Only models with discussion "
 "feature can be used."
 msgstr ""
+"Događaj pošte ne može se konfigurirati na modelu %s. Mogu se koristiti samo "
+"modeli s funkcionalnošću rasprave."
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trg_date_range_type__minutes
@@ -578,6 +602,8 @@ msgid ""
 "Model of action %(action_name)s should match the one from automated rule "
 "%(rule_name)s."
 msgstr ""
+"Model radnje %(action_name)s treba odgovarati onome iz automatiziranog "
+"pravila %(rule_name)s."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__model_id
@@ -597,7 +623,7 @@ msgstr "Mjeseci"
 #: code:addons/base_automation/models/base_automation.py:0
 #, python-format
 msgid "No record to run the automation on was found."
-msgstr ""
+msgstr "Nije pronađen zapis na kojem bi se automatizacija pokrenula."
 
 #. module: base_automation
 #. odoo-python
@@ -621,12 +647,12 @@ msgstr "Okidač pri izmjeni vrijednosti"
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_change
 msgid "On UI change"
-msgstr ""
+msgstr "Pri promjeni sučelja"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_archive
 msgid "On archived"
-msgstr ""
+msgstr "Pri arhiviranju"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_create
@@ -636,17 +662,17 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_unlink
 msgid "On deletion"
-msgstr ""
+msgstr "Pri brisanju"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_message_received
 msgid "On incoming message"
-msgstr ""
+msgstr "Pri dolaznoj poruci"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_message_sent
 msgid "On outgoing message"
-msgstr ""
+msgstr "Pri odlaznoj poruci"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_create_or_write
@@ -656,17 +682,17 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_unarchive
 msgid "On unarchived"
-msgstr ""
+msgstr "Pri poništavanju arhiviranja"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_write
 msgid "On update"
-msgstr ""
+msgstr "Pri ažuriranju"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_webhook
 msgid "On webhook"
-msgstr ""
+msgstr "Pri webhooku"
 
 #. module: base_automation
 #. odoo-javascript
@@ -685,7 +711,7 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_priority_set
 msgid "Priority is set to"
-msgstr ""
+msgstr "Prioritet je postavljen na"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__record_getter
@@ -714,17 +740,17 @@ msgstr ""
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Select a date field..."
-msgstr ""
+msgstr "Odaberite polje s datumom..."
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Select a value..."
-msgstr ""
+msgstr "Odaberite vrijednost..."
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Select fields..."
-msgstr ""
+msgstr "Odaberite polja..."
 
 #. module: base_automation
 #. odoo-javascript
@@ -755,6 +781,9 @@ msgid ""
 "on\n"
 "                tasks when a specific tag is added."
 msgstr ""
+"Pošaljite e-poštu kada objekt promijeni stanje, arhivirajte zapise\n"
+"                nakon mjesec dana neaktivnosti ili se podsjetite da pratite\n"
+"                zadatke kada se doda određena oznaka."
 
 #. module: base_automation
 #. odoo-javascript
@@ -781,6 +810,8 @@ msgid ""
 "Some triggers need a reference to a selection field. This field is used to "
 "store it."
 msgstr ""
+"Neki okidači trebaju referencu na polje za odabir. Ovo polje se koristi za "
+"njezino pohranjivanje."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_field_ref
@@ -788,47 +819,49 @@ msgid ""
 "Some triggers need a reference to another field. This field is used to store "
 "it."
 msgstr ""
+"Neki okidači trebaju referencu na drugo polje. Ovo polje se koristi za "
+"njezino pohranjivanje."
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_actions_one2many_field.js:0
 #, python-format
 msgid "Specific User"
-msgstr ""
+msgstr "Određeni korisnik"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_stage_set
 msgid "Stage is set to"
-msgstr ""
+msgstr "Faza je postavljena na"
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/kanban_header_patch.js:0
 #, python-format
 msgid "Stage is set to \"%s\""
-msgstr ""
+msgstr "Faza je postavljena na \"%s\""
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_state_set
 msgid "State is set to"
-msgstr ""
+msgstr "Stanje je postavljeno na"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_tag_set
 msgid "Tag is added"
-msgstr ""
+msgstr "Dodana je oznaka"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "Target Record"
-msgstr ""
+msgstr "Ciljani zapis"
 
 #. module: base_automation
 #. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
 #, python-format
 msgid "Target model of actions %(action_names)s are different from rule model."
-msgstr ""
+msgstr "Ciljani model radnji %(action_names)s razlikuje se od modela pravila."
 
 #. module: base_automation
 #. odoo-python
@@ -838,6 +871,8 @@ msgid ""
 "The \"%(trigger_value)s\" %(trigger_label)s can only be used with the "
 "\"%(state_value)s\" action type"
 msgstr ""
+"\"%(trigger_value)s\" %(trigger_label)s može se koristiti samo s vrstom "
+"radnje \"%(state_value)s\""
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trigger_field_ids
@@ -845,6 +880,8 @@ msgid ""
 "The automation rule will be triggered if and only if one of these fields is "
 "updated.If empty, all fields are watched."
 msgstr ""
+"Pravilo automatizacije će se pokrenuti samo ako se ažurira jedno od ovih "
+"polja. Ako je prazno, prate se sva polja."
 
 #. module: base_automation
 #. odoo-javascript
@@ -854,6 +891,8 @@ msgid ""
 "The error occurred during the execution of the automation rule\n"
 "                \""
 msgstr ""
+"Došlo je do pogreške tijekom izvršavanja pravila automatizacije\n"
+"                \""
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__record_getter
@@ -861,13 +900,15 @@ msgid ""
 "This code will be run to find on which record the automation rule should be "
 "run."
 msgstr ""
+"Ovaj kod će se pokrenuti kako bi se pronašao zapis na kojem treba pokrenuti "
+"pravilo automatizacije."
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_trigger_selection_field.js:0
 #, python-format
 msgid "Timing Conditions"
-msgstr ""
+msgstr "Vremenski uvjeti"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trigger
@@ -887,7 +928,7 @@ msgstr "Polje za aktivaciju"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_field_ref_model_name
 msgid "Trigger Field Model"
-msgstr ""
+msgstr "Model polja okidača"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trigger_field_ids
@@ -897,7 +938,7 @@ msgstr "Polja aktivacije"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_field_ref
 msgid "Trigger Reference"
-msgstr ""
+msgstr "Referenca okidača"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_field_ref_display_name
@@ -952,14 +993,14 @@ msgstr "Koristi kalendar"
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_user_set
 msgid "User is set"
-msgstr ""
+msgstr "Korisnik je postavljen"
 
 #. module: base_automation
 #. odoo-javascript
 #: code:addons/base_automation/static/src/base_automation_trigger_selection_field.js:0
 #, python-format
 msgid "Values Updated"
-msgstr ""
+msgstr "Ažurirane vrijednosti"
 
 #. module: base_automation
 #. odoo-python
@@ -973,19 +1014,19 @@ msgstr "Upozorenje"
 #: code:addons/base_automation/models/base_automation.py:0
 #, python-format
 msgid "Webhook Log"
-msgstr ""
+msgstr "Zapis webhooka"
 
 #. module: base_automation
 #. odoo-python
 #: code:addons/base_automation/models/base_automation.py:0
 #, python-format
 msgid "Webhook Logs"
-msgstr ""
+msgstr "Zapisi webhooka"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__webhook_uuid
 msgid "Webhook UUID"
-msgstr ""
+msgstr "UUID webhooka"
 
 #. module: base_automation
 #. odoo-javascript
@@ -1008,6 +1049,9 @@ msgid ""
 "                If present, will be checked by the scheduler. If empty, will "
 "be checked at creation and update."
 msgstr ""
+"Kada uvjet treba biti pokrenut.\n"
+"                Ako je postavljen, provjerit će ga planer. Ako je prazan, "
+"provjeravat će se pri kreiranju i ažuriranju."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__active
@@ -1017,7 +1061,7 @@ msgstr "Ako nije označeno, pravilo je skriveno i neće se izvršiti."
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
 msgid "When updating"
-msgstr ""
+msgstr "Pri ažuriranju"
 
 #. module: base_automation
 #: model_terms:ir.actions.act_window,help:base_automation.base_automation_act
@@ -1025,6 +1069,8 @@ msgid ""
 "With Automation Rules, you can automate\n"
 "                <em>any</em> workflow."
 msgstr ""
+"S pravilima automatizacije možete automatizirati\n"
+"                <em>bilo koji</em> radni tijek."
 
 #. module: base_automation
 #. odoo-javascript
@@ -1049,6 +1095,8 @@ msgid ""
 "You cannot send an email, add followers or create an activity for a deleted "
 "record.  It simply does not work."
 msgstr ""
+"Ne možete poslati e-poštu, dodati pratitelje ili kreirati aktivnost za "
+"obrisan zapis. Jednostavno ne funkcionira."
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -1059,7 +1107,7 @@ msgstr ""
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_kanban
 msgid "based on"
-msgstr ""
+msgstr "na temelju"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
@@ -1071,4 +1119,4 @@ msgstr ""
 #: code:addons/base_automation/static/src/base_automation_actions_one2many_field.xml:0
 #, python-format
 msgid "no action defined..."
-msgstr ""
+msgstr "nema definirane radnje..."

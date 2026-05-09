@@ -3,13 +3,13 @@
 # * stock_delivery
 #
 # Odoo Translation Bot <c3p@odoo.com>, 2025.
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:38+0000\n"
-"PO-Revision-Date: 2025-11-22 21:23+0000\n"
+"PO-Revision-Date: 2026-05-09 08:06+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Bosnian <https://translate.odoo.com/projects/odoo-17/"
 "stock_delivery/bs/>\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: stock_delivery
 #. odoo-python
@@ -104,7 +104,7 @@ msgstr ""
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__weight_bulk
 msgid "Bulk Weight"
-msgstr ""
+msgstr "Ukupna masa"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
@@ -175,13 +175,13 @@ msgstr ""
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.vpicktree_view_tree
 msgid "Destination"
-msgstr ""
+msgstr "Odredište"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_move_line__destination_country_code
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__destination_country_code
 msgid "Destination Country"
-msgstr ""
+msgstr "Odredišna država"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.choose_delivery_package_view_form
@@ -325,7 +325,7 @@ msgstr "Proizvod"
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_stock_move_line
 msgid "Product Moves (Stock Move Line)"
-msgstr ""
+msgstr "Kretanja proizvoda (Stavka skladišnog transfera)"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__delivery_type
@@ -412,7 +412,7 @@ msgstr ""
 #: model:ir.ui.menu,name:stock_delivery.menu_action_delivery_carrier_form
 #: model_terms:ir.ui.view,arch_db:stock_delivery.stock_location_route_view_form_inherit_stock_delivery
 msgid "Shipping Methods"
-msgstr ""
+msgstr "Načini dostave"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_package__shipping_weight
@@ -441,7 +441,7 @@ msgstr "Kretanje zalihe"
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_stock_package_type
 msgid "Stock package type"
-msgstr ""
+msgstr "Vrsta skladišnog paketa"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_quant_package__weight_uom_rounding
@@ -460,6 +460,8 @@ msgid ""
 "The ISO country code in two chars. \n"
 "You can use this field for quick search."
 msgstr ""
+"ISO oznaka države u dva slova.\n"
+"Možete koristiti za brzo pretraživanje."
 
 #. module: stock_delivery
 #. odoo-python
@@ -505,16 +507,19 @@ msgid ""
 "shipping weight specified will default to their products' total weight. This "
 "is the weight used to compute the cost of the shipping."
 msgstr ""
+"Ukupna težina paketa i proizvoda koji nisu u paketu. Paketi bez navedene "
+"otpremne težine zadano će koristiti ukupnu težinu svojih proizvoda. Ova se "
+"težina koristi za izračun troškova otpreme."
 
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_stock_picking__weight_bulk
 msgid "Total weight of products which are not in a package."
-msgstr ""
+msgstr "Ukupna težina proizvoda koji nisu u paketu."
 
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_stock_quant_package__shipping_weight
 msgid "Total weight of the package."
-msgstr ""
+msgstr "Ukupna težina paketa."
 
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_stock_picking__weight
@@ -569,7 +574,7 @@ msgstr "Težina"
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__shipping_weight
 msgid "Weight for Shipping"
-msgstr ""
+msgstr "Transportna težina"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.view_picking_withcarrier_out_form
@@ -581,7 +586,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__weight_uom_name
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_quant_package__weight_uom_name
 msgid "Weight unit of measure label"
-msgstr ""
+msgstr "Oznaka jedinice mjere težine"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_package_barcode_small_delivery
@@ -615,7 +620,7 @@ msgstr ""
 #. module: stock_delivery
 #: model:ir.ui.menu,name:stock_delivery.menu_delivery_zip_prefix
 msgid "Zip Prefix"
-msgstr ""
+msgstr "Prefiksi poštanskog broja"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.label_package_template_view_delivery
@@ -635,4 +640,4 @@ msgstr ""
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.label_package_template_view_delivery
 msgid "^FS"
-msgstr ""
+msgstr "^FS"

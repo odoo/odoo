@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 18:36+0000\n"
-"PO-Revision-Date: 2026-04-07 09:29+0000\n"
+"POT-Creation-Date: 2026-05-08 17:36+0000\n"
+"PO-Revision-Date: 2026-05-09 17:01+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Slovak <https://translate.odoo.com/projects/odoo-17/"
 "website_slides/sk/>\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n == 1 ? 0 : n % 1 == 0 && "
 "n >= 2 && n <= 4 ? 1 : n % 1 != 0 ? 2: 3);\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__members_engaged_count
@@ -125,7 +125,7 @@ msgstr "&amp;nbsp;"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_all
 msgid "'. Showing results for '"
-msgstr ""
+msgstr "'. Zobrazujú sa výsledky pre '"
 
 #. module: website_slides
 #. odoo-javascript
@@ -512,7 +512,7 @@ msgstr "<i class=\"fa fa-folder-o me-1\"/>Pridať sekciu"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_pages_kanban_view
 msgid "<i class=\"fa fa-globe me-1\" title=\"Website\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-globe me-1\" title=\"Webstránka\"/>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.courses_home
@@ -4028,6 +4028,11 @@ msgid "Menu Entry"
 msgstr ""
 
 #. module: website_slides
+#: model:ir.model,name:website_slides.model_base_partner_merge_automatic_wizard
+msgid "Merge Partner Wizard"
+msgstr "Pomocník zlučovania partnerov"
+
+#. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_has_error
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__message_has_error
 msgid "Message Delivery error"
@@ -6635,6 +6640,15 @@ msgstr ""
 msgid ""
 "You cannot mark a slide quiz as not completed if you are not among its "
 "members or it is unpublished."
+msgstr ""
+
+#. module: website_slides
+#. odoo-python
+#: code:addons/website_slides/models/base_partner_merge.py:0
+#, python-format
+msgid ""
+"You cannot merge these contacts because multiple contacts are enrolled in "
+"the same courses: %s"
 msgstr ""
 
 #. module: website_slides

@@ -6,13 +6,13 @@
 # Martin Trigaux, 2018
 # Boško Stojaković <bluesoft83@gmail.com>, 2018
 # Bole <bole@dajmi5.com>, 2018
-# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:38+0000\n"
-"PO-Revision-Date: 2025-12-31 11:51+0000\n"
+"PO-Revision-Date: 2026-05-09 17:01+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Bosnian <https://translate.odoo.com/projects/odoo-17/"
 "sale_timesheet/bs/>\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: sale_timesheet
 #. odoo-python
@@ -141,7 +141,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_update_default_description
 msgid "<u>Profitability</u>"
-msgstr ""
+msgstr "<u>Profitabilnost</u>"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_update_default_description
@@ -160,6 +160,13 @@ msgid ""
 "this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"Prema konfiguraciji proizvoda, isporučena količina može se automatski "
+"izračunati mehanizmom:\n"
+"- Ručno: količina se postavlja ručno u retku\n"
+"- Analitički iz troškova: količina je zbroj količina iz knjiženih troškova\n"
+"- Evidencija radnog vremena: količina je zbroj sati zabilježenih na zadacima "
+"povezanim s ovim retkom prodaje\n"
+"- Kretanje zaliha: količina dolazi iz potvrđenih prikupljanja\n"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_account_move_reversal
@@ -307,7 +314,7 @@ msgstr "Kompanija"
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "Postavke"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
@@ -322,7 +329,7 @@ msgstr "Cijena (Koštanje)"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__cost_currency_id
 msgid "Cost Currency"
-msgstr ""
+msgstr "Valuta cijene"
 
 #. module: sale_timesheet
 #: model:ir.actions.act_window,name:sale_timesheet.project_project_action_multi_create_invoice
@@ -402,7 +409,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_kanban_inherit_sale_timesheet
 msgid "Customer Ratings"
-msgstr ""
+msgstr "Ocjene kupaca"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_create_sale_order__partner_id
@@ -666,6 +673,12 @@ msgid ""
 "Create a task and track hours: Create a task on the sales order validation "
 "and track the work hours."
 msgstr ""
+"Ručno postavljanje količina po narudžbi: Račun na temelju ručno unesene "
+"količine, bez stvaranja analitičkog konta.\n"
+"Vremenski listovi po ugovoru: Račun na temelju praćenih sati na "
+"odgovarajućem vremenskom listu.\n"
+"Stvorite zadatak i pratite radno vrijeme: Stvorite zadatak na provjeri "
+"važenjei prodajnog naloga i pratite radno vrijeme."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_timesheets_analysis_report__margin
@@ -682,7 +695,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_line__qty_delivered_method
 msgid "Method to update delivered qty"
-msgstr ""
+msgstr "Metoda ažuriranja isporučene količine"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.product_template_view_search_sale_timesheet
@@ -712,7 +725,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model_terms:ir.actions.act_window,help:sale_timesheet.timesheet_action_billing_report
 msgid "No data yet!"
-msgstr ""
+msgstr "Još nema podataka!"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__non_billable
@@ -779,7 +792,7 @@ msgstr ""
 #: code:addons/sale_timesheet/models/project.py:0
 #, python-format
 msgid "Operation not supported"
-msgstr ""
+msgstr "Operacija nije podržana"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line__order_id
@@ -854,7 +867,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_project_update
 msgid "Project Update"
-msgstr ""
+msgstr "Ažuriranje projekta"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_create_sale_order__project_id
@@ -923,7 +936,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_sale_page
 msgid "S0001"
-msgstr ""
+msgstr "S0001"
 
 #. module: sale_timesheet
 #. odoo-python
@@ -974,7 +987,7 @@ msgstr "Prodajna narudžba"
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
 #, python-format
 msgid "Sales Order Item"
-msgstr ""
+msgstr "Stavka prodajnog naloga"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_update_default_description
@@ -1014,6 +1027,9 @@ msgid ""
 "invoiced to your customer. Remove the sales order item for the timesheet "
 "entry to be non-billable."
 msgstr ""
+"Stavka prodajnog naloga kojoj će se dodati utrošeno vrijeme kako bi se "
+"fakturirala vašem kupcu. Uklonite stavku prodajnog naloga za unos vremenskog "
+"lista kako bi bila nenaplativa."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_sale_line_employee_map__sale_order_id
@@ -1106,7 +1122,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_update_default_description
 msgid "Sold"
-msgstr ""
+msgstr "Prodano"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_advance_payment_inv__date_start_invoice_timesheet
@@ -1121,7 +1137,7 @@ msgstr "Zadatak"
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_project_task_recurrence
 msgid "Task Recurrence"
-msgstr ""
+msgstr "Ponavljanje zadatka"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__project_project__pricing_type__task_rate
@@ -1136,7 +1152,7 @@ msgstr "Zadaci"
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_report_project_task_user
 msgid "Tasks Analysis"
-msgstr ""
+msgstr "Analiza zadataka"
 
 #. module: sale_timesheet
 #. odoo-python

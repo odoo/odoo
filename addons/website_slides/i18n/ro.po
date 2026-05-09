@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* website_slides
+# * website_slides
 #
 # Translators:
 # Fekete Mihai <mihai.fekete@forestandbiomass.ro>, 2024
@@ -16,21 +16,23 @@
 # Lyall Kindmurr, 2024
 # Maria Muntean, 2025
 # Larisa_nexterp, 2025
-#
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 18:36+0000\n"
-"PO-Revision-Date: 2023-10-26 23:10+0000\n"
-"Last-Translator: Larisa_nexterp, 2025\n"
-"Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
+"POT-Creation-Date: 2026-05-08 17:36+0000\n"
+"PO-Revision-Date: 2026-05-09 17:01+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Romanian <https://translate.odoo.com/projects/odoo-17/"
+"website_slides/ro/>\n"
 "Language: ro\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?"
-"2:1));\n"
+"Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
+"20)) ? 1 : 2;\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__members_engaged_count
@@ -4350,6 +4352,11 @@ msgid "Menu Entry"
 msgstr "Intrare meniu"
 
 #. module: website_slides
+#: model:ir.model,name:website_slides.model_base_partner_merge_automatic_wizard
+msgid "Merge Partner Wizard"
+msgstr "Expert partener îmbinare"
+
+#. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_has_error
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__message_has_error
 msgid "Message Delivery error"
@@ -7055,6 +7062,15 @@ msgid ""
 msgstr ""
 "Nu puteți marca un chestionar cu slide-uri ca nefinalizat dacă nu vă "
 "numărați printre membrii acestuia sau dacă este nepublicat."
+
+#. module: website_slides
+#. odoo-python
+#: code:addons/website_slides/models/base_partner_merge.py:0
+#, python-format
+msgid ""
+"You cannot merge these contacts because multiple contacts are enrolled in "
+"the same courses: %s"
+msgstr ""
 
 #. module: website_slides
 #. odoo-python

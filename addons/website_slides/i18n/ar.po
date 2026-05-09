@@ -1,25 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* website_slides
+# * website_slides
 #
 # Translators:
 # Malaz Abuidris <msea@odoo.com>, 2025
 # Wil Odoo, 2025
-#
+# Weblate <noreply-mt-weblate@weblate.org>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-20 18:36+0000\n"
-"PO-Revision-Date: 2023-10-26 23:10+0000\n"
-"Last-Translator: Wil Odoo, 2025\n"
-"Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
+"POT-Creation-Date: 2026-05-08 17:36+0000\n"
+"PO-Revision-Date: 2026-05-09 17:01+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Arabic <https://translate.odoo.com/projects/odoo-17/"
+"website_slides/ar/>\n"
 "Language: ar\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
-"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+"&& n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__members_engaged_count
@@ -4307,6 +4309,11 @@ msgid "Menu Entry"
 msgstr "قيد القائمة "
 
 #. module: website_slides
+#: model:ir.model,name:website_slides.model_base_partner_merge_automatic_wizard
+msgid "Merge Partner Wizard"
+msgstr "معالج دمج الوكيل"
+
+#. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_has_error
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__message_has_error
 msgid "Message Delivery error"
@@ -6984,6 +6991,15 @@ msgid ""
 msgstr ""
 "لا يمكنك تحديد الاختبار القصير لشريحة كغير مكتمل إذا لم تكن أحد الأعضاء أو "
 "إذا كان غير منشور. "
+
+#. module: website_slides
+#. odoo-python
+#: code:addons/website_slides/models/base_partner_merge.py:0
+#, python-format
+msgid ""
+"You cannot merge these contacts because multiple contacts are enrolled in "
+"the same courses: %s"
+msgstr ""
 
 #. module: website_slides
 #. odoo-python
