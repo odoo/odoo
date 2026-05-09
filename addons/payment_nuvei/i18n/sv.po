@@ -6,13 +6,14 @@
 # Wil Odoo, 2025
 #
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Hanna Kharraziha <hakha@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-29 18:38+0000\n"
-"PO-Revision-Date: 2025-12-31 16:32+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"PO-Revision-Date: 2026-05-09 09:15+0000\n"
+"Last-Translator: Hanna Kharraziha <hakha@odoo.com>\n"
 "Language-Team: Swedish <https://translate.odoo.com/projects/odoo-18/"
 "payment_nuvei/sv/>\n"
 "Language: sv\n"
@@ -20,13 +21,13 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: payment_nuvei
 #. odoo-python
 #: code:addons/payment_nuvei/models/payment_transaction.py:0
 msgid "%(payment_method)s requires both a first and last name."
-msgstr ""
+msgstr "%(payment_method)s kräver både för- och efternamn."
 
 #. module: payment_nuvei
 #. odoo-python
@@ -35,7 +36,7 @@ msgid ""
 "An error occurred during the processing of your payment (%(reason)s). Please "
 "try again."
 msgstr ""
-"Ett fel uppstod under behandlingen av din betalning (%(reason)s). Vänligen "
+"Ett fel uppstod när betalningen skulle behandlas (%(reason)s). Vänligen "
 "försök igen."
 
 #. module: payment_nuvei
@@ -46,7 +47,7 @@ msgstr "Kod"
 #. module: payment_nuvei
 #: model_terms:ir.ui.view,arch_db:payment_nuvei.payment_provider_form
 msgid "Merchant Identifier"
-msgstr "Identifierare för handlare"
+msgstr "Handlarens ID-nummer"
 
 #. module: payment_nuvei
 #. odoo-python
@@ -62,17 +63,17 @@ msgstr "Nuvei"
 #. module: payment_nuvei
 #: model:ir.model.fields,field_description:payment_nuvei.field_payment_provider__nuvei_merchant_identifier
 msgid "Nuvei Merchant Identifier"
-msgstr ""
+msgstr "Handlarens ID-nummer hos Nuvei"
 
 #. module: payment_nuvei
 #: model:ir.model.fields,field_description:payment_nuvei.field_payment_provider__nuvei_secret_key
 msgid "Nuvei Secret Key"
-msgstr ""
+msgstr "Hemlig nyckel hos Nuvei"
 
 #. module: payment_nuvei
 #: model:ir.model.fields,field_description:payment_nuvei.field_payment_provider__nuvei_site_identifier
 msgid "Nuvei Site Identifier"
-msgstr ""
+msgstr "Sidans ID-nummer hos Nuvei"
 
 #. module: payment_nuvei
 #: model:ir.model,name:payment_nuvei.model_payment_provider
@@ -88,7 +89,7 @@ msgstr "Betalningstransaktion"
 #. odoo-python
 #: code:addons/payment_nuvei/models/payment_transaction.py:0
 msgid "Received data with missing payment state."
-msgstr "Mottagen data med saknad betalningsstatus."
+msgstr "Mottagen data som saknar betalningsstatus."
 
 #. module: payment_nuvei
 #. odoo-python
@@ -100,7 +101,9 @@ msgstr "Mottagen data med saknad referens."
 #. odoo-python
 #: code:addons/payment_nuvei/models/payment_transaction.py:0
 msgid "Received invalid transaction status %(status)s and reason '%(reason)s'."
-msgstr "Mottog ogiltig transaktionsstatus %(status)s och orsak '%(reason)s'."
+msgstr ""
+"Mottagen betalning med ogiltig transaktionsstatus %(status)s på grund av '%"
+"(reason)s'."
 
 #. module: payment_nuvei
 #: model_terms:ir.ui.view,arch_db:payment_nuvei.payment_provider_form
@@ -110,12 +113,12 @@ msgstr "Hemlig nyckel"
 #. module: payment_nuvei
 #: model_terms:ir.ui.view,arch_db:payment_nuvei.payment_provider_form
 msgid "Site Identifier"
-msgstr ""
+msgstr "Sidans ID-nummer"
 
 #. module: payment_nuvei
 #: model:ir.model.fields,help:payment_nuvei.field_payment_provider__nuvei_merchant_identifier
 msgid "The code of the merchant account to use with this provider."
-msgstr "Koden för det handelskonto som ska användas med den här leverantören."
+msgstr "Den kod för handlarens konto som bör användas med den här leverantören."
 
 #. module: payment_nuvei
 #. odoo-python
@@ -126,9 +129,9 @@ msgstr "Kunden lämnade betalningssidan."
 #. module: payment_nuvei
 #: model:ir.model.fields,help:payment_nuvei.field_payment_provider__nuvei_site_identifier
 msgid "The site identifier code associated with the merchant account."
-msgstr ""
+msgstr "Sidans ID-nummer är direkt kopplat till handlarens konto."
 
 #. module: payment_nuvei
 #: model:ir.model.fields,help:payment_nuvei.field_payment_provider__code
 msgid "The technical code of this payment provider."
-msgstr "Den tekniska koden för denna betalningsleverantör."
+msgstr "Betalningsleverantörens tekniska kod."
