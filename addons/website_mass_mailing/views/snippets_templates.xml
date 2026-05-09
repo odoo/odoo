@@ -54,7 +54,7 @@ database, without the s_newsletter_list class. See fixNewsletterListClass.
         <div class="js_subscribe_wrap">
             <div t-attf-class="{{_wrap_classes or 'input-group'}}">
                 <input type="email" name="email" t-attf-class="s_newsletter_subscribe_form_input js_subscribe_value form-control #{_input_classes}" placeholder="Email Address"/>
-                <a role="button" href="#" t-attf-class="js_subscribe_btn o_submit {{_btn_classes or 'btn btn-primary'}}">Subscribe</a>
+                <button t-attf-class="js_subscribe_btn o_submit {{_btn_classes or 'btn btn-primary'}}">Subscribe</button>
             </div>
         </div>
     </div>
@@ -240,7 +240,7 @@ database, without the s_newsletter_list class. See fixNewsletterListClass.
                     <div class="s_website_form_submit s_website_form_no_submit_label col-12 mb-0 py-2 text-end" data-name="Submit Button">
                         <div style="width: 250px;" class="s_website_form_label"/>
                         <span id="s_website_form_result"></span>
-                        <a href="#" role="button" class="btn btn-primary ms-auto ms-lg-0 s_website_form_send">Subscribe</a>
+                        <button class="btn btn-primary ms-auto ms-lg-0 s_website_form_send">Subscribe</button>
                     </div>
                 </div>
             </form>
