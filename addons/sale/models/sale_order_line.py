@@ -1145,17 +1145,27 @@ class SaleOrderLine(models.Model):
             else:
                 line.amount_to_invoice = 0.0
 
+    def _get_analytic_distribution_arguments(self) -> dict:
+        """
+        Get arguments to determine analytic distribution.
+        This function aims to be overridden by partner submodules
+        :return: dict
+        """
+        return {
+            "product_id": self.product_id.id,
+            "product_categ_id": self.product_id.categ_id.id,
+            "partner_id": self.order_id.partner_id.id,
+            "partner_category_id": self.order_id.partner_id.category_id.ids,
+            "company_id": self.company_id.id,
+        }
+
     @api.depends('order_id.partner_id', 'product_id')
     def _compute_analytic_distribution(self):
         for line in self:
             if not line.display_type:
-                distribution = line.env['account.analytic.distribution.model']._get_distribution({
-                    "product_id": line.product_id.id,
-                    "product_categ_id": line.product_id.categ_id.id,
-                    "partner_id": line.order_id.partner_id.id,
-                    "partner_category_id": line.order_id.partner_id.category_id.ids,
-                    "company_id": line.company_id.id,
-                })
+                distribution = line.env['account.analytic.distribution.model']._get_distribution(
+                    line._get_analytic_distribution_arguments()
+                )
                 line.analytic_distribution = distribution or line.analytic_distribution
 
     @api.depends('product_id', 'state', 'qty_invoiced', 'qty_delivered')
