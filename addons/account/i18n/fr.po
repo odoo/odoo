@@ -26,10 +26,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-22 18:36+0000\n"
-"PO-Revision-Date: 2026-04-23 11:50+0000\n"
+"POT-Creation-Date: 2026-05-08 17:37+0000\n"
+"PO-Revision-Date: 2026-05-06 14:28+0000\n"
 "Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
-"Language-Team: French <https://translate.odoo.com/projects/odoo-s19-2/"
+"Language-Team: French <https://translate.odoo.com/projects/odoo-s19-3/"
 "account/fr/>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
@@ -38,78 +38,6 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
 "1000000 == 0) ? 1 : 2);\n"
 "X-Generator: Weblate 5.17\n"
-
-#. module: account
-#. odoo-javascript
-#: code:addons/account/static/src/components/bill_guide/bill_guide.xml:0
-msgid ""
-"\n"
-"                                Create a bill manually\n"
-"                            "
-msgstr ""
-
-#. module: account
-#. odoo-javascript
-#: code:addons/account/static/src/components/bill_guide/bill_guide.xml:0
-msgid ""
-"\n"
-"                                Create manually\n"
-"                            "
-msgstr ""
-
-#. module: account
-#. odoo-javascript
-#: code:addons/account/static/src/components/bill_guide/bill_guide.xml:0
-msgid ""
-"\n"
-"                                try our sample\n"
-"                            "
-msgstr ""
-
-#. module: account
-#. odoo-javascript
-#: code:addons/account/static/src/components/document_file_uploader/document_file_uploader.xml:0
-msgid ""
-"\n"
-"                        Upload\n"
-"                    "
-msgstr ""
-
-#. module: account
-#. odoo-javascript
-#: code:addons/account/static/src/components/bill_guide/bill_guide.xml:0
-msgid ""
-"\n"
-"                        or\n"
-"                    "
-msgstr ""
-
-#. module: account
-#. odoo-javascript
-#: code:addons/account/static/src/components/product_catalog/search/search_panel.xml:0
-msgid ""
-"\n"
-"                    + Add Section\n"
-"                "
-msgstr ""
-
-#. module: account
-#. odoo-javascript
-#: code:addons/account/static/src/components/account_file_uploader/account_file_uploader.xml:0
-msgid ""
-"\n"
-"                    Upload\n"
-"                "
-msgstr ""
-
-#. module: account
-#. odoo-javascript
-#: code:addons/account/static/src/components/currency_form/open_decimal_precision_btn_template.xml:0
-msgid ""
-"\n"
-"             More precision on Product Prices\n"
-"        "
-msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -176,24 +104,10 @@ msgstr ""
 "Veuillez contacter votre administrateur."
 
 #. module: account
-#. odoo-javascript
-#: code:addons/account/static/src/components/grouped_view_widget/grouped_view_widget.xml:0
-msgid " are not shown in the preview"
-msgstr ""
-
-#. module: account
 #. odoo-python
 #: code:addons/account/models/account_lock_exception.py:0
 msgid " for '%s'"
 msgstr " pour '%s'"
-
-#. module: account
-#. odoo-javascript
-#: code:addons/account/static/src/components/account_batch_sending_summary/account_batch_sending_summary.xml:0
-msgid ""
-" invoice(s)\n"
-"                "
-msgstr ""
 
 #. module: account
 #. odoo-python
@@ -467,6 +381,12 @@ msgid "(object._get_report_base_filename())"
 msgstr "(object._get_report_base_filename())"
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/product_catalog/search/search_panel.xml:0
+msgid "+ Add Section"
+msgstr ""
+
+#. module: account
 #. odoo-python
 #: code:addons/account/models/account_tax.py:0
 msgid "- %(name)s in %(company)s"
@@ -503,7 +423,7 @@ msgstr "- Versement de"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
 msgid "-> View partially reconciled entries"
-msgstr "-> Voir les pièces comptables partiellement lettrées"
+msgstr "-> Voir les écritures comptables partiellement lettrées"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.email_template_mail_gateway_failed
@@ -2717,7 +2637,7 @@ msgid ""
 "A journal entry consists of several journal items, each of\n"
 "                which is either a debit or a credit transaction."
 msgstr ""
-"Une pièce comptable se compose de plusieurs lignes d’écriture, chacune\n"
+"Une écriture comptable se compose de plusieurs lignes d’écriture, chacune\n"
 "                 correspondant à une transaction au débit ou au crédit."
 
 #. module: account
@@ -4746,6 +4666,12 @@ msgid "Availability"
 msgstr "Disponibilité"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_res_partner__available_additional_identifiers_metadata
+#: model:ir.model.fields,field_description:account.field_res_users__available_additional_identifiers_metadata
+msgid "Available Additional Identifiers Metadata"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__available_invoice_template_pdf_report_ids
 #: model:ir.model.fields,field_description:account.field_res_partner__available_invoice_template_pdf_report_ids
 #: model:ir.model.fields,field_description:account.field_res_users__available_invoice_template_pdf_report_ids
@@ -6557,6 +6483,11 @@ msgstr ""
 "professionnel"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_search
+msgid "Cost of revenue"
+msgstr ""
+
+#. module: account
 #: model:account.account,description:account.22_account_account_us_postage
 msgid ""
 "Costs for shipping products or materials to customers or receiving inventory."
@@ -6704,6 +6635,12 @@ msgid "Create a Mail Template"
 msgstr "Créer un modèle d'e-mail"
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/bill_guide/bill_guide.xml:0
+msgid "Create a bill manually"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_out_refund_type
 #: model_terms:ir.actions.act_window,help:account.action_move_out_refund_type_non_legacy
 msgid "Create a credit note"
@@ -6718,7 +6655,7 @@ msgstr "Créer une facture client"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_journal_line
 msgid "Create a journal entry"
-msgstr "Créer une pièce comptable"
+msgstr "Créer une écriture comptable"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_supplier_accounts
@@ -6835,6 +6772,12 @@ msgid ""
 msgstr ""
 "Créez des factures, enregistrez des paiements et gardez une trace de vos "
 "discussions avec vos clients."
+
+#. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/bill_guide/bill_guide.xml:0
+msgid "Create manually"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -8999,7 +8942,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_move_line_form
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "Entries"
-msgstr "Pièces comptables"
+msgstr "Écritures"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__entries_count
@@ -11715,7 +11658,7 @@ msgstr "Facturé"
 #: model_terms:ir.ui.view,arch_db:account.view_invoice_tree
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Invoices"
-msgstr "Factures clients"
+msgstr "Factures"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_home_menu_invoice
@@ -12107,7 +12050,7 @@ msgstr "Pièces comptables à hacher"
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_payment_tree
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
 msgid "Journal Entry"
-msgstr "Écriture comptable"
+msgstr "Pièce comptable"
 
 #. module: account
 #. odoo-javascript
@@ -13363,6 +13306,12 @@ msgstr "Contrôler vos marges par produits à partir des factures"
 #: model:ir.model.fields.selection,name:account.selection__account_move__auto_post__monthly
 msgid "Monthly"
 msgstr "Mensuel"
+
+#. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/currency_form/open_decimal_precision_btn_template.xml:0
+msgid "More precision on Product Prices"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -14701,15 +14650,11 @@ msgid "Paid Invoices"
 msgstr "Factures clients payées"
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/account_payment_field/account_payment.xml:0
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Paid on"
 msgstr "Payé le"
-
-#. module: account
-#. odoo-javascript
-#: code:addons/account/static/src/components/account_payment_field/account_payment.xml:0
-msgid "Paid on "
-msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__paired_internal_transfer_payment_id
@@ -16649,15 +16594,11 @@ msgid "Reversed"
 msgstr "Extourné"
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/account_payment_field/account_payment.xml:0
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Reversed on"
 msgstr "Extourné le"
-
-#. module: account
-#. odoo-javascript
-#: code:addons/account/static/src/components/account_payment_field/account_payment.xml:0
-msgid "Reversed on "
-msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__review_state
@@ -17689,6 +17630,12 @@ msgstr "Montrer les fonctions de comptabilité complètes"
 #: model:res.groups,name:account.group_account_secured
 msgid "Show Inalterability Features"
 msgstr "Afficher les caractéristiques d'inaltérabilité"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__show_invoice_vendor_bill
+#: model:ir.model.fields,field_description:account.field_account_move__show_invoice_vendor_bill
+msgid "Show Invoice Vendor Bill"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__show_journal
@@ -19902,7 +19849,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "The selected"
-msgstr "La sélection"
+msgstr "La sélection de"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_secure_entries_wizard__hash_date
@@ -21373,6 +21320,8 @@ msgstr "Données mises à jour"
 #. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/components/account_file_uploader/account_file_uploader.js:0
+#: code:addons/account/static/src/components/account_file_uploader/account_file_uploader.xml:0
+#: code:addons/account/static/src/components/document_file_uploader/document_file_uploader.xml:0
 msgid "Upload"
 msgstr "Uploader"
 
@@ -22037,7 +21986,7 @@ msgstr "Annuel"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "Yes, confirm and secure them now."
-msgstr "Oui, confirmez et sécurisez-les maintenant."
+msgstr "Oui, confirmez-les maintenant."
 
 #. module: account
 #. odoo-javascript
@@ -23051,7 +23000,13 @@ msgstr "avec des montants relatifs à"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "and will not be posted automatically."
-msgstr "et ne sera pas comptabilisé(e) automatiquement."
+msgstr "et ne seront donc pas comptabilisées automatiquement."
+
+#. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/grouped_view_widget/grouped_view_widget.xml:0
+msgid "are not shown in the preview"
+msgstr ""
 
 #. module: account
 #. odoo-javascript
@@ -23214,7 +23169,7 @@ msgstr "tout le monde"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "fall outside the typical range.<br/>"
-msgstr ""
+msgstr "sont en dehors de la plage habituelle.<br/>"
 
 #. module: account
 #. odoo-python
@@ -23269,6 +23224,12 @@ msgstr ""
 #: code:addons/account/controllers/portal.py:0
 msgid "in_invoice"
 msgstr "in_invoice"
+
+#. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/account_batch_sending_summary/account_batch_sending_summary.xml:0
+msgid "invoice(s)"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -23440,6 +23401,12 @@ msgid "to create the taxes for this country."
 msgstr "pour créer les taxes de ce pays."
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/bill_guide/bill_guide.xml:0
+msgid "try our sample"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
 msgid ""
 "undertakes to do its best to supply performant services in due time in "
@@ -23484,13 +23451,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "will be posted. Some of them may be future-dated or require hashing,"
 msgstr ""
-"seront comptabilisés. Certains éléments parmi ceux-ci peuvent être datés "
-"dans le futur ou nécessiter un hachage,"
+"sera comptabilisée. Certaines peuvent être datées dans le futur ou "
+"nécessiter un hachage"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
 msgid "will be secured with hash."
-msgstr "seront sécurisés avec un hachage."
+msgstr "sera sécurisé(e) avec un hachage."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.autopost_bills_wizard

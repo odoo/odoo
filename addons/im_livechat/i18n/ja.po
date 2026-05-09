@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-22 18:36+0000\n"
-"PO-Revision-Date: 2026-04-30 07:45+0000\n"
+"POT-Creation-Date: 2026-05-03 17:36+0000\n"
+"PO-Revision-Date: 2026-05-04 13:46+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-3/"
 "im_livechat/ja/>\n"
@@ -26,74 +26,6 @@ msgstr ""
 "X-Generator: Weblate 5.17\n"
 
 #. module: im_livechat
-#. odoo-javascript
-#: code:addons/im_livechat/static/src/views/discuss_template.xml:0
-msgid ""
-"\n"
-"                    Go to Sessions\n"
-"                "
-msgstr ""
-"\n"
-"                    セッションへ移動\n"
-"                "
-
-#. module: im_livechat
-#. odoo-javascript
-#: code:addons/im_livechat/static/src/core/web/livechat_channel_info_list.xml:0
-msgid ""
-"\n"
-"                    View Contact\n"
-"                "
-msgstr ""
-"\n"
-"                    連絡先を表示\n"
-"                "
-
-#. module: im_livechat
-#. odoo-javascript
-#: code:addons/im_livechat/static/src/core/public_web/livechat_leave_dialog.xml:0
-msgid ""
-"\n"
-"                Close Conversation\n"
-"            "
-msgstr ""
-"\n"
-"                会話を閉じる\n"
-"            "
-
-#. module: im_livechat
-#. odoo-javascript
-#: code:addons/im_livechat/static/src/core/public_web/livechat_leave_dialog.xml:0
-msgid ""
-"\n"
-"                Discard\n"
-"            "
-msgstr ""
-"\n"
-"                破棄\n"
-"            "
-
-#. module: im_livechat
-#. odoo-javascript
-#: code:addons/im_livechat/static/src/core/public_web/livechat_rating_notification_message.xml:0
-msgid ""
-"\n"
-"                View Chat "
-msgstr ""
-
-#. module: im_livechat
-#. odoo-javascript
-#: code:addons/im_livechat/static/src/embed/common/feedback_panel/feedback_panel.xml:0
-msgid ""
-"\n"
-"            Receive a copy of this conversation\n"
-"            "
-msgstr ""
-"\n"
-"            この会話のコピーを受け取る\n"
-"            "
-
-#. module: im_livechat
 #: model:ir.model.constraint,message:im_livechat.constraint_discuss_channel_livechat_rating_constraint
 msgid ""
 "\n"
@@ -102,6 +34,10 @@ msgid ""
 "        or empty and can only be set on live chat channels.\n"
 "        "
 msgstr ""
+"\n"
+"        ライブチャットの評価は、1(不満)、3(普通)、5(満足)のいずれか、\n"
+"        または空欄とし、ライブチャットチャネルでのみ管理設定可能です。\n"
+"        "
 
 #. module: im_livechat
 #. odoo-python
@@ -680,6 +616,7 @@ msgstr "閉じる"
 #. module: im_livechat
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/common/thread_actions_patch.js:0
+#: code:addons/im_livechat/static/src/core/public_web/livechat_leave_dialog.xml:0
 msgid "Close Conversation"
 msgstr ""
 
@@ -924,6 +861,12 @@ msgid "Digest"
 msgstr "レポート"
 
 #. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/public_web/livechat_leave_dialog.xml:0
+msgid "Discard"
+msgstr ""
+
+#. module: im_livechat
 #: model:chatbot.script.answer,name:im_livechat.chatbot_script_answer_discuss_demo
 #: model:im_livechat.expertise,name:im_livechat.chatbot_script_expertise_discuss_demo
 msgid "Discuss"
@@ -1150,6 +1093,12 @@ msgstr ""
 "<strong>ウェブサイト</strong>へ移動 &gt; <strong>設定</strong> &gt; <strong>"
 "管理設定</strong> &gt; <strong>Eメール</strong> &amp; <strong>マーケティング"
 "</strong>"
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/views/discuss_template.xml:0
+msgid "Go to Sessions"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__guest_id
@@ -2201,6 +2150,12 @@ msgid "Rating Text"
 msgstr "評価テキスト"
 
 #. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/embed/common/feedback_panel/feedback_panel.xml:0
+msgid "Receive a copy of this conversation"
+msgstr ""
+
+#. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_script_answer__redirect_link
 msgid "Redirect Link"
 msgstr "リダイレクトリンク"
@@ -2827,6 +2782,12 @@ msgstr ""
 
 #. module: im_livechat
 #. odoo-javascript
+#: code:addons/im_livechat/static/src/core/public_web/livechat_rating_notification_message.xml:0
+msgid "View Chat"
+msgstr ""
+
+#. module: im_livechat
+#. odoo-javascript
 #: code:addons/im_livechat/static/src/core/web/livechat_channel_info_list.xml:0
 msgid "View Contact"
 msgstr "連絡先を表示"
@@ -3093,3 +3054,55 @@ msgstr "WebSocketメッセージ処理"
 #: model_terms:ir.ui.view,arch_db:im_livechat.livechat_email_template
 msgid "width:40px; height:40px; border-radius:0.5rem; display:block;"
 msgstr ""
+
+#~ msgid ""
+#~ "\n"
+#~ "                    Go to Sessions\n"
+#~ "                "
+#~ msgstr ""
+#~ "\n"
+#~ "                    セッションへ移動\n"
+#~ "                "
+
+#~ msgid ""
+#~ "\n"
+#~ "                    View Contact\n"
+#~ "                "
+#~ msgstr ""
+#~ "\n"
+#~ "                    連絡先を表示\n"
+#~ "                "
+
+#~ msgid ""
+#~ "\n"
+#~ "                Close Conversation\n"
+#~ "            "
+#~ msgstr ""
+#~ "\n"
+#~ "                会話を閉じる\n"
+#~ "            "
+
+#~ msgid ""
+#~ "\n"
+#~ "                Discard\n"
+#~ "            "
+#~ msgstr ""
+#~ "\n"
+#~ "                破棄\n"
+#~ "            "
+
+#~ msgid ""
+#~ "\n"
+#~ "                View Chat "
+#~ msgstr ""
+#~ "\n"
+#~ "                チャットを表示 "
+
+#~ msgid ""
+#~ "\n"
+#~ "            Receive a copy of this conversation\n"
+#~ "            "
+#~ msgstr ""
+#~ "\n"
+#~ "            この会話のコピーを受け取る\n"
+#~ "            "

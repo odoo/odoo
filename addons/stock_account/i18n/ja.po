@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-22 18:37+0000\n"
-"PO-Revision-Date: 2026-04-30 07:35+0000\n"
+"POT-Creation-Date: 2026-05-03 17:36+0000\n"
+"PO-Revision-Date: 2026-05-04 13:46+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-3/"
 "stock_account/ja/>\n"
@@ -24,40 +24,6 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Weblate 5.17\n"
-
-#. module: stock_account
-#. odoo-javascript
-#: code:addons/stock_account/static/src/stock_account_forecasted/forecasted_header.xml:0
-msgid ""
-"\n"
-"                Value On Hand:\n"
-"                "
-msgstr ""
-"\n"
-"                手持在庫金額:\n"
-"                "
-
-#. module: stock_account
-#. odoo-javascript
-#: code:addons/stock_account/static/src/stock_valuation/filters/filter_date.xml:0
-msgid ""
-"\n"
-"            At the date of "
-msgstr ""
-"\n"
-"            基準日 "
-
-#. module: stock_account
-#. odoo-javascript
-#: code:addons/stock_account/static/src/stock_valuation/buttons_bar/buttons_bar.xml:0
-msgid ""
-"\n"
-"            Generate Entry\n"
-"        "
-msgstr ""
-"\n"
-"            仕訳を生成\n"
-"        "
 
 #. module: stock_account
 #. odoo-python
@@ -174,9 +140,7 @@ msgstr ""
 #. module: stock_account
 #. odoo-javascript
 #: code:addons/stock_account/static/src/stock_valuation/filters/filter_warehouses.xml:0
-msgid ""
-"All Warehouses\n"
-"            "
+msgid "All Warehouses"
 msgstr ""
 
 #. module: stock_account
@@ -197,7 +161,7 @@ msgstr "分析プラン"
 #. module: stock_account
 #. odoo-javascript
 #: code:addons/stock_account/static/src/stock_valuation/filters/filter_date.xml:0
-msgid "As of "
+msgid "As of"
 msgstr ""
 
 #. module: stock_account
@@ -207,6 +171,12 @@ msgid ""
 "At closing, register the inventory variation of the period into a specific "
 "account"
 msgstr "期末処理時には、当該期間の在庫変動を特定の勘定科目に登録してください"
+
+#. module: stock_account
+#. odoo-javascript
+#: code:addons/stock_account/static/src/stock_valuation/filters/filter_date.xml:0
+msgid "At the date of"
+msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product__avg_cost
@@ -459,7 +429,7 @@ msgstr "費用勘定"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_account_account__account_stock_expense_active
 msgid "Expense Account Active"
-msgstr ""
+msgstr "経費勘定が有効"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_location__valuation_account_id
@@ -488,6 +458,12 @@ msgstr "対象：%(quantity)s %(uom)s (%(price_unit)s %(uom)sごと)"
 #: model_terms:ir.ui.view,arch_db:stock_account.view_account_form
 msgid "For Perpetual Continental Only"
 msgstr "永続在庫評価(大陸式)の場合のみ"
+
+#. module: stock_account
+#. odoo-javascript
+#: code:addons/stock_account/static/src/stock_valuation/buttons_bar/buttons_bar.xml:0
+msgid "Generate Entry"
+msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_account_account__id
@@ -725,9 +701,7 @@ msgstr ""
 #. module: stock_account
 #. odoo-javascript
 #: code:addons/stock_account/static/src/stock_valuation/filters/filter_options.xml:0
-msgid ""
-"Options\n"
-"            "
+msgid "Options"
 msgstr ""
 
 #. module: stock_account
@@ -786,7 +760,7 @@ msgstr "価格差異勘定"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_price_difference_account_active
 msgid "Price Difference Account Active"
-msgstr ""
+msgstr "価格差勘定 有効"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__price_unit
@@ -967,7 +941,7 @@ msgstr "在庫評価勘定"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_stock_valuation_account_active
 msgid "Stock Valuation Account Active"
-msgstr ""
+msgstr "在庫評価勘定 有効"
 
 #. module: stock_account
 #. odoo-javascript
@@ -986,7 +960,7 @@ msgstr "在庫変動勘定"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category__account_stock_variation_active
 msgid "Stock Variation Account Active"
-msgstr ""
+msgstr "在庫変動勘定 有効"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_product__company_currency_id
@@ -1125,6 +1099,12 @@ msgid "Value Description"
 msgstr "評価額の説明"
 
 #. module: stock_account
+#. odoo-javascript
+#: code:addons/stock_account/static/src/stock_account_forecasted/forecasted_header.xml:0
+msgid "Value On Hand:"
+msgstr ""
+
+#. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
 msgid "Value based on original move %(reference)s"
@@ -1164,7 +1144,7 @@ msgstr "在庫差額勘定"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_account_account__account_stock_variation_active
 msgid "Variation Account Active"
-msgstr ""
+msgstr "変動勘定 有効"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_stock_valuation_account_id
@@ -1235,3 +1215,45 @@ msgstr "stock_move_id"
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
 msgid "units"
 msgstr "単位"
+
+#~ msgid ""
+#~ "\n"
+#~ "                Value On Hand:\n"
+#~ "                "
+#~ msgstr ""
+#~ "\n"
+#~ "                手持在庫金額:\n"
+#~ "                "
+
+#~ msgid ""
+#~ "\n"
+#~ "            At the date of "
+#~ msgstr ""
+#~ "\n"
+#~ "            基準日 "
+
+#~ msgid ""
+#~ "\n"
+#~ "            Generate Entry\n"
+#~ "        "
+#~ msgstr ""
+#~ "\n"
+#~ "            仕訳を生成\n"
+#~ "        "
+
+#~ msgid ""
+#~ "All Warehouses\n"
+#~ "            "
+#~ msgstr ""
+#~ "すべての倉庫\n"
+#~ "            "
+
+#~ msgid "As of "
+#~ msgstr "時点:"
+
+#~ msgid ""
+#~ "Options\n"
+#~ "            "
+#~ msgstr ""
+#~ "オプション\n"
+#~ "            "

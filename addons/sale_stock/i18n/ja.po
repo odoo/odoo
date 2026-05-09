@@ -14,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-22 18:38+0000\n"
-"PO-Revision-Date: 2026-04-30 09:39+0000\n"
+"POT-Creation-Date: 2026-05-03 17:38+0000\n"
+"PO-Revision-Date: 2026-05-07 08:32+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-3/"
 "sale_stock/ja/>\n"
@@ -27,88 +27,6 @@ msgstr ""
 "X-Generator: Weblate 5.17\n"
 
 #. module: sale_stock
-#. odoo-javascript
-#: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
-msgid ""
-"\n"
-"                                Available in stock\n"
-"                            "
-msgstr ""
-"\n"
-"                                在庫あり\n"
-"                            "
-
-#. module: sale_stock
-#. odoo-javascript
-#: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
-msgid ""
-"\n"
-"                                No future availability\n"
-"                            "
-msgstr ""
-"\n"
-"                                今後の在庫見込みなし\n"
-"                            "
-
-#. module: sale_stock
-#. odoo-javascript
-#: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
-msgid ""
-"\n"
-"                                Not enough future availability\n"
-"                            "
-msgstr ""
-"\n"
-"                                将来の利用可能在庫が不足しています\n"
-"                            "
-
-#. module: sale_stock
-#. odoo-javascript
-#: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
-msgid ""
-"\n"
-"                                Remaining demand available at "
-msgstr ""
-"\n"
-"                               残需要は次の時点で利用可能： "
-
-#. module: sale_stock
-#. odoo-javascript
-#: code:addons/sale_stock/static/src/sale_stock_forecasted/forecasted_details.xml:0
-msgid ""
-"\n"
-"                    1 Quotation"
-msgstr ""
-"\n"
-"                    1 見積もり"
-
-#. module: sale_stock
-#. odoo-javascript
-#: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
-msgid ""
-"\n"
-"            View Forecast\n"
-"        "
-msgstr ""
-"\n"
-"            予測を表示\n"
-"        "
-
-#. module: sale_stock
-#. odoo-javascript
-#: code:addons/sale_stock/static/src/sale_stock_forecasted/forecasted_details.xml:0
-msgid " Quotations"
-msgstr ""
-
-#. module: sale_stock
-#. odoo-javascript
-#: code:addons/sale_stock/static/src/xml/delay_alert.xml:0
-msgid ""
-" will be late.\n"
-"        "
-msgstr ""
-
-#. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
 msgid ""
 ".\n"
@@ -116,6 +34,12 @@ msgid ""
 msgstr ""
 "。\n"
 "                マニュアルでのフォローが必要かもしれません。"
+
+#. module: sale_stock
+#. odoo-javascript
+#: code:addons/sale_stock/static/src/sale_stock_forecasted/forecasted_details.xml:0
+msgid "1 Quotation"
+msgstr "1 見積"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
@@ -184,6 +108,12 @@ msgid ""
 "this line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"プロダクト構成に応じて、配送数量はメカニズムによって自動的に計算されます：\n"
+"  - 手動：数量を明細上で手動で設定します\n"
+"  - 費用からの分析： 数量は計上された費用からの合計数量です\n"
+"  - タイムシート：数量は、この明細にリンクされたタスクに記録された時間の合計"
+"です\n"
+"  - 在庫移動： 数量は確定したピッキングに由来します\n"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_account_accrued_orders_wizard
@@ -217,6 +147,12 @@ msgstr "在庫状況"
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.js:0
 msgid "Available"
 msgstr "処理可能"
+
+#. module: sale_stock
+#. odoo-javascript
+#: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
+msgid "Available in stock"
+msgstr "利用可能な在庫"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_stock_rules_report__so_route_ids
@@ -497,12 +433,18 @@ msgstr "納品数量を更新する方法"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid "Move forward expected delivery dates by <br/>"
-msgstr ""
+msgstr "予定納期の前倒し: <br/>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_stock_help_message_template
 msgid "No delivery yet! Automate them with sales orders."
 msgstr "配送がまだありません!購買オーダで自動化しましょう。"
+
+#. module: sale_stock
+#. odoo-javascript
+#: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
+msgid "No future availability"
+msgstr "今後の在庫なし"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.portal_my_orders
@@ -515,17 +457,23 @@ msgid "Not Delivered"
 msgstr "未出荷"
 
 #. module: sale_stock
+#. odoo-javascript
+#: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
+msgid "Not enough future availability"
+msgstr "今後の在庫不足"
+
+#. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order_line__customer_lead
 msgid ""
 "Number of days between the order confirmation and the shipping of the "
 "products"
-msgstr ""
+msgstr "オーダ確定からプロダクト出荷までの日数"
 
 #. module: sale_stock
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
-msgid "On "
-msgstr ""
+msgid "On"
+msgstr "時点："
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.portal_my_orders
@@ -546,6 +494,12 @@ msgstr "プロダクトの移動(在庫移動ライン)"
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__qty_to_deliver
 msgid "Qty To Deliver"
 msgstr "配送予定数量"
+
+#. module: sale_stock
+#. odoo-javascript
+#: code:addons/sale_stock/static/src/sale_stock_forecasted/forecasted_details.xml:0
+msgid "Quotations"
+msgstr "見積"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
@@ -571,6 +525,12 @@ msgstr "在庫ドキュメントの関連付け"
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__stock_reference_ids
 msgid "References"
 msgstr "参照"
+
+#. module: sale_stock
+#. odoo-javascript
+#: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
+msgid "Remaining demand available at"
+msgstr "残りの需要については以下で利用可能："
 
 #. module: sale_stock
 #. odoo-python
@@ -651,7 +611,7 @@ msgstr "販売安全日数"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid "Schedule deliveries earlier to avoid delays"
-msgstr "遅配を避けるために早めに出荷を予定"
+msgstr "遅延を防ぐため、出荷予定日を前倒しで設定"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__security_lead
@@ -661,7 +621,7 @@ msgstr "安全リードタイム"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__use_security_lead
 msgid "Security Lead Time for Sales"
-msgstr "購買安全リードタイム"
+msgstr "販売安全リードタイム"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_route__sale_selectable
@@ -722,10 +682,8 @@ msgstr "在庫ルールレポート"
 #. module: sale_stock
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/xml/delay_alert.xml:0
-msgid ""
-"The delivery\n"
-"            "
-msgstr ""
+msgid "The delivery"
+msgstr "納品は"
 
 #. module: sale_stock
 #. odoo-javascript
@@ -772,6 +730,12 @@ msgstr "関連する出荷で、在庫遅延がある場合は True"
 #: model:ir.model,name:sale_stock.model_res_users
 msgid "User"
 msgstr "ユーザ"
+
+#. module: sale_stock
+#. odoo-javascript
+#: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
+msgid "View Forecast"
+msgstr "予測照会"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__warehouse_id
@@ -829,3 +793,62 @@ msgstr "が次の数量の代わりにオーダされました:"
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
 msgid "processed instead of"
 msgstr "代わりに処理"
+
+#. module: sale_stock
+#. odoo-javascript
+#: code:addons/sale_stock/static/src/xml/delay_alert.xml:0
+msgid "will be late."
+msgstr "が遅れます。"
+
+#~ msgid ""
+#~ "\n"
+#~ "                                Available in stock\n"
+#~ "                            "
+#~ msgstr ""
+#~ "\n"
+#~ "                                在庫あり\n"
+#~ "                            "
+
+#~ msgid ""
+#~ "\n"
+#~ "                                No future availability\n"
+#~ "                            "
+#~ msgstr ""
+#~ "\n"
+#~ "                                今後の在庫見込みなし\n"
+#~ "                            "
+
+#~ msgid ""
+#~ "\n"
+#~ "                                Not enough future availability\n"
+#~ "                            "
+#~ msgstr ""
+#~ "\n"
+#~ "                                将来の利用可能在庫が不足しています\n"
+#~ "                            "
+
+#~ msgid ""
+#~ "\n"
+#~ "                                Remaining demand available at "
+#~ msgstr ""
+#~ "\n"
+#~ "                               残需要は次の時点で利用可能： "
+
+#~ msgid ""
+#~ "\n"
+#~ "                    1 Quotation"
+#~ msgstr ""
+#~ "\n"
+#~ "                    1 見積もり"
+
+#~ msgid ""
+#~ "\n"
+#~ "            View Forecast\n"
+#~ "        "
+#~ msgstr ""
+#~ "\n"
+#~ "            予測を表示\n"
+#~ "        "
+
+#~ msgid " Quotations"
+#~ msgstr "見積"

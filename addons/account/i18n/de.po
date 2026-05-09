@@ -28,7 +28,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-22 18:36+0000\n"
+"POT-Creation-Date: 2026-05-08 17:37+0000\n"
 "PO-Revision-Date: 2026-04-30 09:33+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-s19-3/"
@@ -39,102 +39,6 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 5.17\n"
-
-#. module: account
-#. odoo-javascript
-#: code:addons/account/static/src/components/bill_guide/bill_guide.xml:0
-msgid ""
-"\n"
-"                                Create a bill manually\n"
-"                            "
-msgstr ""
-"\n"
-"                                Rechnung manuell erstellen\n"
-"                            "
-
-#. module: account
-#. odoo-javascript
-#: code:addons/account/static/src/components/bill_guide/bill_guide.xml:0
-msgid ""
-"\n"
-"                                Create manually\n"
-"                            "
-msgstr ""
-"\n"
-"                                Manuell erstellen\n"
-"                            "
-
-#. module: account
-#. odoo-javascript
-#: code:addons/account/static/src/components/bill_guide/bill_guide.xml:0
-msgid ""
-"\n"
-"                                try our sample\n"
-"                            "
-msgstr ""
-"\n"
-"                                mit Beispieldaten testen\n"
-"                            "
-
-#. module: account
-#. odoo-javascript
-#: code:addons/account/static/src/components/document_file_uploader/document_file_uploader.xml:0
-msgid ""
-"\n"
-"                        Upload\n"
-"                    "
-msgstr ""
-"\n"
-"                        Hochladen\n"
-"                    "
-
-#. module: account
-#. odoo-javascript
-#: code:addons/account/static/src/components/bill_guide/bill_guide.xml:0
-msgid ""
-"\n"
-"                        or\n"
-"                    "
-msgstr ""
-"\n"
-"                        oder\n"
-"                    "
-
-#. module: account
-#. odoo-javascript
-#: code:addons/account/static/src/components/product_catalog/search/search_panel.xml:0
-msgid ""
-"\n"
-"                    + Add Section\n"
-"                "
-msgstr ""
-"\n"
-"                    + Abschnitt hinzufügen\n"
-"                "
-
-#. module: account
-#. odoo-javascript
-#: code:addons/account/static/src/components/account_file_uploader/account_file_uploader.xml:0
-msgid ""
-"\n"
-"                    Upload\n"
-"                "
-msgstr ""
-"\n"
-"                        Hochladen\n"
-"                    "
-
-#. module: account
-#. odoo-javascript
-#: code:addons/account/static/src/components/currency_form/open_decimal_precision_btn_template.xml:0
-msgid ""
-"\n"
-"             More precision on Product Prices\n"
-"        "
-msgstr ""
-"\n"
-"             Genauere Angaben zu Produktpreisen\n"
-"        "
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__type
@@ -203,26 +107,10 @@ msgstr ""
 "Bitte wenden Sie sich an Ihren Administrator."
 
 #. module: account
-#. odoo-javascript
-#: code:addons/account/static/src/components/grouped_view_widget/grouped_view_widget.xml:0
-msgid " are not shown in the preview"
-msgstr "werden in der Vorschau nicht angezeigt"
-
-#. module: account
 #. odoo-python
 #: code:addons/account/models/account_lock_exception.py:0
 msgid " for '%s'"
 msgstr " für ‚%s‘"
-
-#. module: account
-#. odoo-javascript
-#: code:addons/account/static/src/components/account_batch_sending_summary/account_batch_sending_summary.xml:0
-msgid ""
-" invoice(s)\n"
-"                "
-msgstr ""
-" Rechnung(en)\n"
-"                "
 
 #. module: account
 #. odoo-python
@@ -497,6 +385,12 @@ msgstr "(von"
 #: model:ir.actions.report,print_report_name:account.account_invoices_without_payment
 msgid "(object._get_report_base_filename())"
 msgstr "(object._get_report_base_filename())"
+
+#. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/product_catalog/search/search_panel.xml:0
+msgid "+ Add Section"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -807,18 +701,18 @@ msgstr ""
 "                    selbstfakturierte Gutschrift\n"
 "                </t>\n"
 "                <t t-if=\"object.invoice_origin\">\n"
-"                    (mit Referenz: <t t-out=\"object.invoice_origin or ''\">"
-"SUB003</t>)\n"
+"                    (mit Referenz: <t t-out=\"object.invoice_origin or "
+"''\">SUB003</t>)\n"
 "                </t>\n"
 "                über einen Betrag von <span style=\"font-weight:bold;\" t-"
 "out=\"format_amount(object.amount_total, object.currency_id) or ''\">143 "
 "750,00 €</span>\n"
-"                von <t t-out=\"object.company_id.name or ''\">"
-"IhrUnternehmen</t>.\n"
+"                von <t t-out=\"object.company_id.name or "
+"''\">IhrUnternehmen</t>.\n"
 "                <br/><br/>\n"
 "                Bei Rückfragen stehen wir gerne zur Verfügung.\n"
-"                <<t t-if=\"not is_html_empty"
-"(object.invoice_user_id.signature)\">\n"
+"                <<t t-if=\"not "
+"is_html_empty(object.invoice_user_id.signature)\">\n"
 "                    <br/><br/>\n"
 "                    <div data-o-mail-quote=\"1\">--<br data-o-mail-"
 "quote=\"1\"/><t t-out=\"object.invoice_user_id.signature or ''\">Mitchell "
@@ -927,8 +821,9 @@ msgstr ""
 "            (mit Referenz: <t t-out=\"object.invoice_origin or ''\">SUB003</"
 "t>)\n"
 "        </t>\n"
-"        in Höhe von <span style=\"font-weight:bold;\" t-out=\"format_amount"
-"(object.amount_total, object.currency_id) or ''\">143 750,00 €</span>\n"
+"        in Höhe von <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount_total, object.currency_id) or ''\">143 "
+"750,00 €</span>\n"
 "        von <t t-out=\"object.company_id.name or ''\">IhrUnternehmen</t>.\n"
 "        <t t-if=\"object.payment_state in ('paid', 'in_payment')\">\n"
 "            Diese Rechnung wurde bereits beglichen.\n"
@@ -938,8 +833,8 @@ msgstr ""
 "            <t t-if=\"object.payment_reference\">\n"
 "                <br/><br/>\n"
 "                Bitte verwenden Sie für Ihre Zahlung den folgenden "
-"Verwendungszweck: <strong t-out=\"object.payment_reference or ''\">RG/2021/"
-"05/0005</strong>\n"
+"Verwendungszweck: <strong t-out=\"object.payment_reference or ''\">RG/"
+"2021/05/0005</strong>\n"
 "                <t t-if=\"object.partner_bank_id\">\n"
 "                    Überweisen Sie bitte auf das Konto <strong t-"
 "out=\"object.partner_bank_id.account_number\"/>\n"
@@ -1051,8 +946,9 @@ msgstr ""
 "            (mit Referenz: <t t-out=\"object.invoice_origin or ''\">SUB003</"
 "t>)\n"
 "        </t>\n"
-"        in Höhe von <span style=\"font-weight:bold;\" t-out=\"format_amount"
-"(object.amount_total, object.currency_id) or ''\">143 750,00 €</span>\n"
+"        in Höhe von <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount_total, object.currency_id) or ''\">143 "
+"750,00 €</span>\n"
 "        von <t t-out=\"object.company_id.name or ''\">IhrUnternehmen</t>.\n"
 "        <t t-if=\"object.payment_state in ('paid', 'in_payment')\">\n"
 "            Die selbstfakturierte Rechnung wurde bereits beglichen.\n"
@@ -1136,12 +1032,12 @@ msgstr ""
 "            Gutschrift\n"
 "        </t>\n"
 "        <t t-if=\"object.invoice_origin\">\n"
-"            (mit der Referenz: <t t-out=\"object.invoice_origin or ''\">"
-"SUB003</t>)\n"
+"            (mit der Referenz: <t t-out=\"object.invoice_origin or "
+"''\">SUB003</t>)\n"
 "        </t>\n"
 "        über den Betrag von <span style=\"font-weight:bold;\" t-"
-"out=\"format_amount(object.amount_total, object.currency_id) or ''\">"
-"143.750,00 €</span>\n"
+"out=\"format_amount(object.amount_total, object.currency_id) or "
+"''\">143.750,00 €</span>\n"
 "       von <t t-out=\"object.company_id.name or ''\">IhrUnternehmen</t>.\n"
 "        <br/><br/>\n"
 "        Bei Rückfragen stehen wir gerne zur Verfügung.\n"
@@ -1185,12 +1081,12 @@ msgstr ""
 "        Guten Tag <t t-out=\"object.partner_id.name or ''\">Azure Interior</"
 "t>,<br/><br/>\n"
 "        vielen Dank für Ihre Zahlung.\n"
-"        Hier ist Ihr Zahlungsbeleg <span style=\"font-weight:bold;\" t-out=\""
-"(object.name or '').replace('/','-') or ''\">BNK1-2021-05-0002</span> über "
-"die Zahlung\n"
-"        von <span style=\"font-weight:bold;\" t-out=\"format_amount"
-"(object.amount, object.currency_id) or ''\">10,00 €</span> von <t t-"
-"out=\"object.company_id.name or ''\">IhrUnternehmen</t>.\n"
+"        Hier ist Ihr Zahlungsbeleg <span style=\"font-weight:bold;\" t-"
+"out=\"(object.name or '').replace('/','-') or ''\">BNK1-2021-05-0002</span> "
+"über die Zahlung\n"
+"        von <span style=\"font-weight:bold;\" t-"
+"out=\"format_amount(object.amount, object.currency_id) or ''\">10,00 €</"
+"span> von <t t-out=\"object.company_id.name or ''\">IhrUnternehmen</t>.\n"
 "        <br/><br/>\n"
 "        Zögern Sie nicht, uns zu kontaktieren, sollten Sie hierzu Fragen "
 "haben.\n"
@@ -1566,8 +1462,8 @@ msgid ""
 "<span invisible=\"name or name_placeholder or "
 "document_sequence_editable\">Draft</span>"
 msgstr ""
-"<span invisible=\"name or name_placeholder or document_sequence_editable\">"
-"Entwurf</span>"
+"<span invisible=\"name or name_placeholder or "
+"document_sequence_editable\">Entwurf</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.autopost_bills_wizard
@@ -2063,8 +1959,8 @@ msgstr ""
 "<div style=\"margin: 0px; padding: 0px; font-family:Verdana, Arial,sans-"
 "serif; color: #454748;\">\n"
 "    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-"
-"top: 16px; background-color: #F1F1F1; width: 100%; border-"
-"collapse:separate;\">\n"
+"top: 16px; background-color: #F1F1F1; width: 100%; border-collapse:separate;"
+"\">\n"
 "        <tr>\n"
 "            <td align=\"center\">\n"
 "                <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
@@ -2085,8 +1981,8 @@ msgstr ""
 "                                    <td align=\"right\" style=\"padding-"
 "right: 16px;\">\n"
 "                                        <img alt=\"Odoo\" src=\"/web/static/"
-"img/logo_inverse_white_206px.png\" style=\"height: 2em; object-fit: "
-"contain;\" class=\"align-baseline w-auto\"/>\n"
+"img/logo_inverse_white_206px.png\" style=\"height: 2em; object-fit: contain;"
+"\" class=\"align-baseline w-auto\"/>\n"
 "                                    </td>\n"
 "                                </tr>\n"
 "                            </table>\n"
@@ -2113,8 +2009,8 @@ msgstr ""
 "                                        </h3>\n"
 "                                        <p style=\"margin-top: 12px;\">\n"
 "                                            Sie haben <t t-"
-"if=\"invoice_count &gt; 1\">neue elektronische Rechnungen</t><t t-else=\"\">"
-"eine neue elektronische Rechnung</t>!\n"
+"if=\"invoice_count &gt; 1\">neue elektronische Rechnungen</t><t t-"
+"else=\"\">eine neue elektronische Rechnung</t>!\n"
 "                                        </p>\n"
 "                                        <t t-set=\"MAX_INVOICES_TO_DISPLAY\" "
 "t-value=\"5\"/>\n"
@@ -2129,19 +2025,19 @@ msgstr ""
 "                                                <t t-if=\"inv.name or "
 "inv.ref\">\n"
 "                                                    <span style=\"font-"
-"weight:bold;\">Rechnungsref.:</span> <t t-out=\"inv.name or inv.ref\"/><br/>"
-"\n"
+"weight:bold;\">Rechnungsref.:</span> <t t-out=\"inv.name or inv.ref\"/><br/"
+">\n"
 "                                                </t>\n"
 "                                                <t t-"
 "if=\"inv.partner_id.name\">\n"
 "                                                    <span style=\"font-"
 "weight:bold;\">Lieferant:</span> <t t-out=\"inv.partner_id.name\"/><br/>\n"
 "                                                </t>\n"
-"                                                <t t-if=\"inv.amount_total\">"
-"\n"
+"                                                <t t-"
+"if=\"inv.amount_total\">\n"
 "                                                    <span style=\"font-"
-"weight:bold;\">Betrag:</span> <t t-out=\"inv.amount_total\" t-options=\""
-"{'widget': 'monetary', 'display_currency': inv.currency_id or "
+"weight:bold;\">Betrag:</span> <t t-out=\"inv.amount_total\" t-"
+"options=\"{'widget': 'monetary', 'display_currency': inv.currency_id or "
 "object.company_id.currency_id}\"/><br/>\n"
 "                                                </t>\n"
 "                                                <t t-"
@@ -2156,11 +2052,11 @@ msgstr ""
 "padding-top: 24px;\">\n"
 "                                            <a t-if=\"invoice_count != 1\" t-"
 "attf-href=\"/odoo/accounting/action-"
-"account.action_account_moves_email_preview?active_ids={{ "
-"invoice_preview_ids }}\" target=\"_blank\" t-attf-style=\"padding: 12px "
-"24px; font-size: 14px; font-weight: bold; color: #FFFFFF; text-decoration: "
-"none !important; background-color: #008384; border-radius:3px; display: "
-"inline-block;\">\n"
+"account.action_account_moves_email_preview?"
+"active_ids={{ invoice_preview_ids }}\" target=\"_blank\" t-attf-"
+"style=\"padding: 12px 24px; font-size: 14px; font-weight: bold; color: "
+"#FFFFFF; text-decoration: none !important; background-color: #008384; border-"
+"radius:3px; display: inline-block;\">\n"
 "                                               Rechnungen einsehen\n"
 "                                            </a>\n"
 "                                            <a t-else=\"\" t-attf-href=\"/"
@@ -4784,6 +4680,12 @@ msgid "Availability"
 msgstr "Verfügbarkeit"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_res_partner__available_additional_identifiers_metadata
+#: model:ir.model.fields,field_description:account.field_res_users__available_additional_identifiers_metadata
+msgid "Available Additional Identifiers Metadata"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__available_invoice_template_pdf_report_ids
 #: model:ir.model.fields,field_description:account.field_res_partner__available_invoice_template_pdf_report_ids
 #: model:ir.model.fields,field_description:account.field_res_users__available_invoice_template_pdf_report_ids
@@ -6593,6 +6495,11 @@ msgid "Cost of office furniture, fixtures, and business equipment"
 msgstr "Kosten für Büromöbel, Einrichtungsgegenstände und Geschäftsmaterialien"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_search
+msgid "Cost of revenue"
+msgstr ""
+
+#. module: account
 #: model:account.account,description:account.22_account_account_us_postage
 msgid ""
 "Costs for shipping products or materials to customers or receiving inventory."
@@ -6741,6 +6648,12 @@ msgid "Create a Mail Template"
 msgstr "Eine E-Mail-Vorlage erstellen"
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/bill_guide/bill_guide.xml:0
+msgid "Create a bill manually"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_out_refund_type
 #: model_terms:ir.actions.act_window,help:account.action_move_out_refund_type_non_legacy
 msgid "Create a credit note"
@@ -6872,6 +6785,12 @@ msgid ""
 msgstr ""
 "Erstellen Sie Rechnungen, registrieren Sie Zahlungen und verfolgen Sie die "
 "Gespräche mit Ihren Kunden."
+
+#. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/bill_guide/bill_guide.xml:0
+msgid "Create manually"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -13388,6 +13307,12 @@ msgid "Monthly"
 msgstr "Monatlich"
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/currency_form/open_decimal_precision_btn_template.xml:0
+msgid "More precision on Product Prices"
+msgstr ""
+
+#. module: account
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid ""
@@ -14729,14 +14654,10 @@ msgid "Paid Invoices"
 msgstr "Bezahlte Ausgangsrechnungen"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
-msgid "Paid on"
-msgstr "Bezahlt am"
-
-#. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/components/account_payment_field/account_payment.xml:0
-msgid "Paid on "
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "Paid on"
 msgstr "Bezahlt am"
 
 #. module: account
@@ -16668,15 +16589,11 @@ msgid "Reversed"
 msgstr "Storniert"
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/account_payment_field/account_payment.xml:0
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Reversed on"
 msgstr "Gutgeschrieben am"
-
-#. module: account
-#. odoo-javascript
-#: code:addons/account/static/src/components/account_payment_field/account_payment.xml:0
-msgid "Reversed on "
-msgstr "Gutgeschrieben am "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__review_state
@@ -17716,6 +17633,12 @@ msgstr "Zeige vollständige Finanzbuchhaltung"
 #: model:res.groups,name:account.group_account_secured
 msgid "Show Inalterability Features"
 msgstr "Unveränderlichkeitsfunktionen anzeigen"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__show_invoice_vendor_bill
+#: model:ir.model.fields,field_description:account.field_account_move__show_invoice_vendor_bill
+msgid "Show Invoice Vendor Bill"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__show_journal
@@ -21412,6 +21335,8 @@ msgstr "Hochgeladene Daten"
 #. module: account
 #. odoo-javascript
 #: code:addons/account/static/src/components/account_file_uploader/account_file_uploader.js:0
+#: code:addons/account/static/src/components/account_file_uploader/account_file_uploader.xml:0
+#: code:addons/account/static/src/components/document_file_uploader/document_file_uploader.xml:0
 msgid "Upload"
 msgstr "Hochladen"
 
@@ -23099,6 +23024,12 @@ msgstr "und werden nicht automatisch gebucht."
 
 #. module: account
 #. odoo-javascript
+#: code:addons/account/static/src/components/grouped_view_widget/grouped_view_widget.xml:0
+msgid "are not shown in the preview"
+msgstr ""
+
+#. module: account
+#. odoo-javascript
 #: code:addons/account/static/src/components/account_payment_field/account_payment.xml:0
 msgid "assign to invoice"
 msgstr "zur Rechnung hinzufügen"
@@ -23315,6 +23246,12 @@ msgid "in_invoice"
 msgstr "in_invoice"
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/account_batch_sending_summary/account_batch_sending_summary.xml:0
+msgid "invoice(s)"
+msgstr ""
+
+#. module: account
 #. odoo-python
 #: code:addons/account/controllers/download_docs.py:0
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
@@ -23487,6 +23424,12 @@ msgid "to create the taxes for this country."
 msgstr ", um die Steuern für dieses Land zu erstellen."
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/bill_guide/bill_guide.xml:0
+msgid "try our sample"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
 msgid ""
 "undertakes to do its best to supply performant services in due time in "
@@ -23607,3 +23550,91 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Selbstfakturierte Rechnung (Ref. {{ object.name "
 "or 'k. A.' }})"
+
+#~ msgid ""
+#~ "\n"
+#~ "                                Create a bill manually\n"
+#~ "                            "
+#~ msgstr ""
+#~ "\n"
+#~ "                                Rechnung manuell erstellen\n"
+#~ "                            "
+
+#~ msgid ""
+#~ "\n"
+#~ "                                Create manually\n"
+#~ "                            "
+#~ msgstr ""
+#~ "\n"
+#~ "                                Manuell erstellen\n"
+#~ "                            "
+
+#~ msgid ""
+#~ "\n"
+#~ "                                try our sample\n"
+#~ "                            "
+#~ msgstr ""
+#~ "\n"
+#~ "                                mit Beispieldaten testen\n"
+#~ "                            "
+
+#~ msgid ""
+#~ "\n"
+#~ "                        Upload\n"
+#~ "                    "
+#~ msgstr ""
+#~ "\n"
+#~ "                        Hochladen\n"
+#~ "                    "
+
+#~ msgid ""
+#~ "\n"
+#~ "                        or\n"
+#~ "                    "
+#~ msgstr ""
+#~ "\n"
+#~ "                        oder\n"
+#~ "                    "
+
+#~ msgid ""
+#~ "\n"
+#~ "                    + Add Section\n"
+#~ "                "
+#~ msgstr ""
+#~ "\n"
+#~ "                    + Abschnitt hinzufügen\n"
+#~ "                "
+
+#~ msgid ""
+#~ "\n"
+#~ "                    Upload\n"
+#~ "                "
+#~ msgstr ""
+#~ "\n"
+#~ "                        Hochladen\n"
+#~ "                    "
+
+#~ msgid ""
+#~ "\n"
+#~ "             More precision on Product Prices\n"
+#~ "        "
+#~ msgstr ""
+#~ "\n"
+#~ "             Genauere Angaben zu Produktpreisen\n"
+#~ "        "
+
+#~ msgid " are not shown in the preview"
+#~ msgstr "werden in der Vorschau nicht angezeigt"
+
+#~ msgid ""
+#~ " invoice(s)\n"
+#~ "                "
+#~ msgstr ""
+#~ " Rechnung(en)\n"
+#~ "                "
+
+#~ msgid "Paid on "
+#~ msgstr "Bezahlt am"
+
+#~ msgid "Reversed on "
+#~ msgstr "Gutgeschrieben am "

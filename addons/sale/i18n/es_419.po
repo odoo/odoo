@@ -9,9 +9,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-29 17:37+0000\n"
-"PO-Revision-Date: 2026-05-01 04:02+0000\n"
-"Last-Translator: \"Patricia Gutiérrez (pagc)\" <pagc@odoo.com>\n"
+"POT-Creation-Date: 2026-05-03 17:37+0000\n"
+"PO-Revision-Date: 2026-05-09 01:13+0000\n"
+"Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
 "odoo-s19-3/sale/es_419/>\n"
 "Language: es_419\n"
@@ -1145,6 +1145,14 @@ msgid ""
 "this line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"Según la configuración del producto, la cantidad entregada se puede calcular "
+"de forma automática mediante uno de estos mecanismos:\n"
+"  - Manual: La cantidad se establece de forma manual en la línea\n"
+"  - Analítica de Gastos: La cantidad es la suma de los gastos registrados\n"
+"  - Registro de horas: La cantidad es la suma de horas registradas en las "
+"tareas vinculadas a esta línea\n"
+"  - Movimientos de inventario: La cantidad proviene de las recolecciones "
+"confirmadas\n"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_accrued_revenue_entry
@@ -1449,11 +1457,14 @@ msgid ""
 "been used for this product, the change of unit of measure can not be done.\n"
 "If you want to change it, please archive the product and create a new one."
 msgstr ""
+"Ya usaste otras unidades de medida (como %(problem_uom)s) que no son %(uom)s "
+"para este producto, así que no podrás cambiarla.\n"
+"Si quieres cambiarla, archiva el producto y crea uno nuevo."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__reinvoice_policy__sales_price
 msgid "At Sales price"
-msgstr ""
+msgstr "Al precio de venta"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__reinvoice_policy__cost
@@ -1817,7 +1828,7 @@ msgstr "Configuración"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Configure Delivery Methods"
-msgstr ""
+msgstr "Configura los métodos de entrega"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1825,6 +1836,8 @@ msgid ""
 "Configure delivery methods or work with delivery providers using existing "
 "integrations."
 msgstr ""
+"Configura métodos de entrega o trabaja con los proveedores de entrega "
+"mediante las integraciones existentes."
 
 #. module: sale
 #. odoo-javascript
@@ -2226,7 +2239,7 @@ msgstr "Estado de la entrega"
 #: model:ir.model.fields,field_description:sale.field_product_product__sale_delay
 #: model:ir.model.fields,field_description:sale.field_product_template__sale_delay
 msgid "Delivery Time"
-msgstr ""
+msgstr "Tiempo de entrega"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__expected_date
@@ -2248,6 +2261,8 @@ msgid ""
 "Delivery lead time, in days. It's the number of days, promised to the "
 "customer, between the confirmation of the sales order and the delivery."
 msgstr ""
+"El plazo de entrega en días. Es el número de días prometidos al cliente "
+"entre la confirmación de la orden de venta y la entrega."
 
 #. module: sale
 #: model:product.template,name:sale.advance_product_0_product_template
@@ -2392,7 +2407,7 @@ msgstr "Nombre en pantalla"
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__display_product_images_on_so
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Display Product Images"
-msgstr ""
+msgstr "Mostrar imágenes del producto"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__display_qty_widget
@@ -2576,7 +2591,7 @@ msgstr "Fecha esperada"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.product_template_form_view
 msgid "Expenses, Services & Materials"
-msgstr ""
+msgstr "Gastos, servicios y materiales"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__validity_date
@@ -3598,8 +3613,7 @@ msgid ""
 "Number of days between the order confirmation and the shipping of the "
 "products"
 msgstr ""
-"Número de días entre la confirmación de la orden y la entrega de los "
-"productos"
+"Número de días entre la confirmación de la orden y el envío de los productos"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_has_error_counter

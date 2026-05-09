@@ -14,71 +14,18 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-22 18:36+0000\n"
-"PO-Revision-Date: 2026-04-11 14:23+0000\n"
+"POT-Creation-Date: 2026-05-03 17:36+0000\n"
+"PO-Revision-Date: 2026-05-07 17:59+0000\n"
 "Last-Translator: \"Maitê Dietze (madi)\" <madi@odoo.com>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/odoo-"
-"s19-2/im_livechat/pt_BR/>\n"
+"s19-3/im_livechat/pt_BR/>\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
 "1000000 == 0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.16.2\n"
-
-#. module: im_livechat
-#. odoo-javascript
-#: code:addons/im_livechat/static/src/views/discuss_template.xml:0
-msgid ""
-"\n"
-"                    Go to Sessions\n"
-"                "
-msgstr ""
-
-#. module: im_livechat
-#. odoo-javascript
-#: code:addons/im_livechat/static/src/core/web/livechat_channel_info_list.xml:0
-msgid ""
-"\n"
-"                    View Contact\n"
-"                "
-msgstr ""
-
-#. module: im_livechat
-#. odoo-javascript
-#: code:addons/im_livechat/static/src/core/public_web/livechat_leave_dialog.xml:0
-msgid ""
-"\n"
-"                Close Conversation\n"
-"            "
-msgstr ""
-
-#. module: im_livechat
-#. odoo-javascript
-#: code:addons/im_livechat/static/src/core/public_web/livechat_leave_dialog.xml:0
-msgid ""
-"\n"
-"                Discard\n"
-"            "
-msgstr ""
-
-#. module: im_livechat
-#. odoo-javascript
-#: code:addons/im_livechat/static/src/core/public_web/livechat_rating_notification_message.xml:0
-msgid ""
-"\n"
-"                View Chat "
-msgstr ""
-
-#. module: im_livechat
-#. odoo-javascript
-#: code:addons/im_livechat/static/src/embed/common/feedback_panel/feedback_panel.xml:0
-msgid ""
-"\n"
-"            Receive a copy of this conversation\n"
-"            "
-msgstr ""
+"X-Generator: Weblate 5.17\n"
 
 #. module: im_livechat
 #: model:ir.model.constraint,message:im_livechat.constraint_discuss_channel_livechat_rating_constraint
@@ -89,6 +36,12 @@ msgid ""
 "        or empty and can only be set on live chat channels.\n"
 "        "
 msgstr ""
+"\n"
+"        A classificação do chat ao vivo deve ser 1 (Insatisfeito), 3 (Neutro)"
+", 5 (Satisfeito)\n"
+"        ou deixada em branco e só pode ser definida em canais de chat ao "
+"vivo.\n"
+"        "
 
 #. module: im_livechat
 #. odoo-python
@@ -153,7 +106,7 @@ msgstr "%(minutes)sm"
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/public_web/livechat_rating_notification_service.js:0
 msgid "%(name)s left a rating:"
-msgstr ""
+msgstr "%(name)s deixou uma avaliação:"
 
 #. module: im_livechat
 #. odoo-python
@@ -216,12 +169,12 @@ msgstr "< 1m"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
 msgid "<i class=\"fa fa-sign-in o-me-1_5\" role=\"img\"/>Join"
-msgstr ""
+msgstr "<i class=\"fa fa-sign-in o-me-1_5\" role=\"img\"/>Participar"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
 msgid "<i class=\"fa fa-sign-out o-me-1_5\" role=\"img\"/>Leave"
-msgstr ""
+msgstr "<i class=\"fa fa-sign-out o-me-1_5\" role=\"img\"/>Sair"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
@@ -229,6 +182,8 @@ msgid ""
 "<i class=\"fa fa-smile-o text-success\" role=\"img\" aria-label=\"Happy "
 "face\"/>"
 msgstr ""
+"<i class=\"fa fa-smile-o text-success\" role=\"img\" aria-label=\"Happy "
+"face\"/>"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.chatbot_test_script_page
@@ -387,7 +342,7 @@ msgstr "Agentes Conectados"
 #: model:ir.actions.act_window,name:im_livechat.im_livechat_agent_history_action
 #: model:ir.ui.menu,name:im_livechat.menu_reporting_livechat_agent
 msgid "Agents Performance"
-msgstr ""
+msgstr "Desempenho dos agentes"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -679,6 +634,7 @@ msgstr "Fechar"
 #. module: im_livechat
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/core/common/thread_actions_patch.js:0
+#: code:addons/im_livechat/static/src/core/public_web/livechat_leave_dialog.xml:0
 msgid "Close Conversation"
 msgstr ""
 
@@ -923,6 +879,12 @@ msgid "Digest"
 msgstr "Resumo"
 
 #. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/public_web/livechat_leave_dialog.xml:0
+msgid "Discard"
+msgstr ""
+
+#. module: im_livechat
 #: model:chatbot.script.answer,name:im_livechat.chatbot_script_answer_discuss_demo
 #: model:im_livechat.expertise,name:im_livechat.chatbot_script_expertise_discuss_demo
 msgid "Discuss"
@@ -1150,6 +1112,12 @@ msgstr ""
 "Vá para <strong>Site</strong> &gt; <strong>Configuração</strong> &gt; "
 "<strong>Definições</strong> &gt; <strong>E-mail</strong> &amp; "
 "<strong>Marketing.</strong>"
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/views/discuss_template.xml:0
+msgid "Go to Sessions"
+msgstr ""
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_member_history__guest_id
@@ -2204,6 +2172,12 @@ msgid "Rating Text"
 msgstr "Texto da avaliação"
 
 #. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/embed/common/feedback_panel/feedback_panel.xml:0
+msgid "Receive a copy of this conversation"
+msgstr ""
+
+#. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_script_answer__redirect_link
 msgid "Redirect Link"
 msgstr "URL de redirecionamento"
@@ -2836,6 +2810,12 @@ msgstr "Resposta raw do usuário"
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
 msgid "View Channel"
 msgstr "Ver canal"
+
+#. module: im_livechat
+#. odoo-javascript
+#: code:addons/im_livechat/static/src/core/public_web/livechat_rating_notification_message.xml:0
+msgid "View Chat"
+msgstr ""
 
 #. module: im_livechat
 #. odoo-javascript

@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-22 18:37+0000\n"
-"PO-Revision-Date: 2026-04-30 07:28+0000\n"
+"POT-Creation-Date: 2026-05-03 17:36+0000\n"
+"PO-Revision-Date: 2026-05-07 22:56+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
 "odoo-s19-3/stock_account/es_419/>\n"
@@ -21,40 +21,6 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 5.17\n"
-
-#. module: stock_account
-#. odoo-javascript
-#: code:addons/stock_account/static/src/stock_account_forecasted/forecasted_header.xml:0
-msgid ""
-"\n"
-"                Value On Hand:\n"
-"                "
-msgstr ""
-"\n"
-"                Valor a la mano:\n"
-"                "
-
-#. module: stock_account
-#. odoo-javascript
-#: code:addons/stock_account/static/src/stock_valuation/filters/filter_date.xml:0
-msgid ""
-"\n"
-"            At the date of "
-msgstr ""
-"\n"
-"            A la fecha del "
-
-#. module: stock_account
-#. odoo-javascript
-#: code:addons/stock_account/static/src/stock_valuation/buttons_bar/buttons_bar.xml:0
-msgid ""
-"\n"
-"            Generate Entry\n"
-"        "
-msgstr ""
-"\n"
-"            Generar entrada\n"
-"        "
 
 #. module: stock_account
 #. odoo-python
@@ -174,12 +140,8 @@ msgstr ""
 #. module: stock_account
 #. odoo-javascript
 #: code:addons/stock_account/static/src/stock_valuation/filters/filter_warehouses.xml:0
-msgid ""
-"All Warehouses\n"
-"            "
+msgid "All Warehouses"
 msgstr ""
-"Todos los almacenes\n"
-"            "
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_analytic_account
@@ -199,8 +161,8 @@ msgstr "Plan analítico"
 #. module: stock_account
 #. odoo-javascript
 #: code:addons/stock_account/static/src/stock_valuation/filters/filter_date.xml:0
-msgid "As of "
-msgstr "A partir del "
+msgid "As of"
+msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_account_account__account_stock_variation_id
@@ -211,6 +173,12 @@ msgid ""
 msgstr ""
 "Al cierre, registra la variación del inventario del periodo en una cuenta "
 "específica"
+
+#. module: stock_account
+#. odoo-javascript
+#: code:addons/stock_account/static/src/stock_valuation/filters/filter_date.xml:0
+msgid "At the date of"
+msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product__avg_cost
@@ -466,7 +434,7 @@ msgstr "Cuenta de gastos"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_account_account__account_stock_expense_active
 msgid "Expense Account Active"
-msgstr ""
+msgstr "Cuenta de gastos activa"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_location__valuation_account_id
@@ -495,6 +463,12 @@ msgstr "Por %(quantity)s %(uom)s (%(price_unit)s por %(uom)s)"
 #: model_terms:ir.ui.view,arch_db:stock_account.view_account_form
 msgid "For Perpetual Continental Only"
 msgstr "Solo para duración indefinida continental"
+
+#. module: stock_account
+#. odoo-javascript
+#: code:addons/stock_account/static/src/stock_valuation/buttons_bar/buttons_bar.xml:0
+msgid "Generate Entry"
+msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_account_account__id
@@ -736,9 +710,7 @@ msgstr ""
 #. module: stock_account
 #. odoo-javascript
 #: code:addons/stock_account/static/src/stock_valuation/filters/filter_options.xml:0
-msgid ""
-"Options\n"
-"            "
+msgid "Options"
 msgstr ""
 
 #. module: stock_account
@@ -798,7 +770,7 @@ msgstr "Cuenta de diferencia de precio"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_price_difference_account_active
 msgid "Price Difference Account Active"
-msgstr ""
+msgstr "Cuenta activa de diferencia de precio"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__price_unit
@@ -982,7 +954,7 @@ msgstr "Cuenta de valoración de existencias"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_stock_valuation_account_active
 msgid "Stock Valuation Account Active"
-msgstr ""
+msgstr "Cuenta activa de valuación de inventario"
 
 #. module: stock_account
 #. odoo-javascript
@@ -1001,7 +973,7 @@ msgstr "Cuenta de variación de existencias"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category__account_stock_variation_active
 msgid "Stock Variation Account Active"
-msgstr ""
+msgstr "Cuenta activa de variación de inventario"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_product__company_currency_id
@@ -1145,6 +1117,12 @@ msgid "Value Description"
 msgstr "Descripción del valor"
 
 #. module: stock_account
+#. odoo-javascript
+#: code:addons/stock_account/static/src/stock_account_forecasted/forecasted_header.xml:0
+msgid "Value On Hand:"
+msgstr ""
+
+#. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
 msgid "Value based on original move %(reference)s"
@@ -1184,7 +1162,7 @@ msgstr "Cuenta de variación"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_account_account__account_stock_variation_active
 msgid "Variation Account Active"
-msgstr ""
+msgstr "Cuenta activa de variación"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_stock_valuation_account_id
@@ -1258,3 +1236,38 @@ msgstr "stock_move_id"
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
 msgid "units"
 msgstr "unidades"
+
+#~ msgid ""
+#~ "\n"
+#~ "                Value On Hand:\n"
+#~ "                "
+#~ msgstr ""
+#~ "\n"
+#~ "                Valor a la mano:\n"
+#~ "                "
+
+#~ msgid ""
+#~ "\n"
+#~ "            At the date of "
+#~ msgstr ""
+#~ "\n"
+#~ "            A la fecha del "
+
+#~ msgid ""
+#~ "\n"
+#~ "            Generate Entry\n"
+#~ "        "
+#~ msgstr ""
+#~ "\n"
+#~ "            Generar entrada\n"
+#~ "        "
+
+#~ msgid ""
+#~ "All Warehouses\n"
+#~ "            "
+#~ msgstr ""
+#~ "Todos los almacenes\n"
+#~ "            "
+
+#~ msgid "As of "
+#~ msgstr "A partir del "

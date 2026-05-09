@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-22 18:36+0000\n"
-"PO-Revision-Date: 2026-04-30 09:32+0000\n"
+"POT-Creation-Date: 2026-05-03 17:36+0000\n"
+"PO-Revision-Date: 2026-05-08 09:02+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-s19-3/"
 "hr_expense/de/>\n"
@@ -28,62 +28,6 @@ msgstr ""
 "X-Generator: Weblate 5.17\n"
 
 #. module: hr_expense
-#. odoo-javascript
-#: code:addons/hr_expense/static/src/views/list.xml:0
-msgid ""
-"\n"
-"                Approve\n"
-"            "
-msgstr ""
-
-#. module: hr_expense
-#. odoo-javascript
-#: code:addons/hr_expense/static/src/views/list.xml:0
-msgid ""
-"\n"
-"                Post Entries\n"
-"            "
-msgstr ""
-
-#. module: hr_expense
-#. odoo-javascript
-#: code:addons/hr_expense/static/src/views/list.xml:0
-msgid ""
-"\n"
-"                Refuse\n"
-"            "
-msgstr ""
-
-#. module: hr_expense
-#. odoo-javascript
-#: code:addons/hr_expense/static/src/views/kanban.xml:0
-#: code:addons/hr_expense/static/src/views/list.xml:0
-msgid ""
-"\n"
-"                Scan\n"
-"            "
-msgstr ""
-
-#. module: hr_expense
-#. odoo-javascript
-#: code:addons/hr_expense/static/src/views/list.xml:0
-msgid ""
-"\n"
-"                Submit\n"
-"            "
-msgstr ""
-
-#. module: hr_expense
-#. odoo-javascript
-#: code:addons/hr_expense/static/src/views/kanban.xml:0
-#: code:addons/hr_expense/static/src/views/list.xml:0
-msgid ""
-"\n"
-"                Upload\n"
-"            "
-msgstr ""
-
-#. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__has_existing_bill
 msgid ""
 " - When a bill already exists, the payment will use the supplier payable "
@@ -92,6 +36,11 @@ msgid ""
 "directly on the expense account, as usual.\n"
 "            "
 msgstr ""
+" - Wenn bereits eine Rechnung vorliegt, wird für die Zahlung das "
+"Kreditorenkonto verwendet, damit sie der Rechnung zugeordnet werden kann.\n"
+"                 - Wenn keine Rechnung vorliegt, wird die Zahlung wie üblich "
+"direkt auf dem Aufwandskonto verbucht.\n"
+"            "
 
 #. module: hr_expense
 #. odoo-python
@@ -171,7 +120,7 @@ msgstr "<i class=\"oi oi-arrow-right\"/> Ihre Alias-Domain einrichten"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_split
 msgid "<span class=\"mx-1\" invisible=\"split_possible\">/</span>"
-msgstr ""
+msgstr "<span class=\"mx-1\" invisible=\"split_possible\">/</span>"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_payment_form_inherit_expense
@@ -335,6 +284,10 @@ msgid ""
 "For company paid expenses with a matched bill, the account needs to be the "
 "payable account of the bill."
 msgstr ""
+"Für von Mitarbeitern bezahlte Ausgaben und vom Unternehmen bezahlte Ausgaben "
+"ohne entsprechende Rechnung wird ein Aufwandskonto erwartet.\n"
+"Bei vom Unternehmen bezahlten Ausgaben mit entsprechender Rechnung muss das "
+"Konto das Kreditorenkonto der Rechnung sein."
 
 #. module: hr_expense
 #. odoo-javascript
@@ -343,13 +296,15 @@ msgid ""
 "An expense with the same product, amount, and date already exists.\n"
 "Are you sure you want to submit this one as well?"
 msgstr ""
+"Es existiert bereits eine Ausgabe mit demselben Produkt, Betrag und Datum.\n"
+"Sind Sie sicher, dass Sie diese auch einreichen möchten?"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_split
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_split_form_view
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "Analytic"
-msgstr ""
+msgstr "Kostenrechnung"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_account_analytic_account
@@ -388,6 +343,7 @@ msgstr "Genehmigungsstatus"
 #. module: hr_expense
 #. odoo-javascript
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
+#: code:addons/hr_expense/static/src/views/list.xml:0
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_approve_duplicate_view_form
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "Approve"
@@ -569,7 +525,7 @@ msgstr "Wechselkurs"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__date
 msgid "Date"
-msgstr ""
+msgstr "Datum"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
@@ -712,6 +668,8 @@ msgstr "Mitarbeiterspesen"
 #: code:addons/hr_expense/models/hr_expense.py:0
 msgid "Enter a description and select a product to proceed."
 msgstr ""
+"Geben Sie eine Beschreibung ein und wählen Sie ein Produkt aus, um "
+"fortzufahren."
 
 #. module: hr_expense
 #. odoo-python
@@ -725,12 +683,14 @@ msgstr "Geben Sie eine Beschreibung ein, um fortzufahren."
 msgid ""
 "Enter a name then choose a product and configure the amount of your expense."
 msgstr ""
+"Geben Sie einen Namen ein, wählen Sie dann ein Produkt aus und legen Sie den "
+"Betrag Ihrer Ausgabe fest."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__existing_bill_id
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "Existing Bill"
-msgstr ""
+msgstr "Vorhandene Rechnung"
 
 #. module: hr_expense
 #. odoo-javascript
@@ -802,7 +762,7 @@ msgstr "Assistent zum Buchen von Spesen"
 #: model:ir.ui.menu,name:hr_expense.menu_hr_product
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
 msgid "Expense Products"
-msgstr ""
+msgstr "Ausgabenprodukte"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense_refuse_wizard
@@ -853,7 +813,7 @@ msgstr "Ausgabe bezahlt"
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_product
 msgid "Expense products can be reinvoiced to your customers."
-msgstr ""
+msgstr "Ausgabenprodukte können an Ihre Kunden weiterberechnet werden."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
@@ -1014,7 +974,7 @@ msgstr "Leitfaden"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__has_existing_bill
 msgid "Has Existing Bill"
-msgstr ""
+msgstr "Hat bestehende Rechnung"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__has_message
@@ -1432,7 +1392,7 @@ msgstr "Anzahl der Ausgaben"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__split_expense_count
 msgid "Number of Split Expenses"
-msgstr ""
+msgstr "Anzahl geteilter Ausgaben"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_has_error_counter
@@ -1612,10 +1572,18 @@ msgid ""
 "Please specify if the expenses were paid by the company, reimbursed to the "
 "employee directly, or in a payslip."
 msgstr ""
+"Bitte geben Sie an, ob die Ausgaben vom Unternehmen bezahlt, dem Mitarbeiter "
+"direkt erstattet oder über die Gehaltsabrechnung abgerechnet wurden."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "Post"
+msgstr ""
+
+#. module: hr_expense
+#. odoo-javascript
+#: code:addons/hr_expense/static/src/views/list.xml:0
+msgid "Post Entries"
 msgstr ""
 
 #. module: hr_expense
@@ -1745,6 +1713,8 @@ msgid "Refund employees via their payslips."
 msgstr "Erstatten Sie Mitarbeiter über ihre Gehaltsabrechnungen."
 
 #. module: hr_expense
+#. odoo-javascript
+#: code:addons/hr_expense/static/src/views/list.xml:0
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_approve_duplicate_view_form
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
@@ -1841,6 +1811,13 @@ msgid "Save this page and come back here to set up the feature."
 msgstr ""
 "Speichern Sie diese Seite und kommen Sie hierher zurück, um die Funktion zu "
 "konfigurieren."
+
+#. module: hr_expense
+#. odoo-javascript
+#: code:addons/hr_expense/static/src/views/kanban.xml:0
+#: code:addons/hr_expense/static/src/views/list.xml:0
+msgid "Scan"
+msgstr ""
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
@@ -1955,6 +1932,8 @@ msgstr ""
 "Geplant: anstehende Aktivitäten."
 
 #. module: hr_expense
+#. odoo-javascript
+#: code:addons/hr_expense/static/src/views/list.xml:0
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "Submit"
 msgstr "Einreichen"
@@ -2283,6 +2262,13 @@ msgstr "Nettobetrag"
 #: code:addons/hr_expense/static/src/components/hr_expense_product_form_view.js:0
 msgid "Update cost"
 msgstr "Kosten aktualisieren"
+
+#. module: hr_expense
+#. odoo-javascript
+#: code:addons/hr_expense/static/src/views/kanban.xml:0
+#: code:addons/hr_expense/static/src/views/list.xml:0
+msgid "Upload"
+msgstr "Hochladen"
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_actions_my_all

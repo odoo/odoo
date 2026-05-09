@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~19.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-29 17:37+0000\n"
-"PO-Revision-Date: 2026-05-01 04:01+0000\n"
+"POT-Creation-Date: 2026-05-03 17:37+0000\n"
+"PO-Revision-Date: 2026-05-06 17:03+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
 "odoo-s19-3/pos_bancontact_pay/es_419/>\n"
@@ -169,6 +169,11 @@ msgid ""
 "- Static Sticker: A fixed QR sticker placed near the counter is used for "
 "scanning with every order."
 msgstr ""
+"Define cómo mostrarle el código QR al cliente:\n"
+"- Visualización en pantalla: Aparece un nuevo código QR en la pantalla para "
+"cada orden.\n"
+"- Etiqueta estática: Usa una etiqueta QR fija cerca del mostrador para "
+"escanearla en cada orden."
 
 #. module: pos_bancontact_pay
 #: model:ir.model.fields,field_description:pos_bancontact_pay.field_account_journal__display_name
@@ -182,7 +187,7 @@ msgstr "Nombre a mostrar"
 #. module: pos_bancontact_pay
 #: model_terms:ir.ui.view,arch_db:pos_bancontact_pay.pos_payment_method_view_form_inherit_bancontact_pay
 msgid "Download Sticker"
-msgstr ""
+msgstr "Descargar etiqueta"
 
 #. module: pos_bancontact_pay
 #. odoo-javascript
@@ -211,6 +216,8 @@ msgid ""
 "Merchant profile not found on Bancontact. Please check your Payment Profile "
 "ID (ppid)."
 msgstr ""
+"No encontramos el perfil del comerciante en Bancontact. Revisa tu ID de "
+"perfil de pago (ppid)."
 
 #. module: pos_bancontact_pay
 #. odoo-javascript
@@ -230,6 +237,8 @@ msgid ""
 "One Bancontact Pay sticker payment method can only be linked to one POS "
 "configuration."
 msgstr ""
+"Un método de pago con la etiqueta de Bancontact Pay solo puede estar "
+"vinculada a una configuración de PdV."
 
 #. module: pos_bancontact_pay
 #. odoo-javascript
@@ -238,24 +247,26 @@ msgid ""
 "Payment at %s\n"
 "POS %s"
 msgstr ""
+"Pago en %s\n"
+"PdV %s"
 
 #. module: pos_bancontact_pay
 #. odoo-javascript
 #: code:addons/pos_bancontact_pay/static/src/app/pos_store.js:0
 msgid "Payment cancelled"
-msgstr ""
+msgstr "Pago cancelado"
 
 #. module: pos_bancontact_pay
 #. odoo-javascript
 #: code:addons/pos_bancontact_pay/static/src/app/pos_store.js:0
 msgid "Payment expired"
-msgstr ""
+msgstr "Pago vencido"
 
 #. module: pos_bancontact_pay
 #. odoo-javascript
 #: code:addons/pos_bancontact_pay/static/src/app/pos_store.js:0
 msgid "Payment failed"
-msgstr ""
+msgstr "Pago fallido"
 
 #. module: pos_bancontact_pay
 #. odoo-javascript
@@ -295,6 +306,8 @@ msgstr "Uso de QR"
 #: code:addons/pos_bancontact_pay/errors/http.py:0
 msgid "Rate limit reached with Bancontact. Please wait and try again."
 msgstr ""
+"Alcanzaste el límite de solicitudes con Bancontact. Espera e inténtalo otra "
+"vez."
 
 #. module: pos_bancontact_pay
 #: model:ir.model.fields,help:pos_bancontact_pay.field_pos_payment_method__bancontact_test_mode
@@ -304,7 +317,7 @@ msgstr "Ejecuta transacciones en el entorno de prueba."
 #. module: pos_bancontact_pay
 #: model:ir.model.fields.selection,name:pos_bancontact_pay.selection__pos_payment_method__bancontact_usage__sticker
 msgid "Static Sticker"
-msgstr ""
+msgstr "Etiqueta estática"
 
 #. module: pos_bancontact_pay
 #. odoo-python
@@ -314,6 +327,9 @@ msgid ""
 "to another POS configuration (%(config_names)s).\n"
 "A sticker can only be linked to one POS configuration at a time."
 msgstr ""
+"El método de pago \"%(method_name)s\" con la etiqueta de Bancontact ya está "
+"asignado a otra configuración de PdV (%(config_names)s).\n"
+"Solo puedes vincular una etiqueta a una configuración de PdV a la vez."
 
 #. module: pos_bancontact_pay
 #. odoo-python
@@ -347,6 +363,10 @@ msgid ""
 "If you need to cancel it, please ask the customer to do so on their device "
 "or force the cancellation."
 msgstr ""
+"El cliente está completando el pago en este momento, así que no puedes "
+"cancelarlo ahora.\n"
+"Si necesitas cancelarlo, pídele al cliente que lo haga desde su dispositivo "
+"o fuerza la cancelación."
 
 #. module: pos_bancontact_pay
 #. odoo-python
@@ -356,12 +376,15 @@ msgid ""
 "This payment method does not support the journal's currency.\n"
 "Supported currencies: %(currencies)s."
 msgstr ""
+"Un método de pago de Bancontact Pay usa el diario \"%(journal)s\".\n"
+"Este método de pago no es compatible con la moneda del diario.\n"
+"Monedas compatibles: %(currencies)s."
 
 #. module: pos_bancontact_pay
 #. odoo-javascript
 #: code:addons/pos_bancontact_pay/static/src/app/pos_payment_method.js:0
 msgid "This sticker is already processing another payment."
-msgstr ""
+msgstr "Esta etiqueta ya está procesando otro pago."
 
 #. module: pos_bancontact_pay
 #. odoo-python
@@ -369,6 +392,8 @@ msgstr ""
 msgid ""
 "Unable to cancel payment. The payment may not be in a cancellable state."
 msgstr ""
+"No fue posible cancelar el pago. Es posible que el pago no esté en un estado "
+"que permita cancelarlo."
 
 #. module: pos_bancontact_pay
 #. odoo-python
@@ -377,6 +402,8 @@ msgid ""
 "Unable to process the request. Please verify your configuration or try again "
 "later."
 msgstr ""
+"No fue posible procesar la solicitud. Verifica tu configuración o inténtalo "
+"de nuevo más tarde."
 
 #~ msgid "Extra Large (800x800)"
 #~ msgstr "Extra grande (800x800)"

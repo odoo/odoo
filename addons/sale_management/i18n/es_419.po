@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-22 18:36+0000\n"
-"PO-Revision-Date: 2026-04-30 07:28+0000\n"
+"POT-Creation-Date: 2026-05-03 17:36+0000\n"
+"PO-Revision-Date: 2026-05-07 16:40+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
 "odoo-s19-3/sale_management/es_419/>\n"
@@ -20,30 +20,6 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 5.17\n"
-
-#. module: sale_management
-#. odoo-javascript
-#: code:addons/sale_management/static/src/fields/sale_order_line_field/sale_order_line_field.xml:0
-msgid ""
-"\n"
-"                        New Section\n"
-"                    "
-msgstr ""
-"\n"
-"                        Nueva sección\n"
-"                    "
-
-#. module: sale_management
-#. odoo-javascript
-#: code:addons/sale_management/static/src/fields/sale_order_line_field/sale_order_line_field.xml:0
-msgid ""
-"\n"
-"                    Add a section\n"
-"                "
-msgstr ""
-"\n"
-"                    Agergar una sección\n"
-"                "
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__active
@@ -61,6 +37,8 @@ msgid "Add a product"
 msgstr "Agregar un producto"
 
 #. module: sale_management
+#. odoo-javascript
+#: code:addons/sale_management/static/src/fields/sale_order_line_field/sale_order_line_field.xml:0
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "Add a section"
 msgstr "Agregar una sección"
@@ -242,11 +220,13 @@ msgid ""
 "If unchecked, it will allow you to hide the Order template without removing "
 "it."
 msgstr ""
+"Si esta opción no está seleccionada, podrás ocultar la plantilla de orden "
+"sin eliminarla."
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "Invoicing"
-msgstr ""
+msgstr "Facturación"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__journal_id
@@ -282,6 +262,12 @@ msgid "Missing required product and UoM on accountable sale quote line."
 msgstr ""
 "Falta el producto requerido y la UdM en la línea de cotización de venta "
 "contable."
+
+#. module: sale_management
+#. odoo-javascript
+#: code:addons/sale_management/static/src/fields/sale_order_line_field/sale_order_line_field.xml:0
+msgid "New Section"
+msgstr ""
 
 #. module: sale_management
 #: model:ir.model.fields.selection,name:sale_management.selection__sale_order_template_line__display_type__line_note
@@ -320,7 +306,7 @@ msgstr "Sección opcional"
 #: model:ir.model,name:sale_management.model_sale_order_template
 #: model:res.groups,name:sale_management.group_sale_order_template
 msgid "Order Templates"
-msgstr ""
+msgstr "Plantillas de órdenes"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__parent_id
@@ -351,7 +337,7 @@ msgstr "Cantidad"
 #. module: sale_management
 #: model:ir.model.fields.selection,name:sale_management.selection__sale_order_template__template_type__quotation
 msgid "Quotation"
-msgstr ""
+msgstr "Cotización"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__number_of_days
@@ -438,13 +424,13 @@ msgstr "Línea de la orden de venta"
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__team_ids
 msgid "Sales Team"
-msgstr ""
+msgstr "Equipo de ventas"
 
 #. module: sale_management
 #. odoo-javascript
 #: code:addons/sale_management/static/src/fields/sale_order_line_field/sale_order_line_field.xml:0
 msgid "Save as Template"
-msgstr ""
+msgstr "Guardar como plantilla"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_search
@@ -461,19 +447,19 @@ msgstr "Sección"
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_search
 msgid "Section Templates"
-msgstr ""
+msgstr "Plantillas de sección"
 
 #. module: sale_management
 #. odoo-javascript
 #: code:addons/sale_management/static/src/fields/sale_order_line_field/sale_order_line_field.js:0
 msgid "Section template %s created successfully"
-msgstr ""
+msgstr "La plantilla de sección %s fue creada con éxito"
 
 #. module: sale_management
 #. odoo-javascript
 #: code:addons/sale_management/static/src/fields/sale_order_line_field/sale_order_line_field.js:0
 msgid "Section template %s updated successfully"
-msgstr ""
+msgstr "La plantilla de sección %s fue actualizada con éxito"
 
 #. module: sale_management
 #: model_terms:digest.tip,tip_description:sale_management.digest_tip_sale_management_1
@@ -502,12 +488,12 @@ msgstr "Establecer como opcional"
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "Settings"
-msgstr ""
+msgstr "Ajustes"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__share_template
 msgid "Share"
-msgstr ""
+msgstr "Compartir"
 
 #. module: sale_management
 #: model_terms:digest.tip,tip_description:sale_management.digest_tip_sale1_management_0
@@ -531,14 +517,14 @@ msgstr "Subsección"
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__name
 msgid "Template"
-msgstr ""
+msgstr "Plantilla"
 
 #. module: sale_management
 #: model:ir.actions.act_window,name:sale_management.sale_order_template_action
 #: model:ir.ui.menu,name:sale_management.sale_order_template_menu
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "Templates"
-msgstr ""
+msgstr "Plantillas"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
@@ -591,7 +577,7 @@ msgstr "Consejo: Vender o comprar productos al por mayor con matrices"
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__template_type
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_search
 msgid "Type"
-msgstr ""
+msgstr "Tipo"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template_line__product_uom_id
@@ -638,7 +624,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/sale_management/static/src/fields/sale_order_line_field/sale_order_line_field.js:0
 msgid "You cannot save a section with combo lines as a template"
-msgstr ""
+msgstr "No puedes guardar una sección con líneas de combos como plantilla"
 
 #. module: sale_management
 #. odoo-python
@@ -697,4 +683,22 @@ msgstr "Por ejemplo, Paquete estándar de consultoría"
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "of"
-msgstr ""
+msgstr "de"
+
+#~ msgid ""
+#~ "\n"
+#~ "                        New Section\n"
+#~ "                    "
+#~ msgstr ""
+#~ "\n"
+#~ "                        Nueva sección\n"
+#~ "                    "
+
+#~ msgid ""
+#~ "\n"
+#~ "                    Add a section\n"
+#~ "                "
+#~ msgstr ""
+#~ "\n"
+#~ "                    Agergar una sección\n"
+#~ "                "
