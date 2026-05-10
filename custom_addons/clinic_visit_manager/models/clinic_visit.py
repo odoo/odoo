@@ -50,6 +50,24 @@ class ClinicVisit(models.Model):
         default=fields.Datetime.now,
     )
 
+    queued_at = fields.Datetime(
+        string="Queued At",
+        readonly=True,
+        copy=False,
+    )
+
+    consultation_started_at = fields.Datetime(
+        string="Consultation Started At",
+        readonly=True,
+        copy=False,
+    )
+
+    completed_at = fields.Datetime(
+        string="Completed At",
+        readonly=True,
+        copy=False,
+    )
+
     symptoms = fields.Text(
         string="Symptoms",
     )
@@ -112,6 +130,16 @@ class ClinicVisit(models.Model):
         string="Doctor Notes",
     )
 
+    queue_wait_minutes = fields.Integer(
+        string="Wait Minutes",
+        compute="_compute_timing_minutes",
+    )
+
+    consultation_minutes = fields.Integer(
+        string="Consultation Minutes",
+        compute="_compute_timing_minutes",
+    )
+
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
@@ -133,6 +161,27 @@ class ClinicVisit(models.Model):
                 if record.weight_kg and height_m
                 else 0.0
             )
+
+    @api.depends("queued_at", "consultation_started_at", "completed_at")
+    def _compute_timing_minutes(self):
+        now = fields.Datetime.now()
+        for record in self:
+            queue_end = record.consultation_started_at or record.completed_at or now
+            consultation_end = record.completed_at or now
+            record.queue_wait_minutes = self._minutes_between(
+                record.queued_at,
+                queue_end,
+            )
+            record.consultation_minutes = self._minutes_between(
+                record.consultation_started_at,
+                consultation_end,
+            )
+
+    @staticmethod
+    def _minutes_between(start, end):
+        if not start or not end or end < start:
+            return 0
+        return int((end - start).total_seconds() // 60)
 
     def _sync_patient_values(self, vals):
         patient_id = vals.get("patient_id")
@@ -161,6 +210,8 @@ class ClinicVisit(models.Model):
             if not record.patient_name:
                 raise UserError("Patient name is required.")
             vals = {"state": "waiting"}
+            if not record.queued_at:
+                vals["queued_at"] = fields.Datetime.now()
             if not record.token_number:
                 vals["token_number"] = self.env["ir.sequence"].next_by_code(
                     "clinic.visit.token"
@@ -171,13 +222,21 @@ class ClinicVisit(models.Model):
         for record in self:
             if record.state != "waiting":
                 raise UserError("Only waiting visits can start consultation.")
-            record.state = "in_consultation"
+            vals = {"state": "in_consultation"}
+            if not record.consultation_started_at:
+                vals["consultation_started_at"] = fields.Datetime.now()
+            record.write(vals)
 
     def action_done(self):
         for record in self:
             if record.state not in ("waiting", "in_consultation"):
                 raise UserError("Only active visits can be marked as done.")
-            record.state = "done"
+            vals = {"state": "done"}
+            if not record.completed_at:
+                vals["completed_at"] = fields.Datetime.now()
+            if record.state == "waiting" and not record.consultation_started_at:
+                vals["consultation_started_at"] = vals["completed_at"]
+            record.write(vals)
 
     def action_cancel(self):
         for record in self:

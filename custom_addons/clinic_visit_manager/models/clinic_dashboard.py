@@ -47,6 +47,15 @@ class ClinicVisitDashboard(models.Model):
         string="Completed Today",
         compute="_compute_visit_counts",
     )
+    today_revenue = fields.Float(
+        string="Revenue Today",
+        compute="_compute_visit_counts",
+    )
+    next_visit_id = fields.Many2one(
+        "clinic.visit",
+        string="Next Patient",
+        compute="_compute_active_visit_ids",
+    )
     active_visit_ids = fields.Many2many(
         "clinic.visit",
         string="Active Queue",
@@ -72,6 +81,9 @@ class ClinicVisitDashboard(models.Model):
             "today_done": Visit.search_count(
                 today_domain + [("state", "=", "done")]
             ),
+            "today_revenue": sum(
+                Visit.search(today_domain + [("state", "=", "done")]).mapped("fee")
+            ),
         }
         for dashboard in self:
             dashboard.draft_count = counts["draft"]
@@ -83,15 +95,23 @@ class ClinicVisitDashboard(models.Model):
             dashboard.total_patient_count = counts["total_patient"]
             dashboard.today_visit_count = counts["today_visit"]
             dashboard.today_done_count = counts["today_done"]
+            dashboard.today_revenue = counts["today_revenue"]
 
     def _compute_active_visit_ids(self):
-        visits = self.env["clinic.visit"].search(
+        Visit = self.env["clinic.visit"]
+        visits = Visit.search(
             [("state", "in", ("waiting", "in_consultation"))],
-            order="visit_date asc, id asc",
+            order="queued_at asc, visit_date asc, id asc",
             limit=20,
+        )
+        next_visit = Visit.search(
+            [("state", "=", "waiting")],
+            order="queued_at asc, visit_date asc, id asc",
+            limit=1,
         )
         for dashboard in self:
             dashboard.active_visit_ids = visits
+            dashboard.next_visit_id = next_visit
 
     def _get_today_domain(self):
         today = fields.Date.context_today(self)
@@ -138,6 +158,25 @@ class ClinicVisitDashboard(models.Model):
             "Active Queue",
             [("state", "in", ("waiting", "in_consultation"))],
         )
+
+    def action_open_next_visit(self):
+        self.ensure_one()
+        if not self.next_visit_id:
+            return self.action_open_active_queue()
+        return {
+            "type": "ir.actions.act_window",
+            "name": self.next_visit_id.display_name,
+            "res_model": "clinic.visit",
+            "res_id": self.next_visit_id.id,
+            "view_mode": "form",
+        }
+
+    def action_start_next_visit(self):
+        self.ensure_one()
+        if not self.next_visit_id:
+            return self.action_open_active_queue()
+        self.next_visit_id.action_start_consultation()
+        return self.action_open_next_visit()
 
     def action_open_today_visits(self):
         return self._get_visit_action("Today's Visits", self._get_today_domain())

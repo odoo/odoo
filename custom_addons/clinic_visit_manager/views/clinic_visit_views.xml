@@ -11,6 +11,8 @@
                 <field name="patient_id"/>
                 <field name="doctor_name"/>
                 <field name="visit_date"/>
+                <field name="queued_at" optional="hide"/>
+                <field name="queue_wait_minutes"/>
                 <field name="temperature_celsius" optional="hide"/>
                 <field name="pulse_rate" optional="hide"/>
                 <field name="oxygen_saturation" optional="hide"/>
@@ -63,11 +65,16 @@
                             <field name="patient_id"/>
                             <field name="doctor_name"/>
                             <field name="visit_date"/>
+                            <field name="queued_at"/>
+                            <field name="consultation_started_at"/>
+                            <field name="completed_at"/>
                         </group>
 
                         <group>
                             <field name="fee"/>
                             <field name="state"/>
+                            <field name="queue_wait_minutes"/>
+                            <field name="consultation_minutes"/>
                         </group>
                     </group>
 
