@@ -54,6 +54,49 @@ class ClinicVisit(models.Model):
         string="Symptoms",
     )
 
+    temperature_celsius = fields.Float(
+        string="Temperature (C)",
+        digits=(4, 1),
+    )
+
+    blood_pressure_systolic = fields.Integer(
+        string="Systolic BP",
+    )
+
+    blood_pressure_diastolic = fields.Integer(
+        string="Diastolic BP",
+    )
+
+    pulse_rate = fields.Integer(
+        string="Pulse Rate",
+    )
+
+    respiratory_rate = fields.Integer(
+        string="Respiratory Rate",
+    )
+
+    oxygen_saturation = fields.Float(
+        string="Oxygen Saturation (%)",
+        digits=(5, 2),
+    )
+
+    weight_kg = fields.Float(
+        string="Weight (kg)",
+        digits=(6, 2),
+    )
+
+    height_cm = fields.Float(
+        string="Height (cm)",
+        digits=(6, 2),
+    )
+
+    bmi = fields.Float(
+        string="BMI",
+        compute="_compute_bmi",
+        digits=(5, 2),
+        store=True,
+    )
+
     fee = fields.Float(
         string="Consultation Fee",
     )
@@ -80,6 +123,16 @@ class ClinicVisit(models.Model):
         if "patient_name" in vals or "patient_id" in vals:
             self._sync_patient_values(vals)
         return super().write(vals)
+
+    @api.depends("weight_kg", "height_cm")
+    def _compute_bmi(self):
+        for record in self:
+            height_m = record.height_cm / 100
+            record.bmi = (
+                record.weight_kg / (height_m * height_m)
+                if record.weight_kg and height_m
+                else 0.0
+            )
 
     def _sync_patient_values(self, vals):
         patient_id = vals.get("patient_id")
