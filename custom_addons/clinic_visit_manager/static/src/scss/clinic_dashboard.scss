@@ -1,171 +1,186 @@
 .o_clinic_dashboard {
-    background: #f5f8fc;
+    background: #f6f8fb;
+    color: #172033;
     max-width: none;
+    padding: 28px !important;
 
-    .o_clinic_dashboard_header {
-        border-left: 4px solid #2f5f95;
-        margin-bottom: 24px;
-        padding-left: 12px;
-
-        h1 {
-            color: #171a1f;
-            font-size: 34px;
-            font-weight: 800;
-            letter-spacing: 0;
-            margin: 0;
-            text-transform: uppercase;
-        }
+    .btn {
+        border-radius: 6px;
+        font-weight: 700;
     }
 
-    .o_clinic_dashboard_cards {
-        display: grid;
-        gap: 16px;
-        grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-        margin-bottom: 48px;
-    }
-
-    .o_clinic_kpi_card {
-        align-items: flex-start;
-        background: #ffffff;
-        border: 0;
-        border-radius: 8px;
-        box-shadow: 0 8px 24px rgba(28, 41, 61, 0.08);
-        color: #171a1f;
-        display: flex;
-        flex-direction: column;
-        min-height: 88px;
-        padding: 16px 18px;
-        text-align: left;
-
-        &:hover,
-        &:focus {
-            box-shadow: 0 10px 28px rgba(47, 95, 149, 0.16);
-            transform: translateY(-1px);
-        }
-    }
-
-    .o_clinic_kpi_dot {
-        border-radius: 50%;
-        height: 8px;
-        margin-bottom: 8px;
-        width: 8px;
-    }
-
-    .o_clinic_dot_blue {
-        background: #557ca8;
-    }
-
-    .o_clinic_dot_teal {
-        background: #579b95;
-    }
-
-    .o_clinic_dot_indigo {
-        background: #787098;
-    }
-
-    .o_clinic_dot_slate {
-        background: #76879a;
-    }
-
-    .o_clinic_dot_green {
-        background: #6f9877;
-    }
-
-    .o_clinic_dot_gold {
-        background: #9b805d;
-    }
-
-    .o_clinic_kpi_label {
-        color: #50545a;
-        font-size: 14px;
-        font-weight: 600;
-    }
-
-    .o_clinic_kpi_value {
-        color: #171a1f;
-        font-size: 26px;
-        font-weight: 800;
-        line-height: 1.1;
-        margin-top: 2px;
-    }
-
-    .o_clinic_dashboard_filters {
-        display: flex;
-        gap: 72px;
-        margin-bottom: 32px;
-
-        h3 {
-            color: #171a1f;
-            font-size: 18px;
-            font-weight: 700;
-            margin-bottom: 12px;
-        }
-
-        .btn-group {
-            background: #edf2f8;
-            border-radius: 22px;
-            padding: 4px;
-
-            .btn {
-                border: 0;
-                border-radius: 18px;
-                font-weight: 700;
-                min-width: 92px;
-            }
-        }
-    }
-
-    .o_clinic_dashboard_next {
+    .o_clinic_dashboard_hero {
         align-items: center;
-        background: #ffffff;
-        border-left: 4px solid #2f5f95;
-        border-radius: 8px;
-        box-shadow: 0 8px 24px rgba(28, 41, 61, 0.08);
         display: flex;
         justify-content: space-between;
-        margin-bottom: 28px;
-        padding: 18px 20px;
+        margin-bottom: 22px;
+
+        h1 {
+            color: #172033;
+            font-size: 32px;
+            font-weight: 800;
+            letter-spacing: 0;
+            margin: 2px 0 0;
+        }
     }
 
+    .o_clinic_dashboard_eyebrow,
     .o_clinic_section_label {
-        color: #50545a;
+        color: #647085;
         display: block;
-        font-size: 13px;
-        font-weight: 700;
-        margin-bottom: 4px;
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: 0.08em;
         text-transform: uppercase;
     }
 
-    .o_clinic_next_patient {
-        color: #171a1f;
-        font-size: 20px;
-        font-weight: 800;
-    }
-
-    .o_clinic_next_actions {
+    .o_clinic_dashboard_hero_actions,
+    .o_clinic_panel_actions {
         display: flex;
         gap: 10px;
     }
 
+    .o_clinic_command_grid {
+        display: grid;
+        gap: 16px;
+        grid-template-columns: minmax(240px, 1fr) minmax(240px, 1fr) minmax(300px, 1.2fr);
+        margin-bottom: 16px;
+    }
+
+    .o_clinic_command_panel,
+    .o_clinic_metric,
     .o_clinic_dashboard_table {
         background: #ffffff;
+        border: 1px solid #e3e8f0;
         border-radius: 8px;
-        box-shadow: 0 8px 24px rgba(28, 41, 61, 0.08);
+        box-shadow: 0 10px 30px rgba(23, 32, 51, 0.06);
+    }
+
+    .o_clinic_command_panel {
+        display: flex;
+        flex-direction: column;
+        min-height: 150px;
+        padding: 18px;
+    }
+
+    .o_clinic_panel_current {
+        border-top: 4px solid #6d5bd0;
+    }
+
+    .o_clinic_panel_next {
+        border-top: 4px solid #1d7f76;
+    }
+
+    .o_clinic_primary_record {
+        color: #172033;
+        display: block;
+        font-size: 22px;
+        font-weight: 800;
+        margin: 14px 0 22px;
+        min-height: 30px;
+    }
+
+    .o_clinic_pressure_grid {
+        display: grid;
+        gap: 10px;
+        grid-template-columns: repeat(3, 1fr);
+        margin: 14px 0 8px;
+
+        div {
+            background: #f6f8fb;
+            border-radius: 6px;
+            padding: 12px;
+        }
+
+        span {
+            color: #647085;
+            display: block;
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .o_field_widget,
+        div div {
+            color: #172033;
+            font-size: 20px;
+            font-weight: 800;
+        }
+    }
+
+    .o_clinic_text_button {
+        align-self: flex-start;
+        margin-top: auto;
+        padding-left: 0;
+    }
+
+    .o_clinic_metrics_row {
+        display: grid;
+        gap: 12px;
+        grid-template-columns: repeat(5, minmax(130px, 1fr));
+        margin-bottom: 18px;
+    }
+
+    .o_clinic_metric {
+        align-items: flex-start;
+        border: 1px solid #e3e8f0;
+        color: #172033;
+        display: flex;
+        flex-direction: column;
+        min-height: 86px;
+        padding: 14px 16px;
+        text-align: left;
+
+        span {
+            color: #647085;
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .o_field_widget {
+            font-size: 24px;
+            font-weight: 800;
+            line-height: 1;
+        }
+    }
+
+    .o_clinic_dashboard_columns {
+        display: grid;
+        gap: 16px;
+        grid-template-columns: minmax(0, 1.35fr) minmax(360px, 0.85fr);
+    }
+
+    .o_clinic_dashboard_table {
         overflow: hidden;
-        padding: 24px;
+        padding: 18px;
     }
 
     .o_clinic_dashboard_table_header {
         align-items: center;
         display: flex;
         justify-content: space-between;
-        margin-bottom: 16px;
+        margin-bottom: 14px;
 
         h2 {
-            color: #171a1f;
-            font-size: 20px;
+            color: #172033;
+            font-size: 18px;
             font-weight: 800;
-            margin: 0;
+            margin: 2px 0 0;
+        }
+    }
+
+    @media (max-width: 1100px) {
+        .o_clinic_command_grid,
+        .o_clinic_dashboard_columns,
+        .o_clinic_metrics_row {
+            grid-template-columns: 1fr;
+        }
+
+        .o_clinic_dashboard_hero {
+            align-items: flex-start;
+            flex-direction: column;
+            gap: 14px;
         }
     }
 }

@@ -51,14 +51,37 @@ class ClinicVisitDashboard(models.Model):
         string="Revenue Today",
         compute="_compute_visit_counts",
     )
+    average_wait_minutes = fields.Integer(
+        string="Average Wait",
+        compute="_compute_active_visit_ids",
+    )
+    longest_wait_minutes = fields.Integer(
+        string="Longest Wait",
+        compute="_compute_active_visit_ids",
+    )
+    current_visit_id = fields.Many2one(
+        "clinic.visit",
+        string="Current Consultation",
+        compute="_compute_active_visit_ids",
+    )
     next_visit_id = fields.Many2one(
         "clinic.visit",
         string="Next Patient",
         compute="_compute_active_visit_ids",
     )
+    longest_waiting_visit_id = fields.Many2one(
+        "clinic.visit",
+        string="Longest Waiting",
+        compute="_compute_active_visit_ids",
+    )
     active_visit_ids = fields.Many2many(
         "clinic.visit",
         string="Active Queue",
+        compute="_compute_active_visit_ids",
+    )
+    today_completed_visit_ids = fields.Many2many(
+        "clinic.visit",
+        string="Recently Completed",
         compute="_compute_active_visit_ids",
     )
 
@@ -104,14 +127,37 @@ class ClinicVisitDashboard(models.Model):
             order="queued_at asc, visit_date asc, id asc",
             limit=20,
         )
+        waiting_visits = visits.filtered(lambda visit: visit.state == "waiting")
         next_visit = Visit.search(
             [("state", "=", "waiting")],
             order="queued_at asc, visit_date asc, id asc",
             limit=1,
         )
+        current_visit = Visit.search(
+            [("state", "=", "in_consultation")],
+            order="consultation_started_at asc, id asc",
+            limit=1,
+        )
+        completed_today = Visit.search(
+            self._get_today_domain() + [("state", "=", "done")],
+            order="completed_at desc, id desc",
+            limit=10,
+        )
+        wait_minutes = waiting_visits.mapped("queue_wait_minutes")
+        longest_wait_minutes = max(wait_minutes, default=0)
+        longest_waiting_visit = waiting_visits.filtered(
+            lambda visit: visit.queue_wait_minutes == longest_wait_minutes
+        )[:1]
         for dashboard in self:
             dashboard.active_visit_ids = visits
             dashboard.next_visit_id = next_visit
+            dashboard.current_visit_id = current_visit
+            dashboard.today_completed_visit_ids = completed_today
+            dashboard.average_wait_minutes = (
+                int(sum(wait_minutes) / len(wait_minutes)) if wait_minutes else 0
+            )
+            dashboard.longest_wait_minutes = longest_wait_minutes
+            dashboard.longest_waiting_visit_id = longest_waiting_visit
 
     def _get_today_domain(self):
         today = fields.Date.context_today(self)
@@ -177,6 +223,37 @@ class ClinicVisitDashboard(models.Model):
             return self.action_open_active_queue()
         self.next_visit_id.action_start_consultation()
         return self.action_open_next_visit()
+
+    def action_open_current_visit(self):
+        self.ensure_one()
+        if not self.current_visit_id:
+            return self.action_open_active_queue()
+        return {
+            "type": "ir.actions.act_window",
+            "name": self.current_visit_id.display_name,
+            "res_model": "clinic.visit",
+            "res_id": self.current_visit_id.id,
+            "view_mode": "form",
+        }
+
+    def action_done_current_visit(self):
+        self.ensure_one()
+        if not self.current_visit_id:
+            return self.action_open_active_queue()
+        self.current_visit_id.action_done()
+        return self.action_open_active_queue()
+
+    def action_open_longest_waiting_visit(self):
+        self.ensure_one()
+        if not self.longest_waiting_visit_id:
+            return self.action_open_active_queue()
+        return {
+            "type": "ir.actions.act_window",
+            "name": self.longest_waiting_visit_id.display_name,
+            "res_model": "clinic.visit",
+            "res_id": self.longest_waiting_visit_id.id,
+            "view_mode": "form",
+        }
 
     def action_open_today_visits(self):
         return self._get_visit_action("Today's Visits", self._get_today_domain())
