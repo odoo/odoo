@@ -1,0 +1,71 @@
+<odoo>
+    <record id="view_clinic_visit_dashboard_form" model="ir.ui.view">
+        <field name="name">clinic.visit.dashboard.form</field>
+        <field name="model">clinic.visit.dashboard</field>
+        <field name="arch" type="xml">
+            <form string="Clinic Dashboard" create="0" edit="0">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_open_draft"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-pencil">
+                            <field name="draft_count"
+                                   widget="statinfo"
+                                   string="Draft"/>
+                        </button>
+
+                        <button name="action_open_waiting"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-clock-o">
+                            <field name="waiting_count"
+                                   widget="statinfo"
+                                   string="Waiting"/>
+                        </button>
+
+                        <button name="action_open_in_consultation"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-user-md">
+                            <field name="in_consultation_count"
+                                   widget="statinfo"
+                                   string="In Consultation"/>
+                        </button>
+
+                        <button name="action_open_done"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-check">
+                            <field name="done_count"
+                                   widget="statinfo"
+                                   string="Done"/>
+                        </button>
+
+                        <button name="action_open_cancelled"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-times">
+                            <field name="cancelled_count"
+                                   widget="statinfo"
+                                   string="Cancelled"/>
+                        </button>
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_clinic_visit_dashboard" model="ir.actions.act_window">
+        <field name="name">Dashboard</field>
+        <field name="res_model">clinic.visit.dashboard</field>
+        <field name="view_mode">form</field>
+        <field name="res_id" ref="clinic_visit_dashboard_main"/>
+    </record>
+
+    <menuitem id="menu_clinic_dashboard"
+              name="Dashboard"
+              parent="menu_clinic_root"
+              action="action_clinic_visit_dashboard"
+              sequence="1"/>
+</odoo>

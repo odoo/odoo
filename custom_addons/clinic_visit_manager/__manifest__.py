@@ -11,8 +11,10 @@
     "data": [
         "security/ir.model.access.csv",
         "data/clinic_visit_sequence.xml",
+        "data/clinic_dashboard_data.xml",
         "views/clinic_visit_views.xml",
         "views/clinic_patient_views.xml",
+        "views/clinic_dashboard_views.xml",
     ],      
     "installable": True,
     "application": True,
