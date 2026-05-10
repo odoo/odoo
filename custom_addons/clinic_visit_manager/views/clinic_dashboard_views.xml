@@ -4,52 +4,105 @@
         <field name="model">clinic.visit.dashboard</field>
         <field name="arch" type="xml">
             <form string="Clinic Dashboard" create="0" edit="0">
-                <sheet>
-                    <div class="oe_button_box" name="button_box">
+                <sheet class="o_clinic_dashboard">
+                    <div class="o_clinic_dashboard_header">
+                        <h1>Dashboard</h1>
+                    </div>
+
+                    <div class="o_clinic_dashboard_cards">
                         <button name="action_open_draft"
                                 type="object"
-                                class="oe_stat_button"
-                                icon="fa-pencil">
-                            <field name="draft_count"
-                                   widget="statinfo"
-                                   string="Draft"/>
+                                class="btn o_clinic_kpi_card">
+                            <span class="o_clinic_kpi_dot o_clinic_dot_blue"/>
+                            <span class="o_clinic_kpi_label">Draft Visits</span>
+                            <field name="draft_count" class="o_clinic_kpi_value"/>
                         </button>
 
                         <button name="action_open_waiting"
                                 type="object"
-                                class="oe_stat_button"
-                                icon="fa-clock-o">
-                            <field name="waiting_count"
-                                   widget="statinfo"
-                                   string="Waiting"/>
+                                class="btn o_clinic_kpi_card">
+                            <span class="o_clinic_kpi_dot o_clinic_dot_teal"/>
+                            <span class="o_clinic_kpi_label">Waiting</span>
+                            <field name="waiting_count" class="o_clinic_kpi_value"/>
                         </button>
 
                         <button name="action_open_in_consultation"
                                 type="object"
-                                class="oe_stat_button"
-                                icon="fa-user-md">
-                            <field name="in_consultation_count"
-                                   widget="statinfo"
-                                   string="In Consultation"/>
+                                class="btn o_clinic_kpi_card">
+                            <span class="o_clinic_kpi_dot o_clinic_dot_indigo"/>
+                            <span class="o_clinic_kpi_label">In Consultation</span>
+                            <field name="in_consultation_count" class="o_clinic_kpi_value"/>
                         </button>
 
-                        <button name="action_open_done"
+                        <button name="action_open_today_visits"
                                 type="object"
-                                class="oe_stat_button"
-                                icon="fa-check">
-                            <field name="done_count"
-                                   widget="statinfo"
-                                   string="Done"/>
+                                class="btn o_clinic_kpi_card">
+                            <span class="o_clinic_kpi_dot o_clinic_dot_slate"/>
+                            <span class="o_clinic_kpi_label">Today's Visits</span>
+                            <field name="today_visit_count" class="o_clinic_kpi_value"/>
                         </button>
 
-                        <button name="action_open_cancelled"
+                        <button name="action_open_patients"
                                 type="object"
-                                class="oe_stat_button"
-                                icon="fa-times">
-                            <field name="cancelled_count"
-                                   widget="statinfo"
-                                   string="Cancelled"/>
+                                class="btn o_clinic_kpi_card">
+                            <span class="o_clinic_kpi_dot o_clinic_dot_green"/>
+                            <span class="o_clinic_kpi_label">Total Patients</span>
+                            <field name="total_patient_count" class="o_clinic_kpi_value"/>
                         </button>
+
+                        <button name="action_open_today_done"
+                                type="object"
+                                class="btn o_clinic_kpi_card">
+                            <span class="o_clinic_kpi_dot o_clinic_dot_gold"/>
+                            <span class="o_clinic_kpi_label">Completed Today</span>
+                            <field name="today_done_count" class="o_clinic_kpi_value"/>
+                        </button>
+                    </div>
+
+                    <div class="o_clinic_dashboard_filters">
+                        <div>
+                            <h3>Visits</h3>
+                            <div class="btn-group">
+                                <button name="action_open_today_visits"
+                                        type="object"
+                                        class="btn btn-primary">Today</button>
+                                <button name="action_open_all_visits"
+                                        type="object"
+                                        class="btn btn-secondary">All</button>
+                            </div>
+                        </div>
+                        <div>
+                            <h3>Queue</h3>
+                            <div class="btn-group">
+                                <button name="action_open_active_queue"
+                                        type="object"
+                                        class="btn btn-primary">Active</button>
+                                <button name="action_open_done"
+                                        type="object"
+                                        class="btn btn-secondary">Done</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="o_clinic_dashboard_table">
+                        <div class="o_clinic_dashboard_table_header">
+                            <h2>Active Queue</h2>
+                            <button name="action_open_active_queue"
+                                    type="object"
+                                    class="btn btn-link">Open full list</button>
+                        </div>
+                        <field name="active_visit_ids" readonly="1" nolabel="1">
+                            <list create="0" edit="0" delete="0">
+                                <field name="token_number"/>
+                                <field name="patient_name"/>
+                                <field name="doctor_name"/>
+                                <field name="visit_date"/>
+                                <field name="temperature_celsius" optional="hide"/>
+                                <field name="pulse_rate" optional="hide"/>
+                                <field name="oxygen_saturation" optional="hide"/>
+                                <field name="state"/>
+                            </list>
+                        </field>
                     </div>
                 </sheet>
             </form>

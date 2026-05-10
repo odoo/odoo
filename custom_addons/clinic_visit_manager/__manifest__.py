@@ -16,6 +16,11 @@
         "views/clinic_patient_views.xml",
         "views/clinic_dashboard_views.xml",
     ],      
+    "assets": {
+        "web.assets_backend": [
+            "clinic_visit_manager/static/src/scss/clinic_dashboard.scss",
+        ],
+    },
     "installable": True,
     "application": True,
     "license": "LGPL-3",
