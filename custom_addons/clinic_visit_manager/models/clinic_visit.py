@@ -5,8 +5,10 @@ from odoo.exceptions import UserError
 
 VISIT_STATES = [
     ("draft", "Draft"),
-    ("confirmed", "Confirmed"),
+    ("waiting", "Waiting"),
+    ("in_consultation", "In Consultation"),
     ("done", "Done"),
+    ("cancelled", "Cancelled"),
 ]
 
 
@@ -30,6 +32,13 @@ class ClinicVisit(models.Model):
         "clinic.patient",
         string="Patient Card",
         ondelete="restrict",
+    )
+
+    token_number = fields.Char(
+        string="Token",
+        readonly=True,
+        copy=False,
+        index=True,
     )
 
     doctor_name = fields.Char(
@@ -98,10 +107,27 @@ class ClinicVisit(models.Model):
         for record in self:
             if not record.patient_name:
                 raise UserError("Patient name is required.")
-            record.state = "confirmed"
+            vals = {"state": "waiting"}
+            if not record.token_number:
+                vals["token_number"] = self.env["ir.sequence"].next_by_code(
+                    "clinic.visit.token"
+                )
+            record.write(vals)
+
+    def action_start_consultation(self):
+        for record in self:
+            if record.state != "waiting":
+                raise UserError("Only waiting visits can start consultation.")
+            record.state = "in_consultation"
 
     def action_done(self):
         for record in self:
-            if record.state != "confirmed":
-                raise UserError("Only confirmed visits can be marked as done.")
+            if record.state not in ("waiting", "in_consultation"):
+                raise UserError("Only active visits can be marked as done.")
             record.state = "done"
+
+    def action_cancel(self):
+        for record in self:
+            if record.state == "done":
+                raise UserError("Done visits cannot be cancelled.")
+            record.state = "cancelled"

@@ -5,6 +5,7 @@
         <field name="model">clinic.visit</field>
         <field name="arch" type="xml">
             <list string="Clinic Visits">
+                <field name="token_number"/>
                 <field name="name"/>
                 <field name="patient_name"/>
                 <field name="patient_id"/>
@@ -24,25 +25,37 @@
                 <header>
                     <button name="action_confirm"
                             type="object"
-                            string="Confirm Visit"
+                            string="Send to Queue"
                             class="btn-primary"
                             invisible="state != 'draft'"/>
+
+                    <button name="action_start_consultation"
+                            type="object"
+                            string="Start Consultation"
+                            class="btn-primary"
+                            invisible="state != 'waiting'"/>
 
                     <button name="action_done"
                             type="object"
                             string="Mark Done"
                             class="btn-success"
-                            invisible="state != 'confirmed'"/>
+                            invisible="state not in ('waiting', 'in_consultation')"/>
+
+                    <button name="action_cancel"
+                            type="object"
+                            string="Cancel"
+                            invisible="state in ('done', 'cancelled')"/>
 
                     <field name="state"
                            widget="statusbar"
-                           statusbar_visible="draft,confirmed,done"/>
+                           statusbar_visible="draft,waiting,in_consultation,done"/>
                 </header>
 
                 <sheet>
                     <group>
                         <group>
                             <field name="name"/>
+                            <field name="token_number"/>
                             <field name="patient_name"/>
                             <field name="patient_id"/>
                             <field name="doctor_name"/>
@@ -69,10 +82,38 @@
         </field>
     </record>
 
+    <record id="view_clinic_visit_search" model="ir.ui.view">
+        <field name="name">clinic.visit.search</field>
+        <field name="model">clinic.visit</field>
+        <field name="arch" type="xml">
+            <search string="Clinic Visits">
+                <field name="token_number"/>
+                <field name="patient_name"/>
+                <field name="patient_id"/>
+                <field name="doctor_name"/>
+                <filter name="active_queue"
+                        string="Active Queue"
+                        domain="[('state', 'in', ('waiting', 'in_consultation'))]"/>
+                <filter name="today"
+                        string="Today"
+                        domain="[('visit_date', '&gt;=', context_today().strftime('%Y-%m-%d 00:00:00')), ('visit_date', '&lt;=', context_today().strftime('%Y-%m-%d 23:59:59'))]"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_by_state"
+                            string="Status"
+                            context="{'group_by': 'state'}"/>
+                    <filter name="group_by_doctor"
+                            string="Doctor"
+                            context="{'group_by': 'doctor_name'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
     <record id="action_clinic_visit" model="ir.actions.act_window">
         <field name="name">Clinic Visits</field>
         <field name="res_model">clinic.visit</field>
         <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_clinic_visit_search"/>
     </record>
 
     <menuitem id="menu_clinic_root"

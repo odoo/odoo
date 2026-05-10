@@ -10,6 +10,7 @@
     "depends": ["base", "contacts"],
     "data": [
         "security/ir.model.access.csv",
+        "data/clinic_visit_sequence.xml",
         "views/clinic_visit_views.xml",
         "views/clinic_patient_views.xml",
     ],      

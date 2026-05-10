@@ -10,6 +10,7 @@ class ClinicVisitController(http.Controller):
             {
                 "id": visit.id,
                 "name": visit.name,
+                "token_number": visit.token_number,
                 "patient_name": visit.patient_name,
                 "doctor_name": visit.doctor_name,
                 "visit_date": visit.visit_date,
