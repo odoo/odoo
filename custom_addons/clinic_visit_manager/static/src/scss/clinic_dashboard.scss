@@ -4,20 +4,12 @@
     max-width: none;
     padding: 28px !important;
 
-    .btn {
-        border-radius: 6px;
-        font-weight: 700;
-    }
-
     .o_clinic_dashboard_hero {
-        align-items: center;
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 22px;
+        margin-bottom: 18px;
 
         h1 {
             color: #172033;
-            font-size: 32px;
+            font-size: 30px;
             font-weight: 800;
             letter-spacing: 0;
             margin: 2px 0 0;
@@ -34,20 +26,13 @@
         text-transform: uppercase;
     }
 
-    .o_clinic_dashboard_hero_actions,
-    .o_clinic_panel_actions {
-        display: flex;
-        gap: 10px;
-    }
-
-    .o_clinic_command_grid {
+    .o_clinic_metrics_row {
         display: grid;
-        gap: 16px;
-        grid-template-columns: minmax(240px, 1fr) minmax(240px, 1fr) minmax(300px, 1.2fr);
-        margin-bottom: 16px;
+        gap: 12px;
+        grid-template-columns: repeat(5, minmax(130px, 1fr));
+        margin-bottom: 18px;
     }
 
-    .o_clinic_command_panel,
     .o_clinic_metric,
     .o_clinic_dashboard_table {
         background: #ffffff;
@@ -56,78 +41,12 @@
         box-shadow: 0 10px 30px rgba(23, 32, 51, 0.06);
     }
 
-    .o_clinic_command_panel {
-        display: flex;
-        flex-direction: column;
-        min-height: 150px;
-        padding: 18px;
-    }
-
-    .o_clinic_panel_current {
-        border-top: 4px solid #6d5bd0;
-    }
-
-    .o_clinic_panel_next {
-        border-top: 4px solid #1d7f76;
-    }
-
-    .o_clinic_primary_record {
-        color: #172033;
-        display: block;
-        font-size: 22px;
-        font-weight: 800;
-        margin: 14px 0 22px;
-        min-height: 30px;
-    }
-
-    .o_clinic_pressure_grid {
-        display: grid;
-        gap: 10px;
-        grid-template-columns: repeat(3, 1fr);
-        margin: 14px 0 8px;
-
-        div {
-            background: #f6f8fb;
-            border-radius: 6px;
-            padding: 12px;
-        }
-
-        span {
-            color: #647085;
-            display: block;
-            font-size: 12px;
-            font-weight: 700;
-            margin-bottom: 4px;
-        }
-
-        .o_field_widget,
-        div div {
-            color: #172033;
-            font-size: 20px;
-            font-weight: 800;
-        }
-    }
-
-    .o_clinic_text_button {
-        align-self: flex-start;
-        margin-top: auto;
-        padding-left: 0;
-    }
-
-    .o_clinic_metrics_row {
-        display: grid;
-        gap: 12px;
-        grid-template-columns: repeat(5, minmax(130px, 1fr));
-        margin-bottom: 18px;
-    }
-
     .o_clinic_metric {
         align-items: flex-start;
-        border: 1px solid #e3e8f0;
         color: #172033;
         display: flex;
         flex-direction: column;
-        min-height: 86px;
+        min-height: 82px;
         padding: 14px 16px;
         text-align: left;
 
@@ -145,23 +64,10 @@
         }
     }
 
-    .o_clinic_dashboard_columns {
-        display: grid;
-        gap: 16px;
-        grid-template-columns: minmax(0, 1.35fr) minmax(360px, 0.85fr);
-    }
-
-    .o_clinic_dashboard_queue {
-        margin-bottom: 16px;
-    }
-
     .o_clinic_dashboard_table {
+        min-height: 320px;
         overflow: hidden;
         padding: 18px;
-    }
-
-    .o_clinic_queue_table {
-        min-height: 260px;
     }
 
     .o_clinic_dashboard_table_header {
@@ -194,16 +100,8 @@
     }
 
     @media (max-width: 1100px) {
-        .o_clinic_command_grid,
-        .o_clinic_dashboard_columns,
         .o_clinic_metrics_row {
             grid-template-columns: 1fr;
-        }
-
-        .o_clinic_dashboard_hero {
-            align-items: flex-start;
-            flex-direction: column;
-            gap: 14px;
         }
     }
 }

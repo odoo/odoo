@@ -83,6 +83,11 @@ class ClinicVisitDashboard(models.Model):
         string="Active Queue",
         compute="_compute_active_visit_ids",
     )
+    recent_visit_ids = fields.Many2many(
+        "clinic.visit",
+        string="Patient Visits",
+        compute="_compute_active_visit_ids",
+    )
     today_completed_visit_ids = fields.Many2many(
         "clinic.visit",
         string="Recently Completed",
@@ -158,6 +163,11 @@ class ClinicVisitDashboard(models.Model):
         )[:1]
         for dashboard in self:
             dashboard.active_visit_ids = visits
+            dashboard.recent_visit_ids = Visit.search(
+                [],
+                order="visit_date desc, id desc",
+                limit=50,
+            )
             dashboard.next_visit_id = next_visit
             dashboard.current_visit_id = current_visit
             dashboard.today_completed_visit_ids = completed_today

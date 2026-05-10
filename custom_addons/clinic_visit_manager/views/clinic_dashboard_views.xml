@@ -7,72 +7,9 @@
                 <sheet class="o_clinic_dashboard">
                     <div class="o_clinic_dashboard_hero">
                         <div>
-                            <span class="o_clinic_dashboard_eyebrow">Clinic Command Center</span>
-                            <h1>Today's Patient Flow</h1>
+                            <span class="o_clinic_dashboard_eyebrow">Clinic</span>
+                            <h1>Dashboard</h1>
                         </div>
-                        <div class="o_clinic_dashboard_hero_actions">
-                            <button name="action_open_today_visits"
-                                    type="object"
-                                    class="btn btn-secondary">Today's Visits</button>
-                            <button name="action_open_active_queue"
-                                    type="object"
-                                    class="btn btn-primary">Open Queue</button>
-                        </div>
-                    </div>
-
-                    <div class="o_clinic_command_grid">
-                        <section class="o_clinic_command_panel o_clinic_panel_current">
-                            <span class="o_clinic_section_label">Now With Doctor</span>
-                            <field name="current_visit_id"
-                                   readonly="1"
-                                   class="o_clinic_primary_record"/>
-                            <div class="o_clinic_panel_actions">
-                                <button name="action_open_current_visit"
-                                        type="object"
-                                        class="btn btn-secondary">Open</button>
-                                <button name="action_done_current_visit"
-                                        type="object"
-                                        class="btn btn-primary">Mark Done</button>
-                            </div>
-                        </section>
-
-                        <section class="o_clinic_command_panel o_clinic_panel_next">
-                            <span class="o_clinic_section_label">Next Patient</span>
-                            <field name="next_visit_id"
-                                   readonly="1"
-                                   class="o_clinic_primary_record"/>
-                            <div class="o_clinic_panel_actions">
-                                <button name="action_open_next_visit"
-                                        type="object"
-                                        class="btn btn-secondary">Open</button>
-                                <button name="action_start_next_visit"
-                                        type="object"
-                                        class="btn btn-primary">Start</button>
-                            </div>
-                        </section>
-
-                        <section class="o_clinic_command_panel">
-                            <span class="o_clinic_section_label">Queue Pressure</span>
-                            <div class="o_clinic_pressure_grid">
-                                <div>
-                                    <span>Waiting</span>
-                                    <field name="waiting_count"/>
-                                </div>
-                                <div>
-                                    <span>Avg Wait</span>
-                                    <div><field name="average_wait_minutes"/> min</div>
-                                </div>
-                                <div>
-                                    <span>Longest</span>
-                                    <div><field name="longest_wait_minutes"/> min</div>
-                                </div>
-                            </div>
-                            <button name="action_open_longest_waiting_visit"
-                                    type="object"
-                                    class="btn btn-link o_clinic_text_button">
-                                Open longest waiting patient
-                            </button>
-                        </section>
                     </div>
 
                     <div class="o_clinic_metrics_row">
@@ -82,29 +19,29 @@
                             <span>Today's Visits</span>
                             <field name="today_visit_count"/>
                         </button>
+                        <button name="action_open_all_visits"
+                                type="object"
+                                class="btn o_clinic_metric">
+                            <span>Total Visits</span>
+                            <field name="total_visit_count"/>
+                        </button>
+                        <button name="action_open_patients"
+                                type="object"
+                                class="btn o_clinic_metric">
+                            <span>Total Patients</span>
+                            <field name="total_patient_count"/>
+                        </button>
                         <button name="action_open_today_done"
                                 type="object"
                                 class="btn o_clinic_metric">
                             <span>Completed</span>
                             <field name="today_done_count"/>
                         </button>
-                        <button name="action_open_in_consultation"
+                        <button name="action_open_active_queue"
                                 type="object"
                                 class="btn o_clinic_metric">
-                            <span>In Consultation</span>
-                            <field name="in_consultation_count"/>
-                        </button>
-                        <button name="action_open_patients"
-                                type="object"
-                                class="btn o_clinic_metric">
-                            <span>Patients</span>
-                            <field name="total_patient_count"/>
-                        </button>
-                        <button name="action_open_today_done"
-                                type="object"
-                                class="btn o_clinic_metric">
-                            <span>Revenue</span>
-                            <field name="today_revenue"/>
+                            <span>Active Queue</span>
+                            <field name="active_queue_count"/>
                         </button>
                     </div>
 
@@ -112,19 +49,19 @@
                         <section class="o_clinic_dashboard_table o_clinic_queue_table">
                             <div class="o_clinic_dashboard_table_header">
                                 <div>
-                                    <span class="o_clinic_section_label">Live Queue</span>
+                                    <span class="o_clinic_section_label">Patient Visits</span>
                                     <h2>
-                                        Active Queue
+                                        Visit Table
                                         <span class="o_clinic_count_badge">
-                                            <field name="active_queue_count"/>
+                                            <field name="total_visit_count"/>
                                         </span>
                                     </h2>
                                 </div>
-                                <button name="action_open_active_queue"
+                                <button name="action_open_all_visits"
                                         type="object"
                                         class="btn btn-link">Full list</button>
                             </div>
-                            <field name="active_visit_ids" readonly="1" nolabel="1">
+                            <field name="recent_visit_ids" readonly="1" nolabel="1">
                                 <list create="0" edit="0" delete="0">
                                     <field name="token_number"/>
                                     <field name="name"/>
@@ -135,29 +72,6 @@
                                     <field name="queue_wait_minutes"/>
                                     <field name="consultation_minutes" optional="hide"/>
                                     <field name="state"/>
-                                </list>
-                            </field>
-                        </section>
-                    </div>
-
-                    <div class="o_clinic_dashboard_columns">
-                        <section class="o_clinic_dashboard_table">
-                            <div class="o_clinic_dashboard_table_header">
-                                <div>
-                                    <span class="o_clinic_section_label">Finished Today</span>
-                                    <h2>Recently completed visits</h2>
-                                </div>
-                                <button name="action_open_today_done"
-                                        type="object"
-                                        class="btn btn-link">See all</button>
-                            </div>
-                            <field name="today_completed_visit_ids" readonly="1" nolabel="1">
-                                <list create="0" edit="0" delete="0">
-                                    <field name="token_number"/>
-                                    <field name="patient_name"/>
-                                    <field name="doctor_name"/>
-                                    <field name="completed_at"/>
-                                    <field name="fee"/>
                                 </list>
                             </field>
                         </section>
