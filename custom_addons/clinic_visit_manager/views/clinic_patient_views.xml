@@ -1,0 +1,111 @@
+<odoo>
+
+    <record id="view_clinic_patient_kanban" model="ir.ui.view">
+        <field name="name">clinic.patient.kanban</field>
+        <field name="model">clinic.patient</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile">
+                <field name="name"/>
+                <field name="phone"/>
+                <field name="email"/>
+                <field name="age"/>
+                <field name="gender"/>
+                <field name="blood_group"/>
+                <field name="visit_count"/>
+                <templates>
+                    <t t-name="card">
+                        <field name="name" class="fw-bold fs-5"/>
+                        <div class="text-muted">
+                            <span t-if="record.age.raw_value">
+                                Age: <field name="age"/>
+                            </span>
+                            <span t-if="record.gender.raw_value">
+                                - <field name="gender"/>
+                            </span>
+                        </div>
+                        <div class="mt-1">
+                            Visits: <field name="visit_count"/>
+                        </div>
+                        <div t-if="record.blood_group.raw_value" class="mt-1">
+                            Blood Group: <field name="blood_group"/>
+                        </div>
+                        <div t-if="record.phone.raw_value" class="mt-1">
+                            Phone: <field name="phone"/>
+                        </div>
+                        <div t-if="record.email.raw_value" class="mt-1">
+                            Email: <field name="email"/>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_clinic_patient_list" model="ir.ui.view">
+        <field name="name">clinic.patient.list</field>
+        <field name="model">clinic.patient</field>
+        <field name="arch" type="xml">
+            <list string="Patients">
+                <field name="name"/>
+                <field name="phone"/>
+                <field name="email"/>
+                <field name="age"/>
+                <field name="gender"/>
+                <field name="blood_group"/>
+                <field name="visit_count"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_clinic_patient_form" model="ir.ui.view">
+        <field name="name">clinic.patient.form</field>
+        <field name="model">clinic.patient</field>
+        <field name="arch" type="xml">
+            <form string="Patient">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="phone"/>
+                            <field name="email"/>
+                        </group>
+                        <group>
+                            <field name="age"/>
+                            <field name="gender"/>
+                            <field name="blood_group"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Visits">
+                            <field name="visit_ids" readonly="1">
+                                <list>
+                                    <field name="name"/>
+                                    <field name="visit_date"/>
+                                    <field name="doctor_name"/>
+                                    <field name="fee"/>
+                                    <field name="state"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Notes">
+                            <field name="notes"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_clinic_patient" model="ir.actions.act_window">
+        <field name="name">Patients</field>
+        <field name="res_model">clinic.patient</field>
+        <field name="view_mode">kanban,list,form</field>
+    </record>
+
+    <menuitem id="menu_clinic_patient"
+              name="Patients"
+              parent="menu_clinic_root"
+              action="action_clinic_patient"
+              sequence="10"/>
+
+</odoo>
