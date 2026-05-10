@@ -119,14 +119,13 @@
                 <filter name="today"
                         string="Today"
                         domain="[('visit_date', '&gt;=', context_today().strftime('%Y-%m-%d 00:00:00')), ('visit_date', '&lt;=', context_today().strftime('%Y-%m-%d 23:59:59'))]"/>
-                <group expand="0" string="Group By">
-                    <filter name="group_by_state"
-                            string="Status"
-                            context="{'group_by': 'state'}"/>
-                    <filter name="group_by_doctor"
-                            string="Doctor"
-                            context="{'group_by': 'doctor_name'}"/>
-                </group>
+                <separator/>
+                <filter name="group_by_state"
+                        string="Status"
+                        context="{'group_by': 'state'}"/>
+                <filter name="group_by_doctor"
+                        string="Doctor"
+                        context="{'group_by': 'doctor_name'}"/>
             </search>
         </field>
     </record>
