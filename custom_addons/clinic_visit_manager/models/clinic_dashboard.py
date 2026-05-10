@@ -51,6 +51,10 @@ class ClinicVisitDashboard(models.Model):
         string="Revenue Today",
         compute="_compute_visit_counts",
     )
+    active_queue_count = fields.Integer(
+        string="Queue Count",
+        compute="_compute_visit_counts",
+    )
     average_wait_minutes = fields.Integer(
         string="Average Wait",
         compute="_compute_active_visit_ids",
@@ -104,6 +108,9 @@ class ClinicVisitDashboard(models.Model):
             "today_done": Visit.search_count(
                 today_domain + [("state", "=", "done")]
             ),
+            "active_queue": Visit.search_count(
+                [("state", "in", ("waiting", "in_consultation"))]
+            ),
             "today_revenue": sum(
                 Visit.search(today_domain + [("state", "=", "done")]).mapped("fee")
             ),
@@ -118,6 +125,7 @@ class ClinicVisitDashboard(models.Model):
             dashboard.total_patient_count = counts["total_patient"]
             dashboard.today_visit_count = counts["today_visit"]
             dashboard.today_done_count = counts["today_done"]
+            dashboard.active_queue_count = counts["active_queue"]
             dashboard.today_revenue = counts["today_revenue"]
 
     def _compute_active_visit_ids(self):

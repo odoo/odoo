@@ -108,12 +108,17 @@
                         </button>
                     </div>
 
-                    <div class="o_clinic_dashboard_columns">
-                        <section class="o_clinic_dashboard_table">
+                    <div class="o_clinic_dashboard_queue">
+                        <section class="o_clinic_dashboard_table o_clinic_queue_table">
                             <div class="o_clinic_dashboard_table_header">
                                 <div>
                                     <span class="o_clinic_section_label">Live Queue</span>
-                                    <h2>Patients waiting and in consultation</h2>
+                                    <h2>
+                                        Active Queue
+                                        <span class="o_clinic_count_badge">
+                                            <field name="active_queue_count"/>
+                                        </span>
+                                    </h2>
                                 </div>
                                 <button name="action_open_active_queue"
                                         type="object"
@@ -122,15 +127,20 @@
                             <field name="active_visit_ids" readonly="1" nolabel="1">
                                 <list create="0" edit="0" delete="0">
                                     <field name="token_number"/>
+                                    <field name="name"/>
                                     <field name="patient_name"/>
+                                    <field name="patient_id"/>
                                     <field name="doctor_name"/>
+                                    <field name="visit_date"/>
                                     <field name="queue_wait_minutes"/>
                                     <field name="consultation_minutes" optional="hide"/>
                                     <field name="state"/>
                                 </list>
                             </field>
                         </section>
+                    </div>
 
+                    <div class="o_clinic_dashboard_columns">
                         <section class="o_clinic_dashboard_table">
                             <div class="o_clinic_dashboard_table_header">
                                 <div>

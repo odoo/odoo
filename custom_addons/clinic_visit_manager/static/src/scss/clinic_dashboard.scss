@@ -151,9 +151,17 @@
         grid-template-columns: minmax(0, 1.35fr) minmax(360px, 0.85fr);
     }
 
+    .o_clinic_dashboard_queue {
+        margin-bottom: 16px;
+    }
+
     .o_clinic_dashboard_table {
         overflow: hidden;
         padding: 18px;
+    }
+
+    .o_clinic_queue_table {
+        min-height: 260px;
     }
 
     .o_clinic_dashboard_table_header {
@@ -168,6 +176,21 @@
             font-weight: 800;
             margin: 2px 0 0;
         }
+    }
+
+    .o_clinic_count_badge {
+        align-items: center;
+        background: #e8f3f1;
+        border-radius: 999px;
+        color: #1d7f76;
+        display: inline-flex;
+        font-size: 14px;
+        font-weight: 800;
+        justify-content: center;
+        margin-left: 8px;
+        min-width: 32px;
+        padding: 3px 10px;
+        vertical-align: middle;
     }
 
     @media (max-width: 1100px) {
