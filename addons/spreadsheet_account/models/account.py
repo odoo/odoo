@@ -7,6 +7,7 @@ from dateutil.relativedelta import relativedelta
 from odoo import models, api, _
 from odoo.fields import Domain
 from odoo.tools import date_utils
+from odoo.addons.spreadsheet.utils.helpers import spreadsheet_safe_batch
 
 
 class AccountAccount(models.Model):
@@ -105,6 +106,7 @@ class AccountAccount(models.Model):
 
     @api.readonly
     @api.model
+    @spreadsheet_safe_batch
     def spreadsheet_fetch_debit_credit(self, args_list):
         """Fetch data for ODOO.CREDIT, ODOO.DEBIT and ODOO.BALANCE formulas
         The input list looks like this::
@@ -131,6 +133,7 @@ class AccountAccount(models.Model):
 
     @api.readonly
     @api.model
+    @spreadsheet_safe_batch
     def spreadsheet_fetch_residual_amount(self, args_list):
         """Fetch data for ODOO.RESUDUAL formulas
         The input list looks like this::
@@ -156,6 +159,7 @@ class AccountAccount(models.Model):
         return results
 
     @api.model
+    @spreadsheet_safe_batch
     def spreadsheet_fetch_partner_balance(self, args_list):
         """Fetch data for ODOO.PARTNER.BALANCE formulas
         The input list looks like this::
@@ -187,6 +191,7 @@ class AccountAccount(models.Model):
         return results
 
     @api.model
+    @spreadsheet_safe_batch
     def get_account_group(self, account_types):
         data = self._read_group(
             [
@@ -204,6 +209,7 @@ class AccountAccount(models.Model):
         ]
 
     @api.model
+    @spreadsheet_safe_batch
     def spreadsheet_fetch_balance_tag(self, args_list):
         """Fetch data for ODOO.BALANCE.TAG formulas
         The input list looks like this::

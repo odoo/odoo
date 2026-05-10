@@ -1,5 +1,6 @@
 // @ts-check
 
+import { _t } from "@web/core/l10n/translation";
 import { EvaluationError } from "@odoo/o-spreadsheet";
 import { LoadingDataError, isLoadingError } from "../o_spreadsheet/errors";
 
@@ -39,6 +40,12 @@ export class Request {
  *  ```
  *  [result1, result2] = self.env['my.model'].my_batched_method([request_1_args, request_2_args])
  *  ```
+ *
+ * IMPORTANT:
+ * - Per-request UserError exceptions must be handled internally via the @spreadsheet_safe_batch decorator.
+ * - The method must NOT raise when a single request fails with a UserError.
+ * - Instead, it must return a structured error object for that item: { "__error__": "<message>" }
+ * - Any other exceptions should be propagated, causing the RPC to fail.
  */
 class ListRequestBatch {
     /**
@@ -252,7 +259,9 @@ export class BatchEndpoint {
      */
     _notifyResults(batchResult) {
         for (const [request, result] of batchResult) {
-            if (result instanceof Error) {
+            if (result && result.__error__) {
+                this.failureCallback(request, new Error(result.__error__));
+            } else if (result instanceof Error) {
                 this.failureCallback(request, result);
             } else {
                 this.successCallback(request, result);
@@ -276,7 +285,7 @@ export class BatchEndpoint {
             const promise = this.orm
                 .call(resModel, method, batch.payload)
                 .then((result) => batch.splitResponse(result))
-                .catch(() => this._retryOneByOne(batch))
+                .catch(() => this._handleBatchFailure(batch))
                 .then((batchResults) => this._notifyResults(batchResults));
             this.batchStartsLoadingCallback(promise);
         });
@@ -285,26 +294,21 @@ export class BatchEndpoint {
     /**
      * @private
      * @param {ListRequestBatch} batch
-     * @returns {Promise<Map<Request, unknown>>}
+     * @returns {Map<Request, Error>}
      */
-    async _retryOneByOne(batch) {
-        const mergedResults = new Map();
-        const { resModel, method } = batch;
-        const singleRequestBatches = batch.requests.map(
-            (request) => new ListRequestBatch(resModel, method, [request])
-        );
-        const proms = [];
-        for (const batch of singleRequestBatches) {
-            const request = batch.requests[0];
-            const prom = this.orm
-                .call(resModel, method, batch.payload)
-                .then((result) =>
-                    mergedResults.set(request, batch.splitResponse(result).get(request))
+    _handleBatchFailure(batch) {
+        const results = new Map();
+        for (const request of batch.requests) {
+            results.set(
+                request,
+                new Error(
+                    _t(
+                        "Data failed to load due to a server error or a formula issue (possibly in a referenced cell). " +
+                            "Please verify the formula or retry later. Contact odoo.com/help if the problem persists."
+                    )
                 )
-                .catch((error) => mergedResults.set(request, error));
-            proms.push(prom);
+            );
         }
-        await Promise.allSettled(proms);
-        return mergedResults;
+        return results;
     }
 }
