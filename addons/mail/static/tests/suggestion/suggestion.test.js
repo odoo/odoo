@@ -20,10 +20,12 @@ import {
     onRpc,
     patchWithCleanup,
     serverState,
+    withUser,
 } from "@web/../tests/web_test_helpers";
 
 import { Composer, MENTION_AMOUNT_WARNING } from "@mail/core/common/composer";
 import { press } from "@odoo/hoot-dom";
+import { rpc } from "@web/core/network/rpc";
 import { range } from "@web/core/utils/numbers";
 
 describe.current.tags("desktop");
@@ -1435,4 +1437,59 @@ test("should send notifications to users with names containing HTML entities", a
     await contains(".o-mail-MessageNotificationPopover span", {
         text: `${partnerRaw.name} (${partnerRaw.email})`,
     });
+});
+
+test("Recent message authors should be displayed before other partners", async () => {
+    const pyEnv = await startServer();
+    const [partnerA, partnerB, partnerC, partnerD] = pyEnv["res.partner"].create([
+        { name: "Person A" },
+        { name: "Person B" },
+        { name: "Person C" },
+        { name: "Person D" },
+    ]);
+    const [, userB] = pyEnv["res.users"].create([
+        { partner_id: partnerA },
+        { partner_id: partnerB },
+        { partner_id: partnerC },
+        { partner_id: partnerD },
+    ]);
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "general",
+        channel_type: "channel",
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId }),
+            Command.create({ partner_id: partnerA }),
+            Command.create({ partner_id: partnerB }),
+            Command.create({ partner_id: partnerC }),
+            Command.create({ partner_id: partnerD }),
+        ],
+    });
+    pyEnv["mail.message"].create({
+        author_id: partnerD,
+        body: "older",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-Message", { count: 1 });
+    await insertText(".o-mail-Composer-input", "@Person ");
+    await contains(".o-mail-Composer-suggestion:eq(0) strong:text('Person D')");
+    await contains(".o-mail-Composer-suggestion:eq(1) strong:text('Person A')");
+    await contains(".o-mail-Composer-suggestion:eq(2) strong:text('Person B')");
+    await contains(".o-mail-Composer-suggestion:eq(3) strong:text('Person C')");
+    await withUser(userB, () =>
+        rpc("/mail/message/post", {
+            post_data: { body: "newer", message_type: "comment", subtype_xmlid: "mail.mt_comment" },
+            thread_id: channelId,
+            thread_model: "discuss.channel",
+        })
+    );
+    await contains(".o-mail-Message", { count: 2 });
+    // Edit the search term to re-trigger the local sort with updated messages.
+    await press("Backspace");
+    await contains(".o-mail-Composer-suggestion:eq(0) strong:text('Person B')");
+    await contains(".o-mail-Composer-suggestion:eq(1) strong:text('Person D')");
+    await contains(".o-mail-Composer-suggestion:eq(2) strong:text('Person A')");
+    await contains(".o-mail-Composer-suggestion:eq(3) strong:text('Person C')");
 });
