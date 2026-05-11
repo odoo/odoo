@@ -927,13 +927,9 @@ export class TablePlugin extends Plugin {
         const startTd = closestElement(selection.startContainer, "td");
         const endTd = closestElement(selection.endContainer, "td");
         if (startTd && startTd === endTd && !isProtected(startTd) && !isProtecting(startTd)) {
-            const selectedNodes = this.dependencies.selection
-                .getTargetedNodes()
-                .filter(this.dependencies.selection.areNodeContentsFullySelected);
             const cellContents = descendants(startTd);
-            const areCellContentsFullySelected = cellContents
-                .filter((d) => !isBlock(d))
-                .every((child) => selectedNodes.includes(child));
+            const areCellContentsFullySelected =
+                this.dependencies.selection.areNodeContentsFullySelected(startTd);
             if (areCellContentsFullySelected) {
                 const SENSITIVITY = 5;
                 if (!this._mouseMovePositionWhenAllContentsSelected) {
