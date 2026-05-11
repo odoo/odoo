@@ -18,11 +18,11 @@ Implementar un proceso de desarrollo de software que integre la metodología ág
 El equipo de trabajo está formado por 5 estudiantes. El rol de **Líder de Equipo** será rotativo por cada Sprint para desarrollar habilidades de liderazgo y responsabilidad.
 
 ### Integrantes
-**-Apaza Anahua Roydan**
-**-Quiñonez Delgado Aarón Fernando**
-**-Sencia Ale Bryan Daniel**
-**-Yauli Merma Diego Raul**
-**-Sivincha Machaca Saul Andre**
+* **Apaza Anahua Roydan**.
+* **Quiñonez Delgado Aarón Fernando**.
+* **Sencia Ale Bryan Daniel**.
+* **Yauli Merma Diego Raul**.
+* **Sivincha Machaca Saul Andre**.
 
 ### Roles y Responsabilidades (Sprint 0)
 
