@@ -34,6 +34,7 @@ from odoo.tools import (
     str2bool,
 )
 from odoo.tools.date_utils import all_timezones
+from odoo.tools.sql import escape_like_value
 
 _logger = logging.getLogger(__name__)
 
@@ -743,7 +744,7 @@ class ResUsers(models.Model):
 
     @api.model
     def _get_email_domain(self, email):
-        return Domain('email', '=', email)
+        return Domain('email', '=ilike', escape_like_value(email or ''))
 
     @api.model
     def _get_login_order(self):
