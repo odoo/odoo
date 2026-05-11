@@ -104,12 +104,8 @@ export const tourService = {
                 throw new Error(`Tour '${tourName}' is not found in the database.`);
             }
 
-            if (!tour.steps.length) {
-                if (tourRegistry.contains(tour.name)) {
-                    tour.steps = tourRegistry.get(tour.name).steps();
-                } else {
-                    tour.onHold = true;
-                }
+            if (!tour.steps.length && tourRegistry.contains(tour.name)) {
+                tour.steps = tourRegistry.get(tour.name).steps();
             }
 
             return tour;
@@ -175,7 +171,8 @@ export const tourService = {
             if (tourConfig.fromDB) {
                 tour = await getTourFromDB(tourName);
             }
-            if (!tour) {
+            // if (!tour) {
+            if (!tour || !tour.steps.length) {
                 return;
             }
 
