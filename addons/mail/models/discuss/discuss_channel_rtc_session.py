@@ -42,13 +42,16 @@ class DiscussChannelRtcSession(models.Model):
         stores = Store.Stores()
         rtc_sessions = super().create(vals_list)
         for channel in rtc_sessions.channel_id.filtered(lambda c: len(c.rtc_session_ids) == 1):
+            now = fields.Datetime.now()
+            # sudo - discuss.channel: can bump channel interest on call start.
+            channel.sudo().last_interest_dt = now
             body = Markup('<div data-oe-type="call" class="o_mail_notification"></div>')
             message = channel.message_post(body=body, message_type="notification")
             # sudo - discuss.call.history: can create call history when call is created.
             self.env["discuss.call.history"].sudo().create(
                 {
                     "channel_id": channel.id,
-                    "start_dt": fields.Datetime.now(),
+                    "start_dt": now,
                     "start_call_message_id": message.id,
                 },
             )

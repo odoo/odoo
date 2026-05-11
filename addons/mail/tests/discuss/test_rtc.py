@@ -222,6 +222,8 @@ class TestChannelRTC(MailCommon, HttpCase):
             )
             rtc_session = self.member_of_employee_in_chat.sudo().rtc_session_ids
             return [
+                # update channel interest date on first call participant
+                BusResult(self.chat, "mail.record/insert"),
                 BusResult(
                     # update new message separator (message_post)
                     self.user_employee,
@@ -360,6 +362,8 @@ class TestChannelRTC(MailCommon, HttpCase):
             )
             rtc_session = self.member_of_employee_in_group_a.sudo().rtc_session_ids
             return [
+                # update channel interest date on first call participant
+                BusResult(self.channel_group_a, "mail.record/insert"),
                 BusResult(
                     self.user_employee,
                     # Update of the author's member record after posting the call message.
