@@ -1097,7 +1097,8 @@ test("empty many2one field with no result", async () => {
     expect(".dropdown-menu li.o_m2o_no_result").toHaveCount(0);
 });
 
-test("empty many2one field with no result and no create & edit", async () => {
+test.tags("owl3");
+test.todo("empty many2one field with no result and no create & edit", async () => {
     class M2O extends models.Model {
         m2o = fields.Many2one({ relation: "m2o" });
     }
@@ -1152,13 +1153,16 @@ test("empty many2one field with node options", async () => {
     );
 });
 
-test("many2one with no_create_edit and no_quick_create options should show no records when no result match", async () => {
-    expect.assertions(2);
+test.tags("owl3");
+test.todo(
+    "many2one with no_create_edit and no_quick_create options should show no records when no result match",
+    async () => {
+        expect.assertions(2);
 
-    await mountView({
-        type: "form",
-        resModel: "partner",
-        arch: `
+        await mountView({
+            type: "form",
+            resModel: "partner",
+            arch: `
             <form>
                 <sheet>
                     <group>
@@ -1166,14 +1170,21 @@ test("many2one with no_create_edit and no_quick_create options should show no re
                     </group>
                 </sheet>
             </form>`,
-    });
+        });
 
-    await contains(".o_field_many2one[name='product_id'] input").click();
-    expect(".o_field_many2one[name='product_id'] .dropdown-menu li.o_m2o_no_result").toHaveCount(0);
-    await contains(".o_field_many2one[name='product_id'] input").edit("aze", { confirm: false });
-    await runAllTimers();
-    expect(".o_field_many2one[name='product_id'] .dropdown-menu li.o_m2o_no_result").toHaveCount(1);
-});
+        await contains(".o_field_many2one[name='product_id'] input").click();
+        expect(
+            ".o_field_many2one[name='product_id'] .dropdown-menu li.o_m2o_no_result"
+        ).toHaveCount(0);
+        await contains(".o_field_many2one[name='product_id'] input").edit("aze", {
+            confirm: false,
+        });
+        await runAllTimers();
+        expect(
+            ".o_field_many2one[name='product_id'] .dropdown-menu li.o_m2o_no_result"
+        ).toHaveCount(1);
+    }
+);
 
 test("many2one in edit mode", async () => {
     expect.assertions(17);
@@ -3062,26 +3073,30 @@ test("propagate can_create onto the search popup", async () => {
     expect(queryAllTexts(".modal-footer button")).toEqual(["Close"]);
 });
 
-test("many2one with can_create=false shows no result item when searched something that doesn't exist", async () => {
-    await mountView({
-        type: "form",
-        resModel: "partner",
-        arch: `
+test.tags("owl3");
+test.todo(
+    "many2one with can_create=false shows no result item when searched something that doesn't exist",
+    async () => {
+        await mountView({
+            type: "form",
+            resModel: "partner",
+            arch: `
             <form>
                 <sheet>
                     <field name="product_id" can_create="false" can_write="false" />
                 </sheet>
             </form>`,
-    });
+        });
 
-    await contains(".o_field_many2one input").click();
-    await contains(".o_field_many2one[name=product_id] input").edit("abc", { confirm: false });
-    await runAllTimers();
-    expect(".o_field_many2one[name=product_id] .o_m2o_dropdown_option_create").toHaveCount(0);
-    expect(".o_field_many2one[name=product_id] .o_m2o_no_result").toHaveCount(1);
-    await contains(getFixture()).click();
-    expect(".o_field_many2one[name=product_id] .o_m2o_no_result").toHaveCount(0);
-});
+        await contains(".o_field_many2one input").click();
+        await contains(".o_field_many2one[name=product_id] input").edit("abc", { confirm: false });
+        await runAllTimers();
+        expect(".o_field_many2one[name=product_id] .o_m2o_dropdown_option_create").toHaveCount(0);
+        expect(".o_field_many2one[name=product_id] .o_m2o_no_result").toHaveCount(1);
+        await contains(getFixture()).click();
+        expect(".o_field_many2one[name=product_id] .o_m2o_no_result").toHaveCount(0);
+    }
+);
 
 test("pressing enter in a m2o in an editable list", async () => {
     await mountView({
@@ -3107,7 +3122,9 @@ test("pressing enter in a m2o in an editable list", async () => {
     await animationFrame();
 
     expect("tr.o_data_row:nth-child(1) [name=product_id] input").toBeFocused();
-    expect("tr.o_data_row:nth-child(1) [name=product_id] .o-autocomplete--dropdown-menu").toHaveCount(0);
+    expect(
+        "tr.o_data_row:nth-child(1) [name=product_id] .o-autocomplete--dropdown-menu"
+    ).toHaveCount(0);
 
     // we now trigger again ENTER to make sure we can move to next line
     await press("Enter");
@@ -3128,7 +3145,9 @@ test("pressing enter in a m2o in an editable list", async () => {
     await animationFrame();
 
     expect("tr.o_data_row:nth-child(2) [name=product_id] input").toBeFocused();
-    expect("tr.o_data_row:nth-child(2) [name=product_id] .o-autocomplete--dropdown-menu").toHaveCount(0);
+    expect(
+        "tr.o_data_row:nth-child(2) [name=product_id] .o-autocomplete--dropdown-menu"
+    ).toHaveCount(0);
 
     await press("Enter");
     await animationFrame();

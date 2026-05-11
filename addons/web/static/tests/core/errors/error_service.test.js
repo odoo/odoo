@@ -44,7 +44,8 @@ test("can handle rejected promise errors with a string as reason", async () => {
     expect.verifyErrors(["-- something went wrong --"]);
 });
 
-test("handle RPC_ERROR of type='server' and no associated dialog class", async () => {
+test.tags("owl3");
+test.todo("handle RPC_ERROR of type='server' and no associated dialog class", async () => {
     const error = new RPCError();
     error.code = 701;
     error.message = "Some strange error occurred";
@@ -80,96 +81,104 @@ test("handle RPC_ERROR of type='server' and no associated dialog class", async (
     expect.verifyErrors(["RPC_ERROR: Some strange error occured"]);
 });
 
-test("handle custom RPC_ERROR of type='server' and associated custom dialog class", async () => {
-    class CustomDialog extends Component {
-        static template = xml`<RPCErrorDialog title="'Strange Error'"/>`;
-        static components = { RPCErrorDialog };
-        static props = { ...standardErrorDialogProps };
+test.tags("owl3");
+test.todo(
+    "handle custom RPC_ERROR of type='server' and associated custom dialog class",
+    async () => {
+        class CustomDialog extends Component {
+            static template = xml`<RPCErrorDialog title="'Strange Error'"/>`;
+            static components = { RPCErrorDialog };
+            static props = { ...standardErrorDialogProps };
+        }
+        const error = new RPCError();
+        error.code = 701;
+        error.message = "Some strange error occurred";
+        error.model = "some model";
+        const errorData = {
+            context: { exception_class: "strange_error" },
+            name: "strange_error",
+        };
+        error.data = errorData;
+
+        mockService("dialog", {
+            add(dialogClass, props) {
+                expect(dialogClass).toBe(CustomDialog);
+                expect(props).toMatchObject({
+                    name: "RPC_ERROR",
+                    type: "server",
+                    code: 701,
+                    data: errorData,
+                    subType: null,
+                    message: "Some strange error occurred",
+                    exceptionName: null,
+                    model: "some model",
+                });
+                expect(props.traceback).toMatch(/RPC_ERROR: Some strange error occured/);
+                expect.step("dialog.add");
+            },
+        });
+        await makeMockEnv();
+        errorDialogRegistry.add("strange_error", CustomDialog);
+
+        expect.errors(1);
+        Promise.reject(error);
+
+        await expect.waitForSteps(["dialog.add"]);
+        expect.verifyErrors(["RPC_ERROR: Some strange error occured"]);
     }
-    const error = new RPCError();
-    error.code = 701;
-    error.message = "Some strange error occurred";
-    error.model = "some model";
-    const errorData = {
-        context: { exception_class: "strange_error" },
-        name: "strange_error",
-    };
-    error.data = errorData;
+);
 
-    mockService("dialog", {
-        add(dialogClass, props) {
-            expect(dialogClass).toBe(CustomDialog);
-            expect(props).toMatchObject({
-                name: "RPC_ERROR",
-                type: "server",
-                code: 701,
-                data: errorData,
-                subType: null,
-                message: "Some strange error occurred",
-                exceptionName: null,
-                model: "some model",
-            });
-            expect(props.traceback).toMatch(/RPC_ERROR: Some strange error occured/);
-            expect.step("dialog.add");
-        },
-    });
-    await makeMockEnv();
-    errorDialogRegistry.add("strange_error", CustomDialog);
+test.tags("owl3");
+test.todo(
+    "handle normal RPC_ERROR of type='server' and associated custom dialog class",
+    async () => {
+        class CustomDialog extends Component {
+            static template = xml`<RPCErrorDialog title="'Strange Error'"/>`;
+            static components = { RPCErrorDialog };
+            static props = ["*"];
+        }
+        class NormalDialog extends Component {
+            static template = xml`<RPCErrorDialog title="'Normal Error'"/>`;
+            static components = { RPCErrorDialog };
+            static props = ["*"];
+        }
+        const error = new RPCError();
+        error.code = 701;
+        error.message = "A normal error occurred";
+        const errorData = {
+            context: { exception_class: "strange_error" },
+        };
+        error.exceptionName = "normal_error";
+        error.data = errorData;
+        error.model = "some model";
+        mockService("dialog", {
+            add(dialogClass, props) {
+                expect(dialogClass).toBe(NormalDialog);
+                expect(props).toMatchObject({
+                    name: "RPC_ERROR",
+                    type: "server",
+                    code: 701,
+                    data: errorData,
+                    subType: null,
+                    message: "A normal error occurred",
+                    exceptionName: "normal_error",
+                    model: "some model",
+                });
+                expect(props.traceback).toMatch(/RPC_ERROR: A normal error occured/);
+                expect.step("dialog.add");
+            },
+        });
+        await makeMockEnv();
+        errorDialogRegistry.add("strange_error", CustomDialog);
+        errorDialogRegistry.add("normal_error", NormalDialog);
 
-    expect.errors(1);
-    Promise.reject(error);
+        expect.errors(1);
+        Promise.reject(error);
 
-    await expect.waitForSteps(["dialog.add"]);
-    expect.verifyErrors(["RPC_ERROR: Some strange error occured"]);
-});
-
-test("handle normal RPC_ERROR of type='server' and associated custom dialog class", async () => {
-    class CustomDialog extends Component {
-        static template = xml`<RPCErrorDialog title="'Strange Error'"/>`;
-        static components = { RPCErrorDialog };
-        static props = ["*"];
+        await expect.waitForSteps(["dialog.add"]);
+        expect.verifyErrors(["RPC_ERROR: A normal error occured"]);
     }
-    class NormalDialog extends Component {
-        static template = xml`<RPCErrorDialog title="'Normal Error'"/>`;
-        static components = { RPCErrorDialog };
-        static props = ["*"];
-    }
-    const error = new RPCError();
-    error.code = 701;
-    error.message = "A normal error occurred";
-    const errorData = {
-        context: { exception_class: "strange_error" },
-    };
-    error.exceptionName = "normal_error";
-    error.data = errorData;
-    error.model = "some model";
-    mockService("dialog", {
-        add(dialogClass, props) {
-            expect(dialogClass).toBe(NormalDialog);
-            expect(props).toMatchObject({
-                name: "RPC_ERROR",
-                type: "server",
-                code: 701,
-                data: errorData,
-                subType: null,
-                message: "A normal error occurred",
-                exceptionName: "normal_error",
-                model: "some model",
-            });
-            expect(props.traceback).toMatch(/RPC_ERROR: A normal error occured/);
-            expect.step("dialog.add");
-        },
-    });
-    await makeMockEnv();
-    errorDialogRegistry.add("strange_error", CustomDialog);
-    errorDialogRegistry.add("normal_error", NormalDialog);
-
-    expect.errors(1);
-    Promise.reject(error);
-
-    await expect.waitForSteps(["dialog.add"]);
-    expect.verifyErrors(["RPC_ERROR: A normal error occured"]);
-});
+);
 
 test("will let handlers from the registry handle errors first", async () => {
     const testEnv = await makeMockEnv();

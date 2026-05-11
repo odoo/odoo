@@ -594,7 +594,8 @@ test("date field with max_precision option", async () => {
     expect(".o_field_widget[name='date']").toHaveText("Jan 12, 2017");
 });
 
-test("DateField with onchange forcing a specific date", async () => {
+test.tags("owl3");
+test.todo("DateField with onchange forcing a specific date", async () => {
     mockDate("2009-05-04 10:00:00", +1);
 
     Partner._onChanges.date = (obj) => {

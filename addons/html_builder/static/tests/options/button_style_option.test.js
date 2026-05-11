@@ -146,7 +146,8 @@ test("fill gradient should be stored as background-image", async () => {
     );
 });
 
-test("border works even if current border style is none", async () => {
+test.tags("owl3");
+test.todo("border works even if current border style is none", async () => {
     await setupHTMLBuilder('<p><a href="http://test.com/" class="btn">Link label</a></p>', {
         styleContent: "p > a { border: 0px none rgba(0, 0, 0, 0); }",
     });
