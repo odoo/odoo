@@ -54,11 +54,7 @@
                 <t t-else="">
                     <t t-set="template_price_vals" t-value="get_product_prices(product)"/>
                     <div class="product_price" aria-label="Price information">
-                        <t t-set="hide_price" t-value="(
-                            not template_price_vals['price_reduce']
-                            and website.prevent_sale
-                            and website._prevent_product_sale(product, True)
-                        )"/>
+                        <t t-set="hide_price" t-value="website._prevent_product_sale(product, not template_price_vals['price_reduce'])"/>
                         <span
                             class="mb-0 fw-bold"
                             aria-label="Sale price"
@@ -247,9 +243,7 @@
                     <span class="o_label small ms-1">Add to Cart</span>
                 </button>
             </t>
-            <t t-elif="website.prevent_sale and website._prevent_product_sale(
-                product, not template_price_vals['price_reduce']
-            )">
+            <t t-elif="website._prevent_product_sale(product, not template_price_vals['price_reduce'])">
                 <a
                     title="Contact us"
                     aria-label="Contact us"

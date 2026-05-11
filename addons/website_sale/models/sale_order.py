@@ -9,7 +9,7 @@ from odoo import SUPERUSER_ID, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Command, Domain
 from odoo.http import request
-from odoo.tools import SQL, float_is_zero, float_round
+from odoo.tools import SQL, float_round
 
 from odoo.addons.website_sale.models.website import (
     FISCAL_POSITION_SESSION_CACHE_KEY,
@@ -920,7 +920,7 @@ class SaleOrder(models.Model):
                     for transaction in abandoned_sale_order.transaction_ids
                 )
                 and any(
-                    not float_is_zero(line.price_unit, precision_rounding=line.currency_id.rounding)
+                    not line.currency_id.is_zero(line.price_unit)
                     for line in abandoned_sale_order.order_line
                 )
                 and not has_later_sale_order.get(abandoned_sale_order.partner_id)

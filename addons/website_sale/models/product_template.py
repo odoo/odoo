@@ -9,7 +9,7 @@ from werkzeug import urls
 from odoo import api, fields, models
 from odoo.fields import Domain
 from odoo.http import request
-from odoo.tools import float_is_zero, float_round, is_html_empty, lazy
+from odoo.tools import float_round, is_html_empty, lazy
 from odoo.tools.sql import SQL, column_exists, create_column
 from odoo.tools.translate import adapt_translated_field_value, html_translate
 
@@ -860,12 +860,8 @@ class ProductTemplate(models.Model):
                     taxes=taxes,
                     website=website,
                 )
-        is_zero_price = float_is_zero(
-            combination_info["price"], precision_rounding=currency.rounding
-        )
-        prevent_sale = website.prevent_sale and website._prevent_product_sale(
-            product_or_template, is_zero_price
-        )
+        is_zero_price = currency.is_zero(combination_info["price"])
+        prevent_sale = website._prevent_product_sale(product_or_template, is_zero_price)
         combination_info.update({
             "prevent_sale": prevent_sale,
             "hide_price": prevent_sale and is_zero_price,

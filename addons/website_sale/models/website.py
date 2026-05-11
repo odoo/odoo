@@ -1100,6 +1100,9 @@ class Website(models.Model):
         :return: Whether selling the product online should be prevented.
         :rtype: boolean
         """
+        if not self.prevent_sale:
+            return False
+
         # If the sale of zero-priced products should be prevented.
         if self.prevent_sale_for == "zero_price":
             return is_zero_price_product
