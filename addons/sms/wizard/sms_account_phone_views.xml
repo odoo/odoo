@@ -18,4 +18,33 @@
             </form>
         </field>
     </record>
+
+    <record id="sms_account_phone_error_view_form" model="ir.ui.view">
+        <field name="name">sms.account.phone.error.view.form</field>
+        <field name="model">sms.account.phone.error</field>
+        <field name="arch" type="xml">
+            <form string="Country Not Supported">
+                <field name="phone_number" invisible="1"/>
+                <div class="mt-1">
+                    Oops! Our SMS provider doesn't reach 
+                    <field name="country_id" readonly="1" options="{'no_open': True}"/>.
+                    <br/>
+                    Check out Twilio to see if they cover it.
+                    <br/>
+                </div>
+                <div class="mt-3">
+                    <a href="https://www.odoo.com/documentation/latest/applications/marketing/sms_marketing/twilio.html" 
+                    target="_blank" 
+                    class="btn btn-link p-0 align-baseline" 
+                    role="button">
+                    Learn More
+                    </a>
+                </div>
+                <footer class="justify-content-center">
+                    <button string="Close" class="btn-primary" special="cancel" data-hotkey="z"/>
+                    <button string="Set up Twilio" name="action_setup_twilio" type="object" class="btn-secondary" data-hotkey="q"/>
+                </footer>
+            </form>
+        </field>
+    </record>
 </odoo>
