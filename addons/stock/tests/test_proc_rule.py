@@ -658,6 +658,28 @@ class TestProcRule(TransactionCase):
         stock_move._action_confirm()
         self.assertEqual(orderpoint.qty_to_order, 6)
 
+    def test_compute_qty_to_order_after_receipt_line_deletion(self):
+        """Test that deleting a confirmed incoming receipt move updates the orderpoint."""
+        self.product.is_storable = True
+        orderpoint = self.env['stock.warehouse.orderpoint'].create({
+            'name': 'Manual orderpoint',
+            'product_id': self.product.id,
+            'product_min_qty': 10,
+            'product_max_qty': 10,
+            'trigger': 'manual',
+        })
+        stock_move = self.env['stock.move'].create({
+            'product_id': self.product.id,
+            'product_uom': self.product.uom_id.id,
+            'product_uom_qty': 10,
+            'location_id': self.ref('stock.stock_location_suppliers'),
+            'location_dest_id': self.ref('stock.stock_location_stock'),
+        })
+        stock_move._action_confirm()
+        self.assertRecordValues(orderpoint, [{'qty_forecast': 10.0, 'qty_to_order': 0.0}])
+        stock_move.unlink()
+        self.assertRecordValues(orderpoint, [{'qty_forecast': 0.0, 'qty_to_order': 10.0}])
+
     def test_rule_help_message_mto_mtso(self):
         """Verify that the rule's help message correctly displays all relevant
         information when the procurement method is MTO or MTSO.
