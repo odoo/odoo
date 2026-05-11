@@ -4,6 +4,7 @@
 from unittest.mock import patch
 
 from odoo import Command, fields
+from odoo.exceptions import UserError
 from odoo.tests import Form, tagged
 from odoo.tools import float_is_zero
 
@@ -57,6 +58,7 @@ class TestSaleToInvoice(TestSaleCommon):
             "active_id": cls.sale_order.id,
             "default_journal_id": cls.company_data["default_journal_sale"].id,
         }
+        cls.InvoiceWizard = cls.env["sale.advance.payment.inv"].with_context(cls.context)
 
     def _check_order_search(self, orders, domain, expected_result):
         domain += [("id", "in", orders.ids)]
@@ -95,20 +97,13 @@ class TestSaleToInvoice(TestSaleCommon):
         self.sale_order.action_confirm()
         self._check_order_search(self.sale_order, [("invoice_ids", "=", False)], self.sale_order)
         # Let's do an invoice for a deposit of 100
-        downpayment = (
-            self
-            .env["sale.advance.payment.inv"]
-            .with_context(self.context)
-            .create({"advance_payment_method": "fixed", "fixed_amount": 50})
-        )
+        downpayment = self.InvoiceWizard.create({
+            "advance_payment_method": "fixed",
+            "fixed_amount": 50,
+        })
+        # Create two $50 invoices
         downpayment.create_invoices()
-        downpayment2 = (
-            self
-            .env["sale.advance.payment.inv"]
-            .with_context(self.context)
-            .create({"advance_payment_method": "fixed", "fixed_amount": 50})
-        )
-        downpayment2.create_invoices()
+        downpayment.create_invoices()
         self._check_order_search(
             self.sale_order, [("invoice_ids", "=", False)], self.env["sale.order"]
         )
@@ -126,8 +121,7 @@ class TestSaleToInvoice(TestSaleCommon):
         self.sol_prod_deliver.write({"qty_delivered": 2.0})
 
         # Let's do an invoice with refunds
-        payment = self.env["sale.advance.payment.inv"].with_context(self.context).create({})
-        payment.create_invoices()
+        self.InvoiceWizard.create({}).create_invoices()
 
         self.assertEqual(
             len(self.sale_order.invoice_ids), 3, "Invoice should be created for the SO"
@@ -177,12 +171,10 @@ class TestSaleToInvoice(TestSaleCommon):
         self.sale_order.action_confirm()
         self._check_order_search(self.sale_order, [("invoice_ids", "=", False)], self.sale_order)
         # Let's do an invoice for a deposit of 10%
-        downpayment = (
-            self
-            .env["sale.advance.payment.inv"]
-            .with_context(self.context)
-            .create({"advance_payment_method": "percentage", "amount": 10})
-        )
+        downpayment = self.InvoiceWizard.create({
+            "advance_payment_method": "percentage",
+            "amount": 10,
+        })
         downpayment.create_invoices()
         self._check_order_search(
             self.sale_order, [("invoice_ids", "=", False)], self.env["sale.order"]
@@ -333,12 +325,7 @@ class TestSaleToInvoice(TestSaleCommon):
         # Confirm the SO
         self.sale_order.action_confirm()
         # Let's do an invoice for a deposit of 100
-        payment = (
-            self
-            .env["sale.advance.payment.inv"]
-            .with_context(self.context)
-            .create({"advance_payment_method": "percentage", "amount": 50})
-        )
+        payment = self.InvoiceWizard.create({"advance_payment_method": "percentage", "amount": 50})
         payment.create_invoices()
 
         self.assertEqual(
@@ -380,13 +367,10 @@ class TestSaleToInvoice(TestSaleCommon):
         self.sale_order.action_confirm()
 
         # Create an invoice for a Down payment of 100
-        payment = (
-            self
-            .env["sale.advance.payment.inv"]
-            .with_context(self.context)
-            .create({"advance_payment_method": "fixed", "fixed_amount": 100})
-        )
-        payment.create_invoices()
+        self.InvoiceWizard.create({
+            "advance_payment_method": "fixed",
+            "fixed_amount": 100,
+        }).create_invoices()
 
         # Ensure the downpayment line on the sale order is correctly set to 100
         downpayment_line = self.sale_order.order_line.filtered(
@@ -471,12 +455,7 @@ class TestSaleToInvoice(TestSaleCommon):
         )
 
         # Let's do an invoice with invoiceable lines
-        payment = (
-            self
-            .env["sale.advance.payment.inv"]
-            .with_context(self.context)
-            .create({"advance_payment_method": "delivered"})
-        )
+        payment = self.InvoiceWizard.create({"advance_payment_method": "delivered"})
         self._check_order_search(self.sale_order, [("invoice_ids", "=", False)], self.sale_order)
         payment.create_invoices()
         self._check_order_search(
@@ -556,13 +535,7 @@ class TestSaleToInvoice(TestSaleCommon):
                 )
 
         # Let's do an invoice with invoiceable lines
-        payment = (
-            self
-            .env["sale.advance.payment.inv"]
-            .with_context(self.context)
-            .create({"advance_payment_method": "delivered"})
-        )
-        payment.create_invoices()
+        self.InvoiceWizard.create({"advance_payment_method": "delivered"}).create_invoices()
 
         invoice = self.sale_order.invoice_ids[0]
 
@@ -739,13 +712,7 @@ class TestSaleToInvoice(TestSaleCommon):
         Check that the operations behave well, if a custom module creates such a situation.
         """
         self.sale_order.action_confirm()
-        payment = (
-            self
-            .env["sale.advance.payment.inv"]
-            .with_context(self.context)
-            .create({"advance_payment_method": "delivered"})
-        )
-        payment.create_invoices()
+        self.InvoiceWizard.create({"advance_payment_method": "delivered"}).create_invoices()
 
         # create a second SO whose lines are linked to the same invoice lines
         # this is a way to create a situation where sale_line_ids has multiple items
@@ -792,22 +759,10 @@ class TestSaleToInvoice(TestSaleCommon):
 
         sol_prod_deliver.write({"qty_delivered": 5.0})
 
-        # Context
-        self.context = {
-            "active_model": "sale.order",
-            "active_ids": [sale_order.id],
-            "active_id": sale_order.id,
-            "default_journal_id": self.company_data["default_journal_sale"].id,
-        }
-
         # Let's do an invoice with invoiceable lines
-        payment = (
-            self
-            .env["sale.advance.payment.inv"]
-            .with_context(self.context)
-            .create({"advance_payment_method": "delivered"})
-        )
-        payment.create_invoices()
+        self.InvoiceWizard.with_context(
+            active_ids=[sale_order.id], active_id=sale_order.id
+        ).create({"advance_payment_method": "delivered"}).create_invoices()
 
         invoice = sale_order.invoice_ids[0]
 
@@ -878,22 +833,10 @@ class TestSaleToInvoice(TestSaleCommon):
             "Delivering the combo items lines should update the combo product line as well.",
         )
 
-        # Context
-        self.context = {
-            "active_model": "sale.order",
-            "active_ids": [sale_order.id],
-            "active_id": sale_order.id,
-            "default_journal_id": self.company_data["default_journal_sale"].id,
-        }
-
         # Let's do an invoice with invoiceable lines
-        payment = (
-            self
-            .env["sale.advance.payment.inv"]
-            .with_context(self.context)
-            .create({"advance_payment_method": "delivered"})
-        )
-        payment.create_invoices()
+        self.InvoiceWizard.with_context(
+            active_ids=[sale_order.id], active_id=sale_order.id
+        ).create({"advance_payment_method": "delivered"}).create_invoices()
 
         invoice = sale_order.invoice_ids[0]
 
@@ -964,13 +907,9 @@ class TestSaleToInvoice(TestSaleCommon):
         }
 
         # Let's do an invoice with invoiceable lines
-        invoicing_wizard = (
-            self
-            .env["sale.advance.payment.inv"]
-            .with_context(self.context)
-            .create({"advance_payment_method": "delivered"})
-        )
-        invoicing_wizard.create_invoices()
+        self.InvoiceWizard.with_context(
+            active_ids=[sale_order.id], active_id=sale_order.id
+        ).create({"advance_payment_method": "delivered"}).create_invoices()
 
         self.assertEqual(sol_prod_deliver.qty_invoiced, 5.0)
         # We would have to change the digits of the field to
@@ -2102,3 +2041,79 @@ class TestSaleToInvoice(TestSaleCommon):
         invoice = sale_order._create_invoices()
         invoice.line_ids[0].account_id = self.cash_rounding_a.profit_account_id
         self.assertEqual(invoice.line_ids[0].analytic_distribution, analytic_distribution_manual)
+
+    def test_invoice_overages_allowed_if_has_overages(self):
+        self.sale_order.action_confirm()
+        self.sol_serv_order.qty_delivered = 5  # Out of 3
+
+        wizard = self.InvoiceWizard.new({})
+
+        self.assertTrue(wizard.allow_invoice_overages)
+        self.assertTrue(wizard.invoice_overages, msg="Enabled by default if allowed")
+
+    def test_invoice_overages_not_allowed_if_not_has_overages(self):
+        self.sale_order.action_confirm()
+        self.sol_serv_order.qty_delivered = 3  # Out of 3
+
+        wizard = self.InvoiceWizard.new({})
+
+        self.assertFalse(wizard.allow_invoice_overages)
+        self.assertFalse(wizard.invoice_overages, msg="Disabled by default if not allowed")
+
+    def test_invoice_overages_with_zero_qty_invoiced(self):
+        self.sale_order.action_confirm()
+        self.sol_serv_order.qty_delivered = 5  # Out of 3
+
+        self.InvoiceWizard.create({"invoice_overages": True}).create_invoices()
+
+        self.assertEqual(self.sol_serv_order.qty_invoiced, 5)
+        self.assertEqual(self.sol_serv_order.invoice_lines.quantity, 5, msg="Ordered + overages")
+
+    def test_no_invoice_overages_with_zero_qty_invoiced(self):
+        self.sale_order.action_confirm()
+        self.sol_serv_order.qty_delivered = 5  # Out of 3
+
+        self.InvoiceWizard.create({"invoice_overages": False}).create_invoices()
+
+        self.assertEqual(self.sol_serv_order.qty_invoiced, 3)
+        self.assertEqual(self.sol_serv_order.invoice_lines.quantity, 3, msg="Ordered only")
+
+    def test_invoice_overages_with_ordered_qty_invoiced(self):
+        self.sale_order.action_confirm()
+        self.sol_serv_order.qty_delivered = 3  # Out of 3
+        self.InvoiceWizard.create({}).create_invoices()  # Invoice the ordered quantity
+        self.sol_serv_order.qty_delivered = 5  # Deliver more than ordered
+
+        self.InvoiceWizard.create({"invoice_overages": True}).create_invoices()
+
+        self.assertEqual(self.sol_serv_order.qty_invoiced, 5)
+        self.assertEqual(self.sol_serv_order.invoice_lines[-1].quantity, 2, msg="Overages only")
+
+    def test_no_invoice_overages_with_ordered_qty_invoiced_raises(self):
+        """Case where the ordered qty has already been invoiced, and the user tries to invoice again
+        without including overages."""
+        self.sale_order.action_confirm()
+        self.sol_serv_order.qty_delivered = 3  # Out of 3
+        self.InvoiceWizard.create({}).create_invoices()  # Invoice the ordered quantity
+        self.sol_serv_order.qty_delivered = 5  # Deliver more than ordered
+
+        with self.assertRaisesRegex(UserError, "No items are available to invoice."):
+            self.InvoiceWizard.create({"invoice_overages": False}).create_invoices()
+
+    def test_refound_overages(self):
+        self.sale_order.action_confirm()
+        self.sol_serv_order.qty_delivered = 5  # Out of 3
+        self.InvoiceWizard.create({"invoice_overages": True}).create_invoices()  # Invoice overages
+        # Rectify delivered quantity, such that qty_invoiced > product_uom_qty > qty_delivered
+        self.sol_serv_order.qty_delivered = 2  # Out of 3
+
+        self.InvoiceWizard.create({"invoice_overages": False}).create_invoices()  # Refound
+        invoice_line = self.sol_serv_order.invoice_lines[-1]
+
+        self.assertEqual(self.sol_serv_order.qty_invoiced, 3)
+        self.assertTrue(invoice_line.is_refund)
+        self.assertEqual(
+            invoice_line.quantity,
+            2,
+            msg="Refound overages only, the product is still invoiced on ordered.",
+        )

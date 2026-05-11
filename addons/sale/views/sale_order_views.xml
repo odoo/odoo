@@ -287,7 +287,7 @@
                     type="action"
                     class="btn-primary"
                     data-hotkey="q"
-                    invisible="invoice_status != 'to invoice'"/>
+                    invisible="invoice_status != 'to invoice' and not (has_overages and invoice_status == 'upselling')"/>
                 <button
                     string="Create Invoice"
                     id="create_invoice_percentage"
@@ -747,6 +747,7 @@
                                     string="Delivered"
                                     decoration-info="(not display_type and invoice_status == 'to invoice')"
                                     decoration-bf="(not display_type and invoice_status == 'to invoice')"
+                                    decoration-danger="qty_overage and qty_delivered &gt; qty_invoiced"
                                     column_invisible="parent.state != 'sale'"
                                     readonly="qty_delivered_method != 'manual' or is_downpayment"
                                     optional="show"/>

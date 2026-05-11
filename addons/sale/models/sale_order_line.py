@@ -290,6 +290,7 @@ class SaleOrderLine(models.Model):
     qty_delivered_percent = fields.Float(
         string="% Delivered", compute="_compute_qty_delivered_percent", readonly=False
     )
+    qty_overage = fields.Float(compute="_compute_qty_overage", digits="Product Unit")
 
     # Analytic & Invoicing fields
     qty_invoiced = fields.Float(
@@ -1120,6 +1121,15 @@ class SaleOrderLine(models.Model):
 
         return result
 
+    @api.depends("product_id", "product_uom_qty", "qty_delivered")
+    def _compute_qty_overage(self):
+        for line in self:
+            product = line.product_id
+            if product.type == "service" and product.invoice_policy == "order":
+                line.qty_overage = max(line.qty_delivered - line.product_uom_qty, 0)
+            else:
+                line.qty_overage = 0
+
     @api.depends("invoice_lines.move_id.state", "invoice_lines.quantity")
     def _compute_qty_invoiced(self):
         """Compute the invoiced quantity invoiced.
@@ -1196,7 +1206,9 @@ class SaleOrderLine(models.Model):
         return self.invoice_lines
 
     # no trigger product_id.invoice_policy to avoid retroactively changing SO
-    @api.depends("qty_invoiced", "qty_delivered", "product_uom_qty", "state")
+    @api.depends(
+        "qty_invoiced", "qty_delivered", "product_uom_qty", "state", "order_id.invoice_overages"
+    )
     def _compute_qty_to_invoice(self):
         """
         Compute the quantity to invoice. If the invoice policy is order, the quantity to invoice is
@@ -1209,7 +1221,9 @@ class SaleOrderLine(models.Model):
             if line.state == "sale" and not line.display_type:
                 if line.product_id.type == "combo":
                     combo_lines.add(line)
-                elif line.product_id.invoice_policy == "order":
+                elif line.product_id.invoice_policy == "order" and not (
+                    line.qty_overage and line.order_id.invoice_overages
+                ):
                     line.qty_to_invoice = line.product_uom_qty - line.qty_invoiced
                 else:
                     line.qty_to_invoice = line.qty_delivered - line.qty_invoiced
@@ -1255,6 +1269,7 @@ class SaleOrderLine(models.Model):
                     line.qty_delivered, line.product_uom_qty, precision_digits=precision
                 )
                 == 1
+                and not (line.qty_overage and line.order_id.invoice_overages)
             ):
                 line.invoice_status = "upselling"
             elif (

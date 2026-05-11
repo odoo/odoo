@@ -28,6 +28,11 @@ class SaleAdvancePaymentInv(models.TransientModel):
         "sale.order", default=lambda self: self.env.context.get("active_ids")
     )
 
+    allow_invoice_overages = fields.Boolean(compute="_compute_allow_invoice_overages")
+    invoice_overages = fields.Boolean(
+        compute="_compute_invoice_overages", inverse="_inverse_invoice_overages"
+    )
+
     # Down Payment logic
     has_down_payments = fields.Boolean(
         string="Has down payments", compute="_compute_has_down_payments"
@@ -68,6 +73,20 @@ class SaleAdvancePaymentInv(models.TransientModel):
     def _compute_count(self):
         for wizard in self:
             wizard.count = len(wizard.sale_order_ids)
+
+    def _compute_allow_invoice_overages(self):
+        for wizard in self:
+            wizard.allow_invoice_overages = any(
+                order.has_overages for order in wizard.sale_order_ids
+            )
+
+    def _compute_invoice_overages(self):
+        for wizard in self:
+            wizard.invoice_overages = wizard.allow_invoice_overages
+
+    def _inverse_invoice_overages(self):
+        for wizard in self:
+            wizard.sale_order_ids.invoice_overages = wizard.invoice_overages
 
     @api.depends("sale_order_ids")
     def _compute_has_down_payments(self):

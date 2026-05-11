@@ -461,6 +461,9 @@ class SaleOrder(models.Model):
     terms_type = fields.Selection(related="company_id.terms_type")
     type_name = fields.Char(string="Type Name", compute="_compute_type_name")
 
+    has_overages = fields.Boolean(compute="_compute_has_overages")
+    invoice_overages = fields.Boolean()
+
     # Remaining ux fields (not computed, not stored)
 
     has_active_pricelist = fields.Boolean(compute="_compute_has_active_pricelist")
@@ -1153,6 +1156,11 @@ class SaleOrder(models.Model):
     def _compute_delivery_date(self):
         for order in self:
             order.delivery_date = order.commitment_date or order.expected_date
+
+    @api.depends("order_line.qty_overage")
+    def _compute_has_overages(self):
+        for order in self:
+            order.has_overages = any(line.qty_overage for line in order.order_line)
 
     # === CONSTRAINT METHODS ===#
 
