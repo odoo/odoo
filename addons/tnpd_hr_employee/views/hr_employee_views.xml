@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    TNPD Prison HR Employee Extension — Form View Inheritance
+    Inherits the standard employee form (hr.view_employee_form) and appends
+    a dedicated "TNPD Prison Information" notebook page.  No existing pages
+    or fields are modified or removed.
+-->
+<odoo>
+<data>
+
+    <record id="tnpd_hr_employee_view_form_inherit" model="ir.ui.view">
+        <field name="name">tnpd.hr.employee.form.inherit</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+
+            <!--
+                Append a new notebook page after all existing pages.
+                Position "inside" on //notebook adds the page as the last tab.
+            -->
+            <xpath expr="//notebook" position="inside">
+
+                <page name="tnpd_prison_info"
+                      string="TNPD Prison Information"
+                      groups="hr.group_hr_user">
+
+                    <!-- ═══════════════════════════════════════════════════
+                         1. SERVICE IDENTIFICATION
+                         Core service identifiers and key dates.
+                    ════════════════════════════════════════════════════ -->
+                    <group string="Service Identification">
+                        <group>
+                            <!-- Gender and DOB are provided by core; display
+                                 them here for quick reference. -->
+                            <field name="sex" string="Gender"/>
+                            <field name="birthday" string="Date of Birth"/>
+                            <field name="x_designation"/>
+                            <field name="x_employee_code"/>
+                            <field name="x_cps_no"/>
+                            <field name="x_gpf_no"/>
+                        </group>
+                        <group>
+                            <field name="x_cug_mobile"/>
+                            <field name="x_date_of_appointment"/>
+                            <field name="x_date_of_retirement"/>
+                            <field name="x_panel_year_sl_no"/>
+                        </group>
+                    </group>
+
+                    <!-- ═══════════════════════════════════════════════════
+                         2. PERMANENT ADDRESS
+                         Residential address details of the employee.
+                    ════════════════════════════════════════════════════ -->
+                    <group string="Permanent Address">
+                        <group colspan="2">
+                            <field name="x_permanent_address"
+                                   nolabel="1"
+                                   placeholder="Door No., Street, Area..."
+                                   colspan="2"/>
+                        </group>
+                        <group>
+                            <field name="x_town"/>
+                            <field name="x_taluk"/>
+                        </group>
+                        <group>
+                            <field name="x_native_district"/>
+                        </group>
+                    </group>
+
+                    <!-- ═══════════════════════════════════════════════════
+                         3. DEMOGRAPHIC INFORMATION
+                         Religion, community, caste, language, education.
+                    ════════════════════════════════════════════════════ -->
+                    <group string="Demographic Information">
+                        <group>
+                            <field name="x_religion"/>
+                            <field name="x_community"/>
+                            <field name="x_caste"/>
+                        </group>
+                        <group>
+                            <field name="x_mother_tongue"/>
+                            <field name="x_education_qualification"
+                                   placeholder="e.g. B.Sc., MCA — Institution — Year"/>
+                        </group>
+                    </group>
+
+                    <!-- ═══════════════════════════════════════════════════
+                         4. PRESENT STATION
+                         Current posting details.
+                    ════════════════════════════════════════════════════ -->
+                    <group string="Present Station">
+                        <group>
+                            <field name="x_date_present_station"/>
+                            <field name="x_central_prison"
+                                   placeholder="e.g. Central Prison, Chennai"/>
+                        </group>
+                        <group>
+                            <field name="x_district_jail"
+                                   placeholder="e.g. District Jail, Coimbatore"/>
+                            <field name="x_sub_jail"
+                                   placeholder="e.g. Sub Jail, Pollachi"/>
+                        </group>
+                    </group>
+
+                    <!-- ═══════════════════════════════════════════════════
+                         5. DISCIPLINARY RECORD
+                         Pending actions and minor punishment history.
+                    ════════════════════════════════════════════════════ -->
+                    <group string="Disciplinary Record">
+                        <group>
+                            <field name="x_disciplinary_action_pending"/>
+                        </group>
+                        <group/>
+                        <group colspan="2">
+                            <field name="x_disciplinary_action_details"
+                                   invisible="not x_disciplinary_action_pending"
+                                   placeholder="Case reference, charges, current status..."
+                                   colspan="2"
+                                   nolabel="1"/>
+                        </group>
+                        <group string="Minor Punishments" colspan="2">
+                            <field name="x_minor_punishment_details"
+                                   nolabel="1"
+                                   placeholder="Date | Authority | Charge | Punishment awarded"
+                                   colspan="2"/>
+                        </group>
+                    </group>
+
+                    <!-- ═══════════════════════════════════════════════════
+                         6. SERVICE HISTORY
+                         Full posting history throughout service.
+                    ════════════════════════════════════════════════════ -->
+                    <group string="Service History">
+                        <field name="x_service_history"
+                               nolabel="1"
+                               placeholder="Station / Unit / Seat | Date of Joining | Date of Relief"
+                               colspan="2"/>
+                    </group>
+
+                    <!-- ═══════════════════════════════════════════════════
+                         7. ACHIEVEMENTS & RECOGNITION
+                         Medals and rewards.
+                    ════════════════════════════════════════════════════ -->
+                    <group string="Achievements and Recognition">
+                        <group string="Medals">
+                            <field name="x_medals"
+                                   nolabel="1"
+                                   placeholder="Medal name | Date | Awarded by"
+                                   colspan="2"/>
+                        </group>
+                        <group string="Rewards">
+                            <field name="x_rewards"
+                                   nolabel="1"
+                                   placeholder="Reward / Commendation | Date | Authority"
+                                   colspan="2"/>
+                        </group>
+                    </group>
+
+                    <!-- ═══════════════════════════════════════════════════
+                         8. FAMILY & MISCELLANEOUS
+                         Spouse employment details and general remarks.
+                    ════════════════════════════════════════════════════ -->
+                    <group string="Family and Miscellaneous">
+                        <group string="Spouse Employment">
+                            <field name="x_spouse_employment"
+                                   nolabel="1"
+                                   placeholder="Name | Employer | Designation | Place of Posting"
+                                   colspan="2"/>
+                        </group>
+                        <group string="Remarks">
+                            <field name="x_remarks"
+                                   nolabel="1"
+                                   placeholder="Administrative notes..."
+                                   colspan="2"/>
+                        </group>
+                    </group>
+
+                </page>
+            </xpath>
+
+        </field>
+    </record>
+
+</data>
+</odoo>
