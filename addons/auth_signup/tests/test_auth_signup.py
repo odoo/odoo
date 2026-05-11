@@ -67,6 +67,31 @@ class TestAuthSignupFlow(HttpCaseWithUserPortal, HttpCaseWithUserDemo):
             mail = self.env['mail.message'].search([('message_type', '=', 'email_outgoing'), ('model', '=', 'res.users'), ('res_id', '=', new_user.id)], limit=1)
             self.assertTrue(mail, "The new user must be informed of his registration")
 
+    def test_free_signup_case_insensitive_email(self):
+        """ Signing up with a case variant of an existing user's email is rejected. """
+        self._activate_free_signup()
+        url = self._get_free_signup_url()
+
+        def _signup(login, name):
+            self.authenticate(None, None)
+            return self.url_open(url, data={
+                'login': login,
+                'name': name,
+                'password': 'mypassword',
+                'confirm_password': 'mypassword',
+                'csrf_token': http.Request.csrf_token(self),
+            })
+
+        with patch.object(odoo.addons.mail.models.mail_mail.MailMail, 'unlink', lambda self: None), \
+                self.patch_captcha_signup():
+            _signup('TwinCase@example.com', 'Twin')
+            response = _signup('twincase@EXAMPLE.com', 'Twin Bis')
+
+        users = self.env['res.users'].with_context(active_test=False).search(
+            [('login', '=ilike', 'twincase@example.com')])
+        self.assertEqual(len(users), 1, "Case-variant signup must not create a second user.")
+        self.assertIn("Another user is already registered using this email address.", response.text)
+
     def test_compute_signup_url(self):
         user = self.user_demo
         user.group_ids -= self.env.ref('base.group_partner_manager')
