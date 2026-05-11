@@ -7,6 +7,7 @@
     'depends': ['point_of_sale', 'account_payment'],
     'data': [
         'views/res_config_settings_views.xml',
+        'security/ir.model.access.csv',
         'views/payment_transaction_views.xml',
         'views/pos_payment_views.xml',
         'views/pos_payment_method_views.xml',
