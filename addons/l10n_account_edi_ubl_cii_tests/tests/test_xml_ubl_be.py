@@ -269,7 +269,7 @@ class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
             'name': "Buyer",
             'email': "buyer@yahoo.com",
             'phone': "1111",
-            'vat': "BE980737405",
+            'vat': "BE0980737405",
         }
         # assert there is no matching partner
         partner_match = self.env['res.partner']._retrieve_partner(**partner_vals)

@@ -250,11 +250,6 @@ class AccountMove(models.Model):
         if tree.tag == '{urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100}CrossIndustryInvoice':
             return self.env['account.edi.xml.cii']
         ubl_version = tree.find('{*}UBLVersionID')
-        if ubl_version is not None:
-            if ubl_version.text == '2.0':
-                return self.env['account.edi.xml.ubl_20']
-            if ubl_version.text in ('2.1', '2.2', '2.3'):
-                return self.env['account.edi.xml.ubl_21']
         if customization_id is not None and customization_id.text:
             if 'xrechnung' in customization_id.text:
                 return self.env['account.edi.xml.ubl_de']
@@ -266,6 +261,11 @@ class AccountMove(models.Model):
                 return self.env['account.edi.xml.ubl_sg']
             if 'urn:cen.eu:en16931:2017' in customization_id.text:
                 return self.env['account.edi.xml.ubl_bis3']
+        if ubl_version is not None:
+            if ubl_version.text == '2.0':
+                return self.env['account.edi.xml.ubl_20']
+            if ubl_version.text in ('2.1', '2.2', '2.3'):
+                return self.env['account.edi.xml.ubl_21']
 
     @api.model
     def _ubl_parse_attached_document(self, tree):

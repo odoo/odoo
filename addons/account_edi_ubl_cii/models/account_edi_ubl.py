@@ -2753,6 +2753,8 @@ class AccountEdiUBL(models.AbstractModel):
             tax_values_list=tax_values_list,
         )
 
+        self._import_ubl_invoice_ensure_same_country(collected_values, tax_values_list)
+
         # Taxes at the document line level.
         for line_collected_values in lines_collected_values:
             to_write = line_collected_values['to_write']
@@ -2788,6 +2790,17 @@ class AccountEdiUBL(models.AbstractModel):
                     "Could not retrieve the tax: %s for the document level allowance/charge.",
                     tax_values['amount'],
                 ))
+
+    def _import_ubl_invoice_ensure_same_country(self, collected_values, tax_values_list):
+        country_ids = set()
+        for tv in tax_values_list:
+            if (tax := tv.get('tax')) and tax.country_id:
+                country_ids.add(tax.country_id.id)
+                if len(country_ids) > 1:
+                    for tv in tax_values_list:
+                        tv['tax'] = None
+                    collected_values['logs'].append(_("Taxes cannot be determined automatically, please check them manually."))
+                    return
 
     def _import_ubl_invoice_get_default_base_line_kwargs(self, collected_values):
         invoice = collected_values['invoice']
