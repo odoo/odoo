@@ -175,6 +175,8 @@ test("Show notification when joining a channel that already received help", asyn
     await contains(".o-livechat-LivechatStatusSelection .active", { text: "Looking for help" });
     await click("button[name='join-channel']");
     expect.waitForSteps(["warning - Someone has already joined this conversation"]);
+    await click("[title='Chat Actions']");
+    await contains(".o-dropdown-item:text('Hide')");
 });
 
 test("Hide 'help already received' notification when channel is not visible", async () => {

@@ -94,7 +94,7 @@ const discussChannelPatch = {
     /** @override */
     _computeCanHide() {
         if (this.channel_type === "livechat") {
-            return false;
+            return this.isLocallyPinned && !this.self_member_id;
         }
         return super._computeCanHide(...arguments);
     },
