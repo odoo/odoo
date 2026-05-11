@@ -842,6 +842,8 @@ class AccountMoveLine(models.Model):
         are making this too complex and expensive to compute.
         """
         def _get_domain_information(domain):
+            allowed_display_types = {'line_section', 'line_subsection', 'line_note'}
+            display_types = set(self.env['account.move.line']._fields['display_type']._selection)
             account_id = None
             parent_state_domain = []
             for domain_element in domain:
@@ -861,10 +863,21 @@ class AccountMoveLine(models.Model):
                         continue
                     # Ignore date and display_type filters as they do not impact the cumulated balance
                     if (
-                        (field == 'date' and operator in ('>=', '<=', '=', '>', '<'))
-                        or (
-                            field == 'display_type' and operator == 'not in' and isinstance(value, (set, list, tuple))
-                            and len(set(value) - {'line_section', 'line_subsection', 'line_note'}) == 0
+                        (
+                            field == 'date'
+                            and operator in ('>=', '<=', '=', '>', '<')
+                        ) or (
+                            field == 'display_type'
+                            and isinstance(value, (set, list, tuple))
+                            and (
+                                (
+                                    operator == 'not in'
+                                    and len(set(value) - allowed_display_types) == 0
+                                ) or (
+                                    operator == 'in'
+                                    and len(set(value) - (display_types - allowed_display_types)) == 0
+                                )
+                            )
                         )
                     ):
                         continue
