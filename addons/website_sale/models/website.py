@@ -322,7 +322,7 @@ class Website(models.Model):
 
     def get_cta_data(self, website_purpose, website_type):
         cta_data = super().get_cta_data(website_purpose, website_type)
-        cta_data['shop_btn_href'] = '/shop'
+        cta_data["shop_btn_href"] = "/shop"
         return cta_data
 
     @api.model
@@ -918,7 +918,9 @@ class Website(models.Model):
         if not self.has_ecommerce_access():
             return result
         if search_type in ["products", "product_public_category", "all"]:
-            result.append(self.env["product.public.category"]._search_get_detail(self, order, options))
+            result.append(
+                self.env["product.public.category"]._search_get_detail(self, order, options)
+            )
         if search_type in ["products", "product_template", "all"]:
             result.append(self.env["product.template"]._search_get_detail(self, order, options))
         return result
@@ -1099,6 +1101,9 @@ class Website(models.Model):
         :return: Whether selling the product online should be prevented.
         :rtype: boolean
         """
+        if not self.prevent_sale:
+            return False
+
         # If the sale of zero-priced products should be prevented.
         if self.prevent_sale_for == "zero_price":
             return is_zero_price_product

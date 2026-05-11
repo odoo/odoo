@@ -1,7 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.http import request, route
-from odoo.tools import float_is_zero
 
 from odoo.addons.sale.controllers.product_configurator import SaleProductConfiguratorController
 from odoo.addons.website_sale.controllers.main import WebsiteSale
@@ -129,12 +128,9 @@ class WebsiteSaleProductConfiguratorController(SaleProductConfiguratorController
         )
 
         if request.is_frontend:
-            has_zero_price = float_is_zero(
-                basic_product_information["price"], precision_rounding=currency.rounding
-            )
-            basic_product_information["can_be_sold"] = not (
-                request.website.prevent_sale
-                and request.website._prevent_product_sale(product_or_template, has_zero_price)
+            has_zero_price = currency.is_zero(basic_product_information["price"])
+            basic_product_information["can_be_sold"] = not request.website._prevent_product_sale(
+                product_or_template, has_zero_price
             )
             # Don't compute the strikethrough price if there's a custom price (i.e. if `price_info`
             # is populated).
