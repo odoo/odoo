@@ -79,12 +79,14 @@
 
 <t t-name="mail.Thread.loadingError">
     <div class="d-flex flex-grow-1 align-items-center justify-content-center flex-column">
+        <span class="fs-1">😔</span>
         <div class="o-mail-Thread-error">
-            An error occurred while fetching messages.
+            An error occurred while loading messages.
         </div>
         <span t-if="this.props.thread.hasLoadingFailedError" class="o-xsmaller text-muted" t-out="window.String(this.props.thread.hasLoadingFailedError)"/>
         <button class="btn btn-link" t-on-click="this.onClickLoadOlder">
-            Click here to retry
+            <i class="fa fa-refresh"/>
+            Try again
         </button>
     </div>
 </t>
