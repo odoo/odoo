@@ -11,6 +11,8 @@ import { removeStyle } from "@html_editor/utils/dom";
 /**
  * @typedef {CSSSelector[]} move_node_blacklist_selectors
  * @typedef {CSSSelector[]} move_node_whitelist_selectors
+ * @typedef {((position: {top:number, left:number}, movableElement: HTMLElement)
+ *   => {top:number, left:number})[]} move_widget_position_processors
  * @typedef {((movableElement: HTMLElement) => void)[]} on_movable_element_set_handlers
  * @typedef {(() => void)[]} on_will_unset_movable_element_handlers
  */
@@ -44,10 +46,10 @@ export class MoveNodePlugin extends Plugin {
 
         this.elementHookMap = new Map();
 
-        this.addDomListener(this.editable, "mousemove", this.onMousemove, true);
+        this.addDomListener(this.editable, "mousemove", this.onMousemove, true, true);
         this.addDomListener(this.editable, "touchmove", this.onMousemove, true);
         this.addDomListener(this.document, "keydown", this.onDocumentKeydown, true);
-        this.addDomListener(this.document, "mousemove", this.onDocumentMousemove, true);
+        this.addDomListener(this.document, "mousemove", this.onDocumentMousemove, true, true);
         this.addDomListener(this.document, "touchmove", this.onDocumentMousemove, true);
 
         // This container help to add zone into which the mouse can activate the move widget.
@@ -293,10 +295,19 @@ export class MoveNodePlugin extends Plugin {
             moveWidgetOffsetTop = parseInt(style.marginTop, 10) || 0;
         }
 
+        const moveWidgetPosition = this.processThrough(
+            "move_widget_position_processors",
+            {
+                top: anchorY - containerRect.y - moveWidgetOffsetTop,
+                left: moveWidgetLeftPos - containerRect.x,
+            },
+            movableElement
+        );
+
         this.moveWidget.style.width = `${WIDGET_MOVE_SIZE}px`;
         this.moveWidget.style.height = `${WIDGET_MOVE_SIZE}px`;
-        this.moveWidget.style.top = `${anchorY - containerRect.y - moveWidgetOffsetTop}px`;
-        this.moveWidget.style.left = `${moveWidgetLeftPos - containerRect.x}px`;
+        this.moveWidget.style.top = `${moveWidgetPosition.top}px`;
+        this.moveWidget.style.left = `${moveWidgetPosition.left}px`;
         this.moveWidget.dataset.tooltipTemplate = `html_editor.MoveNodePluginTooltip`;
         this.addDomListener(this.moveWidget, "click", () => {
             const isNodeContentEditable = isContentEditable(movableElement);

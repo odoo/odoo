@@ -43,7 +43,7 @@ declare module "plugins" {
     import { ImagePostProcessShared, on_image_updated_handlers, on_image_processed_handlers, on_will_process_image_handlers } from "@html_editor/main/media/image_post_process_plugin";
     import { closest_savable_providers, ImageSaveShared, on_image_saved_handlers } from "@html_editor/main/media/image_save_plugin";
     import { media_dialog_extra_tabs, MediaShared, on_media_added_handlers, on_media_dialog_saved_handlers, on_will_save_media_dialog_handlers, on_media_replaced_handlers } from "@html_editor/main/media/media_plugin";
-    import { move_node_blacklist_selectors, move_node_whitelist_selectors, on_movable_element_set_handlers, on_will_unset_movable_element_handlers } from "@html_editor/main/movenode_plugin";
+    import { move_node_blacklist_selectors, move_node_whitelist_selectors, move_widget_position_processors, on_movable_element_set_handlers, on_will_unset_movable_element_handlers } from "@html_editor/main/movenode_plugin";
     import { on_layout_geometry_change_handlers } from "@html_editor/main/position_plugin";
     import { power_buttons, should_show_power_buttons_predicates } from "@html_editor/main/power_buttons_plugin";
     import { powerbox_blacklist_selectors, powerbox_categories, powerbox_items, PowerboxShared } from "@html_editor/main/powerbox/powerbox_plugin";
@@ -246,6 +246,7 @@ declare module "plugins" {
         clipboard_content_processors: clipboard_content_processors;
         clipboard_text_processors: clipboard_text_processors;
         deselect_custom_selected_nodes_processors: deselect_custom_selected_nodes_processors;
+        move_widget_position_processors: move_widget_position_processors;
         node_to_insert_processors: node_to_insert_processors;
         normalize_processors: normalize_processors;
         pending_history_commit_data_processors: pending_history_commit_data_processors;
