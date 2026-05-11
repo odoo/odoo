@@ -938,7 +938,7 @@
     </record>
 
     <function model="hr.work.entry.type" name="write">
-        <value model="hr.work.entry.type" eval="obj().sudo().search([('code', 'in', ['LEAVE100', 'LEAVE105', 'WORK110', 'LEAVE90', 'LEAVE110', 'LEAVE120', 'OUT'])]).ids"/>
+        <value model="hr.work.entry.type" eval="obj().sudo().search([('code', 'in', ['LEAVE100', 'LEAVE105', 'WORK110', 'LEAVE90', 'LEAVE110', 'LEAVE120'])]).ids"/>
         <value eval="{'request_unit': 'half_day'}"/>
     </function>
 
