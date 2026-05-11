@@ -1174,9 +1174,6 @@ class AccountAccount(models.Model):
         }
 
     def action_validate_opening_move(self):
-        if self.env.context.get('company_id') != self.env.company.id:
-            raise UserError(self.env._("You are attempting to validate opening entries belonging to another company. Please switch to the correct company."))
-
         opening_move = self.env.company.account_opening_move_id
         if not opening_move:
             raise UserError(self.env._("Even magicians can't post nothing!"))
