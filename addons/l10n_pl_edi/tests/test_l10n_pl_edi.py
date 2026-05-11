@@ -88,6 +88,7 @@ class TestL10nPlEdi(AccountTestInvoicingCommon, CronMixinCase):
                     'price_unit': 1000.0,
                 })
             ],
+            'ref': '12345',
         })
 
     def _get_xml_value(self, xml_content, xpath):
