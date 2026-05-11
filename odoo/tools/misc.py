@@ -1097,7 +1097,15 @@ class OrderedSet(MutableSet[T], typing.Generic[T]):
         return reduce(OrderedSet.__and__, others, self)
 
     def copy(self):
-        return self.__class__(self)
+        """Return a shallow copy of the ordered set.
+
+        Copy the underlying mapping directly instead of rebuilding the set
+        from iteration. Iterating over weakref-backed collections may trigger
+        cleanup callbacks mutating the collection during traversal.
+        """
+        copied_set = self.__class__()
+        copied_set._map = self._map.copy()
+        return copied_set
 
 
 class LastOrderedSet(OrderedSet[T], typing.Generic[T]):
