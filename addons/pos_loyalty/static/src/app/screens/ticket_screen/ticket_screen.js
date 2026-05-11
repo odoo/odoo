@@ -54,4 +54,17 @@ patch(TicketScreen.prototype, {
                 program.trigger_product_ids.map((p) => p.id).includes(orderline.product_id.id)
         );
     },
+    onClickOrderline(orderline) {
+        if (
+            this.getSelectedOrder()?.finalized &&
+            this.getSelectedOrderlineId() == orderline.id &&
+            this._isEWalletGiftCard(orderline)
+        ) {
+            {
+                this._showNotAllowedRefundNotification();
+                return;
+            }
+        }
+        return super.onClickOrderline(...arguments);
+    },
 });
