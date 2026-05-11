@@ -91,7 +91,8 @@ class TestOrmPartnerCategory(models.Model):
     _name = 'test_orm.partner.category'
     _description = 'Test ORM Partner Category'
 
-    name = fields.Char(required=True)
+    name = fields.Char(required=True, translate=True)
+    active = fields.Boolean(default=True)
     parent_id = fields.Many2one('test_orm.partner.category')
     child_ids = fields.One2many('test_orm.partner.category', 'parent_id')
     partner_ids = fields.Many2many('test_orm.partner', column1='category_id', column2='partner_id')
