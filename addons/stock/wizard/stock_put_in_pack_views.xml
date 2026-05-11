@@ -5,6 +5,9 @@
         <field name="model">stock.put.in.pack</field>
         <field name="arch" type="xml">
             <form string="Put in Pack">
+                <!-- Required for weight onchange -->
+                <field name="move_line_ids" invisible="1"/>
+                <field name="package_ids" invisible="1" />
                 <group>
                     <field name="package_type_id" placeholder="Select a Package Type" options="{'no_create': True}"/>
                     <field name="result_package_id"
