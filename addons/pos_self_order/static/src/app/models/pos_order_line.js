@@ -3,7 +3,7 @@ import { patch } from "@web/core/utils/patch";
 
 patch(PosOrderline.prototype, {
     get changes() {
-        const change = this.order_id.uiState.lineChanges[this.uuid];
+        const change = this.order_id?.uiState.lineChanges[this.uuid];
 
         if (!change) {
             return {
