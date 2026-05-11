@@ -1193,7 +1193,7 @@ class AccountMove(models.Model):
             'amount_total': amount_total,
         }
 
-    def _l10n_it_edi_get_partner_info(self, node):
+    def _l10n_it_edi_get_partner_info(self, node, is_simplified=False):
         """ Map the XML partner data to dict from one of the nodes:
             - CedentePrestatore (seller)
             - CessionarioCommittente (buyer)
@@ -1212,7 +1212,8 @@ class AccountMove(models.Model):
                 - the Codice Fiscale looks like 01234567890
             we also set it as VAT number
         """
-        personal_data_node = node.xpath('./DatiAnagrafici/Anagrafica')[0]
+        # Simplified invoice has a different structure
+        personal_data_node = node.xpath('.//Anagrafica')[0] if not is_simplified else node
 
         # name
         company_name = get_text(personal_data_node, './Denominazione')
@@ -1220,19 +1221,13 @@ class AccountMove(models.Model):
         last_name = get_text(personal_data_node, './Cognome')
         name = company_name or f"{last_name} {first_name}"
 
-        # address
-        address_node = node.xpath('./Sede')[0]  # it is mandatory
-        address = get_text(address_node, './Indirizzo')
-        address_no = get_text(address_node, './NumeroCivico')
-        full_address = f"{address} {address_no}".rstrip()
-
         # country_code, VAT and codice_fiscale
-        codice_fiscale = get_text(node, './DatiAnagrafici/CodiceFiscale') or False
-        vat_no_prefix = get_text(node, './DatiAnagrafici/IdFiscaleIVA/IdCodice') or False
+        codice_fiscale = get_text(node, './/CodiceFiscale') or False
+        vat_no_prefix = get_text(node, './/IdFiscaleIVA/IdCodice') or False
         is_company = True
         if vat_no_prefix:
             # Take country from VAT node
-            country_code = get_text(node, './DatiAnagrafici/IdFiscaleIVA/IdPaese').upper()
+            country_code = get_text(node, './/IdFiscaleIVA/IdPaese').upper()
         else:
             # Take country from address, that's a mandatory field
             country_code = get_text(node, './Sede/Nazione').upper()
@@ -1244,13 +1239,23 @@ class AccountMove(models.Model):
                     if iva.is_valid(codice_fiscale):
                         vat_no_prefix = codice_fiscale
 
-        return {
-            'postal_address': {
-                'country_code': country_code,
+        # address
+        postal_address = {'country_code': country_code}
+        if not is_simplified:
+            # Simplified invoice has no address tag
+            address_node = node.xpath('./Sede')[0]
+            address = get_text(address_node, './Indirizzo')
+            address_no = get_text(address_node, './NumeroCivico')
+            full_address = f"{address} {address_no}".rstrip()
+            postal_address = {
+                **postal_address,
                 'street': string.capwords(full_address) or False,
                 'city': string.capwords(get_text(address_node, './Comune')) or False,
                 'zip': get_text(address_node, './CAP') or False,
-            },
+            }
+
+        return {
+            'postal_address': postal_address,
             'vat': f"{country_code}{vat_no_prefix}" if vat_no_prefix else '/',
             'codice_fiscale': codice_fiscale,
             'is_company': is_company,
@@ -1333,7 +1338,7 @@ class AccountMove(models.Model):
             Partner = self.env['res.partner'].with_company(company)
             partner_info = buyer_seller_info[partner_role]
             partner_node = tree.xpath(partner_info['section_xpath'])[0]
-            partner_info = self._l10n_it_edi_get_partner_info(partner_node)
+            partner_info = self._l10n_it_edi_get_partner_info(partner_node, is_simplified=extra_info['simplified'])
             partner_cf = partner_info.get('codice_fiscale')
 
             # Italy has a TIN (Codice Fiscale) that is more unique (key) than VAT
