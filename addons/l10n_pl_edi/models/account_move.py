@@ -218,7 +218,7 @@ class AccountMove(models.Model):
                 'P_7': line.name,
                 'P_8A': line.product_uom_id.name or 'szt.',
                 'P_8B': line.quantity * sign,
-                'P_9A': float_repr(line.price_unit, 2),
+                'P_9A': float_repr(line.price_unit, 8),
                 'P_11': float_repr(line.price_subtotal * sign, 2),
                 'P_12': compute_p_12(tag_names),
             }
