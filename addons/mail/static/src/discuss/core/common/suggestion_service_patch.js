@@ -115,7 +115,7 @@ const suggestionServicePatch = {
     },
     /** @override */
     sortPartnerSuggestionsContext(thread) {
-        return Object.assign(super.sortPartnerSuggestionsContext(), {
+        return Object.assign(super.sortPartnerSuggestionsContext(...arguments), {
             recentChatPartnerIds: this.store.getRecentChatPartnerIds(),
             memberPartnerIds: new Set(
                 thread?.channel?.channel_member_ids
