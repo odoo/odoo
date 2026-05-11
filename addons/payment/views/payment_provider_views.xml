@@ -211,10 +211,14 @@
                                 <group>
                                     <field name="minimum_amount"/>
                                     <field name="maximum_amount"/>
-                                    <label for="available_currency_ids"/>
+                                    <label for="available_currency_ids" groups="base.group_system"/>
                                     <!-- Use a div to allow placing a button next to the field in
                                     overrides. -->
-                                    <div name="available_currencies" class="o_row">
+                                    <div
+                                        name="available_currencies"
+                                        class="o_row"
+                                        groups="base.group_system"
+                                    >
                                         <field
                                             name="available_currency_ids"
                                             widget="many2many_tags"
