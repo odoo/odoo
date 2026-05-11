@@ -599,3 +599,23 @@ class TestDeliveryCost(common.TransactionCase):
         delivery_sol = so.order_line[-1]
         self.assertEqual(delivery_sol.product_id, delivery.product_id)
         self.assertEqual(delivery_sol.price_subtotal, 12.5)
+
+    def test_action_open_delivery_wizard_ignores_archived_carriers(self):
+        self.partner_18.property_delivery_carrier_id = self.normal_delivery
+
+        self.normal_delivery.active = False
+
+        sale_order = self.SaleOrder.create({
+            'partner_id': self.partner_18.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.product_4.id,
+                    'product_uom_qty': 10,
+                    'product_uom': self.product_uom_unit.id,
+                    'price_unit': 10.0,
+                }),
+            ],
+        })
+
+        action = sale_order.action_open_delivery_wizard()
+        self.assertEqual(action['context']['default_carrier_id'], False)
