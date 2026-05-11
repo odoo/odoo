@@ -451,6 +451,68 @@ class TestConsumeComponent(TestConsumeComponentCommon):
         self.assertRecordValues(mo.move_raw_ids, [
             {'should_consume_qty': 1.0, 'quantity': 1.0, 'picked': False},
             {'should_consume_qty': 1.0, 'quantity': 1.0, 'picked': True},
+<<<<<<< b529d705d1d6ab6dabaa70863f9ae8dfdaef2cc4
+||||||| ceca7a0931c1eaa3001dfcf5879fe9080360bfb5
+            {'should_consume_qty': 1.0, 'quantity': 1.0, 'picked': True},
+        ])
+
+    def test_multi_lot_component_consumption(self):
+        """
+        Check that indicated lot on raw move lines are conserved even if the first
+        lot has enough quantity on hand
+        """
+        self.bom_serial_lines[0].unlink()
+        self.bom_serial_lines[2].unlink()
+
+        quants = self.create_quant(self.raw_lot, 2)
+        quants |= self.create_quant(self.raw_lot, 2, offset=1)
+        quants.action_apply_inventory()
+
+        mo = self.create_mo(self.mo_serial_tmpl, 1)
+        mo.action_confirm()
+        mo.move_raw_ids.move_line_ids.quantity = 1
+        details_form = Form.from_action(self.env, mo.move_raw_ids.action_show_details())
+        with details_form.move_line_ids.new() as move_line:
+            move_line.lot_id = quants[1].lot_id
+            move_line.quantity = 1
+        details_form.save()
+        mo.button_mark_done()
+        mo.invalidate_recordset()
+        self.assertRecordValues(mo.move_raw_ids.move_line_ids, [
+            {'quantity': 1.0},
+            {'quantity': 1.0},
+=======
+            {'should_consume_qty': 1.0, 'quantity': 1.0, 'picked': True},
+        ])
+
+    def test_multi_lot_component_consumption(self):
+        """
+        Check that indicated lot on raw move lines are conserved even if the first
+        lot has enough quantity on hand
+        """
+        grp_lot = self.env.ref('stock.group_production_lot')
+        self.env.user.group_ids |= grp_lot
+        self.bom_serial_lines[0].unlink()
+        self.bom_serial_lines[2].unlink()
+
+        quants = self.create_quant(self.raw_lot, 2)
+        quants |= self.create_quant(self.raw_lot, 2, offset=1)
+        quants.action_apply_inventory()
+
+        mo = self.create_mo(self.mo_serial_tmpl, 1)
+        mo.action_confirm()
+        mo.move_raw_ids.move_line_ids.quantity = 1
+        details_form = Form.from_action(self.env, mo.move_raw_ids.action_show_details())
+        with details_form.move_line_ids.new() as move_line:
+            move_line.lot_id = quants[1].lot_id
+            move_line.quantity = 1
+        details_form.save()
+        mo.button_mark_done()
+        mo.invalidate_recordset()
+        self.assertRecordValues(mo.move_raw_ids.move_line_ids, [
+            {'quantity': 1.0},
+            {'quantity': 1.0},
+>>>>>>> c33eed79de19ef54d26c022fff80587a8da5678a
         ])
 
     def test_no_component_consumption_on_lot_removal(self):
