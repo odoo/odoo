@@ -538,7 +538,7 @@ Please change the quantity done or the rounding precision in your settings.""",
         prefetch_virtual_available = defaultdict(set)
         virtual_available_dict = {}
         for move in product_moves:
-            if move._is_consuming() and move.state == 'draft' or move.picking_code == 'internal':
+            if move._is_consuming() and move.state == 'draft' or move.picking_type_id.code == 'internal':
                 prefetch_virtual_available[key_virtual_available(move)].add(move.product_id.id)
             elif move.picking_type_id.code == 'incoming':
                 prefetch_virtual_available[key_virtual_available(move, incoming=True)].add(move.product_id.id)
