@@ -44,7 +44,12 @@ export class PortalChatterService {
                 translateFn: appTranslateFn,
                 dev: env.debug,
             });
-            app.createRoot(PortalChatter, { env, props }).mount(shadow);
+            app.createRoot(PortalChatter, {
+                env: Object.assign(Object.create(env), {
+                    rootId: root.getAttribute("id"),
+                }),
+                props,
+            }).mount(shadow);
         });
         const thread = this.store["mail.thread"].insert({ model: props.resModel, id: props.resId });
         Object.assign(thread, {
