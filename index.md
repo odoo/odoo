@@ -4,6 +4,14 @@ title: Plan de Proyecto
 ---
 
 <style>
+table {
+    border-collapse: collapse;
+}
+
+table, th, td {
+    border: 1px solid black;
+}
+
 table th {
     background-color: black !important;
     color: white !important;
