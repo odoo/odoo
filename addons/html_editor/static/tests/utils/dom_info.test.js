@@ -293,6 +293,22 @@ describe("isVisible", () => {
             expect(result).toBe(true);
         });
     });
+    describe("elements", () => {
+        test("should identify a table containing only zero-width spaces as visible", () => {
+            const [table] = insertTestHtml(
+                unformat(`
+                    <table class="o_table">
+                        <tbody>
+                            <tr><td><p><font>\u200b</font></p></td><td><p><font>\u200b</font></p></td></tr>
+                            <tr><td><p><font>\u200b</font></p></td><td><p><font>\u200b</font></p></td></tr>
+                        </tbody>
+                    </table>
+                `)
+            );
+            const result = isVisible(table);
+            expect(result).toBe(true);
+        });
+    });
 });
 
 describe("getDeepestPosition", () => {
