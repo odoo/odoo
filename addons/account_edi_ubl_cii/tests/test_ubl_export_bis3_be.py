@@ -859,6 +859,33 @@ class TestUblExportBis3BE(TestUblBis3Common, TestUblCiiBECommon):
         self._generate_invoice_ubl_file(invoice)
         self._assert_invoice_ubl_file(invoice, 'test_invoice_BR_E_08_line_extension_amount')
 
+    def test_export_sections_as_invoice_lines(self):
+        """A collapsed section should be exported as invoice lines grouped by tax"""
+        tax_12 = self.percent_tax(12.0)
+        tax_21 = self.percent_tax(21.0)
+        product_1 = self._create_product(lst_price=100, name="product_1")
+        product_2 = self._create_product(lst_price=50, name="product_2")
+        product_3 = self._create_product(lst_price=200, name="product_3")
+        product_4 = self._create_product(lst_price=500, name="product_4")
+
+        invoice = self._create_invoice(
+            partner_id=self.partner_be,
+            invoice_line_ids=[
+                # This section should be exported twice : one for 12%, other for 21%.
+                self._prepare_invoice_line(name="Section 1", display_type='line_section', collapse_composition=True, price_unit=0.0),
+                self._prepare_invoice_line(product_id=product_1, tax_ids=[tax_12.id]),
+                self._prepare_invoice_line(product_id=product_2, tax_ids=[tax_12.id]),
+                self._prepare_invoice_line(product_id=product_3, tax_ids=[tax_21.id]),
+                # This section should be ignored, the product line should be exported instead.
+                self._prepare_invoice_line(name="Section 2", display_type='line_section', collapse_composition=False, price_unit=0.0),
+                self._prepare_invoice_line(product_id=product_4, tax_ids=[tax_21.id]),
+            ],
+            post=True,
+        )
+
+        self._generate_invoice_ubl_file(invoice)
+        self._assert_invoice_ubl_file(invoice, 'test_invoice_export_sections_as_invoice_lines')
+
     def test_invoice_tax_subtotal_exempt_amount(self):
         """ Test that the taxable amount for exempt taxes is correctly computed,
         regardless of the tax calculation rounding method.
