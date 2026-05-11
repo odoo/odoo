@@ -2,7 +2,6 @@ import {
     click,
     contains,
     defineMailModels,
-    editInput,
     insertText,
     listenStoreFetch,
     openDiscuss,
@@ -12,7 +11,6 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { AvatarCard } from "@mail/core/web/avatar_card/avatar_card";
 import { animationFrame, describe, expect, test } from "@odoo/hoot";
-import { press } from "@odoo/hoot-dom";
 import { mockDate } from "@odoo/hoot-mock";
 
 import {
@@ -306,20 +304,59 @@ test("Search does not fetch when term is more specific after empty result", asyn
         ],
         channel_type: "channel",
     });
+    const memberIds = pyEnv["discuss.channel.member"].search([["channel_id", "=", channelId]]);
+    const [selfMemberId] = pyEnv["discuss.channel.member"].search([
+        ["channel_id", "=", channelId],
+        ["partner_id", "=", serverState.partnerId],
+    ]);
+    listenStoreFetch("/discuss/channel/members", { logParams: ["/discuss/channel/members"] });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-discuss-ChannelMemberList");
-    listenStoreFetch("/discuss/channel/members");
-    await editInput(document.body, "input[placeholder='Search members']", "zzzz");
-    await waitStoreFetch("/discuss/channel/members");
+    await contains(".o-discuss-ChannelMemberList"); // wait for auto-open of this panel
+    await waitStoreFetch(
+        `/discuss/channel/members - ${JSON.stringify({
+            channel_id: channelId,
+            known_member_ids: [selfMemberId], // members not fetched initially
+        })}`
+    );
+    await contains(".o-discuss-ChannelMember", { count: 3 });
+    await contains(".o-discuss-ChannelMember:text('Mitchell Admin')");
+    await contains(".o-discuss-ChannelMember:text('Alice')");
+    await contains(".o-discuss-ChannelMember:text('Bob')");
+    await insertText("input[placeholder='Search members']", "a");
+    await waitStoreFetch(
+        `/discuss/channel/members - ${JSON.stringify({
+            channel_id: channelId,
+            known_member_ids: memberIds,
+            search_term: "a",
+        })}`
+    );
+    await contains(".o-discuss-ChannelMember", { count: 2 });
+    await contains(".o-discuss-ChannelMember:text('Mitchell Admin')");
+    await contains(".o-discuss-ChannelMember:text('Alice')");
+    await insertText("input[placeholder='Search members']", "z");
+    await waitStoreFetch(
+        `/discuss/channel/members - ${JSON.stringify({
+            channel_id: channelId,
+            known_member_ids: memberIds,
+            search_term: "az",
+        })}`
+    );
     await contains(".o-discuss-ChannelMember", { count: 0 });
     await contains(".o-discuss-ChannelMemberList span:text('No members found.')");
-    await press("backspace");
-    await waitStoreFetch("/discuss/channel/members");
-    await contains(".o-discuss-ChannelMember", { count: 0 });
-    await insertText("input[placeholder='Search members']", "zz");
-    await contains(".o-discuss-ChannelMemberList span:text('No members found.')");
-    await expect.waitForSteps([]);
+    await insertText("input[placeholder='Search members']", "z");
+    await animationFrame();
+    expect.verifySteps([]); // no search 'azz'
+    await insertText("input[placeholder='Search members']", "b", { replace: true });
+    await waitStoreFetch(
+        `/discuss/channel/members - ${JSON.stringify({
+            channel_id: channelId,
+            known_member_ids: memberIds,
+            search_term: "b",
+        })}`
+    );
+    await contains(".o-discuss-ChannelMember", { count: 1 });
+    await contains(".o-discuss-ChannelMember:text('Bob')");
 });
 
 test("Shows a hint to narrow member search when there's more than 100 matches", async () => {
