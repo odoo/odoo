@@ -38,7 +38,7 @@ class PosOrder(models.Model):
                         order['amount_total'])
 
         open_session = PosSession.search([
-            ('state', 'not in', ('closed', 'closing_control')),
+            ('state', '=', 'opened'),
             ('config_id', '=', closed_session.config_id.id)
         ], limit=1)
 
