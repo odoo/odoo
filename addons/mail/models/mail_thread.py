@@ -3827,6 +3827,11 @@ class MailThread(models.AbstractModel):
         subtype_id = msg_vals['subtype_id'] if 'subtype_id' in msg_vals else message.subtype_id.id
         is_discussion = subtype_id == self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment')
 
+        if 'email_notification_subtitles' in self.env.context:
+            subtitles = [str(sub) for sub in self.env.context['email_notification_subtitles']]
+        else:
+            subtitles = [record_name]
+
         return {
             # message
             'is_discussion': is_discussion,
@@ -3836,7 +3841,7 @@ class MailThread(models.AbstractModel):
             'model_description': model_description,
             'record': record_wlang,
             'record_name': record_name,
-            'subtitles': self.env.context.get('email_notification_subtitles', [record_name]),
+            'subtitles': subtitles,
             # user / environment
             'author_user': author_user,  # User who sends the message
             'company': company,
@@ -3885,6 +3890,9 @@ class MailThread(models.AbstractModel):
 
         email_layout_xmlid = msg_vals['email_layout_xmlid'] if 'email_layout_xmlid' in msg_vals else message.email_layout_xmlid
         template_xmlid = email_layout_xmlid if email_layout_xmlid else 'mail.mail_notification_layout'
+
+        if 'subtitles' in render_values:
+            render_values['subtitles'] = [str(sub) for sub in render_values['subtitles']]
 
         render_values = {**render_values, **recipients_group}
         mail_body = self.env['ir.qweb']._render(
