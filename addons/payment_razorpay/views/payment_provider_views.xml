@@ -7,7 +7,7 @@
         <field name="inherit_id" ref="payment.payment_provider_form"/>
         <field name="arch" type="xml">
             <group name="provider_credentials" position="before">
-                <div class="text-muted mb-2" invisible="not razorpay_account_id">
+                <div class="text-muted mb-2" groups="base.group_system" invisible="not razorpay_account_id">
                     This provider is linked with your Razorpay account.
                 </div>
             </group>
@@ -26,6 +26,7 @@
                             name="action_reset_credentials"
                             class="btn-secondary ms-2"
                             confirm="Are you sure you want to disconnect?"
+                            groups="base.group_system"
                             invisible="not razorpay_account_id"
                             readonly="True"
                         />
@@ -34,6 +35,7 @@
                         name="razorpay_key_id"
                         string="Key Id"
                         decoration-muted="razorpay_account_id"
+                        groups="base.group_system"
                     />
                     <field
                         name="razorpay_key_secret"
@@ -53,6 +55,7 @@
                             type="object"
                             name="action_razorpay_create_webhook"
                             class="btn-primary ms-2"
+                            groups="base.group_system"
                             invisible="not razorpay_account_id or razorpay_webhook_secret"
                         />
                     </div>
@@ -62,13 +65,14 @@
                 <div
                     class="alert alert-warning"
                     role="alert"
+                    groups="base.group_system"
                     invisible="code != 'razorpay' or not razorpay_key_id or razorpay_account_id"
                 >
                     You are currently connected to Razorpay through the credentials method, which is
                     deprecated. Click the "Connect" button below to use the recommended OAuth
                     method.
                 </div>
-                <div invisible="code != 'razorpay' or razorpay_account_id">
+                <div groups="base.group_system" invisible="code != 'razorpay' or razorpay_account_id">
                     <button
                         string="Connect"
                         type="object"
