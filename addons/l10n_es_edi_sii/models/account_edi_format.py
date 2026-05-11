@@ -205,7 +205,7 @@ class AccountEdiFormat(models.Model):
             info = {
                 'PeriodoLiquidacion': {
                     'Ejercicio': str(invoice.date.year),
-                    'Periodo': str(invoice.date.month).zfill(2),
+                    'Periodo': invoice._l10n_es_edi_get_period(),
                 },
                 'IDFactura': {
                     'FechaExpedicionFacturaEmisor': invoice.invoice_date.strftime('%d-%m-%Y'),
