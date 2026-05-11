@@ -334,11 +334,13 @@ class ResUsers(models.Model):
         if self.env.company not in self.company_ids:
             raise AccessError(_("Oops! This person needs access to %s before you can make them an employee here.\n"
                 "Grant them access first, or switch to a company they already belong to.", self.env.company.name))
-        self.env['hr.employee'].create(dict(
-            name=self.name,
-            company_id=self.env.company.id,
-            **self.env['hr.employee']._sync_user(self)
-        ))
+        self.env['hr.employee'].create(
+            dict(
+                name=self.name,
+                company_id=self.env.company.id,
+                **self.env['hr.employee']._sync_user(self)
+            )
+        )
         return self.action_open_employees()
 
     def action_open_employees(self):
