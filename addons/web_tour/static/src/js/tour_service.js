@@ -226,7 +226,7 @@ export class TourService {
         const tourName = tourState.getCurrentTour();
         const tourConfig = tourState.getCurrentConfig();
         const tour = await this.getTour(tourName, tourConfig);
-        if (!tour) {
+        if (!tour || !tour.steps.length) {
             return;
         }
 
