@@ -250,6 +250,7 @@
                                     <field name="price_include_override"
                                            invisible="amount_type == 'group' or has_negative_factor"
                                            placeholder="Default"
+                                           required="type_tax_use == 'purchase'"
                                     />
                                     <field name="include_base_amount" invisible="amount_type == 'group'"/>
                                     <field name="is_base_affected"

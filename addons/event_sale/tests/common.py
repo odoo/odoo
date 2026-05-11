@@ -14,6 +14,7 @@ class TestEventSaleCommon(TestEventProductCommon, TestSalesCommon):
     def setUpClass(cls):
         super(TestEventSaleCommon, cls).setUpClass()
 
+        cls.env.company.account_price_include = 'tax_excluded'
         cls.event_0 = cls.env['event.event'].create({
             'name': 'TestEvent',
             'date_begin': fields.Datetime.to_string(datetime.today() + timedelta(days=1)),

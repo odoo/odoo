@@ -16,6 +16,7 @@ class SaleCommon(
         super().setUpClass()
 
         cls.env.company.country_id = cls.quick_ref("base.us")
+        cls.env.company.account_price_include = 'tax_excluded'
         cls.group_discount_per_so_line = cls.quick_ref("sale.group_discount_per_so_line")
 
         if cls._disable_taxes():
@@ -54,11 +55,12 @@ class TestSaleCommon(AccountTestInvoicingCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-
+        cls.env.company.account_price_include = 'tax_excluded'
         cls.pricelist = cls._enable_pricelists()
 
     @classmethod
     def collect_company_accounting_data(cls, company):
+        company.account_price_include = 'tax_excluded'
         company_data = super().collect_company_accounting_data(company)
 
         company_data.update({

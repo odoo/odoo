@@ -78,6 +78,7 @@ class AccountTestInvoicingCommon(ProductCommon):
         super().setUpClass()
 
         cls.maxDiff = None
+        cls.env.company.account_price_include = 'tax_excluded'
         cls.company_data = cls.collect_company_accounting_data(cls.env.company)
         cls.product_category.with_company(cls.env.company).write({
             'property_account_income_categ_id': cls.company_data['default_account_revenue'].id,
@@ -274,6 +275,7 @@ class AccountTestInvoicingCommon(ProductCommon):
             if 'currency_id' not in create_values:
                 create_values['currency_id'] = country.currency_id.id
         company = super()._create_company(**create_values)
+        company.account_price_include = 'tax_excluded'
         cls._use_chart_template(company, cls.chart_template)
         # if the currency_id was defined explicitly (or via the country), it should override the one from the coa
         if create_values.get('currency_id'):

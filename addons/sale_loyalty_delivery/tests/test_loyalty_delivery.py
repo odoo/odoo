@@ -12,6 +12,7 @@ class TestLoyaltyDeliveryCost(common.TransactionCase):
     def setUpClass(cls):
         super().setUpClass()
 
+        cls.env.company.account_price_include = 'tax_excluded'
         cls.partner_1 = cls.env["res.partner"].create({"name": "My Test Customer"})
         cls.pricelist = cls.env["product.pricelist"].create({"name": "Test Pricelist"})
         cls.product_4 = cls.env["product.product"].create({

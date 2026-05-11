@@ -12,10 +12,10 @@ class TestUi(AccountTestInvoicingCommon, HttpCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-
         cls.agrolait = cls.env["res.partner"].create({"name": "Agrolait", "email": "agro@lait.be"})
 
     def test_01_sale_tour(self):
+        self.env['res.company'].search([]).account_price_include = 'tax_excluded'
         self.env.ref("base.user_admin").write({"email": "mitchell.admin@example.com"})
         self.start_tour("/odoo", "sale_tour", login="admin")
 

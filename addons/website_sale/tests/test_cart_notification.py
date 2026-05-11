@@ -11,6 +11,7 @@ class TestWebsiteSaleCartNotification(HttpCase, ProductVariantsCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.env.company.account_price_include = 'tax_excluded'
         cls.website = cls.env.company.website_id
         cls.size_attribute.create_variant = "no_variant"
         cls.product_tmpl_1 = cls.env["product.template"].create({

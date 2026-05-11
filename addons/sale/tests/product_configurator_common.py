@@ -11,6 +11,7 @@ class TestProductConfiguratorCommon(UomCommon, HttpCase):
     def setUpClass(cls):
         super().setUpClass()
         # Setup attributes and attributes values
+        cls.env.company.account_price_include = 'tax_excluded'
         cls.product_attribute_1 = cls.env["product.attribute"].create({
             "name": "Legs",
             "sequence": 10,

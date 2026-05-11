@@ -157,6 +157,7 @@ class AccountTax(models.Model):
     price_include_override = fields.Selection(
         selection=[('tax_included', 'Tax Included'), ('tax_excluded', 'Tax Excluded')],
         string='Included in Price',
+        compute='_compute_price_include_override', readonly=False, store=True,
         tracking=True,
         help="Overrides the Company's default on whether the price you use on the product and invoices includes this tax."
     )
@@ -303,6 +304,14 @@ class AccountTax(models.Model):
                 *self.env['account.tax.group']._check_company_domain(company),
                 ('country_id', '=', False),
             ], limit=1)
+
+    @api.depends('type_tax_use')
+    def _compute_price_include_override(self):
+        for tax in self:
+            if tax.type_tax_use == 'purchase':
+                tax.price_include_override = 'tax_excluded'
+            else:
+                tax.price_include_override = False
 
     @api.depends('price_include_override')
     def _compute_price_include(self):
