@@ -1,7 +1,7 @@
 <templates xml:space="preserve">
 
 <t t-name="html_builder.TextEffectSelector">
-    <button t-custom-ref="root" class="btn btn-light o-select-text-effect" t-att-title="props.title" t-att-class="{ active: this.state.isActive }" t-att="{ disabled: this.state.isDisabled }" t-on-click="onClick">
+    <button t-custom-ref="root" class="btn btn-light o-select-text-effect" t-att-title="this.props.title" t-att-class="{ active: this.state.isActive }" t-att="{ disabled: this.state.isDisabled }" t-on-click="this.onClick">
         <t t-call="html_builder.TextEffectSelectorSvg"/>
     </button>
 </t>
@@ -27,7 +27,7 @@
             <div class="border g-col-4 position-relative"
                 style="cursor: pointer; background-color: white; color: black"
                 t-att-title="preset.name"
-                t-att-aria-label="preset.name"
+                t-att-aria-label="preset.name" 
             >
                 <BuilderButton action="'setTextEffect'" actionValue="preset.effectJson" title="preset.name">
                     <div class="overflow-visible position-relative fw-bolder text-center" style="scale: 0.7">
@@ -51,7 +51,7 @@
             <div class="p-2 d-flex align-items-center">
                 <t t-if="this.state.showBack">
                     <button class="fa fa-angle-left btn btn-secondary bg-transparent border-0"
-                        t-on-click="onClickClosePresets"
+                        t-on-click="this.onClickClosePresets"
                     />
                 </t>
                 <span class="cursor-pointer">Select a text effect</span>
@@ -62,10 +62,10 @@
             <BuilderRow label.translate="Effect">
                 <button type="button" class="o-hb-btn btn btn-secondary" t-out="this.domState.presetName"
                     title="Open presets" aria-label="Open presets"
-                    t-on-click="onClickOpenPresets"
+                    t-on-click="this.onClickOpenPresets"
                 />
                 <button type="button" class="o-hb-btn btn ms-auto fa fa-fw fa-trash px-2 py-2 btn-secondary"
-                    t-on-click="onClickReset"
+                    t-on-click="this.onClickReset"
                     title="Remove effect" aria-label="Remove effect"/>
             </BuilderRow>
             <hr class="mx-2 mt-1 mb-0"/>
