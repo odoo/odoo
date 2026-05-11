@@ -44,10 +44,12 @@
                 </div>
                 <label
                     for="authorize_webhook_id"
+                    groups="base.group_system"
                     invisible="not (authorize_login and authorize_transaction_key and authorize_signature_key) or code != 'authorize'"
                 />
                 <div
                     class="o_row"
+                    groups="base.group_system"
                     invisible="not (authorize_login and authorize_transaction_key and authorize_signature_key) or code != 'authorize'"
                 >
                     <field string="Webhook ID" name="authorize_webhook_id" widget="password"/>

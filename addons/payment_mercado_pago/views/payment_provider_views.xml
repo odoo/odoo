@@ -7,7 +7,7 @@
         <field name="inherit_id" ref="payment.payment_provider_form"/>
         <field name="arch" type="xml">
             <header position="inside">
-                <div invisible="code != 'mercado_pago'">
+                <div invisible="code != 'mercado_pago'" groups="base.group_system">
                     <button
                         string="Connect"
                         type="object"
@@ -33,6 +33,7 @@
                     required="is_live"
                     readonly="mercado_pago_access_token and mercado_pago_account_country_id"
                     options="{'no_create': True}"
+                    groups="base.group_system"
                 />
                 <field
                     string="Access Token"
@@ -48,6 +49,7 @@
                         code != 'mercado_pago'
                         or (mercado_pago_access_token and mercado_pago_public_key)
                     "
+                    groups="base.group_system"
                 >
                     <div
                         class="alert alert-warning mt-2"

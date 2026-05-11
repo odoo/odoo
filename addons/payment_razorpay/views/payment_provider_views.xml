@@ -7,7 +7,7 @@
         <field name="inherit_id" ref="payment.payment_provider_form"/>
         <field name="arch" type="xml">
             <header position="inside">
-                <div invisible="not razorpay_is_oauth_supported">
+                <div invisible="not razorpay_is_oauth_supported" groups="base.group_system">
                     <button
                         string="Connect"
                         type="object"
@@ -29,6 +29,7 @@
                 <div
                     invisible="not razorpay_account_id and not (razorpay_key_id and razorpay_key_secret)"
                     class="text-muted mb-2"
+                    groups="base.group_system"
                 >
                     This provider is linked with your Razorpay account.
                 </div>
@@ -44,6 +45,7 @@
                     name="razorpay_key_id"
                     invisible="code != 'razorpay' or razorpay_is_oauth_supported and (not razorpay_key_id or not razorpay_key_secret)"
                     readonly="razorpay_account_id"
+                    groups="base.group_system"
                 />
                 <field
                     string="Key Secret"
@@ -66,6 +68,7 @@
                         name="action_razorpay_create_webhook"
                         invisible="not razorpay_account_id or razorpay_webhook_secret"
                         class="btn-primary ms-2"
+                        groups="base.group_system"
                     />
                 </div>
             </group>
@@ -74,6 +77,7 @@
                     role="alert"
                     invisible="code != 'razorpay' or not razorpay_key_id or razorpay_account_id or not razorpay_is_oauth_supported"
                     class="alert alert-warning"
+                    groups="base.group_system"
                 >
                     You are currently connected to Razorpay through the credentials method, which is
                     deprecated. Click the "Connect" button above to use the recommended OAuth
