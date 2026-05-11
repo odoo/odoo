@@ -18,7 +18,6 @@ import { mergeClasses } from "@web/core/utils/classname";
 import { useChildRef, useService } from "@web/core/utils/hooks";
 import { deepMerge } from "@web/core/utils/objects";
 import { effect } from "@web/core/utils/reactive";
-import { utils } from "@web/core/ui/ui_service";
 import { hasTouch } from "@web/core/browser/feature_detection";
 
 export function getFirstElementOfNode(node) {
@@ -196,7 +195,7 @@ export class Dropdown extends Component {
     }
 
     get isBottomSheet() {
-        return utils.isSmall() && hasTouch() && this.props.bottomSheet;
+        return hasTouch() && this.props.bottomSheet;
     }
 
     /** @type {string} */
