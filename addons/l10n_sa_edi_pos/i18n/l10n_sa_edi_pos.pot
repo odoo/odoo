@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 19.3a1+e\n"
+"Project-Id-Version: Odoo Server 19.4a1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-12 19:16+0000\n"
-"PO-Revision-Date: 2026-03-12 19:16+0000\n"
+"POT-Creation-Date: 2026-05-10 18:13+0000\n"
+"PO-Revision-Date: 2026-05-10 18:13+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -40,7 +40,7 @@ msgstr ""
 
 #. module: l10n_sa_edi_pos
 #: model:ir.model.fields,field_description:l10n_sa_edi_pos.field_account_edi_xml_ubl_21_zatca__display_name
-#: model:ir.model.fields,field_description:l10n_sa_edi_pos.field_pos_config__display_name
+#: model:ir.model.fields,field_description:l10n_sa_edi_pos.field_account_move__display_name
 #: model:ir.model.fields,field_description:l10n_sa_edi_pos.field_pos_order__display_name
 #: model:ir.model.fields,field_description:l10n_sa_edi_pos.field_pos_order_receipt__display_name
 #: model:ir.model.fields,field_description:l10n_sa_edi_pos.field_res_company__display_name
@@ -53,14 +53,8 @@ msgid "Electronic invoicing"
 msgstr ""
 
 #. module: l10n_sa_edi_pos
-#. odoo-python
-#: code:addons/l10n_sa_edi_pos/models/pos_config.py:0
-msgid "Go to Journal configuration"
-msgstr ""
-
-#. module: l10n_sa_edi_pos
 #: model:ir.model.fields,field_description:l10n_sa_edi_pos.field_account_edi_xml_ubl_21_zatca__id
-#: model:ir.model.fields,field_description:l10n_sa_edi_pos.field_pos_config__id
+#: model:ir.model.fields,field_description:l10n_sa_edi_pos.field_account_move__id
 #: model:ir.model.fields,field_description:l10n_sa_edi_pos.field_pos_order__id
 #: model:ir.model.fields,field_description:l10n_sa_edi_pos.field_pos_order_receipt__id
 #: model:ir.model.fields,field_description:l10n_sa_edi_pos.field_res_company__id
@@ -68,13 +62,21 @@ msgid "ID"
 msgstr ""
 
 #. module: l10n_sa_edi_pos
-#: model_terms:ir.ui.view,arch_db:l10n_sa_edi_pos.company_info_receipt
-msgid "Plot:"
+#: model:ir.model,name:l10n_sa_edi_pos.model_account_move
+msgid "Journal Entry"
 msgstr ""
 
 #. module: l10n_sa_edi_pos
-#: model:ir.model,name:l10n_sa_edi_pos.model_pos_config
-msgid "Point of Sale Configuration"
+#. odoo-javascript
+#: code:addons/l10n_sa_edi_pos/static/src/app/utils/order_payment_validation.js:0
+msgid ""
+"Please remove the new order lines from the order to proceed with the "
+"settlement."
+msgstr ""
+
+#. module: l10n_sa_edi_pos
+#: model_terms:ir.ui.view,arch_db:l10n_sa_edi_pos.company_info_receipt
+msgid "Plot:"
 msgstr ""
 
 #. module: l10n_sa_edi_pos
@@ -88,6 +90,12 @@ msgid "Point of Sale Order Receipt Generator"
 msgstr ""
 
 #. module: l10n_sa_edi_pos
+#. odoo-javascript
+#: code:addons/l10n_sa_edi_pos/static/src/app/utils/order_payment_validation.js:0
+msgid "Settlement Error"
+msgstr ""
+
+#. module: l10n_sa_edi_pos
 #: model_terms:ir.ui.view,arch_db:l10n_sa_edi_pos.pos_order_receipt_header
 msgid "THIS IS NOT A LEGAL DOCUMENT"
 msgstr ""
@@ -97,19 +105,6 @@ msgstr ""
 #: code:addons/l10n_sa_edi_pos/static/src/app/utils/order_payment_validation.js:0
 msgid ""
 "The Receipt and Invoice generated here are not valid documents as there is "
-msgstr ""
-
-#. module: l10n_sa_edi_pos
-#: model:ir.model.fields,help:l10n_sa_edi_pos.field_pos_order__l10n_sa_invoice_edi_state
-msgid "The aggregated state of all the EDIs with web-service of this move"
-msgstr ""
-
-#. module: l10n_sa_edi_pos
-#. odoo-python
-#: code:addons/l10n_sa_edi_pos/models/pos_config.py:0
-msgid ""
-"The invoice journal of the point of sale %s must be properly onboarded "
-"according to ZATCA specifications.\n"
 msgstr ""
 
 #. module: l10n_sa_edi_pos

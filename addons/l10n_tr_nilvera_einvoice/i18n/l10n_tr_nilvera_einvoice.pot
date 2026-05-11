@@ -4,31 +4,16 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 19.3a1+e\n"
+"Project-Id-Version: Odoo Server 19.4a1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-12 19:16+0000\n"
-"PO-Revision-Date: 2026-03-12 19:16+0000\n"
+"POT-Creation-Date: 2026-05-10 18:13+0000\n"
+"PO-Revision-Date: 2026-05-10 18:13+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
-
-#. module: l10n_tr_nilvera_einvoice
-#: model:res.partner.category,name:l10n_tr_nilvera_einvoice.partner_demo_company_tr_tag
-msgid "0-123456780100019"
-msgstr ""
-
-#. module: l10n_tr_nilvera_einvoice
-#: model:res.partner.category,name:l10n_tr_nilvera_einvoice.l10n_tr_res_partner_1_tag
-msgid "0-123456780200020"
-msgstr ""
-
-#. module: l10n_tr_nilvera_einvoice
-#: model:res.partner.category,name:l10n_tr_nilvera_einvoice.l10n_tr_res_partner_2_tag
-msgid "0-424519348000017"
-msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
 #: model:l10n_tr_nilvera_einvoice.account.tax.code,name:l10n_tr_nilvera_einvoice.account_tax_code_316
@@ -186,6 +171,12 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_tr_nilvera_einvoice/models/account_move_send.py:0
 msgid "Check Tax ID, City, Street, State, and Country or Partner(s)"
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
+#. odoo-python
+#: code:addons/l10n_tr_nilvera_einvoice/models/account_move_send.py:0
+msgid "Check VAT on Partner(s)"
 msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
@@ -534,6 +525,14 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_tr_nilvera_einvoice/models/account_move_send.py:0
 msgid ""
+"For Public Sector e-Invoices, the Public Spending Unit must have a valid "
+"address and Tax ID defined."
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
+#. odoo-python
+#: code:addons/l10n_tr_nilvera_einvoice/models/account_move_send.py:0
+msgid ""
 "For Registered for Export type invoices with a 702 reason code, the Customer"
 " Line Code must be filled in per product in the invoice lines."
 msgstr ""
@@ -638,6 +637,12 @@ msgstr ""
 #. module: l10n_tr_nilvera_einvoice
 #: model_terms:ir.ui.view,arch_db:l10n_tr_nilvera_einvoice.account_nilvera_view_move_form
 msgid "Invoice Type"
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
+#. odoo-python
+#: code:addons/l10n_tr_nilvera_einvoice/models/account_move.py:0
+msgid "Invoices in Error"
 msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
@@ -911,6 +916,12 @@ msgid "Public Sector"
 msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
+#: model:ir.model.fields,field_description:l10n_tr_nilvera_einvoice.field_account_bank_statement_line__l10n_tr_public_spending_unit_id
+#: model:ir.model.fields,field_description:l10n_tr_nilvera_einvoice.field_account_move__l10n_tr_public_spending_unit_id
+msgid "Public Spending Unit"
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
 #: model:ir.model.fields.selection,name:l10n_tr_nilvera_einvoice.selection__account_move__l10n_tr_shipping_type__2
 msgid "Railway Transportation"
 msgstr ""
@@ -1041,6 +1052,15 @@ msgid "Shuttle Transportation Service"
 msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
+#. odoo-python
+#: code:addons/l10n_tr_nilvera_einvoice/models/account_move.py:0
+msgid ""
+"Some PDFs could not be retrieved because the Nilvera Status is not "
+"successful yet or is in error. Please try again once the status becomes "
+"successful."
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
 #: model:ir.model.fields,help:l10n_tr_nilvera_einvoice.field_res_partner__l10n_tr_nilvera_customer_alias_id
 #: model:ir.model.fields,help:l10n_tr_nilvera_einvoice.field_res_users__l10n_tr_nilvera_customer_alias_id
 msgid ""
@@ -1083,6 +1103,11 @@ msgstr ""
 #. module: l10n_tr_nilvera_einvoice
 #: model:l10n_tr_nilvera_einvoice.account.tax.code,name:l10n_tr_nilvera_einvoice.account_tax_code_602
 msgid "Survey, Plan-Project, Consultancy, Audit and Similar Services"
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
+#: model_terms:ir.ui.view,arch_db:l10n_tr_nilvera_einvoice.account_nilvera_view_move_form
+msgid "Synchronize with Nilvera"
 msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
@@ -1166,6 +1191,14 @@ msgstr ""
 msgid ""
 "The Contact Tag(s) cannot be deleted because it is used in Türkiye "
 "electronic integrations."
+msgstr ""
+
+#. module: l10n_tr_nilvera_einvoice
+#. odoo-python
+#: code:addons/l10n_tr_nilvera_einvoice/models/account_move.py:0
+msgid ""
+"The PDF could not be retrieved because the Nilvera Status is not successful "
+"yet or is in error. Please try again once the status becomes successful."
 msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
@@ -1393,6 +1426,7 @@ msgstr ""
 
 #. module: l10n_tr_nilvera_einvoice
 #. odoo-python
+#: code:addons/l10n_tr_nilvera_einvoice/models/account_move.py:0
 #: code:addons/l10n_tr_nilvera_einvoice/models/account_move_send.py:0
 msgid "View Invoice(s)"
 msgstr ""
