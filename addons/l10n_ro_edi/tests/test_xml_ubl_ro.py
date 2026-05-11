@@ -162,7 +162,7 @@ class TestUBLROCommon(TestUBLCommon):
 
         cls.env['res.partner.bank'].create({
             'partner_id': cls.company_data['company'].partner_id.id,
-            'account_number': 'RO98RNCB1234567890123456',
+            'formatted_account_number': 'RO98RNCB1234567890123456',
             'bank_name': 'Banca Trimitere EDI Global',
             'country_id': cls.env.ref('base.ro').id,
             'state_id': cls.env.ref('base.RO_CJ').id,
@@ -181,7 +181,7 @@ class TestUBLROCommon(TestUBLCommon):
             'vat': 'RO1234567897',
             'phone': '+40 123 456 780',
             'street': "Rolling Roast, 88",
-            'bank_ids': [(0, 0, {'account_number': 'RO98RNCB1234567890123456', 'allow_out_payment': True})],
+            'bank_ids': [(0, 0, {'formatted_account_number': 'RO98RNCB1234567890123456', 'allow_out_payment': True})],
             'ref': 'ref_partner_a',
             'invoice_edi_format': 'ciusro',
         })

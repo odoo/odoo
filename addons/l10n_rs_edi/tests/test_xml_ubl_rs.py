@@ -25,7 +25,7 @@ class TestUBLRS(TestUBLCommon):
 
         cls.env['res.partner.bank'].create({
             'partner_id': cls.company_data['company'].partner_id.id,
-            'account_number': 'RS1234123456123456123456',
+            'formatted_account_number': 'RS1234123456123456123456',
             'allow_out_payment': True,
         })
 
@@ -37,7 +37,7 @@ class TestUBLRS(TestUBLCommon):
             'zip': '101801',
             'phone': '+381 98 765 43 21',
             'vat': 'RS111032440',
-            'bank_ids': [Command.create({'account_number': 'RS1234567891234567892345'})],
+            'bank_ids': [Command.create({'formatted_account_number': 'RS1234567891234567892345'})],
             'l10n_rs_edi_registration_number': '12345678',
         })
 

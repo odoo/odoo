@@ -56,7 +56,7 @@ class TestExpenseCommon(AccountTestInvoicingCommon):
             'work_contact_id': cls.expense_user_employee.partner_id.id,
             'bank_account_ids': [
                 Command.create({
-                    'account_number': 'BE68539007547034',
+                    'formatted_account_number': 'BE68539007547034',
                     'allow_out_payment': True,
                     'partner_id': cls.expense_user_employee.partner_id.id,
             })]

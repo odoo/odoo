@@ -23,7 +23,7 @@ class ResPartnerBank(models.Model):
                 'SCT',                                                  # Identification Code
                 self.bank_bic or '',                                    # BIC of the Beneficiary Bank
                 (self.holder_name or self.partner_id.name)[:71],        # Name of the Beneficiary
-                self.sanitized_account_number,                          # Account Number of the Beneficiary
+                self.account_number,                                    # Account Number of the Beneficiary
                 currency.name + str(amount),                            # Currency + Amount of the Transfer in EUR
                 '',                                                     # Purpose of the Transfer
                 structured_communication,                               # Remittance Information (Structured)
@@ -57,7 +57,7 @@ class ResPartnerBank(models.Model):
                 error_messages.append(_("Can't generate a SEPA QR Code with the %s currency.", currency.name))
             if self.account_type != 'iban':
                 error_messages.append(_("Can't generate a SEPA QR code if the account type isn't IBAN."))
-            if not (self.sanitized_account_number and self.sanitized_account_number[:2] in sepa_iban_codes):
+            if not (self.account_number and self.account_number[:2] in sepa_iban_codes):
                 error_messages.append(_("Can't generate a SEPA QR code with a non SEPA iban."))
             if len(error_messages) > 0:
                 return '\r\n'.join(error_messages)

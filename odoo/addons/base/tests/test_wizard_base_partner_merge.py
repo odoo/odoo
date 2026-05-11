@@ -17,9 +17,9 @@ class TestMergePartner(TransactionCase):
         self.partner3 = self.Partner.create({'name': 'Partner 3', 'email': 'partner3@example.com'})
 
         # Create bank accounts
-        self.bank1 = self.Bank.create({'account_number': '12345', 'partner_id': self.partner1.id})
-        self.bank2 = self.Bank.create({'account_number': '54321', 'partner_id': self.partner2.id})
-        self.bank3 = self.Bank.create({'account_number': '12345', 'partner_id': self.partner3.id})  # Duplicate account number
+        self.bank1 = self.Bank.create({'formatted_account_number': '12345', 'partner_id': self.partner1.id})
+        self.bank2 = self.Bank.create({'formatted_account_number': '54321', 'partner_id': self.partner2.id})
+        self.bank3 = self.Bank.create({'formatted_account_number': '12345', 'partner_id': self.partner3.id})  # Duplicate account number
 
         # Create references
         self.attachment1 = self.env['ir.attachment'].create({

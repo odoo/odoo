@@ -42,7 +42,7 @@ class TestEdiFacturaeXmls(AccountTestInvoicingCommon):
         })
 
         cls.env['res.partner.bank'].create({
-            'account_number': 'ES9121000418450200051332',
+            'formatted_account_number': 'ES9121000418450200051332',
             'partner_id': cls.company_data['company'].partner_id.id,
             'bank_name': 'CAIXABANK',
             'bank_bic': 'CAIXESBBXXX',

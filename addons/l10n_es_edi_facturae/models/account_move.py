@@ -319,7 +319,7 @@ class AccountMove(models.Model):
                     'InstallmentAmount': payment_term.amount_residual_currency,
                     'PaymentMeans': self.l10n_es_payment_means or '04',
                     'AccountToBeCredited': {
-                        'IBAN': self.partner_bank_id.sanitized_account_number,
+                        'IBAN': self.partner_bank_id.account_number,
                         'BIC': self.partner_bank_id.bank_bic,
                     },
                 })

@@ -46,5 +46,5 @@ class ResPartnerBank(models.Model):
             account_employee = self.sudo().filtered("partner_id.employee_ids")
             for account in account_employee:
                 account.sudo(self.env.su).display_name = \
-                    account.account_number[:2] + "*" * len(account.account_number[2:-4]) + account.account_number[-4:]
+                    account.formatted_account_number[:2] + "*" * len(account.formatted_account_number[2:-4]) + account.formatted_account_number[-4:]
         super(ResPartnerBank, self - account_employee)._compute_display_name()

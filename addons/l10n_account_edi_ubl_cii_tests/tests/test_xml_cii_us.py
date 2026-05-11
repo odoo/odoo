@@ -54,7 +54,7 @@ class TestCIIUS(TestUBLCommon):
         should create the correct invoice
         """
         self.env['res.partner.bank'].sudo().create({
-            'account_number': 'FR76 1254 2547 2569 8542 5874 698',
+            'formatted_account_number': 'FR76 1254 2547 2569 8542 5874 698',
             'partner_id': self.company_data['company'].partner_id.id,
         })
         self._assert_imported_invoice_from_file(

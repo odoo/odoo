@@ -14,7 +14,7 @@ class TestSetupWizard(AccountTestInvoicingCommon):
             {
                 'num_journals_without_account_bank': 1,
                 'linked_journal_id': False,
-                'account_number': 'BE15001559627230',
+                'formatted_account_number': 'BE15001559627230',
                 'bank_name': 'Test bank',
                 'bank_bic': False
             }

@@ -377,7 +377,7 @@ class TestHrEmployee(TestHrCommon):
         })
         test_user.partner_id.company_id = test_company
         bank_account = self.env['res.partner.bank'].create({
-            'account_number': '1234567',
+            'formatted_account_number': '1234567',
             'partner_id' : test_user.partner_id.id,
         })
         test_employee = self.env['hr.employee'].create({

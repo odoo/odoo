@@ -65,16 +65,16 @@ class ResPartnerBank(models.Model):
             else:
                 bank.l10n_ch_display_qr_bank_options = self.env.company.account_fiscal_country_id.code in ('CH', 'LI')
 
-    @api.depends('account_number')
+    @api.depends('formatted_account_number')
     def _compute_l10n_ch_qr_iban(self):
         for record in self:
             try:
-                validate_qr_iban(self.env, record.account_number)
+                validate_qr_iban(self.env, record.formatted_account_number)
                 valid_qr_iban = True
             except ValidationError:
                 valid_qr_iban = False
             if valid_qr_iban:
-                record.l10n_ch_qr_iban = record.sanitized_account_number
+                record.l10n_ch_qr_iban = record.account_number
             else:
                 record.l10n_ch_qr_iban = None
 
@@ -115,7 +115,7 @@ class ResPartnerBank(models.Model):
         # and must then be 27 characters-long, with mod10r check digit as the 27th one)
         reference_type = 'NON'
         reference = ''
-        acc_number = self.sanitized_account_number
+        acc_number = self.account_number
 
         if self.l10n_ch_qr_iban:
             # _check_for_qr_code_errors ensures we can't have a QR-IBAN without a QR-reference here
@@ -266,7 +266,7 @@ class ResPartnerBank(models.Model):
 
         if qr_method == 'ch_qr':
             if not _partner_fields_set(self.partner_id):
-                return _("The partner set on the bank account meant to receive the payment (%s) must have a complete postal address (street, zip, city and country).", self.account_number)
+                return _("The partner set on the bank account meant to receive the payment (%s) must have a complete postal address (street, zip, city and country).", self.formatted_account_number)
 
             if debtor_partner and not _partner_fields_set(debtor_partner):
                 return _("The partner must have a complete postal address (street, zip, city and country).")

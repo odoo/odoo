@@ -1019,7 +1019,7 @@ class TestPointOfSaleFlow(CommonPosTest):
         self.pos_config_usd.open_ui()
         # Case 1: journal bank allows out payment
         allowed_bank = self.env["res.partner.bank"].create({
-            "account_number": "FR7612345678901234567890123",
+            "formatted_account_number": "FR7612345678901234567890123",
             "partner_id": self.company.partner_id.id,
             "bank_name": "Test Bank",
             "allow_out_payment": True,
@@ -1035,7 +1035,7 @@ class TestPointOfSaleFlow(CommonPosTest):
         # Case 2: journal bank not allowed + no company fallback
         self.pos_config_usd.open_ui()
         blocked_bank = self.env["res.partner.bank"].create({
-            "account_number": "FR7612345678901234567890124",
+            "formatted_account_number": "FR7612345678901234567890124",
             "partner_id": self.company.partner_id.id,
             "bank_name": "Test Bank",
         })
