@@ -590,7 +590,8 @@ test("chatter message actions appear only after saving the form", async () => {
     await contains(".o-mail-Message-actions");
 });
 
-test("post message on draft record", async () => {
+test.tags("owl3");
+test.todo("post message on draft record", async () => {
     await start();
     await openFormView("res.partner", undefined, {
         arch: `

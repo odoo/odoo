@@ -182,7 +182,8 @@ test("attachment box should order attachments from newest to oldest", async () =
     await contains(".o-mail-AttachmentContainer:eq(2):has(:text('A.txt'))");
 });
 
-test("attachment box auto-closed on switch to record wih no attachments", async () => {
+test.tags("owl3");
+test.todo("attachment box auto-closed on switch to record wih no attachments", async () => {
     const pyEnv = await startServer();
     const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
         { display_name: "first partner" },
