@@ -380,22 +380,39 @@ class StockMoveLine(models.Model):
                 create_move(move_line)
 
         move_to_recompute_state = set()
-        for move_line in mls:
-            if move_line.state == 'done':
-                continue
-            location = move_line.location_id
-            product = move_line.product_id
-            move = move_line.move_id
-            if move:
-                reservation = not move._should_bypass_reservation()
-            else:
+        if self.env.context.get("same_move_lots", False):
+            move = mls.move_id
+            location = move.location_id
+            product = move.product_id
+            qty_per_lot = {}
+            for move_line in mls:
+                if move_line.state == 'done':
+                    continue
                 reservation = product.type == 'product' and not location.should_bypass_reservation()
-            if move_line.quantity_product_uom and reservation:
-                self.env['stock.quant']._update_reserved_quantity(
-                    product, location, move_line.quantity_product_uom, lot_id=move_line.lot_id, package_id=move_line.package_id, owner_id=move_line.owner_id)
+                if move_line.quantity_product_uom and reservation:
+                    qty_per_lot[move_line.lot_id] = move_line.quantity_product_uom
+            if qty_per_lot:
+                self.env['stock.quant']._update_reserved_quantity_lots(
+                        product, location, qty_per_lot, owner_id=move.partner_id)
+                move_to_recompute_state.add(move.id)
 
+        else:
+            for move_line in mls:
+                if move_line.state == 'done':
+                    continue
+                location = move_line.location_id
+                product = move_line.product_id
+                move = move_line.move_id
                 if move:
-                    move_to_recompute_state.add(move.id)
+                    reservation = not move._should_bypass_reservation()
+                else:
+                    reservation = product.type == 'product' and not location.should_bypass_reservation()
+                if move_line.quantity_product_uom and reservation:
+                    self.env['stock.quant']._update_reserved_quantity(
+                        product, location, move_line.quantity_product_uom, lot_id=move_line.lot_id, package_id=move_line.package_id, owner_id=move_line.owner_id)
+
+                    if move:
+                        move_to_recompute_state.add(move.id)
         self.env['stock.move'].browse(move_to_recompute_state)._recompute_state()
         self.env['stock.move'].browse(created_moves)._post_process_created_moves()
 
@@ -659,17 +676,34 @@ class StockMoveLine(models.Model):
 
         quants_cache = self.env['stock.quant']._get_quants_cache_by_products_locations(mls_todo.product_id, mls_todo.location_id | mls_todo.location_dest_id, extra_domain=['|', ('lot_id', 'in', mls_todo.lot_id.ids), ('lot_id', '=', False)])
 
-        for ml in mls_todo.with_context(quants_cache=quants_cache):
-            # if this move line is force assigned, unreserve elsewhere if needed
-            ml._synchronize_quant(-ml.quantity_product_uom, ml.location_id, action="reserved")
-            available_qty, in_date = ml._synchronize_quant(-ml.quantity_product_uom, ml.location_id)
-            ml._synchronize_quant(ml.quantity_product_uom, ml.location_dest_id, package=ml.result_package_id, in_date=in_date)
-            if available_qty < 0:
-                ml._free_reservation(
-                    ml.product_id, ml.location_id,
-                    abs(available_qty), lot_id=ml.lot_id, package_id=ml.package_id,
-                    owner_id=ml.owner_id, ml_ids_to_ignore=ml_ids_to_ignore)
-            ml_ids_to_ignore.add(ml.id)
+        for move in mls_todo.move_id:
+            mls = mls_todo.filtered(lambda ml: ml.move_id.id == move.id)
+            if len(move.lot_ids) > 0 and len(move.lot_ids) == len(move.move_line_ids):
+                qty_per_lot = {ml.lot_id: ml.quantity_product_uom for ml in mls}
+                mls = mls.with_context(quants_cache=quants_cache)
+                mls._synchronize_quant_lots(-move.quantity, move.location_id, action="reserved", qty_per_lot=qty_per_lot)
+                available_quantities, in_date = mls._synchronize_quant_lots(-move.quantity, move.location_id, qty_per_lot=qty_per_lot)
+                mls._synchronize_quant_lots(move.quantity, move.location_dest_id, package=False, in_date=in_date, qty_per_lot=qty_per_lot)
+                for ml in mls:
+                    if available_quantities.get(ml.lot_id, 0) < 0:
+                        ml._free_reservation(
+                            ml.product_id, ml.location_id,
+                            abs(available_quantities.get(ml.lot_id)), lot_id=ml.lot_id, package_id=ml.package_id,
+                            owner_id=ml.owner_id, ml_ids_to_ignore=ml_ids_to_ignore)
+                ml_ids_to_ignore.update(mls.mapped('id'))
+
+            else:
+                for ml in mls.with_context(quants_cache=quants_cache):
+                    # if this move line is force assigned, unreserve elsewhere if needed
+                    ml._synchronize_quant(-ml.quantity_product_uom, ml.location_id, action="reserved")
+                    available_qty, in_date = ml._synchronize_quant(-ml.quantity_product_uom, ml.location_id)
+                    ml._synchronize_quant(ml.quantity_product_uom, ml.location_dest_id, package=ml.result_package_id, in_date=in_date)
+                    if available_qty < 0:
+                        ml._free_reservation(
+                            ml.product_id, ml.location_id,
+                            abs(available_qty), lot_id=ml.lot_id, package_id=ml.package_id,
+                            owner_id=ml.owner_id, ml_ids_to_ignore=ml_ids_to_ignore)
+                    ml_ids_to_ignore.add(ml.id)
         # Reset the reserved quantity as we just moved it to the destination location.
         mls_todo.write({
             'date': fields.Datetime.now(),
@@ -696,6 +730,28 @@ class StockMoveLine(models.Model):
             self.env['stock.quant']._update_available_quantity(self.product_id, location, -taken_from_untracked_qty, lot_id=False, package_id=package, owner_id=owner, in_date=in_date)
             self.env['stock.quant']._update_available_quantity(self.product_id, location, taken_from_untracked_qty, lot_id=lot, package_id=package, owner_id=owner, in_date=in_date)
         return available_qty, in_date
+
+    def _synchronize_quant_lots(self, quantity, location, action="available", in_date=False, **quants_value):
+        qty_per_lot = quants_value.get('qty_per_lot', {})
+        package = quants_value.get('package', self.package_id)
+        owner = quants_value.get('owner', self.owner_id)
+        available_quantities = {}
+        if self.product_id.type != 'product' or float_is_zero(quantity, precision_rounding=self.product_uom_id.rounding):
+            return 0, False
+        if action == "available":
+            available_quantities, in_date = self.env['stock.quant']._update_available_quantity_lots(self.product_id, location, qty_per_lot=qty_per_lot, owner_id=owner, in_date=in_date)
+        elif action == "reserved" and not self.move_id._should_bypass_reservation(location):
+            self.env['stock.quant']._update_reserved_quantity_lots(self.product_id, location, qty_per_lot=qty_per_lot, owner_id=owner)
+        for lot_id, available_qty in available_quantities.items():
+            if available_qty < 0:
+                # see if we can compensate the negative quants with some untracked quants
+                untracked_qty = self.env['stock.quant']._get_available_quantity(self.product_id, location, lot_id=False, package_id=package, owner_id=owner, strict=True)
+                if not untracked_qty:
+                    continue
+                taken_from_untracked_qty = min(untracked_qty, abs(quantity))
+                self.env['stock.quant']._update_available_quantity(self.product_id, location, -taken_from_untracked_qty, lot_id=False, package_id=package, owner_id=owner, in_date=in_date)
+                self.env['stock.quant']._update_available_quantity(self.product_id, location, taken_from_untracked_qty, lot_id=lot_id, package_id=package, owner_id=owner, in_date=in_date)
+        return available_quantities, in_date
 
     def _get_similar_move_lines(self):
         self.ensure_one()
