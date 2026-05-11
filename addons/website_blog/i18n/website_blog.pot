@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.4a1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-07 17:37+0000\n"
-"PO-Revision-Date: 2026-05-07 17:37+0000\n"
+"POT-Creation-Date: 2026-05-10 17:37+0000\n"
+"PO-Revision-Date: 2026-05-10 17:37+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -156,15 +156,6 @@ msgid "<i class=\"fa fa-globe me-1\" title=\"Website\"/>"
 msgstr ""
 
 #. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_single_aside_preview_data
-#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_single_circle_preview_data
-#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_single_full_preview_data
-msgid ""
-"<i class=\"fa fa-user-circle-o me-2\" role=\"presentation\"/><span>Marc "
-"Demo</span> • <span>Mar 13, 2025</span> •"
-msgstr ""
-
-#. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_card_preview_data
 msgid "<small class=\"text-muted\">Mar 13, 2025</small>"
 msgstr ""
@@ -197,11 +188,15 @@ msgstr ""
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_single_badge_preview_data
 msgid ""
-"<span class=\"o_cc o_cc1 d-inline-flex align-items-center justify-content-center gap-3 border rounded py-2 px-3 rounded-pill\">\n"
-"                    <span class=\"badge text-bg-primary\">NEW</span>\n"
-"                    <strong>Sierra Tarahumara</strong>\n"
-"                    <span class=\"text-muted\">Marc Demo in Travel</span>\n"
-"                    <span class=\"text-primary\">Read Now <i class=\"fa fa-long-arrow-right\" role=\"presentation\"/></span>\n"
+"<span class=\"o_cc o_cc1 d-inline-flex align-items-center justify-content-center flex-wrap gap-3 my-3 border rounded py-2 rounded-pill\">\n"
+"                    <span class=\"d-flex align-items-center gap-2\">\n"
+"                        <span class=\"badge text-bg-primary\">NEW</span>\n"
+"                        <strong>Sierra Tarahumara</strong>\n"
+"                    </span>\n"
+"                    <span class=\"d-flex align-items-center gap-2\">\n"
+"                        <span class=\"text-muted\">Marc Demo in Travel</span>\n"
+"                        <span class=\"text-primary\">Read Now <i class=\"fa fa-long-arrow-right\" role=\"presentation\"/></span>\n"
+"                    </span>\n"
 "                </span>"
 msgstr ""
 
@@ -218,6 +213,46 @@ msgid ""
 msgstr ""
 
 #. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_list_preview_data
+msgid ""
+"<span class=\"w-100 w-md-auto\"><i class=\"fa fa-user-circle-o me-2\" role=\"presentation\"/>Marc Demo</span>\n"
+"                    <span class=\"d-none d-sm-inline mx-sm-2\">•</span>\n"
+"                    <span class=\"text-muted\">Mar 13, 2025</span>"
+msgstr ""
+
+#. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_single_aside_preview_data
+msgid ""
+"<span class=\"w-100 w-sm-auto\">\n"
+"                                <span><i class=\"fa fa-user-circle-o me-2\" role=\"presentation\"/> Marc Demo</span>\n"
+"                            </span>\n"
+"                            <span class=\"d-none d-sm-inline text-muted\">•</span>\n"
+"                            <span class=\"text-muted \">Mar 13, 2025 • </span>"
+msgstr ""
+
+#. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_single_circle_preview_data
+msgid ""
+"<span class=\"w-100 w-sm-auto\">\n"
+"                        <span><i class=\"fa fa-user-circle-o me-2\"/> Marc Demo</span>\n"
+"                    </span>\n"
+"                    <span class=\"d-none d-sm-inline text-muted\">•</span>\n"
+"                    <span class=\"text-muted\">Mar 13, 2025</span>\n"
+"                    <span class=\"text-muted mx-2\">•</span>"
+msgstr ""
+
+#. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_single_full_preview_data
+msgid ""
+"<span class=\"w-100 w-sm-auto\">\n"
+"                    <span><i class=\"fa fa-user-circle-o me-2\" role=\"presentation\"/> Marc Demo</span>\n"
+"                </span>\n"
+"                <span class=\"d-none d-sm-inline text-muted mx-sm-2\">•</span>\n"
+"                <span class=\"text-muted\">Mar 13, 2025</span>\n"
+"                <span class=\"text-muted mx-2\">•</span>"
+msgstr ""
+
+#. module: website_blog
 #: model_terms:web_tour.tour,rainbow_man_message:website_blog.blog
 msgid "<span><b>Good job!</b> You went through all steps of this tour.</span>"
 msgstr ""
@@ -228,13 +263,6 @@ msgstr ""
 msgid ""
 "<span><i class=\"fa fa-user-circle-o me-2\" role=\"presentation\"/> Marc "
 "Demo</span>"
-msgstr ""
-
-#. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_list_preview_data
-msgid ""
-"<span><i class=\"fa fa-user-circle-o me-2\" role=\"presentation\"/>Marc Demo</span>\n"
-"                    <span class=\"text-muted\"> • Mar 13, 2025</span>"
 msgstr ""
 
 #. module: website_blog
@@ -1717,6 +1745,11 @@ msgid "Read Now <i class=\"fa fa-long-arrow-right\" role=\"presentation\"/>"
 msgstr ""
 
 #. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_single_full_preview_data
+msgid "Read Now <i class=\"fa fa-long-arrow-right\"/>"
+msgstr ""
+
+#. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.posts_loop
 msgid "Read more <i class=\"oi oi-chevron-right ms-2\"/>"
 msgstr ""
@@ -2621,4 +2654,14 @@ msgstr ""
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_post_info
 msgid "| No comments yet"
+msgstr ""
+
+#. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_list_preview_data
+msgid "• Astronomy"
+msgstr ""
+
+#. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.s_dynamic_snippet_blog_posts_list_preview_data
+msgid "• Travel"
 msgstr ""

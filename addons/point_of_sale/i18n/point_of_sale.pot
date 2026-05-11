@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.4a1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-07 17:35+0000\n"
-"PO-Revision-Date: 2026-05-07 17:35+0000\n"
+"POT-Creation-Date: 2026-05-10 17:36+0000\n"
+"PO-Revision-Date: 2026-05-10 17:36+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -295,6 +295,11 @@ msgid ""
 msgstr ""
 
 #. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.product_pricelist_view_kanban_pos
+msgid "<i class=\"fa fa-money\" role=\"img\" aria-label=\"Currency\" title=\"Currency\"/>"
+msgstr ""
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
 msgid "<i class=\"fa fa-pencil\"/> Edit"
 msgstr ""
@@ -342,6 +347,31 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "<span class=\"oe_inline\"><b>Skip Preview Screen</b></span>"
+msgstr ""
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_printer_kanban
+msgid "<span class=\"text-muted\">No Categories</span>"
+msgstr ""
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.product_pricelist_view_kanban_pos
+msgid "<span class=\"text-muted\">No Company Selected</span>"
+msgstr ""
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.product_pricelist_view_kanban_pos
+msgid "<span class=\"text-muted\">No Country Groups</span>"
+msgstr ""
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_payment_method_kanban
+msgid "<span class=\"text-muted\">No Journal</span>"
+msgstr ""
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_payment_method_kanban
+msgid "<span class=\"text-muted\">No Point of Sale</span>"
 msgstr ""
 
 #. module: point_of_sale
@@ -1970,6 +2000,11 @@ msgid ""
 msgstr ""
 
 #. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_printer_kanban
+msgid "Categories:"
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/category_selector/category_selector.xml:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_template_form_view
@@ -2425,6 +2460,12 @@ msgid "Company has chart of accounts"
 msgstr ""
 
 #. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.product_pricelist_view_kanban_pos
+#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_payment_method_kanban
+msgid "Company:"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_res_config_settings
 msgid "Config Settings"
 msgstr ""
@@ -2634,6 +2675,11 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__country_code
 msgid "Country Code"
+msgstr ""
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.product_pricelist_view_kanban_pos
+msgid "Country Groups:"
 msgstr ""
 
 #. module: point_of_sale
@@ -4617,6 +4663,11 @@ msgstr ""
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 msgid "Journal Items"
+msgstr ""
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_payment_method_kanban
+msgid "Journal:"
 msgstr ""
 
 #. module: point_of_sale
@@ -6898,6 +6949,11 @@ msgid "Point of Sale User Group"
 msgstr ""
 
 #. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_payment_method_kanban
+msgid "Point of Sale:"
+msgstr ""
+
+#. module: point_of_sale
 #: model:mail.template,name:point_of_sale.email_template_pos_receipt
 msgid "Point of Sale: Receipt"
 msgstr ""
@@ -7149,6 +7205,7 @@ msgid "Pricelist Rule"
 msgstr ""
 
 #. module: point_of_sale
+#: model:ir.actions.act_window,name:point_of_sale.pos_product_pricelist_action
 #: model:ir.ui.menu,name:point_of_sale.pos_config_menu_action_product_pricelist
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Pricelists"
@@ -10317,6 +10374,11 @@ msgid "Upsell & Cross-Sell"
 msgstr ""
 
 #. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_printer_kanban
+msgid "Use LNA:"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_printer__use_lna
 msgid "Use Local Network Access"
 msgstr ""
@@ -10325,6 +10387,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__use_presets
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_use_presets
 msgid "Use Presets"
+msgstr ""
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_printer_kanban
+msgid "Use Type:"
 msgstr ""
 
 #. module: point_of_sale
