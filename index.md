@@ -33,8 +33,9 @@ El equipo de trabajo está formado por 5 estudiantes. El rol de **Líder de Equi
 ### Roles y Responsabilidades (Sprint 4):
 
 ## 4. Herramientas Tecnológicas
+
 | Herramienta | Uso en el Proyecto |
-| :--- | :--- |
+| --- | --- |
 | **GitHub Projects** | Gestionar el Product Backlog, armar Sprints y ver el progreso en tiempo real. |
 | **GitHub Issues** | Registrar historias de usuario, reportar bugs y documentar decisiones técnicas. |
 | **GitHub Actions** | Automatización CI/CD: compilar código, correr pruebas y desplegar a staging. |
