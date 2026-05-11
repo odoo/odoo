@@ -286,7 +286,10 @@ export function isVisible(node) {
             isMediaElement(node) ||
             hasVisibleContent(node) ||
             isProtecting(node) ||
-            isEmbeddedComponent(node))
+            isEmbeddedComponent(node) ||
+            // Keep editor tables visible even when cells only contain
+            // placeholder ZWS content, as `.o_table` tables are always visible.
+            (node.nodeName === "TD" && !!closestElement(node, "table.o_table")))
     );
 }
 export function hasVisibleContent(node) {
