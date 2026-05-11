@@ -40,7 +40,6 @@ class ProductTemplate(models.Model):
         "product.template",
         "website.seo.metadata",
         "website.published.multi.mixin",
-        "website.quick.add.mixin",
         "website.searchable.mixin",
         "website.structured_data.mixin",
     ]
@@ -693,25 +692,24 @@ class ProductTemplate(models.Model):
 
         return res
 
-    def _is_base_catalog_eligible(self):
-        """
-        Pre-check to determine if the product template is sellable.
+    def _is_purchasable(self):
+        """Extension hook for module-specific restrictions."""
+        return True
 
-        :return: True if the product matches the base eCommerce domain, False otherwise.
+    def _has_ecommerce_sellable_variants(self):
+        """
+        Determine whether the product has at least one valid, configurable variant available.
+
+        :return: True if at least one valid variant combination exists; otherwise, False.
         :rtype: bool
         """
         self.ensure_one()
-        return bool(self.filtered_domain(self.env["website"]._product_domain()))
-
-    def _has_purchasable_variants(self):
-        """
-        Determines if the product has at least one valid, configurable variant available.
-
-        :return: True if at least one valid variant combination exists, False otherwise.
-        :rtype: bool
-        """
-        self.ensure_one()
-        if not self.active or not self._is_base_catalog_eligible():
+        # Pre-check to determine if the product template is sellable.
+        is_ecommerce_sellable = (
+            bool(self.filtered_domain(self.env["website"]._product_domain()))
+            and self._is_purchasable()
+        )
+        if not self.active or not is_ecommerce_sellable:
             # for performance: avoid calling `_get_possible_combinations`
             return False
         return next(self._get_possible_combinations(), False) is not False
@@ -1065,9 +1063,7 @@ class ProductTemplate(models.Model):
         )
 
         if not tax_display:
-            show_tax = (
-                website or self.env.website
-            ).show_line_subtotals_tax_selection
+            show_tax = (website or self.env.website).show_line_subtotals_tax_selection
             tax_display = "total_excluded" if show_tax == "tax_excluded" else "total_included"
 
         return tax_details[tax_display]
@@ -1406,7 +1402,17 @@ class ProductTemplate(models.Model):
 
     def _website_show_quick_add(self):
         self.ensure_one()
-        self._website_show_quick_add_common()
+        if self._is_sold_out() or not self.filtered_domain(self.env["website"]._product_domain()):
+            return False
+        if not self._get_available_uoms():
+            return False
+        return (
+            not (
+                self.env.website.prevent_sale
+                and self.env.website._prevent_product_sale(self, not self._get_contextual_price())
+            )
+            and self._is_purchasable()
+        )
 
     @api.model
     def _get_configurator_display_price(
@@ -1445,7 +1451,7 @@ class ProductTemplate(models.Model):
         :rtype: dict
         """
         self.ensure_one()
-        website = self.env.website or self.env['website'].browse(self.env.context.get('host_id'))
+        website = self.env.website or self.env["website"].browse(self.env.context.get("host_id"))
 
         if self.product_variant_count == 1:
             vals = self.product_variant_id._prepare_jsonld_vals()
@@ -1492,7 +1498,7 @@ class ProductTemplate(models.Model):
             schemas.append(self._prepare_jsonld_vals())
         elif self:
             category = self.env["product.public.category"].browse(
-                self.env.context.get("shop_category_id"),
+                self.env.context.get("shop_category_id")
             )
             if category:
                 list_path = category.website_url
@@ -1519,7 +1525,7 @@ class ProductTemplate(models.Model):
             category = self.public_categ_ids[:1]
         else:
             category = self.env["product.public.category"].browse(
-                self.env.context.get("shop_category_id"),
+                self.env.context.get("shop_category_id")
             )
         if category:
             for cat in category.parents_and_self:
@@ -1681,9 +1687,7 @@ class ProductTemplate(models.Model):
             product_or_template, date, currency, pricelist, **kwargs
         )
 
-        if (
-            website := self.env.website
-        ) and product_or_template.is_product_variant:
+        if (website := self.env.website) and product_or_template.is_product_variant:
             max_quantity = product_or_template._get_max_quantity(website, request.cart, **kwargs)
             if max_quantity is not None:
                 if uom:
