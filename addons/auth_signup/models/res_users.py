@@ -98,6 +98,9 @@ class ResUsers(models.Model):
         if 'partner_id' not in values:
             if self._get_signup_invitation_scope() != 'b2c':
                 raise SignupError(_('Signup is not allowed for uninvited users'))
+        if values.get('email') and self.with_context(active_test=False).search_count(
+                self._get_email_domain(values['email']), limit=1):
+            raise UserError(_("Another user is already registered using this email address."))
         return self._create_user_from_template(values)
 
     def _notify_inviter(self):
