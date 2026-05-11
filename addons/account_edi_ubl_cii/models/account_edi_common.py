@@ -233,8 +233,8 @@ class AccountEdiCommon(models.AbstractModel):
         return False
 
     def _get_belgian_cocontractant_note(self, customer, supplier):
-        invoice = self.env.context.get('tax_exemption_reason_invoice')
-        if invoice and customer.country_id.code == 'BE' and supplier.country_id == customer.country_id and invoice:
+
+        if (invoice := self.env.context.get('tax_exemption_reason_invoice')) and customer.country_id.code == 'BE' and supplier.country_id == customer.country_id:
             co_contractant = self.env['account.chart.template'].ref('fiscal_position_template_4', raise_if_not_found=False)
             if co_contractant and invoice.fiscal_position_id == co_contractant:
                 note = html2plaintext(invoice.fiscal_position_id.note) if invoice.fiscal_position_id.note else ''
