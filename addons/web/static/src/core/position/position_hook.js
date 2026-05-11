@@ -4,6 +4,15 @@ import { omit } from "@web/core/utils/objects";
 import { useThrottleForAnimation } from "@web/core/utils/timing";
 import { EventBus, onWillDestroy } from "@odoo/owl";
 
+function getRectHash(element) {
+    if (element) {
+        const { x, y, height, width } = element.getBoundingClientRect();
+        return JSON.stringify([x, y, height, width]);
+    } else {
+        return null;
+    }
+}
+
 /**
  * @typedef {import("@web/core/position/utils").ComputePositionOptions} ComputePositionOptions
  * @typedef {import("@web/core/position/utils").PositioningSolution} PositioningSolution
@@ -41,6 +50,9 @@ export const POSITION_BUS = Symbol("position-bus");
 export function usePosition(refName, getTarget, options = {}) {
     const ref = useRef(refName);
     let lock = false;
+    let lastSolution = null;
+    let lastTargetRect = null;
+    const component = useComponent();
     const update = () => {
         const targetEl = getTarget();
         if (!ref.el || !targetEl?.isConnected || lock) {
@@ -53,10 +65,14 @@ export function usePosition(refName, getTarget, options = {}) {
         if (solution.direction !== "center") {
             options.position = `${solution.direction}-${solution.variant}`; // memorize last position
         }
-        options.onPositioned?.(ref.el, solution);
+
+        lastTargetRect = getRectHash(targetEl);
+        if (JSON.stringify(solution) !== lastSolution) {
+            lastSolution = JSON.stringify(solution);
+            options.onPositioned?.(ref.el, solution);
+        }
     };
 
-    const component = useComponent();
     const bus = component.env[POSITION_BUS] || new EventBus();
 
     let executingUpdate = false;
@@ -78,6 +94,12 @@ export function usePosition(refName, getTarget, options = {}) {
     }
 
     const throttledUpdate = useThrottleForAnimation(() => bus.trigger("update"));
+    const mutationObserver = new MutationObserver(() => {
+        if (getRectHash(getTarget()) !== lastTargetRect) {
+            throttledUpdate();
+        }
+    });
+
     useLayoutEffect(() => {
         // Reposition
         bus.trigger("update");
@@ -113,6 +135,10 @@ export function usePosition(refName, getTarget, options = {}) {
             for (const document of documents) {
                 document.addEventListener("scroll", scrollListener, { capture: true });
                 document.addEventListener("load", throttledUpdate, { capture: true });
+                mutationObserver.observe(document, {
+                    childList: true,
+                    subtree: true,
+                });
             }
             window.addEventListener("resize", throttledUpdate);
             return () => {
@@ -121,6 +147,7 @@ export function usePosition(refName, getTarget, options = {}) {
                     document.removeEventListener("load", throttledUpdate, { capture: true });
                 }
                 window.removeEventListener("resize", throttledUpdate);
+                mutationObserver.disconnect();
             };
         }
     });
