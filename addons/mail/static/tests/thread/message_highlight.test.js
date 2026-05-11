@@ -42,41 +42,43 @@ test("can highlight messages that are not yet loaded", async () => {
     await isInViewportOf(".o-mail-Message:contains(message 100)", ".o-mail-Thread");
 });
 
-test.tags("owl3");
-test.todo("can highlight message (slow ref registration)", async () => {
-    disableAnimations();
-    const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({ name: "general" });
-    let middleMessageId;
-    for (let i = 0; i < 200; i++) {
-        const messageId = pyEnv["mail.message"].create({
-            body: `message ${i}`,
-            model: "discuss.channel",
-            res_id: channelId,
-        });
-        if (i === 100) {
-            middleMessageId = messageId;
+for (let run = 0; run < 30; run++) {
+    test.tags("owl3");
+    test(`can highlight message (slow ref registration) [run ${run}]`, async () => {
+        disableAnimations();
+        const pyEnv = await startServer();
+        const channelId = pyEnv["discuss.channel"].create({ name: "general" });
+        let middleMessageId;
+        for (let i = 0; i < 200; i++) {
+            const messageId = pyEnv["mail.message"].create({
+                body: `message ${i}`,
+                model: "discuss.channel",
+                res_id: channelId,
+            });
+            if (i === 100) {
+                middleMessageId = messageId;
+            }
         }
-    }
-    await pyEnv["discuss.channel"].set_message_pin(channelId, middleMessageId, true);
-    let slowRegisterMessageDef;
-    patchWithCleanup(UseForwardRefsToParent.prototype, {
-        async registerRef(...args) {
-            // Ensure scroll is made even when messages are mounted later.
-            await slowRegisterMessageDef;
-            return super.registerRef(...args);
-        },
+        await pyEnv["discuss.channel"].set_message_pin(channelId, middleMessageId, true);
+        let slowRegisterMessageDef;
+        patchWithCleanup(UseForwardRefsToParent.prototype, {
+            async registerRef(...args) {
+                // Ensure scroll is made even when messages are mounted later.
+                await slowRegisterMessageDef;
+                return super.registerRef(...args);
+            },
+        });
+        await start();
+        await openDiscuss(channelId);
+        await tick(); // Wait for the scroll to first unread to complete.
+        await isInViewportOf(".o-mail-Message:contains(message 199)", ".o-mail-Thread");
+        slowRegisterMessageDef = new Deferred();
+        await click("a[data-oe-type='highlight']");
+        await advanceTime(1000);
+        slowRegisterMessageDef.resolve();
+        await isInViewportOf(".o-mail-Message:contains(message 100)", ".o-mail-Thread");
     });
-    await start();
-    await openDiscuss(channelId);
-    await tick(); // Wait for the scroll to first unread to complete.
-    await isInViewportOf(".o-mail-Message:contains(message 199)", ".o-mail-Thread");
-    slowRegisterMessageDef = new Deferred();
-    await click("a[data-oe-type='highlight']");
-    await advanceTime(1000);
-    slowRegisterMessageDef.resolve();
-    await isInViewportOf(".o-mail-Message:contains(message 100)", ".o-mail-Thread");
-});
+}
 
 test("highlight scrolls to beginning of long message", async () => {
     disableAnimations();
