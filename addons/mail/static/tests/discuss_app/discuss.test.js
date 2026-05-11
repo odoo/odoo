@@ -2150,7 +2150,7 @@ test("failure on loading messages should display error", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await contains(".o-mail-Thread:has(:text('An error occurred while fetching messages.'))");
+    await contains(".o-mail-Thread:has(:text('An error occurred while loading messages.'))");
     await animationFrame();
     expect.verifyErrors(["RPC_ERROR"]);
 });
@@ -2169,7 +2169,7 @@ test("failure on loading messages should prompt retry button", async () => {
     });
     await start();
     await openDiscuss(channelId);
-    await contains("button:text('Click here to retry')");
+    await contains("button:text('Try again')");
     await animationFrame();
     expect.verifyErrors(["RPC_ERROR"]);
 });
@@ -2211,8 +2211,8 @@ test("failure on loading more messages should display error and prompt retry but
     await contains(".o-mail-Message", { count: 30 });
     messageFetchShouldFail = true;
     await click("button:text('Load More')");
-    await contains(".o-mail-Thread:has(:text('An error occurred while fetching messages.'))");
-    await contains("button:text('Click here to retry')");
+    await contains(".o-mail-Thread:has(:text('An error occurred while loading messages.'))");
+    await contains("button:text('Try again')");
     await contains("button:text('Load More')", { count: 0 });
 });
 
@@ -2254,9 +2254,9 @@ test("Retry loading more messages on failed load more messages should load more 
     messageFetchShouldFail = true;
     await contains(".o-mail-Thread", { scroll: "bottom" });
     await scroll(".o-mail-Thread", 0);
-    await contains("button:text('Click here to retry')");
+    await contains("button:text('Try again')");
     messageFetchShouldFail = false;
-    await click("button:text('Click here to retry')");
+    await click("button:text('Try again')");
     await waitStoreFetch("/discuss/channel/messages");
     await contains(".o-mail-Message", { count: 60 });
     await scroll(".o-mail-Thread", 0);
