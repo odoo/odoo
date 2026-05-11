@@ -1,17 +1,17 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.http import request
+
 from odoo.addons.mail.controllers.webclient import WebclientController
 from odoo.addons.mail.tools.discuss import Store
-from odoo.http import request
+from odoo.addons.mail.tools.store_handler import store_handler
 
 
 class HrWebclientController(WebclientController):
-    @classmethod
-    def _process_request_for_internal_user(cls, store: Store, name, params):
-        super()._process_request_for_internal_user(store, name, params)
-        if name == "hr.employee.public":
-            emp_public = request.env["hr.employee.public"].search_fetch([("id", "=", params["id"])])
-            store.add(emp_public, "_store_avatar_card_fields")
+    @store_handler("hr.employee.public")
+    def store_hr_employee_public(self, store: Store, id):
+        emp_public = request.env["hr.employee.public"].search_fetch([("id", "=", id)])
+        store.add(emp_public, "_store_avatar_card_fields")
 
     @classmethod
     def _get_supported_avatar_card_models(self):

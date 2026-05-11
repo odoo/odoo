@@ -1,10 +1,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.http import request, route
-from odoo.addons.mail.controllers.webclient import WebclientController, WRITE_FETCH_PARAMS
-from odoo.addons.mail.tools.discuss import Store
 
-WRITE_FETCH_PARAMS |= {"init_livechat"}
+from odoo.addons.mail.controllers.webclient import WebclientController
+from odoo.addons.mail.tools.discuss import Store
+from odoo.addons.mail.tools.store_handler import store_handler
 
 
 class WebClient(WebclientController):
@@ -18,36 +18,35 @@ class WebClient(WebclientController):
             },
         )
 
-    @classmethod
-    def _process_request_for_internal_user(cls, store: Store, name, params):
-        super()._process_request_for_internal_user(store, name, params)
-        if name == "im_livechat.channel":
-            store.add(request.env["im_livechat.channel"].search([]), ["are_you_inside", "name"])
-        if name == "/im_livechat/looking_for_help":
-            chats_looking_for_help = request.env["discuss.channel"].search(
-                [("livechat_status", "=", "need_help")],
-                order="livechat_looking_for_help_since_dt ASC, id ASC",
-                limit=100,
-            )
-            request.update_context(
-                channels=request.env.context["channels"] | chats_looking_for_help
-            )
-        if name == "/im_livechat/session/data":
-            channel_id = params.get("channel_id")
-            if not channel_id:
-                return
-            channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
-            if not channel:
-                return
-            store.add(channel, "_store_livechat_extra_fields")
-        if name == "/im_livechat/fetch_self_expertise":
-            store.add(request.env.user, lambda res: res.many("livechat_expertise_ids", ["name"]))
+    @store_handler("im_livechat.channel")
+    def store_im_livechat_channel(self, store: Store):
+        store.add(request.env["im_livechat.channel"].search([]), ["are_you_inside", "name"])
 
-    @classmethod
-    def _process_request_for_all(cls, store: Store, name, params):
-        super()._process_request_for_all(store, name, params)
-        if name == "init_livechat":
-            store.add_global_values(lambda res: cls._store_init_livechat_fields(res, params))
+    @store_handler("/im_livechat/looking_for_help")
+    def store_im_livechat_looking_for_help(self, store: Store):
+        chats_looking_for_help = request.env["discuss.channel"].search(
+            [("livechat_status", "=", "need_help")],
+            order="livechat_looking_for_help_since_dt ASC, id ASC",
+            limit=100,
+        )
+        request.update_context(channels=request.env.context["channels"] | chats_looking_for_help)
+
+    @store_handler("/im_livechat/session/data")
+    def store_im_livechat_session_data(self, store: Store, channel_id):
+        if not channel_id:
+            return
+        channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
+        store.add(channel, "_store_livechat_extra_fields")
+
+    @store_handler("/im_livechat/fetch_self_expertise")
+    def store_im_livechat_fetch_self_expertise(self, store: Store):
+        store.add(request.env.user, lambda res: res.many("livechat_expertise_ids", ["name"]))
+
+    @store_handler("init_livechat", audience="everyone", readonly=False)
+    def store_init_livechat(self, store: Store, livechat_channel_id=None):
+        store.add_global_values(
+            lambda res: self._store_init_livechat_fields(res, livechat_channel_id),
+        )
 
     @classmethod
     def _store_init_livechat_fields(cls, res: Store.FieldList, params):
