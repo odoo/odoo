@@ -191,6 +191,9 @@ test("404 page in translate mode", async () => {
             websiteServiceInTranslateMode.is404 = () => true;
             this.websiteService = websiteServiceInTranslateMode;
             this.websiteContext = this.websiteService.context;
+            this.metaState = {
+                translatable: !!this.websiteService.currentWebsite?.metadata.translatable,
+            };
         },
     });
     await setupWebsiteBuilder(`<h1> Homepage </h1>`, { openEditor: false });

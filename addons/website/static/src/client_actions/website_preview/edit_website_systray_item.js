@@ -25,8 +25,14 @@ export class EditWebsiteSystrayItem extends Component {
         this.websiteService = useService("website");
         this.notification = useService("notification");
         this.websiteContext = useState(this.websiteService.context);
-        // TODO: website service should share a reactive
-        useBus(websiteSystrayRegistry, "CONTENT-UPDATED", () => this.checkPendingTranslations());
+        this.metaState = useState({
+            translatable: !!this.websiteService.currentWebsite?.metadata.translatable,
+        });
+        useBus(websiteSystrayRegistry, "CONTENT-UPDATED", () => {
+            this.metaState.translatable =
+                !!this.websiteService.currentWebsite?.metadata.translatable;
+            this.checkPendingTranslations();
+        });
         this.isEnteringTranslateMode = false;
     }
 
@@ -44,7 +50,7 @@ export class EditWebsiteSystrayItem extends Component {
     }
 
     get translatable() {
-        return this.websiteService.currentWebsite?.metadata.translatable;
+        return this.metaState.translatable;
     }
 
     async attemptStartTranslate() {
