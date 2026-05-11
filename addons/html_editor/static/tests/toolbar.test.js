@@ -2091,3 +2091,13 @@ test("toolbar should not be displayed when only invisible nodes are selected", a
     setContent(el, `<div><p>abc</p><h1 class="d-none">[I'm not displayed]</h1></div>`);
     await expectElementCount(".o-we-toolbar", 0);
 });
+
+test("should highlight text color button on color picker opened", async () => {
+    await setupEditor(`<div><p>[abc]</p></div>`);
+    await waitFor(".o-we-toolbar");
+    await expandToolbar();
+    expect(".o-select-color-foreground").not.toHaveClass("active");
+    await click(".o-select-color-foreground");
+    await waitFor(".o_font_color_selector");
+    expect(".o-select-color-foreground").toHaveClass("active");
+});

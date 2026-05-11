@@ -37,6 +37,7 @@ export class ColorSelector extends Component {
 
     setup() {
         this.state = useState({});
+        this.colorSelectorState = useState({ isOpen: false });
         const htmlStyle = getHtmlStyle(document);
         const defaultThemeColors = DEFAULT_THEME_COLOR_VARS.map((color) =>
             getCSSVariableValue(color, htmlStyle)
@@ -78,6 +79,10 @@ export class ColorSelector extends Component {
                 onClose: () => {
                     this.props.applyColorResetPreview();
                     this.props.onClose();
+                    this.colorSelectorState.isOpen = false;
+                },
+                onOpen: () => {
+                    this.colorSelectorState.isOpen = true;
                 },
                 ref: colorPickerRef,
             }
