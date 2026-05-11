@@ -3,6 +3,7 @@ from collections import defaultdict, Counter
 import math
 
 from odoo import api, fields, models, modules, tools
+from odoo.tools.date_utils import get_quarter_number
 from odoo.exceptions import LockError, UserError
 from odoo.tools.float_utils import float_round
 from markupsafe import Markup
@@ -277,6 +278,13 @@ class AccountMove(models.Model):
 
         return errors
 
+    def _l10n_es_edi_get_period(self):
+        self.ensure_one()
+        if 'account_return_periodicity' in self.company_id._fields:
+            if self.company_id.account_return_periodicity == 'trimester':
+                return f'{get_quarter_number(self.date)}T'
+        return str(self.date.month).zfill(2)
+
     def _l10n_es_edi_get_invoices_info(self):
         info_list = []
         for move in self:
@@ -286,7 +294,7 @@ class AccountMove(models.Model):
             info = {
                 'PeriodoLiquidacion': {
                     'Ejercicio': str(move.date.year),
-                    'Periodo': str(move.date.month).zfill(2),
+                    'Periodo': move._l10n_es_edi_get_period(),
                 },
                 'IDFactura': {
                     'FechaExpedicionFacturaEmisor': move.invoice_date.strftime('%d-%m-%Y'),
