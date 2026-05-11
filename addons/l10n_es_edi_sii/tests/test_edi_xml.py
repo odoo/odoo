@@ -1280,3 +1280,25 @@ class TestEdiXmls(TestEsEdiCommon):
                 },
                 'PeriodoLiquidacion': {'Periodo': '01', 'Ejercicio': '2019'}
             })
+
+    def test_out_invoice_period_match_tax_periodicity(self):
+        """
+        Test that an invoice in April correctly reflects the '2T' period
+        when the company's tax periodicity is set to 'trimester'
+        and '0A' when the tax periodicity is set to 'year
+        """
+        self.ensure_installed('account_reports')
+        with freeze_time(self.frozen_today), \
+             patch('odoo.addons.l10n_es_edi_sii.models.account_edi_format.AccountEdiFormat._l10n_es_edi_call_web_service_sign',
+                   new=mocked_l10n_es_edi_call_web_service_sign):
+            self.env.company.account_tax_periodicity = 'trimester'
+            invoice = self._create_invoice(
+                date='2019-04-02',
+                post=True,
+            )
+
+            generated_files = self._process_documents_web_services(invoice, {'es_sii'})
+            self.assertTrue(generated_files)
+
+            json_file = json.loads(generated_files[0].decode())[0]
+            self.assertEqual(json_file.get('PeriodoLiquidacion'), {'Periodo': '2T', 'Ejercicio': '2019'})
