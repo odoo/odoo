@@ -6,7 +6,7 @@ title: Plan de Proyecto
 <style>
     
 table th {
-    background-color: #0b1f3a !important;
+    background-color: #020d1a !important;
     color: white !important;
 }
 </style>
