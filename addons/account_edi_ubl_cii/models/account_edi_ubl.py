@@ -3348,7 +3348,7 @@ class AccountEdiUBL(models.AbstractModel):
             "Format used to import the invoice: %s",
             self.env['ir.model']._get(self._name).name,
         )
-        if logs := collected_values['logs']:
+        if logs := dict.fromkeys(collected_values['logs']):
             body += Markup("<ul>%s</ul>") % Markup().join(Markup("<li>%s</li>") % l for l in logs)
         invoice.with_context(no_new_invoice=True).message_post(body=body, attachment_ids=attachments.ids)
 
