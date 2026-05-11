@@ -115,28 +115,6 @@ class TestOrmDiscussion(models.Model):
         """Ensure computed O2M domains work as expected."""
         return [("important", "=", True)]
 
-    @api.onchange('name')
-    def _onchange_name(self):
-        # test onchange modifying one2many field values
-        if self.env.context.get('generate_dummy_message') and self.name == '{generate_dummy_message}':
-            # update body of existings messages and emails
-            for message in self.messages:
-                message.body = 'not last dummy message'
-            for message in self.important_messages:
-                message.body = 'not last dummy message'
-            # add new dummy message
-            message_vals = self.messages._add_missing_default_values({'body': 'dummy message', 'important': True})
-            self.messages |= self.messages.new(message_vals)
-            self.important_messages |= self.messages.new(message_vals)
-
-    @api.onchange('moderator')
-    def _onchange_moderator(self):
-        self.participants |= self.moderator
-
-    @api.onchange('messages')
-    def _onchange_messages(self):
-        self.message_concat = "\n".join(["%s:%s" % (m.name, m.body) for m in self.messages])
-
 
 class TestOrmMessage(models.Model):
     _name = 'test_orm.message'
@@ -265,21 +243,6 @@ class TestOrmMulti(models.Model):
     lines = fields.One2many('test_orm.multi.line', 'multi')
     partners = fields.One2many(related='partner.child_ids')
     tags = fields.Many2many('test_orm.multi.tag', domain=[('name', 'ilike', 'a')])
-
-    @api.onchange('name')
-    def _onchange_name(self):
-        for line in self.lines:
-            line.name = self.name
-
-    @api.onchange('partner')
-    def _onchange_partner(self):
-        for line in self.lines:
-            line.partner = self.partner
-
-    @api.onchange('tags')
-    def _onchange_tags(self):
-        for line in self.lines:
-            line.tags |= self.tags
 
 
 class TestOrmMultiLine(models.Model):
@@ -837,10 +800,6 @@ class TestOrmComputeOnchange(models.Model):
         'test_orm.multi.tag',
         compute='_compute_tag_ids', store=True, readonly=False,
     )
-
-    @api.onchange('foo')
-    def _onchange_foo(self):
-        self.count += 1
 
     @api.depends('foo')
     def _compute_bar(self):
@@ -1772,10 +1731,6 @@ class TestOrmComputedModifier(models.Model):
         for record in self:
             record.sub_foo = record.foo
 
-    @api.onchange('bar')
-    def _onchange_moderator(self):
-        self.sub_bar = self.bar
-
 
 class TestOrmCompute_Editable(models.Model):
     _name = 'test_orm.compute_editable'
@@ -1783,12 +1738,6 @@ class TestOrmCompute_Editable(models.Model):
 
     precision_rounding = fields.Float(default=0.01, digits=(1, 10))
     line_ids = fields.One2many('test_orm.compute_editable.line', 'parent_id')
-
-    @api.onchange('line_ids')
-    def _onchange_line_ids(self):
-        for line in self.line_ids:
-            # even if 'same' is not in the view, it should be the same as 'value'
-            line.count += line.same
 
 
 class TestOrmCompute_EditableLine(models.Model):
