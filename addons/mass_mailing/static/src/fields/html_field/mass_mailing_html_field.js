@@ -57,6 +57,15 @@ export class MassMailingHtmlField extends HtmlField {
             loadBundle("mass_mailing.assets_builder");
         }
 
+        // useRecordObserver's callback now runs during setup() (via Owl's
+        // reactive effect), before this component's setup() continues. This
+        // means state.key is already incremented by the time we register the
+        // useEffect below, so updateThemeSelector would never be called on
+        // the first mount. Call them explicitly here to compute the correct
+        // initial state before the first render.
+        this.updateActiveTheme();
+        this.updateThemeSelector();
+
         this.iframeRef = useChildRef();
         this.iframeWrapperRef = useChildRef();
         this.codeViewButtonRef = useRef("codeViewButtonRef");
@@ -335,7 +344,7 @@ export class MassMailingHtmlField extends HtmlField {
     async commitChanges({ urgent } = {}) {
         if (!urgent) {
             await this.mutex.exec(() => {
-                if (this.withBuilder && this.isEditorReady()) {
+                if (this.withBuilder && this.isEditorReady() && this.editor.shared.operation) {
                     return this.editor.shared.operation.getUnlockedDef();
                 }
             });

@@ -1022,7 +1022,7 @@ test("quick check on save if domain has been edited via the debug input", async 
     await contains(SELECTORS.debugArea).edit("[['id', '!=', False]]");
     await contains("button.o_form_button_save").click();
     await animationFrame();
-    expect.verifySteps(["validate model", "validate model"]);
+    expect.verifySteps(["validate model"]);
     expect(".o_domain_show_selection_button").toHaveText("4 record(s)");
 });
 test("domain field can be foldable", async function () {

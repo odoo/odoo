@@ -5426,9 +5426,8 @@ test(`Domain: allow empty domain on fieldInfo`, async () => {
     expect.verifySteps(["search_read"]);
 });
 
-// same as "statusbar with dynamic domain"
-test.tags("desktop", "owl3");
-test.todo(`discard form with specialdata on desktop`, async () => {
+test.tags("desktop");
+test(`discard form with specialdata on desktop`, async () => {
     await mountView({
         resModel: "partner",
         type: "form",

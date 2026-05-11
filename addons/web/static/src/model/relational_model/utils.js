@@ -1,12 +1,5 @@
 import { useComponent } from "@web/owl2/utils";
-import {
-    immediateEffect,
-    markup,
-    onWillDestroy,
-    onWillStart,
-    onWillUpdateProps,
-    untrack,
-} from "@odoo/owl";
+import { effect, markup, onWillDestroy, onWillStart, onWillUpdateProps } from "@odoo/owl";
 import { evalPartialContext, makeContext } from "@web/core/context";
 import { Domain } from "@web/core/domain";
 import {
@@ -18,11 +11,9 @@ import {
 import { x2ManyCommands } from "@web/core/orm_service";
 import { evaluateExpr } from "@web/core/py_js/py";
 import { omit } from "@web/core/utils/objects";
-import { batched } from "@web/core/utils/timing";
 import { orderByToString } from "@web/search/utils/order_by";
 import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
-import { uniqueId } from "@web/core/utils/functions";
 import { unique } from "@web/core/utils/arrays";
 
 const granularityToInterval = {
@@ -773,99 +764,23 @@ export function isRelational(field) {
  */
 export function useRecordObserver(callback) {
     const component = useComponent();
-    let currentId;
-    let isDestroyed = false;
-
-    let hooksSet = false;
-    const setHooks = (props) => {
-        hooksSet = true;
-        const hooks = props.record.model.hooks;
-        const hookNames = [
-            "onRootLoaded",
-            "onRecordSaved",
-            "onSavedMulti",
-            "onRecordChanged",
-            "onRecordDiscarded",
-        ];
-        const previousCbs = [];
-        for (const hookName of hookNames) {
-            const previousCb = hooks[hookName];
-            previousCbs.push([hookName, previousCb]);
-            hooks[hookName] = (...args) => {
-                const result = previousCb(...args);
-                batchedCallback(
-                    currentId,
-                    props.record,
-                    props,
-                    () => {},
-                    () => {}
-                );
-                return result;
-            };
-        }
-        return () => {
-            for (const [key, previousCb] of previousCbs) {
-                hooks[key] = previousCb;
-            }
-        };
+    let prom;
+    let props = component.props;
+    const observeRecord = () => {
+        prom = Promise.resolve(callback(props.record, props)).then(() => component.render());
+        return prom;
     };
-
-    const batchedCallback = batched(
-        (effectId, record, props, resolve, reject) => {
-            if (isDestroyed || effectId !== currentId) {
-                // effect doesn't clean up when the component is unmounted.
-                // We must do it manually.
-                return;
-            }
-            return Promise.resolve(callback(record, props)).then(resolve).catch(reject);
-        },
-        () => new Promise((res) => window.requestAnimationFrame(res))
-    );
-
-    let disposeHooks = () => {};
-    let disposePreviousEffect = () => {};
-    const observeRecord = (props) => {
-        disposePreviousEffect();
-        currentId = uniqueId();
-        if (!props.record) {
-            return;
-        }
-        if (!hooksSet) {
-            disposeHooks = setHooks(props);
-        }
-        const { promise, resolve, reject } = Promise.withResolvers();
-        const effectId = currentId;
-        let firstCall = true;
-        disposePreviousEffect = immediateEffect(() => {
-            if (isDestroyed) {
-                return;
-            }
-            for (const key in props.record.data) {
-                props.record.data[key]; // consume signal
-            }
-            if (firstCall) {
-                firstCall = false;
-                untrack(() => Promise.resolve(callback(props.record, props)))
-                    .then(resolve)
-                    .catch(reject);
-            } else {
-                batchedCallback(effectId, props.record, props, resolve, reject);
-            }
-        });
-        return promise;
-    };
-    onWillDestroy(() => {
-        isDestroyed = true;
-        currentId = uniqueId();
-        disposePreviousEffect();
-        disposeHooks();
-    });
-    onWillStart(() => observeRecord(component.props));
+    let cleanup = effect(() => observeRecord());
+    onWillStart(() => prom);
     onWillUpdateProps((nextProps) => {
         if (nextProps.record !== component.props.record) {
-            return observeRecord(nextProps);
+            props = nextProps;
+            cleanup();
+            cleanup = effect(() => observeRecord());
+            return prom;
         }
     });
+    onWillDestroy(cleanup);
 }
 
 /**
