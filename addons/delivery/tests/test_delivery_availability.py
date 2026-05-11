@@ -240,3 +240,22 @@ class TestDeliveryAvailability(DeliveryCommon, SaleCommon):
         }))
         choose_delivery_carrier = delivery_wizard.save()
         self.assertFalse(self.carrier.id in choose_delivery_carrier.available_carrier_ids.ids, "Carrier excluded tag is set on one product in the order")
+
+    def test_action_open_delivery_wizard_ignores_archived_carriers(self):
+        self.partner.property_delivery_carrier_id = self.carrier
+
+        self.carrier.active = False
+
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.product.id,
+                    'product_uom_qty': 10,
+                    'price_unit': 10.0,
+                }),
+            ],
+        })
+
+        action = sale_order.action_open_delivery_wizard()
+        self.assertEqual(action['context']['default_carrier_id'], False)
