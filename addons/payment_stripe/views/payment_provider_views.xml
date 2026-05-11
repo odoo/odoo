@@ -9,6 +9,7 @@
             <group name="provider_credentials" position="before">
                 <div
                      name="stripe_onboarding_group"
+                     groups="base.group_system"
                      invisible="context.get('stripe_onboarding', False) or (code != 'stripe' or stripe_secret_key or stripe_publishable_key)">
                     <button string="Connect Stripe"
                             type="object"
@@ -29,10 +30,12 @@
                                 type="object"
                                 name="action_stripe_create_webhook"
                                 class="btn-primary"
+                                groups="base.group_system"
                                 invisible="stripe_webhook_secret or not stripe_secret_key"/>
                     </div>
                 </group>
                 <div name="stripe_keys_link"
+                     groups="base.group_system"
                      invisible="not context.get('stripe_onboarding', False) or (code != 'stripe' or stripe_secret_key and stripe_publishable_key)">
                     <a class="btn btn-link" role="button" href="https://dashboard.stripe.com/account/apikeys" target="_blank">
                         Get your Secret and Publishable keys
