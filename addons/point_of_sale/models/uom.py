@@ -7,6 +7,9 @@ class UomUom(models.Model):
 
     is_pos_groupable = fields.Boolean(string='Group Products in POS', help="Check if you want to group products of this unit in point of sale orders")
 
+    def _load_pos_data(self, data):
+        return super(UomUom, self.with_context(active_test=False))._load_pos_data(data)
+
     @api.model
     def _load_pos_data_fields(self, config_id):
         config = self.env['pos.config'].browse(config_id)
