@@ -5,7 +5,7 @@
     "version": "2.0",
     "category": "Hidden",
     "summary": "The payment engine used by payment provider modules.",
-    "depends": ["onboarding", "portal"],
+    "depends": ["onboarding", "payment_proxy", "portal"],
     "data": [
         # Record data.
         "data/ir_actions_server_data.xml",

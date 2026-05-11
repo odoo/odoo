@@ -10,6 +10,7 @@ from odoo.exceptions import UserError, ValidationError
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.const import REPORT_REASONS_MAPPING, SENSITIVE_KEYS
 from odoo.addons.payment.logging import get_payment_logger
+from odoo.addons.payment_proxy.utils import send_api_request
 
 # Pass the possibly empty set of sensitive keys to the logger in case a provider module extends it.
 _logger = get_payment_logger(__name__, sensitive_keys=SENSITIVE_KEYS)
@@ -815,21 +816,9 @@ class PaymentProvider(models.Model):
         self._log_request(method, url, payload, reference=reference)
 
         # Send the request.
-        try:
-            response = requests.request(
-                method,
-                url,
-                params=params,
-                data=data,
-                json=json,
-                headers=headers,
-                auth=auth,
-                timeout=10,
-            )
-        except (requests.exceptions.ConnectionError, requests.exceptions.Timeout):
-            raise ValidationError(
-                _("Could not establish the connection to the payment provider.")
-            ) from None
+        response = send_api_request(
+            method, url, params=params, data=data, json=json, headers=headers, auth=auth
+        )
 
         # Log the response.
         self._log_response(response, reference=reference)
