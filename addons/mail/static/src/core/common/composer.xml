@@ -194,6 +194,7 @@
                 "<t t-out="option.thread.getPersonaName(partner)"/>"
             </t>
         </strong>
+        <span t-if="partner.statusSubtitle" t-att-class="'me-1 smaller text-truncate align-self-center ' + partner.statusSubtitleClass" t-out="partner.statusSubtitle"/>
         <span t-if="partner.email" class="text-600 text-truncate align-self-center opacity-75" t-att-title="title">(<t t-out="partner.email"/>)</span>
     </t>
 

@@ -90,7 +90,11 @@ export class ImStatus extends Component {
 
     get title() {
         const data = this.activeImStatusData;
-        return data.title[this.persona.imStatusUI] || data.title.default || data.title;
+        const titles =
+            typeof data.title === "function"
+                ? data.title({ member: this.props.member, persona: this.persona, user: this.user })
+                : data.title;
+        return titles[this.persona.imStatusUI] ?? titles.default ?? titles;
     }
 
     get colorClass() {

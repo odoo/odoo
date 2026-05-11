@@ -5,6 +5,7 @@
             <DiscussAvatar member="this.member"/>
             <div t-custom-ref="displayName" class="d-flex overflow-hidden flex-column lh-sm">
                 <span class="ms-2 text-truncate text-muted fw-bold" t-out="this.member.name" t-att-title="this.member.name"/>
+                <span t-if="this.member.partner_id?.statusSubtitle" t-att-class="'ms-2 smaller text-truncate ' + this.member.partner_id.statusSubtitleClass" t-out="this.member.partner_id.statusSubtitle"/>
             </div>
             <i t-if="this.member.channel_role === 'owner'" class="ms-1 fa fa-star text-warning lh-sm" role="img" title="Channel Owner" aria-label="Channel Owner"/>
             <i t-if="this.member.channel_role === 'admin'" class="ms-1 fa fa-star text-primary lh-sm" role="img" title="Channel Admin" aria-label="Channel Admin"/>

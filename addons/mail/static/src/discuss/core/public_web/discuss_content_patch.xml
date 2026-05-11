@@ -5,5 +5,11 @@
             <PipBanner t-if="this.rtc.isPipMode and this.thread.channel?.eq(this.rtc.channel)"/>
             <Call t-elif="this.thread.channel?.showCallView" channel="this.thread.channel"/>
         </xpath>
+        <xpath expr="//AutoresizeInput[contains(@className, 'o-mail-DiscussContent-threadName')]" position="after">
+            <t t-if="this.correspondentStatusMessage">
+                <div class="flex-shrink-0 mx-1 py-2 border-start"/>
+                <span class="text-muted small px-1 py-0 my-auto flex-shrink-1 text-truncate" t-out="this.correspondentStatusMessage"/>
+            </t>
+        </xpath>
     </t>
 </templates>

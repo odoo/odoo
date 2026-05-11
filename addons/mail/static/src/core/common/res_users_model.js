@@ -26,6 +26,8 @@ export class ResUsers extends ImStatusMixin {
     active;
     /** @type {ReturnType<import("@odoo/owl").markup>|string|undefined} */
     signature = fields.Html(undefined);
+    /** @type {string} */
+    status_message;
 
     get avatarUrl() {
         if (this.partner_id) {

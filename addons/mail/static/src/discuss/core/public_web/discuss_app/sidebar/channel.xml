@@ -39,6 +39,7 @@
                         <span class="text-truncate" t-out="this.channel.displayName" t-custom-ref="displayName"/>
                         <div class="d-flex gap-2 ms-auto" t-custom-ref="displayNameAdditionalContent"/>
                     </div>
+                    <span t-if="this.channel.correspondent?.partner_id?.statusSubtitle" t-att-class="'smaller text-truncate ' + this.channel.correspondent.partner_id.statusSubtitleClass" t-out="this.channel.correspondent.partner_id.statusSubtitle"/>
                 </div>
             </div>
             <div t-if="this.indicators.length" class="position-absolute rounded-circle p-0 o-xsmaller o-mail-DiscussSidebarChannel-indicatorCompact lh-1 bg-inherit" name="indicator-compact">
