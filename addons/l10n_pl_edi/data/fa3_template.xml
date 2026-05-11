@@ -326,9 +326,14 @@
             </t>
         </Platnosc>
 
-        <t t-if="invoice.invoice_incoterm_id">
+        <t t-if="invoice.invoice_incoterm_id or invoice.ref">
         <WarunkiTransakcji>
-            <WarunkiDostawy t-out="invoice.invoice_incoterm_id.code"/>
+            <WarunkiDostawy t-if="invoice.invoice_incoterm_id" t-out="invoice.invoice_incoterm_id.code"/>
+            <t t-if="invoice.ref">
+            <Zamowienia>
+              <NrZamowienia t-out="invoice.ref"/>
+            </Zamowienia>
+            </t>
         </WarunkiTransakcji>
         </t>
       </Fa>
