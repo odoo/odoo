@@ -14,7 +14,8 @@ from odoo.tools.sql import SQL, column_exists, create_column
 from odoo.tools.translate import adapt_translated_field_value, html_translate
 
 from odoo.addons.website.models import ir_http
-from odoo.addons.website.tools import text_from_html
+from odoo.addons.website.helpers.jsonld_builder import JsonLd
+from odoo.addons.website_sale.const import SHOP_PATH
 
 # A delimiter that users aren't likely to search for in product codes.
 RARE_DELIMITER = "\u241e"
@@ -40,6 +41,7 @@ class ProductTemplate(models.Model):
         "website.seo.metadata",
         "website.published.multi.mixin",
         "website.searchable.mixin",
+        "website.structured_data.mixin",
     ]
     _mail_post_access = "read"
     _check_company_auto = True
@@ -1380,24 +1382,20 @@ class ProductTemplate(models.Model):
                 ), pricelist_rule_id
         return price, pricelist_rule_id
 
-    def _to_markup_data(self, website):
-        """Generate JSON-LD markup data for the current product template.
+    def _build_product_jsonld(self):
+        """Build detailed ``Product`` schema for a post detail page.
 
-        If the template has multiple variants, the https://schema.org/ProductGroup schema is used.
-        Otherwise, the markup data generation is delegated to the variant to use the
-        https://schema.org/Product schema.
-
-        :param website website: The current website.
-        :return: The JSON-LD markup data.
-        :rtype: dict
+        Returns either a single Product JSON-LD (for templates with one variant)
+        or a ProductGroup JSON-LD (for multi-variant templates).
         """
         self.ensure_one()
-
+        website = self.env["website"].get_current_website()
         if self.product_variant_count == 1:
-            markup_data = self.product_variant_id._to_markup_data(website)
+            # Single variant: return variant product schema directly
+            product_group_jsonld = self.product_variant_id._build_product_jsonld()
         else:
-            # perf: temporal solution to avoid slowness when product have many variants and
-            # pricelist rules
+            # Multiple variants: build ProductGroup schema
+            # Performance: Limit variants to avoid slowness with large variant counts and pricelist rules
             limit = (
                 self
                 .env["ir.config_parameter"]
@@ -1405,31 +1403,56 @@ class ProductTemplate(models.Model):
                 .get_int("website_sale.markup_data_limit_variants")
                 or None
             )
-            if limit:
-                product_variant_ids = self.product_variant_ids[:limit]
-            else:
-                product_variant_ids = self.product_variant_ids
-
-            base_url = website.get_base_url()
-            markup_data = {
-                "@context": "https://schema.org",
-                "@type": "ProductGroup",
+            product_variant_ids = self.product_variant_ids[:limit] if limit else self.product_variant_ids
+            variant = next((v for v in product_variant_ids if v.default_code), None)
+            product_group_id = variant.default_code if variant else f"TEMPLATE-{self.id}"
+            base_url = self.get_base_url()
+            schema_data = {
                 "name": self.name,
-                "image": f"{base_url}{website.image_url(self, 'image_1920')}",
                 "url": f"{base_url}{self.website_url}",
-                "hasVariant": [product._to_markup_data(website) for product in product_variant_ids],
+                "productGroupID": product_group_id,
             }
             if self.description_ecommerce:
-                markup_data["description"] = text_from_html(self.description_ecommerce)
-
-        if website.is_view_active("website_sale.product_comment") and self.rating_count:
-            markup_data["aggregateRating"] = {
-                "@type": "AggregateRating",
-                # sudo: product.product - visitor can access product average rating
+                schema_data["description"] = self.description_ecommerce
+            nested_schema_data = {
+                "image": JsonLd("ImageObject", {"url": f"{base_url}{website.image_url(self, 'image_1024')}"}),
+                "brand": JsonLd("Organization", {"@id": f"{base_url}/#organization"}),
+                "hasVariant": [variant._build_product_jsonld() for variant in product_variant_ids],
+            }
+            product_group_jsonld = JsonLd("ProductGroup", schema_data).add_nested(nested_schema_data)
+        if website.is_view_active('website_sale.product_comment') and self.rating_count:
+            rating_jsonld = JsonLd("AggregateRating", {
                 "ratingValue": self.sudo().rating_avg,
                 "reviewCount": self.rating_count,
-            }
-        return markup_data
+            })
+            product_group_jsonld.add_nested({"aggregateRating": rating_jsonld})
+        return product_group_jsonld
+
+    def _get_breadcrumb_items(self, is_detail_page=False):
+        """Breadcrumb navigation items for shop and product pages."""
+        items = super()._get_breadcrumb_items(is_detail_page)
+        items.append((self.env._("Shop"), SHOP_PATH))
+        if is_detail_page:
+            category = self.public_categ_ids
+        else:
+            category = self.env["product.public.category"].browse(
+                self.env.context.get("shop_category_id")
+            )
+        if category:
+            slug = self.env["ir.http"]._slug
+            for cat in category.parents_and_self:
+                items.append((cat.name, f"{SHOP_PATH}/category/{slug(cat)}"))
+        if is_detail_page:
+            items.append((self.name, self.website_url))
+        return items
+
+    def _get_jsonld(self, is_detail_page=False):
+        """Build detailed JSON-LD for product pages."""
+        schemas = super()._get_jsonld(is_detail_page)
+        if is_detail_page:
+            schemas.append(self._build_product_jsonld())
+            return schemas
+        return schemas
 
     def _get_ribbon(self, price_vals=None, auto_assign_ribbons=None, variant=None):
         """Return the ribbon to display for the current template.

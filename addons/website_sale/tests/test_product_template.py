@@ -45,24 +45,24 @@ class TestWebsiteSaleProductTemplate(WebsiteSaleCommon):
             ],
         })
         with self.mock_request():
-            markup_data = product_template._to_markup_data(self.website)
-        self.assertEqual(markup_data["@type"], "ProductGroup")
-        self.assertEqual(len(markup_data["hasVariant"]), 2)
+            structured_data = product_template._build_product_jsonld()._to_jsonld_dict()
+        self.assertEqual(structured_data["@type"], "ProductGroup")
+        self.assertEqual(len(structured_data["hasVariant"]), 2)
 
     def test_markup_data_uses_product_schema_when_single_variant(self):
         product_template = self.env["product.template"].create({"name": "Test product"})
         with self.mock_request():
-            markup_data = product_template._to_markup_data(self.website)
-        self.assertEqual(markup_data["@type"], "Product")
+            structured_data = product_template._build_product_jsonld()._to_jsonld_dict()
+        self.assertEqual(structured_data["@type"], "Product")
 
     def test_markup_data_uses_taxes_excluded_price_when_configured_on_website(self):
         self.env["res.config.settings"].create({
             "show_line_subtotals_tax_selection": "tax_excluded"
         }).execute()
         with self.mock_request():
-            markup_data = self.product._to_markup_data(self.website)
+            structured_data = self.product._build_product_jsonld()._to_jsonld_dict()
             self.assertEqual(
-                markup_data["offers"]["price"],
+                structured_data["offers"]["price"],
                 self.website.currency_id.round(self.product.base_unit_price),
             )
 
@@ -73,9 +73,9 @@ class TestWebsiteSaleProductTemplate(WebsiteSaleCommon):
         self.product.price_extra = 10
         with self.mock_request():
             product_tmpl = self.product.product_tmpl_id
-            markup_data = self.product._to_markup_data(self.website)
+            structured_data = self.product._build_product_jsonld()._to_jsonld_dict()
             self.assertEqual(
-                markup_data["offers"]["price"],
+                structured_data["offers"]["price"],
                 self.website.currency_id.round(
                     self.product.base_unit_price * (1 + product_tmpl.taxes_id[0].amount / 100)
                 ),
@@ -91,7 +91,7 @@ class TestWebsiteSaleProductTemplate(WebsiteSaleCommon):
             .search([("name", "!=", company_currency.name)], limit=1)
         )
         with self.mock_request():
-            markup = self.product._to_markup_data(self.website)
+            structured_data = self.product._build_product_jsonld()._to_jsonld_dict()
         # Expected converted price
         expected_price = company_currency._convert(
             self.product.list_price,
@@ -99,7 +99,7 @@ class TestWebsiteSaleProductTemplate(WebsiteSaleCommon):
             company=self.env.company,
             date=Date.from_string("2020-01-01"),
         )
-        self.assertAlmostEqual(markup["offers"]["price"], expected_price, places=2)
+        self.assertAlmostEqual(structured_data["offers"]["price"], expected_price, places=2)
 
     def test_remove_archived_products_from_cart(self):
         """Archived products shouldn't appear in carts."""

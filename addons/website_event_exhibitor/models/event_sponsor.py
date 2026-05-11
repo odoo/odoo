@@ -4,6 +4,7 @@ from datetime import datetime, timedelta, UTC
 from zoneinfo import ZoneInfo
 
 from odoo import api, fields, models
+from odoo.addons.website.helpers.jsonld_builder import JsonLd
 from odoo.tools import is_html_empty
 from odoo.tools.date_utils import float_to_time
 from odoo.tools.translate import html_translate
@@ -20,6 +21,7 @@ class EventSponsor(models.Model):
         'mail.activity.mixin',
         'website.published.mixin',
         'website.searchable.mixin',
+        'website.structured_data.mixin',
     ]
 
     def _default_sponsor_type_id(self):
@@ -172,6 +174,84 @@ class EventSponsor(models.Model):
     @api.depends('event_id.website_id.domain')
     def _compute_website_absolute_url(self):
         super()._compute_website_absolute_url()
+
+    def _build_exhibitor_base_jsonld(self):
+        """Build the base event exhibitor schema for listing cards."""
+        self.ensure_one()
+        base_url = self.get_base_url()
+        schema_type = "LocalBusiness" if self.partner_id.is_company else "Person"
+        schema_data = {
+            "@id": f"{base_url}{self.website_url}/#{schema_type}",
+            "name": self.name,
+            "description": self.subtitle,
+            "mainEntityOfPage": f"{base_url}{self.website_url}",
+        }
+        if self.url:
+            schema_data["url"] = self.url
+        schema = JsonLd(schema_type, schema_data)
+        if image_url := self.website_image_url:
+            schema.add_nested({"image": JsonLd("ImageObject", {"url": f"{base_url}{image_url}"})})
+        return schema
+
+    def _build_exhibitor_jsonld(self):
+        """Build the detailed event exhibitor schema for a detail page."""
+        self.ensure_one()
+        exhibitor_jsonld = self._build_exhibitor_base_jsonld()
+        base_url = self.get_base_url()
+        schema_data = {
+            "telephone": self.phone,
+            "email": self.email,
+            "sameAs": f"{base_url}{self.website_url}",
+        }
+        return exhibitor_jsonld.set(schema_data)
+
+    def _get_breadcrumb_items(self, is_detail_page=False):
+        """Get breadcrumb items for the event exhibitor."""
+        items = super()._get_breadcrumb_items(is_detail_page)
+        items.append((self.env._("Events"), "/event"))
+        if not self:
+            return items
+        event = self[0].event_id
+        event_slug = self.env['ir.http']._slug(event)
+        items.extend([
+            (event.name, event.website_url),
+            (self.env._("Exhibitors"), f"/event/{event_slug}/exhibitors"),
+        ])
+        if is_detail_page:
+            items.append((self.name, self.website_url))
+        return items
+
+    def _build_exhibitor_collectionpage_jsonld(self):
+        """Build a ``CollectionPage`` schema for the listing page."""
+        event = self[0].event_id
+        website = self.env['website'].get_current_website()
+        base_url = website.get_base_url()
+        event_slug = self.env['ir.http']._slug(event)
+        collection_url = f"{base_url}/event/{event_slug}/exhibitors"
+        schema_data = {
+            "name": self.env._("Exhibitors"),
+            "url": collection_url,
+        }
+        list_items = [
+            JsonLd("ListItem", {"position": index + 1}).add_nested({
+                "item": sponsor._build_exhibitor_base_jsonld(),
+            }) for index, sponsor in enumerate(self)
+        ]
+        main_entity_jsonld = JsonLd("ItemList").add_nested({
+            "itemListElement": list_items,
+        })
+        return JsonLd("CollectionPage", schema_data).add_nested({"mainEntity": main_entity_jsonld})
+
+    def _get_jsonld(self, is_detail_page=False):
+        """Return the list of JsonLd schemas for event exhibitor."""
+        schemas = super()._get_jsonld(is_detail_page)
+        if not self:
+            return schemas
+        if is_detail_page:
+            schemas.append(self._build_exhibitor_jsonld())
+            return schemas
+        schemas.append(self._build_exhibitor_collectionpage_jsonld())
+        return schemas
 
     @api.model
     def _search_get_detail(self, website, order, options):

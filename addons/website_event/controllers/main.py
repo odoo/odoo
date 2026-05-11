@@ -187,7 +187,8 @@ class WebsiteEventController(http.Controller):
             'slugify_tags': self._slugify_tags,
             'search_count': event_count,
             'original_search': fuzzy_search_term and search,
-            'website': website
+            'website': website,
+            'structured_data': events.render_jsonld(),
         }
 
         return request.render("website_event.index", values)
@@ -219,6 +220,7 @@ class WebsiteEventController(http.Controller):
             page = view.key if view else page
             values['seo_object'] = request.website.get_template(page)
             values['main_object'] = event
+            values['structured_data'] = event.render_jsonld(is_detail_page=True)
         except ValueError:
             # page not found
             page = 'website.page_404'
@@ -264,6 +266,7 @@ class WebsiteEventController(http.Controller):
         return {
             'event': event,
             'main_object': event,
+            'structured_data': event.render_jsonld(is_detail_page=True),
             'range': range,
             'google_url': lazy(lambda: urls.get('google_url')),
             'iCal_url': lazy(lambda: urls.get('iCal_url')),

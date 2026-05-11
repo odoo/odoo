@@ -224,6 +224,11 @@ class WebsiteBlog(http.Controller):
             values['main_object'] = blog
         values['blog_url'] = QueryURL('/blog', ['blog', 'tag'], blog=blog, tag=tag, date_begin=date_begin, date_end=date_end, search=search)
 
+        posts = values['posts']
+        if blog:
+            posts = posts.with_context(blog_id=blog.id)
+        values['structured_data'] = posts.render_jsonld()
+
         return request.render("website_blog.blog_post_short", values)
 
     @http.route(['''/blog/<model("blog.blog"):blog>/feed'''], type='http', auth="public", website=True, sitemap=True)
@@ -334,6 +339,7 @@ class WebsiteBlog(http.Controller):
             'is_next_post_recommended': is_next_post_recommended,
             'date': date_begin,
             'blog_url': blog_url,
+            'structured_data': blog_post.render_jsonld(is_detail_page=True),
         }
         response = request.render("website_blog.blog_post_complete", values)
 

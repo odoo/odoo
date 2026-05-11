@@ -153,6 +153,7 @@ class WebsiteHrRecruitment(WebsiteForm):
         jobs_to_display = found_jobs[offset:offset + self._jobs_per_page]
         return request.render("website_hr_recruitment.index", {
             'jobs': jobs_to_display,
+            'structured_data': jobs_to_display.render_jsonld(),
             'country_id': country,
             'department_id': department,
             'office_id': office,
@@ -190,6 +191,7 @@ class WebsiteHrRecruitment(WebsiteForm):
     @http.route('''/jobs/<model("hr.job"):job>''', type='http', auth="public", website=True, sitemap=True)
     def job(self, job, **kwargs):
         return request.render("website_hr_recruitment.detail", {
+            'structured_data': job.render_jsonld(is_detail_page=True),
             'job': job,
             'main_object': job,
         })

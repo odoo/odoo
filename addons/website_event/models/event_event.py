@@ -10,6 +10,8 @@ import werkzeug.urls
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, tools, _
+from odoo.addons.website.helpers.jsonld_builder import JsonLd
+from odoo.addons.website.tools import text_from_html
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
 from odoo.tools.misc import get_lang, format_date
@@ -26,6 +28,7 @@ class EventEvent(models.Model):
         'website.cover_properties.mixin',
         'website.searchable.mixin',
         'website.page_visibility_options.mixin',
+        'website.structured_data.mixin',
     ]
 
     def _default_cover_properties(self):
@@ -666,3 +669,128 @@ class EventEvent(models.Model):
             data['tag_ids'] = event.tag_ids.read(['name'])
             data['image_url'] = event._get_image_url()
         return results_data
+
+    def _build_event_base_jsonld(self):
+        """Build the base ``Event`` schema for listing cards."""
+        self.ensure_one()
+        if not self.address_id or self.is_ongoing or self.is_done or self.website_visibility != 'public':
+            # Google event rich results require a public upcoming event with
+            # a physical place.
+            return None
+        base_url = self.get_base_url()
+        address = self.address_id.sudo()
+        street = ', '.join(part for part in (address.street, address.street2) if part)
+        address_schema_data = {}
+        if street:
+            address_schema_data["streetAddress"] = street
+        if address.city:
+            address_schema_data["addressLocality"] = address.city
+        if address.zip:
+            address_schema_data["postalCode"] = address.zip
+        if address.state_id.code:
+            address_schema_data["addressRegion"] = address.state_id.code
+        if address.country_id.code:
+            address_schema_data["addressCountry"] = address.country_id.code
+        schema_data = {
+            "name": self.name,
+            "url": self.website_absolute_url,
+            "startDate": JsonLd.to_iso_datetime(self.date_begin),
+        }
+        nested_schema_data = {}
+        if image_url := self.website_id.image_url(self, 'image_1920'):
+            nested_schema_data["image"] = JsonLd("ImageObject", {"url": f"{base_url}{image_url}"})
+        nested_schema_data["location"] = JsonLd("Place", {"name": self.address_name}).add_nested(
+            {"address": JsonLd("PostalAddress", address_schema_data)}
+        )
+        return JsonLd("Event", schema_data).add_nested(nested_schema_data)
+
+    def _build_event_jsonld(self):
+        """Build the detailed ``Event`` schema for a detail page."""
+        self.ensure_one()
+        event_jsonld = self._build_event_base_jsonld()
+        if not event_jsonld:
+            return None
+        description = self.subtitle or (self.description and text_from_html(self.description, True))
+        nested_schema_data = {}
+        if self.organizer_id:
+            organizer_sudo = self.organizer_id.sudo()
+            organizer_data = {}
+            if organizer_sudo == self.env.company.partner_id:
+                organizer_data["@id"] = f"{self.get_base_url()}/#organization"
+            else:
+                organizer_data["name"] = organizer_sudo.name
+                if organizer_sudo.website:
+                    organizer_data["url"] = organizer_sudo.website
+            nested_schema_data["organizer"] = JsonLd("Organization", organizer_data)
+        event_status = "EventCancelled" if self.kanban_state == 'cancel' else "EventScheduled"
+        offers_jsonld = [self._build_event_offer_jsonld(ticket) for ticket in self.event_ticket_ids]
+        schema_data = {
+            "endDate": JsonLd.to_iso_datetime(self.date_end),
+            "eventStatus": f"https://schema.org/{event_status}",
+            "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+        }
+        if description:
+            schema_data["description"] = description
+        nested_schema_data["offers"] = offers_jsonld
+        return event_jsonld.set(schema_data).add_nested(nested_schema_data)
+
+    def _build_event_offer_jsonld(self, ticket):
+        """
+        Create a JSON-LD Offer for a single event ticket.
+        Availability is SoldOut if ticket is sold out or past end_sale_datetime.
+        """
+        now = fields.Datetime.now()
+        is_expired = ticket.end_sale_datetime and ticket.end_sale_datetime < now
+        is_available = not (ticket.is_sold_out or is_expired)
+        availability = "https://schema.org/InStock" if is_available else "https://schema.org/SoldOut"
+        offer_jsonld = JsonLd("Offer", {
+            "name": ticket.name,
+            "availability": availability,
+            "validFrom": JsonLd.to_iso_datetime(ticket.start_sale_datetime),
+            "validThrough": JsonLd.to_iso_datetime(ticket.end_sale_datetime),
+        })
+        if is_available:
+            offer_jsonld.set({"url": f"{self.website_absolute_url}/register"})
+        return offer_jsonld
+
+    def _build_event_collectionpage_jsonld(self):
+        """Build CollectionPage structured data for the events listing page."""
+        website = self.env['website'].get_current_website()
+        base_url = website.get_base_url()
+        schema_data = {
+            "name": self.env._("Events"),
+            "url": f"{base_url}/event",
+        }
+        nested_schema_data = {
+            "isPartOf": JsonLd("Organization", {"@id": f"{base_url}/#organization"}),
+        }
+        event_jsonlds = [
+            event_schema for event in self if (event_schema := event._build_event_base_jsonld())
+        ]
+        if event_jsonlds:
+            main_entity = JsonLd("ItemList").add_nested({
+                "itemListElement": [
+                    JsonLd("ListItem", {"position": i + 1}).add_nested({"item": event_jsonld})
+                    for i, event_jsonld in enumerate(event_jsonlds)
+                ],
+            })
+            nested_schema_data["mainEntity"] = main_entity
+        return JsonLd("CollectionPage", schema_data).add_nested(nested_schema_data)
+
+    def _get_breadcrumb_items(self, is_detail_page=False):
+        """Return breadcrumb items for an event page."""
+        items = super()._get_breadcrumb_items(is_detail_page)
+        items.append((self.env._('Events'), "/event"))
+        if is_detail_page:
+            items.append((self.name, self.website_url))
+        return items
+
+    def _get_jsonld(self, is_detail_page=False):
+        """Return rendered structured data for event list and detail pages."""
+        schemas = super()._get_jsonld(is_detail_page)
+        if is_detail_page:
+            if event_schema_jsonld := self._build_event_jsonld():
+                schemas.append(event_schema_jsonld)
+            return schemas
+        schemas.append(self._build_event_collectionpage_jsonld())
+        return schemas

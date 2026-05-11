@@ -6,6 +6,7 @@ from odoo import api, fields, models
 from odoo.http import request
 
 from odoo.addons.website_sale import const
+from odoo.addons.website.helpers.jsonld_builder import JsonLd
 
 
 class ProductProduct(models.Model):
@@ -119,15 +120,11 @@ class ProductProduct(models.Model):
         else:
             self.website_published = False
 
-    def _to_markup_data(self, website):
-        """Generate JSON-LD markup data for the current product.
-
-        :param website website: The current website.
-        :return: The JSON-LD markup data.
-        :rtype: dict
-        """
+    def _build_product_jsonld(self):
+        """Full Product structured data for individual product variant pages."""
         self.ensure_one()
-
+        website = self.env["website"].get_current_website()
+        base_url = self.get_base_url()
         product_price = request.pricelist._get_product_price(
             self, quantity=1, currency=website.currency_id
         )
@@ -138,35 +135,51 @@ class ProductProduct(models.Model):
             product_price, website.currency_id, product_taxes_sudo, taxes, self, website=website
         )
 
-        base_url = website.get_base_url()
-        markup_data = {
-            "@context": "https://schema.org",
-            "@type": "Product",
+        schema_data = {
             "name": self.with_context(display_default_code=False).display_name,
             "url": f"{base_url}{self.website_url}",
-            "image": f"{base_url}{website.image_url(self, 'image_1920')}",
-            "offers": {"@type": "Offer", "price": price, "priceCurrency": website.currency_id.name},
         }
-        if self.website_meta_description or self.description_sale:
-            markup_data["description"] = self.website_meta_description or self.description_sale
+        if self.website_meta_description:
+            schema_data["description"] = self.website_meta_description
         if self.barcode:
-            markup_data["gtin"] = self.barcode
+            schema_data["gtin"] = self.barcode
+        offer_schema_data = {
+            "priceCurrency": website.currency_id.name,
+            "price": price,
+        }
         if self.is_product_variant and self.is_storable:
-            if not self._is_sold_out():
-                availability = "https://schema.org/InStock"
-            else:
-                availability = "https://schema.org/OutOfStock"
-            markup_data["offers"]["availability"] = availability
+            offer_schema_data["availability"] = (
+                "http://schema.org/OutOfStock"
+                if self._is_sold_out()
+                else "http://schema.org/InStock"
+            )
 
         direct, others = self._split_standard_from_custom_attributes()
-        markup_data.update(direct)
+        schema_data.update(direct)
         if others:
-            markup_data["additionalProperty"] = [
+            schema_data["additionalProperty"] = [
                 {"@type": "PropertyValue", "name": name, "value": value}
                 for name, value in others.items()
             ]
-
-        return markup_data
+        offer_jsonld = JsonLd("Offer", offer_schema_data).add_nested({
+            "seller": JsonLd("Organization", {"@id": f"{base_url}/#organization"}),
+        })
+        image_schemas = [
+            JsonLd("ImageObject", {
+                "url": f"{base_url}{website.image_url(self, 'image_1920')}",
+            }),
+        ]
+        image_schemas.extend(
+            JsonLd("ImageObject", {
+                "url": f"{base_url}{website.image_url(image, 'image_1920')}",
+            })
+            for image in self.product_variant_image_ids
+        )
+        nested_schema_data = {
+            "offers": offer_jsonld,
+            "image": image_schemas,
+        }
+        return JsonLd("Product", schema_data).add_nested(nested_schema_data)
 
     def _get_image_1920_url(self):
         """Return the local url of the product main image.

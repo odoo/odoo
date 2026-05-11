@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
+from odoo.addons.website.helpers.jsonld_builder import JsonLd
 
 
 class SlideChannel(models.Model):
@@ -75,3 +76,21 @@ class SlideChannel(models.Model):
         action = self.env["ir.actions.actions"]._for_xml_id("website_sale_slides.sale_report_action_slides")
         action['domain'] = [('product_id', 'in', self.product_id.ids)]
         return action
+
+    def _build_course_jsonld(self):
+        """Build detailed ``Course`` schema for a course detail page."""
+        course_jsonld = super()._build_course_jsonld()
+        if offers_schema := self._build_course_offer_jsonld():
+            course_jsonld.add_nested({"offers": offers_schema})
+        return course_jsonld
+
+    def _build_course_offer_jsonld(self):
+        """Build detailed ``Course Offer`` schema for a course offer detail page."""
+        product = self.product_id
+        if not product:
+            return None
+        product_info = product._get_combination_info_variant()
+        return JsonLd("Offer", {
+            "price": product_info.get('price', 0),
+            "priceCurrency": product.currency_id.name,
+        })

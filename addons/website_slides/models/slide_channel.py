@@ -9,6 +9,8 @@ from dateutil.relativedelta import relativedelta
 from markupsafe import Markup
 
 from odoo import api, fields, models, tools, _
+from odoo.addons.website.helpers.jsonld_builder import JsonLd
+from odoo.addons.website.tools import text_from_html
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Domain
 from odoo.tools import is_html_empty
@@ -29,6 +31,7 @@ class SlideChannel(models.Model):
         'website.seo.metadata',
         'website.published.multi.mixin',
         'website.searchable.mixin',
+        'website.structured_data.mixin',
     ]
     _order = 'sequence, id'
     _partner_unfollow_enabled = True
@@ -1119,3 +1122,74 @@ class SlideChannel(models.Model):
     @api.model
     def _allow_publish_rating_stats(self):
         return True
+
+    def _build_course_base_jsonld(self):
+        """Build the base ``Course`` schema for listing cards."""
+        self.ensure_one()
+        website = self.env['website'].get_current_website()
+        base_url = website.get_base_url()
+        description = self.description_short and text_from_html(self.description_short, True)
+        if not description and self.description:
+            description = text_from_html(self.description, True)
+
+        schema_data = {"name": self.name}
+        if self.website_url:
+            schema_data["url"] = f"{base_url}{self.website_url}"
+        if description:
+            schema_data["description"] = description
+        course_data = JsonLd("Course", schema_data)
+        nested_schema_data = {
+            "provider": JsonLd("Organization", {"@id": f"{base_url}/#organization"}),
+        }
+        course_data.add_nested(nested_schema_data)
+        if image_url := self.env['website'].image_url(self, 'image_1024'):
+            full_image_url = image_url if image_url.startswith('http') else f"{base_url}{image_url}"
+            nested_schema_data = {"image": JsonLd("ImageObject", {"url": full_image_url})}
+            course_data.add_nested(nested_schema_data)
+        return course_data
+
+    def _build_course_jsonld(self):
+        """Build detailed ``Course`` schema for a course detail page."""
+        schema = self._build_course_base_jsonld()
+        nested_schema_data = {
+            "aggregateRating": JsonLd("AggregateRating", {
+                "ratingValue": self.rating_avg_stars,
+                "reviewCount": self.rating_count,
+            }),
+        }
+        if self.user_id:
+            nested_schema_data["editor"] = JsonLd("Person", {"name": self.user_id.name})
+        return schema.set({
+            "dateModified": JsonLd.to_iso_datetime(self.slide_last_update)
+        }).add_nested(nested_schema_data)
+
+    def _get_breadcrumb_items(self, is_detail_page=False):
+        """Return breadcrumb items for course listing and detail pages."""
+        items = super()._get_breadcrumb_items(is_detail_page)
+        items.append((self.env._("Courses"), "/slides"))
+        if is_detail_page:
+            items.append((self.name, self.website_url))
+        return items
+
+    def _build_course_collectionpage_jsonld(self):
+        """Build a ``CollectionPage`` schema for the courses listing page."""
+        website = self.env['website'].get_current_website()
+        base_url = website.get_base_url()
+        schema_data = {
+            "name": self.env._("Courses"),
+            "url": f"{base_url}/slides",
+        }
+        nested_schema_data = {
+            "hasPart": [channel._build_course_base_jsonld() for channel in self],
+            "isPartOf": JsonLd("Organization", {"@id": f"{base_url}/#organization"}),
+        }
+        return JsonLd("CollectionPage", schema_data).add_nested(nested_schema_data)
+
+    def _get_jsonld(self, is_detail_page=False):
+        """Return the list of JsonLd schemas for course."""
+        schemas = super()._get_jsonld(is_detail_page)
+        if is_detail_page:
+            schemas.append(self._build_course_jsonld())
+            return schemas
+        schemas.append(self._build_course_collectionpage_jsonld())
+        return schemas

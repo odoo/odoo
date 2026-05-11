@@ -5,7 +5,8 @@ from datetime import datetime
 import random
 
 from odoo import api, models, fields, _
-from odoo.addons.website.tools import text_from_html
+from odoo.addons.website.tools import images_from_html, text_from_html
+from odoo.addons.website.helpers.jsonld_builder import JsonLd
 from odoo.tools.json import scriptsafe as json_scriptsafe
 from odoo.tools.translate import html_translate
 from odoo.tools import html_escape
@@ -21,6 +22,7 @@ class BlogBlog(models.Model):
         'website.located.mixin',
         'website.cover_properties.mixin',
         'website.searchable.mixin',
+        'website.structured_data.mixin',
     ]
     _order = 'name'
 
@@ -104,6 +106,32 @@ class BlogBlog(models.Model):
 
         return tag_by_blog
 
+    def _get_breadcrumb_items(self, is_detail_page=False):
+        """Return breadcrumb items for a blog page."""
+        items = super()._get_breadcrumb_items(is_detail_page)
+        items.append((self.env._('Blog Posts'), "/blog"))
+        if is_detail_page:
+            items.append((self.name, self.website_url))
+        return items
+
+    def _build_blog_jsonld(self):
+        """Build the base ``Blog`` schema."""
+        self.ensure_one()
+        base_url = self.get_base_url()
+        blog_slug = self.env["ir.http"]._slug(self)
+        blog_url = f"{base_url}/blog/{blog_slug}"
+        schema_data = {
+            "@id": f"{blog_url}/#blog",
+            "name": self.name,
+            "url": blog_url,
+        }
+        if self.subtitle:
+            schema_data["description"] = self.subtitle
+        nested_schema_data = {
+            "publisher": JsonLd("Organization", {"@id": f"{base_url}/#organization"}),
+        }
+        return JsonLd("Blog", schema_data).add_nested(nested_schema_data)
+
 
 class BlogTagCategory(models.Model):
     _name = 'blog.tag.category'
@@ -141,7 +169,8 @@ class BlogPost(models.Model):
     _description = "Blog Post"
     _inherit = ['mail.thread', 'website.seo.metadata', 'website.published.multi.mixin',
         'website.page_visibility_options.mixin',
-        'website.cover_properties.mixin', 'website.searchable.mixin']
+        'website.cover_properties.mixin', 'website.searchable.mixin',
+        'website.structured_data.mixin']
     _order = 'id DESC'
     _mail_post_access = 'read'
 
@@ -179,6 +208,115 @@ class BlogPost(models.Model):
     write_uid = fields.Many2one('res.users', 'Last Contributor', readonly=True)
     visits = fields.Integer('No of Views', copy=False, default=0, readonly=True)
     website_id = fields.Many2one(related='blog_id.website_id', readonly=True, store=True)
+
+    def _build_blog_post_base_jsonld(self):
+        """Build the base ``BlogPosting`` schema."""
+        self.ensure_one()
+        website = self.env['website'].get_current_website()
+        base_url = self.get_base_url()
+        post_url = f"{base_url}{self.website_url}"
+        schema_data = {
+            "@id": f"{post_url}/#blogpost",
+            "headline": self.name,
+            "url": post_url,
+            "datePublished": JsonLd.to_iso_datetime(self.published_date),
+            "dateModified": JsonLd.to_iso_datetime(self.write_date),
+        }
+        if tags := self.tag_ids.mapped("name"):
+            schema_data["keywords"] = ", ".join(tags)
+        if website.is_view_active('website_blog.opt_posts_loop_show_teaser') and self.teaser:
+            schema_data["description"] = self.teaser
+        if website.is_view_active('website_blog.opt_posts_loop_show_stats') and self.website_message_ids:
+            schema_data["commentCount"] = len(self.website_message_ids)
+        nested_schema_data = {}
+        if (
+            website.is_view_active('website_blog.opt_posts_loop_show_cover')
+            and (image_url := self._get_image_url())
+        ):
+            nested_schema_data["image"] = JsonLd("ImageObject", {"url": base_url + image_url})
+        organization = JsonLd("Organization", {"@id": f"{base_url}/#organization"})
+        nested_schema_data["publisher"] = organization
+        author_sudo = self.author_id.sudo()
+        if author_sudo.is_company:
+            nested_schema_data["author"] = organization
+        else:
+            nested_schema_data["author"] = JsonLd("Person", {"name": author_sudo.display_name})
+        blog_slug = self.env['ir.http']._slug(self.blog_id)
+        nested_schema_data["isPartOf"] = JsonLd("Blog", {"@id": f"{base_url}/blog/{blog_slug}/#blog"})
+        return JsonLd("BlogPosting", schema_data).add_nested(nested_schema_data)
+
+    def _get_breadcrumb_items(self, is_detail_page=False):
+        """Return breadcrumb items for a blog post page."""
+        if is_detail_page:
+            blog = self.blog_id
+        else:
+            blog = self.blog_id.browse(self.env.context.get('blog_id'))
+        items = blog._get_breadcrumb_items(bool(blog))
+        if is_detail_page:
+            items.append((self.name, self.website_url))
+        return items
+
+    def _build_blog_post_jsonld(self):
+        """Build the full ``BlogPosting`` schema for a post detail page."""
+        self.ensure_one()
+        website = self.env['website'].get_current_website()
+        base_url = website.get_base_url()
+        blog_post_jsonld = self._build_blog_post_base_jsonld()
+        image_urls = []
+        if not blog_post_jsonld.get("image"):
+            if image_url := self._get_image_url():
+                image_urls.append(f"{base_url}{image_url}")
+        if html_images := images_from_html(self.content, base_url):
+            image_urls.extend(dict.fromkeys(html_images))
+        schema_data = {}
+        if (
+            not blog_post_jsonld.get("commentCount")
+            and website.is_view_active('website_blog.opt_blog_post_comment')
+        ):
+            schema_data["commentCount"] = len(self.website_message_ids)
+        if self.env.lang:
+            schema_data["inLanguage"] = self.env.lang.replace("_", "-")
+        if self.content:
+            if content_text := text_from_html(self.content, True):
+                schema_data["wordCount"] = len(content_text.split())
+        if schema_data:
+            blog_post_jsonld.set(schema_data)
+        if image_urls:
+            blog_post_jsonld.add_nested({
+                "image": [
+                    JsonLd("ImageObject", {"url": url})
+                    for url in image_urls
+                ],
+            })
+        return blog_post_jsonld
+
+    def _get_jsonld(self, is_detail_page=False):
+        """Return the list of JsonLd schemas for blog post."""
+        schemas = super()._get_jsonld(is_detail_page)
+        if is_detail_page:
+            schemas.extend([
+                self.blog_id._build_blog_jsonld(),
+                self._build_blog_post_jsonld(),
+            ])
+            return schemas
+        current_blog = self.env['blog.blog'].browse(self.env.context.get('blog_id')).exists()
+        blogs = current_blog or self.mapped('blog_id')
+        for blog_record in blogs:
+            schemas.append(blog_record._build_blog_jsonld())
+        schemas.append(self._build_blog_collectionpage_jsonld(blog=current_blog))
+        return schemas
+
+    def _build_blog_collectionpage_jsonld(self, blog=None):
+        """Build a ``CollectionPage`` schema for the blog listing page."""
+        website = self.env['website'].get_current_website()
+        base_url = website.get_base_url()
+        collectionpage_name = f"{blog.name}" if blog else self.env._('Blog Posts')
+        haspart_jsonld = [post._build_blog_post_base_jsonld() for post in self]
+        organization_jsonld = JsonLd("Organization", {"@id": f"{base_url}/#organization"})
+        return JsonLd("CollectionPage", {
+            "name": collectionpage_name,
+            "url": f"{base_url}/blog",
+        }).add_nested({"hasPart": haspart_jsonld, "isPartOf": organization_jsonld})
 
     @api.depends('content', 'teaser_manual')
     def _compute_teaser(self):
