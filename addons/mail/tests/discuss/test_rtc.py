@@ -97,6 +97,7 @@ class TestChannelRTC(MailCommon, HttpCase):
                         "res.partner": self._filter_partners_fields(partner_data),
                         "res.users": self._filter_users_fields(
                             {
+                                "all_employee_ids": [],
                                 "id": self.user_employee.id,
                                 "employee_ids": [],
                                 "partner_id": self.partner_employee.id,
@@ -139,6 +140,7 @@ class TestChannelRTC(MailCommon, HttpCase):
                 "res.partner": self._filter_partners_fields(partner_data),
                 "res.users": self._filter_users_fields(
                     {
+                        "all_employee_ids": [],
                         "id": self.user_employee.id,
                         "employee_ids": [],
                         "partner_id": self.partner_employee.id,
@@ -1041,6 +1043,7 @@ class TestChannelRTC(MailCommon, HttpCase):
                         ),
                         "res.users": self._filter_users_fields(
                             {
+                                "all_employee_ids": [],
                                 "id": self.user_employee.id,
                                 "employee_ids": [],
                                 "partner_id": self.partner_employee.id,
