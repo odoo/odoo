@@ -8,7 +8,10 @@
                     <t t-if="combo.qty_free > 0">
                         <h5 class="text-muted ms-2 mb-0">
                             <t t-out="this.getSelectedComboItemsText(combo)"/>
-                            <span class="fst-italic"> included</span>
+                            <span class="fst-italic"> included </span>
+                            <t t-if="combo.qty_free != combo.qty_max" >
+                                <span class="text-danger fst-italic"> (up to <t t-out="combo.qty_max"/>) </span>
+                            </t>
                         </h5>
                     </t>
                     <t t-else="">
