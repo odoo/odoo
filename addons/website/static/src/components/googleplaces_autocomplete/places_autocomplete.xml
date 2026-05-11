@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="website.PlacesAutoComplete">
+        <AutoCompleteWithPages
+            sources="sources"
+            targetDropdown="props.targetDropdown"
+            menuCssClass="'o_website_ui_autocomplete pac-container'"
+        >
+            <t t-set-slot="option" t-slot-scope="optionScope">
+                <span class="pac-icon pac-icon-marker"/>
+                <span class="pac-item-query" t-out="optionScope.data.label"/>
+            </t>
+        </AutoCompleteWithPages>
+    </t>
+</templates>

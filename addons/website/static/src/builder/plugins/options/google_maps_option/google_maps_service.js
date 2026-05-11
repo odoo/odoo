@@ -1,11 +1,60 @@
 /* eslint-disable no-async-promise-executor */
 
-import { loadJS } from "@web/core/assets";
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { user } from "@web/core/user";
 import { markup } from "@odoo/owl";
+
+/**
+ * Initializes the Google Maps JavaScript API using the dynamic library import
+ * bootstrap pattern. Libraries (e.g. "maps", "places", "marker") are loaded
+ * lazily via `google.maps.importLibrary()` at each call site.
+ *
+ * @param {string} key - The Google Maps API key
+ * @see https://developers.google.com/maps/documentation/javascript/load-maps-js-api#dynamic-library-import
+ */
+function initGoogleMapsAPI(key) {
+    ((g) => {
+        var h,
+            a,
+            k,
+            p = "The Google Maps JavaScript API",
+            c = "google",
+            l = "importLibrary",
+            q = "__ib__",
+            m = document,
+            b = window;
+        b = b[c] || (b[c] = {});
+        var d = b.maps || (b.maps = {}),
+            r = new Set(),
+            e = new URLSearchParams(),
+            u = () =>
+                h ||
+                (h = new Promise(async (f, n) => {
+                    await (a = m.createElement("script"));
+                    e.set("libraries", [...r] + "");
+                    for (k in g) {
+                        e.set(
+                            k.replace(/[A-Z]/g, (t) => "_" + t[0].toLowerCase()),
+                            g[k]
+                        );
+                    }
+                    e.set("callback", c + ".maps." + q);
+                    a.src = `https://maps.${c}apis.com/maps/api/js?` + e;
+                    d[q] = f;
+                    a.onerror = () => (h = n(Error(p + " could not load.")));
+                    a.nonce = m.querySelector("script[nonce]")?.nonce || "";
+                    m.head.append(a);
+                }));
+        d[l]
+            ? console.warn(p + " only loads once. Ignoring:", g)
+            : (d[l] = (f, ...n) => r.add(f) && u().then(() => d[l](f, ...n)));
+    })({
+        key: key,
+        v: "weekly",
+    });
+}
 
 registry.category("services").add("google_maps", {
     dependencies: ["notification"],
@@ -13,12 +62,7 @@ registry.category("services").add("google_maps", {
         const notification = deps["notification"];
         let gMapsAPIKeyProm;
         let gMapsAPILoading;
-        const promiseKeys = {};
-        const promiseKeysResolves = {};
-        let lastKey;
-        window.odoo_gmaps_api_post_load = async function odoo_gmaps_api_post_load() {
-            promiseKeysResolves[lastKey]?.();
-        }.bind(this);
+        let bootstrapLoadedKey;
         return {
             /**
              * @param {boolean} [refetch=false]
@@ -40,24 +84,30 @@ registry.category("services").add("google_maps", {
                 // Note: only need refetch to reload a configured key and load
                 // the library. If the library was loaded with a correct key and
                 // that the key changes meanwhile... it will not work but we can
-                // agree the user can bother to reload the page at that moment.
+                // agree the user can bother to reload the page when they are
+                // notified.
                 if (refetch || !gMapsAPILoading) {
                     gMapsAPILoading = new Promise(async (resolve) => {
                         const key = await this.getGMapsAPIKey(refetch);
-                        lastKey = key;
 
                         if (key) {
-                            if (!promiseKeys[key]) {
-                                promiseKeys[key] = new Promise((resolve) => {
-                                    promiseKeysResolves[key] = resolve;
-                                });
-                                await loadJS(
-                                    `https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places&callback=odoo_gmaps_api_post_load&key=${encodeURIComponent(
-                                        key
-                                    )}`
+                            if (bootstrapLoadedKey && bootstrapLoadedKey !== key) {
+                                notification.add(
+                                    _t(
+                                        "Google Maps configuration has changed. Please reload the page for changes to take effect."
+                                    ),
+                                    {
+                                        type: "warning",
+                                        sticky: true,
+                                    }
                                 );
+                                resolve(false);
+                                return;
                             }
-                            await promiseKeys[key];
+                            if (!bootstrapLoadedKey) {
+                                initGoogleMapsAPI(key);
+                                bootstrapLoadedKey = key;
+                            }
                             resolve(key);
                         } else {
                             if (!editableMode && user.isAdmin) {
