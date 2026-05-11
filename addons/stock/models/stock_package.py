@@ -386,6 +386,7 @@ class StockPackage(models.Model):
                 **literal_eval(action.get('context', '{}')),
                 'default_package_ids': self.ids,
                 'default_location_dest_id': self.location_dest_id[:1].id,
+                'picking_ids': self.move_line_ids.picking_id.ids
             }
             return action
         return False

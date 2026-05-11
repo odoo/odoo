@@ -956,6 +956,7 @@ class StockPicking(models.Model):
                 'default_location_id': self.location_id.id,
                 'default_location_dest_id': self.location_dest_id.id,
                 'default_company_id': self.company_id.id,
+                'picking_ids': self.ids,
                 'show_lots_text': self.show_lots_text,
                 'picking_code': self.picking_type_code,
                 'create': self.state not in ('done', 'cancel'),
