@@ -1,9 +1,7 @@
-import { signal } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { Record } from "@web/model/relational_model/record";
 import { RelationalModel } from "@web/model/relational_model/relational_model";
-import { makeReactive } from "@web/owl2/utils";
 
 class ProductCatalogRecord extends Record {
     setup(config, data, options = {}) {
@@ -11,8 +9,6 @@ class ProductCatalogRecord extends Record {
         data = { ...data };
         delete data.productCatalogData;
         super.setup(config, data, options);
-
-        makeReactive(this, "productCatalogData", signal.Object);
     }
 }
 
