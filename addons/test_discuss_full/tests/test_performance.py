@@ -453,6 +453,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             ),
             "res.users": self._filter_users_fields(
                 {
+                    "all_employee_ids": [],
                     "employee_ids": [],
                     "id": self.user_root.id,
                     "partner_id": self.partner_root.id,
@@ -460,6 +461,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                     "active": False,
                 },
                 {
+                    "all_employee_ids": [self.employees[0].id],
                     "id": user_0.id,
                     "employee_ids": [self.employees[0].id],
                     "is_admin": False,
@@ -1997,6 +1999,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         partner = user.partner_id
         if user == self.users[0]:
             return {
+                "all_employee_ids": user.employee_ids.ids,
                 "active": True,
                 "id": user.id,
                 "employee_ids": user.employee_ids.ids,
@@ -2005,6 +2008,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             }
         if user == self.users[1]:
             return {
+                "all_employee_ids": user.employee_ids.ids,
                 "id": user.id,
                 "employee_ids": user.employee_ids.ids,
                 "partner_id": partner.id,
@@ -2013,12 +2017,14 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         if user == self.users[2]:
             if only_inviting:
                 return {
+                    "all_employee_ids": user.employee_ids.ids,
                     "id": user.id,
                     "employee_ids": user.employee_ids.ids,
                     "partner_id": partner.id,
                 }
             return {
                 "active": True,
+                "all_employee_ids": user.employee_ids.ids,
                 "id": user.id,
                 "employee_ids": user.employee_ids.ids,
                 "partner_id": partner.id,
@@ -2027,6 +2033,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         if user == self.users[3]:
             return {
                 "active": True,
+                "all_employee_ids": user.employee_ids.ids,
                 "id": user.id,
                 "employee_ids": user.employee_ids.ids,
                 "partner_id": partner.id,
@@ -2035,6 +2042,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         if user == self.users[12]:
             return {
                 "active": True,
+                "all_employee_ids": user.employee_ids.ids,
                 "id": user.id,
                 "employee_ids": user.employee_ids.ids,
                 "partner_id": partner.id,
@@ -2043,6 +2051,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         if user == self.users[14]:
             return {
                 "active": True,
+                "all_employee_ids": user.employee_ids.ids,
                 "id": user.id,
                 "employee_ids": user.employee_ids.ids,
                 "partner_id": partner.id,
@@ -2051,6 +2060,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         if user == self.users[15]:
             return {
                 "active": True,
+                "all_employee_ids": user.employee_ids.ids,
                 "id": user.id,
                 "employee_ids": user.employee_ids.ids,
                 "partner_id": partner.id,

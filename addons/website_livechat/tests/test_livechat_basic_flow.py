@@ -276,6 +276,7 @@ class TestLivechatBasicFlowHttpCase(HttpCaseWithUserDemo, TestLivechatCommon):
                 ),
                 "res.users": self._filter_users_fields(
                     {
+                        "all_employee_ids": [],
                         "id": self.operator.id,
                         "employee_ids": [],
                         "partner_id": self.operator.partner_id.id,
