@@ -761,6 +761,84 @@ test("should select table single cell when entire content is selected via mouse 
     await expectElementCount(".o-we-toolbar", 1);
 });
 
+test("should select table single formatted cell when entire content is selected via mouse movement", async () => {
+    const content = unformat(`
+        <table class="table table-bordered o_table" style="width: 250px;">
+            <tbody>
+                <tr>
+                    <td style="width: 200px;">
+                        <p><strong>abcdefghijklmno</strong></p>
+                        <p>
+                            <font style="color: red;">
+                                abcdefghijklmnopqrs
+                            </font>
+                        </p>
+                        <p><em>abcdefg</em></p>
+                    </td>
+                    <td style="width: 50px;"><p><br></p></td>
+                </tr>
+                <tr>
+                    <td><p><br></p></td>
+                    <td><p><br></p></td>
+                </tr>
+            </tbody>
+        </table>
+    `);
+
+    const { el } = await setupEditor(content);
+
+    const firstTd = el.querySelector("td");
+    const firstP = firstTd.firstElementChild;
+    const lastP = firstTd.lastElementChild;
+
+    const firstTextNode = firstP.querySelector("strong").firstChild;
+    const lastTextNode = lastP.querySelector("em").firstChild;
+
+    // Simulate mousedown at the top of the first paragraph.
+    const rectStart = firstP.getBoundingClientRect();
+    manuallyDispatchProgrammaticEvent(firstP, "mousedown", {
+        clientX: rectStart.left,
+        clientY: rectStart.top,
+    });
+
+    // Select from start of first formatted node to end of last formatted node.
+    setSelection({
+        anchorNode: firstTextNode,
+        anchorOffset: 0,
+        focusNode: lastTextNode,
+        focusOffset: nodeSize(lastTextNode),
+    });
+
+    await animationFrame();
+
+    // Simulate mouse movement until end of selection.
+    const range = document.createRange();
+    range.setStart(lastTextNode, 0);
+    range.setEnd(lastTextNode, nodeSize(lastTextNode));
+    const rect = range.getBoundingClientRect();
+
+    manuallyDispatchProgrammaticEvent(lastP, "mousemove", {
+        clientX: rect.right,
+        clientY: rect.top,
+    });
+
+    manuallyDispatchProgrammaticEvent(lastP, "mousemove", {
+        clientX: rect.right + 5,
+        clientY: rect.top,
+    });
+
+    manuallyDispatchProgrammaticEvent(lastP, "mouseup", {
+        clientX: rect.right + 5,
+        clientY: rect.top,
+    });
+
+    await animationFrame();
+    await tick();
+
+    expect(firstTd).toHaveClass("o_selected_td");
+    await expectElementCount(".o-we-toolbar", 1);
+});
+
 test.tags("desktop");
 test("toolbar should close on keypress tab inside table", async () => {
     const contentBefore = unformat(`
