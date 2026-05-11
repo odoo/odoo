@@ -865,4 +865,9 @@
         <value eval="{'request_unit': 'hour', 'time_off_selectable': False}"/>
     </function>
 
+    <function model="hr.work.entry.type" name="write">
+        <value model="hr.work.entry.type" eval="obj().sudo().search([('code', '=', 'OVERTIME')]).ids"/>
+        <value eval="{'request_unit': 'hour'}"/>
+    </function>
+
 </data></odoo>
