@@ -2,9 +2,10 @@
 import re
 
 import werkzeug.urls
-from lxml import etree
+from lxml import etree, html
 
 from odoo.tools.misc import hmac
+from odoo.tools.urls import urljoin
 
 
 def distance(s1="", s2="", limit=4):
@@ -91,6 +92,26 @@ def text_from_html(html_fragment, collapse_whitespace=False):
     if collapse_whitespace:
         content = re.sub(r'\s+', ' ', content).strip()
     return content
+
+
+def images_from_html(html_fragment, base_url):
+    """
+    Extract unique image URLs from an HTML fragment.
+
+    :param html_fragment: document from which image URLs must be extracted
+    :param base_url: base URL of the website to resolve relative URLs
+    :return: list of image URLs extracted from the html
+    """
+    if not html_fragment:
+        return []
+
+    tree = html.fromstring(html_fragment)
+    seen = set()
+
+    for img in tree.xpath('//img[@src]'):
+        src = urljoin(base_url, img.get('src'))
+        seen.add(src)
+    return list(seen)
 
 
 def get_base_domain(url, strip_www=False):

@@ -18,6 +18,7 @@ from markupsafe import Markup
 from urllib.parse import urlparse, urlsplit
 from werkzeug import urls
 
+from odoo.addons.website.helpers.jsonld_builder import JsonLd
 from odoo import api, fields, models, tools, release
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.addons.website.tools import similarity_score, text_from_html, get_base_domain
@@ -2491,3 +2492,24 @@ class Website(models.CachedModel):
 
     def _is_tag_classes_watchlisted(self, tagName, atts):
         return self._get_blocked_iframe_containers_classes().intersection((atts.get('class') or '').split(' '))
+
+    def render_jsonld(self):
+        """Generate structured data for the website."""
+        self.ensure_one()
+        return JsonLd.render_structured_data([self._build_organization_jsonld()])
+
+    def _build_organization_jsonld(self):
+        """Generate Organization structured data using only website context.
+
+        :return: JsonLd
+        :rtype: JsonLd
+        """
+        base_url = self.get_base_url()
+        logo_url = f"{base_url}/logo.png?company={self.company_id.id}"
+        return JsonLd('Organization',
+            {
+                'name': self.name,
+                'url': base_url,
+                '@id': f"{base_url}/#organization",
+            },
+        ).add_nested({'logo': JsonLd('ImageObject', {'url': logo_url})})

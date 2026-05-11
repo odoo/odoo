@@ -19,6 +19,7 @@ from . import test_http_endpoint
 from . import test_iap
 from . import test_import_files
 from . import test_ir_asset
+from . import test_jsonld_builder
 from . import test_lang_url
 from . import test_menu
 from . import test_multi_website
