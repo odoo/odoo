@@ -31,7 +31,11 @@ export const livechatBootService = {
                 translateFn: appTranslateFn,
                 dev: env.debug,
             });
-            app.createRoot(LivechatRoot, { env }).mount(shadow);
+            app.createRoot(LivechatRoot, {
+                env: Object.assign(Object.create(env), {
+                    rootId: root.getAttribute("id"),
+                }),
+            }).mount(shadow);
         });
     },
 };
