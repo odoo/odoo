@@ -36,6 +36,7 @@ class AccountMoveLine(models.Model):
             ("purchase_b2b_rcm", "B2B RCM"),
             ("purchase_b2c_rcm", "B2C RCM"),
             ("purchase_imp_services", "IMP(service)"),
+            ("purchase_imp_services_rcm", "IMP(service) RCM"),
             ("purchase_imp_goods", "IMP(goods)"),
             ("purchase_cdnr_regular", "CDNR Regular"),
             ("purchase_cdnur_overseas", "CDNUR Overseas"),
@@ -261,6 +262,8 @@ class AccountMoveLine(models.Model):
 
                 # export service type products purchases
                 if gst_treatment == 'overseas' and any(tax.tax_scope == 'service' for tax in line.tax_ids | line.tax_line_id) and tags_have_categ(line_tags, ['igst', 'cess']):
+                    if is_reverse_charge_tax(line):
+                        return 'purchase_imp_services_rcm'
                     return 'purchase_imp_services'
 
                 # export goods type products purchases
