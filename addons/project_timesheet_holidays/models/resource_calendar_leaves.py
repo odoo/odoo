@@ -109,13 +109,15 @@ class ResourceCalendarLeaves(models.Model):
                 resources_per_tz,
             )
             for leave in cal_attendance_intervals_params_entry['leaves']:
+                leave_date_from = leave.date_from.replace(tzinfo=UTC)
+                leave_date_to = leave.date_to.replace(tzinfo=UTC)
                 for resource_id in cal_attendance_intervals_params_entry['resources'].ids or [False]:
                     work_hours_data = work_hours_intervals[resource_id]
 
                     for date_from, date_to, _dummy in work_hours_data:
-                        if date_to > leave.date_from.replace(tzinfo=UTC) and date_from < leave.date_to.replace(tzinfo=UTC):
-                            tmp_start = max(date_from, leave.date_from.replace(tzinfo=UTC))
-                            tmp_end = min(date_to, leave.date_to.replace(tzinfo=UTC))
+                        if date_to > leave_date_from and date_from < leave_date_to:
+                            tmp_start = max(date_from, leave_date_from)
+                            tmp_end = min(date_to, leave_date_to)
                             results[calendar_id][leave.id][resource_id][tmp_start.date()] += (tmp_end - tmp_start).total_seconds() / 3600
                     results[calendar_id][leave.id][resource_id] = sorted(results[calendar_id][leave.id][resource_id].items())
         return results
