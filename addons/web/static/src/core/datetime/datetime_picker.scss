@@ -80,11 +80,11 @@
         aspect-ratio: 1;
         position: relative;
 
-        &:hover, &:focus, &.o_highlighted {
+        &:hover, &.focus, &.o_highlighted {
             --DateTimePicker__date-cell-border-color-hover: #{$o-component-active-border};
         }
 
-        &.o_highlighted:focus {
+        &.o_highlighted.focus {
             border-radius: 50%;
             box-shadow: 0 0 0 1px #{$o-component-active-border};
         }
@@ -112,7 +112,7 @@
         font-variant: tabular-nums;
     }
 
-    .btn:focus-visible {
+    .btn.focus {
         box-shadow: 0 0 0 1px #{$o-component-active-border};
     }
 }

@@ -218,7 +218,6 @@ test("set an invalid date when the field is already set", async () => {
     await contains(".o_field_widget[name='date'] button").click();
     expect(".o_field_widget[name='date'] input").toHaveValue("02/03/2017");
     await fieldInput("date").edit("invalid date");
-    await contains(".o_field_widget[name='date'] button").click();
     expect(".o_field_widget[name='date'] input").toHaveValue("02/03/2017", {
         message: "Should have been reset to the original value",
     });
@@ -490,10 +489,9 @@ test("hit enter should update value", async () => {
     await mountView({ type: "form", resModel: "res.partner", resId: 1 });
     await contains(".o_field_date button").click();
     await contains(".o_field_date input").edit("01/08");
-    expect(".o_field_widget[name='date']").toHaveText("Jan 8");
-    await contains(".o_field_date button").click();
+    expect(".o_field_widget[name='date'] input").toHaveValue("01/08/2019");
     await contains(".o_field_date input").edit("08/01");
-    expect(".o_field_widget[name='date']").toHaveText("Aug 1");
+    expect(".o_field_widget[name='date'] input").toHaveValue("08/01/2019");
 });
 
 test("allow to use compute dates (+5d for instance)", async () => {
@@ -505,21 +503,21 @@ test("allow to use compute dates (+5d for instance)", async () => {
     expect(".o_field_date").toHaveText("Sep 15, 2019");
     await contains(".o_field_date button").click();
     await fieldInput("date").edit("+5d");
-    expect(".o_field_date").toHaveText("Feb 20");
+    expect(".o_field_date input").toHaveValue("02/20/2021");
 
     // Discard and do it again
     await contains(".o_form_button_cancel").click();
     expect(".o_field_date").toHaveText("Sep 15, 2019");
     await contains(".o_field_date button").click();
     await fieldInput("date").edit("+5d");
-    expect(".o_field_date").toHaveText("Feb 20");
+    expect(".o_field_date input").toHaveValue("02/20/2021");
 
     // Save and do it again
     await clickSave();
     expect(".o_field_date").toHaveText("Feb 20");
     await contains(".o_field_date button").click();
     await fieldInput("date").edit("+5d");
-    expect(".o_field_date").toHaveText("Feb 20");
+    expect(".o_field_date input").toHaveValue("02/20/2021");
 });
 
 test("date field with min_precision option", async () => {

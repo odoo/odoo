@@ -36,7 +36,6 @@
                         t-on-focus="() => this.picker.activeInput = this.startDateField"
                         t-on-blur="this.onInputBlured"
                         t-att-title="this.props.warnFuture and this.isDateInTheFuture(0) ? this.futureWarningMsg : ''"
-                        t-on-keydown="this.onkeyDown"
                     />
                 </t>
             </t>
@@ -70,7 +69,7 @@
                             t-custom-ref="end-date"
                             type="text"
                             t-att-id="this.props.startDateField and this.props.id"
-                            t-att-class="'o_input cursor-pointer user-select-none' + (this.props.warnFuture and this.isDateInTheFuture(1) ? 'text-danger' : '')"
+                            t-att-class="'o_input cursor-pointer user-select-none ' + (this.props.warnFuture and this.isDateInTheFuture(1) ? 'text-danger' : '')"
                             autocomplete="off"
                             inputmode="none"
                             t-att-placeholder="this.getPlaceholder(this.endDateField)"
@@ -79,7 +78,6 @@
                             t-on-focus="() => this.picker.activeInput = this.endDateField"
                             t-on-blur="this.onInputBlured"
                             t-att-title="this.props.warnFuture and this.isDateInTheFuture(1) ? this.futureWarningMsg : ''"
-                            t-on-keydown="this.onkeyDown"
                         />
                     </t>
                 </t>

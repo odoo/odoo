@@ -231,7 +231,7 @@ test("Date field - interaction with the datepicker", async () => {
 
     // Check date after change
     expect(".o_datetime_picker:first").not.toHaveCount();
-    expect("input[data-field=date]").toHaveValue("02/16/2017");
+    expect("button[data-field=date]").toHaveValue("02/16/2017");
     expect("button[data-field=date_end]").toHaveValue("03/12/2017");
 
     // Try to change range with end date
@@ -252,7 +252,7 @@ test("Date field - interaction with the datepicker", async () => {
     // Check date after change
     expect(".o_datetime_picker:first").not.toHaveCount();
     expect("button[data-field=date]").toHaveValue("02/13/2017");
-    expect("input[data-field=date_end]").toHaveValue("03/18/2017");
+    expect("button[data-field=date_end]").toHaveValue("03/18/2017");
 
     // Save
     await clickSave();
@@ -416,7 +416,7 @@ test("Render with initial empty value: date field", async () => {
     await contains(".o_toggle_range").click();
     await press("Control+Enter");
     await animationFrame();
-    expect("input[data-field=date]").toHaveValue(queryValue("button[data-field=date_end]"));
+    expect("button[data-field=date]").toHaveValue(queryValue("input[data-field=date_end]"));
 });
 
 test("Render with initial empty value: datetime field", async () => {
