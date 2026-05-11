@@ -1,0 +1,11 @@
+<odoo>
+    <record id="view_customer_graph" model="ir.ui.view">
+        <field name="name">sale.customer.graph</field>
+        <field name="model">sale.customer</field>
+        <field name="arch" type="xml">
+            <graph string="Số giao dịch theo khách hàng" type="bar">
+                <field name="source"/>
+            </graph>
+        </field>
+    </record>
+</odoo>

@@ -1,6 +1,7 @@
 from odoo import models, fields, api
-import datetime as dt
-import random
+import xlsxwriter
+from io import BytesIO
+
 
 class Customer(models.Model):
     _name = 'sale.customer'
@@ -48,14 +49,6 @@ class Customer(models.Model):
         ('company', 'Doanh nghiệp'),
     ], string="Phân loại khách")
 
-    state = fields.Selection([
-        ('active', 'Đang chăm sóc'),
-        ('inactive', 'Ngừng liên hệ'),
-        ('blocked', 'Chặn'),
-        ('potential', 'Tiềm năng'),
-        ('vip', 'Khách VIP'),
-    ], string="Trạng thái", default='active')
-
     # Đánh dấu khách chăm sóc không thành công
     ignore = fields.Boolean(
         string="Chăm sóc không thành",
@@ -73,9 +66,56 @@ class Customer(models.Model):
         string="Dự án quan tâm"
     )
 
+    transaction_ids = fields.One2many(
+        'sale.transaction',
+        'customer_id',
+        string='Giao dịch'
+    )
     
 
     @api.onchange('ignore')
     def _onchange_field_a(self):
         if self.ignore:
             self.previous_salesperson_ids = [(5, 0, 0)]
+
+    def action_export_state_pie_excel(self):
+        output = BytesIO()
+        workbook = xlsxwriter.Workbook(output)
+        sheet = workbook.add_worksheet("Customer State")
+
+        # Group dữ liệu giống pie chart
+        data = self.read_group(
+            [],
+            [],
+            ['state']
+        )
+
+        sheet.write(0, 0, "State")
+        sheet.write(0, 1, "Count")
+
+        row = 1
+        for line in data:
+            label = dict(self._fields['state'].selection).get(line['state'], line['state'])
+            sheet.write(row, 0, label)
+            sheet.write(row, 1, line['__count'])
+            row += 1
+
+        # ===== PIE CHART =====
+        chart = workbook.add_chart({'type': 'pie'})
+
+        chart.add_series({
+            'categories': ['Customer State', 1, 0, row-1, 0],
+            'values':     ['Customer State', 1, 1, row-1, 1],
+        })
+
+        chart.set_title({'name': 'Customer State Distribution'})
+        sheet.insert_chart('D2', chart)
+
+        workbook.close()
+        output.seek(0)
+
+        return {
+            'type': 'ir.actions.act_url',
+            'url': 'data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,' + output.getvalue().hex(),
+            'target': 'self'
+        }

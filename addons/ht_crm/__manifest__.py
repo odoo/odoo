@@ -24,7 +24,10 @@
         'views/menu_views.xml',
         'views/estate_project_views.xml',
         'views/customer_views.xml',
-        'views/QLNS.xml'
+        'views/QLNS.xml',
+        'reports/customer_report.xml',
+        'reports/project_report.xml',
+        'reports/transaction_report.xml'
     ],
     # only loaded in demonstration mode
     'demo': [

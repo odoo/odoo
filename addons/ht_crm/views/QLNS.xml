@@ -142,11 +142,12 @@
         <field name="model">sale.transaction</field>
         <field name="arch" type="xml">
             <list string="Giao Dịch">
+                <field name="transaction_code"/>
                 <field name="date"/>
                 <field name="employee_id"/>
                 <field name="customer_id"/>
                 <field name="product_id"/>
-                <field name="value" widget="monetary"/>
+                <field name="value"/>
             </list>
         </field>
     </record>
@@ -179,4 +180,5 @@
         </field>
     </record>
 
+    
 </odoo>

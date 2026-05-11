@@ -1,20 +1,40 @@
 from odoo import models, fields, api, exceptions
+from datetime import date
 
 class Transaction(models.Model):
     _name = 'sale.transaction'
     _description = "Transaction Information"
+
+    name = fields.Char(
+        related='transaction_code',
+        store=True,
+        string='Giao dịch'
+    )
+
+    transaction_code = fields.Char(
+        string="Mã giao dịch", required=True
+    )
+
+    currency_id = fields.Many2one(
+        'res.currency',
+        default=lambda self: self.env.company.currency_id
+    )
 
     employee_id = fields.Many2one('sale.employee', domain=[('role_ids.code', '=', 'sales')])
     customer_id = fields.Many2one("sale.customer")
     product_id = fields.Many2one('estate.property.unit', domain=[('state', 'in', ['available', 'resale'])])
     date = fields.Date(default=fields.Date.today)
 
-    value = fields.Float(
+
+    # BI
+    value = fields.Monetary(
         string="Giá giao dịch",
+        currency_field="currency_id",
         compute="_compute_value",
-        store=True,
-        digits=(16, 0)
+        store=True
     )
+
+    # Trường bổ sung
     listed_price = fields.Float(string="Giá niêm yết")
     discount = fields.Float(
         string="Chiết khấu (%)",
@@ -22,7 +42,13 @@ class Transaction(models.Model):
         digits=(16, 1)
     )
 
-    _tracking = True
+    state = fields.Selection([
+        ('reference', 'Tham khảo'),
+        ('visit', 'Tham quan'),
+        ('booking', 'Giữ chỗ'),
+        ('deposit', 'Đặt cọc')
+    ], string="Trạng thái", default='reference')
+
 
     @api.onchange('product_id')
     def _onchange_product_id(self):
@@ -89,10 +115,12 @@ class Transaction(models.Model):
         record = super().create(vals)
 
         if record.employee_id and record.date:
+            date = fields.Date.from_string(record.date)
+
             self._increase_kpi(
                 record.employee_id.id,
-                record.date.month,
-                record.date.year,
+                date.month,
+                date.year,
                 record.value
             )
 

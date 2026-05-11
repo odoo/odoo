@@ -36,9 +36,9 @@ class PhoneBook(models.Model):
 
     # Trường xử lý số nóng lạnh.    
     is_hot = fields.Boolean(string="Nóng?", default=False)
-    hot_until = fields.Datetime(string="Hết hạn Data Nóng")
+    hot_until = fields.Datetime(string="Hết hạn lúc", compute='_compute_hot_until', store=True)
     hot_duration = fields.Integer(
-        string="Thời gian Data Nóng (phút)",
+        string="Thời hạn (phút)",
         default=30
     )
 
@@ -99,15 +99,70 @@ class PhoneBook(models.Model):
             )
 
 
-    # Hàm phân KH (ngẫu nhiên)
-    def action_distribute_numbers(self):
-        eligible_users = self.env['sale.employee'].search([
-            ('active', '=', True),
-            ('role_ids.code', '=', 'sales')
+    @api.depends("hot_duration")
+    def _compute_hot_until(self):
+        now = fields.Datetime.now()
+
+        for rec in self:
+            if not rec.hot_duration:
+                rec.hot_until = False
+                continue
+
+            rec.hot_until = now + datetime.timedelta(
+                minutes=rec.hot_duration
+            )
+
+    @api.model
+    def cron_distribute(self):
+        now = fields.Datetime.now()
+
+        records = self.search([
+            ("hot_until", "!=", False),
+            ("hot_until", "<=", now),
         ])
 
+        for rec in records:
+            rec.auto_distribute_numbers()
+
+            # schedule next run
+            if rec.hot_duration:
+                rec.hot_until = now + datetime.timedelta(
+                    minutes=rec.hot_duration
+                )
+            else:
+                rec.hot_until = False
+
+    def auto_distribute_numbers(self):
+        # Với mọi record đang được chọn.
+        for record in self:
+            eligible_users = record.project_id.sales_ids
+            if not record.hot_duration:
+                continue
+
+            # Dữ liệu rác
+            if record.status == 'invalid':
+                continue
+
+            available = eligible_users.filtered(
+                lambda u: u not in record.previous_salesperson_ids
+            )
+
+            if not available:
+                record.write({'salesperson_id': ""})
+                record.write({'previous_salesperson_ids': [(5, 0, 0)]})
+                continue
+
+            assigned_user = random.choice(available)
+
+            record.salesperson_id = assigned_user.id
+            record.previous_salesperson_ids = [(4, assigned_user.id)]
+
+    # Hàm phân KH (ngẫu nhiên)
+    def action_distribute_numbers(self):
+        eligible_users = self.project_id.sales_ids
+
         if not eligible_users:
-            raise Exception("No active users found.")
+            raise exceptions.ValidationError("No active users found.")
 
         # Với mọi record đang được chọn.
         for record in self:

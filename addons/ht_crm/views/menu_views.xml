@@ -72,6 +72,25 @@
     </record>
 
 
+    <record id="action_customer_graph" model="ir.actions.act_window">
+        <field name="name">Biểu đồ KH</field>
+        <field name="res_model">sale.customer</field>
+        <field name="view_mode">graph,list</field>
+        <field name="context">{'graph_mode': 'pie'}</field>
+    </record>
+
+    <record id="action_transaction_graph" model="ir.actions.act_window">
+        <field name="name">Biểu đồ GD</field>
+        <field name="res_model">sale.transaction</field>
+        <field name="view_mode">graph,list</field>
+    </record>
+
+    <record id="action_estate_project_graph" model="ir.actions.act_window">
+        <field name="name">Biểu đồ Dự Án</field>
+        <field name="res_model">estate.project</field>
+        <field name="view_mode">graph,list</field>
+    </record>
+
     <menuitem id="menu_ht_root" name="HTLand CRM" sequence="10">
 
         <!-- CUSTOMER MANAGEMENT -->
@@ -96,10 +115,15 @@
             <menuitem id="menu_role" action="action_employee_role"/>
         </menuitem>
 
-        <!-- SYSTEM -->
-        <menuitem id="menu_system_root" name="Hệ Thống" sequence="40" groups="base.group_system">
-            <menuitem id="menu_users" action="action_users"/>
-        </menuitem>
+        <menuitem id="menu_statistics_root" name="Thống Kê" sequence="40">
+            <menuitem id="menu_stats_customer" name="Khách hàng" action="action_customer_graph"/>
+            <menuitem id="menu_stats_transaction" name="Giao dịch" action="action_transaction_graph"/>
+            <menuitem id="menu_stats_project" name="Dự án" action="action_estate_project_graph"/>
+        </menuitem> 
 
+        <!-- SYSTEM -->
+        <menuitem id="menu_system_root" name="Hệ Thống" sequence="50" groups="base.group_system">
+            <menuitem id="menu_users" action="action_users"/>
+        </menuitem>       
     </menuitem> 
 </odoo>

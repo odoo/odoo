@@ -56,10 +56,10 @@
         <field name="groups" eval="[(4, ref('group_ht_user'))]"/>
     </record>
 
-    <!-- <record id="ir_cron_cool_down_data" model="ir.cron">
-        <field name="name">Cool Down Hot Data</field>
+    <!-- <record id="ir_cron_distribute" model="ir.cron">
+        <field name="name">Phân số điện thoại</field>
         <field name="model_id" ref="model_sale_phonebook"/>
-        <field name="code">model._cron_cool_down_data()</field>
+        <field name="code">model.cron_distribute()</field>
         <field name="interval_number">1</field>
         <field name="interval_type">minutes</field>
     </record> -->
@@ -111,14 +111,6 @@
 
         <field name="arch" type="xml">
             <form string="Customer">
-
-                <!-- HEADER -->
-                <header>
-                    <field name="state"
-                        widget="statusbar"
-                        statusbar_visible="potential,active,vip,inactive,blocked"/>
-                </header>
-
                 <sheet>
 
                     <!-- TITLE -->
@@ -144,9 +136,6 @@
                         <group>
 
                             <field name="salesperson_id"/>
-
-                            <field name="ignore"
-                                groups="base.group_system,ht_crm.group_ht_leader,ht_crm.group_ht_executive"/>
 
                         </group>
 
@@ -178,6 +167,14 @@
 
                     <!-- NOTEBOOK -->
                     <notebook>
+                        <page string="Giao dịch">
+                            <field name="transaction_ids">
+                                <list limit="5">
+                                    <field name="product_id"/>
+                                    <field name="state"/>
+                                </list>
+                            </field>
+                        </page>
 
                         <!-- PROJECT -->
                         <page string="Dự án quan tâm">
@@ -209,18 +206,6 @@
         <field name="model">sale.customer</field>
         <field name="arch" type="xml">
             <list>
-                <!-- <header>
-                    <button name="action_distribute_customers" 
-                            string="Distribute" 
-                            type="object" 
-                            class="oe_highlight"
-                            groups="ht_crm.group_ht_leader,ht_crm.group_ht_executive"/>
-                    <button name="reverse" 
-                        string="Reverse" 
-                        type="object" 
-                        class="oe_highlight"
-                        groups="ht_crm.group_ht_leader,ht_crm.group_ht_executive"/>
-                </header> -->
                 <!-- TRƯỜNG CƠ BẢN -->
                 <field name="name"/>
                 <field name="partner_platform"/>
@@ -233,12 +218,12 @@
                 <field name="contact_address"/>
 
                 <!-- TRƯỜNG BỔ SUNG -->
-                <field name="salesperson_id"/>
+                <!-- <field name="salesperson_id"/>
                 <field name="previous_salesperson_ids" widget="many2many_tags" groups="ht_crm.group_ht_leader,ht_crm.group_ht_executive"/>
-                <field name="ignore" widget="checkbox" groups="ht_crm.group_ht_leader,ht_crm.group_ht_executive"/>
+                <field name="ignore" widget="checkbox" groups="ht_crm.group_ht_leader,ht_crm.group_ht_executive"/> -->
                 <field name="type"/>
             </list> 
         </field>
     </record>
-    
+
 </odoo>

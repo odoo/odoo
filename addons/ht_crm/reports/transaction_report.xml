@@ -1,0 +1,12 @@
+<odoo>
+    <record id="view_transaction_graph" model="ir.ui.view">
+        <field name="name">sale.transaction.graph</field>
+        <field name="model">sale.transaction</field>
+        <field name="arch" type="xml">
+            <graph string="Doanh số theo tháng">
+                <field name="date" type="row"/>
+                <field name="value" type="measure"/>
+            </graph>
+        </field>
+    </record>  
+</odoo>

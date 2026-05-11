@@ -1,0 +1,19 @@
+<odoo>
+    <record id="view_estate_project_graph" model="ir.ui.view">
+        <field name="name">estate.project.graph</field>
+        <field name="model">estate.project</field>
+        <field name="arch" type="xml">
+
+            <graph string="Dự án Bất động sản" type="bar">
+
+                <!-- Nhóm theo tiến độ -->
+                <field name="progress" type="row"/>
+
+                <!-- Đếm số dự án -->
+                <field name="id" type="measure"/>
+
+            </graph>
+
+        </field>
+    </record>
+</odoo>
