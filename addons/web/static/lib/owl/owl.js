@@ -169,23 +169,30 @@ var owl = (() => {
       return;
     }
     if (state === 2) {
-      for (const source of computation.sources) {
-        if (!("compute" in source)) {
-          continue;
+      if (computation.isDerived) {
+        for (const source of computation.sources) {
+          if (!("compute" in source)) {
+            continue;
+          }
+          updateComputation(source);
         }
-        updateComputation(source);
-      }
-      if (computation.state !== 1) {
-        computation.state = 0;
-        return;
+        if (computation.state !== 1) {
+          computation.state = 0;
+          return;
+        }
+      } else {
+        computation.state = 1;
       }
     }
     removeSources(computation);
     const previousComputation = currentComputation;
     currentComputation = computation;
-    computation.value = computation.compute();
-    computation.state = 0;
-    currentComputation = previousComputation;
+    try {
+      computation.value = computation.compute();
+      computation.state = 0;
+    } finally {
+      currentComputation = previousComputation;
+    }
   }
   function removeSources(computation) {
     const sources = computation.sources;
@@ -213,10 +220,11 @@ var owl = (() => {
         if (observer.state) {
           continue;
         }
-        observer.state = 2;
         if (observer.isDerived) {
+          observer.state = 2;
           stack.push(observer);
         } else {
+          observer.state = 1;
           observers.push(observer);
         }
       }
@@ -4404,8 +4412,8 @@ ${issueStrings}`);
   };
   var __info__ = {
     version: App.version,
-    date: "2026-05-08T09:33:52.109Z",
-    hash: "35c1f255",
+    date: "2026-05-11T11:49:14.861Z",
+    hash: "dacdb591",
     url: "https://github.com/odoo/owl"
   };
 
