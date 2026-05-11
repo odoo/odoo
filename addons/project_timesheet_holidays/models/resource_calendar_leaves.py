@@ -101,16 +101,18 @@ class ResourceCalendarLeaves(models.Model):
                 cal_attendance_intervals_params_entry['date_from'],
                 cal_attendance_intervals_params_entry['date_to'],
                 cal_attendance_intervals_params_entry['resources'],
-                tz=ZoneInfo(calendar.tz)
+                tz=UTC
             )
             for leave in cal_attendance_intervals_params_entry['leaves']:
+                leave_date_from = leave.date_from.replace(tzinfo=UTC)
+                leave_date_to = leave.date_to.replace(tzinfo=UTC)
                 work_hours_data = work_hours_intervals[leave.resource_id.id]
 
                 for date_from, date_to, _dummy in work_hours_data:
-                    if date_to > leave.date_from.replace(tzinfo=UTC) and date_from < leave.date_to.replace(tzinfo=UTC):
-                        tmp_start = max(date_from, leave.date_from.replace(tzinfo=UTC))
-                        tmp_end = min(date_to, leave.date_to.replace(tzinfo=UTC))
-                        results[calendar_id][leave.id][tmp_start.date()] += (tmp_end - tmp_start).total_seconds() / 3600
+                    if date_to > leave_date_from and date_from < leave_date_to:
+                        tmp_start = max(date_from, leave_date_from)
+                        tmp_end = min(date_to, leave_date_to)
+                        results[calendar_id][leave.id][tmp_start.astimezone(ZoneInfo(calendar.tz)).date()] += (tmp_end - tmp_start).total_seconds() / 3600
                 results[calendar_id][leave.id] = sorted(results[calendar_id][leave.id].items())
         return results
 
