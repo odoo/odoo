@@ -2,6 +2,14 @@
 layout: default
 title: Plan de Proyecto
 ---
+
+<style>
+table th {
+    background-color: black !important;
+    color: white !important;
+}
+</style>
+
 # Plan de Proyecto: SCRUM y DevOps – Odoo (Módulo Ventas)
 
 ## 1. Objetivo del Proyecto
