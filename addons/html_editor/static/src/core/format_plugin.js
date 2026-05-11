@@ -248,7 +248,10 @@ export class FormatPlugin extends Plugin {
     }
 
     removeFontSizeFormat(el) {
-        this.removeFormats(["fontSize", "setFontSizeClassName"], [el, ...descendants(el)]);
+        for (const node of [el, ...descendants(el)]) {
+            removeFormat(node, formatsSpecs.fontSize);
+            removeFormat(node, formatsSpecs.setFontSizeClassName);
+        }
     }
 
     /**

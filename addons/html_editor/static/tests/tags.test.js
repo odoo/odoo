@@ -454,6 +454,14 @@ describe("to heading 1", () => {
             contentAfter: '<h1 style="text-align: center;">[abcde<strong>fg</strong>]</h1>',
         });
     });
+
+    test("should convert h2 to h1 and remove the classes", async () => {
+        await testEditor({
+            contentBefore: '<h2 class="h3-fs">[Enhance] Your <strong>Experience</strong></h2>',
+            stepFunction: setTag("h1"),
+            contentAfter: "<h1>[Enhance] Your <strong>Experience</strong></h1>",
+        });
+    });
 });
 
 describe("to heading 2", () => {
