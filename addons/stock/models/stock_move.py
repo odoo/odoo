@@ -939,6 +939,11 @@ Please change the quantity done or the rounding precision in your settings.""",
         instead of all the orderpoints linked to the product."""
         if not self:
             return
+        orderpoints = self._get_orderpoints_to_update()
+        orderpoints.invalidate_recordset(['qty_to_order', 'qty_forecast'])
+        self.env.add_to_compute(self.env['stock.warehouse.orderpoint']._fields['qty_to_order_computed'], orderpoints)
+
+    def _get_orderpoints_to_update(self):
         domains = []
         for move in self:
             domain_for_move = Domain('product_id', '=', move.product_id.id)
@@ -947,8 +952,7 @@ Please change the quantity done or the rounding precision in your settings.""",
                 domain_for_move &= Domain('warehouse_id', 'in', wh_ids)
             domains.append(domain_for_move)
         orderpoints = self.env['stock.warehouse.orderpoint'].sudo().search(Domain.OR(domains), order='id')
-        orderpoints.invalidate_recordset(['qty_to_order', 'qty_forecast'])
-        self.env.add_to_compute(self.env['stock.warehouse.orderpoint']._fields['qty_to_order_computed'], orderpoints)
+        return orderpoints
 
     def _delay_alert_get_documents(self):
         """Returns a list of recordset of the documents linked to the stock.move in `self` in order
@@ -2411,7 +2415,10 @@ Please change the quantity done or the rounding precision in your settings.""",
     def unlink(self):
         # With the non plannified picking, draft moves could have some move lines.
         self.with_context(prefetch_fields=False).mapped('move_line_ids').unlink()
-        return super(StockMove, self).unlink()
+        orderpoints = self._get_orderpoints_to_update()
+        res = super().unlink()
+        self.env.add_to_compute(self.env['stock.warehouse.orderpoint']._fields['qty_to_order_computed'], orderpoints)
+        return res
 
     def _prepare_move_split_vals(self, qty):
         vals = {
