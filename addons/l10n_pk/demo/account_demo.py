@@ -25,7 +25,7 @@ class AccountChartTemplate(models.AbstractModel):
                             'quantity': 2,
                             'price_unit': 40000.0,
                             'tax_ids': [Command.set([
-                                'pk_sales_tax_services_10'
+                                'pk_sales_tax_gst_18'
                             ])],
                         }),
                         Command.create({
@@ -33,8 +33,8 @@ class AccountChartTemplate(models.AbstractModel):
                             'quantity': 3,
                             'price_unit': 400.0,
                             'tax_ids': [Command.set([
-                                'pk_sales_tax_services_17',
-                                'pk_tax_wh_S_1'
+                                'pk_sales_tax_gst_25',
+                                'pk_sales_tax_swht_1_10th',
                             ])],
                         }),
                         Command.create({
@@ -42,7 +42,7 @@ class AccountChartTemplate(models.AbstractModel):
                             'quantity': 4,
                             'price_unit': 300.0,
                             'tax_ids': [Command.set([
-                                'pk_sales_tax_services_5'
+                                'pk_sales_tax_gst_5_rr',
                             ])],
                         }),
                     ],
@@ -60,7 +60,7 @@ class AccountChartTemplate(models.AbstractModel):
                             'quantity': 2,
                             'price_unit': 4000.0,
                             'tax_ids': [Command.set([
-                                'pk_sales_tax_services_10'
+                                'pk_sales_tax_gst_18',
                             ])],
                         }),
                         Command.create({
@@ -68,7 +68,7 @@ class AccountChartTemplate(models.AbstractModel):
                             'quantity': 3,
                             'price_unit': 300.0,
                             'tax_ids': [Command.set([
-                                'pk_sales_tax_services_5'
+                                'pk_sales_tax_gst_5_rr',
                             ])],
                         }),
                     ],
@@ -100,7 +100,7 @@ class AccountChartTemplate(models.AbstractModel):
                             'quantity': 2,
                             'price_unit': 40000.0,
                             'tax_ids': [Command.set([
-                                'pk_sales_tax_services_10'
+                                'pk_sales_tax_gst_18'
                             ])],
                         }),
                         Command.create({
@@ -108,8 +108,8 @@ class AccountChartTemplate(models.AbstractModel):
                             'quantity': 3,
                             'price_unit': 400.0,
                             'tax_ids': [Command.set([
-                                'pk_sales_tax_services_10',
-                                'pk_tax_wh_S_5'
+                                'pk_sales_tax_gst_18',
+                                'pk_sales_tax_itwht_5'
                             ])],
                         }),
                         Command.create({
@@ -117,7 +117,7 @@ class AccountChartTemplate(models.AbstractModel):
                             'quantity': 4,
                             'price_unit': 300.0,
                             'tax_ids': [Command.set([
-                                'pk_sales_tax_services_5'
+                                'pk_sales_tax_gst_5_rr'
                             ])],
                         }),
                     ],
@@ -149,7 +149,7 @@ class AccountChartTemplate(models.AbstractModel):
                             'quantity': 1,
                             'price_unit': 1000.0,
                             'tax_ids': [Command.set([
-                                'pk_sales_tax_services_15'
+                                'pk_sales_tax_gst_18',
                             ])],
                         }),
                         Command.create({
@@ -157,8 +157,8 @@ class AccountChartTemplate(models.AbstractModel):
                             'quantity': 1,
                             'price_unit': 2000.0,
                             'tax_ids': [Command.set([
-                                'pk_sales_tax_services_10',
-                                'pk_tax_wh_S_1'
+                                'pk_sales_tax_gst_18',
+                                'pk_sales_tax_swht_1_10th',
                             ])],
                         }),
                     ]
@@ -176,7 +176,7 @@ class AccountChartTemplate(models.AbstractModel):
                             'quantity': 4,
                             'price_unit': 1000.0,
                             'tax_ids': [Command.set([
-                                'pk_sales_tax_17'
+                                'pk_sales_tax_gst_25',
                             ])],
                         }),
                         Command.create({
@@ -184,7 +184,7 @@ class AccountChartTemplate(models.AbstractModel):
                             'quantity': 3,
                             'price_unit': 2000.0,
                             'tax_ids': [Command.set([
-                                'pk_sales_tax_services_10'
+                                'pk_sales_tax_gst_18',
                             ])],
                         }),
                     ]
@@ -202,7 +202,7 @@ class AccountChartTemplate(models.AbstractModel):
                             'quantity': 1,
                             'price_unit': 1000.0,
                             'tax_ids': [Command.set([
-                                'pk_sales_tax_services_17'
+                                'pk_sales_tax_gst_25',
                             ])],
                         }),
                         Command.create({
@@ -210,8 +210,8 @@ class AccountChartTemplate(models.AbstractModel):
                             'quantity': 1,
                             'price_unit': 2000.0,
                             'tax_ids': [Command.set([
-                                'pk_sales_tax_services_10',
-                                'pk_tax_wh_S_5'
+                                'pk_sales_tax_gst_18',
+                                'pk_sales_tax_itwht_5',
                             ])],
                         }),
                     ]
