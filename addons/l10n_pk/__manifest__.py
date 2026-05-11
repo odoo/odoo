@@ -18,12 +18,12 @@ Activates:
 - Tax Report
 - Withholding Tax Report
     """,
-    'depends': ['account'],
-    'auto_install': ['account'],
-    'data': [
-        'data/account_tax_vat_report.xml',
-        'data/account_tax_wh_report.xml',
+    'depends': [
+        'account',
+        'account_tax_python',
+        'l10n_account_withholding_tax',
     ],
+    'auto_install': ['account'],
     'demo': [
         'demo/res_partner_demo.xml',
         'demo/demo_company.xml',
