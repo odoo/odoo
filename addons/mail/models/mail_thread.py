@@ -1578,7 +1578,17 @@ class MailThread(models.AbstractModel):
             alternative = False
             mixed = False
             html = False
-            for part in message.walk():
+
+            def iter_outer_parts(part):
+                yield part
+                # only look inside multipart containers. attached emails (.eml)
+                # are just attachments; we should not look inside them for
+                # body parts.
+                if part.get_content_maintype() == 'multipart':
+                    for child in part.iter_parts():
+                        yield from iter_outer_parts(child)
+
+            for part in iter_outer_parts(message):
                 if message_dict.get('is_bounce') and body:
                     # bounce email, keep only the first body and ignore
                     # the parent email that might be added at the end

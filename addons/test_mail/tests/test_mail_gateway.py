@@ -119,6 +119,34 @@ class TestEmailParsing(MailCommon):
                            )
         self.env['mail.thread'].message_parse(self.from_string(mail))
 
+    def test_message_parse_eml_attachment_body_isolation(self):
+        """An attached .eml must be captured as an attachment only; its inner
+        text/plain or text/html parts must not leak into (or replace) the
+        outer message body."""
+        mail = self.format(
+            test_mail_data.MAIL_EML_ATTACHMENT,
+            email_from='"Sylvie Lelitre" <test.sylvie.lelitre@agrolait.com>',
+            to=f'generic@{self.alias_domain}',
+            msg_id='<cb7eaf62-58dc-2017-148c-305d0c78892f@odoo.com>',
+            references='<f3b9f8f8-28fa-2543-cab2-7aa68f679ebb@odoo.com>',
+            subject='Re: test attac',
+        )
+        res = self.env['mail.thread'].message_parse(self.from_string(mail))
+
+        self.assertIn(
+            'Some nice content', res['body'],
+            'outer body must be preserved when an .eml is attached')
+        self.assertNotIn(
+            "Résultat de recherche d'images", res['body'],
+            'text/plain content from an attached .eml must not leak into body')
+        self.assertNotIn(
+            'princesse au petit pois', res['body'],
+            'text/html content from an attached .eml must not leak into body')
+        eml_attachments = [a for a in res['attachments'] if a[0] == 'original_msg.eml']
+        self.assertEqual(
+            len(eml_attachments), 1,
+            'the .eml must still be captured as an attachment')
+
     def test_message_parse_eml_bounce_headers(self):
         # Test Text/RFC822-Headers MIME content-type
         msg_id = '<861878175823148.1577183525.736005783081055-openerp-19177-account.invoice@mycompany.example.com>'
