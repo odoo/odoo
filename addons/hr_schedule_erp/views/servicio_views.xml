@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_schedule_servicio_view_tree" model="ir.ui.view">
+        <field name="name">hr.schedule.servicio.tree</field>
+        <field name="model">hr.schedule.servicio</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="fecha_servicio"/>
+                <field name="cliente_id"/>
+                <field name="grupo_id"/>
+                <field name="hora_inicio"/>
+                <field name="hora_fin"/>
+                <field name="estado_id"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="hr_schedule_servicio_view_form" model="ir.ui.view">
+        <field name="name">hr.schedule.servicio.form</field>
+        <field name="model">hr.schedule.servicio</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                <button name="%(hr_schedule_reasignacion_wizard_action)d"
+                    string="Reasignar auxiliar"
+                    type="action"
+                    class="btn-primary"
+                    context="{'default_servicio_id': id}"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="cliente_id"/>
+                            <field name="grupo_id"/>
+                            <field name="fecha_servicio"/>
+                        </group>
+                        <group>
+                            <field name="hora_inicio"/>
+                            <field name="hora_fin"/>
+                            <field name="estado_id"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="direccion"/>
+                        <field name="anotaciones"/>
+                    </group>
+                    <group>
+                        <field name="auxiliar_ids" widget="many2many_tags"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="hr_schedule_servicio_view_search" model="ir.ui.view">
+        <field name="name">hr.schedule.servicio.search</field>
+        <field name="model">hr.schedule.servicio</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="cliente_id"/>
+                <field name="fecha_servicio"/>
+                <filter name="f_en_curso" string="En curso" domain="[('estado_id', '=', 'en_curso')]"/>
+                <filter name="f_disputa" string="En disputa" domain="[('estado_id', '=', 'disputa')]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="hr_schedule_servicio_action" model="ir.actions.act_window">
+        <field name="name">Services</field>
+        <field name="res_model">hr.schedule.servicio</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="hr_schedule_servicio_view_search"/>
+    </record>
+
+    <menuitem id="hr_schedule_servicio_menu" name="Services" parent="hr_schedule_menu" action="hr_schedule_servicio_action" sequence="30"/>
+
+    <record id="hr_schedule_servicio_action_quincenal" model="ir.actions.act_window">
+        <field name="name">Corte Quincenal</field>
+        <field name="res_model">hr.schedule.servicio</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('periodo_quincena', '=', 'q1')]</field>
+    </record>
+
+    <menuitem id="hr_schedule_servicio_quincenal_menu"
+            name="Corte Quincenal"
+            parent="hr_schedule_menu"
+            action="hr_schedule_servicio_action_quincenal"
+            sequence="31"/>
+    <record id="hr_schedule_servicio_action_q1" model="ir.actions.act_window">
+        <field name="name">Corte 1ra Quincena</field>
+        <field name="res_model">hr.schedule.servicio</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('periodo_quincena', '=', 'q1')]</field>
+    </record>
+
+    <record id="hr_schedule_servicio_action_q2" model="ir.actions.act_window">
+        <field name="name">Corte 2da Quincena</field>
+        <field name="res_model">hr.schedule.servicio</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('periodo_quincena', '=', 'q2')]</field>
+    </record>
+
+    <menuitem id="hr_schedule_servicio_q1_menu"
+            name="Corte 1ra Quincena"
+            parent="hr_schedule_menu"
+            action="hr_schedule_servicio_action_q1"
+            sequence="31"/>
+
+    <menuitem id="hr_schedule_servicio_q2_menu"
+            name="Corte 2da Quincena"
+            parent="hr_schedule_menu"
+            action="hr_schedule_servicio_action_q2"
+            sequence="32"/>
+</odoo>

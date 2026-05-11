@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Privilege visible en formulario de usuarios -->
+    <record id="priv_hr_schedule_access" model="res.groups.privilege">
+        <field name="name">HR Scheduling Access</field>
+        <field name="description">Roles del módulo HR Scheduling</field>
+        <field name="placeholder">Sin acceso</field>
+        <field name="sequence">120</field>
+        <field name="category_id" ref="base.module_category_human_resources"/>
+    </record>
+
+    <record id="group_hr_programador_erp" model="res.groups">
+        <field name="name">Programador Principal</field>
+        <field name="privilege_id" ref="priv_hr_schedule_access"/>
+        <field name="sequence">10</field>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+
+    <record id="group_hr_coordina_scheduled" model="res.groups">
+        <field name="name">Coordinación</field>
+        <field name="privilege_id" ref="priv_hr_schedule_access"/>
+        <field name="sequence">20</field>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+
+    <record id="group_hr_auxiliar_erp" model="res.groups">
+        <field name="name">Auxiliar</field>
+        <field name="privilege_id" ref="priv_hr_schedule_access"/>
+        <field name="sequence">30</field>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+</odoo>
