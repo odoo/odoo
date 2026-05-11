@@ -128,7 +128,7 @@
             <field name="model">stock.move</field>
             <field name="priority">1000</field>
             <field name="arch" type="xml">
-                <form string="Move Detail">
+                <form string="Move Detail" js_class="sm_form">
                     <field name="sequence" invisible="1"/>
                     <field name="company_id" invisible="1"/>
                     <field name="state" invisible="1"/>
@@ -186,6 +186,10 @@
                     <field name="location_id" column_invisible="True"/>
                     <field name="location_dest_id" column_invisible="True"/>
                     <field name="package_id" column_invisible="True" context="{'show_src_package': 1}"/>
+                    <field name="package_weight" column_invisible="1"/>
+                    <field name="package_max_weight" column_invisible="1"/>
+                    <field name="package_base_weight" column_invisible="1"/>
+                    <field name="product_weight" column_invisible="1"/>
                     <field name="result_package_id" column_invisible="True" context="{'show_dest_package': 1}"/>
                     <field name="tracking" column_invisible="True"/>
                     <field name="picking_type_id" column_invisible="True"/>
@@ -217,6 +221,7 @@
                     <field name="picking_code" column_invisible="True"/>
                     <field name="picked" column_invisible="True"/>
                     <field name="quantity" string="Quantity" readonly="state == 'done' and is_locked" sum="Quantity"/>
+                    <field name="quantity_product_uom" column_invisible="True"/>
                     <field name="uom_id" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom" widget="many2one_uom"
                         readonly="state == 'done' and id"/>
                 </list>
