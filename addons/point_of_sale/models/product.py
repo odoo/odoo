@@ -389,7 +389,7 @@ class Uom(models.Model):
 
         domain = self._load_pos_data_domain(data)
         return {
-            'data': self.with_context({**self.env.context}).search_read(domain, fields, load=False),
+            'data': self.with_context({**self.env.context, 'active_test': False}).search_read(domain, fields, load=False),
             'fields': fields,
         }
 
