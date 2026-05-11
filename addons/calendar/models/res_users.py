@@ -5,6 +5,7 @@ from zoneinfo import ZoneInfo
 
 from odoo import api, fields, models, modules, _
 from odoo.exceptions import AccessError
+from odoo.fields import Domain
 
 
 class ResUsers(models.Model):
@@ -135,16 +136,25 @@ class ResUsers(models.Model):
             ('state', '!=', 'declined'),
         ])
 
-        return ['&', '|',
-                '&',
-                    '|',
-                        ['start', '>=', fields.Datetime.to_string(start_dt_utc)],
-                        ['stop', '>=', fields.Datetime.to_string(start_dt_utc)],
-                    ['start', '<=', fields.Datetime.to_string(stop_dt_utc)],
-                '&',
-                    ['allday', '=', True],
-                    ['start_date', '=', fields.Date.to_string(start_date)],
-                ('attendee_ids', 'in', current_user_non_declined_attendee_ids)]
+        is_today_allday = Domain.AND([
+            Domain('allday', '=', True),
+            Domain('start_date', '=', fields.Date.to_string(start_date)),
+        ])
+        is_today_ongoing_or_future = Domain.AND([
+            Domain.OR([
+                Domain('start', '>=', fields.Datetime.to_string(start_dt_utc)),
+                Domain('stop', '>=', fields.Datetime.to_string(start_dt_utc)),
+            ]),
+            Domain('start', '<=', fields.Datetime.to_string(stop_dt_utc)),
+        ])
+
+        return Domain.AND([
+            Domain('attendee_ids', 'in', current_user_non_declined_attendee_ids),
+            Domain.OR([
+                is_today_allday,
+                is_today_ongoing_or_future,
+            ])
+        ])
 
     @api.model
     def _get_activity_groups(self):
