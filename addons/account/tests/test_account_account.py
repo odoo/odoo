@@ -630,6 +630,8 @@ class TestAccountAccount(TestAccountMergeCommon):
             {'account_id': account.id,              'balance': 1000.0,  'amount_currency': 2000.0},
             {'account_id': account.id,              'balance': -1000.0, 'amount_currency': -2000.0},
         ])
+        account.action_validate_opening_move()
+        self.assertTrue(company.account_opening_move_id.posted_before)
 
     def test_unmerge(self):
         company_1 = self.company_data['company']
