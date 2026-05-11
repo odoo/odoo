@@ -321,7 +321,7 @@
                 <RachunekBankowy>
                     <NrRB t-out="invoice.partner_bank_id.acc_number.replace(' ', '')"/>
                     <NazwaBanku t-out="invoice.partner_bank_id.bank_id.name"/>
-                    <OpisRachunku t-out="invoice.currency_id.name"/>
+                    <OpisRachunku t-out="invoice.partner_bank_id.currency_id.name"/>
                 </RachunekBankowy>
             </t>
         </Platnosc>
