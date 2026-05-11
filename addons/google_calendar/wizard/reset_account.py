@@ -2,9 +2,6 @@
 
 from odoo import fields, models
 
-from odoo.addons.google_calendar.models.google_sync import google_calendar_token
-from odoo.addons.google_calendar.utils.google_calendar import GoogleCalendarService
-
 
 class GoogleCalendarAccountReset(models.TransientModel):
     _name = 'google.calendar.account.reset'
@@ -24,8 +21,6 @@ class GoogleCalendarAccountReset(models.TransientModel):
     ], string="Next Synchronization", required=True, default='new')
 
     def reset_account(self):
-        google = GoogleCalendarService(self.env['google.service'])
-
         events = self.env['calendar.event'].search([
             ('user_id', '=', self.user_id.id),
             ('google_id', '!=', False)])
@@ -33,10 +28,20 @@ class GoogleCalendarAccountReset(models.TransientModel):
             ('base_event_id', 'in', events.ids),
             ('google_id', '!=', False)])
 
+        google_ids_to_delete = []
         if self.delete_policy in ('delete_google', 'delete_both'):
-            with google_calendar_token(self.user_id) as token:
-                for event in events:
-                    google.delete(event.google_id, token=token)
+            # Queue delete requests only for standalone events and recurrence masters.
+            # Because Google automatically deletes all child instances when a master is deleted,
+            # queuing individual instances is redundant and could exceed the 600 req/min API quota.
+            standalone_events = events.filtered(lambda e: e.recurrence_id not in recurrences)
+            google_ids_to_delete = recurrences.mapped('google_id') + standalone_events.mapped('google_id')
+
+            if google_ids_to_delete:
+                self.env['google.calendar.pending.deletion'].sudo().create([
+                    {'google_id': google_id, 'user_id': self.user_id.id}
+                    for google_id in google_ids_to_delete
+                ])
+                self.env.ref('google_calendar.ir_cron_process_google_pending_deletions')._trigger()
 
         # Delete events according to the selected policy. If the deletion is only in
         # Google, we won't keep track of the 'google_id' field for events and recurrences.
@@ -60,8 +65,9 @@ class GoogleCalendarAccountReset(models.TransientModel):
         if self.delete_policy not in ('delete_odoo', 'delete_both'):
             events.with_context(skip_event_permission=True).write(next_sync_update)
 
-        self.user_id.res_users_settings_id._set_google_auth_tokens(False, False, 0)
-        self.user_id.write({
-            'google_calendar_sync_token': False,
-            'google_calendar_cal_id': False,
-        })
+        if google_ids_to_delete:
+            # Credentials must stay valid until the cron has processed the
+            # queue on Google's side. Re-linking will be blocked in the meantime.
+            self.user_id.res_users_settings_id.sudo().google_calendar_reset_pending = True
+        else:
+            self.user_id.res_users_settings_id._finalize_google_calendar_reset()

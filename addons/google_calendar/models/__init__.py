@@ -8,3 +8,4 @@ from . import res_users
 from . import res_users_settings
 from . import calendar_attendee
 from . import calendar_alarm_manager
+from . import google_calendar_pending_deletion

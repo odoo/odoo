@@ -17,5 +17,16 @@ model._sync_all_google_calendar()
             <field name="interval_number">12</field>
             <field name="interval_type">hours</field>
         </record>
+
+        <record forcecreate="True" id="ir_cron_process_google_pending_deletions" model="ir.cron">
+            <field name="name">Google Calendar: process pending deletions</field>
+            <field name="model_id" ref="model_google_calendar_pending_deletion"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_process_pending_deletions()</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="active" eval="True"/>
+        </record>
     </data>
 </odoo>

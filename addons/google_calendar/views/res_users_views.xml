@@ -16,10 +16,23 @@
                         <field name="google_calendar_token_validity" readonly="1"/>
                         <field name="google_calendar_sync_token" readonly="1"/>
                         <field name="google_calendar_cal_id" readonly="1"/>
+                        <field name="google_calendar_reset_pending" invisible="1" groups="base.group_system"/> <!-- drives the banner + Reset/Cancel button visibility below -->
+                        <div colspan="2" class="alert alert-warning mt-3" role="alert"
+                             invisible="not google_calendar_reset_pending">
+                            A reset of this Google Calendar account is in progress.
+                            Re-linking another account is blocked until the pending Google deletions
+                            have been processed.
+                        </div>
                         <button
                             string="Reset Account" colspan="2" class="btn btn-secondary mt-3"
                             type="action" name="%(google_calendar_reset_account_action)d"
-                            context="{'default_user_id': id}"/>
+                            context="{'default_user_id': id}"
+                            invisible="google_calendar_reset_pending"/>
+                        <button
+                            string="Cancel Pending Reset" colspan="2" class="btn btn-warning mt-3"
+                            type="object" name="action_cancel_google_calendar_reset"
+                            confirm="Cancelling will stop the account resetting. Some events may remain on Google's side. Continue?"
+                            invisible="not google_calendar_reset_pending"/>
                     </group>
                 </group>
             </field>

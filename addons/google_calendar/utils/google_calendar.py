@@ -4,6 +4,7 @@ from uuid import uuid4
 import requests
 import json
 import logging
+from contextlib import suppress
 
 from odoo import fields
 from odoo.addons.google_calendar.utils.google_event import GoogleEvent
@@ -21,6 +22,27 @@ def requires_auth_token(func):
 
 class InvalidSyncToken(Exception):
     pass
+
+
+class GoogleCalendarRateLimit(Exception):
+    """Raised when Google Calendar API answers with a rate-limit / quota response.
+    Callers performing bulk operations (e.g. account reset) should catch this
+    and apply truncated exponential backoff per
+    https://developers.google.com/workspace/calendar/api/guides/quota
+    """
+
+
+# https://developers.google.com/workspace/calendar/api/guides/errors
+_RATE_LIMIT_REASONS = frozenset({'rateLimitExceeded', 'userRateLimitExceeded', 'quotaExceeded'})
+_ALREADY_GONE_REASONS = frozenset({'eventCancelled'})
+
+
+def _google_error_reason(http_error):
+    with suppress(ValueError, KeyError, IndexError, TypeError):
+        return http_error.response.json()['error']['errors'][0].get('reason')
+
+    return None
+
 
 class GoogleCalendarService():
 
@@ -91,22 +113,27 @@ class GoogleCalendarService():
 
     @requires_auth_token
     def delete(self, event_id, token=None, timeout=TIMEOUT):
+        # Deleting a recurring-event master cancels every instance (and any
+        # detached "exception" instances) on Google's side in a single call.
         url = "/calendar/v3/calendars/primary/events/%s?sendUpdates=all" % event_id
         headers = {'Content-type': 'application/json'}
         params = {'access_token': token}
-        # Delete all events from recurrence in a single request to Google and triggering a single mail.
-        # The 'singleEvents' parameter is a trick that tells Google API to delete all recurrent events individually,
-        # making the deletion be handled entirely on their side, and then we archive the events in Odoo.
-        is_recurrence = self.google_service.env.context.get('is_recurrence', True)
-        if is_recurrence:
-            params['singleEvents'] = 'true'
         try:
             self.google_service._do_request(url, params, headers=headers, method='DELETE', timeout=timeout)
         except requests.HTTPError as e:
-            # For some unknown reason Google can also return a 403 response when the event is already cancelled.
-            if e.response.status_code not in (410, 403):
-                raise e
-            _logger.info("Google event %s was already deleted" % event_id)
+            code = e.response.status_code
+            reason = _google_error_reason(e)
+
+            # Already gone (deleted on Google's side or cancelled): treat as success.
+            if code in (404, 410) or reason in _ALREADY_GONE_REASONS:
+                _logger.info("Google event %s already deleted (HTTP %s, reason=%s)", event_id, code, reason)
+                return
+
+            # Rate-limit / quota: surface a typed exception so bulk callers can back off.
+            if code == 429 or reason in _RATE_LIMIT_REASONS:
+                raise GoogleCalendarRateLimit(reason or "HTTP %s" % code) from e
+
+            raise
 
 
     #################################

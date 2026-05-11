@@ -22,6 +22,7 @@ class ResUsers(models.Model):
     google_calendar_sync_token = fields.Char(related='res_users_settings_id.google_calendar_sync_token', groups="base.group_system")
     google_calendar_cal_id = fields.Char(related='res_users_settings_id.google_calendar_cal_id', groups="base.group_system")
     google_synchronization_stopped = fields.Boolean(related='res_users_settings_id.google_synchronization_stopped', readonly=False, groups="base.group_system")
+    google_calendar_reset_pending = fields.Boolean(related='res_users_settings_id.google_calendar_reset_pending', groups="base.group_system")
 
     def _get_google_calendar_token(self):
         self.ensure_one()
@@ -31,6 +32,11 @@ class ResUsers(models.Model):
 
     def _get_google_sync_status(self):
         """ Returns the calendar synchronization status (active, paused or stopped). """
+        # During an account reset the tokens are still valid so
+        # the deletion cron can use them. Sync must stay stopped so it doesn't
+        # re-import the events being deleted.
+        if self.sudo().res_users_settings_id.google_calendar_reset_pending:
+            return "sync_stopped"
         status = "sync_active"
         if self.env['ir.config_parameter'].sudo().get_bool("google_calendar_sync_paused"):
             status = "sync_paused"
@@ -139,7 +145,11 @@ class ResUsers(models.Model):
     @api.model
     def _sync_all_google_calendar(self):
         """ Cron job """
-        domain = [('google_calendar_rtoken', '!=', False), ('google_synchronization_stopped', '=', False)]
+        domain = [
+            ('google_calendar_rtoken', '!=', False),
+            ('google_synchronization_stopped', '=', False),
+            ('google_calendar_reset_pending', '=', False),
+        ]
         # google_calendar_token_validity is not stored on res.users
         if not self:
             users = self.env['res.users'].sudo().search(domain).sorted('google_calendar_token_validity')
@@ -160,6 +170,11 @@ class ResUsers(models.Model):
         meaning we can make API calls, false otherwise."""
         self.ensure_one()
         return self.sudo().google_calendar_token and self._get_google_sync_status() == 'sync_active'
+
+    def action_cancel_google_calendar_reset(self):
+        """Aborts the reset process and finalize the reset now. """
+        self.ensure_one()
+        self.res_users_settings_id._cancel_google_calendar_reset()
 
     def stop_google_synchronization(self):
         self.ensure_one()
