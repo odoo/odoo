@@ -118,13 +118,14 @@
                         }"/>
                     </div>
                     <div t-ref="picker-target"/>
+                    <span t-if="env.inDiscussApp and !isSendButtonDisabled and !isMobileOS and shouldUseCtrlEnterToSend" class="text-muted small ms-1" t-out="OR_PRESS_SEND_KEYBIND"/>
                 </div>
                 <div t-else="" class="d-flex align-items-center gap-1 w-100 pe-2">
                     <div class="pt-1" t-att-class="{ 'mt-2': !props.composer.message }">
                         <span t-if="props.composer.message and !ui.isSmall" class="text-muted px-1 small" t-out="CANCEL_OR_SAVE_EDIT_TEXT" t-on-click="onClickCancelOrSaveEditText" />
                         <t t-elif="!props.composer.message and !props.composer.restoredFromFullComposer">
                             <t t-call="mail.Composer.sendButton"/>
-                            <span t-if="!isSendButtonDisabled and !isMobileOS" class="text-muted small ms-1" t-out="OR_PRESS_SEND_KEYBIND"/>
+                            <span t-if="!isSendButtonDisabled and !isMobileOS and shouldUseCtrlEnterToSend" class="text-muted small ms-1" t-out="OR_PRESS_SEND_KEYBIND"/>
                         </t>
                     </div>
                     <span class="flex-grow-1"/>

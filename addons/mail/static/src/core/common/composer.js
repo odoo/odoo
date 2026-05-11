@@ -123,12 +123,6 @@ export class Composer extends Component {
         this.store = useService("mail.store");
         this.composerActions = useComposerActions({ composer: () => this.props.composer });
         this.EDIT_CLICK_TYPE = EDIT_CLICK_TYPE;
-        this.OR_PRESS_SEND_KEYBIND = _t("or press %(send_keybind)s", {
-            send_keybind: htmlJoin(
-                this.sendKeybinds.map((key) => markup`<samp>${key}</samp>`),
-                " + "
-            ),
-        });
         this.attachmentUploader = useAttachmentUploader(
             this.thread ?? this.props.composer.message.thread,
             { composer: this.props.composer }
@@ -409,8 +403,23 @@ export class Composer extends Component {
         return this.props.type === "note" ? _t("Log") : _t("Send");
     }
 
+    get OR_PRESS_SEND_KEYBIND() {
+        return _t("%(prefix)s press %(send_keybind)s %(suffix)s", {
+            prefix: this.shouldUseCtrlEnterToSend ? "" : _t("or"),
+            send_keybind: htmlJoin(
+                this.sendKeybinds.map((key) => markup`<samp>${key}</samp>`),
+                " + "
+            ),
+            suffix: this.shouldUseCtrlEnterToSend ? _t("to send") : "",
+        });
+    }
+
+    get shouldUseCtrlEnterToSend() {
+        return !this.props.composer.isSimpleContent;
+    }
+
     get sendKeybinds() {
-        return this.env.inChatter ? [_t("CTRL"), _t("Enter")] : [_t("Enter")];
+        return this.shouldUseCtrlEnterToSend ? [_t("CTRL"), _t("Enter")] : [_t("Enter")];
     }
 
     get showComposerAvatar() {
@@ -530,7 +539,9 @@ export class Composer extends Component {
                 if (this.isMobileOS || ev.isComposing) {
                     return;
                 }
-                const shouldPost = this.env.inChatter ? ev.ctrlKey : !ev.shiftKey;
+                const shouldPost = this.shouldUseCtrlEnterToSend
+                    ? ev.ctrlKey
+                    : !ev.shiftKey && !ev.ctrlKey;
                 if (!shouldPost) {
                     return;
                 }
