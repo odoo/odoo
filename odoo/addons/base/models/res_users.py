@@ -716,7 +716,7 @@ class ResUsers(models.Model):
 
     @api.model
     def _get_email_domain(self, email):
-        return Domain('email', '=', email)
+        return Domain('email', '=ilike', tools.escape_psql(email or ''))
 
     @api.model
     def _get_login_order(self):
