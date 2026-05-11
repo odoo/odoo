@@ -1044,6 +1044,7 @@
             id="o_wsale_categories_filmstrip"
             class="o_wsale_filmstrip_container o_wsale_filmstrip_default d-flex align-items-stretch overflow-hidden"
             role="navigation"
+            t-if="not (len(entries) == 1 and category == entries)"
         >
             <div class="o_wsale_filmstrip_wrapper position-relative overflow-auto z-1">
                 <ul
