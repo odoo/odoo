@@ -372,7 +372,12 @@ export function useColorPicker(refName, props, options = {}) {
     const root = useRef(refName);
 
     function onClick() {
-        colorPicker.isOpen ? colorPicker.close() : colorPicker.open(root.el, props);
+        if (colorPicker.isOpen) {
+            colorPicker.close();
+        } else {
+            colorPicker.open(root.el, props);
+            options.onOpen?.();
+        }
     }
 
     useLayoutEffect(
