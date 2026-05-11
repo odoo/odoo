@@ -260,6 +260,7 @@ test("close on click outside when the opening active element was removed", async
 });
 
 test("close on outside click in shadow dom", async () => {
+    const shadowRootId = "o-shadow-root-id";
     class DropdownInShadowDom extends Component {
         static components = { SimpleDropdown };
         static props = [];
@@ -269,17 +270,21 @@ test("close on outside click in shadow dom", async () => {
     class ShadowDom extends Component {
         static components = { Dropdown, DropdownItem };
         static props = [];
-        static template = xml`<div class="shadow-root" t-ref="shadow-root-ref" />`;
+        static template = xml`<div class="shadow-root" t-ref="shadow-root-ref" id="${shadowRootId}" />`;
         setup() {
             const shadowRootRef = useRef("shadow-root-ref");
             onMounted(() => {
                 const shadowBody = shadowRootRef.el.attachShadow({ mode: "open" });
-                mountWithCleanup(DropdownInShadowDom, { target: shadowBody });
+                mountWithCleanup(DropdownInShadowDom, { env: this.env, target: shadowBody });
             });
         }
     }
 
-    await mountWithCleanup(ShadowDom, { noMainContainer: true });
+    await mountWithCleanup(ShadowDom, {
+        componentEnv: { rootId: shadowRootId },
+        containerEnv: { rootId: shadowRootId },
+        noMainContainer: true,
+    });
 
     const shadowBody = queryOne(".shadow-root").shadowRoot;
     await contains(DROPDOWN_TOGGLE, { root: shadowBody }).click();
