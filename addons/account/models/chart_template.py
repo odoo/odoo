@@ -505,6 +505,7 @@ class AccountChartTemplate(models.AbstractModel):
             This allows to define all the data before the records even exist in the database.
             """
             fields = ((model._fields[k], k, v) for k, v in values.items() if k in model._fields)
+            failed_fields = []
             for field, fname, value in fields:
                 if not value:
                     values[fname] = False
@@ -515,16 +516,13 @@ class AccountChartTemplate(models.AbstractModel):
                     try:
                         values[fname] = self.ref(value).id if value not in ('', 'False', 'None') else False
                     except ValueError:
-                        if model != self.env['res.company']:
+                        if model._name == 'res.company':
+                            # Try a fallback on the company when reloading/loading on a branch
+                            values[fname] = self.env.company[fname] or self.env.company.root_id[fname] or False
+                        else:
                             _logger.warning("Failed when trying to recover %s for field=%s", value, field)
-                            raise
-
-                        # We can't find the record referenced in the chart template in our database.
-                        # This might happen when we're creating a branch and the parent company has deleted the
-                        # referenced record and replaced it with something else.
-                        #
-                        # In this case, we try looking for the record already set on the company or its root.
-                        values[fname] = self.env.company[fname] or self.env.company.parent_ids[0][fname] or False
+                            failed_fields.append(fname)
+                            values[fname] = False
                 elif field.type in ('one2many', 'many2many') and isinstance(value[0], (list, tuple)):
                     for i, (command, _id, *last_part) in enumerate(value):
                         if last_part:
@@ -545,6 +543,8 @@ class AccountChartTemplate(models.AbstractModel):
                         for v in value.split(',')
                         if v
                     ])]
+            for fname in failed_fields:
+                del values[fname]
             return values
 
         def delay(all_data):
