@@ -29,7 +29,7 @@ test("Change dynamic SVG colors", async () => {
     );
     const expectColors = async (expectedRgb, expectedParam) => {
         await waitFor(
-            `[data-label="Dynamic Colors"] button.o_we_color_preview[style="background-color: ${expectedRgb};"]`,
+            `[data-label="Illustration Colors"] button.o_we_color_preview[style="background-color: ${expectedRgb};"]`,
             { timeout: 1000 }
         );
         expect(svg).toHaveAttribute("src", `${imgPath}?c1=${expectedParam}`);
