@@ -165,8 +165,7 @@ test("geo charts are replaced with an image", async function () {
         offset: { x: 0, y: 0 },
         definition: {
             type: "geo",
-            dataSets: [],
-            dataSetsHaveTitle: false,
+            dataSource: { type: "range", dataSets: [], dataSetsHaveTitle: false },
             title: {},
             legendPosition: "none",
         },
