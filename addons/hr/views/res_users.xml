@@ -221,7 +221,7 @@
                 </field>
                 <field name="image_1920" widget="contact_image" position="after">
                     <field name="image_1920" class="o_contact_image_large" invisible="not employee_id or work_email == login"
-                        widget="contact_image" options="{'preview_image': 'avatar_128', 'img_class': 'rounded-4'}"/>
+                        widget="contact_image" options="{'preview_image': 'avatar_128', 'size': [130,130], 'img_class': 'rounded-4'}"/>
                 </field>
                 <!-- Must be replaced by work_email when the user has an employee_id. -->
                 <xpath expr="//label[@for='email']" position="attributes">
