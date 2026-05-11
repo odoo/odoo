@@ -707,3 +707,14 @@ class StockMove(models.Model):
         else:
             res['raw_material_production_id'] = self.production_id.id
         return res
+
+    def action_scrap(self):
+        moves_to_repick = self.env['stock.move']
+        for scrap in self:
+            if scrap.production_id and scrap.lot_ids:
+                move_lines_to_unpick = scrap.production_id.move_raw_ids.move_line_ids.filtered(lambda ml: ml.lot_id in scrap.lot_ids)
+                move_lines_to_unpick.picked = False
+                moves_to_repick |= move_lines_to_unpick.move_id
+        res = super().action_scrap()
+        moves_to_repick.picked = True
+        return res

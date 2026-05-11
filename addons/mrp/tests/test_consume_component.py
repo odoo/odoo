@@ -1,5 +1,6 @@
 import copy
 
+from odoo import Command
 from odoo.exceptions import UserError
 from odoo.tests import common, tagged, Form
 
@@ -578,3 +579,33 @@ class TestConsumeComponent(TestConsumeComponentCommon):
         # Check quantity available in stock for each product
         self.assertEqual(self.raw_none.qty_available, 0)
         self.assertEqual(self.raw_lot.qty_available, 0)
+
+    def test_scrapped_component_is_not_reused_on_mo(self):
+        """Ensure scrapped lots/serials are not reused on the MO.
+
+        When a component tracked by lot/serial number is scrapped during
+        a work order, the same lot/serial should no longer be used if it is no
+        longer available in inventory.
+        """
+        quants = self.create_quant(self.raw_serial, 2)
+        quants.action_apply_inventory()
+        self.env['mrp.routing.workcenter'].create({
+            'name': 'operation',
+            'workcenter_id': self.workcenter.id,
+            'bom_id': self.bom_none.id,
+        })
+        mo = self.create_mo(self.mo_none_tmpl, 1)
+        mo.action_confirm()
+        mo.workorder_ids.button_start()
+        sn = mo.move_raw_ids[2].lot_ids
+        move_line = mo.move_raw_ids[2].move_line_ids
+        self.env['stock.move'].with_context(default_production_id=mo.id).create({
+            'product_id': self.raw_serial.id,
+            'lot_ids': [Command.link(sn.id)],
+            'is_scrap': True,
+            'quantity': 1,
+            'location_id': self.stock_id,
+        }).action_scrap()
+        self.assertTrue(mo.move_raw_ids[2].lot_ids)
+        self.assertFalse(sn in mo.move_raw_ids[2].lot_ids)
+        self.assertFalse(move_line.exists())
