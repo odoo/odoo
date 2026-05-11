@@ -821,6 +821,7 @@ export class CalendarModel extends Model {
             isHatched: rawRecord["is_hatched"] || false,
             isStriked: rawRecord["is_striked"] || false,
             isTimeHidden: isTimeHidden || !showTime,
+            isDay: this.meta.scale === "day",
             isMonth: this.meta.scale === "month",
             isSmall: this.env.isSmall,
             rawRecord,
