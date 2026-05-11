@@ -12,7 +12,7 @@ Implementar un proceso de desarrollo de software que integre la metodología ág
 * **Repositorio:** [https://github.com/roydanpe/odooIPS](https://github.com/roydanpe/odooIPS)
 * **Dominio:** Sistema empresarial (ERP/CRM) aplicado al rubro comercial.
 * **Complejidad:** Mediana. Se trabajará con el [**Módulo de Ventas**](ArquitecturaModuloVnetas.md), el cual cuenta con más de 10,000 líneas de código (> 10 KLOC).
-* **Viabilidad Técnica y Legal:** [GNU Lesser General Public License, version 3 (LGPL-3)](REPORTE_VERIFICACION.md) (verificada para uso académico) e iinfraestructura DevOps adaptable, permitiendo la implementación de un entorno containerizado basado en [Docker Compose](REPORTE_VERIFICACION.md), facilitando la implementación del pipeline de automatización solicitado.
+* **Viabilidad Técnica y Legal:** [GNU Lesser General Public License, version 3 (LGPL-3)](REPORTE_VERIFICACION.md) (verificada para uso académico) e infraestructura DevOps adaptable, permitiendo la implementación de un entorno containerizado basado en [Docker Compose](REPORTE_VERIFICACION.md), facilitando la implementación del pipeline de automatización solicitado.
 
 ## 3. Equipo y Metodología de Trabajo
 El equipo de trabajo está formado por 5 estudiantes. El rol de **Líder de Equipo** será rotativo por cada Sprint para desarrollar habilidades de liderazgo y responsabilidad.
