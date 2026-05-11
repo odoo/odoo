@@ -4,20 +4,13 @@ from markupsafe import Markup
 from werkzeug.exceptions import NotFound
 
 from odoo import fields, http
+from odoo.exceptions import AccessError
 from odoo.fields import Domain
 from odoo.http import request
-from odoo.addons.mail.controllers.webclient import WebclientController, WRITE_FETCH_PARAMS
-from odoo.addons.mail.tools.discuss import mail_route, Store
-from odoo.exceptions import AccessError
 
-WRITE_FETCH_PARAMS |= {
-    "/discuss/channel/favorite",
-    "/discuss/channel/messages",
-    "/discuss/channel/pin",
-    "/discuss/create_channel",
-    "/discuss/create_group",
-    "/discuss/get_or_create_chat",
-}
+from odoo.addons.mail.controllers.webclient import WebclientController
+from odoo.addons.mail.tools.discuss import Store, mail_route
+from odoo.addons.mail.tools.store_handler import store_handler
 
 
 class DiscussChannelWebclientController(WebclientController):
@@ -40,7 +33,6 @@ class DiscussChannelWebclientController(WebclientController):
             > 0,
         )
 
-    @classmethod
     def _process_request_loop(self, store: Store, fetch_params):
         """Override to add discuss channel specific features."""
         # aggregate of channels to return, to batch them in a single query when all the fetch params
@@ -58,80 +50,114 @@ class DiscussChannelWebclientController(WebclientController):
             # prefetch a lot of data that message format could use)
             store.add(channels._get_last_messages(), "_store_message_fields")
 
-    @classmethod
-    def _process_request_for_all(self, store: Store, name, params):
-        """Override to return channel as member and last messages."""
-        super()._process_request_for_all(store, name, params)
-        if name == "init_messaging":
-            member_domain = [("is_self", "=", True), ("rtc_inviting_session_id", "!=", False)]
-            channel_domain = [("channel_member_ids", "any", member_domain)]
-            channels = request.env["discuss.channel"].search_fetch(channel_domain)
-            request.update_context(channels=request.env.context["channels"] | channels)
-        if name == "channels_as_member":
-            channels = request.env["discuss.channel"].search_fetch(
-                [("channel_member_ids", "any", [("is_self", "=", True), ("is_pinned", "=", True)])],
+    def store_init_messaging(self, store: Store):
+        member_domain = [("is_self", "=", True), ("rtc_inviting_session_id", "!=", False)]
+        channel_domain = [("channel_member_ids", "any", member_domain)]
+        channels = request.env["discuss.channel"].search_fetch(channel_domain)
+        request.update_context(channels=request.env.context["channels"] | channels)
+        super().store_init_messaging(store)
+
+    @store_handler("channels_as_member", audience="everyone")
+    def store_channels_as_member(self, store: Store):
+        channels = request.env["discuss.channel"].search_fetch(
+            [("channel_member_ids", "any", [("is_self", "=", True), ("is_pinned", "=", True)])],
+        )
+        request.update_context(
+            channels=request.env.context["channels"] | channels,
+            add_channels_last_message=True,
+        )
+        self._add_has_unpinned_channels_to_store(store)
+
+    @store_handler("discuss.channel", audience="everyone")
+    def store_add_discuss_channel_to_context(self, store: Store, *channel_id):
+        channels = request.env["discuss.channel"].search([("id", "in", channel_id)])
+        request.update_context(channels=request.env.context["channels"] | channels)
+
+    @store_handler("/discuss/channel/members", audience="everyone")
+    def store_get_discuss_channel_members(
+        self,
+        store: Store,
+        channel_id,
+        search_term=None,
+        known_member_ids=None,
+    ):
+        channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
+        if not channel:
+            return
+        domain = Domain("channel_id", "=", channel.id)
+        if known_member_ids:
+            domain &= Domain("id", "in", known_member_ids)
+        if search_term:
+            domain &= (
+                Domain("partner_id.name", "ilike", search_term)
+                | Domain("guest_id.name", "ilike", search_term)
             )
-            request.update_context(
-                channels=request.env.context["channels"] | channels, add_channels_last_message=True
+        unknown_members = request.env["discuss.channel.member"].search_fetch(
+            domain,
+            limit=100,
+        )
+        store.add(channel, ["member_count"]).add(unknown_members, "_store_member_fields")
+
+    @store_handler("/discuss/channel/favorite", audience="everyone", readonly=False)
+    def store_set_discuss_channel_favorite(self, store: Store, channel_id, is_favorite):
+        if member := request.env["discuss.channel.member"].search(
+            [("channel_id", "=", channel_id), ("is_self", "=", True)],
+        ):
+            member.is_favorite = is_favorite
+
+    @store_handler("/discuss/channel/messages", audience="everyone", readonly=False)
+    def store_get_discuss_channel_messages(self, store: Store, channel_id, fetch_params=None):
+        channel = request.env["discuss.channel"].search([("id", "=", channel_id)])
+        if channel:
+            messages = self._resolve_messages(
+                store,
+                thread=channel,
+                fetch_params=fetch_params,
+            )
+            messages.set_message_done()
+
+    @store_handler("/discuss/channel/pin", audience="everyone", readonly=False)
+    def store_set_discuss_channel_pin(self, store: Store, channel_id, pinned):
+        if member := request.env["discuss.channel.member"].search_fetch(
+            [("channel_id", "=", channel_id), ("is_self", "=", True)],
+        ):
+            member.unpin_dt = False if pinned else fields.Datetime.now()
+        self._add_has_unpinned_channels_to_store(store)
+
+    @store_handler("/discuss/get_or_create_chat", audience="everyone", readonly=False)
+    def store_get_or_create_chat(self, store: Store, partners_to):
+        if resolve_channel := request.env["discuss.channel"]._get_or_create_chat(
+            partners_to=partners_to,
+        ):
+            store.resolve_data_request(
+                lambda res: res.one("channel", "_store_channel_fields", value=resolve_channel),
             )
             self._add_has_unpinned_channels_to_store(store)
-        if name == "discuss.channel":
-            channels = request.env["discuss.channel"].search([("id", "in", params)])
-            request.update_context(channels=request.env.context["channels"] | channels)
-        if name == "/discuss/channel/members":
-            channel = request.env["discuss.channel"].search([("id", "=", params["channel_id"])])
-            if channel:
-                search_term = params.get("search_term")
-                known_member_ids = params.get("known_member_ids", [])
-                domain = Domain("channel_id", "=", channel.id) & Domain("id", "not in", known_member_ids)
-                if search_term:
-                    domain &= (
-                        Domain("partner_id.name", "ilike", search_term)
-                        | Domain("guest_id.name", "ilike", search_term)
-                    )
-                unknown_members = request.env["discuss.channel.member"].search_fetch(
-                    domain,
-                    limit=100,
-                )
-                store.add(channel, ["member_count"]).add(unknown_members, "_store_member_fields")
-        if name == "/discuss/channel/favorite":
-            if member := request.env["discuss.channel.member"].search(
-                [("channel_id", "=", params["channel_id"]), ("is_self", "=", True)],
-            ):
-                member.is_favorite = params["is_favorite"]
-        if name == "/discuss/channel/messages":
-            channel = request.env["discuss.channel"].search([("id", "=", params["channel_id"])])
-            if channel:
-                messages = self._resolve_messages(
-                    store,
-                    thread=channel,
-                    fetch_params=params.get("fetch_params"),
-                )
-                messages.set_message_done()
-        resolve_channel = request.env["discuss.channel"]
-        if name == "/discuss/channel/pin":
-            if member := request.env["discuss.channel.member"].search_fetch(
-                [("channel_id", "=", params["channel_id"]), ("is_self", "=", True)],
-            ):
-                member.unpin_dt = False if params["pinned"] else fields.Datetime.now()
-            self._add_has_unpinned_channels_to_store(store)
-        if name == "/discuss/get_or_create_chat":
-            resolve_channel = request.env["discuss.channel"]._get_or_create_chat(
-                params["partners_to"],
+
+    @store_handler("/discuss/create_channel", audience="everyone", readonly=False)
+    def store_create_channel(self, store: Store, name, group_id, is_readonly):
+        if resolve_channel := request.env["discuss.channel"]._create_channel(
+            name=name,
+            group_id=group_id,
+            is_readonly=is_readonly,
+        ):
+            store.resolve_data_request(
+                lambda res: res.one("channel", "_store_channel_fields", value=resolve_channel),
             )
-        if name == "/discuss/create_channel":
-            resolve_channel = request.env["discuss.channel"]._create_channel(
-                params["name"],
-                params["group_id"],
-                params["is_readonly"],
-            )
-        if name == "/discuss/create_group":
-            resolve_channel = request.env["discuss.channel"]._create_group(
-                params["partners_to"],
-                params.get("default_display_mode", False),
-                params.get("name", ""),
-            )
-        if resolve_channel:
+
+    @store_handler("/discuss/create_group", audience="everyone", readonly=False)
+    def store_create_group(
+        self,
+        store: Store,
+        partners_to,
+        default_display_mode=False,
+        name="",
+    ):
+        if resolve_channel := request.env["discuss.channel"]._create_group(
+            name=name,
+            partners_to=partners_to,
+            default_display_mode=default_display_mode,
+        ):
             store.resolve_data_request(
                 lambda res: res.one("channel", "_store_channel_fields", value=resolve_channel),
             )
@@ -149,7 +175,7 @@ class DiscussChannelWebclientController(WebclientController):
         members_with_unread = members.filtered(
             lambda member: (
                 member.message_unread_counter or member.channel_id.message_needaction_counter
-            )
+            ),
         )
         res.attr("initChannelsUnreadCounter", len(members_with_unread))
         # fetch channels data before calling super to benefit from prefetching (channel info might

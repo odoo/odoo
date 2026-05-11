@@ -5,5 +5,6 @@ from . import alias_error
 from . import attachment
 from . import discuss
 from . import link_preview
+from . import store_handler
 from . import parser
 from . import web_push
