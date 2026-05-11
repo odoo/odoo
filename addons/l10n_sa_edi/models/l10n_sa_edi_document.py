@@ -270,7 +270,10 @@ class L10nSaEdiDocument(models.Model):
     def _l10n_sa_apply_qr_code(self, xml_content):
         """Apply QR code on Invoice UBL content"""
         root = etree.fromstring(xml_content)
-        qr_code = self.resource.l10n_sa_qr_code_str
+        # Applying with_prefetch() to set the _prefetch_ids = _ids,
+        # preventing premature QR code computation for other invoices.
+        resource = self.resource.with_prefetch()
+        qr_code = resource.l10n_sa_qr_code_str
         qr_node = root.xpath('//*[local-name()="ID"][text()="QR"]/following-sibling::*/*')[0]
         qr_node.text = qr_code
         return etree.tostring(root, with_tail=False)
@@ -282,9 +285,6 @@ class L10nSaEdiDocument(models.Model):
         """
         signed_xml = self._l10n_sa_sign_xml(unsigned_xml, certificate, self.resource.l10n_sa_invoice_signature)
         if self.resource._l10n_sa_is_simplified():
-            # Applying with_prefetch() to set the _prefetch_ids = _ids,
-            # preventing premature QR code computation for other invoices.
-            self.resource.with_prefetch()
             return self._l10n_sa_apply_qr_code(signed_xml)
         return signed_xml
 
