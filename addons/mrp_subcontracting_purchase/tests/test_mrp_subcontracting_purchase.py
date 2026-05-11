@@ -1104,3 +1104,29 @@ class MrpSubcontractingPurchaseTest(TestAccountSubcontractingFlows):
         self.assertIn(replenish_wizard.route_id, buy_routes)
         manufacture_route = self.env['stock.rule'].search([('action', '=', 'manufacture'), ('company_id', '=', self.company.id)]).route_id
         self.assertNotIn(manufacture_route, replenish_wizard.allowed_route_ids)
+
+    def test_forecast_after_scrap_resupply(self):
+        """Tests that the computation of the forecast_availability of the resupply of a PO
+        does not raise after scraping"""
+        resupply_sub_on_order_route = self.env['stock.route'].search([('name', '=', 'Resupply Subcontractor on Order')])
+        self.comp1.route_ids += resupply_sub_on_order_route
+
+        po = self.env['purchase.order'].create({
+            'partner_id': self.bom.subcontractor_ids.id,
+            'order_line': [Command.create({
+                'product_id': self.finished.id,
+                'product_qty': 1,
+            })],
+        })
+        po.button_confirm()
+        resupply = po._get_subcontracting_resupplies()
+        self.env['stock.quant']._update_available_quantity(self.comp1, resupply.location_id, 1)
+        scrap = self.env['stock.scrap'].with_context(default_picking_type_id=po.picking_type_id.id).create({
+            'product_id': self.comp1.id,
+            'scrap_qty': 1,
+            'picking_id': resupply.id
+        })
+        scrap.action_validate()
+        self.assertEqual(scrap.state, 'done')
+        resupply.move_ids.invalidate_recordset(['forecast_availability'])
+        self.assertRecordValues(resupply.move_ids, [{'forecast_availability': -1.0}, {'forecast_availability': 0.0}])
