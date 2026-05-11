@@ -330,6 +330,49 @@ describe("click", () => {
         await expectElementCount(".o-we-toolbar", 1);
     });
 
+    test("should select the table with empty fonts when clicked on a hook", async () => {
+        const { el } = await setupEditor(
+            unformat(`
+                <table class="o_table">
+                    <tbody>
+                        <tr>
+                            <td><p><font style="color: rgb(0, 255, 0);">[]\u200b</font></p></td>
+                            <td><p><font style="color: rgb(0, 255, 0);">\u200b</font></p></td>
+                            <td><p><font style="color: rgb(0, 255, 0);">\u200b</font></p></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p><br></p>
+            `),
+            {
+                styleContent: styles,
+            }
+        );
+        await animationFrame();
+        const firstTable = el.querySelector("table");
+        await hover(firstTable);
+        await animationFrame();
+        expect(".oe-sidewidget-move").toHaveCount(1);
+        await click(".oe-sidewidget-move");
+        await animationFrame();
+        expect(getContent(el)).toBe(
+            unformat(`
+                <p data-selection-placeholder=""><br></p>
+                <table class="o_table o_selected_table">
+                    <tbody>
+                        <tr>
+                            <td class="o_selected_td"><p><font style="color: rgb(0, 255, 0);">[\u200b</font></p></td>
+                            <td class="o_selected_td"><p><font style="color: rgb(0, 255, 0);">\u200b</font></p></td>
+                            <td class="o_selected_td"><p><font style="color: rgb(0, 255, 0);">\u200b]</font></p></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p><br></p>
+            `)
+        );
+        await expectElementCount(".o-we-toolbar", 1);
+    });
+
     test("should select a non-editable element completely when clicked on a hook", async () => {
         const { el } = await setupEditor(
             unformat(
