@@ -142,7 +142,7 @@
         <field name="model">sale.transaction</field>
         <field name="arch" type="xml">
             <list string="Giao Dịch">
-                <field name="transaction_code"/>
+                <field name="name"/>
                 <field name="date"/>
                 <field name="employee_id"/>
                 <field name="customer_id"/>
@@ -180,5 +180,11 @@
         </field>
     </record>
 
-    
+    <record id="seq_sale_transaction" model="ir.sequence">
+        <field name="name">Sale Transaction</field>
+        <field name="code">sale.transaction</field>
+        <field name="prefix">GD/%(year)s/</field>
+        <field name="padding">5</field>
+        <field name="number_next">1</field>
+    </record>
 </odoo>

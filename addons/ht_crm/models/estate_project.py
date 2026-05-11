@@ -14,9 +14,9 @@ class EstatePropertyUnit(models.Model):
     _description = 'Căn hộ / Sản phẩm bất động sản'
 
     name = fields.Char(
-        related='product_code',
-        store=True,
-        string='Sản phẩm'
+        string="Mã sản phẩm",
+        compute="_compute_name",
+        store=True
     )
     project_id = fields.Many2one(
         'estate.project',
@@ -28,13 +28,6 @@ class EstatePropertyUnit(models.Model):
     block = fields.Char(string="Block", size=5)
     floor = fields.Integer(string="Tầng")
     unit_number = fields.Integer(string="Căn hộ số", required=True)
-
-    product_code = fields.Char(
-        string="Mã sản phẩm",
-        compute="_compute_product_code",
-        store=False,
-        required=True
-    )
 
     unit_type_id = fields.Many2one(
         'estate.property.unit.type',
@@ -60,7 +53,7 @@ class EstatePropertyUnit(models.Model):
 
 
     @api.depends('unit_type_id', 'unit_number')
-    def _compute_product_code(self):
+    def _compute_name(self):
         for rec in self:
             unit_block = rec.block or ""
 
@@ -68,9 +61,9 @@ class EstatePropertyUnit(models.Model):
             unit_no = f"{rec.unit_number:02d}"
 
             if unit_block and unit_floor and unit_no:
-                rec.product_code = f"{unit_block}{unit_floor}{unit_no}"
+                rec.name = f"{unit_block}{unit_floor}{unit_no}"
             else:
-                rec.product_code = ""
+                rec.name = ""
 
     # Ràng buộc
     _sql_constraints = [

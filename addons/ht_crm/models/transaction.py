@@ -6,13 +6,11 @@ class Transaction(models.Model):
     _description = "Transaction Information"
 
     name = fields.Char(
-        related='transaction_code',
-        store=True,
-        string='Giao dịch'
-    )
-
-    transaction_code = fields.Char(
-        string="Mã giao dịch", required=True
+        string='Mã giao dịch',
+        required=True,
+        copy=False,
+        readonly=True,
+        default='New'
     )
 
     currency_id = fields.Many2one(
@@ -126,6 +124,16 @@ class Transaction(models.Model):
 
         return record
 
+    @api.model_create_multi
+    def create(self, vals_list):
+
+        for vals in vals_list:
+            if vals.get('name', 'New') == 'New':
+                vals['name'] = self.env['ir.sequence'].next_by_code(
+                    'sale.transaction'
+                ) or 'New'
+
+        return super().create(vals_list)
 
     # ================= UNLINK =================
     def unlink(self):
@@ -179,5 +187,19 @@ class Transaction(models.Model):
                     rec.value
                 )
 
+        if 'state' in vals:
+            for record in self:
+
+                # Đặt cọc -> khóa sản phẩm
+                if record.state == 'deposit' and record.product_id:
+                    record.product_id.state = 'blocked'
+
+                # Booking -> giữ chỗ
+                elif record.state == 'booking' and record.product_id:
+                    record.product_id.state = 'reserved'
+
+                # Quay về trạng thái đầu
+                elif record.state == 'reference' and record.product_id:
+                    record.product_id.state = 'available'
         return res
     
