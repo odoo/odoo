@@ -453,6 +453,8 @@ class TestConsumeComponent(TestConsumeComponentCommon):
         Check that indicated lot on raw move lines are conserved even if the first
         lot has enough quantity on hand
         """
+        grp_lot = self.env.ref('stock.group_production_lot')
+        self.env.user.group_ids |= grp_lot
         self.bom_serial_lines[0].unlink()
         self.bom_serial_lines[2].unlink()
 
