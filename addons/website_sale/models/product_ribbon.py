@@ -32,7 +32,12 @@ class ProductRibbon(models.Model):
     )
     assign = fields.Selection(
         string="Assign",
-        selection=[("manual", "Manually"), ("sale", "On Sale"), ("new", "When New"), ("out_of_stock", "When out of stock")],
+        selection=[
+            ("manual", "Manually"),
+            ("sale", "On Sale"),
+            ("new", "When New"),
+            ("out_of_stock", "When out of stock"),
+        ],
         required=True,
         default="manual",
         help=(

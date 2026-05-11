@@ -283,7 +283,7 @@ class AccountMove(models.Model):
             lambda line: line._is_line_reinvoicable()
         )
         if not so_lines:
-            return self.env['account.analytic.line']
+            return self.env["account.analytic.line"]
 
         return (
             self

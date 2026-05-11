@@ -59,10 +59,7 @@ class TestClickAndCollectFlow(HttpCase, ClickAndCollectCommon):
     def test_get_product_available_qty_without_cart_request(self):
         self.website.warehouse_id = self.warehouse
 
-        with patch(
-            'odoo.addons.website_sale_collect.models.website.request',
-            new=object(),
-        ):
+        with patch("odoo.addons.website_sale_collect.models.website.request", new=object()):
             qty = self.website._get_product_available_qty(self.storable_product)
 
         self.assertEqual(qty, 10)

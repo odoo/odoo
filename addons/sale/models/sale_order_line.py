@@ -601,7 +601,9 @@ class SaleOrderLine(models.Model):
                 line.product_id.sale_line_warn_msg if has_warning_group else ""
             )
 
-    @api.depends("product_id", "product_id.uom_id", "product_id.uom_ids", "product_id.extra_uom_ids")
+    @api.depends(
+        "product_id", "product_id.uom_id", "product_id.uom_ids", "product_id.extra_uom_ids"
+    )
     def _compute_allowed_uom_ids(self):
         for line in self:
             line.allowed_uom_ids = line.product_id._get_available_uoms()
@@ -969,7 +971,7 @@ class SaleOrderLine(models.Model):
                 line.price_total / line.product_uom_qty if line.product_uom_qty else 0.0
             )
 
-    @api.depends('product_id', 'company_id')
+    @api.depends("product_id", "company_id")
     def _compute_customer_lead(self):
         for line in self:
             line.customer_lead = line.product_id.with_company(line.company_id).sale_delay

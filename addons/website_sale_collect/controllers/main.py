@@ -50,7 +50,10 @@ class WebsiteSaleCollect(WebsiteSale):
             return res
 
         res.update(order_sudo._prepare_in_store_default_location_data())
-        if order_sudo.carrier_id.delivery_type == "in_store" and order_sudo.partner_shipping_id.pickup_location_data:
+        if (
+            order_sudo.carrier_id.delivery_type == "in_store"
+            and order_sudo.partner_shipping_id.pickup_location_data
+        ):
             res["insufficient_stock_data"] = order_sudo._get_insufficient_stock_data(
                 order_sudo.partner_shipping_id.pickup_location_data.get("id")
             )

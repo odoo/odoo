@@ -62,8 +62,12 @@ class ProductTemplate(models.Model):
         check_company=True,
     )
     sale_delay = fields.Integer(
-        'Delivery Time', default=0, company_dependent=True,
-        help="Delivery lead time, in days. It's the number of days, promised to the customer, between the confirmation of the sales order and the delivery.")
+        "Delivery Time",
+        default=0,
+        company_dependent=True,
+        help="Delivery lead time, in days. It's the number of days, promised to the customer,"
+        " between the confirmation of the sales order and the delivery.",
+    )
 
     @api.depends("invoice_policy", "sale_ok", "service_tracking")
     def _compute_product_tooltip(self):

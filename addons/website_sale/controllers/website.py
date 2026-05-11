@@ -51,7 +51,16 @@ class Website(main.Website):
         return super()._login_redirect(uid, redirect=redirect)
 
     @route()
-    def autocomplete(self, search_type=None, term=None, order=None, offset=0, limit=5, max_nb_chars=999, options=None):
+    def autocomplete(
+        self,
+        search_type=None,
+        term=None,
+        order=None,
+        offset=0,
+        limit=5,
+        max_nb_chars=999,
+        options=None,
+    ):
         options = options or {}
         if "display_currency" not in options:
             options["display_currency"] = request.website.currency_id

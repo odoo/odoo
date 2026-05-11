@@ -21,7 +21,7 @@ class XenditController(http.Controller):
 
     @http.route("/payment/xendit/payment", type="jsonrpc", auth="public")
     def xendit_payment(self, reference, token_ref, access_token, auth_id=None):
-        """ Make a payment by token request and handle the response.
+        """Make a payment by token request and handle the response.
 
         :param str reference: The reference of the transaction.
         :param str token_ref: The reference of the Xendit token to use to make the payment.

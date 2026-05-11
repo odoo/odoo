@@ -392,7 +392,7 @@ class SaleProductConfiguratorController(Controller):
             pricelist=pricelist,
             **kwargs,
         )
-        if kwargs.get('show_packaging', True) and product_or_template._has_multiple_uoms():
+        if kwargs.get("show_packaging", True) and product_or_template._has_multiple_uoms():
             basic_information["available_uoms"] = product_or_template._get_available_uoms().read([
                 "id",
                 "display_name",

@@ -667,14 +667,8 @@ class TestDeliveryCost(DeliveryCommon):
             "partner_invoice_id": self.partner_4.id,
             "partner_shipping_id": self.partner_4.id,
             "order_line": [
-                Command.create({
-                    "product_id": product_combo.id,
-                    "product_uom_qty": 5,
-                }),
-                Command.create({
-                    "product_id": self.product.id,
-                    "product_uom_qty": 5,
-                })
+                Command.create({"product_id": product_combo.id, "product_uom_qty": 5}),
+                Command.create({"product_id": self.product.id, "product_uom_qty": 5}),
             ],
         })
 

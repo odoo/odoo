@@ -46,7 +46,7 @@ class PaymentPostProcessing(http.Controller):
         template = self.get_payment_status_template_xmlid(monitored_tx)
         return request.render(template, values)
 
-    def get_payment_status_template_xmlid(self, tx):
+    def get_payment_status_template_xmlid(self, tx):  # noqa: ARG002
         return "payment.payment_status"
 
     @http.route("/payment/status/poll", type="jsonrpc", auth="public")

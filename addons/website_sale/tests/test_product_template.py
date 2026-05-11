@@ -143,7 +143,7 @@ class TestWebsiteSaleProductTemplate(WebsiteSaleCommon):
         template = self.product.product_tmpl_id
         template.uom_ids = [self.uom_dozen.id, self.uom_ton.id]
 
-        uoms = template.with_context({'website_id': self.website.id})._get_available_uoms()
+        uoms = template.with_context({"website_id": self.website.id})._get_available_uoms()
 
         self.assertEqual(len(uoms), 3)
 
@@ -153,7 +153,7 @@ class TestWebsiteSaleProductTemplate(WebsiteSaleCommon):
         template.uom_ids = [self.uom_dozen.id, self.uom_ton.id]
         self.website.restricted_uom_ids = [self.uom_dozen.id]
 
-        uoms = template.with_context({'website_id': self.website.id})._get_available_uoms()
+        uoms = template.with_context({"website_id": self.website.id})._get_available_uoms()
 
         self.assertEqual(len(uoms), 2)
         self.assertTrue(self.uom_dozen not in uoms)
@@ -164,9 +164,9 @@ class TestWebsiteSaleProductTemplate(WebsiteSaleCommon):
         template.uom_ids = [self.uom_dozen.id]
         self.website.restricted_uom_ids = [template.uom_id.id]
 
-        result = template.with_context({'website_id': self.website.id})._has_multiple_uoms()
-        uoms = template.with_context({'website_id': self.website.id})._get_available_uoms()
-        main_uom = template.with_context({'website_id': self.website.id})._get_main_uom()
+        result = template.with_context({"website_id": self.website.id})._has_multiple_uoms()
+        uoms = template.with_context({"website_id": self.website.id})._get_available_uoms()
+        main_uom = template.with_context({"website_id": self.website.id})._get_main_uom()
 
         self.assertEqual(len(uoms), 1)
         self.assertTrue(result)
@@ -178,9 +178,9 @@ class TestWebsiteSaleProductTemplate(WebsiteSaleCommon):
         template.uom_ids = [self.uom_dozen.id]
         self.website.restricted_uom_ids = [self.uom_dozen.id]
 
-        result = template.with_context({'website_id': self.website.id})._has_multiple_uoms()
-        uoms = template.with_context({'website_id': self.website.id})._get_available_uoms()
-        main_uom = template.with_context({'website_id': self.website.id})._get_main_uom()
+        result = template.with_context({"website_id": self.website.id})._has_multiple_uoms()
+        uoms = template.with_context({"website_id": self.website.id})._get_available_uoms()
+        main_uom = template.with_context({"website_id": self.website.id})._get_main_uom()
 
         self.assertEqual(len(uoms), 1)
         self.assertFalse(result)

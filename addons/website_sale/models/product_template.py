@@ -945,9 +945,9 @@ class ProductTemplate(models.Model):
             has_stock_notification = product_sudo._has_stock_notification(
                 self.env.user.partner_id
             ) or (
-                    request
-                    and product_sudo.id
-                    in request.session.get("product_with_stock_notification_enabled", set())
+                request
+                and product_sudo.id
+                in request.session.get("product_with_stock_notification_enabled", set())
             )
             stock_notification_email = request and request.session.get(
                 "stock_notification_email", ""
@@ -958,7 +958,7 @@ class ProductTemplate(models.Model):
                     request.cart._get_cart_qty(product_sudo.id), to_unit=uom
                 )
             digits = self.env["decimal.precision"].precision_get("Product Unit")
-            rounding = 10 ** -digits
+            rounding = 10**-digits
             combination_info.update({
                 "free_qty": free_qty,
                 "cart_qty": cart_quantity,
@@ -1203,7 +1203,7 @@ class ProductTemplate(models.Model):
         ]
 
     @api.model
-    def _search_get_detail(self, website, order, options):
+    def _search_get_detail(self, website, order, options):  # noqa: ARG002
         domains = [website.sale_product_domain()]
         category = options.get("category")
         tags = options.get("tags")
@@ -1245,12 +1245,31 @@ class ProductTemplate(models.Model):
         mapping = {
             "name": {"name": "name", "type": "text", "match": True},
             "website_url": {"name": "website_url", "type": "text", "truncate": False},
-            "search_item_metadata": {"name": "price", "type": "html", "display_currency": options["display_currency"]},
+            "search_item_metadata": {
+                "name": "price",
+                "type": "html",
+                "display_currency": options["display_currency"],
+            },
             "image_url": {"name": "image_url", "type": "html"},
-            "description": {"name": "description_ecommerce", "type": "text", "html": True, "match": True},
+            "description": {
+                "name": "description_ecommerce",
+                "type": "text",
+                "html": True,
+                "match": True,
+            },
             "tags": {"name": "product_tag_ids", "type": "tags", "match": True},
-            "attribute_value_ids": {"name": "attribute_value_ids", "type": "tags", "match": True, "force_show": True},
-            "description_sale": {"name": "description_sale", "type": "text", "html": True, "match": True},
+            "attribute_value_ids": {
+                "name": "attribute_value_ids",
+                "type": "tags",
+                "match": True,
+                "force_show": True,
+            },
+            "description_sale": {
+                "name": "description_sale",
+                "type": "text",
+                "html": True,
+                "match": True,
+            },
         }
         return {
             "model": "product.template",
@@ -1270,9 +1289,7 @@ class ProductTemplate(models.Model):
             values = product.mapped("attribute_line_ids.value_ids")
             data["attribute_value_ids"] = values.read(["id", "name"])
             data["product_tag_ids"] = product.product_tag_ids.read(["name"])
-            price = self._search_render_results_prices(
-                mapping, combination_info
-            )
+            price = self._search_render_results_prices(mapping, combination_info)
             if price:
                 data["price"] = price
             data["image_url"] = "/web/image/product.template/%s/image_128" % data["id"]
@@ -1283,10 +1300,9 @@ class ProductTemplate(models.Model):
             return None
 
         monetary_options = {"display_currency": mapping["search_item_metadata"]["display_currency"]}
-        price = self.env["ir.qweb.field.monetary"].value_to_html(
+        return self.env["ir.qweb.field.monetary"].value_to_html(
             combination_info["price"], monetary_options
         )
-        return price
 
     def _get_google_analytics_data(self, product, combination_info):
         self.ensure_one()
@@ -1532,7 +1548,7 @@ class ProductTemplate(models.Model):
 
     @api.model
     def _get_additional_configurator_data(
-            self, product_or_template, date, currency, pricelist, *, uom=None, **kwargs
+        self, product_or_template, date, currency, pricelist, *, uom=None, **kwargs
     ):
         """Override of `sale` to append basic stock data.
 

@@ -32,7 +32,7 @@ class PaymentTransaction(models.Model):
 
         return {
             "rounded_amount": self._get_rounded_amount(),
-            "access_token": payment_utils.generate_access_token(self.reference)
+            "access_token": payment_utils.generate_access_token(self.reference),
         }
 
     def _get_specific_rendering_values(self, processing_values):

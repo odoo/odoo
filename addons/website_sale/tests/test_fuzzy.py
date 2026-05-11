@@ -22,19 +22,24 @@ class TestFuzzy(ProductVariantsCommon):
         product_green.default_code = "GREEN_98765"
         self.cr.flush()
 
-        options = {
-            "display_currency": True,
-            "allowFuzzy": True
-        }
-        results_count, _, fuzzy_term = website._search_with_fuzzy("product_template", "RED234", 0, 5, "name asc", options)
+        options = {"display_currency": True, "allowFuzzy": True}
+        results_count, _, fuzzy_term = website._search_with_fuzzy(
+            "product_template", "RED234", 0, 5, "name asc", options
+        )
         self.assertEqual(1, results_count, "Should have found red")
-        self.assertEqual('red_12345', fuzzy_term, "Should suggest red")
-        results_count, _, fuzzy_term = website._search_with_fuzzy("product_template", "GROEN98765", 0, 5, "name asc", options)
+        self.assertEqual("red_12345", fuzzy_term, "Should suggest red")
+        results_count, _, fuzzy_term = website._search_with_fuzzy(
+            "product_template", "GROEN98765", 0, 5, "name asc", options
+        )
         self.assertEqual(1, results_count, "Should have found green")
-        self.assertEqual('green_98765', fuzzy_term, "Should suggest green")
-        results_count, _, fuzzy_term = website._search_with_fuzzy("product_template", "BLUABCE", 0, 5, "name asc", options)
+        self.assertEqual("green_98765", fuzzy_term, "Should suggest green")
+        results_count, _, fuzzy_term = website._search_with_fuzzy(
+            "product_template", "BLUABCE", 0, 5, "name asc", options
+        )
         self.assertEqual(1, results_count, "Should have found blue")
-        self.assertEqual('blue_abcde', fuzzy_term, "Should suggest blue")
-        results_count, _, fuzzy_term = website._search_with_fuzzy("product_template", "SQWBRNZ", 0, 5, "name asc", options)
+        self.assertEqual("blue_abcde", fuzzy_term, "Should suggest blue")
+        results_count, _, fuzzy_term = website._search_with_fuzzy(
+            "product_template", "SQWBRNZ", 0, 5, "name asc", options
+        )
         self.assertEqual(0, results_count, "Should have found none")
         self.assertIsNone(fuzzy_term, "Should have no suggestion")

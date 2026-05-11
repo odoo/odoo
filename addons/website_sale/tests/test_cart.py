@@ -461,7 +461,7 @@ class TestWebsiteSaleCart(ProductVariantsCommon, WebsiteSaleCommon):
     def test_checkout_no_delivery_method_available(self):
         portal_user = self.user_portal
         portal_user.write(self.dummy_partner_address_values)
-        self.carrier.country_ids = [Command.set(self.env.ref('base.be').ids)]
+        self.carrier.country_ids = [Command.set(self.env.ref("base.be").ids)]
         self.product.type = "consu"
         with (
             self.mock_request(user=portal_user) as request,

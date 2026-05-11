@@ -54,10 +54,7 @@ class StripeCommon(PaymentCommon):
             **cls.notification_amount_and_currency,
         }
         cls.void_payment_data = {
-            "data": {
-                "captured": False,
-                "object": cls.refund_object,
-            },
+            "data": {"captured": False, "object": cls.refund_object},
             "type": "charge.refunded",
         }
         cls.refund_payment_data = {

@@ -93,5 +93,6 @@ class TestSaleOrder(WebsiteSaleCommon):
         cart = self._create_so(partner_id=customer.parent_id.id)
         cart._archive_partner_if_no_user()
         self.assertTrue(
-            self.cart.partner_id.active, "Registered company shouldn't be archived if any contact has a user"
+            self.cart.partner_id.active,
+            "Registered company shouldn't be archived if any contact has a user",
         )

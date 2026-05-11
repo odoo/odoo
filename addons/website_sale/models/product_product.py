@@ -288,11 +288,8 @@ class ProductProduct(models.Model):
 
     def _get_extra_tracking_values(self, **kwargs):
         extra_tracking_values = {}
-        if (
-            kwargs.get('res_model') == self._name
-            and (res_id := kwargs.get('res_id'))
-        ):
-            extra_tracking_values['product_id'] = res_id
+        if kwargs.get("res_model") == self._name and (res_id := kwargs.get("res_id")):
+            extra_tracking_values["product_id"] = res_id
         return extra_tracking_values
 
     def _is_sold_out(self):

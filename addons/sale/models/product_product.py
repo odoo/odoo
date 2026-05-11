@@ -58,8 +58,15 @@ class ProductProduct(models.Model):
                 domain,
                 [("order_id.commitment_date", "<=", self.env.context.get("to_date").date())],
             ])
-        order_lines = self.env["sale.order.line"].sudo()._read_group(
-            domain, ["product_id", "product_uom_id"], ["product_uom_qty:sum", "qty_delivered:sum"]
+        order_lines = (
+            self
+            .env["sale.order.line"]
+            .sudo()
+            ._read_group(
+                domain,
+                ["product_id", "product_uom_id"],
+                ["product_uom_qty:sum", "qty_delivered:sum"],
+            )
         )
         for product, line_uom, qty_sold, qty_delivered in order_lines:
             to_deliver = (qty_sold - qty_delivered) * line_uom.factor / product.uom_id.factor

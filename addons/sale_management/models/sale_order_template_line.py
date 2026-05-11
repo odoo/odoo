@@ -74,7 +74,9 @@ class SaleOrderTemplateLine(models.Model):
 
     # === COMPUTE METHODS ===#
 
-    @api.depends("product_id", "product_id.uom_id", "product_id.uom_ids", "product_id.extra_uom_ids")
+    @api.depends(
+        "product_id", "product_id.uom_id", "product_id.uom_ids", "product_id.extra_uom_ids"
+    )
     def _compute_allowed_uom_ids(self):
         for option in self:
             option.allowed_uom_ids = option.product_id._get_available_uoms()

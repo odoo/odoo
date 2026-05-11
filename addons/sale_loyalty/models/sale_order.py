@@ -867,7 +867,7 @@ class SaleOrder(models.Model):
                     "points_cost"
                 )
             )
-        if any(rule.reward_point_mode == 'money' for rule in coupon.program_id.rule_ids):
+        if any(rule.reward_point_mode == "money" for rule in coupon.program_id.rule_ids):
             points = coupon.currency_id.round(points)
         return points
 

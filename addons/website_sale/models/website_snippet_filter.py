@@ -149,7 +149,7 @@ class WebsiteSnippetFilter(models.Model):
                         res_product["product_id"] = product.product_variant_id.id
                     else:
                         res_product.update(product._get_combination_info())
-                    res_product['hide_variants'] = hide_variants
+                    res_product["hide_variants"] = hide_variants
 
                     if records.env.context.get("add2cart_rerender"):
                         res_product["_add2cart_rerender"] = True
@@ -195,7 +195,9 @@ class WebsiteSnippetFilter(models.Model):
     @api.model
     def _get_products(self, mode, **kwargs):
         dynamic_filter = self.env.context.get("dynamic_filter")
-        handler = getattr(self.sudo(False), "_get_products_%s" % mode, self.sudo(False)._get_products_latest_sold)
+        handler = getattr(
+            self.sudo(False), "_get_products_%s" % mode, self.sudo(False)._get_products_latest_sold
+        )
         website = self.env["website"].get_current_website()
         search_domain = self.env.context.get("search_domain")
         limit = self.env.context.get("limit")

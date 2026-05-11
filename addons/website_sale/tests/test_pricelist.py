@@ -487,7 +487,7 @@ class TestWebsitePriceList(WebsiteSaleCommon):
 
 def simulate_frontend_context(self, website_id=None):
     if website_id is None:
-        website_id = self.env.ref('website.default_website').id
+        website_id = self.env.ref("website.default_website").id
 
     # Mock this method will be enough to simulate frontend context in most methods
     def get_request_website():

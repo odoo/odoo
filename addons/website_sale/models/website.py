@@ -318,7 +318,7 @@ class Website(models.Model):
 
     def get_cta_data(self, website_purpose, website_type):
         cta_data = super().get_cta_data(website_purpose, website_type)
-        cta_data['shop_btn_href'] = '/shop'
+        cta_data["shop_btn_href"] = "/shop"
         return cta_data
 
     @api.model
@@ -859,9 +859,9 @@ class Website(models.Model):
             and self.env.user.partner_id.filtered_domain(
                 self.env["res.partner"]._check_company_domain(self.company_id.id)
             )
-        ):  # Search for abandonned cart.
+        ):  # Search for abandoned cart.
             partner_sudo = self.env.user.partner_id
-            abandonned_cart_sudo = SaleOrderSudo.search(
+            abandoned_cart_sudo = SaleOrderSudo.search(
                 [
                     ("partner_id", "=", partner_sudo.id),
                     ("website_id", "=", self.id),
@@ -869,13 +869,13 @@ class Website(models.Model):
                 ],
                 limit=1,
             )
-            if abandonned_cart_sudo:
+            if abandoned_cart_sudo:
                 if not request.env.cr.readonly:
                     # Force the recomputation of the pricelist and fiscal position when resurrecting
-                    # an abandonned cart
-                    abandonned_cart_sudo._update_address(partner_sudo.id, ["partner_id"])
-                    abandonned_cart_sudo._verify_cart()
-                sale_order_sudo = abandonned_cart_sudo
+                    # an abandoned cart
+                    abandoned_cart_sudo._update_address(partner_sudo.id, ["partner_id"])
+                    abandoned_cart_sudo._verify_cart()
+                sale_order_sudo = abandoned_cart_sudo
 
         if (
             sale_order_sudo or not self.env.user._is_public()
@@ -914,7 +914,9 @@ class Website(models.Model):
         if not self.has_ecommerce_access():
             return result
         if search_type in ["products", "product_public_category", "all"]:
-            result.append(self.env["product.public.category"]._search_get_detail(self, order, options))
+            result.append(
+                self.env["product.public.category"]._search_get_detail(self, order, options)
+            )
         if search_type in ["products", "product_template", "all"]:
             result.append(self.env["product.template"]._search_get_detail(self, order, options))
         return result
@@ -968,7 +970,8 @@ class Website(models.Model):
             (all_abandoned_carts - abandoned_carts).cart_recovery_email_sent = True
             for sale_order in abandoned_carts:
                 template = self.env.ref("website_sale.mail_template_sale_cart_recovery")
-                # fallback email_vals in case partner_to,email_to were emptied or default recipients is false
+                # fallback email_vals in case partner_to,email_to were emptied or default recipients
+                # is false
                 email_vals = (
                     {}
                     if template.email_to or template.partner_to or template.use_default_to

@@ -12,15 +12,7 @@ WEBHOOK_ROUTE = "/payment/mercado_pago/webhook"
 
 
 # The countries supported by Mercado Pago.
-SUPPORTED_COUNTRIES = {
-    "AR",
-    "BR",
-    "CL",
-    "CO",
-    "MX",
-    "PE",
-    "UY",
-}
+SUPPORTED_COUNTRIES = {"AR", "BR", "CL", "CO", "MX", "PE", "UY"}
 
 # Mapping of country codes to corresponding currency codes.
 CURRENCY_MAPPING = {

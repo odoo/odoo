@@ -10,45 +10,45 @@ class GelatoCommon(SaleCommon):
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.partner_missing_street = cls.env['res.partner'].create({
-            'name': 'Test',
-            'city': 'Leuven',
-            'zip': '3001',
-            'country_id': cls.env.ref('base.be').id,
-            'email': 'test@test.com',
-            'phone': '123123123',
+        cls.partner_missing_street = cls.env["res.partner"].create({
+            "name": "Test",
+            "city": "Leuven",
+            "zip": "3001",
+            "country_id": cls.env.ref("base.be").id,
+            "email": "test@test.com",
+            "phone": "123123123",
         })
 
         cls.partner_street_too_long = cls.partner_missing_street.copy({
-            'street': 'Rue de la Madeleine/Magdalenasteenweg'
+            "street": "Rue de la Madeleine/Magdalenasteenweg"
         })
 
-        cls.gelato_template = cls.env['product.template'].create({
-            'name': 'Gelato Product Template'
+        cls.gelato_template = cls.env["product.template"].create({
+            "name": "Gelato Product Template"
         })
-        cls.gelato_product = cls.env['product.product'].create({
-            'name': 'Test Gelato Product',
-            'gelato_product_uid': 'dummy_uid',
+        cls.gelato_product = cls.env["product.product"].create({
+            "name": "Test Gelato Product",
+            "gelato_product_uid": "dummy_uid",
         })
-        cls.gelato_order = cls.env['sale.order'].create({
-            'partner_id': cls.partner.id,
-            'order_line': [
-                Command.create({'product_id': cls.gelato_product.id, 'product_uom_qty': 1})
+        cls.gelato_order = cls.env["sale.order"].create({
+            "partner_id": cls.partner.id,
+            "order_line": [
+                Command.create({"product_id": cls.gelato_product.id, "product_uom_qty": 1})
             ],
         })
 
         cls.template_data_one_variant = {
-            'id': 'c12a363e-0d4e-4d96-be4b-bf4138eb8743',
-            'title': 'Classic Unisex Crewneck T-shirt',
-            'description': 'Some test description',
-            'variants': [
+            "id": "c12a363e-0d4e-4d96-be4b-bf4138eb8743",
+            "title": "Classic Unisex Crewneck T-shirt",
+            "description": "Some test description",
+            "variants": [
                 {
-                    'productUid': 'm_orange_tshirt_uid',
-                    'variantOptions': [
-                        {'name': 'Size', 'value': 'M'},
-                        {'name': 'Color', 'value': 'Orange'},
+                    "productUid": "m_orange_tshirt_uid",
+                    "variantOptions": [
+                        {"name": "Size", "value": "M"},
+                        {"name": "Color", "value": "Orange"},
                     ],
-                    'imagePlaceholders': [{'printArea': 'front'}, {'printArea': 'back'}],
+                    "imagePlaceholders": [{"printArea": "front"}, {"printArea": "back"}],
                 }
             ],
         }

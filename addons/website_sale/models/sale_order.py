@@ -1098,9 +1098,7 @@ class SaleOrder(models.Model):
         for order in self:
             customer = order.partner_id
             customer_comm_partner_contacts = (
-                customer
-                | customer.commercial_partner_id
-                | customer.commercial_partner_id.child_ids
+                customer | customer.commercial_partner_id | customer.commercial_partner_id.child_ids
             )
             if not customer_comm_partner_contacts.user_ids:
                 partners_to_archive |= customer_comm_partner_contacts

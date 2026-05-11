@@ -57,7 +57,9 @@ class LoyaltyCard(models.Model):
     def _check_expiration_date(self):
         for card in self:
             if card.expiration_date and card.expiration_date < fields.Date.context_today(card):
-                raise ValidationError(self.env._("The expiry date cannot be in the past. Please select a valid date."))
+                raise ValidationError(
+                    self.env._("The expiry date cannot be in the past. Please select a valid date.")
+                )
 
     @api.constrains("code")
     def _contrains_code(self):

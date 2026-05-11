@@ -267,7 +267,7 @@ class PaymentTransaction(models.Model):
         if self.provider_code != "mercado_pago":
             return super()._extract_token_values(payment_data)
 
-        if not payment_data.get('token'):
+        if not payment_data.get("token"):
             return {}
 
         # Fetch the customer id or create a new one.
