@@ -18,3 +18,11 @@ class ResPartner(models.Model):
             vat_country, vat_number = self._split_vat(partner.vat)
             if vat_country in ('BE', '') and self._check_vat_number('BE', vat_number):
                 partner.company_registry = vat_number
+
+    @api.onchange('vat', 'country_id')
+    def _onchange_country_prefix_on_vat(self):
+        """Add 'BE' prefix to the VAT if missing."""
+        for partner in self.filtered(lambda p: p._deduce_country_code() == 'BE' and p.vat):
+            vat_country, vat_number = self._split_vat(partner.vat)
+            if not vat_country and self._check_vat_number('BE', vat_number):
+                partner.vat = f'BE{partner.vat}'
