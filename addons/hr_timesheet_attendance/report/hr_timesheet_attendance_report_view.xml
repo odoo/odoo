@@ -7,7 +7,7 @@
             <field name="arch" type="xml">
                 <search string="Timesheet Attendance">
                     <field name="employee_id" string="Employee"/>
-                    <filter string="My Team" name="my_team" domain="[('employee_id.parent_id.user_id', '=', uid)]"/>
+                    <filter string="My Team" name="my_team" domain="[('employee_ids.is_subordinate', '=', True)]"/>
                     <filter string="My Department" name="my_department" domain="[('employee_id.member_of_department', '=', True)]"/>
                     <separator/>
                     <filter name="month" string="Date" date="date">

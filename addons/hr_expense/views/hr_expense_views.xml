@@ -451,7 +451,7 @@
 
                     <!-- Filters -->
                     <filter string="My Expenses" name="my_open_expenses" domain="[('employee_id.user_id', '=', uid)]"/>
-                    <filter string="My Team" name="my_team_expenses" domain="[('employee_id.parent_id.user_id', '=', uid)]"
+                    <filter string="My Team" name="my_team_expenses" domain="[('employee_ids.is_subordinate', '=', True)]"
                             groups="hr_expense.group_hr_expense_team_approver" help="Expenses of Your Team Member"/>
                     <separator />
                     <filter string="Paid by Company" name="by_company" domain="[('payment_mode', '=', 'company_account')]"/>
