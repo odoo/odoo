@@ -54,7 +54,7 @@ class AccountMove(models.Model):
 
             if (
                 any(
-                    tax.l10n_sa_exemption_reason_code in ('VATEX-SA-HEA', 'VATEX-SA-EDU')
+                    tax.ubl_cii_tax_exemption_reason_code in ('VATEX-SA-HEA', 'VATEX-SA-EDU')
                     for tax in move.invoice_line_ids.filtered(
                         lambda line: line.display_type == 'product',
                     ).tax_ids

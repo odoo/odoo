@@ -18,9 +18,24 @@ EXEMPTION_REASON_CODES = [
     ('VATEX-SA-OOS', 'VATEX-SA-OOS Not subject to VAT.')
 ]
 
+REQUIRED_EXEMPTION_CODES = {'AE', 'E', 'G', 'O', 'K', 'Z'}
+NO_EXEMPTION_REASON_CODES = {'Z', 'E'}
+
 
 class AccountTax(models.Model):
     _inherit = 'account.tax'
 
-    l10n_sa_exemption_reason_code = fields.Selection(string="Exemption Reason Code",
-                                                     selection=EXEMPTION_REASON_CODES, help="Tax Exemption Reason Code (ZATCA)")
+    ubl_cii_tax_exemption_reason_code = fields.Selection(selection_add=EXEMPTION_REASON_CODES)
+    l10n_sa_show_exemption_reason = fields.Boolean(compute="_compute_l10n_sa_show_exemption_reason")
+
+    def _compute_ubl_cii_requires_exemption_reason(self):
+        super()._compute_ubl_cii_requires_exemption_reason()
+        for record in self.filtered(lambda rec: rec.company_id.account_fiscal_country_id.code == 'SA'):
+            record.ubl_cii_requires_exemption_reason = record.ubl_cii_tax_category_code in REQUIRED_EXEMPTION_CODES
+
+    def _compute_l10n_sa_show_exemption_reason(self):
+        for tax in self:
+            tax.l10n_sa_show_exemption_reason = (
+                tax.company_id.account_fiscal_country_id.code != 'SA'
+                or tax.ubl_cii_tax_category_code not in NO_EXEMPTION_REASON_CODES
+            )
