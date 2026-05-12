@@ -1275,7 +1275,7 @@ class PurchaseOrder(models.Model):
             seller = product._select_seller(
                 partner_id=self.partner_id,
                 quantity=None,
-                date=self.date_order and self.date_order.date(),
+                date=fields.Date.context_today(self, timestamp=self.date_order),
                 uom_id=uom_id,
                 ordered_by='min_qty',
                 params={'order_id': self, 'force_uom': kwargs.get('force_uom', False)}
