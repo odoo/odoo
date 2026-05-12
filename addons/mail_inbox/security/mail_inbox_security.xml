@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Users can only see mails from servers they own -->
+    <record id="fetchmail_mail_rule_user" model="ir.rule">
+        <field name="name">Fetchmail Mail: own inbox only</field>
+        <field name="model_id" ref="model_fetchmail_mail"/>
+        <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+        <field name="domain_force">
+            ['|', ('fetchmail_server_id', '=', False), ('fetchmail_server_id.user_id', '=', user.id)]
+        </field>
+    </record>
+
+    <!-- ERP managers can see and manage all inbox mails -->
+    <record id="fetchmail_mail_rule_manager" model="ir.rule">
+        <field name="name">Fetchmail Mail: manager sees all</field>
+        <field name="model_id" ref="model_fetchmail_mail"/>
+        <field name="groups" eval="[(4, ref('base.group_erp_manager'))]"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+    </record>
+</odoo>

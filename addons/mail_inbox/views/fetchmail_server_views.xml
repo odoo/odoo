@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_fetchmail_server_form_inherit" model="ir.ui.view">
+        <field name="name">fetchmail.server.form.inbox</field>
+        <field name="model">fetchmail.server</field>
+        <field name="inherit_id" ref="mail.view_email_server_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="is_inbox" widget="boolean_toggle"/>
+                <field name="user_id" invisible="not is_inbox" options="{'no_create': True}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
