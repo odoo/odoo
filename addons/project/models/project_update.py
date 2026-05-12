@@ -21,7 +21,7 @@ STATUS_COLOR = {
 class ProjectUpdate(models.Model):
     _name = 'project.update'
     _description = 'Project Update'
-    _order = 'id desc'
+    _order = 'date desc, id desc'
     _inherit = ['mail.thread', 'mail.activity.mixin']
 
     @api.model
