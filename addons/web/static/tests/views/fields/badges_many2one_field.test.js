@@ -189,31 +189,24 @@ test("BadgesMany2OneField: placeholder falls back to field label when not provid
     expect(".o_selection_badge.o-dropdown-caret").toHaveText("+1");
 });
 
-test.tags("owl3");
-test.todo(
-    "[Offline] BadgesMany2OneField: verify badges are displayed in offline mode",
-    async () => {
-        onRpc("product", "name_search", () => {
-            expect.step("name_search");
-            return new Response("", { status: 502 });
-        });
-        await mountView({
-            resModel: "partner",
-            resId: 2,
-            type: "form",
-            arch: `
+test("[Offline] BadgesMany2OneField: verify badges are displayed in offline mode", async () => {
+    onRpc("product", "name_search", () => {
+        expect.step("name_search");
+        return new Response("", { status: 502 });
+    });
+    await mountView({
+        resModel: "partner",
+        resId: 2,
+        type: "form",
+        arch: `
             <form>
                 <field name="product_id" widget="badges_many2one"/>
             </form>`,
-        });
+    });
 
-        // Verify the field doesn't crash and displays the fallback name
-        expect(".o_selection_badge").toHaveCount(1);
-        expect(".o_selection_badge:contains(xphone)").toHaveCount(1);
+    // Verify the field doesn't crash and displays the fallback name
+    expect(".o_selection_badge").toHaveCount(1);
+    expect(".o_selection_badge:contains(xphone)").toHaveCount(1);
 
-        expect.verifySteps([
-            "name_search", // initial rendering
-            "name_search", // re-rendered because we switched offline (due to the first name_search)
-        ]);
-    }
-);
+    expect.verifySteps(["name_search"]);
+});
