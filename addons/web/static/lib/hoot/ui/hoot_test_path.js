@@ -57,7 +57,7 @@ export class HootTestPath extends Component {
                 <t t-set="results" t-value="this.props.test.results()" />
                 <t t-if="results.length > 1">
                     <strong class="text-amber whitespace-nowrap mx-1">
-                        x<t t-out="this.results.length" />
+                        x<t t-out="results.length" />
                     </strong>
                 </t>
             </span>
