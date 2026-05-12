@@ -13,8 +13,8 @@ import {
 } from "@odoo/hoot-dom";
 import { onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { setupEditor, testEditor } from "./_helpers/editor";
-import { getContent } from "./_helpers/selection";
 import { deleteBackward, insertText } from "./_helpers/user_actions";
+import { getContent, setSelection } from "./_helpers/selection";
 import { execCommand } from "./_helpers/userCommands";
 import { expandToolbar } from "./_helpers/toolbar";
 import { nodeSize } from "@html_editor/utils/position";
@@ -494,4 +494,18 @@ test("Should delete the file box", async () => {
     expect(getContent(el)).toBe(
         `<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>`
     );
+});
+
+test("should show the updated file name in the link preview", async () => {
+    const { editor } = await setupEditor("<p>[]<br></p>");
+    patchUpload(editor);
+    execCommand(editor, "uploadFile");
+    await waitFor('.o_file_box a:contains("file.txt")');
+    const fileName = queryOne("a.o_link_readonly");
+    await click(".o_link_readonly");
+    fileName.textContent = "Hello";
+    setSelection({ anchorNode: fileName, anchorOffset: 0 });
+    await waitFor(".o_we_url_link:not(:empty)");
+    const fileNameInPreview = queryOne(".o_we_url_link");
+    expect(fileNameInPreview.textContent).toBe("Hello");
 });
