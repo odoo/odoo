@@ -1108,6 +1108,7 @@ class IrModelFields(models.Model):
             if column_name in vals:
                 del vals[column_name]
 
+<<<<<<< 438e1dab4760919df40198c64d26212a72e4e4a2
         if vals.get('translate') and not isinstance(vals['translate'], str):
             _logger.warning("Deprecated since Odoo 19, ir.model.fields.translate becomes Selection, the value should be a string")
             vals['translate'] = 'html_translate' if vals.get('ttype') == 'html' else 'standard'
@@ -1117,6 +1118,14 @@ class IrModelFields(models.Model):
             # we need to set the uninstall flag to allow removing them
             (self._prepare_update() - self).with_context(**{MODULE_UNINSTALL_FLAG: True}).unlink()
 
+||||||| 3edf9431465ea4a73755eb0439fb397e5af180a4
+=======
+        if column_rename and self.state == 'manual':
+            # renaming a studio field, remove inherits fields
+            # we need to set the uninstall flag to allow removing them
+            (self._prepare_update() - self).with_context(**{MODULE_UNINSTALL_FLAG: True}).unlink()
+
+>>>>>>> 625764435030ecfa5bc31bac9a7441d315aa5972
         res = super(IrModelFields, self).write(vals)
 
         self.env.flush_all()
