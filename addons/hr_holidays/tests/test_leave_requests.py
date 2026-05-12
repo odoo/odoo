@@ -2665,3 +2665,49 @@ class TestLeaveRequests(TestHrHolidaysCommon):
 
         hourly_leave.invalidate_recordset()
         self.assertEqual(hourly_leave.state, 'validate')
+
+    def test_leave_duration_with_absence_work_entry(self):
+        absence_work_entry = self.env['hr.work.entry.type'].create({
+            'name': 'absence work entry',
+            'code': 'ABSENCE',
+            'count_as': 'absence',
+        })
+        calendar_1, calendar_2 = self.env['resource.calendar'].create([{
+                'name': 'Calendar 1',
+                'company_id': False,
+                'attendance_ids': [(5, 0, 0),
+                    (0, 0, {'dayofweek': '0', 'hour_from': 8, 'hour_to': 12, 'work_entry_type_id': absence_work_entry.id}),
+                    (0, 0, {'dayofweek': '0', 'hour_from': 13, 'hour_to': 17}),
+                ],
+            }, {
+                'name': 'Calendar 2',
+                'company_id': False,
+                'attendance_ids': [(5, 0, 0),
+                    (0, 0, {'dayofweek': '0', 'hour_from': 8, 'hour_to': 12}),
+                    (0, 0, {'dayofweek': '0', 'hour_from': 13, 'hour_to': 17, 'work_entry_type_id': absence_work_entry.id}),
+                ],
+        }])
+        employee_1, employee_2 = self.env['hr.employee'].sudo().create([{
+                'name': 'Emp1',
+                'resource_calendar_id': calendar_1.id,
+            }, {
+                'name': 'Emp2',
+                'resource_calendar_id': calendar_2.id,
+        }])
+        leave_1, leave_2 = self.env['hr.leave'].create([{
+            'name': 'leave 1',
+            'employee_id': employee_1.id,
+            'work_entry_type_id': self.holidays_type_half.id,
+            'request_date_from': date(2026, 5, 11),
+            'request_date_to': date(2026, 5, 11),
+        }, {
+            'name': 'leave 2',
+            'employee_id': employee_2.id,
+            'work_entry_type_id': self.holidays_type_half.id,
+            'request_date_from': date(2026, 5, 11),
+            'request_date_to': date(2026, 5, 11),
+        }])
+        self.assertEqual(leave_1.number_of_days, 0.5)
+        self.assertEqual(leave_2.number_of_days, 0.5)
+        self.assertEqual(leave_1.number_of_hours, 4)
+        self.assertEqual(leave_2.number_of_hours, 4)
