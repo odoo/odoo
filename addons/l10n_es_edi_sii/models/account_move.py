@@ -149,41 +149,62 @@ class AccountMove(models.Model):
 
     def _send_l10n_es_sii_document(self, cancel=False):
         """ Creates doc, calls webservice and updates states. """
-        self.ensure_one()
+        batches = defaultdict(lambda: self.env['account.move'])
+        for move in self:
+            csv = move.l10n_es_edi_csv if not cancel else False
+            batches[(move.company_id.id, move.move_type, csv)] |= move
 
-        # Avoid the move to be sent if it is being modified by a parallel transaction (for example reset to draft)
-        # It will also avoid the move to be sent by different parallel transactions
-        self._l10n_es_sii_lock_move()
+        result = True
+        for moves in batches.values():
+            result = moves._send_l10n_es_sii_document_batch(cancel=cancel) and result
+        return result
 
+    def _send_l10n_es_sii_document_batch(self, cancel=False):
+        """ Creates docs, calls webservice and updates states. """
         target_state = 'to_cancel' if cancel else 'to_send'
+        documents = self.env['l10n_es_edi_sii.document']
+        moves_to_send = self.env['account.move']
 
-        document = self.l10n_es_edi_sii_document_ids.filtered(lambda d: d.state == target_state)[:1]
-        if not document:
-            document = self.env['l10n_es_edi_sii.document'].sudo().create({
-                'move_id': self.id,
-                'state': target_state,
-            })
+        for move in self:
+            # Avoid the move to be sent if it is being modified by a parallel transaction (for example reset to draft).
+            # It will also avoid the move to be sent by different parallel transactions.
+            move._l10n_es_sii_lock_move()
 
-        errors = self._l10n_es_sii_check_move_configuration()
-        if errors:
-            document.sudo().write({
-                'response_message': Markup("%s<br/>%s") % (
-                    self.env._("Invalid invoice configuration:"),
-                    Markup("<br/>").join(errors)
-                )
-            })
+            document = move.l10n_es_edi_sii_document_ids.filtered(lambda d: d.state == target_state)[:1]
+            if not document:
+                document = self.env['l10n_es_edi_sii.document'].sudo().create({
+                    'move_id': move.id,
+                    'state': target_state,
+                })
+
+            errors = move._l10n_es_sii_check_move_configuration()
+            if errors:
+                document.sudo().write({
+                    'response_message': Markup("%s<br/>%s") % (
+                        self.env._("Invalid invoice configuration:"),
+                        Markup("<br/>").join(errors)
+                    )
+                })
+                continue
+
+            documents |= document
+            moves_to_send |= move
+
+        if not documents:
             return False
 
-        communication_type = self.l10n_es_edi_csv and not cancel and 'A1' or 'A0'
-        info_list = self._l10n_es_edi_get_invoices_info()
+        communication_type = moves_to_send[:1].l10n_es_edi_csv and not cancel and 'A1' or 'A0'
+        info_list = moves_to_send._l10n_es_edi_get_invoices_info()
 
         # Trigger the document model to handle the actual sending
-        result = document._post_to_web_service(info_list, communication_type)
+        results = documents._post_to_web_service(info_list, communication_type)
+        if len(documents) == 1:
+            results = {documents: results}
 
         # Retry logic for 1117
-        if result and result.get('error_1117') and not self.env.context.get('error_1117'):
-            document.sudo().unlink()
-            return self.with_context(error_1117=True)._send_l10n_es_sii_document(cancel=cancel)
+        if any(result.get('error_1117') for result in results.values()) and not self.env.context.get('error_1117'):
+            documents.sudo().unlink()
+            return moves_to_send.with_context(error_1117=True)._send_l10n_es_sii_document(cancel=cancel)
 
         return True
 
@@ -200,6 +221,9 @@ class AccountMove(models.Model):
 
         if not company.l10n_es_sii_tax_agency:
             errors.append(self.env._("Please specify a tax agency on your company for SII."))
+
+        if self.move_type in ('in_invoice', 'in_refund') and not self.ref:
+            errors.append(self.env._("You should put a vendor reference on this vendor bill."))
 
         lines = self.invoice_line_ids.filtered(
             lambda l: l.display_type not in ('line_section', 'line_subsection', 'line_note')
@@ -245,6 +269,12 @@ class AccountMove(models.Model):
         return errors
 
     def _l10n_es_edi_get_invoices_info(self):
+        if len(self) > 1:
+            info_list = []
+            for move in self:
+                info_list += move._l10n_es_edi_get_invoices_info()
+            return info_list
+
         if not self.l10n_es_registration_date:
             self.l10n_es_registration_date = fields.Date.context_today(self)
 
