@@ -10,7 +10,6 @@ export class MailMessage extends models.ServerModel {
 
     author_id = fields.Generic({ default: () => serverState.partnerId });
     pinned_at = fields.Generic({ default: false });
-    tracking_value_ids = fields.One2many({ relation: "mail.tracking.value" });
 
     /** @param {DomainListRepr} [domain] */
     mark_all_as_read(domain) {

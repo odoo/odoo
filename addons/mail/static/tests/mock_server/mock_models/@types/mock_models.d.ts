@@ -20,7 +20,6 @@ declare module "mock_models" {
     import { MailShortcode as MailShortcode2 } from "@mail/../tests/mock_server/mock_models/mail_shortcode";
     import { MailTemplate as MailTemplate2 } from "@mail/../tests/mock_server/mock_models/mail_template";
     import { MailThread as MailThread2 } from "@mail/../tests/mock_server/mock_models/mail_thread";
-    import { MailTrackingValue as MailTrackingValue2 } from "@mail/../tests/mock_server/mock_models/mail_tracking_value";
     import { ResFake as ResFake2 } from "@mail/../tests/mock_server/mock_models/res_fake";
     import { ResLang as ResLang2 } from "@mail/../tests/mock_server/mock_models/res_lang";
     import { ResRole as ResRole2 } from "addons/mail/static/tests/mock_server/mock_models/res_role";
@@ -50,7 +49,6 @@ declare module "mock_models" {
     export interface MailShortcode extends MailShortcode2 {}
     export interface MailTemplate extends MailTemplate2 {}
     export interface MailThread extends MailThread2 {}
-    export interface MailTrackingValue extends MailTrackingValue2 {}
     export interface ResFake extends ResFake2 {}
     export interface ResLang extends ResLang2 {}
     export interface ResPartner extends ResPartner2 {}
@@ -81,7 +79,6 @@ declare module "mock_models" {
         "mail.shortcode": MailShortcode,
         "mail.template": MailTemplate,
         "mail.thread": MailThread,
-        "mail.tracking.value": MailTrackingValue,
         "res.fake": ResFake,
         "res.groups": ResGroups,
         "res.lang": ResLang,
