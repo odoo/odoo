@@ -125,6 +125,7 @@ class ResConfigSettings(models.TransientModel):
         compute='_compute_has_plausible_shared_key',
         inverse='_inverse_has_plausible_shared_key')
     module_website_livechat = fields.Boolean()
+    module_website_address_autocomplete = fields.Boolean("Website Address Autocomplete")
 
     @api.depends('website_id')
     def _compute_shared_user_account(self):

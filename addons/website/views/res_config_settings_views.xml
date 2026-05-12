@@ -90,6 +90,14 @@
                         <setting id="livechat" string="Live Chat" help="Allows your visitors to chat with you">
                             <field name="module_website_livechat"/>
                         </setting>
+                        <setting
+                            id="autocomplete_googleplaces_setting"
+                            string="Google Address Validation"
+                            help="Use Google Places API to validate addresses"
+                            documentation="/applications/websites/website/configuration/address_autocomplete.html"
+                        >
+                            <field name="module_website_address_autocomplete"/>
+                        </setting>
                     </block>
                     <block title="Tracking &amp; SEO" id="website_settings" invisible="not website_id">
                         <setting

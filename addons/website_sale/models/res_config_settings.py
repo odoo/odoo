@@ -26,7 +26,6 @@ class ResConfigSettings(models.TransientModel):
     )
 
     # Modules
-    module_website_sale_autocomplete = fields.Boolean("Address Autocomplete")
     module_website_sale_collect = fields.Boolean("Click & Collect")
 
     # Website-dependent settings
