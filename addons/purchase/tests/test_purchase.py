@@ -1375,6 +1375,51 @@ class TestPurchase(AccountTestInvoicingCommon):
             po.action_receive()
         self.assertEqual(po.order_line.qty_received, 0)
 
+    @freeze_time('2026-05-12 20:00:00')
+    def test_supplierinfo_date_timezone_aware(self):
+        """Supplierinfo lookup should use the user's local date, not UTC.
+
+        When a user in Pacific/Auckland (UTC+12) creates a PO at
+        2026-05-12 20:00 UTC (= 2026-05-13 08:00 NZST), a supplierinfo
+        with date_start=2026-05-13 must match — the user's local date is
+        May 13, even though the UTC date is still May 12.
+
+        An older entry covering up to May 12 at a different price ensures
+        the test fails if the code uses the UTC date instead of the
+        user's local date.
+        """
+        self.env.user.tz = 'Pacific/Auckland'
+        self.env['product.supplierinfo'].create({
+            'partner_id': self.partner_a.id,
+            'product_tmpl_id': self.product_a.product_tmpl_id.id,
+            'min_qty': 1,
+            'price': 30.0,
+            'date_start': fields.Date.from_string('2026-05-01'),
+            'date_end': fields.Date.from_string('2026-05-12'),
+        })
+        self.env['product.supplierinfo'].create({
+            'partner_id': self.partner_a.id,
+            'product_tmpl_id': self.product_a.product_tmpl_id.id,
+            'min_qty': 1,
+            'price': 50.0,
+            'date_start': fields.Date.from_string('2026-05-13'),
+            'date_end': fields.Date.from_string('2026-05-31'),
+        })
+
+        po = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'product_id': self.product_a.id,
+                'product_qty': 1,
+            })],
+        })
+
+        self.assertEqual(
+            po.order_line.price_unit, 50.0,
+            "The price should come from the May 13-31 entry, not the "
+            "May 1-12 entry that matches the wrong UTC date.",
+        )
+
 
 @tagged('at_install', '-post_install')
 class TestPurchaseWithoutStock(AccountTestInvoicingCommon):
