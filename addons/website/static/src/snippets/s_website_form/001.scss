@@ -11,7 +11,7 @@
     }
     // Select inputs do not trigger the default browser behavior
     // Since we use a custom editable element
-    .s_website_form_field select {
+    .s_website_form_field select, .s_website_form_m2m_pills_container {
         pointer-events: none;
     }
 }
@@ -87,6 +87,57 @@
     }
     .s_website_form_field_description {
         display: block;
+    }
+
+    .s_website_form_m2m_selection {
+        .s_website_form_m2m_pills_container {
+            min-height: $input-height;
+            padding-right: calc(#{$form-select-indicator-padding} + 1.5em);
+
+            &:focus-within {
+                border-color: $input-focus-border-color;
+                box-shadow: $input-focus-box-shadow;
+            }
+        }
+        // Clicking anywhere on the field opens the menu.
+        button[data-bs-toggle="dropdown"] {
+            position: absolute;
+            inset: 0;
+            border: 0;
+            background: transparent;
+        }
+        .s_website_form_m2m_pill {
+            position: relative;
+            z-index: 1;
+            white-space: normal;
+            overflow-wrap: anywhere;
+        }
+        .s_website_form_m2m_remove_all {
+            position: absolute;
+            top: 50%;
+            right: $form-select-indicator-padding;
+            z-index: 1;
+            transform: translateY(-50%);
+        }
+        .s_website_form_m2m_pill_remove,
+        .s_website_form_m2m_remove_all {
+            padding: 0;
+            font-size: inherit;
+            line-height: 1;
+            color: inherit;
+        }
+        .dropdown-item {
+            &::before {
+                content: "square";
+                display: inline-block;
+                width: 1.5em;
+                font-family: 'Material Symbols Outlined';
+            }
+            &[aria-checked="true"]::before {
+                content: "check_box";
+                color: $primary;
+            }
+        }
     }
 
     // File blocks.

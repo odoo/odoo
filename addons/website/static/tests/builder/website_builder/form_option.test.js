@@ -1174,6 +1174,69 @@ describe("Many2one Field", () => {
     });
 });
 
+describe("Many2Many Field", () => {
+    const selectedOptions = ":iframe select.s_website_form_input option[selected]";
+    const emptyOption = ":iframe .s_website_form_empty_option";
+
+    beforeEach(async () => {
+        onRpc("get_authorized_fields", () => ({
+            recipient_ids: {
+                name: "recipient_ids",
+                relation: "res.partner",
+                string: "To (Partners)",
+                type: "many2many",
+            },
+        }));
+        await setupWebsiteBuilder(`
+            <section class="s_website_form" data-snippet="s_website_form" data-name="Form">
+                <div class="container-fluid">
+                    <form action="/website/form/" method="post" data-model_name="res.partner">
+                        <div class="s_website_form_rows">
+                            <div data-name="Field" class="s_website_form_field" data-type="many2many_selection">
+                                <div class="row">
+                                    <label class="s_website_form_label">
+                                        <span class="s_website_form_label_content">To (Partners)</span>
+                                    </label>
+                                    <div class="s_website_form_m2m_selection dropdown">
+                                        <select multiple="multiple" class="s_website_form_input d-none" name="recipient_ids">
+                                            <option value="9" selected="selected">Partner One</option>
+                                            <option value="20" selected="selected">Partner Two</option>
+                                            <option value="36">Partner Three</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </section>
+        `);
+        await contains(":iframe .s_website_form_label_content").click();
+    });
+
+    test("Selection type for m2m fields lists a Multiple and a Single section", async () => {
+        await contains("button[id='existing_field_select_type_opt']").click();
+        expect(
+            ".o_popover .o-hb-select-dropdown-category:contains('Multiple Selection')"
+        ).toHaveCount(1);
+        expect(
+            ".o_popover .o-hb-select-dropdown-category:contains('Single Selection')"
+        ).toHaveCount(1);
+        expect(".o_popover [data-action-value='many2many_selection']").toHaveCount(1);
+    });
+
+    test("toggling only option off enables Allow Empty", async () => {
+        expect(selectedOptions).toHaveCount(2);
+        expect(emptyOption).toHaveCount(0);
+
+        await contains(".o_we_table_wrapper table tr:first input[type=checkbox]").click();
+        await contains(".o_we_table_wrapper table input[type=checkbox]:checked").click();
+
+        expect(selectedOptions).toHaveCount(0);
+        expect(emptyOption).toHaveCount(1);
+    });
+});
+
 test("other option attributes are preserved when switching between radio and select, removed for other field types", async () => {
     onRpc("get_authorized_fields", () => ({}));
     await setupWebsiteBuilder(formSelectXml);
