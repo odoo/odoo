@@ -1764,6 +1764,26 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
             company0_query.table.default_partner_id,
         )), [(None,)])
 
+    def test_27_company_dependent_default_many2one_compute_sql_reuse(self):
+        company0 = self.env.ref('base.main_company')
+        partner = self.env.company.partner_id
+        company0.default_partner_id = partner
+
+        company0_query = company0._as_query(ordered=False)
+        default_partner_id = company0_query.table.default_partner_id
+        joins_after_first_access = company0_query._joins.copy()
+        duplicate_default_partner_id = company0_query.table.default_partner_id
+
+        self.assertEqual(
+            company0_query._joins,
+            joins_after_first_access,
+            "Accessing the same compute_sql many2one twice should reuse its existing join.",
+        )
+        self.assertEqual(self.env.execute_query(company0_query.select(
+            default_partner_id,
+            duplicate_default_partner_id,
+        )), [(partner.id, partner.id)])
+
     def test_27_company_dependent_default_check_global_default(self):
         # The default is set on all the companies, so a global default doesn't change anything
         company0 = self.env.ref('base.main_company')

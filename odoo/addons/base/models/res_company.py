@@ -1,8 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import json
 import logging
-
-from psycopg2.extras import Json
 
 from odoo import api, fields, models, modules, tools
 from odoo.api import SUPERUSER_ID
@@ -39,7 +38,7 @@ def company_default_for(fname, target_model, target_fname):
         for company_id in self.env['res.company'].sudo()._cached_data()['id']:
             model = model.with_company(company_id)
             data[company_id] = field.convert_to_column(field.convert_to_write(field.get_company_dependent_fallback(model), model), model)
-        default_sql = SQL("(%s::jsonb->>%s::text)::%s", Json(data), table.id, field.sql_column_type)
+        default_sql = SQL("(%s::jsonb->>%s::text)::%s", json.dumps(data, sort_keys=True), table.id, field.sql_column_type)
         if field.type == 'many2one':
             related_alias = table._make_alias(fname)
             table._query.add_join('LEFT JOIN', related_alias, self.env[field.comodel_name]._table, SQL("%s = %s", default_sql, related_alias.id))
