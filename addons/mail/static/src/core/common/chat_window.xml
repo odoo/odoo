@@ -92,7 +92,7 @@
         'py-2': this.threadActions.actions.length lte 3,
         'ps-2': !this.hasActionsMenu,
     }" name="threadAvatar">
-        <DiscussAvatar channel="this.channel" size="24" typing="false"/>
+        <DiscussAvatar record="this.channel" size="24" typing="false"/>
     </div>
     <t t-if="this.channel.parent_channel_id">
         <span class="fw-bold small o-mx-0_5 opacity-75 opacity-100-hover cursor-pointer o-hover-text-underline rounded fs-6" t-out="this.channel.parent_channel_id.displayName" title="Open Channel" t-custom-ref="parentChannel" t-on-click.stop="() => this.channel.parent_channel_id.open({ focus: true })"/>

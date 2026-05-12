@@ -32,7 +32,7 @@
         >
             <div class="o-mail-DiscussSidebarChannel-itemMain border-0 rounded-start-2 text-reset d-flex align-items-center p-0 flex-grow-1" t-att-class="{ 'justify-content-center': this.store.discuss.isSidebarCompact, 'overflow-hidden': !this.store.discuss.isSidebarCompact }" t-att-title="this.store.discuss.isSidebarCompact ? undefined : this.channel.displayName">
                 <div class="position-relative d-flex flex-shrink-0 o-my-0_5 rounded-2" name="threadAvatar" t-att-class="{ 'ms-2': !this.store.discuss.isSidebarCompact }">
-                    <DiscussAvatar channel="this.channel" size="26"/>
+                    <DiscussAvatar record="this.channel" size="26"/>
                 </div>
                 <div t-if="!this.store.discuss.isSidebarCompact" class="o-mail-DiscussSidebarChannel-itemName o-mail-DiscussSidebar-itemName overflow-hidden ms-2 text-start flex-grow-1 z-1" t-att-class="this.itemNameAttClass">
                     <div class="d-flex align-items-baseline min-w-0 gap-2">
