@@ -276,6 +276,33 @@
         </div>
     </t>
 
+    <!-- Many2Many Selection (Multi-Select Dropdown) Field -->
+    <t t-name="website.form_field_many2many_selection">
+        <t t-call="website.form_field">
+            <div class="s_website_form_m2m_selection dropdown">
+                <select multiple="multiple" class="s_website_form_input d-none" t-att-name="field.name" t-att-required="field.required || field.modelRequired || None">
+                    <option t-if="field.allowEmpty" t-out="field.placeholder" class="s_website_form_empty_option" value=""/>
+                    <option t-foreach="field.records" t-as="record" t-key="record_index" t-out="record.display_name" t-att-value="record.id" t-att="{selected: record.selected and 'selected' or None}"/>
+                </select>
+                <div class="s_website_form_m2m_pills_container form-select d-flex flex-wrap align-items-center gap-1">
+                    <button t-att-id="field.id" type="button" data-bs-toggle="dropdown" data-bs-auto-close="outside" data-bs-display="static"
+                        aria-haspopup="menu" aria-expanded="false" aria-label="Toggle options"/>
+                    <span t-attf-class="s_website_form_m2m_placeholder#{field.records.some(r => r.selected) ? ' d-none' : ''}" t-out="field.placeholder"/>
+                    <span t-foreach="field.records" t-as="record" t-key="record_index" t-attf-class="s_website_form_m2m_pill badge rounded-pill text-bg-primary#{record.selected ? '' : ' d-none'}" t-att-data-value="record.id">
+                        <t t-out="record.display_name"/>
+                        <button type="button" class="s_website_form_m2m_pill_remove btn ms-1" data-oe-protected="true" aria-label="Remove">
+                            <i class="fa fa-times" aria-hidden="true"/>
+                        </button>
+                    </span>
+                    <div class="dropdown-menu w-100" role="menu">
+                        <button t-foreach="field.records" t-as="record" t-key="record_index" type="button" class="dropdown-item" role="menuitemcheckbox"
+                            t-att-aria-checked="record.selected and 'true' or 'false'" t-att-data-value="record.id" t-out="record.display_name"/>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </t>
+
     <!-- Many2One Field -->
     <t t-name="website.form_field_many2one">
         <!-- Binary one2many -->

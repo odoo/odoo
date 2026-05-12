@@ -152,7 +152,12 @@
         <BuilderSelect t-if="this.isExistingFieldSelectType and this.state.valueList"
             id="'existing_field_select_type_opt'" preview="false" action="'existingFieldSelectType'"
         >
-            <BuilderSelectItem actionValue="'many2many'" t-if="this.isExistingFieldSelectTypeMultiple">Checkbox</BuilderSelectItem>
+            <t t-if="this.isExistingFieldSelectTypeMultiple">
+                <div class="o-hb-select-dropdown-category py-2 ps-2 fst-italic">Multiple Selection</div>
+                <BuilderSelectItem actionValue="'many2many'">Checkbox</BuilderSelectItem>
+                <BuilderSelectItem actionValue="'many2many_selection'">Dropdown List</BuilderSelectItem>
+            </t>
+            <div class="o-hb-select-dropdown-category py-2 ps-2 fst-italic">Single Selection</div>
             <BuilderSelectItem actionValue="'many2one'">Dropdown List</BuilderSelectItem>
             <BuilderSelectItem actionValue="'selection'">Radio</BuilderSelectItem>
         </BuilderSelect>
