@@ -67,32 +67,30 @@
 }
 
 .o_track {
-    .o-mail-Message-body {
-        padding-left: 0px;
+    padding-left: 0px;
 
-        b::before {
-            color: $body-color;
-            content: "\2192";
-            margin: 0 5px;
-        }
-        i {
-          &::before {
-            margin-left: 5px;
-            content: "(";
-          }
+    b::before {
+        color: $body-color;
+        content: "\2192";
+        margin: 0 5px;
+    }
+    i {
+      &::before {
+        margin-left: 5px;
+        content: "(";
+      }
 
-          &::after {
-            content: ")";
-          }
-        }
+      &::after {
+        content: ")";
+      }
+    }
 
-        b {
-            color: $info;
-            font-weight: bold;
-        }
-        i {
-            color: $text-muted;
-        }
+    b {
+        color: $info;
+        font-weight: bold;
+    }
+    i {
+        color: $text-muted;
     }
 }
 

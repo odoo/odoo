@@ -1829,11 +1829,11 @@ class HrEmployee(models.Model):
                 start = format_date_abbr(self.env, version_sudo.date_start) if version_sudo.date_start else False
                 end = format_date_abbr(self.env, version_sudo.date_end) if version_sudo.date_end else False
                 if start and end:
-                    msg = self.env._("Modified from %(start)s to %(end)s") % {'start': start, 'end': end}
+                    msg = self.env._("As of %(start)s to %(end)s") % {'start': start, 'end': end}
                 elif start:
-                    msg = self.env._("Modified from %s") % (start)
+                    msg = self.env._("As of %s") % (start)
                 else:
-                    msg = self.env._("Modified")
+                    msg = self.env._("As of")
                 employee._track_set_log_message(Markup("<b>%s</b>") % msg)
         if vals.get('department_id') or vals.get('user_id'):
             department_id = vals['department_id'] if vals.get('department_id') else self[:1].department_id.id
