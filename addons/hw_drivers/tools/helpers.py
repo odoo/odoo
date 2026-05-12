@@ -147,7 +147,7 @@ def check_version_upgrades(local_branch, db_branch):
         # 1. Check if the upgrade script needs to be ran
         # Needed if local branch is < 19.1 and db branch is >= 19.1 + python version < 3.12
         _logger.info("Checking for version upgrades for local branch %s / db_branch %s", local_branch, db_branch)
-        version_db = db_branch[-4:] if db_branch != 'master' else db_branch  # master is currently always >= 19.1
+        version_db = db_branch[-4:]
         version_local = local_branch[-4:] if local_branch != 'master' else local_branch
         local_python_version = tuple(int(x) for x in platform.python_version_tuple()[:2])
         if version_local >= '19.1' or version_db < '19.1' or local_python_version >= (3, 12):
@@ -187,7 +187,8 @@ def check_git_branch(server_url=None, get_db_branch=False):
         # For master ['server_serie'] is formatted like "18.4". For db < master the format is like "saas~18.3"
         db_branch = data['result']['server_serie'].replace('~', '-')
         if not subprocess.check_output(git + ['ls-remote', 'origin', db_branch]):
-            db_branch = 'master'
+            _logger.warning("Connected database is a development branch, skipping as it's likely an error.")
+            return db_branch if get_db_branch else None
         if get_db_branch:
             return db_branch
         local_branch = (
