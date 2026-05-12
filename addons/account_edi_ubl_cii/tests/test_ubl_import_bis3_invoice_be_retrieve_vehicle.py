@@ -58,11 +58,32 @@ class TestUblImportBis3InvoiceBEVehicle(TestUblImportBis3InvoiceBE):
         )
 
         self.assertRecordValues(invoice.invoice_line_ids, [
-            {'vehicle_id': self.car.id},  # match VIN in AdditionalItemProperty/Value where AdditionalItemProperty/Name == 'SerialNumber'
-            {'vehicle_id': self.car2.id},  # match VIN in AdditionalItemProperty/Value where AdditionalItemProperty/Name == 'VIN'
-            {'vehicle_id': self.car.id},  # match License Plate in AdditionalItemProperty/Value where AdditionalItemProperty/Name == 'PlateNumber'
-            {'vehicle_id': self.car3.id},  # search VIN in Item/Description
-            {'vehicle_id': self.car.id},  # search License Plate in Item/Description
-            {'vehicle_id': self.car.id},  # search combined License Plate and VIN in Item/Description
-            {'vehicle_id': False},  # Double vin -> no vehicle linked
+            {  # match VIN in AdditionalItemProperty/Value where AdditionalItemProperty/Name == 'SerialNumber'
+                'name': 'Loyer/Huur du/van 2026-01-20 au/tot 2026-02-19 VOITURE PARTICULIERE ESSENCE ABCDEF012345GHJKL',
+                'vehicle_id': self.car.id,
+            },
+            {  # match VIN in AdditionalItemProperty/Value where AdditionalItemProperty/Name == 'VIN'
+                'name': 'Loyer/Huur du/van 2026-01-20 au/tot 2026-02-19 VOITURE PARTICULIERE ESSENCE ABCDEF012346GHJKL',
+                'vehicle_id': self.car2.id,
+            },
+            {  # match License Plate in AdditionalItemProperty/Value where AdditionalItemProperty/Name == 'PlateNumber'
+                'name': 'Loyer/Huur du/van 2026-01-20 au/tot 2026-02-19 VOITURE PARTICULIERE ESSENCE 1-ABC-123',
+                'vehicle_id': self.car.id,
+            },
+            {  # search VIN in Item/Description
+                'name': 'Loyer/Huur du/van 2026-01-20 au/tot 2026-02-19 VOITURE PARTICULIERE ESSENCE ABCDEF012347GHJKL',
+                'vehicle_id': self.car3.id,
+            },
+            {  # search License Plate in Item/Description
+                'name': 'Loyer/Huur du/van 2026-01-20 au/tot 2026-02-19 VOITURE PARTICULIERE ESSENCE 1-ABC-123',
+                'vehicle_id': self.car.id,
+            },
+            {  # search combined License Plate and VIN in Item/Description
+                'name': 'Loyer/Huur du/van 2026-01-20 au/tot 2026-02-19 ABCDEF012345GHJKL VOITURE PARTICULIERE ESSENCE 1-ABC-123',
+                'vehicle_id': self.car.id,
+            },
+            {  # Double vin -> no vehicle linked
+                'name': 'Loyer/Huur du/van 2026-01-20 au/tot 2026-02-19 VOITURE PARTICULIERE ESSENCE',
+                'vehicle_id': False,
+            },
         ])
