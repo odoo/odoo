@@ -21,6 +21,18 @@ class HrEmployee(models.Model):
 
     # ── Section 1: Service Identification ─────────────────────────────────
 
+    x_initial = fields.Char(
+        string='Initial',
+        help='Name initial(s) of the employee (e.g. "R.", "A.K.").',
+        groups='hr.group_hr_user',
+    )
+
+    x_mobile_no = fields.Char(
+        string='Mobile No',
+        help='Personal mobile number of the employee.',
+        groups='hr.group_hr_user',
+    )
+
     x_designation = fields.Char(
         string='Designation',
         help='Official designation of the employee within the prison department '
@@ -217,12 +229,26 @@ class HrEmployee(models.Model):
         groups='hr.group_hr_user',
     )
 
+    x_major_punishment_details = fields.Text(
+        string='Details of Major Punishment Awarded',
+        help='Chronological record of major punishments awarded, including '
+             'charge particulars, date, and authority.',
+        groups='hr.group_hr_user',
+    )
+
     # ── Section 7: Service History ────────────────────────────────────────
 
     x_service_history = fields.Text(
         string='Places / Units / Seats Served Throughout Service',
         help='Complete posting history — list each station, unit, or seat '
              'with the dates of joining and relief.',
+        groups='hr.group_hr_user',
+    )
+
+    x_training_undergone = fields.Text(
+        string='Training Undergone',
+        help='Details of training programmes attended, including course name, '
+             'institution, duration, and year.',
         groups='hr.group_hr_user',
     )
 
