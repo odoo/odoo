@@ -26,6 +26,12 @@ class TestSyncOdoo2GoogleCommon(TestSyncGoogle):
             "name": "Jean-Luc",
             "email": "jean-luc@opoo.com"
         })
+        cls.notification_alarm = cls.env['calendar.alarm'].create({
+            'name': 'Alarm',
+            'alarm_type': 'notification',
+            'interval': 'minutes',
+            'duration': 20,
+        })
         # Make sure this test will work for the next 30 years
         cls.env['ir.config_parameter'].set_int('google_calendar.sync.range_days', 10000)
         cls.env["ir.config_parameter"].set_bool("google_calendar.disable_auto_videocall_link", False)
@@ -187,6 +193,7 @@ class TestSyncOdoo2Google(TestSyncOdoo2GoogleCommon):
     def test_event_allday_creation(self):
         event = self.env['calendar.event'].create({
             'name': "Event",
+            'alarm_ids': [(4, self.notification_alarm.id)],  # no alarm by default for allday events, adding one
             'allday': True,
             'start': datetime(2020, 1, 15),
             'stop': datetime(2020, 1, 15),
@@ -201,7 +208,7 @@ class TestSyncOdoo2Google(TestSyncOdoo2GoogleCommon):
             'description': '',
             'location': '',
             'guestsCanModify': True,
-            'reminders': {'overrides': [{'method': 'popup', 'minutes': 15}], 'useDefault': False},
+            'reminders': {'overrides': [{'method': 'popup', 'minutes': 20}], 'useDefault': False},
             'organizer': {'email': 'odoobot@example.com', 'self': True},
             'attendees': [{'email': 'odoobot@example.com', 'responseStatus': 'accepted'}],
             'extendedProperties': {'shared': {'%s_odoo_id' % self.env.cr.dbname: event.id}},
@@ -243,6 +250,7 @@ class TestSyncOdoo2Google(TestSyncOdoo2GoogleCommon):
         event = self.env['calendar.event'].create({
             'google_id': google_id,
             'name': "Event",
+            'alarm_ids': [(4, self.notification_alarm.id)],  # no alarm by default for allday events, adding one
             'start': datetime(2020, 1, 15),
             'stop': datetime(2020, 1, 15),
             'allday': True,
@@ -262,7 +270,7 @@ class TestSyncOdoo2Google(TestSyncOdoo2GoogleCommon):
             'description': '',
             'location': '',
             'guestsCanModify': True,
-            'reminders': {'overrides': [{'method': 'popup', 'minutes': 15}], 'useDefault': False},
+            'reminders': {'overrides': [{'method': 'popup', 'minutes': 20}], 'useDefault': False},
             'organizer': {'email': 'odoobot@example.com', 'self': True},
             'attendees': [{'email': 'odoobot@example.com', 'responseStatus': 'accepted'}],
             'recurrence': ['RRULE:FREQ=WEEKLY;COUNT=2;BYDAY=WE'],
@@ -276,6 +284,7 @@ class TestSyncOdoo2Google(TestSyncOdoo2GoogleCommon):
         event = self.env['calendar.event'].create({
             'google_id': google_id,
             'name': "Event",
+            'alarm_ids': [(4, self.notification_alarm.id)],  # no alarm by default for allday events, adding one
             'start': datetime(2020, 1, 15),
             'stop': datetime(2020, 1, 15),
             'allday': True,
@@ -297,7 +306,7 @@ class TestSyncOdoo2Google(TestSyncOdoo2GoogleCommon):
             'description': '',
             'location': '',
             'guestsCanModify': True,
-            'reminders': {'overrides': [{'method': 'popup', 'minutes': 15}], 'useDefault': False},
+            'reminders': {'overrides': [{'method': 'popup', 'minutes': 20}], 'useDefault': False},
             'organizer': {'email': 'odoobot@example.com', 'self': True},
             'attendees': [{'email': 'odoobot@example.com', 'responseStatus': 'accepted'}],
             'recurrence': ['RRULE:FREQ=WEEKLY;COUNT=2;BYDAY=WE'],
@@ -319,6 +328,7 @@ class TestSyncOdoo2Google(TestSyncOdoo2GoogleCommon):
         })
         event_2 = self.env['calendar.event'].create({
             'name': "Event",
+            'alarm_ids': [(4, self.notification_alarm.id)],  # no alarm by default for allday events, adding one
             'start': datetime(2020, 1, 22),
             'stop': datetime(2020, 1, 22),
             'allday': True,
@@ -348,7 +358,7 @@ class TestSyncOdoo2Google(TestSyncOdoo2GoogleCommon):
             'organizer': {'email': 'odoobot@example.com', 'self': True},
             'attendees': [{'email': 'odoobot@example.com', 'responseStatus': 'accepted'}],
             'extendedProperties': {'shared': {'%s_odoo_id' % self.env.cr.dbname: event.recurrence_id.id}},
-            'reminders': {'overrides': [{'method': 'popup', 'minutes': 15}], 'useDefault': False},
+            'reminders': {'overrides': [{'method': 'popup', 'minutes': 20}], 'useDefault': False},
             'recurrence': ['RRULE:FREQ=WEEKLY;WKST=SU;COUNT=1;BYDAY=WE'],
             'transparency': 'opaque',
         }, timeout=3)
@@ -407,6 +417,7 @@ class TestSyncOdoo2Google(TestSyncOdoo2GoogleCommon):
         google_id = 'aaaaaaaaa'
         event = self.env['calendar.event'].create({
             'name': "Event",
+            'alarm_ids': [(4, self.notification_alarm.id)],  # no alarm by default for allday events, adding one
             'start': datetime(2020, 1, 15),
             'stop': datetime(2020, 1, 15),
             'allday': True,
@@ -436,7 +447,7 @@ class TestSyncOdoo2Google(TestSyncOdoo2GoogleCommon):
             'attendees': [{'email': 'odoobot@example.com', 'responseStatus': 'accepted'}],
             'recurrence': ['RRULE:FREQ=WEEKLY;WKST=SU;COUNT=2;BYDAY=WE'],
             'extendedProperties': {'shared': {'%s_odoo_id' % self.env.cr.dbname: new_recurrence.id}},
-            'reminders': {'overrides': [{'method': 'popup', 'minutes': 15}], 'useDefault': False},
+            'reminders': {'overrides': [{'method': 'popup', 'minutes': 20}], 'useDefault': False},
             'transparency': 'opaque',
         }, timeout=3)
 
@@ -542,6 +553,7 @@ class TestSyncOdoo2Google(TestSyncOdoo2GoogleCommon):
         """ Sync attendee state immediately """
         event = self.env['calendar.event'].create({
             'name': "Event with attendees",
+            'alarm_ids': [(4, self.notification_alarm.id)],  # no alarm by default for allday events, adding one
             'start': datetime(2020, 1, 15),
             'stop': datetime(2020, 1, 15),
             'allday': True,
@@ -564,7 +576,7 @@ class TestSyncOdoo2Google(TestSyncOdoo2GoogleCommon):
             'organizer': {'email': 'odoobot@example.com', 'self': True},
             'attendees': [{'email': 'jean-luc@opoo.com', 'responseStatus': 'declined'}],
             'extendedProperties': {'shared': {'%s_odoo_id' % self.env.cr.dbname: event.id}},
-            'reminders': {'overrides': [{'method': 'popup', 'minutes': 15}], 'useDefault': False},
+            'reminders': {'overrides': [{'method': 'popup', 'minutes': 20}], 'useDefault': False},
             'transparency': 'opaque',
         })
 
@@ -851,6 +863,7 @@ class TestSyncOdoo2Google(TestSyncOdoo2GoogleCommon):
         # Create 'all day' event: ensure that 'need_sync' is falsy after creation an API wasn't called.
         event = self.env['calendar.event'].with_user(self.organizer_user).create({
             'name': "All Day Recurrent Event",
+            'alarm_ids': [(4, self.notification_alarm.id)],  # no alarm by default for allday events, adding one
             'user_id': self.organizer_user.id,
             'start': datetime(2024, 1, 17),
             'stop': datetime(2024, 1, 17),
@@ -877,7 +890,7 @@ class TestSyncOdoo2Google(TestSyncOdoo2GoogleCommon):
             'description': event.description,
             'location': '',
             'guestsCanModify': True,
-            'reminders': {'overrides': [{'method': 'popup', 'minutes': 15}], 'useDefault': False},
+            'reminders': {'overrides': [{'method': 'popup', 'minutes': 20}], 'useDefault': False},
             'organizer': {'email': self.organizer_user.email, 'self': True},
             'attendees': [{'email': self.organizer_user.email, 'responseStatus': 'accepted'}],
             'recurrence': ['RRULE:FREQ=WEEKLY;COUNT=1;BYDAY=WE'],
@@ -946,6 +959,7 @@ class TestSyncOdoo2Google(TestSyncOdoo2GoogleCommon):
     def test_event_duplication_allday_google_calendar(self):
         event = self.env['calendar.event'].with_user(self.organizer_user).create({
             'name': "Event",
+            'alarm_ids': [(4, self.notification_alarm.id)],  # no alarm by default for allday events, adding one
             'allday': True,
             'partner_ids': [(4, self.organizer_user.partner_id.id), (4, self.attendee_user.partner_id.id)],
             'start': datetime(2020, 1, 15),
@@ -966,7 +980,7 @@ class TestSyncOdoo2Google(TestSyncOdoo2GoogleCommon):
                             {'email': self.attendee_user.email, 'responseStatus': 'needsAction'},
                             {'email': self.organizer_user.email, 'responseStatus': 'accepted'}
                          ],
-            'reminders': {'overrides': [{'method': 'popup', 'minutes': 15}], 'useDefault': False},
+            'reminders': {'overrides': [{'method': 'popup', 'minutes': 20}], 'useDefault': False},
             'transparency': 'opaque',
         }
         self.assertGoogleEventInsertedMultiTime({
