@@ -34,7 +34,7 @@
 
                     <t t-set-slot="control-panel-status-indicator">
                         <t t-if="this.canEdit">
-                            <FormStatusIndicator model="this.model" discard.bind="this.discard" save.bind="this.saveButtonClicked" />
+                            <FormStatusIndicator t-props="this.statusIndicator.props()" />
                         </t>
                     </t>
 

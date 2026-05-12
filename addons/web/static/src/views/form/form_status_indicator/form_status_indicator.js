@@ -1,51 +1,63 @@
-import { useLayoutEffect, useRef, useState } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { useLayoutEffect, useRef } from "@web/owl2/utils";
+import { Component, useState } from "@odoo/owl";
 import { useBus } from "@web/core/utils/hooks";
+
+export function useStatusIndicator(model, actions = {}) {
+    const _fieldIsDirty = useState({ value: false });
+    useBus(model.bus, "FIELD_IS_DIRTY", (ev) => {
+        _fieldIsDirty.value = ev.detail;
+    });
+
+    return {
+        props() {
+            const { root } = model;
+            return {
+                isDirty: root.dirty || _fieldIsDirty.value,
+                isValid: root.isValid,
+                isNew: root.isNew && !root.offlineId,
+                save: actions.save,
+                discard: actions.discard,
+            };
+        },
+    };
+}
 
 export class FormStatusIndicator extends Component {
     static template = "web.FormStatusIndicator";
     static props = {
-        model: Object,
+        isDirty: Boolean,
+        isValid: { type: Boolean, optional: true, default: true },
+        isNew: { type: Boolean, optional: true, default: false },
         save: Function,
         discard: Function,
     };
 
+    static defaultProps = {
+        isValid: true,
+        isNew: false,
+    };
+
     setup() {
-        this.state = useState({
-            fieldIsDirty: false,
-        });
-        useBus(
-            this.props.model.bus,
-            "FIELD_IS_DIRTY",
-            (ev) => (this.state.fieldIsDirty = ev.detail)
-        );
+        this.saveButton = useRef("save");
         useLayoutEffect(
             () => {
-                if (!this.props.model.root.isNew && this.indicatorMode === "invalid") {
+                if (!this.props.isNew && this.indicatorMode === "invalid") {
                     this.saveButton.el.setAttribute("disabled", "1");
                 } else {
                     this.saveButton.el.removeAttribute("disabled");
                 }
             },
-            () => [this.props.model.root.isValid, this.state.fieldIsDirty]
+            () => [this.props.isValid, this.props.isDirty]
         );
-
-        this.saveButton = useRef("save");
     }
 
     get displayButtons() {
         return this.indicatorMode !== "saved";
     }
 
-    get isNew() {
-        const { isNew, offlineId } = this.props.model.root;
-        return isNew && !offlineId;
-    }
-
     get indicatorMode() {
-        const { isValid } = this.props.model.root;
-        const isDirty = this.props.model.root.dirty || this.state.fieldIsDirty;
-        if (this.isNew || isDirty) {
+        const { isValid, isNew, isDirty } = this.props;
+        if (isNew || isDirty) {
             return isValid ? "dirty" : "invalid";
         }
         return "saved";
