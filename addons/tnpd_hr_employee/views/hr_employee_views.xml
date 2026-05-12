@@ -34,6 +34,7 @@
                                  them here for quick reference. -->
                             <field name="sex" string="Gender"/>
                             <field name="birthday" string="Date of Birth"/>
+                            <field name="x_initial"/>
                             <field name="x_designation"/>
                             <field name="x_employee_code"/>
                             <field name="x_cps_no"/>
@@ -41,6 +42,7 @@
                         </group>
                         <group>
                             <field name="x_cug_mobile"/>
+                            <field name="x_mobile_no"/>
                             <field name="x_date_of_appointment"/>
                             <field name="x_date_of_retirement"/>
                             <field name="x_panel_year_sl_no"/>
@@ -124,6 +126,12 @@
                                    placeholder="Date | Authority | Charge | Punishment awarded"
                                    colspan="2"/>
                         </group>
+                        <group string="Major Punishments" colspan="2">
+                            <field name="x_major_punishment_details"
+                                   nolabel="1"
+                                   placeholder="Date | Authority | Charge | Punishment awarded"
+                                   colspan="2"/>
+                        </group>
                     </group>
 
                     <!-- ═══════════════════════════════════════════════════
@@ -134,6 +142,17 @@
                         <field name="x_service_history"
                                nolabel="1"
                                placeholder="Station / Unit / Seat | Date of Joining | Date of Relief"
+                               colspan="2"/>
+                    </group>
+
+                    <!-- ═══════════════════════════════════════════════════
+                         6b. TRAINING UNDERGONE
+                         Training programmes attended during service.
+                    ════════════════════════════════════════════════════ -->
+                    <group string="Training Undergone">
+                        <field name="x_training_undergone"
+                               nolabel="1"
+                               placeholder="Course Name | Institution | Duration | Year"
                                colspan="2"/>
                     </group>
 
