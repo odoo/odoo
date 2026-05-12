@@ -68,6 +68,10 @@ class Users(models.Model):
 
     def _get_totp_mail_code(self):
         self.ensure_one()
+        assert (
+            self.env.su
+            or (request and not request.session.uid and request.session.get('pre_uid') == self.id)  # nosemgrep: requests-in-models
+        )
 
         key = self._get_totp_mail_key()
 
