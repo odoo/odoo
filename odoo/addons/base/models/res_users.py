@@ -801,6 +801,7 @@ class ResUsers(models.Model):
                     ICP = env['ir.config_parameter']
                     if not ICP.get_bool('web.base.url.freeze'):
                         ICP.set_str('web.base.url', base)
+                        _logger.info("web.base.url set to %s", base)
                 except Exception:
                     _logger.exception("Failed to update web.base.url configuration parameter")
         return auth_info
