@@ -90,6 +90,14 @@ export class BaseContainerPlugin extends Plugin {
                 }
             },
         ],
+        should_unwrap_edge_block_to_insert_predicates: (blockToInsert, referenceBlock) => {
+            if (
+                this.isCandidateForBaseContainer(blockToInsert) &&
+                this.isCandidateForBaseContainer(referenceBlock)
+            ) {
+                return true;
+            }
+        },
         system_classes: [BASE_CONTAINER_CLASS],
     };
 

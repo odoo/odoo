@@ -12,7 +12,7 @@ import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { _t } from "@web/core/l10n/translation";
 
-/** @typedef {((insertedNode: Node) => insertedNode)[]} before_insert_within_pre_processors */
+/** @typedef {((insertedNode: Node) => insertedNode)[]} fragment_to_insert_within_pre_processors */
 
 const rightLeafOnlyNotBlockPath = createDOMPathGenerator(DIRECTIONS.RIGHT, {
     leafOnly: true,
@@ -52,7 +52,12 @@ export class CodeBlockPlugin extends Plugin {
         split_element_block_overrides: this.handleSplitBlockPRE.bind(this),
         delete_backward_overrides: withSequence(20, this.handleDeleteBackward.bind(this)),
         delete_backward_word_overrides: this.handleDeleteBackward.bind(this),
-        before_insert_processors: this.handleInsertWithinPre.bind(this),
+        fragment_to_insert_processors: this.processFragmentToInsert.bind(this),
+        should_unwrap_edge_block_to_insert_predicates: (blockToInsert, referenceBlock) => {
+            if (referenceBlock.nodeName === "PRE") {
+                return true;
+            }
+        },
     };
 
     blockFormatIsAvailable(selection) {
@@ -133,14 +138,12 @@ export class CodeBlockPlugin extends Plugin {
         return true;
     }
 
-    handleInsertWithinPre(insertContainer, block) {
+    processFragmentToInsert(fragment) {
+        const block = closestBlock(this.dependencies.selection.getEditableSelection().anchorNode);
         if (block.nodeName !== "PRE") {
-            return insertContainer;
+            return fragment;
         }
-        insertContainer = this.processThrough(
-            "before_insert_within_pre_processors",
-            insertContainer
-        );
+        fragment = this.processThrough("fragment_to_insert_within_pre_processors", fragment);
         const isDeepestBlock = (node) =>
             isBlock(node) && ![...node.querySelectorAll("*")].some(isBlock);
         let linebreak;
@@ -157,9 +160,9 @@ export class CodeBlockPlugin extends Plugin {
                 processNode(child);
             }
         };
-        for (const node of childNodes(insertContainer)) {
+        for (const node of childNodes(fragment)) {
             processNode(node);
         }
-        return insertContainer;
+        return fragment;
     }
 }

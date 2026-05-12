@@ -581,11 +581,7 @@ describe("Selection after embedded component insertion", () => {
         });
         editor.shared.dom.insert(parseHTML(editor.document, `<div data-embedded="counter"></div>`));
         editor.shared.history.commit();
-        // Insertion triggers `selectionchange` and `commit` creates a selection
-        // placeholder. `fixSelectionInsideEditableRoot` moves the selection
-        // into it and triggers another `selectionchange` that removes the
-        // selection placeholder. So we must wait for the `.o-we-hint`.
-        await waitFor(".o-we-hint");
+        await animationFrame();
         cleanHints(editor);
         expect(getContent(el)).toBe(
             unformat(`
@@ -1133,7 +1129,7 @@ describe("editable descendants", () => {
                             <div data-embedded="wrapper" data-oe-protected="true" contenteditable="false">
                                 <div class="deep">
                                     <div data-embedded-editable="deep" data-oe-protected="false" contenteditable="true">
-                                        <p>deep</p>
+                                        <p>deep[]</p>
                                     </div>
                                 </div>
                             </div>
@@ -1141,7 +1137,7 @@ describe("editable descendants", () => {
                         </div>
                     </div>
                 </div>
-                <p>[]after</p>
+                <p>after</p>
             `)
         );
         undo(editor);

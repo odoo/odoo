@@ -310,7 +310,6 @@ test("add table inside empty list", async () => {
         el,
         `<ul>
             <li>
-                <br>
                 <table class="table table-bordered o_table">
                     <tbody>
                         <tr>
