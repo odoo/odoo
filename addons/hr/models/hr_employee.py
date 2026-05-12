@@ -1054,7 +1054,7 @@ class HrEmployee(models.Model):
     def _compute_sql_presence_state(self, table):
         # Ugly hack to be able to groupby hr_presence_state: that's not efficient since we will compute
         # the hr_presence_state on every record in the DB to generate this new groupby specification.
-        limit_records = self.env['ir.config_parameter'].get_int('hr.employee.hr_presence_state.limit', 1000)
+        limit_records = self.env['ir.config_parameter'].sudo().get_int('hr.employee.hr_presence_state.limit', 1000)
         all_records = self.sudo().with_context(active_test=False).search_fetch([], limit=limit_records + 1, order='id')
         # Protection against too much inefficient code.
         if len(all_records) > limit_records:
