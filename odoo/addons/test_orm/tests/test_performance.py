@@ -1,27 +1,26 @@
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 import logging
 
-from odoo.addons.base.tests.common import SavepointCaseWithUserDemo
-from odoo.tests.common import TransactionCase, users, warmup, tagged
-from odoo.tools import mute_logger, sql
 from odoo import Command
+from odoo.tests.common import TransactionCase, tagged, users, warmup
+from odoo.tools import mute_logger, sql
+
+from .common import TestOrmPartnerCommon
+from odoo.addons.base.tests.common import SavepointCaseWithUserDemo
 
 _logger = logging.getLogger(__name__)
 
 
-@tagged('at_install', '-post_install')  # LEGACY at_install
-class TestPerformance(SavepointCaseWithUserDemo):
-
+@tagged('at_install', '-post_install')
+class TestPerformance(TestOrmPartnerCommon, SavepointCaseWithUserDemo):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
         cls._load_partners_set()
 
-        partner3 = cls.env['res.partner'].search([('name', '=', 'AnalytIQ')], limit=1)
-        partner4 = cls.env['res.partner'].search([('name', '=', 'Urban Trends')], limit=1)
-        partner10 = cls.env['res.partner'].search([('name', '=', 'Ctrl-Alt-Fix')], limit=1)
-        partner12 = cls.env['res.partner'].search([('name', '=', 'Ignitive Labs')], limit=1)
+        partner3 = cls.partners.filtered_domain([('name', '=', 'AnalytIQ')])[0]
+        partner4 = cls.partners.filtered_domain([('name', '=', 'Urban Trends')])[0]
+        partner10 = cls.partners.filtered_domain([('name', '=', 'Ctrl-Alt-Fix')])[0]
+        partner12 = cls.partners.filtered_domain([('name', '=', 'Ignitive Labs')])[0]
 
         cls.env['test_performance.base'].create([{
             'name': 'Object 0',
