@@ -1,5 +1,5 @@
 from odoo import api, fields, models, modules
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import UserError, ValidationError, RedirectWarning
 
 
 class PdpRegistration(models.TransientModel):
@@ -132,6 +132,15 @@ class PdpRegistration(models.TransientModel):
         }
 
     def _action_open_pdp_form(self, reopen=True):
+        if not self.env.user.totp_enabled:
+            raise RedirectWarning(
+                message=self.env._("To be able to register, you need to enable the two-factor authentification."),
+                action=self.env.user._get_records_action(
+                    target='new',
+                    views=[(self.env.ref('base.view_users_form_simple_modif').id, "form")]
+                ),
+                button_text=self.env._("Go to the preference panel"),
+            )
         return self._get_records_action(
             name=self.env._("Send via French electronic invoicing"),
             target='new',
