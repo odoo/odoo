@@ -55,6 +55,7 @@ export class FileViewer extends Component {
             imageLoaded: false,
             scale: 1,
             angle: 0,
+            isIframeLoaded: false,
         });
         this.ui = useService("ui");
         useEffect(
@@ -72,6 +73,13 @@ export class FileViewer extends Component {
 
     onImageLoaded() {
         this.state.imageLoaded = true;
+    }
+
+    onIframeLoaded(ev) {
+        const iFrameEl = ev.target;
+        iFrameEl.contentWindow.requestAnimationFrame(() => {
+            this.state.isIframeLoaded = true;
+        });
     }
 
     close() {
