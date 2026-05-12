@@ -32,7 +32,7 @@ class PosPreset(models.Model):
     @api.model
     def _load_pos_data_fields(self, config):
         params = super()._load_pos_data_fields(config)
-        params.extend(['mail_template_id'])
+        params.extend(['mail_template_id', 'service_at'])
         return params
 
     def _can_return_content(self, field_name=None, access_token=None):
