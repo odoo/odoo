@@ -249,7 +249,8 @@ export class ModelFieldSelectorPopover extends Component {
                 for (let index = 0; index < names.length; index++) {
                     const name = names[index];
                     const { resModel, fieldDefs } = modelsInfo[index];
-                    page = new Page(resModel, this.filter(fieldDefs, path, resModel), {
+                    const pagePath = names.slice(0, index).join(".");
+                    page = new Page(resModel, this.filter(fieldDefs, pagePath, resModel), {
                         previousPage: page,
                         selectedName: name,
                         isDebugMode: this.props.isDebugMode,
