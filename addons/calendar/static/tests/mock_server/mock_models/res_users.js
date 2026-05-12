@@ -39,6 +39,7 @@ export class ResUsers extends mailModels.ResUsers {
             // "&",
             // ["allday", "=", true],
             // ["start_date", "=", serializeDateTime(startDate)],
+            ["alarm_ids", "!=", false],
             ["attendee_ids", "in", [...currentPartnerAttendeeIds]],
         ];
     }
@@ -51,6 +52,7 @@ export class ResUsers extends mailModels.ResUsers {
             {
                 fields: ["id", "start", "name", "allday"],
                 order: "start",
+                limit: 2,
             }
         );
         if (meetingsLines.length) {
@@ -58,7 +60,7 @@ export class ResUsers extends mailModels.ResUsers {
                 id: "calendar.event", // for simplicity
                 meetings: meetingsLines,
                 model: "calendar.event",
-                name: "Today's Meetings",
+                name: "Upcoming Meetings",
                 is_today_meetings: true,
                 type: "meeting",
             });

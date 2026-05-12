@@ -614,7 +614,8 @@ class TestEventNotifications(CalendarMailCommon):
         }
         ])
         with freeze_time('2023-11-15 16:00:00'):
-            self.assertEqual(len(search_event()), 3)
+            # Not the all day event nor the event ended yesterday
+            self.assertEqual(len(search_event()), 2)
         events.unlink()
 
     def test_recurring_meeting_reminder_notification(self):
