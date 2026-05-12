@@ -14,8 +14,10 @@ export class Many2ManyPackageTagsField extends Many2ManyTagsField {
     get tags() {
         const tags = super.tags;
         if (this.hasNoneTag) {
+            const records = this.props.record.data[this.props.name].records;
+            const lastRecord = records.at(-1);
             tags.push({
-                ...this.getTagProps(this.props.record.data[this.props.name].records.at(-1)),
+                ...(lastRecord ? this.getTagProps(lastRecord) : {}),
                 id: "datapoint_None",
                 text: _t("No Package"),
             });
