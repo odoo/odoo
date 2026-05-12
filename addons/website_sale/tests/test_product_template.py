@@ -45,14 +45,14 @@ class TestWebsiteSaleProductTemplate(WebsiteSaleCommon):
             ],
         })
         with self.mock_request():
-            structured_data = product_template._build_product_jsonld()._to_jsonld_dict()
+            structured_data = product_template._build_product_template_jsonld()._to_jsonld_dict()
         self.assertEqual(structured_data["@type"], "ProductGroup")
         self.assertEqual(len(structured_data["hasVariant"]), 2)
 
     def test_markup_data_uses_product_schema_when_single_variant(self):
         product_template = self.env["product.template"].create({"name": "Test product"})
         with self.mock_request():
-            structured_data = product_template._build_product_jsonld()._to_jsonld_dict()
+            structured_data = product_template._build_product_template_jsonld()._to_jsonld_dict()
         self.assertEqual(structured_data["@type"], "Product")
 
     def test_markup_data_uses_taxes_excluded_price_when_configured_on_website(self):
@@ -60,7 +60,7 @@ class TestWebsiteSaleProductTemplate(WebsiteSaleCommon):
             "show_line_subtotals_tax_selection": "tax_excluded"
         }).execute()
         with self.mock_request():
-            structured_data = self.product._build_product_jsonld()._to_jsonld_dict()
+            structured_data = self.product._build_product_product_jsonld()._to_jsonld_dict()
             self.assertEqual(
                 structured_data["offers"]["price"],
                 self.website.currency_id.round(self.product.base_unit_price),
@@ -73,7 +73,7 @@ class TestWebsiteSaleProductTemplate(WebsiteSaleCommon):
         self.product.price_extra = 10
         with self.mock_request():
             product_tmpl = self.product.product_tmpl_id
-            structured_data = self.product._build_product_jsonld()._to_jsonld_dict()
+            structured_data = self.product._build_product_product_jsonld()._to_jsonld_dict()
             self.assertEqual(
                 structured_data["offers"]["price"],
                 self.website.currency_id.round(
@@ -91,7 +91,7 @@ class TestWebsiteSaleProductTemplate(WebsiteSaleCommon):
             .search([("name", "!=", company_currency.name)], limit=1)
         )
         with self.mock_request():
-            structured_data = self.product._build_product_jsonld()._to_jsonld_dict()
+            structured_data = self.product._build_product_product_jsonld()._to_jsonld_dict()
         # Expected converted price
         expected_price = company_currency._convert(
             self.product.list_price,

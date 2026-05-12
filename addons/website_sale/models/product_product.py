@@ -120,7 +120,7 @@ class ProductProduct(models.Model):
         else:
             self.website_published = False
 
-    def _build_product_jsonld(self):
+    def _build_product_product_jsonld(self):
         """Full Product structured data for individual product variant pages."""
         self.ensure_one()
         website = self.env["website"].get_current_website()
@@ -153,14 +153,6 @@ class ProductProduct(models.Model):
                 if self._is_sold_out()
                 else "http://schema.org/InStock"
             )
-
-        direct, others = self._split_standard_from_custom_attributes()
-        schema_data.update(direct)
-        if others:
-            schema_data["additionalProperty"] = [
-                {"@type": "PropertyValue", "name": name, "value": value}
-                for name, value in others.items()
-            ]
         offer_jsonld = JsonLd("Offer", offer_schema_data).add_nested({
             "seller": JsonLd("Organization", {"@id": f"{base_url}/#organization"}),
         })
@@ -179,6 +171,13 @@ class ProductProduct(models.Model):
             "offers": offer_jsonld,
             "image": image_schemas,
         }
+        direct, others = self._split_standard_from_custom_attributes()
+        schema_data.update(direct)
+        if others:
+            nested_schema_data["additionalProperty"] = [
+                JsonLd("PropertyValue", {"name": name, "value": value})
+                for name, value in others.items()
+            ]
         return JsonLd("Product", schema_data).add_nested(nested_schema_data)
 
     def _get_image_1920_url(self):

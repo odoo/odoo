@@ -1180,9 +1180,19 @@ class SlideChannel(models.Model):
             "url": f"{base_url}/slides",
         }
         nested_schema_data = {
-            "hasPart": [channel._build_course_base_jsonld() for channel in self],
             "isPartOf": JsonLd("Organization", {"@id": f"{base_url}/#organization"}),
         }
+        channel_jsonlds = [channel._build_course_base_jsonld() for channel in self]
+        if channel_jsonlds:
+            main_entity = JsonLd("ItemList").add_nested({
+                "itemListElement": [
+                    JsonLd("ListItem",
+                        {"position": i + 1}
+                    ).add_nested({"item": channel_jsonld})
+                    for i, channel_jsonld in enumerate(channel_jsonlds)
+                ],
+            })
+            nested_schema_data["mainEntity"] = main_entity
         return JsonLd("CollectionPage", schema_data).add_nested(nested_schema_data)
 
     def _get_jsonld(self, is_detail_page=False):

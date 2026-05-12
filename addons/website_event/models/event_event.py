@@ -670,8 +670,8 @@ class EventEvent(models.Model):
             data['image_url'] = event._get_image_url()
         return results_data
 
-    def _build_event_base_jsonld(self):
-        """Build the base ``Event`` schema for listing cards."""
+    def _build_event_jsonld(self):
+        """Build the detailed ``Event`` schema for a detail page."""
         self.ensure_one()
         if not self.address_id or self.is_ongoing or self.is_done or self.website_visibility != 'public':
             # Google event rich results require a public upcoming event with
@@ -691,48 +691,55 @@ class EventEvent(models.Model):
             address_schema_data["addressRegion"] = address.state_id.code
         if address.country_id.code:
             address_schema_data["addressCountry"] = address.country_id.code
+        description = self.subtitle or (
+            self.description and text_from_html(self.description, True)
+        )
+        event_status = (
+            "EventCancelled"
+            if self.kanban_state == 'cancel'
+            else "EventScheduled"
+        )
         schema_data = {
             "name": self.name,
             "url": self.website_absolute_url,
             "startDate": JsonLd.to_iso_datetime(self.date_begin),
-        }
-        nested_schema_data = {}
-        if image_url := self.website_id.image_url(self, 'image_1920'):
-            nested_schema_data["image"] = JsonLd("ImageObject", {"url": f"{base_url}{image_url}"})
-        nested_schema_data["location"] = JsonLd("Place", {"name": self.address_name}).add_nested(
-            {"address": JsonLd("PostalAddress", address_schema_data)}
-        )
-        return JsonLd("Event", schema_data).add_nested(nested_schema_data)
-
-    def _build_event_jsonld(self):
-        """Build the detailed ``Event`` schema for a detail page."""
-        self.ensure_one()
-        event_jsonld = self._build_event_base_jsonld()
-        if not event_jsonld:
-            return None
-        description = self.subtitle or (self.description and text_from_html(self.description, True))
-        nested_schema_data = {}
-        if self.organizer_id:
-            organizer_sudo = self.organizer_id.sudo()
-            organizer_data = {}
-            if organizer_sudo == self.env.company.partner_id:
-                organizer_data["@id"] = f"{self.get_base_url()}/#organization"
-            else:
-                organizer_data["name"] = organizer_sudo.name
-                if organizer_sudo.website:
-                    organizer_data["url"] = organizer_sudo.website
-            nested_schema_data["organizer"] = JsonLd("Organization", organizer_data)
-        event_status = "EventCancelled" if self.kanban_state == 'cancel' else "EventScheduled"
-        offers_jsonld = [self._build_event_offer_jsonld(ticket) for ticket in self.event_ticket_ids]
-        schema_data = {
             "endDate": JsonLd.to_iso_datetime(self.date_end),
             "eventStatus": f"https://schema.org/{event_status}",
             "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
         }
         if description:
             schema_data["description"] = description
-        nested_schema_data["offers"] = offers_jsonld
-        return event_jsonld.set(schema_data).add_nested(nested_schema_data)
+        nested_schema_data = {
+            "location": JsonLd(
+                "Place",
+                {"name": self.address_name},
+            ).add_nested({
+                "address": JsonLd("PostalAddress", address_schema_data),
+            }),
+            "offers": [
+                self._build_event_offer_jsonld(ticket)
+                for ticket in self.event_ticket_ids
+            ],
+        }
+        if image_url := self.website_id.image_url(self, 'image_1920'):
+            nested_schema_data["image"] = JsonLd(
+                "ImageObject",
+                {"url": f"{base_url}{image_url}"},
+            )
+        if self.organizer_id:
+            organizer_sudo = self.organizer_id.sudo()
+            organizer_schema_data = {}
+            if organizer_sudo == self.env.company.partner_id:
+                organizer_schema_data["@id"] = f"{base_url}/#organization"
+            else:
+                organizer_schema_data["name"] = organizer_sudo.name
+                if organizer_sudo.website:
+                    organizer_schema_data["url"] = organizer_sudo.website
+            nested_schema_data["organizer"] = JsonLd(
+                "Organization",
+                organizer_schema_data,
+            )
+        return JsonLd("Event", schema_data).add_nested(nested_schema_data)
 
     def _build_event_offer_jsonld(self, ticket):
         """
@@ -753,30 +760,6 @@ class EventEvent(models.Model):
             offer_jsonld.set({"url": f"{self.website_absolute_url}/register"})
         return offer_jsonld
 
-    def _build_event_collectionpage_jsonld(self):
-        """Build CollectionPage structured data for the events listing page."""
-        website = self.env['website'].get_current_website()
-        base_url = website.get_base_url()
-        schema_data = {
-            "name": self.env._("Events"),
-            "url": f"{base_url}/event",
-        }
-        nested_schema_data = {
-            "isPartOf": JsonLd("Organization", {"@id": f"{base_url}/#organization"}),
-        }
-        event_jsonlds = [
-            event_schema for event in self if (event_schema := event._build_event_base_jsonld())
-        ]
-        if event_jsonlds:
-            main_entity = JsonLd("ItemList").add_nested({
-                "itemListElement": [
-                    JsonLd("ListItem", {"position": i + 1}).add_nested({"item": event_jsonld})
-                    for i, event_jsonld in enumerate(event_jsonlds)
-                ],
-            })
-            nested_schema_data["mainEntity"] = main_entity
-        return JsonLd("CollectionPage", schema_data).add_nested(nested_schema_data)
-
     def _get_breadcrumb_items(self, is_detail_page=False):
         """Return breadcrumb items for an event page."""
         items = super()._get_breadcrumb_items(is_detail_page)
@@ -791,6 +774,4 @@ class EventEvent(models.Model):
         if is_detail_page:
             if event_schema_jsonld := self._build_event_jsonld():
                 schemas.append(event_schema_jsonld)
-            return schemas
-        schemas.append(self._build_event_collectionpage_jsonld())
         return schemas

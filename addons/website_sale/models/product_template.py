@@ -1382,7 +1382,7 @@ class ProductTemplate(models.Model):
                 ), pricelist_rule_id
         return price, pricelist_rule_id
 
-    def _build_product_jsonld(self):
+    def _build_product_template_jsonld(self):
         """Build detailed ``Product`` schema for a post detail page.
 
         Returns either a single Product JSON-LD (for templates with one variant)
@@ -1392,7 +1392,7 @@ class ProductTemplate(models.Model):
         website = self.env["website"].get_current_website()
         if self.product_variant_count == 1:
             # Single variant: return variant product schema directly
-            product_group_jsonld = self.product_variant_id._build_product_jsonld()
+            product_group_jsonld = self.product_variant_id._build_product_product_jsonld()
         else:
             # Multiple variants: build ProductGroup schema
             # Performance: Limit variants to avoid slowness with large variant counts and pricelist rules
@@ -1417,7 +1417,7 @@ class ProductTemplate(models.Model):
             nested_schema_data = {
                 "image": JsonLd("ImageObject", {"url": f"{base_url}{website.image_url(self, 'image_1024')}"}),
                 "brand": JsonLd("Organization", {"@id": f"{base_url}/#organization"}),
-                "hasVariant": [variant._build_product_jsonld() for variant in product_variant_ids],
+                "hasVariant": [variant._build_product_product_jsonld() for variant in product_variant_ids],
             }
             product_group_jsonld = JsonLd("ProductGroup", schema_data).add_nested(nested_schema_data)
         if website.is_view_active('website_sale.product_comment') and self.rating_count:
@@ -1450,8 +1450,7 @@ class ProductTemplate(models.Model):
         """Build detailed JSON-LD for product pages."""
         schemas = super()._get_jsonld(is_detail_page)
         if is_detail_page:
-            schemas.append(self._build_product_jsonld())
-            return schemas
+            schemas.append(self._build_product_template_jsonld())
         return schemas
 
     def _get_ribbon(self, price_vals=None, auto_assign_ribbons=None, variant=None):
