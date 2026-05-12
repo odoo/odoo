@@ -1,5 +1,5 @@
 import { onWillRender, useLayoutEffect, useRef, useState } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
+import { Component, effect } from "@odoo/owl";
 import { useDateTimePicker } from "@web/core/datetime/datetime_picker_hook";
 import { areDatesEqual, deserializeDate, deserializeDateTime, today } from "@web/core/l10n/dates";
 import { localization } from "@web/core/l10n/localization";
@@ -173,6 +173,12 @@ export class DateTimeField extends Component {
             },
             () => [this.startDate.el?.tagName, this.endDate.el?.tagName, this.picker.activeInput]
         );
+
+        useLayoutEffect(() => {
+            return effect(() => {
+                this.state.value = this.getRecordValue();
+            })
+        }, () => []);
 
         onWillRender(() => this.triggerIsDirty());
 
