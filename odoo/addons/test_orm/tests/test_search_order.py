@@ -151,29 +151,27 @@ class TestSearch(TransactionCase):
         b = Users.create({'name': '__test_B', 'login': '__a_test_B', 'country_id': country_us.id, 'state_id': states_us[1].id})
         c = Users.create({'name': '__test_B', 'login': '__z_test_B', 'country_id': country_us.id, 'state_id': states_us[0].id})
 
-        # Search as search user
-        Users = Users.with_user(u)
-
-        # Do: search on res.users, order on a field on res.partner to try inherits'd fields, then res.users
+        # Do: search on test_orm.search.order.users, order on a field on test_orm.search.order.partner to try inherits'd fields,
+        # then test_orm.search.order.users
         expected_ids = [u.id, a.id, c.id, b.id]
         user_ids = Users.search([('id', 'in', expected_ids)], order='name asc, login desc').ids
-        self.assertEqual(user_ids, expected_ids, 'search on res_users did not provide expected ids or expected order')
+        self.assertEqual(user_ids, expected_ids, 'search on test_orm.search.order.users did not provide expected ids or expected order')
 
         # Do: order on many2one and inherits'd fields
         expected_ids = [c.id, b.id, a.id, u.id]
         user_ids = Users.search([('id', 'in', expected_ids)], order='state_id asc, country_id desc, name asc, login desc').ids
-        self.assertEqual(user_ids, expected_ids, 'search on res_users did not provide expected ids or expected order')
+        self.assertEqual(user_ids, expected_ids, 'search on test_orm.search.order.users did not provide expected ids or expected order')
 
         # Do: order on many2one and inherits'd fields
         expected_ids = [u.id, b.id, c.id, a.id]
         user_ids = Users.search([('id', 'in', expected_ids)], order='country_id desc, state_id desc, name asc, login desc').ids
-        self.assertEqual(user_ids, expected_ids, 'search on res_users did not provide expected ids or expected order')
+        self.assertEqual(user_ids, expected_ids, 'search on test_orm.search.order.users did not provide expected ids or expected order')
 
-        # Do: order on many2one, but not by specifying in order parameter of search, but by overriding _order of res_users
+        # Do: order on many2one, but not by specifying in order parameter of search, but by overriding _order of test_orm.search.order.users
         self.patch_order('test_orm.search.order.users', 'country_id desc, name asc, login desc')
         expected_ids = [u.id, c.id, b.id, a.id]
         user_ids = Users.search([('id', 'in', expected_ids)]).ids
-        self.assertEqual(user_ids, expected_ids, 'search on res_users did not provide expected ids or expected order')
+        self.assertEqual(user_ids, expected_ids, 'search on test_orm.search.order.users did not provide expected ids or expected order')
 
     def test_11_indirect_inherits_m2o_order(self):
         self.patch_order('test_orm.search.order.alpha', 'id')
