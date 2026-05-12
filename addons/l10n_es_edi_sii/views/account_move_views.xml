@@ -7,9 +7,7 @@
             <field name="binding_model_id" ref="account.model_account_move"/>
             <field name="binding_view_types">list</field>
             <field name="state">code</field>
-            <field name="code">moves = records.filtered(lambda move: move.state == 'posted' and move.l10n_es_edi_is_required)
-if moves:
-    moves._send_l10n_es_sii_document()</field>
+            <field name="code">records.action_l10n_es_sii_send_in_batch()</field>
         </record>
 
         <record id="view_move_form_inherit_l10n_es_edi" model="ir.ui.view">

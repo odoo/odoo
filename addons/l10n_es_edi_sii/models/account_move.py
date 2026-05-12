@@ -2,10 +2,13 @@
 from collections import defaultdict, Counter
 import math
 
-from odoo import api, fields, models
+from odoo import api, fields, models, tools
 from odoo.exceptions import LockError, UserError
 from odoo.tools.float_utils import float_round
 from markupsafe import Markup
+
+
+L10N_ES_SII_BATCH_SIZE = 10000
 
 
 class AccountMove(models.Model):
@@ -125,11 +128,12 @@ class AccountMove(models.Model):
 
     def _l10n_es_sii_lock_move(self):
         """ Acquire a write lock on the invoices in self. """
-        self.ensure_one()
         try:
             self.lock_for_update()
         except LockError:
-            raise UserError(self.env._('Cannot send this entry as it is already being processed.'))
+            if len(self) == 1:
+                raise UserError(self.env._('Cannot send this entry as it is already being processed.'))
+            raise UserError(self.env._('Cannot send these entries as they are already being processed.'))
 
     # -------------------------------------------------------------------------
     # ACTION METHODS
@@ -143,6 +147,21 @@ class AccountMove(models.Model):
             'tag': 'soft_reload',
         }
 
+    def action_l10n_es_sii_send_in_batch(self):
+        """ Groups selected invoices and sends them to SII via batched payloads. """
+        moves_to_process = self.filtered(lambda m: m.l10n_es_edi_is_required and m.state == 'posted')
+        batches = moves_to_process.grouped(lambda m: (m.company_id, m.is_sale_document(), bool(m.l10n_es_edi_csv)))
+
+        result = True
+        for batch_moves in batches.values():
+            for i in range(0, len(batch_moves), L10N_ES_SII_BATCH_SIZE):
+                chunk = batch_moves[i:i + L10N_ES_SII_BATCH_SIZE]
+                result = chunk._send_l10n_es_sii_document_batch() and result
+
+                if not tools.config['test_enable']:
+                    self.env.cr.commit()
+        return result
+
     # -------------------------------------------------------------------------
     # BUSINESS LOGIC
     # -------------------------------------------------------------------------
@@ -152,7 +171,7 @@ class AccountMove(models.Model):
         batches = defaultdict(lambda: self.env['account.move'])
         for move in self:
             csv = move.l10n_es_edi_csv if not cancel else False
-            batches[(move.company_id.id, move.move_type, csv)] |= move
+            batches[(move.company_id.id, move.is_sale_document(), csv)] |= move
 
         result = True
         for moves in batches.values():
@@ -165,11 +184,11 @@ class AccountMove(models.Model):
         documents = self.env['l10n_es_edi_sii.document']
         moves_to_send = self.env['account.move']
 
-        for move in self:
-            # Avoid the move to be sent if it is being modified by a parallel transaction (for example reset to draft).
-            # It will also avoid the move to be sent by different parallel transactions.
-            move._l10n_es_sii_lock_move()
+        # Avoid the moves to be sent if they are being modified by a parallel transaction (for example reset to draft).
+        # It will also avoid the moves to be sent by different parallel transactions.
+        self._l10n_es_sii_lock_move()
 
+        for move in self:
             document = move.l10n_es_edi_sii_document_ids.filtered(lambda d: d.state == target_state)[:1]
             if not document:
                 document = self.env['l10n_es_edi_sii.document'].sudo().create({
@@ -269,16 +288,13 @@ class AccountMove(models.Model):
         return errors
 
     def _l10n_es_edi_get_invoices_info(self):
-        if len(self) > 1:
-            info_list = []
-            for move in self:
-                info_list += move._l10n_es_edi_get_invoices_info()
-            return info_list
+        return [move._l10n_es_edi_get_invoice_info() for move in self]
 
+    def _l10n_es_edi_get_invoice_info(self):
+        self.ensure_one()
         if not self.l10n_es_registration_date:
             self.l10n_es_registration_date = fields.Date.context_today(self)
 
-        info_list = []
         com_partner = self.commercial_partner_id
         is_simplified = self.l10n_es_is_simplified
 
@@ -452,8 +468,7 @@ class AccountMove(models.Model):
             )
             invoice_node['CuotaDeducible'] = float_round(sign * total_deductible, 2)
 
-        info_list.append(info)
-        return info_list
+        return info
 
     def _l10n_es_edi_get_invoices_tax_details_info(self, filter_invl_to_apply=None):
         def grouping_key_generator(base_line, tax_data):
