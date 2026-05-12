@@ -320,7 +320,7 @@ class Website(Home):
             create_date = fields.Datetime.from_string(sitemap.create_date)
             delta = datetime.datetime.now() - create_date
             if delta < SITEMAP_CACHE_TIME:
-                content = sitemap.raw
+                content = sitemap.raw.content
 
         if not content:
             # Remove all sitemaps in ir.attachments as we're going to regenerated them
