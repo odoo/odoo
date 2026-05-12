@@ -171,6 +171,8 @@ class HrEmployeeDeparture(models.Model):
                 emp_to_archive += employee
 
             if employee.sudo().contract_date_start:
+                # TODO: create as many contract as we need for be student guys
+                # Ou bien le departure osef car jamais utilisé en student ?
                 employee.sudo().write({'contract_date_end': departure.departure_date})
             employee.version_ids.filtered(lambda v: v.date_version > departure.departure_date).unlink()
 
