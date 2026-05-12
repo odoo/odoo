@@ -1,4 +1,4 @@
-import { useChildSubEnv, useRef, useState } from "@web/owl2/utils";
+import { useChildEnv, useChildSubEnv, useRef, useState } from "@web/owl2/utils";
 import { Component } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";
@@ -279,7 +279,7 @@ export class TextEffectSelector extends Component {
             services: this.props.config.editor.services,
         });
         this.popover = usePopover(TextEffectOption, {
-            env: this.__owl__.childEnv,
+            env: useChildEnv(), // owl3 migration, this should be replaced
             onClose: () => {
                 if (this.activeElement && this.activeElement.dataset.textEffect) {
                     const json = JSON.parse(this.activeElement.dataset.textEffect);
