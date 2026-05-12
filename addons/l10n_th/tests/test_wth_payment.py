@@ -26,15 +26,26 @@ class TestL10nTHWTHPayment(AccountTestInvoicingCommon):
             'padding': 4,
             'number_increment': 1,
         })
+        cls.witthold_tax_section = cls.env['account.withholding.tax.section'].create({
+            'name': 'Withholding Tax Section',
+            'company_id': cls.company_data['company'].id,
+            'withholding_sequence_id': cls.withholding_sequence.id,
+        })
         cls.outstanding_account = cls.env['account.account'].create({
             'name': "Outstanding Payments",
             'code': 'OSTP420',
             'reconcile': False,
             'account_type': 'asset_current',
         })
+        cls.purchase_account = cls.env['account.account'].create({
+            'code': '900000',
+            'name': 'Product Sales',
+            'account_type': 'income',
+            'withholding_tax_section_id': cls.witthold_tax_section.id,
+        })
 
     def test_withholding_condition_is_propagated(self):
-        withholding_tax = self.percent_tax(-1, is_withholding_tax_on_payment=True, withholding_sequence_id=self.withholding_sequence.id)
+        self.percent_tax(-1, is_withholding_tax_on_payment=True, withholding_tax_section_id=self.witthold_tax_section.id)
 
         invoice = self.env['account.move'].create({
             'move_type': 'in_invoice',
@@ -42,8 +53,8 @@ class TestL10nTHWTHPayment(AccountTestInvoicingCommon):
             'invoice_date': fields.Date.today(),
             'invoice_line_ids': [Command.create({
                 'product_id': self.product_a.id,
+                'account_id': self.purchase_account.id,
                 'price_unit': 1000.0,
-                'tax_ids': [Command.set(withholding_tax.ids)],
             })],
         })
         invoice.action_post()
