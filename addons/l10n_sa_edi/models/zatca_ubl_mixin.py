@@ -322,9 +322,9 @@ class ZatcaUblMixin(models.AbstractModel):
         if supplier.country_id.code == 'SA':
             if tax and tax.amount != 0:
                 return 'S'
-            if tax and tax.l10n_sa_exemption_reason_code in TAX_EXEMPTION_CODES:
+            if tax and tax.ubl_cii_tax_exemption_reason_code in TAX_EXEMPTION_CODES:
                 return 'E'
-            if tax and tax.l10n_sa_exemption_reason_code in TAX_ZERO_RATE_CODES:
+            if tax and tax.ubl_cii_tax_exemption_reason_code in TAX_ZERO_RATE_CODES:
                 return 'Z'
 
             return 'O'
@@ -343,14 +343,17 @@ class ZatcaUblMixin(models.AbstractModel):
             return super()._get_tax_exemption_reason(customer, supplier, tax)
 
         if tax and tax.amount == 0:
-            exemption_reason_by_code = dict(tax._fields["l10n_sa_exemption_reason_code"]._description_selection(self.env))
-            code = tax.l10n_sa_exemption_reason_code
+            exemption_reason_by_code = dict(tax._fields["ubl_cii_tax_exemption_reason_code"]._description_selection(self.env))
+            code = tax.ubl_cii_tax_exemption_reason_code or "VATEX-SA-OOS"
+            exemption_reason = exemption_reason_by_code[code].split(code)[1].lstrip() if code else "Not subject to VAT"
+
+            if code == "VATEX-SA-OOS" and (tax_exemption_reason := tax.ubl_cii_tax_exemption_reason):
+                # In case of VATEX-SA-OOS we allow the user to use his own defined exemption reason
+                exemption_reason = tax_exemption_reason
+
             return {
-                'tax_exemption_reason_code': code or "VATEX-SA-OOS",
-                'tax_exemption_reason': (
-                    exemption_reason_by_code[code].split(code)[1].lstrip()
-                    if code else "Not subject to VAT"
-                ),
+                'tax_exemption_reason_code': code,
+                'tax_exemption_reason': exemption_reason,
             }
 
         return {
