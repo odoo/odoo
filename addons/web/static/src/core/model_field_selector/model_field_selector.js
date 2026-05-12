@@ -3,7 +3,7 @@ import { Component, onWillStart, onWillUpdateProps } from "@odoo/owl";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { useService } from "@web/core/utils/hooks";
-import { hasTouch } from "@web/core/browser/feature_detection";
+import { utils } from "@web/core/ui/ui_service";
 import { ModelFieldSelectorPopover } from "./model_field_selector_popover";
 
 export class ModelFieldSelector extends Component {
@@ -47,7 +47,7 @@ export class ModelFieldSelector extends Component {
                     this.props.update(this.newPath, fieldInfo);
                 }
             },
-            useBottomSheet: this.isBottomSheet,
+            useBottomSheet: utils.useBottomSheet(),
         });
         this.keepLast = new KeepLast();
         this.state = useState({ isInvalid: false, displayNames: [] });
@@ -58,10 +58,6 @@ export class ModelFieldSelector extends Component {
                 this.updateState(nextProps);
             }
         });
-    }
-
-    get isBottomSheet() {
-        return this.env.isSmall && hasTouch();
     }
 
     getPopoverProps() {

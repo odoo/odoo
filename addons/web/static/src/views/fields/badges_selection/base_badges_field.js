@@ -2,7 +2,7 @@ import { Component } from "@odoo/owl";
 import { standardFieldProps } from "../standard_field_props";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { hasTouch } from "@web/core/browser/feature_detection";
+import { utils } from "@web/core/ui/ui_service";
 
 const DROPDOWN_ITEM_LIMIT = 8;
 export class BaseBadgesField extends Component {
@@ -77,8 +77,8 @@ export class BaseBadgesField extends Component {
         return this.props.value;
     }
 
-    get isBottomSheet() {
-        return this.env.isSmall && hasTouch();
+    get useBottomSheet() {
+        return utils.useBottomSheet();
     }
 
     stringify(value) {

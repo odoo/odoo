@@ -4,6 +4,7 @@ import { registry } from "@web/core/registry";
 import { throttleForAnimation } from "@web/core/utils/timing";
 import { BlockUI } from "./block_ui";
 import { browser } from "@web/core/browser/browser";
+import { hasTouch } from "@web/core/browser/feature_detection";
 import { getTabableElements, isFocusable } from "@web/core/utils/ui";
 import { getActiveHotkey } from "../hotkeys/hotkey_service";
 
@@ -152,6 +153,11 @@ export const utils = {
     },
     isSmall(ui = {}) {
         return (ui.size || utils.getSize()) <= SIZES.SM;
+    },
+    /** Returns true on a small touch device (i.e. mobile), where dropdowns
+    should be rendered as bottom sheets instead of floating popovers. */
+    useBottomSheet() {
+        return utils.isSmall() && hasTouch();
     },
 };
 

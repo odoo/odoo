@@ -1,6 +1,7 @@
 import { useLayoutEffect, useRef, useState } from "@web/owl2/utils";
 import { Component, onWillUpdateProps } from "@odoo/owl";
 import { hasTouch } from "@web/core/browser/feature_detection";
+import { utils } from "@web/core/ui/ui_service";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -227,11 +228,11 @@ export class SelectMenu extends Component {
     }
 
     get displayInputInDropdown() {
-        return (this.isBottomSheet || !this.displayInputInToggler) && this.props.searchable;
+        return (this.useBottomSheet || !this.displayInputInToggler) && this.props.searchable;
     }
 
-    get isBottomSheet() {
-        return this.env.isSmall && hasTouch();
+    get useBottomSheet() {
+        return utils.useBottomSheet();
     }
 
     get canDeselect() {
@@ -323,11 +324,11 @@ export class SelectMenu extends Component {
     onStateChanged(open) {
         this.dropdownNextOpenState = undefined;
         if (open) {
-            if (this.isBottomSheet) {
+            if (this.useBottomSheet) {
                 // the toggler input must not be focused
                 document.activeElement.blur();
             }
-            if (this.displayInputInDropdown && !this.isBottomSheet) {
+            if (this.displayInputInDropdown && !this.useBottomSheet) {
                 this.inputRef.el.focus();
             }
             this.choicesRef.el?.addEventListener("scroll", (ev) => this.onScroll(ev));

@@ -1,6 +1,6 @@
 import { useRef, useState } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
-import { hasTouch } from "@web/core/browser/feature_detection";
+import { utils } from "@web/core/ui/ui_service";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { ColorList } from "@web/core/colorlist/colorlist";
 import { Domain } from "@web/core/domain";
@@ -79,7 +79,7 @@ export class Many2ManyTagsField extends Component {
         this.orm = useService("orm");
         this.previousColorsMap = {};
         this.popover = usePopover(this.constructor.components.Popover, {
-            useBottomSheet: this.isBottomSheet,
+            useBottomSheet: utils.useBottomSheet(),
         });
         this.dialog = useService("dialog");
         this.dialogClose = [];
@@ -142,10 +142,6 @@ export class Many2ManyTagsField extends Component {
                 return saveRecord([created[0]]);
             };
         }
-    }
-
-    get isBottomSheet() {
-        return this.env.isSmall && hasTouch();
     }
 
     get relation() {

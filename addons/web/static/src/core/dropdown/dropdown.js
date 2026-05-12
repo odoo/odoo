@@ -19,7 +19,6 @@ import { mergeClasses } from "@web/core/utils/classname";
 import { useChildRef, useService } from "@web/core/utils/hooks";
 import { deepMerge } from "@web/core/utils/objects";
 import { utils } from "@web/core/ui/ui_service";
-import { hasTouch } from "@web/core/browser/feature_detection";
 
 export function getFirstElementOfNode(node) {
     if (!node) {
@@ -169,7 +168,7 @@ export class Dropdown extends Component {
             shrink: true,
             setActiveElement: false,
         };
-        if (this.isBottomSheet) {
+        if (utils.useBottomSheet() && this.props.bottomSheet) {
             Object.assign(options, {
                 useBottomSheet: true,
                 class: mergeClasses("o-dropdown--menu dropdown-menu show", this.props.menuClass),
@@ -208,10 +207,6 @@ export class Dropdown extends Component {
                 this.closePopover();
             }
         });
-    }
-
-    get isBottomSheet() {
-        return utils.isSmall() && hasTouch() && this.props.bottomSheet;
     }
 
     /** @type {string} */
