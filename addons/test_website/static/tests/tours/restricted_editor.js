@@ -66,120 +66,106 @@ const goToMenuItem = [
     stepUtils.waitIframeIsReady(),
 ];
 
-registerWebsitePreviewTour(
-    "test_restricted_editor_only",
+registerWebsitePreviewTour("test_restricted_editor_only", {}, () => [
+    // Home
+    checkNoTranslate,
+    ...clickOnEditAndWaitEditMode(),
     {
-        undeterministicTour_doNotCopy: true,
+        content: "Check icons cannot be dragged",
+        trigger: "#snippet_groups .o_snippet[name='Intro'].o_disabled",
+        run: function () {
+            if (document.querySelector("button.o_snippet_thumbnail_area")) {
+                console.error(
+                    "The button to open the add snippet dialog should not be display for restricted editor."
+                );
+            }
+        },
     },
-    () => [
-        // Home
-        checkNoTranslate,
-        ...clickOnEditAndWaitEditMode(),
-        {
-            content: "Check icons cannot be dragged",
-            trigger: "#snippet_groups .o_snippet[name='Intro'].o_disabled",
-            run: function () {
-                if (document.querySelector("button.o_snippet_thumbnail_area")) {
-                    console.error(
-                        "The button to open the add snippet dialog should not be display for restricted editor."
-                    );
-                }
-            },
+    ...clickOnSave(),
+    ...switchTo("fr"),
+    ...translate,
+    ...closeErrorDialog,
+    ...switchTo("en"),
+    // Model item
+    {
+        trigger: ":iframe body:contains(welcome to your)",
+    },
+    ...goToMenuItem,
+    checkNoTranslate,
+    ...clickOnEditAndWaitEditMode(),
+    {
+        content: "Check icons cannot be dragged",
+        trigger: "#snippet_groups .o_snippet[name='Intro'].o_disabled",
+        run: function () {
+            if (document.querySelector("button.o_snippet_thumbnail_area")) {
+                console.error(
+                    "The button to open the add snippet dialog should not be display for restricted editor."
+                );
+            }
         },
-        ...clickOnSave(),
-        ...switchTo("fr"),
-        ...translate,
-        ...closeErrorDialog,
-        ...switchTo("en"),
-        // Model item
-        {
-            trigger: ":iframe body:contains(welcome to your)",
-        },
-        ...goToMenuItem,
-        checkNoTranslate,
-        ...clickOnEditAndWaitEditMode(),
-        {
-            content: "Check icons cannot be dragged",
-            trigger: "#snippet_groups .o_snippet[name='Intro'].o_disabled",
-            run: function () {
-                if (document.querySelector("button.o_snippet_thumbnail_area")) {
-                    console.error(
-                        "The button to open the add snippet dialog should not be display for restricted editor."
-                    );
-                }
-            },
-        },
-        ...clickOnSave(),
-        ...switchTo("fr"),
-        ...translate,
-        ...closeErrorDialog,
-    ]
-);
+    },
+    ...clickOnSave(),
+    ...switchTo("fr"),
+    ...translate,
+    ...closeErrorDialog,
+]);
 
-registerWebsitePreviewTour(
-    "test_restricted_editor_test_admin",
+registerWebsitePreviewTour("test_restricted_editor_test_admin", {}, () => [
+    // Home
+    checkNoTranslate,
+    ...clickOnEditAndWaitEditMode(),
     {
-        // Remove this key to make the tour fail with error:
-        // "Element has not been found." at step "Open Edit menu"
-        undeterministicTour_doNotCopy: true,
+        content: "Check icons cannot be dragged",
+        trigger: "#snippet_groups .o_snippet[name='Intro'].o_disabled",
     },
-    () => [
-        // Home
-        checkNoTranslate,
-        ...clickOnEditAndWaitEditMode(),
-        {
-            content: "Check icons cannot be dragged",
-            trigger: "#snippet_groups .o_snippet[name='Intro'].o_disabled",
-        },
-        ...clickOnSave(),
-        ...switchTo("fr"),
-        ...translate,
-        ...closeErrorDialog,
-        ...switchTo("en"),
-        // Model item
-        ...goToMenuItem,
-        checkNoTranslate,
-        ...clickOnEditAndWaitEditMode(),
-        {
-            content: "Check icons can be dragged",
-            trigger: "#snippet_groups .o_snippet[name='Intro']:not(.o_disabled)",
-        },
-        ...insertSnippet({ id: "s_banner", name: "Banner", groupName: "Intro" }),
-        {
-            content: "Change name",
-            trigger: ":iframe [data-oe-expression='record.name']",
-            run: "editor New value",
-        },
-        ...clickOnSave(),
-        ...switchTo("fr"),
-        ...translate,
-        {
-            content: "Close the dialog",
-            trigger: ".modal .modal-footer .btn-primary",
-            run: "click",
-        },
-        {
-            content: "Assure the modal is well closed",
-            trigger: "body:not(:has(.modal))",
-        },
-        {
-            content: "Check that html fields are not content editable when translating",
-            trigger:
-                ":iframe [data-oe-expression='record.website_description']:not([contenteditable='true'])",
-        },
-        {
-            content: "Translate name",
-            trigger: ":iframe [data-oe-expression='record.name']",
-            run: "editor Nouvelle valeur",
-        },
-        {
-            content: "Translate some banner text",
-            trigger: ":iframe [data-oe-expression='record.website_description'] strong",
-            run: "editor potentiel.",
-        },
-        ...clickOnSave(),
-    ]
-);
+    ...clickOnSave(),
+    ...switchTo("fr"),
+    ...translate,
+    ...closeErrorDialog,
+    ...switchTo("en"),
+    // Model item
+    ...goToMenuItem,
+    checkNoTranslate,
+    ...clickOnEditAndWaitEditMode(),
+    {
+        content: "Check icons can be dragged",
+        trigger: "#snippet_groups .o_snippet[name='Intro']:not(.o_disabled)",
+    },
+    ...insertSnippet({ id: "s_banner", name: "Banner", groupName: "Intro" }),
+    {
+        content: "Change name",
+        trigger: ":iframe [data-oe-expression='record.name']",
+        run: "editor New value",
+    },
+    ...clickOnSave(),
+    ...switchTo("fr"),
+    ...translate,
+    {
+        content: "Close the dialog",
+        trigger: ".modal .modal-footer .btn-primary",
+        run: "click",
+    },
+    {
+        content: "Assure the modal is well closed",
+        trigger: "body:not(:has(.modal))",
+    },
+    {
+        content: "Check that html fields are not content editable when translating",
+        trigger:
+            ":iframe [data-oe-expression='record.website_description']:not([contenteditable='true'])",
+    },
+    {
+        content: "Translate name",
+        trigger: ":iframe [data-oe-expression='record.name']",
+        run: "editor Nouvelle valeur",
+    },
+    {
+        content: "Translate some banner text",
+        trigger: ":iframe [data-oe-expression='record.website_description'] strong",
+        run: "editor potentiel.",
+    },
+    ...clickOnSave(),
+]);
 
 registerWebsitePreviewTour("test_restricted_editor_tester", {}, () => [
     ...clickOnEditAndWaitEditMode(),
