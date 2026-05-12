@@ -1,4 +1,5 @@
 from odoo import models
+from odoo.exceptions import RedirectWarning
 
 
 class AccountMoveSendWizard(models.TransientModel):
@@ -32,3 +33,15 @@ class AccountMoveSendWizard(models.TransientModel):
         if reason:
             return f" ({reason})"
         return ""
+
+    def action_send_and_print(self, allow_fallback_pdf=False):
+        if self.invoice_edi_format == 'ubl_21_fr' and not self.env.user.totp_enabled:
+            raise RedirectWarning(
+                message=self.env._("To be able to register, you need to enable the two-factor authentification."),
+                action=self.env.user._get_records_action(
+                    target='new',
+                    views=[(self.env.ref('base.view_users_form_simple_modif').id, "form")]
+                ),
+                button_text=self.env._("Go to the preference panel"),
+            )
+        return super().action_send_and_print(allow_fallback_pdf=allow_fallback_pdf)
