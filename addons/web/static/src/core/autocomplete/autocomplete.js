@@ -4,7 +4,7 @@ import { isScrollableY, scrollTo } from "@web/core/utils/scrolling";
 import { useDebounced } from "@web/core/utils/timing";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { usePosition } from "@web/core/position/position_hook";
-import { Component, onWillUpdateProps } from "@odoo/owl";
+import { Component, onWillRender, onWillUpdateProps } from "@odoo/owl";
 import { mergeClasses } from "@web/core/utils/classname";
 
 export class AutoComplete extends Component {
@@ -80,6 +80,12 @@ export class AutoComplete extends Component {
             open: false,
             activeSourceOption: null,
             value: this.props.value,
+        });
+        onWillRender(() => {
+            // FIXME : We should read every part of the state
+            // to actually subscribe the component
+            // this is roughly equivalent to what owl2 did
+            [...Object.entries(this.state)];
         });
 
         this.inputRef = useForwardRefToParent("input");

@@ -529,8 +529,7 @@ test(`simple calendar rendering on mobile`, async () => {
     expect(`.o_calendar_filter:eq(0) .o_calendar_filter_item`).toHaveCount(2);
 });
 
-test.tags("owl3");
-test.todo(`filter panel autocomplete: updates when typing`, async () => {
+test(`filter panel autocomplete: updates when typing`, async () => {
     await mountView({
         resModel: "event",
         type: "calendar",

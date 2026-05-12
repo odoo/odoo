@@ -1747,8 +1747,8 @@ test("Many2ManyTagsField keep the linked records after discard of the quick crea
     expect(".o_tag").toHaveCount(1);
 });
 
-test.tags("desktop", "owl3");
-test.todo("Many2ManyTagsField with option 'no_create' set to true on desktop", async () => {
+test.tags("desktop");
+test("Many2ManyTagsField with option 'no_create' set to true on desktop", async () => {
     await mountView({
         type: "form",
         resModel: "partner",
@@ -1762,8 +1762,8 @@ test.todo("Many2ManyTagsField with option 'no_create' set to true on desktop", a
     expect(".o-autocomplete.dropdown li.o_m2o_no_result").toHaveCount(1);
 });
 
-test.tags("desktop", "owl3");
-test.todo("Many2ManyTagsField with attribute 'can_create' set to false on desktop", async () => {
+test.tags("desktop");
+test("Many2ManyTagsField with attribute 'can_create' set to false on desktop", async () => {
     await mountView({
         type: "form",
         resModel: "partner",
