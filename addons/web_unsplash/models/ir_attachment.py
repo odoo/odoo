@@ -6,10 +6,7 @@ import requests
 from odoo import api, models
 from odoo.exceptions import ValidationError
 
-from odoo.addons.web_unsplash.controllers.main import (
-    UNSPLASH_ACCESS_KEY_ICP,
-    UNSPLASH_APP_ID_ICP,
-)
+from odoo.addons.web_unsplash import utils as unsplash_utils
 
 
 class IrAttachment(models.Model):
@@ -22,9 +19,8 @@ class IrAttachment(models.Model):
 
     @api.model
     def _fetch_unsplash_images(self, **post):
-        IrConfigParameter = self.env["ir.config_parameter"].sudo()
-        access_key = IrConfigParameter.get_str(UNSPLASH_ACCESS_KEY_ICP)
-        app_id = IrConfigParameter.get_str(UNSPLASH_APP_ID_ICP)
+        access_key = unsplash_utils.get_unsplash_access_key(self.env["ir.config_parameter"])
+        app_id = unsplash_utils.get_unsplash_app_id(self.env["ir.config_parameter"])
 
         if not access_key or not app_id:
             if not self.env.user._can_manage_unsplash_settings():

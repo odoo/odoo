@@ -11,18 +11,20 @@ from odoo.tools.image import image_process
 from odoo.tools.mimetypes import guess_mimetype
 
 from odoo.addons.html_editor.controllers.main import attachment_create
+from odoo.addons.web_unsplash import utils as unsplash_utils
+from odoo.addons.web_unsplash.utils import (
+    UNSPLASH_ACCESS_KEY_ICP,
+    UNSPLASH_APP_ID_ICP,
+)
 
 logger = logging.getLogger(__name__)
-
-UNSPLASH_APP_ID_ICP = 'unsplash.app_id'
-UNSPLASH_ACCESS_KEY_ICP = 'unsplash.access_key'
 
 
 class Web_Unsplash(http.Controller):
 
     def _get_access_key(self):
         """ Use this method to get the key, needed for internal reason """
-        return self.env['ir.config_parameter'].sudo().get_str(UNSPLASH_ACCESS_KEY_ICP)
+        return unsplash_utils.get_unsplash_access_key(self.env['ir.config_parameter'])
 
     def _notify_download(self, url):
         ''' Notifies Unsplash from an image download. (API requirement)
@@ -135,7 +137,7 @@ class Web_Unsplash(http.Controller):
 
     @http.route("/web_unsplash/get_app_id", type='jsonrpc', auth="public")
     def get_unsplash_app_id(self, **post):
-        return self.env['ir.config_parameter'].sudo().get_str(UNSPLASH_APP_ID_ICP)
+        return unsplash_utils.get_unsplash_app_id(self.env['ir.config_parameter'])
 
     @http.route("/web_unsplash/save_unsplash", type='jsonrpc', auth="user")
     def save_unsplash(self, **post):
