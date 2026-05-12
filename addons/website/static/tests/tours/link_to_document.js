@@ -86,7 +86,7 @@ registry.category("web_tour.tours").add("test_link_to_document", {
         },
         ...openLinkPopup({
             trigger: `:iframe #wrap .s_banner a:nth-child(1)`,
-            label: "sample.txt",
+            label: "Start Now",
             url: "/web/content/437296?unique=123&download=true",
             edit: true,
         }),
