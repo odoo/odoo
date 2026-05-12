@@ -96,6 +96,7 @@ export class TableUIPlugin extends Plugin {
             }
         };
         this.addDomListener(this.document, "scroll", closeMenus, true);
+        this.tableMenuMethods = Object.assign({}, ...this.getResource("table_menu_commands"));
     }
 
     openPicker() {
@@ -191,31 +192,6 @@ export class TableUIPlugin extends Plugin {
         if (!td) {
             return;
         }
-        const withCommit =
-            (fn) =>
-            (...args) => {
-                fn(...args);
-                this.dependencies.history.commit();
-            };
-        const tableMethods = {
-            moveColumn: withCommit(this.dependencies.table.moveColumn),
-            addColumn: withCommit(this.dependencies.table.addColumn),
-            removeColumn: withCommit(this.dependencies.table.removeColumn),
-            moveRow: withCommit(this.dependencies.table.moveRow),
-            addRow: withCommit(this.dependencies.table.addRow),
-            removeRow: withCommit(this.dependencies.table.removeRow),
-            turnIntoHeader: withCommit(this.dependencies.table.turnIntoHeader),
-            turnIntoRow: withCommit(this.dependencies.table.turnIntoRow),
-            resetRowHeight: withCommit(this.dependencies.table.resetRowHeight),
-            resetColumnWidth: withCommit(this.dependencies.table.resetColumnWidth),
-            resetTableSize: withCommit(this.dependencies.table.resetTableSize),
-            clearColumnContent: withCommit(this.dependencies.table.clearColumnContent),
-            clearRowContent: withCommit(this.dependencies.table.clearRowContent),
-            toggleAlternatingRows: withCommit(this.dependencies.table.toggleAlternatingRows),
-            mergeSelectedCells: withCommit(this.dependencies.table.mergeSelectedCells),
-            unmergeSelectedCell: withCommit(this.dependencies.table.unmergeSelectedCell),
-            buildTableGrid: this.dependencies.table.buildTableGrid,
-        };
         const grid = this.dependencies.table.buildTableGrid(closestElement(td, "table"));
         const rowIndex = getRowIndex(td.parentElement);
         if (grid[rowIndex][0] === td) {
@@ -230,7 +206,8 @@ export class TableUIPlugin extends Plugin {
                     close: () => this.closeRowMenu(),
                     document: this.document,
                     editable: this.editable,
-                    ...tableMethods,
+                    commit: this.dependencies.history.commit,
+                    ...this.tableMenuMethods,
                 },
             });
         }
@@ -248,7 +225,8 @@ export class TableUIPlugin extends Plugin {
                         document: this.document,
                         editable: this.editable,
                         close: () => this.closeColumnMenu(),
-                        ...tableMethods,
+                        commit: this.dependencies.history.commit,
+                        ...this.tableMenuMethods,
                     },
                 });
         }

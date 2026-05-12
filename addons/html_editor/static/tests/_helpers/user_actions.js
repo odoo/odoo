@@ -338,7 +338,10 @@ export async function keydownShiftTab(editor) {
 /** @param {Editor} editor */
 export function resetSize(editor) {
     const selection = editor.shared.selection.getEditableSelection();
-    editor.shared.table.resetTableSize(findInSelection(selection, "table"));
+    editor.shared.resize.resetSize(findInSelection(selection, "table"), {
+        proxyElementSelector: "colgroup",
+        heightElementsSelector: "tr",
+    });
 }
 /** @param {Editor} editor */
 export function alignStart(editor) {

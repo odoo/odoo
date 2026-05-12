@@ -915,6 +915,7 @@ describe("select columns on cross over", () => {
     });
 
     describe("reset size", () => {
+        test.tags("desktop");
         test("should remove any height or width of the table and bring it back to it original form", async () => {
             await testEditor({
                 contentBefore:
@@ -969,6 +970,7 @@ describe("select columns on cross over", () => {
             });
         });
 
+        test.tags("desktop");
         test("should remove any height or width of the table without loosing the style of the element inside it.", async () => {
             await testEditor({
                 contentBefore:
@@ -1043,6 +1045,7 @@ describe("select columns on cross over", () => {
             });
         });
 
+        test.tags("desktop");
         test("should remove any height or width of the table without removig the style of the table.", async () => {
             await testEditor({
                 contentBefore:
