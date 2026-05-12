@@ -146,8 +146,7 @@ test("fill gradient should be stored as background-image", async () => {
     );
 });
 
-test.tags("owl3");
-test.todo("border works even if current border style is none", async () => {
+test("border works even if current border style is none", async () => {
     await setupHTMLBuilder('<p><a href="http://test.com/" class="btn">Link label</a></p>', {
         styleContent: "p > a { border: 0px none rgba(0, 0, 0, 0); }",
     });
@@ -162,6 +161,7 @@ test.todo("border works even if current border style is none", async () => {
     expect("[data-label=Border] .o-hb-input-number").toHaveValue("0");
 
     await contains("[data-label=Border] .o-hb-input-number").edit("4");
+    await animationFrame();
 
     expect("[data-label=Border] .o-hb-input-number").toHaveValue("4");
     expect("[data-label=Border] .o-hb-select-toggle .o-hb-border-preview").toHaveStyle(
@@ -172,12 +172,7 @@ test.todo("border works even if current border style is none", async () => {
         "background-color: rgba(0, 0, 0, 0)",
         { inline: true }
     );
-    expect(":iframe p > a").toHaveStyle(
-        {
-            border: "4px solid rgba(0, 0, 0, 0)",
-        },
-        { inline: true }
-    );
+    expect(":iframe p > a").toHaveStyle(/border: 4px solid rgba(0, 0, 0, 0)/, { inline: true });
 
     await contains("[data-label=Border] .o_we_color_preview").click();
     await contains(".o_color_button[data-color='#0000FF']").click();
@@ -185,10 +180,5 @@ test.todo("border works even if current border style is none", async () => {
     await contains("[data-label=Border] .o-hb-select-toggle").click();
     await contains(".o_popover .dropdown-item[data-action-value=dotted]").click();
 
-    expect(":iframe p > a").toHaveStyle(
-        {
-            border: "4px dotted rgb(0, 0, 255)",
-        },
-        { inline: true }
-    );
+    expect(":iframe p > a").toHaveStyle(/border: 4px dotted rgb(0, 0, 255)/, { inline: true });
 });
