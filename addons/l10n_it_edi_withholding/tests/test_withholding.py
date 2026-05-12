@@ -248,6 +248,7 @@ class TestWithholdingAndPensionFundTaxes(TestItEdi):
                 'price_unit': price_unit,
             } for name, price_unit in self.get_real_client_invoice_data().lines]
         }])
+        # Line 1 is taken into account because the TC is missing, so we deduce it should be included.
         for line in invoice.line_ids.filtered(lambda x: x.display_type == 'product'):
             self.assertEqual(line.tax_ids, (
                 self.inps_purchase_tax
