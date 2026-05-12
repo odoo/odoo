@@ -86,6 +86,13 @@ class HrEmployee(models.Model):
         groups='hr.group_hr_user',
     )
 
+    x_date_of_promotion = fields.Date(
+        string='Date of Promotion',
+        help='Date on which the employee was last promoted to the current designation.',
+        tracking=True,
+        groups='hr.group_hr_user',
+    )
+
     # ── Section 2: Permanent Address ──────────────────────────────────────
 
     x_permanent_address = fields.Text(
