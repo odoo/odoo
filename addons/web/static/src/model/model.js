@@ -37,11 +37,19 @@ export class Model {
         this.orm = services.orm;
         this.bus = new EventBus();
         this.isReady = signal(false);
+        this._useSampleModel = signal(false);
         this.whenReady = Promise.withResolvers();
         this.whenReady.promise.then(() => {
             this.isReady.set(true);
         });
         this.setup(params, services);
+    }
+
+    get useSampleModel() {
+        return this._useSampleModel();
+    }
+    set useSampleModel(value) {
+        this._useSampleModel.set(value);
     }
 
     /**
