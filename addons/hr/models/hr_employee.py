@@ -732,6 +732,12 @@ class HrEmployee(models.Model):
         versions = active_versions.filtered_domain([('date_version', '<=', date)])
         return max(versions, key=lambda v: v.date_version) if versions else active_versions[0]
 
+    def _get_version_to_copy(self, date_version):
+        version_to_copy = self._get_version(date_version)
+        if not version_to_copy:
+            version_to_copy = self.env['hr.version'].search([('employee_id', '=', self.id)], limit=1)
+        return version_to_copy
+
     def create_version(self, values):
         self.ensure_one()
 
@@ -744,9 +750,7 @@ class HrEmployee(models.Model):
         elif isinstance(date, datetime):
             date = date.date()
 
-        version_to_copy = self._get_version(date)
-        if not version_to_copy:
-            version_to_copy = self.env['hr.version'].search([('employee_id', '=', self.id)], limit=1)
+        version_to_copy = self._get_version_to_copy(date)
         if version_to_copy.date_version == date:
             return version_to_copy
 
@@ -794,7 +798,7 @@ class HrEmployee(models.Model):
             for k, v in version_to_copy.sudo().copy_data()[0].items()
             if not (k in new_version_vals and version_fields[k].type in ['one2many', 'many2many'])
         } | copy_vals
-        new_version = self.env['hr.version'].sudo().create(copy_vals).sudo(False)
+        new_version = self.env['hr.version'].sudo().new(copy_vals).sudo(False)
         with self.env.protecting([f for f_name, f in version_fields.items() if f_name not in new_version_vals and f.copy], new_version):
             new_version.write(new_version_vals)
         return new_version
@@ -805,23 +809,30 @@ class HrEmployee(models.Model):
         if date and isinstance(date, str):
             date = fields.Date.to_date(date)
 
-        contracts = self._get_contract_versions(date)[self.id]
-        future_contract_dates = [d for d in list(contracts.keys()) if d > date]
-        new_contract_date_end = min(future_contract_dates) + relativedelta(days=-1) if future_contract_dates else False
-
         # There is already a version but with no contract defined on it so we simply write on it the dates
         if version_same_date := self.version_ids.filtered(lambda v: v.date_version == date):
             version_same_date.write({
                 'contract_date_start': date,
-                'contract_date_end': new_contract_date_end
+                'contract_date_end': self._get_new_contract_already_existing_version_end_date(date)
             })
             return version_same_date
 
         return self.create_version({
             'date_version': date,
             'contract_date_start': date,
-            'contract_date_end': new_contract_date_end
+            'contract_date_end': self._get_new_contract_end_date(date)
         })
+
+    def _get_contract_max_end_date(self, start_date):
+        contracts = self._get_contract_versions(start_date)[self.id]
+        future_contract_dates = [d for d in list(contracts.keys()) if d > start_date]
+        return min(future_contract_dates) + relativedelta(days=-1) if future_contract_dates else False
+
+    def _get_new_contract_end_date(self, start_date):
+        return self._get_contract_max_end_date(start_date)
+
+    def _get_new_contract_already_existing_version_end_date(self, start_date):
+        return self._get_contract_max_end_date(start_date)
 
     def _is_in_contract(self, date):
         return self._get_contract_dates(date) != (False, False)
