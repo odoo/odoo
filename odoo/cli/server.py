@@ -34,15 +34,6 @@ def check_root_user():
         sys.stderr.write("Running as user 'root' is a security risk.\n")
 
 
-def check_postgres_user():
-    """ Exit if the configured database user is 'postgres'.
-
-    This function assumes the configuration has been initialized.
-    """
-    if (config['db_user'] or os.environ.get('PGUSER')) == 'postgres':
-        sys.stderr.write("Using the database user 'postgres' is a security risk, aborting.")
-        sys.exit(1)
-
 def report_configuration():
     """ Log the server version and some configuration values.
 
@@ -95,11 +86,12 @@ def setup_pid_file():
 def main(args):
     check_root_user()
     config.parse_config(args, setup_logging=True)
-    check_postgres_user()
+    if config['db_name'] or config['dbfilter'] or config['list_db']:
+        from odoo.modules import db  # noqa: PLC0415
+        db.check_postgres_user()
     report_configuration()
 
     for db_name in config['db_name']:
-        from odoo.modules import db  # noqa: PLC0415
         try:
             db._create_empty_database(db_name)
             config['init']['base'] = True
