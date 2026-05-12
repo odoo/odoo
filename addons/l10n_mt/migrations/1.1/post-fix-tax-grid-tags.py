@@ -59,10 +59,14 @@ def migrate(cr, version):
     companies = env['res.company'].search([('account_fiscal_country_id.code', '=', 'MT')])
 
     for company in companies:
-        tax_7 |= env.ref(f'account.{company.id}_VAT_S_IN_MT_7_G', raise_if_not_found=False)
-        tax_7 |= env.ref(f'account.{company.id}_VAT_S_IN_MT_7_S', raise_if_not_found=False)
-        tax_5 |= env.ref(f'account.{company.id}_VAT_S_IN_MT_5_G', raise_if_not_found=False)
-        tax_5 |= env.ref(f'account.{company.id}_VAT_S_IN_MT_5_S', raise_if_not_found=False)
+        if tax := env.ref(f'account.{company.id}_VAT_S_IN_MT_7_G', raise_if_not_found=False):
+            tax_7 |= tax
+        if tax := env.ref(f'account.{company.id}_VAT_S_IN_MT_7_S', raise_if_not_found=False):
+            tax_7 |= tax
+        if tax := env.ref(f'account.{company.id}_VAT_S_IN_MT_5_G', raise_if_not_found=False):
+            tax_5 |= tax
+        if tax := env.ref(f'account.{company.id}_VAT_S_IN_MT_5_S', raise_if_not_found=False):
+            tax_5 |= tax
 
     tag_iii_1_base = env['account.account.tag'].search([('name', '=', 'III.1_base'), ('country_id.code', '=', 'MT')], limit=1)
     tag_iii_1_tax = env['account.account.tag'].search([('name', '=', 'III.1_tax'), ('country_id.code', '=', 'MT')], limit=1)
