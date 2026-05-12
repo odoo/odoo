@@ -1,9 +1,18 @@
 import { session } from "@web/session";
 import { _t } from "@web/core/l10n/translation";
-import { Component, useState, onMounted, useRef } from "@odoo/owl";
+import { Component, useState, onMounted, useRef, onWillUnmount } from "@odoo/owl";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { browser } from "@web/core/browser/browser";
 import { cleanZWChars, deduceURLfromText } from "./utils";
+
+function useContentChange(el, callback) {
+    onMounted(() => {
+        el.addEventListener("keyup", callback);
+    });
+    onWillUnmount(() => {
+        el.removeEventListener("keyup", callback);
+    });
+}
 
 export class LinkPopover extends Component {
     static template = "html_editor.linkPopover";
@@ -90,6 +99,9 @@ export class LinkPopover extends Component {
             if (!this.state.editing) {
                 this.loadAsyncLinkPreview();
             }
+        });
+        useContentChange(this.props.linkEl, () => {
+            this.state.urlTitle = this.props.linkEl.textContent;
         });
     }
     initButtonStyle(className) {
@@ -197,9 +209,9 @@ export class LinkPopover extends Component {
             return;
         }
         if (this.isAttachmentUrl()) {
-            const { name, mimetype } = await this.props.getAttachmentMetadata(this.state.url);
+            const { mimetype } = await this.props.getAttachmentMetadata(this.state.url);
             this.resetPreview();
-            this.state.urlTitle = name;
+            this.state.urlTitle = this.props.linkEl.textContent;
             this.state.previewIcon = { type: "mimetype", value: mimetype };
             return;
         }

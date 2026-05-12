@@ -6,7 +6,7 @@ import { describe, expect, test } from "@odoo/hoot";
 import { animationFrame, click, press, queryAll, queryOne, waitFor } from "@odoo/hoot-dom";
 import { onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { setupEditor } from "./_helpers/editor";
-import { getContent } from "./_helpers/selection";
+import { getContent, setSelection } from "./_helpers/selection";
 import { insertText } from "./_helpers/user_actions";
 import { execCommand } from "./_helpers/userCommands";
 import { nodeSize } from "@html_editor/utils/position";
@@ -357,4 +357,17 @@ describe("zero width no-break space", () => {
             '<p>abc\ufeff<span data-embedded="file" class="o_file_box"></span>\ufeff[]<span data-embedded="file" class="o_file_box"></span>\ufeff</p>'
         );
     });
+});
+
+test("should show the updated file name in the link preview", async () => {
+    const { editor } = await setupEditor("<p>[]<br></p>");
+    patchUpload(editor);
+    execCommand(editor, "uploadFile");
+    await waitFor('.o_file_box a:contains("file.txt")');
+    const fileName = queryOne("a.o_link_readonly");
+    fileName.textContent = "Hello";
+    setSelection({ anchorNode: fileName, anchorOffset: 0 });
+    await waitFor(".o_we_url_link:not(:empty)");
+    const fileNameInPreview = queryOne(".o_we_url_link");
+    expect(fileNameInPreview.textContent).toBe("Hello");
 });
