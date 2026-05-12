@@ -84,7 +84,7 @@ export class ResizePlugin extends Plugin {
      */
     onPointerDown(ev) {
         // Start resize if hovering a resizable element edge.
-        if (!this.activeHover) {
+        if (!this.activeHover || ev.button !== 0) {
             return;
         }
 
@@ -121,8 +121,12 @@ export class ResizePlugin extends Plugin {
         ) || [item, neighbor];
 
         this.isResizingElement = true;
-        const handleResize = (ev) =>
+        const handleResize = (ev) => {
+            if ((target1 && !target1.isConnected) || (target2 && !target2.isConnected)) {
+                return endResizeOperation(ev);
+            }
             this.handleResize(ev, direction, resizingParameter, item, neighbor, position);
+        };
         const endResizeOperation = (ev) => {
             ev.preventDefault();
             this.isResizingElement = false;
