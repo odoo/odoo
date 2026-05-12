@@ -7,6 +7,13 @@ export const closestPath = function* (node) {
     }
 };
 
+export const descendantsPath = function* (node) {
+    yield node;
+    for (const child of node.childNodes || []) {
+        yield* descendantsPath(child);
+    }
+};
+
 /**
  * Find a node.
  * @param {findCallback} findCallback - This callback check if this function
@@ -40,6 +47,15 @@ export function findUpTo(node, limitAncestor, predicate) {
         node = node.parentElement;
     }
     return null;
+}
+
+/**
+ * @param {Node} node
+ * @param {Function} predicate
+ * @returns {Node|null}
+ */
+export function findDownTo(node, predicate) {
+    return findNode(descendantsPath(node), predicate);
 }
 
 /**
@@ -391,4 +407,20 @@ export function trapFocus(elements, backward = false) {
         (currentIndex + (backward ? -1 : 1) + focusableElements.length) % focusableElements.length;
 
     focusableElements[nextIndex]?.focus();
+}
+
+/**
+ * Get distinct connected parents of nodes
+ *
+ * @param {Iterable} nodes
+ * @returns {Set}
+ */
+export function getConnectedParents(nodes) {
+    const parents = new Set();
+    for (const node of nodes) {
+        if (node.isConnected && node.parentElement) {
+            parents.add(node.parentElement);
+        }
+    }
+    return parents;
 }

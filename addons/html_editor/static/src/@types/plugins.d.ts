@@ -9,7 +9,8 @@ declare module "plugins" {
     import { on_will_delete_handlers, delete_backward_line_overrides, delete_backward_overrides, delete_backward_word_overrides, delete_forward_line_overrides, delete_forward_overrides, delete_forward_word_overrides, on_deleted_handlers, delete_range_overrides, DeleteShared, is_functional_empty_node_predicates, removable_descendants_providers, system_node_selectors, is_node_removable_predicates } from "@html_editor/core/delete_plugin";
     import { DialogShared } from "@html_editor/core/dialog_plugin";
     import { DomObserverShared, attributes_mutation_value_processors, on_will_filter_mutations_handlers, set_attribute_overrides, on_content_updated_handlers, on_pending_mutations_staged_handlers, serializable_descendants_processors, on_pending_mutations_normalized_handlers, is_mutation_savable_predicates, is_classlist_mutation_savable_predicates } from "@html_editor/core/dom_observer_plugin";
-    import { on_inserted_handlers, before_insert_processors, on_will_set_tag_handlers, DomShared, node_to_insert_processors, system_attributes, system_classes, system_style_properties, are_inlines_allowed_at_root_predicates } from "@html_editor/core/dom_plugin";
+    import { on_inserted_handlers, fragment_to_insert_processors, on_will_set_tag_handlers, DomShared, node_to_insert_processors, system_attributes, system_classes, system_style_properties } from "@html_editor/core/dom_plugin";
+    import { are_inlines_allowed_at_root_predicates } from "@html_editor/core/no_inline_root_plugin";
     import { DomReferenceMapShared } from "@html_editor/core/dom_reference_map_plugin";
     import { can_format_content_predicates, format_specs, is_format_class_predicates, is_formattable_node_predicates, before_format_handlers, formattable_node_providers, FormatShared, has_format_predicates, on_all_formats_removed_handlers, on_format_applied_handlers, on_format_requested_handlers, on_collapsed_formats_removed_handlers } from "@html_editor/core/format_plugin";
     import { HistoryShared, history_commit_data_properties, on_apply_history_commit_handlers, on_history_commit_restored_handlers, on_irreversible_history_commit_applied_handlers, on_revert_history_commit_handlers, on_committed_to_history_handlers, on_will_reset_history_handlers, on_history_commit_redone_handlers, on_history_commit_undone_handlers, on_savepoint_restored_handlers, on_will_rebase_history_handlers, on_history_rebased_handlers, on_remote_history_commit_applied_handlers, on_will_preview_handlers, on_pending_changes_unstashed_handlers, on_history_reset_handlers, on_will_invalidate_pending_changes_handlers, has_history_commit_changes_predicates, is_history_commit_reversible_predicates, pending_history_commit_data_processors, save_point_history_commit_data_processors, snapshot_history_commit_data_processors } from "@html_editor/core/history_plugin";
@@ -29,8 +30,8 @@ declare module "plugins" {
     import { feff_providers, FeffShared, would_feff_be_legit_predicates, selectors_for_feff_providers } from "@html_editor/main/feff_plugin";
     import { apply_background_color_processors, apply_color_style_overrides, apply_color_overrides, color_combination_providers, ColorShared, background_color_processors, on_color_requested_handlers } from "@html_editor/main/font/color_plugin";
     import { ColorUIShared, selected_background_color_providers } from "@html_editor/main/font/color_ui_plugin";
-    import { before_insert_within_pre_processors, font_type_items } from "@html_editor/main/font/font_type_plugin";
-    import { before_insert_within_pre_processors } from "@html_editor/main/font/font_size_plugin";
+    import { fragment_to_insert_within_pre_processors, font_type_items } from "@html_editor/main/font/font_type_plugin";
+    import { fragment_to_insert_within_pre_processors } from "@html_editor/main/font/font_size_plugin";
     import { hint_targets_providers, hints } from "@html_editor/main/hint_plugin";
     import { to_inline_code_processors } from "@html_editor/main/inline_code";
     import { paste_url_overrides } from "@html_editor/main/link/link_paste_plugin";
@@ -239,8 +240,8 @@ declare module "plugins" {
         apply_background_color_processors: apply_background_color_processors;
         attributes_mutation_value_processors: attributes_mutation_value_processors;
         background_color_processors: background_color_processors;
-        before_insert_processors: before_insert_processors;
-        before_insert_within_pre_processors: before_insert_within_pre_processors;
+        fragment_to_insert_processors: fragment_to_insert_processors;
+        fragment_to_insert_within_pre_processors: fragment_to_insert_within_pre_processors;
         clean_for_save_processors: clean_for_save_processors;
         clipboard_content_processors: clipboard_content_processors;
         clipboard_text_processors: clipboard_text_processors;

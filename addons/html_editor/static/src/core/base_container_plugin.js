@@ -90,6 +90,14 @@ export class BaseContainerPlugin extends Plugin {
                 }
             },
         ],
+        is_boundary_insertion_block_mergeable_predicates: (referenceBlock, blockToInsert) => {
+            if (
+                this.isCandidateForBaseContainer(blockToInsert) &&
+                this.isCandidateForBaseContainer(referenceBlock)
+            ) {
+                return true;
+            }
+        },
         system_classes: [BASE_CONTAINER_CLASS],
     };
 

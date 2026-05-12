@@ -158,7 +158,7 @@ export class TablePlugin extends Plugin {
         on_will_split_block_handlers: this.resetTableSelection.bind(this),
 
         /** Processors */
-        before_insert_processors: this.handleTableInsert.bind(this),
+        fragment_to_insert_processors: this.handleTableInsert.bind(this),
         clean_for_save_processors: (root) => {
             this.deselectTable(root);
             return root;
@@ -1910,8 +1910,8 @@ export class TablePlugin extends Plugin {
         });
     }
 
-    handleTableInsert(insertContainer) {
-        const theads = insertContainer.querySelectorAll("THEAD");
+    handleTableInsert(fragment) {
+        const theads = fragment.querySelectorAll("THEAD");
         for (const thead of theads) {
             const tbody = thead.nextElementSibling;
             if (tbody) {
@@ -1928,7 +1928,7 @@ export class TablePlugin extends Plugin {
                 this.dependencies.dom.setTagName(thead, "TBODY");
             }
         }
-        return insertContainer;
+        return fragment;
     }
 
     /**

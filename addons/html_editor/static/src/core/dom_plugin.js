@@ -3,63 +3,48 @@ import { closestBlock, isBlock } from "../utils/blocks";
 import {
     cleanTrailingBR,
     fillEmpty,
-    fillShrunkPhrasingParent,
     makeContentsInline,
     removeClass,
     removeStyle,
-    unwrapContents,
 } from "../utils/dom";
 import {
     allowsParagraphRelatedElements,
-    isContentEditable,
-    isContentEditableAncestor,
     isEmptyBlock,
     isListElement,
     isListItemElement,
     isParagraphRelatedElement,
-    isProtecting,
-    isProtected,
     isSelfClosingElement,
-    isShrunkBlock,
-    isTangible,
-    isUnprotecting,
     isEditorTab,
     isPhrasingContent,
     isVisible,
     getDeepestEditablePosition,
+    isEditionBoundary,
+    isPhrasingContainer,
+    isTextNode,
+    isElement,
+    isProtecting,
+    isProtected,
+    isUnprotecting,
 } from "../utils/dom_info";
 import {
     childNodes,
     children,
     closestElement,
     descendants,
+    findDownTo,
     firstLeaf,
+    getConnectedParents,
     lastLeaf,
 } from "../utils/dom_traversal";
 import { FONT_SIZE_CLASSES, TEXT_STYLE_CLASSES } from "../utils/formatting";
-import { childNodeIndex, nodeSize, rightPos } from "../utils/position";
+import { childNodeIndex, leftPos, nodeSize, rightPos } from "../utils/position";
 import { normalizeCursorPosition, callbacksForCursorUpdate } from "@html_editor/utils/selection";
 import {
     baseContainerGlobalSelector,
     createBaseContainer,
 } from "@html_editor/utils/base_container";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
-
-/**
- * Get distinct connected parents of nodes
- *
- * @param {Iterable} nodes
- * @returns {Set}
- */
-function getConnectedParents(nodes) {
-    const parents = new Set();
-    for (const node of nodes) {
-        if (node.isConnected && node.parentElement) {
-            parents.add(node.parentElement);
-        }
-    }
-    return parents;
-}
+import { isFakeLineBreak } from "@html_editor/utils/dom_state";
 
 /**
  * @typedef {Object} DomShared
@@ -74,11 +59,14 @@ function getConnectedParents(nodes) {
 /**
  * @typedef {((insertedNodes: Node[]) => void)[]} on_inserted_handlers
  * @typedef {((el: HTMLElement) => void)[]} on_will_set_tag_handlers
+ * @typedef {((nodesToInsert: Node[]) => container)[]} on_will_insert_handlers
  *
- * @typedef {((container: Element, block: Element) => container)[]} before_insert_processors
- * @typedef {((nodeToInsert: Node, container: HTMLElement) => nodeToInsert)[]} node_to_insert_processors
+ * @typedef {((fragment: DocumentFragment) => DocumentFragment)[]} fragment_to_insert_processors
+ * @typedef {((nodeToInsert: Node, reference: HTMLElement) => Node)[]} node_to_insert_processors
+ * @typedef {((element: HTMLElement, isFirst: boolean) => Element)[]} element_to_isolate_processors
  *
- * @typedef {((el: HTMLElement) => boolean)[]} are_inlines_allowed_at_root_predicates
+ * @typedef {((parent: HTMLElement, blockToInsert: HTMLElement) => boolean | void)[]} is_parent_compatible_for_insertion_predicates
+ * @typedef {((referenceBlock: HTMLElement, blockToInsert: HTMLElement) => boolean | void)[]} is_boundary_insertion_block_mergeable_predicates
  *
  * @typedef {string[]} system_attributes
  * @typedef {string[]} system_classes
@@ -221,369 +209,314 @@ export class DomPlugin extends Plugin {
         if (!content) {
             return;
         }
-        let selection = this.dependencies.selection.getEditableSelection();
-        if (!selection.isCollapsed) {
+
+        // Delete any selected content before inserting.
+        if (!this.dependencies.selection.getEditableSelection().isCollapsed) {
             this.dependencies.delete.deleteSelection();
-            selection = this.dependencies.selection.getEditableSelection();
         }
 
-        let container = this.document.createElement("fake-element");
-        const containerFirstChild = this.document.createElement("fake-element-fc");
-        const containerLastChild = this.document.createElement("fake-element-lc");
+        // Process the nodes to insert.
+        const nodesToInsert = childNodes(
+            this.processThrough("fragment_to_insert_processors", this.makeFragment(content))
+        );
+        if (!nodesToInsert.length) {
+            return [];
+        }
+
+        // Insert the content.
+        this.trigger("on_will_insert_handlers", nodesToInsert);
+        let insertedContent = this.insertNodes(nodesToInsert);
+        this.trigger("on_inserted_handlers", insertedContent);
+
+        // Clean up trailing line breaks.
+        const isCleanable = (node) =>
+            !isProtecting(node) &&
+            !(isProtected(node) && !isUnprotecting(node)) &&
+            node.isContentEditable;
+        [...getConnectedParents(insertedContent)].filter(isCleanable).forEach(cleanTrailingBR);
+
+        // Move the selection after the insertion.
+        insertedContent = insertedContent.filter((node) => node.isConnected);
+        if (insertedContent.length) {
+            const lastInsertedNode = insertedContent.at(-1);
+            // TODO AGE: distribute this among the relevant plugins.
+            let lastPosition =
+                isParagraphRelatedElement(lastInsertedNode) ||
+                isListItemElement(lastInsertedNode) ||
+                isListElement(lastInsertedNode)
+                    ? rightPos(lastLeaf(lastInsertedNode))
+                    : rightPos(lastInsertedNode);
+            lastPosition = normalizeCursorPosition(lastPosition[0], lastPosition[1], "right");
+            if (
+                !this.config.allowInlineAtRoot &&
+                isEditionBoundary(lastPosition[0], this.editable)
+            ) {
+                // Correct the position if it happens to be in the editable root.
+                lastPosition = getDeepestEditablePosition(...lastPosition);
+            }
+            const currentSelection = this.document.getSelection();
+            if (
+                currentSelection.anchorNode === lastPosition[0] &&
+                currentSelection.anchorOffset === lastPosition[1]
+            ) {
+                // Ensure selectionchange.
+                // TODO AGE: can we avoid having to do this?
+                currentSelection.removeAllRanges();
+            }
+            this.dependencies.selection.setSelection(
+                { anchorNode: lastPosition[0], anchorOffset: lastPosition[1] },
+                { normalize: false }
+            );
+        }
+
+        return insertedContent;
+    }
+
+    /**
+     * Return a document fragment with the given content normalized.
+     *
+     * @param {string | DocumentFragment | Element | null} content
+     * @returns {DocumentFragment}
+     */
+    makeFragment(content) {
+        const fragment = this.document.createDocumentFragment();
         if (typeof content === "string") {
-            container.textContent = content;
+            fragment.textContent = content;
         } else {
-            if (content.nodeType === Node.ELEMENT_NODE) {
+            if (isElement(content)) {
                 this.processThrough("normalize_processors", content);
             } else {
                 for (const child of children(content)) {
                     this.processThrough("normalize_processors", child);
                 }
             }
-            container.replaceChildren(content);
+            fragment.replaceChildren(content);
         }
-
-        const block = closestBlock(selection.anchorNode);
-        container = this.processThrough("before_insert_processors", container, block);
-        this.trigger("before_insert_handlers");
-        if (!container.hasChildNodes()) {
-            return [];
-        }
-        selection = this.dependencies.selection.getEditableSelection();
-
-        let startNode;
-        let insertBefore = false;
-        if (selection.startContainer.nodeType === Node.TEXT_NODE) {
-            insertBefore = !selection.startOffset;
-            if (
-                selection.startOffset !== 0 &&
-                selection.startOffset !== selection.startContainer.length
-            ) {
-                selection.startContainer.splitText(selection.startOffset);
-            }
-            startNode = selection.startContainer;
-        }
-
-        const allInsertedNodes = [];
-        // In case the html inserted starts with a list and will be inserted within
-        // a list, unwrap the list elements from the list.
-        const hasSingleChild = nodeSize(container) === 1;
-        const closestList = (node) => {
-            if (isBlock(node)) {
-                return node && isListItemElement(node);
-            }
-            return closestList(node.parentElement);
-        };
-
-        if (closestList(selection.anchorNode) && isListElement(container.firstChild)) {
-            unwrapContents(container.firstChild);
-        }
-        // Similarly if the html inserted ends with a list.
-        if (
-            closestList(selection.focusNode) &&
-            isListElement(container.lastChild) &&
-            !hasSingleChild
-        ) {
-            unwrapContents(container.lastChild);
-        }
-
-        startNode = startNode || this.dependencies.selection.getEditableSelection().anchorNode;
-
-        const shouldUnwrap = (node) =>
-            (isParagraphRelatedElement(node) || isListItemElement(node)) &&
-            !isEmptyBlock(block) &&
-            !isEmptyBlock(node) &&
-            isContentEditable(block) &&
-            (isContentEditable(node) ||
-                (!node.isConnected && !closestElement(node, "[contenteditable]"))) &&
-            !this.dependencies.split.isUnsplittable(node) &&
-            (node.nodeName === block.nodeName ||
-                (this.dependencies.baseContainer.isCandidateForBaseContainer(node) &&
-                    this.dependencies.baseContainer.isCandidateForBaseContainer(block)) ||
-                block.nodeName === "PRE" ||
-                (block.nodeName === "DIV" && this.dependencies.split.isUnsplittable(block))) &&
-            // If the selection anchorNode is the editable itself, the content
-            // should not be unwrapped.
-            !this.isEditionBoundary(selection.anchorNode);
-
-        // Empty block must contain a br element to allow cursor placement.
-        const firstLeafNode = firstLeaf(container);
-        if (
-            isBlock(firstLeafNode) &&
-            !(closestElement(firstLeafNode, "[contenteditable]")?.contentEditable === "false")
-        ) {
-            fillEmpty(firstLeafNode);
-        }
-        const lastLeafNode = lastLeaf(container);
-        if (
-            isBlock(lastLeafNode) &&
-            !(closestElement(lastLeafNode, "[contenteditable]")?.contentEditable === "false")
-        ) {
-            fillEmpty(lastLeafNode);
-        }
-
-        // In case the html inserted is all contained in a single root <p> or <li>
-        // tag, we take the all content of the <p> or <li> and avoid inserting the
-        // <p> or <li>.
-        if (
-            container.childElementCount === 1 &&
-            (this.dependencies.baseContainer.isCandidateForBaseContainer(container.firstChild) ||
-                shouldUnwrap(container.firstChild))
-        ) {
-            const nodeToUnwrap = container.firstElementChild;
-            container.replaceChildren(...childNodes(nodeToUnwrap));
-        } else if (container.childElementCount > 1) {
-            const isSelectionAtStart =
-                firstLeaf(block) === selection.anchorNode && selection.anchorOffset === 0;
-            const isSelectionAtEnd =
-                lastLeaf(block) === selection.focusNode &&
-                selection.focusOffset === nodeSize(selection.focusNode);
-            // Grab the content of the first child block and isolate it.
-            if (shouldUnwrap(container.firstChild) && !isSelectionAtStart) {
-                // Unwrap the deepest nested first <li> element in the
-                // container to extract and paste the text content of the list.
-                if (isListItemElement(container.firstChild)) {
-                    const deepestBlock = closestBlock(firstLeaf(container.firstChild));
-                    this.dependencies.split.splitAroundUntil(deepestBlock, container.firstChild);
-                    container.firstElementChild.replaceChildren(...childNodes(deepestBlock));
-                }
-                containerFirstChild.replaceChildren(...childNodes(container.firstElementChild));
-                container.firstElementChild.remove();
-            }
-            // Grab the content of the last child block and isolate it.
-            if (shouldUnwrap(container.lastChild) && !isSelectionAtEnd) {
-                // Unwrap the deepest nested last <li> element in the container
-                // to extract and paste the text content of the list.
-                if (isListItemElement(container.lastChild)) {
-                    const deepestBlock = closestBlock(lastLeaf(container.lastChild));
-                    this.dependencies.split.splitAroundUntil(deepestBlock, container.lastChild);
-                    container.lastElementChild.replaceChildren(...childNodes(deepestBlock));
-                }
-                containerLastChild.replaceChildren(...childNodes(container.lastElementChild));
-                container.lastElementChild.remove();
-            }
-        }
-
-        const textNode = this.document.createTextNode("");
-        if (startNode.nodeType === Node.ELEMENT_NODE) {
-            if (selection.anchorOffset === 0) {
-                if (isSelfClosingElement(startNode)) {
-                    startNode.parentNode.insertBefore(textNode, startNode);
-                } else {
-                    startNode.prepend(textNode);
-                }
-                startNode = textNode;
-                allInsertedNodes.push(textNode);
-            } else {
-                startNode = childNodes(startNode).at(selection.anchorOffset - 1);
-            }
-        }
-
-        // If we have isolated block content, first we split the current focus
-        // element if it's a block then we insert the content in the right places.
-        let currentNode = startNode;
-        const _insertAt = (reference, nodes, insertBefore) => {
-            for (const child of insertBefore ? nodes.reverse() : nodes) {
-                reference[insertBefore ? "before" : "after"](child);
-                reference = child;
-            }
-        };
-        const lastInsertedNodes = childNodes(containerLastChild);
-        if (containerLastChild.hasChildNodes()) {
-            const toInsert = childNodes(containerLastChild); // Prevent mutation
-            _insertAt(currentNode, [...toInsert], insertBefore);
-            currentNode = insertBefore ? toInsert[0] : currentNode;
-            toInsert[toInsert.length - 1];
-        }
-        const firstInsertedNodes = childNodes(containerFirstChild);
-        if (containerFirstChild.hasChildNodes()) {
-            const toInsert = childNodes(containerFirstChild); // Prevent mutation
-            _insertAt(currentNode, [...toInsert], insertBefore);
-            currentNode = toInsert[toInsert.length - 1];
-            insertBefore = false;
-        }
-        allInsertedNodes.push(...firstInsertedNodes);
-
-        // If all the Html have been isolated, We force a split of the parent element
-        // to have the need new line in the final result
-        if (!container.hasChildNodes()) {
-            if (this.dependencies.split.isUnsplittable(closestBlock(currentNode.nextSibling))) {
-                this.dependencies.lineBreak.insertLineBreakNode({
-                    targetNode: currentNode.nextSibling,
-                    targetOffset: 0,
-                });
-            } else {
-                // If we arrive here, the o_enter index should always be 0.
-                const parent = currentNode.nextSibling.parentElement;
-                const index = childNodes(parent).indexOf(currentNode.nextSibling);
-                this.dependencies.split.splitBlockNode({
-                    targetNode: parent,
-                    targetOffset: index,
-                });
-            }
-        }
-
-        let nodeToInsert;
-        let doesCurrentNodeAllowsP = allowsParagraphRelatedElements(currentNode);
-        const candidatesForRemoval = [];
-        const insertedNodes = childNodes(container);
-        while ((nodeToInsert = container.firstChild)) {
-            if (isBlock(nodeToInsert) && !doesCurrentNodeAllowsP) {
-                // Split blocks at the edges if inserting new blocks (preventing
-                // <p><p>text</p></p> or <li><li>text</li></li> scenarios).
-                while (
-                    !this.isEditionBoundary(currentNode) &&
-                    (!allowsParagraphRelatedElements(currentNode.parentElement) ||
-                        (isListItemElement(currentNode.parentElement) &&
-                            !this.dependencies.split.isUnsplittable(nodeToInsert)))
-                ) {
-                    if (this.dependencies.split.isUnsplittable(currentNode.parentElement)) {
-                        // If we have to insert an unsplittable element, we cannot afford to
-                        // unwrap it we need to search for a more suitable spot to put it
-                        if (this.dependencies.split.isUnsplittable(nodeToInsert)) {
-                            if (this.isEditionBoundary(currentNode.parentElement)) {
-                                break;
-                            }
-                            currentNode = currentNode.parentElement;
-                            doesCurrentNodeAllowsP = allowsParagraphRelatedElements(currentNode);
-                            continue;
-                        } else {
-                            makeContentsInline(container);
-                            nodeToInsert = container.firstChild;
-                            break;
-                        }
-                    }
-                    let offset = childNodeIndex(currentNode);
-                    if (!insertBefore) {
-                        offset += 1;
-                    }
-                    if (offset) {
-                        const [left, right] = this.dependencies.split.splitElement(
-                            currentNode.parentElement,
-                            offset
-                        );
-                        currentNode = insertBefore ? right : left;
-                        const otherNode = insertBefore ? left : right;
-                        if (isBlock(otherNode)) {
-                            fillShrunkPhrasingParent(otherNode);
-                        }
-                        // After the content insertion, the right-part of a
-                        // split is evaluated for removal.
-                        candidatesForRemoval.push(right);
-                    } else {
-                        if (isBlock(currentNode)) {
-                            fillShrunkPhrasingParent(currentNode);
-                        }
-                        currentNode = currentNode.parentElement;
-                    }
-                    doesCurrentNodeAllowsP = allowsParagraphRelatedElements(currentNode);
-                }
-                if (
-                    isListItemElement(currentNode.parentElement) &&
-                    isBlock(nodeToInsert) &&
-                    this.dependencies.split.isUnsplittable(nodeToInsert)
-                ) {
-                    const br = this.document.createElement("br");
-                    currentNode[
-                        isEmptyBlock(currentNode) || !isTangible(currentNode) ? "before" : "after"
-                    ](br);
-                }
-            }
-            // Ensure that all adjacent paragraph elements are converted to
-            // <li> when inserting in a list.
-            const block = closestBlock(currentNode);
-            nodeToInsert = this.processThrough("node_to_insert_processors", nodeToInsert, block);
-            if (insertBefore) {
-                currentNode.before(nodeToInsert);
-                insertBefore = false;
-            } else {
-                currentNode.after(nodeToInsert);
-            }
-            allInsertedNodes.push(nodeToInsert);
-            if (currentNode.tagName !== "BR" && isShrunkBlock(currentNode)) {
-                currentNode.remove();
-            }
-            currentNode = nodeToInsert;
-        }
-        // Remove the empty text node created earlier
-        textNode.remove();
-        allInsertedNodes.push(...lastInsertedNodes);
-        this.trigger("on_inserted_handlers", allInsertedNodes);
-        let insertedNodesParents = getConnectedParents(allInsertedNodes);
-        for (const parent of insertedNodesParents) {
-            if (
-                !this.areInlinesAllowedAtRoot(parent) &&
-                this.isEditionBoundary(parent) &&
-                allowsParagraphRelatedElements(parent)
-            ) {
-                // Ensure that edition boundaries do not have inline content.
-                this.wrapInlinesInBlocks(parent, {
-                    baseContainerNodeName: this.dependencies.baseContainer.getDefaultNodeName(),
-                });
-            }
-        }
-        insertedNodesParents = getConnectedParents(allInsertedNodes);
-        for (const parent of insertedNodesParents) {
-            if (
-                !isProtecting(parent) &&
-                !(isProtected(parent) && !isUnprotecting(parent)) &&
-                parent.isContentEditable
-            ) {
-                cleanTrailingBR(parent);
-            }
-        }
-        for (const candidateForRemoval of candidatesForRemoval) {
-            if (
-                candidateForRemoval.isConnected &&
-                (isParagraphRelatedElement(candidateForRemoval) ||
-                    isListItemElement(candidateForRemoval)) &&
-                candidateForRemoval.parentElement.isContentEditable &&
-                isEmptyBlock(candidateForRemoval)
-            ) {
-                candidateForRemoval.remove();
-            }
-        }
-        const lastInsertedNode = allInsertedNodes.findLast((node) => node.isConnected);
-        if (!lastInsertedNode) {
-            return;
-        }
-        let lastPosition =
-            isParagraphRelatedElement(lastInsertedNode) ||
-            isListItemElement(lastInsertedNode) ||
-            isListElement(lastInsertedNode)
-                ? rightPos(lastLeaf(lastInsertedNode))
-                : rightPos(lastInsertedNode);
-        lastPosition = normalizeCursorPosition(lastPosition[0], lastPosition[1], "right");
-
-        if (!this.config.allowInlineAtRoot && this.isEditionBoundary(lastPosition[0])) {
-            // Correct the position if it happens to be in the editable root.
-            lastPosition = getDeepestEditablePosition(...lastPosition);
-        }
-        this.dependencies.selection.setSelection(
-            { anchorNode: lastPosition[0], anchorOffset: lastPosition[1] },
-            { normalize: false }
-        );
-        return firstInsertedNodes.concat(insertedNodes).concat(lastInsertedNodes);
+        return fragment;
     }
 
-    isEditionBoundary(node) {
-        if (!node) {
+    /**
+     * Take a list of nodes to insert and insert them in the DOM at selection.
+     * Return the list of inserted nodes.
+     *
+     * @param {Node[]} nodes
+     * @returns {Node[]}
+     */
+    insertNodes(nodes) {
+        // An empty text node may be needed to mark the position of insertion.
+        const marker = this.document.createTextNode("");
+
+        // Find the location of insertion.
+        const { anchorNode, anchorOffset } = this.dependencies.selection.getEditableSelection();
+        let reference = anchorNode;
+        if (isTextNode(anchorNode)) {
+            if (anchorOffset && anchorOffset === anchorNode.length) {
+                anchorNode.after(marker);
+                reference = anchorNode.nextSibling;
+            } else {
+                reference = anchorOffset ? anchorNode.splitText(anchorOffset) : anchorNode;
+            }
+        } else if (!isSelfClosingElement(anchorNode)) {
+            if (!anchorNode.childNodes.length || anchorOffset === anchorNode.childNodes.length) {
+                anchorNode.append(marker);
+            }
+            reference = anchorNode.childNodes[anchorOffset];
+        }
+
+        const [last, isOnly] = [nodes.at(-1), nodes.length === 1];
+        const insertedContent = [];
+        let didUnwrapPreviousBlock = false;
+        let node;
+        let isFirst = true;
+        while ((node = nodes.shift())) {
+            const referenceLeaf = firstLeaf(reference);
+
+            // 1. Deal with boundary nodes.
+            let didUnwrapBlock;
+            if (isFirst || node === last) {
+                // A. Process the node.
+                // TODO AGE: see if I can do that when setting the selection instead.
+                // Empty blocks at the pasted fragment boundaries must contain a BR so
+                // the browser can place the cursor inside them after insertion.
+                const leaves = [isFirst && firstLeaf(node), node === last && lastLeaf(node)];
+                for (const leaf of leaves) {
+                    if (
+                        isBlock(leaf) &&
+                        closestElement(leaf, "[contenteditable]")?.contentEditable !== "false"
+                    ) {
+                        fillEmpty(leaf);
+                    }
+                }
+
+                // B. Unwrap if needed.
+                if (
+                    // In case the html inserted is all contained in a single
+                    // root <p> or <li> tag, we take the all content of the <p>
+                    // or <li> and avoid inserting the <p> or <li>.
+                    (isOnly && this.dependencies.baseContainer.isCandidateForBaseContainer(node)) ||
+                    (!(isFirst && !isOnly && this.isAtStartOfBlock(referenceLeaf)) &&
+                        this.isBoundaryInsertionNodeMergeable(referenceLeaf, node))
+                ) {
+                    this.processThrough("element_to_isolate_processors", node, isFirst);
+                    didUnwrapBlock = isBlock(node);
+                    nodes.unshift(...childNodes(node)); // unwrap
+                    node = nodes.shift();
+                }
+            }
+
+            // 2. Find the next reference to insert.
+            reference = this.findNextInsertionReference(node, referenceLeaf, marker);
+            if (
+                !this.canInsertNodeBefore(node, reference) &&
+                this.dependencies.split.isUnsplittable(reference.parentElement)
+            ) {
+                // Inline the content to insert.
+                if (this.dependencies.split.isSplittable(node)) {
+                    didUnwrapBlock = isBlock(node);
+                    makeContentsInline(node);
+                    nodes.unshift(...node.childNodes);
+                }
+                node = nodes.shift();
+            }
+
+            // 3. Process the node and insert it.
+            if (node) {
+                node = this.processThrough("node_to_insert_processors", node, reference);
+                const wasFakeLineBreak = reference.nodeName === "BR" && isFakeLineBreak(reference);
+                reference.before(node);
+                insertedContent.push(node);
+
+                // 4. Deal with consecutive unwrapped blocks.
+                if (didUnwrapBlock && didUnwrapPreviousBlock) {
+                    // We inserted two elements that we had to unwrap, but we
+                    // want to preserve the newline between them, so we split.
+                    if (!node.nextSibling) {
+                        node.after(marker);
+                    }
+                    reference = node.nextSibling;
+                    const [targetNode, targetOffset] = leftPos(node);
+                    this.dependencies.split.splitBlockNode({ targetNode, targetOffset });
+                }
+
+                // 5. Clean up: remove the reference if needed.
+                if (
+                    // A. Inserting a phrasing container (even nested) in an
+                    // empty block should mean replacing that block.
+                    (isFirst && isEmptyBlock(reference) && findDownTo(node, isPhrasingContainer)) ||
+                    // B. Inserting inline content before a fake line break will
+                    // make it real. Remove it.
+                    (wasFakeLineBreak && !isBlock(node))
+                ) {
+                    reference.remove();
+                    // Reset the reference if needed.
+                    if (nodes.length) {
+                        node = node.isConnected ? node : parent;
+                        node.after(marker);
+                        reference = node.nextSibling;
+                    }
+                }
+            }
+            if (didUnwrapBlock) {
+                didUnwrapPreviousBlock = true;
+            } else if (isBlock(node)) {
+                didUnwrapPreviousBlock = false;
+            }
+            isFirst = false;
+        }
+        // Remove the marker we may have inserted to help with insertion.
+        marker.remove();
+        return insertedContent;
+    }
+
+    findNextInsertionReference(node, reference, marker) {
+        if (
+            !isTextNode(reference) &&
+            !isSelfClosingElement(reference) &&
+            !reference.childNodes.length
+        ) {
+            node.append(marker);
+            reference = node.firstChild;
+        }
+        let parent = reference.parentElement;
+        if (this.canInsertNodeBefore(node, reference) || isEditionBoundary(parent, this.editable)) {
+            return reference;
+        }
+        if (this.isAtStartOfBlock(reference)) {
+            return this.findNextInsertionReference(node, parent, marker);
+        }
+        if (nodeSize(reference) === 0 && this.isAtEndOfBlock(reference)) {
+            // Will have to be removed later.
+            parent.after(marker);
+            return this.findNextInsertionReference(node, parent.nextSibling, marker);
+        }
+        if (this.dependencies.split.isSplittable(parent)) {
+            this.dependencies.split.splitElement(parent, childNodeIndex(reference));
+            // The reference shouldn't have changed, it just moved into a new parent.
+            parent = reference.parentElement;
+            return this.findNextInsertionReference(
+                node,
+                isBlock(parent) ? reference : parent,
+                marker
+            );
+        }
+        return reference;
+    }
+
+    isAtStartOfBlock(node) {
+        const parentBlock = closestBlock(node);
+        while (node !== parentBlock) {
+            if (childNodeIndex(node) !== 0) {
+                return false;
+            }
+            node = node.parentElement;
+        }
+        return true;
+    }
+
+    isAtEndOfBlock(node) {
+        const parentBlock = closestBlock(node);
+        while (node !== parentBlock) {
+            if (childNodeIndex(node) !== nodeSize(node.parentElement) - 1) {
+                return false;
+            }
+            node = node.parentElement;
+        }
+        return true;
+    }
+    isBoundaryInsertionNodeMergeable(reference, node) {
+        if (!isBlock(node) || isEmptyBlock(node) || this.dependencies.split.isUnsplittable(node)) {
             return false;
         }
-        if (node === this.editable) {
+        const referenceBlock = closestBlock(reference);
+        if (isEmptyBlock(referenceBlock) || isEditionBoundary(referenceBlock, this.editable)) {
+            return false;
+        }
+        if (
+            node.nodeName === referenceBlock.nodeName ||
+            (referenceBlock.nodeName === "DIV" &&
+                this.dependencies.split.isUnsplittable(referenceBlock))
+        ) {
             return true;
         }
-        return isContentEditableAncestor(node);
+        return (
+            this.checkPredicates(
+                "is_boundary_insertion_block_mergeable_predicates",
+                referenceBlock,
+                node
+            ) ?? false
+        );
     }
 
-    areInlinesAllowedAtRoot(node) {
-        const results = this.getResource("are_inlines_allowed_at_root_predicates")
-            .map((p) => p(node))
-            .filter((r) => r !== undefined);
-        if (!results.length) {
-            return this.config.allowInlineAtRoot;
+    canInsertNodeBefore(node, reference) {
+        if (!isBlock(node)) {
+            return true;
         }
-        return results.every((r) => r);
+        const parent = reference.parentElement;
+        return (
+            allowsParagraphRelatedElements(parent) &&
+            (this.checkPredicates("is_parent_compatible_for_insertion_predicates", parent, node) ??
+                true)
+        );
     }
 
     /**
