@@ -443,6 +443,7 @@ class SaleOrder(models.Model):
         help="Delivery date you can promise to the customer, computed from the minimum lead time of"
         " the order lines.",
     )
+    extra_total_fields = fields.Json(compute="_compute_extra_total_fields")
     is_expired = fields.Boolean(
         string="Is Expired", compute="_compute_is_expired", search="_search_is_expired"
     )
@@ -1117,6 +1118,21 @@ class SaleOrder(models.Model):
                 currency=order.currency_id or order.company_id.currency_id,
                 company=order.company_id,
             )
+
+    @api.depends(
+        "order_line", "order_line.discount", "order_line.price_unit", "order_line.product_uom_qty"
+    )
+    def _compute_extra_total_fields(self):
+        for order in self:
+            basic_group = {"sequence": 1, "name": "basic", "lines": []}
+            _excl, incl = order._get_advantages()
+            if incl:
+                basic_group["lines"].append({
+                    "label": self.env._("Total Advantage"),
+                    "value": abs(incl),
+                })
+
+            order.extra_total_fields = [basic_group]
 
     @api.depends("state")
     @api.depends_context("lang")

@@ -29,3 +29,21 @@ class SaleOrder(models.Model):
             for order in self:
                 order.margin = mapped_data.get(order.id, 0.0)
                 order.margin_percent = order.amount_untaxed and order.margin / order.amount_untaxed
+
+    @api.depends("margin")
+    def _compute_extra_total_fields(self):
+        super()._compute_extra_total_fields()
+
+        for order in self:
+            if not order.margin:
+                continue
+
+            groups = order.extra_total_fields
+            for basic_group in filter(lambda group: group.get("name") == "basic", groups):
+                basic_group["lines"].append({
+                    "label": self.env._(
+                        "Margin (%(percent).0f%%)", percent=order.margin_percent * 100
+                    ),
+                    "value": order.margin,
+                })
+                order.extra_total_fields = groups
