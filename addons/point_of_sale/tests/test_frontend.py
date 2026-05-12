@@ -2029,6 +2029,58 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.with_user(self.pos_admin).open_ui()
         self.start_tour(f"/pos/ui/{self.main_pos_config.id}", 'PosProductWithDynamicAttributes', login="pos_admin")
 
+    def test_product_with_single_value_dynamic_attribute(self):
+        """A dynamic attribute with a single value must not open the configurator but still
+        creates the product variant on the server when added to the order."""
+        dynamic_attribute = self.env['product.attribute'].create({
+            'name': 'Single Dynamic Attribute',
+            'create_variant': 'dynamic',
+        })
+        value = self.env['product.attribute.value'].create({
+            'name': 'Only Value',
+            'attribute_id': dynamic_attribute.id,
+        })
+        product_template = self.env['product.template'].create({
+            'name': 'Single Dynamic Product',
+            'list_price': 5.0,
+            'taxes_id': False,
+            'available_in_pos': True,
+        })
+        self.env['product.template.attribute.line'].create({
+            'product_tmpl_id': product_template.id,
+            'attribute_id': dynamic_attribute.id,
+            'value_ids': [Command.set([value.id])],
+        })
+
+        no_variant_attribute = self.env['product.attribute'].create({
+            'name': 'No Variant Attribute',
+            'create_variant': 'no_variant',
+        })
+        no_variant_value = self.env['product.attribute.value'].create({
+            'name': 'No Variant Value',
+            'attribute_id': no_variant_attribute.id,
+        })
+        mixed_template = self.env['product.template'].create({
+            'name': 'Mixed Attribute Product',
+            'list_price': 7.0,
+            'taxes_id': False,
+            'available_in_pos': True,
+        })
+        self.env['product.template.attribute.line'].create([
+            {
+                'product_tmpl_id': mixed_template.id,
+                'attribute_id': dynamic_attribute.id,
+                'value_ids': [Command.set([value.id])],
+            },
+            {
+                'product_tmpl_id': mixed_template.id,
+                'attribute_id': no_variant_attribute.id,
+                'value_ids': [Command.set([no_variant_value.id])],
+            },
+        ])
+        self.main_pos_config.with_user(self.pos_admin).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_product_with_single_value_dynamic_attribute', login="pos_user")
+
     def test_autofill_cash_count(self):
         """Make sure that when the decimal separator is a comma, the shown orderline price is correct.
         """
