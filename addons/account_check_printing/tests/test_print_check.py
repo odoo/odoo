@@ -23,6 +23,19 @@ class TestPrintCheck(AccountTestInvoicingCommon):
             .filtered(lambda l: l.code == 'check_printing')
         cls.payment_method_line_check.payment_account_id = cls.inbound_payment_method_line.payment_account_id
 
+        cls.epd_term = cls.env['account.payment.term'].create({
+            'name': '5% 10 Net 30',
+            'early_discount': True,
+            'discount_days': 10,
+            'discount_percentage': 5.0,
+            'line_ids': [Command.create({
+                'value': 'percent',
+                'value_amount': 100,
+                'delay_type': 'days_after',
+                'nb_days': 30,
+            })],
+        })
+
     def test_in_invoice_check_manual_sequencing(self):
         ''' Test the check generation for vendor bills. '''
         nb_invoices_to_test = INV_LINES_PER_STUB + 1
@@ -144,6 +157,8 @@ class TestPrintCheck(AccountTestInvoicingCommon):
             'amount_total': f'${NON_BREAKING_SPACE}150.00',
             'amount_residual': f'${NON_BREAKING_SPACE}75.00',
             'amount_paid': f'150.00{NON_BREAKING_SPACE}€',
+            'amount_discount': None,
+            'amount_writeoff': None,
             'currency': invoice.currency_id,
         }]])
 
@@ -348,6 +363,223 @@ class TestPrintCheck(AccountTestInvoicingCommon):
         move_names = payments.move_id.line_ids.mapped('name')
         self.assertIn(f"Checks - 10001: {payments[0].memo}", move_names)
         self.assertIn(f"Checks - 10002: {payments[1].memo}", move_names)
+
+    def test_epd_stub_line_splits_payment_and_discount(self):
+        """ Test that a check paying a bill within the discount window splits the
+        stub line into the discounted amount paid and the discount.
+        """
+        bill = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'partner_id': self.partner_a.id,
+            'date': '2026-01-01',
+            'invoice_date': '2026-01-01',
+            'invoice_payment_term_id': self.epd_term.id,
+            'invoice_line_ids': [Command.create({
+                'product_id': self.product_a.id,
+                'price_unit': 100.0,
+                'tax_ids': [],
+            })],
+        })
+        bill.action_post()
+
+        payment = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=bill.ids).create({
+            'payment_method_line_id': self.payment_method_line_check.id,
+            'payment_date': '2026-01-05',
+        })._create_payments()
+
+        [[stub_line]] = payment._check_make_stub_pages()
+        self.assertEqual(stub_line['amount_paid'], f'${NON_BREAKING_SPACE}95.00')
+        self.assertEqual(stub_line['amount_discount'], f'${NON_BREAKING_SPACE}5.00')
+        self.assertEqual(stub_line['amount_total'], f'${NON_BREAKING_SPACE}100.00')
+
+    def test_writeoff_stub_line_splits_payment_and_writeoff(self):
+        """ Test that a check below a bill's total splits the stub line into the
+        amount paid and the write-off.
+        """
+        bill = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'partner_id': self.partner_a.id,
+            'date': '2026-01-01',
+            'invoice_date': '2026-01-01',
+            'invoice_line_ids': [Command.create({
+                'product_id': self.product_a.id,
+                'price_unit': 200.0,
+                'tax_ids': [],
+            })],
+        })
+        bill.action_post()
+
+        payment = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=bill.ids).create({
+            'payment_method_line_id': self.payment_method_line_check.id,
+            'amount': 150.0,
+            'payment_difference_handling': 'reconcile',
+            'writeoff_account_id': self.company_data['default_account_revenue'].id,
+            'writeoff_label': 'Write-Off',
+            'payment_date': '2026-01-05',
+        })._create_payments()
+
+        [[stub_line]] = payment._check_make_stub_pages()
+        self.assertEqual(stub_line['amount_paid'], f'${NON_BREAKING_SPACE}150.00')
+        self.assertEqual(stub_line['amount_writeoff'], f'${NON_BREAKING_SPACE}50.00')
+        self.assertEqual(stub_line['amount_total'], f'${NON_BREAKING_SPACE}200.00')
+
+    def test_grouped_writeoff_stub_rounding(self):
+        """ Test that the amounts paid and written off on the stub lines add up
+        to the check amount and the total write-off.
+        """
+        bills = self.env['account.move'].create([{
+            'move_type': 'in_invoice',
+            'partner_id': self.partner_a.id,
+            'date': '2026-01-01',
+            'invoice_date': '2026-01-01',
+            'invoice_line_ids': [Command.create({
+                'product_id': self.product_a.id,
+                'price_unit': 100.0,
+                'tax_ids': [],
+            })],
+        } for _ in range(3)])
+        bills.action_post()
+
+        payment = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=bills.ids).create({
+            'payment_method_line_id': self.payment_method_line_check.id,
+            'group_payment': True,
+            'amount': 200.0,
+            'payment_difference_handling': 'reconcile',
+            'writeoff_account_id': self.company_data['default_account_revenue'].id,
+            'writeoff_label': 'Write-Off',
+            'payment_date': '2026-01-15',
+        })._create_payments()
+
+        def to_float(amount_str):
+            return float(amount_str.replace('$', '').replace(NON_BREAKING_SPACE, '').replace(',', ''))
+
+        [stub_lines] = payment._check_make_stub_pages()
+        self.assertAlmostEqual(sum(to_float(line['amount_paid']) for line in stub_lines), 200.0)
+        self.assertAlmostEqual(sum(to_float(line['amount_writeoff']) for line in stub_lines), 100.0)
+
+    def test_grouped_discount_split_per_bill(self):
+        """ Test that a grouped check applies each bill's own discount and leaves
+        a bill without an early payment discount untouched.
+        """
+        epd_bill = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'partner_id': self.partner_a.id,
+            'date': '2026-01-01',
+            'invoice_date': '2026-01-01',
+            'invoice_payment_term_id': self.epd_term.id,
+            'invoice_line_ids': [Command.create({
+                'product_id': self.product_a.id,
+                'price_unit': 100.0,
+                'tax_ids': [],
+            })],
+        })
+        plain_bill = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'partner_id': self.partner_a.id,
+            'date': '2026-01-01',
+            'invoice_date': '2026-01-01',
+            'invoice_line_ids': [Command.create({
+                'product_id': self.product_a.id,
+                'price_unit': 100.0,
+                'tax_ids': [],
+            })],
+        })
+        (epd_bill + plain_bill).action_post()
+
+        payment = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=(epd_bill + plain_bill).ids).create({
+            'payment_method_line_id': self.payment_method_line_check.id,
+            'group_payment': True,
+            'payment_date': '2026-01-05',
+        })._create_payments()
+
+        [stub_lines] = payment._check_make_stub_pages()
+        lines = {line['number']: line for line in stub_lines}
+
+        self.assertEqual(lines[epd_bill.name]['amount_paid'], f'${NON_BREAKING_SPACE}95.00')
+        self.assertEqual(lines[epd_bill.name]['amount_discount'], f'${NON_BREAKING_SPACE}5.00')
+
+        self.assertEqual(lines[plain_bill.name]['amount_paid'], f'${NON_BREAKING_SPACE}100.00')
+        self.assertIsNone(lines[plain_bill.name]['amount_writeoff'])
+
+    def test_epd_stub_line_outside_discount_window(self):
+        """ Test that no discount is split off when the check is past the discount
+        window or the bill has no early payment discount.
+        """
+        late_bill = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'partner_id': self.partner_a.id,
+            'date': '2026-01-01',
+            'invoice_date': '2026-01-01',
+            'invoice_payment_term_id': self.epd_term.id,
+            'invoice_line_ids': [Command.create({
+                'product_id': self.product_a.id,
+                'price_unit': 100.0,
+                'tax_ids': [],
+            })],
+        })
+        plain_bill = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'partner_id': self.partner_a.id,
+            'date': '2026-01-01',
+            'invoice_date': '2026-01-01',
+            'invoice_line_ids': [Command.create({
+                'product_id': self.product_a.id,
+                'price_unit': 100.0,
+                'tax_ids': [],
+            })],
+        })
+        (late_bill + plain_bill).action_post()
+
+        late_payment = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=late_bill.ids).create({
+            'payment_method_line_id': self.payment_method_line_check.id,
+            'payment_date': '2026-02-15',
+        })._create_payments()
+        plain_payment = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=plain_bill.ids).create({
+            'payment_method_line_id': self.payment_method_line_check.id,
+            'payment_date': '2026-01-05',
+        })._create_payments()
+
+        [[late_stub]] = late_payment._check_make_stub_pages()
+        self.assertIsNone(late_stub['amount_discount'])
+        self.assertEqual(late_stub['amount_paid'], f'${NON_BREAKING_SPACE}100.00')
+
+        [[plain_stub]] = plain_payment._check_make_stub_pages()
+        self.assertIsNone(plain_stub['amount_discount'])
+        self.assertEqual(plain_stub['amount_paid'], f'${NON_BREAKING_SPACE}100.00')
+
+    def test_writeoff_on_epd_account_outside_discount_window(self):
+        """ Test that a late payment whose discount is written off on the cash
+        discount account still splits the stub line into the amount paid and the
+        write-off.
+        """
+        bill = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'partner_id': self.partner_a.id,
+            'date': '2026-01-01',
+            'invoice_date': '2026-01-01',
+            'invoice_payment_term_id': self.epd_term.id,
+            'invoice_line_ids': [Command.create({
+                'product_id': self.product_a.id,
+                'price_unit': 100.0,
+                'tax_ids': [],
+            })],
+        })
+        bill.action_post()
+
+        gain_account = self.env.company.account_journal_early_pay_discount_gain_account_id
+        payment = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=bill.ids).create({
+            'payment_method_line_id': self.payment_method_line_check.id,
+            'amount': 95.0,
+            'payment_difference_handling': 'reconcile',
+            'writeoff_account_id': gain_account.id,
+            'writeoff_label': 'Write-Off',
+            'payment_date': '2026-02-15',
+        })._create_payments()
+
+        [[stub_line]] = payment._check_make_stub_pages()
+        self.assertEqual(stub_line['amount_paid'], f'${NON_BREAKING_SPACE}95.00')
+        self.assertEqual(stub_line['amount_writeoff'], f'${NON_BREAKING_SPACE}5.00')
+        self.assertEqual(stub_line['amount_total'], f'${NON_BREAKING_SPACE}100.00')
 
     def test_number_exceeds_int32_limit(self):
         """Numbers greater than 2,147,483,647 should raise a ValidationError."""
