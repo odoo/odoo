@@ -64,6 +64,7 @@ export const SPLIT_OPERATION_TYPES = /** @type {const} */ ({
  * @typedef { Object } SplitShared
  * @property { SplitPlugin['isUnsplittable'] } isUnsplittable
  * @property { SplitPlugin['splitAroundUntil'] } splitAroundUntil
+ * @property { SplitPlugin['splitElementUntil'] } splitElementUntil
  * @property { SplitPlugin['splitBlock'] } splitBlock
  * @property { SplitPlugin['splitBlockNode'] } splitBlockNode
  * @property { SplitPlugin['splitElement'] } splitElement
@@ -90,6 +91,7 @@ export class SplitPlugin extends Plugin {
         "splitElementBlock",
         "splitElement",
         "splitAroundUntil",
+        "splitElementUntil",
         "splitSelection",
         "isUnsplittable",
         "splitBlockSegments",
@@ -170,19 +172,15 @@ export class SplitPlugin extends Plugin {
             selection = this.dependencies.selection.getEditableSelection();
         }
 
-        return this.splitBlockNode({
-            targetNode: selection.anchorNode,
-            targetOffset: selection.anchorOffset,
-        });
+        return this.splitBlockNode(selection.anchorNode, selection.anchorOffset);
     }
 
     /**
-     * @param {Object} param0
-     * @param {Node} param0.targetNode
-     * @param {number} param0.targetOffset
+     * @param {Node} targetNode
+     * @param {number} targetOffset
      * @returns {SplitOperationResult<SplitOperationType>}
      */
-    splitBlockNode({ targetNode, targetOffset }) {
+    splitBlockNode(targetNode, targetOffset) {
         if (targetNode.nodeType === Node.TEXT_NODE) {
             targetOffset = splitTextNode(targetNode, targetOffset);
             targetNode = targetNode.parentElement;
@@ -235,7 +233,11 @@ export class SplitPlugin extends Plugin {
             if (isProtecting(node) || isProtected(node)) {
                 // TODO ABD: add test
                 return;
-            } else if (node.nodeType === Node.TEXT_NODE && !isVisible(node)) {
+            } else if (
+                node.nodeType === Node.TEXT_NODE &&
+                !isVisible(node) &&
+                !this.dependencies.delete.isUnremovable(node)
+            ) {
                 const parent = node.parentElement;
                 node.remove();
                 fillEmptyElement(parent);
@@ -462,9 +464,8 @@ export class SplitPlugin extends Plugin {
 
             // Check if we can split at this line break.
             const unsplittable = ancestors(br, block).find(this.isUnsplittable.bind(this));
-            const canWrapInUnsplittable = allowsParagraphRelatedElements(unsplittable);
             if (unsplittable) {
-                if (canWrapInUnsplittable) {
+                if (allowsParagraphRelatedElements(unsplittable)) {
                     // If splitting here would split an unsplittable element,
                     // remove the line break and wrap the content around it in
                     // new base containers.
