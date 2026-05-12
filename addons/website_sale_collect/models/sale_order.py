@@ -30,9 +30,9 @@ class SaleOrder(models.Model):
         )
         AccountFiscalPosition = self.env['account.fiscal.position'].sudo()
         for order in in_store_orders:
-            order.fiscal_position_id = AccountFiscalPosition._get_fiscal_position(
-                order.partner_id, delivery=order.warehouse_id.partner_id
-            )
+            order.fiscal_position_id = AccountFiscalPosition.with_company(
+                order.company_id
+            )._get_fiscal_position(order.partner_id, delivery=order.warehouse_id.partner_id)
         super(SaleOrder, self - in_store_orders)._compute_fiscal_position_id()
 
     def _get_free_qty(self, product):
