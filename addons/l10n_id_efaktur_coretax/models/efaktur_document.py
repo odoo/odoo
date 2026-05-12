@@ -87,7 +87,7 @@ class EfakturDocument(models.Model):
 
     def _generate_efaktur_invoice(self):
         """ Generate E-Faktur for customer invoice. Prepare data, load XML template and """
-        invoice_data = self.invoice_ids.prepare_efaktur_vals()
+        invoice_data = self.invoice_ids._prepare_efaktur_vals()
         xml_content = self.env['ir.qweb']._render('l10n_id_efaktur_coretax.efaktur_coretax_template', {'data': invoice_data, 'TIN': self.company_id.vat})
         return etree.tostring(cleanup_xml_node(xml_content, remove_blank_text=False, remove_blank_nodes=False), xml_declaration=True, encoding='UTF-8')
 
