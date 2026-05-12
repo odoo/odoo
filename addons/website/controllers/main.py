@@ -89,6 +89,21 @@ class QueryURL:
 
 class Website(Home):
 
+    def _replace_configurator_preview_response_images(self, response, industry=False, theme_name=False):
+        if not response or not industry or not theme_name:
+            return response
+        if isinstance(response, str):
+            return request.env['website']._replace_configurator_preview_images(response, industry, theme_name)
+        if getattr(response, 'mimetype', None) != 'text/html':
+            return response
+        if hasattr(response, 'flatten'):
+            response.flatten()
+        body = response.get_data(as_text=True)
+        if not body:
+            return response
+        response.set_data(request.env['website']._replace_configurator_preview_images(body, industry, theme_name))
+        return response
+
     def sitemap_index(env, rule, qs):
         Website = env['website'].get_current_website()
         homepage_url = Website.homepage_url
@@ -407,6 +422,8 @@ class Website(Home):
 
     @http.route('/website/configurator/preview', type='http', auth="public", website=True, sitemap=False, multilang=False, readonly=True)
     def website_configurator_preview(self, path=None, **kwargs):
+        preview_industry = kwargs.get('industry')
+        preview_theme_name = request.website.sudo().theme_id.name or 'theme_default'
         preview_values = request.env['website']._get_configurator_preview_values({
             **{
                 f'configurator_preview_color_{index}': kwargs.get(f'color{index}') or kwargs.get(f'color_{index}')
@@ -434,11 +451,20 @@ class Website(Home):
 
         website_page = request.env['ir.http']._serve_page()
         if website_page:
-            return website_page
+            return self._replace_configurator_preview_response_images(
+                website_page,
+                industry=preview_industry,
+                theme_name=preview_theme_name,
+            )
 
         try:
             rule, args = request.env['ir.http']._match(target_path)
-            return serve_ir_http(request, rule, args)
+            response = serve_ir_http(request, rule, args)
+            return self._replace_configurator_preview_response_images(
+                response,
+                industry=preview_industry,
+                theme_name=preview_theme_name,
+            )
         except (AccessError, NotFound, SessionExpiredException):
             raise request.not_found()
 
