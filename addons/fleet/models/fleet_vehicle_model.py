@@ -42,13 +42,9 @@ class FleetVehicleModel(models.Model):
         string='Transmission', tracking=True)
     vehicle_count = fields.Integer(compute='_compute_vehicle_count', search='_search_vehicle_count')
     model_year = fields.Selection(selection='_get_year_selection', tracking=True)
-    color = fields.Char(tracking=True)
     seats = fields.Integer(string='Seating Capacity', tracking=True)
     doors = fields.Integer(string='Number of Doors', tracking=True,
         help="Specifies the total number of doors, including the truck and hatch doors, if applicable.")
-    trailer_hook = fields.Boolean(default=False, string='Trailer Hitch', tracking=True,
-        help="A trailer hitch is a device attached to a vehicle's chassis for towing purposes,\
-            such as pulling trailers, boats, or other vehicles.")
     default_co2 = fields.Float('CO₂ Emissions', tracking=True)
     co2_emission_unit = fields.Selection([('g/km', 'g/km'), ('g/mi', 'g/mi')], compute='_compute_co2_emission_unit', required=True)
     co2_standard = fields.Char(string="Emission Standard", tracking=True,

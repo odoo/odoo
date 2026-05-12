@@ -13,7 +13,7 @@ from odoo.addons.fleet.models.fleet_vehicle_model import FUEL_TYPES
 #Some fields don't have the exact same name
 MODEL_FIELDS_TO_VEHICLE = {
     'transmission': 'transmission', 'model_year': 'model_year', 'electric_assistance': 'electric_assistance',
-    'color': 'color', 'seats': 'seats', 'doors': 'doors', 'trailer_hook': 'trailer_hook', 'default_co2': 'co2',
+    'seats': 'seats', 'doors': 'doors', 'default_co2': 'co2',
     'co2_standard': 'co2_standard', 'default_fuel_type': 'fuel_type', 'power': 'power', 'horsepower': 'horsepower',
     'horsepower_tax': 'horsepower_tax', 'category_id': 'category_id', 'vehicle_range': 'vehicle_range',
     'power_unit': 'power_unit', 'range_unit': 'range_unit',
@@ -54,8 +54,7 @@ class FleetVehicle(models.Model):
     license_plate = fields.Char(tracking=True,
         help='License plate number of the vehicle (i = plate number for a car)', copy=False)
     vin_sn = fields.Char('Chassis Number', help='Unique number written on the vehicle motor (VIN/SN number)', tracking=True, copy=False)
-    trailer_hook = fields.Boolean(default=False, string='Trailer Hitch',
-        compute='_compute_trailer_hook', store=True, readonly=False,
+    trailer_hook = fields.Boolean(default=False, string='Trailer Hitch', tracking=True,
         help="A trailer hitch is a device attached to a vehicle's chassis for towing purposes, \
             such as pulling trailers, boats, or other vehicles.")
     driver_id = fields.Many2one('res.partner', 'Driver', tracking=True, help='Driver address of the vehicle', copy=False)
@@ -70,14 +69,14 @@ class FleetVehicle(models.Model):
     service_count = fields.Integer(compute="_compute_count_all", string='Services')
     odometer_count = fields.Integer(compute="_compute_count_all", string='Odometer')
     history_count = fields.Integer(compute="_compute_count_all", string="Drivers History Count")
-    next_assignation_date = fields.Date('Available From', help='The date from which this vehicle becomes available for assignment. Leave empty if it’s available immediately.',
+    next_assignation_date = fields.Date('Available From', help="The date from which this vehicle becomes available for assignment. Leave empty if it's available immediately.",
         tracking=True)
     order_date = fields.Date('Order Date', tracking=True)
     acquisition_date = fields.Date('Registration Date', required=False, default=fields.Date.today,
         tracking=True, help='Date of vehicle registration')
     write_off_date = fields.Date('Cancellation Date', tracking=True, help="Date when the vehicle's license plate has been cancelled/removed.")
     contract_date_start = fields.Date(string="First Contract Date", default=fields.Date.today, tracking=True)
-    color = fields.Char(help='Color of the vehicle', compute='_compute_color', store=True, readonly=False)
+    color = fields.Char(help='Color of the vehicle', tracking=True)
     state_id = fields.Many2one('fleet.vehicle.state', 'State',
         default=_get_default_state, group_expand='_read_group_expand_full',
         tracking=True,
@@ -186,10 +185,6 @@ class FleetVehicle(models.Model):
         self._load_fields_from_model(['range_unit'])
 
     @api.depends('model_id')
-    def _compute_trailer_hook(self):
-        self._load_fields_from_model(['trailer_hook'])
-
-    @api.depends('model_id')
     def _compute_vehicle_range(self):
         self._load_fields_from_model(['vehicle_range'])
 
@@ -236,10 +231,6 @@ class FleetVehicle(models.Model):
     @api.depends('model_id')
     def _compute_seats(self):
         self._load_fields_from_model(['seats'])
-
-    @api.depends('model_id')
-    def _compute_color(self):
-        self._load_fields_from_model(['color'])
 
     @api.depends('model_id.brand_id.name', 'model_id.name', 'license_plate')
     def _compute_vehicle_name(self):
