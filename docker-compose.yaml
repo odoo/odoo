@@ -1,0 +1,65 @@
+# TNPD Prison - Local Development Stack
+# Matches production container naming convention:
+#   DB container : tnpd-prison-postgres  (host port 5433 → avoids conflict with other local PG)
+#   Odoo backend : tnpd-prison-be
+#
+# Usage:
+#   Start all     : docker compose up -d
+#   Stop all      : docker compose down
+#   DB only       : docker compose up -d tnpd-prison-postgres
+#   View logs     : docker compose logs -f tnpd-prison-be
+#   Odoo shell    : docker exec -i tnpd-prison-be odoo shell -c /etc/odoo/odoo.conf -d tnpd-prison-db
+#   Connect DB    : psql -h localhost -p 5433 -U odoo -d tnpd-prison-db
+
+services:
+
+  # ── PostgreSQL Database ──────────────────────────────────────────────────
+  tnpd-prison-postgres:
+    image: postgres:15
+    container_name: tnpd-prison-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: tnpd-prison-db
+      POSTGRES_USER: odoo
+      POSTGRES_PASSWORD: odoo
+      PGDATA: /var/lib/postgresql/data/pgdata
+    ports:
+      - "5433:5432"           # Host 5433 → container 5432 (avoids conflict with local postgres)
+    volumes:
+      - tnpd-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U odoo -d tnpd-prison-db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── Odoo 19 Backend ──────────────────────────────────────────────────────
+  tnpd-prison-be:
+    image: odoo:19.0
+    container_name: tnpd-prison-be
+    restart: unless-stopped
+    depends_on:
+      tnpd-prison-postgres:
+        condition: service_healthy
+    ports:
+      - "8069:8069"           # Odoo web UI  → http://localhost:8069
+      - "8072:8072"           # Longpolling  (live chat / bus)
+    volumes:
+      - tnpd-odoo-data:/var/lib/odoo
+      - ./addons:/mnt/extra-addons        # Custom modules (tnpd_hr_employee, etc.)
+      - ./config/odoo.conf:/etc/odoo/odoo.conf:ro
+    environment:
+      HOST: tnpd-prison-postgres
+      PORT: 5432
+      USER: odoo
+      PASSWORD: odoo
+
+# ── Named Volumes ────────────────────────────────────────────────────────
+volumes:
+  tnpd-postgres-data:
+  tnpd-odoo-data:
+
+# ── Network ──────────────────────────────────────────────────────────────
+networks:
+  default:
+    name: tnpd-prison-network
