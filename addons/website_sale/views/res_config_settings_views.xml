@@ -18,16 +18,6 @@
         <field name="model">res.config.settings</field>
         <field name="inherit_id" ref="website_payment.res_config_settings_view_form"/>
         <field name="arch" type="xml">
-            <setting id="shared_user_account_setting" position="after">
-                <setting
-                    id="autocomplete_googleplaces_setting"
-                    string="Google Address Validation"
-                    help="Use Google Places API to validate addresses"
-                    documentation="/applications/websites/website/configuration/address_autocomplete.html"
-                >
-                    <field name="module_website_sale_autocomplete"/>
-                </setting>
-            </setting>
             <block id="website_payment_block" position="attributes">
                 <attribute name="title">eCommerce</attribute>
             </block>

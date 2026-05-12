@@ -5,7 +5,7 @@ import { googlePlacesSession } from "@google_address_autocomplete/google_places_
 import { KeepLast } from "@web/core/utils/concurrency";
 
 export class AddressForm extends Interaction {
-    static selector = ".oe_cart .address_autoformat";
+    static selector = ".o_address_autocomplete";
     static selectorHas = "input[name='street'][data-autocomplete-enabled='1']";
     dynamicContent = {
         "input[name='street']": { "t-on-input.withTarget": this.debounced(this.onStreetInput, 200) },
@@ -38,7 +38,7 @@ export class AddressForm extends Interaction {
                     partial_address: inputEl.value,
                 }).then((response) => {
                     inputContainerEl.querySelector(".dropdown-menu")?.remove();
-                    this.renderAt("website_sale_autocomplete.AutocompleteDropDown", {
+                    this.renderAt("website_address_autocomplete.AutocompleteDropDown", {
                         results: response.results,
                     }, inputContainerEl);
                 })
@@ -112,4 +112,4 @@ export class AddressForm extends Interaction {
 
 registry
     .category("public.interactions")
-    .add("website_sale_autocomplete.address_form", AddressForm);
+    .add("website_address_autocomplete.address_form", AddressForm);

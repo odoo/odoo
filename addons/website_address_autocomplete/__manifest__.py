@@ -1,12 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': 'Google places autocompletion',
+    'name': 'Website Address Autocomplete',
     'category': 'Website/Website',
-    'summary': 'Assist your users with automatic completion & suggestions when filling their address during checkout',
-    'description': "Assist your users with automatic completion & suggestions when filling their address during checkout",
+    'summary': 'Assist your users with automatic completion & suggestions when filling their address',
+    'description': "Assist your users with automatic completion & suggestions when filling their address",
     'depends': [
-        'website_sale',
+        'website',
         'google_address_autocomplete',
     ],
     'data': [
@@ -16,11 +16,11 @@
     'assets': {
         'web.assets_frontend': [
             'google_address_autocomplete/static/src/google_places_session.js',
-            'website_sale_autocomplete/static/src/interactions/address_form.js',
-            'website_sale_autocomplete/static/src/xml/autocomplete.xml',
+            'website_address_autocomplete/static/src/interactions/address_form.js',
+            'website_address_autocomplete/static/src/xml/autocomplete.xml',
         ],
         'web.assets_tests': [
-            'website_sale_autocomplete/static/tests/**/*.js'
+            'website_address_autocomplete/static/tests/**/*.js'
         ],
     },
     'auto_install': True,
