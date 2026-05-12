@@ -64,6 +64,10 @@ class TestTour(BaseCommon):
             }]
         })
 
+    def test_get_tour_json_by_name_with_non_existing_tour(self):
+        tour = self.env["web_tour.tour"].get_tour_json_by_name("non_existing_tour")
+        self.assertFalse(tour)
+
     def test_get_current_tour(self):
         self.env.user.tour_enabled = True
         tour = self.env["web_tour.tour"].get_current_tour()

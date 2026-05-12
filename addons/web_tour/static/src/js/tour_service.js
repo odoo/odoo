@@ -69,6 +69,7 @@ export class TourService {
         this.env = env;
         this.orm = services["orm"];
         this.effect = services["effect"];
+        this.notification = services["notification"];
         this.overlay = services["overlay"];
         this.toursEnabled = session?.tour_enabled;
         this.removePointer = () => {};
@@ -162,8 +163,13 @@ export class TourService {
         // Onboarding tour (come from database (.xml files))
         if (options.mode === "manual") {
             const tour = await this.orm.call("web_tour.tour", "get_tour_json_by_name", [name]);
-            if (!tour) {
-                throw new Error(`Tour '${name}' is not found in the database.`);
+            if (!tour || (Array.isArray(tour) && !tour.length)) {
+                tourState.clear();
+                this.notification.add(
+                    _t(`Tour '${name}' is not found in the database.`),
+                    { type: "info" }
+                );
+                return;
             }
             if (!tour.steps.length && tourRegistry.contains(tour.name)) {
                 tour.steps = tourRegistry.get(tour.name).steps;
@@ -350,7 +356,7 @@ export class TourService {
 
 registry.category("services").add("tour_service", {
     // localization dependency to make sure translations used by tours are loaded
-    dependencies: ["orm", "effect", "overlay", "localization"],
+    dependencies: ["orm", "effect", "notification", "overlay", "localization"],
     async start(env, services) {
         await whenReady();
         const service = new TourService(env, services);
