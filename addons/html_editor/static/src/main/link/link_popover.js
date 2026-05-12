@@ -1,9 +1,26 @@
 import { session } from "@web/session";
 import { _t } from "@web/core/l10n/translation";
+<<<<<<< d4e76a5663223a2a2c6e50d1701fabbdcaf32405
 import { Component, useState, onMounted, useRef, useEffect } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
+||||||| 4f6f490b1a2d9d025364205da82bdbd152aa6937
+import { Component, useState, onMounted, useRef } from "@odoo/owl";
+import { useAutofocus, useService } from "@web/core/utils/hooks";
+=======
+import { Component, useState, onMounted, useRef, onWillUnmount } from "@odoo/owl";
+import { useAutofocus, useService } from "@web/core/utils/hooks";
+>>>>>>> 56d43e8d744a5485e7e3d566378089e7df03fd29
 import { browser } from "@web/core/browser/browser";
 import { cleanZWChars, deduceURLfromText } from "./utils";
+
+function useContentChange(el, callback) {
+    onMounted(() => {
+        el.addEventListener("keyup", callback);
+    });
+    onWillUnmount(() => {
+        el.removeEventListener("keyup", callback);
+    });
+}
 
 export class LinkPopover extends Component {
     static template = "html_editor.linkPopover";
@@ -96,6 +113,9 @@ export class LinkPopover extends Component {
             if (!this.state.editing) {
                 this.loadAsyncLinkPreview();
             }
+        });
+        useContentChange(this.props.linkEl, () => {
+            this.state.urlTitle = this.props.linkEl.textContent;
         });
     }
     initButtonStyle(className) {
@@ -203,9 +223,9 @@ export class LinkPopover extends Component {
             return;
         }
         if (this.isAttachmentUrl()) {
-            const { name, mimetype } = await this.props.getAttachmentMetadata(this.state.url);
+            const { mimetype } = await this.props.getAttachmentMetadata(this.state.url);
             this.resetPreview();
-            this.state.urlTitle = name;
+            this.state.urlTitle = this.props.linkEl.textContent;
             this.state.previewIcon = { type: "mimetype", value: mimetype };
             return;
         }
