@@ -17,6 +17,10 @@
 .o-FileViewer-main {
     z-index: -1;
     padding: ($o-navbar-height * 1.125) 0;
+
+    &:has(.o-FileViewer-loading) {
+        cursor: wait;
+    }
 }
 
 .o-FileViewer-zoomer {
@@ -44,6 +48,12 @@
 
     &.o-isText {
         background: $white;
+
+        &.o-FileViewer-loading {
+            background: $black;
+            opacity: 50%;
+            pointer-events: none;
+        }
     }
 
     // Remove the radius of the chrome audio player since it doesn't look good
