@@ -1231,19 +1231,62 @@ export class PosStore extends WithLazyGetterTrap {
             } else {
                 return false;
             }
-        } else if (values.product_id?.product_template_variant_value_ids.length > 0) {
-            // Verify price extra of variant products
-            const priceExtra = values.product_id.product_template_variant_value_ids
-                .filter((attr) => attr.attribute_id.create_variant !== "always")
-                .reduce((acc, attr) => acc + attr.price_extra, 0);
-
-            values.price_extra += priceExtra;
-            if (!values.attribute_value_ids) {
-                values.attribute_value_ids = [];
-            }
-            values.attribute_value_ids = values.attribute_value_ids.concat(
-                values.product_id.product_template_attribute_value_ids.map((attr) => ["link", attr])
+        } else {
+            // When isConfigurable() is false, a dynamic attribute with a single value still needs
+            // its variant created on the server before the order line can reference it.
+            const hasSingleValueDynamic = productTemplate.attribute_line_ids.some(
+                (l) =>
+                    l.attribute_id.create_variant === "dynamic" &&
+                    l.product_template_value_ids.length === 1
             );
+
+            if (hasSingleValueDynamic) {
+                const allAttributeValueIds = productTemplate.attribute_line_ids.flatMap((l) =>
+                    l.product_template_value_ids.map((v) => v.id)
+                );
+
+                const dynamicValueIds = productTemplate.attribute_line_ids
+                    .filter((l) => l.attribute_id.create_variant === "dynamic")
+                    .flatMap((l) => l.product_template_value_ids.map((v) => v.id));
+
+                let candidate = productTemplate.product_variant_ids.find((variant) => {
+                    const attributeIds = variant.product_template_attribute_value_ids.map(
+                        (v) => v.id
+                    );
+                    return dynamicValueIds.every((id) => attributeIds.includes(id));
+                });
+
+                if (!candidate) {
+                    const result = await this.data.callRelated(
+                        "product.template",
+                        "create_product_variant_from_pos",
+                        [productTemplate.id, allAttributeValueIds, this.config.id]
+                    );
+                    candidate = result["product.product"][0];
+                }
+
+                if (candidate) {
+                    values.product_id = candidate;
+                }
+            }
+
+            if (values.product_id.product_template_variant_value_ids.length > 0) {
+                // Verify price extra of variant products
+                const priceExtra = values.product_id.product_template_variant_value_ids
+                    .filter((attr) => attr.attribute_id.create_variant !== "always")
+                    .reduce((acc, attr) => acc + attr.price_extra, 0);
+
+                values.price_extra += priceExtra;
+                if (!values.attribute_value_ids) {
+                    values.attribute_value_ids = [];
+                }
+                values.attribute_value_ids = values.attribute_value_ids.concat(
+                    values.product_id.product_template_attribute_value_ids.map((attr) => [
+                        "link",
+                        attr,
+                    ])
+                );
+            }
         }
     };
 
