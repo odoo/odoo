@@ -310,17 +310,20 @@ class AccountMove(models.Model):
         if not extra_info.get('pension_fund_assosoftware_tags'):
             return pension_fund_tax
 
-        selector = ".//AltriDatiGestionali[TipoDato[contains(text(),'AswCassPre')]]/RiferimentoTesto"
-        reference_tag = self.get_tag(element, selector)
-        if reference_tag is None:
+        parent_selector = ".//AltriDatiGestionali[TipoDato[contains(text(),'AswCassPre')]]"
+        parent_tag = self.get_tag(element, parent_selector)
+        if parent_tag is None:
             return None
 
-        if match := re.match(r"(?P<kind>TC\d{2}) \((?P<tax_rate>\d+)%\)", reference_tag.text):
+        reference_tag = self.get_tag(parent_tag, "./RiferimentoTesto")
+        if reference_tag is not None and (match := re.match(r"(?P<kind>TC\d{2}) \((?P<tax_rate>\d+)%\)", reference_tag.text)):
             rate = float(match.group("tax_rate"))
             match_kind = (match.group("kind") == pension_fund_tax.l10n_it_pension_fund_type)
             match_rate = (float_compare(rate, pension_fund_tax.amount, precision_digits=2) == 0)
             if match_kind and match_rate:
                 return pension_fund_tax
+        elif reference_tag is None:
+            return pension_fund_tax
 
         return None
 
