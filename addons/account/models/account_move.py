@@ -1629,7 +1629,7 @@ class AccountMove(models.Model):
             sign=self.direction_sign,
         )
 
-    def _get_base_and_tax_lines(self):
+    def _get_base_and_tax_lines(self, round_from_tax_lines=True):
         """ Extract the base and tax lines for the taxes computation from the current move
         without applying '_round_base_lines_tax_details'.
 
@@ -1665,7 +1665,6 @@ class AccountMove(models.Model):
                     rate = self.invoice_currency_rate
                     if rate:
                         tax_line['balance'] = self.company_currency_id.round(tax_line['amount_currency'] / rate)
-            AccountTax._round_base_lines_tax_details(base_lines, self.company_id, tax_lines=tax_lines if round_from_tax_lines else [])
         else:
             # The move is not stored yet so the only thing we have is the invoice lines.
             base_lines += self._prepare_epd_base_lines_for_taxes_computation_from_base_lines(base_amls)
