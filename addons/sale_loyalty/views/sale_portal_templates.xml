@@ -48,8 +48,8 @@
     </template>
 
     <template id="sale_order_portal_loyalty_content">
-        <t t-set="loyalty_data" t-value="sale_order.loyalty_data"/>
-        <div class="col-xs-5 col-md-6 col-lg-5" t-if="loyalty_data">
+        <t t-set="loyalty_data" t-value="sale_order._get_loyalty_data()"/>
+        <div t-if="loyalty_data" class="col-xs-5 col-md-6 col-lg-5">
             <table class="table table-sm">
                 <tr>
                     <td><strong>Loyalty Card</strong></td>

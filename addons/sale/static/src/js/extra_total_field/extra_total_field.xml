@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+
+    <t t-name="sale.ExtraTotalsField">
+        <table t-if="this.props.record.data[this.props.name].length" class="float-end text-end">
+            <tbody>
+                <t t-foreach="this.groups" t-as="group" t-key="group_index">
+                    <tr t-if="group_index > 0">
+                        <td colspan="2" class="pt-3"/>
+                    </tr>
+                    <t t-foreach="group.lines" t-as="line" t-key="line_index">
+                        <tr>
+                            <td class="o_td_label">
+                                <label class="o_form_label mb-0 text-muted" t-out="line.label"/>
+                            </td>
+                            <td class="o_list_monetary">
+                                <span t-if="line.is_not_monetary" t-out="line.value"/>
+                                <span t-else="" t-out="this.formatMonetary(line.value)"/>
+                            </td>
+                        </tr>
+                    </t>
+                </t>
+            </tbody>
+        </table>
+    </t>
+
+</templates>

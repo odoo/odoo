@@ -59,6 +59,7 @@ This module contains all the common features of Sales Management and eCommerce.
             "sale/static/src/js/badge_extra_price/*",
             "sale/static/src/js/sale_action_helper/*",
             "sale/static/src/js/combo_configurator_dialog/*",
+            "sale/static/src/js/extra_total_field/*",
             "sale/static/src/js/models/*",
             "sale/static/src/js/product/*",
             "sale/static/src/js/product_card/*",

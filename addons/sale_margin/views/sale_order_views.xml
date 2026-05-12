@@ -7,18 +7,6 @@
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="priority" eval="15"/>
         <field name="arch" type="xml">
-            <field name="tax_totals" position="after">
-                <div class="d-flex float-end" colspan="2">
-                    <label for="margin"/>
-                    <div>
-                        <field name="margin" class="oe_inline"/>
-                        <field name="amount_untaxed" invisible="1"/>
-                        <span class="oe_inline" invisible="amount_untaxed == 0">
-                            (<field name="margin_percent" nolabel="1" class="oe_inline" widget="percentage"/>)
-                        </span>
-                    </div>
-                </div>
-            </field>
             <xpath expr="//field[@name='order_line']//form//field[@name='price_unit']" position="after">
                 <field name="purchase_price" groups="base.group_user"/>
             </xpath>
