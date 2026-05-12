@@ -250,3 +250,18 @@ registry.category("web_tour.tours").add("test_product_configurator_price", {
             Chrome.endTour(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_product_with_single_value_dynamic_attribute", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+
+            ProductScreen.clickDisplayedProduct("Single Dynamic Product"),
+            ProductScreen.selectedOrderlineHas("Single Dynamic Product", "1", "5.0"),
+
+            ProductScreen.clickDisplayedProduct("Mixed Attribute Product"),
+            ProductScreen.selectedOrderlineHas("Mixed Attribute Product", "1", "7.0"),
+            Chrome.endTour(),
+        ].flat(),
+});
