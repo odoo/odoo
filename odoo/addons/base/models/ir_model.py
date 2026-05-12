@@ -1086,6 +1086,11 @@ class IrModelFields(models.Model):
             if column_name in vals:
                 del vals[column_name]
 
+        if column_rename and self.state == 'manual':
+            # renaming a studio field, remove inherits fields
+            # we need to set the uninstall flag to allow removing them
+            (self._prepare_update() - self).with_context(**{MODULE_UNINSTALL_FLAG: True}).unlink()
+
         res = super(IrModelFields, self).write(vals)
 
         self.env.flush_all()
