@@ -29,7 +29,10 @@ import { STATIC_ACTIONS_GROUP_NUMBER } from "@web/search/action_menus/action_men
 import { ButtonBox } from "./button_box/button_box";
 import { FormCompiler } from "./form_compiler";
 import { FormErrorDialog } from "./form_error_dialog/form_error_dialog";
-import { FormStatusIndicator } from "./form_status_indicator/form_status_indicator";
+import {
+    FormStatusIndicator,
+    useStatusIndicator,
+} from "./form_status_indicator/form_status_indicator";
 import { FormCogMenu } from "./form_cog_menu/form_cog_menu";
 
 import {
@@ -342,6 +345,11 @@ export class FormController extends Component {
             editable: false,
         });
         useSubEnv({ propertiesState: this.propertiesState });
+
+        this.statusIndicator = useStatusIndicator(this.model, {
+            save: () => this.saveButtonClicked(),
+            discard: () => this.discard(),
+        });
     }
 
     get cogMenuProps() {
