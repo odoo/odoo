@@ -23,7 +23,7 @@ test("Command palette is active on spreadsheet", async function () {
     expect(".o_command_palette").toHaveCount(1);
 });
 
-test("First item of command palette is insert link", async function () {
+test("First item of command palette is Print", async function () {
     await mountWithCleanup(WebClient);
     const { model } = await createModelWithDataSource({
         serverData,
@@ -31,7 +31,7 @@ test("First item of command palette is insert link", async function () {
     await mountSpreadsheet(model);
     await press(["control", "k"]);
     await animationFrame();
-    expect(".o_command_name:first").toHaveText("Insert / Link");
+    expect(".o_command_name:first").toHaveText("File / Print");
 });
 
 test("First item with a shortcut is Edit / Copy and the shortcut is displayed", async function () {
