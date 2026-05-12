@@ -2,7 +2,8 @@
 <templates xml:space="preserve">  
     <t t-inherit="web.BurgerMenu" t-inherit-mode="extension">
         <xpath expr="//img[hasclass('o_burger_menu_avatar')]" position="replace">
-            <DiscussAvatar user="this.store.self_user" size="26"/>
+            <DiscussAvatar t-if="this.store.self_user" record="this.store.self_user" size="26"/>
+            <t t-else="">$0</t>
         </xpath>
     </t>
 </templates>

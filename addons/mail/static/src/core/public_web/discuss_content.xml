@@ -7,7 +7,7 @@
         <div class="o-mail-DiscussContent-header ps-3 d-flex flex-shrink-0 align-items-center border-bottom border-dark o-border-opacity-15 gap-1 z-1 flex-grow-0" t-custom-ref="header" t-att-class="{ 'py-1': !this.state.correspondentLocalDateTimeFormatted }">
             <t t-if="this.thread">
                 <div t-if="this.showThreadAvatar" class="o-mail-DiscussContent-threadAvatar position-relative align-self-center align-items-center bg-inherit">
-                    <DiscussAvatar thread="this.thread" size="26"/>
+                    <DiscussAvatar record="this.thread" size="26"/>
                     <FileUploader t-if="this.isThreadAvatarEditable" acceptedFileExtensions="'.bmp, .jpg, .jpeg, .png, .svg'" showUploadingText="false" multiUpload="false" onUploaded.bind="(data) => this.onFileUploaded(data)">
                         <t t-set-slot="toggler">
                             <a href="#" class="position-absolute z-1 h-100 w-100 rounded-2 start-0 bottom-0" title="Upload Avatar">

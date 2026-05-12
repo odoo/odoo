@@ -3,7 +3,7 @@
 
     <t t-name="mail.DiscussCommand">
         <div class="o-mail-DiscussCommand o_command_default d-flex align-items-center ps-3 pe-4" t-att-class="{ 'o-uiSmall': this.ui.isSmall }">
-            <DiscussAvatar t-if="this.props.channel or this.props.persona" channel="this.props.channel" persona="this.props.persona" size="this.ui.isSmall ? 32 : 26" className="'me-2'"/>
+            <DiscussAvatar t-if="this.props.channel or this.props.persona" record="this.props.channel or this.props.persona" size="this.ui.isSmall ? 32 : 26" className="'me-2'"/>
             <span class="o-mail-DiscussCommand-nameContainer pe-1 text-ellipsis d-flex align-items-center fw-bold" t-att-class="{ 'o-action': this.props.action }">
                 <t t-if="this.props.channel?.parent_channel_id">
                     <span class="text-truncate flex-shrink-0 opacity-75 mw-75 small" t-out="this.props.channel?.parent_channel_id.displayName"/>

@@ -38,6 +38,8 @@ export class Record {
     static records;
     /** @type {import("models").Store} */
     static store;
+    /** @type {string} */
+    static _name;
     /** @param {() => any} fn */
     static MAKE_UPDATE(fn) {
         return this.store.MAKE_UPDATE(...arguments);

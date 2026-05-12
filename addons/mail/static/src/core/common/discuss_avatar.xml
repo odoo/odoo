@@ -13,7 +13,7 @@
                 <svg width="25" height="15" viewBox="0 0 25 15">
                     <foreignObject x="0" y="0" width="25" height="15">
                         <ThreadIcon t-if="this.thread" thread="this.thread" typing="this.props.typing"/>
-                        <ImStatus t-elif="this.props.member" member="this.props.member" className="'d-flex'" size="'md'" typing="this.props.typing"/>
+                        <ImStatus t-elif="this.channelMember" member="this.channelMember" className="'d-flex'" size="'md'" typing="this.props.typing"/>
                         <ImStatus t-elif="this.user" user="this.user" persona="this.persona"  typing="this.props.typing"/>
                         <ImStatus t-elif="this.persona" persona="this.persona" typing="this.props.typing"/>
                     </foreignObject>
@@ -24,7 +24,7 @@
 
     <t t-name="mail.DiscussAvatar.avatarImg">
         <img t-if="this.thread" class="w-100 h-100 object-fit-cover" t-att-class="{ [this.props.imgRoundedClass]: this.props.imgRoundedClass, 'rounded-2': !this.props.imgRoundedClass }" t-att-src="this.thread.channel?.parent_channel_id?.avatarUrl ?? this.thread.channel?.avatarUrl ?? this.thread.avatarUrl" alt="Thread Image"/>
-        <img t-elif="this.props.member" alt="" class="w-100 h-100 object-fit-cover" t-att-class="{ [this.props.imgRoundedClass]: this.props.imgRoundedClass, 'rounded-3': !this.props.imgRoundedClass }" t-att-src="this.props.member.avatarUrl"/>
+        <img t-elif="this.channelMember" alt="" class="w-100 h-100 object-fit-cover" t-att-class="{ [this.props.imgRoundedClass]: this.props.imgRoundedClass, 'rounded-3': !this.props.imgRoundedClass }" t-att-src="this.channelMember.avatarUrl"/>
         <img
             t-elif="this.user or this.persona"
             class="w-100 h-100 object-fit-cover"
