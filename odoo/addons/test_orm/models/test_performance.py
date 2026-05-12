@@ -14,6 +14,7 @@ class Test_PerformanceBase(models.Model):
     computed_value = fields.Float(compute="_computed_value")
     indirect_computed_value = fields.Float(compute="_indirect_computed_value")
     partner_id = fields.Many2one('test_orm.partner', string='Customer')
+    partner_name = fields.Char(related='partner_id.name', related_sudo=False, string="Partner's Name")
 
     line_ids = fields.One2many('test_performance.line', 'base_id')
     total = fields.Integer(compute="_total", store=True)

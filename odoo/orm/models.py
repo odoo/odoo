@@ -3162,6 +3162,17 @@ class BaseModel(metaclass=MetaModel):
             if field.store:
                 fields_to_fetch.append(field)
             else:
+                # It is preferable to retrieve related `compute_sql` fields directly,
+                # provided that their dependencies are not already stored in the cache.
+                if (
+                    field.compute_sql
+                    and field.related
+                    and not (
+                        ignore_when_in_cache
+                        and field._is_related_depends_cached(self)
+                    )
+                ):
+                    fields_to_fetch.append(field)
                 # optimization: fetch field dependencies
                 for dotname in self.pool.field_depends[field]:
                     dep_field = self._fields[dotname.split('.', 1)[0]]

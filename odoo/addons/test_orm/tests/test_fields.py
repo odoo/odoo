@@ -1430,6 +1430,30 @@ class TestFields(TransactionCaseWithUserDemo, TransactionExpressionCase):
             (record2.id, record2.foo_id.id, None, record2.foo_bar_name_sudo),
         ])
 
+    def test_25_related_search_fetch_access(self):
+        """Fetch related compute_sql fields without bypassing comodel access rules."""
+        model = self.env['test_orm.related'].with_user(self.env.ref('base.user_admin'))
+        bar1, bar2 = self.env['test_orm.related_bar'].create([{'name': 'B1'}, {'name': 'B2'}])
+        foo1, foo2 = self.env['test_orm.related_foo'].create([
+            {'name': 'F1', 'bar_id': bar1.id},
+            {'name': 'F2', 'bar_id': bar2.id},
+        ])
+        record1, record2 = model.create([
+            {'name': 'A1', 'foo_id': foo1.id},
+            {'name': 'A2', 'foo_id': foo2.id},
+        ])
+        # Hide foo2 so the related SQL fetch has to honor comodel read rules.
+        self.env['ir.rule'].create({
+            'name': 'related_foo',
+            'model_id': self.env['ir.model']._get('test_orm.related_foo').id,
+            'domain_force': f"[('id', '=', {foo1.id})]",
+        })
+
+        self.env.invalidate_all()
+        records = model.search_fetch([('id', 'in', (record1 + record2).ids)], ['foo_bar_name'], order='id')
+        with self.assertQueryCount(0):
+            self.assertEqual(records.mapped('foo_bar_name'), ['B1', False])
+
     def test_25_related_multi(self):
         """ test write() on several related fields based on a common computed field. """
         foo = self.env['test_orm.foo'].create({'name': 'A', 'value1': 1, 'value2': 2})

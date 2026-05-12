@@ -158,6 +158,15 @@ class TestPerformance(TestOrmPartnerCommon, SavepointCaseWithUserDemo):
             #  on 'value', and the latter is in cache
             records.fetch(['indirect_computed_value'])
 
+        self.env.invalidate_all()
+        records.fetch(['partner_id'])
+        records.partner_id.fetch(['name'])
+        with self.assertQueryCount(0):
+            # 'partner_name' has a SQL representation,
+            # but its related path is already in cache:
+            # -> compute instead of fetching
+            records.fetch(['partner_name'])
+
         with self.assertQueryCount(1):
             records.invalidate_recordset(['value', 'computed_value', 'indirect_computed_value'])
 
@@ -197,6 +206,12 @@ class TestPerformance(TestOrmPartnerCommon, SavepointCaseWithUserDemo):
             self.env.invalidate_all()
             for record in records.search_fetch([], ['partner_id']):
                 record.partner_id
+
+        # related fields with compute_sql are fetched, without separately querying the comodel.
+        with self.assertQueryCount(1):
+            self.env.invalidate_all()
+            for record in records.search_fetch([], ['partner_name']):
+                record.partner_name
 
         # the case where you don't fetch the right field
         with self.assertQueryCount(2):

@@ -739,6 +739,39 @@ class Field[T]:
         for record, value in zip(records, values):
             record[self.name] = self._process_related(value[self.related_field.name], record.env)
 
+    def _is_related_depends_cached(self, records: BaseModel) -> bool:
+        """Return whether the related field ``self`` can be computed from its cached dependency"""
+        assert self.related
+        records = records.sudo() if self.compute_sudo and not records.env.su else records
+        names = self.related.split('.')
+        for name in names[:-1]:
+            if not records:
+                return True
+
+            field = records._fields[name]
+            field_cache = field._get_cache(records.env)
+            values = []
+            for record_id in records._ids:
+                value = field_cache.get(record_id, SENTINEL)
+                if value is SENTINEL:
+                    return False
+                values.append(value)
+
+            if field.type == 'many2one':
+                ids = (value for value in values if value is not None)
+            else:
+                # Same convention as _compute_related():
+                # intermediate x2many relations only keep their first record.
+                ids = itertools.chain.from_iterable(value[:1] for value in values)
+            records = records.env[field.comodel_name].browse(unique(ids))
+
+        if not records:
+            return True
+
+        field = records._fields[names[-1]]
+        field_cache = field._get_cache(records.env)
+        return all(record_id in field_cache for record_id in records._ids)
+
     def _compute_sql_related(self, model, table: TableSQL) -> SQL:
         # traverse_related
         assert self.related and not self.store
