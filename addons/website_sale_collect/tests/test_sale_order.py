@@ -236,3 +236,33 @@ class TestSaleOrder(ClickAndCollectCommon):
         )
         insufficient_stock_data = cart._get_insufficient_stock_data(self.warehouse_2.id)
         self.assertIn(cart.order_line, insufficient_stock_data)
+
+    def test_fiscal_position_correctly_set_in_multi_company_setup(self):
+        company_2 = self.env["res.company"].create({"name": "Company 2"})
+        self.website.company_id = company_2
+        warehouse_2 = self._create_warehouse(company_id=company_2.id)
+        self.in_store_dm.warehouse_ids = [Command.link(warehouse_2.id)]
+        _, fp_company_2 = self.env["account.fiscal.position"].create([
+            {
+                "name": "Company 1 fiscal position",
+                "country_id": warehouse_2.partner_id.country_id.id,
+                "auto_apply": True,
+            },
+            {
+                "name": "Company 2 fiscal position",
+                "country_id": warehouse_2.partner_id.country_id.id,
+                "company_id": company_2.id,
+                "auto_apply": True,
+            },
+        ])
+        so = self._create_in_store_delivery_order(warehouse_id=warehouse_2.id)
+        pickup_location_data = json.dumps({
+            "id": warehouse_2.id,
+            "name": "Test Pickup",
+            "street": "Test Street",
+            "city": "Test City",
+            "zip_code": "12345",
+            "country_code": "US",
+        })
+        so.set_pickup_location(pickup_location_data)
+        self.assertEqual(so.fiscal_position_id, fp_company_2)
