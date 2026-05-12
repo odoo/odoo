@@ -21,9 +21,7 @@
         size="'xl'"
         modalRef="this.modalRef">
         <t t-set-slot="header" t-slot-scope="scope">
-            <t t-call="html_builder.AddSnippetDialog.header">
-                <t t-set="dismiss" t-value="scope.close"/>
-            </t>
+            <t t-call="html_builder.AddSnippetDialog.header" dismiss="scope.close"/>
         </t>
         <div class="overflow-hidden w-100">
             <div class="d-flex w-100 h-100 vertical flex-row">
