@@ -95,3 +95,6 @@ El equipo de trabajo está formado por 5 estudiantes. El rol de **Líder de Equi
 
 ## 5. [Cronograma de Sprints e Hitos](cronograma.md)
 
+El cronograma maestro consolida el Sprint 0, los cuatro Sprints de desarrollo, los hitos de evaluación y los entregables esperados para el avance del proyecto.
+
+[Ver cronograma maestro](cronograma.md)

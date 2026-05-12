@@ -58,4 +58,4 @@ Repositorio oficial del proyecto:
 | Plan de Proyecto | [Ver documento](https://roydanpe.github.io/odooIPS/) |
 | Arquitectura del Módulo | [Ver documento](ArquitecturaModuloVnetas.md) |
 | Reporte de Verificación | [Ver documento](REPORTE_VERIFICACION.md) |
-| Cronograma | [Ver documento](cronograma.md) |
+| Cronograma | [Ver documento](https://roydanpe.github.io/odooIPS/cronograma.html) |
