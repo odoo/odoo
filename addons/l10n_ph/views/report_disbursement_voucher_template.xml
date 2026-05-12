@@ -58,7 +58,7 @@
             <t name="voucher_title">Disbursement Voucher:</t>
         </xpath>
 
-        <xpath expr="//div[hasclass('row')][div[hasclass('col-6')][@t-if='o.memo']]" position="after">
+        <xpath expr="//div[span[@t-field='o.memo']]" position="after">
             <t t-if="o.payment_method_id.code == 'check_printing'">
                 <div class="row">
                     <div class="col-6" t-if="o.date">
