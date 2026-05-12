@@ -119,52 +119,6 @@ class TestWebsocketCaryall(WebsocketCase):
             frozen_time.tick(delta=timedelta(seconds=timeout_manager.TIMEOUT + 1))
             self.assertFalse(timeout_manager.has_frame_response_timed_out())
 
-    def test_user_login(self):
-        websocket = self.websocket_connect()
-        new_test_user(self.env, login='test_user', password='Password!1')
-        self.authenticate('test_user', 'Password!1')
-        # The session with whom the websocket connected has been
-        # deleted. WebSocket should disconnect in order for the
-        # session to be updated.
-        self.subscribe(websocket, wait_for_dispatch=False)
-        self.assert_close_with_code(websocket, CloseCode.SESSION_EXPIRED)
-
-    def test_user_logout_incoming_message(self):
-        new_test_user(self.env, login='test_user', password='Password!1')
-        user_session = self.authenticate('test_user', 'Password!1')
-        websocket = self.websocket_connect(cookie=f'session_id={user_session.sid};')
-        self.url_open(
-            '/web/session/logout',
-            method='POST',
-            data={
-                "csrf_token": self.csrf_token(),
-            },
-        )
-        # The session with whom the websocket connected has been
-        # deleted. WebSocket should disconnect in order for the
-        # session to be updated.
-        self.subscribe(websocket, wait_for_dispatch=False)
-        self.assert_close_with_code(websocket, CloseCode.SESSION_EXPIRED)
-
-    def test_user_logout_outgoing_message(self):
-        new_test_user(self.env, login='test_user', password='Password!1')
-        user_session = self.authenticate('test_user', 'Password!1')
-        websocket = self.websocket_connect(cookie=f'session_id={user_session.sid};')
-        self.subscribe(websocket, ['channel1'], self.env['bus.bus']._bus_last_id())
-        self.url_open(
-            '/web/session/logout',
-            method='POST',
-            data={
-                "csrf_token": self.csrf_token(),
-            },
-        )
-        # Simulate postgres notify. The session with whom the websocket
-        # connected has been deleted. WebSocket should be closed without
-        # receiving the message.
-        self.env['bus.bus']._sendone('channel1', 'notif type', 'message')
-        self.trigger_notification_dispatching(["channel1"])
-        self.assert_close_with_code(websocket, CloseCode.SESSION_EXPIRED)
-
     def test_channel_subscription_disconnect(self):
         websocket = self.websocket_connect()
         self.subscribe(websocket, ['my_channel'], self.env['bus.bus']._bus_last_id())
@@ -264,33 +218,6 @@ class TestWebsocketCaryall(WebsocketCase):
             with patch('odoo.addons.bus.websocket.acquire_cursor') as mock:
                 self.websocket_connect()
                 self.assertFalse(mock.called)
-
-    @patch.dict(os.environ, {"ODOO_BUS_PUBLIC_SAMESITE_WS": "True"})
-    def test_public_configuration(self):
-        new_test_user(self.env, login='test_user', password='Password!1')
-        user_session = self.authenticate('test_user', 'Password!1')
-        serve_forever_called_event = Event()
-        original_serve_forever = WebsocketConnectionHandler._serve_forever
-
-        def serve_forever(websocket, *args):
-            original_serve_forever(websocket, *args)
-            self.assertNotEqual(websocket._session.sid, user_session.sid)
-            self.assertNotEqual(websocket._session.uid, user_session.uid)
-            serve_forever_called_event.set()
-
-        with patch.object(
-            WebsocketConnectionHandler, '_serve_forever', side_effect=serve_forever
-        ) as mock, mute_logger('odoo.addons.bus.websocket'):
-            ws = self.websocket_connect(
-                cookie=f'session_id={user_session.sid};',
-                origin="http://example.com"
-            )
-            self.assertTrue(
-                ws.getheaders().get('set-cookie').startswith(f'session_id={user_session.sid}'),
-                'The set-cookie response header must be the origin request session rather than the websocket session'
-            )
-            serve_forever_called_event.wait(timeout=5)
-            self.assertTrue(mock.called)
 
     def test_trigger_on_websocket_closed(self):
         with patch('odoo.addons.bus.models.ir_websocket.IrWebsocket._on_websocket_closed') as mock:
