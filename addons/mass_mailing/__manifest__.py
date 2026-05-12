@@ -119,6 +119,7 @@
             ('include', 'mass_mailing.assets_mail_themes'),
             'mass_mailing/static/src/scss/mass_mailing_mail.scss',
             'mass_mailing/static/src/iframe_assets/**/*',
+            'mass_mailing/static/src/snippets/**/*.scss',
         ],
         # style assets used to view the mail content with a basic editor
         'mass_mailing.assets_inside_basic_editor_iframe': [
