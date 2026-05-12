@@ -21,6 +21,7 @@ export class TableDragDrop extends Component {
         close: Function,
         moveRow: Function,
         moveColumn: Function,
+        commit: Function,
         tableGrid: Object,
     };
 
@@ -205,6 +206,7 @@ export class TableDragDrop extends Component {
             } else {
                 this.props.moveColumn(targetIndex, this.props.target);
             }
+            this.props.commit();
         }
         // Close overlay after drop
         this.props.close();

@@ -2,6 +2,7 @@ import { describe, expect, manuallyDispatchProgrammaticEvent, test } from "@odoo
 import { unformat } from "./_helpers/format";
 import { animationFrame } from "@odoo/hoot-mock";
 import { setupEditor } from "./_helpers/editor";
+import { getContent } from "./_helpers/selection";
 
 // Note: we allow ±2px tolerance because DOM sizes can differ slightly
 // across environments (subpixel layout + browser rounding).
@@ -1024,5 +1025,697 @@ describe("column resize", () => {
 
         expect(Math.abs(actualColWidth - expectedColWidth) <= TOLERANCE).toBe(true);
         expect(Math.abs(actualRowWidth - expectedRowWidth) <= TOLERANCE).toBe(true);
+    });
+});
+
+describe("table reset", () => {
+    describe("row", () => {
+        test.tags("desktop");
+        test("reset row size removes custom height", async () => {
+            const { el, editor } = await setupEditor(
+                unformat(`
+                    <table class="table table-bordered o_table">
+                        <tbody>
+                            <tr style="height: 38px;">
+                                <td>1</td>
+                            </tr>
+                            <tr style="height: 100px;">
+                                <td class="a">2[]</td>
+                            </tr>
+                            <tr style="height: 38px;">
+                                <td>3</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `)
+            );
+            const table = el.querySelector("table");
+            const row = table.rows[1];
+            editor.shared.resize.resetHeight(row, {
+                layoutContainer: table,
+                elementsSelector: "tr",
+            });
+            expect(getContent(el)).toBe(
+                unformat(`
+                    <p data-selection-placeholder=""><br></p>
+                    <table class="table table-bordered o_table">
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                            </tr>
+                            <tr>
+                                <td class="a">2[]</td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
+                `)
+            );
+        });
+
+        test.tags("desktop");
+        test("reset row size preserves unrelated row heights", async () => {
+            const { el, editor } = await setupEditor(
+                unformat(`
+                    <table class="table table-bordered o_table">
+                        <tbody>
+                            <tr style="height: 50px;">
+                                <td>1</td>
+                            </tr>
+                            <tr style="height: 100px;">
+                                <td class="a">2[]</td>
+                            </tr>
+                            <tr style="height: 200px;">
+                                <td>3</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `)
+            );
+            const table = el.querySelector("table");
+            const row = table.rows[1];
+            editor.shared.resize.resetHeight(row, {
+                layoutContainer: table,
+                elementsSelector: "tr",
+            });
+            expect(getContent(el)).toBe(
+                unformat(`
+                    <p data-selection-placeholder=""><br></p>
+                    <table class="table table-bordered o_table">
+                        <tbody>
+                            <tr style="height: 50px;">
+                                <td>1</td>
+                            </tr>
+                            <tr>
+                                <td class="a">2[]</td>
+                            </tr>
+                            <tr style="height: 200px;">
+                                <td>3</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
+                `)
+            );
+        });
+
+        test.tags("desktop");
+        test("reset row size removes table margin top", async () => {
+            const { el, editor } = await setupEditor(
+                unformat(`
+                    <table class="table table-bordered o_table" style="margin-top: 40px;">
+                        <tbody>
+                            <tr style="height: 100px;">
+                                <td class="a">1[]</td>
+                            </tr>
+                            <tr style="height: 38px;">
+                                <td>2</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `)
+            );
+            const table = el.querySelector("table");
+            const row = table.rows[0];
+            editor.shared.resize.resetHeight(row, {
+                layoutContainer: table,
+                elementsSelector: "tr",
+            });
+            expect(getContent(el)).toBe(
+                unformat(`
+                    <p data-selection-placeholder="" style="margin: 20px 0px -21px;"><br></p>
+                    <table class="table table-bordered o_table">
+                        <tbody>
+                            <tr>
+                                <td class="a">1[]</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
+                `)
+            );
+        });
+    });
+
+    describe("column", () => {
+        test.tags("desktop");
+        test("should redistribute excess width from current column to smaller columns", async () => {
+            const { el, editor } = await setupEditor(
+                unformat(`
+                    <table class="table table-bordered o_table" style="width: 500px">
+                        <colgroup>
+                            <col style="width: 100px;">
+                            <col style="width: 120px;">
+                            <col style="width: 60px;">
+                            <col style="width: 120px;">
+                            <col style="width: 100px;">
+                        </colgroup>
+                        <tbody>
+                            <tr>
+                                <td class="a">1</td>
+                                <td class="b">2</td>
+                                <td class="c">3[]</td>
+                                <td class="d">4</td>
+                                <td class="e">5</td>
+                            </tr>
+                            <tr>
+                                <td class="f">6</td>
+                                <td class="g">7</td>
+                                <td class="h">8</td>
+                                <td class="i">9</td>
+                                <td class="j">10</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `)
+            );
+            const table = el.querySelector("table");
+            const targetColumn = table.querySelectorAll("col")[2];
+            editor.shared.resize.resetWidth(targetColumn, {
+                layoutContainer: table,
+                hasProxyElements: true,
+            });
+            expect(getContent(el)).toBe(
+                unformat(`
+                    <p data-selection-placeholder=""><br></p>
+                    <table class="table table-bordered o_table">
+                        <tbody>
+                            <tr>
+                                <td class="a">1</td>
+                                <td class="b">2</td>
+                                <td class="c">3[]</td>
+                                <td class="d">4</td>
+                                <td class="e">5</td>
+                            </tr>
+                            <tr>
+                                <td class="f">6</td>
+                                <td class="g">7</td>
+                                <td class="h">8</td>
+                                <td class="i">9</td>
+                                <td class="j">10</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
+                `)
+            );
+        });
+
+        test.tags("desktop");
+        test("should redistribute excess width from the current colspan column when resetting column sizes", async () => {
+            const { el, editor } = await setupEditor(
+                unformat(`
+                    <table class="table table-bordered o_table" style="width: 1182px">
+                        <colgroup>
+                            <col style="width: 236.188px;">
+                            <col style="width: 236.188px;">
+                            <col style="width: 312.125px;">
+                            <col style="width: 160.25px;">
+                            <col style="width: 236.25px;">
+                        </colgroup>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td class="a" colspan="2">2[]</td>
+                                <td>3</td>
+                                <td>4</td>
+                            </tr>
+                            <tr>
+                                <td>5</td>
+                                <td>6</td>
+                                <td colspan="2">7</td>
+                                <td>8</td>
+                            </tr>
+                            <tr>
+                                <td>9</td>
+                                <td>10</td>
+                                <td>11</td>
+                                <td>12</td>
+                                <td>13</td>
+                            </tr>
+                            <tr>
+                                <td>14</td>
+                                <td colspan="2">15</td>
+                                <td>16</td>
+                                <td>17</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `)
+            );
+            const table = el.querySelector("table");
+            const targetColumn = table.querySelectorAll("col")[2];
+            editor.shared.resize.resetWidth(targetColumn, {
+                layoutContainer: table,
+                hasProxyElements: true,
+            });
+            expect(getContent(el)).toBe(
+                unformat(`
+                    <p data-selection-placeholder=""><br></p>
+                    <table class="table table-bordered o_table">
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td class="a" colspan="2">2[]</td>
+                                <td>3</td>
+                                <td>4</td>
+                            </tr>
+                            <tr>
+                                <td>5</td>
+                                <td>6</td>
+                                <td colspan="2">7</td>
+                                <td>8</td>
+                            </tr>
+                            <tr>
+                                <td>9</td>
+                                <td>10</td>
+                                <td>11</td>
+                                <td>12</td>
+                                <td>13</td>
+                            </tr>
+                            <tr>
+                                <td>14</td>
+                                <td colspan="2">15</td>
+                                <td>16</td>
+                                <td>17</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
+                `)
+            );
+        });
+
+        test.tags("desktop");
+        test("should redistribute excess width from larger columns to current column", async () => {
+            const { el, editor } = await setupEditor(
+                unformat(`
+                    <table class="table table-bordered o_table" style="width: 700px">
+                        <colgroup>
+                            <col style="width: 120px;">
+                            <col style="width: 80px;">
+                            <col style="width: 60px;">
+                            <col style="width: 180px;">
+                            <col style="width: 60px;">
+                            <col style="width: 80px;">
+                            <col style="width: 120px;">
+                        </colgroup>
+                        <tbody>
+                            <tr>
+                                <td class="a">1</td>
+                                <td class="b">2</td>
+                                <td class="c">3</td>
+                                <td class="d">4[]</td>
+                                <td class="e">5</td>
+                                <td class="f">6</td>
+                                <td class="g">7</td>
+                            </tr>
+                            <tr>
+                                <td class="h">8</td>
+                                <td class="i">9</td>
+                                <td class="j">10</td>
+                                <td class="k">11</td>
+                                <td class="l">12</td>
+                                <td class="m">13</td>
+                                <td class="n">14</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `)
+            );
+            const table = el.querySelector("table");
+            const targetColumn = table.querySelectorAll("col")[3];
+            editor.shared.resize.resetWidth(targetColumn, {
+                layoutContainer: table,
+                hasProxyElements: true,
+            });
+            expect(getContent(el)).toBe(
+                unformat(`
+                    <p data-selection-placeholder=""><br></p>
+                    <table class="table table-bordered o_table" style="width: 700px">
+                        <colgroup>
+                            <col style="width: 120px;">
+                            <col style="width: 80px;">
+                            <col>
+                            <col>
+                            <col>
+                            <col style="width: 80px;">
+                            <col style="width: 120px;">
+                        </colgroup>
+                        <tbody>
+                            <tr>
+                                <td class="a">1</td>
+                                <td class="b">2</td>
+                                <td class="c">3</td>
+                                <td class="d">4[]</td>
+                                <td class="e">5</td>
+                                <td class="f">6</td>
+                                <td class="g">7</td>
+                            </tr>
+                            <tr>
+                                <td class="h">8</td>
+                                <td class="i">9</td>
+                                <td class="j">10</td>
+                                <td class="k">11</td>
+                                <td class="l">12</td>
+                                <td class="m">13</td>
+                                <td class="n">14</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
+                `)
+            );
+        });
+
+        test.tags("desktop");
+        test("reset column size removes table margin left", async () => {
+            const { el, editor } = await setupEditor(
+                unformat(`
+                    <table class="table table-bordered o_table" style="width: 500px; margin-left: 100px;">
+                        <colgroup>
+                            <col style="width: 100px;">
+                            <col style="width: 200px;">
+                            <col style="width: 200px;">
+                        </colgroup>
+                        <tbody>
+                            <tr>
+                                <td class="a">1[]</td>
+                                <td>2</td>
+                                <td>3</td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td>5</td>
+                                <td>6</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `)
+            );
+            const table = el.querySelector("table");
+            const targetColumn = table.querySelector("col");
+            editor.shared.resize.resetWidth(targetColumn, {
+                layoutContainer: table,
+                hasProxyElements: true,
+            });
+            expect(getContent(el)).toBe(
+                unformat(`
+                    <p data-selection-placeholder=""><br></p>
+                    <table class="table table-bordered o_table">
+                        <tbody>
+                            <tr>
+                                <td class="a">1[]</td>
+                                <td>2</td>
+                                <td>3</td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td>5</td>
+                                <td>6</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
+                `)
+            );
+        });
+    });
+});
+
+describe("text columns", () => {
+    describe("column reset", () => {
+        test.tags("desktop");
+        test("should redistribute excess width from middle column", async () => {
+            const { el, editor } = await setupEditor(
+                unformat(`
+                    <div class="container o_text_columns o-contenteditable-false" contenteditable="false" style="width: 700px;">
+                        <div class="row">
+                            <div class="col-4 o-contenteditable-true" contenteditable="true" style="width: 120px;"><p>1</p></div>
+                            <div class="col-4 o-contenteditable-true" contenteditable="true" style="width: 80px;"><p>2</p></div>
+                            <div class="col-4 o-contenteditable-true" contenteditable="true" style="width: 60px;"><p>3</p></div>
+                            <div class="col-4 o-contenteditable-true" contenteditable="true" style="width: 180px;"><p>4[]</p></div>
+                            <div class="col-4 o-contenteditable-true" contenteditable="true" style="width: 60px;"><p>5</p></div>
+                            <div class="col-4 o-contenteditable-true" contenteditable="true" style="width: 80px;"><p>6</p></div>
+                            <div class="col-4 o-contenteditable-true" contenteditable="true" style="width: 120px;"><p>7</p></div>
+                        </div>
+                    </div>
+                `)
+            );
+            const layoutContainer = el.querySelector(".o_text_columns");
+            const targetColumn = el.querySelector(".row > div:nth-child(4)");
+            editor.shared.resize.resetWidth(targetColumn, {
+                layoutContainer,
+            });
+            expect(getContent(el)).toBe(
+                unformat(`
+                    <p data-selection-placeholder=""><br></p>
+                    <div class="container o_text_columns o-contenteditable-false" contenteditable="false" style="width: 700px;">
+                        <div class="row">
+                            <div class="col-4 o-contenteditable-true" contenteditable="true" style="width: 120px;"><p>1</p></div>
+                            <div class="col-4 o-contenteditable-true" contenteditable="true" style="width: 80px;"><p>2</p></div>
+                            <div class="col-4 o-contenteditable-true" contenteditable="true"><p>3</p></div>
+                            <div class="col-4 o-contenteditable-true" contenteditable="true"><p>4[]</p></div>
+                            <div class="col-4 o-contenteditable-true" contenteditable="true"><p>5</p></div>
+                            <div class="col-4 o-contenteditable-true" contenteditable="true" style="width: 80px;"><p>6</p></div>
+                            <div class="col-4 o-contenteditable-true" contenteditable="true" style="width: 120px;"><p>7</p></div>
+                        </div>
+                    </div>
+                    <p data-selection-placeholder=""><br></p>
+                `)
+            );
+        });
+
+        test.tags("desktop");
+        test("reset first column size removes container margin left", async () => {
+            const { el, editor } = await setupEditor(
+                unformat(`
+                    <div class="container o_text_columns o-contenteditable-false" contenteditable="false" style="width: 500px; margin-left: 100px;">
+                        <div class="row">
+                            <div class="col-4 o-contenteditable-true" contenteditable="true" style="width: 100px;"><p>1[]</p></div>
+                            <div class="col-4 o-contenteditable-true" contenteditable="true" style="width: 200px;"><p>2</p></div>
+                            <div class="col-4 o-contenteditable-true" contenteditable="true" style="width: 200px;"><p>3</p></div>
+                        </div>
+                    </div>
+                `)
+            );
+            const layoutContainer = el.querySelector(".o_text_columns");
+            const targetColumn = el.querySelector(".row > div:first-child");
+            editor.shared.resize.resetWidth(targetColumn, {
+                layoutContainer,
+            });
+            expect(getContent(el)).toBe(
+                unformat(`
+                    <p data-selection-placeholder=""><br></p>
+                    <div class="container o_text_columns o-contenteditable-false" contenteditable="false">
+                        <div class="row">
+                            <div class="col-4 o-contenteditable-true" contenteditable="true"><p>1[]</p></div>
+                            <div class="col-4 o-contenteditable-true" contenteditable="true"><p>2</p></div>
+                            <div class="col-4 o-contenteditable-true" contenteditable="true"><p>3</p></div>
+                        </div>
+                    </div>
+                    <p data-selection-placeholder=""><br></p>
+                `)
+            );
+        });
+
+        test.tags("desktop");
+        test("should redistribute excess width from end column", async () => {
+            const { el, editor } = await setupEditor(
+                unformat(`
+                    <div class="container o_text_columns o-contenteditable-false" contenteditable="false" style="width: 400px;">
+                        <div class="row">
+                            <div class="col-4 o-contenteditable-true" contenteditable="true" style="width: 100px;"><p>1</p></div>
+                            <div class="col-4 o-contenteditable-true" contenteditable="true" style="width: 75px;"><p>2</p></div>
+                            <div class="col-4 o-contenteditable-true" contenteditable="true" style="width: 75px;"><p>3</p></div>
+                            <div class="col-4 o-contenteditable-true" contenteditable="true" style="width: 150px;"><p>4</p></div>
+                        </div>
+                    </div>
+                `)
+            );
+            const layoutContainer = el.querySelector(".o_text_columns");
+            const targetColumn = el.querySelector(".row > div:last-child");
+            editor.shared.resize.resetWidth(targetColumn, {
+                layoutContainer,
+            });
+            expect(getContent(el)).toBe(
+                unformat(`
+                    <p data-selection-placeholder=""><br></p>
+                    <div class="container o_text_columns o-contenteditable-false" contenteditable="false">
+                        <div class="row">
+                            <div class="col-4 o-contenteditable-true" contenteditable="true"><p>1</p></div>
+                            <div class="col-4 o-contenteditable-true" contenteditable="true"><p>2</p></div>
+                            <div class="col-4 o-contenteditable-true" contenteditable="true"><p>3</p></div>
+                            <div class="col-4 o-contenteditable-true" contenteditable="true"><p>4</p></div>
+                        </div>
+                    </div>
+                    <p data-selection-placeholder=""><br></p>
+                `)
+            );
+        });
+    });
+});
+
+describe("fit to content (dblclick)", () => {
+    test.tags("desktop");
+    test("dblclick on row bottom edge resets heights of that row and its neighbor", async () => {
+        const { el } = await setupEditor(
+            unformat(`
+                <table class="table table-bordered o_table">
+                    <tbody>
+                        <tr style="height: 100px;"><td><p><br></p></td></tr>
+                        <tr style="height: 100px;"><td><p><br></p></td></tr>
+                        <tr style="height: 100px;"><td><p><br></p></td></tr>
+                    </tbody>
+                </table>
+            `)
+        );
+
+        const table = el.querySelector("table");
+        const firstRow = table.rows[0];
+        const rowRect = firstRow.getBoundingClientRect();
+        const clientX = rowRect.left + rowRect.width / 2;
+        const clientY = rowRect.bottom;
+
+        // Hover between first and second row.
+        manuallyDispatchProgrammaticEvent(firstRow, "mousemove", {
+            clientX,
+            clientY,
+        });
+        await animationFrame();
+        // Reset row heights with double click.
+        manuallyDispatchProgrammaticEvent(firstRow, "dblclick", {
+            clientX,
+            clientY,
+        });
+        await animationFrame();
+
+        expect(getContent(el)).toBe(
+            unformat(`
+                <p data-selection-placeholder=""><br></p>
+                <table class="table table-bordered o_table">
+                    <tbody>
+                        <tr><td><p><br></p></td></tr>
+                        <tr><td><p><br></p></td></tr>
+                        <tr style="height: 100px;"><td><p><br></p></td></tr>
+                    </tbody>
+                </table>
+                <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
+            `)
+        );
+    });
+
+    test.tags("desktop");
+    test("dblclick on table middle-column edge resets both column widths and removes colgroup", async () => {
+        const { el } = await setupEditor(
+            unformat(`
+                <table class="table table-bordered o_table" style="width: 1200px;">
+                    <colgroup>
+                        <col style="width: 500px;">
+                        <col style="width: 700px;">
+                    </colgroup>
+                    <tbody>
+                        <tr>
+                            <td><p><br></p></td>
+                            <td><p><br></p></td>
+                        </tr>
+                    </tbody>
+                </table>
+            `)
+        );
+
+        const table = el.querySelector("table");
+        const firstCell = table.rows[0].cells[0];
+        const cellRect = firstCell.getBoundingClientRect();
+        const clientX = cellRect.right;
+        const clientY = cellRect.top + cellRect.height / 2;
+
+        // Hover between both columns.
+        manuallyDispatchProgrammaticEvent(firstCell, "mousemove", {
+            clientX,
+            clientY,
+        });
+        await animationFrame();
+        // Reset column widths with double click.
+        manuallyDispatchProgrammaticEvent(firstCell, "dblclick", {
+            clientX,
+            clientY,
+        });
+        await animationFrame();
+
+        expect(getContent(el)).toBe(
+            unformat(`
+                <p data-selection-placeholder="" class="o-horizontal-caret"><br></p>
+                <table class="table table-bordered o_table">
+                    <tbody>
+                        <tr>
+                            <td><p><br></p></td>
+                            <td><p><br></p></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
+            `)
+        );
+    });
+
+    test.tags("desktop");
+    test("dblclick on text-column right edge resets both column widths and clears row width", async () => {
+        const { el } = await setupEditor(
+            unformat(`
+                <div class="container o_text_columns o-contenteditable-false" contenteditable="false">
+                    <div class="row" style="width: 800px;">
+                        <div class="col-4 o-contenteditable-true" contenteditable="true" style="width: 500px;">
+                            <p><br></p>
+                        </div>
+                        <div class="col-4 o-contenteditable-true" contenteditable="true" style="width: 300px;">
+                            <p><br></p>
+                        </div>
+                    </div>
+                </div>
+            `)
+        );
+
+        const row = el.querySelector(".o_text_columns .row");
+        const firstColumn = row.firstChild;
+        const columnRect = firstColumn.getBoundingClientRect();
+        const clientX = columnRect.right;
+        const clientY = columnRect.top + columnRect.height / 2;
+
+        // Hover between both text columns.
+        manuallyDispatchProgrammaticEvent(firstColumn, "mousemove", {
+            clientX,
+            clientY,
+        });
+        await animationFrame();
+        // Reset column widths with double click.
+        manuallyDispatchProgrammaticEvent(firstColumn, "dblclick", {
+            clientX,
+            clientY,
+        });
+        await animationFrame();
+
+        expect(getContent(el)).toBe(
+            unformat(`
+                <p data-selection-placeholder=""><br></p>
+                <div class="container o_text_columns o-contenteditable-false" contenteditable="false">
+                    <div class="row">
+                        <div class="col-4 o-contenteditable-true o_resize_handle" contenteditable="true">
+                            <p><br></p>
+                        </div>
+                        <div class="col-4 o-contenteditable-true" contenteditable="true">
+                            <p><br></p>
+                        </div>
+                    </div>
+                </div>
+                <p data-selection-placeholder=""><br></p>
+            `)
+        );
     });
 });

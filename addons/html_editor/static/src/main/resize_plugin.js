@@ -1,16 +1,19 @@
 import { Plugin } from "@html_editor/plugin";
-import { closestElement } from "@html_editor/utils/dom_traversal";
+import { removeStyle } from "@html_editor/utils/dom";
+import { closestElement, selectElements } from "@html_editor/utils/dom_traversal";
 import { getElementHoveredEdge } from "@html_editor/utils/perspective_utils";
 
 export class ResizePlugin extends Plugin {
     static id = "resize";
     static dependencies = ["history"];
+    static shared = ["resetHeight", "resetWidth"];
 
     setup() {
         // Set up mouse event listeners for resize interactions.
         this.addDomListener(this.editable, "mousemove", this.onMouseMove);
         this.addDomListener(this.editable, "mousedown", this.onMouseDown);
         this.addDomListener(this.editable, "mouseleave", this.onMouseLeave);
+        this.addDomListener(this.editable, "dblclick", this.fitToContent);
 
         // Load resizing parameters from plugin resources.
         this.resizingParameters = this.getResource("resizing_parameters");
@@ -28,7 +31,7 @@ export class ResizePlugin extends Plugin {
 
             // Precompute selectors for items without inline width/height.
             const resizableSelectors = (
-                resizingParameter.resizeTargetSelector ??
+                resizingParameter.proxyElementsSelector ||
                 resizingParameter.resizableElementsSelector
             )
                 .split(",")
@@ -77,19 +80,17 @@ export class ResizePlugin extends Plugin {
     }
 
     /**
-     * Handle mouse down events to initiate resize operations.
+     * Resolve resize targets and metadata from an active hover state.
      *
-     * @param {MouseEvent} ev - The mouse down event
-     * @returns {void}
+     * @param {Object} activeHover - Current active hover information
+     * @returns {{
+     *     item: HTMLElement,
+     *     neighbor: HTMLElement,
+     *     position: 'first'|'middle'|'last',
+     * }}
      */
-    onMouseDown(ev) {
-        // Start resize if hovering a resizable element edge.
-        if (!this.activeHover) {
-            return;
-        }
-
-        const { resizableElement, resizingParameter, resizeEdge, direction } = this.activeHover;
-        ev.preventDefault();
+    getResizeTargets(activeHover) {
+        const { resizableElement, resizeEdge, direction } = activeHover;
 
         const previousSibling = resizableElement.previousElementSibling;
         const nextSibling = resizableElement.nextElementSibling;
@@ -119,6 +120,29 @@ export class ResizePlugin extends Plugin {
             neighbor,
             position
         ) || [item, neighbor];
+
+        return {
+            item,
+            neighbor,
+            position,
+        };
+    }
+
+    /**
+     * Handle mouse down events to initiate resize operations.
+     *
+     * @param {MouseEvent} ev - The mouse down event
+     * @returns {void}
+     */
+    onMouseDown(ev) {
+        // Start resize if hovering a resizable element edge.
+        if (!this.activeHover) {
+            return;
+        }
+
+        ev.preventDefault();
+        const { direction, resizingParameter } = this.activeHover;
+        const { item, neighbor, position } = this.getResizeTargets(this.activeHover);
 
         this.isResizingElement = true;
         const handleResize = (ev) =>
@@ -363,6 +387,230 @@ export class ResizePlugin extends Plugin {
                 }
                 break;
             }
+        }
+    }
+
+    /**
+     * Reset the height of an element and normalize related element heights.
+     *
+     * @param {HTMLElement} targetElement - The element whose height should be reset
+     * @param {Object} options - Reset configuration
+     * @param {HTMLElement} options.layoutContainer - Container used for layout normalization
+     * @param {string} options.elementsSelector - Selector for related elements to normalize
+     * @returns {void}
+     */
+    resetHeight(targetElement, { layoutContainer, elementsSelector }) {
+        if (!targetElement) {
+            return;
+        }
+        // Always remove margin-top from the layout container when resetting
+        // height, regardless of which element is being reset. A margin-top set
+        // during a "first-element" edge resize must be cleared so that the
+        // normalizeHeight pass works against the correct available space.
+        removeStyle(layoutContainer, "margin-top");
+        removeStyle(targetElement, "height");
+        this.normalizeHeight(layoutContainer, elementsSelector);
+    }
+
+    /**
+     * Normalize heights of related elements by removing redundant inline heights.
+     *
+     * @param {HTMLElement} layoutContainer - Container holding related elements
+     * @param {string} elementsSelector - Selector for elements participating in normalization
+     * @returns {void}
+     */
+    normalizeHeight(layoutContainer, elementsSelector) {
+        const elements = selectElements(layoutContainer, elementsSelector);
+        const referenceElement = elements.find((element) => !element.style.height);
+        const referenceHeight = parseFloat(getComputedStyle(referenceElement).height);
+        elements.forEach((element) => {
+            if (
+                element.style.height &&
+                Math.abs(parseFloat(element.style.height) - referenceHeight) <= 1
+            ) {
+                removeStyle(element, "height");
+            }
+        });
+    }
+
+    /**
+     * Reset the width of an element and redistribute widths across siblings.
+     *
+     * @param {HTMLElement} targetElement - The element whose width should be reset
+     * @param {Object} options - Reset configuration
+     * @param {HTMLElement} options.layoutContainer - Container defining the reference layout width
+     * @param {boolean} [options.hasProxyElements] - When true, resizing uses proxy elements
+     *   (e.g. <col> for tables). After normalization, if all proxies have no inline width,
+     *   their parent container (e.g. colgroup) is removed to restore natural layout.
+     *   External callers of the shared resetWidth method can simply omit this.
+     * @returns {void}
+     */
+    resetWidth(targetElement, { layoutContainer, hasProxyElements }) {
+        if (!targetElement) {
+            return;
+        }
+        const elementsContainer = targetElement.parentElement;
+        const elements = [...elementsContainer.children];
+        const currentElementIndex = elements.indexOf(targetElement);
+        const marginProp = this.config.direction === "rtl" ? "margin-right" : "margin-left";
+        // Always compensate for any inline margin-left/right on the layout
+        // container, regardless of which element is being reset. When the user
+        // double-clicks a non-first element while the container has a margin
+        // (set during a prior "first-element" edge resize), we must:
+        //   1. Expand the container's inline width to absorb the margin space.
+        //   2. Expand the first element's inline width by the same amount so
+        //      the visual positions of all siblings are preserved.
+        //   3. Remove the inline margin from the container.
+        // This ensures layoutWidth correctly reflects the full available space
+        // before expectedElementWidth is computed below.
+        if (layoutContainer.style[marginProp]) {
+            const margin = parseFloat(layoutContainer.style[marginProp]);
+            layoutContainer.style.width = `${parseFloat(layoutContainer.style.width) + margin}px`;
+            elements[0].style.width = `${
+                (parseFloat(elements[0].style.width) || elements[0].clientWidth) + margin
+            }px`;
+            removeStyle(layoutContainer, marginProp);
+        }
+
+        const currentElementWidth = parseFloat(targetElement.style.width);
+        const layoutWidth = parseFloat(layoutContainer.style.width);
+
+        const elementCount = elements.length;
+        const expectedElementWidth = layoutWidth / elementCount;
+        const widthDifference = currentElementWidth - expectedElementWidth;
+
+        let totalWidthLeftOfElement = 0;
+        let totalWidthRightOfElement = 0;
+
+        elements.forEach((element, index) => {
+            const elementWidth = parseFloat(element.style.width) || element.clientWidth;
+            if (index < currentElementIndex) {
+                totalWidthLeftOfElement += elementWidth;
+            } else if (index > currentElementIndex) {
+                totalWidthRightOfElement += elementWidth;
+            }
+        });
+
+        let expectedWidthLeftOfElement = currentElementIndex * expectedElementWidth;
+        let expectedWidthRightOfElement =
+            (elementCount - 1 - currentElementIndex) * expectedElementWidth;
+        let elementsToAdjust = [];
+
+        for (
+            let i = currentElementIndex - 1;
+            i >= 0 && Math.abs(expectedWidthLeftOfElement - totalWidthLeftOfElement) > 1;
+            i--
+        ) {
+            elementsToAdjust.push(elements[i]);
+            totalWidthLeftOfElement -=
+                parseFloat(elements[i].style.width) || elements[i].clientWidth;
+            expectedWidthLeftOfElement -= expectedElementWidth;
+        }
+
+        for (
+            let i = currentElementIndex + 1;
+            i < elementCount &&
+            Math.abs(expectedWidthRightOfElement - totalWidthRightOfElement) > 1;
+            i++
+        ) {
+            elementsToAdjust.push(elements[i]);
+            totalWidthRightOfElement -=
+                parseFloat(elements[i].style.width) || elements[i].clientWidth;
+            expectedWidthRightOfElement -= expectedElementWidth;
+        }
+
+        elementsToAdjust = elementsToAdjust.filter((adjustableElement) => {
+            const elementWidth =
+                parseFloat(adjustableElement.style.width) || adjustableElement.clientWidth;
+            return widthDifference > 0
+                ? elementWidth < expectedElementWidth
+                : elementWidth > expectedElementWidth;
+        });
+
+        const totalWidthForAdjustment = elementsToAdjust.reduce((width, adjustableElement) => {
+            const elementWidth =
+                parseFloat(adjustableElement.style.width) || adjustableElement.clientWidth;
+            return width + Math.abs(expectedElementWidth - elementWidth);
+        }, 0);
+
+        targetElement.style.width = `${expectedElementWidth}px`;
+        elementsToAdjust.forEach((adjustableElement) => {
+            const adjustableElementWidth =
+                parseFloat(adjustableElement.style.width) || adjustableElement.clientWidth;
+            const adjustmentWidth =
+                (Math.abs(expectedElementWidth - adjustableElementWidth) /
+                    totalWidthForAdjustment) *
+                Math.abs(widthDifference);
+            adjustableElement.style.width = `${
+                adjustableElementWidth + (widthDifference > 0 ? adjustmentWidth : -adjustmentWidth)
+            }px`;
+        });
+        this.normalizeWidth(layoutContainer, elementsContainer, hasProxyElements);
+    }
+
+    /**
+     * Normalize widths of sibling elements by removing redundant inline widths.
+     *
+     * @param {HTMLElement} layoutContainer - Container defining the reference layout width
+     * @param {HTMLElement} elementsContainer - Parent container holding sibling elements
+     * @param {boolean} [hasProxyElements] - When true, indicates proxy-element resizing
+     *   (e.g. <col> for tables). If all elements end up with no inline width, the
+     *   elementsContainer itself (e.g. colgroup) is removed to restore natural layout.
+     * @returns {void}
+     */
+    normalizeWidth(layoutContainer, elementsContainer, hasProxyElements) {
+        const elements = [...elementsContainer.children];
+        const layoutWidth = parseFloat(layoutContainer.style.width) || layoutContainer.clientWidth;
+        const expectedElementWidth = layoutWidth / elements.length;
+        elements.forEach((element) => {
+            const elementWidth = parseFloat(element.style.width) || element.clientWidth;
+            if (elementWidth && Math.abs(elementWidth - expectedElementWidth) <= 1) {
+                removeStyle(element, "width");
+            }
+        });
+        if (elements.every((element) => !element.style.width)) {
+            removeStyle(layoutContainer, "width");
+            // When hasProxyElements is set (e.g. <col> for tables), remove the
+            // proxy container (e.g. colgroup) once all proxies are width-free,
+            // restoring the table's natural auto-layout.
+            if (hasProxyElements) {
+                elementsContainer.remove();
+            }
+        }
+    }
+
+    /**
+     * Reset the size of the currently hovered resize targets.
+     *
+     * Depending on the resize direction, either height or width
+     * normalization logic is applied to the active resize targets.
+     *
+     * @returns {void}
+     */
+    fitToContent() {
+        if (!this.activeHover) {
+            return;
+        }
+        const { direction, resizableElement, resizingParameter } = this.activeHover;
+        const layoutContainer = closestElement(
+            resizableElement,
+            resizingParameter.parentContainerSelector
+        );
+        const layoutContainerHTML = layoutContainer.outerHTML;
+        const { item, neighbor } = this.getResizeTargets(this.activeHover);
+        const resetDimension =
+            direction === "row" ? this.resetHeight.bind(this) : this.resetWidth.bind(this);
+        [item, neighbor].forEach((targetElement) =>
+            resetDimension(targetElement, {
+                layoutContainer,
+                elementsSelector: resizingParameter.resizableElementsSelector,
+                // Pass hasProxyElements so normalizeWidth knows whether to
+                // remove the proxy-elements container (e.g. colgroup) after reset.
+                hasProxyElements: !!resizingParameter.proxyElementsSelector,
+            })
+        );
+        if (layoutContainer.outerHTML !== layoutContainerHTML) {
+            this.dependencies.history.commit();
         }
     }
 }
