@@ -42,13 +42,12 @@
         <field name="name">estate.project.report.graph</field>
         <field name="model">estate.project.report</field>
         <field name="arch" type="xml">
-
-            <graph string="Khách quan tâm theo dự án" type="bar">
+            <graph type="bar">
+                <field name="month" type="row"/>
                 <field name="project_id" type="row"/>
                 <field name="interested_count" type="measure"/>
                 <field name="purchased_count" type="measure"/>
             </graph>
-
         </field>
     </record>
 
