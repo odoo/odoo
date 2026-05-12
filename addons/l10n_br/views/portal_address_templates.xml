@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <template id="address_form_fields" inherit_id="portal.address_form_fields">
+    <template id="address_form_fields" inherit_id="portal_address_extended.address_extended_form_fields">
         <xpath expr="//select[@name='city_id']/option[not(@value='')]" position="attributes">
             <attribute name="t-att-data-l10n_br_zip_ranges" add="c.l10n_br_zip_ranges"/>
         </xpath>
