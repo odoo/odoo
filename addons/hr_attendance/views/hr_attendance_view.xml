@@ -271,7 +271,7 @@
                 <field name="department_id" operator="child_of"/>
                 <field name="check_in"/>
                 <filter string="My Attendances" name="myattendances" domain="[('employee_id.user_id', '=', uid)]" />
-                <filter string="My Team" name="myteam" domain="[('employee_id.parent_id.user_id', '=', uid)]"/>
+                <filter string="My Team" name="myteam" domain="[('employee_ids.is_subordinate', '=', True)]"/>
                 <separator/>
                 <filter string="At Work" name="nocheckout" domain="[('check_out', '=', False)]" />
                 <filter string="Errors" name="errors"
@@ -365,7 +365,7 @@
                 <field name="employee_id"/>
                 <field name="department_id" operator="child_of"/>
                 <filter string="My Attendances" name="myattendances" domain="[('employee_id.user_id', '=', uid)]" />
-                <filter string="My Team" name="myteam" domain="[('employee_id.parent_id.user_id', '=', uid)]"/>
+                <filter string="My Team" name="myteam" domain="[('employee_ids.is_subordinate', '=', True)]"/>
                 <separator/>
                 <filter string="To Approve" name="to_approve" domain="[('overtime_status','=', 'to_approve')]"/>
                 <filter string="Approved" name="approved" domain="[('overtime_status','=', 'approved')]"/>
