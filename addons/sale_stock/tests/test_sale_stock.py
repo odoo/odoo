@@ -249,6 +249,33 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
         self.inv_2 = self.so.invoice_ids.filtered(lambda r: r.state == 'draft')
         self.assertAlmostEqual(self.inv_2.invoice_line_ids.sorted()[0].quantity, 2.0, msg='Sale Stock: refund quantity on the invoice should be 2.0 instead of "%s".' % self.inv_2.invoice_line_ids.sorted()[0].quantity)
         self.assertEqual(self.so.invoice_status, 'invoiced', 'Sale Stock: so invoice_status should be "invoiced" instead of "%s" after invoicing the return' % self.so.invoice_status)
+        self.inv_2.action_post()
+
+        # Create return picking
+        stock_return_picking_form = Form(self.env['stock.return.picking']
+            .with_context(active_ids=pick.ids, active_id=pick.sorted().ids[0],
+            active_model='stock.picking'))
+        return_wiz = stock_return_picking_form.save()
+        return_wiz.product_return_moves.quantity = 3.0  # Return last 3
+        return_wiz.product_return_moves.to_refund = True  # Refund these 3
+        res = return_wiz.create_returns()
+        return_pick = self.env['stock.picking'].browse(res['res_id'])
+
+        # Validate picking
+        return_pick.move_ids.write({'quantity': 3, 'picked': True})
+        return_pick.button_validate()
+
+        # Check invoice
+        self.assertEqual(self.so.invoice_status, 'to invoice', 'Sale Stock: so invoice_status should be "to invoice" instead of "%s" after picking return' % self.so.invoice_status)
+        self.assertAlmostEqual(self.so.order_line.sorted()[0].qty_delivered, 0.0, msg='Sale Stock: delivered quantity should be 0.0 instead of "%s" after picking return' % self.so.order_line.sorted()[0].qty_delivered)
+        # let's do an invoice with refunds
+        adv_wiz = self.env['sale.advance.payment.inv'].with_context(active_ids=[self.so.id]).create({
+            'advance_payment_method': 'delivered',
+        })
+        adv_wiz.with_context(open_invoices=True).create_invoices()
+        self.inv_3 = self.so.invoice_ids.filtered(lambda r: r.state == 'draft')
+        self.assertAlmostEqual(self.inv_3.invoice_line_ids.sorted()[0].quantity, 3.0, msg='Sale Stock: refund quantity on the invoice should be 3.0 instead of "%s".' % self.inv_3.invoice_line_ids.sorted()[0].quantity)
+        self.assertEqual(self.so.invoice_status, 'invoiced', 'Sale Stock: so invoice_status should be "invoiced" instead of "%s" after invoicing the return' % self.so.invoice_status)
 
     def test_03_sale_stock_delivery_partial(self):
         """
