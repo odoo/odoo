@@ -1,7 +1,7 @@
 import { useExternalListener, useLayoutEffect, useRef, useState } from "@web/owl2/utils";
 import { session } from "@web/session";
 import { _t } from "@web/core/l10n/translation";
-import { Component } from "@odoo/owl";
+import { Component, onMounted, onWillUnmount } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { cleanZWChars, deduceURLfromText } from "./utils";
 import { CheckBox } from "@web/core/checkbox/checkbox";
@@ -17,6 +17,15 @@ import {
     getButtonSize,
     getButtonType,
 } from "@html_editor/utils/button_style";
+
+function useContentChange(el, callback) {
+    onMounted(() => {
+        el.addEventListener("keyup", callback);
+    });
+    onWillUnmount(() => {
+        el.removeEventListener("keyup", callback);
+    });
+}
 
 export class LinkPopover extends Component {
     static template = "html_editor.linkPopover";
@@ -142,6 +151,9 @@ export class LinkPopover extends Component {
             // Listen to pointerdown outside the iframe
             useExternalListener(document, "pointerdown", onPointerDown);
         }
+        useContentChange(this.props.linkElement, () => {
+            this.state.urlTitle = this.props.linkElement.textContent;
+        });
     }
 
     toggleAdvancedOptions() {
@@ -371,9 +383,9 @@ export class LinkPopover extends Component {
             return;
         }
         if (this.isAttachmentUrl()) {
-            const { name, mimetype } = await this.props.getAttachmentMetadata(this.state.url);
+            const { mimetype } = await this.props.getAttachmentMetadata(this.state.url);
             this.resetPreview();
-            this.state.urlTitle = name;
+            this.state.urlTitle = this.props.linkElement.textContent;
             this.state.previewIcon = { type: "mimetype", value: mimetype };
             return;
         }
