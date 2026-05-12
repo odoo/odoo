@@ -39,6 +39,9 @@ class HrAttendance(http.Controller):
                 'last_attendance_worked_hours': float_round(employee.last_attendance_worked_hours, precision_digits=2),
                 'last_check_in': employee.last_check_in,
                 'attendance_state': employee.attendance_state,
+                # attendance_based is restricted to hr.group_hr_user; sudo() exposes the employee's own flag for the systray reminder
+                'attendance_based': 'attendance_based' in employee._fields and employee.sudo().attendance_based,
+                'working_now': employee.sudo().is_in_contract and employee.id in employee.sudo()._get_employee_working_now(),
                 'display_systray': employee.company_id.attendance_from_systray,
                 'device_tracking_enabled': employee.company_id.attendance_device_tracking,
                 'capture_check_in_image': employee.company_id.attendance_capture_check_in,

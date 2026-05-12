@@ -1,4 +1,4 @@
-import { useState } from "@web/owl2/utils";
+import { useRef, useState } from "@web/owl2/utils";
 import { Component, onWillStart } from "@odoo/owl";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -6,12 +6,19 @@ import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { rpc, ConnectionLostError } from "@web/core/network/rpc";
+import { usePopover } from "@web/core/popover/popover_hook";
 import { registry } from "@web/core/registry";
 import { formatFloatTime } from "@web/views/fields/formatters";
 import { useService } from "@web/core/utils/hooks";
 import { isIosApp } from "@web/core/browser/feature_detection";
 import { _t } from "@web/core/l10n/translation";
 import { AttendanceVideoStream } from "@hr_attendance/components/attendance_video_stream/attendance_video_stream";
+import { useReminder } from "@hr/hooks/use_reminder";
+
+class AttendanceReminderPopover extends Component {
+    static props = ["close", "message", "onAction"];
+    static template = "hr_attendance.AttendanceReminderPopover";
+}
 
 export class ActivityMenu extends Component {
     static components = { Dropdown, DropdownItem, AttendanceVideoStream };
@@ -31,6 +38,18 @@ export class ActivityMenu extends Component {
             streamAvailable: null,
         });
         this.cameraCapture = null;
+        this.reminderButtonRef = useRef("attendance_systray_button");
+        this.reminderPopover = usePopover(AttendanceReminderPopover, {
+            closeOnClickAway: false,
+            closeOnEscape: false,
+            position: "bottom",
+            popoverClass: "o_attendance_reminder_popover",
+        });
+        this.reminder = useReminder({
+            shouldTrack: () => this.shouldTrackReminder(),
+            getPopover: () => this.reminderPopover,
+            onShowReminder: () => this.showReminder(),
+        });
         this.dropdown = useDropdownState();
         onWillStart(() => {
             this.lazySession.getValue("attendance_user_data", (employee) => {
@@ -50,6 +69,7 @@ export class ActivityMenu extends Component {
     _searchReadEmployeeFill() {
         if (!this.employee?.id) {
             this.state.isDisplayed = false;
+            this.reminder.reset();
             return;
         }
 
@@ -83,6 +103,25 @@ export class ActivityMenu extends Component {
             };
         });
         this.hasCheckedInToday = this.attendancesToday.length > 0;
+    }
+
+    shouldTrackReminder() {
+        return this.state.isDisplayed && !this.state.checkedIn && this.employee?.attendance_based;
+    }
+
+    async showReminder() {
+        await this.searchReadEmployee();
+        if (!this.shouldTrackReminder() || !this.employee.working_now || !this.reminderButtonRef.el) {
+            return false;
+        }
+        this.reminderPopover.open(this.reminderButtonRef.el, {
+            message: _t("Looks like you're working. Don't forget to check in."),
+            onAction: () => {
+                this.reminder.reset();
+                this.dropdown.open();
+            },
+        });
+        return true;
     }
 
     splitTime(timeStr) {
@@ -151,6 +190,7 @@ export class ActivityMenu extends Component {
     }
 
     async signInOut() {
+        this.reminder.reset();
         const checkInImage = this.cameraCapture?.();
         if (this.closeSystrayOnCheckIn) {
             this.dropdown.close();

@@ -7,7 +7,7 @@
                   beforeOpen.bind="this.beforeDropdownOpen"
                   menuClass="'p-0'"
                   state="this.dropdown">
-            <button>
+            <button t-ref="attendance_systray_button">
                 <i class="fa fa-circle"
                    t-attf-class="text-{{ this.state.checkedIn ? 'success' : 'danger' }}"
                    role="img"
@@ -84,6 +84,14 @@
             </t>
         </Dropdown>
     </t>
+</t>
+
+<t t-name="hr_attendance.AttendanceReminderPopover">
+    <button class="d-flex align-items-center gap-2 p-3 w-100 border-0 bg-transparent text-start"
+            t-on-click="props.onAction">
+        <i class="fa fa-sign-in text-primary" aria-hidden="true"/>
+        <span t-esc="props.message"/>
+    </button>
 </t>
 
 </templates>
