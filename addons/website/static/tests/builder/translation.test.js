@@ -501,6 +501,20 @@ test("trying to translate an element inside a .o_not_editable should add a notif
     await contains(":iframe [data-oe-id='10']").click();
 });
 
+test("shouldn't update the translation of an attribute when closing the dialog", async () => {
+    await setupSidebarBuilderForTranslation({
+        websiteContent: `
+            <img src="/web/image/website.s_text_image_default_image" class="img img-fluid mx-auto rounded o_editable" loading="lazy" title="<span data-oe-model=&quot;ir.ui.view&quot; data-oe-id=&quot;544&quot; data-oe-field=&quot;arch_db&quot; data-oe-translation-state=&quot;to_translate&quot; data-oe-translation-source-sha=&quot;sourceSha&quot;>old title</span>" style=""></img>
+        `,
+    });
+    await contains(".modal .btn:contains(Ok, never show me this again)").click();
+    await contains(":iframe img").click();
+    expect(".modal .modal-body input").toHaveCount(1);
+    await contains(".modal .modal-body input").edit("new title");
+    await contains(".modal .btn-close").click();
+    expect(":iframe img").toHaveAttribute("title", "old title");
+});
+
 test("trying to translate an attribute of an image inside a .o_not_editable should add a notification", async () => {
     expect.assertions(2);
     mockService("notification", {
