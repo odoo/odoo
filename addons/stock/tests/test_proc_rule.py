@@ -920,6 +920,110 @@ class TestProcRule(TransactionCase):
         self.assertListEqual(graph_data['x_axis_vals'], ['', 'In 2 day(s)', 'In 4 day(s)', 'In 6 day(s)'])
         self.assertListEqual([curve_line_val['y'] for curve_line_val in graph_data['curve_line_vals']], [40, 20, 40, 20, 40, 20])
 
+    def test_get_rules_from_location_preserves_route(self):
+        """_get_rules_from_location should keep the selected route across chained rules."""
+        warehouse = self.env['stock.warehouse'].search([], limit=1)
+        product = self.env['product.product'].create({'name': 'Route Chain Product', 'is_storable': True})
+        intermediate_location = self.env['stock.location'].create({
+            'name': 'Route Chain Intermediate',
+            'location_id': warehouse.lot_stock_id.id,
+            'usage': 'internal',
+        })
+        selected_route = self.env['stock.route'].create({'name': 'Selected Chain Route'})
+        fallback_route = self.env['stock.route'].create({'name': 'Fallback Product Route'})
+        product.route_ids = [Command.link(fallback_route.id)]
+
+        first_rule = self.env['stock.rule'].create({
+            'name': 'Selected Route First Rule',
+            'route_id': selected_route.id,
+            'action': 'pull',
+            'procure_method': 'make_to_order',
+            'location_src_id': intermediate_location.id,
+            'location_dest_id': warehouse.lot_stock_id.id,
+            'picking_type_id': warehouse.int_type_id.id,
+            'warehouse_id': warehouse.id,
+        })
+        selected_second_rule = self.env['stock.rule'].create({
+            'name': 'Selected Route Second Rule',
+            'route_id': selected_route.id,
+            'action': 'pull',
+            'procure_method': 'make_to_stock',
+            'location_src_id': self.env.ref('stock.stock_location_suppliers').id,
+            'location_dest_id': intermediate_location.id,
+            'picking_type_id': warehouse.in_type_id.id,
+            'warehouse_id': warehouse.id,
+        })
+        fallback_second_rule = self.env['stock.rule'].create({
+            'name': 'Fallback Route Second Rule',
+            'route_id': fallback_route.id,
+            'action': 'pull',
+            'procure_method': 'make_to_stock',
+            'location_src_id': self.env.ref('stock.stock_location_suppliers').id,
+            'location_dest_id': intermediate_location.id,
+            'picking_type_id': warehouse.in_type_id.id,
+            'warehouse_id': warehouse.id,
+        })
+
+        rules = product._get_rules_from_location(warehouse.lot_stock_id, route_ids=selected_route)
+        self.assertIn(first_rule, rules)
+        self.assertIn(selected_second_rule, rules)
+        self.assertNotIn(fallback_second_rule, rules)
+
+    def test_orderpoint_wizard_warehouse_option_lead_time(self):
+        """Check the Warehouses tab lead time follows the selected resupply route."""
+        warehouse_a = self.env['stock.warehouse'].create({
+            'name': 'Lead Time Warehouse A',
+            'code': 'LTWA',
+        })
+        warehouse_b = self.env['stock.warehouse'].create({
+            'name': 'Lead Time Warehouse B',
+            'code': 'LTWB',
+            'resupply_wh_ids': [Command.link(warehouse_a.id)],
+        })
+        product = self.env['product.product'].create({
+            'name': 'Lead Time Route Product',
+            'is_storable': True,
+        })
+        resupply_route = warehouse_b.resupply_route_ids
+        destination_rule = resupply_route.rule_ids.filtered(
+            lambda rule: rule.location_dest_id == warehouse_b.lot_stock_id
+        )
+        source_rule = resupply_route.rule_ids.filtered(
+            lambda rule: rule.location_dest_id == self.env.company.internal_transit_location_id
+        )
+        self.assertEqual(len(destination_rule), 1)
+        self.assertEqual(len(source_rule), 1)
+        destination_rule.delay = 3
+        source_rule.delay = 4
+
+        fallback_route = self.env['stock.route'].create({'name': 'Lead Time Fallback Route'})
+        product.route_ids = [Command.link(fallback_route.id)]
+        self.env['stock.rule'].create({
+            'name': 'Fallback Route Rule',
+            'route_id': fallback_route.id,
+            'action': 'pull',
+            'procure_method': 'make_to_stock',
+            'location_src_id': self.env.ref('stock.stock_location_suppliers').id,
+            'location_dest_id': self.env.company.internal_transit_location_id.id,
+            'picking_type_id': warehouse_a.in_type_id.id,
+            'warehouse_id': warehouse_a.id,
+            'delay': 99,
+        })
+
+        orderpoint = self.env['stock.warehouse.orderpoint'].create({
+            'location_id': warehouse_b.lot_stock_id.id,
+            'warehouse_id': warehouse_b.id,
+            'product_id': product.id,
+            'product_min_qty': 0,
+            'product_max_qty': 5,
+        })
+        info = self.env['stock.replenishment.info'].create({'orderpoint_id': orderpoint.id})
+        option = info.wh_replenishment_option_ids
+
+        self.assertEqual(len(option), 1)
+        self.assertEqual(option.route_id, resupply_route)
+        self.assertEqual(option.lead_time, "7.0 days")
+
 
 class TestProcRuleLoad(TransactionCase):
     def setUp(cls):
