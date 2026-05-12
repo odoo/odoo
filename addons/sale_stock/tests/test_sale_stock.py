@@ -1728,7 +1728,7 @@ class TestSaleStock(TestSaleStockCommon, ValuationReconciliationTestCommon):
         })
         pick.with_user(inventory_admin_user).move_ids.write(
             {'quantity': 1, 'picked': True})
-        Form.from_action(self.env(user=inventory_admin_user), pick.button_validate())\
+        Form.from_action(self.env(user=inventory_admin_user), pick.with_user(inventory_admin_user).button_validate())\
             .save().process_cancel_backorder()
 
     def test_reduce_qty_ordered_no_backorder(self):
