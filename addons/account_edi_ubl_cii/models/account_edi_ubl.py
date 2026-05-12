@@ -2133,9 +2133,6 @@ class AccountEdiUBL(models.AbstractModel):
         to_write['discount'] = discount
 
     def _import_ubl_invoice_line_add_vehicle_values(self, collected_values):
-        if not self.module_installed('account_fleet'):
-            return
-
         tree = collected_values['tree']
         line_tree = collected_values['line_tree']
 
@@ -2166,7 +2163,7 @@ class AccountEdiUBL(models.AbstractModel):
                 'parent_node_path': './{*}Item',
                 'condition': lambda parent_node, node, value: True,
                 'value_path': './{*}Description',
-                'pattern': r'[A-Za-z0-9]{17}',
+                'pattern': r'[A-Z0-9]{17}',
             },
             {
                 # LICENSE PLATE in Item/Description
@@ -2175,7 +2172,7 @@ class AccountEdiUBL(models.AbstractModel):
                 'condition': lambda parent_node, node, value: True,
                 'value_path': './{*}Description',
                 'linked_field': 'license_plate',
-                'pattern': r'\d-[A-Za-z]{3}-\d{3}',  # BE license plate format
+                'pattern': r'[\dMQOTZ]-?[A-Z]{3}-?\d{3}',  # BE license plate format
             },
             {
                 # VIN in AdditionalDocumentReference/ID with schemeID == 'AKG' (1 vin for the whole invoice)
@@ -2597,6 +2594,16 @@ class AccountEdiUBL(models.AbstractModel):
         for line_collected_values in collected_values['lines_collected_values']:
             vehicle_values = line_collected_values.get('vehicle_values', {})
             if not vehicle_values:
+                continue
+
+            name = ' '.join([line_collected_values['name']] + [
+                value
+                for fname, value in vehicle_values
+                if value not in line_collected_values['name']
+            ])
+            line_collected_values['name'] = line_collected_values['to_write']['name'] = name
+
+            if not self.module_installed('account_fleet'):
                 continue
 
             if vehicle_values in cache:
