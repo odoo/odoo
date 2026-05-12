@@ -30,7 +30,6 @@ import { weakMemoize } from "@html_editor/utils/functions";
 /** @typedef {import("plugins").LazyTranslatedString} LazyTranslatedString */
 
 /**
- * @typedef {((insertedNode: Node) => insertedNode)[]} before_insert_within_pre_processors
  * @typedef {{ name: LazyTranslatedString; tagName: string; extraClass?: string; }[]} font_type_items
  */
 

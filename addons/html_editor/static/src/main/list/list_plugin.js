@@ -67,6 +67,13 @@ const listSelectorItems = [
     },
 ];
 
+const isInList = (el) => (isBlock(el) ? el && isListItemElement(el) : isInList(el.parentElement));
+const isListPredicate = (node) => {
+    if (isListItemElement(node)) {
+        return true;
+    }
+};
+
 export class ListPlugin extends Plugin {
     static id = "list";
     static dependencies = [
@@ -183,10 +190,10 @@ export class ListPlugin extends Plugin {
 
         /** Processors */
         normalize_processors: this.normalize.bind(this),
-        node_to_insert_processors: this.processNodeToInsert.bind(this),
         clipboard_content_processors: this.processContentForClipboard.bind(this),
-        before_insert_within_pre_processors: this.insertListWithinPre.bind(this),
-        before_insert_processors: this.handleInsert.bind(this),
+        fragment_to_insert_within_pre_processors: this.processFragmentToInsertWithinPre.bind(this),
+        fragment_to_insert_processors: this.processFragmentToInsert.bind(this),
+        edge_block_to_unwrap_processors: this.processEdgeNodeToUnwrap.bind(this),
 
         /** Overrides */
         delete_backward_overrides: this.handleDeleteBackward.bind(this),
@@ -222,6 +229,16 @@ export class ListPlugin extends Plugin {
         is_node_in_same_block_segment_predicates: (node, blockNode) => {
             const listAncestor = closestElement(node, "ul, ol");
             if (listAncestor && blockNode.contains(listAncestor)) {
+                return false;
+            }
+        },
+        can_hold_selection_after_insertion_predicates: isListPredicate,
+        should_unwrap_edge_block_to_insert_predicates: (_, parent) => isListPredicate(parent),
+        is_parent_compatible_for_insertion_predicates: (parent, blockToInsert) => {
+            if (
+                isListItemElement(parent) &&
+                !this.dependencies.split.isUnsplittable(blockToInsert)
+            ) {
                 return false;
             }
         },
@@ -891,24 +908,6 @@ export class ListPlugin extends Plugin {
     // Handlers of other plugins commands
     // --------------------------------------------------------------------------
 
-    processNodeToInsert(nodeToInsert, container) {
-        if (isListItemElement(container) && isParagraphRelatedElement(nodeToInsert)) {
-            nodeToInsert = this.dependencies.dom.setTagName(nodeToInsert, "LI");
-        }
-        const listEl = container && closestElement(container, listElementSelector);
-        if (!listEl) {
-            return nodeToInsert;
-        }
-        const mode = container && this.getListMode(listEl);
-        if (isListItemElement(nodeToInsert) && nodeToInsert.querySelector("ol, ul")) {
-            return this.convertList(nodeToInsert, mode);
-        }
-        if (isListElement(nodeToInsert)) {
-            return this.convertList(nodeToInsert, this.getListMode(nodeToInsert));
-        }
-        return nodeToInsert;
-    }
-
     handleTab() {
         if (
             !this.dependencies.selection
@@ -1078,8 +1077,8 @@ export class ListPlugin extends Plugin {
         return clonedContents;
     }
 
-    insertListWithinPre(node) {
-        const listItems = node.querySelectorAll("li:not(.oe-nested)");
+    processFragmentToInsertWithinPre(fragment) {
+        const listItems = fragment.querySelectorAll("li:not(.oe-nested)");
         for (const li of listItems) {
             const nestingLvl = ancestors(li).filter(isListElement).length - 1;
             const list = closestElement(li, "ul, ol");
@@ -1098,7 +1097,7 @@ export class ListPlugin extends Plugin {
             const prefix = " ".repeat(nestingLvl * 4) + char;
             li.prepend(this.document.createTextNode(prefix));
         }
-        return node;
+        return fragment;
     }
 
     // --------------------------------------------------------------------------
@@ -1354,12 +1353,58 @@ export class ListPlugin extends Plugin {
             });
     }
 
-    handleInsert(container, block) {
+    processFragmentToInsert(fragment) {
         if (!this.config.allowChecklist) {
-            for (const list of container.querySelectorAll(".o_checklist > li")) {
+            for (const list of fragment.querySelectorAll(".o_checklist > li")) {
                 this.liToBlocks(list);
             }
         }
-        return container;
+        const hasSingleChild = nodeSize(fragment) === 1;
+        const selection = this.dependencies.selection.getEditableSelection();
+
+        // Inserting a list at the start/end of an existing list item should
+        // merge its items into the current list instead of producing invalid or
+        // surprising nested list markup.
+        if (isInList(selection.anchorNode) && isListElement(fragment.firstChild)) {
+            unwrapContents(fragment.firstChild);
+        }
+        // Similarly if the html inserted ends with a list.
+        if (isInList(selection.focusNode) && isListElement(fragment.lastChild) && !hasSingleChild) {
+            unwrapContents(fragment.lastChild);
+        }
+
+        // Content inserted from a list item should extend the current list.
+        const listRef = closestElement(selection.anchorNode, listElementSelector);
+        if (listRef) {
+            const mode = this.getListMode(listRef);
+            for (const node of childNodes(fragment)) {
+                if (isParagraphRelatedElement(node)) {
+                    this.dependencies.dom.setTagName(node, "LI", true);
+                } else if (isListItemElement(node) && node.querySelector("ol, ul")) {
+                    this.convertList(node, mode);
+                } else if (isListElement(node)) {
+                    this.convertList(node, this.getListMode(node));
+                }
+            }
+        }
+        return fragment;
+    }
+
+    /**
+     * Unwrap the deepest nested first <li> element in the container to extract
+     * and paste the text content of the list.
+     *
+     * @param {Element} element
+     * @param {boolean} isFirst
+     * @returns {Element}
+     */
+    processEdgeNodeToUnwrap(element, isFirst) {
+        if (isListItemElement(element)) {
+            const leaf = isFirst ? firstLeaf(element) : lastLeaf(element);
+            const deepestBlock = closestBlock(leaf);
+            this.dependencies.split.splitAroundUntil(deepestBlock, element);
+            element.replaceChildren(...childNodes(deepestBlock));
+        }
+        return element;
     }
 }

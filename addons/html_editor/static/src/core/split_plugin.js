@@ -436,9 +436,8 @@ export class SplitPlugin extends Plugin {
 
             // Check if we can split at this line break.
             const unsplittable = ancestors(br, block).find(this.isUnsplittable.bind(this));
-            const canWrapInUnsplittable = allowsParagraphRelatedElements(unsplittable);
             if (unsplittable) {
-                if (canWrapInUnsplittable) {
+                if (allowsParagraphRelatedElements(unsplittable)) {
                     // If splitting here would split an unsplittable element,
                     // remove the line break and wrap the content around it in
                     // new base containers.
