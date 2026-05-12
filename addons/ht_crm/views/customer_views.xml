@@ -208,10 +208,9 @@
             <list>
                 <!-- TRƯỜNG CƠ BẢN -->
                 <field name="name"/>
-                <field name="partner_platform"/>
-                <field name="email"/>
-                <field name="date_of_birth"/>
                 <field name="id_number"/>
+                <field name="email"/>
+                <field name="date_of_birth"/>                
                 <field name="issue_date"/>
                 <field name="issue_place"/>
                 <field name="permanent_address"/>
@@ -222,6 +221,7 @@
                 <field name="previous_salesperson_ids" widget="many2many_tags" groups="ht_crm.group_ht_leader,ht_crm.group_ht_executive"/>
                 <field name="ignore" widget="checkbox" groups="ht_crm.group_ht_leader,ht_crm.group_ht_executive"/> -->
                 <field name="type"/>
+                <field name="partner_platform"/>
             </list> 
         </field>
     </record>

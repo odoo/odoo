@@ -1,12 +1,17 @@
 <odoo>
-    <record id="view_transaction_graph" model="ir.ui.view">
-        <field name="name">sale.transaction.graph</field>
-        <field name="model">sale.transaction</field>
+    <record id="view_revenue_quarter_graph" model="ir.ui.view">
+        <field name="name">revenue.quarter.report.graph</field>
+        <field name="model">revenue.quarter.report</field>
         <field name="arch" type="xml">
-            <graph string="Doanh số theo tháng">
-                <field name="date" type="row"/>
-                <field name="value" type="measure"/>
+
+            <graph string="Doanh thu theo quý" type="line">
+
+                <field name="quarter"/>
+
+                <field name="total_revenue" type="measure"/>
+
             </graph>
+
         </field>
-    </record>  
+    </record>
 </odoo>

@@ -13,9 +13,16 @@ class EstatePropertyUnit(models.Model):
     _name = 'estate.property.unit'
     _description = 'Căn hộ / Sản phẩm bất động sản'
 
-    name = fields.Char(
+    currency_id = fields.Many2one(
+        'res.currency',
+        default=lambda self: self.env.company.currency_id
+    )
+
+    name = fields.Char(string="Tên căn", size=50)
+
+    product_code = fields.Char(
         string="Mã sản phẩm",
-        compute="_compute_name",
+        compute="_compute_product_code",
         store=True
     )
     project_id = fields.Many2one(
@@ -25,7 +32,7 @@ class EstatePropertyUnit(models.Model):
         ondelete='cascade'
     )
 
-    block = fields.Char(string="Block", size=5)
+    block = fields.Char(string="Block", size=20)
     floor = fields.Integer(string="Tầng")
     unit_number = fields.Integer(string="Căn hộ số", required=True)
 
@@ -42,7 +49,7 @@ class EstatePropertyUnit(models.Model):
     booking_code = fields.Char(string="Mã VBTT đặt mua")
 
     # Trường bổ sung
-    price = fields.Float(string="Giá bán")
+    price = fields.Monetary(string="Giá bán", currency_field="currency_id")
     state = fields.Selection([
         ('available', 'Còn trống'),
         ('reserved', 'Giữ chỗ'),
@@ -53,7 +60,7 @@ class EstatePropertyUnit(models.Model):
 
 
     @api.depends('unit_type_id', 'unit_number')
-    def _compute_name(self):
+    def _compute_product_code(self):
         for rec in self:
             unit_block = rec.block or ""
 
@@ -61,15 +68,11 @@ class EstatePropertyUnit(models.Model):
             unit_no = f"{rec.unit_number:02d}"
 
             if unit_block and unit_floor and unit_no:
-                rec.name = f"{unit_block}{unit_floor}{unit_no}"
+                rec.product_code = f"{unit_block}{unit_floor}{unit_no}"
             else:
-                rec.name = ""
+                rec.product_code = ""
 
     # Ràng buộc
-    _sql_constraints = [
-        ('product_code_unique', 'unique(product_code)', 'Mã sản phẩm phải duy nhất!')
-    ]
-    
     @api.constrains('floor')
     def _check_floor_non_negative(self):
         for rec in self:

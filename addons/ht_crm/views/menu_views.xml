@@ -74,21 +74,27 @@
 
     <record id="action_customer_graph" model="ir.actions.act_window">
         <field name="name">Biểu đồ KH</field>
-        <field name="res_model">sale.customer</field>
+        <field name="res_model">sale.customer.report</field>
         <field name="view_mode">graph,list</field>
         <field name="context">{'graph_mode': 'pie'}</field>
     </record>
 
     <record id="action_transaction_graph" model="ir.actions.act_window">
         <field name="name">Biểu đồ GD</field>
-        <field name="res_model">sale.transaction</field>
+        <field name="res_model">revenue.quarter.report</field>
         <field name="view_mode">graph,list</field>
     </record>
 
-    <record id="action_estate_project_graph" model="ir.actions.act_window">
-        <field name="name">Biểu đồ Dự Án</field>
-        <field name="res_model">estate.project</field>
-        <field name="view_mode">graph,list</field>
+    <record id="action_estate_project_unit_report" model="ir.actions.act_window">
+        <field name="name">Báo cáo sản phẩm dự án</field>
+        <field name="res_model">estate.project.unit.report</field>
+        <field name="view_mode">graph,pivot</field>
+    </record>
+
+    <record id="action_estate_project_report" model="ir.actions.act_window">
+        <field name="name">Báo cáo dự án</field>
+        <field name="res_model">estate.project.report</field>
+        <field name="view_mode">graph,pivot</field>
     </record>
 
     <menuitem id="menu_ht_root" name="HTLand CRM" sequence="10">
@@ -118,7 +124,8 @@
         <menuitem id="menu_statistics_root" name="Thống Kê" sequence="40">
             <menuitem id="menu_stats_customer" name="Khách hàng" action="action_customer_graph"/>
             <menuitem id="menu_stats_transaction" name="Giao dịch" action="action_transaction_graph"/>
-            <menuitem id="menu_stats_project" name="Dự án" action="action_estate_project_graph"/>
+            <menuitem id="menu_stats_project" name="Dự án" action="action_estate_project_report"/>
+            <menuitem id="menu_stats_project_unit" name="Sản phẩm dự án" action="action_estate_project_unit_report"/>
         </menuitem> 
 
         <!-- SYSTEM -->

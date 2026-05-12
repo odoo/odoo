@@ -1,11 +1,69 @@
 <odoo>
-    <record id="view_customer_graph" model="ir.ui.view">
-        <field name="name">sale.customer.graph</field>
-        <field name="model">sale.customer</field>
+    <record id="view_customer_report_graph" model="ir.ui.view">
+        <field name="name">sale.customer.report.graph</field>
+        <field name="model">sale.customer.report</field>
         <field name="arch" type="xml">
-            <graph string="Số giao dịch theo khách hàng" type="bar">
-                <field name="source"/>
+            <graph>
+                <field name="source" type="row"/>
+                <field name="customer_count" type="measure"/>
             </graph>
+        </field>
+    </record>
+
+
+    <!-- Dự án -->
+    <record id="view_estate_project_unit_report_graph" model="ir.ui.view">
+        <field name="name">estate.project.unit.report.graph</field>
+        <field name="model">estate.project.unit.report</field>
+        <field name="arch" type="xml">
+            <graph string="Tình trạng căn hộ" type="bar">
+                <field name="project_id" type="row"/>
+                <field name="state" type="col"/>
+                <field name="unit_count" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="view_estate_project_unit_report_pivot" model="ir.ui.view">
+        <field name="name">estate.project.unit.report.pivot</field>
+        <field name="model">estate.project.unit.report</field>
+        <field name="arch" type="xml">
+            <pivot string="Báo cáo dự án">
+                <field name="project_id" type="row"/>
+                <field name="state" type="col"/>
+                <field name="unit_count" type="measure"/>
+                <field name="avg_price" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+
+    <record id="view_estate_project_report_graph" model="ir.ui.view">
+        <field name="name">estate.project.report.graph</field>
+        <field name="model">estate.project.report</field>
+        <field name="arch" type="xml">
+
+            <graph string="Khách quan tâm theo dự án" type="bar">
+                <field name="project_id" type="row"/>
+                <field name="interested_count" type="measure"/>
+                <field name="purchased_count" type="measure"/>
+            </graph>
+
+        </field>
+    </record>
+
+    <record id="view_estate_project_report_pivot" model="ir.ui.view">
+        <field name="name">estate.project.report.pivot</field>
+        <field name="model">estate.project.report</field>
+        <field name="arch" type="xml">
+
+            <pivot string="KPI dự án">
+                <field name="project_id" type="row"/>
+                <field name="interested_count" type="measure"/>
+                <field name="purchased_count" type="measure"/>
+                <field name="conversion_rate" type="measure" string="Tỷ lệ chuyển đổi (%)"/>
+            </pivot>
+
         </field>
     </record>
 </odoo>

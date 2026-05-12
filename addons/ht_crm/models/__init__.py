@@ -1,5 +1,4 @@
-from . import phonebook
 from . import customer
-from . import estate_project
-from . import employee
+from . import estate
 from . import transaction
+from . import hr
