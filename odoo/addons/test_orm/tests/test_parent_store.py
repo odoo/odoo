@@ -12,7 +12,7 @@ class TestParentStore(TransactionCase):
         super(TestParentStore, self).setUp()
 
         # force res_partner_category.copy() to copy children
-        category = self.env['res.partner.category']
+        category = self.env['test_orm.partner.category']
         self.patch(category._fields['child_ids'], 'copy', True)
 
         # setup categories
@@ -39,8 +39,8 @@ class TestParentStore(TransactionCase):
         self.assertEqual(len(records), 0)
 
         # Missing parent without _parent_store
-        category = self.env['res.partner.category']
-        self.patch(self.env.registry['res.partner.category'], '_parent_store', False)
+        category = self.env['test_orm.partner.category']
+        self.patch(self.env.registry['test_orm.partner.category'], '_parent_store', False)
         records = category.search([('parent_id', 'child_of', 999999999)])
         self.assertEqual(len(records), 0)
 
@@ -52,8 +52,8 @@ class TestParentStore(TransactionCase):
         self.assertEqual(len(records), 0)
 
         # Missing child without _parent_store
-        category = self.env['res.partner.category']
-        self.patch(self.env.registry['res.partner.category'], '_parent_store', False)
+        category = self.env['test_orm.partner.category']
+        self.patch(self.env.registry['test_orm.partner.category'], '_parent_store', False)
         records = category.search([('parent_id', 'child_of', 999999999)])
         self.assertEqual(len(records), 0)
 
