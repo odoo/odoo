@@ -10,10 +10,11 @@ from odoo.http.session import SessionExpiredException
 from odoo.tests import HttpCase, mute_logger, new_test_user
 
 from odoo.addons.bus.session_helpers import _get_session_token_query_params, check_session
+from odoo.addons.bus.tests.common import WebsocketCase
 from odoo.addons.bus.websocket import CloseCode, WebsocketConnectionHandler
 
 
-class TestWebsocketCheckSession(HttpCase):
+class TestWebsocketCheckSession(WebsocketCase, HttpCase):
     def test_check_session_deletion_time(self):
         bob = new_test_user(self.env, "bob", groups="base.group_user")
         self.authenticate(bob.login, bob.password)
