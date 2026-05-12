@@ -4,7 +4,7 @@
 <t t-name="html_builder.AddSnippetDialog.header" t-inherit="web.Dialog.header" t-inherit-mode="primary">
     <xpath expr="//h4[hasclass('modal-title')]" position="after">
         <button class="btn border-0 d-flex align-items-center"
-                t-on-click="toggleMobilePreview"
+                t-on-click="this.toggleMobilePreview"
                 t-att-class="{ 'text-success': this.state.isMobilePreviewMode }"
                 title="Toggle Mobile Preview"
                 aria-label="Toggle Mobile Preview">
