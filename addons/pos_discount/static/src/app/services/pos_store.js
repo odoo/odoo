@@ -49,6 +49,13 @@ patch(PosStore.prototype, {
             this.numpadMode = "price";
         }
     },
+    getLinesToMerge(sourceOrder, destinationOrder) {
+        const res = super.getLinesToMerge(...arguments);
+        if (destinationOrder.globalDiscountPc) {
+            return res.filter((line) => !line.isDiscountLine);
+        }
+        return res;
+    },
     async applyDiscount(percent, order = this.getOrder()) {
         const taxKey = (taxIds) =>
             taxIds
