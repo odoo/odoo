@@ -12,8 +12,7 @@ class StockLocation(models.Model):
         'account.account', 'Stock Valuation Account',
         domain=[('account_type', 'not in', ('asset_receivable', 'liability_payable', 'asset_cash', 'liability_credit_card'))],
         help="Expense account used to re-qualify products removed from stock and sent to this location")
-    is_valued_internal = fields.Boolean('Is valued inside the company', compute="_compute_is_valued", search="_search_is_valued")
-    is_valued_external = fields.Boolean('Is valued outside the company', compute="_compute_is_valued")
+    is_valued = fields.Boolean('Is valued inside the company', compute="_compute_is_valued", search="_search_is_valued")
 
     def _search_is_valued(self, operator, value):
         if operator not in ['=', '!=']:
@@ -26,12 +25,7 @@ class StockLocation(models.Model):
 
     def _compute_is_valued(self):
         for location in self:
-            if location._should_be_valued():
-                location.is_valued_internal = True
-                location.is_valued_external = False
-            else:
-                location.is_valued_internal = False
-                location.is_valued_external = True
+            location.is_valued = location._should_be_valued()
 
     def _should_be_valued(self):
         """ This method returns a boolean reflecting whether the products stored in `self` should
