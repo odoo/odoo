@@ -1001,7 +1001,7 @@ class ProductTemplate(models.Model):
 
     def _set_tracking(self):
         for template in self:
-            template.write({'is_storable': bool(template.tracking)})
+            template.write({'is_storable': bool(template.tracking) and template.type == 'consu'})
 
     @api.onchange('type')
     def _onchange_type(self):
