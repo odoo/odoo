@@ -3,9 +3,9 @@ import { ChannelMember } from "@mail/discuss/core/common/channel_member";
 import { ChannelActionDialog } from "@mail/discuss/core/common/channel_action_dialog";
 import { ChannelInvitation } from "@mail/discuss/core/common/channel_invitation";
 
-import { Component, onWillRender, onWillUpdateProps, onWillStart } from "@odoo/owl";
+import { Component, onWillUpdateProps, onWillStart } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
-import { useState } from "@web/owl2/utils";
+import { onWillRender, useState } from "@web/owl2/utils";
 
 import { useService } from "@web/core/utils/hooks";
 import { useSequential } from "@mail/utils/common/hooks";
