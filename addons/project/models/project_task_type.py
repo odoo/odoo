@@ -119,7 +119,6 @@ class ProjectTaskType(models.Model):
                 mt_project_task_rating.hidden = not rating_active
                 mt_project_task_rating.default = rating_active
                 self.env.ref('project.mt_task_rating').hidden = not rating_active
-                self.env.ref('project.rating_project_request_email_template').active = rating_active
         return super().write(vals)
 
     def copy_data(self, default=None):
