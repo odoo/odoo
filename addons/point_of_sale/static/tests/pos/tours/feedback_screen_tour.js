@@ -11,14 +11,17 @@ import * as Numpad from "@point_of_sale/../tests/generic_helpers/numpad_util";
 import * as OfflineUtil from "@point_of_sale/../tests/generic_helpers/offline_util";
 import { registry } from "@web/core/registry";
 import { inLeftSide } from "@point_of_sale/../tests/pos/tours/utils/common";
-import { negateStep } from "@point_of_sale/../tests/generic_helpers/utils";
+import { negateStep, refresh } from "@point_of_sale/../tests/generic_helpers/utils";
 
 registry.category("web_tour.tours").add("FeedbackScreenTour", {
     steps: () =>
         [
             Chrome.startPoS(),
-            Dialog.confirm("Open Register"),
             OfflineUtil.setOfflineMode(),
+            // ensure that even after refreshing the page while being offline all data is correctly reloaded
+            refresh(),
+            Dialog.confirm("Continue with limited functionality"),
+            Dialog.confirm("Open Register"),
             ProductScreen.addOrderline("Letter Tray", "10", "5"),
             ProductScreen.clickPartnerButton(),
             // Offline: no server search, the partner is already loaded locally.
@@ -32,7 +35,6 @@ registry.category("web_tour.tours").add("FeedbackScreenTour", {
                 total_amount: "55.00", // letter tray has 10% tax (search SRC)
                 cashier_name: "A", // A simple PoS man! (Take the first word)
             }),
-            Dialog.confirm("Continue with limited functionality"),
             FeedbackScreen.clickNextOrder(),
 
             // send email in receipt screen
@@ -52,7 +54,6 @@ registry.category("web_tour.tours").add("FeedbackScreenTour", {
                 total_amount: "72.00",
             }),
             FeedbackScreen.sendEmail("test@feedbackscreen.com", true),
-            OfflineUtil.setOfflineMode(),
             FeedbackScreen.clickNextOrder(),
 
             // order with tip

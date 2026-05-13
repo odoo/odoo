@@ -186,6 +186,7 @@
             ('remove', 'web/static/src/core/errors/error_handlers.js'), # error handling in PoS is different from the webclient
             ('remove', '/web/static/src/core/dialog/dialog.scss'),
             'web/static/src/core/currency.js',
+            'web/static/src/webclient/errors/offline_fail_to_fetch_error_handler.js',
             # barcode scanner
             'barcodes/static/src/barcode_service.js',
             'barcodes/static/src/js/barcode_parser.js',
