@@ -229,7 +229,12 @@ class IrAttachment(models.Model):
             return ""
         try:
             resource_manager = PDFResourceManager()
-            laparams = LAParams(detect_vertical=True)
+            # Setting boxes_flow triggers the _group_textboxes function,
+            # used to group textboxes by distance, which helps sort them
+            # better. In our case, we don't need to sort them this way,
+            # so we can disable the feature to reduce the memory footprint
+            # of the library and avoid memory issues on most PDF files.
+            laparams = LAParams(detect_vertical=True, boxes_flow=None)
 
             with io.StringIO() as content, TextConverter(
                 resource_manager,
