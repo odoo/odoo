@@ -43,6 +43,7 @@ import { edit, press, queryFirst } from "@odoo/hoot-dom";
 import { MailComposerFormController } from "@mail/chatter/web/mail_composer_form";
 import { useSubEnv } from "@odoo/owl";
 import { getIndexedDB } from "../mail_test_helpers";
+import { waitNotifications } from "@bus/../tests/bus_test_helpers";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -1424,6 +1425,10 @@ test("Canned response can be deleted from the bus", async () => {
     await insertText(".o-mail-Composer-input", "", { replace: true });
     await contains(".o-mail-NavigableList-item", { count: 0 });
     pyEnv["mail.canned.response"].unlink([cannedResponseId]);
+    await waitNotifications([
+        "mail.record/insert",
+        (payload) => payload["mail.canned.response"]
+    ]);
     await insertText(".o-mail-Composer-input", "::");
     await contains(".o-mail-NavigableList-item", { count: 1 });
     await contains(".o-mail-NavigableList-item:has(:text('test'))");

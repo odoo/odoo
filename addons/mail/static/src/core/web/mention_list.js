@@ -1,11 +1,10 @@
-import { useLayoutEffect, useState } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { Component } from "@odoo/owl";
 import { useService, useAutofocus } from "@web/core/utils/hooks";
 
 import { NavigableList } from "@mail/core/common/navigable_list";
 import { mapSuggestionsToOptions } from "@mail/core/common/suggestion_hook";
-import { useSequential } from "@mail/utils/common/hooks";
+import { useSearch } from "@mail/utils/common/hooks";
 
 export class MentionList extends Component {
     static template = "mail.MentionList";
@@ -22,46 +21,27 @@ export class MentionList extends Component {
 
     setup() {
         super.setup();
-        this.state = useState({
-            searchTerm: "",
-            options: [],
-            isFetching: false,
-        });
         this.orm = useService("orm");
         this.store = useService("mail.store");
         this.suggestionService = useService("mail.suggestion");
-        this.sequential = useSequential();
         this.ref = useAutofocus({ mobile: true });
+        this.search = useSearch({
+            fetch: (term) =>
+                this.suggestionService.fetchSuggestions(
+                    { delimiter: this.delimiter, term },
+                    { thread: this.props.thread }
+                ),
+            filter: (term) =>
+                this.suggestionService.searchSuggestions(
+                    { delimiter: this.delimiter, term },
+                    { thread: this.props.thread }
+                ).suggestions,
+            deps: () => [this.delimiter, this.props.thread],
+        });
+    }
 
-        useLayoutEffect(
-            (term, delimiter, thread) => {
-                if (!term) {
-                    this.state.options = [];
-                    return;
-                }
-                this.sequential(async () => {
-                    this.state.isFetching = true;
-                    try {
-                        await this.suggestionService.fetchSuggestions(
-                            { delimiter, term },
-                            { thread }
-                        );
-                    } finally {
-                        this.state.isFetching = false;
-                    }
-                    const { suggestions } = this.suggestionService.searchSuggestions(
-                        { delimiter, term },
-                        { thread }
-                    );
-                    this.state.options = suggestions;
-                });
-            },
-            () => [
-                this.state.searchTerm,
-                this.props.type === "Partner" ? "@" : "#",
-                this.props.thread,
-            ]
-        );
+    get delimiter() {
+        return this.props.type === "Partner" ? "@" : "#";
     }
 
     get placeholder() {
@@ -79,12 +59,12 @@ export class MentionList extends Component {
         return {
             anchorRef: this.ref.el,
             position: "bottom-fit",
-            isLoading: !!this.state.searchTerm && this.state.isFetching,
+            isLoading: !!this.search.searchTerm && this.search.loading,
             onSelect: (...args) => {
                 this.props.onSelect(...args);
                 this.props.close();
             },
-            ...mapSuggestionsToOptions(this.props.type, this.state.options, {
+            ...mapSuggestionsToOptions(this.props.type, this.search.results, {
                 thread: this.props.thread,
             }),
         };

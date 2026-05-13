@@ -49,11 +49,6 @@ registry.category("web_tour.tours").add("test_discuss_sub_channel_search", {
         },
         {
             trigger:
-                ".o-mail-ActionPanel:has(.o-mail-SubChannelList) button[aria-label='Search button']",
-            run: "click",
-        },
-        {
-            trigger:
                 ".o-mail-SubChannelList .o-mail-SubChannelPreview:count(1):contains(Sub Channel 10)",
             async run() {
                 loadMoreDisappearedPromise = new Promise(

@@ -11,7 +11,7 @@
                         class="position-absolute top-50 px-2 translate-middle-y smaller opacity-50"
                         role="status"
                     >
-                        <t t-if="this.state.isSearching">
+                        <t t-if="this.search.loading">
                             <i class="fa fa-spin fa-circle-o-notch" title="Loading..." aria-hidden="true"/>
                             <p class="visually-hidden">Member search is loading...</p>
                         </t>
@@ -23,8 +23,7 @@
                         class="form-control bg-view ps-4"
                         placeholder="Search members"
                         aria-label="Search members"
-                        t-custom-model="this.state.searchTerm"
-                        t-on-input="(...args) => this.onInputSearch(...args)"
+                        t-custom-model="this.search.searchTerm"
                         autocomplete="off"
                     />
                 </div>
@@ -40,9 +39,9 @@
                     </div>
                 </t>
             </t>
-            <span t-if="this.state.searchTerm and !this.state.isSearching and !this.hasFilteredMembers(this.categories)" class="mx-2 mt-2 text-muted">No members found.</span>
+            <span t-if="this.search.searchTerm and !this.search.loading and !this.hasFilteredMembers(this.categories)" class="mx-2 mt-2 text-muted">No members found.</span>
             <span t-if="this.isSearchResultCapped" class="smaller text-muted mx-1 mb-1 fst-italic" t-out="this.searchResultCapHint"/>
-            <t t-if="!this.state.searchTerm">
+            <t t-if="!this.search.searchTerm">
                 <span t-if="this.props.channel.unknownMembersCount === 1" class="mx-2 mt-2">And 1 other member.</span>
                 <span t-if="this.props.channel.unknownMembersCount > 1" class="mx-2 mt-2">And <t t-out="this.props.channel.unknownMembersCount"/> other members.</span>
                 <div t-if="!this.props.channel.areAllMembersLoaded" class="mx-2 my-1">
