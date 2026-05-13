@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="mrp.MOViewListDropdown" style="btn">
-        <Dropdown t-if="this.props.record.data.production_state !== 'done'">
+        <Dropdown t-if="this.props.record.data.state !== 'done'">
             <button t-attf-class="btn btn-link d-flex p-0 {{!this.props.record.resId ? 'invisible': ''}}">
                 <div class="d-flex align-items-center">
                     <span t-attf-class="o_wo_status o_wo_bubble {{this.statusColor}}" t-if="this.props.display === 'bubble'"/>
