@@ -59,6 +59,7 @@ class Driver(Thread):
 
         session_id = data.get('session_id')
         if session_id:
+            self.data["owner"] = session_id  # TODO: remove when v19.0 is deprecated
             self.data["session_id"] = session_id
 
         try:
