@@ -1,11 +1,10 @@
 from odoo import fields, models, tools
 
 
-class RevenueQuarterReport(models.Model):
-    _name = 'revenue.quarter.report'
+class RevenueReport(models.Model):
+    _name = 'revenue.report'
     _description = 'Revenue By Quarter'
     _auto = False
-    _rec_name = 'quarter'
 
     quarter= fields.Char(string='Quý')
     month = fields.Integer(string='Tháng')
