@@ -27,7 +27,7 @@ from odoo.tests.common import (
     release_test_lock,
 )
 
-from odoo.addons.bus.models.bus import channel_with_db, json_dump
+from odoo.addons.bus.tools.utils import channel_with_db, json_dump
 from odoo.addons.bus.websocket import CloseCode, Websocket, WebsocketConnectionHandler
 
 

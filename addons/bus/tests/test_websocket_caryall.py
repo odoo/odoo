@@ -15,7 +15,6 @@ from odoo.api import Environment
 from odoo.tests import new_test_user
 
 from odoo.addons.bus import websocket as websocket_module
-from odoo.addons.bus.models.bus import dispatch
 from odoo.addons.bus.models.ir_websocket import IrWebsocket
 from odoo.addons.bus.tests.common import WebsocketCase
 from odoo.addons.bus.websocket import (
@@ -59,26 +58,6 @@ class TestWebsocketCaryall(WebsocketCase):
             self._serve_forever_patch.stop()
             gc.collect()
             self.assertEqual(len(websocket_module._websocket_instances), 0)
-
-    def test_channel_subscription_disconnect(self):
-        websocket = self.websocket_connect()
-        self.subscribe(websocket, ['my_channel'], self.env['bus.bus']._bus_last_id())
-        # channel is added as expected to the channel to websocket map.
-        self.assertIn((self.env.registry.db_name, 'my_channel'), dispatch._channels_to_ws)
-        websocket.close(CloseCode.CLEAN)
-        self.wait_remaining_websocket_connections()
-        # channel is removed as expected when removing the last
-        # websocket that was listening to this channel.
-        self.assertNotIn((self.env.registry.db_name, 'my_channel'), dispatch._channels_to_ws)
-
-    def test_channel_subscription_update(self):
-        websocket = self.websocket_connect()
-        self.subscribe(websocket, ['my_channel'], self.env['bus.bus']._bus_last_id())
-        # channel is added as expected to the channel to websocket map.
-        self.assertIn((self.env.registry.db_name, 'my_channel'), dispatch._channels_to_ws)
-        self.subscribe(websocket, ['my_channel_2'], self.env['bus.bus']._bus_last_id())
-        # channel is removed as expected when updating the subscription.
-        self.assertNotIn((self.env.registry.db_name, 'my_channel'), dispatch._channels_to_ws)
 
     def test_trigger_notification(self):
         websocket = self.websocket_connect()

@@ -12,7 +12,7 @@ from itertools import product
 from odoo.tests import new_test_user
 from odoo.addons.bus.tests.common import WebsocketCase, BusResult
 from odoo.addons.mail.tests.common import MailCommon, freeze_all_time
-from odoo.addons.bus.models.bus import channel_with_db, json_dump
+from odoo.addons.bus.tools.utils import channel_with_db, json_dump
 
 
 class TestMailPresence(WebsocketCase, MailCommon):
