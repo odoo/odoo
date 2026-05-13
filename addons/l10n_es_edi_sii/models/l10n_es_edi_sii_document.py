@@ -133,7 +133,8 @@ class L10nEsEdiSiiDocument(models.Model):
     # -------------------------------------------------------------------------
 
     def _get_web_service_header(self, communication_type):
-        company = self[:1].company_id
+        document = self[:1]
+        company = document.company_id
         return {
             'IDVersionSii': '1.1',
             'Titular': {
@@ -176,8 +177,9 @@ class L10nEsEdiSiiDocument(models.Model):
                 messages = {
                     'accepted': self.env._("The document was accepted by SII."),
                     'accepted_with_errors': self.env._(
-                        "The document was accepted by SII with the following error: %s"
-                    ) % response_msg,
+                        "The document was accepted by SII with the following error: %s",
+                        response_msg,
+                    ),
                     'cancelled': self.env._("The document was cancelled by SII."),
                 }
                 document.move_id.message_post(body=messages[state])
@@ -200,7 +202,10 @@ class L10nEsEdiSiiDocument(models.Model):
                 })
 
                 document.move_id.message_post(
-                    body=self.env._("The document was rejected by SII with the following error: %s") % response_msg
+                    body=self.env._(
+                        "The document was rejected by SII with the following error: %s",
+                        response_msg,
+                    )
                 )
 
             results[document] = {'success': success, 'state': document.state}
@@ -208,7 +213,8 @@ class L10nEsEdiSiiDocument(models.Model):
         return results[self] if len(self) == 1 else results
 
     def _post_to_agency(self, communication_type, info_list):
-        company = self[:1].company_id
+        document = self[:1]
+        company = document.company_id
         connection_vals = self._get_agency_urls()
 
         def response_for_documents(success, response_data):
@@ -223,7 +229,7 @@ class L10nEsEdiSiiDocument(models.Model):
 
                 client = zeep.Client(connection_vals['url'], operation_timeout=30, timeout=30, session=session)
 
-                is_sale = self[:1].move_id.is_sale_document()
+                is_sale = document.move_id.is_sale_document()
                 service_name = 'SuministroFactEmitidas' if is_sale else 'SuministroFactRecibidas'
                 header = self._get_web_service_header(communication_type)
                 if company.l10n_es_sii_test_env and not connection_vals.get('test_url'):
@@ -233,7 +239,7 @@ class L10nEsEdiSiiDocument(models.Model):
                 if company.l10n_es_sii_test_env and connection_vals.get('test_url'):
                     serv._binding_options['address'] = connection_vals['test_url']
 
-                if self[:1].state == 'to_cancel':
+                if document.state == 'to_cancel':
                     if is_sale:
                         res = serv.AnulacionLRFacturasEmitidas(header, info_list)
                     else:
@@ -278,7 +284,8 @@ class L10nEsEdiSiiDocument(models.Model):
             return response_for_documents(True, {'csv': csv_number, 'response_message': 'Correcto'})
 
         results = {}
-        is_sale = self[:1].move_id.is_sale_document()
+        document = self[:1]
+        is_sale = document.move_id.is_sale_document()
 
         def find_document(respl):
             invoice_number = respl.IDFactura.NumSerieFacturaEmisor
@@ -298,7 +305,7 @@ class L10nEsEdiSiiDocument(models.Model):
                     else candidate.move_id.commercial_partner_id
                 )
                 partner_info = partner._l10n_es_edi_get_partner_info()
-                if partner_info.get('NIF') and partner_info['NIF'] == respl_partner_info.NIF:
+                if partner_info.get('NIF') == respl_partner_info.NIF:
                     return candidate
                 if (
                     partner_info.get('IDOtro')

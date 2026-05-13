@@ -1,14 +1,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from collections import defaultdict, Counter
+from collections import Counter, defaultdict
 import math
 
-from odoo import api, fields, models, tools
+from odoo import api, fields, models, modules, tools
 from odoo.exceptions import LockError, UserError
 from odoo.tools.float_utils import float_round
 from markupsafe import Markup
 
 
-L10N_ES_SII_BATCH_SIZE = 10000
+L10N_ES_SII_MAX_BATCH_SIZE = 10000
 
 
 class AccountMove(models.Model):
@@ -154,11 +154,11 @@ class AccountMove(models.Model):
 
         result = True
         for batch_moves in batches.values():
-            for i in range(0, len(batch_moves), L10N_ES_SII_BATCH_SIZE):
-                chunk = batch_moves[i:i + L10N_ES_SII_BATCH_SIZE]
-                result = chunk._send_l10n_es_sii_document_batch() and result
+            for i in range(0, len(batch_moves), L10N_ES_SII_MAX_BATCH_SIZE):
+                chunk = batch_moves[i:i + L10N_ES_SII_MAX_BATCH_SIZE]
+                result = chunk._send_l10n_es_sii_document_batch(allow_raising_lock=False) and result
 
-                if not tools.config['test_enable']:
+                if not tools.config['test_enable'] and not modules.module.current_test:
                     self.env.cr.commit()
         return result
 
@@ -168,25 +168,27 @@ class AccountMove(models.Model):
 
     def _send_l10n_es_sii_document(self, cancel=False):
         """ Creates doc, calls webservice and updates states. """
-        batches = defaultdict(lambda: self.env['account.move'])
-        for move in self:
-            csv = move.l10n_es_edi_csv if not cancel else False
-            batches[(move.company_id.id, move.is_sale_document(), csv)] |= move
+        batches = self.grouped(lambda m: (m.company_id, m.is_sale_document(), not cancel and m.l10n_es_edi_csv))
 
         result = True
         for moves in batches.values():
             result = moves._send_l10n_es_sii_document_batch(cancel=cancel) and result
         return result
 
-    def _send_l10n_es_sii_document_batch(self, cancel=False):
+    def _send_l10n_es_sii_document_batch(self, cancel=False, allow_raising_lock=True):
         """ Creates docs, calls webservice and updates states. """
         target_state = 'to_cancel' if cancel else 'to_send'
-        documents = self.env['l10n_es_edi_sii.document']
-        moves_to_send = self.env['account.move']
+        document_ids = []
+        move_ids_to_send = []
 
         # Avoid the moves to be sent if they are being modified by a parallel transaction (for example reset to draft).
         # It will also avoid the moves to be sent by different parallel transactions.
-        self._l10n_es_sii_lock_move()
+        if allow_raising_lock:
+            self._l10n_es_sii_lock_move()
+        else:
+            self = self.try_lock_for_update()
+            if not self:
+                return False
 
         for move in self:
             document = move.l10n_es_edi_sii_document_ids.filtered(lambda d: d.state == target_state)[:1]
@@ -206,9 +208,13 @@ class AccountMove(models.Model):
                 })
                 continue
 
-            documents |= document
-            moves_to_send |= move
+            document_ids.append(document.id)
+            move_ids_to_send.append(move.id)
 
+        move_ids_to_send_set = set(move_ids_to_send)
+        document_ids_set = set(document_ids)
+        moves_to_send = self.filtered(lambda move: move.id in move_ids_to_send_set)
+        documents = moves_to_send.l10n_es_edi_sii_document_ids.filtered(lambda document: document.id in document_ids_set)
         if not documents:
             return False
 

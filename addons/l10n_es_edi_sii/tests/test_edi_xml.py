@@ -58,13 +58,13 @@ class TestEdiXmls(TestEsEdiCommon):
         invoice_1 = self._create_invoice_es(
             partner_id=self.partner_b.id,
             invoice_line_ids=[{
-                'tax_ids': [(6, 0, self._get_tax_by_xml_id('s_iva21b').ids)],
+                'tax_ids': [Command.set(self._get_tax_by_xml_id('s_iva21b').ids)],
             }],
         )
         invoice_2 = self._create_invoice_es(
             partner_id=self.partner_b.id,
             invoice_line_ids=[{
-                'tax_ids': [(6, 0, self._get_tax_by_xml_id('s_iva21b').ids)],
+                'tax_ids': [Command.set(self._get_tax_by_xml_id('s_iva21b').ids)],
             }],
         )
         (invoice_1 | invoice_2).action_post()
@@ -100,13 +100,13 @@ class TestEdiXmls(TestEsEdiCommon):
         invoice_1 = self._create_invoice_es(
             partner_id=self.partner_b.id,
             invoice_line_ids=[{
-                'tax_ids': [(6, 0, self._get_tax_by_xml_id('s_iva21b').ids)],
+                'tax_ids': [Command.set(self._get_tax_by_xml_id('s_iva21b').ids)],
             }],
         )
         invoice_2 = self._create_invoice_es(
             partner_id=self.partner_b.id,
             invoice_line_ids=[{
-                'tax_ids': [(6, 0, self._get_tax_by_xml_id('s_iva21b').ids)],
+                'tax_ids': [Command.set(self._get_tax_by_xml_id('s_iva21b').ids)],
             }],
         )
         invoices = invoice_1 | invoice_2
@@ -127,14 +127,14 @@ class TestEdiXmls(TestEsEdiCommon):
         invoice = self._create_invoice_es(
             partner_id=self.partner_b.id,
             invoice_line_ids=[{
-                'tax_ids': [(6, 0, self._get_tax_by_xml_id('s_iva21b').ids)],
+                'tax_ids': [Command.set(self._get_tax_by_xml_id('s_iva21b').ids)],
             }],
         )
         refund = self._create_invoice_es(
             move_type='out_refund',
             partner_id=self.partner_b.id,
             invoice_line_ids=[{
-                'tax_ids': [(6, 0, self._get_tax_by_xml_id('s_iva21b').ids)],
+                'tax_ids': [Command.set(self._get_tax_by_xml_id('s_iva21b').ids)],
             }],
         )
         moves = invoice | refund
@@ -156,7 +156,7 @@ class TestEdiXmls(TestEsEdiCommon):
             ref='BILL-1',
             partner_id=self.partner_b.id,
             invoice_line_ids=[{
-                'tax_ids': [(6, 0, self._get_tax_by_xml_id('p_iva21_bc').ids)],
+                'tax_ids': [Command.set(self._get_tax_by_xml_id('p_iva21_bc').ids)],
             }],
         )
         bill_2 = self._create_invoice_es(
@@ -164,7 +164,7 @@ class TestEdiXmls(TestEsEdiCommon):
             ref='BILL-2',
             partner_id=self.partner_b.id,
             invoice_line_ids=[{
-                'tax_ids': [(6, 0, self._get_tax_by_xml_id('p_iva21_bc').ids)],
+                'tax_ids': [Command.set(self._get_tax_by_xml_id('p_iva21_bc').ids)],
             }],
         )
         bills = bill_1 | bill_2
@@ -187,7 +187,7 @@ class TestEdiXmls(TestEsEdiCommon):
             ref='BILL-1',
             partner_id=self.partner_b.id,
             invoice_line_ids=[{
-                'tax_ids': [(6, 0, self._get_tax_by_xml_id('p_iva21_bc').ids)],
+                'tax_ids': [Command.set(self._get_tax_by_xml_id('p_iva21_bc').ids)],
             }],
         )
         bill_2 = self._create_invoice_es(
@@ -195,7 +195,7 @@ class TestEdiXmls(TestEsEdiCommon):
             ref='BILL-2',
             partner_id=self.partner_b.id,
             invoice_line_ids=[{
-                'tax_ids': [(6, 0, self._get_tax_by_xml_id('p_iva21_bc').ids)],
+                'tax_ids': [Command.set(self._get_tax_by_xml_id('p_iva21_bc').ids)],
             }],
         )
         bills = bill_1 | bill_2
@@ -219,20 +219,20 @@ class TestEdiXmls(TestEsEdiCommon):
         invoice_1 = self._create_invoice_es(
             partner_id=self.partner_b.id,
             invoice_line_ids=[{
-                'tax_ids': [(6, 0, self._get_tax_by_xml_id('s_iva21b').ids)],
+                'tax_ids': [Command.set(self._get_tax_by_xml_id('s_iva21b').ids)],
             }],
         )
         invoice_2 = self._create_invoice_es(
             partner_id=self.partner_b.id,
             invoice_line_ids=[{
-                'tax_ids': [(6, 0, self._get_tax_by_xml_id('s_iva21b').ids)],
+                'tax_ids': [Command.set(self._get_tax_by_xml_id('s_iva21b').ids)],
             }],
         )
         invoices = invoice_1 | invoice_2
         invoices.action_post()
 
         with patch(
-            'odoo.addons.l10n_es_edi_sii.models.account_move.L10N_ES_SII_BATCH_SIZE',
+            'odoo.addons.l10n_es_edi_sii.models.account_move.L10N_ES_SII_MAX_BATCH_SIZE',
             1,
         ), patch(
             'odoo.addons.l10n_es_edi_sii.models.l10n_es_edi_sii_document.L10nEsEdiSiiDocument._post_to_agency',
@@ -253,7 +253,7 @@ class TestEdiXmls(TestEsEdiCommon):
             ref=False,
             partner_id=self.partner_b.id,
             invoice_line_ids=[{
-                'tax_ids': [(6, 0, self._get_tax_by_xml_id('p_iva21_bc').ids)],
+                'tax_ids': [Command.set(self._get_tax_by_xml_id('p_iva21_bc').ids)],
             }],
         )
         bill.action_post()
