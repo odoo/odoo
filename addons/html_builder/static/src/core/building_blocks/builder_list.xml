@@ -76,7 +76,10 @@
                                 <t t-out="this.props.addItemTitle"/>
                             </SelectMenu>
                         </div>
-                        <button type="button" class="btn btn-lg btn-secondary fa fa-refresh" title="Update the list with all records and sort it alphabetically" t-on-click="this.updateRecords"/>
+                        <button type="button" class="btn btn-lg btn-secondary fa fa-clone" title="Add all available records to the list and sort it alphabetically" t-on-click="this.updateRecords"/>
+                        <t t-if="this.props.refreshRecordsAction">
+                            <button type="button" class="btn btn-lg btn-secondary fa fa-refresh" title="Update the listed records with the latest data" t-on-click="this.refreshRecords"/>
+                        </t>
                         <button type="button" class="btn btn-lg btn-secondary fa fa-gear" title="Open the record list manager" t-on-click="this.openRecordsDialog"/>
                     </div>
                 </div>
