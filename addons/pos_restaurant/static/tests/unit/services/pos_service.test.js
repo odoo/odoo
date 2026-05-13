@@ -489,4 +489,31 @@ describe("restaurant pos_store.js", () => {
             expect(order.getOrderlines().length).toBe(1);
         });
     });
+
+    test("preparation receipt order_label", async () => {
+        const store = await setupPosEnv();
+        const pos_categories = store.models["pos.category"].getAll().map((c) => c.id);
+
+        const order = await getFilledOrder(store);
+        const partner = store.models["res.partner"].get(3);
+        order.setPartner(partner);
+        expect(order.floating_order_name).toBe(partner.name);
+
+        const generator = store.ticketPrinter.getGenerator({ models: store.models, order });
+        const orderChange = generator.generatePreparationData(new Set([...pos_categories]), {});
+        expect(orderChange[0].extra_data.order_label).toBe(partner.name);
+
+        const table = store.models["restaurant.table"].get(2);
+        const tableOrder = await getFilledOrder(store, { table_id: table });
+        tableOrder.setPartner(partner);
+        const tableGenerator = store.ticketPrinter.getGenerator({
+            models: store.models,
+            order: tableOrder,
+        });
+        const tableOrderChange = tableGenerator.generatePreparationData(
+            new Set([...pos_categories]),
+            {}
+        );
+        expect(tableOrderChange[0].extra_data.order_label).toBe(`Table ${table.table_number}`);
+    });
 });
