@@ -70,12 +70,24 @@ class StockLot(models.Model):
                 lot.name = lot.product_id.lot_sequence_id.next_by_id() if lot.product_id.lot_sequence_id else False
 
     @api.model
-    def generate_lot_names(self, first_lot, count):
+    def generate_lot_names(self, first_lot, count, product_sequence=False):
         """Generate `lot_names` from a string."""
+        # Get the lot sequence in order to extract prefix and suffix
+        seq = product_sequence or self.env.ref('stock.sequence_production_lots', raise_if_not_found=False)
+        sequence_prefix = sequence_suffix = ''
+        if seq:
+            sequence_prefix, sequence_suffix = seq._get_prefix_suffix()
+        # Remove the prefix and suffix before the computation of the number to be incremented
+        if not first_lot.endswith(sequence_suffix):
+            sequence_suffix = ''
+        if not first_lot.startswith(sequence_prefix):
+            sequence_prefix = ''
+        first_lot = first_lot.removesuffix(sequence_suffix)
+        first_lot = first_lot.removeprefix(sequence_prefix)
         # We look if the first lot contains at least one digit.
         caught_initial_number = regex_findall(r"\d+", first_lot)
         if not caught_initial_number:
-            return self.generate_lot_names(first_lot + "0", count)
+            return self.generate_lot_names(sequence_prefix + first_lot + "0" + sequence_suffix, count, product_sequence)
         # We base the series on the last number found in the base lot.
         initial_number = caught_initial_number[-1]
         padding = len(initial_number)
@@ -87,8 +99,8 @@ class StockLot(models.Model):
         initial_number = int(initial_number)
 
         return [{
-            'lot_name': '%s%s%s' % (prefix, str(initial_number + i).zfill(padding), suffix),
-        } for i in range(0, count)]
+            'lot_name': f'{sequence_prefix}{prefix}{str(initial_number + i).zfill(padding)}{suffix}{sequence_suffix}'
+        } for i in range(count)]
 
     @api.model
     def _get_next_serial(self, company, product):
@@ -98,7 +110,7 @@ class StockLot(models.Model):
                 ['|', ('company_id', '=', company.id), ('company_id', '=', False), ('product_id', '=', product.id)],
                 limit=1, order='id DESC')
             if last_serial:
-                return self.env['stock.lot'].generate_lot_names(last_serial.name, 2)[1]['lot_name']
+                return self.env['stock.lot'].generate_lot_names(last_serial.name, 2, product.lot_sequence_id)[1]['lot_name']
         return False
 
     @api.constrains('name', 'product_id', 'company_id')
