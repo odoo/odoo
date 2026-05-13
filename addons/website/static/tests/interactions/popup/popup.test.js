@@ -51,6 +51,7 @@ function getPopupTemplate(options = {}) {
         extraPrimaryBtnClasses = "",
         modalId = "",
         focusableElements = false,
+        content = "",
     } = options;
     return `
         <div class="s_popup o_snippet_invisible" data-vcss="001" data-snippet="s_popup"
@@ -73,6 +74,7 @@ function getPopupTemplate(options = {}) {
                     <div class="modal-content oe_structure">
                         <div class="s_popup_close js_close_popup o_we_no_overlay o_not_editable" aria-label="Close">×</div>
                         <section>
+                            ${content}
                             <a href="#" class="btn btn-primary ${extraPrimaryBtnClasses}">Primary button</a>
                             ${focusableElements ? '<button id="focus">Button 1</button>' : ""}
                         </section>
@@ -315,5 +317,44 @@ describe("trap focus", () => {
         expect(".btn-primary").toBeFocused();
         await press("Tab", { shiftKey: true });
         expect("#link1").toBeFocused();
+    });
+});
+
+describe("aria-labelledby", () => {
+    beforeEach(removeTransitions);
+
+    test("aria-labelledby respects heading priority", async () => {
+        const content = "<p>Some text</p><h2>Second heading</h2><h1>Main heading</h1>";
+        const { core } = await startInteractions(getPopupTemplate({ content }));
+        expect(core.interactions).toHaveLength(1);
+        const labelID = queryOne("h1").id;
+        expect(modal).toHaveAttribute("aria-labelledby", labelID);
+        expect(modal).not.toHaveAttribute("aria-label");
+    });
+
+    test("aria-labelledby targets first match if multiple choices are available", async () => {
+        const content = "<h4 class='target'>First heading</h4><h4>Additional heading</h4>";
+        const { core } = await startInteractions(getPopupTemplate({ content }));
+        expect(core.interactions).toHaveLength(1);
+        const labelID = queryOne("h4.target").id;
+        expect(modal).toHaveAttribute("aria-labelledby", labelID);
+        expect(modal).not.toHaveAttribute("aria-label");
+    });
+
+    test("aria-labelledby uses existing ID if present", async () => {
+        const content = "<h1 id='heading'>Main heading</h1>";
+        const { core } = await startInteractions(getPopupTemplate({ content }));
+        expect(core.interactions).toHaveLength(1);
+        const labelID = queryOne("h1").id;
+        expect(labelID).toBe("heading");
+        expect(modal).toHaveAttribute("aria-labelledby", "heading");
+        expect(modal).not.toHaveAttribute("aria-label");
+    });
+
+    test("no aria-labelledby when no suitable element exists and fallback on aria-label", async () => {
+        const { core } = await startInteractions(getPopupTemplate());
+        expect(core.interactions).toHaveLength(1);
+        expect(modal).not.toHaveAttribute("aria-labelledby");
+        expect(modal).toHaveAttribute("aria-label", "Popup");
     });
 });
