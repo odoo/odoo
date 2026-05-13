@@ -12,6 +12,7 @@ import {
     findFurthest,
     selectElements,
 } from "@html_editor/utils/dom_traversal";
+import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { TextEffectUtil } from "./text_effect_util";
 
 export class TextEffectPlugin extends Plugin {
@@ -39,7 +40,8 @@ export class TextEffectPlugin extends Plugin {
                         this.toolbarIconState.isDisabled = this.isTextEffectDisabled();
                     },
                 },
-                isAvailable: (selection) => !selection.isCollapsed,
+                isAvailable: (selection) =>
+                    isHtmlContentSupported(selection) && !selection.isCollapsed,
             }),
         ],
         has_format_predicates: (node) => {
