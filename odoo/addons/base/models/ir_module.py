@@ -30,6 +30,7 @@ from odoo.tools.translate import (
     TranslationImporter,
     get_datafile_translation_path,
     get_po_paths,
+    get_translations_for_references,
 )
 
 _logger = logging.getLogger(__name__)
@@ -996,6 +997,34 @@ class IrModuleModule(models.Model):
                     _logger.info('module %s: no translation for language %s', module_name, lang)
 
         translation_importer.save(overwrite=overwrite)
+
+    @api.model
+    def _load_non_installed_modules_manifest_terms(self, langs):
+        """Load module manifest translations for all non-installed modules."""
+
+        if not langs or (len(langs) == 1 and langs[0] in ('en_US', 'en')):
+            return
+
+        for module in self.search([('state', '!=', 'installed')]):
+            for lang in langs:
+                for po_path in get_po_paths(module.name, lang):
+                    _logger.info('module %s: loading manifest translation file %s for language %s', module.name, po_path, lang)
+                    reference_to_field = {
+                        f'model:ir.module.module,description:base.module_{module.name}': 'description',
+                        f'model:ir.module.module,shortdesc:base.module_{module.name}': 'shortdesc',
+                        f'model:ir.module.module,summary:base.module_{module.name}': 'summary',
+                    }
+                    translations = get_translations_for_references(po_path, reference_to_field.keys())
+                    if not translations:
+                        _logger.info('module %s: no manifest translations for language %s', module.name, lang)
+                        continue
+                    translations = {
+                        reference_to_field[ref]: msgstr
+                        for ref, values in translations.items()
+                        for msgid, msgstr in values.items()
+                        if msgstr
+                    }
+                    module.with_context(lang=lang).write(translations)
 
     @api.model
     def _extract_resource_attachment_translations(self, module, lang):

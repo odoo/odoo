@@ -1,6 +1,4 @@
-# -*- coding: utf-8 -*-
-
-from odoo import api, fields, models
+from odoo import fields, models
 
 
 class BaseModuleUpdate(models.TransientModel):
@@ -12,10 +10,13 @@ class BaseModuleUpdate(models.TransientModel):
     state = fields.Selection([('init', 'init'), ('done', 'done')], 'Status', readonly=True, default='init')
 
     def update_module(self):
-        for this in self:
-            updated, added = self.env['ir.module.module'].update_list()
-            this.write({'updated': updated, 'added': added, 'state': 'done'})
-        return False
+        self.ensure_one()
+        updated, added = self.env['ir.module.module'].update_list()
+        # Only load uninstalled modules' terms for the admin users' languages.
+        # If an admin user changes languages, they can trigger `update_list` to load the missing terms.
+        langs = self.env.ref('base.group_system').all_user_ids.mapped('lang')
+        self.env['ir.module.module']._load_non_installed_modules_manifest_terms(langs)
+        self.write({'updated': updated, 'added': added, 'state': 'done'})
 
     def action_module_open(self):
         res = {
