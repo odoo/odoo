@@ -6,7 +6,8 @@ from odoo.fields import Command
 from odoo.tests import Form
 from odoo.addons.stock.tests.common import TestStockCommon
 
-class TestOldRules(TestStockCommon):
+
+class TestStockOldRulesCommon(TestStockCommon):
 
     @classmethod
     def setUpClass(cls):
@@ -27,18 +28,17 @@ class TestOldRules(TestStockCommon):
         })
         delivery_route_3.rule_ids[1].write({'action': 'pull'})
         delivery_route_3.rule_ids[2].write({'action': 'pull'})
-        reception_route_3 = cls.warehouse_3_steps.reception_route_id
-        reception_route_3.rule_ids[0].write({
-            'location_dest_id': reception_route_3.rule_ids[1].location_src_id.id,
-        })
-        reception_route_3.rule_ids[1].write({'action': 'pull_push'})
-        reception_route_3.rule_ids[2].write({'action': 'pull_push'})
+        reception_rules_3 = cls.warehouse_3_steps.reception_route_id.rule_ids
+        reception_rules_3[-2:].write({'action': 'pull_push'})
+        if len(reception_rules_3) == 3:
+            reception_rules_3[0].write({
+                'location_dest_id': reception_rules_3[1].location_src_id.id,
+            })
         cls.mto_route = cls.warehouse_3_steps.mto_pull_id.route_id
         cls.mto_route.active = True
         cls.mto_route.rule_ids.filtered(lambda r: r.picking_type_id == cls.warehouse_3_steps.pick_type_id).write({
             'location_dest_id': delivery_route_3.rule_ids[-2].location_src_id.id,
         })
-
 
         # Create a warehouse with 2 steps using old rules setup.
         cls.warehouse_2_steps = cls.env['stock.warehouse'].create({
@@ -56,6 +56,9 @@ class TestOldRules(TestStockCommon):
         cls.mto_route.rule_ids.filtered(lambda r: r.picking_type_id == cls.warehouse_2_steps.pick_type_id).write({
             'location_dest_id': delivery_route_2.rule_ids[1].location_src_id.id,
         })
+
+
+class TestOldRules(TestStockOldRulesCommon):
 
     def test_delay_alert_3_old(self):
         partner_demo_customer = self.partner
