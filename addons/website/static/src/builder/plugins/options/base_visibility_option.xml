@@ -10,14 +10,14 @@
         </BuilderSelect>
     </BuilderRow>
 
-    <t t-if="this.isActiveItem('overTheContent')">
-        <BuilderRow label.translate="Background" level="this.props.level" t-if="this.props.bgColor and this.hasPageOption(this.props.bgColor)">
+    <BuilderContext t-if="this.isActiveItem('overTheContent')" level="true">
+        <BuilderRow label.translate="Background" t-if="this.props.bgColor and this.hasPageOption(this.props.bgColor)">
             <BuilderColorPicker action="'setPageWebsiteDirty'" styleAction="'background-color'" enabledTabs="['custom']"/>
         </BuilderRow>
-        <BuilderRow label.translate="Text Color" level="this.props.level" t-if="this.props.textColor and this.hasPageOption(this.props.textColor)">
+        <BuilderRow label.translate="Text Color" t-if="this.props.textColor and this.hasPageOption(this.props.textColor)">
             <BuilderColorPicker action="'setPageWebsiteDirty'" styleAction="'color'" enabledTabs="['solid', 'custom']"/>
         </BuilderRow>
-    </t>
+    </BuilderContext>
 </t>
 
 </templates>

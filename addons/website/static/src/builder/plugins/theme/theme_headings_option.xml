@@ -10,16 +10,18 @@
         <BuilderRow label.translate="Font Size" action="'customizeWebsiteVariable'">
             <BuilderNumberInput title.translate="Heading 1" actionParam="'h1-font-size'" default="null" unit="'px'" saveUnit="'rem'" max="144"/>
             <t t-set-slot="collapse">
-                <t t-foreach="[2, 3, 4, 5, 6]" t-as="depth" t-key="depth">
-                    <BuilderRow level="1" label="heading_label + ' ' + depth">
-                        <BuilderNumberInput actionParam="'h' + depth + '-font-size'" default="null" unit="'px'" saveUnit="'rem'" max="144"/>
-                    </BuilderRow>
-                </t>
-                <t t-foreach="used_display_font_sizes" t-as="depth" t-key="depth">
-                    <BuilderRow level="1" label="display_label + ' ' + depth">
-                        <BuilderNumberInput actionParam="'display-' + depth + '-font-size'" default="null" unit="'px'" saveUnit="'rem'" max="144"/>
-                    </BuilderRow>
-                </t>
+                <BuilderContext level="true">
+                    <t t-foreach="[2, 3, 4, 5, 6]" t-as="depth" t-key="depth">
+                        <BuilderRow label="heading_label + ' ' + depth">
+                            <BuilderNumberInput actionParam="'h' + depth + '-font-size'" default="null" unit="'px'" saveUnit="'rem'" max="144"/>
+                        </BuilderRow>
+                    </t>
+                    <t t-foreach="used_display_font_sizes" t-as="depth" t-key="depth">
+                        <BuilderRow label="display_label + ' ' + depth">
+                            <BuilderNumberInput actionParam="'display-' + depth + '-font-size'" default="null" unit="'px'" saveUnit="'rem'" max="144"/>
+                        </BuilderRow>
+                    </t>
+                </BuilderContext>
             </t>
         </BuilderRow>
         <BuilderRow label.translate="Font Family" tooltip.translate="Heading 1">
@@ -28,22 +30,24 @@
                 buttonIcon="'fa-trash'"
                 buttonTitle.translate="Reset to Default Font Family"/>
             <t t-set-slot="collapse">
-                <t t-foreach="[2, 3, 4, 5, 6]" t-as="depth" t-key="depth">
-                    <BuilderRow level="1" label="heading_label + ' ' + depth">
-                        <ThemeFontFamilyOption
-                            cssVariable="'h' + depth + '-font'"
-                            buttonIcon="'fa-remove'"
-                            buttonTitle.translate="Reset to Headings Font Family"/>
-                    </BuilderRow>
-                </t>
-                <t t-foreach="used_display_font_sizes" t-as="depth" t-key="depth">
-                    <BuilderRow level="1" label="display_label + ' ' + depth">
-                        <ThemeFontFamilyOption
-                            cssVariable="'display-' + depth + '-font'"
-                            buttonIcon="'fa-remove'"
-                            buttonTitle.translate="Reset to Headings Font Family"/>
-                    </BuilderRow>
-                </t>
+                <BuilderContext level="true">
+                    <t t-foreach="[2, 3, 4, 5, 6]" t-as="depth" t-key="depth">
+                        <BuilderRow label="heading_label + ' ' + depth">
+                            <ThemeFontFamilyOption
+                                cssVariable="'h' + depth + '-font'"
+                                buttonIcon="'fa-remove'"
+                                buttonTitle.translate="Reset to Headings Font Family"/>
+                        </BuilderRow>
+                    </t>
+                    <t t-foreach="used_display_font_sizes" t-as="depth" t-key="depth">
+                        <BuilderRow label="display_label + ' ' + depth">
+                            <ThemeFontFamilyOption
+                                cssVariable="'display-' + depth + '-font'"
+                                buttonIcon="'fa-remove'"
+                                buttonTitle.translate="Reset to Headings Font Family"/>
+                        </BuilderRow>
+                    </t>
+                </BuilderContext>
             </t>
         </BuilderRow>
         <ThemeFontWeightOption
@@ -55,34 +59,38 @@
             <!-- "× ": \u00D7\u2000 -->
             <BuilderNumberInput title.translate="Heading 1" actionParam="'headings-line-height'" default="null" unit="'✕'" saveUnit="''"/>
             <t t-set-slot="collapse">
-                <t t-foreach="[2, 3, 4, 5, 6]" t-as="depth" t-key="depth">
-                    <BuilderRow level="1" label="heading_label + ' ' + depth">
-                        <BuilderNumberInput actionParam="'h' + depth + '-line-height'" default="null" unit="'✕'" saveUnit="''"/>
-                    </BuilderRow>
-                </t>
-                <t t-foreach="used_display_font_sizes" t-as="depth" t-key="depth">
-                    <BuilderRow level="1" label="display_label + ' ' + depth">
-                        <BuilderNumberInput actionParam="'display-' + depth + '-line-height'" default="null" unit="'✕'" saveUnit="''"/>
-                    </BuilderRow>
-                </t>
+                <BuilderContext level="true">
+                    <t t-foreach="[2, 3, 4, 5, 6]" t-as="depth" t-key="depth">
+                        <BuilderRow label="heading_label + ' ' + depth">
+                            <BuilderNumberInput actionParam="'h' + depth + '-line-height'" default="null" unit="'✕'" saveUnit="''"/>
+                        </BuilderRow>
+                    </t>
+                    <t t-foreach="used_display_font_sizes" t-as="depth" t-key="depth">
+                        <BuilderRow label="display_label + ' ' + depth">
+                            <BuilderNumberInput actionParam="'display-' + depth + '-line-height'" default="null" unit="'✕'" saveUnit="''"/>
+                        </BuilderRow>
+                    </t>
+                </BuilderContext>
             </t>
         </BuilderRow>
         <BuilderRow label.translate="Margins" tooltip.translate="Heading 1" action="'customizeWebsiteVariable'">
             <BuilderNumberInput title.translate="Top" actionParam="'headings-margin-top'" unit="'px'" saveUnit="'px'"/>
             <BuilderNumberInput title.translate="Bottom" actionParam="'headings-margin-bottom'" unit="'px'" saveUnit="'px'"/>
             <t t-set-slot="collapse">
-                <t t-foreach="[2, 3, 4, 5, 6]" t-as="depth" t-key="depth">
-                    <BuilderRow level="1" label="heading_label + ' ' + depth">
-                        <BuilderNumberInput title.translate="Top" actionParam="'h' + depth + '-margin-top'" unit="'px'" saveUnit="'px'"/>
-                        <BuilderNumberInput title.translate="Bottom" actionParam="'h' + depth + '-margin-bottom'" unit="'px'" saveUnit="'px'"/>
-                    </BuilderRow>
-                </t>
-                <t t-foreach="used_display_font_sizes" t-as="depth" t-key="depth">
-                    <BuilderRow level="1" label="display_label + ' ' + depth">
-                        <BuilderNumberInput title.translate="Top" actionParam="'display-' + depth + '-margin-top'" unit="'px'" saveUnit="'px'"/>
-                        <BuilderNumberInput title.translate="Bottom" actionParam="'display-' + depth + '-margin-bottom'" unit="'px'" saveUnit="'px'"/>
-                    </BuilderRow>
-                </t>
+                <BuilderContext level="true">
+                    <t t-foreach="[2, 3, 4, 5, 6]" t-as="depth" t-key="depth">
+                        <BuilderRow label="heading_label + ' ' + depth">
+                            <BuilderNumberInput title.translate="Top" actionParam="'h' + depth + '-margin-top'" unit="'px'" saveUnit="'px'"/>
+                            <BuilderNumberInput title.translate="Bottom" actionParam="'h' + depth + '-margin-bottom'" unit="'px'" saveUnit="'px'"/>
+                        </BuilderRow>
+                    </t>
+                    <t t-foreach="used_display_font_sizes" t-as="depth" t-key="depth">
+                        <BuilderRow label="display_label + ' ' + depth">
+                            <BuilderNumberInput title.translate="Top" actionParam="'display-' + depth + '-margin-top'" unit="'px'" saveUnit="'px'"/>
+                            <BuilderNumberInput title.translate="Bottom" actionParam="'display-' + depth + '-margin-bottom'" unit="'px'" saveUnit="'px'"/>
+                        </BuilderRow>
+                    </t>
+                </BuilderContext>
             </t>
         </BuilderRow>
     </BuilderContext>

@@ -46,30 +46,30 @@
         </BuilderRow>
 
         <t t-if="this.state.ribbonEditMode">
-            <BuilderContext action="'modifyRibbon'">
-                <BuilderRow label.translate="Name" level="1">
+            <BuilderContext action="'modifyRibbon'" level="true">
+                <BuilderRow label.translate="Name">
                     <BuilderTextInput actionParam="'name'" />
                 </BuilderRow>
-                <BuilderRow label.translate="Style" level="1">
+                <BuilderRow label.translate="Style">
                     <BuilderButtonGroup actionParam="'style'">
                         <BuilderButton actionValue="'ribbon'">Ribbon</BuilderButton>
                         <BuilderButton actionValue="'tag'">Badge</BuilderButton>
                     </BuilderButtonGroup>
                </BuilderRow>
 
-                <BuilderRow label.translate="Background" level="1">
+                <BuilderRow label.translate="Background">
                     <BuilderColorPicker
                         actionParam="'bg_color'"
                         enabledTabs="['solid', 'custom']"
                     />
                 </BuilderRow>
-                <BuilderRow label.translate="Text" level="1">
+                <BuilderRow label.translate="Text">
                     <BuilderColorPicker
                         actionParam="'text_color'"
                         enabledTabs="['solid', 'custom']"
                     />
                 </BuilderRow>
-                <BuilderRow label.translate="Position" level="1">
+                <BuilderRow label.translate="Position">
                     <BuilderSelect actionParam="'position'">
                         <BuilderSelectItem ltrRtlMapping="'left-right'" actionValue="'left'">Left</BuilderSelectItem>
                         <BuilderSelectItem ltrRtlMapping="'left-right'" actionValue="'right'">Right</BuilderSelectItem>

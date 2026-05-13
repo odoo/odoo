@@ -14,7 +14,7 @@
             <BuilderSelectItem actionValue="'radar'">Radar</BuilderSelectItem>
         </BuilderSelect>
     </BuilderRow>
-    <BuilderRow label.translate="Stacked" level="1" t-if="this.domState.data.datasets.length > 1 and (this.isActiveItem('bar_chart_opt') or this.isActiveItem('horizontal_bar_chart_opt') or this.isActiveItem('line_chart_opt'))">
+    <BuilderRow label.translate="Stacked" level="true" t-if="this.domState.data.datasets.length > 1 and (this.isActiveItem('bar_chart_opt') or this.isActiveItem('horizontal_bar_chart_opt') or this.isActiveItem('line_chart_opt'))">
         <BuilderCheckbox dataAttributeAction="'stacked'" dataAttributeActionValue="'true'"/>
     </BuilderRow>
     <BuilderRow label.translate="Legend">

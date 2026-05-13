@@ -12,7 +12,7 @@
         </BuilderButtonGroup>
     </BuilderRow>
 
-    <BuilderRow label.translate="Height" level="1" t-if="this.showHeightField()">
+    <BuilderRow label.translate="Height" level="true" t-if="this.showHeightField()">
         <BuilderNumberInput styleAction="{ mainParam: 'height', force: true, allowImportant: false }" unit="'px'" min="0"/>
     </BuilderRow>
 
@@ -20,14 +20,14 @@
         <BuilderCheckbox id="'scroll_button_opt'" action="'addScrollButton'"/>
     </BuilderRow>
 
-    <t t-if="this.isActiveItem('scroll_button_opt')">
-        <BuilderRow label.translate="Animation" level="1" applyTo="':scope > .o_scroll_button'">
+    <BuilderContext t-if="this.isActiveItem('scroll_button_opt')" level="true">
+        <BuilderRow label.translate="Animation" applyTo="':scope > .o_scroll_button'">
             <BuilderSelect>
                 <BuilderSelectItem classAction="''">None</BuilderSelectItem>
                 <BuilderSelectItem classAction="'anim-heartbeat'">Heartbeat</BuilderSelectItem>
             </BuilderSelect>
         </BuilderRow>
-        <BuilderRow label.translate="Size" level="1" applyTo="':scope > .o_scroll_button > i'">
+        <BuilderRow label.translate="Size" applyTo="':scope > .o_scroll_button > i'">
             <BuilderButtonGroup>
                 <BuilderButton classAction="'fa-1x'" title.translate="Size 1x">1x</BuilderButton>
                 <BuilderButton classAction="'fa-2x'" title.translate="Size 2x">2x</BuilderButton>
@@ -36,14 +36,14 @@
                 <BuilderButton classAction="'fa-5x'" title.translate="Size 5x">5x</BuilderButton>
             </BuilderButtonGroup>
         </BuilderRow>
-        <BuilderRow label.translate="Colors" level="1" applyTo="':scope > .o_scroll_button'">
+        <BuilderRow label.translate="Colors" applyTo="':scope > .o_scroll_button'">
             <BuilderColorPicker styleAction="'background-color'" title.translate="Apply a background color"/>
             <BuilderColorPicker styleAction="'color'" title.translate="Apply an icon color" enabledTabs="['solid', 'custom', 'gradient']"/>
         </BuilderRow>
-        <BuilderRow label.translate="Spacing" level="1" applyTo="':scope > .o_scroll_button'">
+        <BuilderRow label.translate="Spacing" applyTo="':scope > .o_scroll_button'">
             <BuilderRange action="'setClassRange'" actionParam="['mb-0', 'mb-1', 'mb-2', 'mb-3', 'mb-4', 'mb-5']" max="5"/>
         </BuilderRow>
-    </t>
+    </BuilderContext>
 </t>
 
 <t t-inherit="website.BuilderOptions" t-inherit-mode="extension">

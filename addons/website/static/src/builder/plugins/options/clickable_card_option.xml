@@ -6,15 +6,15 @@
         <BuilderCheckbox id="'is_clickable_opt'" action="'setCardClickable'" preview="false"/>
     </BuilderRow>
 
-    <t t-if="this.isActiveItem('is_clickable_opt')">
-        <BuilderRow label.translate="Your URL" level="1">
+    <BuilderContext t-if="this.isActiveItem('is_clickable_opt')" level="true">
+        <BuilderRow label.translate="Your URL">
             <BuilderUrlPicker action="'setCardAnchorUrl'" placeholder.translate="e.g. /page or URL" preview="false"/>
         </BuilderRow>
 
-        <BuilderRow t-if="this.state.hasHref" label.translate="Open in New Tab" tooltip.translate="Enable this to open the link in a new browser tab" level="1">
+        <BuilderRow t-if="this.state.hasHref" label.translate="Open in New Tab" tooltip.translate="Enable this to open the link in a new browser tab">
             <BuilderCheckbox applyTo="'.stretched-link'" attributeAction="'target'" attributeActionValue="'_blank'" preview="false"/>
         </BuilderRow>
-    </t>
+    </BuilderContext>
 </t>
 
 <t t-inherit="website.BuilderOptions" t-inherit-mode="extension">

@@ -11,7 +11,7 @@
             </BuilderSelect>
         </BuilderRow>
         <BuilderRow t-if="this.isActiveItem('btn_primary_outline_opt')"
-            level="1" label.translate="Border Width"
+            level="true" label.translate="Border Width"
             action="'customizeWebsiteVariable'"
         >
             <BuilderNumberInput actionParam="'btn-primary-outline-border-width'" unit="'px'" saveUnit="'rem'"/>
@@ -24,7 +24,7 @@
             </BuilderSelect>
         </BuilderRow>
         <BuilderRow t-if="this.isActiveItem('btn_secondary_outline_opt')"
-            level="1" label.translate="Border Width"
+            level="true" label.translate="Border Width"
             action="'customizeWebsiteVariable'"
         >
             <BuilderNumberInput actionParam="'btn-secondary-outline-border-width'" unit="'px'" saveUnit="'rem'"/>
@@ -39,25 +39,29 @@
             <BuilderNumberInput actionParam="'btn-padding-y'" unit="'px'" saveUnit="'rem'" prefixIcon="'oi oi-arrows-v'"/>
             <BuilderNumberInput actionParam="'btn-padding-x'" unit="'px'" saveUnit="'rem'" prefixIcon="'oi oi-arrows-h'"/>
             <t t-set-slot="collapse">
-                <BuilderRow label.translate="Small" tooltip.translate="Vertical and Horizontal padding" level="1">
-                    <BuilderNumberInput actionParam="'btn-padding-y-sm'" unit="'px'" saveUnit="'rem'" prefixIcon="'oi oi-arrows-v'"/>
-                    <BuilderNumberInput actionParam="'btn-padding-x-sm'" unit="'px'" saveUnit="'rem'" prefixIcon="'oi oi-arrows-h'"/>
-                </BuilderRow>
-                <BuilderRow label.translate="Large" tooltip.translate="Vertical and Horizontal padding" level="1">
-                    <BuilderNumberInput actionParam="'btn-padding-y-lg'" unit="'px'" saveUnit="'rem'" prefixIcon="'oi oi-arrows-v'"/>
-                    <BuilderNumberInput actionParam="'btn-padding-x-lg'" unit="'px'" saveUnit="'rem'" prefixIcon="'oi oi-arrows-h'"/>
-                </BuilderRow>
+                <BuilderContext level="true">
+                    <BuilderRow label.translate="Small" tooltip.translate="Vertical and Horizontal padding">
+                        <BuilderNumberInput actionParam="'btn-padding-y-sm'" unit="'px'" saveUnit="'rem'" prefixIcon="'oi oi-arrows-v'"/>
+                        <BuilderNumberInput actionParam="'btn-padding-x-sm'" unit="'px'" saveUnit="'rem'" prefixIcon="'oi oi-arrows-h'"/>
+                    </BuilderRow>
+                    <BuilderRow label.translate="Large" tooltip.translate="Vertical and Horizontal padding">
+                        <BuilderNumberInput actionParam="'btn-padding-y-lg'" unit="'px'" saveUnit="'rem'" prefixIcon="'oi oi-arrows-v'"/>
+                        <BuilderNumberInput actionParam="'btn-padding-x-lg'" unit="'px'" saveUnit="'rem'" prefixIcon="'oi oi-arrows-h'"/>
+                    </BuilderRow>
+                </BuilderContext>
             </t>
         </BuilderRow>
         <BuilderRow label.translate="Font Size" action="'customizeWebsiteVariable'">
             <BuilderNumberInput actionParam="'btn-font-size'" unit="'px'" saveUnit="'rem'"/>
             <t t-set-slot="collapse">
-                <BuilderRow label.translate="Small" level="1">
-                    <BuilderNumberInput actionParam="'btn-font-size-sm'" unit="'px'" saveUnit="'rem'"/>
-                </BuilderRow>
-                <BuilderRow label.translate="Large" level="1">
-                    <BuilderNumberInput actionParam="'btn-font-size-lg'" unit="'px'" saveUnit="'rem'"/>
-                </BuilderRow>
+                <BuilderContext level="true">
+                    <BuilderRow label.translate="Small">
+                        <BuilderNumberInput actionParam="'btn-font-size-sm'" unit="'px'" saveUnit="'rem'"/>
+                    </BuilderRow>
+                    <BuilderRow label.translate="Large">
+                        <BuilderNumberInput actionParam="'btn-font-size-lg'" unit="'px'" saveUnit="'rem'"/>
+                    </BuilderRow>
+                </BuilderContext>
             </t>
         </BuilderRow>
         <ThemeFontWeightOption
@@ -68,12 +72,14 @@
         <BuilderRow label.translate="Round Corners" action="'customizeWebsiteVariable'">
             <BuilderNumberInput actionParam="'btn-border-radius'" unit="'px'" saveUnit="'rem'"/>
             <t t-set-slot="collapse">
-                <BuilderRow label.translate="Small" level="1">
-                    <BuilderNumberInput actionParam="'btn-border-radius-sm'" unit="'px'" saveUnit="'rem'"/>
-                </BuilderRow>
-                <BuilderRow label.translate="Large" level="1">
-                    <BuilderNumberInput actionParam="'btn-border-radius-lg'" unit="'px'" saveUnit="'rem'"/>
-                </BuilderRow>
+                <BuilderContext level="true">
+                    <BuilderRow label.translate="Small">
+                        <BuilderNumberInput actionParam="'btn-border-radius-sm'" unit="'px'" saveUnit="'rem'"/>
+                    </BuilderRow>
+                    <BuilderRow label.translate="Large">
+                        <BuilderNumberInput actionParam="'btn-border-radius-lg'" unit="'px'" saveUnit="'rem'"/>
+                    </BuilderRow>
+                </BuilderContext>
             </t>
         </BuilderRow>
         <BuilderRow label.translate="On Click Effect">

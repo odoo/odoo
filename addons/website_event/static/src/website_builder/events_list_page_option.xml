@@ -29,7 +29,7 @@
         </BuilderRow>
         <t t-if="this.isActiveItem('opt_event_location')">
             <BuilderRow
-                level="1"
+                level="true"
                 label.translate="Include online"
                 tooltip.translate="If enabled, online events will be included when user filters by country.">
                 <BuilderCheckbox actionParam="{views: ['website_event.event_location_include_online']}"/>

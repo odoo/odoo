@@ -41,8 +41,8 @@
             </BuilderButton>
     </BuilderRow>
 
-    <t t-if="this.state.hasShape">
-        <BuilderRow label.translate="Colors" level="1">
+    <BuilderContext t-if="this.state.hasShape" level="true">
+        <BuilderRow label.translate="Colors">
             <t t-foreach="this.state.shapeColorNames" t-as="colorName" t-key="colorName">
                 <BuilderColorPicker
                     action="'backgroundShapeColor'"
@@ -54,7 +54,7 @@
             <BuilderColorPicker title.translate="Background color" styleAction="'background-color'" applyTo="':scope > .o_we_shape'" enabledTabs="['solid', 'custom']"/>
         </BuilderRow>
 
-        <BuilderRow label.translate="Transform" level="1" preview="false">
+        <BuilderRow label.translate="Transform" preview="false">
             <BuilderButton
                 title.translate="Horizontal flip"
                 icon="'oi-arrows-h'"
@@ -67,7 +67,7 @@
                 actionParam="'y'"/>
         </BuilderRow>
 
-        <BuilderRow label.translate="Speed" level="1" t-if="this.state.isAnimated" preview="false">
+        <BuilderRow label.translate="Speed" t-if="this.state.isAnimated" preview="false">
             <BuilderRange
                 action="'setBgAnimationSpeed'"
                 min="-2"
@@ -78,7 +78,7 @@
                 withNumberInput="true"
                 convertorRatio="this.ratioValueConverter" />
         </BuilderRow>
-    </t>
+    </BuilderContext>
 </t>
 
 </templates>
