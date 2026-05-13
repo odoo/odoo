@@ -32,6 +32,7 @@ import { ConnectionLostError } from "@web/core/network/rpc";
 import { TipCell } from "@point_of_sale/app/screens/ticket_screen/tip_cell/tip_cell";
 import { ProgressBar } from "@point_of_sale/app/screens/ticket_screen/progress_bar/progress_bar";
 import { logPosMessage } from "@point_of_sale/app/utils/pretty_console_log";
+import { PrintPopup } from "@point_of_sale/app/components/popups/print_popup/print_popup";
 
 const { DateTime } = luxon;
 const NBR_BY_PAGE = 30;
@@ -178,7 +179,7 @@ export class TicketScreen extends Component {
         }
     }
     async print(order) {
-        await this.pos.ticketPrinter.printOrderReceipt({ order });
+        this.dialog.add(PrintPopup, { order });
     }
     async onFilterSelected(selectedFilter) {
         this.state.filter = selectedFilter;

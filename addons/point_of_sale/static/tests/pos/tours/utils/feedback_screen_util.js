@@ -46,7 +46,7 @@ export function isShown() {
         },
     ];
 }
-export function checkTicketData(data, basic = false) {
+export function checkTicketData(data, basic = false, simplified = false) {
     // data is an object like:
     // {
     //   logo,
@@ -87,9 +87,9 @@ export function checkTicketData(data, basic = false) {
     //     length: number of elements that should be found with the css selector
     //   }],
     // }
-    const check = async (data, basic) => {
+    const check = async (data, basic, simplified) => {
         const order = posmodel.getOrder();
-        const orderData = posmodel.ticketPrinter.getOrderReceiptData(order, basic);
+        const orderData = posmodel.ticketPrinter.getOrderReceiptData(order, { basic, simplified });
         const iframe = await posmodel.ticketPrinter.generateIframe(
             "point_of_sale.pos_order_receipt",
             orderData
@@ -347,7 +347,7 @@ export function checkTicketData(data, basic = false) {
     return [
         {
             trigger: "body",
-            run: async () => await check(data, basic),
+            run: async () => await check(data, basic, simplified),
         },
     ];
 }

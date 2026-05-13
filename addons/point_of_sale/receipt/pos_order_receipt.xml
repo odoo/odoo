@@ -10,7 +10,10 @@
                 <div style="padding-left: 3px; padding-right: 3px;">
                     <div class="w-100 text-normal mb-3">
                         <t t-call="point_of_sale.pos_order_receipt_header" />
-                        <div class="w-100 mt-3">
+                        <div t-if="conditions.get('simplified_receipt')" class="w-100 text-center text-huge" name="simplified_receipt_label">
+                            <strong>Receipt</strong>
+                        </div>
+                        <div t-else="" class="w-100 mt-3">
                             <table t-foreach="lines" t-as="line" style="width:100%" t-att-class="{'mt-2': not line['combo_parent_id'], 'mt-1': line['combo_parent_id']}">
                                 <tbody>
                                     <t t-call="point_of_sale.pos_orderline_receipt" />
@@ -28,13 +31,21 @@
                                 <t t-foreach="extra_data['prices']['taxes']" t-as="tax">
                                     <tr name="taxes_line">
                                         <td class="text-start w-70">
-                                            <span><t t-out="tax['name']" /></span>
+                                            <span>
+                                                <t t-if="conditions.get('simplified_receipt') and not extra_data['prices']['same_tax_base']">
+                                                    Tax <t t-out="tax['name']"/> on 
+                                                    <t t-out="tax['amount_base']"/>
+                                                </t>
+                                                <t t-else="">
+                                                    <t t-out="tax['name']"/>
+                                                </t>
+                                            </span>
                                         </td>
                                         <td class="text-end w-30 text-break">
                                             <span class="font-monospace"><t t-out="tax['amount']" /></span>
                                         </td>
                                     </tr>
-                                    <tr t-if="not extra_data['prices']['same_tax_base']">
+                                    <tr t-if="not extra_data['prices']['same_tax_base'] and not conditions.get('simplified_receipt')">
                                         <td class="text-start w-70">
                                             <span>Base <t t-out="tax['name']" /></span>
                                         </td>
