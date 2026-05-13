@@ -33,7 +33,11 @@ registry.category("error_handlers").add("pos-rpcErrorHandler", rpcErrorHandler);
 
 export function offlineErrorHandler(env, error, originalError) {
     if (originalError instanceof ConnectionLostError) {
-        if (!env.services.pos.data.network.warningTriggered) {
+        const network = env.services.pos?.data?.network;
+        if (!network) {
+            return true;
+        }
+        if (!network.warningTriggered) {
             env.services.dialog.add(AlertDialog, {
                 title: _t("Connection Lost"),
                 body: _t(
@@ -41,7 +45,7 @@ export function offlineErrorHandler(env, error, originalError) {
                 ),
                 confirmLabel: _t("Continue with limited functionality"),
             });
-            env.services.pos.data.network.warningTriggered = true;
+            network.warningTriggered = true;
         }
 
         return true;
