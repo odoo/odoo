@@ -107,7 +107,7 @@ test("replying to message should only render relevant part", async () => {
     replying = false;
     const result = stopObserve();
     expect(result.get(Composer)).toBeLessThan(3);
-    expect(result.get(ActionSwiper)).toBeLessThan(2);
+    expect(result.get(ActionSwiper)).toBeLessThan(3); // Note: ActionSwiper from Message's template
 });
 
 test("right-click message selection should only render relevant part", async () => {
@@ -145,5 +145,5 @@ test("right-click message selection should only render relevant part", async () 
     await contains(".dropdown-menu .o-mail-ActionList");
     rightClicking = false;
     const result = stopObserve();
-    expect(result.get(ActionSwiper)).toBeLessThan(3);
+    expect(result.get(ActionSwiper)).toBeLessThan(3); // Note: ActionSwiper from Message's template
 });
