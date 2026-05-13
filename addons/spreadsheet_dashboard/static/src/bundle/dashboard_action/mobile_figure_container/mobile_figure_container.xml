@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates>
     <t t-name="documents_spreadsheet.MobileFigureContainer">
-        <div class="o-spreadsheet">
+        <div class="o-spreadsheet" t-att-style="this.style"  t-att-class="{'dark': this.props.spreadsheetModel.getters.isDarkMode() }">
             <div t-if="!this.figureRows.length" class="m-3">
                 Only chart figures are displayed in small screens but this dashboard doesn't contain any
             </div>
@@ -11,7 +11,7 @@
                         <div t-if="figure.tag === 'empty'" class="o_empty_figure o-mobile-figure o-figure position-relative"/>
                         <t t-else="">
                             <t t-set="minHeight" t-value="figureRow.length === 1 ? `min-height: ${figure.height}px;` : ''"/>
-                            <div t-att-style="minHeight + ' direction:ltr;'" class="o-mobile-figure o-figure position-relative">
+                            <div t-att-style="minHeight + ' direction:ltr;'" class="o-mobile-figure os-theme-dependant o-figure position-relative">
                                 <t figureUI="figure" t-component="this.getFigureComponent(figure)"/>
                             </div>
                         </t>
