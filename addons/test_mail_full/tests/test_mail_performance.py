@@ -232,7 +232,7 @@ class TestPortalFormatPerformance(FullBaseMailPerformance):
     def test_portal_message_format_norating(self):
         messages_all = self.messages_all.with_user(self.env.user)
 
-        with self.assertQueryCount(employee=10):
+        with self.assertQueryCount(employee=11):
             # res = messages_all.portal_message_format(options=None)
             res = messages_all.portal_message_format(options={'rating_include': False})
 
@@ -247,21 +247,25 @@ class TestPortalFormatPerformance(FullBaseMailPerformance):
                     {
                         'checksum': message.attachment_ids[0].checksum,
                         'filename': 'Test file 1',
+                        'has_thumbnail': False,
                         'id': message.attachment_ids[0].id,
                         'mimetype': 'text/plain',
                         'name': 'Test file 1',
                         'raw_access_token': message.attachment_ids[0]._get_raw_access_token(),
                         'res_id': record.id,
                         'res_model': record._name,
+                        'thumbnail_access_token': message.attachment_ids[0]._get_thumbnail_token(),
                     }, {
                         'checksum': message.attachment_ids[1].checksum,
                         'filename': 'Test file 0',
+                        'has_thumbnail': False,
                         'id': message.attachment_ids[1].id,
                         'mimetype': 'text/plain',
                         'name': 'Test file 0',
                         'raw_access_token': message.attachment_ids[1]._get_raw_access_token(),
                         'res_id': record.id,
                         'res_model': record._name,
+                        'thumbnail_access_token': message.attachment_ids[1]._get_thumbnail_token(),
                     }
                 ]
             )
@@ -285,7 +289,7 @@ class TestPortalFormatPerformance(FullBaseMailPerformance):
     def test_portal_message_format_rating(self):
         messages_all = self.messages_all.with_user(self.env.user)
 
-        with self.assertQueryCount(employee=25):  # 24, sometimes +1
+        with self.assertQueryCount(employee=26):  # 24, sometimes +1
             res = messages_all.portal_message_format(options={'rating_include': True})
 
         self.assertEqual(len(res), len(messages_all))
@@ -307,7 +311,7 @@ class TestPortalFormatPerformance(FullBaseMailPerformance):
     def test_portal_message_format_monorecord(self):
         message = self.messages_all[0].with_user(self.env.user)
 
-        with self.assertQueryCount(employee=16):  # randomness: 15+1
+        with self.assertQueryCount(employee=17):  # randomness: 15+1
             res = message.portal_message_format(options={'rating_include': True})
 
         self.assertEqual(len(res), 1)
