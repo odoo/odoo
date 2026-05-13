@@ -3,6 +3,7 @@ from . import (
     test_access_rights,
     test_action_bindings,
     test_config,
+    test_domain_expression,
     test_inherits,
     test_ir_qweb_fields,
     test_orm,

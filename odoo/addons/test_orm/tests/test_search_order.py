@@ -230,8 +230,6 @@ class TestSearch(TransactionCase):
     def test_20_x_active(self):
         """Check the behaviour of the x_active field."""
         # test that a custom field x_active filters like active
-        # we take the model res.country as a test model as it is included in base and does
-        # not have an active field
         self.env.transaction.will_change_registry()
 
         model_country = self.env['test_orm.country']
