@@ -581,6 +581,14 @@ ADDITIONAL_IDENTIFIERS_METADATA = {
         'validation_function': ee_en.validate,
         'countries': ['EE'],
     },
+    'EG_NIN': {
+        'sequence': 10,
+        'category': 'CN',
+        'label': _lt('National ID'),
+        'help': _lt('Egyptian National ID (14 digits) used to identify individuals.'),
+        'placeholder': '12345678901234',
+        'countries': ['EG'],
+    },
     'ES_EN': {
         'label': _lt('Company ID'),
         'category': 'EN',
