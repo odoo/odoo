@@ -8,6 +8,7 @@ import {
     openDiscuss,
     start,
     startServer,
+    triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
 import { describe, test } from "@odoo/hoot";
 import { mockDate, animationFrame } from "@odoo/hoot-mock";
@@ -38,7 +39,7 @@ test("navigate to sub channel", async () => {
     await click(".o-mail-DiscussSidebarChannel", { name: "General" });
     await contains(".o-mail-DiscussContent-threadName", { value: "New Thread" });
     await contains(
-        `.o-mail-NotificationMessage:text('${serverState.partnerName} started a thread: New Thread.1:00 PM')`
+        `.o-mail-NotificationMessage:text('${serverState.partnerName} started a thread: New Thread. 1:00 PM')`
     );
     await click(".o-mail-NotificationMessage a:text('New Thread')");
     await contains(".o-mail-DiscussContent-threadName", { value: "New Thread" });
@@ -112,7 +113,7 @@ test("should allow creating a thread from an existing thread", async () => {
     await contains(
         ".o-mail-NotificationMessage:text('" +
             serverState.partnerName +
-            " started a thread: hello alex.1:00 PM')"
+            " started a thread: hello alex. 1:00 PM')"
     );
 });
 
@@ -335,6 +336,24 @@ test("show notification when clicking on deleted thread", async () => {
     await contains(
         ".o_notification:has(.o_notification_bar.bg-danger):text('This thread is no longer available.')"
     );
+});
+
+test("thread creation notification displays current thread name", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-DiscussContent-threadName", { value: "General" });
+    await click("button[title='Threads']");
+    await click("button[aria-label='Create Thread']");
+    await contains("input.o-mail-DiscussContent-threadName:value(New Thread)");
+    await insertText(".o-mail-DiscussContent-threadName:enabled", "Renamed Thread", {
+        replace: true,
+    });
+    triggerHotkey("Enter");
+    await click(".o-mail-DiscussSidebarChannel-itemName:text('General')");
+    await contains(".o-mail-NotificationMessage a:text('Renamed Thread')");
+    await contains(".o-mail-NotificationMessage a:text('New Thread')", { count: 0 });
 });
 
 test("Can delete channel thread as author of thread", async () => {

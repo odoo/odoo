@@ -224,6 +224,13 @@
     <i t-att-class="icon"/>
 </t>
 
+<t t-name="mail.Message.threadCreationNotification">
+    <span>
+        <t t-out="threadCreationPrefix"/>
+        <t t-out="threadLink"/>.
+    </span>
+</t>
+
 <t t-name="mail.Message.sidebarBookmark">
     <small class="text-center lh-1 o-opacity-35" t-att-class="{ 'align-self-start ms-1': this.isAlignedRight, 'align-self-end me-1': !this.isAlignedRight, 'mt-2': this.props.squashed, 'mt-1': !this.props.squashed }" title="Bookmarked">
         <i class="fa fa-bookmark"/>

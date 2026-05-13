@@ -192,7 +192,7 @@ export function addLink(node, transformChildren) {
     return getOuterHtml(node);
 }
 
-function generateMentionElement({ className, id, model, text }) {
+export function generateMentionElement({ className, id, model, text }) {
     const link = document.createElement("a");
     setAttributes(link, {
         href: router.stateToUrl({ model: model, resId: id }),
