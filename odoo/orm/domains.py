@@ -62,7 +62,7 @@ import warnings
 from datetime import date, datetime, time, timedelta, timezone, UTC
 
 from odoo.exceptions import AccessError, MissingError, UserError
-from odoo.tools import SQL, OrderedSet, classproperty, partition, str2bool
+from odoo.tools import SQL, FrozenOrderedSet, OrderedSet, classproperty, partition, str2bool
 from odoo.tools.date_utils import parse_date, parse_iso_date
 from .identifiers import NewId
 from .query import Query, TableSQL
@@ -98,7 +98,7 @@ This should be supported in the framework at all levels.
     _search on the comodel of the field (with its context)
 - `any!` works like `any` but bypass adding record rules on the comodel
 - `in` for equality checks where the given value is a collection of values
-  - the collection is transformed into OrderedSet
+  - the collection is transformed into a FrozenOrderedSet
   - False value indicates that the value is *not set*
   - for relational fields
     - if int, bypass record rules
@@ -910,7 +910,7 @@ class DomainCondition(Domain):
             # Having a falsy value is handled correctly in the SQL generation.
             condition = DomainCondition(self.field_expr, neg_op, self.value)
             if self._field(model).falsy_value is None:
-                is_null = DomainCondition(self.field_expr, 'in', OrderedSet([False]))
+                is_null = DomainCondition(self.field_expr, 'in', FrozenOrderedSet((False,)))
                 condition = is_null | condition
             return condition
 
@@ -928,8 +928,8 @@ class DomainCondition(Domain):
             isinstance(other, DomainCondition)
             and self.field_expr == other.field_expr
             and self.operator == other.operator
-            # we want stricter equality than this: `OrderedSet([x]) == {x}`
-            # to ensure that optimizations always return OrderedSet values
+            # we want stricter equality than this: `FrozenOrderedSet([x]) == {x}`
+            # to ensure that optimizations always return FrozenOrderedSet values
             and self.value.__class__ is other.value.__class__
             and self.value == other.value
         )
@@ -1345,23 +1345,23 @@ def _operator_equal_as_in(condition, _):
     if isinstance(value, COLLECTION_TYPES):
         if not value:  # views sometimes use ('user_ids', '!=', []) to indicate the user is set
             _logger.warning("The domain condition %r should compare with False.", condition)
-            value = OrderedSet([False])
+            value = FrozenOrderedSet([False])
         else:
             _logger.warning("The domain condition %r should use the 'in' or 'not in' operator.", condition)
-            value = OrderedSet(value)
+            value = FrozenOrderedSet(value)
     elif isinstance(value, SQL):
         # transform '=' SQL("x") into 'in' SQL("(x)")
         value = SQL("(%s)", value)
     else:
-        value = OrderedSet((value,))
+        value = FrozenOrderedSet((value,))
     return DomainCondition(condition.field_expr, operator, value)
 
 
 @operator_optimization(['in', 'not in'])
 def _optimize_in_set(condition, _model):
-    """Make sure the value is an OrderedSet or use 'any' operator"""
+    """Make sure the value is a FrozenOrderedSet or use 'any' operator"""
     value = condition.value
-    if isinstance(value, OrderedSet) and value:
+    if isinstance(value, FrozenOrderedSet) and value:
         # very common case, just skip creation of a new Domain instance
         return condition
     if isinstance(value, ANY_TYPES):
@@ -1373,7 +1373,7 @@ def _optimize_in_set(condition, _model):
         # TODO show warning, note that condition.field_expr in ('group_ids', 'user_ids') gives a lot of them
         _logger.debug("The domain condition %r should have a list value.", condition)
         value = [value]
-    return DomainCondition(condition.field_expr, condition.operator, OrderedSet(value))
+    return DomainCondition(condition.field_expr, condition.operator, FrozenOrderedSet(value))
 
 
 @operator_optimization(['in', 'not in'])
@@ -1390,7 +1390,7 @@ def _optimize_in_required(condition, model):
         # only optimize if there are no NewId's
         and all(model._ids)
     ):
-        value = OrderedSet(v for v in value if v is not False)
+        value = FrozenOrderedSet(v for v in value if v is not False)
     if len(value) == len(condition.value):
         return condition
     return DomainCondition(condition.field_expr, condition.operator, value)
@@ -1575,7 +1575,7 @@ def _value_to_date(value, env, iso_only=False):
             value = parse_date(value, env)
         return _value_to_date(value, env)
     if isinstance(value, COLLECTION_TYPES):
-        return OrderedSet(_value_to_date(v, env=env, iso_only=iso_only) for v in value)
+        return FrozenOrderedSet(_value_to_date(v, env=env, iso_only=iso_only) for v in value)
     raise ValueError(f'Failed to cast {value!r} into a date')
 
 
@@ -1601,7 +1601,7 @@ def _optimize_type_date_relative(condition, model):
     if (
         operator not in ('in', 'not in', '>', '<', '<=', '>=')
         or "." in condition.field_expr
-        or not isinstance(condition.value, (str, OrderedSet))
+        or not isinstance(condition.value, (str, FrozenOrderedSet))
     ):
         return condition
     value = _value_to_date(condition.value, model.env)
@@ -1644,7 +1644,7 @@ def _value_to_datetime(value, env, iso_only=False):
         return value, True
     if isinstance(value, COLLECTION_TYPES):
         value, is_date = zip(*(_value_to_datetime(v, env=env, iso_only=iso_only) for v in value))
-        return OrderedSet(value), all(is_date)
+        return FrozenOrderedSet(value), all(is_date)
     raise ValueError(f'Failed to cast {value!r} into a datetime')
 
 
@@ -1692,11 +1692,11 @@ def _optimize_type_datetime(condition, model):
         and any(isinstance(v, datetime) for v in value)
     ):
         delta = timedelta(seconds=1)
-        domain = DomainOr.apply(
+        dt_values, other_values = partition(lambda e: isinstance(e, datetime), value)
+        domain = DomainCondition(field_expr, 'in', other_values) | DomainOr.apply(
             DomainCondition(field_expr, '>=', v.replace(microsecond=0))
             & DomainCondition(field_expr, '<', v.replace(microsecond=0) + delta)
-            if isinstance(v, datetime) else DomainCondition(field_expr, '=', v)
-            for v in value
+            for v in dt_values
         )
         if operator == 'not in':
             domain = ~domain
@@ -1711,7 +1711,7 @@ def _optimize_type_datetime_relative(condition, model):
     if (
         operator not in ('in', 'not in', '>', '<', '<=', '>=')
         or "." in condition.field_expr
-        or not isinstance(condition.value, (str, OrderedSet))
+        or not isinstance(condition.value, (str, FrozenOrderedSet))
     ):
         return condition
     value, _ = _value_to_datetime(condition.value, model.env)
@@ -1724,7 +1724,7 @@ def _optimize_properties_date_datetime(condition, model):
     if (
         operator not in ('in', 'not in', '>', '<', '<=', '>=')
         or condition.field_expr.count('.') != 1
-        or not isinstance(condition.value, (str, OrderedSet))
+        or not isinstance(condition.value, (str, FrozenOrderedSet))
     ):
         return condition
     definition = model.get_property_definition(condition.field_expr)
@@ -1738,7 +1738,7 @@ def _optimize_properties_date_datetime(condition, model):
         return condition
     # we need to serialize the value as a string to be able to use with properties
     if isinstance(value, COLLECTION_TYPES):
-        value = OrderedSet(
+        value = FrozenOrderedSet(
             str(item) if isinstance(item, (date, datetime)) else item
             for item in value
         )
@@ -1762,7 +1762,7 @@ def _optimize_type_selection(condition, model):
     ):
         return condition
     excluded = condition.value
-    included = OrderedSet([*field._selection, False]) - excluded
+    included = FrozenOrderedSet([*field._selection, False]) - excluded
     return DomainCondition(condition.field_expr, 'in', included)
 
 
@@ -2031,7 +2031,7 @@ def _merge_set_conditions(cls: type[DomainNary], conditions):
         a in {1} or a in {2}  <=>  a in {1, 2}
         a in {1, 2} and a not in {2, 5}  =>  a in {1}
     """
-    assert all(isinstance(cond.value, OrderedSet) for cond in conditions)
+    assert all(isinstance(cond.value, FrozenOrderedSet) for cond in conditions)
 
     # build the sets for 'in' and 'not in' conditions
     in_sets = [c.value for c in conditions if c.operator == 'in']
@@ -2051,14 +2051,16 @@ def _merge_set_conditions(cls: type[DomainNary], conditions):
             return [DomainCondition(field_expr, 'in', union(in_sets))]
 
 
-def intersection(sets: list[OrderedSet]) -> OrderedSet:
-    """Intersection of a list of OrderedSets"""
-    return functools.reduce(operator.and_, sets)
+def intersection(sets: list[FrozenOrderedSet]) -> FrozenOrderedSet:
+    """Intersection of a list of FrozenOrderedSet"""
+    if sets:
+        return sets[0].intersection(*sets[1:])
+    return FrozenOrderedSet()
 
 
-def union(sets: list[OrderedSet]) -> OrderedSet:
-    """Union of a list of OrderedSets"""
-    return OrderedSet(elem for s in sets for elem in s)
+def union(sets: list[FrozenOrderedSet]) -> FrozenOrderedSet:
+    """Union of a list of FrozenOrderedSet"""
+    return FrozenOrderedSet(elem for s in sets for elem in s)
 
 
 @nary_condition_optimization(operators=('in', 'not in'))

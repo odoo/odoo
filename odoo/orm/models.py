@@ -52,7 +52,7 @@ from odoo.tools import (
 from odoo.tools.constants import PREFETCH_MAX
 from odoo.tools.func import deprecated
 from odoo.tools.lru import LRU
-from odoo.tools.misc import ReversedIterable, exception_to_unicode, unquote
+from odoo.tools.misc import FrozenOrderedSet, ReversedIterable, exception_to_unicode, unquote
 from odoo.tools.safe_eval import _UNSAFE_ATTRIBUTES, safe_checker
 from odoo.tools.translate import _, LazyTranslate
 
@@ -4771,7 +4771,7 @@ class BaseModel(metaclass=MetaModel):
         ):
             # try to create the domain close to what it will look like after optimization
             # to avoid reoptimizing it
-            domain = Domain(self._active_name, 'in', OrderedSet((True,))) & domain
+            domain = Domain(self._active_name, 'in', FrozenOrderedSet((True,))) & domain
 
         # build the query
         domain = domain.optimize_full(self)

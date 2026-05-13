@@ -57,6 +57,7 @@ __all__ = [
     'NON_BREAKING_SPACE',
     'SKIPPED_ELEMENT_TYPES',
     'DotDict',
+    'FrozenOrderedSet',
     'LastOrderedSet',
     'OrderedSet',
     'Reverse',
@@ -1033,6 +1034,81 @@ class OrderedSet[T](MutableSet[T]):
         return self.__class__(self)
 
 
+class FrozenOrderedSet[T](frozenset[T]):
+    """ A frozenset collection that remembers the element's order. """
+    __slots__ = ['__tuple']
+
+    def __new__(cls, elems: Iterable[T] = ()):
+        elems = tuple(unique(elems))
+        s = super().__new__(cls, elems)
+        object.__setattr__(s, '_FrozenOrderedSet__tuple', elems)
+        return s
+
+    def __delattr__(self, name):
+        raise NotImplementedError("immutable")
+
+    def __setattr__(self, name, value):
+        raise NotImplementedError("immutable")
+
+    def __iter__(self):
+        return iter(self.__tuple)
+
+    def __reversed__(self):
+        return reversed(self.__tuple)
+
+    def difference(self, *others):
+        other_values = {v for other in others for v in other}
+        return FrozenOrderedSet(v for v in self.__tuple if v not in other_values)
+
+    def intersection(self, *others):
+        if not others:
+            return self
+        other_values = set(others[0])
+        other_values.intersection_update(*others[1:])
+        return FrozenOrderedSet(v for v in self.__tuple if v in other_values)
+
+    def symmetric_difference(self, other):
+        other = FrozenOrderedSet(other)
+        return (self | other) - (self & other)
+
+    def union(self, *others):
+        def items():
+            yield from self.__tuple
+            for other in others:
+                yield from other
+        return FrozenOrderedSet(items())
+
+    def __and__(self, value):
+        return self.intersection(value)
+
+    def __or__(self, value):
+        return self.union(value)
+
+    def __sub__(self, value):
+        return self.difference(value)
+
+    def __xor__(self, value):
+        return self.symmetric_difference(value)
+
+    def __rand__(self, value):
+        return FrozenOrderedSet(value) & self
+
+    def __ror__(self, value):
+        return FrozenOrderedSet(value) | self
+
+    def __rsub__(self, value):
+        return FrozenOrderedSet(value) - self
+
+    def __rxor__(self, value):
+        return FrozenOrderedSet(value) ^ self
+
+    def __repr__(self):
+        return f'{type(self).__name__}({list(self)!r})'
+
+    def copy(self):
+        return self  # immutable
+
+
 class LastOrderedSet[T](OrderedSet[T]):
     """ A set collection that remembers the elements last insertion order. """
     def add(self, elem):
@@ -1625,6 +1701,10 @@ class frozendict[K, V]:
 
     def __subclasscheck__(self, subclass):
         assert False, "cannot subclass frozendict"  # not a real class
+
+    @classmethod
+    def fromkeys(cls, iterable, value=None):
+        return MappingProxyType(_HashDict.fromkeys(iterable, value))
 
 
 def ReadonlyDict(mapping=(), /, **kw) -> MappingProxyType:

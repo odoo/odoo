@@ -5,7 +5,7 @@ from unittest.mock import patch
 
 from odoo.fields import Command, Domain
 from odoo.tests import tagged, TransactionCase, users
-from odoo.tools import SQL, OrderedSet
+from odoo.tools import FrozenOrderedSet, SQL
 
 from odoo.addons.test_orm.tests.test_domain_expression import TransactionExpressionCase
 
@@ -487,9 +487,9 @@ class TestDomainOptimize(TransactionCase):
     def test_condition_optimize_in(self):
         model = self.env['test_orm.mixed']
         domain = Domain('id', 'in', range(5)).optimize(model)
-        self.assertIsInstance(domain.value, OrderedSet)
+        self.assertIsInstance(domain.value, FrozenOrderedSet)
         domain = Domain('id', 'in', [9, 99]).optimize(model)
-        self.assertIsInstance(domain.value, OrderedSet)
+        self.assertIsInstance(domain.value, FrozenOrderedSet)
         self.assertIs(domain.optimize(model), domain, "Idempotent")
 
         self.assertEqual(
@@ -572,7 +572,7 @@ class TestDomainOptimize(TransactionCase):
         model = self.env['test_orm.message']
         self.assertEqual(
             Domain('discussion', 'like', '').optimize(model),
-            Domain('discussion', 'not in', OrderedSet([False])),
+            Domain('discussion', 'not in', FrozenOrderedSet([False])),
             "Matching anything in relation",
         )
         domain = Domain('discussion', 'like', 'ok').optimize(model)
@@ -588,14 +588,14 @@ class TestDomainOptimize(TransactionCase):
 
     def test_condition_optimize_bool(self):
         model = self.env['test_orm.message']
-        is_important = Domain('important', 'in', OrderedSet([True]))
+        is_important = Domain('important', 'in', FrozenOrderedSet([True]))
         self.assertIs(
             is_important.optimize(model),
             is_important, "Idempotent optimization",
         )
         self.assertEqual(
             Domain('important', '=', True).optimize(model),
-            Domain('important', 'in', OrderedSet([True])),
+            Domain('important', 'in', FrozenOrderedSet([True])),
         )
         self.assertEqual(
             list(Domain('important', 'not in', [True, False]).optimize(model)),
@@ -626,15 +626,15 @@ class TestDomainOptimize(TransactionCase):
         model = self.env['test_orm.mixed']
         self.assertEqual(
             Domain('date', '=', date(2024, 1, 5)).optimize(model),
-            Domain('date', 'in', OrderedSet([date(2024, 1, 5)])),
+            Domain('date', 'in', FrozenOrderedSet([date(2024, 1, 5)])),
         )
         self.assertEqual(
             Domain('date', '=', datetime(2024, 1, 5, 12, 0, 0)).optimize(model),
-            Domain('date', 'in', OrderedSet([date(2024, 1, 5)])),
+            Domain('date', 'in', FrozenOrderedSet([date(2024, 1, 5)])),
         )
         self.assertEqual(
             Domain('date', '=', '2024-01-05').optimize(model),
-            Domain('date', 'in', OrderedSet([date(2024, 1, 5)])),
+            Domain('date', 'in', FrozenOrderedSet([date(2024, 1, 5)])),
         )
         self.assertEqual(
             Domain('date', '=like', '2024%').optimize(model),
@@ -650,7 +650,7 @@ class TestDomainOptimize(TransactionCase):
         )
         self.assertEqual(
             Domain('date', 'not in', ['2024-01-05', date(2023, 1, 1)]).optimize(model),
-            Domain('date', 'not in', OrderedSet([date(2024, 1, 5), date(2023, 1, 1)])),
+            Domain('date', 'not in', FrozenOrderedSet([date(2024, 1, 5), date(2023, 1, 1)])),
         )
 
         with self.assertRaises(ValueError):
@@ -702,11 +702,11 @@ class TestDomainOptimize(TransactionCase):
         self.assertEqual(
             Domain('moment', 'not in', ['2024-01-05', datetime(2023, 1, 1)]).optimize(model),
             (
-                Domain('moment', 'in', OrderedSet([False]))
+                Domain('moment', 'in', FrozenOrderedSet([False]))
                 | Domain('moment', '<', datetime(2024, 1, 5))
                 | Domain('moment', '>=', datetime(2024, 1, 5, second=1))
             ) & (
-                Domain('moment', 'in', OrderedSet([False]))
+                Domain('moment', 'in', FrozenOrderedSet([False]))
                 | Domain('moment', '<', datetime(2023, 1, 1))
                 | Domain('moment', '>=', datetime(2023, 1, 1, second=1))
             ),
@@ -777,29 +777,29 @@ class TestDomainOptimize(TransactionCase):
         # no change for 'in'
         self.assertEqual(
             Domain('state', 'in', ['foo']).optimize_dynamic(model),
-            Domain('state', 'in', OrderedSet(['foo'])),
+            Domain('state', 'in', FrozenOrderedSet(['foo'])),
         )
         self.assertEqual(
             Domain('state', 'in', ['foo', False]).optimize_dynamic(model),
-            Domain('state', 'in', OrderedSet(['foo', False])),
+            Domain('state', 'in', FrozenOrderedSet(['foo', False])),
         )
         self.assertEqual(
             Domain('state', 'in', [False]).optimize_dynamic(model),
-            Domain('state', 'in', OrderedSet([False])),
+            Domain('state', 'in', FrozenOrderedSet([False])),
         )
         # 'not in' becomes 'in'
         self.assertEqual(
             Domain('state', 'not in', ['foo']).optimize_dynamic(model),
-            Domain('state', 'in', OrderedSet(['bar', False])),
+            Domain('state', 'in', FrozenOrderedSet(['bar', False])),
         )
         self.assertEqual(
             Domain('state', 'not in', ['foo', False]).optimize_dynamic(model),
-            Domain('state', 'in', OrderedSet(['bar'])),
+            Domain('state', 'in', FrozenOrderedSet(['bar'])),
         )
         # this one remains as is, and is translated to SQL "state IS NOT NULL"
         self.assertEqual(
             Domain('state', 'not in', [False]).optimize_dynamic(model),
-            Domain('state', 'not in', OrderedSet([False])),
+            Domain('state', 'not in', FrozenOrderedSet([False])),
         )
 
     def test_condition_optimize_maybe_eq(self):
@@ -823,7 +823,7 @@ class TestDomainOptimize(TransactionCase):
         )
         self.assertEqual(
             Domain('id', 'parent_of', categ_child.ids).optimize_full(model),
-            Domain('id', 'in', OrderedSet([categ_child.id, categ.id])),
+            Domain('id', 'in', FrozenOrderedSet([categ_child.id, categ.id])),
         )
 
     def test_condition_optimize_access(self):
@@ -967,10 +967,10 @@ class TestDomainOptimize(TransactionCase):
                 Domain('html', 'like', 'ok'),
             ]).optimize(model),
             Domain.AND([
-                Domain('date', 'not in', OrderedSet([False])),
+                Domain('date', 'not in', FrozenOrderedSet([False])),
                 Domain('date', 'like', "2024"),
                 Domain('html', 'like', 'ok'),
-                Domain('numeric', 'in', OrderedSet([5])),
+                Domain('numeric', 'in', FrozenOrderedSet([5])),
                 Domain('numeric', '<', 99),
             ]),
             "Optimization sorts by field and operator",
@@ -984,10 +984,10 @@ class TestDomainOptimize(TransactionCase):
                 return Domain.FALSE if op == 'in' else Domain.TRUE
             return Domain('numeric', op, values)
 
-        set123 = OrderedSet([1, 2, 3])
-        set345 = OrderedSet([3, 4, 5])
-        set910 = OrderedSet([9, 10])
-        sets = [set123, set345, set910, OrderedSet()]
+        set123 = FrozenOrderedSet([1, 2, 3])
+        set345 = FrozenOrderedSet([3, 4, 5])
+        set910 = FrozenOrderedSet([9, 10])
+        sets = [set123, set345, set910, FrozenOrderedSet()]
         # check all possible pairs (a, b) of sets above
         for a, b in list(combinations(sets, 2)) + list(combinations(reversed(sets), 2)):
             self.assertEqual(
@@ -1021,7 +1021,7 @@ class TestDomainOptimize(TransactionCase):
         )
         self.assertEqual(
             (domain('in', set123) & domain('not in', set345) & domain('in', [1])).optimize(model),
-            domain('in', OrderedSet([1])),
+            domain('in', FrozenOrderedSet([1])),
         )
 
         self.assertEqual(
@@ -1035,7 +1035,7 @@ class TestDomainOptimize(TransactionCase):
 
         self.assertIsInstance(
             (Domain('numeric', 'in', [1]) | Domain('numeric', 'in', [2])).optimize(model).value,
-            OrderedSet, "Check we can optimize something else than OrderedSet",
+            FrozenOrderedSet, "Check we can optimize something else than FrozenOrderedSet",
         )
 
     def test_nary_optimize_in_relational(self):
@@ -1131,7 +1131,7 @@ class TestDomainOptimize(TransactionCase):
         bar = self.env['test_orm.bar']
         domain = Domain('foo', '=', 4) | Domain('foo', '=', 5)
         domain = domain.optimize_full(bar)
-        self.assertEqual(domain, Domain('name', 'in', OrderedSet(['(4, 5)'])))
+        self.assertEqual(domain, Domain('name', 'in', FrozenOrderedSet(['(4, 5)'])))
 
     @users('admin')  # just so it's not SUPERUSER to be able to de-escalate su.
     def test_bypass_comodel_id_lookup(self):
@@ -1186,7 +1186,7 @@ class TestDomainOptimize(TransactionCase):
         with freeze_time(f'2027-05-02{hour_str}'):
             self.assertEqual(
                 Domain('attributes.mydate', '=', '+50y').optimize_full(message_model),
-                Domain('attributes.mydate', 'in', OrderedSet([f'2077-05-02{hour_str}'])),
+                Domain('attributes.mydate', 'in', FrozenOrderedSet([f'2077-05-02{hour_str}'])),
             )
 
             self.assertEqual(
