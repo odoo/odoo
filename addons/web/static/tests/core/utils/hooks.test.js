@@ -1,4 +1,4 @@
-import { reactive, useState } from "@web/owl2/utils";
+import { reactive, render, useState } from "@web/owl2/utils";
 import { describe, destroy, expect, getFixture, mockUserAgent, test } from "@odoo/hoot";
 import { click, queryOne } from "@odoo/hoot-dom";
 import { Deferred, animationFrame, mockTouch } from "@odoo/hoot-mock";
@@ -701,17 +701,17 @@ describe("useBackButton", () => {
         expect(history.state.sentinel).toBe(2);
     });
 
-    test.tags("mobile", "owl3");
-    test.todo("`shouldEnable` callback function pushes/clears trap history entry", async () => {
+    test.tags("mobile");
+    test("`shouldEnable` callback function pushes/clears trap history entry", async () => {
         mockUserAgent("android");
+        let backBtnAvailable = false;
         class DummyComponent extends Component {
             static props = ["*"];
             static template = xml`<div/>`;
             setup() {
-                this.state = useState({ available: false });
                 useBackButton(
                     () => null,
-                    () => this.state.available
+                    () => backBtnAvailable
                 );
             }
         }
@@ -720,10 +720,12 @@ describe("useBackButton", () => {
         history.pushState({ sentinel: 2 }, "", "/other");
         const dummy = await mountWithCleanup(DummyComponent);
         expect(history.state.sentinel).toBe(2);
-        dummy.state.available = true;
+        backBtnAvailable = true;
+        render(dummy);
         await animationFrame();
         expect(history.state.trapState).toBe(true);
-        dummy.state.available = false;
+        backBtnAvailable = false;
+        render(dummy);
         await animationFrame();
         expect(history.state.sentinel).toBe(2);
     });
