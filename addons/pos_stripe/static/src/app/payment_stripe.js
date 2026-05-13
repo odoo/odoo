@@ -151,7 +151,11 @@ export class PaymentStripe extends PaymentInterface {
             return false;
         }
         line.set_payment_status("waitingCard");
-        const collectPaymentMethod = await this.terminal.collectPaymentMethod(clientSecret);
+        const collectPaymentMethod = await this.terminal.collectPaymentMethod(clientSecret, {
+            config_override: {
+                enable_customer_cancellation: true,
+            },
+        });
         if (collectPaymentMethod.error) {
             this._showError(collectPaymentMethod.error.message, collectPaymentMethod.error.code);
             line.set_payment_status("retry");
