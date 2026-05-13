@@ -1167,6 +1167,7 @@ class MailMessage(models.Model):
             lambda res: (
                 res.attr("is_company"),
                 res.one("main_user_id", ["partner_id", "share"]),
+                res.many("user_ids", lambda res: res.many("role_ids", ["color", "sequence"]), internal=True),
                 res.from_method("_store_avatar_fields"),
             ),
             dynamic_fields="_store_author_dynamic_fields",

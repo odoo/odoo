@@ -136,7 +136,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - _compute_message_unread
     #       - fetch im_livechat_channel
     #   1: _get_last_messages
-    #   23: store add message:
+    #   24: store add message:
     #       - fetch mail_message
     #       - search mail_message (_compute_linked_message_ids)
     #       - fetch mail_message (_compute_linked_message_ids)
@@ -152,6 +152,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - search rating_rating
     #       - fetch mail_notification
     #       - search discuss_call_history
+    #       - fetch res_role_res_users_rel
     #       - fetch mail_message_reaction
     #       - fetch mail_message_subtype
     #       - read_group (_compute_rating_stats)
@@ -160,7 +161,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - fetch user (author)
     #       - fetch discuss_call_history
     #       - select the current db snapshot
-    _query_count_discuss_channels = 62
+    _query_count_discuss_channels = 63
 
     def setUp(self):
         super().setUp()
@@ -670,7 +671,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 self._expected_result_for_persona(self.user_root),
             ),
             "res.users": self._filter_users_fields(
-                self._res_for_user(self.users[0]),
+                self._res_for_user(self.users[0], from_message=True),
                 self._res_for_user(self.users[2]),
                 self._res_for_user(self.users[14]),
                 self._res_for_user(self.users[15]),
@@ -1932,6 +1933,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "is_company": False,
                 "main_user_id": user.id,
                 "name": "OdooBot",
+                "user_ids": [user.id],
                 "write_date": fields.Datetime.to_string(user.partner_id.write_date),
             }
         if guest:
@@ -1987,28 +1989,32 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             return {**common_data, "display_name": "Visitor Ernest Employee"}
         return {}
 
-    def _res_for_user(self, user, only_inviting=False, also_livechat=False):
+    def _res_for_user(self, user, only_inviting=False, also_livechat=False, from_message=False):
         partner = user.partner_id
         if user == self.users[0]:
-            return {
-                "all_employee_ids": user.employee_ids.ids,
+            res = {
                 "active": True,
+                "all_employee_ids": user.employee_ids.ids,
                 "id": user.id,
-                "im_status": "online",
                 "im_status_access_token": user._get_im_status_access_token(),
-                "should_display_in_call_im_status": False,
+                "im_status": "online",
                 "partner_id": partner.id,
                 "share": False,
+                "should_display_in_call_im_status": False,
             }
+            if from_message:
+                res["role_ids"] = []
+            return res
         if user == self.users[1]:
             res = {
                 "all_employee_ids": user.employee_ids.ids,
                 "id": user.id,
-                "im_status": "offline",
                 "im_status_access_token": user._get_im_status_access_token(),
-                "should_display_in_call_im_status": False,
+                "im_status": "offline",
                 "partner_id": partner.id,
+                "role_ids": [],
                 "share": False,
+                "should_display_in_call_im_status": False,
             }
             if also_livechat:
                 res["offline_since"] = False
@@ -2027,11 +2033,12 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 "active": True,
                 "all_employee_ids": user.employee_ids.ids,
                 "id": user.id,
-                "im_status": "offline",
                 "im_status_access_token": user._get_im_status_access_token(),
-                "should_display_in_call_im_status": False,
+                "im_status": "offline",
                 "partner_id": partner.id,
+                "role_ids": [],
                 "share": False,
+                "should_display_in_call_im_status": False,
             }
         if user == self.users[3]:
             return {

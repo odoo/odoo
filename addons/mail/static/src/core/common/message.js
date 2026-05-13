@@ -326,6 +326,15 @@ export class Message extends Component {
         return this.props.message;
     }
 
+    /** @type {string} */
+    get authorNameStyle() {
+        const color = this.message.authorRoleColor;
+        if (!color) {
+            return "";
+        }
+        return `color: ${color};`;
+    }
+
     /** Max amount of quick actions, including "..." */
     get quickActionCount() {
         if (isMobileOS()) {
