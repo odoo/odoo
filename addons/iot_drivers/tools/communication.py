@@ -19,6 +19,7 @@ def handle_message(message_type: str, communication_type: str, **kwargs: dict) -
     """
     device_identifier = kwargs.get('device_identifier', IOT_IDENTIFIER)
     base_response = {
+        'owner': kwargs.get('session_id', '0'),  # TODO: remove when v19.0 is deprecated
         'session_id': kwargs.get('session_id', '0'),
         'iot_box_identifier': IOT_IDENTIFIER,
         'device_identifier': device_identifier,
