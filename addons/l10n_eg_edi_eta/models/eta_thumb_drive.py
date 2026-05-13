@@ -7,6 +7,7 @@ import json
 from asn1crypto import cms, core, x509, algos, tsp
 
 from odoo import models, fields
+from odoo.addons.l10n_eg_edi_eta.tools.eta_serialize import serialize_eta_document
 from odoo.tools import BinaryBytes
 
 
@@ -91,25 +92,9 @@ class L10n_Eg_EdiThumbDrive(models.Model):
         # in order to be an exception to the mixed-content restrictions
         return self.env['ir.config_parameter'].sudo().get_str('l10n_eg_eta.sign.host') or 'http://localhost:8069'
 
-    def _serialize_for_signing(self, eta_inv):
-        if not isinstance(eta_inv, dict):
-            return json.dumps(str(eta_inv), ensure_ascii=False)
-
-        canonical_str = []
-        for key, value in eta_inv.items():
-            if not isinstance(value, list):
-                canonical_str.append(json.dumps(key, ensure_ascii=False).upper())
-                canonical_str.append(self._serialize_for_signing(value))
-            else:
-                canonical_str.append(json.dumps(key, ensure_ascii=False).upper())
-                for elem in value:
-                    canonical_str.append(json.dumps(key, ensure_ascii=False).upper())
-                    canonical_str.append(self._serialize_for_signing(elem))
-        return ''.join(canonical_str)
-
     def _generate_signed_attrs__(self, eta_invoice, signing_time):
         cert = x509.Certificate.load(self.certificate)
-        data = hashlib.sha256(self._serialize_for_signing(eta_invoice).encode()).digest()
+        data = hashlib.sha256(serialize_eta_document(eta_invoice).encode()).digest()
         return cms.CMSAttributes([
             cms.CMSAttribute({
                 'type': cms.CMSAttributeType('content_type'),
