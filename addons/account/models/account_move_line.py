@@ -1686,14 +1686,18 @@ class AccountMoveLine(models.Model):
             account_type = line.account_id.account_type
             if line.move_id.is_sale_document(include_receipts=True):
                 if account_type == 'liability_payable':
-                    raise UserError(_("Account %s is of payable type, but is used in a sale operation.", line.account_id.code))
-                if (line.display_type == 'payment_term') ^ (account_type == 'asset_receivable'):
-                    raise UserError(_("Any journal item on a receivable account must have a due date and vice versa."))
+                    raise UserError(self.env._("Account '%s' is of payable type, but is used in a sale operation.", line.account_id.display_name))
+                if (line.display_type == 'payment_term') and (account_type != 'asset_receivable'):
+                    raise UserError(self.env._("Account '%s' used for receivable line is not of receivable type. Check if the account type is correct.", line.account_id.display_name))
+                if (line.display_type != 'payment_term') and (account_type == 'asset_receivable'):
+                    raise UserError(self.env._("Any journal item on '%s' (Receivable) must have a due date.", line.account_id.display_name))
             if line.move_id.is_purchase_document(include_receipts=True):
                 if account_type == 'asset_receivable':
-                    raise UserError(_("Account %s is of receivable type, but is used in a purchase operation.", line.account_id.code))
-                if (line.display_type == 'payment_term') ^ (account_type == 'liability_payable'):
-                    raise UserError(_("Any journal item on a payable account must have a due date and vice versa."))
+                    raise UserError(self.env._("Account '%s' is of receivable type, but is used in a purchase operation.", line.account_id.display_name))
+                if (line.display_type == 'payment_term') and (account_type != 'liability_payable'):
+                    raise UserError(self.env._("Account '%s' used for payable line is not of payable type. Check if the account type is correct.", line.account_id.display_name))
+                if (line.display_type != 'payment_term') and (account_type == 'liability_payable'):
+                    raise UserError(self.env._("Any journal item on '%s' (Payable) must have a due date.", line.account_id.display_name))
 
     def _affect_tax_report(self):
         self.ensure_one()
