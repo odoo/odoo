@@ -277,6 +277,7 @@ class StockMove(models.Model):
         fifo_qty_processed = defaultdict(float)
 
         for move in self:
+            move = move.with_company(move.company_id)
             # Incoming moves
             if move.is_dropship or move.is_in:
                 products_to_recompute.add(move.product_id.id)
