@@ -567,6 +567,8 @@ class CustomerPortal(Controller):
                     'messages': error_messages,
                 }
 
+        parent_name_value = address_values.pop('parent_name', None)
+
         if not partner_sudo:  # Creation of a new address.
             self._complete_address_values(
                 address_values, address_type, use_delivery_as_billing, **form_data
@@ -590,18 +592,19 @@ class CustomerPortal(Controller):
                 # The `phone_validation` module is installed.
                 partner_sudo._onchange_phone_validation()
 
-        if (
-            'parent_name' in address_values
-            and partner_sudo.commercial_partner_id != partner_sudo
-            and partner_sudo.commercial_partner_id.is_company
-        ):
-            # If partner is an individual, update existing company's name or remove one
-            company_name = address_values['parent_name']
-            parent_company = partner_sudo.commercial_partner_id
-            partner_sudo.parent_name = False
-
-            if company_name and parent_company and parent_company.name != company_name:
-                parent_company.name = company_name
+        if parent_name_value:
+            if partner_sudo.commercial_partner_id != partner_sudo:
+                if partner_sudo.commercial_partner_id.is_company:
+                    parent_company = partner_sudo.commercial_partner_id
+                    if parent_company.name != parent_name_value:
+                        parent_company.name = parent_name_value
+            elif partner_sudo.is_company:
+                if partner_sudo.name != parent_name_value:
+                    partner_sudo.name = parent_name_value
+            else:  # Current partner is an individual with no parent
+                partner_sudo._create_parent_from_name(
+                    parent_name_value, additional_values={'is_company': True}
+                )
 
         self._handle_extra_form_data(extra_form_data, address_values)
 
