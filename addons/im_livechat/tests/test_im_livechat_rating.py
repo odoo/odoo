@@ -1,11 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.addons.im_livechat.tests.chatbot_common import ChatbotCase
 from odoo.addons.im_livechat.tests.common import TestGetOperatorCommon
 from odoo.tests.common import JsonRpcException
 from odoo.tools.misc import mute_logger
 
 
-class TestImLivechatFeedback(TestGetOperatorCommon):
+class TestImLivechatFeedback(ChatbotCase, TestGetOperatorCommon):
     def test_rating_allowed_for_visitor(self):
         agent = self._create_operator()
         livechat_channel = self.env["im_livechat.channel"].create(
@@ -42,3 +43,16 @@ class TestImLivechatFeedback(TestGetOperatorCommon):
                 {"channel_id": chat.id, "rate": 5, "reason": "Excellent!"},
             )
         self.assertFalse(chat.livechat_rating)
+
+    def test_rating_for_chat_bot(self):
+        self.authenticate(None, None)
+        data = self.make_jsonrpc_request("/im_livechat/get_session", {
+            "chatbot_script_id": self.chatbot_script.id,
+            "channel_id": self.livechat_channel.id,
+        })
+        chat = self.env["discuss.channel"].browse(data["channel_id"])
+        self.make_jsonrpc_request(
+            "/im_livechat/feedback",
+            {"channel_id": chat.id, "rate": 5, "reason": "Excellent!"},
+        )
+        self.assertEqual(chat.livechat_rating, "5")
