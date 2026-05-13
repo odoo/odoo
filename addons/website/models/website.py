@@ -752,7 +752,7 @@ class Website(models.CachedModel):
                 'res_id': website.id,
             })
         elif not logo_attachment_id and not company.uses_default_logo:
-            website.logo = company.logo.decode('utf-8')
+            website.logo = BinaryBytes(company.logo.content)
 
         # Configure the color palette
         selected_palette = kwargs.get('selected_palette')
