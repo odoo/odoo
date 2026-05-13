@@ -620,7 +620,7 @@ class ProductProduct(models.Model):
         # TODO: Add extra value and extra quantity kwargs to avoid total recomputation
         products_by_cost_method = defaultdict(set)
         for product in self:
-            if product.lot_valuated:
+            if product.lot_valuated and product.cost_method != 'standard':
                 product.sudo().with_context(disable_auto_revaluation=True).standard_price = product.avg_cost
                 continue
             products_by_cost_method[product.cost_method].add(product.id)
