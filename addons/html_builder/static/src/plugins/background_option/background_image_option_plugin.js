@@ -176,7 +176,7 @@ export class SelectFilterColorAction extends StyleAction {
 
         // If no value is provided, use the current one if any.
         if (filterEl && value === undefined) {
-            value = filterEl.style.backgroundImage;
+            value = filterEl.style.backgroundImage || filterEl.style.backgroundColor;
         }
         // If the filter would be transparent, remove it / don't create it.
         const rgba = value && convertCSSColorToRgba(value);
