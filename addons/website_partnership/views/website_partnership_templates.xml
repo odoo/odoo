@@ -26,7 +26,10 @@
         </section>
     </div>
     <!-- Off canvas filters on mobile-->
-    <div id="o_wcrm_offcanvas" class="o_website_offcanvas offcanvas offcanvas-end d-lg-none p-0 overflow-visible">
+    <div id="o_wcrm_offcanvas"
+        class="o_website_offcanvas offcanvas offcanvas-end d-lg-none p-0 overflow-visible"
+        data-filter-url="/partners"
+        data-filter-path-params="grade,country">
         <div class="offcanvas-header">
             <h5 class="offcanvas-title">Filters</h5>
             <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"/>
@@ -49,13 +52,15 @@
                             <ul class="list-group list-group-flush">
                                 <t t-foreach="grades" t-as="grade">
                                     <li class="list-group-item d-flex justify-content-between align-items-center ps-0 pb-0 border-0">
-                                        <a id="filter_category_link" t-att-href="keep_partners_url(grade=grade['grade_id'][0])"
-                                        class="text-reset" aria-label="See categories filters">
-                                            <div class="form-check">
-                                                <input class="form-check-input pe-none" type="radio" t-attf-name="#{grade}" t-attf-id="#{grade}" t-att-checked="bool(grade['active'])"/>
-                                                <label class="form-check-label" t-attf-for="#{grade}" t-out="grade"/>
-                                            </div>
-                                        </a>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="grade"
+                                                t-attf-id="o_wcrm_offcanvas_grade_#{grade['grade_id'][0]}"
+                                                t-att-value="grade['grade_id'][0] or ''"
+                                                t-att-checked="bool(grade['active'])"/>
+                                            <label class="form-check-label"
+                                                t-attf-for="o_wcrm_offcanvas_grade_#{grade['grade_id'][0]}"
+                                                t-out="grade['grade_id'][1] if grade['grade_id'][0] != 0 else all_categories_label"/>
+                                        </div>
                                     </li>
                                 </t>
                             </ul>
@@ -64,6 +69,7 @@
                 </div>
             </div>
         </div>
+        <t t-call="website.mobile_filter_offcanvas_footer"/>
     </div>
     <div class="row mb-4">
         <div class="my-5 py-5 text-center" t-if="not partners and not searches.get('search', '')">
@@ -156,6 +162,8 @@
                 data-bs-toggle="offcanvas"
                 data-bs-target="#o_wcrm_offcanvas">
                 <i class="fa fa-sliders"/>
+                <span t-if="searches.get('search', '') or current_grade"
+                    class="position-absolute top-0 start-100 translate-middle border border-light rounded-circle bg-danger p-1"/>
             </button>
         </div>
     </xpath>
