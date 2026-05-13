@@ -27,5 +27,7 @@ class HrEmployeePublic(models.Model):
 
     def action_open_last_month_attendances(self):
         self.ensure_one()
-        if self.is_user:
+        current_user = self.env.user
+        if (self.is_user and current_user.has_group('hr_attendance.group_hr_attendance_own_reader')) \
+        or current_user.has_group('hr_attendance.group_hr_attendance_officer'):
             return self.employee_id.action_open_last_month_attendances()
