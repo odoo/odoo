@@ -196,6 +196,8 @@ class Base(models.AbstractModel):
                         valid_number = partner._phone_format(fname=fname)
                         if valid_number:
                             break
+                    if valid_number:
+                        break
 
                 if not valid_number:
                     fname = 'phone'

@@ -129,14 +129,14 @@ class TestSMSPost(SMSCommon, TestSMSRecipients, CronMixinCase):
 
         self.assertSMSNotification([{'partner': self.partner_1}], self._test_body, messages)
 
-        # TDE: should take first found one according to partner ordering
+        # Should take the first partner in ordering that has a valid number.
         with self.with_user('employee'):
             record = self.env['mail.test.sms.partner.2many'].create({'customer_ids': [(4, self.partner_1.id), (4, self.partner_2.id)]})
 
             with self.mockSMSGateway():
                 messages = record._message_sms(self._test_body)
 
-        self.assertSMSNotification([{'partner': self.partner_2}], self._test_body, messages)
+        self.assertSMSNotification([{'partner': self.partner_1}], self._test_body, messages)
 
     def test_message_sms_on_field_w_partner(self):
         with self.with_user('employee'), self.mockSMSGateway():
