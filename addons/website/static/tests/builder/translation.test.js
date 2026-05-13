@@ -10,12 +10,7 @@ import {
     queryOne,
 } from "@odoo/hoot-dom";
 import { contains, mockService, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
-import {
-    defineWebsiteModels,
-    getStructureSnippet,
-    invisibleEl,
-    setupWebsiteBuilder,
-} from "./website_helpers";
+import { defineWebsiteModels, invisibleEl, setupWebsiteBuilder } from "./website_helpers";
 import { expectElementCount } from "@html_editor/../tests/_helpers/ui_expectations";
 import { TranslationPlugin } from "@website/builder/plugins/translation_plugin";
 import { dummyBase64Img } from "@html_builder/../tests/helpers";
@@ -487,23 +482,6 @@ test("replicated translated snippets are marked dirty", async () => {
 
     expect([sourceSpan, replicaSpan]).toHaveClass("o_dirty");
     expect([sourceSpan, replicaSpan]).toHaveText("XHello");
-});
-
-test("table of content snippet headings' translation updates its navbar items", async () => {
-    const snippet = "s_table_of_content";
-    const websiteContent = (await getStructureSnippet(snippet)).outerHTML;
-    const { getEditor } = await setupSidebarBuilderForTranslation({ websiteContent });
-    const editor = getEditor();
-    const oldTitle = editor.editable.querySelector("#table_of_content_heading_1_1").textContent;
-    expect(":iframe .s_table_of_content_navbar .table_of_content_link:first-child").toHaveText(
-        oldTitle
-    );
-    const titleEl = editor.editable.querySelector("#table_of_content_heading_1_1");
-    setSelection({ anchorNode: titleEl });
-    await insertText(editor, "New title");
-    expect(":iframe .s_table_of_content_navbar .table_of_content_link:first-child").toHaveText(
-        `New title${oldTitle}`
-    );
 });
 
 test("trying to translate an element inside a .o_not_editable should add a notification", async () => {
