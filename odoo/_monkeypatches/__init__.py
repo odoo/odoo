@@ -39,3 +39,5 @@ def patch_all():
     patch_zeep()
     from .markupsafe import patch_markup
     patch_markup()
+    from .requests import patch_requests
+    patch_requests()
