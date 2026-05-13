@@ -1,6 +1,7 @@
 from datetime import date, datetime
 from freezegun import freeze_time
 from itertools import combinations
+from unittest.mock import patch
 
 from odoo.fields import Command, Domain
 from odoo.tests import tagged, TransactionCase, users
@@ -614,6 +615,12 @@ class TestDomainOptimize(TransactionCase):
             Domain('active', 'in', [True, False]).optimize_full(model),
             Domain.TRUE,
         )
+        with patch.object(model.__class__, '_search_has_important_sibling') as sib:
+            self.assertEqual(
+                Domain('has_important_sibling', 'in', [True, False]).optimize_full(model),
+                Domain.TRUE,
+            )
+            sib.assert_not_called()
 
     def test_condition_optimize_date(self):
         model = self.env['test_orm.mixed']
