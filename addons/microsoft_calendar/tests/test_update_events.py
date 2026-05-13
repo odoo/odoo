@@ -1620,3 +1620,47 @@ class TestUpdateEvents(TestCommon):
         )
         self.organizer_user.with_user(self.organizer_user).sudo()._sync_microsoft_calendar()
         mock_write_from_microsoft.assert_not_called()
+
+    @patch.object(MicrosoftSync, '_microsoft_patch')
+    @patch.object(MicrosoftCalendarService, 'get_events')
+    def test_update_recurrence_from_outlook_keeps_exception_ids_of_organizer_only(self, mock_get_events, mock_patch):
+        """
+        An exception received for an existing recurrence is detached and keeps the Outlook ids
+        of the calendar the recurrence was synced from, without being sent back to Outlook.
+        """
+        # the matching occurrence has no Outlook id, like the ones Odoo recreates when it
+        # reapplies the recurrence
+        occurrence = self.recurrent_events[2]
+        occurrence.with_context(dont_notify=True).write({'microsoft_id': False})
+
+        # the attendee's calendar holds its own ids for the series: they are not stored
+        attendee_master = dict(self.recurrent_event_from_outlook_attendee[0], id='ATT_REC123')
+        attendee_exception = dict(
+            self.recurrent_event_from_outlook_attendee[3],
+            id='ATT_REC123_EVENT_3',
+            seriesMasterId='ATT_REC123',
+            type='exception',
+            subject='edited in Outlook',
+        )
+        mock_get_events.return_value = (MicrosoftEvent([attendee_master, attendee_exception]), None)
+        self.attendee_user.with_user(self.attendee_user).sudo()._sync_microsoft_calendar()
+
+        self.assertEqual(occurrence.name, 'edited in Outlook')
+        self.assertFalse(occurrence.microsoft_id)
+        self.assertFalse(occurrence.follow_recurrence)
+
+        # the organizer's calendar is the one the recurrence comes from: its ids are stored
+        organizer_exception = {
+            **self.recurrent_event_from_outlook_organizer[3],
+            'type': 'exception',
+            'subject': 'edited in Outlook',
+        }
+        mock_get_events.return_value = (
+            MicrosoftEvent([self.recurrent_event_from_outlook_organizer[0], organizer_exception]), None
+        )
+        self.organizer_user.with_user(self.organizer_user).sudo()._sync_microsoft_calendar()
+
+        self.assertEqual(occurrence.microsoft_id, combine_ids('REC123_EVENT_3', 'REC456_EVENT_3'))
+        self.assertFalse(occurrence.follow_recurrence)
+        self.assertFalse(occurrence.need_sync_m)
+        self.assertNotIn('REC123_EVENT_3', [call.args[1] for call in mock_patch.call_args_list])
