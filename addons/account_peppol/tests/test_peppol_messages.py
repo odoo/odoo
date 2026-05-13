@@ -633,6 +633,7 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
             {
                 'name': 'BE Spoiled Kid',
                 'country_id': self.env.ref('base.be').id,
+                'account_fiscal_country_id': self.env.ref('base.us').id,
                 'parent_id': self.env.company.id,
                 'peppol_eas': '0208',
                 'peppol_endpoint': '0477472701',
@@ -641,6 +642,7 @@ class TestPeppolMessage(TestAccountMoveSendCommon, MailCommon):
             {
                 'name': 'BE Independent Kid',
                 'country_id': self.env.ref('base.be').id,
+                'account_fiscal_country_id': self.env.ref('base.us').id,
                 'parent_id': self.env.company.id,
                 'peppol_eas': '0208',
                 'peppol_endpoint': '0477471111',
