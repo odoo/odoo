@@ -24,6 +24,11 @@
         <field name="user_ids" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
     </record>
 
+    <record id="hr.group_attendance_with_hr_access" model="res.groups">
+        <field name="name">Allow restricted HR access to Attendance Managers</field>
+        <field name="comment">The manager will be able to access fields like is_flexible on employees.</field>
+    </record>
+
 <data noupdate="1">
     <record id="hr_employee_comp_rule" model="ir.rule">
         <field name="name">Employee multi company rule</field>

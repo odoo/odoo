@@ -46,6 +46,13 @@
         <field name="implied_ids" eval="[(4, ref('hr_attendance.group_hr_attendance_user'))]"/>
     </record>
 
+    <record id="hr_attendance.group_attendance_with_hr_access" model="res.groups">
+        <field name="name">Access employee fields in HR - hr attendance</field>
+        <field name="comment">The manager will be able to access fields like is_flexible on employees.</field>
+        <field name="implied_ids" eval="[Command.link(ref('hr.group_attendance_with_hr_access'))]"/>
+        <field name="implied_by_ids" eval="[Command.link(ref('hr_attendance.group_hr_attendance_manager'))]"/>
+    </record>
+
     <data noupdate="1">
 
         <!-- Attendances -->

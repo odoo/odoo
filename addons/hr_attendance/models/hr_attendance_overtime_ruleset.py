@@ -51,7 +51,7 @@ class HrAttendanceOvertimeRuleset(models.Model):
             ruleset.rules_count = len(ruleset.rule_ids)
 
     def _compute_versions_count(self):
-        count_by_ruleset = dict(self.env['hr.version']._read_group(
+        count_by_ruleset = dict(self.env['hr.version'].sudo()._read_group(
                 domain=self._get_current_versions_domain(),
                 groupby=['ruleset_id'],
                 aggregates=['__count'],
