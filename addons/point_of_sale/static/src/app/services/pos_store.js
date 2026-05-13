@@ -455,7 +455,7 @@ export class PosStore extends WithLazyGetterTrap {
         this.currency = this.config.currency_id;
         this.models = this.data.models;
         this.screenState.partnerList.offsetBySearch = {
-            "": this.models["res.partner"].toRaw().length,
+            "": this.models["res.partner"].length,
         };
 
         const models = Object.keys(this.models);
@@ -2155,7 +2155,7 @@ export class PosStore extends WithLazyGetterTrap {
     }
 
     async showQR(payment) {
-        if (this.currency?.isZero(payment.amount)) {
+        if (this.currency.isZero(payment.amount)) {
             this.notification.add(_t("Can't create a QR for a zero amount"), { type: "warning" });
             return false;
         }
@@ -2167,7 +2167,7 @@ export class PosStore extends WithLazyGetterTrap {
                 payment.amount,
                 payment.pos_order_id.name + " " + payment.pos_order_id.tracking_number,
                 "",
-                this.currency?.id,
+                this.currency.id,
                 payment.pos_order_id.partner_id?.id,
             ]);
         } catch (error) {
@@ -2415,7 +2415,7 @@ export class PosStore extends WithLazyGetterTrap {
         const amount = order.getDefaultAmountDueToPayIn(pm);
         const fmtAmount = this.env.utils.formatCurrency(amount, true);
 
-        if (!this.currency?.isPositive(amount) || !this.config.cash_rounding) {
+        if (!this.currency.isPositive(amount) || !this.config.cash_rounding) {
             return;
         }
         if (!this.config.only_round_cash_method || pm.type === "cash") {
@@ -2465,7 +2465,7 @@ export class PosStore extends WithLazyGetterTrap {
             !paymentLines.length ||
             (!order.is_refund &&
                 paymentLines.length === 1 &&
-                this.currency?.isNegative(paymentLines[0].amount))
+                this.currency.isNegative(paymentLines[0].amount))
         ) {
             opts.fastPaymentMethod = this.config.payment_method_ids[0];
         }
@@ -2775,7 +2775,7 @@ export class PosStore extends WithLazyGetterTrap {
                     cash_rounding: cashRounding,
                 }
             );
-            totalSplitedComboLinePrice = this.currency?.round(
+            totalSplitedComboLinePrice = this.currency.round(
                 itemLines.reduce((sum, line) => sum + line.line_price, 0)
             );
             matchingCombos.push({
