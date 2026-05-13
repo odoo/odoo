@@ -4,6 +4,7 @@ import { animationFrame, tick } from "@odoo/hoot-mock";
 import { contains } from "@web/../tests/web_test_helpers";
 import { setupEditor } from "./_helpers/editor";
 import { getContent } from "./_helpers/selection";
+import { unformat } from "./_helpers/format";
 
 describe.current.tags("desktop");
 
@@ -157,6 +158,84 @@ describe("drag", () => {
         await drop(outsideArea);
         expect(getContent(el)).toBe(
             `<p>a[]</p><div class="oe_unbreakable"><br></div><div class="o-paragraph">d</div><p>b</p><p>c</p>`
+        );
+    });
+    test("should move cursor to moved node start if selection was outside", async () => {
+        const { el } = await setupEditor(
+            unformat(
+                `<table>
+                    <tbody>
+                        <tr>
+                            <td>ab</td>
+                            <td>cd</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p>ef[]</p>
+                <p>gh</p>`
+            ),
+            {
+                styleContent: styles,
+            }
+        );
+        const table = el.querySelector("table");
+        await hover(table);
+        expect(".oe-dropzone-box-side").toHaveCount(0);
+        const { drop } = await contains(".oe-sidewidget-move").drag();
+        expect(".oe-dropzone-box-side").toHaveCount(6);
+        await drop(".oe-dropzone-box-side:eq(3)");
+        expect(getContent(el)).toBe(
+            unformat(
+                `<p>ef</p>
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>[]ab</td>
+                            <td>cd</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p>gh</p>`
+            )
+        );
+    });
+    test("should preserve selection if inside moved node", async () => {
+        const { el } = await setupEditor(
+            unformat(
+                `<table>
+                    <tbody>
+                        <tr>
+                            <td>ab</td>
+                            <td>c[]d</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p>ef</p>
+                <p>gh</p>`
+            ),
+            {
+                styleContent: styles,
+            }
+        );
+        const table = el.querySelector("table");
+        await hover(table);
+        expect(".oe-dropzone-box-side").toHaveCount(0);
+        const { drop } = await contains(".oe-sidewidget-move").drag();
+        expect(".oe-dropzone-box-side").toHaveCount(6);
+        await drop(".oe-dropzone-box-side:eq(3)");
+        expect(getContent(el)).toBe(
+            unformat(
+                `<p>ef</p>
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>ab</td>
+                            <td>c[]d</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p>gh</p>`
+            )
         );
     });
 });
