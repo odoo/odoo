@@ -1,6 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from ast import literal_eval
 import json
 from datetime import UTC
 from zoneinfo import ZoneInfo
@@ -588,7 +587,7 @@ class EventEvent(models.Model):
         search_tags = self.env['event.tag']
         if tags:
             try:
-                tag_ids = list(filter(None, [self.env['ir.http']._unslug(tag)[1] for tag in tags.split(',')])) or literal_eval(tags)
+                tag_ids = list(filter(None, [self.env['ir.http']._unslug(tag)[1] for tag in tags.split(',')]))
             except SyntaxError:
                 pass
             else:

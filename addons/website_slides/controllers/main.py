@@ -1,6 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from ast import literal_eval
 from dateutil.relativedelta import relativedelta
 
 import json
@@ -9,7 +8,6 @@ import math
 import werkzeug
 
 from odoo import fields, http, tools, _
-from odoo.addons.base.models.ir_qweb import keep_query
 from odoo.addons.website.controllers.main import QueryURL
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.addons.website_profile.controllers.main import WebsiteProfile
@@ -288,16 +286,6 @@ class WebsiteSlides(WebsiteProfile):
             tag_ids.append(toggle_tag_id)
         return ','.join(request.env['ir.http']._slug(tag) for tag in request.env['slide.channel.tag'].browse(tag_ids))
 
-    def _channel_search_tags_ids(self, search_tags):
-        """ Input: %5B4%5D """
-        ChannelTag = request.env['slide.channel.tag']
-        try:
-            tag_ids = literal_eval(search_tags or '')
-        except Exception:
-            return ChannelTag
-        # perform a search to filter on existing / valid tags implicitly
-        return ChannelTag.search([('id', 'in', tag_ids)]) if tag_ids else ChannelTag
-
     def _channel_search_tags_slug(self, search_tags):
         """ Input: hotels-1,adventure-2 """
         ChannelTag = request.env['slide.channel.tag']
@@ -378,59 +366,45 @@ class WebsiteSlides(WebsiteProfile):
             'challenges': challenges,
             'challenges_done': challenges_done,
             'search_tags': request.env['slide.channel.tag'],
-            'slide_query_url': QueryURL('/slides', ['tag']),
+            'slide_query_url': QueryURL('/slides'),
             'slugify_tags': self._slugify_tags,
         })
         return render_values
 
-    def _get_slide_channel_search_options(self, my=None, slug_tags=None, slide_category=None, **post):
+    def _get_slide_channel_search_options(self, my=None, slide_category=None, **post):
         return {
             'allowFuzzy': not post.get('noFuzzy'),
             'my': my,
-            'tag': slug_tags or post.get('tag'),
+            'tag': post.get('tags'),
             'slide_category': slide_category,
         }
 
-    def _has_slide_channel_search(self, my=None, slug_tags=None, slide_category=None, **post):
-        return my or post.get('search') or slug_tags or post.get('tag') or slide_category
+    def _has_slide_channel_search(self, my=None, slide_category=None, **post):
+        return my or post.get('search') or post.get('tags') or slide_category
 
     def sitemap_slides_channel(env, rule, qs):
         if not qs or qs.lower() in '/slides':
             yield {"loc": "/slides"}
 
-    @http.route(['/slides', '/slides/page/<int:page>',
-                 '/slides/tag/<string:slug_tags>', '/slides/tag/<string:slug_tags>/page/<int:page>'],
+    @http.route(['/slides', '/slides/page/<int:page>'],
                 type='http', auth="public", website=True, sitemap=sitemap_slides_channel, readonly=True,
                 list_as_website_content=_lt("eLearning"))
-    def slides_channel(self, slide_category=None, slug_tags=None, my=0, page=1, **post):
+    def slides_channel(self, slide_category=None, my=0, page=1, **post):
         my = 1 if str(my) == '1' else 0  # if in the URL parameters, it will be a string instead of a number
-        if slug_tags and slug_tags.count(',') > 0 and request.httprequest.method == 'GET' and not post.get('prevent_redirect'):
-            # Previously, the tags were searched using GET, which caused issues with crawlers (too many hits)
-            # We replaced those with POST to avoid that, but it's not sufficient as bots "remember" crawled pages for a while
-            # This permanent redirect is placed to instruct the bots that this page is no longer valid
-            # TODO: remove in a few stable versions (v19?), including the "prevent_redirect" param in templates
-            # Note: We allow a single tag to be GET, to keep crawlers & indexes on those pages
-            # What we really want to avoid is combinatorial explosions
-            return request.redirect('/slides', code=301)
-
         render_values = self.slides_channel_values(
-            slide_category=slide_category, slug_tags=slug_tags, my=my, page=page, **post)
+            slide_category=slide_category, my=my, page=page, **post)
         if page > 1 and not render_values['channels']:
             # Refining search may reduce results; if no results and not on page 1, reset to page 1.
-            if slug_tags:
-                return request.redirect(f"/slides/tag/{slug_tags}?{keep_query('*')}")
-            return request.redirect(f"/slides?{keep_query('*')}")
+            return request.redirect_query('/slides', request.httprequest.args)
         return request.render('website_slides.courses_home', render_values)
 
-    def slides_channel_values(self, slide_category=None, slug_tags=None, my=0, page=None, page_size=12, **post):
+    def slides_channel_values(self, slide_category=None, my=0, page=None, page_size=12, **post):
         """ Home page displaying a list of courses displayed according to some
         criterion and search terms.
 
           :param string slide_category: if provided, filter the course to contain at
            least one slide of type 'slide_category'. Used notably to display courses
            with certifications;
-          :param string slug_tags: if provided, filter the slide.channels having
-            the tag(s) (in comma separated slugified form);
           :param bool my: if provided, filter the slide.channels for which the
            current user is a member of
           :param dict post: post parameters, including
@@ -441,7 +415,6 @@ class WebsiteSlides(WebsiteProfile):
         """
         search_args = {
             'my': my,
-            'slug_tags': slug_tags,
             'slide_category': slide_category,
             **post
         }
@@ -454,10 +427,8 @@ class WebsiteSlides(WebsiteProfile):
         channels = channels_all[(page - 1) * page_size:page * page_size] if page else channels_all
         tag_groups = request.env['slide.channel.tag.group'].search(
             ['&', ('tag_ids', '!=', False), ('website_published', '=', True)])
-        if slug_tags:
-            search_tags = self._channel_search_tags_slug(slug_tags)
-        elif post.get('tags'):
-            search_tags = self._channel_search_tags_ids(post['tags'])
+        if post.get('tags'):
+            search_tags = self._channel_search_tags_slug(post['tags'])
         else:
             search_tags = request.env['slide.channel.tag']
 
@@ -476,9 +447,9 @@ class WebsiteSlides(WebsiteProfile):
             'search_count': search_count,
             'top3_users': self._get_top3_users(),
             'slugify_tags': self._slugify_tags,
-            'slide_query_url': QueryURL('/slides', ['tag']),
+            'slide_query_url': QueryURL('/slides'),
             'pager': request.website.pager(
-                url=request.httprequest.path.partition('/page/')[0],
+                url='/slides',
                 url_args=request.httprequest.args.to_dict(),
                 total=search_count,
                 page=page,
