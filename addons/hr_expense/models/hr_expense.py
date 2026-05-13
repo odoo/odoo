@@ -1230,6 +1230,10 @@ class HrExpense(models.Model):
         """ Done in a specific function to be called by hr_expense_extract to keep the same translation """
         return self.env._("Untitled Expense %s", *args)
 
+    def get_untitled_expense_name(self, *args):
+        """ Done in a specific function to be called by hr_expense_extract to keep the same translation """
+        return self.env._("Untitled Expense %s", *args)
+
     @api.model
     def create_expense_from_attachments(self, attachment_ids=None, view_type='list'):
         """
@@ -1253,7 +1257,7 @@ class HrExpense(models.Model):
 
         for attachment in attachments:
             vals = {
-                'name': self._get_untitled_expense_name(format_date(self.env, fields.Date.context_today(self))),
+                'name': self.get_untitled_expense_name(format_date(self.env, fields.Date.context_today(self))),
                 'price_unit': 0,
                 'product_id': product.id,
             }
