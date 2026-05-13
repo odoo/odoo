@@ -26,8 +26,11 @@ registry.category("web_tour.tours").add("ProductScreenTour", {
             // Go by default to home category
 
             Chrome.startPoS(),
-            Dialog.confirm("Open Register"),
             OfflineUtil.setOfflineMode(),
+            // ensure that even after refreshing the page while being offline all data is correctly reloaded
+            refresh(),
+            Dialog.confirm("Continue with limited functionality"),
+            Dialog.confirm("Open Register"),
             inLeftSide([
                 ...ProductScreen.clickControlButtonMore(),
                 // check that cancel order button is disabled if there is no orderline in the order
