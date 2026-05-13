@@ -96,7 +96,7 @@ export class PartnerList extends Component {
         );
 
         const availablePartners = searchWord
-            ? partners.filter((p) => regex.test(unaccent(p.searchString)))
+            ? partners.filter((p) => regex.test(unaccent(p.searchString))).slice(0, 200)
             : partners
                   .slice(0, 1000)
                   .toSorted((a, b) =>
