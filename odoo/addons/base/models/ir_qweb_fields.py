@@ -425,18 +425,21 @@ class IrQwebFieldHtml(models.AbstractModel):
     _inherit = ['ir.qweb.field']
 
     @api.model
+    def render_values(self, options):
+        return dict(record_of_field=options.get('record'))
+
+    @api.model
     def value_to_html(self, value, options):
         irQweb = self.env['ir.qweb']
+        record = options.get('record')
         # wrap value inside a body and parse it as HTML
-        body = etree.fromstring("<body>%s</body>" % value, etree.HTMLParser(encoding='utf-8'))[0]
-        # use pos processing for all nodes with attributes
-        for element in body.iter():
-            if element.attrib:
-                attrib = dict(element.attrib)
-                attrib = irQweb._post_processing_att(element.tag, attrib)
-                element.attrib.clear()
-                element.attrib.update(attrib)
-        return Markup(etree.tostring(body, encoding='unicode', method='html')[6:-7])
+        name = "HTMLField<<%s(%s), %s>>" % ((record and record._name), (record and record.id), options.get('field_name'))
+        body = etree.fromstring("<t t-name='%s'>%s</t>" % (name, value), etree.HTMLParser(encoding='utf-8'))[0]
+        return irQweb._render(body, self.render_values(options))
+
+    @api.model
+    def record_to_html(self, record, field_name, options):
+        return super().record_to_html(record, field_name, dict(options, record=record, field_name=field_name))
 
 
 class IrQwebFieldImage(models.AbstractModel):
