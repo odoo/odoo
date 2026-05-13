@@ -208,10 +208,12 @@
                                         <field name="resource_calendar_id"
                                             groups="!hr_contract.group_hr_contract_manager"
                                             placeholder="Fully Flexible"
+                                            required="1"
                                             options="{'no_open': True, 'no_create': True}"/>
                                         <field name="resource_calendar_id"
                                             groups="hr_contract.group_hr_contract_manager"
-                                            placeholder="Fully Flexible"/>
+                                            placeholder="Fully Flexible"
+                                            required="1"/>
                                         <widget
                                             name="contract_warning_tooltip"
                                             invisible="not calendar_mismatch or state != 'open'"/>
