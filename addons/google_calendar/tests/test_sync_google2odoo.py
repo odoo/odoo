@@ -34,6 +34,12 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
             'email': 'private_email@example.com',
             'company_id': cls.other_company.id,
         })
+        cls.notification_alarm = cls.env['calendar.alarm'].create({
+            'name': 'Alarm',
+            'alarm_type': 'notification',
+            'interval': 'minutes',
+            'duration': 20,
+        })
 
     def generate_recurring_event(self, mock_dt, **values):
         """ Function Used to return a recurrence created at fake time of 'mock_dt'. """
@@ -310,6 +316,7 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
         google_id = 'oj44nep1ldf8a3ll02uip0c9aa'
         event = self.env['calendar.event'].create({
             'name': 'coucou',
+            'alarm_ids': [(4, self.notification_alarm.id)],  # no alarm by default for allday events, adding one
             'start': date(2020, 1, 6),
             'stop': date(2020, 1, 6),
             'allday': True,
@@ -331,7 +338,7 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
             'end': {'date': str(event.stop_date + relativedelta(days=1)), 'dateTime': None},
             'attendees': [{'email': 'odoobot@example.com', 'responseStatus': 'declined'}],
             'extendedProperties': {'private': {'%s_odoo_id' % self.env.cr.dbname: event.id}},
-            'reminders': {'overrides': [{'method': 'popup', 'minutes': 15}], 'useDefault': False},
+            'reminders': {'overrides': [{'method': 'popup', 'minutes': 20}], 'useDefault': False},
         })
 
     @patch_api
@@ -1415,6 +1422,7 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
         other_user = new_test_user(self.env, login='calendar-user')
         event = self.env['calendar.event'].create({
             'name': 'coucou',
+            'alarm_ids': [(4, self.notification_alarm.id)],  # no alarm by default for allday events, adding one
             'start': date(2020, 1, 6),
             'stop': date(2020, 1, 6),
             'allday': True,
@@ -1439,7 +1447,7 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
                           {'email': 'odoobot@example.com', 'responseStatus': 'accepted'},],
             'extendedProperties': {'shared': {'%s_odoo_id' % self.env.cr.dbname: event.id,
                                               '%s_owner_id' % self.env.cr.dbname: other_user.id}},
-            'reminders': {'overrides': [{'method': 'popup', 'minutes': 15}], 'useDefault': False},
+            'reminders': {'overrides': [{'method': 'popup', 'minutes': 20}], 'useDefault': False},
             'transparency': 'opaque',
         }, timeout=3)
 

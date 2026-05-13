@@ -1,7 +1,7 @@
 import { Store } from "@mail/core/common/store_service";
 
-import { deserializeDateTime, formatDateTime } from "@web/core/l10n/dates";
-import { localization } from "@web/core/l10n/localization";
+import { deserializeDateTime } from "@web/core/l10n/dates";
+import { formatDateTime } from "@web/views/fields/formatters";
 import { patch } from "@web/core/utils/patch";
 
 /** @type {import("models").Store} */
@@ -14,7 +14,8 @@ const StorePatch = {
                     if (meeting.start) {
                         const date = deserializeDateTime(meeting.start);
                         meeting.formattedStart = formatDateTime(date, {
-                            format: localization.timeFormat,
+                            showDate: false,
+                            showSeconds: false,
                         });
                     }
                 }

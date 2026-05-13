@@ -20,7 +20,6 @@ patch(ActivityMenu.prototype, {
             this.action.doAction("calendar.action_calendar_event", {
                 newWindow,
                 additionalContext: {
-                    default_mode: "day",
                     search_default_mymeetings: 1,
                 },
                 clearBreadcrumbs: true,
@@ -28,5 +27,17 @@ patch(ActivityMenu.prototype, {
         } else {
             super.openActivityGroup(...arguments);
         }
+    },
+
+    openCalendarMeeting(meetingId, newWindow) {
+        this.dropdown.close();
+        this.action.doAction("calendar.action_calendar_event", {
+            newWindow,
+            additionalContext: {
+                search_default_mymeetings: 1,
+                default_calendar_event_id: meetingId,
+            },
+            clearBreadcrumbs: true,
+        });
     },
 });
