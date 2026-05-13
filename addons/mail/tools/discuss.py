@@ -225,7 +225,7 @@ class Store:
         self.__version = None
         self._auto_send = True
         self.__try_update_version_from_records(bus_channel)
-        assert bus_channel or not (notification_payload or notification_type), (
+        assert bus_channel is not None or not (notification_payload or notification_type), (
             "Notification parameters only make sense when a bus channel is passed."
         )
         if bus_channel:
