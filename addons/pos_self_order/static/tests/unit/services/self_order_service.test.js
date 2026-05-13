@@ -625,3 +625,30 @@ test("product with single 'is_custom' attr is not configurable in 'kiosk' mode",
     expect(ptv[0].is_custom).toBe(true);
     expect(!!store.isProductConfigurable(product)).toBe(false);
 });
+
+test("orderLineNotSend", async () => {
+    const store = await setupSelfPosEnv();
+
+    expect(store.orderLineNotSend).toMatchObject({
+        priceWithTax: 0,
+        priceWithoutTax: 0,
+        count: 0,
+        tax: 0,
+    });
+    await getFilledSelfOrder(store);
+    expect(store.orderLineNotSend).toMatchObject({
+        priceWithTax: 595,
+        priceWithoutTax: 500,
+        count: 5,
+        tax: 95,
+    });
+
+    const product1 = store.models["product.template"].get(5);
+    await store.addToCart(product1, 1);
+    expect(store.orderLineNotSend).toMatchObject({
+        priceWithTax: 710,
+        priceWithoutTax: 600,
+        count: 6,
+        tax: 110,
+    });
+});

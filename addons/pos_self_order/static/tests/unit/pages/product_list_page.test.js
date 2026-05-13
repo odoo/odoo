@@ -1,7 +1,7 @@
 import { test, expect } from "@odoo/hoot";
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { ProductListPage } from "@pos_self_order/app/pages/product_list_page/product_list_page";
-import { setupSelfPosEnv } from "../utils";
+import { setupSelfPosEnv, getFilledSelfOrder } from "../utils";
 import { definePosSelfModels } from "../data/generate_model_definitions";
 
 definePosSelfModels();
@@ -57,4 +57,84 @@ test("getSubCategories and selectCategory", async () => {
     // for mobile mode
     store.config.self_ordering_mode = "mobile";
     expect(comp.getSubCategories()).toHaveLength(0);
+});
+
+test("getBackButton", async () => {
+    const store = await setupSelfPosEnv();
+    const order = await getFilledSelfOrder(store);
+    const comp = await mountWithCleanup(ProductListPage, {});
+
+    expect(comp.getBackButton()).toBe(null);
+
+    order.lines = [];
+    expect(comp.getBackButton()).toMatchObject({
+        position: "left",
+        label: "Back",
+        icon: "oi oi-chevron-left",
+        severity: "secondary",
+        extraClasses: "btn-back",
+    });
+});
+
+test("getDiscardButton", async () => {
+    await setupSelfPosEnv();
+    const comp = await mountWithCleanup(ProductListPage, {});
+
+    expect(comp.getDiscardButton()).toMatchObject({
+        position: "left",
+        label: "Discard",
+        severity: "secondary",
+        icon: "btn-close",
+        extraClasses: "btn-cancel",
+    });
+});
+
+test("getCheckoutButton", async () => {
+    const store = await setupSelfPosEnv();
+    const comp = await mountWithCleanup(ProductListPage, {});
+
+    const expected = {
+        position: "right",
+        label: "Checkout",
+        severity: "primary",
+        extraClasses: "cart",
+    };
+
+    expect(comp.getCheckoutButton()).toMatchObject({ ...expected, disabled: true });
+    await getFilledSelfOrder(store);
+    expect(comp.getCheckoutButton()).toMatchObject({ ...expected, disabled: false });
+});
+
+test("getTotalProps", async () => {
+    const store = await setupSelfPosEnv();
+    await getFilledSelfOrder(store);
+    const comp = await mountWithCleanup(ProductListPage, {});
+
+    store.config.iface_tax_included = "total";
+    expect(comp.getTotalProps()).toMatchObject({ count: 5, price: 595 });
+
+    store.config.iface_tax_included = "subtotal";
+    expect(comp.getTotalProps()).toMatchObject({ count: 5, price: 500 });
+});
+
+test("orderWidgetProps", async () => {
+    await setupSelfPosEnv();
+    const comp = await mountWithCleanup(ProductListPage, {});
+
+    comp.getTotalProps = () => 100;
+    comp.getBackButton = () => ({ label: "Back" });
+    comp.getDiscardButton = () => ({ label: "Discard" });
+    comp.getCheckoutButton = () => ({ label: "Checkout" });
+
+    expect(comp.orderWidgetProps).toMatchObject({
+        total: 100,
+        buttons: [{ label: "Back" }, { label: "Checkout" }],
+    });
+
+    comp.getBackButton = () => null;
+    comp.getCheckoutButton = () => null;
+    expect(comp.orderWidgetProps).toMatchObject({
+        total: 100,
+        buttons: [{ label: "Discard" }],
+    });
 });

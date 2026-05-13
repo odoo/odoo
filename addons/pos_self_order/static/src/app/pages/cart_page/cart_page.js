@@ -53,6 +53,87 @@ export class CartPage extends Component {
         );
     }
 
+    get isCheckout() {
+        return !history.state?.fromLanding;
+    }
+
+    getBackButton() {
+        return {
+            position: "left",
+            label: _t("Back"),
+            icon: "oi oi-chevron-left",
+            severity: "secondary",
+            extraClasses: "btn-back",
+            onClick: () => this.router.back(),
+        };
+    }
+
+    getPresetButton() {
+        const payAfter = this.selfOrder.config.self_ordering_pay_after;
+        const order = this.selfOrder.currentOrder;
+        if (
+            this.selfOrder.hasPresets() &&
+            order.preset_id &&
+            order.unsentLines.length &&
+            !(payAfter === "meal" && Object.keys(order.uiState.lineChanges).length) // No preset change after first order (pay-after-meal)
+        ) {
+            return {
+                position: "right",
+                label: order.preset_id.name,
+                severity: "secondary",
+                extraClasses: "preset-btn",
+                onClick: () =>
+                    this.router.navigate("location", {}, { redirectPage: this.router.activeSlot }),
+            };
+        }
+        return null;
+    }
+
+    getPayButton() {
+        const payAfter = this.selfOrder.config.self_ordering_pay_after;
+        const order = this.selfOrder.currentOrder;
+
+        const hasChanges = Object.keys(order.changes).length > 0;
+        const hasPayment = this.selfOrder.hasPaymentMethod();
+
+        let payAction = null;
+        if (payAfter === "meal") {
+            if (this.isCheckout && hasChanges) {
+                payAction = { label: _t("Order"), disabled: order.lines.length === 0 };
+            } else if (hasPayment) {
+                payAction = { label: _t("Pay") };
+            } else {
+                return null;
+            }
+        } else {
+            if (hasPayment) {
+                payAction = { label: _t("Pay") };
+            } else if (order.unsentLines.length) {
+                payAction = { label: _t("Order") };
+            } else {
+                return null;
+            }
+        }
+
+        return {
+            position: "right",
+            severity: "primary",
+            extraClasses: "cart",
+            onClick: () => this.pay(),
+            ...payAction,
+        };
+    }
+
+    get orderWidgetProps() {
+        const backButton = this.getBackButton();
+        const presetButton = this.getPresetButton();
+        const payButton = this.getPayButton();
+        return {
+            removeTopClasses: true,
+            buttons: [backButton, presetButton, payButton].filter(Boolean),
+        };
+    }
+
     get showCancelButton() {
         return (
             this.selfOrder.config.self_ordering_mode === "mobile" &&
@@ -66,21 +147,31 @@ export class CartPage extends Component {
     }
 
     get lines() {
-        const selfOrder = this.selfOrder;
-        const order = selfOrder.currentOrder;
-        const lines =
-            (selfOrder.config.self_ordering_pay_after === "meal" &&
-            Object.keys(order.changes).length > 0
-                ? order.unsentLines
-                : this.selfOrder.currentOrder.lines) || [];
+        const order = this.selfOrder.currentOrder;
+        let lines = [];
+        if (this.isCheckout) {
+            lines = order.unsentLines.filter((line) => !line.combo_parent_id);
+        } else {
+            lines = order.lines.filter(
+                (l) => order.uiState.lineChanges[l.uuid] && !l.combo_parent_id
+            );
+        }
 
         const regularLines = [];
         const serviceFeeLines = [];
-        for (const line of lines.filter((line) => !line.combo_parent_id)) {
+        for (const line of lines) {
             (line.isServiceFeeLine() ? serviceFeeLines : regularLines).push(line);
         }
 
         return [...regularLines, ...serviceFeeLines];
+    }
+
+    getLineDisplayQty(line) {
+        if (this.isCheckout) {
+            return this.getLineChangeQty(line) || line.qty;
+        }
+        const change = this.selfOrder.currentOrder.uiState.lineChanges[line.uuid];
+        return change ? change.qty : line.qty;
     }
 
     get totalPriceAndTax() {
@@ -405,14 +496,13 @@ export class CartPage extends Component {
 
     getPrice(line) {
         const childLines = line.combo_line_ids;
+        const qty = this.getLineDisplayQty(line);
         if (childLines.length === 0) {
-            const qty = this.getLineChangeQty(line) || line.qty;
             return line.getDisplayPriceWithQty(qty);
         } else {
             let price = 0;
             for (const child of childLines) {
-                const qty = this.getLineChangeQty(child) || child.qty;
-                price += child.getDisplayPriceWithQty(qty);
+                price += child.getDisplayPriceWithQty(this.getLineDisplayQty(child));
             }
             return price;
         }
