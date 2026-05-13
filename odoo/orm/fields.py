@@ -802,9 +802,13 @@ class Field[T, C]:
                 # take the first record when traversing
                 target = target[name][:1]
             # update 'target' only if 'record' and 'target' are both real or
-            # both new (see `test_base_objects.py`, `test_basic`)
-            if target and bool(target.id) == bool(record.id):
+            # both new (see `test_base_objects.py`, `test_basic`); an empty
+            # target is considered of the same kind as 'record'
+            if not target or bool(target.id) == bool(record.id):
                 target[field.name] = record_value[record]
+                # unlike other computed fields, a related field should always
+                # reflect the value at the end of its path, even if it is stored
+                self.write(record, target[field.name])
 
     def _search_related(self, records: BaseModel, operator: str, value) -> DomainType:
         """ Determine the domain to search on field ``self``. """
