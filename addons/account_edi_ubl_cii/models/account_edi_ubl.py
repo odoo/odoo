@@ -3368,7 +3368,8 @@ class AccountEdiUBL(models.AbstractModel):
 
         # Collect the embedded documents.
         invoice = collected_values['invoice']
-        attachments = self._import_attachments(invoice, collected_values['tree']) or self.env['ir.attachment']
+        source_attachment = collected_values['file_data']['attachment'] or self.env['ir.attachment']
+        attachments = source_attachment + self._import_attachments(invoice, collected_values['tree'])
 
         # Chatter.
         body = Markup("<strong>%s</strong>") % _(
