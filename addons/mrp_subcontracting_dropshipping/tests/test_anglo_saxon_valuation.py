@@ -9,7 +9,6 @@ from odoo.tests import tagged, Form
 
 
 @tagged('post_install', '-at_install')
-@skip('Temporary to fast merge new valuation')
 class TestSubcontractingDropshippingValuation(ValuationReconciliationTestCommon):
 
     @classmethod
@@ -41,6 +40,7 @@ class TestSubcontractingDropshippingValuation(ValuationReconciliationTestCommon)
             ],
         })
 
+    @skip('Temporary to fast merge new valuation')
     def test_valuation_subcontracted_and_dropshipped(self):
         """
         Product:
@@ -142,6 +142,7 @@ class TestSubcontractingDropshippingValuation(ValuationReconciliationTestCommon)
             {'account_id': stock_valu_acc_id,   'product_id': self.product_a.id,    'debit': 110.0, 'credit': 0.0},
         ])
 
+    @skip('Temporary to fast merge new valuation')
     def test_avco_valuation_subcontract_and_dropshipped_and_backorder(self):
         """ Splitting a dropship transfer via backorder and invoicing for delivered quantities
         should result in SVL records which have accurate values based on the portion of the total
@@ -205,6 +206,7 @@ class TestSubcontractingDropshippingValuation(ValuationReconciliationTestCommon)
             ]
         )
 
+    @skip('Temporary to fast merge new valuation')
     def test_account_line_entry_kit_bom_dropship(self):
         """ An order delivered via dropship for some kit bom product variant should result in
         accurate journal entries in the expense and stock output accounts if the cost on the
@@ -298,3 +300,51 @@ class TestSubcontractingDropshippingValuation(ValuationReconciliationTestCommon)
             {'name': f'{sale_order.name} - {invoice.name} installment #1',   'account_name': 'Account Receivable (copy)',   'debit': 621.0,    'credit': 0.0},
             {'name': f'{sale_order.name} - {invoice.name} installment #2',   'account_name': 'Account Receivable (copy)',   'debit': 1449.0,   'credit': 0.0},
         ])
+
+    def test_dropship_kit_bom_updates_component_standard_price(self):
+        """
+        Ensure that a dropship sale order for a kit correctly updates
+        the component product's standard_price from the supplier price after validating
+        the dropship transfer.
+        """
+        kit_final_prod = self.product_a
+        avco_products = avco_product, avco_product_2 = self.env['product.product'].create([{
+            'name': f'avco product{i}',
+            'is_storable': True,
+            'categ_id': self.categ_avco_auto.id,
+        } for i in range(2)])
+        kit_bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': kit_final_prod.product_tmpl_id.id,
+            'product_uom_id': kit_final_prod.uom_id.id,
+            'product_qty': 1.0,
+            'type': 'phantom',
+        })
+        kit_bom.bom_line_ids = [
+            Command.create({
+                'product_id': product.id,
+                'product_qty': 2,
+            }) for product in avco_products
+        ]
+        self.env['product.supplierinfo'].create([{
+            'product_id': product.id,
+            'partner_id': self.partner_a.id,
+            'price': 100,
+        } for product in avco_products])
+
+        sale_order = self.env['sale.order'].sudo().create({
+            'partner_id': self.partner_b.id,
+            'order_line': [Command.create({
+                'price_unit': 900,
+                'product_id': kit_final_prod.id,
+                'route_ids': [Command.link(self.dropship_route.id)],
+                'product_uom_qty': 2.0,
+            })],
+        })
+        sale_order.action_confirm()
+        purchase_order = sale_order._get_purchase_orders()[0]
+        purchase_order.button_confirm()
+        dropship_transfer = purchase_order.picking_ids[0]
+        dropship_transfer.button_validate()
+
+        self.assertEqual(avco_product.standard_price, 100)
+        self.assertEqual(avco_product_2.standard_price, 100)
