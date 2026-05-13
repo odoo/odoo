@@ -552,9 +552,12 @@ export class CartService {
      * @returns {void}
      */
     _trackProducts(trackingInfo) {
-        document.querySelector('.oe_website_sale').dispatchEvent(
-            new CustomEvent('add_to_cart_event', {'detail': trackingInfo})
-        );
+        const wrapperEl = document.querySelector('.oe_website_sale');
+        if (wrapperEl) {
+            wrapperEl.dispatchEvent(
+                new CustomEvent('add_to_cart_event', {'detail': trackingInfo})
+            );
+        }
     }
 }
 

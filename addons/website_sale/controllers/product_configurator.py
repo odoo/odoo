@@ -25,6 +25,8 @@ class WebsiteSaleProductConfiguratorController(SaleProductConfiguratorController
         :return: Whether the product configurator dialog should be shown.
         """
         product_template = self.env["product.template"].browse(product_template_id)
+        if product_template._is_donation():
+            return False
         single_product_variant = product_template.get_single_product_variant()
         has_optional_products = bool(
             product_template.optional_product_ids.filtered(self._should_show_product)
@@ -145,8 +147,7 @@ class WebsiteSaleProductConfiguratorController(SaleProductConfiguratorController
             strikethrough_price = (
                 self._get_strikethrough_price(
                     product_or_template.with_context(
-                        uom=uom,
-                        **product_or_template._get_product_price_context(combination)
+                        uom=uom, **product_or_template._get_product_price_context(combination)
                     ),
                     currency,
                     date,
@@ -237,7 +238,7 @@ class WebsiteSaleProductConfiguratorController(SaleProductConfiguratorController
             )
             if uom and uom != product_or_template.uom_id:
                 compare_list_price = product_or_template.uom_id._compute_price(
-                    compare_list_price, uom,
+                    compare_list_price, uom
                 )
             # Only show `compare_list_price` if it's greater than the actual price.
             if currency.compare_amounts(compare_list_price, price) == 1:

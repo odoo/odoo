@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-<t t-name="website_payment.DonationOption">
-    <BuilderRow label.translate="Recipient Email">
-        <BuilderTextInput dataAttributeAction="'donationEmail'" />
-    </BuilderRow>
+<t t-name="website_sale.DonationOption">
     <BuilderRow label.translate="Display Options" preview="false">
         <BuilderCheckbox id="'display_options_opt'" action="'toggleDisplayOptions'" />
     </BuilderRow>
@@ -56,13 +53,13 @@
     </BuilderRow>
 </t>
 
-<t t-name="website_payment.donation.descriptionTranslationInputs">
+<t t-name="website_sale.donation.descriptionTranslationInputs">
     <t t-foreach="descriptions" t-as="description" t-key="description_index">
         <input type="hidden" class="o_translatable_input_hidden d-block mb-1 w-100" name="donation_descriptions" t-att-value="description"/>
     </t>
 </t>
 
-<t t-name="website_payment.donation.prefilledButtons">
+<t t-name="website_sale.donation.prefilledButtons">
     <div class="s_donation_prefilled_buttons mb-2">
         <t t-foreach="prefilled_buttons" t-as="prefilled_button_value" t-key="prefilled_button_value_index">
             <button class="s_donation_btn btn btn-outline-primary btn-lg mb-2 me-1 o_not_editable"
@@ -76,7 +73,7 @@
         </span>
     </div>
 </t>
-<t t-name="website_payment.donation.prefilledButtonsDescriptions">
+<t t-name="website_sale.donation.prefilledButtonsDescriptions">
     <div class="s_donation_prefilled_buttons my-4">
         <t t-foreach="prefilled_buttons" t-as="prefilled_button" t-key="prefilled_button_value_index">
             <div class="s_donation_btn_description d-sm-flex align-items-center my-3 o_not_editable o_translate_mode_hidden" contenteditable="false">
@@ -94,7 +91,7 @@
         </div>
     </div>
 </t>
-<t t-name="website_payment.donation.slider">
+<t t-name="website_sale.donation.slider">
     <div class="s_donation_range_slider_wrap mb-2 position-relative">
         <label for="s_donation_range_slider">Choose Your Amount</label>
         <input type="range" class="form-range" t-att-min="minimum_amount" t-att-max="maximum_amount" t-att-step="slider_step" id="s_donation_range_slider" contenteditable="false"/>

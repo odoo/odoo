@@ -41,6 +41,13 @@ class TestWebsiteSequence(BaseCommon):
                     time_product.product_tmpl_id.id,
                 )
             )
+        # The Donation products cannot be archived nor deleted via ORM
+        donation_products = product_templates.filtered(lambda pt: pt._is_donation())
+        product_templates -= donation_products
+        for dp in donation_products:
+            cls.env.cr.execute(
+                SQL("UPDATE product_template SET active = false WHERE id = %s", dp.id)
+            )
         product_templates.write({"active": False})
         cls.product_tmpls = cls.p1, cls.p2, cls.p3, cls.p4 = ProductTemplate.create([
             {"name": "First Product", "website_sequence": 100},
