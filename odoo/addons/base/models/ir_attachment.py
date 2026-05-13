@@ -651,7 +651,7 @@ class IrAttachment(models.Model):
         records = self.sudo().with_context(active_test=False).search_fetch(
             domain & Domain('res_model', '!=', False) & ~sec_domain, SECURITY_FIELDS, order='id', limit=MAX_SEARCH_LIMIT).sudo(False)
         if len(records) == MAX_SEARCH_LIMIT:  # avoid out of memory
-            raise UserError(self.env._("Cannot search, too many attachments"))
+            raise ValueError(self.env._("Cannot search, too many attachments"))
         records = records._filtered_access(operation)
         # [('id', 'any!', query_with_ids)] is optimized in sec_domain
         return sec_domain | Domain('id', 'any!', records._as_query(ordered=False))

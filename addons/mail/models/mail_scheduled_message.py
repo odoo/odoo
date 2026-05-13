@@ -127,7 +127,7 @@ class MailScheduledMessage(models.Model):
         records = self.with_context(active_test=False).search_fetch(
             domain, ['model', 'res_id'], order='id', limit=MAX_SEARCH_LIMIT)
         if len(records) == MAX_SEARCH_LIMIT:  # avoid out of memory
-            raise UserError(self.env._("Cannot search, too many scheduled messages"))
+            raise ValueError(self.env._("Cannot search, too many scheduled messages"))
         records = records.sudo(False)._filtered_access('read')
         # [('id', 'any!', query_with_ids)] is optimized in sec_domain
         return Domain('id', 'any!', records._as_query(ordered=False))
