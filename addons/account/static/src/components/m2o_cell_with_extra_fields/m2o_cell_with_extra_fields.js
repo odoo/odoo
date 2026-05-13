@@ -50,8 +50,9 @@ export class M2OCellWithExtraFields extends Many2OneField {
         const props = computeM2OProps(this.props);
         return {
             ...props,
+            // if the field is clickable then
             // override canOpen to prevent display m2o as link while in draft
-            canOpen: !props.readonly || this.isReadonlyList,
+            canOpen: props.canOpen && (!props.readonly || this.isReadonlyList),
         }
     }
 }
