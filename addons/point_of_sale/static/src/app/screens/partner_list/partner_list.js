@@ -28,6 +28,7 @@ export class PartnerList extends Component {
         this.dialog = useService("dialog");
         this.modalRef = useChildRef();
         this.modalContent = null;
+        this.searchInputRef = null;
         this.state = useState({
             initialPartners: this.pos.models["res.partner"].getAll(),
             loadedPartners: [],
@@ -79,6 +80,11 @@ export class PartnerList extends Component {
         }
     }
     async onEnter() {
+        // The search input uses a debounce, so state.query may lag behind what the user
+        // typed. Read the live DOM value and sync it before triggering the server search.
+        if (this.searchInputRef?.el) {
+            this.state.query = this.searchInputRef.el.value;
+        }
         if (!this.state.query) {
             return;
         }
@@ -134,7 +140,7 @@ export class PartnerList extends Component {
         );
 
         const availablePartners = searchWord
-            ? partners.filter((p) => regex.test(unaccent(p.searchString)))
+            ? partners.filter((p) => regex.test(unaccent(p.searchString))).slice(0, 200)
             : partners
                   .slice(0, 1000)
                   .toSorted((a, b) =>
