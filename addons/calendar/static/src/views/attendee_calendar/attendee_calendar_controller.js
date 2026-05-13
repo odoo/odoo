@@ -101,7 +101,7 @@ export class AttendeeCalendarController extends CalendarController {
                 super.deleteRecord(...arguments);
             } else {
                 this.orm
-                    .call("calendar.event", "action_unlink_event", [record.id, record.attendeeId])
+                    .call("calendar.event", "action_unlink_event", [record.id])
                     .then((action) => {
                         if (action && action.context) {
                             this.actionService.doAction(action);
@@ -128,7 +128,6 @@ export class AttendeeCalendarController extends CalendarController {
                 name: "Delete Recurring Event",
                 context: {
                     default_calendar_event_id: record.id,
-                    default_attendee_id: record.attendeeId,
                     form_view_ref: "calendar.calendar_popover_delete_view",
                 },
                 target: "new",

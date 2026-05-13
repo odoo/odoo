@@ -1144,11 +1144,10 @@ class CalendarEvent(models.Model):
             new_event.write({'partner_ids': [(Command.set(old_event.partner_ids.ids))]})
         return new_events
 
-    def action_unlink_event(self, attendee_id=None, recurrence=False):
+    def action_unlink_event(self, recurrence=False):
         """
         Delete the event after displaying the delete wizard if necessary.
 
-        :param attendee_id: The ID of the attendee for the event
         :param recurrence: Boolean indicating if the event is recurring
         :return: Action to delete the event
         """
@@ -1170,7 +1169,6 @@ class CalendarEvent(models.Model):
             context = {
                 'default_use_template': bool(template),
                 'default_template_id': template.id,
-                'default_attendee_id': attendee_id,
                 'default_calendar_event_id': self.id,
                 'default_recurrence': recurrence,
                 'model_description': self.with_context(lang=lang),
