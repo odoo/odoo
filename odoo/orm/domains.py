@@ -1437,7 +1437,7 @@ def _optimize_any_domain_at_level(level: OptimizationLevel, condition, model):
             for c in search_domain.iter_conditions()
             if c.is_condition(condition.field_expr, value=Domain)
         )
-        if comodel_domain.is_false():
+        if comodel_domain.is_false() and not search_domain.is_false():
             # we don't know the condition, accept all
             comodel_domain = Domain.TRUE
         comodel = comodel.with_context(search_domain=comodel_domain)
