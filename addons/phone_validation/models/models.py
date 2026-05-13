@@ -170,9 +170,10 @@ class Base(models.AbstractModel):
         """
         result = dict.fromkeys(self.ids, False)
         tocheck_fields = [force_field] if force_field else self._phone_get_number_fields()
+        all_partners_by_record = self._mail_get_partners()
         for record in self:
             all_numbers = [record[fname] for fname in tocheck_fields if fname in record]
-            all_partners = record._mail_get_partners()[record.id]
+            all_partners = all_partners_by_record[record.id]
 
             valid_number, fname = False, False
             for fname in [f for f in tocheck_fields if f in record]:
