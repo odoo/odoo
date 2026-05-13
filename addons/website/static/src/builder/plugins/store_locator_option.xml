@@ -77,6 +77,7 @@
                         records="this.availableRecords"
                         alternativeChoiceItemTemplate="'website.StoreLocatorChoiceItemTemplate'"
                         emptyListMessage.translate="Click on 'Add' to start adding locations"
+                        refreshRecordsAction="'refreshStoreLocator'"
                     />
                 </t>
                 <t t-else="">
@@ -85,14 +86,6 @@
                     </p>
                 </t>
             </div>
-        </BuilderRow>
-        <BuilderRow label.translate="Refresh Locations" preview="false"
-            t-if="this.state.hasLocations">
-            <BuilderButton
-                action="'refreshStoreLocator'"
-                title.translate="Update the selected locations with the latest data">
-                Refresh Now
-            </BuilderButton>
         </BuilderRow>
     </t>
 
