@@ -44,6 +44,17 @@
         </field>
     </record>
 
+    <record id="hr_employee_view_search_inherit_org_chart" model="ir.ui.view">
+        <field name="name">hr.employee.view.search.inherit.org_chart</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_filter"/>
+        <field name="arch" type="xml">
+            <filter name="my_team" position="replace">
+                <filter name="my_team" string="My Team" domain="[('is_subordinate', '=', True)]"/>
+            </filter>
+        </field>
+    </record>
+
     <record id="hr_employee_view_pivot_inherit_org_chart" model="ir.ui.view">
         <field name="name">hr.employee.view.pivot.inherit.org_chart</field>
         <field name="model">hr.employee</field>

@@ -17,6 +17,17 @@
             </p>
         </field>
     </record>
+    <record id="hr_employee_public_view_search_inherit_org_chart" model="ir.ui.view">
+        <field name="name">hr.employee.public.view.search.inherit.org_chart</field>
+        <field name="model">hr.employee.public</field>
+        <field name="inherit_id" ref="hr.hr_employee_public_view_search"/>
+        <field name="arch" type="xml">
+            <filter name="my_team" position="replace">
+                <filter name="my_team" string="My Team" domain="[('is_subordinate', '=', True)]"/>
+            </filter>
+        </field>
+    </record>
+
     <record id="hr_employee_public_hierarchy_view" model="ir.ui.view">
         <field name="name">hr.employee.public.hierarchy.view</field>
         <field name="model">hr.employee.public</field>
