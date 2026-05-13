@@ -135,7 +135,7 @@ class TestOrmMessage(models.Model):
     label = fields.Char(translate=True)
     priority = fields.Integer()
     active = fields.Boolean(default=True)
-    has_important_sibling = fields.Boolean(compute='_compute_has_important_sibling')
+    has_important_sibling = fields.Boolean(compute='_compute_has_important_sibling', search='_search_has_important_sibling')
 
     attributes = fields.Properties(
         string='Discussion Properties',
@@ -147,6 +147,11 @@ class TestOrmMessage(models.Model):
         for record in self:
             siblings = record.discussion.with_context(active_test=False).messages - record
             record.has_important_sibling = any(siblings.mapped('important'))
+
+    def _search_has_important_sibling(self, operator, value):
+        if operator != 'in':
+            return NotImplemented
+        return [('messages.important', '=', True)]  # not entirely correct, but sufficent for tests
 
     @api.constrains('author', 'discussion')
     def _check_author(self):
