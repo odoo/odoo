@@ -6,6 +6,7 @@ from collections import defaultdict
 from urllib.parse import urlencode, urlparse
 
 from odoo import api, fields, models
+from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
 from odoo.http import request
 from odoo.modules.db import FunctionStatus
@@ -286,6 +287,8 @@ class ProductTemplate(models.Model):
         return records
 
     def write(self, vals):
+        if "active" in vals and not vals["active"] and any(pt._is_donation() for pt in self):
+            raise ValidationError(self.env._("Donation products cannot be archived."))
         # Clear empty ecommerce description content to avoid side-effects on product pages
         # when there is no content to display anyway.
         if vals.get("description_ecommerce"):
@@ -299,6 +302,18 @@ class ProductTemplate(models.Model):
                 ),
             )
         return super().write(vals)
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_if_not_donation_product(self):
+        if self.filtered(lambda p: p._is_donation()):
+            raise UserError(self.env._("Donation products cannot be deleted."))
+
+    def _is_donation(self):
+        """Return whether this product is the donation product used by the donation snippet."""
+        self.ensure_one()
+        return self.id == self.env["ir.model.data"]._xmlid_to_res_id(
+            "website_sale.product_donation"
+        )
 
     # === BUSINESS METHODS ===#
 

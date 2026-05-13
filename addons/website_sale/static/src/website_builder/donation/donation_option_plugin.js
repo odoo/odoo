@@ -1,15 +1,13 @@
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
-import { selectElements } from "@html_editor/utils/dom_traversal";
 import { Plugin } from "@html_editor/plugin";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { renderToElement, renderToFragment } from "@web/core/utils/render";
-import { getDefaultEmailTo } from "@website/js/send_mail_form";
 
 export class DonationOption extends BaseOptionComponent {
     static id = "donation_option";
-    static template = "website_payment.DonationOption";
+    static template = "website_sale.DonationOption";
 
     // TODO AGAU: remove when merging https://github.com/odoo-dev/odoo/pull/4240
     static cleanForSave(editingElement) {
@@ -34,30 +32,10 @@ export class DonationOptionPlugin extends Plugin {
             SetSliderStepAction,
         },
         submit_button_selectors: [".s_donation_donate_btn"],
-        on_will_save_handlers: this.onWillSave.bind(this),
-        on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
+        // s_donation_inline drops standalone (e.g. cart page); s_donation stays content-style.
+        so_content_addition_selectors: [".s_donation:not(.s_donation_inline)"],
+        so_snippet_addition_selectors: [".s_donation_inline"],
     };
-
-    async onSnippetDropped({ snippetEl }) {
-        await this.setDefaultDonationEmail(snippetEl);
-    }
-
-    async onWillSave(rootEl) {
-        await this.setDefaultDonationEmail(rootEl);
-    }
-
-    async setDefaultDonationEmail(rootEl) {
-        const donationEls = selectElements(rootEl, ".s_donation").filter(
-            (donationEl) => !donationEl.dataset.donationEmail
-        );
-        if (!donationEls.length) {
-            return;
-        }
-        this.defaultDonationEmail = await getDefaultEmailTo({ services: this.services });
-        for (const donationEl of donationEls) {
-            donationEl.dataset.donationEmail = this.defaultDonationEmail;
-        }
-    }
 }
 
 export class BaseDonationAction extends BuilderAction {
@@ -116,7 +94,7 @@ export class BaseDonationAction extends BuilderAction {
         if (layout !== "slider" || !displayOptions) {
             sliderEl?.remove();
         } else if (layout === "slider" && displayOptions && !sliderEl) {
-            const sliderEl = renderToElement("website_payment.donation.slider", {
+            const sliderEl = renderToElement("website_sale.donation.slider", {
                 minimum_amount: editingElement.dataset.minimumAmount,
                 maximum_amount: editingElement.dataset.maximumAmount,
                 slider_step: editingElement.dataset.sliderStep,
@@ -131,7 +109,7 @@ export class BaseDonationAction extends BuilderAction {
         descriptionInputContainerEl.textContent = "";
         if (showDescriptions) {
             descriptionInputContainerEl.insertBefore(
-                renderToFragment("website_payment.donation.descriptionTranslationInputs", {
+                renderToFragment("website_sale.donation.descriptionTranslationInputs", {
                     descriptions: options.map((option) => option.description),
                 }),
                 null
@@ -149,7 +127,7 @@ export class BaseDonationAction extends BuilderAction {
             }
 
             const prefilledButtonsEl = renderToElement(
-                `website_payment.donation.prefilledButtons${
+                `website_sale.donation.prefilledButtons${
                     showDescriptions ? "Descriptions" : ""
                 }`,
                 {

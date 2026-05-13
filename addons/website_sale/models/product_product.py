@@ -103,6 +103,8 @@ class ProductProduct(models.Model):
         self.ensure_one()
         if self.env.user.has_group("base.group_system"):
             return True
+        if self._is_donation():
+            return True
         if not self.active or not self.website_published:
             return False
         if not self.filtered_domain(self.env["website"]._product_domain()):
@@ -300,6 +302,12 @@ class ProductProduct(models.Model):
         if kwargs.get("res_model") == self._name and (res_id := kwargs.get("res_id")):
             extra_tracking_values["product_id"] = res_id
         return extra_tracking_values
+
+    def _is_donation(self):
+        """Return whether this product is the donation product used by the donation snippet."""
+        self.ensure_one()
+        # Unpublished, sudo to allow public users to read it
+        return self.sudo().product_tmpl_id._is_donation()
 
     def _is_sold_out(self):
         """Return whether the product is sold out (no available quantity).

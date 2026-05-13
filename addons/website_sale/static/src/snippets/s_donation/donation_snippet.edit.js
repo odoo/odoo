@@ -7,7 +7,7 @@ const DonationSnippetEdit = I => class extends I {
 
 registry
     .category("public.interactions.edit")
-    .add("website_payment.donation_snippet", {
+    .add("website_sale.donation_snippet", {
         Interaction: DonationSnippet,
         mixin: DonationSnippetEdit,
     });

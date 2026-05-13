@@ -14,6 +14,7 @@ class SaleOrderLine(models.Model):
     ]
 
     name_short = fields.Char(compute="_compute_name_short")
+    is_donation = fields.Boolean(compute="_compute_is_donation")
 
     # === COMPUTE METHODS ===#
 
@@ -145,6 +146,24 @@ class SaleOrderLine(models.Model):
         :rtype: bool
         """
         return self.product_id.is_published and not self.is_delivery
+
+    @api.depends("product_id")
+    def _compute_is_donation(self):
+        for line in self:
+            line.is_donation = bool(line.product_id and line.product_id._is_donation())
+
+    def _compute_price_unit(self):
+        """Override of `sale` to prevent recomputing the price of donation lines.
+
+        Donation lines have a user-selected price that must never be overwritten by pricelist rules.
+        """
+        donation_lines = self.filtered("is_donation")
+        super(SaleOrderLine, self - donation_lines)._compute_price_unit()
+
+    def _compute_discount(self):
+        donation_lines = self.filtered("is_donation")
+        donation_lines.discount = 0.0
+        super(SaleOrderLine, self - donation_lines)._compute_discount()
 
     def _get_max_line_qty(self):
         max_quantity = self._get_max_available_qty()

@@ -25,6 +25,7 @@
         "data/mail_template_data.xml",
         "data/data.xml",  # Needs mail_template_data
         "data/digest_data.xml",  # Needs mail_template_data
+        "data/donation_data.xml",
         "data/ir_actions_server_data.xml",
         "data/ir_cron_data.xml",
         "data/product_attribute_data.xml",
@@ -76,6 +77,7 @@
         "templates/snippets/snippets.xml",
         "templates/snippets/product_snippet_template_data.xml",
         "templates/snippets/s_add_to_cart.xml",
+        "templates/snippets/s_donation.xml",
         "templates/snippets/s_dynamic_snippet_products.xml",
         "templates/snippets/s_dynamic_snippet_categories.xml",
         "templates/snippets/s_dynamic_snippet_products_preview_data.xml",
@@ -91,7 +93,7 @@
         "templates/snippets/s_mega_menu/thumbnails.xml",
         "templates/snippets/snippet_category_template_data.xml",
         "templates/generate_primary_template.xml",
-        'security/ir.access.csv',
+        "security/ir.access.csv",
     ],
     "demo": [
         "data/demo.xml",

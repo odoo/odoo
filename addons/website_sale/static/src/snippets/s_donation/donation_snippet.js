@@ -1,4 +1,3 @@
-
 import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
 
@@ -16,7 +15,7 @@ export class DonationSnippet extends Interaction {
             "t-att-class": (el) => ({ "active": el === this.activeButtonEl }),
         },
         ".s_donation_donate_btn": {
-            "t-on-click.withTarget": this.locked(this.onDonateClick, true),
+            "t-on-click": this.locked(this.submitDonation, true),
             "t-att-class": () => ({ "o_ready_to_donate": true }), // See TEST_01_DONATION_FIX
         },
         "#s_donation_range_slider": { "t-on-input": this.onRangeSliderInput },
@@ -29,6 +28,7 @@ export class DonationSnippet extends Interaction {
 
     setup() {
         this.currency = null;
+        this.donationInfo = null;
         this.activeButtonEl = null;
         this.rangeSliderEl = this.el.querySelector("#s_donation_range_slider");
         this.defaultAmount = this.el.dataset.defaultAmount;
@@ -49,7 +49,10 @@ export class DonationSnippet extends Interaction {
         // TODO the "cached" parameters has no effect: the actual cache is not
         // initialized on the frontend side at the moment.
         // TODO Also it should be the third param of rpc, not the second one...
-        this.currency = await rpc("/website/get_current_currency", { cache: true });
+        [this.currency, this.donationInfo] = await Promise.all([
+            rpc("/website/get_current_currency", { cache: true }),
+            rpc("/shop/donation/info"),
+        ]);
     }
 
     start() {
@@ -109,64 +112,101 @@ export class DonationSnippet extends Interaction {
         }
     }
 
+    async submitDonation() {
+        this.el.querySelector(".alert-danger")?.remove();  // Clean the error message, if any
+        const amount = this._getDonationAmount();
+        if (amount === null) {
+            return;
+        }
+        if (!Object.keys(this.donationInfo || {}).length) {
+            this._showDonationError(_t("Donation product not found."));
+            return;
+        }
+        await this._addDonationToCart(amount);
+    }
+
     /**
-     * @param {Event} ev
-     * @param {HTMLElement} currentTargetEl
+     * Get the donation amount from the active button, range slider, custom input, or default.
+     * Returns null if validation fails (error is shown to the user).
+     *
+     * @returns {number|null}
      */
-    onDonateClick(ev, currentTargetEl) {
-        this.el.querySelector(".alert-danger")?.remove();
-        const donationButtonEls = this.el.querySelectorAll(".s_donation_btn");
-        let amount = this.activeButtonEl ? parseFloat(this.activeButtonEl.dataset.donationValue) : 0;
-        if (this.el.dataset.displayOptions && !amount) {
-            if (this.rangeSliderEl) {
+    _getDonationAmount() {
+        let amount;
+        if (this.activeButtonEl?.dataset.donationValue) {  // Pre-filled button selected by the user
+            amount = parseFloat(this.activeButtonEl.dataset.donationValue);
+        } else if (this.el.dataset.displayOptions) {
+            if (this.rangeSliderEl) {  // Range slider
                 amount = parseFloat(this.rangeSliderEl.value);
-            } else if (donationButtonEls.length) {
+            // Custom amount input
+            } else if (this.el.querySelectorAll(".s_donation_btn").length) {
                 amount = parseFloat(this.el.querySelector("#s_donation_amount_input")?.value);
-                let errorMessage = "";
-                const minAmount = parseFloat(this.el.dataset.minimumAmount);
-                if (!amount) {
-                    errorMessage = _t("Please select or enter an amount");
-                } else if (amount < minAmount) {
-                    errorMessage = _t(
-                        "The minimum donation amount is %(amount)s",
-                        {
-                            amount: formatCurrency(minAmount, this.currency.id),
-                        }
-                    );
-                }
+                const errorMessage = this._getAmountValidationError(amount);
                 if (errorMessage) {
-                    const pEl = document.createElement("p");
-                    pEl.classList.add("alert", "alert-danger", "o_donation_custom_btn_warning");
-                    pEl.innerText = errorMessage;
-                    this.insert(pEl, currentTargetEl, "beforebegin");
-                    return;
+                    this._showDonationError(errorMessage, "o_donation_custom_btn_warning");
+                    return null;
                 }
             }
         }
+        // Fall back to the snippet's configured default amount
+        return amount || parseFloat(this.defaultAmount);
+    }
+
+    /**
+     * @param {number} amount
+     * @returns {string} error message, or empty string if valid
+     */
+    _getAmountValidationError(amount) {
+        const minAmount = parseFloat(this.el.dataset.minimumAmount || "1");
         if (!amount) {
-            amount = this.defaultAmount;
+            return _t("Please select or enter an amount");
         }
-        const formEl = this.el.querySelector(".s_donation_form");
-
-        const inputsParams = [
-            ["amount", amount],
-            ["currency_id", this.currency.id],
-            ["csrf_token", odoo.csrf_token],
-            ["donation_options", JSON.stringify(this.el.dataset)],
-        ];
-
-        for (const inputParams of inputsParams) {
-            const inputEl = document.createElement("input");
-            inputEl.setAttribute("type", "hidden");
-            inputEl.setAttribute("name", inputParams[0]);
-            inputEl.setAttribute("value", inputParams[1]);
-            this.insert(inputEl, formEl);
+        if (amount < minAmount) {
+            return _t("The minimum donation amount is %(amount)s", {
+                amount: formatCurrency(minAmount, this.currency.id),
+            });
         }
+        return "";
+    }
 
-        formEl.submit();
+    /**
+     * @param {string} message
+     * @param {...string} extraClasses
+     */
+    _showDonationError(message, ...extraClasses) {
+        const pEl = document.createElement("p");
+        pEl.classList.add("alert", "alert-danger", ...extraClasses);
+        pEl.innerText = message;
+        this.insert(pEl, this.el.querySelector(".s_donation_donate_btn"), "beforebegin");
+    }
 
-        // Keep the button locked with loading effect during page reload
-        return new Promise(() => {});
+    /**
+     * @param {number} amount
+     */
+    async _addDonationToCart(amount) {
+        const isOnCartPage = !!document.getElementById("shop_cart");
+        await this.services.cart.add(
+            this._getDonationCartParams(amount),
+            {
+                isConfigured: true,
+                isBuyNow: isOnCartPage, // Force reload of the cart page
+            },
+        );
+    }
+
+    /**
+     * Return the parameters to pass to the cart service when adding a donation.
+     *
+     * @param {number} amount - The donation amount.
+     * @returns {Object} The parameters to pass to the cart service.
+     */
+    _getDonationCartParams(amount) {
+        return {
+            productTemplateId: this.donationInfo.product_template_id,
+            productId: this.donationInfo.product_id,
+            quantity: 1,
+            donation_amount: amount,
+        };
     }
 
     onRangeSliderInput() {
@@ -175,6 +215,4 @@ export class DonationSnippet extends Interaction {
     }
 }
 
-registry
-    .category("public.interactions")
-    .add("website_payment.donation_snippet", DonationSnippet);
+registry.category("public.interactions").add("website_sale.donation_snippet", DonationSnippet);

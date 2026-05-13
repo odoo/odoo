@@ -60,7 +60,6 @@ export class DropZoneSelectorPlugin extends Plugin {
         so_content_addition_selectors: [
             "blockquote",
             ".s_text_highlight",
-            ".s_donation", // TODO: move to plugin
             ".o_snippet_drop_in_only",
         ],
     };

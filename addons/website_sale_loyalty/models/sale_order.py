@@ -207,6 +207,10 @@ class SaleOrder(models.Model):
         self.ensure_one()
         return self.order_line.filtered(lambda line: line.reward_id.reward_type == "shipping")
 
+    def _get_no_effect_on_threshold_lines(self):
+        lines = super()._get_no_effect_on_threshold_lines()
+        return lines + self.order_line.filtered("is_donation")
+
     def _allow_nominative_programs(self):
         website = self.env.website
         if not website:

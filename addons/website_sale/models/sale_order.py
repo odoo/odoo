@@ -286,6 +286,10 @@ class SaleOrder(models.Model):
         """Exclude delivery-related lines."""
         return self.order_line.filtered(lambda line: not line.is_delivery)
 
+    def _get_update_prices_lines(self):
+        """Exclude donation lines from pricelist recomputation."""
+        return super()._get_update_prices_lines().filtered(lambda line: not line.is_donation)
+
     def _get_amount_total_excluding_delivery(self):
         return sum(self._get_non_delivery_lines().mapped("price_total"))
 
@@ -458,11 +462,13 @@ class SaleOrder(models.Model):
         :rtype: `sale.order.line` recordset
         """
         self.ensure_one()
-
         if not self.order_line:
             return self.env["sale.order.line"]
 
         product = self.env["product.product"].browse(product_id)
+        if product._is_donation():
+            return self.env["sale.order.line"]
+
         if product.type == "combo":
             return self.env["sale.order.line"]
 
@@ -658,6 +664,7 @@ class SaleOrder(models.Model):
         # item lines.
         if line.product_type != "combo":
             line._check_validity()
+
         return line
 
     def _prepare_order_line_values(
@@ -670,6 +677,7 @@ class SaleOrder(models.Model):
         no_variant_attribute_value_ids=None,
         product_custom_attribute_values=None,
         combo_item_id=None,
+        donation_amount=None,
         **_kwargs,
     ):
         self.ensure_one()
@@ -708,6 +716,9 @@ class SaleOrder(models.Model):
             "linked_line_id": linked_line_id,
             "combo_item_id": combo_item_id,
         }
+        # Set price_unit with the user-selected donation amount
+        if product._is_donation() and donation_amount is not None:
+            values["price_unit"] = max(float(donation_amount), 1)
 
         # add no_variant attributes that were not received
         no_variant_attribute_values |= combination.filtered(
