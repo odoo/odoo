@@ -82,7 +82,7 @@ class CloudStorageAttachmentMigration(models.Model):
             self.env.cr.execute("UPDATE ir_config_parameter SET value = %s WHERE key = 'cloud_storage_migration_min_attachment_id'", (str(attachment_id),))
             self.env.cr.commit()
 
-        limit_time_real = config['limit_time_real']
+        limit_time_real = config['limit_time_real'] or 120
         # ``config['limit_time_real_cron'] == 0`` means unlimited time for cron worker,
         # but will fallback to ``config['limit_time_real']`` for cron thread
         # here we use ``config['limit_time_real']`` for simplicity
