@@ -314,8 +314,9 @@ class BaseString(Field[str | typing.Literal[False], dict[str, str] | str | Store
             target = record
             for name in path:
                 target = target[name][:1]
-            if target and bool(target.id) == bool(record.id):
+            if not target or bool(target.id) == bool(record.id):
                 target[field.name] = record_value[record]
+                self.write(record, target[field.name])
 
     def write(self, records, value):
         if not self.translate or value is False or value is None:
