@@ -6,13 +6,13 @@
         <BuilderCheckbox id="'make_slide_clickable_opt'" action="'makeSlideClickable'" classAction="'clickable-slide'"/>
     </BuilderRow>
 
-    <BuilderRow t-if="this.isActiveItem('make_slide_clickable_opt')" label.translate="Your URL" level="1">
+    <BuilderRow t-if="this.isActiveItem('make_slide_clickable_opt')" label.translate="Your URL" level="true">
         <BuilderUrlPicker title.translate="Your URL"
             action="'setSlideAnchorUrl'"
             placeholder.translate="e.g. /your-website-page"/>
     </BuilderRow>
 
-    <BuilderRow label.translate="Open in New Tab" tooltip.translate="Enable this to open the link in a new browser tab" level="1">
+    <BuilderRow label.translate="Open in New Tab" tooltip.translate="Enable this to open the link in a new browser tab" level="true">
         <BuilderCheckbox applyTo="'.slide-link'" attributeAction="'target'" attributeActionValue="'_blank'" preview="false"/>
     </BuilderRow>
 </t>

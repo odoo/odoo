@@ -12,7 +12,7 @@
             unit="'%'"
             withNumberInput="true" />
     </BuilderRow>
-    <BuilderRow t-if="this.getItemValue('card_width') !== '100%'" label.translate="Alignment" level="1">
+    <BuilderRow t-if="this.getItemValue('card_width') !== '100%'" label.translate="Alignment" level="true">
         <BuilderButtonGroup action="'setCardAlignment'">
             <BuilderButton ltrRtlMapping="'left-right'" icon="'fa-align-left'" title.translate="Left" actionParam="'me-auto'"/>
             <BuilderButton icon="'fa-align-center'" title.translate="Center" actionParam="'mx-auto'"/>

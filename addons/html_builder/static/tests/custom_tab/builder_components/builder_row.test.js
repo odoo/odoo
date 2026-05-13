@@ -91,17 +91,23 @@ test("reconnects lines across mixed levels", async () => {
         template: xml`
             <div class="options-container">
                 <BuilderRow label="'root-1'">root-1</BuilderRow>
-                <BuilderRow label="'level-1'" level="1">A</BuilderRow>
-                <BuilderRow label="'level-2'" level="2">B</BuilderRow>
-                <BuilderRow label="'level-1'" level="1">C</BuilderRow>
+                <BuilderContext level="true">
+                    <BuilderRow label="'level-1'">A</BuilderRow>
+                    <BuilderRow label="'level-2'" level="true">B</BuilderRow>
+                    <BuilderRow label="'level-1'">C</BuilderRow>
+                </BuilderContext>
                 <BuilderRow label="'root-2'">root-2</BuilderRow>
-                <BuilderRow label="'level-1'" level="1">D</BuilderRow>
-                <BuilderRow label="'level-2'" level="2">E</BuilderRow>
-                <BuilderRow label="'level-2'" level="2">F</BuilderRow>
-                <BuilderRow label="'level-3'" level="3">G</BuilderRow>
-                <BuilderRow label="'level-3'" level="3">H</BuilderRow>
-                <BuilderRow label="'level-2'" level="2">I</BuilderRow>
-                <BuilderRow label="'level-1'" level="1">J</BuilderRow>
+                <BuilderContext level="true">
+                    <BuilderRow label="'level-1'">D</BuilderRow>
+                    <BuilderContext level="true">
+                        <BuilderRow label="'level-2'">E</BuilderRow>
+                        <BuilderRow label="'level-2'">F</BuilderRow>
+                        <BuilderRow label="'level-3'" level="true">G</BuilderRow>
+                        <BuilderRow label="'level-3'" level="true">H</BuilderRow>
+                        <BuilderRow label="'level-2'">I</BuilderRow>
+                    </BuilderContext>
+                    <BuilderRow label="'level-1'">J</BuilderRow>
+                </BuilderContext>
             </div>
         `,
     });
@@ -149,7 +155,7 @@ const collapseOptionTemplate = ({
                 dependency ? "id=\"'test_opt'\"" : ""
             }>A</BuilderButton>
             <t t-set-slot="collapse">
-                <BuilderRow level="1" label="'B'" ${
+                <BuilderRow level="true" label="'B'" ${
                     dependency ? "t-if=\"this.isActiveItem('test_opt')\"" : ""
                 }>
                     <BuilderButton classAction="'b'">B</BuilderButton>
@@ -220,12 +226,14 @@ describe("BuilderRow with collapse content", () => {
                         <BuilderSelectItem classAction="'c'" id="'random_opt'">C</BuilderSelectItem>
                     </BuilderSelect>
                     <t t-set-slot="collapse">
-                        <BuilderRow level="1" t-if="this.isActiveItem('test_opt')" label="'B'">
-                            <BuilderButton classAction="'b'">B</BuilderButton>
-                        </BuilderRow>
-                        <BuilderRow level="1" t-if="this.isActiveItem('random_opt')" label="'D'">
-                            <BuilderButton classAction="'d'">D</BuilderButton>
-                        </BuilderRow>
+                        <BuilderContext level="true">
+                            <BuilderRow t-if="this.isActiveItem('test_opt')" label="'B'">
+                                <BuilderButton classAction="'b'">B</BuilderButton>
+                            </BuilderRow>
+                            <BuilderRow t-if="this.isActiveItem('random_opt')" label="'D'">
+                                <BuilderButton classAction="'d'">D</BuilderButton>
+                            </BuilderRow>
+                        </BuilderContext>
                     </t>
                 </BuilderRow>
             `,

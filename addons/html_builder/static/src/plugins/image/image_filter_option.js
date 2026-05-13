@@ -7,12 +7,7 @@ import { _t } from "@web/core/l10n/translation";
 
 export class ImageFilterOption extends BaseOptionComponent {
     static template = "html_builder.ImageFilterOption";
-    static props = {
-        level: { type: Number, optional: true },
-    };
-    static defaultProps = {
-        level: 0,
-    };
+
     setup() {
         super.setup();
         this.state = useDomState(async (editingElement) => {

@@ -7,7 +7,7 @@
         label.translate="Products Design"
     />
 
-    <BuilderRow t-if="this.isActiveItem('grid_view_opt')" label.translate="Desktop" level="1">
+    <BuilderRow t-if="this.isActiveItem('grid_view_opt')" label.translate="Desktop" level="true">
         <BuilderSelect action="'wishlistGridColumns'" id="'o_wsale_wishlist_grid_columns'">
             <BuilderSelectItem actionValue="2">2 Columns</BuilderSelectItem>
             <BuilderSelectItem actionValue="3">3 Columns</BuilderSelectItem>
@@ -17,7 +17,7 @@
         </BuilderSelect>
     </BuilderRow>
 
-    <BuilderRow t-if="this.isActiveItem('grid_view_opt')" label.translate="Mobile" level="1">
+    <BuilderRow t-if="this.isActiveItem('grid_view_opt')" label.translate="Mobile" level="true">
         <BuilderSelect action="'wishlistMobileColumns'" id="'o_wsale_wishlist_mobile_columns'">
             <BuilderSelectItem actionValue="1">1 Column</BuilderSelectItem>
             <BuilderSelectItem actionValue="2">2 Columns</BuilderSelectItem>

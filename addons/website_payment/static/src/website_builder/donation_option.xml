@@ -22,7 +22,7 @@
                 columnWidth="{ value: 'w-25' }"
                 hiddenProperties="this.isActiveItem('pre_filled_descriptions_opt') ? [] : ['description']"
         />
-        <BuilderRow label.translate="Descriptions" level="1" preview="false">
+        <BuilderRow label.translate="Descriptions" level="true" preview="false">
             <BuilderCheckbox id="'pre_filled_descriptions_opt'" action="'toggleDescriptions'" />
         </BuilderRow>
     </t>
@@ -39,18 +39,20 @@
             </t>
         </BuilderSelect>
     </BuilderRow>
-    <BuilderRow t-if="!this.isActiveItem('no_input_opt')"
-                label.translate="Minimum" level="1">
-        <BuilderNumberInput step="1" action="'setMinimumAmount'"/>
-    </BuilderRow>
-    <t t-if="this.isActiveItem('slider_opt')">
-        <BuilderRow label.translate="Maximum" level="1">
-            <BuilderNumberInput step="1" action="'setMaximumAmount'"/>
+    <BuilderContext level="true">
+        <BuilderRow t-if="!this.isActiveItem('no_input_opt')"
+                    label.translate="Minimum">
+            <BuilderNumberInput step="1" action="'setMinimumAmount'"/>
         </BuilderRow>
-        <BuilderRow label.translate="Step" level="1">
-            <BuilderNumberInput step="1" action="'setSliderStep'"/>
-        </BuilderRow>
-    </t>
+        <t t-if="this.isActiveItem('slider_opt')">
+            <BuilderRow label.translate="Maximum">
+                <BuilderNumberInput step="1" action="'setMaximumAmount'"/>
+            </BuilderRow>
+            <BuilderRow label.translate="Step">
+                <BuilderNumberInput step="1" action="'setSliderStep'"/>
+            </BuilderRow>
+        </t>
+    </BuilderContext>
     <BuilderRow label.translate="Default Amount">
         <BuilderNumberInput step="1" default="25" dataAttributeAction="'defaultAmount'"/>
     </BuilderRow>

@@ -11,10 +11,6 @@ export class BaseVisibilityOption extends BaseOptionComponent {
         textColor: { type: String, optional: true },
         tooltip: { type: String, optional: true },
         visibilityOpt: { type: String, optional: true },
-        level: { type: Number, optional: true },
-    };
-    static defaultProps = {
-        level: 0,
     };
 
     setup() {

@@ -3,7 +3,9 @@
 
 <t t-name="website.WebsiteBackgroundOption" t-inherit="html_builder.BackgroundOption">
     <xpath expr="//BuilderRow[@label.translate='Background']" position="after">
-        <BgBlurOption t-if="!this.websiteBgOptionDomState.hasBgMedia"/>
+        <BuilderContext level="true">
+            <BgBlurOption t-if="!this.websiteBgOptionDomState.hasBgMedia"/>
+        </BuilderContext>
     </xpath>
     <xpath expr="//BuilderRow[@label.translate='Color Filter']" position="after">
         <BuilderContext t-if="this.websiteBgOptionDomState.hasBgMedia" applyTo="':scope > .o_we_bg_filter'">
@@ -36,12 +38,12 @@
     </xpath>
     <xpath expr="//ImageFilterOption" position="replace">
         <BuilderContext applyTo="this.websiteBgOptionDomState.applyTo">
-            <ImageFilterOption level="2"/>
+            <ImageFilterOption/>
         </BuilderContext>
     </xpath>
     <xpath expr="//ImageFormatOption" position="replace">
         <BuilderContext applyTo="this.websiteBgOptionDomState.applyTo">
-            <ImageFormatOption level="2" computeMaxDisplayWidth="this.computeMaxDisplayWidth"/>
+            <ImageFormatOption computeMaxDisplayWidth="this.computeMaxDisplayWidth"/>
         </BuilderContext>
     </xpath>
     <xpath expr="//BuilderButton[@action=&quot;'toggleBgImage'&quot;]" position="attributes">

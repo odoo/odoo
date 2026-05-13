@@ -5,6 +5,7 @@ import { uniqueId } from "@web/core/utils/functions";
 import { useService } from "@web/core/utils/hooks";
 import {
     basicContainerBuilderComponentProps,
+    resolveBuilderLevel,
     useApplyVisibility,
     useBuilderComponent,
     useVisibilityObserver,
@@ -19,7 +20,7 @@ export class BuilderRow extends Component {
         label: { type: String, optional: true },
         tooltip: { type: String, optional: true },
         slots: { type: Object, optional: true },
-        level: { type: Number, optional: true },
+        level: { type: Boolean, optional: true },
         expand: { type: Boolean, optional: true },
         initialExpandAnim: { type: Boolean, optional: true },
         extraLabelClass: { type: String, optional: true },
@@ -48,6 +49,8 @@ export class BuilderRow extends Component {
         this.rootRef = useRef("root");
         this.collapseContentRef = useRef("collapse-content");
         let isMounted = false;
+
+        this.level = resolveBuilderLevel(this.env, this.props.level);
 
         onMounted(() => {
             if (this.props.initialExpandAnim) {
@@ -105,7 +108,7 @@ export class BuilderRow extends Component {
     }
 
     getLevelClass() {
-        return this.props.level ? `hb-row-sublevel hb-row-sublevel-${this.props.level}` : "";
+        return this.level ? `hb-row-sublevel hb-row-sublevel-${this.level}` : "";
     }
 
     onRowContentClick() {

@@ -7,22 +7,24 @@
             <BuilderCheckbox id="'toggle_card_img_opt'" preview="false" action="'toggleCardImg'"/>
         </BuilderRow>
 
-        <BuilderRow label.translate="Position" level="1" t-if="this.isActiveItem('toggle_card_img_opt')">
-            <BuilderButtonGroup applyTo="'.s_card'">
-                <BuilderButton ltrRtlMapping="'left-right'" title.translate="Left" classAction="'flex-lg-row'" iconImg="'/website/static/src/img/snippets_options/pos_left.svg'"/>
-                <BuilderButton ltrRtlMapping="'left-right'" title.translate="Right" classAction="'flex-lg-row-reverse'" iconImg="'/website/static/src/img/snippets_options/pos_right.svg'"/>
-            </BuilderButtonGroup>
-        </BuilderRow>
+        <BuilderContext level="true" t-if="this.isActiveItem('toggle_card_img_opt')">
+            <BuilderRow label.translate="Position">
+                <BuilderButtonGroup applyTo="'.s_card'">
+                    <BuilderButton ltrRtlMapping="'left-right'" title.translate="Left" classAction="'flex-lg-row'" iconImg="'/website/static/src/img/snippets_options/pos_left.svg'"/>
+                    <BuilderButton ltrRtlMapping="'left-right'" title.translate="Right" classAction="'flex-lg-row-reverse'" iconImg="'/website/static/src/img/snippets_options/pos_right.svg'"/>
+                </BuilderButtonGroup>
+            </BuilderRow>
 
-        <BuilderRow label.translate="Width" tooltip.translate="Adjust the image width" level="1" t-if="this.isActiveItem('toggle_card_img_opt')">
-            <BuilderRange
-                styleAction="'--card-img-size-h'"
-                min="10"
-                max="75"
-                step="5"
-                unit="'%'"
-                withNumberInput="true" />
-        </BuilderRow>
+            <BuilderRow label.translate="Width" tooltip.translate="Adjust the image width">
+                <BuilderRange
+                    styleAction="'--card-img-size-h'"
+                    min="10"
+                    max="75"
+                    step="5"
+                    unit="'%'"
+                    withNumberInput="true" />
+            </BuilderRow>
+        </BuilderContext>
 
         <BuilderRow label.translate="Extra height" tooltip.translate="Add extra height to cards">
             <BuilderRange

@@ -17,7 +17,7 @@
 </t>
 
 <t t-name="website.snippet_options_conditional_visibility">
-    <BuilderRow label="option_name" level="1" t-if="this.isActiveItem('visibility_conditional')" preview="false">
+    <BuilderRow label="option_name" level="true" t-if="this.isActiveItem('visibility_conditional')" preview="false">
         <!-- isVisibilityCondition="true" ??? -->
         <BuilderSelect dataAttributeAction="attribute_rule">
             <BuilderSelectItem dataAttributeActionValue="null">Visible for</BuilderSelectItem>
@@ -78,7 +78,7 @@
                 attribute_rule="'visibilityValueUtmSourceRule'"
                 save_attribute="'visibilityValueUtmSource'"
                 model="'utm.source'"/>
-		    <BuilderRow label.translate="Users" level="1" t-if="this.isActiveItem('visibility_conditional')" preview="false">
+		    <BuilderRow label.translate="Users" level="true" t-if="this.isActiveItem('visibility_conditional')" preview="false">
 		        <BuilderSelect dataAttributeAction="'visibilityValueLogged'">
 		            <BuilderSelectItem dataAttributeActionValue="'[{&quot;id&quot;:1,&quot;value&quot;:&quot;true&quot;}]'">Visible for Logged In</BuilderSelectItem>
 		            <BuilderSelectItem dataAttributeActionValue="'[{&quot;id&quot;:2,&quot;value&quot;:&quot;false&quot;}]'">Visible for Logged Out</BuilderSelectItem>

@@ -31,8 +31,8 @@
         </div>
     </BuilderRow>
 
-    <t t-if="this.state.hasShape">
-        <BuilderRow label.translate="Colors" level="1">
+    <BuilderContext t-if="this.state.hasShape" level="true">
+        <BuilderRow label.translate="Colors">
             <t t-foreach="this.state.imageShapeColorNames" t-as="colorName" t-key="colorName_index">
                 <BuilderColorPicker
                     t-if="colorName"
@@ -43,7 +43,7 @@
             </t>
         </BuilderRow>
 
-        <BuilderRow label.translate="Transform" level="1" t-if="this.state.showImageShapeTransform" preview="false">
+        <BuilderRow label.translate="Transform" t-if="this.state.showImageShapeTransform" preview="false">
             <BuilderButton
                 title.translate="Horizontal flip"
                 icon="'oi-arrows-h'"
@@ -72,7 +72,7 @@
                 t-if="this.state.hasShapeTransformation"/>
         </BuilderRow>
 
-        <BuilderRow label.translate="Speed" level="1" t-if="this.state.showImageShapeAnimation" preview="false">
+        <BuilderRow label.translate="Speed" t-if="this.state.showImageShapeAnimation" preview="false">
             <BuilderRange
                 action="'setImageShapeSpeed'"
                 min="-2"
@@ -84,10 +84,10 @@
                 convertorRatio="this.ratioValueConverter" />
         </BuilderRow>
 
-        <BuilderRow label.translate="Stretch" level="1" t-if="this.state.togglableRatio" preview="false" tooltip.translate="Will remove the crop factor">
+        <BuilderRow label.translate="Stretch" t-if="this.state.togglableRatio" preview="false" tooltip.translate="Will remove the crop factor">
             <BuilderCheckbox action="'toggleImageShapeRatio'" />
         </BuilderRow>
-    </t>
+    </BuilderContext>
 </t>
 
 </templates>

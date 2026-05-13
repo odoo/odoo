@@ -343,7 +343,7 @@
                 <BuilderRow
                     label.translate="Overlay"
                     tooltip.translate="Opacity of the overlay"
-                    level="1"
+                    level="true"
                     t-if="this.isActiveItem('wsale_design_showcase_list') || catalogBento"
                 >
                     <BuilderRange
@@ -398,17 +398,19 @@
                         </BuilderSelectItem>
                     </BuilderSelect>
                     <t t-set-slot="collapse">
-                        <BuilderRow label.translate="Bold" level="1">
-                            <BuilderCheckbox classAction="'o_wsale_products_opt_name_weight_bold'"/>
-                        </BuilderRow>
-                        <BuilderRow label.translate="Font Size" level="1">
-                            <BuilderSelect>
-                                <BuilderSelectItem classAction="''">Responsive</BuilderSelectItem>
-                                <BuilderSelectItem classAction="'o_wsale_products_opt_name_size_body'">
-                                    Theme default
-                                </BuilderSelectItem>
-                            </BuilderSelect>
-                        </BuilderRow>
+                        <BuilderContext level="true">
+                            <BuilderRow label.translate="Bold">
+                                <BuilderCheckbox classAction="'o_wsale_products_opt_name_weight_bold'"/>
+                            </BuilderRow>
+                            <BuilderRow label.translate="Font Size">
+                                <BuilderSelect>
+                                    <BuilderSelectItem classAction="''">Responsive</BuilderSelectItem>
+                                    <BuilderSelectItem classAction="'o_wsale_products_opt_name_size_body'">
+                                        Theme default
+                                    </BuilderSelectItem>
+                                </BuilderSelect>
+                            </BuilderRow>
+                        </BuilderContext>
                     </t>
                 </BuilderRow>
 
@@ -500,7 +502,7 @@
                         </t>
                     </BuilderSelect>
                     <t t-set-slot="collapse">
-                        <BuilderRow label.translate="Auto-crop" level="1">
+                        <BuilderRow label.translate="Auto-crop" level="true">
                             <BuilderCheckbox classAction="'o_wsale_products_opt_thumb_cover'"/>
                         </BuilderRow>
                     </t>
@@ -614,7 +616,7 @@
                 <BuilderRow
                     t-if="this.props.recordName === 'shop_opt_products_design_classes'"
                     label.translate="Wishlist"
-                    level="1"
+                    level="true"
                 >
                     <BuilderButton
                         title.translate="Wishlist"

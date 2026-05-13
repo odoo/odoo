@@ -6,10 +6,6 @@ export class CardImagePositionOption extends BaseOptionComponent {
     static template = "website.CardImagePositionOption";
     static props = {
         label: { type: String },
-        level: { type: Number, optional: true },
-    };
-    static defaultProps = {
-        level: 0,
     };
 
     setup() {

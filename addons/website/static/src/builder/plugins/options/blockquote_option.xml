@@ -17,7 +17,7 @@
                 <BuilderSelectItem classAction="'w-100'" id="'so_width_100'">100%</BuilderSelectItem>
             </BuilderSelect>
         </BuilderRow>
-        <BuilderRow label.translate="Alignment" t-if="!this.isActiveItem('so_width_100')" level="1">
+        <BuilderRow label.translate="Alignment" t-if="!this.isActiveItem('so_width_100')" level="true">
             <BuilderButtonGroup>
                 <BuilderButton ltrRtlMapping="'left-right'" classAction="'me-auto'" icon="'fa-align-left'" title.translate="Left"/>
                 <BuilderButton icon="'fa-align-center'" title.translate="Center" classAction="'mx-auto'"/>
@@ -42,7 +42,7 @@
         </BuilderSelect>
     </BuilderRow>
 
-    <BuilderRow label.translate="Style" applyTo="':scope > .s_blockquote_line_elt'" level="1" t-if="this.isActiveItem('blockquote_with_line_opt')">
+    <BuilderRow label.translate="Style" applyTo="':scope > .s_blockquote_line_elt'" level="true" t-if="this.isActiveItem('blockquote_with_line_opt')">
         <BuilderNumberInput styleAction="'width'" min="0" unit="'px'"/>
         <BuilderColorPicker styleAction="'background-color'" enabledTabs="['solid', 'custom', 'gradient']"/>
     </BuilderRow>
@@ -51,7 +51,7 @@
         <BuilderRow label.translate="Show Author">
             <BuilderCheckbox id="'blockquote_show_author_opt'" classAction="'d-flex'"/>
         </BuilderRow>
-        <BuilderRow t-if="this.isActiveItem('blockquote_show_author_opt')" label.translate="Author Alignment" level="1">
+        <BuilderRow t-if="this.isActiveItem('blockquote_show_author_opt')" label.translate="Author Alignment" level="true">
             <BuilderSelect>
                 <BuilderSelectItem ltrRtlMapping="'left-right'" classAction="'flex-row align-items-start justify-content-start text-start'">
                     Left
