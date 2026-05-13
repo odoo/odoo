@@ -52,6 +52,7 @@ function getPopupTemplate(options = {}) {
         modalId = "",
         focusableElements = false,
         content = "",
+        closeButton = true,
     } = options;
     return `
         <div class="s_popup o_snippet_invisible" data-vcss="001" data-snippet="s_popup"
@@ -72,7 +73,11 @@ function getPopupTemplate(options = {}) {
                  role="dialog">
                 <div class="modal-dialog d-flex">
                     <div class="modal-content oe_structure">
-                        <div class="s_popup_close js_close_popup o_we_no_overlay o_not_editable" aria-label="Close">×</div>
+                        ${
+                            closeButton
+                                ? '<button class="s_popup_close js_close_popup border-0 p-0 o_we_no_overlay o_not_editable" aria-label="Close">×</button>'
+                                : ""
+                        }
                         <section>
                             ${content}
                             <a href="#" class="btn btn-primary ${extraPrimaryBtnClasses}">Primary button</a>
@@ -217,9 +222,11 @@ describe("trap focus", () => {
         await press("Tab");
         expect("#focus").toBeFocused();
         await press("Tab");
+        expect(".s_popup_close").toBeFocused();
+        await press("Tab");
         expect(".btn-primary").toBeFocused();
         await press("Tab", { shiftKey: true });
-        expect("#focus").toBeFocused();
+        expect(".s_popup_close").toBeFocused();
     });
 
     test("reset focus on the previous active element when popup is closed", async () => {
@@ -266,9 +273,11 @@ describe("trap focus", () => {
         await press("Tab");
         expect("#focus").toBeFocused();
         await press("Tab");
+        expect(".s_popup_close").toBeFocused();
+        await press("Tab");
         expect(".btn-primary").toBeFocused();
         await press("Tab", { shiftKey: true });
-        expect("#focus").toBeFocused();
+        expect(".s_popup_close").toBeFocused();
         await press("Escape");
         expect(modal).not.toBeVisible();
         expect("[href='#modal']").toBeFocused();
@@ -316,7 +325,28 @@ describe("trap focus", () => {
         await press("Tab", { shiftKey: true });
         expect(".btn-primary").toBeFocused();
         await press("Tab", { shiftKey: true });
+        expect(".s_popup_close").toBeFocused();
+        await press("Tab", { shiftKey: true });
         expect("#link1").toBeFocused();
+    });
+
+    test("focus is trapped when popup opens (no close button)", async () => {
+        // Tests that the code works in the edge case of missing close button
+        const { core } = await startInteractions(`
+            <a href="#">Link</a>
+            ${getPopupTemplate({ modalId: "modal", closeButton: false })}
+        `);
+        expect(core.interactions).toHaveLength(1);
+        await pointerDown(document.body);
+        await tick();
+        await animationFrame();
+        await advanceTime(100);
+        expect("#modal").toBeVisible();
+        await tick();
+        expect(".btn-primary").toBeFocused();
+        await press("Tab");
+        expect(".btn-primary").toBeFocused();
+        await press("Tab", { shiftKey: true });
     });
 });
 

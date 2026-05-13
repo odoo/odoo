@@ -15,7 +15,7 @@ function getTemplate(disabled = false) {
                 data-show-after="0" data-display="afterDelay" data-consents-duration="7" data-bs-focus="false" data-bs-backdrop="false" tabindex="-1" aria-modal="true" role="dialog">
                 <div class="modal-dialog">
                     <div class="modal-content oe_structure">
-                        <div class="s_popup_close js_close_popup o_we_no_overlay o_not_editable" aria-label="Close">×</div>
+                        <button class="s_popup_close js_close_popup border-0 p-0 o_we_no_overlay o_not_editable" aria-label="Close">×</button>
                         <section>
                             <div class="container">
                                 <div class="s_newsletter_subscribe_form s_newsletter_list js_subscribe"

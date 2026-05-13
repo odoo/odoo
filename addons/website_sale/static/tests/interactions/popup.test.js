@@ -24,7 +24,7 @@ test("click on primary button which is add to cart button doesn't close popup", 
                  role="dialog">
                 <div class="modal-dialog d-flex">
                     <div class="modal-content oe_structure">
-                        <div class="s_popup_close js_close_popup o_we_no_overlay o_not_editable" aria-label="Close">×</div>
+                        <button class="s_popup_close js_close_popup border-0 p-0 o_we_no_overlay o_not_editable" aria-label="Close">×</button>
                         <section>
                             <a href="#" class="btn btn-primary js_add_cart">Primary button</a>
                         </section>

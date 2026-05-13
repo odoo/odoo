@@ -166,7 +166,11 @@ export class Popup extends Interaction {
             previouslyFocusedEl = document.activeElement || document.body;
         }
         if (tabableEls.length) {
-            tabableEls[0].focus();
+            // If the popup contains two or more focusable elements, the first
+            // one is assumed to be the close button. In that case, the second
+            // element is focused instead.
+            const focusTarget = tabableEls[1] ?? tabableEls[0];
+            focusTarget.focus();
             this.el.querySelector(".modal").scrollTop = 0;
         } else {
             this.el.querySelector(".modal").focus();
