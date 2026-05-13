@@ -5,10 +5,9 @@ import { ChannelInvitation } from "@mail/discuss/core/common/channel_invitation"
 
 import { Component, onWillRender, onWillUpdateProps, onWillStart } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
-import { useState } from "@web/owl2/utils";
 
 import { useService } from "@web/core/utils/hooks";
-import { useSequential } from "@mail/utils/common/hooks";
+import { useSearch } from "@mail/utils/common/hooks";
 
 let nextId = 0;
 const SEARCH_RESULT_LIMIT = 100;
@@ -46,12 +45,15 @@ export class ChannelMemberList extends Component {
         this.uniqueId = `discuss.ChannelMemberList.${nextId++}`;
         this.store = useService("mail.store");
         this.dialogService = useService("dialog");
-        this.state = useState({ searchTerm: "", isSearching: false });
-        this.lastFetchedSearch = undefined;
-        this.sequential = useSequential();
+        this.search = useSearch({
+            fetch: async (term) => {
+                await this.props.channel.searchChannelMembers(term);
+                return this.hasFilteredMembers(this.computeCategories(term));
+            },
+        });
         this.categories = [];
         onWillRender(() => {
-            this.categories = this.computeCategories(this.state.searchTerm);
+            this.categories = this.computeCategories(this.search.searchTerm);
         });
         onWillStart(() => {
             if (this.props.channel.fetchMembersState === "not_fetched") {
@@ -62,12 +64,8 @@ export class ChannelMemberList extends Component {
             if (nextProps.channel.fetchMembersState === "not_fetched") {
                 nextProps.channel.fetchChannelMembers();
             }
-            if (nextProps.channel.notEq(this.props.channel) && this.state.searchTerm) {
-                this.state.searchTerm = "";
-                this.state.isSearching = false;
-            }
             if (nextProps.channel.notEq(this.props.channel)) {
-                this.lastFetchedSearch = undefined;
+                this.search.reset();
             }
         });
     }
@@ -78,7 +76,7 @@ export class ChannelMemberList extends Component {
     }
 
     get isSearchResultCapped() {
-        if (!this.state.searchTerm) {
+        if (!this.search.searchTerm) {
             return false;
         }
         return (
@@ -107,48 +105,6 @@ export class ChannelMemberList extends Component {
                 remaining -= filtered.length;
                 return { label, matching, filtered, showCount };
             });
-    }
-
-    isSearchMoreSpecificThanLastFetch(searchTerm) {
-        return (
-            this.lastFetchedSearch?.channelId === this.props.channel.id &&
-            searchTerm.startsWith(this.lastFetchedSearch.searchTerm)
-        );
-    }
-
-    /** @param {KeyboardEvent} ev */
-    onInputSearch(ev) {
-        const searchTerm = ev.target.value;
-        this.state.searchTerm = searchTerm;
-        if (!searchTerm) {
-            this.lastFetchedSearch = undefined;
-            this.state.isSearching = false;
-            return;
-        }
-        if (
-            !this.lastFetchedSearch?.hasResults &&
-            this.isSearchMoreSpecificThanLastFetch(searchTerm)
-        ) {
-            this.state.isSearching = false;
-            return;
-        }
-        this.state.isSearching = true;
-        this.sequential(async () => {
-            try {
-                await this.props.channel.searchChannelMembers(searchTerm);
-                if (this.state.searchTerm === searchTerm) {
-                    this.lastFetchedSearch = {
-                        channelId: this.props.channel.id,
-                        searchTerm,
-                        hasResults: this.hasFilteredMembers(this.computeCategories(searchTerm)),
-                    };
-                }
-            } finally {
-                if (this.state.searchTerm === searchTerm) {
-                    this.state.isSearching = false;
-                }
-            }
-        });
     }
 
     onClickInviteButton() {

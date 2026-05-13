@@ -157,7 +157,6 @@ test("create sub thread from sub-thread list", async () => {
         ".o-mail-ActionPanel:has(.o-mail-SubChannelList) .o_searchview_input",
         "MyEpicThread"
     );
-    await click("button[aria-label='Search button']");
     await contains(".o-mail-SubChannelList:text('No threads found.')");
     await click("button[aria-label='Create Thread']");
     await contains(".o-mail-DiscussContent-threadName", { value: "MyEpicThread" });

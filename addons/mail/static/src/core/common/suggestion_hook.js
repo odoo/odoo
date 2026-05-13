@@ -10,13 +10,14 @@ import {
 import { status } from "@odoo/owl";
 import { ConnectionAbortedError } from "@web/core/network/rpc";
 import { useService } from "@web/core/utils/hooks";
-import { useDebounced } from "@web/core/utils/timing";
+import { useSearch } from "@mail/utils/common/hooks";
 
 /**
  * @typedef {Object} Option
  * @property {string} [buttonClass]
  * @property {string} [classList]
  * @property {number} [group]
+ * @property {boolean} [isSpecial]
  * @property {string} [label]
  * @property {string} [optionTemplate]
  * @property {string} [title]
@@ -39,31 +40,32 @@ import { useDebounced } from "@web/core/utils/timing";
  *   | import("@mail/core/common/store_service").SpecialMention} Suggestion
  */
 
-export const DELAY_FETCH = 250;
+function _useDetectionState() {
+    return {
+        /** @type {string|undefined} */
+        delimiter: undefined,
+        /** @type {number|undefined} */
+        position: undefined,
+        term: "",
+    };
+}
+
+/** @return {ReturnType<_useDetectionState>} */
+function useDetectionState() {
+    return useState(_useDetectionState());
+}
 
 export class UseSuggestion {
     constructor(comp) {
         this.comp = comp;
-        this.fetchSuggestions = useDebounced(this.fetchSuggestions.bind(this), DELAY_FETCH);
-        useLayoutEffect(
-            () => {
-                this.update();
-                if (this.search.position === undefined || !this.search.delimiter) {
-                    return; // nothing else to fetch
-                }
-                if (!this.composer.store.self_user) {
-                    return; // guests cannot access fetch suggestion method
-                }
-                if (
-                    this.lastFetchedSearch?.count === 0 &&
-                    (!this.search.delimiter || this.isSearchMoreSpecificThanLastFetch)
-                ) {
-                    return; // no need to fetch since this is more specific than last and last had no result
-                }
-                this.fetchSuggestions();
-            },
-            () => [this.search.delimiter, this.search.position, this.search.term]
-        );
+        this.suggestionService = useService("mail.suggestion");
+        this.detection = useDetectionState();
+        this.search = useSearch({
+            fetch: this.fetchSuggestions.bind(this),
+            filter: this.update.bind(this),
+            deps: () => [this.detection.delimiter, this.detection.position],
+            isActive: () => !!this.detection.delimiter,
+        });
         useLayoutEffect(
             () => {
                 this.detect();
@@ -81,25 +83,6 @@ export class UseSuggestion {
     get composer() {
         return this.comp.props.composer;
     }
-    suggestionService = useService("mail.suggestion");
-    state = useState({
-        count: 0,
-        items: undefined,
-        isFetching: false,
-    });
-    search = {
-        delimiter: undefined,
-        position: undefined,
-        term: "",
-    };
-    lastFetchedSearch;
-    get isSearchMoreSpecificThanLastFetch() {
-        return (
-            this.lastFetchedSearch.delimiter === this.search.delimiter &&
-            this.search.term.startsWith(this.lastFetchedSearch.term) &&
-            this.lastFetchedSearch.position >= this.search.position
-        );
-    }
     clearRawMentions() {
         this.composer.mentionedChannels.length = 0;
         this.composer.mentionedPartners.length = 0;
@@ -109,12 +92,12 @@ export class UseSuggestion {
         this.composer.cannedResponses = [];
     }
     clearSearch() {
-        Object.assign(this.search, {
+        Object.assign(this.detection, {
             delimiter: undefined,
             position: undefined,
             term: "",
         });
-        this.state.items = undefined;
+        this.search.reset();
     }
     detect() {
         let start = 0;
@@ -160,8 +143,8 @@ export class UseSuggestion {
             candidatePositions.push(index);
         }
         // keep the current delimiter if it is still valid
-        if (this.search.position !== undefined && this.search.position < start) {
-            candidatePositions.push(this.search.position);
+        if (this.detection.position !== undefined && this.detection.position < start) {
+            candidatePositions.push(this.detection.position);
         }
         const supportedDelimiters = this.suggestionService.getSupportedDelimiters(
             this.thread,
@@ -196,12 +179,12 @@ export class UseSuggestion {
             if (charBeforeCandidate && !/\s/.test(charBeforeCandidate)) {
                 continue;
             }
-            Object.assign(this.search, {
+            Object.assign(this.detection, {
                 delimiter: candidateDelimiter,
                 position: candidatePosition,
                 term: text.substring(candidatePosition + candidateDelimiter.length, start),
             });
-            this.state.count++;
+            this.search.searchTerm = this.detection.term;
             return;
         }
         this.clearSearch();
@@ -210,12 +193,12 @@ export class UseSuggestion {
         return this.composer.thread || this.composer.message?.thread;
     }
     insert(option) {
-        let position = this.search.position + 1;
+        let position = this.detection.position + 1;
         if (
-            [":", "::"].includes(this.search.delimiter) ||
-            (this.comp.composerService.htmlEnabled && this.search.delimiter !== "/")
+            [":", "::"].includes(this.detection.delimiter) ||
+            (this.comp.composerService.htmlEnabled && this.detection.delimiter !== "/")
         ) {
-            position = this.search.position;
+            position = this.detection.position;
         }
         if (this.comp.composerService.htmlEnabled) {
             const { startContainer, endContainer, endOffset } =
@@ -253,59 +236,49 @@ export class UseSuggestion {
         }
     }
     update() {
-        if (!this.search.delimiter) {
-            return;
+        if (!this.detection.delimiter) {
+            return undefined;
         }
-        const { type, suggestions } = this.suggestionService.searchSuggestions(this.search, {
+        const { type, suggestions } = this.suggestionService.searchSuggestions(this.detection, {
             thread: this.thread,
         });
         if (!suggestions.length) {
-            this.state.items = undefined;
-            return;
+            return undefined;
         }
         // arbitrary limit to avoid displaying too many elements at once
         // ideally a load more mechanism should be introduced
         const limit = 8;
         suggestions.length = Math.min(suggestions.length, limit);
-        this.state.items = { type, suggestions };
+        return { type, suggestions };
     }
 
     async fetchSuggestions() {
         if (!this.thread || status(this.comp) === "destroyed") {
             return;
         }
-        let resetFetchingState = true;
+        if (!this.composer.store.self_user) {
+            return; // guests cannot access fetch suggestion method
+        }
         try {
             this.abortController?.abort();
             this.abortController = new AbortController();
-            this.state.isFetching = true;
-            await this.suggestionService.fetchSuggestions(this.search, {
+            await this.suggestionService.fetchSuggestions(this.detection, {
                 thread: this.thread,
                 abortSignal: this.abortController.signal,
             });
         } catch (e) {
-            this.lastFetchedSearch = null;
             if (e instanceof ConnectionAbortedError) {
-                resetFetchingState = false;
                 return;
             }
             throw e;
-        } finally {
-            if (resetFetchingState) {
-                this.state.isFetching = false;
-            }
         }
         if (!this.thread || status(this.comp) === "destroyed") {
             return;
         }
-        this.update();
-        this.lastFetchedSearch = {
-            ...this.search,
-            count: this.state.items?.suggestions.length ?? 0,
-        };
-        if (!this.state.items?.suggestions.length) {
-            this.clearSearch();
-        }
+        const { suggestions } = this.suggestionService.searchSuggestions(this.detection, {
+            thread: this.thread,
+        });
+        return suggestions.length === 0 ? false : undefined;
     }
 }
 

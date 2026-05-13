@@ -145,11 +145,14 @@ export class NavigableList extends Component {
         const hotkey = getActiveHotkey(ev);
         switch (hotkey) {
             case "enter":
-                markEventHandled(ev, "NavigableList.select");
                 if (this.state.activeIndex === null) {
+                    // Nothing is selectable (e.g. list is open but still loading
+                    // with no options yet). Let Enter propagate so the composer
+                    // can send the message instead of being swallowed.
                     this.close();
                     return;
                 }
+                markEventHandled(ev, "NavigableList.select");
                 this.selectOption(ev, this.state.activeIndex);
                 break;
             case "escape":

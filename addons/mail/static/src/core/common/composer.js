@@ -492,7 +492,7 @@ export class Composer extends Component {
     }
 
     get hasSuggestions() {
-        return Boolean(this.suggestion?.state.items);
+        return Boolean(this.suggestion?.search.results);
     }
 
     get navigableListProps() {
@@ -503,7 +503,7 @@ export class Composer extends Component {
                 this.suggestion.insert(option);
                 markEventHandled(ev, "composer.selectSuggestion");
             },
-            isLoading: !!this.suggestion.search.term && this.suggestion.state.isFetching,
+            isLoading: !!this.suggestion.search.searchTerm && this.suggestion.search.loading,
             options: [],
         };
         if (!this.hasSuggestions) {
@@ -512,8 +512,8 @@ export class Composer extends Component {
         return {
             ...props,
             ...mapSuggestionsToOptions(
-                this.suggestion.state.items.type,
-                this.suggestion.state.items.suggestions,
+                this.suggestion.search.results.type,
+                this.suggestion.search.results.suggestions,
                 { thread: this.thread }
             ),
         };
@@ -663,7 +663,9 @@ export class Composer extends Component {
             default_res_ids: [this.thread.id],
             default_subtype_xmlid: this.props.type === "note" ? "mail.mt_note" : "mail.mt_comment",
             clicked_on_full_composer: true,
-            body_contains_signature_only: !this.props.composer.composerText || this.props.composer.composerText.trim().length === 0,
+            body_contains_signature_only:
+                !this.props.composer.composerText ||
+                this.props.composer.composerText.trim().length === 0,
             // Changed in 18.2+: finally get rid of autofollow, following should be done manually
             ...this.fullComposerAdditionalContext,
         };
