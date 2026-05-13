@@ -94,7 +94,7 @@ class TestWebsocketCheckSession(WebsocketCase, HttpCase):
         # connected has been deleted. WebSocket should be closed without
         # receiving the message.
         self.env['bus.bus']._sendone('channel1', 'notif type', 'message')
-        self.trigger_notification_dispatching(["channel1"])
+        self.trigger_notification_dispatching()
         self.assert_close_with_code(websocket, CloseCode.SESSION_EXPIRED)
 
     @patch.dict(os.environ, {"ODOO_BUS_PUBLIC_SAMESITE_WS": "True"})

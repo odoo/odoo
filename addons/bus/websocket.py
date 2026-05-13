@@ -39,9 +39,9 @@ from odoo.modules.registry import Registry
 from odoo.service.server import CommonServer
 from odoo.tools import config
 
-from .models.bus import dispatch, fetch_bus_notifications
 from .session_helpers import check_session, new_env
 from .tools import orjson
+from .tools.utils import fetch_bus_notifications
 
 _logger = logging.getLogger(__name__)
 _stopping = threading.Event()
@@ -274,7 +274,10 @@ class CloseFrame(Frame):
         super().__init__(Opcode.CLOSE, payload)
 
 
-_websocket_instances = WeakSet()
+_websocket_instances: WeakSet["Websocket"] = WeakSet()
+# Allow ``notify_for_channels`` to find out interrested websockets in an efficient way.
+_channels_to_websockets: defaultdict[tuple, set["Websocket"]] = defaultdict(set)
+_channels_to_websockets_lock = threading.Lock()
 
 
 class Websocket:
@@ -383,6 +386,29 @@ class Websocket:
             except Exception as exc:  # noqa: BLE001
                 self._handle_transport_error(exc)
 
+    @classmethod
+    def notify_for_channels(cls, channels):
+        """Signal all open websockets subscribed to at least one of the given
+        channels that new bus notifications are available.
+
+        :param set channels: Channels that received new notifications. Each
+            element is a hashable tuple as returned by ``channel_with_db()``:
+
+            - ``(dbname, str)`` for string channels.
+            - ``(dbname, model._name, record.id)`` for recordset channels.
+            - ``(dbname, model._name, record.id, subchannel)`` for recordset subchannels.
+
+        """
+        targets: set[Websocket] = set()
+        with _channels_to_websockets_lock:
+            for channel in channels:
+                subscribers = _channels_to_websockets.get(channel)
+                if subscribers:
+                    targets.update(subscribers)
+        for websocket in targets:
+            if websocket.state is ConnectionState.OPEN:
+                websocket.trigger_notification_dispatching()
+
     def close(self, code, reason=None):
         """Notify the socket to initiate closure. The closing handshake
         will start in the subsequent iteration of the event loop.
@@ -410,11 +436,29 @@ class Websocket:
         )
 
     def subscribe(self, channels, last):
+        outdated = self._min_id_by_channel.keys() - channels
+        new = channels - self._min_id_by_channel.keys()
         self._min_id_by_channel = {
             c: self._min_id_by_channel.get(c, last) for c in channels
         }
+        self._unregister_from_channels(outdated)
+        with _channels_to_websockets_lock:
+            for channel in new:
+                _channels_to_websockets[channel].add(self)
         # Dispatch past notifications if there are any.
         self.trigger_notification_dispatching()
+
+    def _unregister_from_channels(self, channels):
+        """Remove ``self`` from the reverse index for each channel in
+        ``channels`` and prune entries that become empty.
+        """
+        with _channels_to_websockets_lock:
+            for channel in channels:
+                subscribers = _channels_to_websockets.get(channel)
+                if subscribers is not None:
+                    subscribers.discard(self)
+                    if not subscribers:
+                        del _channels_to_websockets[channel]
 
     def trigger_notification_dispatching(self):
         """
@@ -655,7 +699,7 @@ class Websocket:
         self.__selector.close()
         self.__socket.close()
         self.__cmd_queue.close()
-        dispatch.unsubscribe(self)
+        self._unregister_from_channels(self._min_id_by_channel)
         self._trigger_lifecycle_event(LifecycleEvent.CLOSE)
         with acquire_cursor(self._db) as cr:
             env = new_env(cr, self._session)

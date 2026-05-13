@@ -8,7 +8,7 @@ from markupsafe import Markup
 
 from odoo import Command, fields
 from odoo.addons.base.models.avatar_mixin import get_random_ui_color_from_seed
-from odoo.addons.bus.models.bus import channel_with_db, json_dump
+from odoo.addons.bus.tools.utils import channel_with_db, json_dump
 from odoo.addons.bus.tests.common import BusResult
 from odoo.addons.mail.models.discuss.discuss_channel import channel_avatar, group_avatar
 from odoo.addons.mail.tests.common import MailCommon, mail_new_test_user

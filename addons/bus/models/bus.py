@@ -1,13 +1,11 @@
 import contextlib
 import datetime
-import json
 import logging
 import math
 import os
 import selectors
 import threading
 import time
-from collections import defaultdict
 
 from psycopg2 import InterfaceError
 from psycopg2.pool import PoolError
@@ -15,10 +13,17 @@ from psycopg2.pool import PoolError
 import odoo
 from odoo import api, fields, models
 from odoo.service.server import CommonServer
-from odoo.tools import config, json_default, SQL
+from odoo.tools import SQL, config
 from odoo.tools.misc import OrderedSet
 
-from ..tools import orjson
+from odoo.addons.bus.tools import orjson
+from odoo.addons.bus.tools.utils import (
+    channel_with_db,
+    fetch_bus_notifications,
+    hashable,
+    json_dump,
+)
+from odoo.addons.bus.websocket import Websocket
 
 _logger = logging.getLogger(__name__)
 
@@ -47,54 +52,9 @@ NOTIFY_PAYLOAD_MAX_LENGTH = get_notify_payload_max_length()
 SKIP_NOTIFICATION = object()
 
 
-def fetch_bus_notifications(cr, min_id_by_channel, ignore_ids=None):
-    """Fetch notifications from the bus table.
-
-    :param cr: Database cursor.
-    :param min_id_by_channel: Dictionary mapping channels to the ID of the last fully
-        processed id. See `Websocket._notif_history`.
-    :param ignore_ids: IDs to exclude.
-    :return: List of notifications.
-
-    """
-    threshold = fields.Datetime.now() - datetime.timedelta(seconds=TIMEOUT)
-    channels_by_id = defaultdict(list)
-    for channel, min_id in min_id_by_channel.items():
-        channels_by_id[min_id].append(json_dump(channel_with_db(cr.dbname, channel)))
-    channel_conditions = []
-    for min_id, channels in channels_by_id.items():
-        since = SQL("create_date > %s", threshold) if min_id == 0 else SQL("id > %s", min_id)
-        channel_conditions.append(SQL("(channel IN %s AND %s)", tuple(channels), since))
-    where = SQL(" OR ").join(channel_conditions)
-    if ignore_ids:
-        where = SQL("(%s) AND id NOT IN %s", where, tuple(ignore_ids))
-    cr.execute(SQL("SELECT id, message FROM bus_bus WHERE %s ORDER BY id", where))
-    return [{"id": r[0], "message": orjson.loads(r[1])} for r in cr.fetchall()]
-
-
 # ---------------------------------------------------------
 # Bus
 # ---------------------------------------------------------
-def json_dump(v):
-    return json.dumps(v, separators=(',', ':'), default=json_default)
-
-
-def hashable(key):
-    if isinstance(key, list):
-        key = tuple(key)
-    return key
-
-
-def channel_with_db(dbname, channel):
-    if isinstance(channel, models.Model):
-        return (dbname, channel._name, channel.id)
-    if isinstance(channel, tuple) and len(channel) == 2 and isinstance(channel[0], models.Model):
-        return (dbname, channel[0]._name, channel[0].id, channel[1])
-    if isinstance(channel, str):
-        return (dbname, channel)
-    return channel
-
-
 def get_notify_payloads(channels):
     """
     Generates the json payloads for the imbus NOTIFY.
@@ -221,33 +181,11 @@ class BusBus(models.Model):
 class ImDispatch(threading.Thread):
     def __init__(self):
         super().__init__(daemon=True, name=f'{__name__}.Bus')
-        self._channels_to_ws = {}
 
-    def subscribe(self, channels, last, db, websocket):
-        """
-        Subcribe to bus notifications. Every notification related to the
-        given channels will be sent through the websocket. If a subscription
-        is already present, overwrite it.
-        """
-        channels = {hashable(channel_with_db(db, c)) for c in channels}
-        for channel in channels:
-            self._channels_to_ws.setdefault(channel, set()).add(websocket)
-        outdated_channels = websocket._min_id_by_channel.keys() - channels
-        self._clear_outdated_channels(websocket, outdated_channels)
-        websocket.subscribe(channels, last)
+    def ensure_started(self):
         with contextlib.suppress(RuntimeError):
             if not self.is_alive():
                 self.start()
-
-    def unsubscribe(self, websocket):
-        self._clear_outdated_channels(websocket, websocket._min_id_by_channel.keys())
-
-    def _clear_outdated_channels(self, websocket, outdated_channels):
-        """ Remove channels from channel to websocket map. """
-        for channel in outdated_channels:
-            self._channels_to_ws[channel].remove(websocket)
-            if not self._channels_to_ws[channel]:
-                self._channels_to_ws.pop(channel)
 
     def loop(self):
         """ Dispatch postgres notifications to the relevant websockets """
@@ -262,16 +200,13 @@ class ImDispatch(threading.Thread):
             while not stop_event.is_set():
                 if sel.select(TIMEOUT):
                     conn.poll()
-                    channels = []
+                    channels = set()
                     while conn.notifies:
-                        channels.extend(orjson.loads(conn.notifies.pop().payload))
-                    # relay notifications to websockets that have
-                    # subscribed to the corresponding channels.
-                    websockets = set()
-                    for channel in channels:
-                        websockets.update(self._channels_to_ws.get(hashable(channel), []))
-                    for websocket in websockets:
-                        websocket.trigger_notification_dispatching()
+                        channels.update(
+                            hashable(channel)
+                            for channel in orjson.loads(conn.notifies.pop().payload)
+                        )
+                    Websocket.notify_for_channels(channels)
 
     def run(self):
         while not stop_event.is_set():

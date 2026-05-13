@@ -6,7 +6,7 @@ from unittest.mock import patch
 
 from odoo import Command
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
-from odoo.addons.bus.models.bus import channel_with_db, json_dump
+from odoo.addons.bus.tools.utils import channel_with_db, json_dump
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.exceptions import UserError
 from odoo.tests import users, warmup, tagged, Form
