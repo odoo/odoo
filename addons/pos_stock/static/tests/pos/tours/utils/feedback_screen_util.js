@@ -4,7 +4,7 @@ import * as FeedbackScreen from "@point_of_sale/../tests/pos/tours/utils/feedbac
 export function checkTicketData(data, basic = false) {
     const check = async (data, basic) => {
         const order = posmodel.getOrder();
-        const orderData = posmodel.ticketPrinter.getOrderReceiptData(order, basic);
+        const orderData = posmodel.ticketPrinter.getOrderReceiptData(order, { basic });
         const iframe = await posmodel.ticketPrinter.generateIframe(
             "point_of_sale.pos_order_receipt",
             orderData

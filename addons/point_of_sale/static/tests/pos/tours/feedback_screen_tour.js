@@ -248,6 +248,19 @@ registry.category("web_tour.tours").add("point_of_sale.test_printed_receipt_tour
                 },
                 true
             ),
+            FeedbackScreen.checkTicketData(
+                {
+                    cssRules: [
+                        {
+                            css: "[name='simplified_receipt_label']",
+                            text: "Receipt",
+                            negation: false,
+                        },
+                    ],
+                },
+                false,
+                true
+            ),
         ].flat(),
 });
 
