@@ -795,7 +795,7 @@ def upgrade_t_model(file_manager, log_info, log_error):
 
 WEB_WHITELIST = {
     "web.Breadcrumb.Name": {'breadcrumb'},  # Var above t-call
-    "web.CalendarFilterSection.filter": {'filter'},  # dynamic t-call
+    "web.CalendarFilterSection.filter": {'filter', 'filterId'},  # dynamic t-call
     "web.CalendarYearPopover.record": {'record'},  # t-for-each above dynamic t-call
     "web.FieldTooltip": {'field', 'debug', 'resModel'},  # JSON stringify context
     "web.ListRenderer.RecordRow": {'record', 'group', 'groupId', '_canSelectRecord'},  # dynamic t-call
@@ -822,7 +822,8 @@ WEB_WHITELIST = {
     "web.TreeEditor.complex_condition": {'node'},  # Nested inherit
 }
 WEB_EXT_WHITELIST = {
-    "web_map.MapRenderer.PinListItems": {'records'},  # dynamic t-call
+    "web_map.MapRenderer.PinListItems": {'records', 'renderer'},  # dynamic t-call
+    'web_map.MapRenderer.PinListContainer': {'renderer'},  # dynamic t-call
     "web_gantt.GanttRenderer.RowHeader": {'row'},  # dynamic t-calls from loops
     "web_gantt.GanttRenderer.RowContent": {'row'},  # dynamic t-calls from loops
     "web_gantt.GanttRenderer.Pill": {'pill', 'row'},  # dynamic t-calls from loops
@@ -832,6 +833,7 @@ WEB_EXT_WHITELIST = {
     "web_grid.Row": {'row', 'section'},  # dynamic t-calls from loops
     "web_grid.AddLine": {'row'},  # dynamic t-calls from loops
     "web_studio.Form.InnerGroup": {'row_index'},  # dynamic t-calls from loops
+    'web_studio.ViewEditor.InteractiveEditorProperties.PythonExpressionCheckbox': {'name'},
     "web_studio.ViewEditor.View": {'scope'},  # dynamic t-call
     "web_studio.property.subOptions": {'attribute'},  # dynamic t-call
     "web_studio.property.defaultInput": {'attribute'},  # dynamic t-call
@@ -843,7 +845,7 @@ WEB_EXT_WHITELIST = {
     "web_studio.property.number": {'attribute'},  # dynamic t-call
     "web_studio.property.string": {'attribute'},  # dynamic t-call
     "web_studio.StudioHomeMenu": {'app_index'},  # xpath on a t-foreach
-    'web_studio.ViewSelector.ChoiceItemRecursive': {'choice'}  # dynamic t-call
+    'web_studio.ViewSelector.ChoiceItemRecursive': {'choice'},  # dynamic t-call
 }
 MAIL_WHITELIST = {
     "discuss.GifPicker.gif": {'gif_value'},  # for-each above t-call
@@ -924,9 +926,10 @@ MISC_WHITELIST = {
     "social.MentionsTemplate": {'option'},  # Nested t-call or inherit
     "views.ViewButtonTooltip": {'debug', 'button', 'model'},  # JSON stringify context
     "website.dialog.addFont.singlePreview": {'previewFontName'},  # Nested t-call
+    'website.dialog.addFont.preview': {'previewFontName'},  # Recursive t-call
     "website.form_radio": {'record_index'},  # dynamic t-calls from loops
     "website.form_checkbox": {'record_index'},  # dynamic t-calls from loops
-    "website_sale.DynamicSnippetProductsOption": {'filteredTemplates'},  # dynamic t-calls from loops
+    "website_sale.DynamicSnippetProductsOption": {'filteredTemplates', 'isSingleMode'},  # dynamic t-calls from loops
 }
 
 
@@ -1292,23 +1295,23 @@ def upgrade(file_manager) -> str:
     collector = MigrationCollector(file_manager)
 
     # collector.run_sub("Migrating useEffect", upgrade_useeffect)
-    collector.run_sub("Migrating onWillRender", upgrade_onwillrender)
-    collector.run_sub("Migrating onRendered", upgrade_onrendered)
-    collector.run_sub("Migrating useComponent", upgrade_usecomponent)
-    collector.run_sub("Migrating useEnv", upgrade_useenv)
-    collector.run_sub("Migrating useSubEnv", upgrade_usesubenv)
-    collector.run_sub("Migrating useChildSubEnv", upgrade_usechildsubenv)
-    collector.run_sub("Migrating useRef", upgrade_useref)
-    collector.run_sub("Migrating useState", upgrade_usestate)
-    collector.run_sub("Migrating reactive", upgrade_reactive)
-    collector.run_sub("Migrating useExternalListener", upgrade_use_external_listener)
-    collector.run_sub("Migrating t-portal", upgrade_tportal)
-    collector.run_sub("Migrating t-esc", upgrade_t_esc)
-    collector.run_sub("Migrating t-ref", upgrade_t_ref)
-    collector.run_sub("Migrating t-model", upgrade_t_model)
-    collector.run_sub("Migrating this. in xml templates", upgrade_this, targets=[])
-    collector.run_sub("Migrating this. in test.js xml fragments", upgrade_this_in_js, targets=[])
-    collector.run_sub("Migrating t-slot", upgrade_t_slot)
-    # collector.run_sub("Migrating parametric t-call", upgrade_t_call_param)
+    # collector.run_sub("Migrating onWillRender", upgrade_onwillrender)
+    # collector.run_sub("Migrating onRendered", upgrade_onrendered)
+    # collector.run_sub("Migrating useComponent", upgrade_usecomponent)
+    # collector.run_sub("Migrating useEnv", upgrade_useenv)
+    # collector.run_sub("Migrating useSubEnv", upgrade_usesubenv)
+    # collector.run_sub("Migrating useChildSubEnv", upgrade_usechildsubenv)
+    # collector.run_sub("Migrating useRef", upgrade_useref)
+    # collector.run_sub("Migrating useState", upgrade_usestate)
+    # collector.run_sub("Migrating reactive", upgrade_reactive)
+    # collector.run_sub("Migrating useExternalListener", upgrade_use_external_listener)
+    # collector.run_sub("Migrating t-portal", upgrade_tportal)
+    # collector.run_sub("Migrating t-esc", upgrade_t_esc)
+    # collector.run_sub("Migrating t-ref", upgrade_t_ref)
+    # collector.run_sub("Migrating t-model", upgrade_t_model)
+    # collector.run_sub("Migrating this. in xml templates", upgrade_this, targets=[])
+    # collector.run_sub("Migrating this. in test.js xml fragments", upgrade_this_in_js, targets=[])
+    # collector.run_sub("Migrating t-slot", upgrade_t_slot)
+    collector.run_sub("Migrating parametric t-call", upgrade_t_call_param)
 
     collector.finalize()
