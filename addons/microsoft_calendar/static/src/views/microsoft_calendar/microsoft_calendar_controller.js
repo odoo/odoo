@@ -13,12 +13,10 @@ patch(AttendeeCalendarController.prototype, {
     },
 
     async onMicrosoftSyncCalendar() {
-        await this.orm.call(
-            "res.users",
-            "restart_microsoft_synchronization",
-            [[user.userId]],
-        );
-        const syncResult = await this.model.syncMicrosoftCalendar();
+        /* Force auth, to offer the user the choice of an account to synchronize.
+        If the authorization is successful, it will set the necessary configuration
+        in `oauth2callback` */
+        const syncResult = await this.model.syncMicrosoftCalendar(false, true);
         if (syncResult.status === "need_auth") {
             window.location.assign(syncResult.url);
         } else if (syncResult.status === "need_config_from_admin") {
@@ -37,9 +35,6 @@ patch(AttendeeCalendarController.prototype, {
                     body: _t("An administrator needs to configure Outlook Synchronization before you can use it!"),
                 });
             }
-        } else {
-            await this.model.load();
-            this.render(true);
         }
     },
 
@@ -49,6 +44,7 @@ patch(AttendeeCalendarController.prototype, {
             "stop_microsoft_synchronization",
             [[user.userId]],
         );
+        this.model._loaded = false;
         await this.model.load();
         this.render(true);
     },
@@ -59,7 +55,8 @@ patch(AttendeeCalendarController.prototype, {
             "unpause_microsoft_synchronization",
             [[user.userId]],
         );
-        await this.onStopMicrosoftSynchronization();
+        this.model._loaded = false;
+        await this.model.load();
         this.render(true);
     }
 });

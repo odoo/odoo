@@ -117,7 +117,7 @@ class GoogleCalendarService():
 
     def _get_calendar_scope(self, RO=False):
         readonly = '.readonly' if RO else ''
-        return 'https://www.googleapis.com/auth/calendar%s' % (readonly)
+        return 'https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/calendar%s' % (readonly)
 
     def _google_authentication_url(self, from_url='http://www.odoo.com'):
         state = {
