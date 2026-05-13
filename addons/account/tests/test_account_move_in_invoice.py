@@ -2936,7 +2936,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
         with move_form.line_ids.new() as line_form:
             line_form.account_id = self.company_data['default_account_payable']
 
-        with self.assertRaisesRegex(UserError, 'Any journal item on a payable account must have a due date and vice versa.'):
+        with self.assertRaisesRegex(UserError, r"Any journal item on '.*' \(Payable\) must have a due date."):
             move_form.save()
 
     def test_default_tax_and_default_fiscal_position(self):
