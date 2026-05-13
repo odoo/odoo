@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="barcodes.BarcodeView">
+        <div class="o_barcode_view">
+            <div t-if="this.state.barcodeScannerOpened" t-ref="barcode_container">
+                <div>
+                    <BarcodeVideoScanner
+                        t-if="this.state.barcodeScannerSupported"
+                        facingMode="this.props.facingMode"
+                        onError.bind="this.onError"
+                        onResult.bind="this.onResult"
+                    />
+                    <div t-else="" t-custom-ref="videoPreview"
+                        class="h-100 d-flex flex-column justify-content-center align-items-center gap-1">
+                        <i class="fa fa-2x fa-camera text-muted" />
+                        <strong>No access to your camera</strong>
+                        <button class="btn btn-link"
+                                data-tooltip="Click the icon in the browser on the left of the address bar and toggle Camera permissions.">
+                            <span>Edit access</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="mt-2">
+                    <BarcodeInput
+                        onSubmit.bind="this.props.onInputSubmit"
+                        placeholder="this.props.placeholder"
+                        inputFocus="false"
+                    />
+                </div>
+            </div>
+            <div t-else="" t-on-click="this.toggleView">
+                <t t-slot="barcode_preview"/>
+            </div>
+        </div>
+    </t>
+</templates>

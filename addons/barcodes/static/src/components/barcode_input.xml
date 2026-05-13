@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="barcodes.BarcodeInput">
+        <div class="input-group o_barcode_input_container">
+            <input
+                id="manual_barcode"
+                t-custom-model="this.state.barcode"
+                type="text"
+                name="barcode"
+                class="form-control o_barcode_input"
+                t-custom-ref="manualBarcode"
+                t-att-placeholder="this.props.placeholder"
+                t-on-keydown="this._onKeydown"
+            />
+            <button
+                class="input-group-text o_barcode_btn"
+                t-att-disabled="!this.state.barcode"
+                t-on-click.prevent="(ev) => this.props.onSubmit(this.state.barcode)">
+                Apply
+            </button>
+        </div>
+    </t>
+</templates>
