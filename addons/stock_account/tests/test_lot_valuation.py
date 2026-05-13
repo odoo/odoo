@@ -650,3 +650,16 @@ class TestLotValuation(TestStockValuationCommon):
         with freeze_time(date_2):
             self._make_out_move(self.product, 10, lot_ids=[self.lot1])
             self.assertEqual(self.product.with_context(to_date=date_1).total_value, 50)
+
+    def test_change_cost_product_std_price_lot_valued(self):
+        """ Check that updating the standard price of a lot valued product with standard
+        price cost method works
+        """
+        self.product.categ_id = self.category_standard
+        self._make_in_move(self.product, 1, 10, lot_ids=[self.lot1])
+        self.assertEqual(self.product.standard_price, 10)
+        self.assertEqual(self.lot1.standard_price, 10)
+
+        self.product.standard_price = 12
+        self.assertEqual(self.product.standard_price, 12)
+        self.assertEqual(self.lot1.standard_price, 12)
