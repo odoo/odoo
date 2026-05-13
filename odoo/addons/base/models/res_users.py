@@ -589,6 +589,8 @@ class ResUsers(models.Model):
             raise UserError(_("You cannot activate the superuser."))
         if vals.get('active') == False and self.env.uid in self._ids:  # noqa: E712
             raise UserError(_("You cannot deactivate the user you're currently logged in as."))
+        if vals.get('active') == False and self.env.ref('base.user_admin').id in self._ids:
+            raise UserError(_("You cannot deactivate the default admin user."))
 
         if vals.get('active'):
             # unarchive partners before unarchiving the users
