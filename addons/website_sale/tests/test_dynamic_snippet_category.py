@@ -34,6 +34,12 @@ class TestDynamicSnippetCategory(WebsiteSaleCommon):
         self.website_sale = WebsiteSale()
         self.website = self.website.with_user(self.env.ref("base.user_admin"))
 
+    def test_snippet_categories_sample(self):
+        sample = self.env.ref('website_sale.dynamic_filter_category_list')._prepare_sample(7)
+        self.assertEqual(len(sample), 7)
+        for category in sample:
+            self.assertTrue(category['cover_image'].startswith('/website_sale/static/src/img/'))
+
     def test_snippet_categories_returns_only_published_and_with_children(self):
         categories = self.env["product.public.category"].get_available_snippet_categories(
             self.website.id
