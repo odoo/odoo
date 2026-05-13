@@ -1133,7 +1133,7 @@ describe("Many2one Field", () => {
     });
 
     test("Update button", async () => {
-        await contains(".o_hb_bg_options_container [data-icon='refresh']").click();
+        await contains(".o_hb_bg_options_container [data-icon='content_copy']").click();
         expect(addRecordButtonSelector).toHaveProperty("disabled", true, {
             message: "Add button should be disabled when all records are included",
         });
