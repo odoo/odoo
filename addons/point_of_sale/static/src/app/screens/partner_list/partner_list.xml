@@ -17,7 +17,8 @@
                     icon="{type: 'fa', value: 'fa-search'}"
                     t-on-enter="() => this.searchPartner()"
                     autofocus="true"
-                    debounceMillis="100" />
+                    debounceMillis="500"
+                    getRef.bind="(ref) => this.searchInputRef = ref" />
             </t>
             <div class="h-100">
                 <t t-set="initialPartners" t-value="getPartners(this.state.initialPartners)"/>
