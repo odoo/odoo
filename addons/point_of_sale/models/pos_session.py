@@ -1952,12 +1952,22 @@ class PosSession(models.Model):
 
     @api.autovacuum
     def _gc_session_sequences(self):
+<<<<<<< f77b301fdb119ca9101119b18b692f2d59d75f68
         sequence_fields = {
             'pos.session.login_number': 'login_number_seq_id',
             'pos.order_': 'order_seq_id',
         }
         for prefix, field in sequence_fields.items():
             sequences = self.env['ir.sequence'].search([('code', 'ilike', prefix)])
+||||||| a7aa7a8aab975e53fc843ffdc5688e5672c3833c
+        for prefix in self._get_gc_sequence_prefix():
+            sequences = self.env['ir.sequence'].search([('code', '=like', f'{prefix}%')])
+=======
+        for prefix in self._get_gc_sequence_prefix():
+            sequences = self.env['ir.sequence'].search([('code', '=like', f'{prefix}%')])
+            # =like uses SQL LIKE where '_' is a wildcard; filter to literal prefix matches only
+            sequences = sequences.filtered(lambda s: s.code.startswith(prefix))
+>>>>>>> 2368114d56959aab1ec4fd527bd656a83404740b
             session_ids = [int(seq.code.split(prefix)[-1]) for seq in sequences if seq.code.split(prefix)[-1].isdigit()]
             sessions = self.env['pos.session'].search([('id', 'in', session_ids), ('state', '=', 'closed')])
             sequence_to_unlink_ids = sessions.mapped(field)
