@@ -339,6 +339,17 @@ class TestVirtualAvailable(TestStockCommon):
         product = product_form.save()
         self.assertEqual(product.tracking, False)
 
+    def test_duplicate_service_with_legacy_tracking_keeps_is_storable_false(self):
+        """Test that an imported service template with tracking='none' compute the is_storable field to False"""
+        template = self.env['product.template'].create({
+            'name': 'Imported service',
+            'type': 'service',
+        })
+        # Simulate a import, with column "tracking" set to "none"
+        template.tracking = 'none'
+        self.assertEqual(template.tracking, 'none')
+        self.assertFalse(template.is_storable)
+
     def test_domain_locations_only_considers_selected_companies(self):
         product = self.env['product.product'].create({'name': 'Product', 'is_storable': True})
         company_a = self.env['res.company'].create({'name': 'Company A'})
