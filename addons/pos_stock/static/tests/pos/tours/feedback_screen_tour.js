@@ -12,13 +12,17 @@ import * as Order from "@point_of_sale/../tests/generic_helpers/order_widget_uti
 import * as Numpad from "@point_of_sale/../tests/generic_helpers/numpad_util";
 import * as OfflineUtil from "@point_of_sale/../tests/generic_helpers/offline_util";
 import { inLeftSide } from "@point_of_sale/../tests/pos/tours/utils/common";
+import { refresh } from "@point_of_sale/../tests/generic_helpers/utils";
 
 registry.category("web_tour.tours").add("StockFeedbackScreenTour", {
     steps: () =>
         [
             Chrome.startPoS(),
-            Dialog.confirm("Open Register"),
             OfflineUtil.setOfflineMode(),
+            // ensure that even after refreshing the page while being offline all data is correctly reloaded
+            refresh(),
+            Dialog.confirm("Continue with limited functionality"),
+            Dialog.confirm("Open Register"),
             ProductScreen.addOrderline("Letter Tray", "10", "5"),
             ProductScreen.clickPartnerButton(),
             // Offline: no server search, the partner is already loaded locally.
@@ -36,7 +40,6 @@ registry.category("web_tour.tours").add("StockFeedbackScreenTour", {
                 is_shipping_date: true,
                 is_shipping_date_today: true, //receipt had expected delivery printed
             }),
-            Dialog.confirm("Continue with limited functionality"),
             FeedbackScreen.clickNextOrder(),
 
             // send email in receipt screen
@@ -56,7 +59,6 @@ registry.category("web_tour.tours").add("StockFeedbackScreenTour", {
                 total_amount: "72.00",
             }),
             FeedbackScreen.sendEmail("test@feedbackscreen.com", true),
-            OfflineUtil.setOfflineMode(),
             FeedbackScreen.clickNextOrder(),
 
             // order with tip

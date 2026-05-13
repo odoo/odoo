@@ -7,6 +7,7 @@ import { useBarcodeReader } from "@point_of_sale/app/hooks/barcode_reader_hook";
 import { _t } from "@web/core/l10n/translation";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { user } from "@web/core/user";
+import { ConnectionLostError } from "@web/core/network/rpc";
 import { Component, onMounted, onWillUnmount, computed, proxy } from "@odoo/owl";
 import { CategorySelector } from "@point_of_sale/app/components/category_selector/category_selector";
 import { Input } from "@point_of_sale/app/components/inputs/input/input";
@@ -128,9 +129,15 @@ export class ProductScreen extends Component {
         });
 
         this.canReorderProducts = false;
-        Promise.resolve(user.checkAccessRight("product.template", "write")).then((hasAccess) => {
-            this.canReorderProducts = hasAccess;
-        });
+        Promise.resolve(user.checkAccessRight("product.template", "write"))
+            .then((hasAccess) => {
+                this.canReorderProducts = hasAccess;
+            })
+            .catch((error) => {
+                if (!(error instanceof ConnectionLostError)) {
+                    throw error;
+                }
+            });
 
         useSortable({
             ref: useRef("productsRoot"),
