@@ -2,16 +2,19 @@
 
 from freezegun import freeze_time
 
-from odoo.tests import tagged, JsonRpcException
-from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 from odoo.http.session import SESSION_ROTATION_INTERVAL
+from odoo.tests import JsonRpcException, tagged
+
+from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
 class TestWebsocketController(HttpCaseWithUserDemo):
     def test_websocket_peek(self):
+        self.env['bus.bus']._sendone('channel_A', 'channel_a_notification', None)
+        self.env.cr.precommit.run()  # Trigger bus record creation.
         result = self.make_jsonrpc_request('/websocket/peek_notifications', {
-            'channels': [],
+            'channels': ['channel_A'],
             'last': 0,
             'is_first_poll': True,
         })
@@ -23,9 +26,7 @@ class TestWebsocketController(HttpCaseWithUserDemo):
         self.assertIsNotNone(channels)
         self.assertIsInstance(channels, list)
         notifications = result.get('notifications')
-        self.assertIsNotNone(notifications)
-        self.assertIsInstance(notifications, list)
-
+        self.assertEqual(notifications[0]['message']['type'], 'channel_a_notification')
         result = self.make_jsonrpc_request('/websocket/peek_notifications', {
             'channels': [],
             'last': 0,
