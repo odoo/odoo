@@ -10,6 +10,10 @@ class PhoneBook(models.Model):
     name = fields.Char(string="Chủ thuê bao")
     phone = fields.Char(string="Số điện thoại", required=True)
     note = fields.Text(string="Ghi chú")
+    created_on = fields.Datetime(
+        string="Ngày tạo",
+        default=fields.Datetime.now
+    )
     
     # Trường bổ sung
     salesperson_id = fields.Many2one(
