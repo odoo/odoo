@@ -179,7 +179,7 @@ export class ColorPlugin extends Plugin {
             this.dependencies.selection.setSelection(
                 {
                     anchorNode: zws,
-                    anchorOffset: 0,
+                    anchorOffset: 1,
                 },
                 { normalize: false }
             );
