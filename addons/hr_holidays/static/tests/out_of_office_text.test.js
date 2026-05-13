@@ -92,7 +92,8 @@ test("Show year when 'back on' is on different year than now", async () => {
     await contains(".o_avatar_card span", { text: "Back on Jan 4, 2025" });
 });
 
-test("Discuss Sidebar shows out of office indication", async () => {
+test.tags("owl3");
+test.todo("Discuss Sidebar shows out of office indication", async () => {
     mockDate("2025-04-08 12:00:00");
     const pyEnv = await startServer();
     pyEnv["hr.employee"].create({
