@@ -1,14 +1,15 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import contextlib
+import inspect
 import json
 import struct
+import unittest
 from itertools import chain, zip_longest
 from threading import Event
-import unittest
 from unittest.mock import patch
-import inspect
+
 from werkzeug.exceptions import BadRequest
-import contextlib
 
 try:
     import websocket
@@ -16,11 +17,18 @@ except ImportError:
     websocket = None
 
 from odoo.http import request
-from odoo.tests.common import HOST, release_test_lock, TEST_CURSOR_COOKIE_NAME, Like, _registry_test_lock
 from odoo.tests import HttpCase
-from odoo.tests.common import BaseCase
-from ..websocket import CloseCode, Websocket, WebsocketConnectionHandler
-from ..models.bus import channel_with_db, dispatch, hashable, json_dump
+from odoo.tests.common import (
+    HOST,
+    TEST_CURSOR_COOKIE_NAME,
+    BaseCase,
+    Like,
+    _registry_test_lock,
+    release_test_lock,
+)
+
+from odoo.addons.bus.models.bus import channel_with_db, json_dump
+from odoo.addons.bus.websocket import CloseCode, Websocket, WebsocketConnectionHandler
 
 
 class BusResult:
@@ -339,20 +347,9 @@ class WebsocketCase(HttpCase, BusCase):
             if wait_for_dispatch:
                 dispatch_bus_notification_done.wait(timeout=5)
 
-    def trigger_notification_dispatching(self, channels):
-        """ Notify the websockets subscribed to the given channels that new
-        notifications are available. Usefull since the bus is not able to do
-        it during tests.
-        """
-        self.env.cr.precommit.run()  # trigger the creation of bus.bus records
-        channels = [
-            hashable(channel_with_db(self.registry.db_name, c)) for c in channels
-        ]
-        websockets = set()
-        for channel in channels:
-            websockets.update(dispatch._channels_to_ws.get(hashable(channel), []))
-        for websocket in websockets:
-            websocket.trigger_notification_dispatching()
+    def trigger_notification_dispatching(self):
+        self.env.cr.precommit.run()  # Trigger the creation of bus.bus records
+        self.env.cr.postcommit.run()  # PostgreSQL NOTIFY happens after commit
 
     def wait_remaining_websocket_connections(self):
         """ Wait for the websocket connections to terminate. """
