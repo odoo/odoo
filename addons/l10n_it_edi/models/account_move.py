@@ -619,7 +619,10 @@ class AccountMove(models.Model):
             return None
         tax = tax_data['tax']
 
-        if tax._l10n_it_is_split_payment():
+        if tax._l10n_it_is_split_payment() or any(
+            child_tax._l10n_it_is_split_payment()
+            for child_tax in tax_data.get('group', self.env['account.tax']).children_tax_ids
+        ):
             tax_exigibility_code = 'S'
         elif tax.tax_exigibility == 'on_payment':
             tax_exigibility_code = 'D'
