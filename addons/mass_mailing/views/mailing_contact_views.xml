@@ -8,6 +8,7 @@
                 <field name="name"
                     filter_domain="['|', '|', ('name','ilike',self), ('company_name','ilike',self), ('email_normalized','ilike',self)]"
                     string="Name / Email"/>
+                <field name="partner_id"/>
                 <field name="tag_ids"/>
                 <field name="list_ids"/>
                 <field name="properties"/>
@@ -52,6 +53,7 @@
                     <button name="action_add_to_mailing_list" string="Add to List" type="object"/>
                 </header>
                 <field name="create_date" string="Create Date" optional="show"/>
+                <field name="partner_id" optional="hide"/>
                 <field name="name" optional="show" readonly="1"/>
                 <field name="company_name" optional="hide"/>
                 <field name="email" readonly="1"/>
@@ -107,6 +109,7 @@
                     </div>
                     <group>
                         <group>
+                            <field name="partner_id"/>
                             <label for="email" class="oe_inline"/>
                             <div class="o_row o_row_readonly" name="email_details">
                                  <button name="mail_action_blacklist_remove" class="fa fa-ban text-danger"
@@ -217,7 +220,7 @@
             <xpath expr="//group/label[@for='email']" position="before">
                 <field name="first_name" placeholder="e.g. &quot;John&quot;"/>
             </xpath>
-            <xpath expr="//group/field[@name='create_date']" position="before">
+            <xpath expr="//group/field[@name='country_id']" position="before">
                 <field name="last_name" placeholder="e.g. &quot;Smith&quot;"/>
             </xpath>
         </field>

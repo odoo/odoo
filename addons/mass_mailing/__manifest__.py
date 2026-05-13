@@ -47,6 +47,7 @@
         'views/mailing_subscription_optout_views.xml',
         'views/mailing_subscription_views.xml',
         'views/res_config_settings_views.xml',
+        'views/res_partner_views.xml',
         'views/utm_campaign_views.xml',
         'views/mailing_menus.xml',
         'views/mailing_templates_portal_layouts.xml',
