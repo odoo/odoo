@@ -35,16 +35,10 @@ registry.category("web_tour.tours").add("purchase_tour", {
             run: "click",
         },
         {
-            trigger: ".o_purchase_order",
-        },
-        {
             trigger: ".o_field_res_partner_many2one[name='partner_id'] input",
             content: _t("Search a vendor name, or create one on the fly."),
             tooltipPosition: "bottom",
-            async run(actions) {
-                const input = this.anchor.querySelector("input");
-                await actions.edit("Azure Interior", input || this.anchor);
-            },
+            run: "edit Azure Interior",
         },
         {
             isActive: ["auto"],
@@ -67,21 +61,12 @@ registry.category("web_tour.tours").add("purchase_tour", {
             trigger: ".o_field_widget[name=product_id], .o_field_widget[name=product_template_id]",
             content: _t("Select a product, or create a new one on the fly."),
             tooltipPosition: "right",
-            async run(actions) {
-                const input = this.anchor.querySelector("input");
-                await actions.edit("DESK0001", input || this.anchor);
-            },
+            run: "edit DESK0001",
         },
         {
-            isActive: ["auto"],
+            content: _t("Let's create it."),
             trigger: "a:contains('DESK0001')",
             run: "click",
-        },
-        {
-            trigger: ".o_field_text[name='name'] textarea:value(DESK0001)",
-        },
-        {
-            trigger: ".o_purchase_order",
         },
         {
             trigger: "div.o_field_widget[name='product_qty'] input ",
@@ -94,11 +79,18 @@ registry.category("web_tour.tours").add("purchase_tour", {
             trigger: ".o_statusbar_buttons .o_arrow_button_current[name='action_rfq_send']",
         },
         ...stepUtils.statusbarButtonsSteps(
-            "Send by Email",
+            "Send RFQ",
             _t("Send the request for quotation to your vendor.")
         ),
         {
-            trigger: ".modal-footer button[name='action_send_mail']",
+            content: _t(`Don't forget to set the Azure Interior's email.`),
+            trigger: ".o_popover .o-mail-RecipientsInputTagsListPopover input",
+            run: "edit kevin@example.com",
+        },
+        {
+            content: _t(`Let's confirm it.`),
+            trigger: `.o_popover button:contains(${_t("Set email")})`,
+            run: "click",
         },
         {
             trigger: ".modal-footer button[name='action_send_mail']",
@@ -107,24 +99,22 @@ registry.category("web_tour.tours").add("purchase_tour", {
             run: "click",
         },
         {
-            trigger: ".o_purchase_order",
+            trigger: `body:not(:has(.modal))`,
         },
         {
-            content: "Select price",
-            trigger: 'tbody tr.o_data_row .o_list_number[name="price_unit"]',
+            content: _t(
+                "Once you get the price from the vendor, you can complete the purchase order with the right price."
+            ),
+            trigger: "tbody tr.o_data_row td[name='price_unit']",
+            run: "click",
         },
         {
-            trigger: "tbody tr.o_data_row .o_list_number[name='price_unit']",
+            trigger: "tbody tr.o_data_row td[name='price_unit'] input",
             content: _t(
                 "Once you get the price from the vendor, you can complete the purchase order with the right price."
             ),
             tooltipPosition: "right",
             run: "edit 200.00",
-        },
-        {
-            isActive: ["auto"],
-            trigger: ".o_purchase_order",
-            run: "click",
         },
         ...stepUtils.statusbarButtonsSteps("Confirm Order", _t("Confirm your purchase.")),
         ...new PurchaseAdditionalTourSteps()._get_purchase_stock_steps(),

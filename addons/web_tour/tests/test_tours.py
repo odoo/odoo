@@ -175,3 +175,19 @@ class WebTourHttp(HttpCase):
         self.browser_js("/odoo?debug=0", code, ready=ready, login="admin")
         if "website" in IrAsset._get_installed_addons_list():
             self.browser_js("/?debug=0", code, ready=ready, login="admin")
+
+    def test_all_onboarding_tours(self):
+        # Ensure all onboarding tours execute successfully until completion
+        # by automatically triggering the required programmatic steps.
+        domain = []
+        # domain = [("name", "=", "account_accountant_tour")]
+        tours = self.env["web_tour.tour"].search(domain)
+        
+        for tour in tours:
+            with self.subTest(tour=tour.name):
+                self.start_tour(
+                    tour.url or "/odoo",
+                    tour.name,
+                    login="admin",
+                    # debug=1
+                )

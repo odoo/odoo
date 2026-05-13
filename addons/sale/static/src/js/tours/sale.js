@@ -36,11 +36,11 @@ registry.category("web_tour.tours").add("sale_tour", {
             trigger: ".o_field_res_partner_many2one[name='partner_id'] input",
             content: _t("Search a customer name, or create one on the fly."),
             tooltipPosition: "right",
-            run: "edit Agrolait",
+            run: "edit Kevin",
         },
         {
-            isActive: ["auto"],
-            trigger: ".ui-menu-item > a:contains('Agrolait')",
+            content: _t("Let's create him"),
+            trigger: `.ui-menu-item > a:contains(Kevin)`,
             run: "click",
         },
         {
@@ -62,7 +62,7 @@ registry.category("web_tour.tours").add("sale_tour", {
             run: "edit DESK0001",
         },
         {
-            isActive: ["auto"],
+            content: _t("Let's create it"),
             trigger: "a:contains('DESK0001')",
             run: "click",
         },
@@ -76,9 +76,7 @@ registry.category("web_tour.tours").add("sale_tour", {
             run: "edit 10.0 && click body",
         },
         {
-            isActive: ["auto"],
             trigger: ".o_field_cell[name='price_subtotal']:contains(10.00)",
-            run: "click",
         },
         {
             isActive: ["auto", "mobile"],
@@ -96,15 +94,23 @@ registry.category("web_tour.tours").add("sale_tour", {
             run: "click",
         },
         {
+            content: _t(`Don't forget to set the Kevin's email.`),
+            trigger: ".o_popover .o-mail-RecipientsInputTagsListPopover input",
+            run: "edit kevin@example.com",
+        },
+        {
+            content: _t(`Let's confirm it.`),
+            trigger: `.o_popover button:contains(${_t("Set email")})`,
+            run: "click",
+        },
+        {
             trigger: ".modal-footer button.o_mail_send",
             content: _t("Go ahead and send the quotation."),
             tooltipPosition: "bottom",
             run: "click",
         },
         {
-            isActive: ["auto"],
             trigger: "body:not(.modal-open)",
-            run: "click",
         },
     ],
 });
