@@ -10,9 +10,7 @@ export class DiscussAppCategory extends Record {
      */
     sortChannels(c1, c2) {
         if (["channels", "favorites"].includes(this.id) || this.discussCategoryAsAppCategory) {
-            return (
-                (c1.displayName && localeCompare(c1.displayName, c2.displayName)) || c2.id - c1.id
-            );
+            return localeCompare(c1.displayName, c2.displayName) || c2.id - c1.id;
         }
         return compareDatetime(c2.lastInterestDt, c1.lastInterestDt) || c2.id - c1.id;
     }
