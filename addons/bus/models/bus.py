@@ -60,7 +60,7 @@ def fetch_bus_notifications(cr, min_id_by_channel, ignore_ids=None):
     threshold = fields.Datetime.now() - datetime.timedelta(seconds=TIMEOUT)
     channels_by_id = defaultdict(list)
     for channel, min_id in min_id_by_channel.items():
-        channels_by_id[min_id].append(json_dump(channel_with_db(cr.dbname, channel)))
+        channels_by_id[min_id].append(json_dump(channel))
     channel_conditions = []
     for min_id, channels in channels_by_id.items():
         since = SQL("create_date > %s", threshold) if min_id == 0 else SQL("id > %s", min_id)
@@ -223,13 +223,12 @@ class ImDispatch(threading.Thread):
         super().__init__(daemon=True, name=f'{__name__}.Bus')
         self._channels_to_ws = {}
 
-    def subscribe(self, channels, last, db, websocket):
+    def subscribe(self, channels, last, websocket):
         """
         Subcribe to bus notifications. Every notification related to the
         given channels will be sent through the websocket. If a subscription
         is already present, overwrite it.
         """
-        channels = {hashable(channel_with_db(db, c)) for c in channels}
         for channel in channels:
             self._channels_to_ws.setdefault(channel, set()).add(websocket)
         outdated_channels = websocket._min_id_by_channel.keys() - channels

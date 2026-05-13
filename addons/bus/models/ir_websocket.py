@@ -4,8 +4,9 @@ from odoo import models
 from odoo.http import request
 from odoo.http.session import check
 from odoo.tools.misc import OrderedSet
-from ..models.bus import dispatch
-from ..websocket import wsrequest
+
+from odoo.addons.bus.models.bus import channel_with_db, dispatch
+from odoo.addons.bus.websocket import wsrequest
 
 
 class IrWebsocket(models.AbstractModel):
@@ -55,14 +56,21 @@ class IrWebsocket(models.AbstractModel):
         :raise ValueError: If the list of channels is not a list of strings.
         """
         if not all(isinstance(c, str) for c in channels):
-            raise ValueError("bus.Bus only string channels are allowed.")
+            e = "bus.Bus only string channels are allowed."
+            raise ValueError(e)
         # sudo - bus.bus: reading non-sensitive last bus id.
         last = 0 if last > self.env["bus.bus"].sudo()._bus_last_id() else last
-        return {"channels": OrderedSet(self._build_bus_channel_list(list(channels))), "last": last}
+        return {
+            "channels": OrderedSet(
+                channel_with_db(self.env.cr.dbname, c)
+                for c in self._build_bus_channel_list(list(channels))
+            ),
+            "last": last,
+        }
 
     def _subscribe(self, og_data):
         data = self._prepare_subscribe_data(og_data["channels"], og_data["last"])
-        dispatch.subscribe(data["channels"], data["last"], self.env.registry.db_name, wsrequest.ws)
+        dispatch.subscribe(data["channels"], data["last"], wsrequest.ws)
         # sudo - bus.bus: checking if last received notification still exists is acceptable.
         if og_data["check_outdated"] and not self.env["bus.bus"].sudo().search(
             [("id", "=", og_data["last"])],
