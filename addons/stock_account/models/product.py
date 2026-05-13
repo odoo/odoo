@@ -91,7 +91,7 @@ class ProductTemplate(models.Model):
                         ('product_id', 'in', products_to_enable.product_variant_ids.ids),
                         ('lot_id', '=', False),
                         ('quantity', '!=', 0),
-                        ('location_id.is_valued_internal', '=', True),
+                        ('location_id.is_valued', '=', True),
                     ])
                     if problematic_quants:
                         raise UserError(self.env._(
@@ -355,9 +355,7 @@ class ProductProduct(models.Model):
         return last_in
 
     def _with_valuation_context(self):
-        valued_locations = self.env['stock.location'].with_context(active_test=False).search(
-            [('is_valued_internal', '=', True)]
-        )
+        valued_locations = self.env['stock.location'].with_context(active_test=False).search([('is_valued', '=', True)])
         return self.with_context(location=valued_locations.ids, strict=True, owners=[False, self.env.company.partner_id.id])
 
     def _get_remaining_moves(self):
@@ -367,7 +365,7 @@ class ProductProduct(models.Model):
             lots = [None]
             if product.lot_valuated:
                 lots = product.stock_quant_ids.filtered(
-                    lambda q: q.lot_id and q.company_id == self.env.company and q.location_id.is_valued_internal and q.quantity > 0
+                    lambda q: q.lot_id and q.company_id == self.env.company and q.location_id.is_valued and q.quantity > 0
                 ).lot_id or [None]
             for lot in lots:
                 moves, remaining_qty = product._run_fifo_get_stack(lot=lot)
@@ -537,7 +535,6 @@ class ProductProduct(models.Model):
                 last_in = self._get_last_in(at_date)
                 return quantity * (last_in._get_price_unit() if last_in else std_price)
             return quantity * std_price
-        external_location = location and location.is_valued_external
 
         fifo_cost = 0
         fifo_stack, qty_on_first_move = self._run_fifo_get_stack(lot=lot, at_date=at_date, location=location)
@@ -575,7 +572,6 @@ class ProductProduct(models.Model):
 
     def _run_fifo_get_stack(self, lot=None, at_date=None, location=None):
         # TODO: return a list of tuple (move, valued_qty) instead
-        external_location = location and location.is_valued_external
         fifo_stack = []
         fifo_stack_size = 0
         if location:
@@ -600,8 +596,6 @@ class ProductProduct(models.Model):
             moves_domain &= Domain([('date', '<=', at_date)])
         if location:
             moves_domain &= Domain([('location_dest_id', '=', location.id)])
-        if external_location:
-            moves_domain &= Domain([('is_out', '=', True)])
         else:
             moves_domain &= Domain([('is_in', '=', True)])
 
