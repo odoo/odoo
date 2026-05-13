@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import Command
 from odoo.exceptions import AccessError
 from odoo.tests import new_test_user
 from odoo.tests.common import TransactionCase, tagged
@@ -22,6 +23,8 @@ class TestAttendanceManager(TransactionCase):
         })
         cls.marc_employee.attendance_manager_id = cls.marc
 
+        cls.ryan = new_test_user(cls.env, login='ryan', groups='hr_attendance.group_hr_attendance_own_reader')
+
         # Create another employee
         cls.abigail_employee, cls.ryan_employee = cls.env['hr.employee'].create([
             {
@@ -31,6 +34,7 @@ class TestAttendanceManager(TransactionCase):
             {
                 'name': 'Ryan Employee',
                 'attendance_manager_id': cls.luisa.id,
+                'user_id': cls.ryan.id,
             },
         ])
 
@@ -66,3 +70,26 @@ class TestAttendanceManager(TransactionCase):
 
         attendance_as_luisa.write({'employee_id': self.ryan_employee.id})
         self.assertEqual(self.attendance.employee_id, self.ryan_employee)
+
+    def test_employee_attendance_smart_button(self):
+        """
+        Ensures that attendance visibility depends correctly on the user's role:
+            - Users with the "see own attendance" (`hr_attendance.group_hr_attendance_own_reader`)
+        group can only see their own attendances
+            - Users without any group cannot see anyone's attendances
+            - Users with the "attendance officers" (`hr_attendance.group_hr_attendance_officer`)
+        group can see everyone's attendances
+        """
+        # "See own attendances" group
+        self.assertFalse(self.marc_employee.with_user(self.ryan).display_attendances)
+        self.assertTrue(self.ryan_employee.with_user(self.ryan).display_attendances)
+
+        # No attendance-related group
+        self.ryan.group_ids = [Command.unlink(self.env.ref('hr_attendance.group_hr_attendance_own_reader').id)]
+        self.assertFalse(self.marc_employee.with_user(self.ryan).display_attendances)
+        self.assertFalse(self.ryan_employee.with_user(self.ryan).display_attendances)
+
+        # Attendance Officer
+        self.ryan.group_ids = [Command.link(self.env.ref('hr_attendance.group_hr_attendance_officer').id)]
+        self.assertTrue(self.marc_employee.with_user(self.ryan).display_attendances)
+        self.assertTrue(self.ryan_employee.with_user(self.ryan).display_attendances)
