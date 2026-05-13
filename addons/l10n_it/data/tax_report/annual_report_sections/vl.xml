@@ -54,13 +54,27 @@
                                 <field name="name">VL3 - Tax Due</field>
                                 <field name="name@it">VL3 - Imposta dovuta</field>
                                 <field name="code">VL3</field>
-                                <field name="aggregation_formula">VL1.balance - VL2.balance</field>
+                                <field name="expression_ids">
+                                    <record id="tax_annual_report_line_vl3_formula" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">VL1.balance - VL2.balance</field>
+                                        <field name="subformula">if_above(EUR(0))</field>
+                                    </record>
+                                </field>
                             </record>
                             <record id="tax_annual_report_line_vl4" model="account.report.line">
                                 <field name="name">VL4 - Tax Credit</field>
                                 <field name="name@it">VL4 - Credito d'imposta</field>
                                 <field name="code">VL4</field>
-                                <field name="aggregation_formula">VL2.balance - VL1.balance</field>
+                                <field name="expression_ids">
+                                    <record id="tax_annual_report_line_vl4_formula" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">VL2.balance - VL1.balance</field>
+                                        <field name="subformula">if_above(EUR(0))</field>
+                                    </record>
+                                </field>
                             </record>
                         </field>
                     </record>
@@ -207,19 +221,33 @@
                                 <field name="name">VL32 - VAT DUE</field>
                                 <field name="name@it">VL32 - IVA DOVUTA</field>
                                 <field name="code">VL32</field>
-                                <field name="aggregation_formula">(VL3.balance + VL20.balance + VL21.balance + VL22.balance + VL23.balance)
+                                <field name="expression_ids">
+                                    <record id="tax_annual_report_line_vl32_formula" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">(VL3.balance + VL20.balance + VL21.balance + VL22.balance + VL23.balance)
                                                     - (VL4.balance + VL11.balance + VL24.balance + VL25.balance + VL26.balance +
                                                         VL27.balance + VL28.balance + VL29.balance + VL30_I.balance + VL30_II.balance +
                                                         VL30_III.balance + VL30_IV.balance + VL31.balance)</field>
+                                        <field name="subformula">if_above(EUR(0))</field>
+                                    </record>
+                                </field>
                             </record>
                             <record id="tax_annual_report_line_vl33" model="account.report.line">
                                 <field name="name">VL33 - VAT CREDIT</field>
                                 <field name="name@it">VL33 - CREDITO IVA</field>
                                 <field name="code">VL33</field>
-                                <field name="aggregation_formula">(VL4.balance + VL11.balance + VL24.balance + VL25.balance + VL26.balance +
+                                <field name="expression_ids">
+                                    <record id="tax_annual_report_line_vl33_formula" model="account.report.expression">
+                                        <field name="label">balance</field>
+                                        <field name="engine">aggregation</field>
+                                        <field name="formula">(VL4.balance + VL11.balance + VL24.balance + VL25.balance + VL26.balance +
                                                         VL27.balance + VL28.balance + VL29.balance + VL30_I.balance + VL30_II.balance +
                                                         VL30_III.balance + VL30_IV.balance + VL31.balance) - (VL3.balance + VL20.balance +
                                                         VL21.balance + VL22.balance + VL23.balance)</field>
+                                        <field name="subformula">if_above(EUR(0))</field>
+                                    </record>
+                                </field>
                             </record>
                             <record id="tax_annual_report_line_vl34" model="account.report.line">
                                 <field name="name">VL34 - Tax credits used in the annual return</field>
