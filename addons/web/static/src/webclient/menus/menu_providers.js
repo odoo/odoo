@@ -60,12 +60,17 @@ commandProviderRegistry.add("menu", {
         apps.forEach((menu) => {
             const props = {};
             if (menu.webIconData) {
-                const prefix = menu.webIconData.startsWith("P")
-                    ? "data:image/svg+xml;base64,"
-                    : "data:image/png;base64,";
-                props.webIconData = menu.webIconData.startsWith("data:image")
-                    ? menu.webIconData
-                    : prefix + menu.webIconData.replace(/\s/g, "");
+                if (
+                    menu.webIconData.startsWith("data:image") ||
+                    menu.webIconData === "/web/static/img/default_icon_app.png"
+                ) {
+                    props.webIconData = menu.webIconData;
+                } else {
+                    const prefix = menu.webIconData.startsWith("P")
+                        ? "data:image/svg+xml;base64,"
+                        : "data:image/png;base64,";
+                    props.webIconData = prefix + menu.webIconData.replace(/\s/g, "");
+                }
             } else {
                 props.webIcon = menu.webIcon;
             }
