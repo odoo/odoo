@@ -49,7 +49,7 @@ test("should get ready to type with a different color", async () => {
     await testEditor({
         contentBefore: "<p>ab[]cd</p>",
         stepFunction: setColor("rgb(255, 0, 0)", "color"),
-        contentAfter: '<p>ab<font style="color: rgb(255, 0, 0);">[]\u200B</font>cd</p>',
+        contentAfter: '<p>ab<font style="color: rgb(255, 0, 0);">\u200B[]</font>cd</p>',
     });
 });
 
@@ -57,7 +57,7 @@ test("should get ready to type with a different background color", async () => {
     await testEditor({
         contentBefore: "<p>ab[]cd</p>",
         stepFunction: setColor("rgb(255, 0, 0)", "backgroundColor"),
-        contentAfter: '<p>ab<font style="background-color: rgb(255, 0, 0);">[]\u200B</font>cd</p>',
+        contentAfter: '<p>ab<font style="background-color: rgb(255, 0, 0);">\u200B[]</font>cd</p>',
     });
 });
 
