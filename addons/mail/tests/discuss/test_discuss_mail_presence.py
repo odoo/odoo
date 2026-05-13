@@ -30,7 +30,7 @@ class TestMailPresence(WebsocketCase, MailCommon):
             channel_parts.append(target._get_im_status_access_token())
         self.subscribe(websocket, ["-".join(channel_parts)], self.env["bus.bus"]._bus_last_id())
         self.env["mail.presence"]._update_presence(target)
-        self.trigger_notification_dispatching([(target, "presence")])
+        self.trigger_notification_dispatching()
         notifications = json.loads(websocket.recv())
         self._close_websockets()
         bus_record = self.env["bus.bus"].search([("id", "=", int(notifications[0]["id"]))])
