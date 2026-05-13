@@ -718,7 +718,7 @@ test("should remove text color from empty element", async () => {
         contentBefore:
             '<p><font data-oe-zws-empty-inline="" style="color: rgb(255, 0, 0);">[]\u200B</font></p>',
         stepFunction: (editor) => execCommand(editor, "removeFormat"),
-        contentAfterEdit: `<p placeholder='Type "/" for commands' class="o-we-hint">[]\u200b</p>`,
+        contentAfterEdit: `<p placeholder='Type "/" for commands' class="o-we-hint">\u200b[]</p>`,
     });
 });
 
@@ -733,7 +733,7 @@ test("should remove text color from empty element in a single selected cell", as
         stepFunction: (editor) => execCommand(editor, "removeFormat"),
         contentAfterEdit: unformat(`
             <table class="table table-bordered o_table o_selected_table"><tbody>
-                <tr><td class="o_selected_td"><p placeholder='Type "/" for commands' class="o-we-hint">[]\u200b</p></td></tr>
+                <tr><td class="o_selected_td"><p placeholder='Type "/" for commands' class="o-we-hint">\u200b[]</p></td></tr>
                 <tr><td><p><br></p></td></tr>
             </tbody></table>
         `),
