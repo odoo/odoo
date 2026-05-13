@@ -360,3 +360,14 @@ class TestMrpValuationStandard(TestBomPriceCommon):
         self.table_head.action_bom_cost()
         self.assertRecordValues(self.table_head, [{'standard_price': 468.75, 'total_value': 468.75}])
         self.assertEqual(old_stock_value, sum(self.env.company.stock_value().values()))
+
+    def test_mo_valuation_uses_production_company(self):
+        """
+        Verify that when validating an MO while env.company differs from mo.company_id, we read company-dependent
+        fields (product.cost_method / standard_price) in the MO's company, not the caller's env.company
+        """
+        self._make_in_move(self.glass, 1, 10)
+        mo = self._create_mo(self.bom_1, 1)
+        self._produce(mo)
+        mo.with_company(self.other_company).button_mark_done()
+        self.assertEqual(self.dining_table.total_value, PRICE + 10)
