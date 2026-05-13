@@ -25,6 +25,7 @@ from collections.abc import Iterable, Iterator
 from contextlib import suppress
 from datetime import datetime
 from difflib import get_close_matches
+from itertools import chain
 from os.path import join
 from pathlib import Path
 from tokenize import generate_tokens, STRING, NEWLINE, INDENT, DEDENT
@@ -1292,10 +1293,17 @@ class PoFileWriter:
 
     def write_rows(self, rows):
         # we now group the translations by source. That means one translation per source.
+        grouped_manifest_rows = {}
         grouped_rows = {}
         modules = set()
         for module, type, name, res_id, src, trad, comments in rows:
-            row = grouped_rows.setdefault(src, {})
+            if 'ir.module.module,' in name:
+                # We store the manifest terms first in the PO(T) file to read them quickly.
+                row = grouped_rows.pop(src, grouped_manifest_rows.setdefault(src, {}))
+            elif src in grouped_manifest_rows:
+                row = grouped_manifest_rows[src]
+            else:
+                row = grouped_rows.setdefault(src, {})
             row.setdefault('modules', set()).add(module)
             if not row.get('translation') and trad != src:
                 row['translation'] = trad
@@ -1303,7 +1311,7 @@ class PoFileWriter:
             row.setdefault('comments', set()).update(comments)
             modules.add(module)
 
-        for src, row in sorted(grouped_rows.items()):
+        for src, row in chain(sorted(grouped_manifest_rows.items()), sorted(grouped_rows.items())):
             if not self.lang:
                 # translation template, so no translation value
                 row['translation'] = ''
@@ -1567,15 +1575,18 @@ class TranslationReader:
         if is_meaningful_term(source):
             self._to_translate.append((module, source, name, res_id, ttype, tuple(comments or ()), record_id, value))
 
-    def _export_imdinfo(self, model: str, imd_per_id: dict[int, ImdInfo]):
+    def _export_imdinfo(self, model: str, imd_per_id: dict[int, ImdInfo], export_modules=None):
         records = self._get_translatable_records(imd_per_id.values())
         if not records:
             return
 
         env = records.env
         for record in records.with_context(check_translations=True):
-            module = imd_per_id[record.id].module
-            xml_name = "%s.%s" % (module, imd_per_id[record.id].name)
+            module = record.name if model == 'ir.module.module' else imd_per_id[record.id].module
+            if model == 'ir.module.module' and export_modules is not None and module not in export_modules:
+                continue
+            xml_module = imd_per_id[record.id].module
+            xml_name = "%s.%s" % (xml_module, imd_per_id[record.id].name)
             for field_name, field in record._fields.items():
                 # ir_actions_actions.name is filtered because unlike other inherited fields,
                 # this field is inherited as postgresql inherited columns.
@@ -1746,22 +1757,35 @@ class TranslationModuleReader(TranslationReader):
                     for entry in translation_file_reader(source, fileformat=fileformat, module=module):
                         xml_defined.add((entry['imd_model'], module, entry['imd_name']))
 
-        query = """SELECT min(name), model, res_id, module
-                     FROM ir_model_data
-                    WHERE module = ANY(%s)
-                 GROUP BY model, res_id, module
-                 ORDER BY module, model, min(name)"""
+        manifest_xmlids = [f'module_{module}' for module in modules]
+        imd_data = self.env.execute_query(SQL("""
+            SELECT min(name), model, res_id, module
+              FROM (
+                    SELECT name, model, res_id, module
+                      FROM ir_model_data
+                     WHERE module = ANY(%(modules)s)
+                       AND model != 'ir.module.module'
 
-        self._cr.execute(query, (modules,))
+                    UNION ALL
+
+                    SELECT name, model, res_id, module
+                      FROM ir_model_data
+                     WHERE model = 'ir.module.module'
+                       AND module = 'base'
+                       AND name = ANY(%(manifest_xmlids)s)
+                   ) AS imd
+          GROUP BY model, res_id, module
+        """, modules=modules, manifest_xmlids=manifest_xmlids))
 
         records_per_model = defaultdict(dict)
-        for (imd_name, model, res_id, module) in self._cr.fetchall():
-            if (model, module, imd_name) in xml_defined:
+        for (imd_name, model, res_id, module) in imd_data:
+            if model != 'ir.module.module' and (model, module, imd_name) in xml_defined:
                 continue
             records_per_model[model][res_id] = ImdInfo(imd_name, model, res_id, module)
 
+        export_modules = set(modules)
         for model, imd_per_id in records_per_model.items():
-            self._export_imdinfo(model, imd_per_id)
+            self._export_imdinfo(model, imd_per_id, export_modules=export_modules)
 
     def _get_module_from_path(self, path):
         dirname = os.path.join(os.path.dirname(path), '')
