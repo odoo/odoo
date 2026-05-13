@@ -198,6 +198,27 @@ def to_minor_currency_units(major_amount, currency, arbitrary_decimal_number=Non
     )
 
 
+def get_language_code(lang, mapping, fallback="en"):
+    """Return the language code corresponding to the provided lang.
+
+    If the lang is not mapped to any language code, the country code is used instead. In
+    case the country code has no match either, we fall back to the provided fallback.
+
+    :param str lang: The lang, in IETF language tag format.
+    :param dict mapping: The dictionary mapping the lang or country code to the language code.
+    :param str fallback: The fallback language code key to use if no match is found.
+    :return: The corresponding language code.
+    :rtype: str
+    """
+    language_code = mapping.get(lang)
+    if not language_code:
+        country_code = lang.split("_")[0]
+        language_code = mapping.get(country_code)
+    if not language_code:
+        language_code = mapping.get(fallback)
+    return language_code
+
+
 # Partner values formatting
 
 
