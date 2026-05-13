@@ -1603,6 +1603,27 @@ class TestXMLTranslation(TransactionCase):
             archf2 % (terms_en2[0], terms_fr[1], terms_fr[2])
         )
 
+    def test_delay_translations_structural_change(self):
+        def link(label):
+            return f'<a class="o_translate_inline" href="#">{label}</a>'
+
+        archf = '<form><p>%s</p></form>'
+        terms_en = (' '.join(link(f'Button {i}') for i in range(1, 14)),)
+        terms_fr = (' '.join(link(f'Bouton {i}') for i in range(1, 14)),)
+        view0 = self.create_view(archf, terms_en, fr_FR=terms_fr)
+
+        terms_en = (f"{terms_en[0]} {link('Button 14')}",)
+        view0.with_context(lang='en_US', delay_translations=True).arch_db = archf % terms_en
+        view0.invalidate_recordset()
+
+        self.assertIn('Button 14', view0.with_context(lang='en_US').arch_db)
+        self.assertNotIn('Button 14', view0.with_context(lang='fr_FR').arch_db)
+        self.assertIn(
+            'Button 14',
+            view0.with_context(lang='fr_FR', edit_translations=True).arch_db,
+            "The delayed translation should expose the new source structure instead of reusing a stale term.",
+        )
+
     def test_delay_translations_no_term(self):
         archf = '<form string="%s"><div>%s</div><div>%s</div></form>'
         terms_en = ('Knife', 'Fork', 'Spoon')

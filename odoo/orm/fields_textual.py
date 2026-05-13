@@ -364,7 +364,9 @@ class BaseString(Field[str | typing.Literal[False]]):
                         old_is_text = is_text(old_term)
                         closest_is_text = is_text(closest_term)
                         if old_is_text or not closest_is_text:
-                            if not closest_is_text and records.env.context.get("install_mode") and lang == 'en_US' and term_adapter:
+                            if not closest_is_text and lang == 'en_US' and term_adapter and (
+                                records.env.context.get("install_mode") or delay_translations
+                            ):
                                 adapter = term_adapter(closest_term)
                                 if adapter(old_term) is None:  # old term and closest_term have different structures
                                      continue
