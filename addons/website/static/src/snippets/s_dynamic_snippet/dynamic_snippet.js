@@ -157,6 +157,7 @@ export class DynamicSnippet extends Interaction {
             unique_id: this.uniqueId,
             extraClasses: dataset.extraClasses || "",
             columnClasses: dataset.columnClasses || "",
+            is_single_record: this.isSingleMode,
         };
     }
 
