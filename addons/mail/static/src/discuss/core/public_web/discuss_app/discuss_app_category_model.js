@@ -10,9 +10,14 @@ export class DiscussAppCategory extends Record {
      */
     sortChannels(c1, c2) {
         if (["channels", "favorites"].includes(this.id) || this.discussCategoryAsAppCategory) {
+            if (c1.displayName && !c2.displayName) {
+                return -1;
+            }
+            if (!c1.displayName && c2.displayName) {
+                return 1;
+            }
             return (
-                (c1.displayName &&
-                    String.prototype.localeCompare.call(c1.displayName, c2.displayName)) ||
+                String.prototype.localeCompare.call(c1.displayName || "", c2.displayName || "") ||
                 c2.id - c1.id
             );
         }
