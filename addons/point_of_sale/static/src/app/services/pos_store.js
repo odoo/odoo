@@ -1308,7 +1308,7 @@ export class PosStore extends WithLazyGetterTrap {
     getDefaultPartnerId() {
         return null;
     }
-    getEmptyOrder() {
+    getEmptyOrder(data = {}) {
         const defaultPartnerId = this.getDefaultPartnerId();
         const emptyOrders = this.models["pos.order"].filter(
             (order) =>
@@ -1320,9 +1320,10 @@ export class PosStore extends WithLazyGetterTrap {
                 order.fiscal_position_id?.id === this.config.default_fiscal_position_id?.id
         );
         if (emptyOrders.length > 0) {
+            Object.assign(emptyOrders[0], data);
             return emptyOrders[0];
         }
-        return this.addNewOrder();
+        return this.addNewOrder(data);
     }
 
     addPendingOrder(orderIds, remove = false) {
