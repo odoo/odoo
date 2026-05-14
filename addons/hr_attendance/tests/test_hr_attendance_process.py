@@ -462,6 +462,7 @@ class TestHrAttendance(HttpCase, TransactionCase):
             self.assertEqual(att.worked_hours, 8)
             self.assertEqual(att.check_out, datetime(2025, 3, 12, 16, 0))
 
+<<<<<<< 4cc1b59d48b8b7d8a0be4ea4407a553bb343bcba
     def test_check_in_out_tolerance(self):
         """ Within the tolerance, a check-in or a check-out is recorded at the planned time, the time of the
         check-in stays the creation date of the attendance. Default tolerance: 15 minutes for an early arrival or
@@ -559,6 +560,25 @@ class TestHrAttendance(HttpCase, TransactionCase):
             'out_mode': 'auto_check_out',
         }])
 
+||||||| c40402fab8c1509f3c68cd9cc5140f7790611d99
+=======
+    def test_write_multi_attendance(self):
+        attendance_1 = self.env['hr.attendance'].create({
+            'employee_id': self.test_employee.id,
+            'check_in': '2024-01-15 08:00:00',
+        })
+        attendance_2 = self.env['hr.attendance'].create({
+            'employee_id': self.employee_kiosk.id,
+            'check_in': '2024-01-15 08:00:00',
+        })
+        (attendance_1 + attendance_2).write({'check_in': '2024-01-15 09:00:00'})
+        self.assertEqual(attendance_1.in_mode, "manual")
+        self.assertEqual(attendance_2.in_mode, "manual")
+        (attendance_1 + attendance_2).write({'check_out': '2024-01-15 10:00:00'})
+        self.assertEqual(attendance_1.out_mode, "manual")
+        self.assertEqual(attendance_2.out_mode, "manual")
+
+>>>>>>> b2975b962a3930ed97903484ec511de99212eaca
 
 @tagged('attendance_process')
 class TestAbsenceDetectionCron(TransactionCase):

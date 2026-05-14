@@ -522,6 +522,7 @@ class HrAttendance(models.Model):
         :param dict vals: the values to write
         :raise AccessError: see :meth:`_check_write_access`
         """
+<<<<<<< 4cc1b59d48b8b7d8a0be4ea4407a553bb343bcba
         self._check_write_access(vals)
         changes_reviewed_fields = bool(self._REVIEWED_FIELDS & vals.keys())
         changes_refusal = "state" in vals and any((a.state == "refused") != (vals["state"] == "refused") for a in self)
@@ -600,6 +601,45 @@ class HrAttendance(models.Model):
             or any(vals.get(mode, "manual") != "manual" for mode in ("in_mode", "out_mode"))
             or bool(vals.get("time_rule_id") or vals.get("source_attendance_id"))
         )
+||||||| c40402fab8c1509f3c68cd9cc5140f7790611d99
+        if vals.get('employee_id') and \
+            vals['employee_id'] not in self.env.user.employee_ids.ids and \
+            not self.env.user.has_group('hr_attendance.group_hr_attendance_manager') and \
+            self.env['hr.employee'].sudo().browse(vals['employee_id']).attendance_manager_id.id != self.env.user.id:
+            raise AccessError(_("Do not have access, user cannot edit the attendances that are not their own or if they are not the attendance manager of the employee."))
+        # snapshot existing output ids before the pipeline runs so that newly
+        # created outputs (fresh, accurate) are not incorrectly marked stale
+        stale_targets = self.env['hr.attendance']
+        if self._STALE_TRIGGER_FIELDS & vals.keys():
+            stale_targets = self.sudo().mapped('overtime_attendance_ids').filtered('id')
+        result = super().write(vals)
+        if stale_targets:
+            stale_targets.exists().with_context(skip_time_rules=True).write({'source_stale': True})
+        if 'check_out' in vals and not self.env.context.get('skip_time_rules') and 'state' not in vals:
+            self._update_tolerance_state()
+        return result
+=======
+        if vals.get('employee_id') and \
+            vals['employee_id'] not in self.env.user.employee_ids.ids and \
+            not self.env.user.has_group('hr_attendance.group_hr_attendance_manager') and \
+            self.env['hr.employee'].sudo().browse(vals['employee_id']).attendance_manager_id.id != self.env.user.id:
+            raise AccessError(_("Do not have access, user cannot edit the attendances that are not their own or if they are not the attendance manager of the employee."))
+        # snapshot existing output ids before the pipeline runs so that newly
+        # created outputs (fresh, accurate) are not incorrectly marked stale
+        stale_targets = self.env['hr.attendance']
+        if self._STALE_TRIGGER_FIELDS & vals.keys():
+            stale_targets = self.sudo().mapped('overtime_attendance_ids').filtered('id')
+        result = super().write(vals)
+        if vals.get('check_out'):
+            self.filtered(lambda x: x.out_mode == 'technical').out_mode = 'manual'
+        if vals.get('check_in'):
+            self.filtered(lambda x: x.in_mode == 'technical').in_mode = 'manual'
+        if stale_targets:
+            stale_targets.exists().with_context(skip_time_rules=True).write({'source_stale': True})
+        if 'check_out' in vals and not self.env.context.get('skip_time_rules') and 'state' not in vals:
+            self._update_tolerance_state()
+        return result
+>>>>>>> b2975b962a3930ed97903484ec511de99212eaca
 
     @api.ondelete(at_uninstall=False)
     def _mark_outputs_stale_on_delete(self):
