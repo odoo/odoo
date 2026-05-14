@@ -98,7 +98,7 @@ class FleetVehicle(models.Model):
     def write(self, vals):
         self._update_create_write_vals(vals)
         if 'driver_employee_id' in vals and not vals['driver_employee_id']:
-            today = fields.Date.today()
+            today = fields.Date.context_today(self)
             for vehicle in self:
                 if vehicle.driver_employee_id:
                     current_log = self.env['fleet.vehicle.assignation.log'].search([

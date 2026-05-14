@@ -16,7 +16,7 @@ class AccountPaymentTerm(models.Model):
         return [Command.create({'value': 'percent', 'value_amount': 100.0, 'nb_days': 0})]
 
     def _default_example_date(self):
-        return self.env.context.get('example_date') or fields.Date.today()
+        return self.env.context.get('example_date') or fields.Date.context_today(self)
 
     name = fields.Char(string='Payment Terms', translate=True, required=True)
     active = fields.Boolean(default=True, help="If the active field is set to False, it will allow you to hide the payment terms without removing it.")
@@ -307,7 +307,7 @@ class AccountPaymentTermLine(models.Model):
 
     def _get_due_date(self, date_ref):
         self.ensure_one()
-        due_date = fields.Date.from_string(date_ref) or fields.Date.today()
+        due_date = fields.Date.from_string(date_ref) or fields.Date.context_today(self)
         if self.delay_type == 'days_after_end_of_month':
             return date_utils.end_of(due_date, 'month') + relativedelta(days=self.nb_days)
         elif self.delay_type == 'days_after_end_of_next_month':

@@ -136,8 +136,9 @@ class HrVersion(models.Model):
         return self.env['hr.leave'].search(domain)
 
     def _get_leaves_from_vals(self, vals):
-        contract_date_start = fields.Date.from_string(vals.get('contract_date_start') or vals.get('date_version', fields.Date.today()))
-        version_date_start = fields.Date.from_string(vals.get('date_version', fields.Date.today()))
+        today = fields.Date.context_today(self)
+        contract_date_start = fields.Date.from_string(vals.get('contract_date_start') or vals.get('date_version', today))
+        version_date_start = fields.Date.from_string(vals.get('date_version', today))
         relevant_start_date = max(contract_date_start, version_date_start)
         domain = [
             ('state', 'not in', ['refuse', 'cancel']),

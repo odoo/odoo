@@ -9,7 +9,7 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
 
     def _get_subcontracting_line(self, bom, seller, level, bom_quantity):
         ratio_uom_seller = seller.uom_id.factor / bom.uom_id.factor
-        price = seller.currency_id._convert(seller.price, self.env.company.currency_id, (bom.company_id or self.env.company), fields.Date.today())
+        price = seller.currency_id._convert(seller.price, self.env.company.currency_id, (bom.company_id or self.env.company), fields.Date.context_today(self))
         return {
             'name': seller.partner_id.display_name,
             'partner_id': seller.partner_id.id,

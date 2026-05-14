@@ -158,7 +158,7 @@ class ResourceCalendar(models.Model):
 
     @api.depends('two_weeks_calendar')
     def _compute_two_weeks_explanation(self):
-        today = fields.Date.today()
+        today = fields.Date.context_today(self)
         week_type = self.env['resource.calendar.attendance'].get_week_type(today)
         week_type_str = self.env._("even") if week_type else self.env._("odd")
         first_day = start_of(today, 'week')

@@ -85,7 +85,7 @@ class PortalAccount(portal.PortalAccount, PaymentPortal):
         batch_name = company.get_next_batch_payment_communication() if len(overdue_invoices) > 1 else first_invoice.name
         values.update({
             'payment': {
-                'date': fields.Date.today(),
+                'date': fields.Date.context_today(request.env.user),
                 'reference': batch_name,
                 'amount': total_amount,
                 'currency': currency,

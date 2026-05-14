@@ -22,7 +22,7 @@ class CustomerPortalLoyalty(CustomerPortal):
                         ("program_id.active", "=", True),
                         ("program_id.program_type", "in", ["loyalty", "ewallet"]),
                         "|",
-                        ("expiration_date", ">=", fields.Date().today()),
+                        ("expiration_date", ">=", fields.Date.context_today(request.env.user)),
                         ("expiration_date", "=", False),
                     ],
                     groupby=["program_id"],

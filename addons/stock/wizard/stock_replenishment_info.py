@@ -65,7 +65,7 @@ class StockReplenishmentInfo(models.TransientModel):
     def _compute_json_lead_days(self):
         def _format_description(description):
             formatted_description = []
-            intermediary_date = fields.Date.today()
+            intermediary_date = fields.Date.context_today(self)
             for line in reversed(description):
                 if isinstance(line[1], str):
                     formatted_description.append((line[0], line[1], False))
@@ -85,7 +85,7 @@ class StockReplenishmentInfo(models.TransientModel):
             replenishment_report.json_lead_days = dumps({
                 'lead_horizon_date': format_date(self.env, replenishment_report.orderpoint_id.lead_horizon_date),
                 'lead_days_description': lead_days_description,
-                'today': format_date(self.env, fields.Date.today()),
+                'today': format_date(self.env, fields.Date.context_today(self)),
                 'trigger': orderpoint.trigger,
                 'qty_forecast': self.env['ir.qweb.field.float'].value_to_html(orderpoint.qty_forecast, {'decimal_precision': 'Product Unit'}),
                 'qty_to_order': self.env['ir.qweb.field.float'].value_to_html(orderpoint.qty_to_order, {'decimal_precision': 'Product Unit'}),

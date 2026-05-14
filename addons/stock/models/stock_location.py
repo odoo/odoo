@@ -143,17 +143,18 @@ class StockLocation(models.Model):
 
     @api.depends('cyclic_inventory_frequency', 'last_inventory_date', 'usage', 'company_id')
     def _compute_next_inventory_date(self):
+        today = fields.Date.context_today(self)
         for location in self:
             if location.company_id and location.usage in ['internal', 'transit'] and location.cyclic_inventory_frequency > 0:
                 try:
                     if location.last_inventory_date:
-                        days_until_next_inventory = location.cyclic_inventory_frequency - (fields.Date.today() - location.last_inventory_date).days
+                        days_until_next_inventory = location.cyclic_inventory_frequency - (today - location.last_inventory_date).days
                         if days_until_next_inventory <= 0:
-                            location.next_inventory_date = fields.Date.today() + timedelta(days=1)
+                            location.next_inventory_date = today + timedelta(days=1)
                         else:
                             location.next_inventory_date = location.last_inventory_date + timedelta(days=location.cyclic_inventory_frequency)
                     else:
-                        location.next_inventory_date = fields.Date.today() + timedelta(days=location.cyclic_inventory_frequency)
+                        location.next_inventory_date = today + timedelta(days=location.cyclic_inventory_frequency)
                 except OverflowError:
                     raise UserError(_("The selected Inventory Frequency (Days) creates a date too far into the future."))
             else:
@@ -390,7 +391,7 @@ class StockLocation(models.Model):
         company_inventory_date = False
 
         if self.company_id.annual_inventory_month:
-            today = fields.Date.today()
+            today = fields.Date.context_today(self)
             annual_inventory_month = int(self.company_id.annual_inventory_month)
             # Manage 0 and negative annual_inventory_day
             annual_inventory_day = max(self.company_id.annual_inventory_day, 1)

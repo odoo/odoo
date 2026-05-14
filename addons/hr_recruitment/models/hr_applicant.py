@@ -485,7 +485,7 @@ class HrApplicant(models.Model):
             'meeting_display_text': _('No Meeting'),
             'meeting_display_date': ''
         })
-        today = fields.Date.today()
+        today = fields.Date.context_today(self)
         for applicant in applicant_with_meetings:
             count = len(applicant.meeting_ids)
             dates = applicant.meeting_ids.mapped('start')

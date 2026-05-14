@@ -54,7 +54,7 @@ class HrLeaveAccrualPlan(models.Model):
         ("10", "October"),
         ("11", "November"),
         ("12", "December")
-    ], export_string_translation=False, default=lambda self: str((fields.Date.today()).month))
+    ], export_string_translation=False, default=lambda self: str((fields.Date.context_today(self)).month))
     added_value_type = fields.Selection([('day', 'Days'), ('hour', 'Hours')],
         export_string_translation=False, default="day", store=True)
 

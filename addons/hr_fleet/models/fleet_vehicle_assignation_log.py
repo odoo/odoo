@@ -51,7 +51,7 @@ class FleetVehicleAssignationLog(models.Model):
         return records
 
     def _update_vehicle_driver(self):
-        today = fields.Date.today()
+        today = fields.Date.context_today(self)
         for rec in self:
             vehicle = rec.vehicle_id
             if (

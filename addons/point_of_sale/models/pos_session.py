@@ -214,7 +214,7 @@ class PosSession(models.Model):
         pos_config = self.env['pos.config'].browse(config_id)
         pricelist_fields = self.env['product.pricelist']._load_pos_data_fields(pos_config)
         pricelist_item_fields = self.env['product.pricelist.item']._load_pos_data_fields(pos_config)
-        today = fields.Date.today()
+        today = fields.Date.context_today(self)
         pricelist_item_domain = [
             '&',
             ('pricelist_id', 'in', self.config_id._get_available_pricelists().ids),
@@ -357,8 +357,9 @@ class PosSession(models.Model):
         return True
 
     def get_session_orders(self):
+        today = fields.Date.context_today(self)
         return self.order_ids.filtered(lambda o:
-            not (o.preset_time and o.preset_time.date() > fields.Date.today())
+            not (o.preset_time and o.preset_time.date() > today)
         )
 
     def action_pos_session_closing_control(self, balancing_account=False, amount_to_balance=0, bank_payment_method_diffs=None):
@@ -533,7 +534,8 @@ class PosSession(models.Model):
 
         self.config_id.close_session_snoozes()
 
-        future_orders = self.order_ids.filtered(lambda order: order.preset_time and order.preset_time.date() > fields.Date.today() and order.state == 'draft')
+        today = fields.Date.context_today(self)
+        future_orders = self.order_ids.filtered(lambda order: order.preset_time and order.preset_time.date() > today and order.state == 'draft')
         future_orders.session_id = False
         validate_result = self.action_pos_session_closing_control(bank_payment_method_diffs=bank_payment_method_diffs)
 

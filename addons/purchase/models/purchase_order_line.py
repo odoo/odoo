@@ -622,7 +622,7 @@ class PurchaseOrderLine(models.Model):
     def _prepare_account_move_line(self, move=False):
         self.ensure_one()
         aml_currency = move and move.currency_id or self.currency_id
-        date = move and move.date or fields.Date.today()
+        date = move and move.date or fields.Date.context_today(self)
 
         res = {
             'display_type': self.display_type or 'product',
@@ -659,7 +659,7 @@ class PurchaseOrderLine(models.Model):
         uom_po_qty = product_uom._compute_quantity(product_qty, product_id.uom_id, rounding_method='HALF-UP')
         # _select_seller is used if the supplier have different price depending
         # the quantities ordered.
-        today = fields.Date.today()
+        today = fields.Date.context_today(self)
         seller = product_id.with_company(company_id)._select_seller(
             partner_id=partner_id,
             quantity=product_qty if values.get('force_uom') else uom_po_qty,
@@ -682,7 +682,7 @@ class PurchaseOrderLine(models.Model):
             price_unit = 0
         if price_unit and seller and po.currency_id and seller.currency_id != po.currency_id:
             price_unit = seller.currency_id._convert(
-                price_unit, po.currency_id, po.company_id, po.date_order or fields.Date.today())
+                price_unit, po.currency_id, po.company_id, po.date_order or fields.Date.context_today(self))
 
         product_lang = product_id.with_prefetch().with_context(
             lang=partner_id.lang,
@@ -718,7 +718,7 @@ class PurchaseOrderLine(models.Model):
         if not 'accrual_entry_date' in self.env.context:
             return False
         accrual_date = fields.Date.from_string(self.env.context['accrual_entry_date'])
-        return accrual_date < fields.Date.today()
+        return accrual_date < fields.Date.context_today(self)
 
     def _update_date_planned(self, updated_date):
         self.date_planned = updated_date

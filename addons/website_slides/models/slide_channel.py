@@ -253,8 +253,7 @@ class SlideChannel(models.Model):
 
     @api.depends('slide_ids.is_published')
     def _compute_slide_last_update(self):
-        for record in self:
-            record.slide_last_update = fields.Date.today()
+        self.slide_last_update = fields.Date.context_today(self)
 
     @api.depends('channel_partner_all_ids.channel_id', 'channel_partner_all_ids.member_status')
     def _compute_members_counts(self):

@@ -23,7 +23,7 @@ class ComplianceLetter(models.TransientModel):
 
     def _get_formatted_date(self):
         """Returns the formatted date as 'Date (Month, xxth, 20XX)'."""
-        date_obj = datetime.strptime(str(fields.Date.today()), '%Y-%m-%d')
+        date_obj = datetime.strptime(str(fields.Date.context_today(self)), '%Y-%m-%d')
         day = date_obj.day
         day_suffix = 'th' if 11 <= day <= 13 else {1: 'st', 2: 'nd', 3: 'rd'}.get(day % 10, 'th')
         return tools.format_date(self.env, date_obj, date_format=f"MMMM d'{day_suffix}', Y")

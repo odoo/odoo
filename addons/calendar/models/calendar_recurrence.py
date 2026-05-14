@@ -627,7 +627,7 @@ class CalendarRecurrence(models.Model):
             return False
 
         now = fields.Datetime.now()
-        today = fields.Date.today()
+        today = fields.Date.context_today(self)
 
         return all(
             (event.stop_date < today if event.allday else event.stop < now)

@@ -327,7 +327,7 @@ class AccountJournal(models.Model):
         return result
 
     def _get_sale_purchase_graph_data(self):
-        today = fields.Date.today()
+        today = fields.Date.context_today(self)
         day_of_week = int(format_datetime(today, 'e', locale=get_lang(self.env).code))
         first_day_of_week = today + timedelta(days=-day_of_week+1)
         format_month = lambda d: format_date(d, 'MMM', locale=get_lang(self.env).code)
@@ -941,7 +941,7 @@ class AccountJournal(models.Model):
         if not partner:
             raise UserError(_('You may only use samples in demo mode, try uploading one of your invoices instead.'))
         context['default_move_type'] = 'in_invoice'
-        invoice_date = fields.Date.today() - timedelta(days=12)
+        invoice_date = fields.Date.context_today(self) - timedelta(days=12)
         company = purchase_journal.company_id
         default_expense_account = company.expense_account_id
         ref = 'DE%s' % invoice_date.strftime('%Y%m')

@@ -3,7 +3,7 @@
 import logging
 from ast import literal_eval
 from collections import defaultdict, Counter
-from datetime import date, datetime, timedelta
+from datetime import datetime, timedelta
 
 from dateutil.relativedelta import MO, relativedelta
 
@@ -180,7 +180,7 @@ class MailActivity(models.Model):
         if tz:
             today = fields.Date.context_today(self.with_context(tz=tz))
         else:
-            today = fields.Date.today()
+            today = fields.Date.context_today(self)
         diff = (date_deadline - today)
         if diff.days == 0:
             return 'today'
@@ -299,14 +299,15 @@ class MailActivity(models.Model):
                 self.env[model].browse(res_ids).message_subscribe(partner_ids=pids)
 
         # send notifications about activity creation
-        todo_activities = activities.filtered(lambda act: act.active and act.date_deadline <= fields.Date.today() and act.user_id)
+        today = fields.Date.context_today(activities)
+        todo_activities = activities.filtered(lambda act: act.active and act.date_deadline <= today and act.user_id)
         if todo_activities:
             for user, user_activities in todo_activities.grouped('user_id').items():
                 user._bus_send("mail.activity/updated", {"activity_created": True, "count_diff": len(user_activities)})
         return activities
 
     def write(self, vals):
-        today = fields.Date.today()
+        today = fields.Date.context_today(self)
 
         def get_user_todo_activity_count(activities):
             return {
@@ -707,13 +708,13 @@ class MailActivity(models.Model):
         }
 
     def action_reschedule_today(self):
-        self.filtered('active').date_deadline = date.today()
+        self.filtered('active').date_deadline = fields.Date.context_today(self)
 
     def action_reschedule_tomorrow(self):
-        self.filtered('active').date_deadline = date.today() + timedelta(days=1)
+        self.filtered('active').date_deadline = fields.Date.context_today(self) + timedelta(days=1)
 
     def action_reschedule_nextweek(self):
-        self.filtered('active').date_deadline = date.today() + relativedelta(weeks=1, weekday=MO(-1))
+        self.filtered('active').date_deadline = fields.Date.context_today(self) + relativedelta(weeks=1, weekday=MO(-1))
 
     def _store_activity_fields(self, res: Store.FieldList):
         res.attr("activity_category")

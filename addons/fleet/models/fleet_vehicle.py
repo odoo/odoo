@@ -2,7 +2,7 @@
 
 from collections import defaultdict
 from dateutil.relativedelta import relativedelta
-from datetime import date, datetime
+from datetime import datetime
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
@@ -72,10 +72,10 @@ class FleetVehicle(models.Model):
     next_assignation_date = fields.Date('Available From', help="The date from which this vehicle becomes available for assignment. Leave empty if it's available immediately.",
         tracking=True)
     order_date = fields.Date('Order Date', tracking=True)
-    acquisition_date = fields.Date('Registration Date', required=False, default=fields.Date.today,
+    acquisition_date = fields.Date('Registration Date', required=False, default=fields.Date.context_today,
         tracking=True, help='Date of vehicle registration')
     write_off_date = fields.Date('Cancellation Date', tracking=True, help="Date when the vehicle's license plate has been cancelled/removed.")
-    contract_date_start = fields.Date(string="First Contract Date", default=fields.Date.today, tracking=True)
+    contract_date_start = fields.Date(string="First Contract Date", default=fields.Date.context_today, tracking=True)
     color = fields.Char(help='Color of the vehicle', tracking=True)
     state_id = fields.Many2one('fleet.vehicle.state', 'State',
         default=_get_default_state, group_expand='_read_group_expand_full',
@@ -445,7 +445,7 @@ class FleetVehicle(models.Model):
             for vehicle in self:
                 vehicle.activity_schedule(
                     'mail.mail_activity_data_todo',
-                    date_deadline=date.today() + relativedelta(weeks=1),
+                    date_deadline=fields.Date.context_today(vehicle) + relativedelta(weeks=1),
                     note=_('Review driver change of %s and specify End date', vehicle.display_name),
                     user_id=vehicle.manager_id.id or self.env.user.id,
                 )
@@ -478,7 +478,7 @@ class FleetVehicle(models.Model):
         return {
             'vehicle_id': self.id,
             'driver_id': vals['driver_id'],
-            'date_start': fields.Date.today(),
+            'date_start': fields.Date.context_today(self),
         }
 
     def create_driver_history(self, vals):

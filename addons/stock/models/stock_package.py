@@ -51,7 +51,7 @@ class StockPackage(models.Model):
     picking_ids = fields.Many2many('stock.picking', string='Transfers', compute='_compute_picking_ids', search="_search_picking_ids", help="Transfers in which the Package is set as Destination Package")
     shipping_weight = fields.Float(string='Shipping Weight', help="Total weight of the package.")
     valid_sscc = fields.Boolean('Package name is valid SSCC', compute='_compute_valid_sscc')
-    pack_date = fields.Date('Pack Date', default=fields.Date.today)
+    pack_date = fields.Date('Pack Date', default=fields.Date.context_today)
     parent_path = fields.Char(index=True)
     json_popover = fields.Char('JSON data for popover widget', compute='_compute_json_popover')
 

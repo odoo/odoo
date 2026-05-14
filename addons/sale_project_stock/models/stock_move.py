@@ -33,7 +33,7 @@ class StockMove(models.Model):
 
         currency_id = self.company_id.currency_id
         if currency_id and currency_id != order.currency_id:
-            price_unit = currency_id._convert(price_unit, order.currency_id, order.company_id, order.date_order or fields.Date.today())
+            price_unit = currency_id._convert(price_unit, order.currency_id, order.company_id, order.date_order or fields.Date.context_today(self))
         return price_unit
 
     def _sale_prepare_sale_line_values(self, order, price, last_sequence):

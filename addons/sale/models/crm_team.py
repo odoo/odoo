@@ -24,7 +24,7 @@ class CrmTeam(models.Model):
 
     def _compute_invoiced(self):
         if self.ids:
-            today = fields.Date.today()
+            today = fields.Date.context_today(self)
             data_map = dict(
                 self.env.execute_query(
                     SQL(

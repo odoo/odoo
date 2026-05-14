@@ -2,13 +2,12 @@
 
 import base64
 import binascii
-import datetime
 import re
 
 from requests.exceptions import RequestException
 
 import odoo.release
-from odoo import _, http
+from odoo import _, fields, http
 from odoo.exceptions import UserError
 from odoo.fields import Domain
 from odoo.http import request
@@ -58,7 +57,7 @@ class HrAttendance(http.Controller):
                 'attendance': {'check_in': employee.last_attendance_id.check_in,
                                'check_out': employee.last_attendance_id.check_out},
                 'overtime_today': sum(request.env['hr.attendance.overtime.line'].sudo().search([
-                    ('employee_id', '=', employee.id), ('date', '=', datetime.date.today())]).mapped('duration')) or 0,
+                    ('employee_id', '=', employee.id), ('date', '=', fields.Date.context_today(request.env.user))]).mapped('duration')) or 0,
                 'use_pin': employee.company_id.attendance_kiosk_use_pin,
                 'display_overtime': employee.company_id.hr_attendance_display_overtime,
                 'device_tracking_enabled': employee.company_id.attendance_device_tracking,

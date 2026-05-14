@@ -1025,7 +1025,7 @@ class ProjectTask(models.Model):
             vals['state'] = '01_in_progress'
 
         if 'repeat_until' in fields:
-            vals['repeat_until'] = Date.today() + timedelta(days=7)
+            vals['repeat_until'] = Date.context_today(self) + timedelta(days=7)
 
         if 'partner_id' in vals and not vals['partner_id']:
             # if the default_partner_id=False or no default_partner_id then we search the partner based on the project and parent
@@ -1446,7 +1446,7 @@ class ProjectTask(models.Model):
         late_milestones = self.env['project.milestone'].sudo()._search([  # sudo is needed for the portal user in Project Sharing.
             ('id', 'in', self.milestone_id.ids),
             ('is_reached', '=', False),
-            ('deadline', '<=', fields.Date.today()),
+            ('deadline', '<=', 'today'),
         ])
         for task in self:
             task.has_late_and_unreached_milestone = task.allow_milestones and task.milestone_id.id in late_milestones
@@ -1458,7 +1458,7 @@ class ProjectTask(models.Model):
             ('allow_milestones', '=', True),
             ('milestone_id', 'any', [
                 ('is_reached', '=', False),
-                ('deadline', '<', fields.Date.today()),
+                ('deadline', '<', 'today'),
             ]),
         ]
 

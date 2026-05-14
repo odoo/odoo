@@ -1047,7 +1047,7 @@ class SaleOrder(models.Model):
         return min(expected_dates)
 
     def _compute_is_expired(self):
-        today = fields.Date.today()
+        today = fields.Date.context_today(self)
         for order in self:
             order.is_expired = (
                 order.state in ("draft", "sent")
@@ -1056,8 +1056,7 @@ class SaleOrder(models.Model):
             )
 
     def _search_is_expired(self, operator, value):  # noqa: ARG002
-        today = fields.Date.today()
-        expired_domain = [("state", "in", ("draft", "sent")), ("validity_date", "<", today)]
+        expired_domain = [("state", "in", ("draft", "sent")), ("validity_date", "<", 'today')]
         if operator == "in":
             return expired_domain
         return ["!", "&"] + expired_domain

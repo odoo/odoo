@@ -280,7 +280,7 @@ class AccountAnalyticLine(models.Model):
         return 'amount'
 
     def _search_fiscal_date(self, operator, value):
-        fiscalyear_date_range = self.env.company.compute_fiscalyear_dates(fields.Date.today())
+        fiscalyear_date_range = self.env.company.compute_fiscalyear_dates(fields.Date.context_today(self))
         return [('date', '>=', fiscalyear_date_range['date_from'] - relativedelta(years=1))]
 
     # Hook to be shared between non related modules

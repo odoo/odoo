@@ -71,7 +71,7 @@ class HrEmployeeDeparture(models.Model):
 
     @api.depends('departure_date', 'action_date')
     def _compute_apply_immediately(self):
-        today = fields.Date.today()
+        today = fields.Date.context_today(self)
         for departure in self:
             if not departure.departure_date:
                 departure.apply_immediately = False
@@ -175,7 +175,7 @@ class HrEmployeeDeparture(models.Model):
             employee.version_ids.filtered(lambda v: v.date_version > departure.departure_date).unlink()
 
         emp_to_archive.action_archive()
-        self.apply_date = fields.Date.today()
+        self.apply_date = fields.Date.context_today(self)
 
         next_action = {'type': 'ir.actions.act_window_close'}
         if users_to_archive:
