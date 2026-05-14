@@ -379,8 +379,23 @@ class HrAttendance(models.Model):
             not self.env.user.has_group('hr_attendance.group_hr_attendance_manager') and \
             self.env['hr.employee'].sudo().browse(vals['employee_id']).attendance_manager_id.id != self.env.user.id:
             raise AccessError(_("Do not have access, user cannot edit the attendances that are not their own or if they are not the attendance manager of the employee."))
+<<<<<<< 74468df73e8a3bd8c7441f0883aea819c774aeb1
         domain_pre = self._get_overtimes_to_update_domain()
+||||||| df75d96296953382f277d6bdbe5fc703c7c717a1
+        attendances_dates = self._get_attendances_dates()
+
+        if vals.get('check_out') and self.out_mode == 'technical':
+            vals.update({'out_mode': 'manual'})
+        if vals.get('check_in') and self.in_mode == 'technical':
+            vals.update({'in_mode': 'manual'})
+=======
+        attendances_dates = self._get_attendances_dates()
+>>>>>>> a6668a8844efa8c2ad4cb19bd32d087756232f72
         result = super().write(vals)
+        if vals.get('check_out'):
+            self.filtered(lambda x: x.out_mode == 'technical').out_mode = 'manual'
+        if vals.get('check_in'):
+            self.filtered(lambda x: x.in_mode == 'technical').in_mode = 'manual'
         if any(field in vals for field in ['employee_id', 'check_in', 'check_out']):
             # Merge attendance dates before and after write to recompute the
             # overtime if the attendances have been moved to another day
