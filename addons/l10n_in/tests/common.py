@@ -34,7 +34,7 @@ class L10nInTestInvoicingCommon(AccountTestInvoicingCommon):
             'street2': "Sala Number 3",
             'city': "Amreli",
             'zip': "365220",
-            'l10n_in_is_gst_registered': True,
+            'l10n_in_gst_registration_type': 'regular',
             'l10n_in_tds_feature': True,
             'l10n_in_tcs_feature': True,
         })

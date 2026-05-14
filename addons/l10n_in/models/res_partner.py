@@ -77,12 +77,18 @@ class ResPartner(models.Model):
         for partner in self:
             partner.display_pan_warning = partner.vat and partner.l10n_in_pan_entity_id and partner.l10n_in_pan_entity_id.name != partner.vat[2:12]
 
-    @api.depends('company_id.l10n_in_is_gst_registered', 'company_id.l10n_in_gstin_status_feature')
+    @api.depends('company_id.l10n_in_gst_registration_type', 'company_id.l10n_in_gstin_status_feature')
     def _compute_l10n_in_gst_registered_and_status(self):
         for record in self:
             company = record.company_id or self.env.company
-            record.l10n_in_is_gst_registered_enabled = company.l10n_in_is_gst_registered
+            record.l10n_in_is_gst_registered_enabled = bool(company.l10n_in_gst_registration_type)
             record.l10n_in_gstin_status_feature_enabled = company.l10n_in_gstin_status_feature
+
+    def _inverse_vat(self):
+        super()._inverse_vat()
+        for partner in self:
+            if partner.country_code == 'IN':
+                partner.ref_company_ids._update_l10n_in_gst_registration_type()
 
     @api.onchange('vat')
     def _onchange_l10n_in_gst_status(self):

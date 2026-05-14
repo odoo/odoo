@@ -9,13 +9,13 @@ class ProductTemplate(models.Model):
     l10n_in_hsn_warning = fields.Text(string="HSC/SAC warning", compute="_compute_l10n_in_hsn_warning")
     l10n_in_is_gst_registered_enabled = fields.Boolean(compute="_compute_l10n_in_is_gst_registered_enabled")
 
-    @api.depends('company_id.l10n_in_is_gst_registered')
+    @api.depends('company_id.l10n_in_gst_registration_type')
     @api.depends_context('allowed_company_ids')
     def _compute_l10n_in_is_gst_registered_enabled(self):
         for record in self:
             allowed_companies = record.company_id or self.env.companies
             record.l10n_in_is_gst_registered_enabled = any(
-                company.l10n_in_is_gst_registered
+                company.l10n_in_gst_registration_type
                 for company in allowed_companies
             )
 

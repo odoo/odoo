@@ -10,5 +10,5 @@ class ResCompany(models.Model):
     def _load_pos_data_fields(self, config):
         fields = super()._load_pos_data_fields(config)
         if self.env.company.country_id.code == 'IN':
-            fields += ['l10n_in_is_gst_registered']
+            fields += ['l10n_in_gst_registration_type']
         return fields
