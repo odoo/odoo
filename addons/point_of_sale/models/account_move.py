@@ -42,6 +42,19 @@ class AccountMove(models.Model):
         if self.state == 'draft':
             return lot_values
 
+        orders = self.sudo().pos_order_ids
+        all_lots = orders.lines.mapped('pack_lot_ids')
+
+        stock_lots = self.env['stock.lot'].search([
+            ('name', 'in', all_lots.mapped('lot_name')),
+            ('product_id', 'in', orders.lines.mapped('product_id').ids),
+        ])
+
+        stock_lot_map = {
+            (lot.name, lot.product_id.id): lot
+            for lot in stock_lots
+        }
+
         # user may not have access to POS orders, but it's ok if they have
         # access to the invoice
         for order in self.sudo().pos_order_ids:
@@ -49,13 +62,14 @@ class AccountMove(models.Model):
                 lots = line.pack_lot_ids or False
                 if lots:
                     for lot in lots:
+                        stock_lot = stock_lot_map.get((lot.lot_name, line.product_id.id))
                         lot_values.append({
                             'product_name': lot.product_id.name,
                             'quantity': line.qty if lot.product_id.tracking == 'lot' else 1.0,
                             'uom_name': line.product_uom_id.name,
                             'lot_name': lot.lot_name,
                             'pos_lot_id': lot.id,
-                        } | self._extract_extra_invoiced_lot_values(lot))
+                        } | self._extract_extra_invoiced_lot_values(stock_lot))
 
         return lot_values
 
