@@ -1885,47 +1885,54 @@ describe("symmetrical selection", () => {
 });
 
 describe("single cell selection", () => {
-    test("should select single empty cell on double click", async () => {
-        const { el } = await setupEditor(
-            unformat(
-                `<table class="table table-bordered o_table">
+    test("should select single empty table cell on double click", async () => {
+        const expectCellSelectedOnDoubleClick = async (cell) => {
+            const { el, plugins } = await setupEditor(
+                unformat(
+                    `<table class="table table-bordered o_table">
+                        <tbody>
+                            <tr><${cell}>[]<br></${cell}><${cell}><br></${cell}><${cell}><br></${cell}></tr>
+                            <tr><td><br></td><td><br></td><td><br></td></tr>
+                        </tbody>
+                    </table>`
+                )
+            );
+
+            const BORDER_SENSITIVITY = 5;
+            const firstCell = el.querySelector(cell);
+            const cellRect = firstCell.getBoundingClientRect();
+            const offset = BORDER_SENSITIVITY + 2;
+
+            manuallyDispatchProgrammaticEvent(firstCell, "mousedown", {
+                detail: 2,
+                clientX: cellRect.x + offset,
+                clientY: cellRect.y + offset,
+            });
+            await animationFrame();
+
+            manuallyDispatchProgrammaticEvent(firstCell, "mouseup", {
+                detail: 2,
+                clientX: cellRect.x + offset,
+                clientY: cellRect.y + offset,
+            });
+            await animationFrame();
+
+            expectContentToBe(
+                el,
+                `<p data-selection-placeholder=""><br></p>
+                <table class="table table-bordered o_table o_selected_table">
                     <tbody>
-                        <tr><td>[]<br></td><td><br></td><td><br></td></tr>
+                        <tr><${cell} class="o_selected_td">[]<br></${cell}><${cell}><br></${cell}><${cell}><br></${cell}></tr>
                         <tr><td><br></td><td><br></td><td><br></td></tr>
                     </tbody>
-                </table>`
-            )
-        );
+                </table>
+                <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
+            );
+            expect(plugins.get("table").getTableSelectionRangeRect()).not.toBe(undefined);
+        };
 
-        const BORDER_SENSITIVITY = 5;
-        const firstTd = el.querySelector("td");
-        const offset = BORDER_SENSITIVITY + 2;
-
-        manuallyDispatchProgrammaticEvent(firstTd, "mousedown", {
-            detail: 2,
-            clientX: offset,
-            clientY: offset,
-        });
-        await animationFrame();
-
-        manuallyDispatchProgrammaticEvent(firstTd, "mouseup", {
-            detail: 2,
-            clientX: offset,
-            clientY: offset,
-        });
-        await animationFrame();
-
-        expectContentToBe(
-            el,
-            `<p data-selection-placeholder=""><br></p>
-            <table class="table table-bordered o_table o_selected_table">
-                <tbody>
-                    <tr><td class="o_selected_td">[]<br></td><td><br></td><td><br></td></tr>
-                    <tr><td><br></td><td><br></td><td><br></td></tr>
-                </tbody>
-            </table>
-            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
-        );
+        await expectCellSelectedOnDoubleClick("td");
+        await expectCellSelectedOnDoubleClick("th");
     });
 
     test("should select single cell containing text on triple click", async () => {
