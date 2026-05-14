@@ -56,6 +56,13 @@
         <field name="groups" eval="[(4, ref('group_ht_user'))]"/>
     </record>
 
+    <record id="rule_phonebook_user" model="ir.rule">
+        <field name="name">User (Phonebook)</field>
+        <field name="model_id" ref="model_sale_phonebook"/>
+        <field name="domain_force">[('project_id.sales_ids.user_id', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('group_ht_user'))]"/>
+    </record>
+
     <!-- <record id="ir_cron_distribute" model="ir.cron">
         <field name="name">Phân số điện thoại</field>
         <field name="model_id" ref="model_sale_phonebook"/>
@@ -84,10 +91,10 @@
 
                 <field name="created_on" readonly="True"/>
                 <field name="name" readonly="True"/>
-                <field name="project_id"/>
                 <field name="phone" widget="phone"/>
                 <field name="status"/>
                 <field name="note"/>
+                <field name="project_id"/>
             </list>  
         </field>
     </record>
@@ -137,6 +144,7 @@
                         <group>
 
                             <field name="salesperson_id"/>
+                            <field name="status"/>
 
                         </group>
 
@@ -185,15 +193,6 @@
 
                         </page>
 
-                        <!-- SALES HISTORY -->
-                        <page string="Lịch sử phụ trách"
-                            groups="ht_crm.group_ht_executive">
-
-                            <field name="previous_salesperson_ids"
-                                widget="many2many_tags"/>
-
-                        </page>
-
                     </notebook>
 
                 </sheet>
@@ -218,11 +217,8 @@
                 <field name="contact_address"/>
 
                 <!-- TRƯỜNG BỔ SUNG -->
-                <!-- <field name="salesperson_id"/>
-                <field name="previous_salesperson_ids" widget="many2many_tags" groups="ht_crm.group_ht_leader,ht_crm.group_ht_executive"/>
-                <field name="ignore" widget="checkbox" groups="ht_crm.group_ht_leader,ht_crm.group_ht_executive"/> -->
-                <field name="type"/>
-                <field name="partner_platform"/>
+                <field name="type" optional="hide"/>
+                <field name="partner_platform" optional="hide"/>
             </list> 
         </field>
     </record>

@@ -8,7 +8,7 @@ class PhoneBook(models.Model):
 
     # Trường cơ bản
     name = fields.Char(string="Chủ thuê bao")
-    phone = fields.Char(string="Số điện thoại", required=True)
+    phone = fields.Char(string="Số điện thoại", size=15, required=True)
     note = fields.Text(string="Ghi chú")
     created_on = fields.Datetime(
         string="Ngày tạo",
@@ -16,6 +16,11 @@ class PhoneBook(models.Model):
     )
     
     # Trường bổ sung
+    project_id = fields.Many2one(
+        "estate.project",
+        string="Dự án"
+    )
+
     salesperson_id = fields.Many2one(
         'sale.employee',
         string="Sales phụ trách",
@@ -28,14 +33,11 @@ class PhoneBook(models.Model):
         groups="ht_crm.group_ht_executive"
     )
 
-    project_id = fields.Many2one(
-        "estate.project",
-        string="Dự án"
-    )
     status = fields.Selection([
-        ('new', 'Chưa gọi'),
-        ('called', 'Đã gọi'),
-        ('invalid', 'Số không hợp lệ / Hủy')
+        ('new', 'Chưa liên hệ'),
+        ('callback', 'Gọi lại'),
+        ('contacted', 'Đã liên hệ'),
+        ('invalid', 'Không hợp lệ / Hủy')
     ], string="Trạng thái", default='new', store=True)
 
     # Trường xử lý số nóng lạnh.    
@@ -163,15 +165,17 @@ class PhoneBook(models.Model):
 
     # Hàm phân KH (ngẫu nhiên)
     def action_distribute_numbers(self):
-        eligible_users = self.project_id.sales_ids
-
-        if not eligible_users:
-            raise exceptions.ValidationError("No active users found.")
-
         # Với mọi record đang được chọn.
         for record in self:
-            # Dữ liệu rác
             if record.status == 'invalid':
+                continue
+
+            eligible_users = record.project_id.sales_ids
+
+            if not eligible_users:
+                record.write({
+                    'salesperson_id': False
+                })
                 continue
 
             available = eligible_users.filtered(

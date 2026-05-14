@@ -11,26 +11,20 @@ class Customer(models.Model):
     partner_platform = fields.Char(string="Sàn Liên Kết")
     name = fields.Char(string="Tên Khách")
     date_of_birth = fields.Date(string="Ngày Sinh")
-    id_number = fields.Char(string="CMND / Passport")
+    id_number = fields.Char(string="CMND / Passport", size=20)
     issue_date = fields.Date(string="Ngày cấp")
     issue_place = fields.Char(string="Nơi cấp")
     permanent_address = fields.Text(string="Địa chỉ thường trú")
     contact_address = fields.Text(string="Địa chỉ liên lạc")
 
-    phone = fields.Char(string="Số điện thoại")
+    phone = fields.Char(string="Số điện thoại", size=15)
     email = fields.Char(string="Email")
 
-    # Nhân viên đang phụ trách
+    # Nhân viên đang phụ trách (có thể thay)
     salesperson_id = fields.Many2one(
         'sale.employee',
         string="Nhân viên phụ trách",
-        domain=[('role_ids.code', '=', 'sales')]
-    )
-
-    # Danh sách nhân viên đã từng phụ trách
-    previous_salesperson_ids = fields.Many2many(
-        'sale.employee',
-        string="Lịch sử phụ trách",
+        domain=[('role_ids.code', '=', 'sales')],
         groups="ht_crm.group_ht_executive"
     )
 
@@ -48,6 +42,15 @@ class Customer(models.Model):
         ('investor', 'Nhà đầu tư'),
         ('company', 'Doanh nghiệp'),
     ], string="Phân loại khách")
+
+    status = fields.Selection([
+        ('new', 'Khách mới'),
+        ('consulting', 'Đang tư vấn'),
+        ('followup', 'Follow-up'),
+        ('paused', 'Tạm dừng'),
+        ('transacting', 'Đã tạo giao dịch'),
+        ('lost', 'Mất khách'),
+    ], default='new')
 
     # Đánh dấu khách chăm sóc không thành công
     ignore = fields.Boolean(
