@@ -96,26 +96,36 @@ export class AttachmentList extends Component {
      */
     onClickUnlink(attachment) {
         if (this.env.inComposer) {
-            return this.props.unlinkAttachment(attachment);
+            this.props.unlinkAttachment(attachment);
+            return true;
         }
         if (this.hasUnlinkConfirmation(attachment)) {
-            this.dialog.add(ConfirmationDialog, {
-                title: _t("Delete Attachment"),
-                body: _t(
-                    'Are you sure you want to delete "%s"?\nThis action cannot be undone.',
-                    attachment.name
-                ),
-                confirmLabel: _t("Delete Attachment"),
-                cancel: () => {},
-                confirm: () => this.onConfirmUnlink(attachment),
+            return new Promise((resolve) => {
+                this.dialog.add(ConfirmationDialog, {
+                    title: _t("Delete Attachment"),
+                    body: _t(
+                        'Are you sure you want to delete "%s"?\nThis action cannot be undone.',
+                        attachment.name
+                    ),
+                    confirmLabel: _t("Delete Attachment"),
+                    cancel: () => resolve(false),
+                    confirm: () => {
+                        this.onConfirmUnlink(attachment);
+                        resolve(true);
+                    },
+                });
             });
         } else {
             this.onConfirmUnlink(attachment);
+            return true;
         }
     }
 
     onClickAttachment(attachment) {
-        this.fileViewer.open(attachment, this.props.attachments);
+        this.fileViewer.open(attachment, this.props.attachments, {
+            onUnlink: this.onClickUnlink.bind(this),
+            canUnlink: (file) => this.showDelete(file),
+        });
     }
 
     /**

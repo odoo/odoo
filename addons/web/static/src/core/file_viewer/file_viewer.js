@@ -34,6 +34,8 @@ export class FileViewer extends Component {
         startIndex: t.any(),
         close: t.any().optional(),
         modal: t.any().optional(true),
+        onUnlink: t.function().optional(),
+        canUnlink: t.function().optional(() => () => false),
     });
 
     autofocusRef = signal(null);
@@ -320,6 +322,10 @@ export class FileViewer extends Component {
         this.zoomerRef().style = "transform: " + `translate(${tx}px, ${ty}px)`;
     }
 
+    get canUnlink() {
+        return this.props.onUnlink && this.props.canUnlink(this.state.file);
+    }
+
     get imageStyle() {
         let style =
             "transform: " +
@@ -333,6 +339,12 @@ export class FileViewer extends Component {
         }
         style += `background: repeating-conic-gradient(#ccc 0deg 90deg, #fff 90deg 180deg) 50% / 20px 20px;`;
         return style;
+    }
+
+    async onClickUnlink() {
+        if (await this.props.onUnlink(this.state.file)) {
+            this.close();
+        }
     }
 
     onClickPrint() {
