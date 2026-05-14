@@ -8,6 +8,7 @@ import { setupEditor, testEditor } from "./_helpers/editor";
 import { getContent } from "./_helpers/selection";
 import { deleteBackward, insertText } from "./_helpers/user_actions";
 import { execCommand } from "./_helpers/userCommands";
+import { expectElementCount } from "./_helpers/ui_expectations";
 import { expandToolbar } from "./_helpers/toolbar";
 import { nodeSize } from "@html_editor/utils/position";
 import { EmbeddedFilePlugin } from "@html_editor/others/embedded_components/plugins/embedded_file_plugin/embedded_file_plugin";
@@ -26,7 +27,7 @@ const patchUpload = (editor) => {
         patchWithCleanup(editor.services.uploadLocalFiles, {
             async upload() {
                 resolve();
-                return [{ id: 1, name: "file.txt" }];
+                return [{ id: 1, name: "file.txt", mimetype: "text/plain" }];
             },
         });
     });
@@ -232,6 +233,19 @@ describe("file command", () => {
             // Shift+Enter should do nothing.
             await press(["shift", "Enter"]);
             expect(getContent(fileNameEl)).toBe("file.txt[]");
+        });
+
+        test("Should open the file viewer on file icon click", async () => {
+            const { editor } = await setupEditor("<p>[]<br></p>");
+            patchUpload(editor);
+
+            // Upload a file and wait until the file image is rendered.
+            execCommand(editor, "uploadFile");
+            const fileImage = await waitFor(".o_file_box .o_file_image");
+
+            // Click the file icon to open the file viewer
+            await click(fileImage);
+            await expectElementCount(".o-FileViewer", 1);
         });
     });
 });
