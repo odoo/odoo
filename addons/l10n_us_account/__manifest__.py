@@ -10,6 +10,7 @@
     """,
     'depends': ['l10n_us', 'account'],
     'data': [
+        'views/l10n_us_account_menus.xml',
         'views/res_partner_bank_views.xml',
         'views/res_config_settings_views.xml',
         'data/tax_report.xml',

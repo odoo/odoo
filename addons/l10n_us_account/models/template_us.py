@@ -84,13 +84,14 @@ class AccountChartTemplate(models.AbstractModel):
                 'default_cash_difference_expense_account_id': 'account_account_us_cash_diff_expense',
                 'account_journal_early_pay_discount_loss_account_id': 'account_account_us_cash_discount_loss',
                 'account_journal_early_pay_discount_gain_account_id': 'account_account_us_cash_discount_gain',
-                'expense_account_id': 'account_account_us_expense',
+                'expense_account_id': 'account_account_us_cost_of_goods_sold',
                 'income_account_id': 'account_account_us_income',
                 'receivable_account_id': 'account_account_us_receivable',
                 'payable_account_id': 'account_account_us_payable',
                 'account_sale_tax_id': default_sales_tax,
                 'account_purchase_tax_id': default_purchase_tax,
                 'account_stock_valuation_id': 'account_account_us_inventory_valuation',
+                'account_production_wip_account_id': 'account_account_us_wip',
             },
         }
 
