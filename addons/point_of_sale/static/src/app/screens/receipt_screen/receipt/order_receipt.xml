@@ -63,7 +63,7 @@
 
                 <div t-if="order.showChange" class="pos-receipt-amount receipt-change">
                     <span class="label-change">Change</span>
-                    <span t-out="formatCurrency(order.change)" class="pos-receipt-right-align font-monospace"/>
+                    <span t-out="formatCurrency(-order.change)" class="pos-receipt-right-align font-monospace"/>
                 </div>
 
                 <!-- Extra Payment Info -->
