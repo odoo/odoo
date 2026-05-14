@@ -343,7 +343,8 @@ class WebsiteCrmPartnerAssign(WebsitePartnership, GoogleMap):
             'search': search,
             'google_maps_api_key': google_maps_api_key,
             'fallback_all_countries': fallback_all_countries,
-            'keep_partners_url': keep
+            'keep_partners_url': keep,
+            'structured_data': partners._render_jsonld(),
         }
         return values
 

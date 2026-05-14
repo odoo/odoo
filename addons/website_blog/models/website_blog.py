@@ -6,7 +6,7 @@ from collections import defaultdict
 import random
 
 from odoo import api, models, fields, _
-from odoo.addons.website.tools import text_from_html
+from odoo.addons.website.tools import images_from_html, text_from_html
 from odoo.tools.json import scriptsafe as json_scriptsafe
 from odoo.tools.translate import html_translate
 from odoo.tools import html_escape
@@ -22,6 +22,7 @@ class BlogBlog(models.Model):
         'website.located.mixin',
         'website.cover_properties.mixin',
         'website.searchable.mixin',
+        'website.structured_data.mixin',
     ]
     _order = 'name'
 
@@ -105,6 +106,28 @@ class BlogBlog(models.Model):
 
         return tag_by_blog
 
+    def _prepare_jsonld_vals(self):
+        self.ensure_one()
+        base_url = self.get_base_url()
+        blog_url = f'{base_url}{self.website_url}'
+        vals = {
+            '@type': 'Blog',
+            '@id': f'{blog_url}/#blog',
+            'name': self.name,
+            'url': blog_url,
+            'publisher': {'@id': f'{base_url}/#organization'},
+        }
+        if self.subtitle:
+            vals['description'] = self.subtitle
+        return vals
+
+    def _get_breadcrumb_items(self, is_detail_page=False):
+        items = super()._get_breadcrumb_items(is_detail_page)
+        items.append((self.env._("Blog Posts"), '/blog'))
+        if is_detail_page:
+            items.append((self.name, self.website_url))
+        return items
+
 
 class BlogTagCategory(models.Model):
     _name = 'blog.tag.category'
@@ -142,7 +165,10 @@ class BlogPost(models.Model):
     _description = "Blog Post"
     _inherit = ['mail.thread', 'website.seo.metadata', 'website.published.multi.mixin',
         'website.page_visibility_options.mixin',
-        'website.cover_properties.mixin', 'website.searchable.mixin']
+        'website.cover_properties.mixin',
+        'website.searchable.mixin',
+        'website.structured_data.mixin',
+    ]
     _order = 'id DESC'
     _mail_post_access = 'read'
 
@@ -337,3 +363,79 @@ class BlogPost(models.Model):
 
     def _get_customer_portal_message_types(self):
         return ["comment", "email"]
+
+    def _prepare_jsonld_vals(self):
+        self.ensure_one()
+        website = self.env['website'].get_current_website()
+        base_url = self.get_base_url()
+        post_url = f'{base_url}{self.website_url}'
+        vals = {
+            '@type': 'BlogPosting',
+            '@id': f'{post_url}/#blogpost',
+            'headline': self.name,
+            'url': post_url,
+            'dateModified': self._to_iso_datetime(self.write_date),
+            'publisher': {'@id': f'{base_url}/#organization'},
+            'isPartOf': {'@id': f'{base_url}{self.blog_id.website_url}/#blog'},
+        }
+        if self.published_date:
+            vals['datePublished'] = self._to_iso_datetime(self.published_date)
+        if tags := self.tag_ids.mapped('name'):
+            vals['keywords'] = ', '.join(tags)
+        if self.teaser:
+            vals['description'] = self.teaser
+        if image_url := self._get_image_url():
+            image_url = f'{base_url}{image_url}'
+        elif html_images := images_from_html(self.content, base_url):
+            image_url = html_images[0]
+        if image_url:
+            vals['image'] = image_url
+        if (
+            website.is_view_active('website_blog.opt_blog_post_comment')
+            and self.website_message_ids
+        ):
+            vals['commentCount'] = len(self.website_message_ids)
+        if self.env.lang:
+            vals['inLanguage'] = self.env.lang.replace('_', '-')
+        if self.content and (content_text := text_from_html(self.content, True)):
+            vals['wordCount'] = len(content_text.split())
+        if author_sudo := self.author_id.sudo():
+            is_company = author_sudo.is_company
+            if is_company and author_sudo == self.website_id.company_id.partner_id:
+                vals['author'] = {'@id': f'{base_url}/#organization'}
+            else:
+                author_vals = {
+                    '@type': 'Organization' if is_company else 'Person',
+                    '@id': f'{base_url}/#{"company" if is_company else "author"}-{author_sudo.id}',
+                    'name': author_sudo.display_name,
+                }
+                if author_sudo.website:
+                    author_vals['url'] = author_sudo.website
+                if is_company and author_sudo.image_128:
+                    author_vals['logo'] = f'{base_url}{self.website_id.image_url(author_sudo, "image_128")}'
+                vals['author'] = author_vals
+        return vals
+
+    def _get_breadcrumb_items(self, is_detail_page=False):
+        if is_detail_page:
+            blog = self.blog_id
+        else:
+            blog = self.env['blog.blog'].browse(self.env.context.get('blog_id'))
+        items = blog._get_breadcrumb_items(bool(blog))
+        if is_detail_page:
+            items.append((self.name, self.website_url))
+        return items
+
+    def _get_jsonld_dict(self, is_detail_page=False):
+        schemas = super()._get_jsonld_dict(is_detail_page)
+        if is_detail_page:
+            schemas.append(self._prepare_jsonld_vals())
+            return schemas
+        current_blog = self.env['blog.blog'].browse(self.env.context.get('blog_id')).exists()
+        if current_blog:
+            schemas.append(current_blog._prepare_jsonld_vals())
+        if self:
+            name = current_blog.name if current_blog else self.env._("Blog Posts")
+            path = current_blog.website_url if current_blog else '/blog'
+            schemas.append(self._build_collectionpage_jsonld_vals(name, path, self))
+        return schemas

@@ -11,7 +11,8 @@ class WebsitePartnerPage(http.Controller):
         return {
             'main_object': partner_sudo,
             'partner': partner_sudo,
-            'edit_page': False
+            'edit_page': False,
+            'structured_data': partner_sudo._render_jsonld(is_detail_page=True),
         }
 
     # Do not use semantic controller due to SUPERUSER_ID

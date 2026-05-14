@@ -10,7 +10,6 @@ from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError, ValidationError, AccessError
 from odoo.fields import Domain
 from odoo.tools import sql, SQL
-from odoo.tools.json import scriptsafe as json_safe
 from odoo.tools.mail import email_normalize, formataddr
 
 _logger = logging.getLogger(__name__)
@@ -23,6 +22,7 @@ class ForumPost(models.Model):
         'website.seo.metadata',
         'website.located.mixin',
         'website.searchable.mixin',
+        'website.structured_data.mixin',
     ]
     _order = "is_correct DESC, vote_count DESC, last_activity_date DESC"
 
@@ -820,65 +820,111 @@ class ForumPost(models.Model):
     # WEBSITE
     # ----------------------------------------------------------------------
 
-    def _get_microdata(self):
-        """
-        Generate structured data (microdata) for the post.
+    def _get_breadcrumb_items(self, is_detail_page=False):
+        items = super()._get_breadcrumb_items(is_detail_page)
+        forum_slug = self.env['ir.http']._slug(self.forum_id)
+        items.extend([
+            (self.env._("Forums"), '/forum'),
+            (self.forum_id.name, f'/forum/{forum_slug}'),
+            (self.name, self.website_url),
+        ])
+        return items
 
-        Returns:
-            str or None: Microdata in JSON format representing the post, or None
-            if not applicable.
-        """
+    def _prepare_jsonld_vals(self):
         self.ensure_one()
-        # Return if it's not a question.
         if self.parent_id:
-            return None
-        correct_posts = self.child_ids.filtered(lambda post: post.is_correct)
-        suggested_posts = self.child_ids.filtered(lambda post: not post.is_correct)[:5]
-        # A QAPage schema must have one accepted answer or at least one suggested answer
-        if not suggested_posts and not correct_posts:
-            return None
+            return self._prepare_reply_jsonld_vals()
+        return self._prepare_question_jsonld_vals()
 
-        structured_data = {
-            "@context": "https://schema.org",
-            "@type": "QAPage",
-            "mainEntity": self._get_structured_data(post_type="question"),
+    def _prepare_question_jsonld_vals(self):
+        vals = {
+            '@type': 'Question',
+            '@id': f'{self.website_absolute_url}/#question',
+            'name': self.name,
+            'answerCount': self.child_count,
+            'upvoteCount': self.vote_count,
+            'datePublished': self._to_iso_datetime(self.create_date),
+            'url': self.website_absolute_url,
+            'author': {'@type': 'Person', 'name': self.create_uid.name},
         }
-        if correct_posts:
-            structured_data["mainEntity"]["acceptedAnswer"] = correct_posts[0]._get_structured_data()
+        if self.plain_content:
+            vals['text'] = self.plain_content
+        if date_modified := self._to_iso_datetime(self.write_date_content):
+            vals['dateModified'] = date_modified
+        return vals
+
+    def _prepare_reply_jsonld_vals(self, schema_type='Answer'):
+        vals = {
+            '@type': schema_type,
+            '@id': f'{self.website_absolute_url}/#{schema_type.lower()}-{self.id}',
+            'upvoteCount': self.vote_count,
+            'datePublished': self._to_iso_datetime(self.create_date),
+            'url': self.website_absolute_url,
+            'author': {'@type': 'Person', 'name': self.create_uid.name},
+        }
+        if self.plain_content:
+            vals['text'] = self.plain_content
+        if date_modified := self._to_iso_datetime(self.write_date_content):
+            vals['dateModified'] = date_modified
+        return vals
+
+    def _build_qapage_jsonld_vals(self):
+        self.ensure_one()
+        if self.parent_id:
+            return {}
+        correct_post = None
+        suggested_posts = []
+        for child in self.child_ids.filtered(lambda post: post.state != 'flagged'):
+            if child.is_correct and not correct_post:
+                correct_post = child
+            elif not child.is_correct and len(suggested_posts) < 5:
+                suggested_posts.append(child)
+            if correct_post and len(suggested_posts) >= 5:
+                break
+        if not correct_post and not suggested_posts:
+            return {}
+        main_entity = self._prepare_question_jsonld_vals()
+        if correct_post:
+            main_entity['acceptedAnswer'] = correct_post._prepare_reply_jsonld_vals()
         if suggested_posts:
-            structured_data["mainEntity"]["suggestedAnswer"] = [
-                suggested_post._get_structured_data()
-                for suggested_post in suggested_posts
+            main_entity['suggestedAnswer'] = [
+                post._prepare_reply_jsonld_vals() for post in suggested_posts
             ]
-        return json_safe.dumps(structured_data, indent=2)
+        return {'@type': 'QAPage', 'mainEntity': main_entity}
 
-    def _get_structured_data(self, post_type="answer"):
-        """
-        Generate structured data (microdata) for an answer or a question.
-
-        Returns:
-            dict: microdata.
-        """
-        res = {
-            "upvoteCount": self.vote_count,
-            "datePublished": self.create_date.isoformat() + 'Z',
-            "url": self.env['ir.http']._url_for(self.website_url),
-            "author": {
-                "@type": "Person",
-                "name": self.create_uid.sudo().name,
-            },
+    def _build_discussionforumposting_jsonld_vals(self):
+        self.ensure_one()
+        if self.parent_id:
+            return {}
+        vals = {
+            '@type': 'DiscussionForumPosting',
+            '@id': f'{self.website_absolute_url}/#discussionforumposting',
+            'headline': self.name,
+            'text': self.plain_content or self.name,
+            'commentCount': self.child_count,
+            'datePublished': self._to_iso_datetime(self.create_date),
+            'url': self.website_absolute_url,
+            'author': {'@type': 'Person', 'name': self.create_uid.name},
         }
-        if post_type == "answer":
-            res["@type"] = "Answer"
-            res["text"] = self.plain_content
-        else:
-            res["@type"] = "Question"
-            res["name"] = self.name
-            res["text"] = self.plain_content or self.name
-            res["answerCount"] = self.child_count
-        if self.create_uid.sudo().website_published:
-            res["author"]["url"] = self.env['ir.http']._url_for(f"/profile/user/{ self.create_uid.sudo().id }")
-        return res
+        if date_modified := self._to_iso_datetime(self.write_date_content):
+            vals['dateModified'] = date_modified
+        if replies := self.child_ids.filtered(lambda post: post.state != 'flagged')[:5]:
+            vals['comment'] = [
+                reply._prepare_reply_jsonld_vals('Comment')
+                for reply in replies
+            ]
+        return vals
+
+    def _get_jsonld_dict(self, is_detail_page=False):
+        schemas = super()._get_jsonld_dict(is_detail_page)
+        if is_detail_page:
+            if self.forum_id.mode == 'discussions':
+                if posting := self._build_discussionforumposting_jsonld_vals():
+                    schemas.append(posting)
+            elif self.forum_id.mode == 'questions':
+                if qapage := self._build_qapage_jsonld_vals():
+                    schemas.append(qapage)
+        return schemas
 
     def go_to_website(self):
         self.ensure_one()

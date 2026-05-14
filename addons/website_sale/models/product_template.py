@@ -13,6 +13,7 @@ from odoo.tools.sql import SQL, column_exists, create_column
 from odoo.tools.translate import adapt_translated_field_value, html_translate
 
 from odoo.addons.website.tools import text_from_html
+from odoo.addons.website_sale.const import SHOP_PATH
 
 # A delimiter that users aren't likely to search for in product codes.
 RARE_DELIMITER = "\u241e"
@@ -38,6 +39,7 @@ class ProductTemplate(models.Model):
         "website.seo.metadata",
         "website.published.multi.mixin",
         "website.searchable.mixin",
+        "website.structured_data.mixin",
     ]
     _mail_post_access = "read"
     _check_company_auto = True
@@ -1399,7 +1401,7 @@ class ProductTemplate(models.Model):
 
         return price, pricelist_rule_id
 
-    def _to_markup_data(self, website):
+    def _prepare_jsonld_vals(self):
         """Generate JSON-LD markup data for the current product template.
 
         If the template has multiple variants, the https://schema.org/ProductGroup schema is used.
@@ -1411,10 +1413,12 @@ class ProductTemplate(models.Model):
         :rtype: dict
         """
         self.ensure_one()
+        website = self.env["website"].get_current_website()
 
         if self.product_variant_count == 1:
-            markup_data = self.product_variant_id._to_markup_data(website)
+            vals = self.product_variant_id._prepare_jsonld_vals()
         else:
+            base_url = website.get_base_url()
             # perf: temporal solution to avoid slowness when product have many variants and
             # pricelist rules
             limit = (
@@ -1424,31 +1428,73 @@ class ProductTemplate(models.Model):
                 .get_int("website_sale.markup_data_limit_variants")
                 or None
             )
-            if limit:
-                product_variant_ids = self.product_variant_ids[:limit]
-            else:
-                product_variant_ids = self.product_variant_ids
-
-            base_url = website.get_base_url()
-            markup_data = {
-                "@context": "https://schema.org",
+            variants = self.product_variant_ids[:limit] if limit else self.product_variant_ids
+            vals = {
                 "@type": "ProductGroup",
+                "@id": f"{base_url}{self.website_url}/#productgroup",
                 "name": self.name,
                 "image": f"{base_url}{website.image_url(self, 'image_1920')}",
                 "url": f"{base_url}{self.website_url}",
-                "hasVariant": [product._to_markup_data(website) for product in product_variant_ids],
+                "hasVariant": [variant._prepare_jsonld_vals() for variant in variants],
             }
             if self.description_ecommerce:
-                markup_data["description"] = text_from_html(self.description_ecommerce)
+                vals["description"] = text_from_html(self.description_ecommerce)
 
         if website.is_view_active("website_sale.product_comment") and self.rating_count:
-            markup_data["aggregateRating"] = {
+            vals["aggregateRating"] = {
                 "@type": "AggregateRating",
                 # sudo: product.product - visitor can access product average rating
                 "ratingValue": self.sudo().rating_avg,
                 "reviewCount": self.rating_count,
             }
-        return markup_data
+        return vals
+
+    def _get_jsonld_dict(self, is_detail_page=False):
+        """Return JSON-LD dicts for a product page.
+
+        On a detail page the template's own schema is appended; on a listing
+        page a CollectionPage with an ItemList of product URLs is appended.
+        """
+        schemas = super()._get_jsonld_dict(is_detail_page)
+        if is_detail_page:
+            schemas.append(self._prepare_jsonld_vals())
+        elif self:
+            category = self.env["product.public.category"].browse(
+                self.env.context.get("shop_category_id"),
+            )
+            if category:
+                list_path = category.website_url
+                list_name = category.name
+            else:
+                list_path = SHOP_PATH
+                list_name = self.env._("Shop")
+            schemas.append(self._build_collectionpage_jsonld_vals(list_name, list_path, self))
+        return schemas
+
+    def _get_breadcrumb_items(self, is_detail_page=False):
+        """Return breadcrumb items for shop and product pages.
+
+        Trail: Home -> Shop -> [category parents] -> Product name (detail only).
+
+        On detail pages the category comes from :attr:`public_categ_ids`.
+        On listing pages it is read from the ``shop_category_id`` context key.
+
+        :rtype: list[tuple[str, str]]
+        """
+        items = super()._get_breadcrumb_items(is_detail_page)
+        items.append((self.env._("Shop"), SHOP_PATH))
+        if is_detail_page:
+            category = self.public_categ_ids[:1]
+        else:
+            category = self.env["product.public.category"].browse(
+                self.env.context.get("shop_category_id"),
+            )
+        if category:
+            for cat in category.parents_and_self:
+                items.append((cat.name, cat.website_url))
+        if is_detail_page:
+            items.append((self.name, self.website_url))
+        return items
 
     def _get_ribbon(self, price_vals=None, auto_assign_ribbons=None, variant=None):
         """Return the ribbon to display for the current template.

@@ -9,6 +9,7 @@ from dateutil.relativedelta import relativedelta
 from markupsafe import Markup
 
 from odoo import api, fields, models, tools, _
+from odoo.addons.website.tools import text_from_html
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Domain
 from odoo.tools import is_html_empty
@@ -29,6 +30,7 @@ class SlideChannel(models.Model):
         'website.seo.metadata',
         'website.published.multi.mixin',
         'website.searchable.mixin',
+        'website.structured_data.mixin',
     ]
     _order = 'sequence, id'
     _partner_unfollow_enabled = True
@@ -1121,3 +1123,64 @@ class SlideChannel(models.Model):
     @api.model
     def _allow_publish_rating_stats(self):
         return True
+
+    def _prepare_jsonld_vals(self):
+        self.ensure_one()
+        website = self.env['website'].get_current_website()
+        base_url = website.get_base_url()
+        description = self.description_short and text_from_html(self.description_short, True)
+        if not description and self.description:
+            description = text_from_html(self.description, True)
+        vals = {
+            '@type': 'Course',
+            '@id': f'{self.website_absolute_url}/#course',
+            'name': self.name,
+            'provider': {'@id': f'{base_url}/#organization'},
+        }
+        if description:
+            vals['description'] = description
+        if self.website_url:
+            vals['url'] = f'{base_url}{self.website_url}'
+        if image_url := self.env['website'].image_url(self, 'image_1024'):
+            vals['image'] = f'{base_url}{image_url}'
+        return vals
+
+    def _build_course_detail_jsonld_vals(self):
+        self.ensure_one()
+        vals = self._prepare_jsonld_vals()
+        vals['offers'] = {
+            '@type': 'Offer',
+            'price': 0,
+            'priceCurrency': self.env.company.currency_id.name,
+        }
+        if self.slide_last_update:
+            vals['dateModified'] = self._to_iso_datetime(self.slide_last_update)
+        if self.rating_count:
+            vals['aggregateRating'] = {
+                '@type': 'AggregateRating',
+                'ratingValue': self.rating_avg_stars,
+                'ratingCount': self.rating_count,
+            }
+        if self.user_id:
+            vals['editor'] = {'@type': 'Person', 'name': self.user_id.name}
+        if lessons := self.slide_content_ids.filtered('is_published'):
+            vals['hasPart'] = [lesson._prepare_jsonld_vals() for lesson in lessons]
+        return vals
+
+    def _get_breadcrumb_items(self, is_detail_page=False):
+        items = super()._get_breadcrumb_items(is_detail_page)
+        items.append((self.env._("Courses"), '/slides'))
+        if is_detail_page:
+            items.append((self.name, self.website_url))
+        return items
+
+    def _get_jsonld_dict(self, is_detail_page=False):
+        schemas = super()._get_jsonld_dict(is_detail_page)
+        if is_detail_page:
+            schemas.append(self._build_course_detail_jsonld_vals())
+            return schemas
+        if self:
+            schemas.append(self._build_collectionpage_jsonld_vals(
+                self.env._("Courses"), '/slides', self, embed_items=True,
+            ))
+        return schemas

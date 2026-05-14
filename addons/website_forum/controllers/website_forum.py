@@ -81,7 +81,10 @@ class WebsiteForum(WebsiteProfile):
             slug = request.env['ir.http']._slug
             return request.redirect(f'/forum/{slug(forums[0])}', code=302)
 
-        return request.render("website_forum.forum_all", {'forums': forums})
+        return request.render("website_forum.forum_all", {
+            'forums': forums,
+            'structured_data': forums._render_jsonld(),
+        })
 
     def sitemap_forum_all(env, rule, qs):
         Forum = env['forum.forum']
@@ -188,6 +191,8 @@ class WebsiteForum(WebsiteProfile):
 
         if forum or tag:
             values['main_object'] = tag or forum
+        if forum:
+            values['structured_data'] = forum._render_jsonld(is_detail_page=True)
 
         return request.render("website_forum.forum_index", values)
 
@@ -306,7 +311,7 @@ class WebsiteForum(WebsiteProfile):
             'main_object': question,
             'edit_in_backend': True,
             'question': question,
-            'seo_microdata': question._get_microdata(),
+            'structured_data': question._render_jsonld(is_detail_page=True),
             'header': {'question_data': True},
             'filters': 'question',
             'reversed': reversed,

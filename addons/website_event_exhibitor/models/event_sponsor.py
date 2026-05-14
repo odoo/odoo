@@ -20,6 +20,7 @@ class EventSponsor(models.Model):
         'mail.activity.mixin',
         'website.published.mixin',
         'website.searchable.mixin',
+        'website.structured_data.mixin',
     ]
 
     def _default_sponsor_type_id(self):
@@ -206,3 +207,62 @@ class EventSponsor(models.Model):
     def get_base_url(self):
         """As website_id is not defined on this record, we rely on event website_id for base URL."""
         return self.event_id.get_base_url()
+
+    def _prepare_jsonld_vals(self):
+        self.ensure_one()
+        base_url = self.get_base_url()
+        schema_type = 'Organization' if self.partner_id.is_company else 'Person'
+        vals = {
+            '@type': schema_type,
+            '@id': f'{base_url}{self.website_url}/#{schema_type.lower()}',
+            'name': self.name,
+            'mainEntityOfPage': f'{base_url}{self.website_url}',
+        }
+        if self.subtitle:
+            vals['description'] = self.subtitle
+        if self.phone:
+            vals['telephone'] = self.phone
+        if self.email:
+            vals['email'] = self.email
+        if self.url:
+            vals['url'] = self.url
+        if image_url := self.website_image_url:
+            vals['image'] = f'{base_url}{image_url}'
+        return vals
+
+    def _get_breadcrumb_items(self, is_detail_page=False):
+        items = super()._get_breadcrumb_items(is_detail_page)
+        items.append((self.env._("Events"), '/event'))
+        if not self:
+            return items
+        event = self[0].event_id
+        event_slug = self.env['ir.http']._slug(event)
+        items.extend([
+            (event.name, event.website_url),
+            (self.env._("Exhibitors"), f'/event/{event_slug}/exhibitors'),
+        ])
+        if is_detail_page:
+            items.append((self.name, self.website_url))
+        return items
+
+    def _build_profilepage_jsonld_vals(self):
+        self.ensure_one()
+        base_url = self.get_base_url()
+        return {
+            '@type': 'ProfilePage',
+            'url': f'{base_url}{self.website_url}',
+            'mainEntity': self._prepare_jsonld_vals(),
+        }
+
+    def _get_jsonld_dict(self, is_detail_page=False):
+        schemas = super()._get_jsonld_dict(is_detail_page)
+        if not self:
+            return schemas
+        if is_detail_page:
+            schemas.append(self._build_profilepage_jsonld_vals())
+            return schemas
+        event_slug = self.env['ir.http']._slug(self[0].event_id)
+        schemas.append(self._build_collectionpage_jsonld_vals(
+            self.env._("Exhibitors"), f'/event/{event_slug}/exhibitors', self,
+        ))
+        return schemas

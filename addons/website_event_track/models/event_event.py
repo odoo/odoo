@@ -63,6 +63,24 @@ class EventEvent(models.Model):
         self.ensure_one()
         return bool(self.track_ids.filtered('is_published'))
 
+    def _prepare_jsonld_vals(self):
+        vals = super()._prepare_jsonld_vals()
+        if not vals:
+            return vals
+        performers = {
+            # sudo only reads is_company to pick the schema type; the displayed
+            # name comes from the track's own partner_name, never the partner.
+            track.partner_name: 'Organization' if track.partner_id.sudo().is_company else 'Person'
+            for track in self.track_ids
+            if track.is_published and track.partner_name
+        }
+        if performers:
+            vals['performer'] = [
+                {'@type': schema_type, 'name': name}
+                for name, schema_type in performers.items()
+            ]
+        return vals
+
     # ------------------------------------------------------------
     # WEBSITE MENU MANAGEMENT
     # ------------------------------------------------------------
