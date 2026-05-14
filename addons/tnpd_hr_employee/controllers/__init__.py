@@ -1,5 +1,4 @@
 # Part of TNPD Prison HR Employee Extension.
 # License: LGPL-3
 
-from . import models
-from . import controllers
+from . import employee_api
