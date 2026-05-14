@@ -381,6 +381,10 @@ class HrAttendance(models.Model):
             raise AccessError(_("Do not have access, user cannot edit the attendances that are not their own or if they are not the attendance manager of the employee."))
         domain_pre = self._get_overtimes_to_update_domain()
         result = super().write(vals)
+        if vals.get('check_out'):
+            self.filtered(lambda x: x.out_mode == 'technical').out_mode = 'manual'
+        if vals.get('check_in'):
+            self.filtered(lambda x: x.in_mode == 'technical').in_mode = 'manual'
         if any(field in vals for field in ['employee_id', 'check_in', 'check_out']):
             # Merge attendance dates before and after write to recompute the
             # overtime if the attendances have been moved to another day
