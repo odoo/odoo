@@ -311,6 +311,10 @@ class HrAttendance(models.Model):
         if self._STALE_TRIGGER_FIELDS & vals.keys():
             stale_targets = self.sudo().mapped('overtime_attendance_ids').filtered('id')
         result = super().write(vals)
+        if vals.get('check_out'):
+            self.filtered(lambda x: x.out_mode == 'technical').out_mode = 'manual'
+        if vals.get('check_in'):
+            self.filtered(lambda x: x.in_mode == 'technical').in_mode = 'manual'
         if stale_targets:
             stale_targets.exists().with_context(skip_time_rules=True).write({'source_stale': True})
         if 'check_out' in vals and not self.env.context.get('skip_time_rules') and 'state' not in vals:
