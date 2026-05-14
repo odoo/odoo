@@ -108,14 +108,15 @@ class ResConfigSettings(models.TransientModel):
         for setting in self:
             lead_scoring_start_date = setting.predictive_lead_scoring_start_date_str
             # if config param is deleted / empty, set the date 8 days prior to current date
+            today = fields.Date.context_today(self)
             if not lead_scoring_start_date:
-                setting.predictive_lead_scoring_start_date = fields.Date.to_date(fields.Date.today() - timedelta(days=8))
+                setting.predictive_lead_scoring_start_date = today - timedelta(days=8)
             else:
                 try:
                     setting.predictive_lead_scoring_start_date = fields.Date.to_date(lead_scoring_start_date)
                 except ValueError:
                     # the config parameter is malformed, so set the date 8 days prior to current date
-                    setting.predictive_lead_scoring_start_date = fields.Date.to_date(fields.Date.today() - timedelta(days=8))
+                    setting.predictive_lead_scoring_start_date = today - timedelta(days=8)
 
     def _inverse_pls_start_date_str(self):
         """ As config_parameters does not accept Date field,

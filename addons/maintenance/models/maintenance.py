@@ -437,7 +437,7 @@ class MaintenanceRequest(models.Model):
             if request.close_date and request.state != 'done':
                 request.close_date = False
             if not request.close_date and request.state == 'done':
-                request.close_date = fields.Date.today()
+                request.close_date = fields.Date.context_today(request)
         return maintenance_requests
 
     def write(self, vals):
@@ -459,7 +459,7 @@ class MaintenanceRequest(models.Model):
                         'schedule_end': schedule_end,
                         'stage_id': request._default_stage().id,
                     })
-            self.close_date = fields.Date.today()
+            self.close_date = fields.Date.context_today(self)
         elif 'state' in vals:
             self.filtered('close_date').close_date = False
 

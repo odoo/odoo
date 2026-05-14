@@ -242,6 +242,7 @@ class SaleOrder(models.Model):
         ])
         total_is_zero = self.currency_id.is_zero(self.amount_total)
         global_discount_reward = self._get_applied_global_discount()
+        today = fields.Date.context_today(self)
         for coupon in loyality_cards:
             points = self._get_real_points_for_coupon(coupon)
             for reward in coupon.program_id.reward_ids - self.order_line.reward_id:
@@ -253,7 +254,7 @@ class SaleOrder(models.Model):
                     continue
                 if reward.reward_type == "discount" and total_is_zero:
                     continue
-                if coupon.expiration_date and coupon.expiration_date < fields.Date.today():
+                if coupon.expiration_date and coupon.expiration_date < today:
                     continue
                 if points >= reward.required_points:
                     if coupon in res:

@@ -533,7 +533,7 @@ class AccountBankStatementLine(models.Model):
         statement = self.search(
             domain=[
                 ('journal_id', '=', journal_id or self._get_default_journal().id),
-                ('date', '<=', date or fields.Date.today()),
+                ('date', '<=', date or 'today'),
             ],
             limit=1
         ).statement_id

@@ -99,7 +99,7 @@ class WebsiteAccount(CustomerPortal):
         CrmLead = request.env['crm.lead']
         domain = self.get_domain_my_opp(request.env.user)
 
-        today = fields.Date.today()
+        today = fields.Date.context_today(request.env.user)
 
         searchbar_filters = {
             'all': {'label': _('Active'), 'domain': []},

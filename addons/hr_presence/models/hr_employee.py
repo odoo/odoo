@@ -97,10 +97,11 @@ class HrEmployee(models.Model):
             context = {'default_employee_id': self.id}
         else:
             model = 'hr.leave.generate.multi.wizard'
+            today = fields.Date.context_today(self)
             context = {
                 'default_employee_ids': self.ids,
-                'default_date_from': fields.Date.today(),
-                'default_date_to': fields.Date.today(),
+                'default_date_from': today,
+                'default_date_to': today,
                 'default_name': _('Unplanned Absence'),
             }
 

@@ -33,7 +33,7 @@ class ProjectTaskRecurrence(models.Model):
 
     @api.constrains('repeat_type', 'repeat_until')
     def _check_repeat_until_date(self):
-        today = fields.Date.today()
+        today = fields.Date.context_today(self)
         if self.filtered(lambda t: t.repeat_type == 'until' and t.repeat_until < today):
             raise ValidationError(_('The end date should be in the future'))
 

@@ -1621,7 +1621,7 @@ Please change the quantity done or the rounding precision in your settings.""",
         move_waiting.write({'state': 'waiting'})
         # procure_method sometimes changes with certain workflows so just in case, apply to all moves
         (move_to_confirm | move_waiting).filtered(lambda m: m.picking_type_id.reservation_method == 'at_confirm')\
-            .write({'reservation_date': fields.Date.today()})
+            .write({'reservation_date': fields.Date.context_today(self)})
 
         # assign picking in batch for all confirmed move that share the same details
         for moves_ids in to_assign.values():
@@ -1860,7 +1860,7 @@ Please change the quantity done or the rounding precision in your settings.""",
         # Return moves should be auto-assigned when confirmed
         if self.origin_returned_move_id:
             return True
-        return self._should_bypass_reservation() or self.picking_type_id.reservation_method == 'at_confirm' or (self.reservation_date and self.reservation_date <= fields.Date.today())
+        return self._should_bypass_reservation() or self.picking_type_id.reservation_method == 'at_confirm' or (self.reservation_date and self.reservation_date <= fields.Date.context_today(self))
 
     def _filtered_for_assign(self):
         return self.filtered(lambda move: (move.state in ('confirmed', 'partially_available') or move.origin_returned_move_id) and move._should_assign_at_confirm())
@@ -2531,7 +2531,7 @@ Please change the quantity done or the rounding precision in your settings.""",
         static_domain = [('state', 'in', ['confirmed', 'partially_available']),
                          ('procure_method', '=', 'make_to_stock'),
                          '|',
-                            ('reservation_date', '<=', fields.Date.today()),
+                            ('reservation_date', '<=', 'today'),
                             ('picking_type_id.reservation_method', '=', 'at_confirm')
                         ]
         moves_to_reserve = self.env['stock.move'].search(

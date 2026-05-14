@@ -141,7 +141,7 @@ class HrWorkEntryType(models.Model):
             date_to = fields.Date.context_today(self, default_date_to_dt)
 
         else:
-            current_year = fields.Date.today().year
+            current_year = fields.Date.context_today(self).year
             date_from = date(current_year, 1, 1)
             date_to = date(current_year, 12, 31)
 
@@ -503,12 +503,13 @@ class HrWorkEntryType(models.Model):
         elif target_date and isinstance(target_date, datetime):
             target_date = target_date.date()
         elif not target_date:
-            target_date = fields.Date.today()
+            target_date = fields.Date.context_today(self)
 
         allocations_leaves_consumed, extra_data = employees.with_context(
             ignored_leave_ids=self.env.context.get('ignored_leave_ids')
         )._get_consumed_leaves(self, target_date)
 
+        today = fields.Date.context_today(self)
         for employee in employees:
             for work_entry_type in self:
                 lt_info = (
@@ -559,7 +560,6 @@ class HrWorkEntryType(models.Model):
                 for allocation, data in allocations_leaves_consumed[employee][work_entry_type].items():
                     # We only need the allocation that are valid at the given date
                     if allocation:
-                        today = fields.Date.today()
                         if allocation.date_from <= today and (not allocation.date_to or allocation.date_to >= today):
                             # we get each allocation available now to indicate visually if
                             # the future evaluation holds changes compared to now
@@ -613,7 +613,7 @@ class HrWorkEntryType(models.Model):
                 holds_changes = (lt_info[1]['accrual_bonus'] > 0
                     or bool(allocations_date - allocations_now)
                     or bool(allocations_now - allocations_date))\
-                    and target_date != fields.Date.today()
+                    and target_date != today
                 lt_info[1].update({
                     'closest_allocation_remaining': closest_allocation_remaining,
                     'closest_allocation_expire': closest_allocation_expire,

@@ -783,7 +783,7 @@ class AccountAccount(models.Model):
             *self.env['account.move.line']._check_company_domain(company_id),
             ('partner_id', '=', partner_id),
             ('account_id', 'any', account_domain),
-            ('date', '>=', fields.Date.add(fields.Date.today(), days=-365 * 2)),
+            ('date', '>=', fields.Date.add(fields.Date.context_today(self), days=-365 * 2)),
             ('move_id.state', '=', 'posted'),
         ], bypass_access=True)
         query.groupby = query.table.account_id

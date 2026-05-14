@@ -212,7 +212,7 @@ class HrLeaveAllocation(models.Model):
 
     @api.depends('employee_id', 'work_entry_type_id')
     def _compute_leaves(self):
-        date_from = fields.Date.today()
+        date_from = fields.Date.context_today(self)
         employee_days_per_allocation = self.employee_id._get_consumed_leaves(self.work_entry_type_id, date_from, ignore_future=True)[0]
         for allocation in self:
             origin = allocation._origin
@@ -475,7 +475,7 @@ class HrLeaveAllocation(models.Model):
             leaves_taken = employee_days_per_allocation[origin.employee_id][origin.work_entry_type_id][origin]['leaves_taken']
             return leaves_taken
 
-        date_to = date_to or fields.Date.today()
+        date_to = date_to or fields.Date.context_today(self)
         already_accrued = {allocation.id: allocation.already_accrued or (allocation.number_of_days != 0 and allocation.accrual_plan_id.accrued_gain_time == 'start') for allocation in self}
         first_allocation = _("""This allocation have already ran once, any modification won't be effective to the days allocated to the employee. If you need to change the configuration of the allocation, delete and create a new one.""")
         for allocation in self:
@@ -764,10 +764,10 @@ class HrLeaveAllocation(models.Model):
             )
 
     def _add_lastcalls(self):
+        today = fields.Date.context_today(self)
         for allocation in self:
             if not allocation.accrual_plan_id:
                 continue
-            today = fields.Date.today()
             (current_level, current_level_idx) = allocation._get_current_accrual_plan_level_id(today)
             if not allocation.lastcall:
                 if not current_level:

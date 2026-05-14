@@ -713,7 +713,7 @@ class ProjectProject(models.Model):
                 # This does not benefit from multi create, this is to allow the default description from being built.
                 # This does seem ok since last_update_status should only be updated on one record at once.
                 self.env['project.update'].with_context(default_project_id=project.id).create({
-                    'name': _('Status Update - %(date)s', date=fields.Date.today().strftime(get_lang(self.env).date_format)),
+                    'name': _('Status Update - %(date)s', date=fields.Date.context_today(self).strftime(get_lang(self.env).date_format)),
                     'status': vals.get('last_update_status'),
                 })
             vals.pop('last_update_status')
@@ -1348,7 +1348,7 @@ class ProjectProject(models.Model):
 
         if self.date_start and self.date:
             if not values.get("date_start"):
-                values["date_start"] = fields.Date.today()
+                values["date_start"] = fields.Date.context_today(self)
             if not values.get("date"):
                 values["date"] = values["date_start"] + (self.date - self.date_start)
 

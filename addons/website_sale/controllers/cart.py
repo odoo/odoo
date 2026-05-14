@@ -60,7 +60,7 @@ class Cart(PaymentPortal):
 
         values.update({
             "website_sale_order": order_sudo,
-            "date": fields.Date.today(),
+            "date": fields.Date.context_today(self),
             "suggested_products": [],
         })
         if order_sudo:
@@ -441,7 +441,7 @@ class Cart(PaymentPortal):
             seen_lines_sudo |= line_sudo
 
             # Group lines by date.
-            days_ago = (fields.Date.today() - line_sudo.order_id.date_order.date()).days
+            days_ago = (fields.Date.context_today(self) - line_sudo.order_id.date_order.date()).days
             if days_ago == 0:
                 line_group_label = self.env._("Today")
             elif days_ago == 1:

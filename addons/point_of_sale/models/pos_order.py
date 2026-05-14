@@ -1178,9 +1178,10 @@ class PosOrder(models.Model):
 
     def cancel_order_from_pos(self):
         draft_orders = self.filtered(lambda o: o.state == 'draft')
+        today = fields.Date.context_today(self)
         if self.env.context.get('active_ids'):
             orders = self.browse(self.env.context.get('active_ids'))
-            order_is_in_futur = any(order.preset_time and order.preset_time.date() > fields.Date.today() for order in orders)
+            order_is_in_futur = any(order.preset_time and order.preset_time.date() > today for order in orders)
             if order_is_in_futur:
                 raise UserError(_('The order delivery / pickup date is in the future. You cannot cancel it.'))
             if not draft_orders:

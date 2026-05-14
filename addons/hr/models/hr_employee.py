@@ -348,7 +348,7 @@ class HrEmployee(models.Model):
 
     @api.model
     def _get_current_day_location_field(self):
-        return DAYS[fields.Date.today().weekday()]
+        return DAYS[fields.Date.context_today(self).weekday()]
 
     def _prepare_create_values(self, vals_list):
         result = super()._prepare_create_values(vals_list)
@@ -713,9 +713,10 @@ class HrEmployee(models.Model):
 
     @api.depends('version_ids.date_version', 'version_ids.active', 'active')
     def _compute_current_version_id(self):
+        today = fields.Date.context_today(self)
         for employee in self:
             version = self.env['hr.version'].search(
-                [('employee_id', 'in', employee.ids), ('date_version', '<=', fields.Date.today())],
+                [('employee_id', 'in', employee.ids), ('date_version', '<=', today)],
                 order='date_version desc',
                 limit=1,
             )
@@ -1091,13 +1092,14 @@ class HrEmployee(models.Model):
 
     @api.depends('user_id')
     def _compute_last_activity(self):
+        today = fields.Date.context_today(self)
         for employee in self:
             tz = employee.tz
             # sudo: res.users - can access presence of accessible user
             if last_presence := employee.user_id.sudo().presence_ids.last_presence:
                 last_activity_datetime = last_presence.replace(tzinfo=UTC).astimezone(ZoneInfo(tz)).replace(tzinfo=None)
                 employee.last_activity = last_activity_datetime.date()
-                if employee.last_activity == fields.Date.today():
+                if employee.last_activity == today:
                     employee.last_activity_time = format_time(self.env, last_presence, time_format='short')
                 else:
                     employee.last_activity_time = False
@@ -1138,10 +1140,9 @@ class HrEmployee(models.Model):
         super(HrEmployee, employee_wo_user_and_image)._compute_avatar(avatar_field, image_field)
 
     def _compute_exceptional_location_id(self):
-        today = fields.Date.today()
         current_employee_locations = self.env['hr.employee.location'].search([
             ('employee_id', 'in', self.ids),
-            ('date', '=', today),
+            ('date', '=', 'today'),
         ])
         employee_work_locations = {l.employee_id.id: l.work_location_id for l in current_employee_locations}
 
@@ -1416,7 +1417,7 @@ class HrEmployee(models.Model):
         companies = self.env['res.company'].search([])
         employees_contract_expiring = self.env['hr.employee']
         employees_work_permit_expiring = self.env['hr.employee']
-        today = fields.Date.today()
+        today = fields.Date.context_today(self)
 
         for company in companies:
             # Employees with contracts expiring soon

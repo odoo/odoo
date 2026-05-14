@@ -203,7 +203,7 @@ class ResPartner(models.Model):
             )
         self.write({
             "l10n_in_gstin_verified_status": l10n_in_gstin_verified_status,
-            "l10n_in_gstin_verified_date": fields.Date.today(),
+            "l10n_in_gstin_verified_date": fields.Date.context_today(self),
         })
         return {
             "type": "ir.actions.client",

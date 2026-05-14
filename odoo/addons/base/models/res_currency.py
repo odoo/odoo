@@ -408,7 +408,7 @@ class ResCurrencyRate(models.Model):
         return self.currency_id.rate_ids.sudo().filtered(lambda x: (
             x.rate
             and x.company_id == (self.company_id or self.env.company.root_id)
-            and x.name < (self.name or fields.Date.today())
+            and x.name < (self.name or fields.Date.context_today(self))
         )).sorted('name')[-1:]
 
     def _get_last_rates_for_companies(self, companies):

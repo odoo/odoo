@@ -86,7 +86,7 @@ class ResLang(models.CachedModel):
     _disallowed_datetime_patterns.remove('%y') # this one is in fact allowed, just not good practice
 
     def _get_date_format_selection(self):
-        current_year = fields.Date.today().year
+        current_year = fields.Date.context_today(self).year
         return [
             ('%d/%m/%Y', '31/01/%s' % current_year),
             ('%m/%d/%Y', '01/31/%s' % current_year),

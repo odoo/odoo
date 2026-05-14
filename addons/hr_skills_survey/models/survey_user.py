@@ -44,7 +44,7 @@ class SurveyUser_Input(models.Model):
         line_type = self.env.ref('hr_skills_survey.resume_type_certification', raise_if_not_found=False)
 
         lines_to_create = []
-        today = fields.Date.today()
+        today = fields.Date.context_today(self)
         for employee in employees:
             user_inputs = employee_user_inputs.get(employee, self.env['survey.user_input'])
             for survey in user_inputs.survey_id:

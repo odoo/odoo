@@ -228,7 +228,7 @@ class ProductFeed(models.Model):
         # Send an early warning to the website manager if the number of products exceeds the
         # midpoint between the soft and hard limit.
         if len(products) > (const.PRODUCT_FEED_SOFT_LIMIT + const.PRODUCT_FEED_HARD_LIMIT) / 2:
-            today = fields.Date.today()
+            today = fields.Date.context_today(self)
             if (
                 not self.last_notification_date
                 or relativedelta(today, self.last_notification_date).weeks > 0

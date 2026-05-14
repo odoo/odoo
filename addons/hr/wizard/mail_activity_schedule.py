@@ -45,7 +45,7 @@ class MailActivitySchedule(models.TransientModel):
             selected_employees = scheduler._get_applied_on_records()
             start_dates = selected_employees.filtered('date_start').mapped('date_start')
             if start_dates:
-                today = fields.Date.today()
+                today = fields.Date.context_today(self)
                 planned_due_date = min(start_dates)
                 if planned_due_date < today or (planned_due_date - today).days < 30:
                     scheduler.plan_date = today + relativedelta(days=+30)

@@ -66,7 +66,7 @@ class HrVersion(models.Model):
     display_name = fields.Char(compute='_compute_display_name')
     active = fields.Boolean(default=True, tracking=1)
 
-    date_version = fields.Date(string="Effective Date", required=True, default=fields.Date.today, tracking=1, groups="hr.group_hr_user")
+    date_version = fields.Date(string="Effective Date", required=True, default=fields.Date.context_today, tracking=1, groups="hr.group_hr_user")
     last_modified_uid = fields.Many2one('res.users', string='Last Modified by',
                                         default=lambda self: self.env.uid, required=True, groups="hr.group_hr_user")
     last_modified_date = fields.Datetime(string='Last Modified on', default=fields.Datetime.now, required=True,
@@ -416,17 +416,17 @@ class HrVersion(models.Model):
             version.display_name = version.name if not version.employee_id else format_date_abbr(version.env, version.date_version)
 
     def _compute_is_current(self):
-        today = fields.Date.today()
+        today = fields.Date.context_today(self)
         for version in self:
             version.is_current = version.date_start <= today and (not version.date_end or version.date_end >= today)
 
     def _compute_is_past(self):
-        today = fields.Date.today()
+        today = fields.Date.context_today(self)
         for version in self:
             version.is_past = version.date_end and version.date_end < today
 
     def _compute_is_future(self):
-        today = fields.Date.today()
+        today = fields.Date.context_today(self)
         for version in self:
             version.is_future = version.date_start > today
 
@@ -687,7 +687,7 @@ class HrVersion(models.Model):
         """
         Returns employee versions that are currently active
         """
-        today = fields.Date.today()
+        today = fields.Date.context_today(self)
         return [
             ("contract_date_start", "<=", today),
             "|",

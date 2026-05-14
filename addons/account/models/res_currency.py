@@ -46,7 +46,7 @@ class ResCurrency(models.Model):
         if self._check_currency_table_monocurrency(companies):
             return self._get_monocurrency_currency_table_sql(companies)
 
-        self._create_currency_table(companies, [('period', None, fields.Date.today())])
+        self._create_currency_table(companies, [('period', None, fields.Date.context_today(self))])
         return SQL('account_currency_table')
 
     def _check_currency_table_monocurrency(self, companies):

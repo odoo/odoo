@@ -32,7 +32,7 @@ class HrLeaveAttendanceReport(models.Model):
 
     @api.depends('employee_id', 'date')
     def _compute_leave_attendance_fields(self):
-        today = fields.Date.today()
+        today = fields.Date.context_today(self)
         min_date = today - relativedelta(years=1)
         max_date = today - relativedelta(days=1)
 

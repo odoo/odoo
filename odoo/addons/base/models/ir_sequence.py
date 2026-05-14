@@ -118,7 +118,7 @@ class IrSequence(models.Model):
         '''
         if not self.use_date_range:
             return self
-        sequence_date = sequence_date or fields.Date.today()
+        sequence_date = sequence_date or fields.Date.context_today(self)
         seq_date = self.env['ir.sequence.date_range'].search(
             [('sequence_id', '=', self.id), ('date_from', '<=', sequence_date), ('date_to', '>=', sequence_date)], limit=1)
         if seq_date:
@@ -279,7 +279,7 @@ class IrSequence(models.Model):
         if not self.use_date_range:
             return self._next_do()
         # date mode
-        dt = sequence_date or self.env.context.get('ir_sequence_date', fields.Date.today())
+        dt = sequence_date or self.env.context.get('ir_sequence_date', fields.Date.context_today(self))
         seq_date = self.env['ir.sequence.date_range'].search([('sequence_id', '=', self.id), ('date_from', '<=', dt), ('date_to', '>=', dt)], limit=1)
         if not seq_date:
             seq_date = self._create_date_range_seq(dt)

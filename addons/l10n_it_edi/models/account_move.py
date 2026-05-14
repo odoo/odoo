@@ -2034,7 +2034,8 @@ class AccountMove(models.Model):
             if moves := pa_moves.filtered(lambda move: not move.l10n_it_origin_document_type):
                 message = _("Partner(s) belongs to the Public Administration, please fill out Origin Document Type field in the Electronic Invoicing tab.")
                 errors['move_missing_origin_document'] = build_error(message=message, records=moves)
-            if moves := pa_moves.filtered(lambda move: move.l10n_it_origin_document_date and move.l10n_it_origin_document_date > fields.Date.today()):
+            today = fields.Date.context_today(self)
+            if moves := pa_moves.filtered(lambda move: move.l10n_it_origin_document_date and move.l10n_it_origin_document_date > today):
                 message = _("The Origin Document Date cannot be in the future.")
                 errors['l10n_it_edi_move_future_origin_document_date'] = build_error(message=message, records=moves)
         if pa_moves := self.filtered(lambda move: len(move.commercial_partner_id.l10n_it_pa_index or '') == 7):
@@ -2305,6 +2306,7 @@ class AccountMove(models.Model):
     def _l10n_it_edi_update_send_state(self):
         ''' Check if the current invoices have been processed by the SdI. '''
         proxy_user = self.company_id.l10n_it_edi_proxy_user_id
+        today = fields.Date.context_today(self)
         if proxy_user.edi_mode == 'demo':
             for move in self:
                 filename = move.l10n_it_edi_attachment_name or '???'
@@ -2313,7 +2315,7 @@ class AccountMove(models.Model):
                         'l10n_it_edi_state': 'forwarded',
                         'l10n_it_edi_transaction': f'demo_{uuid.uuid4()}',
                         'send_ack_to_edi_proxy': False,
-                        'date': fields.Date.today(),
+                        'date': today,
                         'filename': filename},
                     message=_("The e-invoice file %s has been sent in Demo EDI mode.", filename))
             return
@@ -2365,7 +2367,7 @@ class AccountMove(models.Model):
         decrypted_update_content = etree.fromstring(xml_content)
         outcome = get_text(decrypted_update_content, './/EsitoCommittente/Esito')
         outcome_description = get_text(decrypted_update_content, './/EsitoCommittente/Descrizione')
-        date_arrival = get_datetime(decrypted_update_content, './/DataOraRicezione') or fields.Date.today()
+        date_arrival = get_datetime(decrypted_update_content, './/DataOraRicezione') or fields.Date.context_today(self)
         errors = [(
             get_text(error_element, '//Codice'),
             get_text(error_element, '//Descrizione'),
@@ -2402,7 +2404,7 @@ class AccountMove(models.Model):
         sdi_state = parsed_notification['sdi_state']
         filename = parsed_notification.get('filename')
         errors = parsed_notification.get('errors', [])
-        date = parsed_notification.get('date', fields.Date.today())
+        date = parsed_notification.get('date', fields.Date.context_today(self))
         if not filename and self.l10n_it_edi_attachment_name:
             filename = self.l10n_it_edi_attachment_name
         outcome = parsed_notification.get('outcome', False)

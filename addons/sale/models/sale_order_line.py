@@ -703,7 +703,7 @@ class SaleOrderLine(models.Model):
     @api.depends("product_id", "order_id.commitment_date", "display_qty_widget")
     def _compute_qty_at_date(self):
         """Compute the quantity forecasted of product at delivery date."""
-        self.scheduled_date = fields.Date.today()
+        self.scheduled_date = fields.Date.context_today(self)
         self.virtual_available_at_date = 0
         self.qty_available_today = 0
         for line in self:
@@ -1297,7 +1297,7 @@ class SaleOrderLine(models.Model):
                     invoice_line.move_id.state == "posted"
                     or invoice_line.move_id.payment_state == "invoicing_legacy"
                 ):
-                    invoice_date = invoice_line.move_id.invoice_date or fields.Date.today()
+                    invoice_date = invoice_line.move_id.invoice_date or fields.Date.context_today(self)
                     if invoice_line.move_id.move_type == "out_invoice":
                         amount_invoiced += invoice_line.currency_id._convert(
                             invoice_line.price_subtotal,
@@ -1386,7 +1386,7 @@ class SaleOrderLine(models.Model):
                                     aml.price_unit,
                                     line.currency_id,
                                     line.company_id,
-                                    aml.date or fields.Date.today(),
+                                    aml.date or fields.Date.context_today(self),
                                     round=False,
                                 )
                                 * aml.quantity
@@ -1397,7 +1397,7 @@ class SaleOrderLine(models.Model):
                                     aml.price_unit,
                                     line.currency_id,
                                     line.company_id,
-                                    aml.date or fields.Date.today(),
+                                    aml.date or fields.Date.context_today(self),
                                     round=False,
                                 )
                                 * aml.quantity
@@ -2031,7 +2031,7 @@ class SaleOrderLine(models.Model):
         if not "accrual_entry_date" in self.env.context:
             return False
         accrual_date = fields.Date.from_string(self.env.context["accrual_entry_date"])
-        return accrual_date < fields.Date.today()
+        return accrual_date < fields.Date.context_today(self)
 
     def _get_discounted_price(self):
         self.ensure_one()

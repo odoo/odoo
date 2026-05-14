@@ -313,7 +313,7 @@ class ProductProduct(models.Model):
     def _get_standard_price_at_date(self, date=None):
         """ Get Last Price History """
         self.ensure_one()
-        if not date or date == fields.Date.today():
+        if not date or date == fields.Date.context_today(self):
             return self.standard_price
         if self.cost_method != 'standard':
             raise ValidationError(_("You can only get the standard price at a given date for products with 'Standard Price' as cost method."))

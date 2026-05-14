@@ -81,7 +81,7 @@ class TimesheetCustomerPortal(CustomerPortal):
 
         searchbar_groupby = dict(sorted(self._get_searchbar_groupby().items(), key=lambda item: item[1]['sequence']))
 
-        today = fields.Date.today()
+        today = fields.Date.context_today(request.env.user)
         quarter_start, quarter_end = date_utils.get_quarter(today)
         last_quarter_date = date_utils.subtract(quarter_start, weeks=1)
         last_quarter_start, last_quarter_end = date_utils.get_quarter(last_quarter_date)

@@ -24,7 +24,7 @@ class ProductPricelistReport(models.AbstractModel):
         if not pricelist:
             pricelist = self.env['product.pricelist'].search([], limit=1)
         date_str = data.get('date')
-        date = fields.Date.to_date(date_str) if date_str else fields.Date.today()
+        date = fields.Date.to_date(date_str) if date_str else fields.Date.context_today(self)
 
         active_model = data.get('active_model', 'product.template')
         active_ids = data.get('active_ids') or []

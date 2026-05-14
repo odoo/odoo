@@ -77,7 +77,7 @@ class AccountMove(models.Model):
                         'balance': line.currency_id._convert(
                             relevant_qty * price_unit_val_dif,
                             line.company_currency_id,
-                            line.company_id, fields.Date.today(),
+                            line.company_id,
                         ),
                         'account_id': debit_pdiff_account.id,
                         'analytic_distribution': line.analytic_distribution,
@@ -96,7 +96,7 @@ class AccountMove(models.Model):
                         'balance': line.currency_id._convert(
                             relevant_qty * -price_unit_val_dif,
                             line.company_currency_id,
-                            line.company_id, fields.Date.today(),
+                            line.company_id,
                         ),
                         'account_id': line.account_id.id,
                         'analytic_distribution': line.analytic_distribution,
