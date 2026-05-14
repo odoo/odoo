@@ -71,6 +71,11 @@ export class QWebPlugin extends Plugin {
                 return true;
             }
         },
+        is_formattable_node_predicates: (node) => {
+            if (node.matches?.(PROTECTED_QWEB_SELECTOR)) {
+                return true;
+            }
+        },
 
         /** Providers */
         color_target_providers: (node) => closestElement(node, PROTECTED_QWEB_SELECTOR),
