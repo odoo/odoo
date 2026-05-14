@@ -1,6 +1,6 @@
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { useDomState } from "@html_builder/core/utils";
-import { getModelName } from "./utils";
+import { getModelName, getShareableFormUrl } from "./utils";
 import { FormActionFieldsOption } from "./form_action_fields_option";
 import { session } from "@web/session";
 import { selectElements } from "@html_editor/utils/dom_traversal";
@@ -68,9 +68,13 @@ export class FormOption extends BaseOptionComponent {
                 const formInfo = await prepareFormModel(el, activeForm);
                 await applyFormModel(el, activeForm, activeForm.id, formInfo);
             }
+            const isShareable = el.dataset.shareable === "true";
+            const shareableUrl = getShareableFormUrl(el);
             return {
                 models,
                 activeForm,
+                isShareable,
+                shareableUrl,
             };
         });
     }

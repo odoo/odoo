@@ -36,6 +36,7 @@ import {
     rerenderField,
     getFormCacheKey,
     getDescriptionPosition,
+    getShareableFormUrl,
 } from "./utils";
 import { SyncCache } from "@html_builder/utils/sync_cache";
 import { _t } from "@web/core/l10n/translation";
@@ -44,9 +45,12 @@ import { renderToElement } from "@web/core/utils/render";
 import { selectElements } from "@html_editor/utils/dom_traversal";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { isSmallInteger } from "@html_builder/utils/utils";
+import { generateHTMLId } from "@web/core/utils/strings";
 import { getParsedDataFor } from "@website/js/utils";
 import { isTargetVisible } from "@html_builder/core/visibility_plugin";
 import { nodeSize } from "@html_editor/utils/position";
+import { browser } from "@web/core/browser/browser";
+import { DataAttributeAction } from "@html_builder/core/core_builder_action_plugin";
 
 /**
  * @typedef { Object } FormOptionShared
@@ -158,6 +162,7 @@ export class FormOptionPlugin extends Plugin {
             OnSuccessAction,
             ToggleEndMessageAction,
             FormToggleRecaptchaLegalAction,
+            ToggleShareableAction,
             // Field actions
             CustomFieldAction,
             ExistingFieldAction,
@@ -184,6 +189,8 @@ export class FormOptionPlugin extends Plugin {
             ToggleCharacterLimitAction,
             SetAllowedFileTypesAction,
             ToggleRestrictFileTypesAction,
+            // Form & Field common actions
+            CopyToClipboardAction,
         },
         content_not_editable_selectors: ".s_website_form form",
         content_editable_selectors: [
@@ -1197,6 +1204,18 @@ export class FormToggleRecaptchaLegalAction extends BuilderAction {
         return !!recaptchaLegalEl;
     }
 }
+export class ToggleShareableAction extends DataAttributeAction {
+    static id = "toggleShareable";
+    setup() {
+        this.preview = false;
+    }
+    apply({ editingElement: formEl }) {
+        if (!formEl.id) {
+            formEl.id = generateHTMLId("form-").slice(0, 10);
+        }
+        super.apply(...arguments);
+    }
+}
 // Field actions
 export class CustomFieldAction extends BuilderAction {
     static id = "customField";
@@ -1815,6 +1834,33 @@ export class ToggleCheckboxLabel extends BuilderAction {
     isApplied({ editingElement: fieldEl }) {
         const formatInfo = getFieldFormat(fieldEl);
         return formatInfo.labelInvisible;
+    }
+}
+// Form & Field common actions
+export class CopyToClipboardAction extends BuilderAction {
+    static id = "copyToClipboard";
+    setup() {
+        this.preview = false;
+    }
+    async apply({ editingElement: el, params: { mainParam: elType } }) {
+        let text, message;
+        if (elType === "shareableLink") {
+            text = getShareableFormUrl(el);
+            message = _t("Shareable link copied to clipboard");
+        } else if (elType === "fieldName") {
+            text = getFieldName(el);
+            message = _t("Field Name copied to clipboard");
+        }
+        if (text && message) {
+            let type = "success";
+            try {
+                await browser.navigator.clipboard.writeText(text);
+            } catch {
+                message = _t("Copy operation failed");
+                type = "danger";
+            }
+            this.services.notification.add(message, { type });
+        }
     }
 }
 

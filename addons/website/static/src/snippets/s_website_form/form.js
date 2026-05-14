@@ -19,6 +19,7 @@ import {
     serializeDateTime,
 } from "@web/core/l10n/dates";
 import { getParsedDataFor } from "@website/js/utils";
+import { browser } from "@web/core/browser/browser";
 
 const { DateTime } = luxon;
 
@@ -259,18 +260,33 @@ export class Form extends Interaction {
         // It's necessary to handle field values generated on server-side
         // Because, using t-att- inside form make it non-editable
         // Data-fill-with attribute is given during registry and is used by
-        // to know which user data should be used to prfill fields.
+        // to know which user data should be used to prefill fields.
         let dataForValues = getParsedDataFor(this.el.id, document);
+        const hash = browser.location.hash.replace(/^#/, "");
+        const isShareable = this.el.dataset.shareable === "true";
+        const shouldPrefill =
+            isShareable && (!hash || hash.toLowerCase() === this.el.id.toLowerCase());
+        const urlParams = new URLSearchParams(shouldPrefill ? browser.location.search : "");
         // On the "edit_translations" mode, a <span/> with a translated term
         // will replace the attribute value, leading to some inconsistencies
         // (setting again the <span> on the attributes after the editor's
         // cleanup, setting wrong values on the attributes after translating
         // default values...)
-        if (dataForValues || Object.keys(this.preFillValues).length) {
+        if (dataForValues || Object.keys(this.preFillValues).length || urlParams.size) {
             dataForValues = dataForValues || {};
-            const fieldNames = [...this.el.querySelectorAll("[name]")]
-                .filter((el) => !["submit", "button", "image", "reset", "file"].includes(el.type))
-                .map((el) => el.name);
+            const selector =
+                "[name]:not([type='submit'], [type='button'], [type='image'], [type='reset'], [type='file'])";
+            const fieldGroups = new Map();
+            for (const fieldEl of this.el.querySelectorAll(selector)) {
+                const name = fieldEl.name;
+                const group = fieldGroups.get(name);
+                if (group) {
+                    group.push(fieldEl);
+                } else {
+                    fieldGroups.set(name, [fieldEl]);
+                }
+            }
+
             // All types of inputs do not have a value property (eg:hidden),
             // for these inputs any function that is supposed to put a value
             // property actually puts a HTML value attribute. Because of
@@ -278,26 +294,49 @@ export class Form extends Interaction {
             // data loaded here could become default values. We could set
             // the values to submit() for these fields but this could break
             // customizations that use the current behavior as a feature.
-            for (const name of fieldNames) {
-                const fieldEl = this.el.querySelector(`[name="${CSS.escape(name)}"]`);
+            for (const [name, groupEls] of fieldGroups) {
+                const fieldEl = groupEls[0];
 
-                // In general, we want the data-for and prefill values to
-                // take priority over set default values. The 'email_to'
-                // field is however treated as an exception so that values
-                // explicitly set by users are always used.
+                // In general, we want the data-for and prefill values to take
+                // priority over set default values. The 'email_to' field is
+                // however treated as an exception so that values explicitly
+                // set by users are always used.
                 if (name === "email_to" && fieldEl.value) {
                     continue;
                 }
 
-                let newValue;
-                if (dataForValues && dataForValues[name]) {
+                // Resolve the value by priority:
+                // data-for > data-fill-with > URL params
+                let newValue, isValueFromUrl;
+                if (dataForValues[name]) {
                     newValue = dataForValues[name];
                 } else if (this.preFillValues[fieldEl.dataset.fillWith]) {
                     newValue = this.preFillValues[fieldEl.dataset.fillWith];
+                } else if (
+                    urlParams.has(name) &&
+                    fieldEl.closest(".s_website_form_field").dataset.noPrefill !== "true"
+                ) {
+                    isValueFromUrl = true;
+                    newValue = urlParams.get(name).trim();
                 }
                 if (newValue) {
-                    this.initialValues.set(fieldEl, fieldEl.getAttribute("value"));
-                    fieldEl.value = newValue;
+                    if (fieldEl.type === "checkbox" && groupEls.length === 1) {
+                        fieldEl.checked = ["true", "1", "on"].includes(newValue.toLowerCase());
+                    } else if (fieldEl.type === "checkbox" || fieldEl.type === "radio") {
+                        const values = isValueFromUrl ? urlParams.getAll(name) : [newValue];
+                        for (const val of values) {
+                            const targetEl = groupEls.find((el) => el.value === val);
+                            if (targetEl) {
+                                targetEl.checked = true;
+                            }
+                        }
+                    } else if (
+                        fieldEl.nodeName !== "SELECT" ||
+                        [...fieldEl.options].some((option) => option.value === newValue)
+                    ) {
+                        this.initialValues.set(fieldEl, fieldEl.getAttribute("value"));
+                        fieldEl.value = newValue;
+                    }
                 }
             }
         }
