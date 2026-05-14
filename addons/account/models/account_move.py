@@ -1708,11 +1708,13 @@ class AccountMove(models.Model):
         AccountTax = self.env['account.tax']
         is_invoice = self.is_invoice(include_receipts=True)
 
-        if self.id or not is_invoice:
-            base_amls = self.line_ids.filtered(lambda line: line.display_type == 'product')
-        else:
-            base_amls = self.invoice_line_ids.filtered(lambda line: line.display_type == 'product')
-        base_lines = [self._prepare_product_base_line_for_taxes_computation(line) for line in base_amls]
+        amls = self.line_ids if self.id or not is_invoice else self.invoice_line_ids
+        global_discount_amls = amls._get_discount_lines().filtered(lambda line: line.display_type == 'product')  # discount products
+        base_amls = amls.filtered(lambda line: line.display_type == 'product') - global_discount_amls
+        base_lines = [
+            *[self._prepare_product_base_line_for_taxes_computation(line) for line in base_amls],
+            *[self._prepare_global_discount_lines_for_taxes_computation(line) for line in global_discount_amls],
+        ]
 
         tax_lines = []
         if self.id:

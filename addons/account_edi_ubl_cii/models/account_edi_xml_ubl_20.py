@@ -1079,8 +1079,11 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         }
 
     def _is_document_allowance_charge(self, base_line):
-        """ Whether the base line should be treated as a document-level AllowanceCharge. """
-        return base_line['special_type'] == 'early_payment'
+        """
+        Whether the base line should be treated as a document-level AllowanceCharge.
+        Only EPD and Global discounts are handled for now
+        """
+        return base_line['special_type'] in ('global_discount', 'early_payment')
 
     # -------------------------------------------------------------------------
     # EXPORT: account.move specific templates

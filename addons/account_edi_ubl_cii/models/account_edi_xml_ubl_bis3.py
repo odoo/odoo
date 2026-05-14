@@ -912,6 +912,12 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
         constraints.update(
             self._invoice_constraints_cen_en16931_ubl_new(invoice, vals)
         )
+        # A global discount line must be negative to be exported as an Allowance.
+        if any(
+            base_line['special_type'] == 'global_discount' and base_line['tax_details']['total_excluded_currency'] >= 0
+            for base_line in vals.get('base_lines', [])
+        ):
+            constraints.update({'ubl20_discount_line_must_be_negative': _("Discount lines must have a negative amount to be exported as an allowance.")})
         return constraints
 
     def _invoice_constraints_cen_en16931_ubl_new(self, invoice, vals):
@@ -1267,10 +1273,14 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
 
     def _line_nodes_filter_base_lines(self, vals, filter_function=None):
         # EXTENDS account.edi.xml.ubl
-        # Early payment discount lines should not appear as lines but as allowances/charges.
+        # Early payment discount lines AND global discount lines should not appear as lines but as allowances/charges.
         # Cash rounding lines should not appear as lines but in PayableRoundingAmount.
         def new_filter_function(base_line):
-            if self._ubl_is_early_payment_base_line(base_line) or self._ubl_is_cash_rounding_base_line(base_line):
+            if any([
+                self._ubl_is_early_payment_base_line(base_line),
+                self._ubl_is_global_discount_base_line(base_line),
+                self._ubl_is_cash_rounding_base_line(base_line),
+            ]):
                 return False
             return not filter_function or filter_function(base_line)
 
@@ -1532,8 +1542,9 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
         if not invoice:
             return
 
-        # Early payment discount lines are treated as allowances/charges.
+        # Early payment discount lines AND Global discount lines are treated as allowances/charges.
         self._ubl_add_allowance_charge_nodes_early_payment_discount(sub_vals)
+        self._ubl_add_allowance_charge_nodes_global_discount(sub_vals)
 
     def _ubl_get_tax_subtotal_node(self, vals, tax_subtotal):
         # EXTENDS account.edi.xml.ubl
