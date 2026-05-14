@@ -405,6 +405,8 @@ export async function start(options) {
     // Note that loading the emojis cannot be called before setting up the env because
     // it depends on translations being loaded.
     await Promise.all([mountWithCleanup(WebClient, { env, target }), emojiLoader.load()]);
+    const storeService = env.services["mail.store"];
+    after(() => storeService._runDisposeFns());
     return Object.assign(env, { ...options?.env, target });
 }
 

@@ -181,6 +181,7 @@ export class Store extends Record {
                     // effectively delete the record
                     /** @type {Record} */
                     const record = RHD_QUEUE.keys().next().value;
+                    record._runDisposeFns();
                     RHD_QUEUE.delete(record);
                     deletingRecordsByLocalId.delete(record.localId);
                 }
@@ -296,27 +297,31 @@ export class Store extends Record {
             }
         }
         if (Array.isArray(key)) {
+            /** @type {Function[]} */
+            const arrayDisposeFns = [];
+            arrayDisposeFns.forEach((f) => f());
+            arrayDisposeFns.length = 0;
             for (const k of key) {
-                this._onChange(record, k, callback);
+                arrayDisposeFns.push(this._onChange(record, k, callback));
             }
-            return;
+            return () => {
+                arrayDisposeFns.forEach((f) => f());
+                arrayDisposeFns.length = 0;
+            };
         }
         let running = false;
-        let ready = true;
         proxy = reactive(record);
-        untrack(() =>
+        const disposeFn = untrack(() =>
             immediateEffect(() => {
                 if (!running) {
                     _observe();
-                } else if (ready) {
+                } else {
                     callback(_observe);
                 }
             })
         );
         running = true;
-        return () => {
-            ready = false;
-        };
+        return disposeFn;
     }
     _cleanupData(data) {
         super._cleanupData(data);

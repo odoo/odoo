@@ -1,5 +1,4 @@
 import { CallInvitation } from "@mail/discuss/call/common/call_invitation";
-import { onChange } from "@mail/utils/common/misc";
 
 import { Component } from "@odoo/owl";
 
@@ -21,6 +20,7 @@ export class CallInvitations extends Component {
 export const callInvitationsService = {
     dependencies: ["discuss.rtc", "mail.store", "overlay"],
     start(env, services) {
+        /** @type {import("models").Store} */
         const store = services["mail.store"];
         let removeOverlay;
         const onChangeRingingThreadsLength = () => {
@@ -34,7 +34,7 @@ export const callInvitationsService = {
             }
         };
         onChangeRingingThreadsLength();
-        onChange(store.ringingChannels, "length", onChangeRingingThreadsLength);
+        store.registerOnChange(store.ringingChannels, "length", onChangeRingingThreadsLength);
     },
 };
 registry.category("services").add("discuss.call_invitations", callInvitationsService);

@@ -80,6 +80,7 @@ export function isDragSourceExternalFile(dataTransfer) {
  * @param {Object} target
  * @param {string|string[]} key
  * @param {Function} callback
+ * @returns {Function} dispose function
  */
 export function onChange(target, key, callback) {
     let proxy;
@@ -95,14 +96,21 @@ export function onChange(target, key, callback) {
         }
     }
     if (Array.isArray(key)) {
+        /** @type {Function[]} */
+        const arrayDisposeFns = [];
+        arrayDisposeFns.forEach((f) => f());
+        arrayDisposeFns.length = 0;
         for (const k of key) {
-            onChange(target, k, callback);
+            arrayDisposeFns.push(onChange(target, k, callback));
         }
-        return;
+        return () => {
+            arrayDisposeFns.forEach((f) => f());
+            arrayDisposeFns.length = 0;
+        };
     }
     let running = false;
     proxy = reactive(target);
-    untrack(() =>
+    const disposeFn = untrack(() =>
         immediateEffect(() => {
             _observe();
             if (running) {
@@ -111,7 +119,7 @@ export function onChange(target, key, callback) {
         })
     );
     running = true;
-    return proxy;
+    return disposeFn;
 }
 
 /**
