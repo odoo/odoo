@@ -4,7 +4,7 @@
 from odoo import fields, models
 
 
-class Bank(models.Model):
+class ResBank(models.Model):
     _inherit = "res.bank"
 
     def _get_fiscal_country_codes(self):
@@ -25,5 +25,5 @@ class ResPartnerBank(models.Model):
 
     l10n_mx_edi_clabe = fields.Char(
         "CLABE", help="Standardized banking cipher for Mexico. More info "
-        "wikipedia.org/wiki/CLABE")
+        "https://es.wikipedia.org/wiki/CLABE")
     fiscal_country_codes = fields.Char(store=False, default=_get_fiscal_country_codes)
