@@ -192,9 +192,7 @@ export class DomPlugin extends Plugin {
                 shouldBreakLine = true;
             } else if (
                 !visibleNodes.has(node) &&
-                !this.getResource("unremovable_node_predicates").some((predicate) =>
-                    predicate(node)
-                )
+                (this.checkPredicates("is_node_removable_predicates", node) ?? true)
             ) {
                 removeNode(node, cursors);
             } else if (node.nodeName === "BR") {
