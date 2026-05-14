@@ -91,5 +91,21 @@ export class ProductAttribute extends models.ServerModel {
             display_type: "radio",
             create_variant: "no_variant",
         },
+        {
+            id: 12,
+            name: "addon",
+            display_type: "radio",
+            template_value_ids: [1001],
+            attribute_line_ids: [101],
+            create_variant: "no_variant",
+        },
+        {
+            id: 13,
+            name: "engraving",
+            display_type: "radio",
+            template_value_ids: [1002],
+            attribute_line_ids: [102],
+            create_variant: "dynamic",
+        },
     ];
 }

@@ -49,6 +49,29 @@ export class SaleOrder extends models.ServerModel {
         const orderLines = this.env["sale.order.line"].filter((line) =>
             order.order_line.includes(line.id)
         );
+        const customAttributeValues = this.env["product.attribute.custom.value"].filter((value) =>
+            orderLines
+                .flatMap((line) => line.product_custom_attribute_value_ids || [])
+                .includes(value.id)
+        );
+        const productTemplateAttributeValues = this.env["product.template.attribute.value"].filter(
+            (value) =>
+                orderLines
+                    .flatMap((line) => [
+                        ...(line.product_no_variant_attribute_value_ids || []),
+                        ...customAttributeValues
+                            .filter((customValue) =>
+                                (line.product_custom_attribute_value_ids || []).includes(
+                                    customValue.id
+                                )
+                            )
+                            .map(
+                                (customValue) =>
+                                    customValue.custom_product_template_attribute_value_id
+                            ),
+                    ])
+                    .includes(value.id)
+        );
         const partner = this.env["res.partner"].find((partner) => partner.id === order.partner_id);
         const productProducts = this.env["product.product"].filter((product) =>
             orderLines.map((line) => line.product_id).includes(product.id)
@@ -62,6 +85,8 @@ export class SaleOrder extends models.ServerModel {
             "res.partner": [partner],
             "product.product": productProducts,
             "product.template": productTemplates,
+            "product.attribute.custom.value": customAttributeValues,
+            "product.template.attribute.value": productTemplateAttributeValues,
         };
     }
 }

@@ -18,5 +18,17 @@ export class ProductTemplateAttributeLine extends models.ServerModel {
             attribute_id: 11,
             product_template_value_ids: [7],
         },
+        {
+            id: 101,
+            display_name: "Addon",
+            attribute_id: 9,
+            product_template_value_ids: [1001],
+        },
+        {
+            id: 102,
+            display_name: "Engraving",
+            attribute_id: 10,
+            product_template_value_ids: [1002],
+        },
     ];
 }

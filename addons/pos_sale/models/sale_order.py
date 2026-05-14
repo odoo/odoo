@@ -29,24 +29,28 @@ class SaleOrder(models.Model):
             'picking_ids', 'partner_shipping_id', 'partner_invoice_id', 'date_order', 'write_date', 'amount_paid']
 
     def load_sale_order_from_pos(self, config_id):
-        product_ids = self.order_line.product_id.ids
+        config = self.env['pos.config'].browse(config_id)
+        so_lines = self.order_line
+        product_ids = so_lines.product_id.ids
         product_tmpls = self.env['product.template'].with_context(load_archived=True).load_product_from_pos(
             config_id,
             [('product_variant_ids.id', 'in', product_ids)]
         )
-        sale_order_fields = self._load_pos_data_fields(config_id)
-        sale_order_read = self.read(sale_order_fields, load=False)
-        sale_order_line_fields = self.order_line._load_pos_data_fields(config_id)
-        sale_order_line_read = self.order_line.read(sale_order_line_fields, load=False)
-        sale_order_fp_fields = self.env['account.fiscal.position']._load_pos_data_fields(config_id)
-        sale_order_fp_read = self.fiscal_position_id.read(sale_order_fp_fields, load=False)
-        partner_fields = self.env['res.partner']._load_pos_data_fields(config_id)
+        sale_order_read = self._load_pos_data_read(self, config)
+        sale_order_line_read = so_lines._load_pos_data_read(so_lines, config)
+        sale_order_fp_read = self.fiscal_position_id._load_pos_data_read(self.fiscal_position_id, config)
+        partner_read = self.partner_id._load_pos_data_read(self.partner_id, config)
+        custom_attribute_values_read = so_lines.product_custom_attribute_value_ids._load_pos_data_read(
+            so_lines.product_custom_attribute_value_ids,
+            config,
+        )
 
         return {
             'sale.order': sale_order_read,
             'sale.order.line': sale_order_line_read,
             'account.fiscal.position': sale_order_fp_read,
-            'res.partner': self.partner_id.read(partner_fields, load=False),
+            'res.partner': partner_read,
+            'product.attribute.custom.value': custom_attribute_values_read,
             **product_tmpls,
         }
 
@@ -127,7 +131,7 @@ class SaleOrderLine(models.Model):
     def _load_pos_data_fields(self, config):
         return ['discount', 'display_name', 'price_total', 'price_unit', 'product_id', 'product_uom_qty', 'qty_delivered',
             'qty_invoiced', 'qty_to_invoice', 'display_type', 'name', 'tax_ids', 'is_downpayment', 'extra_tax_data',
-            'write_date', 'product_custom_attribute_value_ids'
+            'write_date', 'product_custom_attribute_value_ids', 'product_no_variant_attribute_value_ids'
         ]
 
     @api.depends('pos_order_line_ids.qty', 'pos_order_line_ids.order_id.picking_ids', 'pos_order_line_ids.order_id.picking_ids.state', 'pos_order_line_ids.refund_orderline_ids.order_id.picking_ids.state')

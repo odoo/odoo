@@ -63,6 +63,12 @@ describe("onClickSaleOrder", () => {
         expect(currentOrder.lines[2].qty).toBe(5);
         expect(currentOrder.lines[2].price_unit).toBe(100);
         expect(currentOrder.lines[2].prices.total_excluded).toBe(500);
+        expect(currentOrder.lines[2].attribute_value_ids.map((value) => value.id)).toEqual([
+            1001, 1002,
+        ]);
+        expect(
+            currentOrder.lines[2].custom_attribute_value_ids.map((value) => value.custom_value)
+        ).toEqual(["Happy Birthday"]);
 
         expect(currentOrder.lines[3].product_id.id).toBe(6);
         expect(currentOrder.lines[3].qty).toBe(3);

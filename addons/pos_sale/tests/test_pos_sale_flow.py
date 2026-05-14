@@ -125,14 +125,31 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
     def test_settle_order_with_different_product(self):
         """This test create an order and settle it in the PoS. But only one of the product is delivered.
             And we need to make sure the quantity are correctly updated on the sale order.
+            Also verifies that custom and no-variant attribute values are preserved on the POS order line.
         """
+        attr_custom = self.env['product.attribute'].create({'name': 'Custom Message', 'create_variant': 'no_variant'})
+        attr_custom_val = self.env['product.attribute.value'].create({'name': 'Custom', 'attribute_id': attr_custom.id, 'is_custom': True})
+        attr_addon = self.env['product.attribute'].create({'name': 'Addon', 'create_variant': 'no_variant'})
+        attr_addon_val = self.env['product.attribute.value'].create({'name': 'Gift Wrap', 'attribute_id': attr_addon.id})
+
         #create 2 products
         product_a = self.env['product.product'].create({
             'name': 'Product A',
             'available_in_pos': True,
             'is_storable': True,
             'lst_price': 10.0,
+            'attribute_line_ids': [
+                Command.create({'attribute_id': attr_custom.id, 'value_ids': [Command.set([attr_custom_val.id])]}),
+                Command.create({'attribute_id': attr_addon.id, 'value_ids': [Command.set([attr_addon_val.id])]}),
+            ],
         })
+        custom_ptav = product_a.product_tmpl_id.attribute_line_ids.filtered(
+            lambda l: l.attribute_id == attr_custom
+        ).product_template_value_ids
+        addon_ptav = product_a.product_tmpl_id.attribute_line_ids.filtered(
+            lambda l: l.attribute_id == attr_addon
+        ).product_template_value_ids
+
         product_b = self.env['product.product'].create({
             'name': 'Product B',
             'available_in_pos': True,
@@ -147,6 +164,11 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
                 'name': product_a.name,
                 'product_uom_qty': 1,
                 'price_unit': product_a.lst_price,
+                'product_no_variant_attribute_value_ids': [Command.set(addon_ptav.ids)],
+                'product_custom_attribute_value_ids': [Command.create({
+                    'custom_product_template_attribute_value_id': custom_ptav.id,
+                    'custom_value': 'Happy Birthday',
+                })],
             }), (0, 0, {
                 'product_id': product_b.id,
                 'name': product_b.name,
@@ -176,6 +198,15 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         self.assertEqual(orderline_product_a.move_ids.product_uom_qty, 0)
         # 1 item to deliver for product b.
         self.assertEqual(orderline_product_b.move_ids.product_uom_qty, 1)
+
+        # Verify attribute values are preserved on the POS order line
+        pos_line = sale_order.pos_order_line_ids.filtered(lambda l: l.product_id == product_a)
+        self.assertIn(addon_ptav.id, pos_line.attribute_value_ids.ids)
+        self.assertIn(custom_ptav.id, pos_line.attribute_value_ids.ids)
+        custom_val = pos_line.custom_attribute_value_ids.filtered(
+            lambda v: v.custom_product_template_attribute_value_id == custom_ptav
+        )
+        self.assertEqual(custom_val.custom_value, 'Happy Birthday')
 
     def test_downpayment_refund(self):
         #create a sale order

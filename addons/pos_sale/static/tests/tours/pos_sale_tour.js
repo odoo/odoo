@@ -53,6 +53,10 @@ registry.category("web_tour.tours").add("PosSettleOrder2", {
             PosSale.settleNthOrder(1),
             ProductScreen.clickOrderline("Product A", "1"),
             ProductScreen.selectedOrderlineHas("Product A", "1"),
+            Order.hasLine({
+                productName: "Product A",
+                attributeLine: "Happy Birthday",
+            }),
             ProductScreen.clickOrderline("Product B", "1"),
             ProductScreen.clickNumpad("Qty", "0"),
             ProductScreen.selectedOrderlineHas("Product B", "0"),

@@ -102,6 +102,12 @@ patch(PosStore.prototype, {
             }
 
             const taxes = orderFiscalPos?.getTaxesAfterFiscalPosition(line.tax_ids) || line.tax_ids;
+            const customAttributeValues = Object.values(
+                line.product_custom_attribute_value_ids || {}
+            );
+            const extraAttributeValues = Object.values(
+                line.product_no_variant_attribute_value_ids || {}
+            );
             const newLineValues = {
                 product_tmpl_id: line.product_id?.product_tmpl_id,
                 product_id: line.product_id,
@@ -114,9 +120,7 @@ patch(PosStore.prototype, {
                 customer_note: line.customer_note,
                 description: line.name,
                 order_id: this.getOrder(),
-                custom_attribute_value_ids: Object.values(
-                    line.product_custom_attribute_value_ids || {}
-                ).map((value_line) => [
+                custom_attribute_value_ids: customAttributeValues.map((value_line) => [
                     "create",
                     {
                         custom_product_template_attribute_value_id:
@@ -128,13 +132,12 @@ patch(PosStore.prototype, {
             if (["line_section", "line_subsection"].includes(line.display_type)) {
                 continue;
             }
-            newLineValues.attribute_value_ids = (line.product_custom_attribute_value_ids || []).map(
-                (value_line) => {
-                    if (value_line?.custom_product_template_attribute_value_id) {
-                        return ["link", value_line.custom_product_template_attribute_value_id];
-                    }
-                }
-            );
+            newLineValues.attribute_value_ids = [
+                ...extraAttributeValues,
+                ...customAttributeValues
+                    .map((value_line) => value_line?.custom_product_template_attribute_value_id)
+                    .filter(Boolean),
+            ].map((value) => ["link", value]);
             const newLine = await this.addLineToCurrentOrder(newLineValues, {}, false);
             previousProductLine = newLine;
 

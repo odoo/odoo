@@ -22,6 +22,8 @@ export class SaleOrderLine extends models.ServerModel {
             "is_downpayment",
             "extra_tax_data",
             "write_date",
+            "product_custom_attribute_value_ids",
+            "product_no_variant_attribute_value_ids",
             "is_repair_line",
         ];
     }
@@ -44,6 +46,8 @@ export class SaleOrderLine extends models.ServerModel {
             is_downpayment: false,
             extra_tax_data: {},
             write_date: "2025-07-03 17:04:14",
+            product_custom_attribute_value_ids: [1],
+            product_no_variant_attribute_value_ids: [1001],
         },
         {
             id: 2,
@@ -62,6 +66,8 @@ export class SaleOrderLine extends models.ServerModel {
             is_downpayment: false,
             extra_tax_data: {},
             write_date: "2025-07-03 17:04:14",
+            product_custom_attribute_value_ids: [],
+            product_no_variant_attribute_value_ids: [],
         },
     ];
 
