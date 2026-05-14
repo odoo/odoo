@@ -83,7 +83,7 @@ class TestTitleToSlug(BaseCase):
 
     def test_special_chars(self):
         self.assertEqual(
-            "hello",
+            "h-e-l-l-o",
             self._slugify("^h☺e$#!l(%l}o☞☞")
         )
 
@@ -133,4 +133,22 @@ class TestTitleToSlug(BaseCase):
         self.assertEqual(
             "do-you-know-馬丁娜-a-la-海灘",
             self._slugify(" Do (YOU) ☞☞ know '馬丁娜 à la 海灘' ? ")
+        )
+
+    def test_slash_separator(self):
+        self.assertEqual(
+            "foo-bar",
+            self._slugify("foo/bar")
+        )
+
+    def test_backslash_separator(self):
+        self.assertEqual(
+            "foo-bar",
+            self._slugify(r"foo\bar")
+        )
+
+    def test_brackets(self):
+        self.assertEqual(
+            "black-chair-premium-with-matte-gold",
+            self._slugify("Black chair(Premium, with matte gold)")
         )
