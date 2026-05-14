@@ -669,6 +669,16 @@ export function isTableCell(node) {
 }
 
 /**
+ * Returns the table's <colgroup> child.
+ *
+ * @param {HTMLTableElement} table - Table whose colgroup should be retrieved.
+ * @returns {HTMLTableColElement|null} The colgroup child, or null if none exists.
+ */
+export function getTableColgroup(table) {
+    return table.querySelector(":scope > colgroup");
+}
+
+/**
  * @param {Element} parentBlock
  * @param {Node[]} nodes
  * @returns {boolean}

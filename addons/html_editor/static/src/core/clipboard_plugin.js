@@ -4,6 +4,7 @@ import {
     isEmptyBlock,
     isContentEditable,
     iconClasses,
+    getTableColgroup,
 } from "../utils/dom_info";
 import { Plugin } from "../plugin";
 import { closestBlock } from "../utils/blocks";
@@ -569,7 +570,7 @@ export class ClipboardPlugin extends Plugin {
                     node.removeAttribute(attribute.name);
                     if (["TD", "TH"].includes(node.nodeName) && getRowIndex(node) === 0 && width) {
                         const table = closestElement(node, "table");
-                        let colgroup = table.querySelector("colgroup");
+                        let colgroup = getTableColgroup(table);
                         if (!colgroup) {
                             colgroup = this.document.createElement("colgroup");
                             table.prepend(colgroup);

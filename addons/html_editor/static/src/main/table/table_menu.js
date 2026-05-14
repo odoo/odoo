@@ -6,7 +6,7 @@ import { getRowIndex, getSelectedCellsMergeInfo } from "@html_editor/utils/table
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { _t } from "@web/core/l10n/translation";
-import { getIframeAdjustedBoundingRect, isEmpty, isTableCell } from "@html_editor/utils/dom_info";
+import { getIframeAdjustedBoundingRect, getTableColgroup, isEmpty, isTableCell } from "@html_editor/utils/dom_info";
 import { getBaseContainerSelector } from "@html_editor/utils/base_container";
 
 export class TableMenu extends Component {
@@ -89,7 +89,7 @@ export class TableMenu extends Component {
         }
         const rows = [...table.rows];
         const rowHasHeight = rows.some((row) => row.style.height);
-        const colgroup = table.querySelector("colgroup");
+        const colgroup = getTableColgroup(table);
         return rowHasHeight || colgroup;
     }
 
@@ -100,7 +100,7 @@ export class TableMenu extends Component {
     get hasCustomColumnWidth() {
         const table = closestElement(this.props.target, "table");
         const index = this.tableGrid[0].indexOf(closestElement(this.props.target, isTableCell));
-        const colgroup = table.querySelector("colgroup");
+        const colgroup = getTableColgroup(table);
         if (colgroup) {
             return colgroup.children[index]?.style.width;
         }
