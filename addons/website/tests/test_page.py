@@ -103,6 +103,45 @@ class TestPage(common.TransactionCase):
         cloned_generic_page_2 = Page.search([('url', '=', '/page_1-1'), ('id', '!=', self.page_1.id)])
         self.assertEqual(len(cloned_generic_page_2), 1, "A generic page being cloned should create a specific page with a new URL if there is already a specific page with that URL")
 
+    def test_clone_page_edited_in_default_language(self):
+        self.env['res.lang']._activate_lang('fr_FR')
+        website = self.env['website'].get_current_website()
+
+        self.assertEqual(website.default_lang_id.code, 'en_US')
+
+        view = self.env['ir.ui.view'].create({
+            'name': 'Repro View',
+            'type': 'qweb',
+            'arch': '<div>Original</div>',
+            'key': 'test.repro_view',
+        })
+
+        view.with_context(lang='fr_FR').arch = '<div>Original FR</div>'
+        page = self.env['website.page'].create({
+            'view_id': view.id,
+            'url': '/repro',
+            'website_id': website.id,
+        })
+
+        view.with_context(
+            lang=website.default_lang_id.code, delay_translations=True,
+        ).arch = '<div>Edited</div>'
+        view.invalidate_recordset(['arch_db'])
+        self.assertEqual(view.with_context(lang='fr_FR').arch, '<div>Original FR</div>',
+                         "confirmed fr_FR translation should still be the stale one")
+        self.assertEqual(view.with_context(lang='fr_FR', check_translations=True).arch, '<div>Edited</div>',
+                         "latest fr_FR content lives in the delayed translation slot")
+
+        dup_url = self.env['website.page'].with_context(lang='fr_FR').clone_page(page.id, clone_menu=False)
+        dup = self.env['website.page'].search([('url', '=', dup_url), ('id', '!=', page.id)])
+        self.assertEqual(len(dup), 1, "The page should have been duplicated")
+
+        self.assertEqual(
+            dup.with_context(lang='fr_FR').arch,
+            '<div>Edited</div>',
+            "Duplicating an edited page must use its latest (delayed) content, not the stale confirmed translation",
+        )
+
     def test_cow_page(self):
         Menu = self.env['website.menu']
         Page = self.env['website.page']

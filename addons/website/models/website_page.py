@@ -134,7 +134,7 @@ class WebsitePage(models.Model):
             url = '/' + self.env['ir.http']._slugify(page_name, max_length=1024, path=True)
             copy_param['url'] = self.env['website'].get_unique_path(url)
 
-        new_page = page.copy(copy_param)
+        new_page = page.with_context(check_translations=True).copy(copy_param)
         # Should not clone menu if the page was cloned from one website to another
         # Eg: Cloning a generic page (no website) will create a page with a website, we can't clone menu (not same container)
         if clone_menu and new_page.website_id == page.website_id:
