@@ -917,7 +917,7 @@ class AccountEdiCommon(models.AbstractModel):
                     return tax
         return self.env['account.tax']
 
-    def _retrieve_taxes(self, record, line_values, tax_type, tax_exigibility=False):
+    def _retrieve_taxes(self, record, line_values, tax_type, tax_exigibility=None):
         """
         Retrieve the taxes on the document line at import.
 
@@ -928,6 +928,8 @@ class AccountEdiCommon(models.AbstractModel):
         # if no results, try to fetch the price_include=True taxes. If results, need to adapt the price_unit.
         logs = []
         taxes = []
+        fpos_dest_ids = record.fiscal_position_id.tax_ids.mapped('tax_dest_id').ids if record.fiscal_position_id else []
+        fpos_domain = [('id', 'in', fpos_dest_ids)] if fpos_dest_ids else []
         for tax_node in line_values.pop('tax_nodes'):
             amount = float(tax_node.text)
             domain = [
@@ -940,10 +942,14 @@ class AccountEdiCommon(models.AbstractModel):
             tax = self.env['account.tax']
             if hasattr(record, '_get_specific_tax'):
                 tax = record._get_specific_tax(line_values['name'], 'percent', amount, tax_type).filtered_domain(domain)[:1]
-            if tax_exigibility:
-                if not tax and tax_exigibility:
+            if tax_exigibility is not None:
+                if not tax:
+                    tax = self.env['account.tax'].search(domain + fpos_domain + [('price_include', '=', False), ('tax_exigibility', '=', tax_exigibility)], limit=1)
+                if not tax:
+                    tax = self.env['account.tax'].search(domain + fpos_domain + [('price_include', '=', True), ('tax_exigibility', '=', tax_exigibility)], limit=1)
+                if not tax:
                     tax = self.env['account.tax'].search(domain + [('price_include', '=', False), ('tax_exigibility', '=', tax_exigibility)], limit=1)
-                if not tax and tax_exigibility:
+                if not tax:
                     tax = self.env['account.tax'].search(domain + [('price_include', '=', True), ('tax_exigibility', '=', tax_exigibility)], limit=1)
                 if not tax:
                     logs.append(
@@ -951,6 +957,10 @@ class AccountEdiCommon(models.AbstractModel):
                         exigibility=tax_exigibility,
                         line=line_values['name']),
                     )
+            if not tax and fpos_domain:
+                tax = self.env['account.tax'].search(domain + fpos_domain + [('price_include', '=', False)], limit=1)
+            if not tax and fpos_domain:
+                tax = self.env['account.tax'].search(domain + fpos_domain + [('price_include', '=', True)], limit=1)
             if not tax:
                 tax = self.env['account.tax'].search(domain + [('price_include', '=', False)], limit=1)
             if not tax:

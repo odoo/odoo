@@ -4387,10 +4387,22 @@ class AccountTax(models.Model):
     @api.model
     def _import_retrieve_tax_from_price_include_exclude(self, tax_values):
         price_include = tax_values.get('price_include')
+        fiscal_position = tax_values.get('fiscal_position')
+
+        fpos_domain = []
+        if fiscal_position:
+            fpos_dest_ids = fiscal_position.tax_ids.mapped('tax_dest_id').ids
+            if fpos_dest_ids:
+                fpos_domain = [('id', 'in', fpos_dest_ids)]
+
         criteria = []
         if not price_include:
+            if fpos_domain:
+                criteria.append({'domain': [('price_include', '=', False)] + fpos_domain})
             criteria.append({'domain': [('price_include', '=', False)]})
         elif price_include is None or price_include:
+            if fpos_domain:
+                criteria.append({'domain': [('price_include', '=', True)] + fpos_domain})
             criteria.append({'domain': [('price_include', '=', True)]})
 
         return {'criteria': criteria}
