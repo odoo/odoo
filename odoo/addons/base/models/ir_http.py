@@ -140,11 +140,9 @@ class IrHttp(models.AbstractModel):
     def _slugify_one(cls, value: str, max_length: int = None) -> str:
         """ Transform a string to a slug that can be used in a url path.
             This method will first try to do the job with python-slugify if present.
-            Otherwise it will process string by replacing spaces and underscores with
-            dashes '-',removing every character that is not a word or a dash,
-            collapsing multiple dashes like --- into a single dash, removing leading
-            and trailing dashes and converting to lowercase.
-            Example: ^h☺e$#!l(%l}o 你好& becomes hello-你好
+            Otherwise, every character that is not a word character will be replaced
+            by a dash '-', collapsing duplicates and removing boundary dashes.
+            Example: ^h☺e$#!l(%l}o 你好& becomes h-e-l-l-o-你好
         """
         if slugify_lib:
             # There are 2 different libraries only python-slugify is supported
@@ -153,12 +151,12 @@ class IrHttp(models.AbstractModel):
             except TypeError:
                 pass
         uni = unicodedata.normalize('NFKD', value)
-        slugified_segments = []
-        for slug in re.split('-|_| ', uni):
-            slug = re.sub(r'([^\w])+', '', slug)
-            if slug:
-                slugified_segments.append(slug.lower())
-        slugified_str = unicodedata.normalize('NFC', '-'.join(slugified_segments))
+
+        # Strip combining marks (so accents like 'é' become 'e' instead of 'e-')
+        cleaned = ''.join(c for c in uni if unicodedata.category(c) != 'Mn')
+        # Replace all non-word chars AND underscores with a single dash
+        slug = re.sub(r'[\W_]+', '-', cleaned).strip('-').lower()
+        slugified_str = unicodedata.normalize('NFC', slug)
         return slugified_str[:max_length]
 
     @classmethod
