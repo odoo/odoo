@@ -1,3 +1,4 @@
+from odoo import Command
 from odoo.addons.account_edi_ubl_cii.tests.test_ubl_import_bis3_invoice_be import TestUblImportBis3InvoiceBE
 from odoo.tests import tagged
 
@@ -177,3 +178,31 @@ class TestUblImportBis3InvoiceBERetrieveTax(TestUblImportBis3InvoiceBE):
                 },
             ],
         )
+
+    def test_import_foreign_tax(self):
+        tax_21 = self.percent_tax(21.0, type_tax_use='sale')
+        tax_21_foreign = self.percent_tax(21.0, type_tax_use='sale')
+
+        domestic = self.env['account.fiscal.position'].create({
+            'name': 'Domestic',
+            'company_id': self.company_data['company'].id,
+        })
+        foreign_trade = self.env['account.fiscal.position'].create({
+            'name': 'Foreign Trade',
+            'company_id': self.company_data['company'].id,
+            'tax_ids': [Command.create({'tax_src_id': tax_21.id, 'tax_dest_id': tax_21_foreign.id})],
+        })
+
+        self.partner_be.property_account_position_id = foreign_trade
+        bill = self._import_invoice_as_attachment_on(
+            test_name='test_partial_import_tax_manual_tax_amounts',
+            journal=self.company_data['default_journal_sale'],
+        )
+        self.assertEqual(bill.invoice_line_ids.tax_ids, tax_21_foreign)
+
+        self.partner_be.property_account_position_id = domestic
+        bill = self._import_invoice_as_attachment_on(
+            test_name='test_partial_import_tax_manual_tax_amounts',
+            journal=self.company_data['default_journal_sale'],
+        )
+        self.assertEqual(bill.invoice_line_ids.tax_ids, tax_21)
