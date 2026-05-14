@@ -454,6 +454,20 @@ describe("wrapInlinesInBlocks", () => {
         editor.shared.dom.wrapInlinesInBlocks(div);
         expect(div.innerHTML).toBe("<p><span>abc</span> <span>def</span></p>");
     });
+    test("should not remove invisible unremovable nodes", async () => {
+        const { editor } = await setupEditor("");
+        const div = document.createElement("div");
+        div.innerHTML = 'text<span class="oe_unremovable"></span>more';
+        editor.shared.dom.wrapInlinesInBlocks(div);
+        expect(div.innerHTML).toBe('<p>text<span class="oe_unremovable"></span>more</p>');
+    });
+    test("should remove invisible removable nodes", async () => {
+        const { editor } = await setupEditor("");
+        const div = document.createElement("div");
+        div.innerHTML = "text<span></span>more";
+        editor.shared.dom.wrapInlinesInBlocks(div);
+        expect(div.innerHTML).toBe("<p>textmore</p>");
+    });
 });
 
 describe("fillEmpty", () => {
