@@ -64,7 +64,7 @@ class AccountChartTemplate(models.AbstractModel):
                     'code': '403.01.01'
                 },
                 'default_cash_difference_expense_account_id': {
-                    'name': 'Cash Difference Loss',
+                    'name': _('Cash Difference Loss'),
                     'code': '601.84.02',
                 }
             })
