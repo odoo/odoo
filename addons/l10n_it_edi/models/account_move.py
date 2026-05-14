@@ -1563,27 +1563,26 @@ class AccountMove(models.Model):
                 self.invoice_origin = ", ".join(po_refs)
 
             # Payment / Bank --------------------------------------
-            if self.move_type not in ('out_invoice', 'in_refund'):
-                payments_info = self._l10n_it_edi_get_payment_info(tree)
-                if payments_info['info']:
-                    message_to_log.append(_("Total amount from the XML File: %s", payments_info['amount_total']))
-                    payment_due_dates = []
-                    self.l10n_it_payment_method = False
-                    for payment_info in payments_info['info']:
-                        # Search / Create the bank account if iban is present
-                        if iban := payment_info.get('acc_number'):
-                            self.with_company(company)._l10n_it_edi_import_partner_bank(self, [iban])
-                        # Set payment data on the bill
-                        self.payment_reference = self.payment_reference or payment_info.get('payment_code', False)
-                        payment_due_dates.append(payment_info.get('invoice_date_due'))
-                        if (
-                            not self.l10n_it_payment_method
-                            and (payment_method := payment_info.get('payment_mode'))
-                            and payment_method in self.env['account.payment.method.line']._get_l10n_it_payment_method_selection_code()
-                        ):
-                            self.l10n_it_payment_method = payment_method
-                    if payment_due_dates := [x for x in payment_due_dates if x]:
-                        self.invoice_date_due = max(payment_due_dates)
+            payments_info = self._l10n_it_edi_get_payment_info(tree)
+            if payments_info['info']:
+                message_to_log.append(_("Total amount from the XML File: %s", payments_info['amount_total']))
+                payment_due_dates = []
+                self.l10n_it_payment_method = False
+                for payment_info in payments_info['info']:
+                    # Search / Create the bank account only on incoming docs
+                    if self.move_type not in ('out_invoice', 'in_refund') and (iban := payment_info.get('acc_number')):
+                        self.with_company(company)._l10n_it_edi_import_partner_bank(self, [iban])
+                    # Set payment data on the bill
+                    self.payment_reference = self.payment_reference or payment_info.get('payment_code', False)
+                    payment_due_dates.append(payment_info.get('invoice_date_due'))
+                    if (
+                        not self.l10n_it_payment_method
+                        and (payment_method := payment_info.get('payment_mode'))
+                        and payment_method in self.env['account.payment.method.line']._get_l10n_it_payment_method_selection_code()
+                    ):
+                        self.l10n_it_payment_method = payment_method
+                if payment_due_dates := [x for x in payment_due_dates if x]:
+                    self.invoice_date_due = max(payment_due_dates)
 
             # Invoice lines ---------------------------------------
             tag_name = './/DettaglioLinee' if not extra_info['simplified'] else './/DatiBeniServizi'
