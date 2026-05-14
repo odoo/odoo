@@ -9,6 +9,9 @@ import { withSequence } from "@html_editor/utils/resource";
 import { _t } from "@web/core/l10n/translation";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { DISABLED_NAMESPACE } from "../toolbar/toolbar_plugin";
+import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { FileModel } from "@web/core/file_viewer/file_model";
+import { downloadFile } from "@web/core/network/download";
 
 export class FilePlugin extends Plugin {
     static id = "file";
@@ -69,12 +72,21 @@ export class FilePlugin extends Plugin {
     };
 
     setup() {
+        this.attachmentViewer = this.services.fileViewer();
         this.editable.addEventListener("click", this.onClick.bind(this));
         this.editable.addEventListener("keydown", this.onKeyDown.bind(this));
         this.document.addEventListener("pointerdown", this.onPointerDown.bind(this));
     }
 
     onClick(ev) {
+        // Handles file preview/download from file icon click
+        const fileImage = closestElement(ev.target, ".o_file_image");
+        if (fileImage) {
+            this.onClickFileImage(fileImage);
+            return;
+        }
+
+        // Handles filename editing and cursor placement
         const fileNameEl = closestElement(ev.target, ".o_file_name_container .o_link_readonly");
         if (!fileNameEl || fileNameEl.isContentEditable) {
             return;
@@ -197,5 +209,32 @@ export class FilePlugin extends Plugin {
         });
         const { name: filename, mimetype, id } = attachment;
         return renderStaticFileBox(filename, mimetype, url, id);
+    }
+
+    onClickFileImage(fileImage) {
+        const fileBox = closestElement(fileImage, ".o_file_box");
+        const fileModel = Object.assign(new FileModel(), {
+            id: fileBox.dataset.attachmentId,
+            name: fileImage.title,
+            mimetype: fileImage.dataset.mimetype,
+        });
+        if (fileModel.isViewable) {
+            this.attachmentViewer.open(fileModel);
+        } else {
+            // If not viewable, download it
+            try {
+                downloadFile(fileModel.downloadUrl);
+            } catch {
+                this.services.dialog.add(AlertDialog, {
+                    body: _t(
+                        "Oops, the file %s could not be found. Please replace this file box by a new one to re-upload the file.",
+                        fileModel.name
+                    ),
+                    title: _t("Missing File"),
+                    confirm: () => {},
+                    confirmLabel: _t("Close"),
+                });
+            }
+        }
     }
 }
