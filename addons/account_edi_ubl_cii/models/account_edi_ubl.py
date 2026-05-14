@@ -2758,6 +2758,15 @@ class AccountEdiUBL(models.AbstractModel):
                 if tax_values := charge.get('attempt_tax_values'):
                     tax_values_list.append(tax_values)
 
+        if customer := collected_values.get('customer_values', {}).get('customer'):
+            fiscal_position = self.env['account.move'].new({
+                'company_id': collected_values['company'].id,
+                'move_type': collected_values['invoice'].move_type,
+                'partner_id': customer.id,
+            }).fiscal_position_id
+            for tax_values in tax_values_list:
+                tax_values['fiscal_position'] = fiscal_position
+
         self.env['account.tax']._import_retrieve_tax(
             search_plan=self._import_ubl_retrieve_taxes_search_plan(collected_values),
             company=company,
