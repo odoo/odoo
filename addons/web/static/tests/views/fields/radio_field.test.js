@@ -1,5 +1,5 @@
 import { expect, test } from "@odoo/hoot";
-import { check, click, queryRect } from "@odoo/hoot-dom";
+import { check, click, queryAllTexts, queryRect } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import {
     clickSave,
@@ -246,4 +246,26 @@ test("radio field is empty", async () => {
     expect(".o_radio_input").toHaveCount(3);
     expect(".o_radio_input:disabled").toHaveCount(3);
     expect(".o_radio_input:checked").toHaveCount(0);
+});
+
+test("radio field on a selection filters options with domain", async () => {
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: /* xml */ `<form><field name="color" widget="radio" domain="[('value', '=', 'red')]"/></form>`,
+    });
+
+    expect("div.o_radio_item").toHaveCount(1);
+    expect(queryAllTexts(".o_radio_item")).toEqual(["Red"]);
+});
+
+test("radio field on a selection without domain shows all options", async () => {
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: /* xml */ `<form><field name="color" widget="radio"/></form>`,
+    });
+
+    expect("div.o_radio_item").toHaveCount(2);
+    expect(queryAllTexts(".o_radio_item")).toEqual(["Red", "Black"]);
 });

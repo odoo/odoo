@@ -1,6 +1,7 @@
 import { Component } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
+import { Domain } from "@web/core/domain";
 import { SelectMenu } from "@web/core/select_menu/select_menu";
 import { getFieldDomain } from "@web/model/relational_model/utils";
 import { useSpecialData } from "@web/views/fields/relational_utils";
@@ -44,10 +45,22 @@ export class SelectionField extends Component {
         switch (this.type) {
             case "many2one":
                 return [...this.specialData.data];
-            case "selection":
-                return this.props.record.fields[this.props.name].selection.filter(
+            case "selection": {
+                const allOptions = this.props.record.fields[this.props.name].selection.filter(
                     (option) => option[1] !== ""
                 );
+                const rawDomain =
+                    typeof this.props.domain === "function"
+                        ? this.props.domain()
+                        : this.props.domain;
+                if (!rawDomain || !rawDomain.length) {
+                    return allOptions;
+                }
+                const domain = new Domain(rawDomain);
+                return allOptions.filter(([value, string]) =>
+                    domain.contains({ value, string })
+                );
+            }
             default:
                 return [];
         }
@@ -58,10 +71,13 @@ export class SelectionField extends Component {
                 return this.props.record.data[this.props.name]
                     ? this.props.record.data[this.props.name].display_name
                     : "";
-            case "selection":
-                return this.props.record.data[this.props.name] !== false
-                    ? this.options.find((o) => o[0] === this.props.record.data[this.props.name])[1]
-                    : "";
+            case "selection": {
+                const value = this.props.record.data[this.props.name];
+                if (value === false) return "";
+                const allItems = this.props.record.fields[this.props.name].selection;
+                const option = allItems.find((o) => o[0] === value);
+                return option ? option[1] : "";
+            }
             default:
                 return "";
         }

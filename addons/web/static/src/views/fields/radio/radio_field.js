@@ -1,6 +1,7 @@
 import { Component } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
+import { Domain } from "@web/core/domain";
 import { getFieldDomain } from "@web/model/relational_model/utils";
 import { useSpecialData } from "@web/views/fields/relational_utils";
 import { standardFieldProps } from "../standard_field_props";
@@ -37,8 +38,20 @@ export class RadioField extends Component {
 
     get items() {
         switch (this.type) {
-            case "selection":
-                return this.props.record.fields[this.props.name].selection;
+            case "selection": {
+                const allItems = this.props.record.fields[this.props.name].selection;
+                const rawDomain =
+                    typeof this.props.domain === "function"
+                        ? this.props.domain()
+                        : this.props.domain;
+                if (!rawDomain || !rawDomain.length) {
+                    return allItems;
+                }
+                const domain = new Domain(rawDomain);
+                return allItems.filter(([value, string]) =>
+                    domain.contains({ value, string })
+                );
+            }
             case "many2one": {
                 return this.specialData.data;
             }

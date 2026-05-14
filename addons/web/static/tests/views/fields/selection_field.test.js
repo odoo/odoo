@@ -415,3 +415,40 @@ test("SelectionField search is disabled in BottomSheet", async function (assert)
     await contains(".o_field_widget[name='color'] input").click();
     expect(".o_bottom_sheet input").toHaveCount(0);
 });
+
+test("SelectionField filters options with domain", async () => {
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: /* xml */ `<form><field name="color" domain="[('value', '=', 'red')]"/></form>`,
+    });
+
+    await contains(".o_field_widget[name='color'] input").click();
+    expect(".o_select_menu_item").toHaveCount(1);
+    expect(queryAllTexts(".o_select_menu_item")).toEqual(["Red"]);
+});
+
+test("SelectionField without domain shows all options", async () => {
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: /* xml */ `<form><field name="color"/></form>`,
+    });
+
+    await contains(".o_field_widget[name='color'] input").click();
+    expect(".o_select_menu_item").toHaveCount(2);
+    expect(queryAllTexts(".o_select_menu_item")).toEqual(["Red", "Black"]);
+});
+
+test("SelectionField displays value not in filtered domain", async () => {
+    Partner._records[0].color = "black";
+
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        resId: 1,
+        arch: /* xml */ `<form edit="0"><field name="color" domain="[('value', '=', 'red')]"/></form>`,
+    });
+
+    expect(".o_field_widget[name='color']").toHaveText("Black");
+});
