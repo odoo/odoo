@@ -2,6 +2,7 @@
 
 import re
 import urllib.parse
+from datetime import UTC, date, datetime
 
 from odoo import _, api, fields, models
 from odoo.exceptions import AccessError, UserError
@@ -265,6 +266,174 @@ class WebsiteLocatedMixin(models.AbstractModel):
 
     def _get_extra_tracking_values(self, **kwargs):
         return {}
+
+
+class WebsiteStructuredDataMixin(models.AbstractModel):
+    """Mixin to generate Schema.org JSON-LD structured data for website pages."""
+    _name = 'website.structured_data.mixin'
+    _description = 'Website Structured Data Mixin'
+
+    def _prepare_jsonld_vals(self):
+        """Build the Schema.org property dictionary for this record.
+        Subclasses must override this to return a dict containing at least
+        the ``@type`` key.
+
+        :return: Dictionary of Schema.org properties.
+        :rtype: dict
+        """
+        return {}
+
+    def _get_jsonld_dict(self, is_detail_page=False):
+        """Collect Schema.org dictionaries for the page.
+        Base implementation returns the website's Organization schema.
+        Override to append page-specific schemas.
+
+        :param bool is_detail_page: True if on a record detail page.
+        :return: List of Schema.org dictionaries.
+        :rtype: list[dict]
+        """
+        website = self.env['website'].get_current_website()
+        return [website._prepare_jsonld_vals()]
+
+    def _render_jsonld(self, is_detail_page=False):
+        """Render the complete JSON-LD payload for the current page.
+        Collects schemas, appends a BreadcrumbList if applicable, and Returns a
+        JSON-LD object with @context and an @graph array bundling all page
+        schemas, or False if none.
+
+        :param bool is_detail_page: True if on a record detail page.
+        :return: JSON-LD string, or False if no schemas exist.
+        :rtype: str | bool
+        """
+        schemas = [s for s in self._get_jsonld_dict(is_detail_page=is_detail_page) if s]
+        if not schemas:
+            return False
+        breadcrumb_items = self._get_breadcrumb_items(is_detail_page=is_detail_page)
+        if len(breadcrumb_items) > 1:
+            schemas.append(self._build_breadcrumb_jsonld(breadcrumb_items))
+        return json_safe.dumps(
+            {'@context': 'https://schema.org', '@graph': schemas},
+            ensure_ascii=False,
+        )
+
+    def _get_breadcrumb_items(self, is_detail_page=False):
+        """Return ordered ``(name, relative_url)`` pairs for the breadcrumb trail.
+        Override to append model-specific items to the base "Home" item.
+
+        :param bool is_detail_page: True if on a record detail page.
+        :return: List of breadcrumb tuples.
+        :rtype: list[tuple[str, str]]
+        """
+        return [(self.env._('Home'), '/')]
+
+    def _build_breadcrumb_jsonld(self, items):
+        """Build a Schema.org ``BreadcrumbList`` dict from ``(name, url)`` pairs.
+        Resolves relative URLs to absolute.
+
+        :param list[tuple[str, str]] items: Ordered breadcrumb entries.
+        :return: BreadcrumbList schema dictionary.
+        :rtype: dict
+        """
+        website = self.env['website'].get_current_website()
+        base_url = website.get_base_url()
+        return {
+            '@type': 'BreadcrumbList',
+            'itemListElement': [
+                {
+                    '@type': 'ListItem',
+                    'position': i,
+                    'name': name,
+                    'item': url_join(base_url, url),
+                }
+                for i, (name, url) in enumerate(items, start=1)
+            ],
+        }
+
+    def _build_collectionpage_jsonld_vals(self, name, path, records, name_field='name', embed_items=False):
+        """Build a ``CollectionPage`` wrapping an ``ItemList`` of ``records``.
+
+        The caller is responsible for only building a CollectionPage when
+        relevant (e.g. a non-empty listing).
+
+        :param str name: CollectionPage name.
+        :param str path: Relative URL of the collection page; ``base_url`` is
+            prepended internally.
+        :param records: Recordset to list.
+        :param str name_field: Record field used as the flat ListItem name.
+        :param bool embed_items: If True each ``ListItem`` embeds the record's
+            full schema (via ``_prepare_jsonld_vals``) under the ``item`` key;
+            otherwise it emits a flat ``url`` + ``name``.
+        :rtype: dict
+        """
+        base_url = self.env['website'].get_current_website().get_base_url()
+        return {
+            '@type': 'CollectionPage',
+            'name': name,
+            'url': f'{base_url}{path}',
+            'publisher': {'@id': f'{base_url}/#organization'},
+            'mainEntity': {
+                '@type': 'ItemList',
+                'numberOfItems': len(records),
+                'itemListElement': [
+                    self._build_listitem_jsonld_vals(record, index, base_url, name_field, embed_items)
+                    for index, record in enumerate(records, start=1)
+                ],
+            },
+        }
+
+    def _build_listitem_jsonld_vals(self, record, position, base_url, name_field, embed_items):
+        """Build a single ``ListItem`` entry for an ``ItemList``.
+
+        :param bool embed_items: If True embed the record's full schema under
+            ``item``; otherwise emit a flat ``url`` + ``name``.
+        :rtype: dict
+        """
+        list_item = {'@type': 'ListItem', 'position': position}
+        if embed_items:
+            list_item['item'] = record._prepare_jsonld_vals()
+        else:
+            list_item['url'] = f'{base_url}{record.website_url}'
+            list_item['name'] = record[name_field]
+        return list_item
+
+    def _build_postaladdress_jsonld_vals(self, partner):
+        """Build a schema.org ``PostalAddress`` dict from a partner's address.
+
+        :param partner: ``res.partner`` whose address fields are read.
+        :return: A ``PostalAddress`` dict, or ``{}`` when no field is filled.
+        :rtype: dict
+        """
+        street = ', '.join(part for part in (partner.street, partner.street2) if part)
+        postal = {
+            key: value
+            for key, value in (
+                ('streetAddress', street),
+                ('addressLocality', partner.city),
+                ('postalCode', partner.zip),
+                ('addressRegion', partner.state_id.code),
+                ('addressCountry', partner.country_id.code),
+            )
+            if value
+        }
+        return {'@type': 'PostalAddress', **postal} if postal else {}
+
+    def _to_iso_datetime(self, dt):
+        """Convert a date/datetime value to an ISO 8601 string in the user's timezone.
+
+        :param dt: Date or Datetime value, or a falsy value.
+        :return: ISO 8601 formatted string (seconds precision), or None if ``dt``
+            is falsy or not a date/datetime.
+        :rtype: str | None
+        """
+        if not dt:
+            return None
+        # Datetime values are tz-naive UTC and must be localized
+        if isinstance(dt, datetime):
+            return dt.replace(tzinfo=UTC).isoformat(timespec='seconds')
+        # Date values have no time component and are serialized as-is
+        if isinstance(dt, date):
+            return dt.isoformat()
+        return None
 
 
 class WebsitePublishedMixin(models.AbstractModel):

@@ -22,6 +22,7 @@ class ForumForum(models.Model):
         'website.multi.mixin',
         'website.located.mixin',
         'website.searchable.mixin',
+        'website.structured_data.mixin',
     ]
     _order = "sequence, id"
 
@@ -146,6 +147,28 @@ class ForumForum(models.Model):
         for record in self:
             if record.id:
                 record.website_url = '/forum/%s' % self.env['ir.http']._slug(record)
+
+    def _get_breadcrumb_items(self, is_detail_page=False):
+        items = super()._get_breadcrumb_items(is_detail_page)
+        items.append((self.env._("Forums"), '/forum'))
+        if is_detail_page:
+            items.append((self.name, self.website_url))
+        return items
+
+    def _get_jsonld_dict(self, is_detail_page=False):
+        schemas = super()._get_jsonld_dict(is_detail_page)
+        if is_detail_page:
+            if questions := self.post_ids.filtered(
+                lambda post: not post.parent_id and post.state == 'active',
+            ):
+                schemas.append(self._build_collectionpage_jsonld_vals(
+                    self.name, self.website_url, questions,
+                ))
+        elif self:
+            schemas.append(self._build_collectionpage_jsonld_vals(
+                self.env._("Forum"), '/forum', self,
+            ))
+        return schemas
 
     @api.depends_context('uid')
     @api.depends('privacy', 'authorized_group_id')

@@ -10,6 +10,7 @@ import werkzeug.urls
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, tools, _
+from odoo.addons.website.tools import text_from_html
 from odoo.exceptions import UserError, ValidationError
 from odoo.fields import Domain
 from odoo.tools.misc import get_lang, format_date
@@ -26,6 +27,7 @@ class EventEvent(models.Model):
         'website.cover_properties.mixin',
         'website.searchable.mixin',
         'website.page_visibility_options.mixin',
+        'website.structured_data.mixin',
     ]
 
     def _default_cover_properties(self):
@@ -666,3 +668,110 @@ class EventEvent(models.Model):
             data['tag_ids'] = event.tag_ids.read(['name'])
             data['image_url'] = event._get_image_url()
         return results_data
+
+    def _prepare_jsonld_vals(self):
+        self.ensure_one()
+        # An event is either physical (address_id) or online (event_share_url);
+        # the two are mutually exclusive. Skip events that are either past, or
+        # non-public.
+        if self.is_done or self.website_visibility != 'public':
+            return {}
+        base_url = self.get_base_url()
+        if self.address_id:
+            address = self.address_id.sudo()
+            location = {'@type': 'Place'}
+            if place_name := self.address_name or address.city:
+                location['name'] = place_name
+            if postal := self._build_postaladdress_jsonld_vals(address):
+                # Fall back to the company country when the venue has none set.
+                if 'addressCountry' not in postal and self.company_id.country_id.code:
+                    postal['addressCountry'] = self.company_id.country_id.code
+                location['address'] = postal
+            attendance_mode = 'OfflineEventAttendanceMode'
+        else:
+            location = {'@type': 'VirtualLocation', 'url': self.event_share_url}
+            attendance_mode = 'OnlineEventAttendanceMode'
+        description = self.subtitle or (
+            self.description and text_from_html(self.description, True)
+        )
+        event_status = (
+            'EventCancelled' if self.kanban_state == 'cancel' else 'EventScheduled'
+        )
+        vals = {
+            '@type': 'Event',
+            '@id': f'{self.website_absolute_url}/#event',
+            'name': self.name,
+            'url': self.website_absolute_url,
+            'startDate': self._to_iso_datetime(self.date_begin),
+            'endDate': self._to_iso_datetime(self.date_end),
+            'eventStatus': f'https://schema.org/{event_status}',
+            'eventAttendanceMode': f'https://schema.org/{attendance_mode}',
+            'location': location,
+        }
+        if offers := self._get_ticket_offer_jsonlds():
+            vals['offers'] = offers
+        if description:
+            vals['description'] = description
+        if image_url := self._get_image_url():
+            vals['image'] = f'{base_url}{image_url}'
+        if self.organizer_id:
+            organizer_sudo = self.organizer_id.sudo()
+            if organizer_sudo == self.env.company.partner_id:
+                vals['organizer'] = {
+                    '@id': f'{base_url}/#organization',
+                }
+            else:
+                organizer = {'@type': 'Organization', 'name': organizer_sudo.name}
+                if organizer_sudo.website:
+                    organizer['url'] = organizer_sudo.website
+                vals['organizer'] = organizer
+        return vals
+
+    def _get_ticket_offer_jsonlds(self):
+        self.ensure_one()
+        return [
+            self._build_offer_jsonld_vals(ticket)
+            for ticket in self.event_ticket_ids.filtered(lambda ticket: not ticket.is_expired)
+        ]
+
+    def _build_offer_jsonld_vals(self, ticket):
+        is_available = not (ticket.is_sold_out or ticket.is_expired)
+        offer = {
+            '@type': 'Offer',
+            'name': ticket.name,
+            'price': 0,
+            'priceCurrency': self.company_id.currency_id.name,
+            'availability': (
+                'https://schema.org/InStock' if is_available else 'https://schema.org/SoldOut'
+            ),
+        }
+        if ticket.seats_limited:
+            offer['inventoryLevel'] = {
+                '@type': 'QuantitativeValue',
+                'value': ticket.seats_available,
+            }
+        if ticket.start_sale_datetime:
+            offer['validFrom'] = self._to_iso_datetime(ticket.start_sale_datetime)
+        if ticket.end_sale_datetime:
+            offer['validThrough'] = self._to_iso_datetime(ticket.end_sale_datetime)
+        if is_available:
+            offer['url'] = f'{self.website_absolute_url}/register'
+        return offer
+
+    def _get_breadcrumb_items(self, is_detail_page=False):
+        items = super()._get_breadcrumb_items(is_detail_page)
+        items.append((self.env._("Events"), '/event'))
+        if is_detail_page:
+            items.append((self.name, self.website_url))
+        return items
+
+    def _get_jsonld_dict(self, is_detail_page=False):
+        schemas = super()._get_jsonld_dict(is_detail_page)
+        if is_detail_page:
+            if event_vals := self._prepare_jsonld_vals():
+                schemas.append(event_vals)
+        elif self:
+            schemas.append(self._build_collectionpage_jsonld_vals(
+                self.env._("Events"), '/event', self,
+            ))
+        return schemas

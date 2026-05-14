@@ -487,6 +487,7 @@ class WebsiteSlides(WebsiteProfile):
                 page=page,
                 step=page_size,
                 scope=3) if page else False,
+            'structured_data': channels._render_jsonld(),
         })
 
         return render_values
@@ -651,6 +652,7 @@ class WebsiteSlides(WebsiteProfile):
         render_values.update({
             'channel': channel,
             'main_object': channel,
+            'structured_data': channel._render_jsonld(is_detail_page=True),
             'active_tab': kw.get('active_tab', 'home'),
             # search
             'search_category': category,
@@ -1018,6 +1020,7 @@ class WebsiteSlides(WebsiteProfile):
         values['channel'] = slide.channel_id
         values = self._prepare_additional_channel_values(values, **kwargs)
         values['signup_allowed'] = request.env['res.users'].sudo()._get_signup_invitation_scope() == 'b2c'
+        values['structured_data'] = slide._render_jsonld(is_detail_page=True)
 
         if kwargs.get('fullscreen') == '1':
             values.update(self._slide_channel_prepare_review_values(slide.channel_id))

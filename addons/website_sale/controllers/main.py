@@ -14,7 +14,6 @@ from odoo.fields import Command, Domain
 from odoo.http import request, route
 from odoo.http.stream import content_disposition
 from odoo.tools import SQL, BinaryBytes, clean_context, float_round, lazy, str2bool
-from odoo.tools.json import scriptsafe as json_scriptsafe
 from odoo.tools.translate import LazyTranslate
 
 from odoo.addons.payment.controllers import portal as payment_portal
@@ -689,13 +688,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 nb_filter_sections += 1
         if category:
             values["main_object"] = category
-            values["markup_data_json"] = json_scriptsafe.dumps(
-                [
-                    website._prepare_ecommerce_store_markup_data(),
-                    self._prepare_breadcrumb_markup_data(website.get_base_url(), category),
-                ],
-                indent=2,
-            )
+        values["structured_data"] = products.with_context(
+            shop_category_id=category.id if category else False,
+        )._render_jsonld()
         values.update(self._get_additional_shop_values(values, **post))
 
         values["default_expand_filter_sections"] = nb_filter_sections < MAX_EXPANDED_FILTER_SECTIONS
@@ -976,15 +971,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
         category = product.public_categ_ids.filtered(
             lambda categ: categ.website_id.id in (website.id, False)
         )[:1]
-        markup_data = [
-            website._prepare_ecommerce_store_markup_data(),
-            product._to_markup_data(website),
-        ]
-        if category:
-            # Add breadcrumb's SEO data.
-            markup_data.append(
-                self._prepare_breadcrumb_markup_data(website.get_base_url(), category)
-            )
+        structured_data = product.with_context(
+            shop_category_id=category.id if category else False,
+        )._render_jsonld(is_detail_page=True)
         keep = QueryURL(SHOP_PATH, **request.session.get("attribute_value_params", {}))
 
         attribute_value_params = self._get_attribute_value_params(kwargs)
@@ -1044,34 +1033,10 @@ class WebsiteSale(payment_portal.PaymentPortal):
             "product": product,
             "product_variant": self.env["product.product"].browse(combination_info["product_id"]),
             "view_track": view_track,
-            "markup_data_json": json_scriptsafe.dumps(markup_data, indent=2),
+            "structured_data": structured_data,
             "shop_path": SHOP_PATH,
             "user_email": self.env.user.email
             or request.session.get("stock_notification_email", ""),
-        }
-
-    def _prepare_breadcrumb_markup_data(self, base_url, category):
-        """Generate JSON-LD breadcrumb markup data for the given category.
-
-        See https://schema.org/BreadcrumbList.
-
-        :param str base_url: The base URL of the current website.
-        :param product.public.category category: The current product category.
-        :return: The JSON-LD markup data.
-        :rtype: dict
-        """
-        return {
-            "@context": "https://schema.org",
-            "@type": "BreadcrumbList",
-            "itemListElement": [
-                {
-                    "@type": "ListItem",
-                    "position": i,
-                    "name": cat.name,
-                    "item": f"{base_url}{cat.website_url}",
-                }
-                for i, cat in enumerate(category.parents_and_self, start=1)
-            ],
         }
 
     @route(

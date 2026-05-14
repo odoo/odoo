@@ -13,7 +13,6 @@ from odoo.exceptions import MissingError
 from odoo.fields import Domain
 from odoo.http import request
 from odoo.tools import BinaryBytes, file_open
-from odoo.tools.json import scriptsafe as json_scriptsafe
 
 from odoo.addons.website_sale import const
 
@@ -1147,44 +1146,6 @@ class Website(models.Model):
             {"name": website.env._("GMC 1"), "website_id": website.id}
             for website in self.filtered(lambda w: w._default_feed_is_valid())
         ])
-
-    def _prepare_ecommerce_store_markup_data(self):
-        """Generate JSON-LD markup data for the website's eCommerce store.
-
-        See https://schema.org/OnlineStore
-
-        :return: The JSON-LD markup data.
-        :rtype: dict
-        """
-        self.ensure_one()
-        company = self.sudo().company_id
-        socials = [
-            company.social_twitter,
-            company.social_facebook,
-            company.social_github,
-            company.social_linkedin,
-            company.social_youtube,
-            company.social_instagram,
-            company.social_tiktok,
-        ]
-        base_url = self.get_base_url()
-
-        return {
-            "@context": "https://schema.org",
-            "@type": "OnlineStore",
-            "name": self.name,
-            "url": base_url,
-            "logo": f"{base_url}/logo.png?company={self.company_id.id}",
-            "sameAs": [social for social in socials if social],
-        }
-
-    def _get_ecommerce_store_markup_json(self):
-        """Generate JSON-LD markup data for the company of the website.
-
-        :return: The JSON-LD markup data.
-        :rtype: dict
-        """
-        return json_scriptsafe.dumps(self._prepare_ecommerce_store_markup_data(), indent=2)
 
     def _get_product_available_qty(self, product, **_kwargs):
         """Give the available quantity of a given product.

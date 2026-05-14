@@ -96,7 +96,8 @@ DEFAULT_BLOCKED_THIRD_PARTY_DOMAINS = '\n'.join([  # noqa: FLY002
 
 
 class Website(models.CachedModel):
-    _inherit = 'website'
+    _name = 'website'
+    _inherit = ['website', 'website.structured_data.mixin']
     _description = "Website"
     _order = "sequence, id"
 
@@ -2470,3 +2471,19 @@ class Website(models.CachedModel):
 
     def _is_tag_classes_watchlisted(self, tagName, atts):
         return self._get_blocked_iframe_containers_classes().intersection((atts.get('class') or '').split(' '))
+
+    # ----------------------------------------------------------------------
+    # Structured Data (JSON-LD)
+    # ----------------------------------------------------------------------
+
+    def _prepare_jsonld_vals(self):
+        """Base Organization payload for the website."""
+        self.ensure_one()
+        base_url = self.get_base_url()
+        return {
+            '@type': 'Organization',
+            '@id': f'{base_url}/#organization',
+            'name': self.name,
+            'url': base_url,
+            'logo': f'{base_url}/web/image/website/{self.id}/logo',
+        }

@@ -8,7 +8,8 @@ from odoo.http import request
 
 
 class ProductProduct(models.Model):
-    _inherit = "product.product"
+    _name = 'product.product'
+    _inherit = ["product.product", "website.structured_data.mixin"]
     _mail_post_access = "read"
 
     variant_ribbon_id = fields.Many2one(string="Variant Ribbon", comodel_name="product.ribbon")
@@ -120,50 +121,50 @@ class ProductProduct(models.Model):
         else:
             self.website_published = False
 
-    def _to_markup_data(self, website):
-        """Generate JSON-LD markup data for the current product.
-
-        :param website website: The current website.
-        :return: The JSON-LD markup data.
-        :rtype: dict
-        """
+    def _prepare_jsonld_vals(self):
+        """JSON-LD payload describing the variant as a https://schema.org/Product."""
         self.ensure_one()
 
+        website = self.env["website"].get_current_website()
+        base_url = website.get_base_url()
         product_price = request.pricelist._get_product_price(
             self, quantity=1, currency=website.currency_id
         )
         # Use sudo to access cross-company taxes.
         price = self._apply_taxes_to_price(product_price, website.currency_id, website=website)
 
-        base_url = website.get_base_url()
-        markup_data = {
-            "@context": "https://schema.org",
+        offer = {
+            "@type": "Offer",
+            "price": price,
+            "priceCurrency": website.currency_id.name,
+        }
+        if self.is_product_variant and self.is_storable:
+            offer["availability"] = (
+                "https://schema.org/OutOfStock" if self._is_sold_out()
+                else "https://schema.org/InStock"
+            )
+
+        vals = {
             "@type": "Product",
+            "@id": f"{base_url}{self.website_url}/#product-{self.id}",
             "name": self.with_context(display_default_code=False).display_name,
             "url": f"{base_url}{self.website_url}",
-            "image": f"{base_url}{website.image_url(self, 'image_1920')}",
-            "offers": {"@type": "Offer", "price": price, "priceCurrency": website.currency_id.name},
+            "offers": offer,
+            "image": f"{base_url}{self._get_image_1920_url()}",
         }
-        if self.website_meta_description or self.description_sale:
-            markup_data["description"] = self.website_meta_description or self.description_sale
+        if description := (self.website_meta_description or self.description_sale):
+            vals["description"] = description
         if self.barcode:
-            markup_data["gtin"] = self.barcode
-        if self.is_product_variant and self.is_storable:
-            if not self._is_sold_out():
-                availability = "https://schema.org/InStock"
-            else:
-                availability = "https://schema.org/OutOfStock"
-            markup_data["offers"]["availability"] = availability
+            vals["gtin"] = self.barcode
 
         direct, others = self._split_standard_from_custom_attributes()
-        markup_data.update(direct)
+        vals.update(direct)
         if others:
-            markup_data["additionalProperty"] = [
+            vals["additionalProperty"] = [
                 {"@type": "PropertyValue", "name": name, "value": value}
                 for name, value in others.items()
             ]
-
-        return markup_data
+        return vals
 
     def _get_image_1920_url(self):
         """Return the local url of the product main image.
