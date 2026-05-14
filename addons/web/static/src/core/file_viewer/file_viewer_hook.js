@@ -12,8 +12,11 @@ const fileViewerService = {
             /**
              * @param {import("@web/core/file_viewer/file_viewer").File} file
              * @param {import("@web/core/file_viewer/file_viewer").File[]} files
+             * @param {Object} [options]
+             * @param {Function} [options.canUnlink]
+             * @param {Function} [options.onUnlink]
              */
-            function open(file, files = [file]) {
+            function open(file, files = [file], { canUnlink, onUnlink } = {}) {
                 closeFn?.();
                 if (!file.isViewable) {
                     return;
@@ -26,6 +29,8 @@ const fileViewerService = {
                         {
                             files: viewableFiles,
                             startIndex: index,
+                            canUnlink,
+                            onUnlink,
                             close: () => closeFn?.(),
                         },
                         { rootId: owner?.root?.el?.getRootNode()?.host?.id }
