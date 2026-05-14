@@ -13,14 +13,12 @@ import {
     isContentEditable,
     isElement,
     isEmptyBlock,
-    isEmptyTextNode,
     isPhrasingContent,
     isSelfClosingElement,
     isStylable,
     isTextNode,
     isVisible,
     isVisibleTextNode,
-    isZwnbsp,
     isZWS,
     previousLeaf,
     PROTECTED_QWEB_SELECTOR,
@@ -41,12 +39,11 @@ const allWhitespaceRegex = /^[\s\u200b]*$/;
 const NOT_A_NUMBER = /[^\d]/g;
 
 function isFormatted(formatPlugin, format) {
-    return (sel, nodes) => formatPlugin.isSelectionFormat(format, nodes);
+    return (sel, nodes) => formatPlugin.isFormatActive(format, nodes);
 }
 
 /**
  * @typedef {Object} FormatShared
- * @property { FormatPlugin['isSelectionFormat'] } isSelectionFormat
  * @property { FormatPlugin['insertAndSelectZws'] } insertAndSelectZws
  * @property { FormatPlugin['mergeAdjacentInlines'] } mergeAdjacentInlines
  * @property { FormatPlugin['formatSelection'] } formatSelection
@@ -62,6 +59,7 @@ function isFormatted(formatPlugin, format) {
  * @typedef {((root: Node) => void)[]} on_merged_adjacent_siblings_handlers
  *
  * @typedef {((className: string) => boolean | undefined)[]} is_format_class_predicates
+ * @typedef {((node: Node) => boolean | undefined)[]} is_formattable_node_predicates
  * @typedef {((node: Node) => boolean | undefined)[]} has_format_predicates
  *
  * @typedef {(({
@@ -78,7 +76,6 @@ export class FormatPlugin extends Plugin {
     // TODO ABD: refactor to handle Knowledge comments inside this plugin without sharing mergeAdjacentInlines.
     static shared = [
         "areSimilarElements",
-        "isSelectionFormat",
         "insertAndSelectZws",
         "mergeAdjacentInlines",
         "formatSelection",
@@ -225,7 +222,7 @@ export class FormatPlugin extends Plugin {
         for (const format of formats) {
             if (
                 !formatsSpecs[format].removeStyle ||
-                !this.hasSelectionFormat(format, editableTargetedNodes)
+                !this.hasFormat(format, editableTargetedNodes)
             ) {
                 continue;
             }
@@ -268,21 +265,33 @@ export class FormatPlugin extends Plugin {
     }
 
     /**
-     * Return true if the current selection on the editable contains a formated
+     * Filters a set of nodes down to those that can carry inline formatting.
+     *
+     * @param {Node[]} [targetedNodes]
+     * @returns {Node[]} Subset of targetedNodes that are formattable.
+     */
+    getFormattableNodes(targetedNodes = this.dependencies.selection.getTargetedNodes()) {
+        return targetedNodes.filter(
+            (node) =>
+                this.checkPredicates("is_formattable_node_predicates", node) ??
+                (isTextNode(node) &&
+                    (isVisibleTextNode(node) || isZWS(node)) &&
+                    this.dependencies.selection.isNodeEditable(node))
+        );
+    }
+
+    /**
+     * Return true if the current selection on the editable contains a formatted
      * node
      *
      * @param {String} format 'bold'|'italic'|'underline'|'strikeThrough'|'switchDirection'
      * @param {Node[]} [targetedNodes]
      * @returns {boolean}
      */
-    hasSelectionFormat(format, targetedNodes = this.dependencies.selection.getTargetedNodes()) {
-        const targetedTextNodes = targetedNodes.filter(
-            (node) =>
-                node.matches?.(PROTECTED_QWEB_SELECTOR) ||
-                (isTextNode(node) && (isVisibleTextNode(node) || isZWS(node)))
-        );
+    hasFormat(format, targetedNodes = this.dependencies.selection.getTargetedNodes()) {
+        const nodes = this.getFormattableNodes(targetedNodes);
         const isFormatted = formatsSpecs[format].isFormatted;
-        return targetedTextNodes.some((n) => isFormatted(n, { editable: this.editable }));
+        return nodes.some((n) => isFormatted(n, { editable: this.editable }));
     }
     /**
      * Return true if the current selection on the editable appears as the given
@@ -293,26 +302,20 @@ export class FormatPlugin extends Plugin {
      * @param {Node[]} [targetedNodes]
      * @returns {boolean}
      */
-    isSelectionFormat(format, targetedNodes = this.dependencies.selection.getTargetedNodes()) {
+    isFormatActive(format, targetedNodes = this.dependencies.selection.getTargetedNodes()) {
         const isFormatted = formatsSpecs[format].isFormatted;
-        const isNonFormattedWhiteSpaces = (node) =>
-            /^(\s|\n)+$/.test(node.nodeValue) && !isFormatted(node, { editable: this.editable });
-        const targetedTextNodes = targetedNodes.filter(
-            (node) =>
-                isTextNode(node) &&
-                !isNonFormattedWhiteSpaces(node) &&
-                this.dependencies.selection.isNodeEditable(node) &&
-                (this.checkPredicates("is_formattable_node_predicates", node) ?? true)
-        );
-        return (
-            targetedTextNodes.length &&
-            targetedTextNodes.every(
-                (node) =>
-                    isZwnbsp(node) ||
-                    isEmptyTextNode(node) ||
-                    isFormatted(node, { editable: this.editable })
-            )
-        );
+        let hasFormatted = false;
+        for (const node of this.getFormattableNodes(targetedNodes)) {
+            if (isFormatted(node, { editable: this.editable })) {
+                hasFormatted = true;
+            } else if (!/^\s+$/.test(node.nodeValue)) {
+                // If the node is not formatted and contains some non-whitespace
+                // character, the format can't be active.
+                return false;
+            }
+            // unformatted whitespace, skip.
+        }
+        return hasFormatted;
     }
 
     hasAnyFormat(targetedNodes) {
@@ -320,10 +323,7 @@ export class FormatPlugin extends Plugin {
             this.dependencies.selection.isNodeEditable
         );
         for (const format of Object.keys(formatsSpecs)) {
-            if (
-                formatsSpecs[format].removeStyle &&
-                this.hasSelectionFormat(format, editableTargetedNodes)
-            ) {
+            if (formatsSpecs[format].removeStyle && this.hasFormat(format, editableTargetedNodes)) {
                 return true;
             }
         }
@@ -354,7 +354,7 @@ export class FormatPlugin extends Plugin {
         // note: does it work if selection is in opposite direction?
         const selection = this.dependencies.split.splitSelection();
         if (typeof applyStyle === "undefined") {
-            applyStyle = !this.isSelectionFormat(formatName);
+            applyStyle = !this.isFormatActive(formatName);
         }
 
         const formattedNodes = new Set();

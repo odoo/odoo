@@ -91,6 +91,23 @@ test("should make qweb tag bold and create a commit even with partial selection 
     expect(lastCommit.data.mutations[0].value).toBe("font-weight: bolder;");
 });
 
+test("bold is active when the selection wraps a bold qweb node", async () => {
+    await setupEditor(`<p>[<strong t-out="'Test'" contenteditable="false">Test</strong>]</p>`, {
+        config: { Plugins: [...MAIN_PLUGINS, QWebPlugin] },
+    });
+    await animationFrame();
+    await expectElementCount('.o-we-toolbar [name="bold"].active', 1);
+});
+
+test("bold is inactive when the selection contains a non-bold qweb node", async () => {
+    await setupEditor(
+        `<p>[<span t-out="'Test'" contenteditable="false">Test</span><strong>Y]</strong></p>`,
+        { config: { Plugins: [...MAIN_PLUGINS, QWebPlugin] } }
+    );
+    await animationFrame();
+    await expectElementCount('.o-we-toolbar [name="bold"]:not(.active)', 1);
+});
+
 test.tags("desktop");
 test("should make a whole heading bold after a triple click", async () => {
     await testEditor({
@@ -635,4 +652,28 @@ test("should toggle bold across nested spans", async () => {
     );
     bold(editor);
     expect(getContent(el)).toBe(`<p><span><span>[A</span> </span></p><p>B]</p>`);
+});
+
+test("should toggle bold across sibling strongs with intervening space", async () => {
+    const { el, editor } = await setupEditor(`<p><strong>[A</strong> <strong>B]</strong></p>`);
+    bold(editor);
+    expect(getContent(el)).toBe(`<p>[A B]</p>`);
+    bold(editor);
+    expect(getContent(el)).toBe(`<p><strong>[A B]</strong></p>`);
+});
+
+test("toggle bold across <strong>s with intervening unformatted word applies bold", async () => {
+    await testEditor({
+        contentBefore: `<p><strong>[AB</strong> CD <strong>EF]</strong></p>`,
+        stepFunction: bold,
+        contentAfter: `<p><strong>[AB CD EF]</strong></p>`,
+    });
+});
+
+test("toggle bold on a selection that is only a formatted space", async () => {
+    await testEditor({
+        contentBefore: `<p>A<strong>[ ]</strong>B</p>`,
+        stepFunction: bold,
+        contentAfter: `<p>A[ ]B</p>`,
+    });
 });
