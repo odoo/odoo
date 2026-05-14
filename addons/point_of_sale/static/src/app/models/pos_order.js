@@ -251,7 +251,7 @@ export class PosOrder extends Base {
         const taxTotals = this.taxTotals;
 
         const order_rounding = taxTotals.order_rounding;
-        const order_change = -this.get_change();
+        const order_change = this.get_change();
 
         return {
             orderlines: this.getSortedOrderlines().map((l) =>
