@@ -18,7 +18,7 @@ patch(ClosePosPopup.prototype, {
             return;
         }
 
-        if (this.pos.company.l10n_in_is_gst_registered) {
+        if (this.pos.company.l10n_in_gst_registration_type) {
             const missingHsnLines = await this.orm.call(
                 "pos.session",
                 "set_missing_hsn_codes_in_pos_orders",

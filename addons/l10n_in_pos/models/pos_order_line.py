@@ -26,7 +26,7 @@ class PosOrderLine(models.Model):
 
     def _prepare_base_lines_for_taxes_computation(self):
         base_lines = super()._prepare_base_lines_for_taxes_computation()
-        if self.company_id.l10n_in_is_gst_registered:
+        if self.company_id.l10n_in_gst_registration_type:
             for index, line in enumerate(self):
                 base_lines[index].update({
                     'l10n_in_hsn_code': line.l10n_in_hsn_code,

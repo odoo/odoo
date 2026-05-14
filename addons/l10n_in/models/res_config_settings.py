@@ -54,10 +54,6 @@ class ResConfigSettings(models.TransientModel):
     )
 
     # GST settings
-    l10n_in_is_gst_registered = fields.Boolean(
-        related='company_id.l10n_in_is_gst_registered',
-        readonly=False
-    )
     l10n_in_gstin = fields.Char(
         string="GST Number",
         related='company_id.vat',
@@ -65,6 +61,14 @@ class ResConfigSettings(models.TransientModel):
     )
     l10n_in_gstin_status_feature = fields.Boolean(
         related='company_id.l10n_in_gstin_status_feature',
+        readonly=False
+    )
+    l10n_in_gst_registration_type = fields.Selection(
+        related='company_id.l10n_in_gst_registration_type',
+        readonly=False
+    )
+    l10n_in_composition_tax_rate = fields.Selection(
+        related='company_id.l10n_in_composition_tax_rate',
         readonly=False
     )
     l10n_in_gst_efiling_feature = fields.Boolean(string="GST Reports & E-Filing")

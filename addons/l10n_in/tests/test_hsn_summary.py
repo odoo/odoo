@@ -13,9 +13,7 @@ class TestL10nInHSNSummary(TestTaxCommon):
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.company_data['company'].write({
-            'l10n_in_is_gst_registered': True,
-        })
+        cls.company_data['company'].l10n_in_gst_registration_type = 'regular'
 
         cls.test_hsn_code_1 = '1234'
         cls.test_hsn_code_2 = '4321'

@@ -29,7 +29,7 @@ class PosSession(models.Model):
 
     def _prepare_account_move_line_commands_for_reversal(self, order, invoice_to_reverse):
         commands = super()._prepare_account_move_line_commands_for_reversal(order, invoice_to_reverse)
-        if not order.config_id.company_id.l10n_in_is_gst_registered:
+        if not order.config_id.company_id.l10n_in_gst_registration_type:
             return commands
 
         product_lines = invoice_to_reverse.line_ids.filtered(
@@ -46,7 +46,7 @@ class PosSession(models.Model):
     def _validate_session_accounting(self):
         super()._validate_session_accounting()
         gst_sessions = self.filtered(
-            lambda session: session.company_id.l10n_in_is_gst_registered
+            lambda session: session.company_id.l10n_in_gst_registration_type
             and (session.sale_move_ids or session.refund_move_ids),
         )
         if gst_sessions:
