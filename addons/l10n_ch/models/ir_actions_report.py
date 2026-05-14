@@ -54,8 +54,8 @@ class IrActionsReport(models.Model):
                     qr_pdf = OdooPdfFileReader(stream['stream'], strict=False)
                     res_pdf = OdooPdfFileReader(res[invoice_id]['stream'], strict=False)
 
-                    last_page = res_pdf.pages(-1)
-                    last_page.merge_page(qr_pdf.pages(0))
+                    last_page = res_pdf.pages[-1]
+                    last_page.merge_page(qr_pdf.pages[0])
                     last_page.compress_content_streams()
 
                     output_pdf = OdooPdfFileWriter()
