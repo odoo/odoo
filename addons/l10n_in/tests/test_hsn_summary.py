@@ -15,6 +15,7 @@ class TestL10nInHSNSummary(TestTaxCommon):
 
         cls.company_data['company'].write({
             'l10n_in_is_gst_registered': True,
+            'l10n_in_gst_registration_type': 'regular',
         })
 
         cls.test_hsn_code_1 = '1234'

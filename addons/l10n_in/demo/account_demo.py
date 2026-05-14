@@ -29,6 +29,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_use_credit_limit': True,
                 'account_credit_limit': 10000,
                 'l10n_in_is_gst_registered': True,
+                'l10n_in_gst_registration_type': 'regular',
                 'l10n_in_tcs_feature': True,
                 'l10n_in_tds_feature': True,
                 'l10n_in_edi_production_env': False,

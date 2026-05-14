@@ -67,6 +67,14 @@ class ResConfigSettings(models.TransientModel):
         related='company_id.l10n_in_gstin_status_feature',
         readonly=False
     )
+    l10n_in_gst_registration_type = fields.Selection(
+        related='company_id.l10n_in_gst_registration_type',
+        readonly=False
+    )
+    l10n_in_composition_tax_rate = fields.Selection(
+        related='company_id.l10n_in_composition_tax_rate',
+        readonly=False
+    )
     l10n_in_gst_efiling_feature = fields.Boolean(string="GST Reports & E-Filing")
     l10n_in_disable_b2c_hsn_reporting = fields.Boolean(related='company_id.l10n_in_disable_b2c_hsn_reporting', readonly=False)
     l10n_in_fetch_vendor_edi_feature = fields.Boolean(string="Fetch Vendor E-Invoiced Document")

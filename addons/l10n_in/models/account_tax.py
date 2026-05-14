@@ -24,6 +24,7 @@ class AccountTax(models.Model):
             ('nil_rated', 'Nil Rated'),
             ('exempt', 'Exempt'),
             ('non_gst', 'Non-GST'),
+            ('composition', 'Composition'),
         ],
         string="Indian Tax Type",
     )
