@@ -72,6 +72,11 @@ class AccountTax(models.Model):
         results['l10n_in_hsn_code'] = self._get_base_line_field_value_from_record(record, 'l10n_in_hsn_code', kwargs, False)
         return results
 
+    def _add_tax_details_in_base_line(self, base_line, company, rounding_method=None):
+        if company.country_code == 'IN' and company.l10n_in_gst_registration_type == 'composition':
+            base_line['filter_tax_function'] = lambda t: t.type_tax_use == 'purchase'
+        super()._add_tax_details_in_base_line(base_line, company, rounding_method=rounding_method)
+
     @api.model
     def _l10n_in_get_hsn_summary_table(self, base_lines, display_uom):
         l10n_in_gst_tax_types = set()

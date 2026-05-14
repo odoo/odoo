@@ -1,4 +1,4 @@
-from odoo import _, fields, models
+from odoo import _, fields, models, api
 from odoo.exceptions import UserError, ValidationError, RedirectWarning
 from odoo.tools.sql import column_exists, create_column
 from odoo.tools import SQL
@@ -65,6 +65,14 @@ class ResConfigSettings(models.TransientModel):
     l10n_in_gstin = fields.Char(
         string="GST Number",
         related='company_id.vat',
+        readonly=False
+    )
+    l10n_in_gst_registration_type = fields.Selection(
+        related='company_id.l10n_in_gst_registration_type',
+        readonly=False
+    )
+    l10n_in_composition_scheme_tax_rate = fields.Selection(
+        related='company_id.l10n_in_composition_scheme_tax_rate',
         readonly=False
     )
     l10n_in_gstin_status_feature = fields.Boolean(

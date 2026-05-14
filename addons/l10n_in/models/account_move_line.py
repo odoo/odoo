@@ -139,6 +139,9 @@ class AccountMoveLine(models.Model):
                 elif any(tax.l10n_in_tax_type == 'non_gst' for tax in line.tax_ids):
                     return 'sale_non_gst_supplies'
 
+            if move.company_id.l10n_in_gst_registration_type == 'composition':
+                return
+
             # B2CS: Unregistered or Consumer sales with gst tags
             if gst_treatment in ('unregistered', 'consumer') and not is_reverse_charge_tax(line):
                 if (transaction_type == 'intra_state' and tags_have_categ(line_tags, ['sgst', 'cgst', 'cess'])) or (
