@@ -547,6 +547,9 @@ class AccountMove(models.Model):
             product A    | 123456   | 1000       | 1   | 100      |  900
             product B    | 123456   | 1500       | 2   | 300      | 2700
             totally discounted lines are kept as 0, though
+
+            Please update the ewaybill equivalent while working on this method:
+            _l10n_in_ewaybills_managing_negative_json_lines
         """
         def discount_group_key(line_vals):
             return "%s-%s" % (line_vals['HsnCd'], line_vals['GstRt'])

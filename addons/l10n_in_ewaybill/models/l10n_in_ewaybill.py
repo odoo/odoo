@@ -6,12 +6,14 @@ import logging
 import pytz
 import re
 
+from collections import defaultdict
 from datetime import datetime
 from itertools import starmap
 
 from odoo import _, api, fields, models
 from odoo.exceptions import LockError, UserError
 from odoo.addons.l10n_in_ewaybill.tools.ewaybill_api import EWayBillApi, EWayBillError
+from odoo.tools import float_compare
 
 _logger = logging.getLogger(__name__)
 
@@ -710,12 +712,89 @@ class L10nInEwaybill(models.Model):
             "totInvValue": round_value(total_invoice_value),
         }
 
+    def _l10n_in_ewaybills_managing_negative_json_lines(self, json_payload):
+        """Set negative lines against positive lines as discount with same HSN code and tax rate
+            With negative lines
+            product name | hsn code | total amount | qty
+            =============================================
+            product A    | 123456   | 1000         | 1
+            product B    | 123456   | 1500         | 2
+            Discount     | 123456   | -300         | 1
+            Converted to without negative lines
+            product name | hsn code | total amount | qty
+            =============================================
+            product A    | 123456   | 1000         | 1
+            product B    | 123456   | 1200         | 2
+            totally discounted lines are kept as 0, though
+
+            Please update the edi equivalent while working on this method:
+            _l10n_in_edi_generate_invoice_json_managing_negative_lines
+        """
+        def discount_group_key(line_vals):
+            return (f"{line_vals['hsnCode']}"
+                f"-{line_vals.get('cgstRate', '0.0')}"
+                f"-{line_vals.get('sgstRate', '0.0')}"
+                f"-{line_vals.get('igstRate', '0.0')}"
+                f"-{line_vals.get('cessRate', '0.0')}"
+                )
+
+        def put_discount_on(discount_line_vals, other_line_vals):
+            discount = -discount_line_vals['taxableAmount']
+            discount_to_allow = other_line_vals['taxableAmount']
+            in_round = self.account_move_id._l10n_in_round_value
+            amount_keys = ('taxableAmount',)
+            if float_compare(discount_to_allow, discount, precision_rounding=self.account_move_id.currency_id.rounding) < 0:
+                # Update discount line, needed when discount is more then max line, in short remaining_discount is not zero
+                discount_line_vals.update({
+                    key: in_round(discount_line_vals[key] + other_line_vals[key])
+                    for key in amount_keys
+                })
+                other_line_vals.update(dict.fromkeys(amount_keys, 0.00))
+                return False
+            other_line_vals.update({
+                key: in_round(other_line_vals[key] + discount_line_vals[key])
+                for key in amount_keys
+            })
+            return True
+
+        discount_lines = []
+        for discount_line in json_payload['itemList'][::-1]:  # to be sure to not skip in the loop
+            if discount_line['taxableAmount'] < 0:
+                discount_lines.append(discount_line)
+                json_payload['itemList'].remove(discount_line)
+            elif discount_line['quantity'] < 0:
+                # if taxableAmount is positive and quantity is negative
+                # it implies price unit is negative then we set quantity
+                # as positive because government does not accept negative
+                # in qty or price unit (price unit isn't send)
+                discount_line['quantity'] *= -1
+
+        if not discount_lines:
+            return json_payload
+        self.message_post(
+            author_id=self.env.ref('base.partner_root').id,
+            body=_("Negative lines will be decreased from positive invoice lines having the same taxes and HSN code")
+        )
+
+        lines_grouped_and_sorted = defaultdict(list)
+        for line in sorted(json_payload['itemList'], key=lambda i: i['taxableAmount'], reverse=True):
+            lines_grouped_and_sorted[discount_group_key(line)].append(line)
+
+        for discount_line in discount_lines[::-1]:  # to be sure to not skip in the loop
+            for apply_discount_on in lines_grouped_and_sorted[discount_group_key(discount_line)]:
+                if put_discount_on(discount_line, apply_discount_on):
+                    discount_lines.remove(discount_line)
+        if discount_lines:
+            raise UserError(_("Some discount lines could not have been merged into standard lines."
+            "\nThey may miss HSN code, taxes, or exceeded the amount of corresponding lines"))
+        return json_payload
+
     def _ewaybill_generate_direct_json(self):
-        return {
+        return self._l10n_in_ewaybills_managing_negative_json_lines({
             **self._prepare_ewaybill_base_json_payload(),
             **self._prepare_ewaybill_transportation_json_payload(),
             **self._prepare_ewaybill_tax_details_json_payload(),
-        }
+        })
 
     def _set_data_from_attachment(self):
         """

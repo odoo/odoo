@@ -4,6 +4,7 @@ from freezegun import freeze_time
 
 from odoo import _
 from odoo.addons.l10n_in.tests.common import L10nInTestInvoicingCommon
+from odoo.exceptions import UserError
 from odoo.tests import tagged
 
 
@@ -26,6 +27,7 @@ class TestEwaybillJson(L10nInTestInvoicingCommon):
         cls.invoice_zero_qty.write({
             "invoice_line_ids": [(1, l_id, {"quantity": 0}) for l_id in cls.invoice_zero_qty.invoice_line_ids.ids]})
         cls.invoice_zero_qty.action_post()
+        cls.invoice_negative_lines = cls.init_invoice("out_invoice", post=False, products=cls.product_a + cls.product_a + cls.product_with_cess)
 
     def test_edi_json(self):
         default_ewaybill_vals = {
@@ -47,6 +49,10 @@ class TestEwaybillJson(L10nInTestInvoicingCommon):
         ewaybill_invoice_zero_qty = Ewaybill.create({
             'account_move_id': self.invoice_zero_qty.id,
             **default_ewaybill_vals
+        })
+        ewaybill_invoice_negative_line = Ewaybill.create({
+            'account_move_id': self.invoice_negative_lines.id,
+            **default_ewaybill_vals,
         })
         json_value = ewaybill_invoice._ewaybill_generate_direct_json()
         expected = {
@@ -180,6 +186,76 @@ class TestEwaybillJson(L10nInTestInvoicingCommon):
             "totInvValue": 0.0
         })
         self.assertDictEqual(json_value, expected, "Indian EDI with 0(zero) quantity sent json value is not matched")
+        # =================================== Negative line test ============================================
+        expeted_item_list = [
+                {
+                  "productName": "product_a",
+                  "hsnCode": "111111",
+                  "productDesc": "product_a",
+                  "quantity": 1.0,
+                  "qtyUnit": "UNT",
+                  "taxableAmount": 600.00,
+                  "cgstRate": 2.5,
+                  "sgstRate": 2.5,
+                },
+                {
+                  "productName": "product_with_cess",
+                  "hsnCode": "333333",
+                  "productDesc": "product_with_cess",
+                  "quantity": 1.0,
+                  "qtyUnit": "UNT",
+                  "taxableAmount": 1000.00,
+                  "cgstRate": 6.0,
+                  "sgstRate": 6.0,
+                  "cessRate": 5.0,
+                },
+            ]
+        self.invoice_negative_lines.write({
+            "invoice_line_ids": [
+                (1, self.invoice_negative_lines.invoice_line_ids[1].id, {"price_unit": -400.0}),
+            ]})
+        self.invoice_negative_lines.action_post()
+        json_value = ewaybill_invoice_negative_line._ewaybill_generate_direct_json()
+        self.assertListEqual(
+            json_value['itemList'],
+            expeted_item_list,
+            "Indian ewaybill with negative price is not matched")
+        # =================================== Negative qty test =============================================
+        self.invoice_negative_lines.button_draft()
+        self.invoice_negative_lines.write({
+            "invoice_line_ids": [
+                (1, self.invoice_negative_lines.invoice_line_ids[0].id, {"price_unit": 1000}),
+                (1, self.invoice_negative_lines.invoice_line_ids[1].id, {"price_unit": 400, 'quantity': -1}),
+            ]})
+        self.invoice_negative_lines.action_post()
+        json_value = ewaybill_invoice_negative_line._ewaybill_generate_direct_json()
+        self.assertListEqual(
+            json_value['itemList'],
+            expeted_item_list,
+            "Indian ewaybill with negative qty is not matched")
+        # =================================== double negative test ==========================================
+        self.invoice_negative_lines.button_draft()
+        self.invoice_negative_lines.write({
+            "invoice_line_ids": [
+                (1, self.invoice_negative_lines.invoice_line_ids[0].id, {"price_unit": -1000, 'quantity': -1}),
+                (1, self.invoice_negative_lines.invoice_line_ids[1].id, {"price_unit": -400, 'quantity': 1}),
+            ]})
+        self.invoice_negative_lines.action_post()
+        json_value = ewaybill_invoice_negative_line._ewaybill_generate_direct_json()
+        self.assertListEqual(
+            json_value['itemList'],
+            expeted_item_list,
+            "Indian ewaybill with negative price and qty is not matched")
+        # =================================== Negative line overflowing test =============================================
+        self.invoice_negative_lines.button_draft()
+        self.invoice_negative_lines.write({
+            "invoice_line_ids": [
+                (1, self.invoice_negative_lines.invoice_line_ids[1].id, {"price_unit": 1000}),
+                (1, self.invoice_negative_lines.invoice_line_ids[2].id, {"price_unit": -1100}),
+            ]})
+        self.invoice_negative_lines.action_post()
+        with self.assertRaises(UserError):
+            ewaybill_invoice_negative_line._ewaybill_generate_direct_json()
 
     def test_ewaybill_zero_distance(self):
         """
