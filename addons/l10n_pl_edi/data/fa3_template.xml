@@ -32,6 +32,7 @@
         ======================================================================
       -->
       <Podmiot1>
+        <PrefiksPodatnika t-if="prefiks_podatnika">PL</PrefiksPodatnika>
         <DaneIdentyfikacyjne>
           <t t-if="seller.vat">
           <!-- NIP: Polish Tax Identification Number. The value is cleaned of 'PL' prefix and separators. -->
