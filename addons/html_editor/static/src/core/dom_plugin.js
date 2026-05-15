@@ -244,6 +244,7 @@ export class DomPlugin extends Plugin {
 
         const block = closestBlock(selection.anchorNode);
         container = this.processThrough("before_insert_processors", container, block);
+        this.trigger("before_insert_handlers");
         if (!container.hasChildNodes()) {
             return [];
         }

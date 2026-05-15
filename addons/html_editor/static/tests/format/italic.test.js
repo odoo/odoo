@@ -153,24 +153,6 @@ test("should make two paragraphs (separated with whitespace) italic, then not it
     });
 });
 
-test("should get ready to type in italic", async () => {
-    await testEditor({
-        contentBefore: `<p>ab[]cd</p>`,
-        stepFunction: italic,
-        contentAfterEdit: `<p>ab<em data-oe-zws-empty-inline="">\u200B[]</em>cd</p>`,
-        contentAfter: `<p>ab[]cd</p>`,
-    });
-});
-
-test("should get ready to type in not italic", async () => {
-    await testEditor({
-        contentBefore: `<p><em>ab[]cd</em></p>`,
-        stepFunction: italic,
-        contentAfterEdit: `<p><em>ab</em><span data-oe-zws-empty-inline="">\u200B[]</span><em>cd</em></p>`,
-        contentAfter: `<p><em>ab[]cd</em></p>`,
-    });
-});
-
 test("should not format non-editable text (italic)", async () => {
     await testEditor({
         contentBefore: '<p>[a</p><p contenteditable="false">b</p><p>c]</p>',
@@ -179,16 +161,18 @@ test("should not format non-editable text (italic)", async () => {
     });
 });
 
-test("should remove empty italic tag when changing selection", async () => {
+test("should change italic active state when changing selection", async () => {
     const { editor, el } = await setupEditor("<p>ab[]cd</p>");
 
     italic(editor);
     await tick();
-    expect(getContent(el)).toBe(`<p>ab<em data-oe-zws-empty-inline="">\u200B[]</em>cd</p>`);
+    expect(getContent(el)).toBe(`<p>ab[]cd</p>`);
 
     await simulateArrowKeyPress(editor, "ArrowLeft");
     await tick(); // await selectionchange
     expect(getContent(el)).toBe(`<p>a[]bcd</p>`);
+    await insertText(editor, "x");
+    expect(getContent(el)).toBe(`<p>ax[]bcd</p>`);
 });
 
 test("should make a few characters italic inside table (italic)", async () => {
@@ -248,7 +232,7 @@ test("should not add history commit for italic on collapsed selection", async ()
     // commit. The empty inline tag is temporary: auto-cleaned if unused. We want
     // to avoid having a phantom commit in the history.
     await press(["ctrl", "i"]);
-    expect(getContent(el)).toBe(`<p>abcd<em data-oe-zws-empty-inline="">\u200B[]</em></p>`);
+    expect(getContent(el)).toBe(`<p>abcd[]</p>`);
 
     await insertText(editor, "A");
     expect(getContent(el)).toBe(`<p>abcd<em>A[]</em></p>`);

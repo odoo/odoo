@@ -53,11 +53,11 @@ export class FontSizePlugin extends Plugin {
                         const resolvedSize = this.resolveFontSize(parseFloat(size));
                         if (resolvedSize === null) {
                             // Desired size matches the inherited value
-                            this.dependencies.format.formatSelection("fontSize", {
+                            this.dependencies.format.requestFormat("fontSize", {
                                 applyStyle: false,
                             });
                         } else {
-                            this.dependencies.format.formatSelection("fontSize", {
+                            this.dependencies.format.requestFormat("fontSize", {
                                 formatProps: { size: resolvedSize },
                                 applyStyle: true,
                             });
@@ -65,7 +65,7 @@ export class FontSizePlugin extends Plugin {
                         this.updateFontSizeSelectorParams();
                     },
                     onSelected: (item) => {
-                        this.dependencies.format.formatSelection("setFontSizeClassName", {
+                        this.dependencies.format.requestFormat("setFontSizeClassName", {
                             formatProps: { className: item.className },
                             applyStyle: true,
                         });

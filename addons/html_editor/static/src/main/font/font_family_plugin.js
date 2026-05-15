@@ -46,7 +46,7 @@ export class FontFamilyPlugin extends Plugin {
                     currentFontFamily: this.fontFamily,
                     focusEditable: () => this.dependencies.selection.focusEditable(),
                     onSelected: (item) => {
-                        this.dependencies.format.formatSelection("fontFamily", {
+                        this.dependencies.format.requestFormat("fontFamily", {
                             applyStyle: item.fontFamily !== false,
                             formatProps: item,
                         });
