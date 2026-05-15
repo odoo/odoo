@@ -88,7 +88,7 @@ export function usePartnerAutocomplete() {
      * @private
      */
     function enrichCompany(company) {
-        const context = { 
+        const context = {
             'enriched_company_data': company,
         };
 
@@ -184,8 +184,8 @@ export function usePartnerAutocomplete() {
         await Promise.all(suggestions.map(async (suggestion) => {
             suggestion.query = value;  // Save queried value (name, VAT) for later
             suggestion.description = '';
-            if (suggestion.city){
-                suggestion.description += suggestion.city;
+            if (suggestion.city || suggestion.city_id){
+                suggestion.description += suggestion.city || suggestion.city_id.display_name;
             }
             // Show country name only if searching worldwide
             if (queryCountryId === 0 && suggestion.country_id && suggestion.country_id.display_name) {
