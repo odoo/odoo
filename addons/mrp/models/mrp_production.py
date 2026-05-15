@@ -1099,6 +1099,10 @@ class MrpProduction(models.Model):
         # Make sure that the date passed in vals_list are taken into account and not modified by a compute
         reference_vals_list = []
         for rec, vals in zip(res, vals_list):
+            # Make sure that the move_dest_ids of the move_finished_ids are set since the created_production_id
+            # is a One2Many field unable to link multiple MO's to a common move_dest_ids
+            if vals.get('move_dest_ids'):
+                rec.move_finished_ids.move_dest_ids = vals.get('move_dest_ids')
             (rec.move_raw_ids | rec.move_finished_ids).production_group_id = rec.production_group_id
             if not rec.reference_ids:
                 reference_vals_list.append({
@@ -1277,10 +1281,10 @@ class MrpProduction(models.Model):
         ], limit=1).id
 
     def _get_move_finished_values(self, product_id, product_uom_qty, product_uom, operation_id=False, byproduct_id=False, cost_share=0):
-        group_orders = self.production_group_id.production_ids
+        group_orders = self.reference_ids.production_ids.production_group_id.production_ids.filtered(lambda p: p.production_group_id.parent_ids == self.production_group_id.parent_ids)
         move_dest_ids = self.move_dest_ids
-        if len(group_orders) > 1:
-            move_dest_ids |= group_orders[0].move_finished_ids.filtered(lambda m: m.product_id == self.product_id).move_dest_ids
+        if not move_dest_ids:
+            move_dest_ids = group_orders.move_finished_ids.filtered(lambda m: m.product_id == self.product_id).move_dest_ids
         return {
             'product_id': product_id,
             'product_uom_qty': product_uom_qty,
@@ -1298,7 +1302,7 @@ class MrpProduction(models.Model):
             'origin': self.product_id.partner_ref,
             'reference_ids': self.reference_ids.ids,
             'propagate_cancel': self.propagate_cancel,
-            'move_dest_ids': [(4, x.id) for x in move_dest_ids if not byproduct_id],
+            'move_dest_ids': [Command.set(move_dest_ids.ids)] if not byproduct_id else [],
             'cost_share': cost_share,
             'production_group_id': self.production_group_id.id,
         }
