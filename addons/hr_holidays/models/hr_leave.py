@@ -252,11 +252,16 @@ class HrLeave(models.Model):
         env_company_calendar = self.env.company.resource_calendar_id
         for leave in self:
             calendar = leave.resource_calendar_id or env_company_calendar
-            if (leave.leave_type_request_unit != 'hour'
-                    and leave.employee_id
-                    and leave.request_date_from
-                    and leave.request_date_to
-                    and calendar):
+            if (
+                leave.employee_id
+                and leave.request_date_from
+                and leave.request_date_to
+                and calendar
+                and (
+                    leave.leave_type_request_unit != 'hour'
+                    or not leave.request_hour_from
+                )
+            ):
                 hour_from, hour_to = leave._get_hour_from_to(leave.request_date_from, leave.request_date_to)
                 leave.request_hour_from = hour_from
                 leave.request_hour_to = hour_to
