@@ -37,7 +37,7 @@ class PaymentTransaction(models.Model):
             ) and order.commitment_date.date() != order.date_order.date():
                 formatted_date = format_date(self.env, commitment_date)
                 return Markup("<p>%s</p>") % self.env._(
-                    "Your order will be ready on %d.", formatted_date
+                    "Your order will be ready on %s.", formatted_date
                 )
             return Markup("<p>%s</p>") % self.env._("Your order will be ready soon.")
         return status_message
