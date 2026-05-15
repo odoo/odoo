@@ -78,6 +78,9 @@ export async function loadImage(src, img = new Image()) {
         img.addEventListener("load", () => resolve(img), { once: true });
         img.addEventListener("error", reject, { once: true });
         img.src = source;
+        if (img.complete) {
+            resolve(img);
+        }
     });
 }
 
