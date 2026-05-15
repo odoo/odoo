@@ -282,6 +282,7 @@ class IrCron(models.Model):
         # reset_module_states.
         from odoo.modules.loading import reset_modules_state  # noqa: PLC0415
         reset_modules_state(cr)
+        cr.commit()
 
     @staticmethod
     def _get_ready_sql_condition(cr: BaseCursor) -> SQL:
