@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_invoice_document" inherit_id="account.report_invoice_document" primary="True">
+        <t name="invoice_title" position="replace">
+            <t name="invoice_title">Tax Invoice</t>
+        </t>
+        <t name="draft_invoice_title" position="replace">
+            <t name="draft_invoice_title">Draft Tax Invoice</t>
+        </t>
+        <t name="cancelled_invoice_title" position="replace">
+            <t name="cancelled_invoice_title">Cancelled Tax Invoice</t>
+        </t>
+        <t name="proforma_invoice_title" position="replace">
+            <t name="proforma_invoice_title">Proforma Tax Invoice</t>
+        </t>
+        <t name="draft_proforma_invoice_title" position="replace">
+            <t name="draft_proforma_invoice_title">Draft Proforma Tax Invoice</t>
+        </t>
+        <t name="cancelled_proforma_invoice_title" position="replace">
+            <t name="cancelled_proforma_invoice_title">Cancelled Proforma Tax Invoice</t>
+        </t>
+        <t name="self_billing_invoice_title" position="replace">
+            <t name="self_billing_invoice_title">Self-Billing Tax Invoice</t>
+        </t>
+        <t name="vendor_bill_title" position="replace">
+            <t name="vendor_bill_title">Tax Invoice</t>
+        </t>
+
+        <xpath expr="//div[@id='informations']/div[@name='invoice_date']" position="after">
+            <div class="col" name="original_invoice_date" t-if="o.move_type == 'out_refund' and o.reversed_entry_id and o.reversed_entry_id.invoice_date">
+                <strong>Original Invoice Date</strong>
+                <div t-field="o.reversed_entry_id.invoice_date"/>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="report_invoice" inherit_id="account.report_invoice">
+        <xpath expr='//t[@t-call="account.report_invoice_document"]' position="after">
+            <t t-elif="o._get_name_invoice_report() == 'l10n_sg.report_invoice_document'"
+               t-call="l10n_sg.report_invoice_document"
+               t-lang="lang"/>
+        </xpath>
+    </template>
+</odoo>
