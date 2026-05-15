@@ -6,8 +6,6 @@ from urllib.parse import urlencode, urlparse
 from odoo import api, fields, models
 from odoo.http import request
 
-from odoo.addons.website_sale import const
-
 
 class ProductProduct(models.Model):
     _inherit = "product.product"
@@ -373,28 +371,8 @@ class ProductProduct(models.Model):
                 self.env["ir.cron"]._commit_progress(1)
 
     def _split_standard_from_custom_attributes(self):
-        """Split product attributes into directly mapped fields and the rest.
-
-        Direct fields are attributes whose external_identifier matches a known
-        identifier used across Microdata, GMC Feeds, and Tracking.
-
-        :return: A tuple of:
-            - dict of {external_identifier: value} for known direct fields
-            - dict of {attribute_name: value} for all other attributes
-        :rtype: tuple(dict, dict)
-        """
         self.ensure_one()
-        direct = {}
-        others = {}
-        for ptav in self.product_template_attribute_value_ids:
-            external_id = ptav.attribute_id.external_identifier
-            ext_id = external_id and external_id.lower()
-            value = ptav.product_attribute_value_id.name
-            if ext_id and ext_id in const.DIRECT_MAPPED_ATTRIBUTE_IDENTIFIERS:
-                direct[ext_id] = value
-            elif external_id:
-                others[external_id] = value
-        return direct, others
+        return self.product_template_attribute_value_ids._split_standard_from_custom_attributes()
 
     def _apply_taxes_to_price(self, *args, **kwargs):
         self.ensure_one()

@@ -1335,9 +1335,9 @@ class ProductTemplate(models.Model):
         if combination_name := combination_info["combination"]._get_combination_name():
             tracking_data["item_variant"] = combination_name
 
-        direct, others = product._split_standard_from_custom_attributes()
+        direct, others = combination_info["combination"]._split_standard_from_custom_attributes()
         for ext_id, value in (direct | others).items():
-            # 'brand' maps to predefined GA4 item_brand, others are custom item-scoped parameters
+            # 'brand' maps to predefined GA4 item_brand, others are custom item-scoped params
             key = f"item_{ext_id}" if ext_id == "brand" else ext_id
             tracking_data[key] = value
         return tracking_data
