@@ -58,6 +58,7 @@ class WebsiteForm(form.WebsiteForm):
                 ]
                 data['custom'] += "\n" + "\n".join(["%s : %s" % c for c in custom])
             else:
+                data['record']['partner_id'] = False
                 if values.get('partner_phone'):
                     data['record']['partner_phone'] = values['partner_phone']
                 if values.get('partner_name'):
