@@ -701,7 +701,7 @@ class TestProcurement(TestMrpCommon):
             'warehouse_id': self.warehouse_1,
             'partner_id': vendor.id,
         })
-        customer_move = self.env['stock.move'].search([('reference_ids', 'in', reference.id), ('picking_type_id', '=', self.picking_type_out.id)])
+        customer_move = self.env['stock.move'].search([('reference_ids', '=', reference.id), ('picking_type_id', '=', self.picking_type_out.id)])
         manufacturing_order = self.env['mrp.production'].search([('product_id', '=', product.id)])
         self.assertTrue(manufacturing_order, 'No manufacturing order created.')
 

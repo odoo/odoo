@@ -1339,12 +1339,11 @@ def _operator_equal_as_in(condition, _):
     value = condition.value
     operator = 'in' if condition.operator == '=' else 'not in'
     if isinstance(value, COLLECTION_TYPES):
-        # TODO make a warning or equality against a collection
         if not value:  # views sometimes use ('user_ids', '!=', []) to indicate the user is set
-            _logger.debug("The domain condition %r should compare with False.", condition)
+            _logger.warning("The domain condition %r should compare with False.", condition)
             value = OrderedSet([False])
         else:
-            _logger.debug("The domain condition %r should use the 'in' or 'not in' operator.", condition)
+            _logger.warning("The domain condition %r should use the 'in' or 'not in' operator.", condition)
             value = OrderedSet(value)
     elif isinstance(value, SQL):
         # transform '=' SQL("x") into 'in' SQL("(x)")

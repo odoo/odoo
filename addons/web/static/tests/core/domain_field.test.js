@@ -1236,7 +1236,7 @@ test("allow_expressions = true", async function () {
         context: { path: "name", name: "name" },
     });
 
-    await contains(SELECTORS.debugArea).edit(`[("name", "=", [name])]`);
+    await contains(SELECTORS.debugArea).edit(`[("name", "=", name)]`);
     await animationFrame();
     expect(".o_field_domain").not.toHaveClass("o_field_invalid");
     expect.verifySteps(["The domain involves non-literals. Their evaluation might fail."]);
@@ -1270,7 +1270,7 @@ test("allow_expressions = false (default)", async function () {
         context: { path: "name", name: "name" },
     });
 
-    await contains(SELECTORS.debugArea).edit(`[("name", "=", [name])]`);
+    await contains(SELECTORS.debugArea).edit(`[("name", "=", name)]`);
     await animationFrame();
     expect(".o_field_domain").toHaveClass("o_field_invalid");
     expect.verifySteps(["The domain should not involve non-literals"]);

@@ -915,7 +915,8 @@ class IrModuleModule(models.Model):
     def _get_id(self, name):
         self.flush_model(['name'])
         self.env.cr.execute("SELECT id FROM ir_module_module WHERE name=%s", (name,))
-        return self.env.cr.fetchone()
+        result = self.env.cr.fetchone()
+        return result and result[0]
 
     @api.model
     @tools.ormcache(cache='stable')

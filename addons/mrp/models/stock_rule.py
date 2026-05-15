@@ -152,7 +152,7 @@ class StockRule(models.Model):
             ('picking_type_id', '=', self.picking_type_id.id),
             ('company_id', '=', procurement.company_id.id),
             ('user_id', '=', False),
-            ('reference_ids', '=', procurement.values.get('reference_ids', self.env['stock.reference']).ids),
+            ('reference_ids', 'in', procurement.values.get('reference_ids', self.env['stock.reference']).ids),
         )
         if production_group_id := procurement.values.get('production_group_id'):
             domain += (('production_group_id.parent_ids', '=', production_group_id),)
