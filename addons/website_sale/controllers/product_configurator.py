@@ -8,12 +8,27 @@ from odoo.addons.website_sale.controllers.main import WebsiteSale
 
 class WebsiteSaleProductConfiguratorController(SaleProductConfiguratorController, WebsiteSale):
     @route(
-        route="/website_sale/should_show_product_configurator",
+        route="/website_sale/product_configurator/get_values",
         type="jsonrpc",
         auth="public",
         website=True,
         readonly=True,
     )
+    def website_sale_product_configurator_get_values(self, *args, **kwargs):
+        self._populate_currency_and_pricelist(kwargs)
+
+        product_template_id = kwargs.get("product_template_id")
+        is_product_configured = kwargs.get("is_product_configured", False)
+
+        should_show = self.website_sale_should_show_product_configurator(
+            product_template_id, is_product_configured
+        )
+
+        if not should_show:
+            return False
+
+        return super().sale_product_configurator_get_values(*args, **kwargs)
+
     def website_sale_should_show_product_configurator(
         self, product_template_id, is_product_configured
     ):
@@ -51,17 +66,6 @@ class WebsiteSaleProductConfiguratorController(SaleProductConfiguratorController
             ]):
                 return self.env["product.template"].sudo().browse(product_template_id)
         return super()._get_product_template(product_template_id)
-
-    @route(
-        route="/website_sale/product_configurator/get_values",
-        type="jsonrpc",
-        auth="public",
-        website=True,
-        readonly=True,
-    )
-    def website_sale_product_configurator_get_values(self, *args, **kwargs):
-        self._populate_currency_and_pricelist(kwargs)
-        return super().sale_product_configurator_get_values(*args, **kwargs)
 
     @route(
         route="/website_sale/product_configurator/create_product",

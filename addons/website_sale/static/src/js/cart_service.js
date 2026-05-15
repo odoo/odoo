@@ -203,29 +203,36 @@ export class CartService {
             });
         }
 
-        const shouldShowProductConfigurator = await this.rpc(
-            '/website_sale/should_show_product_configurator',
-            {
-                product_template_id: productTemplateId,
-                is_product_configured: isConfigured,
-            }
-        );
-        if (shouldShowProductConfigurator) {
+        const ptavIds = ptavs.concat(noVariantAttributeValues);
+        const configDataParams = {
+            product_template_id: productTemplateId,
+            quantity: quantity,
+            ptav_ids: ptavIds,
+            product_uom_id: uomId,
+            so_date: serializeDateTime(DateTime.now()),
+            pricelist_id: odoo.default_pricelist_id,
+            is_product_configured: isConfigured,
+            ...this._getAdditionalRpcParams?.() || {},
+            ...rest
+        };
+
+        const result = await this.rpc('/website_sale/product_configurator/get_values', configDataParams);
+        if (result && (!result.mode || result.mode === 'configurator' || result.has_optional_products)) {
             return this._openProductConfigurator(
                 productTemplateId,
                 quantity,
                 uomId,
-                ptavs.concat(noVariantAttributeValues),
+                ptavIds,
                 productCustomAttributeValues,
                 {
                     isBuyNow: isBuyNow,
                     isMainProductConfigurable: !isConfigured,
                     showQuantity: showQuantity,
+                    preloadedData: result,
                 },
                 rest
             );
         }
-
         return this._makeRequest({
             productTemplateId,
             productId,
@@ -345,6 +352,7 @@ export class CartService {
             this.dialog.add(ProductConfiguratorDialog, {
                 productTemplateId: productTemplateId,
                 ptavIds: combination,
+                preloadedData: options.preloadedData,
                 customPtavs: productCustomAttributeValues.map(customPtav => ({
                     id: customPtav.custom_product_template_attribute_value_id,
                     value: customPtav.custom_value,
