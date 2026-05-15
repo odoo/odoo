@@ -265,7 +265,6 @@ export class MassMailingHtmlField extends HtmlField {
             allowTextColumnResize: false,
             record: this.props.record,
             mobileBreakpoint: "md",
-            defaultImageMimetype: "image/png",
             onEditorReady: () => this.commitChanges(),
         };
     }
@@ -282,7 +281,11 @@ export class MassMailingHtmlField extends HtmlField {
         return {
             ...config,
             onEditorReady: () => this.commitChanges(),
-            Plugins: [...MAIN_EDITOR_PLUGINS, ...DYNAMIC_FIELD_PLUGINS]
+            Plugins: [
+                ...MAIN_EDITOR_PLUGINS,
+                ...DYNAMIC_FIELD_PLUGINS,
+                ...registry.category("mail-core-plugins").getAll(),
+            ]
                 .filter((P) => !["banner", "prompt", "link"].includes(P.id))
                 .concat(registry.category("basic-editor-plugins").getAll()),
         };
@@ -389,6 +392,16 @@ export class MassMailingHtmlField extends HtmlField {
             });
         }
         return super.commitChanges(...arguments);
+    }
+
+    /**
+     * Ensure that every SVG and WEBP images are converted to PNG, and create
+     * an attachment for every b64 encoded image, to ensure every image src
+     * is not a data url.
+     * @override
+     */
+    savePendingImages(content) {
+        return this.editor.shared["imageEmailFormat"].sanitizeImages(content);
     }
 
     /**
