@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <!-- https://developers.ecpay.com.tw/16633/ -->
+
+    <record id="payment_method_7eleven" model="payment.method">
+        <field name="name">7Eleven</field>
+        <field name="code">7eleven</field>
+        <field name="primary_payment_method_id" eval="ref('payment.payment_method_cvs')"/>
+        <field name="sequence">1000</field>
+        <field name="active">False</field>
+        <field name="image" type="bytes" file="payment/static/img/7eleven.png"/>
+        <field name="support_tokenization">False</field>
+        <field name="support_express_checkout">False</field>
+        <field name="support_manual_capture">none</field>
+        <field name="support_refund">none</field>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.TWD')])]"/>
+<!--        <field name="provider_id" ref="payment.payment_provider_ecpay"/>-->
+    </record>
+
+    <record id="payment_method_jkopay" model="payment.method">
+        <field name="name">Jkopay</field>
+        <field name="code">jkopay</field>
+        <field name="primary_payment_method_id" eval="ref('payment.payment_method_mobile_wallet')"/>
+        <field name="sequence">1000</field>
+        <field name="active">False</field>
+        <field name="image" type="bytes" file="payment/static/img/jkopay.png"/>
+        <field name="support_tokenization">False</field>
+        <field name="support_express_checkout">False</field>
+        <field name="support_manual_capture">none</field>
+        <field name="support_refund">none</field>
+        <field name="supported_currency_ids" eval="[Command.set([ref('base.TWD')])]"/>
+<!--        <field name="provider_id" ref="payment.payment_provider_ecpay"/>-->
+    </record>
+
+</odoo>

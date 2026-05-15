@@ -2,12 +2,10 @@
 
 import pprint
 
-from werkzeug.exceptions import Forbidden
-
 from odoo import http
 from odoo.http import request
-from odoo.tools import consteq
 
+from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.logging import get_payment_logger
 from odoo.addons.payment_ecpay import const
 
@@ -43,7 +41,9 @@ class EcpayController(http.Controller):
             _logger.info("Handling redirection from ECPay with data:\n%s", pprint.pformat(data))
             tx_sudo = request.env["payment.transaction"].sudo()._search_by_reference("ecpay", data)
             if tx_sudo:
-                self._verify_signature(data, tx_sudo)
+                received_signature = data.pop("CheckMacValue", None)
+                expected_signature = tx_sudo.provider_id._ecpay_calculate_signature(data)
+                payment_utils.verify_signature(received_signature, expected_signature)
                 tx_sudo._process("ecpay", data)
         return request.redirect("/payment/status")
 
@@ -69,7 +69,9 @@ class EcpayController(http.Controller):
         if data and data.get("SimulatePaid") == "0":
             tx_sudo = request.env["payment.transaction"].sudo()._search_by_reference("ecpay", data)
             if tx_sudo:
-                self._verify_signature(data, tx_sudo)
+                received_signature = data.pop("CheckMacValue", None)
+                expected_signature = tx_sudo.provider_id._ecpay_calculate_signature(data)
+                payment_utils.verify_signature(received_signature, expected_signature)
                 tx_sudo._process("ecpay", data)
         else:
             _logger.info(
@@ -77,24 +79,3 @@ class EcpayController(http.Controller):
                 " data."
             )
         return "1|OK"
-
-    @staticmethod
-    def _verify_signature(payment_data, tx_sudo):
-        """Check that the received signature matches the expected one.
-
-        :param dict payment_data: The notification data
-        :param recordset tx_sudo: The sudoed transaction referenced by the notification data, as a
-                                  `payment.transaction` record
-        :return: None
-        :raise: :class:`werkzeug.exceptions.Forbidden` if the signatures don't match
-        """
-        received_signature = payment_data.pop("CheckMacValue", None)
-        if not received_signature:
-            _logger.warning("Received payment data with missing signature.")
-            raise Forbidden
-
-        # Compare the received signature with the expected signature computed from the data.
-        expected_signature = tx_sudo.provider_id._ecpay_calculate_signature(payment_data)
-        if not consteq(received_signature, expected_signature):
-            _logger.warning("Received payment data with invalid signature.")
-            raise Forbidden
