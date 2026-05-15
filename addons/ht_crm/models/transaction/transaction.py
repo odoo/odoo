@@ -39,9 +39,15 @@ class Transaction(models.Model):
         readonly=True
     )
 
-    # BI
+    # % chiết khấu
+    discount = fields.Float(
+        string="Chiết khấu (%)",
+        default=0
+    )
+
+    # Giá cuối cùng sau CK
     price_total = fields.Monetary(
-        string="Giá đã VAT",
+        string="Giá sau VAT",
         currency_field="currency_id",
         compute="_compute_final_price",
         store=True,
@@ -56,11 +62,6 @@ class Transaction(models.Model):
         store=True,
         readonly=True,
         digits=(16, 0)
-    )
-    
-    discount = fields.Float(
-        string="Chiết khấu (%)",
-        default=0
     )
 
     state = fields.Selection([
@@ -79,7 +80,7 @@ class Transaction(models.Model):
     @api.depends('listed_price', 'discount')
     def _compute_final_price(self):
         for rec in self:
-            rec.price_total = rec.listed_price * (1 - rec.discount / 100)
+            rec.price_total = rec.listed_price * (1 - rec.discount)
 
     def _get_kpi(self, employee_id, month, year):
         return self.env['sale.employee.kpi'].search([
