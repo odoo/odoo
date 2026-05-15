@@ -8,6 +8,8 @@ definePosModels();
 test("OrderDetailsDialog opens without currency error", async () => {
     const store = await setupPosEnv();
     const order = await getFilledOrder(store);
+    const partner = store.models["res.partner"].get(4);
+    order.setPartner(partner);
 
     const cashPaymentMethod = store.models["pos.payment.method"].get(1);
     order.addPaymentline(cashPaymentMethod);
