@@ -63,7 +63,6 @@ __all__ = [
     'babel_locale_parse',
     'clean_context',
     'consteq',
-    'discardattr',
     'exception_to_unicode',
     'file_open',
     'file_open_temporary_directory',
@@ -631,13 +630,6 @@ def split_every[T](n: int, iterable: Iterable[T], piece_maker=tuple):
         yield piece
         piece = piece_maker(islice(iterator, n))
 
-
-def discardattr(obj: object, key: str) -> None:
-    """ Perform a ``delattr(obj, key)`` but without crashing if ``key`` is not present. """
-    try:
-        delattr(obj, key)
-    except AttributeError:
-        pass
 
 # ---------------------------------------------
 # String management
