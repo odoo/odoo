@@ -210,10 +210,10 @@ class ChatbotScriptStep(models.Model):
     def _find_first_user_free_input(self, discuss_channel):
         """Find the first message from the visitor responding to a free_input step."""
         chatbot_partner = self.chatbot_script_id.operator_partner_id
-        for answer in discuss_channel.chatbot_message_ids.sorted("id"):
+        for answer in discuss_channel.sudo().chatbot_message_ids.sorted("id"):
             if answer.script_step_id.step_type not in ("free_input_single", "free_input_multi"):
                 continue
-            message = answer.mail_message_id
+            message = answer.mail_message_id.with_env(self.env)
             if message.has_access('read') and message.author_id != chatbot_partner:
                 return message.with_prefetch()
         return self.env["mail.message"]
