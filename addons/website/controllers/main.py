@@ -349,6 +349,16 @@ class Website(Home):
             'url_root': request.httprequest.url_root,
         }, mimetype='text/plain')
 
+    @http.route('/llms.txt', type='http', auth='public', website=True, multilang=False, sitemap=False)
+    def llms_txt(self):
+        website = request.env['website'].get_current_website().sudo()
+        llms_txt = website.llms_txt
+
+        if not llms_txt or not llms_txt.strip():
+            return request.not_found()
+
+        return request.make_response(llms_txt, headers=[('Content-Type', 'text/plain; charset=utf-8')])
+
     @http.route('/sitemap.xml', type='http', auth="public", website=True, multilang=False, sitemap=False)
     def sitemap_xml_index(self, **kwargs):
         Attachment = request.env['ir.attachment'].sudo()

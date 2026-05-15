@@ -240,3 +240,19 @@ class TestControllers(tests.HttpCase):
                 redirect.headers['Location'],
                 f'{self.base_url()}/website/force/{website.id}?isredir=1&path=%2F%3Fa%3Db%26c%3Dd'
             )
+
+    def test_llms_txt(self):
+        """Verify /llms.txt returns 404 when empty and serves content when configured."""
+        website = self.env['website'].search([], limit=1)
+        # No content -> return 404
+        res = self.url_open('/llms.txt')
+        self.assertEqual(res.status_code, 404)
+
+        # Configure llms.txt
+        content = "test: adding content to llms.txt"
+        website.llms_txt = content
+
+        # Content should now be available
+        res = self.url_open('/llms.txt')
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(res.text, content)

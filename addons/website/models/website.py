@@ -163,6 +163,7 @@ class Website(models.CachedModel):
     custom_code_footer = fields.Html('Custom end of <body> code', sanitize=False)
 
     robots_txt = fields.Html('Robots.txt', translate=False, groups='website.group_website_designer', sanitize=False)
+    llms_txt = fields.Text('LLMs.txt', translate=False)
 
     def _default_favicon(self):
         with file_open('web/static/img/favicon.ico', 'rb') as f:
