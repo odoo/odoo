@@ -407,7 +407,11 @@ class TestAccountComposerPerformance(AccountTestInvoicingCommon, MailCommon):
             'print_report_name': "'CUSTOM_%s' % object.name",
         })
 
-        move_template.report_template_ids += extra_dynamic_report
+        extra_dynamic_report_no_filename = self.env.ref('account.action_account_original_vendor_bill').sudo().copy({
+            'name': 'Invoice PDF 3'
+        })
+
+        move_template.report_template_ids += (extra_dynamic_report + extra_dynamic_report_no_filename)
 
         composer = self.env['account.move.send.wizard'].with_context(active_model='account.move', active_ids=test_move.ids).create({
             'sending_methods': ['email'],
@@ -430,6 +434,7 @@ class TestAccountComposerPerformance(AccountTestInvoicingCommon, MailCommon):
                     {'name': 'AttFileName_01.txt', 'raw': b'AttContent_01', 'type': 'text/plain'},
                     {'name': f'{test_move.name}.pdf', 'type': 'application/pdf'},
                     {'name': 'CUSTOM_INVOICE_00.pdf', 'type': 'application/pdf'},
+                    {'name': 'invoice pdf 3_INVOICE_00.pdf', 'type': 'application/pdf'},
                 ],
                 'body_content': f'TemplateBody for {test_move.name}',
                 'email_from': self.user_account_other.email_formatted,
