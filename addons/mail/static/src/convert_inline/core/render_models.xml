@@ -1,0 +1,13 @@
+<templates>
+    <t t-name="mail.NodePositionManager">
+        <t t-foreach="nodeIds" t-as="nodeId" t-key="nodeId_index">
+            <node-position t-att-data-id="nodeId"/>
+        </t>
+    </t>
+    <t t-name="mail.ElementLayout">
+        <t t-tag="model.tag" t-att="model.renderAttributes()">
+            <t t-call="mail.NodePositionManager"
+                t-call-context="nodePositionManager.renderContext({ renderPositionedNodes })"/>
+        </t>
+    </t>
+</templates>
