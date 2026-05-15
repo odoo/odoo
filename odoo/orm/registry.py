@@ -234,6 +234,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
                     except Exception:
                         cr.rollback()
                         reset_modules_state(cr)
+                        cr.commit()
                         raise
                     if registry.loaded:
                         break
