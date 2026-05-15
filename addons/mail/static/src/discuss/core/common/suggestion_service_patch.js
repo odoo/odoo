@@ -36,16 +36,20 @@ const suggestionServicePatch = {
         }
         return super.isPartnerSuggestionValid(partner, { composerType, thread });
     },
-    /**
-     * @override
-     */
-    getPartnerSuggestions({ composerType, thread }) {
-        const isNonPublicChannel =
+    isNonPublicChannel(thread) {
+        return (
             thread &&
             (thread.channel?.channel_type === "group" ||
                 thread.channel?.channel_type === "chat" ||
                 (thread.channel?.channel_type === "channel" &&
-                    (thread.channel.parent_channel_id || thread).group_public_id));
+                    (thread.channel.parent_channel_id || thread).group_public_id))
+        );
+    },
+    /**
+     * @override
+     */
+    getPartnerSuggestions({ composerType, thread }) {
+        const isNonPublicChannel = this.isNonPublicChannel(thread);
         if (isNonPublicChannel) {
             // Only return the channel members when in the context of a
             // group restricted channel. Indeed, the message with the mention
@@ -67,6 +71,19 @@ const suggestionServicePatch = {
             return Array.from(partnersById.values());
         } else {
             return super.getPartnerSuggestions({ thread, composerType });
+        }
+    },
+    /**
+     * @override
+     */
+    getUserSuggestions({ composerType, thread }) {
+        const isNonPublicChannel = this.isNonPublicChannel(thread);
+        if (isNonPublicChannel) {
+            return this.getPartnerSuggestions({ composerType, thread })
+                .filter((partner) => partner.main_user_id)
+                .map((partner) => partner.main_user_id);
+        } else {
+            return super.getUserSuggestions({ composerType, thread });
         }
     },
     /**
