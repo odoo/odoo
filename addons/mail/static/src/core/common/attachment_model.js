@@ -12,7 +12,7 @@ export class Attachment extends FileModelMixin(Record) {
     static new() {
         /** @type {import("models").Attachment} */
         const attachment = super.new(...arguments);
-        Record.onChange(attachment, ["extension", "name"], () => {
+        attachment.registerRecordOnChange(attachment, ["extension", "name"], () => {
             if (!attachment.extension && attachment.name) {
                 attachment.extension = attachment.name.split(".").pop();
             }

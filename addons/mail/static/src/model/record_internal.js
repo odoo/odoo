@@ -12,10 +12,17 @@ import { RecordList } from "./record_list";
 import { immediateEffect, toRaw, untrack } from "@odoo/owl";
 import { RecordUses } from "./record_uses";
 import { LocalStorageEntry } from "@mail/utils/common/local_storage";
-import { onChange } from "@mail/utils/common/misc";
 
 export class RecordInternal {
     [IS_RECORD_SYM] = true;
+    /**
+     * All dispose functions for this records.
+     * For the store, this stores the dispose functions of all records.
+     * Useful to automatically call the dispose functions when the record is deleted or in-between each tests.
+     *
+     * @type {Set<Function>}
+     */
+    disposeFns = new Set();
     // Note: state of fields in Maps rather than object is intentional for improved performance.
     /**
      * For computed field, determines whether the field is computing its value.
@@ -139,7 +146,7 @@ export class RecordInternal {
         }
         if (Model._.fieldsCompute.get(fieldName)) {
             if (!Model._.fieldsEager.get(fieldName)) {
-                onChange(recordProxy, fieldName, () => {
+                record.registerOnChange(recordProxy, fieldName, () => {
                     if (this.fieldsComputing.get(fieldName)) {
                         /**
                          * Use a reactive to reset the computeInNeed flag when there is
@@ -157,7 +164,7 @@ export class RecordInternal {
         }
         if (Model._.fieldsSort.get(fieldName)) {
             if (!Model._.fieldsEager.get(fieldName)) {
-                onChange(recordProxy, fieldName, () => {
+                record.registerOnChange(recordProxy, fieldName, () => {
                     if (this.fieldsSorting.get(fieldName)) {
                         /**
                          * Use a reactive to reset the inNeed flag when there is a
@@ -248,7 +255,10 @@ export class RecordInternal {
         if (!Model._.fieldsCompute.get(fieldName)) {
             return;
         }
-        this.fieldsComputeStop.get(fieldName)?.();
+        const prevStopFn = this.fieldsComputeStop.get(fieldName);
+        if (prevStopFn) {
+            record._runDisposeFn(prevStopFn);
+        }
         let triggered = false;
         const stopFn = untrack(() =>
             immediateEffect(() => {
@@ -273,6 +283,7 @@ export class RecordInternal {
             })
         );
         this.fieldsComputeStop.set(fieldName, stopFn);
+        record._registerDisposeFn(stopFn);
         if (fromInNeed) {
             this.fieldsComputeInNeed.set(fieldName, true);
         }
@@ -292,7 +303,10 @@ export class RecordInternal {
         if (!Model._.fieldsSort.get(fieldName)) {
             return;
         }
-        this.fieldsSortStop.get(fieldName)?.();
+        const prevStopFn = this.fieldsSortStop.get(fieldName);
+        if (prevStopFn) {
+            record._runDisposeFn(prevStopFn);
+        }
         let triggered = false;
         const stopFn = untrack(() =>
             immediateEffect(() => {
@@ -324,6 +338,7 @@ export class RecordInternal {
             })
         );
         this.fieldsSortStop.set(fieldName, stopFn);
+        record._registerDisposeFn(stopFn);
         if (fromInNeed) {
             this.fieldsSortInNeed.set(fieldName, true);
         }
