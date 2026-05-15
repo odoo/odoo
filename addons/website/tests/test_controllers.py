@@ -262,3 +262,19 @@ class TestControllers(tests.HttpCase):
         alternative_website_dashboard = data_per_website[alternative_website.id]
         self.assertTrue(default_website_dashboard.get('selected'))
         self.assertFalse(alternative_website_dashboard.get('selected'))
+
+    def test_llms_txt(self):
+        """Verify /llms.txt returns 404 when empty and serves content when configured."""
+        website = self.env['website'].search([], limit=1)
+        # No content -> return 404
+        res = self.url_open('/llms.txt')
+        self.assertEqual(res.status_code, 404)
+
+        # Configure llms.txt
+        content = "test: adding content to llms.txt"
+        website.llms_txt = content
+
+        # Content should now be available
+        res = self.url_open('/llms.txt')
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(res.text, content)
