@@ -168,7 +168,10 @@ class StockMove(models.Model):
     has_tracking = fields.Selection(related='product_id.tracking', string='Product with Tracking')
     has_lines_without_result_package = fields.Boolean(compute="_compute_has_lines_without_result_package")
     quantity = fields.Float(
-        'Quantity', compute='_compute_quantity', digits='Product Unit', inverse='_set_quantity', store=True)
+        'Quantity', compute='_compute_quantity', digits='Product Unit', inverse='_set_quantity', store=True,
+        write_sequence=25,  # ensure that the lot_ids changed is processed before processing the quantity change,
+                            # to avoid unexpected lot_ids that will be re-added later in the process.
+    )
     quantity_product_uom = fields.Float(
         'Quantity in Product UoM', digits='Product Unit',
         copy=False, compute='_compute_quantity_product_uom', store=True)
@@ -792,12 +795,6 @@ Please change the quantity done or the rounding precision in your settings.""",
         if 'quantity' in vals:
             if any(move.state == 'cancel' for move in self):
                 raise UserError(_('You cannot change a cancelled stock move, create a new line instead.'))
-            # TODO The order of the calls is based on the orders of the keys in vals, which is the order of changes made
-            # in the UI. This should be refactored to avoid relying on the order of the keys in vals.
-            if 'lot_ids' in vals:
-                # If lot_ids is changed after changing the quantity, we need to ensure that the lot_ids changed is process before
-                # processing the quantity change, to avoid unexpected lot_ids that will be re-added later in the process.
-                vals = dict(sorted(vals.items()))
         if 'uom_id' in vals and any(move.state == 'done' for move in self) and not self.env.context.get('skip_uom_conversion'):
             raise UserError(_('You cannot change the UoM for a stock move that has been set to \'Done\'.'))
         if 'product_uom_qty' in vals:

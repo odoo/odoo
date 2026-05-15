@@ -36,7 +36,7 @@ import warnings
 from collections import defaultdict, deque
 from collections.abc import Callable, Iterable, Mapping
 from inspect import getmembers
-from operator import attrgetter, itemgetter
+from operator import itemgetter
 
 import psycopg2.errors
 import psycopg2.extensions
@@ -398,6 +398,13 @@ class BaseModel(metaclass=MetaModel):
 
     _fields__: dict[str, Field]
     _fields: MappingProxyType[str, Field]
+
+    _fields_update_order__: dict[Field, tuple[int, int]]
+    """Field update/inverse order.
+
+    ``{field: (write_sequence, field_index)}``
+    Sort by ``field.write_sequence``, then :attr:`_fields` index.
+    """
 
     _auto: bool = False
     """Whether a database table should be created.
@@ -3773,15 +3780,14 @@ class BaseModel(metaclass=MetaModel):
             vals.setdefault('write_uid', self.env.uid)
             vals.setdefault('write_date', self.env.cr.now())
 
-        field_values = []                           # [(field, value)]
+        field_values = sorted(
+            [(self._fields[key], val) for key, val in vals.items()],
+            key=lambda item: self._fields_update_order__[item[0]]
+        )                                           # [(field, value)]
         determine_inverses = defaultdict(list)      # {inverse: fields}
         fnames_modifying_relations = []
         protected = set()
-        for fname, value in vals.items():
-            field = self._fields.get(fname)
-            if not field:
-                raise ValueError("Invalid field %r on model %r" % (fname, self._name))
-            field_values.append((field, value))
+        for field, value in field_values:
             if field.inverse:
                 if field.type in ('one2many', 'many2many'):
                     # The written value is a list of commands that must applied
@@ -3790,10 +3796,10 @@ class BaseModel(metaclass=MetaModel):
                     # will not be computed and default to an empty recordset. So
                     # make sure the field's value is in cache before writing, in
                     # order to avoid an inconsistent update.
-                    self[fname]
+                    self[field.name]
                 determine_inverses[field.inverse].append(field)
             if self.pool.is_modifying_relations(field):
-                fnames_modifying_relations.append(fname)
+                fnames_modifying_relations.append(field.name)
             if field.inverse or (field.compute and not field.readonly):
                 if field.store or field.type not in ('one2many', 'many2many'):
                     # Protect the field from being recomputed while being
@@ -3839,11 +3845,7 @@ class BaseModel(metaclass=MetaModel):
 
             real_recs = self.filtered('id')
 
-            # field.write_sequence determines a priority for writing on fields.
-            # Monetary fields need their corresponding currency field in cache
-            # for rounding values. X2many fields must be written last, because
-            # they flush other fields when deleting lines.
-            for field, value in sorted(field_values, key=lambda item: item[0].write_sequence):
+            for field, value in field_values:
                 field.write(self, value)
 
             # determine records depending on new values
@@ -4106,7 +4108,7 @@ class BaseModel(metaclass=MetaModel):
                 if vals := data['cached_only']:
                     data['record']._update_cache(vals)
             # call inverse method for each group of fields
-            for fields in determine_inverses.values():
+            for fields in sorted(determine_inverses.values(), key=lambda fields: min(self._fields_update_order__[f] for f in fields)):
                 # determine which records to inverse for those fields
                 inv_names = {field.name for field in fields}
                 inv_rec_ids = []
@@ -4331,7 +4333,7 @@ class BaseModel(metaclass=MetaModel):
             if other_fields:
                 # discard default values from context for other fields
                 others = records.with_context(clean_context(self.env.context))
-                for field in sorted(other_fields, key=attrgetter('_sequence')):
+                for field in sorted(other_fields, key=lambda field: self._fields_update_order__[field]):
                     field.create([
                         (other, data['stored'][field.name])
                         for other, data in zip(others, data_list)
@@ -5479,7 +5481,7 @@ class BaseModel(metaclass=MetaModel):
             raise ValueError("Invalid field %r on model %r" % (e.args[0], self._name))
 
         # convert monetary fields after other columns for correct value rounding
-        for field, value in sorted(field_values, key=lambda item: item[0].write_sequence):
+        for field, value in sorted(field_values, key=lambda item: self._fields_update_order__[item[0]]):
             value = field.convert_to_cache(value, self, validate)
             field._update_cache(self, value)
 
