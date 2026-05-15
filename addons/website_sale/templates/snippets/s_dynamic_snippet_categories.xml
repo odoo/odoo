@@ -2,13 +2,16 @@
 <odoo>
 
     <template id="website_sale.s_dynamic_snippet_category_list" name="Category List">
+        <t t-set="snippet_heading_extra_classes" t-valuef="flex-column"/>
+        <t t-set="snippet_heading_inner_extra_classes" t-valuef="w-lg-50"/>
+        <t t-set="snippet_button_classes" t-valuef="btn btn-secondary"/>
         <t t-call="website.s_dynamic_snippet_template"
             snippet_name.f="s_dynamic_snippet_category_list"
             snippet_classes.f="oe_website_sale s_dynamic_category_clickable_items
                           s_dynamic_snippet_category s_dynamic_category_no_arrows"
             main_page_url.f="/shop"
-            snippet_title.f="Crafting Beautiful Spaces"
-            snippet_description.f="Designing elegant, inviting environments that inspire and delight.">
+            snippet_title.f="Explore our products categories"
+            snippet_description.f="Explore our curated selection and find the products that perfectly match your needs.">
             <t t-call="website_sale.s_dynamic_snippet_category_preview_data"/>
         </t>
     </template>

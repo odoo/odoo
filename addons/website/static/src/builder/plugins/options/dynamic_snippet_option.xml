@@ -57,7 +57,11 @@
             </t>
         </BuilderSelect>
     </BuilderRow>
-    <BuilderRow label.translate="Section Title" t-if="!isSingleMode">
+    <BuilderRow
+        id="section_title_opt_row"
+        label.translate="Section Title"
+        t-if="!isSingleMode"
+    >
         <BuilderButtonGroup applyTo="'.s_dynamic_snippet_title'">
             <t t-set="left">Left</t>
             <t t-set="right">Right</t>
