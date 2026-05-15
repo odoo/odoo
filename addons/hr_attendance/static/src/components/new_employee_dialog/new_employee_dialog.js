@@ -9,7 +9,7 @@ export class NewEmployeeDialog extends Component {
     static components = { Dialog, Many2One };
     static template = "hr_attendance.NewEmployeeDialog";
     props = props({
-        title: t.string().optional(_t("Set-up")),
+        title: t.string().optional(_t("Badge Set-up")),
         footer: t.boolean().optional(false),
         token: t.string(),
     });
@@ -28,7 +28,14 @@ export class NewEmployeeDialog extends Component {
     onSelectEmployee(emp) {
         this.state.searchName = emp?.name ?? "";
         this.state.badgeId = "";
-        if (this.state.searchName == "") {
+        if(emp?.isNew){
+            this.state.searchName = emp.name;
+            this.state.employeeName = emp.name;
+            this.state.value = null;
+            this.state.employeeHasBadge = false;
+            this.onCreate();
+        }
+        else if(this.state.searchName == ""){
             this.state.value = null;
         } else {
             this.state.value = emp;
@@ -45,13 +52,15 @@ export class NewEmployeeDialog extends Component {
             return;
         }
         try {
-            const is_created = await rpc("/hr_attendance/create_employee", {
+            const result = await rpc("/hr_attendance/create_employee", {
                 name: this.state.employeeName,
                 token: this.props.token,
             });
+            const is_created = result.status;
+            const created_emp = result.employee;
             if (is_created) {
-                this.notification.add(_t("Employee created successfully!"), { type: "success" });
-                this.props.close();
+                this.notification.add(_t("Employee created successfully!"), {type: "success"});
+                this.state.value = created_emp
             } else {
                 this.notification.add(_t("Failed to create employee."), {
                     type: "danger",

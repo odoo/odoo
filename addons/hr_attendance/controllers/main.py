@@ -190,12 +190,22 @@ class HrAttendance(http.Controller):
     def create_employee(self, name, token):
         company = self._get_company(token)
         if company:
-            request.env["hr.employee"].create({
+            new_emp = request.env["hr.employee"].create({
                 "name": name,
                 "company_id": company.id,
             })
-            return True
-        return False
+            return {
+                "status": True,
+                "employee": {
+                    "id": new_emp.id,
+                    "name": new_emp.name,
+                },
+            }
+
+        return {
+            "status": False,
+            "employee": None,
+        }
 
     @http.route('/hr_attendance/kiosk_keepalive', auth='user', type='jsonrpc')
     def kiosk_keepalive(self):
