@@ -513,7 +513,30 @@ test("show looking for help duration in the sidebar", async () => {
     await waitForNone(
         ".o-mail-DiscussSidebarChannel-container:has(:text(Visitor #1)) .o-livechat-LookingForHelp-timer"
     );
-    await click(".o-livechat-LivechatStatusSelection button:text('Looking for help')");
+});
+
+test("show looking for help duration when the agent is a member of the chat", async () => {
+    mockDate("2023-01-03 14:00:00");
+    const pyEnv = await startServer();
+    pyEnv["res.users"].write([serverState.userId], {
+        group_ids: pyEnv["res.groups"]
+            .search_read([["id", "=", serverState.groupLivechatId]])
+            .map(({ id }) => id),
+    });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_type: "livechat",
+        livechat_looking_for_help_since_dt: "2023-01-03 14:00:00",
+        livechat_status: "need_help",
+    });
+    pyEnv["discuss.channel.member"].create([
+        {
+            guest_id: pyEnv["mail.guest"].create({ name: "Visitor #1" }),
+            channel_id: channelId,
+            livechat_member_type: "visitor",
+        },
+    ]);
+    await start();
+    await openDiscuss(channelId);
     await waitFor(
         ".o-mail-DiscussSidebarChannel-container:has(:text(Visitor #1)) .o-livechat-LookingForHelp-timer:text(< 1m)"
     );
