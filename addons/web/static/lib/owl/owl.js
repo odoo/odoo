@@ -162,6 +162,13 @@ var owl = (() => {
   }
   function setComputation(computation) {
     currentComputation = computation;
+    // FIXME AAB: this fixes the main memory leak spotted in the test suite
+    // Find where currentComputation isn't properly reset and fix the leak properly
+    Promise.resolve().then(() => {
+      if (currentComputation === computation) {
+        currentComputation = void 0;
+      }
+    })
   }
   function updateComputation(computation) {
     const state = computation.state;
