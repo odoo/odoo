@@ -6,6 +6,7 @@ from cryptography import x509
 from cryptography.hazmat.primitives import hashes, serialization
 from cryptography.hazmat.primitives.asymmetric import ec, padding, rsa
 from cryptography.hazmat.primitives.asymmetric.utils import decode_dss_signature
+from contextlib import suppress
 from lxml import etree
 
 
@@ -57,7 +58,11 @@ class XadesSigner:
         return self._calculate_digest(signed_props_node)
 
     def sign_authentication_challenge(self, challenge_code, nip):
-        xml_to_sign_str = f'<AuthTokenRequest xmlns="http://ksef.mf.gov.pl/auth/token/2.0"><Challenge>{challenge_code}</Challenge><ContextIdentifier><Nip>{nip}</Nip></ContextIdentifier><SubjectIdentifierType>certificateSubject</SubjectIdentifierType></AuthTokenRequest>'
+        subject_str = ""
+        with suppress(Exception):
+            subject_str = self.cert.subject.rfc4514_string()
+        identifier_type = "certificateSubject" if nip in subject_str else "certificateFingerprint"
+        xml_to_sign_str = f'<AuthTokenRequest xmlns="http://ksef.mf.gov.pl/auth/token/2.0"><Challenge>{challenge_code}</Challenge><ContextIdentifier><Nip>{nip}</Nip></ContextIdentifier><SubjectIdentifierType>{identifier_type}</SubjectIdentifierType></AuthTokenRequest>'
         root = etree.fromstring(xml_to_sign_str)
 
         is_rsa = isinstance(self.private_key, rsa.RSAPrivateKey)
