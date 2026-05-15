@@ -38,16 +38,19 @@ class AccountMove(models.Model):
             return res
 
         current_invoice_amls = self.invoice_line_ids.filtered(lambda aml: aml.display_type == 'product' and aml.product_id and aml.product_id.type == 'consu' and aml.quantity)
-        all_invoices_amls = current_invoice_amls.sale_line_ids.invoice_lines.filtered(lambda aml: aml._filter_aml_lot_valuation()).sorted(lambda aml: (aml.date, aml.move_name, aml.id))
+        all_invoices_amls = current_invoice_amls.sale_line_ids.invoice_lines.filtered(
+            lambda aml: aml._filter_aml_lot_valuation()
+        ).sorted(lambda aml: (aml.date, aml.move_id.id, aml.id))
         index = all_invoices_amls.ids.index(current_invoice_amls[:1].id) if current_invoice_amls[:1] in all_invoices_amls else 0
         previous_amls = all_invoices_amls[:index]
         invoiced_qties = current_invoice_amls._get_invoiced_qty_per_product()
         invoiced_products = invoiced_qties.keys()
 
         if self.move_type == 'out_invoice':
-            # filter out the invoices that have been fully refund and re-invoice otherwise, the quantities would be
-            # consumed by the reversed invoice and won't be print on the new draft invoice
-            previous_amls = previous_amls.filtered(lambda aml: aml.move_id.payment_state != 'reversed')
+            # Ignore a reversed invoice only if its reversing move also precedes the invoice being rendered.
+            previous_amls = previous_amls.filtered(
+                lambda aml: aml.move_id.payment_state != 'reversed' or not (aml.move_id.reversal_move_ids & previous_amls.move_id)
+            )
 
         previous_qties_invoiced = previous_amls._get_invoiced_qty_per_product()
 
