@@ -1,18 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import warnings
-
 from collections import defaultdict, OrderedDict
-from datetime import datetime
-from dateutil.relativedelta import relativedelta
 from functools import partial
-from operator import itemgetter
 
 from odoo import http, _
 from odoo.addons.website.controllers.form import WebsiteForm
 from odoo.fields import Domain
 from odoo.http import request
-from odoo.tools import email_normalize, escape_psql
 from odoo.tools.translate import LazyTranslate
 
 _lt = LazyTranslate(__name__)

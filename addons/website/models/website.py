@@ -30,7 +30,7 @@ from odoo.models import Query
 from odoo.modules.module import get_manifest
 from odoo.tools import BinaryBytes, file_open
 from odoo.tools.image import image_process
-from odoo.tools.sql import SQL, escape_psql
+from odoo.tools.sql import SQL, escape_like_value
 from odoo.tools.translate import _
 
 logger = logging.getLogger(__name__)
@@ -2066,7 +2066,7 @@ class Website(models.CachedModel):
         domain = Domain.AND(domain_list)
         if search:
             for search_term in search.split(' '):
-                subdomains = [Domain(field, 'ilike', escape_psql(search_term)) for field in fields]
+                subdomains = [Domain(field, 'ilike', escape_like_value(search_term)) for field in fields]
                 if extra:
                     subdomains.append(extra(self.env, search_term))
                 domain &= Domain.OR(subdomains)
@@ -2372,7 +2372,7 @@ class Website(models.CachedModel):
         :return: yields words
         """
         match_pattern = r'[\w./-]{%s,}' % min(4, len(search) - 3)
-        first = escape_psql(search[0])
+        first = escape_like_value(search[0])
         for search_detail in search_details:
             model_name, fields = search_detail['model'], search_detail['search_fields']
             model = self.env[model_name]

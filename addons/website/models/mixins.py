@@ -3,16 +3,17 @@
 import re
 import urllib.parse
 
-from odoo import api, fields, models, _
-from odoo.fields import Domain
-from odoo.addons.website.tools import text_from_html
-from odoo.http import request
+from odoo import _, api, fields, models
 from odoo.exceptions import AccessError, UserError
+from odoo.fields import Domain
+from odoo.http import request
 from odoo.models import Query
-from odoo.tools import SQL, escape_psql
 from odoo.tools import split_every
-from odoo.tools.urls import urljoin as url_join
 from odoo.tools.json import scriptsafe as json_safe
+from odoo.tools.sql import SQL, escape_like_value
+from odoo.tools.urls import urljoin as url_join
+
+from odoo.addons.website.tools import text_from_html
 
 
 class WebsiteSeoMetadata(models.AbstractModel):
@@ -721,7 +722,7 @@ class WebsiteSearchableMixin(models.AbstractModel):
         if not search:
             return domain
 
-        search_terms = [escape_psql(t) for t in search.split()]
+        search_terms = [escape_like_value(t) for t in search.split()]
         # less number of terms - each term must match at least one field
         if len(search_terms) <= 2:
             for search_term in search_terms:

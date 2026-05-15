@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import re
 
@@ -6,7 +5,8 @@ from random import randint
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
-from odoo.tools import ormcache, make_index_name, create_index
+from odoo.tools import ormcache
+from odoo.tools.sql import make_index_name, create_index
 
 
 class AccountAnalyticPlan(models.Model):
