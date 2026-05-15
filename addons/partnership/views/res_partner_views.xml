@@ -48,7 +48,7 @@
     <record id="view_res_partner_grade_tree" model="ir.ui.view">
         <field name="name">res.partner.inherit.list</field>
         <field name="model">res.partner</field>
-        <field name="inherit_id" ref="base.view_partner_tree"/>
+        <field name="inherit_id" ref="mail.res_partner_view_tree_inherit_mail"/>
         <field name="arch" type="xml">
             <field name="vat" position="after">
                 <field name="grade_id" optional="hide"/>
