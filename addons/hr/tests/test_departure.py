@@ -4,6 +4,7 @@ from datetime import date
 
 from freezegun import freeze_time
 
+from odoo import Command
 from odoo.exceptions import ValidationError
 
 from odoo.addons.hr.tests.common import TestHrCommon
@@ -119,3 +120,26 @@ class TestDeparture(TestHrCommon):
                 self.emp_A.contract_date_end,
                 date(2025, 6, 1),
                 "The employee should have a contract date end.")
+
+    @freeze_time('2025-06-01')
+    def test_departure_dismissal_with_multiple_versions(self):
+        """
+        Checks that the departure is set on the correct version when the dismissal date and the departure date are
+        different and occur during different versions.
+        """
+        self.employee.version_ids[0].write({
+            'contract_date_start': date(2025, 1, 1),
+            'contract_date_end': date(2025, 5, 28)
+        })
+        self.employee.version_ids = [Command.create({
+            'name': 'employee second version',
+            'company_id': self.employee.company_id.id,
+            'contract_date_start': date(2025, 5, 29),
+            'date_version': date(2025, 5, 29),
+        })]
+        departure = self.env['hr.employee.departure'].create([{
+            'employee_id': self.employee.id,
+            'dismissal_date': date(2025, 5, 25),
+            'departure_date': date(2025, 5, 30),
+        }])
+        self.assertEqual(self.employee.version_ids[1].departure_id, departure)
