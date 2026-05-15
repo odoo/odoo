@@ -116,6 +116,7 @@ export class RenderPlugin extends Plugin {
             this.processChildNodes(node, (child) => {
                 rejectedChildren.add(child);
             });
+            console.log("discarded", node);
         } while ((node = treeWalker.nextNode()));
     }
 
@@ -225,6 +226,7 @@ export class RenderPlugin extends Plugin {
                 emailNode.analysis.parsingFacts.mobileSubtree = this.buildEmailTree(node, {
                     parsingFacts: { isMobileSubtree: true },
                 });
+                console.log(emailNode.analysis.parsingFacts.mobileSubtree);
             }
         } while ((node = treeWalker.nextNode()));
         return nodeToEmailNode.get(rootReferenceNode);
@@ -410,6 +412,7 @@ export class RenderPlugin extends Plugin {
         if (layout.pluginIds.size === 0) {
             layout.pluginIds.add(RenderPlugin.id);
         }
+        console.log(Array.from(layout.pluginIds).join(", "), referenceNode);
         return { layout, analysis };
     }
 
