@@ -22,7 +22,7 @@ registerWebsitePreviewTour("website_sale.category_page_and_products_snippet_edit
     {
         content: "Drag and drop the Products snippet group inside the category area.",
         trigger:
-            ".o_block_tab:not(.o_we_ongoing_insertion) .o_snippet[name='Catalog'] .o_snippet_thumbnail",
+            ".o_block_tab:not(.o_we_ongoing_insertion) .o_snippet[name='eCommerce'] .o_snippet_thumbnail",
         run: "drag_and_drop :iframe #category_header",
     },
     {

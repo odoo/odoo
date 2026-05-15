@@ -2,6 +2,8 @@ import { _t } from '@web/core/l10n/translation';
 import { registry } from '@web/core/registry';
 import { utils as uiUtils } from '@web/core/ui/ui_service';
 import { DynamicSnippet } from '@website/snippets/s_dynamic_snippet/dynamic_snippet';
+import { isCSSColor } from '@web/core/utils/colors';
+import { getCSSVariableValue, getHtmlStyle } from '@html_editor/utils/formatting';
 
 
 const SIZE_CONFIG = {
@@ -33,7 +35,19 @@ export class DynamicSnippetCategory extends DynamicSnippet {
             colSpanTwo: colSpanTwo,
             includeParent: nodeData.parentCategoryId && nodeData.showParent,
             parentCategoryId: parseInt(nodeData.parentCategoryId),
+            overlayColor: this.ensureCSSColor(nodeData.overlayGradient) || 'rgba(0,0,0,0.25)',
         });
+    }
+
+    ensureCSSColor(color) {
+        if (!color) {
+            return color;
+        }
+
+        if (color.startsWith("linear-gradient") || isCSSColor(color)) {
+            return color;
+        }
+        return getCSSVariableValue(color, getHtmlStyle(document));
     }
 
     getQWebRenderOptions() {

@@ -28,7 +28,7 @@ export class DynamicSnippetCategoryOptionPlugin extends Plugin {
                 ['showParent', true],
                 ['columns', 4],
                 ['rounded', 2],
-                ['gap', 2],
+                ['gap', 3],
                 ['size', 'medium'],
                 ['alignment', 'center'],
             ]) {
