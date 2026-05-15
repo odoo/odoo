@@ -3,6 +3,7 @@
 
 from datetime import date, timedelta
 from freezegun import freeze_time
+from unittest.mock import patch
 
 from odoo import Command
 from odoo.exceptions import UserError
@@ -3404,3 +3405,62 @@ class TestStockValuation(TestStockValuationCommon):
             {'account_id': self.product_avco_auto.categ_id.account_stock_variation_id.id, 'debit': 0, 'credit': 10},
             {'account_id': self.product_avco_auto.categ_id.property_stock_valuation_account_id.id, 'debit': 10, 'credit': 0}
         ])
+
+    def test_cron_post_stock_valuation_domain(self):
+        """ Cron must process daily/periodic every day and add monthly/periodic
+        on the last day of the month. Real-time and manual companies must be skipped.
+        """
+        Company = self.env['res.company']
+        daily_periodic, monthly_periodic, daily_realtime, manual_periodic = Company.create([
+            {
+                'name': 'Daily Periodic',
+                'inventory_period': 'daily',
+                'inventory_valuation': 'periodic',
+            },
+            {
+                'name': 'Monthly Periodic',
+                'inventory_period': 'monthly',
+                'inventory_valuation': 'periodic',
+            },
+            {
+                'name': 'Daily Realtime',
+                'inventory_period': 'daily',
+                'inventory_valuation': 'real_time',
+            },
+            {
+                'name': 'Manual Periodic',
+                'inventory_period': 'manual',
+                'inventory_valuation': 'periodic',
+            },
+        ])
+
+        called_ids = []
+
+        def fake_close(records, auto_post=False):
+            called_ids.append(records.id)
+            return {'res_id': False}
+
+        with patch.object(self.env.registry['res.company'], 'action_close_stock_valuation', fake_close):
+            with freeze_time('2026-03-15'):
+                called_ids.clear()
+                Company._cron_post_stock_valuation()
+                self.assertIn(daily_periodic.id, called_ids)
+                self.assertNotIn(monthly_periodic.id, called_ids)
+                self.assertNotIn(daily_realtime.id, called_ids)
+                self.assertNotIn(manual_periodic.id, called_ids)
+
+            with freeze_time('2026-03-31'):
+                called_ids.clear()
+                Company._cron_post_stock_valuation()
+                self.assertIn(daily_periodic.id, called_ids)
+                self.assertIn(monthly_periodic.id, called_ids)
+                self.assertNotIn(daily_realtime.id, called_ids)
+                self.assertNotIn(manual_periodic.id, called_ids)
+
+            with freeze_time('2026-02-28'):
+                called_ids.clear()
+                Company._cron_post_stock_valuation()
+                self.assertIn(daily_periodic.id, called_ids)
+                self.assertIn(monthly_periodic.id, called_ids)
+                self.assertNotIn(daily_realtime.id, called_ids)
+                self.assertNotIn(manual_periodic.id, called_ids)

@@ -134,9 +134,13 @@ class ResCompany(models.Model):
 
     @api.model
     def _cron_post_stock_valuation(self):
-        domain = Domain([('inventory_period', '=', 'daily'), ('inventory_valuation', '!=', 'real_time')])
+        periods = ['daily']
         if fields.Date.today() == fields.Date.today() + relativedelta(day=31):
-            domain = domain & Domain([('inventory_period', '=', 'monthly')])
+            periods.append('monthly')
+        domain = Domain([
+            ('inventory_period', 'in', periods),
+            ('inventory_valuation', '!=', 'real_time'),
+        ])
         companies = self.env['res.company'].search(domain)
         for company in companies:
             company.action_close_stock_valuation(auto_post=True)
