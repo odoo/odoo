@@ -57,3 +57,26 @@ class TestProjectPortalAccess(TestProjectSharingCommon, HttpCase):
         # The description should not contain the partner_phone since it was not provided
         self.assertEqual(str(task.description), ('<p>Fix this</p><h4>Other Information</h4>Email : jean@michel.com<br>\n'
             'partner_name : Not Jean Michel<br>\npartner_company_name : foo'))
+
+    def test_task_submission_does_not_overwrite_existing_partner(self):
+        """ Submitting a task via Contact Us with new visitor data should not
+            overwrite the name (or other fields) of the project's existing partner.
+        """
+        self.authenticate(None, None)
+        self.project_portal.partner_id = self.partner_1
+        task_data = {
+            'name': 'New Task From Website',
+            'partner_name': 'TEST',
+            'email_from': 'test_new_visitor@unknown.com',
+            'description': 'Hello',
+            'project_id': self.project_portal.id,
+            'csrf_token': http.Request.csrf_token(self),
+        }
+        response = self.url_open('/website/form/project.task', data=task_data)
+        new_task = self.env['project.task'].browse(response.json().get('id'))
+        self.assertTrue(new_task.exists())
+        self.assertFalse(new_task.partner_id)
+        # the existing partner must NOT be renamed
+        self.assertEqual(self.partner_1.name, 'Valid Lelitre')
+        # The project's partner must remain unchanged
+        self.assertEqual(self.project_portal.partner_id.name, 'Valid Lelitre')
