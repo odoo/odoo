@@ -79,13 +79,9 @@ export class FontSizeSelector extends Component {
                 this.fontSizeInput.addEventListener("click", () => {
                     if (!this.dropdown.isOpen) {
                         this.dropdown.open();
-                        // Focus input on dropdown open if not hidden by bottom sheet
-                        // we wait an animation frame because the bottom sheet is mounted in next frame
                         requestAnimationFrame(() => {
                             if (this.menuRef.el?.closest(".o_bottom_sheet")) {
                                 this.props.onBlur?.();
-                            } else {
-                                this.fontSizeInput.select();
                             }
                         });
                     }
@@ -114,13 +110,16 @@ export class FontSizeSelector extends Component {
         useLayoutEffect(
             () => {
                 // blur on close
-                if (
-                    this.fontSizeInput &&
-                    !this.dropdown.isOpen &&
-                    this.iframeContentRef.el?.contains(this.props.document.activeElement)
-                ) {
-                    this.fontSizeInput.blur();
-                    this.props.onBlur?.();
+                if (this.fontSizeInput) {
+                    // Focus input on dropdown open, blur on close.
+                    if (this.dropdown.isOpen) {
+                        this.fontSizeInput.select();
+                    } else if (
+                        this.iframeContentRef.el?.contains(this.props.document.activeElement)
+                    ) {
+                        this.fontSizeInput.blur();
+                        this.props.onBlur?.();
+                    }
                 }
             },
             () => [this.dropdown.isOpen]

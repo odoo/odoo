@@ -547,6 +547,7 @@ test("should focus the editable area after selecting a font size item on mobile"
     const iframeEl = queryOne(".o-we-toolbar [name='font_size'] iframe");
     const inputEl = iframeEl.contentWindow.document?.querySelector("input");
     await contains(".o-we-toolbar [name='font_size']").click();
+    await animationFrame();
     // In mobile the toolbar is hidden while o_bottom_sheet is opened.
     expect(editor.editable).toBeFocused();
     expect(inputEl).not.toBeFocused();
@@ -584,6 +585,7 @@ test("should not create empty extra nodes while changing format of link on mobil
     const inputEl = iframeEl.contentWindow.document?.querySelector("input");
     await contains(".o-we-toolbar [name='font_size']").click();
     // In mobile the toolbar is hidden while o_bottom_sheet is opened.
+    await animationFrame();
     expect(inputEl).not.toBeFocused();
     await waitFor(".o_font_size_selector_menu .dropdown-item:contains('80')");
     await contains(".o_font_size_selector_menu .dropdown-item:contains('80')").click();
