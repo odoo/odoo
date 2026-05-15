@@ -2,6 +2,7 @@
 
 import logging
 import platform
+import time
 import requests
 import subprocess
 from odoo.addons.iot_drivers.tools.helpers import (
@@ -91,6 +92,8 @@ def check_version_upgrades(local_branch, db_branch):
         subprocess.run(
             ['/home/pi/odoo/addons/iot_drivers/tools/upgrade_scripts/upgrade_trixie/upgrade_trixie.sh'], check=True,
         )
+        # If we reach this point, we are about to reboot. Sleep to prevent git checkout.
+        time.sleep(30)
     except subprocess.CalledProcessError:
         _logger.exception("Failed to upgrade to debian Trixie. Check /home/pi/upgrade.log file for more details")
 
