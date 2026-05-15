@@ -151,7 +151,7 @@ export class HighlightPlugin extends Plugin {
             thicknessToRestore = style.getPropertyValue("--text-highlight-width");
         }
 
-        this.dependencies.format.formatSelection("highlight", {
+        this.dependencies.format.requestFormat("highlight", {
             formatProps: { highlightId, colorToRestore, thicknessToRestore },
             applyStyle: true,
         });
@@ -246,7 +246,7 @@ export class HighlightPlugin extends Plugin {
     }
 
     deleteSelectedHighlight() {
-        this.dependencies.format.formatSelection("highlight", { applyStyle: false });
+        this.dependencies.format.requestFormat("highlight", { applyStyle: false });
         this.updateSelectedHighlight();
     }
 }

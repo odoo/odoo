@@ -179,15 +179,7 @@ export class ColorPlugin extends Plugin {
         let targetedNodes;
         // Get the <font> nodes to color
         if (selection.isCollapsed) {
-            let zws;
-            if (
-                selection.anchorNode.nodeType === Node.TEXT_NODE &&
-                selection.anchorNode.textContent === "\u200b"
-            ) {
-                zws = selection.anchorNode;
-            } else {
-                zws = this.dependencies.format.insertAndSelectZws();
-            }
+            const zws = this.dependencies.format.getOrCreateZws();
             this.dependencies.selection.setSelection(
                 {
                     anchorNode: zws,

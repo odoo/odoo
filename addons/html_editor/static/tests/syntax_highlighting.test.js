@@ -1,12 +1,7 @@
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { getContent, setSelection } from "./_helpers/selection";
 import { animationFrame, click, press, queryOne, waitFor } from "@odoo/hoot-dom";
-import {
-    ensureDistinctHistoryCommit,
-    insertText,
-    insertSpace,
-    splitBlock,
-} from "./_helpers/user_actions";
+import { ensureDistinctHistoryCommit, insertText, insertSpace } from "./_helpers/user_actions";
 import {
     compareHighlightedContent,
     highlightedPre,
@@ -177,35 +172,6 @@ test("inserting an empty code block activates syntax highlighting plugin with an
             highlightedPre({ value: "", textareaRange: 0 }) +
             '<p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>',
         contentAfter: `<pre data-embedded="readonlySyntaxHighlighting" data-language-id="plaintext"><br></pre>[]`,
-    });
-});
-
-test("inserting a code block in an empty paragraph with a style placeholder activates syntax highlighting plugin with an empty textarea", async () => {
-    await testEditorWithHighlightedContent({
-        contentBefore: "<p><br>[]</p>",
-        stepFunction: async (editor) => {
-            await pressAndWait(["ctrl", "b"]);
-            expect(getContent(editor.editable)).toBe(
-                `<p o-we-hint-text='Type "/" for commands' class="o-we-hint"><strong data-oe-zws-empty-inline="">\u200B[]</strong></p>`,
-                { message: "The style placeholder was inserted." }
-            );
-            splitBlock(editor);
-            expect(getContent(editor.editable)).toBe(
-                `<p><strong data-oe-zws-empty-inline="">\u200B</strong></p>` +
-                    `<p o-we-hint-text='Type "/" for commands' class="o-we-hint"><strong data-oe-zws-empty-inline="">[]\u200B</strong></p>`,
-                { message: "The paragraph was split." }
-            );
-            await insertPre(editor);
-        },
-        contentAfterEdit: unformat(
-            `<p><strong data-oe-zws-empty-inline="">\u200B</strong></p>
-            ${highlightedPre({
-                value: "", // There should be no content (the zws is stripped)
-                textareaRange: 0,
-            })}
-            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
-        ),
-        contentAfter: `<p><br></p><pre data-embedded="readonlySyntaxHighlighting" data-language-id="plaintext"><br></pre>[]`,
     });
 });
 

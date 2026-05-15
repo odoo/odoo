@@ -8,6 +8,7 @@ import { expandToolbar } from "../_helpers/toolbar";
 import { unformat } from "../_helpers/format";
 import { expectElementCount } from "../_helpers/ui_expectations";
 import { FONT_SIZE_CLASSES } from "@html_editor/utils/formatting";
+import { insertText } from "../_helpers/user_actions";
 
 test("should do nothing if no format is set", async () => {
     await testEditor({
@@ -832,8 +833,11 @@ test("should remove text color from empty element", async () => {
     await testEditor({
         contentBefore:
             '<p><font data-oe-zws-empty-inline="" style="color: rgb(255, 0, 0);">[]\u200B</font></p>',
-        stepFunction: (editor) => execCommand(editor, "removeFormat"),
-        contentAfterEdit: `<p o-we-hint-text='Type "/" for commands' class="o-we-hint">\u200b[]</p>`,
+        stepFunction: async (editor) => {
+            execCommand(editor, "removeFormat");
+            await insertText(editor, "x");
+        },
+        contentAfterEdit: `<p o-we-hint-text='Type "/" for commands' class="o-we-hint">x[]</p>`,
     });
 });
 
@@ -1234,4 +1238,19 @@ describe("typography classes", () => {
             `),
         });
     });
+});
+
+test("remove format on a collapsed cursor removes format from next typed char", async () => {
+    const { editor, el } = await setupEditor(`<p><strong>ab[]cd</strong></p>`);
+    await press(["control", "Space"]);
+    await insertText(editor, "x");
+    expect(getContent(el)).toBe(`<p><strong>ab</strong>x[]<strong>cd</strong></p>`);
+});
+
+test("remove format discards a pending format intent", async () => {
+    const { editor, el } = await setupEditor(`<p>ab[]cd</p>`);
+    await press(["ctrl", "b"]); // pending bold, no DOM
+    await press(["control", "space"]); // should drop the pending intent
+    await insertText(editor, "x");
+    expect(getContent(el)).toBe(`<p>abx[]cd</p>`);
 });
