@@ -1307,3 +1307,150 @@ class TestProcurement(TestMrpCommon):
         update_quantity_wizard.change_prod_qty()
 
         self.assertEqual(mo_child.product_qty, 1.0)
+
+    def test_component_reservation_from_child_mos(self):
+        """
+        Check that component moves are reserved from the validation of child mo's
+        in case multiple mo's are linked to a common component move.
+        """
+        final_bom = self.bom_4
+        # Set the component to be in MTO + Manufacture with a batch size of 5
+        component = final_bom.bom_line_ids.product_id
+        mto_route = self.warehouse_1.mto_pull_id.route_id
+        mto_route.action_unarchive()
+        component.write({
+            'is_storable': True,
+            'route_ids': [Command.set(mto_route.ids)]
+        })
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': component.product_tmpl_id.id,
+            'enable_batch_size': True,
+            'batch_size': 5.0,
+        })
+        main_mo = self.env['mrp.production'].create({
+            'product_id': final_bom.product_id.id,
+            'bom_id': final_bom.id,
+            'product_qty': 3.0,
+        })
+        main_mo.action_confirm()
+        self.assertRecordValues(main_mo.move_raw_ids, [{
+            'product_id': component.id, 'quantity': 0.0, 'product_uom_qty': 3.0, 'product_uom': self.uom_dunit.id,  # Requires 30 units
+        }])
+        child_mos = main_mo._get_children()
+        self.assertEqual(len(child_mos), 6)
+        self.assertTrue(all(mo.move_finished_ids.move_dest_ids == main_mo.move_raw_ids for mo in child_mos))
+        # Split the main MO
+        wizard = Form.from_action(self.env, main_mo.action_split())
+        wizard.max_batch_size = 1
+        wizard.save().action_split()
+        sibling_mos = main_mo.production_group_id.production_ids
+        self.assertEqual(len(sibling_mos), 3)
+        # Split the third child MO in 5
+        wizard = Form.from_action(self.env, child_mos[2].action_split())
+        wizard.max_batch_size = 1
+        wizard.save().action_split()
+        self.assertEqual(len(child_mos[2].production_group_id.production_ids), 5)
+        # Check that the reservation process is well behaved with respect to these splits
+        self.assertTrue(all(mo.move_finished_ids.move_dest_ids == sibling_mos.move_raw_ids for mo in child_mos))
+        child_mos[0].button_mark_done()
+        self.assertRecordValues(sibling_mos.move_raw_ids, [
+            {'quantity': 0.5}, {'quantity': 0.0}, {'quantity': 0.0}
+        ])
+        child_mos[1].button_mark_done()
+        self.assertRecordValues(sibling_mos.move_raw_ids, [
+            {'quantity': 1.0}, {'quantity': 0.0}, {'quantity': 0.0}
+        ])
+        child_mos[2].button_mark_done()
+        self.assertRecordValues(sibling_mos.move_raw_ids, [
+            {'quantity': 1.0}, {'quantity': 0.1}, {'quantity': 0.0}
+        ])
+        (child_mos[2].production_group_id.production_ids - child_mos[2]).button_mark_done()
+        self.assertRecordValues(sibling_mos.move_raw_ids, [
+            {'quantity': 1.0}, {'quantity': 0.5}, {'quantity': 0.0}
+        ])
+        child_mos[3].button_mark_done()
+        self.assertRecordValues(sibling_mos.move_raw_ids, [
+            {'quantity': 1.0}, {'quantity': 1.0}, {'quantity': 0.0}
+        ])
+        child_mos[4:].button_mark_done()
+        self.assertRecordValues(sibling_mos.move_raw_ids, [
+            {'quantity': 1.0}, {'quantity': 1.0}, {'quantity': 1.0}
+        ])
+
+    def test_component_reservation_with_multiple_sources(self):
+        """
+        Check that component moves are reserved from the validation of child mo's in case
+        multiple mo's are linked to a common component but with different target mo.
+
+        Considering each product to be mMnufactured + MTO with the following bom composition:
+        Final Product (FP):
+            - 1x  Product A:
+                - 1 x Component  # Empty bom, but manufactured nonetheless
+            - 1 x Prodcut B:
+                - 1 x Component
+            - 1 x Component
+        Create and confirm an MO for 3 units of FP > This creates 5 MO's for 3 units each:
+        1 for Product A, 1 for Prodcut B, 3 for Component. Split the MO's for COMP and check
+        that their validation reserves the appropriate move raw.
+        """
+        mto_route = self.warehouse_1.mto_pull_id.route_id
+        mto_route.action_unarchive()
+        final, sub_a, sub_b, component = self.env['product.product'].create([{
+            'name': name,
+            'is_storable': True,
+            'route_ids': [Command.set(mto_route.ids)],
+        } for name in ['Final', 'Subassembly A', 'Subassembly B', 'Component']])
+        bom_final, _bom_a, _bom_b, _bom_compo = self.env['mrp.bom'].create([
+            {
+                'product_tmpl_id': final.product_tmpl_id.id,
+                'bom_line_ids': [
+                    Command.create({'product_id': sub_a.id, 'product_qty': 1}),
+                    Command.create({'product_id': sub_b.id, 'product_qty': 1}),
+                    Command.create({'product_id': component.id, 'product_qty': 1}),
+                ],
+            }, {
+                'product_tmpl_id': sub_a.product_tmpl_id.id,
+                'bom_line_ids': [
+                    Command.create({'product_id': component.id, 'product_qty': 1}),
+                ],
+            }, {
+                'product_tmpl_id': sub_b.product_tmpl_id.id,
+                'bom_line_ids': [
+                    Command.create({'product_id': component.id, 'product_qty': 1}),
+                ],
+            }, {
+                'product_tmpl_id': component.product_tmpl_id.id,
+            },
+        ])
+        main_mo = self.env['mrp.production'].create({
+            'product_id': final.id,
+            'bom_id': bom_final.id,
+            'product_qty': 3,
+        })
+        main_mo.action_confirm()
+        main_mo, sub_a_mo, sub_b_mo, compo_main_mo, compo_sub_a_mo, compo_sub_b_mo = main_mo.reference_ids.production_ids
+        target_moves = (main_mo | sub_a_mo | sub_b_mo).move_raw_ids.filtered(lambda m: m.product_id == component)
+        compo_mos = compo_main_mo | compo_sub_a_mo | compo_sub_b_mo
+        for mo in compo_mos:
+            wizard = Form.from_action(self.env, mo.action_split())
+            wizard.max_batch_size = 1
+            wizard.save().action_split()
+        # Check that each split targets the appropriate move_raw
+        for comp_mo, target_move in zip(compo_mos, target_moves):
+            self.assertTrue(all(mo.move_finished_ids.move_dest_ids == target_move for mo in comp_mo.production_group_id.production_ids))
+        compo_main_mo.production_group_id.production_ids[0].button_mark_done()
+        self.assertRecordValues(target_moves, [
+            {'quantity': 1.0}, {'quantity': 0.0}, {'quantity': 0.0}
+        ])
+        compo_sub_a_mo.production_group_id.production_ids[1:].button_mark_done()
+        self.assertRecordValues(target_moves, [
+            {'quantity': 1.0}, {'quantity': 2.0}, {'quantity': 0.0}
+        ])
+        compo_sub_b_mo.production_group_id.production_ids.button_mark_done()
+        self.assertRecordValues(target_moves, [
+            {'quantity': 1.0}, {'quantity': 2.0}, {'quantity': 3.0}
+        ])
+        compo_main_mo.production_group_id.production_ids[-1].button_mark_done()
+        self.assertRecordValues(target_moves, [
+            {'quantity': 2.0}, {'quantity': 2.0}, {'quantity': 3.0}
+        ])
