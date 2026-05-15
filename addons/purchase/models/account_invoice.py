@@ -170,6 +170,16 @@ class AccountMove(models.Model):
             move.purchase_matched_ratio = 100.0 * matched / total if total else 0.0
             move.is_purchase_matched = matched == total and total > 0
 
+    @api.depends("purchase_id")
+    def _compute_incoterm_location(self):
+        super()._compute_incoterm_location()
+        for move in self:
+            purchase_locations = move.line_ids.purchase_line_id.order_id.mapped("incoterm_location")
+            incoterm_res = next((incoterm for incoterm in purchase_locations if incoterm), False)
+            # if multiple purchase order we take an incoterm that is not false
+            if incoterm_res:
+                move.incoterm_location = incoterm_res
+
     @api.depends('invoice_line_ids.purchase_line_id')
     def _compute_origin_po_count(self):
         for move in self:

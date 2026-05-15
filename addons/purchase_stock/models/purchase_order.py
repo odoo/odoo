@@ -17,7 +17,6 @@ class PurchaseOrder(models.Model):
     def _default_picking_type(self):
         return self._get_picking_type(self.env.context.get('company_id') or self.env.company.id)
 
-    incoterm_location = fields.Char(string='Incoterm Location')
     incoming_picking_count = fields.Integer("Incoming Shipment count", compute='_compute_incoming_picking_count')
     picking_ids = fields.Many2many('stock.picking', compute='_compute_picking_ids', string='Receptions', copy=False, store=True)
     dest_address_id = fields.Many2one('res.partner', compute='_compute_dest_address_id', store=True, readonly=False)
@@ -309,11 +308,6 @@ class PurchaseOrder(models.Model):
             result['views'] = form_view + [(state, view) for state, view in result.get('views', []) if view != 'form']
             result['res_id'] = pickings.id
         return result
-
-    def _prepare_invoice(self):
-        invoice_vals = super()._prepare_invoice()
-        invoice_vals['invoice_incoterm_id'] = self.incoterm_id.id
-        return invoice_vals
 
     # --------------------------------------------------
     # Business methods

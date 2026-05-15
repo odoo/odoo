@@ -420,6 +420,8 @@
                                 <group name="billing_info" string="billing">
                                     <field name="invoice_status" invisible="state in ('draft', 'sent', 'to approve', 'cancel')"/>
                                     <field name="fiscal_position_id" options="{'no_create': True}" readonly="invoice_status == 'invoiced' or locked"/>
+                                    <field name="incoterm_id" readonly="locked"/>
+                                    <field name="incoterm_location"  readonly="locked"/>
                                 </group>
                                 <group name="tracking_info" string="tracking">
                                     <field name="origin"/>
