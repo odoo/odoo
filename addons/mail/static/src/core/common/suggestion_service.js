@@ -181,14 +181,19 @@ export class SuggestionService {
         const cleanedSearchTerm = normalize(term);
         switch (delimiter) {
             case SUGGESTION_DELIMITERS.PARTNER: {
-                const partners = this.searchPartnerSuggestions(cleanedSearchTerm, {
+                const { suggestions } = this.searchPartnerSuggestions(cleanedSearchTerm, {
                     composerType,
                     thread,
                 });
+                const partnerSuggestions = this.sortPartnerSuggestions(
+                    suggestions,
+                    cleanedSearchTerm,
+                    thread
+                );
                 const roles = this.searchRoleSuggestions(cleanedSearchTerm);
                 return {
                     type: "Partner",
-                    suggestions: [...partners.suggestions, ...roles.suggestions],
+                    suggestions: [...partnerSuggestions, ...roles.suggestions],
                 };
             }
             case SUGGESTION_DELIMITERS.CANNED_RESPONSE:
@@ -259,15 +264,44 @@ export class SuggestionService {
     }
 
     /**
-     * @param {string} cleanedSearchTerm
      * @param {Object} [options={}]
      * @param {COMPOSER_TYPES} [options.composerType]
      * @param {import("models").Thread} [options.thread]
      */
+    getUserSuggestions({ composerType, thread }) {
+        return Object.values(this.store["res.users"].records).filter((user) =>
+            this.isPartnerSuggestionValid(user.partner_id, { composerType, thread })
+        );
+    }
+
+    /**
+     * @param {string} cleanedSearchTerm
+     * @param {Object} [options={}]
+     * @param {COMPOSER_TYPES} [options.composerType]
+     * @param {import("models").Thread} [options.thread]
+     * @returns {{ type: String, suggestions: [import("models").ResPartner | import("@mail/core/common/store_service").SpecialMention | import("models").ResUsers] }}
+     */
     searchPartnerSuggestions(cleanedSearchTerm, { composerType, thread } = {}) {
         const partners = this.getPartnerSuggestions({ composerType, thread });
+        const users = this.getUserSuggestions({ composerType, thread });
+        /** @type {[import("models").ResPartner | import("@mail/core/common/store_service").SpecialMention | import("models").ResUsers]} */
         const suggestions = [];
+        for (const user of users) {
+            if (!user.name) {
+                continue;
+            }
+            const name = thread?.getPersonaName(user) ?? user.displayName;
+            if (
+                (name && normalize(name).includes(cleanedSearchTerm)) ||
+                (user.email && normalize(user.email).includes(cleanedSearchTerm))
+            ) {
+                suggestions.push(user);
+            }
+        }
         for (const partner of partners) {
+            if (suggestions.some((user) => user.partner_id === partner)) {
+                continue;
+            }
             const name = thread?.getPersonaName(partner) ?? partner.displayName;
             if (
                 (name && normalize(name).includes(cleanedSearchTerm)) ||
@@ -288,26 +322,30 @@ export class SuggestionService {
         );
         return {
             type: "Partner",
-            suggestions: [...this.sortPartnerSuggestions(suggestions, cleanedSearchTerm, thread)],
+            suggestions: suggestions,
         };
     }
 
     /**
-     * @param {[import("models").Persona | import("@mail/core/common/store_service").SpecialMention]} [partners]
+     * @param {[import("models").ResPartner | import("@mail/core/common/store_service").SpecialMention | import("models").ResUsers]} [suggestions]
      * @param {String} [searchTerm]
      * @param {import("models").Thread} thread
      * @returns {[import("models").Persona]}
      */
-    sortPartnerSuggestions(partners, searchTerm = "", thread = undefined) {
+    sortPartnerSuggestions(suggestions, searchTerm = "", thread = undefined) {
         const cleanedSearchTerm = normalize(searchTerm);
         const compareFunctions = partnerCompareRegistry.getAll();
         const context = this.sortPartnerSuggestionsContext(thread);
-        return partners.sort((p1, p2) => {
-            if (p1.isSpecial || p2.isSpecial) {
+        return suggestions.sort((p1, p2) => {
+            /** @type {import("models").ResPartner | import("@mail/core/common/store_service").SpecialMention} */
+            const partner1 = p1.Model.getName() === "res.users" ? p1.partner_id : p1;
+            /** @type {import("models").ResPartner | import("@mail/core/common/store_service").SpecialMention} */
+            const partner2 = p2.Model.getName() === "res.users" ? p2.partner_id : p2;
+            if (partner1.isSpecial || partner2.isSpecial) {
                 return 0;
             }
             for (const fn of compareFunctions) {
-                const result = fn(p1, p2, {
+                const result = fn(partner1, partner2, {
                     store: this.store,
                     searchTerm: cleanedSearchTerm,
                     thread,

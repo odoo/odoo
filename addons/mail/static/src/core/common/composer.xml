@@ -197,6 +197,21 @@
         <span t-if="partner.email" class="text-600 text-truncate align-self-center opacity-75" t-att-title="title">(<t t-out="partner.email"/>)</span>
     </t>
 
+    <t t-name="mail.Composer.suggestionUser">
+        <t t-set="user" t-value="option.user"/>
+        <t t-set="partner" t-value="user.partner_id"/>
+        <t t-set="title" t-value="user.name"/>
+        <t t-if="user.email" t-set="title" t-value="`${title} (${user.email})`"/>
+        <DiscussAvatar t-if="partner" record="partner" size="24"/>
+        <strong class="o-mail-Composer-suggestionPartner-name px-2 py-1 align-self-center flex-shrink-0 text-truncate" t-att-class="{'o-has-email': user.email, 'mw-100': !user.email}" t-att-title="title">
+            <t t-out="user.name"/>
+            <t t-if="option.thread and user.name !== option.thread.getPersonaName(partner)">
+                "<t t-out="option.thread.getPersonaName(partner)"/>"
+            </t>
+        </strong>
+        <span t-if="user.email" class="text-600 text-truncate align-self-center opacity-75" t-att-title="title">(<t t-out="user.email"/>)</span>
+    </t>
+
     <t t-name="mail.Composer.suggestionRole">
         <span class="d-flex justify-content-center opacity-75" style="min-width:24px;">
             <i class="oi oi-users"/>
