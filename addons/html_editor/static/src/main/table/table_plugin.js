@@ -770,8 +770,8 @@ export class TablePlugin extends Plugin {
         const selection = this.dependencies.selection.getEditableSelection();
         if (closestElement(selection.commonAncestorContainer, "table.o_selected_table")) {
             let [startTd, endTd] = [
-                closestElement(selection.anchorNode, "td"),
-                closestElement(selection.focusNode, "td"),
+                closestElement(selection.anchorNode, isTableCell),
+                closestElement(selection.focusNode, isTableCell),
             ];
             if (selection.direction === DIRECTIONS.LEFT) {
                 [startTd, endTd] = [endTd, startTd];

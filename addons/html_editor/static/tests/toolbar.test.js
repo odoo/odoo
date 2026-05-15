@@ -791,6 +791,24 @@ test("toolbar open on single selected cell in table", async () => {
     await expectElementCount(".o-we-toolbar", 1);
 });
 
+test("toolbar opens when selecting table header cells", async () => {
+    await setupEditor(`
+        <table class="table table-bordered o_table">
+            <tbody>
+                <tr>
+                    <th class="o_table_header">[Header 1</th>
+                    <th class="o_table_header">Header 2]</th>
+                </tr>
+                <tr>
+                    <td>Cell 1</td>
+                    <td>Cell 2</td>
+                </tr>
+            </tbody>
+        </table>
+    `);
+    await expectElementCount(".o-we-toolbar", 1);
+});
+
 test.tags("desktop");
 test("Position toolbar correctly on table selection", async () => {
     const contentBefore = unformat(`
