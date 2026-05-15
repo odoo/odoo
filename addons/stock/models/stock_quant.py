@@ -439,7 +439,6 @@ class StockQuant(models.Model):
             self._quant_tasks()
 
         ctx = dict(self.env.context or {})
-        ctx['no_at_date'] = True
         if self.env.user.has_group('stock.group_stock_user') and not self.env.user.has_group('stock.group_stock_manager'):
             ctx['search_default_my_count'] = True
         view_id = self.env.ref('stock.view_stock_quant_tree_inventory_editable').id

@@ -632,7 +632,6 @@ class ProductProduct(models.Model):
         hide_lot = not any(product.tracking in ['lot', 'serial'] for product in self)
         self = self.with_context(
             hide_location=hide_location, hide_lot=hide_lot,
-            no_at_date=True,
         )
 
         # If user have rights to write on quant, we define the view as editable.
