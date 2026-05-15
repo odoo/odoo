@@ -8,11 +8,12 @@ from unittest.mock import patch
 from odoo import Command
 from odoo.exceptions import UserError
 from odoo.fields import Datetime, Date
-from odoo.tests import Form
+from odoo.tests import Form, tagged
 
 from odoo.addons.stock_account.tests.common import TestStockValuationCommon
 
 
+@tagged('post_install', '-at_install')
 class TestStockValuation(TestStockValuationCommon):
     def test_realtime(self):
         """ Stock moves update stock value with product x cost price,
@@ -2073,6 +2074,44 @@ class TestStockValuation(TestStockValuationCommon):
         self.assertEqual(product.with_context(to_date=Datetime.to_string(date4)).total_value, -60)
         self.assertEqual(product.with_context(to_date=Datetime.to_string(date5)).qty_available, 95)
         self.assertEqual(product.with_context(to_date=Datetime.to_string(date5)).total_value, 1425)
+
+    def test_at_date_fifo_inventory_adjustment(self):
+        """ Make an inventory adjustment at d1 (10 units @ 10), then receive 10 units at a
+        different cost the next day (d2 @ 20). Verify that the historical valuation at d1
+        reflects only the inventory adjustment (total_value=100, avg_cost=10), unaffected
+        by the later reception.
+        """
+        product = self.product_fifo
+
+        now = Datetime.now()
+        date1 = now - timedelta(days=2)
+        date2 = now - timedelta(days=1)
+
+        # Inventory adjustment at d1: add 10 units @ standard_price=10
+        with freeze_time(date1):
+            quant = self.env['stock.quant'].create({
+                'product_id': product.id,
+                'location_id': self.stock_location.id,
+                'inventory_quantity': 10,
+            })
+            quant.action_apply_inventory()
+
+        self.assertEqual(product.qty_available, 10)
+        self.assertEqual(product.total_value, 100)
+        self.assertEqual(product.avg_cost, 10)
+
+        # Reception the next day with a different cost: 10 units @ 20
+        with freeze_time(date2):
+            self._make_in_move(product, 10, unit_cost=20)
+
+        self.assertEqual(product.qty_available, 20)
+        self.assertEqual(product.total_value, 300)
+
+        # At d1, valuation should only reflect the inventory adjustment
+        product_at_d1 = product.with_context(to_date=Datetime.to_string(date1))
+        self.assertEqual(product_at_d1.qty_available, 10)
+        self.assertEqual(product_at_d1.total_value, 100)
+        self.assertEqual(product_at_d1.avg_cost, 10)
 
     def test_inventory_fifo_1(self):
         """ Make an inventory from a location with a company set, and ensure the product has a stock

@@ -551,7 +551,7 @@ class ProductProduct(models.Model):
             last_move = move
             move_value = move.value
             if at_date:
-                move_value = move._get_value(at_date=at_date)
+                move_value = move._get_value(at_date=at_date, forced_std_price=move_value / move._get_valued_qty() if move._get_valued_qty() else 0)
             if qty_on_first_move:
                 valued_qty = move._get_valued_qty()
                 in_qty = qty_on_first_move
