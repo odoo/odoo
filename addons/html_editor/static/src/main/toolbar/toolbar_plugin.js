@@ -554,6 +554,7 @@ class MobileToolbarOverlay {
 
     open({ props }) {
         props.class = "shadow";
+        props.editable = this.editable;
         if (!this.isOpen) {
             const modal = this.editable.closest(".o_modal_full");
             if (modal) {
