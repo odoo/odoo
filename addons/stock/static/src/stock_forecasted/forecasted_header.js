@@ -28,7 +28,7 @@ export class ForecastedHeader extends Component {
     }
 
     get leadTime() {
-        if (!this.products || this.products.length === 0) {
+        if (!this.products || !Object.keys(this.products).length) {
             return null;
         }
         const productsArray = Object.values(this.products || {});
@@ -72,7 +72,7 @@ export class ForecastedHeader extends Component {
     }
 
     get uom() {
-        return Object.values(this.products)[0].uom;
+        return Object.values(this.products)[0]?.uom || "";
     }
 
     addDays(date, days) {
