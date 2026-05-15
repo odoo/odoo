@@ -817,6 +817,20 @@ class TestHrAttendanceOvertime(TransactionCase):
         attendance.action_refuse_overtime()
         self.assertEqual(attendance.validated_overtime_hours, 0)
 
+    def test_no_validation_refused_extra_hours(self):
+        """ Without validation, refused extra hours are not validated anymore, and approved again they are """
+        self.company.attendance_overtime_validation = "no_validation"
+        attendance = self.env['hr.attendance'].create({
+            'employee_id': self.employee.id,
+            'check_in': datetime(2023, 1, 2, 8, 0),
+            'check_out': datetime(2023, 1, 2, 19, 0),
+        })
+        self.assertAlmostEqual(attendance.validated_overtime_hours, 2, 2)
+        attendance.action_refuse_overtime()
+        self.assertEqual(attendance.validated_overtime_hours, 0)
+        attendance.action_approve_overtime()
+        self.assertAlmostEqual(attendance.validated_overtime_hours, 2, 2)
+
     def test_no_validation_extra_hours_change(self):
         """
          In case of attendances requiring no validation, check that extra hours are not recomputed
