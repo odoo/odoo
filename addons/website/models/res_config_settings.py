@@ -238,6 +238,19 @@ class ResConfigSettings(models.TransientModel):
             },
         }
 
+    def action_open_llms(self):
+        self.ensure_one()
+        return {
+            'name': _("LLMs.txt"),
+            'type': 'ir.actions.act_window',
+            'res_model': 'website.llms',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {
+                'default_website_id': self.website_id.id,
+            },
+        }
+
     def action_open_blocked_third_party_domains(self):
         self.website_id._force()
         return {
