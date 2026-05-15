@@ -71,7 +71,6 @@ export class FileViewer extends Component {
                 if (el) {
                     hidePDFJSButtons(this.iframeViewerPdfRef.el, {
                         hideDownload: true,
-                        hidePrint: true,
                     });
                 }
             },
