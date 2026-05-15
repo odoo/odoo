@@ -26,7 +26,7 @@ import {
 } from "@odoo/owl";
 
 import { ActionSwiper } from "@web/core/action_swiper/action_swiper";
-import { isMobileOS } from "@web/core/browser/feature_detection";
+import { hasTouch, isMobileOS } from "@web/core/browser/feature_detection";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { _t } from "@web/core/l10n/translation";
@@ -42,6 +42,12 @@ import { ActionList } from "@mail/core/common/action_list";
 import { loadCssFromBundle } from "@mail/utils/common/misc";
 import { MessageContextMenu } from "@mail/core/common/message_context_menu";
 import { Priority } from "@mail/core/common/priority";
+
+class MessageDropdown extends Dropdown {
+    get isBottomSheet() {
+        return hasTouch() && this.props.bottomSheet;
+    }
+}
 
 /**
  * @typedef {Object} Props
@@ -66,7 +72,7 @@ export class Message extends Component {
         ActionSwiper,
         AttachmentList,
         Composer,
-        Dropdown,
+        Dropdown: MessageDropdown,
         ImStatus,
         MessageContextMenu,
         MessageInReply,
