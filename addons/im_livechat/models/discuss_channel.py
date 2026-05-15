@@ -170,7 +170,7 @@ class DiscussChannel(models.Model):
         search="_search_livechat_matches_self_expertise",
     )
     chatbot_current_step_id = fields.Many2one('chatbot.script.step', string='Chatbot Current Step')
-    chatbot_message_ids = fields.One2many('chatbot.message', 'discuss_channel_id', string='Chatbot Messages')
+    chatbot_message_ids = fields.One2many('chatbot.message', 'discuss_channel_id', string='Chatbot Messages', groups='im_livechat.im_livechat_group_manager')
     country_id = fields.Many2one('res.country', string="Country", help="Country of the visitor of the channel")
     livechat_failure = fields.Selection(
         selection=[
