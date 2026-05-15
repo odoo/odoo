@@ -33,10 +33,16 @@ class TestUi(HttpCaseWithUserDemo):
                 self.env["discuss.channel"]
                 .with_user(bob)
                 ._create_group(
-                    partners_to=john.partner_id.ids, default_display_mode="video_full_screen"
+                    partners_to=john.partner_id.ids,
+                    default_display_mode="video_full_screen",
                 )
             )
         group_chat._add_members(guests=guest)
+        group_chat.message_post(
+            body="Hello everyone!",
+            message_type="comment",
+            subtype_xmlid="mail.mt_comment",
+        )
         self.authenticate("bob", "bob")
         self.make_jsonrpc_request("/mail/rtc/channel/join_call", {"channel_id": group_chat.id})
         self.start_tour(
