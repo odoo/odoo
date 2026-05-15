@@ -2489,7 +2489,8 @@ class HttpCase(TransactionCase):
 
     @classmethod
     def http_port(cls):
-        return config['http_port']
+        from odoo.service.server import server  # noqa: PLC0415
+        return server.port
 
     def setUp(self):
         super().setUp()

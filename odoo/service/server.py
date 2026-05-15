@@ -296,7 +296,7 @@ class ThreadedWSGIServerReloadable(LoggingBaseWSGIServerMixIn, werkzeug.serving.
             super().server_bind()
             _logger.info('HTTP service (werkzeug) running on %s:%s', self.server_name, self.server_port)
             if self.port == 0:
-                self.port = config['http_port'] = self.server_port
+                self.port = self.server_port
 
     def server_activate(self):
         if not self.reload_socket:
@@ -891,7 +891,7 @@ class GeventServer(CommonServer):
         sock.listen(128)
         sock.setblocking(0)
         if self.port == 0:
-            self.port = config['gevent_port'] = sock.getsockname()[1]
+            self.port = sock.getsockname()[1]
 
         self.httpd = WSGIServer(
             sock, self.app,
@@ -1162,7 +1162,7 @@ class PreforkServer(CommonServer):
                 self.socket.setblocking(0)
                 self.socket.bind((self.interface, self.port))
                 if self.port == 0:
-                    self.port = config['http_port'] = self.socket.getsockname()[1]
+                    self.port = self.socket.getsockname()[1]
                 self.socket.listen(8 * self.population)
 
             if config.http_socket_activation:
