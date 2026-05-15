@@ -607,3 +607,38 @@ class TestAllocations(TestHrHolidaysCommon):
                 'date_to': date(2024, 6, 30),
             })
             allocation_2.action_approve()
+
+    @users('admin')
+    def test_action_generate_group_allocations(self):
+        self.env.user.write({
+            'company_ids': [(4, self.company.id)]
+        })
+        self.work_entry_type.write({
+            'allocation_validation_type': 'hr'
+        })
+
+        wizard_env = self.env['hr.leave.allocation.generate.multi.wizard'].with_company(self.company)
+        wizard_group = wizard_env.create({
+            'name': 'Company Wide Allocation',
+            'work_entry_type_id': self.work_entry_type.id,
+            'duration': 10,
+        })
+        wizard_group.action_generate_allocations()
+        allocations = self.env['hr.leave.allocation'].search([
+            ('work_entry_type_id', '=', self.work_entry_type.id),
+            ('name', '=', 'Company Wide Allocation')
+        ])
+
+        expected_employee_count = self.env['hr.employee'].search_count([
+            ('company_id', '=', self.company.id)
+        ])
+        self.assertTrue(
+            len(allocations) == expected_employee_count,
+            "Group allocation should generate records for all employees in the company."
+        )
+        self.assertIn(self.employee, allocations.mapped('employee_id'))
+        self.assertIn(self.employee_emp, allocations.mapped('employee_id'))
+        self.assertTrue(
+            all(state == 'validate' for state in allocations.mapped('state')),
+            "All group allocations should be automatically validated for an HR admin."
+        )
