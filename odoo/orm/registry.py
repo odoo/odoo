@@ -194,7 +194,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
                 # acquire the exclusive or shared lock at the session level; this enables to guard
                 # several transactions under the lock until the cursor is closed
                 if not update_module:
-                    cr.execute("SELECT pg_advisory_lock_shared(hashtext('registry_loading'))")
+                    cr.execute("SELECT pg_advisory_lock_shared(hashtext('registry_loading'))", log_exceptions=False)
                     if db.is_initialized(cr):
                         # check whether we have a partially upgraded database that needs updating;
                         # PostgreSQL will detect deadlocks if several processes have the shared
@@ -208,7 +208,7 @@ class Registry(Mapping[str, type["BaseModel"]]):
                             _logger.info("Force module updates, some modules must be installed/uninstalled/upgraded")
                             update_module = True
                 if update_module:
-                    cr.execute("SELECT pg_advisory_lock(hashtext('registry_loading'))")
+                    cr.execute("SELECT pg_advisory_lock(hashtext('registry_loading'))", log_exceptions=False)
                 # commit after acquiring the lock to re-start the transaction
                 cr.commit()
 
