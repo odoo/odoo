@@ -193,6 +193,7 @@ def add_to_registry(registry: Registry, model_def: type[BaseModel]) -> type[Base
             '_inherit_children': OrderedSet(),      # names of children models
             '_inherits_children': set(),            # names of children models
             '_fields__': {},                        # populated in _setup()
+            '_fields_update_order__': {},           # populated in _post_model_setup__()
             '_table_objects': frozendict(),         # populated in _setup()
         })
         model_cls._fields = MappingProxyType(model_cls._fields__)
@@ -332,6 +333,10 @@ def setup_model_classes(env: Environment):
         _setup_fields(model_cls, env)
 
     for model_cls in models_classes:
+        model_cls._fields_update_order__ = {
+            field: (field.write_sequence, i)
+            for i, field in enumerate(model_cls._fields.values())
+        }
         model_cls(env, (), ())._post_model_setup__()
 
 

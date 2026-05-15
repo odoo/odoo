@@ -585,6 +585,7 @@ class Many2one(_Relational):
 
 class _RelationalMulti(_Relational):
     r"Abstract class for relational fields \*2many."
+    # X2many fields must be written last, because they flush other fields when deleting lines.
     write_sequence = 20
 
     # Important: the cache contains the ids of all the records in the relation,

@@ -116,9 +116,6 @@ class AccountAccount(models.Model):
     company_ids = fields.Many2many('res.company', string='Companies', required=True, readonly=False,
         default=lambda self: self.env.company)
     code_mapping_ids = fields.One2many(comodel_name='account.code.mapping', inverse_name='account_id')
-    # Ensure `code_mapping_ids` is written before `company_ids` so we don't trigger the `_ensure_code_is_unique`
-    # constraint when writing multiple code mappings and multiple companies in the same call to `write`.
-    code_mapping_ids.write_sequence = 19
     tag_ids = fields.Many2many(
         comodel_name='account.account.tag',
         relation='account_account_account_tag',
@@ -1046,6 +1043,11 @@ class AccountAccount(models.Model):
         return records
 
     def write(self, vals):
+        if 'code_mapping_ids' in vals and 'company_ids' in vals:
+            # Ensure `code_mapping_ids` is written before `company_ids` so we don't trigger the `_ensure_code_is_unique`
+            # constraint when writing multiple code mappings and multiple companies in the same call to `write`.
+            self.with_context(defer_account_code_checks=True).write({'code_mapping_ids': vals.pop('code_mapping_ids')})
+
         if vals.get('currency_id'):
             for account in self:
                 if self.env['account.move.line'].search_count([('account_id', '=', account.id), ('currency_id', 'not in', (False, vals['currency_id']))]):

@@ -52,6 +52,7 @@ def company_default_for(fname, target_model, target_fname):
         'inverse': _inverse_to_ir_default,
         'compute_sql': _compute_sql_ir_default,
         'compute_sudo': True,
+        'write_sequence': -10,  # inverse before other fields to apply the company default
     }
 
 
