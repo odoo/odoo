@@ -90,11 +90,12 @@ export class OrderDetailsDialog extends Component {
     }
 
     getCustomerFields() {
-        const partner = this.order.partner_id;
+        const order = this.props.order;
+        const partner = order.partner_id;
         let address = "";
-        let name = this.order.floatingOrderName;
-        let email = this.order.email;
-        let phone = this.order.mobile;
+        let name = order.floatingOrderName;
+        let email = order.email;
+        let phone = order.mobile;
         if (partner) {
             address = [partner.street, partner.zip && partner.city, partner.country_id?.name]
                 .filter(Boolean)
