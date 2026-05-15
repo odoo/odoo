@@ -6,7 +6,7 @@ import { NavigableList } from "@mail/core/common/navigable_list";
 import { MAIL_PLUGINS, MAIL_SMALL_UI_PLUGINS } from "@mail/core/common/plugin/plugin_sets";
 import { mapSuggestionsToOptions, useSuggestion } from "@mail/core/common/suggestion_hook";
 import { useSelection } from "@mail/utils/common/hooks";
-import { trimEmptyBlocksAround } from "@mail/utils/common/format";
+import { processHtmlMessage } from "@mail/utils/common/format";
 import { isDragSourceExternalFile } from "@mail/utils/common/misc";
 import { Wysiwyg } from "@html_editor/wysiwyg";
 
@@ -630,7 +630,9 @@ export class Composer extends Component {
             default_res_ids: [this.thread.id],
             default_subtype_xmlid: this.props.type === "note" ? "mail.mt_note" : "mail.mt_comment",
             clicked_on_full_composer: true,
-            body_contains_signature_only: !this.props.composer.composerText || this.props.composer.composerText.trim().length === 0,
+            body_contains_signature_only:
+                !this.props.composer.composerText ||
+                this.props.composer.composerText.trim().length === 0,
             // Changed in 18.2+: finally get rid of autofollow, following should be done manually
             ...this.fullComposerAdditionalContext,
         };
@@ -719,7 +721,7 @@ export class Composer extends Component {
                 return;
             }
             this.state.active = false;
-            await cb(trimEmptyBlocksAround(this.props.composer.composerHtml));
+            await cb(processHtmlMessage(this.props.composer.composerHtml));
             if (this.props.onPostCallback) {
                 this.props.onPostCallback();
             }

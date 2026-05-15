@@ -15,6 +15,7 @@ import {
 import { Composer } from "@mail/core/common/composer";
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { getService, patchWithCleanup } from "@web/../tests/web_test_helpers";
+import { getOrigin, url } from "@web/core/utils/urls";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -150,6 +151,37 @@ test("html composer: trim boundary empty formatting on send", async () => {
     await click(".o-mail-Composer button[title='Send']:enabled");
     await expect.waitForSteps(["/mail/message/post"]);
     // Expected editor shape before trimming: '<div><br></div><div">Hello World<br/></div>'
-    expect(body).toBe('<div>Hello World</div>');
+    expect(body).toBe("<div>Hello World</div>");
     await contains(".o-mail-Message[data-persistent]:contains(Hello)");
+});
+
+test.tags("html composer");
+test("html composer: message links are prettified on send", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "General",
+        channel_type: "channel",
+    });
+    const messageId = pyEnv["mail.message"].create({
+        body: "Linked message",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    onRpcBefore("/mail/message/post", (args) => {
+        expect.step("/mail/message/post");
+    });
+    await start();
+    await openDiscuss(channelId);
+    const composerService = getService("mail.composer");
+    composerService.setHtmlComposer();
+    await focus(".o-mail-Composer-html.odoo-editor-editable");
+    const editor = {
+        document,
+        editable: document.querySelector(".o-mail-Composer-html.odoo-editor-editable"),
+    };
+    await htmlInsertText(editor, `${getOrigin()}/mail/message/${messageId}`);
+    await click(".o-mail-Composer button[title='Send']:enabled");
+    await expect.waitForSteps(["/mail/message/post"]);
+    await contains(".o-mail-Message .fa.fa-comment");
+    await contains(".o-mail-Message", { text: url(`/mail/message/${messageId}`) });
 });

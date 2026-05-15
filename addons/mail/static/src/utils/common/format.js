@@ -152,13 +152,9 @@ function linkify(text) {
             href,
         });
         link.textContent = url;
-        const messageMatch = messageUrlRegExp.exec(fixedUrl);
-        if (messageMatch !== null) {
-            setAttributes(link, {
-                "data-oe-id": messageMatch[1],
-                "data-oe-model": "mail.message",
-            });
-            link.classList.add("o_message_redirect");
+        const messageId = getMessageRedirectId(fixedUrl);
+        if (messageId) {
+            setMessageRedirectAttributes(link, messageId);
         }
         result = htmlJoin([result, getOuterHtml(link)]);
         curIndex = match.index + match[0].length;
@@ -471,6 +467,68 @@ export function trimEmptyBlocksAround(content) {
     trimBoundaryParagraph("start");
     trimBoundaryParagraph("end");
     return changed ? getInnerHtml(body) : content;
+}
+
+/**
+ * ==== Abstract Linkify ===
+ *
+ * Note: TO-DO
+ *
+ * 1. Match the url with the format global urlRegexp
+ * 2. Extract the basic url that was posted by the user
+ * 3. Extract the FixedURl
+ * 4. check for the URL's prase-ability
+ * 5. preapre result
+ * 6. extract the href form the fixed url
+ * 7. make a anchor element for link preparation
+ * 8. set the general attributes
+ * 9. set url as link's textcontent
+ * 10. message redirect checking and its attribute addition
+ *
+ *
+ *
+ */
+export function processHtmlMessage(content) {
+    const trimmedBody = trimEmptyBlocksAround(content);
+    const body = createDocumentFragmentFromContent(trimmedBody).body;
+    let changed = false;
+    for (const link of body.querySelectorAll("a[href]")) {
+        const messageId = getMessageRedirectId(link.getAttribute("href"));
+        if (
+            messageId &&
+            (link.dataset.oeId !== messageId ||
+                link.dataset.oeModel !== "mail.message" ||
+                !link.classList.contains("o_message_redirect"))
+        ) {
+            setMessageRedirectAttributes(link, messageId);
+            changed = true;
+        }
+    }
+    return changed ? getInnerHtml(body) : trimmedBody;
+}
+
+/**
+ * @param {string} url
+ * @returns {string|undefined}
+ */
+function getMessageRedirectId(url) {
+    if (!url) {
+        return;
+    }
+    const fixedUrl = url.startsWith("/") ? `${getOrigin()}${url}` : url;
+    return messageUrlRegExp.exec(fixedUrl)?.[1];
+}
+
+/**
+ * @param {HTMLAnchorElement} link
+ * @param {string|number} messageId
+ */
+function setMessageRedirectAttributes(link, messageId) {
+    setAttributes(link, {
+        "data-oe-id": messageId,
+        "data-oe-model": "mail.message",
+    });
+    link.classList.add("o_message_redirect");
 }
 
 export function cleanTerm(term) {
