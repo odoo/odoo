@@ -1094,8 +1094,11 @@ class PreforkServer(CommonServer):
             if not registries:
                 return
             for registry in registries.values():
-                with registry.cursor() as cr:
-                    registry.check_signaling(cr)
+                try:
+                    with contextlib.closing(registry.cursor()) as cr:
+                        registry.check_signaling(cr)
+                except Exception as e:  # noqa: BLE001
+                    _logger.info("Continue spawning, failed to check signaling on %s. Cause: %s", registry.db_name, e)
             registries.clear()
             # Close all opened cursors
             sql_db.close_all()
