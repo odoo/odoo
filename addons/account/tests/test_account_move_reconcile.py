@@ -278,6 +278,48 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                 )
                 batch.remove_move_reconcile()
 
+    def test_full_reconcile_unlink_clears_matching_number(self):
+        """ When `account.full.reconcile` is unlinked directly, the FK
+        `full_reconcile_id` on the linked `account.move.line` records is
+        nulled by PostgreSQL but `matching_number` (a plain Char) would keep
+        the now-orphan id of the deleted full unless cleanup is invoked.
+        Ensure the contract holds: no line keeps a decimal `matching_number`
+        pointing to a `account.full.reconcile` record that no longer exists.
+        After cleanup, lines must end up with either `False` (no remaining
+        reconciliation) or a `'P<id>'` partial-matching number (when the
+        partial reconciles survive as zombies pointing to the deleted full).
+        """
+        comp_curr = self.company_data['currency']
+        line_1 = self.create_line_for_reconciliation(1000.0, 1000.0, comp_curr, '2016-01-01')
+        line_2 = self.create_line_for_reconciliation(-1000.0, -1000.0, comp_curr, '2016-01-01')
+        batch = line_1 + line_2
+        batch.reconcile()
+
+        full = batch.full_reconcile_id
+        self.assertTrue(full, "A full reconcile must be created for the balanced batch")
+        amls = full.reconciled_line_ids
+        stale_value = str(full.id)
+        self.assertEqual(set(amls.mapped('matching_number')), {stale_value})
+
+        full.unlink()
+
+        for line in amls:
+            self.assertFalse(
+                line.full_reconcile_id,
+                "FK should be nulled by PostgreSQL cascade on full reconcile unlink",
+            )
+            self.assertNotEqual(
+                line.matching_number, stale_value,
+                "matching_number must not keep the id of the deleted full reconcile "
+                "(line %s kept stale value %r)" % (line.id, line.matching_number),
+            )
+            self.assertTrue(
+                line.matching_number.startswith('P'),
+                "matching_number must be a 'P<id>' partial reference after the full is "
+                "unlinked (partial reconciles survive as zombies pointing to the deleted "
+                "full), not a decimal pointing to the deleted full (got %r)" % line.matching_number,
+            )
+
     def test_reconcile_lines_multiple_in_foreign_currency(self):
         currency = self.other_currency
 
