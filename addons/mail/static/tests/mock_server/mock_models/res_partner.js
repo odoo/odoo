@@ -29,7 +29,7 @@ export class ResPartner extends webModels.ResPartner {
         for (const partner of this) {
             partner.is_in_call =
                 this.env["discuss.channel.member"].search([
-                    ["rtc_session_ids", "!=", []],
+                    ["rtc_session_ids", "!=", false],
                     ["partner_id", "=", partner.id],
                 ]).length > 0;
         }

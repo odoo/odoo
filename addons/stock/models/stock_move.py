@@ -1413,7 +1413,7 @@ Please change the quantity done or the rounding precision in your settings.""",
 
     def _search_picking_for_assignation_domain(self):
         domain = [
-            ('reference_ids', '=', self.reference_ids.ids),
+            ('reference_ids', 'in', self.reference_ids.ids),
             ('location_id', '=', self.location_id.id),
             ('location_dest_id', '=', (self.location_dest_id.id or self.picking_type_id.default_location_dest_id.id)),
             ('picking_type_id', '=', self.picking_type_id.id),

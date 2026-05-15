@@ -960,7 +960,7 @@ class TestWarehousePostInstall(TestStockCommon):
         product_replenish = Form(self.env['product.replenish'].with_context(default_product_id=self.product.id))
         product_replenish.warehouse_id = warehouse_2
         product_replenish.save().launch_replenishment()
-        replenishment_pickings = self.env['stock.picking'].search([('origin', '=', 'Manual Replenishment'), ('product_id', '=', self.product.ids)]).sorted('id')
+        replenishment_pickings = self.env['stock.picking'].search([('origin', '=', 'Manual Replenishment'), ('product_id', 'in', self.product.ids)]).sorted('id')
         self.assertRecordValues(replenishment_pickings, [
             {
                 'picking_type_id': self.warehouse_1.out_type_id.id,

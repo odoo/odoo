@@ -149,7 +149,7 @@ class StockWarehouseOrderpoint(models.Model):
                 [('date', '<=', horizon_date)],
             ])
             domain_move_out = Domain.AND([
-                [('product_id', '=', company_orderpoints.product_id.ids)],
+                [('product_id', 'in', company_orderpoints.product_id.ids)],
                 [('state', 'in', ('waiting', 'confirmed', 'assigned', 'partially_available'))],
                 domain_move_out,
                 [('date', '<=', horizon_date)],
