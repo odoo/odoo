@@ -24,7 +24,8 @@
                 </div>
                 <div
                     name="category_overlay"
-                    t-attf-class="p-3 bg-black-25 position-relative w-100 h-100 d-flex flex-column justify-content-between {{alignmentClass}}"
+                    t-attf-class="p-3 position-relative w-100 h-100 d-flex flex-column justify-content-between {{alignmentClass}}"
+                    t-att-style="overlayColor and ('background:' + overlayColor)"
                 >
                     <h3 class="h4" t-out="category['name']"/>
                     <a
