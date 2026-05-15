@@ -23,7 +23,7 @@ apt-get autoremove -y
 DEBIAN_FRONTEND=noninteractive apt-get full-upgrade -y -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confnew" --purge --auto-remove
 
 # Reinstall packages needed in saas-19.1
-apt-get install -y chromium python3-lxml-html-clean apt-transport-https tailscale
+apt-get install -y chromium python3-geoip2 python3-lxml-html-clean python3-pypdf apt-transport-https tailscale mtr wtype
 
 # Disable read-only on boot
 sed -i 's|,ro|   |g' /etc/fstab
