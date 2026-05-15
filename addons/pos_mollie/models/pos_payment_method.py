@@ -17,7 +17,7 @@ class PosPaymentMethod(models.Model):
     def mollie_create_payment(self, amount: float, payment_uuid: str, pos_session_id: int):
         self.ensure_one()
 
-        if not self.mollie_payment_provider_id.mollie_api_key:
+        if not self.sudo().mollie_payment_provider_id.mollie_api_key:
             raise ValidationError(self.env._("Please set the API key on the Mollie payment provider before making a payment."))
 
         user_lang = self.env.context.get("lang")
@@ -40,7 +40,7 @@ class PosPaymentMethod(models.Model):
             "method": "pointofsale",
             "terminalId": self.mollie_terminal_id
         }
-        return self.mollie_payment_provider_id._send_api_request("POST", "/payments", json=payment_request)
+        return self.sudo().mollie_payment_provider_id._send_api_request("POST", "/payments", json=payment_request)
 
     def mollie_create_refund(self, original_payment_id: str, amount: float, payment_uuid: str, pos_session_id: int):
         self.ensure_one()
@@ -53,12 +53,12 @@ class PosPaymentMethod(models.Model):
             },
             "description": f"pos_session_id={pos_session_id},payment_uuid={payment_uuid}",
         }
-        return self.mollie_payment_provider_id._send_api_request("POST", f"/payments/{original_payment_id}/refunds", json=payment_request)
+        return self.sudo().mollie_payment_provider_id._send_api_request("POST", f"/payments/{original_payment_id}/refunds", json=payment_request)
 
     def mollie_cancel_payment(self, payment_id: str):
         self.ensure_one()
-        return self.mollie_payment_provider_id._send_api_request("DELETE", f"/payments/{payment_id}")
+        return self.sudo().mollie_payment_provider_id._send_api_request("DELETE", f"/payments/{payment_id}")
 
     def _mollie_get_payment(self, payment_id: str):
         self.ensure_one()
-        return self.mollie_payment_provider_id._send_api_request("GET", f"/payments/{payment_id}")
+        return self.sudo().mollie_payment_provider_id._send_api_request("GET", f"/payments/{payment_id}")
