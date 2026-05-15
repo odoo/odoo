@@ -257,11 +257,6 @@
         <td class="text-end" name="move_line_lot_quantity">
             <span t-out="format_number(move_line.quantity)"/>
             <span t-field="move_line.product_uom_id"/>
-            <t t-if="move_line.packaging_uom_id != move_line.product_uom_id" groups="uom.group_uom">
-                <br/>
-                <span class="text-muted" t-esc="move_line.product_uom_id._compute_quantity(move_line.quantity, move_line.packaging_uom_id)">1.00</span>
-                <span class="text-muted" t-field="move_line.packaging_uom_id">Pack of 6</span>
-            </t>
         </td>
     </template>
     <template id="stock_report_delivery_aggregated_move_lines">
