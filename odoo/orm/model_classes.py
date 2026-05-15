@@ -15,7 +15,6 @@ from odoo.exceptions import ValidationError
 from odoo.tools import (
     OrderedSet,
     LastOrderedSet,
-    discardattr,
     frozendict,
     sql,
 )
@@ -138,6 +137,14 @@ _logger = logging.getLogger('odoo.registry')
 # model classes.  But doing so prevents them from being shared.  So instead,
 # we add them on definition classes that define a model without extending it.
 # This increases the number of fields that are shared across registries.
+
+
+def discardattr(obj: object, key: str) -> None:
+    """ Perform a ``delattr(obj, key)`` but without crashing if ``key`` is not present. """
+    try:  # noqa: SIM105
+        delattr(obj, key)
+    except AttributeError:
+        pass
 
 
 def is_model_definition(cls: type) -> bool:
