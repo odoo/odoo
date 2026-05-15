@@ -60,8 +60,6 @@
             </xpath>
             <xpath expr="//field[@name='fiscal_position_id']" position="after">
                 <field name="default_location_dest_id_usage" invisible="1"/>
-                <field name="incoterm_id" readonly="locked"/>
-                <field name="incoterm_location"  readonly="locked"/>
             </xpath>
             <xpath expr="//group[@name='purchase_info']/field[@name='date_approve']" position="after">
                 <field name="date_promised" invisible="state not in ('purchase', 'cancel')"/>

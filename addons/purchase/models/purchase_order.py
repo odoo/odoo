@@ -166,8 +166,10 @@ class PurchaseOrder(models.Model):
         required=True,
     )
     payment_term_id = fields.Many2one('account.payment.term', 'Payment Terms', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
-    incoterm_id = fields.Many2one('account.incoterms', 'Incoterm', help="International Commercial Terms are a series of predefined commercial terms used in international transactions.")
-
+    incoterm_id = fields.Many2one('account.incoterms', 'Incoterm',
+        compute="_compute_incoterm_id", store=True, readonly=False,
+        help="International Commercial Terms are a series of predefined commercial terms used in international transactions.")
+    incoterm_location = fields.Char(string='Incoterm Location', compute='_compute_incoterm_location', store=True, readonly=False)
     product_id = fields.Many2one('product.product', related='order_line.product_id', string='Product')
     user_id = fields.Many2one(
         'res.users', string='Buyer', index=True, tracking=True,
@@ -321,6 +323,20 @@ class PurchaseOrder(models.Model):
                 record.tax_country_id = record.fiscal_position_id.country_id
             else:
                 record.tax_country_id = record.company_id.account_fiscal_country_id
+
+    @api.depends("partner_id")
+    def _compute_incoterm_id(self):
+        for po in self:
+            partner_incoterm = po.partner_id.purchase_incoterm_id
+            if partner_incoterm:
+                po.incoterm_id = partner_incoterm
+
+    @api.depends("partner_id")
+    def _compute_incoterm_location(self):
+        for po in self:
+            partner_incoterm_location = po.partner_id.purchase_incoterm_location
+            if partner_incoterm_location:
+                po.incoterm_location = partner_incoterm_location
 
     @api.depends('order_line', 'order_line.product_id')
     def _compute_show_comparison(self):
@@ -1038,7 +1054,6 @@ class PurchaseOrder(models.Model):
         move_type = self.env.context.get('default_move_type', 'in_invoice')
 
         partner_bank_id = self.partner_id.commercial_partner_id.bank_ids.filtered_domain(['|', ('company_id', '=', False), ('company_id', '=', self.company_id.id)])[:1]
-
         invoice_vals = {
             'move_type': move_type,
             'narration': self.note,
@@ -1049,6 +1064,7 @@ class PurchaseOrder(models.Model):
             'invoice_origin': self.name,
             'invoice_payment_term_id': self.payment_term_id.id,
             'invoice_line_ids': [],
+            'invoice_incoterm_id': self.incoterm_id.id,
             'company_id': self.company_id.id,
             'document_tax_mode': self.document_tax_mode,
         }
