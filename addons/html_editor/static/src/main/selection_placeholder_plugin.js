@@ -239,7 +239,9 @@ export class SelectionPlaceholderPlugin extends Plugin {
             ) {
                 // If it's at the bottom of the document, just persist immediately.
                 this.persistPlaceholder(anchor);
-                this.dependencies.history.addStep();
+                if (this.dependencies.history.getIsCurrentStepModified()) {
+                    this.dependencies.history.addStep();
+                }
             }
         }
     }
