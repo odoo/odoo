@@ -26,8 +26,13 @@ export const convertInlineIframeService = {
             props: { onMounted: resolve, rootRef },
         });
         return {
-            add: (iframe) => {
-                rootRef().append(iframe);
+            add: (iframe, ref) => {
+                const el = ref?.();
+                if (el) {
+                    el.append(iframe);
+                } else {
+                    rootRef().append(iframe);
+                }
                 return () => iframe.remove();
             },
             readyPromise,
