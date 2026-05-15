@@ -126,7 +126,7 @@ class DiscussChannel(models.Model):
         store=True,
     )
     chatbot_current_step_id = fields.Many2one('chatbot.script.step', string='Chatbot Current Step')
-    chatbot_message_ids = fields.One2many('chatbot.message', 'discuss_channel_id', string='Chatbot Messages')
+    chatbot_message_ids = fields.One2many('chatbot.message', 'discuss_channel_id', string='Chatbot Messages', groups='im_livechat.im_livechat_group_manager')
     country_id = fields.Many2one('res.country', string="Country", help="Country of the visitor of the channel")
     livechat_failure = fields.Selection(
         selection=[
@@ -502,9 +502,9 @@ class DiscussChannel(models.Model):
             to fill, like : {'question_email': 'email_from', 'question_phone': 'mobile'}
         """
         values = {}
-        filtered_message_ids = self.chatbot_message_ids.filtered(
-            # sudo: chatbot.script.step - getting the type of the current step
-            lambda m: m.script_step_id.sudo().step_type in step_type_to_field
+        # sudo: chatbot.script.step - getting the type of the current step
+        filtered_message_ids = self.sudo().chatbot_message_ids.filtered(
+            lambda m: m.script_step_id.step_type in step_type_to_field
         )
         for message_id in filtered_message_ids:
             field_name = step_type_to_field[message_id.script_step_id.step_type]
