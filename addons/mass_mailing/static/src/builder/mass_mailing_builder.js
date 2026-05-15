@@ -49,6 +49,7 @@ export class MassMailingBuilder extends Component {
         const massMailingPlugins = removePlugins(
             [
                 ...registry.category("builder-plugins").getAll(),
+                ...registry.category("mail-core-plugins").getAll(),
                 ...registry.category("mass_mailing-plugins").getAll(),
             ],
             pluginsToRemove

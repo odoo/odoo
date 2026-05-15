@@ -169,6 +169,7 @@ For more specific needs, you may also assign custom-defined actions
             'mail/static/src/views/fields/**/*',
             ('remove', 'mail/static/src/views/web/activity/**'),
             'mail/static/src/convert_inline/**/*',
+            'mail/static/src/editor/**/*',
         ],
         'web.assets_backend_lazy': [
             'mail/static/src/views/web/activity/**',
