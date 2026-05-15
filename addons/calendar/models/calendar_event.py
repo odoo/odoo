@@ -909,6 +909,20 @@ class CalendarEvent(models.Model):
         super(CalendarEvent, self - hidden)._compute_display_name()
 
     @api.model
+    def _search(self, domain, offset=0, limit=None, order=None, *, active_test=True, bypass_access=False):
+        if not self.env.su and not bypass_access:
+            fnames = {
+                cond.field_expr.split('.', 1)[0]
+                for cond in Domain(domain).iter_conditions()
+            }
+            # Let users filter by `partner_ids` so the calendar list and
+            # grid can show other people's busy slots.
+            searchable = self._get_public_fields() | {'partner_ids'}
+            if fnames - searchable:
+                domain = Domain.AND([domain, self._get_default_privacy_domain()])
+        return super()._search(domain, offset, limit, order, active_test=active_test, bypass_access=bypass_access)
+
+    @api.model
     def _read_group(self, domain, groupby=(), aggregates=(), having=(), offset=0, limit=None, order=None) -> list[tuple]:
         fnames = {
             spec.split(':')[0] for spec in itertools.chain(
@@ -1086,17 +1100,16 @@ class CalendarEvent(models.Model):
         return videocall_channel
 
     def _get_default_privacy_domain(self):
-        # Sub query user settings from calendars that are not private ('public' and 'confidential').
-        public_calendars_settings = self.env['res.users.settings'].sudo()._search([('calendar_default_privacy', '!=', 'private')]).select('user_id')
-        # display public, confidential events and events with default privacy when owner's default privacy is not private
-        return ['|', '|',
+        # Sub query user settings from calendars that are private.
+        private_calendars_settings = self.env['res.users.settings'].sudo()._search([('calendar_default_privacy', '=', 'private')]).select('user_id')
+        # display public, confidential events, events the user attends, and events with default privacy when owner's default privacy is not private
+        return ['|', '|', '|',
             ('privacy', 'in', ['public', 'confidential']),
             ('user_id', '=', self.env.user.id),
+            ('partner_ids', 'in', [self.env.user.partner_id.id]),
             '&',
                 ('privacy', '=', False),
-                '|',
-                    ('user_id', '=', False),
-                    ('user_id', 'in', public_calendars_settings)]
+                ('user_id', 'not in', private_calendars_settings)]
 
     def _is_event_over(self):
         """Check if the event is over. This method is used to check if the event

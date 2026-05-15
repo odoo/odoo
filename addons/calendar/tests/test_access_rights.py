@@ -123,6 +123,33 @@ class TestAccessRights(TransactionCase):
         data = self.env['calendar.event'].with_user(self.raoul)._read_group([('id', '=', event.id)], groupby=['start:month'])
         self.assertTrue(data, "It should be able to read group")
 
+    def test_search_private_fields(self):
+        """ Non-participants must not be able to surface private events by
+        searching their masked fields (name, location, description, ...). """
+        private = self.create_event(self.john, privacy='private', name='Private Meeting', location='Odoo Office')
+        public = self.create_event(self.john, privacy='public', name='Private Meeting', location='Odoo Office')
+        Event = self.env['calendar.event'].with_user(self.raoul)
+
+        for field, value in [('name', 'Private'), ('location', 'Odoo')]:
+            with self.subTest(field=field):
+                found = Event.search([('id', 'in', (private + public).ids), (field, 'ilike', value)])
+                self.assertNotIn(private, found, f"Private event must not leak via {field} search")
+                self.assertIn(public, found, f"Public event should still match {field} search")
+
+        found = Event.search([
+            ('id', 'in', (private + public).ids),
+            ('start', '>=', datetime(2020, 2, 2)),
+            ('start', '<', datetime(2020, 2, 3)),
+        ])
+        self.assertEqual(found, private + public, "Date searches must still match private events")
+
+        found = Event.search([
+            ('id', 'in', (private + public).ids),
+            ('partner_ids', 'in', [self.george.partner_id.id]),
+        ])
+        self.assertEqual(found, private + public,
+                         "Attendee filter must still surface private events (masked on read)")
+
     def test_private_attendee(self):
         event = self.create_event(
             self.john,
