@@ -30,7 +30,7 @@ class PhoneBook(models.Model):
     previous_salesperson_ids = fields.Many2many(
         'sale.employee',
         string="Lịch sử phụ trách",
-        groups="ht_crm.group_ht_executive"
+        groups="ht_crm.group_ht_executive, ht_crm.group_ht_general_admin"
     )
 
     status = fields.Selection([

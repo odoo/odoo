@@ -44,16 +44,18 @@ class Transaction(models.Model):
         string="Giá đã VAT",
         currency_field="currency_id",
         compute="_compute_final_price",
-        store=True
+        store=True,
+        digits=(16, 2)
     )
 
     # Trường bổ sung
-    price_subtotal = fields.Monetary(
+    listed_price = fields.Monetary(
         currency_field="currency_id",
         related="product_id.price",
-        string="Giá chưa VAT",
+        string="Giá niêm yết",
         store=True,
-        readonly=True
+        readonly=True,
+        digits=(16, 2)
     )
     
     discount = fields.Float(
@@ -63,9 +65,11 @@ class Transaction(models.Model):
     )
 
     state = fields.Selection([
+        ('draft', 'Nháp'),
         ('booking', 'Giữ chỗ'),
-        ('deposit', 'Đặt cọc')
-    ], string="Trạng thái", default='booking')
+        ('deposit', 'Đặt cọc'),
+        ('cancel', 'Hủy'),
+    ], default='draft')
 
     @api.constrains('discount')
     def _check_discount(self):
@@ -73,11 +77,11 @@ class Transaction(models.Model):
             if record.discount < 0 or record.discount > 100:
                 raise exceptions.ValidationError("Chiết khấu phải nằm trong khoảng từ 0 đến 100%.")
 
-    @api.depends('price_subtotal', 'discount')
+    @api.depends('listed_price', 'discount')
     def _compute_final_price(self):
         for rec in self:
-            discount_amount = rec.price_subtotal * (rec.discount / 100)
-            rec.price_total = rec.price_subtotal - discount_amount
+            discount_amount = rec.listed_price * (rec.discount / 100)
+            rec.price_total = rec.listed_price - discount_amount
 
     def _get_kpi(self, employee_id, month, year):
         return self.env['sale.employee.kpi'].search([
@@ -121,6 +125,52 @@ class Transaction(models.Model):
                 'total_deals': new_deals,
             })
 
+    def action_confirm_deposit(self):
+        for rec in self:
+
+            if rec.product_id.state not in ['available', 'reserved']:
+                raise exceptions.ValidationError(
+                    "Sản phẩm không khả dụng."
+                )
+
+            rec.write({
+                'state': 'deposit'
+            })
+
+            rec.product_id.write({
+                'state': 'sold'
+            })
+
+    def action_confirm_booking(self):
+        for rec in self:
+
+            if rec.product_id.state not in ['available', 'reserved']:
+                raise exceptions.ValidationError(
+                    "Sản phẩm không khả dụng."
+                )
+
+            rec.write({
+                'state': 'booking'
+            })
+
+            rec.product_id.write({
+                'state': 'reserved'
+            })
+
+    def action_cancel(self):
+        for rec in self:
+
+            if rec.state == 'cancel':
+                continue
+
+            rec.write({
+                'state': 'cancel'
+            })
+
+            # Mở bán lại sản phẩm
+            rec.product_id.write({
+                'state': 'available'
+            })
     # ================= CREATE =================
     @api.model_create_multi
     def create(self, vals_list):
@@ -198,4 +248,4 @@ class Transaction(models.Model):
                     rec.price_total
                 )
         return res
-    
+

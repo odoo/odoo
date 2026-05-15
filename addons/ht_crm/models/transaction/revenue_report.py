@@ -1,6 +1,5 @@
 from odoo import fields, models, tools
 
-
 class RevenueReport(models.Model):
     _name = 'revenue.report'
     _description = 'Revenue By Quarter'
@@ -32,7 +31,7 @@ class RevenueReport(models.Model):
         tools.drop_view_if_exists(self.env.cr, self._table)
 
         self.env.cr.execute("""
-            CREATE OR REPLACE VIEW revenue_quarter_report AS (
+            CREATE OR REPLACE VIEW revenue_report AS (
 
                 SELECT
 
@@ -54,7 +53,7 @@ class RevenueReport(models.Model):
 
                     COALESCE(AVG(t.price_total), 0) AS avg_revenue
 
-                FROM sale_transaction t
+                FROM sale_transaction t WHERE t.state = 'deposit'
 
                 GROUP BY
                     quarter,

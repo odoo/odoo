@@ -20,7 +20,7 @@
     # always loaded
     'data': [
         'views/groups.xml',
-        'security/ir.model.access.csv',     
+        'security/ir.model.access.csv',   
         'views/menu_views.xml',
         'views/estate_project_views.xml',
         'views/customer_views.xml',

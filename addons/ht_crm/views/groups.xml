@@ -10,10 +10,18 @@
         <field name="implied_ids" eval="[(4, ref('ht_crm.group_ht_user'))]"/>
     </record>
 
-    <!-- Ban điều hành (kế thừa Trưởng phòng) -->
-    <record id="group_ht_executive" model="res.groups">
-        <field name="name">Ban Điều Hành</field>
+    <record id="group_ht_general_admin" model="res.groups">
+        <field name="name">General Administrator</field>
         <field name="implied_ids" eval="[(4, ref('ht_crm.group_ht_leader'))]"/>
     </record>
 
+    <!-- Ban điều hành-->
+    <record id="group_ht_executive" model="res.groups">
+        <field name="name">Ban Điều Hành</field>
+    </record>
+
+    
+    <record id="group_ht_report" model="res.groups">
+        <field name="name">Xem báo cáo</field>
+    </record>
 </odoo>

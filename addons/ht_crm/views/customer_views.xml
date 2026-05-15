@@ -1,5 +1,19 @@
 
 <odoo>
+    <record id="rule_customer_ga" model="ir.rule">
+        <field name="name">GA (Customer)</field>
+        <field name="model_id" ref="model_sale_customer"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('group_ht_general_admin'))]"/>
+    </record>
+
+    <record id="rule_phonebook_ga" model="ir.rule">
+        <field name="name">GA (phonebook)</field>
+        <field name="model_id" ref="model_sale_phonebook"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('group_ht_general_admin'))]"/>
+    </record>
+
     <!-- Hệ Thống -->
     <record id="rule_customer_admin" model="ir.rule">
         <field name="name">Hệ Thống (Customer)</field>
@@ -81,7 +95,7 @@
                             string="Distribute" 
                             type="object" 
                             class="oe_highlight"
-                            groups="ht_crm.group_ht_executive,base.group_system"/>
+                            groups="ht_crm.group_ht_general_admin,base.group_system"/>
                     <!-- <button name="reverse" 
                         string="Reverse" 
                         type="object" 

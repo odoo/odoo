@@ -1,4 +1,25 @@
 <odoo>
+    <record id="rule_transaction_ga" model="ir.rule">
+        <field name="name">GA (Transaction)</field>
+        <field name="model_id" ref="model_sale_transaction"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('group_ht_general_admin'))]"/>
+    </record>
+
+    <record id="rule_employee_ga" model="ir.rule">
+        <field name="name">GA (Employee)</field>
+        <field name="model_id" ref="model_sale_employee"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('group_ht_general_admin'))]"/>
+    </record>
+
+    <record id="rule_employee_kpi_ga" model="ir.rule">
+        <field name="name">GA (Employee KPI)</field>
+        <field name="model_id" ref="model_sale_employee_kpi"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('group_ht_general_admin'))]"/>
+    </record>
+    
     <!-- Hệ Thống -->
     <record id="rule_employee_admin" model="ir.rule">
         <field name="name">Hệ Thống (Employee)</field>
@@ -14,7 +35,7 @@
         <field name="groups" eval="[(4, ref('base.group_system'))]"/>
     </record>
 
-    <record id="rule_kpi_adminc" model="ir.rule">
+    <record id="rule_transaction_admin" model="ir.rule">
         <field name="name">Hệ Thống (Transaction)</field>
         <field name="model_id" ref="model_sale_transaction"/>
         <field name="domain_force">[(1, '=', 1)]</field>
@@ -186,5 +207,228 @@
         <field name="prefix">GD/%(year)s/</field>
         <field name="padding">5</field>
         <field name="number_next">1</field>
+    </record>
+
+    <record id="view_sale_transaction_form" model="ir.ui.view">
+        <field name="name">sale.transaction.form</field>
+        <field name="model">sale.transaction</field>
+        <field name="arch" type="xml">
+            <form string="Giao dịch">
+                
+                <!-- Header -->
+                <header>
+                    <button name="action_confirm_booking"
+                        string="Giữ chỗ"
+                        type="object"
+                        class="btn-secondary"
+                        invisible="state != 'draft'"/>
+
+                    <button name="action_confirm_deposit"
+                            string="Đặt cọc"
+                            type="object"
+                            class="btn-primary"
+                            invisible="state != 'booking'"/>
+
+                    <button name="action_cancel"
+                            string="Hủy"
+                            type="object"
+                            class="btn-danger"
+                            invisible="state == 'cancel'"/>
+
+                    <field name="state"
+                        widget="statusbar"
+                        statusbar_visible="draft,booking,deposit,cancel"/>
+                </header>
+
+                <sheet>
+
+                    <!-- Ribbon -->
+                    <widget name="web_ribbon"
+                            title="Đặt cọc"
+                            bg_color="bg-success"
+                            invisible="state != 'deposit'"/>
+
+                    <widget name="web_ribbon"
+                            title="Booking"
+                            bg_color="bg-warning"
+                            invisible="state != 'booking'"/>
+
+                    <widget name="web_ribbon"
+                            title="Hủy"
+                            bg_color="bg-danger"
+                            invisible="state != 'cancel'"/>
+
+                    <widget name="web_ribbon"
+                        title="Nháp"
+                        bg_color="bg-info"
+                        invisible="state != 'draft'"/>
+
+                    <!-- Title -->
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+
+                    <!-- Main Info -->
+                    <group>
+                        <group string="Thông tin giao dịch">
+
+                            <field name="date"/>
+
+                            <field name="employee_id"
+                                options="{'no_create': False}"/>
+
+                            <field name="customer_id"
+                                options="{'no_create': False}"/>
+
+                        </group>
+
+                        <group string="Thông tin sản phẩm">
+
+                            <field name="product_id"
+                                options="{'no_create': True}"/>
+
+                            <field name="net_area" readonly="1"/>
+
+                            <field name="gross_area" readonly="1"/>
+
+                        </group>
+                    </group>
+
+                    <!-- Price Section -->
+                    <group string="Thông tin tài chính" col="4">
+
+                        <field name="listed_price"
+                            readonly="1"
+                            class="oe_inline"/>
+
+                        <field name="discount"
+                            widget="percentage"/>
+
+                        <field name="price_total"
+                            readonly="1"
+                            class="oe_inline"/>
+
+                        <label for="price_total"/>
+                        <div class="text-muted">
+                            Giá cuối cùng sau VAT và chiết khấu
+                        </div>
+
+                    </group>
+
+                    <!-- Notebook -->
+                    <notebook>
+
+                        <page string="Lịch sử">
+                            <group>
+                                <field name="create_uid" readonly="1"/>
+                                <field name="create_date" readonly="1"/>
+                                <field name="write_uid" readonly="1"/>
+                                <field name="write_date" readonly="1"/>
+                            </group>
+                        </page>
+
+                    </notebook>
+
+                </sheet>
+
+                <!-- Chatter -->
+                <chatter/>
+
+            </form>
+        </field>
+    </record>
+
+    <record id="view_sale_transaction_kanban" model="ir.ui.view">
+        <field name="name">sale.transaction.kanban</field>
+        <field name="model">sale.transaction</field>
+        <field name="arch" type="xml">
+
+            <kanban default_group_by="state">
+
+                <field name="name"/>
+                <field name="customer_id"/>
+                <field name="employee_id"/>
+                <field name="product_id"/>
+                <field name="price_total"/>
+                <field name="state"/>
+
+
+                <progressbar field="state"
+                        colors='{
+                        "draft": "info",
+                        "booking": "warning",
+                        "deposit": "success",
+                        "cancel": "danger"
+                }'/>
+
+                <templates>
+
+                    <t t-name="card">
+
+                        <div class="oe_kanban_card oe_kanban_global_click">
+                            <div class="mb-2">
+                                <widget name="web_ribbon"
+                                        title="Đặt cọc"
+                                        bg_color="bg-success"
+                                        invisible="state != 'deposit'"/>
+
+                                <widget name="web_ribbon"
+                                        title="Booking"
+                                        bg_color="bg-warning"
+                                        invisible="state != 'booking'"/>
+
+                                <widget name="web_ribbon"
+                                        title="Hủy"
+                                        bg_color="bg-danger"
+                                        invisible="state != 'cancel'"/>
+
+                                <widget name="web_ribbon"
+                                    title="Nháp"
+                                    bg_color="bg-info"
+                                    invisible="state != 'draft'"/>
+                            </div>
+
+                            <!-- Header -->
+                            <div class="o_kanban_record_top">
+                                <strong>
+                                    <field name="name"/>
+                                </strong>
+                            </div>
+
+                            <!-- Body -->
+                            <div class="mt-2">
+
+                                <div>
+                                    👤 <field name="customer_id"/>
+                                </div>
+
+                                <div>
+                                    🏢 <field name="product_id"/>
+                                </div>
+
+                                <div>
+                                    💰 <field name="price_total"/>
+                                </div>
+
+                            </div>
+
+                            <!-- Footer -->
+                            <div class="mt-3 text-muted">
+
+                                <field name="employee_id"/>
+
+                            </div>
+
+                        </div>
+
+                    </t>
+
+                </templates>
+
+            </kanban>
+
+        </field>
     </record>
 </odoo>
