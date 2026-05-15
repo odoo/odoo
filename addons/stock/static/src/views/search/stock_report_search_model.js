@@ -43,4 +43,17 @@ export class StockReportSearchModel extends SearchModel {
         this.globalContext['warehouse_id'] = warehouse_id;
         this._notify();
     }
+
+    /**
+     * Sets `to_date` in the context so quantities are computed at a past date.
+     * @param {string|false} date - ISO datetime string, or false to clear
+     */
+    applyDateContext(date) {
+        if (date) {
+            this.globalContext['to_date'] = date;
+        } else {
+            delete this.globalContext['to_date'];
+        }
+        this._notify();
+    }
 }

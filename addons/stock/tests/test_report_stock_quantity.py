@@ -237,12 +237,8 @@ class TestReportStockQuantity(tests.TransactionCase):
         when using multi-step receipt/delivery.
         """
         def get_inv_qty_at_date(product_id, inv_datetime):
-            inventory_at_date_wizard = self.env['stock.quantity.history'].create({'inventory_datetime': inv_datetime})
-            r = inventory_at_date_wizard.open_at_date()
-            return next((product['qty_available'], product['virtual_available']) for product in self.env[r['res_model']].with_context(r['context']).search_read(
-                    domain=(r['domain'] + [('id', '=', product_id)]),
-                    fields=['qty_available', 'virtual_available']
-                ))
+            product = self.env['product.product'].with_context(to_date=inv_datetime).browse(product_id)
+            return (product.qty_available, product.virtual_available)
         # We add a second warehouse and put the resuplying flow in push mechanic to test receipt in 2 steps with an external transfer
         warehouse, warehouse_2 = self.wh, self.env['stock.warehouse'].create({
             'name': 'Resupplier warehouse',
@@ -385,3 +381,63 @@ class TestReportStockQuantity(tests.TransactionCase):
         )
         forecast = [qty for __, __, qty in report]
         self.assertEqual(forecast, [0, 19.5])
+
+    def test_inventory_at_date_minute_precision(self):
+        """
+        Verify that qty_available is correctly computed with minute-level
+        precision on to_date, not just day-level.
+        """
+        product = self.env['product.product'].create({'name': 'Minute Test', 'is_storable': True})
+        stock_location = self.wh.lot_stock_id
+
+        base_time = datetime(2026, 5, 15, 10, 0, 0)
+
+        # Receive 100 units at 10:00
+        with freeze_time(base_time):
+            move1 = self.env['stock.move'].create({
+                'location_id': self.supplier_location.id,
+                'location_dest_id': stock_location.id,
+                'product_id': product.id,
+                'product_uom_qty': 100.0,
+            })
+            move1._action_confirm()
+            move1.write({'quantity': 100.0, 'picked': True})
+            move1._action_done()
+
+        # Receive 50 more at 10:30
+        with freeze_time(base_time + timedelta(minutes=30)):
+            move2 = self.env['stock.move'].create({
+                'location_id': self.supplier_location.id,
+                'location_dest_id': stock_location.id,
+                'product_id': product.id,
+                'product_uom_qty': 50.0,
+            })
+            move2._action_confirm()
+            move2.write({'quantity': 50.0, 'picked': True})
+            move2._action_done()
+
+        # Ship 30 units at 11:00
+        with freeze_time(base_time + timedelta(hours=1)):
+            move3 = self.env['stock.move'].create({
+                'location_id': stock_location.id,
+                'location_dest_id': self.customer_location.id,
+                'product_id': product.id,
+                'product_uom_qty': 30.0,
+            })
+            move3._action_confirm()
+            move3.write({'quantity': 30.0, 'picked': True})
+            move3._action_done()
+
+        def qty_at(dt):
+            return product.with_context(to_date=dt).qty_available
+
+        # Freeze after all moves so that to_date values are in the past
+        with freeze_time(base_time + timedelta(hours=2)):
+            # Before any move: 0
+            self.assertEqual(qty_at(base_time - timedelta(minutes=1)), 0.0)
+            # After first receipt but before second: 100
+            self.assertEqual(qty_at(base_time + timedelta(minutes=15)), 100.0)
+            # After second receipt but before shipment: 150
+            self.assertEqual(qty_at(base_time + timedelta(minutes=45)), 150.0)
+            # After shipment: 120
+            self.assertEqual(qty_at(base_time + timedelta(hours=1, minutes=15)), 120.0)

@@ -3,6 +3,26 @@
 
 <t t-name="stock.StockReportSearchPanel.Regular" t-inherit="web.SearchPanel.Regular">
     <xpath expr="//div/section[1]" position="before">
+        <section class="o_search_panel_section o_search_panel_inventory_date">
+            <header class="o_search_panel_section_header pt-4 pb-2 text-uppercase o_cursor_default">
+                <i class="fa fa-calendar o_search_panel_section_icon text-warning me-2"/>
+                <b>Inventory at Date</b>
+            </header>
+            <div class="px-3 pb-2">
+                <DateTimeInput
+                    type="'datetime'"
+                    value="this.dateState.inventoryDate || this.defaultDate"
+                    onApply.bind="this.onDateApply"
+                    placeholder.translate="Select a date..."
+                    rounding="1"
+                />
+                <button t-if="this.dateState.inventoryDate"
+                    class="btn btn-sm btn-link p-0 mt-1"
+                    t-on-click="this.clearDate">
+                    <i class="fa fa-times me-1"/>Current stock
+                </button>
+            </div>
+        </section>
         <section t-if="this.warehouses.length > 1" class="o_search_panel_section o_search_panel_warehouse">
             <header class="o_search_panel_section_header pt-4 pb-2 text-uppercase o_cursor_default">
                 <i t-attf-class="fa fa-filter o_search_panel_section_icon text-warning me-2"/>
