@@ -104,12 +104,9 @@
             'html_editor/static/src/scss/html_editor.frontend.scss',
             'html_editor/static/src/scss/base_style.scss',
 
-            ('after', 'web/static/lib/bootstrap/scss/_maps.scss', 'mass_mailing/static/src/scss/mass_mailing.ui.scss'),
-
             'html_builder/static/src/scss/background.scss',
 
             ('include', 'mass_mailing.assets_mail_themes'),
-            'mass_mailing/static/src/scss/mass_mailing_mail.scss',
             'mass_mailing/static/src/iframe_assets/**/*',
             'mass_mailing/static/src/snippets/**/*.scss',
         ],
@@ -134,6 +131,13 @@
             ('include', 'html_builder.assets_inside_builder_iframe'),
             ('include', 'mass_mailing.assets_iframe_style_base'),
             'mass_mailing/static/src/builder/**/*.inside.scss'
+        ],
+        'mass_mailing.assets_mail_clients': [
+            # style sheet added in _prepare_mail_values in the
+            # email sent, they are added here to create as many inline style
+            # rules as possible during html conversion.
+            # Files added here should also be handled in _prepare_mail_values
+            'mass_mailing/static/src/mail_clients_css/mass_mailing_mail.css',
         ],
         'mass_mailing.iframe_add_dialog': [
             ('include', 'html_builder.iframe_add_dialog'),

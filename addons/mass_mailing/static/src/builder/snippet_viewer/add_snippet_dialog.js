@@ -10,7 +10,7 @@ export class AddSnippetDialogSandboxed extends AddSnippetDialog {
     }
 
     getDefaultAssets() {
-        return [];
+        return ["mass_mailing.iframe_add_dialog"];
     }
 
     renderIframeHead() {
