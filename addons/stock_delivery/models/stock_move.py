@@ -109,7 +109,7 @@ class StockMoveLine(models.Model):
         """
         aggregated_move_lines = super()._get_aggregated_product_quantities(**kwargs)
         for aggregated_move_line in aggregated_move_lines:
-            hs_code = aggregated_move_lines[aggregated_move_line]['product'].product_tmpl_id.hs_code
+            hs_code = aggregated_move_lines[aggregated_move_line]['product'].hs_code
             aggregated_move_lines[aggregated_move_line]['hs_code'] = hs_code
         return aggregated_move_lines
 
