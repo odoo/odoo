@@ -1158,9 +1158,9 @@ class BaseAutomation(models.Model):
         # retrieve all the automation rules to run based on a timed condition
         final_exception = None
         automations = self.with_context(active_test=True).search([('trigger', 'in', TIME_TRIGGERS)])
-        self.env['ir.cron']._commit_progress(remaining=len(automations))
 
         for automation in automations:
+            automation = automation.with_prefetch()
             # is automation deactivated or disappeared between commits?
             try:
                 if not automation.active:
@@ -1183,8 +1183,7 @@ class BaseAutomation(models.Model):
 
             automation.write({'last_run': now})
             _logger.info("Time-based automation rule `%s` done.", automation.name)
-            if not self.env['ir.cron']._commit_progress(1):
-                break
+            self.env['ir.cron']._commit_progress()
         if final_exception is not None:
             # raise the last found exception to mark the cron job as failing
             raise final_exception
