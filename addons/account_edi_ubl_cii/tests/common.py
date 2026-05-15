@@ -242,6 +242,21 @@ class TestUblCiiFRCommon(TestUblCiiCommon):
         return subfolder_format, subfolder_document, 'fr'
 
 
+class TestUblCiiNOCommon(TestUblCiiCommon):
+
+    @classmethod
+    def _create_company(cls, **create_values):
+        company = super()._create_company(**create_values)
+        company.partner_id.write({
+            'street': "Drammensveien 1",
+            'zip': "0271",
+            'city': "Oslo",
+            'vat': 'NO179728982MVA',
+            'country_id': cls.env.ref('base.no').id,
+        })
+        return company
+
+
 class TestUblBis3Common(TestUblCiiCommon):
 
     @classmethod

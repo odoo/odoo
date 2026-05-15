@@ -733,6 +733,14 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
                     'schemeID': '0190' if len(nl_id) == 20 else '0106',
                 },
             })
+        elif commercial_partner.country_code == 'NO' and vals['party_vals'].get('norway_normalized_vat'):
+            nodes.append({
+                'cbc:RegistrationName': {'_text': commercial_partner.name},
+                'cbc:CompanyID': {
+                    '_text': vals['party_vals']['norway_normalized_vat'],
+                    'schemeID': None,
+                },
+            })
         elif commercial_partner.country_code == 'LU' and commercial_partner.company_registry:
             nodes.append({
                 'cbc:RegistrationName': {'_text': commercial_partner.name},
@@ -799,6 +807,16 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
                     'cbc:ID': {'_text': "TAX"},
                 },
             })
+
+            # The VAT number may not have 'NO' or 'MVA' parts and still be valid but those are mandatory for the ubl generation
+            vat = commercial_partner.vat or ""
+            if vat and not vat.startswith('NO'):
+                vat = 'NO' + vat
+            if vat and not vat.endswith('MVA'):
+                vat += 'MVA'
+            vals['party_vals']['norway_normalized_vat'] = vat
+            if nodes and nodes[0]['cac:TaxScheme']['cbc:ID']['_text'] == 'VAT':
+                nodes[0]['cbc:CompanyID']['_text'] = vat
 
         if commercial_partner.country_code == 'SE':
             nodes.append({
@@ -1205,7 +1223,7 @@ class AccountEdiXmlUbl_Bis3(models.AbstractModel):
                 })
 
         if vals['supplier'].country_id.code == 'NO':
-            vat = vals['document_node']['cac:AccountingSupplierParty']['cac:Party'].get('supplierCompanyID')
+            vat = vals['document_node']['cac:AccountingSupplierParty']['cac:Party']['cac:PartyTaxScheme'][0]['cbc:CompanyID']['_text']
             constraints.update({
                 # NO-R-001: For Norwegian suppliers, a VAT number MUST be the country code prefix NO followed by a
                 # valid Norwegian organization number (nine numbers) followed by the letters MVA.
