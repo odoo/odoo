@@ -28,6 +28,7 @@
         <field name="arch" type="xml">
             <field name="picking_type_id" position="after">
                 <field name="batch_id" optional="show"
+                       width="190px"
                     domain="[
                         ('state', 'in', ['draft', 'in_progress']),
                         '|',
