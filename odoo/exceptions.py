@@ -127,10 +127,11 @@ class ValidationError(UserError):
 
 class ConcurrencyError(Exception):
     """
-    Signal that two concurrent transactions tried to commit something
-    that violates some constraint. Signal that the transaction that
-    failed should be retried after a short delay, see
-    :func:`~odoo.service.model.retrying`.
+    Signal that the transaction that failed should be retried after a short
+    delay, see :func:`~odoo.service.model.retrying`.
+
+    Use case: signal that two concurrent transactions tried to commit something
+    that violates some constraint and should be retried.
 
     This exception is low-level and has very few use cases, it should
     only be used if all alternatives are deemed worse.

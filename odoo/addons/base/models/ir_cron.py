@@ -16,7 +16,7 @@ import psycopg2.errors
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, sql_db
-from odoo.exceptions import LockError, UserError
+from odoo.exceptions import ConcurrencyError, LockError, UserError
 from odoo.http.dispatcher import serialize_exception
 from odoo.modules import Manifest
 from odoo.tools import SQL, config
@@ -235,7 +235,11 @@ class IrCron(models.Model):
             # take into account overridings of _process_job() on that database, check_signaling
             registry = api.Environment(cron_cr, api.SUPERUSER_ID, {}).registry
             registry[IrCron._name]._process_job(cron_cr, job)
-            cron_cr.commit()
+            try:
+                cron_cr.commit()
+            except ConcurrencyError:
+                # the registry may have changed, ignore the error
+                cron_cr.rollback()
             _logger.debug("job %s updated and released", job_id)
 
     @staticmethod
@@ -486,6 +490,7 @@ class IrCron(models.Model):
                 'cron_id': job['id'],
                 'cron_end_time': start_time + MIN_TIME_PER_JOB,
             })
+            registry = env.registry  # to detect changes of the registry
             cron = env[cls._name].browse(job['id'])
 
             status = None
@@ -499,14 +504,29 @@ class IrCron(models.Model):
                 or time.monotonic() < env.context['cron_end_time']
             ):
                 cron, progress = cron._add_progress(timed_out_counter=timed_out_counter)
-                job_cr.commit()
+                try:
+                    job_cr.commit()
+                except ConcurrencyError:
+                    # registry changed, leave the loop without progress
+                    if env.registry is not registry and progress.exists():
+                        progress.unlink()
+                    break
 
                 success = False
+                server_action_id = job['ir_actions_server_id']
+                _logger.debug(
+                    "cron.object.execute(%r, %d, '*', %r, %d)",
+                    env.cr.dbname,
+                    env.uid,
+                    job['cron_name'],
+                    server_action_id,
+                )
                 try:
-                    # signaling check and commit is done inside `_callback`
-                    cron._callback(job['cron_name'], job['ir_actions_server_id'])
+                    cron.env['ir.actions.server'].browse(server_action_id).run()
+                    job_cr.commit()
                     success = True
                 except Exception:  # noqa: BLE001
+                    job_cr.rollback()
                     _logger.exception('Job %r (%s) server action #%s failed',
                         job['cron_name'], job['id'], job['ir_actions_server_id'])
                 finally:
@@ -556,7 +576,14 @@ class IrCron(models.Model):
                     loop_count += 1
                     progress.timed_out_counter = 0
                     timed_out_counter = 0
-                    job_cr.commit()  # ensure we have no leftovers
+                    try:
+                        job_cr.commit()  # ensure we have no leftovers
+                    except ConcurrencyError:
+                        pass  # ignore, we will check if registry changed
+                    finally:
+                        if env.registry is not registry:
+                            # registry changed, set status to leave the loop
+                            status = status or CompletionStatus.PARTIALLY_DONE
 
                     _logger.debug('Job %r (%s) processed %s records, %s records remaining',
                         job['cron_name'], job['id'], done, remaining)
@@ -687,26 +714,6 @@ class IrCron(models.Model):
             INSERT INTO ir_cron_trigger(call_at, cron_id)
             VALUES (%s, %s)
         """, [now, job['id']])
-
-    def _callback(self, cron_name, server_action_id):
-        """ Run the method associated to a given job. It takes care of logging
-        and exception handling. Note that the user running the server action
-        is the user calling this method. """
-        self.ensure_one()
-        try:
-            _logger.debug(
-                "cron.object.execute(%r, %d, '*', %r, %d)",
-                self.env.cr.dbname,
-                self.env.uid,
-                cron_name,
-                server_action_id,
-            )
-            self.env['ir.actions.server'].browse(server_action_id).run()
-            self.env.flush_all()
-            self.env.cr.commit()
-        except Exception:
-            self.env.cr.rollback()
-            raise
 
     def write(self, vals):
         try:

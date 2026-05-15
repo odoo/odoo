@@ -449,9 +449,13 @@ class TestIrCron(TransactionCase, CronMixinCase):
         self.cron._trigger()
         self.env.flush_all()
         default_progress = {'done': 0, 'remaining': 0, 'timed_out_counter': 0}
+
+        def mocked_run(self):
+            raise Exception
+
         with self.enter_registry_test_mode():
             with (
-                patch.object(self.registry['ir.cron'], '_callback', side_effect=Exception),
+                patch.object(self.registry['ir.actions.server'], 'run', mocked_run),
                 patch.object(self.registry['ir.cron'], '_notify_admin') as notify,
                 mute_logger('odoo.addons.base.models.ir_cron'),
                 self.registry.cursor() as cr,
@@ -472,7 +476,7 @@ class TestIrCron(TransactionCase, CronMixinCase):
         self.env.flush_all()
         with (
             self.enter_registry_test_mode(),
-            patch.object(self.registry['ir.cron'], '_callback', side_effect=Exception),
+            patch.object(self.registry['ir.actions.server'], 'run', mocked_run),
             patch.object(self.registry['ir.cron'], '_notify_admin') as notify,
             mute_logger('odoo.addons.base.models.ir_cron'),
             self.registry.cursor() as cr,
@@ -494,7 +498,7 @@ class TestIrCron(TransactionCase, CronMixinCase):
         self.env.flush_all()
         with (
             self.enter_registry_test_mode(),
-            patch.object(self.registry['ir.cron'], '_callback', side_effect=Exception),
+            patch.object(self.registry['ir.actions.server'], 'run', mocked_run),
             patch.object(self.registry['ir.cron'], '_notify_admin') as notify,
             mute_logger('odoo.addons.base.models.ir_cron'),
             self.registry.cursor() as cr,
@@ -516,7 +520,7 @@ class TestIrCron(TransactionCase, CronMixinCase):
         self.env.flush_all()
         with (
             self.enter_registry_test_mode(),
-            patch.object(self.registry['ir.cron'], '_callback', side_effect=Exception),
+            patch.object(self.registry['ir.actions.server'], 'run', mocked_run),
             patch.object(self.registry['ir.cron'], '_notify_admin') as notify,
             mute_logger('odoo.addons.base.models.ir_cron'),
             self.registry.cursor() as cr,
@@ -538,7 +542,7 @@ class TestIrCron(TransactionCase, CronMixinCase):
         self.env.flush_all()
         with (
             self.enter_registry_test_mode(),
-            patch.object(self.registry['ir.cron'], '_callback', side_effect=Exception),
+            patch.object(self.registry['ir.actions.server'], 'run', mocked_run),
             patch.object(self.registry['ir.cron'], '_notify_admin') as notify,
             mute_logger('odoo.addons.base.models.ir_cron'),
             self.registry.cursor() as cr,

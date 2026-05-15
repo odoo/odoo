@@ -15,7 +15,7 @@ from pprint import pformat
 from weakref import ref as weakref
 from zoneinfo import ZoneInfo
 
-from odoo.exceptions import AccessError, UserError, CacheMiss
+from odoo.exceptions import AccessError, CacheMiss, ConcurrencyError, UserError
 from odoo.sql_db import BaseCursor
 from odoo.tools import clean_context, frozendict, reset_cached_properties, OrderedSet, SQL
 from odoo.tools.func import deprecated
@@ -844,7 +844,7 @@ class Transaction:
             # all envs of the transaction share the same cursor
             env.cr.cache.clear()
 
-    def reset(self) -> None:
+    def reset(self, *, raise_if_changed=False) -> None:
         """ Reset the transaction.
 
         This is performed automatically after a commit or rollback!
@@ -854,11 +854,11 @@ class Transaction:
         may have changed!
         """
         # get the registry and rebuild the stack of states
-        new_registry = Registry(self.registry.db_name)
-        if self.registry is new_registry:
+        old_registry = self.registry
+        self.registry = Registry(old_registry.db_name)
+        if old_registry is self.registry:
             self._reset_registry_change()
         else:
-            self.registry = new_registry
             self._registry_invalidated = 0
         # the registry sequence can change during testing, always copy it
         self._registry_sequence = self.registry.registry_sequence
@@ -875,6 +875,10 @@ class Transaction:
         env = self.default_env or next(iter(self.envs), None)
         if env is not None and not env.cr._closing:
             self._check_signaling(env.cr)
+        # raise concurrent errors only after the reset is performed entirely
+        # to leavethe transaction in a consistent state
+        if raise_if_changed and old_registry is not self.registry:
+            raise ConcurrencyError("Registry changed")
 
     @contextmanager
     def committing(self):
@@ -919,7 +923,7 @@ class Transaction:
             # avoid potential memory leaks that may not be handled correctly by
             # the transaction.
             self._registry_invalidated = 0
-            self.reset()
+            self.reset(raise_if_changed=not cr._closing)
             if registry._lock is lock and cr._closing:
                 # We are closing, reset() did not check signaling, force it so
                 # that the next transaction is ready.
@@ -964,8 +968,10 @@ class Transaction:
         cr = env.cr if env is not None else None
         if (cr is None or not cr._closing or cr.postrollback) and self.registry.registry_sequence != self._registry_sequence:
             # registry changed, reset the transaction
-            self.reset()
-            self._registry_invalidated = registry_invalidated
+            try:
+                self.reset(raise_if_changed=cr is not None and not cr._closing)
+            finally:
+                self._registry_invalidated = registry_invalidated
             return
 
         self.clear()
