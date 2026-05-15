@@ -40,7 +40,7 @@ El equipo de trabajo está formado por 5 estudiantes. El rol de **Líder de Equi
 | **Apaza Anahua Roydan** | Líder | Coordinación general, integración del documento final y configuración de herramientas GitHub. |
 | **Quiñonez Delgado Aarón Fernando** | Verificación Técnica | Validación de `docker-compose.yml` y cumplimiento de los criterios de licencia MIT. |
 | **Sencia Ale Bryan Daniel** | Arquitectura de Código | Delimitación del módulo de Ventas y verificación técnica de la complejidad (>10 KLOC). |
-| **Yauli Merma Diego Raul** | Backlog | Creación del Product Backlog inicial en GitHub Issues. |
+| **Yauli Merma Diego Raul** | Gestión de Documentación | Desarrollo del reporte del Hito 1, consolidación de evidencias y documentación del avance del proyecto Scrum y DevOps. |
 | **Sivincha Machaca Saul Andre** | Cronograma Maestro | Planificación de los Sprints de 15 días alineados a los hitos del curso. |
 
 ### Roles y Responsabilidades (Sprint 1):
