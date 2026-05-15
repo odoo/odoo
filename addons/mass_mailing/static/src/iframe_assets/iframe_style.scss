@@ -1,6 +1,9 @@
 html:has(.o_layout) {
     margin: 0 !important;
     padding: 0 !important;
+    // Redeclare CSS values that use color-mix()
+    // to avoid issues with mail rendering engines
+    --o-border-color: #{o-color('300')};
 
     &:has(body:not(.o_mass_mailing_iframe_fullscreen)) {
         height: auto !important;
