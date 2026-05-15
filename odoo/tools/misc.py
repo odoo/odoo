@@ -30,7 +30,6 @@ from contextlib import ContextDecorator, contextmanager
 from difflib import HtmlDiff
 from functools import lru_cache, reduce, wraps
 from itertools import islice, groupby as itergroupby
-from operator import itemgetter
 from types import MappingProxyType
 from zoneinfo import ZoneInfo
 
