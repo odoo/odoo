@@ -269,6 +269,7 @@ class AccountMove(models.Model):
             'correction_info': correction_info,
             'special_transactions': {'OSS_Base', 'OSS_Tax', 'Triangular Sale'} & invoice_tag_names,
             'triangular_transaction': '1' if 'Triangular Sale' in invoice_tag_names else '2',
+            'prefiks_podatnika': bool({'K_21', 'K_12', 'Triangular Sale'} & invoice_tag_names),
         }
 
     def _l10n_pl_edi_render_xml(self):
