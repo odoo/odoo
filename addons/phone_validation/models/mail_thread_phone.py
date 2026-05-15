@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import re
@@ -6,7 +5,7 @@ import re
 from odoo import api, fields, models, _
 from odoo.exceptions import AccessError, UserError
 from odoo.fields import Domain
-from odoo.tools import create_index, make_identifier
+from odoo.tools.sql import create_index, make_identifier
 
 PHONE_REGEX_PATTERN = r'[\s\\./\(\)\-]'
 

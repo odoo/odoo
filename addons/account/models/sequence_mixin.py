@@ -1,10 +1,10 @@
-# -*- coding: utf-8 -*-
 from datetime import date
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 from odoo.tools.misc import format_date
-from odoo.tools import frozendict, date_utils, index_exists, SQL
+from odoo.tools import frozendict, date_utils, SQL
+from odoo.tools.sql import index_exists
 
 import logging
 import re

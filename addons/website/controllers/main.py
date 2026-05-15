@@ -27,9 +27,10 @@ from odoo.http import request
 from odoo.http.router import serve_ir_http
 from odoo.http.session import SessionExpiredException
 from odoo.http.stream import STATIC_CACHE_LONG
-from odoo.tools import OrderedSet, escape_psql, py_to_js_locale
+from odoo.tools import OrderedSet, py_to_js_locale
 from odoo.tools import html_escape as escape
 from odoo.tools.json import scriptsafe as json
+from odoo.tools.sql import escape_like_value
 from odoo.tools.translate import LazyTranslate, TRANSLATED_ELEMENTS
 
 from odoo.addons.base.models.ir_http import EXTENSION_TO_WEB_MIMETYPES
@@ -494,7 +495,7 @@ class Website(Home):
     def get_dynamic_snippet_templates(self, filter_name=False):
         domain = [['key', 'ilike', '.dynamic_filter_template_'], ['type', '=', 'qweb']]
         if filter_name:
-            domain.append(['key', 'ilike', escape_psql('_%s_' % filter_name)])
+            domain.append(['key', 'ilike', escape_like_value('_%s_' % filter_name)])
         templates = request.env['ir.ui.view'].sudo().search_read(domain, ['key', 'name', 'arch_db'])
 
         for t in templates:
@@ -898,7 +899,7 @@ class Website(Home):
             for template in View.search([
                 ('mode', '=', 'primary'),
                 '|',
-                ('key', 'like', escape_psql(f'new_page_template_sections_{group["id"]}_')),
+                ('key', 'like', escape_like_value(f'new_page_template_sections_{group["id"]}_')),
                 ('key', 'like', f'configurator_pages_{group["id"]}'),
                 request.website.website_domain(),
             ], order='key'):

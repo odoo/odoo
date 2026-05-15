@@ -10,7 +10,7 @@ from odoo import api, fields, models, tools
 from odoo.exceptions import UserError
 from odoo.fields import Domain
 from odoo.http import Response
-from odoo.tools import SQL, escape_psql
+from odoo.tools.sql import SQL, escape_like_value
 
 from odoo.addons.base.models.ir_http import EXTENSION_TO_WEB_MIMETYPES
 from odoo.addons.website.tools import text_from_html
@@ -293,7 +293,7 @@ class WebsitePage(models.Model):
                     "%(name)s ILIKE %(search)s OR %(arch_db)s ILIKE %(search)s",
                     name=table.name,
                     arch_db=table.arch_db,
-                    search=f"%{escape_psql(search)}%",
+                    search=f"%{escape_like_value(search)}%",
                 )
             )
             # most_specific_pages is already filtered and ordered

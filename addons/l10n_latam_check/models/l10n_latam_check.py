@@ -5,7 +5,6 @@ import stdnum
 
 from odoo import models, fields, api, Command, _
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools import index_exists
 
 
 _logger = logging.getLogger(__name__)

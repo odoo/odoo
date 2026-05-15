@@ -13,7 +13,7 @@ from .i18n import format_list, py_to_js_locale
 from .json import json_default
 from .mail import *
 from .misc import *
-from .sql import *
+from .sql import SQL, drop_view_if_exists
 from .translate import _, html_translate, xml_translate, LazyTranslate
 from .xml_utils import cleanup_xml_node, load_xsd_files_from_url, validate_xml_from_attachment
 from .convert import convert_csv_import, convert_file, convert_sql_import, convert_xml_import
