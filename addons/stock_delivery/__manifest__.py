@@ -15,6 +15,7 @@ When creating invoices from picking, the system is able to add and compute the s
         "data/mail_template_data.xml",
         'security/ir.model.access.csv',
         'views/product_template_view.xml',
+        'views/product_product_view.xml',
         'views/delivery_view.xml',
         'views/delivery_portal_template.xml',
         'views/report_shipping.xml',
