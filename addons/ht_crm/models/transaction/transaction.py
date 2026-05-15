@@ -45,7 +45,7 @@ class Transaction(models.Model):
         currency_field="currency_id",
         compute="_compute_final_price",
         store=True,
-        digits=(16, 2)
+        digits=(16, 0)
     )
 
     # Trường bổ sung
@@ -55,13 +55,12 @@ class Transaction(models.Model):
         string="Giá niêm yết",
         store=True,
         readonly=True,
-        digits=(16, 2)
+        digits=(16, 0)
     )
     
     discount = fields.Float(
         string="Chiết khấu (%)",
-        default=0,
-        digits=(16, 1)
+        default=0
     )
 
     state = fields.Selection([
@@ -80,8 +79,7 @@ class Transaction(models.Model):
     @api.depends('listed_price', 'discount')
     def _compute_final_price(self):
         for rec in self:
-            discount_amount = rec.listed_price * (rec.discount / 100)
-            rec.price_total = rec.listed_price - discount_amount
+            rec.price_total = rec.listed_price * (1 - rec.discount / 100)
 
     def _get_kpi(self, employee_id, month, year):
         return self.env['sale.employee.kpi'].search([

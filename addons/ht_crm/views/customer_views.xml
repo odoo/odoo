@@ -77,14 +77,6 @@
         <field name="groups" eval="[(4, ref('group_ht_user'))]"/>
     </record>
 
-    <!-- <record id="ir_cron_distribute" model="ir.cron">
-        <field name="name">Phân số điện thoại</field>
-        <field name="model_id" ref="model_sale_phonebook"/>
-        <field name="code">model.cron_distribute()</field>
-        <field name="interval_number">1</field>
-        <field name="interval_type">minutes</field>
-    </record> -->
-
     <record id="view_phonebook_list" model="ir.ui.view">
         <field name="name">sale.phonebook.list</field>
         <field name="model">sale.phonebook</field>
@@ -96,11 +88,6 @@
                             type="object" 
                             class="oe_highlight"
                             groups="ht_crm.group_ht_general_admin,base.group_system"/>
-                    <!-- <button name="reverse" 
-                        string="Reverse" 
-                        type="object" 
-                        class="oe_highlight"
-                        groups="ht_crm.group_ht_executive"/> -->
                 </header>
 
                 <field name="created_on" readonly="True"/>
@@ -108,7 +95,10 @@
                 <field name="phone" widget="phone"/>
                 <field name="status"/>
                 <field name="note"/>
-                <field name="project_id"/>
+
+                <!-- Trường bổ sung -->
+                <field name="salesperson_id" optional="1"/>
+                <field name="project_id" optional="1"/>
             </list>  
         </field>
     </record>
