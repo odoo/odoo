@@ -155,7 +155,7 @@ function stateToUrl(state) {
     }
     const search = objectToUrlEncodedString(omit(state, ...pathKeysToOmit));
     const start_url = startUrl();
-    return `/${start_url}${path}${search ? `?${search}` : ""}`;
+    return new URL(`/${start_url}${path}${search ? `?${search}` : ""}`, browser.location.origin);
 }
 
 function urlToState(urlObj) {
@@ -179,8 +179,7 @@ function urlToState(urlObj) {
             delete sanitizedHash.view_type;
         }
         Object.assign(state, sanitizedHash);
-        const url = browser.location.origin + router.stateToUrl(state);
-        urlObj.href = url;
+        urlObj.href = router.stateToUrl(state).href;
     }
 
     const [prefix, ...splitPath] = urlObj.pathname.split("/").filter(Boolean);
@@ -232,8 +231,7 @@ function urlToState(urlObj) {
         }
         if (prefix === "scoped_app" && !isDisplayStandalone()) {
             // make sure /scoped_app are redirected to /odoo when using the browser instead of the PWA
-            const url = browser.location.origin + router.stateToUrl(state);
-            urlObj.href = url;
+            urlObj.href = router.stateToUrl(state).href;
         }
     }
     return state;
@@ -361,8 +359,8 @@ function makeDebouncedPush(mode) {
     function doPush() {
         // Calculates new route based on aggregated search and options
         const nextState = computeNextState(pushArgs.state, pushArgs.replace);
-        const url = browser.location.origin + router.stateToUrl(nextState);
-        if (!compareUrls(url + browser.location.hash, browser.location.href)) {
+        const url = router.stateToUrl(nextState);
+        if (!compareUrls(url.href + browser.location.hash, browser.location.href)) {
             // If the route changed: pushes or replaces browser state
             if (mode === "push") {
                 // Because doPush is delayed, the history entry will have the wrong name.
@@ -371,10 +369,10 @@ function makeDebouncedPush(mode) {
                 // then restore the title to what it's supposed to be
                 const originalTitle = document.title;
                 document.title = pushArgs.title;
-                browser.history.pushState({ nextState }, "", url);
+                browser.history.pushState({ nextState }, "", url.href);
                 document.title = originalTitle;
             } else {
-                browser.history.replaceState({ nextState }, "", url);
+                browser.history.replaceState({ nextState }, "", url.href);
             }
         } else {
             // URL didn't change but state might have, update it in place

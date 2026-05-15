@@ -195,7 +195,7 @@ export function addLink(node, transformChildren) {
 function generateMentionElement({ className, id, model, text }) {
     const link = document.createElement("a");
     setAttributes(link, {
-        href: router.stateToUrl({ model: model, resId: id }),
+        href: router.stateToUrl({ model: model, resId: id }).href,
         class: className,
         "data-oe-id": id,
         "data-oe-model": model,

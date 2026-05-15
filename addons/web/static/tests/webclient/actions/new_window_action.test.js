@@ -78,7 +78,7 @@ beforeEach(() => {
 test("can execute act_window actions from db ID in a new window", async () => {
     await mountWithCleanup(WebClient);
     await getService("action").doAction(1, { newWindow: true });
-    expect.verifySteps(["open: /odoo/action-1"]);
+    expect.verifySteps(["open: https://www.hoot.test/odoo/action-1"]);
 });
 
 test("'CLEAR-UNCOMMITTED-CHANGES' is not triggered for window action", async () => {
@@ -88,7 +88,7 @@ test("'CLEAR-UNCOMMITTED-CHANGES' is not triggered for window action", async () 
     });
 
     await getService("action").doAction(1, { newWindow: true });
-    expect.verifySteps(["open: /odoo/action-1"]);
+    expect.verifySteps(["open: https://www.hoot.test/odoo/action-1"]);
 });
 
 test("'CLEAR-UNCOMMITTED-CHANGES' is not triggered for client actions", async () => {
@@ -104,7 +104,7 @@ test("'CLEAR-UNCOMMITTED-CHANGES' is not triggered for client actions", async ()
     });
 
     await getService("action").doAction("my_action", { newWindow: true });
-    expect.verifySteps(["open: /odoo/my_action"]);
+    expect.verifySteps(["open: https://www.hoot.test/odoo/my_action"]);
 });
 
 test("'CLEAR-UNCOMMITTED-CHANGES' is not triggered for switchView", async () => {
@@ -117,7 +117,7 @@ test("'CLEAR-UNCOMMITTED-CHANGES' is not triggered for switchView", async () => 
     await getService("action").switchView("kanban", {}, { newWindow: true });
     expect.verifySteps([
         "CLEAR-UNCOMMITTED-CHANGES", // The first do action clear uncommitted changes as expected. The second one doesn't
-        "open: /odoo/action-1",
+        "open: https://www.hoot.test/odoo/action-1",
     ]);
 });
 
@@ -135,7 +135,7 @@ test("can execute dynamic act_window actions in a new window", async () => {
             newWindow: true,
         }
     );
-    expect.verifySteps(["open: /odoo/m-partner/22"]);
+    expect.verifySteps(["open: https://www.hoot.test/odoo/m-partner/22"]);
 });
 
 test("can execute an actions in a new window and preserve the breadcrumb", async () => {
@@ -153,7 +153,7 @@ test("can execute an actions in a new window and preserve the breadcrumb", async
             newWindow: true,
         }
     );
-    expect.verifySteps(["open: /odoo/action-1/m-partner/22"]);
+    expect.verifySteps(["open: https://www.hoot.test/odoo/action-1/m-partner/22"]);
 });
 
 test("can execute client actions in a new window", async () => {
@@ -170,5 +170,5 @@ test("can execute client actions in a new window", async () => {
             newWindow: true,
         }
     );
-    expect.verifySteps(["open: /odoo/__test__client__action__"]);
+    expect.verifySteps(["open: https://www.hoot.test/odoo/__test__client__action__"]);
 });

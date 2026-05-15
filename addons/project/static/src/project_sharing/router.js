@@ -9,7 +9,8 @@ patch(router, {
      */
     stateToUrl(state) {
         const url = super.stateToUrl(state);
-        return url.replace(startUrl(), "my/projects");
+        url.pathname = url.pathname.replace(`/${startUrl()}`, "/my/projects");
+        return url;
     },
     urlToState(urlObj) {
         const { pathname } = urlObj;

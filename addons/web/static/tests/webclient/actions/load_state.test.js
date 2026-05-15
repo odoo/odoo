@@ -1829,7 +1829,9 @@ describe(`new urls`, () => {
         expect.verifySteps(["/web/action/load", "/web/action/load"]);
 
         await runAllTimers(); // wait for the router to be updated
-        expect(router.stateToUrl(router.current)).toBe("/odoo/action-100/1/action-200");
+        expect(router.stateToUrl(router.current).href).toBe(
+            "http://example.com/odoo/action-100/1/action-200"
+        );
 
         // simulate a reload
         await startRouter();
@@ -1874,7 +1876,9 @@ describe(`new urls`, () => {
         expect.verifySteps(["/web/action/load", "/web/action/load"]);
 
         await runAllTimers(); // wait for the router to be updated
-        expect(router.stateToUrl(router.current)).toBe("/odoo/action-100/1/action-200");
+        expect(router.stateToUrl(router.current).href).toBe(
+            "http://example.com/odoo/action-100/1/action-200"
+        );
 
         // simulate a reload with a new lang
         serverState.lang = "fr_FR";

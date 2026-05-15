@@ -374,7 +374,7 @@ export class Message extends Record {
     }
 
     get resUrl() {
-        return url(router.stateToUrl({ model: this.thread.model, resId: this.thread.id }));
+        return url(router.stateToUrl({ model: this.thread.model, resId: this.thread.id }).href);
     }
 
     get isTranslatable() {

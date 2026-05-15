@@ -165,7 +165,7 @@ export function makeActionManager(env, router = _router) {
      */
     async function _controllersFromState(state) {
         const currentState = JSON.parse(browser.sessionStorage.getItem("current_state") || "{}");
-        if (router.stateToUrl(currentState) === router.stateToUrl(state)) {
+        if (router.stateToUrl(currentState).href === router.stateToUrl(state).href) {
             state = currentState;
         }
         if (!state?.actionStack?.length) {
@@ -484,7 +484,7 @@ export function makeActionManager(env, router = _router) {
                     return controller.props?.type === "form";
                 },
                 get url() {
-                    return router.stateToUrl(controller.state);
+                    return router.stateToUrl(controller.state).href;
                 },
                 onSelected() {
                     restore(controller.jsId);
@@ -1371,12 +1371,15 @@ export function makeActionManager(env, router = _router) {
         }
         if (action.report_type === "qweb-html") {
             return _executeReportClientAction(action, options);
-        } else if (action.report_type.startsWith("qweb-pdf") || action.report_type === "qweb-text") {
+        } else if (
+            action.report_type.startsWith("qweb-pdf") ||
+            action.report_type === "qweb-text"
+        ) {
             let type = action.report_type.slice(5);
             let engineName;
             if (type.startsWith("pdf-")) {
                 engineName = type.slice(4);
-                type = "pdf"
+                type = "pdf";
             }
             let success, message;
             env.services.ui.block();
@@ -1385,7 +1388,13 @@ export function makeActionManager(env, router = _router) {
                 if (action.context) {
                     Object.assign(downloadContext, action.context);
                 }
-                ({ success, message } = await downloadReport(rpc, action, type, downloadContext, engineName));
+                ({ success, message } = await downloadReport(
+                    rpc,
+                    action,
+                    type,
+                    downloadContext,
+                    engineName
+                ));
             } finally {
                 env.services.ui.unblock();
             }
