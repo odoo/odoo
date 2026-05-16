@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-07 17:36+0000\n"
+"POT-Creation-Date: 2026-05-15 17:35+0000\n"
 "PO-Revision-Date: 2025-11-20 16:09+0000\n"
 "Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
 "Language-Team: Spanish <https://translate.odoo.com/projects/odoo-19/"
@@ -46,6 +46,13 @@ msgid ""
 "Time type \"%(name)s\" of code \"%(code)s\", with no country assigned, "
 "already exists.\n"
 "                    "
+msgstr ""
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
+msgid ""
+"<span class=\"text-muted fst-italic\">Define how this time type affects "
+"payslips and salary computation.</span>"
 msgstr ""
 
 #. module: hr_work_entry
@@ -1857,6 +1864,11 @@ msgid "Paternity Time Off (Paid by Company)"
 msgstr "Tiempo libre de paternidad (pagado por la empresa)"
 
 #. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
+msgid "Pay Rate"
+msgstr ""
+
+#. module: hr_work_entry
 #: model:ir.ui.menu,name:hr_work_entry.menu_hr_payroll_root
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
 msgid "Payroll"
@@ -2400,11 +2412,6 @@ msgid "Time Type"
 msgstr ""
 
 #. module: hr_work_entry
-#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
-msgid "Time Type Name"
-msgstr ""
-
-#. module: hr_work_entry
 #: model:ir.actions.act_window,name:hr_work_entry.hr_work_entry_type_action
 #: model:ir.ui.menu,name:hr_work_entry.menu_hr_work_entry_type_view
 #: model:ir.ui.menu,name:hr_work_entry.menu_hr_work_entry_type_view_employee
@@ -2661,7 +2668,10 @@ msgid "Week Days Overtime"
 msgstr ""
 
 #. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_ae_work_entry_type_weekend
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_eg_work_entry_type_weekend
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_hk_work_entry_type_weekend
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_sa_work_entry_type_weekend
 msgid "Weekend"
 msgstr "Fin de semana"
 
@@ -2781,6 +2791,11 @@ msgstr ""
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
 msgid "e.g. ATT, PTO, STO, OT, RW, ..."
+msgstr ""
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
+msgid "e.g. Paid Time Off, Sick Leave, Work From Home"
 msgstr ""
 
 #. module: hr_work_entry

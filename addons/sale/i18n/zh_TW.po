@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-10 17:37+0000\n"
+"POT-Creation-Date: 2026-05-15 17:36+0000\n"
 "PO-Revision-Date: 2026-03-14 13:05+0000\n"
 "Last-Translator: \"Tony Ng (ngto)\" <ngto@odoo.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
@@ -3006,11 +3006,6 @@ msgid "Invoicing Address"
 msgstr "發票地址"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order__journal_id
-msgid "Invoicing Journal"
-msgstr "發票日記賬"
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__invoice_policy
 #: model:ir.model.fields,field_description:sale.field_product_template__invoice_policy
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__default_invoice_policy
@@ -3094,6 +3089,11 @@ msgid ""
 msgstr ""
 "禁止在鎖定訂單中修改以下欄位:\n"
 "%s"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order__journal_id
+msgid "Journal"
+msgstr ""
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_move
@@ -5905,12 +5905,6 @@ msgid ""
 msgstr "預設報價有效性不可設為負數。留空（或填寫 0）以停用報價自動過期。"
 
 #. module: sale
-#. odoo-python
-#: code:addons/sale/models/account_analytic_line.py:0
-msgid "You cannot set a negative quantity on services."
-msgstr ""
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "You don't use a good CRM software?"
 msgstr "你使用的 CRM 客戶關係管理軟體不夠好嗎？"
@@ -6099,3 +6093,6 @@ msgid ""
 "{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order' }} {{ object.name or 'n/a' }}"
 msgstr ""
+
+#~ msgid "Invoicing Journal"
+#~ msgstr "發票日記賬"

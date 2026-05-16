@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:36+0000\n"
+"POT-Creation-Date: 2026-05-15 17:35+0000\n"
 "PO-Revision-Date: 2025-12-03 17:12+0000\n"
 "Last-Translator: Dorin Hongu <dhongu@gmail.com>\n"
 "Language-Team: Romanian <https://translate.odoo.com/projects/odoo-19/"
@@ -1005,13 +1005,14 @@ msgstr ""
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
-msgid "<span class=\"mx-1\"><i class=\"fa fa-plus me-1\"/>Odoo meeting</span>"
+msgid ""
+"<span class=\"mx-1\"><i class=\"fa fa-plus me-1\"/>Video conference</span>"
 msgstr ""
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
-msgid "<span> guests</span>"
-msgstr "<span> invitați</span>"
+msgid "<span invisible=\"allday\"> or </span>"
+msgstr ""
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_event_delete_wizard_form
@@ -1144,7 +1145,7 @@ msgstr "Mesaj suplimentar care ar fi trimis cu notificarea pentru memento"
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/core/web/activity_menu_patch.xml:0
-#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "All Day"
 msgstr "Toată ziua"
 
@@ -3171,12 +3172,6 @@ msgid "Today Activities"
 msgstr ""
 
 #. module: calendar
-#. odoo-python
-#: code:addons/calendar/models/res_users.py:0
-msgid "Today's Meetings"
-msgstr "Întâlnirile de astăzi"
-
-#. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/activity/attendee_calendar_activity_list_popover_item.xml:0
 msgid "Tomorrow"
@@ -3241,6 +3236,12 @@ msgstr "Unitate"
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Until"
 msgstr "Până la"
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/res_users.py:0
+msgid "Upcoming Meetings"
+msgstr ""
 
 #. module: calendar
 #: model:mail.template,description:calendar.calendar_template_delete_event
@@ -3424,6 +3425,11 @@ msgid "e.g: 12/31/2030"
 msgstr ""
 
 #. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+msgid "guests"
+msgstr ""
+
+#. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/activity/attendee_calendar_activity_list_popover.xml:0
 msgid "more"
@@ -3455,3 +3461,9 @@ msgstr "{{ object.event_id.name }}: Data actualizată"
 #: model:mail.template,subject:calendar.calendar_template_meeting_update
 msgid "{{object.name}}: Event update"
 msgstr "{{object.name}}: Actualizare eveniment"
+
+#~ msgid "<span> guests</span>"
+#~ msgstr "<span> invitați</span>"
+
+#~ msgid "Today's Meetings"
+#~ msgstr "Întâlnirile de astăzi"

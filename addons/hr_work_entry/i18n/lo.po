@@ -6,10 +6,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.4a1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-07 17:36+0000\n"
+"POT-Creation-Date: 2026-05-15 17:35+0000\n"
 "PO-Revision-Date: 2026-05-07 17:36+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -21,7 +22,8 @@ msgstr ""
 msgid ""
 "\n"
 "Cannot insert \"%(insert_name)s\":\n"
-"Time type \"%(name)s\" of code \"%(code)s\" already exists for country \"%(country)s\".\n"
+"Time type \"%(name)s\" of code \"%(code)s\" already exists for country \"%"
+"(country)s\".\n"
 "                    "
 msgstr ""
 
@@ -31,8 +33,16 @@ msgstr ""
 msgid ""
 "\n"
 "Cannot insert \"%(insert_name)s\":\n"
-"Time type \"%(name)s\" of code \"%(code)s\", with no country assigned, already exists.\n"
+"Time type \"%(name)s\" of code \"%(code)s\", with no country assigned, "
+"already exists.\n"
 "                    "
+msgstr ""
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
+msgid ""
+"<span class=\"text-muted fst-italic\">Define how this time type affects "
+"payslips and salary computation.</span>"
 msgstr ""
 
 #. module: hr_work_entry
@@ -462,8 +472,8 @@ msgstr ""
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_be_work_entry_type_paid_compensatory_rest
 msgid ""
-"Compensatory rest as part of a reduction in working time paid at the time of"
-" recovery"
+"Compensatory rest as part of a reduction in working time paid at the time of "
+"recovery"
 msgstr ""
 
 #. module: hr_work_entry
@@ -1045,8 +1055,8 @@ msgstr ""
 #. module: hr_work_entry
 #: model:ir.model.fields,help:hr_work_entry.field_hr_work_entry_type__active
 msgid ""
-"If the active field is set to false, it will allow you to hide the time type"
-" without removing it."
+"If the active field is set to false, it will allow you to hide the time type "
+"without removing it."
 msgstr ""
 
 #. module: hr_work_entry
@@ -1844,6 +1854,11 @@ msgid "Paternity Time Off (Paid by Company)"
 msgstr ""
 
 #. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
+msgid "Pay Rate"
+msgstr ""
+
+#. module: hr_work_entry
 #: model:ir.ui.menu,name:hr_work_entry.menu_hr_payroll_root
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
 msgid "Payroll"
@@ -1881,8 +1896,7 @@ msgstr ""
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
-msgid ""
-"Provide a description of the Time Type, in which case should it be used"
+msgid "Provide a description of the Time Type, in which case should it be used"
 msgstr ""
 
 #. module: hr_work_entry
@@ -2385,11 +2399,6 @@ msgid "Time Type"
 msgstr ""
 
 #. module: hr_work_entry
-#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
-msgid "Time Type Name"
-msgstr ""
-
-#. module: hr_work_entry
 #: model:ir.actions.act_window,name:hr_work_entry.hr_work_entry_type_action
 #: model:ir.ui.menu,name:hr_work_entry.menu_hr_work_entry_type_view
 #: model:ir.ui.menu,name:hr_work_entry.menu_hr_work_entry_type_view_employee
@@ -2646,7 +2655,10 @@ msgid "Week Days Overtime"
 msgstr ""
 
 #. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_ae_work_entry_type_weekend
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_eg_work_entry_type_weekend
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_hk_work_entry_type_weekend
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_sa_work_entry_type_weekend
 msgid "Weekend"
 msgstr ""
 
@@ -2766,6 +2778,11 @@ msgstr ""
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
 msgid "e.g. ATT, PTO, STO, OT, RW, ..."
+msgstr ""
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
+msgid "e.g. Paid Time Off, Sick Leave, Work From Home"
 msgstr ""
 
 #. module: hr_work_entry

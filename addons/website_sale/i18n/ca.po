@@ -36,7 +36,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-10 17:36+0000\n"
+"POT-Creation-Date: 2026-05-15 17:35+0000\n"
 "PO-Revision-Date: 2026-03-07 14:45+0000\n"
 "Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
 "Language-Team: Catalan <https://translate.odoo.com/projects/odoo-s19-2/"
@@ -1410,12 +1410,6 @@ msgid "Add More"
 msgstr ""
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_res_config_settings__add_to_cart_action
-#: model:ir.model.fields,field_description:website_sale.field_website__add_to_cart_action
-msgid "Add To Cart Action"
-msgstr "Afegeix a l'acció Cart"
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_public_category_form_view
 msgid "Add a product"
 msgstr ""
@@ -1460,7 +1454,6 @@ msgstr "Afegir-ne un"
 #: code:addons/website_sale/static/src/website_builder/add_to_cart_option.js:0
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
 #: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_products_item
-#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Add to Cart"
 msgstr "Afegir a la cistella"
 
@@ -2627,6 +2620,17 @@ msgid "Default Sort"
 msgstr "Clasificació predeterminada"
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_res_config_settings__journal_id
+#: model:ir.model.fields,field_description:website_sale.field_website__journal_id
+msgid "Default Website Journal"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Default accounting journal for online orders"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid ""
 "Default availability mode set on newly created storable products. This can "
@@ -3124,6 +3128,18 @@ msgid "Explore Now"
 msgstr ""
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_attribute__external_identifier
+msgid "External Identifier"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.model.fields,help:website_sale.field_product_attribute__external_identifier
+msgid ""
+"External Identifier will ensure a precise matching between your attributes "
+"and attributes in SEO and other external platforms."
+msgstr ""
+
+#. module: website_sale
 #: model:website.checkout.step,name:website_sale.checkout_step_extra
 msgid "Extra Info"
 msgstr "Informació extra"
@@ -3163,9 +3179,8 @@ msgstr "Informació extra"
 
 #. module: website_sale
 #. odoo-javascript
-#. odoo-python
-#: code:addons/website_sale/models/website.py:0
 #: code:addons/website_sale/static/src/website_builder/shared.js:0
+#: model:ir.model.fields.selection,name:website_sale.selection__website__shop_default_sort__website_sequence_asc
 msgid "Featured"
 msgstr "Destacats"
 
@@ -3453,7 +3468,6 @@ msgstr ""
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/tours/tour_utils.js:0
-#: model:ir.model.fields.selection,name:website_sale.selection__website__add_to_cart_action__go_to_cart
 msgid "Go to cart"
 msgstr "Ves a la cistella"
 
@@ -3852,6 +3866,11 @@ msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Invoicing Journal"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Invoicing Policy"
 msgstr "Política de facturació"
 
@@ -3892,6 +3911,11 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_ribbon_options_plugin.js:0
 msgid "It will be removed from all products. Are you sure?"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Journal"
 msgstr ""
 
 #. module: website_sale
@@ -4288,9 +4312,8 @@ msgstr "Nom"
 
 #. module: website_sale
 #. odoo-javascript
-#. odoo-python
-#: code:addons/website_sale/models/website.py:0
 #: code:addons/website_sale/static/src/website_builder/shared.js:0
+#: model:ir.model.fields.selection,name:website_sale.selection__website__shop_default_sort__name_asc
 msgid "Name (A-Z)"
 msgstr "Nom (A-Z)"
 
@@ -4345,9 +4368,8 @@ msgstr "Nou"
 
 #. module: website_sale
 #. odoo-javascript
-#. odoo-python
-#: code:addons/website_sale/models/website.py:0
 #: code:addons/website_sale/static/src/website_builder/shared.js:0
+#: model:ir.model.fields.selection,name:website_sale.selection__website__shop_default_sort__publish_date_desc
 msgid "Newest Arrivals"
 msgstr "Arribades més noves"
 
@@ -4950,17 +4972,15 @@ msgstr "Preu"
 
 #. module: website_sale
 #. odoo-javascript
-#. odoo-python
-#: code:addons/website_sale/models/website.py:0
 #: code:addons/website_sale/static/src/website_builder/shared.js:0
+#: model:ir.model.fields.selection,name:website_sale.selection__website__shop_default_sort__list_price_desc
 msgid "Price - High to Low"
 msgstr "Preu - alt a baix"
 
 #. module: website_sale
 #. odoo-javascript
-#. odoo-python
-#: code:addons/website_sale/models/website.py:0
 #: code:addons/website_sale/static/src/website_builder/shared.js:0
+#: model:ir.model.fields.selection,name:website_sale.selection__website__shop_default_sort__list_price_asc
 msgid "Price - Low to High"
 msgstr "Preu - Baix a alt"
 
@@ -6373,11 +6393,6 @@ msgid "Status"
 msgstr "Estat"
 
 #. module: website_sale
-#: model:ir.model.fields.selection,name:website_sale.selection__website__add_to_cart_action__stay
-msgid "Stay on Product Page"
-msgstr "Queda't a la pàgina del producte"
-
-#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_wishlist__stock_notification
 msgid "Stock Notification"
 msgstr ""
@@ -7330,11 +7345,6 @@ msgid "Websites"
 msgstr "Llocs web"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "What should be done on \"Add to Cart\"?"
-msgstr "Què s'hauria de fer amb \"Afegeix a la cistella\"?"
-
-#. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__product_ribbon__assign__new
 msgid "When New"
 msgstr ""
@@ -7721,26 +7731,8 @@ msgstr ""
 
 #. module: website_sale
 #. odoo-python
-#: code:addons/website_sale/models/website.py:0
-msgid "list_price asc"
-msgstr ""
-
-#. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/models/website.py:0
-msgid "list_price desc"
-msgstr ""
-
-#. module: website_sale
-#. odoo-python
 #: code:addons/website_sale/models/res_config_settings.py:0
 msgid "model"
-msgstr ""
-
-#. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/models/website.py:0
-msgid "name asc"
 msgstr ""
 
 #. module: website_sale
@@ -7802,12 +7794,6 @@ msgid "only if below"
 msgstr ""
 
 #. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/models/website.py:0
-msgid "publish_date desc"
-msgstr ""
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.accept_terms_and_conditions
 msgid "terms &amp; conditions"
 msgstr "termes &amp; condicions"
@@ -7832,3 +7818,12 @@ msgstr ""
 #: model:mail.template,subject:website_sale.email_template_back_in_stock
 msgid "{{ object.name or 'Product' }} is back in stock"
 msgstr ""
+
+#~ msgid "Add To Cart Action"
+#~ msgstr "Afegeix a l'acció Cart"
+
+#~ msgid "Stay on Product Page"
+#~ msgstr "Queda't a la pàgina del producte"
+
+#~ msgid "What should be done on \"Add to Cart\"?"
+#~ msgstr "Què s'hauria de fer amb \"Afegeix a la cistella\"?"

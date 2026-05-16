@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-07 17:35+0000\n"
+"POT-Creation-Date: 2026-05-15 17:35+0000\n"
 "PO-Revision-Date: 2026-04-11 14:29+0000\n"
 "Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-s19-2/"
@@ -571,6 +571,16 @@ msgstr ""
 "인 별칭\"/>"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_update_view_kanban
+msgid "<span class=\"fa fa-fw fa-calendar me-1\" title=\"Date\"/>"
+msgstr ""
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_update_view_kanban
+msgid "<span class=\"fa fa-fw fa-check me-1\" title=\"Tasks\"/>"
+msgstr ""
+
+#. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid ""
 "<span class=\"fa fa-user me-2\" aria-label=\"Partner\" title=\"Partner\"/>"
@@ -670,19 +680,9 @@ msgid "<span>@</span>"
 msgstr ""
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.project_update_view_kanban
-msgid "<span>Progress</span>"
-msgstr "<span>진행</span>"
-
-#. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid "<span>Reporting</span>"
 msgstr "<span>보고</span>"
-
-#. module: project
-#: model_terms:ir.ui.view,arch_db:project.project_update_view_kanban
-msgid "<span>Status</span>"
-msgstr "<span>상태</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -1786,7 +1786,6 @@ msgstr "일별"
 #: model:ir.model.fields,field_description:project.field_project_update__date
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_graph
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
-#: model_terms:ir.ui.view,arch_db:project.project_update_view_kanban
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_search
 msgid "Date"
 msgstr "날짜"
@@ -2093,7 +2092,6 @@ msgid "Draft"
 msgstr "미결"
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Duplicate"
 msgstr "복사"
@@ -6218,3 +6216,9 @@ msgstr "👤 미지정"
 #: code:addons/project/static/src/components/project_many2one_field/project_many2one_field.js:0
 msgid "🔒 Private"
 msgstr "🔒 비공개"
+
+#~ msgid "<span>Progress</span>"
+#~ msgstr "<span>진행</span>"
+
+#~ msgid "<span>Status</span>"
+#~ msgstr "<span>상태</span>"

@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:36+0000\n"
+"POT-Creation-Date: 2026-05-15 17:35+0000\n"
 "PO-Revision-Date: 2025-10-08 18:37+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -1008,14 +1008,14 @@ msgstr ""
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
-msgid "<span class=\"mx-1\"><i class=\"fa fa-plus me-1\"/>Odoo meeting</span>"
+msgid ""
+"<span class=\"mx-1\"><i class=\"fa fa-plus me-1\"/>Video conference</span>"
 msgstr ""
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
-#, fuzzy
-msgid "<span> guests</span>"
-msgstr "<span> ta mehmon</span>"
+msgid "<span invisible=\"allday\"> or </span>"
+msgstr ""
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_event_delete_wizard_form
@@ -1168,7 +1168,7 @@ msgstr "Eslatma bildirishnomasi bilan yuboriladigan qo‘shimcha xabar"
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/core/web/activity_menu_patch.xml:0
-#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 #, fuzzy
 msgid "All Day"
 msgstr "Butun kun"
@@ -3504,13 +3504,6 @@ msgid "Today Activities"
 msgstr ""
 
 #. module: calendar
-#. odoo-python
-#: code:addons/calendar/models/res_users.py:0
-#, fuzzy
-msgid "Today's Meetings"
-msgstr "Bugungi uchrashuvlar"
-
-#. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/activity/attendee_calendar_activity_list_popover_item.xml:0
 msgid "Tomorrow"
@@ -3584,6 +3577,12 @@ msgstr "Birlik"
 #, fuzzy
 msgid "Until"
 msgstr "Gacha"
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/res_users.py:0
+msgid "Upcoming Meetings"
+msgstr ""
 
 #. module: calendar
 #: model:mail.template,description:calendar.calendar_template_delete_event
@@ -3794,6 +3793,11 @@ msgid "e.g: 12/31/2030"
 msgstr ""
 
 #. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+msgid "guests"
+msgstr ""
+
+#. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/activity/attendee_calendar_activity_list_popover.xml:0
 msgid "more"
@@ -3828,3 +3832,11 @@ msgstr "{{ object.event_id.name }}: Sana yangilandi"
 #, fuzzy
 msgid "{{object.name}}: Event update"
 msgstr "{{object.name}}: Tadbir yangilanishi"
+
+#, fuzzy
+#~ msgid "<span> guests</span>"
+#~ msgstr "<span> ta mehmon</span>"
+
+#, fuzzy
+#~ msgid "Today's Meetings"
+#~ msgstr "Bugungi uchrashuvlar"

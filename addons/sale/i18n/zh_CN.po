@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-10 17:37+0000\n"
+"POT-Creation-Date: 2026-05-15 17:36+0000\n"
 "PO-Revision-Date: 2026-04-04 13:04+0000\n"
 "Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
@@ -3074,11 +3074,6 @@ msgid "Invoicing Address"
 msgstr "开票地址"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order__journal_id
-msgid "Invoicing Journal"
-msgstr "发票日记账"
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__invoice_policy
 #: model:ir.model.fields,field_description:sale.field_product_template__invoice_policy
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__default_invoice_policy
@@ -3162,6 +3157,11 @@ msgid ""
 msgstr ""
 "不能修改锁定订单中的以下字段：\n"
 "%s"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order__journal_id
+msgid "Journal"
+msgstr ""
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_move
@@ -5969,12 +5969,6 @@ msgstr ""
 "不能为默认报价单有效性设为负数。保留为空（或0），以禁用报价单自动过期。"
 
 #. module: sale
-#. odoo-python
-#: code:addons/sale/models/account_analytic_line.py:0
-msgid "You cannot set a negative quantity on services."
-msgstr ""
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "You don't use a good CRM software?"
 msgstr "你没有使用好的客户关系管理软件？"
@@ -6163,3 +6157,6 @@ msgid ""
 "{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order' }} {{ object.name or 'n/a' }}"
 msgstr ""
+
+#~ msgid "Invoicing Journal"
+#~ msgstr "发票日记账"

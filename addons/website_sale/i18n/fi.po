@@ -31,7 +31,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-10 17:36+0000\n"
+"POT-Creation-Date: 2026-05-15 17:35+0000\n"
 "PO-Revision-Date: 2026-05-05 11:53+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-s19-3/"
@@ -1824,12 +1824,6 @@ msgid "Add More"
 msgstr "Lisää"
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_res_config_settings__add_to_cart_action
-#: model:ir.model.fields,field_description:website_sale.field_website__add_to_cart_action
-msgid "Add To Cart Action"
-msgstr "Lisää ostoskoriin -toiminto"
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_public_category_form_view
 msgid "Add a product"
 msgstr ""
@@ -1876,7 +1870,6 @@ msgstr "Lisää yksi"
 #: code:addons/website_sale/static/src/website_builder/add_to_cart_option.js:0
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
 #: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_products_item
-#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Add to Cart"
 msgstr "Lisää ostoskoriin"
 
@@ -3057,6 +3050,17 @@ msgid "Default Sort"
 msgstr "Oletuslajittelu"
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_res_config_settings__journal_id
+#: model:ir.model.fields,field_description:website_sale.field_website__journal_id
+msgid "Default Website Journal"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Default accounting journal for online orders"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid ""
 "Default availability mode set on newly created storable products. This can "
@@ -3567,6 +3571,18 @@ msgid "Explore Now"
 msgstr "Tutustu nyt"
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_attribute__external_identifier
+msgid "External Identifier"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.model.fields,help:website_sale.field_product_attribute__external_identifier
+msgid ""
+"External Identifier will ensure a precise matching between your attributes "
+"and attributes in SEO and other external platforms."
+msgstr ""
+
+#. module: website_sale
 #: model:website.checkout.step,name:website_sale.checkout_step_extra
 msgid "Extra Info"
 msgstr "Lisätiedot"
@@ -3606,9 +3622,8 @@ msgstr "Lisätieto"
 
 #. module: website_sale
 #. odoo-javascript
-#. odoo-python
-#: code:addons/website_sale/models/website.py:0
 #: code:addons/website_sale/static/src/website_builder/shared.js:0
+#: model:ir.model.fields.selection,name:website_sale.selection__website__shop_default_sort__website_sequence_asc
 msgid "Featured"
 msgstr "Esittellyt"
 
@@ -3898,7 +3913,6 @@ msgstr ""
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/tours/tour_utils.js:0
-#: model:ir.model.fields.selection,name:website_sale.selection__website__add_to_cart_action__go_to_cart
 msgid "Go to cart"
 msgstr "Siirry ostoskoriin"
 
@@ -4299,6 +4313,11 @@ msgstr "Laskuta automaattisesti maksun yhteydessä."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Invoicing Journal"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Invoicing Policy"
 msgstr "Laskutuskäytännöt"
 
@@ -4340,6 +4359,11 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_ribbon_options_plugin.js:0
 msgid "It will be removed from all products. Are you sure?"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Journal"
 msgstr ""
 
 #. module: website_sale
@@ -4736,9 +4760,8 @@ msgstr "Nimi"
 
 #. module: website_sale
 #. odoo-javascript
-#. odoo-python
-#: code:addons/website_sale/models/website.py:0
 #: code:addons/website_sale/static/src/website_builder/shared.js:0
+#: model:ir.model.fields.selection,name:website_sale.selection__website__shop_default_sort__name_asc
 msgid "Name (A-Z)"
 msgstr "Nimi (A-Ö)"
 
@@ -4793,9 +4816,8 @@ msgstr "Uusi!"
 
 #. module: website_sale
 #. odoo-javascript
-#. odoo-python
-#: code:addons/website_sale/models/website.py:0
 #: code:addons/website_sale/static/src/website_builder/shared.js:0
+#: model:ir.model.fields.selection,name:website_sale.selection__website__shop_default_sort__publish_date_desc
 msgid "Newest Arrivals"
 msgstr "Viimeksi saapuneet"
 
@@ -5395,17 +5417,15 @@ msgstr "Hinta"
 
 #. module: website_sale
 #. odoo-javascript
-#. odoo-python
-#: code:addons/website_sale/models/website.py:0
 #: code:addons/website_sale/static/src/website_builder/shared.js:0
+#: model:ir.model.fields.selection,name:website_sale.selection__website__shop_default_sort__list_price_desc
 msgid "Price - High to Low"
 msgstr "Hinta - kalleimmasta halvimpaan"
 
 #. module: website_sale
 #. odoo-javascript
-#. odoo-python
-#: code:addons/website_sale/models/website.py:0
 #: code:addons/website_sale/static/src/website_builder/shared.js:0
+#: model:ir.model.fields.selection,name:website_sale.selection__website__shop_default_sort__list_price_asc
 msgid "Price - Low to High"
 msgstr "Hinta - halvimmasta kalleimpaan"
 
@@ -6825,11 +6845,6 @@ msgid "Status"
 msgstr "Tila"
 
 #. module: website_sale
-#: model:ir.model.fields.selection,name:website_sale.selection__website__add_to_cart_action__stay
-msgid "Stay on Product Page"
-msgstr "Pysy tuotesivulla"
-
-#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_wishlist__stock_notification
 msgid "Stock Notification"
 msgstr ""
@@ -7800,11 +7815,6 @@ msgid "Websites"
 msgstr "Verkkosivut"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "What should be done on \"Add to Cart\"?"
-msgstr "Mitä pitäisi tehdä \"Lisää ostoskoriin\" -kohdassa?"
-
-#. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__product_ribbon__assign__new
 msgid "When New"
 msgstr "Kun uusi"
@@ -8194,27 +8204,9 @@ msgstr ""
 
 #. module: website_sale
 #. odoo-python
-#: code:addons/website_sale/models/website.py:0
-msgid "list_price asc"
-msgstr "list_price asc"
-
-#. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/models/website.py:0
-msgid "list_price desc"
-msgstr "list_price desc"
-
-#. module: website_sale
-#. odoo-python
 #: code:addons/website_sale/models/res_config_settings.py:0
 msgid "model"
 msgstr "malli"
-
-#. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/models/website.py:0
-msgid "name asc"
-msgstr "nimi, nousevasti"
 
 #. module: website_sale
 #. odoo-javascript
@@ -8275,12 +8267,6 @@ msgid "only if below"
 msgstr ""
 
 #. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/models/website.py:0
-msgid "publish_date desc"
-msgstr "publish_date laskevasti"
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.accept_terms_and_conditions
 msgid "terms &amp; conditions"
 msgstr "tilaus- &amp; toimitusehdot"
@@ -8305,3 +8291,24 @@ msgstr ""
 #: model:mail.template,subject:website_sale.email_template_back_in_stock
 msgid "{{ object.name or 'Product' }} is back in stock"
 msgstr ""
+
+#~ msgid "Add To Cart Action"
+#~ msgstr "Lisää ostoskoriin -toiminto"
+
+#~ msgid "Stay on Product Page"
+#~ msgstr "Pysy tuotesivulla"
+
+#~ msgid "What should be done on \"Add to Cart\"?"
+#~ msgstr "Mitä pitäisi tehdä \"Lisää ostoskoriin\" -kohdassa?"
+
+#~ msgid "list_price asc"
+#~ msgstr "list_price asc"
+
+#~ msgid "list_price desc"
+#~ msgstr "list_price desc"
+
+#~ msgid "name asc"
+#~ msgstr "nimi, nousevasti"
+
+#~ msgid "publish_date desc"
+#~ msgstr "publish_date laskevasti"

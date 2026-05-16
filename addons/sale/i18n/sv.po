@@ -31,7 +31,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-10 17:37+0000\n"
+"POT-Creation-Date: 2026-05-15 17:36+0000\n"
 "PO-Revision-Date: 2026-04-23 11:53+0000\n"
 "Last-Translator: Hanna Kharraziha <hakha@odoo.com>\n"
 "Language-Team: Swedish <https://translate.odoo.com/projects/odoo-s19-2/sale/"
@@ -3016,11 +3016,6 @@ msgid "Invoicing Address"
 msgstr "Faktureringsadress"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order__journal_id
-msgid "Invoicing Journal"
-msgstr "Journal för fakturering"
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__invoice_policy
 #: model:ir.model.fields,field_description:sale.field_product_template__invoice_policy
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__default_invoice_policy
@@ -3106,6 +3101,11 @@ msgid ""
 msgstr ""
 "Det är förbjudet att ändra följande fält i en låst order:\n"
 "%s"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order__journal_id
+msgid "Journal"
+msgstr ""
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_move
@@ -5991,12 +5991,6 @@ msgstr ""
 "Lämna tomt (eller 0) för att inaktivera automatiskt förfall av offerter."
 
 #. module: sale
-#. odoo-python
-#: code:addons/sale/models/account_analytic_line.py:0
-msgid "You cannot set a negative quantity on services."
-msgstr ""
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "You don't use a good CRM software?"
 msgstr "Använder du inte ett bra CRM-program?"
@@ -6185,3 +6179,6 @@ msgid ""
 "{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order' }} {{ object.name or 'n/a' }}"
 msgstr ""
+
+#~ msgid "Invoicing Journal"
+#~ msgstr "Journal för fakturering"

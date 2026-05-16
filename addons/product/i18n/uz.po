@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-10 17:37+0000\n"
+"POT-Creation-Date: 2026-05-15 17:36+0000\n"
 "PO-Revision-Date: 2025-10-08 18:38+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -307,6 +307,12 @@ msgstr "<span class=\"o_stat_text\">Mahsulotlar</span>"
 msgid ""
 "<span class=\"text-muted\" invisible=\"product_variant_count &lt;= 1\">Based "
 "on variants</span>"
+msgstr ""
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_kanban_view
+#: model_terms:ir.ui.view,arch_db:product.product_template_kanban_view
+msgid "<span class=\"text-muted\">On Hand</span>"
 msgstr ""
 
 #. module: product
@@ -2795,6 +2801,11 @@ msgid "Maroon"
 msgstr "To‘q qizil"
 
 #. module: product
+#: model:product.attribute,name:product.pa_material
+msgid "Material"
+msgstr ""
+
+#. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 #, fuzzy
 msgid "Max. Margin"
@@ -3185,11 +3196,6 @@ msgid "On Hand"
 msgstr ""
 
 #. module: product
-#: model_terms:ir.ui.view,arch_db:product.product_template_kanban_view
-msgid "On hand:"
-msgstr ""
-
-#. module: product
 #. odoo-python
 #: code:addons/product/models/product_template_attribute_line.py:0
 #, fuzzy
@@ -3334,6 +3340,11 @@ msgstr "Ota kategoriya"
 #, fuzzy
 msgid "Parent Path"
 msgstr "Ota yo‘l"
+
+#. module: product
+#: model:product.attribute,name:product.pa_pattern
+msgid "Pattern"
+msgstr ""
 
 #. module: product
 #: model:product.template,name:product.product_product_9_product_template
@@ -3482,13 +3493,6 @@ msgstr "Narx turi"
 #, fuzzy
 msgid "Price at which the product is sold to customers."
 msgstr "Mahsulot xaridorlarga sotiladigan narx."
-
-#. module: product
-#: model_terms:ir.ui.view,arch_db:product.product_kanban_view
-#: model_terms:ir.ui.view,arch_db:product.product_template_kanban_view
-#, fuzzy
-msgid "Price:"
-msgstr "Narx:"
 
 #. module: product
 #. odoo-javascript
@@ -5973,3 +5977,7 @@ msgstr "ga"
 #, fuzzy
 msgid "xlsx"
 msgstr "xlsx"
+
+#, fuzzy
+#~ msgid "Price:"
+#~ msgstr "Narx:"

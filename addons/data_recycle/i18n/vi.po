@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:36+0000\n"
+"POT-Creation-Date: 2026-05-15 17:35+0000\n"
 "PO-Revision-Date: 2025-09-16 04:46+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Vietnamese <https://translate.odoo.com/projects/odoo-19/"
@@ -49,6 +49,21 @@ msgstr "Đang hoạt động"
 #: model:ir.model.fields.selection,name:data_recycle.selection__data_recycle_model__recycle_action__archive
 msgid "Archive"
 msgstr "Lưu trữ"
+
+#. module: data_recycle
+#: model_terms:ir.ui.view,arch_db:data_recycle.view_data_recycle_record_list
+msgid "Archive Suggestion"
+msgstr ""
+
+#. module: data_recycle
+#: model_terms:ir.ui.view,arch_db:data_recycle.view_data_recycle_record_list
+msgid "Archive Suggestions"
+msgstr ""
+
+#. module: data_recycle
+#: model_terms:ir.ui.view,arch_db:data_recycle.view_data_recycle_record_search
+msgid "Archived"
+msgstr ""
 
 #. module: data_recycle
 #: model:ir.model.fields.selection,name:data_recycle.selection__data_recycle_model__recycle_mode__automatic
@@ -119,16 +134,6 @@ msgstr "Delta"
 #: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__time_field_delta_unit
 msgid "Delta Unit"
 msgstr "Đơn vị delta"
-
-#. module: data_recycle
-#: model_terms:ir.ui.view,arch_db:data_recycle.view_data_recycle_record_list
-msgid "Discard"
-msgstr "Huỷ bỏ"
-
-#. module: data_recycle
-#: model_terms:ir.ui.view,arch_db:data_recycle.view_data_recycle_record_search
-msgid "Discarded"
-msgstr "Đã huỷ bỏ"
 
 #. module: data_recycle
 #: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__display_name
@@ -339,20 +344,22 @@ msgid "Time Field"
 msgstr "Trường thời gian"
 
 #. module: data_recycle
+#: model_terms:ir.ui.view,arch_db:data_recycle.view_data_recycle_record_list
+msgid "Unarchive Suggestion"
+msgstr ""
+
+#. module: data_recycle
+#: model_terms:ir.ui.view,arch_db:data_recycle.view_data_recycle_record_list
+msgid "Unarchive Suggestions"
+msgstr ""
+
+#. module: data_recycle
 #. odoo-python
 #: code:addons/data_recycle/models/data_recycle_record.py:0
 msgid "Undefined Name"
 msgstr "Tên không xác định"
 
 #. module: data_recycle
-#. odoo-javascript
-#: code:addons/data_recycle/static/src/views/data_recycle_list_view.xml:0
-msgid "Unselect"
-msgstr ""
-
-#. module: data_recycle
-#. odoo-javascript
-#: code:addons/data_recycle/static/src/views/data_recycle_list_view.xml:0
 #: model_terms:ir.ui.view,arch_db:data_recycle.view_data_recycle_record_list
 msgid "Validate"
 msgstr "Xác nhận"
@@ -382,3 +389,9 @@ msgstr "ở đây"
 #: model_terms:ir.ui.view,arch_db:data_recycle.notification
 msgid "records to clean with the '"
 msgstr "bản ghi cần dọn dẹp với '"
+
+#~ msgid "Discard"
+#~ msgstr "Huỷ bỏ"
+
+#~ msgid "Discarded"
+#~ msgstr "Đã huỷ bỏ"

@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-10 17:37+0000\n"
+"POT-Creation-Date: 2026-05-15 17:36+0000\n"
 "PO-Revision-Date: 2026-05-07 10:01+0000\n"
 "Last-Translator: \"Nurul Aini Akrima Sabila (nuaas)\" <nuaas@odoo.com>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-s19-3/"
@@ -274,6 +274,12 @@ msgstr "<span class=\"o_stat_text\">Produk-Produk</span>"
 msgid ""
 "<span class=\"text-muted\" invisible=\"product_variant_count &lt;= 1\">Based "
 "on variants</span>"
+msgstr ""
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_kanban_view
+#: model_terms:ir.ui.view,arch_db:product.product_template_kanban_view
+msgid "<span class=\"text-muted\">On Hand</span>"
 msgstr ""
 
 #. module: product
@@ -2486,6 +2492,11 @@ msgid "Maroon"
 msgstr "Maroon"
 
 #. module: product
+#: model:product.attribute,name:product.pa_material
+msgid "Material"
+msgstr ""
+
+#. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Max. Margin"
 msgstr "Margin Maks."
@@ -2823,11 +2834,6 @@ msgid "On Hand"
 msgstr ""
 
 #. module: product
-#: model_terms:ir.ui.view,arch_db:product.product_template_kanban_view
-msgid "On hand:"
-msgstr ""
-
-#. module: product
 #. odoo-python
 #: code:addons/product/models/product_template_attribute_line.py:0
 msgid ""
@@ -2956,6 +2962,11 @@ msgid "Parent Path"
 msgstr "Parent Path"
 
 #. module: product
+#: model:product.attribute,name:product.pa_pattern
+msgid "Pattern"
+msgstr ""
+
+#. module: product
 #: model:product.template,name:product.product_product_9_product_template
 msgid "Pedal Bin"
 msgstr "Pedal Bin"
@@ -3081,12 +3092,6 @@ msgstr "Tipe Harga"
 #: model:ir.model.fields,help:product.field_product_template__list_price
 msgid "Price at which the product is sold to customers."
 msgstr "Harga pada mana produk dijual ke pelanggan."
-
-#. module: product
-#: model_terms:ir.ui.view,arch_db:product.product_kanban_view
-#: model_terms:ir.ui.view,arch_db:product.product_template_kanban_view
-msgid "Price:"
-msgstr "Harga:"
 
 #. module: product
 #. odoo-javascript
@@ -5323,3 +5328,6 @@ msgstr "kepada"
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 msgid "xlsx"
 msgstr "xlsx"
+
+#~ msgid "Price:"
+#~ msgstr "Harga:"

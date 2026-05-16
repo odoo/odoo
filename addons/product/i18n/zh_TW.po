@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-10 17:37+0000\n"
+"POT-Creation-Date: 2026-05-15 17:36+0000\n"
 "PO-Revision-Date: 2026-04-23 11:53+0000\n"
 "Last-Translator: \"Tony Ng (ngto)\" <ngto@odoo.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
@@ -267,6 +267,12 @@ msgstr "<span class=\"o_stat_text\">產品</span>"
 msgid ""
 "<span class=\"text-muted\" invisible=\"product_variant_count &lt;= 1\">Based "
 "on variants</span>"
+msgstr ""
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_kanban_view
+#: model_terms:ir.ui.view,arch_db:product.product_template_kanban_view
+msgid "<span class=\"text-muted\">On Hand</span>"
 msgstr ""
 
 #. module: product
@@ -2436,6 +2442,11 @@ msgid "Maroon"
 msgstr "栗紅色"
 
 #. module: product
+#: model:product.attribute,name:product.pa_material
+msgid "Material"
+msgstr ""
+
+#. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "Max. Margin"
 msgstr "最大毛利"
@@ -2771,11 +2782,6 @@ msgid "On Hand"
 msgstr ""
 
 #. module: product
-#: model_terms:ir.ui.view,arch_db:product.product_template_kanban_view
-msgid "On hand:"
-msgstr ""
-
-#. module: product
 #. odoo-python
 #: code:addons/product/models/product_template_attribute_line.py:0
 msgid ""
@@ -2904,6 +2910,11 @@ msgid "Parent Path"
 msgstr "上級路徑"
 
 #. module: product
+#: model:product.attribute,name:product.pa_pattern
+msgid "Pattern"
+msgstr ""
+
+#. module: product
 #: model:product.template,name:product.product_product_9_product_template
 msgid "Pedal Bin"
 msgstr "踏板箱"
@@ -3027,12 +3038,6 @@ msgstr "價格類型"
 #: model:ir.model.fields,help:product.field_product_template__list_price
 msgid "Price at which the product is sold to customers."
 msgstr "產品銷售給客戶的價格."
-
-#. module: product
-#: model_terms:ir.ui.view,arch_db:product.product_kanban_view
-#: model_terms:ir.ui.view,arch_db:product.product_template_kanban_view
-msgid "Price:"
-msgstr "價格:"
 
 #. module: product
 #. odoo-javascript
@@ -5185,3 +5190,6 @@ msgstr "到"
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 msgid "xlsx"
 msgstr "xlsx"
+
+#~ msgid "Price:"
+#~ msgstr "價格:"

@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-07 17:36+0000\n"
+"POT-Creation-Date: 2026-05-15 17:35+0000\n"
 "PO-Revision-Date: 2026-05-06 09:40+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-s19-3/"
@@ -55,6 +55,13 @@ msgstr ""
 "Tijdtype \"%(name)s\" van code \"%(code)s\", zonder toegewezen land, bestaat "
 "al.\n"
 "                    "
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
+msgid ""
+"<span class=\"text-muted fst-italic\">Define how this time type affects "
+"payslips and salary computation.</span>"
+msgstr ""
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,display_code:hr_work_entry.au_work_entry_type_attendance
@@ -1896,6 +1903,11 @@ msgid "Paternity Time Off (Paid by Company)"
 msgstr "Vaderschapsverlof (betaald door bedrijf)"
 
 #. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
+msgid "Pay Rate"
+msgstr ""
+
+#. module: hr_work_entry
 #: model:ir.ui.menu,name:hr_work_entry.menu_hr_payroll_root
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
 msgid "Payroll"
@@ -2455,11 +2467,6 @@ msgid "Time Type"
 msgstr "Tijdtype"
 
 #. module: hr_work_entry
-#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
-msgid "Time Type Name"
-msgstr "Naam tijdtype"
-
-#. module: hr_work_entry
 #: model:ir.actions.act_window,name:hr_work_entry.hr_work_entry_type_action
 #: model:ir.ui.menu,name:hr_work_entry.menu_hr_work_entry_type_view
 #: model:ir.ui.menu,name:hr_work_entry.menu_hr_work_entry_type_view_employee
@@ -2724,7 +2731,10 @@ msgid "Week Days Overtime"
 msgstr "Overuren op weekdagen"
 
 #. module: hr_work_entry
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_ae_work_entry_type_weekend
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_eg_work_entry_type_weekend
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_hk_work_entry_type_weekend
+#: model:hr.work.entry.type,name:hr_work_entry.l10n_sa_work_entry_type_weekend
 msgid "Weekend"
 msgstr "Weekend"
 
@@ -2854,5 +2864,13 @@ msgstr "bv. ATT, PTO, STO, OT, RW..."
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
+msgid "e.g. Paid Time Off, Sick Leave, Work From Home"
+msgstr ""
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
 msgid "e.g. WORK100, LEAVE210, OUT, ..."
 msgstr "bv. WERK100,VERLOF210, OUT..."
+
+#~ msgid "Time Type Name"
+#~ msgstr "Naam tijdtype"

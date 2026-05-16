@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-07 17:35+0000\n"
+"POT-Creation-Date: 2026-05-15 17:35+0000\n"
 "PO-Revision-Date: 2026-01-16 05:48+0000\n"
 "Last-Translator: Odoo Translation Bot <c3p@odoo.com>\n"
 "Language-Team: Norwegian Bokmål <https://translate.odoo.com/projects/odoo-"
@@ -420,6 +420,16 @@ msgid ""
 msgstr ""
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_update_view_kanban
+msgid "<span class=\"fa fa-fw fa-calendar me-1\" title=\"Date\"/>"
+msgstr ""
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_update_view_kanban
+msgid "<span class=\"fa fa-fw fa-check me-1\" title=\"Tasks\"/>"
+msgstr ""
+
+#. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid ""
 "<span class=\"fa fa-user me-2\" aria-label=\"Partner\" title=\"Partner\"/>"
@@ -519,19 +529,9 @@ msgid "<span>@</span>"
 msgstr ""
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.project_update_view_kanban
-msgid "<span>Progress</span>"
-msgstr ""
-
-#. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid "<span>Reporting</span>"
 msgstr "<span>Rapportering</span>"
-
-#. module: project
-#: model_terms:ir.ui.view,arch_db:project.project_update_view_kanban
-msgid "<span>Status</span>"
-msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -1609,7 +1609,6 @@ msgstr "Daglig"
 #: model:ir.model.fields,field_description:project.field_project_update__date
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_graph
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
-#: model_terms:ir.ui.view,arch_db:project.project_update_view_kanban
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_search
 msgid "Date"
 msgstr "Dato"
@@ -1902,7 +1901,6 @@ msgid "Draft"
 msgstr "Utkast"
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Duplicate"
 msgstr "Dupliser"

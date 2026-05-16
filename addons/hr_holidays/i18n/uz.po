@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-07 17:35+0000\n"
+"POT-Creation-Date: 2026-05-15 17:35+0000\n"
 "PO-Revision-Date: 2025-10-08 18:37+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -103,6 +103,12 @@ msgstr "%(allocation_name)s (%(date_from)s dan boshlab cheksiz muddatgacha)"
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
+msgid "%(days)gd"
+msgstr ""
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "%(duration)s (%(start)s)"
 msgstr ""
 
@@ -133,6 +139,18 @@ msgstr ""
 #, fuzzy
 msgid "%(holiday_name)s has been refused."
 msgstr "%(holiday_name)s rad etildi."
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
+msgid "%(hours)dh"
+msgstr ""
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
+msgid "%(hours)dh%(minutes)02d"
+msgstr ""
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -211,7 +229,7 @@ msgstr ""
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
-msgid "%(work_entry_type)s: %(duration)s (%(start)s)"
+msgid "%(work_entry_type)s %(duration)s"
 msgstr ""
 
 #. module: hr_holidays
@@ -410,20 +428,6 @@ msgid "<span class=\"mx-1\">–</span>"
 msgstr "<span class=\"mx-1\">–</span>"
 
 #. module: hr_holidays
-#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_work_entry_type_view_form
-msgid ""
-"<span class=\"mx-2\" invisible=\"unit_of_measure == 'hour'\">days</span>\n"
-"                                            <span class=\"mx-2\" "
-"invisible=\"unit_of_measure != 'hour'\">hours</span>"
-msgstr ""
-
-#. module: hr_holidays
-#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_work_entry_type_view_form
-#, fuzzy
-msgid "<span class=\"mx-2\">up to</span>"
-msgstr "<span class=\"mx-2\">gacha</span>"
-
-#. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_employee_public_form_view_inherit
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_employee_form_leave_inherit
 #, fuzzy
@@ -444,6 +448,13 @@ msgstr "<span class=\"o_stat_text\">Ajratmalar</span>"
 #, fuzzy
 msgid "<span class=\"o_stat_text\">Time Off</span>"
 msgstr "<span class=\"o_stat_text\">Dam olish vaqti</span>"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_work_entry_type_view_form
+msgid ""
+"<span class=\"text-muted fst-italic\">Configure how time off requests are "
+"approved, allocated and managed for this time type.</span>"
+msgstr ""
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
@@ -472,6 +483,21 @@ msgstr ""
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_kanban
 msgid "<span class=\"text-muted\">Amount</span>"
+msgstr ""
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
+msgid ""
+"<span invisible=\"not cap_accrued_time_yearly and not cap_accrued_time\" "
+"class=\"ms-3\">(Caps can affect that gain)</span>"
+msgstr ""
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_work_entry_type_view_form
+msgid ""
+"<span invisible=\"unit_of_measure == 'hour'\">days</span>\n"
+"                                            <span "
+"invisible=\"unit_of_measure != 'hour'\">hours</span>"
 msgstr ""
 
 #. module: hr_holidays
@@ -508,6 +534,11 @@ msgid ""
 msgstr ""
 "<span>Xodimning vaqt mintaqasi siznikidan farq qiladi! Bu yerda sanalar va "
 "vaqtlar xodimning ish vaqti mintaqasida ko‘rsatiladi</span> ("
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_work_entry_type_view_form
+msgid "<span>up to</span>"
+msgstr ""
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -2276,6 +2307,11 @@ msgid "Future Activities"
 msgstr "Kelgusi faoliyatlar"
 
 #. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
+msgid "Gain for the year :"
+msgstr ""
+
+#. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_generate_multi_wizard_view_form
 #, fuzzy
 msgid "Generate Time Off"
@@ -2847,6 +2883,11 @@ msgid ""
 msgstr ""
 "Ruxsat etilgan maksimal ta'til vaqti - Allaqachon olingan ta'til vaqti - "
 "Tasdiqlanishi kutilayotgan ta'til vaqti"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
+msgid "Maximum gain for the year :"
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__first_month__5
@@ -3424,6 +3465,7 @@ msgstr ""
 "etishi mumkin."
 
 #. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__is_based_on_worked_time
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_plan__is_based_on_worked_time
 msgid "Only excludes requests where the time type is set as unpaid kind of."
 msgstr ""
@@ -5111,6 +5153,11 @@ msgid "Yearly"
 msgstr "Yillik"
 
 #. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__yearly_gain
+msgid "Yearly Gain"
+msgstr ""
+
+#. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__start_type__year
 #, fuzzy
 msgid "Years"
@@ -5828,3 +5875,7 @@ msgstr ""
 #, fuzzy
 msgid "validate"
 msgstr "tasdiqlash"
+
+#, fuzzy
+#~ msgid "<span class=\"mx-2\">up to</span>"
+#~ msgstr "<span class=\"mx-2\">gacha</span>"

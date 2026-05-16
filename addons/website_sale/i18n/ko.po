@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-10 17:36+0000\n"
+"POT-Creation-Date: 2026-05-15 17:35+0000\n"
 "PO-Revision-Date: 2026-05-06 09:39+0000\n"
 "Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-s19-3/"
@@ -1818,12 +1818,6 @@ msgid "Add More"
 msgstr "더 추가하기"
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_res_config_settings__add_to_cart_action
-#: model:ir.model.fields,field_description:website_sale.field_website__add_to_cart_action
-msgid "Add To Cart Action"
-msgstr "장바구니 추가"
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_public_category_form_view
 msgid "Add a product"
 msgstr ""
@@ -1870,7 +1864,6 @@ msgstr "하나 추가하기"
 #: code:addons/website_sale/static/src/website_builder/add_to_cart_option.js:0
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
 #: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_products_item
-#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Add to Cart"
 msgstr "장바구니에 담기"
 
@@ -3036,6 +3029,17 @@ msgid "Default Sort"
 msgstr "기본 정렬"
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_res_config_settings__journal_id
+#: model:ir.model.fields,field_description:website_sale.field_website__journal_id
+msgid "Default Website Journal"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Default accounting journal for online orders"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid ""
 "Default availability mode set on newly created storable products. This can "
@@ -3533,6 +3537,18 @@ msgid "Explore Now"
 msgstr "지금 둘러보기"
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_attribute__external_identifier
+msgid "External Identifier"
+msgstr ""
+
+#. module: website_sale
+#: model:ir.model.fields,help:website_sale.field_product_attribute__external_identifier
+msgid ""
+"External Identifier will ensure a precise matching between your attributes "
+"and attributes in SEO and other external platforms."
+msgstr ""
+
+#. module: website_sale
 #: model:website.checkout.step,name:website_sale.checkout_step_extra
 msgid "Extra Info"
 msgstr "추가 정보"
@@ -3572,9 +3588,8 @@ msgstr "추가 정보"
 
 #. module: website_sale
 #. odoo-javascript
-#. odoo-python
-#: code:addons/website_sale/models/website.py:0
 #: code:addons/website_sale/static/src/website_builder/shared.js:0
+#: model:ir.model.fields.selection,name:website_sale.selection__website__shop_default_sort__website_sequence_asc
 msgid "Featured"
 msgstr "추천 상품"
 
@@ -3862,7 +3877,6 @@ msgstr ""
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/tours/tour_utils.js:0
-#: model:ir.model.fields.selection,name:website_sale.selection__website__add_to_cart_action__go_to_cart
 msgid "Go to cart"
 msgstr "장바구니로 이동"
 
@@ -4260,6 +4274,11 @@ msgstr "결제 시 자동으로 청구서가 발행됩니다."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Invoicing Journal"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Invoicing Policy"
 msgstr "청구서 발행 기준"
 
@@ -4300,6 +4319,11 @@ msgstr "주문에 대한 결제가 완료되었으므로 배송 방법을 변경
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_ribbon_options_plugin.js:0
 msgid "It will be removed from all products. Are you sure?"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
+msgid "Journal"
 msgstr ""
 
 #. module: website_sale
@@ -4695,9 +4719,8 @@ msgstr "이름"
 
 #. module: website_sale
 #. odoo-javascript
-#. odoo-python
-#: code:addons/website_sale/models/website.py:0
 #: code:addons/website_sale/static/src/website_builder/shared.js:0
+#: model:ir.model.fields.selection,name:website_sale.selection__website__shop_default_sort__name_asc
 msgid "Name (A-Z)"
 msgstr "제품명 순 (A-Z)"
 
@@ -4752,9 +4775,8 @@ msgstr "신규!"
 
 #. module: website_sale
 #. odoo-javascript
-#. odoo-python
-#: code:addons/website_sale/models/website.py:0
 #: code:addons/website_sale/static/src/website_builder/shared.js:0
+#: model:ir.model.fields.selection,name:website_sale.selection__website__shop_default_sort__publish_date_desc
 msgid "Newest Arrivals"
 msgstr "신규 등록 순"
 
@@ -5354,17 +5376,15 @@ msgstr "가격"
 
 #. module: website_sale
 #. odoo-javascript
-#. odoo-python
-#: code:addons/website_sale/models/website.py:0
 #: code:addons/website_sale/static/src/website_builder/shared.js:0
+#: model:ir.model.fields.selection,name:website_sale.selection__website__shop_default_sort__list_price_desc
 msgid "Price - High to Low"
 msgstr "높은 가격 순"
 
 #. module: website_sale
 #. odoo-javascript
-#. odoo-python
-#: code:addons/website_sale/models/website.py:0
 #: code:addons/website_sale/static/src/website_builder/shared.js:0
+#: model:ir.model.fields.selection,name:website_sale.selection__website__shop_default_sort__list_price_asc
 msgid "Price - Low to High"
 msgstr "낮은 가격 순"
 
@@ -6776,11 +6796,6 @@ msgid "Status"
 msgstr "상태"
 
 #. module: website_sale
-#: model:ir.model.fields.selection,name:website_sale.selection__website__add_to_cart_action__stay
-msgid "Stay on Product Page"
-msgstr "품목 페이지 유지"
-
-#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_wishlist__stock_notification
 msgid "Stock Notification"
 msgstr ""
@@ -7733,11 +7748,6 @@ msgid "Websites"
 msgstr "웹 사이트"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "What should be done on \"Add to Cart\"?"
-msgstr "\"장바구니에 추가하기\" 에서 수행되는 작업은 무엇인가요?"
-
-#. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__product_ribbon__assign__new
 msgid "When New"
 msgstr "새로운 시기"
@@ -8127,27 +8137,9 @@ msgstr ""
 
 #. module: website_sale
 #. odoo-python
-#: code:addons/website_sale/models/website.py:0
-msgid "list_price asc"
-msgstr "list_price asc"
-
-#. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/models/website.py:0
-msgid "list_price desc"
-msgstr "list_price desc"
-
-#. module: website_sale
-#. odoo-python
 #: code:addons/website_sale/models/res_config_settings.py:0
 msgid "model"
 msgstr "모델"
-
-#. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/models/website.py:0
-msgid "name asc"
-msgstr "name asc"
 
 #. module: website_sale
 #. odoo-javascript
@@ -8208,12 +8200,6 @@ msgid "only if below"
 msgstr ""
 
 #. module: website_sale
-#. odoo-python
-#: code:addons/website_sale/models/website.py:0
-msgid "publish_date desc"
-msgstr "publish_date desc"
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.accept_terms_and_conditions
 msgid "terms &amp; conditions"
 msgstr "이용 &amp; 약관"
@@ -8238,3 +8224,24 @@ msgstr ""
 #: model:mail.template,subject:website_sale.email_template_back_in_stock
 msgid "{{ object.name or 'Product' }} is back in stock"
 msgstr ""
+
+#~ msgid "Add To Cart Action"
+#~ msgstr "장바구니 추가"
+
+#~ msgid "Stay on Product Page"
+#~ msgstr "품목 페이지 유지"
+
+#~ msgid "What should be done on \"Add to Cart\"?"
+#~ msgstr "\"장바구니에 추가하기\" 에서 수행되는 작업은 무엇인가요?"
+
+#~ msgid "list_price asc"
+#~ msgstr "list_price asc"
+
+#~ msgid "list_price desc"
+#~ msgstr "list_price desc"
+
+#~ msgid "name asc"
+#~ msgstr "name asc"
+
+#~ msgid "publish_date desc"
+#~ msgstr "publish_date desc"

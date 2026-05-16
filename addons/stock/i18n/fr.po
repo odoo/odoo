@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-10 17:36+0000\n"
+"POT-Creation-Date: 2026-05-15 17:35+0000\n"
 "PO-Revision-Date: 2026-05-05 11:55+0000\n"
 "Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-s19-3/stock/"
@@ -779,6 +779,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.product_view_kanban_catalog
 msgid "<span class=\"text-muted small\"> On Hand</span>"
 msgstr "<span class=\"text-muted small\"> En stock</span>"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.product_template_kanban_stock_view
+msgid "<span class=\"text-muted\">On Hand</span>"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -3156,10 +3161,16 @@ msgstr "Livraisons de %s"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__product_uom_qty
+#: model_terms:ir.ui.view,arch_db:stock.view_move_pivot
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_move_tree
 msgid "Demand"
 msgstr "Demande"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_move__product_qty
+msgid "Demand in Product UoM"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_return_slip
@@ -6329,11 +6340,6 @@ msgstr ""
 "dans l’unité de mesure par défaut du produit"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.product_template_kanban_stock_view
-msgid "On hand:"
-msgstr "Disponible :"
-
-#. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__lot_label_layout__label_quantity__lots
 msgid "One per lot/SN"
 msgstr "Une par lot/NS"
@@ -7665,6 +7671,7 @@ msgstr "Quantités déballées"
 #: model_terms:ir.ui.view,arch_db:stock.view_move_line_form
 #: model_terms:ir.ui.view,arch_db:stock.view_move_line_tree
 #: model_terms:ir.ui.view,arch_db:stock.view_move_line_tree_detailed
+#: model_terms:ir.ui.view,arch_db:stock.view_move_pivot
 #: model_terms:ir.ui.view,arch_db:stock.view_move_tree
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_move_tree
@@ -7710,6 +7717,7 @@ msgid "Quantity has been moved since last count"
 msgstr "Des quantités ont été transférées depuis votre dernier compte"
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_move__quantity_product_uom
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__quantity_product_uom
 msgid "Quantity in Product UoM"
 msgstr "Quantité dans l'UdM du produit"
@@ -7857,11 +7865,6 @@ msgstr "Évaluations"
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Ready"
 msgstr "Prêt"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_move__product_qty
-msgid "Real Quantity"
-msgstr "Quantité réelle"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
@@ -12113,3 +12116,9 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Bon de livraison (Ref {{ object.name or 'n/"
 "a' }})"
+
+#~ msgid "On hand:"
+#~ msgstr "Disponible :"
+
+#~ msgid "Real Quantity"
+#~ msgstr "Quantité réelle"

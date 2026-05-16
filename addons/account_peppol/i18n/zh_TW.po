@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:36+0000\n"
+"POT-Creation-Date: 2026-05-15 17:35+0000\n"
 "PO-Revision-Date: 2026-04-11 14:18+0000\n"
 "Last-Translator: \"Tony Ng (ngto)\" <ngto@odoo.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
@@ -573,6 +573,11 @@ msgid "Available Peppol Sending Methods"
 msgstr "可用的 Peppol 傳送方式"
 
 #. module: account_peppol
+#: model:ir.model,name:account_peppol.model_account_edi_ubl
+msgid "Base helpers for UBL"
+msgstr ""
+
+#. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
 msgid "By clicking the button below:"
 msgstr ""
@@ -739,7 +744,7 @@ msgstr ""
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_edi_common__display_name
 #: model:ir.model.fields,field_description:account_peppol.field_account_edi_proxy_client_user__display_name
-#: model:ir.model.fields,field_description:account_peppol.field_account_edi_xml_ubl_20__display_name
+#: model:ir.model.fields,field_description:account_peppol.field_account_edi_ubl__display_name
 #: model:ir.model.fields,field_description:account_peppol.field_account_edi_xml_ubl_bis3__display_name
 #: model:ir.model.fields,field_description:account_peppol.field_account_journal__display_name
 #: model:ir.model.fields,field_description:account_peppol.field_account_move__display_name
@@ -863,7 +868,7 @@ msgstr ""
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_edi_common__id
 #: model:ir.model.fields,field_description:account_peppol.field_account_edi_proxy_client_user__id
-#: model:ir.model.fields,field_description:account_peppol.field_account_edi_xml_ubl_20__id
+#: model:ir.model.fields,field_description:account_peppol.field_account_edi_ubl__id
 #: model:ir.model.fields,field_description:account_peppol.field_account_edi_xml_ubl_bis3__id
 #: model:ir.model.fields,field_description:account_peppol.field_account_journal__id
 #: model:ir.model.fields,field_description:account_peppol.field_account_move__id
@@ -1803,11 +1808,6 @@ msgid "Token Out of Sync"
 msgstr ""
 
 #. module: account_peppol
-#: model:ir.model,name:account_peppol.model_account_edi_xml_ubl_20
-msgid "UBL 2.0"
-msgstr "UBL 2.0"
-
-#. module: account_peppol
 #: model:ir.model,name:account_peppol.model_account_edi_xml_ubl_bis3
 msgid "UBL BIS Billing 3.0.12"
 msgstr ""
@@ -2124,3 +2124,6 @@ msgstr "以傳送發票，但這個"
 #: model_terms:ir.ui.view,arch_db:account_peppol.mail_notification_layout_with_responsible_signature_and_peppol
 msgid "uses"
 msgstr "使用"
+
+#~ msgid "UBL 2.0"
+#~ msgstr "UBL 2.0"

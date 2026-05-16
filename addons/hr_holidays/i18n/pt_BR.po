@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-07 17:35+0000\n"
+"POT-Creation-Date: 2026-05-15 17:35+0000\n"
 "PO-Revision-Date: 2026-05-08 15:34+0000\n"
 "Last-Translator: \"Maitê Dietze (madi)\" <madi@odoo.com>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/odoo-"
@@ -104,6 +104,12 @@ msgstr "%(allocation_name)s (de %(date_from)s até Ilimitado)"
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
+msgid "%(days)gd"
+msgstr ""
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "%(duration)s (%(start)s)"
 msgstr "%(duration)s (%(start)s)"
 
@@ -130,6 +136,18 @@ msgstr "%(employee_name)s solicitou uma folgas \n"
 #: code:addons/hr_holidays/models/hr_leave.py:0
 msgid "%(holiday_name)s has been refused."
 msgstr "%(holiday_name)s foi recusado."
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
+msgid "%(hours)dh"
+msgstr ""
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave.py:0
+msgid "%(hours)dh%(minutes)02d"
+msgstr ""
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -200,8 +218,8 @@ msgstr "%(start_date)s → %(end_date)s (%(duration)s)"
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
-msgid "%(work_entry_type)s: %(duration)s (%(start)s)"
-msgstr "%(work_entry_type)s: %(duration)s (%(start)s)"
+msgid "%(work_entry_type)s %(duration)s"
+msgstr ""
 
 #. module: hr_holidays
 #. odoo-python
@@ -406,22 +424,6 @@ msgid "<span class=\"mx-1\">–</span>"
 msgstr "<span class=\"mx-1\">–</span>"
 
 #. module: hr_holidays
-#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_work_entry_type_view_form
-msgid ""
-"<span class=\"mx-2\" invisible=\"unit_of_measure == 'hour'\">days</span>\n"
-"                                            <span class=\"mx-2\" "
-"invisible=\"unit_of_measure != 'hour'\">hours</span>"
-msgstr ""
-"<span class=\"mx-2\" invisible=\"unit_of_measure == 'hour'\">dias</span>\n"
-"                                        <span class=\"mx-2\" "
-"invisible=\"unit_of_measure != 'hour'\">horas</span>"
-
-#. module: hr_holidays
-#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_work_entry_type_view_form
-msgid "<span class=\"mx-2\">up to</span>"
-msgstr "<span class=\"mx-2\">até</span>"
-
-#. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_employee_public_form_view_inherit
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_employee_form_leave_inherit
 msgid ""
@@ -442,6 +444,13 @@ msgstr "<span class=\"o_stat_text\">Alocações</span>"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_work_entry_type_view_form
 msgid "<span class=\"o_stat_text\">Time Off</span>"
 msgstr "<span class=\"o_stat_text\">Folga</span>"
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_work_entry_type_view_form
+msgid ""
+"<span class=\"text-muted fst-italic\">Configure how time off requests are "
+"approved, allocated and managed for this time type.</span>"
+msgstr ""
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
@@ -482,6 +491,21 @@ msgid "<span class=\"text-muted\">Amount</span>"
 msgstr "<span class=\"text-muted\">Valor</span>"
 
 #. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
+msgid ""
+"<span invisible=\"not cap_accrued_time_yearly and not cap_accrued_time\" "
+"class=\"ms-3\">(Caps can affect that gain)</span>"
+msgstr ""
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_work_entry_type_view_form
+msgid ""
+"<span invisible=\"unit_of_measure == 'hour'\">days</span>\n"
+"                                            <span "
+"invisible=\"unit_of_measure != 'hour'\">hours</span>"
+msgstr ""
+
+#. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_mandatory_day_action
 msgid ""
 "<span>\n"
@@ -518,6 +542,11 @@ msgstr ""
 "<span>O funcionário está em um fuso horário diferente do seu! Aqui, as datas "
 "e horas são exibidas no fuso horário de trabalho do funcionário</span>\n"
 "                                ("
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_work_entry_type_view_form
+msgid "<span>up to</span>"
+msgstr ""
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -2111,6 +2140,11 @@ msgid "Future Activities"
 msgstr "Atividades futuras"
 
 #. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
+msgid "Gain for the year :"
+msgstr ""
+
+#. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_generate_multi_wizard_view_form
 msgid "Generate Time Off"
 msgstr "Gerar folgas"
@@ -2616,6 +2650,11 @@ msgstr ""
 "Máximo de folgas permitidas - Folgas já tiradas - Folgas aguardando aprovação"
 
 #. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
+msgid "Maximum gain for the year :"
+msgstr ""
+
+#. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__first_month__5
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__yearly_month__5
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_plan__carryover_month__5
@@ -3117,6 +3156,7 @@ msgstr ""
 "solicitações."
 
 #. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__is_based_on_worked_time
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_plan__is_based_on_worked_time
 msgid "Only excludes requests where the time type is set as unpaid kind of."
 msgstr ""
@@ -4634,6 +4674,11 @@ msgid "Yearly"
 msgstr "Anualmente"
 
 #. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__yearly_gain
+msgid "Yearly Gain"
+msgstr ""
+
+#. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__start_type__year
 msgid "Years"
 msgstr "Anos"
@@ -5277,3 +5322,18 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_calendar_view_search
 msgid "validate"
 msgstr "validar"
+
+#~ msgid "%(work_entry_type)s: %(duration)s (%(start)s)"
+#~ msgstr "%(work_entry_type)s: %(duration)s (%(start)s)"
+
+#~ msgid ""
+#~ "<span class=\"mx-2\" invisible=\"unit_of_measure == 'hour'\">days</span>\n"
+#~ "                                            <span class=\"mx-2\" "
+#~ "invisible=\"unit_of_measure != 'hour'\">hours</span>"
+#~ msgstr ""
+#~ "<span class=\"mx-2\" invisible=\"unit_of_measure == 'hour'\">dias</span>\n"
+#~ "                                        <span class=\"mx-2\" "
+#~ "invisible=\"unit_of_measure != 'hour'\">horas</span>"
+
+#~ msgid "<span class=\"mx-2\">up to</span>"
+#~ msgstr "<span class=\"mx-2\">até</span>"

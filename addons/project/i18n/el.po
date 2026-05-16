@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-07 17:35+0000\n"
+"POT-Creation-Date: 2026-05-15 17:35+0000\n"
 "PO-Revision-Date: 2026-04-11 14:27+0000\n"
 "Last-Translator: Odoo Translation Bot <c3p@odoo.com>\n"
 "Language-Team: Greek <https://translate.odoo.com/projects/odoo-s19-2/project/"
@@ -561,6 +561,16 @@ msgstr ""
 "title=\"Domain Alias\"/>"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_update_view_kanban
+msgid "<span class=\"fa fa-fw fa-calendar me-1\" title=\"Date\"/>"
+msgstr ""
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_update_view_kanban
+msgid "<span class=\"fa fa-fw fa-check me-1\" title=\"Tasks\"/>"
+msgstr ""
+
+#. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 #, fuzzy
 msgid ""
@@ -662,19 +672,9 @@ msgid "<span>@</span>"
 msgstr ""
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.project_update_view_kanban
-msgid "<span>Progress</span>"
-msgstr "<span>Εξέλιξη</span>"
-
-#. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid "<span>Reporting</span>"
 msgstr "<span>Αναφορά</span>"
-
-#. module: project
-#: model_terms:ir.ui.view,arch_db:project.project_update_view_kanban
-msgid "<span>Status</span>"
-msgstr "<span>Κατάσταση</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -1760,7 +1760,6 @@ msgstr "Καθημερινά"
 #: model:ir.model.fields,field_description:project.field_project_update__date
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_graph
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
-#: model_terms:ir.ui.view,arch_db:project.project_update_view_kanban
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_search
 msgid "Date"
 msgstr "Ημερομηνία"
@@ -2053,7 +2052,6 @@ msgid "Draft"
 msgstr "Προσχέδιο"
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Duplicate"
 msgstr "Δημιουργία Αντίγραφου"
@@ -6040,3 +6038,9 @@ msgstr ""
 #: code:addons/project/static/src/components/project_many2one_field/project_many2one_field.js:0
 msgid "🔒 Private"
 msgstr ""
+
+#~ msgid "<span>Progress</span>"
+#~ msgstr "<span>Εξέλιξη</span>"
+
+#~ msgid "<span>Status</span>"
+#~ msgstr "<span>Κατάσταση</span>"

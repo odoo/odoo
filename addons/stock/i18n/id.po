@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-10 17:36+0000\n"
+"POT-Creation-Date: 2026-05-15 17:35+0000\n"
 "PO-Revision-Date: 2026-05-07 10:00+0000\n"
 "Last-Translator: \"Nurul Aini Akrima Sabila (nuaas)\" <nuaas@odoo.com>\n"
 "Language-Team: Indonesian <https://translate.odoo.com/projects/odoo-s19-3/"
@@ -769,6 +769,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.product_view_kanban_catalog
 msgid "<span class=\"text-muted small\"> On Hand</span>"
 msgstr "<span class=\"text-muted small\"> Di Tangan</span>"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.product_template_kanban_stock_view
+msgid "<span class=\"text-muted\">On Hand</span>"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -3109,10 +3114,16 @@ msgstr "Pesanan pengiriman %s"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__product_uom_qty
+#: model_terms:ir.ui.view,arch_db:stock.view_move_pivot
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_move_tree
 msgid "Demand"
 msgstr "Demand"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_move__product_qty
+msgid "Demand in Product UoM"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_return_slip
@@ -6265,11 +6276,6 @@ msgstr ""
 "satuan ukuran default produk"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.product_template_kanban_stock_view
-msgid "On hand:"
-msgstr "Di tangan:"
-
-#. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__lot_label_layout__label_quantity__lots
 msgid "One per lot/SN"
 msgstr "Satu per lot/nomor seri"
@@ -7594,6 +7600,7 @@ msgstr "Kuantitas yang diunpack"
 #: model_terms:ir.ui.view,arch_db:stock.view_move_line_form
 #: model_terms:ir.ui.view,arch_db:stock.view_move_line_tree
 #: model_terms:ir.ui.view,arch_db:stock.view_move_line_tree_detailed
+#: model_terms:ir.ui.view,arch_db:stock.view_move_pivot
 #: model_terms:ir.ui.view,arch_db:stock.view_move_tree
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_move_tree
@@ -7639,6 +7646,7 @@ msgid "Quantity has been moved since last count"
 msgstr "Kuantitas telah digerakkan semenjak hitungan terakhir"
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_move__quantity_product_uom
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__quantity_product_uom
 msgid "Quantity in Product UoM"
 msgstr "Kuantitas di Satuan Ukuran Produk"
@@ -7781,11 +7789,6 @@ msgstr "Rating-Rating"
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Ready"
 msgstr "Siap"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_move__product_qty
-msgid "Real Quantity"
-msgstr "Kuantitas Nyata"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
@@ -11975,3 +11978,9 @@ msgid ""
 "{{ object.company_id.name }} Delivery Order (Ref {{ object.name or 'n/a' }})"
 msgstr ""
 "{{ object.company_id.name }} Delivery Order (Ref {{ object.name or 'n/a' }})"
+
+#~ msgid "On hand:"
+#~ msgstr "Di tangan:"
+
+#~ msgid "Real Quantity"
+#~ msgstr "Kuantitas Nyata"

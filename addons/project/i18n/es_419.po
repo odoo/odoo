@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-07 17:35+0000\n"
+"POT-Creation-Date: 2026-05-15 17:35+0000\n"
 "PO-Revision-Date: 2026-05-05 23:48+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
@@ -584,6 +584,16 @@ msgstr ""
 "title=\"Alias del dominio\"/>"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_update_view_kanban
+msgid "<span class=\"fa fa-fw fa-calendar me-1\" title=\"Date\"/>"
+msgstr ""
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_update_view_kanban
+msgid "<span class=\"fa fa-fw fa-check me-1\" title=\"Tasks\"/>"
+msgstr ""
+
+#. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid ""
 "<span class=\"fa fa-user me-2\" aria-label=\"Partner\" title=\"Partner\"/>"
@@ -691,19 +701,9 @@ msgid "<span>@</span>"
 msgstr "<span>@</span>"
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.project_update_view_kanban
-msgid "<span>Progress</span>"
-msgstr "<span>Progreso</span>"
-
-#. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid "<span>Reporting</span>"
 msgstr "<span>Reportes</span>"
-
-#. module: project
-#: model_terms:ir.ui.view,arch_db:project.project_update_view_kanban
-msgid "<span>Status</span>"
-msgstr "<span>Estado</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -1830,7 +1830,6 @@ msgstr "Diario"
 #: model:ir.model.fields,field_description:project.field_project_update__date
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_graph
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
-#: model_terms:ir.ui.view,arch_db:project.project_update_view_kanban
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_search
 msgid "Date"
 msgstr "Fecha"
@@ -2150,7 +2149,6 @@ msgid "Draft"
 msgstr "Borrador"
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Duplicate"
 msgstr "Duplicar"
@@ -6339,3 +6337,9 @@ msgstr "👤 Sin asignar"
 #: code:addons/project/static/src/components/project_many2one_field/project_many2one_field.js:0
 msgid "🔒 Private"
 msgstr "🔒 Privado"
+
+#~ msgid "<span>Progress</span>"
+#~ msgstr "<span>Progreso</span>"
+
+#~ msgid "<span>Status</span>"
+#~ msgstr "<span>Estado</span>"

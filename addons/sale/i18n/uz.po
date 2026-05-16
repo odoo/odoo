@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-10 17:37+0000\n"
+"POT-Creation-Date: 2026-05-15 17:36+0000\n"
 "PO-Revision-Date: 2025-10-08 18:38+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -3336,12 +3336,6 @@ msgid "Invoicing Address"
 msgstr "Hisob-kitob manzili"
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order__journal_id
-#, fuzzy
-msgid "Invoicing Journal"
-msgstr "Hisob-kitob jurnali"
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__invoice_policy
 #: model:ir.model.fields,field_description:sale.field_product_template__invoice_policy
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__default_invoice_policy
@@ -3439,6 +3433,11 @@ msgid ""
 "%s"
 msgstr ""
 "Qulflangan buyurtmada quyidagi maydonlarni o‘zgartirish taqiqlanadi: %s"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order__journal_id
+msgid "Journal"
+msgstr ""
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_move
@@ -6763,12 +6762,6 @@ msgstr ""
 "(yoki 0 kiriting)."
 
 #. module: sale
-#. odoo-python
-#: code:addons/sale/models/account_analytic_line.py:0
-msgid "You cannot set a negative quantity on services."
-msgstr ""
-
-#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 #, fuzzy
 msgid "You don't use a good CRM software?"
@@ -6988,3 +6981,7 @@ msgid ""
 "{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order' }} {{ object.name or 'n/a' }}"
 msgstr ""
+
+#, fuzzy
+#~ msgid "Invoicing Journal"
+#~ msgstr "Hisob-kitob jurnali"

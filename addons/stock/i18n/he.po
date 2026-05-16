@@ -37,7 +37,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-10 17:36+0000\n"
+"POT-Creation-Date: 2026-05-15 17:35+0000\n"
 "PO-Revision-Date: 2026-01-13 16:07+0000\n"
 "Last-Translator: Odoo Translation Bot <c3p@odoo.com>\n"
 "Language-Team: Hebrew <https://translate.odoo.com/projects/odoo-s19-1/stock/"
@@ -729,6 +729,11 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_view_kanban_catalog
 msgid "<span class=\"text-muted small\"> On Hand</span>"
+msgstr ""
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.product_template_kanban_stock_view
+msgid "<span class=\"text-muted\">On Hand</span>"
 msgstr ""
 
 #. module: stock
@@ -2992,10 +2997,16 @@ msgstr "הזמנות משלוח של %s"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__product_uom_qty
+#: model_terms:ir.ui.view,arch_db:stock.view_move_pivot
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_move_tree
 msgid "Demand"
 msgstr "דרישה"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_move__product_qty
+msgid "Demand in Product UoM"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_return_slip
@@ -6069,11 +6080,6 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.product_template_kanban_stock_view
-msgid "On hand:"
-msgstr "במלאי"
-
-#. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__lot_label_layout__label_quantity__lots
 msgid "One per lot/SN"
 msgstr "אחד לאצווה\\מספר סידורי"
@@ -7373,6 +7379,7 @@ msgstr "כמויות פורקו"
 #: model_terms:ir.ui.view,arch_db:stock.view_move_line_form
 #: model_terms:ir.ui.view,arch_db:stock.view_move_line_tree
 #: model_terms:ir.ui.view,arch_db:stock.view_move_line_tree_detailed
+#: model_terms:ir.ui.view,arch_db:stock.view_move_pivot
 #: model_terms:ir.ui.view,arch_db:stock.view_move_tree
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_move_tree
@@ -7418,6 +7425,7 @@ msgid "Quantity has been moved since last count"
 msgstr "הכמות הועברה מאז הספירה האחרונה"
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_move__quantity_product_uom
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__quantity_product_uom
 msgid "Quantity in Product UoM"
 msgstr "כמות ביחידת מידה של מוצר"
@@ -7556,11 +7564,6 @@ msgstr "דירוגים"
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Ready"
 msgstr "מוכן"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_stock_move__product_qty
-msgid "Real Quantity"
-msgstr "כמות אמיתית"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
@@ -11567,3 +11570,9 @@ msgstr ""
 msgid ""
 "{{ object.company_id.name }} Delivery Order (Ref {{ object.name or 'n/a' }})"
 msgstr ""
+
+#~ msgid "On hand:"
+#~ msgstr "במלאי"
+
+#~ msgid "Real Quantity"
+#~ msgstr "כמות אמיתית"

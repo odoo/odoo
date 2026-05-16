@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-10 17:36+0000\n"
+"POT-Creation-Date: 2026-05-15 17:35+0000\n"
 "PO-Revision-Date: 2026-01-16 05:48+0000\n"
 "Last-Translator: \"Tony Ng (ngto)\" <ngto@odoo.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
@@ -281,10 +281,20 @@ msgid ""
 msgstr ""
 
 #. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_kanban
+msgid "<i class=\"fa fa-clock-o me-1 my-auto\" title=\"planned date start\"/>"
+msgstr ""
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_kanban_view
 msgid ""
 "<i class=\"fa fa-cubes mx-1 mt-1\" role=\"img\" title=\"Components "
 "Availability\"/>"
+msgstr ""
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_kanban
+msgid "<i class=\"fa fa-hourglass-half me-1\" title=\"time remaining\"/>"
 msgstr ""
 
 #. module: mrp
@@ -298,23 +308,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_kanban_view
 msgid "<i class=\"fa fa-wrench mx-1 mt-1\" role=\"img\" title=\"Child MO's\"/>"
 msgstr ""
-
-#. module: mrp
-#. odoo-python
-#: code:addons/mrp/models/mrp_bom.py:0
-msgid ""
-"<p class=\"o_view_nocontent_smiling_face\">\n"
-"                        Upload files to your product\n"
-"                    </p><p>\n"
-"                        Use this feature to store any files, like drawings "
-"or specifications.\n"
-"                    </p>"
-msgstr ""
-"<p class=\"o_view_nocontent_smiling_face\">\n"
-"                    上傳文件到產品\n"
-"                   </p><p>\n"
-"                    使用此功能存儲任何文件,如圖紙或規格.\n"
-"                    </p>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.stock_production_type_kanban
@@ -937,18 +930,6 @@ msgid "Archived"
 msgstr "已封存"
 
 #. module: mrp
-#. odoo-javascript
-#: code:addons/mrp/static/src/views/mrp_workorder_kanban/mrp_workorder_kanban_controller.js:0
-msgid "Are you sure you want to Update the Planning ?"
-msgstr ""
-
-#. module: mrp
-#. odoo-javascript
-#: code:addons/mrp/static/src/views/mrp_workorder_kanban/mrp_workorder_kanban_header.js:0
-msgid "Are you sure you want to Update the Work Center Planning ?"
-msgstr ""
-
-#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_tree_view
 msgid ""
 "Are you sure you want to cancel these manufacturing orders?\n"
@@ -1000,17 +981,9 @@ msgstr "附件數目"
 
 #. module: mrp
 #. odoo-javascript
-#. odoo-python
-#: code:addons/mrp/models/mrp_bom.py:0
 #: code:addons/mrp/static/src/components/bom_overview_line/mrp_bom_overview_line.js:0
-#: code:addons/mrp/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
 msgid "Attachments"
 msgstr "附件"
-
-#. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__attachments_count
-msgid "Attachments Count"
-msgstr "附件數目"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__product_variant_attributes
@@ -1247,7 +1220,6 @@ msgstr "生產工單上使用的物料清單"
 #: model:ir.model.fields,field_description:mrp.field_product_template__bom_ids
 #: model:ir.model.fields,field_description:mrp.field_stock_replenishment_info__bom_id
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse_orderpoint__bom_id
-#: model:ir.model.fields.selection,name:mrp.selection__product_document__attached_on_mrp__bom
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_line_view_search
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_tree_view
 #: model_terms:ir.ui.view,arch_db:mrp.product_product_form_view_bom_button
@@ -1727,6 +1699,13 @@ msgstr "確認"
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Confirmed"
 msgstr "已確認"
+
+#. module: mrp
+#. odoo-javascript
+#: code:addons/mrp/static/src/widgets/workorder_planning_status.xml:0
+msgid ""
+"Conflict: this work order overlaps with another one on the same work center"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
@@ -2252,7 +2231,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_tag__display_name
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__display_name
 #: model:ir.model.fields,field_description:mrp.field_picking_label_type__display_name
-#: model:ir.model.fields,field_description:mrp.field_product_document__display_name
 #: model:ir.model.fields,field_description:mrp.field_product_product__display_name
 #: model:ir.model.fields,field_description:mrp.field_product_replenish__display_name
 #: model:ir.model.fields,field_description:mrp.field_product_template__display_name
@@ -2482,12 +2460,6 @@ msgstr "預計 %s"
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_pivot
 msgid "Expected Duration"
 msgstr "預計時長"
-
-#. module: mrp
-#. odoo-javascript
-#: code:addons/mrp/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
-msgid "Files attached to the product."
-msgstr "產品附帶的檔案文件."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__location_final_id
@@ -2740,11 +2712,6 @@ msgid "Has planning issues"
 msgstr ""
 
 #. module: mrp
-#: model:ir.model.fields.selection,name:mrp.selection__product_document__attached_on_mrp__hidden
-msgid "Hidden"
-msgstr "隱藏"
-
-#. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__costs_hour
 msgid "Hourly processing cost."
 msgstr "每小時人工成本."
@@ -2789,7 +2756,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_tag__id
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__id
 #: model:ir.model.fields,field_description:mrp.field_picking_label_type__id
-#: model:ir.model.fields,field_description:mrp.field_product_document__id
 #: model:ir.model.fields,field_description:mrp.field_product_product__id
 #: model:ir.model.fields,field_description:mrp.field_product_replenish__id
 #: model:ir.model.fields,field_description:mrp.field_product_template__id
@@ -3224,17 +3190,6 @@ msgid "Leave"
 msgstr "退出"
 
 #. module: mrp
-#: model:ir.model.fields,help:mrp.field_product_document__attached_on_mrp
-msgid ""
-"Leave hidden if document only accessible on product form.\n"
-"Select Bill of Materials to visualise this document as a product attachment "
-"when this product is in a bill of material."
-msgstr ""
-"如果文件只能在產品表單存取，可繼續保持隱藏。\n"
-"若產品屬於用料清單中項目，請選擇「用料清單」，以將此文件視覺化呈現為產品附"
-"件。"
-
-#. module: mrp
 #: model:ir.model,name:mrp.model_mrp_consumption_warning_line
 msgid "Line of issue consumption"
 msgstr "消耗申報明細"
@@ -3400,11 +3355,6 @@ msgid "MO To Close"
 msgstr "待關閉製造訂單"
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_product_document__attached_on_mrp
-msgid "MRP : Visible at"
-msgstr "物料需求規劃：顯示在"
-
-#. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/widgets/mrp_boolean_icon_field.js:0
 msgid "MRP Boolean Icon"
@@ -3505,7 +3455,6 @@ msgstr "在過去365天內製造"
 #: model:ir.ui.menu,name:mrp.menu_mrp_root
 #: model:res.groups.privilege,name:mrp.res_groups_privilege_manufacturing
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_line_view_search
-#: model_terms:ir.ui.view,arch_db:mrp.product_document_form
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:mrp.stock_move_line_view_search
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
@@ -3547,11 +3496,9 @@ msgid "Manufacturing Order"
 msgstr "製造訂單"
 
 #. module: mrp
-#. odoo-javascript
 #. odoo-python
 #: code:addons/mrp/models/mrp_workorder.py:0
 #: code:addons/mrp/models/stock_picking.py:0
-#: code:addons/mrp/static/src/views/mrp_workorder_kanban/mrp_workorder_kanban_controller.xml:0
 #: model:ir.actions.act_window,name:mrp.action_mrp_production_form
 #: model:ir.actions.act_window,name:mrp.mrp_production_action
 #: model:ir.actions.act_window,name:mrp.mrp_production_action_picking_deshboard
@@ -4367,6 +4314,12 @@ msgid "Plan"
 msgstr "計劃"
 
 #. module: mrp
+#. odoo-javascript
+#: code:addons/mrp/static/src/views/mrp_workorder_kanban/mrp_workorder_kanban_controller.xml:0
+msgid "Plan MO"
+msgstr ""
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
 msgid "Plan Orders"
 msgstr "安排訂單"
@@ -4403,6 +4356,12 @@ msgstr "規劃"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
 msgid "Planning Issues"
+msgstr ""
+
+#. module: mrp
+#. odoo-javascript
+#: code:addons/mrp/static/src/widgets/workorder_planning_status.xml:0
+msgid "Planning issue: this work order is scheduled before a dependency"
 msgstr ""
 
 #. module: mrp
@@ -4574,6 +4533,11 @@ msgid "Produced"
 msgstr "已生產"
 
 #. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
+msgid "Produced Quantity"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_serials__serial_numbers
 msgid "Produced Serial Numbers"
 msgstr "生產序號"
@@ -4609,11 +4573,6 @@ msgid "Product"
 msgstr "商品"
 
 #. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
-msgid "Product Attachments"
-msgstr "產品附件"
-
-#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__capacity_ids
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
 msgid "Product Capacities"
@@ -4630,9 +4589,10 @@ msgid "Product Catalog Product Is In Mo"
 msgstr "產品目錄產品在製造訂單中"
 
 #. module: mrp
-#: model:ir.model,name:mrp.model_product_document
-msgid "Product Document"
-msgstr "產品文件"
+#. odoo-javascript
+#: code:addons/mrp/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
+msgid "Product Documents"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__product_virtual_available
@@ -5046,6 +5006,11 @@ msgid "Remaining Days"
 msgstr "剩餘天數"
 
 #. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_kanban
+msgid "Remaining Time"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__remaining_time
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__remaining_time
 msgid "Remaining Working Time"
@@ -5156,6 +5121,7 @@ msgstr "預定日期"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
+#: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_kanban
 msgid "Scheduled Date"
 msgstr "預定日期"
 
@@ -5508,6 +5474,11 @@ msgid "Start Date"
 msgstr "開始日期"
 
 #. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_tree_editable_view
+msgid "Start date"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__state
 msgid "State"
 msgstr "狀態"
@@ -5522,6 +5493,7 @@ msgstr "狀態"
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
+#: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_kanban
 msgid "Status"
 msgstr "狀態"
 
@@ -6200,6 +6172,12 @@ msgid "Total Quantity"
 msgstr "數量總計"
 
 #. module: mrp
+#. odoo-javascript
+#: code:addons/mrp/static/src/mrp_production_kanban/mrp_production_kanban_header.js:0
+msgid "Total Remaining Time"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__workorder_progress_count
 msgid "Total Running Orders"
 msgstr "運行中訂單總計"
@@ -6395,7 +6373,6 @@ msgstr "預設解鎖"
 #. module: mrp
 #: model:ir.actions.server,name:mrp.action_unplan_workorders
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_to_plan
 msgid "Unplan"
 msgstr "取消計劃"
 
@@ -6406,28 +6383,9 @@ msgid "Unreserve"
 msgstr "取消預留"
 
 #. module: mrp
-#. odoo-javascript
-#: code:addons/mrp/static/src/views/mrp_workorder_kanban/mrp_workorder_kanban_controller.js:0
-#: code:addons/mrp/static/src/views/mrp_workorder_kanban/mrp_workorder_kanban_header.js:0
-msgid "Update"
-msgstr ""
-
-#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Update BoM"
 msgstr "更新用料清單（BOM）"
-
-#. module: mrp
-#. odoo-javascript
-#: code:addons/mrp/static/src/views/mrp_workorder_kanban/mrp_workorder_kanban_controller.xml:0
-msgid "Update Planning"
-msgstr ""
-
-#. module: mrp
-#. odoo-javascript
-#: code:addons/mrp/static/src/views/mrp_workorder_kanban/mrp_workorder_kanban_header.xml:0
-msgid "Update work center planning"
-msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__priority__1
@@ -7223,3 +7181,44 @@ msgstr "實際持續時間"
 #: code:addons/mrp/models/mrp_production.py:0
 msgid "split"
 msgstr "拆分"
+
+#~ msgid ""
+#~ "<p class=\"o_view_nocontent_smiling_face\">\n"
+#~ "                        Upload files to your product\n"
+#~ "                    </p><p>\n"
+#~ "                        Use this feature to store any files, like "
+#~ "drawings or specifications.\n"
+#~ "                    </p>"
+#~ msgstr ""
+#~ "<p class=\"o_view_nocontent_smiling_face\">\n"
+#~ "                    上傳文件到產品\n"
+#~ "                   </p><p>\n"
+#~ "                    使用此功能存儲任何文件,如圖紙或規格.\n"
+#~ "                    </p>"
+
+#~ msgid "Attachments Count"
+#~ msgstr "附件數目"
+
+#~ msgid "Files attached to the product."
+#~ msgstr "產品附帶的檔案文件."
+
+#~ msgid "Hidden"
+#~ msgstr "隱藏"
+
+#~ msgid ""
+#~ "Leave hidden if document only accessible on product form.\n"
+#~ "Select Bill of Materials to visualise this document as a product "
+#~ "attachment when this product is in a bill of material."
+#~ msgstr ""
+#~ "如果文件只能在產品表單存取，可繼續保持隱藏。\n"
+#~ "若產品屬於用料清單中項目，請選擇「用料清單」，以將此文件視覺化呈現為產品附"
+#~ "件。"
+
+#~ msgid "MRP : Visible at"
+#~ msgstr "物料需求規劃：顯示在"
+
+#~ msgid "Product Attachments"
+#~ msgstr "產品附件"
+
+#~ msgid "Product Document"
+#~ msgstr "產品文件"

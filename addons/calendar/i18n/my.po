@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:36+0000\n"
+"POT-Creation-Date: 2026-05-15 17:35+0000\n"
 "PO-Revision-Date: 2025-11-16 15:18+0000\n"
 "Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Burmese <https://translate.odoo.com/projects/odoo-19/calendar/"
@@ -912,12 +912,13 @@ msgstr ""
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
-msgid "<span class=\"mx-1\"><i class=\"fa fa-plus me-1\"/>Odoo meeting</span>"
+msgid ""
+"<span class=\"mx-1\"><i class=\"fa fa-plus me-1\"/>Video conference</span>"
 msgstr ""
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
-msgid "<span> guests</span>"
+msgid "<span invisible=\"allday\"> or </span>"
 msgstr ""
 
 #. module: calendar
@@ -1046,7 +1047,7 @@ msgstr ""
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/core/web/activity_menu_patch.xml:0
-#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "All Day"
 msgstr "တစ်နေ့လုံး"
 
@@ -3036,12 +3037,6 @@ msgid "Today Activities"
 msgstr ""
 
 #. module: calendar
-#. odoo-python
-#: code:addons/calendar/models/res_users.py:0
-msgid "Today's Meetings"
-msgstr ""
-
-#. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/activity/attendee_calendar_activity_list_popover_item.xml:0
 msgid "Tomorrow"
@@ -3106,6 +3101,12 @@ msgstr "ယူနစ်"
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Until"
 msgstr "မတိုင်ခင်ထိ"
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/res_users.py:0
+msgid "Upcoming Meetings"
+msgstr ""
 
 #. module: calendar
 #: model:mail.template,description:calendar.calendar_template_delete_event
@@ -3282,6 +3283,11 @@ msgstr ""
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "e.g: 12/31/2030"
+msgstr ""
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+msgid "guests"
 msgstr ""
 
 #. module: calendar

@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-10 17:36+0000\n"
+"POT-Creation-Date: 2026-05-15 17:35+0000\n"
 "PO-Revision-Date: 2026-01-16 05:45+0000\n"
 "Last-Translator: Odoo Translation Bot <c3p@odoo.com>\n"
 "Language-Team: Romanian <https://translate.odoo.com/projects/odoo-s19-1/mrp/"
@@ -288,10 +288,20 @@ msgid ""
 msgstr ""
 
 #. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_kanban
+msgid "<i class=\"fa fa-clock-o me-1 my-auto\" title=\"planned date start\"/>"
+msgstr ""
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_kanban_view
 msgid ""
 "<i class=\"fa fa-cubes mx-1 mt-1\" role=\"img\" title=\"Components "
 "Availability\"/>"
+msgstr ""
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_kanban
+msgid "<i class=\"fa fa-hourglass-half me-1\" title=\"time remaining\"/>"
 msgstr ""
 
 #. module: mrp
@@ -305,24 +315,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_kanban_view
 msgid "<i class=\"fa fa-wrench mx-1 mt-1\" role=\"img\" title=\"Child MO's\"/>"
 msgstr ""
-
-#. module: mrp
-#. odoo-python
-#: code:addons/mrp/models/mrp_bom.py:0
-msgid ""
-"<p class=\"o_view_nocontent_smiling_face\">\n"
-"                        Upload files to your product\n"
-"                    </p><p>\n"
-"                        Use this feature to store any files, like drawings "
-"or specifications.\n"
-"                    </p>"
-msgstr ""
-"<p class=\"o_view_nocontent_smiling_face\">\n"
-"                        Încărcați fișiere pe produsul dvs.\n"
-"                    </p><p>\n"
-"                        Utilizați această caracteristică pentru a stoca "
-"orice fișier, cum ar fi desene sau specificații.\n"
-"                    </p>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.stock_production_type_kanban
@@ -982,18 +974,6 @@ msgid "Archived"
 msgstr "Arhivat"
 
 #. module: mrp
-#. odoo-javascript
-#: code:addons/mrp/static/src/views/mrp_workorder_kanban/mrp_workorder_kanban_controller.js:0
-msgid "Are you sure you want to Update the Planning ?"
-msgstr ""
-
-#. module: mrp
-#. odoo-javascript
-#: code:addons/mrp/static/src/views/mrp_workorder_kanban/mrp_workorder_kanban_header.js:0
-msgid "Are you sure you want to Update the Work Center Planning ?"
-msgstr ""
-
-#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_tree_view
 msgid ""
 "Are you sure you want to cancel these manufacturing orders?\n"
@@ -1047,17 +1027,9 @@ msgstr "Număr atașamente"
 
 #. module: mrp
 #. odoo-javascript
-#. odoo-python
-#: code:addons/mrp/models/mrp_bom.py:0
 #: code:addons/mrp/static/src/components/bom_overview_line/mrp_bom_overview_line.js:0
-#: code:addons/mrp/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
 msgid "Attachments"
 msgstr "Atașamente"
-
-#. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__attachments_count
-msgid "Attachments Count"
-msgstr "Număr atașamente"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__product_variant_attributes
@@ -1301,7 +1273,6 @@ msgstr "Listă de materiale folosită în Ordinul de producție"
 #: model:ir.model.fields,field_description:mrp.field_product_template__bom_ids
 #: model:ir.model.fields,field_description:mrp.field_stock_replenishment_info__bom_id
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse_orderpoint__bom_id
-#: model:ir.model.fields.selection,name:mrp.selection__product_document__attached_on_mrp__bom
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_line_view_search
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_tree_view
 #: model_terms:ir.ui.view,arch_db:mrp.product_product_form_view_bom_button
@@ -1789,6 +1760,13 @@ msgstr "Confirmă"
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Confirmed"
 msgstr "Confirmat"
+
+#. module: mrp
+#. odoo-javascript
+#: code:addons/mrp/static/src/widgets/workorder_planning_status.xml:0
+msgid ""
+"Conflict: this work order overlaps with another one on the same work center"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
@@ -2337,7 +2315,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_tag__display_name
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__display_name
 #: model:ir.model.fields,field_description:mrp.field_picking_label_type__display_name
-#: model:ir.model.fields,field_description:mrp.field_product_document__display_name
 #: model:ir.model.fields,field_description:mrp.field_product_product__display_name
 #: model:ir.model.fields,field_description:mrp.field_product_replenish__display_name
 #: model:ir.model.fields,field_description:mrp.field_product_template__display_name
@@ -2572,12 +2549,6 @@ msgstr "Estimat %s"
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_pivot
 msgid "Expected Duration"
 msgstr "Durată estinată"
-
-#. module: mrp
-#. odoo-javascript
-#: code:addons/mrp/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
-msgid "Files attached to the product."
-msgstr "Fișiere atașate la produs."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__location_final_id
@@ -2842,11 +2813,6 @@ msgid "Has planning issues"
 msgstr ""
 
 #. module: mrp
-#: model:ir.model.fields.selection,name:mrp.selection__product_document__attached_on_mrp__hidden
-msgid "Hidden"
-msgstr "Ascuns"
-
-#. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__costs_hour
 msgid "Hourly processing cost."
 msgstr "Costul de procesare pe oră."
@@ -2891,7 +2857,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter_tag__id
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__id
 #: model:ir.model.fields,field_description:mrp.field_picking_label_type__id
-#: model:ir.model.fields,field_description:mrp.field_product_document__id
 #: model:ir.model.fields,field_description:mrp.field_product_product__id
 #: model:ir.model.fields,field_description:mrp.field_product_replenish__id
 #: model:ir.model.fields,field_description:mrp.field_product_template__id
@@ -3348,17 +3313,6 @@ msgid "Leave"
 msgstr "Părăsește"
 
 #. module: mrp
-#: model:ir.model.fields,help:mrp.field_product_document__attached_on_mrp
-msgid ""
-"Leave hidden if document only accessible on product form.\n"
-"Select Bill of Materials to visualise this document as a product attachment "
-"when this product is in a bill of material."
-msgstr ""
-"Lăsați ascuns dacă documentul este accesibil doar în formularul produsului.\n"
-"Selectați Lista de materiale pentru a vizualiza acest document ca atașament "
-"la produs când produsul este într-o listă de materiale."
-
-#. module: mrp
 #: model:ir.model,name:mrp.model_mrp_consumption_warning_line
 msgid "Line of issue consumption"
 msgstr "Linia de probleme de consum"
@@ -3526,11 +3480,6 @@ msgid "MO To Close"
 msgstr "CP de închis"
 
 #. module: mrp
-#: model:ir.model.fields,field_description:mrp.field_product_document__attached_on_mrp
-msgid "MRP : Visible at"
-msgstr "MRP : Vizibil la"
-
-#. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/widgets/mrp_boolean_icon_field.js:0
 msgid "MRP Boolean Icon"
@@ -3633,7 +3582,6 @@ msgstr "Produs în ultimile 365 de zile"
 #: model:ir.ui.menu,name:mrp.menu_mrp_root
 #: model:res.groups.privilege,name:mrp.res_groups_privilege_manufacturing
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_line_view_search
-#: model_terms:ir.ui.view,arch_db:mrp.product_document_form
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:mrp.stock_move_line_view_search
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
@@ -3675,11 +3623,9 @@ msgid "Manufacturing Order"
 msgstr "Comanda de Producție"
 
 #. module: mrp
-#. odoo-javascript
 #. odoo-python
 #: code:addons/mrp/models/mrp_workorder.py:0
 #: code:addons/mrp/models/stock_picking.py:0
-#: code:addons/mrp/static/src/views/mrp_workorder_kanban/mrp_workorder_kanban_controller.xml:0
 #: model:ir.actions.act_window,name:mrp.action_mrp_production_form
 #: model:ir.actions.act_window,name:mrp.mrp_production_action
 #: model:ir.actions.act_window,name:mrp.mrp_production_action_picking_deshboard
@@ -4511,6 +4457,12 @@ msgid "Plan"
 msgstr "Plan"
 
 #. module: mrp
+#. odoo-javascript
+#: code:addons/mrp/static/src/views/mrp_workorder_kanban/mrp_workorder_kanban_controller.xml:0
+msgid "Plan MO"
+msgstr ""
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
 msgid "Plan Orders"
 msgstr "Comenzi planificate"
@@ -4548,6 +4500,12 @@ msgstr "Planificare"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
 msgid "Planning Issues"
+msgstr ""
+
+#. module: mrp
+#. odoo-javascript
+#: code:addons/mrp/static/src/widgets/workorder_planning_status.xml:0
+msgid "Planning issue: this work order is scheduled before a dependency"
 msgstr ""
 
 #. module: mrp
@@ -4724,6 +4682,11 @@ msgid "Produced"
 msgstr "Obținut"
 
 #. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
+msgid "Produced Quantity"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_serials__serial_numbers
 msgid "Produced Serial Numbers"
 msgstr "Numere de serie produse"
@@ -4759,11 +4722,6 @@ msgid "Product"
 msgstr "Produs"
 
 #. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
-msgid "Product Attachments"
-msgstr "Atașamente produs"
-
-#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__capacity_ids
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
 msgid "Product Capacities"
@@ -4780,9 +4738,10 @@ msgid "Product Catalog Product Is In Mo"
 msgstr "Produsul din catalog este în CP"
 
 #. module: mrp
-#: model:ir.model,name:mrp.model_product_document
-msgid "Product Document"
-msgstr "Document produs"
+#. odoo-javascript
+#: code:addons/mrp/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
+msgid "Product Documents"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__product_virtual_available
@@ -5200,6 +5159,11 @@ msgid "Remaining Days"
 msgstr "Zile rămase"
 
 #. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_kanban
+msgid "Remaining Time"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__remaining_time
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__remaining_time
 msgid "Remaining Working Time"
@@ -5312,6 +5276,7 @@ msgstr "Programați Data"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
+#: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_kanban
 msgid "Scheduled Date"
 msgstr "Dată planificată"
 
@@ -5669,6 +5634,11 @@ msgid "Start Date"
 msgstr "Dată început"
 
 #. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_tree_editable_view
+msgid "Start date"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__state
 msgid "State"
 msgstr "Stare"
@@ -5683,6 +5653,7 @@ msgstr "Stare"
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
+#: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_kanban
 msgid "Status"
 msgstr "Stare"
 
@@ -6392,6 +6363,12 @@ msgid "Total Quantity"
 msgstr "Cantitatea totală"
 
 #. module: mrp
+#. odoo-javascript
+#: code:addons/mrp/static/src/mrp_production_kanban/mrp_production_kanban_header.js:0
+msgid "Total Remaining Time"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__workorder_progress_count
 msgid "Total Running Orders"
 msgstr "Total comenzi în desfășurare"
@@ -6589,7 +6566,6 @@ msgstr "Deblocat implicit"
 #. module: mrp
 #: model:ir.actions.server,name:mrp.action_unplan_workorders
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_to_plan
 msgid "Unplan"
 msgstr "Neplanificat"
 
@@ -6600,28 +6576,9 @@ msgid "Unreserve"
 msgstr "Anulați rezervarea"
 
 #. module: mrp
-#. odoo-javascript
-#: code:addons/mrp/static/src/views/mrp_workorder_kanban/mrp_workorder_kanban_controller.js:0
-#: code:addons/mrp/static/src/views/mrp_workorder_kanban/mrp_workorder_kanban_header.js:0
-msgid "Update"
-msgstr ""
-
-#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Update BoM"
 msgstr "Actualizează LdM"
-
-#. module: mrp
-#. odoo-javascript
-#: code:addons/mrp/static/src/views/mrp_workorder_kanban/mrp_workorder_kanban_controller.xml:0
-msgid "Update Planning"
-msgstr ""
-
-#. module: mrp
-#. odoo-javascript
-#: code:addons/mrp/static/src/views/mrp_workorder_kanban/mrp_workorder_kanban_header.xml:0
-msgid "Update work center planning"
-msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__priority__1
@@ -7462,3 +7419,46 @@ msgstr "durată reală"
 #: code:addons/mrp/models/mrp_production.py:0
 msgid "split"
 msgstr "divizat"
+
+#~ msgid ""
+#~ "<p class=\"o_view_nocontent_smiling_face\">\n"
+#~ "                        Upload files to your product\n"
+#~ "                    </p><p>\n"
+#~ "                        Use this feature to store any files, like "
+#~ "drawings or specifications.\n"
+#~ "                    </p>"
+#~ msgstr ""
+#~ "<p class=\"o_view_nocontent_smiling_face\">\n"
+#~ "                        Încărcați fișiere pe produsul dvs.\n"
+#~ "                    </p><p>\n"
+#~ "                        Utilizați această caracteristică pentru a stoca "
+#~ "orice fișier, cum ar fi desene sau specificații.\n"
+#~ "                    </p>"
+
+#~ msgid "Attachments Count"
+#~ msgstr "Număr atașamente"
+
+#~ msgid "Files attached to the product."
+#~ msgstr "Fișiere atașate la produs."
+
+#~ msgid "Hidden"
+#~ msgstr "Ascuns"
+
+#~ msgid ""
+#~ "Leave hidden if document only accessible on product form.\n"
+#~ "Select Bill of Materials to visualise this document as a product "
+#~ "attachment when this product is in a bill of material."
+#~ msgstr ""
+#~ "Lăsați ascuns dacă documentul este accesibil doar în formularul "
+#~ "produsului.\n"
+#~ "Selectați Lista de materiale pentru a vizualiza acest document ca "
+#~ "atașament la produs când produsul este într-o listă de materiale."
+
+#~ msgid "MRP : Visible at"
+#~ msgstr "MRP : Vizibil la"
+
+#~ msgid "Product Attachments"
+#~ msgstr "Atașamente produs"
+
+#~ msgid "Product Document"
+#~ msgstr "Document produs"

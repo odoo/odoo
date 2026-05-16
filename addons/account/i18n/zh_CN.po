@@ -28,7 +28,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-07 17:35+0000\n"
+"POT-Creation-Date: 2026-05-15 17:35+0000\n"
 "PO-Revision-Date: 2026-05-05 08:30+0000\n"
 "Last-Translator: \"Chloe Wang (chwa)\" <chwa@odoo.com>\n"
 "Language-Team: Chinese (Simplified Han script) <https://translate.odoo.com/"
@@ -20988,6 +20988,12 @@ msgid "You can only resequence items from the same journal"
 msgstr "只能对同一日记账的项目进行重新排序"
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+msgid "You can only switch the type of a draft document."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_journal__invoice_reference_type
 msgid ""
 "You can set here the default communication that will appear on customer "
@@ -21469,13 +21475,6 @@ msgid ""
 "different %(vat_label)s."
 msgstr ""
 "如果合作伙伴的 %(vat_label)s 不同，则不能将其设置为另一个合作伙伴的开票地址。"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-msgid ""
-"You cannot switch the type of a document with an existing sequence number."
-msgstr ""
 
 #. module: account
 #. odoo-python

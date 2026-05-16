@@ -36,7 +36,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-08 17:37+0000\n"
+"POT-Creation-Date: 2026-05-15 17:35+0000\n"
 "PO-Revision-Date: 2025-11-21 14:46+0000\n"
 "Last-Translator: Odoo Turkish Import <dyki+tr@odoo.com>\n"
 "Language-Team: Turkish <https://translate.odoo.com/projects/odoo-19/"
@@ -2806,6 +2806,7 @@ msgid "Display"
 msgstr "Ekran"
 
 #. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_base_partner_merge_automatic_wizard__display_name
 #: model:ir.model.fields,field_description:website_slides.field_digest_digest__display_name
 #: model:ir.model.fields,field_description:website_slides.field_gamification_challenge__display_name
 #: model:ir.model.fields,field_description:website_slides.field_gamification_karma_tracking__display_name
@@ -3534,6 +3535,7 @@ msgid "HowTo"
 msgstr "Nasıl"
 
 #. module: website_slides
+#: model:ir.model.fields,field_description:website_slides.field_base_partner_merge_automatic_wizard__id
 #: model:ir.model.fields,field_description:website_slides.field_digest_digest__id
 #: model:ir.model.fields,field_description:website_slides.field_gamification_challenge__id
 #: model:ir.model.fields,field_description:website_slides.field_gamification_karma_tracking__id
@@ -4250,6 +4252,11 @@ msgstr "Bu grupların üyeleri otomatik olarak kanalın üyeleri olarak eklenir.
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_tag_group_view_tree
 msgid "Menu Entry"
 msgstr "Menü Girişi"
+
+#. module: website_slides
+#: model:ir.model,name:website_slides.model_base_partner_merge_automatic_wizard
+msgid "Merge Partner Wizard"
+msgstr ""
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_has_error
@@ -6777,6 +6784,14 @@ msgid ""
 msgstr ""
 "Üyesi değilseniz veya yayımlanmamışsa bir slayt sınavını tamamlanmamış "
 "olarak işaretleyemezsiniz."
+
+#. module: website_slides
+#. odoo-python
+#: code:addons/website_slides/models/base_partner_merge.py:0
+msgid ""
+"You cannot merge these contacts because multiple contacts are enrolled in "
+"the same courses: %s"
+msgstr ""
 
 #. module: website_slides
 #. odoo-python
