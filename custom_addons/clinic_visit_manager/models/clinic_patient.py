@@ -18,6 +18,11 @@ class ClinicPatient(models.Model):
     email = fields.Char(
         string="Email",
     )
+    partner_id = fields.Many2one(
+        "res.partner",
+        string="Odoo Customer",
+        ondelete="restrict",
+    )
     age = fields.Integer(
         string="Age",
     )

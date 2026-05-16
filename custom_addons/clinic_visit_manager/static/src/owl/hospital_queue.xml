@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="clinic_visit_manager.ServingCard">
+        <section class="o_hospital_serving_card">
+            <div class="o_hospital_serving_label">Now Serving</div>
+            <t t-if="props.current">
+                <div class="o_hospital_serving_token" t-out="props.current.token"/>
+                <div class="o_hospital_serving_patient" t-out="props.current.patient_name"/>
+                <div class="o_hospital_serving_doctor" t-out="props.current.doctor_name"/>
+            </t>
+            <t t-else="">
+                <div class="o_hospital_serving_token">--</div>
+                <div class="o_hospital_serving_patient">No patient is currently serving</div>
+            </t>
+        </section>
+    </t>
+
+    <t t-name="clinic_visit_manager.WaitingList">
+        <section class="o_hospital_waiting_panel">
+            <div class="o_hospital_panel_heading">
+                <h2>Waiting Queue</h2>
+                <span t-out="props.waiting.length"/>
+            </div>
+            <ol class="o_hospital_waiting_list">
+                <li t-foreach="props.waiting" t-as="queue" t-key="queue.id">
+                    <span class="o_hospital_queue_position" t-out="queue.queue_number"/>
+                    <span class="o_hospital_queue_token" t-out="queue.token"/>
+                    <span class="o_hospital_queue_patient" t-out="queue.patient_name"/>
+                </li>
+                <li t-if="!props.waiting.length" class="o_hospital_empty_row">No patients waiting</li>
+            </ol>
+
+            <t t-if="props.showSkipped">
+                <div class="o_hospital_panel_heading o_hospital_panel_heading_secondary">
+                    <h2>Skipped</h2>
+                    <span t-out="props.skipped.length"/>
+                </div>
+                <ol class="o_hospital_waiting_list o_hospital_skipped_list">
+                    <li t-foreach="props.skipped" t-as="queue" t-key="queue.id">
+                        <span class="o_hospital_queue_position" t-out="queue.queue_number"/>
+                        <span class="o_hospital_queue_token" t-out="queue.token"/>
+                        <span class="o_hospital_queue_patient" t-out="queue.patient_name"/>
+                        <button class="btn btn-light btn-sm" t-on-click="() => props.recall(queue)">Recall</button>
+                    </li>
+                    <li t-if="!props.skipped.length" class="o_hospital_empty_row">No skipped patients</li>
+                </ol>
+            </t>
+        </section>
+    </t>
+
+    <t t-name="clinic_visit_manager.QueueControls">
+        <section class="o_hospital_queue_controls" aria-label="Queue controls">
+            <button class="btn btn-primary" t-on-click="() => props.callNext()" t-att-disabled="!props.hasWaiting">
+                <i class="fa fa-forward"/>
+                <span>Call Next</span>
+            </button>
+            <button class="btn btn-success" t-on-click="() => props.complete()" t-att-disabled="!props.current">
+                <i class="fa fa-check"/>
+                <span>Complete</span>
+            </button>
+            <button class="btn btn-secondary" t-on-click="() => props.skip()" t-att-disabled="!props.current">
+                <i class="fa fa-step-forward"/>
+                <span>Skip</span>
+            </button>
+            <button class="btn btn-light" t-on-click="() => props.recall()" t-att-disabled="!props.hasRecall">
+                <i class="fa fa-bullhorn"/>
+                <span>Recall</span>
+            </button>
+        </section>
+    </t>
+
+    <t t-name="clinic_visit_manager.QueueDashboard">
+        <div class="o_action o_hospital_queue_app">
+            <ControlPanel/>
+            <div class="o-content o_hospital_queue_workspace overflow-auto">
+                <section class="o_hospital_queue_header">
+                    <div>
+                        <h1>Hospital Queue</h1>
+                        <p t-if="data.doctor">Doctor: <t t-out="data.doctor.name"/></p>
+                    </div>
+                    <select class="form-select" t-if="data.doctors.length > 1" t-att-value="state.doctorId" t-on-change="ev => this.setDoctor(ev)">
+                        <option t-foreach="data.doctors" t-as="doctor" t-key="doctor.id" t-att-value="doctor.id" t-out="doctor.name"/>
+                    </select>
+                </section>
+
+                <t t-if="state.loading">
+                    <div class="o_hospital_loading">Loading queue...</div>
+                </t>
+                <t t-else="">
+                    <form t-if="canAddQueue" class="o_hospital_quick_add" t-on-submit.prevent="() => this.addPatient()">
+                        <input class="form-control"
+                               placeholder="Patient name"
+                               t-att-value="state.newPatientName"
+                               t-on-input="ev => this.updateNewPatientName(ev)"/>
+                        <button class="btn btn-primary" type="submit" t-att-disabled="!state.newPatientName.trim() || state.adding">
+                            <i class="fa fa-plus"/>
+                            <span>Add</span>
+                        </button>
+                    </form>
+                    <QueueControls current="current"
+                                   hasWaiting="hasWaiting"
+                                   hasRecall="hasRecall"
+                                   callNext.bind="callNext"
+                                   complete.bind="complete"
+                                   skip.bind="skip"
+                                   recall.bind="recall"/>
+                    <div class="o_hospital_queue_grid">
+                        <ServingCard current="current"/>
+                        <WaitingList waiting="waiting" skipped="skipped" showSkipped="true" recall.bind="recall"/>
+                    </div>
+                </t>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="clinic_visit_manager.TVDisplayScreen">
+        <div class="o_action o_hospital_queue_app o_hospital_tv_screen">
+            <div class="o-content o_hospital_queue_workspace overflow-auto">
+                <section class="o_hospital_tv_header">
+                    <h1>Hospital Queue</h1>
+                    <p t-if="data.doctor" t-out="data.doctor.name"/>
+                </section>
+                <t t-if="state.loading">
+                    <div class="o_hospital_loading">Loading queue...</div>
+                </t>
+                <t t-else="">
+                    <div class="o_hospital_queue_grid">
+                        <ServingCard current="data.current"/>
+                        <WaitingList waiting="data.waiting" skipped="data.skipped" showSkipped="false" recall="() => {}"/>
+                    </div>
+                </t>
+            </div>
+        </div>
+    </t>
+</templates>

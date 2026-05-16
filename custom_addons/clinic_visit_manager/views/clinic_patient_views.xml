@@ -8,6 +8,7 @@
                 <field name="name"/>
                 <field name="phone"/>
                 <field name="email"/>
+                <field name="partner_id" optional="hide" groups="account.group_account_invoice,account.group_account_readonly"/>
                 <field name="age"/>
                 <field name="gender"/>
                 <field name="blood_group"/>
@@ -68,6 +69,7 @@
                             <field name="name"/>
                             <field name="phone"/>
                             <field name="email"/>
+                            <field name="partner_id" groups="account.group_account_invoice,account.group_account_readonly"/>
                         </group>
                         <group>
                             <field name="age"/>
@@ -102,10 +104,21 @@
         <field name="view_mode">kanban,list,form</field>
     </record>
 
+    <record id="action_clinic_patient_owl" model="ir.actions.client">
+        <field name="name">Patients</field>
+        <field name="tag">clinic_visit_manager.dashboard</field>
+        <field name="context">{'clinic_tab': 'patients'}</field>
+    </record>
+
     <menuitem id="menu_clinic_patient"
               name="Patients"
               parent="menu_clinic_root"
-              action="action_clinic_patient"
-              sequence="10"/>
+              action="action_clinic_patient_owl"
+              sequence="10"
+              groups="base.group_no_one"/>
+
+    <record id="menu_clinic_patient" model="ir.ui.menu">
+        <field name="active" eval="False"/>
+    </record>
 
 </odoo>

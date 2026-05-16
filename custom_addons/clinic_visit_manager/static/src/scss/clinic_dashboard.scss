@@ -1,107 +1,843 @@
-.o_clinic_dashboard {
-    background: #f6f8fb;
-    color: #172033;
-    max-width: none;
-    padding: 28px !important;
+.o_clinic_owl_dashboard {
+    --clinic-purple: #7567a6;
+    --clinic-purple-soft: #f3f0f8;
+    --clinic-bg: #f7f7f8;
+    --clinic-panel: #ffffff;
+    --clinic-border: #dedde3;
+    --clinic-text: #252932;
+    --clinic-muted: #6f7480;
 
-    .o_clinic_dashboard_hero {
-        margin-bottom: 18px;
+    background: var(--clinic-bg);
+    color: var(--clinic-text);
+    .o_clinic_workspace {
+        padding: 16px;
+    }
+
+    .o_clinic_metric_icon,
+    .o_clinic_eyebrow {
+        display: none;
+    }
+
+    .btn {
+        border-radius: 4px;
+        box-shadow: none;
+        font-weight: 500;
+    }
+
+    .btn-primary,
+    .btn-success {
+        background: var(--clinic-purple);
+        border-color: var(--clinic-purple);
+        color: #ffffff;
+    }
+
+    .btn-secondary,
+    .btn-light {
+        background: #ffffff;
+        border-color: var(--clinic-border);
+        color: var(--clinic-text);
+    }
+
+    .btn-link {
+        color: var(--clinic-purple);
+        text-decoration: none;
+    }
+
+    .form-control,
+    .form-select {
+        border-color: var(--clinic-border);
+        border-radius: 4px;
+        box-shadow: none;
+    }
+
+    .form-control:focus,
+    .form-select:focus {
+        border-color: var(--clinic-purple);
+        box-shadow: 0 0 0 1px var(--clinic-purple);
+    }
+
+    .o_clinic_app_tabs,
+    .o_clinic_filter_bar {
+        align-items: center;
+        background: transparent;
+        border: 0;
+        border-bottom: 1px solid var(--clinic-border);
+        border-radius: 0;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 18px;
+        margin: 0 0 16px;
+        padding: 0;
+
+        button {
+            background: transparent;
+            border: 0;
+            border-bottom: 2px solid transparent;
+            border-radius: 0;
+            color: var(--clinic-muted);
+            font-weight: 500;
+            min-height: 36px;
+            padding: 0 0 9px;
+
+            &.active {
+                border-color: var(--clinic-purple);
+                color: var(--clinic-purple);
+            }
+        }
+    }
+
+    .o_clinic_dashboard_header,
+    .o_clinic_list_header {
+        align-items: center;
+        background: transparent;
+        border: 0;
+        border-bottom: 1px solid var(--clinic-border);
+        border-radius: 0;
+        display: flex;
+        gap: 16px;
+        justify-content: space-between;
+        margin-bottom: 16px;
+        padding: 0 0 12px;
 
         h1 {
-            color: #172033;
-            font-size: 30px;
-            font-weight: 800;
+            color: var(--clinic-text);
+            font-size: 22px;
+            font-weight: 600;
             letter-spacing: 0;
-            margin: 2px 0 0;
+            margin: 0;
+        }
+
+        p {
+            color: var(--clinic-muted);
+            margin: 4px 0 0;
+        }
+
+        .form-control {
+            max-width: 340px;
         }
     }
 
-    .o_clinic_dashboard_eyebrow,
-    .o_clinic_section_label {
-        color: #647085;
-        display: block;
-        font-size: 12px;
-        font-weight: 800;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
+    .o_clinic_header_actions,
+    .o_clinic_focus_actions {
+        align-items: center;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        justify-content: space-between;
     }
 
-    .o_clinic_metrics_row {
+    .o_clinic_table_grid {
         display: grid;
         gap: 12px;
-        grid-template-columns: repeat(5, minmax(130px, 1fr));
-        margin-bottom: 18px;
+        grid-template-columns: minmax(0, 1fr) minmax(260px, 360px);
+        margin-bottom: 12px;
     }
 
-    .o_clinic_metric,
-    .o_clinic_dashboard_table {
-        background: #ffffff;
-        border: 1px solid #e3e8f0;
-        border-radius: 8px;
-        box-shadow: 0 10px 30px rgba(23, 32, 51, 0.06);
+    .o_clinic_table_panel,
+    .o_clinic_quick_form,
+    .o_clinic_focus_panel {
+        background: var(--clinic-panel);
+        border: 1px solid var(--clinic-border);
+        border-radius: 4px;
+        box-shadow: none;
+        padding: 14px;
     }
 
-    .o_clinic_metric {
-        align-items: flex-start;
-        color: #172033;
-        display: flex;
-        flex-direction: column;
-        min-height: 82px;
-        padding: 14px 16px;
-        text-align: left;
+    .o_clinic_table_panel {
+        overflow-x: auto;
+        padding: 0;
+    }
 
-        span {
-            color: #647085;
+    .o_clinic_table {
+        margin: 0;
+        min-width: 680px;
+
+        thead th {
+            background: #fafafa;
+            border-bottom: 1px solid var(--clinic-border);
+            color: var(--clinic-muted);
+            font-size: 12px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        tbody tr {
+            cursor: default;
+        }
+
+        tbody tr:hover {
+            background: var(--clinic-purple-soft);
+        }
+
+        td,
+        th {
+            padding: 9px 12px;
+            vertical-align: middle;
+        }
+
+        td {
+            color: var(--clinic-text);
             font-size: 13px;
-            font-weight: 700;
-            margin-bottom: 8px;
-        }
-
-        .o_field_widget {
-            font-size: 24px;
-            font-weight: 800;
-            line-height: 1;
         }
     }
 
-    .o_clinic_dashboard_table {
-        min-height: 320px;
-        overflow: hidden;
-        padding: 18px;
+    .o_clinic_metric_summary {
+        min-width: 520px;
+
+        th,
+        td {
+            text-align: center;
+        }
+
+        .o_clinic_metric_value {
+            background: transparent;
+            border: 0;
+            color: var(--clinic-purple);
+            font-size: 20px;
+            font-weight: 600;
+            padding: 0;
+        }
     }
 
-    .o_clinic_dashboard_table_header {
+    .o_clinic_metric_label,
+    .o_clinic_empty_state,
+    .o_clinic_loading {
+        color: var(--clinic-muted);
+        font-size: 13px;
+    }
+
+    .o_clinic_panel_heading {
         align-items: center;
         display: flex;
         justify-content: space-between;
-        margin-bottom: 14px;
+        margin-bottom: 12px;
 
         h2 {
-            color: #172033;
-            font-size: 18px;
-            font-weight: 800;
-            margin: 2px 0 0;
+            color: var(--clinic-text);
+            font-size: 16px;
+            font-weight: 600;
+            letter-spacing: 0;
+            margin: 0;
         }
     }
 
-    .o_clinic_count_badge {
-        align-items: center;
-        background: #e8f3f1;
-        border-radius: 999px;
-        color: #1d7f76;
-        display: inline-flex;
-        font-size: 14px;
-        font-weight: 800;
-        justify-content: center;
-        margin-left: 8px;
-        min-width: 32px;
-        padding: 3px 10px;
-        vertical-align: middle;
+    .o_clinic_featured_patient,
+    .o_clinic_empty_state,
+    .o_clinic_loading,
+    .o_clinic_state_list button {
+        background: #fafafa;
+        border: 1px solid var(--clinic-border);
+        border-radius: 4px;
+        box-shadow: none;
     }
 
-    @media (max-width: 1100px) {
-        .o_clinic_metrics_row {
+    .o_clinic_featured_patient {
+        margin-bottom: 12px;
+        min-height: 88px;
+        padding: 12px;
+
+        h3 {
+            color: var(--clinic-text);
+            font-size: 18px;
+            font-weight: 600;
+            letter-spacing: 0;
+            margin: 8px 0 4px;
+        }
+
+        p {
+            color: var(--clinic-muted);
+            margin: 0;
+        }
+    }
+
+    .o_clinic_token,
+    .o_clinic_status {
+        background: var(--clinic-purple-soft);
+        border-radius: 999px;
+        color: var(--clinic-purple);
+        display: inline-flex;
+        font-size: 12px;
+        font-weight: 500;
+        line-height: 1;
+        padding: 5px 8px;
+    }
+
+    .o_clinic_status_done,
+    .o_clinic_status_cancelled,
+    .o_clinic_status_draft {
+        background: #f2f2f3;
+        color: var(--clinic-muted);
+    }
+
+    .o_clinic_form_grid {
+        display: grid;
+        gap: 10px;
+        grid-template-columns: repeat(3, minmax(160px, 1fr));
+    }
+
+    .o_clinic_form_wide {
+        grid-column: 1 / -1;
+        min-height: 76px;
+    }
+
+    .o_clinic_form_actions {
+        display: flex;
+        gap: 8px;
+        justify-content: flex-end;
+        margin-top: 12px;
+    }
+
+    .o_clinic_table_actions {
+        white-space: nowrap;
+
+        .btn {
+            margin-left: 4px;
+        }
+    }
+
+    .o_clinic_pager {
+        align-items: center;
+        display: flex;
+        gap: 8px;
+        justify-content: flex-end;
+        margin-top: 14px;
+
+        button {
+            background: transparent;
+            border: 0;
+            color: var(--clinic-text);
+            min-height: 28px;
+            min-width: 24px;
+            padding: 0 4px;
+
+            &.active {
+                color: var(--clinic-purple);
+                font-weight: 700;
+            }
+        }
+
+        .o_clinic_pager_arrow i {
+            display: inline-block;
+        }
+    }
+
+    @media (max-width: 760px) {
+        .o_clinic_workspace {
+            padding: 12px;
+        }
+
+        .o_clinic_dashboard_header,
+        .o_clinic_list_header {
+            align-items: stretch;
+            flex-direction: column;
+        }
+
+        .o_clinic_form_grid,
+        .o_clinic_table_grid {
             grid-template-columns: 1fr;
+        }
+
+        .o_clinic_list_header .form-control {
+            max-width: none;
+        }
+    }
+}
+
+.o_clinic_visit_kanban {
+    .o_kanban_record,
+    .o_clinic_vitals_strip span {
+        border-radius: 4px;
+        box-shadow: none;
+    }
+
+    .o_clinic_patient_name {
+        color: var(--clinic-text, #252932);
+        font-size: 17px;
+        font-weight: 600;
+        letter-spacing: 0;
+    }
+
+    .o_clinic_visit_meta {
+        color: var(--clinic-muted, #6f7480);
+        display: grid;
+        gap: 5px;
+        font-size: 13px;
+
+        i {
+            display: none;
+        }
+    }
+
+    .o_clinic_vitals_strip {
+        display: grid;
+        gap: 6px;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+
+        span {
+            background: #fafafa;
+            border: 1px solid var(--clinic-border, #dedde3);
+            color: var(--clinic-muted, #6f7480);
+            font-size: 12px;
+            min-height: 42px;
+            padding: 8px;
+        }
+
+        strong {
+            color: var(--clinic-text, #252932);
+            display: block;
+            font-size: 15px;
+            font-weight: 600;
+        }
+    }
+}
+
+.o_hospital_queue_app {
+    --hospital-blue: #0b6fb8;
+    --hospital-blue-dark: #07548d;
+    --hospital-blue-soft: #eaf5fc;
+    --hospital-border: #d6e4ee;
+    --hospital-bg: #f6fafc;
+    --hospital-panel: #ffffff;
+    --hospital-text: #1f2a33;
+    --hospital-muted: #657786;
+
+    background: var(--hospital-bg);
+    color: var(--hospital-text);
+
+    .o_hospital_queue_workspace {
+        padding: 18px;
+    }
+
+    .btn {
+        align-items: center;
+        border-radius: 6px;
+        display: inline-flex;
+        font-weight: 600;
+        gap: 8px;
+        min-height: 38px;
+    }
+
+    .btn-primary,
+    .btn-success {
+        background: var(--hospital-blue);
+        border-color: var(--hospital-blue);
+        color: #ffffff;
+    }
+
+    .btn-primary:hover,
+    .btn-success:hover {
+        background: var(--hospital-blue-dark);
+        border-color: var(--hospital-blue-dark);
+    }
+
+    .btn-secondary,
+    .btn-light {
+        background: #ffffff;
+        border-color: var(--hospital-border);
+        color: var(--hospital-text);
+    }
+
+    .form-select {
+        border-color: var(--hospital-border);
+        border-radius: 6px;
+        max-width: 320px;
+    }
+
+    .o_hospital_queue_header,
+    .o_hospital_tv_header {
+        align-items: center;
+        border-bottom: 1px solid var(--hospital-border);
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 16px;
+        padding-bottom: 14px;
+
+        h1 {
+            color: var(--hospital-text);
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: 0;
+            margin: 0;
+        }
+
+        p {
+            color: var(--hospital-muted);
+            margin: 4px 0 0;
+        }
+    }
+
+    .o_hospital_queue_controls {
+        background: var(--hospital-panel);
+        border: 1px solid var(--hospital-border);
+        border-radius: 8px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-bottom: 16px;
+        padding: 12px;
+    }
+
+    .o_hospital_quick_add {
+        align-items: center;
+        background: var(--hospital-panel);
+        border: 1px solid var(--hospital-border);
+        border-radius: 8px;
+        display: grid;
+        gap: 10px;
+        grid-template-columns: minmax(220px, 1fr) auto;
+        margin-bottom: 12px;
+        padding: 10px;
+
+        .form-control {
+            border-color: var(--hospital-border);
+            border-radius: 6px;
+            min-height: 38px;
+        }
+    }
+
+    .o_hospital_queue_grid {
+        display: grid;
+        gap: 16px;
+        grid-template-columns: minmax(300px, 0.85fr) minmax(360px, 1.15fr);
+    }
+
+    .o_hospital_serving_card,
+    .o_hospital_waiting_panel,
+    .o_hospital_loading {
+        background: var(--hospital-panel);
+        border: 1px solid var(--hospital-border);
+        border-radius: 8px;
+        box-shadow: 0 8px 24px rgba(31, 42, 51, 0.06);
+    }
+
+    .o_hospital_serving_card {
+        display: grid;
+        min-height: 330px;
+        padding: 28px;
+        place-items: center;
+        text-align: center;
+    }
+
+    .o_hospital_serving_label {
+        color: var(--hospital-muted);
+        font-size: 14px;
+        font-weight: 700;
+        letter-spacing: 0;
+        text-transform: uppercase;
+    }
+
+    .o_hospital_serving_token {
+        color: var(--hospital-blue);
+        font-size: 86px;
+        font-weight: 800;
+        letter-spacing: 0;
+        line-height: 1;
+        margin: 18px 0 10px;
+    }
+
+    .o_hospital_serving_patient {
+        color: var(--hospital-text);
+        font-size: 28px;
+        font-weight: 700;
+        letter-spacing: 0;
+        line-height: 1.2;
+        overflow-wrap: anywhere;
+    }
+
+    .o_hospital_serving_doctor {
+        color: var(--hospital-muted);
+        font-size: 17px;
+        margin-top: 8px;
+    }
+
+    .o_hospital_waiting_panel {
+        padding: 16px;
+    }
+
+    .o_hospital_panel_heading {
+        align-items: center;
+        border-bottom: 1px solid var(--hospital-border);
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+        padding-bottom: 10px;
+
+        h2 {
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: 0;
+            margin: 0;
+        }
+
+        span {
+            background: var(--hospital-blue-soft);
+            border-radius: 999px;
+            color: var(--hospital-blue);
+            font-weight: 700;
+            min-width: 34px;
+            padding: 5px 10px;
+            text-align: center;
+        }
+    }
+
+    .o_hospital_panel_heading_secondary {
+        margin-top: 16px;
+    }
+
+    .o_hospital_waiting_list {
+        display: grid;
+        gap: 8px;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+
+        li {
+            align-items: center;
+            background: #fafdff;
+            border: 1px solid var(--hospital-border);
+            border-radius: 6px;
+            display: grid;
+            gap: 10px;
+            grid-template-columns: 48px 78px minmax(0, 1fr) auto;
+            min-height: 50px;
+            padding: 8px 10px;
+        }
+
+        .o_hospital_empty_row {
+            color: var(--hospital-muted);
+            display: block;
+            padding: 14px;
+            text-align: center;
+        }
+    }
+
+    .o_hospital_queue_position {
+        color: var(--hospital-muted);
+        font-weight: 700;
+    }
+
+    .o_hospital_queue_token {
+        background: var(--hospital-blue-soft);
+        border-radius: 999px;
+        color: var(--hospital-blue);
+        font-weight: 800;
+        padding: 6px 10px;
+        text-align: center;
+    }
+
+    .o_hospital_queue_patient {
+        color: var(--hospital-text);
+        font-weight: 600;
+        overflow-wrap: anywhere;
+    }
+
+    .o_hospital_loading {
+        color: var(--hospital-muted);
+        padding: 20px;
+        text-align: center;
+    }
+
+    &.o_hospital_tv_screen {
+        .o_hospital_queue_workspace {
+            padding: 28px;
+        }
+
+        .o_hospital_tv_header h1 {
+            font-size: 30px;
+        }
+
+        .o_hospital_queue_grid {
+            grid-template-columns: minmax(360px, 0.9fr) minmax(420px, 1.1fr);
+        }
+
+        .o_hospital_serving_card {
+            min-height: 520px;
+        }
+
+        .o_hospital_serving_token {
+            font-size: 132px;
+        }
+
+        .o_hospital_serving_patient {
+            font-size: 42px;
+        }
+
+        .o_hospital_waiting_list li {
+            font-size: 20px;
+            min-height: 68px;
+        }
+    }
+
+    @media (max-width: 900px) {
+        .o_hospital_queue_header,
+        .o_hospital_tv_header {
+            align-items: stretch;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .form-select {
+            max-width: none;
+        }
+
+        .o_hospital_queue_grid,
+        &.o_hospital_tv_screen .o_hospital_queue_grid {
+            grid-template-columns: 1fr;
+        }
+
+        .o_hospital_serving_token,
+        &.o_hospital_tv_screen .o_hospital_serving_token {
+            font-size: 72px;
+        }
+
+        .o_hospital_serving_patient,
+        &.o_hospital_tv_screen .o_hospital_serving_patient {
+            font-size: 26px;
+        }
+
+        .o_hospital_waiting_list li {
+            grid-template-columns: 42px 72px minmax(0, 1fr);
+
+            .btn {
+                grid-column: 1 / -1;
+                justify-content: center;
+            }
+        }
+    }
+}
+
+.o_hospital_queue_app {
+    --hospital-blue: #0f6fae;
+    --hospital-blue-dark: #0a5688;
+    --hospital-blue-soft: #eef7fc;
+    --hospital-border: #d9e6ee;
+    --hospital-bg: #f8fbfd;
+    --hospital-panel: #ffffff;
+    --hospital-text: #202a33;
+    --hospital-muted: #667481;
+
+    .o_hospital_queue_workspace {
+        padding: 16px;
+    }
+
+    .o_hospital_queue_header,
+    .o_hospital_tv_header {
+        margin-bottom: 12px;
+        padding-bottom: 10px;
+
+        h1 {
+            font-size: 22px;
+            font-weight: 650;
+        }
+    }
+
+    .o_hospital_queue_controls {
+        border-radius: 6px;
+        box-shadow: none;
+        margin-bottom: 12px;
+        padding: 10px;
+    }
+
+    .o_hospital_quick_add {
+        border-radius: 6px;
+        box-shadow: none;
+        padding: 8px;
+    }
+
+    .o_hospital_queue_grid {
+        gap: 12px;
+        grid-template-columns: minmax(280px, 0.75fr) minmax(340px, 1.25fr);
+    }
+
+    .o_hospital_serving_card,
+    .o_hospital_waiting_panel,
+    .o_hospital_loading {
+        border-radius: 6px;
+        box-shadow: none;
+    }
+
+    .o_hospital_serving_card {
+        min-height: 260px;
+        padding: 22px;
+    }
+
+    .o_hospital_serving_token {
+        font-size: 68px;
+        margin: 12px 0 8px;
+    }
+
+    .o_hospital_serving_patient {
+        font-size: 24px;
+    }
+
+    .o_hospital_serving_doctor {
+        font-size: 15px;
+    }
+
+    .o_hospital_waiting_panel {
+        padding: 12px;
+    }
+
+    .o_hospital_panel_heading {
+        margin-bottom: 8px;
+        padding-bottom: 8px;
+
+        h2 {
+            font-size: 16px;
+            font-weight: 650;
+        }
+    }
+
+    .o_hospital_waiting_list {
+        gap: 6px;
+
+        li {
+            background: #ffffff;
+            border-radius: 5px;
+            grid-template-columns: 40px 72px minmax(0, 1fr) auto;
+            min-height: 44px;
+            padding: 7px 9px;
+        }
+    }
+
+    .o_hospital_queue_token {
+        padding: 5px 8px;
+    }
+
+    &.o_hospital_tv_screen {
+        .o_hospital_queue_workspace {
+            padding: 24px;
+        }
+
+        .o_hospital_tv_header h1 {
+            font-size: 26px;
+        }
+
+        .o_hospital_serving_card {
+            min-height: 420px;
+        }
+
+        .o_hospital_serving_token {
+            font-size: 112px;
+        }
+
+        .o_hospital_serving_patient {
+            font-size: 36px;
+        }
+
+        .o_hospital_waiting_list li {
+            font-size: 18px;
+            min-height: 60px;
+        }
+    }
+
+    @media (max-width: 600px) {
+        .o_hospital_quick_add {
+            grid-template-columns: 1fr;
+
+            .btn {
+                justify-content: center;
+            }
         }
     }
 }

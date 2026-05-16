@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="clinic_visit_manager.QuickVisitForm">
+        <section class="o_clinic_quick_form">
+            <div class="o_clinic_panel_heading">
+                <h2>New Visit</h2>
+            </div>
+            <div class="o_clinic_form_grid">
+                <input class="form-control" placeholder="Patient name" t-att-value="props.visit.patient_name" t-on-input="ev => props.update('patient_name', ev.target.value)"/>
+                <input class="form-control" placeholder="Phone" t-att-value="props.visit.patient_phone" t-on-input="ev => props.update('patient_phone', ev.target.value)"/>
+                <input class="form-control" type="email" placeholder="Email" t-att-value="props.visit.patient_email" t-on-input="ev => props.update('patient_email', ev.target.value)"/>
+                <input class="form-control" type="number" placeholder="Age" t-att-value="props.visit.patient_age" t-on-input="ev => props.update('patient_age', ev.target.value)"/>
+                <select class="form-select" t-att-value="props.visit.patient_gender" t-on-change="ev => props.update('patient_gender', ev.target.value)">
+                    <option value="">Gender</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                    <option value="other">Other</option>
+                </select>
+                <input class="form-control" placeholder="Doctor name" t-att-value="props.visit.doctor_name" t-on-input="ev => props.update('doctor_name', ev.target.value)"/>
+                <input class="form-control" type="number" step="0.01" placeholder="Fee" t-att-value="props.visit.fee" t-on-input="ev => props.update('fee', ev.target.value)"/>
+                <textarea class="form-control o_clinic_form_wide" placeholder="Visit reason" t-att-value="props.visit.symptoms" t-on-input="ev => props.update('symptoms', ev.target.value)"/>
+            </div>
+            <div class="o_clinic_form_actions">
+                <button class="btn btn-secondary" t-on-click="() => props.close()">Cancel</button>
+                <button class="btn btn-primary" t-on-click="() => props.create()">Create Visit</button>
+            </div>
+        </section>
+    </t>
+
+    <t t-name="clinic_visit_manager.QuickPatientForm">
+        <section class="o_clinic_quick_form">
+            <div class="o_clinic_panel_heading">
+                <h2>New Patient</h2>
+            </div>
+            <div class="o_clinic_form_grid">
+                <input class="form-control" placeholder="Full name" t-att-value="props.patient.name" t-on-input="ev => props.update('name', ev.target.value)"/>
+                <input class="form-control" placeholder="Phone" t-att-value="props.patient.phone" t-on-input="ev => props.update('phone', ev.target.value)"/>
+                <input class="form-control" type="email" placeholder="Email" t-att-value="props.patient.email" t-on-input="ev => props.update('email', ev.target.value)"/>
+                <input class="form-control" type="number" placeholder="Age" t-att-value="props.patient.age" t-on-input="ev => props.update('age', ev.target.value)"/>
+                <select class="form-select" t-att-value="props.patient.gender" t-on-change="ev => props.update('gender', ev.target.value)">
+                    <option value="">Gender</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                    <option value="other">Other</option>
+                </select>
+                <select class="form-select" t-att-value="props.patient.blood_group" t-on-change="ev => props.update('blood_group', ev.target.value)">
+                    <option value="">Blood group</option>
+                    <option value="a_positive">A+</option>
+                    <option value="a_negative">A-</option>
+                    <option value="b_positive">B+</option>
+                    <option value="b_negative">B-</option>
+                    <option value="ab_positive">AB+</option>
+                    <option value="ab_negative">AB-</option>
+                    <option value="o_positive">O+</option>
+                    <option value="o_negative">O-</option>
+                </select>
+                <textarea class="form-control o_clinic_form_wide" placeholder="Notes" t-att-value="props.patient.notes" t-on-input="ev => props.update('notes', ev.target.value)"/>
+            </div>
+            <div class="o_clinic_form_actions">
+                <button class="btn btn-secondary" t-on-click="() => props.close()">Cancel</button>
+                <button class="btn btn-primary" t-on-click="() => props.create()">Create Patient</button>
+            </div>
+        </section>
+    </t>
+
+    <t t-name="clinic_visit_manager.DashboardSummary">
+        <div>
+            <section class="o_clinic_dashboard_header">
+                <div>
+                    <h1>Clinic Dashboard</h1>
+                    <p>
+                        <span t-if="props.updatedAt">Updated <t t-out="props.updatedAt"/></span>
+                        <span t-else="">Live overview</span>
+                    </p>
+                </div>
+            </section>
+
+            <section class="o_clinic_table_panel">
+                <table class="table table-sm o_clinic_table o_clinic_metric_summary">
+                    <thead>
+                        <tr>
+                            <th t-foreach="props.metricCards" t-as="metric" t-key="metric.key" t-out="metric.label"/>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td t-foreach="props.metricCards" t-as="metric" t-key="metric.key">
+                                <button class="o_clinic_metric_value"
+                                        t-on-click="() => props.openDashboardAction(metric.action || 'state', metric.state)"
+                                        t-out="metric.value"/>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section class="o_clinic_table_grid">
+                <article class="o_clinic_table_panel">
+                    <div class="o_clinic_panel_heading">
+                        <h2>Current Queue</h2>
+                    </div>
+                    <table class="table table-sm o_clinic_table">
+                        <thead>
+                            <tr>
+                                <th>Type</th>
+                                <th>Token</th>
+                                <th>Patient</th>
+                                <th>Doctor</th>
+                                <th class="text-end">Wait</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-if="props.data.focus.current">
+                                <td>In Consultation</td>
+                                <td><span class="o_clinic_token" t-out="props.data.focus.current.token_number || props.data.focus.current.name"/></td>
+                                <td t-out="props.data.focus.current.patient_name"/>
+                                <td t-out="props.data.focus.current.doctor_name || '-'"/>
+                                <td class="text-end">-</td>
+                                <td class="text-end">
+                                    <button class="btn btn-secondary btn-sm" t-on-click="() => props.openVisit(props.data.focus.current)">Open</button>
+                                    <button t-if="props.canCompleteVisits" class="btn btn-primary btn-sm" t-on-click="() => props.completeVisit(props.data.focus.current)">Done</button>
+                                </td>
+                            </tr>
+                            <tr t-if="props.data.focus.next">
+                                <td>Next</td>
+                                <td><span class="o_clinic_token" t-out="props.data.focus.next.token_number || props.data.focus.next.name"/></td>
+                                <td t-out="props.data.focus.next.patient_name"/>
+                                <td t-out="props.data.focus.next.doctor_name || '-'"/>
+                                <td class="text-end"><t t-out="props.data.focus.next.queue_wait_minutes"/> min</td>
+                                <td class="text-end">
+                                    <button class="btn btn-secondary btn-sm" t-on-click="() => props.openVisit(props.data.focus.next)">Open</button>
+                                    <button t-if="props.canStartVisits" class="btn btn-primary btn-sm" t-on-click="() => props.startVisit(props.data.focus.next)">Start</button>
+                                </td>
+                            </tr>
+                            <tr t-if="!props.data.focus.current and !props.data.focus.next">
+                                <td colspan="6" class="text-muted text-center">No active queue</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </article>
+
+                <article class="o_clinic_table_panel">
+                    <div class="o_clinic_panel_heading">
+                        <h2>Visit Status</h2>
+                    </div>
+                    <table class="table table-sm o_clinic_table">
+                        <thead>
+                            <tr>
+                                <th>Status</th>
+                                <th class="text-end">Count</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="props.data.state_counts" t-as="stateLine" t-key="stateLine.state"
+                                t-on-click="() => props.openDashboardAction('state', stateLine.state)">
+                                <td><span t-att-class="props.statusClass(stateLine.state)" t-out="stateLine.label"/></td>
+                                <td class="text-end fw-semibold" t-out="stateLine.count"/>
+                            </tr>
+                        </tbody>
+                    </table>
+                </article>
+            </section>
+        </div>
+    </t>
+
+    <t t-name="clinic_visit_manager.VisitTable">
+        <div>
+            <section class="o_clinic_table_panel">
+                <table class="table table-sm o_clinic_table">
+                    <thead>
+                        <tr>
+                            <th>Token</th>
+                            <th>Patient</th>
+                            <th>Doctor</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                            <th class="text-end">Wait</th>
+                            <th class="text-end">Fee</th>
+                            <th class="text-end">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr t-foreach="props.visits" t-as="visit" t-key="visit.id">
+                            <td><span class="o_clinic_token" t-out="visit.token_number || visit.name"/></td>
+                            <td t-out="visit.patient_name"/>
+                            <td t-out="visit.doctor_name || '-'"/>
+                            <td t-out="props.formatDate(visit.visit_date)"/>
+                            <td><span t-att-class="props.statusClass(visit.state)" t-out="props.statusLabel(visit.state)"/></td>
+                            <td class="text-end"><t t-out="visit.queue_wait_minutes"/> min</td>
+                            <td class="text-end" t-out="props.formatNumber(visit.fee, 2)"/>
+                            <td class="text-end o_clinic_table_actions">
+                                <button class="btn btn-secondary btn-sm" t-on-click="() => props.openVisit(visit)">Open</button>
+                                <button t-if="props.canQueueVisits &amp;&amp; visit.state === 'draft'" class="btn btn-primary btn-sm" t-on-click="() => props.sendToQueue(visit)">Queue</button>
+                                <button t-if="props.canStartVisits &amp;&amp; visit.state === 'waiting'" class="btn btn-primary btn-sm" t-on-click="() => props.startVisit(visit)">Start</button>
+                                <button t-if="props.canCompleteVisits &amp;&amp; (visit.state === 'waiting' || visit.state === 'in_consultation')" class="btn btn-primary btn-sm" t-on-click="() => props.completeVisit(visit)">Done</button>
+                                <button t-if="props.canCancelVisits &amp;&amp; visit.state !== 'done' &amp;&amp; visit.state !== 'cancelled'" class="btn btn-link btn-sm" t-on-click="() => props.cancelVisit(visit)">Cancel</button>
+                            </td>
+                        </tr>
+                        <tr t-if="!props.visitCount">
+                            <td colspan="8" class="text-muted text-center">No visits match this view</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+            <nav t-if="props.pageNumbers.length > 1" class="o_clinic_pager" aria-label="Visit pages">
+                <button class="o_clinic_pager_arrow" t-on-click="() => props.previousPage()" title="Previous page">
+                    <i class="fa fa-chevron-left"/>
+                </button>
+                <button t-foreach="props.pageNumbers" t-as="page" t-key="page"
+                        t-att-class="page === props.currentPage ? 'active' : ''"
+                        t-on-click="() => props.setPage(page)"
+                        t-out="page"/>
+                <button class="o_clinic_pager_arrow" t-on-click="() => props.nextPage()" title="Next page">
+                    <i class="fa fa-chevron-right"/>
+                </button>
+            </nav>
+        </div>
+    </t>
+
+    <t t-name="clinic_visit_manager.PatientTable">
+        <div>
+            <section class="o_clinic_table_panel">
+                <table class="table table-sm o_clinic_table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Phone</th>
+                            <th>Email</th>
+                            <th class="text-end">Age</th>
+                            <th>Gender</th>
+                            <th>Blood</th>
+                            <th class="text-end">Visits</th>
+                            <th class="text-end">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr t-foreach="props.patients" t-as="patient" t-key="patient.id">
+                            <td t-out="patient.name"/>
+                            <td t-out="patient.phone || '-'"/>
+                            <td t-out="patient.email || '-'"/>
+                            <td class="text-end" t-out="patient.age || '-'"/>
+                            <td t-out="props.genderLabel(patient.gender)"/>
+                            <td t-out="props.bloodGroupLabel(patient.blood_group)"/>
+                            <td class="text-end" t-out="patient.visit_count"/>
+                            <td class="text-end">
+                                <button class="btn btn-secondary btn-sm" t-on-click="() => props.openPatient(patient)">Open</button>
+                            </td>
+                        </tr>
+                        <tr t-if="!props.patientCount">
+                            <td colspan="8" class="text-muted text-center">No patients match this search</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+            <nav t-if="props.patientCount > 5" class="o_clinic_pager" aria-label="Patient pages">
+                <button class="o_clinic_pager_arrow" t-on-click="() => props.previousPage()" title="Previous page">
+                    <i class="fa fa-chevron-left"/>
+                </button>
+                <button t-foreach="props.pageNumbers" t-as="page" t-key="page"
+                        t-att-class="page === props.currentPage ? 'active' : ''"
+                        t-on-click="() => props.setPage(page)"
+                        t-out="page"/>
+                <button class="o_clinic_pager_arrow" t-on-click="() => props.nextPage()" title="Next page">
+                    <i class="fa fa-chevron-right"/>
+                </button>
+            </nav>
+        </div>
+    </t>
+</templates>

@@ -4,93 +4,32 @@
         <field name="model">clinic.visit.dashboard</field>
         <field name="arch" type="xml">
             <form string="Clinic Dashboard" create="0" edit="0">
-                <sheet class="o_clinic_dashboard">
-                    <div class="o_clinic_dashboard_hero">
-                        <div>
-                            <span class="o_clinic_dashboard_eyebrow">Clinic</span>
-                            <h1>Dashboard</h1>
-                        </div>
-                    </div>
-
-                    <div class="o_clinic_metrics_row">
-                        <button name="action_open_today_visits"
-                                type="object"
-                                class="btn o_clinic_metric">
-                            <span>Today's Visits</span>
-                            <field name="today_visit_count"/>
-                        </button>
-                        <button name="action_open_all_visits"
-                                type="object"
-                                class="btn o_clinic_metric">
-                            <span>Total Visits</span>
-                            <field name="total_visit_count"/>
-                        </button>
-                        <button name="action_open_patients"
-                                type="object"
-                                class="btn o_clinic_metric">
-                            <span>Total Patients</span>
-                            <field name="total_patient_count"/>
-                        </button>
-                        <button name="action_open_today_done"
-                                type="object"
-                                class="btn o_clinic_metric">
-                            <span>Completed</span>
-                            <field name="today_done_count"/>
-                        </button>
-                        <button name="action_open_active_queue"
-                                type="object"
-                                class="btn o_clinic_metric">
-                            <span>Active Queue</span>
-                            <field name="active_queue_count"/>
-                        </button>
-                    </div>
-
-                    <div class="o_clinic_dashboard_queue">
-                        <section class="o_clinic_dashboard_table o_clinic_queue_table">
-                            <div class="o_clinic_dashboard_table_header">
-                                <div>
-                                    <span class="o_clinic_section_label">Patient Visits</span>
-                                    <h2>
-                                        Visit Table
-                                        <span class="o_clinic_count_badge">
-                                            <field name="total_visit_count"/>
-                                        </span>
-                                    </h2>
-                                </div>
-                                <button name="action_open_all_visits"
-                                        type="object"
-                                        class="btn btn-link">Full list</button>
-                            </div>
-                            <field name="recent_visit_ids" readonly="1" nolabel="1">
-                                <list create="0" edit="0" delete="0">
-                                    <field name="token_number"/>
-                                    <field name="name"/>
-                                    <field name="patient_name"/>
-                                    <field name="patient_id"/>
-                                    <field name="doctor_name"/>
-                                    <field name="visit_date"/>
-                                    <field name="queue_wait_minutes"/>
-                                    <field name="consultation_minutes" optional="hide"/>
-                                    <field name="state"/>
-                                </list>
-                            </field>
-                        </section>
-                    </div>
+                <sheet>
+                    <field name="name" readonly="1"/>
                 </sheet>
             </form>
         </field>
     </record>
 
-    <record id="action_clinic_visit_dashboard" model="ir.actions.act_window">
-        <field name="name">Dashboard</field>
-        <field name="res_model">clinic.visit.dashboard</field>
-        <field name="view_mode">form</field>
-        <field name="res_id" ref="clinic_visit_dashboard_main"/>
+    <record id="action_clinic_visit_dashboard_owl" model="ir.actions.client">
+        <field name="name">Clinic Dashboard</field>
+        <field name="tag">clinic_visit_manager.dashboard</field>
+        <field name="context">{'clinic_tab': 'dashboard'}</field>
     </record>
 
     <menuitem id="menu_clinic_dashboard"
               name="Dashboard"
               parent="menu_clinic_root"
-              action="action_clinic_visit_dashboard"
-              sequence="1"/>
+              action="action_clinic_visit_dashboard_owl"
+              sequence="1"
+              groups="base.group_no_one"/>
+
+    <record id="menu_clinic_root" model="ir.ui.menu">
+        <field name="name">Clinic</field>
+        <field name="action" ref="action_clinic_visit_dashboard_owl"/>
+    </record>
+
+    <record id="menu_clinic_dashboard" model="ir.ui.menu">
+        <field name="active" eval="False"/>
+    </record>
 </odoo>

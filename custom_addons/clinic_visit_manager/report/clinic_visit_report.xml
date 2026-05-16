@@ -1,0 +1,172 @@
+<odoo>
+    <template id="report_clinic_visit_document">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <div class="oe_structure"/>
+
+                        <t t-set="layout_document_title">
+                            <span>Clinic Visit Report</span>
+                        </t>
+
+                        <div class="row mb-4">
+                            <div class="col-8">
+                                <h2 class="mb-1">Clinic Visit Report</h2>
+                                <div class="text-muted">
+                                    <span t-if="o.token_number">Token: <span t-field="o.token_number"/></span>
+                                    <span t-if="not o.token_number">Reference: <span t-field="o.name"/></span>
+                                </div>
+                            </div>
+                            <div class="col-4 text-end">
+                                <strong>Status</strong>
+                                <div>
+                                    <span t-field="o.state"/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-6">
+                                <h4>Patient</h4>
+                                <table class="table table-sm table-borderless">
+                                    <tbody>
+                                        <tr>
+                                            <td class="fw-bold">Name</td>
+                                            <td><span t-field="o.patient_name"/></td>
+                                        </tr>
+                                        <tr t-if="o.patient_id.phone">
+                                            <td class="fw-bold">Phone</td>
+                                            <td><span t-field="o.patient_id.phone"/></td>
+                                        </tr>
+                                        <tr t-if="o.patient_id.email">
+                                            <td class="fw-bold">Email</td>
+                                            <td><span t-field="o.patient_id.email"/></td>
+                                        </tr>
+                                        <tr t-if="o.patient_id.age">
+                                            <td class="fw-bold">Age</td>
+                                            <td><span t-field="o.patient_id.age"/></td>
+                                        </tr>
+                                        <tr t-if="o.patient_id.gender">
+                                            <td class="fw-bold">Gender</td>
+                                            <td><span t-field="o.patient_id.gender"/></td>
+                                        </tr>
+                                        <tr t-if="o.patient_id.blood_group">
+                                            <td class="fw-bold">Blood Group</td>
+                                            <td><span t-field="o.patient_id.blood_group"/></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="col-6">
+                                <h4>Visit</h4>
+                                <table class="table table-sm table-borderless">
+                                    <tbody>
+                                        <tr>
+                                            <td class="fw-bold">Reference</td>
+                                            <td><span t-field="o.name"/></td>
+                                        </tr>
+                                        <tr t-if="o.doctor_name">
+                                            <td class="fw-bold">Doctor</td>
+                                            <td><span t-field="o.doctor_name"/></td>
+                                        </tr>
+                                        <tr t-if="o.visit_date">
+                                            <td class="fw-bold">Visit Date</td>
+                                            <td><span t-field="o.visit_date"/></td>
+                                        </tr>
+                                        <tr t-if="o.queued_at">
+                                            <td class="fw-bold">Queued At</td>
+                                            <td><span t-field="o.queued_at"/></td>
+                                        </tr>
+                                        <tr t-if="o.consultation_started_at">
+                                            <td class="fw-bold">Started At</td>
+                                            <td><span t-field="o.consultation_started_at"/></td>
+                                        </tr>
+                                        <tr t-if="o.completed_at">
+                                            <td class="fw-bold">Completed At</td>
+                                            <td><span t-field="o.completed_at"/></td>
+                                        </tr>
+                                        <tr t-if="o.fee">
+                                            <td class="fw-bold">Fee</td>
+                                            <td><span t-field="o.fee"/></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <h4>Vitals</h4>
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Temperature</th>
+                                    <th>Blood Pressure</th>
+                                    <th>Pulse</th>
+                                    <th>Respiratory Rate</th>
+                                    <th>Oxygen</th>
+                                    <th>Weight</th>
+                                    <th>Height</th>
+                                    <th>BMI</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><span t-field="o.temperature_celsius"/> C</td>
+                                    <td>
+                                        <span t-if="o.blood_pressure_systolic or o.blood_pressure_diastolic">
+                                            <span t-field="o.blood_pressure_systolic"/> /
+                                            <span t-field="o.blood_pressure_diastolic"/>
+                                        </span>
+                                    </td>
+                                    <td><span t-field="o.pulse_rate"/></td>
+                                    <td><span t-field="o.respiratory_rate"/></td>
+                                    <td><span t-field="o.oxygen_saturation"/>%</td>
+                                    <td><span t-field="o.weight_kg"/> kg</td>
+                                    <td><span t-field="o.height_cm"/> cm</td>
+                                    <td><span t-field="o.bmi"/></td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <div class="row mt-4">
+                            <div class="col-6">
+                                <h4>Symptoms</h4>
+                                <p t-if="o.symptoms" t-field="o.symptoms"/>
+                                <p t-if="not o.symptoms" class="text-muted">No symptoms recorded.</p>
+                            </div>
+                            <div class="col-6">
+                                <h4>Doctor Notes</h4>
+                                <p t-if="o.notes" t-field="o.notes"/>
+                                <p t-if="not o.notes" class="text-muted">No doctor notes recorded.</p>
+                            </div>
+                        </div>
+
+                        <div class="row mt-5">
+                            <div class="col-6">
+                                <div class="border-top pt-2">Prepared By</div>
+                            </div>
+                            <div class="col-6">
+                                <div class="border-top pt-2">Doctor Signature</div>
+                            </div>
+                        </div>
+
+                        <div class="oe_structure"/>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <record id="action_report_clinic_visit" model="ir.actions.report">
+        <field name="name">Clinic Visit Report</field>
+        <field name="model">clinic.visit</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">clinic_visit_manager.report_clinic_visit_document</field>
+        <field name="report_file">clinic_visit_manager.report_clinic_visit_document</field>
+        <field name="print_report_name">'Clinic Visit - %s' % (object.token_number or object.name)</field>
+        <field name="binding_model_id" ref="model_clinic_visit"/>
+        <field name="binding_type">report</field>
+        <field name="group_ids"
+               eval="[(4, ref('group_clinic_receptionist')), (4, ref('group_clinic_doctor')), (4, ref('group_clinic_manager'))]"/>
+    </record>
+</odoo>
