@@ -8,7 +8,7 @@ class StockMove(models.Model):
         domain = [('move_id', 'in', self.ids), ('cost_id.state', '=', 'done')]
         if at_date:
             domain.append(('cost_id.date', '<=', at_date))
-        landed_cost_group = self.env['stock.valuation.adjustment.lines']._read_group(domain, ['move_id'], ['id:recordset'])
+        landed_cost_group = self.env['stock.valuation.adjustment.line']._read_group(domain, ['move_id'], ['id:recordset'])
         return dict(landed_cost_group)
 
     def _get_value_from_extra(self, quantity, at_date=None):
