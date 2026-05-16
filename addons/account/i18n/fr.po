@@ -28,7 +28,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-05-01 17:35+0000\n"
-"PO-Revision-Date: 2026-05-06 13:28+0000\n"
+"PO-Revision-Date: 2026-05-16 09:38+0000\n"
 "Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-19/account/"
 "fr/>\n"
@@ -206,8 +206,8 @@ msgid ""
 "line."
 msgstr ""
 "%(move)s a atteint un état invalide concernant sa ligne de relevé associée.\n"
-"Pour rester cohérente, l’écriture comptable doit toujours comporter "
-"exactement une ligne de compte d’attente."
+"Pour rester cohérente, la pièce comptable doit toujours comporter exactement "
+"une ligne de compte d’attente."
 
 #. module: account
 #. odoo-python
@@ -1324,7 +1324,7 @@ msgstr "<span class=\"o_stat_text\">Pièces comptables</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "<span class=\"o_stat_text\">Journal Entry</span>"
-msgstr "<span class=\"o_stat_text\">Écriture comptable</span>"
+msgstr "<span class=\"o_stat_text\">Pièce comptable</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -2594,8 +2594,8 @@ msgid ""
 "A journal entry consists of several journal items, each of\n"
 "                which is either a debit or a credit transaction."
 msgstr ""
-"Une écriture comptable se compose de plusieurs lignes d’écriture, chacune\n"
-"                 correspondant à une transaction au débit ou au crédit."
+"Une pièce comptable se compose de plusieurs écritures comptables, chacune "
+"correspondant à une transaction au débit ou au crédit."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_journal_form
@@ -6248,8 +6248,7 @@ msgstr "Super il semble que vous n'ayez pas de montant à régler."
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "Corrupted data on journal entry with id %(id)s (%(name)s)."
-msgstr ""
-"Données corrompues dans l’écriture comptable avec l’ID %(id)s (%(name)s)."
+msgstr "Données corrompues dans la pièce comptable avec l’ID %(id)s (%(name)s)."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.product_template_form_view
@@ -6460,7 +6459,7 @@ msgstr "Créer une facture client"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_journal_line
 msgid "Create a journal entry"
-msgstr "Créer une écriture comptable"
+msgstr "Créer une pièce comptable"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_supplier_accounts
@@ -8249,7 +8248,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_journal_dashboard.py:0
 msgid "Drop to create journal entries with attachments."
-msgstr "Déposer pour créer des écritures comptables avec des pièces jointes."
+msgstr "Déposez des pièces jointes pour créer des pièces comptables."
 
 #. module: account
 #. odoo-python
@@ -8816,7 +8815,7 @@ msgstr "Écritures de différence de change :"
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__no_followup
 #: model:ir.model.fields,help:account.field_account_move__no_followup
 msgid "Exclude this journal entry from follow-up reports."
-msgstr "Exclure cette écriture comptable des rapports de relance."
+msgstr "Exclure cette pièce comptable des rapports de relance."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__no_followup
@@ -9377,9 +9376,9 @@ msgid ""
 "Forces all journal items in this account to have a specific currency (i.e. "
 "bank journals). If no currency is set, entries can use any currency."
 msgstr ""
-"Force toutes les pièces comptables de ce compte à avoir une devise "
-"spécifique (c'est-à-dire les journaux bancaires). Si aucune devise n'est "
-"définie, les écritures peuvent utiliser n'importe quelle devise."
+"Force toutes les écritures comptables de ce compte à utiliser une devise "
+"spécifique (par exemple pour les journaux bancaires). Si aucune devise n’est "
+"définie, les écritures comptables peuvent utiliser n’importe quelle devise."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__foreign_currency_id
@@ -10210,7 +10209,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_reversal__journal_id
 msgid "If empty, uses the journal of the journal entry to be reversed."
-msgstr "Si vide, utilise le journal de l’écriture comptable à contrepasser."
+msgstr "Si vide, utilise le journal de la pièce comptable à contrepasser."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__include_base_amount
@@ -10341,8 +10340,8 @@ msgid ""
 "If you want to use \"Off-Balance Sheet\" accounts, all the accounts of the "
 "journal entry must be of this type"
 msgstr ""
-"Si vous souhaitez utiliser des comptes “hors bilan”, tous les comptes de "
-"l’écriture comptable doivent être de ce type"
+"Si vous souhaitez utiliser des comptes \"hors bilan\", tous les comptes de "
+"la pièce comptable doivent être de ce type"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_validate_account_move__ignore_abnormal_amount
@@ -11530,7 +11529,7 @@ msgstr "Devise du journal"
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 #: model_terms:ir.ui.view,arch_db:account.view_move_tree
 msgid "Journal Entries"
-msgstr "Écritures comptables"
+msgstr "Pièces comptables"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
@@ -11569,7 +11568,7 @@ msgstr "Pièce comptable"
 #: code:addons/account/static/src/components/account_payment_field/account_payment.xml:0
 #: code:addons/account/static/src/components/account_payment_field/account_payment_field.js:0
 msgid "Journal Entry Info"
-msgstr "Infos de l’écriture comptable"
+msgstr "Infos de la pièce comptable"
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_line
@@ -12196,8 +12195,7 @@ msgstr "Verrouiller les champs fiduciaires"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Log changes to posted journal entries immutably"
 msgstr ""
-"Consigner de façon immuable les modifications des écritures comptables "
-"validées"
+"Consigner de façon immuable les modifications des pièces comptables validées"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -18627,10 +18625,10 @@ msgid ""
 "To be consistent, the journal entry must always have exactly one journal "
 "item involving the bank/cash account."
 msgstr ""
-"L’écriture comptable %s a atteint un état invalide concernant sa ligne de "
+"La pièce comptable %s a atteint un état invalide concernant sa ligne de "
 "relevé associée.\n"
-"Pour rester cohérente, l’écriture comptable doit toujours comporter "
-"exactement une ligne d’écriture impliquant le compte bancaire ou de caisse."
+"Pour rester cohérente, la pièce comptable doit toujours comporter exactement "
+"une écriture comptable impliquant le compte bancaire ou de caisse."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_opening_move_id
@@ -18638,7 +18636,7 @@ msgid ""
 "The journal entry containing the initial balance of all this company's "
 "accounts."
 msgstr ""
-"L’écriture comptable contenant le solde initial de tous les comptes de cette "
+"La pièce comptable contenant le solde initial de tous les comptes de cette "
 "société."
 
 #. module: account
@@ -18648,8 +18646,8 @@ msgid ""
 "The journal entry from which this tax cash basis journal entry has been "
 "created."
 msgstr ""
-"L’écriture comptable à partir de laquelle cette écriture de comptabilité de "
-"trésorerie a été créée."
+"La pièce comptable de comptabilité de trésorerie créée à partir de cette "
+"pièce comptable."
 
 #. module: account
 #. odoo-python
@@ -19554,7 +19552,7 @@ msgstr "Cette pièce récurrente sera comptabilisée jusqu'à cette date (inclue
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "This setting locks once a journal entry is created."
-msgstr "Ce paramètre est verrouillé dès qu’une écriture comptable est créée."
+msgstr "Ce paramètre est verrouillé dès qu’une pièce comptable est créée."
 
 #. module: account
 #. odoo-python
@@ -19569,9 +19567,10 @@ msgid ""
 "context,\n"
 "                such as for sending by email or reviewing a batch of records."
 msgstr ""
-"Cette vue affiche uniquement les écritures comptables sélectionnées dans un "
+"Cette vue affiche uniquement les pièces comptables sélectionnées dans un "
 "autre contexte,\n"
-"                par exemple pour un envoi par e-mail ou une révision par lot."
+"                par exemple pour un envoi par e-mail ou pour la révision "
+"d’un lot d’enregistrements."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_reconcile_model
@@ -19655,8 +19654,8 @@ msgid ""
 "they have been posted.\n"
 "Instead, you can cancel the journal entry."
 msgstr ""
-"Pour conserver la piste d’audit restrictive, vous ne pouvez pas supprimer "
-"d’écritures comptables une fois qu’elles ont été validées.\n"
+"Pour préserver la piste d’audit stricte, vous ne pouvez pas supprimer des "
+"pièces comptables une fois qu’elles ont été validées.\n"
 "Vous pouvez toutefois les annuler."
 
 #. module: account
@@ -21119,7 +21118,7 @@ msgid ""
 "You can't change the company of your journal since there are some journal "
 "entries linked to it."
 msgstr ""
-"Vous ne pouvez pas modifier la société de votre journal, car des écritures "
+"Vous ne pouvez pas modifier la société de votre journal, car des pièces "
 "comptables y sont déjà liées."
 
 #. module: account
@@ -21179,9 +21178,9 @@ msgid ""
 "You can't delete a posted journal item. Don’t play games with your "
 "accounting records; reset the journal entry to draft before deleting it."
 msgstr ""
-"Vous ne pouvez pas supprimer une pièce comptable validée. Ne jouez pas avec "
-"votre comptabilité ; remettez la pièce comptable à l’état de brouillon avant "
-"de la supprimer."
+"Vous ne pouvez pas supprimer une écriture comptable validée. Ne jouez pas "
+"avec votre comptabilité. Remettez la pièce comptable à l’état de brouillon "
+"avant de la supprimer."
 
 #. module: account
 #. odoo-python
@@ -21255,7 +21254,7 @@ msgid ""
 "You can't reset to draft those journal entries. You need to request a "
 "cancellation instead."
 msgstr ""
-"Vous ne pouvez pas remettre en brouillon ces écritures comptables. Demandez "
+"Vous ne pouvez pas remettre ces pièces comptables en brouillon. Demandez "
 "plutôt une annulation."
 
 #. module: account
@@ -21365,8 +21364,8 @@ msgstr ""
 #: code:addons/account/models/account_move_line.py:0
 msgid "You cannot delete journal items belonging to a locked journal entry."
 msgstr ""
-"Vous ne pouvez pas supprimer les écritures appartenant à une pièce comptable "
-"verrouillée."
+"Vous ne pouvez pas supprimer des écritures comptables appartenant à une "
+"pièce comptable verrouillée."
 
 #. module: account
 #. odoo-python
@@ -21555,8 +21554,8 @@ msgid ""
 "You cannot modify the taxes related to a posted journal item, you should "
 "reset the journal entry to draft to do so."
 msgstr ""
-"Vous ne pouvez pas modifier les taxes liées à une écriture comptabilisée, il "
-"faut d'abord remettre la pièce comptable en brouillon."
+"Vous ne pouvez pas modifier les taxes liées à une écriture comptable "
+"validée. Vous devez d’abord remettre la pièce comptable en brouillon."
 
 #. module: account
 #. odoo-python
@@ -21675,8 +21674,8 @@ msgid ""
 "You cannot set a currency on this account as it already has some journal "
 "entries having a different foreign currency."
 msgstr ""
-"Vous ne pouvez pas définir une devise sur ce compte, car il existe déjà des "
-"écritures comptables avec une devise étrangère différente."
+"Vous ne pouvez pas définir de devise sur ce compte, car certaines pièces "
+"comptables utilisent déjà une autre devise étrangère."
 
 #. module: account
 #. odoo-python
@@ -21743,8 +21742,8 @@ msgid ""
 "You cannot use this wizard on journal entries belonging to different "
 "companies."
 msgstr ""
-"Vous ne pouvez pas utiliser cet assistant sur des écritures comptables "
-"appartenant à des sociétés différentes."
+"Vous ne pouvez pas utiliser cet assistant sur des pièces comptables "
+"appartenant à différentes sociétés."
 
 #. module: account
 #. odoo-python
