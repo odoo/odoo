@@ -877,7 +877,7 @@ comment-->1000.0</TaxExclusiveAmount></xpath>"""
 
         self.env["ir.model.fields"].create([{
                 "name": name,
-                "model": "account.move",
+                "model": "account.move.line",
                 "model_id": model_id,
                 "ttype": ttype,
                 "state": "manual",
