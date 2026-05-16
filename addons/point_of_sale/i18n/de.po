@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-08 17:35+0000\n"
-"PO-Revision-Date: 2026-04-23 11:51+0000\n"
+"POT-Creation-Date: 2026-05-15 17:35+0000\n"
+"PO-Revision-Date: 2026-05-16 16:38+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-s19-2/"
 "point_of_sale/de/>\n"
@@ -486,7 +486,7 @@ msgstr "<span>Datum</span>"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_order_receipt_footer
 msgid "<span>Expected delivery:</span>"
-msgstr ""
+msgstr "<span>Erwartete Lieferung:</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -1999,7 +1999,7 @@ msgstr "Kassenbeleg"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_session_sales_details
 msgid "Cash Rounding:"
-msgstr ""
+msgstr "Bargeldrundung:"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2674,13 +2674,13 @@ msgstr "Verbinden Sie den Drucker mit dem Internet (Ethernet-Kabel empfohlen)"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Connect printers to your PoS"
-msgstr ""
+msgstr "Verbinden Sie Drucker mit Ihrem Kassensystem"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__other_devices
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_other_devices
 msgid "Connect printers to your PoS."
-msgstr ""
+msgstr "Verbinden Sie Drucker mit Ihrem Kassensystem."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -3151,7 +3151,7 @@ msgstr "Dashboard"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/models/utils/indexed_db.js:0
 msgid "Database Connection Lost"
-msgstr ""
+msgstr "Datenbankverbindung unterbrochen"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3643,6 +3643,18 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/app/components/popups/retry_print_popup/retry_print_popup.xml:0
 msgid "Download"
 msgstr "Herunterladen"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
+msgid "Download IDB Errors"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
+msgid "Download IndexedDB error logs from localStorage"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5386,7 +5398,7 @@ msgstr "Logo-Name"
 #: code:addons/point_of_sale/receipt/pos_order_receipt.py:0
 #: code:addons/point_of_sale/static/src/app/models/pos_order_line.js:0
 msgid "Lot"
-msgstr ""
+msgstr "Los"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_pack_operation_lot__lot_name
@@ -6009,7 +6021,7 @@ msgstr "Nomenklatur"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_printer_form
 msgid "None"
-msgstr ""
+msgstr "Keine"
 
 #. module: point_of_sale
 #. odoo-python
@@ -8359,7 +8371,7 @@ msgstr "Verknüpfte Sitzung: %(link)s"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/models/utils/indexed_db.js:0
 msgid "Reload"
-msgstr ""
+msgstr "Neu laden"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8625,7 +8637,7 @@ msgstr "SMS aktiviert"
 #: code:addons/point_of_sale/receipt/pos_order_receipt.py:0
 #: code:addons/point_of_sale/static/src/app/models/pos_order_line.js:0
 msgid "SN"
-msgstr ""
+msgstr "SN"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_sale_details_receipt
@@ -9794,6 +9806,9 @@ msgid ""
 "The connection to the local database was lost. Reloading the page will "
 "restore it and prevent any loss of unsaved orders."
 msgstr ""
+"Die Verbindung zur lokalen Datenbank wurde unterbrochen. Durch das Neuladen "
+"der Seite wird sie wiederhergestellt und der Verlust ungespeicherter "
+"Aufträge bzw. Bestellungen verhindert."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -11223,6 +11238,14 @@ msgid "Validate"
 msgstr "Validieren"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_payment_method.py:0
+msgid ""
+"Validation Error: You cannot assign the same Cash payment method to multiple "
+"POS Shops. Please create a separate Cash payment method for each shop."
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__value
 msgid "Value"
 msgstr "Wert"
@@ -11697,6 +11720,12 @@ msgid ""
 msgstr ""
 "Sie sind nicht berechtigt, auf das Abschlusskontrolldatum des Kassensystems "
 "zuzugreifen."
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+msgid "You don't have the access rights to perform a cash in/out."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python

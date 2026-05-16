@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-08 17:35+0000\n"
-"PO-Revision-Date: 2026-05-08 11:05+0000\n"
+"POT-Creation-Date: 2026-05-15 17:35+0000\n"
+"PO-Revision-Date: 2026-05-16 16:48+0000\n"
 "Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-s19-2/"
 "point_of_sale/fr/>\n"
@@ -2677,13 +2677,13 @@ msgstr "Connecter l’imprimante à Internet (câble Ethernet recommandé)"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Connect printers to your PoS"
-msgstr ""
+msgstr "Connecter des imprimantes à votre PdV"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__other_devices
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_other_devices
 msgid "Connect printers to your PoS."
-msgstr ""
+msgstr "Connecter des imprimantes à votre PdV."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -3650,6 +3650,18 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/app/components/popups/retry_print_popup/retry_print_popup.xml:0
 msgid "Download"
 msgstr "Télécharger"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
+msgid "Download IDB Errors"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
+msgid "Download IndexedDB error logs from localStorage"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5249,8 +5261,8 @@ msgid ""
 "List of journal entries created when this POS order was reversed and "
 "invoiced after session close."
 msgstr ""
-"Liste des écritures comptables créées lorsque cette commande du point de "
-"vente a été contrepassée et facturée après la clôture de la session."
+"Liste des pièces comptables créées lorsque cette commande du point de vente "
+"a été contrepassée et facturée après la clôture de la session."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6020,7 +6032,7 @@ msgstr "Nomenclature"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_printer_form
 msgid "None"
-msgstr ""
+msgstr "Aucun"
 
 #. module: point_of_sale
 #. odoo-python
@@ -11241,6 +11253,14 @@ msgid "Validate"
 msgstr "Valider"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_payment_method.py:0
+msgid ""
+"Validation Error: You cannot assign the same Cash payment method to multiple "
+"POS Shops. Please create a separate Cash payment method for each shop."
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__value
 msgid "Value"
 msgstr "Valeur"
@@ -11716,6 +11736,12 @@ msgid ""
 msgstr ""
 "Vous n'avez pas les droits d'accès pour obtenir les données de contrôle de "
 "clôture du point de vente."
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+msgid "You don't have the access rights to perform a cash in/out."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python

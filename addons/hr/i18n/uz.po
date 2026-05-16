@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-06 18:36+0000\n"
+"POT-Creation-Date: 2026-05-15 17:35+0000\n"
 "PO-Revision-Date: 2025-10-08 18:37+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -1217,7 +1217,6 @@ msgid "Attachment Count"
 msgstr "Biriktirishlar soni"
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_preferences
 #, fuzzy
 msgid "Attendance PIN"
@@ -5216,6 +5215,11 @@ msgid "Related employees based on their private address"
 msgstr "Shaxsiy manzillari asosida tegishli xodimlar"
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_res_users__all_employee_ids
+msgid "Related employees from all companies"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__user_id
 #: model:ir.model.fields,help:hr.field_resource_resource__user_id
 #, fuzzy
@@ -5899,6 +5903,12 @@ msgid ""
 msgstr ""
 "Siz o‘qishga urinayotgan \"%s\" maydonlari xodimlarning ommaviy profillari "
 "uchun mavjud emas."
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_employee.py:0
+msgid "The following employees have the same work email address: %s"
+msgstr ""
 
 #. module: hr
 #. odoo-python

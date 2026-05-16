@@ -15,21 +15,22 @@
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 # Odoo Translation Bot <c3p@odoo.com>, 2026.
+# Nusara Boonma <nuboo@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-24 17:37+0000\n"
-"PO-Revision-Date: 2026-01-16 05:47+0000\n"
-"Last-Translator: Odoo Translation Bot <c3p@odoo.com>\n"
-"Language-Team: Thai <https://translate.odoo.com/projects/odoo-s19-1/mrp/th/"
-">\n"
+"PO-Revision-Date: 2026-05-16 16:52+0000\n"
+"Last-Translator: Nusara Boonma <nuboo@odoo.com>\n"
+"Language-Team: Thai <https://translate.odoo.com/projects/odoo-s19-2/mrp/th/>"
+"\n"
 "Language: th\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__state
@@ -155,7 +156,7 @@ msgstr "%(qty)s %(measure)s ถูกรื้อแล้วใน %(order)s"
 #. odoo-python
 #: code:addons/mrp/report/mrp_report_bom_structure.py:0
 msgid "%(qty)s Ready To Produce"
-msgstr ""
+msgstr "%(qty)s พร้อมผลิต"
 
 #. module: mrp
 #. odoo-python
@@ -463,6 +464,7 @@ msgstr ""
 msgid ""
 "<span name=\"to_produce\" class=\"fw-bold text-nowrap\">To Produce</span>"
 msgstr ""
+"<span name=\"to_produce\" class=\"fw-bold text-nowrap\">ที่ต้องผลิต</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_production_components
@@ -1717,7 +1719,7 @@ msgstr "ยืนยันแล้ว"
 #: model_terms:ir.ui.view,arch_db:mrp.production_message
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_production_components
 msgid "Consumed"
-msgstr "บริโภคแล้ว"
+msgstr "ปริมาณที่ถูกใช้ไป"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__consume_line_ids
@@ -2942,7 +2944,7 @@ msgstr "วันที่ให้ข้อมูลช่วยให้กำ
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_production_moves
 msgid "Inventory Moves"
-msgstr "การย้ายสินค้าคงคลัง"
+msgstr "การย้ายคลังสินค้า"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_route
@@ -2952,7 +2954,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__move_line_ids
 msgid "Inventory moves for which you must scan a lot number at this work order"
-msgstr "การย้ายสินค้าคงคลังที่คุณต้องสแกนหมายเลขล็อตที่คำสั่งงานนี้"
+msgstr "การย้ายคลังสินค้าที่คุณต้องสแกนหมายเลขล็อตที่คำสั่งงานนี้"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__is_delayed
@@ -3629,7 +3631,7 @@ msgstr "ข้อความ"
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_warehouse_orderpoint
 msgid "Minimum Inventory Rule"
-msgstr "กฎขั้นต่ำของสินค้าคงคลัง"
+msgstr "กฎขั้นต่ำของคลังสินค้า"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
@@ -5443,7 +5445,7 @@ msgstr "วันที่เริ่ม"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__state
 msgid "State"
-msgstr "รัฐ"
+msgstr "สถานะ"
 
 #. module: mrp
 #. odoo-javascript
@@ -5895,7 +5897,7 @@ msgid ""
 "                You can filter on the product to see all the past movements "
 "for the product."
 msgstr ""
-"เมนูนี้ช่วยให้คุณตรวจสอบย้อนกลับได้อย่างสมบูรณ์ของการปฏิบัติการคลังสินค้าคงคลังของสินค้าเฉพาะ\n"
+"เมนูนี้ช่วยให้คุณตรวจสอบย้อนกลับได้อย่างสมบูรณ์ของการปฏิบัติการคลังคลังสินค้าของสินค้าเฉพาะ\n"
 "               คุณสามารถกรองสินค้าเพื่อดูการเคลื่อนไหวที่ผ่านมาทั้งหมดสำหรับสินค้า"
 
 #. module: mrp
@@ -5990,7 +5992,7 @@ msgstr "ที่ปิด"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_production_components
 msgid "To Consume"
-msgstr "การบริโภค"
+msgstr "ปริมาณที่ต้องตัดใช้"
 
 #. module: mrp
 #. odoo-javascript
@@ -6005,7 +6007,7 @@ msgstr "ที่จะทำ"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
 msgid "To Launch"
-msgstr "ที่จะเปิดตัว"
+msgstr "รอดำเนินการ"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.stock_production_type_kanban
@@ -6028,7 +6030,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.view_stock_move_operations_finished
 msgid "To Produce"
-msgstr "ผลิต"
+msgstr "ที่ต้องผลิต"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__search_date_category__today
