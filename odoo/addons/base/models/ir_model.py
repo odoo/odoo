@@ -1085,7 +1085,15 @@ class IrModelFields(models.Model):
                 _logger.warning("Deprecated since Odoo 19, ir.model.fields.translate becomes Selection, the value should be a string")
                 vals['translate'] = 'html_translate' if vals.get('ttype') == 'html' else 'standard'
             if 'model_id' in vals:
-                vals['model'] = IrModel.browse(vals['model_id']).model
+                model_from_id = IrModel.browse(vals['model_id']).model
+                if 'model' in vals:
+                    if vals['model'] != model_from_id:
+                        raise ValidationError(_(
+                            "Inconsistent values: model=%(model)s does not match model_id=%(model_id)s.",
+                            model=vals['model'], model_id=vals['model_id'],
+                        ))
+                else:
+                    vals['model'] = model_from_id
 
         # for self._get_ids() in _update_selection()
         self.env.registry.clear_cache('stable')
