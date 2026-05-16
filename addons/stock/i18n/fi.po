@@ -44,16 +44,16 @@ msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-03 18:38+0000\n"
-"PO-Revision-Date: 2026-04-04 08:05+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
-"Language-Team: Finnish <https://translate.odoo.com/projects/odoo-17/stock/fi/"
-">\n"
+"PO-Revision-Date: 2026-05-16 08:13+0000\n"
+"Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
+"Language-Team: Finnish <https://translate.odoo.com/projects/odoo-17/stock/"
+"fi/>\n"
 "Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: stock
 #. odoo-python
@@ -2360,13 +2360,14 @@ msgid ""
 "type."
 msgstr ""
 "Tuotteiden nykyinen määrä.\n"
-"Yhdessä Stock Location -tilassa tämä sisältää tavaroita, jotka on varastoitu "
-"tähän paikkaan tai mihin tahansa sen alapaikkoihin.\n"
-"Yhdessä Warehouse-ympäristössä tämä sisältää tavaroita, jotka on varastoitu "
-"tämän varaston varastopaikalle tai sen alapaikkoihin.\n"
-"tallennetaan tämän myymälän varastokohtaan tai sen lapsiin.\n"
-"Muussa tapauksessa tämä koskee tavaroita, jotka on tallennettu mihin tahansa "
-"Stock-paikkaan, jossa on sisäinen tyyppi. "
+"Yhden varastosijainnin kontekstissa tämä sisältää kyseiseen sijaintiin tai "
+"sen alisijainteihin varastoidut tuotteet.\n"
+"Yhden varaston kontekstissa tämä sisältää kyseisen varaston "
+"varastosijaintiin tai sen alisijainteihin varastoidut tuotteet.\n"
+"säilytetään tämän myymälän varaston varastosijainnissa tai sen "
+"alisijainneissa.\n"
+"Muussa tapauksessa tämä koskee tavaroita, joita säilytetään missä tahansa "
+"sisäisen tyypin varastosijainnissa."
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_label_layout__move_quantity__custom
@@ -3802,7 +3803,7 @@ msgstr "On seuranta"
 #: model:ir.model.fields,field_description:stock.field_product_replenish__product_has_variants
 #: model:ir.model.fields,field_description:stock.field_stock_rules_report__product_has_variants
 msgid "Has variants"
-msgstr "On variaatioita"
+msgstr "Sisältää variantteja"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_putaway_list
@@ -6899,7 +6900,7 @@ msgstr "Tuotevariaatio"
 #: model:ir.actions.act_window,name:stock.stock_product_normal_action
 #: model:ir.ui.menu,name:stock.product_product_menu
 msgid "Product Variants"
-msgstr "Tuotevariaatiot"
+msgstr "Tuotevariantit"
 
 #. module: stock
 #. odoo-python
