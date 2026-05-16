@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-05-01 17:36+0000\n"
-"PO-Revision-Date: 2026-04-23 05:28+0000\n"
+"PO-Revision-Date: 2026-05-16 09:42+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
 "odoo-19/pos_safaricom/es_419/>\n"
@@ -23,13 +23,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_safaricom/static/src/app/components/popups/mpesa_transaction_popup.xml:0
 msgid "'Search by name or phone or transaction id...'"
-msgstr ""
+msgstr "'Busca por nombre, teléfono o ID de la transacción...'"
 
 #. module: pos_safaricom
 #. odoo-javascript
 #: code:addons/pos_safaricom/static/src/app/components/popups/mpesa_transaction_popup.xml:0
 msgid "'Select M-Pesa Transaction'"
-msgstr ""
+msgstr "'Selecciona una transacción de M-Pesa'"
 
 #. module: pos_safaricom
 #. odoo-javascript
@@ -63,6 +63,11 @@ msgid ""
 "                        This happens automatically on creation, but you can "
 "re-register if you deleted them from the business portal."
 msgstr ""
+"Debes registrar las URL de retrollamada C2B en Safaricom para que Lipa na M-"
+"PESA funcione.\n"
+"                        Esto ocurre de forma automática al crear el "
+"registro, pero puedes registrarlas de nuevo si las eliminas del portal de la "
+"empresa."
 
 #. module: pos_safaricom
 #. odoo-javascript
@@ -107,6 +112,8 @@ msgstr "Secreto del consumidor"
 msgid ""
 "Could not find base url. Please set up web.base.url to a valid https address"
 msgstr ""
+"No pudimos encontrar la URL base, configura web.base.url con una dirección "
+"https válida"
 
 #. module: pos_safaricom
 #: model:ir.model.fields,field_description:pos_safaricom.field_transaction_lipa_na_mpesa__create_uid
@@ -142,7 +149,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/pos_safaricom/models/pos_payment_method.py:0
 msgid "Failed to register URLs: %s"
-msgstr ""
+msgstr "Ocurrió un error al registrar las URL: %s"
 
 #. module: pos_safaricom
 #. odoo-python
@@ -305,6 +312,8 @@ msgid ""
 "The business short code and till number combination as 'shortcode-"
 "tillnumber' (ex: 123456-789012)"
 msgstr ""
+"La combinación del código corto de la empresa y el número de caja con el "
+"formato 'codigocorto-numerodecaja' (por ejemplo: 123456-789012)"
 
 #. module: pos_safaricom
 #: model:ir.model.fields,help:pos_safaricom.field_pos_payment_method__passkey
