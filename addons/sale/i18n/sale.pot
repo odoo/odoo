@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.4a1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-10 17:37+0000\n"
-"PO-Revision-Date: 2026-05-10 17:37+0000\n"
+"POT-Creation-Date: 2026-05-15 17:36+0000\n"
+"PO-Revision-Date: 2026-05-15 17:36+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -2642,11 +2642,6 @@ msgid "Invoicing Address"
 msgstr ""
 
 #. module: sale
-#: model:ir.model.fields,field_description:sale.field_sale_order__journal_id
-msgid "Invoicing Journal"
-msgstr ""
-
-#. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__invoice_policy
 #: model:ir.model.fields,field_description:sale.field_product_template__invoice_policy
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__default_invoice_policy
@@ -2728,6 +2723,11 @@ msgstr ""
 msgid ""
 "It is forbidden to modify the following fields in a locked order:\n"
 "%s"
+msgstr ""
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order__journal_id
+msgid "Journal"
 msgstr ""
 
 #. module: sale
@@ -5471,12 +5471,6 @@ msgstr ""
 msgid ""
 "You cannot set a negative number for the default quotation validity. Leave "
 "empty (or 0) to disable the automatic expiration of quotations."
-msgstr ""
-
-#. module: sale
-#. odoo-python
-#: code:addons/sale/models/account_analytic_line.py:0
-msgid "You cannot set a negative quantity on services."
 msgstr ""
 
 #. module: sale

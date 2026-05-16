@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.4a1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-07 17:35+0000\n"
-"PO-Revision-Date: 2026-05-07 17:35+0000\n"
+"POT-Creation-Date: 2026-05-15 17:35+0000\n"
+"PO-Revision-Date: 2026-05-15 17:35+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -533,6 +533,12 @@ msgid "Browser"
 msgstr ""
 
 #. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/hooks/use_camera.js:0
+msgid "Camera Error"
+msgstr ""
+
+#. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__can_edit
 msgid "Can Edit"
 msgstr ""
@@ -568,9 +574,10 @@ msgid ""
 msgstr ""
 
 #. module: hr_attendance
-#. odoo-javascript
-#: code:addons/hr_attendance/static/src/components/check_in_out/check_in_out.xml:0
-msgid "Check IN"
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid ""
+"Capture a photo at the time of check-in using the device camera (if "
+"available). Images are automatically optimized for performance and storage."
 msgstr ""
 
 #. module: hr_attendance
@@ -579,12 +586,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_public__last_check_in
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_form
 msgid "Check In"
-msgstr ""
-
-#. module: hr_attendance
-#. odoo-javascript
-#: code:addons/hr_attendance/static/src/components/check_in_out/check_in_out.xml:0
-msgid "Check OUT"
 msgstr ""
 
 #. module: hr_attendance
@@ -605,6 +606,23 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/attendance_menu/attendance_menu.xml:0
 msgid "Check out"
+msgstr ""
+
+#. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__in_image
+msgid "Check-In Image"
+msgstr ""
+
+#. module: hr_attendance
+#. odoo-python
+#: code:addons/hr_attendance/models/hr_employee.py:0
+msgid "Check-in image captured"
+msgstr ""
+
+#. module: hr_attendance
+#. odoo-python
+#: code:addons/hr_attendance/models/hr_employee.py:0
+msgid "Check-in is recorded, but picture could not be captured"
 msgstr ""
 
 #. module: hr_attendance
@@ -682,6 +700,7 @@ msgstr ""
 
 #. module: hr_attendance
 #. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/confirmation/confirmation.xml:0
 #: code:addons/hr_attendance/static/src/components/new_employee_dialog/new_employee_dialog.xml:0
 msgid "Confirm"
 msgstr ""
@@ -1060,6 +1079,7 @@ msgstr ""
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/components/card_layout/card_layout.xml:0
+#: code:addons/hr_attendance/static/src/components/confirmation/confirmation.xml:0
 #: code:addons/hr_attendance/static/src/components/greetings/greetings.xml:0
 #: code:addons/hr_attendance/static/src/components/manual_selection/manual_selection.xml:0
 #: code:addons/hr_attendance/static/src/components/pin_code/pin_code.xml:0
@@ -1138,6 +1158,12 @@ msgstr ""
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime_rule__expected_hours_from_contract
 msgid "Hours from employee schedule"
+msgstr ""
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/confirmation/confirmation.xml:0
+msgid "Hours today:"
 msgstr ""
 
 #. module: hr_attendance
@@ -1237,6 +1263,7 @@ msgstr ""
 
 #. module: hr_attendance
 #. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/confirmation/confirmation.xml:0
 #: code:addons/hr_attendance/static/src/components/greetings/greetings.xml:0
 msgid "Invalid request"
 msgstr ""
@@ -1717,6 +1744,7 @@ msgstr ""
 
 #. module: hr_attendance
 #. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/confirmation/confirmation.xml:0
 #: code:addons/hr_attendance/static/src/components/greetings/greetings.xml:0
 #: code:addons/hr_attendance/static/src/components/pin_code/pin_code.xml:0
 msgid "Please return to the main menu."
@@ -2073,6 +2101,13 @@ msgid "Systray"
 msgstr ""
 
 #. module: hr_attendance
+#: model:ir.model.fields,field_description:hr_attendance.field_res_company__attendance_capture_check_in
+#: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__attendance_capture_check_in
+#: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
+msgid "Take Pictures on Check-In"
+msgstr ""
+
+#. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__hr_attendance__in_mode__technical
 #: model:ir.model.fields.selection,name:hr_attendance.selection__hr_attendance__out_mode__technical
 msgid "Technical"
@@ -2265,6 +2300,12 @@ msgstr ""
 #. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__hr_attendance__day_of_date__1
 msgid "Tuesday"
+msgstr ""
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/hooks/use_camera.js:0
+msgid "Unable to access camera"
 msgstr ""
 
 #. module: hr_attendance
@@ -2467,6 +2508,18 @@ msgid "check out"
 msgstr ""
 
 #. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/confirmation/confirmation.xml:0
+msgid "check-in"
+msgstr ""
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/confirmation/confirmation.xml:0
+msgid "check-out"
+msgstr ""
+
+#. module: hr_attendance
 #. odoo-python
 #: code:addons/hr_attendance/models/hr_attendance_overtime_rule.py:0
 msgid "day"
@@ -2491,6 +2544,12 @@ msgstr ""
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_overtime_rule_view_form
 msgid "e.g. Over 8 hours daily"
+msgstr ""
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/components/confirmation/confirmation.xml:0
+msgid "for"
 msgstr ""
 
 #. module: hr_attendance
