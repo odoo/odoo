@@ -763,6 +763,23 @@
         <field name="amount_rate">1</field>  <!-- Unpaid, but treated in a separate rule -->
     </record>
 
+<!-- KW : Kuwait -->
+    <record id="l10n_kw_work_entry_type_paid_leave" model="hr.work.entry.type">
+        <field name="name">Kuwait: Paid Leave</field>
+        <field name="code">KWLEAVE</field>
+        <field name="color">3</field>
+        <field name="is_leave">True</field>
+        <field name="country_id" ref="base.kw"/>
+    </record>
+
+    <record id="l10n_kw_work_entry_type_sick_leave" model="hr.work.entry.type">
+        <field name="name">Kuwait: Sick Leave</field>
+        <field name="code">KWSICK</field>
+        <field name="color">4</field>
+        <field name="is_leave">True</field>
+        <field name="country_id" ref="base.kw"/>
+    </record>
+
 <!-- LU : Luxemburg -->
     <record id="l10n_lu_work_entry_type_situational_unemployment" model="hr.work.entry.type">
         <field name="name">Situational Unemployment</field>
