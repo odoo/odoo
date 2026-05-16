@@ -11,21 +11,22 @@
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
 # Odoo Translation Bot <c3p@odoo.com>, 2026.
+# Nusara Boonma <nuboo@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:36+0000\n"
-"PO-Revision-Date: 2026-01-16 05:56+0000\n"
-"Last-Translator: Odoo Translation Bot <c3p@odoo.com>\n"
-"Language-Team: Thai <https://translate.odoo.com/projects/odoo-s19-1/"
+"POT-Creation-Date: 2026-05-15 17:36+0000\n"
+"PO-Revision-Date: 2026-05-16 14:34+0000\n"
+"Last-Translator: Nusara Boonma <nuboo@odoo.com>\n"
+"Language-Team: Thai <https://translate.odoo.com/projects/odoo-s19-3/"
 "stock_account/th/>\n"
 "Language: th\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.14.3\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: stock_account
 #. odoo-python
@@ -59,6 +60,14 @@ msgstr "<span>จำนวน</span>"
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
 msgid "<span>SN/LN</span>"
 msgstr "<span>SN/LN</span>"
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/stock_move.py:0
+msgid ""
+"A lot/serial number is required for product '%s' as it has lot valuation "
+"enabled."
+msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__avco_value
@@ -353,8 +362,8 @@ msgid ""
 "Date at which the accounting entries will be created in case of automated "
 "inventory valuation. If empty, the inventory date will be used."
 msgstr ""
-"วันที่จะสร้างรายการบัญชีในกรณีการประเมินมูลค่าสินค้าคงคลังอัตโนมัติ หากว่างเปล่า "
-"ระบบจะใช้วันที่ของสินค้าคงคลัง"
+"วันที่จะสร้างรายการบัญชีในกรณีการประเมินมูลค่าคลังสินค้าอัตโนมัติ หากว่างเปล่า "
+"ระบบจะใช้วันที่ของคลังสินค้า"
 
 #. module: stock_account
 #. odoo-javascript
@@ -519,7 +528,7 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_inventory_adjustment_name
 msgid "Inventory Adjustment Reference / Reason"
-msgstr "การอ้างอิงการปรับสินค้าคงคลัง / เหตุผล"
+msgstr "การอ้างอิงการปรับคลังสินค้า / เหตุผล"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_account_bank_statement_line__inventory_closing
@@ -539,7 +548,7 @@ msgstr ""
 #: code:addons/stock_account/static/src/stock_valuation/stock_valuation_report.js:0
 #: code:addons/stock_account/static/src/stock_valuation/stock_valuation_report.xml:0
 msgid "Inventory Loss"
-msgstr "สินค้าคงคลังที่สูญหาย"
+msgstr "คลังสินค้าที่สูญหาย"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_res_company__inventory_period
@@ -553,7 +562,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_valuation
 #: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form_stock
 msgid "Inventory Valuation"
-msgstr "การประเมินมูลค่าสินค้าคงคลัง"
+msgstr "การประเมินมูลค่าคลังสินค้า"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__is_dropship
@@ -1104,20 +1113,8 @@ msgid ""
 "        Used to compute margins on sale orders."
 msgstr ""
 "มูลค่าของล็อต (คำนวณอัตโนมัติใน AVCO)\n"
-"        ใช้ในการประเมินมูลค่าผลิตภัณฑ์เมื่อไม่ทราบต้นทุนการซื้อ (เช่น การปรับสินค้าคงคลัง)\n"
+"        ใช้ในการประเมินมูลค่าผลิตภัณฑ์เมื่อไม่ทราบต้นทุนการซื้อ (เช่น การปรับคลังสินค้า)\n"
 "        ใช้ในการคำนวณมาร์จิ้นในการสั่งซื้อสินค้า"
-
-#. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_stock_move__standard_price
-msgid ""
-"Value of the product (automatically computed in AVCO).\n"
-"        Used to value the product when the purchase cost is not known (e.g. "
-"inventory adjustment).\n"
-"        Used to compute margins on sale orders."
-msgstr ""
-"มูลค่าของสินค้า (คำนวณโดยอัตโนมัติใน AVCO)\n"
-"       ใช้เพื่อประเมินมูลค่าสินค้าเมื่อไม่ทราบต้นทุนการซื้อ (เช่น การปรับปรุงสินค้าคงคลัง)\n"
-"       ใช้เพื่อคำนวณอัตรากำไรจากคำสั่งซื้อขาย"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_account_account__account_stock_variation_id
@@ -1134,8 +1131,7 @@ msgstr ""
 msgid ""
 "When automated inventory valuation is enabled on a product, this account "
 "will hold the current value of the products."
-msgstr ""
-"เมื่อเปิดใช้งานการประเมินมูลค่าสินค้าคงคลังอัตโนมัติในสินค้า บัญชีนี้จะเก็บมูลค่าปัจจุบันของสินค้า"
+msgstr "เมื่อเปิดใช้งานการประเมินมูลค่าคลังสินค้าอัตโนมัติในสินค้า บัญชีนี้จะเก็บมูลค่าปัจจุบันของสินค้า"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_stock_journal
@@ -1143,7 +1139,7 @@ msgid ""
 "When doing automated inventory valuation, this is the Accounting Journal in "
 "which entries will be automatically posted when stock moves are processed."
 msgstr ""
-"เมื่อทำการประเมินมูลค่าสินค้าคงคลังแบบอัตโนมัติ นี่คือสมุดรายวันการบัญชี "
+"เมื่อทำการประเมินมูลค่าคลังสินค้าแบบอัตโนมัติ นี่คือสมุดรายวันการบัญชี "
 "ซึ่งรายการต่างๆจะถูกผ่านรายการโดยอัตโนมัติเมื่อมีการประมวลผลการย้ายสต็อก"
 
 #. module: stock_account
@@ -1177,6 +1173,15 @@ msgstr ""
 
 #. module: stock_account
 #. odoo-python
+#: code:addons/stock_account/models/product.py:0
+msgid ""
+"You cannot enable lot valuation because the following products have on-hand "
+"quantities without a lot/serial number:\n"
+"%s"
+msgstr ""
+
+#. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/models/stock_picking.py:0
 msgid ""
 "You cannot modify the scheduled date of operation %s because it falls within "
@@ -1192,3 +1197,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
 msgid "units"
 msgstr "หน่วย"
+
+#~ msgid ""
+#~ "Value of the product (automatically computed in AVCO).\n"
+#~ "        Used to value the product when the purchase cost is not known "
+#~ "(e.g. inventory adjustment).\n"
+#~ "        Used to compute margins on sale orders."
+#~ msgstr ""
+#~ "มูลค่าของสินค้า (คำนวณโดยอัตโนมัติใน AVCO)\n"
+#~ "       ใช้เพื่อประเมินมูลค่าสินค้าเมื่อไม่ทราบต้นทุนการซื้อ (เช่น การปรับปรุงคลังสินค้า)\n"
+#~ "       ใช้เพื่อคำนวณอัตรากำไรจากคำสั่งซื้อขาย"

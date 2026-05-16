@@ -14,10 +14,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:37+0000\n"
-"PO-Revision-Date: 2026-04-23 11:53+0000\n"
+"POT-Creation-Date: 2026-05-15 17:36+0000\n"
+"PO-Revision-Date: 2026-05-16 14:32+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
-"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-2/"
+"Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-3/"
 "payment/ja/>\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
@@ -154,12 +154,12 @@ msgstr "<strong><i class=\"fa fa-file-text\"/> 在庫状況レポートを表示
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
 msgid "<strong>No payment methods are available</strong>"
-msgstr ""
+msgstr "<strong>利用可能な支払い方法はありません</strong>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
 msgid "<strong>No payment providers are configured</strong>"
-msgstr ""
+msgstr "<strong>設定済みの決済プロバイダーはありません</strong>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_capture_wizard_view_form
@@ -227,7 +227,7 @@ msgstr "Abitab"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
 msgid "Account"
-msgstr ""
+msgstr "勘定科目"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_kanban
@@ -802,6 +802,11 @@ msgid "Contact"
 msgstr "連絡先"
 
 #. module: payment
+#: model:payment.method,name:payment.payment_method_cvs
+msgid "Convenience Stores"
+msgstr ""
+
+#. module: payment
 #: model:payment.method,name:payment.payment_method_cordial
 msgid "Cordial"
 msgstr "Cordial"
@@ -988,6 +993,11 @@ msgid "DuitNow"
 msgstr "DuitNow"
 
 #. module: payment
+#: model:payment.provider,name:payment.payment_provider_ecpay
+msgid "ECPay"
+msgstr ""
+
+#. module: payment
 #: model:payment.method,name:payment.payment_method_emi_india
 msgid "EMI"
 msgstr "EMI"
@@ -1064,6 +1074,11 @@ msgstr "FPX"
 #: model:payment.method,name:payment.payment_method_facilito
 msgid "Facilito"
 msgstr "Facilito"
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_family_mart
+msgid "Family Mart"
+msgstr ""
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.no_pms_available_warning
@@ -1174,6 +1189,11 @@ msgstr "支払いは後処理されたか"
 #: model:ir.model.fields,field_description:payment.field_payment_provider__pre_msg
 msgid "Help Message"
 msgstr "ヘルプメッセージ"
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_hi_life
+msgid "Hi-Life"
+msgstr ""
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_hipercard
@@ -1540,6 +1560,11 @@ msgid "Mobile"
 msgstr "モバイル"
 
 #. module: payment
+#: model:payment.method,name:payment.payment_method_mobile_wallet
+msgid "Mobile Wallet"
+msgstr ""
+
+#. module: payment
 #: model:payment.method,name:payment.payment_method_mobile_wallet_eg
 msgid "Mobile Wallets Egypt"
 msgstr "モバイルウォレット エジプト"
@@ -1633,6 +1658,11 @@ msgstr "以下用に何も設定されていません:"
 #: model:payment.provider,name:payment.payment_provider_nuvei
 msgid "Nuvei"
 msgstr "Nuvei"
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_ok_mart
+msgid "OK Mart"
+msgstr ""
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_ovo
@@ -2425,6 +2455,11 @@ msgstr "TENPAY"
 #: model:payment.method,name:payment.payment_method_ttb
 msgid "TTB"
 msgstr "TTB"
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_twqr
+msgid "TWQR"
+msgstr ""
 
 #. module: payment
 #: model:payment.method,name:payment.payment_method_tabby
@@ -3262,6 +3297,7 @@ msgstr ""
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_buckaroo
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_demo
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_dpo
+#: model_terms:payment.provider,auth_msg:payment.payment_provider_ecpay
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_flutterwave
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_iyzico
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_mercado_pago
@@ -3290,6 +3326,7 @@ msgstr "お支払いは承認されました。"
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_buckaroo
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_demo
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_dpo
+#: model_terms:payment.provider,cancel_msg:payment.payment_provider_ecpay
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_flutterwave
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_iyzico
 #: model_terms:payment.provider,cancel_msg:payment.payment_provider_mercado_pago
@@ -3318,6 +3355,7 @@ msgstr "お支払いはキャンセルされました。"
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_buckaroo
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_demo
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_dpo
+#: model_terms:payment.provider,pending_msg:payment.payment_provider_ecpay
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_flutterwave
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_iyzico
 #: model_terms:payment.provider,pending_msg:payment.payment_provider_mercado_pago
@@ -3345,6 +3383,7 @@ msgstr "お支払いは処理されましたが、承認待ちです。"
 #: model_terms:payment.provider,done_msg:payment.payment_provider_buckaroo
 #: model_terms:payment.provider,done_msg:payment.payment_provider_demo
 #: model_terms:payment.provider,done_msg:payment.payment_provider_dpo
+#: model_terms:payment.provider,done_msg:payment.payment_provider_ecpay
 #: model_terms:payment.provider,done_msg:payment.payment_provider_flutterwave
 #: model_terms:payment.provider,done_msg:payment.payment_provider_iyzico
 #: model_terms:payment.provider,done_msg:payment.payment_provider_mercado_pago
@@ -3434,6 +3473,11 @@ msgstr "エクスプレス・チェックアウトはサポートされていま
 #: model:payment.method,name:payment.payment_method_ideal_brand
 msgid "iDEAL"
 msgstr "iDEAL"
+
+#. module: payment
+#: model:payment.method,name:payment.payment_method_ipass_money
+msgid "iPASS Money"
+msgstr ""
 
 #. module: payment
 #. odoo-python

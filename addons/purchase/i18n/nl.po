@@ -14,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-05-03 17:36+0000\n"
-"PO-Revision-Date: 2026-05-08 09:02+0000\n"
+"PO-Revision-Date: 2026-05-16 14:45+0000\n"
 "Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-s19-3/"
 "purchase/nl/>\n"
@@ -400,6 +400,9 @@ msgid ""
 "                        <span class=\"o_form_label\" invisible=\"state in "
 "('draft', 'sent')\">Purchase Order</span>"
 msgstr ""
+"<span class=\"o_form_label\" invisible=\"state not in ('draft', 'sent')\">"
+"Offerteaanvraag</span><span class=\"o_form_label\" invisible=\"state in "
+"('draft', 'sent')\">Inkooporder</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -437,7 +440,7 @@ msgstr ""
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "<span invisible=\"not receipt_reminder_email\">day(s) before</span>"
-msgstr ""
+msgstr "<span invisible=\"not receipt_reminder_email\">dag(en) voor</span>"
 
 #. module: purchase
 #: model_terms:web_tour.tour,rainbow_man_message:purchase.purchase_tour
@@ -710,17 +713,17 @@ msgstr "Sectie toevoegen"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Add note"
-msgstr ""
+msgstr "Notitie toevoegen"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Add product"
-msgstr ""
+msgstr "Product toevoegen"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Add section"
-msgstr ""
+msgstr "Sectie toevoegen"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -877,7 +880,7 @@ msgstr ""
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Arrival Confirmation"
-msgstr ""
+msgstr "Bevestiging van aankomst"
 
 #. module: purchase
 #. odoo-python
@@ -2070,7 +2073,7 @@ msgstr "Geen inkoopofferte gevonden. Laten we er één maken!"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__non_deductible_tax
 msgid "Non Deductible Tax"
-msgstr ""
+msgstr "Niet-aftrekbare btw"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__priority__0
@@ -2949,6 +2952,10 @@ msgid ""
 "time                                     and previous information from the "
 "RFQ."
 msgstr ""
+"Reset naar de datum van vandaag om de verwachte aankomst opnieuw te "
+"berekenen op basis van de beschikbare levertijd"
+"                                     en eerdere informatie uit de "
+"Offerteaanvraag."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_user_id
@@ -3297,13 +3304,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/purchase/models/product.py:0
 msgid "Template for Products"
-msgstr ""
+msgstr "Sjabloon voor producten"
 
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
 msgid "Template for Requests for Quotation"
-msgstr ""
+msgstr "Sjabloon voor offerteaanvragen"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
@@ -3342,12 +3349,12 @@ msgstr ""
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.track_po_line_template
 msgid "The ordered quantity and unit price have been updated."
-msgstr ""
+msgstr "De bestelde hoeveelheid en de eenheidsprijs zijn bijgewerkt."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.track_po_line_template
 msgid "The ordered quantity has been updated."
-msgstr ""
+msgstr "Het bestelde aantal is bijgewerkt."
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order
@@ -3364,7 +3371,7 @@ msgstr ""
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.track_po_line_template
 msgid "The unit price has been updated."
-msgstr ""
+msgstr "De eenheidsprijs is bijgewerkt."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
@@ -3881,6 +3888,10 @@ msgid ""
 " Please change the company of your RFQ or remove the products from other "
 "companies (%(bad_products)s)."
 msgstr ""
+"Je offerteaanvraag bevat producten van het bedrijf %(product_company)s, "
+"terwijl je offerteaanvraag behoort tot het bedrijf %(quote_company)s. \n"
+" Wijzig alstublieft het bedrijf van je offerteaanvraag of verwijder de "
+"producten van andere bedrijven (%(bad_products)s)."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form

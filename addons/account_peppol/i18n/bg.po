@@ -3,21 +3,22 @@
 # * account_peppol
 #
 # Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Martin Dinovski <martin.dinovski@industria.tech>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:36+0000\n"
-"PO-Revision-Date: 2025-11-08 17:49+0000\n"
-"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
-"Language-Team: Bulgarian <https://translate.odoo.com/projects/odoo-19/"
+"POT-Creation-Date: 2026-05-15 17:36+0000\n"
+"PO-Revision-Date: 2026-05-16 14:31+0000\n"
+"Last-Translator: Martin Dinovski <martin.dinovski@industria.tech>\n"
+"Language-Team: Bulgarian <https://translate.odoo.com/projects/odoo-s19-3/"
 "account_peppol/bg/>\n"
 "Language: bg\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: account_peppol
 #. odoo-python
@@ -460,6 +461,11 @@ msgid "Available Peppol Sending Methods"
 msgstr ""
 
 #. module: account_peppol
+#: model:ir.model,name:account_peppol.model_account_edi_ubl
+msgid "Base helpers for UBL"
+msgstr ""
+
+#. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
 msgid "By clicking the button below:"
 msgstr ""
@@ -623,7 +629,7 @@ msgstr ""
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_edi_common__display_name
 #: model:ir.model.fields,field_description:account_peppol.field_account_edi_proxy_client_user__display_name
-#: model:ir.model.fields,field_description:account_peppol.field_account_edi_xml_ubl_20__display_name
+#: model:ir.model.fields,field_description:account_peppol.field_account_edi_ubl__display_name
 #: model:ir.model.fields,field_description:account_peppol.field_account_edi_xml_ubl_bis3__display_name
 #: model:ir.model.fields,field_description:account_peppol.field_account_journal__display_name
 #: model:ir.model.fields,field_description:account_peppol.field_account_move__display_name
@@ -747,7 +753,7 @@ msgstr ""
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_account_edi_common__id
 #: model:ir.model.fields,field_description:account_peppol.field_account_edi_proxy_client_user__id
-#: model:ir.model.fields,field_description:account_peppol.field_account_edi_xml_ubl_20__id
+#: model:ir.model.fields,field_description:account_peppol.field_account_edi_ubl__id
 #: model:ir.model.fields,field_description:account_peppol.field_account_edi_xml_ubl_bis3__id
 #: model:ir.model.fields,field_description:account_peppol.field_account_journal__id
 #: model:ir.model.fields,field_description:account_peppol.field_account_move__id
@@ -1557,7 +1563,7 @@ msgstr ""
 msgid ""
 "The structure of a received bundle is not in accordance with the bundling "
 "rules."
-msgstr ""
+msgstr "Структурата на получения пакет не отговаря на правилата за групиране."
 
 #. module: account_peppol
 #: model:ir.model.fields,help:account_peppol.field_res_config_settings__account_peppol_edi_identification
@@ -1665,11 +1671,6 @@ msgstr ""
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_config_settings__account_is_token_out_of_sync
 msgid "Token Out of Sync"
-msgstr ""
-
-#. module: account_peppol
-#: model:ir.model,name:account_peppol.model_account_edi_xml_ubl_20
-msgid "UBL 2.0"
 msgstr ""
 
 #. module: account_peppol

@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-05-03 17:36+0000\n"
-"PO-Revision-Date: 2026-05-04 13:46+0000\n"
+"PO-Revision-Date: 2026-05-16 14:47+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-3/"
 "hr_skills/ja/>\n"
@@ -47,7 +47,7 @@ msgstr ""
 #: code:addons/hr_skills/models/hr_employee_skill.py:0
 msgid ""
 "<p class=\"o_view_nocontent_smiling_face\">No Certifications available!</p>"
-msgstr ""
+msgstr "<p class=\"o_view_nocontent_smiling_face\">認定資格はありません</p>"
 
 #. module: hr_skills
 #. odoo-python
@@ -60,6 +60,12 @@ msgid ""
 "                Show Skill Types\n"
 "                </a>"
 msgstr ""
+"<p class=\"o_view_nocontent_smiling_face\">利用可能な認定資格はありません。"
+"スキルタイプへ移動してください！</p>\n"
+"                <a type=\"action\" name=\"hr_skills.hr_skill_type_action\" "
+"class=\"btn btn-primary\">\n"
+"                スキルタイプを表示\n"
+"               </a>"
 
 #. module: hr_skills
 #: model_terms:hr.resume.line,description:hr_skills.employee_resume_line_admin_7
@@ -394,13 +400,13 @@ msgstr "クレイグモア・サウス・ジュニア小学校"
 #. odoo-javascript
 #: code:addons/hr_skills/static/src/fields/resume_one2many/resume_one2many.xml:0
 msgid "Create Resume Lines"
-msgstr ""
+msgstr "履歴書明細を作成"
 
 #. module: hr_skills
 #. odoo-javascript
 #: code:addons/hr_skills/static/src/fields/skills_one2many/skills_one2many.xml:0
 msgid "Create Skills"
-msgstr ""
+msgstr "業務スキルを作成"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_cv_wizard__create_uid
@@ -441,7 +447,7 @@ msgstr "論理的思考"
 #: code:addons/hr_skills/static/src/components/internal_resume_lines/internal_resume_one2many.xml:0
 #: code:addons/hr_skills/static/src/fields/resume_one2many/resume_one2many.xml:0
 msgid "Current"
-msgstr ""
+msgstr "現在"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee__current_employee_skill_ids

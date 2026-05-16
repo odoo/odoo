@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~19.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-05-08 17:39+0000\n"
-"PO-Revision-Date: 2026-04-30 13:43+0000\n"
+"PO-Revision-Date: 2026-05-16 14:51+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-s19-3/"
 "mail_tracking/de/>\n"
@@ -27,7 +27,7 @@ msgstr "Erstellt von"
 #. module: mail_tracking
 #: model:ir.model.fields,field_description:mail_tracking.field_mail_tracking_value__create_date
 msgid "Created on"
-msgstr ""
+msgstr "Erstellt am"
 
 #. module: mail_tracking
 #: model:ir.model.fields,field_description:mail_tracking.field_ir_model_fields__display_name
@@ -46,12 +46,12 @@ msgstr ""
 #: model:ir.model,name:mail_tracking.model_ir_model_fields
 #: model:ir.model.fields,field_description:mail_tracking.field_mail_tracking_value__field_id
 msgid "Field"
-msgstr ""
+msgstr "Feld"
 
 #. module: mail_tracking
 #: model_terms:ir.ui.view,arch_db:mail_tracking.view_mail_tracking_value_form
 msgid "Field details"
-msgstr ""
+msgstr "Feld-Details"
 
 #. module: mail_tracking
 #: model:ir.model.fields,field_description:mail_tracking.field_ir_model_fields__id
@@ -64,22 +64,22 @@ msgstr "ID"
 #. module: mail_tracking
 #: model:ir.model.fields,field_description:mail_tracking.field_mail_tracking_value__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "Zuletzt aktualisiert von"
 
 #. module: mail_tracking
 #: model:ir.model.fields,field_description:mail_tracking.field_mail_tracking_value__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "Zuletzt aktualisiert am"
 
 #. module: mail_tracking
 #: model:ir.model,name:mail_tracking.model_mail_tracking_value
 msgid "Mail Tracking Value"
-msgstr ""
+msgstr "Wert für E-Mail-Verfolgung"
 
 #. module: mail_tracking
 #: model:ir.model,name:mail_tracking.model_mail_message
 msgid "Message"
-msgstr ""
+msgstr "Nachricht"
 
 #. module: mail_tracking
 #: model:ir.model.fields,field_description:mail_tracking.field_mail_tracking_value__mail_message_id
@@ -95,72 +95,72 @@ msgstr "Nachrichten mit Verfolgungswerten können nicht geändert werden"
 #. module: mail_tracking
 #: model:ir.model.fields,field_description:mail_tracking.field_mail_tracking_value__new_value_char
 msgid "New Value Char"
-msgstr ""
+msgstr "Neuer Wert: Zeichen"
 
 #. module: mail_tracking
 #: model:ir.model.fields,field_description:mail_tracking.field_mail_tracking_value__new_value_datetime
 msgid "New Value Datetime"
-msgstr ""
+msgstr "Neuer Wert: Datum/Zeit"
 
 #. module: mail_tracking
 #: model:ir.model.fields,field_description:mail_tracking.field_mail_tracking_value__new_value_float
 msgid "New Value Float"
-msgstr ""
+msgstr "Neuer Wert: Gleitkommazahl"
 
 #. module: mail_tracking
 #: model:ir.model.fields,field_description:mail_tracking.field_mail_tracking_value__new_value_integer
 msgid "New Value Integer"
-msgstr ""
+msgstr "Neuer Wert: Ganzzahl"
 
 #. module: mail_tracking
 #: model:ir.model.fields,field_description:mail_tracking.field_mail_tracking_value__new_value_text
 msgid "New Value Text"
-msgstr ""
+msgstr "Neuer Wert: Text"
 
 #. module: mail_tracking
 #: model_terms:ir.ui.view,arch_db:mail_tracking.view_mail_tracking_value_form
 msgid "New values"
-msgstr ""
+msgstr "Neue Werte"
 
 #. module: mail_tracking
 #: model:ir.model.fields,field_description:mail_tracking.field_mail_tracking_value__old_value_char
 msgid "Old Value Char"
-msgstr ""
+msgstr "Alter Wert: Zeichen"
 
 #. module: mail_tracking
 #: model:ir.model.fields,field_description:mail_tracking.field_mail_tracking_value__old_value_datetime
 msgid "Old Value DateTime"
-msgstr ""
+msgstr "Alter Wert: Datum/Zeit"
 
 #. module: mail_tracking
 #: model:ir.model.fields,field_description:mail_tracking.field_mail_tracking_value__old_value_float
 msgid "Old Value Float"
-msgstr ""
+msgstr "Alter Wert: Gleitkommazahl"
 
 #. module: mail_tracking
 #: model:ir.model.fields,field_description:mail_tracking.field_mail_tracking_value__old_value_integer
 msgid "Old Value Integer"
-msgstr ""
+msgstr "Alter Wert: Ganzzahl"
 
 #. module: mail_tracking
 #: model:ir.model.fields,field_description:mail_tracking.field_mail_tracking_value__old_value_text
 msgid "Old Value Text"
-msgstr ""
+msgstr "Alter Wert: Text"
 
 #. module: mail_tracking
 #: model_terms:ir.ui.view,arch_db:mail_tracking.view_mail_tracking_value_form
 msgid "Old values"
-msgstr ""
+msgstr "Alte Werte"
 
 #. module: mail_tracking
 #: model_terms:ir.ui.view,arch_db:mail_tracking.view_mail_tracking_value_form
 msgid "Related Message"
-msgstr ""
+msgstr "Zugehörige Nachricht"
 
 #. module: mail_tracking
 #: model:ir.model.fields,field_description:mail_tracking.field_mail_tracking_value__field_info
 msgid "Removed field information"
-msgstr ""
+msgstr "Informationen zu entfernten Feldern"
 
 #. module: mail_tracking
 #: model:ir.model.fields,help:mail_tracking.field_mail_mail__tracking_value_ids
@@ -169,29 +169,32 @@ msgid ""
 "Tracked values are stored in a separate model. This field allow to "
 "reconstruct the tracking and to generate statistics on the model."
 msgstr ""
+"Nachverfolgte Werte werden in einem separaten Modell gespeichert. Mithilfe "
+"dieses Felds kann die Nachverfolgung rekonstruiert und eine Statistik zum "
+"Modell generiert werden."
 
 #. module: mail_tracking
 #: model_terms:ir.ui.view,arch_db:mail_tracking.mail_message_view_form_inherit_mail_tracking
 msgid "Tracking"
-msgstr ""
+msgstr "Nachverfolgung"
 
 #. module: mail_tracking
 #: model_terms:ir.ui.view,arch_db:mail_tracking.view_mail_tracking_value_form
 #: model_terms:ir.ui.view,arch_db:mail_tracking.view_mail_tracking_value_tree
 msgid "Tracking Value"
-msgstr ""
+msgstr "Nachverfolgungswert"
 
 #. module: mail_tracking
 #: model:ir.actions.act_window,name:mail_tracking.action_view_mail_tracking_value
 #: model:ir.ui.menu,name:mail_tracking.menu_mail_tracking_value
 msgid "Tracking Values"
-msgstr ""
+msgstr "Nachverfolgungswerte"
 
 #. module: mail_tracking
 #: model:ir.model.fields,field_description:mail_tracking.field_mail_mail__tracking_value_ids
 #: model:ir.model.fields,field_description:mail_tracking.field_mail_message__tracking_value_ids
 msgid "Tracking values"
-msgstr ""
+msgstr "Nachverfolgungswerte"
 
 #. module: mail_tracking
 #. odoo-python
@@ -200,3 +203,5 @@ msgid ""
 "You cannot change message type while copying a message that contains "
 "tracking values."
 msgstr ""
+"Sie können den Nachrichtentyp nicht ändern, während Sie eine Nachricht "
+"kopieren, die Nachverfolgungswerte enthält."

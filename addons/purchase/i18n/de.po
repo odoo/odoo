@@ -16,7 +16,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-05-03 17:36+0000\n"
-"PO-Revision-Date: 2026-04-30 09:38+0000\n"
+"PO-Revision-Date: 2026-05-16 14:53+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-s19-3/"
 "purchase/de/>\n"
@@ -405,6 +405,10 @@ msgid ""
 "                        <span class=\"o_form_label\" invisible=\"state in "
 "('draft', 'sent')\">Purchase Order</span>"
 msgstr ""
+"<span class=\"o_form_label\" invisible=\"state not in ('draft', 'sent')\">"
+"Angebotsvorlage </span>\n"
+"                        <span class=\"o_form_label\" invisible=\"state in "
+"('draft', 'sent')\">Bestellung </span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -442,7 +446,7 @@ msgstr ""
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "<span invisible=\"not receipt_reminder_email\">day(s) before</span>"
-msgstr ""
+msgstr "<span invisible=\"not receipt_reminder_email\">Tag(e) vorher</span>"
 
 #. module: purchase
 #: model_terms:web_tour.tour,rainbow_man_message:purchase.purchase_tour
@@ -715,17 +719,17 @@ msgstr "Abschnitt hinzufügen"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Add note"
-msgstr ""
+msgstr "Notiz hinzufügen"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Add product"
-msgstr ""
+msgstr "Produkt hinzufügen"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Add section"
-msgstr ""
+msgstr "Abschnitt hinzufügen"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -884,7 +888,7 @@ msgstr ""
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Arrival Confirmation"
-msgstr ""
+msgstr "Ankunftsbestätigung"
 
 #. module: purchase
 #. odoo-python
@@ -1285,7 +1289,7 @@ msgstr "Tage bis Bestätigung"
 #. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 msgid "Days to Order"
-msgstr ""
+msgstr "Tage bis Bestellung"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__delay_pass
@@ -1767,13 +1771,13 @@ msgstr "Verspätete Aktivitäten"
 #. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 msgid "Late RFQ"
-msgstr ""
+msgstr "Verspätete Angebotsanfrage"
 
 #. module: purchase
 #. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 msgid "Late Receipt"
-msgstr ""
+msgstr "Verspäteter Wareneingang"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
@@ -1932,7 +1936,7 @@ msgstr "Fehlende erforderliche Felder in der kontoführenden Bestellzeile."
 #. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 msgid "My"
-msgstr ""
+msgstr "Meine"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
@@ -2046,7 +2050,7 @@ msgstr "Nächster Aktivitätstyp"
 #. odoo-javascript
 #: code:addons/purchase/static/src/product_catalog/kanban_renderer.xml:0
 msgid "No Products for the selected Vendor."
-msgstr ""
+msgstr "Keine Produkte für den ausgewählten Lieferanten."
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.action_purchase_order_report_all
@@ -2082,7 +2086,7 @@ msgstr "Keine Angebotsanfrage gefunden. Erstellen Sie eine!"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__non_deductible_tax
 msgid "Non Deductible Tax"
-msgstr ""
+msgstr "Nichtabzugsfähige Steuer"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__priority__0
@@ -2964,6 +2968,9 @@ msgid ""
 "time                                     and previous information from the "
 "RFQ."
 msgstr ""
+"Setzen Sie das Datum auf das heutige Datum zurück, um die voraussichtliche "
+"Ankunftszeit auf der Grundlage der verfügbaren Vorlaufzeit und der "
+"bisherigen Informationen aus der Angebotsanfrage neu zu berechnen."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_user_id
@@ -3319,13 +3326,13 @@ msgstr ""
 #. odoo-python
 #: code:addons/purchase/models/product.py:0
 msgid "Template for Products"
-msgstr ""
+msgstr "Vorlage für Produkte"
 
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/purchase_order.py:0
 msgid "Template for Requests for Quotation"
-msgstr ""
+msgstr "Vorlage für Angebotsanfragen"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
@@ -3364,12 +3371,12 @@ msgstr ""
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.track_po_line_template
 msgid "The ordered quantity and unit price have been updated."
-msgstr ""
+msgstr "Die Bestellmenge und der Stückpreis wurden aktualisiert."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.track_po_line_template
 msgid "The ordered quantity has been updated."
-msgstr ""
+msgstr "Die bestellte Menge wurde aktualisiert."
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order
@@ -3386,7 +3393,7 @@ msgstr ""
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.track_po_line_template
 msgid "The unit price has been updated."
-msgstr ""
+msgstr "Der Stückpreis wurde aktualisiert."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
@@ -3548,7 +3555,7 @@ msgstr "Übersetzter Produktname"
 #. odoo-javascript
 #: code:addons/purchase/static/src/product_catalog/kanban_renderer.xml:0
 msgid "Try removing the top filter to broaden your search"
-msgstr ""
+msgstr "Entfernen Sie den Filter oben, um Ihre Suche zu erweitern"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__activity_exception_decoration
@@ -3640,7 +3647,7 @@ msgstr "Gesamter Nettobetrag"
 #. odoo-javascript
 #: code:addons/purchase/static/src/components/purchase_file_uploader/purchase_file_uploader.xml:0
 msgid "Upload Bill"
-msgstr ""
+msgstr "Rechnung hochladen"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__priority__1
@@ -3911,6 +3918,10 @@ msgid ""
 " Please change the company of your RFQ or remove the products from other "
 "companies (%(bad_products)s)."
 msgstr ""
+"Ihre Angebotsanfrage enthält Produkte des Unternehmens %(product_company)s, "
+"während Ihre Angebotsanfrage zum Unternehmen %(quote_company)s gehört.\n"
+" Bitte ändern Sie das Unternehmen Ihrer Angebotsanfrage oder entfernen Sie "
+"die Produkte anderer Unternehmen (%(bad_products)s)."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form

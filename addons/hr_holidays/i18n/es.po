@@ -13,10 +13,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:36+0000\n"
-"PO-Revision-Date: 2026-04-13 19:23+0000\n"
+"POT-Creation-Date: 2026-05-15 17:35+0000\n"
+"PO-Revision-Date: 2026-05-16 14:51+0000\n"
 "Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
-"Language-Team: Spanish <https://translate.odoo.com/projects/odoo-s19-2/"
+"Language-Team: Spanish <https://translate.odoo.com/projects/odoo-s19-3/"
 "hr_holidays/es/>\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
@@ -24,7 +24,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == "
 "0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: hr_holidays
 #. odoo-python
@@ -327,6 +327,23 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<div>\n"
+"                    Estimado/a <b><t t-"
+"out=\"object.env.context.get('manager')\"/></b>:\n"
+"                    <br/><br/>\n"
+"                    <p>Solicitud de ausencia enviada. Cuando tengas un "
+"momento, ¿podrías aprobar la solicitud de ausencia?</p>\n"
+"                    <ul>\n"
+"                        <li>Tipo de ausencia: <t t-"
+"out=\"object.work_entry_type_id.name\"/></li>\n"
+"                        <li><t t-out=\"object.request_date_from\"/> → <t t-"
+"out=\"object.request_date_to\"/> (<t t-out=\"object.duration_display\"/>)</"
+"li>\n"
+"                        <li t-if=\"object.name\">Motivo: <t t-"
+"out=\"object.name\"/></li>\n"
+"                    </ul>\n"
+"                </div>\n"
+"            "
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
@@ -386,19 +403,6 @@ msgid "<span class=\"mx-1\">–</span>"
 msgstr ""
 
 #. module: hr_holidays
-#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_work_entry_type_view_form
-msgid ""
-"<span class=\"mx-2\" invisible=\"unit_of_measure == 'hour'\">days</span>\n"
-"                                            <span class=\"mx-2\" "
-"invisible=\"unit_of_measure != 'hour'\">hours</span>"
-msgstr ""
-
-#. module: hr_holidays
-#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_work_entry_type_view_form
-msgid "<span class=\"mx-2\">up to</span>"
-msgstr "<span class=\"mx-2\">hasta</span>"
-
-#. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_employee_public_form_view_inherit
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_employee_form_leave_inherit
 msgid ""
@@ -450,6 +454,14 @@ msgid "<span class=\"text-muted\">Amount</span>"
 msgstr ""
 
 #. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_work_entry_type_view_form
+msgid ""
+"<span invisible=\"unit_of_measure == 'hour'\">days</span>\n"
+"                                            <span "
+"invisible=\"unit_of_measure != 'hour'\">hours</span>"
+msgstr ""
+
+#. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_mandatory_day_action
 msgid ""
 "<span>\n"
@@ -482,6 +494,11 @@ msgid ""
 "<span>The employee has a different timezone than yours! Here dates and times "
 "are displayed in the employee's work timezone</span>\n"
 "                                ("
+msgstr ""
+
+#. module: hr_holidays
+#: model_terms:ir.ui.view,arch_db:hr_holidays.hr_work_entry_type_view_form
+msgid "<span>up to</span>"
 msgstr ""
 
 #. module: hr_holidays
@@ -5219,6 +5236,9 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_calendar_view_search
 msgid "validate"
 msgstr "validar"
+
+#~ msgid "<span class=\"mx-2\">up to</span>"
+#~ msgstr "<span class=\"mx-2\">hasta</span>"
 
 #~ msgid ""
 #~ "Changing the contract on this employee changes their working schedule in "

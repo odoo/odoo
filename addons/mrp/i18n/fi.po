@@ -44,17 +44,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:36+0000\n"
-"PO-Revision-Date: 2026-04-18 13:42+0000\n"
+"POT-Creation-Date: 2026-05-15 17:35+0000\n"
+"PO-Revision-Date: 2026-05-16 14:30+0000\n"
 "Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
-"Language-Team: Finnish <https://translate.odoo.com/projects/odoo-s19-2/mrp/"
+"Language-Team: Finnish <https://translate.odoo.com/projects/odoo-s19-3/mrp/"
 "fi/>\n"
 "Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__state
@@ -107,7 +107,7 @@ msgstr "# Osaluettelo"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_product__used_in_bom_count
 msgid "# BoM Where Used"
-msgstr "# Osaluettelo missä käytetään"
+msgstr "# Materiaaliluettelot, joissa käytetään"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_split__num_splits
@@ -217,7 +217,7 @@ msgstr "%s ei voida poistaa. Yritä perua ne."
 #. module: mrp
 #: model:ir.actions.report,print_report_name:mrp.action_report_bom_structure
 msgid "'Bom Overview - %s' % object.display_name"
-msgstr "'Osaluettelon yleiskatsaus - %s' % object.display_name"
+msgstr "'Materiaaliluettelon yleiskatsaus - %s' % object.display_name"
 
 #. module: mrp
 #: model:ir.actions.report,print_report_name:mrp.action_report_finished_product
@@ -315,10 +315,20 @@ msgid ""
 msgstr ""
 
 #. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_kanban
+msgid "<i class=\"fa fa-clock-o me-1 my-auto\" title=\"planned date start\"/>"
+msgstr ""
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_kanban_view
 msgid ""
 "<i class=\"fa fa-cubes mx-1 mt-1\" role=\"img\" title=\"Components "
 "Availability\"/>"
+msgstr ""
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_kanban
+msgid "<i class=\"fa fa-hourglass-half me-1\" title=\"time remaining\"/>"
 msgstr ""
 
 #. module: mrp
@@ -438,7 +448,7 @@ msgstr "<span class=\"o_stat_text\">Jälkitoimitukset</span>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 msgid "<span class=\"o_stat_text\">BoM Overview</span>"
-msgstr "<span class=\"o_stat_text\">Osaluettelon (BoM) yleiskatsaus</span>"
+msgstr "<span class=\"o_stat_text\">Materiaaliluettelon yleiskatsaus</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -572,7 +582,7 @@ msgstr "<span>Toiminnot</span>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "<span>Generate BOM</span>"
-msgstr "<span>Luo osaluettelo</span>"
+msgstr "<span>Luo materiaaliluettelo</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.stock_production_type_kanban
@@ -703,10 +713,10 @@ msgid ""
 "                                Instead, it is used to decompose a BoM into "
 "its components when:"
 msgstr ""
-"Kit-tyyppistä osaluetteloa (BoM) ei tuoteta tuotantotilauksen yhteydessä.<br/"
-">\n"
-"                                Sen sijaan sitä käytetään osaluettelon "
-"purkamiseen sen osiin, kun:"
+"Settityyppistä materiaaliluetteloa ei tuoteta tuotantotilauksen yhteydessä."
+"<br/>\n"
+"                                Sen sijaan sitä käytetään "
+"materiaaliluettelon purkamiseen sen osiin, kun:"
 
 #. module: mrp
 #. odoo-python
@@ -714,7 +724,7 @@ msgstr ""
 msgid ""
 "A product with a kit-type bill of materials can not have a reordering rule."
 msgstr ""
-"Tuotteella, jolla on pakettityyppinen osaluettelo, ei voi olla "
+"Tuotteella, jolla on pakettityyppinen materiaaliluettelo, ei voi olla "
 "uudelleentilaussääntöä."
 
 #. module: mrp
@@ -903,8 +913,8 @@ msgid ""
 msgstr ""
 "Kaikkien tuotemäärien on oltava vähintään 0.\n"
 "Rivejä, joiden määrä on 0, voidaan käyttää valinnaisina riveinä.\n"
-"Sinun on asennettava mrp_byproduct-moduuli, jos haluat hallinnoida "
-"ylimääräisiä tuotteita osaluetteloissa!"
+"Sinun on asennettava mrp_byproduct moduuli, jos haluat hallinnoida "
+"ylimääräisiä tuotteita materiaaliluetteloissa!"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -994,7 +1004,7 @@ msgstr "Muuta"
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__bom_product_template_attribute_value_ids
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__bom_product_template_attribute_value_ids
 msgid "Apply on Variants"
-msgstr "Käytä varianteilla"
+msgstr "Sovella variantteihin"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
@@ -1006,18 +1016,6 @@ msgstr "Käytä varianteilla"
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_workcenter_search
 msgid "Archived"
 msgstr "Arkistoitu"
-
-#. module: mrp
-#. odoo-javascript
-#: code:addons/mrp/static/src/views/mrp_workorder_kanban/mrp_workorder_kanban_controller.js:0
-msgid "Are you sure you want to Update the Planning ?"
-msgstr ""
-
-#. module: mrp
-#. odoo-javascript
-#: code:addons/mrp/static/src/views/mrp_workorder_kanban/mrp_workorder_kanban_header.js:0
-msgid "Are you sure you want to Update the Work Center Planning ?"
-msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_tree_view
@@ -1118,7 +1116,7 @@ msgstr "Tulosta automaattisesti tuotetun erän eränumeroetiketti"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__auto_print_done_mrp_product_labels
 msgid "Auto Print Produced Product Labels"
-msgstr "Tulosta automaattisesti tuote-etiketit"
+msgstr "Tulosta tuote-etiketit automaattisesti"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_picking_type__auto_print_generated_mrp_lot
@@ -1198,12 +1196,12 @@ msgstr "Keskimääräiset kokonaiskustannukset yksikköä kohti"
 #. module: mrp
 #: model:ir.model,name:mrp.model_report_mrp_report_bom_structure
 msgid "BOM Overview Report"
-msgstr "Osaluettelon yleiskatsausraportti"
+msgstr "Materiaaliluettelon yleiskatsausraportti"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_product__variant_bom_ids
 msgid "BOM Product Variants"
-msgstr "Osaluettelon tuotevariantit"
+msgstr "Materiaaliluettelon tuotevariantit"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_byproduct__bom_product_template_attribute_value_ids
@@ -1211,18 +1209,19 @@ msgstr "Osaluettelon tuotevariantit"
 #: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter__bom_product_template_attribute_value_ids
 msgid "BOM Product Variants needed to apply this line."
 msgstr ""
-"Osaluettelon tuotevariantit, joita tarvitaan tämän rivin soveltamiseen."
+"Materiaaliluettelon tuotevariantit, joita tarvitaan tämän rivin "
+"soveltamiseen."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__child_line_ids
 msgid "BOM lines of the referred bom"
-msgstr "Käytetyn osaluettelon rivit"
+msgstr "Käytetyn materiaaliluettelon rivit"
 
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/product_catalog/kanban_controller.js:0
 msgid "Back to BoM"
-msgstr "Takaisin osaluetteloon"
+msgstr "Takaisin materiaaliluetteloon"
 
 #. module: mrp
 #. odoo-javascript
@@ -1418,7 +1417,7 @@ msgstr "Lohkot"
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_byproduct__bom_id
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_line_view_search
 msgid "BoM"
-msgstr "Osaluettelo"
+msgstr "Materiaaliluettelo"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_product__bom_line_ids
@@ -1426,37 +1425,37 @@ msgstr "Osaluettelo"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_product_product_search_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_product_template_search_view
 msgid "BoM Components"
-msgstr "Osaluettelon komponentit"
+msgstr "Materiaaliluettelon komponentit"
 
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/mo_overview/mrp_mo_overview.xml:0
 #: model_terms:ir.ui.view,arch_db:mrp.mo_overview_content
 msgid "BoM Cost"
-msgstr "Osaluettelon kustannukset"
+msgstr "Materiaaliluettelon kustannukset"
 
 #. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/mo_overview_display_filter/mrp_mo_overview_display_filter.js:0
 msgid "BoM Costs"
-msgstr "Osaluettelon kustannukset"
+msgstr "Materiaaliluettelon kustannukset"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__bom_line_id
 msgid "BoM Line"
-msgstr "Osaluettelo rivi"
+msgstr "Materiaaliluettelon rivi"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__bom_line_ids
 msgid "BoM Lines"
-msgstr "Osaluettelon rivit"
+msgstr "Materiaaliluettelon rivit"
 
 #. module: mrp
 #: model:ir.actions.client,name:mrp.action_report_mrp_bom
 #: model:ir.actions.report,name:mrp.action_report_bom_structure
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
 msgid "BoM Overview"
-msgstr "Osaluettelon yleiskatsaus"
+msgstr "Materiaaliluettelon yleiskatsaus"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__type
@@ -1464,7 +1463,7 @@ msgstr "Osaluettelon yleiskatsaus"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_line_view_search
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
 msgid "BoM Type"
-msgstr "Osalistan tyyppi"
+msgstr "Materiaaliluettelon tyyppi"
 
 #. module: mrp
 #: model:product.template,name:mrp.product_product_computer_desk_bolt_product_template
@@ -1500,7 +1499,7 @@ msgstr "Sivutuote"
 #. odoo-python
 #: code:addons/mrp/models/mrp_bom.py:0
 msgid "By-product %s should not be the same as BoM product."
-msgstr "Sivutuote %s ei saa olla sama kuin osaluettelon tuote."
+msgstr "Sivutuotteen %s ei pitäisi olla sama kuin materiaaliluettelon tuote."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_move__byproduct_id
@@ -1672,7 +1671,7 @@ msgstr "Valitse tulostettavien tarrojen tyyppi"
 #. module: mrp
 #: model:ir.model,name:mrp.model_picking_label_type
 msgid "Choose whether to print product or lot/sn labels"
-msgstr "Valitse, tulostetaanko tuote- vai erä/sarjanumero-etikettejä"
+msgstr "Valitse, tulostetaanko tuotteen vai erä-/sarjanumeron etiketit"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__time_stop
@@ -1815,6 +1814,13 @@ msgid "Confirmed"
 msgstr "Vahvistettu"
 
 #. module: mrp
+#. odoo-javascript
+#: code:addons/mrp/static/src/widgets/workorder_planning_status.xml:0
+msgid ""
+"Conflict: this work order overlaps with another one on the same work center"
+msgstr ""
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
 msgid "Conflicts"
 msgstr ""
@@ -1912,7 +1918,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/mo_overview/mrp_mo_overview.xml:0
 msgid "Cost based on the BoM"
-msgstr "Osaluetteloon perustuvat kustannukset"
+msgstr "Materiaaliluetteloon perustuvat kustannukset"
 
 #. module: mrp
 #. odoo-javascript
@@ -2104,13 +2110,14 @@ msgid ""
 "type."
 msgstr ""
 "Tuotteiden nykyinen määrä.\n"
-"Yhdessä Stock Location -tilassa tämä sisältää tavaroita, jotka on varastoitu "
-"tähän paikkaan tai mihin tahansa sen alapaikkoihin.\n"
-"Yhdessä Warehouse-ympäristössä tämä sisältää tavaroita, jotka on varastoitu "
-"tämän varaston varastopaikalle tai sen alapaikkoihin.\n"
-"tallennetaan tämän myymälän varastokohtaan tai sen lapsiin.\n"
-"Muussa tapauksessa tämä koskee tavaroita, jotka on tallennettu mihin tahansa "
-"Stock-paikkaan, jossa on sisäinen tyyppi."
+"Yhden varastosijainnin kontekstissa tämä sisältää kyseiseen sijaintiin tai "
+"sen alisijainteihin varastoidut tuotteet.\n"
+"Yhden varaston kontekstissa tämä sisältää kyseisen varaston "
+"varastosijaintiin tai sen alisijainteihin varastoidut tuotteet.\n"
+"säilytetään tämän myymälän varaston varastosijainnissa tai sen "
+"alisijainneissa.\n"
+"Muussa tapauksessa tämä koskee tavaroita, joita säilytetään missä tahansa "
+"sisäisen tyypin varastosijainnissa."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__qty_producing
@@ -2959,8 +2966,8 @@ msgstr "Kuvake joka kertoo poikkeustoiminnosta."
 msgid ""
 "If a product variant is defined the BOM is available only for this product."
 msgstr ""
-"Jos tuotemuunnelma on määritetty, osaluettelo on saatavilla vain tälle "
-"tuotteelle."
+"Jos tuotevariantti on määritetty, materiaaliluettelo on saatavilla vain "
+"tälle tuotteelle."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__message_needaction
@@ -3041,8 +3048,8 @@ msgid ""
 "If this checkbox is ticked, Odoo will automatically print the product labels "
 "of a MO when it is done."
 msgstr ""
-"Jos valittu, Odoo tulostaa automaattisesti MO:n tuotteiden etiketit, kun se "
-"on valmis."
+"Jos ruksittu, Odoo tulostaa automaattisesti tuotantotilauksen tuote-"
+"etiketit, kun se on valmis."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_picking_type__auto_print_done_production_order
@@ -3095,7 +3102,7 @@ msgstr "Kuljetettavana"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.product_view_search_catalog
 msgid "In the BoM"
-msgstr "Osaluettelossa"
+msgstr "Materiaaliluettelossa"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.product_view_search_catalog
@@ -3335,8 +3342,9 @@ msgid ""
 "Latest component availability status for this MO. If green, then the MO's "
 "readiness status is ready, as per BOM configuration."
 msgstr ""
-"Tämän MO:n viimeisin komponenttien saatavuustilanne. Jos se on vihreä, MO:n "
-"valmiustila on valmis osaluettelon määritysten mukaisesti."
+"Tämän tuotantotilauksen viimeisin komponenttien saatavuustilanne. Jos se on "
+"vihreä, tuotantotilauksen valmiustila on valmis materiaaliluettelon "
+"määritysten mukaisesti."
 
 #. module: mrp
 #: model_terms:product.template,description:mrp.product_product_wood_ply_product_template
@@ -3682,11 +3690,9 @@ msgid "Manufacturing Order"
 msgstr "Tuotantotilaus"
 
 #. module: mrp
-#. odoo-javascript
 #. odoo-python
 #: code:addons/mrp/models/mrp_workorder.py:0
 #: code:addons/mrp/models/stock_picking.py:0
-#: code:addons/mrp/static/src/views/mrp_workorder_kanban/mrp_workorder_kanban_controller.xml:0
 #: model:ir.actions.act_window,name:mrp.action_mrp_production_form
 #: model:ir.actions.act_window,name:mrp.mrp_production_action
 #: model:ir.actions.act_window,name:mrp.mrp_production_action_picking_deshboard
@@ -3913,7 +3919,7 @@ msgstr "Uusi"
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 msgid "New BoM from %(mo_name)s"
-msgstr "Uusi osaluettelo (BoM) alkaen %(mo_name)s"
+msgstr "Uusi materiaaliluettelo %(mo_name)s"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_to_plan
@@ -4062,7 +4068,8 @@ msgstr "Ei valmis"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Note that another version of this BOM is available."
-msgstr "Huomaa, että tästä osaluettelosta on saatavilla toinen versio."
+msgstr ""
+"Huomaa, että tästä materiaaliluettelosta on saatavilla toinenkin versio."
 
 #. module: mrp
 #. odoo-python
@@ -4365,7 +4372,7 @@ msgstr "Alkuperäinen tuotantotavoite (määrä)"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__is_outdated_bom
 msgid "Outdated BoM"
-msgstr "Vanhentunut osaluettelo"
+msgstr "Vanhentunut materiaaliluettelo"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__oee_target
@@ -4405,7 +4412,7 @@ msgstr "Paketin viivakoodi"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__bom_id
 msgid "Parent BoM"
-msgstr "Ylempi osaluettelo"
+msgstr "Päämateriaaliluettelo"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_group__parent_ids
@@ -4518,6 +4525,12 @@ msgid "Plan"
 msgstr "Suunnittele"
 
 #. module: mrp
+#. odoo-javascript
+#: code:addons/mrp/static/src/views/mrp_workorder_kanban/mrp_workorder_kanban_controller.xml:0
+msgid "Plan MO"
+msgstr ""
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
 msgid "Plan Orders"
 msgstr "Suunnittele tilaukset"
@@ -4554,6 +4567,12 @@ msgstr "Suunnittelu"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
 msgid "Planning Issues"
+msgstr ""
+
+#. module: mrp
+#. odoo-javascript
+#: code:addons/mrp/static/src/widgets/workorder_planning_status.xml:0
+msgid "Planning issue: this work order is scheduled before a dependency"
 msgstr ""
 
 #. module: mrp
@@ -4728,6 +4747,11 @@ msgid "Produced"
 msgstr "Valmistetut"
 
 #. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
+msgid "Produced Quantity"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_serials__serial_numbers
 msgid "Produced Serial Numbers"
 msgstr "Tuotetut sarjanumerot"
@@ -4776,7 +4800,7 @@ msgstr "Tuotekapasiteetit"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_product__product_catalog_product_is_in_bom
 msgid "Product Catalog Product Is In Bom"
-msgstr "Tuoteluettelon tuote on osaluettelossa"
+msgstr "Tuotekuvaston tuote on materiaaliluettelossa"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_product__product_catalog_product_is_in_mo
@@ -4801,7 +4825,7 @@ msgstr "Tulostettava tuote-etiketti"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_picking_type_form_inherit_mrp
 msgid "Product Labels"
-msgstr "Tuotetarrat"
+msgstr "Tuote-etiketit"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__module_mrp_plm
@@ -4843,13 +4867,13 @@ msgstr "Tuotemalli"
 #: model:ir.model,name:mrp.model_product_product
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__product_id
 msgid "Product Variant"
-msgstr "Tuotevariaatio"
+msgstr "Tuotevariantti"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_product_variant_action
 #: model:ir.ui.menu,name:mrp.product_variant_mrp
 msgid "Product Variants"
-msgstr "Tuotevariaatiot"
+msgstr "Tuotevariantit"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
@@ -5208,6 +5232,11 @@ msgid "Remaining Days"
 msgstr "Jäljelläolevat päivät"
 
 #. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_kanban
+msgid "Remaining Time"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__remaining_time
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__remaining_time
 msgid "Remaining Working Time"
@@ -5320,6 +5349,7 @@ msgstr "Ajoituksen päiväys"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
+#: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_kanban
 msgid "Scheduled Date"
 msgstr "Suunniteltu päivämäärä"
 
@@ -5441,7 +5471,7 @@ msgid ""
 "within each BoM's Miscellaneous tab"
 msgstr ""
 "Määritä järjestys, jossa työtilaukset käsitellään. Aktivoi ominaisuus kunkin "
-"osaluettelon Sekalaiset-välilehdellä"
+"materiaaliluettelon Sekalaiset-välilehdellä"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_configuration
@@ -5479,13 +5509,13 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse_orderpoint__show_bom
 msgid "Show BoM column"
-msgstr "Näytä osaluettelon sarake"
+msgstr "Näytä materiaaliluettelon sarake"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_replenish__show_bom
 #: model:ir.model.fields,field_description:mrp.field_stock_replenish_mixin__show_bom
 msgid "Show Bom"
-msgstr "Näytä osaluettelo"
+msgstr "Näytä materiaaliluettelo"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_replenishment_info__show_bom_tab
@@ -5679,6 +5709,11 @@ msgid "Start Date"
 msgstr "Aloituspäivä"
 
 #. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_tree_editable_view
+msgid "Start date"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__state
 msgid "State"
 msgstr "Alue"
@@ -5693,6 +5728,7 @@ msgstr "Alue"
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
+#: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_kanban
 msgid "Status"
 msgstr "Tila"
 
@@ -5781,7 +5817,7 @@ msgstr "Valmiin tuotteen varastointi"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__child_bom_id
 msgid "Sub BoM"
-msgstr "Aliosaluettelo"
+msgstr "Alimateriaaliluettelo"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__module_mrp_subcontracting
@@ -5875,7 +5911,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__is_outdated_bom
 msgid "The BoM has been updated since creation of the MO"
-msgstr "Osaluetteloa on päivitetty valmistustilauksen luomisen jälkeen"
+msgstr "Materiaaliluetteloa on päivitetty tuotantotilauksen luomisen jälkeen"
 
 #. module: mrp
 #. odoo-python
@@ -6055,7 +6091,8 @@ msgstr "Tunnisteen nimen on oltava yksilöllinen."
 #: code:addons/mrp/models/mrp_bom.py:0
 msgid "The total cost share for a BoM's by-products cannot exceed 100."
 msgstr ""
-"Osaluettelon sivutuotteiden kokonaiskustannusosuus voi olla enintään 100."
+"Materiaaliluettelon sivutuotteiden kokonaiskustannusosuus voi olla enintään "
+"100."
 
 #. module: mrp
 #. odoo-python
@@ -6134,7 +6171,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_line/mrp_bom_overview_line.xml:0
 msgid "This is a BoM of type Kit!"
-msgstr "Tämä on setti-tyyppinen osaluettelo!"
+msgstr "Tämä on setti-tyyppinen materiaaliluettelo!"
 
 #. module: mrp
 #. odoo-javascript
@@ -6143,8 +6180,8 @@ msgid ""
 "This is the cost based on the BoM of the product. It is computed by summing "
 "the costs of the components and operations needed to build the product."
 msgstr ""
-"Tämä on tuotteen osaluetteloon perustuva kustannus. Se lasketaan laskemalla "
-"yhteen tuotteen rakentamiseen tarvittavien komponenttien ja toimintojen "
+"Tämä on tuotteen materiaaliluetteloon perustuva kustannus. Se lasketaan "
+"summaamalla tuotteen rakentamiseen tarvittavien komponenttien ja toimintojen "
 "kustannukset."
 
 #. module: mrp
@@ -6179,9 +6216,9 @@ msgid ""
 "If the BOM contains operations, make sure the work center capacity is "
 "accurate."
 msgstr ""
-"Tämän on oltava pienin määrä, joka tuotetta voidaan valmistaa. Jos "
-"osaluettelo sisältää toimintoja, varmista, että työpisteen kapasiteetti on "
-"tarkka."
+"Tämän pitäisi olla tuotteen pienin mahdollinen tuotantomäärä. Jos "
+"materiaaliluettelo sisältää toimintoja, varmista, että työpisteen "
+"kapasiteetti on tarkka."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
@@ -6394,6 +6431,12 @@ msgid "Total Quantity"
 msgstr "Kokonaismäärä"
 
 #. module: mrp
+#. odoo-javascript
+#: code:addons/mrp/static/src/mrp_production_kanban/mrp_production_kanban_header.js:0
+msgid "Total Remaining Time"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__workorder_progress_count
 msgid "Total Running Orders"
 msgstr "Käynnissä olevat tilaukset yhteensä"
@@ -6589,7 +6632,6 @@ msgstr "Lukitus avattu oletusarvoisesti"
 #. module: mrp
 #: model:ir.actions.server,name:mrp.action_unplan_workorders
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_to_plan
 msgid "Unplan"
 msgstr "Poista suunnitelmasta"
 
@@ -6600,28 +6642,9 @@ msgid "Unreserve"
 msgstr "Peruuta varaus"
 
 #. module: mrp
-#. odoo-javascript
-#: code:addons/mrp/static/src/views/mrp_workorder_kanban/mrp_workorder_kanban_controller.js:0
-#: code:addons/mrp/static/src/views/mrp_workorder_kanban/mrp_workorder_kanban_header.js:0
-msgid "Update"
-msgstr ""
-
-#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Update BoM"
-msgstr "Päivitä osaluettelo"
-
-#. module: mrp
-#. odoo-javascript
-#: code:addons/mrp/static/src/views/mrp_workorder_kanban/mrp_workorder_kanban_controller.xml:0
-msgid "Update Planning"
-msgstr ""
-
-#. module: mrp
-#. odoo-javascript
-#: code:addons/mrp/static/src/views/mrp_workorder_kanban/mrp_workorder_kanban_header.xml:0
-msgid "Update work center planning"
-msgstr ""
+msgstr "Päivitä materiaaliluettelo"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__priority__1
@@ -6700,7 +6723,7 @@ msgstr "Vahvista"
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_control_panel/mrp_bom_overview_control_panel.xml:0
 msgid "Variant"
-msgstr "Muunnelma"
+msgstr "Variantti"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
@@ -7265,8 +7288,8 @@ msgid ""
 "You cannot use the 'Apply on Variant' functionality and simultaneously "
 "create a BoM for a specific variant."
 msgstr ""
-"Et voi käyttää \"Apply on Variant\" -toimintoa ja samalla luoda osaluetteloa "
-"tietylle variantille."
+"Et voi käyttää 'Sovella variantteihin' -toimintoa ja samalla luoda "
+"materiaaliluetteloa tietylle variantille."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_consumption_warning_form

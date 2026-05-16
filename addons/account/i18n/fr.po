@@ -27,7 +27,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-05-08 17:37+0000\n"
-"PO-Revision-Date: 2026-05-06 14:28+0000\n"
+"PO-Revision-Date: 2026-05-16 14:46+0000\n"
 "Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-s19-3/"
 "account/fr/>\n"
@@ -220,8 +220,8 @@ msgid ""
 "line."
 msgstr ""
 "%(move)s a atteint un état invalide concernant sa ligne de relevé associée.\n"
-"Pour rester cohérente, l’écriture comptable doit toujours comporter "
-"exactement une ligne de compte d’attente."
+"Pour rester cohérente, la pièce comptable doit toujours comporter exactement "
+"une ligne de compte d’attente."
 
 #. module: account
 #. odoo-python
@@ -384,7 +384,7 @@ msgstr "(object._get_report_base_filename())"
 #. odoo-javascript
 #: code:addons/account/static/src/components/product_catalog/search/search_panel.xml:0
 msgid "+ Add Section"
-msgstr ""
+msgstr "+ Ajouter une section"
 
 #. module: account
 #. odoo-python
@@ -484,7 +484,7 @@ msgstr "0% Imports"
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "1-01-85004-3 or 101850043"
-msgstr ""
+msgstr "1-01-85004-3 ou 101850043"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_30_days_end_month_the_10
@@ -500,13 +500,13 @@ msgstr "100,00 USD"
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "10XXXXXXXXY or 20XXXXXXXXY or 15XXXXXXXXY or 16XXXXXXXXY or 17XXXXXXXXY"
-msgstr ""
+msgstr "10XXXXXXXXY ou 20XXXXXXXXY ou 15XXXXXXXXY ou 16XXXXXXXXY ou 17XXXXXXXXY"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "11111111111 (NIN) or 2222222222 (VKN)"
-msgstr ""
+msgstr "11111111111 (NIN) ou 2222222222 (VKN)"
 
 #. module: account
 #. odoo-python
@@ -520,6 +520,7 @@ msgstr ""
 msgid ""
 "12345678 or UA12345678 (EDRPOU), 1234567890 (RNOPP) or 123456789012 (IPN)"
 msgstr ""
+"12345678 ou UA12345678 (EDRPOU), 1234567890 (RNOPP) ou 123456789012 (IPN)"
 
 #. module: account
 #. odoo-python
@@ -536,7 +537,7 @@ msgstr "15 jours"
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "1792060346001 or 1792060346"
-msgstr ""
+msgstr "1792060346001 ou 1792060346"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_30days_early_discount
@@ -578,6 +579,8 @@ msgstr "30% maintenant, le solde à 60 jours"
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "310175397400003 [Fifteen digits, first and last digits should be \"3\"]"
 msgstr ""
+"310175397400003 [Quinze chiffres, dont le premier et le dernier doivent être "
+"\"3\"]"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_45days
@@ -588,7 +591,7 @@ msgstr "45 jours"
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "49-098-576 or 49098576"
-msgstr ""
+msgstr "49-098-576 ou 49098576"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
@@ -1378,7 +1381,7 @@ msgstr "<span class=\"o_stat_text\">Pièces comptables</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "<span class=\"o_stat_text\">Journal Entry</span>"
-msgstr "<span class=\"o_stat_text\">Écriture comptable</span>"
+msgstr "<span class=\"o_stat_text\">Pièce comptable</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -2637,8 +2640,8 @@ msgid ""
 "A journal entry consists of several journal items, each of\n"
 "                which is either a debit or a credit transaction."
 msgstr ""
-"Une écriture comptable se compose de plusieurs lignes d’écriture, chacune\n"
-"                 correspondant à une transaction au débit ou au crédit."
+"Une pièce comptable se compose de plusieurs écritures comptables, chacune "
+"correspondant à une transaction au débit ou au crédit."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_journal_form
@@ -5429,7 +5432,7 @@ msgstr "PORT PAYÉ JUSQU'À"
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "CHE-123.456.788 TVA or CHE-123.456.788 MWST or CHE-123.456.788 IVA"
-msgstr ""
+msgstr "CHE-123.456.788 TVA ou CHE-123.456.788 MWST ou CHE-123.456.788 IVA"
 
 #. module: account
 #. odoo-python
@@ -6449,8 +6452,7 @@ msgstr "Super il semble que vous n'ayez pas de montant à régler."
 #. odoo-python
 #: code:addons/account/models/company.py:0
 msgid "Corrupted data on journal entry with id %(id)s (%(name)s)."
-msgstr ""
-"Données corrompues dans l’écriture comptable avec l’ID %(id)s (%(name)s)."
+msgstr "Données corrompues dans la pièce comptable avec l’ID %(id)s (%(name)s)."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.product_template_form_view
@@ -6485,7 +6487,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
 msgid "Cost of revenue"
-msgstr ""
+msgstr "Coût des ventes"
 
 #. module: account
 #: model:account.account,description:account.22_account_account_us_postage
@@ -6638,7 +6640,7 @@ msgstr "Créer un modèle d'e-mail"
 #. odoo-javascript
 #: code:addons/account/static/src/components/bill_guide/bill_guide.xml:0
 msgid "Create a bill manually"
-msgstr ""
+msgstr "Créer une facture manuellement"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_out_refund_type
@@ -6655,7 +6657,7 @@ msgstr "Créer une facture client"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_journal_line
 msgid "Create a journal entry"
-msgstr "Créer une écriture comptable"
+msgstr "Créer une pièce comptable"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_supplier_accounts
@@ -6777,7 +6779,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/account/static/src/components/bill_guide/bill_guide.xml:0
 msgid "Create manually"
-msgstr ""
+msgstr "Créer manuellement"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -7380,7 +7382,7 @@ msgstr "D"
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "DE123456788 or 12/345/67890"
-msgstr ""
+msgstr "DE123456788 ou 12/345/67890"
 
 #. module: account
 #: model:account.incoterms,name:account.incoterm_DAP
@@ -8538,7 +8540,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_journal_dashboard.py:0
 msgid "Drop to create journal entries with attachments."
-msgstr "Déposer pour créer des écritures comptables avec des pièces jointes."
+msgstr "Déposez des pièces jointes pour créer des pièces comptables."
 
 #. module: account
 #. odoo-python
@@ -9176,7 +9178,7 @@ msgstr "Écritures de différence de change :"
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__no_followup
 #: model:ir.model.fields,help:account.field_account_move__no_followup
 msgid "Exclude this journal entry from follow-up reports."
-msgstr "Exclure cette écriture comptable des rapports de relance."
+msgstr "Exclure cette pièce comptable des rapports de relance."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__no_followup
@@ -9740,9 +9742,9 @@ msgid ""
 "Forces all journal items in this account to have a specific currency (i.e. "
 "bank journals). If no currency is set, entries can use any currency."
 msgstr ""
-"Force toutes les pièces comptables de ce compte à avoir une devise "
-"spécifique (c'est-à-dire les journaux bancaires). Si aucune devise n'est "
-"définie, les écritures peuvent utiliser n'importe quelle devise."
+"Force toutes les écritures comptables de ce compte à utiliser une devise "
+"spécifique (par exemple pour les journaux bancaires). Si aucune devise n’est "
+"définie, les écritures comptables peuvent utiliser n’importe quelle devise."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__foreign_currency_id
@@ -9995,7 +9997,7 @@ msgstr "Postdaté"
 #. odoo-python
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "GB123456782 or XI123456782"
-msgstr ""
+msgstr "GB123456782 ou XI123456782"
 
 #. module: account
 #. odoo-python
@@ -10698,7 +10700,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_reversal__journal_id
 msgid "If empty, uses the journal of the journal entry to be reversed."
-msgstr "Si vide, utilise le journal de l’écriture comptable à contrepasser."
+msgstr "Si vide, utilise le journal de la pièce comptable à contrepasser."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__include_base_amount
@@ -10829,8 +10831,8 @@ msgid ""
 "If you want to use \"Off-Balance Sheet\" accounts, all the accounts of the "
 "journal entry must be of this type"
 msgstr ""
-"Si vous souhaitez utiliser des comptes “hors bilan”, tous les comptes de "
-"l’écriture comptable doivent être de ce type"
+"Si vous souhaitez utiliser des comptes \"hors bilan\", tous les comptes de "
+"la pièce comptable doivent être de ce type"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_validate_account_move__ignore_abnormal_amount
@@ -12057,12 +12059,12 @@ msgstr "Pièce comptable"
 #: code:addons/account/static/src/components/account_payment_field/account_payment.xml:0
 #: code:addons/account/static/src/components/account_payment_field/account_payment_field.js:0
 msgid "Journal Entry Info"
-msgstr "Infos de l’écriture comptable"
+msgstr "Infos de la pièce comptable"
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_reversal
 msgid "Journal Entry Reversal"
-msgstr "Extourne d’écriture comptable"
+msgstr "Extourne de pièce comptable"
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_line
@@ -12727,8 +12729,7 @@ msgstr "Verrouiller les champs fiduciaires"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Log changes to posted journal entries immutably"
 msgstr ""
-"Consigner de façon immuable les modifications des écritures comptables "
-"validées"
+"Consigner de façon immuable les modifications des pièces comptables validées"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -13311,7 +13312,7 @@ msgstr "Mensuel"
 #. odoo-javascript
 #: code:addons/account/static/src/components/currency_form/open_decimal_precision_btn_template.xml:0
 msgid "More precision on Product Prices"
-msgstr ""
+msgstr "Plus de précision sur les prix des produits"
 
 #. module: account
 #. odoo-python
@@ -13478,7 +13479,7 @@ msgstr "Besoin d'annuler la demande"
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
 msgid "Need to update"
-msgstr ""
+msgstr "À mettre à jour"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__needed_terms
@@ -14982,7 +14983,7 @@ msgstr "Titre du reçu de paiement"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__reconcile
 msgid "Payment Reconciliation"
-msgstr ""
+msgstr "Lettrage des paiements"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__payment_reference
@@ -17635,7 +17636,7 @@ msgstr "Afficher les caractéristiques d'inaltérabilité"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__show_invoice_vendor_bill
 #: model:ir.model.fields,field_description:account.field_account_move__show_invoice_vendor_bill
 msgid "Show Invoice Vendor Bill"
-msgstr ""
+msgstr "Afficher la facture"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__show_journal
@@ -19573,10 +19574,10 @@ msgid ""
 "To be consistent, the journal entry must always have exactly one journal "
 "item involving the bank/cash account."
 msgstr ""
-"L’écriture comptable %s a atteint un état invalide concernant sa ligne de "
+"La pièce comptable %s a atteint un état invalide concernant sa ligne de "
 "relevé associée.\n"
-"Pour rester cohérente, l’écriture comptable doit toujours comporter "
-"exactement une ligne d’écriture impliquant le compte bancaire ou de caisse."
+"Pour rester cohérente, la pièce comptable doit toujours comporter exactement "
+"une écriture comptable impliquant le compte bancaire ou de caisse."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_opening_move_id
@@ -19584,7 +19585,7 @@ msgid ""
 "The journal entry containing the initial balance of all this company's "
 "accounts."
 msgstr ""
-"L’écriture comptable contenant le solde initial de tous les comptes de cette "
+"La pièce comptable contenant le solde initial de tous les comptes de cette "
 "société."
 
 #. module: account
@@ -19594,8 +19595,8 @@ msgid ""
 "The journal entry from which this tax cash basis journal entry has been "
 "created."
 msgstr ""
-"L’écriture comptable à partir de laquelle cette écriture de comptabilité de "
-"trésorerie a été créée."
+"La pièce comptable de comptabilité de trésorerie créée à partir de cette "
+"pièce comptable."
 
 #. module: account
 #. odoo-python
@@ -20560,7 +20561,7 @@ msgstr "Cette pièce récurrente sera comptabilisée jusqu'à cette date (inclue
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "This setting locks once a journal entry is created."
-msgstr "Ce paramètre est verrouillé dès qu’une écriture comptable est créée."
+msgstr "Ce paramètre est verrouillé dès qu’une pièce comptable est créée."
 
 #. module: account
 #. odoo-python
@@ -20575,9 +20576,10 @@ msgid ""
 "context,\n"
 "                such as for sending by email or reviewing a batch of records."
 msgstr ""
-"Cette vue affiche uniquement les écritures comptables sélectionnées dans un "
+"Cette vue affiche uniquement les pièces comptables sélectionnées depuis un "
 "autre contexte,\n"
-"                par exemple pour un envoi par e-mail ou une révision par lot."
+"par exemple pour un envoi par e-mail ou pour la révision d’un lot "
+"d’enregistrements."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_reconcile_model
@@ -20655,8 +20657,8 @@ msgid ""
 "they have been posted.\n"
 "Instead, you can cancel the journal entry."
 msgstr ""
-"Pour conserver la piste d’audit restrictive, vous ne pouvez pas supprimer "
-"d’écritures comptables une fois qu’elles ont été validées.\n"
+"Pour préserver la piste d’audit stricte, vous ne pouvez pas supprimer des "
+"pièces comptables une fois qu’elles ont été validées.\n"
 "Vous pouvez toutefois les annuler."
 
 #. module: account
@@ -21305,7 +21307,7 @@ msgstr "Mise à jour des conditions générales"
 #. odoo-python
 #: code:addons/account/models/chart_template.py:0
 msgid "Update app"
-msgstr ""
+msgstr "Mettre l'app à jour"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -21533,7 +21535,7 @@ msgstr "Valide pour"
 #. module: account
 #: model:ir.model,name:account.model_validate_account_move
 msgid "Validate Journal Entry"
-msgstr "Valider l’écriture comptable"
+msgstr "Valider la pièce comptable"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.init_accounts_tree
@@ -21977,6 +21979,8 @@ msgstr "Format XML"
 #: code:addons/account/tools/partner_identifiers.py:0
 msgid "XXXXXXXXX [9 digits] and it should respect the Luhn algorithm checksum"
 msgstr ""
+"XXXXXXXXX [9 chiffres] et doit respecter la somme de contrôle de "
+"l'algorithme de Luhn"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__auto_post__yearly
@@ -22143,7 +22147,7 @@ msgid ""
 "You can't change the company of your journal since there are some journal "
 "entries linked to it."
 msgstr ""
-"Vous ne pouvez pas modifier la société de votre journal, car des écritures "
+"Vous ne pouvez pas modifier la société de votre journal, car des pièces "
 "comptables y sont déjà liées."
 
 #. module: account
@@ -22203,9 +22207,9 @@ msgid ""
 "You can't delete a posted journal item. Don’t play games with your "
 "accounting records; reset the journal entry to draft before deleting it."
 msgstr ""
-"Vous ne pouvez pas supprimer une pièce comptable validée. Ne jouez pas avec "
-"votre comptabilité ; remettez la pièce comptable à l’état de brouillon avant "
-"de la supprimer."
+"Vous ne pouvez pas supprimer une écriture comptable validée. Ne jouez pas "
+"avec votre comptabilité. Remettez la pièce comptable à l’état de brouillon "
+"avant de la supprimer."
 
 #. module: account
 #. odoo-python
@@ -22373,8 +22377,8 @@ msgstr ""
 #: code:addons/account/models/account_move_line.py:0
 msgid "You cannot delete journal items belonging to a locked journal entry."
 msgstr ""
-"Vous ne pouvez pas supprimer les écritures appartenant à une pièce comptable "
-"verrouillée."
+"Vous ne pouvez pas supprimer des écritures comptables appartenant à une "
+"pièce comptable verrouillée."
 
 #. module: account
 #. odoo-python
@@ -22483,7 +22487,7 @@ msgid ""
 "unless the name is removed or set to \"/\". This might create a gap in the "
 "sequence."
 msgstr ""
-"Vous ne pouvez pas modifier le journal d’une écriture comptable une fois "
+"Vous ne pouvez pas modifier le journal d’une pièce comptable une fois "
 "qu’elle a été validée, sauf si le nom est supprimé ou défini sur \"/\". Cela "
 "pourrait créer une rupture dans la séquence."
 
@@ -22495,9 +22499,9 @@ msgid ""
 "assigned, unless the name is removed or set to \"/\". This might create a "
 "gap in the sequence."
 msgstr ""
-"Vous ne pouvez pas modifier le journal d’une écriture comptable à laquelle "
-"un numéro de séquence a été attribué, sauf si le nom est supprimé ou défini "
-"sur \"/\". Cela pourrait créer une rupture dans la séquence."
+"Vous ne pouvez pas modifier le journal d’une pièce comptable à laquelle un "
+"numéro de séquence a été attribué, sauf si le nom est supprimé ou défini sur "
+"\"/\". Cela pourrait créer une rupture dans la séquence."
 
 #. module: account
 #. odoo-python
@@ -22563,8 +22567,8 @@ msgid ""
 "You cannot modify the taxes related to a posted journal item, you should "
 "reset the journal entry to draft to do so."
 msgstr ""
-"Vous ne pouvez pas modifier les taxes liées à une écriture comptabilisée, il "
-"faut d'abord remettre la pièce comptable en brouillon."
+"Vous ne pouvez pas modifier les taxes liées à une écriture comptable "
+"validée. Vous devez d’abord remettre la pièce comptable en brouillon."
 
 #. module: account
 #. odoo-python
@@ -22683,8 +22687,8 @@ msgid ""
 "You cannot set a currency on this account as it already has some journal "
 "entries having a different foreign currency."
 msgstr ""
-"Vous ne pouvez pas définir une devise sur ce compte, car il existe déjà des "
-"écritures comptables avec une devise étrangère différente."
+"Vous ne pouvez pas définir de devise sur ce compte, car certaines pièces "
+"comptables utilisent déjà une autre devise étrangère."
 
 #. module: account
 #. odoo-python
@@ -22741,8 +22745,8 @@ msgid ""
 "You cannot use this wizard on journal entries belonging to different "
 "companies."
 msgstr ""
-"Vous ne pouvez pas utiliser cet assistant sur des écritures comptables "
-"appartenant à des sociétés différentes."
+"Vous ne pouvez pas utiliser cet assistant sur des pièces comptables "
+"appartenant à différentes sociétés."
 
 #. module: account
 #. odoo-python
@@ -23006,7 +23010,7 @@ msgstr "et ne seront donc pas comptabilisées automatiquement."
 #. odoo-javascript
 #: code:addons/account/static/src/components/grouped_view_widget/grouped_view_widget.xml:0
 msgid "are not shown in the preview"
-msgstr ""
+msgstr "ne sont pas affichés dans la prévisualisation"
 
 #. module: account
 #. odoo-javascript
@@ -23229,7 +23233,7 @@ msgstr "in_invoice"
 #. odoo-javascript
 #: code:addons/account/static/src/components/account_batch_sending_summary/account_batch_sending_summary.xml:0
 msgid "invoice(s)"
-msgstr ""
+msgstr "facture(s)"
 
 #. module: account
 #. odoo-python
@@ -23404,7 +23408,7 @@ msgstr "pour créer les taxes de ce pays."
 #. odoo-javascript
 #: code:addons/account/static/src/components/bill_guide/bill_guide.xml:0
 msgid "try our sample"
-msgstr ""
+msgstr "essayer nos exemples"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions

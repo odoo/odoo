@@ -9,9 +9,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-03 17:36+0000\n"
-"PO-Revision-Date: 2026-05-05 23:44+0000\n"
-"Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
+"POT-Creation-Date: 2026-05-15 17:35+0000\n"
+"PO-Revision-Date: 2026-05-16 14:48+0000\n"
+"Last-Translator: \"Patricia Gutiérrez (pagc)\" <pagc@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
 "odoo-s19-3/calendar/es_419/>\n"
 "Language: es_419\n"
@@ -79,7 +79,7 @@ msgstr "(Sin título)"
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/activity/attendee_calendar_activity_list_popover.xml:0
 msgid "...and"
-msgstr ""
+msgstr "... y"
 
 #. module: calendar
 #: model:mail.template,body_html:calendar.calendar_template_meeting_changedate
@@ -293,7 +293,7 @@ msgstr ""
 "align: bottom;\"/>\n"
 "    </h1>\n"
 "    <p style=\"margin: 0;\">\n"
-"        <span style=\"display: block; margin-bottom: 8px;\">Hello <t t-"
+"        <span style=\"display: block; margin-bottom: 8px;\">Hola <t t-"
 "out=\"object.common_name or ''\">Ready Mat</t>,</span>\n"
 "        <t t-if=\"is_online and target_responsible\">\n"
 "            <t t-if=\"customer\">\n"
@@ -301,7 +301,7 @@ msgstr ""
 "ha sido actualizada:\n"
 "            </t>\n"
 "            <t t-else=\"\">\n"
-"                ha sido actualizada ha sido actualizada:\n"
+"                ha sido actualizada:\n"
 "            </t>\n"
 "            <strong t-out=\"object.event_id.appointment_type_id.name or "
 "''\">Agendar una demostración</strong> ahora está programada para el\n"
@@ -385,7 +385,7 @@ msgstr ""
 "            </tr>\n"
 "            <tr t-if=\"object.event_id.location\">\n"
 "                <td style=\"width: 100px; padding-top: 6px; color: #676F7B; "
-"vertical-align: top;\">Location</td>\n"
+"vertical-align: top;\">Ubicación</td>\n"
 "                <td style=\"padding-top: 6px;\">\n"
 "                    <t t-out=\"object.event_id.location or ''\">Bruselas</"
 "t>\n"
@@ -1636,14 +1636,14 @@ msgstr ""
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
-msgid "<span class=\"mx-1\"><i class=\"fa fa-plus me-1\"/>Odoo meeting</span>"
+msgid ""
+"<span class=\"mx-1\"><i class=\"fa fa-plus me-1\"/>Video conference</span>"
 msgstr ""
-"<span class=\"mx-1\"><i class=\"fa fa-plus me-1\"/>Reunión de Odoo</span>"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
-msgid "<span> guests</span>"
-msgstr "<span> invitados</span>"
+msgid "<span invisible=\"allday\"> or </span>"
+msgstr ""
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_event_delete_wizard_form
@@ -1776,7 +1776,7 @@ msgstr ""
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/core/web/activity_menu_patch.xml:0
-#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form_quick_create
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "All Day"
 msgstr "Todo el día"
 
@@ -2051,7 +2051,7 @@ msgstr "Configuración"
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/ask_recurrence_update_policy_dialog.xml:0
 msgid "Confirm"
-msgstr ""
+msgstr "Confirmar"
 
 #. module: calendar
 #. odoo-javascript
@@ -3035,7 +3035,7 @@ msgstr "Siguiente tipo de actividad"
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/activity/attendee_calendar_activity_list_popover_item.xml:0
 msgid "Next Week"
-msgstr ""
+msgstr "Próxima semana"
 
 #. module: calendar
 #. odoo-javascript
@@ -3828,7 +3828,7 @@ msgstr "Reuniones de hoy"
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/activity/attendee_calendar_activity_list_popover_item.xml:0
 msgid "Tomorrow"
-msgstr ""
+msgstr "Mañana"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__trigger_id
@@ -3931,7 +3931,7 @@ msgstr "Origen de la videollamada"
 #. odoo-javascript
 #: code:addons/calendar/static/src/core/web/activity_patch.xml:0
 msgid "View"
-msgstr ""
+msgstr "Vista"
 
 #. module: calendar
 #. odoo-javascript
@@ -4049,19 +4049,19 @@ msgstr "No hay nadie más en esta reunión"
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/fields/many2many_attendee_expandable.xml:0
 msgid "accepted"
-msgstr ""
+msgstr "aceptada"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/fields/many2many_attendee_expandable.xml:0
 msgid "attendees"
-msgstr ""
+msgstr "asistentes"
 
 #. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/fields/many2many_attendee_expandable.xml:0
 msgid "declined"
-msgstr ""
+msgstr "rechazada"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -4074,10 +4074,15 @@ msgid "e.g: 12/31/2030"
 msgstr "Por ejemplo: 12/31/2030"
 
 #. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+msgid "guests"
+msgstr ""
+
+#. module: calendar
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/activity/attendee_calendar_activity_list_popover.xml:0
 msgid "more"
-msgstr ""
+msgstr "más"
 
 #. module: calendar
 #. odoo-javascript
@@ -4089,7 +4094,7 @@ msgstr "this.props.placeholder"
 #. odoo-javascript
 #: code:addons/calendar/static/src/views/fields/many2many_attendee_expandable.xml:0
 msgid "uncertain"
-msgstr ""
+msgstr "sin determinar"
 
 #. module: calendar
 #: model:mail.template,subject:calendar.calendar_template_meeting_reminder
@@ -4105,6 +4110,14 @@ msgstr "{{ object.event_id.name }}: fecha actualizada"
 #: model:mail.template,subject:calendar.calendar_template_meeting_update
 msgid "{{object.name}}: Event update"
 msgstr "{{object.name}}: actualización del evento"
+
+#~ msgid ""
+#~ "<span class=\"mx-1\"><i class=\"fa fa-plus me-1\"/>Odoo meeting</span>"
+#~ msgstr ""
+#~ "<span class=\"mx-1\"><i class=\"fa fa-plus me-1\"/>Reunión de Odoo</span>"
+
+#~ msgid "<span> guests</span>"
+#~ msgstr "<span> invitados</span>"
 
 #~ msgid ""
 #~ "\n"

@@ -15,8 +15,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-08 17:37+0000\n"
-"PO-Revision-Date: 2026-04-30 07:29+0000\n"
+"POT-Creation-Date: 2026-05-15 17:35+0000\n"
+"PO-Revision-Date: 2026-05-16 14:34+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-s19-3/"
 "point_of_sale/ja/>\n"
@@ -118,7 +118,7 @@ msgstr "%s客が  \"%s\"用に見つかりました。"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/progress_bar/progress_bar.js:0
 msgid "%s days left"
-msgstr ""
+msgstr "%s 残日数"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -131,7 +131,7 @@ msgstr "%sは合計%sの金額があります。本当にこのオーダを削�
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/progress_bar/progress_bar.js:0
 msgid "%s hours left"
-msgstr ""
+msgstr "%s 残時間"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -139,7 +139,7 @@ msgstr ""
 msgid ""
 "%s is more than %s% of the order's total amount. Are you sure of this tip "
 "amount?"
-msgstr ""
+msgstr "%s ご注文総額の%s% を超えています。このチップ額でよろしいですか?"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -151,7 +151,7 @@ msgstr "残り%s"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/progress_bar/progress_bar.js:0
 msgid "%s min. left"
-msgstr ""
+msgstr "残り%s分"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -180,19 +180,19 @@ msgstr "(重複 !)"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "(Replace [printer_ip] with the printer IP address)"
-msgstr ""
+msgstr "([printer_ip] をプリンタの IP アドレスに置き換えてください)"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/chose_combo_popup/chose_combo_popup.xml:0
 msgid "(up to"
-msgstr ""
+msgstr "(最大"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/components/popups/optional_products_popup/optional_products_popup.xml:0
 msgid "+ Add"
-msgstr ""
+msgstr "+ 追加"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -203,7 +203,7 @@ msgstr "+ 新規のショップ"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid ", you can skip the system parameter section."
-msgstr ""
+msgstr "、システムパラメータのセクションは省略可能です。"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -215,19 +215,19 @@ msgstr "1時間"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/progress_bar/progress_bar.js:0
 msgid "1 day left"
-msgstr ""
+msgstr "残り1日"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/app/screens/ticket_screen/progress_bar/progress_bar.js:0
 msgid "1 hour left"
-msgstr ""
+msgstr "残り1時間"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/backend/lna_checklist/lna_checklist.xml:0
 msgid "19.1 or above"
-msgstr ""
+msgstr "19.1以降"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -332,17 +332,17 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_form_pos_ui
 msgid "<i class=\"d-none d-md-inline-flex fa fa-building\" title=\"Company\"/>"
-msgstr ""
+msgstr "<i class=\"d-none d-md-inline-flex fa fa-building\" title=\"会社\"/>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_form_pos_ui
 msgid "<i class=\"d-none d-md-inline-flex fa fa-envelope\" title=\"Email\"/>"
-msgstr ""
+msgstr "<i class=\"d-none d-md-inline-flex fa fa-envelope\" title=\"メール\"/>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_partner_form_pos_ui
 msgid "<i class=\"d-none d-md-inline-flex fa fa-phone\" title=\"Phone\"/>"
-msgstr ""
+msgstr "<i class=\"d-none d-md-inline-flex fa fa-phone\" title=\"電話\"/>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -382,6 +382,8 @@ msgid ""
 "<span class=\"o_field_widget o_readonly_modifier\" "
 "invisible=\"is_total_cost_computed\">To be determined</span>"
 msgstr ""
+"<span class=\"o_field_widget o_readonly_modifier\" "
+"invisible=\"is_total_cost_computed\">未定</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -431,7 +433,7 @@ msgstr "<span name=\"ticket\">チケット</span>"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "<span>%</span>"
-msgstr ""
+msgstr "<span>%</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -3560,6 +3562,18 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/app/components/popups/retry_print_popup/retry_print_popup.xml:0
 msgid "Download"
 msgstr "ダウンロード"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
+msgid "Download IDB Errors"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/utils/debug/debug_widget.xml:0
+msgid "Download IndexedDB error logs from localStorage"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -8063,7 +8077,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/app/components/popups/confirmation_dialog/confirmation_dialog.js:0
 #: code:addons/point_of_sale/static/src/app/components/popups/confirmation_dialog/confirmation_dialog.xml:0
 msgid "Reload Data"
-msgstr "データを再読み込みする"
+msgstr "データを再読込み"
 
 #. module: point_of_sale
 #: model:ir.actions.client,name:point_of_sale.action_client_pos_menu
@@ -10735,6 +10749,14 @@ msgid "Validate"
 msgstr "検証"
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_payment_method.py:0
+msgid ""
+"Validation Error: You cannot assign the same Cash payment method to multiple "
+"POS Shops. Please create a separate Cash payment method for each shop."
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__value
 msgid "Value"
 msgstr "数値"
@@ -11138,6 +11160,12 @@ msgid ""
 "You don't have the access rights to get the point of sale closing control "
 "data."
 msgstr "POS管理データを取得するアクセス権を持っていません。"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+msgid "You don't have the access rights to perform a cash in/out."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
