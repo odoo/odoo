@@ -11,7 +11,7 @@ import io
 
 from odoo.exceptions import UserError
 from odoo.tools import sql
-from odoo.tools.translate import quote, unquote, xml_translate, html_translate, TranslationImporter, TranslationModuleReader
+from odoo.tools.translate import _push, quote, unquote, xml_translate, html_translate, TranslationImporter, TranslationModuleReader, TranslationReader
 from odoo.tests.common import TransactionCase, BaseCase, new_test_user, tagged
 
 _stats_logger = logging.getLogger('odoo.tests.stats')
@@ -152,6 +152,74 @@ class TranslationToolsTestCase(BaseCase):
         result = xml_translate(terms.append, source)
         self.assertEqual(result, source)
         self.assertItemsEqual(terms, ['Form stuff'])
+
+    def test_translate_xml_o_translate_inline_on_block(self):
+        """ Test xml_translate() with non-inline elements with o_translate_inline. """
+        terms = []
+        source = """<div>
+                        <h1 class="o_translate_inline">Blah</h1>more text
+                        <h1 class="o_translate_inline" t-if="True">Other Blah</h1>even more text
+                    </div>"""
+        result = xml_translate(terms.append, source)
+        self.assertEqual(result, source)
+        self.assertItemsEqual(terms,
+            ['<h1 class="o_translate_inline">Blah</h1>more text', 'Other Blah', 'even more text'])
+
+    def test_translate_xml_o_translate_inline_on_parent(self):
+        """ Test xml_translate() with non-inline elements inside o_translate_inline. """
+        terms = []
+        source = """<div>
+                        <span class="o_translate_inline">Blah<h1>more text</h1></span>
+                        <span class="o_translate_inline">Other Blah<h1 t-if="True">even more text</h1></span>
+                    </div>"""
+        result = xml_translate(terms.append, source)
+        self.assertEqual(result, source)
+        self.assertItemsEqual(terms,
+            ['<span class="o_translate_inline">Blah<h1>more text</h1></span>', 'Other Blah', 'even more text'])
+
+    def test_translate_xml_highlight(self):
+        """ Test xml_translate() with highlight span (with o_translate_inline). """
+        terms = []
+        source = """<div>
+                        <span class="o_text_highlight o_translate_inline">
+                            <a>solo link</a>
+                        </span>
+                    </div>
+                    <div>
+                        <span class="o_text_highlight o_translate_inline">
+                            <span>Here is a <a>nested link</a> in highlight</span>
+                        </span>
+                    </div>"""
+        result = xml_translate(terms.append, source)
+        self.assertEqual(result, source)
+        self.assertItemsEqual(terms, ["""<span class="o_text_highlight o_translate_inline">
+                            <a>solo link</a>
+                        </span>""", """<span class="o_text_highlight o_translate_inline">
+                            <span>Here is a <a>nested link</a> in highlight</span>
+                        </span>"""])
+
+    def test_translate_xml_o_translate_inline_with_groups(self):
+        """ Test xml_translate() with groups attribute and with o_translate_inline. """
+        terms = []
+        source = """<div>
+                        <a class="o_translate_inline" href="#" groups="anyone">Skip</a>
+                    </div>"""
+        result = xml_translate(terms.append, source)
+        self.assertEqual(result, source)
+        self.assertItemsEqual(terms, ['Skip'])
+
+    def test_translate_xml_groups(self):
+        """ Test xml_translate() with groups attributes. """
+        terms = []
+        source = """<t t-name="stuff">
+                        stuff before
+                        <span groups="anyone"/>
+                        stuff after
+                    </t>"""
+        result = xml_translate(terms.append, source)
+        self.assertEqual(result, source)
+        self.assertItemsEqual(terms,
+            ['stuff before', 'stuff after'])
 
     def test_translate_xml_t(self):
         """ Test xml_translate() with t-* attributes. """
@@ -362,6 +430,24 @@ class TranslationToolsTestCase(BaseCase):
         result = html_translate(lambda term: term, source)
         self.assertEqual(result, source)
 
+    def test_push_filters_no_letter_strings(self):
+        """Strings with no letters should not be exported for translation."""
+        terms = []
+
+        def callback(term, line):
+            return terms.append(term)
+        _push(callback, 'hello', 1)
+        _push(callback, '123', 1)
+        _push(callback, '!@#', 1)
+        _push(callback, '', 1)
+        self.assertEqual(terms, ['hello'])
+
+    def test_push_exports_one_letter_strings(self):
+        """One-letter strings should be exported (e.g. UoM abbreviations like 'g' for grams)."""
+        terms = []
+        _push(lambda term, line: terms.append(term), 'g', 1)
+        self.assertEqual(terms, ['g'])
+
 
 class TestLanguageInstall(TransactionCase):
     def test_language_install(self):
@@ -392,6 +478,23 @@ class TestTranslationExport(TransactionCase):
         """Read files of installed modules and export translatable terms"""
         with self.assertNoLogs('odoo.tools.translate', "ERROR"):
             TranslationModuleReader(self.env.cr)
+
+    def test_push_translation_filters_no_letter_strings(self):
+        """Strings with no letters should not be queued for translation export."""
+        reader = TranslationReader(self.env.cr)
+        reader._push_translation('module', 'model', 'res.partner,name', 1, 'hello')
+        reader._push_translation('module', 'model', 'res.partner,name', 2, '123')
+        reader._push_translation('module', 'model', 'res.partner,name', 3, '!@#')
+        reader._push_translation('module', 'model', 'res.partner,name', 4, '')
+        sources = [entry[1] for entry in reader._to_translate]
+        self.assertEqual(sources, ['hello'])
+
+    def test_push_translation_exports_one_letter_strings(self):
+        """One-letter strings should be queued for export (e.g. UoM abbreviations like 'g' for grams)."""
+        reader = TranslationReader(self.env.cr)
+        reader._push_translation('module', 'model', 'res.partner,name', 1, 'g')
+        sources = [entry[1] for entry in reader._to_translate]
+        self.assertEqual(sources, ['g'])
 
 
 class TestTranslation(TransactionCase):
@@ -1298,7 +1401,7 @@ class TestXMLTranslation(TransactionCase):
 
         self.assertEqual(view.arch_db, archf % terms_en)
         self.assertEqual(view.with_context(lang='fr_FR').arch_db, archf % terms_fr)
-        
+
         # change the order of the text term and the xml term and redo the previous test
         archf = '<form>%s<div>%s</div></form>'
         terms_en = ('<span invisible="1">Draft</span>', 'Draft')
@@ -1525,23 +1628,24 @@ class TestXMLTranslation(TransactionCase):
         self.env['ir.ui.view'].create({
             'type': 'qweb',
             'key': 'test',
-            'arch': '<t t-out="placeholder"/>',
+            'arch': '<button><t t-out="placeholder"/></button>',
         })
         view0 = self.env['ir.ui.view'].with_context(lang='fr_FR', edit_translations=True).create({
             'type': 'qweb',
             'arch': '<t t-call="test" placeholder="hello"/>',
         })
-        self.assertEqual(view0._render_template(view0.id, {'hello': 'world'}), 'world')
+        self.assertEqual(view0._render_template(view0.id, {'hello': 'world'}), '<button>world</button>')
         self.assertEqual(view0.arch_db, '<t t-call="test" placeholder="hello"/>')
 
         view0.arch = '<t t-call="test" placeholder.translate="hello"/>'
         translate_node = (
-            f'&lt;span data-oe-model=&#34;ir.ui.view&#34; data-oe-id=&#34;{view0.id}&#34;'
-            ' data-oe-field=&#34;arch_db&#34; data-oe-translation-state=&#34;to_translate&#34;'
-            ' data-oe-translation-source-sha=&#34;2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824&#34;&gt;hello&lt;/span&gt;'
+            f'<span data-oe-model="ir.ui.view" data-oe-id="{view0.id}"'
+            ' data-oe-field="arch_db" data-oe-translation-state="to_translate"'
+            ' data-oe-translation-source-sha="2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824">hello</span>'
         )
-        self.assertEqual(view0._render_template(view0.id), translate_node)
-        self.assertEqual(view0.arch_db, f'<t t-call="test" placeholder.translate="{translate_node.replace("&#34;", "&quot;")}"/>')
+        self.assertEqual(view0._render_template(view0.id), f'<button>{translate_node}</button>')
+        translate_attr = translate_node.replace("<", "&lt;").replace(">", "&gt;").replace('"', "&quot;")
+        self.assertEqual(view0.arch_db, f'<t t-call="test" placeholder.translate="{translate_attr}"/>')
 
     def test_update_field_translations_source_lang(self):
         """ call update_field_translations with source_lang """

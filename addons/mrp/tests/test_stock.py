@@ -759,3 +759,63 @@ class TestKitPicking(common.TestMrpCommon):
 
         # assert the scrap's bom_id is updated to False after updating the product
         self.assertFalse(scrap.bom_id)
+
+    def test_compute_scrap_qty_mixed_bom(self):
+        """Test that _compute_scrap_qty correctly handles a recordset with
+        scraps that have no bom_id (delegating to super)"""
+        # Products without kit
+        product_no_kit_1 = self.env['product.product'].create({
+            'name': 'No Kit 1',
+            'is_storable': True,
+        })
+        product_no_kit_2 = self.env['product.product'].create({
+            'name': 'No Kit 2',
+            'is_storable': True,
+        })
+
+        # Stock for all products
+        self.env['stock.quant'].create([
+            {
+                'location_id': self.stock_location.id,
+                'product_id': product_no_kit_1.id,
+                'inventory_quantity': 10,
+            },
+            {
+                'location_id': self.stock_location.id,
+                'product_id': product_no_kit_2.id,
+                'inventory_quantity': 10,
+            },
+        ]).action_apply_inventory()
+
+        # Create 2 scraps without bom
+        scrap_no_bom_1, scrap_no_bom_2 = self.env['stock.scrap'].create([
+            {
+                'product_id': product_no_kit_1.id,
+                'scrap_qty': 3.0,
+                'product_uom_id': product_no_kit_1.uom_id.id,
+                'location_id': self.stock_location.id,
+            },
+            {
+                'product_id': product_no_kit_2.id,
+                'scrap_qty': 5.0,
+                'product_uom_id': product_no_kit_2.uom_id.id,
+                'location_id': self.stock_location.id,
+            },
+        ])
+
+        # Verify bom_id assignment
+        self.assertFalse(scrap_no_bom_1.bom_id)
+        self.assertFalse(scrap_no_bom_2.bom_id)
+
+        # Before do_scrap: no move_ids, scrap_qty should be the written values
+        self.assertEqual(scrap_no_bom_1.scrap_qty, 3.0)
+        self.assertEqual(scrap_no_bom_2.scrap_qty, 5.0)
+
+        # Execute all scraps
+        all_scraps = scrap_no_bom_1 | scrap_no_bom_2
+        for scrap in all_scraps:
+            scrap.do_scrap()
+
+        # After do_scrap: move_ids exist
+        self.assertEqual(scrap_no_bom_1.scrap_qty, 3.0)
+        self.assertEqual(scrap_no_bom_2.scrap_qty, 5.0)

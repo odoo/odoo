@@ -9,6 +9,9 @@
                 <group name="sale_info_group" position="inside">
                     <field name="l10n_sa_reason" invisible="not l10n_sa_show_reason" readonly="state != 'draft'"/>
                 </group>
+                <xpath expr="//page[@id='other_tab']//field[@name='delivery_date']" position="after">
+                    <field name="l10n_sa_confirmation_datetime" invisible="country_code != 'SA' or move_type not in ('out_invoice', 'out_refund')" />
+                </xpath>
             </field>
         </record>
     </data>

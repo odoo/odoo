@@ -11,6 +11,11 @@ class StockMoveLine(models.Model):
         return mls
 
     def write(self, vals):
+        analytic_move_to_recompute = set()
+        if 'quantity' in vals or 'move_id' in vals:
+            for move_line in self:
+                move_id = vals.get('move_id', move_line.move_id.id)
+                analytic_move_to_recompute.add(move_id)
         valuation_fields = ['quantity', 'location_id', 'location_dest_id', 'owner_id', 'quant_id', 'lot_id']
         valuation_trigger = any(field in vals for field in valuation_fields)
         qty_by_ml = {}
@@ -19,6 +24,14 @@ class StockMoveLine(models.Model):
         res = super().write(vals)
         if valuation_trigger and qty_by_ml:
             self._update_stock_move_value(qty_by_ml)
+        if analytic_move_to_recompute:
+            self.env['stock.move'].browse(analytic_move_to_recompute).sudo()._create_analytic_move()
+        return res
+
+    def unlink(self):
+        analytic_move_to_recompute = self.move_id
+        res = super().unlink()
+        analytic_move_to_recompute.sudo()._create_analytic_move()
         return res
 
     @api.model
@@ -32,7 +45,7 @@ class StockMoveLine(models.Model):
         return self.owner_id and self.owner_id != self.company_id.partner_id
 
     def _update_stock_move_value(self, old_qty_by_ml=None):
-        move_to_update = set()
+        move_to_update_ids = set()
         if not old_qty_by_ml:
             old_qty_by_ml = {}
 
@@ -40,7 +53,7 @@ class StockMoveLine(models.Model):
             if not (move.is_in or move.is_out):
                 continue
             if move.is_in:
-                move_to_update.add(move.id)
+                move_to_update_ids.add(move.id)
             elif move.is_out:
                 delta = sum(
                     ml.quantity - old_qty_by_ml.get(ml, 0)
@@ -49,5 +62,13 @@ class StockMoveLine(models.Model):
                 )
                 if delta:
                     move._set_value(correction_quantity=delta)
-        if move_to_update:
-            self.env['stock.move'].browse(move_to_update)._set_value()
+        if moves_to_update := self.env['stock.move'].browse(move_to_update_ids):
+            moves_to_update._set_value()
+
+    def _is_consigned_valued_line(self):
+        """ return true if the move line would have been considered in the _get_valued_qty() method except for
+        the _should_exclude_for_valuation criteria (.i.e the line would have been valued if it wasn't consigned)
+        """
+        return self.picked and self._should_exclude_for_valuation() and\
+            (not self.location_id._should_be_valued() and self.location_dest_id._should_be_valued()
+            or self.location_id._should_be_valued() and not self.location_dest_id._should_be_valued())

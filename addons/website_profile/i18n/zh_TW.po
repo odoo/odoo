@@ -7,13 +7,14 @@
 # Tony Ng, 2025
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Tony Ng (ngto)" <ngto@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:39+0000\n"
-"PO-Revision-Date: 2025-09-16 08:12+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2026-04-10 18:40+0000\n"
+"PO-Revision-Date: 2026-04-21 22:27+0000\n"
+"Last-Translator: \"Tony Ng (ngto)\" <ngto@odoo.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
 "projects/odoo-19/website_profile/zh_Hant/>\n"
 "Language: zh_TW\n"
@@ -21,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.email_validation_banner
@@ -48,12 +49,6 @@ msgstr ".在論壇或電子學習平臺上獲取積分。這些點將讓你提�
 #: model_terms:ir.ui.view,arch_db:website_profile.users_page_content
 msgid ". Try another search."
 msgstr ". 請嘗試其他搜尋條件."
-
-#. module: website_profile
-#: model_terms:ir.ui.view,arch_db:website_profile.profile_access_denied
-msgid ""
-"<a class=\"o_translate_inline\" t-attf-href=\"/\">Return to the website.</a>"
-msgstr "<a class=\"o_translate_inline\" t-attf-href=\"/\">返回網站</a>。"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_badges
@@ -468,6 +463,14 @@ msgid "Can Publish"
 msgstr "可以發佈"
 
 #. module: website_profile
+#. odoo-python
+#: code:addons/website_profile/controllers/main.py:0
+msgid ""
+"Changing the country is not allowed once document(s) have been issued for "
+"your account. Please contact us directly for this operation."
+msgstr ""
+
+#. module: website_profile
 #. odoo-javascript
 #: code:addons/website_profile/static/src/components/profile_dialog/profile_dialog.xml:0
 msgid "City"
@@ -488,7 +491,7 @@ msgstr "關閉"
 #. odoo-javascript
 #: code:addons/website_profile/static/src/components/profile_dialog/profile_dialog.xml:0
 msgid "Country"
-msgstr ""
+msgstr "國家/地區"
 
 #. module: website_profile
 #. odoo-javascript
@@ -650,6 +653,11 @@ msgid "Ranks and Badges"
 msgstr ""
 
 #. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.profile_access_denied
+msgid "Return to the website."
+msgstr ""
+
+#. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_sub_nav
 msgid "Search"
 msgstr "搜尋"
@@ -703,6 +711,12 @@ msgid "Update"
 msgstr "更新"
 
 #. module: website_profile
+#. odoo-javascript
+#: code:addons/website_profile/static/src/components/profile_dialog/profile_dialog.js:0
+msgid "Update failed."
+msgstr ""
+
+#. module: website_profile
 #: model:ir.model,name:website_profile.model_res_users
 msgid "User"
 msgstr "使用者"
@@ -731,7 +745,7 @@ msgstr "驗證電郵已發送至"
 #. module: website_profile
 #: model:ir.model.fields,field_description:website_profile.field_gamification_badge__website_published
 msgid "Visible on current website"
-msgstr "在當前網站可見"
+msgstr "在目前網站顯示"
 
 #. module: website_profile
 #. odoo-javascript
@@ -808,6 +822,11 @@ msgid "point"
 msgstr "點"
 
 #. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
+msgid "s"
+msgstr ""
+
+#. module: website_profile
 #. odoo-python
 #: code:addons/website_profile/controllers/main.py:0
 msgid "slides"
@@ -856,6 +875,11 @@ msgstr "{{ object.company_id.name }} 個人資料驗證"
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_sub_nav
 msgid "└ Users"
 msgstr "└ 使用者"
+
+#~ msgid ""
+#~ "<a class=\"o_translate_inline\" t-attf-href=\"/\">Return to the website.</"
+#~ "a>"
+#~ msgstr "<a class=\"o_translate_inline\" t-attf-href=\"/\">返回網站</a>。"
 
 #~ msgid "<i class=\"fa fa-close me-1\"/>Cancel"
 #~ msgstr "<i class=\"fa fa-close me-1\"/> 取消"

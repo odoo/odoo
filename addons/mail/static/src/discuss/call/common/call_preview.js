@@ -271,7 +271,7 @@ export class CallPreview extends Component {
     }
 
     async enableBlur() {
-        this.store.settings.useBlur = true;
+        this.store.settings.setUseBlur(true);
         if (!this.videoRef.el) {
             return;
         }
@@ -285,7 +285,7 @@ export class CallPreview extends Component {
     }
 
     disableBlur() {
-        this.store.settings.useBlur = false;
+        this.store.settings.setUseBlur(false);
         if (this.videoRef.el) {
             this.videoRef.el.srcObject = this.state.videoStream;
         }

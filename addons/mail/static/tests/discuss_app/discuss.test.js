@@ -1,3 +1,5 @@
+import { insertText as htmlInsertText } from "@html_editor/../tests/_helpers/user_actions";
+
 import { waitNotifications, waitUntilSubscribe } from "@bus/../tests/bus_test_helpers";
 
 import {
@@ -5,6 +7,7 @@ import {
     contains,
     defineMailModels,
     editInput,
+    focus,
     insertText,
     listenStoreFetch,
     onRpcBefore,
@@ -18,6 +21,7 @@ import {
     STORE_FETCH_ROUTES,
     triggerHotkey,
     waitStoreFetch,
+    getChannelCommandsForThread,
 } from "@mail/../tests/mail_test_helpers";
 import { mailDataHelpers } from "@mail/../tests/mock_server/mail_mock_server";
 import { describe, expect, test } from "@odoo/hoot";
@@ -203,7 +207,7 @@ test("Posting message should transform links.", async () => {
     await contains("a[href='https://www.odoo.com/']");
 });
 
-test("Posting message should transform relevant data to emoji.", async () => {
+test("[text composer] Posting message should transform relevant data to emoji.", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         name: "general",
@@ -212,6 +216,27 @@ test("Posting message should transform relevant data to emoji.", async () => {
     await start();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "test :P :laughing:");
+    await press("Enter");
+    await contains(".o-mail-Message-body", { text: "test 😛 😆" });
+});
+
+test.tags("html composer");
+test("Posting message should transform relevant data to emoji.", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "general",
+        channel_type: "channel",
+    });
+    await start();
+    const composerService = getService("mail.composer");
+    composerService.setHtmlComposer();
+    await openDiscuss(channelId);
+    await focus(".o-mail-Composer-html.odoo-editor-editable");
+    const editor = {
+        document,
+        editable: document.querySelector(".o-mail-Composer-html.odoo-editor-editable"),
+    };
+    await htmlInsertText(editor, "test :P :laughing:");
     await press("Enter");
     await contains(".o-mail-Message-body", { text: "test 😛 😆" });
 });
@@ -275,6 +300,14 @@ test("Click on avatar opens its partner chat window", async () => {
     await contains(".o_card_user_infos > span", { text: "testPartner" });
     await contains(".o_card_user_infos > a", { text: "test@partner.com" });
     await contains(".o_card_user_infos > a", { text: "+45687468" });
+});
+
+test("guests are not allowed to use commands", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "wololo" });
+    await start({ authenticateAs: false });
+    await openDiscuss(channelId);
+    expect(getChannelCommandsForThread(channelId)).toHaveLength(0);
 });
 
 test("sidebar: chat im_status rendering", async () => {
@@ -2283,6 +2316,7 @@ test("Notification settings: basic rendering", async () => {
     });
     await start();
     await openDiscuss(channelId);
+    await contains(".o-discuss-ChannelMemberList"); // wait for auto-open of this panel
     await click("[title='Notification Settings']");
     await contains("button", { text: "All Messages" });
     await contains("button", { text: "Mentions Only", count: 2 }); // the extra is in the Use Default as subtitle
@@ -2355,6 +2389,7 @@ test("Notification settings: mute/unmute conversation works correctly", async ()
     });
     await start();
     await openDiscuss(channelId);
+    await contains(".o-discuss-ChannelMemberList"); // wait for auto-open of this panel
     await click("[title='Notification Settings']");
     // dropdown requires an extra delay before click (because handler is registered in useEffect)
     await contains("button", { text: "Mute Conversation" });

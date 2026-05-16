@@ -343,3 +343,42 @@ test("do not lose id when adjusting 'selected'", async () => {
         ])
     );
 });
+
+test("can add item with string and integer ids", async () => {
+    class Test extends BaseOptionComponent {
+        static template = xml`
+            <BuilderList
+                dataAttributeAction="'list'"
+                addItemTitle="'Add'"
+                itemShape="{ display_name: 'text', selected: 'boolean' }"
+                default="{ display_name: 'Extra', selected: false }"
+                records="availableRecords" />`;
+        static components = { BuilderList };
+        static props = ["*"];
+        setup() {
+            this.availableRecords = JSON.stringify([
+                {
+                    id: "57cb74cc2f17a163",
+                    display_name: "v1",
+                },
+                {
+                    id: 42,
+                    display_name: "v2",
+                },
+            ]);
+        }
+    }
+    addBuilderOption(
+        class extends Test {
+            static selector = ".test-options-target";
+        }
+    );
+    await setupHTMLBuilder(`<div class="test-options-target">b</div>`);
+    await contains(":iframe .test-options-target").click();
+
+    for (let i = 0; i < 2; i++) {
+        await contains(".we-bg-options-container .bl-dropdown-toggle").click();
+        await contains(".o_popover .o-hb-select-dropdown-item").click();
+    }
+    expect(".we-bg-options-container .bl-dropdown-toggle").toHaveProperty("disabled");
+});

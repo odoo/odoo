@@ -3,13 +3,14 @@
 # * pos_hr
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Junko Augias (juau)" <juau@odoo.com>, 2025.
+# "Junko Augias (juau)" <juau@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:38+0000\n"
-"PO-Revision-Date: 2025-10-28 07:12+0000\n"
+"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"PO-Revision-Date: 2026-02-02 13:44+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/pos_hr/"
 "ja/>\n"
@@ -18,12 +19,12 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: pos_hr
 #: model_terms:ir.ui.view,arch_db:pos_hr.single_employee_sales_report
 msgid "Abigal Peterson"
-msgstr "Abigal Peterson"
+msgstr "アビゲール・ピーターソン"
 
 #. module: pos_hr
 #. odoo-javascript
@@ -51,7 +52,7 @@ msgstr "全従業員"
 #. module: pos_hr
 #: model:ir.model,name:pos_hr.model_account_bank_statement_line
 msgid "Bank Statement Line"
-msgstr "銀行取引明細書内容"
+msgstr "銀行取引明細行"
 
 #. module: pos_hr
 #: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
@@ -64,8 +65,9 @@ msgstr "基本的権利"
 msgid ""
 "Cannot generate report per employee: only one employee logged in during this "
 "session."
-msgstr "従業員別レポートを生成できません: "
-"このセッションでは1人の従業員しかログインしていません。"
+msgstr ""
+"従業員別レポートを生成できません: このセッションでは1人の従業員しかログインし"
+"ていません。"
 
 #. module: pos_hr
 #. odoo-javascript
@@ -134,7 +136,7 @@ msgstr "破棄"
 #: model:ir.model.fields,field_description:pos_hr.field_report_pos_order__display_name
 #: model:ir.model.fields,field_description:pos_hr.field_res_config_settings__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "表示名"
 
 #. module: pos_hr
 #: model:ir.model,name:pos_hr.model_hr_employee
@@ -162,6 +164,16 @@ msgid "Employee: %(employee)s - PoS Config(s): %(config_list)s \n"
 msgstr "従業員: %(employee)s - PoSコンフィグ: %(config_list)s \n"
 
 #. module: pos_hr
+#: model:ir.model.fields,help:pos_hr.field_pos_config__advanced_employee_ids
+#: model:ir.model.fields,help:pos_hr.field_res_config_settings__pos_advanced_employee_ids
+msgid ""
+"Employees linked to users with the PoS Manager role are automatically added "
+"to this list"
+msgstr ""
+"PoS マネジャーの役割を持つユーザに紐づけられた従業員は、自動的にこのリストに"
+"追加されます"
+
+#. module: pos_hr
 #: model:ir.model.fields,field_description:pos_hr.field_pos_config__basic_employee_ids
 #: model:ir.model.fields,field_description:pos_hr.field_res_config_settings__pos_basic_employee_ids
 msgid "Employees with basic access"
@@ -177,7 +189,7 @@ msgstr "管理者アクセス権のある従業員"
 #: model:ir.model.fields,field_description:pos_hr.field_pos_config__minimal_employee_ids
 #: model:ir.model.fields,field_description:pos_hr.field_res_config_settings__pos_minimal_employee_ids
 msgid "Employees with minimal access"
-msgstr ""
+msgstr "アクセス権が最小限の従業員"
 
 #. module: pos_hr
 #. odoo-javascript
@@ -198,7 +210,7 @@ msgstr "PINを入力して下さい"
 #: model:ir.model.fields,field_description:pos_hr.field_report_pos_order__id
 #: model:ir.model.fields,field_description:pos_hr.field_res_config_settings__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: pos_hr
 #: model:ir.model.fields,help:pos_hr.field_pos_config__basic_employee_ids
@@ -207,12 +219,6 @@ msgstr ""
 #: model:ir.model.fields,help:pos_hr.field_res_config_settings__pos_minimal_employee_ids
 msgid "If left empty, all employees can log in to PoS"
 msgstr "空の場合は、すべての従業員がPOSにログインできます。"
-
-#. module: pos_hr
-#: model:ir.model.fields,help:pos_hr.field_pos_config__advanced_employee_ids
-#: model:ir.model.fields,help:pos_hr.field_res_config_settings__pos_advanced_employee_ids
-msgid "If left empty, only Odoo users have extended rights in PoS"
-msgstr "空の場合、OdooユーザのみがPOSの拡張権限を持ちます。"
 
 #. module: pos_hr
 #. odoo-javascript
@@ -225,13 +231,23 @@ msgstr "ロック"
 #: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
 #: model_terms:ir.ui.view,arch_db:pos_hr.res_config_settings_view_form
 msgid "Minimal rights"
-msgstr ""
+msgstr "最小限の権利"
 
 #. module: pos_hr
 #. odoo-javascript
 #: code:addons/pos_hr/static/src/app/utils/select_cashier_mixin.js:0
 msgid "No Cashiers"
 msgstr "レジなし"
+
+#. module: pos_hr
+#. odoo-javascript
+#: code:addons/pos_hr/static/src/app/screens/login_screen/login_screen.js:0
+msgid ""
+"Only the cashier linked to the logged-in user (%s) can proceed to the "
+"Backend."
+msgstr ""
+"ログイン中のユーザ(%s )に関連付けられたレジのみが、バックエンドに進むことがで"
+"きます。"
 
 #. module: pos_hr
 #. odoo-javascript
@@ -255,7 +271,7 @@ msgstr "オープニング"
 #. odoo-python
 #: code:addons/pos_hr/models/pos_session.py:0
 msgid "Others"
-msgstr ""
+msgstr "その他"
 
 #. module: pos_hr
 #. odoo-javascript
@@ -293,7 +309,7 @@ msgstr "POSオーダ"
 #. module: pos_hr
 #: model:ir.model,name:pos_hr.model_report_pos_order
 msgid "Point of Sale Orders Report"
-msgstr "POS注文レポート"
+msgstr "POSオーダレポート"
 
 #. module: pos_hr
 #: model:ir.model,name:pos_hr.model_pos_payment
@@ -314,7 +330,7 @@ msgstr "プロダクトバリアント"
 #. odoo-javascript
 #: code:addons/pos_hr/static/src/app/components/popups/cashier_selection_popup/cashier_selection_popup.xml:0
 msgid "Select Cashier"
-msgstr ""
+msgstr "キャッシャーを選択"
 
 #. module: pos_hr
 #: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
@@ -373,9 +389,11 @@ msgstr "プロダクト価格を変える権利はありません。"
 msgid ""
 "You cannot delete an employee that may be used in an active PoS session, "
 "close the session(s) first: \n"
-msgstr ""
-"アクティブなPOSセッションで使用されている従業員を削除することはできません。最"
-"初にセッションをクローズして下さい: \n"
+msgstr "有効なPOSセッションで使用されている従業員を削除することはできません。最初にセ"
+"ッションをクローズして下さい: \n"
+
+#~ msgid "If left empty, only Odoo users have extended rights in PoS"
+#~ msgstr "空の場合、OdooユーザのみがPOSの拡張権限を持ちます。"
 
 #~ msgid "Change Cashier"
 #~ msgstr "キャッシャーを変更"

@@ -403,8 +403,8 @@ class AccountMove(models.Model):
             for tax in line.tax_ids:
                 if tax.l10n_in_tax_type == 'tcs':
                     max_tax = max(
-                        tax.l10n_in_section_id.l10n_in_section_tax_ids,
-                        key=lambda t: t.amount
+                        tax.l10n_in_section_id.with_context(active_test=False).l10n_in_section_tax_ids,
+                        key=lambda t: abs(t.amount),
                     )
                     updated_tax_ids.append(max_tax.id)
                 else:
@@ -420,7 +420,10 @@ class AccountMove(models.Model):
                 for tax in line.tax_ids:
                     if (
                         tax.l10n_in_tax_type == 'tcs'
-                        and tax.amount != max(tax.l10n_in_section_id.l10n_in_section_tax_ids, key=lambda t: abs(t.amount)).amount
+                        and tax.amount != max(
+                            tax.l10n_in_section_id.with_context(active_test=False).l10n_in_section_tax_ids,
+                            key=lambda t: abs(t.amount),
+                        ).amount
                     ):
                         lines |= line._origin
             return lines
@@ -428,7 +431,7 @@ class AccountMove(models.Model):
     def _get_sections_aggregate_sum_by_pan(self, section_alert, commercial_partner_id):
         self.ensure_one()
         month_start_date, month_end_date = get_month(self.date)
-        company_fiscalyear_dates = self.company_id.compute_fiscalyear_dates(self.date)
+        company_fiscalyear_dates = self.company_id.sudo().compute_fiscalyear_dates(self.date)
         fiscalyear_start_date, fiscalyear_end_date = company_fiscalyear_dates['date_from'], company_fiscalyear_dates['date_to']
         default_domain = [
             ('account_id.l10n_in_tds_tcs_section_id', '=', section_alert.id),
@@ -482,7 +485,7 @@ class AccountMove(models.Model):
         def _group_by_section_alert(invoice_lines):
             group_by_lines = {}
             for line in invoice_lines:
-                group_key = line.account_id.l10n_in_tds_tcs_section_id
+                group_key = line.account_id.sudo().l10n_in_tds_tcs_section_id
                 if group_key and not line.company_currency_id.is_zero(line.price_total):
                     group_by_lines.setdefault(group_key, [])
                     group_by_lines[group_key].append(line)
@@ -679,9 +682,13 @@ class AccountMove(models.Model):
     @api.model
     def _l10n_in_extract_digits(self, string):
         if not string:
-            return string
+            return ""
         matches = re.findall(r"\d+", string)
         return "".join(matches)
+
+    @api.model
+    def _l10n_in_is_service_hsn(self, hsn_code):
+        return self._l10n_in_extract_digits(hsn_code).startswith('99')
 
     @api.model
     def _l10n_in_round_value(self, amount, precision_digits=2):
@@ -717,6 +724,8 @@ class AccountMove(models.Model):
 
     def _get_sync_stack(self, container):
         stack, update_containers = super()._get_sync_stack(container)
+        if all(move.country_code != 'IN' for move in self):
+            return stack, update_containers
         _tax_container, invoice_container, misc_container = update_containers()
         moves = invoice_container['records'] + misc_container['records']
         stack.append((9, self._sync_l10n_in_gstr_section(moves)))
@@ -728,3 +737,22 @@ class AccountMove(models.Model):
         tax_tags_dict = self.env['account.move.line']._get_l10n_in_tax_tag_ids()
         # we set the section on the invoice lines
         moves.line_ids._set_l10n_in_gstr_section(tax_tags_dict)
+
+    def _get_l10n_in_invoice_label(self):
+        self.ensure_one()
+        exempt_types = {'exempt', 'nil_rated', 'non_gst'}
+        if self.country_code != 'IN' or not self.is_sale_document(include_receipts=False):
+            return
+        gst_treatment = self.l10n_in_gst_treatment
+        company = self.company_id
+        tax_types = set(self.invoice_line_ids.tax_ids.mapped('l10n_in_tax_type'))
+        if company.l10n_in_is_gst_registered and tax_types:
+            if gst_treatment in ['overseas', 'special_economic_zone']:
+                return 'Tax Invoice'
+            elif tax_types.issubset(exempt_types):
+                return 'Bill of Supply'
+            elif tax_types.isdisjoint(exempt_types):
+                return 'Tax Invoice'
+            elif gst_treatment in ['unregistered', 'consumer']:
+                return 'Invoice-cum-Bill of Supply'
+        return 'Invoice'

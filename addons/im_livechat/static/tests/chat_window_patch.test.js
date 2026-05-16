@@ -193,3 +193,53 @@ test("Show livechats with new message in chat hub even when in discuss app)", as
     await openFormView("res.partner", serverState.partnerId);
     await contains(".o-mail-ChatWindow-header:contains('Visitor 11')");
 });
+
+test("livechat: non-member can close immediately", async () => {
+    const pyEnv = await startServer();
+    const guestId = pyEnv["mail.guest"].create({ name: "Visitor ABC" });
+    const PartnerId = pyEnv["res.partner"].create({ name: "Agent" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: PartnerId, livechat_member_type: "agent" }),
+            Command.create({ guest_id: guestId, livechat_member_type: "visitor" }),
+        ],
+        livechat_operator_id: PartnerId,
+        channel_type: "livechat",
+    });
+    await start();
+    setupChatHub({ opened: [channelId] });
+    await contains(".o-mail-ChatWindow");
+    await click("[title*='Close Chat Window']");
+    await contains(".o-mail-ChatWindow", { count: 0 });
+});
+
+test.tags("desktop", "focus required");
+test("Can mark as read a livechat that has ended", async () => {
+    const pyEnv = await startServer();
+    const guestId = pyEnv["mail.guest"].create({ name: "Visitor" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId, livechat_member_type: "agent" }),
+            Command.create({ guest_id: guestId, livechat_member_type: "visitor" }),
+        ],
+        channel_type: "livechat",
+    });
+    for (let i = 0; i < 2; i++) {
+        pyEnv["mail.message"].create({
+            author_guest_id: guestId,
+            body: "test message".repeat(10),
+            message_type: "comment",
+            model: "discuss.channel",
+            res_id: channelId,
+        });
+    }
+    await start();
+    setupChatHub({ opened: [channelId] });
+    await contains(".o-mail-ChatWindow .o-mail-Message", { count: 2 });
+    await contains(".o-mail-Thread-banner:has(:text('2 new messages'))");
+    await withGuest(guestId, () =>
+        rpc("/im_livechat/visitor_leave_session", { channel_id: channelId })
+    );
+    await contains("span:text('This livechat conversation has ended.')");
+    await contains(".o-mail-Thread-banner", { count: 0 });
+});

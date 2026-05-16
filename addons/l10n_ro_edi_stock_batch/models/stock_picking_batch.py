@@ -357,11 +357,23 @@ class StockPickingBatch(models.Model):
                 uit = last_validated.l10n_ro_edi_stock_uit
                 raw_xml = base64.b64decode(last_validated.attachment).decode()
 
-            self._l10n_ro_edi_stock_create_document_stock_sent({
+            edi_document = self._l10n_ro_edi_stock_create_document_stock_sent({
                 'l10n_ro_edi_stock_load_id': content['index_incarcare'],
                 'l10n_ro_edi_stock_uit': uit,
                 'raw_xml': raw_xml,
             })
+            attachment = self.env['ir.attachment'].create({
+                'name': f"etransport_{self.name.replace('/', '_')}.xml",
+                'type': 'binary',
+                'datas': edi_document.attachment,
+            })
+            self._message_log(
+                body=_(
+                    "Generated eTransport XML (UIT: %(uit)s) was sent to the authority.",
+                    uit=uit,
+                ),
+                attachment_ids=attachment.ids
+            )
 
     def _l10n_ro_edi_stock_fetch_document_status(self):
         session = requests.Session()

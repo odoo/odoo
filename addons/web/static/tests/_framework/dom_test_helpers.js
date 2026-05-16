@@ -125,12 +125,18 @@ const waitForTouchDelay = async (delay) => {
     }
 };
 
-let unconsumedContains = [];
+/** @type {(() => any) | null} */
+let cancelCurrentDragSequence = null;
+/** @type {Target[]} */
+const unconsumedContains = [];
 
-afterEach(() => {
+afterEach(async () => {
+    if (cancelCurrentDragSequence) {
+        await cancelCurrentDragSequence();
+    }
     if (unconsumedContains.length) {
         const targets = unconsumedContains.map(String).join(", ");
-        unconsumedContains = [];
+        unconsumedContains.length = 0;
         throw new Error(
             `called 'contains' on "${targets}" without any action: use 'waitFor' if no interaction is intended`
         );
@@ -203,11 +209,11 @@ export function contains(target, options) {
          * @returns {Promise<DragHelpers>}
          */
         drag: async (options) => {
-            consumeContains();
             /** @type {typeof cancel} */
             const cancelWithDelay = async (options) => {
                 await cancel(options);
                 await advanceFrame();
+                cancelCurrentDragSequence = null;
             };
 
             /** @type {typeof drop} */
@@ -217,6 +223,7 @@ export function contains(target, options) {
                 }
                 await drop();
                 await advanceFrame();
+                cancelCurrentDragSequence = null;
             };
 
             /** @type {typeof moveTo} */
@@ -227,12 +234,18 @@ export function contains(target, options) {
                 return helpersWithDelay;
             };
 
+            consumeContains();
+
+            await cancelCurrentDragSequence?.();
+
             const { cancel, drop, moveTo } = await drag(nodePromise, options);
             const helpersWithDelay = {
                 cancel: cancelWithDelay,
                 drop: dropWithDelay,
                 moveTo: moveToWithDelay,
             };
+
+            cancelCurrentDragSequence = cancelWithDelay;
 
             await waitForTouchDelay(options?.pointerDownDuration);
 
@@ -247,6 +260,9 @@ export function contains(target, options) {
          */
         dragAndDrop: async (target, dropOptions, dragOptions) => {
             consumeContains();
+
+            await cancelCurrentDragSequence?.();
+
             const [from, to] = await Promise.all([nodePromise, waitFor(target)]);
             const { drop, moveTo } = await drag(from, dragOptions);
 

@@ -12,9 +12,22 @@ import { BuilderAction } from "@html_builder/core/builder_action";
 import { BaseOptionComponent } from "@html_builder/core/utils";
 
 /**
+ * @typedef { Object } SocialMediaOptionShared
+ * @property { SocialMediaOptionPlugin['newLinkElement'] } newLinkElement
+ * @property { SocialMediaOptionPlugin['getRecordedSocialMedia'] } getRecordedSocialMedia
+ * @property { SocialMediaOptionPlugin['setRecordedSocialMedia'] } setRecordedSocialMedia
+ * @property { SocialMediaOptionPlugin['setRecordedSocialMediaAreEdited'] } setRecordedSocialMediaAreEdited
+ * @property { SocialMediaOptionPlugin['getAssociatedSocialMedia'] } getAssociatedSocialMedia
+ * @property { SocialMediaOptionPlugin['removeSocialMediaClasses'] } removeSocialMediaClasses
+ * @property { SocialMediaOptionPlugin['removeIconClasses'] } removeIconClasses
+ * @property { SocialMediaOptionPlugin['getRecordedSocialMediaNames'] } getRecordedSocialMediaNames
+ * @property { SocialMediaOptionPlugin['reorderSocialMediaLink'] } reorderSocialMediaLink
+ */
+
+/**
  * @typedef { Object } SocialMediaInfo
  * @property { boolean } [recorded] whether the social media is one from the orm
- * @property { string|Markup|LazyTranslatedString } label
+ * @property { import("plugins").TranslatedString } label
  * @property { string } iconClass the icon class to use for the social media
  * @property { RegExp } [extraHostnameRegex] a regex for host names that belongs to this social media, but are not catch by the default mechanism
  */
@@ -126,6 +139,7 @@ class SocialMediaOptionPlugin extends Plugin {
         "getRecordedSocialMediaNames",
         "reorderSocialMediaLink",
     ];
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_options: [
             withSequence(TITLE_LAYOUT_SIZE, SocialMediaOption),

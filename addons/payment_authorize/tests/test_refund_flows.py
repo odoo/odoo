@@ -75,3 +75,20 @@ class TestRefundFlows(AuthorizeCommon):
             [('source_transaction_id', '=', source_tx.id)]
         )
         self.assertTrue(refund_tx)
+
+    def test_voided_refund_tx_is_done(self):
+        """ Test that voided refund transactions due to the payment not being settled yet are
+        correctly marked as done. """
+        source_tx = self._create_transaction('direct', state='done')
+        with patch(
+            'odoo.addons.payment_authorize.models.authorize_request.AuthorizeAPI'
+            '.get_transaction_details',
+            return_value={'transaction': {'transactionStatus': 'authorizedPendingCapture'}},
+        ), patch(
+            'odoo.addons.payment_authorize.models.authorize_request.AuthorizeAPI.void',
+            return_value={'x_response_code': '1', 'x_type': 'void'}
+        ), patch(
+            'odoo.addons.payment.models.payment_transaction.PaymentTransaction._validate_amount'
+        ):
+            refund_tx = source_tx._refund(amount_to_refund=source_tx.amount)
+        self.assertEqual(refund_tx.state, 'done')

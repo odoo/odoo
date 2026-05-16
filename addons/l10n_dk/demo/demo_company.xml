@@ -3,7 +3,7 @@
     <record id="base.partner_demo_company_dk" model="res.partner" forcecreate="1">
         <field name="name">DK Company</field>
         <field name="vat">DK58403288</field>
-        <field name="street">G</field>
+        <field name="street">G 1</field>
         <field name="city">Aalborg</field>
         <field name="country_id" ref="base.dk"/>
 
@@ -23,6 +23,7 @@
         <field name="acc_number">DK8250514116589944</field>
         <field name="partner_id" ref="base.partner_demo_company_dk"/>
         <field name="company_id" ref="base.demo_company_dk"/>
+        <field name="allow_out_payment" eval="True"/>
     </record>
 
     <function model="res.company" name="_onchange_country_id">

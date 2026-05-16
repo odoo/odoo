@@ -1,7 +1,6 @@
-import { expect, test } from "@odoo/hoot";
+import { expect, queryAll, test } from "@odoo/hoot";
 import {
     defineWebsiteModels,
-    setupWebsiteBuilder,
     setupWebsiteBuilderWithSnippet,
 } from "@website/../tests/builder/website_helpers";
 import { contains, onRpc } from "@web/../tests/web_test_helpers";
@@ -9,6 +8,13 @@ import { getDragHelper, waitForEndOfOperation } from "@html_builder/../tests/hel
 import { click, queryOne } from "@odoo/hoot-dom";
 
 defineWebsiteModels();
+
+async function setupEmptySocialMedia(options) {
+    const builder = await setupWebsiteBuilderWithSnippet("s_social_media", options);
+    queryAll(":iframe div.s_social_media a").forEach((el) => el.remove());
+    builder.getEditor().shared.history.addStep();
+    return builder;
+}
 
 test("add social medias", async () => {
     onRpc("website", "read", ({ args }) => {
@@ -18,7 +24,7 @@ test("add social medias", async () => {
         return [{ id: 1, social_facebook: "https://fb.com/odoo", social_twitter: false }];
     });
 
-    await setupWebsiteBuilder(`<div class="s_social_media"><h4>Social Media</h4></div>`);
+    await setupEmptySocialMedia();
 
     await click(":iframe h4");
 
@@ -46,7 +52,7 @@ test("reorder social medias", async () => {
         { id: 1, social_facebook: "https://fb.com/odoo", social_twitter: "https://x.com/odoo" },
     ]);
 
-    await setupWebsiteBuilder(`<div class="s_social_media"><h4>Social Media</h4></div>`);
+    await setupEmptySocialMedia();
 
     await click(":iframe h4");
 
@@ -157,7 +163,7 @@ test("save social medias", async () => {
     onRpc("website", "read", ({ args }) => [
         { id: 1, social_facebook: "https://fb.com/odoo", social_twitter: "https://x.com/odoo" },
     ]);
-    await setupWebsiteBuilder(`<div class="s_social_media"><h4>Social Media</h4></div>`);
+    await setupEmptySocialMedia();
 
     await click(":iframe h4");
 
@@ -178,21 +184,12 @@ test("save social medias", async () => {
 });
 
 test("social media snippet should not be user-selectable", async () => {
-    await setupWebsiteBuilder(
-        `<div class="s_social_media o_not_editable"><h4>Social Media</h4></div>`,
-        { loadIframeBundles: true }
-    );
+    await setupEmptySocialMedia({ loadIframeBundles: true });
     expect(":iframe .s_social_media").toHaveStyle({ "user-select": "none" });
 });
 
 test("share snippet should not be editable (except title) nor user-selectable", async () => {
-    await setupWebsiteBuilder(
-        `<div class="s_share">
-            <h4 class="s_share_title">Share</h4>
-            <a href="#"><i class="fa fa-facebook"/></a>
-        </div>`,
-        { loadIframeBundles: true }
-    );
+    await setupWebsiteBuilderWithSnippet("s_share", { loadIframeBundles: true });
     expect(queryOne(":iframe .s_share").isContentEditable).toBe(false);
     expect(queryOne(":iframe .s_share_title").isContentEditable).toBe(true);
     expect(":iframe .s_share").toHaveStyle({ "user-select": "none" });

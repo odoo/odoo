@@ -4,13 +4,15 @@
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Anastasiia Koroleva (koan)" <koan@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:37+0000\n"
-"PO-Revision-Date: 2025-10-22 11:17+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"PO-Revision-Date: 2026-02-20 21:56+0000\n"
+"Last-Translator: \"Anastasiia Koroleva (koan)\" <koan@odoo.com>\n"
 "Language-Team: Russian <https://translate.odoo.com/projects/odoo-19/"
 "barcodes_gs1_nomenclature/ru/>\n"
 "Language: ru\n"
@@ -19,17 +21,17 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: barcodes_gs1_nomenclature
 #. odoo-python
 #: code:addons/barcodes_gs1_nomenclature/models/barcode_nomenclature.py:0
 msgid ""
 "A GS1 barcode nomenclature pattern was matched. However, the barcode failed "
-"to be converted to a valid date: '%(error_message)'"
+"to be converted to a valid date: '%(error_message)s'"
 msgstr ""
-"Найдено соответствие шаблону номенклатуры штрихкода GS1. Однако не удалось "
-"преобразовать штрихкод в допустимую дату: «%(error_message)»"
+"Обнаружено соответствие номенклатуре штрихкодов GS1. Однако не удалось "
+"преобразовать штрихкод в корректную дату: «%(error_message)s»"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__gs1_content_type__alpha
@@ -85,7 +87,7 @@ msgstr "Место назначения"
 #: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_rule__display_name
 #: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_ir_http__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Display Name"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_rule__encoding
@@ -122,7 +124,7 @@ msgstr "Маршрутизация HTTP"
 #: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_rule__id
 #: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_ir_http__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,help:barcodes_gs1_nomenclature.field_barcode_rule__gs1_decimal_usage
@@ -207,6 +209,12 @@ msgid ""
 "unit;        * Numeric Identifier: fixed length barcode following a specific "
 "encoding;        * Alpha-Numeric Name: variable length barcode."
 msgstr ""
+"Тип контента GS1 определяет, как именно правило будет обрабатывать данные "
+"штрихкода:        * Дата: штрихкод будет преобразован в формат даты и "
+"времени Odoo;        * Мера: значение штрихкода привязано к конкретной "
+"единице измерения;        * Числовой идентификатор: штрихкод фиксированной "
+"длины, использующий специальную кодировку;        * Буквенно-цифровое "
+"наименование: штрихкод переменной длины."
 
 #. module: barcodes_gs1_nomenclature
 #. odoo-python
@@ -281,3 +289,10 @@ msgstr ""
 #: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_rule__type
 msgid "Type"
 msgstr "Тип"
+
+#~ msgid ""
+#~ "A GS1 barcode nomenclature pattern was matched. However, the barcode "
+#~ "failed to be converted to a valid date: '%(error_message)'"
+#~ msgstr ""
+#~ "Найдено соответствие шаблону номенклатуры штрихкода GS1. Однако не "
+#~ "удалось преобразовать штрихкод в допустимую дату: «%(error_message)»"

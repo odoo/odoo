@@ -6,6 +6,7 @@ import { isNode } from "@web/../lib/hoot-dom/helpers/dom";
 import {
     isInstanceOf,
     isIterable,
+    isPromise,
     parseRegExp,
     R_WHITE_SPACE,
     toSelector,
@@ -114,6 +115,7 @@ const {
     TypeError,
     URL,
     URLSearchParams,
+    WeakMap,
     WeakSet,
     window,
 } = globalThis;
@@ -189,11 +191,7 @@ function makeObjectCache() {
  * @returns {T}
  */
 function resolve(value) {
-    if (typeof value === "function") {
-        return value();
-    } else {
-        return value;
-    }
+    return typeof value === "function" ? value() : value;
 }
 
 /**
@@ -609,10 +607,12 @@ const R_NAMED_FUNCTION = /^\s*(async\s+)?function/;
 const R_INVISIBLE_CHARACTERS = /[\u00a0\u200b-\u200d\ufeff]/g;
 const R_OBJECT = /^\[object ([\w-]+)\]$/;
 
-const labelObjects = new WeakSet();
-const objectConstructors = new Map();
 /** @type {(KeyboardEventInit & { callback: (ev: KeyboardEvent) => any })[]} */
 const hootKeys = [];
+const labelObjects = new WeakSet();
+const objectConstructors = new Map();
+/** @type {WeakMap<unknown, unknown>} */
+const syncValues = new WeakMap();
 const windowTarget = {
     addEventListener: window.addEventListener.bind(window),
     removeEventListener: window.removeEventListener.bind(window),
@@ -740,6 +740,7 @@ export function createReporting(parentReporting) {
 
     const reporting = reactive({
         assertions: 0,
+        duration: 0,
         failed: 0,
         passed: 0,
         skipped: 0,
@@ -1063,6 +1064,30 @@ export function getFuzzyScore(pattern, string) {
         fuzzyScoreMap[string] = score;
     }
     return score;
+}
+
+/**
+ * Returns the value associated to the given object.
+ * If 'toStringValue' is set, the result will concatenate any inner object that
+ * also has an associated sync value. This is typically useful for nested Blobs.
+ *
+ * @param {unknown} object
+ * @param {boolean} toStringValue
+ */
+export function getSyncValue(object, toStringValue) {
+    const result = syncValues.get(object);
+    if (!toStringValue) {
+        return result;
+    }
+    let textResult = "";
+    if (isIterable(result)) {
+        for (const part of result) {
+            textResult += syncValues.has(part) ? getSyncValue(part, toStringValue) : String(part);
+        }
+    } else {
+        textResult += String(result);
+    }
+    return textResult;
 }
 
 /**
@@ -1434,6 +1459,14 @@ export async function paste() {
 }
 
 /**
+ * @param {unknown} object
+ * @param {unknown} value
+ */
+export function setSyncValue(object, value) {
+    syncValues.set(object, value);
+}
+
+/**
  * @param {string} key
  */
 export function storageGet(key) {
@@ -1635,7 +1668,7 @@ export class Callbacks {
      * @param {boolean} [once]
      */
     add(type, callback, once) {
-        if (isInstanceOf(callback, Promise)) {
+        if (isPromise(callback)) {
             const promiseValue = callback;
             callback = function waitForPromise() {
                 return Promise.resolve(promiseValue).then(resolve);
@@ -2040,8 +2073,10 @@ export const INCLUDE_LEVEL = {
 export const MIME_TYPE = {
     formData: "multipart/form-data",
     blob: "application/octet-stream",
+    html: "text/html",
     json: "application/json",
     text: "text/plain",
+    xml: "text/xml",
 };
 
 export const STORAGE = {

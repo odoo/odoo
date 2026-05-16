@@ -4,13 +4,14 @@
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Malaz Siddig Elsayed Abuidris (msea)" <msea@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:38+0000\n"
-"PO-Revision-Date: 2025-10-13 12:17+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2026-01-25 18:37+0000\n"
+"PO-Revision-Date: 2026-05-05 08:36+0000\n"
+"Last-Translator: \"Malaz Siddig Elsayed Abuidris (msea)\" <msea@odoo.com>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-19/"
 "sale_project/ar/>\n"
 "Language: ar\n"
@@ -19,7 +20,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: sale_project
 #. odoo-python
@@ -116,17 +117,17 @@ msgstr ""
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_order_form_inherit_sale_project
 msgid "<span class=\"o_stat_text\"> Projects</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\"> المشاريع</span>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_order_form_inherit_sale_project
 msgid "<span class=\"o_stat_text\"> Tasks</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\"> المهام</span>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
 msgid "<span class=\"o_stat_text\">Preview</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">معاينة</span>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_form
@@ -147,6 +148,14 @@ msgid ""
 "the project is billable.</span>\n"
 "                </span>"
 msgstr ""
+"<span name=\"rating_status_helper\">\n"
+"                    <span invisible=\"rating_status == 'periodic'\">سيتم "
+"إرسال طلب التقييم بمجرد وصول المهمة إلى هذه المرحلة، شريطة أن يكون المشروع "
+"قابلاً للفوترة.</span>\n"
+"                    <span invisible=\"rating_status == 'stage'\">سيتم إرسال "
+"طلبات التقييم طالما بقيت المهمة في هذه المرحلة، شريطة أن يكون المشروع قابلاً "
+"للفوترة.</span>\n"
+"                </span>"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_form
@@ -232,7 +241,8 @@ msgstr "تأكيد وإغلاق"
 msgid ""
 "Converting this template to a regular project will unlink it from its "
 "associated products."
-msgstr "سيؤدي تحويل هذا القالب إلى مشروع عادي إلى فصله عن المنتجات المرتبطة به."
+msgstr ""
+"سيؤدي تحويل هذا القالب إلى مشروع عادي إلى فصله عن المنتجات المرتبطة به."
 
 #. module: sale_project
 #. odoo-python
@@ -950,6 +960,17 @@ msgid ""
 "        Make sure to use the right format and order e.g. Improve the "
 "configuration screen 5h #feature #v16 @Mitchell !"
 msgstr ""
+"استخدم هذه الكلمات المفتاحية في العنوان لتعيين مهام جديدة:\n"
+"\n"
+"        30h لتخصيص 30 ساعة للمهمة\n"
+"        #tags لتعيين علامات تصنيف للمهمة\n"
+"        @user لإسناد المهمة إلى أحد المستخدمين\n"
+"        ! لتعيين أولوية متوسطة للمهمة\n"
+"        !! لتعيين أولوية عالية للمهمة\n"
+"        !!! لتعيين أولوية عاجلة للمهمة\n"
+" \n"
+"        تأكد من استخدام التنسيق والترتيب الصحيحين، على سبيل المثال: تحسين "
+"شاشة الإعدادات 5h #feature #v16 @Mitchell !"
 
 #. module: sale_project
 #. odoo-python

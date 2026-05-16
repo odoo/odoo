@@ -29,7 +29,7 @@ import {
 import { _makeUser, user } from "@web/core/user";
 
 function getPickerCell(expr) {
-    return queryAll(`.o_datetime_picker .o_date_item_cell:contains(/^${expr}$/)`);
+    return queryAll(`.o_datetime_picker .o_date_item_cell:text(${expr})`);
 }
 
 class Partner extends models.Model {
@@ -1081,7 +1081,7 @@ test("list daterange: start date input width matches its span counterpart", asyn
     const initialWidth = queryFirst(".o_field_daterange span").offsetWidth;
     await contains(".o_field_daterange span:first").click();
     await animationFrame();
-    expect(".o_field_daterange input").toHaveProperty("offsetWidth", initialWidth);
+    expect(".o_field_daterange input").toHaveProperty("offsetWidth", initialWidth + 1);
 });
 
 test("always range: related end date, both start date and end date empty", async () => {

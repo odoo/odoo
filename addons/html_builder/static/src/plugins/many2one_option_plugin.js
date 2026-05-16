@@ -5,12 +5,24 @@ import { BuilderAction } from "@html_builder/core/builder_action";
 
 export class Many2OneOptionPlugin extends Plugin {
     static id = "many2OneOption";
+    /** @type {import("plugins").BuilderResources} */
     resources = {
         builder_options: [Many2OneOption],
         builder_actions: {
             Many2OneAction,
         },
         content_not_editable_selectors: "[data-oe-field][data-oe-many2one-id]",
+        after_replication_handlers: ({ sourceEl, targetEl }) => {
+            if (
+                sourceEl.hasAttribute("data-oe-many2one-model") &&
+                targetEl.hasAttribute("data-oe-many2one-model")
+            ) {
+                targetEl.setAttribute(
+                    "data-oe-many2one-id",
+                    sourceEl.getAttribute("data-oe-many2one-id")
+                );
+            }
+        },
     };
 }
 

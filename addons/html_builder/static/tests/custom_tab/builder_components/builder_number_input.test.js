@@ -2,6 +2,7 @@ import {
     addBuilderAction,
     addBuilderOption,
     setupHTMLBuilder,
+    editBuilderRangeValue,
 } from "@html_builder/../tests/helpers";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { describe, expect, test } from "@odoo/hoot";
@@ -17,7 +18,6 @@ import {
 import { Deferred } from "@odoo/hoot-mock";
 import { xml } from "@odoo/owl";
 import { contains, defineModels, models } from "@web/../tests/web_test_helpers";
-import { delay } from "@web/core/utils/concurrency";
 import { BaseOptionComponent } from "@html_builder/core/utils";
 
 describe.current.tags("desktop");
@@ -220,14 +220,10 @@ describe("default value", () => {
             <div class="test-options-target">10</div>
         `);
         await contains(":iframe .test-options-target").click();
-        const input = queryFirst(".options-container input");
-        input.value = "";
-        input.dispatchEvent(new Event("input"));
-        await delay();
-        input.dispatchEvent(new Event("change"));
-        await delay();
+        await editBuilderRangeValue(".options-container input", "");
+
         expect.verifySteps(["customAction 20", "customAction 20"]);
-        expect(input).toHaveValue("20");
+        expect(".options-container input").toHaveValue("20");
     });
     test("clear BuilderNumberInput without default value", async () => {
         addBuilderAction({
@@ -838,6 +834,40 @@ describe("sanitized values", () => {
         await contains(".options-container input").edit("-1", { instantly: true });
         expect.verifySteps(["customAction 0", "customAction 0"]); // input, change
         expect(".options-container input").toHaveValue("0");
+    });
+    test("clamp to min value when pressing down arrow with min > 0", async () => {
+        addBuilderAction({
+            customAction: class extends BuilderAction {
+                static id = "customAction";
+                getValue({ editingElement }) {
+                    return editingElement.textContent;
+                }
+                apply({ editingElement, value }) {
+                    expect.step(`customAction ${value}`);
+                    editingElement.textContent = value;
+                }
+            },
+        });
+        addBuilderOption(
+            class extends BaseOptionComponent {
+                static selector = ".test-options-target";
+                static template = xml`<BuilderNumberInput action="'customAction'" min="1"/>`;
+            }
+        );
+        await setupHTMLBuilder(`
+            <div class="test-options-target">2</div>
+        `);
+        await contains(":iframe .test-options-target").click();
+        // Simulate pressing arrow down
+        await contains(".options-container input").keyDown("ArrowDown");
+        expect.verifySteps(["customAction 1"]);
+        expect(".options-container input").toHaveValue("1");
+        expect(":iframe .test-options-target").toHaveText("1");
+        // Pressing down again should stay at min value
+        await contains(".options-container input").keyDown("ArrowDown");
+        expect.verifySteps(["customAction 1"]);
+        expect(".options-container input").toHaveValue("1");
+        expect(":iframe .test-options-target").toHaveText("1");
     });
     test("use max when the given value is bigger", async () => {
         addBuilderAction({

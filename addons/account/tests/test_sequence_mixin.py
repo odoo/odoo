@@ -760,6 +760,15 @@ class TestSequenceMixin(TestSequenceMixinCommon):
             self.create_move(date='2021-01-01', post=True)
         mock.assert_called_once()
 
+    def test_flushing_savepoint_rollback_should_clear_cache(self):
+        self.assertFalse(self.env['account.move']._get_sequence_cache(), 'The cache should be empty at this point')
+        with self.env.cr.savepoint() as sp:
+            self.create_move(date='2021-01-01', post=True)
+            self.assertTrue(self.env['account.move']._get_sequence_cache(), 'The cache should have been filled')
+            sp.rollback()
+            self.assertFalse(self.env['account.move']._get_sequence_cache(), 'The cache should have been cleared')
+
+
 @tagged('post_install', '-at_install')
 class TestSequenceGaps(TestSequenceMixinCommon):
     @classmethod
@@ -783,10 +792,10 @@ class TestSequenceGaps(TestSequenceMixinCommon):
     def test_unlink(self):
         self.all_moves[0].button_draft()
         self.all_moves[0].unlink()
-        self.assertEqual(self.all_moves.exists().mapped('made_sequence_gap'), [True, False])
+        self.assertEqual(self.all_moves.exists().mapped('made_sequence_gap'), [False, False])
         self.all_moves[1].button_draft()
         self.all_moves[1].unlink()
-        self.assertEqual(self.all_moves.exists().mapped('made_sequence_gap'), [True])
+        self.assertEqual(self.all_moves.exists().mapped('made_sequence_gap'), [False])
 
     def test_unlink_2(self):
         self.all_moves[1].button_draft()
@@ -794,7 +803,7 @@ class TestSequenceGaps(TestSequenceMixinCommon):
         self.assertEqual(self.all_moves.exists().mapped('made_sequence_gap'), [False, True])
         self.all_moves[0].button_draft()
         self.all_moves[0].unlink()
-        self.assertEqual(self.all_moves.exists().mapped('made_sequence_gap'), [True])
+        self.assertEqual(self.all_moves.exists().mapped('made_sequence_gap'), [False])
 
     def test_change_sequence(self):
         previous = self.all_moves[1].name
@@ -806,12 +815,12 @@ class TestSequenceGaps(TestSequenceMixinCommon):
     def test_change_multi(self):
         self.all_moves[0].name = '/'
         self.all_moves[1].name = '/'
-        self.assertEqual(self.all_moves.mapped('made_sequence_gap'), [False, False, True])
+        self.assertEqual(self.all_moves.mapped('made_sequence_gap'), [False, False, False])
 
     def test_change_multi_2(self):
         self.all_moves[1].name = '/'
         self.all_moves[0].name = '/'
-        self.assertEqual(self.all_moves.mapped('made_sequence_gap'), [False, False, True])
+        self.assertEqual(self.all_moves.mapped('made_sequence_gap'), [False, False, False])
 
     def test_null_change(self):
         self.all_moves[1].name = self.all_moves[1].name
@@ -835,6 +844,54 @@ class TestSequenceGaps(TestSequenceMixinCommon):
         new_move = self.create_move(name=format_string.format(**format_values))
         new_move.action_post()
         self.assertEqual(new_move.made_sequence_gap, True)
+
+    def test_draft1(self):
+        self.all_moves[0].button_draft()
+        self.assertEqual(self.all_moves.mapped('made_sequence_gap'), [False, False, False])
+
+    def test_draft2(self):
+        self.all_moves[1].button_draft()
+        self.assertEqual(self.all_moves.mapped('made_sequence_gap'), [False, True, False])
+
+    def test_draft3(self):
+        self.all_moves[2].button_draft()
+        self.assertEqual(self.all_moves.mapped('made_sequence_gap'), [False, False, False])
+
+    def test_draft4(self):
+        self.all_moves[0].button_draft()
+        self.all_moves[1].button_draft()
+        self.assertEqual(self.all_moves.mapped('made_sequence_gap'), [False, False, False])
+
+    def test_draft4_2(self):
+        self.all_moves[1].button_draft()
+        self.all_moves[0].button_draft()
+        self.assertEqual(self.all_moves.mapped('made_sequence_gap'), [False, False, False])
+
+    def test_draft5(self):
+        self.all_moves[0].button_draft()
+        self.all_moves[2].button_draft()
+        self.assertEqual(self.all_moves.mapped('made_sequence_gap'), [False, False, False])
+
+    def test_draft5_2(self):
+        self.all_moves[2].button_draft()
+        self.all_moves[0].button_draft()
+        self.assertEqual(self.all_moves.mapped('made_sequence_gap'), [False, False, False])
+
+    def test_draft6(self):
+        self.all_moves[1].button_draft()
+        self.all_moves[2].button_draft()
+        self.assertEqual(self.all_moves.mapped('made_sequence_gap'), [False, True, False])
+
+    def test_draft6_2(self):
+        self.all_moves[2].button_draft()
+        self.all_moves[1].button_draft()
+        self.assertEqual(self.all_moves.mapped('made_sequence_gap'), [False, True, False])
+
+    def test_draft7(self):
+        self.all_moves[0].button_draft()
+        self.all_moves[1].button_draft()
+        self.all_moves[2].button_draft()
+        self.assertEqual(self.all_moves.mapped('made_sequence_gap'), [False, False, False])
 
 
 @tagged('post_install', '-at_install')
@@ -976,3 +1033,50 @@ class TestSequenceMixinConcurrency(TransactionCase):
         # check the values
         moves = env0['account.move'].browse(self.data['move_ids'])
         self.assertEqual(moves.mapped('name'), ['CT/2016/01/0001', False, 'CT/2016/01/0002'])
+
+
+@tagged('post_install', '-at_install')
+class TestSequenceMixinBankStatementLoadImport(TestSequenceMixinCommon):
+    def test_failed_import_bank_statement_cache_shouldnt_get_invalidated(self):
+        """ Ensure that even with a failed import, we mostly hit the sequence cache and don't create tons of savepoint"""
+        bank_journal = self.company.bank_journal_ids[:1]  # there could be several journal in some builds
+        fields_list = ['company_id.id', 'date', 'payment_ref', 'amount', 'journal_id.id']
+        data = [
+            [self.company.id, '2026-03-30', '10 euros', 10.0, bank_journal.id],
+            [self.company.id, '2026-03-30', '20 euros', 20.0, bank_journal.id],
+            [self.company.id, '2026-03-30', '50 euros', 50.0, bank_journal.id],
+        ]
+
+        # ensure the creation of those record will crashes when calling `load`
+        original_load_records_create = self.env['account.bank.statement.line']._load_records_create
+
+        def new_load_records_create(vals_list):
+            # only crash after a few attempts to trigger the sequence.mixin several time
+            if any(vals.get('payment_ref') == '50 euros' for vals in vals_list):
+                raise ValidationError("Load process intentionally interrupted for testing")
+            return original_load_records_create(vals_list)
+
+        # track call to the cache and the number of time it was empty
+        empty_cache_count = 0
+        original_get_sequence_cache = self.env['sequence.mixin']._get_sequence_cache
+
+        def count_empty_cache():
+            nonlocal empty_cache_count
+            cache = original_get_sequence_cache()
+            if not cache:
+                empty_cache_count += 1
+            return cache
+
+        with (
+            patch.object(self.env.registry['account.bank.statement.line'], '_load_records_create', side_effect=new_load_records_create),
+            patch.object(self.env.registry['sequence.mixin'], '_get_sequence_cache', side_effect=count_empty_cache),
+            patch.object(self.env.registry['account.move'], '_update_sequence_made_gap', side_effect=lambda *args, **kwargs: None),
+        ):
+            results = self.env['account.bank.statement.line'].load(fields_list, data)
+
+        self.assertEqual(empty_cache_count, 1, "The cache should have been filled the first time")
+        self.assertCountEqual(
+            [{k: v for k, v in m.items() if k in ('record', 'message')} for m in results["messages"]],
+            [{"record": 0, "message": "Load process intentionally interrupted for testing"},
+             {"record": 2, "message": "Load process intentionally interrupted for testing"}],
+        )

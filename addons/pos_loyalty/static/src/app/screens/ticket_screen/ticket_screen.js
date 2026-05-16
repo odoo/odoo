@@ -11,6 +11,12 @@ patch(TicketScreen.prototype, {
         super.setup(...arguments);
         this.notification = useService("notification");
     },
+    async setOrder(order) {
+        await super.setOrder(...arguments);
+        if (order && this.pos.models["loyalty.program"]?.length) {
+            this.pos.updateRewards();
+        }
+    },
     _onUpdateSelectedOrderline() {
         const order = this.getSelectedOrder();
         if (!order) {
@@ -42,13 +48,10 @@ patch(TicketScreen.prototype, {
         );
     },
     _isEWalletGiftCard(orderline) {
-        if (orderline.is_reward_line) {
-            const reward = orderline.reward_id;
-            const program = reward && reward.program_id;
-            if (program && ["gift_card", "ewallet"].includes(program.program_type)) {
-                return true;
-            }
-        }
-        return false;
+        return this.pos.models["loyalty.program"].some(
+            (program) =>
+                ["gift_card", "ewallet"].includes(program.program_type) &&
+                program.trigger_product_ids.map((p) => p.id).includes(orderline.product_id.id)
+        );
     },
 });

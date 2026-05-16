@@ -4,6 +4,7 @@ import logging
 import os
 import re
 import time
+from collections import Counter
 
 from odoo.addons.base.models.ir_http import EXTENSION_TO_WEB_MIMETYPES
 from odoo.addons.website.tools import text_from_html
@@ -91,9 +92,12 @@ class WebsitePage(models.Model):
         ''' Returns the most specific pages in self. '''
         ids = []
         previous_page = None
-        page_keys = self.sudo().search(
-            self.env['website'].browse(self.env.context.get('website_id')).website_domain()
+        page_keys = self.sudo().with_context(prefetch_fields=False).search_fetch(
+            self.env['website'].browse(self.env.context.get('website_id')).website_domain(),
+            field_names=['key'],
         ).mapped('key')
+        page_keys_counts = Counter(page_keys)
+
         # Iterate a single time on the whole list sorted on specific-website first.
         for page in self.sorted(key=lambda p: (p.url, not p.website_id)):
             if (
@@ -101,7 +105,7 @@ class WebsitePage(models.Model):
                 # If a generic page (niche case) has been COWed and that COWed
                 # page received a URL change, it should not let you access the
                 # generic page anymore, despite having a different URL.
-                and (page.website_id or page_keys.count(page.key) == 1)
+                and (page.website_id or page_keys_counts[page.key] == 1)
             ):
                 ids.append(page.id)
             previous_page = page

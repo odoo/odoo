@@ -8,13 +8,14 @@
 # Felix Schubert <felix.schubert@go-erp.com>, 2022
 # Larissa Manderfeld, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Larissa Manderfeld (lman)" <lman@odoo.com>, 2025.
+# "Larissa Manderfeld (lman)" <lman@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:39+0000\n"
-"PO-Revision-Date: 2025-10-31 12:57+0000\n"
+"POT-Creation-Date: 2026-02-13 18:36+0000\n"
+"PO-Revision-Date: 2026-04-24 12:01+0000\n"
 "Last-Translator: \"Larissa Manderfeld (lman)\" <lman@odoo.com>\n"
 "Language-Team: German <https://translate.odoo.com/projects/odoo-19/"
 "sale_stock/de/>\n"
@@ -23,7 +24,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
@@ -123,6 +124,11 @@ msgstr ""
 "  - Zeiterfassung: Die Menge ist die Summe der Stunden, die für Aufgaben "
 "erfasst wurden, die mit dieser Verkaufsposition verbunden sind.\n"
 "  - Lagerbuchungen: Die Menge stammt aus bestätigten Kommissionierungen\n"
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_account_accrued_orders_wizard
+msgid "Accrued Orders Wizard"
+msgstr "Assistent für abgegrenzte Aufträge"
 
 #. module: sale_stock
 #. odoo-javascript
@@ -241,6 +247,7 @@ msgstr ""
 "Auftragspositionen zu verwenden."
 
 #. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_account_accrued_orders_wizard__display_name
 #: model:ir.model.fields,field_description:sale_stock.field_account_move__display_name
 #: model:ir.model.fields,field_description:sale_stock.field_account_move_line__display_name
 #: model:ir.model.fields,field_description:sale_stock.field_product_template__display_name
@@ -251,7 +258,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__display_name
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__display_name
 #: model:ir.model.fields,field_description:sale_stock.field_sale_report__display_name
-#: model:ir.model.fields,field_description:sale_stock.field_stock_account_stock_valuation_report__display_name
 #: model:ir.model.fields,field_description:sale_stock.field_stock_forecasted_product_product__display_name
 #: model:ir.model.fields,field_description:sale_stock.field_stock_lot__display_name
 #: model:ir.model.fields,field_description:sale_stock.field_stock_move__display_name
@@ -349,6 +355,7 @@ msgid "Has late picking"
 msgstr "Hat verspätete Kommissionierung"
 
 #. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_account_accrued_orders_wizard__id
 #: model:ir.model.fields,field_description:sale_stock.field_account_move__id
 #: model:ir.model.fields,field_description:sale_stock.field_account_move_line__id
 #: model:ir.model.fields,field_description:sale_stock.field_product_template__id
@@ -359,7 +366,6 @@ msgstr "Hat verspätete Kommissionierung"
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__id
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__id
 #: model:ir.model.fields,field_description:sale_stock.field_sale_report__id
-#: model:ir.model.fields,field_description:sale_stock.field_stock_account_stock_valuation_report__id
 #: model:ir.model.fields,field_description:sale_stock.field_stock_forecasted_product_product__id
 #: model:ir.model.fields,field_description:sale_stock.field_stock_lot__id
 #: model:ir.model.fields,field_description:sale_stock.field_stock_move__id
@@ -774,11 +780,6 @@ msgid "Stock Rules report"
 msgstr "Bestandsregelbericht"
 
 #. module: sale_stock
-#: model:ir.model,name:sale_stock.model_stock_account_stock_valuation_report
-msgid "Stock Valuation"
-msgstr "Bestandsbewertung"
-
-#. module: sale_stock
 #: model:ir.model,name:sale_stock.model_report_stock_report_stock_rule
 msgid "Stock rule report"
 msgstr "Bestandsregelbericht"
@@ -889,7 +890,7 @@ msgstr "Wenn alle Produkte bereit sind"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid "When to start shipping"
-msgstr "Wann soll mit dem Versand begonnen wird"
+msgstr "Wann soll der Versand beginnen"
 
 #. module: sale_stock
 #. odoo-python
@@ -939,6 +940,9 @@ msgstr "verarbeitet statt"
 #: code:addons/sale_stock/static/src/xml/delay_alert.xml:0
 msgid "will be late."
 msgstr "ist verspätet."
+
+#~ msgid "Stock Valuation"
+#~ msgstr "Bestandsbewertung"
 
 #~ msgid "<i class=\"fa fa-fw fa-clock-o\"/> <b>Preparation</b>"
 #~ msgstr "<i class=\"fa fa-fw fa-clock-o\"/> <b>in Vorbereitung</b>"

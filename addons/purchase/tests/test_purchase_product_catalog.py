@@ -149,3 +149,39 @@ class TestPurchaseProductCatalog(AccountTestInvoicingCommon, HttpCase):
         purchase_orders[0].name = "PO/TEST/00001"
         purchase_orders[1].name = "PO/TEST/00002"
         self.start_tour('/odoo/purchase', 'test_catalog_vendor_uom', login='accountman')
+
+    def test_seller_price_discounted_with_template(self):
+        ProductAttribute = self.env['product.attribute']
+        ProductAttributeValue = self.env['product.attribute.value']
+
+        # Product Attribute
+        att_color = ProductAttribute.create({'name': 'Color', 'sequence': 1})
+
+        # Product Attribute color Value
+        att_color_red = ProductAttributeValue.create({'name': 'red', 'attribute_id': att_color.id, 'sequence': 1})
+        att_color_blue = ProductAttributeValue.create({'name': 'blue', 'attribute_id': att_color.id, 'sequence': 2})
+
+        product_template = self.env['product.template'].create({
+            'name': 'Test Product Template',
+            'uom_id': self.env.ref('uom.product_uom_unit').id,
+            'standard_price': 200.0,
+            'attribute_line_ids': [
+                Command.create({
+                    'attribute_id': att_color.id,
+                    'value_ids': [Command.link(att_color_red.id), Command.link(att_color_blue.id)]
+                }),
+            ]
+        })
+
+        supplier_info = self.env['product.supplierinfo'].create({
+            'partner_id': self.partner_a.id,
+            'product_tmpl_id': product_template.id,
+            'product_uom_id': self.env.ref('uom.product_uom_pack_6').id,
+            'price': 100.0,
+        })
+
+        purchase_order = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+        })
+        catalog_info = purchase_order._get_product_price_and_data(supplier_info.product_tmpl_id.product_variant_ids[0])
+        self.assertEqual(catalog_info['price'], 100.0)

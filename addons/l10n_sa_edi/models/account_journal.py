@@ -1,4 +1,5 @@
 import json
+import logging
 from base64 import b64decode, b64encode
 from datetime import datetime
 
@@ -35,6 +36,8 @@ SANDBOX_AUTH = {
 }
 
 ERROR_MESSAGE = _lt("Something went wrong. Please onboard the journal again.")
+
+_logger = logging.getLogger(__name__)
 
 
 class AccountJournal(models.Model):
@@ -115,21 +118,20 @@ class AccountJournal(models.Model):
 
         # If the invoice wasn't sent to ZATCA because of a timeout, it will retain its existing chain index
         # Make sure there are no opened invoices with the journal's existing sequence
-        move_ids = self.env['account.move'].search(
-            [
-                ('journal_id', '=', self.id),
-                ('l10n_sa_chain_index', '!=', 0)
-            ]
-        )
-        stuck_moves = [move for move in move_ids if not move._l10n_sa_is_in_chain()]
-        if stuck_moves:
+        has_stuck_moves = self.env['account.edi.document'].search([
+            ('move_id.journal_id', '=', self.id),
+            ('move_id.l10n_sa_chain_index', '!=', 0),
+            ('edi_format_id.code', '=', 'sa_zatca'),
+            ('state', '=', 'to_send'),
+        ], limit=1)
+        if has_stuck_moves:
             raise UserError(_("Oops! The journal is stuck. Please submit the pending invoices to ZATCA and try again."))
 
     # ====== CSR Generation =======
 
     def _l10n_sa_csr_required_fields(self):
         """ Return the list of fields required to generate a valid CSR as per ZATCA requirements """
-        return ['l10n_sa_private_key_id', 'vat', 'name', 'city', 'country_id', 'state_id']
+        return ['l10n_sa_private_key_id', 'vat', 'name', 'city', 'country_id', 'state_id', 'street']
 
     def _l10n_sa_generate_csr(self):
         """
@@ -152,6 +154,27 @@ class AccountJournal(models.Model):
         self.l10n_sa_csr = self.env['certificate.certificate'].sudo()._l10n_sa_get_csr_str(self)
 
     # ====== Certificate Methods =======
+
+    def _l10n_sa_get_csid_error(self, csid):
+        """
+            Return a formatted error string if the CSID response has an 'error' or 'errors'
+            key or doesn't have a 'binarySecurityToken'
+        """
+        error_msg = ""
+        unknown_error_msg = _("Unknown response returned from ZATCA. Please check the logs.")
+        if error := csid.get('error'):
+            error_msg = error
+        elif errors := csid.get('errors'):
+            error_msg = " <br/>" + " <br/>- ".join([err['message'] if isinstance(err, dict) else err for err in errors])
+        elif 'error' in [csid.get('type', "").lower(), csid.get('status', "").lower()]:
+            error_msg = csid.get('message') or unknown_error_msg
+        elif not csid.get('binarySecurityToken'):
+            error_msg = unknown_error_msg
+
+        if error_msg:
+            _logger.warning("Failed to obtain CSID: %s", csid)
+
+        return error_msg
 
     def _l10n_sa_reset_certificates(self):
         """
@@ -204,9 +227,9 @@ class AccountJournal(models.Model):
             Request a Compliance Cryptographic Stamp Identifier (CCSID) from ZATCA
         """
         CCSID_data = self._l10n_sa_api_get_compliance_CSID(otp)
-        if CCSID_data.get('errors') or CCSID_data.get('error'):
-            error = CCSID_data['errors'][0]['message'] if CCSID_data.get('errors') else CCSID_data['error']
-            raise UserError(Markup("%s<br/>%s") % (_("Please check the details below and onboard the journal again:"), error))
+        if error := self._l10n_sa_get_csid_error(CCSID_data):
+            raise UserError(_("Please check the details below and onboard the journal again: %s", error))
+
         cert_id = self.env['certificate.certificate'].sudo().create({
             'name': 'CCSID Certificate',
             'content': b64decode(CCSID_data['binarySecurityToken']),
@@ -228,6 +251,16 @@ class AccountJournal(models.Model):
         self_sudo = self.sudo()
 
         if not self_sudo.l10n_sa_compliance_csid_json or not self_sudo.l10n_sa_compliance_csid_certificate_id or not self_sudo.l10n_sa_compliance_checks_passed:
+            _logger.warning(
+                "ZATCA_ERROR: Production CSID precheck failed for journal=%s (id=%s, company_id=%s): "
+                "has_compliance_json=%s, has_compliance_cert=%s, compliance_checks_passed=%s",
+                self.display_name,
+                self.id,
+                self.company_id.id,
+                bool(self_sudo.l10n_sa_compliance_csid_json),
+                bool(self_sudo.l10n_sa_compliance_csid_certificate_id),
+                self_sudo.l10n_sa_compliance_checks_passed,
+            )
             raise UserError(str(ERROR_MESSAGE))
 
         renew = False
@@ -243,8 +276,8 @@ class AccountJournal(models.Model):
 
         CCSID_data = json.loads(self_sudo.l10n_sa_compliance_csid_json)
         PCSID_data = self_sudo._l10n_sa_request_production_csid(CCSID_data, renew, OTP)
-        if PCSID_data.get('error'):
-            raise UserError(_("Could not obtain Production CSID: %s", PCSID_data['error']))
+        if error := self._l10n_sa_get_csid_error(PCSID_data):
+            raise UserError(_("Could not obtain Production CSID: %s", error))
         self_sudo.l10n_sa_production_csid_json = json.dumps(PCSID_data)
         pcsid_certificate = self_sudo.env['certificate.certificate'].create({
             'name': 'PCSID Certificate',
@@ -286,6 +319,12 @@ class AccountJournal(models.Model):
         if self.country_code != 'SA':
             raise UserError(_("Please change the (%s)'s country to Saudi Arabia and try again.", self.company_id.name))
         if not self_sudo.l10n_sa_compliance_csid_json or not self_sudo.l10n_sa_compliance_csid_certificate_id:
+            _logger.warning(
+                "ZATCA_ERROR: Compliance-check precheck failed for journal=%s (id=%s, company_id=%s): missing compliance CSID data",
+                self.display_name,
+                self.id,
+                self.company_id.id,
+            )
             raise UserError(str(ERROR_MESSAGE))
         CCSID_data = json.loads(self_sudo.l10n_sa_compliance_csid_json)
         compliance_files = self._l10n_sa_get_compliance_files()
@@ -296,11 +335,28 @@ class AccountJournal(models.Model):
             prepared_xml = self._l10n_sa_prepare_compliance_xml(fname, fval, self_sudo.l10n_sa_compliance_csid_certificate_id, digital_signature)
             result = self._l10n_sa_api_compliance_checks(prepared_xml.decode(), CCSID_data)
             if result.get('error'):
+                _logger.warning(
+                    "ZATCA_ERROR: Compliance API returned an error for journal=%s (id=%s, company_id=%s, file=%s, error=%s)",
+                    self.display_name,
+                    self.id,
+                    self.company_id.id,
+                    fname,
+                    result.get('error'),
+                )
                 raise UserError(Markup("<p class='mb-0'>%s</p>") % (str(ERROR_MESSAGE)))
             if result['validationResults']['status'] == 'WARNING':
                 warnings = Markup().join(Markup("<li><b>%(code)s</b>: %(message)s </li>") % e for e in result['validationResults']['warningMessages'])
                 self.l10n_sa_csr_errors = Markup("<br/><br/><ul class='pl-3'><b>%s</b>%s</ul>") % (_("Warnings:"), warnings)
             elif result['validationResults']['status'] != 'PASS':
+                _logger.warning(
+                    "ZATCA_ERROR: Compliance validation failed for journal=%s (id=%s, company_id=%s, file=%s, status=%s, error_messages=%s)",
+                    self.display_name,
+                    self.id,
+                    self.company_id.id,
+                    fname,
+                    result['validationResults'].get('status'),
+                    result['validationResults'].get('errorMessages'),
+                )
                 raise UserError(Markup("<p class='mb-0'>%s</p>") % (str(ERROR_MESSAGE)))
         self.l10n_sa_compliance_checks_passed = True
 
@@ -397,6 +453,12 @@ class AccountJournal(models.Model):
         if not otp:
             raise UserError(_("The OTP is invalid. Please try again."))
         if not self.l10n_sa_csr:
+            _logger.warning(
+                "ZATCA_ERROR: CCSID request precheck failed for journal=%s (id=%s, company_id=%s): CSR missing",
+                self.display_name,
+                self.id,
+                self.company_id.id,
+            )
             raise UserError(str(ERROR_MESSAGE))
         request_data = {
             'body': json.dumps({'csr': self.l10n_sa_csr.decode()}),
@@ -511,6 +573,15 @@ class AccountJournal(models.Model):
         self.ensure_one()
         self_sudo = self.sudo()
         if not self_sudo.l10n_sa_production_csid_json or not self_sudo.l10n_sa_production_csid_certificate_id:
+            _logger.info(
+                "ZATCA_ERROR: PCSID retrieval precheck failed for journal=%s (id=%s, company_id=%s): "
+                "has_production_json=%s, has_production_cert=%s",
+                self.display_name,
+                self.id,
+                self.company_id.id,
+                bool(self_sudo.l10n_sa_production_csid_json),
+                bool(self_sudo.l10n_sa_production_csid_certificate_id),
+            )
             raise UserError(str(ERROR_MESSAGE))
         certificate = self_sudo.l10n_sa_production_csid_certificate_id
         if not certificate.is_valid and self.company_id.l10n_sa_api_mode != 'sandbox':

@@ -6,6 +6,7 @@ import { getContent, setSelection } from "./_helpers/selection";
 import { insertText, redo, undo } from "./_helpers/user_actions";
 import { execCommand } from "./_helpers/userCommands";
 import { nodeSize } from "@html_editor/utils/position";
+import { unformat } from "./_helpers/format";
 
 function columnsContainer(contents) {
     return `<div class="container o_text_columns o-contenteditable-false"><div class="row">${contents}</div></div>`;
@@ -444,7 +445,7 @@ describe("undo", () => {
 
     test("should work properly after undo and then redo", async () => {
         await testEditor({
-            contentBefore: "<p>[]</p>",
+            contentBefore: "<p>[]<br></p>",
             stepFunction: async (editor) => {
                 columnize(2)(editor);
                 undo(editor);
@@ -452,6 +453,36 @@ describe("undo", () => {
                 await insertText(editor, "x");
             },
             contentAfter: columnsContainer(column(6, "<p>x[]</p>") + column(6, "<p><br></p>")),
+        });
+    });
+    test("should create columns after undo", async () => {
+        await testEditor({
+            contentBefore: columnsContainer(
+                column(4, "<p>a</p>") + column(4, "<p>b</p>") + column(4, "<p>c[]</p>")
+            ),
+            stepFunction: async (editor) => {
+                columnize(4)(editor);
+                undo(editor);
+                columnize(4)(editor);
+            },
+            contentAfter: unformat(
+                `<div class="container o_text_columns o-contenteditable-false">
+                    <div class="row">
+                        <div class="o-contenteditable-true col-3">
+                            <p>a</p>
+                        </div>
+                        <div class="o-contenteditable-true col-3">
+                            <p>b</p>
+                        </div>
+                        <div class="o-contenteditable-true col-3">
+                            <p>c[]</p>
+                        </div>
+                        <div class="col-3 o-contenteditable-true">
+                            <p><br></p>
+                        </div>
+                    </div>
+                </div>`
+            ),
         });
     });
 });
@@ -555,6 +586,69 @@ describe("helper hint", () => {
                     columnDuringEdit(4, `<p o-we-hint-text="Empty column" class="o-we-hint"><br></p>`)
                 ),
             /* eslint-enable */
+        });
+    });
+
+    test("should display hint in first block of each column after an undo operation", async () => {
+        await testEditor({
+            contentBefore: columnsContainer(
+                column(4, "<p>[]<br></p>") + column(4, "<p><br></p>") + column(4, "<p><br></p>")
+            ),
+            stepFunction: async (editor) => {
+                columnize(4)(editor);
+                undo(editor);
+            },
+            contentAfterEdit: unformat(
+                `<p data-selection-placeholder=""><br></p>
+                <div class="container o_text_columns o-contenteditable-false" contenteditable="false">
+                    <div class="row">
+                        <div class="o-contenteditable-true col-4" contenteditable="true">
+                            <p o-we-hint-text="Empty column" class="o-we-hint">[]<br></p>
+                        </div>
+                        <div class="o-contenteditable-true col-4" contenteditable="true">
+                            <p o-we-hint-text="Empty column" class="o-we-hint"><br></p>
+                        </div>
+                        <div class="o-contenteditable-true col-4" contenteditable="true">
+                            <p o-we-hint-text="Empty column" class="o-we-hint"><br></p>
+                        </div>
+                    </div>
+                </div>
+                <p data-selection-placeholder=""><br></p>`
+            ),
+        });
+    });
+});
+
+describe("list", () => {
+    test("should split list at first item", async () => {
+        await testEditor({
+            contentBefore: "<ul><li>[]a</li><li>b</li><li>c</li></ul>",
+            stepFunction: async (editor) => columnize(2)(editor),
+            contentAfter:
+                "<ul><li>a</li></ul>" +
+                columnsContainer(column(6, "<p>[]<br></p>") + column(6, "<p><br></p>")) +
+                "<ul><li>b</li><li>c</li></ul>",
+        });
+    });
+
+    test("should split list at middle item", async () => {
+        await testEditor({
+            contentBefore: "<ul><li>a</li><li>b[]</li><li>c</li></ul>",
+            stepFunction: async (editor) => columnize(2)(editor),
+            contentAfter:
+                "<ul><li>a</li><li>b</li></ul>" +
+                columnsContainer(column(6, "<p>[]<br></p>") + column(6, "<p><br></p>")) +
+                "<ul><li>c</li></ul>",
+        });
+    });
+
+    test("should split list at last item and add paragraph after", async () => {
+        await testEditor({
+            contentBefore: "<ul><li>a</li><li>b</li><li>c[]</li></ul>",
+            stepFunction: async (editor) => columnize(2)(editor),
+            contentAfter:
+                "<ul><li>a</li><li>b</li><li>c</li></ul>" +
+                columnsContainer(column(6, "<p>[]<br></p>") + column(6, "<p><br></p>")),
         });
     });
 });

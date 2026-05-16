@@ -10,7 +10,18 @@ from odoo.exceptions import ValidationError
 from odoo.tools import get_lang, babel_locale_parse
 
 import logging
+import operator as py_operator
 _logger = logging.getLogger(__name__)
+
+PY_OPERATORS = {
+    '>': py_operator.gt,
+    '<': py_operator.lt,
+    '>=': py_operator.ge,
+    '<=': py_operator.le,
+    '=': py_operator.eq,
+    '!=': py_operator.ne,
+    'in': lambda elem, container: elem in container,
+}
 
 
 def format_date_abbr(env, date):
@@ -29,7 +40,7 @@ class HrVersion(models.Model):
     _rec_name = 'name'
 
     def _get_default_address_id(self):
-        address = self.env.user.company_id.partner_id.address_get(['default'])
+        address = self.env.company.partner_id.address_get(['default'])
         return address['default'] if address else False
 
     def _default_salary_structure(self):
@@ -113,10 +124,10 @@ class HrVersion(models.Model):
             ('contractor', 'Contractor'),
             ('freelance', 'Freelancer'),
         ], string='Employee Type', default='employee', required=True, groups="hr.group_hr_user", tracking=True)
-    department_id = fields.Many2one('hr.department', check_company=True, tracking=True)
+    department_id = fields.Many2one('hr.department', check_company=True, tracking=True, index=True)
     member_of_department = fields.Boolean("Member of department", compute='_compute_part_of_department', search='_search_part_of_department',
         help="Whether the employee is a member of the active user's department or one of it's child department.")
-    job_id = fields.Many2one('hr.job', check_company=True, tracking=True)
+    job_id = fields.Many2one('hr.job', check_company=True, tracking=True, index=True)
     job_title = fields.Char(compute="_compute_job_title", inverse="_inverse_job_title", store=True, readonly=False,
         string="Job Title", tracking=True)
     is_custom_job_title = fields.Boolean(compute='_compute_is_custom_job_title', store=True, default=False, groups="hr.group_hr_user")
@@ -217,11 +228,12 @@ class HrVersion(models.Model):
 
     @api.depends("private_country_id")
     def _compute_allowed_country_state_ids(self):
-        states = self.env["res.country.state"].search([])
-        for version in self:
-            if version.private_country_id:
-                version.allowed_country_state_ids = version.private_country_id.state_ids
-            else:
+        versions_with_countries = self.filtered("private_country_id")
+        for version in versions_with_countries:
+            version.allowed_country_state_ids = version.private_country_id.state_ids
+        if versions_without_countries := (self - versions_with_countries):
+            states = self.env["res.country.state"].search([])
+            for version in versions_without_countries:
                 version.allowed_country_state_ids = states
 
     @api.constrains('employee_id', 'contract_date_start', 'contract_date_end')
@@ -290,11 +302,11 @@ class HrVersion(models.Model):
     def write(self, vals):
         # Employee Versions Validation
         if 'employee_id' in vals:
-            if self.filtered(lambda v: len(v.employee_id.version_ids) == 1 and vals['employee_id'] != v.employee_id.id):
-                raise ValidationError(self.env._("Cannot unassign the only active record of an employee."))
+            if self.filtered(lambda v: v.employee_id and v.employee_id.version_ids <= self and vals['employee_id'] != v.employee_id.id):
+                raise ValidationError(self.env._("Cannot unassign all the active versions of an employee."))
         if 'active' in vals and not vals['active']:
-            if self.filtered(lambda v: len(v.employee_id.version_ids) == 1):
-                raise ValidationError(self.env._("Cannot archive the only active record of an employee."))
+            if self.filtered(lambda v: v.employee_id and v.employee_id.version_ids <= self):
+                raise ValidationError(self.env._("Cannot archive all the active versions of an employee."))
 
         if self.env.context.get('sync_contract_dates') or ("contract_date_start" not in vals and "contract_date_end" not in vals):
             return super().write(vals)
@@ -352,6 +364,26 @@ class HrVersion(models.Model):
 
         return super(HrVersion, multiple_versions).write(new_vals)
 
+    def get_formview_action(self, access_uid=None):
+        """
+        Override this method in order to redirect many2one towards the right model
+            - Contract template -> hr.version
+            - Employee record -> hr.employee(.public) with version_id in context
+        """
+        res = super().get_formview_action(access_uid=access_uid)
+        context = res.get('context', {})
+        if self.employee_id:
+            user = self.env.user
+            if access_uid:
+                user = self.env['res.users'].browse(access_uid)
+            res['res_model'] = 'hr.employee' if user.has_group('hr.group_hr_user') else 'hr.employee.public'
+            res['res_id'] = self.employee_id.id
+            res['context'] = dict(context, version_id=self.id)
+        else:
+            if not context.get('form_view_ref', False):
+                res['context'] = dict(context, form_view_ref='hr.hr_contract_template_form_view')
+        return res
+
     @api.depends_context('lang')
     @api.depends('date_version')
     def _compute_display_name(self):
@@ -391,7 +423,10 @@ class HrVersion(models.Model):
         """
         if not (self.contract_date_start and date_from and date_to):
             return False
-        return self.date_start <= date_to and (not self.date_end or self.date_end >= date_from)
+        period_start = date_from or date.min
+        period_end = date_to or date.max
+        contract_end = self.date_end or date.max
+        return period_start <= contract_end and self.date_start <= period_end
 
     def _is_fully_flexible(self):
         """ return True if the version has a fully flexible working calendar """
@@ -545,10 +580,77 @@ class HrVersion(models.Model):
                 version.date_end = version.contract_date_end
 
     def _search_start_date(self, operator, value):
-        return [('contract_date_start', operator, value)]
+        if operator in ('>', '>='):
+            return [
+                '|',
+                    ('date_version', operator, value),
+                    ('contract_date_start', operator, value),
+            ]
+
+        if operator in ('<', '<='):
+            return [
+                '&',
+                    ('date_version', operator, value),
+                    '|',
+                        ('contract_date_start', '=', False),
+                        ('contract_date_start', operator, value),
+            ]
+
+        if operator == '=':
+            return [
+                '|',
+                    '&',
+                        ('date_version', '=', value),
+                        '|',
+                            ('contract_date_start', '=', False),
+                            ('contract_date_start', '<=', value),
+                    '&',
+                        ('contract_date_start', '=', value),
+                        ('date_version', '<=', value),
+            ]
+
+        if operator == '!=':
+            return ['!', *self._search_start_date('=', value)]
+
+        return NotImplemented
 
     def _search_end_date(self, operator, value):
-        return [('contract_date_end', operator, value)]
+
+        def _compare_dates(date_end, operator, value):
+            op = PY_OPERATORS.get(operator)
+            if not op:
+                return False
+            if not date_end and operator in ('>', '>=', '<', '<='):
+                return False
+            return op(date_end, value)
+
+        all_versions = self.search([('company_id', 'in', self.env.companies.ids)])
+        matching_ids = []
+
+        next_version_map = {}
+        prev_version_per_employee = {}
+
+        for version in all_versions:
+            emp_id = version.employee_id.id
+            if emp_id in prev_version_per_employee:
+                next_version_map[prev_version_per_employee[emp_id].id] = version
+            prev_version_per_employee[emp_id] = version
+
+        for version in all_versions:
+            next_version = next_version_map.get(version.id)
+            date_version_end = next_version.date_version + relativedelta(days=-1) if next_version else False
+
+            if date_version_end and version.contract_date_end:
+                date_end = min(date_version_end, version.contract_date_end)
+            elif date_version_end:
+                date_end = date_version_end
+            else:
+                date_end = version.contract_date_end
+
+            if _compare_dates(date_end, operator, value):
+                matching_ids.append(version.id)
+
+        return [('id', 'in', matching_ids)]
 
     @api.model
     def _get_marital_status_selection(self):

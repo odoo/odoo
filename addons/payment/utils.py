@@ -2,7 +2,7 @@
 
 from hashlib import sha1
 
-from odoo import fields
+from odoo import api, fields
 from odoo.http import request
 from odoo.tools import consteq, float_round
 from odoo.tools.misc import hmac as hmac_tool
@@ -12,7 +12,7 @@ from odoo.addons.payment.const import CURRENCY_MINOR_UNITS
 
 # Access token management
 
-def generate_access_token(*values):
+def generate_access_token(*values, env=None):
     """ Generate an access token based on the provided values.
 
     The token allows to later verify the validity of a request, based on a given set of values.
@@ -21,11 +21,14 @@ def generate_access_token(*values):
     All values must be convertible to a string.
 
     :param list values: The values to use for the generation of the token
+    :param api.Environment env: The environment to use for the generation of the token
     :return: The generated access token
     :rtype: str
     """
+    env = env or (request and request.env)
+    assert isinstance(env, api.Environment), "Environment required to generate access token."
     token_str = '|'.join(str(val) for val in values)
-    access_token = hmac_tool(request.env(su=True), 'generate_access_token', token_str)
+    access_token = hmac_tool(env(su=True), 'generate_access_token', token_str)
     return access_token
 
 
@@ -169,6 +172,27 @@ def to_minor_currency_units(major_amount, currency, arbitrary_decimal_number=Non
     )
 
 
+def get_language_code(lang, mapping, fallback="en"):
+    """Return the language code corresponding to the provided lang.
+
+    If the lang is not mapped to any language code, the country code is used instead. In
+    case the country code has no match either, we fall back to the provided fallback.
+
+    :param str lang: The lang, in IETF language tag format.
+    :param dict mapping: The dictionary mapping the lang or country code to the language code.
+    :param str fallback: The fallback language code key to use if no match is found.
+    :return: The corresponding language code.
+    :rtype: str
+    """
+    language_code = mapping.get(lang)
+    if not language_code:
+        country_code = lang.split("_")[0]
+        language_code = mapping.get(country_code)
+    if not language_code:
+        language_code = mapping.get(fallback)
+    return language_code
+
+
 # Partner values formatting
 
 def format_partner_address(address1="", address2=""):
@@ -191,7 +215,11 @@ def split_partner_name(partner_name):
     :return: The splitted first name and last name
     :rtype: tuple
     """
-    return " ".join(partner_name.split()[:-1]), partner_name.split()[-1]
+    parts = partner_name.split()
+    if len(parts) == 1:
+        return parts[0], ""
+
+    return " ".join(parts[:-1]), parts[-1]
 
 
 # Security

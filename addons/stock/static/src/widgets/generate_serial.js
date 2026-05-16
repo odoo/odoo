@@ -71,6 +71,7 @@ export class GenerateDialog extends Component {
                 default_location_id: this.props.move.data.location_id.id,
                 default_tracking: this.props.move.data.has_tracking,
                 default_quantity: qtyToProcess,
+                default_uom_id: this.props.move.data.has_tracking === 'lot' ? this.props.move.data.product_uom?.id : undefined,
             },
             this.props.mode,
             this.nextSerial.el?.value,
@@ -104,9 +105,6 @@ export class GenerateDialog extends Component {
         ]));
         lines._currentIds.push(...newlines.map((record) => record._virtualId));
         await lines._onUpdate();
-        if (this.sequence && this.nextSerial.el.value === this.nextCustomSerialNumber) {
-            await this.orm.write("ir.sequence", [this.sequence.id], {number_next_actual: this.sequence.number_next_actual + newlines.length});
-        }
         this.props.close();
     }
 }

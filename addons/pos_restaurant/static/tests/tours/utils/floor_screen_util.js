@@ -36,6 +36,22 @@ export function clickFloor(name) {
         },
     ];
 }
+export function hasFloor(name) {
+    return [
+        {
+            content: `has '${name}' floor`,
+            trigger: `.floor-selector .button-floor:contains("${name}")`,
+        },
+    ];
+}
+export function hasNotFloor(name) {
+    return [
+        {
+            content: `has not '${name}' floor`,
+            trigger: negate(`.floor-selector .button-floor:contains("${name}")`),
+        },
+    ];
+}
 export function clickEditButton(button) {
     return [
         {
@@ -201,4 +217,12 @@ export function addFloor(floorName) {
         },
         ...selectedFloorIs(floorName),
     ];
+}
+
+export function clickAddFloor() {
+    return {
+        content: "click add floor",
+        trigger: `.floor-selector button i[aria-label="Add Floor"]`,
+        run: "click",
+    };
 }

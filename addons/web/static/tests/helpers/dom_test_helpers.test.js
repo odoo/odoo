@@ -1,9 +1,10 @@
-import { expect, test } from "@odoo/hoot";
+import { expect, onError, test } from "@odoo/hoot";
 import { on } from "@odoo/hoot-dom";
-import { Component, xml } from "@odoo/owl";
+import { Component, useRef, xml } from "@odoo/owl";
 import { contains, getMockEnv, mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { useDraggable } from "@web/core/utils/draggable";
 
 test("contains: all actions", async () => {
     class Container extends Component {
@@ -102,4 +103,59 @@ test("contains: all actions", async () => {
         cleanups.forEach((cleanup) => cleanup());
         expect.verifySteps(events);
     }
+});
+
+test("only one drag sequence is allowed at a time", async () => {
+    expect.assertions(3);
+
+    await mountWithCleanup(
+        class extends Component {
+            static components = {};
+            static props = {};
+            static template = xml`
+                <ul t-ref="list">
+                    <li>First item</li>
+                    <li>Second item</li>
+                </ul>
+            `;
+
+            setup() {
+                useDraggable({
+                    ref: useRef("list"),
+                    elements: "li",
+                    onDragStart() {
+                        expect.step("dragstart");
+                    },
+                    onDragEnd() {
+                        if (throwOnDragEnd) {
+                            throw new Error("dragend error");
+                        } else {
+                            expect.step("dragend");
+                        }
+                    },
+                    onDrop() {
+                        throw new Error("should not call drop");
+                    },
+                });
+            }
+        }
+    );
+
+    let throwOnDragEnd = false;
+
+    await contains("li:first").drag();
+
+    expect.verifySteps(["dragstart"]);
+
+    await contains("li:last").drag();
+
+    expect.verifySteps(["dragend", "dragstart"]);
+
+    throwOnDragEnd = true;
+    onError((ev) => {
+        ev.preventDefault();
+        expect(ev.error).toMatch("dragend error", {
+            message: "drag sequence should be automatically canceled after test",
+        });
+    });
 });

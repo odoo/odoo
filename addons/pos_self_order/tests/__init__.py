@@ -1,8 +1,8 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from . import test_frontend
 from . import self_order_common_test
+from . import test_res_config_settings
 from . import test_self_order_mobile
 from . import test_self_order_kiosk
 from . import test_self_order_attribute
@@ -12,3 +12,5 @@ from . import test_webmanifest
 from . import test_self_order_sequence
 from . import test_self_order_preset
 from . import test_self_order_controller
+from . import test_takeaway_preset_mail
+from . import test_self_order_prices

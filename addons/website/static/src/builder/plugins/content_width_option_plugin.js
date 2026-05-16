@@ -15,6 +15,7 @@ export class ContentWidthOption extends BaseOptionComponent {
 
 class ContentWidthOptionPlugin extends Plugin {
     static id = "contentWidthOption";
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_options: [withSequence(CONTAINER_WIDTH, ContentWidthOption)],
         builder_actions: {

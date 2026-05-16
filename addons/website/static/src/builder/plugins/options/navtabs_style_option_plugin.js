@@ -7,6 +7,13 @@ import { _t } from "@web/core/l10n/translation";
 import { localization } from "@web/core/l10n/localization";
 import { BaseOptionComponent } from "@html_builder/core/utils";
 
+/**
+ * @typedef { Object } NavTabsStyleOptionShared
+ * @property { NavTabsStyleOptionPlugin['isNavItem'] } isNavItem
+ * @property { NavTabsStyleOptionPlugin['getActiveOverlayButtons'] } getActiveOverlayButtons
+ * @property { NavTabsStyleOptionPlugin['moveNavItem'] } moveNavItem
+ */
+
 export class NavTabsStyleOption extends BaseOptionComponent {
     static template = "website.NavTabsStyleOption";
     static selector = ".s_tabs";
@@ -22,6 +29,7 @@ export class NavTabsImagesStyleOption extends BaseOptionComponent {
 class NavTabsStyleOptionPlugin extends Plugin {
     static id = "navTabsOptionStyle";
     static shared = ["isNavItem", "getActiveOverlayButtons", "moveNavItem"];
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_options: [
             withSequence(SNIPPET_SPECIFIC_END, NavTabsStyleOption),
@@ -37,6 +45,10 @@ class NavTabsStyleOptionPlugin extends Plugin {
         }),
         is_unremovable_selector: ".nav-item",
         unsplittable_node_predicates: this.isUnsplittable,
+        dropzone_selector: {
+            selector: ".s_tabs, .s_tabs_images",
+            excludeAncestor: ".s_table_of_content, .s_tabs, .s_tabs_images",
+        },
     };
 
     setup() {
@@ -120,6 +132,14 @@ class NavTabsStyleOptionPlugin extends Plugin {
             node.closest("li")?.classList.contains("nav-item")
         );
     }
+}
+
+export class NavTabsTranslationPlugin extends Plugin {
+    static id = "navTabsTranslation";
+    /** @type {import("plugins").WebsiteResources} */
+    resources = {
+        force_background_translation_state_selectors: [".s_tabs_nav a", ".o_nav_tabs_description"],
+    };
 }
 
 const getTabsEl = (editingElement) => editingElement.querySelector(".s_tabs_nav");

@@ -8,9 +8,10 @@
     </t>
     <t t-name="purchase_stock.ProductCatalogSearchPanelContent" t-inherit="account.ProductCatalogSearchPanelContent" t-inherit-mode="primary">
         <xpath expr="//section[hasclass('o_search_panel_sections')]" position="attributes">
-            <t t-if="suggest.suggestToggle.isOn">
-                <attribute name="class">o_search_panel_sections mt-4</attribute>
-            </t>
+            <attribute name="t-att-class">
+                suggest.suggestToggle.isOn ? 'mt-4' : 'mt-5'
+            </attribute>
+            <attribute name="class" separator=" " remove="mt-5"/>
         </xpath>
         <xpath expr="//section[hasclass('o_search_panel_sections')]" position="before">
             <t t-if="displaySuggest">

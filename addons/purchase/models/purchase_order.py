@@ -13,7 +13,7 @@ from odoo import api, fields, models, _
 from odoo.fields import Command, Domain
 from odoo.tools import format_amount, format_date, formatLang, groupby, OrderedSet, SQL
 from odoo.tools.float_utils import float_is_zero, float_repr
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import AccessDenied, UserError, ValidationError
 
 _logger = logging.getLogger(__name__)
 
@@ -74,7 +74,7 @@ class PurchaseOrder(models.Model):
             order.invoice_ids = invoices
             order.invoice_count = len(invoices)
 
-    name = fields.Char('Order Reference', required=True, index='trigram', copy=False, default='New')
+    name = fields.Char('Order Reference', required=True, index='trigram', copy=False, default=lambda self: _('New'))
     priority = fields.Selection(
         [('0', 'Normal'), ('1', 'Urgent')], 'Priority', default='0', index=True)
     origin = fields.Char('Source', copy=False,
@@ -292,10 +292,16 @@ class PurchaseOrder(models.Model):
 
     @api.depends('partner_id.name', 'partner_id.purchase_warn_msg', 'order_line.purchase_line_warn_msg')
     def _compute_purchase_warning_text(self):
+        if not self.env.user.has_group('purchase.group_warning_purchase'):
+            self.purchase_warning_text = ''
+            return
         for order in self:
             warnings = OrderedSet()
             if partner_msg := order.partner_id.purchase_warn_msg:
-                warnings.add(order.partner_id.name + ' - ' + partner_msg)
+                warnings.add((order.partner_id.name or order.partner_id.display_name) + ' - ' + partner_msg)
+            if partner_parent_msg := order.partner_id.parent_id.purchase_warn_msg:
+                parent = order.partner_id.parent_id
+                warnings.add((parent.name or parent.display_name) + ' - ' + partner_parent_msg)
             for line in order.order_line:
                 if product_msg := line.purchase_line_warn_msg:
                     warnings.add(line.product_id.display_name + ' - ' + product_msg)
@@ -359,17 +365,30 @@ class PurchaseOrder(models.Model):
             self.order_line.filtered(lambda line: not line.display_type).date_planned = self.date_planned
 
     def _search_is_late(self, operator, value):
-        if operator != 'in':
-            return NotImplemented
-        purchase_domain = Domain('state', '=', 'purchase') & Domain('date_planned', '<=', fields.Datetime.now())
-        line_domain = Domain('order_id', 'any', purchase_domain) & Domain.custom(
-            to_sql=lambda model, alias, query: SQL(
-                "%s < %s",
-                model._field_to_sql(alias, 'qty_received', query),
-                model._field_to_sql(alias, 'product_qty', query),
+        if operator not in ["=", "!="]:
+            raise ValidationError(self.env._("Unsupported operator"))
+        purchase_domain = self._get_domain_is_late(operator, value)
+        if operator == "=" and value or operator == "!=" and not value:
+            purchase_lines_late = Domain('order_id', 'any', purchase_domain) & Domain.custom(
+                to_sql=lambda model, alias, query: SQL(
+                    "%s < %s",
+                    model._field_to_sql(alias, 'qty_received', query),
+                    model._field_to_sql(alias, 'product_qty', query),
+                )
             )
-        )
-        return Domain('order_line', 'any', line_domain)
+            return Domain('order_line', 'any', purchase_lines_late)
+        else:
+            purchase_lines_on_time = Domain('order_id', 'any', purchase_domain) & Domain.custom(
+                to_sql=lambda model, alias, query: SQL(
+                    "%s >= %s",
+                    model._field_to_sql(alias, 'qty_received', query),
+                    model._field_to_sql(alias, 'product_qty', query),
+                )
+            )
+            return Domain('order_line', 'any', purchase_lines_on_time)
+
+    def _get_domain_is_late(self, operator, value):
+        return Domain([('state', '=', 'purchase'), ('date_planned', '<=', fields.Datetime.now())])
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -378,7 +397,7 @@ class PurchaseOrder(models.Model):
             company_id = vals.get('company_id', self.default_get(['company_id'])['company_id'])
             # Ensures default picking type and currency are taken from the right company.
             self_comp = self.with_company(company_id)
-            if vals.get('name', 'New') == 'New':
+            if vals.get('name', _('New')) == _('New'):
                 seq_date = None
                 if 'date_order' in vals:
                     seq_date = fields.Datetime.context_timestamp(self, fields.Datetime.to_datetime(vals['date_order']))
@@ -481,8 +500,10 @@ class PurchaseOrder(models.Model):
             if self.env.context.get('is_reminder'):
                 access_opt['title'] = _('View')
             else:
-                access_opt['title'] = _('View Quotation') if self.state in ('draft', 'sent') else _('View Order')
-                access_opt['url'] = self.get_confirm_url()
+                access_opt.update(
+                    title=_("View Quotation") if self.state in ('draft', 'sent') else _("View Order"),
+                    url=self.get_base_url() + self.get_confirm_url(),
+                )
 
         return groups
 
@@ -618,6 +639,10 @@ class PurchaseOrder(models.Model):
         return True
 
     def button_cancel(self):
+        locked_purchase_orders = self.filtered(lambda po: po.locked)
+        if locked_purchase_orders:
+            raise UserError(self.env._("Unable to cancel purchase order(s): %s. You must first unlock them.", locked_purchase_orders.mapped('display_name')))
+
         purchase_orders_with_invoices = self.filtered(lambda po: any(i.state not in ('cancel', 'draft') for i in po.invoice_ids))
         if purchase_orders_with_invoices:
             raise UserError(_("Unable to cancel purchase order(s): %s. You must first cancel their related vendor bills.", purchase_orders_with_invoices.mapped('display_name')))
@@ -675,7 +700,7 @@ class PurchaseOrder(models.Model):
                 if line.selected_seller_id:
                     supplierinfo['product_name'] = line.selected_seller_id.product_name
                     supplierinfo['product_code'] = line.selected_seller_id.product_code
-                    supplierinfo['product_uom_id'] = line.product_uom.id
+                    supplierinfo['product_uom_id'] = line.product_uom_id.id
                 vals = {
                     'seller_ids': [(0, 0, supplierinfo)],
                 }
@@ -689,7 +714,7 @@ class PurchaseOrder(models.Model):
             'name': _("Bill Matching"),
             'res_model': 'purchase.bill.line.match',
             'domain': [
-                ('partner_id', '=', self.partner_id.id),
+                ('partner_id', 'in', (self.partner_id | self.partner_id.commercial_partner_id).ids),
                 ('company_id', 'in', self.env.company.ids),
                 ('purchase_order_id', 'in', [self.id, False]),
             ],
@@ -870,7 +895,7 @@ class PurchaseOrder(models.Model):
                 oldest_rfq.message_post(body=oldest_rfq_message)
 
                 rfqs.filtered(lambda r: r.state != 'cancel').button_cancel()
-                oldest_rfq._merge_alternative_po(rfqs)
+                oldest_rfq._merge_po_post_process(rfqs)
 
                 # Keep the oldest RFQ IDs
                 merged_rfq_ids.append(oldest_rfq.id)
@@ -887,6 +912,9 @@ class PurchaseOrder(models.Model):
             action['name'] = _("Merged RFQs")
             action['domain'] = [('id', 'in', merged_rfq_ids)]
         return action
+
+    def _merge_po_post_process(self, rfqs):
+        pass
 
     def _merge_alternative_po(self, rfqs):
         pass
@@ -951,6 +979,8 @@ class PurchaseOrder(models.Model):
         """ This function returns the values to populate the custom dashboard in
             the purchase order views.
         """
+        if not self.env.user._is_internal():
+            raise AccessDenied()
         self.browse().check_access('read')
 
         result = {
@@ -1000,11 +1030,11 @@ class PurchaseOrder(models.Model):
         rfq_late_group = self.env['purchase.order']._read_group(rfq_late_domain, groupby, aggregate)
         _update('late', result, rfq_late_group)
 
-        rfq_not_acknowledge = [('state', '=', 'purchase'), ('acknowledged', '=', False)]
+        rfq_not_acknowledge = [('state', 'in', ['purchase', 'done']), ('acknowledged', '=', False)]
         rfq_not_acknowledge_group = self.env['purchase.order']._read_group(rfq_not_acknowledge, groupby, aggregate)
         _update('not_acknowledged', result, rfq_not_acknowledge_group)
 
-        rfq_late_receipt = [('is_late', '=', True)]
+        rfq_late_receipt = [('state', 'in', ['purchase', 'done']), ('is_late', '=', True)]
         rfq_late_receipt_group = self.env['purchase.order']._read_group(rfq_late_receipt, groupby, aggregate)
         _update('late_receipt', result, rfq_late_receipt_group)
 
@@ -1193,6 +1223,7 @@ class PurchaseOrder(models.Model):
                 # The discounted price is expressed in the product's UoM, not in the vendor
                 # price's UoM, so we need to convert it into to match the displayed UoM.
                 price = product_uom._compute_price(price, seller.product_uom_id)
+                product_infos.update(uomFactor=seller.product_uom_id.factor / product_uom.factor)
             product_infos.update(
                 price=price,
                 min_qty=seller.min_qty,

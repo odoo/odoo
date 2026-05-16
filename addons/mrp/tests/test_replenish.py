@@ -372,3 +372,27 @@ class TestMrpReplenish(TestMrpCommon):
             'product_max_qty': 5,
         })
         self.assertEqual(orderpoint.lead_days, 365)
+
+    def test_orderpoint_with_kit_bom_in_another_company(self):
+        """Test that an orderpoint can be created for a product
+        having a kit-type BoM defined in another company.
+        """
+        self.assertEqual(self.bom_2.type, 'phantom')
+        self.assertEqual(self.bom_2.company_id, self.env.company)
+        company_2 = self.env['res.company'].create({'name': 'Company 2'})
+        orderpoint = self.env['stock.warehouse.orderpoint'].with_company(company_2).create({
+            'product_id': self.bom_2.product_id.id,
+        })
+        self.assertEqual(orderpoint.company_id, company_2)
+
+    def test_product_replenish_wizard_multiple_manufacture_routes(self):
+        self.route_manufacture.copy()
+        wizard_form = Form(self.env['product.replenish'].with_context(
+            default_product_tmpl_id=self.product_4.product_tmpl_id.id
+        ))
+        manufacture_routes = self.env['stock.rule'].search([
+            ('action', '=', 'manufacture'),
+            ('company_id', '=', self.company.id),
+            ('location_dest_id.usage', '=', 'internal'),
+        ]).route_id
+        self.assertIn(wizard_form.route_id.id, manufacture_routes.ids)

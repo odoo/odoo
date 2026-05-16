@@ -4,6 +4,7 @@ import { registry } from "@web/core/registry";
 export class CollapsePlugin extends Plugin {
     static id = "collapse";
 
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
         on_cloned_handlers: this.onCloned.bind(this),

@@ -5,6 +5,7 @@ import { selectElements } from "@html_editor/utils/dom_traversal";
 
 class CompanyTeamPlugin extends Plugin {
     static id = "companyTeam";
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         content_editable_providers: this.getEditableEls.bind(this),
     };

@@ -2,7 +2,7 @@
 .o_layout * {
     box-sizing: border-box !important;
 }
-.o_layout :not(.fa) {
+.o_layout {
     font-family: Arial,Helvetica Neue,Helvetica,sans-serif;
 }
 /* Remove space around the email design. */
@@ -58,4 +58,10 @@ body:has(.o_layout) {
     .o_desktop_h100 {
         height: unset !important;
     }
+}
+
+// Redeclare CSS values that use color-mix()
+// to avoid issues with mail rendering engines
+:root {
+    --o-border-color: #{o-color('300')};
 }

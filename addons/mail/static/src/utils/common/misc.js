@@ -1,6 +1,8 @@
 import { reactive } from "@odoo/owl";
+import { AssetsLoadingError, getBundle } from "@web/core/assets";
 import { memoize } from "@web/core/utils/functions";
 import { rpc } from "@web/core/network/rpc";
+import { effect } from "@web/core/utils/reactive";
 
 export function assignDefined(obj, data, keys = Object.keys(data)) {
     for (const key of keys) {
@@ -231,3 +233,131 @@ export const hasHardwareAcceleration = memoize(() => {
     }
     return true;
 });
+
+/**
+ * Runs a reactive effect whenever the dependencies change. The effect receives
+ * the current values returned by `dependencies`. If the effect returns a
+ * cleanup function, it is run before the next execution.
+ *
+ * @template {object[]} T
+ * @param {Object} options
+ * @param {(...dependencies: any[]) => void | (() => void)} options.effect The
+ *        effect callback. May return a cleanup function.
+ * @param {(...args: [...T]) => Object|Array} options.dependencies Returns an array of
+ *        values to track. The effect is called only if these values change.
+ * @param {[...T]} options.reactiveTargets Objects that the effect depends on.
+ */
+export function effectWithCleanup({ effect: effectFn, dependencies, reactiveTargets }) {
+    let cleanup;
+    let prevDependencies;
+    effect((...deps) => {
+        const nextDependencies = dependencies(...deps);
+        const changed =
+            !prevDependencies ||
+            (Array.isArray(nextDependencies)
+                ? nextDependencies.some((v, i) => v !== prevDependencies[i])
+                : Object.keys(nextDependencies).some(
+                      (key) => nextDependencies[key] !== prevDependencies[key]
+                  ));
+        if (changed) {
+            prevDependencies = Array.isArray(nextDependencies)
+                ? [...nextDependencies]
+                : { ...nextDependencies };
+            cleanup?.();
+            cleanup = Array.isArray(nextDependencies)
+                ? effectFn(...nextDependencies)
+                : effectFn({ ...nextDependencies });
+        }
+    }, reactiveTargets);
+}
+
+/**
+ * A thin wrapper around `effectWithCleanup` that debounces the cleanup phase:
+ * setup runs immediately when activated, while cleanup is delayed until the
+ * predicate remains false for `delay` ms.
+ *
+ * Setup is executed again only after cleanup has completed, ensuring symmetry
+ * between setup and cleanup.
+ *
+ * @template T - type of reactive targets
+ * @template D - type of dependencies
+ * @param {Object} options
+ * @param {(dependencies: D) => (() => void)} options.effect Function called
+ * when the predicate becomes true and the effect is not active. Receives the
+ * values returned by `dependencies`.
+ * @param {number} options.delay Debounce delay in milliseconds before running
+ * cleanup.
+ * @param {(...targets: T) => D} options.dependencies Function returning an
+ * array of values tracked by the effect; passed to setup/cleanup.
+ * @param {(...targets: T) => boolean} options.predicate Function returning a
+ * boolean to determine whether the effect should be activated.
+ * @param {[...T]} options.reactiveTargets Array of reactive objects that the
+ * effect depends on.
+ */
+export function effectWithDebouncedCleanup({
+    delay,
+    dependencies,
+    effect: effectFn,
+    predicate,
+    reactiveTargets,
+}) {
+    let timeout;
+    let active = false;
+    let cleanup;
+    effectWithCleanup({
+        effect(ctx) {
+            const { predicate, ...deps } = ctx;
+            if (!predicate) {
+                return;
+            }
+            clearTimeout(timeout);
+            if (!active) {
+                cleanup = effectFn(deps);
+                active = true;
+            }
+            return () => {
+                timeout = setTimeout(() => {
+                    cleanup();
+                    active = false;
+                }, delay);
+            };
+        },
+        dependencies: (...targets) => ({
+            predicate: predicate(...targets),
+            ...dependencies(...targets),
+        }),
+        reactiveTargets,
+    });
+}
+
+/**
+ * @param {HTMLElement} targetNode
+ * @param {string} bundleName
+ */
+export async function loadCssFromBundle(targetNode, bundleName) {
+    try {
+        const res = await getBundle(bundleName);
+        for (const url of res.cssLibs) {
+            const link = document.createElement("link");
+            link.rel = "stylesheet";
+            link.href = url;
+            targetNode.appendChild(link);
+            await new Promise((res, rej) => {
+                link.addEventListener("load", res);
+                link.addEventListener("error", rej);
+            });
+        }
+    } catch (e) {
+        if (e instanceof AssetsLoadingError && e.cause instanceof TypeError) {
+            // an AssetsLoadingError caused by a TypeError means that the
+            // fetch request has been cancelled by the browser. It can occur
+            // when the user changes page, or navigate away from the website
+            // client action, so the iframe is unloaded. In this case, we
+            // don't care abour reporting the error, it is actually a normal
+            // situation.
+            return new Promise(() => {});
+        } else {
+            throw e;
+        }
+    }
+}

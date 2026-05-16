@@ -11,9 +11,22 @@ class MailboxController(http.Controller):
         domain = [("needaction", "=", True)]
         res = request.env["mail.message"]._message_fetch(domain, **(fetch_params or {}))
         messages = res.pop("messages")
+        # sudo: bus.bus: reading non-sensitive last id
+        bus_last_id = request.env["bus.bus"].sudo()._bus_last_id()
+        store = Store().add(
+            messages,
+            extra_fields=[
+                Store.One("thread", [
+                    # sudo: mail.thread: users can read their own message_needaction_counter on the thread
+                    Store.Attr("message_needaction_counter", sudo=True),
+                    Store.Attr("message_needaction_counter_bus_id", bus_last_id)
+                ], as_thread=True)
+            ],
+            add_followers=True
+        )
         return {
             **res,
-            "data": Store().add(messages, add_followers=True).get_result(),
+            "data": store.get_result(),
             "messages": messages.ids,
         }
 

@@ -151,7 +151,11 @@ class ChatbotCase(common.HttpCase):
             {
                 "thread_model": "discuss.channel",
                 "thread_id": discuss_channel.id,
-                "post_data": {"body": body or email or chatbot_script_answer.name},
+                "post_data": {
+                    "body": body or email or chatbot_script_answer.name,
+                    "message_type": "comment",
+                    "subtype_xmlid": "mail.mt_comment",
+                },
             },
         )
         if email:

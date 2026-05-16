@@ -2,6 +2,8 @@ import { OptionsContainer } from "@html_builder/sidebar/option_container";
 import { Plugin } from "@html_editor/plugin";
 import { BuilderOptionsPlugin } from "./builder_options_plugin";
 
+/** @typedef {import("./builder_options_plugin").BuilderOptionContainer[]} translate_options */
+
 export class BuilderOptionsTranslationPlugin extends Plugin {
     static id = "builderOptions";
     static shared = [
@@ -10,6 +12,9 @@ export class BuilderOptionsTranslationPlugin extends Plugin {
         "updateContainers",
         "setNextTarget",
         "getBuilderOptionContext",
+        "getRemoveDisabledReason",
+        "getCloneDisabledReason",
+        "isClonable",
     ];
     static dependencies = ["history"];
 
@@ -25,6 +30,9 @@ export class BuilderOptionsTranslationPlugin extends Plugin {
     }
     deactivateContainers() {}
     getTarget() {}
+    getRemoveDisabledReason() {}
+    getCloneDisabledReason() {}
+    isClonable() {}
     updateContainers() {}
     setNextTarget(targetEl) {
         // Store the next target to activate in the current step.

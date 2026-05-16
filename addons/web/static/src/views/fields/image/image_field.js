@@ -7,8 +7,7 @@ import { isBinarySize } from "@web/core/utils/binary";
 import { FileUploader } from "../file_handler";
 import { standardFieldProps } from "../standard_field_props";
 
-import { Component, useState, onWillRender } from "@odoo/owl";
-const { DateTime } = luxon;
+import { Component, useState } from "@odoo/owl";
 
 export const fileTypeMagicWordMap = {
     "/": "jpg",
@@ -59,18 +58,7 @@ export class ImageField extends Component {
             );
         }
         const field = this.props.record.fields[this.props.name];
-        if (field.related?.includes(".")) {
-            this.uniqueId = DateTime.now();
-            let key = this.props.record.data[this.props.name];
-            onWillRender(() => {
-                const nextKey = this.props.record.data[this.props.name];
-                if (key !== nextKey) {
-                    this.uniqueId = DateTime.now();
-                }
-
-                key = nextKey;
-            });
-        }
+        this.isImageOnAnotherRecord = field.related?.includes(".") || this.fieldType === "many2one";
     }
 
     get imgAlt() {
@@ -89,7 +77,10 @@ export class ImageField extends Component {
     }
 
     get rawCacheKey() {
-        return this.uniqueId || this.props.record.data.write_date;
+        if (this.isImageOnAnotherRecord) {
+            return null;
+        }
+        return this.props.record.data.write_date;
     }
 
     get sizeStyle() {
@@ -167,7 +158,7 @@ export class ImageField extends Component {
             const ctx = canvas.getContext("2d");
             ctx.drawImage(image, 0, 0);
 
-            info.data = canvas.toDataURL("image/webp", 0.75).split(",")[1];
+            info.data = canvas.toDataURL("image/webp").split(",")[1];
             info.type = "image/webp";
             info.name = info.name.replace(/\.[^/.]+$/, ".webp");
         }
@@ -177,7 +168,7 @@ export class ImageField extends Component {
             image.src = `data:image/webp;base64,${info.data}`;
             await new Promise((resolve) => image.addEventListener("load", resolve));
             const originalSize = Math.max(image.width, image.height);
-            const smallerSizes = [1024, 512, 256, 128].filter((size) => size < originalSize);
+            const smallerSizes = [1920, 1024, 512, 256, 128].filter((size) => size < originalSize);
             let referenceId = undefined;
             for (const size of [originalSize, ...smallerSizes]) {
                 const ratio = size / originalSize;
@@ -208,7 +199,7 @@ export class ImageField extends Component {
                             datas:
                                 size === originalSize
                                     ? info.data
-                                    : canvas.toDataURL("image/webp", 0.75).split(",")[1],
+                                    : canvas.toDataURL("image/webp").split(",")[1],
                             res_id: referenceId,
                             res_model: "ir.attachment",
                             mimetype: "image/webp",
@@ -222,7 +213,7 @@ export class ImageField extends Component {
                         {
                             name: info.name.replace(/\.webp$/, ".jpg"),
                             description: "format: jpeg",
-                            datas: canvas.toDataURL("image/jpeg", 0.75).split(",")[1],
+                            datas: canvas.toDataURL("image/jpeg").split(",")[1],
                             res_id: resizedId,
                             res_model: "ir.attachment",
                             mimetype: "image/jpeg",
@@ -304,8 +295,8 @@ export const imageField = {
         zoomDelay: options.zoom_delay,
         previewImage: options.preview_image,
         acceptedFileExtensions: options.accepted_file_extensions,
-        width: options.size && Boolean(options.size[0]) ? options.size[0] : attrs.width,
-        height: options.size && Boolean(options.size[1]) ? options.size[1] : attrs.height,
+        width: options.size && Boolean(options.size[0]) ? options.size[0] : undefined,
+        height: options.size && Boolean(options.size[1]) ? options.size[1] : undefined,
         reload: "reload" in options ? Boolean(options.reload) : true,
     }),
 };

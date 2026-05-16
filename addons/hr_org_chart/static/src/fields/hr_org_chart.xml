@@ -24,7 +24,7 @@
         <!-- NOTE: Use bg-images instead of img to get a clean and squared image -->
         <div
             class="o_media_object img-fluid d-block rounded"
-            t-att-style="'background-image:url(\'/web/image/hr.employee.public/' + employee.id + '/avatar_1024/\')'"
+            t-att-style="'background-image:url(\'/web/image/hr.employee.public/' + employee.id + '/avatar_1024/?unique=' + employee.write_date + '\')'"
             t-att-alt="employee.name"
         />
     </div>
@@ -160,7 +160,7 @@
         <div class="tooltip-arrow"/>
         <h3 class="popover-header">
             <div class="d-flex align-items-center">
-                <span class="o_media_object flex-shrink-0 rounded me-1" t-att-style='"background-image:url(\"/web/image/hr.employee.public/" + props.employee.id + "/avatar_1024/\")"'/>
+                <span class="o_media_object flex-shrink-0 rounded me-1" t-att-style='"background-image:url(\"/web/image/hr.employee.public/" + props.employee.id + "/avatar_1024/?unique=" + props.employee.write_date + "\")"'/>
                 <b class="flex-grow-1 fw-medium"><t t-esc="props.employee.name"/></b>
                 <a href="#" class="o_employee_redirect btn btn-link" t-att-data-employee-id="props.employee.id" t-on-click.prevent="() => this._onEmployeeRedirect(props.employee.id)"><i class="fa fa-user" role="img" aria-label='View employee' title="View employee"/></a>
             </div>

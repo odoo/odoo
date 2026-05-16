@@ -82,7 +82,7 @@ class PurchaseOrder(models.Model):
                 name += '\n' + product_lang.description_purchase
 
             # Compute taxes
-            taxes_ids = fpos.map_tax(line.product_id.supplier_taxes_id.filtered(lambda tax: tax.company_id == requisition.company_id)).ids
+            taxes_ids = fpos.map_tax(line.product_id.supplier_taxes_id.filtered(lambda tax: tax.company_id in requisition.company_id.parent_ids)).ids
 
             product_qty = line.product_qty if requisition.requisition_type == 'purchase_template' else 0
             # Create PO line
@@ -236,6 +236,10 @@ class PurchaseOrder(models.Model):
     def _prepare_grouped_data(self, rfq):
         match_fields = super()._prepare_grouped_data(rfq)
         return match_fields + (rfq.requisition_id.id,)
+
+    def _merge_po_post_process(self, rfqs):
+        super()._merge_po_post_process(rfqs)
+        self._merge_alternative_po(rfqs)
 
     def _merge_alternative_po(self, rfqs):
         if self.alternative_po_ids:

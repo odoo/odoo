@@ -1,9 +1,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from json.decoder import JSONDecodeError
 from unittest.mock import patch
 
+import requests
+
+from odoo.exceptions import ValidationError
 from odoo.fields import Command
 from odoo.tests import tagged
+from odoo.tools import mute_logger
 
 from odoo.addons.payment.const import REPORT_REASONS_MAPPING
 from odoo.addons.payment.tests.common import PaymentCommon
@@ -120,6 +125,17 @@ class TestPaymentProvider(PaymentCommon):
                 self.company.id, self.partner.id, self.amount
             )
             self.assertNotIn(self.provider, compatible_providers)
+
+    def test_provider_compatible_with_branch_companies(self):
+        """ Test that the provider is available to branch companies. """
+        branch_company = self.env['res.company'].create({
+            'name': "Provider Branch Company",
+            'parent_id': self.provider.company_id.id,
+        })
+        compatible_providers = self.provider._get_compatible_providers(
+            branch_company.id, self.partner.id, self.amount,
+        )
+        self.assertIn(self.provider, compatible_providers)
 
     def test_provider_compatible_with_available_countries(self):
         """ Test that the provider is compatible with its available countries. """
@@ -395,3 +411,23 @@ class TestPaymentProvider(PaymentCommon):
         )._get_validation_currency()
         self.assertIn(validation_currency, self.provider.available_currency_ids)
         self.assertIn(validation_currency, self.payment_method.supported_currency_ids)
+
+    @mute_logger('odoo.addons.payment.models.payment_provider')
+    def test_parsing_non_json_response_falls_back_to_text_response(self):
+        """Test that a non-JSON response is smoothly parsed as a text response."""
+        response = requests.Response()
+        response.status_code = 502
+        response._content = b"<html><body>Cloudflare Error</body></html>"
+        with (
+            patch('requests.request', return_value=response),
+            patch(
+                'odoo.addons.payment.models.payment_provider.PaymentProvider._parse_response_error',
+                new=lambda _self, _response: _response.json(),
+            ),
+        ):
+            try:
+                self.provider._send_api_request('GET', '/dummy')
+            except Exception as e:  # noqa: BLE001
+                self.assertNotIsInstance(e, JSONDecodeError)
+                self.assertIsInstance(e, ValidationError)
+                self.assertIn("Cloudflare Error", e.args[0])

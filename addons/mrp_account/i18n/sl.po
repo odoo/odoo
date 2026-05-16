@@ -9,13 +9,14 @@
 # Matjaz Mozetic <m.mozetic@matmoz.si>, 2022
 # Martin Trigaux, 2023
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:38+0000\n"
-"PO-Revision-Date: 2025-09-16 21:31+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"POT-Creation-Date: 2026-04-17 18:38+0000\n"
+"PO-Revision-Date: 2025-11-08 17:52+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Slovenian <https://translate.odoo.com/projects/odoo-19/"
 "mrp_account/sl/>\n"
 "Language: sl\n"
@@ -27,13 +28,9 @@ msgstr ""
 "X-Generator: Weblate 5.12.2\n"
 
 #. module: mrp_account
-#: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
-msgid "$1000"
-msgstr ""
-
-#. module: mrp_account
-#: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
-msgid "$5000"
+#. odoo-python
+#: code:addons/mrp_account/models/stock_move.py:0
+msgid "%(value)s for %(quantity)s %(unit)s from %(production)s"
 msgstr ""
 
 #. module: mrp_account
@@ -41,11 +38,6 @@ msgstr ""
 #: code:addons/mrp_account/models/mrp_production.py:0
 msgid "%s - Labour"
 msgstr ""
-
-#. module: mrp_account
-#: model_terms:ir.ui.view,arch_db:mrp_account.report_wip
-msgid "2023-08-15"
-msgstr "2023-08-15"
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.view_move_form_inherit_mrp_account
@@ -165,6 +157,11 @@ msgid "Category"
 msgstr "Kategorija"
 
 #. module: mrp_account
+#: model:ir.model,name:mrp_account.model_res_company
+msgid "Companies"
+msgstr ""
+
+#. module: mrp_account
 #: model:ir.actions.server,name:mrp_account.action_compute_price_bom_product
 #: model:ir.actions.server,name:mrp_account.action_compute_price_bom_template
 #: model_terms:ir.ui.view,arch_db:mrp_account.product_product_ext_form_view2
@@ -187,8 +184,9 @@ msgstr ""
 #. odoo-python
 #: code:addons/mrp_account/report/stock_valuation_report.py:0
 #: code:addons/mrp_account/static/src/stock_valuation/stock_valuation_report.js:0
+#: code:addons/mrp_account/static/src/stock_valuation/stock_valuation_report.xml:0
 msgid "Cost of Production"
-msgstr ""
+msgstr "Stroški proizvodnje"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter__costs_hour_account_ids
@@ -248,6 +246,7 @@ msgstr "Opusti"
 #: model:ir.model.fields,field_description:mrp_account.field_product_product__display_name
 #: model:ir.model.fields,field_description:mrp_account.field_product_template__display_name
 #: model:ir.model.fields,field_description:mrp_account.field_report_mrp_report_mo_overview__display_name
+#: model:ir.model.fields,field_description:mrp_account.field_res_company__display_name
 #: model:ir.model.fields,field_description:mrp_account.field_stock_account_stock_valuation_report__display_name
 #: model:ir.model.fields,field_description:mrp_account.field_stock_move__display_name
 msgid "Display Name"
@@ -274,12 +273,6 @@ msgid "Extra Unit Cost"
 msgstr ""
 
 #. module: mrp_account
-#. odoo-python
-#: code:addons/mrp_account/models/stock_move.py:0
-msgid "From Production Order %(reference)s"
-msgstr ""
-
-#. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__id
 #: model:ir.model.fields,field_description:mrp_account.field_account_analytic_applicability__id
 #: model:ir.model.fields,field_description:mrp_account.field_account_analytic_line__id
@@ -295,6 +288,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp_account.field_product_product__id
 #: model:ir.model.fields,field_description:mrp_account.field_product_template__id
 #: model:ir.model.fields,field_description:mrp_account.field_report_mrp_report_mo_overview__id
+#: model:ir.model.fields,field_description:mrp_account.field_res_company__id
 #: model:ir.model.fields,field_description:mrp_account.field_stock_account_stock_valuation_report__id
 #: model:ir.model.fields,field_description:mrp_account.field_stock_move__id
 msgid "ID"
@@ -340,7 +334,7 @@ msgstr "Zadnjič posodobljeno"
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_report_mrp_report_mo_overview
 msgid "MO Overview Report"
-msgstr ""
+msgstr "Poročilo s pregledom PN"
 
 #. module: mrp_account
 #. odoo-python
@@ -477,7 +471,7 @@ msgstr "Premik zaloge"
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_stock_account_stock_valuation_report
 msgid "Stock Valuation"
-msgstr ""
+msgstr "Vrednotenje zalog"
 
 #. module: mrp_account
 #: model:ir.model.fields,help:mrp_account.field_account_bank_statement_line__wip_production_ids
@@ -620,6 +614,9 @@ msgstr ""
 #: code:addons/mrp_account/models/mrp_workorder.py:0
 msgid "[WC] %s"
 msgstr ""
+
+#~ msgid "2023-08-15"
+#~ msgstr "2023-08-15"
 
 #~ msgid "Bill of Material"
 #~ msgstr "Kosovnica"

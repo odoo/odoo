@@ -2083,7 +2083,7 @@ test("server actions are called with the correct context", async () => {
 
 test("BinaryField is correctly rendered in Settings form view", async () => {
     onRpc("/web/content", async (request) => {
-        const body = await request.text();
+        const body = await request.formData();
         expect(body).toBeInstanceOf(FormData);
         expect(body.get("field")).toBe("file", {
             message: "we should download the field document",
@@ -2368,4 +2368,28 @@ test("settings search is accent-insensitive", async () => {
     expect(queryAllTexts(".highlighter")).toEqual(["Bâr", "Bar", "bàr"]);
     await editSearch("àz");
     expect(queryAllTexts(".highlighter")).toEqual(["ÄZ", "áz"]);
+});
+
+test("settings search does not highlight escaped characters when highlighting the searched text", async () => {
+    await mountView({
+        type: "form",
+        resModel: "res.config.settings",
+        arch: /* xml */ `
+            <form string="Settings" class="oe_form_configuration o_base_settings" js_class="base_settings">
+                <app string="CRM" name="crm">
+                    <block title="Research &amp; Development">
+                        <setting help="This is Research &amp; Development Settings">
+                            <field name="bar"/>
+                            <div>This test is to check whether &amp; gets escaped during search or not.</div>
+                        </setting>
+                    </block>
+                </app>
+            </form>
+        `,
+    });
+
+    await editSearch("a");
+    expect(queryAllTexts(".highlighter")).toEqual(["a", "a", "a", "a", "a"]);
+    await editSearch("&");
+    expect(queryAllTexts(".highlighter")).toEqual(["&", "&", "&"]);
 });

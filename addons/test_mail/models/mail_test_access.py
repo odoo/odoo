@@ -38,7 +38,7 @@ class MailTestAccessCusto(models.Model):
     or partner which have their own set of ACLs. """
     _description = 'Mail Access Test with Custo'
     _name = 'mail.test.access.custo'
-    _inherit = ['mail.thread.blacklist']
+    _inherit = ['mail.thread.blacklist', 'mail.activity.mixin']
     _mail_post_access = 'write'  # default value but ease mock
     _order = 'id DESC'
     _primary_email = 'email_from'
@@ -48,13 +48,14 @@ class MailTestAccessCusto(models.Model):
     phone = fields.Char()
     customer_id = fields.Many2one('res.partner', 'Customer')
     is_locked = fields.Boolean()
+    is_readonly = fields.Boolean()
 
     def _mail_get_partner_fields(self, introspect_fields=False):
         return ['customer_id']
 
     def _mail_get_operation_for_mail_message_operation(self, message_operation):
         # customize message creation: only unlocked, except admins
-        if message_operation == "create":
+        if message_operation == "create" and not self.env.user._is_admin():
             return dict.fromkeys(self.filtered(lambda r: not r.is_locked), 'read')
         # customize read: read access on unlocked, write access on locked
         elif message_operation == "read":

@@ -8,6 +8,7 @@ export class NoInlineRootPlugin extends Plugin {
     static id = "noInlineRoot";
     static dependencies = ["baseContainer", "selection", "history"];
 
+    /** @type {import("plugins").EditorResources} */
     resources = {
         fix_selection_on_editable_root_overrides: this.fixSelectionOnEditableRoot.bind(this),
     };

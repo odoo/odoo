@@ -299,6 +299,26 @@ const VariantMixin = {
             );
         }
         const addToCart = parent.querySelector('#add_to_cart_wrap');
+        const ctaWrapper = parent.querySelector('#o_wsale_cta_wrapper');
+        if (ctaWrapper?.querySelector('.product_price')) {
+            const showBox =
+                !combination.prevent_zero_price_sale
+                || !!parent.querySelector('#product_option_block').children.length;
+            const boxClasses = ['o_wsale_cta_wrapper_boxed', 'border', 'rounded', 'p-3'];
+            if (showBox) {
+                ctaWrapper.classList.add(...boxClasses);
+            } else {
+                ctaWrapper.classList.remove(...boxClasses);
+            }
+            ctaWrapper.classList.toggle('pt-3', !showBox);
+
+            const boxedPriceContainer = ctaWrapper.querySelector('.product_price')?.closest('.order-first');
+            if (boxedPriceContainer) {
+                const showPrice = !combination.prevent_zero_price_sale;
+                boxedPriceContainer.classList.toggle('d-none', !showPrice);
+                boxedPriceContainer.classList.toggle('d-flex',  showPrice);
+            }
+        }
         const contactUsButton = parent.closest('#product_details')
             ?.querySelector('#contact_us_wrapper');
         const quantity = parent.querySelector('.css_quantity');
@@ -318,8 +338,9 @@ const VariantMixin = {
 
         if (contactUsButton) {
             const contactUsButtonLink = contactUsButton.querySelector('a');
-            const url = contactUsButtonLink.getAttribute('data-url');
-            contactUsButtonLink.setAttribute('href', `${url}?subject=${combination.display_name}`);
+            const url = new URL(contactUsButtonLink.getAttribute('data-url'), window.location.href);
+            url.searchParams.set('subject', combination.display_name);
+            contactUsButtonLink.setAttribute('href', url.toString());
         }
 
         const price = parent.querySelector('.oe_price')?.querySelector('.oe_currency_value');

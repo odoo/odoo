@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
 <t t-name="html_builder.ImageShapeOption">
-    <BuilderRow label.translate="Shape">
+    <BuilderRow label.translate="Shape" t-if="this.state.isShapeSupported">
         <div class="btn-group o-hb-button-group">
             <div
                 class="o-hb-btn btn btn-secondary o-dropdown dropdown-toggle dropdown"
@@ -40,6 +40,12 @@
                 action="'rotateImageShape'" actionParam="{side: 'left'}" />
             <BuilderButton title.translate="Rotate right" icon="'fa-rotate-right'"
                 action="'rotateImageShape'" actionParam="{side: 'right'}" />
+            <BuilderButton
+                title.translate="Reset shape transformation"
+                icon="'oi-close'"
+                action="'resetImageShapeTransformation'"
+                className="'btn-danger-color-hover'"
+                t-if="this.state.hasShapeTransformation"/>
         </BuilderRow>
 
         <BuilderRow label.translate="Speed" level="1" t-if="this.state.showImageShapeAnimation" preview="false">

@@ -205,10 +205,12 @@ export class KanbanRenderer extends Component {
 
         useHotkey("space", ({ target }) => this.onSpaceKeyPress(target), {
             area: () => this.rootRef.el,
+            isAvailable: () => !this.props.quickCreateState.groupId,
         });
 
         useHotkey("shift+space", ({ target }) => this.onSpaceKeyPress(target, true), {
             area: () => this.rootRef.el,
+            isAvailable: () => !this.props.quickCreateState.groupId,
         });
 
         const arrowsOptions = { area: () => this.rootRef.el, allowRepeat: true };
@@ -502,7 +504,7 @@ export class KanbanRenderer extends Component {
     }
 
     toggleSelection(record, isRange = false) {
-        if (isRange) {
+        if (isRange && this.lastCheckedRecord) {
             this.toggleRangeSelection(record);
         } else {
             record.toggleSelection();

@@ -2,7 +2,7 @@ import { Plugin } from "@html_editor/plugin";
 import { closestElement, selectElements } from "@html_editor/utils/dom_traversal";
 import { leftPos, rightPos } from "@html_editor/utils/position";
 import { QWebPicker } from "./qweb_picker";
-import { isElement } from "@html_editor/utils/dom_info";
+import { isElement, PROTECTED_QWEB_SELECTOR } from "@html_editor/utils/dom_info";
 import { withSequence } from "@html_editor/utils/resource";
 
 const isUnsplittableQWebElement = (node) =>
@@ -20,7 +20,6 @@ const isUnsplittableQWebElement = (node) =>
             "t-raw",
         ].some((attr) => node.getAttribute(attr)));
 
-const PROTECTED_QWEB_SELECTOR = "[t-esc], [t-raw], [t-out], [t-field]";
 const QWEB_DATA_ATTRIBUTES = [
     "data-oe-t-group",
     "data-oe-t-inline",
@@ -35,6 +34,7 @@ export const isUnremovableQWebElement = (node) =>
 export class QWebPlugin extends Plugin {
     static id = "qweb";
     static dependencies = ["overlay", "protectedNode", "selection"];
+    /** @type {import("plugins").EditorResources} */
     resources = {
         /** Handlers */
         selectionchange_handlers: withSequence(8, this.onSelectionChange.bind(this)),
@@ -108,10 +108,12 @@ export class QWebPlugin extends Plugin {
     }
 
     normalizeInline(root) {
-        for (const el of selectElements(root, "t")) {
-            if (this.checkAllInline(el)) {
-                el.setAttribute("data-oe-t-inline", "true");
-            }
+        const targets = [...root.querySelectorAll("t")];
+        if (root.matches("t")) {
+            targets.unshift(root);
+        }
+        for (const el of targets.filter((el) => this.checkAllInline(el))) {
+            el.setAttribute("data-oe-t-inline", "true");
         }
     }
 
@@ -153,7 +155,7 @@ export class QWebPlugin extends Plugin {
             const qwebNode =
                 selection &&
                 selection.anchorNode &&
-                closestElement(selection.anchorNode, "[t-field],[t-esc],[t-out]");
+                closestElement(selection.anchorNode, PROTECTED_QWEB_SELECTOR);
             if (qwebNode && this.editable.contains(qwebNode)) {
                 // select the whole qweb node
                 const [anchorNode, anchorOffset] = leftPos(qwebNode);
@@ -235,6 +237,11 @@ export class QWebPlugin extends Plugin {
         this.selectedNode = node;
         this.picker.close();
         this.selectNode(node);
+        // Force Chrome to clear the selection.
+        // Without this, Chrome's optimization may skip the 'selectionchange' event
+        // if the new node is structurally identical to the previous one
+        const selection = this.document.getSelection();
+        selection.removeAllRanges();
     }
 
     clearDataAttributes(root) {

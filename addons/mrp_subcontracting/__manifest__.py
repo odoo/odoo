@@ -136,6 +136,7 @@
             'stock/static/src/widgets/*',
             'stock/static/src/fields/*',
             'mrp_subcontracting/static/src/components/subcontracting_production_form_controller.js',
+            'mrp_subcontracting/static/src/components/subcontracting_production_list_controller.js',
         ],
     },
     'uninstall_hook': 'uninstall_hook',

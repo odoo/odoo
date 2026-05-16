@@ -186,6 +186,7 @@ export class TreeEditor extends Component {
         node.negate = false;
         node.operator = this.props.getDefaultOperator(fieldDef);
         node.value = getDefaultValue(fieldDef, node.operator);
+        node.isProperty = fieldDef?.is_property;
     }
 
     async updatePath(node, path) {

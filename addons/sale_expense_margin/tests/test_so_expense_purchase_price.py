@@ -76,11 +76,10 @@ class TestExpenseMargin(TestExpenseCommon):
         expense._do_approve()  # Skip duplicate wizard
         self.post_expenses_with_wizard(expense)
 
-        self.assertRecordValues(sale_order.order_line, [
-            {'purchase_price': 1000.00, 'is_expense': False},
-            # Expense lines:
-            {'purchase_price':   86.96, 'is_expense': True},
-            {'purchase_price':  100.00, 'is_expense': True},
-            {'purchase_price':  869.57, 'is_expense': True},
-            {'purchase_price': 1000.00, 'is_expense': True},
-        ])
+        self.assertAlmostEqual(sale_order.order_line[0].purchase_price, 1000.0)
+        self.assertFalse(sale_order.order_line[0].is_expense)
+
+        # Expense Lines
+        for line, expected_purchase_price in zip(sale_order.order_line[1:], [86.96, 100.0, 869.5666667, 1000.0]):
+            self.assertAlmostEqual(line.purchase_price, expected_purchase_price)
+            self.assertTrue(line.is_expense)

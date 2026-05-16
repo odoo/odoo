@@ -5,13 +5,13 @@
 # Translators:
 # Martin Trigaux, 2022
 #
-# "Junko Augias (juau)" <juau@odoo.com>, 2025.
+# "Junko Augias (juau)" <juau@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~14.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:37+0000\n"
-"PO-Revision-Date: 2025-11-04 05:20+0000\n"
+"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"PO-Revision-Date: 2026-02-03 07:25+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/"
 "account_tax_python/ja/>\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: account_tax_python
 #: model:ir.model.fields,help:account_tax_python.field_account_tax__amount_type
@@ -105,7 +105,7 @@ msgstr "無効なASTノード: %s"
 #. odoo-python
 #: code:addons/account_tax_python/tools/formula_utils.py:0
 msgid "Invalid formula"
-msgstr "無効な式"
+msgstr "無効な数式"
 
 #. module: account_tax_python
 #. odoo-python
@@ -123,20 +123,21 @@ msgstr "定数値として許可されているのは、int、float、または 
 #. odoo-python
 #: code:addons/account_tax_python/models/account_tax.py:0
 msgid "Only primitive types are allowed in python tax formula context."
-msgstr "Pythonの税計算式の文脈では、プリミティブタイプ(基本型)のみが許可されています"
-"。"
+msgstr ""
+"Pythonの税計算式の文脈では、プリミティブタイプ(基本型)のみが許可されていま"
+"す。"
 
 #. module: account_tax_python
 #. odoo-python
 #: code:addons/account_tax_python/tools/formula_utils.py:0
-msgid "Only product['string'] read-access is allowed"
-msgstr ""
+msgid "Only product['string'] or uom['string'] read-access is allowed"
+msgstr "プロダクト['string'] または 単位['string'] の読取権限のみ許可されます"
 
 #. module: account_tax_python
 #. odoo-python
 #: code:addons/account_tax_python/tools/formula_utils.py:0
 msgid "Only read access to identifiers is allowed"
-msgstr ""
+msgstr "識別子への読み取り専用アクセスのみが許可されています"
 
 #. module: account_tax_python
 #: model:ir.model,name:account_tax_python.model_account_tax
@@ -152,13 +153,17 @@ msgstr "税計算"
 #. odoo-python
 #: code:addons/account_tax_python/tools/formula_utils.py:0
 msgid "Unknown function call"
-msgstr ""
+msgstr "不明な関数呼び出し"
 
 #. module: account_tax_python
 #. odoo-python
 #: code:addons/account_tax_python/tools/formula_utils.py:0
 msgid "Unknown identifier: %s"
-msgstr ""
+msgstr "不明な識別子: %s"
+
+#~ msgid "Only product['string'] read-access is allowed"
+#~ msgstr ""
+#~ "product['string'] 形式による読み取り専用アクセスのみが許可されています"
 
 #~ msgid ""
 #~ "\n"

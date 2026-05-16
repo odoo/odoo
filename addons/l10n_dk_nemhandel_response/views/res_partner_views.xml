@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_partner_form_l10n_dk_nemhandel_response" model="ir.ui.view">
+        <field name="name">res.partner.form.l10n.dk.nemhandel.response</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="l10n_dk_nemhandel.res_partner_form_l10n_dk_nemhandel"/>
+            <field name="arch" type="xml">
+            <data>
+                <xpath expr="//field[@name='nemhandel_verification_state']/.." position="replace">
+                    <div class="col-4" title="Supports Invoice Responses" invisible="not nemhandel_response_support">
+                        <field name="nemhandel_verification_state" readonly="True"/>
+                    </div>
+                    <div class="col-4" title="Does not support Invoice Responses" invisible="nemhandel_response_support">
+                        <field name="nemhandel_verification_state" readonly="True"/>
+                    </div>
+                </xpath>
+            </data>
+        </field>
+    </record>
+</odoo>

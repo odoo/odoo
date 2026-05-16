@@ -135,16 +135,7 @@ class ProjectProject(models.Model):
         """ Create an analytic account if project allow timesheet and don't provide one
             Note: create it before calling super() to avoid raising the ValidationError from _check_allow_timesheet
         """
-        defaults = self.default_get(['allow_timesheets', 'account_id', 'is_template'])
-        analytic_accounts_vals = [
-            vals for vals in vals_list
-            if (
-                vals.get('allow_timesheets', defaults.get('allow_timesheets')) and
-                not vals.get('account_id', defaults.get('account_id')) and not vals.get('is_template', defaults.get('is_template'))
-            )
-        ]
-
-        if analytic_accounts_vals:
+        if analytic_accounts_vals := self._get_processed_analytic_account_vals(vals_list):
             analytic_accounts = self.env['account.analytic.account'].create(self._get_values_analytic_account_batch(analytic_accounts_vals))
             for vals, analytic_account in zip(analytic_accounts_vals, analytic_accounts):
                 vals['account_id'] = analytic_account.id
@@ -206,6 +197,22 @@ class ProjectProject(models.Model):
             action['display_name'] = _("%(name)s's Timesheets", name=self.name)
         return action
 
+    def _get_processed_analytic_account_vals(self, vals_list):
+        """
+        Filters the values list to return the values for analytic accounts creation.
+        Allows values modifications through overrides.
+        """
+        defaults = self.default_get(['allow_timesheets', 'account_id', 'is_template'])
+        analytic_accounts_vals = []
+        for vals in vals_list:
+            if (
+                vals.get('allow_timesheets', defaults.get('allow_timesheets'))
+                and not vals.get('account_id', defaults.get('account_id'))
+                and not vals.get('is_template', defaults.get('is_template'))
+            ):
+                analytic_accounts_vals.append(vals)
+        return analytic_accounts_vals
+
     # ----------------------------
     #  Project Updates
     # ----------------------------
@@ -218,8 +225,8 @@ class ProjectProject(models.Model):
         encode_uom = self.env.company.timesheet_encode_uom_id
         uom_ratio = self.env.ref('uom.product_uom_hour').factor / encode_uom.factor
 
-        allocated = self.allocated_hours / uom_ratio
-        effective = self.total_timesheet_time / uom_ratio
+        allocated = self.allocated_hours * uom_ratio
+        effective = self.total_timesheet_time
         color = ""
         if allocated:
             number = f"{round(effective)} / {round(allocated)} {encode_uom.name}"

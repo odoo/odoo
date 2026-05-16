@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="account_add_gln.view_partner_form_inherit" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit.account_peppol_partner_extra_fields</field>
+        <field name="model">res.partner</field>
+        <field name="priority">15</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr=".//page[@name='sales_purchases']//group[@name='misc']" position="inside">
+                <field name="global_location_number" invisible="type != 'delivery'"/>
+            </xpath>
+            <xpath expr=".//page[@name='contact_addresses']/field[@name='child_ids']/form//field[@name='company_id']" position="after">
+                <field name="global_location_number" invisible="type != 'delivery'"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

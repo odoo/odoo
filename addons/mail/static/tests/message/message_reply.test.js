@@ -1,15 +1,20 @@
 import {
+    insertText as htmlInsertText,
+    pasteHtml,
+} from "@html_editor/../tests/_helpers/user_actions";
+import {
     click,
     contains,
     defineMailModels,
     openDiscuss,
+    openFormView,
     start,
     startServer,
-    openFormView,
 } from "@mail/../tests/mail_test_helpers";
-import { describe, test } from "@odoo/hoot";
+import { describe, expect, test } from "@odoo/hoot";
+import { queryFirst } from "@odoo/hoot-dom";
 import { disableAnimations } from "@odoo/hoot-mock";
-import { serverState } from "@web/../tests/web_test_helpers";
+import { getService, serverState } from "@web/../tests/web_test_helpers";
 import { deserializeDateTime } from "@web/core/l10n/dates";
 
 import { getOrigin } from "@web/core/utils/urls";
@@ -161,6 +166,38 @@ test("can reply to logged note in chatter", async () => {
     await contains(".o-dropdown-item:contains('Reply')", { count: 0 });
 });
 
+test.tags("html composer");
+test("reply to logged note in chatter keeps prefilled mention in html composer", async () => {
+    const pyEnv = await startServer();
+    const partnerBId = pyEnv["res.partner"].create({ name: "Partner B" });
+    pyEnv["mail.message"].create({
+        author_id: partnerBId,
+        body: "Test message from B",
+        model: "res.partner",
+        res_id: serverState.partnerId,
+        subtype_id: pyEnv["mail.message.subtype"].search([
+            ["subtype_xmlid", "=", "mail.mt_note"],
+        ])[0],
+    });
+    await start();
+    getService("mail.composer").setHtmlComposer();
+    await openFormView("res.partner", serverState.partnerId);
+    await click(".o-mail-Message:contains('Test message from B') [title='Reply']");
+    await contains("button.active:text('Log note')");
+    await contains(".o-mail-Composer.o-focused .o-mail-Composer-html.odoo-editor-editable");
+    await contains(
+        ".o-mail-Composer-html.odoo-editor-editable a.o_mail_redirect:text('@Partner B')"
+    );
+    const editor = {
+        document,
+        editable: queryFirst(".o-mail-Composer-html.odoo-editor-editable"),
+    };
+    await htmlInsertText(editor, "Hello");
+    await contains(".o-mail-Composer-send:enabled");
+    await click(".o-mail-Composer-send:enabled");
+    await contains(".o-mail-Message:contains('Hello') a.o_mail_redirect:text('@Partner B')");
+});
+
 test("Replying to a message containing line breaks should be correctly inlined", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "general" });
@@ -184,4 +221,121 @@ test("Replying to a message containing line breaks should be correctly inlined",
     await contains(".o-mail-MessageInReply-message", {
         text: "Message first line. Message second line. Message third line.",
     });
+});
+
+test("reply with only attachment shows parent message context", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "general" });
+    const originalMessageId = pyEnv["mail.message"].create({
+        body: "Original message content",
+        message_type: "comment",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    const attachmentId = pyEnv["ir.attachment"].create({
+        name: "test_image.png",
+        mimetype: "image/png",
+    });
+    pyEnv["mail.message"].create({
+        attachment_ids: [attachmentId],
+        body: "",
+        message_type: "comment",
+        model: "discuss.channel",
+        parent_id: originalMessageId,
+        res_id: channelId,
+    });
+    await start();
+    await openDiscuss(channelId);
+    await contains(".o-mail-MessageInReply-message", {
+        text: "Original message content",
+    });
+});
+
+test("replying to a note restores focus on an already open composer", async () => {
+    const pyEnv = await startServer();
+    const partnerBId = pyEnv["res.partner"].create({ name: "Partner B" });
+    pyEnv["mail.message"].create({
+        author_id: partnerBId,
+        body: "Test message from B",
+        model: "res.partner",
+        res_id: serverState.partnerId,
+        subtype_id: pyEnv["mail.message.subtype"].search([
+            ["subtype_xmlid", "=", "mail.mt_note"],
+        ])[0],
+    });
+    await start();
+    await openFormView("res.partner", serverState.partnerId);
+    await click("button:not(.active):text('Log note')");
+    await contains(".o-mail-Composer.o-focused");
+    queryFirst(".o-mail-Composer-input").blur();
+    await contains(".o-mail-Composer.o-focused", { count: 0 });
+    await click(".o-mail-Message-actions [title='Reply']");
+    await contains(".o-mail-Composer.o-focused");
+});
+
+test("click on message in reply in inbox navigates to the parent message", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    const messageId = pyEnv["mail.message"].create({
+        body: "Parent message",
+        message_type: "comment",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    pyEnv["mail.message"].create({
+        body: "Reply to parent message",
+        message_type: "comment",
+        model: "discuss.channel",
+        needaction: true,
+        parent_id: messageId,
+        res_id: channelId,
+    });
+    await start();
+    await openDiscuss("mail.box_inbox");
+    await click(".o-mail-MessageInReply-message", {
+        parent: [".o-mail-Message", { text: "Reply to parent message" }],
+    });
+    await contains(
+        ".o-mail-DiscussContent:has(.o-mail-DiscussContent-threadName[title='General']) .o-mail-Message.o-highlighted .o-mail-Message-content:has(:text('Parent message'))"
+    );
+});
+
+test.tags("focus required", "html composer");
+test("Click reply to note again preserves composer content", async () => {
+    const pyEnv = await startServer();
+    pyEnv["mail.message"].create([
+        {
+            author_id: pyEnv["res.partner"].create({ name: "Batman" }),
+            body: "I am Justice",
+            model: "res.partner",
+            res_id: serverState.partnerId,
+            subtype_id: pyEnv["mail.message.subtype"].search([
+                ["subtype_xmlid", "=", "mail.mt_note"],
+            ])[0],
+        },
+    ]);
+    await start();
+    const composerService = getService("mail.composer");
+    composerService.setHtmlComposer();
+    await openFormView("res.partner", serverState.partnerId);
+    await click(".o-mail-Message:contains(I am Justice) [title='Reply']");
+    await contains(".o-mail-Composer.o-focused");
+    const editor = {
+        document,
+        editable: document.querySelector(".o-mail-Composer-html.odoo-editor-editable"),
+    };
+    pasteHtml(editor, "<strong>Strong Text</strong>");
+    await contains(
+        ".o-mail-Composer-html.odoo-editor-editable:text('@Batman Strong Text'):has(a.o_mail_redirect:text('@Batman')):has(strong:text('Strong Text'))"
+    );
+    // check the exact textContent because :text() validates the rendered text, not the NBSP separator.
+    expect(editor.editable.textContent).toBe("\uFEFF@Batman\uFEFF\u00A0Strong Text");
+    await click("button.active:text('Log note')");
+    await contains(".o-mail-Composer", { count: 0 });
+    await click(".o-mail-Message:contains(I am Justice) [title='Reply']");
+    await contains(".o-mail-Composer.o-focused");
+    await contains(
+        ".o-mail-Composer-html.odoo-editor-editable:text('@Batman Strong Text'):has(a.o_mail_redirect:text('@Batman')):has(strong:text('Strong Text'))"
+    );
+    expect(editor.editable.textContent).toBe("\uFEFF@Batman\uFEFF\u00A0Strong Text");
 });

@@ -41,6 +41,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'expense_account_id': 'uae_account_400001',
                 'income_account_id': 'uae_account_500001',
                 'tax_calculation_rounding_method': 'round_per_line',
+                'account_stock_journal_id': 'inventory_valuation',
+                'account_stock_valuation_id': 'uae_account_131100',
             },
         }
 
@@ -79,4 +81,12 @@ class AccountChartTemplate(models.AbstractModel):
             fiscal_position_xmlid: {
                 'sequence': 1,
             }
+        }
+
+    @template('ae', 'account.account')
+    def _get_ae_account_account(self):
+        return {
+            'uae_account_131100': {
+                'account_stock_variation_id': 'uae_account_400001',
+            },
         }

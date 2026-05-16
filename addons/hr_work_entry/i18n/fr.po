@@ -7,13 +7,13 @@
 # Martin Trigaux, 2023
 # Jolien De Paepe, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Manon Rondou (ronm)" <ronm@odoo.com>, 2025.
+# "Manon Rondou (ronm)" <ronm@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:37+0000\n"
-"PO-Revision-Date: 2025-10-29 15:14+0000\n"
+"POT-Creation-Date: 2026-04-10 18:38+0000\n"
+"PO-Revision-Date: 2026-04-14 13:02+0000\n"
 "Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-19/"
 "hr_work_entry/fr/>\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
 "1000000 == 0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,help:hr_work_entry.field_hr_employee__work_entry_source
@@ -51,12 +51,6 @@ msgstr ""
 "Planning : les prestations seront générées à partir du planning de "
 "l'employé. (nécessite l'application Planning)\n"
 "    "
-
-#. module: hr_work_entry
-#. odoo-python
-#: code:addons/hr_work_entry/models/hr_work_entry.py:0
-msgid "%(employee)s does not have a contract on %(date)s."
-msgstr "%(employee)s n’a pas de contrat le %(date)s."
 
 #. module: hr_work_entry
 #. odoo-python
@@ -104,9 +98,15 @@ msgid "<span>Hours</span>"
 msgstr "<span>Heures</span>"
 
 #. module: hr_work_entry
+#: model:hr.work.entry.type,display_code:hr_work_entry.work_entry_type_attendance
+msgid "A"
+msgstr "A"
+
+#. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__active
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__active
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__active
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
 msgid "Active"
 msgstr "Actif"
 
@@ -351,6 +351,12 @@ msgid "Duration"
 msgstr "Durée"
 
 #. module: hr_work_entry
+#. odoo-python
+#: code:addons/hr_work_entry/models/hr_work_entry.py:0
+msgid "Duration must be positive and cannot exceed 24 hours."
+msgstr "La durée doit être positive et ne peut pas dépasser 24 heures."
+
+#. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_regeneration_wizard__earliest_available_date_message
 msgid "Earliest Available Date Message"
 msgstr "Message de date de disponibilité la plus ancienne"
@@ -565,8 +571,8 @@ msgid ""
 "In order to regenerate the work entries, you need to provide the wizard with "
 "an employee_id, a date_from and a date_to."
 msgstr ""
-"Pour régénérer les prestations, vous devez indiquer un identifiant d’"
-"employé, une date de début et une date de fin."
+"Pour régénérer les prestations, vous devez indiquer un identifiant "
+"d’employé, une date de début et une date de fin."
 
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_ch_swissdec_interruption_wt
@@ -1014,6 +1020,11 @@ msgid "Set"
 msgstr "Définir"
 
 #. module: hr_work_entry
+#: model:ir.actions.server,name:hr_work_entry.action_hr_work_entry_set_to_draft
+msgid "Set to Draft"
+msgstr "Remettre en brouillon"
+
+#. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.l10n_sa_work_entry_type_sick_leave_100
 msgid "Sick Leave (100% Paid)"
 msgstr "Congé maladie (100 % Payé)"
@@ -1156,6 +1167,11 @@ msgid ""
 msgstr ""
 "Code de pays ISO en deux caractères. \n"
 "Vous pouvez utiliser ce champ pour une recherche rapide."
+
+#. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_form
+msgid "The amount of work on the day should not exceed 24 hours."
+msgstr "La quantité de travail sur la journée ne doit pas dépasser 24 heures."
 
 #. module: hr_work_entry
 #. odoo-python
@@ -1424,6 +1440,9 @@ msgstr "Vacances jeunes"
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_calendar_multi_create_form
 msgid "hours"
 msgstr "heures"
+
+#~ msgid "%(employee)s does not have a contract on %(date)s."
+#~ msgstr "%(employee)s n’a pas de contrat le %(date)s."
 
 #~ msgid "Beginning"
 #~ msgstr "Début"

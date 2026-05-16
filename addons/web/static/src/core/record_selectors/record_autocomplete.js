@@ -100,8 +100,12 @@ export class RecordAutocomplete extends Component {
             : undefined;
         // fine for now but we don't like this kind of dependence of core to views
         const SelectCreateDialog = registry.category("dialogs").get("select_create");
+        let title = _t("Search");
+        if (fieldString && fieldString.trim()) {
+            title = _t("Search: %s", fieldString);
+        }
         this.addDialog(SelectCreateDialog, {
-            title: _t("Search: %s", fieldString),
+            title,
             dynamicFilters,
             domain: this.getDomain(),
             resModel,

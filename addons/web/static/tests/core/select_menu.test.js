@@ -729,7 +729,7 @@ test("When multiSelect is enable, value is an array of values, multiple choices 
 
     // Select second choice
     await open();
-    expect(".o_select_menu_item:nth-of-type(1).active").toHaveCount(1);
+    expect(".o_select_menu_item:nth-of-type(1).selected").toHaveCount(1);
 
     await editSelectMenu(".o_select_menu input", { index: 1 });
     expect.verifySteps([["a", "b"]]);
@@ -737,7 +737,7 @@ test("When multiSelect is enable, value is an array of values, multiple choices 
     expect(".o_select_menu .o_tag_badge_text").toHaveCount(2);
 
     await open();
-    expect(".o_select_menu_item.active").toHaveCount(2);
+    expect(".o_select_menu_item.selected").toHaveCount(2);
 });
 
 test("When multiSelect is enable, allow deselecting elements by clicking the selected choices inside the dropdown or by clicking the tags", async () => {
@@ -778,7 +778,7 @@ test("When multiSelect is enable, allow deselecting elements by clicking the sel
     expect(".o_select_menu .o_tag_badge_text").toHaveText("B");
 
     await open();
-    expect(".o_select_menu_item.active").toHaveCount(1);
+    expect(".o_select_menu_item.selected").toHaveCount(1);
 
     await click(".o_tag .o_delete");
     await animationFrame();

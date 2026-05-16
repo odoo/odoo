@@ -7,10 +7,15 @@ import { loadCSS } from "@web/core/assets";
 import { BuilderFontSizeSelector } from "./font_size_selector";
 import { withSequence } from "@html_editor/utils/resource";
 
+/**
+ * @typedef {string[]} fontCssVariables
+ */
+
 export class BuilderFontPlugin extends Plugin {
     static id = "builderFont";
     static shared = ["getFontsCache", "getFontsData"];
     static dependencies = ["toolbar"];
+    /** @type {import("plugins").BuilderResources} */
     resources = {
         // Lists CSS variables that will be reset when a font is deleted if
         // they refer to that font.
@@ -91,7 +96,7 @@ export class BuilderFontPlugin extends Plugin {
         for (const font of googleFonts) {
             const fontURL = `https://fonts.googleapis.com/css?family=${encodeURIComponent(
                 font
-            ).replace(/%20/g, "+")}`;
+            ).replace(/%20/g, "+")}:300,300i,400,400i,700,700i`;
             fontsToLoad.push(fontURL);
         }
         for (const font of googleLocalFonts) {

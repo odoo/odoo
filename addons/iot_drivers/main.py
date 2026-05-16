@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
+import platform
 import requests
 import schedule
 import subprocess
@@ -7,7 +8,7 @@ from threading import Thread
 import time
 
 from odoo.addons.iot_drivers.tools import certificate, helpers, upgrade, wifi
-from odoo.addons.iot_drivers.tools.system import IS_RPI
+from odoo.addons.iot_drivers.tools.system import IS_RPI, IS_WINDOWS
 from odoo.addons.iot_drivers.websocket_client import WebsocketClient
 
 if IS_RPI:
@@ -23,11 +24,10 @@ unsupported_devices = {}
 
 
 class Manager(Thread):
-    daemon = True
     ws_channel = ""
 
     def __init__(self):
-        super().__init__()
+        super().__init__(daemon=True)
         self.identifier = helpers.get_identifier()
         self.domain = self._get_domain()
         self.version = helpers.get_version(detailed_version=True)
@@ -82,9 +82,11 @@ class Manager(Thread):
         """
         iot_box = {
             'identifier': self.identifier,
+            'mac': helpers.get_mac_address(),
             'ip': self.domain,
             'token': helpers.get_token(),
             'version': self.version,
+            "l10n_eg_proxy_token": helpers.get_conf("proxy_access_token", "options"),
         }
         devices_list = {}
         for device in self.previous_iot_devices.values():
@@ -137,6 +139,8 @@ class Manager(Thread):
 
         helpers.start_nginx_server()
         _logger.info("IoT Box Image version: %s", helpers.get_version(detailed_version=True))
+        if IS_WINDOWS:
+            _logger.info("Windows version: %s", platform.platform())
         upgrade.check_git_branch()
 
         if IS_RPI and helpers.get_odoo_server_url():
@@ -156,6 +160,7 @@ class Manager(Thread):
         # Set scheduled actions
         schedule.every().day.at("00:00").do(certificate.ensure_validity)
         schedule.every().day.at("00:00").do(helpers.reset_log_level)
+        schedule.every().day.at("00:00").do(upgrade.check_git_branch)
 
         # Set up the websocket connection
         ws_client = WebsocketClient(self.ws_channel)

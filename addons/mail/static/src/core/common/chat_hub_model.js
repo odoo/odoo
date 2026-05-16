@@ -4,7 +4,7 @@ import { fields, Record } from "./record";
 import { Deferred, Mutex } from "@web/core/utils/concurrency";
 
 export const CHAT_HUB_KEY = "mail.ChatHub";
-const CHAT_HUB_COMPACT_LS = "mail.user_setting.chathub_compact";
+export const CHAT_HUB_COMPACT_LS = "mail.user_setting.chathub_compact";
 
 export class ChatHub extends Record {
     BUBBLE = 56; // same value as $o-mail-ChatHub-bubblesWidth
@@ -21,12 +21,12 @@ export class ChatHub extends Record {
         const chatHub = super.new(...arguments);
         browser.addEventListener("storage", (ev) => {
             if (ev.key === CHAT_HUB_KEY) {
-                chatHub.load(ev.newValue);
+                chatHub.load(ev.newValue || undefined);
             } else if (ev.key === null) {
                 chatHub.load();
             }
             if (ev.key === CHAT_HUB_COMPACT_LS) {
-                chatHub.compact = ev.newValue === "true";
+                chatHub._recomputeCompact++;
             }
         });
         chatHub
@@ -34,18 +34,11 @@ export class ChatHub extends Record {
             .then(() => chatHub.initPromise.resolve());
         return chatHub;
     }
-
+    _recomputeCompact = 0;
     compact = fields.Attr(false, {
         compute() {
+            void this._recomputeCompact;
             return browser.localStorage.getItem(CHAT_HUB_COMPACT_LS) === "true";
-        },
-        /** @this {import("models").Chathub} */
-        onUpdate() {
-            if (this.compact) {
-                browser.localStorage.setItem(CHAT_HUB_COMPACT_LS, this.compact.toString());
-            } else {
-                browser.localStorage.removeItem(CHAT_HUB_COMPACT_LS);
-            }
         },
     });
     canShowOpened = fields.Many("ChatWindow");
@@ -78,7 +71,8 @@ export class ChatHub extends Record {
         for (const cw of this.opened) {
             cw.bypassCompact = false;
         }
-        this.compact = true;
+        browser.localStorage.setItem(CHAT_HUB_COMPACT_LS, true);
+        this._recomputeCompact++;
     }
 
     onRecompute() {
@@ -95,6 +89,14 @@ export class ChatHub extends Record {
     async _load(str) {
         /** @type {{ opened: Object[], folded: Object[] }} */
         const { opened = [], folded = [] } = JSON.parse(str);
+        const hasInvalidData =
+            opened.some((data) => !data.id || !data.model) ||
+            folded.some((data) => !data.id || !data.model);
+        if (hasInvalidData) {
+            opened.length = 0;
+            folded.length = 0;
+            browser.localStorage.removeItem(CHAT_HUB_KEY);
+        }
         const getThread = (data) => this.store.Thread.getOrFetch(data, ["display_name"]);
         const openPromises = opened.map(getThread);
         const foldPromises = folded.map(getThread);

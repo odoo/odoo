@@ -7,13 +7,13 @@
 # Wil Odoo, 2025
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Tony Ng (ngto)" <ngto@odoo.com>, 2025.
+# "Tony Ng (ngto)" <ngto@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:37+0000\n"
-"PO-Revision-Date: 2025-10-17 08:20+0000\n"
+"POT-Creation-Date: 2026-02-20 18:35+0000\n"
+"PO-Revision-Date: 2026-04-17 09:38+0000\n"
 "Last-Translator: \"Tony Ng (ngto)\" <ngto@odoo.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
 "projects/odoo-19/website_slides/zh_Hant/>\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__members_engaged_count
@@ -177,8 +177,8 @@ msgid ""
 "<a href=\"#\" class=\"btn btn-outline-primary o_translate_inline\">Discover "
 "more</a>"
 msgstr ""
-"<a href=\"#\" class=\"btn btn-outline-primary o_translate_inline\""
-">發現更多</a>"
+"<a href=\"#\" class=\"btn btn-outline-primary o_translate_inline\">發現更多</"
+"a>"
 
 #. module: website_slides
 #: model_terms:slide.slide,html_content:website_slides.slide_slide_demo_1_4
@@ -188,17 +188,8 @@ msgid ""
 "<a href=\"/contactus\" class=\"btn btn-primary rounded-circle "
 "o_translate_inline\">Contact us</a>"
 msgstr ""
-"<a href=\"/contactus\" class="
-"\"btn btn-primary rounded-circle o_translate_inline\">聯絡我們</a>"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.profile_access_denied
-msgid ""
-"<a t-attf-href=\"/slides/course-#{request.params.get('channel_id')}\" "
-"class=\"o_translate_inline\">Return to the course.</a>"
-msgstr ""
-"<a t-attf-href=\"/slides/course-#{request.params.get('channel_id')}\" "
-"class=\"o_translate_inline\">返回課程</a>"
+"<a href=\"/contactus\" class=\"btn btn-primary rounded-circle "
+"o_translate_inline\">聯絡我們</a>"
 
 #. module: website_slides
 #. odoo-python
@@ -312,32 +303,32 @@ msgid ""
 "            "
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
-"                    <div style="
-"\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"                        <p style=\"margin: 0px;\"><t t-out="
-"\"object.partner_id.name or ''\">Brandon Freeman</t> 你好！</p><br/>\n"
+"                    <div style=\"margin: 0px; padding: 0px; font-size: 13px;"
+"\">\n"
+"                        <p style=\"margin: 0px;\"><t t-"
+"out=\"object.partner_id.name or ''\">Brandon Freeman</t> 你好！</p><br/>\n"
 "                        <p><b>恭喜！</b></p>\n"
-"                        <p>你已完成以下課程： <b t-out="
-"\"object.channel_id.name or ''\">園藝基礎</b></p>\n"
+"                        <p>你已完成以下課程： <b t-"
+"out=\"object.channel_id.name or ''\">園藝基礎</b></p>\n"
 "                        <p>看看其他可以報名的課程。</p><br/>\n"
 "\n"
-"                        <div style="
-"\"padding: 16px 8px 16px 8px; text-align: center;\">\n"
+"                        <div style=\"padding: 16px 8px 16px 8px; text-align: "
+"center;\">\n"
 "                            <a href=\"/slides\" t-attf-style=\"background-"
 "color: {{object.channel_id.user_id.company_id.email_secondary_color or "
-"'#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: {{"
-"object.channel_id.user_id.company_id.email_primary_color or '#FFFFFF'}}; "
+"'#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: "
+"{{object.channel_id.user_id.company_id.email_primary_color or '#FFFFFF'}}; "
 "border-radius: 5px;\">\n"
 "                                探索課程\n"
 "                            </a>\n"
 "                        </div>\n"
 "                        希望你喜歡這獨家內容！\n"
-"                        <t t-if=\"object.channel_id.user_id.signature\" "
-"data-o-mail-quote-container=\"1\">\n"
+"                        <t t-if=\"object.channel_id.user_id.signature\" data-"
+"o-mail-quote-container=\"1\">\n"
 "                            <br/>\n"
 "                            <div data-o-mail-quote=\"1\">--<br data-o-mail-"
-"quote=\"1\"/><t t-out=\"object.channel_id.user_id.signature or ''\" data-o"
-"-mail-quote=\"1\">Mitchell Admin</t></div>\n"
+"quote=\"1\"/><t t-out=\"object.channel_id.user_id.signature or ''\" data-o-"
+"mail-quote=\"1\">Mitchell Admin</t></div>\n"
 "                        </t>\n"
 "                    </div>\n"
 "                </div>\n"
@@ -640,8 +631,8 @@ msgstr "<i class=\"fa fa-cloud-upload me-1\"/> 加入內容"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
-msgid "<i class=\"fa fa-comments\"/> Comments ("
-msgstr "<i class=\"fa fa-comments\"/>評論 （</i>"
+msgid "<i class=\"fa fa-comments\"/> Comments"
+msgstr ""
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
@@ -960,8 +951,8 @@ msgid ""
 "<span class=\"d-none d-md-inline me-2 me-md-0\">Start now</span><i "
 "class=\"oi oi-arrow-right d-md-none\" aria-hidden=\"true\"/>"
 msgstr ""
-"<span class=\"d-none d-md-inline me-2 me-md-0\">立即開始</span><i class="
-"\"oi oi-arrow-right d-md-none\" aria-hidden=\"true\"/>"
+"<span class=\"d-none d-md-inline me-2 me-md-0\">立即開始</span><i class=\"oi "
+"oi-arrow-right d-md-none\" aria-hidden=\"true\"/>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
@@ -988,8 +979,8 @@ msgid ""
 "<span class=\"me-2 d-none d-md-inline\">Continue</span><i class=\"oi oi-"
 "arrow-right\" aria-hidden=\"true\"/>"
 msgstr ""
-"<span class=\"me-2 d-none d-md-inline\">繼續</span><i class="
-"\"oi oi-arrow-right\" aria-hidden=\"true\"/>"
+"<span class=\"me-2 d-none d-md-inline\">繼續</span><i class=\"oi oi-arrow-"
+"right\" aria-hidden=\"true\"/>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.course_slides_list
@@ -1035,8 +1026,8 @@ msgid ""
 "<span class=\"position-absolute top-0 badge bg-secondary mt-2 ms-2\">New "
 "Content</span>"
 msgstr ""
-"<span class=\"position-absolute top-0 badge bg-secondary mt-2 ms-2\""
-">新內容</span>"
+"<span class=\"position-absolute top-0 badge bg-secondary mt-2 ms-2\">新內容</"
+"span>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_content_detailed
@@ -2783,6 +2774,15 @@ msgid "Defines the content that will be promoted on the course home page"
 msgstr "定義將在課程主頁上推廣的內容"
 
 #. module: website_slides
+#: model:ir.model.fields,help:website_slides.field_slide_channel__channel_type
+#: model:ir.model.fields,help:website_slides.field_slide_channel_partner__channel_type
+#: model:ir.model.fields,help:website_slides.field_slide_slide__channel_type
+msgid ""
+"Defines the course type (e.g., \"Training\" for interactive learning, or "
+"\"Documentation\" for resources and guides)."
+msgstr ""
+
+#. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__publish_template_id
 msgid ""
 "Defines the email your Attendees will receive each time you upload new "
@@ -3928,7 +3928,8 @@ msgstr "它看起來應該類似"
 msgid ""
 "Jim and Todd plant a potted tree for a customer of Knecht's Nurseries and "
 "Landscaping. Narrated by Leif Knecht, owner."
-msgstr "Jim 及 Todd 為 Knecht 苗圃及園藝公司的一名客戶，種植了一棵盆栽樹。由公司東主 "
+msgstr ""
+"Jim 及 Todd 為 Knecht 苗圃及園藝公司的一名客戶，種植了一棵盆栽樹。由公司東主 "
 "Leif Knecht 主講。"
 
 #. module: website_slides
@@ -4313,7 +4314,8 @@ msgstr "益處非凡的胡蘿蔔"
 msgid ""
 "Mighty forest just don't appear in a few weeks. Learn how time made our "
 "forests mighty and mysterious."
-msgstr "強大的森林只是在幾週內不會出現。了解時間如何讓我們的森林變得強大而神秘。"
+msgstr ""
+"強大的森林只是在幾週內不會出現。了解時間如何讓我們的森林變得強大而神秘。"
 
 #. module: website_slides
 #. odoo-javascript
@@ -4702,9 +4704,9 @@ msgid ""
 "usually be a placeholder expression that provides the appropriate language, "
 "e.g. {{ object.partner_id.lang }}."
 msgstr ""
-"發送電子郵件時使用的翻譯語言（ISO "
-"代碼），可選填。若未有設定，會使用合作夥伴的主要語言。通常，這會是佔位表達式"
-"，指示適當的語言，例如：{{ object.partner_id.lang }}。"
+"發送電子郵件時使用的翻譯語言（ISO 代碼），可選填。若未有設定，會使用合作夥伴"
+"的主要語言。通常，這會是佔位表達式，指示適當的語言，例如："
+"{{ object.partner_id.lang }}。"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
@@ -4759,6 +4761,7 @@ msgstr "樞紐分析表"
 #: code:addons/website_slides/static/src/xml/slide_course_join.xml:0
 #: code:addons/website_slides/static/src/xml/slide_quiz.xml:0
 #: model_terms:ir.ui.view,arch_db:website_slides.course_join
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
 msgid "Please"
 msgstr "請"
 
@@ -4769,23 +4772,14 @@ msgid ""
 "Please %(a_login_open)slogin%(a_login_close)s or %(a_signup_open)screate an "
 "account%(a_signup_close)s to vote for this lesson"
 msgstr ""
-"請 %(a_login_open)s登入%(a_login_close)s 或 "
-"%(a_signup_open)s建立一個帳戶%(a_signup_close)s，以為此課堂投票。"
+"請 %(a_login_open)s登入%(a_login_close)s 或 %(a_signup_open)s建立一個帳戶%"
+"(a_signup_close)s，以為此課堂投票。"
 
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/interactions/slide_like.js:0
 msgid "Please %(a_login_open)slogin%(a_login_close)s to vote for this lesson"
 msgstr "請 %(a_login_open)s登入%(a_login_close)s 以為此課堂投票。"
-
-#. module: website_slides
-#: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
-msgid ""
-"Please <a t-attf-href=\"/odoo?redirect=#{request.httprequest.url}\" "
-"class=\"fw-bold o_translate_inline\"> login </a> to share this"
-msgstr ""
-"請<a t-attf-href=\"/odoo?redirect=#{request.httprequest.url}\" class=\"fw-"
-"bold o_translate_inline\">登入</a>以分享"
 
 #. module: website_slides
 #. odoo-python
@@ -5203,6 +5197,11 @@ msgid "Retry"
 msgstr "重試"
 
 #. module: website_slides
+#: model_terms:ir.ui.view,arch_db:website_slides.profile_access_denied
+msgid "Return to the course."
+msgstr ""
+
+#. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 msgid "Review Course"
 msgstr "評價課程"
@@ -5381,7 +5380,7 @@ msgstr "手動選擇"
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_category.js:0
+#: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_category.xml:0
 msgid "Select or create a category"
 msgstr "選擇或建立類別"
 
@@ -5399,7 +5398,7 @@ msgstr "選擇或建立標籤組"
 
 #. module: website_slides
 #. odoo-javascript
-#: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_select_tags.xml:0
+#: code:addons/website_slides/static/src/js/public/components/slide_upload_dialog/slide_upload_category.xml:0
 msgid "Select or create tags"
 msgstr "選擇或建立標籤"
 
@@ -6496,7 +6495,7 @@ msgstr "Vimeo："
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_tag_group__website_published
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__website_published
 msgid "Visible on current website"
-msgstr "在當前網站可見"
+msgstr "在目前網站顯示"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__total_views
@@ -6697,7 +6696,8 @@ msgid ""
 "Write one or two paragraphs describing your product, services or a specific "
 "feature.<br> To be successful your content needs to be useful to your "
 "readers."
-msgstr "寫一兩段文字，描述你的產品或服務，或個別特色及功能。<br>成功的內容必須對讀者"
+msgstr ""
+"寫一兩段文字，描述你的產品或服務，或個別特色及功能。<br>成功的內容必須對讀者"
 "有用。"
 
 #. module: website_slides
@@ -7154,6 +7154,7 @@ msgstr "參加"
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/slide_share_dialog/email_sharing_input.xml:0
 #: code:addons/website_slides/static/src/xml/slide_course_join.xml:0
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
 msgid "login"
 msgstr "登入"
 
@@ -7238,6 +7239,7 @@ msgstr "要求存取"
 #. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/public/components/slide_share_dialog/email_sharing_input.xml:0
+#: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
 msgid "to share this"
 msgstr "分享這個"
 
@@ -7272,6 +7274,23 @@ msgstr "{{ user.name }} 向你分享了 {{ object.slide_category }}！"
 #: model_terms:ir.ui.view,arch_db:website_slides.course_nav
 msgid "└<span class=\"ms-1\">Uncategorized</span>"
 msgstr "└ <span class=\"ms-1\">未分類</span>"
+
+#~ msgid ""
+#~ "<a t-attf-href=\"/slides/course-#{request.params.get('channel_id')}\" "
+#~ "class=\"o_translate_inline\">Return to the course.</a>"
+#~ msgstr ""
+#~ "<a t-attf-href=\"/slides/course-#{request.params.get('channel_id')}\" "
+#~ "class=\"o_translate_inline\">返回課程</a>"
+
+#~ msgid ""
+#~ "Please <a t-attf-href=\"/odoo?redirect=#{request.httprequest.url}\" "
+#~ "class=\"fw-bold o_translate_inline\"> login </a> to share this"
+#~ msgstr ""
+#~ "請<a t-attf-href=\"/odoo?redirect=#{request.httprequest.url}\" class=\"fw-"
+#~ "bold o_translate_inline\">登入</a>以分享"
+
+#~ msgid "<i class=\"fa fa-comments\"/> Comments ("
+#~ msgstr "<i class=\"fa fa-comments\"/>評論 （</i>"
 
 #~ msgid ""
 #~ "<div style=\"margin: 0px; padding: 0px;\">\n"

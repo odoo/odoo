@@ -9,8 +9,10 @@ import selectors
 import threading
 import time
 from psycopg2 import InterfaceError
+from psycopg2.pool import PoolError
 
 import odoo
+from ..tools import orjson
 from odoo import api, fields, models
 from odoo.service.server import CommonServer
 from odoo.tools import json_default, SQL
@@ -182,7 +184,7 @@ class BusBus(models.Model):
         for notif in notifications:
             result.append({
                 'id': notif['id'],
-                'message': json.loads(notif['message']),
+                'message': orjson.loads(notif['message']),
             })
         return result
 
@@ -246,7 +248,7 @@ class ImDispatch(threading.Thread):
                     conn.poll()
                     channels = []
                     while conn.notifies:
-                        channels.extend(json.loads(conn.notifies.pop().payload))
+                        channels.extend(orjson.loads(conn.notifies.pop().payload))
                     # relay notifications to websockets that have
                     # subscribed to the corresponding channels.
                     websockets = set()
@@ -260,7 +262,7 @@ class ImDispatch(threading.Thread):
             try:
                 self.loop()
             except Exception as exc:
-                if isinstance(exc, InterfaceError) and stop_event.is_set():
+                if isinstance(exc, (InterfaceError, PoolError)) and stop_event.is_set():
                     continue
                 _logger.exception("Bus.loop error, sleep and retry")
                 time.sleep(TIMEOUT)

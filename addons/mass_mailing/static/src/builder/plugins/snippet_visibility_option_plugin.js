@@ -3,13 +3,31 @@ import { registry } from "@web/core/registry";
 import { SnippetVisibilityOption } from "../options/snippet_visibility_option";
 import { withSequence } from "@html_editor/utils/resource";
 import { effect } from "@web/core/utils/reactive";
+import { DataAttributeAction } from "@html_builder/core/core_builder_action_plugin";
+
+class DataAttributeChangeAction extends DataAttributeAction {
+    static id = "dataAttributeChangeAction";
+    apply(context) {
+        super.apply(context);
+        this.config.onChange?.(context);
+    }
+    isApplied({ editingElement, params: { mainParam: attributeName } = {}, value }) {
+        if (value) {
+            return Boolean(editingElement.dataset[attributeName]) === Boolean(value);
+        } else {
+            return super.isApplied(...arguments);
+        }
+    }
+}
 
 class SnippetVisibilityPlugin extends Plugin {
     static id = "mass_mailing.SnippetVisibility";
     static shared = ["getModel"];
 
     resources = {
+        builder_actions: { DataAttributeChangeAction },
         builder_options: [withSequence(Infinity, SnippetVisibilityOption)],
+        system_attributes: "data-filter-domain",
     };
     setup() {
         this.mailingModelId = this.config.record.data.mailing_model_id.id;
@@ -34,7 +52,7 @@ class SnippetVisibilityPlugin extends Plugin {
     resetFilterDomains() {
         const filteredElements = this.editable.querySelectorAll("[data-filter-domain]");
         filteredElements.forEach((el) => el.removeAttribute("data-filter-domain"));
-        this.dispatchTo("trigger_dom_updated");
+        this.config.onChange?.({ isPreviewing: false });
     }
 }
 

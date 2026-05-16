@@ -49,6 +49,7 @@ from packaging.markers import Marker
 from packaging.requirements import Requirement
 from packaging.tags import mac_platforms  # noqa: PLC2701
 from packaging.utils import canonicalize_name
+from packaging.version import parse, InvalidVersion
 
 from pip._internal.index.package_finder import (
     LinkEvaluator,  # noqa: PLC2701
@@ -80,9 +81,10 @@ def urlopen(url):
 
 
 def parse_version(vstring: str) -> Optional[Version]:
-    if not vstring:
+    try:
+        return parse(vstring).release
+    except InvalidVersion:
         return None
-    return tuple(map(int, vstring.split('.')))
 
 
 def cleanup_debian_version(s: str) -> str:
@@ -421,7 +423,7 @@ def main(args):
     output_format = 'ansi'
     if args.format:
         output_format = args.format
-        assert format in SUPPORTED_FORMATS
+        assert output_format in SUPPORTED_FORMATS
     elif args.output:
         output_format = 'txt'
         ext = args.output.split('.')[-1]

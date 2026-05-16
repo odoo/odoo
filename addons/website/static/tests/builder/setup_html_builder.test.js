@@ -56,3 +56,17 @@ test("Admin navbar is hidden in edit mode", async () => {
     await waitFor(":iframe section");
     expect(".o_main_navbar").not.toBeVisible();
 });
+
+test("saved translation branding is removed in edit mode", async () => {
+    // This situation should not happen with up-to-date code, but translation
+    // branding nodes could have been saved with code between d4d428ff1d (29th
+    // October 2025) and f09dc4d9d3 (19th November 2025)
+    await setupWebsiteBuilder(`
+        <h1 class="title">
+            <span data-oe-model="ir.ui.view" data-oe-id="526"
+                  data-oe-field="arch_db" data-oe-translation-state="to_translate"
+                  data-oe-translation-source-sha="123">Hello</span>
+        </h1>
+    `);
+    expect(":iframe h1.title").toHaveInnerHTML("Hello");
+});

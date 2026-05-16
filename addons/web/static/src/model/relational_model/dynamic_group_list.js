@@ -293,7 +293,10 @@ export class DynamicGroupList extends DynamicList {
 
     async _deleteGroups(groups) {
         const shouldReload = groups.some((g) => g.count > 0);
-        await this._unlinkGroups(groups);
+        const succeeded = await this._unlinkGroups(groups);
+        if (succeeded === false) {
+            return;
+        }
         const configGroups = { ...this.config.groups };
         for (const group of groups) {
             delete configGroups[group.value];

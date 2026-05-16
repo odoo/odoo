@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import date
+
 from odoo import api, fields, models
 from odoo.exceptions import AccessError
 from odoo.fields import Domain
@@ -18,11 +20,20 @@ class HrLeaveAllocationGenerateMultiWizard(models.TransientModel):
             domain &= Domain(['|', ('leave_manager_id', '=', self.env.user.id), ('user_id', '=', self.env.user.id)])
         return domain
 
+    def _domain_holiday_status_id(self):
+        domain = [
+            ('company_id', 'in', self.env.companies.ids + [False]),
+            ('requires_allocation', '=', True),
+        ]
+        if self.env.user.has_group('hr_holidays.group_hr_holidays_user'):
+            return domain
+        return Domain.AND([domain, [('employee_requests', '=', True)]])
+
     name = fields.Char("Description", compute="_compute_name", store=True, readonly=False)
     duration = fields.Float(string="Allocation")
     holiday_status_id = fields.Many2one(
         "hr.leave.type", string="Time Off Type", required=True,
-        domain="[('company_id', 'in', [company_id, False])]")
+        domain=_domain_holiday_status_id)
     request_unit = fields.Selection(related="holiday_status_id.request_unit")
     allocation_mode = fields.Selection([
         ('employee', 'By Employee'),
@@ -104,6 +115,10 @@ class HrLeaveAllocationGenerateMultiWizard(models.TransientModel):
                 mail_notify_force_send=False,
                 mail_activity_automation_skip=True,
             ).create(vals_list)
+            accrual_allocations = allocations.filtered(lambda a: a.allocation_type == 'accrual')
+            for date_to, allocation in accrual_allocations.grouped('date_to').items():
+                date_to = min(date_to, date.today()) if date_to else False
+                allocation._process_accrual_plans(date_to)
             allocations.filtered(lambda c: c.validation_type not in ('no_validation', 'hr')).action_approve()
             if self.env.user.has_group('hr_holidays.group_hr_holidays_user'):
                 allocations.filtered(lambda c: c.validation_type == 'hr').action_approve()

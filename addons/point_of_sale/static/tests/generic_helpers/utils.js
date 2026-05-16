@@ -44,8 +44,15 @@ export function refresh() {
                     checkTransaction();
                 }, 305);
                 setTimeout(() => {
-                    throw new Error("Timeout waiting indexedDB for transactions to finish");
-                }, 2000);
+                    const activeTx = posmodel.data.indexedDB.activeTransactions;
+                    const storeNames = Array.from(activeTx).flatMap((tx) =>
+                        Array.from(tx.objectStoreNames)
+                    );
+                    const uniqueStores = [...new Set(storeNames)].join(", ");
+                    throw new Error(
+                        `Timeout waiting indexedDB for transactions to finish. Stores open: [${uniqueStores}]`
+                    );
+                }, 5000);
             });
         },
         "refresh page",

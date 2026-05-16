@@ -143,7 +143,7 @@ test("media dialog: upload", async function () {
     expect("[name='attachment_ids'] .o_attachment[title='test.jpg']").toHaveCount(1);
 
     await contains(".o_form_button_save").click();
-    expect.verifySteps(["web_save"]);
+    await expect.waitForSteps(["web_save"]);
 });
 
 test("mention a partner", async () => {
@@ -185,7 +185,7 @@ test("mention a partner", async () => {
     await press("enter");
     expect("[name='body'] .odoo-editor-editable").toHaveInnerHTML(`
     <p>
-        <a target="_blank" data-oe-protected="true" contenteditable="false" href="https://www.hoot.test/odoo/res.partner/17" class="o_mail_redirect" data-oe-id="17" data-oe-model="res.partner">
+        <a href="/odoo/res.partner/17" class="o_mail_redirect" data-oe-id="17" data-oe-model="res.partner" target="_blank" contenteditable="false">
             @Mitchell Admin
         </a>
     </p>`);

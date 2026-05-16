@@ -100,6 +100,7 @@ export class MailMessage extends models.ServerModel {
             if (thread) {
                 const thread_data = {
                     display_name: thread.name ?? thread.display_name,
+                    has_mail_thread: this.env[message.model]._inherit?.includes("mail.thread"),
                     module_icon: "/base/static/description/icon.png",
                 };
                 if (for_current_user && add_followers) {
@@ -439,7 +440,7 @@ export class MailMessage extends models.ServerModel {
         ]);
         let reaction_group = mailDataHelpers.Store.many(
             MailMessageReaction.browse(reactions),
-            "ADD"
+            makeKwArgs({ mode: "ADD" })
         );
         if (reactions.length === 0) {
             reaction_group = [["DELETE", { message: this.browse(id), content: content }]];

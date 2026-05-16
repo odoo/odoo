@@ -5,6 +5,7 @@ class ImageSnippetOptionPlugin extends Plugin {
     static id = "imageSnippetOption";
     static dependencies = ["media"];
     static shared = ["onSnippetDropped"];
+    /** @type {import("plugins").BuilderResources} */
     resources = {
         on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
         so_content_addition_selector: [".s_image"],
@@ -29,6 +30,7 @@ class ImageSnippetOptionPlugin extends Plugin {
                     if (dragState.draggedEl.classList.contains("o_grid_item")) {
                         dragState.draggedEl.classList.add("o_grid_item_image");
                     }
+                    dragState.replacedSnippetEl = selectedImageEl;
                 },
             });
             onClose.then(() => {

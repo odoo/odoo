@@ -1,7 +1,6 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
-
 WITHHOLDING_TYPE_SELECTION = [
     ('RT01', '[RT01] Withholding for persons'),
     ('RT02', '[RT02] Withholding for personal businesses'),
@@ -46,28 +45,28 @@ WITHHOLDING_REASON_SELECTION = [
 ]
 
 PENSION_FUND_TYPE_SELECTION = [
-    ('TC01', 'National pension fund for lawyers and solicitors'),
-    ('TC02', 'Pension fund for accountants with a degree'),
-    ('TC03', 'Pension fund for surveyors'),
-    ('TC04', 'National pension fund for associated engineers and architects'),
-    ('TC05', 'National pension fund for notaries'),
-    ('TC06', 'Pension fund for accountants without a degree and commercial experts'),
-    ('TC07', 'ENASARCO pension fund for sales agents'),
-    ('TC08', 'ENPACL pension fund for labor consultants'),
-    ('TC09', 'ENPAM pension fund for doctors'),
-    ('TC10', 'ENPAF pension fund for chemists'),
-    ('TC11', 'ENPAV pension fund for veterinaries'),
-    ('TC12', 'ENPAIA pension fund for people working in agriculture'),
-    ('TC13', 'Pension fund for employees in delivery and marine agencies'),
-    ('TC14', 'INPGI pension fund for journalists'),
-    ('TC15', 'ONAOSI fund for sanitary orphans'),
-    ('TC16', 'CASAGIT Additional pension fund for journalists'),
-    ('TC17', 'EPPI pension fund for industrial experts'),
-    ('TC18', 'EPAP pension fund'),
-    ('TC19', 'ENPAB national pension fund for biologists'),
-    ('TC20', 'ENPAPI national pension fund for nurses'),
-    ('TC21', 'ENPAP national pension fund for psychologists'),
-    ('TC22', 'INPS national pension fund'),
+    ('TC01', '[TC01] National pension fund for lawyers and solicitors'),
+    ('TC02', '[TC02] Pension fund for accountants with a degree'),
+    ('TC03', '[TC03] Pension fund for surveyors'),
+    ('TC04', '[TC04] National pension fund for associated engineers and architects'),
+    ('TC05', '[TC05] National pension fund for notaries'),
+    ('TC06', '[TC06] Pension fund for accountants without a degree and commercial experts'),
+    ('TC07', '[TC07] ENASARCO pension fund for sales agents'),
+    ('TC08', '[TC08] ENPACL pension fund for labor consultants'),
+    ('TC09', '[TC09] ENPAM pension fund for doctors'),
+    ('TC10', '[TC10] ENPAF pension fund for chemists'),
+    ('TC11', '[TC11] ENPAV pension fund for veterinaries'),
+    ('TC12', '[TC12] ENPAIA pension fund for people working in agriculture'),
+    ('TC13', '[TC13] Pension fund for employees in delivery and marine agencies'),
+    ('TC14', '[TC14] INPGI pension fund for journalists'),
+    ('TC15', '[TC15] ONAOSI fund for sanitary orphans'),
+    ('TC16', '[TC16] CASAGIT Additional pension fund for journalists'),
+    ('TC17', '[TC17] EPPI pension fund for industrial experts'),
+    ('TC18', '[TC18] EPAP pension fund'),
+    ('TC19', '[TC19] ENPAB national pension fund for biologists'),
+    ('TC20', '[TC20] ENPAPI national pension fund for nurses'),
+    ('TC21', '[TC21] ENPAP national pension fund for psychologists'),
+    ('TC22', '[TC22] INPS national pension fund'),
 ]
 
 
@@ -83,6 +82,13 @@ class AccountTax(models.Model):
         match kind:
             case 'withholding':
                 return self.filtered(lambda tax: tax.l10n_it_withholding_type)
+            case 'withholding_no_enasarco':
+                # Enasarco has both withholding and pension fund types,
+                # but it must be considered a pension fund for the checks.
+                return self.filtered(lambda tax:
+                    tax.l10n_it_withholding_type
+                    and tax.l10n_it_withholding_type != 'RT04'
+                )
             case 'pension_fund':
                 return self.filtered(lambda tax: tax.l10n_it_pension_fund_type)
             case 'vat':
@@ -93,6 +99,12 @@ class AccountTax(models.Model):
             case _:
                 return super()._l10n_it_filter_kind(kind)
 
+    @api.onchange("l10n_it_withholding_type")
+    def _onchange_l10n_it_withholding_type(self):
+        """ When no withholding type is selected, there should be no withholding reason, the field is hidden """
+        taxes_to_be_cleared = self.filtered(lambda tax: tax.l10n_it_withholding_reason and not tax.l10n_it_withholding_type)
+        taxes_to_be_cleared.l10n_it_withholding_reason = False
+
     @api.constrains('amount', 'l10n_it_withholding_type', 'l10n_it_withholding_reason', 'l10n_it_pension_fund_type')
     def _validate_withholding(self):
         for tax in self:
@@ -102,3 +114,7 @@ class AccountTax(models.Model):
                 raise ValidationError(_("Tax '%s' has a withholding type, so the withholding reason must also be specified", tax.name))
             if tax.l10n_it_withholding_reason and not tax.l10n_it_withholding_type:
                 raise ValidationError(_("Tax '%s' has a withholding reason, so the withholding type must also be specified", tax.name))
+            if (tax.l10n_it_withholding_type == 'RT04') ^ (tax.l10n_it_pension_fund_type == 'TC07'):
+                raise ValidationError(_("Tax '%s' has one of withholding and pension fund types that do not relate to ENASARCO, and one that does.", tax.name))
+            if tax.l10n_it_withholding_type == 'RT04' and tax.l10n_it_withholding_reason != 'ZO':
+                raise ValidationError(_("Tax '%s' has withholding type ENASARCO, the withholding reason should be [ZO] - Other reason.", tax.name))

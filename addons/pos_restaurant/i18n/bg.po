@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* pos_restaurant
+# * pos_restaurant
 #
 # Translators:
 # Nikola Iliev, 2023
@@ -14,31 +14,45 @@
 # Rosen Vladimirov <vladimirov.rosen@gmail.com>, 2023
 # Albena Mincheva <albena_vicheva@abv.bg>, 2023
 # Maria Boyadjieva <marabo2000@gmail.com>, 2023
-#
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:36+0000\n"
-"PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Maria Boyadjieva <marabo2000@gmail.com>, 2023\n"
-"Language-Team: Bulgarian (https://app.transifex.com/odoo/teams/41243/bg/)\n"
+"POT-Creation-Date: 2026-04-10 18:37+0000\n"
+"PO-Revision-Date: 2025-11-08 21:54+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Bulgarian <https://translate.odoo.com/projects/odoo-19/"
+"pos_restaurant/bg/>\n"
 "Language: bg\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: pos_restaurant
 #. odoo-javascript
-#: code:addons/pos_restaurant/static/src/app/screens/payment_screen/payment_screen.xml:0
-msgid "/ Guest"
+#: code:addons/pos_restaurant/static/src/app/services/pos_store.js:0
+msgid " and $1"
+msgstr ""
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/split_bill_screen/split_bill_screen.xml:0
+msgid "% discount"
 msgstr ""
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/services/pos_store.js:0
-msgid "18:45 John 4P"
+msgid "%s, sent to the kitchen"
+msgstr ""
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/payment_screen/payment_screen.xml:0
+msgid "/ Guest"
 msgstr ""
 
 #. module: pos_restaurant
@@ -93,13 +107,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_screen.xml:0
 msgid "Add Table"
-msgstr ""
+msgstr "Добавете маса"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_screen.xml:0
 msgid "Add a new floor to get started."
-msgstr ""
+msgstr "Добавете нов етаж за да започнете."
 
 #. module: pos_restaurant
 #: model_terms:ir.actions.act_window,help:pos_restaurant.action_restaurant_floor_form
@@ -110,7 +124,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_screen.xml:0
 msgid "Add a new table to get started."
-msgstr ""
+msgstr "Добавете нова маса за да започнете."
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -139,7 +153,7 @@ msgstr ""
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Allow Bill Splitting"
-msgstr ""
+msgstr "Позволи разделяне на сметката."
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
@@ -176,7 +190,7 @@ msgstr "Архивирано"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_screen.js:0
 msgid "Are you sure?"
-msgstr ""
+msgstr "Сигурни ли сте?"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -186,6 +200,7 @@ msgstr ""
 
 #. module: pos_restaurant
 #. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_screen.xml:0
 #: code:addons/pos_restaurant/static/src/app/screens/tip_screen/tip_screen.xml:0
 msgid "Back"
 msgstr "Назад"
@@ -203,12 +218,12 @@ msgstr "Фоново изображение"
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.pos_food_bacon_product_template
 msgid "Bacon Burger"
-msgstr ""
+msgstr "Бургер с бекон"
 
 #. module: pos_restaurant
 #: model:product.attribute.value,name:pos_restaurant.pav_sides_fries
 msgid "Belgian fresh homemade fries"
-msgstr ""
+msgstr "Белгийски свежи домашни пържени картофи."
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -231,13 +246,13 @@ msgstr "Разделяне на фактура за покупка"
 #. module: pos_restaurant
 #: model:product.attribute.value,name:pos_restaurant.pav_extras_pizza_black_olives
 msgid "Black olives"
-msgstr ""
+msgstr "Черни маслини"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/product_screen/order_summary/order_summary.xml:0
 msgid "Book table"
-msgstr ""
+msgstr "Резервирай маса"
 
 #. module: pos_restaurant
 #: model:product.template,description_sale:pos_restaurant.product_old_fashioned_product_template
@@ -247,18 +262,18 @@ msgstr ""
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.burger_drink_combo_product_template
 msgid "Burger Menu Combo"
-msgstr ""
+msgstr "Бургер меню комбо"
 
 #. module: pos_restaurant
 #: model:pos.payment.method,name:pos_restaurant.payment_method
 msgid "Card"
-msgstr ""
+msgstr "Карта"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/product_screen/product_screen.xml:0
 msgid "Cart"
-msgstr ""
+msgstr "Количка"
 
 #. module: pos_restaurant
 #. odoo-python
@@ -329,7 +344,7 @@ msgstr "Настройки"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/receipt_screen/receipt_screen.xml:0
 msgid "Continue"
-msgstr ""
+msgstr "Продължи"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.product_cosmopolitan_product_template
@@ -342,7 +357,7 @@ msgstr ""
 #: code:addons/pos_restaurant/static/src/app/screens/product_screen/actionpad_widget/actionpad_widget.xml:0
 #: code:addons/pos_restaurant/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
 msgid "Course"
-msgstr ""
+msgstr "Курс"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -363,7 +378,7 @@ msgstr ""
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_order__course_ids
 msgid "Courses"
-msgstr ""
+msgstr "Курсове"
 
 #. module: pos_restaurant
 #: model:product.template,description_sale:pos_restaurant.product_cosmopolitan_product_template
@@ -405,7 +420,7 @@ msgstr ""
 #. module: pos_restaurant
 #: model:pos.preset,name:pos_restaurant.pos_delivery_preset
 msgid "Delivery"
-msgstr ""
+msgstr "Доставка"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
@@ -425,9 +440,9 @@ msgstr ""
 
 #. module: pos_restaurant
 #. odoo-javascript
-#: code:addons/pos_restaurant/static/src/app/utils/order_payment_validation.js:0
+#: code:addons/pos_restaurant/static/src/app/services/pos_store.js:0
 msgid "Discard"
-msgstr ""
+msgstr "Отхвърлете"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_config__display_name
@@ -446,7 +461,7 @@ msgstr "Име за показване"
 #. module: pos_restaurant
 #: model:pos.category,name:pos_restaurant.drinks
 msgid "Drinks"
-msgstr ""
+msgstr "Напитки"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
@@ -469,7 +484,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/components/navbar/navbar.xml:0
 msgid "Edit Plan"
-msgstr ""
+msgstr "Редактирайте Плана"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config__iface_splitbill
@@ -493,7 +508,7 @@ msgstr ""
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.espresso_product_template
 msgid "Espresso"
-msgstr ""
+msgstr "Еспресо"
 
 #. module: pos_restaurant
 #: model:product.attribute.value,name:pos_restaurant.pav_extras_pizza_extra_cheese
@@ -508,13 +523,13 @@ msgstr ""
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.fanta_product_template
 msgid "Fanta"
-msgstr ""
+msgstr "Фанта"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_screen.xml:0
 msgid "File"
-msgstr ""
+msgstr "Файл"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -527,7 +542,7 @@ msgstr ""
 #: code:addons/pos_restaurant/static/src/app/components/order_course/order_course.xml:0
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_order_course__fired
 msgid "Fired"
-msgstr ""
+msgstr "Уволнен"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_order_course__fired_date
@@ -553,7 +568,7 @@ msgstr "Име на под"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_screen.js:0
 msgid "Floor Name ?"
-msgstr ""
+msgstr "Име на Етаж ?"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -571,7 +586,7 @@ msgstr "Подови планировки"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_screen.js:0
 msgid "Floor name"
-msgstr ""
+msgstr "Име на етаж"
 
 #. module: pos_restaurant
 #. odoo-python
@@ -582,7 +597,7 @@ msgstr ""
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Floors"
-msgstr ""
+msgstr "Етажи"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
@@ -618,7 +633,7 @@ msgstr ""
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.green_tea_product_template
 msgid "Green Tea"
-msgstr ""
+msgstr "Зелен Чай"
 
 #. module: pos_restaurant
 #: model:product.attribute.value,name:pos_restaurant.pav_sides_grilled_vegetables
@@ -628,7 +643,7 @@ msgstr ""
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_preset__use_guest
 msgid "Guest"
-msgstr ""
+msgstr "Гост"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -664,7 +679,7 @@ msgstr "ID"
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.ice_tea_product_template
 msgid "Ice Tea"
-msgstr ""
+msgstr "Студен Чай"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__active
@@ -677,7 +692,7 @@ msgstr ""
 
 #. module: pos_restaurant
 #. odoo-javascript
-#: code:addons/pos_restaurant/static/src/app/utils/order_payment_validation.js:0
+#: code:addons/pos_restaurant/static/src/app/services/pos_store.js:0
 msgid ""
 "It seems that the order has not been sent. Would you like to send it to "
 "preparation?"
@@ -687,7 +702,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/components/numpad_dropdown/numpad_dropdown.xml:0
 msgid "Jump"
-msgstr ""
+msgstr "Скок"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -713,7 +728,7 @@ msgstr "Последно актуализирано на"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_screen.xml:0
 msgid "Loading"
-msgstr ""
+msgstr "Зареждане в системата"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -762,7 +777,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/services/pos_store.js:0
 msgid "Message"
-msgstr ""
+msgstr "Съобщение"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.milkshake_banana_product_template
@@ -777,7 +792,7 @@ msgstr "Минит мейд"
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.product_mojito_product_template
 msgid "Mojito"
-msgstr ""
+msgstr "Мохито"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.product_moscow_mule_product_template
@@ -804,7 +819,7 @@ msgstr ""
 #: code:addons/pos_restaurant/static/src/app/screens/product_screen/actionpad_widget/actionpad_widget.xml:0
 #: code:addons/pos_restaurant/static/src/app/screens/product_screen/product_screen.xml:0
 msgid "New"
-msgstr ""
+msgstr "Нов"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -816,13 +831,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_screen.xml:0
 msgid "New Order"
-msgstr ""
+msgstr "Нова поръчка"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/tip_screen/tip_screen.xml:0
 msgid "No Tip"
-msgstr ""
+msgstr "Без бакшиш"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -868,25 +883,23 @@ msgstr "Отворен"
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.view_pos_preset_form_inherit_pos_restaurant
 msgid "Options"
-msgstr ""
+msgstr "Настройки"
 
 #. module: pos_restaurant
 #. odoo-javascript
-#: code:addons/pos_restaurant/static/src/app/screens/product_screen/actionpad_widget/actionpad_widget.xml:0
-#: code:addons/pos_restaurant/static/src/app/screens/product_screen/product_screen.xml:0
-#: code:addons/pos_restaurant/static/src/app/utils/order_payment_validation.js:0
+#: code:addons/pos_restaurant/static/src/app/services/pos_store.js:0
 msgid "Order"
 msgstr "Поръчка"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_order_course__line_ids
 msgid "Order Lines"
-msgstr ""
+msgstr "Редове на поръчка"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_order_course__order_id
 msgid "Order Ref"
-msgstr ""
+msgstr "Референция за поръчка"
 
 #. module: pos_restaurant
 #: model:ir.model,name:pos_restaurant.model_restaurant_order_course
@@ -906,14 +919,14 @@ msgstr ""
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.pos_food_bolo_product_template
 msgid "Pasta Bolognese"
-msgstr ""
+msgstr "Паста Болонезе"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/product_screen/product_screen.xml:0
 #: code:addons/pos_restaurant/static/src/app/screens/receipt_screen/receipt_screen.xml:0
 msgid "Pay"
-msgstr ""
+msgstr "Плати"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -930,35 +943,35 @@ msgstr ""
 #. module: pos_restaurant
 #: model:product.attribute.value,name:pos_restaurant.pav_extras_pizza_pepperoni
 msgid "Pepperoni"
-msgstr ""
+msgstr "Пеперони"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_screen.xml:0
 msgid "Picture"
-msgstr ""
+msgstr "Картина"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.product_pina_colada_product_template
 msgid "Pina colada"
-msgstr ""
+msgstr "Пина колада"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.pos_food_margherita_product_template
 msgid "Pizza Margherita"
-msgstr ""
+msgstr "Пица Маргарита"
 
 #. module: pos_restaurant
 #: model:product.template,description_sale:pos_restaurant.pos_food_vege_product_template
 #: model:product.template,name:pos_restaurant.pos_food_vege_product_template
 msgid "Pizza Vegetarian"
-msgstr ""
+msgstr "Вегетарианска пица"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/product_screen/actionpad_widget/actionpad_widget.xml:0
 msgid "Plan"
-msgstr ""
+msgstr "Планирайте"
 
 #. module: pos_restaurant
 #. odoo-python
@@ -997,7 +1010,7 @@ msgstr "Сесия на център за продажби"
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__pos_config_ids
 msgid "Point of Sales"
-msgstr ""
+msgstr "Точка на продажба"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_iface_printbill
@@ -1033,7 +1046,7 @@ msgstr ""
 #. module: pos_restaurant
 #: model:ir.model.fields.selection,name:pos_restaurant.selection__pos_config__default_screen__register
 msgid "Register"
-msgstr ""
+msgstr "Регистрирайте"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1063,7 +1076,7 @@ msgstr "Премахването на маса не може да се отме�
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_screen.xml:0
 msgid "Rename"
-msgstr ""
+msgstr "Преименувай"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1076,7 +1089,7 @@ msgstr ""
 #: code:addons/pos_restaurant/models/pos_config.py:0
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.view_pos_preset_form_inherit_pos_restaurant
 msgid "Restaurant"
-msgstr ""
+msgstr "Ресторант"
 
 #. module: pos_restaurant
 #: model:ir.model,name:pos_restaurant.model_restaurant_floor
@@ -1101,7 +1114,7 @@ msgstr "Ресторантска маса"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/payment_screen/payment_screen_payment_lines/payment_screen_payment_lines.xml:0
 msgid "Reverse"
-msgstr ""
+msgstr "Връщане"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1134,7 +1147,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_screen.xml:0
 msgid "Save"
-msgstr ""
+msgstr "Запазете"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.schweppes_product_template
@@ -1158,6 +1171,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Select the table first or after registering the order"
 msgstr ""
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/product_screen/actionpad_widget/actionpad_widget.xml:0
+#: code:addons/pos_restaurant/static/src/app/screens/product_screen/product_screen.xml:0
+msgid "Send"
+msgstr "Изпрати"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__sequence
@@ -1212,7 +1232,7 @@ msgstr ""
 #. module: pos_restaurant
 #: model:pos.category,name:pos_restaurant.pos_category_soft_drinks
 msgid "Soft drinks"
-msgstr ""
+msgstr "Безалкохолни напитки"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.pos_food_tuna_product_template
@@ -1400,19 +1420,19 @@ msgstr "Съвет"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/tip_screen/tip_screen.xml:0
 msgid "Tip Amount"
-msgstr ""
+msgstr "Стойност на бакшиш:"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/components/tip_receipt/tip_receipt.xml:0
 msgid "Tip:"
-msgstr ""
+msgstr "Бакшиш:"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/ticket_screen/ticket_screen.js:0
 msgid "Tipping"
-msgstr ""
+msgstr "Даване на бакшиш"
 
 #. module: pos_restaurant
 #: model:product.template,description_sale:pos_restaurant.pos_food_margherita_product_template
@@ -1459,7 +1479,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_screen.js:0
 msgid "Unsupported File Format"
-msgstr ""
+msgstr "Неподдържан файлов формат"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1471,12 +1491,12 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/tip_screen/tip_screen.xml:0
 msgid "Username"
-msgstr ""
+msgstr "Потребителско име"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_order_course__uuid
 msgid "Uuid"
-msgstr ""
+msgstr "Uuid"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__position_v
@@ -1490,7 +1510,7 @@ msgstr ""
 
 #. module: pos_restaurant
 #. odoo-javascript
-#: code:addons/pos_restaurant/static/src/app/utils/order_payment_validation.js:0
+#: code:addons/pos_restaurant/static/src/app/services/pos_store.js:0
 msgid "Warning !"
 msgstr ""
 
@@ -1523,6 +1543,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__width
 msgid "Width"
 msgstr "Широчина"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/split_bill_screen/split_bill_screen.xml:0
+msgid "With"
+msgstr ""
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1586,21 +1612,15 @@ msgstr ""
 
 #. module: pos_restaurant
 #. odoo-javascript
-#: code:addons/pos_restaurant/static/src/app/components/tip_receipt/tip_receipt.xml:0
-msgid "________________________"
-msgstr ""
-
-#. module: pos_restaurant
-#. odoo-javascript
-#: code:addons/pos_restaurant/static/src/app/components/tip_receipt/tip_receipt.xml:0
-msgid "______________________________________________"
+#: code:addons/pos_restaurant/static/src/app/services/pos_store.js:0
+msgid "e.g. John"
 msgstr ""
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/product_screen/product_screen.xml:0
 msgid "items"
-msgstr ""
+msgstr "предмети"
 
 #. module: pos_restaurant
 #. odoo-javascript

@@ -87,7 +87,7 @@ patch(ProductScreen.prototype, {
                 return acc;
             }, {});
             const isAvailable = Object.values(avaibilityByTicket).some((av) =>
-                Object.values(av).some((a) => typeof a === "number" && a > 0)
+                Object.values(av).some((a) => (typeof a === "number" && a > 0) || a === "unlimited")
             );
             if (!isAvailable || eventSeats === 0) {
                 this.notification.add("All slots are booked out for this event.", {
@@ -125,8 +125,8 @@ patch(ProductScreen.prototype, {
             slotSelected = this.pos.models["event.slot"].get(slotResult.slotId);
         } else {
             avaibilityByTicket = tickets.reduce((acc, ticket) => {
-                if (ticket.seats_max === 0 && !event.seats_limited) {
-                    acc[ticket.id] = "unlimited";
+                if (ticket.seats_max === 0) {
+                    acc[ticket.id] = event.seats_limited ? event.seats_available : "unlimited";
                 } else {
                     acc[ticket.id] = ticket.seats_available;
                 }
@@ -152,6 +152,9 @@ patch(ProductScreen.prototype, {
             return;
         }
 
+        const globalIdentificationAnswers = {};
+        const identificationQuestionTypes = ["name", "email", "phone", "company_name"];
+
         const { globalSimpleChoice, globalTextAnswer } = Object.entries(result.byOrder).reduce(
             (acc, [questionId, answer]) => {
                 const question = this.pos.models["event.question"].get(parseInt(questionId));
@@ -162,6 +165,12 @@ patch(ProductScreen.prototype, {
                     acc.globalSimpleChoice[questionId] = answer;
                 } else if (answer) {
                     acc.globalTextAnswer[questionId] = answer;
+                    if (
+                        identificationQuestionTypes.includes(question.question_type) &&
+                        !(question.question_type in globalIdentificationAnswers)
+                    ) {
+                        globalIdentificationAnswers[question.question_type] = answer;
+                    }
                 }
 
                 return acc;
@@ -171,10 +180,19 @@ patch(ProductScreen.prototype, {
 
         for (const [ticketId, data] of Object.entries(result.byRegistration)) {
             const ticket = this.pos.models["event.event.ticket"].get(parseInt(ticketId));
+            const priceExtra = ticket.price - ticket.product_id.lst_price;
+            const priceUnit = ticket.product_id.getPrice(
+                this.pos.getOrder().pricelist_id,
+                1,
+                priceExtra,
+                false,
+                ticket.product_id
+            );
             const line = await this.pos.addLineToCurrentOrder({
                 product_id: ticket.product_id,
                 product_tmpl_id: ticket.product_id.product_tmpl_id,
-                price_unit: ticket.price,
+                price_unit: priceUnit,
+                price_extra: priceExtra,
                 price_type: "original",
                 qty: data.length,
                 event_ticket_id: ticket,
@@ -182,11 +200,17 @@ patch(ProductScreen.prototype, {
             });
 
             for (const registration of data) {
-                const userData = {};
+                // Global answers have precedence for identification question types.
+                const userData = { ...globalIdentificationAnswers };
                 for (const [questionId, answer] of Object.entries(registration)) {
                     const question = this.pos.models["event.question"].get(parseInt(questionId));
 
-                    if (!question) {
+                    if (
+                        !question ||
+                        !answer ||
+                        !identificationQuestionTypes.includes(question.question_type) ||
+                        question.question_type in userData
+                    ) {
                         continue;
                     }
 
@@ -230,29 +254,32 @@ patch(ProductScreen.prototype, {
                     registration_answer_ids: Object.entries({
                         ...textAnswer,
                         ...globalTextAnswer,
-                    }).map(([questionId, answer]) => [
-                        "create",
-                        {
-                            question_id: this.pos.models["event.question"].get(
-                                parseInt(questionId)
-                            ),
-                            value_text_box: answer,
-                        },
-                    ]),
-                    registration_answer_choice_ids: Object.entries({
-                        ...simpleChoice,
-                        ...globalSimpleChoice,
-                    }).map(([questionId, answer]) => [
-                        "create",
-                        {
-                            question_id: this.pos.models["event.question"].get(
-                                parseInt(questionId)
-                            ),
-                            value_answer_id: this.pos.models["event.question.answer"].get(
-                                parseInt(answer)
-                            ),
-                        },
-                    ]),
+                    })
+                        .map(([questionId, answer]) => [
+                            "create",
+                            {
+                                question_id: this.pos.models["event.question"].get(
+                                    parseInt(questionId)
+                                ),
+                                value_text_box: answer,
+                            },
+                        ])
+                        .concat(
+                            Object.entries({
+                                ...simpleChoice,
+                                ...globalSimpleChoice,
+                            }).map(([questionId, answer]) => [
+                                "create",
+                                {
+                                    question_id: this.pos.models["event.question"].get(
+                                        parseInt(questionId)
+                                    ),
+                                    value_answer_id: this.pos.models["event.question.answer"].get(
+                                        parseInt(answer)
+                                    ),
+                                },
+                            ])
+                        ),
                 });
             }
         }

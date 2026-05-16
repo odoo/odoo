@@ -5,6 +5,7 @@ import { ConnectionLostError } from "@web/core/network/rpc";
 import { onRpc } from "@web/../tests/web_test_helpers";
 import { imageUrl } from "@web/core/utils/urls";
 import { prepareRoundingVals } from "../accounting/utils";
+const { DateTime } = luxon;
 
 definePosModels();
 
@@ -28,6 +29,61 @@ describe("pos_store.js", () => {
         const json2str = store.getStrNotes([{ text: "json", colorIndex: 0 }]);
         expect(json2str).toBeOfType("string");
         expect(json2str).toBe("json");
+    });
+
+    test("connectNewData canceled order", async () => {
+        const store = await setupPosEnv();
+        const models = store.models;
+        const order = await getFilledOrder(store);
+        const serializedOrder = { ...order.raw };
+
+        await store.deleteOrders([order]);
+        serializedOrder.state = "cancel";
+        let isListenerCalled = false;
+        const listenerCleanup = models["pos.order"].addEventListener("update", (data) => {
+            if (data.id === order.id) {
+                const orderToRecompute = models["pos.order"].get(data.id);
+                orderToRecompute.triggerRecomputeAllPrices();
+                isListenerCalled = true;
+            }
+        });
+        models.connectNewData({
+            "pos.order": [serializedOrder],
+        });
+        const updatedOrder = models["pos.order"].get(order.id);
+        expect(updatedOrder.state).toBe("cancel");
+        expect(isListenerCalled).toBe(true);
+        listenerCleanup();
+    });
+
+    test("sendOrderInPreparation clears change state when no prep changes", async () => {
+        const store = await setupPosEnv();
+        const order = store.addNewOrder();
+        const productOutsidePrep = store.models["product.template"].get(14);
+        const date = DateTime.now();
+
+        await store.addLineToOrder(
+            {
+                product_tmpl_id: productOutsidePrep,
+                qty: 1,
+                write_date: date,
+                create_date: date,
+            },
+            order
+        );
+
+        expect(order.hasChange).toBe(true);
+
+        let printCalled = false;
+        store.printChanges = async () => {
+            printCalled = true;
+            return true;
+        };
+
+        await store.sendOrderInPreparation(order);
+
+        expect(printCalled).toBe(false);
+        expect(order.hasChange).toBe(false);
     });
 
     describe("syncAllOrders", () => {
@@ -231,8 +287,8 @@ describe("pos_store.js", () => {
 
         const productA = store.models["product.product"].get(5);
         const productB = store.models["product.product"].get(6);
-        productA.parentPosCategIds = [1];
-        productB.parentPosCategIds = [2];
+        productA.pos_categ_ids = [1];
+        productB.pos_categ_ids = [2];
 
         const currentOrderChange = {
             new: [
@@ -310,8 +366,9 @@ describe("pos_store.js", () => {
         const store = await setupPosEnv();
         store.selectedCategory = store.models["pos.category"].get(1);
         let products = store.productsToDisplay;
-        expect(products.length).toBe(1);
-        expect(products[0].id).toBe(5);
+        expect(products.length).toBe(2);
+        expect(products[0].id).toBe(17);
+        expect(products[1].id).toBe(5);
         expect(store.selectedCategory.id).toBe(1);
         store.selectedCategory = store.models["pos.category"].get(1);
         store.searchProductWord = "TEST";
@@ -333,18 +390,22 @@ describe("pos_store.js", () => {
         store.config.iface_group_by_categ = false;
         let grouped = store.productToDisplayByCateg;
         expect(grouped.length).toBe(1); //Only one group
-        expect(grouped[0][0]).toBe(0);
-        expect(grouped[0][1].length).toBe(12); //10 products in same group
+        expect(grouped[0][0]).toBe("0");
+        expect(grouped[0][1].length).toBe(15);
 
         // Case 2: Grouping enabled
         store.config.iface_group_by_categ = true;
         grouped = store.productToDisplayByCateg;
-        expect(grouped.length).toBe(5);
+        expect(grouped.length).toBe(6);
         // Confirm grouping structure
         for (const [catId, prods] of grouped) {
             expect(Array.isArray(prods)).toBe(true);
             expect(prods.length).toBeGreaterThan(0);
             for (const prod of prods) {
+                if (catId === "0") {
+                    expect(prod.pos_categ_ids.length).toBe(0);
+                    continue;
+                }
                 const categoryIds = prod.pos_categ_ids.map((c) => c.id);
                 expect(categoryIds).toInclude(parseInt(catId));
             }
@@ -353,9 +414,105 @@ describe("pos_store.js", () => {
         // Case 3: Grouping with search filtering
         store.searchProductWord = "TEST";
         grouped = store.productToDisplayByCateg;
-        expect(grouped.length).toBe(2);
+        expect(grouped.length).toBe(3);
         expect(grouped[0][1][0].name).toBe("TEST");
         expect(grouped[1][1][0].name).toBe("TEST 2");
+        expect(grouped[2][1][0].name).toBe("Accounting Test Product 1");
+        expect(grouped[2][1][1].name).toBe("Accounting Test Product 2");
+
+        // Case 4: Grouping with category filtering
+        store.searchProductWord = "";
+        store.selectedCategory = store.models["pos.category"].get(1);
+        grouped = store.productToDisplayByCateg;
+        expect(grouped.length).toBe(1);
+        expect(grouped[0][0]).toBe(1);
+        expect(grouped[0][1][0].name).toBe("Multi Category Product");
+        expect(grouped[0][1][1].name).toBe("TEST");
+
+        // Case 5: Grouping with category 'Food' selected (parent of 'Burger' & 'Pizza')
+        store.selectedCategory = store.models["pos.category"].get(3);
+        grouped = store.productToDisplayByCateg;
+        expect(grouped.length).toBe(3);
+        expect(grouped[0][0]).toBe(3);
+        expect(grouped[0][1][0].name).toBe("Club sandwich");
+        expect(grouped[1][1][0].name).toBe("Bacon burger");
+        expect(grouped[2][1][0].name).toBe("Pizza margarita");
+
+        // Case 6: Grouping with special products excluded
+        const specialProduct = store.models["product.template"].get(25);
+        store.searchProductWord = "";
+        store.selectedCategory = store.models["pos.category"].get(
+            specialProduct.pos_categ_ids[0].id
+        );
+
+        grouped = store.productToDisplayByCateg;
+        expect(grouped).toHaveLength(1);
+        expect(grouped[0][1].map((p) => p.id)).not.toInclude(specialProduct.id);
+    });
+
+    test("productToDisplayByCateg count", async () => {
+        const store = await setupPosEnv();
+        const createProductsAndCateg = (prefix, count) => {
+            const categ = store.models["pos.category"].create({
+                name: `${prefix}_categ`,
+            });
+
+            for (let i = 0; i < count; i++) {
+                store.models["product.template"].create({
+                    name: `${prefix}_${i}`,
+                    pos_categ_ids: [categ.id],
+                    active: true,
+                    available_in_pos: true,
+                });
+            }
+
+            return categ;
+        };
+
+        store.config.iface_group_by_categ = true;
+        const test1 = createProductsAndCateg("producttest1", 100);
+        const test2 = createProductsAndCateg("producttest2", 150);
+        const grouped = store.productToDisplayByCateg;
+        const byCateg = store.models["product.template"].getAllBy("pos_categ_ids");
+
+        const test1Products = byCateg[test1.id];
+        const test2Products = byCateg[test2.id];
+        const groupedTest1 = grouped.find((data) => data[0] == test1.id)[1];
+        const groupedTest2 = grouped.find((data) => data[0] == test2.id)[1];
+
+        expect(test1Products).toHaveLength(100);
+        expect(test2Products).toHaveLength(150);
+        expect(groupedTest1).toHaveLength(100);
+        expect(groupedTest2).toHaveLength(100);
+
+        store.searchProductWord = "producttest1";
+        const groupedSearchTest1 = store.productToDisplayByCateg;
+        const groupedSearchTest1Prods = groupedSearchTest1.find((data) => data[0] == test1.id)[1];
+        expect(groupedSearchTest1).toHaveLength(1);
+        expect(groupedSearchTest1Prods).toHaveLength(100);
+
+        store.searchProductWord = "producttest";
+        const groupedSearchTest = store.productToDisplayByCateg;
+        const groupedSearchTest1Prods2 = groupedSearchTest.find((data) => data[0] == test1.id)[1];
+        const groupedSearchTest2Prods2 = groupedSearchTest.find((data) => data[0] == test2.id)[1];
+        expect(groupedSearchTest).toHaveLength(2);
+        expect(groupedSearchTest1Prods2).toHaveLength(100);
+        expect(groupedSearchTest2Prods2).toHaveLength(100);
+
+        store.searchProductWord = "";
+        const productWoCategory = store.models["product.template"].readMany([15, 16]);
+        const groupedSearchTest3 = store.productToDisplayByCateg;
+        expect(groupedSearchTest3[groupedSearchTest3.length - 1][0]).toEqual("0");
+        expect(groupedSearchTest3[groupedSearchTest3.length - 1][1]).toHaveLength(2);
+        expect(groupedSearchTest3[groupedSearchTest3.length - 1][1].map((p) => p.id)).toEqual(
+            productWoCategory.map((p) => p.id)
+        );
+
+        store.selectedCategory = test1;
+        const groupedSearchTest4 = store.productToDisplayByCateg;
+        expect(groupedSearchTest4).toHaveLength(1);
+        expect(groupedSearchTest4[0][0]).toEqual(test1.id);
+        expect(groupedSearchTest4[0][1]).toHaveLength(100);
     });
 
     test("onDeleteOrder", async () => {
@@ -422,6 +579,14 @@ describe("pos_store.js", () => {
         expect(store.getPaymentMethodFmtAmount(card2, order)).toBeEmpty();
     });
 
+    test("canEditPayment", async () => {
+        const store = await setupPosEnv();
+        const order = await getFilledOrder(store);
+        expect(store.canEditPayment(order)).toBe(true);
+        order.nb_print = 1;
+        expect(store.canEditPayment(order)).toBe(false);
+    });
+
     describe("cacheReceiptLogo", () => {
         function getCompanyLogo256Url(companyId) {
             const fullUrl = imageUrl("res.company", companyId, "logo", {
@@ -454,6 +619,39 @@ describe("pos_store.js", () => {
             const companyId = store.company.id;
             expect.verifySteps([`Company logo ${companyId} fetched`]);
             expect(store.config.receiptLogoUrl).toInclude(getCompanyLogo256Url(companyId));
+        });
+
+        test("preSyncAllOrders", async () => {
+            // This test check prices sign on preSyncAllOrders for refunds
+            const store = await setupPosEnv();
+            const order = await getFilledOrder(store);
+
+            await store.preSyncAllOrders([order]);
+            expect(order.amount_total).toEqual(17.85);
+            expect(order.amount_tax).toEqual(2.85);
+            expect(order.lines[0].qty).toEqual(3);
+            expect(order.lines[0].price_unit).toEqual(3);
+            expect(order.lines[0].price_subtotal).toEqual(9);
+            expect(order.lines[0].price_subtotal_incl).toEqual(10.35);
+            expect(order.lines[1].qty).toEqual(2);
+            expect(order.lines[1].price_unit).toEqual(3);
+            expect(order.lines[1].price_subtotal).toEqual(6);
+            expect(order.lines[1].price_subtotal_incl).toEqual(7.5);
+
+            order.is_refund = true;
+            order.lines.forEach((line) => (line.qty = -line.qty));
+            await store.preSyncAllOrders([order]);
+
+            expect(order.amount_total).toEqual(-17.85);
+            expect(order.amount_tax).toEqual(-2.85);
+            expect(order.lines[0].qty).toEqual(-3);
+            expect(order.lines[0].price_unit).toEqual(3);
+            expect(order.lines[0].price_subtotal).toEqual(9);
+            expect(order.lines[0].price_subtotal_incl).toEqual(10.35);
+            expect(order.lines[1].qty).toEqual(-2);
+            expect(order.lines[1].price_unit).toEqual(3);
+            expect(order.lines[1].price_subtotal).toEqual(6);
+            expect(order.lines[1].price_subtotal_incl).toEqual(7.5);
         });
     });
 });

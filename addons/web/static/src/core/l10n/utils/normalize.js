@@ -1,4 +1,12 @@
 /**
+ * @typedef {{
+ *  match: string;
+ *  start: number;
+ *  end: number;
+ * }} NormalizedMatchResult
+ */
+
+/**
  * Normalizes a string for use in comparison.
  *
  * @example
@@ -20,7 +28,7 @@ export function normalize(str) {
  *
  * @param {string} src
  * @param {string} substr
- * @returns {{match: string, start: number, end: number}}
+ * @returns {NormalizedMatchResult}
  */
 export function normalizedMatch(src, substr) {
     if (!substr) {
@@ -84,7 +92,7 @@ export function normalizedMatch(src, substr) {
  *
  * @param {string} src
  * @param {string} substr
- * @returns {Array<{match: string, start: number, end: number}>}
+ * @returns {NormalizedMatchResult[]}
  */
 export function normalizedMatches(src, substr) {
     const matches = [];

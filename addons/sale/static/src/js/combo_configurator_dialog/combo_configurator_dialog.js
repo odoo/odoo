@@ -1,4 +1,4 @@
-import { Component, useState, useSubEnv } from '@odoo/owl';
+import { Component, onMounted, onWillUnmount, useState, useSubEnv } from '@odoo/owl';
 import { formatCurrency } from '@web/core/currency';
 import { Dialog } from '@web/core/dialog/dialog';
 import { _t } from '@web/core/l10n/translation';
@@ -32,6 +32,7 @@ export class ComboConfiguratorDialog extends Component {
             optional: true,
             shape: {
                 showQuantity : { type: Boolean, optional: true },
+                showPrice : { type: Boolean, optional: true },
             },
         },
         save: Function,
@@ -57,6 +58,9 @@ export class ComboConfiguratorDialog extends Component {
 
         this.unconfigurableCombos = this.props.combos.filter(combo => !combo.isConfigurable);
         this.configurableCombos = this.props.combos.filter(combo => combo.isConfigurable);
+
+        onMounted(() => this.env.bus.trigger("FORM-CONTROLLER:FORM-IN-DIALOG:ADD"));
+        onWillUnmount(() => this.env.bus.trigger("FORM-CONTROLLER:FORM-IN-DIALOG:REMOVE"));
     }
 
     /**

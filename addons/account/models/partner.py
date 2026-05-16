@@ -19,6 +19,7 @@ _logger = logging.getLogger(__name__)
 _ref_company_registry = {
     'jp': '7000012050002',
     'dk': '58403288',
+    'fi': '8763054-9',
 }
 
 
@@ -153,7 +154,7 @@ class AccountFiscalPosition(models.Model):
     def map_tax(self, taxes):
         if not self:
             return taxes
-        if not self.tax_ids:  # empty fiscal positions (like those created by tax units) remove all taxes
+        if not self.tax_ids and taxes.fiscal_position_ids:  # empty fiscal positions (like those created by tax units) remove all taxes
             return self.env['account.tax']
         return self.env['account.tax'].browse(unique(
             tax_id
@@ -259,7 +260,7 @@ class AccountFiscalPosition(models.Model):
             vat_exclusion = company.vat[:2] == partner.vat[:2]
 
         # If company and partner have the same vat prefix (and are both within the EU), use invoicing
-        if not delivery or (intra_eu and vat_exclusion):
+        if not delivery or (intra_eu and vat_exclusion and partner.country_id == company.country_id):
             delivery = partner
 
         # partner manually set fiscal position always win
@@ -278,7 +279,15 @@ class AccountFiscalPosition(models.Model):
         return all_auto_apply_fpos._get_first_matching_fpos(delivery)
 
     def action_open_related_taxes(self):
-        return self.tax_ids._get_records_action(name=_("%s taxes", self.display_name))
+        list_view = self.env.ref('account.account_tax_fiscal_position_view_tree', raise_if_not_found=False)
+        return {
+            'type': 'ir.actions.act_window',
+            'name': self.env._("%s taxes", self.display_name),
+            'res_model': 'account.tax',
+            'views': [(list_view.id if list_view else False, 'list'), (False, 'form')],
+            'domain': [('id', 'in', self.tax_ids.ids)],
+            'context': {'active_test': False},
+        }
 
     def action_create_foreign_taxes(self):
         self.ensure_one()
@@ -323,12 +332,15 @@ class ResPartner(models.Model):
     partner_company_registry_placeholder = fields.Char(compute='_compute_partner_company_registry_placeholder')
     duplicate_bank_partner_ids = fields.Many2many(related="bank_ids.duplicate_bank_partner_ids")
 
-    @api.depends('company_id')
+    @api.depends('company_id', 'country_code')
     @api.depends_context('allowed_company_ids')
     def _compute_fiscal_country_codes(self):
         for record in self:
             allowed_companies = record.company_id or self.env.companies
-            record.fiscal_country_codes = ",".join(allowed_companies.mapped('account_fiscal_country_id.code'))
+            country_codes = allowed_companies.mapped('account_fiscal_country_id.code')
+            if record.country_code:
+                country_codes.append(record.country_code)
+            record.fiscal_country_codes = ",".join(set(country_codes))
 
     @api.depends('company_id')
     @api.depends_context('allowed_company_ids')
@@ -523,20 +535,25 @@ class ResPartner(models.Model):
     currency_id = fields.Many2one('res.currency', compute='_get_company_currency', readonly=True,
         string="Currency") # currency of amount currency
     property_account_payable_id = fields.Many2one('account.account', company_dependent=True,
+        check_company=True,
         string="Account Payable",
         domain="[('account_type', '=', 'liability_payable')]",
         ondelete='restrict')
     property_account_receivable_id = fields.Many2one('account.account', company_dependent=True,
+        check_company=True,
         string="Account Receivable",
         domain="[('account_type', '=', 'asset_receivable')]",
         ondelete='restrict')
     property_account_position_id = fields.Many2one('account.fiscal.position', company_dependent=True,
+        check_company=True,
         string="Fiscal Position",
         help="The fiscal position determines the taxes/accounts used for this contact.")
     property_payment_term_id = fields.Many2one('account.payment.term', company_dependent=True,
+        check_company=True,
         string='Customer Payment Terms',
         ondelete='restrict')
     property_supplier_payment_term_id = fields.Many2one('account.payment.term', company_dependent=True,
+        check_company=True,
         string='Vendor Payment Terms',
     )
     ref_company_ids = fields.One2many('res.company', 'partner_id',
@@ -592,14 +609,16 @@ class ResPartner(models.Model):
 
     property_outbound_payment_method_line_id = fields.Many2one(
         comodel_name='account.payment.method.line',
+        check_company=True,
         company_dependent=True,
-        domain=lambda self: [('payment_type', '=', 'outbound'), ('company_id', 'parent_of', self.env.company.id)],
+        domain=lambda self: [('journal_id.active', '=', True), ('payment_type', '=', 'outbound'), ('company_id', 'parent_of', self.env.company.id)],
     )
 
     property_inbound_payment_method_line_id = fields.Many2one(
         comodel_name='account.payment.method.line',
+        check_company=True,
         company_dependent=True,
-        domain=lambda self: [('payment_type', '=', 'inbound'), ('company_id', 'parent_of', self.env.company.id)],
+        domain=lambda self: [('journal_id.active', '=', True), ('payment_type', '=', 'inbound'), ('company_id', 'parent_of', self.env.company.id)],
     )
 
     def _compute_bank_count(self):
@@ -865,77 +884,167 @@ class ResPartner(models.Model):
     # -------------------------------------------------------------------------
 
     @api.model
-    def _retrieve_partner_with_vat(self, vat, extra_domain):
+    def _import_retrieve_customer_from_vat(self, customer_values):
+        vat = customer_values.get('vat')
         if not vat:
-            return None
+            return
 
-        # Sometimes, the vat is specified with some whitespaces.
-        normalized_vat = vat.replace(' ', '')
+        # Sometimes, the vat is specified with some whitespaces or dots.
+        normalized_vat = vat.replace(' ', '').replace('.', '')
         country_prefix = re.match('^[a-zA-Z]{2}|^', vat).group()
 
-        partner = self.env['res.partner'].search(extra_domain + [('vat', 'in', (normalized_vat, vat))], limit=2)
-
-        # Try to remove the country code prefix from the vat.
-        if not partner and country_prefix:
-            partner = self.env['res.partner'].search(extra_domain + [
-                ('vat', 'in', (normalized_vat[2:], vat[2:])),
-                ('country_id.code', '=', country_prefix.upper()),
-            ], limit=2)
-
-            # The country could be not specified on the partner.
-            if not partner:
-                partner = self.env['res.partner'].search(extra_domain + [
+        criteria = [{'domain': [('vat', 'in', (normalized_vat, vat))]}]
+        if country_prefix:
+            criteria.append({
+                'domain': [
                     ('vat', 'in', (normalized_vat[2:], vat[2:])),
-                    ('country_id', '=', False),
-                ], limit=2)
+                    ('country_id.code', '=', country_prefix.upper()),
+                ],
+            })
+            criteria.append({
+                'domain': [
+                    ('vat', 'in', (normalized_vat[2:], vat[2:])),
+                    ('country_id.code', '=', False),
+                ],
+            })
 
-        # The vat could be a string of alphanumeric values without country code but with missing zeros at the
-        # beginning.
-        if not partner:
-            try:
-                vat_only_numeric = str(int(re.sub(r'^\D{2}', '', normalized_vat) or 0))
-            except ValueError:
-                vat_only_numeric = None
+        try:
+            vat_only_numeric = str(int(re.sub(r'^\D{2}', '', normalized_vat) or 0))
+        except ValueError:
+            vat_only_numeric = None
+        if vat_only_numeric:
 
-            if vat_only_numeric:
-                if country_prefix:
-                    vat_prefix_regex = f'({country_prefix})?'
-                else:
-                    vat_prefix_regex = '([A-z]{2})?'
-                Partner = self.env['res.partner']
-                query = Partner._search(extra_domain + [('active', '=', True)], limit=2)
+            def search_vat_regex(values):
+                static_domain = values['static_domain']
+                vat_prefix_regex = values['vat_prefix_regex']
+
+                query = self._search(static_domain + [('active', '=', True)], limit=2)
                 query.add_where(SQL(
                     "%s ~ %s",
-                    Partner._field_to_sql(Partner._table, 'vat'),
+                    self._field_to_sql(self._table, 'vat'),
                     f'^{vat_prefix_regex}0*{vat_only_numeric}$',
                 ))
                 partner_row = list(query)
                 if partner_row and len(partner_row) == 1:
-                    partner = Partner.browse(partner_row[0])
+                    return self.browse(partner_row[0])
 
-        return partner
+            if country_prefix:
+                vat_prefix_regex = f'({country_prefix})?'
+            else:
+                vat_prefix_regex = '([A-z]{2})?'
+
+            criteria.append({
+                'vat_prefix_regex': vat_prefix_regex,
+                'search_method': search_vat_regex,
+            })
+
+        return {
+            'criteria': criteria,
+        }
+
+    @api.model
+    def _import_retrieve_customer_from_phone(self, customer_values):
+        phone = customer_values.get('phone')
+        if not phone:
+            return
+
+        return {
+            'criteria': [{
+                'domain': [('phone', '=', phone)],
+            }],
+        }
+
+    @api.model
+    def _import_retrieve_customer_from_email(self, customer_values):
+        email = customer_values.get('email')
+        if not email:
+            return
+
+        return {
+            'criteria': [{
+                'domain': [('email', '=', email)],
+            }],
+        }
+
+    @api.model
+    def _import_retrieve_customer_from_name(self, customer_values):
+        name = customer_values.get('name')
+        if not name:
+            return
+
+        return {
+            'criteria': [{
+                'domain': [('name', 'ilike', name)],
+            }],
+        }
+
+    @api.model
+    def _import_retrieve_customer(self, search_plan, company, customer_values_list):
+        cache = {}
+
+        static_domain = Domain.OR([
+            [*self._check_company_domain(company), ('company_id', '!=', False)],
+            [('company_id', '=', False)],
+        ])
+        for customer_values in customer_values_list:
+            partner = None
+            for plan in search_plan:
+                plan_values = plan(customer_values)
+                if not plan_values:
+                    continue
+
+                for criteria in plan_values['criteria']:
+                    domain = criteria.get('domain')
+                    search_method = criteria.get('search_method')
+                    if domain:
+                        cache_key = str(domain)
+                    else:
+                        cache_key = criteria.get('cache_key')
+
+                    # Look at the cache if the value has already been tested with this key.
+                    if cache_key in cache:
+                        if partner := cache[cache_key]:
+                            customer_values['customer'] = partner
+                            break
+                        else:
+                            continue
+
+                    if domain:
+                        full_domain = Domain.AND([static_domain, domain])
+                        partner = self.search(
+                            full_domain,
+                            order='company_id, parent_id DESC, id DESC',
+                            limit=1,
+                        )
+                    elif search_method:
+                        partner = search_method({
+                            **criteria,
+                            'static_domain': static_domain,
+                        })
+
+                    if partner:
+                        if cache_key:
+                            cache[cache_key] = partner
+                        customer_values['customer'] = partner
+                        break
+
+                if partner:
+                    break
+
+    @api.model
+    def _retrieve_partner_with_vat(self, vat, extra_domain):
+        # DEPRECATED: TO BE REMOVED IN MASTER
+        return self._retrieve_partner(vat=vat)
 
     @api.model
     def _retrieve_partner_with_phone_email(self, phone, email, extra_domain):
-        domains = []
-        if phone:
-            domains.append([('phone', '=', phone)])
-        if email:
-            domains.append([('email', '=', email)])
-
-        if not domains:
-            return None
-
-        domain = Domain.OR(domains)
-        if extra_domain:
-            domain &= Domain(extra_domain)
-        return self.env['res.partner'].search(domain, limit=2)
+        # DEPRECATED: TO BE REMOVED IN MASTER
+        return self._retrieve_partner(phone=phone, email=email)
 
     @api.model
     def _retrieve_partner_with_name(self, name, extra_domain):
-        if not name:
-            return None
-        return self.env['res.partner'].search([('name', 'ilike', name)] + extra_domain, limit=2)
+        # DEPRECATED: TO BE REMOVED IN MASTER
+        return self._retrieve_partner(name=name)
 
     def _retrieve_partner(self, name=None, phone=None, email=None, vat=None, domain=None, company=None):
         '''Search all partners and find one that matches one of the parameters.
@@ -947,34 +1056,24 @@ class ResPartner(models.Model):
         :param company: The company of the partner.
         :returns:       A partner or an empty recordset if not found.
         '''
-
-        def search_with_vat(extra_domain):
-            return self._retrieve_partner_with_vat(vat, extra_domain)
-
-        def search_with_phone_mail(extra_domain):
-            return self._retrieve_partner_with_phone_email(phone, email, extra_domain)
-
-        def search_with_name(extra_domain):
-            return self._retrieve_partner_with_name(name, extra_domain)
-
-        def search_with_domain(extra_domain):
-            if not domain:
-                return None
-            return self.env['res.partner'].search(domain + extra_domain, limit=1)
-
-        for search_method in (search_with_vat, search_with_domain, search_with_phone_mail, search_with_name):
-            for extra_domain in (
-                [*self.env['res.partner']._check_company_domain(company or self.env.company), ('company_id', '!=', False)],
-                [('company_id', '=', False)],
-            ):
-                partner = search_method(extra_domain)
-
-                # The VAT should be a sufficiently distinctive criterion
-                if partner and search_method == search_with_vat:
-                    return partner[:1]
-                if partner and len(partner) == 1:
-                    return partner
-        return self.env['res.partner']
+        customer_values = {
+            'vat': vat,
+            'phone': phone,
+            'email': email,
+            'name': name,
+        }
+        self._import_retrieve_customer(
+            search_plan=[
+                self._import_retrieve_customer_from_vat,
+                lambda collected_values: {'criteria': [{'domain': domain}]} if domain else None,
+                self._import_retrieve_customer_from_email,
+                self._import_retrieve_customer_from_phone,
+                self._import_retrieve_customer_from_name,
+            ],
+            company=company or self.env.company,
+            customer_values_list=[customer_values],
+        )
+        return customer_values.get('customer') or self.env['res.partner']
 
     def _merge_method(self, destination, source):
         """
@@ -1039,3 +1138,20 @@ class ResPartner(models.Model):
 
     def action_open_business_doc(self):
         return self._get_records_action()
+
+    @api.model
+    def _clear_removed_edi_formats(self, *formats):
+        """Helper to clear outdated EDI formats.
+
+        Usually called as an uninstall hook of modules that add these formats.
+        It avoids the form view to become unusable after module uninstallation.
+        """
+        self.env.cr.execute(
+            """
+            UPDATE res_partner
+            SET invoice_edi_format_store = invoice_edi_format_store - res_company.id::char
+            FROM res_company
+            WHERE res_partner.invoice_edi_format_store ->> res_company.id::char IN %s
+            """,
+            (formats,),
+        )

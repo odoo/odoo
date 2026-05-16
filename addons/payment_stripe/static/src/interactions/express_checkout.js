@@ -18,7 +18,7 @@ patch(ExpressCheckout.prototype, {
      */
     _getOrderDetails(deliveryAmount, amountFreeShipping) {
         const pending = this.paymentContext['shippingInfoRequired'] && deliveryAmount === undefined;
-        const minorAmount = parseInt(this.paymentContext['minorAmount']);
+        const minorAmount = parseInt(this.paymentContext['minorAmount'] || 0);
         const displayItems = [{
             label: _t("Your order"),
             amount: minorAmount,
@@ -177,10 +177,14 @@ patch(ExpressCheckout.prototype, {
                         },
                     },
                 ));
+                const recomputedAmount = await this.waitFor(rpc(
+                    this.paymentContext['shippingAddressUpdateRoute'] + '/compute_taxes',
+                ));
                 const { delivery_methods, delivery_discount_minor_amount } = availableCarriersData;
-                if (delivery_methods.length === 0) {
+                if (delivery_methods.length === 0 || recomputedAmount.external_tax_error) {
                     ev.updateWith({status: 'invalid_shipping_address'});
                 } else {
+                    this.paymentContext['minorAmount'] = recomputedAmount;
                     ev.updateWith({
                         status: 'success',
                         shippingOptions: delivery_methods.map(carrier => ({

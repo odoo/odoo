@@ -17,7 +17,7 @@ import {
 import { MAIN_PLUGINS } from "@html_editor/plugin_sets";
 import { parseHTML } from "@html_editor/utils/html";
 import { beforeEach, describe, expect, getFixture, test } from "@odoo/hoot";
-import { click, queryFirst } from "@odoo/hoot-dom";
+import { click, queryFirst, waitFor } from "@odoo/hoot-dom";
 import { animationFrame, tick } from "@odoo/hoot-mock";
 import {
     App,
@@ -41,6 +41,7 @@ import { Deferred } from "@web/core/utils/concurrency";
 import { Plugin } from "@html_editor/plugin";
 import { cleanHints, dispatchCleanForSave } from "./_helpers/dispatch";
 import { expectElementCount } from "./_helpers/ui_expectations";
+import { renderToElement } from "@web/core/utils/render";
 
 function getConfig(components) {
     return {
@@ -581,13 +582,17 @@ describe("Selection after embedded component insertion", () => {
         });
         editor.shared.dom.insert(parseHTML(editor.document, `<div data-embedded="counter"></div>`));
         editor.shared.history.addStep();
-        await animationFrame();
+        // Insertion triggers selectionchange & addStep creates selection
+        // placeholder.fixSelectionInsideEditableRoot moves selection into it,
+        // trigger another selectionchange that removes selection placeholder.
+        // So we must wait for the o-we-hint.
+        await waitFor(".o-we-hint");
         cleanHints(editor);
         expect(getContent(el)).toBe(
             unformat(`
                 <p data-selection-placeholder=""><br></p>
-                <div data-embedded="counter" data-oe-protected="true" contenteditable="false">[]<span class="counter">Counter:0</span></div>
-                <p data-selection-placeholder=""><br></p>`)
+                <div data-embedded="counter" data-oe-protected="true" contenteditable="false"><span class="counter">Counter:0</span></div>
+                <p>[]<br></p>`)
         );
     });
     test("block at the end of paragraph", async () => {
@@ -596,13 +601,17 @@ describe("Selection after embedded component insertion", () => {
         });
         editor.shared.dom.insert(parseHTML(editor.document, `<div data-embedded="counter"></div>`));
         editor.shared.history.addStep();
-        await animationFrame();
+        // Insertion triggers selectionchange & addStep creates selection
+        // placeholder.fixSelectionInsideEditableRoot moves selection into it,
+        // trigger another selectionchange that removes selection placeholder.
+        // So we must wait for the o-we-hint.
+        await waitFor(".o-we-hint");
         cleanHints(editor);
         expect(getContent(el)).toBe(
             unformat(`
                 <p>a</p>
-                <div data-embedded="counter" data-oe-protected="true" contenteditable="false">[]<span class="counter">Counter:0</span></div>
-                <p data-selection-placeholder=""><br></p>`)
+                <div data-embedded="counter" data-oe-protected="true" contenteditable="false"><span class="counter">Counter:0</span></div>
+                <p>[]<br></p>`)
         );
     });
     test("block at the start of paragraph", async () => {
@@ -892,6 +901,62 @@ describe("Mount processing", () => {
         simplePlugin.insertElement("<div data-embedded='embeddedCounter'/>");
         await animationFrame();
         expect(setSelection).toBe(simplePlugin.dependencies.selection.setSelection);
+    });
+
+    test("Insert a component and execute a callback for its first mount", async () => {
+        const { el, editor, plugins } = await setupEditor(`<p>[]after</p>`, {
+            config: getConfig([embedding("counter", Counter)]),
+        });
+        const host = plugins
+            .get("embeddedComponents")
+            .renderBlueprintToElement(xml`<span data-embedded="counter"></span>`, {}, () =>
+                expect.step("onComponentInserted")
+            );
+        plugins.get("dom").insert(host);
+        addStep(editor);
+        await animationFrame();
+        // First mount
+        expect(getContent(el)).toBe(
+            `<p><span data-embedded="counter" data-oe-protected="true" contenteditable="false"><span class="counter">Counter:0</span></span>[]after</p>`
+        );
+        expect.verifySteps(["onComponentInserted"]);
+        deleteBackward(editor);
+        addStep(editor);
+        expect(getContent(el)).toBe(`<p>[]after</p>`);
+        undo(editor);
+        await animationFrame();
+        // Second mount, onComponentInserted was discarded
+        expect(getContent(el)).toBe(
+            `<p><span data-embedded="counter" data-oe-protected="true" contenteditable="false"><span class="counter">Counter:0</span></span>[]after</p>`
+        );
+        expect.verifySteps([]);
+    });
+
+    test("Discard onComponentInserted callback if a component is removed before finishing being mounted after insertion", async () => {
+        const { el, editor, plugins } = await setupEditor(`<p>[]after</p>`, {
+            config: getConfig([embedding("counter", Counter)]),
+        });
+        const host = plugins
+            .get("embeddedComponents")
+            .renderBlueprintToElement(xml`<span data-embedded="counter"></span>`, {}, () =>
+                expect.step("onComponentInserted")
+            );
+        plugins.get("dom").insert(host);
+        addStep(editor);
+        expect(getContent(el)).toBe(
+            `<p><span data-embedded="counter" data-oe-protected="true" contenteditable="false"></span>[]after</p>`
+        );
+        // Don't wait for the component to mount, and remove the host
+        deleteBackward(editor);
+        addStep(editor);
+        expect(getContent(el)).toBe(`<p>[]after</p>`);
+        undo(editor);
+        await animationFrame();
+        // First mount, but onComponentInserted was discarded since the component was removed
+        expect(getContent(el)).toBe(
+            `<p><span data-embedded="counter" data-oe-protected="true" contenteditable="false"><span class="counter">Counter:0</span></span>[]after</p>`
+        );
+        expect.verifySteps([]);
     });
 });
 
@@ -1285,6 +1350,55 @@ describe("editable descendants", () => {
         const editableDescendants = el.querySelectorAll(`[data-embedded-editable="deep"]`);
         expect(getEditableDescendants(simple).deep).toBe(editableDescendants[0]);
         expect(getEditableDescendants(wrapper).deep).toBe(editableDescendants[1]);
+    });
+
+    test("preserve selection inside an editable descendant", async () => {
+        const SimpleEmbeddedWrapper = EmbeddedWrapperMixin("deep");
+        const { el, editor, plugins } = await setupEditor(unformat(`<p>after</p>`), {
+            config: getConfig([
+                embedding("wrapper", SimpleEmbeddedWrapper, (host) => ({ host }), {
+                    getEditableDescendants,
+                }),
+            ]),
+        });
+        plugins.get("dom").insert(
+            renderToElement(xml`
+                <div data-embedded="wrapper">
+                    <div data-embedded-editable="deep">
+                        <p>deep</p>
+                    </div>
+                </div>
+            `)
+        );
+        addStep(editor);
+        // Set the selection before the component is mounted
+        plugins.get("selection").setCursorStart(el.querySelector("[data-embedded-editable] p"));
+        expect(getContent(el)).toBe(
+            unformat(`
+                <p data-selection-placeholder=""><br></p>
+                <div data-embedded="wrapper" data-oe-protected="true" contenteditable="false">
+                    <div data-embedded-editable="deep" data-oe-protected="false" contenteditable="true">
+                        <p>[]deep</p>
+                    </div>
+                </div>
+                <p>after</p>
+            `)
+        );
+        await animationFrame();
+        // Verify that the selection was preserved after insertion
+        expect(getContent(el)).toBe(
+            unformat(`
+                <p data-selection-placeholder=""><br></p>
+                <div data-embedded="wrapper" data-oe-protected="true" contenteditable="false">
+                    <div class="deep">
+                        <div data-embedded-editable="deep" data-oe-protected="false" contenteditable="true">
+                            <p>[]deep</p>
+                        </div>
+                    </div>
+                </div>
+                <p>after</p>
+            `)
+        );
     });
 });
 

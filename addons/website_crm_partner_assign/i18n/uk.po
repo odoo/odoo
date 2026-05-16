@@ -1,19 +1,20 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* website_crm_partner_assign
+# * website_crm_partner_assign
 #
 # Translators:
 # Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2022
 # Martin Trigaux, 2022
-#
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:39+0000\n"
-"PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
-"Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
+"POT-Creation-Date: 2026-03-20 18:37+0000\n"
+"PO-Revision-Date: 2025-11-08 21:57+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Ukrainian <https://translate.odoo.com/projects/odoo-19/"
+"website_crm_partner_assign/uk/>\n"
 "Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,6 +23,7 @@ msgstr ""
 "11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % "
 "100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || "
 "(n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign__nbr_opportunities
@@ -32,12 +34,12 @@ msgstr "К-сть нагод"
 #. odoo-javascript
 #: code:addons/website_crm_partner_assign/static/src/interactions/crm_partner_assign.js:0
 msgid "%s's Opportunity"
-msgstr ""
+msgstr "Нагода %s"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
 msgid "&amp;nbsp;&amp;nbsp;"
-msgstr ""
+msgstr "&amp;nbsp;&amp;nbsp;"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
@@ -53,11 +55,13 @@ msgid ""
 "<i class=\"fa fa-map-marker\" role=\"img\" aria-label=\"Open map\" "
 "title=\"Open map\"/>"
 msgstr ""
+"<i class=\"fa fa-map-marker\" role=\"img\" aria-label=\"Open map\" "
+"title=\"Open map\"/>"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "<i class=\"fa fa-pencil me-1\"/>Edit"
-msgstr ""
+msgstr "<i class=\"fa fa-pencil me-1\"/>Редагувати"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.partner
@@ -67,12 +71,12 @@ msgstr ""
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "<option>Countries...</option>"
-msgstr ""
+msgstr "<option>Країни...</option>"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "<option>States...</option>"
-msgstr ""
+msgstr "<option>Області...</option>"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
@@ -235,12 +239,12 @@ msgid ""
 "                            Hello,<br/>\n"
 "                            We have been contacted by those prospects that "
 "are in your region. Thus, the following leads have been assigned to <t t-"
-"out=\"ctx['partner_id'].name or ''\"/>:<br/>\n"
+"out=\"ctx['partner_id'].name if ctx.get('partner_id') else ''\"/>:<br/>\n"
 "                            <ol>\n"
-"                                <li t-foreach=\"ctx['partner_leads']\" t-"
-"as=\"lead\"><a t-att-href=\"lead['lead_link']\" t-out=\"lead['lead_id'].name "
-"or 'Subject Undefined'\">Subject Undefined</a>, <t t-"
-"out=\"lead['lead_id'].partner_name or lead['lead_id'].contact_name or "
+"                                <li t-foreach=\"ctx.get('partner_leads', [])"
+"\" t-as=\"lead\"><a t-att-href=\"lead['lead_link']\" t-"
+"out=\"lead['lead_id'].name or 'Subject Undefined'\">Subject Undefined</a>, "
+"<t t-out=\"lead['lead_id'].partner_name or lead['lead_id'].contact_name or "
 "'Contact Name Undefined'\">Contact Name Undefined</t>, <t t-"
 "out=\"lead['lead_id'].country_id and lead['lead_id'].country_id.name or "
 "'Country Undefined'\">Country Undefined</t>, <t t-"
@@ -258,18 +262,20 @@ msgid ""
 "                            <t t-else=\"\">\n"
 "                                You do not have yet a portal access to our "
 "database. Please contact\n"
-"                                <t t-out=\"ctx['partner_id'].user_id and "
-"ctx['partner_id'].user_id.email and 'your account manager %s (%s)' % "
+"                                <t t-out=\"ctx.get('partner_id') and "
+"ctx['partner_id'].user_id and ctx['partner_id'].user_id.email and 'your "
+"account manager %s (%s)' % "
 "(ctx['partner_id'].user_id.name,ctx['partner_id'].user_id.email) or "
 "'us'\">us</t>.<br/>\n"
 "                            </t>\n"
 "                            The lead will be sent to another partner if you "
 "do not contact the lead before 20 days.<br/><br/>\n"
 "                            Thank you,<br/>\n"
-"                            <t t-out=\"ctx['partner_id'].user_id and "
-"ctx['partner_id'].user_id.signature or ''\"/>\n"
+"                            <t t-out=\"ctx.get('partner_id') and "
+"ctx['partner_id'].user_id and ctx['partner_id'].user_id.signature or ''\"/>\n"
 "                            <br/>\n"
-"                            <t t-if=\"not ctx['partner_id'].user_id\">\n"
+"                            <t t-if=\"not ctx.get('partner_id') or not "
+"ctx['partner_id'].user_id\">\n"
 "                                PS: It looks like you do not have an account "
 "manager assigned to you, please contact us.\n"
 "                            </t>\n"
@@ -364,7 +370,7 @@ msgstr "Адреса"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
 msgid "Address:"
-msgstr ""
+msgstr "Адреса:"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
@@ -380,13 +386,13 @@ msgstr "Всі країни"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index_filter_by_industry
 msgid "All Industries"
-msgstr ""
+msgstr "Усі сфери"
 
 #. module: website_crm_partner_assign
 #. odoo-python
 #: code:addons/website_crm_partner_assign/models/crm_lead.py:0
 msgid "All fields are required!"
-msgstr ""
+msgstr "Усі поля обовʼязкові!"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.res_partner_activation_view_search
@@ -406,7 +412,7 @@ msgstr "Призначений партнер"
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.crm_lead_merge_summary_inherit_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
 msgid "Assigned Partner:"
-msgstr ""
+msgstr "Призначений партнер:"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.view_crm_lead_opportunity_geo_assign_form
@@ -421,7 +427,7 @@ msgstr "Автоматичне очищення вмісту HTML"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.partner
 msgid "Back to resellers list"
-msgstr ""
+msgstr "Повернутися до списку партнерів"
 
 #. module: website_crm_partner_assign
 #: model:ir.model,name:website_crm_partner_assign.model_crm_partner_report_assign
@@ -431,7 +437,7 @@ msgstr "Аналіз партнерства CRM"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
 msgid "Campaign:"
-msgstr ""
+msgstr "Кампанія:"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner_grade__can_publish
@@ -464,7 +470,7 @@ msgstr "Закрити"
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "Communication history"
-msgstr ""
+msgstr "Історія комунікації"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
@@ -484,7 +490,7 @@ msgstr "Контакт"
 #. odoo-javascript
 #: code:addons/website_crm_partner_assign/static/src/website_builder/partner_page_option.xml:0
 msgid "Contact Details"
-msgstr ""
+msgstr "Деталі контактної особи"
 
 #. module: website_crm_partner_assign
 #. odoo-python
@@ -521,12 +527,12 @@ msgstr ""
 #. module: website_crm_partner_assign
 #: model_terms:ir.actions.act_window,help:website_crm_partner_assign.res_partner_activation_act
 msgid "Create a Partner Activation"
-msgstr ""
+msgstr "Створити активацію партнера"
 
 #. module: website_crm_partner_assign
 #: model:ir.model,website_form_label:website_crm_partner_assign.model_crm_lead
 msgid "Create an Opportunity"
-msgstr ""
+msgstr "Створіть нагоду"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_assignation__create_uid
@@ -560,12 +566,14 @@ msgstr "Ім'я клієнта"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
 msgid "Customer:"
-msgstr ""
+msgstr "Клієнт:"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.layout
 msgid "DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL RESELLERS"
 msgstr ""
+"ПЕРЕТЯГУЙТЕ СЮДИ КОНСТРУКТОРСЬКІ БЛОКИ, ЩОБ ЗРОБИТИ ЇХ ДОСТУПНИМИ ДЛЯ ВСІХ "
+"ПАРТНЕРІВ"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_leads
@@ -618,7 +626,7 @@ msgstr "Редагувати нагоду"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
 msgid "Edit to add a short description"
-msgstr ""
+msgstr "Редагуйте для додавання короткого опису"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_leads
@@ -652,12 +660,12 @@ msgstr "Очікуваний дохід"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
 msgid "Filter by category"
-msgstr ""
+msgstr "Фільтр за категоріями"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
 msgid "Filter by country"
-msgstr ""
+msgstr "Фільтр за країнами"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index_filter_by_industry
@@ -667,22 +675,22 @@ msgstr ""
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
 msgid "Filters"
-msgstr ""
+msgstr "Фільтри"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
 msgid "Find a reseller"
-msgstr ""
+msgstr "Знайти партнера"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_home_lead
 msgid "Follow and convert your leads"
-msgstr ""
+msgstr "Слідкуйте за вашими лідами та конвертуйте їх"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_home_lead
 msgid "Follow and convert your opportunities"
-msgstr ""
+msgstr "Слідкуйте за вашими нагодами та конвертуйте їх"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead_forward_to_partner__partner_id
@@ -708,12 +716,12 @@ msgstr "Перемістити партнеру"
 #. odoo-python
 #: code:addons/website_crm_partner_assign/controllers/main.py:0
 msgid "Future Activities"
-msgstr ""
+msgstr "Майбутні дії"
 
 #. module: website_crm_partner_assign
 #: model:mail.template,subject:website_crm_partner_assign.email_template_lead_forward_mail
-msgid "Fwd: Lead: {{ ctx['partner_id'].name }}"
-msgstr "Fwd: Lead: {{ ctx['partner_id'].name }}"
+msgid "Fwd: Lead: {{ ctx['partner_id'].name if ctx.get('partner_id') else ''}}"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_lead__partner_latitude
@@ -733,7 +741,7 @@ msgstr "Геолокація"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.crm_lead_merge_summary_inherit_partner_assign
 msgid "Geolocation:"
-msgstr ""
+msgstr "Геолокація:"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,help:website_crm_partner_assign.field_res_partner_grade__partner_weight
@@ -747,7 +755,7 @@ msgstr ""
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
 msgid "Go to reseller"
-msgstr ""
+msgstr "Перейти до партнерів"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign__grade_id
@@ -758,7 +766,7 @@ msgstr "Оцінка"
 #. odoo-python
 #: code:addons/website_crm_partner_assign/models/crm_lead.py:0
 msgid "I am interested by this lead."
-msgstr ""
+msgstr "Я зацікавлений у цьому ліді."
 
 #. module: website_crm_partner_assign
 #. odoo-python
@@ -809,7 +817,7 @@ msgstr "Посилання на впровадження"
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner__implemented_partner_count
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users__implemented_partner_count
 msgid "Implemented Partner Count"
-msgstr ""
+msgstr "Підрахунок реалізованих партнерів"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner__assigned_partner_id
@@ -850,7 +858,7 @@ msgstr "Остання дата цієї справи була переслан�
 #. odoo-python
 #: code:addons/website_crm_partner_assign/controllers/main.py:0
 msgid "Late Activities"
-msgstr ""
+msgstr "Останні дії"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign__date_review
@@ -861,7 +869,7 @@ msgstr "Останній огляд партнера"
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner__date_review
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users__date_review
 msgid "Latest Review"
-msgstr ""
+msgstr "Останній огляд"
 
 #. module: website_crm_partner_assign
 #: model:ir.model,name:website_crm_partner_assign.model_crm_lead
@@ -928,7 +936,7 @@ msgstr "Втрачено"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
 msgid "Medium:"
-msgstr ""
+msgstr "Канал:"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.crm_lead_partner_filter
@@ -968,7 +976,7 @@ msgstr "Дата наступної дії"
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner__date_review_next
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_users__date_review_next
 msgid "Next Review"
-msgstr ""
+msgstr "Наступний огляд"
 
 #. module: website_crm_partner_assign
 #. odoo-python
@@ -989,13 +997,13 @@ msgstr "Більше немає доступних партнерів"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
 msgid "No results found for \""
-msgstr ""
+msgstr "Не знайдено результатів для \""
 
 #. module: website_crm_partner_assign
 #. odoo-python
 #: code:addons/website_crm_partner_assign/models/crm_lead.py:0
 msgid "Not allowed to update the following field(s): %s."
-msgstr ""
+msgstr "Не дозволено оновлювати наступні поля: %s."
 
 #. module: website_crm_partner_assign
 #. odoo-python
@@ -1008,7 +1016,7 @@ msgstr ""
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index_filter_by_industry
 msgid "Open industries dropdown"
-msgstr ""
+msgstr "Відкрити спадаючий список напрямків"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_home_lead
@@ -1030,7 +1038,7 @@ msgstr "Нагода"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "Opportunity -"
-msgstr ""
+msgstr "Нагода -"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign__partner_id
@@ -1065,7 +1073,7 @@ msgstr "Дата призначення партнера"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.crm_lead_merge_summary_inherit_partner_assign
 msgid "Partner Assignment Date:"
-msgstr ""
+msgstr "Дата призначення партнера:"
 
 #. module: website_crm_partner_assign
 #: model:ir.model,name:website_crm_partner_assign.model_res_partner_grade
@@ -1102,13 +1110,13 @@ msgstr "Партнер не зацікавлений"
 #. odoo-python
 #: code:addons/website_crm_partner_assign/controllers/main.py:0
 msgid "Partners"
-msgstr ""
+msgstr "Партнери"
 
 #. module: website_crm_partner_assign
 #. odoo-javascript
-#: code:addons/website_crm_partner_assign/static/src/website_builder/website_crm_partner_assign_option_plugin.js:0
+#: code:addons/website_crm_partner_assign/static/src/website_builder/website_crm_partner_assign_option.js:0
 msgid "Partners Page"
-msgstr ""
+msgstr "Партнерська сторінка"
 
 #. module: website_crm_partner_assign
 #: model:ir.actions.act_window,name:website_crm_partner_assign.action_report_crm_partner_assign
@@ -1208,7 +1216,7 @@ msgstr "Дилери"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
 msgid "Sales Team:"
-msgstr ""
+msgstr "Команда продажу:"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.view_report_crm_partner_assign_filter
@@ -1218,7 +1226,7 @@ msgstr "Продавець"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
 msgid "Salesperson:"
-msgstr ""
+msgstr "Продавець:"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
@@ -1233,22 +1241,22 @@ msgstr ""
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
 msgid "See all resellers"
-msgstr ""
+msgstr "Переглянути всіх партнерів"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
 msgid "See categories filters"
-msgstr ""
+msgstr "Переглянути фільтри категорій"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
 msgid "See countries filters"
-msgstr ""
+msgstr "Переглянути фільтри країн"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index_filter_by_industry
 msgid "See industries filters"
-msgstr ""
+msgstr "Переглянути фільтри напрямків"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.crm_lead_forward_to_partner_form
@@ -1268,7 +1276,7 @@ msgstr "Надіслати листа"
 #. module: website_crm_partner_assign
 #: model:mail.template,description:website_crm_partner_assign.email_template_lead_forward_mail
 msgid "Sent to partner when a lead has been assigned to him"
-msgstr ""
+msgstr "Надсилається партнеру після призначення його на лід"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_res_partner__grade_sequence
@@ -1304,7 +1312,7 @@ msgstr "Стадія"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "Stage:"
-msgstr ""
+msgstr "Етап:"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
@@ -1351,7 +1359,7 @@ msgstr "Немає нагод."
 #. odoo-python
 #: code:addons/website_crm_partner_assign/models/crm_lead.py:0
 msgid "There is no country set in addresses for %(lead_names)s."
-msgstr ""
+msgstr "Не вказано жодної країни в адресі на %(lead_names)s."
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
@@ -1373,6 +1381,8 @@ msgstr ""
 msgid ""
 "Those are used to know where your Partners stand in your onboarding process."
 msgstr ""
+"Вони використовуються для того, щоб знати, на якій позиції знаходяться ваші "
+"партнери в процесі адаптації."
 
 #. module: website_crm_partner_assign
 #. odoo-python
@@ -1474,17 +1484,17 @@ msgstr "за"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
 msgid "in"
-msgstr ""
+msgstr "в"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.crm_lead_merge_summary_inherit_partner_assign
 msgid "latitude,"
-msgstr ""
+msgstr "широта,"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.crm_lead_merge_summary_inherit_partner_assign
 msgid "longitude"
-msgstr ""
+msgstr "довгота"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
@@ -1494,12 +1504,12 @@ msgstr "на"
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
 msgid "reference"
-msgstr ""
+msgstr "посилання"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.index
 msgid "references"
-msgstr ""
+msgstr "референси"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields.selection,name:website_crm_partner_assign.selection__crm_lead_forward_to_partner__forward_type__assigned
@@ -1521,6 +1531,9 @@ msgstr ""
 #: code:addons/website_crm_partner_assign/controllers/main.py:0
 msgid "won_status"
 msgstr ""
+
+#~ msgid "Fwd: Lead: {{ ctx['partner_id'].name }}"
+#~ msgstr "Fwd: Lead: {{ ctx['partner_id'].name }}"
 
 #~ msgid "<i class=\"fa fa-file-text-o\"/> I'm interested"
 #~ msgstr "<i class=\"fa fa-file-text-o\"/> Я зацікавлений"

@@ -520,6 +520,7 @@ test("clicking on a cell triggers a doAction", async () => {
                 domain: [["product_id", "=", 37]],
                 name: "Partners",
                 res_model: "partner",
+                search_view_id: [67, "search"],
                 target: "current",
                 type: "ir.actions.act_window",
                 view_mode: "list",
@@ -535,6 +536,7 @@ test("clicking on a cell triggers a doAction", async () => {
     await mountView({
         type: "pivot",
         resModel: "partner",
+        searchViewId: 67,
         arch: `
 			<pivot string="Partners">
 				<field name="product_id" type="row"/>
@@ -3860,6 +3862,7 @@ test("middle clicking on a cell triggers a doAction", async () => {
                 domain: [["product_id", "=", 37]],
                 name: "Partners",
                 res_model: "partner",
+                search_view_id: [67, "search"],
                 target: "current",
                 type: "ir.actions.act_window",
                 view_mode: "list",
@@ -3878,6 +3881,7 @@ test("middle clicking on a cell triggers a doAction", async () => {
     await mountView({
         type: "pivot",
         resModel: "partner",
+        searchViewId: 67,
         arch: `
 			<pivot string="Partners">
 				<field name="product_id" type="row"/>

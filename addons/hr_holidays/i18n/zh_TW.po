@@ -7,13 +7,15 @@
 # Tony Ng, 2025
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Tony Ng (ngto)" <ngto@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:37+0000\n"
-"PO-Revision-Date: 2025-09-16 08:11+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2026-04-24 17:35+0000\n"
+"PO-Revision-Date: 2026-05-07 10:06+0000\n"
+"Last-Translator: \"Tony Ng (ngto)\" <ngto@odoo.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
 "projects/odoo-19/hr_holidays/zh_Hant/>\n"
 "Language: zh_TW\n"
@@ -21,7 +23,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: hr_holidays
 #. odoo-python
@@ -244,9 +246,21 @@ msgstr "在此期間的摘要"
 #. module: hr_holidays
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
+msgid "(s)"
+msgstr ""
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
 msgid ""
 "(s)\n"
 "                                    and a balance cap is set to"
+msgstr ""
+
+#. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/components/accrual_level/accrual_levels.xml:0
+msgid "(s)."
 msgstr ""
 
 #. module: hr_holidays
@@ -1314,11 +1328,10 @@ msgid ""
 "period they already took leaves. Changing this working schedule changes the "
 "duration of these leaves in such a way the employee no longer has the "
 "required allocation for them. Please review these leaves and/or allocations "
-"before changing the contract."
+"before changing the contract.\n"
+"\n"
+"This error has been triggered by:\n"
 msgstr ""
-"更改該員工的合同會改變其已休假期間的工作安排。更改工作時間表會改變這些假期的"
-"持續時間，從而使該員工不再擁有所需的假期分配。請在更改合同前審查這些假期和/或"
-"分配。"
 
 #. module: hr_holidays
 #. odoo-python
@@ -1617,7 +1630,7 @@ msgstr "日"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
 msgid "Day Period"
-msgstr ""
+msgstr "期間"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__added_value_type__day
@@ -1966,7 +1979,7 @@ msgstr "歐洲休假"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_generate_multi_wizard_view_form
 msgid "Everyone"
-msgstr ""
+msgstr "每一個人"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__employee_requests
@@ -2168,7 +2181,7 @@ msgstr "香港侍產假"
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.l10n_hk_leave_type_paternity_leave_80
 msgid "HK Paternity Leaves 80%"
-msgstr ""
+msgstr "香港侍產假 80% 薪金"
 
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.l10n_hk_leave_type_sick_leave
@@ -2739,6 +2752,11 @@ msgid "Meeting"
 msgstr "會議"
 
 #. module: hr_holidays
+#: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report_calendar__member_of_department
+msgid "Member of department"
+msgstr "部門數目"
+
+#. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_has_error
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__message_has_error
 msgid "Message Delivery error"
@@ -2920,6 +2938,8 @@ msgid "New Group Allocation"
 msgstr "新增群組分配"
 
 #. module: hr_holidays
+#. odoo-javascript
+#: code:addons/hr_holidays/static/src/views/calendar/calendar_controller.xml:0
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_tree
 msgid "New Group Time Off"
@@ -3259,7 +3279,7 @@ msgstr "概覽"
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.l10n_pl_leave_type_sick_leave
 msgid "PL Sick Leaves 80% "
-msgstr ""
+msgstr "波蘭病假 80% 薪金"
 
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.l10n_eg_leave_type_paid_sick_time_off
@@ -3280,7 +3300,7 @@ msgstr "育嬰假"
 #: model:hr.leave.type,name:hr_holidays.l10n_jo_leave_type_paternity
 #: model:hr.leave.type,name:hr_holidays.l10n_sa_leave_type_paternity
 msgid "Paternity Leave"
-msgstr ""
+msgstr "侍產假"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -3333,7 +3353,7 @@ msgstr "公開員工"
 #: model:ir.ui.menu,name:hr_holidays.hr_holidays_public_time_off_menu_configuration
 #: model_terms:ir.ui.view,arch_db:hr_holidays.resource_calendar_form_inherit
 msgid "Public Holidays"
-msgstr "公眾假日"
+msgstr "公眾假期"
 
 #. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.open_view_public_holiday
@@ -3652,7 +3672,7 @@ msgstr "顯示下一活動日期已過的所有記錄"
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.l10n_sa_leave_type_sick_leave_100
 msgid "Sick Leave (100% Paid)"
-msgstr ""
+msgstr "病假（100% 薪金）"
 
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.l10n_eg_leave_type_sick_leave_75
@@ -3669,7 +3689,7 @@ msgstr "病假（無薪）"
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.l10n_jo_leave_type_unpaid_sick
 msgid "Sick Leave (Unpaid)"
-msgstr ""
+msgstr "病假（無薪）"
 
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.l10n_ae_leave_type_sick_leave_0
@@ -3697,6 +3717,16 @@ msgstr "病假"
 #: model:hr.leave.type,name:hr_holidays.l10n_be_leave_type_small_unemployment
 msgid "Small Unemployment"
 msgstr "短暫失業"
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/wizard/hr_leave_generate_multi_wizard.py:0
+msgid ""
+"Some employees already have time off requests in hours that overlap with the "
+"selected period, Odoo cannot automatically adjust or split hourly leaves "
+"during batch generation. Conflicting time off:\n"
+"%s"
+msgstr ""
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -3821,7 +3851,7 @@ msgstr "總數"
 #. odoo-javascript
 #: code:addons/hr_holidays/static/src/views/calendar/calendar_filter_panel/calendar_mobile_filter_panel.xml:0
 msgid "Summary"
-msgstr ""
+msgstr "摘要"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__week_day__6
@@ -4170,7 +4200,7 @@ msgstr "休假數目"
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_employee.py:0
 msgid "Time Off Dashboard"
-msgstr ""
+msgstr "休假儀表板"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__private_name
@@ -4750,6 +4780,13 @@ msgid "When the time is accrued?"
 msgstr "休假時間是甚麼時候累積的？"
 
 #. module: hr_holidays
+#: model:ir.model.fields,help:hr_holidays.field_hr_leave_report_calendar__member_of_department
+msgid ""
+"Whether the employee is a member of the active user's department or one of "
+"it's child department."
+msgstr "員工是生效用戶部門的成員還是其子部門之一的成員。"
+
+#. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_holidays_cancel_leave_form
 msgid "Why do you want to cancel this approved time off ?"
 msgstr "為何想取消這個已批准的休假？"
@@ -5011,14 +5048,6 @@ msgid ""
 "You cannot reduce the duration below the duration of leaves already taken by "
 "the employee."
 msgstr "持續時間不可縮短至低於員工已放取的休假的持續時間。"
-
-#. module: hr_holidays
-#. odoo-python
-#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
-msgid ""
-"You cannot refuse this allocation request since the employee has already "
-"taken leaves for it. Please refuse or delete those leaves first."
-msgstr "您不能拒絕該分配請求，因為該員工已經為此休假。請先拒絕或刪除這些假期。"
 
 #. module: hr_holidays
 #. odoo-python
@@ -5374,6 +5403,23 @@ msgstr "有效期至"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_calendar_view_search
 msgid "validate"
 msgstr "驗證"
+
+#~ msgid ""
+#~ "Changing the contract on this employee changes their working schedule in "
+#~ "a period they already took leaves. Changing this working schedule changes "
+#~ "the duration of these leaves in such a way the employee no longer has the "
+#~ "required allocation for them. Please review these leaves and/or "
+#~ "allocations before changing the contract."
+#~ msgstr ""
+#~ "更改該員工的合同會改變其已休假期間的工作安排。更改工作時間表會改變這些假期"
+#~ "的持續時間，從而使該員工不再擁有所需的假期分配。請在更改合同前審查這些假期"
+#~ "和/或分配。"
+
+#~ msgid ""
+#~ "You cannot refuse this allocation request since the employee has already "
+#~ "taken leaves for it. Please refuse or delete those leaves first."
+#~ msgstr ""
+#~ "您不能拒絕該分配請求，因為該員工已經為此休假。請先拒絕或刪除這些假期。"
 
 #~ msgid ""
 #~ "%(leave_name)s has been cancelled with the justification: <br/> %"

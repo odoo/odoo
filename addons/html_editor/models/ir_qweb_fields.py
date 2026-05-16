@@ -252,7 +252,10 @@ class IrQwebFieldMany2one(models.AbstractModel):
                 attrs['data-oe-many2one-allowreset'] = 1
                 if not many2one:
                     attrs['data-oe-many2one-model'] = record._fields[field_name].comodel_name
-            attrs['data-oe-many2one-domain'] = json_safe.dumps(field._description_domain(self.env))
+            domain = field._description_domain(self.env)
+            if isinstance(domain, str):
+                domain = []
+            attrs['data-oe-many2one-domain'] = json_safe.dumps(domain)
         return attrs
 
     @api.model
@@ -531,6 +534,9 @@ class IrQwebFieldImage(models.AbstractModel):
             return None
 
     def load_remote_url(self, url):
+        if url.startswith('data:'):
+            logger.debug("Cannot load binary data url %r", url)
+            return None
         try:
             # should probably remove remote URLs entirely:
             # * in fields, downloading them without blowing up the server is a

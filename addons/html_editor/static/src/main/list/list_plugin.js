@@ -2,6 +2,8 @@ import { Plugin } from "@html_editor/plugin";
 import { closestBlock, isBlock } from "@html_editor/utils/blocks";
 import {
     removeClass,
+    removeEmptyTextNodes,
+    removeStyle,
     toggleClass,
     unwrapContents,
     wrapInlinesInBlocks,
@@ -13,6 +15,7 @@ import {
     isListElement,
     isListItemElement,
     isParagraphRelatedElement,
+    isPhrasingContent,
     isProtected,
     isProtecting,
     isShrunkBlock,
@@ -35,7 +38,7 @@ import { compareListTypes, createList, insertListAfter, isListItem } from "./uti
 import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
 import { withSequence } from "@html_editor/utils/resource";
 import { FONT_SIZE_CLASSES, getFontSizeOrClass, getHtmlStyle } from "@html_editor/utils/formatting";
-import { getTextColorOrClass } from "@html_editor/utils/color";
+import { getTextColorOrClass, TEXT_CLASSES_REGEX } from "@html_editor/utils/color";
 import { baseContainerGlobalSelector } from "@html_editor/utils/base_container";
 import { ListSelector } from "./list_selector";
 import { reactive } from "@odoo/owl";
@@ -80,6 +83,7 @@ export class ListPlugin extends Plugin {
         allowChecklist: true,
     };
     toolbarListSelectorKey = reactive({ value: 0 });
+    /** @type {import("plugins").EditorResources} */
     resources = {
         user_commands: [
             {
@@ -189,6 +193,8 @@ export class ListPlugin extends Plugin {
         node_to_insert_processors: this.processNodeToInsert.bind(this),
         clipboard_content_processors: this.processContentForClipboard.bind(this),
         before_insert_within_pre_processors: this.insertListWithinPre.bind(this),
+        before_insert_processors: this.handleInsert.bind(this),
+        triple_click_overrides: this.handleTripleClick.bind(this),
 
         fully_selected_node_predicates: (node, selection, range) => {
             if (node.nodeName === "LI") {
@@ -340,7 +346,7 @@ export class ListPlugin extends Plugin {
             return this.baseContainerToList(element, mode);
         }
         // @todo @phoenix: check for callbacks registered as resources instead?
-        if (element.matches("td, th, li.nav-item")) {
+        if (element.matches("td, th, li.nav-item, blockquote")) {
             return this.blockContentsToList(element, mode);
         }
         let list;
@@ -454,10 +460,14 @@ export class ListPlugin extends Plugin {
         }
         const newTag = newMode === "CL" ? "UL" : newMode;
         const newList = this.dependencies.dom.setTagName(list, newTag);
-        // Clear list style (@todo @phoenix - why??)
+        // Remove any previously set list-style so that when changing the list
+        // type, the new list can show its correct default marker style.
         newList.style.removeProperty("list-style");
         for (const li of newList.children) {
             li.style.removeProperty("list-style");
+            if (!isListElement(li.firstChild)) {
+                li.classList.remove("oe-nested");
+            }
         }
         removeClass(newList, "o_checklist");
         if (newMode === "CL") {
@@ -487,15 +497,14 @@ export class ListPlugin extends Plugin {
         if (!isOrphan) {
             return;
         }
-        if (element.children.length && [...element.children].every(isBlock)) {
-            // Unwrap <li> if each of its children is a block element.
-            unwrapContents(element);
-        } else {
-            // Otherwise, wrap its content in a new <p> element.
-            const paragraph = this.dependencies.baseContainer.createBaseContainer();
-            element.replaceWith(paragraph);
-            paragraph.replaceChildren(...element.childNodes);
-        }
+        const cursors = this.dependencies.selection.preserveSelection();
+        wrapInlinesInBlocks(element, {
+            baseContainerNodeName: this.dependencies.baseContainer.getDefaultNodeName(),
+            cursors,
+        });
+        cursors.update(callbacksForCursorUpdate.unwrap(element));
+        unwrapContents(element);
+        cursors.restore();
     }
 
     mergeSimilarLists(element) {
@@ -543,7 +552,8 @@ export class ListPlugin extends Plugin {
 
         if (
             [...element.children].some(
-                (child) => isBlock(child) && !this.dependencies.split.isUnsplittable(child)
+                (child) =>
+                    !isPhrasingContent(child) && !this.dependencies.split.isUnsplittable(child)
             )
         ) {
             const cursors = this.dependencies.selection.preserveSelection();
@@ -1059,6 +1069,16 @@ export class ListPlugin extends Plugin {
         }
     }
 
+    handleTripleClick(ev) {
+        const node = ev.target;
+        const isChecklistItem =
+            node.tagName === "LI" && this.getListMode(node.parentElement) === "CL";
+        if (isChecklistItem && this.isPointerInsideCheckbox(node, ev.offsetX, ev.offsetY)) {
+            // If pointer is inside checkbox, prevent tripleclick selection.
+            return true;
+        }
+    }
+
     /**
      * @param {MouseEvent} ev
      * @param {HTMLLIElement} li - LI element inside a checklist.
@@ -1091,6 +1111,9 @@ export class ListPlugin extends Plugin {
         }
         const cursors = this.dependencies.selection.preserveSelection();
         for (const listItem of listItems) {
+            // Remove empty text nodes without breaking the current selection.
+            removeEmptyTextNodes(listItem, cursors);
+
             if (this.dependencies.selection.areNodeContentsFullySelected(listItem)) {
                 for (const node of [
                     listItem,
@@ -1098,9 +1121,14 @@ export class ListPlugin extends Plugin {
                         (n) => isElement(n) && closestElement(n, "LI") === listItem
                     ),
                 ]) {
-                    removeClass(node, "o_default_color");
+                    // Remove any color-related classes.
+                    const classesToRemove = [...node.classList].filter(
+                        (cls) => cls === "o_default_color" || TEXT_CLASSES_REGEX.test(cls)
+                    );
+                    removeClass(node, ...classesToRemove);
+
                     if (node.style.color) {
-                        node.style.color = "";
+                        removeStyle(node, "color");
                     }
                 }
 
@@ -1111,7 +1139,11 @@ export class ListPlugin extends Plugin {
                         list.classList.add("o_default_color");
                     }
                 }
-            } else if (color === "" && listItem.style.color) {
+            } else if (
+                color === "" &&
+                (listItem.style.color ||
+                    [...listItem.classList].some((cls) => TEXT_CLASSES_REGEX.test(cls)))
+            ) {
                 const textNodes = targetedNodes.filter(
                     (n) => isVisibleTextNode(n) && closestElement(n, "li") === listItem
                 );
@@ -1157,6 +1189,9 @@ export class ListPlugin extends Plugin {
             if (!hasOnlyBaseBlocks || (!applyStyle && !hasExistingFontSize)) {
                 continue;
             }
+
+            // Remove empty text nodes without breaking the current selection.
+            removeEmptyTextNodes(listItem, cursors);
 
             if (this.dependencies.selection.areNodeContentsFullySelected(listItem)) {
                 for (const node of [
@@ -1214,7 +1249,7 @@ export class ListPlugin extends Plugin {
      * @param {HTMLElement} list - The `<ul>` element used to determine the parent list and marker width.
      */
     adjustListPadding(list) {
-        if (!isListElement(list)) {
+        if (!isListElement(list) || ![...list.children].some(getFontSizeOrClass)) {
             return;
         }
         list.style.removeProperty("padding-inline-start");
@@ -1227,7 +1262,7 @@ export class ListPlugin extends Plugin {
                 const markerWidth = parseFloat(this.window.getComputedStyle(li, "::marker").width);
                 return isNaN(markerWidth) ? 0 : markerWidth;
             })
-            .reduce(Math.max);
+            .reduce((accumulator, currentValue) => Math.max(accumulator, currentValue));
         // For `UL` with large font size the marker width is so big that more padding is needed.
         const largestMarkerPadding = Math.round(largestMarker) * (list.nodeName === "UL" ? 2 : 1);
 
@@ -1243,7 +1278,7 @@ export class ListPlugin extends Plugin {
 
     adjustListPaddingOnDelete() {
         const selection = this.document.getSelection();
-        if (!selection.isCollapsed) {
+        if (!selection.isCollapsed || !selection.anchorNode) {
             return;
         }
         const listItem = closestElement(selection.anchorNode);
@@ -1274,5 +1309,14 @@ export class ListPlugin extends Plugin {
                     description: command.title,
                 };
             });
+    }
+
+    handleInsert(container, block) {
+        if (!this.config.allowChecklist) {
+            for (const list of container.querySelectorAll(".o_checklist > li")) {
+                this.liToBlocks(list);
+            }
+        }
+        return container;
     }
 }

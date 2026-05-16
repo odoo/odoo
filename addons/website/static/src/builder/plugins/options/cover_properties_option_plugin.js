@@ -10,6 +10,7 @@ import { coverSizeClassLabels } from "./cover_properties_option";
 class CoverPropertiesOptionPlugin extends Plugin {
     static id = "coverPropertiesOption";
     static dependencies = ["builderActions", "media", "imagePostProcess"];
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_options: [withSequence(COVER_PROPERTIES, CoverPropertiesOption)],
         builder_actions: {

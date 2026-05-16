@@ -2,6 +2,7 @@
 
 from . import test_apply_pending_coupon
 from . import test_ewallet
+from . import test_concurrent_promo_code
 from . import test_free_product_reward
 from . import test_sale_coupon_multiwebsite
 from . import test_shop_loyalty_payment

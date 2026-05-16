@@ -1,5 +1,13 @@
 import { addBusMessageHandler, busModels } from "@bus/../tests/bus_test_helpers";
-import { after, before, expect, getFixture, registerDebugInfo, test } from "@odoo/hoot";
+import {
+    after,
+    before,
+    expect,
+    getFixture,
+    mockPermission,
+    registerDebugInfo,
+    test,
+} from "@odoo/hoot";
 import { hover as hootHover, queryFirst, resize } from "@odoo/hoot-dom";
 import { Deferred, microTick } from "@odoo/hoot-mock";
 import {
@@ -23,7 +31,7 @@ import {
 } from "@web/../tests/web_test_helpers";
 
 import { CHAT_HUB_KEY } from "@mail/core/common/chat_hub_model";
-import { contains } from "./mail_test_helpers_contains";
+import { click, contains } from "./mail_test_helpers_contains";
 
 import { closeStream, mailGlobal } from "@mail/utils/common/misc";
 import { Component, onMounted, onPatched, onWillDestroy, status } from "@odoo/owl";
@@ -76,7 +84,7 @@ import { ResRole } from "./mock_server/mock_models/res_role";
 import { ResUsers } from "./mock_server/mock_models/res_users";
 import { ResUsersSettings } from "./mock_server/mock_models/res_users_settings";
 import { ResUsersSettingsVolumes } from "./mock_server/mock_models/res_users_settings_volumes";
-import { Network } from "@mail/discuss/call/common/rtc_service";
+import { Network, Rtc } from "@mail/discuss/call/common/rtc_service";
 import { UPDATE_EVENT } from "@mail/discuss/call/common/peer_to_peer";
 
 export * from "./mail_test_helpers_contains";
@@ -104,6 +112,13 @@ addBusMessageHandler("mail.record/insert", (_env, _id, payload) => {
 export function defineMailModels() {
     defineParams({ suite: "mail" }, "replace");
     return defineModels(mailModels);
+}
+
+export function getChannelCommandsForThread(threadId) {
+    const store = getService("mail.store");
+    const suggestionService = getService("mail.suggestion");
+    const thread = store.Thread.get({ model: "discuss.channel", id: threadId });
+    return suggestionService.getChannelCommands(thread);
 }
 
 export const mailModels = {
@@ -176,11 +191,20 @@ export function onRpcAfter(route, callback) {
     const handler = registry.category("mail.mock_rpc").get(route);
     patchWithCleanup(handler, { after: callback });
 }
+/** @type {Map<string, string>} */
+const globalArchs = new Map();
 
-let archs = {};
+/**
+ * @param {Record<string, string>} newArchs
+ */
 export function registerArchs(newArchs) {
-    archs = newArchs;
-    after(() => (archs = {}));
+    if (!globalArchs.size) {
+        after(() => globalArchs.clear());
+    }
+    globalArchs.clear();
+    for (const [key, value] of Object.entries(newArchs)) {
+        globalArchs.set(key, value);
+    }
 }
 
 export function onlineTest(...args) {
@@ -240,15 +264,16 @@ export async function openView({ context, res_model, res_id, views, domain, ...p
         type,
         resModel: res_model,
         resId: res_id,
-        arch: params?.arch || archs[viewId || res_model + `,false,` + type] || undefined,
+        arch: params?.arch || globalArchs.get(viewId || res_model + `,false,` + type) || undefined,
         viewId: params?.arch || viewId,
         ...params,
     });
     await getService("action").doAction(action, { props: options });
 }
 
-let tabs = [];
-after(() => (tabs = []));
+/** @type {Set<HTMLElement>} */
+const globalTabs = new Set();
+
 /**
  * Add an item to the "Switch Tab" dropdown. If it doesn't exist, create the
  * dropdown and add the item afterwards.
@@ -258,13 +283,16 @@ after(() => (tabs = []));
  * item.
  */
 async function addSwitchTabDropdownItem(rootTarget, tabTarget) {
-    tabs.push(tabTarget);
+    if (!globalTabs.size) {
+        after(() => globalTabs.clear());
+    }
+    globalTabs.add(tabTarget);
     const zIndexMainTab = 100000;
     let dropdownDiv = rootTarget.querySelector(".o-mail-multi-tab-dropdown");
     const onClickDropdownItem = (e) => {
         const dropdownToggle = dropdownDiv.querySelector(".dropdown-toggle");
         dropdownToggle.innerText = `Switch Tab (${e.target.innerText})`;
-        tabs.forEach((tab) => (tab.style.zIndex = -zIndexMainTab));
+        globalTabs.forEach((tab) => (tab.style.zIndex = -zIndexMainTab));
         if (e.target.innerText !== "Hoot") {
             tabTarget.style.zIndex = zIndexMainTab;
         }
@@ -280,7 +308,7 @@ async function addSwitchTabDropdownItem(rootTarget, tabTarget) {
         dropdownDiv.classList.add("o-mail-multi-tab-dropdown");
         dropdownDiv.innerHTML = `
             <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Switch Tab (${tabs.length})
+                Switch Tab (${globalTabs.size})
             </button>
             <ul class="dropdown-menu">
                 <li><a class="dropdown-item">Hoot</a></li>
@@ -289,7 +317,7 @@ async function addSwitchTabDropdownItem(rootTarget, tabTarget) {
         dropdownDiv.querySelector("a").onclick = onClickDropdownItem;
         rootTarget.appendChild(dropdownDiv);
     }
-    const tabIndex = tabs.length;
+    const tabIndex = globalTabs.size;
     const li = document.createElement("li");
     const a = document.createElement("a");
     li.appendChild(a);
@@ -309,6 +337,12 @@ let discussAsTabId = 0;
  * }} [options]
  */
 export async function start(options) {
+    patchWithCleanup(Rtc.prototype, {
+        start() {
+            super.start();
+            after(() => this.clear());
+        },
+    });
     if (!MockServer.current) {
         await startServer();
     }
@@ -581,39 +615,15 @@ export async function makeMockRtcNetwork({ env, channelId }) {
  * based on the given value. Note that when `requestPermissionResult` is passed,
  * the `change` event of the `Permissions` API will also be triggered.
  *
- * @param {"default" | "denied" | "granted"} permission
- * @param {"default" | "denied" | "granted"} requestPermissionResult
+ * @param {PermissionName} requestPermissionResult
  */
-export function patchBrowserNotification(permission = "default", requestPermissionResult) {
-    if (!browser.Notification || !browser.navigator.permissions) {
-        return;
-    }
-    const notificationQueries = [];
-    patchWithCleanup(browser.navigator.permissions, {
-        async query({ name }) {
-            const result = await super.query(...arguments);
-            if (name === "notifications") {
-                Object.defineProperty(result, "state", {
-                    get: () => (permission === "default" ? "prompt" : permission),
-                });
-                notificationQueries.push(result);
-            }
-            return result;
-        },
-    });
-    patchWithCleanup(browser.Notification, {
-        permission,
-        isPatched: true,
+export function patchBrowserNotification(requestPermissionResult) {
+    mockPermission("notifications", "prompt");
+
+    patchWithCleanup(Notification, {
         requestPermission() {
-            if (!requestPermissionResult) {
-                return super.requestPermission(...arguments);
-            }
-            this.permission = requestPermissionResult;
-            for (const query of notificationQueries) {
-                query.permission = requestPermissionResult;
-                query.dispatchEvent(new Event("change"));
-            }
-            return requestPermissionResult;
+            mockPermission("notifications", requestPermissionResult);
+            return super.requestPermission();
         },
     });
 }
@@ -972,4 +982,39 @@ export function patchVoiceMessageAudio() {
         });
     });
     return res;
+}
+
+export function mockPermissionsPrompt() {
+    patchWithCleanup(browser.navigator.permissions, {
+        async query() {
+            return {
+                state: "prompt",
+                addEventListener: () => {},
+                removeEventListener: () => {},
+                onchange: null,
+            };
+        },
+    });
+}
+
+/**
+ * Assert IM status on chat bubble and chat window of given `conversationName` with `count`.
+ * The conversation should be present as a bubble initially, becomes open and folded again
+ * after calling function.
+ *
+ * This is made as a function so that negative assertion on ImStatus can use this function and
+ * ensure using correct selector and await properly like the positive assertions.
+ *
+ * @param {string} conversationName
+ * @param {Number} count
+ */
+export async function assertChatBubbleAndWindowImStatus(conversationName, count) {
+    await contains(`.o-mail-ChatBubble[name=${conversationName}]`);
+    expect(`.o-mail-ChatBubble[name=${conversationName}] .o-mail-ImStatus`).toHaveCount(count);
+    await click(`.o-mail-ChatBubble[name=${conversationName}]`);
+    await contains(`.o-mail-ChatWindow-header:has(:text(${conversationName}))`);
+    expect(
+        `.o-mail-ChatWindow-header:has(:text(${conversationName})) .o-mail-ImStatus`
+    ).toHaveCount(count);
+    await click(`.o-mail-ChatWindow-header:has(:text(${conversationName}))`);
 }

@@ -8,6 +8,7 @@ import {
     getMultipleInputs,
     isFieldCustom,
     getCurrentFieldInputEl,
+    getModelName,
 } from "./utils";
 import { formatDate, formatDateTime } from "@web/core/l10n/dates";
 
@@ -32,13 +33,14 @@ export class FormFieldOption extends BaseOptionComponent {
             valueList: null,
         });
         this.domState = useDomState((el) => {
-            const modelName = el.closest("form")?.dataset.model_name;
+            const modelName = getModelName(el.closest("form"));
             const fieldName = getFieldName(el);
             return {
                 elDataset: { ...el.dataset },
                 elClassList: [...el.classList],
                 fieldName,
                 modelName,
+                fieldTranslatedName: el.dataset.translatedName,
             };
         });
         this.format = {

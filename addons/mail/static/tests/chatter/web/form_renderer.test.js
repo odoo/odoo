@@ -3,13 +3,15 @@ import {
     click,
     contains,
     defineMailModels,
+    insertText,
     openFormView,
     patchUiSize,
     scroll,
     start,
     startServer,
 } from "@mail/../tests/mail_test_helpers";
-import { describe, test, expect } from "@odoo/hoot";
+import { describe, expect, test } from "@odoo/hoot";
+import { mockService, serverState } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("desktop");
 defineMailModels();
@@ -28,13 +30,11 @@ test.skip("Form view not scrolled when switching record", async () => {
             display_name: "Partner 2",
         },
     ]);
-    const messages = [...Array(60).keys()].map((id) => {
-        return {
-            body: "not empty",
-            model: "res.partner",
-            res_id: id < 29 ? partnerId_1 : partnerId_2,
-        };
-    });
+    const messages = [...Array(60).keys()].map((id) => ({
+        body: "not empty",
+        model: "res.partner",
+        res_id: id < 29 ? partnerId_1 : partnerId_2,
+    }));
     pyEnv["mail.message"].create(messages);
     patchUiSize({ size: SIZES.LG });
     await start();
@@ -180,7 +180,7 @@ test("[TECHNICAL] unfolded ellipsis button should not fold on message click besi
     });
     expect(".o-mail-Message-body span").toHaveCount(0);
     await click(".o-mail-ellipsis");
-    expect(".o-mail-Message-body span").toHaveText('--\nSystem')
+    expect(".o-mail-Message-body span").toHaveText("--\nSystem");
     await click(".o-mail-Message");
     expect(".o-mail-Message-body span").toHaveCount(1);
 });
@@ -217,4 +217,50 @@ test("ellipsis button on message of type notification", async () => {
             </form>`,
     });
     await contains(".o-mail-ellipsis");
+});
+
+test("read more/less should appear only once for the signature", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({});
+
+    mockService("action", {
+        doAction(action, { onClose }) {
+            if (action.name === "Compose Email") {
+                // Simulate message post of full composer
+                pyEnv["mail.message"].create({
+                    body: action.context.default_body.toString(),
+                    model: action.context.default_model,
+                    res_id: action.context.default_res_ids[0],
+                });
+                return onClose(undefined);
+            }
+            return super.doAction(...arguments);
+        },
+    });
+
+    // Yes you can get this kind of signature by playing with the html editor
+    pyEnv["res.users"].write(serverState.userId, {
+        signature: `
+            <div>
+                <span data-o-mail-quote="1">
+                    --
+                </span>
+            </div>
+            <div data-o-mail-quote="1">
+                Signature !
+            </div>
+            <div>
+                <br data-o-mail-quote="1">
+            </div>
+        `,
+    });
+
+    await start();
+    await openFormView("res.partner", partnerId);
+    await contains(".o-mail-Chatter");
+    await click(".o-mail-Chatter-sendMessage");
+    await insertText(".o-mail-Composer-input", "Example Body");
+    await click("[name='open-full-composer']");
+    await contains(".o-mail-Message-body", { text: "Example Body", count: 1 });
+    expect(".o-mail-Message .o-signature-container button.o-mail-ellipsis").toHaveCount(1);
 });

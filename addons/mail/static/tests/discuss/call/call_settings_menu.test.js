@@ -37,7 +37,8 @@ test("Renders the call settings", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "test" });
     patchUiSize({ size: SIZES.SM });
-    await start();
+    const env = await start();
+    const rtc = env.services["discuss.rtc"];
     await openDiscuss(channelId);
     // dropdown requires an extra delay before click (because handler is registered in useEffect)
     await contains("[title='Open Actions Menu']");
@@ -47,7 +48,10 @@ test("Renders the call settings", async () => {
     await contains("label[aria-label='Camera']");
     await contains("label[aria-label='Microphone']");
     await contains("label[aria-label='Audio Output']");
+    await contains("option", { textContent: "Permission Needed", count: 3 });
+    rtc.microphonePermission = "granted";
     await contains("option[value=mockAudioDeviceId]");
+    rtc.cameraPermission = "granted";
     await contains("option[value=mockVideoDeviceId]");
     await contains("button", { text: "Voice Detection" });
     await contains("button", { text: "Push to Talk" });
@@ -118,10 +122,7 @@ test("local storage for call settings", async () => {
 
     // testing save to local storage
     await click("input[title='Show video participants only']");
-    await waitForSteps([
-        "mail_user_setting_use_blur: true",
-        "mail_user_setting_show_only_video: false",
-    ]);
+    await waitForSteps(["mail_user_setting_show_only_video: false"]);
     await click("input[title='Blur video background']");
     expect(localStorage.getItem("mail_user_setting_use_blur")).toBe(null);
     await editInput(document.body, ".o-Discuss-CallSettings-thresholdInput", 0.3);

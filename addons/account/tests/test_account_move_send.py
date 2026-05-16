@@ -401,7 +401,11 @@ class TestAccountComposerPerformance(AccountTestInvoicingCommon, MailCommon):
         test_customer = self.test_customers[0].with_env(self.env)
         move_template = self.move_template.with_env(self.env)
 
-        extra_dynamic_report = self.env.ref('account.action_account_original_vendor_bill')
+        extra_dynamic_report = self.env.ref('account.action_account_original_vendor_bill').sudo().copy({
+            'name': 'Invoice PDF 2',
+            'print_report_name': "'CUSTOM_%s' % object.name",
+        })
+
         move_template.report_template_ids += extra_dynamic_report
 
         composer = self.env['account.move.send.wizard'].with_context(active_model='account.move', active_ids=test_move.ids).create({
@@ -424,7 +428,7 @@ class TestAccountComposerPerformance(AccountTestInvoicingCommon, MailCommon):
                     {'name': 'AttFileName_00.txt', 'raw': b'AttContent_00', 'type': 'text/plain'},
                     {'name': 'AttFileName_01.txt', 'raw': b'AttContent_01', 'type': 'text/plain'},
                     {'name': f'{test_move.name}.pdf', 'type': 'application/pdf'},
-                    {'name': f'{extra_dynamic_report.name.lower()}_{test_move.name}.pdf', 'type': 'application/pdf'},
+                    {'name': 'CUSTOM_INVOICE_00.pdf', 'type': 'application/pdf'},
                 ],
                 'body_content': f'TemplateBody for {test_move.name}',
                 'email_from': self.user_account_other.email_formatted,
@@ -477,6 +481,17 @@ class TestAccountComposerPerformance(AccountTestInvoicingCommon, MailCommon):
             content='access_token=',
         )
 
+    def test_invoice_email_subtitle_from_sale_order(self):
+        """ Test email notification subtitle for Invoice created from Sale Order. """
+        self.ensure_installed('sale')
+        self.product_a.taxes_id = False
+        self.env.user.group_ids |= self.env.ref('sales_team.group_sale_salesman')
+        sale_order = self._create_sale_order_one_line(product_id=self.product_a.id, partner_id=self.partner_a.id)
+        invoice = sale_order._create_invoices()
+        context = invoice._notify_by_email_prepare_rendering_context(message=self.env['mail.message'])
+        self.assertEqual(context.get('subtitles')[0], f"{invoice.display_name} - {self.partner_a.name}")
+        self.assertIn('1,000', context.get('subtitles')[1])
+
 
 class TestAccountMoveSendCommon(AccountTestInvoicingCommon):
 
@@ -501,13 +516,16 @@ class TestAccountMoveSendCommon(AccountTestInvoicingCommon):
             )
 
     def create_send_and_print(self, invoices, default=False, **kwargs):
-        action_send_and_print = invoices.action_send_and_print()
-        if action_send_and_print['res_model'] == 'account.move.send.wizard' and not default and not kwargs.get('sending_methods'):
-            # In most cases, for testing purpose you only want to try to generate the document, no need to send it.
-            # Therefore by default we deactivate sending methods, unless default parameter is set to True,
-            # or they are explicitly given.
-            kwargs['sending_methods'] = []
-        return self.env[action_send_and_print['res_model']].with_context(action_send_and_print['context']).create(kwargs)
+        invoices.action_send_and_print()
+        if len(invoices) == 1:
+            if not default and not kwargs.get('sending_methods'):
+                # In most cases, for testing purpose you only want to try to generate the document, no need to send it.
+                # Therefore by default we deactivate sending methods, unless default parameter is set to True,
+                # or they are explicitly given.
+                kwargs['sending_methods'] = []
+            return self._create_account_move_send_wizard_single(invoices, **kwargs)
+        else:
+            return self._create_account_move_send_wizard_multi(invoices, **kwargs)
 
     def _get_mail_message(self, move, limit=1):
         return self.env['mail.message'].search([('model', '=', move._name), ('res_id', '=', move.id)], limit=limit)
@@ -709,6 +727,14 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         self.assertFalse(self._get_mail_message(invoice1, limit=None).partner_ids)
         self.assertTrue(invoice2.invoice_pdf_report_id)
         self.assertTrue(self._get_mail_message(invoice2, limit=None).partner_ids)
+
+    def test_invoice_multi_cron_disabled_alert(self):
+        invoice1 = self.init_invoice("out_invoice", partner=self.partner_a, amounts=[1000], post=True)
+        invoice2 = self.init_invoice("out_invoice", partner=self.partner_b, amounts=[1000], post=True)
+        self.env.ref('account.ir_cron_account_move_send').active = False
+        wizard = self.create_send_and_print(invoice1 + invoice2)
+        self.assertTrue('account_send_cron_archived' in wizard.alerts)
+        self.assertEqual(wizard.alerts['account_send_cron_archived']['level'], 'warning')
 
     def test_invoice_multi_with_edi(self):
         invoice1 = self.init_invoice("out_invoice", partner=self.partner_a, amounts=[1000], post=True)
@@ -1129,7 +1155,7 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
     def test_get_sending_settings(self):
         invoice = self.init_invoice("out_invoice", amounts=[1000], post=True)
         wizard = self.create_send_and_print(invoice, sending_methods=['email'])
-        
+
         expected_results = {
             'sending_methods': ['email'],
             'invoice_edi_format': False,
@@ -1224,3 +1250,46 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         wizard_2 = self.create_send_and_print(move2)
         wizard_2.action_send_and_print()
         self.assertEqual(move2.message_main_attachment_id.name, f"CustomName_{move2._get_report_base_filename().replace('/', '_')}.pdf")
+
+    def test_journal_follower_gets_pdf_on_send_and_print(self):
+        watcher_email = 'watcher@example.com; bob@example.com'
+        journal = self.company_data['default_journal_sale']
+        journal.incoming_einvoice_notification_email = watcher_email
+
+        invoice = self.init_invoice("out_invoice", amounts=[1000], partner=self.partner_a, post=True)
+        wizard = self.create_send_and_print(invoice)
+
+        with patch('odoo.addons.mail.models.mail_template.MailTemplate.send_mail') as patched_send_mail:
+            wizard.action_send_and_print()
+
+        # we send an email for every recipient individually (for separate unsubscribe links)
+        self.assertEqual(patched_send_mail.call_count, 2)
+
+        for call in patched_send_mail.call_args_list:
+            attachments_data = call.kwargs.get('email_values', {}).get('attachment_ids', [])
+            self.assertTrue(invoice.invoice_pdf_report_id)
+            self.assertEqual(len(attachments_data), 1)
+            self.assertRecordValues(invoice.invoice_pdf_report_id, [{
+                'name': attachments_data[0][2]['name'],
+                'raw': attachments_data[0][2]['raw'],
+            }])
+
+    def test_invoice_send_reply_to_persistence(self):
+        """ Test that the reply_to set on the mail template is correctly
+        propagated through the wizard to the final mail message. """
+        invoice = self.init_invoice("out_invoice", amounts=[1000], post=True)
+        custom_reply_to = "custom_reply_address@example.com"
+
+        template = self.env.ref('account.email_template_edi_invoice')
+        template.reply_to = custom_reply_to
+
+        wizard = self.create_send_and_print(
+            invoice,
+            sending_methods=['email'],
+            template_id=template.id
+        )
+
+        wizard.action_send_and_print()
+
+        message = self._get_mail_message(invoice)
+        self.assertEqual(message.reply_to, custom_reply_to)

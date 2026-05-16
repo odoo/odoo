@@ -1,6 +1,6 @@
 import { redo, undo } from "@html_editor/../tests/_helpers/user_actions";
 import { expect, test } from "@odoo/hoot";
-import { animationFrame } from "@odoo/hoot-dom";
+import { animationFrame, edit, press } from "@odoo/hoot-dom";
 import { contains, defineModels, models, onRpc, webModels } from "@web/../tests/web_test_helpers";
 import { registry } from "@web/core/registry";
 import { patch } from "@web/core/utils/patch";
@@ -62,15 +62,7 @@ test("change action of form changes available options", async () => {
             formFields: [{ type: "char", name: "name", fillWith: "name", string: "Your Name" }],
         });
 
-    await setupWebsiteBuilder(
-        `<section class="s_website_form"><form data-model_name="mail.mail">
-            <div class="s_website_form_field"><label class="s_website_form_label" for="contact1">Name</label><input id="contact1" class="s_website_form_input"/></div>
-            <div class="s_website_form_submit">
-                <div class="s_website_form_label"/>
-                <a>Submit</a>
-            </div>
-        </form></section>`
-    );
+    await setupWebsiteBuilderWithSnippet("s_website_form");
 
     await contains(":iframe section").click();
     await contains("div:has(>span:contains('Action')) + div button").click();
@@ -440,4 +432,104 @@ test("Form using the Outgoing Mails model includes hidden email_to field", async
 
     expect(":iframe input[type='hidden'][name='email_to']").toHaveCount(1);
     expect(":iframe input[type='hidden'][name='email_to']").toHaveValue("info@yourcompany.example.com");
+});
+
+test("Label falls back to default value (data-translated-name) when removed", async () => {
+    onRpc("get_authorized_fields", () => ({}));
+    await setupWebsiteBuilder(
+        `<section class="s_website_form" data-snippet="s_website_form" data-name="Form">
+            <div class="container-fluid">
+            <form action="/website/form/" method="post" class="o_mark_required" data-model_name="mail.mail">
+                <div class="s_website_form_rows">
+                    <div data-name="Field" data-translated-name="Default value" class="s_website_form_field s_website_form_required" data-type="text">
+                        <div class="row">
+                            <label class="s_website_form_label" for="oyeqnysxh10b">
+                                <span class="s_website_form_label_content">My Field</span>
+                            </label>
+                        <select class="form-select s_website_form_input" required="" id="oyeqnysxh10b" name="field" />
+                        </div>
+                    </div>
+                </div>
+            </form>
+            </div>
+        </section>`
+    );
+
+    await contains(":iframe section span:contains('My Field')").click();
+    await contains("[data-action-id='setLabelText'] input").click();
+    expect("[data-action-id='setLabelText'] input").toHaveValue("My Field");
+    await edit("");
+    await press("Tab");
+    expect("[data-action-id='setLabelText'] input").toHaveValue("Default value");
+    expect(":iframe section [data-translated-name='Default value'] label").toHaveText(
+        "Default value"
+    );
+});
+
+test("Option list input editing is disabled for non-custom forms", async () => {
+    onRpc("get_authorized_fields", () => ({}));
+    const { getEditor } = await setupWebsiteBuilder(
+        `<section class="s_website_form"><form data-model_name="mail.mail">
+            <div data-name="Field" class="s_website_form_field mb-3 col-12" data-type="many2one">
+                <div class="row s_col_no_resize s_col_no_bgcolor">
+                    <label class="col-form-label col-sm-auto s_website_form_label" for="ozp7023vqhe">
+                        <span class="s_website_form_label_content">Selection Field</span>
+                    </label>
+                    <div class="col-sm">
+                        <select class="form-select s_website_form_input" name="Phone Number" id="ozp7023vqhe">
+                            <option id="ozp7023vqhe0" value="Option 1">Option 1</option>
+                            <option id="ozp7023vqhe1" value="Option 2">Option 2</option>
+                            <option id="ozp7023vqhe2" value="Option 3">Option 3</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="s_website_form_submit">
+                <div class="s_website_form_label"/>
+                <a>Submit</a>
+            </div>
+        </form></section>`
+    );
+    getEditor();
+    await contains(":iframe .s_website_form_field").click();
+    expect(".options-container[data-container-title='Field'] .we-bg-options-container").toHaveCount(1);
+
+    const inputs = [...document.querySelectorAll('.hb-row')]
+        .find(el => el.textContent.includes('Option List'))
+        .querySelectorAll('.o-hb-input-base');
+    expect([...inputs].every(input => input.disabled)).toBe(true);
+});
+
+test("Option list input editing is enabled for custom forms", async () => {
+    onRpc("get_authorized_fields", () => ({}));
+    const { getEditor } = await setupWebsiteBuilder(
+        `<section class="s_website_form"><form data-model_name="mail.mail">
+            <div data-name="Field" class="s_website_form_field mb-3 col-12 s_website_form_custom" data-type="many2one">
+                <div class="row s_col_no_resize s_col_no_bgcolor">
+                    <label class="col-form-label col-sm-auto s_website_form_label" for="ozp7023vqhe">
+                        <span class="s_website_form_label_content">Selection Field</span>
+                    </label>
+                    <div class="col-sm">
+                        <select class="form-select s_website_form_input" name="Phone Number" id="ozp7023vqhe">
+                            <option id="ozp7023vqhe0" value="Option 1">Option 1</option>
+                            <option id="ozp7023vqhe1" value="Option 2">Option 2</option>
+                            <option id="ozp7023vqhe2" value="Option 3">Option 3</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="s_website_form_submit">
+                <div class="s_website_form_label"/>
+                <a>Submit</a>
+            </div>
+        </form></section>`
+    );
+    getEditor();
+    await contains(":iframe .s_website_form_field").click();
+    expect(".options-container[data-container-title='Field'] .we-bg-options-container").toHaveCount(1);
+
+    const inputs = [...document.querySelectorAll('.hb-row')]
+        .find(el => el.textContent.includes('Option List'))
+        .querySelectorAll('.o-hb-input-base');
+    expect([...inputs].every(input => input.disabled)).toBe(false);
 });

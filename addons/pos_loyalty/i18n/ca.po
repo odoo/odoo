@@ -3,13 +3,14 @@
 # * pos_loyalty
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# "Noemi Pla Garcia (nopl)" <nopl@odoo.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:37+0000\n"
-"PO-Revision-Date: 2025-09-16 02:36+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2026-03-20 18:35+0000\n"
+"PO-Revision-Date: 2025-11-17 10:57+0000\n"
+"Last-Translator: \"Noemi Pla Garcia (nopl)\" <nopl@odoo.com>\n"
 "Language-Team: Catalan <https://translate.odoo.com/projects/odoo-19/"
 "pos_loyalty/ca/>\n"
 "Language: ca\n"
@@ -37,6 +38,14 @@ msgstr ""
 #: code:addons/pos_loyalty/static/src/app/screens/partner_list_screen/partner_line/partner_line.js:0
 msgid "%s Points"
 msgstr "%s punts"
+
+#. module: pos_loyalty
+#. odoo-javascript
+#: code:addons/pos_loyalty/static/src/app/services/pos_store.js:0
+msgid ""
+"%s: %s\n"
+"Balance: %s"
+msgstr ""
 
 #. module: pos_loyalty
 #: model:loyalty.program,name:pos_loyalty.15_pc_on_next_order
@@ -190,12 +199,6 @@ msgstr "Saldo actual:"
 
 #. module: pos_loyalty
 #. odoo-javascript
-#: code:addons/pos_loyalty/static/src/app/screens/receipt_screen/order_receipt/order_receipt.xml:0
-msgid "Customer"
-msgstr "Client/a"
-
-#. module: pos_loyalty
-#. odoo-javascript
 #: code:addons/pos_loyalty/static/src/app/services/pos_store.js:0
 msgid "Customer needed"
 msgstr "Cal un client"
@@ -213,6 +216,7 @@ msgid "Discount & Loyalty"
 msgstr "Descomptes i Fidelització"
 
 #. module: pos_loyalty
+#: model:ir.model.fields,field_description:pos_loyalty.field_account_move_line__display_name
 #: model:ir.model.fields,field_description:pos_loyalty.field_barcode_rule__display_name
 #: model:ir.model.fields,field_description:pos_loyalty.field_loyalty_card__display_name
 #: model:ir.model.fields,field_description:pos_loyalty.field_loyalty_mail__display_name
@@ -240,7 +244,7 @@ msgstr "Introduïu el codi"
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/app/screens/product_screen/order_summary/order_summary.js:0
 msgid "Enter Gift Card Number"
-msgstr ""
+msgstr "Introdueix el número de la targeta regal"
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -279,14 +283,6 @@ msgstr ""
 
 #. module: pos_loyalty
 #. odoo-javascript
-#: code:addons/pos_loyalty/static/src/app/services/pos_store.js:0
-msgid ""
-"Gift Card: %s\n"
-"Balance: %s"
-msgstr ""
-
-#. module: pos_loyalty
-#. odoo-javascript
 #: code:addons/pos_loyalty/static/src/app/screens/product_screen/control_buttons/control_buttons.js:0
 msgid "Gift card or Discount code"
 msgstr "Targeta de regal o codi de descompte"
@@ -303,6 +299,7 @@ msgid "How many point this reward cost on the coupon."
 msgstr "Quants punts costa aquesta recompensa al cupó."
 
 #. module: pos_loyalty
+#: model:ir.model.fields,field_description:pos_loyalty.field_account_move_line__id
 #: model:ir.model.fields,field_description:pos_loyalty.field_barcode_rule__id
 #: model:ir.model.fields,field_description:pos_loyalty.field_loyalty_card__id
 #: model:ir.model.fields,field_description:pos_loyalty.field_loyalty_mail__id
@@ -357,6 +354,11 @@ msgstr "El programa de la targeta regal no és vàlid. Més d'una regla."
 #: model:ir.model.fields,field_description:pos_loyalty.field_pos_order_line__is_reward_line
 msgid "Is Reward Line"
 msgstr "És una línia de reenviament"
+
+#. module: pos_loyalty
+#: model:ir.model,name:pos_loyalty.model_account_move_line
+msgid "Journal Item"
+msgstr ""
 
 #. module: pos_loyalty
 #: model:ir.model,name:pos_loyalty.model_loyalty_mail
@@ -539,8 +541,10 @@ msgstr "Reinicia els programes"
 
 #. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_loyalty_program__pos_config_ids
-msgid "Restrict publishing to those shops."
-msgstr "Restringeix la publicació a aquestes botigues."
+msgid ""
+"Restrict publishing to those shops. Note: A program will only be used in the "
+"shops using the same currency as the program."
+msgstr ""
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -890,3 +894,9 @@ msgstr "eWallet requereix que se seleccioni un client"
 #: code:addons/pos_loyalty/static/src/app/screens/receipt_screen/order_receipt/order_receipt.xml:0
 msgid "no expiration"
 msgstr "sense venciment"
+
+#~ msgid "Restrict publishing to those shops."
+#~ msgstr "Restringeix la publicació a aquestes botigues."
+
+#~ msgid "Customer"
+#~ msgstr "Client/a"

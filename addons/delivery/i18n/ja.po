@@ -8,13 +8,15 @@
 # Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2023
 # Ryoko Tsuda <ryoko@quartile.co>, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Junko Augias (juau)" <juau@odoo.com>, 2025.
+# "Junko Augias (juau)" <juau@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Yoshi Tashiro <tashiro@quartile.co>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:38+0000\n"
-"PO-Revision-Date: 2025-10-15 07:20+0000\n"
+"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"PO-Revision-Date: 2026-05-04 13:38+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/"
 "delivery/ja/>\n"
@@ -23,7 +25,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: delivery
 #. odoo-python
@@ -113,12 +115,12 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__integration_level
 msgid "Action while validating Delivery Orders"
-msgstr "納品書の検証中のアクション"
+msgstr "出荷オーダを確定する際のアクション"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__active
 msgid "Active"
-msgstr "アクティブ"
+msgstr "有効"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_carrier_view_form
@@ -187,7 +189,7 @@ msgstr "可能な配送業者"
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_carrier__delivery_type__base_on_rule
 msgid "Based on Rules"
-msgstr "計算規則に基づく"
+msgstr "計算ルールに基づく"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__can_generate_return
@@ -370,7 +372,7 @@ msgstr "送料"
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_price_rule
 msgid "Delivery Price Rules"
-msgstr "配送価格規則"
+msgstr "配送価格ルール"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__product_id
@@ -447,7 +449,7 @@ msgid ""
 msgstr ""
 "各配送会社（例：UPS）は、複数の配送方法\n"
 "　　　（例：UPSエクスプレス、UPSスタンダード）\n"
-"　　　  を持つことができ、各配送方法に料金規則が紐づけられています。"
+"　　　  を持つことができ、各配送方法に料金ルールが紐づけられています。"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__prod_environment
@@ -537,7 +539,7 @@ msgstr "レートの取得と出荷の作成"
 #. module: delivery
 #: model:ir.model,name:delivery.model_ir_http
 msgid "HTTP Routing"
-msgstr ""
+msgstr "HTTPルーティング"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__id
@@ -702,7 +704,7 @@ msgstr "最大値"
 #. module: delivery
 #: model:ir.model,name:delivery.model_ir_module_module
 msgid "Module"
-msgstr ""
+msgstr "モジュール"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__must_have_tag_ids
@@ -724,7 +726,7 @@ msgstr "新規プロバイダー"
 #. odoo-python
 #: code:addons/delivery/models/sale_order.py:0
 msgid "No pick-up points are available for this delivery address."
-msgstr "その配送先住所では利用できる集荷ポイントがありません。"
+msgstr "その配送先では利用できる集荷ポイントがありません。"
 
 #. module: delivery
 #. odoo-javascript
@@ -814,7 +816,7 @@ msgstr "価格"
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_price_rule_form
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_price_rule_tree
 msgid "Price Rules"
-msgstr "価格規則"
+msgstr "価格ルール"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -824,7 +826,7 @@ msgstr "価格設定"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__price_rule_ids
 msgid "Pricing Rules"
-msgstr "価格設定規則"
+msgstr "価格設定ルール"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_product_category
@@ -1010,7 +1012,7 @@ msgid ""
 "            according to your settings; on the sales order (based on the\n"
 "            quotation) or the invoice (based on the delivery orders)."
 msgstr ""
-"これらの方法により、（見積書に基づいた）販売オーダまたは（配送オーダに基づい"
+"これらの方法により、（見積書に基づいた）販売オーダまたは（出荷オーダに基づい"
 "た）請求書上で、設定に応じた配送費用を自動的に計算することができます。"
 
 #. module: delivery

@@ -50,7 +50,7 @@ class ProductValue(models.Model):
 
     def _compute_current_value_details(self):
         for product_value in self:
-            if not product_value.move_id:
+            if not (product_value.move_id and product_value.move_id.quantity):
                 product_value.current_value_details = False
                 continue
             move = product_value.move_id
@@ -83,7 +83,7 @@ class ProductValue(models.Model):
             else:
                 product_ids.add(vals['product_id'])
         if lot_ids:
-            move_ids.update(self.env['stock.move'].search([('lot_id', 'in', lot_ids)]).ids)
+            move_ids.update(self.env['stock.move.line'].search([('lot_id', 'in', lot_ids)]).move_id.ids)
         products = self.env['product.product'].browse(product_ids)
         if products:
             moves_by_product = products._get_remaining_moves()

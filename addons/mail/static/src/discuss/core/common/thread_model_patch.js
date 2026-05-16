@@ -1,7 +1,11 @@
 import { fields } from "@mail/core/common/record";
 import { Thread } from "@mail/core/common/thread_model";
 import { useSequential } from "@mail/utils/common/hooks";
-import { compareDatetime, nearestGreaterThanOrEqual } from "@mail/utils/common/misc";
+import {
+    compareDatetime,
+    effectWithCleanup,
+    nearestGreaterThanOrEqual,
+} from "@mail/utils/common/misc";
 import { _t } from "@web/core/l10n/translation";
 
 import { formatList } from "@web/core/l10n/utils";
@@ -16,6 +20,26 @@ const commandRegistry = registry.category("discuss.channel_commands");
 
 /** @type {typeof Thread} */
 const threadStaticPatch = {
+    new() {
+        const thread = super.new(...arguments);
+        // Handles subscriptions for non-members. Subscriptions for channels
+        // that the user is a member of are handled by
+        // `ir_websocket@_build_bus_channel_list`.
+        effectWithCleanup({
+            effect(busChannel, busService) {
+                if (busService && busChannel) {
+                    busService.addChannel(busChannel);
+                    return () => busService.deleteChannel(busChannel);
+                }
+            },
+            dependencies: (thread) => [
+                thread.shouldSubscribeToBusChannel && thread.busChannel,
+                thread.store.env.services.bus_service,
+            ],
+            reactiveTargets: [thread],
+        });
+        return thread;
+    },
     async getOrFetch(data, fieldNames = []) {
         if (data.model !== "discuss.channel" || data.id < 1) {
             return super.getOrFetch(...arguments);
@@ -138,7 +162,7 @@ const threadPatch = {
                     return;
                 }
                 return this.channel_member_ids.reduce((lastMessageSeenByAllId, member) => {
-                    if (member.persona.notEq(this.store.self) && member.seen_message_id) {
+                    if (member.notEq(this.selfMember) && member.seen_message_id) {
                         return lastMessageSeenByAllId
                             ? Math.min(lastMessageSeenByAllId, member.seen_message_id.id)
                             : member.seen_message_id.id;
@@ -157,10 +181,11 @@ const threadPatch = {
                 // starts from most recent persistent messages to find early
                 for (let i = this.persistentMessages.length - 1; i >= 0; i--) {
                     const message = this.persistentMessages[i];
-                    if (!message.isSelfAuthored) {
-                        continue;
-                    }
-                    if (message.id > this.lastMessageSeenByAllId) {
+                    if (
+                        !message.isSelfAuthored ||
+                        message.isNotification ||
+                        message.id > this.lastMessageSeenByAllId
+                    ) {
                         continue;
                     }
                     res = message;
@@ -202,6 +227,7 @@ const threadPatch = {
             inverse: "threadAsSelf",
         });
         this.scrollUnread = true;
+        // memberBusSubscription
         this.toggleBusSubscription = fields.Attr(false, {
             /** @this {import("models").Thread} */
             compute() {
@@ -258,7 +284,7 @@ const threadPatch = {
     },
     /** @returns {import("models").ChannelMember} */
     computeCorrespondent() {
-        if (this.channel_type === "channel") {
+        if (["channel", "group"].includes(this.channel_type)) {
             return undefined;
         }
         const correspondents = this.correspondents;
@@ -437,9 +463,6 @@ const threadPatch = {
     /** @override */
     open(options) {
         if (this.model === "discuss.channel") {
-            if (!this.self_member_id) {
-                this.store.env.services["bus_service"].addChannel(this.busChannel);
-            }
             const res = this.openChannel();
             if (res) {
                 return res;
@@ -463,6 +486,7 @@ const threadPatch = {
             const command = commandRegistry.get(firstWord, false);
             if (
                 command &&
+                (!command.condition || command.condition({ store: this.store, thread: this })) &&
                 (!command.channel_types || command.channel_types.includes(this.channel_type))
             ) {
                 await this.executeCommand(command, textContent);
@@ -470,6 +494,14 @@ const threadPatch = {
             }
         }
         return super.post(...arguments);
+    },
+    get shouldSubscribeToBusChannel() {
+        return Boolean(
+            this.model === "discuss.channel" &&
+                !this.isTransient &&
+                !this.self_member_id &&
+                (this.isLocallyPinned || this.chat_window?.isOpen)
+        );
     },
     get showUnreadBanner() {
         return this.self_member_id?.message_unread_counter_ui > 0;

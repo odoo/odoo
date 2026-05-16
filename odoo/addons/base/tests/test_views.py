@@ -13,7 +13,7 @@ from lxml.builder import E
 from psycopg2 import IntegrityError
 from psycopg2.extras import Json
 
-from odoo.exceptions import AccessError, ValidationError
+from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tests import common, tagged
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 from odoo.tools import mute_logger, view_validation, safe_eval
@@ -1892,6 +1892,7 @@ class TestTemplating(ViewCase):
         """)
         self.assertEqual(arch, expected)
 
+
 @tagged('post_install', '-at_install')
 class TestViews(ViewCase):
 
@@ -2228,6 +2229,25 @@ class TestViews(ViewCase):
                 'arch': '<attribute></attribute>',
                 'inherit_id': False,
             })
+
+    def test_xml_editor_rejects_encoding_declaration(self):
+        """Must raise a UserError when encoding declaration is included."""
+        with self.assertRaises(UserError):
+            self.View.create({
+                'name': 'encoding_declaration_view',
+                'arch_base': "<?xml version='1.0' encoding='utf-8'?>",
+                'inherit_id': False,
+            })
+
+        view = self.assertValid("<form string='Test'></form>", name="test_xml_encoding_view")
+        for field in ("arch", "arch_base"):
+            with self.subTest(field=field):
+                original_value = view[field]
+
+                with self.assertRaises(UserError):
+                    view.write({field: "<?xml version='1.0' encoding='utf-8'?><form/>"})
+
+                self.assertXMLEqual(view[field], original_value)
 
     def test_context_in_view(self):
         arch = """
@@ -2694,6 +2714,28 @@ class TestViews(ViewCase):
         """
         self.assertValid(arch % 'base.group_no_one')
         self.assertWarning(arch % 'base.dummy')
+
+    def test_groups_field_removed(self):
+        view = self.View.create({
+            'name': 'valid view',
+            'model': 'ir.ui.view',
+            'arch': """
+                <form string="View">
+                    <span class="oe_inline" invisible="0 == 0">
+                        (<field name="name" groups="base.group_portal"/>)
+                    </span>
+                </form>
+            """,
+        })
+        arch = self.View.get_views([(view.id, view.type)])['views']['form']['arch']
+
+        self.assertEqual(arch, """
+                <form string="View">
+                    <span class="oe_inline" invisible="0 == 0">
+                        ()
+                    </span>
+                </form>
+            """.strip())
 
     def test_attrs_groups_behavior(self):
         view = self.View.create({
@@ -4800,13 +4842,11 @@ class TestInvisibleField(TransactionCaseWithUserDemo):
             'account',
             'account_3way_match',
             'account_accountant',
-            'account_accountant_batch_payment',
             'account_asset',
             'account_asset_fleet',
             'account_auto_transfer',
             'account_avatax',
             'account_avatax_geolocalize',
-            'account_avatax_sale',
             'account_base_import',
             'account_batch_payment',
             'account_budget',
@@ -4835,7 +4875,6 @@ class TestInvisibleField(TransactionCaseWithUserDemo):
             'appointment',
             'approvals',
             'approvals_purchase_stock',
-            'auth_signup',
             'auth_totp',
             'barcodes_gs1_nomenclature',
             'base_address_extended',
@@ -4870,9 +4909,6 @@ class TestInvisibleField(TransactionCaseWithUserDemo):
             'documents_account',
             'documents_approvals',
             'documents_fleet',
-            'documents_l10n_be_hr_payroll',
-            'documents_project',
-            'documents_project_sale',
             'documents_spreadsheet',
             'event',
             'event_booth',
@@ -4900,7 +4936,6 @@ class TestInvisibleField(TransactionCaseWithUserDemo):
             'hr_attendance',
             'hr_contract',
             'hr_contract_salary',
-            'hr_contract_salary_holidays',
             'hr_expense',
             'hr_expense_extract',
             'hr_fleet',
@@ -4921,11 +4956,9 @@ class TestInvisibleField(TransactionCaseWithUserDemo):
             'hr_sign',
             'hr_skills',
             'hr_skills_slides',
-            'hr_skills_survey',
             'hr_timesheet',
             'hr_work_entry',
             'hr_work_entry_holidays_enterprise',
-            'iap',
             'im_livechat',
             'industry_fsm',
             'industry_fsm_report',
@@ -4945,7 +4978,6 @@ class TestInvisibleField(TransactionCaseWithUserDemo):
             'l10n_be_hr_payroll',
             'l10n_be_hr_payroll_dimona',
             'l10n_be_hr_payroll_fleet',
-            'l10n_be_hr_payroll_sd_worx',
             'l10n_be_reports',
             'l10n_be_soda',
             'l10n_br',
@@ -4968,7 +5000,6 @@ class TestInvisibleField(TransactionCaseWithUserDemo):
             'l10n_ec_edi_stock',
             'l10n_ec_sale',
             'l10n_eg_edi_eta',
-            'l10n_eg_hr_payroll',
             'l10n_employment_hero',
             'l10n_es_edi_facturae',
             'l10n_es_edi_sii',
@@ -5007,12 +5038,12 @@ class TestInvisibleField(TransactionCaseWithUserDemo):
             'l10n_lu_reports',
             'l10n_ma_hr_payroll',
             'l10n_mx',
-            'l10n_mx_edi',
-            'l10n_mx_edi_extended',
-            'l10n_mx_edi_landing',
-            'l10n_mx_edi_pos',
-            'l10n_mx_edi_stock',
             'l10n_mx_hr_payroll',
+            'l10n_mx_edi',
+            'l10n_mx_edi_pos',
+            'l10n_mx_edi_extended',
+            'l10n_mx_edi_stock',
+            'l10n_mx_edi_landing',
             'l10n_mx_reports',
             'l10n_mx_xml_polizas',
             'l10n_my_edi',
@@ -5044,12 +5075,10 @@ class TestInvisibleField(TransactionCaseWithUserDemo):
             'loyalty',
             'lunch',
             'mail',
-            'mail_bot_hr',
             'mail_group',
             'maintenance',
             'maintenance_worksheet',
             'marketing_automation',
-            'marketing_automation_sms',
             'mass_mailing',
             'mass_mailing_crm',
             'mass_mailing_event',
@@ -5067,11 +5096,8 @@ class TestInvisibleField(TransactionCaseWithUserDemo):
             'mrp_subcontracting',
             'mrp_subcontracting_dropshipping',
             'mrp_workorder',
-            'mrp_workorder_expiry',
-            'mrp_workorder_iot',
             'onboarding',
             'partner_autocomplete',
-            'partner_commission',
             'payment',
             'payment_adyen',
             'payment_authorize',
@@ -5085,8 +5111,6 @@ class TestInvisibleField(TransactionCaseWithUserDemo):
             'pos_iot',
             'pos_online_payment',
             'pos_restaurant',
-            'pos_restaurant_appointment',
-            'pos_self_order',
             'privacy_lookup',
             'product',
             'product_email_template',
@@ -5117,7 +5141,6 @@ class TestInvisibleField(TransactionCaseWithUserDemo):
             'sale_amazon',
             'sale_crm',
             'sale_expense',
-            'sale_external_tax',
             'sale_loyalty',
             'sale_management',
             'sale_margin',
@@ -5125,10 +5148,8 @@ class TestInvisibleField(TransactionCaseWithUserDemo):
             'sale_planning',
             'sale_product_matrix',
             'sale_project',
-            'sale_purchase',
             'sale_renting',
             'sale_renting_crm',
-            'sale_stock',
             'sale_stock_renting',
             'sale_subscription',
             'sale_timesheet',
@@ -5137,7 +5158,6 @@ class TestInvisibleField(TransactionCaseWithUserDemo):
             'sign',
             'sms',
             'snailmail',
-            'snailmail_account',
             'social',
             'social_crm',
             'social_facebook',
@@ -5162,7 +5182,6 @@ class TestInvisibleField(TransactionCaseWithUserDemo):
             'survey',
             'test_testing_utilities',
             'timesheet_grid',
-            'uom',
             'utm',
             'voip',
             'web',
@@ -5187,8 +5206,6 @@ class TestInvisibleField(TransactionCaseWithUserDemo):
             'website_helpdesk_forum',
             'website_hr_recruitment',
             'website_knowledge',
-            'website_livechat',
-            'website_payment',
             'website_sale',
             'website_sale_loyalty',
             'website_sale_slides',
@@ -5203,7 +5220,7 @@ class TestInvisibleField(TransactionCaseWithUserDemo):
             'worksheet',
         )
 
-        modules_without_error = set(self.env['ir.module.module'].search([('state', '=', 'intalled'), ('name', 'in', only_log_modules)]).mapped('name'))
+        modules_without_error = set(self.env['ir.module.module'].search([('state', '=', 'installed'), ('name', 'in', only_log_modules)]).mapped('name'))
         module_log_views = defaultdict(list)
         module_error_views = defaultdict(lambda: defaultdict(list))
         uncommented_regexp = r'''(<field [^>]*invisible=['"](True|1)['"][^>]*>)[\s\t\n ]*(.*)'''
@@ -6090,3 +6107,20 @@ class ViewModifiers(ViewCase):
         self.assertFalse(tree.xpath('//div[@id="foo"]'))
         self.assertTrue(tree.xpath('//div[@id="bar"]'))
         self.assertFalse(tree.xpath('//div[@id="stuff"]'))
+
+    def test_create_inherit_view_with_xpath_without_expr(self):
+        """Test that creating inherited view containing <xpath> node without the 'expr' attribute."""
+
+        parent_view = self.env.ref('base.view_partner_form')
+        inherit_arch = """
+            <xpath position="replace">
+                <field name="name"/>
+            </xpath>
+        """
+
+        with self.assertRaises(ValidationError):
+            self.env['ir.ui.view'].create({
+                'name': 'test.xpath.without.expr',
+                'inherit_id': parent_view.id,
+                'arch': inherit_arch,
+            })

@@ -842,14 +842,18 @@ class EventEvent(models.Model):
         for event in self:
             cal = vobject.iCalendar()
             cal_event = cal.add('vevent')
-            start = slot.start_datetime or event.date_begin
-            end = slot.end_datetime or event.date_end
+            start = slot.start_datetime if slot else event.date_begin
+            end = slot.end_datetime if slot else event.date_end
 
             cal_event.add('created').value = fields.Datetime.now().replace(tzinfo=pytz.timezone('UTC'))
             cal_event.add('dtstart').value = start.astimezone(pytz.timezone(event.date_tz))
             cal_event.add('dtend').value = end.astimezone(pytz.timezone(event.date_tz))
             cal_event.add('summary').value = event.name
-            cal_event.add('description').value = event._get_external_description()
+            external_description = event._get_external_description()
+            cal_event.add('description').value = external_description
+            xalt = cal_event.add('X-ALT-DESC')
+            xalt.value = external_description
+            xalt.params['FMTTYPE'] = ['text/html']
             if event.address_id:
                 cal_event.add('location').value = event.address_inline
 

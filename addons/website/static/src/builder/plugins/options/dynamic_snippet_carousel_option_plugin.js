@@ -5,6 +5,13 @@ import { DynamicSnippetCarouselOption } from "./dynamic_snippet_carousel_option"
 import { DYNAMIC_SNIPPET, setDatasetIfUndefined } from "./dynamic_snippet_option_plugin";
 import { BuilderAction } from "@html_builder/core/builder_action";
 
+/**
+ * @typedef { Object } DynamicSnippetCarouselOptionShared
+ * @property { DynamicSnippetCarouselOptionPlugin['setOptionsDefaultValues'] } setOptionsDefaultValues
+ * @property { DynamicSnippetCarouselOptionPlugin['updateTemplateSnippetCarousel'] } updateTemplateSnippetCarousel
+ * @property { DynamicSnippetCarouselOptionPlugin['getModelNameFilter'] } getModelNameFilter
+ */
+
 export const DYNAMIC_SNIPPET_CAROUSEL = DYNAMIC_SNIPPET;
 
 class DynamicSnippetCarouselOptionPlugin extends Plugin {
@@ -16,6 +23,7 @@ class DynamicSnippetCarouselOptionPlugin extends Plugin {
     ];
     static dependencies = ["dynamicSnippetOption"];
     modelNameFilter = "";
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_actions: {
             SetCarouselSliderSpeedAction,

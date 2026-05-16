@@ -4,6 +4,7 @@ import { getCrudMethodsExamples } from "@api_doc/utils/doc_model_utils";
 import { DocMethod } from "@api_doc/components/doc_method";
 import { DocLoadingIndicator } from "@api_doc/components/doc_loading_indicator";
 import { useDocUI } from "@api_doc/utils/doc_ui_store";
+import { DocErrorDialog } from "@api_doc/components/doc_error_dialog";
 
 const TYPE_COLORS = {
     "text-success": ["integer", "char", "boolean", "selection", "float"],
@@ -46,6 +47,7 @@ export class DocModel extends Component {
         DocTable,
         DocMethod,
         DocLoadingIndicator,
+        DocErrorDialog,
     };
     static props = {};
 
@@ -240,7 +242,7 @@ export class DocModel extends Component {
                     },
                     {
                         type: TABLE_TYPES.Tooltip,
-                        value: fieldData.help,
+                        value: fieldData.help || "",
                     },
                     {
                         type: TABLE_TYPES.Code,

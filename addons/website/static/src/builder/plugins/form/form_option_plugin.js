@@ -45,6 +45,23 @@ import { localization } from "@web/core/l10n/localization";
 import { formatDate } from "@web/core/l10n/dates";
 import { BaseOptionComponent } from "@html_builder/core/utils";
 
+/**
+ * @typedef { Object } FormOptionShared
+ * @property { FormOptionPlugin['prepareFormModel'] } prepareFormModel
+ * @property { FormOptionPlugin['getModelsCache'] } getModelsCache
+ * @property { FormOptionPlugin['applyFormModel'] } applyFormModel
+ * @property { FormOptionPlugin['addHiddenField'] } addHiddenField
+ * @property { FormOptionPlugin['fetchAuthorizedFields'] } fetchAuthorizedFields
+ * @property { FormOptionPlugin['loadFieldOptionData'] } loadFieldOptionData
+ * @property { FormOptionPlugin['prepareFields'] } prepareFields
+ * @property { FormOptionPlugin['replaceField'] } replaceField
+ * @property { FormOptionPlugin['prepareConditionInputs'] } prepareConditionInputs
+ * @property { FormOptionPlugin['setLabelsMark'] } setLabelsMark
+ * @property { FormOptionPlugin['clearValidationDataset'] } clearValidationDataset
+ * @property { FormOptionPlugin['defaultMessage'] } defaultMessage
+ * @property { FormOptionPlugin['fetchModels'] } fetchModels
+ */
+
 const { DateTime } = luxon;
 
 export class WebsiteFormSubmitOption extends BaseOptionComponent {
@@ -72,6 +89,7 @@ export class FormOptionPlugin extends Plugin {
         "defaultMessage",
         "fetchModels",
     ];
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_header_middle_buttons: [
             {
@@ -100,9 +118,6 @@ export class FormOptionPlugin extends Plugin {
             ) {
                 reasons.push(_t("You cannot duplicate this field."));
             }
-            if (el.classList.contains("s_website_form_submit")) {
-                reasons.push(_t("You can't duplicate the submit button of the form."));
-            }
         },
         remove_disabled_reason_providers: ({ el, reasons }) => {
             if (el.classList.contains("s_website_form_model_required")) {
@@ -111,9 +126,6 @@ export class FormOptionPlugin extends Plugin {
                         "This field is mandatory for this action. You cannot remove it. Try hiding it with the 'Visibility' option instead and add it a default value."
                     )
                 );
-            }
-            if (el.classList.contains("s_website_form_submit")) {
-                reasons.push(_t("You can't remove the submit button of the form"));
             }
         },
         builder_options: [FormOption, FormFieldOptionRedraw, WebsiteFormSubmitOption],
@@ -173,8 +185,10 @@ export class FormOptionPlugin extends Plugin {
             },
         ],
         so_content_addition_selector: [".s_website_form"],
+        submit_button_selectors: [".s_website_form_send", ".s_website_form_submit"],
         on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
         on_cloned_handlers: this.onCloned.bind(this),
+        is_unremovable_selector: ".s_website_form_send, .s_website_form_submit",
     };
     setup() {
         this.modelsCache = new SyncCache(this._fetchModels.bind(this));
@@ -385,7 +399,7 @@ export class FormOptionPlugin extends Plugin {
     }
     async fetchAuthorizedFields(formEl) {
         // Combine model and fields into cache key.
-        const model = formEl.dataset.model_name;
+        const model = getModelName(formEl);
         const propertyOrigins = {};
         const parts = [model];
         for (const hiddenInputEl of [...formEl.querySelectorAll("input[type=hidden]")].sort(
@@ -692,10 +706,10 @@ export class FormOptionPlugin extends Plugin {
             const type = getFieldType(fieldEl);
 
             const [optionText, checkType] = selectEl
-                ? [_t("Option"), "exclusive_boolean"]
+                ? [_t("Option List"), "exclusive_boolean"]
                 : type === "selection"
-                ? [_t("Radio"), "exclusive_boolean"]
-                : [_t("Checkbox"), "boolean"];
+                ? [_t("Radio Button List"), "exclusive_boolean"]
+                : [_t("Checkbox List"), "boolean"];
             const defaults = [...fieldEl.querySelectorAll("[checked], [selected]")].map((el) =>
                 isSmallInteger(el.value) ? parseInt(el.value) : el.value
             );
@@ -705,14 +719,15 @@ export class FormOptionPlugin extends Plugin {
                 availableRecords = JSON.stringify(field.records);
             }
             valueList = reactive({
-                title: _t("%s List", optionText),
-                addItemTitle: _t("Add"),
+                title: optionText,
+                addItemTitle: _t("Add New Option"),
                 checkType,
                 defaultItemName: _t("Item"),
                 hasDefault: ["one2many", "many2many"].includes(type) ? "multiple" : "unique",
                 defaults: JSON.stringify(defaults),
                 availableRecords: availableRecords,
                 newRecordId: isFieldCustom(fieldEl) ? getNewRecordId(fieldEl) : "",
+                isInputDisabled: !isFieldCustom(fieldEl),
             });
         }
         return {
@@ -972,6 +987,9 @@ export class AddActionFieldAction extends BuilderAction {
 export class PromptSaveRedirectAction extends BuilderAction {
     static id = "promptSaveRedirect";
     static dependencies = ["savePlugin"];
+    setup() {
+        this.canTimeout = false;
+    }
     apply({ params: { mainParam } }) {
         const redirectToAction = (action) => {
             redirect(`/odoo/action-${encodeURIComponent(action)}`);

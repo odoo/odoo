@@ -232,7 +232,8 @@ class AccountPartialReconcile(models.Model):
             return {}
 
         for partial in self:
-            for move in {partial.debit_move_id.move_id, partial.credit_move_id.move_id}:
+            for field, counterpart_field in (('debit', 'credit'), ('credit', 'debit')):
+                move, counterpart_move = partial[f'{field}_move_id'].move_id, partial[f'{counterpart_field}_move_id'].move_id
 
                 # Collect data about cash basis.
                 if move.id in tax_cash_basis_values_per_move:
@@ -322,6 +323,7 @@ class AccountPartialReconcile(models.Model):
                     'percentage': percentage,
                     'payment_rate': payment_rate,
                     'both_move_posted': partial.debit_move_id.move_id.state == 'posted' and partial.credit_move_id.move_id.state == 'posted',
+                    'counterpart_move': counterpart_move,
                 }
 
                 # Add partials.
@@ -514,6 +516,7 @@ class AccountPartialReconcile(models.Model):
         for move_values in tax_cash_basis_values_per_move.values():
             move = move_values['move']
             pending_cash_basis_lines = []
+            amount_residual_per_tax_line = {line.id: line.amount_residual_currency for line_type, line in move_values['to_process_lines'] if line_type == 'tax'}
 
             for partial_values in move_values['partials']:
                 partial = partial_values['partial']
@@ -553,8 +556,13 @@ class AccountPartialReconcile(models.Model):
                             move_values['is_fully_paid']
                             or line.currency_id.compare_amounts(abs(line.amount_residual_currency), abs(amount_currency)) < 0
                         )
+                        and partial_values == move_values['partials'][-1]
                     ):
-                        amount_currency = line.amount_residual_currency
+                        # If the move is supposed to be fully paid, and we're on the last partial for it,
+                        # put the remaining amount to avoid rounding issues
+                        amount_currency = amount_residual_per_tax_line[line.id]
+                    if caba_treatment == 'tax':
+                        amount_residual_per_tax_line[line.id] -= amount_currency
                     balance = partial_values['payment_rate'] and amount_currency / partial_values['payment_rate'] or 0.0
 
                     # ==========================================================================
@@ -576,6 +584,8 @@ class AccountPartialReconcile(models.Model):
                         # Base line.
 
                         cb_line_vals = self._prepare_cash_basis_base_line_vals(line, balance, amount_currency)
+                        cb_line_vals['name'] = ' - '.join(filter(None, (line.move_id.name, partial_values['counterpart_move'].name)))
+
                         grouping_key = self._get_cash_basis_base_line_grouping_key_from_vals(cb_line_vals)
 
                     if grouping_key in partial_lines_to_create:

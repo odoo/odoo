@@ -534,6 +534,16 @@ class TestSaleOrder(SaleCommon):
         self.assertEqual(discount_line.invoice_status, 'to invoice')
         self.assertEqual(self.sale_order.invoice_status, 'to invoice')
 
+    def test_so_with_fixed_discount_zero_amount(self):
+        """ Applying a fixed discount of 0.0 should have no effect on the order total. """
+        initial_total = self.sale_order.amount_total
+        self.env['sale.order.discount'].create({
+            'sale_order_id': self.sale_order.id,
+            'discount_amount': 0.0,
+            'discount_type': 'amount',
+        }).action_apply_discount()
+        self.assertEqual(self.sale_order.amount_total, initial_total)
+
     def test_sale_order_line_product_taxes_on_branch(self):
         """ Check taxes populated on SO lines from product on branch company.
             Taxes from the branch company should be taken with a fallback on parent company.
@@ -721,6 +731,8 @@ class TestSaleOrder(SaleCommon):
             },
         ])
 
+        group_warning_sale = self.env.ref('sale.group_warning_sale')
+        self.group_user.implied_ids = [Command.link(group_warning_sale.id)]
         sale_order2.action_confirm()
         sale_order2._create_invoices()
         invoice = Form(sale_order2.invoice_ids[0])
@@ -729,11 +741,19 @@ class TestSaleOrder(SaleCommon):
                              'Test Product 1 - Highly corrosive',
                              'Test Product 2 - Toxic pollutant')
         expected_warnings_for_sale_order2 = ('Test Partner, Invoice - Slightly infectious disease',
+                                             'Test Partner - Highly infectious disease',
                                              'Test Product 1 - Highly corrosive',
                                              'Test Product 2 - Toxic pollutant')
         self.assertEqual(sale_order.sale_warning_text, '\n'.join(expected_warnings))
         self.assertEqual(sale_order2.sale_warning_text, '\n'.join(expected_warnings_for_sale_order2))
         self.assertEqual(invoice.sale_warning_text, '\n'.join(expected_warnings_for_sale_order2))
+
+        # without warning group, there should be no warning
+        self.group_user.implied_ids = [Command.unlink(group_warning_sale.id)]
+        self.assertEqual(sale_order.sale_warning_text, '')
+        self.assertEqual(sale_order2.sale_warning_text, '')
+        invoice = Form(sale_order2.invoice_ids[0])
+        self.assertEqual(invoice.sale_warning_text, '')
 
     def test_sale_order_email_subtitle(self):
         """Test email notification subtitle for Sale Order with and without partner name."""
@@ -1098,7 +1118,8 @@ class TestSaleMailComposerUI(MailCommon, HttpCase):
         cls.env['mail.alias.domain'].create({'name': 'example.com'})
         cls.partner = cls.env['res.partner'].create({
             'name': 'test customer',
-            'email': 'dummy@example.com'
+            'lang': 'en_US',
+            'email': 'en@example.com',
         })
         cls.quotation = cls.env['sale.order'].create({
             'partner_id': cls.partner.id,
@@ -1112,3 +1133,66 @@ class TestSaleMailComposerUI(MailCommon, HttpCase):
                 "mail_attachment_removal_tour",
                 login="admin",
             )
+
+    def test_mail_button_translation(self):
+        """Test the final rendering context to ensure the button is properly translated
+        for each recipient's language, checking both the 'View' and the type_name. """
+        self.env['res.lang']._activate_lang('fr_FR')
+        self.partner_fr = self.env['res.partner'].create({
+            'name': 'French Customer',
+            'lang': 'fr_FR',
+            'email': 'fr@example.com',
+        })
+        # Quotation -> SO
+        self.quotation.action_confirm()
+        self.message = self.env['mail.message'].create({
+            'model': 'sale.order',
+            'res_id': self.quotation.id,
+            'body': 'Testing button translation',
+            'message_type': 'comment',
+        })
+        recipients_data = [
+            {
+                'id': self.partner.id,
+                'lang': 'en_US',
+                'type': 'customer',
+                'notif': 'email',
+                'groups': [],
+                'uid': self.partner.user_ids[0].id if self.partner.user_ids else False,
+            },
+            {
+                'id': self.partner_fr.id,
+                'lang': 'fr_FR',
+                'type': 'follower',
+                'notif': 'email',
+                'groups': [],
+                'uid': self.partner_fr.user_ids[0].id if self.partner_fr.user_ids else False,
+            },
+        ]
+
+        iterator = self.quotation._notify_get_classified_recipients_iterator(
+            message=self.message,
+            recipients_data=recipients_data,
+            msg_vals={'model': 'sale.order'}
+        )
+        results = {lang: group for lang, render_values, group in iterator}
+
+        button_en = results['en_US'].get('button_access', {}).get('title', '')
+        button_fr = results['fr_FR'].get('button_access', {}).get('title', '')
+
+        self.assertNotEqual(
+            button_en,
+            button_fr,
+            "The button text is identical, the context language was not fetched correctly."
+        )
+
+        self.assertEqual(
+            button_en,
+            "View Sales Order",
+            f"Expected 'View Sales Order', got '{button_en}'"
+        )
+        self.assertEqual(
+            button_fr,
+            "Voir Commande client",
+            f"Expected 'Voir Commande client', got '{button_fr}'"
+        )

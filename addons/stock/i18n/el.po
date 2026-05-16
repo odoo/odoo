@@ -13,15 +13,16 @@
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # Dionysis Zacharioudakis <d.zacharioudakis@dileanity.com>, 2025.
 # Panagiotis karampaglis <panosdotk@gmail.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:37+0000\n"
-"PO-Revision-Date: 2025-10-21 05:28+0000\n"
-"Last-Translator: Panagiotis karampaglis <panosdotk@gmail.com>\n"
-"Language-Team: Greek <https://translate.odoo.com/projects/odoo-19/stock/el/>"
-"\n"
+"POT-Creation-Date: 2026-04-10 18:37+0000\n"
+"PO-Revision-Date: 2025-11-15 11:30+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
+"Language-Team: Greek <https://translate.odoo.com/projects/odoo-19/stock/el/"
+">\n"
 "Language: el\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -74,6 +75,14 @@ msgid ""
 msgstr ""
 "\n"
 "(%(serial_number)s) υπάρχει στην τοποθεσία %(location)s"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_move.py:0
+msgid ""
+"\n"
+"Package: %s"
+msgstr ""
 
 #. module: stock
 #. odoo-python
@@ -444,52 +453,9 @@ msgid "1 Week"
 msgstr "1 Εβδομάδα"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
-#: model_terms:ir.ui.view,arch_db:stock.stock_report_delivery_aggregated_move_lines
-msgid "1.00"
-msgstr "1.00"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_content
-msgid "12.0"
-msgstr "12.0"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_generic_barcode
-msgid "1234567890"
-msgstr "1234567890"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_lot_label
-msgid "12345678901"
-msgstr "12345678901"
-
-#. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__product_label_format__2x7xprice
 msgid "2 x 7 with price"
 msgstr "2 x 7 με τιμή"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
-msgid "2021-09-01"
-msgstr "2021-09-01"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
-msgid "2023-01-01"
-msgstr "2023-01-01"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_picking
-msgid "2023-09-24"
-msgstr "2023-09-24"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
-#: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_content
-#: model_terms:ir.ui.view,arch_db:stock.report_picking
-msgid "3.00"
-msgstr "3.00"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__lot_label_layout__print_format__4x12
@@ -516,11 +482,6 @@ msgstr "4 x 12 με τιμή"
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__product_label_format__4x7xprice
 msgid "4 x 7 with price"
 msgstr "4 x 7 με τιμή"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_content
-msgid "54326786758"
-msgstr "54326786758"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_form_view
@@ -785,12 +746,6 @@ msgid "<span class=\"text-muted small\"> On Hand</span>"
 msgstr "<span class=\"text-muted small\"> Απόθεμα</span>"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
-#: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
-msgid "<span groups=\"!uom.group_uom\">On Hand</span>"
-msgstr "<span groups=\"!uom.group_uom\">Απόθεμα</span>"
-
-#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "<span> days</span>"
 msgstr "<span> ημέρες</span>"
@@ -849,8 +804,8 @@ msgstr "<strong>Επαφή</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
-msgid "<strong>Customer Address</strong>"
-msgstr "<strong>Διεύθυνση Πελάτη</strong>"
+msgid "<strong>Customer</strong>"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -861,6 +816,11 @@ msgstr "<strong>Παραδοθέν</strong>"
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Delivery Address:</strong>"
 msgstr "<strong>Διεύθυνση Παράδοσης:</strong>"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
+msgid "<strong>Delivery Address</strong>"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -956,6 +916,8 @@ msgstr "<strong>Διεύθυνση παραλήπτη</strong>"
 msgid ""
 "<strong>Save</strong> this page and come back here to set up the feature."
 msgstr ""
+"<strong>Αποθηκεύστε</strong> αυτήν την σελίδα και επιστρέψτε εδώ για να "
+"ρυθμίσετε αυτό το χαρακτηριστικό."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -975,7 +937,7 @@ msgstr "<strong>Υπογραφή</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Status:</strong>"
-msgstr ""
+msgstr "<strong>Κατάσταση:</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.message_head
@@ -1058,7 +1020,7 @@ msgstr "Ενέργεια"
 #. odoo-javascript
 #: code:addons/stock/static/src/fields/stock_action_field.js:0
 msgid "Action Name"
-msgstr ""
+msgstr "Όνομα Ενέργειας"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__message_needaction
@@ -1279,7 +1241,6 @@ msgstr "Όλες οι κινήσεις"
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/views/search/stock_report_search_panel.xml:0
-#: model_terms:ir.ui.view,arch_db:stock.stock_location_route_form_view
 msgid "All Warehouses"
 msgstr "Όλες οι Αποθήκες"
 
@@ -1615,7 +1576,7 @@ msgstr "Αυτοματοποίηση"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_reorder_report_search
 msgid "Automatic"
-msgstr ""
+msgstr "Αυτόματα"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__auto
@@ -1743,7 +1704,7 @@ msgstr "Το barcode είναι έγκυρο EAN"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_info__based_on
 msgid "Based on"
-msgstr ""
+msgstr "Βασισμένο στο"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_stock_picking_batch
@@ -1863,7 +1824,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.replenishment_option_warning_view
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quantity_history
-#: model_terms:ir.ui.view,arch_db:stock.view_stock_return_picking_form
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_rules_report
 msgid "Cancel"
 msgstr "Ακύρωση"
@@ -2019,6 +1979,11 @@ msgstr "Επιλέξτε Διάταξη Ετικετών"
 #: code:addons/stock/models/stock_picking.py:0
 msgid "Choose Type of Labels To Print"
 msgstr "Διαλέξτε Τύπο Ετικετών για να Εκτυπώσετε"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.stock_location_route_form_view
+msgid "Choose Warehouses"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quantity_history__inventory_datetime
@@ -2447,7 +2412,7 @@ msgstr "Δημιουργία Αποθέματος"
 #. module: stock
 #: model:ir.model,website_form_label:stock.model_res_partner
 msgid "Create a Customer"
-msgstr ""
+msgstr "Δημιουργία Πελάτη"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
@@ -2692,7 +2657,7 @@ msgstr "Τοποθεσίες Πελάτη"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.search_product_lot_filter
 msgid "Customers"
-msgstr ""
+msgstr "Πελάτες"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -3074,7 +3039,7 @@ msgstr "Διεύθυνση Παράδοσης"
 #. odoo-javascript
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 msgid "Delivery Date"
-msgstr ""
+msgstr "Ημερομηνία Παράδοσης"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery
@@ -3240,7 +3205,7 @@ msgstr "Φίλτρο Πακέτου Προορισμού"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_put_in_pack__location_dest_id
 msgid "Destination"
-msgstr ""
+msgstr "Προορισμός"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__partner_id
@@ -3337,7 +3302,7 @@ msgstr "Αναλυτικές Ενέργειες"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Details"
-msgstr ""
+msgstr "Λεπτομέρειες"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__show_details_visible
@@ -3354,7 +3319,7 @@ msgstr "Διαφορά"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_type_form
 msgid "Dimensions"
-msgstr ""
+msgstr "Διαστάσεις"
 
 #. module: stock
 #. odoo-javascript
@@ -3373,6 +3338,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
 #: model_terms:ir.ui.view,arch_db:stock.view_product_replenish
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_orderpoint_snooze
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_return_picking_form
 msgid "Discard"
 msgstr "Απόρριψη"
 
@@ -4638,7 +4604,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_production_lot_form
 msgid "Information"
-msgstr ""
+msgstr "Πληροφορία"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_kandan
@@ -4884,6 +4850,11 @@ msgid "Inventory at Date"
 msgstr "Απόθεμα την ημερομηνία"
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_move__is_date_editable
+msgid "Is Date Editable"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__is_empty
 msgid "Is Empty"
 msgstr "Είναι Κενό"
@@ -4911,6 +4882,11 @@ msgstr "Είναι Πολλαπλής Τοποθεσίας"
 #: model:ir.model.fields,field_description:stock.field_stock_quant_relocate__is_partial_package
 msgid "Is Partial Package"
 msgstr "Είναι Μερική Συσκευασία"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_picking__is_date_editable
+msgid "Is Scheduled Date Editable"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__is_signed
@@ -5086,7 +5062,7 @@ msgstr "Τελευταίοι 3 Μήνες"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_replenishment_info__based_on__three_months
 msgid "Last 3 months"
-msgstr ""
+msgstr "Τελευταίοι 3 μήνες"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
@@ -5101,7 +5077,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_replenishment_info__based_on__one_week
 msgid "Last 7 days"
-msgstr ""
+msgstr "Τελευταίες 7 ημέρες"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__last_count_date
@@ -5707,7 +5683,7 @@ msgstr "Μάιος"
 #. module: stock
 #: model:res.company,partnership_label:stock.res_company_1
 msgid "Members"
-msgstr ""
+msgstr "Μέλη"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__message_has_error
@@ -5880,7 +5856,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "My Activities"
-msgstr ""
+msgstr "Οι Δραστηριότητες μου"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__my_activity_date_deadline
@@ -6302,7 +6278,9 @@ msgstr "Καρέκλα Γραφείου"
 #: code:addons/stock/static/src/stock_forecasted/forecasted_header.xml:0
 #: model:ir.model.fields,field_description:stock.field_stock_quant__on_hand
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__qty_on_hand
+#: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
 #: model_terms:ir.ui.view,arch_db:stock.product_product_stock_tree
+#: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
 #: model_terms:ir.ui.view,arch_db:stock.search_product_lot_filter
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_product_template_tree
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_product_tree
@@ -6914,7 +6892,7 @@ msgstr "Μήκος Συσκευασίας"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__packaging_uom_qty
 msgid "Packaging Quantity"
-msgstr ""
+msgstr "Ποσότητα Συσκευασίας"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_package_type__width
@@ -7144,7 +7122,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__price_unit
 msgid "Price Unit"
-msgstr ""
+msgstr "Τιμή Μονάδας"
 
 #. module: stock
 #. odoo-javascript
@@ -7304,6 +7282,7 @@ msgstr "Κατηγορίες Ειδών"
 
 #. module: stock
 #: model:ir.model,name:stock.model_product_category
+#: model:ir.model.fields,field_description:stock.field_stock_move__product_category_id
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__product_category_name
 #: model:ir.model.fields,field_description:stock.field_stock_putaway_rule__category_id
 #: model:ir.model.fields,field_description:stock.field_stock_quant__product_categ_id
@@ -8056,7 +8035,7 @@ msgstr "Παραπομπή:"
 #: model:ir.ui.menu,name:stock.menu_stock_references
 #: model_terms:ir.ui.view,arch_db:stock.stock_reference_tree_view
 msgid "References"
-msgstr ""
+msgstr "Παραπομπές"
 
 #. module: stock
 #: model:ir.actions.server,name:stock.action_stock_quant_relocate
@@ -8094,7 +8073,7 @@ msgstr "Στρατηγική Μετακίνησης %s δεν υλοποιείτ
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_view_list_editable
 msgid "Remove"
-msgstr ""
+msgstr "Αφαίρεση"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_tree_editable
@@ -8213,7 +8192,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__replenish_location
 msgid "Replenishments"
-msgstr ""
+msgstr "Ανατροφοδοτήσεις"
 
 #. module: stock
 #: model:ir.model,name:stock.model_ir_actions_report
@@ -8553,7 +8532,7 @@ msgstr "S0001"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__res_company__stock_confirmation_type__sms
 msgid "SMS"
-msgstr ""
+msgstr "SMS"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_stock_sms
@@ -8594,6 +8573,11 @@ msgid "Sample data"
 msgstr "Δείγματα δεδομένων"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_replenishment_info
+msgid "Save"
+msgstr ""
+
+#. module: stock
 #. odoo-python
 #: code:addons/stock/models/product.py:0
 msgid "Save the product form before updating the Quantity On Hand."
@@ -8602,7 +8586,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__inventory_date
 msgid "Scheduled"
-msgstr ""
+msgstr "Προγραμματισμένη"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__date_planned
@@ -8765,8 +8749,8 @@ msgid ""
 "Selected storage category does not exist in the 'store to' location or any "
 "of its sublocations"
 msgstr ""
-"Η επιλεγμένη κατηγορία αποθήκευσης δεν υπάρχει στην τοποθεσία «αποθήκευση σε»"
-" ούτε σε κάποια από τις υποτοποθεσίες της"
+"Η επιλεγμένη κατηγορία αποθήκευσης δεν υπάρχει στην τοποθεσία «αποθήκευση "
+"σε» ούτε σε κάποια από τις υποτοποθεσίες της"
 
 #. module: stock
 #. odoo-python
@@ -9126,6 +9110,8 @@ msgstr "Εμφάνιση Μεταφορών"
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Show all records whose next activity date is past"
 msgstr ""
+"Εμφάνιση όλων των καταγραφών των οποίων η επόμενη δραστηριότητα είναι "
+"προγενέστερη"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_kandan
@@ -10036,14 +10022,6 @@ msgid "There are no inventory adjustments to revert."
 msgstr "Δεν υπάρχουν διορθώσεις αποθέματος προς αναίρεση."
 
 #. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_move_line.py:0
-msgid ""
-"There is nothing eligible to put in a pack. Either there are no quantities "
-"to put in a pack or moves are already done."
-msgstr ""
-
-#. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_move_line_action
 msgid "There's no product move yet"
 msgstr "Δεν έχει γίνει ακόμη μετακίνηση προϊόντος"
@@ -10791,7 +10769,7 @@ msgstr "Μονάδα Μέτρησης"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_option__uom
 msgid "Unit Name"
-msgstr ""
+msgstr "Μονάδα Μέτρηση"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
@@ -10803,7 +10781,7 @@ msgstr "Τεμάχια"
 #: model:ir.ui.menu,name:stock.menu_stock_uom_form_action
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Units & Packagings"
-msgstr "Μονάδες Μέτρησεις & Συσκευασίες"
+msgstr "Μονάδες Μέτρησης & Συσκευασίες"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__product_uom_id
@@ -10961,6 +10939,7 @@ msgstr "Τοποθεσίες Προμηθευτή"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_package_history_list
 msgid "View"
 msgstr "Προβολή"
 
@@ -11002,7 +10981,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_production_lot_form
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_rule_form
 msgid "Visible to all"
-msgstr ""
+msgstr "Ορατό σε όλους"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__shipping_volume
@@ -12234,12 +12213,50 @@ msgid "units"
 msgstr "μονάδες"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_replenishment_info
+msgid "x"
+msgstr ""
+
+#. module: stock
 #: model:mail.template,subject:stock.mail_template_data_delivery_confirmation
 msgid ""
 "{{ object.company_id.name }} Delivery Order (Ref {{ object.name or 'n/a' }})"
 msgstr ""
 "{{ object.company_id.name }} Εντολή Παράδοσης (Ref {{ object.name or 'n/"
 "a' }})"
+
+#~ msgid "1.00"
+#~ msgstr "1.00"
+
+#~ msgid "12.0"
+#~ msgstr "12.0"
+
+#~ msgid "1234567890"
+#~ msgstr "1234567890"
+
+#~ msgid "12345678901"
+#~ msgstr "12345678901"
+
+#~ msgid "2021-09-01"
+#~ msgstr "2021-09-01"
+
+#~ msgid "2023-01-01"
+#~ msgstr "2023-01-01"
+
+#~ msgid "2023-09-24"
+#~ msgstr "2023-09-24"
+
+#~ msgid "3.00"
+#~ msgstr "3.00"
+
+#~ msgid "54326786758"
+#~ msgstr "54326786758"
+
+#~ msgid "<span groups=\"!uom.group_uom\">On Hand</span>"
+#~ msgstr "<span groups=\"!uom.group_uom\">Απόθεμα</span>"
+
+#~ msgid "<strong>Customer Address</strong>"
+#~ msgstr "<strong>Διεύθυνση Πελάτη</strong>"
 
 #~ msgid "If ticked, you will be able to select entire packages to move"
 #~ msgstr ""

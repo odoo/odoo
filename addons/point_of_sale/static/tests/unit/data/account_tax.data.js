@@ -18,6 +18,7 @@ export class AccountTax extends models.ServerModel {
             "id",
             "sequence",
             "tax_group_id",
+            "fiscal_position_ids",
         ];
     }
 
@@ -35,6 +36,7 @@ export class AccountTax extends models.ServerModel {
             company_id: 250,
             sequence: 1,
             tax_group_id: 1,
+            fiscal_position_ids: [1],
         },
         {
             id: 2,
@@ -49,6 +51,7 @@ export class AccountTax extends models.ServerModel {
             company_id: 250,
             sequence: 1,
             tax_group_id: 3,
+            fiscal_position_ids: [],
         },
         {
             id: 3,
@@ -62,6 +65,20 @@ export class AccountTax extends models.ServerModel {
             company_id: 250,
             is_base_affected: true,
             tax_group_id: 4,
+        },
+        {
+            id: 4,
+            name: "15% incl",
+            type_tax_use: "sale",
+            amount_type: "percent",
+            amount: 15,
+            price_include_override: "tax_included",
+            price_include: true,
+            include_base_amount: true,
+            has_negative_factor: false,
+            company_id: 250,
+            is_base_affected: true,
+            tax_group_id: 5,
         },
     ];
 }

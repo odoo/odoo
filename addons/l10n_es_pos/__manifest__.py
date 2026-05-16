@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
-    'name': 'Spain - Point of Sale',
+    'name': '[Deprecated] Spain - Point of Sale',
     'category': 'Accounting/Localizations/Point of Sale',
     'summary': """Spanish localization for Point of Sale""",
     'depends': ['point_of_sale', 'l10n_es'],

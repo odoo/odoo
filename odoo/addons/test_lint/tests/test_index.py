@@ -68,7 +68,7 @@ class TestIndex(common.TransactionCase):
             for field in model._fields.values():
                 if field.type == 'one2many' and field.inverse_name:
                     comodel = self.env[field.comodel_name]
-                    inverse_field = comodel._fields.get(field.inverse_name)
+                    inverse_field = comodel._fields.get(field.inverse_name).base_field
                     if inverse_field and not ignore(field, inverse_field):
                         fields_to_index.add(f"{inverse_field} (inverse of {field})")
         if fields_to_index:

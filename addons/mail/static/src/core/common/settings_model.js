@@ -5,7 +5,8 @@ import { fields, Record } from "./record";
 import { debounce } from "@web/core/utils/timing";
 import { rpc } from "@web/core/network/rpc";
 
-const MESSAGE_SOUND = "mail.user_setting.message_sound";
+export const MESSAGE_SOUND = "mail.user_setting.message_sound";
+export const USE_BLUR_LS = "mail_user_setting_use_blur";
 
 export class Settings extends Record {
     id;
@@ -44,17 +45,11 @@ export class Settings extends Record {
             return this.channel_notifications === false ? "mentions" : this.channel_notifications;
         },
     });
+    _recomputeMessageSound = 0;
     messageSound = fields.Attr(true, {
         compute() {
+            void this._recomputeMessageSound;
             return browser.localStorage.getItem(MESSAGE_SOUND) !== "false";
-        },
-        /** @this {import("models").Settings} */
-        onUpdate() {
-            if (this.messageSound) {
-                browser.localStorage.removeItem(MESSAGE_SOUND);
-            } else {
-                browser.localStorage.setItem(MESSAGE_SOUND, "false");
-            }
         },
     });
     useCallAutoFocus = fields.Attr(true, {
@@ -91,17 +86,11 @@ export class Settings extends Record {
     backgroundBlurAmount = 10;
     edgeBlurAmount = 10;
     showOnlyVideo = false;
+    _recomputeUseBlur = 0;
     useBlur = fields.Attr(false, {
         compute() {
-            return browser.localStorage.getItem("mail_user_setting_use_blur") === "true";
-        },
-        /** @this {import("models").Settings} */
-        onUpdate() {
-            if (this.useBlur) {
-                browser.localStorage.setItem("mail_user_setting_use_blur", "true");
-            } else {
-                browser.localStorage.removeItem("mail_user_setting_use_blur");
-            }
+            void this._recomputeUseBlur;
+            return browser.localStorage.getItem(USE_BLUR_LS) === "true";
         },
     });
     blurPerformanceWarning = fields.Attr(false, {
@@ -192,6 +181,16 @@ export class Settings extends Record {
                 name: _t("Until I turn it back on"),
             },
         ];
+    }
+
+    /** @param {boolean} newValue */
+    setUseBlur(newValue) {
+        if (newValue) {
+            browser.localStorage.setItem(USE_BLUR_LS, true);
+        } else {
+            browser.localStorage.removeItem(USE_BLUR_LS);
+        }
+        this._recomputeUseBlur++;
     }
 
     getMuteUntilText(dt) {
@@ -427,10 +426,10 @@ export class Settings extends Record {
     }
     onStorage(ev) {
         if (ev.key === MESSAGE_SOUND) {
-            this.messageSound = ev.newValue !== "false";
+            this._recomputeMessageSound++;
         }
-        if (ev.key === "mail_user_setting_use_blur") {
-            this.useBlur = ev.newValue === "true";
+        if (ev.key === USE_BLUR_LS) {
+            this._recomputeUseBlur++;
         }
     }
     /**

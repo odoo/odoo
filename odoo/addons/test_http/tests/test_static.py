@@ -232,6 +232,13 @@ class TestHttpStatic(TestHttpStaticCommon):
                 assert_filename='pyramid.of.gizeh.png',
             )
 
+        with self.subTest("long name"):
+            res = self.assertDownloadGizeh(
+                f'/web/content/test_http.gizeh_png?filename={"a" * 4000}.png',
+                assert_filename=f'{"a" * 100}.png',
+            )
+            self.assertEqual(res.headers['Content-Disposition'], f'inline; filename={"a" * 100}.png')
+
     def test_static12_not_found_to_placeholder(self):
         with self.subTest(x_sendfile=False):
             self.assertDownloadPlaceholder('/web/image/idontexist')
@@ -451,6 +458,33 @@ class TestHttpStatic(TestHttpStaticCommon):
                     e = "wkhtmltopdf only works if it is allowed to cache everything"
                     raise AssertionError(e) from exc
                 self.assertEqual(res.content, self.gizeh_data)
+
+    def test_static24_only_one_date_header(self):
+        res = self.assertDownloadPlaceholder('/web/image')
+        # requests merge multiple headers with a same key together, it
+        # concatenates the values, hence .count(' GMT')
+        self.assertEqual(res.headers['Date'].count(' GMT'), 1,
+            "There must be only 1 Date header, not 2")
+
+    def test_static25_binary_non_base64(self):
+        self.authenticate('admin', 'admin')
+
+        # need a Binary(attachment=False) field
+        # TODO: master, add such a field on test_http.stargate
+        record = self.env['ir.mail_server'].create({
+            'name': 'dummy test_http test_static server',
+            'smtp_host': 'localhost',
+        })
+
+        record.smtp_ssl_certificate = b'non base64 value'
+        self.assertDownload(
+            f'/web/content/ir.mail_server/{record.id}/smtp_ssl_certificate',
+            headers={},
+            assert_status_code=200,
+            assert_headers={},
+            assert_content=b'non base64 value',
+        )
+
 
 @tagged('post_install', '-at_install')
 class TestHttpStaticLogo(TestHttpStaticCommon):

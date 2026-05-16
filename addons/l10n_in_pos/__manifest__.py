@@ -12,6 +12,7 @@
     ],
     'data': [
         'views/pos_order_line_views.xml',
+        'views/product_view.xml',
         'views/res_config_settings_views.xml',
         'data/pos_bill_data.xml',
     ],

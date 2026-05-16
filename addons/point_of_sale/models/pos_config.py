@@ -26,7 +26,7 @@ class PosConfig(models.Model):
         return self.env['stock.warehouse'].search(self.env['stock.warehouse']._check_company_domain(self.env.company), limit=1).id
 
     def _default_picking_type_id(self):
-        return self.env['stock.warehouse'].with_context(active_test=False).search(self.env['stock.warehouse']._check_company_domain(self.env.company), limit=1).pos_type_id.id
+        return self.env['stock.warehouse'].search(self.env['stock.warehouse']._check_company_domain(self.env.company), limit=1).pos_type_id.id
 
     def _default_sale_journal(self):
         journal = self.env['account.journal']._ensure_company_account_journal()
@@ -177,7 +177,7 @@ class PosConfig(models.Model):
     has_active_session = fields.Boolean(compute='_compute_current_session')
     manual_discount = fields.Boolean(string="Line Discounts", default=True)
     ship_later = fields.Boolean(string="Ship Later")
-    warehouse_id = fields.Many2one('stock.warehouse', default=_default_warehouse_id, ondelete='restrict')
+    warehouse_id = fields.Many2one('stock.warehouse', compute='_compute_warehouse_id', store=True, readonly=False, precompute=True, ondelete='restrict')
     route_id = fields.Many2one('stock.route', string="Spefic route for products delivered later.")
     picking_policy = fields.Selection([
         ('direct', 'As soon as possible'),
@@ -234,6 +234,14 @@ class PosConfig(models.Model):
             'records': records
         })
 
+        for config in self.trusted_config_ids:
+            config._notify('SYNCHRONISATION', {
+                'static_records': static_records,
+                'session_id': config.current_session_id.id,
+                'login_number': 0,
+                'records': records
+            })
+
     def read_config_open_orders(self, domain, record_ids=[]):
         delete_record_ids = {}
         dynamic_records = {}
@@ -246,7 +254,7 @@ class PosConfig(models.Model):
             delete_record_ids[model] = browsed.filtered(lambda r: not r.exists()).ids
             # Cancelled orders must be forced deleted from the user interface.
             if model == "pos.order":
-                delete_record_ids[model] += browsed.filtered(lambda r: r.state == "cancel").ids
+                delete_record_ids[model] += browsed.exists().filtered(lambda r: r.state == "cancel").ids
 
         pos_order_data = dynamic_records.get('pos.order') or self.env['pos.order']
         data = pos_order_data.read_pos_data([], self)
@@ -277,10 +285,10 @@ class PosConfig(models.Model):
 
         record = read_records[0]
         record['_server_version'] = exp_version()
-        record['_base_url'] = self.get_base_url()
+        record['_base_url'] = config.get_base_url()
         record['_data_server_date'] = self.env.context.get('pos_last_server_date') or self.env.cr.now()
-        record['_has_cash_move_perm'] = self.env.user.has_group('account.group_account_invoice')
-        record['_has_cash_delete_perm'] = self.env.user.has_group('account.group_account_basic')
+        record['_has_cash_move_perm'] = self.env.user._has_cash_move_permission()
+        record['_has_cash_delete_perm'] = self.env.user._has_cash_delete_permission()
         record['_pos_special_products_ids'] = self.env['pos.config']._get_special_products().ids
 
         # Add custom fields for 'formula' taxes.
@@ -301,6 +309,14 @@ class PosConfig(models.Model):
             config.fast_payment_method_ids = config.fast_payment_method_ids.filtered(lambda pm: pm.id in config.payment_method_ids.ids)
             if not config.fast_payment_method_ids:
                 config.use_fast_payment = False
+
+    @api.depends('picking_type_id')
+    def _compute_warehouse_id(self):
+        for config in self:
+            if config.picking_type_id.warehouse_id:
+                config.warehouse_id = config.picking_type_id.warehouse_id
+            else:
+                config.warehouse_id = config._default_warehouse_id()
 
     @api.depends('payment_method_ids')
     def _compute_cash_control(self):
@@ -368,7 +384,7 @@ class PosConfig(models.Model):
             },
         }
 
-        all_paid_orders = session.order_ids.filtered(lambda o: o.state == 'paid')
+        all_paid_orders = session.order_ids.filtered(lambda o: o.state in ['paid', 'done'])
         refund_orders = all_paid_orders.filtered(lambda o: o.is_refund)
         draft_orders = session.order_ids.filtered(lambda o: o.state == 'draft')
         non_refund_orders = all_paid_orders - refund_orders
@@ -629,6 +645,9 @@ class PosConfig(models.Model):
                 if key in vals.keys():
                     if bypass_payment_method_ids_forbidden_change and key == 'payment_method_ids':
                         continue
+                    # Allow activating a pos config even if it has an open session, but don't allow deactivating it.
+                    if key == 'active' and vals['active']:
+                        continue
                     field_name = self._fields[key].get_description(self.env)["string"]
                     forbidden_fields.append(field_name)
 
@@ -641,7 +660,7 @@ class PosConfig(models.Model):
         result = super(PosConfig, self).write(vals)
 
         for config in self:
-            if config.use_presets and config.default_preset_id.id not in config.available_preset_ids.ids:
+            if config.use_presets and config.default_preset_id and config.default_preset_id.id not in config.available_preset_ids.ids:
                 config.available_preset_ids |= config.default_preset_id
 
         self.sudo()._set_fiscal_position()
@@ -704,7 +723,7 @@ class PosConfig(models.Model):
         return new_vals
 
     def _get_forbidden_change_fields(self):
-        return ['module_pos_restaurant', 'payment_method_ids']
+        return ['module_pos_restaurant', 'payment_method_ids', 'active']
 
     def unlink(self):
         # Delete the pos.config records first then delete the sequences linked to them
@@ -888,6 +907,19 @@ class PosConfig(models.Model):
         except (TypeError, ValueError, OverflowError):
             return DEFAULT_LIMIT_LOAD_PRODUCT
 
+    def get_product_loading_info(self):
+        """Return total product.template count matching the PoS domain and the configured loading limit.
+
+        Used by the frontend to warn the user before triggering a full sync when the product
+        count exceeds the configured limit or crosses the dangerous threshold (20 000+).
+        """
+        self.ensure_one()
+        ProductTemplate = self.env['product.template']
+        domain = ProductTemplate._load_pos_data_domain({}, self)
+        total_count = ProductTemplate.search_count(domain)
+        limit = self.get_limited_product_count()
+        return {'total_count': total_count, 'limit': limit}
+
     def _get_limited_partner_count(self):
         config_param = self.env['ir.config_parameter'].sudo().get_param('point_of_sale.limited_customer_count', DEFAULT_LIMIT_LOAD_PARTNER)
         try:
@@ -1017,9 +1049,12 @@ class PosConfig(models.Model):
             bank_journal = self.env['account.journal'].search([('type', '=', 'bank'), ('company_id', 'in', self.env.company.parent_ids.ids)], limit=1)
             if not bank_journal:
                 raise UserError(_('Ensure that there is an existing bank journal. Check if chart of accounts is installed in your company.'))
+            chart_template = self.with_context(allowed_company_ids=self.env.company.root_id.ids).env['account.chart.template']
+            outstanding_account = chart_template.ref('account_journal_payment_debit_account_id', raise_if_not_found=False) or self.env.company.transfer_account_id
             bank_pm = self.env['pos.payment.method'].create({
                 'name': _('Card'),
                 'journal_id': bank_journal.id,
+                'outstanding_account_id': outstanding_account.id if outstanding_account else False,
                 'company_id': self.env.company.id,
                 'sequence': 1,
             })
@@ -1220,7 +1255,7 @@ class PosConfig(models.Model):
 
     def _get_available_pricelists(self):
         self.ensure_one()
-        return self.available_pricelist_ids if self.use_pricelist else self.pricelist_id
+        return self.available_pricelist_ids + self.pricelist_id if self.use_pricelist else self.pricelist_id
 
     def _env_with_clean_context(self):
         safe_context = {}

@@ -8,6 +8,7 @@ import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 export class TextDirectionPlugin extends Plugin {
     static id = "textDirection";
     static dependencies = ["selection", "history", "split", "format"];
+    /** @type {import("plugins").EditorResources} */
     resources = {
         user_commands: [
             {
@@ -28,7 +29,7 @@ export class TextDirectionPlugin extends Plugin {
     };
 
     setup() {
-        if (this.config.direction) {
+        if (this.config.direction && !this.editable.closest("[dir]")) {
             this.editable.setAttribute("dir", this.config.direction);
         }
         this.direction = this.config.direction || "ltr";
@@ -42,7 +43,10 @@ export class TextDirectionPlugin extends Plugin {
         ].filter((n) => isTextNode(n) && isContentEditable(n) && n.nodeValue.trim().length);
         const blocks = new Set(
             targetedTextNodes.map(
-                (textNode) => closestElement(textNode, "ul,ol") || closestBlock(textNode)
+                (textNode) =>
+                    closestElement(textNode, "ul,ol") ||
+                    closestElement(textNode, "[data-embedded='toggleBlock']") ||
+                    closestBlock(textNode)
             )
         );
 

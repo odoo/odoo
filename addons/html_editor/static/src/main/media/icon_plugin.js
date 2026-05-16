@@ -4,10 +4,13 @@ import { _t } from "@web/core/l10n/translation";
 import { MediaDialog } from "./media_dialog/media_dialog";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { ICON_SELECTOR, isElement } from "@html_editor/utils/dom_info";
+import { isIconElement, isZwnbsp } from "../../utils/dom_info";
 
 export class IconPlugin extends Plugin {
     static id = "icon";
     static dependencies = ["history", "selection", "dialog"];
+    toolbarNamespace = "icon";
+    /** @type {import("plugins").EditorResources} */
     resources = {
         user_commands: [
             {
@@ -54,17 +57,43 @@ export class IconPlugin extends Plugin {
                 isAvailable: isHtmlContentSupported,
             },
         ],
-        toolbar_namespaces: [
-            {
-                id: "icon",
-                isApplied: (targetedNodes) =>
-                    targetedNodes.every(
-                        (node) =>
-                            // All nodes should be icons, its ZWS child or its ancestors
-                            node.classList?.contains("fa") ||
-                            node.parentElement.classList.contains("fa") ||
-                            (node.querySelector?.(".fa") && node.isContentEditable !== false)
-                    ),
+        toolbar_namespace_providers: [
+            (targetedNodes) => {
+                if (!targetedNodes.length) {
+                    return;
+                }
+                const isIconInTargetedNodes = targetedNodes.some(isIconElement);
+                // All nodes should be icons, their ZWS children, or their ancestors.
+                // FEFF nodes are only considered valid if an icon is selected and the
+                // FEFF is directly adjacent to it.
+                const isIconRelatedNode = (node) => {
+                    if (
+                        node.classList?.contains("fa") ||
+                        node.parentElement?.classList.contains("fa") ||
+                        (node.querySelector?.(":scope > .fa") && node.isContentEditable !== false)
+                    ) {
+                        return true;
+                    }
+                    if (isZwnbsp(node) && isIconInTargetedNodes) {
+                        return (
+                            node.nextElementSibling?.classList?.contains("fa") ||
+                            node.previousElementSibling?.classList?.contains("fa")
+                        );
+                    }
+                    // Node is applying style on the icon.
+                    if (
+                        isElement(node) &&
+                        node.children.length === 1 &&
+                        isIconElement(node.children[0])
+                    ) {
+                        return true;
+                    }
+                    return false;
+                };
+
+                if (targetedNodes.every(isIconRelatedNode)) {
+                    return this.toolbarNamespace;
+                }
             },
         ],
         toolbar_groups: [

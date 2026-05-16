@@ -61,3 +61,22 @@ registry
 registry
     .category('public.interactions.edit')
     .add('website_sale.dynamic_snippet_category', {Interaction: DynamicSnippetCategory});
+
+registry
+    .category("public.interactions.preview")
+    .add("website_sale.dynamic_snippet_category", {
+        Interaction: DynamicSnippetCategory,
+        mixin: (I) => class extends I {
+            getQWebRenderOptions() {
+                const options = super.getQWebRenderOptions(...arguments);
+                // The row sizes in `SIZE_CONFIG` have the `vh` unit, thus the
+                // height is relative to the viewport height, and does not
+                // scale down with the scaling applied by the iframe of the
+                // snippet preview dialog. This reduces the size by a similar
+                // factor to keep the appearance of the snippet in the preview
+                // similar to the dropped version.
+                const scale = this.el.getBoundingClientRect().height / this.el.offsetHeight;
+                return Object.assign(options, { rowSize: `calc(${options.rowSize} * ${scale})` });
+            }
+        },
+    });

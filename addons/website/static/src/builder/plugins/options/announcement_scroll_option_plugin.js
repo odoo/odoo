@@ -26,6 +26,7 @@ export class AnnouncementScrollOption extends BaseOptionComponent {
 export class AnnouncementScrollOptionPlugin extends Plugin {
     static id = "announcementScrollOptionPlugin";
     selector = AnnouncementScrollOption.selector;
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_options: [
             withSequence(after(WEBSITE_BACKGROUND_OPTIONS), AnnouncementScrollOption),

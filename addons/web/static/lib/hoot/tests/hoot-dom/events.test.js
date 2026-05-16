@@ -1236,8 +1236,8 @@ describe(parseUrl(import.meta.url), () => {
             "pointerleave:0@input",
             "mouseleave:0@input",
             // Change
-            "blur@input",
             "change@input",
+            "blur@input",
             "focusout@input",
         ]);
     });
@@ -1432,6 +1432,24 @@ describe(parseUrl(import.meta.url), () => {
         await setInputFiles(new File([""], "file.txt"));
 
         expect("input").toHaveValue(/file\.txt/);
+    });
+
+    test("setInputFiles: shadow root", async () => {
+        await mountForTest(/* xml */ `
+            <div class="container" />
+        `);
+
+        const shadow = queryOne(".container").attachShadow({
+            mode: "open",
+        });
+        const input = document.createElement("input");
+        input.type = "file";
+        shadow.appendChild(input);
+
+        await click(".container:shadow input");
+        await setInputFiles(new File([""], "file.txt"));
+
+        expect(".container:shadow input").toHaveValue(/file\.txt/);
     });
 
     test("setInputRange: basic case and events", async () => {
@@ -1741,6 +1759,8 @@ describe(parseUrl(import.meta.url), () => {
             "focus@input",
             "focusin@input",
             "focusin@form",
+            "keyup:Tab@input",
+            "keyup:Tab@form",
             // Enter
             "keydown:Enter@input",
             "keydown:Enter@form",
@@ -1772,6 +1792,8 @@ describe(parseUrl(import.meta.url), () => {
             "focus@button",
             "focusin@button",
             "focusin@form",
+            "keyup:Tab@button",
+            "keyup:Tab@form",
             // Enter
             "keydown:Enter@button",
             "keydown:Enter@form",
@@ -1804,6 +1826,8 @@ describe(parseUrl(import.meta.url), () => {
             "focus@button",
             "focusin@button",
             "focusin@form",
+            "keyup:Tab@button",
+            "keyup:Tab@form",
             // Enter
             "keydown:Enter@button",
             "keydown:Enter@form",

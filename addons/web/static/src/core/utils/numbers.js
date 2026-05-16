@@ -206,6 +206,8 @@ export function humanNumber(number, options = { decimals: 0, minDigits: 1 }) {
  * @param {Object} [options]
  * @param {number[]} [options.digits] the number of digits that should be used,
  *   instead of the default digits precision in the field.
+ * @param {number} [options.minDigits] the minimum number of decimal digits to display.
+ *   Displays maximum 6 decimal places if no precision is provided.
  * @param {boolean} [options.humanReadable] if true, large numbers are formatted
  *   to a human readable format.
  * @param {string} [options.decimalPoint] decimal separating character
@@ -221,9 +223,17 @@ export function formatFloat(value, options = {}) {
     let precision;
     if (options.digits && options.digits[1] !== undefined) {
         precision = options.digits[1];
+    } else if (options.minDigits) {
+        const intDigitsCount = (value !== 0) ? Math.floor(Math.log10(Math.abs(value))) + 1 : 1;
+        // We estimate the maximum decimal digits we can display without showing rounding errors,
+        // by substracting the number of integer digits to 15, as floats have 15-16 digits precision.
+        const maxDecDigits = Math.max(15 - intDigitsCount, 0);
+        // We display maximum 6 digits or the number of significant digits (if it's lower)
+        precision = Math.min(6, maxDecDigits);
     } else {
         precision = 2;
     }
+    const minPrecision = options.minDigits || precision;
     if (floatIsZero(value, precision)) {
         value = 0.0;
     }
@@ -235,8 +245,11 @@ export function formatFloat(value, options = {}) {
     const decimalPoint = "decimalPoint" in options ? options.decimalPoint : l10n.decimalPoint;
     const formatted = formatFixedDecimals(value, precision).split(".");
     formatted[0] = insertThousandsSep(formatted[0], thousandsSep, grouping);
-    if (options.trailingZeros === false && formatted[1]) {
+    if (formatted[1]) {
         formatted[1] = formatted[1].replace(/0+$/, "");
+        if (options.trailingZeros !== false) {
+            formatted[1] = formatted[1].padEnd(minPrecision, "0");
+        }
     }
     return formatted[1] ? formatted.join(decimalPoint) : formatted[0];
 }

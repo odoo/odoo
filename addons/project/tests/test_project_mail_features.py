@@ -571,32 +571,44 @@ class TestProjectMailFeatures(TestProjectCommon, MailCommon):
     def test_mail_alais_assignees_from_recipient_list(self):
         # including all types of users in recipient list
         new_user = new_test_user(self.env, 'int_user')
-        incoming_to = (
+
+        # format: Name <some@email.com>
+        incoming_to_emails_with_name = (
+            f"\"{self.project_goats.name}\" <{self.project_goats.alias_name}@{self.project_goats.alias_domain_id.name}>"
+            f"\"{self.user_public.name}\" <{self.user_public.email}>,"
+            f"\"{self.user_projectmanager.name}\" <{self.user_projectmanager.email}>,"
+            f"\"{self.user_portal.name}\" <{self.user_portal.email}>,"
+            f"\"{self.user_projectuser.name}\" <{self.user_projectuser.email}>,"
+        )
+        # format: some@email.com
+        incoming_to_emails = (
             f"{self.project_goats.alias_name}@{self.project_goats.alias_domain_id.name},"
             f"{self.user_public.email},"
             f"{self.user_projectmanager.email},"
             f"{self.user_portal.email},"
             f"{self.user_projectuser.email},"
         )
-        with self.mock_mail_gateway():
-            task = self.format_and_process(
-                MAIL_TEMPLATE,
-                self.user_employee.email,
-                incoming_to,
-                cc=f"{new_user.email}",
-                subject='Test task assignees from email to address',
-                target_model='project.task',
-            )
-            self.flush_tracking()
-        self.assertTrue(task, "Task has not been created from a incoming email")
-        # only internal users are set as asssignees
-        self.assertEqual(task.user_ids, self.user_projectmanager + self.user_projectuser, "Assignees have not been set from the to address of the mail")
-        # public and portal users are ignored
-        self.assertNotIn(task.user_ids, self.user_public + self.user_portal, "Assignees should not be set for user other than internal users")
-        # sender should not be added as user in the task
-        self.assertNotIn(task.user_ids, self.user_employee, "Sender can never be in assignees")
-        # internal users in cc of mail shoudl be added in email_cc field
-        self.assertEqual(task.email_cc, new_user.email, "The internal user in CC is not added into email_cc field")
+
+        for incoming_to in [incoming_to_emails_with_name, incoming_to_emails]:
+            with self.mock_mail_gateway():
+                task = self.format_and_process(
+                    MAIL_TEMPLATE,
+                    self.user_employee.email,
+                    incoming_to,
+                    cc=f"{new_user.email}",
+                    subject=f'Test task assignees from email to address with {incoming_to}',
+                    target_model='project.task',
+                )
+                self.flush_tracking()
+            self.assertTrue(task, "Task has not been created from a incoming email")
+            # only internal users are set as asssignees
+            self.assertEqual(task.user_ids, self.user_projectmanager + self.user_projectuser, "Assignees have not been set from the to address of the mail")
+            # public and portal users are ignored
+            self.assertNotIn(task.user_ids, self.user_public + self.user_portal, "Assignees should not be set for user other than internal users")
+            # sender should not be added as user in the task
+            self.assertNotIn(task.user_ids, self.user_employee, "Sender can never be in assignees")
+            # internal users in cc of mail shoudl be added in email_cc field
+            self.assertEqual(task.email_cc, new_user.email, "The internal user in CC is not added into email_cc field")
 
     def test_task_creation_removes_email_signatures(self):
         """
@@ -690,3 +702,25 @@ Content-Type: text/html;
         task = self.env['project.task'].browse(task_id)
         self.assertEqual(task.name, "In a cage")
         self.assertEqual(task.project_id, self.project_pigs)
+
+    def test_task_access_action(self):
+        """ Test that the access action link is correctly generated for portal users """
+        project_portal = self.env['project.project'].create({
+            'name': 'Portal Project',
+            'privacy_visibility': 'portal',
+        })
+        task_portal = self.env['project.task'].create({
+            'name': 'Test Task Portal',
+            'project_id': project_portal.id,
+        })
+
+        # Portal User + Project Sharing -> Project Sharing Link
+        project_portal.message_subscribe(partner_ids=self.user_portal.partner_id.ids)
+        project_portal._add_collaborators(self.user_portal.partner_id)
+        action = task_portal.with_user(self.user_portal)._get_access_action()
+        self.assertEqual(action['type'], 'ir.actions.act_url')
+        self.assertIn(
+            f'/my/projects/{project_portal.id}/project_sharing/{task_portal.id}',
+            action['url'],
+            "Portal user with edit access should get a link to project sharing",
+        )

@@ -111,13 +111,7 @@ export class Orderline extends Component {
         const discount = line.getDiscountStr();
         const mode = this.props.mode;
         const attributeStr = line.orderDisplayProductName.attributeString;
-        const taxGroup = [
-            ...new Set(
-                this.line.product_id.taxes_id
-                    ?.map((tax) => tax.tax_group_id.pos_receipt_label)
-                    .filter((label) => label)
-            ),
-        ].join(" ");
+        const taxGroup = this.line.taxGroupLabels;
         const showPrice =
             !basic &&
             line.getQuantityStr() != 1 &&
@@ -127,7 +121,8 @@ export class Orderline extends Component {
         }`;
         return {
             name: mode === "receipt" ? line.full_product_name : line.orderDisplayProductName.name,
-            attributeString: mode === "display" && attributeStr && `- ${attributeStr}`,
+            attributeString:
+                ["display", "split"].includes(mode) && attributeStr && `- ${attributeStr}`,
             internalNote: mode === "display" && line.note && JSON.parse(this.line.note || "[]"),
             isReceipt: mode === "receipt",
             isDisplay: mode === "display",

@@ -5,8 +5,13 @@
         display: flex;
         padding: 0;
 
-        .nav {
-            width: 200px;
+        .list-group {
+            --list-group-active-bg: #{$o-brand-primary};
+            --list-group-active-border-color: #{$o-brand-primary};
+            --list-group-active-color: #{color-contrast($o-brand-primary)};
+
+            min-width: 200px;
+            max-width: 250px;
         }
     }
 

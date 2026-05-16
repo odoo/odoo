@@ -12,16 +12,11 @@ class TestPosHrHttpCommon(TestPointOfSaleHttpCommon):
 
         cls.env.user.group_ids += cls.env.ref('hr.group_hr_user')
 
-        cls.main_pos_config.write({"module_pos_hr": True})
-
         # Admin employee
-        cls.admin = cls.env.ref("hr.employee_admin").sudo().copy({
-            "date_version": '2000-01-01',
-            "company_id": cls.env.company.id,
-            "user_id": cls.pos_admin.id,
-            "name": "Mitchell Admin",
-            "pin": False,
-        })
+        cls.pos_admin.employee_id.name = "Mitchell Admin"
+        cls.admin = cls.pos_admin.employee_id
+
+        cls.main_pos_config.write({"module_pos_hr": True})
 
         # Managers
         cls.manager_user = new_test_user(
@@ -51,7 +46,7 @@ class TestPosHrHttpCommon(TestPointOfSaleHttpCommon):
         emp1_user = new_test_user(
             cls.env,
             login="emp1_user",
-            groups="base.group_user",
+            groups="base.group_user, point_of_sale.group_pos_user, account.group_account_invoice",
             name="Pos Employee1",
             email="emp1_user@pos.com",
         )
@@ -245,3 +240,40 @@ class TestUi(TestPosHrHttpCommon):
 
         self.start_pos_tour("pos_hr_go_backend_closed_registered", login="manager_user")
         self.start_pos_tour("pos_hr_go_backend_opened_registered", login="manager_user")
+        self.start_pos_tour("pos_hr_go_backend_opened_registered_different_user_logged", login="emp1_user")
+
+    def test_maximum_closing_difference(self):
+        self.main_pos_config.set_maximum_difference = True
+        self.main_pos_config.amount_authorized_diff = 0
+
+        # Admin users should still be able to override max difference
+        # regardless if they are the connected user or not
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour(
+            "/pos/ui?config_id=%d" % self.main_pos_config.id,
+            "test_maximum_closing_difference",
+            login="pos_user"
+        )
+
+        # Advanced rights employees should not override max difference
+        # when the connected user has admin rights (they never should)
+        self.main_pos_config.with_user(self.pos_admin).open_ui()
+        self.start_tour(
+            "/pos/ui?config_id=%d" % self.main_pos_config.id,
+            "test_maximum_closing_difference",
+            login="pos_admin"
+        )
+
+    def test_scan_employee_barcode_with_pos_hr_disabled(self):
+        """
+        Ensure that scanning an employee barcode when module_pos_hr is disabled does not
+        trigger any traceback.
+        """
+        self.main_pos_config.module_pos_hr = False
+        self.main_pos_config.with_user(self.pos_admin).open_ui()
+
+        self.start_tour(
+            "/pos/ui?config_id=%d" % self.main_pos_config.id,
+            "test_scan_employee_barcode_with_pos_hr_disabled",
+            login="pos_admin"
+        )

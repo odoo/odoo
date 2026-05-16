@@ -22,13 +22,16 @@
 # JanaAvalah, 2023
 # Leaanika Randmets, 2023
 # Kristina Pešehodko <kristina@avalah.ee>, 2025.
+# Tairi Tiimann <tairi@avalah.ee>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Odoo Translation Bot <c3p@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:37+0000\n"
-"PO-Revision-Date: 2025-10-28 07:51+0000\n"
-"Last-Translator: Kristina Pešehodko <kristina@avalah.ee>\n"
+"POT-Creation-Date: 2026-04-10 18:37+0000\n"
+"PO-Revision-Date: 2026-04-13 20:52+0000\n"
+"Last-Translator: Odoo Translation Bot <c3p@odoo.com>\n"
 "Language-Team: Estonian <https://translate.odoo.com/projects/odoo-19/mrp/et/>"
 "\n"
 "Language: et\n"
@@ -36,7 +39,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__state
@@ -228,6 +231,12 @@ msgid "+ %d day(s)"
 msgstr "+ %d päev(a)"
 
 #. module: mrp
+#. odoo-python
+#: code:addons/mrp/models/stock_rule.py:0
+msgid "+ %s day(s)"
+msgstr "+%s päev(a)"
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mo_overview_content
 msgid "- Overview"
 msgstr "- Ülevaade"
@@ -255,55 +264,14 @@ msgstr ""
 "valmistoodang(ud) tootmisest lattu."
 
 #. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
-msgid "100"
-msgstr "100"
-
-#. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.report_mrp_production_components
-#: model_terms:ir.ui.view,arch_db:mrp.report_mrp_workorder
-msgid "12345678901"
-msgstr "12345678901"
-
-#. module: mrp
 #: model_terms:product.template,description:mrp.product_product_computer_desk_leg_product_template
 msgid "18″ x 2½″ Square Leg"
 msgstr "18″ x 2½″ Ruudukujuline jalg"
 
 #. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
-msgid "2023-09-15"
-msgstr "2023-09-15"
-
-#. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.report_mrp_production_components
-msgid "25"
-msgstr "25"
-
-#. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
-msgid "50"
-msgstr "50"
-
-#. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
-msgid "58"
-msgstr "58"
-
-#. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
-msgid "60"
-msgstr "60"
-
-#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_production_components
 msgid "8 GB RAM"
 msgstr "8 GB RAM"
-
-#. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
-msgid "987654321098"
-msgstr "987654321098"
 
 #. module: mrp
 #. odoo-javascript
@@ -364,21 +332,18 @@ msgid ""
 "                                        <span class=\"o_annotation "
 "o_annotation_5 o_annotation_start position-absolute\">Select Operator</span>"
 msgstr ""
-"<span class="
-"\"o_annotation o_annotation_1 o_annotation_end position-absolute\""
-">Ajakell</span>\n"
-"                                        <span class="
-"\"o_annotation o_annotation_2 o_annotation_end position-absolute\""
-">Kvaliteedikontroll</span>\n"
-"                                        <span class="
-"\"o_annotation o_annotation_3 o_annotation_start position-absolute\""
-">Tagasiside</span>\n"
-"                                        <span class="
-"\"o_annotation o_annotation_4 o_annotation_start position-absolute\""
-">Registreeri materjale</span>\n"
-"                                        <span class="
-"\"o_annotation o_annotation_5 o_annotation_start position-absolute\">Vali "
-"operaator</span>"
+"<span class=\"o_annotation o_annotation_1 o_annotation_end position-"
+"absolute\">Ajakell</span>\n"
+"                                        <span class=\"o_annotation "
+"o_annotation_2 o_annotation_end position-absolute\">Kvaliteedikontroll</"
+"span>\n"
+"                                        <span class=\"o_annotation "
+"o_annotation_3 o_annotation_start position-absolute\">Tagasiside</span>\n"
+"                                        <span class=\"o_annotation "
+"o_annotation_4 o_annotation_start position-absolute\">Registreeri materjale</"
+"span>\n"
+"                                        <span class=\"o_annotation "
+"o_annotation_5 o_annotation_start position-absolute\">Vali operaator</span>"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_routing_action
@@ -394,21 +359,16 @@ msgid ""
 "                    <span class=\"o_annotation o_annotation_5 "
 "o_annotation_start position-absolute\">Select Operator</span>"
 msgstr ""
-"<span class="
-"\"o_annotation o_annotation_1 o_annotation_end position-absolute\""
-">Ajakell</span>\n"
-"                    <span class="
-"\"o_annotation o_annotation_2 o_annotation_end position-absolute\""
-">Kvaliteedikontroll</span>\n"
-"                    <span class="
-"\"o_annotation o_annotation_3 o_annotation_start position-absolute\""
-">Tagasiside</span>\n"
-"                    <span class="
-"\"o_annotation o_annotation_4 o_annotation_start position-absolute\""
-">Registreeri materjalid</span>\n"
-"                    <span class="
-"\"o_annotation o_annotation_5 o_annotation_start position-absolute\">Vali "
-"operaator</span>"
+"<span class=\"o_annotation o_annotation_1 o_annotation_end position-"
+"absolute\">Ajakell</span>\n"
+"                    <span class=\"o_annotation o_annotation_2 "
+"o_annotation_end position-absolute\">Kvaliteedikontroll</span>\n"
+"                    <span class=\"o_annotation o_annotation_3 "
+"o_annotation_start position-absolute\">Tagasiside</span>\n"
+"                    <span class=\"o_annotation o_annotation_4 "
+"o_annotation_start position-absolute\">Registreeri materjalid</span>\n"
+"                    <span class=\"o_annotation o_annotation_5 "
+"o_annotation_start position-absolute\">Vali operaator</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
@@ -429,6 +389,11 @@ msgstr "<span class=\"o_stat_text\">BoMi ülevaade</span>"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "<span class=\"o_stat_text\">Child MO</span>"
 msgstr "<span class=\"o_stat_text\"> Alam-tootmistellimus</span>"
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
+msgid "<span class=\"o_stat_text\">Copy Existing Operations</span>"
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
@@ -526,10 +491,10 @@ msgid ""
 "                                    <span invisible=\"time_mode == "
 "'manual'\"> / last </span>"
 msgstr ""
-"<span invisible=\"time_mode == 'auto' and workorder_count != 0\""
-">minutid</span>\n"
-"                                                                               "
-"<span invisible=\"time_mode == 'manual'\"> / viimane </span>"
+"<span invisible=\"time_mode == 'auto' and workorder_count != 0\">minutit</"
+"span>\n"
+"                                                                               <span "
+"invisible=\"time_mode == 'manual'\"> / viimane </span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
@@ -602,7 +567,7 @@ msgstr "<span>minutit</span>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
 msgid "<span> (minutes)</span>"
-msgstr "<span> (minutid)</span>"
+msgstr "<span> (minutit)</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
@@ -713,8 +678,8 @@ msgid ""
 "                                Instead, it is used to decompose a BoM into "
 "its components when:"
 msgstr ""
-"Komplekti tüüpi materjalide loetelu (BoM) ei toodeta tootmistellimusega.<br/>"
-"\n"
+"Komplekti tüüpi materjalide loetelu (BoM) ei toodeta tootmistellimusega.<br/"
+">\n"
 "                                Selle asemel kasutatakse seda materjalide "
 "loetelu (BoM) komponentideks lahtivõtmiseks, kui:"
 
@@ -1086,8 +1051,8 @@ msgid ""
 "Automatically print the lot/SN label when the \"Create a new serial/lot "
 "number\" button is used."
 msgstr ""
-"Trüki partii-/seerianumbri etikett automaatselt, kui kasutatakse nuppu "
-"\"Loo uus seeria-/partii number\"."
+"Trüki partii-/seerianumbri etikett automaatselt, kui kasutatakse nuppu \"Loo "
+"uus seeria-/partii number\"."
 
 #. module: mrp
 #. odoo-javascript
@@ -2540,7 +2505,7 @@ msgstr "Muudatus(ed):"
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 msgid "Exp %s"
-msgstr "Oodata%s"
+msgstr "Oodatav %s"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__components_availability_state__expected
@@ -2734,7 +2699,7 @@ msgstr "Vaba kasutamiseks / Vaba kogus"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "From"
-msgstr "Kellelt"
+msgstr "Kust"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.oee_search_view
@@ -3657,6 +3622,7 @@ msgstr "Tootmistellimus"
 #: model:ir.actions.act_window,name:mrp.action_mrp_production_form
 #: model:ir.actions.act_window,name:mrp.mrp_production_action
 #: model:ir.actions.act_window,name:mrp.mrp_production_action_picking_deshboard
+#: model:ir.model.fields,field_description:mrp.field_stock_picking__production_ids
 #: model:ir.ui.menu,name:mrp.menu_mrp_production_action
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_tree_view
@@ -3912,6 +3878,12 @@ msgid "No Backorder"
 msgstr "Järelsaatelehte pole"
 
 #. module: mrp
+#. odoo-python
+#: code:addons/mrp/models/stock_rule.py:0
+msgid "No BoM Found"
+msgstr ""
+
+#. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_routing_action
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 msgid "No Operations Yet !"
@@ -3960,6 +3932,12 @@ msgstr "Selle seadme tootlikkus ei ole vähenenud"
 #: model_terms:ir.actions.act_window,help:mrp.mrp_unbuild
 msgid "No unbuild order found"
 msgstr "Lahti võetud tellimusi ei leitud"
+
+#. module: mrp
+#. odoo-python
+#: code:addons/mrp/wizard/mrp_production_serial_numbers.py:0
+msgid "No valid serial numbers provided."
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_workorder_production
@@ -4156,7 +4134,8 @@ msgstr "Laos"
 #: code:addons/mrp/models/mrp_production.py:0
 msgid ""
 "Only manufacturing orders in either a draft or confirmed state can be %s."
-msgstr "Tootmistellimused peavad olema \"Mustand\" või \"Kinnitatud\" olekus%s."
+msgstr ""
+"Tootmistellimused peavad olema \"Mustand\" või \"Kinnitatud\" olekus%s."
 
 #. module: mrp
 #. odoo-python
@@ -4543,6 +4522,11 @@ msgid "Pre-Production"
 msgstr "Tootmiseelne"
 
 #. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_serials_form
+msgid "Prepare MO"
+msgstr ""
+
+#. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_control_panel/mrp_bom_overview_control_panel.xml:0
 #: code:addons/mrp/static/src/components/mo_overview/mrp_mo_overview.xml:0
@@ -4756,7 +4740,7 @@ msgstr "Toote variatsioonid"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Product to build..."
-msgstr "Toode ehitamiseks..."
+msgstr "Toode tootmiseks..."
 
 #. module: mrp
 #: model:ir.model.constraint,message:mrp.constraint_mrp_workcenter_capacity_workcenter_product_product_uom_unique
@@ -4849,7 +4833,6 @@ msgstr "Tootmine algas hilja"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_group__production_ids
-#: model:ir.model.fields,field_description:mrp.field_stock_picking__production_ids
 #: model:ir.model.fields,field_description:mrp.field_stock_reference__production_ids
 msgid "Productions"
 msgstr "Tootmised"
@@ -5395,6 +5378,11 @@ msgid "Show Bom Tab"
 msgstr "Näita retsepti vahelehte"
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom__show_copy_operations_button
+msgid "Show Copy Operations Button"
+msgstr ""
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Show Details"
 msgstr "Näita detaile"
@@ -5758,6 +5746,13 @@ msgid "Technical field to check when we can unreserve"
 msgstr "Tehniline väli, et kontrollida, millal saame reservatsiooni tühistada"
 
 #. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_bom__show_copy_operations_button
+msgid ""
+"Technical field used to control the visibility of the 'Copy Existing "
+"Operations' button."
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__is_outdated_bom
 msgid "The BoM has been updated since creation of the MO"
 msgstr "Retsept on uuendatud peale tootmisetellimuse loomist"
@@ -5950,6 +5945,12 @@ msgstr ""
 #: code:addons/mrp/report/mrp_report_bom_structure.py:0
 msgid "There is no defined calendar on workcenter %s."
 msgstr "Töökeskuses %s ei ole määratud kalendrit."
+
+#. module: mrp
+#. odoo-python
+#: code:addons/mrp/wizard/mrp_production_serial_numbers.py:0
+msgid "There is no serial numbers to apply."
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_unbuild_moves
@@ -6505,8 +6506,8 @@ msgid ""
 "%(products)s"
 msgstr ""
 "Väärtusi ei saa seadistada ja valideerida, kuna jälgitava toote puhul, mille "
-"tarbitud kogust suurendatakse, tuleb täpsustada partii-/"
-"seerianumber:%(products)s"
+"tarbitud kogust suurendatakse, tuleb täpsustada partii-/seerianumber:%"
+"(products)s"
 
 #. module: mrp
 #. odoo-javascript
@@ -6994,6 +6995,12 @@ msgstr "Tootmise saate ühendada ainult sama olekuga."
 
 #. module: mrp
 #. odoo-python
+#: code:addons/mrp/models/mrp_production.py:0
+msgid "You cannot cancel a manufacturing order that is already done."
+msgstr ""
+
+#. module: mrp
+#. odoo-python
 #: code:addons/mrp/models/mrp_workorder.py:0
 msgid ""
 "You cannot change the quantity produced of a work order that is in done or "
@@ -7020,6 +7027,12 @@ msgstr "Te ei saa siit luua uut retsepti."
 #: code:addons/mrp/models/mrp_workorder.py:0
 msgid "You cannot create cyclic dependency."
 msgstr "Te ei saa luua tsüklilist sõltuvust."
+
+#. module: mrp
+#. odoo-python
+#: code:addons/mrp/models/mrp_production.py:0
+msgid "You cannot delete a manufacturing order that is already done."
+msgstr ""
 
 #. module: mrp
 #. odoo-python
@@ -7115,10 +7128,10 @@ msgstr ""
 "                        <b invisible=\"consumption != 'strict'\">\n"
 "                            Palun vaadake üle koostisosade tarbimine või "
 "paluge juhil kinnitada\n"
-"                            <span invisible=\"mrp_production_count != 1\""
-">see tootmistellimus</span>\n"
-"                            <span invisible=\"mrp_production_count == 1\""
-">need tootmistellimused</span>.\n"
+"                            <span invisible=\"mrp_production_count != "
+"1\">see tootmistellimus</span>\n"
+"                            <span invisible=\"mrp_production_count == "
+"1\">need tootmistellimused</span>.\n"
 "                        </b>"
 
 #. module: mrp
@@ -7169,16 +7182,6 @@ msgstr ""
 msgid ""
 "You need to generate Lot/Serial Number(s) to mark as done some productions"
 msgstr "Te peate partii-/seerianumbreid looma, et lõpetada tootmised"
-
-#. module: mrp
-#. odoo-python
-#: code:addons/mrp/models/mrp_production.py:0
-msgid ""
-"You need to supply Lot/Serial Number for products and 'consume' them: %"
-"(missing_products)s"
-msgstr ""
-"Peate pakkuma partii/seriaalinumbrit toodetele ja need \"tarbima\": "
-"%(missing_products)s"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_production_backorder
@@ -7306,6 +7309,37 @@ msgstr "tegelik kestus"
 #: code:addons/mrp/models/mrp_production.py:0
 msgid "split"
 msgstr "poolita"
+
+#~ msgid "100"
+#~ msgstr "100"
+
+#~ msgid "12345678901"
+#~ msgstr "12345678901"
+
+#~ msgid "2023-09-15"
+#~ msgstr "2023-09-15"
+
+#~ msgid "25"
+#~ msgstr "25"
+
+#~ msgid "50"
+#~ msgstr "50"
+
+#~ msgid "58"
+#~ msgstr "58"
+
+#~ msgid "60"
+#~ msgstr "60"
+
+#~ msgid "987654321098"
+#~ msgstr "987654321098"
+
+#~ msgid ""
+#~ "You need to supply Lot/Serial Number for products and 'consume' them: %"
+#~ "(missing_products)s"
+#~ msgstr ""
+#~ "Peate pakkuma partii/seriaalinumbrit toodetele ja need \"tarbima\": %"
+#~ "(missing_products)s"
 
 #~ msgid "# Read Work Orders"
 #~ msgstr "Loetud töökäsud"

@@ -154,7 +154,7 @@ from http import HTTPStatus
 from io import BytesIO
 from os.path import join as opj
 from pathlib import Path
-from urllib.parse import urlparse
+from urllib.parse import urlparse, urlsplit
 from zlib import adler32
 
 import babel.core
@@ -310,6 +310,16 @@ SESSION_LIFETIME = 60 * 60 * 24 * 7
 # The default duration (3h) before a session is rotated, changing the
 # session id (also on the cookie) but keeping the same content.
 SESSION_ROTATION_INTERVAL = 60 * 60 * 3
+
+# The header to pass in a request to skip the soft session rotation
+SESSION_ROTATION_INTERVAL_HEADER_SKIP = "X-Odoo-Skip-Session-Rotation-Interval"
+
+# URL paths for which automatic session rotation is disabled.
+SESSION_ROTATION_EXCLUDED_PATHS = (
+    '/websocket/on_closed',
+    '/websocket/peek_notifications',
+    '/websocket/update_bus_presence',
+)
 
 # After a session is rotated, the session should be kept for a couple of
 # seconds to account for network delay between multiple requests which are
@@ -538,8 +548,21 @@ class Stream:
     @classmethod
     def from_binary_field(cls, record, field_name):
         """ Create a :class:`~Stream`: from a binary field. """
-        data_b64 = record[field_name]
-        data = base64.b64decode(data_b64) if data_b64 else b''
+        data = record[field_name] or b''
+
+        # Image fields enforce base64 encoding. Binary fields don't
+        # enforce anything: raw bytes are fine, expected even.
+        # People nonetheless write base64 encoded bytes inside binary
+        # fields, and expect automatic decoding when read, crazy!
+        with contextlib.suppress(ValueError):
+            data = base64.b64decode(
+                # Some libs add linefeed every X (where X < 79) char in
+                # the base64, for email mime. validate=True would raise
+                # an error for those linefeeds so stip them.
+                data.replace(b'\r', b'').replace(b'\n', b''),
+                validate=True,
+            )
+
         return cls(
             type='data',
             data=data,
@@ -1009,7 +1032,8 @@ class FilesystemSessionStore(sessions.FilesystemSessionStore):
         else:
             self.delete(session)
             session.sid = self.generate_key()
-        if session.uid and env:
+        if session.uid:
+            assert env, "saving this session requires an environment"
             session.session_token = security.compute_session_token(session, env)
         session.should_rotate = False
         session['create_time'] = time.time()
@@ -1201,8 +1225,6 @@ class Session(collections.abc.MutableMapping):
         self.uid = None
         self['pre_login'] = credential['login']
         self['pre_uid'] = pre_uid
-
-        env = env(user=pre_uid)
 
         # if 2FA is disabled we finalize immediately
         user = env['res.users'].browse(pre_uid)
@@ -2053,7 +2075,8 @@ class Request:
         if isinstance(location, URL):
             location = location.to_url()
         if local:
-            location = '/' + url_parse(location).replace(scheme='', netloc='').to_url().lstrip('/\\')
+            location = url_parse(location).replace(scheme='', netloc='').to_url().lstrip('/\\')
+            location = '/' + urlsplit(location).geturl().lstrip('/\\')
         if self.db:
             return self.env['ir.http']._redirect(location, code)
         return werkzeug.utils.redirect(location, code, Response=Response)
@@ -2124,7 +2147,12 @@ class Request:
 
         if sess.should_rotate:
             root.session_store.rotate(sess, env)  # it saves
-        elif sess.uid and time.time() >= sess['create_time'] + SESSION_ROTATION_INTERVAL:
+        elif (
+            sess.uid
+            and time.time() >= sess['create_time'] + SESSION_ROTATION_INTERVAL
+            and request.httprequest.path not in SESSION_ROTATION_EXCLUDED_PATHS
+            and not request.httprequest.headers.get(SESSION_ROTATION_INTERVAL_HEADER_SKIP)
+        ):
             root.session_store.rotate(sess, env, True)
         elif sess.is_dirty:
             root.session_store.save(sess)
@@ -2187,19 +2215,27 @@ class Request:
         Dispatch the request to its matching controller in a
         database-free environment.
         """
-        router = root.nodb_routing_map.bind_to_environ(self.httprequest.environ)
         try:
-            rule, args = router.match(return_rule=True)
-        except NotFound as exc:
-            exc.response = Response(NOT_FOUND_NODB, status=exc.code, headers=[
-                ('Content-Type', 'text/html; charset=utf-8'),
-            ])
-            raise
-        self._set_request_dispatcher(rule)
-        self.dispatcher.pre_dispatch(rule, args)
-        response = self.dispatcher.dispatch(rule.endpoint, args)
-        self.dispatcher.post_dispatch(response)
-        return response
+            router = root.nodb_routing_map.bind_to_environ(self.httprequest.environ)
+            try:
+                rule, args = router.match(return_rule=True)
+            except NotFound as exc:
+                exc.response = Response(NOT_FOUND_NODB, status=exc.code, headers=[
+                    ('Content-Type', 'text/html; charset=utf-8'),
+                ])
+                raise
+            self._set_request_dispatcher(rule)
+            self.dispatcher.pre_dispatch(rule, args)
+            response = self.dispatcher.dispatch(rule.endpoint, args)
+            self.dispatcher.post_dispatch(response)
+            return response
+        except HTTPException as exc:
+            if exc.code is not None:
+                raise
+            # Valid response returned via werkzeug.exceptions.abort
+            response = exc.get_response()
+            HttpDispatcher(self).post_dispatch(response)
+            return response
 
     def _serve_db(self):
         """ Load the ORM and use it to process the request. """
@@ -2266,13 +2302,21 @@ class Request:
                 return service_model.retrying(serve_func, env=self.env)
             except Exception as exc:  # noqa: BLE001
                 raise self._update_served_exception(exc)
+        except HTTPException as exc:
+            if exc.code is not None:
+                raise
+            # Valid response returned via werkzeug.exceptions.abort
+            response = exc.get_response()
+            HttpDispatcher(self).post_dispatch(response)
+            return response
         finally:
+            self.env = None
             if cr is not None:
                 cr.close()
 
     def _update_served_exception(self, exc):
         if isinstance(exc, HTTPException) and exc.code is None:
-            return exc  # bubble up to odoo.http.Application.__call__
+            return exc  # bubble up to _serve_db
         if (
             'werkzeug' in config['dev_mode']
             and self.dispatcher.routing_type != JsonRPCDispatcher.routing_type
@@ -2363,7 +2407,7 @@ class Dispatcher(ABC):
         if cors and self.request.httprequest.method == 'OPTIONS':
             set_header('Access-Control-Max-Age', CORS_MAX_AGE)
             set_header('Access-Control-Allow-Headers',
-                       'Origin, X-Requested-With, Content-Type, Accept, Authorization')
+                       'Origin, X-Requested-With, Content-Type, Accept, Authorization, Range')
             werkzeug.exceptions.abort(Response(status=204))
 
         if 'max_content_length' in routing:
@@ -2574,7 +2618,7 @@ class Json2Dispatcher(Dispatcher):
 
     @classmethod
     def is_compatible_with(cls, request):
-        return request.httprequest.mimetype in cls.mimetypes
+        return request.httprequest.mimetype in cls.mimetypes or not request.httprequest.content_length
 
     def dispatch(self, endpoint, args):
         # "args" are the path parameters, "id" in /web/image/<id>
@@ -2801,12 +2845,6 @@ class Application:
                 return response(environ, start_response)
 
             except Exception as exc:
-                # Valid (2xx/3xx) response returned via werkzeug.exceptions.abort.
-                if isinstance(exc, HTTPException) and exc.code is None:
-                    response = exc.get_response()
-                    HttpDispatcher(request).post_dispatch(response)
-                    return response(environ, start_response)
-
                 # Logs the error here so the traceback starts with ``__call__``.
                 if hasattr(exc, 'loglevel'):
                     _logger.log(exc.loglevel, exc, exc_info=getattr(exc, 'exc_info', None))

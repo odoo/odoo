@@ -22,7 +22,7 @@ class TestUBLTRCommon(AccountTestInvoicingCommon):
             'email': 'info@company.trexample.com',
             'phone': '+90 501 234 56 78',
             'ref': 'Ulus',
-            'bank_ids': [Command.create({'acc_number': 'TR0123456789'})],
+            'bank_ids': [Command.create({'acc_number': 'TR0123456789', 'allow_out_payment': True})],
         })
 
         cls.einvoice_partner = cls.env['res.partner'].create({
@@ -35,7 +35,7 @@ class TestUBLTRCommon(AccountTestInvoicingCommon):
             'country_id': cls.env.ref('base.tr').id,
             'email': 'info@tr_partner.com',
             'phone': '+90 509 876 54 32',
-            'bank_ids': [Command.create({'acc_number': 'TR9876543210'})],
+            'bank_ids': [Command.create({'acc_number': 'TR9876543210', 'allow_out_payment': True})],
             'invoice_edi_format': 'ubl_tr',
             'ref': 'Ulus',
             'l10n_tr_nilvera_customer_status': 'einvoice',
@@ -51,7 +51,7 @@ class TestUBLTRCommon(AccountTestInvoicingCommon):
             'country_id': cls.env.ref('base.tr').id,
             'email': 'info@tr_partner.com',
             'phone': '+90 509 876 54 32',
-            'bank_ids': [Command.create({'acc_number': 'TR9876543210'})],
+            'bank_ids': [Command.create({'acc_number': 'TR9876543210', 'allow_out_payment': True})],
             'invoice_edi_format': 'ubl_tr',
             'l10n_tr_nilvera_customer_status': 'earchive',
         })
@@ -71,8 +71,9 @@ class TestUBLTRCommon(AccountTestInvoicingCommon):
             'company_id': cls.company_data['company'].id,
         })
 
-    def _generate_invoice_xml(self, partner_id, tax=None, **kwargs):
+    def _generate_invoice_xml(self, partner_id, tax=None, include_invoice=False, **kwargs):
         invoice_tax = (tax and tax.ids) or self.tax_20.ids
+
         invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',
             'company_id': self.company_data['company'].id,
@@ -92,4 +93,7 @@ class TestUBLTRCommon(AccountTestInvoicingCommon):
             **kwargs,
         })
         invoice.action_post()
+
+        if include_invoice:
+            return self.env['account.edi.xml.ubl.tr']._export_invoice(invoice)[0], invoice
         return self.env['account.edi.xml.ubl.tr']._export_invoice(invoice)[0]

@@ -3,7 +3,6 @@ import werkzeug
 
 from ast import literal_eval
 from collections import Counter
-from datetime import datetime
 from werkzeug.exceptions import NotFound
 
 from odoo import fields, http, _
@@ -220,20 +219,12 @@ class WebsiteEventController(http.Controller):
         urls = lazy(event._get_event_resource_urls)
         return {
             'event': event,
-            'slots': event.event_slot_ids.filtered(
-                        lambda s: s.start_datetime > datetime.now()
-                        and any(
-                            availability is None or availability > 0
-                            for availability in event._get_seats_availability([
-                                (s, ticket) for ticket in event.event_ticket_ids or [False]
-                            ])
-                        )
-                    ).grouped('date'),
             'main_object': event,
             'range': range,
             'google_url': lazy(lambda: urls.get('google_url')),
             'iCal_url': lazy(lambda: urls.get('iCal_url')),
             'registration_error_code': post.get('registration_error_code'),
+            'slots': event.event_slot_ids._filter_open_slots().grouped('date'),
             'website_visitor_timezone': request.env['website.visitor']._get_visitor_timezone(),
         }
 
@@ -293,10 +284,7 @@ class WebsiteEventController(http.Controller):
             }
         })
 
-    @http.route(['/event/<model("event.event"):event>/registration/new'], type='jsonrpc', auth="public", methods=['POST'], website=True)
-    def registration_new(self, event, **post):
-        """ After (slot and) tickets selection, render attendee(s) registration form.
-        Slot and tickets availability check already performed in the template. """
+    def _prepare_registration_new_values(self, event, **post):
         tickets = self._process_tickets_form(event, post)
         slot_id = post.get('event_slot_id', False)
         # Availability check needed as the total number of tickets can exceed the event/slot available tickets
@@ -329,14 +317,24 @@ class WebsiteEventController(http.Controller):
                     "email": visitor.email,
                     "phone": visitor.mobile,
                 }
-        return request.env['ir.ui.view']._render_template("website_event.registration_attendee_details", {
+
+        return {
             'tickets': tickets,
             'event_slot_id': slot_id,
             'event': event,
             'availability_check': availability_check,
             'default_first_attendee': default_first_attendee,
             'limit_check': limit_check,
-        })
+        }
+
+    @http.route(['/event/<model("event.event"):event>/registration/new'], type='jsonrpc', auth="public", methods=['POST'], website=True)
+    def registration_new(self, event, **post):
+        """ After (slot and) tickets selection, render attendee(s) registration form.
+        Slot and tickets availability check already performed in the template. """
+        values = self._prepare_registration_new_values(event, **post)
+        if not values:
+            return values
+        return request.env['ir.ui.view']._render_template("website_event.registration_attendee_details", values)
 
     def _process_attendees_form(self, event, form_details):
         """ Process data posted from the attendee details form.
@@ -370,7 +368,10 @@ class WebsiteEventController(http.Controller):
                 registration_index, field_name = key_values
                 if field_name not in registration_fields:
                     continue
-                registrations.setdefault(registration_index, dict())[field_name] = int(value) or False
+                # Only cast when needed, as it might crash here for custom inputs in overrides
+                if isinstance(registration_fields[field_name], (fields.Many2one, fields.Integer)):
+                    value = int(value) or False
+                registrations.setdefault(registration_index, dict())[field_name] = value
                 continue
 
             if len(key_values) != 3:
@@ -490,6 +491,7 @@ class WebsiteEventController(http.Controller):
             'google_url': urls.get('google_url'),
             'iCal_url': urls.get('iCal_url'),
             'slot': slot,
+            'slots': event.event_slot_ids._filter_open_slots().grouped('date'),
             'website_visitor_timezone': request.env['website.visitor']._get_visitor_timezone(),
         }
 

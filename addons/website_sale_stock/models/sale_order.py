@@ -2,6 +2,7 @@
 
 from odoo import models
 from odoo.exceptions import ValidationError
+from odoo.tools import float_round
 
 
 class SaleOrder(models.Model):
@@ -29,7 +30,8 @@ class SaleOrder(models.Model):
 
             # Convert cart and available quantities to the requested uom
             product_qty_in_cart = product_uom._compute_quantity(product_qty_in_cart, uom)
-            available_qty = product_uom._compute_quantity(available_qty, uom)
+            available_qty = product_uom._compute_quantity(available_qty, uom, round=False)
+            available_qty = float_round(available_qty, precision_digits=0, rounding_method='DOWN')
 
             old_qty = order_line.product_uom_qty if order_line else 0
             added_qty = new_qty - old_qty

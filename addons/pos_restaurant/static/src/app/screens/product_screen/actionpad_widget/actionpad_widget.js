@@ -18,6 +18,7 @@ patch(ActionpadWidget.prototype, {
     setup() {
         super.setup();
         this.doSubmitOrder = useTrackedAsync(() => this.pos.submitOrder());
+        this.doReprintOrder = useTrackedAsync(() => this.pos.reprintOrder());
     },
     get swapButton() {
         return (

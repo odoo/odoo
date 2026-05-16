@@ -79,13 +79,12 @@ function patchActivityDomain(load, params) {
     return load(params);
 }
 
-// Because tests implicitly use Popover
-// and that it uses HTMLElement.animate()
-disableAnimations();
-
 describe.current.tags("desktop");
 defineTestMailModels();
 beforeEach(async () => {
+    // Because tests implicitly use Popover
+    // and that it uses HTMLElement.animate()
+    disableAnimations();
     mockDate("2023-04-08 10:00:00", 0);
     patchWithCleanup(DynamicList.prototype, {
         async load(params) {

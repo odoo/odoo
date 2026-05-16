@@ -1,6 +1,9 @@
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 from datetime import datetime, timezone
 import random
 from odoo import models, api
+from odoo.fields import Domain
 from odoo.addons.pos_adyen.models.pos_payment_method import UNPREDICTABLE_ADYEN_DATA
 
 
@@ -53,3 +56,13 @@ class PosPaymentMethod(models.Model):
             req = self.proxy_adyen_request(data)
 
             return req and (isinstance(req, bool) or not req.get('error'))
+
+    @api.model
+    def _load_pos_self_data_domain(self, data, config):
+        domain = super()._load_pos_self_data_domain(data, config)
+        if config.self_ordering_mode == 'kiosk':
+            domain = Domain.OR([
+                [('use_payment_terminal', '=', 'adyen'), ('id', 'in', config.payment_method_ids.ids)],
+                domain
+            ])
+        return domain

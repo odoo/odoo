@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<asset id="theme_default.test_asset_tag_aaa" name="Test asset tag (init active => keep active => update active)">
+    <bundle>test_asset_bundle</bundle>
+    <path>theme_default/tests/something.scss</path>
+</asset>
+<asset id="theme_default.test_asset_tag_aii" name="Test asset tag (init active => make inactive => update inactive)">
+    <bundle>test_asset_bundle</bundle>
+    <path>theme_default/tests/something.scss</path>
+</asset>
+<asset id="theme_default.test_asset_tag_aia" name="Test asset tag (init active => make inactive => update active)">
+    <bundle>test_asset_bundle</bundle>
+    <path>theme_default/tests/something.scss</path>
+    <field name="active">True</field> <!-- Take into account during update -->
+</asset>
+<asset id="theme_default.test_asset_tag_iii" name="Test asset tag (init inactive => keep inactive => update inactive)" active="False">
+    <bundle>test_asset_bundle</bundle>
+    <path>theme_default/tests/something.scss</path>
+</asset>
+<asset id="theme_default.test_asset_tag_iaa" name="Test asset tag (init inactive => make active => update active)" active="False">
+    <bundle>test_asset_bundle</bundle>
+    <path>theme_default/tests/something.scss</path>
+</asset>
+<asset id="theme_default.test_asset_tag_prepend" name="Test asset tag with directive">
+    <bundle directive="prepend">test_asset_bundle</bundle>
+    <path>theme_default/tests/something.scss</path>
+</asset>
+<asset id="theme_default.test_asset_tag_extra" name="Test asset tag with extra field">
+    <bundle>test_asset_bundle</bundle>
+    <path>theme_default/tests/something.scss</path>
+    <field name="sequence" eval="17"/>
+</asset>
+
+</odoo>

@@ -408,3 +408,58 @@ class TestProductConfiguratorData(HttpCaseWithUserDemo, ProductVariantsCommon, S
                 for product in _get_active_variants()
             )
         )
+
+    def test_multiple_attribute_lines_same_attribute(self):
+        """
+        Test that product configurator works correctly when multiple attribute
+        lines reference the same attribute. This ensures no KeyError is raised
+        when building the attrs_map in _get_product_information.
+        """
+        # Create a product template with two attribute lines referencing the same attribute
+        product_template = self.env['product.template'].create({
+            'name': 'Multi Size Shirt',
+            'categ_id': self.product_category.id,
+            'attribute_line_ids': [
+                Command.create({
+                    'attribute_id': self.size_attribute.id,
+                    'value_ids': [
+                        Command.set([
+                            self.size_attribute_l.id,
+                        ]),
+                    ],
+                }),
+                Command.create({
+                    'attribute_id': self.color_attribute.id,
+                    'value_ids': [
+                        Command.set([
+                            self.color_attribute_red.id,
+                            self.color_attribute_blue.id,
+                        ])
+                    ],
+                }),
+                Command.create({
+                    'attribute_id': self.size_attribute.id,
+                    'value_ids': [
+                        Command.set([
+                            self.size_attribute_m.id,
+                        ]),
+                    ],
+                }),
+            ],
+        })
+
+        self.authenticate('demo', 'demo')
+        # This should not raise a KeyError
+        result = self.request_get_values(product_template)
+
+        # Verify we got the expected number of attribute lines
+        self.assertEqual(len(result['products'][0]['attribute_lines']), 3)
+        # Verify that each attribute line has its attribute info correctly mapped
+        attribute_names = [
+            line['attribute']['name']
+            for line in result['products'][0]['attribute_lines']
+        ]
+        self.assertIn('Size', attribute_names)
+        self.assertIn('Color', attribute_names)
+        # Count occurrences of 'Size' - should be 2 since we have two lines with the same attribute
+        self.assertEqual(attribute_names.count('Size'), 2)

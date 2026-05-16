@@ -2,13 +2,14 @@ import { Interaction } from "@web/public/interaction";
 import { registry } from "@web/core/registry";
 import {
     getCurrentTextHighlight,
+    adaptHighlightPosition,
     makeHighlightSvgs,
     closestToObserve,
     getObservedEls,
 } from "@website/js/highlight_utils";
 
 export class TextHighlight extends Interaction {
-    static selector = "#wrapwrap";
+    static selector = "#wrapwrap, .o_wslides_fs_content";
     dynamicContent = {
         _root: {
             "t-on-text_highlight_added": ({ target }) => this.onTextHighlightAdded(target),
@@ -54,13 +55,15 @@ export class TextHighlight extends Interaction {
         for (const closestToObserve of closestToObserves) {
             for (const el of closestToObserve.querySelectorAll(".o_text_highlight")) {
                 const highlightID = getCurrentTextHighlight(el);
-                const svgs = makeHighlightSvgs(el, highlightID);
                 const currentSVGs = el.querySelectorAll(".o_text_highlight_svg");
                 for (const svg of currentSVGs) {
                     svg.remove();
                 }
-                for (const svg of svgs) {
-                    this.insert(svg, el);
+                const svgs = makeHighlightSvgs(el, highlightID);
+
+                for (const svg of svgs.toReversed()) {
+                    this.insert(svg, el, "afterbegin");
+                    adaptHighlightPosition(el, svg);
                 }
             }
         }

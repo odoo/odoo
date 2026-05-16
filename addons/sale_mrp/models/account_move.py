@@ -21,6 +21,8 @@ class AccountMoveLine(models.Model):
                     # In the case where the product has no direct component in its bom, it won't be present in the stock moves boms.
                     # We then take the first bom of the product.
                     bom = self.env['mrp.bom']._bom_find(products=so_line.product_id, company_id=so_line.company_id.id, bom_type='phantom')[so_line.product_id]
+                    if not bom:
+                        return price_unit
                 is_line_reversing = self.move_id.move_type == 'out_refund'
                 account_moves = so_line.invoice_lines.move_id.filtered(lambda m: m.state == 'posted' and bool(m.reversed_entry_id) == is_line_reversing)
                 posted_invoice_lines = account_moves.line_ids.filtered(lambda l: l.display_type == 'cogs' and l.product_id == self.product_id and l.balance > 0)
@@ -28,15 +30,14 @@ class AccountMoveLine(models.Model):
                 reversal_cogs = posted_invoice_lines.move_id.reversal_move_ids.line_ids.filtered(lambda l: l.display_type == 'cogs' and l.product_id == self.product_id and l.balance > 0)
                 qty_invoiced -= sum([line.product_uom_id._compute_quantity(line.quantity, line.product_id.uom_id) for line in reversal_cogs])
 
-                moves = so_line.move_ids
+                moves = so_line.move_ids.filtered(lambda m: m.state == 'done')
                 average_price_unit = 0
+                # Components quantities for 1 'unit' in the product's base uom
                 components_qty = so_line._get_bom_component_qty(bom)
                 storable_components = self.env['product.product'].search([('id', 'in', list(components_qty.keys())), ('is_storable', '=', True)])
                 for product in storable_components:
-                    factor = components_qty[product.id]['qty']
                     prod_moves = moves.filtered(lambda m: m.product_id == product)
                     product = product.with_company(self.company_id)
-                    average_price_unit += factor * prod_moves._get_price_unit()
+                    average_price_unit += prod_moves._get_price_unit()
                 price_unit = average_price_unit / bom.product_qty or price_unit
-                price_unit = self.product_id.uom_id._compute_price(price_unit, self.product_uom_id)
         return price_unit

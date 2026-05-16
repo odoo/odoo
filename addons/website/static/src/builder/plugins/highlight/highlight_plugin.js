@@ -19,6 +19,7 @@ import { toolbarButtonProps } from "@html_editor/main/toolbar/toolbar";
 export class HighlightPlugin extends Plugin {
     static id = "highlight";
     static dependencies = ["history", "selection", "split", "format", "edit_interaction"];
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         toolbar_groups: [withSequence(50, { id: "websiteDecoration" })],
         toolbar_items: [
@@ -45,6 +46,13 @@ export class HighlightPlugin extends Plugin {
                 isAvailable: isHtmlContentSupported,
             },
         ],
+        toolbar_namespace_providers: [
+            withSequence(
+                90,
+                (targetedNodes, editableSelection) =>
+                    closestElement(editableSelection.anchorNode, ".o_text_highlight") && "compact"
+            ),
+        ],
         normalize_handlers: (root) => {
             for (const node of root.querySelectorAll(".o_text_highlight")) {
                 // Signal to the interaction that there is (maybe) a new element
@@ -53,8 +61,6 @@ export class HighlightPlugin extends Plugin {
         },
         format_class_predicates: (className) => className.startsWith("o_text_highlight"),
         selectionchange_handlers: this.updateSelectedHighlight.bind(this),
-        collapsed_selection_toolbar_predicate: (selectionData) =>
-            !!closestElement(selectionData.editableSelection.anchorNode, ".o_text_highlight"),
         remove_all_formats_handlers: () => {
             // we rely on the normalize handler to start it again
             this.dependencies.edit_interaction.stopInteraction("website.text_highlight");
@@ -120,7 +126,7 @@ export class HighlightPlugin extends Plugin {
             );
             this.highlightState.color = style.every((v) => v === style[0])
                 ? style[0]
-                : getComputedStyle(this.document.body).getPropertyValue("--o-color-1");
+                : getComputedStyle(this.document.body).getPropertyValue("--hb-cp-o-color-1");
             const thickness = nodes.map((node) =>
                 getComputedStyle(node).getPropertyValue("--text-highlight-width")
             );

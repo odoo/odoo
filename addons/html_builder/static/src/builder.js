@@ -26,6 +26,20 @@ import { withSequence } from "@html_editor/utils/resource";
 import { getHtmlStyle } from "@html_editor/utils/formatting";
 import { isVisible } from "@html_builder/utils/utils";
 
+// These elements should only have inline content (even if they have a `block`
+// display style, for example if they are in a flex)
+// NOTE: h1, h2, ..., p, pre already prevents wrapping their children into block
+const ONLY_ALLOW_INLINE_TAGS = new Set([
+    ...["a", "em", "strong", "small", "s", "cite", "q", "abbr", "data", "time", "code"],
+    ...["samp", "sub", "sup", "i", "b", "u", "mark", "bdi", "span", "label", "button"],
+]);
+
+/**
+ * @typedef {(() => void)[]} on_mobile_preview_clicked
+ * @typedef {(() => void)[]} trigger_dom_updated
+ * @typedef {{ Component: Component; props: object; }[]} lower_panel_entries
+ */
+
 export class Builder extends Component {
     static template = "html_builder.Builder";
     static components = { BlockTab, CustomizeTab };
@@ -84,6 +98,7 @@ export class Builder extends Component {
 
         // TODO: maybe do a different config for the translate mode and the
         // "regular" mode.
+        /** @type {Editor} */
         this.editor = new Editor(
             {
                 Plugins: this.props.Plugins,
@@ -117,6 +132,7 @@ export class Builder extends Component {
                     await this.props.closeEditor?.();
                 },
                 installSnippetModule: (snippet) => this.props.installSnippetModule?.(snippet),
+                /** @type {import("plugins").BuilderResources} */
                 resources: {
                     trigger_dom_updated: () => {
                         this.triggerDomUpdated();
@@ -165,9 +181,8 @@ export class Builder extends Component {
                     }),
                     unsplittable_node_predicates: (/** @type {Node} */ node) =>
                         node.querySelector?.("[data-oe-translation-source-sha]"),
-                    can_display_toolbar: (namespace) => !["image", "icon"].includes(namespace),
-
-                    // disable the toolbar for images and icons
+                    are_inlines_allowed_at_root_predicates: (el) =>
+                        ONLY_ALLOW_INLINE_TAGS.has(el.tagName.toLowerCase()) || undefined,
                 },
                 localOverlayContainers: {
                     key: this.env.localOverlayContainerKey,
@@ -188,6 +203,8 @@ export class Builder extends Component {
                 baseContainers: ["P"],
                 cleanEmptyStructuralContainers: false,
                 isEditableRTL: false,
+                publicAttachments: true,
+                direction: "ltr",
             },
             this.env.services
         );
@@ -208,6 +225,7 @@ export class Builder extends Component {
 
             if (this.editableEl.matches(".o_rtl")) {
                 this.editor.config.isEditableRTL = true;
+                this.editor.config.direction = "rtl";
             }
 
             // Prevent image dragging in the website builder. Not via css because
@@ -259,7 +277,7 @@ export class Builder extends Component {
         const getStatePromises = [];
         const { promise: updatePromise, resolve } = Promise.withResolvers();
         this.editorBus.trigger("DOM_UPDATED", { getStatePromises, updatePromise });
-        await Promise.all(getStatePromises);
+        await Promise.allSettled(getStatePromises);
         const isLastTriggerId = this.lastTrigerUpdateId === currentTriggerId;
         resolve(isLastTriggerId);
     }
@@ -308,11 +326,11 @@ export class Builder extends Component {
     }
 
     undo() {
-        this.editor.shared.history.undo();
+        this.editor.shared.operation.next(() => this.editor.shared.history.undo());
     }
 
     redo() {
-        this.editor.shared.history.redo();
+        this.editor.shared.operation.next(() => this.editor.shared.history.redo());
     }
 
     onMobilePreviewClick() {

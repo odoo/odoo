@@ -1,7 +1,8 @@
-import { expect, test } from "@odoo/hoot";
-import { contains } from "@web/../tests/web_test_helpers";
-import { defineWebsiteModels, setupWebsiteBuilder } from "./website_helpers";
+import { expect, test, tick, waitFor, waitUntil } from "@odoo/hoot";
+import { contains, onRpc } from "@web/../tests/web_test_helpers";
+import { addPlugin, defineWebsiteModels, setupWebsiteBuilder } from "./website_helpers";
 import { getDragHelper, waitForEndOfOperation } from "@html_builder/../tests/helpers";
+import { Plugin } from "@html_editor/plugin";
 
 defineWebsiteModels();
 
@@ -75,4 +76,38 @@ test("Drag & drop an inner snippet inside a grid item should adjust its height o
     expect(":iframe .btn").toHaveCount(1);
     expect(":iframe .o_grid_item").toHaveClass("g-height-3");
     expect(":iframe .o_grid_mode").toHaveAttribute("data-row-count", "3");
+});
+
+test("Add an image to a grid", async () => {
+    onRpc("ir.attachment", "generate_access_token", () => "dummy-token");
+    onRpc("ir.attachment", "search_read", () => [
+        { image_src: "/website/static/src/img/snippets_demo/s_text_image.jpg" },
+    ]);
+    addPlugin(
+        class extends Plugin {
+            static id = "test";
+            resources = {
+                on_media_dialog_saved_handlers: (el) => waitUntil(() => el[0].complete).then(tick),
+            };
+        }
+    );
+    await setupWebsiteBuilder(
+        `
+        <section>
+            <div class="container">
+                <div class="row o_grid_mode" data-row-count="1">
+                    <div class="o_grid_item g-height-1 g-col-lg-7 col-lg-7" style="grid-area: 1 / 1 / 2 / 8; z-index: 1;">
+                        <p style="height: 50px;">TEST</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    `
+    );
+    await contains(":iframe .o_grid_mode").click();
+    await contains("button[data-action-id=addGridElement][data-action-param=image]").click();
+    await contains(".o_existing_attachment_cell .o_button_area").click();
+
+    await waitFor(":iframe .o_grid_mode .o_grid_item img");
+    expect(":iframe .o_grid_mode .o_grid_item img").toHaveCount(1);
 });

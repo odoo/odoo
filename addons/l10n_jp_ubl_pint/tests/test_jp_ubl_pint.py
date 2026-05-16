@@ -41,6 +41,7 @@ class TestJpUBLPint(AccountTestInvoicingCommon):
         cls.startClassPatcher(freeze_time(cls.fakenow))
 
     def test_invoice(self):
+        self.env['ir.config_parameter'].set_param('account_edi_ubl_cii.use_new_dict_to_xml_helpers', 'True')
         invoice = self.init_invoice('out_invoice', currency=self.other_currency, products=self.product_a)
         invoice.action_post()
 
@@ -53,4 +54,32 @@ class TestJpUBLPint(AccountTestInvoicingCommon):
         self.assertXmlTreeEqual(
             self.get_xml_tree_from_string(actual_xml),
             self.get_xml_tree_from_string(expected_xml),
+        )
+
+    def test_invoice_import(self):
+        with file_open('l10n_jp_ubl_pint/tests/expected_xmls/invoice.xml', 'rb') as f:
+            xml_attachment = self.env['ir.attachment'].create({
+                'mimetype': 'application/xml',
+                'name': 'test_invoice.xml',
+                'raw': f.read(),
+            })
+
+        imported_invoice = self.env['account.move'] \
+            .with_context(default_move_type='out_invoice') \
+            ._create_records_from_attachments(xml_attachment)
+
+        self.assertEqual(imported_invoice.move_type, 'out_invoice')
+        self.assertEqual(imported_invoice.partner_id, self.partner_a)
+        self.assertEqual(imported_invoice.currency_id, self.other_currency)
+        self.assertEqual(
+            imported_invoice.invoice_date.strftime("%Y-%m-%d"),
+            "2019-01-01",
+        )
+        self.assertRecordValues(
+            imported_invoice,
+            [{
+                'amount_untaxed': 1000.0,
+                'amount_tax': 100.0,
+                'amount_total': 1100.0,
+            }],
         )

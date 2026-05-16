@@ -28,7 +28,7 @@ class SpreadsheetDashboard(models.Model):
         string='Is Favorite',
         help='Indicates whether the dashboard is favorited by the current user'
     )
-    main_data_model_ids = fields.Many2many('ir.model')
+    main_data_model_ids = fields.Many2many('ir.model', copy=False)
 
     @api.depends_context('uid')
     @api.depends('favorite_user_ids')
@@ -64,7 +64,13 @@ class SpreadsheetDashboard(models.Model):
             return
 
     def _dashboard_is_empty(self):
-        return any(self.env[model].search_count([], limit=1) == 0 for model in self.sudo().main_data_model_ids.mapped("model"))
+        for model_name in self.sudo().main_data_model_ids.mapped("model"):
+            model = self.env[model_name]
+            if not model.has_access("read"):
+                model = model.sudo()
+            if model.search_count([], limit=1) == 0:
+                return True
+        return False
 
     def _get_dashboard_translation_namespace(self):
         data = self.env['ir.model.data'].sudo().search([

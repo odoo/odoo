@@ -135,6 +135,14 @@ class TestSelfAccessRights(TestHrCommon):
     def testReadOtherEmployee(self):
         with self.assertRaises(AccessError):
             self.hubert_emp.with_user(self.richard).read(self.protected_fields_emp.keys())
+        # Check simple user can read all public fields of private employee
+        public_fields = [
+            field_name
+            for field_name in self.env['hr.employee.public']._fields
+            if field_name in self.env['hr.employee']._fields
+        ]
+        res = self.hubert_emp.with_user(self.richard).read(public_fields)
+        self.assertEqual(len(public_fields), len(res[0]))
 
     # Write hr.employee #
     def testWriteSelfEmployee(self):
@@ -172,6 +180,14 @@ class TestSelfAccessRights(TestHrCommon):
     def testSearchUserEMployee(self):
         # Searching user based on employee_id field should not raise bad query error
         self.env['res.users'].with_user(self.richard).search([('employee_id', 'ilike', 'Hubert')])
+
+    # Write hr.department
+    def testWriteDepartmentEmployee(self):
+        with self.assertRaises(AccessError):
+            self.env['hr.department'].with_user(self.richard).create({'name': 'New Dept'})
+        dept = self.env['hr.department'].create({'name': 'New Dept'})
+        with self.assertRaises(AccessError):
+            dept.with_user(self.richard).write({'name': 'Renamed Dept'})
 
     def test_onchange_readable_fields_with_no_access(self):
         """

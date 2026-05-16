@@ -15,6 +15,7 @@ const sizeClasses = ["btn-sm", "btn-lg"];
 
 class ButtonOptionPlugin extends Plugin {
     static id = "buttonOption";
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         on_cloned_handlers: this.onCloned.bind(this),
         // Drag and drop from sidebar: manage the button preview.
@@ -184,6 +185,14 @@ class ButtonOptionPlugin extends Plugin {
         }
         return { ...initialState, previousSiblingEl, nextSiblingEl };
     }
+}
+
+export class ButtonTranslationPlugin extends Plugin {
+    static id = "buttonTranslation";
+    /** @type {import("plugins").WebsiteResources} */
+    resources = {
+        force_background_translation_state_selectors: "a.btn",
+    };
 }
 
 registry.category("website-plugins").add(ButtonOptionPlugin.id, ButtonOptionPlugin);

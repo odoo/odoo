@@ -35,6 +35,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'income_account_id': 'l10n_ph_account_430400',
                 'expense_account_id': 'l10n_ph_account_620000',
                 'transfer_account_id': 'l10n_ph_account_100201',
+                'account_stock_journal_id': 'inventory_valuation',
+                'account_stock_valuation_id': 'l10n_ph_account_110300',
             },
         }
 
@@ -42,4 +44,13 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_ph_account_journal(self):
         return {
             "bank": {"default_account_id": "l10n_ph_account_100001"},
+        }
+
+    @template('ph', 'account.account')
+    def _get_ph_account_account(self):
+        return {
+            'l10n_ph_account_110300': {
+                'account_stock_expense_id': 'l10n_ph_account_510000',
+                'account_stock_variation_id': 'l10n_ph_account_511900',
+            },
         }

@@ -89,3 +89,14 @@ test("Switching search type keeps 'order by' option if it exists on both types",
     expect("[data-label='Search within'] button.o-dropdown").toHaveText("Everything");
     expect("[data-label='Order by'] button.o-dropdown").toHaveText("something");
 });
+
+test("Input parent is not contenteditable, while all other children beside the input are", async () => {
+    await setupWebsiteBuilder(searchbarHTML("name asc"));
+
+    expect(":iframe .input-group:has(:scope > input)").toHaveAttribute("contenteditable", "false");
+
+    expect(":iframe .input-group:has(:scope > input) > *:not(input)").toHaveAttribute(
+        "contenteditable",
+        "true"
+    );
+});

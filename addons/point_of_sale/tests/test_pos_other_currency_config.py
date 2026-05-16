@@ -364,3 +364,24 @@ class TestPoSOtherCurrencyConfig(TestPoSCommon):
                 debit += line.debit
                 credit += line.credit
             self.assertEqual(tools.float_compare(debit, credit, precision_rounding=self.other_currency_config.currency_id.rounding), 0)  # debit and credit should be equal
+
+    def test_with_session_check_product_cost(self):
+        def find_by(list_of_dicts, key, value):
+            return next((d for d in list_of_dicts if d.get(key) == value), None)
+
+        self.other_currency_config.open_ui()
+        product = self.other_currency_config.current_session_id.load_data([])['product.product']
+
+        self.assertAlmostEqual(find_by(product, 'id', self.product1.id)['lst_price'], 5.00)
+        self.assertAlmostEqual(find_by(product, 'id', self.product2.id)['lst_price'], 10.00)
+        self.assertAlmostEqual(find_by(product, 'id', self.product3.id)['lst_price'], 15.00)
+        self.assertAlmostEqual(find_by(product, 'id', self.product4.id)['lst_price'], 50.00)
+        self.assertAlmostEqual(find_by(product, 'id', self.product5.id)['lst_price'], 100.00)
+        self.assertAlmostEqual(find_by(product, 'id', self.product6.id)['lst_price'], 22.65)
+        self.assertAlmostEqual(find_by(product, 'id', self.product7.id)['lst_price'], 3.50)
+
+    def test_pos_data_standard_price_converted(self):
+        self.other_currency_config.open_ui()
+        res = self.other_currency_config.current_session_id.load_data({})
+        product1_data = next(filter(lambda product: product['display_name'] == "Product 1", res['product.product']))
+        self.assertEqual(product1_data['standard_price'], 2.5)  # standard price should be converted

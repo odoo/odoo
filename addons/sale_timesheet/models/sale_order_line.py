@@ -19,7 +19,7 @@ class SaleOrderLine(models.Model):
     @api.depends_context('with_remaining_hours', 'company')
     def _compute_display_name(self):
         super()._compute_display_name()
-        with_remaining_hours = self.env.context.get('with_remaining_hours')
+        with_remaining_hours = self.env.context.get('with_remaining_hours') and not self.env.context.get('skip_remaining_hours', False)
         if with_remaining_hours and any(line.remaining_hours_available for line in self):
             company = self.env.company
             encoding_uom = company.timesheet_encode_uom_id
@@ -56,7 +56,7 @@ class SaleOrderLine(models.Model):
             remaining_hours = None
             if line.remaining_hours_available:
                 qty_left = line.product_uom_qty - line.qty_delivered
-                remaining_hours = line.product_uom_id._compute_quantity(qty_left, uom_hour)
+                remaining_hours = line.product_uom_id._compute_quantity(qty_left, uom_hour, round=False)
             line.remaining_hours = remaining_hours
 
     @api.depends('product_id')
@@ -160,7 +160,7 @@ class SaleOrderLine(models.Model):
         lines_by_timesheet = self.filtered(lambda sol: sol.product_id and sol.product_id._is_delivered_timesheet())
         domain = Domain(lines_by_timesheet._timesheet_compute_delivered_quantity_domain())
         refund_account_moves = self.order_id.invoice_ids.filtered(lambda am: am.state == 'posted' and am.move_type == 'out_refund').reversed_entry_id
-        timesheet_domain = Domain('timesheet_invoice_id', '=', False) | Domain('timesheet_invoice_id.state', '=', 'cancel')
+        timesheet_domain = Domain('timesheet_invoice_id', '=', False) | Domain('timesheet_invoice_id.state', '=', 'cancel') & Domain('timesheet_invoice_id.payment_state', '!=', 'invoicing_legacy')
         if refund_account_moves:
             credited_timesheet_domain = Domain('timesheet_invoice_id.state', '=', 'posted') & Domain('timesheet_invoice_id', 'in', refund_account_moves.ids)
             timesheet_domain |= credited_timesheet_domain

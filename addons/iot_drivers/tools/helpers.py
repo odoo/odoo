@@ -53,7 +53,7 @@ class IoTRestart(Thread):
     Thread to restart odoo server in IoT Box when we must return a answer before
     """
     def __init__(self, delay):
-        Thread.__init__(self)
+        super().__init__(daemon=True)
         self.delay = delay
 
     def run(self):
@@ -193,9 +193,12 @@ def get_img_name():
 
 
 def get_ip():
+    """Get the local IP address of the IoT Box by creating
+    a dummy connection to the gateway or Google DNS.
+    """
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     try:
-        s.connect(('8.8.8.8', 1))  # Google DNS
+        s.connect((get_gateway() or '8.8.8.8', 1))  # Google DNS
         return s.getsockname()[0]
     except OSError as e:
         _logger.warning("Could not get local IP address: %s", e)
@@ -267,8 +270,7 @@ def get_version(detailed_version=False):
     if IS_RPI:
         image_version = read_file_first_line('/var/odoo/iotbox_version')
     elif IS_WINDOWS:
-        # updated manually when big changes are made to the windows virtual IoT
-        image_version = '23.11'
+        image_version = read_file_first_line('VERSION') or '23.11'
     elif IS_TEST:
         image_version = 'test'
 
@@ -651,7 +653,10 @@ def check_network(host=None):
     if not host:
         return None
 
-    host = socket.gethostbyname(host)
+    try:
+        host = socket.gethostbyname(host)
+    except socket.gaierror:
+        return "unreachable"
     packet_loss, avg_latency = mtr(host)
     thresholds = {"fast": 5, "normal": 20} if ip_address(host).is_private else {"fast": 50, "normal": 150}
 

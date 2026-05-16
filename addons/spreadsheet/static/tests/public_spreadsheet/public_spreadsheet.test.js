@@ -7,6 +7,7 @@ import { THIS_YEAR_GLOBAL_FILTER } from "@spreadsheet/../tests/helpers/global_fi
 import { addGlobalFilter } from "@spreadsheet/../tests/helpers/commands";
 import { freezeOdooData } from "@spreadsheet/helpers/model";
 import { createModelWithDataSource } from "@spreadsheet/../tests/helpers/model";
+import { setCellContent } from "../helpers/commands";
 
 defineSpreadsheetModels();
 
@@ -66,6 +67,14 @@ test("click close button in filter panel will close the panel", async function (
     expect(fixture.querySelector(".o-public-spreadsheet-filters")).toBe(null);
 });
 
+test("Internal links converted to neutralized are not clickable", async function (assert) {
+    const { model } = await createModelWithDataSource();
+    setCellContent(model, "A1", "[label](odoo://ir_menu_xml_id/test_menu)");
+    data = await freezeOdooData(model);
+    const fixture = await mountPublicSpreadsheet("dashboardDataUrl", "dashboard");
+    expect(fixture.querySelector(".o-dashboard-clickable-cell")).toBe(null);
+});
+
 test.tags("desktop");
 test("Hides the download button when the downloadExcelUrl is not provided", async function () {
     const { model } = await createModelWithDataSource();
@@ -73,4 +82,14 @@ test("Hides the download button when the downloadExcelUrl is not provided", asyn
     const fixture = await mountPublicSpreadsheet("dashboardDataUrl", "spreadsheet", false);
     await contains(".o-topbar-menu[data-id='file']").click();
     expect(fixture.querySelector(".o-menu-item[data-name='download_public_excel']")).toBe(null);
+});
+
+test.tags("desktop");
+test("Disable copy button in public spreadsheets", async function () {
+    const { model } = await createModelWithDataSource();
+    await addGlobalFilter(model, THIS_YEAR_GLOBAL_FILTER);
+    data = await freezeOdooData(model);
+    const fixture = await mountPublicSpreadsheet("dashboardDataUrl", "spreadsheet");
+    await contains(".o-topbar-menu[data-id='edit']").click();
+    expect(fixture.querySelector(".o-menu-item[data-name='copy']")).toHaveClass("disabled");
 });

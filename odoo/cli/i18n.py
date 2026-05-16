@@ -7,6 +7,7 @@ from pathlib import Path
 from odoo import SUPERUSER_ID
 from odoo.api import Environment
 from odoo.cli.command import Command
+from odoo.fields import Domain
 from odoo.modules import get_module_path
 from odoo.modules.registry import Registry
 from odoo.tools import OrderedSet, config
@@ -128,14 +129,25 @@ class I18n(Command):
     def _get_languages(self, env, language_codes, active_test=True):
         # We want to log invalid parameters
         Lang = env['res.lang'].with_context(active_test=False)
-        languages = Lang.search([('iso_code', 'in', language_codes)])
+        languages = Lang.search(Domain.OR([Domain('iso_code', 'in', language_codes),
+                                           Domain('code', 'in', language_codes)]))
         if not_found_language_codes := set(language_codes) - set(languages.mapped("iso_code")):
             _logger.warning("Ignoring not found languages: %s", ', '.join(not_found_language_codes))
         if active_test:
             if not_installed_languages := languages.filtered(lambda x: not x.active):
                 languages -= not_installed_languages
-                iso_code_str = ", ".join(not_installed_languages.mapped("iso_code"))
-                _logger.warning("Ignoring not installed languages: %s", iso_code_str)
+                iso_codes = not_installed_languages.mapped('iso_code')
+                _logger.warning(
+                    textwrap.dedent("""\
+                        Ignoring not installed languages: %s
+                        Install them running the below command, then run this command again.
+
+                        $ %s -l %s
+                    """),
+                    ', '.join(iso_codes),
+                    self.loadlang_parser.prog,
+                    ' '.join(iso_codes),
+                )
         return languages
 
     def _import(self, parsed_args):

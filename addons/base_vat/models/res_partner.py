@@ -1,17 +1,20 @@
 import logging
 import datetime
 import re
+import requests
+import secrets
+import uuid
 
 import stdnum
 from stdnum import luhn
-from stdnum.eu.vat import check_vies
-from stdnum.exceptions import InvalidComponent, InvalidChecksum, InvalidFormat
+from stdnum.exceptions import InvalidChecksum, InvalidFormat
 from stdnum.util import clean
 
 from odoo import api, models, fields
-from odoo.tools import _, LazyTranslate
-from odoo.exceptions import ValidationError
+from odoo.tools import _, LazyTranslate, hash_sign
+from odoo.exceptions import ValidationError, UserError
 from odoo.addons.base.models.res_partner import EU_EXTRA_VAT_CODES
+
 
 _lt = LazyTranslate(__name__)
 _logger = logging.getLogger(__name__)
@@ -26,7 +29,7 @@ _ref_vat = {
     'au': '83 914 571 673',
     'be': 'BE0477472701',
     'bg': 'BG1234567892',
-    'br': _lt('either 11 digits for CPF or 14 digits for CNPJ'),
+    'br': _lt('either 11 digits for CPF or 14 characters for CNPJ'),
     'cr': '3101012009',
     'ch': _lt('CHE-123.456.788 TVA or CHE-123.456.788 MWST or CHE-123.456.788 IVA'),  # Swiss by Yannick Vaucher @ Camptocamp
     'cl': '76086428-5',
@@ -74,8 +77,11 @@ _ref_vat = {
     'si': 'SI12345679',
     'sk': 'SK2022749619',
     'sm': 'SM24165',
-    'tr': _lt('17291716060 (NIN) or 1729171602 (VKN)'),
+    'th': '1234545678781',
+    'tr': _lt('11111111111 (NIN) or 2222222222 (VKN)'),
+    'ua': _lt('12345678 or UA12345678 (EDRPOU), 1234567890 (RNOPP) or 123456789012 (IPN)'),
     'uy': _lt("Example: '219999830019' (format: 12 digits, all numbers, valid check digit)"),
+    'uz': _lt('XXXXXXXXX [9 digits]'),
     've': 'V-12345678-1, V123456781, V-12.345.678-1',
     'xi': 'XI123456782',
     'sa': _lt('310175397400003 [Fifteen digits, first and last digits should be "3"]'),
@@ -191,28 +197,116 @@ class ResPartner(models.Model):
             if partner.parent_id and partner.parent_id.vat == partner.vat:
                 partner.vies_valid = partner.parent_id.vies_valid
                 continue
-            from odoo.tools import zeep  # noqa: PLC0415
-            try:
-                vies_valid = check_vies(partner.vat, timeout=10)
-                partner.vies_valid = vies_valid['valid']
-            except (OSError, InvalidComponent, zeep.exceptions.Fault) as e:
-                if partner._origin.id:
-                    msg = ""
-                    if isinstance(e, OSError):
-                        msg = _("Connection with the VIES server failed. The VAT number %s could not be validated.", partner.vat)
-                    elif isinstance(e, InvalidComponent):
-                        msg = _("The VAT number %s could not be interpreted by the VIES server.", partner.vat)
-                    elif isinstance(e, zeep.exceptions.Fault):
-                        msg = _('The request for VAT validation was not processed. VIES service has responded with the following error: %s', e.message)
-                    partner._origin.message_post(body=msg)
-                _logger.warning("The VAT number %s failed VIES check.", partner.vat)
-                partner.vies_valid = False
+            status = partner._check_vies_iap()
+            partner._update_vies_status(status)
 
     def _split_vat(self, vat):
         vat_prefix, vat_number = vat[:2].upper(), vat[2:].replace(' ', '')
         if not vat_prefix.isalpha():
             return '', vat
         return vat_prefix, vat_number
+
+    @api.model
+    def _get_iap_vies_credentials(self):
+        """
+        Return a couple (identifier, token) that is going to identify this db to IAP such that only
+        this one can request updates on a previously asked VIES check.
+        If they exist, we simply return them. If they don't, we create them in another cursor to
+        avoid the current transaction to be rolled back after the record has been created on IAP.
+        """
+        # No existing cron = no way for db to pull updates, thus no need to bother IAP
+        if not self.env.ref('base_vat.vies_iap_check_update', raise_if_not_found=False):
+            return "dummy_identifier", "dummy_token"  # ignored by IAP, same as neutralized
+
+        IrConfigParam = self.env['ir.config_parameter'].sudo()
+        identifier = IrConfigParam.get_param('iap_vies.client_identifier')
+        token = IrConfigParam.get_param('iap_vies.client_token')
+        if identifier and token:
+            return identifier, token
+
+        identifier = str(uuid.uuid4())
+        token = secrets.token_urlsafe()
+        with self.env.registry.cursor() as new_cursor:
+            IrConfigParamNewCursor = self.env(cr=new_cursor)['ir.config_parameter'].sudo()
+            IrConfigParamNewCursor.set_param('iap_vies.client_identifier', identifier)
+            IrConfigParamNewCursor.set_param('iap_vies.client_token', token)
+
+        return identifier, token
+
+    @api.model
+    def _get_iap_vies_endpoint(self):
+        prod, test = 'https://vies.api.odoo.com', 'https://vies.test.odoo.com'
+        default_endpoint = test if self.env.ref('base.module_base_vat').demo else prod
+        endpoint = self.env['ir.config_parameter'].sudo().get_param('iap_vies.endpoint', default_endpoint)
+        if endpoint not in (prod, test):
+            raise UserError(_('Invalid IAP VIES endpoint'))
+        return endpoint
+
+    def _check_vies_iap(self):
+        """Called when VAT is manually edited"""
+        self.ensure_one()
+        endpoint = self._get_iap_vies_endpoint()
+        client_identifier, client_token = self._get_iap_vies_credentials()
+        try:
+            req = requests.post(
+                endpoint + '/api/vies/1/check_validity',
+                data={
+                    "vat": self.vat,
+                    "db_uuid": self.env['ir.config_parameter'].sudo().get_param('database.uuid'),
+                    "client_identifier": client_identifier,
+                    "client_token": client_token,
+                    "webhook_url": self.get_base_url() + '/base_vat/1/webhook_update_vies',
+                    "webhook_token": hash_sign(self.sudo().env, "vies_check", self.vat, expiration_hours=24),  # See BaseVatWebhookController
+                },
+                timeout=20,
+            )
+            req.raise_for_status()
+        except requests.exceptions.RequestException:
+            _logger.exception("VIES check: call to IAP failed")
+            return "fault"
+        resp = req.json()
+        if not resp.get("status"):
+            _logger.error("VIES check: no status returned. Response: %s", resp)
+            return "fault"
+        return resp["status"]
+
+    @api.model
+    def _cron_check_vies_iap(self):
+        """Called by cron to check if IAP has any update on a previously requested VAT that was pending"""
+        endpoint = self._get_iap_vies_endpoint()
+        client_identifier, client_token = self._get_iap_vies_credentials()
+        try:
+            req = requests.post(
+                endpoint + '/api/vies/1/check_update',
+                data={
+                    "db_uuid": self.env['ir.config_parameter'].sudo().get_param('database.uuid'),
+                    "client_identifier": client_identifier,
+                    "client_token": client_token,
+                },
+                timeout=10,
+            )
+            req.raise_for_status()
+        except requests.exceptions.RequestException:
+            _logger.exception("Error while contacting IAP VIES")
+            return
+        resp = req.json()
+        _logger.info("IAP VIES check response: %s", resp)
+        for company_vat, company_status in resp.items():
+            partner = self.search([("vat", "=", company_vat)])
+            partner._update_vies_status(company_status)
+
+    def _update_vies_status(self, status):
+        self.vies_valid = status == "valid"
+        _logger.info("VIES status updated to %s for partner ids: %s", status, self.ids)
+        msg = None
+        if status == "pending":
+            msg = _("The VIES check is pending. The status will be updated soon.")
+        elif status == "fault":
+            msg = _("The VIES check failed. Please check the Tax ID manually.")
+        elif status in ("valid", "unassigned"):
+            msg = _("The Intra-Community validity has been updated.")
+        if msg:
+            self._message_log_batch(bodies={p._origin.id: msg for p in self if p._origin.id})
 
     @api.model
     def _check_vat_number(self, country_code, vat_number):
@@ -230,7 +324,7 @@ class ResPartner(models.Model):
             company = self.env.company
 
         vat_label = _("VAT")
-        if country_code and company.country_id and country_code == company.country_id.code.lower() and company.country_id.vat_label:
+        if country_code and company.country_id and country_code == company.country_id.code and company.country_id.vat_label:
             vat_label = company.country_id.vat_label
 
         expected_format = _ref_vat.get(country_code.lower())
@@ -306,12 +400,15 @@ class ResPartner(models.Model):
             return True
         return stdnum.util.get_cc_module('gr', 'vat').is_valid(vat)
 
+    # Our EDI provider Infile has designated this range of testing VATs for our customers.
+    __check_vat_gt_testing_infile = re.compile(r'98[0-9]{10}K')
+
     def check_vat_gt(self, vat):
         """
         Allow some custom Guatemala NIT numbers to pass the test to be used for testing the Guatemalan EDI.
         """
         guatemalan_test_vats = ('11201220K', '11201350K')
-        if vat in guatemalan_test_vats:
+        if vat in guatemalan_test_vats or self.__check_vat_gt_testing_infile.match(vat):
             return True
         return stdnum.util.get_cc_module('gt', 'vat').is_valid(vat)
 
@@ -528,24 +625,7 @@ class ResPartner(models.Model):
         return self._check_vat_sa_re.match(vat) or False
 
     def check_vat_ua(self, vat):
-        res = []
-        for partner in self:
-            if partner.commercial_partner_id.country_id.code == 'MX':
-                if len(vat) == 10:
-                    res.append(True)
-                else:
-                    res.append(False)
-            elif partner.commercial_partner_id.is_company:
-                if len(vat) == 12:
-                    res.append(True)
-                else:
-                    res.append(False)
-            else:
-                if len(vat) == 10 or len(vat) == 9:
-                    res.append(True)
-                else:
-                    res.append(False)
-        return all(res)
+        return len(vat[2:] if vat.startswith('UA') else vat) in {8, 10, 12}
 
     def check_vat_uy(self, vat):
         """ Taken from python-stdnum's master branch, as the release doesn't handle RUT numbers starting with 22.
@@ -575,6 +655,9 @@ class ResPartner(models.Model):
             and vat[8:11] == '001'
             and vat[-1] == calc_check_digit(vat)  # Invalid Check Digit
         )
+
+    def check_vat_uz(self, vat):
+        return len(vat) == 9 and vat.isdigit()
 
     def check_vat_ve(self, vat):
         # https://tin-check.com/en/venezuela/
@@ -633,6 +716,7 @@ class ResPartner(models.Model):
             all_gstin_re = [
                 r'[0-9]{2}[a-zA-Z]{5}[0-9]{4}[a-zA-Z]{1}[1-9A-Za-z]{1}[Zz1-9A-Ja-j]{1}[0-9a-zA-Z]{1}', # Normal, Composite, Casual GSTIN
                 r'[0-9]{4}[A-Z]{3}[0-9]{5}[UO]{1}[N][A-Z0-9]{1}', #UN/ON Body GSTIN
+                r'[0-9]{4}[A-Z]{3}[0-9]{5}[A-Z]{3}',  # Revised NRI GSTIN
                 r'[0-9]{4}[a-zA-Z]{3}[0-9]{5}[N][R][0-9a-zA-Z]{1}', #NRI GSTIN
                 r'[0-9]{2}[a-zA-Z]{4}[a-zA-Z0-9]{1}[0-9]{4}[a-zA-Z]{1}[1-9A-Za-z]{1}[DK]{1}[0-9a-zA-Z]{1}', #TDS GSTIN
                 r'[0-9]{2}[a-zA-Z]{5}[0-9]{4}[a-zA-Z]{1}[1-9A-Za-z]{1}[C]{1}[0-9a-zA-Z]{1}' #TCS GSTIN
@@ -640,9 +724,26 @@ class ResPartner(models.Model):
             return any(re.compile(rx).match(vat) for rx in all_gstin_re)
         return False
 
+    # Minimal regex matching similar to stdnum
+    # Derived from https://github.com/arthurdejong/python-stdnum/commit/d3ec3bd7fefe0d0a708b6594a66de28777eb9b8d
+    __check_vat_br_re = re.compile(r'^[\dA-Z]+$')
+
     def check_vat_br(self, vat):
+        def is_cnpj_valid(vat):
+            vat = clean(vat, ' -./').strip().upper()
+            if vat.startswith('000000000000') or len(vat) != 14:
+                return False
+            if self.__check_vat_br_re.match(vat):
+                values = [ord(n) - 48 for n in vat[:12]]
+                weights = [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2]
+                d1 = (11 - sum(w * v for w, v in zip(weights, values))) % 11 % 10
+                values.append(d1)
+                weights = [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2]
+                d2 = (11 - sum(w * v for w, v in zip(weights, values))) % 11 % 10
+                return vat[-2:] == f'{d1}{d2}'
+            return False
+
         is_cpf_valid = stdnum.get_cc_module('br', 'cpf').is_valid
-        is_cnpj_valid = stdnum.get_cc_module('br', 'cnpj').is_valid
         return is_cpf_valid(vat) or is_cnpj_valid(vat)
 
     _check_vat_cr_re = re.compile(r'^(?:[1-9]\d{8}|\d{10}|[1-9]\d{10,11})$')
@@ -675,6 +776,12 @@ class ResPartner(models.Model):
         """
         vat = vat.strip()
         return bool(self.__check_vat_vn_re.match(vat))
+
+    def format_vat_al(self, vat):
+        vat_prefix, vat_number = self._split_vat(vat)
+        stdnum_vat_format = stdnum.util.get_cc_module('al', 'nipt').compact
+        vat_number = stdnum_vat_format(vat_number)
+        return f'{vat_prefix}{vat_number}'
 
     def format_vat_eu(self, vat):
         # Foreign companies that trade with non-enterprises in the EU
@@ -716,6 +823,12 @@ class ResPartner(models.Model):
             vat = vat[:8] + '-' + vat[8] + '-' + vat[9] + vat[10]
         return vat
 
+    def format_vat_is(self, vat):
+        vat_prefix, vat_number = self._split_vat(vat)
+        stdnum_vat_format = stdnum.util.get_cc_module('is_', 'vsk').compact
+        vat_number = stdnum_vat_format(vat_number)
+        return f'{vat_prefix}{vat_number}'
+
     def check_vat_id(self, vat):
         """ Temporary Indonesian VAT validation to support the new format
         introduced in January 2024."""
@@ -737,6 +850,10 @@ class ResPartner(models.Model):
             return False
 
         return True
+
+    def check_vat_th(self, vat):
+        check_func = stdnum.util.get_cc_module('th', 'tin').is_valid
+        return check_func(vat)
 
     def check_vat_de(self, vat):
         is_valid_vat = stdnum.util.get_cc_module("de", "vat").is_valid
@@ -764,7 +881,7 @@ class ResPartner(models.Model):
         own validation to support these new valid UBNs.
         """
         vat = stdnum.util.get_cc_module("tw", "vat").compact(vat)
-        if len(vat) != 8:
+        if len(vat) != 8 or not vat.isdigit():
             return False  # The length is fixed, and we will expect it to be 8 in the following checks.
 
         logic_multiplier = [1, 2, 1, 2, 1, 2, 4, 1]  # This multiplier is set by the official validation logic.
@@ -826,3 +943,10 @@ class ResPartner(models.Model):
         if self.env.context.get('import_file'):
             self.env.remove_to_compute(self._fields['vies_valid'], self)
         return res
+
+    def _create_contact_parent_company(self):
+        new_company = super()._create_contact_parent_company()
+        if new_company and self.vies_valid:
+            new_company.env.remove_to_compute(self._fields['vies_valid'], new_company)
+            new_company.vies_valid = self.vies_valid
+        return new_company

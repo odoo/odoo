@@ -8,22 +8,27 @@ import {
 } from "../_helpers/user_actions";
 import { execCommand } from "../_helpers/userCommands";
 import { unformat } from "../_helpers/format";
+import { nodeSize } from "@html_editor/utils/position";
 
-before(
-    () =>
-        document.fonts.add(
-            new FontFace("Roboto", "url(/web/static/fonts/google/Roboto/Roboto-Regular.ttf)")
-        ).ready
-);
+before(async () => {
+    const font = new FontFace("Roboto", "url(/web/static/fonts/google/Roboto/Roboto-Regular.ttf)");
+    await font.load();
+    document.fonts.add(font);
+    await document.fonts.ready;
+});
 
 test.tags("font-dependent");
-test("should apply font-size to completely selected list item", async () => {
+test("should apply font-size to completely selected list item (1)", async () => {
     await testEditor({
         styleContent: ":root { font: 14px Roboto }",
         contentBefore: "<ol><li>[abc]</li><li>def</li></ol>",
         stepFunction: setFontSize("56px"),
         contentAfter: `<ol style="padding-inline-start: 60px;"><li style="font-size: 56px;">[abc]</li><li>def</li></ol>`,
     });
+});
+
+test.tags("font-dependent");
+test("should apply font-size to completely selected list item (2)", async () => {
     await testEditor({
         styleContent: ":root { font: 14px Roboto }",
         contentBefore: unformat(`
@@ -56,6 +61,79 @@ test("should apply font-size to completely selected multiple list items", async 
         stepFunction: (editor) =>
             execCommand(editor, "formatFontSizeClassName", { className: "h2-fs" }),
         contentAfter: '<ul><li class="h2-fs">[abc</li><li class="h2-fs">def]</li></ul>',
+    });
+});
+
+test("should apply font size to a fully selected list item with trailing empty line (1)", async () => {
+    await testEditor({
+        contentBefore: "<ul><li>[abc</li><li>]<br></li></ul>",
+        stepFunction: setFontSize("56px"),
+        contentAfter:
+            '<ul style="padding-inline-start: 38px;"><li style="font-size: 56px;">[abc</li><li style="font-size: 56px;">]<br></li></ul>',
+    });
+});
+
+test("should apply font size to a fully selected list item with trailing empty line (2)", async () => {
+    await testEditor({
+        contentBefore: "<ul><li>[abc</li><li><br>]<br></li></ul>",
+        stepFunction: setFontSize("56px"),
+        contentAfter:
+            '<ul style="padding-inline-start: 38px;"><li style="font-size: 56px;">[abc</li><li style="font-size: 56px;"><br>]<br></li></ul>',
+    });
+});
+
+test("should apply font size to a fully selected list item with trailing empty line (3)", async () => {
+    await testEditor({
+        contentBefore: "<ul><li>[abc</li><li>abcd<br>]<br></li></ul>",
+        stepFunction: setFontSize("56px"),
+        contentAfter:
+            '<ul style="padding-inline-start: 38px;"><li style="font-size: 56px;">[abc</li><li style="font-size: 56px;">abcd<br>]<br></li></ul>',
+    });
+});
+
+test("should not apply font size to list item when selection excludes trailing empty line", async () => {
+    await testEditor({
+        contentBefore: "<ul><li>[abc</li><li>abcd]<br><br></li></ul>",
+        stepFunction: setFontSize("56px"),
+        contentAfter:
+            '<ul style="padding-inline-start: 38px;"><li style="font-size: 56px;">[abc</li><li><span style="font-size: 56px;">abcd]</span><br><br></li></ul>',
+    });
+});
+
+test("should apply font-size on fully selected list items with empty text nodes at list boundaries", async () => {
+    await testEditor({
+        contentBefore: '<ul><li><a href="#">abc</a></li><li><a href="#">abc</a></li></ul>',
+        contentBeforeEdit:
+            '<ul><li>\ufeff<a href="#">\ufeffabc\ufeff</a>\ufeff</li><li>\ufeff<a href="#">\ufeffabc\ufeff</a>\ufeff</li></ul>',
+        stepFunction: (editor) => {
+            const listItems = editor.editable.querySelectorAll("li");
+            // Set selection here because injected \ufeff can be excluded
+            // from the DOM range.
+            editor.shared.selection.setSelection({
+                anchorNode: listItems[0].firstChild,
+                anchorOffset: 0,
+                focusNode: listItems[1].lastChild,
+                focusOffset: nodeSize(listItems[1].lastChild),
+            });
+            // Empty text node at start of first <li>
+            listItems[0].insertBefore(document.createTextNode(""), listItems[0].firstChild);
+            // Empty text node at end of second <li>
+            listItems[1].appendChild(document.createTextNode(""));
+            setFontSize("32px")(editor);
+        },
+        contentAfterEdit:
+            '<ul><li style="font-size: 32px;">[\ufeff<a href="#">\ufeffabc\ufeff</a>\ufeff</li><li style="font-size: 32px;">\ufeff<a href="#">\ufeffabc\ufeff</a>\ufeff]</li></ul>',
+        contentAfter:
+            '<ul><li style="font-size: 32px;">[<a href="#">abc</a></li><li style="font-size: 32px;"><a href="#">abc</a>]</li></ul>',
+    });
+});
+
+test("should replace list item inline font-size with font-size class", async () => {
+    await testEditor({
+        contentBefore: '<ul><li style="font-size: 18px;">[abc]</li></ul>',
+        stepFunction: (editor) =>
+            execCommand(editor, "formatFontSizeClassName", { className: "h2-fs" }),
+        contentAfter: '<ul><li class="h2-fs">[abc]</li></ul>',
     });
 });
 
@@ -276,28 +354,34 @@ test("should remove font-size class from list item containing sublist", async ()
     });
 });
 
-test("should remove font-size and its classes from partially selected list item", async () => {
+test("should remove font-size and its classes from partially selected list item (1)", async () => {
     await testEditor({
         styleContent: "ol { font: 14px Roboto }",
         contentBefore: `<ol><li>a</li><li style="font-size: 56px;">b[c]d</li><li>e</li></ol>`,
         stepFunction: (editor) => execCommand(editor, "removeFormat"),
         contentAfter: `<ol style="padding-inline-start: 60px;"><li>a</li><li style="font-size: 56px;">b<span class="o_default_font_size">[c]</span>d</li><li>e</li></ol>`,
     });
+});
 
+test("should remove font-size and its classes from partially selected list item (2)", async () => {
     await testEditor({
         styleContent: "ol { font: 14px Roboto }",
         contentBefore: `<ol><li>a</li><li class="h2-fs">b[c]d</li><li>e</li></ol>`,
         stepFunction: (editor) => execCommand(editor, "removeFormat"),
         contentAfter: `<ol><li>a</li><li class="h2-fs">b<span class="o_default_font_size">[c]</span>d</li><li>e</li></ol>`,
     });
+});
 
+test("should remove font-size and its classes from partially selected list item (3)", async () => {
     await testEditor({
         styleContent: "ol { font: 14px Roboto }",
         contentBefore: `<ol><li style="font-size: 56px;">a[bc</li><li style="font-size: 56px;">def</li><li style="font-size: 56px;">gh]i</li></ol>`,
         stepFunction: (editor) => execCommand(editor, "removeFormat"),
         contentAfter: `<ol style="padding-inline-start: 60px;"><li style="font-size: 56px;">a<span class="o_default_font_size">[bc</span></li><li>def</li><li style="font-size: 56px;"><span class="o_default_font_size">gh]</span>i</li></ol>`,
     });
+});
 
+test("should remove font-size and its classes from partially selected list item (4)", async () => {
     await testEditor({
         styleContent: "ol { font: 14px Roboto }",
         contentBefore: `<ol><li class="h2-fs">a[bc</li><li class="h2-fs">def</li><li class="h2-fs">gh]i</li></ol>`,

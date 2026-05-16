@@ -7,12 +7,7 @@ from collections import deque
 from contextlib import ExitStack
 from typing import Optional
 
-import astroid
-
-try:
-    from astroid import NodeNG
-except ImportError:
-    from astroid.node_classes import NodeNG
+from astroid import nodes
 
 import pylint.interfaces
 from pylint.checkers import BaseChecker, utils
@@ -40,10 +35,10 @@ FUNCTION_WHITELIST = {
 
 function_definitions = collections.defaultdict(list)
 callsites_for_queries = collections.defaultdict(list)
-root_call: contextvars.ContextVar[Optional[astroid.Call]] =\
+root_call: contextvars.ContextVar[Optional[nodes.Call]] =\
     contextvars.ContextVar('root_call', default=None)
 @contextlib.contextmanager
-def push_call(node: astroid.Call):
+def push_call(node: nodes.Call):
     with ExitStack() as s:
         if root_call.get() is None:
             t = root_call.set(node)
@@ -77,39 +72,39 @@ class OdooBaseChecker(BaseChecker):
         return node.file
     def _get_return_node(self, node):
         ret = []
-        nodes = deque([node])
-        while nodes:
-            node = nodes.popleft()
-            if isinstance(node, astroid.Return):
+        q = deque([node])
+        while q:
+            node = q.popleft()
+            if isinstance(node, nodes.Return):
                 ret.append(node)
             else:
-                nodes.extend(node.get_children())
+                q.extend(node.get_children())
         return ret
 
     def _is_asserted(self, node): # If there is an assert on the value of the node, it's very likely to be safe
-        asserted = deque((assert_.test for assert_ in node.scope().nodes_of_class(astroid.Assert)))
+        asserted = deque(assert_.test for assert_ in node.scope().nodes_of_class(nodes.Assert))
         while asserted:
             n = asserted.popleft()
-            if isinstance(n, astroid.Name) and n.name == node.name:
+            if isinstance(n, nodes.Name) and n.name == node.name:
                 return True
             else:
                 asserted.extend(n.get_children())
         return False
 
     def _get_attribute_chain(self, node):
-        if isinstance(node, astroid.Attribute):
+        if isinstance(node, nodes.Attribute):
             return self._get_attribute_chain(node.expr) + '.' + node.attrname
-        elif isinstance(node, astroid.Name):
+        elif isinstance(node, nodes.Name):
             return node.name
-        elif isinstance(node, astroid.Call):
+        elif isinstance(node, nodes.Call):
             return self._get_attribute_chain(node.func)
         return '' #FIXME
 
     def _evaluate_function_call(self, node, args_allowed, position):
-        name = node.func.attrname if isinstance(node.func, astroid.Attribute) else node.func.name
+        name = node.func.attrname if isinstance(node.func, nodes.Attribute) else node.func.name
         if name == 'SQL':
             return True
-        if isinstance(node.scope(), astroid.GeneratorExp):
+        if isinstance(node.scope(), nodes.GeneratorExp):
             return True
         if name == node.scope().name:
             return True
@@ -125,13 +120,13 @@ class OdooBaseChecker(BaseChecker):
             )
         return True
 
-    def _is_fstring_cst(self, node: astroid.JoinedStr, args_allowed=False, position=None):
+    def _is_fstring_cst(self, node: nodes.JoinedStr, args_allowed=False, position=None):
         # an fstring is constant if all its FormattedValue are constant, or
         # are access to private attributes (nb: whitelist?)
         return self.all_const((
             node.value for node in node.values
-            if isinstance(node, astroid.FormattedValue)
-            if not (isinstance(node.value, astroid.Attribute) and node.value.attrname.startswith('_'))
+            if isinstance(node, nodes.FormattedValue)
+            if not (isinstance(node.value, nodes.Attribute) and node.value.attrname.startswith('_'))
         ),
             args_allowed=args_allowed,
             position=position
@@ -143,72 +138,70 @@ class OdooBaseChecker(BaseChecker):
             for node in nodes
         )
 
-    def _is_constexpr(self, node: NodeNG, *, args_allowed=False, position=None):
-        if isinstance(node, astroid.Const): # astroid.const is always safe
+    def _is_constexpr(self, node: nodes.NodeNG, *, args_allowed=False, position=None):
+        if isinstance(node, nodes.Const):  # astroid.const is always safe
             return True
-        elif isinstance(node, (astroid.List, astroid.Set)):
+        elif isinstance(node, (nodes.List, nodes.Set)):
             return self.all_const(node.elts, args_allowed=args_allowed)
-        elif isinstance(node, astroid.Tuple):
+        elif isinstance(node, nodes.Tuple):
             if position is None:
                 return self.all_const(node.elts, args_allowed=args_allowed)
             else:
                 return self._is_constexpr(node.elts[position], args_allowed=args_allowed)
-        elif isinstance(node, astroid.Dict):
+        elif isinstance(node, nodes.Dict):
             return all(
                 self._is_constexpr(k, args_allowed=args_allowed) and self._is_constexpr(v, args_allowed=args_allowed)
                 for k, v in node.items
             )
-        elif isinstance(node, astroid.Starred):
+        elif isinstance(node, nodes.Starred):
             return self._is_constexpr(node.value, args_allowed=args_allowed, position=position)
-        elif isinstance(node, astroid.BinOp): # recusively infer both side of the operation. Failing if either side is not inferable
+        elif isinstance(node, nodes.BinOp):  # recusively infer both side of the operation. Failing if either side is not inferable
             left_operand = self._is_constexpr(node.left, args_allowed=args_allowed)
             # This case allows to always consider a string formatted with %d to be safe
             if node.op == '%' and \
-                isinstance(node.left, astroid.Const) and \
+                isinstance(node.left, nodes.Const) and \
                 node.left.pytype() == 'builtins.str' and \
                 '%d' in node.left.value and \
                 not '%s' in node.left.value:
                 return True
             right_operand = self._is_constexpr(node.right, args_allowed=args_allowed)
             return left_operand and right_operand
-        elif isinstance(node, astroid.Name) or isinstance(node, astroid.AssignName): # Variable: find the assignement instruction in the AST and infer its value.
-            assignements = node.lookup(node.name)
+        elif isinstance(node, (nodes.Name, nodes.AssignName)):  # Variable: find the assignement instruction in the AST and infer its value.
+            assignment = node.lookup(node.name)
             assigned_node = []
-            for n in assignements[1]: #assignement[0] contains the scope, so assignment[1] contains the assignement nodes
+            for n in assignment[1]:  # assignment[0] contains the scope, so assignment[1] contains the assignement nodes
                 # FIXME: makes no sense, assuming this gets
                 #        `visit_functiondef`'d we should just ignore it
-                if isinstance(n.parent, astroid.FunctionDef):
+                if isinstance(n.parent, (nodes.FunctionDef, nodes.Arguments)):
                     assigned_node += [args_allowed]
-                elif isinstance(n.parent, astroid.Arguments):
-                    assigned_node += [args_allowed]
-                elif isinstance(n.parent, astroid.Tuple): # multi assign a,b = (a,b)
+                elif isinstance(n.parent, nodes.Tuple):  # multi assign a,b = (a,b)
                     statement = n.statement()
-                    if isinstance(statement, astroid.For):
+                    if isinstance(statement, nodes.For):
                         assigned_node += [self._is_constexpr(statement.iter, args_allowed=args_allowed)]
-                    elif isinstance(statement, astroid.Assign):
+                    elif isinstance(statement, nodes.Assign):
                         assigned_node += [self._is_constexpr(statement.value, args_allowed=args_allowed, position=n.parent.elts.index(n))]
                     else:
                         raise TypeError(f"Expected statement Assign or For, got {statement}")
-                elif isinstance(n.parent, astroid.For):
+                elif isinstance(n.parent, nodes.For):
                     assigned_node.append(self._is_constexpr(n.parent.iter, args_allowed=args_allowed))
-                elif isinstance(n.parent, astroid.AugAssign):
+                elif isinstance(n.parent, nodes.AugAssign):
                     left = self._is_constexpr(n.parent.target, args_allowed=args_allowed)
                     right = self._is_constexpr(n.parent.value, args_allowed=args_allowed)
                     assigned_node.append(left and right)
-                elif isinstance(n.parent, astroid.Module):
+                elif isinstance(n.parent, nodes.Module):
                     return True
                 else:
-                    if isinstance(n.parent, astroid.Comprehension):
+                    if isinstance(n.parent, nodes.Comprehension):
                         assigned_node += [self._is_constexpr(n.parent.iter, args_allowed=args_allowed)]
                     else:
                         assigned_node += [self._is_constexpr(n.parent.value, args_allowed=args_allowed)]
             if assigned_node and all(assigned_node):
                 return True
             return self._is_asserted(node)
-        elif isinstance(node, astroid.JoinedStr):
+        elif isinstance(node, nodes.JoinedStr):
             return self._is_fstring_cst(node, args_allowed)
-        elif isinstance(node, astroid.Call):
-            if isinstance(node.func, astroid.Attribute):
+        elif isinstance(node, nodes.Call):
+            if isinstance(node.func, nodes.Attribute):
                 if node.func.attrname == 'append':
                     return self._is_constexpr(node.args[0])
                 elif node.func.attrname == 'format':
@@ -219,16 +212,16 @@ class OdooBaseChecker(BaseChecker):
                     )
             with push_call(node):
                 return self._evaluate_function_call(node, args_allowed=args_allowed, position=position)
-        elif isinstance(node, astroid.IfExp):
+        elif isinstance(node, nodes.IfExp):
             body = self._is_constexpr(node.body, args_allowed=args_allowed)
             orelse = self._is_constexpr(node.orelse, args_allowed=args_allowed)
             return body and orelse
-        elif isinstance(node, astroid.Subscript):
+        elif isinstance(node, nodes.Subscript):
             return self._is_constexpr(node.value, args_allowed=args_allowed)
-        elif isinstance(node, astroid.BoolOp):
+        elif isinstance(node, nodes.BoolOp):
             return self.all_const(node.values, args_allowed=args_allowed)
 
-        elif isinstance(node, astroid.Attribute):
+        elif isinstance(node, nodes.Attribute):
             attr_chain = self._get_attribute_chain(node)
             while attr_chain:
                 if attr_chain in ATTRIBUTE_WHITELIST or attr_chain.startswith('_'):
@@ -243,20 +236,17 @@ class OdooBaseChecker(BaseChecker):
     def _get_cursor_name(self, node):
         expr_list = []
         node_expr = node.expr
-        while isinstance(node_expr, astroid.Attribute):
+        while isinstance(node_expr, nodes.Attribute):
             expr_list.insert(0, node_expr.attrname)
             node_expr = node_expr.expr
-        if isinstance(node_expr, astroid.Name):
+        if isinstance(node_expr, nodes.Name):
             expr_list.insert(0, node_expr.name)
         cursor_name = '.'.join(expr_list)
         return cursor_name
 
-    def _allowable(self, node):
-        """
-        :type node: NodeNG
-        """
+    def _allowable(self, node: nodes.NodeNG) -> bool:
         scope = node.scope()
-        if isinstance(scope, astroid.FunctionDef) and (scope.name.startswith("_") or scope.name == 'init'):
+        if isinstance(scope, nodes.FunctionDef) and (scope.name.startswith("_") or scope.name == 'init'):
             return True
 
         infered = utils.safe_infer(node)
@@ -269,23 +259,23 @@ class OdooBaseChecker(BaseChecker):
 
         # self._thing is OK (mostly self._table), self._thing() also because
         # it's a common pattern of reports (self._select, self._group_by, ...)
-        return (isinstance(node, astroid.Attribute)
-            and isinstance(node.expr, astroid.Name)
+        return (isinstance(node, nodes.Attribute)
+            and isinstance(node.expr, nodes.Name)
             and node.attrname.startswith('_')
         )
 
-    def _check_concatenation(self, node):
+    def _check_concatenation(self, node: nodes.NodeNG) -> bool | None:
         node = self.resolve(node)
 
         if self._allowable(node):
             return False
 
-        if isinstance(node, astroid.BinOp) and node.op in ('%', '+'):
-            if isinstance(node.right, astroid.Tuple):
+        if isinstance(node, nodes.BinOp) and node.op in ('%', '+'):
+            if isinstance(node.right, nodes.Tuple):
                 # execute("..." % (self._table, thing))
                 if not all(map(self._allowable, node.right.elts)):
                     return True
-            elif isinstance(node.right, astroid.Dict):
+            elif isinstance(node.right, nodes.Dict):
                 # execute("..." % {'table': self._table}
                 if not all(self._allowable(v) for _, v in node.right.items):
                     return True
@@ -308,8 +298,8 @@ class OdooBaseChecker(BaseChecker):
             return self._check_concatenation(node.left)
 
         # check execute("...".format(self._table, table=self._table))
-        if isinstance(node, astroid.Call) \
-                and isinstance(node.func, astroid.Attribute) \
+        if isinstance(node, nodes.Call) \
+                and isinstance(node.func, nodes.Attribute) \
                 and node.func.attrname == 'format':
 
             return not (
@@ -318,18 +308,20 @@ class OdooBaseChecker(BaseChecker):
             )
 
         # check execute(f'foo {...}')
-        if isinstance(node, astroid.JoinedStr):
+        if isinstance(node, nodes.JoinedStr):
             return not all(
                 self._allowable(formatted.value)
-                for formatted in node.nodes_of_class(astroid.FormattedValue)
+                for formatted in node.nodes_of_class(nodes.FormattedValue)
             )
+
+        return None
 
     def resolve(self, node):
         # if node is a variable, find how it was built
-        if isinstance(node, astroid.Name):
+        if isinstance(node, nodes.Name):
             for target in node.lookup(node.name)[1]:
                 # could also be e.g. arguments (if the source is a function parameter)
-                if isinstance(target.parent, astroid.Assign):
+                if isinstance(target.parent, nodes.Assign):
                     # FIXME: handle multiple results (e.g. conditional assignment)
                     return target.parent.value
         # otherwise just return the original node for checking
@@ -341,9 +333,9 @@ class OdooBaseChecker(BaseChecker):
         current_file_bname = os.path.basename(self.linter.current_file)
         if not (
             # .execute() or .executemany()
-            isinstance(node, astroid.Call) and node.args and
-            ((isinstance(node.func, astroid.Attribute) and node.func.attrname in ('execute', 'executemany', 'SQL') and self._get_cursor_name(node.func) in DFTL_CURSOR_EXPR) or
-            (isinstance(node.func, astroid.Name) and node.func.name == 'SQL')) and
+            isinstance(node, nodes.Call) and node.args and
+            ((isinstance(node.func, nodes.Attribute) and node.func.attrname in ('execute', 'executemany', 'SQL') and self._get_cursor_name(node.func) in DFTL_CURSOR_EXPR) or
+            (isinstance(node.func, nodes.Name) and node.func.name == 'SQL')) and
             # ignore in test files, probably not accessible
             not current_file_bname.startswith('test_')
         ):
@@ -387,7 +379,7 @@ class OdooBaseChecker(BaseChecker):
                 )
 
     @functools.lru_cache(None)
-    def _is_const_def(self, node: astroid.FunctionDef, /, *, position: Optional[int], const_args: bool = False) -> bool:
+    def _is_const_def(self, node: nodes.FunctionDef, /, *, position: Optional[int], const_args: bool = False) -> bool:
         if node.name.startswith('__') or node.name in FUNCTION_WHITELIST:
             return True
 

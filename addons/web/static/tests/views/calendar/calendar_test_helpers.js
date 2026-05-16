@@ -143,6 +143,7 @@ export const FAKE_FIELDS = {
         default: 1,
     },
     name: { string: "Name", type: "char" },
+    description: { string: "Description", type: "html" },
     start_date: { string: "Start Date", type: "date" },
     stop_date: { string: "Stop Date", type: "date" },
     start: { string: "Start Datetime", type: "datetime" },
@@ -189,9 +190,22 @@ export const FAKE_MODEL = {
             "event",
             "calendar"
         ),
+        description: Field.parseFieldNode(
+            createElement("field", { name: "description" , class: "text-wrap"}),
+            { event: { fields: FAKE_FIELDS } },
+            "event",
+            "calendar"
+        ),
     },
     activeFields: {
         name: {
+            context: "{}",
+            invisible: false,
+            readonly: false,
+            required: false,
+            onChange: false,
+        },
+        description: {
             context: "{}",
             invisible: false,
             readonly: false,

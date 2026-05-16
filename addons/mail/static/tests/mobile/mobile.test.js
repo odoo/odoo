@@ -1,5 +1,10 @@
 import {
+    mailCanAddMessageReactionMobile,
+    mailCanCopyTextToClipboardMobile,
+} from "@mail/../tests/mail_shared_tests";
+import {
     SIZES,
+    assertChatHub,
     click,
     contains,
     defineMailModels,
@@ -7,7 +12,9 @@ import {
     listenStoreFetch,
     openDiscuss,
     openFormView,
+    openListView,
     patchUiSize,
+    setupChatHub,
     start,
     startServer,
     waitStoreFetch,
@@ -17,6 +24,7 @@ import { describe, test } from "@odoo/hoot";
 import { advanceTime, pointerDown, press } from "@odoo/hoot-dom";
 import { Deferred, mockTouch, mockUserAgent } from "@odoo/hoot-mock";
 
+import { browser } from "@web/core/browser/browser";
 import { asyncStep, serverState, waitForSteps } from "@web/../tests/web_test_helpers";
 
 describe.current.tags("mobile");
@@ -83,29 +91,9 @@ test("enter key should create a newline in composer", async () => {
     await contains(".o-mail-Message-body:has(br)", { textContent: "TestOther" });
 });
 
-// FIXME: test doesn't work on runbot, somehow it runs there as if isMobileOS() is false
-test.skip("can add message reaction (mobile)", async () => {
-    const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-    pyEnv["mail.message"].create({
-        body: "Hello world",
-        res_id: channelId,
-        message_type: "comment",
-        model: "discuss.channel",
-    });
-    await start();
-    await openDiscuss(channelId);
-    await contains(".o-mail-Message", { text: "Hello world" });
-    await click(".o-mail-Message [title='Expand']");
-    await click(".modal button:contains('Add a Reaction')");
-    await click(".modal .o-EmojiPicker .o-Emoji:contains('😀')");
-    await contains(".o-mail-MessageReaction:contains('😀')");
-    // Can quickly add new reactions
-    await click(".o-mail-MessageReactions button[title='Add Reaction']");
-    await click(".modal .o-EmojiPicker .o-Emoji:contains('🤣')");
-    await contains(".o-mail-MessageReaction:contains('🤣')");
-    await contains(".o-mail-MessageReaction:contains('😀')");
-});
+test("can add message reaction (mobile)", mailCanAddMessageReactionMobile);
+
+test("can copy text to clipboard (mobile)", mailCanCopyTextToClipboardMobile);
 
 test("Can edit message comment in chatter (mobile)", async () => {
     mockTouch(true);
@@ -134,4 +122,34 @@ test("Can edit message comment in chatter (mobile)", async () => {
     await insertText(".o-mail-Message .o-mail-Composer-input", "edited message", { replace: true });
     await click("button[title='Save editing']");
     await contains(".o-mail-Message", { text: "edited message (edited)" });
+});
+
+test("Don't show chat hub in discuss app on mobile", async () => {
+    mockTouch(true);
+    mockUserAgent("android");
+    patchUiSize({ size: SIZES.SM });
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "test" });
+    setupChatHub({ folded: [channelId] });
+    await start();
+    await contains(".o-mail-ChatBubble");
+    await openDiscuss();
+    await contains(".o-mail-ChatBubble", { count: 0 });
+});
+
+test("click on an odoo link should fold the chat window (mobile)", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({});
+    patchUiSize({ size: SIZES.SM });
+    await start();
+    await openDiscuss(channelId);
+    await insertText(".o-mail-Composer-input", `http://${browser.location.host}/odoo.com`);
+    await click(".o-mail-Composer button[title='Send']");
+    await contains(".o-mail-ChatWindow");
+    await click(`a[href="http://${browser.location.host}/odoo.com"]`);
+    await contains(".o-mail-ChatWindow", { count: 0 });
+    await contains(".o-mail-ChatBubble", { count: 0 });
+    await openListView("discuss.channel", { res_id: channelId });
+    await contains(".o-mail-ChatBubble");
+    assertChatHub({ folded: [channelId] });
 });

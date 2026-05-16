@@ -32,5 +32,16 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_purchase_tax_id': 'OTAX_19',
                 'expense_account_id': 'account_410235',
                 'income_account_id': 'account_310115',
+                'account_stock_journal_id': 'inventory_valuation',
+                'account_stock_valuation_id': 'account_110612',
+            },
+        }
+
+    @template('cl', 'account.account')
+    def _get_cl_account_account(self):
+        return {
+            'account_110612': {
+                'account_stock_expense_id': 'account_410230',
+                'account_stock_variation_id': 'account_603100',
             },
         }

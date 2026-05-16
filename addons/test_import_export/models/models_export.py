@@ -18,6 +18,9 @@ class ExportAggregator(models.Model):
     one2many = fields.One2many('export.aggregator.one2many', 'parent_id')
     many2many = fields.Many2many(comodel_name='res.partner')
     active = fields.Boolean(default=True)
+    parent_id = fields.Many2one('export.aggregator', string='Parent')
+    definition_properties = fields.PropertiesDefinition('Definitions')
+    properties = fields.Properties('Properties', definition='parent_id.definition_properties')
 
 
 class ExportAggregatorOne2many(models.Model):
@@ -28,3 +31,12 @@ class ExportAggregatorOne2many(models.Model):
     parent_id = fields.Many2one('export.aggregator')
     value = fields.Integer()
     active = fields.Boolean(default=True)
+    admin_property_def = fields.Many2one('export.aggregator.admin')
+    admin_property = fields.Properties('Properties', definition='admin_property_def.definition_properties')
+
+
+class ExportAggregatorAdminOnly(models.Model):
+    _name = 'export.aggregator.admin'
+    _description = 'Export Aggregator only for admin'
+
+    definition_properties = fields.PropertiesDefinition('Definitions')

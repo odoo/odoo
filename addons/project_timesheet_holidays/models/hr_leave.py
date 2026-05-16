@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models, _
+from odoo import api, fields, models, _
 
 import pytz
 
@@ -21,9 +21,10 @@ class HrLeave(models.Model):
         """
         vals_list = []
         leave_ids = []
-        calendar_leaves_data = self.env['resource.calendar.leaves']._read_group([('holiday_id', 'in', self.ids)], ['holiday_id'], ['id:array_agg'])
+        leaves_with_active_employee = self.filtered(lambda l: l.employee_id.active)
+        calendar_leaves_data = self.env['resource.calendar.leaves']._read_group([('holiday_id', 'in', leaves_with_active_employee.ids)], ['holiday_id'], ['id:array_agg'])
         mapped_calendar_leaves = {leave: calendar_leave_ids[0] for leave, calendar_leave_ids in calendar_leaves_data}
-        for leave in self:
+        for leave in leaves_with_active_employee:
             project, task = leave.employee_id.company_id.internal_project_id, leave.employee_id.company_id.leave_timesheet_task_id
 
             if not project or not task or leave.holiday_status_id.time_type == 'other':
@@ -33,14 +34,14 @@ class HrLeave(models.Model):
             if not leave.employee_id:
                 continue
 
-            calendar = leave.employee_id.resource_calendar_id
-            calendar_timezone = pytz.timezone(calendar.tz)
+            calendar = leave.resource_calendar_id
+            calendar_timezone = pytz.timezone((calendar or leave.employee_id).tz)
 
-            if calendar.flexible_hours and (leave.request_unit_hours or leave.request_unit_half or leave.date_from.date() == leave.date_to.date()):
+            if calendar.flexible_hours and leave.date_from.date() == leave.date_to.date():
                 leave_date = leave.date_from.astimezone(calendar_timezone).date()
                 if leave.request_unit_hours:
                     hours = leave.request_hour_to - leave.request_hour_from
-                elif leave.request_unit_half:
+                elif leave.request_unit_half and leave.request_date_from_period == leave.request_date_to_period:
                     hours = calendar.hours_per_day / 2
                 else:  # Single-day leave
                     hours = calendar.hours_per_day
@@ -52,7 +53,9 @@ class HrLeave(models.Model):
                 work_hours_data = leave.employee_id._list_work_time_per_day(
                     leave.date_from,
                     leave.date_to,
-                    domain=[('id', 'not in', ignored_resource_calendar_leaves)] if ignored_resource_calendar_leaves else None)[leave.employee_id.id]
+                    domain=[('id', 'not in', ignored_resource_calendar_leaves)] if ignored_resource_calendar_leaves else None,
+                    calendar=calendar,
+                )[leave.employee_id.id]
 
             for index, (day_date, work_hours_count) in enumerate(work_hours_data):
                 vals_list.append(leave._timesheet_prepare_line_values(index, work_hours_data, day_date, work_hours_count, project, task))
@@ -126,7 +129,15 @@ class HrLeave(models.Model):
         timesheet_ids_to_remove = []
         for leave in self:
             if leave.number_of_days == 0 and leave.sudo().timesheet_ids:
+                timesheet_ids_to_remove.extend(leave.timesheet_ids.ids)
                 leave.sudo().timesheet_ids.holiday_id = False
-                timesheet_ids_to_remove.extend(leave.timesheet_ids)
         self.env['account.analytic.line'].browse(set(timesheet_ids_to_remove)).sudo().unlink()
         return res
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_timesheets(self):
+        """ Remove timesheets when the timeoff is deleted. """
+        timesheets = self.sudo().timesheet_ids
+        timesheets.write({'holiday_id': False})
+        timesheets.unlink()
+        self._check_missing_global_leave_timesheets()

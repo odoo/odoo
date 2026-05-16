@@ -14,7 +14,6 @@ ul.o_checklist {
     > li {
         list-style: none;
         position: relative;
-        margin-left: 20px;
 
         &:not(.oe-nested):before {
             content: '';
@@ -48,6 +47,17 @@ ul.o_checklist {
             &:has(ul, ol) > :not(ul, ol) {
                 text-decoration: line-through;
                 opacity: 0.5;
+            }
+        }
+    }
+}
+
+.odoo-editor-editable {
+    li {
+        &[style*="color"],
+        &[class*="text-"] {
+            font[class*="bg-"]:not([class*="text-"]):not([style*="color"]) {
+                color: inherit !important;
             }
         }
     }

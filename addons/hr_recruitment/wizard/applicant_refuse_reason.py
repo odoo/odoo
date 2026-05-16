@@ -16,7 +16,7 @@ class ApplicantGetRefuseReason(models.TransientModel):
 
     refuse_reason_id = fields.Many2one('hr.applicant.refuse.reason', 'Refuse Reason', required=True, default=_default_refuse_reason_id)
     applicant_ids = fields.Many2many('hr.applicant')
-    send_mail = fields.Boolean("Send Email", default=False)
+    send_mail = fields.Boolean("Send Email", compute='_compute_send_mail', precompute=True, store=True, readonly=False)
     template_id = fields.Many2one('mail.template', string='Email Template',
         compute='_compute_template_id', precompute=True, store=True, readonly=False,
         domain="[('model', '=', 'hr.applicant')]")
@@ -41,6 +41,12 @@ class ApplicantGetRefuseReason(models.TransientModel):
         compute='_compute_from_template_id', readonly=False, store=True,
         help="send emails after that date. This date is considered as being in UTC timezone."
     )
+
+    @api.depends('refuse_reason_id', 'applicant_without_email', 'template_id')
+    def _compute_send_mail(self):
+        for wizard in self:
+            template = wizard.template_id
+            wizard.send_mail = template.active and not wizard.applicant_without_email
 
     @api.depends('applicant_ids')
     def _compute_applicant_without_email(self):
@@ -80,8 +86,8 @@ class ApplicantGetRefuseReason(models.TransientModel):
     @api.depends('refuse_reason_id')
     def _compute_template_id(self):
         for wizard in self:
-            if wizard.refuse_reason_id:
-                wizard.template_id = wizard.refuse_reason_id.template_id
+            if wizard.refuse_reason_id and (template := wizard.refuse_reason_id.template_id):
+                wizard.template_id = template.active and template
             else:
                 wizard.template_id = False
 
@@ -95,11 +101,16 @@ class ApplicantGetRefuseReason(models.TransientModel):
             'subject': 'subject',
         }
         for wizard in self:
+            template = wizard.template_id
             for wizard_field_name, template_field_name in fields_to_copy_name_mapping.items():
-                if wizard.template_id:
-                    wizard[wizard_field_name] = wizard.template_id[template_field_name]
-                else:
-                    wizard[wizard_field_name] = False
+                wizard[wizard_field_name] = template[template_field_name] if template else False
+
+            if template and len(wizard.applicant_ids) == 1:
+                rendered_values = self._prepare_mail_values(wizard.applicant_ids._origin)
+                wizard.update({
+                    'subject': rendered_values.get('subject'),
+                    'body': rendered_values.get('body'),
+                })
 
     def action_refuse_reason_apply(self):
         if self.send_mail:
@@ -149,29 +160,22 @@ class ApplicantGetRefuseReason(models.TransientModel):
         return related_original_applicants
 
     def _prepare_send_refusal_mails(self):
-        mail_values = []
         for applicant in self.applicant_ids:
-            mail_value = self._prepare_mail_values(applicant)
-            applicant.message_post(body=mail_value.get('body_html'))
-            mail_values.append(mail_value)
-        self.env['mail.mail'].sudo().create(mail_values)
+            mail_values = self._prepare_mail_values(applicant)
+            applicant.message_post(**mail_values)
 
     def _prepare_mail_values(self, applicant):
         """ Create mail specific for recipient """
         lang = self._render_lang(applicant.ids)[applicant.id]
         subject = self._render_field('subject', applicant.ids, set_lang=lang)[applicant.id]
         body = self._render_field('body', applicant.ids, set_lang=lang)[applicant.id]
-        mail_values = {
-            'attachment_ids': [(4, att.id) for att in self.attachment_ids],
-            'author_id': self.env.user.partner_id.id,
-            'auto_delete': True,
-            'body_html': body,
-            'email_to': applicant.email_from or applicant.partner_id.email,
-            'email_from': self.env.user.email_formatted,
-            'model': None,
-            'res_id': None,
+        email_from = self.template_id.email_from if self.template_id and self.template_id.email_from else self.env.user.email_formatted
+        return {
+            'body': body,
+            'email_from': email_from,
             'subject': subject,
+            'author_id': self.env.user.partner_id.id,
             'scheduled_date': self.scheduled_date,
+            'attachment_ids': [(4, att.id) for att in self.attachment_ids],
+            'partner_ids': applicant.partner_id.ids
         }
-
-        return mail_values

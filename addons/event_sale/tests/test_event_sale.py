@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import Command
 from odoo.addons.event_sale.tests.common import TestEventSaleCommon
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.exceptions import ValidationError
@@ -233,6 +234,42 @@ class TestEventSale(TestEventSaleCommon):
         self.assertEqual(editor_action['res_model'], 'registration.editor')
 
     @users('user_sales_salesman')
+    def test_registration_state_on_so_confirmation(self):
+        """Test that registration stays in draft after SO confirmation
+        and only moves to open after registration editor confirmation.
+        """
+        customer_so = self.customer_so.with_user(self.env.user)
+        ticket = self.event_0.event_ticket_ids[0]
+
+        # Create SO in draft with a ticket
+        customer_so.write({
+            'order_line': [(0, 0, {
+                'event_id': self.event_0.id,
+                'event_ticket_id': ticket.id,
+                'product_id': ticket.product_id.id,
+                'product_uom_qty': 1,
+                'price_unit': 10,
+            })]
+        })
+        customer_so.action_confirm()
+
+        registrations = self.env['event.registration'].search([
+            ('sale_order_id', '=', customer_so.id)
+        ])
+        self.assertEqual(registrations.state, 'draft')
+
+        editor = self.env['registration.editor'].with_context({
+            'default_sale_order_id': customer_so.id
+        }).create({})
+        editor.action_make_registration()
+
+        registrations = self.env['event.registration'].search([
+            ('sale_order_id', '=', customer_so.id)
+        ])
+        self.assertEqual(len(registrations), 1)
+        self.assertEqual(registrations.state, 'open')
+
+    @users('user_sales_salesman')
     def test_event_sale_free_confirm(self):
         """Check that free registrations are immediately
         confirmed if the seats are available.
@@ -379,6 +416,9 @@ class TestEventSale(TestEventSaleCommon):
         self.assertEqual(self.event_0.sale_price_total, expected_price)
 
     def test_ticket_price_with_currency_conversion(self):
+        """ Test that the price of the ticket and the `sale_price_total` are
+        correctly converted when using another currency.
+        """
         def _prepare_currency(self, currency_name):
             currency = self.env['res.currency'].with_context(active_test=False).search(
                 [('name', '=', currency_name)]
@@ -386,8 +426,11 @@ class TestEventSale(TestEventSaleCommon):
             currency.action_unarchive()
             return currency
 
-        currency_VEF = _prepare_currency(self, 'VEF')
         currency_USD = _prepare_currency(self, 'USD')
+        currency_VEF = _prepare_currency(self, 'VEF')
+        currency_VEF.rate_ids = [Command.create({
+            'rate': 5.0,
+        })]
 
         company_test = self.env['res.company'].create({
             'name': 'TestCompany',
@@ -396,6 +439,7 @@ class TestEventSale(TestEventSaleCommon):
         })
         self.env.user.company_ids += company_test
         self.env.user.company_id = company_test
+        currency_VEF.rate_ids.company_id = company_test
 
         pricelist_USD = self.env['product.pricelist'].create({
             'name': 'pricelist_USD',
@@ -439,10 +483,26 @@ class TestEventSale(TestEventSaleCommon):
         so.pricelist_id = pricelist_VEF
         so.action_update_prices()
 
+        # Asserting using a fixed value to make sure the conversion is correctly applied
+        # with a value other than 1.0 for the conversion rate between USD and VEF.
+        self.assertEqual(
+            so.amount_total,
+            5000.0,  # 1000 * 5.0 (conversion rate between USD and VEF)
+        )
+
         self.assertAlmostEqual(
             so.amount_total,
             currency_USD._convert(
                 event_ticket.price, currency_VEF, self.env.user.company_id, so.date_order
+            ),
+            delta=1,
+        )
+
+        so.action_confirm()
+        self.assertAlmostEqual(
+            event.sale_price_total,
+            currency_VEF._convert(
+                so.amount_total, currency_USD, self.env.user.company_id, so.date_order
             ),
             delta=1,
         )

@@ -72,7 +72,7 @@ class TestBIR2307Generation(TestPhCommon):
             # Header
             0: ['Reporting_Month', 'Vendor_TIN', 'branchCode', 'companyName', 'surName', 'firstName', 'middleName', 'address', 'zip_code', 'nature', 'ATC', 'income_payment', 'ewt_rate', 'tax_amount'],
             # Row
-            1: ['01/15/2020', '123456789', '001', 'JMC Company', '', '', '', '250 Amorsolo Street, Manila, Philippines', '+900–1-096', 'WC516 - Commission/rebates/discounts', 'WC516', 100.0, 10.0, 10.0],
+            1: ['01/15/2020', '123456789', '001', 'JMC Company', '', '', '', '250 Amorsolo Street, Manila, Philippines', '+900–1-096', 'Commission/rebates/discounts', 'WC516', 100.0, 10.0, 10.0],
         }
 
         report_file = io.BytesIO(bir_2307)

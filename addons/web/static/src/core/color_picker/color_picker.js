@@ -1,11 +1,7 @@
 import { Component, useEffect, useRef, useState } from "@odoo/owl";
 import { CustomColorPicker } from "@web/core/color_picker/custom_color_picker/custom_color_picker";
 import { usePopover } from "@web/core/popover/popover_hook";
-import {
-    isCSSColor,
-    isColorGradient,
-    normalizeCSSColor,
-} from "@web/core/utils/colors";
+import { isCSSColor, isColorGradient, normalizeCSSColor } from "@web/core/utils/colors";
 import { cookie } from "@web/core/browser/cookie";
 import { POSITION_BUS } from "../position/position_hook";
 import { registry } from "../registry";
@@ -26,6 +22,8 @@ export const DEFAULT_GRAYSCALES = {
     solid: ["black", "900", "800", "600", "400", "200", "100", "white"],
 };
 
+// These CSS variables are defined in html_editor.
+// Using ColorPicker without html_editor installed is extremely unlikely.
 export const DEFAULT_THEME_COLOR_VARS = [
     "o-color-1",
     "o-color-2",
@@ -65,6 +63,7 @@ export class ColorPicker extends Component {
         noTransparency: { type: Boolean, optional: true },
         close: { type: Function, optional: true },
         className: { type: String, optional: true },
+        useDefaultThemeColors: { type: Boolean, optional: true },
     };
     static defaultProps = {
         close: () => {},
@@ -72,6 +71,7 @@ export class ColorPicker extends Component {
         enabledTabs: ["solid", "custom"],
         cssVarColorPrefix: "",
         setOnCloseCallback: () => {},
+        useDefaultThemeColors: true,
     };
 
     setup() {
@@ -83,7 +83,9 @@ export class ColorPicker extends Component {
 
         this.DEFAULT_COLORS = DEFAULT_COLORS;
         this.grayscales = Object.assign({}, DEFAULT_GRAYSCALES, this.props.grayscales);
-        this.DEFAULT_THEME_COLOR_VARS = DEFAULT_THEME_COLOR_VARS;
+        this.DEFAULT_THEME_COLOR_VARS = this.props.useDefaultThemeColors
+            ? DEFAULT_THEME_COLOR_VARS
+            : [];
         this.defaultColorSet = this.getDefaultColorSet();
         this.defaultColor = this.props.state.selectedColor;
         this.focusedBtn = null;

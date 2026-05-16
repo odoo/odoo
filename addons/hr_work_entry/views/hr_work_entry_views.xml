@@ -15,6 +15,7 @@
         <field name="res_model">hr.work.entry</field>
         <field name="path">work-entries</field>
         <field name="view_mode">list,form,pivot</field>
+        <field name="context">{'search_default_active_employees': 1}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_empty_folder">
                 No data to display
@@ -84,9 +85,12 @@
                 <div class="alert alert-warning text-center" role="alert" invisible="state != 'validated'">
                     Note: Validated work entries cannot be modified.
                 </div>
-                <div invisible="state != 'conflict'">
-                    <div class="alert alert-warning" role="alert" invisible="work_entry_type_id" name="work_entry_undefined">
+                <div class="alert alert-warning" invisible="state != 'conflict'" role="alert" name="work_entry_undefined">
+                    <div invisible="work_entry_type_id">
                         This work entry cannot be validated. The work entry type is undefined.
+                    </div>
+                    <div invisible="not work_entry_type_id">
+                        The amount of work on the day should not exceed 24 hours.
                     </div>
                 </div>
                 <sheet>
@@ -94,17 +98,17 @@
                         <group>
                             <field name="name" string="Description" placeholder="Additional Description..." readonly="state == 'validated'"/>
                             <field name="work_entry_type_id" readonly="state == 'validated'" options="{'no_create': True, 'no_open': True}" widget="many2one_work_entry_type"/>
-                            <field name="employee_id" readonly="state != 'draft'" widget="many2one_avatar_employee"/>
+                            <field name="employee_id" readonly="state == 'validated'" widget="many2one_avatar_employee"/>
                         </group>
                         <group>
-                            <field name="date" readonly="state != 'draft'"/>
+                            <field name="date" readonly="state == 'validated'"/>
                             <label for="duration"/>
                             <div class="o_row mw-50 mw-sm-25">
                                 <field name="duration"
                                     nolabel="1"
                                     widget="float_time"
                                     class="o_hr_narrow_field"
-                                    readonly="state != 'draft'"/>
+                                    readonly="state == 'validated'"/>
                                 <span>Hours</span>
                             </div>
                             <field name="company_id" invisible="1"/>
@@ -192,7 +196,8 @@
                 <filter name="group_work_entry_type" string="Type" context="{'group_by': 'work_entry_type_id'}"/>
                 <filter name="group_start_date" string="Date" context="{'group_by': 'date'}"/>
                 <separator/>
-                <filter name="archived" string="Archived" domain="[('active', '=', False)]"/>
+                <filter name="active_employees" string="Active" domain="[('employee_id.active', '=', True)]"/>
+                <filter name="archived" string="Archived" domain="[('employee_id.active', '=', False)]"/>
             </search>
         </field>
     </record>
@@ -295,6 +300,18 @@
                     </t>
                 </templates>
             </kanban>
+        </field>
+    </record>
+
+    <record model="ir.actions.server" id="action_hr_work_entry_set_to_draft">
+        <field name="name">Set to Draft</field>
+        <field name="sequence" eval="50"/>
+        <field name="model_id" ref="hr_work_entry.model_hr_work_entry"/>
+        <field name="binding_model_id" ref="hr_work_entry.model_hr_work_entry"/>
+        <field name="binding_view_types">list,form</field>
+        <field name="state">code</field>
+        <field name="code">
+records.action_set_to_draft()
         </field>
     </record>
 

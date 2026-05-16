@@ -89,3 +89,9 @@ class PosOrder(models.Model):
     def _load_pos_self_data_fields(self, config):
         result = super()._load_pos_self_data_fields(config)
         return result + ['online_payment_method_id', 'next_online_payment_amount']
+
+    @api.model
+    def _check_pos_order(self, pos_config, order, device_type, table=None):
+        data = super()._check_pos_order(pos_config, order, device_type, table)
+        data['use_self_order_online_payment'] = order.get('use_self_order_online_payment')
+        return data

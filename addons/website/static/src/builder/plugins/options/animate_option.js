@@ -6,8 +6,9 @@ export class AnimateOption extends BaseOptionComponent {
     static dependencies = ["animateOption"];
     static selector = ".o_animable, section .row > div, img, .fa, .btn";
     static exclude =
-        "[data-oe-xpath], .o_not-animable, .s_col_no_resize.row > div, .s_col_no_resize";
+        "[data-oe-xpath], .o_not-animable, .s_col_no_resize.row > div, .s_col_no_resize, .s_website_form_submit";
     static props = {
+        dropdownClass: { type: String, optional: true, default: "o-hb-select-dropdown" },
         requireAnimation: { type: Boolean, optional: true },
         slots: { type: Object, optional: true },
     };
@@ -73,9 +74,9 @@ export class AnimateOption extends BaseOptionComponent {
 
         return hasDirection;
     }
+    // This is done as a stable fix
+    // TODO: remove in master
     async canHaveHoverEffect(el) {
-        const proms = this.getResource("hover_effect_allowed_predicates").map((p) => p(el));
-        const settledProms = await Promise.all(proms);
-        return settledProms.length && settledProms.every(Boolean);
+        return this.dependencies.animateOption.canHaveHoverEffect(el);
     }
 }

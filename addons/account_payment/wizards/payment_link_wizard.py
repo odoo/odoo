@@ -99,7 +99,7 @@ class PaymentLinkWizard(models.TransientModel):
         if self.res_model != 'account.move':
             return res
 
-        return payment_utils.generate_access_token(self.res_id, self.amount)
+        return payment_utils.generate_access_token(self.res_id, self.amount, env=self.env)
 
     def _prepare_anchor(self):
         """ Override of `payment` to set the 'portal_pay' anchor. """

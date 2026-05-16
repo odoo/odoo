@@ -794,7 +794,7 @@ class TestReorderingRule(TransactionCase):
         orderpoint.with_user(french_user).action_replenish()
         self.assertRecordValues(po_line, [{"name": "[A] produit en français", "product_qty": 9.0}])
         self.assertEqual(len(po_line.order_id.order_line), 1)
-        self.assertRecordValues(po_line.move_dest_ids, [{"product_uom_qty": 9.0}])
+        self.assertRecordValues(po_line.move_dest_ids, [{"product_uom_qty": 5.0}, {"product_uom_qty": 4.0}])
         orderpoint.product_min_qty = 10.0
         orderpoint.product_max_qty = 20.0
         # run the scheduler to test the use case where the user is always the SUPERUSER

@@ -25,6 +25,7 @@ export class WebsiteBackgroundBlockquoteOption extends BaseWebsiteBackgroundOpti
 
 class BlockquoteOptionPlugin extends Plugin {
     static id = "blockquoteOption";
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         mark_color_level_selector_params: [{ selector: ".s_blockquote" }],
         builder_options: [

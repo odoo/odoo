@@ -1,12 +1,15 @@
 import { BackgroundOption } from "@html_builder/plugins/background_option/background_option";
 import { BackgroundPositionOverlay } from "@html_builder/plugins/background_option/background_position_overlay";
+import { Plugin } from "@html_editor/plugin";
 import { expect, test } from "@odoo/hoot";
 import { animationFrame, queryOne, scroll, waitFor } from "@odoo/hoot-dom";
 import { contains, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import {
+    addPlugin,
     addOption,
     defineWebsiteModels,
     setupWebsiteBuilder,
+    setupWebsiteBuilderWithSnippet,
 } from "@website/../tests/builder/website_helpers";
 
 defineWebsiteModels();
@@ -51,8 +54,11 @@ test("change the background shape of elements", async () => {
         </div>`);
     await contains(":iframe .selector").click();
     await contains("[data-label='Shape'] button").click();
+    expect(
+        ".o_pager_container .o-hb-bg-shape-btn:nth-child(1) .btn.active[data-action-id='setBackgroundShape']"
+    ).toHaveCount();
     await contains(
-        ".o_pager_container .o-hb-bg-shape-btn:nth-child(2) [data-action-id='setBackgroundShape']"
+        ".o_pager_container .o-hb-bg-shape-btn:nth-child(2) .btn:not(.active)[data-action-id='setBackgroundShape']"
     ).click();
     expect(":iframe .selector div#first").toHaveAttribute(
         "data-oe-shape-data",
@@ -335,7 +341,7 @@ async function dragAndDropBgImage() {
 }
 
 test("change the main color of a background image of type '/html_editor/shape'", async () => {
-    await setupWebsiteBuilder(
+    const { waitSidebarUpdated } = await setupWebsiteBuilder(
         `
             <section style="background-image: url('/html_editor/shape/http_routing/404.svg?c2=o-color-2');">
                 AAAA
@@ -346,6 +352,7 @@ test("change the main color of a background image of type '/html_editor/shape'",
         }
     );
     await contains(":iframe section").click();
+    await waitSidebarUpdated();
     await contains("[data-label='Main Color'] .o_we_color_preview").click();
     await contains(
         ".o-main-components-container .o_colorpicker_section [data-color='o-color-5']"
@@ -381,6 +388,7 @@ test("remove the background image of a snippet", async () => {
             </div>
         </section>`);
     await contains(":iframe section").click();
+    await waitSidebarUpdated();
     expect(":iframe section").toHaveStyle("backgroundImage");
     await contains("[data-action-id='toggleBgImage']").click();
     await waitSidebarUpdated();
@@ -388,7 +396,7 @@ test("remove the background image of a snippet", async () => {
 });
 
 test("changing shape's background color doesn't hide the shape itself", async () => {
-    await setupWebsiteBuilder(
+    const { waitSidebarUpdated } = await setupWebsiteBuilder(
         `<section style="background-image: url('/html_editor/shape/http_routing/404.svg?c2=o-color-2');">
             AAAA
         </section>`,
@@ -397,6 +405,7 @@ test("changing shape's background color doesn't hide the shape itself", async ()
         }
     );
     await contains(":iframe section").click();
+    await waitSidebarUpdated();
     await contains("button[data-action-id='toggleBgShape']").click();
     await contains(
         ".o_pager_container .o-hb-bg-shape-btn [data-action-value='html_builder/Connections/01'][data-action-id='setBackgroundShape']"
@@ -409,13 +418,122 @@ test("changing shape's background color doesn't hide the shape itself", async ()
 });
 
 test("remove background image removes color filter", async () => {
-    const backgroundImageUrl = "url('/web/image/123/transparent.png')";
-    await setupWebsiteBuilder(`
-        <section>
-            <span class='s_parallax_bg oe_img_bg o_bg_img_center' style="background-image: ${backgroundImageUrl} !important;">aaa</span>
-            <div class="o_we_bg_filter bg-black-50"><br></div>
-        </section>`);
+    await setupWebsiteBuilderWithSnippet("s_cover");
     await contains(":iframe section").click();
     await contains("[data-action-id='toggleBgImage']").click();
     expect(":iframe section .o_we_bg_filter").not.toHaveCount();
+});
+
+test("change background size", async () => {
+    const { waitSidebarUpdated } = await setupWebsiteBuilder(`
+        <section class="o_bg_img_opt_repeat" style="background-image: url('/web/image/123/transparent.png'); width: 500px; height:500px; background-size: 100px;">
+        </section>`);
+
+    const section = await waitFor(":iframe section");
+    await contains(section).click();
+
+    await waitSidebarUpdated();
+
+    const widthInput = await waitFor(
+        '[data-action-id="setBackgroundSize"][data-action-param="width"] > input'
+    );
+    const heightInput = await waitFor(
+        '[data-action-id="setBackgroundSize"][data-action-param="height"] > input'
+    );
+
+    expect(heightInput).toHaveValue("");
+
+    await contains(heightInput).edit("0");
+    expect(heightInput).toHaveValue("1", { message: "minimum value is 1" });
+    expect(section).toHaveStyle("background-size: 100px 1px");
+
+    await contains(heightInput).edit("");
+    expect(heightInput).toHaveValue("");
+    expect(section).toHaveStyle("background-size: 100px");
+
+    await contains(widthInput).edit("");
+    expect(widthInput).toHaveValue("");
+    expect(heightInput).toHaveValue("", { message: "height input should stay empty" });
+    expect(section).toHaveStyle("background-size: auto");
+
+    await contains(widthInput).edit("0");
+    expect(widthInput).toHaveValue("1", { message: "minimum value is 1" });
+    expect(section).toHaveStyle("background-size: 1px");
+});
+
+test("background shape detection is compatible with previous ones (web_editor)", async () => {
+    await setupWebsiteBuilder(`
+        <section data-oe-shape-data='{"shape":"web_editor/Connections/01","flip":[],"showOnMobile":false,"shapeAnimationSpeed":"0"}'>
+            AAAA
+        </section>`);
+    await contains(":iframe section").click();
+    expect("div[data-label='Shape'] button:first-of-type").toHaveText("Connections 01");
+    await contains("div[data-label='Shape'] button:first-of-type").click();
+    expect("button.active[data-action-id='setBackgroundShape']").toHaveAttribute(
+        "data-action-value",
+        "html_builder/Connections/01"
+    );
+});
+
+test("can customize background shape groups", async () => {
+    class CustomBackgroundShapeGroupsPlugin extends Plugin {
+        static id = "customBackgroundShapeGroups";
+        resources = {
+            background_shape_groups_providers: (shapeGroups) => {
+                const connections = shapeGroups.basic.subgroups.connections.shapes;
+                const customShapes = {
+                    "html_builder/Connections/01": {
+                        ...connections["html_builder/Connections/01"],
+                        selectLabel: "Custom 01",
+                    },
+                    "html_builder/Connections/02": {
+                        ...connections["html_builder/Connections/02"],
+                        selectLabel: "Custom 02",
+                    },
+                };
+                const extraShapes = {
+                    "html_builder/Connections/03": {
+                        ...connections["html_builder/Connections/03"],
+                        selectLabel: "Extra 03",
+                    },
+                };
+                delete connections["html_builder/Connections/01"];
+                delete connections["html_builder/Connections/02"];
+                return {
+                    basic: {
+                        subgroups: {
+                            custom: {
+                                label: "Custom",
+                                shapes: customShapes,
+                            },
+                        },
+                    },
+                    extra: {
+                        label: "Extra",
+                        subgroups: {
+                            extra: {
+                                label: "Extra",
+                                shapes: extraShapes,
+                            },
+                        },
+                    },
+                };
+            },
+        };
+    }
+    addPlugin(CustomBackgroundShapeGroupsPlugin);
+
+    await setupWebsiteBuilder(`<section>AAAA</section>`);
+    await contains(":iframe section").click();
+    await contains("button[data-action-id='toggleBgShape']").click();
+    expect(".o_pager_container").toHaveText(/Custom/);
+    expect("button.o-hb-select-pager-tab[data-group-id='extra']").toHaveCount(1);
+    expect("[data-action-value='html_builder/Connections/01']").toHaveCount(1);
+    expect("[data-action-value='html_builder/Connections/02']").toHaveCount(1);
+    await contains("[data-action-value='html_builder/Connections/01']").click();
+    expect(":iframe section").toHaveAttribute(
+        "data-oe-shape-data",
+        '{"shape":"html_builder/Connections/01","flip":[],"showOnMobile":false,"shapeAnimationSpeed":"0"}'
+    );
+    expect("div[data-label='Shape'] button:not([data-action-id])").toHaveText("Custom 01");
 });

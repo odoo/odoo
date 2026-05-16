@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import Command
+from odoo import Command, SUPERUSER_ID
 from odoo.fields import Datetime
 from odoo.tests import Form, new_test_user, tagged
 from odoo.exceptions import UserError
@@ -104,6 +104,14 @@ class TestSaleProject(TestSaleProjectCommon):
         # Create additional analytic plans at setup to avoid adding fields in project.project between tests
         cls.analytic_plan_1 = cls.env['account.analytic.plan'].create({'name': 'Sale Project Plan 1'})
         cls.analytic_plan_2 = cls.env['account.analytic.plan'].create({'name': 'Sale Project Plan 2'})
+        cls.analytic_account_1 = cls.env['account.analytic.account'].create({
+            'name': 'Analytic Account - Plan 1',
+            'plan_id': cls.analytic_plan_1.id,
+        })
+        cls.analytic_account_2 = cls.env['account.analytic.account'].create({
+            'name': 'Analytic Account - Plan 2',
+            'plan_id': cls.analytic_plan_2.id,
+        })
 
     def test_sale_order_with_project_task(self):
         SaleOrder = self.env['sale.order'].with_context(tracking_disable=True)
@@ -121,7 +129,7 @@ class TestSaleProject(TestSaleProjectCommon):
         })
 
         so_line_order_task_in_global = SaleOrderLine.create({
-            'name': f"{self.product_order_service2.name}\n[TEST1]\nGlobal project",
+            'name': f"{self.product_order_service2.display_name}\nDescription for global task.",
             'product_id': self.product_order_service2.id,
             'product_uom_qty': 10,
             'order_id': sale_order.id,
@@ -129,7 +137,7 @@ class TestSaleProject(TestSaleProjectCommon):
 
         self.product_order_service3.description_sale = "Task in New Project"
         so_line_order_new_task_new_project = SaleOrderLine.create({
-            'name': f"{self.product_order_service3.display_name}\n[TEST2]\nNew project",
+            'name': f"{self.product_order_service3.display_name}\nDescription for new project task.",
             'product_id': self.product_order_service3.id,
             'product_uom_qty': 10,
             'order_id': sale_order.id,
@@ -155,29 +163,29 @@ class TestSaleProject(TestSaleProjectCommon):
         self.assertEqual(self.project_global.tasks.sale_line_id, so_line_order_task_in_global, "Global project's task should be linked to so line")
         self.assertEqual(
             so_line_order_task_in_global.task_id.name,
-            f"{sale_order.name} - [TEST1]",
-            "Task name in global project should include SO name & partial line description",
+            f"{sale_order.name} - Description for global task.",
+            "Task name in global project should include SO name and the single-line SOL description.",
         )
-        self.assertEqual(
-            str(so_line_order_task_in_global.task_id.description),
-            '<p>Global project</p>',
+        self.assertFalse(
+            so_line_order_task_in_global.task_id.description,
+            "Task description should be empty for single-line SOL descriptions."
         )
         #  service_tracking 'task_in_project'
         self.assertTrue(so_line_order_new_task_new_project.project_id, "Sales order line should be linked to newly created project")
         self.assertTrue(so_line_order_new_task_new_project.task_id, "Sales order line should be linked to newly created task")
         self.assertEqual(
             so_line_order_new_task_new_project.task_id.name,
-            "[TEST2]",
-            "Task name in new project should only include partial line description",
+            "Description for new project task.",
+            "Task name should be the single-line SOL description.",
         )
-        self.assertEqual(
-            str(so_line_order_new_task_new_project.task_id.description),
-            '<p>New project</p>',
+        self.assertFalse(
+            so_line_order_new_task_new_project.task_id.description,
+            "Task description should be empty for single-line SOL descriptions."
         )
         self.assertEqual(
             so_line_order_new_task_new_project2.task_id.name,
-            self.product_order_service3.display_name,
-            "Task name created from a SOL with default description should use the product name",
+            self.product_order_service3.description_sale,
+            "Task name should be the product's default sales description."
         )
         # service_tracking 'project_only'
         self.assertFalse(so_line_order_only_project.task_id, "Task should not be created")
@@ -512,10 +520,16 @@ class TestSaleProject(TestSaleProjectCommon):
         self.assertEqual(self.env.company, sale_order.project_ids.company_id, "The project created for the SO should have the same company as its account.")
 
     def test_project_creation_on_so_with_manual_analytic(self):
-        """ Tests that the manually added analytic account (of a plan other than projects) and the project account
-            created when SO is confirmed are both still in the line after confirmation.
+        """ Tests the interaction between manually added analytic account (of a plan other than projects), distribution
+            model accounts and the project account created when SO is confirmed.
         """
+        self.env['account.analytic.distribution.model'].create({
+            'partner_id': self.partner.id,
+            'analytic_distribution': {self.analytic_account_1.id: 100},
+            'company_id': self.company.id,
+        })
         analytic_distribution_manual = {str(self.analytic_account_sale.id): 100}
+
         sale_order = self.env['sale.order'].create({
             'partner_id': self.partner.id,
             'partner_invoice_id': self.partner.id,
@@ -523,13 +537,16 @@ class TestSaleProject(TestSaleProjectCommon):
             'order_line': [
                 Command.create({
                     'product_id': self.product_order_service3.id,
-                    'analytic_distribution': analytic_distribution_manual,
                 }),
             ],
         })
-        self.assertEqual(sale_order.order_line.analytic_distribution, analytic_distribution_manual)
+        sale_order.order_line.analytic_distribution = {**sale_order.order_line.analytic_distribution, **analytic_distribution_manual}
         sale_order.action_confirm()
-        expected_analytic_distribution = {f"{self.analytic_account_sale.id},{sale_order.order_line.project_id.account_id.id}": 100}
+        # All accounts (manually added, from distribution model and project account) are in the line after confirmation
+        expected_analytic_distribution = {
+            f"{self.analytic_account_sale.id},{sale_order.project_id.account_id.id}": 100,
+            f"{self.analytic_account_1.id},{sale_order.project_id.account_id.id}": 100,
+        }
         self.assertEqual(sale_order.order_line.analytic_distribution, expected_analytic_distribution)
 
     def test_project_on_sol_with_analytic_distribution_model(self):
@@ -539,17 +556,9 @@ class TestSaleProject(TestSaleProjectCommon):
         """
         # We create one distribution model with two accounts in one line, based on product
         # and a second model with a different plan, based on partner
-        analytic_account_1 = self.env['account.analytic.account'].create({
-            'name': 'Analytic Account - Plan 1',
-            'plan_id': self.analytic_plan_1.id,
-        })
-        analytic_account_2 = self.env['account.analytic.account'].create({
-            'name': 'Analytic Account - Plan 2',
-            'plan_id': self.analytic_plan_2.id,
-        })
         distribution_model_product = self.env['account.analytic.distribution.model'].create({
             'product_id': self.product_a.id,
-            'analytic_distribution': {','.join([str(analytic_account_1.id), str(analytic_account_2.id)]): 100},
+            'analytic_distribution': {','.join([str(self.analytic_account_1.id), str(self.analytic_account_2.id)]): 100},
             'company_id': self.company.id,
         })
         distribution_model_partner = self.env['account.analytic.distribution.model'].create({
@@ -572,14 +581,13 @@ class TestSaleProject(TestSaleProjectCommon):
                 Command.create({'product_id': self.product_a.id}),
             ],
         })
-
         expected_analytic_distribution = {
-            f"{analytic_account_1.id},{analytic_account_2.id},{project.account_id.id}": 100,
+            f"{self.analytic_account_1.id},{self.analytic_account_2.id},{project.account_id.id}": 100,
             f"{self.analytic_account_sale.id},{project.account_id.id}": 100,
         }
         self.assertEqual(sale_order.order_line.analytic_distribution, expected_analytic_distribution)
 
-        # If the project is removed from the SO, only the product's analytic distribution is still in the line
+        # If the project is removed from the SO, only the analytic distribution is still in the line
         sale_order.project_id = None
         self.assertEqual(
             sale_order.order_line.analytic_distribution,
@@ -905,6 +913,36 @@ class TestSaleProject(TestSaleProjectCommon):
             sale_order_action = multi_company_project.with_company(company).action_view_sos()
             self.assertEqual(sale_order_action["type"], "ir.actions.act_window")
             self.assertEqual(sale_order_action["res_model"], "sale.order")
+
+    def test_multi_company_so_creation(self):
+        # SO with project template with non-superuser company_id able creates project with proper company
+        company = self.env['res.company'].create({
+            'name': 'Multi-Company Test Company',
+            'currency_id': self.env.ref('base.EUR').id,
+        })
+
+        company_project_template = self.env['project.project'].with_company(company).create({
+            'name': 'Multi-Company Test Company Project Template',
+            'company_id': company.id,
+        })
+
+        product_with_project_template = self.env['product.product'].with_company(company).create({
+            'name': 'product with template',
+            'list_price': 1,
+            'type': 'service',
+            'service_tracking': 'project_only',
+            'project_template_id': company_project_template.id,
+        })
+
+        # SOs with one created project
+        sale_order = self.env['sale.order'].with_company(company).create({'partner_id': self.partner.id})
+        self.env['sale.order.line'].with_company(company).create({
+            'product_id': product_with_project_template.id,
+            'order_id': sale_order.id,
+        })
+        sale_order_sudo = sale_order.with_user(SUPERUSER_ID)
+        sale_order_sudo.action_confirm()
+        self.assertEqual(company_project_template.company_id, sale_order.project_ids[0].company_id, "The created project should have the same company as the template")
 
     def test_creating_AA_when_adding_service_to_confirmed_so(self):
         sale_order = self.env['sale.order'].create({
@@ -1659,7 +1697,7 @@ class TestSaleProject(TestSaleProjectCommon):
             - Create a project and link it to the sale order.
             - Create a task and link it to the project.
             - Verify that the project is linked to the sale order.
-            - Verify that the tasks is linked to the sale order.
+            - Verify that the task without SO item is not linked to the sale order.
             - Verify that the project & task smart button is hidden.
             - Confirm the sale order.
             - Verify the visibility of the project & task smart button.
@@ -1689,8 +1727,8 @@ class TestSaleProject(TestSaleProjectCommon):
 
         self.assertEqual(
             (sale_order.project_count, sale_order.tasks_count),
-            (1, 1),
-            "The project and task should be linked to the sale order."
+            (1, 0),
+            "Project must be linked and tasks without SO lines should not be linked to the sales order."
         )
         self.assertFalse(
             sale_order.show_project_button,
@@ -1876,3 +1914,135 @@ class TestSaleProject(TestSaleProjectCommon):
         self.assertEqual(sale_order.partner_id, self.partner)
         self.assertFalse(self.project_global.sale_line_id)
         self.assertEqual(self.project_global.reinvoiced_sale_order_id, sale_order)
+
+    def test_allocated_hours_manual_delivery_service(self):
+        """
+        Test that allocated_hours match the quantity ordered on creation
+        when the service product has 'delivered_manual' service policy.
+        """
+        self.product_service_delivered_manual.service_tracking = 'task_in_project'
+        so = self.env['sale.order'].create({'partner_id': self.partner.id})
+        sol = self.env['sale.order.line'].create({
+            'order_id': so.id,
+            'product_id': self.product_service_delivered_manual.id,
+            'product_uom_qty': 10,
+        })
+        so.action_confirm()
+        self.assertEqual(sol.task_id.allocated_hours, 10, "The allocated hours should be 10.")
+
+    def test_quotation_with_zero_unit_project_service(self):
+        """
+        Test checking that a project doesn't get created on order when ordering 0 units of the corresponding
+         product service if it is optional. If the unit is increased to 1, a project should be created.
+        """
+        sale_order_with_option = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'product_uom_qty': 1,
+                }),
+                Command.create({
+                    'display_type': 'line_section',
+                    'name': "Optional products",
+                    'is_optional': True,
+                }),
+                Command.create({
+                    'product_id': self.product_order_service4.id,
+                    'product_uom_qty': 0,
+                }),
+            ],
+        })
+        optional_product_line = sale_order_with_option.order_line.filtered(lambda line: not line.display_type and line._is_line_optional())
+        sale_order_with_option.action_confirm()
+        self.assertFalse(optional_product_line.project_id)
+        optional_product_line.write({'product_uom_qty': 1})
+        self.assertEqual(optional_product_line.project_id.sale_order_id, sale_order_with_option)
+
+    def test_subtask_inherits_sale_line_from_template(self):
+        """Test that subtasks created from project template inherit sale_line_id from parent task."""
+
+        project_template = self.env['project.project'].create({
+            'name': 'Project Template with Subtasks',
+        })
+        parent_task_template = self.env['project.task'].create({
+            'name': 'Parent Task Template',
+            'project_id': project_template.id,
+        })
+        self.env['project.task'].create([
+            {
+                'name': 'Subtask Template 1',
+                'parent_id': parent_task_template.id,
+                'project_id': project_template.id,
+            },
+            {
+                'name': 'Subtask Template 2',
+                'parent_id': parent_task_template.id,
+                'project_id': project_template.id,
+            }
+        ])
+
+        service_product = self.env['product.product'].create({
+            'name': 'Service with Project Template',
+            'standard_price': 20,
+            'list_price': 40,
+            'type': 'service',
+            'invoice_policy': 'delivery',
+            'uom_id': self.uom_hour.id,
+            'service_tracking': 'task_in_project',
+            'project_id': False,
+            'project_template_id': project_template.id,
+        })
+
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+        })
+        sale_order_line = self.env['sale.order.line'].create({
+            'order_id': sale_order.id,
+            'product_id': service_product.id,
+            'product_uom_qty': 1,
+        })
+        sale_order.action_confirm()
+
+        created_project = sale_order_line.project_id
+        self.assertTrue(created_project, "A new project should have been created")
+
+        created_tasks = created_project.task_ids
+        parent_task = created_tasks.filtered(lambda t: not t.parent_id)
+        subtasks = created_tasks.filtered(lambda t: t.parent_id)
+
+        self.assertEqual(len(subtasks), 2, "Should have exactly two subtasks from template")
+        self.assertEqual(parent_task.sale_line_id, sale_order_line, "Parent task should have sale_line_id set")
+
+        for subtask in subtasks:
+            self.assertEqual(subtask.sale_line_id, sale_order_line, "Subtask '%s' should inherit sale_line_id from parent task" % subtask.name)
+
+    def test_section_sale_line_from_template_has_no_task(self):
+        default_task = self.env['project.task'].with_context(tracking_disable=True).create({
+            'name': 'Task',
+            'project_id': self.project_global.id
+        })
+        sale_order = self.env['sale.order'].with_context(tracking_disable=True, default_task_id=default_task.id).create({
+            'partner_id': self.partner.id,
+        })
+
+        quotation_template = self.env['sale.order.template'].create({
+            'name': 'Test quotation with section',
+        })
+        quotation_template.write({
+            'sale_order_template_line_ids': [
+                Command.set(
+                    self.env['sale.order.template.line'].create([{
+                        'name': 'section 1',
+                        'sale_order_template_id': quotation_template.id,
+                        'display_type': 'line_section',
+                    }]).ids
+                )
+            ]
+        })
+
+        sale_order.with_context(default_task_id=default_task.id).write({
+            'sale_order_template_id': quotation_template.id,
+        })
+        sale_order.with_context(default_task_id=default_task.id)._onchange_sale_order_template_id()
+        self.assertFalse(sale_order.order_line.mapped('task_id'), "SOL should have no related tasks, because it is a section")

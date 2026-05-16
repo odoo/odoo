@@ -1,29 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-
-        <record id="website.user_custom_bootstrap_overridden_scss" model="ir.asset">
-            <field name="name">User custom bootstrap overridden SCSS</field>
-            <field name="bundle">web._assets_frontend_helpers</field>
-            <field name="directive">prepend</field>
-            <field name="path">website/static/src/scss/user_custom_bootstrap_overridden.scss</field>
+        <asset id="website.user_custom_bootstrap_overridden_scss" name="User custom bootstrap overridden SCSS">
+            <bundle directive="prepend">web._assets_frontend_helpers</bundle>
+            <path>website/static/src/scss/user_custom_bootstrap_overridden.scss</path>
             <field name="sequence" eval="99"/>
-        </record>
+        </asset>
 
-        <record id="website.user_custom_rules_scss" model="ir.asset">
-            <field name="name">User custom rules SCSS</field>
-            <field name="bundle">web.assets_frontend</field>
-            <field name="path">website/static/src/scss/user_custom_rules.scss</field>
+        <asset id="website.user_custom_rules_scss" name="User custom rules SCSS">
+            <bundle>web.assets_frontend</bundle>
+            <path>website/static/src/scss/user_custom_rules.scss</path>
             <field name="sequence" eval="99"/>
-        </record>
+        </asset>
 
-        <record id="website.configurator_tour" model="ir.asset">
+        <asset id="website.configurator_tour" name="Website Configurator Tour" active="False">
             <field name="key">website.configurator_tour</field>
-            <field name="name">Website Configurator Tour</field>
-            <field name="bundle">website.assets_editor</field>
-            <field name="path">website/static/src/js/tours/configurator_tour.js</field>
-            <field name="active" eval="False"/>
-        </record>
-
+            <bundle>website.assets_editor</bundle>
+            <path>website/static/src/js/tours/configurator_tour.js</path>
+        </asset>
     </data>
 </odoo>

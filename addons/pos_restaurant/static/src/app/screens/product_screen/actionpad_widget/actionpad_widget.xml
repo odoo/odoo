@@ -8,7 +8,8 @@
             </button>
         </xpath>
         <xpath expr="//div[hasclass('validation')]" position="attributes">
-            <attribute name="t-if">this.swapButton or props.showActionButton</attribute>
+            <!-- Check availability for all children, needed due to condition based pay button. Skip rendering if none are available. -->
+            <attribute name="t-if">!this.swapButton or showFastPaymentMethods or (pos.showBackButton() and !pos.config.module_pos_restaurant)</attribute>
         </xpath>
         <xpath expr="//div[hasclass('validation')]//button[hasclass('pay-order-button')]" position="attributes">
             <attribute name="t-if">!this.swapButton</attribute>
@@ -48,9 +49,9 @@
                 </button>
                 <button
                     class="button btn btn-secondary btn-lg d-flex flex-row align-items-center justify-content-center"
-                    t-on-click="() => doSubmitOrder.call()"
+                    t-on-click="() => doReprintOrder.call()"
                     t-elif="this.pos.unwatched.printers.length and this.currentOrder.uiState.lastPrints.length"
-                    t-att-disabled="doSubmitOrder.status === 'loading'">
+                    t-att-disabled="doReprintOrder.status === 'loading'">
                     <i class="fa fa-cutlery" aria-hidden="true"></i>
                 </button>
                 <button

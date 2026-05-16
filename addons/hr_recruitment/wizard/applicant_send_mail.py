@@ -8,7 +8,7 @@ class ApplicantSendMail(models.TransientModel):
     _inherit = ['mail.composer.mixin']
     _description = 'Send mails to applicants'
 
-    applicant_ids = fields.Many2many('hr.applicant', string='Applications', required=True)
+    applicant_ids = fields.Many2many('hr.applicant', string='Applications', required=True, context={'active_test': False})
     author_id = fields.Many2one('res.partner', 'Author', required=True, default=lambda self: self.env.user.partner_id.id)
     attachment_ids = fields.Many2many('ir.attachment', string='Attachments', readonly=False, store=True, bypass_search_access=True)
 

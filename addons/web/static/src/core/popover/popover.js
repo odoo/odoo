@@ -96,6 +96,7 @@ export class Popover extends Component {
 
         // Positioning props
         fixedPosition: { optional: true, type: Boolean },
+        extendedFlipping: { optional: true, type: Boolean },
         holdOnHover: { optional: true, type: Boolean },
         onPositioned: { optional: true, type: Function },
         position: {
@@ -130,6 +131,10 @@ export class Popover extends Component {
         this.popoverRef = useRef("ref");
         this.position = usePosition("ref", () => this.props.target, this.positioningOptions);
 
+        if (!this.props.animation) {
+            this.animationDone = true;
+        }
+
         const resizeObserver = new ResizeObserver(() => {
             if (!this.props.fixedPosition && this.animationDone) {
                 this.position.unlock();
@@ -162,6 +167,7 @@ export class Popover extends Component {
 
     get positioningOptions() {
         return {
+            extendedFlipping: this.props.extendedFlipping,
             margin: this.props.arrow ? 8 : 0,
             onPositioned: (el, solution) => {
                 this.onPositioned(solution);

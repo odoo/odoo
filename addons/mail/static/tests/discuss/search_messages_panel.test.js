@@ -36,6 +36,7 @@ test("Should open the search panel when search button is clicked", async () => {
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await openDiscuss(channelId);
+    await contains(".o-discuss-ChannelMemberList"); // wait for auto-open of this panel
     await click("[title='Search Messages']");
     await contains(".o-mail-SearchMessagesPanel");
     await contains(".o_searchview");
@@ -173,6 +174,8 @@ test("Search a message in history (desktop)", async () => {
     await insertText(".o_searchview_input", "message");
     triggerHotkey("Enter");
     await contains(".o-mail-SearchMessagesPanel .o-mail-Message");
+    await click(".o-mail-SearchMessagesPanel .o-mail-MessageCard-jump");
+    await contains(".o-mail-Thread .o-mail-Message.o-highlighted");
 });
 
 test.tags("mobile");
@@ -218,6 +221,7 @@ test("Should close the search panel when search button is clicked again", async 
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await openDiscuss(channelId);
+    await contains(".o-discuss-ChannelMemberList"); // wait for auto-open of this panel
     await click("[title='Search Messages']");
     await click("[title='Close Search']");
     await contains(".o-mail-SearchMessagesPanel");
@@ -299,6 +303,7 @@ test("Editing the searched term should not edit the current searched term", asyn
     });
     await start();
     await openDiscuss(channelId);
+    await contains(".o-discuss-ChannelMemberList"); // wait for auto-open of this panel
     await click("[title='Search Messages']");
     await insertText(".o_searchview_input", "message");
     triggerHotkey("Enter");

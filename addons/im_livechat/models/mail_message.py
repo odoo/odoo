@@ -57,6 +57,7 @@ class MailMessage(models.Model):
                                 [
                                     ("script_step_id", "=", step.id),
                                     ("id", "!=", chatbot_message.id),
+                                    ("discuss_channel_id", "=", channel.id),
                                 ],
                                 limit=1,
                             )

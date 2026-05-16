@@ -32,6 +32,29 @@ class Many2manyCase(TransactionCase):
         self.assertEqual(len(pirates), 1)
         self.assertEqual(pirates, self.redbeard)
 
+    def test_attachment_m2m_link(self):
+        user = new_test_user(self.env, 'foo', groups='base.group_system')
+
+        attachments = self.env['ir.attachment'].create({
+            'res_model': self.ship._name,
+            'res_id': self.ship.id,
+            'name': 'test',
+        }).with_user(user)
+        record = self.env['test_orm.attachment.host'].create({
+            'real_binary': b'aGV5',
+        }).with_user(user)
+        attachments += attachments.sudo().search([
+            ('res_model', '=', record._name),
+            ('res_field', '=', 'real_binary'),
+        ])
+        self.assertEqual(len(attachments), 2)
+        record.real_m2m_attachment_ids = [Command.link(a.id) for a in attachments]
+
+        self.assertFalse(record.env.su)
+
+        record.invalidate_model()
+        self.assertEqual(len(record.real_m2m_attachment_ids), len(attachments))
+
     def test_bypass_search_access(self):
         user = new_test_user(self.env, 'foo', groups='base.group_system')
 

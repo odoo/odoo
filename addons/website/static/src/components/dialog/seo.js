@@ -952,6 +952,9 @@ export class OptimizeSEODialog extends Component {
         this.contentClass = "oe_seo_configuration";
 
         onWillStart(async () => {
+            // Wait for the preview iframe because this dialog reads directly
+            // from the iframe DOM.
+            await this.waitForIframe();
             const {
                 metadata: { mainObject, seoObject, path },
             } = this.website.currentWebsite;
@@ -964,7 +967,9 @@ export class OptimizeSEODialog extends Component {
             this.canEditSeo = this.data.can_edit_seo;
             this.canEditDescription = this.canEditSeo && "website_meta_description" in this.data;
             this.canEditTitle = this.canEditSeo && "website_meta_title" in this.data;
-            this.canEditUrl = this.canEditSeo && "seo_name" in this.data;
+            // The URL must not be customizable if it does not contain an editable slug.
+            const editableSlugPattern = new RegExp(`.*/(${this.data.seo_name || ""}|${this.data.seo_name_default || ""})-\\d+.*`);
+            this.canEditUrl = this.canEditSeo && Boolean(new URL(path).pathname.match(editableSlugPattern));
             seoContext.title = this.canEditTitle && this.data.website_meta_title;
 
             // If website.page, hide the google preview & tell user his page is currently unindexed
@@ -995,6 +1000,18 @@ export class OptimizeSEODialog extends Component {
 
             this.canEditKeywords = "website_meta_keywords" in this.data;
             seoContext.keywords = this.getMeta({ name: "keywords" });
+        });
+    }
+
+    async waitForIframe() {
+        await new Promise((resolve) => {
+            const iframeEl = document.querySelector(
+                ".o_iframe_container > iframe:not(.o_ignore_in_tour)"
+            );
+            if (!iframeEl || iframeEl.contentDocument?.readyState === "complete") {
+                return resolve();
+            }
+            iframeEl.addEventListener("load", resolve, { once: true });
         });
     }
 

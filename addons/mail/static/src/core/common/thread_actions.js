@@ -146,11 +146,11 @@ export class ThreadAction extends Action {
     }
 
     /** Closes this action. */
-    close() {
+    close({ nextActiveAction } = {}) {
         if (this.toggle) {
             this.owner.threadActions.activeAction = this.owner.threadActions.actionStack.pop();
         }
-        this.definition.close?.call(this, this.params);
+        this.definition.close?.call(this, Object.assign(this.params, { nextActiveAction }));
     }
 
     /** States whether this action is currently active. */
@@ -200,7 +200,7 @@ export class ThreadAction extends Action {
                         this.owner.threadActions.activeAction
                     );
                 } else {
-                    this.owner.threadActions.activeAction.close();
+                    this.owner.threadActions.activeAction.close({ nextActiveAction: this });
                 }
             }
             this.owner.threadActions.activeAction = this;

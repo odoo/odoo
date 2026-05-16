@@ -10,7 +10,7 @@ import { SetupEditorPlugin } from "@html_builder/core/setup_editor_plugin";
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { defineMailModels, startServer } from "@mail/../tests/mail_test_helpers";
-import { after, describe } from "@odoo/hoot";
+import { describe } from "@odoo/hoot";
 import { advanceTime, animationFrame, click, queryOne, tick, waitFor } from "@odoo/hoot-dom";
 import {
     contains,
@@ -34,8 +34,10 @@ import { WebsiteBuilderClientAction } from "@website/client_actions/website_prev
 import { WebsiteSystrayItem } from "@website/client_actions/website_preview/website_systray_item";
 import { mockImageRequests } from "./image_test_helpers";
 import { getWebsiteSnippets } from "./snippets_getter.hoot";
-import { BaseOptionComponent } from "@html_builder/core/utils";
+import { BaseOptionComponent, revertPreview } from "@html_builder/core/utils";
 import { BorderConfigurator } from "@html_builder/plugins/border_configurator_option";
+import { WebsiteBuilder } from "@website/builder/website_builder";
+import { getTranslatedElements } from "./translated_elements_getter.hoot";
 
 class Website extends models.Model {
     _name = "website";
@@ -74,6 +76,27 @@ export function defineWebsiteModels() {
     }));
 }
 
+const domParserCache = new Map();
+function patchDOMParser() {
+    patchWithCleanup(DOMParser.prototype, {
+        parseFromString(html, type) {
+            if (type !== "text/html") {
+                return super.parseFromString(html, type);
+            }
+            if (domParserCache.has(html)) {
+                return domParserCache.get(html).cloneNode(true);
+            }
+            const res = super.parseFromString(html, type);
+            if (res.body?.firstChild?.id === "snippet_groups") {
+                // Only cache the document containing the snippets
+                domParserCache.set(html, res);
+                return res.cloneNode(true);
+            }
+            return res;
+        },
+    });
+}
+
 /**
  * This helper will be moved to website. Prefer using setupHTMLBuilder
  * for builder-specific tests
@@ -88,6 +111,7 @@ export async function setupWebsiteBuilder(
         hasToCreateWebsite = true,
         styleContent,
         headerContent = "",
+        footerContent = "",
         beforeWrapwrapContent = "",
         translateMode = false,
         onIframeLoaded = () => {},
@@ -105,15 +129,15 @@ export async function setupWebsiteBuilder(
     let editableContent;
     const comp = await mountWithCleanup(WebClient);
     let originalIframeLoaded;
-    let resolveIframeLoaded = () => {};
+    let resolveIframeLoaded = async () => {};
     const bodyHTML = `${beforeWrapwrapContent}
         <div id="wrapwrap">${headerContent} <div id="wrap" class="oe_structure oe_empty" ${
         translateMode
             ? ""
             : `data-oe-model="ir.ui.view" data-oe-id="${setupWebsiteBuilderOeId}" data-oe-field="arch"`
-    }>${websiteContent}</div></div>`;
+    }>${websiteContent}</div> ${footerContent}</div>`;
     const iframeLoaded = new Promise((resolve) => {
-        resolveIframeLoaded = (el) => {
+        resolveIframeLoaded = async (el) => {
             const iframe = el;
             const styleEl = iframe.contentDocument.createElement("style");
             styleEl.textContent = /*css*/ `* { transition: none !important; } `;
@@ -126,10 +150,17 @@ export async function setupWebsiteBuilder(
                 "website.page(4,)"
             );
             iframe.contentDocument.body.innerHTML = bodyHTML;
-            // we artificially set the is-ready attribute to trick the rest of
-            // the code into thinking that the js inside the iframe is properly
-            // loaded
-            iframe.contentDocument.body.setAttribute("is-ready", "true");
+            if (loadIframeBundles && loadAssetsFrontendJS) {
+                await waitFor("body[is-ready=true]", {
+                    timeout: 1000,
+                    root: iframe.contentDocument,
+                });
+            } else {
+                // If we don't include the iframe JS, we artificially set the
+                // is-ready attribute to trick the rest of the code into
+                // thinking that it has been loaded.
+                iframe.contentDocument.body.setAttribute("is-ready", "true");
+            }
 
             onIframeLoaded(iframe);
             resolve(el);
@@ -140,6 +171,10 @@ export async function setupWebsiteBuilder(
         resolveEditAssetsLoaded = () => resolve();
     });
 
+    onRpc("/website/get_translated_elements", () => getTranslatedElements());
+
+    patchDOMParser();
+
     patchWithCleanup(WebsiteBuilderClientAction.prototype, {
         setIframeLoaded() {
             super.setIframeLoaded();
@@ -147,6 +182,13 @@ export async function setupWebsiteBuilder(
             originalIframeLoaded = this.iframeLoaded;
             this.iframeLoaded = iframeLoaded;
         },
+        // Override for Firefox. Chrome doesn't load the initial iframe and
+        // never goes through this method. As Firefox does, it means it re-
+        // assigns `this.publicRootReady` to a deferred that is never resolved
+        // in tests, which prevents any Hoot builder test from working.
+        // Reimplement this method the day interactions within the iframe work
+        // with Hoot.
+        preparePublicRootReady() {},
         async loadAssetsEditBundle() {
             // To instantiate interactions in the iframe test we need to load
             // the frontend bundle in it. The problem is that Hoot does not have
@@ -199,7 +241,7 @@ export async function setupWebsiteBuilder(
 
     let lastUpdatePromise;
     const waitSidebarUpdated = async () => {
-        await editor.shared.operation.next();
+        await revertPreview(editor);
         // The tick ensures that lastUpdatePromise has correctly been assigned
         await tick();
         await lastUpdatePromise;
@@ -245,7 +287,7 @@ export async function setupWebsiteBuilder(
     patchWithCleanupImg();
 
     const iframe = queryOne("iframe[data-src^='/website/force/1']");
-    if (isBrowserFirefox()) {
+    if (isBrowserFirefox() && !(iframe?.contentDocument.readyState === "complete")) {
         await originalIframeLoaded;
     }
     if (loadIframeBundles) {
@@ -254,7 +296,7 @@ export async function setupWebsiteBuilder(
             js: loadAssetsFrontendJS,
         });
     }
-    resolveIframeLoaded(iframe);
+    await resolveIframeLoaded(iframe);
     await animationFrame();
     if (openEditor) {
         await openBuilderSidebar(editAssetsLoaded);
@@ -269,7 +311,11 @@ export async function setupWebsiteBuilder(
 
 async function openBuilderSidebar(editAssetsLoaded) {
     // The next line allow us to await asynchronous fetches and cache them before it is used
-    await Promise.all([getWebsiteSnippets(), loadBundle("website.website_builder_assets")]);
+    await Promise.all([
+        getWebsiteSnippets(),
+        loadBundle("website.website_builder_assets"),
+        loadBundle("html_editor.assets_image_cropper"),
+    ]);
 
     await click(".o-website-btn-custo-primary");
     await editAssetsLoaded;
@@ -285,10 +331,12 @@ async function openBuilderSidebar(editAssetsLoaded) {
     await animationFrame();
 }
 
-export function addPlugin(Plugin) {
-    registry.category("website-plugins").add(Plugin.id, Plugin);
-    after(() => {
-        registry.category("website-plugins").remove(Plugin.id);
+export function addPlugin(...Plugin) {
+    patchWithCleanup(WebsiteBuilder.prototype, {
+        get builderProps() {
+            const props = super.builderProps;
+            return { ...props, Plugins: [...props.Plugins, ...Plugin] };
+        },
     });
 }
 
@@ -388,6 +436,7 @@ export async function waitForSnippetDialog() {
  * @param {string | string[]} snippetName
  */
 export async function setupWebsiteBuilderWithSnippet(snippetName, options = {}) {
+    patchDOMParser();
     mockService("website", {
         get currentWebsite() {
             return {
@@ -416,7 +465,16 @@ export async function setupWebsiteBuilderWithSnippet(snippetName, options = {}) 
 export async function getStructureSnippet(snippetName) {
     const html = await getWebsiteSnippets();
     const snippetsDocument = new DOMParser().parseFromString(html, "text/html");
-    return snippetsDocument.querySelector(`[data-snippet=${snippetName}]`).cloneNode(true);
+    const processors = registry.category("html_builder.snippetsPreprocessor").getAll();
+    for (const processor of Object.values(processors)) {
+        processor("website.snippets", snippetsDocument);
+    }
+    const snippetEl = snippetsDocument.querySelector(
+        `[data-snippet=${snippetName}]:not([data-snippet] [data-snippet])`
+    );
+    const el = snippetEl.cloneNode(true);
+    el.dataset.name = snippetEl.parentElement.getAttribute("name");
+    return el;
 }
 
 export async function insertStructureSnippet(editor, snippetName) {

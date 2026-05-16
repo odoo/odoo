@@ -28,10 +28,10 @@
                 <field name="out_mode" string="Input Mode (Out)" optional="hidden"/>
                 <field name="in_latitude" string="Latitude (In)" optional="hidden"/>
                 <field name="in_longitude" string="Longitude (In)" optional="hidden"/>
-                <field name="in_location" string="Longitude (In)" optional="hidden"/>
+                <field name="in_location" string="Location (In)" optional="hidden"/>
                 <field name="out_latitude" string="Latitude (Out)" optional="hidden"/>
                 <field name="out_longitude" string="Longitude (Out)" optional="hidden"/>
-                <field name="out_location" string="Location" optional="hidden"/>
+                <field name="out_location" string="Location (Out)" optional="hidden"/>
                 <field name="create_uid" optional="hidden"/>
                 <field name="write_uid" optional="hidden"/>
                 <field name="write_date" optional="hidden"/>
@@ -201,7 +201,7 @@
                     </group>
                     <notebook invisible="not overtime_status">
                         <page string="Overtime Details">
-                            <field name="linked_overtime_ids">
+                            <field name="linked_overtime_ids" readonly="1">
                                 <list editable="bottom">
                                     <field name="rule_ids" widget="many2many_tags" readonly="1"/>
                                     <field name="duration" widget="float_time" readonly="1"/>
@@ -493,6 +493,6 @@
 
     <menuitem id="menu_hr_attendance_configuration" name="Configuration" parent="menu_hr_attendance_root" sequence="99" groups="hr_attendance.group_hr_attendance_manager"/>
 
-    <menuitem id="menu_hr_attendance_onboarding" name="Onboarding" action="action_try_kiosk" parent="menu_hr_attendance_configuration" sequence="100"/>
+    <menuitem id="menu_hr_attendance_onboarding" name="Onboarding" action="action_try_kiosk" parent="menu_hr_attendance_configuration" sequence="100" groups="hr.group_hr_user"/>
 
 </odoo>

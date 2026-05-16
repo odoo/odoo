@@ -13,7 +13,6 @@ export class WelcomePage extends Component {
 
     setup() {
         super.setup();
-        this.isClosed = false;
         this.store = useService("mail.store");
         this.ui = useService("ui");
         this.rtc = useService("discuss.rtc");
@@ -31,9 +30,9 @@ export class WelcomePage extends Component {
         }
     }
 
-    joinChannel() {
+    async joinChannel() {
         if (!this.store.self_partner) {
-            this.store.self_guest?.updateGuestName(this.state.userName.trim());
+            await this.store.self_guest?.updateGuestName(this.state.userName.trim());
         }
         browser.localStorage.setItem("discuss_call_preview_join_mute", !this.state.hasMicrophone);
         browser.localStorage.setItem(

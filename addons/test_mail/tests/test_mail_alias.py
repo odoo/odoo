@@ -47,15 +47,54 @@ class TestMailAlias(TestMailAliasCommon):
             with self.assertRaises(exceptions.ValidationError):
                 self.env['ir.config_parameter'].set_param('mail.catchall.domain.allowed', value)
 
-        for value, expected in [
+        test_cases = [
             ('', False),
             ('hello.com', 'hello.com'),
             ('hello.com,,', 'hello.com'),
             ('hello.com,bonjour.com', 'hello.com,bonjour.com'),
             ('hello.COM, BONJOUR.com', 'hello.com,bonjour.com'),
-        ]:
-            self.env['ir.config_parameter'].set_param('mail.catchall.domain.allowed', value)
-            self.assertEqual(self.env['ir.config_parameter'].get_param('mail.catchall.domain.allowed'), expected)
+        ]
+        for value, expected in test_cases:
+            with self.subTest(value=value):
+                self.env['ir.config_parameter'].set_param('mail.catchall.domain.allowed', value)
+                self.assertEqual(self.env['ir.config_parameter'].get_param('mail.catchall.domain.allowed'), expected)
+
+        # test create and write sanitization
+        for value, expected in test_cases:
+            with self.subTest(value=value):
+                self.env["ir.config_parameter"].search([
+                    ("key", "=", "mail.catchall.domain.allowed")
+                ]).unlink()
+                self.env["ir.config_parameter"].create({
+                    "key": "mail.catchall.domain.allowed",
+                    "value": value,
+                })
+                # check after create
+                self.assertEqual(
+                    self.env["ir.config_parameter"].get_param(
+                        "mail.catchall.domain.allowed"
+                    ),
+                    expected,
+                )
+
+                icp_record = self.env["ir.config_parameter"].search([
+                    ("key", "=", "mail.catchall.domain.allowed")
+                ])
+                icp_record.write({
+                        "key": "mail.catchall.domain.allowed",
+                        "value": "randomPlaceHolder",
+                    })
+                icp_record.write({
+                        "key": "mail.catchall.domain.allowed",
+                        "value": value,
+                    })
+                # check after write
+                self.assertEqual(
+                    self.env["ir.config_parameter"].get_param(
+                        "mail.catchall.domain.allowed"
+                    ),
+                    expected,
+                )
 
     @users('erp_manager')
     def test_alias_domain_company_check(self):

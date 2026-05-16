@@ -210,3 +210,23 @@ class TestProject(TestCommonSaleTimesheet):
     def test_duplicate_project_allocated_hours(self):
         self.project_global.allocated_hours = 10
         self.assertEqual(self.project_global.copy().allocated_hours, 10)
+
+    def test_project_creation_timesheet_account_companies(self):
+        project_template = self.env['project.project'].create({
+            'name': 'Project template',
+            'is_template': True,
+            'company_id': False,
+            'allow_timesheets': True,
+            'allow_billable': True,
+        })
+
+        self.partner_b.company_id = self.company
+
+        wizard = self.env['project.template.create.wizard'].create({
+            'template_id': project_template.id,
+            'name': 'New Project from Template',
+            'partner_id': self.partner_b.id,
+        })
+        new_project = wizard._create_project_from_template()
+
+        self.assertEqual(new_project.company_id, self.partner_b.company_id)

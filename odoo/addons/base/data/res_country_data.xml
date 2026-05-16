@@ -144,7 +144,7 @@
         <record id="bg" model="res.country">
             <field name="name">Bulgaria</field>
             <field name="code">bg</field>
-            <field name="currency_id" ref="BGN" />
+            <field name="currency_id" ref="EUR" />
             <field eval="359" name="phone_code" />
             <field name="vat_label">VAT</field>
         </record>
@@ -344,7 +344,7 @@
         <record id="cw" model="res.country">
             <field name="name">Curaçao</field>
             <field name="code">cw</field>
-            <field name="currency_id" ref="ANG" />
+            <field name="currency_id" ref="XCG" />
             <field eval="599" name="phone_code" />
         </record>
         <record id="cx" model="res.country">
@@ -514,6 +514,7 @@
             <field name="code">ge</field>
             <field name="currency_id" ref="GEL" />
             <field eval="995" name="phone_code" />
+            <field eval="'%(street)s\n%(street2)s\n%(city)s %(state_name)s %(zip)s\n%(country_name)s'" name="address_format"/>
         </record>
         <record id="gf" model="res.country">
             <field name="name">French Guiana</field>
@@ -1025,6 +1026,7 @@
             <field name="code">mz</field>
             <field name="currency_id" ref="MZN" />
             <field eval="258" name="phone_code" />
+            <field name="vat_label">NUIT</field>
         </record>
         <record id="na" model="res.country">
             <field name="name">Namibia</field>
@@ -1355,7 +1357,7 @@
         <record id="sx" model="res.country">
             <field name="name">Sint Maarten (Dutch part)</field>
             <field name="code">sx</field>
-            <field name="currency_id" ref="ANG" />
+            <field name="currency_id" ref="XCG" />
             <field eval="1721" name="phone_code" />
         </record>
         <record id="sy" model="res.country">
@@ -1516,6 +1518,7 @@
             <field name="code">uz</field>
             <field name="currency_id" ref="UZS" />
             <field eval="998" name="phone_code" />
+            <field name="vat_label">TIN</field>
         </record>
         <record id="va" model="res.country">
             <field name="name">Holy See (Vatican City State)</field>

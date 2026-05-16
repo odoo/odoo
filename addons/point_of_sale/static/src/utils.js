@@ -23,7 +23,7 @@ export function uuidv4() {
  * @returns {string}
  */
 export function deduceUrl(url) {
-    const { protocol } = window.location;
+    const protocol = odoo.use_lna ? "http:" : window.location.protocol;
     if (!url.includes("//")) {
         url = `${protocol}//${url}`;
     }
@@ -52,6 +52,13 @@ export function constructAttributeString(line) {
         }
 
         attributeString = attributeString.slice(0, -2);
+    } else if (
+        attributeString === "" &&
+        line?.product_id?.product_template_variant_value_ids?.length > 0
+    ) {
+        attributeString = line.product_id.product_template_variant_value_ids
+            ?.map((attr) => attr.name)
+            .join(", ");
     }
 
     return attributeString;
@@ -172,8 +179,47 @@ export class Counter {
     }
 }
 
+export function isValidPhone(string) {
+    const phone = string.replace(/[\s.\-()]/g, "");
+    const pattern = /^\+\d{8,18}$/;
+    return pattern.test(phone);
+}
+
 export function isValidEmail(email) {
     return email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+// Checks whether an ip address is on the local network. So one of the ranges:
+// 10.0.0.0 - 10.255.255.255
+// 127.0.0.0 - 127.255.255.255
+// 172.16.0.0 - 172.31.255.255
+// 169.254.0.0 - 169.254.255.255
+// 192.168.0.0 - 192.168.255.255
+export function isPrivateIp(ip) {
+    if (!ip || typeof ip !== "string") {
+        return false;
+    }
+    const blocks = ip.split(".");
+    if (blocks.length !== 4) {
+        return false;
+    }
+
+    const [a, b, c, d] = blocks.map(Number);
+    const invalidBlock = blocks.some(
+        (b, i) => isNaN([a, b, c, d][i]) || [a, b, c, d][i] < 0 || [a, b, c, d][i] > 255
+    );
+
+    if (invalidBlock) {
+        return false;
+    }
+
+    return (
+        a === 10 ||
+        a === 127 ||
+        (a === 172 && b >= 16 && b <= 31) ||
+        (a === 192 && b === 168) ||
+        (a === 169 && b === 254)
+    );
 }
 
 export const LONG_PRESS_DURATION = session.test_mode ? 100 : 500;

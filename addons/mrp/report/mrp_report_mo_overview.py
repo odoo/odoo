@@ -220,6 +220,8 @@ class ReportMrpReport_Mo_Overview(models.AbstractModel):
         }
 
     def _get_unit_cost(self, move):
+        """ Returns the unit cost of the move expressed in the UOM of the move
+        """
         if not move:
             return 0.0
         return move.product_id.uom_id._compute_price(move.product_id.standard_price, move.product_uom)

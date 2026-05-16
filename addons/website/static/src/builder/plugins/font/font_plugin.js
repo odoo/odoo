@@ -3,6 +3,12 @@ import { Plugin } from "@html_editor/plugin";
 import { getCSSVariableValue, getHtmlStyle } from "@html_editor/utils/formatting";
 import { showAddFontDialog } from "./add_font_dialog";
 
+/**
+ * @typedef { Object } WebsiteFontShared
+ * @property { WebsiteFontPlugin['addFont'] } addFont
+ * @property { WebsiteFontPlugin['deleteFont'] } deleteFont
+ */
+
 // TODO Website-specific
 class WebsiteFontPlugin extends Plugin {
     static id = "websiteFont";

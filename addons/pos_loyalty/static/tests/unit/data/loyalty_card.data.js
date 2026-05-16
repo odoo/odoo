@@ -38,6 +38,14 @@ export class LoyaltyCard extends models.ServerModel {
             program_id: 3,
             write_date: DateTime.now().toFormat("yyyy-MM-dd HH:mm:ss"),
         },
+        {
+            id: 4,
+            code: "CARD004",
+            points: 3,
+            partner_id: 1,
+            program_id: 7,
+            write_date: DateTime.now().minus({ days: 2 }).toFormat("yyyy-MM-dd HH:mm:ss"),
+        },
     ];
 }
 

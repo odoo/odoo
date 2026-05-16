@@ -307,6 +307,33 @@ class TestComposerForm(TestMailComposer):
         self.assertFalse(composer_form.subtype_is_log)
 
     @users('employee')
+    def test_mail_composer_comment_wtpl_signature_only(self):
+        """Signature-only body loads user default template; otherwise keeps signature."""
+        composer_form = Form(self.env['mail.compose.message'].with_context(
+            self._get_web_context(
+                self.test_records,
+                add_web=True,
+                default_body='<p data-o-mail-quote="1">--<br data-o-mail-quote="1"/>Signature</p>',
+                body_contains_signature_only=True,
+            )
+        ))
+        self.assertEqual(composer_form.body, '<p data-o-mail-quote="1">--<br data-o-mail-quote="1"/>Signature</p>')
+
+        # Now with user default template
+        self.env['ir.default'].sudo().set(
+            'mail.compose.message', 'template_id', self.template.id
+        )
+        composer_form = Form(self.env['mail.compose.message'].with_context(
+            self._get_web_context(
+                self.test_record,
+                add_web=True,
+                default_body='<p data-o-mail-quote="1">--<br data-o-mail-quote="1"/>Signature</p>',
+                body_contains_signature_only=True,
+            )
+        ))
+        self.assertEqual(composer_form.body, f'<p>TemplateBody {self.test_record.name}</p>')
+
+    @users('employee')
     def test_mail_composer_comment_wtpl_batch(self):
         """ Batch mode of composer in comment mode. """
         composer_form = Form(self.env['mail.compose.message'].with_context(
@@ -2882,6 +2909,9 @@ class TestComposerResultsMass(TestMailComposer):
                                   default_template_id=self.template.id)
         ))
         composer = composer_form.save()
+        composer.attachment_ids = self.env['ir.attachment'].sudo().create(
+            self._generate_attachments_data(1, res_model=composer._name, res_id=composer.id)
+        )
         self.assertTrue(composer.reply_to_force_new, 'Should use template reply-to value')
         with self.mock_mail_gateway(mail_unlink_sent=True):
             composer._action_send_mail()
@@ -2907,6 +2937,11 @@ class TestComposerResultsMass(TestMailComposer):
             self.assertEqual(message.subject, 'TemplateSubject %s' % record.name)
             self.assertEqual(message.body, '<p>TemplateBody %s</p>' % record.name)
             self.assertEqual(message.author_id, self.user_employee.partner_id)
+            self.assertEqual(len(message.attachment_ids), 1)
+            self.assertEqual(message.attachment_ids.res_model, record._name)
+            self.assertEqual(message.attachment_ids.res_id, record.id)
+            self.assertEqual(composer.attachment_ids.name, message.attachment_ids.name)
+            self.assertEqual(composer.attachment_ids.datas, message.attachment_ids.datas)
             # post-related fields are void
             self.assertFalse(message.subtype_id)
             self.assertFalse(message.partner_ids)

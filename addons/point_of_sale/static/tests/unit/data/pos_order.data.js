@@ -1,4 +1,4 @@
-import { models } from "@web/../tests/web_test_helpers";
+import { models, Command } from "@web/../tests/web_test_helpers";
 
 export class PosOrder extends models.ServerModel {
     _name = "pos.order";
@@ -43,12 +43,46 @@ export class PosOrder extends models.ServerModel {
     sync_from_ui(data) {
         const orderIds = [];
         for (const record of data) {
+            const record_uuid_mapping = record.relations_uuid_mapping || {};
+            delete record.relations_uuid_mapping;
             if (record.id) {
                 this.write([record.id], record);
                 orderIds.push(record.id);
             } else {
                 const id = this.create(record);
                 orderIds.push(id);
+            }
+            for (const [modelName, mapping] of Object.entries(record_uuid_mapping)) {
+                // Search for owner records by UUID
+                const ownerRecords = this.env[modelName].search_read(
+                    [["uuid", "in", Object.keys(mapping)]],
+                    ["id", "uuid"]
+                );
+                for (const [uuid, fields] of Object.entries(mapping)) {
+                    for (const [name, uuids] of Object.entries(fields)) {
+                        const field = this.env[modelName]._fields[name];
+                        if (["one2many", "many2many"].includes(field.type)) {
+                            // Get all related records by uuids
+                            const relatedRecords = this.env[field.relation].search_read(
+                                [["uuid", "in", uuids]],
+                                ["id", "uuid"]
+                            );
+                            const ownerRecord = ownerRecords.find((r) => r.uuid === uuid);
+                            if (ownerRecord) {
+                                this.env[modelName].write([ownerRecord.id], {
+                                    [name]: relatedRecords.map((r) => Command.link(r.id)),
+                                });
+                            }
+                        } else {
+                            // single record relation (many2one)
+                            const record = this.env[field.relation].search([["uuid", "=", uuids]]);
+                            const ownerRecord = ownerRecords.find((r) => r.uuid === uuid);
+                            if (ownerRecord && record) {
+                                this.env[modelName].write([ownerRecord.id], { [name]: record[0] });
+                            }
+                        }
+                    }
+                }
             }
         }
 

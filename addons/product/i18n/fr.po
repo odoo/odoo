@@ -9,13 +9,15 @@
 # Martin Trigaux, 2022
 # Jolien De Paepe, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Manon Rondou (ronm)" <ronm@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:38+0000\n"
-"PO-Revision-Date: 2025-09-14 21:10+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2026-04-10 18:39+0000\n"
+"PO-Revision-Date: 2026-04-14 13:02+0000\n"
+"Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-19/product/"
 "fr/>\n"
 "Language: fr\n"
@@ -24,7 +26,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
 "1000000 == 0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: product
 #. odoo-python
@@ -50,16 +52,6 @@ msgstr "# Variantes d'article"
 #: model:ir.model.fields,field_description:product.field_product_category__product_count
 msgid "# Products"
 msgstr "# Produits"
-
-#. module: product
-#: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
-msgid "$14.00"
-msgstr "14,00 $"
-
-#. module: product
-#: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
-msgid "$15.00"
-msgstr "15,00 $"
 
 #. module: product
 #. odoo-python
@@ -182,44 +174,14 @@ msgid "1 year"
 msgstr "1 an"
 
 #. module: product
-#: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
-msgid "10"
-msgstr "10"
-
-#. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
 msgid "10 Units"
 msgstr "10 unités"
 
 #. module: product
-#: model:product.attribute.value,name:product.pav_height_100
-msgid "100"
-msgstr "100"
-
-#. module: product
-#: model:product.attribute.value,name:product.pav_length_120
-msgid "120"
-msgstr "120"
-
-#. module: product
-#: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
-msgid "123456789012"
-msgstr "123456789012"
-
-#. module: product
-#: model:product.attribute.value,name:product.pav_length_140
-msgid "140"
-msgstr "140"
-
-#. module: product
-#: model:product.attribute.value,name:product.pav_length_160
-msgid "160"
-msgstr "160"
-
-#. module: product
 #: model:product.template,description_sale:product.product_product_4_product_template
 msgid "160x80cm, with large legs"
-msgstr ""
+msgstr "160×80 cm, avec pieds larges"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_label_layout__print_format__2x7xprice
@@ -242,11 +204,6 @@ msgid "3 years"
 msgstr "3 ans"
 
 #. module: product
-#: model:product.attribute.value,name:product.pav_shoe_size_39
-msgid "39"
-msgstr "39"
-
-#. module: product
 #: model:product.attribute.value,name:product.pav_size_3xl
 msgid "3XL"
 msgstr "3XL"
@@ -267,31 +224,6 @@ msgid "4 x 7 with price"
 msgstr "4 x 7 avec le prix"
 
 #. module: product
-#: model:product.attribute.value,name:product.pav_shoe_size_40
-msgid "40"
-msgstr "40"
-
-#. module: product
-#: model:product.attribute.value,name:product.pav_shoe_size_41
-msgid "41"
-msgstr "41"
-
-#. module: product
-#: model:product.attribute.value,name:product.pav_shoe_size_42
-msgid "42"
-msgstr "42"
-
-#. module: product
-#: model:product.attribute.value,name:product.pav_shoe_size_43
-msgid "43"
-msgstr "43"
-
-#. module: product
-#: model:product.attribute.value,name:product.pav_height_45
-msgid "45"
-msgstr "45"
-
-#. module: product
 #: model:product.attribute.value,name:product.pav_size_4xl
 msgid "4XL"
 msgstr "4XL"
@@ -305,11 +237,6 @@ msgstr "5XL"
 #: model:product.attribute.value,name:product.pav_duration_month_6
 msgid "6 months"
 msgstr "6 mois"
-
-#. module: product
-#: model:product.attribute.value,name:product.pav_height_85
-msgid "85"
-msgstr "85"
 
 #. module: product
 #: model_terms:product.template,website_description:product.product_product_4_product_template
@@ -454,6 +381,16 @@ msgstr ""
 
 #. module: product
 #. odoo-python
+#: code:addons/product/models/product_pricelist_item.py:0
+msgid ""
+"A pricelist item with \"Other Pricelist\" as base must have a "
+"base_pricelist_id."
+msgstr ""
+"Un élément de liste de prix avec \"Autre liste de prix\" comme base doit "
+"avoir un base_pricelist_id."
+
+#. module: product
+#. odoo-python
 #: code:addons/product/models/product_uom.py:0
 msgid "A product already uses the barcode"
 msgstr "Un produit utilise déjà le code-barres"
@@ -524,7 +461,7 @@ msgstr "Activités"
 #: model:ir.model.fields,field_description:product.field_product_product__activity_exception_decoration
 #: model:ir.model.fields,field_description:product.field_product_template__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "Activité exception décoration"
+msgstr "Indicateur d’exception d’activité"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist__activity_state
@@ -879,6 +816,7 @@ msgstr "Beige"
 #: model:product.template,description_sale:product.consu_delivery_02_product_template
 msgid "Big table seats 10–12 for team discussions"
 msgstr ""
+"Grande table pouvant accueillir 10 à 12 personnes pour les réunions d’équipe"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_color_black
@@ -893,7 +831,7 @@ msgstr "Bleu"
 #. module: product
 #: model:product.template,description_sale:product.product_product_7_product_template
 msgid "Blue plastic bin for flexible office storage"
-msgstr ""
+msgstr "Bac en plastique bleu pour un rangement flexible au bureau"
 
 #. module: product
 #: model:product.attribute,name:product.pa_brand
@@ -1078,7 +1016,7 @@ msgstr ""
 #. module: product
 #: model:product.template,description_sale:product.product_delivery_01_product_template
 msgid "Comfortable yellow chair for daily work"
-msgstr ""
+msgstr "Chaise jaune confortable pour le travail quotidien"
 
 #. module: product
 #: model:ir.model,name:product.model_res_company
@@ -1141,7 +1079,7 @@ msgstr "Contact"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_label_layout__custom_quantity
 msgid "Copies"
-msgstr ""
+msgstr "Copies"
 
 #. module: product
 #: model:product.template,name:product.product_product_13_product_template
@@ -1387,7 +1325,7 @@ msgstr "Description"
 #. module: product
 #: model:product.template,description_sale:product.product_order_01_product_template
 msgid "Design and plan smart offices with ease"
-msgstr ""
+msgstr "Concevez et planifiez des bureaux intelligents en toute simplicité"
 
 #. module: product
 #: model:product.template,name:product.product_product_3_product_template
@@ -1412,7 +1350,7 @@ msgstr "Support de bureau avec écran"
 #. module: product
 #: model:product.template,description_sale:product.product_product_3_product_template
 msgid "Desk combination, black-brown: chair + desk + drawer"
-msgstr ""
+msgstr "Combinaison de bureau, noir-brun : chaise + bureau + tiroir"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute__sequence
@@ -1544,12 +1482,18 @@ msgstr "Tiroir noir"
 #. module: product
 #: model_terms:product.template,description:product.product_product_27_product_template
 msgid "Drawer with two routing possiblities"
-msgstr ""
+msgstr "Tiroir avec deux options d’installation"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_options_drawers
 msgid "Drawers"
 msgstr "Tiroirs"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_product.py:0
+msgid "Duplicate values in attribute values are not allowed: %s"
+msgstr "Les doublons dans les valeurs d’attribut ne sont pas autorisés : %s"
 
 #. module: product
 #: model:product.attribute,name:product.pa_duration
@@ -1854,7 +1798,7 @@ msgstr "A un message"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__has_thumbnail
 msgid "Has Thumbnail"
-msgstr ""
+msgstr "A une vignette"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_head_shoulders
@@ -1879,7 +1823,7 @@ msgstr ""
 #. module: product
 #: model:product.template,description_sale:product.product_product_12_product_template
 msgid "High-back office chair with great support"
-msgstr ""
+msgstr "Chaise de bureau à haut dossier offrant un excellent soutien"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_document_form
@@ -2127,7 +2071,7 @@ msgstr "Est un abonné"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__is_in_selected_section_of_order
 msgid "Is In Selected Section Of Order"
-msgstr ""
+msgstr "Est dans la section sélectionnée de la commande"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__is_pricelist_required
@@ -2156,9 +2100,23 @@ msgid "Is public document"
 msgstr "Est un document public"
 
 #. module: product
+#. odoo-python
+#: code:addons/product/models/product_product.py:0
+msgid ""
+"It is not possible to import different values for the same attribute: %s"
+msgstr ""
+"Il n’est pas possible d’importer des valeurs différentes pour le même "
+"attribut : %s"
+
+#. module: product
 #: model:ir.model.fields.selection,name:product.selection__res_config_settings__product_weight_in_lbs__0
 msgid "Kilograms (kg)"
 msgstr "Kilogrammes (kg)"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_size_l
+msgid "L"
+msgstr "L"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_loreal
@@ -2247,7 +2205,7 @@ msgstr "Activités en retard"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__delay
 msgid "Lead Time"
-msgstr ""
+msgstr "Délai"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__delay
@@ -2268,7 +2226,7 @@ msgstr "Cuir"
 #. module: product
 #: model:product.template,description_sale:product.product_product_13_product_template
 msgid "Left-sided workspace with storage"
-msgstr ""
+msgstr "Espace de travail côté gauche avec rangement"
 
 #. module: product
 #: model:product.attribute,name:product.pa_legs
@@ -2330,6 +2288,11 @@ msgid ""
 msgstr ""
 "À la recherche d'une teinte bambou personnalisée pour correspondre aux "
 "meubles existants ? Contactez-nous pour obtenir un devis."
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_size_m
+msgid "M"
+msgstr "M"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_template_attribute_value__exclude_for
@@ -2431,7 +2394,7 @@ msgstr "Quantité minimale"
 #. module: product
 #: model:product.template,description_sale:product.product_product_8_product_template
 msgid "Minimalist wooden desk for executive use"
-msgstr ""
+msgstr "Bureau en bois minimaliste pour un usage de direction"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_update_product_attribute_value__mode
@@ -2590,7 +2553,7 @@ msgstr "Non, laissez comme ça"
 #. module: product
 #: model:product.template,description_sale:product.product_template_acoustic_bloc_screens
 msgid "Noise-reducing panels for open spaces"
-msgstr ""
+msgstr "Panneaux acoustiques pour réduire le bruit dans les open spaces"
 
 #. module: product
 #. odoo-python
@@ -3014,7 +2977,7 @@ msgstr "Imprimer les étiquettes"
 #. module: product
 #: model:product.template,description_sale:product.product_product_24_product_template
 msgid "Private pod with desk and chair"
-msgstr ""
+msgstr "Espace privatif avec bureau et chaise"
 
 #. module: product
 #. odoo-python
@@ -3246,6 +3209,12 @@ msgid "Product Unit of Measure"
 msgstr "Unité de mesure du produit"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__import_attribute_values
+#: model:ir.model.fields,field_description:product.field_product_template__import_attribute_values
+msgid "Product Values"
+msgstr "Valeurs du produit"
+
+#. module: product
 #: model:ir.model,name:product.model_product_product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__product_id
 #: model:ir.model.fields.selection,name:product.selection__product_pricelist_item__applied_on__0_product_variant
@@ -3400,7 +3369,7 @@ msgstr "Ray-Ban"
 #. odoo-python
 #: code:addons/product/models/product_pricelist_item.py:0
 msgid "Recursive pricelist rules detected: %s"
-msgstr ""
+msgstr "Règles de liste de prix récursives détectées : %s"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_color_red
@@ -3489,7 +3458,7 @@ msgstr "Frais de restaurant"
 #. module: product
 #: model:product.template,description_sale:product.product_product_5_product_template
 msgid "Right-aligned desk with storage"
-msgstr ""
+msgstr "Bureau aligné à droite avec rangement"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_rolex
@@ -3510,6 +3479,11 @@ msgstr "Lignes"
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__rule_tip
 msgid "Rule Tip"
 msgstr "Règle astuces"
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_size_s
+msgid "S"
+msgstr "S"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__sale_ok
@@ -3630,7 +3604,7 @@ msgstr "Taille"
 #. module: product
 #: model:product.template,description_sale:product.product_product_9_product_template
 msgid "Soft-close pedal bin for office use"
-msgstr ""
+msgstr "Poubelle à pédale avec fermeture douce pour une utilisation au bureau"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_sony
@@ -3747,7 +3721,7 @@ msgstr "Liste de prix du fournisseur"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_tag_form_view
 msgid "Tag"
-msgstr ""
+msgstr "Étiquette"
 
 #. module: product
 #: model:ir.model.constraint,message:product.constraint_product_tag_name_uniq
@@ -3839,6 +3813,18 @@ msgstr ""
 #: model:ir.model.fields,help:product.field_product_template_attribute_value__display_type
 msgid "The display type used in the Product Configurator."
 msgstr "Le type d'affichage utilisé dans le configurateur de produit"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_product.py:0
+msgid ""
+"The exitings product has different attribute value. \"%(imported_values)s\" "
+"is not equivalent to \"%(existing_values)s\" for \"%(external_id)s\", \"%"
+"(id)s\""
+msgstr ""
+"Le produit existant a une valeur d’attribut différente. \"%"
+"(imported_values)s\" n’est pas équivalent à \"%(existing_values)s\" pour \"%"
+"(external_id)s\", \"%(id)s\""
 
 #. module: product
 #: model_terms:product.template,website_description:product.product_product_4_product_template
@@ -4020,7 +4006,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__thumbnail
 msgid "Thumbnail"
-msgstr ""
+msgstr "Vignette"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_tide
@@ -4066,6 +4052,26 @@ msgstr "UdM"
 #: code:addons/product/wizard/product_label_layout.py:0
 msgid "Unable to find report template for %s format"
 msgstr "Impossible de trouver le modèle de rapport pour le format %s"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_product.py:0
+msgid ""
+"Unable to import products with attribute value without attribute name "
+"(defined as: attribute:value): %s"
+msgstr ""
+"Impossible d’importer des produits avec une valeur d’attribut sans nom "
+"d’attribut (défini sous la forme : attribut:valeur) : %s"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_product.py:0
+msgid ""
+"Unable to import products with attribute values but without name of product "
+"set"
+msgstr ""
+"Impossible d’importer des produits avec des valeurs d’attribut mais sans nom "
+"de produit défini"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_underarmour
@@ -4900,6 +4906,51 @@ msgstr "au"
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 msgid "xlsx"
 msgstr "xlsx"
+
+#~ msgid "$14.00"
+#~ msgstr "14,00 $"
+
+#~ msgid "$15.00"
+#~ msgstr "15,00 $"
+
+#~ msgid "10"
+#~ msgstr "10"
+
+#~ msgid "100"
+#~ msgstr "100"
+
+#~ msgid "120"
+#~ msgstr "120"
+
+#~ msgid "123456789012"
+#~ msgstr "123456789012"
+
+#~ msgid "140"
+#~ msgstr "140"
+
+#~ msgid "160"
+#~ msgstr "160"
+
+#~ msgid "39"
+#~ msgstr "39"
+
+#~ msgid "40"
+#~ msgstr "40"
+
+#~ msgid "41"
+#~ msgstr "41"
+
+#~ msgid "42"
+#~ msgstr "42"
+
+#~ msgid "43"
+#~ msgstr "43"
+
+#~ msgid "45"
+#~ msgstr "45"
+
+#~ msgid "85"
+#~ msgstr "85"
 
 #~ msgid ""
 #~ "You cannot assign the Main Pricelist as Other Pricelist in PriceList Item"

@@ -6,7 +6,8 @@
 
 from odoo.addons.stock.tests.common import TestStockCommon
 from odoo.exceptions import UserError
-from odoo.tests import Form
+from odoo.fields import Command
+from odoo.tests import Form, tagged
 
 
 class TestVirtualAvailable(TestStockCommon):
@@ -385,3 +386,74 @@ class TestVirtualAvailable(TestStockCommon):
         with Form(product) as product_form:
             product_form.qty_available = 0.0
         self.assertEqual(product.qty_available, 0.0)
+
+
+@tagged('post_install', '-at_install')
+class TestProductPostInstall(TestStockCommon):
+    def test_change_product_inventory_tracking_inventory_adjustment(self):
+        """
+        This test checks that inventory adjustments are performed to counter balance done stock
+        moves in order to reset the product quantity once a product is set as storable.
+
+        This adjustment is necessary to ensure a proper valorisation of goods.
+        """
+        product = self.product
+        self.assertFalse(product.is_storable)
+        product.uom_ids += self.uom_dozen
+        transit_location = self.env['stock.location'].create({
+            'name': 'Lovely transit-location',
+            'usage': 'transit',
+            'location_id': self.stock_location.id,
+        })
+        # validate a receipt an internal transfer and a delivery
+        pickings = self.env['stock.picking'].create([
+            {
+                'location_id': self.supplier_location.id,
+                'location_dest_id': self.stock_location.id,
+                'picking_type_id': self.picking_type_in.id,
+                'move_ids': [
+                    Command.create({
+                        'product_id': product.id,
+                        'product_uom_qty': 1.0,
+                        'product_uom': self.uom_dozen.id,
+                        'location_id': self.supplier_location.id,
+                        'location_dest_id': self.stock_location.id,
+                    })
+                ]
+            },
+            {
+                'location_id': self.stock_location.id,
+                'location_dest_id': transit_location.id,
+                'picking_type_id': self.picking_type_int.id,
+                'move_ids': [
+                    Command.create({
+                        'product_id': product.id,
+                        'product_uom_qty': 3.0,
+                        'location_id': self.stock_location.id,
+                        'location_dest_id': transit_location.id,
+                    })
+                ]
+            },
+            {
+                'location_id': self.stock_location.id,
+                'location_dest_id': self.customer_location.id,
+                'picking_type_id': self.picking_type_out.id,
+                'move_ids': [
+                    Command.create({
+                        'product_id': product.id,
+                        'product_uom_qty': 5.0,
+                        'location_id': self.stock_location.id,
+                        'location_dest_id': self.customer_location.id,
+                    })
+                ]
+            }
+        ])
+        pickings.action_confirm()
+        pickings.button_validate()
+        product.is_storable = True
+        self.assertEqual(product.qty_available, 0.0)
+        inventory_adjustments = self.env['stock.move'].search([('location_dest_usage', '=', 'inventory')], order='product_qty')
+        self.assertRecordValues(inventory_adjustments, [
+            {'location_id': transit_location.id, 'quantity': 3.0},
+            {'location_id': self.stock_location.id, 'quantity': 4.0},
+        ])

@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
-from odoo.addons.l10n_ar.tests.common import TestAr
-from odoo.tests import tagged
+from odoo.addons.l10n_ar.tests.common import TestArCommon
+from odoo.tests import tagged, Form
 from odoo import Command
 from datetime import datetime
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
-class TestL10nArWithholdingArRi(TestAr):
+class TestArWithholdingArRi(TestArCommon):
 
     @classmethod
     def setUpClass(cls):
@@ -106,6 +106,47 @@ class TestL10nArWithholdingArRi(TestAr):
         })
         invoice.action_post()
         return invoice
+
+    def third_party_check_journal(self):
+        journal_vals = {
+                'name': ('Third Party Checks'),
+                'type': 'cash',
+                'outbound_payment_method_line_ids': [
+                    Command.create({'payment_method_id': self.env.ref('l10n_latam_check.account_payment_method_out_third_party_checks').id}),
+                ],
+                'inbound_payment_method_line_ids': [
+                    Command.create({'payment_method_id': self.env.ref('l10n_latam_check.account_payment_method_new_third_party_checks').id}),
+                    Command.create({'payment_method_id': self.env.ref('l10n_latam_check.account_payment_method_in_third_party_checks').id}),
+                ],
+            }
+        third_party_check_journal = self.env['account.journal'].create(journal_vals)
+        return third_party_check_journal
+
+    def in_third_party_check(self, journal):
+        in_third_party_check = self.env['account.payment'].create({
+            'date': datetime.today(),
+            'amount': 30762.71,
+            'payment_type': 'inbound',
+            'partner_id': self.res_partner_adhoc.id,
+            'journal_id': journal.id,
+            'payment_method_line_id': journal.inbound_payment_method_line_ids[0].id,
+            'l10n_latam_new_check_ids': [Command.clear()] + [Command.create({'name': 1, 'amount': 30762.71, 'payment_date': datetime.today()})]
+        })
+        in_third_party_check.action_post()
+        return in_third_party_check
+
+    def in_invoice_wht_5(self, l10n_latam_document_number):
+        in_invoice_wht = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'date': '2023-01-01',
+            'invoice_date': '2023-01-01',
+            'partner_id': self.res_partner_adhoc.id,
+            'invoice_line_ids': [Command.create({'product_id': self.product_a.id, 'price_unit': 156087.00, 'tax_ids': [Command.set(self.tax_21.ids)]})],
+            'l10n_latam_document_number': l10n_latam_document_number,
+
+        })
+        in_invoice_wht.action_post()
+        return in_invoice_wht
 
     def new_payment_register(self, move_ids, taxes):
         wizard = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=move_ids.ids).create({'payment_date': '2023-01-01'})
@@ -351,3 +392,99 @@ class TestL10nArWithholdingArRi(TestAr):
             # Receivable line:
             {'debit': 121000.0, 'credit': 0.0, 'currency_id': wizard.currency_id.id, 'amount_currency': 1210.0, 'reconciled': True}
         ])
+
+    def test_11_earnings_withholding_applied_with_scale(self):
+        """Payment with third party check with withholding tax type 'Earnings Scale'. Verify withholding amount."""
+        third_party_check_journal = self.third_party_check_journal()
+        in_third_party_check = self.in_third_party_check(third_party_check_journal)
+        invoice = self.in_invoice_4_wht()
+        self.tax_wth_earnings_incurred_scale_test_5.l10n_ar_withholding_sequence_id = self.earnings_withholding_sequence
+        self.env['l10n_ar.partner.tax'].create({
+            'partner_id': self.res_partner_adhoc.id,
+            'company_id': invoice.company_id.id,
+            'tax_id': self.tax_wth_earnings_incurred_scale_test_5.id
+        })
+        taxes = [{'id': invoice.partner_id.l10n_ar_partner_tax_ids.tax_id.id, 'base_amount': invoice.amount_untaxed}]
+        wizard = self.new_payment_register(invoice, taxes)
+        wizard.journal_id = third_party_check_journal.id
+        wizard.payment_method_line_id = wizard.journal_id.inbound_payment_method_line_ids[1].id
+        wizard.l10n_latam_move_check_ids = in_third_party_check.l10n_latam_new_check_ids
+        wizard._compute_amount()
+        self.assertEqual(wizard.amount, 31929.25)
+        self.assertEqual(wizard.l10n_ar_withholding_ids.base_amount, 26387.81)
+        self.assertEqual(wizard.l10n_ar_withholding_ids.amount, 1166.54)
+        self.assertEqual(wizard.l10n_ar_net_amount, 30762.71)
+
+    def test_11_withholding_amounts_1(self):
+        """Check computation of withholding tax amount."""
+        self.tax_wth_test_1.write({'amount': 4.5})
+        moves = self.in_invoice_wht_5('2-1')
+        taxes = [{'id': self.tax_wth_test_1.id, 'base_amount': sum(moves.mapped('amount_untaxed'))}]
+        wizard = self.new_payment_register(moves, taxes)
+        action = wizard.action_create_payments()
+        payment = self.env['account.payment'].browse(action['res_id'])
+        self.assertRecordValues(payment.move_id.line_ids.sorted('balance'), [
+            # Liquidity line:
+            {'debit': 0.0, 'credit': 181841.35, 'currency_id': wizard.currency_id.id, 'amount_currency': -181841.35, 'reconciled': False},
+            # base line:
+            {'debit': 0.0, 'credit': 156087.0, 'currency_id': wizard.currency_id.id, 'amount_currency': -156087.0, 'reconciled': False},
+            # withholding line:
+            {'debit': 0.0, 'credit': 7023.92, 'currency_id': wizard.currency_id.id, 'amount_currency': -7023.92, 'reconciled': False},
+            # base line:
+            {'debit': 156087.0, 'credit': 0.0, 'currency_id': wizard.currency_id.id, 'amount_currency': 156087.0, 'reconciled': False},
+            # Receivable line:
+            {'debit': 188865.27, 'credit': 0.0, 'currency_id': wizard.currency_id.id, 'amount_currency': 188865.27, 'reconciled': True}
+        ])
+
+    def test_12_withholding_check_payment_iterative_flush(self):
+        """Test the iterative solver cache flush bug.
+        A 30,250 ARS vendor bill with 1% withholding tax (250 ARS retention) paid with an
+        own check of 30,000 ARS must iteratively converge to 30,250 gross.
+        """
+        self.tax_wth_test_1.amount = 1.0
+
+        # Setup Journal with Own Checks Outbound Payment Method
+        third_party_check_journal = self.third_party_check_journal()
+        own_check_method = self.env.ref('l10n_latam_check.account_payment_method_own_checks')
+        third_party_check_journal.outbound_payment_method_line_ids = [Command.create({'payment_method_id': own_check_method.id})]
+        own_check_line = third_party_check_journal.outbound_payment_method_line_ids.filtered(lambda l: l.payment_method_id == own_check_method)[:1]
+
+        # Create a Vendor Bill of exactly 30,250 (25000 untaxed + 21% VAT = 30250)
+        invoice = self._create_invoice_one_line(
+            move_type='in_invoice',
+            partner_id=self.res_partner_adhoc,
+            product_id=self.product_a,
+            price_unit=25000.0,
+            tax_ids=self.tax_21,
+            l10n_latam_document_number='1-99',
+            post=True,
+        )
+
+        # Add partner tax configuration to guarantee withholdings automatically apply on the wizard
+        self.env['l10n_ar.partner.tax'].create({
+            'partner_id': self.res_partner_adhoc.id,
+            'company_id': invoice.company_id.id,
+            'tax_id': self.tax_wth_test_1.id
+        })
+
+        with Form(self.env['account.payment.register'].with_context(active_model='account.move', active_ids=invoice.ids)) as pay_form:
+            pay_form.journal_id = third_party_check_journal
+            pay_form.payment_method_line_id = own_check_line
+
+            # Add check details triggering onchange combinations
+            with pay_form.l10n_latam_new_check_ids.new() as check_line:
+                check_line.name = 'CHK-999'
+                check_line.payment_date = datetime.today()
+                check_line.amount = 30000.0
+
+        wizard = pay_form.save()
+
+        # Validate perfectly converged mathematical values
+        self.assertRecordValues(wizard, [{
+            'l10n_ar_net_amount': 30000.0,
+            'amount': 30250.0,
+        }])
+        self.assertRecordValues(wizard.l10n_ar_withholding_ids, [{
+            'amount': 250.0,
+            'base_amount': 25000.0,
+        }])

@@ -3,13 +3,14 @@
 # * stock_delivery
 #
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# Saara Hakanen <sahak@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:39+0000\n"
-"PO-Revision-Date: 2025-09-16 15:38+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"POT-Creation-Date: 2026-01-25 18:37+0000\n"
+"PO-Revision-Date: 2026-02-18 17:59+0000\n"
+"Last-Translator: Saara Hakanen <sahak@odoo.com>\n"
 "Language-Team: Finnish <https://translate.odoo.com/projects/odoo-19/"
 "stock_delivery/fi/>\n"
 "Language: fi\n"
@@ -17,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: stock_delivery
 #. odoo-python
@@ -49,7 +50,7 @@ msgstr "<span>Toimituspaino: </span>"
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_shipping2
 msgid "<strong>Carrier:</strong>"
-msgstr ""
+msgstr "<strong>Kuljetusyritys:</strong>"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_delivery_document2
@@ -96,16 +97,18 @@ msgid ""
 "<strong>Weight:</strong>\n"
 "                <br/>"
 msgstr ""
+"<strong>Paino:</strong>\n"
+"                <br/>"
 
 #. module: stock_delivery
 #: model:ir.model.fields,help:stock_delivery.field_stock_picking__integration_level
 msgid "Action while validating Delivery Orders"
-msgstr ""
+msgstr "Toiminta toimitustilausten vahvistamisen aikana"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__allowed_carrier_ids
 msgid "Allowed Carrier"
-msgstr ""
+msgstr "Sallittu kuljetusyhtiö"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_route__shipping_selectable
@@ -142,7 +145,7 @@ msgstr "Huolitsijan koodi"
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_put_in_pack__package_carrier_type
 msgid "Carrier Type"
-msgstr ""
+msgstr "Kuljetuyrityksen tyyppi"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.stock_move_line_view_search_delivery
@@ -234,7 +237,7 @@ msgstr "FedEx"
 #: model_terms:ir.ui.view,arch_db:stock_delivery.product_template_hs_code
 #: model_terms:ir.ui.view,arch_db:stock_delivery.report_delivery_document2
 msgid "HS Code"
-msgstr "Tavaranimike (HS-koodi)"
+msgstr "HS-koodi"
 
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_choose_delivery_carrier__id
@@ -256,7 +259,7 @@ msgstr "ID"
 #. module: stock_delivery
 #: model:ir.model.fields,field_description:stock_delivery.field_stock_picking__integration_level
 msgid "Integration Level"
-msgstr ""
+msgstr "Integraatiotaso"
 
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_stock_route
@@ -330,7 +333,7 @@ msgstr "Palveluntarjoaja"
 #. module: stock_delivery
 #: model:ir.model,name:stock_delivery.model_stock_put_in_pack
 msgid "Put In Pack Wizard"
-msgstr ""
+msgstr "Ohjattu paketointitoiminto"
 
 #. module: stock_delivery
 #: model:ir.model.fields.selection,name:stock_delivery.selection__delivery_carrier__invoice_policy__real
@@ -483,6 +486,8 @@ msgid ""
 "The weight of your package is higher than the maximum weight authorized for "
 "its package type. Please choose another package."
 msgstr ""
+"Pakettisi paino ylittää sen pakettityypille sallitun enimmäispainon. Valitse "
+"toinen paketti."
 
 #. module: stock_delivery
 #. odoo-python
@@ -621,12 +626,12 @@ msgstr "^FO310,200"
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.alternative_zpl_label
 msgid "^FO35, 180 ^A0N,15^FDHS:"
-msgstr ""
+msgstr "^FO35, 180 ^A0N,15^FDHS:"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.normal_zpl_label
 msgid "^FO35, 220 ^A0N,15^FDHS:"
-msgstr ""
+msgstr "^FO35, 220 ^A0N,15^FDHS:"
 
 #. module: stock_delivery
 #: model_terms:ir.ui.view,arch_db:stock_delivery.alternative_zpl_label

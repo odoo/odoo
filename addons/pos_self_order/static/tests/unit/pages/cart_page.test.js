@@ -3,6 +3,7 @@ import { mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { CartPage } from "@pos_self_order/app/pages/cart_page/cart_page";
 import { setupSelfPosEnv, getFilledSelfOrder, addComboProduct } from "../utils";
 import { definePosSelfModels } from "../data/generate_model_definitions";
+import { animationFrame } from "@odoo/hoot-dom";
 
 definePosSelfModels();
 
@@ -52,6 +53,18 @@ test("canChangeQuantity", async () => {
     expect(comp.canChangeQuantity(line)).toBe(true);
     await comp.pay();
     expect(comp.canChangeQuantity(line)).toBe(false);
+});
+
+test("totalPriceAndTax", async () => {
+    const store = await setupSelfPosEnv("mobile", "table", "meal");
+    await getFilledSelfOrder(store);
+    const comp = await mountWithCleanup(CartPage, {});
+    await animationFrame();
+
+    expect(comp.totalPriceAndTax).toEqual({ priceWithTax: 595, tax: 95 });
+    store.cancelOrder();
+    await store.addToCart(store.models["product.template"].get(6), 2);
+    expect(comp.totalPriceAndTax).toEqual({ priceWithTax: 250, tax: 50 });
 });
 
 test("getPrice", async () => {

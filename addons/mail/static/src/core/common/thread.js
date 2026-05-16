@@ -81,7 +81,6 @@ export class Thread extends Component {
         this.store = useService("mail.store");
         this.ui = useService("ui");
         this.state = useState({
-            isFocused: false,
             isReplyingTo: false,
             mountedAndLoaded: false,
             showJumpPresent: false,
@@ -89,6 +88,7 @@ export class Thread extends Component {
         });
         this.lastJumpPresent = this.props.jumpPresent;
         this.orm = useService("orm");
+        this.ui = useService("ui");
         /** @type {ReturnType<import('@mail/utils/common/hooks').useMessageScrolling>|null} */
         this.messageHighlight = this.env.messageHighlight
             ? useState(this.env.messageHighlight)
@@ -206,8 +206,8 @@ export class Thread extends Component {
             }
         });
         onWillUnmount(() => {
-            if (this.state.isFocused) {
-                this.props.thread.isFocusedCounter--;
+            if (this.props.thread.isFocusedByThread) {
+                this.props.thread.isFocusedByThread = false;
             }
         });
         useEffect(
@@ -501,8 +501,7 @@ export class Thread extends Component {
     }
 
     onFocusin() {
-        this.state.isFocused = true;
-        this.props.thread.isFocusedCounter++;
+        this.props.thread.isFocusedByThread = true;
         const thread = toRaw(this.props.thread);
         if (thread?.scrollTop === "bottom" && !thread.scrollUnread && !thread.markedAsUnread) {
             thread?.markAsRead();
@@ -510,8 +509,23 @@ export class Thread extends Component {
     }
 
     onFocusout() {
-        this.state.isFocused = false;
-        this.props.thread.isFocusedCounter--;
+        this.props.thread.isFocusedByThread = false;
+    }
+
+    async onParentMessageClick(parentMessage) {
+        if (!parentMessage) {
+            return;
+        }
+        const targetThread = parentMessage.thread;
+        if (!targetThread) {
+            return;
+        }
+        if (targetThread.eq(this.props.thread)) {
+            this.env.messageHighlight?.highlightMessage(parentMessage, targetThread);
+        } else {
+            targetThread.highlightMessage = parentMessage;
+            await targetThread.open({ focus: true });
+        }
     }
 
     getMessageClassName(message) {
@@ -528,6 +542,9 @@ export class Thread extends Component {
             this.state.showJumpPresent = false;
         }
         this.props.thread.scrollTop = immediate ? "bottom" : "bottom-smooth";
+        if (!this.ui.isSmall) {
+            this.props.thread.composer.autofocus++;
+        }
     }
 
     registerMessageRef(message, ref) {
@@ -701,7 +718,7 @@ export class Thread extends Component {
                 channelName: this.props.thread.name,
             });
         }
-        if (this.props.thread.channel_type === "channel") {
+        if (this.props.thread.channel_type === "group") {
             return _t("This is the start of %(conversationName)s group", {
                 conversationName: this.props.thread.displayName,
             });

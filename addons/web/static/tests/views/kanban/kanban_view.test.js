@@ -70,8 +70,10 @@ import {
     patchWithCleanup,
     quickCreateKanbanColumn,
     quickCreateKanbanRecord,
+    removeFacet,
     serverState,
     stepAllNetworkCalls,
+    switchView,
     toggleKanbanColumnActions,
     toggleKanbanRecordDropdown,
     toggleMenuItem,
@@ -88,6 +90,7 @@ import { FileInput } from "@web/core/file_input/file_input";
 import { browser } from "@web/core/browser/browser";
 import { currencies } from "@web/core/currency";
 import { registry } from "@web/core/registry";
+import { user } from "@web/core/user";
 import { RelationalModel } from "@web/model/relational_model/relational_model";
 import { SampleServer } from "@web/model/sample_server";
 import { KanbanCompiler } from "@web/views/kanban/kanban_compiler";
@@ -5806,7 +5809,6 @@ test("delete an empty column, then a column with records.", async () => {
                 __extra_domain: [["product_id", "=", 7]],
                 product_id: [7, "empty group"],
                 __count: 0,
-                __fold: false,
                 __records: [],
             });
             result.length = 3;
@@ -6204,7 +6206,6 @@ test("count of folded groups in empty kanban with sample data", async () => {
                 product_id: [2, "In Progress"],
                 __count: 0,
                 __extra_domain: [],
-                __fold: true,
             },
         ],
         length: 2,
@@ -7393,7 +7394,7 @@ test("kanban with sample data grouped by m2o and existing groups", async () => {
                 __extra_domain: [["product_id", "=", "3"]],
             },
         ],
-        length: 2,
+        length: 1,
     }));
 
     await mountView({
@@ -7415,6 +7416,43 @@ test("kanban with sample data grouped by m2o and existing groups", async () => {
     expect(".o_kanban_group:first .o_column_title").toHaveText("hello");
     expect(".o_kanban_record:not(.o_kanban_ghost)").toHaveCount(16);
     expect(".o_kanban_record").toHaveText("hello");
+});
+
+test(`kanban grouped by m2o with sample data with more than 5 real groups`, async () => {
+    Partner._records = [];
+    onRpc("web_read_group", () => ({
+        // simulate 6, empty, real groups
+        groups: [1, 2, 3, 4, 5, 6].map((id) => ({
+            __count: 0,
+            __records: [],
+            product_id: [id, `Value ${id}`],
+            __extra_domain: [["product_id", "=", id]],
+        })),
+        length: 6,
+    }));
+
+    await mountView({
+        resModel: "partner",
+        type: "kanban",
+        arch: `
+            <kanban sample="1">
+                <templates>
+                    <div t-name="card">
+                        <field name="product_id"/>
+                    </div>
+                </templates>
+            </kanban>`,
+        groupBy: ["product_id"],
+    });
+    expect(".o_content").toHaveClass("o_view_sample_data");
+    expect(queryAllTexts(`.o_kanban_group .o_column_title`)).toEqual([
+        "Value 1",
+        "Value 2",
+        "Value 3",
+        "Value 4",
+        "Value 5",
+        "Value 6",
+    ]);
 });
 
 test.tags("desktop");
@@ -13710,6 +13748,35 @@ test("selection can be enabled by pressing 'space' key", async () => {
 });
 
 test.tags("desktop");
+test("selection can be enabled by pressing 'shift + space' key", async () => {
+    await mountView({
+        type: "kanban",
+        resModel: "partner",
+        arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="card">
+                            <field name="foo"/>
+                        </t>
+                    </templates>
+                </kanban>`,
+    });
+    expect(".o_selection_box").toHaveCount(0);
+    await press("ArrowDown");
+    await keyDown("Shift");
+    await press("Space");
+    await animationFrame();
+    expect(".o_record_selected").toHaveCount(1);
+    await keyUp("Shift");
+    await press("ArrowDown");
+    await press("ArrowDown");
+    await keyDown("Shift");
+    await press("Space");
+    await animationFrame();
+    expect(".o_record_selected").toHaveCount(3);
+});
+
+test.tags("desktop");
 test("drag and drop records and quickly open a record", async () => {
     Partner._views.kanban = /* xml */ `
         <kanban>
@@ -13814,9 +13881,9 @@ test("groups will be scrolled to on unfold if outside of viewport", async () => 
             "the next group (which is folded) should stick to the right of the screen after the scroll",
     });
     expect(".o_column_folded:eq(0)").toHaveText("column 7\n(1)");
-    await contains('.o_kanban_group:contains("column 7\n(1)")').click();
+    await contains('.o_kanban_group:contains("column 7 (1)")').click();
     expect(".o_content").toHaveProperty("scrollLeft", 2154);
-    ({ x, width } = queryRect('.o_kanban_group:contains("column 7\n(1)")'));
+    ({ x, width } = queryRect('.o_kanban_group:contains("column 7 (1)")'));
     // TODO JUM: change digits option
     expect(x + width).toBeCloseTo(window.innerWidth, {
         digits: 0,
@@ -13828,7 +13895,7 @@ test("groups will be scrolled to on unfold if outside of viewport", async () => 
     expect(".o_content").toHaveProperty("scrollLeft", 3302);
     await contains(".o_kanban_group:last").click();
     expect(".o_content").toHaveProperty("scrollLeft", 3562);
-    ({ x, width } = queryRect('.o_kanban_group:contains("column 11\n(1)")'));
+    ({ x, width } = queryRect('.o_kanban_group:contains("column 11 (1)")'));
     // TODO JUM: change digits option
     expect(x + width).toBeCloseTo(window.innerWidth, {
         digits: 0,
@@ -14615,6 +14682,78 @@ test("Cache: unfolded is now folded", async () => {
 });
 
 test.tags("desktop");
+test("Cache: kanban view progressbar, filter, open a record, edit, come back", async () => {
+    // This test encodes a very specify scenario involving a kanban with progressbar, where the
+    // filter was lost when coming back due to the cache callback, which removed the groups
+    // information.
+    Product._records[1].fold = false;
+
+    let def;
+    onRpc("web_read_group", () => def);
+
+    Partner._views = {
+        "kanban,false": `
+            <kanban default_group_by="product_id" on_create="quick_create" quick_create_view="some_view_ref">
+                <progressbar field="foo" colors='{"yop": "success", "gnap": "warning", "blip": "danger"}'/>
+                <templates>
+                    <t t-name="card">
+                        <field name="foo"/>
+                    </t>
+                </templates>
+            </kanban>`,
+        "form,false": `<form><field name="product_id" widget="statusbar" options="{'clickable': true}"/></form>`,
+        "search,false": `<search/>`,
+    };
+
+    defineActions([
+        {
+            id: 1,
+            name: "Partners Action",
+            res_model: "partner",
+            views: [
+                [false, "kanban"],
+                [false, "form"],
+            ],
+            search_view_id: [false, "search"],
+        },
+    ]);
+
+    await mountWithCleanup(WebClient);
+    await getService("action").doAction(1);
+    expect(".o_kanban_group").toHaveCount(2);
+    expect(".o_kanban_group:eq(0) .o_kanban_record").toHaveCount(2);
+
+    // Filter the first column with the progressbar
+    await contains(".o_column_progress .progress-bar", { root: getKanbanColumn(0) }).click();
+    expect(".o_kanban_group:eq(0) .o_kanban_record").toHaveCount(1);
+
+    // Open a record, then go back, s.t. we populate the cache with the current params of the kanban
+    await contains(".o_kanban_group:eq(1) .o_kanban_record").click();
+    expect(".o_form_view").toHaveCount(1);
+    await contains(".o_back_button").click();
+    expect(".o_kanban_group:eq(0) .o_kanban_record").toHaveCount(1);
+
+    // Open again and make a change which will have an impact on the kanban, then go back
+    await contains(".o_kanban_group:eq(1) .o_kanban_record").click();
+    expect(".o_form_view").toHaveCount(1);
+    await contains(".o_field_widget[name=product_id] button[data-value='3']").click();
+    // Slow down the rpc s.t. we first use data from the cache, and then we update
+    def = new Deferred();
+    await contains(".o_back_button").click();
+    expect(".o_kanban_group:eq(0) .o_kanban_record").toHaveCount(1);
+
+    // Resolve the promise
+    def.resolve();
+    await animationFrame();
+    expect(".o_kanban_group:eq(0) .o_kanban_record").toHaveCount(1);
+
+    // Open a last time and come back => the filter should still be applied correctly
+    await contains(".o_kanban_group:eq(1) .o_kanban_record").click();
+    await contains(".o_back_button").click();
+    expect(".o_kanban_group:eq(0) .o_kanban_record").toHaveCount(1);
+});
+
+test.tags("desktop");
 test("scroll position is restored when coming back to kanban view", async () => {
     Partner._views = {
         kanban: `
@@ -14792,4 +14931,95 @@ test("scroll position is restored when coming back to kanban view (grouped, mobi
     expect(".o_kanban_renderer").toHaveCount(1);
     expect(".o_kanban_group:eq(2)").toHaveProperty("scrollTop", 200);
     expect(".o_kanban_renderer").toHaveProperty("scrollLeft", 656);
+});
+
+test.tags("desktop");
+test("limit is reset when restoring a view after ungrouping", async () => {
+    Partner._views["kanban"] = `
+        <kanban sample="1">
+            <templates>
+                <t t-name="card">
+                    <field name="foo"/>
+                </t>
+            </templates>
+        </kanban>`;
+    Partner._views["list"] = '<list><field name="foo"/></list>';
+    Partner._views.search = `
+        <search>
+            <group>
+                <filter name="foo" string="Foo" context="{'group_by': 'foo'}"/>
+            </group>
+        </search>
+    `;
+
+    onRpc("partner", "web_search_read", ({ kwargs }) => {
+        const { domain, limit } = kwargs;
+        if (!domain.length) {
+            expect.step(`limit=${limit}`);
+        }
+    });
+
+    patchWithCleanup(user, {
+        hasGroup: () => true,
+    });
+
+    await mountWithCleanup(WebClient);
+
+    await getService("action").doAction({
+        type: "ir.actions.act_window",
+        id: 450,
+        xml_id: "action_450",
+        name: "Partners",
+        res_model: "partner",
+        views: [
+            [false, "kanban"],
+            [false, "list"],
+            [false, "form"],
+        ],
+        context: { search_default_foo: true },
+    });
+
+    await switchView("list");
+    await removeFacet("Foo");
+    expect.verifySteps(["limit=80"]);
+    await switchView("kanban");
+    expect.verifySteps(["limit=40"]);
+});
+
+test.tags("desktop");
+test("add o-navigable to buttons with dropdown-item class and view buttons", async () => {
+    Partner._records.splice(1, 3); // keep one record only
+
+    await mountView({
+        type: "kanban",
+        resModel: "partner",
+        arch: `
+            <kanban>
+                <templates>
+                    <t t-name="menu">
+                        <a role="menuitem" class="dropdown-item">Item</a>
+                        <a role="menuitem" type="set_cover" class="dropdown-item">Item</a>
+                        <a role="menuitem" type="object" class="dropdown-item">Item</a>
+                    </t>
+                    <t t-name="card">
+                        <div/>
+                    </t>
+                </templates>
+            </kanban>`,
+    });
+
+    expect(".o-dropdown--menu").toHaveCount(0);
+    await toggleKanbanRecordDropdown();
+    expect(".o-dropdown--menu .dropdown-item.o-navigable").toHaveCount(3);
+    expect(".o-dropdown--menu .dropdown-item.o-navigable.focus").toHaveCount(0);
+
+    // Check that navigation is working
+    await hover(".o-dropdown--menu .dropdown-item.o-navigable");
+    expect(".o-dropdown--menu .dropdown-item.o-navigable.focus").toHaveCount(1);
+
+    await press("arrowdown");
+    expect(".o-dropdown--menu .dropdown-item.o-navigable:nth-child(2)").toHaveClass("focus");
+
+    await press("arrowdown");
+    expect(".o-dropdown--menu .dropdown-item.o-navigable:nth-child(3)").toHaveClass("focus");
 });

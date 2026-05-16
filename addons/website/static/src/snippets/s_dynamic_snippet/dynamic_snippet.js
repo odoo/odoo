@@ -19,6 +19,16 @@ export class DynamicSnippet extends Interaction {
             "t-on-click": this.callToAction,
         },
         _window: { "t-on-resize": this.throttled(this.render) },
+        _root: {
+            "t-att-class": () => ({
+                // Compatibility code: A dynamic snippet may end up with one,
+                // several, or all of these classes as a default visibility one.
+                o_dynamic_empty: !this.isVisible,
+                s_dynamic_empty: !this.isVisible,
+                o_dynamic_snippet_empty: !this.isVisible,
+                o_dynamic_snippet_loading: !this.data.length,
+            }),
+        },
         ".missing_option_warning": {
             "t-att-class": () => ({
                 "d-none": !!this.data.length,
@@ -39,6 +49,7 @@ export class DynamicSnippet extends Interaction {
         this.uniqueId = uniqueId("s_dynamic_snippet_");
         this.templateKey = "website.s_dynamic_snippet.grid";
         this.withSample = false;
+        this.rpc = rpc;
     }
 
     async willStart() {
@@ -96,7 +107,7 @@ export class DynamicSnippet extends Interaction {
         if (this.isConfigComplete()) {
             const nodeData = this.el.dataset;
             const filterFragments = await this.waitFor(
-                rpc(
+                this.rpc(
                     "/website/snippet/filters",
                     Object.assign(
                         {
@@ -150,9 +161,14 @@ export class DynamicSnippet extends Interaction {
     }
 
     render() {
+        if (this.el.querySelector(".s_dialog_preview")) {
+            return;
+        }
         if (this.data.length > 0 || this.withSample) {
+            this.toggleVisibility(true);
             this.prepareContent();
         } else {
+            this.toggleVisibility(false);
             this.renderedContentNode = document.createDocumentFragment();
         }
         this.renderContent();
@@ -166,7 +182,6 @@ export class DynamicSnippet extends Interaction {
         const templateAreaEl = this.el.querySelector(".dynamic_snippet_template");
         this.services["public.interactions"].stopInteractions(templateAreaEl);
         templateAreaEl.replaceChildren(this.renderedContentNode);
-        this.el.classList.remove("o_dynamic_snippet_empty");
         // TODO this is probably not the only public widget which creates DOM
         // which should be attached to another public widget. Maybe a generic
         // method could be added to properly do this operation of DOM addition.
@@ -188,6 +203,13 @@ export class DynamicSnippet extends Interaction {
     }
 
     /**
+     * @param {Boolean} visible
+     */
+    toggleVisibility(visible) {
+        this.isVisible = visible;
+    }
+
+    /**
      * Navigates to the call to action url.
      *
      * @param {Event} ev
@@ -197,4 +219,17 @@ export class DynamicSnippet extends Interaction {
     }
 }
 
+export const DynamicSnippetCached = (I) =>
+    class extends I {
+        setup() {
+            super.setup();
+            this.rpc = (url, params) => this.services.website_edit.rpcCache({ ...params, url });
+        }
+    };
+
 registry.category("public.interactions").add("website.dynamic_snippet", DynamicSnippet);
+
+registry.category("public.interactions.preview").add("website.dynamic_snippet", {
+    Interaction: DynamicSnippet,
+    mixin: DynamicSnippetCached,
+});

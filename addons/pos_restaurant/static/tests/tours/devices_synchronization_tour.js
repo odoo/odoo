@@ -29,7 +29,7 @@ registry.category("web_tour.tours").add("test_devices_synchronization", {
             DeviceSynchronization.changeLineQuantity("Water", 44),
             ProductScreen.checkTotalAmount(99.0),
             ProductScreen.clickPartnerButton(),
-            ProductScreen.clickCustomer("Deco Addict"),
+            ProductScreen.clickCustomer("Acme Corporation"),
             Chrome.clickPlanButton(),
 
             // prpoduct_screen

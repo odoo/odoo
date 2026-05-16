@@ -15,6 +15,7 @@ class StockActionField extends Component {
         ...MonetaryField.props,
         actionName: { type: String, optional: false },
         actionContext: { type: String, optional: true },
+        disabled: { type: String, optional: true },
     };
     static components = {
         FloatField,
@@ -30,10 +31,14 @@ class StockActionField extends Component {
     }
     
     extractProps () {
-        const keysToRemove = ["actionName", "actionContext"];
+        const keysToRemove = ["actionName", "actionContext", "disabled"];
         return Object.fromEntries(
          Object.entries(this.props).filter(([prop]) => !keysToRemove.includes(prop))
        );
+    }
+
+    get disabled() {
+         return this.props.disabled ? evaluateExpr(this.props.disabled, this.props.record.evalContext) : false;
     }
 
     _onClick(ev) {
@@ -57,8 +62,13 @@ const stockActionField = {
     ...monetaryField,
     component: StockActionField,
     supportedOptions: [
-        ...floatField.supportedOptions,
-        ...monetaryField.supportedOptions,
+        Object.values(
+            Object.fromEntries(
+                [...floatField.supportedOptions, ...monetaryField.supportedOptions].map(
+                    (option) => [option.name, option]
+                )
+            )
+        ),
         {
             label: _t("Action Name"),
             name: "action_name",
@@ -69,6 +79,7 @@ const stockActionField = {
         const [{ context, fieldType, options }] = args;
         const action_props = {
             actionName: options.action_name,
+            disabled: options.disabled,
             actionContext: context,
         }
         let props = {...action_props}

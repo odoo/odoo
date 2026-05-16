@@ -6,13 +6,14 @@
 # Sanne Kristensen <sanne@vkdata.dk>, 2022
 # Martin Trigaux, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:37+0000\n"
-"PO-Revision-Date: 2025-09-14 21:14+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2026-04-17 18:38+0000\n"
+"PO-Revision-Date: 2025-11-08 21:52+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Danish <https://translate.odoo.com/projects/odoo-19/base_vat/"
 "da/>\n"
 "Language: da\n"
@@ -39,7 +40,14 @@ msgstr ""
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
-msgid "17291716060 (NIN) or 1729171602 (VKN)"
+msgid "11111111111 (NIN) or 2222222222 (VKN)"
+msgstr ""
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid ""
+"12345678 or UA12345678 (EDRPOU), 1234567890 (RNOPP) or 123456789012 (IPN)"
 msgstr ""
 
 #. module: base_vat
@@ -61,6 +69,11 @@ msgid "49-098-576 or 49098576"
 msgstr "49-098-576 eller 49098576"
 
 #. module: base_vat
+#: model:ir.actions.server,name:base_vat.vies_iap_check_update_ir_actions_server
+msgid "Base VAT: Sync updates from IAP VIES"
+msgstr ""
+
+#. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "CHE-123.456.788 TVA or CHE-123.456.788 MWST or CHE-123.456.788 IVA"
@@ -76,14 +89,6 @@ msgstr "Virksomheder"
 #: model:ir.model,name:base_vat.model_res_config_settings
 msgid "Config Settings"
 msgstr "Konfigurationsindstillinger"
-
-#. module: base_vat
-#. odoo-python
-#: code:addons/base_vat/models/res_partner.py:0
-msgid ""
-"Connection with the VIES server failed. The VAT number %s could not be "
-"validated."
-msgstr ""
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_partner
@@ -166,11 +171,26 @@ msgid ""
 "If this checkbox is ticked, the default fiscal position that applies will "
 "depend upon the output of the verification by the European VIES Service."
 msgstr ""
+"Hvis dette felt er markeret, fastsættes den relevante standardskatteposition "
+"ud fra resultatet af verifikationen via den europæiske VIES-tjeneste."
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid ""
+"If you are trying to input a European number, this is the expected format: "
+msgstr ""
 
 #. module: base_vat
 #: model:ir.model.fields,field_description:base_vat.field_res_partner__vies_valid
 #: model:ir.model.fields,field_description:base_vat.field_res_users__vies_valid
 msgid "Intra-Community Valid"
+msgstr ""
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid "Invalid IAP VIES endpoint"
 msgstr ""
 
 #. module: base_vat
@@ -209,6 +229,12 @@ msgid ""
 msgstr ""
 
 #. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid "The Intra-Community validity has been updated."
+msgstr ""
+
+#. module: base_vat
 #: model:ir.model.fields,help:base_vat.field_res_partner__vat
 #: model:ir.model.fields,help:base_vat.field_res_users__vat
 msgid ""
@@ -216,19 +242,19 @@ msgid ""
 "country format. You can use '/' to indicate that the partner is not subject "
 "to tax."
 msgstr ""
+"Skatteregistreringsnummeret. Værdierne valideres ud fra landets format. Brug "
+"'/' for at angive, at partneren ikke er skattepligtig."
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
-msgid "The VAT number %s could not be interpreted by the VIES server."
+msgid "The VIES check failed. Please check the Tax ID manually."
 msgstr ""
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
-msgid ""
-"The request for VAT validation was not processed. VIES service has responded "
-"with the following error: %s"
+msgid "The VIES check is pending. The status will be updated soon."
 msgstr ""
 
 #. module: base_vat
@@ -253,6 +279,12 @@ msgstr "Bekræft CVR nummer"
 #: model_terms:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
 msgid "Verify VAT numbers using the European VIES service"
 msgstr "Bekræft CVR numre ved hjælp af European VIES"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid "XXXXXXXXX [9 digits]"
+msgstr ""
 
 #. module: base_vat
 #. odoo-python

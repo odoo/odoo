@@ -18,20 +18,24 @@ class L10nHuEdiTestInvoiceXml(L10nHuEdiTestCommon):
             cls.company_data['company'].write({
                 'bank_ids': [Command.create({
                     'acc_number': 'HU0123456789',
+                    'allow_out_payment': True,
                 })]
             })
             cls.partner_company.write({
                 'bank_ids': [Command.create({
                     'acc_number': 'HU6666666666',
+                    'allow_out_payment': True,
                 })]
             })
             cls.bank_company = cls.env['res.partner.bank'].create({
                 'acc_number': 'HU7357735773',
                 'partner_id': cls.company_data['company'].partner_id.id,
+                'allow_out_payment': True,
             })
             cls.bank_partner = cls.env['res.partner.bank'].create({
                 'acc_number': 'HU9487189480',
                 'partner_id': cls.partner_company.id,
+                'allow_out_payment': True,
             })
 
     def test_invoice_and_credit_note(self):
@@ -145,6 +149,9 @@ class L10nHuEdiTestInvoiceXml(L10nHuEdiTestCommon):
                     self.get_xml_tree_from_string(invoice_xml),
                     self.get_xml_tree_from_string(expected_xml_file.read()),
                 )
+
+            # Assert that the `l10n_hu_chain_index` is not silently set by the tax audit export
+            self.assertFalse(invoice.l10n_hu_invoice_chain_index, "The chain index shouldn't be set by the tax audit report")
 
     def test_multi_currency_tax_sign(self):
         currency_eur = self.env.ref('base.EUR')

@@ -14,7 +14,7 @@ from odoo.fields import Domain
 from odoo.tools import email_normalize_all, float_round
 
 from odoo.addons.payment import utils as payment_utils
-from odoo.addons.payment.const import SENSITIVE_KEYS
+from odoo.addons.payment.const import CURRENCY_MINOR_UNITS, SENSITIVE_KEYS
 from odoo.addons.payment.logging import get_payment_logger
 
 
@@ -283,13 +283,14 @@ class PaymentTransaction(models.Model):
                     'active_model': 'payment.transaction',
                     # Consider also confirmed transactions to calculate the total authorized amount.
                     'active_ids': self.filtered(lambda tx: tx.state in ['authorized', 'done']).ids,
+                    'payment_backend_action': True,
                 },
             }
         else:
             captured_txs_sudo = self.env['payment.transaction'].sudo()
             for tx in self.filtered(lambda tx: tx.state == 'authorized'):
                 # In sudo mode to read on provider fields.
-                captured_txs_sudo |= tx.sudo()._capture()
+                captured_txs_sudo |= tx.sudo().with_context(payment_backend_action=True)._capture()
             return captured_txs_sudo._build_action_feedback_notification()
 
     def action_void(self):
@@ -306,7 +307,7 @@ class PaymentTransaction(models.Model):
                 lambda t: t.state == 'done' and t.operation == tx.operation
             ))
             # In sudo mode to read on provider fields.
-            voided_txs_sudo |= tx.sudo()._void(amount_to_void=tx.amount - captured_amount)
+            voided_txs_sudo |= tx.sudo().with_context(payment_backend_action=True)._void(amount_to_void=tx.amount - captured_amount)
         return voided_txs_sudo._build_action_feedback_notification()
 
     def action_refund(self, amount_to_refund=None):
@@ -323,7 +324,7 @@ class PaymentTransaction(models.Model):
         refunded_txs_sudo = self.env['payment.transaction'].sudo()
         for tx in self:
             # In sudo mode to read on provider fields.
-            refunded_txs_sudo |= tx.sudo()._refund(amount_to_refund=amount_to_refund)
+            refunded_txs_sudo |= tx.sudo().with_context(payment_backend_action=True)._refund(amount_to_refund=amount_to_refund)
         return refunded_txs_sudo._build_action_feedback_notification()
 
     def _build_action_feedback_notification(self):
@@ -349,6 +350,18 @@ class PaymentTransaction(models.Model):
                 'message': msg,
                 'next': {'type': 'ir.actions.act_window_close'},  # Close any open wizard.
             },
+        }
+
+    def action_post_process(self):
+        """Trigger the post-processing of the transactions.
+
+        :return: A client action to soft-reload the view.
+        :rtype: dict
+        """
+        self._post_process()
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'soft_reload',
         }
 
     # === BUSINESS METHODS - PRE-PROCESSING === #
@@ -733,8 +746,9 @@ class PaymentTransaction(models.Model):
         tx = self or self._search_by_reference(provider_code, payment_data)
         if tx:
             tx.ensure_one()
+            previous_state = tx.state
             tx._validate_amount(payment_data)
-            if tx.state == 'error':
+            if tx.state == 'error' and tx.state != previous_state:
                 return tx
             tx._apply_updates(payment_data)
             if tx.tokenize and tx.state in {'authorized', 'done'}:
@@ -808,7 +822,11 @@ class PaymentTransaction(models.Model):
         # providers send a positive one.
         if self.operation == 'refund':
             amount = -amount
-        tx_amount = self.amount if precision_digits is None else float_round(
+        if precision_digits is None:
+            precision_digits = CURRENCY_MINOR_UNITS.get(
+                self.currency_id.name, self.currency_id.decimal_places
+            )
+        tx_amount = float_round(
             self.amount, precision_digits=precision_digits, rounding_method='DOWN'
         )
         if self.currency_id.compare_amounts(amount, tx_amount) != 0:

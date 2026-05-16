@@ -146,7 +146,7 @@ export function getImageSizeFromCache(src) {
  * @param {Number} aspectRatio the aspectRatio of the crop box
  * @param {DOMStringMap} dataset dataset containing the cropperDataFields
  */
-export async function activateCropper(image, aspectRatio, dataset) {
+export async function activateCropper(image, aspectRatio, dataset, { onReady } = {}) {
     await loadBundle("html_editor.assets_image_cropper");
     const oldSrc = image.src;
     const newSrc = await _loadImageObjectURL(image.getAttribute("src"));
@@ -168,7 +168,12 @@ export async function activateCropper(image, aspectRatio, dataset) {
         // Can't use 0 because it's falsy and cropperjs will then use its defaults (200x100)
         minContainerWidth: 1,
         minContainerHeight: 1,
-        ready: readyResolve,
+        ready: () => {
+            readyResolve();
+            if (onReady) {
+                onReady(cropper);
+            }
+        },
     });
     if (oldSrc === newSrc && image.complete) {
         return;
@@ -207,7 +212,7 @@ export async function loadImageInfo(el, attachmentSrc = "") {
     }
 
     const srcUrl = new URL(src, docHref);
-    let relativeSrc = srcUrl.pathname;
+    let relativeSrc = decodeURI(srcUrl.pathname);
 
     let match = relativeSrc.match(/\/(?:web_editor|html_editor)\/image_shape\/(\w+\.\w+)/);
     if (el.dataset.shape && match) {

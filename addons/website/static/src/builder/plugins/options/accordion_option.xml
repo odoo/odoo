@@ -12,7 +12,7 @@
         </BuilderButton>
     </BuilderRow>
 
-    <BuilderContext applyTo="'.accordion'">
+    <BuilderContext applyTo="':scope > .accordion'">
         <BuilderRow label.translate="Style" >
             <BuilderSelect>
                 <BuilderSelectItem id="'accordion_style_boxed_opt'" title.translate="Boxed" classAction="''">Boxed</BuilderSelectItem>
@@ -23,7 +23,7 @@
             <BuilderCheckbox classAction="'accordion-flush'"/>
         </BuilderRow>
         <BuilderRow label.translate="Round Corners" level="1">
-            <BuilderNumberInput applyTo="'.accordion-item'" styleAction="'--accordion-border-radius'" unit="'px'" min="0" composable="true"/>
+            <BuilderNumberInput applyTo="':scope > .accordion-item'" styleAction="'--accordion-border-radius'" unit="'px'" min="0" composable="true"/>
         </BuilderRow>
 
         <BuilderRow label.translate="Icons">
@@ -52,7 +52,7 @@
                 <BuilderSelectItem title.translate="Translate" classAction="'o_transition o_transition_translate'">Translate</BuilderSelectItem>
             </BuilderSelect>
         </BuilderRow>
-        <BuilderRow label.translate="Position" level="1" applyTo="'.accordion-header'">
+        <BuilderRow label.translate="Position" level="1" applyTo="':scope > .accordion-item > .accordion-header'">
             <BuilderButtonGroup>
                 <BuilderButton title.translate="Left" classAction="'justify-content-end flex-row-reverse o_icons_position_reversed'" iconImg="'/website/static/src/img/snippets_options/pos_left.svg'"/>
                 <BuilderButton title.translate="Right" classAction="'justify-content-between'" iconImg="'/website/static/src/img/snippets_options/pos_right.svg'"/>

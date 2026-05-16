@@ -1,6 +1,6 @@
 @mixin sublevel-line($_level-left: 0) {
     position: absolute;
-    top: 0;
+    top: var(--o-hb-row-sublevel-top, 0);
     bottom: 0;
     left: $_level-left - $o-we-border-width;
     border: $o-we-border-width solid var(--o-hb-row-sublevel-color, #{mix($o-we-bg-lighter, $o-we-fg-light)});
@@ -14,7 +14,7 @@
     $_z-index: 4;
 
     .popover & {
-        --o-hb-row-bg-color: var(--o-hb-row-bg-color-popover, --popover-bg);
+        --o-hb-row-bg-color: var(--o-hb-row-bg-color-popover, #{$o-we-fg-lighter});
         --o-hb-row-active-bg-color: var(--o-hb-row-active-bg-color-popover, #{mix($o-we-color-accent, $o-we-fg-lighter, 20%)});
         --o-hb-row-color: var(--o-hb-row-color-popover, #{$o-we-bg-lightest});
         --o-hb-row-color-active: var(--o-hb-row-color-active-popover, #{$o-we-bg-darkest});
@@ -24,6 +24,7 @@
         }
         .hb-row-label {
             flex: 0 0 38%;
+            align-self: center;
         }
         .hb-row-content {
             flex: 0 0 62%;
@@ -54,7 +55,7 @@
         flex: 0 0 44%;
         z-index: $_z-index;
         background-color: var(--o-hb-row-bg-color, #{$o-we-bg-lighter});
-        padding: $o-hb-row-spacing 0 $o-hb-row-spacing $o-hb-row-padding-left;
+        padding: $o-hb-row-spacing $o-hb-row-spacing $o-hb-row-spacing $o-hb-row-padding-left;
         align-self: baseline;
     }
 
@@ -66,6 +67,11 @@
         align-items: center;
         gap: var(--hb-row-content-gap);
         z-index: $_z-index; // Make sure outlines / shadows are not trimmed.
+
+        // to prevent overlapping of ul with builder options.
+        &:has(ul) {
+            z-index: auto;
+        }
     }
 
     .o_hb_collapse_toggler {

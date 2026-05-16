@@ -33,7 +33,7 @@
                                         <div t-foreach="line.combo_line_ids" t-as="cline" t-key="cline.uuid" class="ps-3 mb-2">
                                             <t t-set="c_qty" t-value="cline.qty / line.qty"/>
                                             <span t-if="(c_qty &gt; 1)"><t t-esc="c_qty"/>x </span>
-                                            <t t-esc="cline.product_id.name"/>
+                                            <t t-esc="formatProductName(cline.product_id)"/>
                                             <div t-foreach="cline.attribute_value_ids" t-as="attrVal" t-key="attrVal.id" class="ps-3 mt-1 text-muted">
                                                 <t t-esc="attrVal.attribute_id.name" />:
                                                 <t t-esc="attrVal.name" />
@@ -71,8 +71,9 @@
             </div>
             <div class="o_self_footer border-top border-bottom bg-white py-2 py-lg-3" t-att-class="{'o_self_shadow_bottom': scrollShadow.bottom}">
                 <div class="container o_self_container order-price d-flex flex-column gap-0 gap-lg-1 align-items-end px-md-4" >
-                    <div class="fs-3 fw-bold o-so-tabular-nums mb-0 pe-sm-2 pe-kiosk-p-4">Total: <span class="text-primary"><t t-esc="selfOrder.formatMonetary(selfOrder.currentOrder.priceIncl)" /></span></div>
-                    <div class="fs-4 o-so-tabular-nums mb-0 pe-sm-2 pe-kiosk-p-4 text-muted" t-if="displayTaxes">Taxes: <t t-esc="selfOrder.formatMonetary(selfOrder.currentOrder.amountTaxes)" /></div>
+                    <t t-set="total" t-value="totalPriceAndTax"/>
+                    <div class="fs-3 fw-bold o-so-tabular-nums mb-0 pe-sm-2 pe-kiosk-p-4">Total: <span class="text-primary"><t t-esc="selfOrder.formatMonetary(total.priceWithTax)" /></span></div>
+                    <div class="fs-4 o-so-tabular-nums mb-0 pe-sm-2 pe-kiosk-p-4 text-muted" t-if="displayTaxes">Taxes: <t t-esc="selfOrder.formatMonetary(total.tax)" /></div>
                  </div>
             </div>
             <OrderWidget t-if="this.selfOrder.ordering" action.bind="pay" removeTopClasses="true"/>

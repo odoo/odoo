@@ -11,7 +11,7 @@ patch(ControlButtons.prototype, {
     setup() {
         super.setup(...arguments);
         this.state = useState({
-            nbrRewards: [],
+            nbrRewards: 0,
         });
 
         onWillRender(() => {

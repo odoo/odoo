@@ -51,8 +51,9 @@ export class FeedbackPanel extends Component {
         );
     }
 
+    /** @deprecated use `thread.transcriptUrl` instead */
     get transcriptUrl() {
-        return url(`/im_livechat/download_transcript/${this.props.thread.id}`);
+        return this.props.thread.transcriptUrl;
     }
 
     onClickSendFeedback() {

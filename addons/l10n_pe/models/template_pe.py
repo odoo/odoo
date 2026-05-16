@@ -32,5 +32,16 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_purchase_tax_id': 'purchase_tax_igv_18',
                 'expense_account_id': 'chart6329',
                 'income_account_id': 'chart70121',
+                'account_stock_journal_id': 'inventory_valuation',
+                'account_stock_valuation_id': 'chart20111',
+            },
+        }
+
+    @template('pe', 'account.account')
+    def _get_pe_account_account(self):
+        return {
+            'chart20111': {
+                'account_stock_expense_id': 'chart6111',
+                'account_stock_variation_id': 'chart69121',
             },
         }

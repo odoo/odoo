@@ -1,11 +1,17 @@
 import { uuidv4 } from "@point_of_sale/utils";
-import { getService, makeDialogMockEnv, mountWithCleanup } from "@web/../tests/web_test_helpers";
-import { tick, waitUntil } from "@odoo/hoot-dom";
+import {
+    getService,
+    makeDialogMockEnv,
+    mountWithCleanup,
+    patchWithCleanup,
+} from "@web/../tests/web_test_helpers";
+import { animationFrame, tick, waitFor, waitUntil } from "@odoo/hoot-dom";
 import { Deferred } from "@odoo/hoot-mock";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { patch } from "@web/core/utils/patch";
 import { onMounted } from "@odoo/owl";
 import { expect } from "@odoo/hoot";
+import { user } from "@web/core/user";
 
 const { DateTime } = luxon;
 
@@ -23,6 +29,11 @@ export const setupPosEnv = async () => {
     await makeDialogMockEnv();
     const store = getService("pos");
     store.setCashier(store.user);
+    patchWithCleanup(user, {
+        // Needed for the allowProductCreation method
+        checkAccessRight: (model, operation) =>
+            operation === "create" && model === "product.product",
+    });
     return store;
 };
 
@@ -105,4 +116,28 @@ export const patchDialogComponent = (component) => {
 
 export const expectFormattedPrice = (value, expected) => {
     expect(value).toBe(expected.replaceAll(" ", "\u00a0"));
+};
+
+export const dialogActions = async (action, steps = []) => {
+    // Launch the action in a promise to be able to await the end of the steps
+    await mountWithCleanup(MainComponentsContainer);
+    const promise = new Promise((resolve) => {
+        const call = async (fn) => {
+            const result = await fn();
+            resolve(result);
+        };
+        call(action);
+    });
+
+    // Wait for the dialog to be mounted
+    await waitFor(".o_dialog");
+
+    // Execute the steps one by one
+    for (const step of steps) {
+        await step();
+        await animationFrame();
+    }
+
+    // Return the result of the action
+    return await promise;
 };

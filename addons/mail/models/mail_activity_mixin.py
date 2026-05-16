@@ -116,8 +116,6 @@ class MailActivityMixin(models.AbstractModel):
             record.activity_user_id = record.activity_ids[0].user_id if record.activity_ids else False
 
     def _search_activity_exception_decoration(self, operator, operand):
-        if operator in Domain.NEGATIVE_OPERATORS:
-            return NotImplemented
         return [('activity_ids.activity_type_id.decoration_type', operator, operand)]
 
     @api.depends('activity_ids.state')

@@ -24,3 +24,12 @@ class AccountMove(models.Model):
         res = super().action_post()
         self.reflect_cancelled_sol(False)
         return res
+
+    def _is_downpayment(self):
+        # EXTENDS sale
+        self.ensure_one()
+        if self.line_ids.sale_line_ids:
+            return super()._is_downpayment()
+
+        base_lines, _ = self._get_rounded_base_and_tax_lines()
+        return base_lines and all('down_payment' in (line['computation_key'] or '').split(',') for line in base_lines)

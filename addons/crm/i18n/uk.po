@@ -5,26 +5,28 @@
 # Translators:
 # Bohdan Lisnenko, 2022
 # Martin Trigaux, 2022
-# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2022
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2022, 2026.
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Vlad Patenko <vlad.patenko@gmail.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:37+0000\n"
-"PO-Revision-Date: 2025-09-16 22:54+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
-"Language-Team: Ukrainian <https://translate.odoo.com/projects/odoo-19/crm/uk/"
-">\n"
+"POT-Creation-Date: 2026-02-20 18:35+0000\n"
+"PO-Revision-Date: 2026-05-07 15:10+0000\n"
+"Last-Translator: Vlad Patenko <vlad.patenko@gmail.com>\n"
+"Language-Team: Ukrainian <https://translate.odoo.com/projects/odoo-19/crm/"
+"uk/>\n"
 "Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != "
-"11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % "
-"100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || "
-"(n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
-"X-Generator: Weblate 5.12.2\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 "
+"? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > "
+"14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % "
+"100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__lead_all_assigned_month_count
@@ -130,7 +132,7 @@ msgstr ""
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
 msgid "<i class=\"fa fa-info-circle me-2\" title=\"Assigned Lead Count\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-info-circle me-2\" title=\"Assigned Lead Count\"/>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.quick_create_opportunity_form
@@ -175,6 +177,9 @@ msgid ""
 "title=\"By saving this change, the customer email will also be updated.\" "
 "invisible=\"not partner_email_update\"/>"
 msgstr ""
+"<span class=\"fa fa-exclamation-triangle text-warning oe_edit_only\" "
+"title=\"By saving this change, the customer email will also be updated.\" "
+"invisible=\"not partner_email_update\"/>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -183,6 +188,9 @@ msgid ""
 "title=\"By saving this change, the customer phone number will also be "
 "updated.\" invisible=\"not partner_phone_update\"/>"
 msgstr ""
+"<span class=\"fa fa-exclamation-triangle text-warning oe_edit_only\" "
+"title=\"By saving this change, the customer phone number will also be "
+"updated.\" invisible=\"not partner_phone_update\"/>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -192,6 +200,10 @@ msgid ""
 "                                    <span class=\"o_stat_text\" "
 "invisible=\"duplicate_lead_count &gt; 1\">Similar Lead</span>"
 msgstr ""
+"<span class=\"o_stat_text\" invisible=\"duplicate_lead_count &lt; 2\">Схожі "
+"ліди</span>\n"
+"                                    <span class=\"o_stat_text\" "
+"invisible=\"duplicate_lead_count &gt; 1\">Схожий лід</span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.utm_campaign_view_form
@@ -200,6 +212,9 @@ msgid ""
 "                        <span class=\"o_stat_text\" "
 "invisible=\"use_leads\">Opportunities</span>"
 msgstr ""
+"<span class=\"o_stat_text\" invisible=\"not use_leads\">Ліди</span>\n"
+"                        <span class=\"o_stat_text\" "
+"invisible=\"use_leads\">Нагоди</span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lost_reason_view_form
@@ -210,15 +225,6 @@ msgstr "<span class=\"o_stat_text\"> Ліди</span>"
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid ""
 "<span class=\"opacity-50 p-2 text-nowrap d-none d-sm-block\"> at </span>"
-msgstr ""
-
-#. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
-msgid ""
-"<span class=\"opacity-50 p-2\" groups=\"crm.group_use_recurring_revenues\"> "
-"+ </span>\n"
-"                                        <span class=\"opacity-50 p-2\" "
-"groups=\"!crm.group_use_recurring_revenues\"> at </span>"
 msgstr ""
 
 #. module: crm
@@ -237,6 +243,8 @@ msgid ""
 "<span> leads assigned this month\n"
 "                            on a maximum of </span>"
 msgstr ""
+"<span> ліди призначені цього місяця\n"
+"                            максимум від </span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
@@ -311,7 +319,7 @@ msgid ""
 "                    <td valign=\"top\" style=\"font-size: 13px;\">\n"
 "                        <div>\n"
 "                            Hi <t t-out=\"object.partner_id and "
-"object.partner_id.name or ''\">Deco Addict</t>,<br/><br/>\n"
+"object.partner_id.name or ''\">Acme Corporation</t>,<br/><br/>\n"
 "                            Welcome to <t t-out=\"object.company_id.name or "
 "''\">My Company (San Francisco)</t>.\n"
 "                            It's great to meet you! Now that you're on "
@@ -424,7 +432,7 @@ msgstr ""
 #: code:addons/crm/static/src/views/crm_form/crm_pls_tooltip_button.xml:0
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "AI"
-msgstr ""
+msgstr "AI"
 
 #. module: crm
 #. odoo-javascript
@@ -511,7 +519,7 @@ msgstr "Оформлення виключення дії"
 #. module: crm
 #: model:ir.ui.menu,name:crm.mail_activity_plan_menu_config_lead
 msgid "Activity Plans"
-msgstr ""
+msgstr "Плани дій"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__activity_state
@@ -550,7 +558,7 @@ msgstr ""
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 msgid "Activity type"
-msgstr ""
+msgstr "Тип дії"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -600,17 +608,17 @@ msgstr "Безпека псевдоніма контакту"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_domain_id
 msgid "Alias Domain"
-msgstr ""
+msgstr "Домен псевдоніма"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_domain
 msgid "Alias Domain Name"
-msgstr ""
+msgstr "Назва домену псевдоніму"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_full_name
 msgid "Alias Email"
-msgstr ""
+msgstr "Псевдонім електронної пошти"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_name
@@ -620,12 +628,12 @@ msgstr "Назва псевдоніма"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_status
 msgid "Alias Status"
-msgstr ""
+msgstr "Статус псевдоніма"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_status
 msgid "Alias status assessed on the last message received."
-msgstr ""
+msgstr "Статус псевдоніма оцінюється за останнім отриманим повідомленням."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_model_id
@@ -786,7 +794,7 @@ msgstr "Середнє охоплення лідів (за 30 днів)"
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "Belgium"
-msgstr ""
+msgstr "Бельгія"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__is_blacklisted
@@ -864,7 +872,7 @@ msgstr "Скасувати"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_member_view_form
 msgid "Capacity"
-msgstr ""
+msgstr "Ємність"
 
 #. module: crm
 #. odoo-python
@@ -960,7 +968,7 @@ msgstr "Примітка закриття"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_scoring_frequency_field__color
 msgid "Color"
-msgstr ""
+msgstr "Колір"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__color
@@ -1039,7 +1047,7 @@ msgstr "Огляд лідів, створених з:"
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "Consulting"
-msgstr ""
+msgstr "Консалтинг"
 
 #. module: crm
 #: model:ir.model,name:crm.model_res_partner
@@ -1056,7 +1064,7 @@ msgstr "Деталі контакту:"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.quick_create_opportunity_form
 msgid "Contact Email"
-msgstr ""
+msgstr "Контактна електронна пошта"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -1073,7 +1081,7 @@ msgstr "Назва контакту"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.quick_create_opportunity_form
 msgid "Contact Phone"
-msgstr ""
+msgstr "Телефон контакту"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
@@ -1083,7 +1091,7 @@ msgstr "Контакт:"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "Contacts"
-msgstr ""
+msgstr "Контакти"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner__name
@@ -1316,7 +1324,7 @@ msgstr "Клієнт"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__commercial_partner_id
 msgid "Customer Company"
-msgstr ""
+msgstr "Компанія клієнта"
 
 #. module: crm
 #: model:ir.ui.menu,name:crm.res_partner_menu_customer
@@ -1431,7 +1439,7 @@ msgstr "Огляд"
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_lost_view_form
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_pls_update_view_form
 msgid "Discard"
-msgstr ""
+msgstr "Відмінити"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_calendar_event__display_name
@@ -1500,12 +1508,13 @@ msgstr ""
 #: code:addons/crm/static/src/js/tours/crm.js:0
 msgid "Drag your opportunity to <b>Won</b> when you get the deal. Congrats!"
 msgstr ""
+"Перетягніть вашу нагоду на <b>Впіймано</b> після отримання угоди. Вітаємо!"
 
 #. module: crm
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "Duration: %s"
-msgstr ""
+msgstr "Тривалість: %s"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lead_action_forecast
@@ -1535,7 +1544,7 @@ msgstr "Псевдонім ел. пошти"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__email_domain_criterion
 msgid "Email Domain Criterion"
-msgstr ""
+msgstr "Критерій домену електронної пошти"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__email_state
@@ -1555,7 +1564,7 @@ msgstr "Email cc:"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_domain
 msgid "Email domain e.g. 'example.com' in 'odoo@example.com'"
-msgstr ""
+msgstr "Домен пошти, напр., 'example.com' в 'odoo@example.com'"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
@@ -1609,7 +1618,7 @@ msgstr "Спрогнозуйте дату, на яку нагоду буде в�
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__lead_all_assigned_month_exceeded
 msgid "Exceed monthly lead assignement"
-msgstr ""
+msgstr "Перевищення місячного призначення лідів"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__date_deadline
@@ -1742,7 +1751,7 @@ msgstr "З %(source_name)s"
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "From %(source_name)s: %(source_subject)s"
-msgstr ""
+msgstr "З %(source_name)s: %(source_subject)s"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -1847,7 +1856,7 @@ msgid ""
 "creation alias)"
 msgstr ""
 "ID батьківського запису, що містить псевдонім (наприклад: проект, що містить "
-"завдання створити псевдонім)."
+"завдання створити псевдонім)"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__activity_exception_icon
@@ -1971,7 +1980,7 @@ msgstr "Чи видимий партнер"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__won_status
 msgid "Is Won"
-msgstr ""
+msgstr "Впіймано"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage__is_won
@@ -1987,6 +1996,7 @@ msgstr "Є автоматичною ймовірністю?"
 #: model:ir.model.fields,help:crm.field_crm_lead__duration_tracking
 msgid "JSON that maps ids from a many2one field to seconds spent"
 msgstr ""
+"JSON, який зіставляє ідентифікатори з поля many2one у витрачені секунди"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__function
@@ -2037,13 +2047,13 @@ msgstr "Остання дія"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
 msgid "Last Automation:"
-msgstr ""
+msgstr "Остання автоматизація:"
 
 #. module: crm
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "Last Meeting"
-msgstr ""
+msgstr "Остання зустріч"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__date_last_stage_update
@@ -2317,7 +2327,7 @@ msgstr "Підрахунок лідів/нагод"
 #. odoo-javascript
 #: code:addons/crm/static/src/views/crm_form/crm_pls_tooltip_button.xml:0
 msgid "Learn More"
-msgstr ""
+msgstr "Детальніше"
 
 #. module: crm
 #. odoo-javascript
@@ -2356,7 +2366,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_incoming_local
 msgid "Local-part based incoming detection"
-msgstr ""
+msgstr "Виявлення вхідних повідомлень на основі локальної частини"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__lang_code
@@ -2381,6 +2391,8 @@ msgid ""
 "Looks like nothing is planned. :(<br><br><i>Tip: Schedule activities to keep "
 "track of everything you have to do!</i>"
 msgstr ""
+"Виглядає, ніби нічого не заплановано. :(<br><br><i>Порада: Заплануйте дії, "
+"щоби слідкувати за всім, що ви робите!</i>"
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__crm_activity_report__won_status__lost
@@ -2408,7 +2420,7 @@ msgstr "Підрахунок втрачених"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_lost_view_form
 msgid "Lost Lead"
-msgstr ""
+msgstr "Втрачений лід"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__lost_reason_id
@@ -2439,7 +2451,7 @@ msgstr "Низький"
 #. odoo-javascript
 #: code:addons/crm/static/src/views/crm_kanban/crm_column_progress.xml:0
 msgid "MRR"
-msgstr ""
+msgstr "MRR"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -2525,18 +2537,18 @@ msgstr "Канал:"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__meeting_display_date
 msgid "Meeting Display Date"
-msgstr ""
+msgstr "Відображення дати зустрічі"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__meeting_display_label
 msgid "Meeting Display Label"
-msgstr ""
+msgstr "Мітка відображення зустрічі"
 
 #. module: crm
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "Meeting scheduled at %s"
-msgstr ""
+msgstr "Зустріч заброньовано на %s"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.act_crm_opportunity_calendar_event_new
@@ -2700,7 +2712,7 @@ msgstr "Тип наступної дії"
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "Next Meeting"
-msgstr ""
+msgstr "Наступна зустріч"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -2717,7 +2729,7 @@ msgstr "Ні"
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "No Meeting"
-msgstr ""
+msgstr "Немає зустрічі"
 
 #. module: crm
 #. odoo-python
@@ -2880,7 +2892,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "Кількість повідомлень, які вимагають дії"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__message_has_error_counter
@@ -2914,7 +2926,7 @@ msgstr ""
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Ongoing"
-msgstr ""
+msgstr "У процесі"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
@@ -3000,7 +3012,7 @@ msgstr "Нагода"
 #: model:ir.model.fields,field_description:crm.field_res_partner__opportunity_count
 #: model:ir.model.fields,field_description:crm.field_res_users__opportunity_count
 msgid "Opportunity Count"
-msgstr ""
+msgstr "Підрахунок нагод"
 
 #. module: crm
 #: model:mail.message.subtype,name:crm.mt_lead_create
@@ -3081,7 +3093,7 @@ msgstr "Протерміновані нагоди"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "Ownership"
-msgstr ""
+msgstr "Власність"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_parent_model_id
@@ -3128,7 +3140,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:crm.selection__crm_activity_report__won_status__pending
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead__won_status__pending
 msgid "Pending"
-msgstr ""
+msgstr "В очікуванні"
 
 #. module: crm
 #. odoo-python
@@ -3149,7 +3161,7 @@ msgstr "Телефон у чорному списку"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__phone_mobile_search
 msgid "Phone Number"
-msgstr ""
+msgstr "Номер телефону"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__phone_state
@@ -3228,7 +3240,7 @@ msgstr "Підрахунок потенційних дублікатів лід�
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Predictive Lead Scoring"
-msgstr ""
+msgstr "Оцінка прогнозу лідів"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__predictive_lead_scoring_field_labels
@@ -3292,7 +3304,7 @@ msgstr "Пропорційний MRR"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__recurring_revenue_prorated
 msgid "Prorated Recurring Revenues"
-msgstr ""
+msgstr "Пропорційно розподілені регулярні доходи"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__prorated_revenue
@@ -3312,7 +3324,7 @@ msgstr "Підтверджено"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__rating_ids
 msgid "Ratings"
-msgstr ""
+msgstr "Оцінювання"
 
 #. module: crm
 #. odoo-javascript
@@ -3698,7 +3710,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__duration_tracking
 msgid "Status time"
-msgstr ""
+msgstr "Час статусу"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__street
@@ -3724,7 +3736,7 @@ msgstr "Вулиця 2"
 #. odoo-python
 #: code:addons/crm/models/crm_lead.py:0
 msgid "Subject: "
-msgstr ""
+msgstr "Тема: "
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__subtype_id
@@ -3968,7 +3980,7 @@ msgstr "Порада: конвертуйте вхідні електронні �
 #: model:digest.tip,name:crm.digest_tip_crm_1
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_1
 msgid "Tip: Did you know Odoo has built-in lead mining?"
-msgstr "Порада:  Чи знали ви, що Odoo має вбудоване отримання лідів?"
+msgstr "Порада: Чи знали ви, що Odoo має вбудоване отримання лідів?"
 
 #. module: crm
 #: model:digest.tip,name:crm.digest_tip_crm_4
@@ -4053,6 +4065,8 @@ msgid ""
 "True if the monthly lead assignment count is greater than the maximum "
 "assignment limit, false otherwise."
 msgstr ""
+"True, якщо місячна кількість призначень лідів перевищує максимальний ліміт "
+"призначень, false в іншому випадку."
 
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_0
@@ -4115,7 +4129,7 @@ msgstr "Майбутні закриття"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_pls_update_view_form
 msgid "Update"
-msgstr ""
+msgstr "Оновити"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_lead_pls_update_action
@@ -4182,7 +4196,7 @@ msgstr ""
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_action_helper
 msgid "Use the <i>New</i> button, or send an email to"
-msgstr ""
+msgstr "Використовуйте кнопку <i>Новий</i> або надішліть email на"
 
 #. module: crm
 #. odoo-python
@@ -4191,6 +4205,8 @@ msgid ""
 "Use the <i>New</i> button, or send an email to %(email_link)s to test the "
 "email gateway."
 msgstr ""
+"Використовуйте кнопку <i>Новий</i>, або надішліть email на %(email_link)s "
+"для тестування поштового шлюзу."
 
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_7
@@ -4204,6 +4220,8 @@ msgstr ""
 msgid ""
 "Use the New button, or configure an email alias to test the email gateway."
 msgstr ""
+"Використовуйте кнопку «Новий» або налаштуйте псевдонім електронної пошти, "
+"щоб перевірити шлюз електронної пошти."
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_opportunity_report_action
@@ -4243,7 +4261,7 @@ msgstr "Дуже високий"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "Visible to all"
-msgstr ""
+msgstr "Видно всім"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -4293,7 +4311,7 @@ msgstr "Привітальне демо"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_lost_view_form
 msgid "What went wrong?"
-msgstr ""
+msgstr "Що пішло не так?"
 
 #. module: crm
 #: model:crm.stage,name:crm.stage_lead4
@@ -4414,13 +4432,18 @@ msgstr "Індекс"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
 msgid "alias"
+msgstr "псевдонім"
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
+msgid "at"
 msgstr ""
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 #: model_terms:ir.ui.view,arch_db:crm.quick_create_opportunity_form
 msgid "e.g. \"Monthly\""
-msgstr ""
+msgstr "напр. \"Щомісяця\""
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_stage_form
@@ -4445,7 +4468,7 @@ msgstr "наприклад, https://www.odoo.com"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
 msgid "e.g. mycompany.com"
-msgstr ""
+msgstr "напр. mycompany.com"
 
 #. module: crm
 #. odoo-javascript
@@ -4503,7 +4526,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/crm/static/src/views/crm_form/crm_pls_tooltip_button.xml:0
 msgid "stage"
-msgstr ""
+msgstr "сцена"
 
 #. module: crm
 #. odoo-javascript

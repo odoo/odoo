@@ -91,3 +91,14 @@ export function parseGroupField(allFields, groupFieldString) {
 export function domainHasNoRecordAtThisPosition(domain) {
     return domain.some((node) => node.value === "NO_RECORD_AT_THIS_POSITION");
 }
+
+export async function getRelationalFieldDefinition(resModel, fieldName, fieldService) {
+    const { modelsInfo, names } = await fieldService.loadPath(resModel, fieldName);
+    return {
+        ...modelsInfo.at(-1).fieldDefs[fieldName.split(".").at(-1)],
+        string: names
+            .map((name, i) => modelsInfo[i].fieldDefs[name]?.string || _t("Unnamed Field"))
+            .join(" > "),
+        name: fieldName,
+    };
+}

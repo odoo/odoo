@@ -35,13 +35,15 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_journal_early_pay_discount_gain_account_id': 'l10n_tw_account_7191',
                 'default_cash_difference_income_account_id': 'l10n_tw_account_7181',
                 'default_cash_difference_expense_account_id': 'l10n_tw_account_7561',
-                'account_sale_tax_id': 'tw_tax_sale_5',
-                'account_purchase_tax_id': 'tw_tax_purchase_5',
+                'account_sale_tax_id': 'l10n_tw_tax_sale_5_tr_vat',
+                'account_purchase_tax_id': 'l10n_tw_tax_purchase_5_vat_pc_uid',
                 'expense_account_id': 'l10n_tw_account_5601',
                 'income_account_id': 'l10n_tw_account_4111',
                 'account_production_wip_account_id': 'l10n_tw_account_1314',
                 'account_production_wip_overhead_account_id': 'l10n_tw_account_5601',
                 'tax_calculation_rounding_method': 'round_globally',
+                'account_stock_journal_id': 'inventory_valuation',
+                'account_stock_valuation_id': 'l10n_tw_account_1315',
             },
         }
 
@@ -55,5 +57,13 @@ class AccountChartTemplate(models.AbstractModel):
                 'name': self.env._("Cash"),
                 'type': 'cash',
                 'default_account_id': 'l10n_tw_account_1101',
+            },
+        }
+
+    @template('tw', 'account.account')
+    def _get_tw_account_account(self):
+        return {
+            'l10n_tw_account_1315': {
+                'account_stock_variation_id': 'l10n_tw_account_5101',
             },
         }

@@ -9,7 +9,7 @@
                     Show optimized images
                 </label>
             </div>
-            <select t-if="showSearchServiceSelect" class="o_input o_we_search_select form-select" t-on-change="ev => props.changeSearchService(ev.target.value)">
+            <select t-if="showSearchServiceSelect" class="o_input o_we_search_select form-select pe-5" t-on-change="ev => props.changeSearchService(ev.target.value)">
                 <option t-att-selected="props.searchService === 'all'" value="all">All</option>
                 <option t-att-selected="props.searchService === 'database'" value="database">My Images</option>
                 <option t-if="props.useMediaLibrary" t-att-selected="props.searchService === 'media-library'" value="media-library">Illustrations</option>

@@ -23,7 +23,7 @@ export class BomOverviewControlPanel extends Component {
         variants: { type: Object, optional: true },
         data: { type: Object, optional: true },
         uomName: { type: String, optional: true },
-        currentWarehouse: Object,
+        currentWarehouse: { type: Object, optional: true },
         warehouses: { type: Array, optional: true },
         print: Function,
         changeWarehouse: Function,
@@ -82,8 +82,8 @@ export class BomOverviewControlPanel extends Component {
             target: "current",
             context: {
                 default_bom_id: this.props.data.bom_id,
-                default_picking_type_id: this.props.currentWarehouse.manu_type_id[0],
-                default_product_qty: this.props.bomQuantity,
+                bom_overview_picking_type_id: this.props.currentWarehouse.manu_type_id[0],
+                bom_overview_product_qty: this.props.bomQuantity,
             },
         };
         return this.action.doAction(action);
@@ -101,7 +101,7 @@ export class BomOverviewControlPanel extends Component {
         return this.props.warehouses.map(wh => ({
             id: wh.id,
             label: wh.name,
-            class: { selected: wh.name === this.props.currentWarehouse.name },
+            class: { selected: wh.name === this.props.currentWarehouse?.name },
             onSelected: () => this.props.changeWarehouse(wh.id)
         }));
     }

@@ -78,7 +78,8 @@ class StockScrap(models.Model):
         self.scrap_qty = 1
         for scrap in self:
             if not scrap.bom_id:
-                return super(StockScrap, scrap)._compute_scrap_qty()
+                super(StockScrap, scrap)._compute_scrap_qty()
+                continue
             if scrap.move_ids:
                 filters = {
                     'incoming_moves': lambda m: True,
@@ -88,6 +89,12 @@ class StockScrap(models.Model):
 
     def _should_check_available_qty(self):
         return super()._should_check_available_qty() or self.product_is_kit
+
+    def _create_scrap_move(self):
+        move = super()._create_scrap_move()
+        if self.product_id.is_kits:
+            move = move.with_context(is_scrap=True).action_explode()
+        return move
 
     def do_replenish(self, values=False):
         self.ensure_one()

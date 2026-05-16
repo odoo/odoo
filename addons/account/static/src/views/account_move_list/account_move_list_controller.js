@@ -27,7 +27,11 @@ export class AccountMoveListController extends FileUploadListController {
     }
 
     async loadExtraPrintItems() {
-        return this.orm.call("account.move", "get_extra_print_items", [this.actionMenuProps.getActiveIds()]);
+        if (this.actionMenuProps.resModel === "account.move") {
+            const selectedResIds = await this.model.root.getResIds(true);
+            return this.orm.call("account.move", "get_extra_print_items", [selectedResIds]);
+        }
+        return []
     }
 
     async onDeleteSelectedRecords() {

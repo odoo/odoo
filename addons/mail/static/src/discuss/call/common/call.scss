@@ -27,7 +27,6 @@
             height: 10%;
             min-height: #{"max(10%, 100px)"};
             &.o-hasVideo.o-selfInCall {
-                width: 100%;
                 height: calc(100vw * 9 / 16);
             }
         }
@@ -40,6 +39,10 @@
             height: 100%;
         }
     }
+}
+
+.o-discuss-Call-layoutActions button {
+    --o-mail-ActionList-Button-opacity: .75;
 }
 
 .o-discuss-Call-sidebar {

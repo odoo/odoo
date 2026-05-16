@@ -167,6 +167,7 @@
                         <field name="name">12) Total Value of Tax Payable</field>
                         <field name="name@ms_MY">12) Jumlah Nilai Cukai Yang Kena Dibayar</field>
                         <field name="code">SST02_PTV</field>
+                        <field name="aggregation_formula" eval="False"/>
                         <field name="hierarchy_level">1</field>
                         <field name="expression_ids">
                             <record id="l10n_my_sst_tax_payable_total_value_agg_d" model="account.report.expression">
@@ -252,6 +253,7 @@
                         <field name="name">14) Total Tax Payable Before Penalty Imposed</field>
                         <field name="name@ms_MY">14) Jumlah Cukai Yang Kena Dibayar Seblum Penalti Dikenakan</field>
                         <field name="code">SST02_PTBP</field>
+                        <field name="aggregation_formula" eval="False"/>
                         <field name="hierarchy_level">1</field>
                         <field name="expression_ids">
                             <record id="l10n_my_sst_tax_payable_total_before_penalty_agg_d" model="account.report.expression">
@@ -278,6 +280,7 @@
                     <record id="l10n_my_sst_total_including_penalty" model="account.report.line">
                         <field name="name">16) Total of Tax Payable Inclusive Penalty</field>
                         <field name="name@ms_MY">16) Jumlah Cukai Kena Dibayar Termasuk Penalti</field>
+                        <field name="aggregation_formula" eval="False"/>
                         <field name="hierarchy_level">1</field>
                         <field name="expression_ids">
                             <record id="l10n_my_sst_total_including_penalty_agg_d" model="account.report.expression">

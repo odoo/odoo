@@ -8,13 +8,15 @@
 # Martin Trigaux, 2023
 # Jolien De Paepe, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Manon Rondou (ronm)" <ronm@odoo.com>, 2025.
+# "Manon Rondou (ronm)" <ronm@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# jura <julienraway@hotmail.com>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:37+0000\n"
-"PO-Revision-Date: 2025-10-21 12:30+0000\n"
+"POT-Creation-Date: 2026-04-10 18:37+0000\n"
+"PO-Revision-Date: 2026-04-14 13:02+0000\n"
 "Last-Translator: \"Manon Rondou (ronm)\" <ronm@odoo.com>\n"
 "Language-Team: French <https://translate.odoo.com/projects/odoo-19/project/"
 "fr/>\n"
@@ -24,12 +26,12 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
 "1000000 == 0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__portal
 msgid " All internal users and invited portal users"
-msgstr ""
+msgstr " Tous les utilisateurs internes et les utilisateurs invités du portail"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_count
@@ -288,64 +290,65 @@ msgid ""
 "            "
 msgstr ""
 "<div>\n"
-"    <t t-set=\"access_token\" t-value=\"object._rating_get_access_token()\"/>"
-"\n"
+"    <t t-set=\"access_token\" t-value=\"object._rating_get_access_token()\"/"
+">\n"
 "    <t t-set=\"partner\" t-value=\"object._rating_get_partner()\"/>\n"
 "    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
 "style=\"width:100%; margin:0px auto;\">\n"
 "    <tbody>\n"
 "        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
 "            <t t-if=\"partner.name\">\n"
-"                Bonjour <t t-out=\"partner.name or ''\">Brandon Freeman</t>,<"
-"br/><br/>\n"
+"                Bonjour <t t-out=\"partner.name or ''\">Brandon Freeman</t>,"
+"<br/><br/>\n"
 "            </t>\n"
 "            <t t-else=\"\">\n"
 "                Bonjour,<br/><br/>\n"
 "            </t>\n"
 "            Merci de prendre un moment pour évaluer nos services concernant "
-"la tâche <strong t-out=\"object.name or ''\">Planification et budget</strong>"
-"\n"
+"la tâche <strong t-out=\"object.name or ''\">Planification et budget</"
+"strong>\n"
 "            <t t-if=\"object._rating_get_operator().name\">\n"
-"                attribuée à <strong t-out="
-"\"object._rating_get_operator().name or ''\">Mitchell Admin</strong>.<br/>\n"
+"                attribuée à <strong t-"
+"out=\"object._rating_get_operator().name or ''\">Mitchell Admin</strong>.<br/"
+">\n"
 "            </t>\n"
 "            <t t-else=\"\">\n"
 "                .<br/>\n"
 "            </t>\n"
 "        </td></tr>\n"
 "        <tr><td style=\"text-align: center;\">\n"
-"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width="
-"\"590\" style="
-"\"width:100%; margin: 32px 0px 32px 0px; display: inline-table;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
+"width=\"590\" style=\"width:100%; margin: 32px 0px 32px 0px; display: inline-"
+"table;\">\n"
 "                <tr><td style=\"font-size: 13px;text-align:center;\">\n"
-"                    <strong>Dites-nous ce que vous pensez de nos "
-"services</strong><br/>\n"
+"                    <strong>Dites-nous ce que vous pensez de nos services</"
+"strong><br/>\n"
 "                    <span style=\"font-size: 12px; opacity: 0.5; color: "
 "#454748;\">(cliquez sur un de ces smileys)</span>\n"
 "                </td></tr>\n"
 "                <tr><td style=\"font-size: 13px;\">\n"
-"                    <table style="
-"\"width:100%;text-align:center;margin-top:2rem;\">\n"
+"                    <table style=\"width:100%;text-align:center;margin-"
+"top:2rem;\">\n"
 "                        <tr>\n"
 "                            <td>\n"
-"                                <a t-attf-href=\"/rate/{{ access_token }}/5\""
-" t-att-class=\"'pe-none' if object._rating_get_operator() else ''\">\n"
-"                                    <img alt=\"Satisfait\" src="
-"\"/rating/static/src/img/rating_5.png\" title=\"Satisfait\"/>\n"
+"                                <a t-attf-href=\"/rate/{{ access_token }}/"
+"5\" t-att-class=\"'pe-none' if object._rating_get_operator() else ''\">\n"
+"                                    <img alt=\"Satisfait\" src=\"/rating/"
+"static/src/img/rating_5.png\" title=\"Satisfait\"/>\n"
 "                                </a>\n"
 "                            </td>\n"
 "                            <td>\n"
-"                                <a t-attf-href=\"/rate/{{ access_token }}/3\""
-" t-att-class=\"'pe-none' if object._rating_get_operator() else ''\">\n"
-"                                    <img alt=\"Neutre\" src="
-"\"/rating/static/src/img/rating_3.png\" title=\"Neutre\"/>\n"
+"                                <a t-attf-href=\"/rate/{{ access_token }}/"
+"3\" t-att-class=\"'pe-none' if object._rating_get_operator() else ''\">\n"
+"                                    <img alt=\"Neutre\" src=\"/rating/static/"
+"src/img/rating_3.png\" title=\"Neutre\"/>\n"
 "                                </a>\n"
 "                            </td>\n"
 "                            <td>\n"
-"                                <a t-attf-href=\"/rate/{{ access_token }}/1\""
-" t-att-class=\"'pe-none' if object._rating_get_operator() else ''\">\n"
-"                                    <img alt=\"Insatisfait\" src="
-"\"/rating/static/src/img/rating_1.png\" title=\"Insatisfait\"/>\n"
+"                                <a t-attf-href=\"/rate/{{ access_token }}/"
+"1\" t-att-class=\"'pe-none' if object._rating_get_operator() else ''\">\n"
+"                                    <img alt=\"Insatisfait\" src=\"/rating/"
+"static/src/img/rating_1.png\" title=\"Insatisfait\"/>\n"
 "                                </a>\n"
 "                            </td>\n"
 "                        </tr>\n"
@@ -357,39 +360,38 @@ msgstr ""
 "            Nous vous remercions pour votre retour, qui nous aide à "
 "améliorer continuellement nos services.\n"
 "            <t t-if=\"object.stage_id.rating_status == 'stage'\">\n"
-"                <br/><span style="
-"\"margin: 0; font-size: 12px; opacity: 0.5; color: #454748;\">Ce "
-"questionnaire de satisfaction vous a été envoyé car votre tâche est passée à "
-"l’étape <b t-out=\"object.stage_id.name or ''\">En cours</b></span>\n"
+"                <br/><span style=\"margin: 0; font-size: 12px; opacity: 0.5; "
+"color: #454748;\">Ce questionnaire de satisfaction vous a été envoyé car "
+"votre tâche est passée à l’étape <b t-out=\"object.stage_id.name or ''\">En "
+"cours</b></span>\n"
 "            </t>\n"
 "            <t t-if=\"object.stage_id.rating_status == 'periodic'\">\n"
-"                <br/><span style="
-"\"margin: 0; font-size: 12px; opacity: 0.5; color: #454748;\">Ce "
-"questionnaire de satisfaction est envoyé <b t-out="
-"\"object.stage_id.rating_status_period or ''\">chaque semaine</b> tant que "
-"la tâche reste dans l’étape <b t-out=\"object.stage_id.name or ''\">En "
+"                <br/><span style=\"margin: 0; font-size: 12px; opacity: 0.5; "
+"color: #454748;\">Ce questionnaire de satisfaction est envoyé <b t-"
+"out=\"object.stage_id.rating_status_period or ''\">chaque semaine</b> tant "
+"que la tâche reste dans l’étape <b t-out=\"object.stage_id.name or ''\">En "
 "cours</b>.</span>\n"
 "            </t>\n"
 "        </td></tr>\n"
 "        <tr><td><br/>Cordialement,</td></tr>\n"
 "        <tr><td>\n"
-"           <t t-out=\"object.project_id.company_id.name or ''\""
-">YourCompany</t>\n"
+"           <t t-out=\"object.project_id.company_id.name or ''\">YourCompany</"
+"t>\n"
 "        </td></tr>\n"
 "        <tr><td style=\"opacity: 0.5;\">\n"
 "            <t t-out=\"object.project_id.company_id.phone or ''\">1 "
 "650-123-4567</t>\n"
 "            <t t-if=\"object.project_id.company_id.email\">\n"
-"                | <a t-attf-href="
-"\"mailto:{{ object.project_id.company_id.email }}\" style=\"text-"
-"decoration:none; color: #454748;\" t-out=\""
-"object.project_id.company_id.email or ''\">info@yourcompany.com</a>\n"
+"                | <a t-attf-href=\"mailto:"
+"{{ object.project_id.company_id.email }}\" style=\"text-decoration:none; "
+"color: #454748;\" t-out=\"object.project_id.company_id.email or "
+"''\">info@yourcompany.com</a>\n"
 "            </t>\n"
 "            <t t-if=\"object.project_id.company_id.website\">\n"
-"                | <a t-attf-href="
-"\"{{ object.project_id.company_id.website }}\" style=\"text-decoration:none; "
-"color: #454748;\" t-out=\"object.project_id.company_id.website or ''\""
-">http://www.example.com</a>\n"
+"                | <a t-attf-href=\"{{ object.project_id.company_id.website }}"
+"\" style=\"text-decoration:none; color: #454748;\" t-"
+"out=\"object.project_id.company_id.website or ''\">http://www.example.com</"
+"a>\n"
 "            </t>\n"
 "        </td></tr>\n"
 "    </tbody>\n"
@@ -609,6 +611,19 @@ msgid ""
 "                                            </span>\n"
 "                                        </span>"
 msgstr ""
+"<span colspan=\"2\" class=\"text-muted o_row ps-1\">\n"
+"                                            <i class=\"fa fa-lightbulb-o "
+"pe-2\"/>\n"
+"                                            <span "
+"name=\"rating_status_helper\">\n"
+"                                                <span "
+"invisible=\"rating_status == 'periodic'\">Une demande d’évaluation sera "
+"envoyée dès qu’une tâche atteindra cette étape.</span>\n"
+"                                                <span "
+"invisible=\"rating_status == 'stage'\">Des demandes d’évaluation seront "
+"envoyées tant que la tâche restera dans cette étape.</span>\n"
+"                                            </span>\n"
+"                                        </span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_kanban
@@ -658,7 +673,7 @@ msgstr "<u>Jalons</u>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "<u>Profitability</u>"
-msgstr ""
+msgstr "<u>Rentabilité</u>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
@@ -771,7 +786,7 @@ msgstr "Activités de"
 #: model:ir.model.fields,field_description:project.field_project_task__activity_exception_decoration
 #: model:ir.model.fields,field_description:project.field_project_update__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "Activité exception décoration"
+msgstr "Indicateur d’exception d’activité"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.mail_activity_plan_action_config_project_task_plan
@@ -1086,6 +1101,9 @@ msgid ""
 "                When creating a new project from the template, choose who "
 "will take on each role."
 msgstr ""
+"Assignez des rôles aux tâches dans vos modèles de projet. Lors de la "
+"création d’un nouveau projet à partir du modèle, choisissez qui assumera "
+"chaque rôle."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.rating_rating_view_form_project
@@ -1426,6 +1444,13 @@ msgid ""
 "Periodic rating: an email will be automatically sent at regular intervals as "
 "long as the task remains in the stage."
 msgstr ""
+"Collectez les retours de vos clients en leur envoyant une demande "
+"d’évaluation lorsqu’une tâche entre dans une certaine étape. Pour ce faire, "
+"définissez un modèle d’e-mail d’évaluation sur l’étape.\n"
+"Évaluation lors du changement d’étape : un e-mail sera automatiquement "
+"envoyé lorsqu’une tâche atteindra l’étape.\n"
+"Évaluation périodique : un e-mail sera automatiquement envoyé à intervalles "
+"réguliers tant que la tâche restera dans cette étape."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_role__color
@@ -1645,7 +1670,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified
 msgid "Create tasks by email:"
-msgstr ""
+msgstr "Créer des tâches par e-mail :"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified_template
@@ -1748,7 +1773,7 @@ msgstr "URl du portail client"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "Customer Rating"
-msgstr ""
+msgstr "Évaluation des clients"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.rating_rating_action_project_report
@@ -1841,12 +1866,16 @@ msgid ""
 "disable         Changing this parameter will not affect the rotting status/"
 "date of resources last updated before this change."
 msgstr ""
+"Nombre de jours avant que les tâches dans cette étape deviennent obsolètes. "
+"Définissez sur 0 pour désactiver. La modification de ce paramètre "
+"n’affectera pas le statut ou la date d’obsolescence des ressources mises à "
+"jour avant ce changement."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__rotting_days
 #: model:ir.model.fields,help:project.field_project_task__rotting_days
 msgid "Day count since this resource was last updated"
-msgstr ""
+msgstr "Nombre de jours depuis la dernière mise à jour de cette ressource"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_unit__day
@@ -1859,7 +1888,7 @@ msgstr "Jours"
 #: model:ir.model.fields,field_description:project.field_project_project__rotting_days
 #: model:ir.model.fields,field_description:project.field_project_task__rotting_days
 msgid "Days Rotting"
-msgstr ""
+msgstr "Jours d’inactivité"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__delay_endings_days
@@ -1869,7 +1898,7 @@ msgstr "Jours avant échéance"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__rotting_threshold_days
 msgid "Days to rot"
-msgstr ""
+msgstr "Jours avant inactivité"
 
 #. module: project
 #. odoo-python
@@ -2070,6 +2099,7 @@ msgstr "Ignorer"
 #: model:ir.model.fields,field_description:project.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:project.field_res_partner__display_name
 #: model:ir.model.fields,field_description:project.field_res_users__display_name
+#: model:ir.model.fields,field_description:project.field_res_users_settings__display_name
 #: model:ir.model.fields,field_description:project.field_task_share_wizard__display_name
 msgid "Display Name"
 msgstr "Nom d'affichage"
@@ -2290,7 +2320,7 @@ msgstr "Finance"
 #: model:ir.model.fields,field_description:project.field_project_project_stage__fold
 #: model:ir.model.fields,field_description:project.field_project_task_type__fold
 msgid "Folded"
-msgstr ""
+msgstr "Replié"
 
 #. module: project
 #. odoo-javascript
@@ -2341,7 +2371,7 @@ msgstr "Pour toujours"
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_project_base
 msgid "Future"
-msgstr "Futur(e)(s)"
+msgstr "À venir"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
@@ -2394,6 +2424,9 @@ msgid ""
 "individual tasks. Internal users automatically gain access to tasks they are "
 "assigned to."
 msgstr ""
+"Donnez aux utilisateurs l’accès en les ajoutant comme abonnés — soit au "
+"projet, soit aux tâches individuelles. Les utilisateurs internes obtiennent "
+"automatiquement l’accès aux tâches qui leur sont assignées."
 
 #. module: project
 #. odoo-javascript
@@ -2428,7 +2461,7 @@ msgstr "A un message"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__has_template_ancestor
 msgid "Has Template Ancestor"
-msgstr ""
+msgstr "A un modèle ancêtre"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_invitation_follower
@@ -2516,6 +2549,7 @@ msgstr "Comment se passe ce projet ?"
 #: model:ir.model.fields,field_description:project.field_res_config_settings__id
 #: model:ir.model.fields,field_description:project.field_res_partner__id
 #: model:ir.model.fields,field_description:project.field_res_users__id
+#: model:ir.model.fields,field_description:project.field_res_users_settings__id
 #: model:ir.model.fields,field_description:project.field_task_share_wizard__id
 msgid "ID"
 msgstr "ID"
@@ -2575,6 +2609,9 @@ msgid ""
 "If enabled, this stage will be displayed as folded in the Kanban and List "
 "views of your projects. Projects in a folded stage are considered as closed."
 msgstr ""
+"Si activé, cette étape sera affichée comme repliée dans les vues Kanban et "
+"Liste de vos projets. Les projets dans une étape repliée sont considérés "
+"comme fermés."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type__rating_template_id
@@ -2584,6 +2621,10 @@ msgid ""
 "Alternatively, it will be sent at a regular interval as long as the task "
 "remains in this stage."
 msgstr ""
+"Si ce champ est défini, une demande d’évaluation sera automatiquement "
+"envoyée par e-mail au client lorsque la tâche atteindra cette étape.\n"
+"Alternativement, elle sera envoyée à intervalles réguliers tant que la tâche "
+"restera dans cette étape."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_stage__mail_template_id
@@ -2616,7 +2657,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "Import Template for Tasks"
-msgstr ""
+msgstr "Importer un modèle pour les tâches"
 
 #. module: project
 #. odoo-javascript
@@ -2674,12 +2715,12 @@ msgstr "Nom d'affichage invalide"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__invited_users
 msgid "Invited internal and portal users"
-msgstr ""
+msgstr "Utilisateurs internes et portail invités"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__followers
 msgid "Invited internal users"
-msgstr ""
+msgstr "Utilisateurs internes invités"
 
 #. module: project
 #. odoo-javascript
@@ -2754,7 +2795,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 msgid "Last 30 Days"
-msgstr "Les 30 derniers jours"
+msgstr "30 derniers jours"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
@@ -2851,7 +2892,7 @@ msgstr "Plus tard"
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 msgid "Let's create a regular <b>project</b>."
-msgstr ""
+msgstr "Créons un <b>projet</b> standard."
 
 #. module: project
 #. odoo-javascript
@@ -3667,7 +3708,7 @@ msgstr "Les tâches privées ne peuvent pas être converties en modèles"
 #. module: project
 #: model:project.project,name:project.project_template_1
 msgid "Product Launch Campaign"
-msgstr ""
+msgstr "Campagne de lancement de produit"
 
 #. module: project
 #. odoo-javascript
@@ -3785,7 +3826,7 @@ msgstr "Assistant de suppression d'étape de projet"
 #. module: project
 #: model:ir.actions.server,name:project.ir_cron_rating_project_ir_actions_server
 msgid "Project Stage: Send rating"
-msgstr ""
+msgstr "Étape du projet : envoyer l’évaluation"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_project_stage_configure
@@ -3862,6 +3903,29 @@ msgid ""
 "access.\n"
 "- Project admins have access to private projects, even if not followers.\n"
 msgstr ""
+"Visibilité du projet et des tâches :\n"
+"- Utilisateurs internes invités : ont accès uniquement au projet ou aux "
+"tâches qu’ils suivent. Les assignés obtiennent automatiquement l’accès.\n"
+"- Utilisateurs internes et portail invités : même fonctionnement que ci-"
+"dessus, étendu aux utilisateurs portail.\n"
+"- Tous les utilisateurs internes : accès complet au projet et à toutes ses "
+"tâches.\n"
+"- Tous les utilisateurs internes et utilisateurs portail invités : les "
+"utilisateurs internes ont un accès complet. Les utilisateurs portail n’ont "
+"accès qu’au projet ou aux tâches qu’ils suivent.\n"
+"\n"
+"Niveaux d’accès portail :\n"
+"- Lecture seule : les utilisateurs portail voient les tâches via leur "
+"portail mais ne peuvent pas les modifier.\n"
+"- Modification (limitée) : les utilisateurs portail accèdent aux vues kanban/"
+"liste et peuvent modifier certains champs des tâches suivies.\n"
+"- Modification : identique ci-dessus, avec accès à toutes les tâches.\n"
+"\n"
+"Autres règles :\n"
+"- Les utilisateurs internes peuvent ouvrir une tâche via un lien direct, "
+"même sans accès au projet.\n"
+"- Les administrateurs du projet ont accès aux projets privés, même s’ils ne "
+"sont pas abonnés.\n"
 
 #. module: project
 #. odoo-javascript
@@ -4288,14 +4352,14 @@ msgstr "Revenir au projet"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_template_create_wizard__role_to_users_ids
 msgid "Role To Users"
-msgstr "Rôle aux utilisateurs"
+msgstr "Rôle pour les utilisateurs"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__is_rotting
 #: model:ir.model.fields,field_description:project.field_project_task__is_rotting
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Rotting"
-msgstr ""
+msgstr "Inactivité"
 
 #. module: project
 #. odoo-javascript
@@ -4426,7 +4490,7 @@ msgstr "Envoyer une invitation"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__rating_active
 msgid "Send a customer rating request"
-msgstr ""
+msgstr "Envoyer une demande d’évaluation au client"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__sequence
@@ -4642,7 +4706,7 @@ msgstr "Propriétaire de l'étape"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_active
 msgid "Stage Rating Status"
-msgstr ""
+msgstr "Statut d’évaluation de l’étape"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_stage
@@ -4850,7 +4914,7 @@ msgstr "Récurrence de tâche"
 #. module: project
 #: model:ir.model,name:project.model_task_share_wizard
 msgid "Task Sharing"
-msgstr ""
+msgstr "Partage de tâche"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_type
@@ -5013,7 +5077,7 @@ msgstr "Modèle"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_template_create_wizard__template_has_dates
 msgid "Template Has Dates"
-msgstr ""
+msgstr "Le modèle contient des dates"
 
 #. module: project
 #. odoo-python
@@ -5703,6 +5767,17 @@ msgid ""
 "        Make sure to use the right format and order e.g. Improve the "
 "configuration screen 5h #feature #v16 @Mitchell !"
 msgstr ""
+"Utilisez ces mots-clés dans le titre pour créer de nouvelles tâches :\n"
+"\n"
+"    30h Allouer 30 heures à la tâche  \n"
+"    #tags Ajouter des tags à la tâche  \n"
+"    @user Assigner la tâche à un utilisateur  \n"
+"    ! Définir la tâche comme priorité moyenne  \n"
+"    !! Définir la tâche comme priorité élevée  \n"
+"    !!! Définir la tâche comme priorité urgente  \n"
+"\n"
+"    Veillez à utiliser le bon format et l’ordre correct, par exemple : "
+"Améliorer l’écran de configuration 5h #feature #v16 @Mitchell !"
 
 #. module: project
 #: model:ir.model,name:project.model_res_users
@@ -5710,6 +5785,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
 msgid "User"
 msgstr "Utilisateur"
+
+#. module: project
+#: model:ir.model,name:project.model_res_users_settings
+msgid "User Settings"
+msgstr "Paramètres utilisateur"
 
 #. module: project
 #: model:res.groups,comment:project.group_project_user
@@ -5803,6 +5883,9 @@ msgid ""
 "takes each role. These employees will be added to the tasks, along with "
 "anyone already assigned."
 msgstr ""
+"Lorsque vous créez un projet à partir d’un modèle, vous pouvez choisir quel "
+"employé assume chaque rôle. Ces employés seront ajoutés aux tâches, ainsi "
+"que toute personne déjà assignée."
 
 #. module: project
 #: model:project.tags,name:project.project_tags_14
@@ -6007,6 +6090,13 @@ msgstr ""
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 msgid "Your managers decide which feedback is accepted"
 msgstr "Vos managers décident quel feedback est accepté"
+
+#. module: project
+#. odoo-javascript
+#: code:addons/project/static/src/views/analytic_account_form/analytic_account_form_controller.js:0
+#: code:addons/project/static/src/views/analytic_account_list/analytic_account_list_controller.js:0
+msgid "\\t- ${"
+msgstr "\\t- ${"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -6221,7 +6311,7 @@ msgstr "pour signaler quel est le statut actuel de votre idée."
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task_type__rating_status__stage
 msgid "when reaching this stage"
-msgstr ""
+msgstr "lorsque cette étape est atteinte"
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_1

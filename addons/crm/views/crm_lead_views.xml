@@ -791,7 +791,7 @@
                         options="{'currency_field': 'company_currency'}" groups="crm.group_use_recurring_revenues"/>
                     <field name="recurring_plan" optional="hide" groups="crm.group_use_recurring_revenues"/>
                     <field name="stage_id_color" column_invisible="1"/>
-                    <field name="stage_id" optional="show" widget="badge_rotting" options="{'color_field': 'stage_id_color'}"/>
+                    <field name="stage_id" optional="show" widget="badge_rotting" options="{'no_open': True}"/>
                     <field name="active" column_invisible="True"/>
                     <field name="probability" string="Probability (%)" optional="hide"/>
                     <field name="lost_reason_id" optional="hide"/>

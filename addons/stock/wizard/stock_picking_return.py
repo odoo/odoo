@@ -79,7 +79,8 @@ class StockReturnPickingLine(models.TransientModel):
                 new_return_move.write(vals)
             else:
                 self.env['stock.move'].create(vals)
-        return True
+            return True
+        return False
 
 
 class StockReturnPicking(models.TransientModel):

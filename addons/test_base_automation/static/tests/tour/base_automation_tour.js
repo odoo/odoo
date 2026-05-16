@@ -360,14 +360,14 @@ registry.category("web_tour.tours").add("test_resize_kanban", {
         },
         {
             trigger:
-                ".o_automation_actions:contains(Set Active To False\nSet Active To False\nSet Active To False)",
+                ".o_automation_actions:contains(Set Active To False Set Active To False Set Active To False)",
             async run() {
                 document.body.style.setProperty("width", "500px");
                 window.dispatchEvent(new Event("resize"));
             },
         },
         {
-            trigger: ".o_automation_actions:contains(Set Active To False\n2 actions)",
+            trigger: ".o_automation_actions:contains(Set Active To False 2 actions)",
         },
     ],
 });
@@ -646,7 +646,7 @@ registry.category("web_tour.tours").add("base_automation.on_change_rule_creation
             run: "edit ir.ui.view",
         },
         {
-            trigger: ".ui-menu-item > a:contains(/^View$/)",
+            trigger: ".ui-menu-item > a:text(View)",
             run: "click",
         },
         {
@@ -663,7 +663,7 @@ registry.category("web_tour.tours").add("base_automation.on_change_rule_creation
             run: "edit Active",
         },
         {
-            trigger: ".ui-menu-item > a:contains(/^Active$/)",
+            trigger: ".ui-menu-item > a:text(Active)",
             run: "click",
         },
         ...stepUtils.saveForm(),

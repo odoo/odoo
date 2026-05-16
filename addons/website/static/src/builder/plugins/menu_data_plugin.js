@@ -4,10 +4,16 @@ import { NavbarLinkPopover } from "./navbar_link_popover/navbar_link_popover";
 import { MenuDialog, EditMenuDialog } from "@website/components/dialog/edit_menu";
 import { withSequence } from "@html_editor/utils/resource";
 
+/**
+ * @typedef { Object } MenuDataShared
+ * @property { MenuDataPlugin['openEditMenu'] } openEditMenu
+ */
+
 export class MenuDataPlugin extends Plugin {
     static id = "menuDataPlugin";
     static shared = ["openEditMenu"];
     static dependencies = ["savePlugin"];
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         link_popovers: [
             withSequence(10, {

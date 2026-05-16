@@ -1,0 +1,431 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* auth_totp_mail
+#
+#
+# Translated by:
+# Deepvision - info@deepvision.uz | +998 77-093-0007
+# Amon Olimov - amon.bars@gmail.com
+# Jonibek Yorqulov - j.yorqulov@deepvision.uz
+# Mirzohidkhon Ulugkhujaev ulugkhujayevmirzohidxon@gmail.com
+#
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 19.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"PO-Revision-Date: 2025-10-08 18:37+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: uz\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: auth_totp_mail
+#: model_terms:ir.ui.view,arch_db:auth_totp_mail.auth_totp_mail_form
+#, fuzzy
+msgid ""
+".\n"
+"                <br/>"
+msgstr ". <br/>"
+
+#. module: auth_totp_mail
+#: model:mail.template,body_html:auth_totp_mail.mail_template_totp_invite
+#, fuzzy
+msgid ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Dear <t t-out=\"object.partner_id.name or ''\"/><br/><br/>\n"
+"        <t t-out=\"user.name  or ''\"/> requested you activate two-factor "
+"authentication to protect your account.<br/><br/>\n"
+"        Two-factor Authentication (\"2FA\") is a system of double "
+"authentication.\n"
+"        The first one is done with your password and the second one with a "
+"code you get from a dedicated mobile app.\n"
+"        Popular ones include Authy, Google Authenticator or the Microsoft "
+"Authenticator.\n"
+"\n"
+"        </p><p style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
+"            <a t-att-href=\"object.get_totp_invite_url()\" t-attf-"
+"style=\"background-color:{{object.company_id.email_secondary_color or "
+"'#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: "
+"{{object.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px;"
+"\">\n"
+"                Activate my two-factor Authentication\n"
+"            </a>\n"
+"        </p>\n"
+"    \n"
+"</div>\n"
+"        "
+msgstr ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\"> <p "
+"style=\"margin: 0px; padding: 0px; font-size: 13px;\"> Hurmatli <t t-"
+"out=\"object.partner_id.name or ''\"/><br/><br/> <t t-out=\"user.name or "
+"''\"/> sizning hisobingizni himoya qilish maqsadida ikki bosqichli "
+"autentifikatsiyani faollashtirish so‘rovini yubordi.<br/><br/> Ikki "
+"bosqichli autentifikatsiya (\"2FA\") - bu qo‘sh tekshiruv tizimi "
+"hisoblanadi.         Birinchi bosqich parolingiz orqali, ikkinchisi esa "
+"maxsus mobil ilovadan olingan kod yordamida amalga oshiriladi.         "
+"Bunday mashhur ilovalar qatoriga Authy, Google Authenticator yoki Microsoft "
+"Authenticator kiradi. </p><p style=\"margin: 16px 0px 16px 0px; text-align: "
+"center;\"> <a t-att-href=\"object.get_totp_invite_url()\" t-attf-"
+"style=\"background-color:{{object.company_id.email_secondary_color or "
+"'#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: "
+"{{object.company_id.email_primary_color or '#FFFFFF'}}; border-radius: 5px;"
+"\"> Ikki bosqichli autentifikatsiyani faollashtirish </a> </p> </div>"
+
+#. module: auth_totp_mail
+#: model:mail.template,body_html:auth_totp_mail.mail_template_totp_mail_code
+#, fuzzy
+msgid ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"Dear <t t-out=\"object.partner_id.name or ''\"/><br/><br/>\n"
+"<p>Someone is trying to log in into your account with a new device.</p>\n"
+"<ul>\n"
+"    <t t-set=\"not_available\">N/A</t>\n"
+"    <li>Location: <t t-out=\"ctx.get('location') or not_available\"/></li>\n"
+"    <li>Device: <t t-out=\"ctx.get('device') or not_available\"/></li>\n"
+"    <li>Browser: <t t-out=\"ctx.get('browser') or not_available\"/></li>\n"
+"    <li>IP address: <t t-out=\"ctx.get('ip') or not_available\"/></li>\n"
+"</ul>\n"
+"<p>If this is you, please enter the following code to complete the login:</"
+"p>\n"
+"<t t-set=\"code_expiration\" t-value=\"object._get_totp_mail_code()\"/>\n"
+"<t t-set=\"code\" t-value=\"code_expiration[0]\"/>\n"
+"<t t-set=\"expiration\" t-value=\"code_expiration[1]\"/>\n"
+"<div style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
+"    <span t-out=\"code\" style=\"background-color:#faf9fa; border: 1px solid "
+"#dad8de; padding: 8px 16px 8px 16px; font-size: 24px; color: #875A7B; border-"
+"radius: 5px;\"/>\n"
+"</div>\n"
+"<small>Please note that this code expires in <t t-out=\"expiration\"/>.</"
+"small>\n"
+"\n"
+"<p style=\"margin: 16px 0px 16px 0px;\">\n"
+"    If you did NOT initiate this log-in,\n"
+"    you should immediately change your password to ensure account security.\n"
+"</p>\n"
+"\n"
+"<p style=\"margin: 16px 0px 16px 0px;\">\n"
+"    We also strongly recommend enabling the two-factor authentication using "
+"an authenticator app to help secure your account.\n"
+"</p>\n"
+"\n"
+"<p style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
+"    <a t-att-href=\"object.get_totp_invite_url()\" style=\"background-"
+"color:#875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: "
+"#fff; border-radius: 5px;\">\n"
+"        Activate my two-factor authentication\n"
+"    </a>\n"
+"</p>\n"
+"</div>\n"
+"        "
+msgstr ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\"> Hurmatli <t t-"
+"out=\"object.partner_id.name yoki ''\"/><br/><br/> <p>Kimdir sizning "
+"hisobingizga yangi qurilma orqali kirishga urinmoqda.</p> <ul> <t t-"
+"set=\"mavjud_emas\">Ma'lumot yo‘q</t> <li>Joylashuv: <t t-"
+"out=\"ctx.get('joylashuv') yoki mavjud_emas\"/></li> <li>Qurilma: <t t-"
+"out=\"ctx.get('qurilma') yoki mavjud_emas\"/></li> <li>Brauzer: <t t-"
+"out=\"ctx.get('brauzer') yoki mavjud_emas\"/></li> <li>IP manzil: <t t-"
+"out=\"ctx.get('ip') yoki mavjud_emas\"/></li> </ul> <p>Agar bu siz "
+"bo‘lsangiz, kirishni yakunlash uchun quyidagi kodni kiriting:</p> <t t-"
+"set=\"code_expiration\" t-value=\"object._get_totp_mail_code()\"/> <t t-"
+"set=\"kod\" t-value=\"code_expiration[0]\"/> <t t-set=\"muddat\" t-"
+"value=\"code_expiration[1]\"/> <div style=\"margin: 16px 0px 16px 0px; text-"
+"align: center;\"> <span t-out=\"kod\" style=\"background-color:#faf9fa; "
+"border: 1px solid #dad8de; padding: 8px 16px 8px 16px; font-size: 24px; "
+"color: #875A7B; border-radius: 5px;\"/> </div> <small>Iltimos, e'tibor "
+"bering: ushbu kod <t t-out=\"muddat\"/> dan keyin yaroqsiz bo‘ladi.</small> "
+"<p style=\"margin: 16px 0px 16px 0px;\"> Agar siz bu kirishni BOSHLAMAGANSIZ "
+"bo‘lsangiz, hisobingiz xavfsizligini ta'minlash uchun zudlik bilan "
+"parolingizni o‘zgartirishingiz kerak. </p> <p style=\"margin: 16px 0px 16px "
+"0px;\"> Shuningdek, hisobingizni yanada himoyalash uchun autentifikator "
+"ilovasi yordamida ikki bosqichli tasdiqlashni yoqishni qat'iy tavsiya "
+"etamiz. </p> <p style=\"margin: 16px 0px 16px 0px; text-align: center;\"> <a "
+"t-att-href=\"object.get_totp_invite_url()\" style=\"background-"
+"color:#875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: "
+"#fff; border-radius: 5px;\"> Ikki bosqichli tasdiqlashni faollashtirish </a> "
+"</p> </div>"
+
+#. module: auth_totp_mail
+#: model_terms:ir.ui.view,arch_db:auth_totp_mail.auth_totp_mail_form
+#, fuzzy
+msgid ""
+"<i class=\"fa fa-envelope-o\"/>\n"
+"                To login, enter below the six-digit authentication code just "
+"sent via email to"
+msgstr ""
+"<i class=\"fa fa-envelope-o\"/> Kirish uchun quyida elektron pochta orqali "
+"yuborilgan olti xonali tasdiqlash kodini kiriting"
+
+#. module: auth_totp_mail
+#: model_terms:ir.ui.view,arch_db:auth_totp_mail.res_users_view_form
+#, fuzzy
+msgid ""
+"<span class=\"text-muted\">\n"
+"                            Recommended for extra security.\n"
+"                        </span>"
+msgstr ""
+"<span class=\"text-muted\"> Qo‘shimcha xavfsizlik uchun tavsiya etiladi. </"
+"span>"
+
+#. module: auth_totp_mail
+#: model_terms:ir.ui.view,arch_db:auth_totp_mail.account_security_alert
+#, fuzzy
+msgid "<span>Consider also</span>"
+msgstr "<span>Shuningdek, quyidagini ham ko‘rib chiqing</span>"
+
+#. module: auth_totp_mail
+#. odoo-python
+#: code:addons/auth_totp_mail/models/res_users.py:0
+#, fuzzy
+msgid "A new device was used to sign in to your account."
+msgstr "Hisobingizga kirish uchun yangi qurilma ishlatildi."
+
+#. module: auth_totp_mail
+#. odoo-python
+#: code:addons/auth_totp_mail/models/auth_totp_device.py:0
+#, fuzzy
+msgid ""
+"A trusted device has just been removed from your account: %(device_names)s"
+msgstr "Hisobingizdan ishonchli qurilma olib tashlandi: %(device_names)s"
+
+#. module: auth_totp_mail
+#: model:ir.model.fields.selection,name:auth_totp_mail.selection__res_config_settings__auth_totp_policy__all_required
+#, fuzzy
+msgid "All users"
+msgstr "Barcha foydalanuvchilar"
+
+#. module: auth_totp_mail
+#: model:ir.model,name:auth_totp_mail.model_auth_totp_device
+#, fuzzy
+msgid "Authentication Device"
+msgstr "Autentifikatsiya qurilmasi"
+
+#. module: auth_totp_mail
+#. odoo-python
+#: code:addons/auth_totp_mail/models/res_users.py:0
+#, fuzzy
+msgid "Cannot send email: user %s has no email address."
+msgstr ""
+"Elektron xat yuborish imkonsiz: %s foydalanuvchisining elektron pochta "
+"manzili yo‘q."
+
+#. module: auth_totp_mail
+#: model_terms:ir.ui.view,arch_db:auth_totp_mail.res_users_view_form
+#, fuzzy
+msgid "Click to enable 2FA."
+msgstr "Ikki bosqichli tasdiqlashni yoqish uchun bosing."
+
+#. module: auth_totp_mail
+#: model:ir.model,name:auth_totp_mail.model_res_config_settings
+#, fuzzy
+msgid "Config Settings"
+msgstr "Konfiguratsiya sozlamalari"
+
+#. module: auth_totp_mail
+#: model:ir.model.fields,field_description:auth_totp_mail.field_auth_totp_device__display_name
+#: model:ir.model.fields,field_description:auth_totp_mail.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:auth_totp_mail.field_res_users__display_name
+#, fuzzy
+msgid "Display Name"
+msgstr "Ko‘rsatiladigan nom"
+
+#. module: auth_totp_mail
+#: model:ir.model.fields.selection,name:auth_totp_mail.selection__res_config_settings__auth_totp_policy__employee_required
+#, fuzzy
+msgid "Employees only"
+msgstr "Faqat xodimlar"
+
+#. module: auth_totp_mail
+#: model_terms:ir.ui.view,arch_db:auth_totp_mail.res_users_view_form
+#, fuzzy
+msgid "Enable 2FA"
+msgstr "Ikki bosqichli tasdiqlashni yoqish"
+
+#. module: auth_totp_mail
+#: model_terms:ir.ui.view,arch_db:auth_totp_mail.res_config_settings_view_form
+#, fuzzy
+msgid ""
+"Enforce the two-factor authentication by email for employees or for all "
+"users (including portal users) if they didn't enable any other two-factor "
+"authentication method."
+msgstr ""
+"Xodimlar yoki barcha foydalanuvchilar (portal foydalanuvchilari ham) uchun, "
+"agar ular boshqa ikki bosqichli tasdiqlash usulini yoqmagan bo‘lsalar, "
+"elektron pochta orqali ikki bosqichli tasdiqlashni majburiy qilish."
+
+#. module: auth_totp_mail
+#: model:ir.model.fields,field_description:auth_totp_mail.field_res_config_settings__auth_totp_enforce
+#, fuzzy
+msgid "Enforce two-factor authentication"
+msgstr "Ikki bosqichli tasdiqlashni majburiy qilish"
+
+#. module: auth_totp_mail
+#: model:ir.model.fields,field_description:auth_totp_mail.field_auth_totp_device__id
+#: model:ir.model.fields,field_description:auth_totp_mail.field_res_config_settings__id
+#: model:ir.model.fields,field_description:auth_totp_mail.field_res_users__id
+#, fuzzy
+msgid "ID"
+msgstr "ID"
+
+#. module: auth_totp_mail
+#: model:mail.template,subject:auth_totp_mail.mail_template_totp_invite
+#, fuzzy
+msgid "Invitation to activate two-factor authentication on your Odoo account"
+msgstr ""
+"Odoo hisobingizda ikki bosqichli tasdiqlashni faollashtirish uchun taklif"
+
+#. module: auth_totp_mail
+#. odoo-python
+#: code:addons/auth_totp_mail/models/res_users.py:0
+#, fuzzy
+msgid ""
+"Invitation to use two-factor authentication sent for the following user(s): "
+"%s"
+msgstr ""
+"Quyidagi foydalanuvchi(lar) uchun ikki bosqichli tasdiqlashdan foydalanish "
+"taklifi yuborildi: %s"
+
+#. module: auth_totp_mail
+#: model_terms:ir.ui.view,arch_db:auth_totp_mail.view_users_form
+#, fuzzy
+msgid "Invite to use 2FA"
+msgstr "Ikki bosqichli tasdiqlashdan foydalanishga taklif qilish"
+
+#. module: auth_totp_mail
+#: model:ir.actions.server,name:auth_totp_mail.action_invite_totp
+#, fuzzy
+msgid "Invite to use two-factor authentication"
+msgstr "Ikki bosqichli tasdiqlashdan foydalanishga taklif qilish"
+
+#. module: auth_totp_mail
+#: model_terms:ir.ui.view,arch_db:auth_totp_mail.auth_totp_mail_form
+#, fuzzy
+msgid "Learn More"
+msgstr "Batafsil ma'lumot"
+
+#. module: auth_totp_mail
+#. odoo-python
+#: code:addons/auth_totp_mail/models/res_users.py:0
+#, fuzzy
+msgid "New Connection to your Account"
+msgstr "Hisobingizga yangi ulanish"
+
+#. module: auth_totp_mail
+#: model:ir.actions.server,name:auth_totp_mail.action_activate_two_factor_authentication
+#, fuzzy
+msgid "Open two-factor authentication configuration"
+msgstr "Ikki bosqichli tasdiqlash sozlamalarini ochish"
+
+#. module: auth_totp_mail
+#: model_terms:ir.ui.view,arch_db:auth_totp_mail.auth_totp_mail_form
+#, fuzzy
+msgid "Re-send email"
+msgstr "Xatni qayta yuborish"
+
+#. module: auth_totp_mail
+#. odoo-python
+#: code:addons/auth_totp_mail/models/res_users.py:0
+#, fuzzy
+msgid "Security"
+msgstr "Xavfsizlik"
+
+#. module: auth_totp_mail
+#. odoo-python
+#: code:addons/auth_totp_mail/models/res_users.py:0
+#, fuzzy
+msgid "Security Update: 2FA Activated"
+msgstr "Xavfsizlik yangilanishi: Ikki bosqichli tasdiqlash faollashtirildi"
+
+#. module: auth_totp_mail
+#. odoo-python
+#: code:addons/auth_totp_mail/models/res_users.py:0
+#, fuzzy
+msgid "Security Update: 2FA Deactivated"
+msgstr "Xavfsizlik yangilanishi: Ikki bosqichli tasdiqlash o‘chirildi"
+
+#. module: auth_totp_mail
+#. odoo-python
+#: code:addons/auth_totp_mail/models/auth_totp_device.py:0
+#, fuzzy
+msgid "Security Update: Device Removed"
+msgstr "Xavfsizlik yangilanishi: Qurilma olib tashlandi"
+
+#. module: auth_totp_mail
+#: model:mail.template,name:auth_totp_mail.mail_template_totp_invite
+#, fuzzy
+msgid "Settings: 2Fa Invitation"
+msgstr "Sozlamalar: Ikki bosqichli tasdiqlash taklifi"
+
+#. module: auth_totp_mail
+#: model:mail.template,name:auth_totp_mail.mail_template_totp_mail_code
+#, fuzzy
+msgid "Settings: 2Fa New Login"
+msgstr "Sozlamalar: Ikki bosqichli tasdiqlash yangi kirish"
+
+#. module: auth_totp_mail
+#: model_terms:ir.ui.view,arch_db:auth_totp_mail.res_users_view_form
+#, fuzzy
+msgid "Two-factor Authentication"
+msgstr "Ikki bosqichli tasdiqlash"
+
+#. module: auth_totp_mail
+#: model:ir.model.fields,field_description:auth_totp_mail.field_res_config_settings__auth_totp_policy
+#, fuzzy
+msgid "Two-factor authentication enforcing policy"
+msgstr "Ikki bosqichli tasdiqlashni majburiy qilish siyosati"
+
+#. module: auth_totp_mail
+#. odoo-python
+#: code:addons/auth_totp_mail/models/res_users.py:0
+#, fuzzy
+msgid "Two-factor authentication has been activated on your account"
+msgstr "Hisobingizda ikki bosqichli tasdiqlash faollashtirildi"
+
+#. module: auth_totp_mail
+#. odoo-python
+#: code:addons/auth_totp_mail/models/res_users.py:0
+#, fuzzy
+msgid "Two-factor authentication has been deactivated on your account"
+msgstr "Hisobingizda ikki bosqichli tasdiqlash o‘chirildi"
+
+#. module: auth_totp_mail
+#: model:ir.model,name:auth_totp_mail.model_res_users
+#, fuzzy
+msgid "User"
+msgstr "Foydalanuvchi"
+
+#. module: auth_totp_mail
+#. odoo-python
+#: code:addons/auth_totp_mail/models/res_users.py:0
+#, fuzzy
+msgid "Verification failed, please double-check the 6-digit code"
+msgstr "Tasdiqlash amalga oshmadi, iltimos, 6 xonali kodni qayta tekshiring"
+
+#. module: auth_totp_mail
+#: model_terms:ir.ui.view,arch_db:auth_totp_mail.auth_totp_mail_form
+#, fuzzy
+msgid ""
+"We strongly recommend enabling the two-factor authentication using an "
+"authenticator app to help secure your account.\n"
+"                <br/>"
+msgstr ""
+"Hisobingizni himoyalash uchun autentifikator ilovasi yordamida ikki "
+"bosqichli tasdiqlashni yoqishni qat'iy tavsiya etamiz. <br/>"
+
+#. module: auth_totp_mail
+#: model:mail.template,subject:auth_totp_mail.mail_template_totp_mail_code
+#, fuzzy
+msgid "Your two-factor authentication code"
+msgstr "Ikki bosqichli tasdiqlash kodingiz"
+
+#. module: auth_totp_mail
+#: model_terms:ir.ui.view,arch_db:auth_totp_mail.account_security_alert
+#, fuzzy
+msgid "activating Two-factor Authentication"
+msgstr "Ikki bosqichli tasdiqlashni faollashtirish"

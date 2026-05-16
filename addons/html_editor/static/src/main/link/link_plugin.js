@@ -1,12 +1,19 @@
 import { Plugin } from "@html_editor/plugin";
-import { unwrapContents } from "@html_editor/utils/dom";
 import { closestElement, descendants, selectElements } from "@html_editor/utils/dom_traversal";
+import { mergeAdjacentTextNodes, unwrapContents } from "@html_editor/utils/dom";
 import { findInSelection, callbacksForCursorUpdate } from "@html_editor/utils/selection";
 import { _t } from "@web/core/l10n/translation";
 import { LinkPopover } from "./link_popover";
 import { DIRECTIONS, leftPos, nodeSize, rightPos } from "@html_editor/utils/position";
 import { EMAIL_REGEX, URL_REGEX, cleanZWChars, deduceURLfromText } from "./utils";
-import { isElement, isVisible, isZwnbsp } from "@html_editor/utils/dom_info";
+import {
+    isElement,
+    isPhrasingContent,
+    isProtected,
+    isProtecting,
+    isVisible,
+    isZwnbsp,
+} from "@html_editor/utils/dom_info";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { rpc } from "@web/core/network/rpc";
 import { memoize } from "@web/core/utils/functions";
@@ -15,6 +22,8 @@ import { isBlock, closestBlock } from "@html_editor/utils/blocks";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { isBrowserFirefox } from "@web/core/browser/feature_detection";
 
+/** @typedef {import("@odoo/owl").Component} Component */
+/** @typedef {import("plugins").CSSSelector} CSSSelector */
 /**
  * @typedef {import("@html_editor/core/selection_plugin").EditorSelection} EditorSelection
  */
@@ -124,6 +133,19 @@ async function fetchAttachmentMetaData(url, ormService) {
  * @property { LinkPlugin['insertLink'] } insertLink
  */
 
+/**
+ * @typedef {((link: HTMLLinkElement) => boolean)[]} is_link_editable_predicates
+ * @typedef {((link: HTMLLinkElement) => boolean)[]} legit_empty_link_predicates
+ * @typedef {(() => boolean)[]} link_compatible_selection_predicates
+ * @typedef {CSSSelector[]} immutable_link_selectors
+ * @typedef {{
+ *      PopoverClass: Component;
+ *      isAvailable: (linkEl: HTMLLinkElement) => boolean;
+ *      getProps: (props) => props;
+ *  }[]} link_popovers
+ * @typedef {((linkEl: HTMLAnchorElement) => void)[]} create_link_handlers
+ */
+
 export class LinkPlugin extends Plugin {
     static id = "link";
     static dependencies = [
@@ -143,6 +165,7 @@ export class LinkPlugin extends Plugin {
     };
     // @phoenix @todo: do we want to have createLink and insertLink methods in link plugin?
     static shared = ["createLink", "insertLink", "getPathAsUrlCommand"];
+    /** @type {import("plugins").EditorResources} */
     resources = {
         user_commands: [
             {
@@ -184,7 +207,7 @@ export class LinkPlugin extends Plugin {
 
         toolbar_groups: [
             withSequence(40, { id: "link", namespaces: ["compact", "expanded"] }),
-            withSequence(30, { id: "image_link", namespaces: ["image"] }),
+            withSequence(30, { id: "image_link", namespaces: ["image", "icon"] }),
         ],
         toolbar_items: [
             {
@@ -256,10 +279,23 @@ export class LinkPlugin extends Plugin {
             ".o_prevent_link_editor a",
         ],
         legit_empty_link_predicates: (linkEl) => linkEl.hasAttribute("data-mimetype"),
+        unsplittable_node_predicates: (node) => node.nodeName === "A",
+        // When the selection fully covers a link, we consider that the link is selected.
+        fully_selected_node_predicates: (node, selection) =>
+            node.nodeName === "A" &&
+            !node.classList.contains("btn") &&
+            cleanZWChars(selection.textContent()) === cleanZWChars(node.innerText),
 
         /** Handlers */
-        beforeinput_handlers: withSequence(5, this.onBeforeInput.bind(this)),
-        input_handlers: this.onInputDeleteNormalizeLink.bind(this),
+        beforeinput_handlers: [
+            withSequence(5, this.onBeforeInputPrepareConvertToLink.bind(this)),
+            this.onBeforeInputFixFirefoxSelection.bind(this),
+            withSequence(20, this.onBeforeInputConvertToLink.bind(this)),
+        ],
+        input_handlers: [
+            this.onInputDeleteNormalizeLink.bind(this),
+            this.onInputConvertToLink.bind(this),
+        ],
         before_delete_handlers: this.updateCurrentLinkSyncState.bind(this),
         delete_handlers: this.onInputDeleteNormalizeLink.bind(this),
         before_paste_handlers: this.updateCurrentLinkSyncState.bind(this),
@@ -268,11 +304,13 @@ export class LinkPlugin extends Plugin {
         clean_for_save_handlers: ({ root }) => this.removeEmptyLinks(root),
         normalize_handlers: this.normalizeLink.bind(this),
         after_insert_handlers: this.handleAfterInsert.bind(this),
+        on_will_remove_handlers: () => this.closeLinkTools(),
 
         /** Overrides */
         split_element_block_overrides: this.handleSplitBlock.bind(this),
         insert_line_break_element_overrides: this.handleInsertLineBreak.bind(this),
         delete_image_overrides: this.deleteImageLink.bind(this),
+        delete_backward_overrides: withSequence(15, this.handleDeleteBackward.bind(this)),
         double_click_overrides: this.doubleClickLinkOverrides.bind(this),
         triple_click_overrides: this.tripleClickButtonOverrides.bind(this),
 
@@ -335,7 +373,8 @@ export class LinkPlugin extends Plugin {
                     const selectionData = this.dependencies.selection.getSelectionData();
                     return (
                         selectionData.documentSelectionIsInEditable &&
-                        isHtmlContentSupported(selectionData.editableSelection)
+                        isHtmlContentSupported(selectionData.editableSelection) &&
+                        this.isLinkAllowedOnSelection()
                     );
                 },
             }
@@ -410,6 +449,10 @@ export class LinkPlugin extends Plugin {
             description: _t("Create an URL."),
             icon: "fa-link",
             run: () => {
+                this.dispatchTo(
+                    "before_paste_handlers",
+                    this.dependencies.selection.getEditableSelection()
+                );
                 this.dependencies.dom.insert(this.createLink(url, text));
                 this.dependencies.history.addStep();
             },
@@ -418,8 +461,9 @@ export class LinkPlugin extends Plugin {
     }
 
     isLinkAllowedOnSelection() {
-        if (this.getResource("link_compatible_selection_predicates").some((p) => p())) {
-            return true;
+        const isLinkCompatible = this.checkPredicates("link_compatible_selection_predicates");
+        if (isLinkCompatible !== undefined) {
+            return isLinkCompatible;
         }
         const targetedNodes = this.dependencies.selection.getTargetedNodes();
         const targetedBlocks = targetedNodes.filter(isBlock);
@@ -429,7 +473,8 @@ export class LinkPlugin extends Plugin {
             // Prevent a link across sibling blocks:
             targetedBlocks.every((node) =>
                 targetedNodes.every((other) => node.contains(other) || other.contains(node))
-            )
+            ) &&
+            targetedNodes.some(this.dependencies.selection.isNodeEditable)
         );
     }
 
@@ -468,8 +513,8 @@ export class LinkPlugin extends Plugin {
             linkElement = this.createLink(undefined, selection.textContent());
         }
 
-        const selectionTextContent = selection?.textContent();
-        const isImage = !!findInSelection(selection, "img");
+        const selectionTextContent = cleanZWChars(selection?.textContent());
+        const isImage = !!findInSelection(selection, "img, .fa");
 
         const applyCallback = (
             url,
@@ -677,7 +722,7 @@ export class LinkPlugin extends Plugin {
                     link.setAttribute("style", saveCustomStyle);
                 }
                 // Remove the current link (linkInDocument) if it has no content
-                if (cleanZWChars(link.innerText) === "" && !link.querySelector("img")) {
+                if (cleanZWChars(link.textContent) === "" && !link.querySelector("img, .fa")) {
                     const [anchorNode, anchorOffset] = rightPos(link);
                     // We force the cursor after the link before removing the link
                     // to ensure we don't lose the selection position.
@@ -708,7 +753,7 @@ export class LinkPlugin extends Plugin {
             // create a font tag inside it, and move the color to the font tag.
             // This ensures the color is applied to the font element instead of
             // the anchor element itself.
-            if (color && childNodes.every((n) => !isBlock(n))) {
+            if (color && childNodes.every(isPhrasingContent)) {
                 anchorEl.style.removeProperty("color");
                 const font = selectElements(anchorEl, "font").next().value;
                 if (font && cleanZWChars(anchorEl.textContent) === font.textContent) {
@@ -774,7 +819,11 @@ export class LinkPlugin extends Plugin {
                 }
             }
         }
-        if (!selectionData.currentSelectionIsInEditable) {
+        const anchorNode = this.document.getSelection()?.anchorNode;
+        const isSelectionInProtected =
+            this.document.getSelection()?.isCollapsed &&
+            (isProtecting(anchorNode) || isProtected(anchorNode));
+        if (!selectionData.currentSelectionIsInEditable || isSelectionInProtected) {
             const popoverEl = document.querySelector(".o-we-linkpopover");
             const anchorNode = document.getSelection()?.anchorNode;
             if (
@@ -788,7 +837,7 @@ export class LinkPlugin extends Plugin {
         } else if (!selection.isCollapsed) {
             // Open the link tool only if we have an image selected and the selection
             // is fully contained in the image parent link.
-            const imageNode = findInSelection(selection, "img");
+            const imageNode = findInSelection(selection, "img, .fa");
             const parentElement = imageNode?.parentElement;
             const linkContainingImage = imageNode && closestElement(imageNode, "a");
             if (
@@ -860,6 +909,7 @@ export class LinkPlugin extends Plugin {
         }
         cursors.restore();
         this.linkInDocument = null;
+        this.dependencies.selection.focusEditable();
         this.dependencies.history.addStep();
     }
 
@@ -964,7 +1014,10 @@ export class LinkPlugin extends Plugin {
             endLink.parentElement.isContentEditable &&
             !this.isUnremovable(endLink)
         ) {
-            focusNode = this.dependencies.split.splitAroundUntil(focusNode, endLink);
+            focusNode = this.dependencies.split.splitAroundUntil(
+                focusNode,
+                closestElement(focusNode, "a")
+            );
             focusOffset = direction === DIRECTIONS.RIGHT ? nodeSize(focusNode) : 0;
             this.dependencies.selection.setSelection(
                 { anchorNode, anchorOffset, focusNode, focusOffset },
@@ -1041,37 +1094,51 @@ export class LinkPlugin extends Plugin {
         }
     }
 
-    onBeforeInput(ev) {
-        if (ev.inputType === "insertParagraph" || ev.inputType === "insertLineBreak") {
-            const nodeForSelectionRestore = this.handleAutomaticLinkInsertion();
-            if (nodeForSelectionRestore) {
-                this.dependencies.selection.setCursorStart(nodeForSelectionRestore);
-                this.dependencies.history.addStep();
-            }
+    onBeforeInputPrepareConvertToLink(ev) {
+        if (
+            ev.inputType === "insertParagraph" ||
+            ev.inputType === "insertLineBreak" ||
+            (ev.inputType === "insertText" && ev.data === " ")
+        ) {
+            this.convertToLink = this.prepareConvertToLink();
         }
-        if (ev.inputType === "insertText" && ev.data === " ") {
-            const nodeForSelectionRestore = this.handleAutomaticLinkInsertion();
-            if (nodeForSelectionRestore) {
-                // Since we manually insert a space here, we will be adding a history step
-                // after link creation with selection at the end of the link and another
-                // after inserting the space. So first undo will remove the space, and the
-                // second will undo the link creation.
-                this.dependencies.selection.setSelection({
-                    anchorNode: nodeForSelectionRestore,
-                    anchorOffset: 0,
-                });
-                this.dependencies.history.addStep();
-                nodeForSelectionRestore.textContent =
-                    "\u00A0" + nodeForSelectionRestore.textContent;
-                this.dependencies.selection.setSelection({
-                    anchorNode: nodeForSelectionRestore,
-                    anchorOffset: 1,
-                });
-                this.dependencies.history.addStep();
-                ev.preventDefault();
-            }
+    }
+
+    onBeforeInputFixFirefoxSelection(ev) {
+        // Firefox: avoid corrupted selection inside link.
+        const selection = this.document.getSelection();
+        if (
+            ev.inputType === "insertText" &&
+            selection.isCollapsed &&
+            selection.anchorNode.nodeType === Node.TEXT_NODE &&
+            selection.anchorNode.parentElement.tagName === "A"
+        ) {
+            // Reset hidden internal selection state.
+            const offset = selection.anchorOffset;
+            selection.collapse(selection.anchorNode, 0);
+            selection.collapse(selection.anchorNode, offset);
         }
         this.updateCurrentLinkSyncState();
+    }
+
+    onBeforeInputConvertToLink(ev) {
+        if (this.convertToLink) {
+            if (ev.inputType === "insertParagraph" || ev.inputType === "insertLineBreak") {
+                this.convertToLink();
+                this.dependencies.history.addStep();
+                delete this.convertToLink;
+            }
+        }
+    }
+
+    onInputConvertToLink(ev) {
+        if (this.convertToLink) {
+            if (ev.inputType === "insertText" && ev.data === " ") {
+                this.convertToLink();
+                this.dependencies.history.addStep();
+                delete this.convertToLink;
+            }
+        }
     }
 
     onInputDeleteNormalizeLink() {
@@ -1114,8 +1181,23 @@ export class LinkPlugin extends Plugin {
     /**
      * Inserts a link in the editor. Called after pressing space or (shif +) enter.
      * Performs a regex check to determine if the url has correct syntax.
+     * TODO Delete in master: kept for stable
      */
     handleAutomaticLinkInsertion() {
+        const convertToLink = this.prepareConvertToLink();
+        if (convertToLink) {
+            return convertToLink();
+        }
+    }
+
+    /**
+     * If a link must be inserted after pressing space or (shift +) enter,
+     * returns information that will be needed to insert the link.
+     * Performs a regex check to determine if the url has correct syntax.
+     *
+     * @returns {Function} that performs the link conversion
+     */
+    prepareConvertToLink() {
         let selection = this.dependencies.selection.getEditableSelection();
         if (
             isHtmlContentSupported(selection) &&
@@ -1123,7 +1205,9 @@ export class LinkPlugin extends Plugin {
             selection.anchorNode.nodeType === Node.TEXT_NODE
         ) {
             // Merge adjacent text nodes.
-            selection.anchorNode.parentNode.normalize();
+            const cursor = this.dependencies.selection.preserveSelection();
+            mergeAdjacentTextNodes(selection.anchorNode.parentNode, cursor);
+            cursor.restore();
             selection = this.dependencies.selection.getEditableSelection();
             const textSliced = selection.anchorNode.textContent.slice(0, selection.anchorOffset);
             const textNodeSplitted = textSliced.split(/\s/);
@@ -1131,25 +1215,35 @@ export class LinkPlugin extends Plugin {
             // In case of multiple matches, only the last one will be converted.
             const match = [...potentialUrl.matchAll(new RegExp(URL_REGEX, "g"))].pop();
 
-            if (match && !EMAIL_REGEX.test(match[0])) {
+            if (match) {
                 const nodeForSelectionRestore = selection.anchorNode.splitText(
                     selection.anchorOffset
                 );
-                const url = match[2] ? match[0] : "https://" + match[0];
+                let url;
+                if (!EMAIL_REGEX.test(match[0])) {
+                    url = match[2] ? match[0] : "https://" + match[0];
+                } else {
+                    url = "mailto:" + match[0];
+                }
+
                 const startOffset = selection.anchorOffset - potentialUrl.length + match.index;
                 const text = selection.anchorNode.textContent.slice(
                     startOffset,
                     startOffset + match[0].length
                 );
-                const link = this.createLink(url, text);
                 // split the text node and replace the url text with the link
                 const textNodeToReplace = selection.anchorNode.splitText(startOffset);
                 textNodeToReplace.splitText(match[0].length);
-                selection.anchorNode.parentElement.replaceChild(link, textNodeToReplace);
-                if (link.getAttribute("href") === link.textContent) {
-                    this.newlyInsertedLinks.add(link);
-                }
-                return nodeForSelectionRestore;
+                const link = this.createLink(url, text);
+                return () => {
+                    textNodeToReplace.splitText(match[0].length); // this will keep the space (that will have been added in the meantime)
+                    textNodeToReplace.parentNode.replaceChild(link, textNodeToReplace);
+                    if (link.getAttribute("href") === link.textContent) {
+                        this.newlyInsertedLinks.add(link);
+                    }
+                    // TODO Remove in master: kept for stable
+                    return nodeForSelectionRestore;
+                };
             }
         }
     }
@@ -1206,6 +1300,28 @@ export class LinkPlugin extends Plugin {
         return true;
     }
 
+    handleDeleteBackward({ startContainer, startOffset, endContainer, endOffset }) {
+        // Detect if selection is around FEFF after the end edge of a button.
+        if (startContainer !== endContainer || startOffset !== 0 || endOffset !== 1) {
+            return;
+        }
+        if (startContainer.nodeType !== Node.TEXT_NODE || startContainer.textContent != "\uFEFF") {
+            return;
+        }
+        const previousSibling = startContainer.previousSibling;
+        // We must ensure that previous sibling is an element node before
+        // calling `matches` (text nodes do not implement this method).
+        if (previousSibling?.nodeType !== Node.ELEMENT_NODE || !previousSibling.matches("a.btn")) {
+            return;
+        }
+        // Move before inner FEFF of the button.
+        this.dependencies.selection.setSelection({
+            anchorNode: startContainer.previousSibling,
+            anchorOffset: startContainer.previousSibling.childNodes.length - 1,
+        });
+        return true;
+    }
+
     handleAfterInsert(insertedNodes) {
         for (const node of insertedNodes) {
             if (node.nodeType === Node.ELEMENT_NODE) {
@@ -1232,7 +1348,10 @@ export class LinkPlugin extends Plugin {
                     }
                 ),
                 isAvailable: link_popover.isAvailable,
-                getProps: link_popover.getProps,
+                getProps: (...args) => ({
+                    ...link_popover.getProps(...args),
+                    publicAttachments: this.config.publicAttachments,
+                }),
             });
         });
     }

@@ -24,6 +24,7 @@ export class SnippetModel extends Reactive {
             snippet_content: [],
             snippet_custom_content: [],
         };
+        this.originalSnippets = {};
     }
 
     get hasCustomGroup() {
@@ -182,6 +183,7 @@ export class SnippetModel extends Reactive {
     computeSnippetTemplates(snippetsDocument) {
         const snippetsBody = snippetsDocument.body;
         this.snippetsByCategory = {};
+        this.originalSnippets = {};
         for (const snippetCategory of snippetsBody.querySelectorAll("snippets")) {
             const snippets = [];
             for (const snippetEl of snippetCategory.children) {
@@ -195,7 +197,7 @@ export class SnippetModel extends Reactive {
                     thumbnailSrc: snippetEl.dataset.oeThumbnail,
                     imagePreviewSrc: snippetEl.dataset.oImagePreview,
                     isCustom: false,
-                    label: this.getSnippetLabel(snippetEl),
+                    label: "",
                     isDisabled: false,
                     forbidSanitize: false,
                     gridColumnSpan: 0,
@@ -227,6 +229,10 @@ export class SnippetModel extends Reactive {
                         snippet.isCustom = true;
                         break;
                 }
+                snippet.label = this.getSnippetLabel(snippetEl, snippet.isCustom);
+                if (["snippet_structure", "snippet_content"].includes(snippetCategory.id)) {
+                    this.originalSnippets[snippet.name] ??= snippet;
+                }
                 snippets.push(snippet);
             }
             this.snippetsByCategory[snippetCategory.id] = snippets;
@@ -243,8 +249,8 @@ export class SnippetModel extends Reactive {
                 : snippet.name;
             if (this.isCustomInnerContent(customSnippetName)) {
                 customInnerContent.unshift(snippet);
-                customSnippets.splice(i, 1);
-            } else if (!this.isCustomStructure(customSnippetName)) {
+            }
+            if (!this.isCustomStructure(customSnippetName)) {
                 // If no structure snippet could be found, it means that the
                 // module is not installed (i.e. the original snippet has no
                 // `data-snippet` attribute).
@@ -262,14 +268,15 @@ export class SnippetModel extends Reactive {
                 {
                     body: message,
                     confirm: async () => {
-                        const isInnerContent =
-                            this.snippetsByCategory.snippet_custom_content.includes(snippet);
-                        const snippetCustom = isInnerContent
-                            ? this.snippetsByCategory.snippet_custom_content
-                            : this.snippetsByCategory.snippet_custom;
-                        const index = snippetCustom.findIndex((s) => s.id === snippet.id);
-                        if (index > -1) {
-                            snippetCustom.splice(index, 1);
+                        for (const categoryKey of ["snippet_custom", "snippet_custom_content"]) {
+                            const snippetList = this.snippetsByCategory[categoryKey] || [];
+                            const snippetIndex = snippetList.findIndex(
+                                (item) => item.id === snippet.id
+                            );
+
+                            if (snippetIndex > -1) {
+                                snippetList.splice(snippetIndex, 1);
+                            }
                         }
                         await this.orm.call("ir.ui.view", "delete_snippet", [], {
                             view_id: snippet.viewId,
@@ -323,9 +330,7 @@ export class SnippetModel extends Reactive {
         if (!snippetKey) {
             return;
         }
-        return [...this.snippetStructures, ...this.snippetInnerContents].find(
-            (snippet) => snippet.name === snippetKey
-        );
+        return this.originalSnippets[snippetKey];
     }
 
     /**
@@ -435,14 +440,15 @@ export class SnippetModel extends Reactive {
      * Gets the label of the snippet.
      *
      * @param {HTMLElement} snippetEl
+     * @param {boolean} [isCustom = false]
      * @returns {String}
      */
-    getSnippetLabel(snippetEl) {
+    getSnippetLabel(snippetEl, isCustom = false) {
         return snippetEl.dataset.oLabel;
     }
 }
 
-registry.category("services").add("html_builder.snippets", {
+export const snippetService = {
     dependencies: ["orm", "dialog"],
 
     start(env, { orm, dialog }) {
@@ -469,7 +475,9 @@ registry.category("services").add("html_builder.snippets", {
 
         return { getSnippetModel };
     },
-});
+};
+
+registry.category("services").add("html_builder.snippets", snippetService);
 
 export function useSnippets(snippetsName) {
     const snippetsService = useService("html_builder.snippets");

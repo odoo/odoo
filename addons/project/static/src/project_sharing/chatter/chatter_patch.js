@@ -12,6 +12,8 @@ patch(Chatter.prototype, {
         });
         this.orm = useService("orm");
         useSubEnv({
+            // 'inFrontendPortalChatter' is specific to the frontend portal chatters 
+            // and should not be set to 'true' in the project sharing chatter environment.
             projectSharingId: this.props.projectSharingId,
         });
     },

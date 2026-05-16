@@ -8,7 +8,10 @@ const resPartnerPatch = {
         super.setup();
         /** @type {String[]} */
         this.livechat_languages = [];
-        /** @type {String[]} */
+        /**
+         * @deprecated Use `user.livechat_expertise_ids` instead.
+         * @type {String[]}
+         */
         this.livechat_expertise = [];
     },
     _computeDisplayName() {

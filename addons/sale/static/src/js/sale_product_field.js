@@ -116,7 +116,7 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
         return this.props.record.data.is_configurable_product;
     }
     get isCombo() {
-        return this.props.record.data.product_type === 'combo';
+        return this.props.record.data.product_template_id && this.props.record.data.product_type === 'combo';
     }
     get isDownpayment() {
         return this.props.record.data.is_downpayment;
@@ -259,20 +259,25 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
             selectedComboItems: selectedComboItems,
             edit: edit,
             save: async (mainProduct, optionalProducts) => {
-                await Promise.all([
-                    // Don't add main product if it's a combo product as it has already been added
-                    // from combo configurator
-                    ...(
-                        !selectedComboItems.length ?
-                            [applyProduct(this.props.record, mainProduct)]: []
-                    ),
-                    ...optionalProducts.map(async product => {
-                        const line = await saleOrderRecord.data.order_line.addNewRecord({
-                            position: 'bottom', mode: 'readonly'
-                        });
-                        await applyProduct(line, product);
-                    }),
-                ]);
+                // Don't add main product if it's a combo product as it has already been added
+                // from combo configurator
+                const proms = !selectedComboItems.length
+                    ? [applyProduct(this.props.record, mainProduct)]
+                    : [];
+
+                for (const [i, product] of optionalProducts.entries()) {
+                    const index =
+                        saleOrderRecord.data.order_line.records.indexOf(this.props.record)
+                        + selectedComboItems.length
+                        + i;
+                    const line = await saleOrderRecord.data.order_line.addNewRecordAtIndex(index, {
+                        mode: 'readonly',
+                    });
+                    const productData = this._prepareNewLineData(line, product);
+                    proms.push(applyProduct(line, productData));
+                }
+
+                await Promise.all(proms);
                 this._onProductUpdate();
                 saleOrderRecord.data.order_line.leaveEditMode();
             },
@@ -380,6 +385,13 @@ export class SaleOrderLineProductField extends ProductLabelSectionAndNoteField {
      */
     _getAdditionalDialogProps() {
         return {};
+    }
+
+    /**
+     * Hook to append extra data in newly created optional product lines.
+     */
+    _prepareNewLineData(_line, product) {
+        return product;
     }
 
     /**

@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import Command
+from odoo.tests import Form
 
 from odoo.addons.project_purchase.tests.test_project_profitability import TestProjectPurchaseProfitability
 
@@ -22,6 +23,14 @@ class TestProjectPurchase(TestProjectPurchaseProfitability):
         # Create additional analytic plans at setup to avoid adding fields in project.project between tests
         cls.analytic_plan_1 = cls.env['account.analytic.plan'].create({'name': 'Purchase Project Plan 1'})
         cls.analytic_plan_2 = cls.env['account.analytic.plan'].create({'name': 'Purchase Project Plan 2'})
+        cls.analytic_account_1 = cls.env['account.analytic.account'].create({
+            'name': 'Analytic Account - Plan 1',
+            'plan_id': cls.analytic_plan_1.id,
+        })
+        cls.analytic_account_2 = cls.env['account.analytic.account'].create({
+            'name': 'Analytic Account - Plan 2',
+            'plan_id': cls.analytic_plan_2.id,
+        })
 
     def test_project_on_pol_with_analytic_distribution_model(self):
         """ If a line has a distribution coming from an analytic distribution model, and the PO has a project,
@@ -30,17 +39,9 @@ class TestProjectPurchase(TestProjectPurchaseProfitability):
         """
         # We create one distribution model with two accounts in one line, based on product
         # and a second model with a different plan, based on partner
-        analytic_account_1 = self.env['account.analytic.account'].create({
-            'name': 'Analytic Account - Plan 1',
-            'plan_id': self.analytic_plan_1.id,
-        })
-        analytic_account_2 = self.env['account.analytic.account'].create({
-            'name': 'Analytic Account - Plan 2',
-            'plan_id': self.analytic_plan_2.id,
-        })
         distribution_model_product = self.env['account.analytic.distribution.model'].create({
             'product_id': self.product_order.id,
-            'analytic_distribution': {','.join([str(analytic_account_1.id), str(analytic_account_2.id)]): 100},
+            'analytic_distribution': {','.join([str(self.analytic_account_1.id), str(self.analytic_account_2.id)]): 100},
             'company_id': self.company.id,
         })
         distribution_model_partner = self.env['account.analytic.distribution.model'].create({
@@ -63,10 +64,16 @@ class TestProjectPurchase(TestProjectPurchaseProfitability):
         # When we add a project to the PO, it should keep the previous accounts + the project account
         purchase_order.project_id = self.project1
         expected_distribution_project = {
-            f"{analytic_account_1.id},{analytic_account_2.id},{self.project1.account_id.id}": 100,
+            f"{self.analytic_account_1.id},{self.analytic_account_2.id},{self.project1.account_id.id}": 100,
             f"{self.analytic_account.id},{self.project1.account_id.id}": 100,
         }
         self.assertEqual(purchase_order.order_line.analytic_distribution, expected_distribution_project)
+
+        # the analytic distribution shouldn't change on items added after setting a project on the PO
+        with Form(purchase_order) as po:
+            with po.order_line.new() as line:
+                line.product_id = self.product_order
+            self.assertEqual(purchase_order.order_line[-1].analytic_distribution, expected_distribution_project)
 
     def test_compute_purchase_orders_count(self):
         self.project1.account_id = self.analytic_account  # Project with analytics

@@ -23,13 +23,14 @@
 # Jonas Zinkevicius <jozi@odoo.com>, 2023
 # Ramunė ViaLaurea <ramune.vialaurea@gmail.com>, 2023
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:37+0000\n"
-"PO-Revision-Date: 2025-09-16 18:43+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"POT-Creation-Date: 2026-04-10 18:37+0000\n"
+"PO-Revision-Date: 2025-11-08 19:07+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Lithuanian <https://translate.odoo.com/projects/odoo-19/"
 "website_sale/lt/>\n"
 "Language: lt\n"
@@ -50,7 +51,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/website_sale/controllers/cart.py:0
 msgid "%s days ago"
-msgstr ""
+msgstr "prieš %s d."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_title
@@ -140,38 +141,9 @@ msgid "1 Column"
 msgstr ""
 
 #. module: website_sale
-#: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_width__100_pc
-msgid "100 %"
-msgstr "100 %"
-
-#. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_list_page_option.xml:0
 msgid "2 Columns"
-msgstr ""
-
-#. module: website_sale
-#: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_width__33_pc
-msgid "33 %"
-msgstr ""
-
-#. module: website_sale
-#: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_width__50_pc
-msgid "50 %"
-msgstr "50 %"
-
-#. module: website_sale
-#: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_width__66_pc
-msgid "66 %"
-msgstr "66 %"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
-msgid ""
-"<a role=\"button\" t-att-href=\"order.partner_id.signup_prepare() and "
-"order.partner_id.with_context(relative_url=True)._get_signup_url()\" "
-"class=\"btn btn-primary o_translate_inline\">Sign Up</a>\n"
-"                    <span class=\"align-middle\">to follow your order.</span>"
 msgstr ""
 
 #. module: website_sale
@@ -200,7 +172,7 @@ msgstr "<b>Rūšiuoti pagal</b>"
 #: model_terms:ir.ui.view,arch_db:website_sale.filter_products_tags
 #: model_terms:ir.ui.view,arch_db:website_sale.product_attribute_filters_form
 msgid "<b>Tags</b>"
-msgstr ""
+msgstr "<b>Žymos</b>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.suggested_products_list
@@ -223,6 +195,8 @@ msgid ""
 "<i class=\"fa fa-bolt me-2\"/>\n"
 "                Buy now"
 msgstr ""
+"<i class=\"fa fa-bolt me-2\"/>\n"
+"                Pirkti dabar"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_add_to_cart
@@ -250,7 +224,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_edit_button
 msgid "<i class=\"fa fa-pencil me-1\"/>Edit"
-msgstr ""
+msgstr "<i class=\"fa fa-pencil me-1\"/>Redaguoti"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_edit_button
@@ -260,7 +234,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "<i class=\"fa fa-print me-2\"/>Print"
-msgstr ""
+msgstr "<i class=\"fa fa-print me-2\"/>Spausdinti"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.quick_reorder_button
@@ -353,6 +327,11 @@ msgid "<span class=\"align-middle\">Already have an account?</span>"
 msgstr ""
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
+msgid "<span class=\"align-middle\">to follow your order.</span>"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_preview_data
 msgid ""
 "<span class=\"fw-bold\" name=\"product_price\" data-oe-type=\"monetary\" "
@@ -405,7 +384,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.navigation_buttons
 msgid "<span class=\"px-3\">or</span>"
-msgstr ""
+msgstr "<span class=\"px-3\">arba</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.template_footer_website_sale
@@ -452,6 +431,8 @@ msgid ""
 "<span class=\"text-muted\" invisible=\"product_variant_count &lt;= 1\">Based "
 "on variants</span>"
 msgstr ""
+"<span class=\"text-muted\" invisible=\"product_variant_count &lt;= 1\">Pagal "
+"variantus</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -537,28 +518,6 @@ msgid "<span>for</span>"
 msgstr ""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.cart
-msgid ""
-"<strong>\n"
-"                                <a class=\"o_translate_inline\" t-attf-"
-"href=\"/shop/cart/?id={{id}}&amp;access_token={{access_token}}"
-"&amp;revive_method=merge\">Click here</a>\n"
-"                            </strong> if you want to merge your previous "
-"cart into current cart."
-msgstr ""
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.cart
-msgid ""
-"<strong>\n"
-"                                <a class=\"o_translate_inline\" t-attf-"
-"href=\"/shop/cart/?id={{id}}&amp;access_token={{access_token}}"
-"&amp;revive_method=squash\">Click here</a>\n"
-"                            </strong> if you want to restore your previous "
-"cart. Your current cart will be replaced with your previous cart."
-msgstr ""
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
 msgid "<strong>Documents</strong>"
 msgstr ""
@@ -571,7 +530,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.total
 msgid "<strong>Total</strong>"
-msgstr ""
+msgstr "<strong>Suma</strong>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
@@ -668,6 +627,8 @@ msgid ""
 "A detailed, formatted description to promote your product on this page. Use "
 "'/' to discover more features."
 msgstr ""
+"Išsamus, suformatuotas aprašymas, skirtas reklamuoti jūsų produktą šiame "
+"puslapyje. Norėdami sužinoti daugiau funkcijų, naudokite „/“."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
@@ -743,7 +704,7 @@ msgstr "Priimtinas failo dydis"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_feed__access_token
 msgid "Access Token"
-msgstr ""
+msgstr "Prieigos raktas"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.template_footer_website_sale
@@ -788,7 +749,7 @@ msgstr "Reikalingas veiksmas"
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
 msgid "Actions"
-msgstr ""
+msgstr "Veiksmai"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_product_view_form_easy_inherit_website_sale
@@ -833,7 +794,7 @@ msgstr "Palyginimui pridėkite perbrauktą kainą"
 #: model_terms:ir.ui.view,arch_db:website_sale.billing_address_list
 #: model_terms:ir.ui.view,arch_db:website_sale.delivery_address_list
 msgid "Add an address"
-msgstr ""
+msgstr "Pridėti adresą"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines_quantity
@@ -844,6 +805,7 @@ msgstr "Pridėti vieną"
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/combo_configurator_dialog/combo_configurator_dialog.xml:0
+#: code:addons/website_sale/static/src/js/product/product.xml:0
 #: code:addons/website_sale/static/src/website_builder/add_to_card_option.js:0
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
 #: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_products_item
@@ -861,7 +823,7 @@ msgstr "Mygtukas įdėti į krepšelį"
 #: code:addons/website_sale/static/src/js/product_configurator_dialog/product_configurator_dialog.xml:0
 #: model_terms:ir.ui.view,arch_db:website_sale.shop_product_buttons
 msgid "Add to cart"
-msgstr ""
+msgstr "Pridėti į krepšelį"
 
 #. module: website_sale
 #: model:website.checkout.step,name:website_sale.checkout_step_delivery
@@ -890,13 +852,13 @@ msgstr ""
 #: code:addons/website_sale/static/src/website_builder/dynamic_snippet_category_options.xml:0
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
 msgid "Alignment"
-msgstr ""
+msgstr "Lygiavimas"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.filter_select_attributes
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
 msgid "All"
-msgstr ""
+msgstr "Visi"
 
 #. module: website_sale
 #. odoo-javascript
@@ -904,7 +866,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.product_feed_form
 #: model_terms:ir.ui.view,arch_db:website_sale.product_feed_list
 msgid "All Categories"
-msgstr ""
+msgstr "Visos kategorijos"
 
 #. module: website_sale
 #. odoo-javascript
@@ -921,7 +883,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__ecommerce_access__everyone
 msgid "All users"
-msgstr ""
+msgstr "Visi vartotojai"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_delivery_carrier_form_website_delivery
@@ -990,7 +952,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_ribbon__assign
 msgid "Assign"
-msgstr ""
+msgstr "Priskirti"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1018,7 +980,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_ratio__auto
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_ratio_mobile__auto
 msgid "Auto"
-msgstr ""
+msgstr "Automatinis"
 
 #. module: website_sale
 #. odoo-javascript
@@ -1050,7 +1012,7 @@ msgstr ""
 #. module: website_sale
 #: model:website.checkout.step,back_button_label:website_sale.checkout_step_cart
 msgid "Back to cart"
-msgstr ""
+msgstr "Grįžti į krepšelį"
 
 #. module: website_sale
 #: model:website.checkout.step,back_button_label:website_sale.checkout_step_extra
@@ -1067,7 +1029,7 @@ msgstr "Fonas"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_ribbon__bg_color
 msgid "Background Color"
-msgstr ""
+msgstr "Fono spalva"
 
 #. module: website_sale
 #. odoo-javascript
@@ -1145,7 +1107,7 @@ msgstr "Apmokestinimas"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.billing_address_list
 msgid "Billing address"
-msgstr ""
+msgstr "Sąskaitos adresas"
 
 #. module: website_sale
 #. odoo-python
@@ -1169,7 +1131,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
 msgid "Bold"
-msgstr ""
+msgstr "Pusjuodis"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1191,7 +1153,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_list_page_option.xml:0
 msgid "Bordered"
-msgstr ""
+msgstr "Su kraštinėmis"
 
 #. module: website_sale
 #. odoo-python
@@ -1203,7 +1165,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
 msgid "Boxed"
-msgstr ""
+msgstr "Įrėmintas"
 
 #. module: website_sale
 #. odoo-python
@@ -1217,7 +1179,7 @@ msgstr "Dėžutės"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/dynamic_snippet_category_options.xml:0
 msgid "Button"
-msgstr ""
+msgstr "Mygtukas"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1250,7 +1212,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_preview_data
 msgid "Cabinet with Doors"
-msgstr ""
+msgstr "Spintelė su durimis"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_cabinets
@@ -1328,6 +1290,8 @@ msgid ""
 "Categories are used to browse your products through the\n"
 "                touchscreen interface."
 msgstr ""
+"Kategorijos yra naudojamos produktų naršymui\n"
+"jutiklinio ekrano sąsajoje."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_category_extra_link
@@ -1379,7 +1343,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
 msgid "Center"
-msgstr ""
+msgstr "Centravimas"
 
 #. module: website_sale
 #. odoo-javascript
@@ -1412,7 +1376,7 @@ msgstr ""
 #. module: website_sale
 #: model:website.checkout.step,main_button_label:website_sale.checkout_step_delivery
 msgid "Checkout"
-msgstr ""
+msgstr "Apmokėti"
 
 #. module: website_sale
 #. odoo-javascript
@@ -1461,7 +1425,7 @@ msgstr ""
 #: code:addons/website_sale/static/src/js/client_actions/configurator/productPageSelectionScreen.xml:0
 #: code:addons/website_sale/static/src/js/client_actions/configurator/shopPageSelectionScreen.xml:0
 msgid "Choose your favorite"
-msgstr ""
+msgstr "Pasirinkite mėgiamiausią"
 
 #. module: website_sale
 #: model:product.pricelist,name:website_sale.list_christmas
@@ -1472,7 +1436,7 @@ msgstr "Kalėdos"
 #. odoo-python
 #: code:addons/website_sale/const.py:0
 msgid "Classic"
-msgstr ""
+msgstr "Klasikinis"
 
 #. module: website_sale
 #. odoo-python
@@ -1505,6 +1469,11 @@ msgstr ""
 "i>dešiniajame viršutiniame kampe"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.cart
+msgid "Click here"
+msgstr "Spauskite čia"
+
+#. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/tours/website_sale_shop.js:0
 msgid "Click here to open the reporting menu"
@@ -1527,7 +1496,7 @@ msgstr "Paspauskite šį mygtuką, kad jūsų klientai galėtų tai matyti."
 #: code:addons/website_sale/static/src/js/client_actions/configurator/productPageSelectionScreen.xml:0
 #: code:addons/website_sale/static/src/js/client_actions/configurator/shopPageSelectionScreen.xml:0
 msgid "Click to select"
-msgstr ""
+msgstr "Norėdami pasirinkti, spragtelėkite"
 
 #. module: website_sale
 #. odoo-javascript
@@ -1542,13 +1511,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.o_wsale_offcanvas
 #: model_terms:ir.ui.view,arch_db:website_sale.quick_reorder_sidebar
 msgid "Close"
-msgstr ""
+msgstr "Uždaryti"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/location_selector/location_schedule/location_schedule.js:0
 msgid "Closed"
-msgstr ""
+msgstr "Uždaryta"
 
 #. module: website_sale
 #. odoo-javascript
@@ -1583,7 +1552,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
 msgid "Colors"
-msgstr ""
+msgstr "Spalvos"
 
 #. module: website_sale
 #. odoo-javascript
@@ -1648,7 +1617,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_preview_data
 msgid "Conference Chair"
-msgstr ""
+msgstr "Konferencijų kėdė"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_res_config_settings
@@ -1659,7 +1628,7 @@ msgstr "Konfigūracijos nustatymai"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/product_configurator_dialog/product_configurator_dialog.js:0
 msgid "Configure"
-msgstr ""
+msgstr "Konfigūruoti"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1682,7 +1651,7 @@ msgstr ""
 #: model:website.checkout.step,main_button_label:website_sale.checkout_step_extra
 #: model:website.checkout.step,main_button_label:website_sale.checkout_step_payment
 msgid "Confirm"
-msgstr ""
+msgstr "Patvirtinti"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.navigation_buttons
@@ -1733,7 +1702,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.template_footer_website_sale
 msgid "Contact us"
-msgstr ""
+msgstr "Susisiekite su mumis"
 
 #. module: website_sale
 #. odoo-javascript
@@ -1761,7 +1730,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__cover_image
 #: model_terms:ir.ui.view,arch_db:website_sale.product_public_category_form_view
 msgid "Cover Image"
-msgstr ""
+msgstr "Viršelio paveikslėlis"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_category_template
@@ -1850,7 +1819,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.template_footer_website_sale
 msgid "Customer Care"
-msgstr ""
+msgstr "Klientų aptarnavimas"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
@@ -1979,7 +1948,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.template_footer_website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.total
 msgid "Delivery"
-msgstr ""
+msgstr "Pristatymas"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_on_checkout
@@ -1994,12 +1963,12 @@ msgstr "Pristatymo kiekis"
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_delivery
 msgid "Delivery Methods"
-msgstr ""
+msgstr "Pristatymo būdai"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.delivery_address_list
 msgid "Delivery address"
-msgstr ""
+msgstr "Pristatymo adresas"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_services_delivery_and_installation
@@ -2077,7 +2046,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Details"
-msgstr ""
+msgstr "Papildoma informacija"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__website_sequence
@@ -2095,7 +2064,7 @@ msgstr "Santrauka"
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
 #: model:ir.model.fields.selection,name:website_sale.selection__res_config_settings__account_on_checkout__disabled
 msgid "Disabled"
-msgstr ""
+msgstr "Išjungta"
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__account_on_checkout__disabled
@@ -2105,7 +2074,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.coupon_form
 msgid "Discount code..."
-msgstr ""
+msgstr "Nuolaidos kodas"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -2123,7 +2092,7 @@ msgstr ""
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website_sale.product_ribbon_form_view
 msgid "Display"
-msgstr ""
+msgstr "Vaizdavimas"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_account_move__display_name
@@ -2131,6 +2100,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale.field_delivery_carrier__display_name
 #: model:ir.model.fields,field_description:website_sale.field_digest_digest__display_name
 #: model:ir.model.fields,field_description:website_sale.field_ir_http__display_name
+#: model:ir.model.fields,field_description:website_sale.field_ir_module_module__display_name
 #: model:ir.model.fields,field_description:website_sale.field_payment_token__display_name
 #: model:ir.model.fields,field_description:website_sale.field_product_attribute__display_name
 #: model:ir.model.fields,field_description:website_sale.field_product_document__display_name
@@ -2286,7 +2256,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_document_form
 msgid "E-commerce"
-msgstr ""
+msgstr "El. Prekyba"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_pricelist__code
@@ -2469,7 +2439,7 @@ msgstr ""
 #: code:addons/website_sale/static/src/website_builder/products_list_page_option.xml:0
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "Filters"
-msgstr ""
+msgstr "Filtrai"
 
 #. module: website_sale
 #. odoo-python
@@ -2567,7 +2537,7 @@ msgstr "Sekėjai (partneriai)"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
 msgid "Font Size"
-msgstr ""
+msgstr "Šrifto dydis"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_bins_storage
@@ -2596,7 +2566,7 @@ msgstr "Iš interneto svetainės"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_list_page_option.xml:0
 msgid "Full"
-msgstr ""
+msgstr "Pilnas"
 
 #. module: website_sale
 #. odoo-javascript
@@ -2610,7 +2580,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/website_sale/const.py:0
 msgid "Functional"
-msgstr ""
+msgstr "Funkcinis"
 
 #. module: website_sale
 #. odoo-python
@@ -2652,7 +2622,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
 msgid "General"
-msgstr ""
+msgstr "Bendra"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_desks_glass
@@ -2725,7 +2695,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.template_footer_website_sale
 msgid "Help Center"
-msgstr ""
+msgstr "Pagalbos Tarnyba"
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__product_attribute__preview_variants__hidden
@@ -2739,7 +2709,7 @@ msgstr "Paslėpta"
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
 #: code:addons/website_sale/static/src/website_builder/products_list_page_option.xml:0
 msgid "Hide"
-msgstr ""
+msgstr "Paslėpti"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__prevent_zero_price_sale
@@ -2798,6 +2768,7 @@ msgstr "Sutinku su"
 #: model:ir.model.fields,field_description:website_sale.field_delivery_carrier__id
 #: model:ir.model.fields,field_description:website_sale.field_digest_digest__id
 #: model:ir.model.fields,field_description:website_sale.field_ir_http__id
+#: model:ir.model.fields,field_description:website_sale.field_ir_module_module__id
 #: model:ir.model.fields,field_description:website_sale.field_payment_token__id
 #: model:ir.model.fields,field_description:website_sale.field_product_attribute__id
 #: model:ir.model.fields,field_description:website_sale.field_product_document__id
@@ -2928,7 +2899,7 @@ msgstr ""
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
 #: code:addons/website_sale/static/src/website_builder/products_list_page_option.xml:0
 msgid "Images"
-msgstr ""
+msgstr "Paveikslėliai"
 
 #. module: website_sale
 #. odoo-javascript
@@ -2951,7 +2922,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.template_footer_website_sale
 msgid "Instagram"
-msgstr ""
+msgstr "Instagram"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_attribute__preview_variants
@@ -3073,19 +3044,19 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale.field_product_feed__lang_id
 #: model_terms:ir.ui.view,arch_db:website_sale.product_feed_search
 msgid "Language"
-msgstr ""
+msgstr "Kalba"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_feed__website_lang_ids
 msgid "Languages"
-msgstr ""
+msgstr "Kalbos"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/dynamic_snippet_category_options.xml:0
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
 msgid "Large"
-msgstr ""
+msgstr "Didelis"
 
 #. module: website_sale
 #. odoo-python
@@ -3207,13 +3178,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
 msgid "List view"
-msgstr ""
+msgstr "Sąrašų rodinys"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
 msgid "Loading..."
-msgstr ""
+msgstr "Vykdoma..."
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__ecommerce_access__logged_in
@@ -3249,7 +3220,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__res_config_settings__account_on_checkout__mandatory
 msgid "Mandatory"
-msgstr ""
+msgstr "Privaloma"
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__account_on_checkout__mandatory
@@ -3259,13 +3230,13 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__product_ribbon__assign__manual
 msgid "Manually"
-msgstr ""
+msgstr "Rankiniu būdu"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
 msgid "Map view"
-msgstr ""
+msgstr "Žemėlapio rodinys"
 
 #. module: website_sale
 #. odoo-javascript
@@ -3310,7 +3281,7 @@ msgstr "Žinutės"
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
 #: code:addons/website_sale/static/src/website_builder/products_list_page_option.xml:0
 msgid "Mobile"
-msgstr ""
+msgstr "Mobilus"
 
 #. module: website_sale
 #. odoo-javascript
@@ -3325,9 +3296,14 @@ msgid "Modern Grid"
 msgstr ""
 
 #. module: website_sale
+#: model:ir.model,name:website_sale.model_ir_module_module
+msgid "Module"
+msgstr "Modulis"
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.accordion_more_information
 msgid "More Information"
-msgstr ""
+msgstr "Daugiau informacijos"
 
 #. module: website_sale
 #. odoo-javascript
@@ -3403,7 +3379,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/website_sale/models/product_public_category.py:0
 msgid "New"
-msgstr ""
+msgstr "Naujas"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_ribbon_form_view
@@ -3448,7 +3424,7 @@ msgstr ""
 #: code:addons/website_sale/static/src/xml/website_sale_image_viewer.xml:0
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_preview_data
 msgid "Next"
-msgstr ""
+msgstr "Kitas"
 
 #. module: website_sale
 #. odoo-javascript
@@ -3492,7 +3468,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/location_selector/location_selector_dialog/location_selector_dialog.js:0
 msgid "No result"
-msgstr ""
+msgstr "Jokių rezultatų"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -3507,7 +3483,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "No results found for '"
-msgstr ""
+msgstr "Rezultatų nerasta pagal '"
 
 #. module: website_sale
 #. odoo-python
@@ -3584,7 +3560,7 @@ msgstr ""
 #: model:ir.model.fields,help:website_sale.field_product_feed__message_needaction_counter
 #: model:ir.model.fields,help:website_sale.field_product_template__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "Pranešimų skaičius, kuriems reikia imtis veiksmų"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_feed__message_has_error_counter
@@ -3733,12 +3709,12 @@ msgstr "Arba nuskenuokite mane su savo banko programėle."
 #: model:website.checkout.step,name:website_sale.checkout_step_cart
 #: model_terms:ir.ui.view,arch_db:website_sale.checkout_layout
 msgid "Order"
-msgstr ""
+msgstr "Užsakymas"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Order Confirmation"
-msgstr ""
+msgstr "Užsakymo patvirtinimas"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
@@ -3800,12 +3776,12 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.packaging_title
 msgid "Packaging"
-msgstr ""
+msgstr "Pakavimas"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_website_page
 msgid "Page"
-msgstr ""
+msgstr "Puslapis"
 
 #. module: website_sale
 #. odoo-javascript
@@ -3816,7 +3792,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__parent_id
 msgid "Parent"
-msgstr ""
+msgstr "Tėvinis"
 
 #. module: website_sale
 #. odoo-javascript
@@ -3838,12 +3814,12 @@ msgstr ""
 #. odoo-python
 #: code:addons/website_sale/controllers/main.py:0
 msgid "Pay now"
-msgstr ""
+msgstr "Apmokėti dabar"
 
 #. module: website_sale
 #: model:website.checkout.step,name:website_sale.checkout_step_payment
 msgid "Payment"
-msgstr ""
+msgstr "Mokėjimas"
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_methods
@@ -3858,7 +3834,7 @@ msgstr "Mokėjimo paslaugos tiekėjas"
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_payment_token
 msgid "Payment Token"
-msgstr ""
+msgstr "Mokėjimo raktas"
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_tokens
@@ -3886,7 +3862,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
 msgid "Phone Number"
-msgstr ""
+msgstr "Telefono numeris"
 
 #. module: website_sale
 #. odoo-javascript
@@ -3954,7 +3930,7 @@ msgstr ""
 #: code:addons/website_sale/static/src/xml/website_sale_image_viewer.xml:0
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_preview_data
 msgid "Previous"
-msgstr ""
+msgstr "Ankstesnis"
 
 #. module: website_sale
 #. odoo-javascript
@@ -4018,7 +3994,7 @@ msgstr "Kainoraštis"
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_pricelist_item
 msgid "Pricelist Rule"
-msgstr ""
+msgstr "Kainoraščio taisyklė"
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_catalog_pricelists
@@ -4034,7 +4010,7 @@ msgstr "Spausdinti"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.template_footer_website_sale
 msgid "Privacy Policy"
-msgstr ""
+msgstr "Privatumo politika"
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.action_unpaid_orders_ecommerce
@@ -4045,7 +4021,7 @@ msgstr "Apdoroti užsakymą, kai gaunamas mokėjimas."
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/add_to_cart_option.xml:0
-#: code:addons/website_sale/static/src/website_builder/products_item_option_plugin.js:0
+#: code:addons/website_sale/static/src/website_builder/products_item_option.js:0
 #: model:ir.model,name:website_sale.model_product_template
 #: model:ir.model.fields,field_description:website_sale.field_website_track__product_id
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -4126,7 +4102,7 @@ msgstr ""
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/client_actions/configurator/productPageSelectionScreen.xml:0
-#: code:addons/website_sale/static/src/website_builder/product_page_option_plugin.js:0
+#: code:addons/website_sale/static/src/website_builder/product_page_option.js:0
 msgid "Product Page"
 msgstr ""
 
@@ -4294,7 +4270,7 @@ msgstr ""
 
 #. module: website_sale
 #. odoo-javascript
-#: code:addons/website_sale/static/src/website_builder/products_list_page_option_plugin.js:0
+#: code:addons/website_sale/static/src/website_builder/products_list_page_option.js:0
 msgid "Products Page"
 msgstr ""
 
@@ -4341,7 +4317,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale.field_product_product__publish_date
 #: model:ir.model.fields,field_description:website_sale.field_product_template__publish_date
 msgid "Publish Date"
-msgstr ""
+msgstr "Publikavimo data"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_document__shown_on_product_page
@@ -4493,7 +4469,7 @@ msgstr "Siunčiamas priminimo laiškas"
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_container__regular
 #: model:ir.model.fields.selection,name:website_sale.selection__website__shop_page_container__regular
 msgid "Regular"
-msgstr ""
+msgstr "Įprastas"
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_cols_order__regular
@@ -4595,7 +4571,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.template_footer_website_sale
 msgid "Returns"
-msgstr ""
+msgstr "Grąžinimai"
 
 #. module: website_sale
 #. odoo-javascript
@@ -4609,7 +4585,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
 msgid "Reviews"
-msgstr ""
+msgstr "Atsiliepimai"
 
 #. module: website_sale
 #. odoo-javascript
@@ -4693,7 +4669,7 @@ msgstr "Pardavimų analizės ataskaita"
 #: model:ir.model.fields,field_description:website_sale.field_product_product__description_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_template__description_sale
 msgid "Sales Description"
-msgstr ""
+msgstr "Pardavimo aprašymas"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_sale_order
@@ -4728,7 +4704,7 @@ msgstr "Pavyzdis"
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_list_page_option.xml:0
 msgid "Search"
-msgstr ""
+msgstr "Paieška"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce_abondand
@@ -4756,8 +4732,14 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.o_wsale_offcanvas
 #: model_terms:ir.ui.view,arch_db:website_sale.product
+#: model_terms:ir.ui.view,arch_db:website_sale.product_search
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "Search in"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.filter_radio_and_multi_attributes
+msgid "Search {{0}} ({{1}})"
 msgstr ""
 
 #. module: website_sale
@@ -5044,13 +5026,18 @@ msgstr ""
 #: code:addons/website_sale/const.py:0
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
 msgid "Showcase"
-msgstr ""
+msgstr "Parodyti"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_list_page_option.xml:0
 msgid "Sidebar"
-msgstr ""
+msgstr "Šoninė juosta"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.confirmation
+msgid "Sign Up"
+msgstr "Užsiregistruoti"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
@@ -5194,7 +5181,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.total
 msgid "Subtotal"
-msgstr ""
+msgstr "Tarpinė suma"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__alternative_product_ids
@@ -5224,7 +5211,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_list_page_option.xml:0
 msgid "Tabs"
-msgstr ""
+msgstr "Skiltys"
 
 #. module: website_sale
 #. odoo-javascript
@@ -5237,7 +5224,7 @@ msgstr "Žymos"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_feed__target
 msgid "Target"
-msgstr ""
+msgstr "Tikslas"
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__show_line_subtotals_tax_selection__tax_excluded
@@ -5263,7 +5250,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.total
 msgid "Taxes"
-msgstr ""
+msgstr "Mokesčiai"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__variants_default_code
@@ -5276,13 +5263,13 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.template_footer_website_sale
 msgid "Terms &amp; Conditions"
-msgstr ""
+msgstr "Sąlygos &amp; nuostatos"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/product_page_option.xml:0
 msgid "Terms and Conditions"
-msgstr ""
+msgstr "Taisyklės ir sąlygos:"
 
 #. module: website_sale
 #. odoo-javascript
@@ -5341,6 +5328,12 @@ msgstr ""
 msgid ""
 "The company of the website you are trying to sell from (%(website_company)s) "
 "is different than the one you want to use (%(company)s)"
+msgstr ""
+
+#. module: website_sale
+#. odoo-python
+#: code:addons/website_sale/models/sale_order.py:0
+msgid "The delivery method is not compatible with your delivery address."
 msgstr ""
 
 #. module: website_sale
@@ -5452,13 +5445,13 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_theme_utils
 msgid "Theme Utils"
-msgstr ""
+msgstr "Tema Utils"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_design_panel.xml:0
 msgid "Theme colors"
-msgstr ""
+msgstr "Temos spalvos"
 
 #. module: website_sale
 #. odoo-javascript
@@ -5536,7 +5529,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_preview_data
 msgid "Three-Seat Sofa"
-msgstr ""
+msgstr "Trivietė sofa"
 
 #. module: website_sale
 #. odoo-javascript
@@ -5573,7 +5566,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/website_sale/controllers/cart.py:0
 msgid "Today"
-msgstr ""
+msgstr "Šiandien"
 
 #. module: website_sale
 #. odoo-javascript
@@ -5624,7 +5617,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.template_footer_website_sale
 msgid "Twitter"
-msgstr ""
+msgstr "Twitter"
 
 #. module: website_sale
 #: model:res.groups,name:website_sale.group_show_uom_price
@@ -5679,7 +5672,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_feed__url
 msgid "Url"
-msgstr ""
+msgstr "URL"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -5735,6 +5728,14 @@ msgid "Video URL"
 msgstr "Vaizdo įrašo nuoroda"
 
 #. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/interactions/website_sale.js:0
+msgid "View Less"
+msgstr ""
+
+#. module: website_sale
+#. odoo-javascript
+#: code:addons/website_sale/static/src/interactions/website_sale.js:0
 #: model_terms:ir.ui.view,arch_db:website_sale.filter_radio_and_multi_attributes
 msgid "View More"
 msgstr ""
@@ -5743,7 +5744,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/notification/add_to_cart_notification/add_to_cart_notification.xml:0
 msgid "View cart"
-msgstr ""
+msgstr "Peržiūrėti krepšelį"
 
 #. module: website_sale
 #. odoo-javascript
@@ -5886,7 +5887,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_website_menu
 msgid "Website Menu"
-msgstr ""
+msgstr "Svetainės meniu"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_feed__website_message_ids
@@ -5920,7 +5921,7 @@ msgstr "Svetainės parduotuvė"
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_website_snippet_filter
 msgid "Website Snippet Filter"
-msgstr ""
+msgstr "Svetainės fragmentų filtras"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_delivery_carrier__website_url
@@ -6029,7 +6030,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/website_sale/controllers/cart.py:0
 msgid "Yesterday"
-msgstr ""
+msgstr "Vakar"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
@@ -6077,19 +6078,19 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.template_footer_website_sale
 msgid "YouTube"
-msgstr ""
+msgstr "YouTube"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
 msgid "Your Email"
-msgstr ""
+msgstr "Jūsų el. pašto adresas"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/js/website_sale_form_editor.js:0
 msgid "Your Name"
-msgstr ""
+msgstr "Jūsų vardas"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
@@ -6164,7 +6165,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website_sale/static/src/website_builder/products_list_page_option.xml:0
 msgid "by"
-msgstr ""
+msgstr "pagal"
 
 #. module: website_sale
 #. odoo-javascript
@@ -6239,6 +6240,20 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "hours."
 msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.cart
+msgid "if you want to merge your previous cart into current cart."
+msgstr "jei norite sujungti ankstesnį krepšelį su dabartiniu krepšeliu."
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.cart
+msgid ""
+"if you want to restore your previous cart. Your current cart will be "
+"replaced with your previous cart."
+msgstr ""
+"jei norite atkurti savo ankstesnį krepšelį. Dabartinis jūsų krepšelis bus "
+"pakeistas ankstesniu."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -6316,11 +6331,6 @@ msgid ""
 msgstr ""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.products
-msgid "placeholder"
-msgstr ""
-
-#. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/models/website.py:0
 msgid "publish_date desc"
@@ -6332,9 +6342,23 @@ msgid "terms &amp; conditions"
 msgstr "Taisyklės ir sąlygos:"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.cart_combo_item_line
+msgid "x"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_products_item
 msgid "{{0}} image"
 msgstr ""
+
+#~ msgid "100 %"
+#~ msgstr "100 %"
+
+#~ msgid "50 %"
+#~ msgstr "50 %"
+
+#~ msgid "66 %"
+#~ msgstr "66 %"
 
 #~ msgid "&amp; Shipping"
 #~ msgstr "&amp; Siuntimas"
@@ -6538,9 +6562,6 @@ msgstr ""
 
 #~ msgid "City"
 #~ msgstr "Miestas"
-
-#~ msgid "Click here"
-#~ msgstr "Spauskite čia"
 
 #~ msgid "Compute shipping cost and ship with Easypost"
 #~ msgstr "Apskaičiuoti siuntimo kainą ir siųsti per Easypost"
@@ -6775,9 +6796,6 @@ msgstr ""
 #~ msgid "Shopping cart"
 #~ msgstr "Pirkinių krepšelis"
 
-#~ msgid "Sign Up"
-#~ msgstr "Užsiregistruoti"
-
 #~ msgid "Sold"
 #~ msgstr "Parduota"
 
@@ -6902,16 +6920,6 @@ msgstr ""
 
 #~ msgid "eCommerce Shop"
 #~ msgstr "Atributai el. parduotuvėje"
-
-#~ msgid "if you want to merge your previous cart into current cart."
-#~ msgstr "jei norite sujungti ankstesnį krepšelį su dabartiniu krepšeliu."
-
-#~ msgid ""
-#~ "if you want to restore your previous cart. Your current cart will be "
-#~ "replaced with your previous cart."
-#~ msgstr ""
-#~ "jei norite atkurti savo ankstesnį krepšelį. Dabartinis jūsų krepšelis bus "
-#~ "pakeistas ankstesniu."
 
 #~ msgid "new address"
 #~ msgstr "naują adresą"

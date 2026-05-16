@@ -28,6 +28,8 @@ class NewsletterSubscribeCommonOptionPlugin extends Plugin {
                 dropIn: ".row.o_grid_mode",
             },
         ],
+        is_unremovable_selector: ".js_subscribe_btn",
+        submit_button_selectors: [".js_subscribe_btn"],
     };
 }
 

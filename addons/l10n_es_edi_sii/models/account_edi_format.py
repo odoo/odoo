@@ -129,7 +129,7 @@ class AccountEdiFormat(models.Model):
 
             else:
                 # Vendor bills
-                if tax_values['l10n_es_type'] in ('sujeto', 'sujeto_isp', 'no_sujeto', 'no_sujeto_loc', 'dua'):
+                if tax_values['l10n_es_type'] in ('sujeto', 'sujeto_isp', 'no_sujeto', 'no_sujeto_loc', 'dua', 'sujeto_agricultura'):
                     tax_amount_deductible += tax_values['tax_amount']
                 elif tax_values['l10n_es_type'] == 'retencion':
                     tax_amount_retention += tax_values['tax_amount']

@@ -28,11 +28,11 @@
             [data-snippet="s_carousel_intro"],
             [data-snippet="s_carousel_cards"],
             [data-snippet="s_quotes_carousel_minimal"],
-            [data-snippet="s_quotes_carousel"] {
-                height: 550px;
-            }
+            [data-snippet="s_quotes_carousel"],
             [data-snippet="s_quotes_carousel_compact"] {
-                height: 350px;
+                .carousel-inner, .carousel-inner > .carousel-item {
+                    height: fit-content;
+                }
             }
             [data-snippet="s_three_columns"] .figure-img[style*="height:50vh"] {
                 /* In Travel theme. */
@@ -84,6 +84,16 @@
                         .modal-content {
                             box-shadow: 0rem 3.5rem 12rem rgba(0, 0, 0, 0.6);
                         }
+                    }
+                }
+
+                // Force visibility on root snippets if desktop/mobile invisible
+                // and on conditionally visible elements
+                &.o_snippet_desktop_invisible, &.o_snippet_mobile_invisible, &.o_conditional_hidden, & .o_conditional_hidden {
+                    display: block !important;
+
+                    &.d-lg-flex, &.d-md-flex, &.o_half_screen_height, &.o_full_screen_height {
+                        display: flex !important;
                     }
                 }
             }
@@ -158,14 +168,21 @@
         }
 
         .o_custom_snippet_edit {
-                > * {
-                color: rgba(0, 0, 0, 0.6);
+            > * {
                 font-size: 50px;
                 font-family: $o-we-font-family;
-                }
-                .btn:hover {
+            }
+            .btn:hover {
                 color: rgba(0, 0, 0, 0.8);
-                }
+            }
+        }
+    }
+
+    &.o_add_snippets_preview--dark {
+        .o_custom_snippet_edit {
+            --body-color: #{$white};
+
+            color: $white;
         }
     }
 }

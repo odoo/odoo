@@ -22,6 +22,7 @@
                 >
                 <field name="active"/>
                 <field name="alias_email"/>
+                <field name="company_id"/>
                 <templates>
                     <t t-name="menu" groups="hr_recruitment.group_hr_recruitment_user">
                         <div class="container">
@@ -74,7 +75,7 @@
                             <main>
                                 <div class="d-flex flex-row align-content-center ms-2">
                                     <div class="col-3 d-flex flex-column align-self-center o_kanban_card_header">
-                                        <div class="d-flex flex-row">
+                                        <div class="d-flex flex-row justify-content-between">
                                             <div class="d-flex fw-bold fs-3 o_kanban_card_header_title">
                                                 <field name="is_favorite" widget="boolean_favorite" nolabel="1"/>
                                                 <field class="fs-3" name="name"/>
@@ -148,7 +149,7 @@
                                     </div>
                                     <div class="col align-content-center me-5">
                                         <div class="d-flex justify-content-center">
-                                            <div class="me-2">
+                                            <div name="large_screen_job_page_div" class="me-2" invisible="1">
                                                 <button class="btn btn-primary" name="%(action_hr_job_applications)d" type="action">
                                                     Job Page
                                                 </button>
@@ -348,8 +349,8 @@
                 </button>
             </div>
             <xpath expr="//page[@name='job_description_page']" position="after">
-                <page string="Trackers" name="trackers_page" groups="hr.group_hr_user">
-                    <field name="job_source_ids" groups="hr_recruitment.group_hr_recruitment_interviewer"/>
+                <page string="Trackers" name="trackers_page" groups="hr_recruitment.group_hr_recruitment_user">
+                    <field name="job_source_ids" groups="hr_recruitment.group_hr_recruitment_user"/>
                 </page>
             </xpath>
             <xpath expr="//sheet" position="after">

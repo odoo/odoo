@@ -16,7 +16,11 @@
         width: 100%;
         object-fit: cover;
 
-        &[data-shape] {
+        // Apply `object-fit: contain` only when some aspect ratio is applied.
+        // This ensures the cropped area is displayed correctly inside its container.
+        // If the aspect ratio is (`0/0`), the image should behave normally and
+        // follow default layout (such as `object-fit: cover` when stretched).
+        &[data-shape]:not([data-aspect-ratio="0/0"]) {
             object-fit: contain;
         }
 
@@ -42,14 +46,14 @@
     }
 
     // Options
-    &.o_card_img_top {
-        .o_card_img_ratio_custom {
+    &.o_card_img_top, &.o_card_img_bottom {
+        > .o_card_img_ratio_custom {
             --aspect-ratio: var(--card-img-aspect-ratio);
         }
     }
 
     &.o_card_img_horizontal {
-        .o_card_img_wrapper {
+        >.o_card_img_wrapper {
             flex-shrink: 0;
 
             @include media-breakpoint-up(lg) {

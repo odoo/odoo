@@ -15,13 +15,17 @@
 # gezza <geza.nagy@oregional.hu>, 2023
 # Tamás Németh <ntomasz81@gmail.com>, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Nagy Géza <geza.nagy@oregional.hu>, 2026.
+# Sarbó Gergely <sarbo.gergely@gmail.com>, 2026.
+# Odoo Translation Bot <c3p@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:38+0000\n"
-"PO-Revision-Date: 2025-09-29 19:46+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2026-04-10 18:39+0000\n"
+"PO-Revision-Date: 2026-04-13 20:46+0000\n"
+"Last-Translator: Odoo Translation Bot <c3p@odoo.com>\n"
 "Language-Team: Hungarian <https://translate.odoo.com/projects/odoo-19/"
 "product/hu/>\n"
 "Language: hu\n"
@@ -29,7 +33,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: product
 #. odoo-python
@@ -51,16 +55,6 @@ msgstr "# Termékváltozat"
 #: model:ir.model.fields,field_description:product.field_product_category__product_count
 msgid "# Products"
 msgstr "# Termék"
-
-#. module: product
-#: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
-msgid "$14.00"
-msgstr "$14.00"
-
-#. module: product
-#: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
-msgid "$15.00"
-msgstr "$15.00"
 
 #. module: product
 #. odoo-python
@@ -160,7 +154,7 @@ msgstr ""
 #. module: product
 #: model:product.attribute.value,name:product.pav_duration_month_1
 msgid "1 month"
-msgstr ""
+msgstr "1 hónap"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_duration_year_1
@@ -168,39 +162,9 @@ msgid "1 year"
 msgstr "1 év"
 
 #. module: product
-#: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
-msgid "10"
-msgstr "10"
-
-#. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
 msgid "10 Units"
 msgstr "10 egység"
-
-#. module: product
-#: model:product.attribute.value,name:product.pav_height_100
-msgid "100"
-msgstr ""
-
-#. module: product
-#: model:product.attribute.value,name:product.pav_length_120
-msgid "120"
-msgstr ""
-
-#. module: product
-#: model_terms:ir.ui.view,arch_db:product.report_packagingbarcode
-msgid "123456789012"
-msgstr ""
-
-#. module: product
-#: model:product.attribute.value,name:product.pav_length_140
-msgid "140"
-msgstr ""
-
-#. module: product
-#: model:product.attribute.value,name:product.pav_length_160
-msgid "160"
-msgstr ""
 
 #. module: product
 #: model:product.template,description_sale:product.product_product_4_product_template
@@ -228,11 +192,6 @@ msgid "3 years"
 msgstr ""
 
 #. module: product
-#: model:product.attribute.value,name:product.pav_shoe_size_39
-msgid "39"
-msgstr ""
-
-#. module: product
 #: model:product.attribute.value,name:product.pav_size_3xl
 msgid "3XL"
 msgstr ""
@@ -253,31 +212,6 @@ msgid "4 x 7 with price"
 msgstr "4 x 7 árral"
 
 #. module: product
-#: model:product.attribute.value,name:product.pav_shoe_size_40
-msgid "40"
-msgstr ""
-
-#. module: product
-#: model:product.attribute.value,name:product.pav_shoe_size_41
-msgid "41"
-msgstr ""
-
-#. module: product
-#: model:product.attribute.value,name:product.pav_shoe_size_42
-msgid "42"
-msgstr ""
-
-#. module: product
-#: model:product.attribute.value,name:product.pav_shoe_size_43
-msgid "43"
-msgstr ""
-
-#. module: product
-#: model:product.attribute.value,name:product.pav_height_45
-msgid "45"
-msgstr ""
-
-#. module: product
 #: model:product.attribute.value,name:product.pav_size_4xl
 msgid "4XL"
 msgstr ""
@@ -290,11 +224,6 @@ msgstr ""
 #. module: product
 #: model:product.attribute.value,name:product.pav_duration_month_6
 msgid "6 months"
-msgstr ""
-
-#. module: product
-#: model:product.attribute.value,name:product.pav_height_85
-msgid "85"
 msgstr ""
 
 #. module: product
@@ -434,6 +363,14 @@ msgstr ""
 
 #. module: product
 #. odoo-python
+#: code:addons/product/models/product_pricelist_item.py:0
+msgid ""
+"A pricelist item with \"Other Pricelist\" as base must have a "
+"base_pricelist_id."
+msgstr ""
+
+#. module: product
+#. odoo-python
 #: code:addons/product/models/product_uom.py:0
 msgid "A product already uses the barcode"
 msgstr ""
@@ -541,7 +478,7 @@ msgstr ""
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Add a price"
-msgstr ""
+msgstr "Ár hozzáadása"
 
 #. module: product
 #. odoo-javascript
@@ -653,7 +590,7 @@ msgstr "Alumínium"
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_apple
 msgid "Apple"
-msgstr ""
+msgstr "Apple"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_tree_view
@@ -776,7 +713,7 @@ msgstr "Tulajdonságok"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_only_form_view
 msgid "Attributes & Variants"
-msgstr ""
+msgstr "Tulajdonságok & változatok"
 
 #. module: product
 #. odoo-javascript
@@ -853,7 +790,7 @@ msgstr "Fekete"
 #. module: product
 #: model:product.attribute.value,name:product.pav_color_blue
 msgid "Blue"
-msgstr ""
+msgstr "Kék"
 
 #. module: product
 #: model:product.template,description_sale:product.product_product_7_product_template
@@ -863,12 +800,12 @@ msgstr ""
 #. module: product
 #: model:product.attribute,name:product.pa_brand
 msgid "Brand"
-msgstr ""
+msgstr "Márka"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_color_brown
 msgid "Brown"
-msgstr ""
+msgstr "Barna"
 
 #. module: product
 #. odoo-javascript
@@ -906,7 +843,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:product.product_category_action_form
 #: model_terms:ir.ui.view,arch_db:product.product_view_search_catalog
 msgid "Categories"
-msgstr ""
+msgstr "Kategóriák"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__categ_id
@@ -951,7 +888,7 @@ msgstr ""
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_cocacola
 msgid "Coca-Cola"
-msgstr ""
+msgstr "Coca-Cola"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
@@ -1137,7 +1074,7 @@ msgstr "Országcsoportok"
 #. module: product
 #: model:res.groups,name:product.group_product_manager
 msgid "Create"
-msgstr ""
+msgstr "Létrehozás"
 
 #. module: product
 #: model:ir.model,website_form_label:product.model_res_partner
@@ -1506,6 +1443,12 @@ msgstr ""
 #. module: product
 #: model:product.attribute.value,name:product.pav_options_drawers
 msgid "Drawers"
+msgstr "Fiókok"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_product.py:0
+msgid "Duplicate values in attribute values are not allowed: %s"
 msgstr ""
 
 #. module: product
@@ -1750,7 +1693,7 @@ msgstr ""
 #. module: product
 #: model:product.attribute.value,name:product.pav_color_gold
 msgid "Gold"
-msgstr ""
+msgstr "Arany"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.report_pricelist_page
@@ -1782,7 +1725,7 @@ msgstr ""
 #. module: product
 #: model:product.attribute.value,name:product.pav_color_green
 msgid "Green"
-msgstr ""
+msgstr "Zöld"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_h_m
@@ -1815,7 +1758,7 @@ msgstr ""
 #. module: product
 #: model:product.attribute,name:product.pa_height
 msgid "Height"
-msgstr ""
+msgstr "Magasság"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute_value__html_color
@@ -2102,8 +2045,20 @@ msgid "Is public document"
 msgstr "Nyilvános dokumentum"
 
 #. module: product
+#. odoo-python
+#: code:addons/product/models/product_product.py:0
+msgid ""
+"It is not possible to import different values for the same attribute: %s"
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields.selection,name:product.selection__res_config_settings__product_weight_in_lbs__0
 msgid "Kilograms (kg)"
+msgstr ""
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_size_l
+msgid "L"
 msgstr ""
 
 #. module: product
@@ -2191,7 +2146,7 @@ msgstr "Késő tevékenységek"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__delay
 msgid "Lead Time"
-msgstr ""
+msgstr "Átfutási idő"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__delay
@@ -2222,7 +2177,7 @@ msgstr "Lábak"
 #. module: product
 #: model:product.attribute,name:product.pa_length
 msgid "Length"
-msgstr ""
+msgstr "Hossz"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_lenovo
@@ -2271,6 +2226,11 @@ msgstr "Logisztika"
 msgid ""
 "Looking for a custom bamboo stain to match existing furniture? Contact us "
 "for a quote."
+msgstr ""
+
+#. module: product
+#: model:product.attribute.value,name:product.pav_size_m
+msgid "M"
 msgstr ""
 
 #. module: product
@@ -2401,7 +2361,7 @@ msgstr ""
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
 msgid "My Activities"
-msgstr ""
+msgstr "Tevékenységeim"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist__my_activity_date_deadline
@@ -2637,7 +2597,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_combo_item__product_id
 #: model:product.attribute,name:product.pa_options
 msgid "Options"
-msgstr ""
+msgstr "Opciók"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_oral_b
@@ -2647,7 +2607,7 @@ msgstr ""
 #. module: product
 #: model:product.attribute.value,name:product.pav_color_orange
 msgid "Orange"
-msgstr ""
+msgstr "Narancs"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__original_id
@@ -2697,7 +2657,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_product__uom_ids
 #: model:ir.model.fields,field_description:product.field_product_template__uom_ids
 msgid "Packagings"
-msgstr ""
+msgstr "Csomagolások"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_panasonic
@@ -2747,7 +2707,7 @@ msgstr ""
 #. module: product
 #: model:product.attribute.value,name:product.pav_color_pink
 msgid "Pink"
-msgstr ""
+msgstr "Rózsaszín"
 
 #. module: product
 #. odoo-javascript
@@ -2908,7 +2868,7 @@ msgstr "Árlisták"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Prices"
-msgstr ""
+msgstr "Árak"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
@@ -3165,6 +3125,12 @@ msgid "Product Unit of Measure"
 msgstr "Termék mértékegység"
 
 #. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__import_attribute_values
+#: model:ir.model.fields,field_description:product.field_product_template__import_attribute_values
+msgid "Product Values"
+msgstr ""
+
+#. module: product
 #: model:ir.model,name:product.model_product_product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__product_id
 #: model:ir.model.fields.selection,name:product.selection__product_pricelist_item__applied_on__0_product_variant
@@ -3270,7 +3236,7 @@ msgstr "Beszerzési leírás"
 #. module: product
 #: model:product.attribute.value,name:product.pav_color_purple
 msgid "Purple"
-msgstr ""
+msgstr "Lila"
 
 #. module: product
 #. odoo-javascript
@@ -3303,7 +3269,7 @@ msgstr ""
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "Quotation Description"
-msgstr ""
+msgstr "Ajánlatra kerülő leírás"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__display_type__radio
@@ -3324,7 +3290,7 @@ msgstr ""
 #. module: product
 #: model:product.attribute.value,name:product.pav_color_red
 msgid "Red"
-msgstr ""
+msgstr "Piros"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_reebok
@@ -3429,6 +3395,11 @@ msgid "Rule Tip"
 msgstr ""
 
 #. module: product
+#: model:product.attribute.value,name:product.pav_size_s
+msgid "S"
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__sale_ok
 #: model:ir.model.fields,field_description:product.field_product_template__sale_ok
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -3472,7 +3443,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/product/static/src/product_name_and_description/product_name_and_description.js:0
 msgid "Search a product"
-msgstr ""
+msgstr "Termék keresése"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__display_type__select
@@ -3526,12 +3497,12 @@ msgstr "Név megjelenítése"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
 msgid "Show all records whose next activity date is past"
-msgstr ""
+msgstr "Múltbeli határidős tevékenységgel rendelkező rekordok"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_color_silver
 msgid "Silver"
-msgstr ""
+msgstr "Ezüst"
 
 #. module: product
 #: model:product.attribute,name:product.pa_size
@@ -3654,7 +3625,7 @@ msgstr "Beszállító árlista"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_tag_form_view
 msgid "Tag"
-msgstr ""
+msgstr "Címke"
 
 #. module: product
 #: model:ir.model.constraint,message:product.constraint_product_tag_name_uniq
@@ -3737,6 +3708,15 @@ msgstr ""
 #: model:ir.model.fields,help:product.field_product_attribute_value__display_type
 #: model:ir.model.fields,help:product.field_product_template_attribute_value__display_type
 msgid "The display type used in the Product Configurator."
+msgstr ""
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_product.py:0
+msgid ""
+"The exitings product has different attribute value. \"%(imported_values)s\" "
+"is not equivalent to \"%(existing_values)s\" for \"%(external_id)s\", \"%"
+"(id)s\""
 msgstr ""
 
 #. module: product
@@ -3859,7 +3839,7 @@ msgstr "Az összes tulajdonság felárainak összege"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 msgid "This note is added to sales orders and invoices."
-msgstr ""
+msgstr "Ez a jegyzet rendelésekre és számlákra kerül."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -3894,7 +3874,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_document__thumbnail
 msgid "Thumbnail"
-msgstr ""
+msgstr "Hüvelykujj"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_brand_tide
@@ -3939,6 +3919,22 @@ msgstr ""
 #. odoo-python
 #: code:addons/product/wizard/product_label_layout.py:0
 msgid "Unable to find report template for %s format"
+msgstr ""
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_product.py:0
+msgid ""
+"Unable to import products with attribute value without attribute name "
+"(defined as: attribute:value): %s"
+msgstr ""
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_product.py:0
+msgid ""
+"Unable to import products with attribute values but without name of product "
+"set"
 msgstr ""
 
 #. module: product
@@ -3997,7 +3993,7 @@ msgstr "Mértékegységek"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_uom
 msgid "Units of Measure & Packagings"
-msgstr ""
+msgstr "Mértékegységek és csomagolások"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
@@ -4359,17 +4355,17 @@ msgstr ""
 #. module: product
 #: model:product.attribute.value,name:product.pav_size_xl
 msgid "XL"
-msgstr ""
+msgstr "XL"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_size_xs
 msgid "XS"
-msgstr ""
+msgstr "XS"
 
 #. module: product
 #: model:product.attribute.value,name:product.pav_color_yellow
 msgid "Yellow"
-msgstr ""
+msgstr "Sárga"
 
 #. module: product
 #. odoo-python
@@ -4721,6 +4717,21 @@ msgstr "eddig"
 #: code:addons/product/static/src/js/pricelist_report/product_pricelist_report.xml:0
 msgid "xlsx"
 msgstr ""
+
+#~ msgid "$14.00"
+#~ msgstr "$14.00"
+
+#~ msgid "$15.00"
+#~ msgstr "$15.00"
+
+#~ msgid "10"
+#~ msgstr "10"
+
+#~ msgid "100"
+#~ msgstr "100"
+
+#~ msgid "40"
+#~ msgstr "40"
 
 #~ msgid ""
 #~ "You cannot assign the Main Pricelist as Other Pricelist in PriceList Item"

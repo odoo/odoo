@@ -1,10 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from base64 import b64decode
-from cups import IPPError, IPP_JOB_COMPLETED, IPP_JOB_PROCESSING, IPP_JOB_PENDING, CUPS_FORMAT_AUTO
-from escpos import printer
-from escpos.escpos import EscposIO
-import escpos.exceptions
+from threading import Lock
+from cups import IPPError, IPP_JOB_COMPLETED, IPP_JOB_PROCESSING, IPP_JOB_PENDING, CUPS_FORMAT_AUTO, Connection
 import logging
 import netifaces as ni
 import time
@@ -13,7 +11,6 @@ from odoo import http
 from odoo.addons.iot_drivers.connection_manager import connection_manager
 from odoo.addons.iot_drivers.controllers.proxy import proxy_drivers
 from odoo.addons.iot_drivers.iot_handlers.drivers.printer_driver_base import PrinterDriverBase
-from odoo.addons.iot_drivers.iot_handlers.interfaces.printer_interface_L import conn, cups_lock
 from odoo.addons.iot_drivers.main import iot_devices
 from odoo.addons.iot_drivers.tools import helpers, wifi, route
 
@@ -24,45 +21,22 @@ class PrinterDriver(PrinterDriverBase):
 
     def __init__(self, identifier, device):
         super().__init__(identifier, device)
+        self.conn = Connection()
+        self.cups_lock = Lock()
         self.device_connection = device['device-class'].lower()
         self.receipt_protocol = 'star' if 'STR_T' in device['device-id'] else 'escpos'
         self.connected_by_usb = self.device_connection == 'direct'
         self.device_name = device['device-make-and-model']
         self.ip = device.get('ip')
 
-        if any(cmd in device['device-id'] for cmd in ['CMD:STAR;', 'CMD:ESC/POS;']):
+        if any(cmd in device['device-id'] for cmd in ['CMD:STAR;', 'CMD:ESC/POS;']) or "tm-m30" in self.device_name.lower():
             self.device_subtype = "receipt_printer"
-        elif any(cmd in device['device-id'] for cmd in ['COMMAND SET:ZPL;', 'CMD:ESCLABEL;']):
+        elif any(cmd in device['device-id'] for cmd in ['COMMAND SET:ZPL;', 'CMD:ESCLABEL;']) or "zpl" in self.device_name.lower():
             self.device_subtype = "label_printer"
         else:
             self.device_subtype = "office_printer"
 
-        if self.device_subtype == "receipt_printer" and self.receipt_protocol == 'escpos':
-            self._init_escpos(device)
-
         self.print_status()
-
-    def _init_escpos(self, device):
-        if device.get('usb_product'):
-            def usb_matcher(usb_device):
-                return (
-                    usb_device.manufacturer and usb_device.manufacturer.lower() == device['usb_manufacturer'] and
-                    usb_device.product == device['usb_product'] and
-                    usb_device.serial_number == device['usb_serial_number']
-                )
-
-            self.escpos_device = printer.Usb(usb_args={"custom_match": usb_matcher})
-        elif device.get('ip'):
-            self.escpos_device = printer.Network(device['ip'], timeout=5)
-        else:
-            return
-        try:
-            self.escpos_device.open()
-            self.escpos_device.set_with_default(align='center')
-            self.escpos_device.close()
-        except escpos.exceptions.Error as e:
-            _logger.info("%s - Could not initialize escpos class: %s", self.device_name, e)
-            self.escpos_device = None
 
     @classmethod
     def supported(cls, device):
@@ -72,24 +46,25 @@ class PrinterDriver(PrinterDriverBase):
         self.send_status('disconnected', 'Printer was disconnected')
         super().disconnect()
 
-    def print_raw(self, data):
+    def print_raw(self, data, action_unique_id=None):
         """Print raw data to the printer
 
         :param data: The data to print
+        :param action_unique_id: The unique identifier of the action triggering the print
         """
-        if not self.check_printer_status():
-            return
-
         try:
-            with cups_lock:
-                job_id = conn.createJob(self.device_identifier, 'Odoo print job', {'document-format': CUPS_FORMAT_AUTO})
-                conn.startDocument(self.device_identifier, job_id, 'Odoo print job', CUPS_FORMAT_AUTO, 1)
-                conn.writeRequestData(data, len(data))
-                conn.finishDocument(self.device_identifier)
+            with self.cups_lock:
+                job_id = self.conn.createJob(self.device_identifier, 'Odoo print job', {'document-format': CUPS_FORMAT_AUTO})
+                self.conn.startDocument(self.device_identifier, job_id, 'Odoo print job', CUPS_FORMAT_AUTO, 1)
+                self.conn.writeRequestData(data, len(data))
+                self.conn.finishDocument(self.device_identifier)
             self.job_ids.append(job_id)
+            if action_unique_id:
+                self.job_action_ids[job_id] = action_unique_id
         except IPPError:
             _logger.exception("Printing failed")
             self.send_status(status='error', message='ERROR_FAILED')
+            raise  # ensure error caught in driver.py -> don't register action_unique_id
 
     @classmethod
     def format_star(cls, im):
@@ -146,18 +121,6 @@ class PrinterDriver(PrinterDriverBase):
         title, body = self._printer_status_content()
 
         commands = self.RECEIPT_PRINTER_COMMANDS[self.receipt_protocol]
-        if self.escpos_device:
-            try:
-                with EscposIO(self.escpos_device) as dev:
-                    dev.printer.set(align='center', double_height=True, double_width=True)
-                    dev.printer.textln(title.decode())
-                    dev.printer.set_with_default(align='center', double_height=False, double_width=False)
-                    dev.writelines(body.decode())
-                    dev.printer.qr(f"http://{helpers.get_ip()}", size=6)
-                return
-            except (escpos.exceptions.Error, OSError, AssertionError):
-                _logger.warning("Failed to print QR status receipt, falling back to simple receipt")
-
         title = commands['title'] % title
         self.print_raw(commands['center'] + title + b'\n' + body + commands['cut'])
 
@@ -219,11 +182,14 @@ class PrinterDriver(PrinterDriverBase):
         else:
             ip = '\nIoT Box IP Addresses:\n%s\n' % '\n'.join(ips)
 
-        network_quality = "\nNetwork quality:\n - To Odoo server: %s\n" % wan_quality
-        if to_gateway_quality:
-            network_quality += " - To Modem: %s\n" % to_gateway_quality
-        if to_printer_quality:
-            network_quality += " - To Printer (%s): %s\n" % (self.ip, to_printer_quality)
+        if len(ips) == 0:
+            network_quality = ""
+        else:
+            network_quality = "\nNetwork quality:\n - To Odoo server: %s\n" % wan_quality
+            if to_gateway_quality:
+                network_quality += " - To Modem: %s\n" % to_gateway_quality
+            if to_printer_quality:
+                network_quality += " - To Printer (%s): %s\n" % (self.ip, to_printer_quality)
 
         if len(ips) >= 1:
             identifier = '\nIdentifier:\n%s\n' % iot_status["identifier"]
@@ -237,22 +203,25 @@ class PrinterDriver(PrinterDriverBase):
 
     def _action_default(self, data):
         _logger.debug("_action_default called for printer %s", self.device_name)
-        self.print_raw(b64decode(data['document']))
+        self.print_raw(b64decode(data['document']), action_unique_id=data.get('action_unique_id'))
         return {'print_id': data['print_id']} if 'print_id' in data else {}
 
     def _cancel_job_with_error(self, job_id, error_message):
         self.job_ids.remove(job_id)
-        conn.cancelJob(job_id)
-        self.send_status(status='error', message=error_message)
+        self.conn.cancelJob(job_id)
+        self.send_status(
+            status='error', message=error_message, action_unique_id=self.job_action_ids.pop(job_id, None)
+        )
 
     def _check_job_status(self, job_id):
         try:
-            with cups_lock:
-                job = conn.getJobAttributes(job_id, requested_attributes=['job-state', 'job-state-reasons', 'job-printer-state-message', 'time-at-creation'])
+            with self.cups_lock:
+                job = self.conn.getJobAttributes(job_id, requested_attributes=['job-state', 'job-state-reasons', 'job-printer-state-message', 'time-at-creation'])
                 _logger.debug("job details for job id #%d: %s", job_id, job)
                 job_state = job['job-state']
                 if job_state == IPP_JOB_COMPLETED:
                     self.job_ids.remove(job_id)
+                    self.job_action_ids.pop(job_id, None)
                     self.send_status(status='success')
                 # Generic timeout, e.g. USB printer has been unplugged
                 elif job['time-at-creation'] + self.job_timeout_seconds < time.time():
@@ -266,6 +235,7 @@ class PrinterDriver(PrinterDriverBase):
         except IPPError:
             _logger.exception('IPP error occurred while fetching CUPS jobs')
             self.job_ids.remove(job_id)
+            self._recent_action_ids.pop(self.job_action_ids.pop(job_id, None), None)
 
 
 class PrinterController(http.Controller):
@@ -274,8 +244,11 @@ class PrinterController(http.Controller):
     def default_printer_action(self, data):
         printer = next((d for d in iot_devices if iot_devices[d].device_type == 'printer' and iot_devices[d].device_connection == 'direct'), None)
         if printer:
-            iot_devices[printer].action(data)
-            return True
+            try:
+                iot_devices[printer].action(data)
+                return True
+            except Exception:  # noqa: BLE001
+                return False
         return False
 
 

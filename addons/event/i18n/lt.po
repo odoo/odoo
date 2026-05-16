@@ -20,13 +20,14 @@
 # Arunas V. <arunas@devoro.com>, 2023
 # Ramunė ViaLaurea <ramune.vialaurea@gmail.com>, 2023
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:38+0000\n"
-"PO-Revision-Date: 2025-09-16 18:32+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"POT-Creation-Date: 2026-04-10 18:38+0000\n"
+"PO-Revision-Date: 2025-11-08 21:52+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Lithuanian <https://translate.odoo.com/projects/odoo-19/event/"
 "lt/>\n"
 "Language: lt\n"
@@ -146,38 +147,13 @@ msgid "'Full Page Ticket - %s' % (object.name or 'Event').replace('/','')"
 msgstr ""
 
 #. module: event
-#: model_terms:ir.ui.view,arch_db:event.event_report_full_page_ticket_layout
-msgid "+123456789"
-msgstr ""
-
-#. module: event
-#: model:event.tag,name:event.event_tag_category_1_tag_2
-msgid "10-14"
-msgstr ""
-
-#. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_formatted_event_address
 msgid "1000 Brussels"
 msgstr ""
 
 #. module: event
-#: model:event.tag,name:event.event_tag_category_1_tag_3
-msgid "15-18"
-msgstr ""
-
-#. module: event
-#: model:event.tag,name:event.event_tag_category_1_tag_4
-msgid "18+"
-msgstr ""
-
-#. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_event__badge_format__four_per_sheet
 msgid "4 per sheet"
-msgstr ""
-
-#. module: event
-#: model:event.tag,name:event.event_tag_category_1_tag_1
-msgid "5-10"
 msgstr ""
 
 #. module: event
@@ -403,10 +379,10 @@ msgid ""
 "my_tickets?badge_mode=1&amp;registration_ids={{ registration_ids }}"
 "&amp;tickets_hash={{ object.event_id._get_tickets_access_hash(registration_ids) }}"
 "\" target=\"_blank\" t-attf-style=\"padding: 8px 12px; font-size: 12px; "
-"color: {{object.event_id.user_id.company_id.email_primary_color or "
-"'#FFFFFF'}}; text-decoration: none !important; font-weight: 400; background-"
-"color: {{object.event_id.user_id.company_id.email_secondary_color or "
-"'#875A7B'}}; border-radius:3px\">\n"
+"color: {{object.event_id.company_id.email_primary_color or '#FFFFFF'}}; text-"
+"decoration: none !important; font-weight: 400; background-color: "
+"{{object.event_id.company_id.email_secondary_color or '#875A7B'}}; border-"
+"radius:3px\">\n"
 "                        Download Badges\n"
 "                    </a>\n"
 "                    <t t-if=\"not object.company_id.uses_default_logo\">\n"
@@ -438,9 +414,9 @@ msgid ""
 "                        <t t-if=\"event_website_url\">\n"
 "                            <a t-att-href=\"event_website_url\" t-attf-"
 "style=\"font-weight:bold;color:"
-"{{object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}}; "
-"text-decoration:none;\" t-out=\"object.event_id.name or ''\">OpenWood "
-"Collection Online Reveal</a>\n"
+"{{object.event_id.company_id.email_secondary_color or '#875A7B'}}; text-"
+"decoration:none;\" t-out=\"object.event_id.name or ''\">OpenWood Collection "
+"Online Reveal</a>\n"
 "                        </t>\n"
 "                        <t t-else=\"\">\n"
 "                            <strong t-out=\"object.event_id.name or "
@@ -652,8 +628,8 @@ msgid ""
 "                                <t t-if=\"event_organizer.email\">\n"
 "                                    <li>Mail: <a t-attf-href=\"mailto:"
 "{{ event_organizer.email }}\" t-attf-style=\"text-decoration:none;color: "
-"{{object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}};\" "
-"t-out=\"event_organizer.email\">info@yourcompany.com</a></li>\n"
+"{{object.event_id.company_id.email_secondary_color or '#875A7B'}};\" t-"
+"out=\"event_organizer.email\">info@yourcompany.com</a></li>\n"
 "                                </t>\n"
 "                                <t t-if=\"event_organizer.phone\">\n"
 "                                    <li>Phone: <t t-"
@@ -726,13 +702,13 @@ msgid ""
 "        <tr><td style=\"text-align: center; font-size: 14px;\">\n"
 "            Sent by <a target=\"_blank\" t-attf-"
 "href=\"{{ object.company_id.website }}\" t-attf-style=\"color: "
-"{{object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}};\" "
-"t-out=\"object.company_id.name or ''\">YourCompany</a>\n"
+"{{object.event_id.company_id.email_secondary_color or '#875A7B'}};\" t-"
+"out=\"object.company_id.name or ''\">YourCompany</a>\n"
 "            <t t-if=\"is_online\">\n"
 "                <br/>\n"
 "                Discover <a href=\"/event\" t-attf-style=\"color: "
-"{{object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}};"
-"\">all our events</a>.\n"
+"{{object.event_id.company_id.email_secondary_color or '#875A7B'}};\">all our "
+"events</a>.\n"
 "            </t>\n"
 "        </td></tr>\n"
 "        </table>\n"
@@ -785,10 +761,10 @@ msgid ""
 "registration_ids={{ object.ids }}"
 "&amp;tickets_hash={{ object.event_id._get_tickets_access_hash(object.ids) }}"
 "&amp;responsive_html=1\" target=\"_blank\" style=\"padding: 8px 12px; font-"
-"size: 12px; color: {{object.event_id.user_id.company_id.email_primary_color "
-"or '#FFFFFF'}}; text-decoration: none !important; font-weight: 400; "
-"background-color: {{object.event_id.user_id.company_id.email_secondary_color "
-"or '#875A7B'}}; border-radius:3px\">\n"
+"size: 12px; color: {{object.event_id.company_id.email_primary_color or "
+"'#FFFFFF'}}; text-decoration: none !important; font-weight: 400; background-"
+"color: {{object.event_id.company_id.email_secondary_color or '#875A7B'}}; "
+"border-radius:3px\">\n"
 "                            View Tickets\n"
 "                        </a>\n"
 "                        <a t-else=\"event_website_url\" t-att-"
@@ -838,9 +814,9 @@ msgid ""
 "                        <t t-if=\"event_website_url\">\n"
 "                            <a t-att-href=\"event_website_url\" t-attf-"
 "style=\"font-weight:bold;color: "
-"{{object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}}; "
-"text-decoration:none;\" t-out=\"object.event_id.name or ''\">OpenWood "
-"Collection Online Reveal</a>\n"
+"{{object.event_id.company_id.email_secondary_color or '#875A7B'}}; text-"
+"decoration:none;\" t-out=\"object.event_id.name or ''\">OpenWood Collection "
+"Online Reveal</a>\n"
 "                        </t>\n"
 "                        <t t-else=\"\">\n"
 "                            <strong t-out=\"object.event_id.name or "
@@ -1056,8 +1032,8 @@ msgid ""
 "                                <t t-if=\"event_organizer.email\">\n"
 "                                    <li>Mail: <a t-attf-href=\"mailto:"
 "{{ event_organizer.email }}\" t-attf-style=\"text-decoration:none; color: "
-"{{object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}};\" "
-"t-out=\"event_organizer.email or ''\"/></li>\n"
+"{{object.event_id.company_id.email_secondary_color or '#875A7B'}};\" t-"
+"out=\"event_organizer.email or ''\"/></li>\n"
 "                                </t>\n"
 "                                <t t-if=\"event_organizer.phone\">\n"
 "                                    <li>Phone: <t t-"
@@ -1123,14 +1099,14 @@ msgid ""
 "      <tr><td style=\"text-align: center; font-size: 14px;\">\n"
 "        Sent by <a target=\"_blank\" t-attf-"
 "href=\"{{ object.company_id.website }}\" t-attf-style=\"color: "
-"{{object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}};\" "
-"t-out=\"object.company_id.name or ''\">YourCompany</a>\n"
+"{{object.event_id.company_id.email_secondary_color or '#875A7B'}};\" t-"
+"out=\"object.company_id.name or ''\">YourCompany</a>\n"
 "        <t t-if=\"'website_url' in object.event_id and "
 "object.event_id.website_url\">\n"
 "            <br/>\n"
 "            Discover <a href=\"/event\" t-attf-style=\"color: "
-"{{object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}};"
-"\">all our events</a>.\n"
+"{{object.event_id.company_id.email_secondary_color or '#875A7B'}};\">all our "
+"events</a>.\n"
 "        </t>\n"
 "      </td></tr>\n"
 "    </table>\n"
@@ -1183,10 +1159,9 @@ msgid ""
 "registration_ids={{ object.ids }}"
 "&amp;tickets_hash={{ object.event_id._get_tickets_access_hash(object.ids) }}"
 "&amp;responsive_html=1\" target=\"_blank\" t-attf-style=\"padding: 8px 12px; "
-"font-size: 12px; color: "
-"{{object.event_id.user_id.company_id.email_primary_color or '#FFFFFF'}}; "
-"text-decoration: none !important; font-weight: 400; background-color: "
-"{{object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}}; "
+"font-size: 12px; color: {{object.event_id.company_id.email_primary_color or "
+"'#FFFFFF'}}; text-decoration: none !important; font-weight: 400; background-"
+"color: {{object.event_id.company_id.email_secondary_color or '#875A7B'}}; "
 "border-radius:3px\">\n"
 "                            View Tickets\n"
 "                        </a>\n"
@@ -1237,7 +1212,7 @@ msgid ""
 "event\n"
 "                        <t t-if=\"event_website_url\">\n"
 "                            <a t-att-href=\"event_website_url\" t-attf-"
-"style=\"color: {{object.event_id.user_id.company_id.email_secondary_color or "
+"style=\"color: {{object.event_id.company_id.email_secondary_color or "
 "'#875A7B'}}; text-decoration:none;font-weight:bold;\" t-"
 "out=\"object.event_id.name or ''\">OpenWood Collection Online Reveal</a>\n"
 "                        </t>\n"
@@ -1257,10 +1232,10 @@ msgid ""
 "out=\"object.sale_order_id.name\"/>\n"
 "                        and was placed on <t t-"
 "out=\"object.sale_order_id.date_order.date()\"/>\n"
-"                        <t t-if=\"object.sale_order_line_id.price_unit\"> "
+"                        <t t-if=\"object.sale_order_line_id.price_total\"> "
 "for an amount of\n"
 "                            <t t-"
-"out=\"object.sale_order_line_id.price_unit\" t-options=\"{'widget': "
+"out=\"object.sale_order_line_id.price_total\" t-options=\"{'widget': "
 "'monetary', 'display_currency': object.sale_order_line_id.currency_id}\"/>\n"
 "                        </t>.\n"
 "                    </div>\n"
@@ -1469,8 +1444,8 @@ msgid ""
 "                                <t t-if=\"event_organizer.email\">\n"
 "                                    <li>Mail: <a t-attf-href=\"mailto:"
 "{{ event_organizer.email }}\" t-attf-style=\"text-decoration:none; color: "
-"{{object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}};\" "
-"t-out=\"event_organizer.email or ''\">info@yourcompany.com</a></li>\n"
+"{{object.event_id.company_id.email_secondary_color or '#875A7B'}};\" t-"
+"out=\"event_organizer.email or ''\">info@yourcompany.com</a></li>\n"
 "                                </t>\n"
 "                                <t t-if=\"event_organizer.phone\">\n"
 "                                    <li>Phone: <t t-"
@@ -1543,13 +1518,13 @@ msgid ""
 "        <tr><td style=\"text-align: center; font-size: 14px;\">\n"
 "            Sent by <a target=\"_blank\" t-attf-"
 "href=\"{{ object.company_id.website }}\" t-attf-style=\"color: "
-"{{object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}};\" "
-"t-out=\"object.company_id.name or ''\">YourCompany</a>\n"
+"{{object.event_id.company_id.email_secondary_color or '#875A7B'}};\" t-"
+"out=\"object.company_id.name or ''\">YourCompany</a>\n"
 "            <t t-if=\"is_online\">\n"
 "                <br/>\n"
 "                Discover <a href=\"/event\" t-attf-style=\"color: "
-"{{object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}};"
-"\">all our events</a>.\n"
+"{{object.event_id.company_id.email_secondary_color or '#875A7B'}};\">all our "
+"events</a>.\n"
 "            </t>\n"
 "        </td></tr>\n"
 "        </table>\n"
@@ -1782,7 +1757,7 @@ msgstr "Atsakymas"
 #: model_terms:ir.ui.view,arch_db:event.event_registration_answer_view_tree
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Answer Breakdown"
-msgstr ""
+msgstr "Atsakymų suskirstymas"
 
 #. module: event
 #. odoo-javascript
@@ -1822,7 +1797,7 @@ msgstr "Džiaugiamės galėdami prisidėti prie šio renginio kaip komanda."
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_question__once_per_order
 msgid "Ask once per order"
-msgstr ""
+msgstr "Klausti vieną kartą per užsakymą"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -1832,6 +1807,10 @@ msgid ""
 "founded TinyERP. This was the first phase of OpenERP which would later "
 "became Odoo, the most installed open-source business software worldwide."
 msgstr ""
+"Būdamas vos 13 metų, Johnas DOE jau pradėjo kurti savo pirmąsias verslo "
+"programas klientams. Įgijęs civilinės inžinerijos specialybę, jis įkūrė "
+"„TinyERP“. Tai buvo pirmasis „OpenERP“ etapas, kuris vėliau tapo „Odoo“ – "
+"dažniausiai pasaulyje diegiama atvirojo kodo verslo programine įranga."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_attachment_count
@@ -1872,7 +1851,7 @@ msgstr "Dalyvis"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__registration_answer_ids
 msgid "Attendee Answers"
-msgstr ""
+msgstr "Dalyvių atsakymai"
 
 #. module: event
 #: model:ir.actions.report,name:event.action_report_event_event_attendee_list
@@ -1888,7 +1867,7 @@ msgstr "Dalyvio vardas"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__registration_answer_choice_ids
 msgid "Attendee Selection Answers"
-msgstr ""
+msgstr "Dalyvių atrankos atsakymai"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.attendee_list
@@ -2105,7 +2084,7 @@ msgstr "Spalvos indeksas"
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_event_registration_report
 msgid "Come back once you have registrations to overview answers."
-msgstr ""
+msgstr "Sugrįžkite, kai turėsite registracijų, kad peržiūrėtumėte atsakymus."
 
 #. module: event
 #: model_terms:res.partner,website_description:event.res_partner_event_1
@@ -2387,7 +2366,7 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_full_page_ticket
 msgid "Download Tickets <i class=\"ms-1 fa fa-download\"/>"
-msgstr ""
+msgstr "Atsisiųsti bilietus <i class=\"ms-1 fa fa-download\"/>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -2553,7 +2532,7 @@ msgstr "Renginio klausimas"
 #. module: event
 #: model:ir.model,name:event.model_event_question_answer
 msgid "Event Question Answer"
-msgstr ""
+msgstr "Įvykio klausimas ir atsakymas"
 
 #. module: event
 #: model:ir.ui.menu,name:event.event_question_menu
@@ -3253,7 +3232,7 @@ msgstr ""
 #. module: event
 #: model_terms:event.event,description:event.event_2
 msgid "John DOE"
-msgstr ""
+msgstr "John DOE"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_foldable_badge
@@ -3620,7 +3599,7 @@ msgstr "Kito veiksmo tipas"
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_event_registration_report
 msgid "No Answers yet!"
-msgstr ""
+msgstr "Kol kas nėra atsakymų!"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.event_registration_action
@@ -3748,7 +3727,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Once per Order"
-msgstr ""
+msgstr "Vieną kartą per užsakymą"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_search
@@ -3807,7 +3786,7 @@ msgstr ""
 #. module: event
 #: model:event.event,name:event.event_7
 msgid "OpenWood Collection Online Reveal"
-msgstr ""
+msgstr "\"OpenWood Collection“ internetinis pristatymas"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__organizer_id
@@ -4180,7 +4159,7 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_answer_view_tree
 msgid "Selected answer"
-msgstr ""
+msgstr "Pasirinktas atsakymas"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_question__question_type__simple_choice
@@ -4468,7 +4447,7 @@ msgstr "Šablonas"
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_question__question_type__text_box
 msgid "Text Input"
-msgstr ""
+msgstr "Teksto įvestis"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration_answer__value_text_box
@@ -4607,7 +4586,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.constraint,message:event.constraint_event_registration_answer_value_check
 msgid "There must be a suggested value or a text value."
-msgstr ""
+msgstr "Turi būti nurodyta siūloma arba tekstinė reikšmė."
 
 #. module: event
 #. odoo-python
@@ -4725,7 +4704,7 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.attendee_list
 msgid "Ticket type"
-msgstr ""
+msgstr "Prašymo tipas"
 
 #. module: event
 #. odoo-javascript
@@ -5030,7 +5009,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__is_ongoing
 msgid "Whether event has begun"
-msgstr ""
+msgstr "Ar renginys prasidėjo"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event_ticket__sale_available
@@ -5057,7 +5036,7 @@ msgstr "Jūs tikrai esate tarp geriausių."
 #: code:addons/event/models/event_question.py:0
 msgid ""
 "You cannot change the question type of a question that already has answers!"
-msgstr ""
+msgstr "Negalite pakeisti klausimo tipo, jei jis jau turi atsakymų!"
 
 #. module: event
 #. odoo-python
@@ -5078,7 +5057,7 @@ msgstr ""
 #: code:addons/event/models/event_question_answer.py:0
 msgid ""
 "You cannot delete an answer that has already been selected by attendees."
-msgstr ""
+msgstr "Negalite ištrinti atsakymo, kurį jau pasirinko dalyviai."
 
 #. module: event
 #: model:mail.template,subject:event.event_registration_mail_template_badge
@@ -5108,7 +5087,7 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_form
 msgid "e.g. \"Do you have any diet restrictions?\""
-msgstr ""
+msgstr "pvz., „Ar turite mitybos apribojimų?“"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_stage_view_form
@@ -5151,7 +5130,7 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_form
 msgid "events"
-msgstr ""
+msgstr "renginiai"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_full_page_ticket_layout

@@ -11,6 +11,7 @@ from dateutil.relativedelta import relativedelta
 from operator import itemgetter
 
 from odoo import _, fields, http, tools
+from odoo.exceptions import UserError
 from odoo.fields import Domain
 from odoo.http import request
 from odoo.tools.translate import LazyTranslate
@@ -150,6 +151,8 @@ class WebsiteProfile(http.Controller):
             user = request.env.user
         values = self._profile_edition_preprocess_values(user, **kwargs)
         whitelisted_values = {key: values[key] for key in sorted(user._self_accessible_fields()[1]) if key in values}
+        if not user.partner_id._can_edit_country() and whitelisted_values.get('country_id') != user.partner_id.country_id.id:
+            raise UserError(_("Changing the country is not allowed once document(s) have been issued for your account. Please contact us directly for this operation."))
         user.write(whitelisted_values)
 
     # Ranks and Badges
@@ -230,11 +233,34 @@ class WebsiteProfile(http.Controller):
                                           scope=page_count if page_count < self._pager_max_pages else self._pager_max_pages,
                                           url_args=kwargs)
 
-            users = User.sudo().search(dom, limit=self._users_per_page, offset=pager['offset'], order='karma DESC')
-            user_values = self._prepare_all_users_values(users)
-
             # Get karma position for users (only website_published)
             position_domain = [('karma', '>', 1), ('website_published', '=', True)]
+
+            if group_by:
+                to_date = fields.Date.today()
+                if group_by == 'week':
+                    from_date = to_date - relativedelta(weeks=1)
+                elif group_by == 'month':
+                    from_date = to_date - relativedelta(months=1)
+                else:
+                    from_date = None
+                user_ids = request.env['res.users']._get_user_ids_ranked_by_karma(
+                    dom,
+                    from_date=from_date,
+                    to_date=to_date,
+                    limit=self._users_per_page,
+                    offset=pager['offset'],
+                )
+                users = User.sudo().browse(user_ids)
+            else:
+                users = User.sudo().search(
+                    dom,
+                    limit=self._users_per_page,
+                    offset=pager['offset'],
+                    order='karma DESC, id DESC',
+                )
+
+            user_values = self._prepare_all_users_values(users)
             position_map = self._get_position_map(position_domain, users, group_by)
 
             max_position = max([user_data['karma_position'] for user_data in position_map.values()], default=1)

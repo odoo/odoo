@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:39+0000\n"
+"POT-Creation-Date: 2026-04-10 18:40+0000\n"
 "PO-Revision-Date: 2025-10-13 12:16+0000\n"
 "Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
 "Language-Team: Arabic <https://translate.odoo.com/projects/odoo-19/"
@@ -80,15 +80,6 @@ msgid "6 Woodworking tips and tricks for beginners"
 msgstr "6 نصائح وطرق للأعمال الخشبية للمبتدئين"
 
 #. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.pwa_offline
-msgid ""
-"<a t-att-href=\"url_for('/event')\" class=\"btn btn-primary btn-block "
-"o_translate_inline\">Home page</a>"
-msgstr ""
-"<a t-att-href=\"url_for('/event')\" class="
-"\"btn btn-primary btn-block o_translate_inline\">الصفحة الرئيسية</a>"
-
-#. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_template_new
 msgid "<b>Mail</b>:"
 msgstr "<b>البريد</b>:"
@@ -146,20 +137,20 @@ msgid ""
 "</div>"
 msgstr ""
 "<div>\n"
-"    عزيزنا <t t-out=\"object.partner_id.name or object.partner_name or ''\""
-">براندن فريمان</t><br/>\n"
+"    عزيزنا <t t-out=\"object.partner_id.name or object.partner_name or "
+"''\">براندن فريمان</t><br/>\n"
 "    يسعدنا إخبارك بأن مقترحك <t t-out=\"object.name or ''\">محور هذه "
-"الفعالية</t> قد تم قبوله وتأكيده للفعالية<t t-out="
-"\"object.event_id.name or ''\">الكشف عن مجموعة OpenWood عبر الإنترنت</t>.\n"
+"الفعالية</t> قد تم قبوله وتأكيده للفعالية<t t-out=\"object.event_id.name or "
+"''\">الكشف عن مجموعة OpenWood عبر الإنترنت</t>.\n"
 "    <br/>\n"
 "    ستجد المزيد من التفاصيل هنا:\n"
 "    <div style=\"margin: 16px 0px 16px 0px;\">\n"
-"        <a t-attf-href="
-"\"/event/{{ object.event_id.id }}/track/{{ object.id }}\" t-attf-style="
-"\"padding: 8px 16px 8px 16px; font-size: 14px; color: {{"
-"object.company_id.email_primary_color or '#FFFFFF'}}; text-decoration: none "
-"!important; background-color: {{object.company_id.email_secondary_color or "
-"'#875A7B'}}; border-radius:3px\">\n"
+"        <a t-attf-href=\"/event/{{ object.event_id.id }}/track/"
+"{{ object.id }}\" t-attf-style=\"padding: 8px 16px 8px 16px; font-size: "
+"14px; color: {{object.company_id.email_primary_color or '#FFFFFF'}}; text-"
+"decoration: none !important; background-color: "
+"{{object.company_id.email_secondary_color or '#875A7B'}}; border-"
+"radius:3px\">\n"
 "            عرض الحوار\n"
 "        </a>\n"
 "    </div>\n"
@@ -167,8 +158,8 @@ msgstr ""
 "    شكراً لك،\n"
 "    <t t-if=\"user.signature\" data-o-mail-quote-container=\"1\">\n"
 "        <br/>\n"
-"        <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-out="
-"\"user.signature or ''\" data-o-mail-quote=\"1\">ميتشل آدمن</t></div>\n"
+"        <div data-o-mail-quote=\"1\">--<br data-o-mail-quote=\"1\"/><t t-"
+"out=\"user.signature or ''\" data-o-mail-quote=\"1\">ميتشل آدمن</t></div>\n"
 "    </t>\n"
 "</div>"
 
@@ -204,10 +195,10 @@ msgid ""
 "                                </span>"
 msgstr ""
 "<span class=\"o_wetrack_proposal_error_section text-danger d-none ml8\">\n"
-"                                    <i class=\"fa fa-close mr4\" role=\"img\""
-" aria-label=\"Error\" title=\"خطأ \"/>\n"
-"                                    <span class="
-"\"o_wetrack_proposal_error_message\"/>\n"
+"                                    <i class=\"fa fa-close mr4\" "
+"role=\"img\" aria-label=\"Error\" title=\"خطأ \"/>\n"
+"                                    <span "
+"class=\"o_wetrack_proposal_error_message\"/>\n"
 "                                </span>"
 
 #. module: website_event_track
@@ -1843,14 +1834,8 @@ msgstr "الأنشطة المستقبلية"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_confirmation_end_page_hook
 #: model_terms:ir.ui.view,arch_db:website_event_track.registration_complete
-msgid ""
-"Get prepared and\n"
-"                    <a class=\"o_translate_inline\" t-att-href=\"'/event/%s/"
-"track' % (slug(event))\">register to your favorites talks now.</a>"
-msgstr ""
-"كن مستعداً\n"
-"                    <a class=\"o_translate_inline\" t-att-href="
-"\"'/event/%s/track' % (slug(event))\">وسجل لحضور حواراتك المفضلة الآن.</a>"
+msgid "Get prepared and"
+msgstr "تجهّز و"
 
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_18
@@ -1901,6 +1886,11 @@ msgstr "مرتفع"
 #: model:ir.model.fields.selection,name:website_event_track.selection__event_track__priority__3
 msgid "Highest"
 msgstr "الأعلى"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.pwa_offline
+msgid "Home page"
+msgstr "الصفحة الرئيسية "
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track21
@@ -3591,6 +3581,12 @@ msgid "minutes after Track start"
 msgstr "دقائق بعد بدء المسار"
 
 #. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_confirmation_end_page_hook
+#: model_terms:ir.ui.view,arch_db:website_event_track.registration_complete
+msgid "register to your favorites talks now."
+msgstr "قم بالتسجيل لحوارتك المفضلة الآن. "
+
+#. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
 msgid "starts in"
 msgstr "يبدأ في"
@@ -3599,6 +3595,28 @@ msgstr "يبدأ في"
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
 msgid "starts on"
 msgstr "يبدأ في"
+
+#. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/xml/website_event_pwa.xml:0
+msgid "x"
+msgstr ""
+
+#~ msgid ""
+#~ "<a t-att-href=\"url_for('/event')\" class=\"btn btn-primary btn-block "
+#~ "o_translate_inline\">Home page</a>"
+#~ msgstr ""
+#~ "<a t-att-href=\"url_for('/event')\" class=\"btn btn-primary btn-block "
+#~ "o_translate_inline\">الصفحة الرئيسية</a>"
+
+#~ msgid ""
+#~ "Get prepared and\n"
+#~ "                    <a class=\"o_translate_inline\" t-att-href=\"'/event/"
+#~ "%s/track' % (slug(event))\">register to your favorites talks now.</a>"
+#~ msgstr ""
+#~ "كن مستعداً\n"
+#~ "                    <a class=\"o_translate_inline\" t-att-href=\"'/event/"
+#~ "%s/track' % (slug(event))\">وسجل لحضور حواراتك المفضلة الآن.</a>"
 
 #~ msgid "&amp;bull;"
 #~ msgstr "&amp;bull;"
@@ -3692,14 +3710,8 @@ msgstr "يبدأ في"
 #~ msgid "Filter Tracks..."
 #~ msgstr "تصفية المسارات... "
 
-#~ msgid "Get prepared and"
-#~ msgstr "تجهّز و"
-
 #~ msgid "Group By"
 #~ msgstr "تجميع حسب"
-
-#~ msgid "Home page"
-#~ msgstr "الصفحة الرئيسية "
 
 #~ msgid "No results found"
 #~ msgstr "لم يتم العثور على نتائج "
@@ -3764,9 +3776,6 @@ msgstr "يبدأ في"
 #~ "                            للاهتمام ولديه احتمالية أن يكون ذا فائدة\n"
 #~ "                            للجمهور، سيتم اعتباره ليتم\n"
 #~ "                            ضمه في البرنامج. "
-
-#~ msgid "register to your favorites talks now."
-#~ msgstr "قم بالتسجيل لحوارتك المفضلة الآن. "
 
 #~ msgid "search."
 #~ msgstr "البحث. "

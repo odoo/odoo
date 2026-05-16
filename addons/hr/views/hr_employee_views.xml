@@ -89,7 +89,7 @@
                 <form string="Employee" js_class="hr_employee_form" duplicate="false">
                     <header groups="hr.group_hr_user">
                         <button string="Create User" name="action_create_user" type="object"
-                                class="btn btn-primary" invisible="user_id" groups="hr.group_hr_user"
+                                class="btn btn-primary" invisible="user_id" groups="base.group_erp_manager"
                                 context="{'default_create_employee': True}"/>
                         <button name="%(plan_wizard_action)d" string="Launch Plan" type="action"
                             groups="hr.group_hr_user" invisible="not active or not id" context="{'sort_by_responsible': True}"/>
@@ -115,8 +115,8 @@
                                 <field name="image_1920" widget='image' class="m-0" options='{"size": [128,158], "zoom": true, "preview_image":"avatar_128"}'/>
                                 <field name="show_hr_icon_display" invisible="1" />
                             </div>
-                            <div class="col px-4">
-                                <div class="oe_title ps-0 pe-sm-2">
+                            <div class="col-12 col-sm-6 col-md-7 col-lg-8 px-4">
+                                <div class="oe_title mw-100 ps-0 pe-sm-2">
                                     <h1 class="d-flex flex-row align-items-center">
                                         <field name="name" placeholder="Employee's Name"
                                             required="True" style="font-size: min(4vw, 2.6rem);"/>
@@ -145,7 +145,7 @@
                                 <div invisible="not user_id">
                                     <widget name="hr_employee_chat" invisible="not context.get('chat_icon')"/>
                                 </div>
-                                <field name="hr_icon_display" invisible="not show_hr_icon_display or not id" widget="hr_presence_status"/>
+                                <field name="hr_icon_display" invisible="not show_hr_icon_display or not id or not active" widget="hr_presence_status"/>
                             </div>
                         </div>
                         <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
@@ -317,6 +317,10 @@
                                         <field name="certificate"/>
                                         <field name="study_field"/>
                                     </group>
+                                    <group string="Documents" name="hr_document_group">
+                                        <field name="id_card"/>
+                                        <field name="driving_license"/>
+                                    </group>
                                 </group>
                             </page>
                             <page name="payroll_information" string="Payroll" groups="hr.group_hr_manager">
@@ -342,7 +346,7 @@
                                         </div>
                                         <field name="employee_type"/>
                                         <field name="contract_type_id" string="Contract Type" placeholder="Contract Type"/>
-                                        <field name="structure_type_id" string="Pay Category" placeholder="Pay Category"
+                                        <field name="structure_type_id" string="Pay Category" placeholder="Employee will be excluded from Pay Runs"
                                                 domain="['|', ('country_id', '=', False), ('country_id', '=', company_country_id)]"/>
 
                                         <separator name="schedule" string="Schedule"/>
@@ -355,8 +359,8 @@
                                     <group string="User" name="user">
                                         <label for="user_id"/>
                                         <div class="o_row align-items-center">
-                                            <field name="user_id" string="User" placeholder="Not linked to an user"
-                                                domain="[('company_ids', 'in', company_id), ('share', '=', False)]"
+                                            <field name="user_id" string="User" placeholder="No user linked"
+                                                domain="[('company_ids', 'in', company_id)]"
                                                 context="{
                                                     'default_create_employee_id': id,
                                                     'default_name': name,
@@ -364,11 +368,12 @@
                                                     'default_mobile': mobile_phone,
                                                     'default_login': work_email,
                                                     'default_partner_id': work_contact_id,
+                                                    'search_default_filter_no_share': 1,
                                                 }"
                                                 widget="many2one_avatar_user"
                                                 groups="base.group_erp_manager"/>
-                                            <field name="user_id" string="User" placeholder="Not linked to an user"
-                                                domain="[('company_ids', 'in', company_id), ('share', '=', False)]"
+                                            <field name="user_id" string="User" placeholder="No user linked"
+                                                domain="[('company_ids', 'in', company_id)]"
                                                 context="{
                                                     'default_create_employee_id': id,
                                                     'default_name': name,
@@ -376,6 +381,7 @@
                                                     'default_mobile': mobile_phone,
                                                     'default_login': work_email,
                                                     'default_partner_id': work_contact_id,
+                                                    'search_default_filter_no_share': 1,
                                                 }"
                                                 widget="many2one_avatar_user"
                                                 groups="!base.group_erp_manager"
@@ -663,7 +669,7 @@
             <field name="view_id" eval="False"/>
             <field name="search_view_id" ref="view_employee_filter"/>
             <field name="help" type="html">
-                <div class="o_view_nocontent">
+                <div>
                     <div class="o_nocontent_help">
                         <div>
                             <p class="text-center fs-1">

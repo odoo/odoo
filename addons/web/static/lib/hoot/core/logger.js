@@ -190,7 +190,7 @@ class Logger {
                 `(${withArgs.shift()}`,
                 ...withArgs,
                 "time:",
-                suite.jobs.reduce((acc, job) => acc + (job.duration || 0), 0),
+                suite.reporting.duration,
                 "ms)"
             );
         }
@@ -203,16 +203,7 @@ class Logger {
         if (!this.canLog("tests")) {
             return;
         }
-        const { fullName, lastResults } = test;
-        $log(
-            ...styledArguments([
-                `Test ${stringify(fullName)} passed (assertions:`,
-                lastResults.counts.assertion || 0,
-                `/ time:`,
-                lastResults.duration,
-                `ms)`,
-            ])
-        );
+        $log(...styledArguments([`Running test ${stringify(test.fullName)}`]));
     }
     /**
      * @param {[label: string, color: string]} prefix
@@ -285,22 +276,27 @@ let nextNetworkLogId = 1;
  */
 export function makeNetworkLogger(prefix, title) {
     const id = nextNetworkLogId++;
+    const slicedTitle =
+        title.length > 128 ? title.slice(0, 128) + " (click to show full input)" : title;
     return {
         /**
-         * Request logger: blue-ish.
+         * Request logger: blue lotus.
          * @param {() => any[]} getData
          */
         logRequest(getData) {
             if (!logger.canLog("debug")) {
                 return;
             }
-            const color = `color: #66e`;
+            const color = `color: #6960ec`;
             const args = [`${color}; font-weight: bold;`, color];
             const [dataHeader, ...otherData] = getData();
             if (!isNil(dataHeader)) {
                 args.push(dataHeader);
             }
-            $groupCollapsed(`-> %c${prefix}#${id}%c<${title}>`, ...args);
+            $groupCollapsed(`-> %c${prefix}#${id}%c ${slicedTitle}`, ...args);
+            if (slicedTitle !== title) {
+                $log(title);
+            }
             for (const data of otherData) {
                 $log(data);
             }
@@ -308,20 +304,23 @@ export function makeNetworkLogger(prefix, title) {
             $groupEnd();
         },
         /**
-         * Response logger: orange.
+         * Response logger: dark orange.
          * @param {() => any[]} getData
          */
         logResponse(getData) {
             if (!logger.canLog("debug")) {
                 return;
             }
-            const color = `color: #f80`;
+            const color = `color: #ff8c00`;
             const args = [`${color}; font-weight: bold;`, color];
             const [dataHeader, ...otherData] = getData();
             if (!isNil(dataHeader)) {
                 args.push(dataHeader);
             }
-            $groupCollapsed(`<- %c${prefix}#${id}%c<${title}>`, ...args);
+            $groupCollapsed(`<- %c${prefix}#${id}%c ${slicedTitle}`, ...args);
+            if (slicedTitle !== title) {
+                $log(title);
+            }
             for (const data of otherData) {
                 $log(data);
             }

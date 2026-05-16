@@ -321,6 +321,8 @@ class MrpWorkorder(models.Model):
 
         for workorder in self:
             workorder.blocked_by_workorder_ids.needed_by_workorder_ids = workorder.needed_by_workorder_ids
+
+        self.end_all()
         res = super().unlink()
         # We need to go through `_action_confirm` for all workorders of the current productions to
         # make sure the links between them are correct (`next_work_order_id` could be obsolete now).
@@ -481,11 +483,13 @@ class MrpWorkorder(models.Model):
         values = vals
         new_workcenter = False
         if 'qty_produced' in values:
-            if any(w.state in ['done', 'cancel'] for w in self):
-                raise UserError(_('You cannot change the quantity produced of a work order that is in done or cancel state.'))
-            elif self.product_uom_id.compare(values['qty_produced'], 0) < 0:
-                raise UserError(_('The quantity produced must be positive.'))
+            for wo in self:
+                if wo.state in ['done', 'cancel']:
+                    raise UserError(_('You cannot change the quantity produced of a work order that is in done or cancel state.'))
+                elif wo.product_uom_id.compare(values['qty_produced'], 0) < 0:
+                    raise UserError(_('The quantity produced must be positive.'))
 
+        workorders_with_new_wc = self.env['mrp.workorder']
         if 'production_id' in values and any(values['production_id'] != w.production_id.id for w in self):
             raise UserError(_('You cannot link this work order to another manufacturing order.'))
         if 'workcenter_id' in values:
@@ -497,9 +501,7 @@ class MrpWorkorder(models.Model):
                     workorder.leave_id.resource_id = new_workcenter.resource_id
                     if workorder.state == 'progress':
                         continue
-                    workorder.duration_expected = workorder._get_duration_expected()
-                    if workorder.date_start:
-                        workorder.date_finished = workorder._calculate_date_finished(new_workcenter=new_workcenter)
+                    workorders_with_new_wc |= workorder
         if 'date_start' in values or 'date_finished' in values:
             for workorder in self:
                 date_start = fields.Datetime.to_datetime(values.get('date_start', workorder.date_start))
@@ -527,12 +529,19 @@ class MrpWorkorder(models.Model):
                         })
 
         res = super().write(values)
-        if 'qty_produced' in values and self.production_id.product_uom_id.compare(values.get('qty_produced', 0), 0) > 0:
-            for production in self.production_id:
+        productions = self.production_id.filtered(
+            lambda p: p.product_uom_id.compare(values.get('qty_produced', 0), 0) > 0
+        )
+        if 'qty_produced' in values and productions:
+            for production in productions:
                 min_wo_qty = min(production.workorder_ids.mapped('qty_produced'))
-                if self.production_id.product_uom_id.compare(min_wo_qty, 0) > 0:
+                if production.product_uom_id.compare(min_wo_qty, 0) > 0:
                     production.workorder_ids.filtered(lambda w: w.state != 'done').qty_producing = min_wo_qty
             self._set_qty_producing()
+        for workorder in workorders_with_new_wc:
+            workorder.duration_expected = workorder._get_duration_expected()
+            if workorder.date_start:
+                workorder.date_finished = workorder._calculate_date_finished(new_workcenter=new_workcenter)
 
         return res
 
@@ -688,20 +697,23 @@ class MrpWorkorder(models.Model):
     def button_finish(self):
         date_finished = fields.Datetime.now()
         all_vals_dict = defaultdict(lambda: self.env['mrp.workorder'])
-        for workorder in self:
-            if workorder.state in ('done', 'cancel'):
-                continue
-            moves = (self.move_raw_ids + self.production_id.move_byproduct_ids.filtered(lambda m: m.operation_id == self.operation_id))
-            for move in moves:
-                if not move.picked:
-                    if workorder.production_id.product_uom_id.is_zero(workorder.production_id.qty_producing):
-                        qty_available = workorder.production_id.product_qty
-                    else:
-                        qty_available = workorder.production_id.qty_producing
-                    new_qty = move.product_uom.round(qty_available * move.unit_factor)
-                    move._set_quantity_done(new_qty)
-            moves.picked = True
-            workorder.end_all()
+        workorders_to_end = self.filtered(lambda workorder: workorder.state not in ('done', 'cancel'))
+        operations = workorders_to_end.operation_id
+        moves_to_pick = workorders_to_end.move_raw_ids.filtered(lambda move: not move.picked)
+        moves_to_pick += workorders_to_end.production_id.move_byproduct_ids.filtered(lambda move: not move.picked and move.operation_id in operations)
+
+        for move in moves_to_pick:
+            production_id = move.raw_material_production_id or move.production_id
+            if production_id.product_uom_id.is_zero(production_id.qty_producing):
+                qty_available = production_id.product_qty
+            else:
+                qty_available = production_id.qty_producing
+            new_qty = move.product_uom.round(qty_available * move.unit_factor)
+            move._set_quantity_done(new_qty)
+
+        moves_to_pick.picked = True
+        workorders_to_end.end_all()
+        for workorder in workorders_to_end:
             vals = {
                 'qty_produced': workorder.qty_produced or workorder.qty_producing or workorder.qty_production,
                 'state': 'done',

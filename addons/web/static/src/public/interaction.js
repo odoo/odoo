@@ -121,6 +121,7 @@ export class Interaction {
         this.__colibri__ = metadata;
         this.el = el;
         this.env = env;
+        /** @type {import("services").ServiceFactories} */
         this.services = env.services;
     }
 

@@ -24,6 +24,7 @@ export class AutoComplete extends Component {
             },
         },
         placeholder: { type: String, optional: true },
+        title: { type: String, optional: true },
         autocomplete: { type: String, optional: true },
         autoSelect: { type: Boolean, optional: true },
         resetOnSelect: { type: Boolean, optional: true },
@@ -46,6 +47,7 @@ export class AutoComplete extends Component {
     static defaultProps = {
         value: "",
         placeholder: "",
+        title: "",
         autocomplete: "new-password",
         autoSelect: false,
         dropdown: true,
@@ -119,7 +121,6 @@ export class AutoComplete extends Component {
                     this.state.value = nextProps.value;
                     this.inputRef.el.value = nextProps.value;
                 }
-                this.close();
             }
         });
 
@@ -358,6 +359,7 @@ export class AutoComplete extends Component {
         }
         this.props.onChange({
             inputValue: this.inputRef.el.value,
+            isOptionSelected: this.ignoreBlur,
         });
     }
     async onInput() {
@@ -489,7 +491,10 @@ export class AutoComplete extends Component {
             return;
         }
         if (isScrollableY(this.listRef.el)) {
-            scrollTo(this.listRef.el.querySelector(`#${this.activeSourceOptionId}`));
+            const element = this.listRef.el.querySelector(`#${this.activeSourceOptionId}`);
+            if (element) {
+                scrollTo(element);
+            }
         }
     }
 }

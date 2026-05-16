@@ -30,8 +30,8 @@ class HrAttendanceOvertimeLine(models.Model):
         store=True, readonly=False,
     )
 
-    time_start = fields.Datetime(string='Start')
-    time_stop = fields.Datetime(string='Stop')
+    time_start = fields.Datetime(string='Start')  # time_start will be equal to attendance.check_in
+    time_stop = fields.Datetime(string='Stop')  # time_stop will be equal to attendance.check_out
     amount_rate = fields.Float("Overtime pay rate", required=True, default=1.0)
 
     is_manager = fields.Boolean(compute="_compute_is_manager")
@@ -90,19 +90,29 @@ class HrAttendanceOvertimeLine(models.Model):
 
     def _linked_attendances(self):
         return self.env['hr.attendance'].search([
-            ('date', 'in', self.mapped('date')),
+            ('check_in', 'in', self.mapped('time_start')),
             ('employee_id', 'in', self.employee_id.ids),
         ])
 
     def write(self, vals):
-        if any(key in vals for key in ['status', 'manual_duration']):
+        if any(key in vals for key in ['status', 'manual_duration', 'duration']):
             attendances = self._linked_attendances()
-            self.env.add_to_compute(
-                 attendances._fields['overtime_status'],
-                 attendances
-            )
-            self.env.add_to_compute(
-                 attendances._fields['validated_overtime_hours'],
-                 attendances
-            )
+            if any(key in vals for key in ['status', 'manual_duration']):
+                self.env.add_to_compute(
+                    attendances._fields['overtime_status'],
+                    attendances
+                )
+                self.env.add_to_compute(
+                    attendances._fields['validated_overtime_hours'],
+                    attendances
+                )
+            if 'duration' in vals:
+                self.env.add_to_compute(
+                    attendances._fields['overtime_hours'],
+                    attendances
+                )
+                self.env.add_to_compute(
+                    attendances._fields['expected_hours'],
+                    attendances
+                )
         return super().write(vals)

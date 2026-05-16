@@ -5,11 +5,18 @@ declare module "models" {
     };
 
     export type GlorySettings = {
-        OccupyEnable: "0" | "1";
-        SessionEnable: "0" | "1";
-        SessionMinute: string;
-        SoapDuplicateCheck: "0" | "1";
-        SoapUserCheck: "0" | "1";
+        OccupyEnable: 0 | 1;
+        SessionEnable: 0 | 1;
+        SessionMinute: number;
+        SoapDuplicateCheck: 0 | 1;
+        SoapUserCheck: 0 | 1;
+    };
+
+    export type GloryState = {
+        status: string;
+        amountInserted: number;
+        lastDeviceError: string | null;
+        inventory: Array<{ value: number; amount: number; status: string }>;
     };
 
     export type GloryUser = {

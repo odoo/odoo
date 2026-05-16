@@ -6,6 +6,7 @@ import { BaseOptionComponent } from "@html_builder/core/utils";
 
 class WidthOptionPlugin extends Plugin {
     static id = "widthOption";
+    /** @type {import("plugins").BuilderResources} */
     resources = {
         builder_options: [withSequence(WIDTH, WidthOption)],
     };

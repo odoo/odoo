@@ -37,6 +37,10 @@ class StockPicking(models.Model):
     def _search_delay_pass(self, operator, value):
         return [('purchase_id.date_order', operator, value)]
 
+    def _action_done(self):
+        self.purchase_id.sudo().action_acknowledge()
+        return super()._action_done()
+
 
 class StockWarehouse(models.Model):
     _inherit = 'stock.warehouse'
@@ -50,7 +54,7 @@ class StockWarehouse(models.Model):
     def _compute_buy_to_resupply(self):
         for warehouse in self:
             buy_route = warehouse.buy_pull_id.route_id
-            warehouse.buy_to_resupply = bool(buy_route.product_selectable or buy_route.warehouse_ids.filtered(lambda w: w.id == warehouse.id))
+            warehouse.buy_to_resupply = warehouse.id in buy_route.warehouse_ids.ids
 
     def _inverse_buy_to_resupply(self):
         for warehouse in self:
@@ -129,7 +133,7 @@ class StockReturnPicking(models.TransientModel):
 
     def _create_return(self):
         picking = super()._create_return()
-        if len(picking.move_ids.partner_id) == 1:
+        if len(picking.move_ids.partner_id) == 1 and picking.partner_id != picking.move_ids.partner_id:
             picking.partner_id = picking.move_ids.partner_id
         return picking
 
@@ -256,7 +260,7 @@ class StockWarehouseOrderpoint(models.Model):
 
     def _get_default_supplier(self):
         self.ensure_one()
-        if self.show_supplier:
+        if self.show_supplier and self.product_id:
             return self._get_default_rule()._get_matching_supplier(
                 self.product_id, self.qty_to_order, self.product_uom, self.company_id, {}
             )
@@ -300,7 +304,7 @@ class StockWarehouseOrderpoint(models.Model):
     def _get_replenishment_multiple_alternative(self, qty_to_order):
         self.ensure_one()
         routes = self.effective_route_id or self.product_id.route_ids
-        if not any(r.action == 'buy' for r in routes.rule_ids):
+        if not (self.product_id and any(r.action == 'buy' for r in routes.rule_ids)):
             return super()._get_replenishment_multiple_alternative(qty_to_order)
         planned_date = self._get_orderpoint_procurement_date()
         global_horizon_days = self.get_horizon_days()

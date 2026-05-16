@@ -330,12 +330,8 @@ test("multi edition of DatetimeField in list view: edit date in input", async ()
     await click(".o_field_datetime input");
     await animationFrame();
     await edit("10/02/2019 09:00:00", { confirm: "Enter" });
-    await animationFrame();
 
-    expect(".modal").toHaveCount(1);
-
-    await click(".modal .modal-footer .btn-primary");
-    await animationFrame();
+    await contains(".modal:only .modal-footer .btn-primary").click();
 
     expect(".o_data_row:first-child .o_data_cell:first").toHaveText("Oct 2, 9:00 AM");
     expect(".o_data_row:nth-child(2) .o_data_cell:first").toHaveText("Oct 2, 9:00 AM");
@@ -369,10 +365,7 @@ test("multi edition of DatetimeField in list view: clear date in input", async (
     await edit("", { confirm: "Enter" });
     await animationFrame();
 
-    expect(".modal").toHaveCount(1);
-
-    await click(".modal .modal-footer .btn-primary");
-    await animationFrame();
+    await contains(".modal:only .modal-footer .btn-primary").click();
 
     expect(".o_data_row:first-child .o_data_cell:first").toHaveText("");
     expect(".o_data_row:nth-child(2) .o_data_cell:first").toHaveText("");
@@ -641,7 +634,7 @@ test("placeholder_field shows as placeholder (datetime)", async () => {
             </form>`,
     });
     await contains("div[name='datetime'] button").click();
-    expect("div[name='datetime'] input").toHaveAttribute("placeholder", "Apr 1, 2025, 9:11 AM", {
+    expect("div[name='datetime'] input").toHaveAttribute("placeholder", /Apr 1, 2025, 9:11\sAM/, {
         message: "placeholder_field should be the placeholder",
     });
 });
@@ -687,4 +680,46 @@ test("list datetime: column widths (numeric format)", async () => {
         "partner,1",
     ]);
     expect(queryAllProperties(".o_list_table thead th", "offsetWidth")).toEqual([40, 144, 616]);
+});
+
+test("DateField: incoherent state and record value", async () => {
+    await mountView({
+        type: "form",
+        resModel: "partner",
+        arch: `
+            <form>
+                <group>
+                    <field name="date"/>
+                    <field name="datetime"/>
+                </group>
+            </form>`,
+    });
+
+    // Date field
+    await contains(".o_field_widget[name=date] input").click();
+    await edit("11/10", { confirm: "Enter" });
+    await animationFrame();
+    expect(".o_field_widget[name=date] button").toHaveValue("11/10/2019");
+
+    await contains(".o_form_button_save").click();
+    await animationFrame();
+
+    await contains(".o_field_widget[name=date] button").click();
+    await edit("10/10", { confirm: "Enter" });
+    await animationFrame();
+    expect(".o_field_widget[name=date] button").toHaveValue("10/10/2019");
+
+    // Datetime field
+    await contains(".o_field_widget[name=datetime] input").click();
+    await edit("11/10", { confirm: "Enter" });
+    await animationFrame();
+    expect(".o_field_widget[name=datetime] button").toHaveValue("11/10/2019 00:00:00");
+
+    await contains(".o_form_button_save").click();
+    await animationFrame();
+
+    await contains(".o_field_widget[name=datetime] button").click();
+    await edit("10/10", { confirm: "Enter" });
+    await animationFrame();
+    expect(".o_field_widget[name=datetime] button").toHaveValue("10/10/2019 00:00:00");
 });

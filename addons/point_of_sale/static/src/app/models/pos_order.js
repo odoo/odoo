@@ -9,16 +9,24 @@ const { DateTime } = luxon;
 
 export class PosOrder extends PosOrderAccounting {
     static pythonModel = "pos.order";
+    static excludedLazyGetters = [
+        "user",
+        "company",
+        "currency",
+        "pickingType",
+        "session",
+        "finalized",
+        "isUnsyncedPaid",
+        "originalSplittedOrder",
+        "isRefund",
+        "floatingOrderName",
+    ];
 
     setup(vals) {
         super.setup(vals);
 
         if (!this.session_id?.id && (!this.finalized || !this.isSynced)) {
             this.session_id = this.session;
-
-            if (this.state === "draft" && this.lines.length == 0 && this.payment_ids.length == 0) {
-                this._isResidual = true;
-            }
         }
 
         // Data present in python model
@@ -51,6 +59,10 @@ export class PosOrder extends PosOrderAccounting {
         }
         if (!this.user_id && this.models["res.users"]) {
             this.user_id = this.user;
+        }
+
+        if (!this.config_id) {
+            this.config_id = this.config;
         }
     }
 
@@ -100,6 +112,10 @@ export class PosOrder extends PosOrderAccounting {
 
     get finalized() {
         return this.state !== "draft";
+    }
+
+    get canBeRemovedFromIndexedDB() {
+        return (this.finalized && this.isSynced) || this.state === "cancel";
     }
 
     get totalQuantity() {
@@ -187,7 +203,7 @@ export class PosOrder extends PosOrderAccounting {
             preset.fiscal_position_id || this.config.default_fiscal_position_id;
         this.preset_id = preset;
         if (preset.is_return) {
-            this.lines.forEach((l) => l.setQuantity(-Math.abs(l.getQuantity())));
+            this.lines.forEach((l) => l.setQuantity(-Math.abs(l.getQuantity()), true));
         }
     }
 
@@ -340,38 +356,57 @@ export class PosOrder extends PosOrderAccounting {
             (line) => line.price_type === "original" && line.combo_line_ids?.length
         );
         for (const pLine of combo_parent_lines) {
+            const { childLineFree, childLineExtra } = this.getFreeAndExtraChildLines(pLine);
             attributes_prices[pLine.id] = computeComboItems(
                 pLine.product_id,
-                pLine.combo_line_ids.map((cLine) => {
-                    if (cLine.attribute_value_ids) {
-                        return {
-                            combo_item_id: cLine.combo_item_id,
-                            configuration: {
-                                attribute_value_ids: cLine.attribute_value_ids,
-                            },
-                            qty: pLine.qty,
-                        };
-                    } else {
-                        return { combo_item_id: cLine.combo_item_id, qty: pLine.qty };
-                    }
-                }),
+                childLineFree,
                 pricelist,
                 this.models["decimal.precision"].getAll(),
                 this.models["product.template.attribute.value"].getAllBy("id"),
-                [],
+                childLineExtra,
                 this.config_id.currency_id
             );
         }
         const combo_children_lines = this.lines.filter(
-            (line) => line.price_type === "automatic" && line.combo_parent_id
+            (line) => line.price_type === "original" && line.combo_parent_id
         );
         combo_children_lines.forEach((line) => {
-            line.setUnitPrice(
-                attributes_prices[line.combo_parent_id.id].find(
-                    (item) => item.combo_item_id.id === line.combo_item_id.id
-                ).price_unit
+            const currentItem = attributes_prices[line.combo_parent_id.id].find(
+                (item) => item.combo_item_id.id === line.combo_item_id.id
+            );
+            line.setUnitPrice(currentItem.price_unit);
+            // Removing to be able to have extras that are the same as free products
+            attributes_prices[line.combo_parent_id.id].splice(
+                attributes_prices[line.combo_parent_id.id].indexOf(currentItem),
+                1
             );
         });
+    }
+
+    getFreeAndExtraChildLines(pLine) {
+        const childLineFree = [];
+        const childLineExtra = [];
+        const comboRemainingFree = {};
+        for (const cLine of pLine.combo_line_ids) {
+            if (!(cLine.combo_item_id.combo_id.id in comboRemainingFree)) {
+                comboRemainingFree[cLine.combo_item_id.combo_id.id] =
+                    cLine.combo_item_id.combo_id.qty_free * pLine.qty;
+            }
+            const newQty = comboRemainingFree[cLine.combo_item_id.combo_id.id] - cLine.qty;
+            const baseData = { combo_item_id: cLine.combo_item_id };
+            if (cLine.attribute_value_ids) {
+                baseData.configuration = { attribute_value_ids: cLine.attribute_value_ids };
+            }
+            if (cLine.qty) {
+                if (newQty >= 0) {
+                    comboRemainingFree[cLine.combo_item_id.combo_id.id] = newQty;
+                    childLineFree.push({ ...baseData, qty: cLine.qty, parentQty: pLine.qty });
+                } else {
+                    childLineExtra.push({ ...baseData, qty: cLine.qty });
+                }
+            }
+        }
+        return { childLineFree, childLineExtra };
     }
 
     /**
@@ -430,17 +465,12 @@ export class PosOrder extends PosOrderAccounting {
     /* ---- Payment Lines --- */
     addPaymentline(payment_method) {
         this.assertEditable();
-        const existingCash = this.payment_ids.find((pl) => pl.payment_method_id.is_cash_count);
 
         if (this.electronicPaymentInProgress()) {
             return {
                 status: false,
                 data: _t("There is already an electronic payment in progress."),
             };
-        }
-
-        if (existingCash && payment_method.is_cash_count) {
-            return { status: false, data: _t("There is already a cash payment line.") };
         }
 
         const totalAmountDue = this.getDefaultAmountDueToPayIn(payment_method);
@@ -512,8 +542,7 @@ export class PosOrder extends PosOrderAccounting {
                         orderLine.discount == 0
                     ) {
                         sum +=
-                            (orderLine.currencyDisplayPriceUnit -
-                                orderLine.unitPrices.no_discount_total_included) *
+                            (orderLine.displayPriceUnit - orderLine.displayPriceUnitNoDiscount) *
                             orderLine.getQuantity();
                     }
                 }
@@ -530,7 +559,7 @@ export class PosOrder extends PosOrderAccounting {
         return (
             this.isRefund &&
             this.payment_ids.some(
-                (pl) => pl.payment_method_id.use_payment_terminal && pl.payment_status !== "done"
+                (pl) => pl.payment_method_id.payment_terminal && pl.payment_status !== "done"
             )
         );
     }
@@ -630,7 +659,7 @@ export class PosOrder extends PosOrderAccounting {
                   )
                 : defaultFiscalPosition;
             newPartnerPricelist =
-                this.models["product.pricelist"].find(
+                this.config.available_pricelist_ids.find(
                     (pricelist) => pricelist.id === newPartner.property_product_pricelist?.id
                 ) || this.config.pricelist_id;
         } else {
@@ -712,6 +741,16 @@ export class PosOrder extends PosOrderAccounting {
             return seqA - seqB;
         }
         return pos_categ_id_A - pos_categ_id_B;
+    }
+
+    get discountLines() {
+        return this.lines?.filter(
+            (line) => line.product_id.id === this.config.discount_product_id?.id
+        );
+    }
+
+    get globalDiscountPc() {
+        return this.discountLines?.[0]?.extra_tax_data?.discount_percentage || 0;
     }
 
     getName() {

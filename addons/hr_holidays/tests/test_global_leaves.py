@@ -132,6 +132,39 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
         # The user in Europe/Brussels timezone see 4:30 and not 2:30 because he is in UTC +02:00.
         # The user in Asia/Kolkata timezone (determined via the browser) see 8:00 because he is in UTC +05:30
 
+    def test_global_leave_working_schedule_without_company(self):
+        """
+        Check public holidays for a company apply to employees of this company
+        when using a working schedule without a company.
+        """
+        calendar_no_company = self.env['resource.calendar'].create({
+            'name': 'Schedule without company',
+            'company_id': False,
+        })
+        self.employee_emp.resource_calendar_id = calendar_no_company
+
+        self.env['resource.calendar.leaves'].create({
+            'name': 'Public Holiday',
+            'date_from': datetime(2024, 1, 3, 0, 0),
+            'date_to': datetime(2024, 1, 3, 23, 59),
+            'calendar_id': calendar_no_company.id,
+            'company_id': self.employee_emp.company_id.id,
+        })
+        leave_type = self.env['hr.leave.type'].create({
+            'name': 'Paid Time Off',
+            'time_type': 'leave',
+            'requires_allocation': False,
+        })
+        leave = self.env['hr.leave'].create({
+            'name': 'Time Off',
+            'employee_id': self.employee_emp.id,
+            'holiday_status_id': leave_type.id,
+            'request_date_from': date(2024, 1, 2),
+            'request_date_to': date(2024, 1, 4),
+        })
+
+        self.assertEqual(leave.number_of_days, 2, "Public holiday duration should not be included")
+
     def test_global_leave_number_of_days_with_new(self):
         """
             Check that leaves stored in memory (and not in the database)
@@ -325,3 +358,52 @@ class TestGlobalLeaves(TestHrHolidaysCommon):
         }
         for day, value in expected.items():
             self.assertEqual(flex_days.get(day), value, f"Day {day} should be {'unusual' if value else 'normal'}")
+
+    def test_public_holidays_for_consecutive_allocations(self):
+        employee = self.employee_emp
+        leave_type = self.env['hr.leave.type'].create({
+            'name': 'Paid Time Off',
+            'time_type': 'leave',
+            'requires_allocation': 'yes',
+        })
+        self.env['hr.leave.allocation'].create([
+            {
+                'name': '2025 allocation',
+                'holiday_status_id': leave_type.id,
+                'number_of_days': 20,
+                'employee_id': employee.id,
+                'state': 'confirm',
+                'date_from': date(2025, 1, 1),
+                'date_to': date(2025, 12, 31),
+            },
+            {
+                'name': '2026 allocation',
+                'holiday_status_id': leave_type.id,
+                'number_of_days': 20,
+                'employee_id': employee.id,
+                'state': 'confirm',
+                'date_from': date(2026, 1, 1),
+                'date_to': date(2026, 12, 31),
+            }
+        ]).action_approve()
+
+        leave = self.env['hr.leave'].create({
+            'name': 'Holiday 1 week',
+            'employee_id': employee.id,
+            'holiday_status_id': leave_type.id,
+            'request_date_from': datetime(2025, 12, 8, 7, 0),
+            'request_date_to': datetime(2026, 1, 3, 18, 0),
+        })
+        leave.action_approve()
+
+        self.assertEqual(leave.number_of_days, 20, "Number of days should be 20")
+
+        public_holiday = self.env['resource.calendar.leaves'].create({
+            'name': 'Global Time Off',
+            'date_from': datetime(2025, 12, 31, 23, 0, 0),
+            'date_to': datetime(2026, 1, 1, 22, 59, 59),
+        })
+
+        self.assertTrue(public_holiday)
+        self.assertEqual(leave.number_of_days, 19, "Number of days should be 19 as one day has been granted back to the"
+                                                   "the employee for the public holiday")

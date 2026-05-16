@@ -198,3 +198,21 @@ export function checkImagePriceExtraVisible(price) {
         },
     ];
 }
+
+export function isRadioDisabled(name) {
+    return [
+        {
+            content: `check radio attribute with name ${name}`,
+            trigger: `.modal .attribute-name-cell:contains('${name}') input:disabled`,
+        },
+    ];
+}
+
+export function priceIs(price) {
+    return [
+        {
+            content: `checking that total price is ${price}`,
+            trigger: `.modal .modal-title:contains('${price}')`,
+        },
+    ];
+}

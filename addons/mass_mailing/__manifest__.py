@@ -67,6 +67,7 @@
         'views/snippets/mass_mailing_masonry_snippets.xml',
         'views/snippets/mass_mailing_people_snippets.xml',
         'views/snippets/mass_mailing_text_snippets.xml',
+        'views/snippets/mass_mailing_website_snippets.xml',
     ],
     'demo': [
         'demo/utm.xml',
@@ -95,6 +96,7 @@
             'web/static/src/scss/pre_variables.scss',
             'web/static/lib/bootstrap/scss/_variables.scss',
             'web/static/lib/bootstrap/scss/_maps.scss',
+            'web/static/lib/bootstrap/scss/_alert.scss',
             ('include', 'web._assets_bootstrap_frontend'),
 
             # useful scss from /html_editor web.assets_frontend
@@ -109,6 +111,7 @@
             ('after', 'web/static/lib/bootstrap/scss/_maps.scss', 'mass_mailing/static/src/scss/mass_mailing.ui.scss'),
 
             'html_editor/static/src/scss/bootstrap_overridden.scss',
+            'html_builder/static/src/scss/background.scss',
 
             'web/static/src/libs/fontawesome/css/font-awesome.css',
             'web/static/lib/odoo_ui_icons/*',
@@ -121,9 +124,16 @@
             'mass_mailing/static/src/scss/mass_mailing_mail.scss',
             'mass_mailing/static/src/iframe_assets/**/*',
         ],
+        # style assets used to view the mail content with a basic editor
+        'mass_mailing.assets_inside_basic_editor_iframe': [
+            ('include', 'mass_mailing.assets_iframe_style'),
+            ('include', 'html_editor.assets_editor'),
+        ],
         # style assets used to view the mail content in Odoo, but not used
         # during html conversion, specific to the builder
         'mass_mailing.assets_inside_builder_iframe': [
+            ('include', 'mass_mailing.assets_iframe_style'),
+            ('include', 'html_editor.assets_editor'),
             ('include', 'html_builder.assets_inside_builder_iframe'),
             'mass_mailing/static/src/builder/**/*.inside.scss'
         ],
@@ -138,6 +148,7 @@
             'mass_mailing/static/src/xml/mailing_portal_subscription_form.xml',
         ],
         'web.assets_backend': [
+            'mass_mailing/static/src/editor/**/*',
             'mass_mailing/static/src/fields/**/*',
             'mass_mailing/static/src/themes/**/*',
             'mass_mailing/static/src/iframe/**/*',

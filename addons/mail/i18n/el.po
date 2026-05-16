@@ -12,20 +12,22 @@
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # Panagiotis karampaglis <panosdotk@gmail.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Odoo Translation Bot <c3p@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:37+0000\n"
-"PO-Revision-Date: 2025-10-21 05:28+0000\n"
-"Last-Translator: Panagiotis karampaglis <panosdotk@gmail.com>\n"
+"POT-Creation-Date: 2026-05-08 17:35+0000\n"
+"PO-Revision-Date: 2026-04-09 11:24+0000\n"
+"Last-Translator: Odoo Translation Bot <c3p@odoo.com>\n"
 "Language-Team: Greek <https://translate.odoo.com/projects/odoo-19/mail/el/>\n"
 "Language: el\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_ir_actions_server__followers_type
@@ -268,14 +270,14 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/web/discuss_core_web_service.js:0
-msgid "%(user)s connected. This is their first connection. Wish them luck."
+#: code:addons/mail/static/src/core/common/message_model.js:0
+msgid "%(user)s deleted the thread \"%(thread_name)s\""
 msgstr ""
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/common/message_model.js:0
-msgid "%(user)s deleted the thread \"%(thread_name)s\""
+#: code:addons/mail/static/src/discuss/core/web/discuss_core_web_service.js:0
+msgid "%(user)s just connected for the first time. Wish them luck!"
 msgstr ""
 
 #. module: mail
@@ -385,6 +387,18 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/core/common/composer.xml:0
+msgid "(Keep formatting)"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/composer.xml:0
+msgid "(Remove formatting)"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/core/common/message.js:0
 msgid "(Translated from: %(language)s)"
 msgstr ""
@@ -453,11 +467,6 @@ msgstr ""
 #: code:addons/mail/models/discuss/discuss_channel.py:0
 #: code:addons/mail/static/src/discuss/core/common/thread_model_patch.js:0
 msgid "1 other"
-msgstr ""
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.account_security_alert
-msgid "111.222.333.444"
 msgstr ""
 
 #. module: mail
@@ -855,7 +864,7 @@ msgstr "Ενέργεια"
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__name
 #: model:ir.model.fields,field_description:mail.field_ir_cron__name
 msgid "Action Name"
-msgstr ""
+msgstr "Όνομα Ενέργειας"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__message_needaction
@@ -1088,7 +1097,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_followers_edit__operation__add
 msgid "Add"
-msgstr ""
+msgstr "Προσθήκη"
 
 #. module: mail
 #. odoo-javascript
@@ -1245,7 +1254,7 @@ msgstr "Ρυθμίσεις για προχωρημένους"
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/web/thread_actions.js:0
 msgid "Advanced Settings"
-msgstr ""
+msgstr "Ρυθμίσεις για προχωρημένους"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_plan_template__delay_from__after_plan_date
@@ -2048,7 +2057,7 @@ msgstr ""
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/device_select.xml:0
-msgid "Browser default"
+msgid "Browser Default"
 msgstr ""
 
 #. module: mail
@@ -2066,7 +2075,7 @@ msgstr ""
 #: code:addons/mail/static/src/core/common/im_status.xml:0
 #: code:addons/mail/static/src/core/common/im_status_dropdown.xml:0
 msgid "Busy"
-msgstr ""
+msgstr "Απασχολημένος/η"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__res_users__notification_type__email
@@ -2365,7 +2374,7 @@ msgstr ""
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_res_users_my_fullpage
 msgid "Change My Preferences"
-msgstr ""
+msgstr "Αλλαγή Προτιμήσεων"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity__activity_decoration
@@ -2894,6 +2903,12 @@ msgstr "Περιεχόμενα"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/core/common/composer.xml:0
+msgid "Continue with Full Composer?"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/core/common/search_message_input.js:0
 msgid "Conversations"
 msgstr ""
@@ -2995,7 +3010,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model,website_form_label:mail.model_res_partner
 msgid "Create a Customer"
-msgstr ""
+msgstr "Δημιουργία Πελάτη"
 
 #. module: mail
 #. odoo-python
@@ -3240,7 +3255,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/message_patch.xml:0
 msgid "Date:"
-msgstr ""
+msgstr "Ημερομηνία:"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_schedule__scheduled_datetime
@@ -3313,7 +3328,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel_member.py:0
 msgid "Decline"
-msgstr ""
+msgstr "Απόρριψη"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__activity_decoration
@@ -3584,7 +3599,7 @@ msgstr ""
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/rtc_service.js:0
-msgid "Disconnected from the RTC call by the server"
+msgid "Disconnected from the call by the server"
 msgstr ""
 
 #. module: mail
@@ -4430,15 +4445,21 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
 msgid ""
-"Failed to render QWeb template: %(template_src)s\n"
+"Failed to render QWeb template for %(template_label)s\n"
+"Target Model: %(model_name)s\n"
+"Language context: %(lang_context)s\n"
+"Error: %(error_details)s\n"
 "\n"
-"%(template_traceback)s)"
+"Template Source Snippet:\n"
+"%(template_src)s"
 msgstr ""
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
-msgid "Failed to render inline_template template: %(template_txt)s"
+msgid ""
+"Failed to render inline_template template: %(template_txt)s\n"
+"Error details: %(error)s"
 msgstr ""
 
 #. module: mail
@@ -4782,6 +4803,12 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_company__email_formatted
 msgid "Formatted Email"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/common/composer.xml:0
+msgid "Formatting can only be restored in Full Composer."
 msgstr ""
 
 #. module: mail
@@ -5633,12 +5660,12 @@ msgstr "Διάστημα"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_cron__interval_number
 msgid "Interval Number"
-msgstr ""
+msgstr "Interval Number"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_cron__interval_type
 msgid "Interval Unit"
-msgstr ""
+msgstr "Μονάδα Διαστήματος"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_alias__alias_status__invalid
@@ -5763,6 +5790,18 @@ msgid "Invitation already sent to this address"
 msgstr ""
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/common/channel_invitation.js:0
+msgid "Invitation link copied!"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/common/channel_invitation.js:0
+msgid "Invitation link copy failed (Permission denied?)!"
+msgstr ""
+
+#. module: mail
 #. odoo-python
 #: code:addons/mail/wizard/mail_followers_edit.py:0
 msgid "Invitation to follow %(document_model)s."
@@ -5804,6 +5843,12 @@ msgstr ""
 #: code:addons/mail/static/src/discuss/core/public_web/discuss_command_palette.xml:0
 msgid "Invite people"
 msgstr "Πρόσκληση ατόμων"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/core/common/channel_invitation.js:0
+msgid "Invite people or email"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -6133,12 +6178,12 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_presence__last_poll
 msgid "Last Poll"
-msgstr ""
+msgstr "Τελευταία Δημοσκόπηση"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_presence__last_presence
 msgid "Last Presence"
-msgstr ""
+msgstr "Τελευταία Παρουσία"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel_member__seen_message_id
@@ -6327,15 +6372,9 @@ msgid "Link between link previews and messages"
 msgstr ""
 
 #. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/discuss/core/common/channel_invitation.js:0
-msgid "Link copied!"
-msgstr ""
-
-#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
 msgid "Link to"
-msgstr ""
+msgstr "Σύνδεση με"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__linked_message_ids
@@ -6594,6 +6633,12 @@ msgid "Mail Template Reset"
 msgstr ""
 
 #. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_render_mixin.py:0
+msgid "Mail Template: '%(name)s' (ID: %(record_id)s)"
+msgstr ""
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.model_search_view
 msgid "Mail Thread"
 msgstr "Νήμα Email"
@@ -6701,7 +6746,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_alert
 msgid "Marc Demo"
-msgstr ""
+msgstr "Marc Demo"
 
 #. module: mail
 #. odoo-javascript
@@ -6751,6 +6796,12 @@ msgid "Mark as done"
 msgstr "Σήμανση ως Ολοκληρωμένη"
 
 #. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_render_mixin.py:0
+msgid "Mass Mailing Template: '%(name)s' (ID: %(record_id)s)"
+msgstr ""
+
+#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_settings.js:0
 #: code:addons/mail/static/src/discuss/call/common/device_select.js:0
@@ -6771,7 +6822,7 @@ msgstr ""
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/core/common/channel_member_list.xml:0
-#: code:addons/mail/static/src/discuss/core/common/thread_actions.js:0
+#: code:addons/mail/static/src/discuss/core/public_web/thread_actions.js:0
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__channel_member_ids
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_form
 msgid "Members"
@@ -6952,7 +7003,7 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/core/common/composer.js:0
+#: code:addons/mail/static/src/core/common/store_service.js:0
 msgid "Message posted on \"%s\""
 msgstr ""
 
@@ -7416,6 +7467,7 @@ msgstr "Επόμενες διαθέσιμες δραστηριότητες"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/core/common/composer.xml:0
 #: code:addons/mail/static/src/core/web/message_patch.js:0
 msgid "No"
 msgstr "Όχι"
@@ -7492,6 +7544,12 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/thread_patch.xml:0
 msgid "No history messages"
+msgstr ""
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_render_mixin.py:0
+msgid "No language detected in context"
 msgstr ""
 
 #. module: mail
@@ -7954,7 +8012,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/core/web/message_patch.xml:0
 msgid "On"
-msgstr ""
+msgstr "Ενεργό"
 
 #. module: mail
 #. odoo-javascript
@@ -8062,8 +8120,11 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/mail_template.py:0
 msgid ""
-"Oops! We couldn't save your template due to an issue with this value: %"
-"(template_txt)s. Correct it and try again."
+"Oops! We couldn't save your template due to an issue.\n"
+"\n"
+"Error: %(error_details)s\n"
+"\n"
+"Correct it and try again."
 msgstr ""
 
 #. module: mail
@@ -8140,7 +8201,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_followers_edit__operation
 msgid "Operation"
-msgstr ""
+msgstr "Λειτουργία"
 
 #. module: mail
 #. odoo-javascript
@@ -8536,6 +8597,12 @@ msgid "Permanently delete this thread?"
 msgstr ""
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/call/common/device_select.xml:0
+msgid "Permission Needed"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_partner__phone
 #: model:ir.model.fields,field_description:mail.field_res_users__phone
 msgid "Phone"
@@ -8873,7 +8940,7 @@ msgstr "Προηγούμενος Τύπος Δραστηριότητας"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_cron__priority
 msgid "Priority"
-msgstr ""
+msgstr "Προτεραιότητα"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_form
@@ -8883,7 +8950,7 @@ msgstr "Μυστικότητα"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_canned_response_view_search
 msgid "Private"
-msgstr ""
+msgstr "Προσωπικό"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_fetchmail_server__object_id
@@ -9322,7 +9389,7 @@ msgstr "Επαναλαμβανόμενη"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_ir_cron__interval_number
 msgid "Repeat every x."
-msgstr ""
+msgstr "Επανάληψη κάθε Χ."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__reply_to_mode
@@ -9411,7 +9478,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_alert
 msgid "Reset Password"
-msgstr ""
+msgstr "Επαναφορά Κωδικού"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -9509,7 +9576,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.res_role_view_search
 #: model_terms:ir.ui.view,arch_db:mail.res_role_view_tree
 msgid "Role"
-msgstr ""
+msgstr "Ρόλος"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.res_role_action
@@ -9698,7 +9765,7 @@ msgstr "Προγραμματισμένη Ημερομηνία Αποστολής
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_cron__user_id
 msgid "Scheduler User"
-msgstr ""
+msgstr "Χρήστης Χρονοπρογραμματιστή"
 
 #. module: mail
 #. odoo-python
@@ -9939,6 +10006,12 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/views/web/fields/assign_user_command_hook.js:0
 msgid "Select a user..."
+msgstr ""
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/wizard/mail_activity_schedule.py:0
+msgid "Selected user '%(user)s' cannot upload documents on model '%(model)s'"
 msgstr ""
 
 #. module: mail
@@ -10234,7 +10307,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_canned_response_view_search
 msgid "Shared"
-msgstr ""
+msgstr "Κοινόχρηστο"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -10296,6 +10369,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.res_partner_view_search_inherit_mail
 msgid "Show all records whose next activity date is past"
 msgstr ""
+"Εμφάνιση όλων των καταγραφών των οποίων η επόμενη δραστηριότητα είναι "
+"προγενέστερη"
 
 #. module: mail
 #. odoo-javascript
@@ -10521,7 +10596,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_settings.js:0
 msgid "Stop"
-msgstr ""
+msgstr "Διακοπή"
 
 #. module: mail
 #. odoo-javascript
@@ -10731,7 +10806,7 @@ msgstr "ΑΦΜ"
 #: model:ir.ui.menu,name:mail.discuss_technical
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Technical"
-msgstr ""
+msgstr "Τεχνικό"
 
 #. module: mail
 #. odoo-javascript
@@ -10803,6 +10878,12 @@ msgstr ""
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
+msgid "Template name not identified"
+msgstr ""
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_render_mixin.py:0
 msgid ""
 "Template rendering should only be called with a list of IDs. Received “%"
 "(res_ids)s” instead."
@@ -10840,7 +10921,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/call/common/call_settings.js:0
 msgid "Test"
-msgstr ""
+msgstr "Τεστ"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_form
@@ -10851,7 +10932,7 @@ msgstr "Δοκιμή & Επιβεβαίωση"
 #. odoo-javascript
 #: code:addons/mail/static/src/views/fields/mail_server_configurator_selection/mail_server_configurator_selection.xml:0
 msgid "Test Connection"
-msgstr ""
+msgstr "Δοκιμαστική Σύνδεση"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_template_preview_view_form
@@ -11084,6 +11165,8 @@ msgid ""
 "The priority of the job, as an integer: 0 means higher priority, 10 means "
 "lower priority."
 msgstr ""
+"Η προτεραιότητα της εργασίας, ως ακέραιος: 0 σημαίνει υψηλή προτεραιότητα, "
+"10 σημαίνει χαμηλή προτεραιότητα."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template_preview__scheduled_date
@@ -11427,7 +11510,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_attachment__thumbnail
 msgid "Thumbnail"
-msgstr ""
+msgstr "Μικρογραφία"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__user_tz
@@ -11573,7 +11656,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/mail_activity.py:0
 msgid "Todo"
-msgstr ""
+msgstr "Εκκρεμότητες"
 
 #. module: mail
 #. odoo-javascript
@@ -11797,7 +11880,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_schedule_view_form
 msgid "Unassigned"
-msgstr ""
+msgstr "Μη Ανατεθειμένη"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
@@ -11896,10 +11979,30 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/core/common/follower_model.js:0
+#: code:addons/mail/static/src/core/common/message_model.js:0
 #: code:addons/mail/static/src/core/web/recipients_input.js:0
 #: code:addons/mail/static/src/core/web/recipients_popover.js:0
 #: code:addons/mail/static/src/views/web/fields/many2many_tags_email/many2many_tags_email.js:0
 msgid "Unnamed"
+msgstr "Χωρίς όνομα"
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_tracking_value.py:0
+msgid "Unnamed %(record_model_name)s (%(record_id)s)"
+msgstr ""
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_render_mixin.py:0
+msgid "Unnamed Mail Template"
+msgstr ""
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_render_mixin.py:0
+msgid "Unnamed Mailing"
 msgstr ""
 
 #. module: mail
@@ -12288,7 +12391,7 @@ msgstr "Όνομα Χρήστη"
 #: model:ir.model.fields,field_description:mail.field_res_role__user_ids
 #: model_terms:ir.ui.view,arch_db:mail.res_role_view_search
 msgid "Users"
-msgstr ""
+msgstr "Χρήστες"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_users__role_ids
@@ -12345,7 +12448,7 @@ msgstr "Έγκυρο"
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__value
 #: model:ir.model.fields,field_description:mail.field_ir_cron__value
 msgid "Value"
-msgstr ""
+msgstr "Τιμή"
 
 #. module: mail
 #. odoo-python
@@ -12455,7 +12558,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_view_form
 #: model_terms:ir.ui.view,arch_db:mail.mail_alias_domain_view_form
 msgid "Visible to all"
-msgstr ""
+msgstr "Ορατό σε όλους"
 
 #. module: mail
 #. odoo-javascript
@@ -12690,6 +12793,7 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/core/common/composer.xml:0
 #: code:addons/mail/static/src/core/web/message_patch.js:0
 msgid "Yes"
 msgstr "Ναι"
@@ -13101,6 +13205,12 @@ msgid "created this channel."
 msgstr ""
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/js/rotting_mixin/rotting_statusbar.xml:0
+msgid "d"
+msgstr ""
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_alert
 msgid "day, month dd, yyyy - hh:mm:ss (GMT)"
 msgstr ""
@@ -13239,7 +13349,7 @@ msgstr "π.χ. Συζήτηση για προσφορά"
 #: model_terms:ir.ui.view,arch_db:mail.mail_canned_response_view_form
 #: model_terms:ir.ui.view,arch_db:mail.mail_canned_response_view_tree
 msgid "e.g. Hello, how may I help you?"
-msgstr ""
+msgstr "π.χ. Γεια σας, πώς μπορώ να σας βοηθήσω;"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_plan_template_view_form
@@ -13639,6 +13749,12 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail/models/discuss/discuss_channel_member.py:0
 msgid "“%(member_name)s” in “%(channel_name)s”"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/core/web/activity.js:0
+msgid "“%s”"
 msgstr ""
 
 #~ msgid "0 Future"

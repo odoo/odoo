@@ -50,12 +50,13 @@ test("Can invite a partner to a livechat channel", async () => {
     });
     await start();
     await openDiscuss(channelId);
+    await contains(".o-livechat-ChannelInfoList"); // wait for auto-open of this panel
     await click("button[title='Invite People']");
     await click("input", {
         parent: [".o-discuss-ChannelInvitation-selectable", { text: "James" }],
     });
     await contains(
-        ".o-discuss-ChannelInvitation-selectable:contains('James\nEnglish\nFrench\nGerman\npricing\nevents')"
+        ".o-discuss-ChannelInvitation-selectable:contains('James English French German pricing events')"
     );
     await click("button:enabled", { text: "Invite" });
     await contains(".o-mail-NotificationMessage", {
@@ -91,6 +92,7 @@ test("Available operators come first", async () => {
     });
     await start();
     await openDiscuss(channelId);
+    await contains(".o-livechat-ChannelInfoList"); // wait for auto-open of this panel
     await click("button[title='Invite People']");
     await contains(".o-discuss-ChannelInvitation-selectable", { count: 2 });
     await contains(":nth-child(1 of .o-discuss-ChannelInvitation-selectable)", { text: "Ron" });
@@ -147,6 +149,7 @@ test("Partners invited most frequently by the current user come first", async ()
     await start();
     await openDiscuss();
     await click(".o-mail-DiscussSidebarChannel", { text: "Visitor #1" });
+    await contains(".o-livechat-ChannelInfoList"); // wait for auto-open of this panel
     await click("button[title='Invite People']");
     await click("input", { parent: [".o-discuss-ChannelInvitation-selectable", { text: "John" }] });
     await click("button:enabled", { text: "Invite" });
@@ -189,10 +192,11 @@ test("shows operators are in call", async () => {
     });
     await start();
     await openDiscuss(channelId);
+    await contains(".o-livechat-ChannelInfoList"); // wait for auto-open of this panel
     await click("[title='Invite People']");
-    await contains(".o-discuss-ChannelInvitation-selectable:contains('bob\nin a call')");
+    await contains(".o-discuss-ChannelInvitation-selectable:contains('bob in a call')");
     await contains(".o-discuss-ChannelInvitation-selectable:contains('john')");
-    await contains(".o-discuss-ChannelInvitation-selectable:contains('john\nin a call')", {
+    await contains(".o-discuss-ChannelInvitation-selectable:contains('john in a call')", {
         count: 0,
     });
 });
@@ -225,6 +229,7 @@ test("Operator invite shows livechat_username", async () => {
     await start();
     await openDiscuss();
     await click(".o-mail-DiscussSidebarChannel", { text: "Visitor #1" });
+    await contains(".o-livechat-ChannelInfoList"); // wait for auto-open of this panel
     await click("button[title='Invite People']");
     await contains("input", {
         parent: [".o-discuss-ChannelInvitation-selectable", { text: "Johnny" }],

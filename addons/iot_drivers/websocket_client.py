@@ -1,7 +1,6 @@
 import json
 import logging
 import platform
-import pprint
 import requests
 import time
 import urllib.parse
@@ -10,7 +9,7 @@ import websocket
 from threading import Thread
 
 from odoo.addons.iot_drivers import main
-from odoo.addons.iot_drivers.tools import helpers
+from odoo.addons.iot_drivers.tools import helpers, upgrade
 from odoo.addons.iot_drivers.server_logger import close_server_log_sender_handler
 from odoo.addons.iot_drivers.webrtc_client import webrtc_client
 
@@ -59,9 +58,9 @@ class WebsocketClient(Thread):
     def on_message(self, ws, messages):
         """Synchronously handle messages received by the websocket."""
         for message in json.loads(messages):
-            _logger.debug("websocket received a message: %s", pprint.pformat(message))
             self.last_message_id = message['id']
             payload = message['message']['payload']
+            _logger.info("Received message of type %s", message['message']['type'])
 
             if not helpers.get_identifier() in payload.get('iot_identifiers', []):
                 continue
@@ -70,8 +69,10 @@ class WebsocketClient(Thread):
                 case 'iot_action':
                     for device_identifier in payload['device_identifiers']:
                         if device_identifier in main.iot_devices:
-                            _logger.debug("device '%s' action started with: %s", device_identifier, pprint.pformat(payload))
+                            start_operation_time = time.perf_counter()
+                            _logger.info("device '%s' action started", device_identifier)
                             main.iot_devices[device_identifier].action(payload)
+                            _logger.info("device '%s' action finished - %.*f", device_identifier, 3, time.perf_counter() - start_operation_time)
                         else:
                             # Notify the controller that the device is not connected
                             send_to_controller({
@@ -103,6 +104,8 @@ class WebsocketClient(Thread):
                     ws.close()
                     helpers.odoo_restart()
                 case 'webrtc_offer':
+                    if not webrtc_client:
+                        continue
                     answer = webrtc_client.offer(payload['offer'])
                     send_to_controller({
                         'iot_box_identifier': helpers.get_identifier(),
@@ -132,6 +135,11 @@ class WebsocketClient(Thread):
                             'wan_quality': helpers.check_network("www.odoo.com"),
                         }
                     })
+                case 'bundle_changed':
+                    # This message is sent by the DB whenever the web JS asset bundle changes.
+                    # While this is a bit of a hack we use this message to check if the DB has been upgraded,
+                    # since we know the bundle will always change in this situation.
+                    upgrade.check_git_branch()
                 case _:
                     continue
 
@@ -153,7 +161,7 @@ class WebsocketClient(Thread):
         self.websocket_url = urllib.parse.urlunsplit((scheme, url_parsed.netloc, 'websocket', '', ''))
         self.db_name = helpers.get_conf('db_name') or ''
         self.session_id = ''
-        super().__init__()
+        super().__init__(daemon=True)
 
     def run(self):
         if self.db_name:

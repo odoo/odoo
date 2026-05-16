@@ -74,7 +74,7 @@ TRANSLATED_ELEMENTS = {
 TRANSLATED_ATTRS = {
     'string', 'add-label', 'help', 'sum', 'avg', 'confirm', 'placeholder', 'alt', 'title', 'aria-label',
     'aria-keyshortcuts', 'aria-placeholder', 'aria-roledescription', 'aria-valuetext',
-    'value_label', 'data-tooltip', 'label', 'confirm-label', 'cancel-label',
+    'value_label', 'data-tooltip', 'label', 'confirm-label', 'confirm-title', 'cancel-label',
 }
 
 TRANSLATED_ATTRS.update({f't-attf-{attr}' for attr in TRANSLATED_ATTRS})
@@ -150,31 +150,41 @@ def translate_xml_node(node, callback, parse, serialize):
         """ Return whether ``text`` is a string with non-space characters. """
         return bool(text) and not space_pattern.fullmatch(text)
 
-    def translatable(node):
+    def is_force_inline(node):
+        """ Return whether ``node`` is marked as it should be translated as
+            one term.
+        """
+        return "o_translate_inline" in node.attrib.get("class", "").split()
+
+    def translatable(node, force_inline=False):
         """ Return whether the given node can be translated as a whole. """
+        # Some specific nodes (e.g., text highlights) have an auto-updated DOM
+        # structure that makes them impossible to translate.
+        # The introduction of a translation `<span>` in the middle of their
+        # hierarchy breaks their functionalities. We need to force them to be
+        # translated as a whole using the `o_translate_inline` class.
+        force_inline = force_inline or is_force_inline(node)
         return (
-            # Some specific nodes (e.g., text highlights) have an auto-updated
-            # DOM structure that makes them impossible to translate.
-            # The introduction of a translation `<span>` in the middle of their
-            # hierarchy breaks their functionalities. We need to force them to
-            # be translated as a whole using the `o_translate_inline` class.
-            "o_translate_inline" in node.attrib.get("class", "").split()
-            or node.tag in TRANSLATED_ELEMENTS
-            and not any(key.startswith("t-") or key.endswith(".translate") for key in node.attrib)
-            and all(translatable(child) for child in node)
+            (force_inline or node.tag in TRANSLATED_ELEMENTS)
+            # Nodes with directives are not translatable. Directives usually
+            # start with `t-`, but this prefix is optional for `groups` (see
+            # `_compile_directive_groups` which reads `t-groups` and `groups`)
+            and not any(key.startswith("t-") or key == 'groups' or key.endswith(".translate") for key in node.attrib)
+            and all(translatable(child, force_inline) for child in node)
         )
 
-    def hastext(node, pos=0):
+    def hastext(node, pos=0, force_inline=False):
         """ Return whether the given node contains some text to translate at the
             given child node position.  The text may be before the child node,
             inside it, or after it.
         """
+        force_inline = force_inline or is_force_inline(node)
         return (
             # there is some text before node[pos]
             nonspace(node[pos-1].tail if pos else node.text)
             or (
                 pos < len(node)
-                and translatable(node[pos])
+                and translatable(node[pos], force_inline)
                 and (
                     any(  # attribute to translate
                         val and (
@@ -185,9 +195,9 @@ def translate_xml_node(node, callback, parse, serialize):
                         for key, val in node[pos].attrib.items()
                     )
                     # node[pos] contains some text to translate
-                    or hastext(node[pos])
+                    or hastext(node[pos], 0, force_inline)
                     # node[pos] has no text, but there is some text after it
-                    or hastext(node, pos + 1)
+                    or hastext(node, pos + 1, force_inline)
                 )
             )
         )
@@ -211,7 +221,7 @@ def translate_xml_node(node, callback, parse, serialize):
                 # into a <div> element
                 div = etree.Element('div')
                 div.text = (node[pos-1].tail if pos else node.text) or ''
-                while pos < len(node) and translatable(node[pos]):
+                while pos < len(node) and translatable(node[pos], is_force_inline(node)):
                     div.append(node[pos])
 
                 # translate the content of the <div> element as a whole
@@ -1052,8 +1062,9 @@ def trans_export_records(lang, model_name, ids, buffer, format, env):
 def _push(callback, term, source_line):
     """ Sanity check before pushing translation terms """
     term = (term or "").strip()
-    # Avoid non-char tokens like ':' '...' '.00' etc.
-    if len(term) > 8 or any(x.isalpha() for x in term):
+    # We only want to export strings that are likely to be translated.
+    # We avoid exporting strings that contain no letters, like `:`, `...`, `.00`, etc.
+    if any(x.isalpha() for x in term):
         callback(term, source_line)
 
 def _extract_translatable_qweb_terms(element, callback):
@@ -1197,14 +1208,11 @@ class TranslationReader:
         msgid "<source>"
         record_id is the database id of the record being translated
         """
-        # empty and one-letter terms are ignored, they probably are not meant to be
-        # translated, and would be very hard to translate anyway.
         sanitized_term = (source or '').strip()
-        # remove non-alphanumeric chars
-        sanitized_term = re.sub(r'\W+', '', sanitized_term)
-        if not sanitized_term or len(sanitized_term) <= 1:
-            return
-        self._to_translate.append((module, source, name, res_id, ttype, tuple(comments or ()), record_id, value))
+        # We only want to export strings that are likely to be translated.
+        # We avoid exporting strings that contain no letters, like `:`, `...`, `.00`, etc.
+        if any(x.isalpha() for x in sanitized_term):
+            self._to_translate.append((module, source, name, res_id, ttype, tuple(comments or ()), record_id, value))
 
     def _export_imdinfo(self, model: str, imd_per_id: dict[int, ImdInfo]):
         records = self._get_translatable_records(imd_per_id.values())
@@ -1461,7 +1469,7 @@ class TranslationModuleReader(TranslationReader):
         """
 
         # Also scan these non-addon paths
-        for bin_path in ['osv', 'report', 'modules', 'service', 'tools']:
+        for bin_path in ['orm', 'osv', 'report', 'modules', 'service', 'tools']:
             self._path_list.append((os.path.join(config.root_path, bin_path), True))
         # non-recursive scan for individual files in root directory but without
         # scanning subdirectories that may contain addons
@@ -1658,15 +1666,20 @@ class TranslationImporter:
                                 translations.update({k: v for k, v in translation_dictionary[term_en].items() if v != term_en})
                                 translation_dictionary[term_en] = translations
 
+                        changed_values = {}
                         for lang in langs:
                             # translate and confirm model_terms translations
-                            values[lang] = field.translate(lambda term: translation_dictionary.get(term, {}).get(lang), _value_en)
-                            values.pop(f'_{lang}', None)
-                        params.extend((id_, Json(values)))
+                            new_val = field.translate(lambda term: translation_dictionary.get(term, {}).get(lang), _value_en)
+                            if values.get(lang, None) != new_val:
+                                changed_values[lang] = new_val
+                            if f'_{lang}' in values:
+                                changed_values[f'_{lang}'] = None
+                        if changed_values:
+                            params.extend((id_, Json(changed_values)))
                     if params:
                         env.cr.execute(f"""
                             UPDATE "{model_table}" AS m
-                            SET "{field_name}" =  t.value
+                            SET "{field_name}" = jsonb_strip_nulls("{field_name}" || t.value)
                             FROM (
                                 VALUES {', '.join(['(%s, %s::jsonb)'] * (len(params) // 2))}
                             ) AS t(id, value)

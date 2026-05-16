@@ -63,7 +63,7 @@ class CheckUyVat(AccountTestInvoicingCommon):
             self._create_partner("it_nie", "ABC 93:402. asas 010-1")
 
     def test_invalid_rut(self):
-        common_msg = "The VAT number.*does not seem to be valid."
+        common_msg = "The RUT number.*does not seem to be valid."
         with self.assertRaisesRegex(ValidationError, common_msg, msg="invalid number"):
             self._create_partner("it_rut", "215521750018")
         with self.assertRaisesRegex(ValidationError, common_msg, msg="do not accept dot ('.') character"):

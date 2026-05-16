@@ -31,7 +31,7 @@ class TestTokenSyncResolution(TransactionCase):
 
     def test_peppol_out_of_sync_detection(self):
         def fake_call(endpoint, params=None, auth_type=None):
-            if endpoint.endswith('/api/peppol/2/participant_status'):
+            if endpoint.endswith('/api/peppol/1/update_user'):
                 raise AccountEdiProxyError('invalid_signature')
             return {}
 
@@ -41,6 +41,7 @@ class TestTokenSyncResolution(TransactionCase):
             'odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user.Account_Edi_Proxy_ClientUser._make_request',
             side_effect=fake_call
         ), self.assertRaises(UserError) as e:
-            self.user._peppol_get_participant_status()
+            settings = self.env['res.config.settings'].create({})
+            settings.account_peppol_contact_email = 'a@a.com'  # triggers the inverse to update the mail
 
         self.assertIn("please go to Settings > Accounting > Peppol Settings and click on 'Reconnect this database'", e.exception.args[0])

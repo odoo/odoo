@@ -3,13 +3,14 @@
 # * marketing_card
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Junko Augias (juau)" <juau@odoo.com>, 2025.
+# "Junko Augias (juau)" <juau@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:37+0000\n"
-"PO-Revision-Date: 2025-10-27 02:31+0000\n"
+"POT-Creation-Date: 2026-01-25 18:35+0000\n"
+"PO-Revision-Date: 2026-05-02 09:35+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/"
 "marketing_card/ja/>\n"
@@ -18,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: marketing_card
 #. odoo-python
@@ -113,7 +114,7 @@ msgstr "要アクション"
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__active
 #: model:ir.model.fields,field_description:marketing_card.field_card_card__active
 msgid "Active"
-msgstr "アクティブ"
+msgstr "有効"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__activity_ids
@@ -128,12 +129,22 @@ msgstr "例外の活動を示す装飾"
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__activity_state
 msgid "Activity State"
-msgstr "活動状態"
+msgstr "活動ステータス"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__activity_type_icon
 msgid "Activity Type Icon"
-msgstr "活動種別アイコン"
+msgstr "活動タイプアイコン"
+
+#. module: marketing_card
+#. odoo-python
+#: code:addons/marketing_card/models/card_campaign.py:0
+msgid ""
+"An error occured while rendering a card for %(record_name)s. Try again or "
+"check the server logs for more details."
+msgstr ""
+"%(record_name)s のカードを表示中にエラーが発生しました。もう一度お試しいただ"
+"くか、詳細はサーバログをご確認ください。"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.card_campaign_view_form
@@ -227,7 +238,7 @@ msgstr "カードレイアウト"
 #. odoo-python
 #: code:addons/marketing_card/models/card_campaign.py:0
 msgid "Card Preview"
-msgstr ""
+msgstr "カードプレビュー"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_mailing_mailing__card_requires_sync_count
@@ -271,6 +282,11 @@ msgid "Color"
 msgstr "色"
 
 #. module: marketing_card
+#: model_terms:ir.ui.view,arch_db:marketing_card.mailing_mailing_view_form_inherit_marketing_card
+msgid "Confirm Cards Update"
+msgstr "カード更新を確定"
+
+#. module: marketing_card
 #: model_terms:ir.actions.act_window,help:marketing_card.cards_card_action
 msgid "Create a Card Campaign to send cards to your partners"
 msgstr "取引先にカードを送るカードキャンペーンの作成"
@@ -304,7 +320,7 @@ msgstr "作成日"
 #. module: marketing_card
 #: model:card.template,name:marketing_card.card_template_dark
 msgid "Dark"
-msgstr "暗い"
+msgstr "ダーク"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_template__default_background
@@ -407,7 +423,7 @@ msgstr "ヘッダパス"
 #. odoo-python
 #: code:addons/marketing_card/models/card_campaign.py:0
 msgid "Hello everyone"
-msgstr ""
+msgstr "こんにちは"
 
 #. module: marketing_card
 #. odoo-python
@@ -419,7 +435,7 @@ msgstr "ニュースを共有して下さい"
 #. odoo-python
 #: code:addons/marketing_card/models/card_campaign.py:0
 msgid "Here's the link to advertise your participation."
-msgstr ""
+msgstr "こちらが、参加を告知するためのリンクです。"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__id
@@ -452,7 +468,7 @@ msgstr "チェックした場合は、新しいメッセージに注意が必要
 #: model:ir.model.fields,help:marketing_card.field_card_campaign__message_has_error
 #: model:ir.model.fields,help:marketing_card.field_card_campaign__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr "選択されている場合、一部のメッセージで配信エラーが発生しています。"
+msgstr "有効にすると、一部のメッセージに配信エラーが発生します。"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_card__image
@@ -554,7 +570,7 @@ msgstr "メール配信数"
 #. odoo-python
 #: code:addons/marketing_card/models/card_campaign.py:0
 msgid "Many thanks"
-msgstr ""
+msgstr "ありがとうございます"
 
 #. module: marketing_card
 #: model:ir.model,name:marketing_card.model_card_card
@@ -622,7 +638,7 @@ msgstr ""
 #. module: marketing_card
 #: model:ir.model,name:marketing_card.model_ir_model
 msgid "Models"
-msgstr ""
+msgstr "モデル"
 
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__my_activity_date_deadline
@@ -704,6 +720,9 @@ msgid ""
 "usually be a placeholder expression that provides the appropriate language, "
 "e.g. {{ object.partner_id.lang }}."
 msgstr ""
+"メール送信時に選択できる任意の翻訳言語(ISOコード)。未設定の場合は、関連する取"
+"引先の言語が使用されます。通常は、たとえば {{ object.partner_id.lang }} のよ"
+"うな、適切な言語を指定するプレースホルダー式を使用します。"
 
 #. module: marketing_card
 #: model:card.template,name:marketing_card.card_template_organic
@@ -829,7 +848,7 @@ msgstr "報酬リンク"
 #. module: marketing_card
 #: model:ir.model.fields,field_description:marketing_card.field_card_campaign__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr "SMS送信エラー"
+msgstr "SMS配信エラー"
 
 #. module: marketing_card
 #: model:card.template,name:marketing_card.card_template_safari
@@ -927,7 +946,7 @@ msgid ""
 "Planned: Future activities."
 msgstr ""
 "活動に基づくステータス\n"
-"遅延: 期限が既に過ぎています\n"
+"期限超過：期限日がすでに過ぎています\n"
 "今日: 活動日は今日です\n"
 "予定: 将来の活動。"
 
@@ -995,7 +1014,7 @@ msgstr ""
 #. module: marketing_card
 #: model:ir.model.fields,help:marketing_card.field_card_campaign__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "記録上の例外活動の種類。"
+msgstr "レコード上の例外の活動タイプ。"
 
 #. module: marketing_card
 #: model:ir.model,name:marketing_card.model_utm_source
@@ -1061,7 +1080,7 @@ msgstr "あなたのホームページ"
 #. odoo-python
 #: code:addons/marketing_card/models/card_campaign.py:0
 msgid "Your help with this promotion would be greatly appreciated!"
-msgstr ""
+msgstr "このプロモーションへのご協力に心より感謝いたします!"
 
 #. module: marketing_card
 #: model_terms:ir.ui.view,arch_db:marketing_card.template_2

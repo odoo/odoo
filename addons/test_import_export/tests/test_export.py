@@ -703,3 +703,64 @@ class TestGroupedExport(XlsxCreatorCase):
                 ['5', '8'],
             ],
         )
+
+    def test_groupby_properties_type_field(self):
+        """Test that exporting works for record grouped by a property field."""
+
+        property_def = [{'name': 'date', 'type': 'date', 'string': 'Date', 'default': '2025-11-11'}]
+        record = self.env['export.aggregator'].create({'definition_properties': property_def})
+        values = [
+            {'int_sum': 10, 'properties': {'date': '2025-11-09'}, 'parent_id': record.id, 'float_min': 86.8},
+            {'int_sum': 10, 'properties': {'date': '2025-11-12'}, 'parent_id': record.id, 'float_min': 82.8},
+            {'int_sum': 10, 'properties': {'date': '2025-09-09'}, 'parent_id': record.id, 'float_min': 20.8},
+        ]
+        self.make(values)
+        export = self.export(
+            fields=['int_sum', 'properties'],
+            params={
+                'groupby': ['properties.date:month'],
+                'domain': [('int_sum', '=', 10)],
+            },
+        )
+
+        self.assertExportEqual(export, [
+            ['Int Sum', 'Properties'],
+            ['September 2025 (1)', ''],
+            ['10', "{'date': '2025-09-09'}"],
+            ['November 2025 (2)', ''],
+            ['10', "{'date': '2025-11-09'}"],
+            ['10', "{'date': '2025-11-12'}"],
+        ])
+
+    def test_groupby_avg_empty_group(self):
+        """
+        Test that exporting a grouped view does not crash
+        when encountering an empty group.
+        """
+        self.make({'date_max': '2026-01-01', 'float_avg': 100.0})
+
+        # Sepcify min_groups which sets the number of groups in the view
+        export = self.export(
+            fields=['float_avg'],
+            params={
+                'groupby': ['date_max:month'],
+                'context': {
+                    'fill_temporal': {
+                        'min_groups': 4,
+                        'fill_from': '2026-01-01',
+                    }
+                }
+            }
+        )
+
+        self.assertExportEqual(
+            export,
+            [
+                ['Float Avg'],
+                ['January 2026 (1)'],
+                ['100.00'],
+                ['February 2026 (0)'],
+                ['March 2026 (0)'],
+                ['April 2026 (0)'],
+            ],
+        )

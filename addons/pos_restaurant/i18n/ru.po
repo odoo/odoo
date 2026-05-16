@@ -4,13 +4,15 @@
 #
 # Translators:
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Anastasiia Koroleva (koan)" <koan@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:36+0000\n"
-"PO-Revision-Date: 2025-09-16 02:30+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2026-04-10 18:37+0000\n"
+"PO-Revision-Date: 2026-05-05 12:54+0000\n"
+"Last-Translator: \"Anastasiia Koroleva (koan)\" <koan@odoo.com>\n"
 "Language-Team: Russian <https://translate.odoo.com/projects/odoo-19/"
 "pos_restaurant/ru/>\n"
 "Language: ru\n"
@@ -20,19 +22,31 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || "
 "(n%100>=11 && n%100<=14)? 2 : 3);\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.17\n"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/services/pos_store.js:0
+msgid " and $1"
+msgstr " и 1 $"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/split_bill_screen/split_bill_screen.xml:0
+msgid "% discount"
+msgstr "% скидка"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/services/pos_store.js:0
+msgid "%s, sent to the kitchen"
+msgstr "%s, отправлено на кухню"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/payment_screen/payment_screen.xml:0
 msgid "/ Guest"
 msgstr "/ Гость"
-
-#. module: pos_restaurant
-#. odoo-javascript
-#: code:addons/pos_restaurant/static/src/app/services/pos_store.js:0
-msgid "18:45 John 4P"
-msgstr "18:45 Джон, 4 чел."
 
 #. module: pos_restaurant
 #: model:product.template,description_sale:pos_restaurant.pos_food_cheeseburger_product_template
@@ -181,10 +195,11 @@ msgstr "Вы уверены?"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/product_screen/actionpad_widget/actionpad_widget.xml:0
 msgid "Assign"
-msgstr ""
+msgstr "Назначить"
 
 #. module: pos_restaurant
 #. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_screen.xml:0
 #: code:addons/pos_restaurant/static/src/app/screens/tip_screen/tip_screen.xml:0
 msgid "Back"
 msgstr "Назад"
@@ -341,28 +356,28 @@ msgstr "Космополитен"
 #: code:addons/pos_restaurant/static/src/app/screens/product_screen/actionpad_widget/actionpad_widget.xml:0
 #: code:addons/pos_restaurant/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
 msgid "Course"
-msgstr ""
+msgstr "Курс"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/services/pos_store.js:0
 msgid "Course %s fired"
-msgstr ""
+msgstr "Курс %s запущен"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_order_line__course_id
 msgid "Course Ref"
-msgstr ""
+msgstr "Арт. курса"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_order_course__index
 msgid "Course index"
-msgstr ""
+msgstr "Индекс курса"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_order__course_ids
 msgid "Courses"
-msgstr ""
+msgstr "Курсы"
 
 #. module: pos_restaurant
 #: model:product.template,description_sale:pos_restaurant.product_cosmopolitan_product_template
@@ -387,7 +402,7 @@ msgstr "Дата создания:"
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_config__default_screen
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_default_screen
 msgid "Default Screen"
-msgstr ""
+msgstr "Экран по умолчанию"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -404,7 +419,7 @@ msgstr "Ошибка при удалении"
 #. module: pos_restaurant
 #: model:pos.preset,name:pos_restaurant.pos_delivery_preset
 msgid "Delivery"
-msgstr ""
+msgstr "Доставка"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
@@ -414,17 +429,17 @@ msgstr "Создайте схему зала и назначайте заказ�
 #. module: pos_restaurant
 #: model:pos.preset,name:pos_restaurant.pos_takein_preset
 msgid "Dine In"
-msgstr ""
+msgstr "На месте"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/models/pos_order.js:0
 msgid "Direct Sale"
-msgstr ""
+msgstr "Прямая продажа"
 
 #. module: pos_restaurant
 #. odoo-javascript
-#: code:addons/pos_restaurant/static/src/app/utils/order_payment_validation.js:0
+#: code:addons/pos_restaurant/static/src/app/services/pos_store.js:0
 msgid "Discard"
 msgstr "Отменить"
 
@@ -455,7 +470,7 @@ msgstr "Предварительная печать чека"
 #. module: pos_restaurant
 #: model:ir.model,name:pos_restaurant.model_pos_preset
 msgid "Easily load a set of configuration options"
-msgstr ""
+msgstr "Быстрая загрузка набора настроек конфигурации"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -519,19 +534,19 @@ msgstr "Файл"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/product_screen/actionpad_widget/actionpad_widget.js:0
 msgid "Fire %s"
-msgstr ""
+msgstr "Запустить %s"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/components/order_course/order_course.xml:0
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_order_course__fired
 msgid "Fired"
-msgstr ""
+msgstr "Уволен"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_order_course__fired_date
 msgid "Fired Date"
-msgstr ""
+msgstr "Дата запуска"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__floor_id
@@ -603,6 +618,8 @@ msgstr "Для удобства предлагаются следующие ва
 #: model:ir.model.fields,help:pos_restaurant.field_pos_preset__use_guest
 msgid "Force guest selection when clicking on order button in PoS restaurant"
 msgstr ""
+"Обязательный выбор количества гостей при нажатии кнопки заказа в POS для "
+"ресторана"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.pos_food_funghi_product_template
@@ -627,7 +644,7 @@ msgstr "Овощи-гриль"
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_preset__use_guest
 msgid "Guest"
-msgstr ""
+msgstr "Гость"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -674,11 +691,11 @@ msgstr "В значении False – стол не будет доступен 
 
 #. module: pos_restaurant
 #. odoo-javascript
-#: code:addons/pos_restaurant/static/src/app/utils/order_payment_validation.js:0
+#: code:addons/pos_restaurant/static/src/app/services/pos_store.js:0
 msgid ""
 "It seems that the order has not been sent. Would you like to send it to "
 "preparation?"
-msgstr ""
+msgstr "Похоже, заказ не был отправлен. Отправить его на приготовление?"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -801,7 +818,7 @@ msgstr "Негрони"
 #: code:addons/pos_restaurant/static/src/app/screens/product_screen/actionpad_widget/actionpad_widget.xml:0
 #: code:addons/pos_restaurant/static/src/app/screens/product_screen/product_screen.xml:0
 msgid "New"
-msgstr ""
+msgstr "Новый"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -813,7 +830,7 @@ msgstr "Новый зал"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/floor_screen/floor_screen.xml:0
 msgid "New Order"
-msgstr ""
+msgstr "Новый заказ"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -865,30 +882,28 @@ msgstr "Открыть"
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.view_pos_preset_form_inherit_pos_restaurant
 msgid "Options"
-msgstr ""
+msgstr "Опции"
 
 #. module: pos_restaurant
 #. odoo-javascript
-#: code:addons/pos_restaurant/static/src/app/screens/product_screen/actionpad_widget/actionpad_widget.xml:0
-#: code:addons/pos_restaurant/static/src/app/screens/product_screen/product_screen.xml:0
-#: code:addons/pos_restaurant/static/src/app/utils/order_payment_validation.js:0
+#: code:addons/pos_restaurant/static/src/app/services/pos_store.js:0
 msgid "Order"
 msgstr "Заказ"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_order_course__line_ids
 msgid "Order Lines"
-msgstr ""
+msgstr "Позиции заказов"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_order_course__order_id
 msgid "Order Ref"
-msgstr ""
+msgstr "Заказ Ref"
 
 #. module: pos_restaurant
 #: model:ir.model,name:pos_restaurant.model_restaurant_order_course
 msgid "POS Restaurant Order Course"
-msgstr ""
+msgstr "Курс заказа (POS Ресторан)"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__parent_id
@@ -965,6 +980,9 @@ msgid ""
 "this floor.\n"
 "Open session: %(session_names)s"
 msgstr ""
+"Пожалуйста, закройте и подтвердите следующую открытую сессию POS перед "
+"изменением схемы зала.\n"
+"Открытая сессия: %(session_names)s"
 
 #. module: pos_restaurant
 #: model:ir.model,name:pos_restaurant.model_pos_config
@@ -1020,7 +1038,7 @@ msgstr "Картофель с тимьяном"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/receipt_screen/order_receipt/order_receipt.xml:0
 msgid "Pro forma receipt"
-msgstr ""
+msgstr "Счет-проформа"
 
 #. module: pos_restaurant
 #: model:product.template,description_sale:pos_restaurant.product_aperol_spritz_product_template
@@ -1030,7 +1048,7 @@ msgstr "Просекко, апероль, содовая"
 #. module: pos_restaurant
 #: model:ir.model.fields.selection,name:pos_restaurant.selection__pos_config__default_screen__register
 msgid "Register"
-msgstr ""
+msgstr "Регистрация"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1154,7 +1172,14 @@ msgstr "Выберите стол для переноса заказа"
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Select the table first or after registering the order"
-msgstr ""
+msgstr "Выбор стола до или после регистрации заказа"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/product_screen/actionpad_widget/actionpad_widget.xml:0
+#: code:addons/pos_restaurant/static/src/app/screens/product_screen/product_screen.xml:0
+msgid "Send"
+msgstr "Отправить"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__sequence
@@ -1165,13 +1190,13 @@ msgstr "Последовательность"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/product_screen/actionpad_widget/actionpad_widget.xml:0
 msgid "Set Tab"
-msgstr ""
+msgstr "Начать обслуживание"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/product_screen/actionpad_widget/actionpad_widget.xml:0
 msgid "Set Table"
-msgstr ""
+msgstr "Выбрать стол"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_config__set_tip_after_payment
@@ -1253,7 +1278,7 @@ msgstr "Промежуточный итог"
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.sushi_drink_combo_product_template
 msgid "Sushi Lunch Combo"
-msgstr ""
+msgstr "Комбо-ланч с суши"
 
 #. module: pos_restaurant
 #: model:product.attribute.value,name:pos_restaurant.pav_sides_sweet_potato
@@ -1303,7 +1328,7 @@ msgstr "Столы"
 #. module: pos_restaurant
 #: model:pos.preset,name:pos_restaurant.pos_takeout_preset
 msgid "Takeout"
-msgstr ""
+msgstr "Навынос"
 
 #. module: pos_restaurant
 #: model:product.template,description_sale:pos_restaurant.product_margarita_product_template
@@ -1431,7 +1456,7 @@ msgstr "Перевод"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/services/pos_store.js:0
 msgid "Transfer \"%s\" to:"
-msgstr ""
+msgstr "Перенести «%s» в:"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1443,13 +1468,13 @@ msgstr "Перенести / Объединить"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/services/pos_store.js:0
 msgid "Transfer all products of \"%s\" into:"
-msgstr ""
+msgstr "Перенести все товары из «%s» в:"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/product_screen/control_buttons/control_buttons.xml:0
 msgid "Transfer course"
-msgstr ""
+msgstr "Перенести курс"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1472,7 +1497,7 @@ msgstr "Имя пользователя"
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_order_course__uuid
 msgid "Uuid"
-msgstr ""
+msgstr "Uuid"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__position_v
@@ -1486,9 +1511,9 @@ msgstr "Водка 42 Below, лайм, сахар и имбирный эль"
 
 #. module: pos_restaurant
 #. odoo-javascript
-#: code:addons/pos_restaurant/static/src/app/utils/order_payment_validation.js:0
+#: code:addons/pos_restaurant/static/src/app/services/pos_store.js:0
 msgid "Warning !"
-msgstr ""
+msgstr "Внимание!"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.water_product_template
@@ -1522,9 +1547,15 @@ msgstr "Ширина"
 
 #. module: pos_restaurant
 #. odoo-javascript
+#: code:addons/pos_restaurant/static/src/app/screens/split_bill_screen/split_bill_screen.xml:0
+msgid "With"
+msgstr "С"
+
+#. module: pos_restaurant
+#. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/services/pos_store.js:0
 msgid "You are currently transferring the order %s"
-msgstr ""
+msgstr "Вы переносите заказ %s"
 
 #. module: pos_restaurant
 #. odoo-python
@@ -1556,7 +1587,7 @@ msgstr "Нельзя удалить стол, если по нему есть ч
 #. odoo-python
 #: code:addons/pos_restaurant/models/pos_preset.py:0
 msgid "You cannot delete the master preset(s)."
-msgstr ""
+msgstr "Нельзя удалить основной пресет(ы)."
 
 #. module: pos_restaurant
 #. odoo-python
@@ -1582,19 +1613,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/services/pos_store.js:0
 msgid "You cannot transfer an order to itself"
-msgstr ""
+msgstr "Заказ нельзя перенести на тот же стол"
 
 #. module: pos_restaurant
 #. odoo-javascript
-#: code:addons/pos_restaurant/static/src/app/components/tip_receipt/tip_receipt.xml:0
-msgid "________________________"
-msgstr "________________________"
-
-#. module: pos_restaurant
-#. odoo-javascript
-#: code:addons/pos_restaurant/static/src/app/components/tip_receipt/tip_receipt.xml:0
-msgid "______________________________________________"
-msgstr "______________________________________________"
+#: code:addons/pos_restaurant/static/src/app/services/pos_store.js:0
+msgid "e.g. John"
+msgstr "напр. Джон"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1606,7 +1631,16 @@ msgstr "позиции"
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/app/screens/split_bill_screen/split_bill_screen.xml:0
 msgid "product(s) selected"
-msgstr ""
+msgstr "товаров выбрано"
+
+#~ msgid "________________________"
+#~ msgstr "________________________"
+
+#~ msgid "______________________________________________"
+#~ msgstr "______________________________________________"
+
+#~ msgid "18:45 John 4P"
+#~ msgstr "18:45 Джон, 4 чел."
 
 #~ msgid "<strong>Point of Sales: </strong>"
 #~ msgstr "<strong>Точка продаж: </strong>"

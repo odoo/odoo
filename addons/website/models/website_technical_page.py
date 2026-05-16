@@ -42,11 +42,14 @@ class WebsiteTechnicalPage(models.Model):
     @property
     def _table_query(self):
         routes = self.get_static_routes()
-        values = ", ".join(str(route) for route in routes)
+        values = SQL(", ").join(
+            SQL('(%s, %s)', route_title, route_path)
+            for route_title, route_path in routes
+        )
 
         return SQL("""
             SELECT row_number() OVER () AS id,
                 column1 AS name,
                 column2 AS website_url
             FROM (VALUES %s) AS t(column1, column2)
-        """ % values)
+        """, values)

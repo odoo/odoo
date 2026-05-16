@@ -181,7 +181,7 @@
                                 <t t-set="_form_classes" t-valuef="d-flex flex-row align-items-center flex-wrap float-end"/>
                                 <t t-set="search_type" t-valuef="forums"/>
                                 <t t-set="action" t-value="'/forum/%s%s' % (forum_id or 'all', '/tag/%s/questions' % slug(tag) if tag else '')"/>
-                                <t t-set="display_description" t-value="true"/>
+                                <t t-set="display_description" t-valuef="false"/>
                                 <t t-set="display_detail" t-valuef="false"/>
                                 <t t-set="placeholder" t-valuef="Search Posts..."/>
                                 <input type="hidden" name="my" value="upvoted"/>

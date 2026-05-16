@@ -49,7 +49,7 @@ export class PurchaseStockProductCatalogSearchModel extends AccountProductCatalo
      */
     async _fetchSections() {
         this._editSuggestContext();
-        super._fetchSections(...arguments);
+        await super._fetchSections(...arguments);
     }
 
     /**
@@ -125,7 +125,7 @@ export class PurchaseStockProductCatalogSearchModel extends AccountProductCatalo
             suggest_based_on: this.suggest.basedOn,
             suggest_days: this.suggest.numberOfDays,
             suggest_percent: this.suggest.percentFactor,
-            sectionId: this.selectedSection.sectionId ?? false,
+            section_id: this.selectedSection.sectionId ?? false,
         };
         if (!this.suggest.suggestToggle.isOn) {
             for (const k of new Set([...Object.keys(suggestContext)])) {

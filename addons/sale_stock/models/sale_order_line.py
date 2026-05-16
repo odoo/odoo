@@ -5,7 +5,7 @@ from collections import defaultdict
 
 from odoo import api, fields, models, _
 from odoo.fields import Domain
-from odoo.tools import float_compare
+from odoo.tools import float_compare, float_is_zero
 from odoo.exceptions import UserError
 
 
@@ -213,6 +213,32 @@ class SaleOrderLine(models.Model):
                 delivered_qties[line] = qty
         return delivered_qties
 
+    def _compute_invoice_status(self):
+        def check_moves_state(moves):
+            # All moves states are either 'done' or 'cancel', and there is at least one 'done'
+            at_least_one_done = False
+            for move in moves:
+                if move.state not in ['done', 'cancel']:
+                    return False
+                at_least_one_done = at_least_one_done or move.state == 'done'
+            return at_least_one_done
+        super()._compute_invoice_status()
+        for line in self:
+            # We handle the following specific situation: a physical product is partially delivered,
+            # but we would like to set its invoice status to 'Fully Invoiced'. The use case is for
+            # products sold by weight, where the delivered quantity rarely matches exactly the
+            # quantity ordered.
+            if (
+                line.state == 'sale'
+                and line.invoice_status == 'no'
+                and line.product_id.type in ['consu', 'product']
+                and line.product_id.invoice_policy == 'delivery'
+                and line.move_ids
+                and check_moves_state(line.move_ids)
+                and not float_is_zero(line.qty_delivered, precision_rounding=line.product_uom_id.rounding)
+            ):
+                line.invoice_status = 'invoiced'
+
     @api.model_create_multi
     def create(self, vals_list):
         lines = super().create(vals_list)
@@ -310,7 +336,7 @@ class SaleOrderLine(models.Model):
             triggering_rule_ids = []
             seen_wh_ids = set()
             for move in sorted_moves:
-                if move.warehouse_id.id not in seen_wh_ids:
+                if move.warehouse_id.id not in seen_wh_ids and move.rule_id:
                     triggering_rule_ids.append(move.rule_id.id)
                     seen_wh_ids.add(move.warehouse_id.id)
         if self.env.context.get('accrual_entry_date'):
@@ -325,7 +351,11 @@ class SaleOrderLine(models.Model):
             )):
                 if not move.origin_returned_move_id or (move.origin_returned_move_id and move.to_refund):
                     outgoing_moves_ids.add(move.id)
-            elif (move._is_incoming() or move.location_id._is_outgoing()) and move.to_refund:
+            elif move.to_refund and (
+                (strict and move._is_incoming() or move.location_id._is_outgoing()) or (
+                not strict and move.rule_id.id in triggering_rule_ids and
+                (move.location_final_id or move.location_dest_id).usage == 'internal'
+            )):
                 incoming_moves_ids.add(move.id)
 
         return self.env['stock.move'].browse(outgoing_moves_ids), self.env['stock.move'].browse(incoming_moves_ids)
@@ -420,3 +450,9 @@ class SaleOrderLine(models.Model):
             )
         )
         return res
+
+    def has_valued_move_ids(self):
+        return (
+            any(move.state not in ('cancel', 'draft') for move in self.move_ids)
+            or super().has_valued_move_ids()  # TODO: remove in master
+        )

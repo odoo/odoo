@@ -1,16 +1,17 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo.addons.account.tests.common import AccountTestInvoicingCommon
-from odoo.tests import tagged, Form
-from odoo import Command, fields
-from odoo.exceptions import UserError
-from odoo.tools import mute_logger
-
 
 from datetime import timedelta
+
 from freezegun import freeze_time
-from psycopg2.errors import ForeignKeyViolation
-import pytz
+from psycopg2.errors import IntegrityError
+from pytz import timezone
+
+from odoo import Command, fields
+from odoo.exceptions import UserError
+from odoo.tests import Form, tagged
+from odoo.tools import mute_logger
+
+from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 
 
 @tagged('-at_install', 'post_install')
@@ -155,7 +156,7 @@ class TestPurchase(AccountTestInvoicingCommon):
 
         # check date_planned is correctly set
         self.assertEqual(po.date_planned, date_planned)
-        po_tz = pytz.timezone(po.user_id.tz)
+        po_tz = timezone(po.user_id.tz)
         localized_date_planned = po.date_planned.astimezone(po_tz)
         self.assertEqual(localized_date_planned, po.get_localized_date_planned())
         # Ensure that the function get_localized_date_planned can accept a date in string format
@@ -874,7 +875,10 @@ class TestPurchase(AccountTestInvoicingCommon):
         """Test warnings when partner/products with purchase warnings are used."""
         partner_with_warning = self.env['res.partner'].create({
             'name': 'Test Partner', 'purchase_warn_msg': 'Highly infectious disease'})
+        child_partner = self.env['res.partner'].create({
+            'type': 'invoice', 'parent_id': partner_with_warning.id, 'purchase_warn_msg': 'Slightly infectious disease'})
         purchase_order = self.env['purchase.order'].create({'partner_id': partner_with_warning.id})
+        purchase_order2 = self.env['purchase.order'].create({'partner_id': child_partner.id})
 
         product_with_warning1 = self.env['product.product'].create({
             'name': 'Test Product 1', 'purchase_line_warn_msg': 'Highly corrosive'})
@@ -894,12 +898,33 @@ class TestPurchase(AccountTestInvoicingCommon):
                 'order_id': purchase_order.id,
                 'product_id': product_with_warning1.id,
             },
+            {
+                'order_id': purchase_order2.id,
+                'product_id': product_with_warning2.id,
+            },
         ])
+        group_warning_purchase = self.env.ref('purchase.group_warning_purchase')
+        self.env.user.group_ids.implied_ids = [Command.link(group_warning_purchase.id)]
+        purchase_order2.button_confirm()
+        purchase_order2.action_create_invoice()
+        invoice = Form(purchase_order2.invoice_ids[0])
 
         expected_warnings = ('Test Partner - Highly infectious disease',
                              'Test Product 1 - Highly corrosive',
                              'Test Product 2 - Toxic pollutant')
+        expected_warnings_for_purchase_order2 = ('Test Partner, Invoice - Slightly infectious disease',
+                                                 'Test Partner - Highly infectious disease',
+                                                 'Test Product 2 - Toxic pollutant')
         self.assertEqual(purchase_order.purchase_warning_text, '\n'.join(expected_warnings))
+        self.assertEqual(purchase_order2.purchase_warning_text, '\n'.join(expected_warnings_for_purchase_order2))
+        self.assertEqual(invoice.purchase_warning_text, '\n'.join(expected_warnings_for_purchase_order2))
+
+        # without warning group, there should be no warning
+        self.env.user.group_ids.implied_ids = [Command.unlink(group_warning_purchase.id)]
+        self.assertEqual(purchase_order.purchase_warning_text, '')
+        self.assertEqual(purchase_order2.purchase_warning_text, '')
+        invoice = Form(purchase_order2.invoice_ids[0])
+        self.assertEqual(invoice.purchase_warning_text, '')
 
     def test_bill_in_purchase_matching_individual(self):
         """
@@ -933,6 +958,8 @@ class TestPurchase(AccountTestInvoicingCommon):
         self.env['purchase.order.line'].flush_model()
         result = vendor_bill.action_purchase_matching()
         matching_records = self.env['purchase.bill.line.match'].search(result['domain'])
+        result_bill_matching = purchase_order.action_bill_matching()
+        matching_records_from_po = self.env['purchase.bill.line.match'].search(result_bill_matching['domain'])
 
         # Ensure that calling `action_add_to_po()` on multiple records
         # does not raise a singleton ValueError when the vendor is an individual
@@ -942,6 +969,9 @@ class TestPurchase(AccountTestInvoicingCommon):
         self.assertEqual(len(matching_records), 2)
         self.assertEqual(matching_records.account_move_id, vendor_bill)
         self.assertEqual(matching_records.purchase_order_id, purchase_order)
+        self.assertEqual(len(matching_records_from_po), 2)
+        self.assertEqual(matching_records_from_po.account_move_id, vendor_bill)
+        self.assertEqual(matching_records_from_po.purchase_order_id, purchase_order)
 
     def test_purchase_suggest_qty(self):
         """
@@ -1043,6 +1073,48 @@ class TestPurchase(AccountTestInvoicingCommon):
         po.button_unlock()
         self.assertFalse(po.locked)
 
+    def test_purchase_order_mail_links_to_correct_website(self):
+        """Check that purchase order emails link to the order's company website."""
+        if 'website_id' not in self.env.company:
+            self.skipTest("The `website` module is required to support multiple company websites.")
+
+        company1 = self.company_data['company']
+        company2 = self.company_data_2['company']
+        companies = company1 + company2
+        companies.website_id = None
+        self.env['website'].create([{
+            'name': f"{company.name}'s Website",
+            'domain': f"http://website{company.id}.example.com",
+            'company_id': company.id,
+        } for company in companies])
+        self.assertEqual(len(companies.website_id), 2)
+
+        rfq = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'company_id': company2.id,
+            'order_line': [Command.create({'product_id': self.product_a.id})],
+        })
+
+        email_ctx = rfq.action_rfq_send().get('context', {})
+        mail_template = self.env['mail.template'].browse(email_ctx.get('default_template_id'))
+        mail_template.auto_delete = False
+
+        message = rfq.with_context(**email_ctx).message_post_with_source(
+            mail_template, subtype_xmlid='mail.mt_comment',
+        )
+        self.assertIn(
+            company2.website_id.domain, message.mail_ids.body_html,
+            "Mail should link to the website of the order's company",
+        )
+        self.assertNotIn(
+            company1.website_id.domain, message.mail_ids.body_html,
+            "Mail shouldn't link to the website of the first company",
+        )
+        self.assertNotIn(
+            self.env['base'].get_base_url(), message.mail_ids.body_html,
+            "Mail shouldn't link to the base URL",
+        )
+
     def test_action_view_po_when_product_template_archived(self):
         """
         Test to ensure that the purchased_product_qty value remains the same
@@ -1126,7 +1198,164 @@ class TestPurchase(AccountTestInvoicingCommon):
                 })],
         })
 
-        with (self.assertRaises(ForeignKeyViolation), self.cr.savepoint(), mute_logger("odoo.sql_db")):
+        with (self.assertRaises(IntegrityError), self.cr.savepoint(), mute_logger("odoo.sql_db")):
             uom_test.unlink()
 
         self.assertEqual(po.order_line[0].product_uom_id, uom_test)
+
+    def test_locked_purchase_order_cannot_cancel(self):
+        """Test that a locked purchase order cannot be cancelled.
+        A purchase order must be unlocked before it can be cancelled.
+        """
+        po = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+        })
+        po.button_confirm()
+        self.assertFalse(po.locked)
+        # Lock the purchase order.
+        po.button_lock()
+        self.assertTrue(po.locked, "The purchase order should be locked.")
+
+        # Try to cancel the locked PO, should raise a UserError.
+        with self.assertRaises(UserError):
+            po.button_cancel()
+
+        # Unlock the PO and then cancel it, should succeed.
+        po.button_unlock()
+        po.button_cancel()
+        self.assertEqual(po.state, 'cancel', "The purchase order should be cancelled.")
+
+    def test_orderline_description_change_on_partner_change(self):
+        """Test that The Vendor Code and/or Vendor Name does change correctly in the product description when changing the partner"""
+        supplierinfo_vals = {
+            'min_qty': 1,
+            'product_id': self.product_a.id,
+            'product_tmpl_id': self.product_a.product_tmpl_id.id,
+        }
+
+        self.env["product.supplierinfo"].create([
+            {
+                **supplierinfo_vals,
+                'price': 10,
+                'product_name': 'Name 1',
+                'product_code': 'Code 1',
+                'partner_id': self.partner_a.id,
+            },
+            {
+                **supplierinfo_vals,
+                'price': 20,
+                'product_name': 'Name 2',
+                'product_code': 'Code 2',
+                'partner_id': self.partner_b.id,
+            },
+            {
+                **supplierinfo_vals,
+                'price': 15,
+                'partner_id': self.partner.id,
+            }
+        ])
+
+        partner_c = self.env['res.partner'].create({'name': 'Partner not in sellers'})
+
+        custom_desc = "This is a custom description that should not be touched"
+        po = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                    'product_id': self.product_a.id,
+                    'product_qty': 1,
+                    'name': "[Code 1] Name 1\nSome Variant: Some Value: Some Text"
+                }), Command.create({
+                    'product_id': self.product_a.id,
+                    'product_qty': 1,
+                }), Command.create({
+                    'product_id': self.product_a.id,
+                    'product_qty': 1,
+                    'name': custom_desc
+                })
+            ],
+        })
+
+        self.assertEqual(po.order_line[0].name, "[Code 1] Name 1\nSome Variant: Some Value: Some Text")
+        self.assertEqual(po.order_line[1].name, "[Code 1] Name 1")
+        self.assertEqual(po.order_line[2].name, custom_desc)
+        po.partner_id = self.partner.id
+        self.assertEqual(po.order_line[0].name, "product_a\nSome Variant: Some Value: Some Text")
+        self.assertEqual(po.order_line[1].name, "product_a")
+        self.assertEqual(po.order_line[2].name, custom_desc)
+        po.partner_id = self.partner_b.id
+        self.assertEqual(po.order_line[0].name, "[Code 2] Name 2\nSome Variant: Some Value: Some Text")
+        self.assertEqual(po.order_line[1].name, "[Code 2] Name 2")
+        self.assertEqual(po.order_line[2].name, custom_desc)
+        po.partner_id = partner_c.id
+        self.assertEqual(po.order_line[0].name, "product_a\nSome Variant: Some Value: Some Text")
+        self.assertEqual(po.order_line[1].name, "product_a")
+        self.assertEqual(po.order_line[2].name, custom_desc)
+        po.partner_id = self.partner_a.id
+        self.assertEqual(po.order_line[0].name, "[Code 1] Name 1\nSome Variant: Some Value: Some Text")
+        self.assertEqual(po.order_line[1].name, "[Code 1] Name 1")
+        self.assertEqual(po.order_line[2].name, custom_desc)
+
+    def test_supplier_info_uom_on_variant(self):
+        """Test that supplier info defined on a variant with a specific UoM is correctly applied on the purchase order line.
+        Test also other variant for the same template cannot use the uom."""
+        self.env.user.group_ids += self.env.ref('uom.group_uom')
+
+        # Create a product template with two variants (Color: Red / Blue)
+        color_attribute = self.env['product.attribute'].create({'name': 'Color'})
+        color_red = self.env['product.attribute.value'].create({
+            'name': 'Red',
+            'attribute_id': color_attribute.id,
+        })
+        color_blue = self.env['product.attribute.value'].create({
+            'name': 'Blue',
+            'attribute_id': color_attribute.id,
+        })
+        product_template = self.env['product.template'].create({
+            'name': 'Colored Widget',
+            'type': 'consu',
+            'uom_id': self.uom_unit.id,
+            'attribute_line_ids': [Command.create({
+                'attribute_id': color_attribute.id,
+                'value_ids': [Command.set([color_red.id, color_blue.id])],
+            })],
+        })
+        variant_red = product_template.product_variant_ids.filtered(
+            lambda v: color_red in v.product_template_attribute_value_ids.product_attribute_value_id
+        )
+        variant_blue = product_template.product_variant_ids.filtered(
+            lambda v: color_blue in v.product_template_attribute_value_ids.product_attribute_value_id
+        )
+
+        # Create a supplier info specific to the Red variant with uom_dozens
+        self.env['product.supplierinfo'].create({
+            'partner_id': self.partner_a.id,
+            'product_tmpl_id': product_template.id,
+            'product_id': variant_red.id,
+            'product_uom_id': self.uom_dozen.id,
+            'min_qty': 1,
+            'price': 120,
+        })
+
+        # For the Red variant: the supplier info UoM (dozens) should be selected
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = self.partner_a
+        with po_form.order_line.new() as line:
+            line.product_id = variant_red
+        po = po_form.save()
+        po_line_red = po.order_line
+        self.assertEqual(po_line_red.product_uom_id, self.uom_dozen,
+            "The UoM of the PO line for the Red variant should match the supplier info UoM (dozens).")
+        self.assertEqual(po_line_red.price_unit, 120,
+            "The price from the supplier info should be applied on the Red variant PO line.")
+
+        # For the Blue variant: the supplier info UoM (dozens) must not be available since it is tied to Red
+        po_form2 = Form(self.env['purchase.order'])
+        po_form2.partner_id = self.partner_a
+        with po_form2.order_line.new() as line:
+            line.product_id = variant_blue
+        po2 = po_form2.save()
+        po_line_blue = po2.order_line
+        self.assertNotEqual(po_line_blue.product_uom_id, self.uom_dozen,
+            "The UoM of the PO line for the Blue variant should not be the supplier info UoM (dozens) tied to Red.")
+        self.assertNotIn(self.uom_dozen, po_line_blue.allowed_uom_ids,
+            "The dozens UoM should not be allowed for the Blue variant since the supplier info is specific to Red.")

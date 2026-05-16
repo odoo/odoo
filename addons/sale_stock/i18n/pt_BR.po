@@ -7,12 +7,13 @@
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # "Maitê Dietze (madi)" <madi@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:39+0000\n"
-"PO-Revision-Date: 2025-10-03 02:31+0000\n"
+"POT-Creation-Date: 2026-02-13 18:36+0000\n"
+"PO-Revision-Date: 2025-12-12 15:40+0000\n"
 "Last-Translator: \"Maitê Dietze (madi)\" <madi@odoo.com>\n"
 "Language-Team: Portuguese (Brazil) <https://translate.odoo.com/projects/"
 "odoo-19/sale_stock/pt_BR/>\n"
@@ -22,7 +23,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : ((n != 0 && n % "
 "1000000 == 0) ? 1 : 2);\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
@@ -120,6 +121,11 @@ msgstr ""
 "- Planilha de horas: a quantidade é a soma das horas registradas nas tarefas "
 "vinculadas a essa linha de venda\n"
 "- Movimentações de estoque: a quantidade vem de separações confirmadas\n"
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_account_accrued_orders_wizard
+msgid "Accrued Orders Wizard"
+msgstr "Assistente de pedidos de provisão"
 
 #. module: sale_stock
 #. odoo-javascript
@@ -236,6 +242,7 @@ msgstr ""
 "pedido."
 
 #. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_account_accrued_orders_wizard__display_name
 #: model:ir.model.fields,field_description:sale_stock.field_account_move__display_name
 #: model:ir.model.fields,field_description:sale_stock.field_account_move_line__display_name
 #: model:ir.model.fields,field_description:sale_stock.field_product_template__display_name
@@ -246,7 +253,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__display_name
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__display_name
 #: model:ir.model.fields,field_description:sale_stock.field_sale_report__display_name
-#: model:ir.model.fields,field_description:sale_stock.field_stock_account_stock_valuation_report__display_name
 #: model:ir.model.fields,field_description:sale_stock.field_stock_forecasted_product_product__display_name
 #: model:ir.model.fields,field_description:sale_stock.field_stock_lot__display_name
 #: model:ir.model.fields,field_description:sale_stock.field_stock_move__display_name
@@ -334,7 +340,7 @@ msgstr "Totalmente entregue"
 #. odoo-javascript
 #: code:addons/sale_stock/static/src/stock_valuation/stock_valuation_report.js:0
 msgid "Goods Delivered Not Invoiced"
-msgstr ""
+msgstr "Mercadorias entregues não faturadas"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__show_json_popover
@@ -342,6 +348,7 @@ msgid "Has late picking"
 msgstr "Tem separação atrasada"
 
 #. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_account_accrued_orders_wizard__id
 #: model:ir.model.fields,field_description:sale_stock.field_account_move__id
 #: model:ir.model.fields,field_description:sale_stock.field_account_move_line__id
 #: model:ir.model.fields,field_description:sale_stock.field_product_template__id
@@ -352,7 +359,6 @@ msgstr "Tem separação atrasada"
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__id
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__id
 #: model:ir.model.fields,field_description:sale_stock.field_sale_report__id
-#: model:ir.model.fields,field_description:sale_stock.field_stock_account_stock_valuation_report__id
 #: model:ir.model.fields,field_description:sale_stock.field_stock_forecasted_product_product__id
 #: model:ir.model.fields,field_description:sale_stock.field_stock_lot__id
 #: model:ir.model.fields,field_description:sale_stock.field_stock_move__id
@@ -511,7 +517,7 @@ msgstr "Sem disponibilidade futura"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.portal_my_orders
 msgid "Not Available"
-msgstr ""
+msgstr "Não disponível"
 
 #. module: sale_stock
 #: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__delivery_status__pending
@@ -596,12 +602,12 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_reference
 msgid "Reference between stock documents"
-msgstr ""
+msgstr "Referência entre documentos de estoque"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__stock_reference_ids
 msgid "References"
-msgstr ""
+msgstr "Referências"
 
 #. module: sale_stock
 #. odoo-javascript
@@ -656,7 +662,7 @@ msgstr "Contagem de pedidos de venda"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_reference__sale_ids
 msgid "Sales"
-msgstr ""
+msgstr "Vendas"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_report
@@ -733,7 +739,7 @@ msgstr "Política de envio"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.portal_my_orders
 msgid "Shipping Status"
-msgstr ""
+msgstr "Status da remessa"
 
 #. module: sale_stock
 #: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__delivery_status__started
@@ -766,11 +772,6 @@ msgstr "Regra de estoque"
 #: model:ir.model,name:sale_stock.model_stock_rules_report
 msgid "Stock Rules report"
 msgstr "Relatório de regras de estoque"
-
-#. module: sale_stock
-#: model:ir.model,name:sale_stock.model_stock_account_stock_valuation_report
-msgid "Stock Valuation"
-msgstr ""
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_report_stock_report_stock_rule
@@ -932,6 +933,9 @@ msgstr "processados em vez de"
 #: code:addons/sale_stock/static/src/xml/delay_alert.xml:0
 msgid "will be late."
 msgstr "vai atrasar."
+
+#~ msgid "Stock Valuation"
+#~ msgstr "Valoração de estoque"
 
 #~ msgid "<i class=\"fa fa-fw fa-clock-o\"/> <b>Preparation</b>"
 #~ msgstr "<i class=\"fa fa-fw fa-clock-o\"/> <b>Preparação</b>"

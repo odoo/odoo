@@ -1,5 +1,4 @@
 import { registry } from "@web/core/registry";
-import { browser } from "@web/core/browser/browser";
 import { stepUtils } from "@web_tour/tour_utils";
 
 function fillSelectMenu(inputID, search) {
@@ -49,18 +48,6 @@ registry.category("web_tour.tours").add('website_links_tour', {
         ...fillSelectMenu("channel-select-wrapper", mediumValue),
         ...fillSelectMenu("source-select-wrapper", sourceValue),
         {
-            content: "Copy tracker link",
-            trigger: '#btn_shorten_url',
-            run: function () {
-                // Patch and ignore write on clipboard in tour as we don't have permissions
-                const oldWriteText = browser.navigator.clipboard.writeText;
-                browser.navigator.clipboard.writeText = () => {
-                    console.info("Copy in clipboard ignored!");
-                };
-                browser.navigator.clipboard.writeText = oldWriteText;
-            },
-        },
-        {
             content: "Generate Link Tracker",
             trigger: "#btn_shorten_url",
             run: "click",
@@ -79,7 +66,7 @@ registry.category("web_tour.tours").add('website_links_tour', {
         },
         {
             content: "check that we landed on correct page with correct query strings",
-            trigger: ".s_title h1:contains(/^Contact us$/)",
+            trigger: ".s_title h1:text(Contact us)",
             run: function () {
                 const enc = c => encodeURIComponent(c).replace(/%20/g, '+');
                 const expectedUrl = `/contactus?utm_campaign=${enc(campaignValue)}&utm_source=${enc(sourceValue)}&utm_medium=${enc(mediumValue)}`;

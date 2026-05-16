@@ -35,13 +35,15 @@ registry.category("web_tour.tours").add("test_dblclick_event_from_calendar", {
         {
             content: "Change Scheduled End",
             trigger: "button#schedule_end_0",
-            run() {
-                const input = document.querySelector("button#schedule_end_0");
-                input.value = luxon.DateTime
-                    .fromFormat(input.value, "MM/dd/yyyy hh:mm:ss a")
+            run: "click",
+        },
+        {
+            trigger: "input#schedule_end_0",
+            async run({ edit, anchor }) {
+                const value = luxon.DateTime.fromFormat(anchor.value, "MM/dd/yyyy hh:mm:ss a")
                     .plus({ hours: 1 })
                     .toFormat("MM/dd/yyyy hh:mm:ss a");
-                input.dispatchEvent(new Event("change"));
+                await edit(value);
             },
         },
         {

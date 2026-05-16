@@ -4,13 +4,14 @@
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
-# "Marianna Ciofani (cima)" <cima@odoo.com>, 2025.
+# "Marianna Ciofani (cima)" <cima@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:38+0000\n"
-"PO-Revision-Date: 2025-10-15 16:45+0000\n"
+"POT-Creation-Date: 2026-04-10 18:38+0000\n"
+"PO-Revision-Date: 2026-04-14 08:57+0000\n"
 "Last-Translator: \"Marianna Ciofani (cima)\" <cima@odoo.com>\n"
 "Language-Team: Italian <https://translate.odoo.com/projects/odoo-19/"
 "html_builder/it/>\n"
@@ -18,9 +19,9 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == 0)"
-" ? 1 : 2);\n"
-"X-Generator: Weblate 5.12.2\n"
+"Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n != 0 && n % 1000000 == "
+"0) ? 1 : 2);\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: html_builder
 #. odoo-javascript
@@ -60,6 +61,22 @@ msgstr ""
 
 #. module: html_builder
 #. odoo-javascript
+#: code:addons/html_builder/static/src/plugins/shape/shape_selector.xml:0
+msgid "A"
+msgstr "A"
+
+#. module: html_builder
+#. odoo-javascript
+#: code:addons/html_builder/static/src/core/operation_plugin.js:0
+msgid ""
+"A technical issue occurred in the builder, you should save or discard your "
+"changes."
+msgstr ""
+"Si è verificato un problema tecnico nel builder, è necessario salvare o "
+"eliminare le modifiche apportate."
+
+#. module: html_builder
+#. odoo-javascript
 #: code:addons/html_builder/static/src/core/building_blocks/builder_list.js:0
 #: code:addons/html_builder/static/src/plugins/image/image_filter_option.xml:0
 msgid "Add"
@@ -67,7 +84,7 @@ msgstr "Aggiungi"
 
 #. module: html_builder
 #. odoo-javascript
-#: code:addons/html_builder/static/src/plugins/add_product_option.xml:0
+#: code:addons/html_builder/static/src/plugins/add_product_option.js:0
 msgid "Add Product"
 msgstr "Aggiungi prodotto"
 
@@ -237,8 +254,12 @@ msgstr "Alt tag"
 #. module: html_builder
 #. odoo-javascript
 #: code:addons/html_builder/static/src/core/anchor/anchor_plugin.js:0
-msgid "Anchor copied to clipboard%(br)sLink: %(anchorLink)s"
-msgstr "Ancoraggio copiato negli appunti %(br)sLink: %(anchorLink)s"
+msgid ""
+"Anchor copied to clipboard%(br)s%(open_span)sLink: %(anchor_link)s%"
+"(close_span)s"
+msgstr ""
+"Ancoraggio copiato negli appunti%(br)s%(open_span)sLink: %(anchor_link)s%"
+"(close_span)s"
 
 #. module: html_builder
 #. odoo-javascript
@@ -1668,6 +1689,16 @@ msgstr "Elementi invisibili"
 
 #. module: html_builder
 #. odoo-javascript
+#: code:addons/html_builder/static/src/core/version_error_plugin.js:0
+msgid ""
+"It might have caused problem during the editing. Please drag the new version "
+"from the snippet panel to update it."
+msgstr ""
+"Potrebbe aver causato problemi durante la modifica. Trascina la nuova "
+"versione dal pannello degli snippet per aggiornarla."
+
+#. module: html_builder
+#. odoo-javascript
 #: code:addons/html_builder/static/src/core/building_blocks/builder_list.js:0
 msgid "Item"
 msgstr "Voce"
@@ -1687,6 +1718,7 @@ msgstr "Labirinto"
 #. module: html_builder
 #. odoo-javascript
 #: code:addons/html_builder/static/src/plugins/rating_option.xml:0
+#: code:addons/html_builder/static/src/plugins/size_option.xml:0
 msgid "Large"
 msgstr "Grande"
 
@@ -1789,6 +1821,7 @@ msgstr "Media"
 #. module: html_builder
 #. odoo-javascript
 #: code:addons/html_builder/static/src/plugins/rating_option.xml:0
+#: code:addons/html_builder/static/src/plugins/size_option.xml:0
 msgid "Medium"
 msgstr "Medio"
 
@@ -2200,6 +2233,12 @@ msgstr "Rimuovi"
 
 #. module: html_builder
 #. odoo-javascript
+#: code:addons/html_builder/static/src/plugins/background_option/background_image.xml:0
+msgid "Remove image"
+msgstr "Rimuovi immagine"
+
+#. module: html_builder
+#. odoo-javascript
 #: code:addons/html_builder/static/src/sidebar/option_container.xml:0
 msgid "Remove this block"
 msgstr "Elimina questo blocco"
@@ -2272,6 +2311,12 @@ msgstr "Azzera"
 #: code:addons/html_builder/static/src/plugins/image/image_tool_option.xml:0
 msgid "Reset crop"
 msgstr "Ripristina ritaglio"
+
+#. module: html_builder
+#. odoo-javascript
+#: code:addons/html_builder/static/src/plugins/image/image_shape_option.xml:0
+msgid "Reset shape transformation"
+msgstr "Reimposta trasformazione forma"
 
 #. module: html_builder
 #. odoo-javascript
@@ -2354,6 +2399,12 @@ msgstr "Salva e copia"
 #: code:addons/html_builder/static/src/snippets/snippet_service.js:0
 msgid "Save and Install"
 msgstr "Salva e installa"
+
+#. module: html_builder
+#. odoo-javascript
+#: code:addons/html_builder/static/src/core/save_snippet_plugin.js:0
+msgid "Saved as %s. Find it in your snippets."
+msgstr "Salvato come %s. Trovalo negli snippet."
 
 #. module: html_builder
 #. odoo-javascript
@@ -2472,6 +2523,7 @@ msgstr "Shuriken (R)"
 #: code:addons/html_builder/static/src/plugins/image/image_size.xml:0
 #: code:addons/html_builder/static/src/plugins/image/image_tool_option.xml:0
 #: code:addons/html_builder/static/src/plugins/rating_option.xml:0
+#: code:addons/html_builder/static/src/plugins/size_option.xml:0
 msgid "Size"
 msgstr "Dimensione"
 
@@ -2485,6 +2537,7 @@ msgstr "Inclinato"
 #. odoo-javascript
 #: code:addons/html_builder/static/src/plugins/font/font_plugin.js:0
 #: code:addons/html_builder/static/src/plugins/rating_option.xml:0
+#: code:addons/html_builder/static/src/plugins/size_option.xml:0
 msgid "Small"
 msgstr "Piccola"
 
@@ -2782,6 +2835,12 @@ msgstr ""
 
 #. module: html_builder
 #. odoo-javascript
+#: code:addons/html_builder/static/src/core/version_error_plugin.js:0
+msgid "This snippet is outdated"
+msgstr "Questo snippet è obsoleto"
+
+#. module: html_builder
+#. odoo-javascript
 #: code:addons/html_builder/static/src/plugins/rating_option.xml:0
 msgid "Thumbs"
 msgstr "Pollici"
@@ -3055,6 +3114,12 @@ msgstr "Ondulata 14"
 
 #. module: html_builder
 #. odoo-javascript
+#: code:addons/html_builder/static/src/plugins/image/image_filter_option.js:0
+msgid "WebGL is not enabled on your browser."
+msgstr "WebGL non è attivo nel tuo browser."
+
+#. module: html_builder
+#. odoo-javascript
 #: code:addons/html_builder/static/src/plugins/image/image_format_option.xml:0
 msgid "WebP compression not supported on this browser"
 msgstr "Compressione WebP non supportata dal browser"
@@ -3096,16 +3161,6 @@ msgstr "Non ci sono record da aggiungere"
 #: code:addons/html_builder/static/src/plugins/image/replace_media_option.xml:0
 msgid "Your URL"
 msgstr "La tua URL"
-
-#. module: html_builder
-#. odoo-javascript
-#: code:addons/html_builder/static/src/core/save_snippet_plugin.js:0
-msgid ""
-"Your custom snippet was successfully saved as %s. Find it in your snippets "
-"collection."
-msgstr ""
-"Il tuo snippet personalizzato è stato salvato con successo come %s ed è "
-"stato aggiunto alla tua collezione di snippet."
 
 #. module: html_builder
 #. odoo-javascript
@@ -3226,6 +3281,16 @@ msgstr "⌙ Attiva"
 #: code:addons/html_builder/static/src/plugins/rating_option.xml:0
 msgid "⌙ Inactive"
 msgstr "⌙ Non attiva"
+
+#~ msgid "Anchor copied to clipboard%(br)sLink: %(anchorLink)s"
+#~ msgstr "Ancoraggio copiato negli appunti %(br)sLink: %(anchorLink)s"
+
+#~ msgid ""
+#~ "Your custom snippet was successfully saved as %s. Find it in your "
+#~ "snippets collection."
+#~ msgstr ""
+#~ "Il tuo snippet personalizzato è stato salvato con successo come %s ed è "
+#~ "stato aggiunto alla tua collezione di snippet."
 
 #~ msgid "ACCESS OPTIONS ANYWAY"
 #~ msgstr "ACCEDI COMUNQUE ALLE OPZIONI"

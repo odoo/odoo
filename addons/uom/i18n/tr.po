@@ -13,26 +13,31 @@
 # Nadir Gazioglu <nadirgazioglu@gmail.com>, 2022
 # Tugay Hatıl <tugayh@projetgrup.com>, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# DeepL <noreply-mt-deepl@weblate.org>, 2025.
+# Odoo Turkish Import <dyki+tr@odoo.com>, 2025.
+# "Malaz Siddig Elsayed Abuidris (msea)" <msea@odoo.com>, 2025.
+# "Deniz Guvener Unal (degu)" <degu@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:39+0000\n"
-"PO-Revision-Date: 2025-09-16 02:34+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
-"Language-Team: Turkish <https://translate.odoo.com/projects/odoo-19/uom/tr/"
-">\n"
+"POT-Creation-Date: 2026-04-10 18:40+0000\n"
+"PO-Revision-Date: 2026-04-13 20:48+0000\n"
+"Last-Translator: \"Deniz Guvener Unal (degu)\" <degu@odoo.com>\n"
+"Language-Team: Turkish <https://translate.odoo.com/projects/odoo-19/uom/tr/>"
+"\n"
 "Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__factor
 msgid "Absolute Quantity"
-msgstr ""
+msgstr "Mutlak Miktar"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__active
@@ -52,7 +57,7 @@ msgstr "Arşivlendi"
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__relative_factor
 msgid "Contains"
-msgstr ""
+msgstr "İçerir"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__create_uid
@@ -89,12 +94,22 @@ msgstr "Saat"
 msgid ""
 "How much bigger or smaller this unit is compared to the reference UoM for "
 "this unit"
-msgstr ""
+msgstr "Bu birimin, referans birime (UoM) göre büyüklük/küçüklük oranı"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__id
 msgid "ID"
 msgstr "ID"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_kwh
+msgid "KWH"
+msgstr ""
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_litre
+msgid "L"
+msgstr ""
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__write_uid
@@ -112,21 +127,26 @@ msgid "Manage Multiple Units of Measure"
 msgstr "Çoklu Ölçü Birim Yönetimi"
 
 #. module: uom
+#: model:uom.uom,name:uom.product_uom_minute
+msgid "Minutes"
+msgstr ""
+
+#. module: uom
 #: model:uom.uom,name:uom.product_uom_pack_6
 msgid "Pack of 6"
-msgstr ""
+msgstr "6'lı Paket"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__parent_path
 msgid "Parent Path"
-msgstr ""
+msgstr "Üst Yol"
 
 #. module: uom
 #. odoo-javascript
 #: code:addons/uom/static/src/components/many2one_uom/many2one_uom_field.js:0
 #: code:addons/uom/static/src/components/many2x_uom_tags/many2x_uom_tags.js:0
 msgid "Product Field Name"
-msgstr ""
+msgstr "Ürün Alan Adı"
 
 #. module: uom
 #: model:ir.model,name:uom.model_uom_uom
@@ -136,31 +156,31 @@ msgstr "Ürün Ölçü Birimi"
 #. module: uom
 #: model_terms:ir.ui.view,arch_db:uom.product_uom_form_view
 msgid "Quantity"
-msgstr ""
+msgstr "Miktar"
 
 #. module: uom
 #. odoo-javascript
 #: code:addons/uom/static/src/components/many2one_uom/many2one_uom_field.js:0
 #: code:addons/uom/static/src/components/many2x_uom_tags/many2x_uom_tags.js:0
 msgid "Quantity Field Name"
-msgstr ""
+msgstr "Miktar Alan Adı"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__relative_uom_id
 #: model_terms:ir.ui.view,arch_db:uom.product_uom_form_view
 msgid "Reference Unit"
-msgstr ""
+msgstr "Referans Birimi"
 
 #. module: uom
 #. odoo-python
 #: code:addons/uom/models/uom_uom.py:0
 msgid "Reference unit of measure is missing."
-msgstr ""
+msgstr "Referans ölçü birimi eksik."
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__related_uom_ids
 msgid "Related UoMs"
-msgstr ""
+msgstr "İlgili UoM'ler"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__rounding
@@ -175,7 +195,7 @@ msgstr "Ölçü Birimi Ara"
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__sequence
 msgid "Sequence"
-msgstr ""
+msgstr "Sıralama"
 
 #. module: uom
 #. odoo-python
@@ -189,6 +209,13 @@ msgid ""
 "Therefore, changing core units of measure in a running database is not "
 "recommended."
 msgstr ""
+"Bazı kritik alanlar %s adresinde değiştirilmiştir.\n"
+"Mevcut verilerin bu değişiklikle güncellenmeyeceğini unutmayın.\n"
+"\n"
+"Ölçü birimleri tüm sistemi etkilediğinden, bu durum kritik sorunlara neden "
+"olabilir.\n"
+"Bu nedenle, çalışan bir veritabanında temel ölçü birimlerinin değiştirilmesi "
+"önerilmez."
 
 #. module: uom
 #: model:ir.model.constraint,message:uom.constraint_uom_uom_factor_gt_zero
@@ -209,7 +236,7 @@ msgstr ""
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_ton
 msgid "Ton"
-msgstr ""
+msgstr "Ton"
 
 #. module: uom
 #: model:ir.model.fields,help:uom.field_uom_uom__active
@@ -222,7 +249,7 @@ msgstr ""
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__name
 msgid "Unit Name"
-msgstr ""
+msgstr "Birim Adı"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_unit
@@ -233,7 +260,7 @@ msgstr "Adet"
 #: model:ir.actions.act_window,name:uom.product_uom_form_action
 #: model_terms:ir.ui.view,arch_db:uom.product_uom_tree_view
 msgid "Units & Packagings"
-msgstr ""
+msgstr "Birimler & Ambalajlar"
 
 #. module: uom
 #: model_terms:ir.ui.view,arch_db:uom.product_uom_form_view
@@ -244,7 +271,7 @@ msgstr "Ölçü Birimi"
 #. odoo-javascript
 #: code:addons/uom/static/src/components/many2one_uom/many2one_uom_field.js:0
 msgid "Unnamed"
-msgstr ""
+msgstr "Adsız"
 
 #. module: uom
 #. odoo-python
@@ -278,6 +305,11 @@ msgid "ft³"
 msgstr "ayak³"
 
 #. module: uom
+#: model:uom.uom,name:uom.product_uom_gram
+msgid "g"
+msgstr ""
+
+#. module: uom
 #: model:uom.uom,name:uom.product_uom_gal
 msgid "gal (US)"
 msgstr "galon (Amerikan)"
@@ -308,6 +340,11 @@ msgid "lb"
 msgstr "pound"
 
 #. module: uom
+#: model:uom.uom,name:uom.product_uom_meter
+msgid "m"
+msgstr ""
+
+#. module: uom
 #: model:uom.uom,name:uom.product_uom_mile
 msgid "mi"
 msgstr "mil"
@@ -315,7 +352,7 @@ msgstr "mil"
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_milliliter
 msgid "ml"
-msgstr ""
+msgstr "ml"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_millimeter

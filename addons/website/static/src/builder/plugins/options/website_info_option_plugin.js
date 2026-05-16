@@ -13,6 +13,7 @@ export class InfoPageOption extends BaseOptionComponent {
 
 class WebsiteInfoPageOption extends Plugin {
     static id = "websiteInfoPageOption";
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_options: [InfoPageOption],
     };

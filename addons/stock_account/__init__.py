@@ -10,11 +10,12 @@ from . import wizard
 def _post_init_hook(env):
     _configure_journals(env)
     _create_product_value(env)
+    _configure_stock_account_company_data(env)
 
 
 def _create_product_value(env):
     product_vals_list = []
-    products = env['product.product'].search([('type', '=', 'consu')])
+    products = env['product.product'].with_context(prefetch_fields=False).search([('type', '=', 'consu')])
     for company in env['res.company'].search([]):
         products = products.with_company(company)
         product_vals_list += [
@@ -27,7 +28,7 @@ def _create_product_value(env):
             }
             for product in products if not product.company_id or product.company_id == company
         ]
-    env['product.value'].create(product_vals_list)
+    env['product.value'].with_context(prefetch_fields=False).create(product_vals_list)
 
 
 def _configure_journals(env):
@@ -67,3 +68,15 @@ def _configure_journals(env):
 
         ChartTemplate._load_data(data)
         ChartTemplate._post_load_data(template_code, company, template_data)
+
+
+def _configure_stock_account_company_data(env):
+    for company in env['res.company'].search([('chart_template', '!=', False)], order="parent_path"):
+        ChartTemplate = env['account.chart.template'].with_company(company)
+        template_code = company.chart_template
+        res_company_data = ChartTemplate._get_stock_account_res_company(template_code)
+        account_account_data = ChartTemplate._get_stock_account_account(template_code)
+        ChartTemplate._load_data({
+            'res.company': res_company_data,
+            'account.account': account_account_data,
+        })

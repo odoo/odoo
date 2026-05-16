@@ -25,4 +25,4 @@ class AccountMove(models.Model):
     def _l10n_ae_is_simplified(self):
         """Returns True if the customer is an individual, i.e: The invoice is B2C"""
         self.ensure_one()
-        return not self.partner_id.is_company
+        return not self.commercial_partner_id.is_company

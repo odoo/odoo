@@ -233,7 +233,7 @@ class AccountLock_Exception(models.Model):
 
     def action_revoke(self):
         """Revokes an active exception."""
-        if not self.env.user.has_group('account.group_account_manager'):
+        if not self.env.user.has_group('account.group_account_manager') and not self.env.su:
             raise UserError(_("You cannot revoke Lock Date Exceptions. Ask someone with the 'Adviser' role."))
         for record in self:
             if record.state == 'active':

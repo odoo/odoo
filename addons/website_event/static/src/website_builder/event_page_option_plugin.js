@@ -64,7 +64,10 @@ export class DisplaySubMenuAction extends BuilderAction {
         if (!isEventPage) {
             return 0;
         }
-        const objectIds = this.currentWebsiteUrl.match(/\d+(?=\/|$)/);;
+        const objectIds = this.currentWebsiteUrl.match(/\d+(?=\/|$)/);
+        if (!objectIds) {
+            return 0;
+        }
         return parseInt(objectIds[0]) | 0;
     }
 

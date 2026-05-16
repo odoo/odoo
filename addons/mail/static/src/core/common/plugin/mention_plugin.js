@@ -1,17 +1,52 @@
 import { Plugin } from "@html_editor/plugin";
+import { closestElement } from "@html_editor/utils/dom_traversal";
 import { generateThreadMentionElement } from "@mail/utils/common/format";
 
 export class MentionPlugin extends Plugin {
     static id = "mention";
-    static dependencies = ["selection", "history"];
+    static dependencies = ["baseContainer", "selection", "history"];
     resources = {
+        is_node_editable_predicates: (node) => {
+            for (const { selector } of this.MENTION_SELECTORS) {
+                if (closestElement(node, selector)) {
+                    return true;
+                }
+            }
+        },
+        select_all_overrides: this.selectAll.bind(this),
         selectionchange_handlers: this.detectMentions.bind(this),
+        selectors_for_feff_providers: () =>
+            this.MENTION_SELECTORS.map(({ selector }) => selector).join(", "),
     };
 
     setup() {
         super.setup();
         /** @type {import("models").Store} */
         this.store = this.services["mail.store"];
+    }
+
+    /**
+     * Extend the selection to include whole mention elements at the borders
+     * so that it doesn't get stuck into the contenteditable=false
+     */
+    selectAll({ anchorNode, anchorOffset, focusNode, focusOffset }) {
+        const SELECTOR = this.MENTION_SELECTORS.map(({ selector }) => selector).join(", ");
+        if (closestElement(anchorNode, SELECTOR)) {
+            const startMention = closestElement(anchorNode, SELECTOR);
+            anchorNode = startMention.parentNode;
+            anchorOffset = Array.prototype.indexOf.call(anchorNode.childNodes, startMention);
+        }
+        if (closestElement(focusNode, SELECTOR)) {
+            const endMention = closestElement(focusNode, SELECTOR);
+            focusNode = endMention.parentNode;
+            focusOffset = Array.prototype.indexOf.call(focusNode.childNodes, endMention) + 1;
+        }
+        this.dependencies.selection.setSelection({
+            anchorNode,
+            anchorOffset,
+            focusNode,
+            focusOffset,
+        });
     }
 
     get MENTION_SELECTORS() {
@@ -23,6 +58,14 @@ export class MentionPlugin extends Plugin {
                     this.store.handleValidChannelMention(channelLinks);
                     this.dependencies.history.addStep();
                 },
+            },
+            {
+                selector: "a.o_mail_redirect",
+                checker: (el) => true,
+            },
+            {
+                selector: "a.o-discuss-mention",
+                checker: (el) => true,
             },
         ];
     }
@@ -40,7 +83,23 @@ export class MentionPlugin extends Plugin {
             )
                 .filter(({ isValid }) => isValid)
                 .map(({ el }) => el);
+            this.prepareValidMentionLinks(validMentionLinks);
             validMentionsHandler?.(validMentionLinks);
+        }
+    }
+
+    prepareValidMentionLinks(validMentionLinks) {
+        for (const el of validMentionLinks) {
+            // if el's parent is odoo-editor-editable, which happens when the html is computed or set with setContent,
+            // considering the mention blocks are protected and not editable.
+            // This will lead to issues where the mention cannot be deleted or edited properly.
+            // In this case, we wrap the mention with a base container.
+            if (el.parentElement === this.editable) {
+                const baseContainer = this.dependencies.baseContainer.createBaseContainer();
+                baseContainer.appendChild(el.cloneNode(true));
+                this.editable.replaceChild(baseContainer, el);
+                this.dependencies.history.addStep();
+            }
         }
     }
 

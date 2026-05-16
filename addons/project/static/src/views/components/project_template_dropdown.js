@@ -31,7 +31,7 @@ export class ProjectTemplateDropdown extends Component {
         },
     };
     static defaultProps = {
-        hotkey: "r",
+        hotkey: "c",
         isDisabled: false,
     };
 

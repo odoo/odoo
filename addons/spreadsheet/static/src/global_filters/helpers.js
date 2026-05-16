@@ -39,13 +39,16 @@ export const RELATIVE_PERIODS = {
 /**
  * @param {DateValue} dateFilterValue
  * @param {{ chain: string, type: string }} [fieldMatching]
- * @returns {string}
+ * @returns {string | undefined}
  */
 export function getBestGranularity(dateFilterValue, fieldMatching) {
     if (!dateFilterValue) {
         return "year";
     }
     const { from, to } = getDateRange(dateFilterValue);
+    if (!from || !to) {
+        return undefined;
+    }
     const numberOfDays = Math.round(to.diff(from, "days").days);
     if (numberOfDays <= 1) {
         return fieldMatching?.type === "datetime" ? "hour" : "day";
@@ -64,9 +67,12 @@ export function getBestGranularity(dateFilterValue, fieldMatching) {
  */
 export function getValidGranularities(dateFilterValue) {
     if (!dateFilterValue) {
-        return ["week", "month", "quarter", "year"];
+        return ["day", "week", "month", "quarter", "year"];
     }
     const { from, to } = getDateRange(dateFilterValue);
+    if (!from || !to) {
+        return ["day", "week", "month", "quarter", "year"];
+    }
     const numberOfDays = Math.round(to.diff(from, "days").days);
     if (numberOfDays <= 1) {
         return ["hour", "day"];
@@ -157,7 +163,7 @@ const SET_OPERATORS_BEHAVIORS = {
         return new Domain([[fieldPath, domainOperator, false]]);
     },
     toCellValue(getters, filter, filterValue) {
-        return { value: filterValue.operator === "set" };
+        return [[{ value: filterValue.operator === "set" }]];
     },
 };
 
@@ -175,7 +181,7 @@ const FILTERS_BEHAVIORS = {
                 );
             },
             toCellValue(getters, filter, filterValue) {
-                return { value: filterValue.strings.join(", ") };
+                return [[{ value: filterValue.strings.join(", ") }]];
             },
         },
         {
@@ -188,7 +194,7 @@ const FILTERS_BEHAVIORS = {
                 return new Domain([[fieldPath, filterValue.operator, filterValue.strings]]);
             },
             toCellValue(getters, filter, filterValue) {
-                return { value: filterValue.strings.join(", ") };
+                return [[{ value: filterValue.strings.join(", ") }]];
             },
         },
         {
@@ -203,7 +209,7 @@ const FILTERS_BEHAVIORS = {
                 );
             },
             toCellValue(getters, filter, filterValue) {
-                return { value: filterValue.strings.join(", ") };
+                return [[{ value: filterValue.strings.join(", ") }]];
             },
         },
         SET_OPERATORS_BEHAVIORS,
@@ -242,7 +248,7 @@ const FILTERS_BEHAVIORS = {
                 );
             },
             toCellValue(getters, filter, filterValue) {
-                return { value: filterValue.strings.join(", ") };
+                return [[{ value: filterValue.strings.join(", ") }]];
             },
         },
         SET_OPERATORS_BEHAVIORS,
@@ -270,7 +276,7 @@ const FILTERS_BEHAVIORS = {
                 return new Domain([[fieldPath, filterValue.operator, filterValue.selectionValues]]);
             },
             toCellValue(getters, filter, filterValue) {
-                return { value: filterValue.selectionValues.join(", ") };
+                return [[{ value: filterValue.selectionValues.join(", ") }]];
             },
         },
     ],
@@ -292,9 +298,8 @@ const FILTERS_BEHAVIORS = {
                 return new Domain([[fieldPath, filterValue.operator, filterValue.targetValue]]);
             },
             toCellValue(getters, filter, filterValue) {
-                return {
-                    value: filterValue.targetValue !== undefined ? filterValue.targetValue : "",
-                };
+                const value = filterValue.targetValue !== undefined ? filterValue.targetValue : "";
+                return [[{ value }]];
             },
         },
         {

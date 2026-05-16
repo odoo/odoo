@@ -102,14 +102,17 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
         self._init_mail_mock()
 
         def _ir_mail_server_build_email(model, email_from, email_to, subject, body, **kwargs):
-            self._mails.append({
+            data = {
                 'email_from': email_from,
                 'email_to': email_to,
                 'subject': subject,
                 'body': body,
                 **kwargs,
-            })
-            return build_email_origin(model, email_from, email_to, subject, body, **kwargs)
+            }
+            res = build_email_origin(model, email_from, email_to, subject, body, **kwargs)
+            data['EmailMessage'] = res
+            self._mails.append(data)
+            return res
 
         def _mail_mail_create(model, *args, **kwargs):
             res = mail_create_origin(model, *args, **kwargs)
@@ -835,28 +838,32 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
         else:
             raise AssertionError('mail.mail exists for message %s / recipients %s / emails %s but should not exist' % (mail_message, recipients.ids, email_to or '/'))
         finally:
-            self.assertNotSentEmail(recipients)
+            self.assertNotSentEmail(recipients=list(recipients) + email_split_and_format_normalize(email_to or ''), message_id=mail_message and mail_message.message_id)
 
-    def assertNotSentEmail(self, recipients=None):
+    def assertNotSentEmail(self, recipients=None, message_id=None):
         """Check no email was generated during gateway mock.
 
         :param recipients:
             List of partner for which we will check that no email have been sent
             Or list of email address
-            If None, we will check that no email at all have been sent
+            If empty, we will check that no email at all have been sent
+        :param message_id:
+            message-id associated with the email. Allows to identify emails originating
+            from the a specific message in odoo.
         """
-        if recipients is None:
-            mails = self._mails
-        else:
+        mails = self._mails
+        if message_id:
+            mails = [mail for mail in self._mails if mail['message_id'] == message_id]
+        if recipients:
             all_emails = [
-                email_to.email if isinstance(email_to, self.env['res.partner'].__class__)
+                email_to.email_formatted if isinstance(email_to, self.env['res.partner'].__class__)
                 else email_to
                 for email_to in recipients
             ]
 
             mails = [
                 mail
-                for mail in self._mails
+                for mail in mails
                 if any(email in all_emails for email in mail['email_to'])
             ]
 
@@ -1508,13 +1515,18 @@ class MailCase(common.TransactionCase, MockEmail, BusCase):
                     mbody in message.body and message.message_type == mtype and
                     msubtype == message.subtype_id
                 ))
+                debug_info = '\n'.join(
+                    f'Msg: message_type {message.message_type}, subtype {message.subtype_id.name}, content {message.body}'
+                    for message in messages
+                )
             else:
                 message = self.env['mail.message'].sudo().search([
                     ('body', 'ilike', mbody),
                     ('message_type', '=', mtype),
                     ('subtype_id', '=', msubtype.id)
                 ], limit=1, order='id DESC')
-            self.assertTrue(message, 'Mail: not found message (content: %s, message_type: %s, subtype: %s)' % (mbody, mtype, msubtype and msubtype.name))
+                debug_info = ''
+            self.assertTrue(message, 'Mail: not found message (content: %s, message_type: %s, subtype: %s\n%s)' % (mbody, mtype, msubtype and msubtype.name, debug_info))
 
             # check message values
             if message_values:
@@ -1663,7 +1675,7 @@ class MailCase(common.TransactionCase, MockEmail, BusCase):
                         )
 
             if not any(p for recipients in email_groups.values() for p in recipients):
-                self.assertNoMail(partners, email_to=email_addrs, mail_message=message, author=message.author_id)
+                self.assertNoMail(self.env['res.partner'], email_to=email_addrs, mail_message=message, author=message.author_id)
 
         return done_msgs, done_notifs
 

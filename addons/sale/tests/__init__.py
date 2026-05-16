@@ -13,6 +13,7 @@ from . import test_product_catalog
 from . import test_product_configurator_data
 from . import test_sale_combo_configurator
 from . import test_sale_flow
+from . import test_sale_early_payment_discount
 from . import test_sale_order
 from . import test_sale_order_product_catalog
 from . import test_sale_order_ui
@@ -22,6 +23,7 @@ from . import test_sale_product_template
 from . import test_sale_refund
 from . import test_sale_to_invoice
 from . import test_sale_report
+from . import test_sale_sections
 from . import test_taxes_downpayment
 from . import test_taxes_global_discount
 from . import test_taxes_tax_totals_summary

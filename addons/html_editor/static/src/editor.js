@@ -6,9 +6,12 @@ import { resourceSequenceSymbol, withSequence } from "./utils/resource";
 import { fixInvalidHTML, initElementForEdition } from "./utils/sanitize";
 import { setElementContent } from "@web/core/utils/html";
 
+/** @typedef {import("plugins").EditorResources} EditorResources */
+/** @typedef {import("plugins").GlobalResources} GlobalResources */
+/** @typedef {keyof GlobalResources} GlobalResourcesId */
 /**
- * @typedef { import("./plugin_sets").SharedMethods } SharedMethods
- * @typedef {typeof import("./plugin").Plugin} PluginConstructor
+ * @typedef {import("plugins").SharedMethods} SharedMethods
+ * @typedef {import("plugins").PluginConstructor} PluginConstructor
  **/
 
 /**
@@ -42,12 +45,28 @@ import { setElementContent } from "@web/core/utils/html";
  * @property { HTMLElement } editable
  * @property { SharedMethods } dependencies
  * @property { import("./editor").EditorConfig } config
- * @property { * } services
+ * @property { import("services").ServiceFactories } services
  * @property { Editor['getResource'] } getResource
  * @property { Editor['dispatchTo'] } dispatchTo
  * @property { Editor['delegateTo'] } delegateTo
+ * @property { Editor['checkPredicates'] } checkPredicates
  */
 
+/**
+ * @typedef {((arg: {root: EditorContext["editable"]}) => void)[]} clean_for_save_handlers
+ * @typedef {(() => void)[]} start_edition_handlers
+ */
+
+/**
+ * Clean up DOM before taking into account for next history step remaining in
+ * edit mode
+ * @typedef {((root: EditorContext["editable"] | HTMLElement, stepType?: "original"|"undo"|"redo"|"restore") => void)[]} normalize_handlers
+ */
+
+/**
+ * @param {PluginConstructor[]} plugins
+ * @returns {PluginConstructor[]}
+ */
 function sortPlugins(plugins) {
     const initialPlugins = new Set(plugins);
     const inResult = new Set();
@@ -90,6 +109,7 @@ export class Editor {
         this.isDestroyed = false;
         this.config = config;
         this.services = services;
+        /** @type { EditorResources } */
         this.resources = null;
         this.plugins = [];
         /** @type { HTMLElement } **/
@@ -119,6 +139,7 @@ export class Editor {
             }
         }
         editable.setAttribute("contenteditable", true);
+        editable.setAttribute("translate", "no");
         initElementForEdition(editable, { allowInlineAtRoot: !!this.config.allowInlineAtRoot });
         editable.classList.add("odoo-editor-editable");
         if (this.config.classList) {
@@ -244,12 +265,14 @@ export class Editor {
             getResource: this.getResource.bind(this),
             dispatchTo: this.dispatchTo.bind(this),
             delegateTo: this.delegateTo.bind(this),
+            checkPredicates: this.checkPredicates.bind(this),
         };
     }
 
     /**
-     * @param {string} resourceId
-     * @returns {Array}
+     * @template {GlobalResourcesId} R
+     * @param {R} resourceId
+     * @returns {GlobalResources[R]}
      */
     getResource(resourceId) {
         return this.resources[resourceId] || [];
@@ -270,8 +293,9 @@ export class Editor {
      * this.dispatchTo("my_event_handlers", arg1, arg2);
      * ```
      *
-     * @param {string} resourceId
-     * @param  {...any} args The arguments to pass to the handlers.
+     * @template {GlobalResourcesId} R
+     * @param {R} resourceId
+     * @param {Parameters<GlobalResources[R][0]>} args The arguments to pass to the handlers.
      */
     dispatchTo(resourceId, ...args) {
         this.getResource(resourceId).forEach((handler) => handler(...args));
@@ -295,12 +319,41 @@ export class Editor {
      * }
      * ```
      *
-     * @param {string} resourceId
-     * @param  {...any} args The arguments to pass to the overrides.
+     * @template {GlobalResourcesId} R
+     * @param {R} resourceId
+     * @param {Parameters<GlobalResources[R][0]>} args The arguments to pass to the overrides.
      * @returns {boolean} Whether one of the overrides returned a truthy value.
      */
     delegateTo(resourceId, ...args) {
         return this.getResource(resourceId).some((fn) => fn(...args));
+    }
+
+    /**
+     * Test the given arguments against all the predicates registered under
+     * `resourceId` (which ends with "_predicates" by convention), and return
+     * true if any predicate returns `true` and none returns `false` (ignoring
+     * those that return `undefined`).
+     *
+     * Important note: since this function treats booleans and nullish results
+     * differently, make sure that:
+     * 1. Predicates only return a boolean when it's meaningful.
+     * 2. Any call to `checkPredicates` involves the declaration of a default
+     *    value in case it returns `undefined`.
+     *
+     * Example:
+     * ```js
+     * const isTrue = this.checkPredicates("my_predicates", arg1, arg2) ?? true;
+     * ```
+     *
+     * @param {string} resourceId
+     * @param  {...any} args The arguments to pass to the predicates.
+     * @returns {boolean | undefined}
+     */
+    checkPredicates(resourceId, ...args) {
+        const results = this.getResource(resourceId)
+            .map((predicate) => predicate(...args))
+            .filter((result) => result !== undefined);
+        return results.length ? results.every(Boolean) : undefined;
     }
 
     getContent() {

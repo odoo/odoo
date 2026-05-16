@@ -19,8 +19,6 @@ export class MovesListRenderer extends ListRenderer {
         this.actionService = useService("action");
         this.descriptionColumn = "description_picking";
         this.productColumns = ["product_id", "product_template_id"];
-        this.pickingId = this.props.list.context.default_picking_id || 0;
-        this.locationId = this.props.list.context.default_location_id || 0;
 
         onWillStart(async () => {
             this.hasPackageActive = await user.hasGroup("stock.group_tracking_lot");
@@ -28,8 +26,10 @@ export class MovesListRenderer extends ListRenderer {
     }
 
     async onClickMovePackage() {
-        if (!this.pickingId) {
-            await this.forceSave();
+        // If picking doesn't exist yet or location is outdated, it will lead to incorrect results
+        const canOpenDialog = await this.forceSave();
+        if (!canOpenDialog) {
+            return;
         }
         const domain = [];
         if (this.locationId) {
@@ -72,9 +72,10 @@ export class MovesListRenderer extends ListRenderer {
     async forceSave() {
         // This means the record hasn't been saved once, but we need the picking id to know for which picking we create the move lines.
         const record = this.env.model.root;
-        await record.save();
+        const result = await record.save();
         this.pickingId = record.data.id;
         this.locationId = record.data.location_id?.id;
+        return result;
     }
 }
 
@@ -83,7 +84,6 @@ patch(MovesListRenderer.prototype, ProductNameAndDescriptionListRendererMixin);
 export class StockMoveX2ManyField extends X2ManyField {
     static components = { ...X2ManyField.components, ListRenderer: MovesListRenderer };
 }
-
 
 export const stockMoveX2ManyField = {
     ...x2ManyField,

@@ -254,8 +254,8 @@ describe("RPC calls", () => {
     test("'web_read_group': 2 groups", async () => {
         const server = new DeterministicSampleServer("hobbit", fields.hobbit);
         const existingGroups = [
-            { profession: "gardener", count: 0 }, // fake group
-            { profession: "adventurer", count: 0 }, // fake group
+            { profession: "gardener", count: 0, __records: [] }, // fake group
+            { profession: "adventurer", count: 0, __records: [] }, // fake group
         ];
         server.setExistingGroups(existingGroups);
         const result = await server.mockRpc({
@@ -276,9 +276,9 @@ describe("RPC calls", () => {
     test("'web_read_group': all groups", async () => {
         const server = new DeterministicSampleServer("hobbit", fields.hobbit);
         const existingGroups = [
-            { profession: "gardener", count: 0 }, // fake group
-            { profession: "brewer", count: 0 }, // fake group
-            { profession: "adventurer", count: 0 }, // fake group
+            { profession: "gardener", count: 0, __records: [] }, // fake group
+            { profession: "brewer", count: 0, __records: [] }, // fake group
+            { profession: "adventurer", count: 0, __records: [] }, // fake group
         ];
         server.setExistingGroups(existingGroups);
         const result = await server.mockRpc({
@@ -410,22 +410,5 @@ describe("RPC calls", () => {
         expect(result).toHaveLength(1);
         const ids = new Array(16).fill(0).map((_, index) => index + 1);
         expect(result[0]["id:array_agg"]).toEqual(ids);
-    });
-
-    test("'web_read_group': records on unfolded group", async () => {
-        const server = new DeterministicSampleServer("hobbit", fields.hobbit);
-        server.setExistingGroups([
-            { profession: "gardener", count: 0 },
-            { profession: "brewer", count: 0 },
-        ]);
-        const result = await server.mockRpc({
-            method: "web_read_group",
-            model: "hobbit",
-            groupBy: ["profession"],
-            aggregates: [],
-            opening_info: [{ folded: false }, { folded: true }],
-        });
-        expect(result.groups[0].__records).toEqual([]);
-        expect("__records" in result.groups[1]).toBe(false);
     });
 });

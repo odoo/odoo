@@ -166,7 +166,7 @@ class MrpUnbuild(models.Model):
         self.ensure_one()
         self._check_company()
         # remove the default_* keys that were only needed in the unbuild wizard
-        self = self.with_env(self.env(context=clean_context(self.env)))  # noqa: PLW0642
+        self = self.with_env(self.env(context=clean_context(self.env.context)))  # noqa: PLW0642
         if self.product_id.tracking != 'none' and not self.lot_id.id:
             raise UserError(_('You should provide a lot number for the final product.'))
 
@@ -178,6 +178,9 @@ class MrpUnbuild(models.Model):
         produce_moves = self._generate_produce_moves()
         produce_moves._action_confirm()
         produce_moves.quantity = 0
+
+        # Collect component lots already restored by previous unbuilds on the same MO
+        previously_unbuilt_lots = (self.mo_id.unbuild_ids - self).produce_line_ids.filtered(lambda ml: ml.product_id != self.product_id and ml.product_id.tracking == 'serial').lot_ids
 
         finished_moves = consume_moves.filtered(lambda m: m.product_id == self.product_id)
         consume_moves -= finished_moves
@@ -210,7 +213,9 @@ class MrpUnbuild(models.Model):
             needed_quantity = move.product_uom_qty
             moves_lines = original_move.mapped('move_line_ids')
             if move in produce_moves and self.lot_id:
-                moves_lines = moves_lines.filtered(lambda ml: self.lot_id in ml.produce_line_ids.lot_id)  # FIXME sle: double check with arm
+                moves_lines = moves_lines.filtered(
+                    lambda ml: self.lot_id in ml.produce_line_ids.lot_id and ml.lot_id not in previously_unbuilt_lots
+                )
             for move_line in moves_lines:
                 # Iterate over all move_lines until we unbuilded the correct quantity.
                 taken_quantity = min(needed_quantity, move_line.quantity - qty_already_used[move_line])
@@ -223,6 +228,8 @@ class MrpUnbuild(models.Model):
                     needed_quantity -= taken_quantity
                     qty_already_used[move_line] += taken_quantity
                     unbuild_move_line._apply_putaway_strategy()
+            if move in produce_moves and float_compare(needed_quantity, 0, precision_rounding=move.product_uom.rounding) > 0:
+                move.quantity += needed_quantity
 
         (finished_moves | consume_moves | produce_moves).picked = True
         finished_moves._action_done()

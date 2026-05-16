@@ -147,7 +147,7 @@ class AccountReport(models.Model):
         string="Hide lines at 0",
         selection=[('by_default', "Enabled by Default"), ('optional', "Optional"), ('never', "Never")],
         compute=lambda x: x._compute_report_option_filter('filter_hide_0_lines', 'optional'),
-        precompute=True, readonly=False, store=True, depends=['root_report_id'],
+        precompute=True, readonly=False, store=True, depends=['root_report_id', 'section_main_report_ids'],
     )
     filter_period_comparison = fields.Boolean(
         string="Period Comparison",
@@ -179,7 +179,7 @@ class AccountReport(models.Model):
         string="Account Types",
         selection=[('both', "Payable and receivable"), ('payable', "Payable"), ('receivable', "Receivable"), ('disabled', 'Disabled')],
         compute=lambda x: x._compute_report_option_filter('filter_account_type', 'disabled'), readonly=False,
-        precompute=True, store=True, depends=['root_report_id'],
+        precompute=True, store=True, depends=['root_report_id', 'section_main_report_ids'],
     )
     filter_partner = fields.Boolean(
         string="Partners",
@@ -643,7 +643,7 @@ class AccountReportExpression(models.Model):
     @api.constrains('formula')
     def _check_formula(self):
         def raise_formula_error(expression):
-            raise ValidationError(_("Invalid formula for expression '%(label)s' of line '%(line)s': %(formula)s",
+            raise ValidationError(self.env._("Invalid formula for expression '%(label)s' of line '%(line)s': %(formula)s",
                                     label=expression.label, line=expression.report_line_name,
                                     formula=expression.formula))
 
@@ -659,7 +659,7 @@ class AccountReportExpression(models.Model):
             for token in ACCOUNT_CODES_ENGINE_SPLIT_REGEX.split(expression.formula.replace(' ', '')):
                 if token:  # e.g. if the first character of the formula is "-", the first token is ''
                     token_match = ACCOUNT_CODES_ENGINE_TERM_REGEX.match(token)
-                    prefix = token_match['prefix']
+                    prefix = token_match and token_match['prefix']
                     if not prefix:
                         raise_formula_error(expression)
 
@@ -754,7 +754,7 @@ class AccountReportExpression(models.Model):
 
                     if former_tax_tags and all(tag_expr in self for tag_expr in former_tax_tags._get_related_tax_report_expressions()):
                         # If we're changing the formula of all the expressions using that tag, rename the tag
-                        former_tax_tags._update_field_translations('name', {'en_US': vals['formula']})
+                        former_tax_tags._update_field_translations('name', {'en_US': vals['formula'].lstrip('-')})
                     else:
                         # Else, create a new tag. Its the compute functions will make sure it is properly linked to the expressions
                         tag_vals = self.env['account.report.expression']._get_tags_create_vals(vals['formula'], country.id)

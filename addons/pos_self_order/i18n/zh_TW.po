@@ -7,13 +7,15 @@
 # Tony Ng, 2025
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# "Tony Ng (ngto)" <ngto@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:38+0000\n"
-"PO-Revision-Date: 2025-09-16 08:11+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2026-04-24 17:36+0000\n"
+"PO-Revision-Date: 2026-04-13 20:46+0000\n"
+"Last-Translator: \"Tony Ng (ngto)\" <ngto@odoo.com>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
 "projects/odoo-19/pos_self_order/zh_Hant/>\n"
 "Language: zh_TW\n"
@@ -21,7 +23,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: pos_self_order
 #: model:ir.actions.report,print_report_name:pos_self_order.report_self_order_qr_codes_page
@@ -33,12 +35,6 @@ msgstr "\"二維碼\""
 #: code:addons/pos_self_order/models/pos_config.py:0
 msgid "(require Odoo Enterprise)"
 msgstr "（需要 Odoo 企業版）"
-
-#. module: pos_self_order
-#. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/store/order_change_receipt_template.xml:0
-msgid "/ Tracker number:"
-msgstr "/ 追蹤號碼："
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
@@ -63,7 +59,8 @@ msgid ""
 "''\"/>\n"
 "                    <t t-set=\"store_name\" t-"
 "value=\"object.config_id.name\"/>\n"
-"                    <t t-set=\"tz\" t-value=\"object.env.user.tz\"/>\n"
+"                    <t t-set=\"tz\" t-"
+"value=\"object.company_id.partner_id.tz\"/>\n"
 "                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
 "user.lang\"/>\n"
 "                    <div>\n"
@@ -73,9 +70,10 @@ msgid ""
 "                    </div>\n"
 "                    <br/>\n"
 "                    <div>Your order <t t-out=\"object.tracking_number\">...</"
-"t> amounting in <t t-out=\"object.amount_total\">$xx.xx</t> has been "
-"confirmed. <span t-if=\"object.preset_time or client.street\">It will be "
-"ready</span> <span t-if=\"object.preset_time\">at <t t-"
+"t> amounting in <t t-"
+"out=\"format_amount(object.amount_total,object.currency_id)\">$xx.xx</t> has "
+"been confirmed. <span t-if=\"object.preset_time or client.street\">It will "
+"be ready</span> <span t-if=\"object.preset_time\">at <t t-"
 "out=\"format_time(time=object.preset_time, tz=tz, time_format='short', "
 "lang_code=lg)\">12:00 pm</t></span> <span t-if=\"client.street\">at <t t-"
 "out=\"street\">street</t>, <t t-out=\"state\">state</t>, <t t-"
@@ -92,45 +90,6 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
-"<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
-"                    <t t-set=\"client\" t-value=\"object.partner_id\"/>\n"
-"                    <t t-set=\"client_name\" t-value=\"client.name\"/>\n"
-"                    <t t-set=\"street\" t-value=\"client.street or ''\"/>\n"
-"                    <t t-set=\"state\" t-value=\"client.state_id.name or "
-"''\"/>\n"
-"                    <t t-set=\"city\" t-value=\"client.city or ''\"/>\n"
-"                    <t t-set=\"country\" t-value=\"client.country_id.name or "
-"''\"/>\n"
-"                    <t t-set=\"store_name\" t-"
-"value=\"object.config_id.name\"/>\n"
-"                    <t t-set=\"tz\" t-value=\"object.env.user.tz\"/>\n"
-"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
-"user.lang\"/>\n"
-"                    <div>\n"
-"                        <t t-if=\"client_name\"><t t-out=\"client_name\">客戶"
-"名稱</t> 你好！</t>\n"
-"                        <t t-else=\"\">你好！</t>\n"
-"                    </div>\n"
-"                    <br/>\n"
-"                    <div>你的訂單 <t t-out=\"object.tracking_number\">...</t>"
-"（金額為 <t t-out=\"object.amount_total\">$xx.xx</t>）已獲確認。<span t-"
-"if=\"object.preset_time or client.street\">訂單將會在以下時間/地點準備好：</"
-"span> <span t-if=\"object.preset_time\"><t t-"
-"out=\"format_time(time=object.preset_time, tz=tz, time_format='short', "
-"lang_code=lg)\">下午 12:00</t></span><span t-if=\"client.street\"> <t t-"
-"out=\"street\">街道</t>, <t t-out=\"state\">州/省</t>, <t t-out=\"client.zip "
-"or ''\">郵遞區號</t>, <t t-out=\"city\">城市</t>, <t t-out=\"country\">國家/"
-"地區</t></span></div>\n"
-"                    <br/>\n"
-"                    <div>謝謝！</div>\n"
-"                    <br/>\n"
-"                    <div t-if=\"object.state == 'paid'\">\n"
-"                        <div>你的收據在附件中。</div>\n"
-"                        <br/>\n"
-"                    </div>\n"
-"                    <t t-out=\"store_name\">商店名稱</t>\n"
-"                </div>\n"
-"            "
 
 #. module: pos_self_order
 #: model:mail.template,body_html:pos_self_order.takeout_email_template
@@ -138,7 +97,8 @@ msgid ""
 "<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
 "                    <t t-set=\"store_name\" t-"
 "value=\"object.config_id.name\"/>\n"
-"                    <t t-set=\"tz\" t-value=\"object.env.user.tz\"/>\n"
+"                    <t t-set=\"tz\" t-"
+"value=\"object.company_id.partner_id.tz\"/>\n"
 "                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
 "user.lang\"/>\n"
 "                    <div>\n"
@@ -148,8 +108,9 @@ msgid ""
 "                    </div>\n"
 "                    <br/>\n"
 "                    <div>Your order <t t-out=\"object.tracking_number\">...</"
-"t> amounting in <t t-out=\"object.amount_total\">$xx.xx</t> has been "
-"confirmed. <span t-if=\"object.preset_time\">It will be ready at <t t-"
+"t> amounting in <t t-"
+"out=\"format_amount(object.amount_total,object.currency_id)\">$xx.xx</t> has "
+"been confirmed. <span t-if=\"object.preset_time\">It will be ready at <t t-"
 "out=\"format_time(time=object.preset_time, tz=tz, time_format='short', "
 "lang_code=lg)\">12:00 pm</t></span></div>\n"
 "                    <br/>\n"
@@ -163,33 +124,6 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
-"<div style=\"margin: 0; padding: 0; font-size: 14px;\">\n"
-"                    <t t-set=\"store_name\" t-"
-"value=\"object.config_id.name\"/>\n"
-"                    <t t-set=\"tz\" t-value=\"object.env.user.tz\"/>\n"
-"                    <t t-set=\"lg\" t-value=\"object.partner_id.lang or "
-"user.lang\"/>\n"
-"                    <div>\n"
-"                        <t t-if=\"client_name\"><t t-out=\"client_name\">客戶"
-"名稱</t> 你好！</t>\n"
-"                        <t t-else=\"\">你好！</t>\n"
-"                    </div>\n"
-"                    <br/>\n"
-"                    <div>你的訂單 <t t-out=\"object.tracking_number\">...</t>"
-"（金額為 <t t-out=\"object.amount_total\">$xx.xx</t>）已獲確認。<span t-"
-"if=\"object.preset_time\">訂單將會在以下時間準備好：<t t-"
-"out=\"format_time(time=object.preset_time, tz=tz, time_format='short', "
-"lang_code=lg)\">下午 12:00</t></span></div>\n"
-"                    <br/>\n"
-"                    <div>謝謝！</div>\n"
-"                    <br/>\n"
-"                    <div t-if=\"object.state == 'paid'\">\n"
-"                        <div>你的收據在附件中。</div>\n"
-"                        <br/>\n"
-"                    </div>\n"
-"                    <t t-out=\"store_name\">商店名稱</t>\n"
-"                </div>\n"
-"            "
 
 #. module: pos_self_order
 #: model:ir.model.fields,help:pos_self_order.field_pos_config__self_ordering_default_user_id
@@ -287,6 +221,7 @@ msgstr "可用介面語言"
 #: code:addons/pos_self_order/static/src/app/pages/eating_location_page/eating_location_page.xml:0
 #: code:addons/pos_self_order/static/src/app/pages/order_history_page/order_history_page.xml:0
 #: code:addons/pos_self_order/static/src/app/pages/payment_page/payment_page.xml:0
+#: code:addons/pos_self_order/static/src/app/pages/product_page/product_page.xml:0
 #: code:addons/pos_self_order/static/src/app/pages/stand_number_page/stand_number_page.xml:0
 msgid "Back"
 msgstr "返回"
@@ -351,12 +286,6 @@ msgstr "選擇自助下單模式"
 #: model:ir.model.fields,help:pos_self_order.field_res_config_settings__pos_self_ordering_pay_after
 msgid "Choose when the customer will pay"
 msgstr "選擇客戶付款時間"
-
-#. module: pos_self_order
-#. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
-msgid "Choose your"
-msgstr "選擇你的"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -618,6 +547,12 @@ msgstr "在餐廳設定頁面中，啟用二維碼餐牌，即可在餐桌取得
 
 #. module: pos_self_order
 #. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
+msgid "Enter a valid phone number starting with the country code (e.g. +32)"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/attribute_selection/attribute_selection.xml:0
 msgid "Enter your custom value"
 msgstr "輸入你的自訂值"
@@ -627,6 +562,12 @@ msgstr "輸入你的自訂值"
 #: code:addons/pos_self_order/static/src/app/pages/stand_number_page/stand_number_page.xml:0
 msgid "Enter your tracker number"
 msgstr "輸入你的追蹤號碼"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
+msgid "Extra:"
+msgstr ""
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.qr_codes_page
@@ -784,6 +725,12 @@ msgid "Internet Connection Lost"
 msgstr ""
 
 #. module: pos_self_order
+#. odoo-python
+#: code:addons/pos_self_order/models/pos_order.py:0
+msgid "Invalid preset"
+msgstr ""
+
+#. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/overrides/screens/ticket_screen/ticket_screen.js:0
 msgid "Invoiced"
@@ -809,6 +756,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:pos_self_order.pos_self_order_search_view
 msgid "Kiosk"
 msgstr "自助考勤終端"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/store/order_change_receipt_template.xml:0
+msgid "Kiosk T"
+msgstr ""
 
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_self_order_custom_link__name
@@ -991,7 +944,7 @@ msgstr "進行中"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/network_connectionLost_popup/network_connectionLost_popup.xml:0
 msgid "Online"
-msgstr ""
+msgstr "線上"
 
 #. module: pos_self_order
 #. odoo-python
@@ -1014,6 +967,7 @@ msgstr "開啟自助服務機"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/order_widget/order_widget.js:0
 #: code:addons/pos_self_order/static/src/app/pages/stand_number_page/stand_number_page.js:0
+#: code:addons/pos_self_order/static/src/app/store/order_change_receipt_template.xml:0
 msgid "Order"
 msgstr "訂單"
 
@@ -1032,7 +986,7 @@ msgstr "伺服器上找不到訂單"
 #. module: pos_self_order
 #: model:ir.model.fields,field_description:pos_self_order.field_pos_order__source
 msgid "Origin"
-msgstr ""
+msgstr "原始"
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1124,7 +1078,7 @@ msgstr "POS訂單"
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_pos_payment_method
 msgid "Point of Sale Payment Methods"
-msgstr "POS付款條件"
+msgstr "POS 銷售點付款方式"
 
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_pos_session
@@ -1165,7 +1119,7 @@ msgstr "列印二維碼"
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/printing_failure_popup/printing_failure_popup.js:0
 msgid "Printing failed"
-msgstr ""
+msgstr "列印失敗"
 
 #. module: pos_self_order
 #: model:ir.model,name:pos_self_order.model_product_template
@@ -1225,6 +1179,12 @@ msgstr "二維碼餐牌及訂購"
 #: code:addons/pos_self_order/static/src/app/components/quantity_widget/quantity_widget.xml:0
 msgid "Quantity select"
 msgstr "選擇數量"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/components/attribute_selection/attribute_selection.xml:0
+msgid "Required"
+msgstr ""
 
 #. module: pos_self_order
 #: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
@@ -1323,12 +1283,6 @@ msgstr ""
 
 #. module: pos_self_order
 #. odoo-javascript
-#: code:addons/pos_self_order/static/src/app/components/preset_info_popup/preset_info_popup.xml:0
-msgid "Select your address"
-msgstr "選擇你的地址"
-
-#. module: pos_self_order
-#. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/product_page/product_page.xml:0
 msgid "Selection"
 msgstr "選單"
@@ -1393,6 +1347,12 @@ msgstr ""
 #. module: pos_self_order
 #: model:ir.model.fields.selection,name:pos_self_order.selection__pos_order__source__mobile
 msgid "Self-Order Mobile"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/store/order_change_receipt_template.xml:0
+msgid "Self-Order T"
 msgstr ""
 
 #. module: pos_self_order
@@ -1724,6 +1684,11 @@ msgid "Zip"
 msgstr "郵遞區號"
 
 #. module: pos_self_order
+#: model_terms:ir.ui.view,arch_db:pos_self_order.res_config_settings_view_form_menu
+msgid "a"
+msgstr ""
+
+#. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/components/unavailable_product_dialog/unavailable_product_dialog.xml:0
 msgid "are"
@@ -1760,8 +1725,8 @@ msgstr "https://odoo.com"
 #. module: pos_self_order
 #. odoo-javascript
 #: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
-msgid "included"
-msgstr "已包括"
+msgid "included &"
+msgstr ""
 
 #. module: pos_self_order
 #. odoo-javascript
@@ -1779,6 +1744,31 @@ msgstr "不可用。請返回訂單進行修改。"
 #: model_terms:ir.ui.view,arch_db:pos_self_order.custom_link_tree
 msgid "odoo"
 msgstr "odoo"
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
+msgid "per extra unit"
+msgstr ""
+
+#. module: pos_self_order
+#. odoo-javascript
+#: code:addons/pos_self_order/static/src/app/pages/cart_page/cart_page.xml:0
+#: code:addons/pos_self_order/static/src/app/pages/combo_page/combo_page.xml:0
+msgid "x"
+msgstr ""
+
+#~ msgid "Choose your"
+#~ msgstr "選擇你的"
+
+#~ msgid "included"
+#~ msgstr "已包括"
+
+#~ msgid "Select your address"
+#~ msgstr "選擇你的地址"
+
+#~ msgid "/ Tracker number:"
+#~ msgstr "/ 追蹤號碼："
 
 #~ msgid ""
 #~ "%s is not available anymore, it has thus been removed from your order. "

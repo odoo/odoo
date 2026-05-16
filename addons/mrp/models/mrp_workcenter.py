@@ -3,6 +3,7 @@
 import json
 
 from babel.dates import format_date
+from collections import defaultdict
 from dateutil import relativedelta
 from datetime import timedelta, datetime
 from functools import partial
@@ -133,7 +134,8 @@ class MrpWorkcenter(models.Model):
     def _get_workcenter_load_per_week(self, week_range, date_start, date_stop):
         load_data = {rec: {} for rec in self}
         # demo data
-        if not self.order_ids:
+        has_workorder = self.env['mrp.workorder'].search_count([('workcenter_id', 'in', self.ids)], limit=1)
+        if not has_workorder:
             for wc in self:
                 load_limit = 40     # default max load per week is 40 hours on a new workcenter
                 load_data[wc] = {week_start: randint(0, int(load_limit * 2)) for week_start in week_range}
@@ -150,9 +152,10 @@ class MrpWorkcenter(models.Model):
 
     def _prepare_graph_data(self, load_data, week_range):
         graph_data = {wid: [] for wid in self._ids}
+        has_workorder = self.env['mrp.workorder'].search_count([('workcenter_id', 'in', self.ids)], limit=1)
         for workcenter in self:
             load_limit = sum(workcenter.resource_calendar_id.attendance_ids.mapped('duration_hours'))
-            wc_data = {'is_sample_data': not self.order_ids, 'labels': list(week_range.values())}
+            wc_data = {'is_sample_data': not has_workorder, 'labels': list(week_range.values())}
             load_bar = []
             excess_bar = []
             for week_start in week_range:
@@ -240,11 +243,28 @@ class MrpWorkcenter(models.Model):
 
     @api.depends('blocked_time', 'productive_time')
     def _compute_oee(self):
-        for order in self:
-            if order.productive_time:
-                order.oee = round(order.productive_time * 100.0 / (order.productive_time + order.blocked_time), 2)
+        time_data = self.env['mrp.workcenter.productivity']._read_group(
+            domain=[
+                ('date_start', '>=', fields.Datetime.to_string(datetime.now() - relativedelta.relativedelta(months=1))),
+                ('workcenter_id', 'in', self.ids),
+                ('date_end', '!=', False),
+            ],
+            groupby=['workcenter_id', 'loss_type'],
+            aggregates=['duration:sum'],
+        )
+        time_by_workcenter = defaultdict(lambda: {'productive_time': 0.0, 'blocked_time': 0.0})
+        for data in time_data:
+            workcenter, loss_type, duration = data
+            time_to_update = 'productive_time' if loss_type == 'productive' else 'blocked_time'
+            time_by_workcenter[workcenter.id][time_to_update] += duration
+        for workcenter in self:
+            workcenter_time = time_by_workcenter[workcenter.id]
+            productive_time = workcenter_time['productive_time']
+            if productive_time:
+                blocked_time = workcenter_time['blocked_time']
+                workcenter.oee = float_round(productive_time * 100.0 / (productive_time + blocked_time), precision_digits=2)
             else:
-                order.oee = 0.0
+                workcenter.oee = 0.0
 
     def _compute_performance(self):
         wo_data = self.env['mrp.workorder']._read_group([
@@ -332,6 +352,8 @@ class MrpWorkcenter(models.Model):
         :rtype: tuple
         """
         self.ensure_one()
+        ICP = self.env['ir.config_parameter'].sudo()
+        max_planning_iterations = max(int(ICP.get_param('mrp.workcenter_max_planning_iterations', '50')), 1)
         resource = self.resource_id
         revert = to_timezone(start_datetime.tzinfo)
         start_datetime = localized(start_datetime)
@@ -346,7 +368,7 @@ class MrpWorkcenter(models.Model):
         now = localized(datetime.now())
         delta = timedelta(days=14)
         start_interval, stop_interval = None, None
-        for n in range(50):  # 50 * 14 = 700 days in advance (hardcoded)
+        for n in range(max_planning_iterations):  # 50 * 14 = 700 days in advance
             if forward:
                 date_start = start_datetime + delta * n
                 date_stop = date_start + delta
@@ -592,7 +614,6 @@ class MrpWorkcenterCapacity(models.Model):
     _name = 'mrp.workcenter.capacity'
     _description = 'Work Center Capacity'
     _check_company_auto = True
-    _order = 'workcenter_id, product_id nulls first,product_uom_id,id'
 
     def _default_time_start(self):
         workcenter_id = self.workcenter_id.id or self.env.context.get('default_workcenter_id')
@@ -604,8 +625,8 @@ class MrpWorkcenterCapacity(models.Model):
 
     workcenter_id = fields.Many2one('mrp.workcenter', string='Work Center', required=True, index=True)
     product_id = fields.Many2one('product.product', string='Product')
-    product_uom_id = fields.Many2one('uom.uom', string='Unit', default=lambda self: self.env.ref('uom.product_uom_unit'),
-        compute="_compute_product_uom_id", store=True, readonly=False, required=True)
+    product_uom_id = fields.Many2one('uom.uom', string='Unit',
+        compute="_compute_product_uom_id", precompute=True, store=True, readonly=False, required=True)
     capacity = fields.Float('Capacity', help="Number of pieces that can be produced in parallel for this product or for all, depending on the unit.")
     time_start = fields.Float('Setup Time (minutes)', default=_default_time_start, help="Time in minutes for the setup.")
     time_stop = fields.Float('Cleanup Time (minutes)', default=_default_time_stop, help="Time in minutes for the cleaning.")

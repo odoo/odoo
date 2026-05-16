@@ -74,7 +74,10 @@ class LinkTracker(models.Model):
     @api.depends('code')
     def _compute_short_url(self):
         for tracker in self:
-            tracker.short_url = tools.urls.urljoin(tracker.short_url_host or '', tracker.code or '')
+            try:
+                tracker.short_url = tools.urls.urljoin(tracker.short_url_host or '', tracker.code or '')
+            except ValueError:
+                raise UserError(self.env._("Please enter valid short URL code."))
 
     def _compute_short_url_host(self):
         for tracker in self:

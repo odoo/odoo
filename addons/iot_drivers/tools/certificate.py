@@ -55,7 +55,8 @@ def get_certificate_end_date():
     if IS_RPI and float(get_version()[1:8]) < 2025.10:
         cert_end_date = cert.not_valid_after
     else:
-        cert_end_date = cert.not_valid_after_utc
+        cert_end_date = cert.not_valid_after_utc.replace(tzinfo=None)
+
     if (
         common_name == 'OdooTempIoTBoxCertificate'
         or datetime.datetime.now() > cert_end_date - datetime.timedelta(days=10)

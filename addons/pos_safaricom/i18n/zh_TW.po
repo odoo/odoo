@@ -1,0 +1,332 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * pos_safaricom
+#
+# "Tony Ng (ngto)" <ngto@odoo.com>, 2026.
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 19.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-05-01 17:36+0000\n"
+"PO-Revision-Date: 2026-04-16 03:10+0000\n"
+"Last-Translator: \"Tony Ng (ngto)\" <ngto@odoo.com>\n"
+"Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
+"projects/odoo-19/pos_safaricom/zh_Hant/>\n"
+"Language: zh_TW\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 5.16.2\n"
+
+#. module: pos_safaricom
+#. odoo-javascript
+#: code:addons/pos_safaricom/static/src/app/components/popups/mpesa_transaction_popup.xml:0
+msgid "'Search by name or phone or transaction id...'"
+msgstr ""
+
+#. module: pos_safaricom
+#. odoo-javascript
+#: code:addons/pos_safaricom/static/src/app/components/popups/mpesa_transaction_popup.xml:0
+msgid "'Select M-Pesa Transaction'"
+msgstr ""
+
+#. module: pos_safaricom
+#. odoo-javascript
+#: code:addons/pos_safaricom/static/src/app/components/popups/mpesa_transaction_popup.xml:0
+msgid "Accept"
+msgstr "接受"
+
+#. module: pos_safaricom
+#. odoo-javascript
+#: code:addons/pos_safaricom/static/src/app/components/popups/mpesa_transaction_popup.xml:0
+#: model:ir.model.fields,field_description:pos_safaricom.field_transaction_lipa_na_mpesa__amount
+msgid "Amount"
+msgstr "金額"
+
+#. module: pos_safaricom
+#. odoo-javascript
+#: code:addons/pos_safaricom/static/src/app/components/popups/mpesa_transaction_popup.xml:0
+msgid "Arrived at"
+msgstr "到達"
+
+#. module: pos_safaricom
+#: model:ir.model.fields,field_description:pos_safaricom.field_pos_payment_method__business_short_code
+msgid "Business Short Code"
+msgstr "業務簡短代碼"
+
+#. module: pos_safaricom
+#: model_terms:ir.ui.view,arch_db:pos_safaricom.pos_payment_method_view_form_inherit_pos_safaricom
+msgid ""
+"C2B callback URLs must be registered with Safaricom for Lipa na M-PESA to "
+"work.\n"
+"                        This happens automatically on creation, but you can "
+"re-register if you deleted them from the business portal."
+msgstr ""
+
+#. module: pos_safaricom
+#. odoo-javascript
+#: code:addons/pos_safaricom/static/src/app/components/popups/mpesa_transaction_popup.xml:0
+msgid "Cancel"
+msgstr "取消"
+
+#. module: pos_safaricom
+#. odoo-javascript
+#: code:addons/pos_safaricom/static/src/app/payment_safaricom.js:0
+msgid "Cannot process transactions with float numbers. Round it please."
+msgstr "不能處理包含浮點數的交易。請將數額取整。"
+
+#. module: pos_safaricom
+#. odoo-javascript
+#: code:addons/pos_safaricom/static/src/app/payment_safaricom.js:0
+msgid "Cannot process transactions with negative amount."
+msgstr "不能處理包含負數金額的交易。"
+
+#. module: pos_safaricom
+#: model:ir.model.fields,field_description:pos_safaricom.field_pos_payment_method__consumer_key
+msgid "Consumer Key"
+msgstr "消費者密鑰"
+
+#. module: pos_safaricom
+#. odoo-python
+#: code:addons/pos_safaricom/models/pos_payment_method.py:0
+msgid "Consumer Key and Consumer Secret are required for Safaricom M-Pesa"
+msgstr "使用 Safaricom M-Pesa 需要消費者密鑰及消費者秘密。"
+
+#. module: pos_safaricom
+#: model:ir.model.fields,field_description:pos_safaricom.field_pos_payment_method__consumer_secret
+msgid "Consumer Secret"
+msgstr "消費者秘密"
+
+#. module: pos_safaricom
+#. odoo-python
+#: code:addons/pos_safaricom/models/pos_payment_method.py:0
+msgid ""
+"Could not find base url. Please set up web.base.url to a valid https address"
+msgstr ""
+
+#. module: pos_safaricom
+#: model:ir.model.fields,field_description:pos_safaricom.field_transaction_lipa_na_mpesa__create_uid
+msgid "Created by"
+msgstr "建立者"
+
+#. module: pos_safaricom
+#: model:ir.model.fields,field_description:pos_safaricom.field_transaction_lipa_na_mpesa__create_date
+msgid "Created on"
+msgstr "建立日期"
+
+#. module: pos_safaricom
+#: model:ir.model.fields,field_description:pos_safaricom.field_pos_payment_method__display_name
+#: model:ir.model.fields,field_description:pos_safaricom.field_transaction_lipa_na_mpesa__display_name
+msgid "Display Name"
+msgstr "顯示名稱"
+
+#. module: pos_safaricom
+#. odoo-javascript
+#: code:addons/pos_safaricom/static/src/app/payment_safaricom.js:0
+msgid "Failed to generate QR code"
+msgstr "未能產生二維碼"
+
+#. module: pos_safaricom
+#. odoo-python
+#: code:addons/pos_safaricom/models/pos_payment_method.py:0
+msgid "Failed to register URLs. Check your credentials and try again."
+msgstr "未能登記網址。請檢查你的憑證，然後再試。"
+
+#. module: pos_safaricom
+#. odoo-python
+#: code:addons/pos_safaricom/models/pos_payment_method.py:0
+msgid "Failed to register URLs: %s"
+msgstr ""
+
+#. module: pos_safaricom
+#. odoo-python
+#: code:addons/pos_safaricom/models/pos_payment_method.py:0
+msgid "Failed to retrieve access token from Safaricom"
+msgstr "未能從 Safaricom 讀取存取權杖。"
+
+#. module: pos_safaricom
+#. odoo-javascript
+#: code:addons/pos_safaricom/static/src/app/components/popups/mpesa_transaction_popup.xml:0
+#: model:ir.model.fields,field_description:pos_safaricom.field_pos_payment_method__id
+#: model:ir.model.fields,field_description:pos_safaricom.field_transaction_lipa_na_mpesa__id
+msgid "ID"
+msgstr "識別碼"
+
+#. module: pos_safaricom
+#. odoo-python
+#: code:addons/pos_safaricom/models/pos_payment_method.py:0
+msgid "Invalid phone number format. Please use format: 2547XXXXXXXX"
+msgstr "電話號碼格式無效。請使用以下格式：2547XXXXXXXX"
+
+#. module: pos_safaricom
+#: model:ir.model.fields,field_description:pos_safaricom.field_transaction_lipa_na_mpesa__write_uid
+msgid "Last Updated by"
+msgstr "最後更新者"
+
+#. module: pos_safaricom
+#: model:ir.model.fields,field_description:pos_safaricom.field_transaction_lipa_na_mpesa__write_date
+msgid "Last Updated on"
+msgstr "最後更新日期"
+
+#. module: pos_safaricom
+#: model:ir.model.fields.selection,name:pos_safaricom.selection__pos_payment_method__safaricom_payment_type__lipa_na_mpesa
+msgid "Lipa na M-PESA"
+msgstr "Lipa na M-PESA"
+
+#. module: pos_safaricom
+#: model_terms:ir.ui.view,arch_db:pos_safaricom.pos_payment_method_view_form_inherit_pos_safaricom
+msgid "Lipa na M-PESA Configuration"
+msgstr "Lipa na M-PESA 配置"
+
+#. module: pos_safaricom
+#: model:ir.model.fields.selection,name:pos_safaricom.selection__pos_payment_method__safaricom_payment_type__mpesa_express
+msgid "M-PESA Express"
+msgstr "M-PESA Express"
+
+#. module: pos_safaricom
+#. odoo-javascript
+#: code:addons/pos_safaricom/static/src/app/payment_safaricom.js:0
+msgid "M-Pesa Phone Number"
+msgstr "M-Pesa 電話號碼"
+
+#. module: pos_safaricom
+#. odoo-javascript
+#: code:addons/pos_safaricom/static/src/app/components/popups/mpesa_transaction_popup.xml:0
+msgid "M-Pesa QR Code"
+msgstr "M-Pesa 二維碼"
+
+#. module: pos_safaricom
+#. odoo-javascript
+#: code:addons/pos_safaricom/static/src/app/components/popups/mpesa_transaction_popup.xml:0
+#: model:ir.model.fields,field_description:pos_safaricom.field_transaction_lipa_na_mpesa__name
+msgid "Name"
+msgstr "名稱"
+
+#. module: pos_safaricom
+#: model:ir.model.fields,field_description:pos_safaricom.field_transaction_lipa_na_mpesa__number
+msgid "Number"
+msgstr "編號"
+
+#. module: pos_safaricom
+#: model:ir.model.fields,field_description:pos_safaricom.field_pos_payment_method__passkey
+msgid "Passkey"
+msgstr "通行密鑰"
+
+#. module: pos_safaricom
+#. odoo-javascript
+#: code:addons/pos_safaricom/static/src/app/services/pos_store.js:0
+msgid "Payment Failed"
+msgstr "付款失敗"
+
+#. module: pos_safaricom
+#: model:ir.model.fields,field_description:pos_safaricom.field_pos_payment_method__safaricom_payment_type
+msgid "Payment Type"
+msgstr "付款類型"
+
+#. module: pos_safaricom
+#. odoo-javascript
+#: code:addons/pos_safaricom/static/src/app/payment_safaricom.js:0
+msgid "Payment line not found"
+msgstr "找不到付款資料行"
+
+#. module: pos_safaricom
+#. odoo-javascript
+#: code:addons/pos_safaricom/static/src/app/services/pos_store.js:0
+msgid "Payment was not completed"
+msgstr "付款未完成"
+
+#. module: pos_safaricom
+#. odoo-javascript
+#: code:addons/pos_safaricom/static/src/app/components/popups/mpesa_transaction_popup.xml:0
+msgid "Phone"
+msgstr "電話"
+
+#. module: pos_safaricom
+#. odoo-javascript
+#: code:addons/pos_safaricom/static/src/app/payment_safaricom.js:0
+msgid "Phone number is required for M-Pesa payment."
+msgstr "使用 M-Pesa 付款需要有電話號碼。"
+
+#. module: pos_safaricom
+#: model:ir.model,name:pos_safaricom.model_pos_payment_method
+msgid "Point of Sale Payment Methods"
+msgstr "POS 銷售點付款方式"
+
+#. module: pos_safaricom
+#: model:ir.model.fields,field_description:pos_safaricom.field_transaction_lipa_na_mpesa__received_at
+msgid "Received At"
+msgstr "收到"
+
+#. module: pos_safaricom
+#. odoo-javascript
+#: code:addons/pos_safaricom/static/src/app/components/popups/mpesa_transaction_popup.xml:0
+msgid "Refresh"
+msgstr "更新"
+
+#. module: pos_safaricom
+#: model_terms:ir.ui.view,arch_db:pos_safaricom.pos_payment_method_view_form_inherit_pos_safaricom
+msgid "Register URLs"
+msgstr "登記網址"
+
+#. module: pos_safaricom
+#: model_terms:ir.ui.view,arch_db:pos_safaricom.pos_payment_method_view_form_inherit_pos_safaricom
+msgid "Register or re-register C2B callback URLs with Safaricom"
+msgstr "向 Safaricom 登記或重新登記 C2B 回呼網址"
+
+#. module: pos_safaricom
+#. odoo-javascript
+#: code:addons/pos_safaricom/static/src/app/payment_safaricom.js:0
+msgid "Safaricom M-Pesa Error"
+msgstr "Safaricom M-Pesa 錯誤"
+
+#. module: pos_safaricom
+#. odoo-javascript
+#: code:addons/pos_safaricom/static/src/app/components/popups/mpesa_transaction_popup.xml:0
+msgid "Scan to Pay with M-Pesa"
+msgstr "掃瞄以用 M-Pesa 付款"
+
+#. module: pos_safaricom
+#: model:ir.model.fields,field_description:pos_safaricom.field_pos_payment_method__safaricom_test_mode
+msgid "Test Mode"
+msgstr "測試模式"
+
+#. module: pos_safaricom
+#: model:ir.model.fields,help:pos_safaricom.field_pos_payment_method__business_short_code
+msgid ""
+"The business short code and till number combination as 'shortcode-"
+"tillnumber' (ex: 123456-789012)"
+msgstr ""
+
+#. module: pos_safaricom
+#: model:ir.model.fields,help:pos_safaricom.field_pos_payment_method__passkey
+msgid "The passkey is used to generate the password for the STK Push"
+msgstr "此通行密鑰用於為 STK Push 推送功能產生密碼。"
+
+#. module: pos_safaricom
+#: model:ir.model.fields,field_description:pos_safaricom.field_transaction_lipa_na_mpesa__trans_id
+msgid "Transaction ID"
+msgstr "交易識別碼"
+
+#. module: pos_safaricom
+#: model:ir.model,name:pos_safaricom.model_transaction_lipa_na_mpesa
+msgid "Transaction Lipa na M-PESA"
+msgstr "Lipa na M-PESA 交易"
+
+#. module: pos_safaricom
+#: model:ir.model.fields,help:pos_safaricom.field_pos_payment_method__safaricom_test_mode
+msgid "Use sandbox environment"
+msgstr "使用沙盒環境"
+
+#~ msgid ""
+#~ "C2B callback URLs must be registered with Safaricom for Lipa na M-PESA to "
+#~ "work.\n"
+#~ "                            This happens automatically on creation, but "
+#~ "you can re-register if you deleted them from the business portal."
+#~ msgstr ""
+#~ "若要 Lipa na M-PESA 正常運作，C2B 回呼網址必須已在 Safaricom 登記。\n"
+#~ "                            建立記錄時，系統會自動執行此操作，但如果你已在"
+#~ "企業門戶網站刪除這些資料，可以重新登記。"
+
+#~ msgid "Failed to register URLs"
+#~ msgstr "未能登記網址"

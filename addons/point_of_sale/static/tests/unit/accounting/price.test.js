@@ -35,9 +35,11 @@ test("Prices includes", async () => {
     expectFormattedPrice(order.currencyDisplayPrice, "$ 1,390.00");
     expectFormattedPrice(order.currencyAmountTaxes, "$ 290.00");
     expectFormattedPrice(order.lines[0].currencyDisplayPrice, "$ 1,250.00");
-    expectFormattedPrice(order.lines[0].currencyDisplayPriceUnit, "$ 1,000.00");
+    expectFormattedPrice(order.lines[0].currencyDisplayPriceUnit, "$ 1,250.00");
+    expectFormattedPrice(order.lines[0].currencyDisplayPriceUnitExcl, "$ 1,000.00");
     expectFormattedPrice(order.lines[1].currencyDisplayPrice, "$ 140.00");
-    expectFormattedPrice(order.lines[1].currencyDisplayPriceUnit, "$ 100.00");
+    expectFormattedPrice(order.lines[1].currencyDisplayPriceUnit, "$ 140.00");
+    expectFormattedPrice(order.lines[1].currencyDisplayPriceUnitExcl, "$ 100.00");
 });
 
 test("Prices excludes", async () => {
@@ -51,4 +53,30 @@ test("Prices excludes", async () => {
     expectFormattedPrice(order.lines[0].currencyDisplayPriceUnit, "$ 1,000.00");
     expectFormattedPrice(order.lines[1].currencyDisplayPrice, "$ 100.00");
     expectFormattedPrice(order.lines[1].currencyDisplayPriceUnit, "$ 100.00");
+});
+
+test("Combo prices incl and excl", async () => {
+    const store = await setupPosEnv();
+    const order = store.addNewOrder();
+
+    const template = store.models["product.template"].get(7);
+    const comboProduct = store.models["product.combo.item"].get(1);
+
+    await store.addLineToOrder(
+        {
+            product_tmpl_id: template,
+            payload: [[{ combo_item_id: comboProduct, qty: 1 }]],
+            qty: 1,
+        },
+        order
+    );
+    order.setOrderPrices();
+
+    const [comboParentLine, comboChildLine] = order.lines;
+
+    expect(comboParentLine.comboTotalPrice).toBe(3.75);
+    expect(comboParentLine.comboTotalPriceWithoutTax).toBe(3);
+
+    expect(comboChildLine.comboTotalPrice).toBe(3.75);
+    expect(comboChildLine.comboTotalPriceWithoutTax).toBe(3);
 });

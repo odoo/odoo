@@ -753,11 +753,12 @@ export class OdooPivotModel extends PivotModel {
         const allGroupBys = params.groupingSets.flat();
         const order = columns
             .concat(rows)
-            .filter(
-                (dimension) =>
-                    dimension.order && allGroupBys.includes(dimension.nameWithGranularity)
+            .filter((dimension) => allGroupBys.includes(dimension.nameWithGranularity))
+            .map((dimension) =>
+                dimension.order
+                    ? `${dimension.nameWithGranularity} ${dimension.order}`
+                    : dimension.nameWithGranularity
             )
-            .map((dimension) => `${dimension.nameWithGranularity} ${dimension.order}`)
             .join(",");
         params.kwargs.order = order;
 

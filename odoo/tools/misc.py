@@ -29,7 +29,7 @@ from collections import defaultdict
 from collections.abc import Iterable, Iterator, Mapping, MutableMapping, MutableSet, Reversible
 from contextlib import ContextDecorator, contextmanager
 from difflib import HtmlDiff
-from functools import reduce, wraps
+from functools import lru_cache, reduce, wraps
 from itertools import islice, groupby as itergroupby
 from operator import itemgetter
 
@@ -229,7 +229,7 @@ def file_path(file_path: str, filter_ext: tuple[str, ...] = ('',), env: Environm
         addons_paths = list(map(os.path.dirname, module.__path__))
     else:
         root_path = os.path.abspath(config.root_path)
-        temporary_paths = env.transaction._Transaction__file_open_tmp_paths if env else ()
+        temporary_paths = env.transaction._Transaction__file_open_tmp_paths if env else []
         addons_paths = [*odoo.addons.__path__, root_path, *temporary_paths]
 
     for addons_dir in addons_paths:
@@ -305,13 +305,12 @@ def file_open_temporary_directory(env: Environment):
     :param env: environment for which the temporary directory is created.
     :return: the absolute path to the created temporary directory
     """
-    assert not env.transaction._Transaction__file_open_tmp_paths, 'Reentrancy is not implemented for this method'
     with tempfile.TemporaryDirectory() as module_dir:
         try:
-            env.transaction._Transaction__file_open_tmp_paths = (module_dir,)
+            env.transaction._Transaction__file_open_tmp_paths.append(module_dir)
             yield module_dir
         finally:
-            env.transaction._Transaction__file_open_tmp_paths = ()
+            env.transaction._Transaction__file_open_tmp_paths.remove(module_dir)
 
 
 #----------------------------------------------------------
@@ -814,12 +813,22 @@ class lower_logging(logging.Handler):
             record.levelname = f'_{record.levelname}'
             record.levelno = self.to_level
             self.had_error_log = True
-            record.args = tuple(arg.replace('Traceback (most recent call last):', '_Traceback_ (most recent call last):') if isinstance(arg, str) else arg for arg in record.args)
+            if MungedTracebackLogRecord.__base__ is logging.LogRecord:
+                MungedTracebackLogRecord.__bases__ = (record.__class__,)
+            record.__class__ = MungedTracebackLogRecord
 
         if logging.getLogger(record.name).isEnabledFor(record.levelno):
             for handler in self.old_handlers:
                 if handler.level <= record.levelno:
                     handler.emit(record)
+
+
+class MungedTracebackLogRecord(logging.LogRecord):
+    def getMessage(self):
+        return super().getMessage().replace(
+            'Traceback (most recent call last):',
+            '_Traceback_ (most recent call last):',
+        )
 
 
 def stripped_sys_argv(*strip_args):
@@ -1080,6 +1089,9 @@ class OrderedSet(MutableSet[T], typing.Generic[T]):
     def intersection(self, *others):
         return reduce(OrderedSet.__and__, others, self)
 
+    def copy(self):
+        return self.__class__(self)
+
 
 class LastOrderedSet(OrderedSet[T], typing.Generic[T]):
     """ A set collection that remembers the elements last insertion order. """
@@ -1160,6 +1172,9 @@ class Callbacks:
         """ Remove all callbacks and data from self. """
         self._funcs.clear()
         self.data.clear()
+
+    def __len__(self) -> int:
+        return len(self._funcs)
 
 
 class ReversedIterable(Reversible[T], typing.Generic[T]):
@@ -1304,6 +1319,7 @@ def get_lang(env: Environment, lang_code: str | None = None) -> LangData:
     return env['res.lang']._get_data(code=lang)
 
 
+@lru_cache
 def babel_locale_parse(lang_code: str | None) -> babel.Locale:
     if lang_code:
         try:
@@ -1461,7 +1477,8 @@ def format_datetime(
     :param env:
     :param str|datetime value: naive datetime to format either in string or in datetime
     :param str tz: name of the timezone  in which the given datetime should be localized
-    :param str dt_format: one of “full”, “long”, “medium”, or “short”, or a custom date/time pattern compatible with `babel` lib
+    :param str dt_format: “medium”, or “short” to use res.lang format with or without the
+        seconds. Or a custom date/time pattern compatible with `babel` lib
     :param str lang_code: ISO code of the language to use to render the given datetime
     :rtype: str
     """
@@ -1488,12 +1505,13 @@ def format_datetime(
         date_format = posix_to_ldml(lang.date_format, locale=locale)
         time_format = posix_to_ldml(lang.time_format, locale=locale)
         dt_format = '%s %s' % (date_format, time_format)
+    elif dt_format == 'short':
+        date_format = posix_to_ldml(lang.date_format, locale=locale)
+        time_format = posix_to_ldml(lang.time_format.replace(':%S', ''), locale=locale)
+        dt_format = '%s %s' % (date_format, time_format)
 
     # Babel allows to format datetime in a specific language without change locale
     # So month 1 = January in English, and janvier in French
-    # Be aware that the default value for format is 'medium', instead of 'short'
-    #     medium:  Jan 5, 2016, 10:20:31 PM |   5 janv. 2016 22:20:31
-    #     short:   1/5/16, 10:20 PM         |   5/01/16 22:20
     # Formatting available here : http://babel.pocoo.org/en/latest/dates.html#date-fields
     return babel.dates.format_datetime(localized_datetime, dt_format, locale=locale)
 
@@ -1509,9 +1527,10 @@ def format_time(
 
         :param env:
         :param value: the time to format
-        :type value: `datetime.time` instance. Could be timezoned to display tzinfo according to format (e.i.: 'full' format)
+        :type value: `datetime.time` instance. Could be timezoned to display tzinfo according to format
         :param tz: name of the timezone  in which the given datetime should be localized
-        :param time_format: one of “full”, “long”, “medium”, or “short”, or a custom time pattern
+        :param str time_format: “medium”, or “short” to use res.lang format with or without the
+            seconds. Or a custom time pattern compatible with `babel` lib
         :param lang_code: ISO
 
         :rtype str
@@ -1538,6 +1557,8 @@ def format_time(
     locale = babel_locale_parse(lang.code)
     if not time_format or time_format == 'medium':
         time_format = posix_to_ldml(lang.time_format, locale=locale)
+    elif time_format == 'short':
+        time_format = posix_to_ldml(lang.time_format.replace(':%S', ''), locale=locale)
 
     return babel.dates.format_time(localized_time, format=time_format, locale=locale)
 

@@ -25,7 +25,6 @@ registry.category("web_tour.tours").add("generic_localization_tour", {
                 content: "receipt screen is shown",
                 trigger: ".pos .receipt-screen",
             },
-            ReceiptScreen.isShown(),
             ReceiptScreen.clickNextOrder(),
             ProductScreen.isShown(),
             Chrome.endTour(),

@@ -10,13 +10,15 @@
 # Chrille Hedberg <hedberg.chrille@gmail.com>, 2022
 # Daniel Osser <danielosser@gmail.com>, 2023
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# Jakob Krabbe <jakob.krabbe@vertel.se>, 2025.
+# Hanna Kharraziha <hakha@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:37+0000\n"
-"PO-Revision-Date: 2025-09-16 21:34+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"POT-Creation-Date: 2026-04-17 18:38+0000\n"
+"PO-Revision-Date: 2026-03-20 17:34+0000\n"
+"Last-Translator: Hanna Kharraziha <hakha@odoo.com>\n"
 "Language-Team: Swedish <https://translate.odoo.com/projects/odoo-19/base_vat/"
 "sv/>\n"
 "Language: sv\n"
@@ -24,13 +26,13 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "1-01-85004-3 or 101850043"
-msgstr ""
+msgstr "1-01-85004-3 eller 101850043"
 
 #. module: base_vat
 #. odoo-python
@@ -43,7 +45,14 @@ msgstr ""
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
-msgid "17291716060 (NIN) or 1729171602 (VKN)"
+msgid "11111111111 (NIN) or 2222222222 (VKN)"
+msgstr ""
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid ""
+"12345678 or UA12345678 (EDRPOU), 1234567890 (RNOPP) or 123456789012 (IPN)"
 msgstr ""
 
 #. module: base_vat
@@ -66,6 +75,11 @@ msgid "49-098-576 or 49098576"
 msgstr "49-098-576 eller 49098576"
 
 #. module: base_vat
+#: model:ir.actions.server,name:base_vat.vies_iap_check_update_ir_actions_server
+msgid "Base VAT: Sync updates from IAP VIES"
+msgstr ""
+
+#. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "CHE-123.456.788 TVA or CHE-123.456.788 MWST or CHE-123.456.788 IVA"
@@ -83,16 +97,6 @@ msgid "Config Settings"
 msgstr "Inställningar"
 
 #. module: base_vat
-#. odoo-python
-#: code:addons/base_vat/models/res_partner.py:0
-msgid ""
-"Connection with the VIES server failed. The VAT number %s could not be "
-"validated."
-msgstr ""
-"Anslutningen till VIES-servern misslyckades. Momsnumret %s kunde inte "
-"bekräftas."
-
-#. module: base_vat
 #: model:ir.model,name:base_vat.model_res_partner
 msgid "Contact"
 msgstr "Kontakt"
@@ -107,7 +111,7 @@ msgstr "Land"
 #. module: base_vat
 #: model:ir.model,website_form_label:base_vat.model_res_partner
 msgid "Create a Customer"
-msgstr ""
+msgstr "Skapa en kund"
 
 #. module: base_vat
 #. odoo-python
@@ -136,6 +140,8 @@ msgstr ""
 msgid ""
 "Example: '219999830019' (format: 12 digits, all numbers, valid check digit)"
 msgstr ""
+"Exempel: '219999830019' (format: 12 siffror, alla nummer, giltig "
+"kontrollsiffra)"
 
 #. module: base_vat
 #. odoo-python
@@ -147,7 +153,7 @@ msgstr "GB123456782 eller XI123456782"
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "GODE561231GR8"
-msgstr ""
+msgstr "GODE561231GR8"
 
 #. module: base_vat
 #. odoo-python
@@ -158,7 +164,7 @@ msgstr "HU12345676 eller 12345678-1-11 eller 8071592153"
 #. module: base_vat
 #: model:ir.model.fields,field_description:base_vat.field_res_country__has_foreign_fiscal_position
 msgid "Has Foreign Fiscal Position"
-msgstr ""
+msgstr "Har utländsk skatteområde"
 
 #. module: base_vat
 #: model:ir.model.fields,field_description:base_vat.field_res_company__id
@@ -179,6 +185,13 @@ msgstr ""
 "europeiska VIES-tjänsten."
 
 #. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid ""
+"If you are trying to input a European number, this is the expected format: "
+msgstr ""
+
+#. module: base_vat
 #: model:ir.model.fields,field_description:base_vat.field_res_partner__vies_valid
 #: model:ir.model.fields,field_description:base_vat.field_res_users__vies_valid
 msgid "Intra-Community Valid"
@@ -187,8 +200,14 @@ msgstr "Giltighet inom gemenskapen"
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
-msgid "Note: the expected format is %(expected_format)s"
+msgid "Invalid IAP VIES endpoint"
 msgstr ""
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid "Note: the expected format is %(expected_format)s"
+msgstr "Notera: det förväntade formatet är %(expected_format)s"
 
 #. module: base_vat
 #: model:ir.model.fields,field_description:base_vat.field_res_partner__perform_vies_validation
@@ -210,6 +229,8 @@ msgid ""
 "The %(vat_label)s number [%(wrong_vat)s] does not seem to be valid. %"
 "(expected_note)s"
 msgstr ""
+"%(vat_label)s-numret [%(wrong_vat)s] verkar inte vara giltigt. %"
+"(expected_note)s"
 
 #. module: base_vat
 #. odoo-python
@@ -217,6 +238,14 @@ msgstr ""
 msgid ""
 "The %(vat_label)s number [%(wrong_vat)s] for %(record_label)s does not seem "
 "to be valid. %(expected_note)s"
+msgstr ""
+"%(vat_label)s-numret [%(wrong_vat)s] för %(record_label)s verkar inte vara "
+"giltigt. %(expected_note)s"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+msgid "The Intra-Community validity has been updated."
 msgstr ""
 
 #. module: base_vat
@@ -234,24 +263,20 @@ msgstr ""
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
-msgid "The VAT number %s could not be interpreted by the VIES server."
-msgstr "Momsnumret %s kunde inte tolkas av VIES-servern."
+msgid "The VIES check failed. Please check the Tax ID manually."
+msgstr ""
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
-msgid ""
-"The request for VAT validation was not processed. VIES service has responded "
-"with the following error: %s"
+msgid "The VIES check is pending. The status will be updated soon."
 msgstr ""
-"Begäran om validering av moms behandlades inte. VIES-tjänsten har svarat med "
-"följande fel: %s"
 
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "To explicitly indicate no (valid) VAT, use '/' instead. "
-msgstr ""
+msgstr "För att uttryckligen ange ingen (giltig) moms, använd '/' istället. "
 
 #. module: base_vat
 #. odoo-python
@@ -273,6 +298,12 @@ msgstr "Verifiera momsregistreringsnummer med VIES-tjänsten"
 #. module: base_vat
 #. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
+msgid "XXXXXXXXX [9 digits]"
+msgstr ""
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
 msgid "XXXXXXXXX [9 digits] and it should respect the Luhn algorithm checksum"
 msgstr ""
 "XXXXXXXXX [9 siffror] och den bör respektera Luhn-algoritmens kontrollsumma"
@@ -288,6 +319,26 @@ msgstr "antingen 11 siffror för CPF eller 14 siffror för CNPJ"
 #: code:addons/base_vat/models/res_partner.py:0
 msgid "partner [%s]"
 msgstr "företag [%s]"
+
+#~ msgid ""
+#~ "Connection with the VIES server failed. The VAT number %s could not be "
+#~ "validated."
+#~ msgstr ""
+#~ "Anslutningen till VIES-servern misslyckades. Momsnumret %s kunde inte "
+#~ "bekräftas."
+
+#~ msgid "The VAT number %s could not be interpreted by the VIES server."
+#~ msgstr "Momsnumret %s kunde inte tolkas av VIES-servern."
+
+#~ msgid ""
+#~ "The request for VAT validation was not processed. VIES service has "
+#~ "responded with the following error: %s"
+#~ msgstr ""
+#~ "Begäran om validering av moms behandlades inte. VIES-tjänsten har svarat "
+#~ "med följande fel: %s"
+
+#~ msgid "17291716060 (NIN) or 1729171602 (VKN)"
+#~ msgstr "17291716060 (NIN) eller 1729171602 (VKN)"
 
 #~ msgid "Fiscal Position"
 #~ msgstr "Skatteområde"

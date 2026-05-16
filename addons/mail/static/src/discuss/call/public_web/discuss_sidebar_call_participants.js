@@ -1,6 +1,7 @@
 import { Component, useEffect, useState } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { Thread } from "@mail/core/common/thread_model";
+import { CALL_ICON_DEAFEN, CALL_ICON_MUTED } from "@mail/discuss/call/common/call_actions";
 import { AvatarStack } from "@mail/discuss/core/common/avatar_stack";
 import { useHover } from "@mail/utils/common/hooks";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
@@ -27,6 +28,8 @@ export class DiscussSidebarCallParticipants extends Component {
         });
         this.state = useState({ expanded: false });
         this.floating = useDropdownState();
+        this.CALL_ICON_DEAFEN = CALL_ICON_DEAFEN;
+        this.CALL_ICON_MUTED = CALL_ICON_MUTED;
         useEffect(
             (selfSession, compact) => {
                 if (selfSession?.in(this.sessions) && !compact) {

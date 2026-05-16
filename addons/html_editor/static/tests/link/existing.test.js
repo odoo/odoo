@@ -110,7 +110,7 @@ test("should add a character in the link after a br tag", async () => {
     });
 });
 
-test("should remove an empty link on save", async () => {
+test("should remove an empty link on save (1)", async () => {
     await testEditor({
         contentBefore: '<p>a<a href="http://test.test/">b[]</a>c</p>',
         contentBeforeEdit:
@@ -120,11 +120,17 @@ test("should remove an empty link on save", async () => {
             '<p>a\ufeff<a href="http://test.test/" class="o_link_in_selection">\ufeff[]\ufeff</a>\ufeffc</p>',
         contentAfter: "<p>a[]c</p>",
     });
+});
+
+test("should remove an empty link on save (2)", async () => {
     await testEditor({
-        contentBefore: '<p>a<a href="http://test.test/"></a>b</p>',
-        contentBeforeEdit: '<p>a\ufeff<a href="http://test.test/">\ufeff\ufeff</a>\ufeffb</p>',
-        contentAfterEdit: '<p>a\ufeff<a href="http://test.test/">\ufeff\ufeff</a>\ufeffb</p>',
-        contentAfter: "<p>ab</p>",
+        contentBefore: '<p>a<a href="http://test.test/">c[]</a>b</p>',
+        contentBeforeEdit:
+            '<p>a\ufeff<a href="http://test.test/" class="o_link_in_selection">\ufeffc[]\ufeff</a>\ufeffb</p>',
+        stepFunction: deleteBackward,
+        contentAfterEdit:
+            '<p>a\ufeff<a href="http://test.test/" class="o_link_in_selection">\ufeff[]\ufeff</a>\ufeffb</p>',
+        contentAfter: "<p>a[]b</p>",
     });
 });
 
@@ -140,13 +146,13 @@ test("should not remove a link containing an image on save", async () => {
 test("should not remove a document link on save", async () => {
     await testEditor({
         contentBefore:
-            '<p>a<a href="exist" class="o_image" title="file.js.map" data-mimetype="text/plain"></a>b</p>',
+            '<p>a<span class="o_file_box"><a href="exist" title="file.js.map" data-mimetype="text/plain"></a></span>b</p>',
         contentBeforeEdit:
-            '<p>a<a href="exist" class="o_image" title="file.js.map" data-mimetype="text/plain" contenteditable="false"></a>b</p>',
+            '<p>a\ufeff<span class="o_file_box" contenteditable="false"><a href="exist" title="file.js.map" data-mimetype="text/plain"></a></span>\ufeffb</p>',
         contentAfterEdit:
-            '<p>a<a href="exist" class="o_image" title="file.js.map" data-mimetype="text/plain" contenteditable="false"></a>b</p>',
+            '<p>a\ufeff<span class="o_file_box" contenteditable="false"><a href="exist" title="file.js.map" data-mimetype="text/plain"></a></span>\ufeffb</p>',
         contentAfter:
-            '<p>a<a href="exist" class="o_image" title="file.js.map" data-mimetype="text/plain"></a>b</p>',
+            '<p>a<span class="o_file_box"><a href="exist" title="file.js.map" data-mimetype="text/plain"></a></span>b</p>',
     });
 });
 

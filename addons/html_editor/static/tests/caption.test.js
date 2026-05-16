@@ -3,12 +3,13 @@ import {
     manuallyDispatchProgrammaticEvent,
     click,
     press,
+    queryAll,
     queryOne,
     waitFor,
     waitForNone,
 } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
-import { contains, makeMockEnv, onRpc } from "@web/../tests/web_test_helpers";
+import { contains, makeMockEnv, onRpc, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { CaptionPlugin } from "@html_editor/others/embedded_components/plugins/caption_plugin/caption_plugin";
 import { MAIN_PLUGINS, EMBEDDED_COMPONENT_PLUGINS } from "@html_editor/plugin_sets";
 import { MAIN_EMBEDDINGS } from "@html_editor/others/embedded_components/embedding_sets";
@@ -17,8 +18,10 @@ import { setupEditor, testEditor } from "./_helpers/editor";
 import { unformat } from "./_helpers/format";
 import { deleteBackward, deleteForward, insertText } from "./_helpers/user_actions";
 import { cleanHints } from "./_helpers/dispatch";
-import { getContent } from "./_helpers/selection";
+import { getContent, setSelection } from "./_helpers/selection";
 import { expectElementCount } from "./_helpers/ui_expectations";
+import { childNodeIndex, nodeSize } from "@html_editor/utils/position";
+import { parseHTML } from "@html_editor/utils/html";
 
 class CaptionPluginWithPredictableId extends CaptionPlugin {
     getCaptionId() {
@@ -61,9 +64,8 @@ const toggleCaption = async (captionText) => {
 };
 const addLinkToImage = async (url) => {
     await click("img");
-    await waitFor(".o-we-toolbar button[name='link']");
-    await click(".o-we-toolbar");
-    await click("button[name='link']");
+    await waitFor(".o-we-toolbar button[name='link']:not([disabled])");
+    await click(".o-we-toolbar button[name='link']");
     if (url) {
         await waitFor(".o-we-linkpopover");
         await contains(".o-we-linkpopover input.o_we_href_input_link", { timeout: 1500 }).edit(
@@ -271,6 +273,7 @@ test("leaving the caption persists its value", async () => {
             const heading = queryOne("h1");
             await click(heading);
             expect(editor.document.activeElement).not.toBe(input);
+            editor.shared.selection.setCursorStart(heading);
             await animationFrame(); // Wait for the selection to change.
         },
         contentAfterEdit: unformat(
@@ -310,6 +313,7 @@ test("can't use the powerbox in a caption", async () => {
             await expectElementCount(".o-we-powerbox", 0);
             const heading = queryOne("h1");
             await click(heading);
+            editor.shared.selection.setCursorStart(heading);
             await animationFrame(); // Wait for the selection to change.
         },
         contentAfter: unformat(
@@ -592,6 +596,39 @@ test("replace an image with a caption", async () => {
     });
 });
 
+test("remove caption when replacing an image with other media", async () => {
+    onRpc("ir.attachment", "search_read", () => [
+        {
+            id: 1,
+            name: "logo",
+            mimetype: "image/png",
+            image_src: "/web/static/img/logo2.png",
+            access_token: false,
+            public: true,
+        },
+    ]);
+    const { el } = await setupEditorWithEmbeddedCaption(
+        unformat(
+            `<figure>
+                <img src="/web/static/img/logo.png">
+                <figcaption>Hello</figcaption>
+            </figure>
+            <p>abc</p>`
+        )
+    );
+    await click("img");
+    await waitFor(".o-we-toolbar button[name='replace_image']");
+    await click("button[name='replace_image']");
+    await waitFor(".o_select_media_dialog");
+    await click(".modal .modal-body .nav-item:nth-child(3) a"); // Icons
+    await waitFor(".modal .modal-body .fa-heart");
+    await click(".modal .modal-body .fa-heart");
+    expect("img[src='/web/static/img/logo.png']").toHaveCount(0);
+    expect(getContent(el)).toBe(
+        '<p>\ufeff<span class="fa fa-heart" contenteditable="false">\u200b</span>[]\ufeff</p><p>abc</p>'
+    );
+});
+
 test("edit caption after replacing image", async () => {
     onRpc("/web/dataset/call_kw/ir.attachment/search_read", () => [
         {
@@ -678,13 +715,13 @@ test("after replacing a captioned image, undo should revert to the original imag
             expect("img[src='/web/static/img/logo.png']").toHaveCount(1);
             expect("img[src='/web/static/img/logo2.png']").toHaveCount(0);
         },
-        contentAfter: unformat(
-            `<figure>
+        contentAfter: unformat(`
+            <figure>
                 [<img src="/web/static/img/logo.png" class="img-fluid test-image">]
                 <figcaption></figcaption>
             </figure>
-            <h1>Heading</h1>`
-        ),
+            <h1>Heading</h1>
+        `),
     });
 });
 
@@ -785,9 +822,10 @@ test("add a link then a caption to an image surrounded by text", async () => {
             await animationFrame();
             await toggleCaption("Hello");
             // Blur the input to commit the caption.
-            await click("p"); // Blur the input.
-            await animationFrame(); // Wait for the focus event to trigger a step.
-            editor.shared.selection.setCursorStart(editor.document.querySelectorAll("p")[1]);
+            const p = queryAll("p")[1];
+            await click(p);
+            editor.shared.selection.setCursorStart(p);
+            await animationFrame(); // Wait for the selection to change.
         },
         contentAfter: unformat(
             `<p>ab</p>
@@ -954,6 +992,265 @@ test("previewing an image without caption doesn't show the caption as title (eve
     expect(titleSpan.textContent).toBe(base64Img.replaceAll("\n", "%0A"));
 });
 
+test("should drag and drop image with its caption(1)", async () => {
+    const captionId = 1;
+    const caption = "Hello";
+    const { el } = await setupEditorWithEmbeddedCaption(
+        unformat(`
+            <p>a</p>
+            <figure contenteditable="false">
+                <img class="img-fluid test-image o_editable_media" src="${base64Img}">
+                <figcaption>${caption}</figcaption>
+            </figure>
+            <p>b</p>
+        `)
+    );
+    const imgElement = el.querySelector("img");
+    const parent = imgElement.parentElement;
+    const index = childNodeIndex(imgElement);
+    setSelection({
+        anchorNode: parent,
+        anchorOffset: index,
+        focusNode: parent,
+        focusOffset: index + 1,
+    });
+    const targetNodeForDrop = el.lastChild;
+    patchWithCleanup(document, {
+        caretPositionFromPoint: () => ({
+            offsetNode: targetNodeForDrop,
+            offset: nodeSize(targetNodeForDrop),
+        }),
+    });
+
+    const dragdata = new DataTransfer();
+    await manuallyDispatchProgrammaticEvent(imgElement, "dragstart", { dataTransfer: dragdata });
+    await animationFrame();
+    const imageHTML = dragdata.getData("application/vnd.odoo.odoo-editor");
+    const dropData = new DataTransfer();
+    dropData.setData(
+        "text/html",
+        `<meta http-equiv="Content-Type" content="text/html;charset=UTF-8"><img src="${base64Img}">`
+    );
+    // Simulate the application/vnd.odoo.odoo-editor data that the browser would do.
+    dropData.setData("application/vnd.odoo.odoo-editor", imageHTML);
+    await manuallyDispatchProgrammaticEvent(targetNodeForDrop, "drop", { dataTransfer: dropData });
+    await animationFrame();
+
+    expect(getContent(el)).toBe(
+        unformat(`
+            <p>a</p>
+            <p>b</p>
+            <figure contenteditable="false">
+                <img data-caption="${caption}" data-caption-id="${captionId}" src="${base64Img}" class="img-fluid test-image o_editable_media">
+                <figcaption placeholder="${caption}" data-embedded-props='{"id":"${captionId}","focusInput":false}' class="mt-2" contenteditable="false" data-oe-protected="true" data-embedded="caption">
+                    <input ${CAPTION_INPUT_ATTRIBUTES}>
+                </figcaption>
+            </figure>
+            <p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>
+        `)
+    );
+});
+
+test("should drag and drop image with its caption(2)", async () => {
+    const captionId = 1;
+    const caption = "Hello";
+    const { el } = await setupEditorWithEmbeddedCaption(
+        unformat(`
+            <p>a</p>
+            <figure contenteditable="false">
+                <img class="img-fluid test-image o_editable_media" src="${base64Img}">
+                <figcaption>${caption}</figcaption>
+            </figure>
+            <p>b</p>
+        `)
+    );
+    const imgElement = el.querySelector("img");
+    const targetNodeForDrop = el.lastChild;
+    patchWithCleanup(document, {
+        caretPositionFromPoint: () => ({
+            offsetNode: targetNodeForDrop,
+            offset: nodeSize(targetNodeForDrop),
+        }),
+    });
+
+    await manuallyDispatchProgrammaticEvent(imgElement, "pointerdown");
+    const dragdata = new DataTransfer();
+    await manuallyDispatchProgrammaticEvent(imgElement, "dragstart", { dataTransfer: dragdata });
+    await animationFrame();
+    const imageHTML = dragdata.getData("application/vnd.odoo.odoo-editor");
+    const dropData = new DataTransfer();
+    dropData.setData(
+        "text/html",
+        `<meta http-equiv="Content-Type" content="text/html;charset=UTF-8"><img src="${base64Img}">`
+    );
+    // Simulate the application/vnd.odoo.odoo-editor data that the browser would do.
+    dropData.setData("application/vnd.odoo.odoo-editor", imageHTML);
+    await manuallyDispatchProgrammaticEvent(targetNodeForDrop, "drop", { dataTransfer: dropData });
+    await manuallyDispatchProgrammaticEvent(imgElement, "dragend");
+    await animationFrame();
+
+    expect(getContent(el)).toBe(
+        unformat(`
+            <p>a</p>
+            <p>b</p>
+            <figure contenteditable="false">
+                <img data-caption="${caption}" data-caption-id="${captionId}" src="${base64Img}" class="img-fluid test-image o_editable_media">
+                <figcaption placeholder="${caption}" data-embedded-props='{"id":"${captionId}","focusInput":false}' class="mt-2" contenteditable="false" data-oe-protected="true" data-embedded="caption">
+                    <input ${CAPTION_INPUT_ATTRIBUTES}>
+                </figcaption>
+            </figure>
+            <p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]<br></p>
+        `)
+    );
+});
+
+test("should drag and drop image with caption along with selected text", async () => {
+    const captionId = 1;
+    const caption = "Hello";
+    const { el } = await setupEditorWithEmbeddedCaption(
+        unformat(`
+            <p>[a</p>
+            <figure contenteditable="false">
+                <img class="img-fluid test-image o_editable_media" src="${base64Img}">
+                <figcaption>${caption}</figcaption>
+            </figure>
+            <p>b]</p>
+            <p>c</p>
+        `)
+    );
+    const imgElement = el.querySelector("img");
+    const targetNodeForDrop = el.lastChild;
+    patchWithCleanup(document, {
+        caretPositionFromPoint: () => ({
+            offsetNode: targetNodeForDrop,
+            offset: nodeSize(targetNodeForDrop),
+        }),
+    });
+
+    const dragdata = new DataTransfer();
+    await manuallyDispatchProgrammaticEvent(imgElement, "dragstart", { dataTransfer: dragdata });
+    await animationFrame();
+    const odooEditorData = dragdata.getData("application/vnd.odoo.odoo-editor");
+    const textHtml = dragdata.getData("text/html");
+    const dropData = new DataTransfer();
+    dropData.setData("text/html", textHtml);
+    // Simulate the application/vnd.odoo.odoo-editor data that the browser would do.
+    dropData.setData("application/vnd.odoo.odoo-editor", odooEditorData);
+    await manuallyDispatchProgrammaticEvent(targetNodeForDrop, "drop", { dataTransfer: dropData });
+    await animationFrame();
+
+    expect(getContent(el)).toBe(
+        unformat(`
+            <p><br></p>
+            <p>ca</p>
+            <figure contenteditable="false">
+                <img data-caption="${caption}" data-caption-id="${captionId}" src="${base64Img}" class="img-fluid test-image o_editable_media">
+                <figcaption placeholder="${caption}" data-embedded-props='{"id":"${captionId}","focusInput":false}' class="mt-2" contenteditable="false" data-oe-protected="true" data-embedded="caption">
+                    <input ${CAPTION_INPUT_ATTRIBUTES}>
+                </figcaption>
+            </figure>
+            <p>b[]</p>
+        `)
+    );
+});
+
+test("should cut an image and its caption as a single embedded figure", async () => {
+    const captionId = 1;
+    const captionText = "Hello";
+
+    const { el: editorRoot, editor } = await setupEditorWithEmbeddedCaption(
+        unformat(`
+            <p>a</p>
+            <p>b</p>
+            <figure contenteditable="false">
+                <img class="img-fluid test-image o_editable_media" src="${base64Img}">
+                <figcaption>${captionText}</figcaption>
+            </figure>
+            <p>c</p>
+        `)
+    );
+
+    const image = editorRoot.querySelector("img");
+    const figure = image.parentElement;
+    const imageIndex = childNodeIndex(image);
+
+    // Select the image node for cutting
+    setSelection({
+        anchorNode: figure,
+        anchorOffset: imageIndex,
+        focusNode: figure,
+        focusOffset: imageIndex + 1,
+    });
+
+    const clipboard = new DataTransfer();
+    const cutEvent = new ClipboardEvent("cut", { clipboardData: clipboard });
+    editor.editable.dispatchEvent(cutEvent);
+    await animationFrame();
+
+    // Verify editor content after cut
+    expect(getContent(editorRoot)).toBe(
+        unformat(`
+            <p>a</p>
+            <p>b</p>
+            <p>[]c</p>
+        `)
+    );
+
+    // Verify cut fragment stored inside clipboard data
+    const cutPayload = clipboard.getData("application/vnd.odoo.odoo-editor");
+    const fragment = parseHTML(editor.document, cutPayload);
+
+    expect(getContent(fragment)).toBe(
+        unformat(`
+            <figure contenteditable="false">
+                <img class="img-fluid test-image o_editable_media" src="${base64Img}" data-caption-id="${captionId}" data-caption="${captionText}">
+                <figcaption ${getFigcaptionAttributes(captionId, captionText)}>
+                    <input ${CAPTION_INPUT_ATTRIBUTES}>
+                </figcaption>
+            </figure>
+        `)
+    );
+});
+
+test("should copy an image along with its caption", async () => {
+    const captionId = 1;
+    const caption = "Hello";
+    const { el, editor } = await setupEditorWithEmbeddedCaption(
+        unformat(`
+            <p>a</p>
+            <figure contenteditable="false">
+                <img class="img-fluid test-image o_editable_media" src="${base64Img}">
+                <figcaption>${caption}</figcaption>
+            </figure>
+            <p>[]<br></p>
+        `)
+    );
+    const imgElement = el.querySelector("img");
+    const parent = imgElement.parentElement;
+    const index = childNodeIndex(imgElement);
+    setSelection({
+        anchorNode: parent,
+        anchorOffset: index,
+        focusNode: parent,
+        focusOffset: index + 1,
+    });
+
+    const clipboardData = new DataTransfer();
+    await press(["ctrl", "c"], { dataTransfer: clipboardData });
+    const copiedContent = clipboardData.getData("application/vnd.odoo.odoo-editor");
+    const fragment = parseHTML(editor.document, copiedContent);
+    expect(getContent(fragment)).toBe(
+        unformat(`
+            <figure contenteditable="false">
+                <img class="img-fluid test-image o_editable_media" src="${base64Img}" data-caption-id="${captionId}" data-caption="${caption}">
+                <figcaption ${getFigcaptionAttributes(captionId, caption)}>
+                    <input ${CAPTION_INPUT_ATTRIBUTES}>
+                </figcaption>
+            </figure>
+        `)
+    );
+});
+
 test("should properly parse figure without fig caption", async () => {
     await testEditor({
         config: configWithEmbeddedCaption,
@@ -972,6 +1269,251 @@ test("should properly parse figure without fig caption", async () => {
             </figure>
             <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>
             `
+        ),
+    });
+});
+
+test("removing an image caption inside a table should wrap image in a base container", async () => {
+    const caption = "Hello";
+    await testEditor({
+        config: configWithEmbeddedCaption,
+        contentBefore: unformat(
+            `<table>
+                <tbody>
+                    <tr>
+                        <td>
+                            <p>a</p>
+                            <figure>
+                                <img class="img-fluid test-image" src="${base64Img}">
+                                <figcaption>${caption}</figcaption>
+                            </figure>
+                            <p>b[]</p>
+                        </td>
+                        <td><p>c</p></td>
+                    </tr>
+                </tbody>
+            </table>`
+        ),
+        stepFunction: async () => {
+            await click("img");
+            await waitFor(".o-we-toolbar button[name='image_caption']");
+            await click(".o-we-toolbar button[name='image_caption']");
+        },
+        contentAfter: unformat(
+            `<table>
+                <tbody>
+                    <tr>
+                        <td>
+                            <p>a</p>
+                            <p>
+                                [<img class="img-fluid test-image" src="${base64Img}" data-caption="${caption}">]
+                            </p>
+                            <p>b</p>
+                        </td>
+                        <td><p>c</p></td>
+                    </tr>
+                </tbody>
+            </table>`
+        ),
+    });
+});
+
+test("adding an image caption inside a list item should not split a list item", async () => {
+    const captionId = 1;
+    await testEditor({
+        config: configWithEmbeddedCaption,
+        contentBefore: unformat(
+            `<ul>
+                <li>
+                    ab
+                    <img class="img-fluid test-image" src="${base64Img}">
+                    cd
+                </li>
+            </ul>`
+        ),
+        stepFunction: async (editor) => {
+            await toggleCaption();
+            await waitFor("figcaption > input");
+            const input = queryOne("figure > figcaption > input");
+            expect(input.value).toBe("");
+            expect(editor.document.activeElement).toBe(input);
+            // Remove the editor selection for the test because it's irrelevant
+            // since the focus is not in it.
+            const selection = editor.document.getSelection();
+            selection.removeAllRanges();
+        },
+        contentAfterEdit: unformat(
+            `<ul>
+                <li>
+                    ab
+                    <figure contenteditable="false">
+                        <img class="img-fluid test-image o_editable_media" src="${base64Img}" data-caption-id="${captionId}" data-caption="">
+                        <figcaption ${getFigcaptionAttributes(captionId, "", true)}>
+                            <input ${CAPTION_INPUT_ATTRIBUTES}>
+                        </figcaption>
+                    </figure>
+                    cd
+                </li>
+            </ul>`
+        ),
+    });
+});
+
+test("removing an image caption inside list item should wrap image in a base container", async () => {
+    const caption = "Hello";
+    await testEditor({
+        config: configWithEmbeddedCaption,
+        contentBefore: unformat(
+            `<ul>
+                <li>
+                    ab
+                    <figure>
+                        <img class="img-fluid test-image" src="${base64Img}">
+                        <figcaption>${caption}</figcaption>
+                    </figure>
+                    cd[]
+                </li>
+            </ul>`
+        ),
+        stepFunction: async () => {
+            await click("img");
+            await waitFor(".o-we-toolbar button[name='image_caption']");
+            await click(".o-we-toolbar button[name='image_caption']");
+        },
+        contentAfter: unformat(
+            `<ul>
+                <li>
+                    <p>ab</p>
+                    <p>[<img class="img-fluid test-image" src="${base64Img}" data-caption="${caption}">]</p>
+                    <p>cd</p>
+                </li>
+            </ul>`
+        ),
+    });
+});
+
+test("Should be able to revert image replace", async () => {
+    onRpc("/web/dataset/call_kw/ir.attachment/search_read", () => [
+        {
+            id: 1,
+            name: "logo",
+            mimetype: "image/png",
+            image_src: "/web/static/img/logo2.png",
+            access_token: false,
+            public: true,
+        },
+    ]);
+
+    await makeMockEnv();
+    const captionText = "caption";
+
+    const { el } = await setupEditorWithEmbeddedCaption(
+        unformat(`
+            <p><br></p>
+            <figure>
+                <img src="/web/static/img/logo.png" class="img-fluid test-image">
+                <figcaption>${captionText}</figcaption>
+            </figure>
+            <h1>[]Heading</h1>
+        `)
+    );
+
+    await animationFrame();
+
+    await click("img");
+    await waitFor(".o-we-toolbar button[name='replace_image']");
+    await click("button[name='replace_image']");
+
+    // Select the image
+    await waitFor(".o_select_media_dialog");
+    await click(
+        ".o_we_media_dialog_img_wrapper:has(img.o_we_attachment_highlight) + .o_button_area"
+    );
+    await animationFrame();
+
+    // Check the image was successfully replaced
+    expect("img[src='/web/static/img/logo.png']").toHaveCount(0);
+    expect("img[src='/web/static/img/logo2.png']").toHaveCount(1);
+
+    // UNDO
+    await press(["ctrl", "z"]);
+    await animationFrame();
+
+    // Check the original image is back
+    expect("img[src='/web/static/img/logo.png']").toHaveCount(1);
+    expect("img[src='/web/static/img/logo2.png']").toHaveCount(0);
+
+    // Check the caption text is still same
+    const input = el.querySelector("input");
+    expect(input.value).toBe(captionText);
+});
+
+test("should toggle caption on an image with display:block (add and remove caption)", async () => {
+    const captionId = 1;
+    const { el, editor } = await setupEditorWithEmbeddedCaption(
+        `<img class="img-fluid test-image o_editable_media" style="display:block" src="${base64Img}">`
+    );
+    await animationFrame();
+    await toggleCaption();
+    await animationFrame();
+    const input = queryOne("figure > figcaption > input");
+    expect(input.value).toBe("");
+    expect(editor.document.activeElement).toBe(input);
+    // Remove the editor selection for the test because it's irrelevant
+    // since the focus is not in it.
+    const selection = editor.document.getSelection();
+    selection.removeAllRanges();
+    await waitForNone(".o-we-toolbar");
+    expect(getContent(el)).toBe(
+        unformat(
+            `<p data-selection-placeholder=""><br></p>
+            <figure contenteditable="false">
+                <img class="img-fluid test-image o_editable_media" style="display:block" src="${base64Img}" data-caption-id="${captionId}" data-caption="">
+                <figcaption ${getFigcaptionAttributes(captionId, "", true)}>
+                    <input ${CAPTION_INPUT_ATTRIBUTES}>
+                </figcaption>
+            </figure>
+            <p data-selection-placeholder="" style="margin: -9px 0px 8px;"><br></p>`
+        )
+    );
+    await click("img");
+    const captionButton = ".o-we-toolbar button[name='image_caption']";
+    await waitFor(captionButton);
+    expect(captionButton).toHaveClass("active");
+    await click(captionButton);
+    await animationFrame();
+    expect(getContent(el)).toBe(
+        unformat(`
+            <p>[<img class="img-fluid test-image" style="display:block" src="${base64Img}" data-caption="">]</p>
+        `)
+    );
+});
+
+test.tags("focus required");
+test("should select whole editable on 'ctrl+a' when image with caption is selected", async () => {
+    const captionId = 1;
+    await testEditor({
+        config: configWithEmbeddedCaption,
+        contentBefore: `<p>abc</p><img class="img-fluid test-image" src="${base64Img}"><p>def</p>`,
+        stepFunction: async () => {
+            await toggleCaption();
+            await waitFor("figcaption > input");
+
+            await click("figure > img");
+            await expectElementCount(".o-we-toolbar", 1);
+
+            // Select whole figure with ctrl+a
+            await press(["ctrl", "a"]);
+        },
+        contentAfterEdit: unformat(
+            `<p>[abc</p>
+            <figure contenteditable="false">
+                <img class="img-fluid test-image o_editable_media" src="${base64Img}" data-caption-id="${captionId}" data-caption="">
+                <figcaption ${getFigcaptionAttributes(captionId, "", true)}>
+                    <input ${CAPTION_INPUT_ATTRIBUTES}>
+                </figcaption>
+            </figure>
+            <p>def]</p>`
         ),
     });
 });

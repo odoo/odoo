@@ -1060,7 +1060,6 @@ const _getEmojisData1 = () => `{
     "category": "Smileys & Emotion",
     "codepoints": "😎",
     "emoticons": [
-        "B)",
         "8)",
         "B-)",
         "8-)"
@@ -2266,6 +2265,7 @@ const _getEmojisData1 = () => `{
     ],
     "name": "` + _t("hundred points") + `",
     "shortcodes": [
+        ":100:",
         ":hundred_points:"
     ]
 },

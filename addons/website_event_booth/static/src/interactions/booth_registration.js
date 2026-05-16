@@ -135,7 +135,7 @@ export class BoothRegistration extends Interaction {
             errorMessages.push(_t("The booth category doesn't exist."));
         }
         if (errors.includes('existingPartnerError')) {
-            errorMessages.push(_t("It looks like your email is linked to an existing account."));
+            errorMessages.push(_t("It looks like your email is already in our system."));
             this.inSigninError = true;
         } else {
             this.inSigninError = false;

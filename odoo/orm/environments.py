@@ -584,7 +584,7 @@ class Transaction:
         self.cache = Cache(self)
 
         # temporary directories (managed in odoo.tools.file_open_temporary_directory)
-        self.__file_open_tmp_paths = ()  # type: ignore # noqa: PLE0237
+        self.__file_open_tmp_paths = []  # type: ignore # noqa: PLE0237
 
     def flush(self) -> None:
         """ Flush pending computations and updates in the transaction. """

@@ -8,18 +8,27 @@ import { CONDITIONAL_VISIBILITY, DEVICE_VISIBILITY } from "@website/builder/opti
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { BaseOptionComponent } from "@html_builder/core/utils";
 
+/**
+ * @typedef {{
+ *      saveAttribute: string;
+ *      attributeName: string;
+ *      callWith: "code" | "name" | "value" | "id";
+ * }[]} visibility_selector_parameters
+ */
 export const DEVICE_VISIBILITY_OPTION_SELECTOR = "section .row > div";
 
 export class DeviceVisibilityOption extends BaseOptionComponent {
     static template = "website.DeviceVisibilityOption";
     static dependencies = ["visibility"];
     static selector = DEVICE_VISIBILITY_OPTION_SELECTOR;
-    static exclude = ".s_col_no_resize.row > div, .s_masonry_block .s_col_no_resize";
+    static exclude =
+        ".s_col_no_resize.row > div, .s_masonry_block .s_col_no_resize, .s_website_form_submit";
 }
 
 class VisibilityOptionPlugin extends Plugin {
     static id = "visibilityOption";
     static dependencies = ["visibility", "websiteSession"];
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_options: [
             withSequence(CONDITIONAL_VISIBILITY, VisibilityOption),

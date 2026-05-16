@@ -133,6 +133,35 @@ class TestSafeEval(BaseCase):
             safe_eval("self.__name__", {'self': self}, mode="exec")
 
 
+class TestSafeEvalTransaction(TransactionCase):
+
+    @mute_logger('odoo.sql_db')
+    def test_bubble_up_integrity_error(self):
+        vals = {
+            'module': 'module_test',
+            'name': 'duplicate_name',
+            'model': 'res.partner',
+        }
+        self.env['ir.model.data'].create(vals)
+
+        # Trigger `UniqueViolation` via `_obj_name_uniq` constraint.
+
+        with self.assertRaises(Exception) as normal_exception:
+            self.env['ir.model.data'].create(vals)
+
+        with self.assertRaises(Exception) as bubble_up_exception:
+            expr = """
+                self.env['ir.model.data'].create(vals)
+            """
+            safe_eval(dedent(expr), {'self': self, 'vals': vals}, mode='exec')
+
+        self.assertEqual(
+            type(normal_exception.exception),
+            type(bubble_up_exception.exception),
+            'Database integrity exception must be the same as normal business code evaluation.'
+        )
+
+
 class TestParentStore(TransactionCase):
     """ Verify that parent_store computation is done right """
 
@@ -158,6 +187,32 @@ class TestParentStore(TransactionCase):
         old_struct = new_cat0.search([('parent_id', 'child_of', self.cat0.id)])
         self.assertEqual(len(old_struct), 4, "After duplication, previous record must have old childs records only")
         self.assertFalse(new_struct & old_struct, "After duplication, nodes should not be mixed")
+
+    def test_missing_parent(self):
+        """ Missing parent id should not raise an error. """
+        # Missing parent with _parent_store
+        new_cat0 = self.cat0.copy()
+        records = new_cat0.search([('parent_id', 'parent_of', 999999999)])
+        self.assertEqual(len(records), 0)
+
+        # Missing parent without _parent_store
+        category = self.env['res.partner.category']
+        self.patch(self.env.registry['res.partner.category'], '_parent_store', False)
+        records = category.search([('parent_id', 'child_of', 999999999)])
+        self.assertEqual(len(records), 0)
+
+    def test_missing_child(self):
+        """ Missing child id should not raise an error. """
+        # Missing child with _parent_store
+        new_cat0 = self.cat0.copy()
+        records = new_cat0.search([('parent_id', 'child_of', 999999999)])
+        self.assertEqual(len(records), 0)
+
+        # Missing child without _parent_store
+        category = self.env['res.partner.category']
+        self.patch(self.env.registry['res.partner.category'], '_parent_store', False)
+        records = category.search([('parent_id', 'child_of', 999999999)])
+        self.assertEqual(len(records), 0)
 
     def test_duplicate_children_01(self):
         """ Duplicate the children then reassign them to the new parent (1st method). """

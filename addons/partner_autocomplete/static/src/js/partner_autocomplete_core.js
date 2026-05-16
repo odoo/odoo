@@ -43,6 +43,7 @@ export function usePartnerAutocomplete() {
             const allGSTinRe = [
                 /\d{2}[a-zA-Z]{5}\d{4}[a-zA-Z][1-9A-Za-z][Zz1-9A-Ja-j][0-9a-zA-Z]/, // Normal, Composite, Casual GSTIN
                 /\d{4}[A-Z]{3}\d{5}[UO]N[A-Z0-9]/, // UN/ON Body GSTIN
+                /\d{4}[A-Z]{3}\d{5}[A-Z]{3}/, // Revised NRI GSTIN
                 /\d{4}[a-zA-Z]{3}\d{5}NR[0-9a-zA-Z]/, // NRI GSTIN
                 /\d{2}[a-zA-Z]{4}[a-zA-Z0-9]\d{4}[a-zA-Z][1-9A-Za-z][DK][0-9a-zA-Z]/, // TDS GSTIN
                 /\d{2}[a-zA-Z]{5}\d{4}[a-zA-Z][1-9A-Za-z]C[0-9a-zA-Z]/ // TCS GSTIN
@@ -72,10 +73,14 @@ export function usePartnerAutocomplete() {
      * @private
      */
     function enrichCompany(company) {
+        const context = { 
+            'enriched_company_data': company,
+        };
+
         if (isGSTNumber(company.query)){
             return orm.call('res.partner', 'enrich_by_gst', [company.query]);
         }
-        return orm.call('res.partner', 'enrich_by_duns', [company.duns]);
+        return orm.call('res.partner', 'enrich_by_duns', [company.duns], { context: context });
     }
 
     function removeUselessFields(company, fieldsToKeep) {
@@ -97,7 +102,7 @@ export function usePartnerAutocomplete() {
     function getCreateData(company, fieldsToKeep) {
         return enrichCompany(company).then((companyData) => {
             // Fetch additional company info via Autocomplete Enrichment API
-
+            let isEnrichAccessible = false;
             if (companyData.error) {
                 if (companyData.error_message === 'Insufficient Credit') {
                     notifyNoCredits();
@@ -113,9 +118,13 @@ export function usePartnerAutocomplete() {
                     ...companyData,
                 };
             }
+            else {
+                isEnrichAccessible = true;
+            }
             return {
                 company: companyData,
                 logo: companyData.logo || false,
+                isEnrichAccessible,
             };
         })
     }

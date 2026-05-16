@@ -1,4 +1,4 @@
-import { destroy, expect, test } from "@odoo/hoot";
+import { destroy, expect, mockTouch, test } from "@odoo/hoot";
 import { keyDown, keyUp, press, queryAllTexts, queryOne, resize } from "@odoo/hoot-dom";
 import { animationFrame } from "@odoo/hoot-mock";
 import { Component, onMounted, useState, xml } from "@odoo/owl";
@@ -34,6 +34,37 @@ test("simple rendering", async () => {
     expect("main").toHaveText("Hello!");
     expect(".o_dialog footer").toHaveCount(1, { message: "the footer is rendered by default" });
     expect(".o_dialog footer:visible").toHaveCount(0, { message: "the footer is hidden if empty" });
+});
+
+test("simple rendering - touch display with trap focus", async () => {
+    mockTouch(true);
+    class Parent extends Component {
+        static components = { Dialog };
+        static template = xml`
+          <Dialog>
+            <input type="text" placeholder="withFocus"/>
+          </Dialog>
+      `;
+        static props = ["*"];
+    }
+    await makeDialogMockEnv();
+    await mountWithCleanup(Parent);
+
+    expect(".o_dialog").toHaveCount(1);
+    expect("input[placeholder=withFocus]").not.toBeFocused();
+    await press("Tab", { shiftKey: false });
+    await animationFrame();
+    expect("input[placeholder=withFocus]").toBeFocused();
+
+    await press("Tab", { shiftKey: true });
+    await animationFrame();
+    expect("input[placeholder=withFocus]").not.toBeFocused();
+    // The main became focusable, this affects devices with touch and keyboard.
+    expect(".o_dialog main").toBeFocused();
+
+    await press("Tab", { shiftKey: true });
+    await animationFrame();
+    expect("input[placeholder=withFocus]").toBeFocused();
 });
 
 test("hotkeys work on dialogs", async () => {

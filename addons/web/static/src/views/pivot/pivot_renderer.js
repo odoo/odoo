@@ -312,6 +312,7 @@ export class PivotRenderer extends Component {
                 type: "ir.actions.act_window",
                 name: this.model.metaData.title,
                 res_model: this.model.metaData.resModel,
+                search_view_id: this.env.config.views?.find((v) => v[1] === "search"),
                 views: views,
                 view_mode: "list",
                 target: "current",

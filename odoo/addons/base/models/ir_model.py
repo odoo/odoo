@@ -365,6 +365,11 @@ class IrModel(models.Model):
         if crons:
             crons.unlink()
 
+        # delete related ir_model_data
+        model_data = self.env['ir.model.data'].search([('model', 'in', self.mapped('model'))])
+        if model_data:
+            model_data.unlink()
+
         self._drop_table()
         res = super().unlink()
 
@@ -625,7 +630,12 @@ class IrModelFields(models.Model):
     @api.constrains('domain')
     def _check_domain(self):
         for field in self:
-            safe_eval(field.domain or '[]')
+            try:
+                safe_eval(field.domain or '[]')
+            except ValueError as e:
+                raise ValidationError(
+                    _("An error occurred while evaluating the domain:\n%(error)s", error=e)
+                ) from e
 
     @api.constrains('name')
     def _check_name(self):
@@ -656,13 +666,26 @@ class IrModelFields(models.Model):
                     field_name=name,
                     related_field=self.related,
                 ))
-            model_name = field.relation
             if index < last and not field.relation:
                 raise UserError(_(
                     'Non-relational field name "%(field_name)s" in related field "%(related_field)s"',
                     field_name=name,
                     related_field=self.related,
                 ))
+            if index < last and self.env.registry.ready and not (
+                field.store or (
+                    (model := self.env.get(model_name)) is not None
+                    and (model_field := model._fields.get(field.name))
+                    and model_field._description_searchable
+                )
+            ):
+                raise UserError(_(
+                    'Field "%(field_name)s" in related path "%(related_field)s" is not searchable. '
+                    'Non-searchable fields cannot be used in related fields.',
+                    field_name=name,
+                    related_field=self.related,
+                ))
+            model_name = field.relation
         return field
 
     @api.constrains('related')
@@ -1088,6 +1111,11 @@ class IrModelFields(models.Model):
         if vals.get('translate') and not isinstance(vals['translate'], str):
             _logger.warning("Deprecated since Odoo 19, ir.model.fields.translate becomes Selection, the value should be a string")
             vals['translate'] = 'html_translate' if vals.get('ttype') == 'html' else 'standard'
+
+        if column_rename and self.state == 'manual':
+            # renaming a studio field, remove inherits fields
+            # we need to set the uninstall flag to allow removing them
+            (self._prepare_update() - self).with_context(**{MODULE_UNINSTALL_FLAG: True}).unlink()
 
         res = super(IrModelFields, self).write(vals)
 
@@ -1757,6 +1785,10 @@ class IrModelFieldsSelection(models.Model):
             if not field or not field.store or not Model._auto:
                 continue
 
+            # Field changed its type, skip it.
+            if field.type not in ('selection', 'reference'):
+                continue
+
             ondelete = (field.ondelete or {}).get(selection.value)
             # special case for custom fields
             if ondelete is None and field.manual and not field.required:
@@ -1765,33 +1797,53 @@ class IrModelFieldsSelection(models.Model):
             if ondelete is None:
                 # nothing to do, the selection does not come from a field extension
                 continue
-            elif callable(ondelete):
-                ondelete(selection._get_records())
-            elif ondelete == 'set null':
-                safe_write(selection._get_records(), field.name, False)
-            elif ondelete == 'set default':
-                value = field.convert_to_write(field.default(Model), Model)
-                safe_write(selection._get_records(), field.name, value)
-            elif ondelete.startswith('set '):
-                safe_write(selection._get_records(), field.name, ondelete[4:])
-            elif ondelete == 'cascade':
-                selection._get_records().unlink()
-            else:
-                # this shouldn't happen... simply a sanity check
-                raise ValueError(_(
-                    'The ondelete policy "%(policy)s" is not valid for field "%(field)s"',
-                    policy=ondelete, field=selection,
-                ))
+
+            companies = self.env.companies if self.field_id.company_dependent else [self.env.company]
+            for company in companies:
+                # make a company-specific env for the Model and selection
+                Model = Model.with_company(company.id)
+                selection = selection.with_company(company.id)
+                if callable(ondelete):
+                    ondelete(selection._get_records())
+                elif ondelete == 'set null':
+                    safe_write(selection._get_records(), field.name, False)
+                elif ondelete == 'set default':
+                    value = field.convert_to_write(field.default(Model), Model)
+                    safe_write(selection._get_records(), field.name, value)
+                elif ondelete.startswith('set '):
+                    safe_write(selection._get_records(), field.name, ondelete[4:])
+                elif ondelete == 'cascade':
+                    selection._get_records().unlink()
+                else:
+                    # this shouldn't happen... simply a sanity check
+                    raise ValueError(_(
+                        'The ondelete policy "%(policy)s" is not valid for field "%(field)s"',
+                        policy=ondelete, field=selection,
+                    ))
 
     def _get_records(self):
         """ Return the records having 'self' as a value. """
         self.ensure_one()
         Model = self.env[self.field_id.model]
         Model.flush_model([self.field_id.name])
-        query = 'SELECT id FROM "{table}" WHERE "{field}"=%s'.format(
-            table=Model._table, field=self.field_id.name,
-        )
-        self.env.cr.execute(query, [self.value])
+        if self.field_id.company_dependent:
+            # company-dependent fields are stored as jsonb (e.g; {company_id: value})
+            query = SQL(
+                "SELECT id FROM %s WHERE %s ->> %s = %s",
+                SQL.identifier(Model._table),
+                SQL.identifier(self.field_id.name),
+                str(self.env.company.id),
+                self.value,
+            )
+        else:
+            # normal selection fields are stored as general datatype
+            query = SQL(
+                "SELECT id FROM %s WHERE %s = %s",
+                SQL.identifier(Model._table),
+                SQL.identifier(self.field_id.name),
+                self.value,
+            )
+        self.env.cr.execute(query)
         return Model.browse(r[0] for r in self.env.cr.fetchall())
 
 
@@ -1853,6 +1905,7 @@ class IrModelConstraint(models.Model):
                     JOIN pg_class cl
                     ON (cs.conrelid = cl.oid)
                     WHERE cs.contype IN %s AND cs.conname = %s AND cl.relname = %s
+                    AND cl.relnamespace = current_schema::regnamespace
                     """, ('c', 'u', 'x') if typ == 'u' else (typ,), hname, table
                 )):
                     self.env.execute_query(SQL(
@@ -2461,7 +2514,10 @@ class IrModelData(models.Model):
                         field_.setup(model)
                         has_shared_field = True
         if has_shared_field:
-            reset_cached_properties(self.env.registry)
+            registry = self.env.registry
+            reset_cached_properties(registry)
+            registry._field_trigger_trees.clear()
+            registry._is_modifying_relations.clear()
 
         # to collect external ids of records that cannot be deleted
         undeletable_ids = []
@@ -2516,7 +2572,12 @@ class IrModelData(models.Model):
 
         # remove non-model records first, grouped by batches of the same model
         for model, items in itertools.groupby(unique(records_items), itemgetter(0)):
-            delete(self.env[model].browse(item[1] for item in items))
+            ids = [item[1] for item in items]
+            # we cannot guarantee that the ir.model.data points to an existing model
+            if model in self.env:
+                delete(self.env[model].browse(ids))
+            else:
+                _logger.info("Orphan ir.model.data records %s refer to unavailable model '%s'", ids, model)
 
         # Remove copied views. This must happen after removing all records from
         # the modules to remove, otherwise ondelete='restrict' may prevent the

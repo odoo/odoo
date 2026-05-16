@@ -817,6 +817,48 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
             ]
         })
 
+    def test_mixed_epd_global_rounding(self):
+        """
+            Ensure the early payment discount journal item is computed by rounding globally.
+        """
+        tax_15 = self.percent_tax(15.0)
+
+        early_pay_1_percents_7_days = self.env['account.payment.term'].create({
+            'name': '1% discount if paid within 7 days',
+            'company_id': self.company_data['company'].id,
+            'early_pay_discount_computation': 'mixed',
+            'discount_percentage': 1,
+            'discount_days': 7,
+            'early_discount': True,
+            'line_ids': [Command.create({
+                'value': 'percent',
+                'nb_days': 0,
+                'value_amount': 100,
+            })]
+        })
+
+        invoice = self._create_invoice(
+            date='2022-02-01',
+            invoice_payment_term_id=early_pay_1_percents_7_days,
+            invoice_line_ids=[
+                self._prepare_invoice_line(price_unit=4.76, tax_ids=tax_15)
+                for _ in range(4)
+            ],
+        )
+        self.assertRecordValues(invoice.line_ids, [
+            {'display_type': 'product', 'balance': -4.76},
+            {'display_type': 'product', 'balance': -4.76},
+            {'display_type': 'product', 'balance': -4.76},
+            {'display_type': 'product', 'balance': -4.76},
+            {'display_type': 'epd', 'balance': 0.19},
+            {'display_type': 'epd', 'balance': -0.19},
+            {'display_type': 'tax', 'balance': -2.83},
+            {'display_type': 'payment_term', 'balance': 21.87},
+        ])
+        [term_vals] = invoice.needed_terms.values()
+        discount = term_vals['balance'] - term_vals['discount_balance']
+        self.assertAlmostEqual(discount, 0.19)
+
     def test_register_payment_batch_with_discount_and_without_discount(self):
         """
         Test that a batch payment, that is
@@ -1069,4 +1111,66 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
             {'amount_currency': 14.79},
             # Discounted amount:
             {'amount_currency': 762.2},
+        ])
+
+    def test_epd_with_cash_rounding_biggest_tax(self):
+        """
+        Ensure that the early payment discount calculation works correctly when the invoice
+        uses a cash rounding record that utilizes the "biggest_tax" strategy.
+        """
+        tax = self.env['account.tax'].create({
+                'name': '8.1%',
+                'amount': 8.1,
+            })
+
+        rounding = self.env['account.cash.rounding'].create({
+            'name': 'Rounding Nearest',
+            'rounding': 0.05,
+            'strategy': 'biggest_tax',
+            'rounding_method': 'HALF-UP',
+        })
+
+        early_payment_term = self.env['account.payment.term'].create({
+            'name': "early_payment_term",
+            'company_id': self.company_data['company'].id,
+            'early_pay_discount_computation': 'included',
+            'early_discount': True,
+            'discount_percentage': 2,
+            'discount_days': 18,
+            'line_ids': [
+                Command.create({
+                    'value': 'percent',
+                    'value_amount': 100.0,
+                    'nb_days': 30,
+                }),
+            ],
+        })
+
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_payment_term_id': early_payment_term.id,
+            'invoice_date': '2019-01-01',
+            'date': '2019-01-01',
+            'invoice_line_ids': [
+                Command.create({
+                    'name': 'line',
+                    'price_unit': 364.60,
+                    'tax_ids': [Command.set(tax.ids)],
+                }),
+            ],
+            'invoice_cash_rounding_id': rounding.id,
+        })
+        invoice.action_post()
+
+        payment = self.env['account.payment.register']\
+            .with_context(active_model='account.move', active_ids=invoice.ids)\
+            .create({'payment_date': '2019-01-10'})\
+            ._create_payments()
+
+        self.assertRecordValues(payment.move_id.line_ids.sorted('balance'), [
+            {'balance': -394.15},
+            {'balance': 0.61},
+            {'balance': 7.29},
+            {'balance': 386.25},
         ])

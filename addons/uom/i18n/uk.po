@@ -1,26 +1,33 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* uom
+# * uom
 #
 # Translators:
 # Martin Trigaux, 2022
 #
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
+# Oleksii Lytvynov <oleksii.lytvynov@self-erp.com>, 2026.
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2026.
+# Odoo Translation Bot <c3p@odoo.com>, 2026.
+# Lohushchenko <nadiia.lohushchenko@self-erp.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:39+0000\n"
-"PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
-"Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
+"POT-Creation-Date: 2026-04-10 18:40+0000\n"
+"PO-Revision-Date: 2026-04-16 08:25+0000\n"
+"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>\n"
+"Language-Team: Ukrainian <https://translate.odoo.com/projects/odoo-19/uom/"
+"uk/>\n"
 "Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != "
-"11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % "
-"100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || "
-"(n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 "
+"? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > "
+"14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % "
+"100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__factor
@@ -45,7 +52,7 @@ msgstr "Заархівовано"
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__relative_factor
 msgid "Contains"
-msgstr ""
+msgstr "Містить"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__create_uid
@@ -90,6 +97,16 @@ msgid "ID"
 msgstr "ID"
 
 #. module: uom
+#: model:uom.uom,name:uom.product_uom_kwh
+msgid "KWH"
+msgstr "кВт"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_litre
+msgid "L"
+msgstr "л"
+
+#. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__write_uid
 msgid "Last Updated by"
 msgstr "Востаннє оновив"
@@ -102,17 +119,22 @@ msgstr "Останнє оновлення"
 #. module: uom
 #: model:res.groups,name:uom.group_uom
 msgid "Manage Multiple Units of Measure"
-msgstr "Керування різними одиницями вімірювання"
+msgstr "Керування різними одиницями вимірювання"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_minute
+msgid "Minutes"
+msgstr "Хвилини"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_pack_6
 msgid "Pack of 6"
-msgstr ""
+msgstr "Упаковка з 6"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__parent_path
 msgid "Parent Path"
-msgstr ""
+msgstr "Батьківський шлях"
 
 #. module: uom
 #. odoo-javascript
@@ -129,7 +151,7 @@ msgstr "Одиниця вимірювання товару"
 #. module: uom
 #: model_terms:ir.ui.view,arch_db:uom.product_uom_form_view
 msgid "Quantity"
-msgstr ""
+msgstr "Кількість"
 
 #. module: uom
 #. odoo-javascript
@@ -142,7 +164,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:uom.field_uom_uom__relative_uom_id
 #: model_terms:ir.ui.view,arch_db:uom.product_uom_form_view
 msgid "Reference Unit"
-msgstr ""
+msgstr "Базова одиниця виміру"
 
 #. module: uom
 #. odoo-python
@@ -168,7 +190,7 @@ msgstr "Пошук одиниці вимірювання"
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__sequence
 msgid "Sequence"
-msgstr ""
+msgstr "Послідовність"
 
 #. module: uom
 #. odoo-python
@@ -203,7 +225,7 @@ msgstr ""
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_ton
 msgid "Ton"
-msgstr ""
+msgstr "Тонна"
 
 #. module: uom
 #: model:ir.model.fields,help:uom.field_uom_uom__active
@@ -216,18 +238,18 @@ msgstr ""
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__name
 msgid "Unit Name"
-msgstr ""
+msgstr "Назва одиниці"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_unit
 msgid "Units"
-msgstr "Одиниці"
+msgstr "Штуки"
 
 #. module: uom
 #: model:ir.actions.act_window,name:uom.product_uom_form_action
 #: model_terms:ir.ui.view,arch_db:uom.product_uom_tree_view
 msgid "Units & Packagings"
-msgstr ""
+msgstr "Одиниці виміру та Упаковки"
 
 #. module: uom
 #: model_terms:ir.ui.view,arch_db:uom.product_uom_form_view
@@ -238,7 +260,7 @@ msgstr "Одиниці вимірювання"
 #. odoo-javascript
 #: code:addons/uom/static/src/components/many2one_uom/many2one_uom_field.js:0
 msgid "Unnamed"
-msgstr ""
+msgstr "Неназваний"
 
 #. module: uom
 #. odoo-python
@@ -272,6 +294,11 @@ msgid "ft³"
 msgstr "ft³"
 
 #. module: uom
+#: model:uom.uom,name:uom.product_uom_gram
+msgid "g"
+msgstr "г"
+
+#. module: uom
 #: model:uom.uom,name:uom.product_uom_gal
 msgid "gal (US)"
 msgstr "gal (US)"
@@ -302,6 +329,11 @@ msgid "lb"
 msgstr "lb"
 
 #. module: uom
+#: model:uom.uom,name:uom.product_uom_meter
+msgid "m"
+msgstr "м"
+
+#. module: uom
 #: model:uom.uom,name:uom.product_uom_mile
 msgid "mi"
 msgstr "миля"
@@ -309,22 +341,22 @@ msgstr "миля"
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_milliliter
 msgid "ml"
-msgstr ""
+msgstr "мл"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_millimeter
 msgid "mm"
-msgstr "mm"
+msgstr "мм"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_square_meter
 msgid "m²"
-msgstr "m²"
+msgstr "м²"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_cubic_meter
 msgid "m³"
-msgstr "m³"
+msgstr "м³"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_oz
@@ -339,7 +371,7 @@ msgstr "qt (US)"
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_yard
 msgid "yd"
-msgstr ""
+msgstr "yd"
 
 #~ msgid ""
 #~ "<span class=\"oe_grey oe_inline\">\n"

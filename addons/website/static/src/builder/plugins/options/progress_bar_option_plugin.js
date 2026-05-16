@@ -24,6 +24,7 @@ export class ProgressBarOption extends BaseOptionComponent {
 
 class ProgressBarOptionPlugin extends Plugin {
     static id = "progressBarOption";
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_options: ProgressBarOption,
         builder_actions: {

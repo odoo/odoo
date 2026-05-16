@@ -11,13 +11,14 @@
 # Martin Trigaux, 2023
 # Ryoko Tsuda <ryoko@quartile.co>, 2023, 2025.
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Junko Augias (juau)" <juau@odoo.com>, 2025.
+# "Junko Augias (juau)" <juau@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:37+0000\n"
-"PO-Revision-Date: 2025-10-31 08:42+0000\n"
+"POT-Creation-Date: 2026-04-10 18:37+0000\n"
+"PO-Revision-Date: 2026-05-02 09:33+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/project/"
 "ja/>\n"
@@ -26,7 +27,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__portal
@@ -287,63 +288,63 @@ msgid ""
 "            "
 msgstr ""
 "<div>\n"
-"    <t t-set=\"access_token\" t-value=\"object._rating_get_access_token()\"/>"
-"\n"
+"    <t t-set=\"access_token\" t-value=\"object._rating_get_access_token()\"/"
+">\n"
 "    <t t-set=\"partner\" t-value=\"object._rating_get_partner()\"/>\n"
 "    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
 "style=\"width:100%; margin:0px auto;\">\n"
 "    <tbody>\n"
 "        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
 "            <t t-if=\"partner.name\">\n"
-"                <t t-out=\"partner.name or ''\">Brandon Freeman</t>様<br/><"
-"br/>\n"
+"                <t t-out=\"partner.name or ''\">Brandon Freeman</t>様<br/"
+"><br/>\n"
 "            </t>\n"
 "            <t t-else=\"\">\n"
 "                お世話になっております。<br/><br/>\n"
 "            </t>\n"
-"            弊社の下記サービスについて、ご感想をお聞かせください： <strong "
-"t-out=\"object.name or ''\">計画・予算立案</strong> \n"
+"            弊社の下記サービスについて、ご感想をお聞かせください： <strong t-"
+"out=\"object.name or ''\">計画・予算立案</strong> \n"
 "            <t t-if=\"object._rating_get_operator().name\">\n"
-"                担当者： <strong t-out="
-"\"object._rating_get_operator().name or ''\">Mitchell Admin</strong>.<br/>\n"
+"                担当者： <strong t-out=\"object._rating_get_operator().name "
+"or ''\">Mitchell Admin</strong>.<br/>\n"
 "            </t>\n"
 "            <t t-else=\"\">\n"
 "                .<br/>\n"
 "            </t>\n"
 "        </td></tr>\n"
 "        <tr><td style=\"text-align: center;\">\n"
-"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width="
-"\"590\" style="
-"\"width:100%; margin: 32px 0px 32px 0px; display: inline-table;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" "
+"width=\"590\" style=\"width:100%; margin: 32px 0px 32px 0px; display: inline-"
+"table;\">\n"
 "                <tr><td style=\"font-size: 13px;text-align:center;\">\n"
-"                    "
-"<strong>弊社のサービスについてご感想をお聞かせください。</strong><br/>\n"
+"                    <strong>弊社のサービスについてご感想をお聞かせください。"
+"</strong><br/>\n"
 "                    <span style=\"font-size: 12px; opacity: 0.5; color: "
 "#454748;\">(下記より１つをお選びください)</span>\n"
 "                </td></tr>\n"
 "                <tr><td style=\"font-size: 13px;\">\n"
-"                    <table style="
-"\"width:100%;text-align:center;margin-top:2rem;\">\n"
+"                    <table style=\"width:100%;text-align:center;margin-"
+"top:2rem;\">\n"
 "                        <tr>\n"
 "                            <td>\n"
-"                                <a t-attf-href=\"/rate/{{ access_token }}/5\""
-" t-att-class=\"'pe-none' if object._rating_get_operator() else ''\">\n"
-"                                    <img alt=\"Happy\" src="
-"\"/rating/static/src/img/rating_5.png\" title=\"Happy\"/>\n"
+"                                <a t-attf-href=\"/rate/{{ access_token }}/"
+"5\" t-att-class=\"'pe-none' if object._rating_get_operator() else ''\">\n"
+"                                    <img alt=\"Happy\" src=\"/rating/static/"
+"src/img/rating_5.png\" title=\"Happy\"/>\n"
 "                                </a>\n"
 "                            </td>\n"
 "                            <td>\n"
-"                                <a t-attf-href=\"/rate/{{ access_token }}/3\""
-" t-att-class=\"'pe-none' if object._rating_get_operator() else ''\">\n"
-"                                    <img alt=\"Neutral\" src="
-"\"/rating/static/src/img/rating_3.png\" title=\"Neutral\"/>\n"
+"                                <a t-attf-href=\"/rate/{{ access_token }}/"
+"3\" t-att-class=\"'pe-none' if object._rating_get_operator() else ''\">\n"
+"                                    <img alt=\"Neutral\" src=\"/rating/"
+"static/src/img/rating_3.png\" title=\"Neutral\"/>\n"
 "                                </a>\n"
 "                            </td>\n"
 "                            <td>\n"
-"                                <a t-attf-href=\"/rate/{{ access_token }}/1\""
-" t-att-class=\"'pe-none' if object._rating_get_operator() else ''\">\n"
-"                                    <img alt=\"Unhappy\" src="
-"\"/rating/static/src/img/rating_1.png\" title=\"Unhappy\"/>\n"
+"                                <a t-attf-href=\"/rate/{{ access_token }}/"
+"1\" t-att-class=\"'pe-none' if object._rating_get_operator() else ''\">\n"
+"                                    <img alt=\"Unhappy\" src=\"/rating/"
+"static/src/img/rating_1.png\" title=\"Unhappy\"/>\n"
 "                                </a>\n"
 "                            </td>\n"
 "                        </tr>\n"
@@ -352,42 +353,40 @@ msgstr ""
 "            </table>\n"
 "        </td></tr>\n"
 "        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
-"            "
-"フィードバックをもとに、引き続き改善に努めてまいりますので、ご協力のほどお願"
-"いいたします。\n"
+"            フィードバックをもとに、引き続き改善に努めてまいりますので、ご協"
+"力のほどお願いいたします。\n"
 "            <t t-if=\"object.stage_id.rating_status == 'stage'\">\n"
-"                <br/><span style="
-"\"margin: 0; font-size: 12px; opacity: 0.5; color: #454748;\""
-">本アンケートは、プロジェクトが<b t-out=\"object.stage_id.name or ''\""
-">進行中</b>ステージ</span>に移動したため自動で送信されています。\n"
+"                <br/><span style=\"margin: 0; font-size: 12px; opacity: 0.5; "
+"color: #454748;\">本アンケートは、プロジェクトが<b t-"
+"out=\"object.stage_id.name or ''\">進行中</b>ステージ</span>に移動したため自"
+"動で送信されています。\n"
 "            </t>\n"
 "            <t t-if=\"object.stage_id.rating_status == 'periodic'\">\n"
-"                <br/><span style="
-"\"margin: 0; font-size: 12px; opacity: 0.5; color: #454748;\""
-">本アンケートは<b t-out=\"object.stage_id.rating_status_period or ''\""
-">毎月</b>自動送信されます（プロジェクト <b t-out="
-"\"object.stage_id.name or ''\">進行中</b>)</span>\n"
+"                <br/><span style=\"margin: 0; font-size: 12px; opacity: 0.5; "
+"color: #454748;\">本アンケートは<b t-"
+"out=\"object.stage_id.rating_status_period or ''\">毎月</b>自動送信されます"
+"（プロジェクト <b t-out=\"object.stage_id.name or ''\">進行中</b>)</span>\n"
 "            </t>\n"
 "        </td></tr>\n"
 "        <tr><td><br/>どうぞよろしくお願いいたします。</td></tr>\n"
 "        <tr><td>\n"
-"           <t t-out=\"object.project_id.company_id.name or ''\""
-">YourCompany</t>\n"
+"           <t t-out=\"object.project_id.company_id.name or ''\">YourCompany</"
+"t>\n"
 "        </td></tr>\n"
 "        <tr><td style=\"opacity: 0.5;\">\n"
 "            <t t-out=\"object.project_id.company_id.phone or ''\">1 "
 "650-123-4567</t>\n"
 "            <t t-if=\"object.project_id.company_id.email\">\n"
-"                | <a t-attf-href="
-"\"mailto:{{ object.project_id.company_id.email }}\" style=\"text-"
-"decoration:none; color: #454748;\" t-out=\""
-"object.project_id.company_id.email or ''\">info@yourcompany.com</a>\n"
+"                | <a t-attf-href=\"mailto:"
+"{{ object.project_id.company_id.email }}\" style=\"text-decoration:none; "
+"color: #454748;\" t-out=\"object.project_id.company_id.email or "
+"''\">info@yourcompany.com</a>\n"
 "            </t>\n"
 "            <t t-if=\"object.project_id.company_id.website\">\n"
-"                | <a t-attf-href="
-"\"{{ object.project_id.company_id.website }}\" style=\"text-decoration:none; "
-"color: #454748;\" t-out=\"object.project_id.company_id.website or ''\""
-">http://www.example.com</a>\n"
+"                | <a t-attf-href=\"{{ object.project_id.company_id.website }}"
+"\" style=\"text-decoration:none; color: #454748;\" t-"
+"out=\"object.project_id.company_id.website or ''\">http://www.example.com</"
+"a>\n"
 "            </t>\n"
 "        </td></tr>\n"
 "    </tbody>\n"
@@ -605,6 +604,19 @@ msgid ""
 "                                            </span>\n"
 "                                        </span>"
 msgstr ""
+"<span colspan=\"2\" class=\"text-muted o_row ps-1\">\n"
+"                                            <i class=\"fa fa-lightbulb-o "
+"pe-2\"/>\n"
+"                                            <span "
+"name=\"rating_status_helper\">\n"
+"                                                <span "
+"invisible=\"rating_status == 'periodic'\">評価リクエストはタスクがこのステー"
+"ジに移動すると送信されます。</span>\n"
+"                                                <span "
+"invisible=\"rating_status == 'stage'\">評価リクエストはタスクがこのステージに"
+"ある限り送信されます。</span>\n"
+"                                            </span>\n"
+"                                        </span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_kanban
@@ -654,7 +666,7 @@ msgstr "<u>マイルストン</u>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "<u>Profitability</u>"
-msgstr ""
+msgstr "<u>収益性</u>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
@@ -779,14 +791,14 @@ msgstr "活動計画"
 #: model:ir.model.fields,field_description:project.field_project_task__activity_state
 #: model:ir.model.fields,field_description:project.field_project_update__activity_state
 msgid "Activity State"
-msgstr "活動状態"
+msgstr "活動ステータス"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__activity_type_icon
 #: model:ir.model.fields,field_description:project.field_project_task__activity_type_icon
 #: model:ir.model.fields,field_description:project.field_project_update__activity_type_icon
 msgid "Activity Type Icon"
-msgstr "活動種別アイコン"
+msgstr "活動タイプアイコン"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.mail_activity_type_action_config_project_types
@@ -1079,6 +1091,9 @@ msgid ""
 "                When creating a new project from the template, choose who "
 "will take on each role."
 msgstr ""
+"プロジェクトテンプレート内のタスクに役割を割り当てます。\n"
+"                テンプレートから新規プロジェクトを作成する際、各役割を担当す"
+"る人物を選択します。"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.rating_rating_view_form_project
@@ -1149,7 +1164,7 @@ msgstr "メッセージ以外の添付ファイル"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_update__user_id
 msgid "Author"
-msgstr "著作者"
+msgstr "作成者"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -1316,7 +1331,7 @@ msgstr "キャンセル済"
 #: model:mail.message.subtype,name:project.mt_project_task_changes_requested
 #: model:mail.message.subtype,name:project.mt_task_changes_requested
 msgid "Changes Requested"
-msgstr "変更要求済"
+msgstr "修正依頼"
 
 #. module: project
 #. odoo-javascript
@@ -1417,6 +1432,12 @@ msgid ""
 "Periodic rating: an email will be automatically sent at regular intervals as "
 "long as the task remains in the stage."
 msgstr ""
+"タスクが特定のステージに入った際に評価依頼を送信し、顧客からフィードバックを"
+"収集します。これを行うには、ステージに評価メールテンプレートを定義します。\n"
+"ステージ変更時の評価：タスクがステージに到達すると自動的にメールが送信されま"
+"す。\n"
+"定期方式の評価：タスクがステージに留まっている間、一定間隔で自動的にメールが"
+"送信されます。"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_role__color
@@ -1634,7 +1655,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified
 msgid "Create tasks by email:"
-msgstr ""
+msgstr "メールでタスクを作成:"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified_template
@@ -1737,7 +1758,7 @@ msgstr "顧客ポータルURL"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "Customer Rating"
-msgstr ""
+msgstr "顧客レーティング"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.rating_rating_action_project_report
@@ -1797,9 +1818,10 @@ msgid ""
 "statistics on the time it usually takes to move tasks from one stage/state "
 "to another."
 msgstr ""
-"タスクの状態が最後に変更された日付。\n"
-"この情報に基づいて、滞っているタスクを特定したり、あるステージ/状態から別のス"
-"テージ/状態にタスクを移動するのに通常かかる時間の統計を取ることができます。"
+"タスクのステータスが最後に変更された日付。\n"
+"この情報に基づいて、滞っているタスクを特定したり、あるステージ/ステータスから"
+"別のステージ/ステータスにタスクを移動するのに通常かかる時間の統計を取ることが"
+"できます。"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__date
@@ -1826,12 +1848,15 @@ msgid ""
 "disable         Changing this parameter will not affect the rotting status/"
 "date of resources last updated before this change."
 msgstr ""
+"このステージのタスクが期限切れになるまでの日数。無効化するには0を設定してくだ"
+"さい。         このパラメータを変更しても、変更前に最終更新されたリソースの期"
+"限切れステータス/日付には影響しません。"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__rotting_days
 #: model:ir.model.fields,help:project.field_project_task__rotting_days
 msgid "Day count since this resource was last updated"
-msgstr ""
+msgstr "このリソースが最後に更新されてからの経過日数"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_unit__day
@@ -1844,7 +1869,7 @@ msgstr "日"
 #: model:ir.model.fields,field_description:project.field_project_project__rotting_days
 #: model:ir.model.fields,field_description:project.field_project_task__rotting_days
 msgid "Days Rotting"
-msgstr ""
+msgstr "停滞日数"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__delay_endings_days
@@ -1854,7 +1879,7 @@ msgstr "期日までの日数"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__rotting_threshold_days
 msgid "Days to rot"
-msgstr ""
+msgstr "停滞までの日数"
 
 #. module: project
 #. odoo-python
@@ -2050,6 +2075,7 @@ msgstr "破棄"
 #: model:ir.model.fields,field_description:project.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:project.field_res_partner__display_name
 #: model:ir.model.fields,field_description:project.field_res_users__display_name
+#: model:ir.model.fields,field_description:project.field_res_users_settings__display_name
 #: model:ir.model.fields,field_description:project.field_task_share_wizard__display_name
 msgid "Display Name"
 msgstr "表示名"
@@ -2269,7 +2295,7 @@ msgstr "財務"
 #: model:ir.model.fields,field_description:project.field_project_project_stage__fold
 #: model:ir.model.fields,field_description:project.field_project_task_type__fold
 msgid "Folded"
-msgstr ""
+msgstr "折りたたみ"
 
 #. module: project
 #. odoo-javascript
@@ -2373,6 +2399,9 @@ msgid ""
 "individual tasks. Internal users automatically gain access to tasks they are "
 "assigned to."
 msgstr ""
+"ユーザをフォロワーとして追加することでアクセス権を付与します。プロジェクト全"
+"体または個々のタスクに対して追加できます。内部ユーザは、割り当てられたタスク"
+"へのアクセス権を自動的に取得します。"
 
 #. module: project
 #. odoo-javascript
@@ -2407,7 +2436,7 @@ msgstr "メッセージあり"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__has_template_ancestor
 msgid "Has Template Ancestor"
-msgstr ""
+msgstr "テンプレートの上位要素あり"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_invitation_follower
@@ -2424,7 +2453,7 @@ msgstr "クローズ済タスクを隠す"
 #: model:ir.model.fields.selection,name:project.selection__project_task__priority__2
 #: model:ir.model.fields.selection,name:project.selection__report_project_task_user__priority__2
 msgid "High priority"
-msgstr "優先度高"
+msgstr "高優先度"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -2495,6 +2524,7 @@ msgstr "プロジェクトの状況は？"
 #: model:ir.model.fields,field_description:project.field_res_config_settings__id
 #: model:ir.model.fields,field_description:project.field_res_partner__id
 #: model:ir.model.fields,field_description:project.field_res_users__id
+#: model:ir.model.fields,field_description:project.field_res_users_settings__id
 #: model:ir.model.fields,field_description:project.field_task_share_wizard__id
 msgid "ID"
 msgstr "ID"
@@ -2546,7 +2576,7 @@ msgstr "チェックした場合は、新しいメッセージに注意が必要
 #: model:ir.model.fields,help:project.field_project_update__message_has_error
 #: model:ir.model.fields,help:project.field_project_update__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr "選択されている場合、一部のメッセージで配信エラーが発生しています。"
+msgstr "有効にすると、一部のメッセージに配信エラーが発生します。"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_stage__fold
@@ -2554,6 +2584,9 @@ msgid ""
 "If enabled, this stage will be displayed as folded in the Kanban and List "
 "views of your projects. Projects in a folded stage are considered as closed."
 msgstr ""
+"有効にすると、このステージはプロジェクトのかんばんビューおよびリストビューで"
+"折りたたんで表示されます。折りたたまれたステージにあるプロジェクトは、完了(ク"
+"ローズ)したものとして扱われます。"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type__rating_template_id
@@ -2563,6 +2596,9 @@ msgid ""
 "Alternatively, it will be sent at a regular interval as long as the task "
 "remains in this stage."
 msgstr ""
+"設定されている場合、タスクがこのステージに達すると、顧客に自動的に評価申請"
+"メールが送信されます。\n"
+"あるいは、タスクがこのステージにある限り、一定の間隔で送信されます。"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_stage__mail_template_id
@@ -2595,7 +2631,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/project/models/project_task.py:0
 msgid "Import Template for Tasks"
-msgstr ""
+msgstr "タスク用テンプレートをインポート"
 
 #. module: project
 #. odoo-javascript
@@ -2648,17 +2684,17 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/project/static/src/components/subtask_kanban_list/subtask_kanban_list.js:0
 msgid "Invalid Display Name"
-msgstr ""
+msgstr "無効な表示名"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__invited_users
 msgid "Invited internal and portal users"
-msgstr ""
+msgstr "招待された内部ユーザおよびポータルユーザ"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__followers
 msgid "Invited internal users"
-msgstr ""
+msgstr "招待された内部ユーザ"
 
 #. module: project
 #. odoo-javascript
@@ -2735,7 +2771,7 @@ msgstr "過去30日"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 msgid "Last 365 Days"
-msgstr "過去365日"
+msgstr "直近365日"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
@@ -2808,7 +2844,7 @@ msgstr "最終更新日"
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Late Activities"
-msgstr "遅れた活動"
+msgstr "期限超過の活動"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
@@ -2827,7 +2863,7 @@ msgstr "以降"
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 msgid "Let's create a regular <b>project</b>."
-msgstr ""
+msgstr "定期的な<b>プロジェクト</b>を作成しましょう。"
 
 #. module: project
 #. odoo-javascript
@@ -3346,7 +3382,7 @@ msgstr "配信エラーが発生されたメッセージ数"
 #: model:ir.model.fields.selection,name:project.selection__project_update__status__off_track
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_search
 msgid "Off Track"
-msgstr "オフトラック"
+msgstr "遅延"
 
 #. module: project
 #: model:project.tags,name:project.project_tags_10
@@ -3445,7 +3481,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_project_base
 msgid "Overdue"
-msgstr "遅延"
+msgstr "期限超過"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_view_task_overpassed_draft
@@ -3631,7 +3667,7 @@ msgstr "プライベートタスクはテンプレートに変換できません
 #. module: project
 #: model:project.project,name:project.project_template_1
 msgid "Product Launch Campaign"
-msgstr ""
+msgstr "プロダクトローンチキャンペーン"
 
 #. module: project
 #. odoo-javascript
@@ -3749,7 +3785,7 @@ msgstr "プロジェクトステージ削除ウィザード"
 #. module: project
 #: model:ir.actions.server,name:project.ir_cron_rating_project_ir_actions_server
 msgid "Project Stage: Send rating"
-msgstr ""
+msgstr "プロジェクトステージ：評価を送信"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_project_stage_configure
@@ -3826,6 +3862,29 @@ msgid ""
 "access.\n"
 "- Project admins have access to private projects, even if not followers.\n"
 msgstr ""
+"プロジェクトとタスクの可視性:\n"
+"- 招待された内部ユーザ: フォローしているプロジェクトまたはタスクのみアクセス"
+"可能。担当者には自動的にアクセス権が付与されます。\n"
+"- 招待された内部ユーザおよびポータルユーザ: 上記と同様、ポータルユーザに拡張"
+"されます。\n"
+"- すべての内部ユーザ: プロジェクトおよびそのすべてのタスクへのフルアクセス"
+"権。\n"
+"- すべての内部ユーザおよび招待されたポータルユーザ: 内部ユーザはフルアクセス"
+"権を取得。ポータルユーザはフォローしているプロジェクトまたはタスクのみアクセ"
+"ス可能。\n"
+"\n"
+"ポータルアクセスレベル:\n"
+"- 読み取り専用: ポータルユーザはポータル経由でタスクを表示できますが、編集は"
+"不可。\n"
+"- 編集(限定): ポータルユーザはカンバン/リストビューにアクセスでき、フォロー中"
+"のタスクの限定フィールドを編集可能。\n"
+"- 編集: 上記と同様、全タスクへのアクセス権付き。\n"
+"\n"
+"その他のルール:\n"
+"- 内部ユーザは、プロジェクトアクセス権がなくても直接リンクからタスクを開けま"
+"す。\n"
+"- プロジェクト管理者は、非フォロワーであっても非公開プロジェクトにアクセスで"
+"きます。\n"
 
 #. module: project
 #. odoo-javascript
@@ -4254,7 +4313,7 @@ msgstr "役割ごとのユーザ設定"
 #: model:ir.model.fields,field_description:project.field_project_task__is_rotting
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Rotting"
-msgstr ""
+msgstr "停滞"
 
 #. module: project
 #. odoo-javascript
@@ -4268,7 +4327,7 @@ msgstr "保存"
 #: model:ir.model.fields,field_description:project.field_project_task__message_has_sms_error
 #: model:ir.model.fields,field_description:project.field_project_update__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr "SMS送信エラー"
+msgstr "SMS配信エラー"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
@@ -4383,7 +4442,7 @@ msgstr "招待状を送信"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__rating_active
 msgid "Send a customer rating request"
-msgstr ""
+msgstr "顧客評価の依頼を送信"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__sequence
@@ -4596,7 +4655,7 @@ msgstr "ステージ所有者"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_active
 msgid "Stage Rating Status"
-msgstr ""
+msgstr "ステージ評価ステータス"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_stage
@@ -4621,7 +4680,7 @@ msgstr "開始日"
 #: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__state
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__state
 msgid "State"
-msgstr "状態"
+msgstr "ステータス"
 
 #. module: project
 #. odoo-javascript
@@ -4638,7 +4697,7 @@ msgstr "ステータス 読取専用"
 #: model_terms:ir.ui.view,arch_db:project.view_project_calendar
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "Status"
-msgstr "状態"
+msgstr "ステータス"
 
 #. module: project
 #. odoo-python
@@ -4657,7 +4716,7 @@ msgid ""
 "Planned: Future activities."
 msgstr ""
 "活動に基づくステータス\n"
-"遅延: 期限が既に過ぎています\n"
+"期限超過：期限日がすでに過ぎています\n"
 "今日: 活動日は今日です\n"
 "予定: 将来の活動。"
 
@@ -4803,14 +4862,14 @@ msgstr "タスクの繰り返し"
 #. module: project
 #: model:ir.model,name:project.model_task_share_wizard
 msgid "Task Sharing"
-msgstr ""
+msgstr "タスク分担"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_type
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 #: model_terms:ir.ui.view,arch_db:project.task_type_tree
 msgid "Task Stage"
-msgstr "タスク工程"
+msgstr "タスクステージ"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_stage
@@ -4966,7 +5025,7 @@ msgstr "テンプレート"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_template_create_wizard__template_has_dates
 msgid "Template Has Dates"
-msgstr ""
+msgstr "テンプレートに日付あり"
 
 #. module: project
 #. odoo-python
@@ -4990,7 +5049,7 @@ msgstr "テンプレートが%sから作成されました。"
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 msgid "Templates"
-msgstr ""
+msgstr "テンプレート"
 
 #. module: project
 #. odoo-javascript
@@ -5484,7 +5543,7 @@ msgstr "2つのタスクは互いに依存し合うことはできません。"
 #: model:ir.model.fields,help:project.field_project_task__activity_exception_decoration
 #: model:ir.model.fields,help:project.field_project_update__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "記録上の例外活動の種類。"
+msgstr "レコード上の例外の活動タイプ。"
 
 #. module: project
 #. odoo-python
@@ -5638,6 +5697,17 @@ msgid ""
 "        Make sure to use the right format and order e.g. Improve the "
 "configuration screen 5h #feature #v16 @Mitchell !"
 msgstr ""
+"新しいタスクを設定するには、タイトルに以下のキーワードを使用してください:\n"
+"\n"
+"        30h タスクに30時間を割り当てる\n"
+"        #タグ タスクにタグを設定する\n"
+"        @ユーザ タスクを特定のユーザに割り当てる\n"
+"        ! 優先度：中程度\n"
+"        !! 優先度：高\n"
+"        !!! 優先度：緊急\n"
+"\n"
+"        タイトルは以下の順番で記述してください 例：設定画面を改善する 5h "
+"#feature #v16@Mitchell !"
 
 #. module: project
 #: model:ir.model,name:project.model_res_users
@@ -5645,6 +5715,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
 msgid "User"
 msgstr "ユーザ"
+
+#. module: project
+#: model:ir.model,name:project.model_res_users_settings
+msgid "User Settings"
+msgstr "ユーザ設定"
 
 #. module: project
 #: model:res.groups,comment:project.group_project_user
@@ -5739,6 +5814,9 @@ msgid ""
 "takes each role. These employees will be added to the tasks, along with "
 "anyone already assigned."
 msgstr ""
+"テンプレートからプロジェクトを作成する際、各役割を担当する従業員を選択できま"
+"す。これらの従業員は、既に割り当てられている従業員と共にタスクに追加されま"
+"す。"
 
 #. module: project
 #: model:project.tags,name:project.project_tags_14
@@ -5936,6 +6014,13 @@ msgstr ""
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 msgid "Your managers decide which feedback is accepted"
 msgstr "上司が、どのフィードバックを受け入れるか"
+
+#. module: project
+#. odoo-javascript
+#: code:addons/project/static/src/views/analytic_account_form/analytic_account_form_controller.js:0
+#: code:addons/project/static/src/views/analytic_account_list/analytic_account_list_controller.js:0
+msgid "\\t- ${"
+msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -6147,7 +6232,7 @@ msgstr "アイデアの現在のステータスを示します。"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task_type__rating_status__stage
 msgid "when reaching this stage"
-msgstr ""
+msgstr "このステージに達したとき"
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_1

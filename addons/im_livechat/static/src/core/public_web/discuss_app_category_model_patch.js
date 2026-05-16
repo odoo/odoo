@@ -18,6 +18,9 @@ patch(DiscussAppCategory.prototype, {
      * @param {import("models").Thread} t2
      */
     sortThreads(t1, t2) {
+        if (this.eq(this.app?.livechatLookingForHelpCategory)) {
+            return t1.id - t2.id;
+        }
         if (this.livechat_channel_id || this.eq(this.app?.defaultLivechatCategory)) {
             return compareDatetime(t2.lastInterestDt, t1.lastInterestDt) || t2.id - t1.id;
         }

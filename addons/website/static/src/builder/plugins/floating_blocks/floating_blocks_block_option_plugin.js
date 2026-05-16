@@ -8,6 +8,7 @@ import { FloatingBlocksBlockMobileOption } from "./floating_blocks_block_mobile_
 
 class FloatingBlocksBlockOptionPlugin extends Plugin {
     static id = "floatingBlocksBlockOptionPlugin";
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_options: [
             withSequence(BEGIN, FloatingBlocksBlockMobileOption),

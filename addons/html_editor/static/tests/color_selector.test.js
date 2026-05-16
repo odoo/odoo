@@ -1,7 +1,10 @@
-import { describe, expect, test } from "@odoo/hoot";
 import {
+    advanceTime,
+    animationFrame,
     click,
+    describe,
     edit,
+    expect,
     getActiveElement,
     hover,
     press,
@@ -9,16 +12,16 @@ import {
     queryFirst,
     queryOne,
     setInputRange,
+    test,
     waitFor,
     waitUntil,
-} from "@odoo/hoot-dom";
-import { animationFrame } from "@odoo/hoot-mock";
+} from "@odoo/hoot";
 import { contains } from "@web/../tests/web_test_helpers";
 import { setupEditor } from "./_helpers/editor";
 import { getContent, setSelection } from "./_helpers/selection";
 import { expandToolbar } from "./_helpers/toolbar";
-import { execCommand } from "./_helpers/userCommands";
 import { expectElementCount } from "./_helpers/ui_expectations";
+import { execCommand } from "./_helpers/userCommands";
 
 test("can set foreground color", async () => {
     const { el } = await setupEditor("<p>[test]</p>");
@@ -102,7 +105,7 @@ test("default opacity should get applied when applying background color to icon"
     await expectElementCount(".o-we-toolbar", 1);
     expect(".o_font_color_selector").toHaveCount(0); // selector closed
     expect(getContent(el)).toBe(
-        `<p><font style="background-color: rgba(255, 0, 0, 0.6);">[ab</font><font style="background-color: rgba(255, 0, 0, 0.6);">\ufeff<span class="fa fa-glass" contenteditable="false">\u200b</span>\ufeff</font><font style="background-color: rgba(255, 0, 0, 0.6);">cd]</font></p>`
+        `<p><font style="background-color: rgba(255, 0, 0, 0.6);">[ab</font>\ufeff<span class="fa fa-glass" contenteditable="false" style="background-color: rgba(255, 0, 0, 0.6);">\u200b</span>\ufeff<font style="background-color: rgba(255, 0, 0, 0.6);">cd]</font></p>`
     );
 });
 
@@ -202,7 +205,7 @@ test("applied custom color should be shown in colorpicker after switching tab", 
     await animationFrame();
     expect(".o_hex_input").toHaveValue("#FF0000");
     const newColor = "#00FF00";
-    await contains(".o_hex_input").edit(newColor);
+    await contains(".o_hex_input").edit(newColor, { confirm: false });
     expect(".o_hex_input").toHaveValue(newColor);
     expect(getContent(el)).toBe(
         '<p><font style="background-color: rgb(0, 255, 0);">test</font></p>'
@@ -1347,4 +1350,29 @@ describe("color preview", () => {
         await animationFrame();
         expect("p font").toHaveStyle({ backgroundImage: initialGradient });
     });
+});
+
+test("Should not close the color picker on icon color change", async () => {
+    const { el } = await setupEditor(
+        `<p><span class="fa fa-glass" contenteditable="false"></span></p>`
+    );
+    await animationFrame();
+    const icon = el.querySelector(".fa");
+    setSelection({
+        anchorNode: icon.previousSibling,
+        anchorOffset: 1,
+        focusNode: icon.nextSibling,
+        focusOffset: 0,
+    });
+    await waitFor(".o-select-color-foreground");
+    await click(".o-select-color-foreground");
+    await waitFor('[data-color="o-color-1"]');
+    await hover('[data-color="o-color-1"]');
+    expectElementCount('[data-color="o-color-1"]', 1);
+    await advanceTime(200);
+    await animationFrame();
+    await waitFor('.o_font_color_selector [data-color="o-color-2"]');
+    await hover('[data-color="o-color-2"]');
+    // Color picker should stay open
+    expectElementCount('[data-color="o-color-2"]', 1);
 });

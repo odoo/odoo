@@ -2,7 +2,12 @@
 <templates xml:space="preserve">
     <t t-inherit="mail.DiscussSidebarChannel.main" t-inherit-mode="extension">
         <xpath expr="//*[@name='threadAvatar']" position="before">
-            <t t-call="im_livechat.LivechatStatusLabelOfThread">
+            <i t-if="store.discuss.isSidebarCompact and thread.discussAppCategory.eq(store.discuss.livechatLookingForHelpCategory) and thread.matchesSelfExpertise"
+               class="fa fa-star o-mail-starred position-absolute top-0 start-0 z-1"
+               role="image"
+               title="Relevant to your expertise"
+            />
+            <t t-else="" t-call="im_livechat.LivechatStatusLabelOfThread">
                 <t t-set="templateParams" t-value="{ livechatThread: props.thread }"/>
             </t>
         </xpath>
@@ -57,6 +62,7 @@
                         'o-need-help': isBtnActive and btn.status === 'need_help',
                         'o-waiting bg-warning-subtle text-warning': isBtnActive and btn.status === 'waiting',
                     }"
+                    t-att-disabled="!store.has_access_livechat"
                     t-on-click="() => livechatThread.updateLivechatStatus(btn.status)"
                 >
                     <input

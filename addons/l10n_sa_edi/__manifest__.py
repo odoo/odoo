@@ -5,7 +5,7 @@
     'name': 'Saudi Arabia - E-invoicing',
     'author': 'Odoo S.A.',
     'countries': ['sa'],
-    'version': '0.2',
+    'version': '0.3',
     'depends': [
         'account_edi',
         'account_edi_ubl_cii',
@@ -21,6 +21,7 @@ E-invoice implementation for Saudi Arabia; Integration with ZATCA
     """,
     'category': 'Accounting/Localizations/EDI',
     'license': 'LGPL-3',
+    'post_init_hook': '_l10n_sa_edi_post_init',
     'data': [
         'security/ir.model.access.csv',
         'data/account_edi_format.xml',
@@ -33,6 +34,7 @@ E-invoice implementation for Saudi Arabia; Integration with ZATCA
         'views/res_company_views.xml',
         'views/res_config_settings_view.xml',
         'views/report_invoice.xml',
+        'views/report_templates.xml',
     ],
     'demo': [
         'demo/demo_company.xml',

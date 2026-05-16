@@ -13,13 +13,15 @@
 # Michal Veselý <michal@veselyberanek.net>, 2022
 # Jiří Podhorecký, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
+# Marek Jasanský <zahiro@ashtechnology.eu>, 2026.
+# "Marta (wacm)" <wacm@odoo.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:39+0000\n"
-"PO-Revision-Date: 2025-09-16 10:09+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2026-04-10 18:40+0000\n"
+"PO-Revision-Date: 2026-02-25 14:50+0000\n"
+"Last-Translator: \"Marta (wacm)\" <wacm@odoo.com>\n"
 "Language-Team: Czech <https://translate.odoo.com/projects/odoo-19/"
 "website_event_track/cs/>\n"
 "Language: cs\n"
@@ -28,7 +30,7 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n "
 "<= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: website_event_track
 #. odoo-python
@@ -81,13 +83,6 @@ msgstr "10 nápadů na DIY nábytek pro úplné začátečníky"
 #: model:event.track,name:website_event_track.event_7_track_18
 msgid "6 Woodworking tips and tricks for beginners"
 msgstr "6 tipů a triků pro začátečníky při práci se dřevem"
-
-#. module: website_event_track
-#: model_terms:ir.ui.view,arch_db:website_event_track.pwa_offline
-msgid ""
-"<a t-att-href=\"url_for('/event')\" class=\"btn btn-primary btn-block "
-"o_translate_inline\">Home page</a>"
-msgstr ""
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_template_new
@@ -1173,7 +1168,7 @@ msgstr "Objevte náš nový návrhářský tým"
 #: model:ir.model.fields,field_description:website_event_track.field_website_menu__display_name
 #: model:ir.model.fields,field_description:website_event_track.field_website_visitor__display_name
 msgid "Display Name"
-msgstr "Zobrazovací název"
+msgstr "Zobrazovaný název"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__website_cta
@@ -1413,10 +1408,7 @@ msgstr "Budoucí činnosti"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_confirmation_end_page_hook
 #: model_terms:ir.ui.view,arch_db:website_event_track.registration_complete
-msgid ""
-"Get prepared and\n"
-"                    <a class=\"o_translate_inline\" t-att-href=\"'/event/%s/"
-"track' % (slug(event))\">register to your favorites talks now.</a>"
+msgid "Get prepared and"
 msgstr ""
 
 #. module: website_event_track
@@ -1468,6 +1460,11 @@ msgstr "Vysoká"
 #: model:ir.model.fields.selection,name:website_event_track.selection__event_track__priority__3
 msgid "Highest"
 msgstr "Nejvyšší"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.pwa_offline
+msgid "Home page"
+msgstr ""
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track21
@@ -2320,7 +2317,7 @@ msgstr "Zobrazit tlačítko"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Show all records whose next activity date is past"
-msgstr ""
+msgstr "Zobrazit všechny záznamy, jejichž datum další aktivity již uplynulo"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_event_view_form
@@ -3145,6 +3142,12 @@ msgid "minutes after Track start"
 msgstr ""
 
 #. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_confirmation_end_page_hook
+#: model_terms:ir.ui.view,arch_db:website_event_track.registration_complete
+msgid "register to your favorites talks now."
+msgstr ""
+
+#. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
 msgid "starts in"
 msgstr "začíná v"
@@ -3153,6 +3156,19 @@ msgstr "začíná v"
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
 msgid "starts on"
 msgstr "začíná v"
+
+#. module: website_event_track
+#. odoo-javascript
+#: code:addons/website_event_track/static/src/xml/website_event_pwa.xml:0
+msgid "x"
+msgstr ""
+
+#~ msgid ""
+#~ "<a t-att-href=\"url_for('/event')\" class=\"btn btn-primary btn-block "
+#~ "o_translate_inline\">Home page</a>"
+#~ msgstr ""
+#~ "<a t-att-href=\"url_for('/event')\" class=\"btn btn-primary btn-block "
+#~ "o_translate_inline\">Domů</a>"
 
 #~ msgid "&amp;bull;"
 #~ msgstr "&amp;bull;"

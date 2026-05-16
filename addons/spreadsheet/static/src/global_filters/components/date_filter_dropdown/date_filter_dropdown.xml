@@ -10,7 +10,7 @@
 
                 <div class="o-date-option-label" t-esc="option.label"/>
                 <t t-if="option.type === 'range'">
-                    <div class="d-flex flex-row">
+                    <div class="d-flex flex-row" t-on-click.stop="">
                         <DateTimeInput type="'date'" value="dateFrom()" onChange="(dateFrom) => this.setDateFrom(dateFrom)" />
                         <span class="d-flex align-items-center">to</span>
                         <DateTimeInput type="'date'" value="dateTo()" onChange="(dateTo) => this.setDateTo(dateTo)" />

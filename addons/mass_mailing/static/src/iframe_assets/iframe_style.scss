@@ -37,6 +37,9 @@ html:has(.o_layout, .o_basic_theme) {
             padding: 0;
             border: none;
         }
+        .o_mass_mailing_value {
+            overflow-wrap: break-word !important;
+        }
         .o_mass_mailing_value ~ .o_loading_screen {
             display: none !important;
         }
@@ -71,4 +74,10 @@ html:has(.o_layout) {
         outline: 2px dashed #01bad2;
         outline-offset: -2px;
     }
+}
+
+body {
+    // Set frontend direction that will be flipped with
+    // rtlcss for right-to-left text direction.
+    direction: ltr;
 }

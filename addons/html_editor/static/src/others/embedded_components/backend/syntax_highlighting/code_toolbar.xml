@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="html_editor.CodeToolbar">
+        <div t-att-class="props.isActive ? 'show' : ''" class="o_code_toolbar">
+            <div data-prevent-closing-overlay="true">
+                <Dropdown menuClass="'o_language_selector'" focusToggleOnClosed="false">
+                    <button class="btn" t-att-title="languages[props.currentLanguage]" name="language">
+                        <span class="px-1" t-esc="languages[props.currentLanguage]"/>
+                        <i class="fa fa-caret-down"></i>
+                    </button>
+                    <t t-set-slot="content">
+                        <t t-foreach="Object.entries(languages)" t-as="language" t-key="language[0]">
+                            <DropdownItem
+                                attrs="{ name: language[1] }"
+                                onSelected="() => props.onLanguageChange(language[0])" t-on-pointerdown.prevent="() => {}">
+                                <t t-esc="language[1]"/>
+                            </DropdownItem>
+                        </t>
+                    </t>
+                </Dropdown>
+                <CopyButton content="props.getContent" copyText.translate="Copy" successText.translate="Code copied to the clipboard." t-on-pointerdown.prevent="() => {}"/>
+                <button class="text-nowrap btn"
+                    t-on-click="this.props.convertToParagraph"
+                >
+                    <span class="mx-1 fa fa-paragraph" title="Convert to paragraph"></span>
+                </button>
+            </div>
+        </div>
+    </t>
+</templates>

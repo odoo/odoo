@@ -1167,6 +1167,35 @@ class TestWebReadGroup(common.TransactionCase):
             },
         )
 
+    def test_order_field_aggregator_fallback(self):
+        """Ordering by a field not in aggregates should use the field's default aggregator.
+        Ordering with a non-default aggregator in aggregates should use that aggregator."""
+        Model = self.env["test_read_group.aggregate"]
+        Model.create([
+            {"key": 1, "value": 1},
+            {"key": 1, "value": 1},
+            {"key": 1, "value": 1},
+            {"key": 2, "value": 2},
+        ])
+
+        groups = Model.web_read_group(
+            domain=[],
+            groupby=["key"],
+            aggregates=["__count"],
+            order="value",
+        )["groups"]
+
+        self.assertEqual([g["key"] for g in groups], [2, 1])
+
+        groups = Model.web_read_group(
+            domain=[],
+            groupby=["key"],
+            aggregates=["value:max"],
+            order="value",
+        )["groups"]
+
+        self.assertEqual([g["key"] for g in groups], [1, 2])
+
     def test_read_extra_info_groupby_value(self):
         Model = self.env["test_read_group.aggregate"]
         partner_1, partner_2 = self.env["res.partner"].create(

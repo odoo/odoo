@@ -1,8 +1,13 @@
+import logging
 from collections import defaultdict
+
 from markupsafe import Markup
 
-from odoo import _, api, models, modules, tools
+from odoo import Command, _, api, models, modules, tools
 from odoo.exceptions import UserError, ValidationError
+
+
+_logger = logging.getLogger(__name__)
 
 
 class AccountMoveSend(models.AbstractModel):
@@ -75,9 +80,19 @@ class AccountMoveSend(models.AbstractModel):
             'author_partner_id': get_setting('author_partner_id', from_cron=from_cron) or self.env.user.partner_id.id,
         }
         vals['invoice_edi_format'] = get_setting('invoice_edi_format', default_value=self._get_default_invoice_edi_format(move, sending_methods=vals['sending_methods']))
+        mail_template = get_setting('mail_template') or self._get_default_mail_template_id(move)
         if 'email' in vals['sending_methods']:
-            mail_template = get_setting('mail_template') or self._get_default_mail_template_id(move)
             mail_lang = get_setting('mail_lang') or self._get_default_mail_lang(move, mail_template)
+            vals.update({
+                'mail_template': mail_template,
+                'mail_lang': mail_lang,
+                'mail_body': get_setting('mail_body', default_value=self._get_default_mail_body(move, mail_template, mail_lang)),
+                'mail_subject': get_setting('mail_subject', default_value=self._get_default_mail_subject(move, mail_template, mail_lang)),
+                'mail_partner_ids': get_setting('mail_partner_ids', default_value=self._get_default_mail_partner_ids(move, mail_template, mail_lang).ids),
+                'reply_to': get_setting('reply_to') or self._get_mail_default_field_value_from_template(mail_template, mail_lang, move, 'reply_to'),
+            })
+        # Add mail attachments if sending methods support them
+        if self._display_attachments_widget(vals['invoice_edi_format'], vals['sending_methods']):
             mail_attachments_widget = self._get_default_mail_attachments_widget(
                 move,
                 mail_template,
@@ -85,14 +100,7 @@ class AccountMoveSend(models.AbstractModel):
                 extra_edis=vals['extra_edis'],
                 pdf_report=vals['pdf_report'],
             )
-            vals.update({
-                'mail_template': mail_template,
-                'mail_lang': mail_lang,
-                'mail_body': get_setting('mail_body', default_value=self._get_default_mail_body(move, mail_template, mail_lang)),
-                'mail_subject': get_setting('mail_subject', default_value=self._get_default_mail_subject(move, mail_template, mail_lang)),
-                'mail_partner_ids': get_setting('mail_partner_ids', default_value=self._get_default_mail_partner_ids(move, mail_template, mail_lang).ids),
-                'mail_attachments_widget': get_setting('mail_attachments_widget', default_value=mail_attachments_widget),
-            })
+            vals['mail_attachments_widget'] = get_setting('mail_attachments_widget', default_value=mail_attachments_widget)
         return vals
 
     # -------------------------------------------------------------------------
@@ -110,7 +118,17 @@ class AccountMoveSend(models.AbstractModel):
         - action the action to run when the link is clicked
         """
         alerts = {}
-
+        send_cron = self.env.ref('account.ir_cron_account_move_send', raise_if_not_found=False)
+        if len(moves) > 1 and send_cron and not send_cron.sudo().active:
+            has_cron_access = send_cron.has_access('write')
+            has_access_message = _("The scheduled action 'Send Invoices automatically' is archived. You won't be able to send invoices in batch.")
+            no_access_addendum = _("\nPlease contact your administrator.")
+            alerts['account_send_cron_archived'] = {
+                'level': 'warning',
+                'message': has_access_message if has_cron_access else has_access_message + no_access_addendum,
+                'action_text': _("Check") if has_cron_access else None,
+                'action': send_cron._get_records_action() if has_cron_access else None,
+            }
         # Filter moves that are trying to send via email
         email_moves = moves.filtered(lambda m: 'email' in moves_data[m]['sending_methods'])
         if email_moves:
@@ -252,16 +270,17 @@ class AccountMoveSend(models.AbstractModel):
         pdf_report = pdf_report or self._get_default_pdf_report_id(move)
         invoice_template = pdf_report | self.env.ref('account.account_invoices')
         extra_mail_templates = mail_template.report_template_ids - invoice_template
-        filename = move._get_invoice_report_filename(report=pdf_report)
-        return [
-            {
+        attachments = []
+        for extra_mail_template in extra_mail_templates:
+            filename = move._get_invoice_report_filename(report=extra_mail_template)
+            attachments.append({
                 'id': f'placeholder_{extra_mail_template.name.lower()}_{filename}',
-                'name': f'{extra_mail_template.name.lower()}_{filename}',
+                'name': filename,
                 'mimetype': 'application/pdf',
                 'placeholder': True,
                 'dynamic_report': extra_mail_template.report_name,
-            } for extra_mail_template in extra_mail_templates
-        ]
+            })
+        return attachments
 
     @api.model
     def _get_invoice_extra_attachments(self, move):
@@ -351,6 +370,10 @@ class AccountMoveSend(models.AbstractModel):
             return error['error_title']
         errors = Markup().join(Markup("<li>%s</li>") % error for error in error['errors'])
         return Markup("%s<ul>%s</ul>") % (error['error_title'], errors)
+
+    @api.model
+    def _display_attachments_widget(self, edi_format, sending_methods):
+        return 'email' in sending_methods
 
     # -------------------------------------------------------------------------
     # SENDING METHODS
@@ -449,7 +472,7 @@ class AccountMoveSend(models.AbstractModel):
         attachments = self.sudo().env['ir.attachment'].create(attachment_to_create)
         res_id_to_attachment = {attachment.res_id: attachment for attachment in attachments}
 
-        for invoice in invoices_data:
+        for invoice, invoice_data in invoices_data.items():
             if attachment := res_id_to_attachment.get(invoice.id):
                 invoice.message_main_attachment_id = attachment
                 invoice.invalidate_recordset(fnames=['invoice_pdf_report_id', 'invoice_pdf_report_file'])
@@ -479,6 +502,24 @@ class AccountMoveSend(models.AbstractModel):
                 to_send_mail[move] = move_data
         self._send_mails(to_send_mail)
         self._send_notifications_to_partners(group_by_partner)
+
+        # Notify subscribers.
+        for move, move_data in moves_data.items():
+            if not move.is_invoice(include_receipts=True):
+                continue
+
+            try:
+                move.journal_id._notify_invoice_subscribers(
+                    invoice=move,
+                    mail_params={
+                        'attachment_ids': [
+                            Command.create({'name': attachment.name, 'raw': attachment.raw, 'mimetype': attachment.mimetype})
+                            for attachment in self._get_invoice_extra_attachments(move)
+                        ]
+                    },
+                )
+            except Exception:
+                _logger.exception("Failed notifying subscribers for move %s", move.id)
 
     @api.model
     def _send_notifications_to_partners(self, moves_grouped_by_author_partner_id, is_success=True):
@@ -562,13 +603,16 @@ class AccountMoveSend(models.AbstractModel):
             for attachment in self.env['ir.attachment'].browse(list(seen_attachment_ids)).exists()
         ]
 
-        return {
+        params = {
             'author_id': move_data['author_partner_id'],
             'body': move_data['mail_body'],
             'subject': move_data['mail_subject'],
             'partner_ids': move_data['mail_partner_ids'],
             'attachments': mail_attachments,
         }
+        if move_data.get('reply_to'):
+            params['reply_to'] = move_data['reply_to']
+        return params
 
     @api.model
     def _generate_dynamic_reports(self, moves_data):
@@ -799,14 +843,17 @@ class AccountMoveSend(models.AbstractModel):
         success = {move: move_data for move, move_data in moves_data.items() if not move_data.get('error')}
         if success:
             self._hook_if_success(success, from_cron=from_cron)
+
         # Update sending data of moves
         for move, move_data in moves_data.items():
             # We keep the sending_data, so it will be retried
             if from_cron and move_data.get('error', {}).get('retry'):
                 continue
             move.sending_data = False
+
         # Return generated attachments.
         attachments = self.env['ir.attachment']
         for move, move_data in success.items():
             attachments += self._get_invoice_extra_attachments(move) or move_data['proforma_pdf_attachment']
+
         return attachments

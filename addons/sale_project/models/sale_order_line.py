@@ -102,12 +102,13 @@ class SaleOrderLine(models.Model):
 
     @api.depends('order_id.partner_id', 'product_id', 'order_id.project_id')
     def _compute_analytic_distribution(self):
-        super()._compute_analytic_distribution()
-        for line in self:
-            project = line.product_id.project_id or line.order_id.project_id
-            if line.display_type or not line.product_id or not project:
-                continue
+        ctx_project = self.env['project.project'].browse(self.env.context.get('project_id'))
+        project_lines = self.filtered(lambda l: not l.display_type and (ctx_project or l.product_id.with_company(l.company_id).project_id or l.order_id.project_id))
+        empty_project_lines = project_lines.filtered(lambda l: not l.analytic_distribution)
+        super(SaleOrderLine, (self - project_lines) + empty_project_lines)._compute_analytic_distribution()
 
+        for line in project_lines:
+            project = ctx_project or line.product_id.with_company(line.company_id).project_id or line.order_id.project_id
             if line.analytic_distribution:
                 applied_root_plans = self.env['account.analytic.account'].browse(
                     list({int(account_id) for ids in line.analytic_distribution for account_id in ids.split(",")})
@@ -149,10 +150,15 @@ class SaleOrderLine(models.Model):
         return lines
 
     def write(self, vals):
+        sols_with_no_qty_ordered = self.env['sale.order.line']
+        if 'product_uom_qty' in vals and vals.get('product_uom_qty') > 0:
+            sols_with_no_qty_ordered = self.filtered(lambda sol: sol.product_uom_qty == 0)
         result = super().write(vals)
         # changing the ordered quantity should change the allocated hours on the
         # task, whatever the SO state. It will be blocked by the super in case
         # of a locked sale order.
+        if vals.get('product_uom_qty') and sols_with_no_qty_ordered:
+            sols_with_no_qty_ordered.filtered(lambda l: l.is_service and l.state == 'sale' and not l.is_expense)._timesheet_service_generation()
         if 'product_uom_qty' in vals and not self.env.context.get('no_update_allocated_hours', False):
             for line in self:
                 if line.task_id and line.product_id.type == 'service':
@@ -247,27 +253,19 @@ class SaleOrderLine(models.Model):
     def _timesheet_create_task_prepare_values(self, project):
         self.ensure_one()
         allocated_hours = 0.0
-        if self.product_id.service_type not in ['milestones', 'manual']:
+        if self.product_id.service_type != 'milestones':
             allocated_hours = self._convert_qty_company_hours(self.company_id)
         sale_line_name_parts = self.name.split('\n')
-        products_inside_template_line_with_name = self.order_id.sale_order_template_id.sale_order_template_line_ids.filtered(
-            lambda line: line.product_id and line.name).product_id
-        if self.product_id in products_inside_template_line_with_name:
-            title = self.product_id.name
-            description = '<br/>'.join(sale_line_name_parts)
-        else:
-            default_name = self.with_context(
-                lang=self.order_id._get_lang(),
-            )._get_sale_order_line_multiline_description_sale()
-            if (
-                self.name != default_name
-                and len(sale_line_name_parts) > 1
-                and sale_line_name_parts[1]
-            ):
-                # if there's a custom line description, skip the product name part when possible
-                sale_line_name_parts.pop(0)
+
+        if sale_line_name_parts and sale_line_name_parts[0] == self.product_id.display_name:
+            sale_line_name_parts.pop(0)
+
+        if len(sale_line_name_parts) == 1 and sale_line_name_parts[0]:
             title = sale_line_name_parts[0]
-            description = '<br/>'.join(sale_line_name_parts[1:])
+            description = ''
+        else:
+            title = self.product_id.display_name
+            description = '<br/>'.join(sale_line_name_parts)
 
         return {
             'name': title if project.sale_line_id else '%s - %s' % (self.order_id.name or '', title),
@@ -343,8 +341,14 @@ class SaleOrderLine(models.Model):
             new project/task. This explains the searches on 'sale_line_id' on project/task. This also
             implied if so line of generated task has been modified, we may regenerate it.
         """
-        so_line_task_global_project = self._get_so_lines_task_global_project()
-        so_line_new_project = self._get_so_lines_new_project()
+        sale_order_lines = self.filtered(
+            lambda sol:
+                sol.is_service
+                and sol.product_id.service_tracking in ['project_only', 'task_in_project', 'task_global_project']
+                and not (sol._is_line_optional() and sol.product_uom_qty == 0)
+        )
+        so_line_task_global_project = sale_order_lines._get_so_lines_task_global_project()
+        so_line_new_project = sale_order_lines._get_so_lines_new_project()
         task_templates = self.env['project.task']
 
         # search so lines from SO of current so lines having their project generated, in order to check if the current one can

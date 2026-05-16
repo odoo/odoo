@@ -10,6 +10,7 @@ UOM_TO_UNECE_CODE = {
     'uom.product_uom_gram': 'GRM',
     'uom.product_uom_day': 'DAY',
     'uom.product_uom_hour': 'HUR',
+    'uom.product_uom_minute': 'MIN',
     'uom.product_uom_ton': 'TNE',
     'uom.product_uom_meter': 'MTR',
     'uom.product_uom_km': 'KMT',
@@ -21,7 +22,7 @@ UOM_TO_UNECE_CODE = {
     'uom.product_uom_foot': 'FOT',
     'uom.product_uom_mile': 'SMI',
     'uom.product_uom_floz': 'OZA',
-    'uom.product_uom_qt': 'QT',
+    'uom.product_uom_qt': 'QTL',
     'uom.product_uom_gal': 'GLL',
     'uom.product_uom_cubic_meter': 'MTQ',
     'uom.product_uom_cubic_inch': 'INQ',
@@ -30,6 +31,7 @@ UOM_TO_UNECE_CODE = {
     'uom.uom_square_foot': 'FTK',
     'uom.product_uom_yard': 'YRD',
     'uom.product_uom_millimeter': 'MMT',
+    'uom.product_uom_kwh': 'KWH',
 }
 
 

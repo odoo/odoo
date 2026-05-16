@@ -80,7 +80,8 @@ safe_attrs = defs.safe_attrs | frozenset(
      'data-ai-field', 'data-ai-record-id',
      'data-heading-link-id',
      'data-mimetype-before-conversion',
-     'data-language-id', 'data-syntax-highlighting-value'
+     'data-language-id',
+     'data-bs-toggle',  # support nav-tabs
      ])
 SANITIZE_TAGS = {
     # allow new semantic HTML5 tags
@@ -98,7 +99,7 @@ class _Cleaner(clean.Cleaner):
     _style_whitelist = [
         'font-size', 'font-family', 'font-weight', 'font-style', 'background-color', 'color', 'text-align',
         'line-height', 'letter-spacing', 'text-transform', 'text-decoration', 'text-decoration', 'opacity',
-        'float', 'vertical-align', 'display', 'object-fit',
+        'float', 'vertical-align', 'display', 'object-fit', 'direction',
         'padding', 'padding-top', 'padding-left', 'padding-bottom', 'padding-right',
         'margin', 'margin-top', 'margin-left', 'margin-bottom', 'margin-right',
         'white-space',
@@ -385,6 +386,8 @@ def html_normalize(src, filter_callback=None, output_method="html"):
     # perform quote detection before cleaning and class removal
     for el in doc.iter(tag=etree.Element):
         tag_quote(el)
+
+    doc = html.fromstring(html.tostring(doc, method=output_method))
 
     if filter_callback:
         doc = filter_callback(doc)

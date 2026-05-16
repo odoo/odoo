@@ -1,7 +1,6 @@
 import { describe, test } from "@odoo/hoot";
 import { testEditor } from "./_helpers/editor";
 import { unformat } from "./_helpers/format";
-import { BOLD_TAGS } from "./_helpers/tags";
 import { FORMATTABLE_TAGS } from "@html_editor/utils/formatting";
 
 /**
@@ -60,15 +59,21 @@ describe("No orphan inline elements compatibility mode", () => {
         });
     });
 
-    test("should not transform <br> inside <p>", async () => {
+    test("should not transform <br> inside <p> (1)", async () => {
         await testEditor({
             contentBefore: "<p>ab<br>c</p>",
             contentAfter: "<p>ab<br>c</p>",
         });
+    });
+
+    test("should not transform <br> inside <p> (2)", async () => {
         await testEditor({
             contentBefore: "<p>ab<br>c</p><p>d<br></p>",
             contentAfter: "<p>ab<br>c</p><p>d<br></p>",
         });
+    });
+
+    test("should not transform <br> inside <p> (3)", async () => {
         await testEditor({
             contentBefore: "xx<p>ab<br>c</p>d<br>yy",
             contentAfter: "<div>xx</div><p>ab<br>c</p><div>d</div><div>yy</div>",
@@ -93,12 +98,14 @@ describe("No orphan inline elements compatibility mode", () => {
         });
     });
 
-    test("should wrap a div.o_image direct child of the editable into a block", async () => {
+    test("should wrap a div.o_file_box direct child of the editable into a block", async () => {
         await testEditor({
-            contentBefore: '<p>abc</p><div class="o_image"></div><p>def</p>',
+            contentBefore:
+                '<p>abc</p><span class="o_file_box" contenteditable="false"><a href="#" title="document" data-mimetype="application/pdf"></a></span><p>def</p>',
             contentBeforeEdit:
-                '<p>abc</p><div><div class="o_image" contenteditable="false"></div></div><p>def</p>',
-            contentAfter: '<p>abc</p><div><div class="o_image"></div></div><p>def</p>',
+                '<p>abc</p><div class="o-paragraph">\ufeff<span class="o_file_box" contenteditable="false"><a href="#" title="document" data-mimetype="application/pdf"></a></span>\ufeff</div><p>def</p>',
+            contentAfter:
+                '<p>abc</p><div><span class="o_file_box"><a href="#" title="document" data-mimetype="application/pdf"></a></span></div><p>def</p>',
         });
     });
 });
@@ -209,6 +216,20 @@ describe("color normalization", () => {
         });
     });
 
+    test("should unwrap nested identical <font> tag when parent already has the same class", async () => {
+        await testEditor({
+            contentBefore: unformat(`
+                <p><font class="bg-color-1 text-gradient" style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);">
+                    parent
+                    <font class="bg-color-1">child</font>
+                </font></p>
+            `),
+            contentAfter: unformat(`
+                <p><font class="bg-color-1 text-gradient" style="background-image: linear-gradient(135deg, rgb(214, 255, 127) 0%, rgb(0, 179, 204) 100%);">parentchild</font></p>
+            `),
+        });
+    });
+
     test("should unwrap nested identical <font> tags with color (class and style same)", async () => {
         await testEditor({
             contentBefore: unformat(`
@@ -287,13 +308,25 @@ describe("color normalization", () => {
 });
 
 describe("formatting normalization", () => {
-    test("should unwrap nested identical bold tags", async () => {
-        for (const tag of BOLD_TAGS) {
-            await testEditor({
-                contentBefore: `<p>a${tag(`b${tag(`c${tag(`d`)}`)}e`)}f</p>`,
-                contentAfter: `<p>a${tag("bcde")}f</p>`,
-            });
-        }
+    test("should unwrap nested identical bold tags (1)", async () => {
+        await testEditor({
+            contentBefore: "<p>a<strong>b<strong>c<strong>d</strong></strong>e</strong>f</p>",
+            contentAfter: "<p>a<strong>bcde</strong>f</p>",
+        });
+    });
+
+    test("should unwrap nested identical bold tags (2)", async () => {
+        await testEditor({
+            contentBefore: `<p>a<span style="font-weight: bolder;">b<span style="font-weight: bolder;">c<span style="font-weight: bolder;">d</span></span>e</span>f</p>`,
+            contentAfter: `<p>a<span style="font-weight: bolder;">bcde</span>f</p>`,
+        });
+    });
+
+    test("should unwrap nested identical bold tags (3)", async () => {
+        await testEditor({
+            contentBefore: "<p>a<b>b<b>c<b>d</b></b>e</b>f</p>",
+            contentAfter: "<p>a<b>bcde</b>f</p>",
+        });
     });
 
     test("should merge nested strong inside formatting tags", async () => {
@@ -329,14 +362,21 @@ describe("formatting normalization", () => {
         });
     });
 
-    test("merges adjacent formattable tags", async () => {
-        for (const tagName of FORMATTABLE_TAGS.map((tag) => tag.toLowerCase())) {
+    test("should merge nested small inside formatting tags", async () => {
+        await testEditor({
+            contentBefore: `<p><small><small>text</small></small></p>`,
+            contentAfter: `<p><small>text</small></p>`,
+        });
+    });
+
+    for (const tagName of FORMATTABLE_TAGS.map((tag) => tag.toLowerCase())) {
+        test(`merges adjacent formattable ${tagName}`, async () => {
             await testEditor({
                 contentBefore: `<p><${tagName}>A</${tagName}><${tagName}>B</${tagName}></p>`,
                 contentAfter: `<p><${tagName}>AB</${tagName}></p>`,
             });
-        }
-    });
+        });
+    }
 });
 
 describe("Editor config initialization", () => {

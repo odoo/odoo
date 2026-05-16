@@ -3,14 +3,14 @@
 # * stock
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Fernanda Alvarez (mfar)" <mfar@odoo.com>, 2025.
-# "Patricia Gutiérrez (pagc)" <pagc@odoo.com>, 2025.
+# "Fernanda Alvarez (mfar)" <mfar@odoo.com>, 2025, 2026.
+# "Patricia Gutiérrez (pagc)" <pagc@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:37+0000\n"
-"PO-Revision-Date: 2025-10-11 02:30+0000\n"
+"POT-Creation-Date: 2026-04-10 18:37+0000\n"
+"PO-Revision-Date: 2026-05-08 20:48+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
 "odoo-19/stock/es_419/>\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: stock
 #. odoo-python
@@ -83,6 +83,16 @@ msgid ""
 msgstr ""
 "\n"
 "(%(serial_number)s) existe en la ubicación %(location)s"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_move.py:0
+msgid ""
+"\n"
+"Package: %s"
+msgstr ""
+"\n"
+"Paquete: %s"
 
 #. module: stock
 #. odoo-python
@@ -427,8 +437,8 @@ msgstr ""
 "* Cliente: Ubicación virtual que representa la ubicación de destino de los "
 "productos enviados a tus clientes.\n"
 "* Pérdida de inventario: Ubicación virtual que sirve como contraparte para "
-"las operaciones de inventario para corregir los niveles de inventario ("
-"inventarios físicos).\n"
+"las operaciones de inventario para corregir los niveles de inventario "
+"(inventarios físicos).\n"
 "* Producción: Ubicación virtual de contraparte para las operaciones de "
 "producción. Esta ubicación consume componentes y produce productos "
 "terminados.\n"
@@ -482,52 +492,9 @@ msgid "1 Week"
 msgstr "1 semana"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
-#: model_terms:ir.ui.view,arch_db:stock.stock_report_delivery_aggregated_move_lines
-msgid "1.00"
-msgstr "1.00"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_content
-msgid "12.0"
-msgstr "12.0"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_generic_barcode
-msgid "1234567890"
-msgstr "1234567890"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_lot_label
-msgid "12345678901"
-msgstr "12345678901"
-
-#. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__product_label_format__2x7xprice
 msgid "2 x 7 with price"
 msgstr "2 x 7 con precio"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
-msgid "2021-09-01"
-msgstr "01-09-2021"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
-msgid "2023-01-01"
-msgstr "01-01-2023"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_picking
-msgid "2023-09-24"
-msgstr "24-09-2023"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
-#: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_content
-#: model_terms:ir.ui.view,arch_db:stock.report_picking
-msgid "3.00"
-msgstr "3.00"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__lot_label_layout__print_format__4x12
@@ -554,11 +521,6 @@ msgstr "4 x 12 con precio"
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__product_label_format__4x7xprice
 msgid "4 x 7 with price"
 msgstr "4 x 7 con precio"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_content
-msgid "54326786758"
-msgstr "54326786758"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_form_view
@@ -870,12 +832,6 @@ msgid "<span class=\"text-muted small\"> On Hand</span>"
 msgstr "<span class=\"text-muted small\"> A la mano</span>"
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
-#: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
-msgid "<span groups=\"!uom.group_uom\">On Hand</span>"
-msgstr "<span groups=\"!uom.group_uom\">A la mano</span>"
-
-#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "<span> days</span>"
 msgstr "<span> días</span>"
@@ -934,8 +890,8 @@ msgstr "<strong>Contacto</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
-msgid "<strong>Customer Address</strong>"
-msgstr "<strong>Dirección del cliente</strong>"
+msgid "<strong>Customer</strong>"
+msgstr "<strong>Cliente</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -946,6 +902,11 @@ msgstr "<strong>Entregado</strong>"
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Delivery Address:</strong>"
 msgstr "<strong>Dirección de entrega:</strong>"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
+msgid "<strong>Delivery Address</strong>"
+msgstr "<strong>Dirección de entrega</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -1366,7 +1327,6 @@ msgstr "Todos los traslados"
 #. module: stock
 #. odoo-javascript
 #: code:addons/stock/static/src/views/search/stock_report_search_panel.xml:0
-#: model_terms:ir.ui.view,arch_db:stock.stock_location_route_form_view
 msgid "All Warehouses"
 msgstr "Todos los almacenes"
 
@@ -1390,9 +1350,8 @@ msgid ""
 "Allow Make to Order, or automate PO, when a product is sold and get direct "
 "links between documents."
 msgstr ""
-"Permitir fabricación bajo pedido, o automatizar las órdenes de compra, "
-"cuando un producto se venda. Tendrás acceso directo a los documentos que se "
-"creen."
+"Permite la fabricación bajo pedido o automatiza las órdenes de compra cuando "
+"se venda un producto. Crea enlaces directos entre los documentos."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_storage_category__allow_new_product
@@ -1402,7 +1361,7 @@ msgstr "Permitir nuevo producto"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_storage_category__allow_new_product__mixed
 msgid "Allow mixed products"
-msgstr "Permitir productos mezlcados"
+msgstr "Permitir productos mezclados"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__allowed_location_ids
@@ -1570,9 +1529,9 @@ msgid ""
 "been used for this product, the change of unit of measure can not be done.If "
 "you want to change it, please archive the product and create a new one."
 msgstr ""
-"Ya utilizó otra unidad de medida (como %(problem_uom)s) que no es %(uom)s "
-"para este producto, así que no podrá cambiarla. Si desea hacerlo, archive el "
-"producto y cree uno nuevo."
+"Ya usaste otras unidades de medida (como %(problem_uom)s) que no son %(uom)s "
+"para este producto, así que no podrás cambiarla. Si quieres cambiarla, "
+"archiva el producto y crea uno nuevo."
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__move_type__direct
@@ -1953,8 +1912,8 @@ msgid ""
 "Can't move a container having packages in another location (%"
 "(old_location)s) to a different location (%(new_location)s)."
 msgstr ""
-"No es posible mover un contenedor que tiene paquetes en otra ubicación "
-"(%(old_location)s) a una ubicación diferente (%(new_location)s)."
+"No es posible mover un contenedor que tiene paquetes en otra ubicación (%"
+"(old_location)s) a una ubicación diferente (%(new_location)s)."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.lot_label_layout_form_picking
@@ -1962,7 +1921,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.replenishment_option_warning_view
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quantity_history
-#: model_terms:ir.ui.view,arch_db:stock.view_stock_return_picking_form
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_rules_report
 msgid "Cancel"
 msgstr "Cancelar"
@@ -2119,6 +2077,11 @@ msgid "Choose Type of Labels To Print"
 msgstr "Elegir tipos de etiquetas para imprimir"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.stock_location_route_form_view
+msgid "Choose Warehouses"
+msgstr "Seleccionar almacenes"
+
+#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quantity_history__inventory_datetime
 #: model:ir.model.fields,help:stock.field_stock_request_count__inventory_date
 msgid "Choose a date to get the inventory at that date"
@@ -2138,7 +2101,7 @@ msgstr "Elija el diseño de la hoja para imprimir etiquetas de lotes"
 #. module: stock
 #: model:ir.model,name:stock.model_product_label_layout
 msgid "Choose the sheet layout to print the labels"
-msgstr "Elija el diseño de la hoja para imprimir etiquetas"
+msgstr "Elige el diseño de la hoja para imprimir etiquetas"
 
 #. module: stock
 #: model:ir.model,name:stock.model_picking_label_type
@@ -3047,9 +3010,9 @@ msgid ""
 "Define a minimum stock rule so that Odoo automatically creates requests for "
 "quotations or confirmed manufacturing orders to resupply your stock."
 msgstr ""
-"Defina una regla de existencias mínimas para que Odoo cree solicitudes de "
-"cotización u órdenes de fabricación confirmadas de forma automática para "
-"reabastecer sus existencias."
+"Define una regla de existencias mínimas. Con ella, Odoo creará solicitudes "
+"de cotización u órdenes de fabricación confirmadas de forma automática para "
+"reabastecer tus existencias."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_warehouse_form
@@ -3233,8 +3196,8 @@ msgid ""
 "Delivery lead time, in days. It's the number of days, promised to the "
 "customer, between the confirmation of the sales order and the delivery."
 msgstr ""
-"Plazo de entrega, en días. Es el número de días, prometidos al cliente, "
-"desde la confirmación de la orden de venta hasta la entrega."
+"El plazo de entrega en días. Es el número de días prometidos al cliente "
+"entre la confirmación de la orden de venta y la entrega."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__delivery_count
@@ -3494,6 +3457,7 @@ msgstr "Dimensiones"
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
 #: model_terms:ir.ui.view,arch_db:stock.view_product_replenish
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_orderpoint_snooze
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_return_picking_form
 msgid "Discard"
 msgstr "Descartar"
 
@@ -3787,7 +3751,7 @@ msgstr "Asegure la trazabilidad de los productos almacenables en su almacén."
 #. odoo-javascript
 #: code:addons/stock/static/src/views/picking_form/stock_move_product_label.xml:0
 msgid "Enter a description"
-msgstr "Ingresar una descripción"
+msgstr "Escribe una descripción"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_envia
@@ -5019,6 +4983,11 @@ msgid "Inventory at Date"
 msgstr "Inventario a la fecha"
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_move__is_date_editable
+msgid "Is Date Editable"
+msgstr "La fecha se puede editar"
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__is_empty
 msgid "Is Empty"
 msgstr "Está vacío"
@@ -5046,6 +5015,11 @@ msgstr "Es multi ubicación"
 #: model:ir.model.fields,field_description:stock.field_stock_quant_relocate__is_partial_package
 msgid "Is Partial Package"
 msgstr "Es un empaque parcial"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_picking__is_date_editable
+msgid "Is Scheduled Date Editable"
+msgstr "La fecha programada se puede editar"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__is_signed
@@ -5167,7 +5141,7 @@ msgstr "Mantener diferencia"
 #. odoo-javascript
 #: code:addons/stock/static/src/widgets/lots_dialog.xml:0
 msgid "Keep current lines"
-msgstr "Mantener las líneas actuales"
+msgstr "Conservar las líneas actuales"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_conflict_form_view
@@ -5345,7 +5319,7 @@ msgstr "Última actualización el"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_putaway_rule__sublocation__last_used
 msgid "Last Used"
-msgstr "Último uso"
+msgstr "Última usada"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__last_count_date
@@ -6261,7 +6235,7 @@ msgstr "Todavía no hay recepciones. Creemos una."
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_orderpoint
 msgid "No reordering rule found"
-msgstr "No se encontró ninguna regla de reordenamiento"
+msgstr "No hay ninguna regla de reordenamiento"
 
 #. module: stock
 #. odoo-python
@@ -6435,7 +6409,9 @@ msgstr "Silla de oficina"
 #: code:addons/stock/static/src/stock_forecasted/forecasted_header.xml:0
 #: model:ir.model.fields,field_description:stock.field_stock_quant__on_hand
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__qty_on_hand
+#: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
 #: model_terms:ir.ui.view,arch_db:stock.product_product_stock_tree
+#: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
 #: model_terms:ir.ui.view,arch_db:stock.search_product_lot_filter
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_product_template_tree
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_product_tree
@@ -7432,6 +7408,7 @@ msgstr "Categorías de productos"
 
 #. module: stock
 #: model:ir.model,name:stock.model_product_category
+#: model:ir.model.fields,field_description:stock.field_stock_move__product_category_id
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__product_category_name
 #: model:ir.model.fields,field_description:stock.field_stock_putaway_rule__category_id
 #: model:ir.model.fields,field_description:stock.field_stock_quant__product_categ_id
@@ -8354,7 +8331,7 @@ msgstr "Reportes"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_inventory_editable
 msgid "Request a Count"
-msgstr "Solicitar un recuento"
+msgstr "Solicitar un conteo"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -8710,6 +8687,11 @@ msgstr "Mismo mes del año pasado"
 #: code:addons/stock/models/stock_picking.py:0
 msgid "Sample data"
 msgstr "Datos de muestra"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_replenishment_info
+msgid "Save"
+msgstr "Guardar"
 
 #. module: stock
 #. odoo-python
@@ -9083,7 +9065,7 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.server,name:stock.action_view_set_to_zero_quants_tree
 msgid "Set to 0"
-msgstr "Configurar a 0"
+msgstr "Establecer en 0"
 
 #. module: stock
 #: model:ir.actions.server,name:stock.action_view_set_quants_tree
@@ -10158,16 +10140,6 @@ msgid "There are no inventory adjustments to revert."
 msgstr "No hay ajustes de inventario por revertir."
 
 #. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_move_line.py:0
-msgid ""
-"There is nothing eligible to put in a pack. Either there are no quantities "
-"to put in a pack or moves are already done."
-msgstr ""
-"No hay nada elegible por poner en un paquete. No hay cantidades que poner en "
-"el paquete o ya se hicieron los movimientos."
-
-#. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_move_line_action
 msgid "There's no product move yet"
 msgstr "Todavía no hay movimientos de productos"
@@ -10437,7 +10409,7 @@ msgstr "Esto descartará todos los recuentos no aplicados, ¿desea continuar?"
 #. odoo-python
 #: code:addons/stock/models/stock_rule.py:0
 msgid "Time Horizon"
-msgstr "Horizontal temporal"
+msgstr "Horizonte temporal"
 
 #. module: stock
 #. odoo-javascript
@@ -10597,7 +10569,7 @@ msgstr "Total entrante"
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_product_tree
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_editable
 msgid "Total On Hand"
-msgstr "Total disponible"
+msgstr "Total a la mano"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_product_stock_tree
@@ -10794,7 +10766,7 @@ msgstr "Ubicaciones de tránsito"
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Transport management: organize packs in your fleet, or carriers."
 msgstr ""
-"Gestión del transporte: organice paquetes en su flota o con sus "
+"Gestión de transporte: Organiza los paquetes en tu flotilla o con los "
 "transportistas."
 
 #. module: stock
@@ -11081,6 +11053,7 @@ msgstr "Ubicaciones del proveedor"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_package_history_list
 msgid "View"
 msgstr "Vista"
 
@@ -12345,12 +12318,57 @@ msgid "units"
 msgstr "unidades"
 
 #. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_replenishment_info
+msgid "x"
+msgstr "x"
+
+#. module: stock
 #: model:mail.template,subject:stock.mail_template_data_delivery_confirmation
 msgid ""
 "{{ object.company_id.name }} Delivery Order (Ref {{ object.name or 'n/a' }})"
 msgstr ""
 "Orden de entrega de {{ object.company_id.name }} (Ref {{ object.name or 'n/"
 "a' }})"
+
+#~ msgid "1.00"
+#~ msgstr "1.00"
+
+#~ msgid "12.0"
+#~ msgstr "12.0"
+
+#~ msgid "1234567890"
+#~ msgstr "1234567890"
+
+#~ msgid "12345678901"
+#~ msgstr "12345678901"
+
+#~ msgid "2021-09-01"
+#~ msgstr "01-09-2021"
+
+#~ msgid "2023-01-01"
+#~ msgstr "01-01-2023"
+
+#~ msgid "2023-09-24"
+#~ msgstr "24-09-2023"
+
+#~ msgid "3.00"
+#~ msgstr "3.00"
+
+#~ msgid "54326786758"
+#~ msgstr "54326786758"
+
+#~ msgid "<span groups=\"!uom.group_uom\">On Hand</span>"
+#~ msgstr "<span groups=\"!uom.group_uom\">A la mano</span>"
+
+#~ msgid "<strong>Customer Address</strong>"
+#~ msgstr "<strong>Dirección del cliente</strong>"
+
+#~ msgid ""
+#~ "There is nothing eligible to put in a pack. Either there are no "
+#~ "quantities to put in a pack or moves are already done."
+#~ msgstr ""
+#~ "No hay nada elegible por poner en un paquete. No hay cantidades que poner "
+#~ "en el paquete o ya se hicieron los movimientos."
 
 #~ msgid ""
 #~ "* Vendor Location: Virtual location representing the source location for "

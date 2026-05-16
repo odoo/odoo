@@ -294,6 +294,43 @@ class TestIrModelEdition(TransactionCase):
             default_ttype="char"
         ).name_create("field_name")
 
+    def test_setup_models(self):
+        self.env['ir.model'].create({
+            'name': 'Bananas',
+            'model': 'x_bananas',
+            'field_id': [Command.create({'name': 'x_name', 'ttype': 'char'})],
+        })
+        # check that registry setup doesn't introduce duplicates in registry.field_depends
+        self.registry._setup_models__(self.env.cr, [])
+        fnames = [str(field) for field in self.registry.field_depends]
+        self.assertEqual(len(fnames), len(set(fnames)), "registry.field_depends contains duplicates")
+
+    def test_setup_model_with_manual_related_fields(self):
+        model = self.env['ir.model'].create({
+            'name': 'Bananas',
+            'model': 'x_bananas',
+        })
+        self.env['ir.model.fields'].create({
+            'name': 'x_partner_id',
+            'field_description': 'Partner',
+            'ttype': 'many2one',
+            'relation': 'res.partner',
+            'model_id': model.id,
+            'state': 'manual',
+        })
+        self.env['ir.model.fields'].create({
+            'name': 'x_name_related',
+            'field_description': 'Name Related',
+            'ttype': 'char',
+            'related': 'x_partner_id.name',
+            'model_id': model.id,
+            'state': 'manual',
+        })
+        # check that registry setup doesn't introduce duplicates in registry.field_setup_dependents
+        self.registry._setup_models__(self.env.cr, [])
+        res_partner_name = self.env['res.partner']._fields['name']
+        fnames = [str(field) for field in self.registry.field_setup_dependents[res_partner_name]]
+        self.assertEqual(len(fnames), len(set(fnames)), "registry.field_setup_dependents contains duplicates")
 
 @tagged('test_eval_context')
 class TestEvalContext(TransactionCase):

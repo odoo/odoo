@@ -65,6 +65,12 @@ patch(PosOrderline.prototype, {
             this.settled_order_id
         );
     },
+    isGlobalDiscountApplicable() {
+        if (this.isGiftCardOrEWalletReward()) {
+            return false;
+        }
+        return super.isGlobalDiscountApplicable?.() ?? true;
+    },
     isGiftCardOrEWalletReward() {
         const coupon = this.coupon_id;
         if (!coupon || !this.is_reward_line) {
@@ -81,5 +87,11 @@ patch(PosOrderline.prototype, {
             ...super.getDisplayClasses(),
             "fst-italic": this.is_reward_line,
         };
+    },
+    canBeMergedWith(orderline) {
+        return (
+            super.canBeMergedWith(...arguments) &&
+            this._e_wallet_program_id === orderline._e_wallet_program_id
+        );
     },
 });

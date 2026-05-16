@@ -44,7 +44,7 @@ export function serializeGloryXml(gloryElement) {
  */
 export const makeGloryHeader = (sequenceNumber, sessionId) => {
     const sequenceNumberString = sequenceNumber.toString(10).padStart(11, "0");
-    return [
+    const header = [
         {
             name: "Id",
             children: ["OdooPos"],
@@ -53,11 +53,14 @@ export const makeGloryHeader = (sequenceNumber, sessionId) => {
             name: "SeqNo",
             children: [sequenceNumberString],
         },
-        {
+    ];
+    if (sessionId) {
+        header.push({
             name: "SessionID",
             children: [sessionId],
-        },
-    ];
+        });
+    }
+    return header;
 };
 
 /**
@@ -68,9 +71,10 @@ export const makeGloryHeader = (sequenceNumber, sessionId) => {
  * @returns {string}
  */
 export function parseGloryResult(xmlResponse) {
-    const resultString = GLORY_RESULT[xmlResponse.getAttribute("result")];
+    const resultCode = xmlResponse.getAttribute("result");
+    const resultString = GLORY_RESULT[resultCode];
     if (!resultString) {
-        throw new Error("Not a valid Glory XML response");
+        return `UNKNOWN_STATUS_${resultCode}`;
     }
 
     return resultString;

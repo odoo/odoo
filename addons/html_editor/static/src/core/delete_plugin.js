@@ -17,6 +17,7 @@ import {
     nextLeaf,
     previousLeaf,
     isEmptyBlock,
+    isSelfClosingElement,
 } from "../utils/dom_info";
 import { getState, isFakeLineBreak, observeMutations, prepareUpdate } from "../utils/dom_state";
 import {
@@ -63,6 +64,32 @@ import { normalizeDeepCursorPosition, normalizeFakeBR } from "@html_editor/utils
  * @property { DeletePlugin['deleteForward'] } deleteForward
  */
 
+/**
+ * @typedef {(() => void)[]} before_delete_handlers
+ * @typedef {(() => void)[]} delete_handlers
+ *
+ * @typedef {((range: RangeLike) => void | true)[]} delete_backward_overrides
+ * @typedef {((range: RangeLike) => void | true)[]} delete_backward_word_overrides
+ * @typedef {((range: RangeLike) => void | true)[]} delete_backward_line_overrides
+ * @typedef {((range: RangeLike) => void | true)[]} delete_forward_overrides
+ * @typedef {((range: RangeLike) => void | true)[]} delete_forward_word_overrides
+ * @typedef {((range: RangeLike) => void | true)[]} delete_forward_line_overrides
+ * @typedef {((range: RangeLike) => void | true)[]} delete_range_overrides
+ *
+ * @typedef {((node: Node) => boolean)[]} functional_empty_node_predicates
+ * @typedef {((node: Node) => boolean)[]} is_empty_predicates
+ *
+ * @typedef {((node: Node) => Node[])[]} removable_descendants_providers
+ *
+ * @typedef {CSSSelector[]} system_node_selectors
+ */
+/**
+ * The `root` argument is used by some predicates in which a node is
+ * conditionally unremovable (e.g. a table cell is only removable if its
+ * ancestor table is also being removed).
+ * @typedef {((node: Node, root: HTMLElement) => boolean)[]} unremovable_node_predicates
+ */
+
 // @todo @phoenix: move these predicates to different plugins
 export const unremovableNodePredicates = [
     (node) => node.classList?.contains("oe_unremovable"),
@@ -74,6 +101,7 @@ export class DeletePlugin extends Plugin {
     static dependencies = ["baseContainer", "selection", "history", "input", "userCommand"];
     static id = "delete";
     static shared = ["deleteBackward", "deleteForward", "deleteRange", "deleteSelection", "delete"];
+    /** @type {import("plugins").EditorResources} */
     resources = {
         user_commands: [
             { id: "deleteBackward", run: () => this.delete("backward", "character") },
@@ -183,11 +211,20 @@ export class DeletePlugin extends Plugin {
         // targeted nodes here to be sure to include a partial text node
         // selection.
         const selectedNodes = this.dependencies.selection.getTargetedNodes();
-        const canBeDeleted = (node) =>
-            this.dependencies.selection.isNodeEditable(node) ||
-            selectedNodes.includes(
-                closestElement(node, (node) => this.dependencies.selection.isNodeEditable(node))
+        const canBeDeleted = (node) => {
+            const isEditableOrFullySelected = (a) =>
+                this.dependencies.selection.isNodeEditable(a) ||
+                (this.dependencies.selection.areNodeContentsFullySelected(a) &&
+                    isContentEditable(a.parentElement));
+
+            return (
+                isEditableOrFullySelected(node) ||
+                selectedNodes.includes(
+                    closestElement(node, (node) => isEditableOrFullySelected(node))
+                )
             );
+        };
+
         if (selectedNodes.some((node) => !canBeDeleted(node))) {
             return;
         }
@@ -211,6 +248,9 @@ export class DeletePlugin extends Plugin {
      */
     delete(direction, granularity) {
         const selection = this.dependencies.selection.getEditableSelection();
+
+        this.dependencies.history.stageSelection();
+
         this.dispatchTo("before_delete_handlers");
 
         if (!selection.isCollapsed) {
@@ -345,7 +385,7 @@ export class DeletePlugin extends Plugin {
         <b>[abc]</b> -> <b>[]ZWS</b>
         <b>[abc</b> <b>d]ef</b> -> <b>[]ZWS</b> <b>ef</b>
         <b>[abc</b> <b>def]</b> -> <b>[]ZWS</b> <b>ZWS</b>
-        
+
     Block:
         Shrunk blocks get filled.
         <p>[abc]</p> -> <p>[]<br></p>
@@ -632,10 +672,14 @@ export class DeletePlugin extends Plugin {
             for (const child of [...node.childNodes]) {
                 remove(child);
             }
-            if (this.isUnremovable(node, root)) {
+            if (
+                this.isUnremovable(node, root) ||
+                (!this.dependencies.selection.isNodeEditable(node) &&
+                    !node.parentElement?.isContentEditable)
+            ) {
                 return false;
             }
-            if (node.hasChildNodes()) {
+            if (node.hasChildNodes() && node.isContentEditable) {
                 node.before(...node.childNodes);
                 node.remove();
                 return false;
@@ -1130,9 +1174,16 @@ export class DeletePlugin extends Plugin {
             // TODO ABD: add test
             return true;
         }
-        const isZwnbspLinkPad = (node) =>
-            isButton(node.previousSibling) || isButton(node.nextSibling);
-        if (isZwnbsp(textNode) && isZwnbspLinkPad(textNode)) {
+        // Return true for FEFFs to the right of a button, such that the user
+        // can backspace the cursor into the button without deleting its first
+        // character. Return true for FEFFs to the left of an *empty* button,
+        // such that the user can delete the empty button without deleting also
+        // the first visible character to its left.
+        const isEmptyButton = (node) => isButton(node) && /^\ufeff*$/.test(node.textContent);
+        if (
+            isZwnbsp(textNode) &&
+            (isButton(textNode.previousSibling) || isEmptyButton(textNode.nextSibling))
+        ) {
             return true;
         }
         // ZWS and ZWNBSP are invisible.
@@ -1359,6 +1410,7 @@ export class DeletePlugin extends Plugin {
             !this.isUnremovable(closestUnmergeable)
         ) {
             closestUnmergeable.remove();
+            this.fillShrunkBlocks(commonAncestor);
             this.dependencies.selection.setSelection({
                 anchorNode: destContainer,
                 anchorOffset: destOffset,
@@ -1410,7 +1462,7 @@ export class DeletePlugin extends Plugin {
 
     // @todo: no need for this once selection in the editable root is corrected?
     normalizeEnterBlock(node, offset) {
-        while (isBlock(node.childNodes[offset])) {
+        while (isBlock(node.childNodes[offset]) && !isSelfClosingElement(node.childNodes[offset])) {
             [node, offset] = [node.childNodes[offset], 0];
         }
         return [node, offset];

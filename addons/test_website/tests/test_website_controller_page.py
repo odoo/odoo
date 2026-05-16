@@ -1,7 +1,7 @@
 from lxml import html
 
 from odoo.tools import mute_logger
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, ValidationError
 from odoo.tests import HttpCase, tagged
 import unittest
 
@@ -152,9 +152,44 @@ class TestWebsiteControllerPage(HttpCase):
         self.assertEqual(len(rec_nodes), 1)
         self.assertEqual(rec_nodes[0].get("href"), f"/model/{self.listing_controller_page.name_slugified}/{slug(self.exposed_records[1])}")
 
+        response = self.url_open(f"/model/{self.listing_controller_page.name_slugified}/page/2?search={self.exposed_records[0].name}")
+        self.assertEqual(response.url.partition('/model/')[2], f"exposed-model?search={self.exposed_records[0].name}&order=create_date+desc")
+        tree = html.fromstring(response.content.decode())
+        rec_nodes = tree.xpath("//a[@class='test_record_listing']")
+        self.assertEqual(len(rec_nodes), 1)
+        self.assertEqual(rec_nodes[0].get("href"), f"/model/{self.listing_controller_page.name_slugified}/{slug(self.exposed_records[0])}")
+
     def test_default_layout(self):
         self.assertEqual(self.listing_controller_page.default_layout, 'grid')
         self.start_tour('/model/exposed-model', 'website_controller_page_listing_layout', login='admin')
         self.assertEqual(self.listing_controller_page.default_layout, 'list')
         #check that the user that has not previously interacted with the layout switcher will prompt on the default layout
         self.start_tour('/model/exposed-model', 'website_controller_page_default_page_check', login='admin')
+
+    def test_model_constrains(self):
+        def get_model_meta_params(model_name):
+            m = self.env[model_name]
+            return (m._abstract, m._auto, m._transient)
+
+        default_page_vals = {
+                "arch": "<t><div/></t>",
+                "type": "qweb",
+                "name": "some_name"
+        }
+        # Abstract Model
+        self.assertEqual(get_model_meta_params("website.published.mixin"), (True, False, False))
+        with self.assertRaises(ValidationError) as cm:
+            self.env["website.controller.page"].create({**default_page_vals, "model": "website.published.mixin"})
+        self.assertEqual(str(cm.exception), "A page must be set to display a concrete model.")
+
+        # Transient Model
+        self.assertEqual(get_model_meta_params("base.partner.merge.automatic.wizard"), (False, True, True))
+        with self.assertRaises(ValidationError) as cm:
+            self.env["website.controller.page"].create({**default_page_vals, "model": "base.partner.merge.automatic.wizard"})
+        self.assertEqual(str(cm.exception), "A page must be set to display a concrete model.")
+
+        # _auto = False Model
+        self.assertEqual(get_model_meta_params("res.device"), (False, False, False))
+        with self.assertRaises(ValidationError) as cm:
+            self.env["website.controller.page"].create({**default_page_vals, "model": "res.device"})
+        self.assertEqual(str(cm.exception), "A page must be set to display a concrete model.")

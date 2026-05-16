@@ -262,7 +262,7 @@ class PaymentTransaction(models.Model):
         if not status:
             self._set_error(_("Received data with missing payment state."))
         elif status in const.PAYMENT_STATUS_MAPPING['pending']:
-            if status == 'AUTHORIZATION_REQUESTED':
+            if status == 'AUTHORIZATION_REQUESTED' and self.operation in ('online_token', 'offline'):
                 self._set_error(status)
             elif self.operation == 'validation' \
                  and status in {'PENDING_CAPTURE', 'CAPTURE_REQUESTED'} \

@@ -35,6 +35,8 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_purchase_tax_id': 'account_tax_template_purchase_20_code060',
                 'income_account_id': 'chart_at_template_4000',
                 'expense_account_id': 'chart_at_template_5010',
+                'account_stock_journal_id': 'inventory_valuation',
+                'account_stock_valuation_id': 'chart_at_template_1600',
             },
         }
 
@@ -44,3 +46,12 @@ class AccountChartTemplate(models.AbstractModel):
             bank_tags = self.env.ref('l10n_at.account_tag_external_code_2300') | self.env.ref('l10n_at.account_tag_l10n_at_ABIV')
             company.account_journal_suspense_account_id.tag_ids = bank_tags
             company.transfer_account_id.tag_ids = self.env.ref('l10n_at.account_tag_external_code_2885') | self.env.ref('l10n_at.account_tag_l10n_at_ABIV')
+
+    @template('at', 'account.account')
+    def _get_at_account_account(self):
+        return {
+            'chart_at_template_1600': {
+                'account_stock_expense_id': 'chart_at_template_5010',
+                'account_stock_variation_id': 'chart_at_template_5880',
+            },
+        }

@@ -178,6 +178,7 @@ class ProjectProject(models.Model):
     can_mark_milestone_as_done = fields.Boolean(compute='_compute_next_milestone_id', groups="project.group_project_milestone", export_string_translation=False)
     is_milestone_deadline_exceeded = fields.Boolean(compute='_compute_next_milestone_id', groups="project.group_project_milestone", export_string_translation=False)
     is_template = fields.Boolean(copy=False, export_string_translation=False)
+    show_ratings = fields.Boolean(compute='_compute_show_ratings', export_string_translation=False)
 
     _project_date_greater = models.Constraint(
         'check(date >= date_start)',
@@ -389,6 +390,18 @@ class ProjectProject(models.Model):
         for project in self:
             project.update_count = update_count_per_project.get(project, 0)
 
+    @api.depends('type_ids.rating_active')
+    def _compute_show_ratings(self):
+        projects_with_rating_active = self.env['project.task.type'].search_fetch(
+            domain=[
+                ('project_ids', 'in', self.ids),
+                ('rating_active', '=', True),
+            ],
+            field_names=['project_ids'],
+        ).project_ids
+        for project in self:
+            project.show_ratings = project in projects_with_rating_active
+
     def _inverse_allow_task_dependencies(self):
         """ Reset state for waiting tasks in the project if the feature is disabled
             or recompute the tasks with dependencies if the project has the feature enabled again
@@ -420,8 +433,8 @@ class ProjectProject(models.Model):
         res = self._check_project_group_with_field('allow_task_dependencies', 'project.group_project_task_dependencies')
         # Hide/Show task waiting subtype when task dependencies feature is disabled/enabled
         if res or res is False:
-            self.env.ref('project.mt_task_waiting').hidden = not res
-            self.env.ref('project.mt_project_task_waiting').hidden = not res
+            self.env.ref('project.mt_task_waiting').sudo().hidden = not res
+            self.env.ref('project.mt_project_task_waiting').sudo().hidden = not res
 
     def _inverse_allow_milestones(self):
         self._check_project_group_with_field('allow_milestones', 'project.group_project_milestone')
@@ -775,7 +788,7 @@ class ProjectProject(models.Model):
         has_user_group = bool(self.env.user.has_group(group_name))
         group = self.env.ref(group_name)
         base_group_user = self.env.ref('base.group_user')
-        has_project_field_set = bool(self.env['project.project'].search_count([(field_name, '=', True)], limit=1))
+        has_project_field_set = bool(self.env['project.project'].sudo().search_count([(field_name, '=', True)], limit=1))
         res = None
 
         if not has_user_group and has_project_field_set:
@@ -1085,6 +1098,7 @@ class ProjectProject(models.Model):
                 'number': f'{int(self.rating_avg) if self.rating_avg.is_integer() else round(self.rating_avg, 1)} / 5',
                 'action_type': 'object',
                 'action': 'action_view_all_rating',
+                'show': self.show_ratings,
                 'sequence': 15,
             })
         if self.env.user.has_group('project.group_project_user'):
@@ -1270,7 +1284,7 @@ class ProjectProject(models.Model):
         if request_list and "followers" in request_list:
             store.add(
                 self,
-                {"collaborator_ids": Store.Many(self.collaborator_ids.partner_id, [])},
+                {"collaborator_ids": Store.Many(self.sudo().collaborator_ids.partner_id, [])},
                 as_thread=True,
             )
 

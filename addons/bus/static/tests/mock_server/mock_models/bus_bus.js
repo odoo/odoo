@@ -38,6 +38,15 @@ export class BusBus extends models.Model {
                 if (typeof target === "string") {
                     return channel === target;
                 }
+                if (Array.isArray(target) && Array.isArray(channel)) {
+                    const [target0, target1] = target;
+                    const [channel0, channel1] = channel;
+                    return (
+                        channel0?._name === target0?.model &&
+                        channel0?.id === target0?.id &&
+                        channel1 === target1
+                    );
+                }
                 return channel?._name === target?.model && channel?.id === target?.id;
             })
         );

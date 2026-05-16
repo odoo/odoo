@@ -1,16 +1,17 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from itertools import pairwise
+from unittest.mock import patch
 
 from odoo.exceptions import UserError, ValidationError
-from odoo.fields import Command
-from odoo.tests import tagged, Form
+from odoo.fields import Command, Domain
+from odoo.tests import Form, tagged
 
-from odoo.addons.product.tests.common import ProductCommon
+from odoo.addons.product.tests.common import ProductVariantsCommon
 
 
 @tagged('post_install', '-at_install')
-class TestPricelist(ProductCommon):
+class TestPricelist(ProductVariantsCommon):
 
     @classmethod
     def setUpClass(cls):
@@ -19,7 +20,7 @@ class TestPricelist(ProductCommon):
         cls.datacard = cls.env['product.product'].create({'name': 'Office Lamp'})
         cls.usb_adapter = cls.env['product.product'].create({'name': 'Office Chair'})
 
-        cls.sale_pricelist_id = cls.env['product.pricelist'].create({
+        cls.sale_pricelist_id, cls.pricelist_eu = cls.env['product.pricelist'].create([{
             'name': 'Sale pricelist',
             'item_ids': [
                 Command.create({
@@ -43,7 +44,11 @@ class TestPricelist(ProductCommon):
                     'applied_on': '3_global',
                 }),
             ],
-        })
+        }, {
+            'name': "EU Pricelist",
+            'country_group_ids': cls.env.ref('base.europe').ids,
+        }])
+
         # Enable pricelist feature
         cls.env.user.group_ids += cls.env.ref('product.group_product_pricelist')
         cls.uom_ton = cls.env.ref('uom.product_uom_ton')
@@ -136,6 +141,63 @@ class TestPricelist(ProductCommon):
 
         self.assertEqual(res_partner.property_product_pricelist, pl_first)
 
+    def test_40_specific_property_product_pricelist(self):
+        """Ensure that that ``specific_property_product_pricelist`` value only gets set
+        when changing ``property_product_pricelist`` to a non-default value for the partner.
+        """
+        pricelist_1, pricelist_2 = self.pricelist, self.sale_pricelist_id
+        self.env['product.pricelist'].search([
+            ('id', 'not in', [pricelist_1.id, pricelist_2.id, self.pricelist_eu.id]),
+        ]).active = False
+
+        # Set country to BE -> property defaults to EU pricelist
+        with Form(self.partner) as partner_form:
+            partner_form.country_id = self.env.ref('base.be')
+        self.assertEqual(self.partner.property_product_pricelist, self.pricelist_eu)
+        self.assertFalse(self.partner.specific_property_product_pricelist)
+
+        # Set country to KI -> property defaults to highest sequence pricelist
+        with Form(self.partner) as partner_form:
+            partner_form.country_id = self.env.ref('base.ki')
+        self.assertEqual(self.partner.property_product_pricelist, pricelist_1)
+        self.assertFalse(self.partner.specific_property_product_pricelist)
+
+        # Setting non-default pricelist as property should update specific property
+        with Form(self.partner) as partner_form:
+            partner_form.property_product_pricelist = pricelist_2
+        self.assertEqual(self.partner.property_product_pricelist, pricelist_2)
+        self.assertEqual(self.partner.specific_property_product_pricelist, pricelist_2)
+
+        # Changing partner country shouldn't update (specific) pricelist property
+        with Form(self.partner) as partner_form:
+            partner_form.country_id = self.env.ref('base.be')
+        self.assertEqual(self.partner.property_product_pricelist, pricelist_2)
+        self.assertEqual(self.partner.specific_property_product_pricelist, pricelist_2)
+
+    def test_45_property_product_pricelist_config_parameter(self):
+        """Check that the ``ir.config_parameter`` gets utilized as fallback to both
+        ``property_product_pricelist`` & ``specific_property_product_pricelist``.
+        """
+        pricelist_1, pricelist_2 = self.pricelist, self.sale_pricelist_id
+        self.env['product.pricelist'].search([
+            ('id', 'not in', [pricelist_1.id, pricelist_2.id]),
+        ]).active = False
+        self.assertEqual(self.partner.property_product_pricelist, pricelist_1)
+
+        self.partner.invalidate_recordset(['property_product_pricelist'])
+        ICP = self.env['ir.config_parameter'].sudo()
+        ICP.set_param('res.partner.property_product_pricelist', pricelist_2.id)
+        with patch.object(
+            self.pricelist.__class__,
+            '_get_partner_pricelist_multi_search_domain_hook',
+            return_value=Domain.FALSE,  # ensures pricelist falls back on ICP
+        ):
+            with Form(self.partner) as partner_form:
+                self.assertEqual(partner_form.property_product_pricelist, pricelist_2)
+                partner_form.property_product_pricelist = pricelist_1
+            self.assertEqual(self.partner.property_product_pricelist, pricelist_1)
+            self.assertEqual(self.partner.specific_property_product_pricelist, pricelist_1)
+
     def test_pricelists_multi_comp_checks(self):
         first_company = self.env.company
         second_company = self.env['res.company'].create({'name': 'Test Company'})
@@ -180,11 +242,7 @@ class TestPricelist(ProductCommon):
             self.pricelist.company_id = second_company
 
     def test_pricelists_res_partner_form(self):
-        pricelist_europe = self.env['product.pricelist'].create({
-            'name': 'Sale pricelist',
-            'country_group_ids': self.env.ref('base.europe').ids,
-        })
-
+        pricelist_europe = self.pricelist_eu
         default_pricelist = self.env['product.pricelist'].search([('name', 'ilike', ' ')], limit=1)
 
         with Form(self.env['res.partner']) as partner_form:
@@ -309,3 +367,100 @@ class TestPricelist(ProductCommon):
         with self.assertRaises(ValidationError):
             # C -> [B -> D -> A -> B -> _, D -> _] (recurs)
             Pricelist.item_ids.create(create_item_vals(pl_b, pl_d))
+
+    def test_pricelist_rule_linked_to_product_variant(self):
+        """Verify that pricelist rules assigned to a variant remain linked after write."""
+        self.product_sofa_red.pricelist_rule_ids = [
+            Command.create({
+                'applied_on': '0_product_variant',
+                'product_id': self.product_sofa_red.id,
+                'compute_price': 'fixed',
+                'fixed_price': 99.9,
+                'pricelist_id': self.pricelist.id,
+            }),
+            Command.create({
+                'applied_on': '0_product_variant',
+                'product_id': self.product_sofa_red.id,
+                'compute_price': 'fixed',
+                'fixed_price': 89.9,
+                'pricelist_id': self.pricelist.id,
+            }),
+        ]
+        self.assertEqual(len(self.product_sofa_red.pricelist_rule_ids), 2)
+        first_rule, second_rule = self.product_sofa_red.pricelist_rule_ids
+        self.product_sofa_red.pricelist_rule_ids = [
+            Command.update(first_rule.id, {'fixed_price': 79.9}),
+            Command.unlink(second_rule.id),
+        ]
+        self.assertEqual(len(self.product_sofa_red.pricelist_rule_ids), 1)
+        self.assertEqual(self.pricelist.item_ids.fixed_price, 79.9)
+        self.assertIn(self.product_sofa_red, self.pricelist.item_ids.product_id)
+
+        # Update of template-based rules through variant form
+        self.product_template_sofa.pricelist_rule_ids = [
+            # Template-based rule (can be edited through the variants)
+            Command.create({
+                'applied_on': '1_product',
+                'product_tmpl_id': self.product_template_sofa.id,
+                'pricelist_id': self.pricelist.id,
+            }),
+            # Rule on another variant than the one being edited. It cannot be edited through the
+            # current variant and therefore shouldn't change when another variant rules are edited.
+            Command.create({
+                'applied_on': '0_product_variant',
+                'product_id': self.product_sofa_blue.id,
+                'compute_price': 'fixed',
+                'fixed_price': 89.9,
+                'pricelist_id': self.pricelist.id,
+            })
+        ]
+        self.assertEqual(len(self.product_template_sofa.pricelist_rule_ids), 3)
+        template_rule = self.product_template_sofa.pricelist_rule_ids.filtered(
+            lambda item: not item.product_id
+        )
+        self.assertEqual(len(self.product_sofa_red.pricelist_rule_ids), 2)
+        self.product_sofa_red.pricelist_rule_ids = [
+            Command.update(template_rule.id, {'fixed_price': 133}),
+        ]
+        self.assertEqual(template_rule.fixed_price, 133)
+
+        self.product_sofa_red.pricelist_rule_ids = [
+            Command.unlink(template_rule.id),
+        ]
+        self.assertFalse(template_rule.exists())
+
+        self.assertTrue(self.product_sofa_blue.pricelist_rule_ids)
+        self.assertEqual(len(self.product_template_sofa.pricelist_rule_ids), 2)
+
+    def test_pricelist_applied_on_product_variant(self):
+        # product template with variants
+        sofa_1 = self.product_template_sofa.product_variant_ids[0]
+        # create pricelist with rule on template
+        pricelist = self.env["product.pricelist"].create(
+            {
+                "name": "Pricelist for Acoustic Bloc Screens",
+                "item_ids": [
+                    Command.create(
+                        {
+                            "compute_price": "fixed",
+                            "fixed_price": 123,
+                            "base": "list_price",
+                            "applied_on": "1_product",
+                            "product_tmpl_id": self.product_template_sofa.id,
+                        }
+                    ),
+                ],
+            }
+        )
+        # open rule form and change rule to apply on variant instead of template
+        with Form(pricelist.item_ids) as item_form:
+            item_form.product_id = sofa_1
+        # check that `applied_on` changed to variant
+        self.assertEqual(pricelist.item_ids.applied_on, "0_product_variant")
+        # re-edit rule to apply on template again by clearing `product_id`
+        with Form(pricelist.item_ids) as item_form:
+            item_form.product_id = self.env["product.product"]
+        # check that `applied_on` changed to template
+        self.assertEqual(pricelist.item_ids.applied_on, "1_product")
+        # check that product_id is cleared
+        self.assertFalse(pricelist.item_ids.product_id)

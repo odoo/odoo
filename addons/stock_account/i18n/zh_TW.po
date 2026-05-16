@@ -8,13 +8,14 @@
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # "Tony Ng (ngto)" <ngto@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~18.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:37+0000\n"
-"PO-Revision-Date: 2025-10-18 18:33+0000\n"
-"Last-Translator: \"Tony Ng (ngto)\" <ngto@odoo.com>\n"
+"POT-Creation-Date: 2026-04-10 18:38+0000\n"
+"PO-Revision-Date: 2025-11-08 18:00+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Chinese (Traditional Han script) <https://translate.odoo.com/"
 "projects/odoo-19/stock_account/zh_Hant/>\n"
 "Language: zh_TW\n"
@@ -39,13 +40,8 @@ msgstr ""
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
-msgid "%(quantity)s %(uom)s at product's standard price %(price)s"
+msgid "%(quantity)s %(uom)s at product's cost"
 msgstr ""
-
-#. module: stock_account
-#: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
-msgid "6.00"
-msgstr "6.00"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
@@ -63,8 +59,11 @@ msgid "<span>SN/LN</span>"
 msgstr "<span>序號/批次</span>"
 
 #. module: stock_account
-#: model:ir.actions.act_window,name:stock_account.stock_avco_report_action
-msgid "AVCO Justification"
+#. odoo-python
+#: code:addons/stock_account/models/stock_move.py:0
+msgid ""
+"A lot/serial number is required for product '%s' as it has lot valuation "
+"enabled."
 msgstr ""
 
 #. module: stock_account
@@ -75,7 +74,7 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_account
 msgid "Account"
-msgstr ""
+msgstr "帳戶"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_chart_template
@@ -96,6 +95,7 @@ msgstr "會計資訊"
 #. module: stock_account
 #. odoo-javascript
 #: code:addons/stock_account/static/src/stock_valuation/stock_valuation_report.js:0
+#: code:addons/stock_account/static/src/stock_valuation/stock_valuation_report.xml:0
 msgid "Accrual"
 msgstr ""
 
@@ -146,7 +146,7 @@ msgstr "影響接收操作的落地成本, 並在產品之間拆分以更新成�
 #. odoo-javascript
 #: code:addons/stock_account/static/src/stock_valuation/filters/filter_warehouses.xml:0
 msgid "All Warehouses"
-msgstr ""
+msgstr "全部倉庫"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_analytic_account
@@ -167,10 +167,11 @@ msgstr "分析計劃"
 #. odoo-javascript
 #: code:addons/stock_account/static/src/stock_valuation/filters/filter_date.xml:0
 msgid "As of"
-msgstr ""
+msgstr "截至"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_account_account__account_stock_variation_id
+#: model:ir.model.fields,help:stock_account.field_product_category__account_stock_variation_id
 msgid ""
 "At closing, register the inventory variation of the period into a specific "
 "account"
@@ -243,16 +244,17 @@ msgstr "公司"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__company_currency_id
 msgid "Company Currency"
-msgstr ""
+msgstr "公司貨幣"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__computed_value_description
+#: model:ir.model.fields,field_description:stock_account.field_stock_move__value_computed_justification
 msgid "Computed Value Description"
 msgstr ""
 
 #. module: stock_account
 #. odoo-python
-#: code:addons/stock_account/models/product_value.py:0
+#: code:addons/stock_account/models/stock_move.py:0
 msgid ""
 "Computed value: %(value)s\n"
 "%(description)s"
@@ -279,7 +281,7 @@ msgstr "成本計算方法"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_location_form_inherit
 msgid "Cost of Production"
-msgstr ""
+msgstr "生產成本"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_cost_method
@@ -313,10 +315,11 @@ msgstr "建立於"
 #. odoo-javascript
 #: code:addons/stock_account/static/src/stock_valuation/line/line.xml:0
 msgid "Credit"
-msgstr ""
+msgstr "貸方"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__currency_id
+#: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__currency_id
 #: model:ir.model.fields,field_description:stock_account.field_stock_quant__currency_id
 msgid "Currency"
 msgstr "貨幣"
@@ -339,7 +342,7 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__res_company__inventory_period__daily
 msgid "Daily"
-msgstr ""
+msgstr "每天"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__date
@@ -359,7 +362,7 @@ msgstr "在自動清點估價的情況下建立會計分錄的日期。如果為
 #. odoo-javascript
 #: code:addons/stock_account/static/src/stock_valuation/line/line.xml:0
 msgid "Debit"
-msgstr ""
+msgstr "借方"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__description
@@ -406,8 +409,10 @@ msgid "Display Serial & Lot Number on Invoices"
 msgstr "在發票上顯示序號和批號"
 
 #. module: stock_account
+#. odoo-javascript
 #. odoo-python
 #: code:addons/stock_account/report/stock_valuation_report.py:0
+#: code:addons/stock_account/static/src/stock_valuation/stock_valuation_report.xml:0
 msgid "Ending Stock"
 msgstr ""
 
@@ -420,6 +425,13 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_account_account__account_stock_expense_id
 msgid "Expense Account"
+msgstr "費用項目"
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_stock_location__valuation_account_id
+msgid ""
+"Expense account used to re-qualify products removed from stock and sent to "
+"this location"
 msgstr ""
 
 #. module: stock_account
@@ -438,7 +450,7 @@ msgstr ""
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_account_form
-msgid "From company"
+msgid "For Perpetual Continental Only"
 msgstr ""
 
 #. module: stock_account
@@ -490,21 +502,23 @@ msgid "If checked, the valuation will be specific by Lot/Serial number."
 msgstr "若勾選，估值將按個別批次/序號獨立進行。"
 
 #. module: stock_account
+#. odoo-javascript
 #. odoo-python
 #: code:addons/stock_account/report/stock_valuation_report.py:0
+#: code:addons/stock_account/static/src/stock_valuation/stock_valuation_report.xml:0
 msgid "Initial Balance"
-msgstr ""
+msgstr "初始餘額"
 
 #. module: stock_account
 #. odoo-python
-#: code:addons/stock_account/models/product.py:0
-msgid "Invalid search on valuation"
+#: code:addons/stock_account/models/stock_location.py:0
+msgid "Invalid search operator or value"
 msgstr ""
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_inventory_adjustment_name
 msgid "Inventory Adjustment Reference / Reason"
-msgstr ""
+msgstr "庫存調整參照/原因"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_location
@@ -516,8 +530,9 @@ msgstr "盤點位置"
 #. odoo-python
 #: code:addons/stock_account/report/stock_valuation_report.py:0
 #: code:addons/stock_account/static/src/stock_valuation/stock_valuation_report.js:0
+#: code:addons/stock_account/static/src/stock_valuation/stock_valuation_report.xml:0
 msgid "Inventory Loss"
-msgstr ""
+msgstr "盤點損失"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_res_company__inventory_period
@@ -527,15 +542,11 @@ msgstr ""
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/account_chart_template.py:0
+#: model:ir.actions.client,name:stock_account.action_report_stock_valuation
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_valuation
 #: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form_stock
 msgid "Inventory Valuation"
 msgstr "庫存計價"
-
-#. module: stock_account
-#: model_terms:ir.ui.view,arch_db:stock_account.view_location_form_inherit
-msgid "Inventory Variation"
-msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__is_dropship
@@ -568,6 +579,14 @@ msgid "Is valued outside the company"
 msgstr ""
 
 #. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/res_company.py:0
+msgid ""
+"It exists closing entries after the selected date. Cancel them before "
+"generate an entry prior to them"
+msgstr ""
+
+#. module: stock_account
 #: model:ir.model,name:stock_account.model_account_move
 msgid "Journal Entry"
 msgstr "日記賬記項"
@@ -581,6 +600,11 @@ msgstr "日記賬項目"
 #. odoo-python
 #: code:addons/stock_account/models/res_company.py:0
 msgid "Journal Items"
+msgstr "日記賬項目"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__justification
+msgid "Justification"
 msgstr ""
 
 #. module: stock_account
@@ -597,6 +621,11 @@ msgstr "最後更新者"
 #: model:ir.model.fields,field_description:stock_account.field_product_value__write_date
 msgid "Last Updated on"
 msgstr "最後更新於"
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.view_location_form_inherit
+msgid "Loss Account"
+msgstr "虧損賬戶"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__lot_id
@@ -624,44 +653,55 @@ msgid "Manual Value"
 msgstr ""
 
 #. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_product_category__property_valuation
-msgid ""
-"Manual: The accounting entries to value the inventory are not posted "
-"automatically.\n"
-"        Automated: An accounting entry is automatically created to value the "
-"inventory when a product enters or leaves the company.\n"
-"        "
-msgstr ""
-"手動：盤點存貨的會計傳票不會自動過帳。\n"
-"自動：當產品進入或離開公司時，自動建立一個會計傳票來評估庫存。\n"
-"        "
-
-#. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__res_company__inventory_period__monthly
 msgid "Monthly"
-msgstr ""
+msgstr "每月"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__move_id
 msgid "Move"
+msgstr "分錄"
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.product_value_form_view
+msgid "New Value"
 msgstr ""
 
 #. module: stock_account
-#: model_terms:ir.ui.view,arch_db:stock_account.view_account_form
-msgid "None (only useful for continental)"
+#. odoo-python
+#: code:addons/stock_account/models/stock_move.py:0
+msgid "Only is set (= True) is supported in search for remaining_qty."
+msgstr ""
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/product.py:0
+msgid ""
+"Only the value 'periodic' and 'real_time' are accepted to search on "
+"valuation field."
 msgstr ""
 
 #. module: stock_account
 #. odoo-javascript
 #: code:addons/stock_account/static/src/stock_valuation/filters/filter_options.xml:0
 msgid "Options"
-msgstr ""
+msgstr "選項"
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_valuation__periodic
 #: model:ir.model.fields.selection,name:stock_account.selection__product_template__valuation__periodic
 #: model:ir.model.fields.selection,name:stock_account.selection__res_company__inventory_valuation__periodic
 msgid "Periodic (at closing)"
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_product_category__property_valuation
+msgid ""
+"Periodic: The accounting entries are suggested manually in the inventory "
+"valuation report.\n"
+"        Perpetual: An accounting entry is automatically created to value the "
+"inventory when a product is billed or invoiced.\n"
+"        "
 msgstr ""
 
 #. module: stock_account
@@ -694,12 +734,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock_account.field_product_product__property_price_difference_account_id
 #: model:ir.model.fields,field_description:stock_account.field_product_template__property_price_difference_account_id
 msgid "Price Difference Account"
-msgstr ""
+msgstr "價格差額賬戶"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__price_unit
 msgid "Price Unit"
-msgstr ""
+msgstr "單價"
 
 #. module: stock_account
 #. odoo-python
@@ -728,13 +768,13 @@ msgstr "產品移動（庫存移動資料行）"
 #. odoo-python
 #: code:addons/stock_account/models/stock_quant.py:0
 msgid "Product Quantity Confirmed"
-msgstr ""
+msgstr "產品數量已確認"
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/stock_quant.py:0
 msgid "Product Quantity Updated"
-msgstr ""
+msgstr "產品數量已更新"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_value
@@ -766,6 +806,11 @@ msgstr "數量"
 #: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__reference
 msgid "Reference"
 msgstr "編號"
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.view_move_search
+msgid "Remaining"
+msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__remaining_qty
@@ -861,7 +906,6 @@ msgstr "庫存補貨報告"
 #. module: stock_account
 #. odoo-javascript
 #: code:addons/stock_account/static/src/stock_account_forecasted/forecasted_header.js:0
-#: model:ir.actions.client,name:stock_account.action_report_stock_valuation
 #: model:ir.model,name:stock_account.model_stock_account_stock_valuation_report
 msgid "Stock Valuation"
 msgstr "庫存估值"
@@ -874,9 +918,17 @@ msgid "Stock Valuation Account"
 msgstr "庫存計價項目"
 
 #. module: stock_account
+#. odoo-javascript
 #. odoo-python
 #: code:addons/stock_account/report/stock_valuation_report.py:0
+#: code:addons/stock_account/static/src/stock_valuation/stock_valuation_report.xml:0
+#: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
 msgid "Stock Variation"
+msgstr ""
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_product_category__account_stock_variation_id
+msgid "Stock Variation Account"
 msgstr ""
 
 #. module: stock_account
@@ -914,7 +966,7 @@ msgstr "此操作可能會導致數據損失。所有批次/序號的估值將�
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__total_quantity
 msgid "Total Quantity"
-msgstr ""
+msgstr "數量總計"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_move_view_list_valuation
@@ -958,6 +1010,11 @@ msgid "Unit Cost"
 msgstr "單位成本"
 
 #. module: stock_account
+#: model:ir.actions.act_window,name:stock_account.stock_avco_report_action
+msgid "Unit Cost History"
+msgstr ""
+
+#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__to_refund
 #: model:ir.model.fields,field_description:stock_account.field_stock_return_picking_line__to_refund
 msgid "Update quantities on SO/PO"
@@ -969,21 +1026,10 @@ msgid "Use Anglo-Saxon Accounting"
 msgstr ""
 
 #. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_stock_location__valuation_account_id
-msgid ""
-"Used for inventory valuation. When set on a virtual location (non internal "
-"type), this account will be used to hold the value of products into this "
-"location, instead of the generic Stock Account set on the product. This has "
-"no effect for internal locations.In real-time: The product's account will be "
-"used as counterparty account.During closing: The company's stock valuation "
-"account will be used as counterparty account."
-msgstr ""
-
-#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_value__user_id
 #: model:ir.model.fields,field_description:stock_account.field_stock_avco_report__user_id
 msgid "User"
-msgstr ""
+msgstr "使用者"
 
 #. module: stock_account
 #: model:ir.actions.act_window,name:stock_account.stock_move_valuation_action
@@ -1016,6 +1062,11 @@ msgid "Value"
 msgstr "值"
 
 #. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_move__value_justification
+msgid "Value Description"
+msgstr ""
+
+#. module: stock_account
 #. odoo-javascript
 #: code:addons/stock_account/static/src/stock_account_forecasted/forecasted_header.xml:0
 msgid "Value On Hand:"
@@ -1038,15 +1089,6 @@ msgstr ""
 "批次價值（在 AVCO 中自動計算）。\n"
 "        在採購成本未知情況下，用於為產品估值（例如庫存調整）。\n"
 "        計算銷售訂單利潤率時也會使用。"
-
-#. module: stock_account
-#: model:ir.model.fields,help:stock_account.field_stock_move__standard_price
-msgid ""
-"Value of the product (automatically computed in AVCO).\n"
-"        Used to value the product when the purchase cost is not known (e.g. "
-"inventory adjustment).\n"
-"        Used to compute margins on sale orders."
-msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_account_account__account_stock_variation_id
@@ -1083,6 +1125,37 @@ msgid "You can only adjust valuation for one move at a time."
 msgstr ""
 
 #. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/product.py:0
+msgid ""
+"You can only get the standard price at a given date for products with "
+"'Standard Price' as cost method."
+msgstr ""
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/product.py:0
+msgid "You can only use the '=' operator to search on valuation field."
+msgstr ""
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/product.py:0
+msgid ""
+"You cannot enable lot valuation because the following products have on-hand "
+"quantities without a lot/serial number:\n"
+"%s"
+msgstr ""
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/models/stock_picking.py:0
+msgid ""
+"You cannot modify the scheduled date of operation %s because it falls within "
+"a locked fiscal period."
+msgstr ""
+
+#. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__account_move_id
 msgid "stock_move_id"
 msgstr ""
@@ -1091,6 +1164,30 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
 msgid "units"
 msgstr "單位"
+
+#~ msgid "6.00"
+#~ msgstr "6.00"
+
+#~ msgid ""
+#~ "Value of the product (automatically computed in AVCO).\n"
+#~ "        Used to value the product when the purchase cost is not known "
+#~ "(e.g. inventory adjustment).\n"
+#~ "        Used to compute margins on sale orders."
+#~ msgstr ""
+#~ "產品價值（在 AVCO 中自動計算）。\n"
+#~ "        用於在採購成本未知情況下對產品進行估值（例如庫存調整）。\n"
+#~ "        用於計算銷售訂單的利潤率。"
+
+#~ msgid ""
+#~ "Manual: The accounting entries to value the inventory are not posted "
+#~ "automatically.\n"
+#~ "        Automated: An accounting entry is automatically created to value "
+#~ "the inventory when a product enters or leaves the company.\n"
+#~ "        "
+#~ msgstr ""
+#~ "手動：盤點存貨的會計傳票不會自動過帳。\n"
+#~ "自動：當產品進入或離開公司時，自動建立一個會計傳票來評估庫存。\n"
+#~ "        "
 
 #~ msgid ""
 #~ "\n"

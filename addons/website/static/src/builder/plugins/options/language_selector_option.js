@@ -17,6 +17,7 @@ const LANGUAGE_SELECTOR = after(HEADER_BOX);
 class LanguageSelectorOptionPlugin extends Plugin {
     static id = "languageSelectorOption";
     static dependencies = ["builderActions"];
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         builder_options: [withSequence(LANGUAGE_SELECTOR, LanguageSelectorOption)],
     };

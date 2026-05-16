@@ -11,6 +11,7 @@ from odoo import Command, _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools import float_round, float_repr, float_compare, date_utils, SQL
 from odoo.tools.xml_utils import cleanup_xml_node, find_xml_value
+from odoo.tools.sql import column_exists, create_column
 from odoo.addons.l10n_es_edi_facturae.xml_utils import (
     NS_MAP,
     _canonicalize_node,
@@ -49,6 +50,32 @@ COUNTRY_CODE_MAP = {
     "AX": "ALA", "AZ": "AZE", "IE": "IRL", "ID": "IDN", "UA": "UKR", "QA": "QAT", "MZ": "MOZ"
 }
 REVERSED_COUNTRY_CODE = {v: k for k, v in COUNTRY_CODE_MAP.items()}
+#  The reason type should be exactly the fields given below.
+#  We cannot rely on the translated Selection since a single character difference would render the XML incorrect.
+SPANISH_CREDIT_REASON_TYPE = {
+    '01': 'Número de la factura',
+    '02': 'Serie de la factura',
+    '03': 'Fecha expedición',
+    '04': 'Nombre y apellidos/Razón Social-Emisor',
+    '05': 'Nombre y apellidos/Razón Social-Receptor',
+    '06': 'Identificación fiscal Emisor/obligado',
+    '07': 'Identificación fiscal Receptor',
+    '08': 'Domicilio Emisor/Obligado',
+    '09': 'Domicilio Receptor',
+    '10': 'Detalle Operación',
+    '11': 'Porcentaje impositivo a aplicar',
+    '12': 'Cuota tributaria a aplicar',
+    '13': 'Fecha/Periodo a aplicar',
+    '14': 'Clase de factura',
+    '15': 'Literales legales',
+    '16': 'Base imponible',
+    '80': 'Cálculo de cuotas repercutidas',
+    '81': 'Cálculo de cuotas retenidas',
+    '82': 'Base imponible modificada por devolución de envases / embalajes',
+    '83': 'Base imponible modificada por descuentos y bonificaciones',
+    '84': 'Base imponible modificada por resolución firme, judicial o administrativa',
+    '85': 'Base imponible modificada cuotas repercutidas no satisfechas. Auto de declaración de concurso',
+}
 
 
 class AccountMove(models.Model):
@@ -89,7 +116,12 @@ class AccountMove(models.Model):
             ('83', "Taxable Base modified due to discounts and rebates"),
             ('84', "Taxable Base modified due to firm court ruling or administrative decision"),
             ('85', "Taxable Base modified due to unpaid outputs where there is a judgement opening insolvency proceedings"),
-        ], string='Spanish Facturae EDI Reason Code', default='10')
+        ],
+        string='Spanish Facturae EDI Reason Code',
+        compute='_compute_l10n_es_edi_facturae_reason_code',
+        store=True,
+        readonly=False,
+    )
     l10n_es_invoicing_period_start_date = fields.Date(string="Invoice Period Start Date")
     l10n_es_invoicing_period_end_date = fields.Date(string="Invoice Period End Date")
     l10n_es_payment_means = fields.Selection(
@@ -113,7 +145,31 @@ class AccountMove(models.Model):
             ('17', "Banker’s draft"),
             ('18', "Cash on delivery"),
             ('19', "Payment by card"),
-        ], string="Payment Means", default='04')
+        ],
+        string="Payment Means",
+        compute='_compute_l10n_es_payment_means',
+        store=True,
+        readonly=False,
+    )
+
+    def _auto_init(self):
+        # Create compute stored field l10n_es_edi_facturae_reason_code and
+        # l10n_es_payment_means here to avoid timeout error on large databases.
+        if not column_exists(self.env.cr, 'account_move', 'l10n_es_edi_facturae_reason_code'):
+            create_column(self.env.cr, 'account_move', 'l10n_es_edi_facturae_reason_code', 'varchar')
+        if not column_exists(self.env.cr, 'account_move', 'l10n_es_payment_means'):
+            create_column(self.env.cr, 'account_move', 'l10n_es_payment_means', 'varchar')
+        return super()._auto_init()
+
+    @api.depends('country_code')
+    def _compute_l10n_es_edi_facturae_reason_code(self):
+        for move in self.filtered(lambda move: move.country_code == 'ES'):
+            move.l10n_es_edi_facturae_reason_code = move.l10n_es_edi_facturae_reason_code or '10'
+
+    @api.depends('country_code')
+    def _compute_l10n_es_payment_means(self):
+        for move in self.filtered(lambda move: move.country_code == 'ES'):
+            move.l10n_es_payment_means = move.l10n_es_payment_means or '04'
 
     def _get_fields_to_detach(self):
         # EXTENDS account
@@ -199,8 +255,7 @@ class AccountMove(models.Model):
             tax_period = refunded_invoice._l10n_es_edi_facturae_get_tax_period()
 
             reason_code = self.l10n_es_edi_facturae_reason_code or '10'
-            reason_description = [label for code, label in self._fields['l10n_es_edi_facturae_reason_code'].selection
-                                  if code == reason_code][0]
+            reason_description = SPANISH_CREDIT_REASON_TYPE[reason_code]
             return {
                 'refunded_invoice_record': refunded_invoice,
                 'ReasonCode': reason_code,
@@ -263,7 +318,7 @@ class AccountMove(models.Model):
                 installments.append({
                     'InstallmentDueDate': payment_term.date_maturity,
                     'InstallmentAmount': payment_term.amount_residual_currency,
-                    'PaymentMeans': self.l10n_es_payment_means,
+                    'PaymentMeans': self.l10n_es_payment_means or '04',
                     'AccountToBeCredited': {
                         'IBAN': self.partner_bank_id.sanitized_acc_number,
                         'BIC': self.partner_bank_id.bank_bic,
@@ -432,22 +487,33 @@ class AccountMove(models.Model):
             invoice_values['Items'].append(invoice_line_values)
 
         def grouping_function_per_base_line_tax(base_line, tax_data):
+            if not tax_data:
+                return
             return {
-                'record': base_line['record'],
-                'tax': tax_data['tax'] if tax_data else None,
+                'tax_es_type': tax_data['tax'].l10n_es_edi_facturae_tax_type,
+                'tax_rate': tax_data['tax'].amount,
+                'tax_amount_type': tax_data['tax'].amount_type,
             }
 
         base_lines_aggregated_values = AccountTax._aggregate_base_lines_tax_details(base_lines, grouping_function_per_base_line_tax)
         values_per_grouping_key = AccountTax._aggregate_base_lines_aggregated_values(base_lines_aggregated_values)
         for grouping_key, values in values_per_grouping_key.items():
-            tax = grouping_key['tax']
-            if not tax:
+            if not grouping_key:
+                continue
+            tax_record = values['base_line_x_taxes_data'][0][1][0]['tax']
+            if not tax_record:
                 continue
 
-            is_withholding = tax.amount < 0.0
-            tax_data = self._l10n_es_edi_facturae_get_tax_node_from_tax_data({**values, 'grouping_key': tax})
-            invoice_values['TaxesWithheld' if is_withholding else 'TaxOutputs'].append(tax_data)
-            invoice_values['TotalTaxesWithheld' if is_withholding else 'TotalTaxOutputs'] += values['tax_amount_currency']
+            is_withholding = values['grouping_key']['tax_rate'] < 0.0
+            tax_data = self._l10n_es_edi_facturae_get_tax_node_from_tax_data({**values, 'grouping_key': tax_record}, round=True)
+            if is_withholding:
+                invoice_values['TaxesWithheld'].append(tax_data)
+                invoice_values['TotalTaxesWithheld'] -= values['tax_amount_currency']
+            else:
+                invoice_values['TaxOutputs'].append(tax_data)
+                invoice_values['TotalTaxOutputs'] += values['tax_amount_currency']
+
+        invoice_values['TotalTaxesWithheld'] = abs(invoice_values['TotalTaxesWithheld'])
 
         invoice_values['TotalGrossAmountBeforeTaxes'] = (
             invoice_values['TotalGrossAmount']

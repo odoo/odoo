@@ -71,7 +71,7 @@ class CalendarAlarm(models.Model):
         display_interval = self._interval_selection.get(self.interval, '')
         display_alarm_type = {
             key: value for key, value in self._fields['alarm_type']._description_selection(self.env)
-        }[self.alarm_type]
+        }.get(self.alarm_type, '')
         self.name = "%s - %s %s" % (display_alarm_type, self.duration, display_interval)
         if self.notify_responsible:
             self.name += " - " + _("Notify Responsible")

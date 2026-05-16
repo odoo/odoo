@@ -57,6 +57,7 @@
             background-color: transparent;
         }
     }
+
     .o-hb-bg-shape-btn {
         grid-column: span 2;
         padding: 0;
@@ -65,9 +66,39 @@
             height: 50px;
         }
     }
+
     .o-hb-img-shape-btn {
         button {
             aspect-ratio: 1;
+        }
+    }
+
+    .o-hb-img-shape-btn,  .o-hb-bg-shape-btn {
+        > .o-hb-btn {
+            --o-highlight-shape-color: var(--o-hb-btn-active-color, #{$o-we-color-accent});
+            --o-highlight-shape-bg-opacity: 0%;
+            --o-highlight-shape-bg-color: color-mix(
+                in srgb,
+                var(--o-highlight-shape-color) var(--o-highlight-shape-bg-opacity),
+                transparent
+            );
+
+            &.active {
+                --o-highlight-shape-bg-opacity: 10%;
+                border-width: 3px;
+                border-color: var(--o-highlight-shape-color);
+                background-color: var(--o-highlight-shape-bg-color);
+
+                &::before {
+                    border-radius: unset;
+                }
+            }
+            &:hover,
+            &:focus-visible {
+                --o-highlight-shape-bg-opacity: 25%;
+                box-shadow: unset;
+                background-color: var(--o-highlight-shape-bg-color);
+            }
         }
     }
 

@@ -22,7 +22,7 @@ class AccountEdiXmlUblTr(models.AbstractModel):
 
     def _get_tax_category_code(self, customer, supplier, tax):
         # OVERRIDES account.edi.ubl_21
-        if tax.amount < 0:  # This is a withholding
+        if tax and tax.amount < 0:  # This is a withholding
             return '9015'
         return '0015'
 
@@ -94,7 +94,7 @@ class AccountEdiXmlUblTr(models.AbstractModel):
         ]
         if vals['invoice'].currency_id.name != 'TRY':
             document_node['cbc:Note'].append({'_text': self._l10n_tr_get_amount_integer_partn_text_note(invoice.amount_residual, vals['invoice'].currency_id), 'note_attrs': {}})
-            document_node['cbc:Note'].append({'_text': self._l10n_tr_get_invoice_currency_exchange_rate(invoice)})
+            document_node['cbc:Note'].append({'_text': f'KUR : {self._l10n_tr_get_currency_conversion_rate(invoice):.6f} TL'})
 
     @api.model
     def _l10n_tr_get_amount_integer_partn_text_note(self, amount, currency):
@@ -115,15 +115,9 @@ class AccountEdiXmlUblTr(models.AbstractModel):
         else:
             document_node['cac:Delivery'] = None
 
-    def _l10n_tr_get_invoice_currency_exchange_rate(self, invoice):
-        conversion_rate = self.env['res.currency']._get_conversion_rate(
-            from_currency=invoice.currency_id,
-            to_currency=invoice.company_currency_id,
-            company=invoice.company_id,
-            date=invoice.invoice_date,
-        )
-        # Nilvera Portal accepts the exchange rate for 6 decimals places only.
-        return f'KUR : {conversion_rate:.6f} TL'
+    def _l10n_tr_get_currency_conversion_rate(self, invoice):
+        """Return the exchange rate from invoice currency to company currency, rounded to 6 decimals."""
+        return round(1 / invoice.invoice_currency_rate, 6)
 
     def _add_invoice_payment_means_nodes(self, document_node, vals):
         # EXTENDS account.edi.xml.ubl_21
@@ -138,7 +132,7 @@ class AccountEdiXmlUblTr(models.AbstractModel):
             document_node['cac:PricingExchangeRate'] = {
                 'cbc:SourceCurrencyCode': {'_text': vals['currency_name']},
                 'cbc:TargetCurrencyCode': {'_text': vals['company_currency_id'].name},
-                'cbc:CalculationRate': {'_text': round(invoice.currency_id._get_conversion_rate(invoice.currency_id, invoice.company_id.currency_id, invoice.company_id, invoice.invoice_date), 6)},
+                'cbc:CalculationRate': {'_text': self._l10n_tr_get_currency_conversion_rate(invoice)},
                 'cbc:Date': {'_text': invoice.invoice_date},
             }
 
@@ -168,7 +162,7 @@ class AccountEdiXmlUblTr(models.AbstractModel):
 
     def _get_address_node(self, vals):
         partner = vals['partner']
-        model = vals.get('model', 'res.partner')
+        model = partner._name
         country = partner['country' if model == 'res.bank' else 'country_id']
         state = partner['state' if model == 'res.bank' else 'state_id']
 
@@ -319,9 +313,9 @@ class AccountEdiXmlUblTr(models.AbstractModel):
         })
         return partner_vals
 
-    def _import_fill_invoice_form(self, invoice, tree, qty_factor):
+    def _import_fill_invoice(self, invoice, tree, qty_factor):
         # EXTENDS account.edi.xml.ubl_20
-        logs = super()._import_fill_invoice_form(invoice, tree, qty_factor)
+        logs = super()._import_fill_invoice(invoice, tree, qty_factor)
 
         # ==== Nilvera UUID ====
         if uuid_node := tree.findtext('./{*}UUID'):

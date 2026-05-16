@@ -11,6 +11,8 @@ import { BuilderOverlayPlugin } from "./builder_overlay/builder_overlay_plugin";
 import { CachedModelPlugin } from "./cached_model_plugin";
 import { ClonePlugin } from "./clone_plugin";
 import { ColorUIPlugin } from "./color_ui_plugin";
+import { ImagePlugin } from "./image_plugin";
+import { IconPlugin } from "./icon_plugin";
 import { CoreBuilderActionPlugin } from "./core_builder_action_plugin";
 import { CompositeActionPlugin } from "./composite_action_plugin";
 import { CustomizeTabPlugin } from "./customize_tab_plugin";
@@ -34,6 +36,7 @@ import { BuilderContentEditablePlugin } from "./builder_content_editable_plugin"
 import { ImageFieldPlugin } from "@html_builder/plugins/image_field_plugin";
 import { MonetaryFieldPlugin } from "@html_builder/plugins/monetary_field_plugin";
 import { Many2OneOptionPlugin } from "@html_builder/plugins/many2one_option_plugin";
+import { VersionErrorPlugin } from "./version_error_plugin";
 
 const mainEditorPluginsToRemove = [
     "PowerButtonsPlugin",
@@ -43,8 +46,11 @@ const mainEditorPluginsToRemove = [
     "BannerPlugin",
     "MoveNodePlugin",
     "FontFamilyPlugin",
+    "SelectionPlaceholderPlugin",
     // Replaced plugins:
     "ColorUIPlugin",
+    "ImagePlugin",
+    "IconPlugin",
 ];
 
 export const MAIN_PLUGINS = [
@@ -53,6 +59,8 @@ export const MAIN_PLUGINS = [
         mainEditorPluginsToRemove
     ),
     ColorUIPlugin,
+    ImagePlugin,
+    IconPlugin,
 ];
 
 export const CORE_PLUGINS = [
@@ -87,4 +95,5 @@ export const CORE_PLUGINS = [
     ImageFieldPlugin,
     MonetaryFieldPlugin,
     Many2OneOptionPlugin,
+    VersionErrorPlugin,
 ];

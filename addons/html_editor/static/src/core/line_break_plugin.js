@@ -14,17 +14,24 @@ import { nextLeaf } from "../utils/dom_info";
  * @property { LineBreakPlugin['insertLineBreakNode'] } insertLineBreakNode
  */
 
+/**
+ * @typedef {(() => void)[]} before_line_break_handlers
+ * @typedef {((params: { targetNode: Element, targetOffset: number }) => void | true)[]} insert_line_break_element_overrides
+ */
+
 export class LineBreakPlugin extends Plugin {
     static dependencies = ["selection", "history", "input", "delete"];
     static id = "lineBreak";
     static shared = ["insertLineBreak", "insertLineBreakNode", "insertLineBreakElement"];
+    /** @type {import("plugins").EditorResources} */
     resources = {
         beforeinput_handlers: this.onBeforeInput.bind(this),
         legit_feff_predicates: [
             (node) =>
                 !node.nextSibling &&
                 !isBlock(closestElement(node)) &&
-                nextLeaf(node, closestBlock(node)),
+                nextLeaf(node, closestBlock(node)) &&
+                node.previousSibling,
         ],
     };
 
@@ -35,6 +42,8 @@ export class LineBreakPlugin extends Plugin {
             // @todo @phoenix collapseIfZWS is not tested
             // this.shared.collapseIfZWS();
             this.dependencies.delete.deleteSelection();
+            selection = this.dependencies.selection.getEditableSelection();
+        } else if (!closestElement(selection.anchorNode).isContentEditable) {
             selection = this.dependencies.selection.getEditableSelection();
         }
 

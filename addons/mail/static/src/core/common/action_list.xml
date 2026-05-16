@@ -50,7 +50,7 @@
         [action.tagClassNames]: true,
         'position-relative': true,
         'active': action.isActive,
-        'o-mail-ActionList-button btn btn-secondary btn-group-item': true,
+        'o-mail-ActionList-button btn btn-group-item': true,
         'o-first': props.isFirstInGroup,
         'o-last': props.isLastInGroup,
         'o-odooControlPanelSwitchStyle': props.odooControlPanelSwitchStyle,
@@ -70,15 +70,17 @@
         'px-3 py-2': props.dropdown and ui.isSmall,
         'py-1': props.dropdown and !ui.isSmall,
         'text-start px-2': !props.inline and !ui.isSmall,
+        'btn-secondary': !action.tags.includes('DANGER') and !action.tags.includes('SUCCESS') and !action.tags.includes('PRIMARY'),
+        'btn-primary': action.tags.includes('PRIMARY'),
         'btn-danger': action.tags.includes('DANGER'),
         'btn-success': action.tags.includes('SUCCESS'),
         'o-text-white border-0 o-simulateDarkTheme': store.shouldSimulateDarkTheme(this),
-        'bg-700': store.shouldSimulateDarkTheme(this) and !action.tags.includes('DANGER') and !action.tags.includes('SUCCESS') and !action.tags.includes('CALL_LAYOUT'),
+        'bg-700': store.shouldSimulateDarkTheme(this) and !action.tags.includes('DANGER') and !action.tags.includes('SUCCESS') and !action.tags.includes('PRIMARY') and !action.tags.includes('CALL_LAYOUT'),
         'bg-transparent': store.shouldSimulateDarkTheme(this) and action.tags.includes('CALL_LAYOUT'),
     })"/>
     <t t-set="attrs" t-value="{ 'aria-label': action.name, 'disabled': action.disabledCondition, 'name': action.id, 'data-sequence': action.sequence, 'data-sequence-group': action.sequenceGroup, 'data-sequence-quick': action.sequenceQuick }"/>
     <t t-if="action.component and action.componentCondition" t-component="action.component" t-props="action.componentProps"/>
-    <DropdownItem t-elif="props.dropdown" class="btnClass + ' d-flex align-items-center ' + (ui.isSmall ? 'gap-2' : 'gap-1')" tag="'button'" onSelected="(ev) => this.onSelected(action, ev)" attrs="attrs">
+    <DropdownItem t-elif="props.dropdown" class="btnClass + ' d-flex align-items-center dropdown-item_active_noarrow ' + (ui.isSmall ? 'gap-2' : 'gap-1')" tag="'button'" onSelected="(ev) => this.onSelected(action, ev)" attrs="attrs">
         <t t-call="mail.Action.content"/>
     </DropdownItem>
     <button t-else="" t-att-class="btnClass" t-att="Object.assign(attrs, { 'title': action.name })" t-on-click="(ev) => this.onSelected(action, ev)" t-att-data-hotkey="action.hotkey" t-att-style="props.style">

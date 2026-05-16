@@ -42,17 +42,8 @@ export class DiscussContent extends Component {
 
     actionPanelAutoOpenFn() {
         const memberListAction = this.threadActions.actions.find((a) => a.id === "member-list");
-        if (!memberListAction) {
-            return;
-        }
-        if (this.store.discuss.isMemberPanelOpenByDefault) {
-            if (!this.threadActions.activeAction) {
-                memberListAction.open();
-            } else if (this.threadActions.activeAction === memberListAction) {
-                return; // no-op (already open)
-            } else {
-                this.store.discuss.isMemberPanelOpenByDefault = false;
-            }
+        if (memberListAction && this.store.discuss.isMemberPanelOpenByDefault) {
+            memberListAction.open();
         }
     }
 

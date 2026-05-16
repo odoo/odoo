@@ -36,6 +36,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 (ev) => {
                     if (ev.key === "a" && ev.altKey) {
                         currentUrl.searchParams.set("enable_editor", 1);
+                        currentUrl.searchParams.set("edit_translations", 1);
                         window.location.replace(currentUrl.href);
                     }
                 },

@@ -6,13 +6,14 @@
 # Jumshud Sultanov <cumshud@gmail.com>, 2022
 # erpgo translator <jumshud@erpgo.az>, 2022
 # "Tiffany Chang (tic)" <tic@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:38+0000\n"
-"PO-Revision-Date: 2025-09-16 13:38+0000\n"
-"Last-Translator: \"Tiffany Chang (tic)\" <tic@odoo.com>\n"
+"POT-Creation-Date: 2026-04-10 18:38+0000\n"
+"PO-Revision-Date: 2025-11-08 19:02+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Azerbaijani <https://translate.odoo.com/projects/odoo-19/"
 "event/az/>\n"
 "Language: az\n"
@@ -130,38 +131,13 @@ msgid "'Full Page Ticket - %s' % (object.name or 'Event').replace('/','')"
 msgstr ""
 
 #. module: event
-#: model_terms:ir.ui.view,arch_db:event.event_report_full_page_ticket_layout
-msgid "+123456789"
-msgstr ""
-
-#. module: event
-#: model:event.tag,name:event.event_tag_category_1_tag_2
-msgid "10-14"
-msgstr ""
-
-#. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_report_template_formatted_event_address
 msgid "1000 Brussels"
 msgstr ""
 
 #. module: event
-#: model:event.tag,name:event.event_tag_category_1_tag_3
-msgid "15-18"
-msgstr ""
-
-#. module: event
-#: model:event.tag,name:event.event_tag_category_1_tag_4
-msgid "18+"
-msgstr ""
-
-#. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_event__badge_format__four_per_sheet
 msgid "4 per sheet"
-msgstr ""
-
-#. module: event
-#: model:event.tag,name:event.event_tag_category_1_tag_1
-msgid "5-10"
 msgstr ""
 
 #. module: event
@@ -378,10 +354,10 @@ msgid ""
 "my_tickets?badge_mode=1&amp;registration_ids={{ registration_ids }}"
 "&amp;tickets_hash={{ object.event_id._get_tickets_access_hash(registration_ids) }}"
 "\" target=\"_blank\" t-attf-style=\"padding: 8px 12px; font-size: 12px; "
-"color: {{object.event_id.user_id.company_id.email_primary_color or "
-"'#FFFFFF'}}; text-decoration: none !important; font-weight: 400; background-"
-"color: {{object.event_id.user_id.company_id.email_secondary_color or "
-"'#875A7B'}}; border-radius:3px\">\n"
+"color: {{object.event_id.company_id.email_primary_color or '#FFFFFF'}}; text-"
+"decoration: none !important; font-weight: 400; background-color: "
+"{{object.event_id.company_id.email_secondary_color or '#875A7B'}}; border-"
+"radius:3px\">\n"
 "                        Download Badges\n"
 "                    </a>\n"
 "                    <t t-if=\"not object.company_id.uses_default_logo\">\n"
@@ -413,9 +389,9 @@ msgid ""
 "                        <t t-if=\"event_website_url\">\n"
 "                            <a t-att-href=\"event_website_url\" t-attf-"
 "style=\"font-weight:bold;color:"
-"{{object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}}; "
-"text-decoration:none;\" t-out=\"object.event_id.name or ''\">OpenWood "
-"Collection Online Reveal</a>\n"
+"{{object.event_id.company_id.email_secondary_color or '#875A7B'}}; text-"
+"decoration:none;\" t-out=\"object.event_id.name or ''\">OpenWood Collection "
+"Online Reveal</a>\n"
 "                        </t>\n"
 "                        <t t-else=\"\">\n"
 "                            <strong t-out=\"object.event_id.name or "
@@ -627,8 +603,8 @@ msgid ""
 "                                <t t-if=\"event_organizer.email\">\n"
 "                                    <li>Mail: <a t-attf-href=\"mailto:"
 "{{ event_organizer.email }}\" t-attf-style=\"text-decoration:none;color: "
-"{{object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}};\" "
-"t-out=\"event_organizer.email\">info@yourcompany.com</a></li>\n"
+"{{object.event_id.company_id.email_secondary_color or '#875A7B'}};\" t-"
+"out=\"event_organizer.email\">info@yourcompany.com</a></li>\n"
 "                                </t>\n"
 "                                <t t-if=\"event_organizer.phone\">\n"
 "                                    <li>Phone: <t t-"
@@ -701,13 +677,13 @@ msgid ""
 "        <tr><td style=\"text-align: center; font-size: 14px;\">\n"
 "            Sent by <a target=\"_blank\" t-attf-"
 "href=\"{{ object.company_id.website }}\" t-attf-style=\"color: "
-"{{object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}};\" "
-"t-out=\"object.company_id.name or ''\">YourCompany</a>\n"
+"{{object.event_id.company_id.email_secondary_color or '#875A7B'}};\" t-"
+"out=\"object.company_id.name or ''\">YourCompany</a>\n"
 "            <t t-if=\"is_online\">\n"
 "                <br/>\n"
 "                Discover <a href=\"/event\" t-attf-style=\"color: "
-"{{object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}};"
-"\">all our events</a>.\n"
+"{{object.event_id.company_id.email_secondary_color or '#875A7B'}};\">all our "
+"events</a>.\n"
 "            </t>\n"
 "        </td></tr>\n"
 "        </table>\n"
@@ -760,10 +736,10 @@ msgid ""
 "registration_ids={{ object.ids }}"
 "&amp;tickets_hash={{ object.event_id._get_tickets_access_hash(object.ids) }}"
 "&amp;responsive_html=1\" target=\"_blank\" style=\"padding: 8px 12px; font-"
-"size: 12px; color: {{object.event_id.user_id.company_id.email_primary_color "
-"or '#FFFFFF'}}; text-decoration: none !important; font-weight: 400; "
-"background-color: {{object.event_id.user_id.company_id.email_secondary_color "
-"or '#875A7B'}}; border-radius:3px\">\n"
+"size: 12px; color: {{object.event_id.company_id.email_primary_color or "
+"'#FFFFFF'}}; text-decoration: none !important; font-weight: 400; background-"
+"color: {{object.event_id.company_id.email_secondary_color or '#875A7B'}}; "
+"border-radius:3px\">\n"
 "                            View Tickets\n"
 "                        </a>\n"
 "                        <a t-else=\"event_website_url\" t-att-"
@@ -813,9 +789,9 @@ msgid ""
 "                        <t t-if=\"event_website_url\">\n"
 "                            <a t-att-href=\"event_website_url\" t-attf-"
 "style=\"font-weight:bold;color: "
-"{{object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}}; "
-"text-decoration:none;\" t-out=\"object.event_id.name or ''\">OpenWood "
-"Collection Online Reveal</a>\n"
+"{{object.event_id.company_id.email_secondary_color or '#875A7B'}}; text-"
+"decoration:none;\" t-out=\"object.event_id.name or ''\">OpenWood Collection "
+"Online Reveal</a>\n"
 "                        </t>\n"
 "                        <t t-else=\"\">\n"
 "                            <strong t-out=\"object.event_id.name or "
@@ -1031,8 +1007,8 @@ msgid ""
 "                                <t t-if=\"event_organizer.email\">\n"
 "                                    <li>Mail: <a t-attf-href=\"mailto:"
 "{{ event_organizer.email }}\" t-attf-style=\"text-decoration:none; color: "
-"{{object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}};\" "
-"t-out=\"event_organizer.email or ''\"/></li>\n"
+"{{object.event_id.company_id.email_secondary_color or '#875A7B'}};\" t-"
+"out=\"event_organizer.email or ''\"/></li>\n"
 "                                </t>\n"
 "                                <t t-if=\"event_organizer.phone\">\n"
 "                                    <li>Phone: <t t-"
@@ -1098,14 +1074,14 @@ msgid ""
 "      <tr><td style=\"text-align: center; font-size: 14px;\">\n"
 "        Sent by <a target=\"_blank\" t-attf-"
 "href=\"{{ object.company_id.website }}\" t-attf-style=\"color: "
-"{{object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}};\" "
-"t-out=\"object.company_id.name or ''\">YourCompany</a>\n"
+"{{object.event_id.company_id.email_secondary_color or '#875A7B'}};\" t-"
+"out=\"object.company_id.name or ''\">YourCompany</a>\n"
 "        <t t-if=\"'website_url' in object.event_id and "
 "object.event_id.website_url\">\n"
 "            <br/>\n"
 "            Discover <a href=\"/event\" t-attf-style=\"color: "
-"{{object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}};"
-"\">all our events</a>.\n"
+"{{object.event_id.company_id.email_secondary_color or '#875A7B'}};\">all our "
+"events</a>.\n"
 "        </t>\n"
 "      </td></tr>\n"
 "    </table>\n"
@@ -1158,10 +1134,9 @@ msgid ""
 "registration_ids={{ object.ids }}"
 "&amp;tickets_hash={{ object.event_id._get_tickets_access_hash(object.ids) }}"
 "&amp;responsive_html=1\" target=\"_blank\" t-attf-style=\"padding: 8px 12px; "
-"font-size: 12px; color: "
-"{{object.event_id.user_id.company_id.email_primary_color or '#FFFFFF'}}; "
-"text-decoration: none !important; font-weight: 400; background-color: "
-"{{object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}}; "
+"font-size: 12px; color: {{object.event_id.company_id.email_primary_color or "
+"'#FFFFFF'}}; text-decoration: none !important; font-weight: 400; background-"
+"color: {{object.event_id.company_id.email_secondary_color or '#875A7B'}}; "
 "border-radius:3px\">\n"
 "                            View Tickets\n"
 "                        </a>\n"
@@ -1212,7 +1187,7 @@ msgid ""
 "event\n"
 "                        <t t-if=\"event_website_url\">\n"
 "                            <a t-att-href=\"event_website_url\" t-attf-"
-"style=\"color: {{object.event_id.user_id.company_id.email_secondary_color or "
+"style=\"color: {{object.event_id.company_id.email_secondary_color or "
 "'#875A7B'}}; text-decoration:none;font-weight:bold;\" t-"
 "out=\"object.event_id.name or ''\">OpenWood Collection Online Reveal</a>\n"
 "                        </t>\n"
@@ -1232,10 +1207,10 @@ msgid ""
 "out=\"object.sale_order_id.name\"/>\n"
 "                        and was placed on <t t-"
 "out=\"object.sale_order_id.date_order.date()\"/>\n"
-"                        <t t-if=\"object.sale_order_line_id.price_unit\"> "
+"                        <t t-if=\"object.sale_order_line_id.price_total\"> "
 "for an amount of\n"
 "                            <t t-"
-"out=\"object.sale_order_line_id.price_unit\" t-options=\"{'widget': "
+"out=\"object.sale_order_line_id.price_total\" t-options=\"{'widget': "
 "'monetary', 'display_currency': object.sale_order_line_id.currency_id}\"/>\n"
 "                        </t>.\n"
 "                    </div>\n"
@@ -1444,8 +1419,8 @@ msgid ""
 "                                <t t-if=\"event_organizer.email\">\n"
 "                                    <li>Mail: <a t-attf-href=\"mailto:"
 "{{ event_organizer.email }}\" t-attf-style=\"text-decoration:none; color: "
-"{{object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}};\" "
-"t-out=\"event_organizer.email or ''\">info@yourcompany.com</a></li>\n"
+"{{object.event_id.company_id.email_secondary_color or '#875A7B'}};\" t-"
+"out=\"event_organizer.email or ''\">info@yourcompany.com</a></li>\n"
 "                                </t>\n"
 "                                <t t-if=\"event_organizer.phone\">\n"
 "                                    <li>Phone: <t t-"
@@ -1518,13 +1493,13 @@ msgid ""
 "        <tr><td style=\"text-align: center; font-size: 14px;\">\n"
 "            Sent by <a target=\"_blank\" t-attf-"
 "href=\"{{ object.company_id.website }}\" t-attf-style=\"color: "
-"{{object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}};\" "
-"t-out=\"object.company_id.name or ''\">YourCompany</a>\n"
+"{{object.event_id.company_id.email_secondary_color or '#875A7B'}};\" t-"
+"out=\"object.company_id.name or ''\">YourCompany</a>\n"
 "            <t t-if=\"is_online\">\n"
 "                <br/>\n"
 "                Discover <a href=\"/event\" t-attf-style=\"color: "
-"{{object.event_id.user_id.company_id.email_secondary_color or '#875A7B'}};"
-"\">all our events</a>.\n"
+"{{object.event_id.company_id.email_secondary_color or '#875A7B'}};\">all our "
+"events</a>.\n"
 "            </t>\n"
 "        </td></tr>\n"
 "        </table>\n"
@@ -1630,7 +1605,7 @@ msgstr "Fəaliyyət Növü ikonu"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
 msgid "Activity type"
-msgstr ""
+msgstr "Fəaliyyət növü"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_stage_view_form
@@ -1665,7 +1640,7 @@ msgstr "Ünvan"
 #. module: event
 #: model:res.groups,name:event.group_event_manager
 msgid "Administrator"
-msgstr ""
+msgstr "Administrator"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_website_event_exhibitor
@@ -1746,7 +1721,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_question_answer__name
 msgid "Answer"
-msgstr ""
+msgstr "Cavab"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_registration_report
@@ -1756,7 +1731,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event.event_registration_answer_view_tree
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Answer Breakdown"
-msgstr ""
+msgstr "Cavabın Təsnifi"
 
 #. module: event
 #. odoo-javascript
@@ -1764,7 +1739,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_event_question__answer_ids
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_form
 msgid "Answers"
-msgstr ""
+msgstr "Cavablar"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_search
@@ -1901,7 +1876,7 @@ msgstr "Mövcud Yerlər"
 #. module: event
 #: model:ir.actions.report,name:event.action_report_event_registration_badge
 msgid "Badge"
-msgstr ""
+msgstr "Nişan"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__badge_image
@@ -1922,7 +1897,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/event/controllers/main.py:0
 msgid "Badges"
-msgstr ""
+msgstr "Bəcik Nişanları"
 
 #. module: event
 #: model_terms:event.event,description:event.event_3
@@ -1945,7 +1920,7 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Barcode Nomenclature"
-msgstr ""
+msgstr "Barkod Nomenklaturası"
 
 #. module: event
 #: model:ir.model.constraint,message:event.constraint_event_registration_barcode_event_uniq
@@ -2069,7 +2044,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__color
 #: model:ir.model.fields,field_description:event.field_event_slot__color
 msgid "Color"
-msgstr ""
+msgstr "Rəng"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_tag__color
@@ -2121,7 +2096,7 @@ msgstr "Şirkət"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__company_name
 msgid "Company Name"
-msgstr ""
+msgstr "Şirkətin Adı"
 
 #. module: event
 #. odoo-python
@@ -2170,7 +2145,7 @@ msgstr "Kontakt"
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Continue"
-msgstr ""
+msgstr "Davam edin"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__country_id
@@ -2262,7 +2237,7 @@ msgstr "Tarix"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__event_date_range
 msgid "Date Range"
-msgstr ""
+msgstr "Tarix Aralığı"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_unit__days
@@ -2371,7 +2346,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Edit"
-msgstr ""
+msgstr "Redaktə et"
 
 #. module: event
 #: model:event.question,title:event.event_question_email
@@ -2418,7 +2393,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_slot__end_hour
 msgid "Ending Hour"
-msgstr ""
+msgstr "Bitiş saatı"
 
 #. module: event
 #: model:event.event,subtitle:event.event_2
@@ -2428,7 +2403,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__mail_state__error
 msgid "Error"
-msgstr ""
+msgstr "Xəta"
 
 #. module: event
 #. odoo-javascript
@@ -2546,7 +2521,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/event/controllers/main.py:0
 msgid "Event Registrations"
-msgstr ""
+msgstr "Tədbir Qeydiyyatları"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__event_user_id
@@ -2849,7 +2824,7 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_slot_tree
 msgid "From"
-msgstr ""
+msgstr "Başlama Tarixi"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_registration
@@ -2947,7 +2922,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_event_event__has_message
 #: model:ir.model.fields,field_description:event.field_event_registration__has_message
 msgid "Has Message"
-msgstr ""
+msgstr "Mesajı Var"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -2968,7 +2943,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Home"
-msgstr ""
+msgstr "Əsas"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_slot_form
@@ -3122,7 +3097,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_barcode.xml:0
 msgid "Install"
-msgstr ""
+msgstr "Quraşdır"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__interval_nbr
@@ -3250,12 +3225,12 @@ msgstr "Kanban Metodu"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Key"
-msgstr ""
+msgstr "Açar"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__lang
 msgid "Language"
-msgstr ""
+msgstr "Dil"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
@@ -3424,7 +3399,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Mandatory"
-msgstr ""
+msgstr "Tələb olunur"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_question__is_mandatory_answer
@@ -3518,13 +3493,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "My Activities"
-msgstr ""
+msgstr "Mənim Fəaliyyətlərim"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__my_activity_date_deadline
 #: model:ir.model.fields,field_description:event.field_event_registration__my_activity_date_deadline
 msgid "My Activity Deadline"
-msgstr ""
+msgstr "Mənim Fəaliyyətlərimin Son Tarixi"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
@@ -3557,7 +3532,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_event_event__activity_calendar_event_id
 #: model:ir.model.fields,field_description:event.field_event_registration__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
-msgstr ""
+msgstr "Növbəti Fəaliyyət Təqvimi Tədbiri"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__activity_date_deadline
@@ -3603,7 +3578,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__barcode_nomenclature_id
 msgid "Nomenclature"
-msgstr ""
+msgstr "Nomenklatura"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_search
@@ -3678,7 +3653,7 @@ msgstr "Xətaların sayı"
 #: model:ir.model.fields,help:event.field_event_event__message_needaction_counter
 #: model:ir.model.fields,help:event.field_event_registration__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "Əməliyyat tələb edən mesajların sayı"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__message_has_error_counter
@@ -3835,7 +3810,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/event/static/src/client_action/event_registration_summary_dialog.xml:0
 msgid "Print"
-msgstr ""
+msgstr "Çap edin"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -3852,7 +3827,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_event_registration__registration_properties
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Properties"
-msgstr ""
+msgstr "Xüsusiyyətlər"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -3873,13 +3848,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Question"
-msgstr ""
+msgstr "Sual"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_question__question_type
 #: model:ir.model.fields,field_description:event.field_event_registration_answer__question_type
 msgid "Question Type"
-msgstr ""
+msgstr "Sual Növü"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__question_ids
@@ -3888,7 +3863,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event.view_event_registration_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Questions"
-msgstr ""
+msgstr "Suallar"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_website_event_track_quiz
@@ -3899,7 +3874,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_event_event__rating_ids
 #: model:ir.model.fields,field_description:event.field_event_registration__rating_ids
 msgid "Ratings"
-msgstr ""
+msgstr "Qiymətləndirmələr"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_event__kanban_state__done
@@ -4141,7 +4116,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_question__question_type__simple_choice
 msgid "Selection"
-msgstr ""
+msgstr "Seçim"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -4336,7 +4311,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_slot__start_hour
 msgid "Starting Hour"
-msgstr ""
+msgstr "Başlama saatı"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_partner__static_map_url
@@ -4354,13 +4329,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event.event_question_view_list
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Stats"
-msgstr ""
+msgstr "Statistika"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__state
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Status"
-msgstr ""
+msgstr "Status"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__activity_state
@@ -4725,12 +4700,12 @@ msgstr "Saat qurşağı"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_question__title
 msgid "Title"
-msgstr ""
+msgstr "Başlıq"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_slot_tree
 msgid "To"
-msgstr ""
+msgstr "Bitmə Tarixi"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
@@ -4843,7 +4818,7 @@ msgstr "Vahid"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_slot_tree
 msgid "Until"
-msgstr ""
+msgstr "Qeyd edilən tarixədək"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search

@@ -3,41 +3,39 @@
 
 from odoo.exceptions import UserError
 from odoo.fields import Command
+
+from odoo.tests import users
 from .common import PurchaseTestCommon
 
 
 class TestDeleteOrder(PurchaseTestCommon):
 
+    @users('purchase_user')
     def test_00_delete_order(self):
         ''' Testcase for deleting purchase order with purchase user group'''
 
         # In order to test delete process on purchase order,tried to delete a confirmed order and check Error Message.
-        partner = self.env['res.partner'].create({'name': 'My Partner'})
-
-        purchase_order = self.env['purchase.order'].create({
-            'partner_id': partner.id,
+        purchase_order_1 = self.env['purchase.order'].create({
+            'partner_id': self.vendor.id,
             'state': 'purchase',
         })
-        purchase_order_1 = purchase_order.with_user(self.res_users_purchase_user)
         with self.assertRaises(UserError):
             purchase_order_1.unlink()
 
         # Delete 'cancelled' purchase order with user group
-        purchase_order = self.env['purchase.order'].create({
-            'partner_id': partner.id,
+        purchase_order_2 = self.env['purchase.order'].create({
+            'partner_id': self.vendor.id,
             'state': 'purchase',
         })
-        purchase_order_2 = purchase_order.with_user(self.res_users_purchase_user)
         purchase_order_2.button_cancel()
         self.assertEqual(purchase_order_2.state, 'cancel', 'PO is cancelled!')
         purchase_order_2.unlink()
 
         # Delete 'draft' purchase order with user group
-        purchase_order = self.env['purchase.order'].create({
-            'partner_id': partner.id,
+        purchase_order_3 = self.env['purchase.order'].create({
+            'partner_id': self.vendor.id,
             'state': 'draft',
         })
-        purchase_order_3 = purchase_order.with_user(self.res_users_purchase_user)
         purchase_order_3.button_cancel()
         self.assertEqual(purchase_order_3.state, 'cancel', 'PO is cancelled!')
         purchase_order_3.unlink()
@@ -48,9 +46,9 @@ class TestDeleteOrder(PurchaseTestCommon):
         partner = self.env['res.partner'].create({'name': 'My Partner'})
 
         move = self.env['stock.move'].create({
-            'product_id': self.product_2.id,
+            'product_id': self.product.id,
             'product_uom_qty': 1,
-            'product_uom': self.product_2.uom_id.id,
+            'product_uom': self.product.uom_id.id,
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'picking_type_id': self.picking_type_out.id,
@@ -62,9 +60,9 @@ class TestDeleteOrder(PurchaseTestCommon):
             'partner_id': partner.id,
             'order_line': [
                 Command.create({
-                    'product_id': self.product_2.id,
+                    'product_id': self.product.id,
                     'product_qty': 1.0,
-                    'product_uom_id': self.product_2.uom_id.id,
+                    'product_uom_id': self.product.uom_id.id,
                     'propagate_cancel': False,
                 })],
         })

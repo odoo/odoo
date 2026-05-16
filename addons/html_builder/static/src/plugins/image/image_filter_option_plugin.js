@@ -7,6 +7,7 @@ import { registry } from "@web/core/registry";
 
 class ImageFilterOptionPlugin extends Plugin {
     static id = "ImageFilterOption";
+    /** @type {import("plugins").BuilderResources} */
     resources = {
         builder_actions: {
             GlFilterAction,

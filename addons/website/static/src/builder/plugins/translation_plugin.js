@@ -1,13 +1,13 @@
 import { Plugin } from "@html_editor/plugin";
-import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
 import { AttributeTranslateDialog } from "../translation_components/attributeTranslateDialog";
 import { SelectTranslateDialog } from "../translation_components/selectTranslateDialog";
-import {
-    localStorageNoDialogKey,
-    TranslatorInfoDialog,
-} from "../translation_components/translatorInfoDialog";
 import { withSequence } from "@html_editor/utils/resource";
+import { makeContentsInline, unwrapContents } from "@html_editor/utils/dom";
+
+/**
+ * @typedef {((editableEls: HTMLElement[]) => void)[]} mark_translatable_nodes
+ */
 
 export const translationAttributeSelector =
     '[placeholder*="data-oe-translation-source-sha="], ' +
@@ -50,9 +50,17 @@ export class TranslationPlugin extends Plugin {
     static id = "translation";
     static dependencies = ["history"];
 
+    /** @type {import("plugins").WebsiteResources} */
     resources = {
         clean_for_save_handlers: this.cleanForSave.bind(this),
         get_dirty_els: this.getDirtyTranslations.bind(this),
+        after_replication_handlers: ({ targetEl }) => {
+            // Tag TOC navbar entries explicitly so the replicated
+            // translation reaches the save payload.
+            if (targetEl.classList.contains("o_translation_without_style")) {
+                targetEl.classList.add("o_dirty");
+            }
+        },
         after_setup_editor_handlers: () => {
             const translationSavableEls = getTranslationAttributeEls(
                 this.services.website.pageDocument
@@ -69,6 +77,7 @@ export class TranslationPlugin extends Plugin {
             for (const editableEl of editableEls) {
                 if (editableEl.querySelectorAll(editableElSelector).length) {
                     editableEl.setAttribute("data-oe-readonly", "true");
+                    editableEl.classList.remove("o_editable", "o_editable_attribute");
                 }
             }
             return true;
@@ -77,12 +86,21 @@ export class TranslationPlugin extends Plugin {
             this.prepareTranslation();
         }),
         system_classes: ["o_editable_attribute"],
+        before_insert_processors: withSequence(20, (container) => {
+            makeContentsInline(container);
+            for (const el of container.querySelectorAll(this.nonTranslatedSelector)) {
+                unwrapContents(el);
+            }
+            return container;
+        }),
     };
 
     setup() {
         this.websiteService = this.services.website;
         this.notificationService = this.services.notification;
         this.dialogService = this.services.dialog;
+        this.nonTranslatedSelector =
+            `:not(${this.config.translatedElements.join(", ")})` + `:not(.o_translate_inline)`;
     }
 
     prepareTranslation() {
@@ -109,10 +127,6 @@ export class TranslationPlugin extends Plugin {
             });
         }
 
-        if (!browser.localStorage.getItem(localStorageNoDialogKey)) {
-            this.dialogService.add(TranslatorInfoDialog);
-        }
-
         const showNotification = (ev) => {
             // Prevent duplicate notifications for the same click but allow the
             // event to bubble (i.e. for carousel sliding)
@@ -129,7 +143,14 @@ export class TranslationPlugin extends Plugin {
                 sticky: false,
             });
         };
-        for (const translateEl of this.editableEls) {
+        // The TOC navbar lives under `.o_not_editable`, so its translation
+        // spans are excluded from `findOEditable`. Iterate them explicitly
+        // so `handleToC` can align their source SHA with the matching
+        // heading and tag them with `o_translation_without_style`.
+        const tocNavTranslationEls = this.editable.querySelectorAll(
+            ".s_table_of_content_navbar_wrap [data-oe-translation-source-sha]"
+        );
+        for (const translateEl of new Set([...this.editableEls, ...tocNavTranslationEls])) {
             this.handleToC(translateEl);
         }
         const savableInsideNotEditableEls = this.editable.querySelectorAll(
@@ -169,7 +190,7 @@ export class TranslationPlugin extends Plugin {
         this.elToTranslationInfoMap = new Map();
         const translatedAttrs = ["placeholder", "title", "alt", "value"];
         const translationRegex =
-            /<span [^>]*data-oe-translation-source-sha="([^"]+)"[^>]*>(.*)<\/span>/;
+            /<span [^>]*data-oe-translation-source-sha="([^"]+)"[^>]*>([\s\S]*?)<\/span>/;
         const isEmpty = (el) => !el.hasChildNodes() || el.innerHTML.trim() === "";
         const matchTag = (el) => el.matches("input, select, textarea, img");
         for (const translatedAttr of translatedAttrs) {
@@ -256,7 +277,6 @@ export class TranslationPlugin extends Plugin {
                     translateEl.dataset.oeTranslationSourceSha =
                         headerEl.dataset.oeTranslationSourceSha;
                 }
-                // TODO: handle o_translation_without_style
                 translateEl.classList.add("o_translation_without_style");
             }
         }

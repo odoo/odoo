@@ -19,6 +19,19 @@ class PosPaymentMethod(models.Model):
         params += ['is_online_payment']
         return params
 
+    @api.model
+    def _load_pos_data_read(self, records, config):
+        read_records = super()._load_pos_data_read(records, config)
+
+        for record in read_records:
+            if not record.get('is_online_payment'):
+                continue
+
+            pm = self.env['pos.payment.method'].browse(record['id']).exists()
+            providers = pm._get_online_payment_providers().mapped('code') if pm else []
+            record['_customer_required'] = bool(set(providers) & set(self._get_customer_required_providers_code()))
+        return read_records
+
     @api.depends('is_online_payment')
     def _compute_type(self):
         opm = self.filtered('is_online_payment')
@@ -49,6 +62,15 @@ class PosPaymentMethod(models.Model):
                 pm.has_an_online_payment_provider = bool(pm._get_online_payment_providers())
             else:
                 pm.has_an_online_payment_provider = False
+
+    @api.constrains('config_ids', 'is_online_payment')
+    def _check_pos_config_online_payment(self):
+        """ Check that each POS config has at most one online payment method,"""
+        for pm in self.filtered('is_online_payment'):
+            for config in pm.config_ids:
+                other_online_pms = config.payment_method_ids.filtered(lambda other_pm: other_pm.is_online_payment and other_pm.id != pm.id)
+                if other_online_pms:
+                    raise ValidationError(_("The %s already has one online payment.", config.name))
 
     def _is_write_forbidden(self, fields):
         return super(PosPaymentMethod, self)._is_write_forbidden(fields - {'online_payment_provider_ids'})
@@ -134,3 +156,9 @@ class PosPaymentMethod(models.Model):
     def _onchange_is_online_payment(self):
         """Reset method to hide widget `pos_payment_provider_cards` in form view."""
         self.payment_method_type = 'none'
+
+    def _is_online_payment(self):
+        return self.is_online_payment
+
+    def _get_customer_required_providers_code(self):
+        return ['aps', 'flutterwave']

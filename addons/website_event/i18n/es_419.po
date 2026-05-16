@@ -3,14 +3,15 @@
 # * website_event
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Fernanda Alvarez (mfar)" <mfar@odoo.com>, 2025.
-# "Patricia Gutiérrez (pagc)" <pagc@odoo.com>, 2025.
+# "Fernanda Alvarez (mfar)" <mfar@odoo.com>, 2025, 2026.
+# "Patricia Gutiérrez (pagc)" <pagc@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:37+0000\n"
-"PO-Revision-Date: 2025-10-07 23:38+0000\n"
+"POT-Creation-Date: 2026-01-25 18:35+0000\n"
+"PO-Revision-Date: 2026-04-09 02:01+0000\n"
 "Last-Translator: \"Fernanda Alvarez (mfar)\" <mfar@odoo.com>\n"
 "Language-Team: Spanish (Latin America) <https://translate.odoo.com/projects/"
 "odoo-19/website_event/es_419/>\n"
@@ -19,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_website_visitor__event_registration_count
@@ -521,7 +522,7 @@ msgstr "Agregar a Google"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_calendar_links
 msgid "Add to Google Agenda"
-msgstr "Agregar a la agenda de Google"
+msgstr "Agregar al calendario de Google"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_dates
@@ -541,7 +542,7 @@ msgstr "Agregar a iCal/Outlook"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_calendar_links
 msgid "Add to your calendar"
-msgstr "Agréguelo a su calendario"
+msgstr "Agrégalo a tu calendario"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_topbar
@@ -799,6 +800,7 @@ msgstr "Descripción"
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__display_name
 #: model:ir.model.fields,field_description:website_event.field_event_registration__display_name
+#: model:ir.model.fields,field_description:website_event.field_event_slot__display_name
 #: model:ir.model.fields,field_description:website_event.field_event_tag__display_name
 #: model:ir.model.fields,field_description:website_event.field_event_tag_category__display_name
 #: model:ir.model.fields,field_description:website_event.field_event_type__display_name
@@ -908,6 +910,11 @@ msgid "Event Registrations"
 msgstr "Registros al evento"
 
 #. module: website_event
+#: model:ir.model,name:website_event.model_event_slot
+msgid "Event Slot"
+msgstr "Espacio del evento"
+
+#. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__subtitle
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
 msgid "Event Subtitle"
@@ -1012,8 +1019,7 @@ msgstr "Filtros"
 msgid ""
 "Find out what people see and say about this event, and join the conversation."
 msgstr ""
-"Descubra lo que la gente ve y dice sobre este evento, únase a la "
-"conversación."
+"Descubre qué opinan las personas sobre este evento y únete a la conversación."
 
 #. module: website_event
 #. odoo-javascript
@@ -1046,7 +1052,7 @@ msgstr "Obtén tus boletos <i class=\"fa fa-chevron-right\"/>"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
 msgid "Get directions"
-msgstr "Obtener direcciones"
+msgstr "Cómo llegar"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_calendar_links
@@ -1122,6 +1128,7 @@ msgstr "¿Cómo se enteró de este evento?"
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__id
 #: model:ir.model.fields,field_description:website_event.field_event_registration__id
+#: model:ir.model.fields,field_description:website_event.field_event_slot__id
 #: model:ir.model.fields,field_description:website_event.field_event_tag__id
 #: model:ir.model.fields,field_description:website_event.field_event_tag_category__id
 #: model:ir.model.fields,field_description:website_event.field_event_type__id
@@ -1604,7 +1611,7 @@ msgstr "Ventas"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.modal_ticket_registration
 msgid "Sales end on"
-msgstr "Las ventas finalizan el"
+msgstr "Las ventas terminan el"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.modal_ticket_registration
@@ -1635,6 +1642,8 @@ msgid "Search an event.."
 msgstr "Buscar un evento..."
 
 #. module: website_event
+#. odoo-javascript
+#: code:addons/website_event/static/src/interactions/website_event_slot_details.js:0
 #: model_terms:ir.ui.view,arch_db:website_event.modal_slot_registration
 msgid "Select a Date:"
 msgstr "Seleccione una fecha:"
@@ -1644,6 +1653,12 @@ msgstr "Seleccione una fecha:"
 #: model_terms:ir.ui.view,arch_db:website_event.event_registration_view_tree
 msgid "Selected Answers"
 msgstr "Respuestas seleccionadas"
+
+#. module: website_event
+#. odoo-javascript
+#: code:addons/website_event/static/src/interactions/website_event_slot_details.js:0
+msgid "Selected Date:"
+msgstr "Fecha seleccionada:"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__seo_name

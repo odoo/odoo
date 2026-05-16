@@ -21,6 +21,8 @@ registry.category("web_tour.tours").add("test_optional_product", {
             // Add a product with optional products
             ProductScreen.clickDisplayedProduct("Desk Pad", false),
             Dialog.is({ title: "Optional Products" }),
+            // Check image of optional product
+            OptionalProduct.checkImage("Small Shelf", true),
             // Add a specific optional product
             OptionalProduct.addOptionalProduct("Small Shelf", 5),
             ProductScreen.selectedOrderlineHas("Small Shelf", "5.0"),
@@ -50,5 +52,14 @@ registry.category("web_tour.tours").add("test_optional_product", {
             ),
 
             Chrome.endTour(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_optional_product_image_not_display", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            ProductScreen.clickDisplayedProduct("Desk Pad"),
+            OptionalProduct.checkImage("Small Shelf", false),
         ].flat(),
 });

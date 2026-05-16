@@ -1,3 +1,4 @@
+import { callbacksForCursorUpdate } from "@html_editor/utils/selection";
 import { Plugin } from "../plugin";
 import { isBlock } from "../utils/blocks";
 import { fillEmpty, splitTextNode } from "../utils/dom";
@@ -8,7 +9,7 @@ import {
     isVisible,
 } from "../utils/dom_info";
 import { prepareUpdate } from "../utils/dom_state";
-import { childNodes, closestElement, firstLeaf, lastLeaf } from "../utils/dom_traversal";
+import { childNodes, closestElement, firstLeaf, lastLeaf, findUpTo } from "../utils/dom_traversal";
 import { DIRECTIONS, childNodeIndex, nodeSize } from "../utils/position";
 import { isProtected, isProtecting } from "@html_editor/utils/dom_info";
 
@@ -23,6 +24,15 @@ import { isProtected, isProtecting } from "@html_editor/utils/dom_info";
  * @property { SplitPlugin['splitSelection'] } splitSelection
  */
 
+/**
+ * @typedef {(({element: HTMLElement, secondPart: HTMLElement}) => void)[]} after_split_element_handlers
+ * @typedef {(() => void)[]} before_split_block_handlers
+ *
+ * @typedef {((params: { targetNode: Node, targetOffset: number, blockToSplit: HTMLElement | null }) => void | true)[]} split_element_block_overrides
+ *
+ * @typedef {((node: Node) => boolean)[]} unsplittable_node_predicates
+ */
+
 export class SplitPlugin extends Plugin {
     static dependencies = ["baseContainer", "selection", "history", "input", "delete", "lineBreak"];
     static id = "split";
@@ -35,6 +45,7 @@ export class SplitPlugin extends Plugin {
         "splitSelection",
         "isUnsplittable",
     ];
+    /** @type {import("plugins").EditorResources} */
     resources = {
         beforeinput_handlers: this.onBeforeInput.bind(this),
 
@@ -88,6 +99,8 @@ export class SplitPlugin extends Plugin {
             // this.shared.collapseIfZWS();
             this.dependencies.delete.deleteSelection();
             selection = this.dependencies.selection.getEditableSelection();
+        } else if (!closestElement(selection.anchorNode).isContentEditable) {
+            selection = this.dependencies.selection.getEditableSelection();
         }
 
         return this.splitBlockNode({
@@ -124,8 +137,12 @@ export class SplitPlugin extends Plugin {
      * @returns {[HTMLElement|undefined, HTMLElement|undefined]}
      */
     splitElementBlock({ targetNode, targetOffset, blockToSplit }) {
-        // If the block is unsplittable, insert a line break instead.
-        if (this.isUnsplittable(blockToSplit)) {
+        // If the block is unsplittable or the targetNode is within an
+        // unsplittable element, insert a line break instead.
+        if (
+            this.isUnsplittable(blockToSplit) ||
+            findUpTo(targetNode, blockToSplit, (el) => this.isUnsplittable(el))
+        ) {
             // @todo: t-if, t-else etc are not blocks, but they are
             // unsplittable.  The check must be done from the targetNode up to
             // the block for unsplittables. There are apparently no tests for
@@ -182,17 +199,28 @@ export class SplitPlugin extends Plugin {
      * @returns {[HTMLElement, HTMLElement]}
      */
     splitElement(element, offset) {
+        const cursor = this.dependencies.selection.preserveSelection();
         /** @type {HTMLElement} **/
         const firstPart = element.cloneNode();
         /** @type {HTMLElement} **/
         const secondPart = element.cloneNode();
+        cursor.update(callbacksForCursorUpdate.before(element, firstPart));
         element.before(firstPart);
+        cursor.update(callbacksForCursorUpdate.after(element, secondPart));
         element.after(secondPart);
         const children = childNodes(element);
-        firstPart.append(...children.slice(0, offset));
-        secondPart.append(...children.slice(offset));
+        for (const node of children.slice(0, offset)) {
+            cursor.update(callbacksForCursorUpdate.append(firstPart, node));
+            firstPart.appendChild(node);
+        }
+        for (const node of children.slice(offset)) {
+            cursor.update(callbacksForCursorUpdate.append(secondPart, node));
+            secondPart.appendChild(node);
+        }
+        cursor.update(callbacksForCursorUpdate.remove(element));
         element.remove();
         this.dispatchTo("after_split_element_handlers", { firstPart, secondPart });
+        cursor.restore();
         return [firstPart, secondPart];
     }
 

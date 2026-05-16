@@ -4,6 +4,7 @@
 import datetime
 from freezegun import freeze_time
 
+from odoo import Command
 from odoo.addons.stock.tests.common import TestStockCommon
 from odoo.exceptions import UserError
 from odoo.tests import Form
@@ -221,3 +222,67 @@ class TestStockMoveLine(TestStockCommon):
             })
             # 36 units > 24 units
             self.assertTrue(ml.date > update_date_3, "Quantity change check for date should take into account UoM conversion")
+
+    def test_lot_creation_from_move_line_with_generic_stock(self):
+        """
+        Test that if the product already have quantities and after that tracking is set to serial,
+        we can create a lot and assign it to the move.
+        """
+        self.productA.tracking = "none"
+
+        self.env["stock.quant"]._update_available_quantity(self.productA, self.stock_location, 100)
+
+        self.productA.tracking = "serial"
+
+        serial_lot = self.env["stock.lot"].create(
+            {
+                "name": "SN001",
+                "product_id": self.productA.id,
+                "company_id": self.env.company.id,
+            }
+        )
+
+        move = self.env["stock.move"].create(
+            {
+                "product_id": self.productA.id,
+                "product_uom": self.productA.uom_id.id,
+                "product_uom_qty": 1.0,
+                "location_id": self.stock_location.id,
+                "location_dest_id": self.customer_location.id,
+                "lot_ids": [Command.link(serial_lot.id)],
+            }
+        )
+
+        line = move.move_line_ids[0]
+        self.assertEqual(line.lot_id, serial_lot)
+
+    def test_action_detailed_operations_domain_includes_new_lines(self):
+        """Test that newly created move lines remain visible in detailed operations view."""
+        receipt = self.env['stock.picking'].create({
+            'picking_type_id': self.picking_type_in.id,
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'move_ids': [Command.create({
+                'product_id': self.productA.id,
+                'product_uom_qty': 10.0,
+                'product_uom': self.productA.uom_id.id,
+                'location_id': self.supplier_location.id,
+                'location_dest_id': self.stock_location.id,
+            })],
+        })
+        receipt.action_confirm()
+        initial_move_line = receipt.move_line_ids
+        self.assertRecordValues(initial_move_line, [{'quantity': 10.0}])
+        action = receipt.action_detailed_operations()
+        self.assertEqual(initial_move_line, self.env['stock.move.line'].search(action['domain']))
+
+        new_move_line = self.env['stock.move.line'].create({
+            'picking_id': receipt.id,
+            'product_id': self.productA.id,
+            'product_uom_id': self.productA.uom_id.id,
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'move_id': receipt.move_ids.id,
+            'quantity': 5.0,
+        })
+        self.assertEqual(initial_move_line | new_move_line, self.env['stock.move.line'].search(action['domain']))

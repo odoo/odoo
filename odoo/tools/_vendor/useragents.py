@@ -75,11 +75,11 @@ class UserAgentParser(object):
     )
 
     def __init__(self):
-        self.platforms = [(b, re.compile(a, re.I)) for a, b in self.platforms]
-        self.browsers = [
+        self.platforms = tuple((b, re.compile(a, re.I)) for a, b in self.platforms)
+        self.browsers = tuple(
             (b, re.compile(self._browser_version_re % a, re.I))
             for a, b in self.browsers
-        ]
+        )
 
     def __call__(self, user_agent):
         for platform, regex in self.platforms:  # noqa: B007

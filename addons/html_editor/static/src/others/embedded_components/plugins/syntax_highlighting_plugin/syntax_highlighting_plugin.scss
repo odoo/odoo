@@ -7,13 +7,18 @@
 
     pre, textarea.o_prism_source {
         margin: 0;
-        padding: 8px 16px;
+        padding: 20px 16px 8px 16px;
     }
 
     pre {
         font: inherit;
         tab-size: inherit;
         white-space: pre;
+        &::-webkit-scrollbar {
+            // Because we have two scrollbars on top of each others
+            // we hide the pre one.
+            opacity: 0;
+        }
     }
 
     textarea.o_prism_source {
@@ -27,5 +32,50 @@
         outline: none;
         background: transparent;
         resize: none;
+        white-space: pre;
+
+        &::placeholder {
+            opacity: 0;
+        }
+        &:focus::placeholder {
+            opacity: 1;
+        }
+
+        &::-webkit-scrollbar {
+            height: 8px;
+        }
+    
+        &::-webkit-scrollbar-thumb {
+            border-radius: 4px;
+            background: #888;
+        }
+    }
+
+    .o_code_toolbar {
+        position: absolute;
+        top: 0;
+        right: 0;
+        padding: 3px 4px;
+        z-index: 1;
+        align-items: center;
+        justify-content: flex-end;
+        display: none;
+
+        button {
+            display: inline-flex;
+            align-items: center;
+            height: 20px;
+            padding: 0 3px 0 0;
+            font-size: 12px;
+            --btn-hover-bg: #{$o-gray-200};
+        }
+    }
+
+    &:hover,
+    &:has(.dropdown-toggle.show),
+    &:focus-within {
+        .o_code_toolbar {
+            display: flex;
+        }
     }
 }

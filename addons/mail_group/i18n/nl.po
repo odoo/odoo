@@ -3,14 +3,14 @@
 # * mail_group
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# Bren Driesen <brdri@odoo.com>, 2025.
+# Bren Driesen <brdri@odoo.com>, 2025, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:38+0000\n"
-"PO-Revision-Date: 2025-10-23 09:16+0000\n"
-"Last-Translator: \"Dylan Kiss (dyki)\" <dyki@odoo.com>\n"
+"POT-Creation-Date: 2026-04-10 18:39+0000\n"
+"PO-Revision-Date: 2026-03-14 09:44+0000\n"
+"Last-Translator: Bren Driesen <brdri@odoo.com>\n"
 "Language-Team: Dutch <https://translate.odoo.com/projects/odoo-19/mail_group/"
 "nl/>\n"
 "Language: nl\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_list
@@ -73,8 +73,8 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "                Hallo,<br/><br/>\n"
-"                Je hebt je aangemeld voor de mailinglijst <strong t-out="
-"\"object.name or ''\"/>.\n"
+"                Je hebt je aangemeld voor de mailinglijst <strong t-"
+"out=\"object.name or ''\"/>.\n"
 "                <br/><br/>\n"
 "                Klik op de volgende link om je inschrijving te bevestigen: "
 "<strong t-if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t "
@@ -107,9 +107,9 @@ msgstr ""
 "                Je hebt gevraagd om je uit te schrijven van de mailinglijst "
 "<strong t-out=\"object.name or ''\"/>.\n"
 "                <br/><br/>\n"
-"                Klik op de volgende link om dit te bevestigen: <strong t-if="
-"\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-out="
-"\"ctx['token_url'] or ''\"/></a></strong>.\n"
+"                Klik op de volgende link om dit te bevestigen: <strong t-"
+"if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-"
+"out=\"ctx['token_url'] or ''\"/></a></strong>.\n"
 "                <br/><br/>\n"
 "                Was dit niet de bedoeling? Geen zorgen, negeer dit bericht "
 "dan gewoon.\n"
@@ -130,10 +130,10 @@ msgid ""
 msgstr ""
 "<div>\n"
 "                <p>Hallo <t t-out=\"object.partner_id.name or ''\"/>,</p>\n"
-"                <p>Hieronder vind je de richtlijnen van de <t t-out="
-"\"object.mail_group_id.name\"/> mailinglijst.</p>\n"
-"                <p><t t-out="
-"\"object.mail_group_id.moderation_guidelines_msg or ''\"/></p>\n"
+"                <p>Hieronder vind je de richtlijnen van de <t t-"
+"out=\"object.mail_group_id.name\"/> mailinglijst.</p>\n"
+"                <p><t t-out=\"object.mail_group_id.moderation_guidelines_msg "
+"or ''\"/></p>\n"
 "            </div>\n"
 "        "
 
@@ -674,7 +674,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/mail_group/controllers/portal.py:0
 msgid "Groups"
-msgstr ""
+msgstr "Groepen"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation_guidelines_msg
@@ -1416,7 +1416,7 @@ msgstr ""
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_notify_moderation
 msgid "Thank you!"
-msgstr "Dank je!"
+msgstr "Bedankt!"
 
 #. module: mail_group
 #. odoo-python
@@ -1460,9 +1460,9 @@ msgid ""
 "email that does not reply to an existing record will cause the creation of a "
 "new record of this model (e.g. a Project Task)"
 msgstr ""
-"Het model waar deze alias bijhoort. Iedere inkomende e-mail dat niet bij een "
-"bestaande regel hoort zal leiden tot het aanmaken van een nieuwe regel in "
-"dit model (Bijv. een projecttaak)."
+"Het model (soort Odoo-Document) waar deze alias bijhoort. Iedere inkomende e-"
+"mail die niet bij een bestaande regel hoort zal leiden tot het aanmaken van "
+"een nieuwe regel in dit model (bv. een projecttaak)"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_name
@@ -1470,8 +1470,8 @@ msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
 msgstr ""
-"De naam van de e-mailalias, bijvoorbeeld: 'vacature' als je alle e-mails van "
-"vacature@uwbedrijf.nl wilt afvangen."
+"De naam van de e-mailalias, bv. 'vacature' als je alle mails van "
+"<vacature@jouwbedrijf.com> wilt opvangen"
 
 #. module: mail_group
 #. odoo-python
@@ -1584,11 +1584,6 @@ msgid "You have messages to moderate, please go for the proceedings."
 msgstr "Je hebt berichten om te modereren, ga alsjeblieft voor de procedure."
 
 #. module: mail_group
-#: model_terms:ir.ui.view,arch_db:mail_group.mail_group_footer
-msgid "_______________________________________________"
-msgstr "_______________________________________________________________"
-
-#. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "alias"
 msgstr "alias"
@@ -1682,6 +1677,9 @@ msgstr "afgemeld van"
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
 msgid "your email..."
 msgstr "je e-mail..."
+
+#~ msgid "_______________________________________________"
+#~ msgstr "_______________________________________________________________"
 
 #~ msgid "Group By"
 #~ msgstr "Groeperen op"

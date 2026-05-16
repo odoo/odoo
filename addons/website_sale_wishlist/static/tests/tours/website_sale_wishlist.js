@@ -1,5 +1,6 @@
 import { rpc } from "@web/core/network/rpc";
 import { registry } from "@web/core/registry";
+import { delay } from "@web/core/utils/concurrency";
 
 registry.category("web_tour.tours").add('shop_wishlist', {
     url: '/shop?search=Customizable Desk',
@@ -21,6 +22,11 @@ registry.category("web_tour.tours").add('shop_wishlist', {
         {
             content: "remove first item in whishlist",
             trigger: '.o_wish_rm:first',
+            run: "click",
+        },
+        {
+            content: "go back to the store",
+            trigger: "#empty-wishlist-message a[href='/shop']",
             run: "click",
             expectUnloadPage: true,
         },
@@ -103,8 +109,8 @@ registry.category("web_tour.tours").add('shop_wishlist', {
             run: "click",
         },
         {
-            content: "Clicking on the Continue Shopping",
-            trigger: "button:contains(\"Continue Shopping\")",
+            content: "Clicking on the Add to cart button",
+            trigger: "button[name='website_sale_product_configurator_continue_button']",
             run: "click",
             expectUnloadPage: true,
         },
@@ -191,7 +197,10 @@ registry.category("web_tour.tours").add('shop_wishlist', {
         {
             content: "Select Bottle with second variant from /product",
             trigger: "input.js_variant_change[data-value-name=blue]:not(:visible)",
-            run: "click",
+            run: async (actions) => {
+                await delay(1500);
+                await actions.click();
+            },
         },
         {
             trigger: "#product_detail .o_add_wishlist_dyn:not(.disabled)",
@@ -204,7 +213,10 @@ registry.category("web_tour.tours").add('shop_wishlist', {
         {
             content: "Select Bottle with third variant from /product",
             trigger: "input.js_variant_change[data-value-name=black]:not(:visible)",
-            run: "click",
+            run: async (actions) => {
+                await delay(1500);
+                await actions.click();
+            },
         },
         {
             trigger: "#product_detail .o_add_wishlist_dyn:not(.disabled)",
@@ -421,6 +433,11 @@ registry.category("web_tour.tours").add('shop_wishlist', {
         {
             content: "Remove the product from the wishlist",
             trigger: '.o_wish_rm',
+            run: "click",
+        },
+        {
+            content: "go back to the store",
+            trigger: "#empty-wishlist-message a[href='/shop']",
             run: "click",
             expectUnloadPage: true,
         },

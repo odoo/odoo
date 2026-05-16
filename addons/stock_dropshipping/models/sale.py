@@ -43,7 +43,8 @@ class SaleOrderLine(models.Model):
         # People without purchase rights should be able to do this operation
         purchase_lines_sudo = self.sudo().purchase_line_ids
         # We make sure that it's not a kit with dropshipped components
-        if self.product_id == purchase_lines_sudo.product_id and purchase_lines_sudo.filtered(lambda r: r.state != 'cancel'):
+        if any(pol._is_dropshipped() and pol.state != 'cancel' for pol in purchase_lines_sudo) and\
+            self.product_id == purchase_lines_sudo.product_id:
             qty = 0.0
             for po_line in purchase_lines_sudo.filtered(lambda r: r.state != 'cancel'):
                 qty += po_line.product_uom_id._compute_quantity(po_line.product_qty, self.product_uom_id, rounding_method='HALF-UP')

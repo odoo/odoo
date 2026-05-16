@@ -32,7 +32,7 @@ class IrAttachment(models.Model):
     _cloud_storage_google_url_pattern = re.compile(r'^https://storage\.googleapis\.com/(?P<bucket_name>[\w\-.]+)/(?P<blob_name>[^?]+)$')
 
     def _get_cloud_storage_google_info(self):
-        match = self._cloud_storage_google_url_pattern.match(self.url)
+        match = self._cloud_storage_google_url_pattern.fullmatch(self.url or '')
         if not match:
             raise ValidationError(self.env._('%s is not a valid Google Cloud Storage URL.', self.url))
         return {

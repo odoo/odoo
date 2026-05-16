@@ -4,13 +4,14 @@
 #
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
 # "Kwanghee Park (kwpa)" <kwpa@odoo.com>, 2025.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:39+0000\n"
-"PO-Revision-Date: 2025-10-14 10:45+0000\n"
-"Last-Translator: \"Kwanghee Park (kwpa)\" <kwpa@odoo.com>\n"
+"POT-Creation-Date: 2026-04-10 18:39+0000\n"
+"PO-Revision-Date: 2025-11-12 13:10+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Korean <https://translate.odoo.com/projects/odoo-19/"
 "sms_twilio/ko/>\n"
 "Language: ko\n"
@@ -24,30 +25,25 @@ msgstr ""
 #. odoo-python
 #: code:addons/sms_twilio/wizard/sms_twilio_account_manage.py:0
 msgid "%(failure_type)s: %(failure_reason)s"
-msgstr ""
+msgstr "%(failure_type)s: %(failure_reason)s"
 
 #. module: sms_twilio
 #. odoo-python
 #: code:addons/sms_twilio/tools/sms_api.py:0
 msgid "'To' and 'From' numbers cannot be the same"
-msgstr ""
-
-#. module: sms_twilio
-#: model_terms:ir.ui.view,arch_db:sms_twilio.sms_twilio_account_manage_view_form
-msgid "+1 555-123-4567"
-msgstr "+1 555-123-4567"
+msgstr "'발신자' 번호와 ‘수신자’ 번호는 동일할 수 없습니다"
 
 #. module: sms_twilio
 #. odoo-python
 #: code:addons/sms_twilio/tools/sms_api.py:0
 msgid "A 'From' number is required to send a message"
-msgstr ""
+msgstr "메시지를 전송하려면 '보내는 사람' 번호가 있어야 합니다"
 
 #. module: sms_twilio
 #. odoo-python
 #: code:addons/sms_twilio/tools/sms_api.py:0
 msgid "A 'To' phone number is required"
-msgstr ""
+msgstr "'받는 사람' 전화번호가 있어야 합니다"
 
 #. module: sms_twilio
 #: model_terms:ir.ui.view,arch_db:sms_twilio.sms_twilio_account_manage_view_form
@@ -64,7 +60,7 @@ msgstr "계정 SID"
 #. odoo-python
 #: code:addons/sms_twilio/wizard/sms_twilio_account_manage.py:0
 msgid "An error occurred while fetching the numbers."
-msgstr ""
+msgstr "번호를 가져오는 동안 오류가 발생했습니다."
 
 #. module: sms_twilio
 #: model:ir.model.fields,field_description:sms_twilio.field_res_company__sms_twilio_auth_token
@@ -76,7 +72,7 @@ msgstr "인증 토큰"
 #: model:ir.model.fields.selection,name:sms_twilio.selection__mail_notification__failure_type__twilio_authentication
 #: model:ir.model.fields.selection,name:sms_twilio.selection__sms_sms__failure_type__twilio_authentication
 msgid "Authentication Error\""
-msgstr ""
+msgstr "인증 오류\""
 
 #. module: sms_twilio
 #: model:ir.model,name:sms_twilio.model_res_company
@@ -98,7 +94,7 @@ msgstr "환경설정"
 #. module: sms_twilio
 #: model_terms:ir.ui.view,arch_db:sms_twilio.res_config_settings_view_form
 msgid "Configure Twilio Account"
-msgstr ""
+msgstr "Twilio 계정 환경설정"
 
 #. module: sms_twilio
 #: model:ir.model.fields,field_description:sms_twilio.field_sms_twilio_number__country_id
@@ -153,7 +149,7 @@ msgstr "표시명"
 #. odoo-python
 #: code:addons/sms_twilio/wizard/sms_twilio_account_manage.py:0
 msgid "Error: %s"
-msgstr ""
+msgstr "오류: %s"
 
 #. module: sms_twilio
 #: model:ir.model.fields,field_description:sms_twilio.field_sms_sms__failure_type
@@ -169,7 +165,7 @@ msgstr "실패 유형"
 #: model:ir.model.fields.selection,name:sms_twilio.selection__mail_notification__failure_type__twilio_from_to
 #: model:ir.model.fields.selection,name:sms_twilio.selection__sms_sms__failure_type__twilio_from_to
 msgid "From / To identic"
-msgstr ""
+msgstr "발신자 / 수신자 동일"
 
 #. module: sms_twilio
 #: model:ir.model.fields,field_description:sms_twilio.field_mail_notification__id
@@ -187,7 +183,7 @@ msgstr "ID"
 #: model:ir.model.fields.selection,name:sms_twilio.selection__mail_notification__failure_type__twilio_callback
 #: model:ir.model.fields.selection,name:sms_twilio.selection__sms_sms__failure_type__twilio_callback
 msgid "Incorrect callback URL"
-msgstr ""
+msgstr "잘못된 콜백 URL"
 
 #. module: sms_twilio
 #. odoo-python
@@ -195,7 +191,7 @@ msgstr ""
 msgid ""
 "Invalid Twilio Account SID: must only contain alphanumeric characters after "
 "'AC'."
-msgstr ""
+msgstr "잘못된 Twilio 계정 SID: 'AC' 뒤에는 영숫자만 올 수 있습니다."
 
 #. module: sms_twilio
 #. odoo-python
@@ -203,6 +199,8 @@ msgstr ""
 msgid ""
 "Invalid Twilio Account SID: must start with 'AC' and be 34 characters long."
 msgstr ""
+"잘못된 Twilio 계정 SID: 반드시 'AC' 로 시작해야 하며 글자 수는 34자를 넘을 "
+"수 없습니다."
 
 #. module: sms_twilio
 #: model:ir.model.fields,field_description:sms_twilio.field_sms_twilio_account_manage__write_uid
@@ -237,7 +235,7 @@ msgstr "메시지 알림"
 #: model:ir.model.fields.selection,name:sms_twilio.selection__mail_notification__failure_type__twilio_from_missing
 #: model:ir.model.fields.selection,name:sms_twilio.selection__sms_sms__failure_type__twilio_from_missing
 msgid "Missing From Number"
-msgstr ""
+msgstr "발신자 번호 누락"
 
 #. module: sms_twilio
 #: model_terms:ir.ui.view,arch_db:sms_twilio.sms_twilio_account_manage_view_form
@@ -246,6 +244,9 @@ msgid ""
 "                            <i class=\"fa fa-external-link\" aria-"
 "hidden=\"true\"/>"
 msgstr ""
+"도움이 필요하신가요?\n"
+"                            <i class=\"fa fa-external-link\" aria-"
+"hidden=\"true\"/>"
 
 #. module: sms_twilio
 #: model:ir.model.fields,field_description:sms_twilio.field_res_company__sms_twilio_number_ids
@@ -261,13 +262,13 @@ msgstr "발신 SMS"
 #. module: sms_twilio
 #: model_terms:ir.ui.view,arch_db:sms_twilio.sms_twilio_account_manage_view_form
 msgid "Phone Numbers"
-msgstr ""
+msgstr "전화번호"
 
 #. module: sms_twilio
 #. odoo-python
 #: code:addons/sms_twilio/wizard/sms_twilio_account_manage.py:0
 msgid "Please set the number to which you want to send a test SMS."
-msgstr ""
+msgstr "테스트 SMS를 전송하려는 번호를 지정하세요."
 
 #. module: sms_twilio
 #: model_terms:ir.ui.view,arch_db:sms_twilio.sms_twilio_account_manage_view_form
@@ -289,7 +290,7 @@ msgstr "SMS Twilio 연결 마법사"
 #. module: sms_twilio
 #: model:ir.model,name:sms_twilio.model_sms_composer
 msgid "Send SMS Wizard"
-msgstr ""
+msgstr "SMS 전송 마법사"
 
 #. module: sms_twilio
 #: model_terms:ir.ui.view,arch_db:sms_twilio.sms_twilio_account_manage_view_form
@@ -299,12 +300,12 @@ msgstr "테스트용 SMS 발송"
 #. module: sms_twilio
 #: model:ir.model.fields.selection,name:sms_twilio.selection__res_company__sms_provider__iap
 msgid "Send via Odoo"
-msgstr ""
+msgstr "Odoo를 통해 보내기"
 
 #. module: sms_twilio
 #: model:ir.model.fields.selection,name:sms_twilio.selection__res_company__sms_provider__twilio
 msgid "Send via Twilio"
-msgstr ""
+msgstr "Twilio를 통해 보내기"
 
 #. module: sms_twilio
 #: model:ir.model.fields,field_description:sms_twilio.field_sms_twilio_number__sequence
@@ -314,7 +315,7 @@ msgstr "순서"
 #. module: sms_twilio
 #: model:ir.model.fields,field_description:sms_twilio.field_sms_twilio_account_manage__test_number
 msgid "Test Number"
-msgstr ""
+msgstr "테스트용 번호"
 
 #. module: sms_twilio
 #: model:ir.model.fields,help:sms_twilio.field_sms_twilio_number__country_code
@@ -322,6 +323,8 @@ msgid ""
 "The ISO country code in two chars. \n"
 "You can use this field for quick search."
 msgstr ""
+"ISO 국가 코드는 두 개의 문자로 구성됩니다.\n"
+"이 필드는 빠른 검색에 활용할 수 있습니다."
 
 #. module: sms_twilio
 #. odoo-python
@@ -333,19 +336,19 @@ msgstr "SMS가 %s부터 발송되었습니다"
 #. odoo-python
 #: code:addons/sms_twilio/tools/sms_api.py:0
 msgid "The number you're trying to reach is not correctly formatted"
-msgstr ""
+msgstr "수신자 번호 형식이 올바르지 않습니다"
 
 #. module: sms_twilio
 #. odoo-python
 #: code:addons/sms_twilio/wizard/sms_twilio_account_manage.py:0
 msgid "This is a test SMS from Odoo"
-msgstr ""
+msgstr "Odoo에서 전송한 테스트 SMS입니다"
 
 #. module: sms_twilio
 #. odoo-python
 #: code:addons/sms_twilio/tools/sms_api.py:0
 msgid "Trial Account Limitation"
-msgstr ""
+msgstr "체험 계정 한도"
 
 #. module: sms_twilio
 #. odoo-python
@@ -363,7 +366,7 @@ msgstr "Twilio 번호"
 #. odoo-python
 #: code:addons/sms_twilio/wizard/sms_twilio_account_manage.py:0
 msgid "Twilio SMS"
-msgstr ""
+msgstr "Twilio SMS"
 
 #. module: sms_twilio
 #: model_terms:ir.ui.view,arch_db:sms_twilio.sms_twilio_account_manage_view_form
@@ -380,7 +383,7 @@ msgstr "Twilio SMS SID"
 #. odoo-python
 #: code:addons/sms_twilio/tools/sms_api.py:0
 msgid "Twilio StatusCallback URL is incorrect"
-msgstr ""
+msgstr "Twilio 상태 콜백 URL이 잘못되었습니다"
 
 #. module: sms_twilio
 #. odoo-python
@@ -392,23 +395,26 @@ msgstr "알 수 없는 오류가 발생했습니다. Odoo 고객 지원팀에 �
 #. odoo-python
 #: code:addons/sms_twilio/tools/sms_api.py:0
 msgid "Unknown failure at sending, please contact Odoo support"
-msgstr ""
+msgstr "전송 중 알 수 없는 오류가 발생했습니다. Odoo 고객 지원팀에 문의하세요"
 
 #. module: sms_twilio
 #. odoo-python
 #: code:addons/sms_twilio/tools/sms_api.py:0
 msgid "Unverified recipient on Trial Account"
-msgstr ""
+msgstr "테스트용 계정 미확인 수신자"
 
 #. module: sms_twilio
 #: model_terms:ir.ui.view,arch_db:sms_twilio.sms_twilio_account_manage_view_form
 msgid "Update Account"
-msgstr ""
+msgstr "계정 업데이트"
 
 #. module: sms_twilio
 #: model_terms:ir.ui.view,arch_db:sms_twilio.sms_twilio_account_manage_view_form
 msgid "abcde12345abcde12345abcde12345ab"
 msgstr "abcde12345abcde12345abcde12345ab"
+
+#~ msgid "+1 555-123-4567"
+#~ msgstr "+1 555-123-4567"
 
 #~ msgid ""
 #~ "Any number here that is not on Twilio will be deleted and the ordering "

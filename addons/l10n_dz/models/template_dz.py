@@ -34,5 +34,16 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_purchase_tax_id': 'l10n_dz_vat_purchase_19',
                 'expense_account_id': 'l10n_dz_600',
                 'income_account_id': 'l10n_dz_700',
+                'account_stock_journal_id': 'inventory_valuation',
+                'account_stock_valuation_id': 'l10n_dz_31',
+            },
+        }
+
+    @template('dz', 'account.account')
+    def _get_dz_account_account(self):
+        return {
+            'l10n_dz_31': {
+                'account_stock_expense_id': 'l10n_dz_601',
+                'account_stock_variation_id': 'l10n_dz_603',
             },
         }

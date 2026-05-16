@@ -6,6 +6,7 @@ import { BaseOptionComponent } from "@html_builder/core/utils";
 
 class TextAlignmentOptionPlugin extends Plugin {
     static id = "textAlignmentOption";
+    /** @type {import("plugins").BuilderResources} */
     resources = {
         builder_options: [withSequence(TEXT_ALIGNMENT, TextAlignmentOption)],
     };

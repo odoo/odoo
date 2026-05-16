@@ -4,9 +4,14 @@ import { isImageUrl } from "@html_editor/utils/url";
 import { Plugin } from "@html_editor/plugin";
 import { childNodeIndex } from "@html_editor/utils/position";
 
+/**
+ * @typedef {((text: string, url: string) => void | true)[]} paste_url_overrides
+ */
+
 export class LinkPastePlugin extends Plugin {
     static id = "linkPaste";
     static dependencies = ["link", "clipboard", "selection", "dom", "history"];
+    /** @type {import("plugins").EditorResources} */
     resources = {
         before_paste_handlers: this.selectFullySelectedLink.bind(this),
         paste_text_overrides: this.handlePasteText.bind(this),

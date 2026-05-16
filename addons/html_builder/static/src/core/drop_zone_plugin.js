@@ -4,6 +4,30 @@ import { isElement } from "@html_editor/utils/dom_info";
 import { closestElement } from "@html_editor/utils/dom_traversal";
 import { _t } from "@web/core/l10n/translation";
 
+/** @typedef {import("plugins").CSSSelector} CSSSelector */
+/**
+ * @typedef {{
+ *     selector: CSSSelector;
+ *     exclude: CSSSelector;
+ *     dropIn: CSSSelector;
+ *     dropNear: CSSSelector;
+ *     excludeNearParent: CSSSelector;
+ * }} DropzoneSelector
+ *
+ * @typedef { Object } DropZoneShared
+ * @property { DropZonePlugin['activateDropzones'] } activateDropzones
+ * @property { DropZonePlugin['removeDropzones'] } removeDropzones
+ * @property { DropZonePlugin['getDropRootElement'] } getDropRootElement
+ * @property { DropZonePlugin['getSelectorSiblings'] } getSelectorSiblings
+ * @property { DropZonePlugin['getSelectorChildren'] } getSelectorChildren
+ * @property { DropZonePlugin['getSelectors'] } getSelectors
+ */
+
+/**
+ * @typedef {DropzoneSelector[]} dropzone_selector
+ * @typedef {((el: HTMLElement) => boolean)[]} filter_for_sibling_dropzone_predicates
+ */
+
 export class DropZonePlugin extends Plugin {
     static id = "dropzone";
     static dependencies = ["history", "setup_editor_plugin"];
@@ -15,6 +39,7 @@ export class DropZonePlugin extends Plugin {
         "getSelectorChildren",
         "getSelectors",
     ];
+    /** @type {import("plugins").BuilderResources} */
     resources = {
         savable_mutation_record_predicates: (record) => {
             if (record.type === "childList") {
@@ -98,7 +123,7 @@ export class DropZonePlugin extends Plugin {
                     selectorSiblings.push(
                         ...this.getSelectorSiblings(editableAreaEls, rootEl, {
                             selector: dropNear,
-                            excludeNearParent,
+                            excludeParent: excludeNearParent,
                         })
                     );
                 }
@@ -122,6 +147,10 @@ export class DropZonePlugin extends Plugin {
 
         // Prevent dropping an element into another one.
         // (e.g. ToC inside another ToC)
+        const hasForm = snippetEl.matches("form") || !!snippetEl.querySelector("form");
+        if (hasForm && !selectorExcludeAncestor.includes("form")) {
+            selectorExcludeAncestor.push("form");
+        }
         if (selectorExcludeAncestor.length) {
             const excludeAncestor = selectorExcludeAncestor.join(",");
             selectorSiblings = selectorSiblings.filter((el) => !el.closest(excludeAncestor));

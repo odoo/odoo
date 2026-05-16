@@ -7,6 +7,15 @@ import { _t } from "@web/core/l10n/translation";
 import { baseContainerGlobalSelector } from "@html_editor/utils/base_container";
 import { getDeepestPosition, isContentEditable } from "@html_editor/utils/dom_info";
 
+/** @typedef {import("plugins").CSSSelector} CSSSelector */
+
+/**
+ * @typedef {CSSSelector[]} move_node_blacklist_selectors
+ * @typedef {CSSSelector[]} move_node_whitelist_selectors
+ * @typedef {((movableElement: HTMLElement) => void)[]} set_movable_element_handlers
+ * @typedef {(() => void)[]} unset_movable_element_handlers
+ */
+
 const WIDGET_CONTAINER_WIDTH = 25;
 const WIDGET_MOVE_SIZE = 20;
 
@@ -15,6 +24,7 @@ const ALLOWED_ELEMENTS = "h1, h2, h3, p, hr, pre, blockquote, li";
 export class MoveNodePlugin extends Plugin {
     static id = "movenode";
     static dependencies = ["baseContainer", "selection", "history", "position", "localOverlay"];
+    /** @type {import("plugins").EditorResources} */
     resources = {
         layout_geometry_change_handlers: () => {
             if (this.currentMovableElement) {
@@ -151,16 +161,22 @@ export class MoveNodePlugin extends Plugin {
         }
 
         const visibleElements = [...this.visibleMovableElements];
-        // Prevent layout thrashing by computing all the rects in advance.
+        // Prevent layout thrashing by computing all the rects and styles in
+        // advance.
         const elementRects = visibleElements.map((element) => element.getBoundingClientRect());
+        const elementStyles = visibleElements.map((element) => {
+            const style = getComputedStyle(element);
+            return {
+                marginTop: parseInt(style.marginTop, 10) || 0,
+                marginBottom: parseInt(style.marginBottom, 10) || 0,
+            };
+        });
         for (const index in visibleElements) {
             const element = visibleElements[index];
             const elementRect = elementRects[index];
             const hookElement = this.elementHookMap.get(element);
 
-            const style = getComputedStyle(element);
-            const marginTop = parseInt(style.marginTop, 10) || 0;
-            const marginBottom = parseInt(style.marginBottom, 10) || 0;
+            const { marginTop, marginBottom } = elementStyles[index];
             let hookBox;
             if (element.tagName === "HR") {
                 hookBox = new DOMRect(

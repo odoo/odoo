@@ -103,9 +103,10 @@ class StockRule(models.Model):
                     new_productions_values_by_company[procurement.company_id.id]['procurements'].append(procurement)
                     procurement_qty -= batch_size
             else:
+                procurement_product_uom_qty = procurement.product_uom._compute_quantity(procurement.product_qty, procurement.product_id.uom_id)
                 self.env['change.production.qty'].sudo().with_context(skip_activity=True).create({
                     'mo_id': mo.id,
-                    'product_qty': mo.product_id.uom_id._compute_quantity((mo.product_uom_qty + procurement.product_qty), mo.product_uom_id)
+                    'product_qty': mo.product_id.uom_id._compute_quantity((mo.product_uom_qty + procurement_product_uom_qty), mo.product_uom_id),
                 }).change_prod_qty()
 
         for company_id in new_productions_values_by_company:
@@ -153,6 +154,8 @@ class StockRule(models.Model):
             ('user_id', '=', False),
             ('reference_ids', '=', procurement.values.get('reference_ids', self.env['stock.reference']).ids),
         )
+        if production_group_id := procurement.values.get('production_group_id'):
+            domain += (('production_group_id.parent_ids', '=', production_group_id),)
         if procurement.values.get('orderpoint_id'):
             procurement_date = datetime.combine(
                 fields.Date.to_date(procurement.values['date_planned']) - relativedelta(days=int(bom.produce_delay)),

@@ -6,13 +6,14 @@
 # Martin Trigaux, 2022
 # Ryoko Tsuda <ryoko@quartile.co>, 2023
 # "Dylan Kiss (dyki)" <dyki@odoo.com>, 2025.
-# "Junko Augias (juau)" <juau@odoo.com>, 2025.
+# "Junko Augias (juau)" <juau@odoo.com>, 2025, 2026.
+# Weblate <noreply-mt-weblate@weblate.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-08 18:37+0000\n"
-"PO-Revision-Date: 2025-10-31 08:42+0000\n"
+"POT-Creation-Date: 2026-01-25 18:36+0000\n"
+"PO-Revision-Date: 2026-01-23 07:31+0000\n"
 "Last-Translator: \"Junko Augias (juau)\" <juau@odoo.com>\n"
 "Language-Team: Japanese <https://translate.odoo.com/projects/odoo-19/"
 "barcodes/ja/>\n"
@@ -21,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.12.2\n"
+"X-Generator: Weblate 5.14.3\n"
 
 #. module: barcodes
 #. odoo-python
@@ -43,13 +44,13 @@ msgid ""
 "                                if the regular expression matches a prefix "
 "of the barcode."
 msgstr ""
-"<i>バーコード表現規則</i> はバーコードがどのように認識され、分類されるかを定"
-"義します。\n"
-"                                バーコードスキャン時に、パターンが合致する規"
-"則のうち <i>一番始めのもの</i> を採用します。\n"
+"<i>バーコード表現ルール</i> はバーコードがどのように認識され、分類されるかを"
+"定義します。\n"
+"                                バーコードスキャン時に、パターンが合致する"
+"ルールのうち <i>一番始めのもの</i> を採用します。\n"
 "                                パターン構文は正規表現です。正規表現がバー"
 "コードのプレフィクスに一致することをもち、\n"
-"                                バーコードが規則に合致すると判断します。"
+"                                バーコードがルールに合致すると判断します。"
 
 #. module: barcodes
 #: model_terms:ir.actions.act_window,help:barcodes.action_barcode_nomenclature_form
@@ -57,13 +58,13 @@ msgid ""
 "A barcode nomenclature defines how the point of sale identify and interprets "
 "barcodes"
 msgstr ""
-"バーコード表現規則は、販売時点管理がどのようにバーコードを識別し解釈するかを"
-"定義します"
+"バーコード表現ルールは、販売時点管理がどのようにバーコードを識別し解釈するか"
+"を定義します"
 
 #. module: barcodes
 #: model_terms:ir.actions.act_window,help:barcodes.action_barcode_nomenclature_form
 msgid "Add a new barcode nomenclature"
-msgstr "新しいバーコード表現規則を追加"
+msgstr "新しいバーコード表現ルールを追加"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__alias
@@ -79,12 +80,12 @@ msgstr "常に可能"
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__name
 msgid "An internal identification for this barcode nomenclature rule"
-msgstr "このバーコード表現規則の内部識別"
+msgstr "このバーコード表現ルールの内部識別"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_nomenclature__name
 msgid "An internal identification of the barcode nomenclature"
-msgstr "このバーコード表現規則の内部識別"
+msgstr "このバーコード表現ルールの内部識別"
 
 #. module: barcodes
 #: model:ir.model.fields.selection,name:barcodes.selection__barcode_rule__encoding__any
@@ -114,13 +115,13 @@ msgstr "バーコードイベントMixin"
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__barcode_nomenclature_id
 #: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
 msgid "Barcode Nomenclature"
-msgstr "バーコード表現規則"
+msgstr "バーコード表現ルール"
 
 #. module: barcodes
 #: model:ir.actions.act_window,name:barcodes.action_barcode_nomenclature_form
 #: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_tree
 msgid "Barcode Nomenclatures"
-msgstr "バーコード表現規則"
+msgstr "バーコード表現ルール"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__pattern
@@ -131,7 +132,7 @@ msgstr "バーコードパターン"
 #: model:ir.model,name:barcodes.model_barcode_rule
 #: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_rule_form
 msgid "Barcode Rule"
-msgstr "バーコード規則"
+msgstr "バーコードルール"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcodes_barcode_events_mixin___barcode_scanned
@@ -142,7 +143,7 @@ msgstr "スキャンされたバーコード"
 #. odoo-javascript
 #: code:addons/barcodes/static/src/barcode_handlers.js:0
 msgid "Barcode: %(barcode)s"
-msgstr ""
+msgstr "バーコード: %(barcode)s"
 
 #. module: barcodes
 #: model:ir.model,name:barcodes.model_res_company
@@ -194,7 +195,7 @@ msgstr "エンコード"
 #. odoo-javascript
 #: code:addons/barcodes/static/src/components/manual_barcode.js:0
 msgid "Enter a barcode..."
-msgstr ""
+msgstr "バーコードを入力..."
 
 #. module: barcodes
 #: model:ir.model,name:barcodes.model_ir_http
@@ -217,6 +218,8 @@ msgid ""
 "In order to use barcodes.barcode_events_mixin, method on_barcode_scanned "
 "must be implemented"
 msgstr ""
+"barcodes.barcode_events_mixinを使用するにはon_barcode_scanned メソッドを実装"
+"する必要があります"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__write_uid
@@ -274,12 +277,12 @@ msgstr "もう一度スキャンして下さい。"
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__name
 msgid "Rule Name"
-msgstr "規則名"
+msgstr "ルール名"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__rule_ids
 msgid "Rules"
-msgstr "規則"
+msgstr "ルール"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__sequence
@@ -307,12 +310,12 @@ msgstr "バーコードマッチングパターン"
 #: code:addons/barcodes/models/barcode_rule.py:0
 msgid ""
 "The barcode pattern %(pattern)s does not lead to a valid regular expression."
-msgstr ""
+msgstr "バーコードパターン %(pattern)s は検証済の正規表現にはなりません。"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_nomenclature__rule_ids
 msgid "The list of barcode rules"
-msgstr "バーコード規則のリスト"
+msgstr "バーコードルールのリスト"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__alias
@@ -326,8 +329,8 @@ msgid ""
 "There is a syntax error in the barcode pattern %(pattern)s: a rule can only "
 "contain one pair of braces."
 msgstr ""
-"バーコードパターン%(pattern)sにシンタックスエラーがあります: 1 つの規則には中"
-"括弧を 1 組しか含めることができません。"
+"バーコードパターン%(pattern)sにシンタックスエラーがあります: 1 つのルールには"
+"中括弧を 1 組しか含めることができません。"
 
 #. module: barcodes
 #. odoo-python
@@ -353,8 +356,8 @@ msgid ""
 "This rule will apply only if the barcode is encoded with the specified "
 "encoding"
 msgstr ""
-"この規則は、バーコードが指定されたエンコーディングでエンコードされている場合"
-"にのみ適用されます"
+"このルールは、バーコードが指定されたエンコーディングでエンコードされている場"
+"合にのみ適用されます"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__type
@@ -369,8 +372,8 @@ msgid ""
 "one way or another when trying to match a rule with the other encoding."
 msgstr ""
 "UPCコードは、プレフィックスとしてゼロを付けてJAN/EANに変換できます。 この設定"
-"では、ある規則と他のエンコーディングを一致させるときにUPC /EANバーコードを自"
-"動的に変換するかどうかを決定します。"
+"では、あるルールと他のエンコーディングを一致させるときにUPC /EANバーコードを"
+"自動的に変換するかどうかを決定します。"
 
 #. module: barcodes
 #: model:ir.model.fields.selection,name:barcodes.selection__barcode_rule__encoding__upca
@@ -402,7 +405,8 @@ msgstr "不明なバーコードコマンド"
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__sequence
 msgid "Used to order rules such that rules with a smaller sequence match first"
 msgstr ""
-"より小さな付番規則が最初に一致するように規則を順序付けするために使用されます"
+"より小さな付番ルールが最初に一致するようにルールを順序付けするために使用され"
+"ます"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcodes_barcode_events_mixin___barcode_scanned
@@ -414,4 +418,4 @@ msgstr "最後にスキャンされたバーコードの値。"
 #: code:addons/barcodes/models/barcode_nomenclature.py:0
 msgid ""
 "You cannot delete '%(name)s' because it's the default barcode nomenclature."
-msgstr ""
+msgstr "%(name)s' はデフォルトのバーコード命名法であるため、削除できません。"

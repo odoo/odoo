@@ -206,7 +206,7 @@ class DeliveryCarrier(models.Model):
         if source._name == 'sale.order':
             products = source.order_line.product_id
         elif source._name == 'stock.picking':
-            products = source.move_ids.product_id
+            products = source.move_ids.with_prefetch().mapped('product_id')
         else:
             raise UserError(_("Invalid source document type"))
         return not self.must_have_tag_ids or any(
@@ -219,7 +219,7 @@ class DeliveryCarrier(models.Model):
         if source._name == 'sale.order':
             products = source.order_line.product_id
         elif source._name == 'stock.picking':
-            products = source.move_ids.product_id
+            products = source.move_ids.with_prefetch().mapped('product_id')
         else:
             raise UserError(_("Invalid source document type"))
         return not any(tag in products.all_product_tag_ids for tag in self.excluded_tag_ids)
@@ -453,22 +453,19 @@ class DeliveryCarrier(models.Model):
         self = self.sudo()
         order = order.sudo()
         total = weight = volume = quantity = wv = 0
-        total_delivery = 0.0
         for line in order.order_line:
             if line.state == 'cancel':
                 continue
-            if line.is_delivery:
-                total_delivery += line.price_total
             if not line.product_id or line.is_delivery:
                 continue
-            if line.product_id.type == "service":
+            if line.product_id.type in {"service", "combo"}:
                 continue
             qty = line.product_uom_id._compute_quantity(line.product_uom_qty, line.product_id.uom_id)
             weight += (line.product_id.weight or 0.0) * qty
             volume += (line.product_id.volume or 0.0) * qty
             wv += (line.product_id.weight or 0.0) * (line.product_id.volume or 0.0) * qty
             quantity += qty
-        total = (order.amount_total or 0.0) - total_delivery
+        total = order._compute_amount_total_without_delivery()
 
         total = self._compute_currency(order, total, 'pricelist_to_company')
         # weight is either,

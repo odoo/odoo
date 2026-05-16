@@ -45,7 +45,7 @@ class StockWarehouse(models.Model):
     def _compute_manufacture_to_resupply(self):
         for warehouse in self:
             manufacture_route = warehouse.manufacture_pull_id.route_id
-            warehouse.manufacture_to_resupply = bool(manufacture_route.product_selectable or manufacture_route.warehouse_ids.filtered(lambda w: w.id == warehouse.id))
+            warehouse.manufacture_to_resupply = warehouse.id in manufacture_route.warehouse_ids.ids
 
     def _inverse_manufacture_to_resupply(self):
         for warehouse in self:
@@ -312,10 +312,14 @@ class StockWarehouseOrderpoint(models.Model):
     @api.constrains('product_id')
     def check_product_is_not_kit(self):
         domain = [
-            '|', ('product_id', 'in', self.product_id.ids),
-                 '&', ('product_id', '=', False),
-                      ('product_tmpl_id', 'in', self.product_id.product_tmpl_id.ids),
-            ('type', '=', 'phantom'),
+            '&',
+                '|', ('product_id', 'in', self.product_id.ids),
+                    '&', ('product_id', '=', False),
+                        ('product_tmpl_id', 'in', self.product_id.product_tmpl_id.ids),
+                ('type', '=', 'phantom'),
+                '|',
+                    ('company_id', 'in', self.company_id.ids),
+                    ('company_id', '=', False),
         ]
         if self.env['mrp.bom'].search_count(domain, limit=1):
             raise ValidationError(_("A product with a kit-type bill of materials can not have a reordering rule."))

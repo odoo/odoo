@@ -850,8 +850,13 @@ class CalendarEvent(models.Model):
         current_attendees = self.filtered('active').attendee_ids
         skip_attendee_notification = self.env.context.get('skip_attendee_notification')
         if not skip_attendee_notification and 'partner_ids' in values:
-            # we send to all partners and not only the new ones
-            (current_attendees - previous_attendees)._notify_attendees(
+            # we send to all partners and not only the new ones, but ignore attendees
+            # added AFTER the stop/end date of the event
+            ignore_past_event_attendees = current_attendees.filtered(
+                lambda attendee: attendee.event_id.start < fields.Datetime.now()
+            )
+
+            (current_attendees - previous_attendees - ignore_past_event_attendees)._notify_attendees(
                 self.env.ref('calendar.calendar_template_meeting_invitation', raise_if_not_found=False),
                 force_send=True,
             )
@@ -1678,11 +1683,17 @@ class CalendarEvent(models.Model):
         return details
 
     def _get_customer_description(self):
-        """:return (html): Sanitized HTML description for customer to include in calendar exports"""
+        """
+        :rtype: str
+        :returns: html Sanitized HTML description for customer to include in calendar exports
+        """
         return html_sanitize(self.description) if not is_html_empty(self.description) else ''
 
     def _get_customer_summary(self):
-        """:return (str): The summary to include in calendar exports"""
+        """
+        :rtype: str
+        :returns: The summary to include in calendar exports
+        """
         return self.name or ''
 
     @api.model

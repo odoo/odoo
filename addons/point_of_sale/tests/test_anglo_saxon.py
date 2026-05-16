@@ -66,9 +66,9 @@ class TestAngloSaxonCommon(AccountTestInvoicingCommon):
 
 
 @tagged('post_install', '-at_install')
-@skip('Temporary to fast merge new valuation')
 class TestAngloSaxonFlow(TestAngloSaxonCommon):
 
+    @skip('Temporary to fast merge new valuation')
     def test_create_account_move_line(self):
         # This test will check that the correct journal entries are created when a product in real time valuation
         # is sold in a company using anglo-saxon
@@ -151,8 +151,8 @@ class TestAngloSaxonFlow(TestAngloSaxonCommon):
             'inventory_quantity': 10.0,
             'location_id': self.warehouse.lot_stock_id.id,
         }).action_apply_inventory()
-        self.assertEqual(self.product.value_svl, 30, "Value should be (5*5 + 5*1) = 30")
-        self.assertEqual(self.product.quantity_svl, 10)
+        self.assertEqual(self.product.total_value, 30, "Value should be (5*5 + 5*1) = 30")
+        self.assertEqual(self.product.virtual_available, 10)
 
 
         self.pos_config.open_ui()
@@ -182,6 +182,7 @@ class TestAngloSaxonFlow(TestAngloSaxonCommon):
 
         return self.PosOrder.create(pos_order_values)
 
+    @skip('Temporary to fast merge new valuation')
     def test_fifo_valuation_no_invoice(self):
         """Register a payment and validate a session after selling a fifo
         product without making an invoice for the customer"""
@@ -231,6 +232,39 @@ class TestAngloSaxonFlow(TestAngloSaxonCommon):
         self.assertEqual(pos_order_pos0.account_move.journal_id, self.pos_config.invoice_journal_id)
         self.assertEqual(line.debit, 27, 'As it is a fifo product, the move\'s value should be 5*5 + 2*1')
 
+    def test_fifo_valuation_with_invoice_when_pos_customer_is_delivery_type(self):
+        """Register a payment and validate a session after selling a fifo
+        product and make an invoice for the customer when a delivery address
+        has been set as the customer on the POS order"""
+        delivery_address = self.partner.copy({
+            'type': 'delivery',
+            'parent_id': self.partner.id,
+        })
+        pos_order_pos0 = self._prepare_pos_order()
+        pos_order_pos0.partner_id = delivery_address.id
+
+        context_make_payment = {"active_ids": [pos_order_pos0.id], "active_id": pos_order_pos0.id}
+        self.pos_make_payment_0 = self.PosMakePayment.with_context(context_make_payment).create({
+            'amount': 7 * 450.0,
+            'payment_method_id': self.cash_payment_method.id,
+        })
+
+        # register the payment
+        context_payment = {'active_id': pos_order_pos0.id}
+        self.pos_make_payment_0.with_context(context_payment).check()
+
+        # Create the customer invoice
+        pos_order_pos0.action_pos_order_invoice()
+
+        # check that the invoice address on the invoice is the parent_id of the delivery address
+        self.assertEqual(pos_order_pos0.partner_id.parent_id, pos_order_pos0.account_move.partner_id)
+
+        # check the anglo saxon move lines
+        line = pos_order_pos0.account_move.line_ids.filtered(lambda l: l.debit and l.account_id == self.category.property_account_expense_categ_id)
+        self.assertEqual(pos_order_pos0.account_move.journal_id, self.pos_config.invoice_journal_id)
+        self.assertEqual(line.debit, 27, 'As it is a fifo product, the move\'s value should be 5*5 + 2*1')
+
+    @skip('Temporary to fast merge new valuation')
     def test_cogs_with_ship_later_no_invoicing(self):
         # This test will check that the correct journal entries are created when a product in real time valuation
         # is sold using the ship later option and no invoice is created in a company using anglo-saxon
@@ -310,6 +344,7 @@ class TestAngloSaxonFlow(TestAngloSaxonCommon):
         self.assertEqual(aml_output[0].debit, 100.0, "Cost of Good Sold entry missing or mismatching")
         self.assertEqual(aml_output[0].credit, 0.0, "Cost of Good Sold entry missing or mismatching")
 
+    @skip('Temporary to fast merge new valuation')
     def test_action_pos_order_invoice(self):
         self.company.point_of_sale_update_stock_quantities = 'closing'
 
@@ -349,6 +384,50 @@ class TestAngloSaxonFlow(TestAngloSaxonCommon):
         stock_output_amls = related_amls.filtered_domain([('account_id', '=', stock_output_account.id)])
 
         self.assertTrue(all(stock_output_amls.mapped('reconciled')))
+
+    def test_no_duplicate_picking_on_repeated_invoice_action(self):
+        """Calling action_pos_order_invoice multiple times (e.g. a backend user
+        clicking 'Customer Invoice' on an already-invoiced order) must not
+        create more than one stock picking for the same POS order.
+
+        Regression test for the guard added to _create_order_picking:
+        the condition at the top of action_pos_order_invoice (anglo_saxon +
+        update_stock_at_closing + session open) would previously call
+        _create_order_picking unconditionally, producing one extra picking on
+        every repeated click.
+        """
+        self.company.point_of_sale_update_stock_quantities = 'closing'
+
+        self.pos_config.open_ui()
+        order = self.PosOrder.create({
+            'company_id': self.company.id,
+            'partner_id': self.partner.id,
+            'session_id': self.pos_config.current_session_id.id,
+            'lines': [(0, 0, {
+                'product_id': self.product.id,
+                'price_unit': 450,
+                'qty': 1.0,
+                'price_subtotal': 450,
+                'price_subtotal_incl': 450,
+            })],
+            'amount_total': 450,
+            'amount_tax': 0,
+            'amount_paid': 0,
+            'amount_return': 0,
+        })
+        context_make_payment = {'active_ids': [order.id], 'active_id': order.id}
+        self.PosMakePayment.with_context(context_make_payment).create({
+            'amount': 450.0,
+            'payment_method_id': self.cash_payment_method.id,
+        }).with_context({'active_id': order.id}).check()
+
+        # First legitimate call: invoice + picking created
+        order.action_pos_order_invoice()
+        self.assertEqual(len(order.picking_ids), 1, "First call should create exactly one picking")
+
+        # Second call: simulates a backend user clicking 'Customer Invoice' again
+        order.action_pos_order_invoice()
+        self.assertEqual(len(order.picking_ids), 1, "Repeated call must not create a duplicate picking")
 
     def test_action_pos_order_invoice_with_discount(self):
         """This test make sure that the line containing 'Discoun from' is correctly added to the invoice"""
@@ -404,6 +483,7 @@ class TestAngloSaxonFlow(TestAngloSaxonCommon):
         self.assertEqual(product_line.price_subtotal, 90.25)  # Discount applies on price_unit
         self.assertEqual(product_line.price_total, 103.79)  # Taxes applied with price_total
 
+    @skip('Temporary to fast merge new valuation')
     def test_cogs_with_ship_later_with_backorder(self):
         # This test will check that the correct journal entries are created when 2 products are sold
         # using the ship later option and one of them is processed in a backorder
@@ -513,3 +593,73 @@ class TestAngloSaxonFlow(TestAngloSaxonCommon):
         self.assertEqual(len(aml_output), 1, "There should be 1 output account move lines")
         self.assertEqual(aml_output.debit, 0)
         self.assertEqual(aml_output.credit, 20)
+
+    def test_cogs_multi_products_perpetual(self):
+        """
+        Check that an order with mutliple products that is invoiced
+        in anglo saxon perpetual posts its stock valuation entries
+        """
+        self.category.property_valuation = 'real_time'
+        self.product.write({
+            'categ_id': self.category,
+            'standard_price': 20,
+            'list_price': 100
+        })
+        product2 = self.env['product.product'].create({
+            'name': 'P2',
+            'categ_id': self.category.id,
+            'standard_price': 100,
+            'list_price': 200,
+            'available_in_pos': True,
+            'is_storable': True,
+        })
+
+        self.pos_config.open_ui()
+        pos_session = self.pos_config.current_session_id
+        pos_session.set_opening_control(0, None)
+
+        # create order
+        pos_order_values = {
+            'company_id': self.company.id,
+            'partner_id': self.partner.id,
+            'session_id': self.pos_config.current_session_id.id,
+            'lines': [Command.create({
+                'product_id': self.product.id,
+                'price_unit': 100,
+                'discount': 0.0,
+                'qty': 1.0,
+                'price_subtotal': 100,
+                'price_subtotal_incl': 100,
+            }), Command.create({
+                'product_id': product2.id,
+                'price_unit': 200,
+                'discount': 0.0,
+                'qty': 1.0,
+                'price_subtotal': 200,
+                'price_subtotal_incl': 200,
+            })],
+            'amount_total': 300,
+            'amount_tax': 0,
+            'amount_paid': 0,
+            'amount_return': 0,
+            'last_order_preparation_change': '{}',
+            'to_invoice': True,
+        }
+        pos_order = self.PosOrder.create(pos_order_values)
+
+        # register payment
+        context_make_payment = {"active_ids": [pos_order.id], "active_id": pos_order.id}
+        pos_payment = self.PosMakePayment.with_context(context_make_payment).create({
+            'amount': 300.0,
+            'payment_method_id': self.cash_payment_method.id,
+        })
+        context_payment = {'active_id': pos_order.id}
+        pos_payment.with_context(context_payment).check()
+
+        valuation_account = self.category.property_stock_valuation_account_id
+        valuation_lines = pos_order.account_move.line_ids.filtered(lambda line: line.account_id == valuation_account)
+
+        self.assertRecordValues(valuation_lines.sorted(lambda aml: aml.product_id.id), [
+            {'product_id': self.product.id, 'credit': 20.0},
+            {'product_id': product2.id, 'credit': 100.0},
+        ])

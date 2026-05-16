@@ -1,5 +1,5 @@
 import { Deferred } from "@web/core/utils/concurrency";
-import { IndexedDB } from "@web/core/utils/indexed_db";
+import { IDBQuotaExceededError, IndexedDB } from "@web/core/utils/indexed_db";
 import { deepCopy } from "../utils/objects";
 
 /**
@@ -24,6 +24,7 @@ function validateSettings({ type, update }) {
 }
 
 const CRYPTO_ALGO = "AES-GCM";
+const MAX_STORAGE_SIZE = 2 * 1024 * 1024 * 1024; // 2Gb
 
 class Crypto {
     constructor(secret) {
@@ -112,6 +113,15 @@ export class RPCCache {
         this.indexedDB = new IndexedDB(name, version + CRYPTO_ALGO);
         this.ramCache = new RamCache();
         this.pendingRequests = {};
+        this.checkSize(); // we want to control the disk space used by Odoo
+    }
+
+    async checkSize() {
+        const { usage } = await navigator.storage.estimate();
+        if (usage > MAX_STORAGE_SIZE) {
+            console.log(`Deleting indexedDB database as maximum storage size is reached`);
+            return this.indexedDB.deleteDatabase();
+        }
     }
 
     /**
@@ -130,12 +140,13 @@ export class RPCCache {
         if (hasPendingRequest) {
             // never do the same call multiple times in parallel => return the same value for all
             // those calls, but store their callback to call them when/if the real value is obtained
-            this.pendingRequests[requestKey].push(callback);
+            this.pendingRequests[requestKey].callbacks.push(callback);
             return ramValue.then((result) => deepCopy(result));
         }
 
         if (!ramValue || update === "always") {
-            this.pendingRequests[requestKey] = [callback];
+            const request = { callbacks: [callback], invalidated: false };
+            this.pendingRequests[requestKey] = request;
 
             // execute the fallback and write the result in the caches
             const prom = new Promise((resolve, reject) => {
@@ -145,27 +156,38 @@ export class RPCCache {
                     resolve(result);
                     // call the pending request callbacks with the result
                     const hasChanged = !!fromCacheValue && !jsonEqual(fromCacheValue, result);
-                    this.pendingRequests[requestKey]?.forEach((cb) =>
-                        cb(deepCopy(result), hasChanged)
-                    );
+                    request.callbacks.forEach((cb) => cb(deepCopy(result), hasChanged));
+                    if (request.invalidated) {
+                        return result;
+                    }
                     delete this.pendingRequests[requestKey];
                     // update the ram and optionally the disk caches with the latest data
                     this.ramCache.write(table, key, Promise.resolve(result));
                     if (type === "disk") {
                         this.crypto.encrypt(result).then((encryptedResult) => {
-                            this.indexedDB.write(table, key, encryptedResult);
+                            this.indexedDB.write(table, key, encryptedResult).catch((e) => {
+                                if (e instanceof IDBQuotaExceededError) {
+                                    this.indexedDB.deleteDatabase();
+                                } else {
+                                    throw e;
+                                }
+                            });
                         });
                     }
                     return result;
                 };
                 const onRejected = async (error) => {
                     await fromCache;
-                    delete this.pendingRequests[requestKey];
+                    if (!request.invalidated) {
+                        delete this.pendingRequests[requestKey];
+                        if (!fromCacheValue) {
+                            this.ramCache.delete(table, key); // remove rejected prom from ram cache
+                        }
+                    }
                     if (fromCacheValue) {
                         // promise has already been fullfilled with the cached value
                         throw error;
                     }
-                    this.ramCache.delete(table, key); // remove rejected prom from ram cache
                     reject(error);
                 };
                 fallback().then(onFullfilled, onRejected);
@@ -213,5 +235,10 @@ export class RPCCache {
     invalidate(tables) {
         this.indexedDB.invalidate(tables);
         this.ramCache.invalidate(tables);
+        // flag the pending requests as invalidated s.t. we don't write their results in caches
+        for (const key in this.pendingRequests) {
+            this.pendingRequests[key].invalidated = true;
+        }
+        this.pendingRequests = {};
     }
 }

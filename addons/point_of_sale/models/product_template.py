@@ -166,7 +166,7 @@ class ProductTemplate(models.Model):
             'id', 'display_name', 'standard_price', 'categ_id', 'pos_categ_ids', 'taxes_id', 'barcode', 'name', 'list_price', 'is_favorite',
             'default_code', 'to_weight', 'uom_id', 'description_sale', 'description', 'tracking', 'type', 'service_tracking', 'is_storable',
             'write_date', 'color', 'pos_sequence', 'available_in_pos', 'attribute_line_ids', 'active', 'image_128', 'combo_ids', 'product_variant_ids', 'public_description',
-            'pos_optional_product_ids', 'sequence', 'product_tag_ids'
+            'pos_optional_product_ids', 'sequence', 'product_tag_ids', 'currency_id',
         ]
 
     @api.model
@@ -221,6 +221,10 @@ class ProductTemplate(models.Model):
         if products.filtered(lambda p: p.pos_optional_product_ids):
             products |= products.mapped("pos_optional_product_ids")
 
+        # Ensure products from loaded orders are loaded
+        if data.get('pos.order.line'):
+            products += self.env['product.product'].browse([l['product_id'] for l in data['pos.order.line']]).product_tmpl_id
+
         return self._load_pos_data_read(products, config)
 
     @api.model
@@ -230,7 +234,7 @@ class ProductTemplate(models.Model):
         return read_records
 
     def _load_product_with_domain(self, domain, load_archived=False, offset=0, limit=0):
-        context = {**self.env.context, 'display_default_code': False, 'active_test': not load_archived}
+        context = {**self.env.context, 'display_default_code': False, 'active_test': not load_archived, 'bin_size': True}
         domain = self._server_date_to_domain(domain)
         return self.with_context(context).search(
             domain,
@@ -262,14 +266,20 @@ class ProductTemplate(models.Model):
             for tax in taxes:
                 taxes_by_company[tax.company_id.id].add(tax.id)
 
-        different_currency = config_id.currency_id != self.env.company.currency_id
+        different_currency = {}
+        for product in products:
+            currency_id = product['currency_id']
+            if currency_id != config_id.currency_id.id:
+                different_currency.setdefault(currency_id, []).append(product)
 
         self._add_archived_combinations(products)
-        for product in products:
-            if different_currency:
-                product['list_price'] = self.env.company.currency_id._convert(product['list_price'], config_id.currency_id, self.env.company, fields.Date.today())
-                product['standard_price'] = self.env.company.currency_id._convert(product['standard_price'], config_id.currency_id, self.env.company, fields.Date.today())
+        for currency_id, product_templates in different_currency.items():
+            currency = self.env['res.currency'].browse(currency_id)
+            for product in product_templates:
+                product['list_price'] = currency._convert(product['list_price'], config_id.currency_id, self.env.company, fields.Date.today())
+                product['standard_price'] = currency._convert(product['standard_price'], config_id.currency_id, self.env.company, fields.Date.today())
 
+        for product in products:
             product['image_128'] = bool(product['image_128'])
 
             if len(taxes_by_company) > 1 and len(product['taxes_id']) > 1:
@@ -298,17 +308,26 @@ class ProductTemplate(models.Model):
                     "Deleting a product available in a session would be like attempting to snatch a hamburger from a customer’s hand mid-bite; chaos will ensue as ketchup and mayo go flying everywhere!",
                 ))
 
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_special_product(self):
+        self._check_is_special_product()
+
     def _ensure_unused_in_pos(self):
-        open_pos_sessions = self.env['pos.session'].search([('state', '!=', 'closed')])
-        used_products = open_pos_sessions.order_ids.filtered(lambda o: o.state == "draft").lines.product_id.product_tmpl_id
-        if used_products & self:
+        if any(self.mapped('available_in_pos')) and self.env['pos.session'].sudo().search_count([('state', '!=', 'closed')]):
             raise UserError(_(
                 "Hold up! Archiving products while POS sessions are active is like pulling a plate mid-meal.\n"
                 "Make sure to close all sessions first to avoid any issues.",
             ))
 
+    def _check_is_special_product(self):
+        special_products = self.env['pos.config'].sudo()._get_special_products().product_tmpl_id
+        for product in self:
+            if product in special_products:
+                raise UserError(_("You cannot archive a product that is set as a special product in a Point of Sale configuration. Please change the configuration first."))
+
     def action_archive(self):
         self._ensure_unused_in_pos()
+        self._check_is_special_product()
         return super().action_archive()
 
     @api.onchange('sale_ok')

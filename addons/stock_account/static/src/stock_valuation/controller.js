@@ -23,7 +23,7 @@ export class StockValuationReportController {
 
     async loadReportData() {
         const kwargs = {
-            date: serializeDate(this.state.date),
+            date: this.state.date.toISODate() || false,
         };
         const res = await this.orm.call(
             "stock_account.stock.valuation.report",
@@ -44,7 +44,6 @@ export class StockValuationReportController {
         }
         // Prepare the "Initial Balance" lines.
         this.data.initial_balance.lines = [];
-        this.data.initial_balance.accounts = [];
         for (let [accountId, data] of Object.entries(this.data.initial_balance.lines_by_account_id)) {
             const account = this.data.accounts_by_id[accountId];
             this.data.initial_balance.lines.push({
@@ -52,11 +51,9 @@ export class StockValuationReportController {
                 value: data.value,
                 account_id: accountId,
             });
-            this.data.initial_balance.accounts.push(...data.accounts);
         }
         // Prepare the "Ending Stock" lines.
         this.data.ending_stock.lines = [];
-        this.data.ending_stock.accounts = [];
         for (let [accountId, data] of Object.entries(this.data.ending_stock.lines_by_account_id)) {
             const account = this.data.accounts_by_id[accountId];
             this.data.ending_stock.lines.push({
@@ -64,19 +61,22 @@ export class StockValuationReportController {
                 value: data.value,
                 account_id: accountId,
             });
-            this.data.ending_stock.accounts.push(...data.accounts);
         }
     }
 
     async setDate(date) {
         this.state.date = date;
-        this.dateAsString = date.toFormat('y-LL-dd HH:mm:ss');
+        this.dateAsString = serializeDate(date);
         await this.loadReportData();
     }
 
     // Actions -----------------------------------------------------------------
     async actionGenerateEntry() {
         const args = [[this.companyId]];
+        const date = serializeDate(this.state.date);
+        if (date != serializeDate(DateTime.now())) {
+            args.push(date);
+        }
         const action = await this.orm.call("res.company", "action_close_stock_valuation", args);
         if (action) {
             this.actionService.doAction(action);

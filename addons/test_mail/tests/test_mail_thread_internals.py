@@ -8,7 +8,7 @@ from odoo.addons.mail.tests.common import mail_new_test_user, MailCommon
 from odoo.addons.test_mail.models.test_mail_models import MailTestSimple
 from odoo.addons.test_mail.tests.common import TestRecipients
 from odoo.addons.mail.tools.discuss import Store
-from odoo.tests import Form, users, warmup, tagged
+from odoo.tests import HttpCase, Form, users, warmup, tagged
 from odoo.tools import mute_logger
 
 
@@ -414,7 +414,7 @@ class TestAPI(ThreadRecipients):
 
         # test default computation of recipients
         self.env.invalidate_all()
-        with self.assertQueryCount(22):
+        with self.assertQueryCount(14):
             defaults_withcc = test_records.with_context()._message_get_default_recipients(with_cc=True)
             defaults_withoutcc = test_records.with_context()._message_get_default_recipients()
         for record, expected in zip(test_records, [
@@ -582,11 +582,18 @@ class TestAPI(ThreadRecipients):
             'email_from': self.partner_employee.email_formatted,
             'name': 'Partner follower (user)',
         })
+        # existing partner with multiple emails -> should propose only the first one
+        partner_multiemail = self.test_partner.copy({'email': 'test1.external@example.com,test2.external@example.com'})
+        ticket_partner_multiemail = self.env['mail.test.ticket.mc'].create({
+            'customer_id': partner_multiemail.id,
+            'email_from': partner_multiemail.email_formatted,
+            'name': 'Partner Multi-Emails',
+        })
         ticket_partner_fol.message_subscribe(partner_ids=self.test_partner.ids)
         ticket_partner_fol.message_subscribe(partner_ids=self.partner_employee.ids)
         for ticket, sugg_partner in zip(
-            ticket_partner_email + ticket_partner + ticket_partner_fol + ticket_partner_fol_user,
-            (self.test_partner, self.test_partner, self.test_partner, False),
+            ticket_partner_email + ticket_partner + ticket_partner_fol + ticket_partner_fol_user + ticket_partner_multiemail,
+            (self.test_partner, self.test_partner, self.test_partner, False, partner_multiemail),
             strict=True,
         ):
             with self.subTest(ticket=ticket.name):
@@ -969,6 +976,12 @@ class TestAPI(ThreadRecipients):
         self.assertFalse((attachments + new_attachments).exists())
         self.assertEqual(message.body, Markup('<p>Another Body, void attachments <span class="o-mail-Message-edited"></span></p>'))
 
+        ticket_record._message_update_content(
+            message,
+            body=Markup("line1<br>edit<br>line2<br>line3"),
+        )
+        self.assertEqual(message.body, Markup('<p>line1 <br>edit<br>line2<br>line3<span class="o-mail-Message-edited"></span></p>'))
+
     @mute_logger('openerp.addons.mail.models.mail_mail')
     @users('employee')
     def test_message_update_content_check(self):
@@ -1144,8 +1157,8 @@ class TestChatterTweaks(ThreadRecipients):
         self.assertTrue(record.name)
 
 
-@tagged('mail_thread')
-class TestDiscuss(MailCommon, TestRecipients):
+@tagged('mail_thread', 'post_install', '-at_install')
+class TestDiscuss(HttpCase, MailCommon, TestRecipients):
 
     @classmethod
     def setUpClass(cls):
@@ -1249,6 +1262,21 @@ class TestDiscuss(MailCommon, TestRecipients):
         self.assertEqual(len(message), 1, "Test message should have been posted")
         self.test_record.unlink()
         self.assertFalse(message.exists(), "Test message should have been deleted")
+
+    @mute_logger("odoo.http")
+    def test_access_inbox_records(self):
+        for access, name in [("admin", "Inaccessible Record"), ("internal", "Accessible Record")]:
+            self.env["mail.test.access"].create(
+                {
+                    "access": access,
+                    "name": name,
+                }
+            ).message_post(
+                body=f"Message in {name.lower()}",
+                message_type="comment",
+                partner_ids=[self.user_employee.partner_id.id],
+            )
+        self.start_tour("/odoo", "access_inbox_records_tour", login=self.user_employee.login)
 
 
 @tagged('mail_thread')

@@ -18,8 +18,8 @@
             placeholder="Enter a description"
             rows="1"
             type="text"
-            t-att-class="{ 'd-none': !(columnIsProductAndLabel.value and (label or !props.readonly and labelVisibility.value)) }"
-            t-att-readonly="props.readonly and isProductClickable ? '1' : ''"
+            t-att-class="{ 'd-none': !(columnIsProductAndLabel.value and (label or labelVisibility.value)) }"
+            t-att-readonly="isDescriptionReadonly"
             t-att-value="label"
             t-ref="labelNodeRef"
         />

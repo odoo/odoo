@@ -1,3 +1,4 @@
+/* global posmodel */
 import * as PosLoyalty from "@pos_loyalty/../tests/tours/utils/pos_loyalty_util";
 import * as ProductScreen from "@point_of_sale/../tests/pos/tours/utils/product_screen_util";
 import * as TicketScreen from "@point_of_sale/../tests/pos/tours/utils/ticket_screen_util";
@@ -212,10 +213,15 @@ registry.category("web_tour.tours").add("PosCouponTour5", {
         [
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("AAAA"),
             ProductScreen.addOrderline("Test Product 1", "1", "100"),
+            PosLoyalty.pointsAwardedAre("115"),
             PosLoyalty.clickDiscountButton(),
             Dialog.confirm(),
             ProductScreen.totalAmountIs("92.00"),
+            PosLoyalty.pointsAwardedAre("92"),
+            Chrome.endTour(),
         ].flat(),
 });
 
@@ -583,12 +589,30 @@ registry.category("web_tour.tours").add("RefundRulesProduct", {
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
             ProductScreen.clickDisplayedProduct("product_a"),
+            ProductScreen.clickDisplayedProduct("Gift Card"),
+            ProductScreen.clickDisplayedProduct("Top-up eWallet"),
+            ProductScreen.clickPartnerButton(),
+            PartnerList.clickPartner("AAAAAAA"),
             PosLoyalty.finalizeOrder("Cash", "1000"),
             ProductScreen.isShown(),
             ...ProductScreen.clickRefund(),
             TicketScreen.filterIs("Paid"),
             TicketScreen.selectOrder("001"),
             ProductScreen.clickNumpad("1"),
+            ProductScreen.clickLine("Gift Card"),
+            ProductScreen.clickNumpad("1"),
+            {
+                content: "Notification: not allowed to refund this product",
+                trigger:
+                    ".o_notification .o_notification_content:contains('Refunding a top up or reward product for an eWallet or gift card program is not allowed.')",
+            },
+            ProductScreen.clickLine("Top-up eWallet"),
+            ProductScreen.clickNumpad("1"),
+            {
+                content: "Notification: not allowed to refund this product",
+                trigger:
+                    ".o_notification .o_notification_content:contains('Refunding a top up or reward product for an eWallet or gift card program is not allowed.')",
+            },
             TicketScreen.confirmRefund(),
             PaymentScreen.isShown(),
         ].flat(),
@@ -610,10 +634,7 @@ registry.category("web_tour.tours").add("test_settle_dont_give_points_again", {
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
             ProductScreen.clickPartnerButton(),
-            PartnerList.clickPartnerOptions("AAA Partner"),
-            PartnerList.clickDropDownItemText("Settle invoices"),
-            PartnerList.clickSettleOrderName("TSJ/"),
-            ProductScreen.totalAmountIs("10.00"),
+            PartnerList.settleCustomerAccount("AAA Partner", "10.00", "TSJ/"),
         ].flat(),
 });
 
@@ -623,7 +644,7 @@ registry.category("web_tour.tours").add("test_refund_does_not_decrease_points", 
             Chrome.startPoS(),
             Dialog.confirm("Open Register"),
             ProductScreen.clickPartnerButton(),
-            ProductScreen.clickCustomer("Refunding Guy"),
+            ProductScreen.clickCustomer("Refunding Guy", true),
             ProductScreen.clickDisplayedProduct("Refund Product"),
             ProductScreen.clickControlButton("Reward"),
             SelectionPopup.has("$ 1 per point on your order", { run: "click" }),
@@ -674,5 +695,130 @@ registry.category("web_tour.tours").add("test_min_qty_points_awarded", {
             PosLoyalty.pointsTotalIs("90"),
             PosLoyalty.orderTotalIs("0.0"),
             PosLoyalty.finalizeOrder("Cash", "0.0"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_confirm_coupon_programs_one_by_one", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            {
+                trigger: "body",
+                content: "Create fake orders",
+                run: async () => {
+                    // Create 5 orders that will be synced one by one
+                    for (let i = 0; i < 5; i++) {
+                        const order = posmodel.createNewOrder();
+                        const product = posmodel.models["product.template"].find(
+                            (p) => p.name === "Desk Pad"
+                        );
+                        const pm = posmodel.models["pos.payment.method"].getFirst();
+                        const program = posmodel.models["loyalty.program"].find(
+                            (p) => p.program_type === "gift_card"
+                        );
+
+                        await posmodel.addLineToOrder({ product_tmpl_id: product }, order);
+                        posmodel.addPendingOrder([order.id]);
+                        order.addPaymentline(pm);
+                        order.state = "paid";
+
+                        // Create fake coupon point changes to simulate coupons to be confirmed
+                        order.uiState.couponPointChanges = [
+                            {
+                                points: 124.2,
+                                program_id: program.id,
+                                coupon_id: -(i + 1),
+                                barcode: "",
+                            },
+                        ];
+                    }
+                },
+            },
+            // Create one more order to be able to trigger the sync from the UI
+            ProductScreen.clickDisplayedProduct("Desk Pad"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Bank"),
+            PaymentScreen.clickValidate(),
+            ReceiptScreen.isShown(),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_order_reward_product_tax_included_included", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.addOrderline("Product Include", "1"),
+            PosLoyalty.enterCode("hellopromo"),
+            PosLoyalty.hasRewardLine("$ 10 on your order", "-10.00"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_order_reward_product_tax_included_excluded", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            ProductScreen.addOrderline("Product Include", "1"),
+            PosLoyalty.enterCode("hellopromo"),
+            PosLoyalty.hasRewardLine("$ 10 on your order", "-10.00"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_specific_reward_product_tax_included_included", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.addOrderline("Product Include", "1"),
+            PosLoyalty.enterCode("hellopromo"),
+            PosLoyalty.hasRewardLine("$ 10 on Product Include", "-10.00"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_specific_reward_product_tax_included_excluded", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            ProductScreen.addOrderline("Product Include", "1"),
+            PosLoyalty.enterCode("hellopromo"),
+            PosLoyalty.hasRewardLine("$ 10 on Product Include", "-10.00"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_loyalty_is_not_processed_for_draft_order", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickPartnerButton(),
+            ProductScreen.clickCustomer("AAAA"),
+            ProductScreen.addOrderline("Whiteboard Pen", "1", "100"),
+            PosLoyalty.pointsAwardedAre("100"),
+            PosLoyalty.pointsTotalIs("150"),
+            ProductScreen.saveOrder(),
+            ProductScreen.selectFloatingOrder(0),
+            PosLoyalty.pointsAwardedAre("100"),
+            PosLoyalty.pointsTotalIs("150"),
+        ].flat(),
+});
+
+registry.category("web_tour.tours").add("test_race_conditions_update_program", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Test Product"),
+            PosLoyalty.orderTotalIs("34.87"),
+            {
+                trigger: "body",
+                run: async () => {
+                    // Check the number of lines in the order
+                    const line_count = document.querySelectorAll(".orderline").length;
+                    if (line_count !== 11) {
+                        throw new Error(`Expected 11 orderlines, found ${line_count}`);
+                    }
+                },
+            },
         ].flat(),
 });

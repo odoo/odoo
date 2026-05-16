@@ -62,7 +62,7 @@ class SaleComboConfiguratorController(Controller):
                 'id': combo.id,
                 'name': combo.name,
                 'combo_items': [
-                   self. _get_combo_item_data(
+                   self._get_combo_item_data(
                        combo,
                        combo_item,
                        selected_combo_item_dict.get(combo_item.id, {}),

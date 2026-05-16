@@ -5,6 +5,7 @@ import os
 import logging
 import re
 import requests
+import urllib.parse
 import werkzeug.urls
 import werkzeug.utils
 import werkzeug.wrappers
@@ -34,6 +35,7 @@ from odoo.addons.web.controllers.binary import Binary
 from odoo.addons.web.controllers.session import Session
 from odoo.addons.website.tools import get_base_domain
 from odoo.tools.json import scriptsafe as json
+from odoo.tools.translate import TRANSLATED_ELEMENTS
 
 _lt = LazyTranslate(__name__)
 logger = logging.getLogger(__name__)
@@ -68,11 +70,9 @@ class QueryURL:
                     paths[key] = "%s" % value
             elif value:
                 if isinstance(value, (list, set)):
-                    fragments.append(
-                        werkzeug.urls.url_encode([(key, item) for item in value if item])
-                    )
+                    fragments.append(urllib.parse.urlencode([(key, item) for item in value if item]))
                 else:
-                    fragments.append(werkzeug.urls.url_encode([(key, value)]))
+                    fragments.append(urllib.parse.urlencode([(key, value)]))
         for key in path_args:
             value = paths.get(key)
             if value is not None:
@@ -157,9 +157,10 @@ class Website(Home):
             domain_to = get_base_domain(website.domain)
             if domain_from != domain_to:
                 # redirect to correct domain for a correct routing map
+                query_params = urllib.parse.urlencode({'isredir': 1, 'path': path})
                 url_to = tools.urls.urljoin(
                     website.domain,
-                    '/website/force/%s?isredir=1&path=%s' % (website.id, path),
+                    f'/website/force/{website.id}?{query_params}',
                 )
                 return request.redirect(url_to)
         website._force()
@@ -211,6 +212,10 @@ class Website(Home):
     @http.route('/website/get_languages', type='jsonrpc', auth="user", website=True, readonly=True)
     def website_languages(self, **kwargs):
         return [(py_to_js_locale(lg.code), lg.url_code, lg.name) for lg in request.website.language_ids]
+
+    @http.route('/website/get_translated_elements', type='jsonrpc', auth="user", readonly=True)
+    def translated_elements(self, **kwargs):
+        return list(TRANSLATED_ELEMENTS)
 
     @http.route('/website/lang/<lang>', type='http', auth="public", website=True, multilang=False)
     def change_lang(self, lang, r='/', **kwargs):
@@ -409,6 +414,10 @@ class Website(Home):
             ]
         }
 
+    @http.route('/website/check_existing_link', type='jsonrpc', auth="user", website=True, readonly=True)
+    def check_existing_link(self, link):
+        return request.website.check_existing_page(link)
+
     @http.route('/website/save_session_layout_mode', type='jsonrpc', auth='public', website=True, readonly=True)
     def save_session_layout_mode(self, layout_mode, view_id):
         assert layout_mode in ('grid', 'list'), "Invalid layout mode"
@@ -421,7 +430,9 @@ class Website(Home):
             dynamic_filter_sudo = dynamic_filter_sudo.search(
                 Domain('id', '=', filter_id) & request.website.website_domain()
             )
-        return dynamic_filter_sudo._render(**kwargs) or []
+        single_record_filter = kwargs.get('limit') == 1 and kwargs.get('res_model') and kwargs.get('res_id')
+        dynamic_filter_found = single_record_filter or dynamic_filter_sudo
+        return dynamic_filter_sudo._render(**kwargs) if dynamic_filter_found else []
 
     @http.route('/website/snippet/options_filters', type='jsonrpc', auth='user', website=True, readonly=True)
     def get_dynamic_snippet_filters(self, model_name=None, search_domain=None):
@@ -687,7 +698,10 @@ class Website(Home):
         # If that URL is also a menu, we update it accordingly.
         # NB: we don't want to slugify on menu creation as it could redirect
         # towards files (with spaces, apostrophes, etc.).
-        menu = request.env['website.menu'].search([('url', '=', '/' + path)])
+        # When searching for a menu, we also match URLs with or without a
+        # leading slash to prevent mismatches when records were created without
+        # a leading slash.
+        menu = request.env['website.menu'].search([('url', 'in', ['/' + path, path]), ('page_id', '=', False)])
         if menu:
             menu.page_id = page['page_id']
 
@@ -766,14 +780,17 @@ class Website(Home):
 
     @http.route('/website/save_xml', type='jsonrpc', auth='user', website=True)
     def save_xml(self, view_id, arch):
+        disable_delay_translations = self.env['ir.config_parameter'].sudo().get_param(
+            'website.disable_delay_translations'
+        ) not in ('False', '0', '', False)
         request.env['ir.ui.view'].browse(view_id).with_context(
             lang=request.website.default_lang_id.code,
-            delay_translations=True,
+            delay_translations=not disable_delay_translations,
         ).arch = arch
 
     @http.route("/website/get_switchable_related_views", type="jsonrpc", auth="user", website=True, readonly=True)
     def get_switchable_related_views(self, key):
-        views = request.env["ir.ui.view"].get_related_views(key, bundles=False).filtered(lambda v: v.customize_show)
+        views = request.env["ir.ui.view"].with_context(is_customization_code=False).get_related_views(key, bundles=False).filtered(lambda v: v.customize_show)
         views = views.sorted(key=lambda v: (v.inherit_id.id, v.name))
         return views.with_context(display_website=False).read(['name', 'id', 'key', 'xml_id', 'active', 'inherit_id'])
 
@@ -1243,7 +1260,7 @@ class Website(Home):
             dict: views, scss, js
         """
         # Related views must be fetched if the user wants the views and/or the style
-        views = request.env["ir.ui.view"].with_context(no_primary_children=True, __views_get_original_hierarchy=[]).get_related_views(key, bundles=bundles)
+        views = request.env["ir.ui.view"].with_context(no_primary_children=True, __views_get_original_hierarchy=[], is_customization_code=False).get_related_views(key, bundles=bundles)
         views = views.read(['name', 'id', 'key', 'xml_id', 'arch', 'active', 'inherit_id'])
 
         scss_files_data_by_bundle = []
