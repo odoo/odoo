@@ -21,9 +21,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-24 17:38+0000\n"
-"PO-Revision-Date: 2026-04-11 09:03+0000\n"
-"Last-Translator: Hanna Kharraziha <hakha@odoo.com>\n"
+"POT-Creation-Date: 2026-05-15 17:38+0000\n"
+"PO-Revision-Date: 2026-05-16 09:09+0000\n"
+"Last-Translator: Weblate <noreply-mt-weblate@weblate.org>\n"
 "Language-Team: Swedish <https://translate.odoo.com/projects/odoo-18/"
 "account_peppol/sv/>\n"
 "Language: sv\n"
@@ -31,7 +31,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 5.17\n"
 
 #. module: account_peppol
 #. odoo-python
@@ -44,6 +44,12 @@ msgstr " (Kund inte på Peppol)"
 #: code:addons/account_peppol/wizard/account_move_send_wizard.py:0
 msgid " (Demo)"
 msgstr " (Demo)"
+
+#. module: account_peppol
+#. odoo-python
+#: code:addons/account_peppol/wizard/account_move_send_wizard.py:0
+msgid " (Missing %(eas)s)"
+msgstr ""
 
 #. module: account_peppol
 #. odoo-python
@@ -534,6 +540,7 @@ msgstr "Journal för inkommande fakturor"
 #: code:addons/account_peppol/models/account_move_send.py:0
 msgid "Invoice %s is too big to send via peppol (64MB limit)"
 msgstr ""
+"Faktura med ID-nummer %s är för stor för att skicka genom peppol (högst 64MB)"
 
 #. module: account_peppol
 #: model:ir.model.fields,field_description:account_peppol.field_res_partner__invoice_sending_method
@@ -841,6 +848,8 @@ msgid ""
 "Please enter the mobile number in the correct international format.\n"
 "For example: +32123456789, where +32 is the country code."
 msgstr ""
+"Vänligen ange mobilnumret i rätt internationellt format. \n"
+"Till exempel: +32123456789, där +32 är landskoden."
 
 #. module: account_peppol
 #. odoo-python
@@ -997,7 +1006,7 @@ msgstr "Överhoppade"
 #. odoo-python
 #: code:addons/account_peppol/models/account_move_send.py:0
 msgid "Some attachments could not be sent with the XML:"
-msgstr ""
+msgstr "Visa bilagor med följande XML kunde inte skickas:"
 
 #. module: account_peppol
 #: model:ir.model.fields.selection,name:account_peppol.selection__peppol_registration__edi_mode__test
@@ -1062,6 +1071,8 @@ msgid ""
 "The invoice has been sent to the Peppol Access Point. The following "
 "attachments were sent with the XML:"
 msgstr ""
+"Fakturan har skickats till Peppol åtkomstpunkten. Bilagor med följande XML "
+"har skickats:"
 
 #. module: account_peppol
 #. odoo-python
@@ -1326,7 +1337,7 @@ msgstr ""
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.res_config_settings_view_form
 msgid "Your Peppol ID"
-msgstr ""
+msgstr "Ditt Peppol-ID"
 
 #. module: account_peppol
 #. odoo-python
@@ -1373,6 +1384,7 @@ msgid ""
 "[PEPPOL-EN16931-R010] An electronic address (EAS) must be provided on the "
 "customer '%s'."
 msgstr ""
+"[PEPPOL-EN16931-R010] En digital adress (EAS) måste anges för kunden '%s'."
 
 #. module: account_peppol
 #. odoo-python
@@ -1381,6 +1393,7 @@ msgid ""
 "[PEPPOL-EN16931-R020] An electronic address (EAS) must be provided on the "
 "company '%s'."
 msgstr ""
+"[PEPPOL-EN16931-R020] En digital adress (EAS) måste anges för företaget '%s'."
 
 #. module: account_peppol
 #: model_terms:ir.ui.view,arch_db:account_peppol.peppol_registration_form
