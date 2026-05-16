@@ -63,7 +63,13 @@
 
                 <div t-if="order.showChange" class="pos-receipt-amount receipt-change">
                     <span class="label-change">Change</span>
+<<<<<<< b575bdc8cb71bf33a94ae2090e847bc37488364a
                     <span t-out="formatCurrency(order.change)" class="pos-receipt-right-align font-monospace"/>
+||||||| 3eb3393c7a19de483ba3afefeb207401fe45218c
+                    <span t-out="formatCurrency(order.orderChange)" class="pos-receipt-right-align font-monospace"/>
+=======
+                    <span t-out="formatCurrency(-order.orderChange)" class="pos-receipt-right-align font-monospace"/>
+>>>>>>> 53b9245a20deac9e17eec78356371aaca0ec8add
                 </div>
 
                 <!-- Extra Payment Info -->

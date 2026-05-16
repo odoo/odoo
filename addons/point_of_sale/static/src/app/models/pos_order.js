@@ -727,6 +727,44 @@ export class PosOrder extends PosOrderAccounting {
         return data;
     }
 
+<<<<<<< b575bdc8cb71bf33a94ae2090e847bc37488364a
+||||||| 3eb3393c7a19de483ba3afefeb207401fe45218c
+    getCustomerDisplayData() {
+        return {
+            lines: this.lines.map((l) => ({
+                ...l.getDisplayData(),
+                isSelected: l.isSelected(),
+                imageSrc: `/web/image/product.product/${l.product_id.id}/image_128`,
+            })),
+            finalized: this.finalized,
+            amount: formatCurrency(this.getTotalWithTax() || 0),
+            paymentLines: this.payment_ids.map((pl) => ({
+                name: pl.payment_method_id.name,
+                amount: formatCurrency(pl.getAmount()),
+            })),
+            change: this.getChange() && formatCurrency(this.getChange()),
+            generalCustomerNote: this.general_customer_note || "",
+        };
+    }
+=======
+    getCustomerDisplayData() {
+        return {
+            lines: this.lines.map((l) => ({
+                ...l.getDisplayData(),
+                isSelected: l.isSelected(),
+                imageSrc: `/web/image/product.product/${l.product_id.id}/image_128`,
+            })),
+            finalized: this.finalized,
+            amount: formatCurrency(this.getTotalWithTax() || 0),
+            paymentLines: this.payment_ids.map((pl) => ({
+                name: pl.payment_method_id.name,
+                amount: formatCurrency(pl.getAmount()),
+            })),
+            change: this.getChange() && formatCurrency(-this.getChange()),
+            generalCustomerNote: this.general_customer_note || "",
+        };
+    }
+>>>>>>> 53b9245a20deac9e17eec78356371aaca0ec8add
     get floatingOrderName() {
         return this.floating_order_name || this.tracking_number.toString() || "";
     }

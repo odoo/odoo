@@ -6,6 +6,60 @@ import { inLeftSide, waitForLoading } from "@point_of_sale/../tests/pos/tours/ut
 import * as ProductScreen from "@point_of_sale/../tests/pos/tours/utils/product_screen_util";
 import * as PaymentScreen from "@point_of_sale/../tests/pos/tours/utils/payment_screen_util";
 import * as Chrome from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
+<<<<<<< b575bdc8cb71bf33a94ae2090e847bc37488364a
+||||||| 3eb3393c7a19de483ba3afefeb207401fe45218c
+import * as OfflineUtil from "@point_of_sale/../tests/generic_helpers/offline_util";
+
+registry.category("web_tour.tours").add("pos_basic_order_01_multi_payment_and_change", {
+    steps: () =>
+        [
+            waitForLoading(),
+            Chrome.startPoS(),
+            OfflineUtil.setOfflineMode(),
+            ProductScreen.clickDisplayedProduct("Desk Organizer", true, "1", "5.10"),
+            ProductScreen.clickDisplayedProduct("Desk Organizer", true, "2", "10.20"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.enterPaymentLineAmount("Cash", "5", true, {
+                amount: "5.0",
+                remaining: "5.20",
+            }),
+            PaymentScreen.clickPaymentMethod("Bank", true, { amount: "5.2" }),
+            PaymentScreen.enterPaymentLineAmount("Bank", "6", true, {
+                amount: "6.0",
+                change: "0.80",
+            }),
+            OfflineUtil.setOnlineMode(),
+            ProductScreen.finishOrder(),
+        ].flat(),
+});
+=======
+import * as OfflineUtil from "@point_of_sale/../tests/generic_helpers/offline_util";
+
+registry.category("web_tour.tours").add("pos_basic_order_01_multi_payment_and_change", {
+    steps: () =>
+        [
+            waitForLoading(),
+            Chrome.startPoS(),
+            OfflineUtil.setOfflineMode(),
+            ProductScreen.clickDisplayedProduct("Desk Organizer", true, "1", "5.10"),
+            ProductScreen.clickDisplayedProduct("Desk Organizer", true, "2", "10.20"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.enterPaymentLineAmount("Cash", "5", true, {
+                amount: "5.0",
+                remaining: "5.20",
+            }),
+            PaymentScreen.clickPaymentMethod("Bank", true, { amount: "5.2" }),
+            PaymentScreen.enterPaymentLineAmount("Bank", "6", true, {
+                amount: "6.0",
+                change: "-0.80",
+            }),
+            OfflineUtil.setOnlineMode(),
+            ProductScreen.finishOrder(),
+        ].flat(),
+});
+>>>>>>> 53b9245a20deac9e17eec78356371aaca0ec8add
 
 registry.category("web_tour.tours").add("pos_basic_order_02_decimal_order_quantity", {
     steps: () =>

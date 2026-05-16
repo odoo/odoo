@@ -43,6 +43,7 @@ export class CustomerDisplayPosAdapter {
         this.data = {
             finalized: order.finalized,
             general_customer_note: order.general_customer_note,
+<<<<<<< b575bdc8cb71bf33a94ae2090e847bc37488364a
             amount: order.currencyDisplayPriceIncl,
             subtotal:
                 order.config_id.iface_tax_included !== "total" &&
@@ -50,6 +51,13 @@ export class CustomerDisplayPosAdapter {
                 order.currencyDisplayPriceExcl,
             amountTaxes: order.prices.taxDetails.has_tax_groups && order.currencyAmountTaxes,
             change: order.change && formatCurrency(order.change, order.currency),
+||||||| 3eb3393c7a19de483ba3afefeb207401fe45218c
+            amount: formatCurrency(order.getTotalWithTax() || 0, order.currency),
+            change: order.getChange() && formatCurrency(order.getChange(), order.currency),
+=======
+            amount: formatCurrency(order.getTotalWithTax() || 0, order.currency),
+            change: order.getChange() && formatCurrency(-order.getChange(), order.currency),
+>>>>>>> 53b9245a20deac9e17eec78356371aaca0ec8add
             paymentLines: order.payment_ids.map((pl) => this.getPaymentData(pl)),
             lines: order.lines.map((l) => this.getOrderlineData(l)),
             qrPaymentData: toRaw(order.getSelectedPaymentline()?.qrPaymentData),

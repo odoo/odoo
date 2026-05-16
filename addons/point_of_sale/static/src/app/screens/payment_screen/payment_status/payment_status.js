@@ -9,8 +9,16 @@ export class PaymentScreenStatus extends Component {
     };
     static components = { PriceFormatter };
 
+<<<<<<< b575bdc8cb71bf33a94ae2090e847bc37488364a
     get isComplete() {
         return this.isRemaining && this.order.orderHasZeroRemaining;
+||||||| 3eb3393c7a19de483ba3afefeb207401fe45218c
+    get changeText() {
+        return this.env.utils.formatCurrency(this.props.order.getChange());
+=======
+    get changeText() {
+        return this.env.utils.formatCurrency(-this.props.order.getChange());
+>>>>>>> 53b9245a20deac9e17eec78356371aaca0ec8add
     }
 
     get isIncompleteAndPositive() {
