@@ -1,11 +1,6 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-""" Helper functions for reports testing.
-
-    Please /do not/ import this file by default, but only explicitly call it
-    through the code of python tests.
-"""
+""" Helper functions for reports testing. """
 
 import logging
 import os
@@ -13,8 +8,8 @@ import tempfile
 from lxml import etree
 from subprocess import Popen, PIPE
 
-from .. import api
-from .safe_eval import safe_eval
+from odoo import api
+from odoo.tools.safe_eval import safe_eval
 
 _logger = logging.getLogger(__name__)
 _test_logger = logging.getLogger('odoo.tests')
