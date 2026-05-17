@@ -1,9 +1,9 @@
 {
-    'name': "Telesales",
+    'name': "HTLand CRM",
 
     'summary': "Short (1 phrase/line) summary of the module's purpose",
 
-    'description': """ Hỗ trợ sale phones
+    'description': """ Thuộc về công ty HTLand
     """,
 
     'author': "HTLand",
