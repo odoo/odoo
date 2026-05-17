@@ -53,7 +53,7 @@ export class CodeEditor extends Component {
         sessionId: 1,
     };
 
-    static MODES = ["js", "xml", "qweb", "scss", "python"];
+    static MODES = ["js", "xml", "qweb", "scss", "python", "json"];
     static THEMES = ["", "monokai"];
 
     setup() {
@@ -126,11 +126,22 @@ export class CodeEditor extends Component {
                     showGutter: !readonly,
                 });
 
+                // JSON mode keeps the gutter (and its fold widgets) visible
+                // even when readonly, so users can collapse objects/arrays
+                // with the mouse — the common case for read-only JSON
+                // viewers (config snapshots, API response logs, etc.).
+                if (this.props.mode === "json") {
+                    this.aceEditor.renderer.setOptions({
+                        showGutter: true,
+                        showFoldWidgets: true,
+                    });
+                }
+
                 this.aceEditor.renderer.$cursorLayer.element.style.display = readonly
                     ? "none"
                     : "block";
             },
-            () => [this.props.readonly]
+            () => [this.props.readonly, this.props.mode]
         );
 
         useEffect(
