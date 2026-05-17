@@ -43,6 +43,10 @@
                                             <td class="fw-bold">Email</td>
                                             <td><span t-field="o.patient_id.email"/></td>
                                         </tr>
+                                        <tr t-if="o.patient_id.doctor_id">
+                                            <td class="fw-bold">Registered Doctor</td>
+                                            <td><span t-field="o.patient_id.doctor_id"/></td>
+                                        </tr>
                                         <tr t-if="o.patient_id.age">
                                             <td class="fw-bold">Age</td>
                                             <td><span t-field="o.patient_id.age"/></td>

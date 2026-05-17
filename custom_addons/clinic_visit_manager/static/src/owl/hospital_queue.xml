@@ -114,19 +114,47 @@
     </t>
 
     <t t-name="clinic_visit_manager.TVDisplayScreen">
-        <div class="o_action o_hospital_queue_app o_hospital_tv_screen">
+        <div class="o_action o_hospital_queue_app o_hospital_tv_screen o_patient_display_screen">
             <div class="o-content o_hospital_queue_workspace overflow-auto">
                 <section class="o_hospital_tv_header">
-                    <h1>Hospital Queue</h1>
-                    <p t-if="data.doctor" t-out="data.doctor.name"/>
+                    <h1>Patient Display</h1>
+                    <p>Watch your token and proceed when your name is called</p>
                 </section>
                 <t t-if="state.loading">
                     <div class="o_hospital_loading">Loading queue...</div>
                 </t>
                 <t t-else="">
-                    <div class="o_hospital_queue_grid">
-                        <ServingCard current="data.current"/>
-                        <WaitingList waiting="data.waiting" skipped="data.skipped" showSkipped="false" recall="() => {}"/>
+                    <div class="o_patient_display_grid">
+                        <section class="o_patient_now_called">
+                            <div class="o_hospital_serving_label">Now Called</div>
+                            <t t-if="latestCalled">
+                                <div class="o_patient_called_token" t-out="latestCalled.token"/>
+                                <div class="o_patient_called_name" t-out="latestCalled.patient_name"/>
+                                <div class="o_patient_called_instruction">Please proceed to the doctor</div>
+                                <div class="o_patient_called_doctor" t-out="latestCalled.doctor_name"/>
+                            </t>
+                            <t t-else="">
+                                <div class="o_patient_called_token">--</div>
+                                <div class="o_patient_called_name">Please wait for your token</div>
+                            </t>
+                        </section>
+
+                        <section class="o_patient_called_panel">
+                            <div class="o_hospital_panel_heading">
+                                <h2>Called Tokens</h2>
+                                <span t-out="calledPatients.length"/>
+                            </div>
+                            <ol class="o_hospital_waiting_list o_patient_called_list">
+                                <li t-foreach="calledPatients" t-as="queue" t-key="queue.id">
+                                    <span class="o_hospital_queue_token" t-out="queue.token"/>
+                                    <span class="o_hospital_queue_patient" t-out="queue.patient_name"/>
+                                    <span class="o_patient_doctor_name" t-out="queue.doctor_name"/>
+                                </li>
+                                <li t-if="!calledPatients.length" class="o_hospital_empty_row">No patient has been called yet</li>
+                            </ol>
+                        </section>
+
+                        <WaitingList waiting="data.waiting" skipped="[]" showSkipped="false" recall="() => {}"/>
                     </div>
                 </t>
             </div>

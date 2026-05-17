@@ -4,12 +4,12 @@ import { Component } from "@odoo/owl";
 
 export class QuickVisitForm extends Component {
     static template = "clinic_visit_manager.QuickVisitForm";
-    static props = ["visit", "update", "create", "close"];
+    static props = ["visit", "doctors", "update", "create", "close"];
 }
 
 export class QuickPatientForm extends Component {
     static template = "clinic_visit_manager.QuickPatientForm";
-    static props = ["patient", "update", "create", "close"];
+    static props = ["patient", "doctors", "update", "create", "close"];
 }
 
 export class DashboardSummary extends Component {

@@ -23,6 +23,11 @@ class ClinicPatient(models.Model):
         string="Odoo Customer",
         ondelete="restrict",
     )
+    doctor_id = fields.Many2one(
+        "res.users",
+        string="Registered Doctor",
+        ondelete="set null",
+    )
     age = fields.Integer(
         string="Age",
     )

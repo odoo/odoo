@@ -16,6 +16,10 @@
                     <option value="female">Female</option>
                     <option value="other">Other</option>
                 </select>
+                <select class="form-select" t-att-value="props.visit.doctor_id" t-on-change="ev => props.update('doctor_id', ev.target.value)">
+                    <option value="">Registered doctor</option>
+                    <option t-foreach="props.doctors" t-as="doctor" t-key="doctor.id" t-att-value="doctor.id" t-out="doctor.name"/>
+                </select>
                 <input class="form-control" placeholder="Doctor name" t-att-value="props.visit.doctor_name" t-on-input="ev => props.update('doctor_name', ev.target.value)"/>
                 <input class="form-control" type="number" step="0.01" placeholder="Fee" t-att-value="props.visit.fee" t-on-input="ev => props.update('fee', ev.target.value)"/>
                 <textarea class="form-control o_clinic_form_wide" placeholder="Visit reason" t-att-value="props.visit.symptoms" t-on-input="ev => props.update('symptoms', ev.target.value)"/>
@@ -36,6 +40,10 @@
                 <input class="form-control" placeholder="Full name" t-att-value="props.patient.name" t-on-input="ev => props.update('name', ev.target.value)"/>
                 <input class="form-control" placeholder="Phone" t-att-value="props.patient.phone" t-on-input="ev => props.update('phone', ev.target.value)"/>
                 <input class="form-control" type="email" placeholder="Email" t-att-value="props.patient.email" t-on-input="ev => props.update('email', ev.target.value)"/>
+                <select class="form-select" t-att-value="props.patient.doctor_id" t-on-change="ev => props.update('doctor_id', ev.target.value)">
+                    <option value="">Registered doctor</option>
+                    <option t-foreach="props.doctors" t-as="doctor" t-key="doctor.id" t-att-value="doctor.id" t-out="doctor.name"/>
+                </select>
                 <input class="form-control" type="number" placeholder="Age" t-att-value="props.patient.age" t-on-input="ev => props.update('age', ev.target.value)"/>
                 <select class="form-select" t-att-value="props.patient.gender" t-on-change="ev => props.update('gender', ev.target.value)">
                     <option value="">Gender</option>
@@ -227,6 +235,7 @@
                             <th>Name</th>
                             <th>Phone</th>
                             <th>Email</th>
+                            <th>Doctor</th>
                             <th class="text-end">Age</th>
                             <th>Gender</th>
                             <th>Blood</th>
@@ -239,6 +248,7 @@
                             <td t-out="patient.name"/>
                             <td t-out="patient.phone || '-'"/>
                             <td t-out="patient.email || '-'"/>
+                            <td t-out="patient.doctor_id ? patient.doctor_id[1] : '-'"/>
                             <td class="text-end" t-out="patient.age || '-'"/>
                             <td t-out="props.genderLabel(patient.gender)"/>
                             <td t-out="props.bloodGroupLabel(patient.blood_group)"/>
@@ -248,7 +258,7 @@
                             </td>
                         </tr>
                         <tr t-if="!props.patientCount">
-                            <td colspan="8" class="text-muted text-center">No patients match this search</td>
+                            <td colspan="9" class="text-muted text-center">No patients match this search</td>
                         </tr>
                     </tbody>
                 </table>

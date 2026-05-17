@@ -89,7 +89,7 @@
     </record>
 
     <record id="action_hospital_queue_tv" model="ir.actions.client">
-        <field name="name">Queue TV Display</field>
+        <field name="name">Patient Display</field>
         <field name="tag">clinic_visit_manager.hospital_queue_tv</field>
     </record>
 
@@ -125,13 +125,9 @@
     </record>
 
     <menuitem id="menu_hospital_queue_tv"
-              name="Queue TV Display"
+              name="Patient Display"
               parent="menu_clinic_root"
               action="action_hospital_queue_tv"
               sequence="4"
-              groups="base.group_no_one"/>
-
-    <record id="menu_hospital_queue_tv" model="ir.ui.menu">
-        <field name="active" eval="False"/>
-    </record>
+              groups="base.group_user"/>
 </odoo>

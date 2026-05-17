@@ -9,6 +9,7 @@
                 <field name="name"/>
                 <field name="patient_name"/>
                 <field name="patient_id"/>
+                <field name="doctor_id"/>
                 <field name="doctor_name"/>
                 <field name="visit_date"/>
                 <field name="queued_at" optional="hide"/>
@@ -150,6 +151,7 @@
                             <field name="token_number"/>
                             <field name="patient_name"/>
                             <field name="patient_id"/>
+                            <field name="doctor_id"/>
                             <field name="doctor_name"/>
                             <field name="visit_date"/>
                             <field name="queued_at"/>
@@ -231,6 +233,7 @@
                 <field name="token_number"/>
                 <field name="patient_name"/>
                 <field name="patient_id"/>
+                <field name="doctor_id"/>
                 <field name="doctor_name"/>
                 <filter name="active_queue"
                         string="Active Queue"
@@ -243,8 +246,8 @@
                         string="Status"
                         context="{'group_by': 'state'}"/>
                 <filter name="group_by_doctor"
-                        string="Doctor"
-                        context="{'group_by': 'doctor_name'}"/>
+                        string="Registered Doctor"
+                        context="{'group_by': 'doctor_id'}"/>
             </search>
         </field>
     </record>

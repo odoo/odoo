@@ -8,6 +8,7 @@
                 <field name="name"/>
                 <field name="phone"/>
                 <field name="email"/>
+                <field name="doctor_id"/>
                 <field name="partner_id" optional="hide" groups="account.group_account_invoice,account.group_account_readonly"/>
                 <field name="age"/>
                 <field name="gender"/>
@@ -36,6 +37,9 @@
                         <div t-if="record.email.raw_value" class="mt-1">
                             Email: <field name="email"/>
                         </div>
+                        <div t-if="record.doctor_id.raw_value" class="mt-1">
+                            Doctor: <field name="doctor_id"/>
+                        </div>
                     </t>
                 </templates>
             </kanban>
@@ -50,6 +54,7 @@
                 <field name="name"/>
                 <field name="phone"/>
                 <field name="email"/>
+                <field name="doctor_id"/>
                 <field name="age"/>
                 <field name="gender"/>
                 <field name="blood_group"/>
@@ -69,6 +74,7 @@
                             <field name="name"/>
                             <field name="phone"/>
                             <field name="email"/>
+                            <field name="doctor_id"/>
                             <field name="partner_id" groups="account.group_account_invoice,account.group_account_readonly"/>
                         </group>
                         <group>

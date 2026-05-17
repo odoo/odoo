@@ -216,10 +216,9 @@ export class TVDisplayScreen extends Component {
         this.orm = useService("orm");
         this.state = useState({
             data: {
-                current: false,
+                current: [],
                 waiting: [],
-                skipped: [],
-                doctor: false,
+                updated_at: false,
             },
             loading: true,
         });
@@ -240,12 +239,20 @@ export class TVDisplayScreen extends Component {
         if (!options.silent) {
             this.state.loading = true;
         }
-        this.state.data = await this.orm.call("hospital.queue", "get_queue_data", [false]);
+        this.state.data = await this.orm.call("hospital.queue", "get_patient_display_data", []);
         this.state.loading = false;
     }
 
     get data() {
         return this.state.data;
+    }
+
+    get calledPatients() {
+        return this.data.current || [];
+    }
+
+    get latestCalled() {
+        return this.calledPatients[0] || false;
     }
 }
 

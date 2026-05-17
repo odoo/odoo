@@ -20,6 +20,7 @@ const VISIT_FIELDS = [
     "token_number",
     "name",
     "patient_name",
+    "doctor_id",
     "doctor_name",
     "visit_date",
     "queue_wait_minutes",
@@ -31,6 +32,7 @@ const PATIENT_FIELDS = [
     "name",
     "phone",
     "email",
+    "doctor_id",
     "age",
     "gender",
     "blood_group",
@@ -132,9 +134,17 @@ export class ClinicDashboard extends Component {
             patient_email: "",
             patient_age: "",
             patient_gender: "",
-            doctor_name: "",
-            fee: "",
+            ...this.defaultVisitValues(),
             symptoms: "",
+        };
+    }
+
+    defaultVisitValues() {
+        const defaults = this.state?.dashboard?.visit_defaults || {};
+        return {
+            doctor_id: defaults.doctor_id || "",
+            doctor_name: defaults.doctor_name || "",
+            fee: defaults.fee || "",
         };
     }
 
@@ -143,6 +153,7 @@ export class ClinicDashboard extends Component {
             name: "",
             phone: "",
             email: "",
+            doctor_id: "",
             age: "",
             gender: "",
             blood_group: "",
@@ -170,6 +181,25 @@ export class ClinicDashboard extends Component {
             "get_owl_dashboard_data",
             []
         );
+        this.applyVisitDefaults();
+    }
+
+    applyVisitDefaults() {
+        const visit = this.state.newVisit;
+        if (
+            visit.patient_name ||
+            visit.patient_phone ||
+            visit.patient_email ||
+            visit.patient_age ||
+            visit.patient_gender ||
+            visit.doctor_id ||
+            visit.doctor_name ||
+            visit.fee ||
+            visit.symptoms
+        ) {
+            return;
+        }
+        Object.assign(visit, this.defaultVisitValues());
     }
 
     async loadVisits() {
@@ -215,7 +245,15 @@ export class ClinicDashboard extends Component {
         if (!search) {
             return [];
         }
-        return ["|", "|", ["name", "ilike", search], ["phone", "ilike", search], ["email", "ilike", search]];
+        return [
+            "|",
+            "|",
+            "|",
+            ["name", "ilike", search],
+            ["phone", "ilike", search],
+            ["email", "ilike", search],
+            ["doctor_id.name", "ilike", search],
+        ];
     }
 
     setTab(tab) {
@@ -231,6 +269,9 @@ export class ClinicDashboard extends Component {
         }
         const stateKey = formName === "patient" ? "showPatientForm" : "showVisitForm";
         this.state[stateKey] = !this.state[stateKey];
+        if (formName === "visit" && this.state[stateKey]) {
+            this.applyVisitDefaults();
+        }
     }
 
     async setVisitFilter(filter) {
@@ -258,6 +299,10 @@ export class ClinicDashboard extends Component {
 
     updateNewVisit(field, value) {
         this.state.newVisit[field] = value;
+        if (field === "doctor_id") {
+            const doctor = this.doctors.find((item) => String(item.id) === String(value));
+            this.state.newVisit.doctor_name = doctor ? doctor.name : "";
+        }
     }
 
     updateNewPatient(field, value) {
@@ -314,7 +359,11 @@ export class ClinicDashboard extends Component {
     }
 
     async createVisit() {
-        const intakeVals = this.cleanValues(this.state.newVisit, FLOAT_VISIT_FIELDS, ["patient_age"]);
+        const intakeVals = this.cleanValues(
+            this.state.newVisit,
+            FLOAT_VISIT_FIELDS,
+            ["patient_age", "doctor_id"]
+        );
         if (!intakeVals.patient_name) {
             this.notification.add(_t("Patient name is required."), { type: "warning" });
             return;
@@ -341,11 +390,12 @@ export class ClinicDashboard extends Component {
                 name: vals.patient_name,
                 phone: vals.patient_phone,
                 email: vals.patient_email,
+                doctor_id: vals.doctor_id,
                 age: vals.patient_age,
                 gender: vals.patient_gender,
             },
             [],
-            ["age"]
+            ["age", "doctor_id"]
         );
     }
 
@@ -353,6 +403,7 @@ export class ClinicDashboard extends Component {
         const visitVals = this.cleanValues(
             {
                 patient_name: vals.patient_name,
+                doctor_id: vals.doctor_id,
                 doctor_name: vals.doctor_name,
                 fee: vals.fee,
                 symptoms: vals.symptoms,
@@ -372,7 +423,7 @@ export class ClinicDashboard extends Component {
         const patients = await this.orm.searchRead(
             "clinic.patient",
             this.patientLookupDomain(vals),
-            ["name", "phone", "email", "age", "gender"],
+            ["name", "phone", "email", "doctor_id", "age", "gender"],
             { limit: 1 }
         );
         if (!patients.length) {
@@ -382,7 +433,7 @@ export class ClinicDashboard extends Component {
 
         const patient = patients[0];
         const updateVals = {};
-        for (const field of ["phone", "email", "age", "gender"]) {
+        for (const field of ["phone", "email", "doctor_id", "age", "gender"]) {
             if (vals[field] && !patient[field]) {
                 updateVals[field] = vals[field];
             }
@@ -404,7 +455,7 @@ export class ClinicDashboard extends Component {
     }
 
     async createPatient() {
-        const vals = this.cleanValues(this.state.newPatient, [], ["age"]);
+        const vals = this.cleanValues(this.state.newPatient, [], ["age", "doctor_id"]);
         if (!vals.name) {
             this.notification.add(_t("Patient name is required."), { type: "warning" });
             return;
@@ -543,6 +594,10 @@ export class ClinicDashboard extends Component {
 
     get data() {
         return this.state.dashboard || {};
+    }
+
+    get doctors() {
+        return this.data.doctors || [];
     }
 
     get metrics() {

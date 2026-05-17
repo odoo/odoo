@@ -25,12 +25,14 @@
                 <t t-else="">
                     <QuickVisitForm t-if="state.showVisitForm and canCreateVisit"
                                     visit="state.newVisit"
+                                    doctors="doctors"
                                     update.bind="updateNewVisit"
                                     create.bind="createVisit"
                                     close.bind="closeVisitForm"/>
 
                     <QuickPatientForm t-if="state.showPatientForm and canCreatePatient"
                                       patient="state.newPatient"
+                                      doctors="doctors"
                                       update.bind="updateNewPatient"
                                       create.bind="createPatient"
                                       close.bind="closePatientForm"/>

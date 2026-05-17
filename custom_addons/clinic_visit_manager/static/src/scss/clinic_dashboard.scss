@@ -841,3 +841,103 @@
         }
     }
 }
+
+.o_patient_display_screen {
+    .o_patient_display_grid {
+        display: grid;
+        gap: 16px;
+        grid-template-columns: minmax(380px, 1.1fr) minmax(300px, 0.75fr);
+    }
+
+    .o_patient_now_called,
+    .o_patient_called_panel {
+        background: var(--hospital-panel);
+        border: 1px solid var(--hospital-border);
+        border-radius: 6px;
+        box-shadow: none;
+    }
+
+    .o_patient_now_called {
+        align-items: center;
+        display: flex;
+        flex-direction: column;
+        grid-row: span 2;
+        justify-content: center;
+        min-height: 560px;
+        padding: 34px;
+        text-align: center;
+    }
+
+    .o_patient_called_token {
+        color: var(--hospital-blue);
+        font-size: 150px;
+        font-weight: 800;
+        letter-spacing: 0;
+        line-height: 1;
+        margin: 18px 0 12px;
+    }
+
+    .o_patient_called_name {
+        color: var(--hospital-text);
+        font-size: 48px;
+        font-weight: 750;
+        letter-spacing: 0;
+        line-height: 1.15;
+        overflow-wrap: anywhere;
+    }
+
+    .o_patient_called_instruction {
+        background: var(--hospital-blue-soft);
+        border-radius: 999px;
+        color: var(--hospital-blue);
+        font-size: 22px;
+        font-weight: 700;
+        margin-top: 24px;
+        padding: 10px 18px;
+    }
+
+    .o_patient_called_doctor {
+        color: var(--hospital-muted);
+        font-size: 22px;
+        margin-top: 14px;
+    }
+
+    .o_patient_called_panel,
+    .o_hospital_waiting_panel {
+        padding: 14px;
+    }
+
+    .o_patient_called_list li {
+        grid-template-columns: 96px minmax(0, 1fr) minmax(120px, 0.6fr);
+    }
+
+    .o_patient_doctor_name {
+        color: var(--hospital-muted);
+        font-weight: 600;
+        overflow-wrap: anywhere;
+    }
+
+    @media (max-width: 1000px) {
+        .o_patient_display_grid {
+            grid-template-columns: 1fr;
+        }
+
+        .o_patient_now_called {
+            grid-row: auto;
+            min-height: 420px;
+        }
+
+        .o_patient_called_token {
+            font-size: 104px;
+        }
+
+        .o_patient_called_name {
+            font-size: 34px;
+        }
+
+        .o_patient_called_instruction,
+        .o_patient_called_doctor {
+            font-size: 18px;
+        }
+    }
+}

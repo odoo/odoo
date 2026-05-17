@@ -63,6 +63,8 @@ class ClinicVisitDashboard(models.Model):
                 "next": self._serialize_visit(next_visit),
             },
             "permissions": self._get_permissions(),
+            "doctors": self._get_registered_doctors(),
+            "visit_defaults": self._get_visit_defaults(),
         }
 
     def _get_permissions(self):
@@ -78,6 +80,56 @@ class ClinicVisitDashboard(models.Model):
             "can_complete": is_doctor or is_manager,
             "can_cancel": is_receptionist or is_manager,
         }
+
+    def _get_registered_doctors(self):
+        doctor_group = self.env.ref(
+            "clinic_visit_manager.group_clinic_doctor",
+            raise_if_not_found=False,
+        )
+        doctors = (
+            doctor_group.user_ids.sorted("name")
+            if doctor_group
+            else self.env["res.users"]
+        )
+        return [
+            {
+                "id": doctor.id,
+                "name": doctor.display_name,
+            }
+            for doctor in doctors
+        ]
+
+    def _get_visit_defaults(self):
+        config = self.env["ir.config_parameter"].sudo()
+        doctor_name = config.get_param(
+            "clinic_visit_manager.default_doctor_name",
+            "",
+        )
+        fee = float(
+            config.get_param(
+                "clinic_visit_manager.default_consultation_fee",
+                "0.0",
+            )
+            or 0.0
+        )
+        doctor = self._find_registered_doctor(doctor_name)
+        return {
+            "doctor_id": doctor.id if doctor else False,
+            "doctor_name": doctor.display_name if doctor else doctor_name,
+            "fee": fee or "",
+        }
+
+    def _find_registered_doctor(self, doctor_name):
+        doctor_name = (doctor_name or "").strip()
+        if not doctor_name:
+            return self.env["res.users"]
+        doctors = self.env["res.users"].browse(
+            [doctor["id"] for doctor in self._get_registered_doctors()]
+        )
+        return doctors.filtered(
+            lambda doctor: doctor.display_name.lower() == doctor_name.lower()
+            or doctor.name.lower() == doctor_name.lower()
+        )[:1]
 
     def _get_today_domain(self):
         today = fields.Date.context_today(self)

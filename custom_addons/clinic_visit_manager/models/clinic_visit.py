@@ -22,6 +22,7 @@ RECEPTIONIST_WRITE_FIELDS = frozenset(
     {
         "patient_name",
         "patient_id",
+        "doctor_id",
         "doctor_name",
         "visit_date",
         "fee",
@@ -91,6 +92,12 @@ class ClinicVisit(models.Model):
 
     doctor_name = fields.Char(
         string="Doctor Name",
+    )
+
+    doctor_id = fields.Many2one(
+        "res.users",
+        string="Registered Doctor",
+        ondelete="restrict",
     )
 
     visit_date = fields.Datetime(
@@ -206,9 +213,10 @@ class ClinicVisit(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
+            self._sync_patient_values(vals)
+            self._sync_doctor_values(vals)
             self._apply_visit_defaults(vals)
             self._check_visit_field_permissions(vals, creating=True)
-            self._sync_patient_values(vals)
         return super().create(vals_list)
 
     def write(self, vals):
@@ -218,7 +226,28 @@ class ClinicVisit(models.Model):
         self._check_visit_field_permissions(vals)
         if "patient_name" in vals or "patient_id" in vals:
             self._sync_patient_values(vals)
-        return super().write(vals)
+        if "doctor_id" in vals:
+            self._sync_doctor_values(vals)
+        result = super().write(vals)
+        if {"state", "patient_name", "doctor_id", "doctor_name", "token_number"} & set(vals):
+            self._broadcast_patient_display_update("updated")
+        return result
+
+    @api.onchange("patient_id")
+    def _onchange_patient_id(self):
+        for record in self:
+            if not record.patient_id:
+                continue
+            record.patient_name = record.patient_id.name
+            if record.patient_id.doctor_id and not record.doctor_id:
+                record.doctor_id = record.patient_id.doctor_id
+                record.doctor_name = record.patient_id.doctor_id.display_name
+
+    @api.onchange("doctor_id")
+    def _onchange_doctor_id(self):
+        for record in self:
+            if record.doctor_id:
+                record.doctor_name = record.doctor_id.display_name
 
     @api.depends("weight_kg", "height_cm")
     def _compute_bmi(self):
@@ -277,23 +306,44 @@ class ClinicVisit(models.Model):
         patient_id = vals.get("patient_id")
         patient_name = (vals.get("patient_name") or "").strip()
 
-        if patient_id and not patient_name:
+        if patient_id:
             patient = self.env["clinic.patient"].browse(patient_id)
-            vals["patient_name"] = getattr(patient, "name", "")
+            if not patient_name:
+                vals["patient_name"] = getattr(patient, "name", "")
+            if "doctor_id" not in vals and getattr(patient, "doctor_id", False):
+                vals["doctor_id"] = patient.doctor_id.id
             return
 
         if patient_name and not patient_id and self._should_auto_create_patient():
-            vals["patient_id"] = self._get_or_create_patient(patient_name).id
+            vals["patient_id"] = self._get_or_create_patient(
+                patient_name,
+                vals.get("doctor_id"),
+            ).id
 
-    def _get_or_create_patient(self, patient_name):
+    def _sync_doctor_values(self, vals):
+        if "doctor_id" not in vals:
+            return
+        doctor_id = vals.get("doctor_id")
+        if doctor_id:
+            doctor = self.env["res.users"].browse(doctor_id)
+            vals["doctor_name"] = doctor.display_name
+        elif not vals.get("doctor_name"):
+            vals["doctor_name"] = False
+
+    def _get_or_create_patient(self, patient_name, doctor_id=False):
         patient_name = patient_name.strip()
         patient = self.env["clinic.patient"].search(
             [("name", "=ilike", patient_name)],
             limit=1,
         )
         if patient:
+            if doctor_id and not patient.doctor_id:
+                patient.sudo().doctor_id = doctor_id
             return patient
-        return self.env["clinic.patient"].create({"name": patient_name})
+        vals = {"name": patient_name}
+        if doctor_id:
+            vals["doctor_id"] = doctor_id
+        return self.env["clinic.patient"].create(vals)
 
     def _get_invoice_product(self):
         product_id = self.env["ir.config_parameter"].sudo().get_param(
@@ -427,6 +477,17 @@ class ClinicVisit(models.Model):
                 )
                 % {"fields": ", ".join(field_labels or sorted(forbidden_fields))}
             )
+
+    def _broadcast_patient_display_update(self, action):
+        self.env["bus.bus"]._sendone(
+            "hospital_queue",
+            "hospital_queue_update",
+            {
+                "action": action,
+                "doctor_ids": [],
+                "updated_at": fields.Datetime.to_string(fields.Datetime.now()),
+            },
+        )
 
     def action_confirm(self):
         self._check_workflow_groups((GROUP_RECEPTIONIST, GROUP_MANAGER))

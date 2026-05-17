@@ -108,6 +108,45 @@ class HospitalQueue(models.Model):
         }
 
     @api.model
+    def get_patient_display_data(self):
+        queue_current = self.search(
+            [("state", "=", "serving")],
+            order="write_date desc, queue_number asc, id asc",
+            limit=8,
+        )
+        queue_waiting = self.search(
+            [("state", "=", "waiting")],
+            order="queue_number asc, id asc",
+            limit=24,
+        )
+        visit_model = self.env["clinic.visit"]
+        visit_current = visit_model.search(
+            [("state", "=", "in_consultation")],
+            order="write_date desc, queued_at asc, id asc",
+            limit=8,
+        )
+        visit_waiting = visit_model.search(
+            [("state", "=", "waiting")],
+            order="queued_at asc, visit_date asc, id asc",
+            limit=24,
+        )
+        current = sorted(
+            [self._serialize_queue_display(queue) for queue in queue_current]
+            + [self._serialize_visit_display(visit) for visit in visit_current],
+            key=lambda item: item["called_at"] or "",
+            reverse=True,
+        )[:8]
+        waiting = (
+            [self._serialize_queue_display(queue) for queue in queue_waiting]
+            + [self._serialize_visit_display(visit) for visit in visit_waiting]
+        )[:24]
+        return {
+            "current": current,
+            "waiting": waiting,
+            "updated_at": fields.Datetime.to_string(fields.Datetime.now()),
+        }
+
+    @api.model
     def action_add_patient(self, patient_name, doctor_id=False):
         patient_name = (patient_name or "").strip()
         if not patient_name:
@@ -222,6 +261,37 @@ class HospitalQueue(models.Model):
             "doctor_name": queue.doctor_id.display_name,
             "state": queue.state,
             "queue_number": queue.queue_number,
+        }
+
+    def _serialize_queue_display(self, queue):
+        data = self._serialize_queue(queue)
+        data.update(
+            {
+                "id": f"queue-{queue.id}",
+                "source": "queue",
+                "called_at": fields.Datetime.to_string(queue.write_date)
+                if queue.write_date
+                else False,
+            }
+        )
+        return data
+
+    @staticmethod
+    def _serialize_visit_display(visit):
+        return {
+            "id": f"visit-{visit.id}",
+            "source": "visit",
+            "token": visit.token_number or visit.name,
+            "patient_name": visit.patient_name,
+            "doctor_id": False,
+            "doctor_name": visit.doctor_name or "",
+            "state": visit.state,
+            "queue_number": visit.token_number or "-",
+            "called_at": fields.Datetime.to_string(
+                visit.consultation_started_at or visit.write_date
+            )
+            if visit.consultation_started_at or visit.write_date
+            else False,
         }
 
     def _current_for_doctor(self, doctor):
