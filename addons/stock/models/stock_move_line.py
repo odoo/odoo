@@ -123,7 +123,7 @@ class StockMoveLine(models.Model):
     @api.depends('state')
     def _compute_picked(self):
         for line in self:
-            if line.move_id.state == 'done' or (self.env.context.get('allow_parent_move_picked_reset') and line.move_id.picked):
+            if line.move_id.state == 'done' or self.env.context.get('auto_pick_move_lines'):
                 line.picked = True
 
     @api.depends('picking_id')
@@ -270,7 +270,9 @@ class StockMoveLine(models.Model):
                 for sml in smls:
                     if len(used_locations) > 1:
                         break
-                    sml.location_dest_id = sml.move_id.location_dest_id.with_context(exclude_sml_ids=excluded_smls, locations=locations)._get_putaway_strategy(sml.product_id, quantity=sml.quantity)
+                    putaway_loc_id = sml.move_id.location_dest_id.with_context(exclude_sml_ids=excluded_smls, locations=locations)._get_putaway_strategy(sml.product_id, quantity=sml.quantity)
+                    if putaway_loc_id != sml.location_dest_id:
+                        sml.location_dest_id = putaway_loc_id
                     excluded_smls.discard(sml.id)
                     used_locations.add(sml.location_dest_id)
                 if len(used_locations) > 1:

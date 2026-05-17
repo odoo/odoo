@@ -1,11 +1,14 @@
 from odoo import http
 from odoo.http import request
+from odoo.tools import consteq
 
 
 class PosCustomerDisplay(http.Controller):
     @http.route("/pos_customer_display/<id_>/<device_uuid>", auth="public", type="http", website=True)
     def pos_customer_display(self, id_, device_uuid, **kw):
         pos_config_sudo = request.env["pos.config"].sudo().browse(int(id_))
+        if not consteq(kw.get('access_token', ''), pos_config_sudo.access_token):
+            return request.not_found()
         return request.render(
             "point_of_sale.customer_display_index",
             {

@@ -5,7 +5,7 @@ from markupsafe import Markup
 
 from odoo import _, fields, models, Command
 from odoo.exceptions import UserError
-from odoo.tools import formatLang, frozendict, html2plaintext, html_escape, pdf, str2bool
+from odoo.tools import formatLang, frozendict, html2plaintext, html_escape, pdf, str2bool, unique
 from odoo.addons.account_edi_ubl_cii.models.account_edi_common import (
     FloatFmt,
     GST_COUNTRY_CODES,
@@ -1054,23 +1054,12 @@ class AccountEdiUBL(models.AbstractModel):
     def _ubl_add_line_price_node(self, vals, in_foreign_currency=True):
         line_node = vals['line_node']
         base_line = vals['line_vals']['base_line']
+        suffix = '_currency' if in_foreign_currency else ''
         currency = base_line['currency_id'] if in_foreign_currency else vals['company_currency']
-
-        raw_gross_total_excluded = self.env['account.tax']._get_gross_total_without_tax(
-            base_line=base_line,
-            company=vals['company'],
-            in_foreign_currency=in_foreign_currency,
-        )
-        raw_gross_price_unit = self.env['account.tax']._get_price_unit_without_tax(
-            base_line=base_line,
-            company=vals['company'],
-            raw_gross_total_excluded=raw_gross_total_excluded,
-            in_foreign_currency=in_foreign_currency,
-        )
 
         line_node['cac:Price'] = {
             'cbc:PriceAmount': {
-                '_text': FloatFmt(raw_gross_price_unit, min_dp=1),
+                '_text': FloatFmt(base_line['tax_details'][f'raw_gross_price_unit{suffix}'], min_dp=1, max_dp=6),
                 'currencyID': currency.name,
             },
         }
@@ -1264,7 +1253,7 @@ class AccountEdiUBL(models.AbstractModel):
             gross_total_excluded += sign * allowance_charge_node['cbc:Amount']['_text']
 
         line_node['cbc:LineExtensionAmount'] = {
-            '_text': FloatFmt(gross_total_excluded, max_dp=currency.decimal_places),
+            '_text': FloatFmt(gross_total_excluded, min_dp=currency.decimal_places),
             'currencyID': currency.name,
         }
 
@@ -1796,11 +1785,11 @@ class AccountEdiUBL(models.AbstractModel):
         return {
             '_currency': currency,
             'cbc:TaxableAmount': {
-                '_text': FloatFmt(tax_subtotal['base_amount'], max_dp=currency.decimal_places),
+                '_text': FloatFmt(tax_subtotal['base_amount'], min_dp=currency.decimal_places),
                 'currencyID': currency.name
             },
             'cbc:TaxAmount': {
-                '_text': FloatFmt(tax_subtotal['tax_amount'], max_dp=currency.decimal_places),
+                '_text': FloatFmt(tax_subtotal['tax_amount'], min_dp=currency.decimal_places),
                 'currencyID': currency.name
             },
             'cbc:Percent': {
@@ -1829,7 +1818,7 @@ class AccountEdiUBL(models.AbstractModel):
         return {
             '_currency': currency,
             'cbc:TaxAmount': {
-                '_text': FloatFmt(tax_total['amount'], max_dp=currency.decimal_places),
+                '_text': FloatFmt(tax_total['amount'], min_dp=currency.decimal_places),
                 'currencyID': currency.name
             },
             'cac:TaxSubtotal': [
@@ -2009,7 +1998,7 @@ class AccountEdiUBL(models.AbstractModel):
             for line_node in vals['document_node'].get(line_key, [])
         )
         vals['legal_monetary_total_node']['cbc:LineExtensionAmount'] = {
-            '_text': FloatFmt(line_extension_amount, max_dp=currency.decimal_places),
+            '_text': FloatFmt(line_extension_amount, min_dp=currency.decimal_places),
             'currencyID': currency.name,
         }
 
@@ -2018,7 +2007,7 @@ class AccountEdiUBL(models.AbstractModel):
         node = vals['legal_monetary_total_node']
 
         node['cbc:TaxExclusiveAmount'] = {
-            '_text': FloatFmt(node['cbc:LineExtensionAmount']['_text'], max_dp=currency.decimal_places),
+            '_text': FloatFmt(node['cbc:LineExtensionAmount']['_text'], min_dp=currency.decimal_places),
             'currencyID': currency.name,
         }
 
@@ -2040,7 +2029,7 @@ class AccountEdiUBL(models.AbstractModel):
         node['cbc:TaxInclusiveAmount'] = {
             '_text': FloatFmt(
                 node['cbc:TaxExclusiveAmount']['_text'] + tax_amount,
-                max_dp=currency.decimal_places,
+                min_dp=currency.decimal_places,
             ),
             'currencyID': currency.name,
         }
@@ -2062,11 +2051,11 @@ class AccountEdiUBL(models.AbstractModel):
 
         node.update({
             'cbc:AllowanceTotalAmount': {
-                '_text': FloatFmt(total_allowance, max_dp=currency.decimal_places),
+                '_text': FloatFmt(total_allowance, min_dp=currency.decimal_places),
                 'currencyID': currency.name,
             } if total_allowance else None,
             'cbc:ChargeTotalAmount': {
-                '_text': FloatFmt(total_charge, max_dp=currency.decimal_places),
+                '_text': FloatFmt(total_charge, min_dp=currency.decimal_places),
                 'currencyID': currency.name,
             } if total_charge else None,
         })
@@ -2077,14 +2066,14 @@ class AccountEdiUBL(models.AbstractModel):
 
         payable_rounding_amount = (node['cbc:PayableRoundingAmount'] or {}).get('_text') or 0.0
         node['cbc:PrepaidAmount'] = {
-            '_text': FloatFmt(0.0, max_dp=currency.decimal_places),
+            '_text': FloatFmt(0.0, min_dp=currency.decimal_places),
             'currencyID': currency.name,
         }
         node['cbc:PayableAmount'] = {
             '_text': FloatFmt(
                 node['cbc:TaxInclusiveAmount']['_text']
                 + payable_rounding_amount,
-                max_dp=currency.decimal_places,
+                min_dp=currency.decimal_places,
             ),
             'currencyID': currency.name,
         }
@@ -2118,7 +2107,7 @@ class AccountEdiUBL(models.AbstractModel):
             }
         else:
             node['cbc:PayableRoundingAmount'] = {
-                '_text': FloatFmt(payable_rounding_amount, max_dp=currency.decimal_places),
+                '_text': FloatFmt(payable_rounding_amount, min_dp=currency.decimal_places),
                 'currencyID': currency.name,
             }
 
@@ -2391,7 +2380,7 @@ class AccountEdiUBL(models.AbstractModel):
             if note := node.text:
                 payment_references.append(note)
 
-        if payment_reference := ','.join(payment_references):
+        if payment_reference := ','.join(unique(payment_references)):
             collected_values['to_write']['payment_reference'] = payment_reference
 
     def _import_ubl_invoice_add_delivery(self, collected_values):
@@ -2433,19 +2422,6 @@ class AccountEdiUBL(models.AbstractModel):
         collected_values['prepaid_amount'] = prepaid_amount
         formatted_prepaid_amount = formatLang(self.env, prepaid_amount, currency_obj=currency)
         collected_values['logs'].append(_("A payment of %s was detected.", formatted_prepaid_amount))
-
-    def _import_ubl_invoice_add_rounding_amount(self, collected_values):
-        file_document_sign = collected_values['file_document_sign']
-        currency = collected_values['currency_values']['currency']
-        tree = collected_values['tree']
-        rounding_amount_str = tree.findtext('./{*}LegalMonetaryTotal/{*}PayableRoundingAmount')
-        rounding_amount = file_document_sign * float(rounding_amount_str or 0.0)
-        if currency.is_zero(rounding_amount):
-            return
-
-        collected_values['rounding_amount'] = rounding_amount
-        formatted_rounding_amount = formatLang(self.env, rounding_amount, currency_obj=currency)
-        collected_values['logs'].append(_("A rounding amount of %s was detected.", formatted_rounding_amount))
 
     def _import_ubl_invoice_add_tax_total_values(self, collected_values):
         file_document_sign = collected_values['file_document_sign']
@@ -2897,6 +2873,15 @@ class AccountEdiUBL(models.AbstractModel):
                 if tax_values := charge.get('attempt_tax_values'):
                     tax_values_list.append(tax_values)
 
+        if customer := collected_values.get('customer_values', {}).get('customer'):
+            fiscal_position = self.env['account.move'].new({
+                'company_id': collected_values['company'].id,
+                'move_type': collected_values['invoice'].move_type,
+                'partner_id': customer.id,
+            }).fiscal_position_id
+            for tax_values in tax_values_list:
+                tax_values['fiscal_position'] = fiscal_position
+
         self.env['account.tax']._import_retrieve_tax(
             search_plan=self._import_ubl_retrieve_taxes_search_plan(collected_values),
             company=company,
@@ -2990,16 +2975,6 @@ class AccountEdiUBL(models.AbstractModel):
             base_line_kwargs['_create_values']['deferred_end_date'] = deferred_end_date
         return base_line_kwargs
 
-    def _import_ubl_invoice_get_rounding_base_line_kwargs(self, collected_values):
-        base_line_kwargs = {
-            **self._import_ubl_invoice_get_default_base_line_kwargs(collected_values),
-            'quantity': 1.0,
-            'price_unit': collected_values['rounding_amount'],
-            'tax_ids': [],
-        }
-        base_line_kwargs['_create_values']['name'] = _("Rounding")
-        return base_line_kwargs
-
     def _import_ubl_invoice_get_allowance_charge_line_kwargs(self, collected_values):
         allowance_charge = collected_values['allowance_charge']
         file_document_sign = collected_values['file_document_sign']
@@ -3082,15 +3057,17 @@ class AccountEdiUBL(models.AbstractModel):
         if not self.module_installed('account_accountant'):
             # _predict_specific_account is defined in account_accountant
             return
+
+        accounts_map = {}
         lines_collected_values = collected_values['lines_collected_values']
         for line_collected_values in lines_collected_values:
             account_values = line_collected_values['account_values']
             if predictive := account_values.get('invoice_predictive'):
-                account_id = self.env['account.move.line']._predict_specific_account(
-                    move=predictive['invoice'],
-                    name=predictive['name'],
-                    partner=predictive['partner'],
-                )
+                account_params = {'move': predictive['invoice'], 'name': predictive['name'], 'partner': predictive['partner']}
+                account_key = tuple(account_params.values())
+                if account_key not in accounts_map:
+                    accounts_map[account_key] = self.env['account.move.line']._predict_specific_account(**account_params)
+                account_id = accounts_map.get(account_key)
                 if account_id:
                     account_values['account'] = self.env['account.account'].browse(account_id)
 
@@ -3140,14 +3117,6 @@ class AccountEdiUBL(models.AbstractModel):
 
             # Product line.
             base_line_kwargs = self._import_ubl_invoice_line_get_product_base_line_kwargs(line_collected_values)
-            base_lines.append(AccountTax._prepare_base_line_for_taxes_computation(
-                record=None,
-                **base_line_kwargs,
-            ))
-
-        # Cash rounding line.
-        if collected_values.get('rounding_amount'):
-            base_line_kwargs = self._import_ubl_invoice_get_rounding_base_line_kwargs(collected_values)
             base_lines.append(AccountTax._prepare_base_line_for_taxes_computation(
                 record=None,
                 **base_line_kwargs,
@@ -3226,6 +3195,7 @@ class AccountEdiUBL(models.AbstractModel):
             taxes_to_tax_amount_currency[taxes] = global_tax_values['tax_amount_currency']
 
         # If we are too far away from the total retrieved in the xml, don't fix anything: the error is elsewhere.
+        collected_values['are_taxes_complete'] = is_complete
         if (
             not is_complete
             or currency.compare_amounts(abs(invoice.amount_tax - total_tax_amount) - tolerance, 0.0) > 0
@@ -3278,6 +3248,47 @@ class AccountEdiUBL(models.AbstractModel):
             invoice._sync_dynamic_lines(container),
         ):
             invoice.line_ids = line_ids_commands
+
+    def _import_ubl_invoice_fix_untaxed_amount(self, collected_values):
+        if not collected_values['are_taxes_complete']:
+            return
+
+        tree = collected_values['tree']
+        file_document_sign = collected_values['file_document_sign']
+        currency = collected_values['currency_values']['currency']
+        tax_exclusive_amount_str = tree.findtext('./{*}LegalMonetaryTotal/{*}TaxExclusiveAmount')
+        if not tax_exclusive_amount_str:
+            return
+
+        payable_rounding_amount_str = tree.findtext('./{*}LegalMonetaryTotal/{*}PayableRoundingAmount')
+        tax_exclusive_amount = file_document_sign * float(tax_exclusive_amount_str or 0.0)
+        payable_rounding_amount = file_document_sign * float(payable_rounding_amount_str or 0.0)
+        expected_untaxed_amount = tax_exclusive_amount + payable_rounding_amount
+        invoice = collected_values['invoice']
+        difference = currency.round(expected_untaxed_amount - invoice.amount_untaxed)
+        for line_collected_values in collected_values['lines_collected_values']:
+            for charge in line_collected_values['charges']:
+                attempt_tax_values = charge.get('attempt_tax_values')
+                if attempt_tax_values and attempt_tax_values.get('tax'):
+                    difference -= charge['amount']
+        if currency.is_zero(difference):
+            return
+
+        container = {'records': invoice}
+        with (
+            invoice._check_balanced(container),
+            invoice._disable_discount_precision(),
+            invoice._sync_dynamic_lines(container),
+        ):
+            invoice.invoice_line_ids = [
+                Command.create({
+                    'display_type': 'product',
+                    'name': _("Rounding"),
+                    'quantity': 1,
+                    'price_unit': difference,
+                    'tax_ids': [],
+                }),
+            ]
 
     def _import_attachments(self, invoice, tree):
         """ EXTENDS 'account_edi_common': ATTEMPTS to create a PDF attachment when the XML file doesn't provide one."""
@@ -3346,7 +3357,7 @@ class AccountEdiUBL(models.AbstractModel):
             "Format used to import the invoice: %s",
             self.env['ir.model']._get(self._name).name,
         )
-        if logs := collected_values['logs']:
+        if logs := dict.fromkeys(collected_values['logs']):
             body += Markup("<ul>%s</ul>") % Markup().join(Markup("<li>%s</li>") % l for l in logs)
         invoice.with_context(no_new_invoice=True).message_post(body=body, attachment_ids=attachments.ids)
 
@@ -3397,7 +3408,6 @@ class AccountEdiUBL(models.AbstractModel):
 
         # Prepaid / rounding amounts / Tax total values.
         self._import_ubl_invoice_add_prepaid_amount(collected_values)
-        self._import_ubl_invoice_add_rounding_amount(collected_values)
         self._import_ubl_invoice_add_tax_total_values(collected_values)
 
         # Extract information about allowance / charges.
@@ -3414,5 +3424,6 @@ class AccountEdiUBL(models.AbstractModel):
         # End the invoice.
         self._import_ubl_invoice_write_collected_values(collected_values)
         self._import_ubl_invoice_fix_taxes_amounts(collected_values)
+        self._import_ubl_invoice_fix_untaxed_amount(collected_values)
         self._import_ubl_invoice_post_processing(collected_values)
         return

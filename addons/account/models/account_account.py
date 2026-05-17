@@ -275,11 +275,11 @@ class AccountAccount(models.Model):
                     accounts="\n".join(f"- {account.display_name}" for account in accounts_without_company),
                 ),
             )
+        # Need to invalidate the sudo cache as we might have just written on `company_ids`
+        self.invalidate_recordset(fnames=['company_ids'])
         if self.filtered(lambda a: a.account_type == 'asset_cash' and len(a.company_ids) > 1):
             raise ValidationError(_("Bank & Cash accounts cannot be shared between companies."))
 
-        # Need to invalidate the sudo cache as we might have just written on `company_ids`
-        self.invalidate_recordset(fnames=['company_ids'])
         for companies, accounts in self.grouped(lambda a: a.company_ids).items():
             if self.env['account.move.line'].sudo().search_count([
                 ('account_id', 'in', accounts.ids),
@@ -774,8 +774,18 @@ class AccountAccount(models.Model):
 
     @api.model
     def _get_most_frequent_account_for_partner(self, company_id, partner_id, move_type=None):
-        most_frequent_account = self._get_most_frequent_accounts_for_partner(company_id, partner_id, move_type, filter_never_user_accounts=True, limit=1)
-        return most_frequent_account[0] if most_frequent_account else False
+
+        cache = self.env.cr.cache.setdefault('most_frequent_accounts_for_partner', {})
+        key = (company_id, partner_id, move_type)
+
+        if key not in cache:
+            most_frequent_account = self._get_most_frequent_accounts_for_partner(
+                company_id, partner_id, move_type,
+                filter_never_user_accounts=True, limit=1,
+            )
+            cache[key] = most_frequent_account[0] if most_frequent_account else False
+
+        return cache[key]
 
     @api.model
     def _order_accounts_by_frequency_for_partner(self, company_id, partner_id, move_type=None):
@@ -802,6 +812,13 @@ class AccountAccount(models.Model):
             )
         return sql_order
 
+    def _get_name_search_account_types(self, move_type):
+        move_type_accounts = {
+            'out': ['income'],
+            'in': ['expense', 'asset_fixed', 'expense_direct_cost'],
+        }
+        return move_type_accounts.get(move_type.split('_')[0])
+
     @api.model
     @api.readonly
     def name_search(self, name='', domain=None, operator='ilike', limit=100):
@@ -815,14 +832,15 @@ class AccountAccount(models.Model):
         if not name and suggested_accounts:
             return [(record.id, record.display_name) for record in self.sudo().browse(suggested_accounts)]
 
+        digit_in_search_term = any(c.isdigit() for c in name)
         search_domain = Domain('display_name', 'ilike', name) if name else []
-        move_type_accounts = {
-            'out': ['income'],
-            'in': ['expense', 'asset_fixed'],
-        }
-        allowed_account_types = move_type_accounts.get(move_type.split('_')[0])
-        type_domain = [('account_type', 'in', allowed_account_types)] if allowed_account_types else []
-        domain = Domain.AND([search_domain, type_domain, domain])
+
+        if digit_in_search_term:
+            domain = Domain.AND([search_domain, domain])
+        else:
+            allowed_account_types = self._get_name_search_account_types(move_type)
+            type_domain = [('account_type', 'in', allowed_account_types)] if allowed_account_types else []
+            domain = Domain.AND([search_domain, type_domain, domain])
 
         records = self.with_context(preferred_account_ids=suggested_accounts).search_fetch(domain, ['display_name'], limit=limit)
         return [(record.id, record.display_name) for record in records]

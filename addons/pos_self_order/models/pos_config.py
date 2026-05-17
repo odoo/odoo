@@ -11,6 +11,7 @@ from odoo.exceptions import UserError, ValidationError, AccessError
 
 from odoo import api, fields, models, _, service
 from odoo.tools import file_open, split_every
+from odoo.service.common import exp_version
 
 
 class PosConfig(models.Model):
@@ -318,6 +319,7 @@ class PosConfig(models.Model):
         if not read_records:
             return read_records
         record = read_records[0]
+        record['_server_version'] = exp_version()
         record['_self_ordering_image_home_ids'] = config.self_ordering_image_home_ids.ids
         record['_self_ordering_image_background_ids'] = config.self_ordering_image_background_ids.ids
         record['_pos_special_products_ids'] = config._get_special_products().ids
@@ -413,7 +415,7 @@ class PosConfig(models.Model):
         return self.self_ordering_url
 
     def _supported_kiosk_payment_terminal(self):
-        return ['adyen', 'razorpay', 'stripe', 'pine_labs']
+        return ['adyen', 'razorpay', 'stripe', 'pine_labs', 'viva_com']
 
     def has_valid_self_payment_method(self):
         """ Checks if the POS config has a valid payment method (terminal or online). """

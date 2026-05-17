@@ -1285,6 +1285,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             'name': 'Office furnitures',
             'parent_id': product_category_base.id
         })
+        product_tag = self.env['product.tag'].create({'name': 'Random tag'})
 
         self.productA = self.env['product.product'].create(
             {
@@ -1305,6 +1306,7 @@ class TestUi(TestPointOfSaleHttpCommon):
                 'available_in_pos': True,
                 'taxes_id': False,
                 'categ_id': product_category_office.id,
+                'product_tag_ids': [(4, product_tag.id)]
             }
         )
 
@@ -1367,7 +1369,7 @@ class TestUi(TestPointOfSaleHttpCommon):
                 'discount_mode': 'per_order',
                 'discount': 10,
                 'discount_applicability': 'specific',
-                'discount_product_domain': '["&", ("categ_id", "not ilike", "Saleable"), ("name", "=", "Product B")]',
+                'discount_product_domain': '["&", "&", ("categ_id", "not ilike", "Saleable"), ("name", "=", "Product B"), ("product_tag_ids", "not ilike", "test")]',
             }),
             (0, 0, {
                 'reward_type': 'discount',
@@ -1376,7 +1378,7 @@ class TestUi(TestPointOfSaleHttpCommon):
                 'discount_mode': 'per_order',
                 'discount': 10,
                 'discount_applicability': 'specific',
-                'discount_product_domain': '["&", ("categ_id", "ilike", "Saleable"), ("name", "=", "Product B")]',
+                'discount_product_domain': '["&", "&", ("categ_id", "ilike", "Saleable"), ("name", "=", "Product B"), ("product_tag_ids", "not ilike", "test")]',
             })],
             'pos_config_ids': [Command.link(self.main_pos_config.id)],
         })
@@ -2696,6 +2698,13 @@ class TestUi(TestPointOfSaleHttpCommon):
             })],
             'pos_config_ids': [Command.link(self.main_pos_config.id)],
         })
+
+        self.env.ref('loyalty.gift_card_product_50').product_tmpl_id.write({'active': True})
+        self.create_programs([('arbitrary_name', 'gift_card')])
+
+        self.env['res.partner'].create({'name': 'AAAAAAA'})
+        self.env.ref('loyalty.ewallet_product_50').product_tmpl_id.write({'active': True})
+        self.create_programs([('arbitrary_name', 'ewallet')])
 
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_tour(

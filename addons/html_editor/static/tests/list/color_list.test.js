@@ -8,6 +8,7 @@ import {
 } from "../_helpers/user_actions";
 import { execCommand } from "../_helpers/userCommands";
 import { unformat } from "../_helpers/format";
+import { nodeSize } from "@html_editor/utils/position";
 
 test("should apply color to completely selected list item", async () => {
     await testEditor({
@@ -40,6 +41,70 @@ test("should apply text color class to fully selected multiple list items", asyn
         stepFunction: setColor("text-o-color-1", "color"),
         contentAfter:
             '<ul><li class="text-o-color-1">[abc</li><li class="text-o-color-1">def]</li></ul>',
+    });
+});
+
+test("should color a fully selected list item with trailing empty line (1)", async () => {
+    await testEditor({
+        contentBefore: "<ul><li>[abc</li><li>]<br></li></ul>",
+        stepFunction: setColor("rgb(255, 0, 0)", "color"),
+        contentAfter:
+            '<ul><li style="color: rgb(255, 0, 0);">[abc</li><li style="color: rgb(255, 0, 0);">]<br></li></ul>',
+    });
+});
+
+test("should color a fully selected list item with trailing empty line (2)", async () => {
+    await testEditor({
+        contentBefore: "<ul><li>[abc</li><li><br>]<br></li></ul>",
+        stepFunction: setColor("rgb(255, 0, 0)", "color"),
+        contentAfter:
+            '<ul><li style="color: rgb(255, 0, 0);">[abc</li><li style="color: rgb(255, 0, 0);"><br>]<br></li></ul>',
+    });
+});
+
+test("should color a fully selected list item with trailing empty line (3)", async () => {
+    await testEditor({
+        contentBefore: "<ul><li>[abc</li><li>abcd<br>]<br></li></ul>",
+        stepFunction: setColor("rgb(255, 0, 0)", "color"),
+        contentAfter:
+            '<ul><li style="color: rgb(255, 0, 0);">[abc</li><li style="color: rgb(255, 0, 0);">abcd<br>]<br></li></ul>',
+    });
+});
+
+test("should not color list item when selection excludes trailing empty line", async () => {
+    await testEditor({
+        contentBefore: "<ul><li>[abc</li><li>abcd]<br><br></li></ul>",
+        stepFunction: setColor("rgb(255, 0, 0)", "color"),
+        contentAfter:
+            '<ul><li style="color: rgb(255, 0, 0);">[abc</li><li><font style="color: rgb(255, 0, 0);">abcd]</font><br><br></li></ul>',
+    });
+});
+
+test("should apply color on fully selected list items with empty text nodes at list boundaries", async () => {
+    await testEditor({
+        contentBefore: '<ul><li><a href="#">abc</a></li><li><a href="#">abc</a></li></ul>',
+        contentBeforeEdit:
+            '<ul><li>\ufeff<a href="#">\ufeffabc\ufeff</a>\ufeff</li><li>\ufeff<a href="#">\ufeffabc\ufeff</a>\ufeff</li></ul>',
+        stepFunction: (editor) => {
+            const listItems = editor.editable.querySelectorAll("li");
+            // Set selection here because injected \ufeff can be excluded
+            // from the DOM range.
+            editor.shared.selection.setSelection({
+                anchorNode: listItems[0].firstChild,
+                anchorOffset: 0,
+                focusNode: listItems[1].lastChild,
+                focusOffset: nodeSize(listItems[1].lastChild),
+            });
+            // Empty text node at start of first <li>
+            listItems[0].insertBefore(document.createTextNode(""), listItems[0].firstChild);
+            // Empty text node at end of second <li>
+            listItems[1].appendChild(document.createTextNode(""));
+            setColor("rgb(255, 0, 0)", "color")(editor);
+        },
+        contentAfterEdit:
+            '<ul><li style="color: rgb(255, 0, 0);">[\ufeff<a href="#">\ufeffabc\ufeff</a>\ufeff</li><li style="color: rgb(255, 0, 0);">\ufeff<a href="#">\ufeffabc\ufeff</a>\ufeff]</li></ul>',
+        contentAfter:
+            '<ul><li style="color: rgb(255, 0, 0);">[<a href="#">abc</a></li><li style="color: rgb(255, 0, 0);"><a href="#">abc</a>]</li></ul>',
     });
 });
 

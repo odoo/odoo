@@ -250,7 +250,7 @@ class PurchaseOrder(models.Model):
         for po in purchases:
             if po.user_id == self.env.user:
                 my_purchase_count += 1
-            if not po.effective_date or po.effective_date > po.date_planned:
+            if not po.effective_date or po.effective_date.date() > po.date_planned.date():
                 continue
             otd_purchase_count += 1
             if po.user_id == self.env.user:
@@ -458,3 +458,7 @@ class PurchaseOrder(models.Model):
         """ remove the given references from the list of references. """
         self.ensure_one()
         self.reference_ids = [Command.unlink(stock_reference.id) for stock_reference in reference]
+
+    def _merge_po_post_process(self, rfqs):
+        super()._merge_po_post_process(rfqs)
+        self.reference_ids += rfqs.reference_ids

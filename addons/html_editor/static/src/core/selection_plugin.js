@@ -219,6 +219,8 @@ export class SelectionPlugin extends Plugin {
         "isSelectionInEditable",
         "isNodeEditable",
         "selectAroundNonEditable",
+        "getCachedSelection",
+        "setCachedSelection",
     ];
     /** @type {import("plugins").EditorResources} */
     resources = {
@@ -300,9 +302,17 @@ export class SelectionPlugin extends Plugin {
         super.destroy();
     }
 
+    getCachedSelection() {
+        return this._cachedSelection;
+    }
+
+    setCachedSelection(value) {
+        this._cachedSelection = value;
+    }
+
     selectAll() {
         const selection = this.getEditableSelection();
-        const containerSelector = "#wrap > *, .oe_structure > *, [contenteditable]";
+        const containerSelector = '#wrap > *, .oe_structure > *, [contenteditable="true"]';
         const container = selection && closestElement(selection.anchorNode, containerSelector);
         const [anchorNode, anchorOffset] = getDeepestEditablePosition(container, 0);
         const [focusNode, focusOffset] = getDeepestEditablePosition(container, nodeSize(container));
@@ -354,6 +364,12 @@ export class SelectionPlugin extends Plugin {
      * Update the active selection to the current selection in the editor.
      */
     updateActiveSelection() {
+        if (this.getCachedSelection()) {
+            // `before_input_handler` may change the selection, which would
+            // invalidate the cached selection. Keep it in sync as long as
+            // the cache is active.
+            this.setCachedSelection(this.document.getSelection());
+        }
         this.previousActiveSelection = this.activeSelection;
         // getSelectionData sets this.activeSelection to the current selection
         const selectionData = this.getSelectionData();
@@ -512,7 +528,7 @@ export class SelectionPlugin extends Plugin {
      * @return { SelectionData }
      */
     getSelectionData() {
-        const selection = this.document.getSelection();
+        const selection = this.getCachedSelection() || this.document.getSelection();
         const documentSelectionIsInEditable = selection && this.isSelectionInEditable(selection);
         let collapsed;
         const documentSelection =
@@ -822,20 +838,36 @@ export class SelectionPlugin extends Plugin {
 
     areNodeContentsFullySelected(node) {
         const selection = this.getEditableSelection();
+        // In empty blocks (e.g. <p><br></p>), Ctrl+A produces a collapsed
+        // DOM selection, so no actual range is selected.
+        if (selection.isCollapsed) {
+            return false;
+        }
         const range = new Range();
         range.setStart(selection.startContainer, selection.startOffset);
-        range.setEnd(selection.endContainer, selection.endOffset);
+        // Adjust the range end if it ends with a <br>.
+        const { endContainer, endOffset } = this.getEditableSelection();
+        if (endContainer.childNodes?.[endOffset]?.nodeName === "BR") {
+            range.setEnd(endContainer, endOffset + 1);
+        } else {
+            range.setEnd(endContainer, endOffset);
+        }
+
+        // Custom rules.
+        if (
+            this.getResource("fully_selected_node_predicates")?.some((cb) =>
+                cb(node, selection, range)
+            )
+        ) {
+            return true;
+        }
 
         const firstLeafNode = firstLeaf(node);
         const lastLeafNode = lastLeaf(node);
+        // Default rule: range must cover the full node.
         return (
-            // Custom rules
-            this.getResource("fully_selected_node_predicates").some((cb) =>
-                cb(node, selection, range)
-            ) ||
-            // Default rule
-            (range.isPointInRange(firstLeafNode, 0) &&
-                range.isPointInRange(lastLeafNode, nodeSize(lastLeafNode)))
+            range.isPointInRange(firstLeafNode, 0) &&
+            range.isPointInRange(lastLeafNode, nodeSize(lastLeafNode))
         );
     }
 

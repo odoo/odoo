@@ -199,6 +199,7 @@ class StockMove(models.Model):
 
         account_move = self.env['account.move'].sudo().create({
             'ref': joined_refs,
+            'partner_id': self._get_partner_id_for_valuation_lines(),
             'journal_id': self.company_id.account_stock_journal_id.id,
             'line_ids': [Command.create(aml_vals) for aml_vals in aml_vals_list],
             'date': self.env.context.get('force_period_date') or fields.Date.context_today(self),
@@ -206,6 +207,9 @@ class StockMove(models.Model):
         self.env['stock.move'].browse(move_to_link).account_move_id = account_move.id
         account_move._post()
         return account_move
+
+    def _get_partner_id_for_valuation_lines(self):
+        return (self.picking_id.partner_id and self.env['res.partner']._find_accounting_partner(self.picking_id.partner_id).id) or False
 
     def _create_analytic_move(self):
         for move in self:
@@ -291,6 +295,7 @@ class StockMove(models.Model):
         fifo_qty_processed = defaultdict(float)
 
         for move in self:
+            move = move.with_company(move.company_id)
             # Incoming moves
             if move.is_dropship or move.is_in:
                 products_to_recompute.add(move.product_id.id)

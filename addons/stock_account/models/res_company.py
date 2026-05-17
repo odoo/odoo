@@ -53,7 +53,7 @@ class ResCompany(models.Model):
         last_closing_date = self._get_last_closing_date()
         if at_date and last_closing_date and at_date < fields.Date.to_date(last_closing_date):
             raise UserError(self.env._('It exists closing entries after the selected date. Cancel them before generate an entry prior to them'))
-        aml_vals_list = self._action_close_stock_valuation(at_date=at_date)
+        aml_vals_list = self.with_context(allowed_company_ids=self.env.company.ids)._action_close_stock_valuation(at_date=at_date)
 
         if not aml_vals_list:
             # No account moves to create, so nothing to display.
@@ -134,9 +134,13 @@ class ResCompany(models.Model):
 
     @api.model
     def _cron_post_stock_valuation(self):
-        domain = Domain([('inventory_period', '=', 'daily'), ('inventory_valuation', '!=', 'real_time')])
+        periods = ['daily']
         if fields.Date.today() == fields.Date.today() + relativedelta(day=31):
-            domain = domain & Domain([('inventory_period', '=', 'monthly')])
+            periods.append('monthly')
+        domain = Domain([
+            ('inventory_period', 'in', periods),
+            ('inventory_valuation', '!=', 'real_time'),
+        ])
         companies = self.env['res.company'].search(domain)
         for company in companies:
             company.action_close_stock_valuation(auto_post=True)
