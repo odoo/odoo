@@ -147,7 +147,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         delivery_partner = invoice.company_id.partner_id if invoice.is_purchase_document() else invoice.partner_shipping_id
 
         delivery_vals = {
-            'actual_delivery_date': invoice.delivery_date,
+            'actual_delivery_date': invoice.delivery_date.date() if invoice.delivery_date else None,
             'delivery_location_vals': {
                 'delivery_address_vals': self._get_partner_address_vals(delivery_partner),
             },
