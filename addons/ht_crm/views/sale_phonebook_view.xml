@@ -1,0 +1,120 @@
+<odoo>
+    <record id="view_phonebook_list" model="ir.ui.view">
+        <field name="name">sale.phonebook.list</field>
+        <field name="model">sale.phonebook</field>
+        <field name="arch" type="xml">
+            <list>
+                <header>
+                    <button name="action_distribute_numbers"
+                            string="Distribute"
+                            type="object"
+                            class="oe_highlight"
+                            icon="fa-random"
+                            groups="ht_crm.group_ht_general_admin,base.group_system"/>
+                </header>
+
+                <field name="created_on" readonly="True"/>
+                <field name="name" readonly="True"/>
+                <field name="phone" widget="phone"/>
+                <field name="status"/>
+                <field name="note"/>
+
+                <!-- Trường bổ sung -->
+                <field name="salesperson_id" optional="1" groups="ht_crm.group_ht_executive,ht_crm.group_ht_general_admin,ht_crm.group_ht_leader"/>
+                <field name="project_id" optional="1"/>
+            </list>  
+        </field>
+    </record>
+
+    <record id="view_phonebook_form" model="ir.ui.view">
+        <field name="name">sale.phonebook.form</field>
+        <field name="model">sale.phonebook</field>
+        <field name="arch" type="xml">
+            <form string="Phonebook">
+
+                <header>
+                    <field name="status"
+                        widget="statusbar"
+                        statusbar_visible="new,contacted,callback,invalid"/>
+                </header>
+
+                <sheet>
+
+                    <!-- Ribbon -->
+                    <widget name="web_ribbon"
+                            title="Hủy"
+                            bg_color="bg-danger"
+                            invisible="status != 'invalid'"/>
+
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Tên"/>
+                        </h1>
+
+                        <h2>
+                            <!-- USER -->
+                            <field name="phone"
+                                readonly="1"
+                                groups="ht_crm.group_ht_user"
+                                widget="phone"/>
+
+                            <!-- ADMIN -->
+                            <field name="phone"
+                                groups="base.group_system,ht_crm.group_ht_general_admin,ht_crm.group_ht_executive,ht_crm.group_ht_leader" widget="phone"/>
+                        </h2>
+                    </div>
+
+                    <group>
+                        <group string="Thông Tin Data">
+
+                            <field name="created_on" readonly="1"/>
+
+                            <field name="salesperson_id"
+                                options="{'no_create': False}"/>
+
+                            <field name="project_id"/>
+
+                        </group>
+
+                        <group string="Tình Trạng">
+
+                            <field name="status"/>
+                            <field name="note" placeholder="Ghi chú..."/>
+
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Lịch Sử">
+                            <group>
+                                <field name="create_uid" readonly="1"/>
+                                <field name="write_uid" readonly="1"/>
+                                <field name="write_date" readonly="1"/>
+                            </group>
+                        </page>
+
+                    </notebook>
+
+                </sheet>
+
+                <!-- Chatter -->
+                <chatter/>
+
+            </form>
+        </field>
+    </record>
+
+    <record id="view_sale_phonebook_log_list" model="ir.ui.view">
+        <field name="name">sale.phonebook.log.list</field>
+        <field name="model">sale.phonebook.log</field>
+        <field name="arch" type="xml">
+            <list string="Logs" create="false">
+                <field name="create_date" string="Thời gian"/>
+                <field name="user_id" string="Người thao tác"/>
+                <field name="phonebook_id" string="Bị tác động"/>
+                <field name="action" string="Hành động"/>
+                <field name="note" string="Ghi chú"/>
+            </list>
+        </field>
+    </record>
+</odoo>

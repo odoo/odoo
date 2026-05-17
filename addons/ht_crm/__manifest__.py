@@ -22,12 +22,20 @@
         'views/groups.xml',
         'security/ir.model.access.csv',   
         'views/menu_views.xml',
-        'views/estate_project_views.xml',
-        'views/customer_views.xml',
-        'views/QLNS.xml',
+        'views/rules/estate_project.xml',
+        'views/rules/estate_property_unit.xml',
+        'views/rules/sale_customers.xml',
+        'views/rules/sale_phonebook.xml',
+        'views/rules/sale_transaction.xml',
+        'views/estate_project_view.xml',
+        'views/sale_customer_view.xml',
+        'views/sale_phonebook_view.xml',
+        'views/sale_transaction_view.xml',
+        'views/sale_employee_view.xml',
         'reports/customer_report.xml',
-        'reports/project_report.xml',
-        'reports/transaction_report.xml'
+        'reports/estate_project.xml',
+        'reports/estate_property_unit.xml',
+        'reports/sale_transaction.xml'
     ],
     # only loaded in demonstration mode
     'demo': [

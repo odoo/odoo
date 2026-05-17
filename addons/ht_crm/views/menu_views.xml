@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <odoo>
     <record id="action_phonebook" model="ir.actions.act_window">
-        <field name="name">Phonebook</field>
+        <field name="name">Data</field>
         <field name="res_model">sale.phonebook</field>
         <field name="view_mode">list,form</field>
     </record>
@@ -13,13 +13,13 @@
     </record>
 
     <record id="action_customer" model="ir.actions.act_window">
-        <field name="name">Customers</field>
+        <field name="name">Khách hàng</field>
         <field name="res_model">sale.customer</field>
         <field name="view_mode">list,form</field>
     </record>
 
     <record id="action_users" model="ir.actions.act_window">
-        <field name="name">Users</field>
+        <field name="name">Người dùng</field>
         <field name="res_model">res.users</field>
         <field name="view_mode">list,form</field>
     </record>
@@ -97,31 +97,34 @@
         <field name="view_mode">graph,pivot</field>
     </record>
 
-    <menuitem id="menu_ht_root" name="HTLand CRM" sequence="10">
+    <menuitem id="menu_ht_root" name="HTLand CRM">
 
         <!-- CUSTOMER MANAGEMENT -->
-        <menuitem id="menu_customer_root" name="Khách Hàng" sequence="10">
+        <menuitem id="menu_customer_root" name="CRM" sequence="10">
             <menuitem id="menu_customer" action="action_customer"/>
             <menuitem id="menu_phonebook" action="action_phonebook"/>
             <menuitem id="menu_phonebook_log" action="action_phone_log"/>
+        </menuitem>
+
+        <menuitem id="menu_project_root" name="Dự Án" sequence="20">
             <menuitem id="menu_project" action="action_estate_project"/>
             <menuitem id="menu_property_unit" action="action_estate_property_unit"/>
             <menuitem id="menu_property_unit_type" action="action_estate_property_unit_type"/>
         </menuitem>
 
         <!-- SALES -->
-        <menuitem id="menu_sales_root" name="Sales" sequence="20">
+        <menuitem id="menu_sales_root" name="Sales" sequence="30">
             <menuitem id="menu_transaction" action="action_transaction"/>
             <menuitem id="menu_kpi" action="action_employee_kpi"/>
         </menuitem>
 
         <!-- ORGANIZATION -->
-        <menuitem id="menu_org_root" name="Tổ Chức" sequence="30" groups="group_ht_leader,group_ht_executive,base.group_system">
+        <menuitem id="menu_org_root" name="Tổ Chức" sequence="40" groups="group_ht_leader,group_ht_executive">
             <menuitem id="menu_employee" action="action_employee"/>
             <menuitem id="menu_role" action="action_employee_role"/>
         </menuitem>
 
-        <menuitem id="menu_statistics_root" name="Thống Kê" sequence="40">
+        <menuitem id="menu_statistics_root" name="Thống Kê" sequence="50">
             <menuitem id="menu_stats_customer" name="Khách hàng" action="action_customer_graph"/>
             <menuitem id="menu_stats_transaction" name="Giao dịch" action="action_transaction_graph"/>
             <menuitem id="menu_stats_project" name="Dự án" action="action_estate_project_report"/>

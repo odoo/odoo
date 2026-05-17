@@ -1,54 +1,20 @@
 
 <odoo>
-    <record id="rule_estate_project_ga" model="ir.rule">
-        <field name="name">GA (Estate Project)</field>
-        <field name="model_id" ref="model_estate_project"/>
-        <field name="domain_force">[(1, '=', 1)]</field>
-        <field name="groups" eval="[(4, ref('group_ht_general_admin'))]"/>
-    </record>
-
-    <record id="rule_estate_property_unit_ga" model="ir.rule">
-        <field name="name">GA (Estate Project Unit)</field>
-        <field name="model_id" ref="model_estate_property_unit"/>
-        <field name="domain_force">[(1, '=', 1)]</field>
-        <field name="groups" eval="[(4, ref('group_ht_general_admin'))]"/>
-    </record>
-
-    <record id="rule_estate_project_exec" model="ir.rule">
-        <field name="name">Ban Điều Hành - (Estate Project)</field>
-        <field name="model_id" ref="model_estate_project"/>
-        <field name="domain_force">[(1, '=', 1)]</field>
-        <field name="groups" eval="[(4, ref('group_ht_user'))]"/>
-    </record>
-
-    <record id="rule_estate_project_user" model="ir.rule">
-        <field name="name">User - (Estate Project)</field>
-        <field name="model_id" ref="model_estate_project"/>
-        <field name="domain_force">
-            [
-                (
-                    'sales_ids.user_id',
-                    'in',
-                    [user.id]
-                )
-            ]
+    <!-- List view -->
+    <record id="view_estate_project_list" model="ir.ui.view">
+        <field name="name">estate.project.list</field>
+        <field name="model">estate.project</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="investor"/>
+                <field name="location"/>
+                <field name="area"/>
+                <field name="price_per_m2"/>
+                <field name="legal_status"/>
+                <field name="progress"/>
+            </list>
         </field>
-        <field name="groups" eval="[(4, ref('group_ht_user'))]"/>
-    </record>
-
-    <record id="rule_estate_property_unit_user" model="ir.rule">
-        <field name="name">User - (Property Unit)</field>
-        <field name="model_id" ref="model_estate_property_unit"/>
-        <field name="domain_force">
-            [
-                (
-                    'project_id.sales_ids.user_id',
-                    'in',
-                    [user.id]
-                )
-            ]
-        </field>
-        <field name="groups" eval="[(4, ref('group_ht_user'))]"/>
     </record>
 
     <record id="view_estate_project_form" model="ir.ui.view">
@@ -168,24 +134,7 @@
                 </sheet>
             </form>
         </field>
-    </record>
-
-    <!-- List view -->
-    <record id="view_estate_project_list" model="ir.ui.view">
-        <field name="name">estate.project.list</field>
-        <field name="model">estate.project</field>
-        <field name="arch" type="xml">
-            <list>
-                <field name="name"/>
-                <field name="investor"/>
-                <field name="location"/>
-                <field name="area"/>
-                <field name="price_per_m2"/>
-                <field name="legal_status"/>
-                <field name="progress"/>
-            </list>
-        </field>
-    </record>
+    </record>    
 
     <record id="view_estate_property_unit_list" model="ir.ui.view">
         <field name="name">estate.property.unit.list</field>

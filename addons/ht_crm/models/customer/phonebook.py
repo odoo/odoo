@@ -67,36 +67,22 @@ class PhoneBook(models.Model):
 
 
     def write(self, vals):
-        status_dict = dict(self._fields['status'].selection)
+        if not self.env.user.has_group(
+            'base.group_system'
+        ):
+            allowed_fields = ['note', 'status']
 
-        old_status_map = {
-            rec.id: rec.status
-            for rec in self
-        }
+            forbidden_fields = [
+                field for field in vals
+                if field not in allowed_fields
+            ]
 
-        res = super().write(vals)
+            if forbidden_fields:
+                raise exceptions.UserError(
+                    "Bạn chỉ được sửa ghi chú và trạng thái."
+                )
 
-        for rec in self:
-
-            # Hot logic
-            if 'is_hot' in vals and vals['is_hot']:
-                rec.set_expire_on_hot()
-
-            # Status logging
-            if 'status' in vals:
-                old_status = old_status_map.get(rec.id)
-
-                if old_status != rec.status:
-                    old_label = status_dict.get(old_status)
-                    new_label = status_dict.get(rec.status)
-
-                    self.env['sale.phonebook.log'].create({
-                        'phonebook_id': rec.id,
-                        'action': 'status_changed',
-                        'note': f'{old_label} -> {new_label}'
-                    })
-
-        return res
+        return super().write(vals)
 
     def set_expire_on_hot(self):
         for rec in self:

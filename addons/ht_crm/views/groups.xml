@@ -12,12 +12,13 @@
 
     <record id="group_ht_general_admin" model="res.groups">
         <field name="name">General Administrator</field>
-        <field name="implied_ids" eval="[(4, ref('ht_crm.group_ht_leader'))]"/>
+        <field name="implied_ids" eval="[(5, 0, 0)]"/>
     </record>
 
     <!-- Ban điều hành-->
     <record id="group_ht_executive" model="res.groups">
         <field name="name">Ban Điều Hành</field>
+        <field name="implied_ids" eval="[(5, 0, 0)]"/>
     </record>
 
     

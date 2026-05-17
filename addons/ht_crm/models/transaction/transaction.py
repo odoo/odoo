@@ -42,7 +42,8 @@ class Transaction(models.Model):
     # % chiết khấu
     discount = fields.Float(
         string="Chiết khấu (%)",
-        default=0
+        default=0,
+        digits=(16, 1)
     )
 
     # Giá cuối cùng sau CK
@@ -80,7 +81,8 @@ class Transaction(models.Model):
     @api.depends('listed_price', 'discount')
     def _compute_final_price(self):
         for rec in self:
-            rec.price_total = rec.listed_price * (1 - rec.discount)
+            discount_amount = rec.listed_price * (rec.discount / 100)
+            rec.price_total = rec.listed_price - discount_amount
 
     def _get_kpi(self, employee_id, month, year):
         return self.env['sale.employee.kpi'].search([

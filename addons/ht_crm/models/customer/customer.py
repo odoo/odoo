@@ -24,8 +24,7 @@ class Customer(models.Model):
     salesperson_id = fields.Many2one(
         'sale.employee',
         string="Nhân viên phụ trách",
-        domain=[('role_ids.code', '=', 'sales')],
-        groups="ht_crm.group_ht_executive"
+        domain=[('role_ids.code', '=', 'sales')]
     )
 
     source = fields.Selection([
