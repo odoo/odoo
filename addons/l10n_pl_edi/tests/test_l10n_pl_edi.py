@@ -1029,3 +1029,29 @@ class TestL10nPlEdi(AccountTestInvoicingCommon, CronMixinCase):
             bill.invoice_line_ids.mapped('tax_ids.amount'),
             [23.0, 23.0, 5.0],
         )
+
+    def test_mpp_value(self):
+        invoice = self._create_invoice(
+            partner_id=self.partner_pl,
+            invoice_date='2025-05-27',
+            post=True
+        )
+
+        xml = invoice._l10n_pl_edi_render_xml()
+        self.assertEqual(
+            self._get_xml_value(xml, "//ns:Fa/ns:Adnotacje/ns:P_18A"),
+            '2',
+        )
+
+        invoice = self._create_invoice(
+            partner_id=self.partner_pl,
+            invoice_date='2025-05-27',
+            l10n_pl_mpp=True,
+            post=True
+        )
+
+        xml = invoice._l10n_pl_edi_render_xml()
+        self.assertEqual(
+            self._get_xml_value(xml, "//ns:Fa/ns:Adnotacje/ns:P_18A"),
+            '1',
+        )
