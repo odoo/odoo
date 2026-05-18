@@ -33,6 +33,7 @@
         'views/sale_transaction_view.xml',
         'views/sale_employee_view.xml',
         'views/action_reports.xml',
+        'reports/layouts/external_layout_transaction.xml',
         'reports/customer_report.xml',
         'reports/estate_project.xml',
         'reports/estate_property_unit.xml',
