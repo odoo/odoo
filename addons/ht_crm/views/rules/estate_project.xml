@@ -14,16 +14,16 @@
     </record>
 
     <!-- Sales thấy đồng nghiệp và dự án đang phụ trách -->
-    <record id="rule_estate_project_sales_access" model="ir.rule">
+    <!-- <record id="rule_estate_project_sales_access" model="ir.rule">
         <field name="name">Estate Project - Sales Access</field>
         <field name="model_id" ref="model_estate_project"/>
         <field name="domain_force">
             [
                 '|',
-                ('sales_ids.user_id', 'in', [user.id]),
-                ('phonebook_ids.salesperson_id', '=', user.id)
+                ('pool_ids.employee_id.user_id', 'in', [user.id]),
+                ('phonebook_ids.sales_ids.user_id', 'in', [user.id])
             ]
         </field>
         <field name="groups" eval="[(4, ref('group_ht_user'))]"/>
-    </record>
+    </record> -->
 </odoo>

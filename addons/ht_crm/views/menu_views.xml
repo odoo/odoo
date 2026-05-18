@@ -5,6 +5,12 @@
         <field name="res_model">sale.phonebook</field>
         <field name="view_mode">list,form</field>
     </record>
+
+    <record id="action_phonebook_batch" model="ir.actions.act_window">
+        <field name="name">Tập dữ liệu</field>
+        <field name="res_model">sale.phonebook.batch</field>
+        <field name="view_mode">list,form</field>
+    </record>
     
     <record id="action_phone_log" model="ir.actions.act_window">
         <field name="name">Phone Log</field>
@@ -103,6 +109,7 @@
         <menuitem id="menu_customer_root" name="CRM" sequence="10">
             <menuitem id="menu_customer" action="action_customer"/>
             <menuitem id="menu_phonebook" action="action_phonebook"/>
+            <menuitem id="menu_phonebook_batch" action="action_phonebook_batch"/>
             <menuitem id="menu_phonebook_log" action="action_phone_log"/>
         </menuitem>
 

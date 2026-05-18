@@ -132,7 +132,7 @@ class EstateProject(models.Model):
 
     # Các trường liên kết
     phonebook_ids = fields.One2many(
-        "sale.phonebook",
+        "sale.phonebook.batch",
         "project_id",
         string="Data thuộc dự án"
     )
@@ -177,3 +177,4 @@ class EstateProject(models.Model):
     def action_clear_purchased_customers(self):
         for rec in self:
             rec.purchased_customer_ids = [(5, 0, 0)]
+        

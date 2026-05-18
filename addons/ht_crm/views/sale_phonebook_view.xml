@@ -12,6 +12,7 @@
                             icon="fa-random"
                             groups="ht_crm.group_ht_general_admin,base.group_system"/>
                 </header>
+                <field name="group_id"/>
 
                 <field name="created_on" readonly="True"/>
                 <field name="name" readonly="True"/>
@@ -21,7 +22,6 @@
 
                 <!-- Trường bổ sung -->
                 <field name="salesperson_id" optional="1" groups="ht_crm.group_ht_executive,ht_crm.group_ht_general_admin,ht_crm.group_ht_leader"/>
-                <field name="project_id" optional="1"/>
             </list>  
         </field>
     </record>
@@ -66,18 +66,18 @@
 
                     <group>
                         <group string="Thông Tin Data">
-
+                            <field name="group_id"/>
                             <field name="created_on" readonly="1"/>
 
                             <field name="salesperson_id"
                                 options="{'no_create': False}"/>
 
-                            <field name="project_id"/>
-
                         </group>
 
                         <group string="Tình Trạng">
                             <field name="is_hot" widget="boolean" groups="base.group_system,ht_crm.group_ht_general_admin,ht_crm.group_ht_executive,ht_crm.group_ht_leader"/>
+                            <field name="hot_until" groups="base.group_system,ht_crm.group_ht_general_admin,ht_crm.group_ht_executive,ht_crm.group_ht_leader"/>
+                            <field name="hot_duration" groups="base.group_system,ht_crm.group_ht_general_admin,ht_crm.group_ht_executive,ht_crm.group_ht_leader"/>
                             <field name="status"/>
                             <field name="note" placeholder="Ghi chú..."/>
 
@@ -112,6 +112,45 @@
                 <field name="action" string="Hành động"/>
                 <field name="note" string="Ghi chú"/>
             </list>
+        </field>
+    </record>
+
+    <!-- <record id="ir_cron_distribute_hot" model="ir.cron">
+        <field name="name">Distribute Hot</field>
+        <field name="model_id" ref="model_sale_phonebook"/>
+        <field name="state">code</field>
+        <field name="code">model.cron_distribute()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">minutes</field>
+        <field name="active">True</field>
+    </record> -->
+
+    <record id="view_phonebook_batch_form" model="ir.ui.view">
+        <field name="name">sale.phonebook.batch.form</field>
+        <field name="model">sale.phonebook.batch</field>
+        <field name="arch" type="xml">
+            <form string="Tập Phonebook">
+                <sheet>
+
+                    <group>
+                        <field name="name"/>
+                        <field name="code"/>
+                        <field name="group_key_date"/>
+                        <field name="project_id"/>
+                    </group>
+
+                    <notebook>
+                        <page string="Danh sách số điện thoại">
+                            <field name="phonebook_id"/>
+                        </page>
+
+                        <page string="Sales phụ trách">
+                            <field name="sales_ids" domain="[('project_ids', 'in', [project_id])]"/>
+                        </page>                       
+                    </notebook>
+
+                </sheet>
+            </form>
         </field>
     </record>
 </odoo>
