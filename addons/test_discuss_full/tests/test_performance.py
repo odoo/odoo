@@ -76,6 +76,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #                   - search mail_presence (_compute_im_status)
     #                   - fetch mail_presence (_compute_im_status)
     #                   - search hr_employee (_store_im_status_fields override)
+    #                   - search hr_employee (_store_im_status_fields override, from `all_employee_ids`)
     #                   - search hr_employee_location (_store_im_status_fields override)
     #                   - fetch hr_employee (_compute_work_location_type)
     #                   - search hr_leave (_compute_leave_status)
@@ -87,7 +88,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #           - search discuss_channel_res_groups_rel (group_ids)
     #           - fetch res_groups (group_public_id)
     #           - select the current db snapshot
-    _query_count_init_messaging = 35
+    _query_count_init_messaging = 36
     # Queries for _query_count_discuss_channels (in order):
     #   3: _search_is_member (for current user, first occurence channels_as_member)
     #       - fetch res_users
@@ -102,7 +103,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - search_fetch member (channel_member_ids)
     #       - search channel JOIN member (channel_name_member_ids)
     #       - fetch discuss_channel_member (manual prefetch)
-    #       16: member:
+    #       17: member:
     #           - search im_livechat_channel_member_history (livechat member type)
     #           - fetch im_livechat_channel_member_history (livechat member type)
     #           13: partner:
@@ -113,6 +114,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #               - search mail_presence (_compute_im_status)
     #               - fetch mail_presence (_compute_im_status)
     #               - search hr_employee (_store_im_status_fields override)
+    #               - search hr_employee (_store_im_status_fields override, from `all_employee_ids`)
     #               - search hr_employee_location (_store_im_status_fields override)
     #               - fetch hr_employee (_compute_work_location_type)
     #               - search hr_leave (_compute_leave_status)
@@ -159,7 +161,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
     #       - fetch user (author)
     #       - fetch discuss_call_history
     #       - select the current db snapshot
-    _query_count_discuss_channels = 62
+    _query_count_discuss_channels = 63
 
     def setUp(self):
         super().setUp()
@@ -456,6 +458,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             ),
             "res.users": self._filter_users_fields(
                 {
+                    "all_employee_ids": [],
                     "employee_ids": [],
                     "id": self.user_root.id,
                     "partner_id": self.partner_root.id,
@@ -463,6 +466,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                     "active": False,
                 },
                 {
+                    "all_employee_ids": [self.employees[0].id],
                     "should_display_in_call_im_status": False,
                     "id": user_0.id,
                     "im_status": "online",
@@ -1988,6 +1992,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         partner = user.partner_id
         if user == self.users[0]:
             return {
+                "all_employee_ids": user.employee_ids.ids,
                 "active": True,
                 "id": user.id,
                 "im_status": "online",
@@ -1999,6 +2004,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
             }
         if user == self.users[1]:
             res = {
+                "all_employee_ids": user.employee_ids.ids,
                 "id": user.id,
                 "im_status": "offline",
                 "im_status_access_token": user._get_im_status_access_token(),
@@ -2013,6 +2019,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         if user == self.users[2]:
             if only_inviting:
                 return {
+                    "all_employee_ids": user.employee_ids.ids,
                     "id": user.id,
                     "im_status": "offline",
                     "im_status_access_token": user._get_im_status_access_token(),
@@ -2022,6 +2029,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
                 }
             return {
                 "active": True,
+                "all_employee_ids": user.employee_ids.ids,
                 "id": user.id,
                 "im_status": "offline",
                 "im_status_access_token": user._get_im_status_access_token(),
@@ -2033,6 +2041,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         if user == self.users[3]:
             return {
                 "active": True,
+                "all_employee_ids": user.employee_ids.ids,
                 "id": user.id,
                 "im_status": "offline",
                 "im_status_access_token": user._get_im_status_access_token(),
@@ -2044,6 +2053,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         if user == self.users[12]:
             return {
                 "active": True,
+                "all_employee_ids": user.employee_ids.ids,
                 "id": user.id,
                 "im_status": "offline",
                 "im_status_access_token": user._get_im_status_access_token(),
@@ -2055,6 +2065,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         if user == self.users[14]:
             return {
                 "active": True,
+                "all_employee_ids": user.employee_ids.ids,
                 "id": user.id,
                 "im_status": "offline",
                 "im_status_access_token": user._get_im_status_access_token(),
@@ -2066,6 +2077,7 @@ class TestDiscussFullPerformance(HttpCase, MailCommon):
         if user == self.users[15]:
             return {
                 "active": True,
+                "all_employee_ids": user.employee_ids.ids,
                 "id": user.id,
                 "im_status": "offline",
                 "im_status_access_token": user._get_im_status_access_token(),
