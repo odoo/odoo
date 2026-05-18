@@ -146,15 +146,15 @@ export class LoyaltyReward extends models.ServerModel {
             all_discount_product_ids: [],
         },
         {
-            // Reward for Gift Card Program (id=6): $10 gift card
+            // Reward for Gift Card Program (id=6): $1 per point discount
             id: 6,
-            description: "$10 Gift Card",
+            description: "Gift Card",
             program_id: 6,
-            reward_type: "gift_card",
+            reward_type: "discount",
             required_points: 1,
             clear_wallet: false,
-            discount: 0,
-            discount_mode: "percent",
+            discount: 1,
+            discount_mode: "per_point",
             discount_applicability: "order",
             discount_max_amount: 0,
             discount_line_product_id: 20,

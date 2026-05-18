@@ -23,6 +23,7 @@ export class PosSession extends models.ServerModel {
             "product.template",
             "product.product",
             "product.attribute",
+            "product.attribute.value",
             "product.attribute.custom.value",
             "product.template.attribute.line",
             "product.template.attribute.value",

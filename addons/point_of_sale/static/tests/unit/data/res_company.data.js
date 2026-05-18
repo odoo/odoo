@@ -50,6 +50,7 @@ export class ResCompany extends webModels.ResCompany {
             city: "",
             zip: "",
             account_fiscal_country_id: 233,
+            nomenclature_id: 1,
         },
     ];
 }

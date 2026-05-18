@@ -975,14 +975,19 @@ patch(PosOrder.prototype, {
      * @returns the cheapest line from all the lines where the program is applicable
      */
     _getCheapestLine(reward) {
-        const applicableProductIds = new Set(reward.all_discount_product_ids.map((p) => p.id));
-        const filtered_lines = this.getOrderlines().filter(
-            (line) =>
-                !line.combo_parent_id &&
-                !line.reward_id &&
-                line.getQuantity() &&
-                applicableProductIds.has(line.getProduct().id)
+        const applicableProductIds = new Set(
+            (reward.all_discount_product_ids || []).map((p) => p.id)
         );
+        const filtered_lines = this.getOrderlines().filter((line) => {
+            if (!line.combo_parent_id && !line.reward_id && line.getQuantity()) {
+                // If no specific discount product ids are set, consider all products applicable
+                if (applicableProductIds.size === 0) {
+                    return true;
+                }
+                return applicableProductIds.has(line.getProduct().id);
+            }
+            return false;
+        });
         return filtered_lines.toSorted(
             (lineA, lineB) => lineA.comboTotalPrice / lineA.qty - lineB.comboTotalPrice / lineB.qty
         )[0];
