@@ -776,7 +776,7 @@ export function changeBackgroundShape(shape = "html_builder/Connections/01") {
         },
         {
             content: "Wait for panel to close",
-            trigger: ".options-container:visible",
+            trigger: "body:not(:has(.hb-panel-slide-out))",
         },
     ];
 }
