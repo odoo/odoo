@@ -345,7 +345,7 @@ class TestCompanyBranch(AccountTestInvoicingCommon):
         self.assertIn(invoice.payment_state, ('paid', 'in_payment'), "Invoice not marked as paid after assigning credit.")
 
     def test_branch_user_bank_statement_foreign_currency(self):
-        self.branch_user.write({"company_ids": self.branch_a.ids, "groups_id": [Command.link(self.env.ref('account.group_account_manager').id)]})
+        self.branch_user.write({"company_ids": self.branch_a.ids, "groups_id": [Command.link(self.env.ref('account.group_account_user').id)]})
 
         journal = self.env['account.journal'].create({
             'name': "Bank (Gol)",
