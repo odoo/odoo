@@ -168,12 +168,14 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
             self._filter_users_fields(
                 {
                     "active": False,
+                    "all_employee_ids": [],
                     "id": self.user_root.id,
                     "employee_ids": [],
                     "partner_id": self.partner_root.id,
                     "share": False,
                 },
                 {
+                    "all_employee_ids": [],
                     "employee_ids": [],
                     "should_display_in_call_im_status": False,
                     "id": test_user.id,
@@ -188,6 +190,7 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
                     "share": False,
                 },
                 {
+                    "all_employee_ids": [],
                     "should_display_in_call_im_status": False,
                     "id": operator.id,
                     "im_status": "offline",
@@ -308,12 +311,14 @@ class TestGetDiscussChannel(TestImLivechatCommon, MailCommon):
             self._filter_users_fields(
                 {
                     "active": False,
+                    "all_employee_ids": [],
                     "id": self.user_root.id,
                     "employee_ids": [],
                     "partner_id": self.partner_root.id,
                     "share": False,
                 },
                 {
+                    "all_employee_ids": [],
                     "employee_ids": [],
                     "should_display_in_call_im_status": False,
                     "id": operator.id,
