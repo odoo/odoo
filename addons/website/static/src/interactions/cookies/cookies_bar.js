@@ -83,6 +83,7 @@ export class CookiesBar extends Popup {
             utm_campaign: "odoo_utm_campaign",
             utm_source: "odoo_utm_source",
             utm_medium: "odoo_utm_medium",
+            utm_reference: "odoo_utm_reference",
         };
         for (const [key, value] of params) {
             if (key in trackingFields) {
