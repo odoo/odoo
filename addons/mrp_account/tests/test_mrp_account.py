@@ -55,6 +55,12 @@ class TestMrpAccount(TestBomPriceCommon):
         bom_form = Form(self.env['mrp.bom'].with_user(mrp_manager))
         bom_form.product_id = self.dining_table
 
+    def test_mrp_manager_without_account_permissions_can_duplicate_mo(self):
+        mrp_manager = new_test_user(
+            self.env, 'temp_mrp_manager', 'mrp.group_mrp_manager,product.group_product_variant',
+        )
+        self.assertTrue(self._create_mo(self.bom_1, 1).with_user(mrp_manager).copy())
+
     def test_two_productions_unbuild_one_sell_other_fifo(self):
         """ Unbuild orders, when supplied with a specific MO record, should restrict their value
         consumption to moves originating from that MO record.
