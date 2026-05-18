@@ -1112,7 +1112,7 @@ function _process_request_for_all(store, name, params, context = {}) {
     }
     if (name === "/discuss/create_group") {
         const channelId = DiscussChannel._create_group(
-            params.partners_to,
+            params.users_to,
             params.default_display_mode,
             params.name
         );
