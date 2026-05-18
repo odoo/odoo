@@ -325,6 +325,7 @@ class ChatbotCase(MailCommon, chatbot_common.ChatbotCase):
                             },
                         ),
                         "res.users": self._filter_users_fields({
+                            "all_employee_ids": [],
                             "employee_ids": [],
                             "should_display_in_call_im_status": False,
                             "id": self.user_employee.id,
