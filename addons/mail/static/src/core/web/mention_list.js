@@ -1,14 +1,15 @@
 import { _t } from "@web/core/l10n/translation";
 import { Component } from "@odoo/owl";
-import { useService, useAutofocus } from "@web/core/utils/hooks";
+import { useChildRef, useService } from "@web/core/utils/hooks";
 
 import { NavigableList } from "@mail/core/common/navigable_list";
+import { SearchInput } from "@mail/core/common/search_input";
 import { mapSuggestionsToOptions } from "@mail/core/common/suggestion_hook";
 import { useSearch } from "@mail/utils/common/hooks";
 
 export class MentionList extends Component {
     static template = "mail.MentionList";
-    static components = { NavigableList };
+    static components = { NavigableList, SearchInput };
     static props = {
         onSelect: { type: Function },
         close: { type: Function, optional: true },
@@ -24,7 +25,7 @@ export class MentionList extends Component {
         this.orm = useService("orm");
         this.store = useService("mail.store");
         this.suggestionService = useService("mail.suggestion");
-        this.ref = useAutofocus({ mobile: true });
+        this.ref = useChildRef();
         this.search = useSearch({
             fetch: (term) =>
                 this.suggestionService.fetchSuggestions(

@@ -4,16 +4,8 @@
         <ActionPanel close="this.props.close" title.translate="Threads" resizable="!!this.env.inMeetingView" initialWidth="400" icon="'fa fa-comments-o'">
             <t t-set-slot="header">
                 <div class="d-flex align-items-center my-0">
-                    <div class="input-group ms-1 my-2">
-                        <div class="form-control d-flex align-items-center p-0 bg-view" role="search" aria-autocomplete="list">
-                            <div class="o_searchview d-flex align-items-center flex-grow-1 flex-wrap gap-1 h-100 border-end-0">
-                                <div class="input-group-text bg-transparent border-0 pe-0">
-                                    <i t-if="!this.search.loading" class="o_searchview_icon oi oi-search opacity-50" role="img" aria-label="Search Sub Channels" title="Search Sub Channels"/>
-                                    <i t-else="" class="fa fa-circle-o-notch fa-spin opacity-50" aria-label="Search in progress" title="Search in progress"/>
-                                </div>
-                                <input t-custom-ref="search" t-custom-model="this.search.searchTerm" type="text" class="o_searchview_input rounded flex-grow-1 w-auto border-0 px-2 bg-view" placeholder="Search by name"/>
-                            </div>
-                        </div>
+                    <div class="input-group input-group-sm ms-1 my-2">
+                        <SearchInput search="this.search" placeholder.translate="Search by name" autofocus="true"/>
                         <button t-if="this.props.channel.canCreateSubChannels" class="btn btn-primary smaller" aria-label="Create Thread" t-on-click="this.onClickCreate">Create</button>
                     </div>
                 </div>

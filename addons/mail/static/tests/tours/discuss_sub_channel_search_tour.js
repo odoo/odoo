@@ -44,7 +44,7 @@ registry.category("web_tour.tours").add("test_discuss_sub_channel_search", {
             trigger: `.o-mail-SubChannelPreview .o-mail-SubChannelPreview-name:text(Sub Channel ${i})`,
         })),
         {
-            trigger: ".o-mail-ActionPanel:has(.o-mail-SubChannelList) .o_searchview_input",
+            trigger: ".o-mail-ActionPanel:has(.o-mail-SubChannelList) .o-mail-SearchInput input",
             run: "edit Sub Channel 10",
         },
         {
@@ -57,7 +57,7 @@ registry.category("web_tour.tours").add("test_discuss_sub_channel_search", {
             },
         },
         {
-            trigger: ".o_searchview_input",
+            trigger: ".o-mail-SearchInput input",
             run: "clear",
         },
         {
