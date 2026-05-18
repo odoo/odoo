@@ -65,6 +65,17 @@ import { nodeSize } from "@html_editor/utils/position";
  * @property { FormOptionPlugin['fetchModels'] } fetchModels
  */
 
+export const INNER_SNIPPETS_EXCLUDED_FROM_FORMS = [
+    ".s_accordion",
+    ".s_add_to_cart",
+    ".s_chart",
+    ".s_countdown",
+    ".o_facebook_page",
+    ".s_instagram_page",
+    ".s_online_appointment",
+    ".s_rental_search",
+];
+
 export class FormOptionPlugin extends Plugin {
     static id = "websiteFormOption";
     static dependencies = ["builderActions", "builderOptions", "savePlugin", "websiteBridge"];
@@ -189,19 +200,26 @@ export class FormOptionPlugin extends Plugin {
         },
         dropzone_selectors: [
             {
-                selector: ".s_website_form",
+                selector: [".s_website_form", ...INNER_SNIPPETS_EXCLUDED_FROM_FORMS].join(", "),
                 excludeAncestor: "form",
             },
             {
-                selector: ".s_website_form_field, .s_website_form_submit",
+                selector:
+                    ".s_website_form_field, .s_website_form_submit, .s_website_form_inner_content",
                 exclude: ".s_website_form_dnone",
-                dropNear: ".s_website_form_field",
+                dropNear: ".s_website_form_field, .s_website_form_inner_content",
                 dropLockWithin: "form",
             },
         ],
-        so_content_addition_selectors: [".s_website_form"],
+        so_content_addition_selectors: [
+            ".s_website_form, .s_website_form_field, .s_website_form_inner_content",
+        ],
         submit_button_selectors: [".s_website_form_send", ".s_website_form_submit"],
         on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
+        on_element_dropped_handlers: ({ droppedEl }) => this.wrapFormElement(droppedEl),
+        on_snippet_over_dropzone_handlers: this.onSnippetOverDropzone.bind(this),
+        on_snippet_out_dropzone_handlers: ({ dragState }) =>
+            this.clearEmptyWrappersAfterDrag(dragState),
         on_cloned_handlers: this.onCloned.bind(this),
         is_unremovable_selectors: ".s_website_form_send, .s_website_form_submit",
         immutable_link_selectors: [".s_website_form_send"],
@@ -531,7 +549,8 @@ export class FormOptionPlugin extends Plugin {
             newSnippetEl = renderField(field);
         } else {
             newSnippetEl = document.createElement("div");
-            newSnippetEl.className = "col-lg-12";
+            newSnippetEl.className =
+                "s_website_form_inner_content o_no_direct_child_drop col-lg-12";
             const snippetConfig = this.config.snippetModel.getSnippetByName(
                 "snippet_content",
                 snippet.id
@@ -824,12 +843,55 @@ export class FormOptionPlugin extends Plugin {
      * Handler called when a snippet is dropped.
      *
      * @param {Object} params
+     * @param {HTMLElement} params.dragState- The state provided by drag handlers
      * @param {HTMLElement} params.snippetEl - The dropped snippet element.
      */
-    async onSnippetDropped({ snippetEl }) {
+    async onSnippetDropped({ dragState, snippetEl }) {
+        if (!snippetEl.closest(".s_website_form")) {
+            return;
+        }
+
+        // Manage the wrapping into columns
+        this.wrapFormElement(snippetEl);
+        this.clearEmptyWrappersAfterDrag(dragState);
+
         // Re-render the fields to ensure each field gets a unique ID.
         await this.rerenderFieldsInElement(snippetEl);
         await this.applyDefaultValues(snippetEl);
+    }
+    /**
+     * Called when the snippet is dragged over a dropzone.
+     *
+     * @param {Object} params
+     * @param {HTMLElement} params.dragState- The state provided by drag handlers
+     * @param {HTMLElement} params.snippetEl - The dragged snippet element.
+     */
+    onSnippetOverDropzone({ snippetEl, dragState }) {
+        const dropzoneEl = dragState.currentDropzoneEl;
+        // Skip if dropzone is outside a form or inside a form inner snippet
+        if (!dropzoneEl.matches(".s_website_form_rows > *")) {
+            return;
+        }
+        // Wrap `snippetEl` in a column element to get a realistic preview,
+        // and store the wrapper element in `dragState` to cleanup later on
+        snippetEl = this.wrapFormElement(snippetEl);
+        dragState.previewWrapper = snippetEl;
+    }
+    /**
+     * Checks if the drag state contains a `previewWrapper` element and remove
+     * it if present.
+     *
+     * `dragState.previewWrapper` is an empty element left over by the drag
+     * mechanism (see `onSnippetOverDropzone` and `wrapFormElement`).
+     *
+     * @param {Object} dragState - The state provided by drag handlers
+     */
+    clearEmptyWrappersAfterDrag(dragState) {
+        const previewWrapper = dragState.previewWrapper;
+        if (previewWrapper) {
+            previewWrapper.remove();
+            delete dragState.previewWrapper;
+        }
     }
     /**
      * Handler called when an element is cloned.
@@ -896,6 +958,47 @@ export class FormOptionPlugin extends Plugin {
         delete fieldEl.dataset.errorMessage;
         delete fieldEl.dataset.requirementBetween;
         delete fieldEl.dataset.requirementCondition;
+    }
+
+    /**
+     * If the element is positioned inside a website form, wraps it in a `div`
+     * having classes `s_website_form_inner_content` and `o_no_direct_child_drop`
+     * and `col-12`.
+     * `s_website_form_inner_content` is used in form-related dropzone selector
+     * rules, e.g., to define how blocks can be moved inside forms.
+     * `o_no_direct_child_drop` prevents elements from being dropped as a direct
+     * child of the wrapper. As a result, each wrapper can contain only a single
+     * element. This does not prevent new inner snippets to be dropped inside
+     * already wrapped ones.
+     * `col-12` is to get a column that is both displayed and edited correctly.
+     *
+     * @param {HTMLElement} el - The element to check.
+     * @returns {HTMLElement} The element, or the wrapper if wrapping is applied
+     *
+     */
+    wrapFormElement(el) {
+        if (el.matches(".s_website_form_rows > p > *")) {
+            // Some inner blocks such as buttons are wrapped inside a `p`. In
+            // that case we should wrap the `p`
+            el = el.parentElement;
+        } else if (!el.matches(".s_website_form_rows > *")) {
+            // Skip if el was dropped outside a form or inside a form inner snippet
+            return el;
+        }
+
+        // Snippet doesn't need wrapping if it already has a 'col' class.
+        // This is the case, e.g., for cards that could be dragged from
+        // s_three_columns snippets inside a form.
+        if ([...el.classList].some((c) => c.startsWith("col-"))) {
+            el.classList.add("s_website_form_inner_content", "o_no_direct_child_drop");
+            return el;
+        }
+
+        const wrapper = document.createElement("div");
+        wrapper.classList.add("s_website_form_inner_content", "o_no_direct_child_drop", "col-12");
+        el.parentNode.replaceChild(wrapper, el);
+        wrapper.appendChild(el);
+        return wrapper;
     }
 }
 
