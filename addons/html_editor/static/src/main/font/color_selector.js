@@ -29,10 +29,18 @@ export class ColorSelector extends Component {
         onClose: Function,
         useDefaultThemeColors: { type: Boolean, optional: true },
     };
+
     static defaultProps = {
+<<<<<<< dc63f240c3236eb18dec6b02b6f997b26831d7e8
         cssVarColorPrefix: "",
         enabledTabs: ["solid", "gradient", "custom"],
         useDefaultThemeColors: true,
+||||||| 4cb744a0017d3a91f490a059cea66186ddfd1a90
+        themeColorPrefix: "",
+=======
+        themeColorPrefix: "",
+        useDefaultThemeColors: true,
+>>>>>>> f6a354ed478b0dae416edda7eaa3aeb9ee7a42b2
     };
 
     setup() {
@@ -69,6 +77,7 @@ export class ColorSelector extends Component {
                 applyColorPreview: this.props.applyColorPreview,
                 applyColorResetPreview: this.props.applyColorResetPreview,
                 getUsedCustomColors: this.props.getUsedCustomColors,
+                useDefaultThemeColors: this.props.useDefaultThemeColors,
                 colorPrefix: this.props.colorPrefix,
                 enabledTabs: this.props.enabledTabs,
                 cssVarColorPrefix: this.props.cssVarColorPrefix,

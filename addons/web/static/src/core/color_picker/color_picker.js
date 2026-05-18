@@ -68,17 +68,46 @@ export class ColorPicker extends Component {
     static defaultProps = {
         close: () => {},
         defaultOpacity: 100,
+<<<<<<< dc63f240c3236eb18dec6b02b6f997b26831d7e8
         enabledTabs: ["solid", "custom"],
         cssVarColorPrefix: "",
         setOnCloseCallback: () => {},
         useDefaultThemeColors: true,
+||||||| 4cb744a0017d3a91f490a059cea66186ddfd1a90
+        enabledTabs: ["solid", "gradient", "custom"],
+        showRgbaField: false,
+        themeColorPrefix: "",
+=======
+        enabledTabs: ["solid", "gradient", "custom"],
+        showRgbaField: false,
+        themeColorPrefix: "",
+        useDefaultThemeColors: true,
+>>>>>>> f6a354ed478b0dae416edda7eaa3aeb9ee7a42b2
     };
 
     setup() {
+<<<<<<< dc63f240c3236eb18dec6b02b6f997b26831d7e8
         this.tabs = registry
             .category("color_picker_tabs")
             .getAll()
             .filter((tab) => this.props.enabledTabs.includes(tab.id));
+||||||| 4cb744a0017d3a91f490a059cea66186ddfd1a90
+        this.DEFAULT_COLORS = DEFAULT_COLORS;
+        this.DEFAULT_GRADIENT_COLORS = DEFAULT_GRADIENT_COLORS;
+        this.grayscales = Object.assign({}, DEFAULT_GRAYSCALES);
+        this.grayscales = Object.assign(this.grayscales, this.props.grayscales);
+        this.DEFAULT_THEME_COLOR_VARS = DEFAULT_THEME_COLOR_VARS;
+        this.defaultColorSet = this.getDefaultColorSet();
+=======
+        this.DEFAULT_COLORS = DEFAULT_COLORS;
+        this.DEFAULT_GRADIENT_COLORS = DEFAULT_GRADIENT_COLORS;
+        this.grayscales = Object.assign({}, DEFAULT_GRAYSCALES);
+        this.grayscales = Object.assign(this.grayscales, this.props.grayscales);
+        this.DEFAULT_THEME_COLOR_VARS = this.props.useDefaultThemeColors
+            ? DEFAULT_THEME_COLOR_VARS
+            : [];
+        this.defaultColorSet = this.getDefaultColorSet();
+>>>>>>> f6a354ed478b0dae416edda7eaa3aeb9ee7a42b2
         this.root = useRef("root");
 
         this.DEFAULT_COLORS = DEFAULT_COLORS;
