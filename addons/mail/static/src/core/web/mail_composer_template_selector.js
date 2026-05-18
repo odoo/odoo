@@ -10,7 +10,6 @@ import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
 
-
 export class MailComposerTemplateSelector extends Component {
     static template = "mail.MailComposerTemplateSelector";
     static components = { Dropdown, DropdownItem };
@@ -24,6 +23,7 @@ export class MailComposerTemplateSelector extends Component {
         const { context } = this.props.record.evalContext;
         this.state = useState({
             hideMailTemplateManagementOptions: context?.hide_mail_template_management_options,
+            templates: [],
         });
 
         onWillStart(() => {
@@ -33,15 +33,27 @@ export class MailComposerTemplateSelector extends Component {
 
     async fetchTemplates() {
         const fields = ["display_name"];
-        const templates = await this.orm.searchRead("mail.template", [
-            ["model", "=", this.props.record.data.render_model],
-            ["user_id", "=", user.userId]
-        ], fields, { limit: this.limit });
-        if (templates.length < this.limit) {
-            templates.push(...await this.orm.searchRead("mail.template", [
+        const templates = await this.orm.searchRead(
+            "mail.template",
+            [
                 ["model", "=", this.props.record.data.render_model],
-                ["user_id", "=", false]
-            ], fields, { limit: this.limit - templates.length }));
+                ["user_id", "=", user.userId],
+            ],
+            fields,
+            { limit: this.limit }
+        );
+        if (templates.length < this.limit) {
+            templates.push(
+                ...(await this.orm.searchRead(
+                    "mail.template",
+                    [
+                        ["model", "=", this.props.record.data.render_model],
+                        ["user_id", "=", false],
+                    ],
+                    fields,
+                    { limit: this.limit - templates.length }
+                ))
+            );
         }
         this.state.templates = templates;
     }
@@ -65,7 +77,7 @@ export class MailComposerTemplateSelector extends Component {
             type: "object",
             name: "open_template_creation_wizard",
             resId: this.props.record.resId,
-            resModel: this.props.record.resModel
+            resModel: this.props.record.resModel,
         });
     }
 
@@ -87,7 +99,7 @@ export class MailComposerTemplateSelector extends Component {
             multiSelect: false,
             noCreate: true,
             domain: [["model", "=", this.props.record.data.render_model]],
-            onSelected: async templateIds => {
+            onSelected: async (templateIds) => {
                 await this.props.record.update({
                     template_id: { id: templateIds[0] },
                 });
