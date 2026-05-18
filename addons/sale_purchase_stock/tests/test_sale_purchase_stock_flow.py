@@ -629,3 +629,32 @@ class TestSalePurchaseStockFlow(TransactionCase):
         self.assertEqual(len(all_pos), 2, 'Reordering rule must create a separate PO, not merge into the sale order PO')
         po_from_rr = all_pos - po_from_so
         self.assertFalse(po_from_rr.reference_ids, 'Reordering rule PO should have no reference_ids')
+
+    def test_mto_po_double_quantity_update(self):
+        """
+        Confirm an SO for an MTO + Buy product. Increase and then decrease the quantity on the PO.
+        The quantity of the receipt should be adapted accodingly.
+        """
+        so = self.env['sale.order'].create({
+            'partner_id': self.customer.id,
+            'order_line': [
+                Command.create({
+                    'name': self.mto_product.name,
+                    'product_id': self.mto_product.id,
+                    'product_uom_qty': 1,
+                    'product_uom_id': self.mto_product.uom_id.id,
+                    'price_unit': 10,
+                }),
+            ],
+        })
+        so.action_confirm()
+        delivery = so.picking_ids
+        self.assertRecordValues(delivery.move_ids, [
+            {'product_id': self.mto_product.id, 'product_uom_qty': 1.0},
+        ])
+        po = so._get_purchase_orders()
+        po.button_confirm()
+        po.order_line.product_qty = 10.0
+        self.assertEqual(po.picking_ids.move_ids.quantity, 10.0)
+        po.order_line.product_qty = 5.0
+        self.assertEqual(po.picking_ids.move_ids.quantity, 5.0)
