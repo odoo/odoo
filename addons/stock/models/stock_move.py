@@ -277,8 +277,9 @@ class StockMove(models.Model):
     @api.depends('move_line_ids', 'move_line_ids.result_package_id', 'move_line_ids.result_package_id.outermost_package_id')
     def _compute_package_ids(self):
         for move in self:
-            if move.state in ['done', 'cancel']:
-                move.package_ids = move.move_line_ids.package_history_id.outermost_dest_id
+            package_history = move.move_line_ids.package_history_id
+            if move.state in ['done', 'cancel'] and package_history:
+                move.package_ids = package_history.outermost_dest_id
             else:
                 # Only display the top-level packages until the move is done.
                 move.package_ids = move.move_line_ids.result_package_id.outermost_package_id
