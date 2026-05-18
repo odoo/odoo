@@ -326,9 +326,11 @@ registry.category("web_tour.tours").add("test_self_order_product_availability", 
         Utils.checkIsNoBtn("My Order"),
         Utils.clickBtn("Order Now"),
         LandingPage.selectLocation("Test-In"),
-        // Mark 'Combo Product 5' as unavailable and verify it shows as out of stock
+        // 'Combo Product 2' is snoozed, so it should appear as Out of stock
+        ProductPage.checkProductOutOfStock("Combo Product 2"),
+        // Mark 'Combo Product 5' as unavailable and verify it is not available
         Utils.setProductAvailability("Combo Product 5", false),
-        ProductPage.checkProductOutOfStock("Combo Product 5"),
+        Utils.negateStep(ProductPage.checkProductIsShown("Combo Product 5")),
         ProductPage.clickProduct("Office Combo"),
         ProductPage.clickComboProduct("Combo Product 4"),
         Utils.clickBtn("Add to cart"),
