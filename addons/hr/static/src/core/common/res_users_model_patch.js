@@ -6,15 +6,14 @@ import { user } from "@web/core/user";
 patch(ResUsers.prototype, {
     setup() {
         super.setup();
-        this.employee_ids = fields.Many("hr.employee", {
-            inverse: "user_id",
-        });
+        this.employee_ids = fields.Many("hr.employee");
+        this.all_employee_ids = fields.Many("hr.employee", { inverse: "user_id" });
         this.employee_id = fields.One("hr.employee", {
             compute() {
                 return (
-                    this.employee_ids.find(
+                    this.all_employee_ids.find(
                         (employee) => employee.company_id?.id === user.activeCompany?.id
-                    ) || this.employee_ids[0]
+                    ) || this.all_employee_ids[0]
                 );
             },
         });

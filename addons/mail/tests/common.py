@@ -2127,6 +2127,7 @@ class MailCommon(MailCase):
         """
         if "hr.employee" not in self.env:
             for data in users_data:
+                data.pop("all_employee_ids", None)
                 data.pop("employee_ids", None)
         if "has_active_call" not in self.env["res.users"]._fields:
             for data in users_data:
