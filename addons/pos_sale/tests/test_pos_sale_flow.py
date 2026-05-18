@@ -2221,6 +2221,20 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PoSApplyDownpaymentWithExtraLine', login="accountman")
         self.assertEqual(so.amount_unpaid, 90)
 
+    def test_ensure_downpayment_product_in_multiple_company(self):
+        if self.env['ir.module.module']._get('pos_hr').state != 'installed':
+            self.skipTest("pos_hr module is required for this test")
+
+        branch = self.env['res.company'].create({
+            'name': 'Branch 1',
+            'parent_id': self.env.company.id,
+            'chart_template': self.env.company.chart_template,
+        })
+        self.env["pos.config"].with_company(branch).create({
+            "name": "Branch Point of Sale"
+        })
+        self.env['pos.config']._ensure_downpayment_product()
+
 
 @tagged('post_install', '-at_install')
 class TestPoSSalePayment(TestPointOfSaleHttpCommon, PaymentCommon):
