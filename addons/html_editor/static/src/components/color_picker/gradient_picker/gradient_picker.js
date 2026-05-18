@@ -11,9 +11,10 @@ import { CheckBox } from "@web/core/checkbox/checkbox";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { isMobileOS } from "@web/core/browser/feature_detection";
+import { IframeInput } from "@html_editor/components/iframe_input/iframe_input";
 
 export class GradientPicker extends Component {
-    static components = { ColorPicker, CheckBox, Dropdown, DropdownItem };
+    static components = { ColorPicker, CheckBox, Dropdown, DropdownItem, IframeInput };
     static template = "html_editor.GradientPicker";
     static props = {
         onGradientChange: { type: Function, optional: true },

@@ -314,8 +314,15 @@ export class ColorPicker extends Component {
         }
     }
 
-    onMouseEnter() {
-        if (this.state.currentColorPreview) {
+    onMouseEnter(ev) {
+        const previousTarget = ev.relatedTarget;
+        const parentIframe = previousTarget?.ownerDocument?.defaultView?.frameElement;
+        const mouseEnteredFromWithinPicker =
+            this.root.el.contains(previousTarget) || this.root.el.contains(parentIframe);
+        // Re-apply the current preview only when the mouse genuinely
+        // re-enters the picker from outside. Moving between internal
+        // boundaries (like iframe inputs) should not reset previews.
+        if (this.state.currentColorPreview && !mouseEnteredFromWithinPicker) {
             // Sometimes the previews can be reverted outside of the color
             // picker, for example, if a user hovers any of the previewable
             // options in html builder. So here we reset the preview and apply

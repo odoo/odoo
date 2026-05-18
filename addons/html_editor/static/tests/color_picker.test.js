@@ -12,6 +12,7 @@ import { defineStyle, mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { ColorPicker, DEFAULT_COLORS } from "@html_editor/components/color_picker/color_picker";
 import { CustomColorPicker } from "@html_editor/components/color_picker/custom_color_picker/custom_color_picker";
 import { registry } from "@web/core/registry";
+import { getIframeInput } from "./_helpers/iframe_input";
 
 test("basic rendering", async () => {
     await mountWithCleanup(ColorPicker, {
@@ -265,7 +266,11 @@ test("custom color picker sets default color as selected", async () => {
             defaultColor: "#FF0000",
         },
     });
-    expect("input.o_hex_input").toHaveValue("#FF0000");
+    const hexInputEl = await getIframeInput(
+        ".o_color_picker_inputs iframe.o_hex_iframe",
+        "input[name='hex_input']"
+    );
+    expect(hexInputEl).toHaveValue("#FF0000");
 });
 
 test("should preserve color slider when picking max lightness color", async () => {
@@ -306,9 +311,14 @@ test("should preserve color slider when picking max lightness color", async () =
 
 test("custom color picker change color on click in hue slider", async () => {
     await mountWithCleanup(CustomColorPicker, { props: { selectedColor: "#FF0000" } });
-    expect("input.o_hex_input").toHaveValue("#FF0000");
+    const hexInputEl = await getIframeInput(
+        ".o_color_picker_inputs iframe.o_hex_iframe",
+        "input[name='hex_input']"
+    );
+    expect(hexInputEl).toHaveValue("#FF0000");
     await click(".o_color_slider");
-    expect("input.o_hex_input").not.toHaveValue("#FF0000");
+    await animationFrame();
+    expect(hexInputEl).not.toHaveValue("#FF0000");
 });
 
 class ExtraTab extends Component {

@@ -64,13 +64,12 @@
                             <div class="position-absolute gradient-angle-thumb"></div>
                         </div>
                         <div class="o_color_gradient_input d-flex align-items-center">
-                            <input
-                                name="angle"
-                                type="number"
-                                min="-360"
-                                max="360"
-                                t-att-value="this.state.angle"
-                                t-on-change="this.onAngleChange"
+                            <IframeInput
+                                value="this.state.angle"
+                                inputAttrs="{ name: 'angle_input', type: 'number', min: -360, max: 360 }"
+                                iframeClass="'o_angle_iframe'"
+                                inputStyle="'background-color: transparent; font-family: monospace; font-size: 12px;'"
+                                onChange.bind="this.onAngleChange"
                             />
                             <span>deg</span>
                         </div>
@@ -83,13 +82,12 @@
                         Position X
                         <div class="d-flex">
                             <span class="o_color_gradient_input">
-                                <input
-                                    name="positionX"
-                                    type="number"
-                                    min="-100"
-                                    max="200"
-                                    t-att-value="this.positions['x']"
-                                    t-on-change="(ev) => this.onPositionChange('x', ev)"
+                                <IframeInput
+                                    value="this.positions['x']"
+                                    inputAttrs="{ name: 'position_x_input', type: 'number', min: -100, max: 200 }"
+                                    iframeClass="'o_position_x_iframe'"
+                                    inputStyle="'background-color: transparent; font-family: monospace; font-size: 12px;'"
+                                    onChange.bind="(ev) => this.onPositionChange('x', ev)"
                                 />
                                 <span>%</span>
                             </span>
@@ -99,13 +97,12 @@
                         Position Y
                         <div class="d-flex">
                             <span class="o_color_gradient_input">
-                                <input
-                                    name="positionY"
-                                    type="number"
-                                    min="-100"
-                                    max="200"
-                                    t-att-value="this.positions['y']"
-                                    t-on-change="(ev) => this.onPositionChange('y', ev)"
+                                <IframeInput
+                                    value="this.positions['y']"
+                                    inputAttrs="{ name: 'position_y_input', type: 'number', min: -100, max: 200 }"
+                                    iframeClass="'o_position_y_iframe'"
+                                    inputStyle="'background-color: transparent; font-family: monospace; font-size: 12px;'"
+                                    onChange.bind="(ev) => this.onPositionChange('y', ev)"
                                 />
                                 <span>%</span>
                             </span>

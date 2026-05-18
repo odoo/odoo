@@ -1,16 +1,16 @@
 import { useLayoutEffect, useRef } from "@web/owl2/utils";
-import { Component, onMounted, props, proxy, t } from "@odoo/owl";
+import { Component, props, proxy, t } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
 import { useDebounced } from "@web/core/utils/timing";
-import { cookie } from "@web/core/browser/cookie";
 import { getCSSVariableValue, getHtmlStyle } from "@html_editor/utils/formatting";
 import {
     useDropdownAutoVisibility,
     useToolbarDropdownFocus,
 } from "@html_editor/toolbar_dropdown_hook";
 import { useChildRef } from "@web/core/utils/hooks";
+import { IframeInput } from "@html_editor/components/iframe_input/iframe_input";
 
 export const MAX_FONT_SIZE = 144;
 
@@ -29,7 +29,7 @@ export class FontSizeSelector extends Component {
         getSelection: t.function(),
         isDisabled: t.boolean(),
     });
-    static components = { Dropdown, DropdownItem };
+    static components = { Dropdown, DropdownItem, IframeInput };
 
     setup() {
         this.items = this.props.getItems();
@@ -38,95 +38,12 @@ export class FontSizeSelector extends Component {
         this.dropdown = useDropdownState();
         this.menuRef = useChildRef();
         useDropdownAutoVisibility(this.env.overlayState, this.menuRef);
-        this.iframeContentRef = useRef("iframeContent");
+        this.iframeContentRef = useChildRef();
+        this.fontSizeInputRef = useChildRef();
         this.debouncedCustomFontSizeInput = useDebounced(this.onCustomFontSizeInput, 200);
         useToolbarDropdownFocus(this.dropdown, this.fontSizeSelector);
-
-        onMounted(() => {
-            const iframeEl = this.iframeContentRef.el;
-
-            const initFontSizeInput = () => {
-                const iframeDoc = iframeEl.contentWindow.document;
-
-                // Skip if already/still initialized.
-                if (this.fontSizeInput?.closest("body") === iframeDoc.body || !iframeDoc.body) {
-                    return;
-                }
-
-                this.fontSizeInput = iframeDoc.createElement("input");
-                this.fontSizeInput.addEventListener("blur", () => {
-                    this.props.onBlur?.();
-                });
-                const isDarkMode = cookie.get("color_scheme") === "dark";
-                const htmlStyle = getHtmlStyle(document);
-                const backgroundColor = getCSSVariableValue(
-                    isDarkMode ? "gray-200" : "white",
-                    htmlStyle
-                );
-                const color = getCSSVariableValue("black", htmlStyle);
-                const fontFamily = getCSSVariableValue("o-system-fonts", htmlStyle);
-
-                const style = iframeDoc.createElement("style");
-                style.textContent = `
-                    body {
-                        padding: 0;
-                        margin: 0;
-                    }
-                    input::-webkit-outer-spin-button,
-                    input::-webkit-inner-spin-button {
-                        -webkit-appearance: none;
-                        margin: 0;
-                    }
-                    input[type=number] {
-                        -moz-appearance: textfield;
-                        width: 100%;
-                        height: 100%;
-                        border: none;
-                        outline: none;
-                        text-align: center;
-                        background-color: ${backgroundColor};
-                        color: ${color};
-                        font-family: ${fontFamily};
-                    }
-                `;
-                iframeDoc.head.appendChild(style);
-                this.fontSizeInput.type = "number";
-                this.fontSizeInput.min = 0;
-                this.fontSizeInput.name = "font-size-input";
-                this.fontSizeInput.autocomplete = "off";
-                this.fontSizeInput.value = this.state.displayName;
-                iframeDoc.body.appendChild(this.fontSizeInput);
-                this.fontSizeInput.addEventListener("click", () => {
-                    if (!this.dropdown.isOpen) {
-                        this.dropdown.open();
-                        requestAnimationFrame(() => {
-                            if (this.menuRef.el?.closest(".o_bottom_sheet")) {
-                                this.props.onBlur?.();
-                            }
-                        });
-                    }
-                });
-                this.fontSizeInput.addEventListener("input", this.debouncedCustomFontSizeInput);
-                this.fontSizeInput.addEventListener(
-                    "keydown",
-                    this.onKeyDownFontSizeInput.bind(this)
-                );
-            };
-            if (iframeEl.contentDocument.readyState === "complete") {
-                initFontSizeInput();
-            }
-            // If iframe is moved around in DOM, it restarts from scratch and needs to be repopulated.
-            iframeEl.addEventListener("load", initFontSizeInput);
-        });
-        useLayoutEffect(
-            () => {
-                if (this.fontSizeInput) {
-                    // Update `fontSizeInputValue` whenever the font size changes.
-                    this.fontSizeInput.value = this.state.displayName;
-                }
-            },
-            () => [this.state.displayName]
-        );
+        const htmlStyle = getHtmlStyle(document);
+        this.fontFamily = getCSSVariableValue("o-system-fonts", htmlStyle);
         useLayoutEffect(
             () => {
                 // blur on close
@@ -144,6 +61,21 @@ export class FontSizeSelector extends Component {
             },
             () => [this.dropdown.isOpen]
         );
+    }
+
+    get fontSizeInput() {
+        return this.fontSizeInputRef.el;
+    }
+
+    onClickFontSizeInput() {
+        if (!this.dropdown.isOpen) {
+            this.dropdown.open();
+            requestAnimationFrame(() => {
+                if (this.menuRef.el?.closest(".o_bottom_sheet")) {
+                    this.props.onBlur?.();
+                }
+            });
+        }
     }
 
     onCustomFontSizeInput(ev) {

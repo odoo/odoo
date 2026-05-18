@@ -22,12 +22,17 @@
             </div>
         </div>
         <div class="o_color_picker_inputs d-flex justify-content-between mb-2">
-            <t t-set="input_classes" t-value="'p-0 border-0 text-center font-monospace bg-transparent'" />
-
-            <div class="o_hex_div d-flex align-items-baseline me-1">
-                <input type="text" t-attf-class="o_hex_input {{input_classes}}" data-color-method="hex" size="1"
-                    t-on-input="this.onHexColorInput"/>
-                <label class="flex-grow-0 ms-1 mb-0">hex</label>
+            <div class="o_hex_div px-1 d-flex align-items-center">
+                <IframeInput
+                    value="this.hexDisplay.value"
+                    inputAttrs="{ name: 'hex_input' }"
+                    iframeClass="'o_hex_iframe'"
+                    inputStyle="'border: 1px solid; background-color: transparent; font-family: monospace; font-size: 11px;'"
+                    onClick.bind="this.onHexInputClick"
+                    onInput.bind="this.onHexColorInput"
+                    onKeydown.bind="this.onKeydown"
+                />
+                <label class="flex-grow-0 ms-1">hex</label>
             </div>
         </div>
     </div>
