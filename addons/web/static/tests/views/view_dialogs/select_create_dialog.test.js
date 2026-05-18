@@ -1046,3 +1046,28 @@ test("SelectCreateDialog: default props, create a record", async () => {
 
     expect(".o_dialog").toHaveCount(0);
 });
+
+test.tags("desktop");
+test("SelectCreateDialog list: control panel stays visible when list overflows", async () => {
+    for (let i = 4; i <= 30; i++) {
+        Partner._records.push({ id: i, name: `Partner ${i}`, foo: `foo${i}` });
+    }
+    Partner._views["list"] = /* xml */ `
+        <list>
+            <field name="name"/>
+        </list>
+    `;
+
+    await mountWithCleanup(WebClient);
+    getService("dialog").add(SelectCreateDialog, {
+        resModel: "partner",
+        noCreate: true,
+    });
+    await animationFrame();
+    expect(".o_dialog .o_list_view .o_content").toHaveStyle({ overflowY: "auto" });
+
+    const renderer = queryOne(".o_dialog .o_list_renderer");
+    expect(renderer.scrollHeight).toBeGreaterThan(renderer.clientHeight, {
+        message: "Scroll belongs to the renderer (doesn't include the control panel)",
+    });
+});
