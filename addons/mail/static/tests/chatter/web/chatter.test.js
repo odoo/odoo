@@ -687,7 +687,9 @@ test("Mentions in composer should still work when using pager", async () => {
     await start();
     await openFormView("res.partner", partnerId_1, { resIds: [partnerId_1, partnerId_2] });
     await click("button:text('Log note')");
+    await contains(".o-mail-Composer-input");
     await click(".o_pager_next");
+    await contains(".o_pager:text(2 / 2)"); // ensures we correctly switched to the second record
     await insertText(".o-mail-Composer-input", "@");
     // all active records in DB with a name: Mitchell Admin | Hermit
     await contains(".o-mail-Composer-suggestion", { count: 2 });
