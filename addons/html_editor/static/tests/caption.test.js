@@ -3,6 +3,7 @@ import {
     manuallyDispatchProgrammaticEvent,
     click,
     press,
+    queryAll,
     queryOne,
     waitFor,
     waitForNone,
@@ -68,9 +69,8 @@ const toggleCaption = async (captionText) => {
 };
 const addLinkToImage = async (url) => {
     await click("img");
-    await waitFor(".o-we-toolbar button[name='link']");
-    await click(".o-we-toolbar");
-    await click("button[name='link']");
+    await waitFor(".o-we-toolbar button[name='link']:not([disabled])");
+    await click(".o-we-toolbar button[name='link']");
     if (url) {
         await waitFor(".o-we-linkpopover");
         await contains(".o-we-linkpopover input.o_we_href_input_link", { timeout: 1500 }).edit(
@@ -829,9 +829,10 @@ test("add a link then a caption to an image surrounded by text", async () => {
             await animationFrame();
             await toggleCaption("Hello");
             // Blur the input to commit the caption.
-            await click("p"); // Blur the input.
-            await animationFrame(); // Wait for the focus event to trigger a step.
-            editor.shared.selection.setCursorStart(editor.document.querySelectorAll("p")[1]);
+            const p = queryAll("p")[1];
+            await click(p);
+            editor.shared.selection.setCursorStart(p);
+            await animationFrame(); // Wait for the selection to change.
         },
         contentAfter: unformat(
             `<p>ab</p>

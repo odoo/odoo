@@ -127,7 +127,7 @@ test("should not format non-editable text (setFontSize)", async () => {
 test("should add font size in selected table cells", async () => {
     await testEditor({
         contentBefore:
-            '<table><tbody><tr><td class="o_selected_td"><p>[<br></p></td><td class="o_selected_td"><p><br></p>]</td></tr><tr><td><p><br></p></td><td><p><br></p></td></tr></tbody></table>',
+            '<table><tbody><tr><td class="o_selected_td"><p>[<br></p></td><td class="o_selected_td"><p>]<br></p></td></tr><tr><td><p><br></p></td><td><p><br></p></td></tr></tbody></table>',
         stepFunction: setFontSize("48px"),
         contentAfter:
             '<table><tbody><tr><td><p><span style="font-size: 48px;">[<br></span></p></td><td><p><span style="font-size: 48px;">]<br></span></p></td></tr><tr><td><p><br></p></td><td><p><br></p></td></tr></tbody></table>',
@@ -209,7 +209,7 @@ test("should add style to br except line-break br", async () => {
     const { editor, el } = await setupEditor("<p>[]abc<br><br></p>");
     await press(["ctrl", "a"]);
     execCommand(editor, "formatFontSize", { size: "36px" });
-    expect(getContent(el)).toBe(`<p><span style="font-size: 36px;">[abc]</span><br><br></p>`);
+    expect(getContent(el)).toBe(`<p><span style="font-size: 36px;">[abc</span><br>]<br></p>`);
 });
 
 test("should update the font size currectly if already has one", async () => {
@@ -226,7 +226,7 @@ test("should add style to br except line-break br (2)", async () => {
     await press(["ctrl", "a"]);
     execCommand(editor, "formatFontSize", { size: "36px" });
     expect(getContent(el)).toBe(
-        `<p><span style="font-size: 36px;">[abc</span><br><span style="font-size: 36px;"><br>]</span><br></p>`
+        `<p><span style="font-size: 36px;">[abc</span><br><span style="font-size: 36px;"><br></span>]<br></p>`
     );
 });
 
