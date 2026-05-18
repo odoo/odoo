@@ -240,7 +240,7 @@ class PurchaseOrderLine(models.Model):
             qty_to_attach = move_dests_initial_demand - qty
             qty_to_push = self.product_qty - move_dests_initial_demand
 
-        if float_compare(qty_to_attach, 0.0, precision_rounding=self.product_uom.rounding) > 0:
+        if not float_is_zero(qty_to_attach, precision_rounding=self.product_uom.rounding):
             product_uom_qty, product_uom = self.product_uom._adjust_uom_quantities(qty_to_attach, self.product_id.uom_id)
             res.append(self._prepare_stock_move_vals(picking, price_unit, product_uom_qty, product_uom))
         if not float_is_zero(qty_to_push, precision_rounding=self.product_uom.rounding):
