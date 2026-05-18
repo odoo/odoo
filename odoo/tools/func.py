@@ -95,7 +95,7 @@ class classproperty[T]:
     def __init__(self, fget: Callable[[typing.Any], T]) -> None:
         self.fget = classmethod(fget)
 
-    def __get__(self, cls, owner: type | None = None, /) -> T:
+    def __get__(self, instance, owner: type | None = None, /) -> T:
         return self.fget.__get__(None, owner)()
 
     @property
@@ -104,11 +104,27 @@ class classproperty[T]:
 
 
 class lazy_classproperty[T](classproperty[T]):
-    """ Similar to ``functools.cached_property``, but for classes. """
-    def __get__(self, cls, owner: type | None = None, /) -> T:
-        val = super().__get__(cls, owner)
-        setattr(owner, self.fget.__name__, val)
-        return val
+    SENTINEL = object()
+
+    def __get__(self, instance, owner: type | None = None, /) -> T:
+        cache_name = f'__lazy_classproperty__{self.fget.__name__}'
+        value = vars(owner).get(cache_name, self.SENTINEL)
+        if value is self.SENTINEL:
+            value = super().__get__(instance, owner)
+            type.__setattr__(owner, cache_name, value)
+        return value
+
+
+def reset_lazy_classproperties(cls) -> None:
+    assert isinstance(cls, type)
+    cache_names = [name for name in list(vars(cls)) if name.startswith('__lazy_classproperty__')]
+    for cache_name in cache_names:
+        try:  # noqa: SIM105
+            type.__delattr__(cls, cache_name)  # noqa: PLC2801
+        except AttributeError:
+            pass
+    for c in cls.__subclasses__():
+        reset_lazy_classproperties(c)
 
 
 class lazy:
