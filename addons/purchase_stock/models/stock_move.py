@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from collections import deque
-from datetime import datetime
 
 from odoo import api, Command, fields, models, _
-from odoo.fields import Date
 from odoo.tools.float_utils import float_round, float_is_zero, float_compare
 from odoo.exceptions import UserError
 
@@ -168,21 +166,15 @@ class StockMove(models.Model):
     # Valuation
     # --------------------------------------------------------
 
-    def _get_value_from_account_move(self, quantity, at_date=None):
-        valuation_data = super()._get_value_from_account_move(quantity, at_date=at_date)
+    def _get_value_from_account_move(self, quantity):
+        valuation_data = super()._get_value_from_account_move(quantity)
         if not self.purchase_line_id:
             return valuation_data
-
-        if isinstance(at_date, datetime):
-            # Since aml.date are Date, we don't need the extra precision here.
-            at_date = Date.to_date(at_date)
 
         aml_quantity = 0
         value = 0
         aml_ids = set()
         for aml in self.purchase_line_id.invoice_lines:
-            if at_date and aml.date > at_date:
-                continue
             if aml.move_id.state != 'posted':
                 continue
             aml_ids.add(aml.id)
@@ -250,10 +242,10 @@ class StockMove(models.Model):
         self.ensure_one()
         return quantity
 
-    def _get_value_from_quotation(self, quantity, at_date=None):
+    def _get_value_from_quotation(self, quantity):
         # TODO: Start from global value
         if not self.purchase_line_id:
-            return super()._get_value_from_quotation(quantity, at_date)
+            return super()._get_value_from_quotation(quantity)
         price_unit = self.purchase_line_id._get_stock_move_price_unit(self.date)
         uom_quantity = self.uom_id._compute_quantity(quantity, self.product_id.uom_id)
         quantity = min(quantity, uom_quantity)

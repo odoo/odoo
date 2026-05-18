@@ -351,13 +351,12 @@ class StockMove(models.Model):
         self.env['product.product'].browse(products_to_recompute)._update_standard_price()
         self.env['stock.lot'].browse(lots_to_recompute)._update_standard_price()
 
-    def _get_value(self, forced_std_price=False, at_date=False, ignore_manual_update=False):
-        return self._get_value_data(forced_std_price, at_date, ignore_manual_update)['value']
+    def _get_value(self, forced_std_price=False, ignore_manual_update=False):
+        return self._get_value_data(forced_std_price, ignore_manual_update)['value']
 
     def _get_value_data(
         self,
         forced_std_price=False,
-        at_date=False,
         ignore_manual_update=False,
         add_extra_value=True,
     ):
@@ -382,8 +381,7 @@ class StockMove(models.Model):
         descriptions = []
 
         if not ignore_manual_update:
-            manual_data = self._get_manual_value(
-                remaining_qty, at_date)
+            manual_data = self._get_manual_value(remaining_qty)
             # In case of manual update we will skip extra cost
             if manual_data['quantity']:
                 add_extra_value = False
@@ -394,14 +392,14 @@ class StockMove(models.Model):
 
         # 1. take from Invoice/Bills
         if remaining_qty:
-            account_data = self._get_value_from_account_move(remaining_qty, at_date)
+            account_data = self._get_value_from_account_move(remaining_qty)
             value += account_data['value']
             remaining_qty -= account_data['quantity']
             if account_data.get('description'):
                 descriptions.append(account_data['description'])
 
         if remaining_qty:
-            production_data = self._get_value_from_production(remaining_qty, at_date)
+            production_data = self._get_value_from_production(remaining_qty)
             value += production_data["value"]
             remaining_qty -= production_data["quantity"]
             if production_data.get("description"):
@@ -409,7 +407,7 @@ class StockMove(models.Model):
 
         # 2. from SO/PO lines
         if remaining_qty:
-            quotation_data = self._get_value_from_quotation(remaining_qty, at_date)
+            quotation_data = self._get_value_from_quotation(remaining_qty)
             value += quotation_data['value']
             remaining_qty -= quotation_data['quantity']
             if quotation_data.get('description'):
@@ -417,7 +415,7 @@ class StockMove(models.Model):
 
         # 3. from returns
         if remaining_qty:
-            return_data = self._get_value_from_returns(remaining_qty, at_date)
+            return_data = self._get_value_from_returns(remaining_qty)
             value += return_data['value']
             remaining_qty -= return_data['quantity']
             if return_data.get('description'):
@@ -425,12 +423,12 @@ class StockMove(models.Model):
 
         # 4. standard_price
         if remaining_qty:
-            std_price_data = self._get_value_from_std_price(remaining_qty, forced_std_price, at_date)
+            std_price_data = self._get_value_from_std_price(remaining_qty, forced_std_price)
             value += std_price_data['value']
             descriptions.append(std_price_data.get('description'))
 
         if add_extra_value:
-            extra_data = self._get_value_from_extra(valued_qty, at_date)
+            extra_data = self._get_value_from_extra(valued_qty)
             value += extra_data['value']
             if extra_data.get('description'):
                 descriptions.append(extra_data['description'])
@@ -453,11 +451,9 @@ class StockMove(models.Model):
             return self.uom_id._compute_quantity(self.quantity, self.product_id.uom_id)
         return 0
 
-    def _get_manual_value(self, quantity, at_date=None):
+    def _get_manual_value(self, quantity):
         valuation_data = dict(VALUATION_DICT)
         domain = Domain([('move_id', '=', self.id)])
-        if at_date:
-            domain &= Domain([('date', '<=', at_date)])
         manual_value = self.env['product.value'].sudo().search(domain, order="date desc, id desc", limit=1)
         if manual_value:
             valuation_data['value'] = manual_value.value
@@ -471,16 +467,16 @@ class StockMove(models.Model):
             valuation_data['description'] = description
         return valuation_data
 
-    def _get_value_from_account_move(self, quantity, at_date=None):
+    def _get_value_from_account_move(self, quantity):
         return dict(VALUATION_DICT)
 
-    def _get_value_from_production(self, quantity, at_date=None):
+    def _get_value_from_production(self, quantity):
         return dict(VALUATION_DICT)
 
-    def _get_value_from_quotation(self, quantity, at_date=None):
+    def _get_value_from_quotation(self, quantity):
         return dict(VALUATION_DICT)
 
-    def _get_value_from_returns(self, quantity, at_date=None):
+    def _get_value_from_returns(self, quantity):
         if self.origin_returned_move_id and self.origin_returned_move_id.is_out:
             origin_move = self.origin_returned_move_id
             origin_valued_qty = origin_move._get_valued_qty()
@@ -491,18 +487,17 @@ class StockMove(models.Model):
             }
         return dict(VALUATION_DICT)
 
-    def _get_value_from_std_price(self, quantity, std_price=False, at_date=None):
-        if at_date and self.product_id.cost_method == 'standard':
-            std_price = std_price or self.product_id.standard_price or self.product_id._get_standard_price_at_date(at_date)
+    def _get_value_from_std_price(self, quantity, std_price=False):
+        std_price = std_price if std_price else self.product_id.standard_price
         # If multiple lots keep standard_price from product
-        elif self.product_id.lot_valuated and len(self.lot_ids) == 1:
+        if self.product_id.lot_valuated and len(self.lot_ids) == 1:
             std_price = self.lot_ids.standard_price
-        elif not std_price and at_date and self.product_id.cost_method == 'fifo':
+        elif not std_price and self.product_id.cost_method == 'fifo':
             valued_qty = self._get_valued_qty()
             if valued_qty:
                 std_price = self.value / valued_qty
         return {
-            'value': (std_price or self.product_id.standard_price) * quantity,
+            'value': std_price * quantity,
             'quantity': quantity,
             'description': self.env._("%(quantity)s %(uom)s at product's cost",
                 quantity=quantity,
@@ -510,7 +505,7 @@ class StockMove(models.Model):
             ),
         }
 
-    def _get_value_from_extra(self, quantity, at_date=None):
+    def _get_value_from_extra(self, quantity):
         return dict(VALUATION_DICT)
 
     def _get_move_directions(self):
