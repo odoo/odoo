@@ -40,6 +40,7 @@
         'views/website_technical_views.xml',
         'views/website_templates.xml',
         'views/snippets/snippets.xml',
+        'views/snippets/s_team_board.xml',
         'views/snippets/s_announcement_scroll.xml',
         'views/snippets/s_framed_intro.xml',
         'views/snippets/s_title.xml',
@@ -250,7 +251,8 @@
             # Activated on-demand by website.ripple_effect_js.
             ('remove', 'website/static/src/interactions/ripple_effect.js'),
             ('remove', 'website/static/src/core/website_edit_service.js'),
-            ('replace', 'web/static/src/public/public_root_instance.js', 'website/static/src/js/content/website_root_instance.js'),
+            ('replace', 'web/static/src/public/public_root_instance.js',
+             'website/static/src/js/content/website_root_instance.js'),
             'website/static/src/snippets/**/*.js',
             ('remove', 'website/static/src/snippets/**/*.edit.js'),
             'website/static/src/scss/website.scss',
@@ -388,7 +390,8 @@
             ('prepend', 'website/static/src/scss/bootstrap_overridden.scss'),
         ],
         'web._assets_bootstrap_frontend': [
-            ('after', 'web/static/src/scss/utilities_custom.scss', 'html_builder/static/src/scss/utilities_custom.scss'),
+            ('after', 'web/static/src/scss/utilities_custom.scss',
+             'html_builder/static/src/scss/utilities_custom.scss'),
         ],
         'html_editor.assets_link_popover': [
             'html_builder/static/src/utils/utils_css.js',
@@ -501,9 +504,11 @@
             '0': ['s_text_block_h1', 's_comparisons', 's_text_block_2nd', 's_showcase', 's_text_block_h2', 's_faq_collapse', 's_call_to_action'],
             '1': ['s_text_block_h1', 's_comparisons', 's_call_to_action'],
             '2': ['s_cover', 's_comparisons', 's_call_to_action', 's_features_grid', 's_color_blocks_2'],
-            '3': ['s_carousel', 's_product_catalog', 's_call_to_action_menu'],  # should be s_call_to_action - but let's create that snippet
+            # should be s_call_to_action - but let's create that snippet
+            '3': ['s_carousel', 's_product_catalog', 's_call_to_action_menu'],
             '4': ['s_text_block_h1', 's_image_text', 's_text_image', 's_image_text_2nd', 's_call_to_action'],
-            '5': ['s_text_block_h1', 's_text_block', 's_product_catalog', 's_three_columns_menu', 's_call_to_action'],  # was s_call_to_action_menu
+            # was s_call_to_action_menu
+            '5': ['s_text_block_h1', 's_text_block', 's_product_catalog', 's_three_columns_menu', 's_call_to_action'],
         },
         'team': {
             '0': ['s_text_block_h1', 's_three_columns'],
