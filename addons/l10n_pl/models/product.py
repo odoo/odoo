@@ -1,4 +1,4 @@
-from odoo import models, fields
+from odoo import api, fields, models
 
 
 class ProductTemplate(models.Model):
@@ -23,3 +23,16 @@ class ProductTemplate(models.Model):
         ],
         help='Codes for specific types of products, needed for VAT declaration'
     )
+    l10n_pl_split_payment = fields.Boolean(
+        string="Split Payment",
+        compute="_compute_l10n_pl_split_payment",
+        store=True, readonly=False,
+        help="Indicates if this product is subject to split payment",
+    )
+    l10n_pl_pkwiu_code_id = fields.Many2one(string="PKWiU Code", comodel_name='l10n_pl.pkwiu.code')
+
+    @api.depends('l10n_pl_pkwiu_code_id.split_payment')
+    def _compute_l10n_pl_split_payment(self):
+        for product in self:
+            pkwiu_code = product.l10n_pl_pkwiu_code_id
+            product.l10n_pl_split_payment = pkwiu_code.split_payment if pkwiu_code else False
