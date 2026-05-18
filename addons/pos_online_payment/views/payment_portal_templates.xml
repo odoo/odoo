@@ -69,7 +69,10 @@
                     </div>
 
                     <!-- Polling -->
-                    <div t-else="" name="o_payment_status">
+                    <div t-else=""
+                         name="o_payment_status"
+                         t-att-data-landing-route="tx.landing_route"
+                         t-att-data-notification-channel="notification_channel">
                         <div class="spinner-border text-600" style="width: 4rem; height: 4rem; --spinner-animation-speed: .5s" role="status">
                             <span class="visually-hidden">Loading...</span>
                         </div>
