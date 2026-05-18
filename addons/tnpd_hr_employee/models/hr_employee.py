@@ -203,13 +203,13 @@ class HrEmployee(models.Model):
         groups='hr.group_hr_user',
     )
     x_district_jail = fields.Char(
-        string='District Jail (Present Station)',
-        help='Name of the District Jail at the employee\'s current posting, if applicable.',
+        string='District Jail (Legacy)',
+        help='Legacy text field. Use x_district_jail_id for new records.',
         groups='hr.group_hr_user',
     )
     x_sub_jail = fields.Char(
-        string='Sub Jail (Present Station)',
-        help='Name of the Sub Jail at the employee\'s current posting, if applicable.',
+        string='Sub Jail (Legacy)',
+        help='Legacy text field. Use x_sub_jail_id for new records.',
         groups='hr.group_hr_user',
     )
 

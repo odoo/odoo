@@ -70,18 +70,15 @@ class TransferApprovalRequest(models.Model):
         required=True,
         index=True,
         ondelete='restrict',
-        tracking=True,
     )
     requested_district_jail = fields.Many2one(
         comodel_name='prison.jail',
         string='Requested District Jail',
-        # Domain is enforced in Python; XML view adds the parent_id filter
-        # for a cascading dropdown effect.
+        # Optional: Central Prisons without District Jails (e.g. Vellore,
+        # Tiruchirappalli) administer Sub Jails directly.
         domain=[('jail_type', '=', 'district_jail'), ('active', '=', True)],
-        required=True,
         index=True,
         ondelete='restrict',
-        tracking=True,
     )
     requested_sub_jail = fields.Many2one(
         comodel_name='prison.jail',
@@ -90,7 +87,6 @@ class TransferApprovalRequest(models.Model):
         required=True,
         index=True,
         ondelete='restrict',
-        tracking=True,
     )
 
     # ── Workflow ──────────────────────────────────────────────────────────────
@@ -111,7 +107,6 @@ class TransferApprovalRequest(models.Model):
         default='pending',
         required=True,
         index=True,
-        tracking=True,
     )
     requested_by = fields.Many2one(
         comodel_name='res.users',
@@ -132,7 +127,7 @@ class TransferApprovalRequest(models.Model):
 
     @api.onchange('requested_central_prison')
     def _onchange_requested_central_prison(self):
-        """Reset district and sub when central changes; tighten district domain."""
+        """Reset district and sub when central changes; update both domains."""
         self.requested_district_jail = False
         self.requested_sub_jail = False
         if self.requested_central_prison:
@@ -142,13 +137,19 @@ class TransferApprovalRequest(models.Model):
                         ('jail_type', '=', 'district_jail'),
                         ('parent_id', '=', self.requested_central_prison.id),
                         ('active', '=', True),
-                    ]
+                    ],
+                    # Pre-filter sub jails by central; narrows further when DJ is chosen
+                    'requested_sub_jail': [
+                        ('jail_type', '=', 'sub_jail'),
+                        ('parent_id', '=', self.requested_central_prison.id),
+                        ('active', '=', True),
+                    ],
                 }
             }
 
     @api.onchange('requested_district_jail')
     def _onchange_requested_district_jail(self):
-        """Reset sub when district changes; tighten sub domain."""
+        """Reset sub when district changes; filter sub by DJ, or by Central if no DJ."""
         self.requested_sub_jail = False
         if self.requested_district_jail:
             return {
@@ -156,6 +157,17 @@ class TransferApprovalRequest(models.Model):
                     'requested_sub_jail': [
                         ('jail_type', '=', 'sub_jail'),
                         ('parent_id', '=', self.requested_district_jail.id),
+                        ('active', '=', True),
+                    ]
+                }
+            }
+        elif self.requested_central_prison:
+            # DJ cleared or not applicable — show Sub Jails directly under Central
+            return {
+                'domain': {
+                    'requested_sub_jail': [
+                        ('jail_type', '=', 'sub_jail'),
+                        ('parent_id', '=', self.requested_central_prison.id),
                         ('active', '=', True),
                     ]
                 }
@@ -169,7 +181,7 @@ class TransferApprovalRequest(models.Model):
         'requested_sub_jail',
     )
     def _check_requested_jail_hierarchy(self):
-        """Ensure district belongs to central and sub belongs to district."""
+        """Ensure hierarchy is consistent: DJ belongs to Central; Sub belongs to DJ or Central."""
         for rec in self:
             if rec.requested_district_jail and rec.requested_central_prison:
                 if rec.requested_district_jail.parent_id != rec.requested_central_prison:
@@ -178,13 +190,23 @@ class TransferApprovalRequest(models.Model):
                         f'belong to Central Jail "{rec.requested_central_prison.name}".\n'
                         'Select a District Jail that falls under the chosen Central Jail.'
                     )
-            if rec.requested_sub_jail and rec.requested_district_jail:
-                if rec.requested_sub_jail.parent_id != rec.requested_district_jail:
-                    raise ValidationError(
-                        f'Sub Jail "{rec.requested_sub_jail.name}" does not belong to '
-                        f'District Jail "{rec.requested_district_jail.name}".\n'
-                        'Select a Sub Jail that falls under the chosen District Jail.'
-                    )
+            if rec.requested_sub_jail:
+                if rec.requested_district_jail:
+                    # Sub Jail must be under the selected District Jail
+                    if rec.requested_sub_jail.parent_id != rec.requested_district_jail:
+                        raise ValidationError(
+                            f'Sub Jail "{rec.requested_sub_jail.name}" does not belong to '
+                            f'District Jail "{rec.requested_district_jail.name}".\n'
+                            'Select a Sub Jail that falls under the chosen District Jail.'
+                        )
+                elif rec.requested_central_prison:
+                    # No DJ: Sub Jail must be directly under the Central Prison
+                    if rec.requested_sub_jail.parent_id != rec.requested_central_prison:
+                        raise ValidationError(
+                            f'Sub Jail "{rec.requested_sub_jail.name}" is not directly '
+                            f'under Central Jail "{rec.requested_central_prison.name}".\n'
+                            'Select a Sub Jail that belongs to the chosen Central Jail.'
+                        )
 
     # ── Internal helpers ─────────────────────────────────────────────────────
 

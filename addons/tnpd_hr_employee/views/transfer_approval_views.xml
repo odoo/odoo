@@ -106,27 +106,25 @@
                                    options="{'no_create': True, 'no_quick_create': True}"
                                    required="True"/>
                         </group>
-                        <group string="Step 2 — District Jail">
+                        <group string="Step 2 — District Jail (if applicable)">
                             <!--
-                                Dynamic domain: only District Jails that are
-                                children of the selected Central Jail.
-                                Falls back to all district jails if central is
-                                not yet chosen.
+                                Optional: only Central Prisons that have District Jails
+                                will show records here. Leave blank for Centrals like
+                                Vellore / Tiruchirappalli whose Sub Jails are direct.
                             -->
                             <field name="requested_district_jail"
                                    readonly="state != 'pending'"
                                    domain="requested_central_prison and [('jail_type', '=', 'district_jail'), ('parent_id', '=', requested_central_prison), ('active', '=', True)] or [('jail_type', '=', 'district_jail'), ('active', '=', True)]"
-                                   options="{'no_create': True, 'no_quick_create': True}"
-                                   required="True"/>
+                                   options="{'no_create': True, 'no_quick_create': True}"/>
                         </group>
                         <group string="Step 3 — Sub Jail">
                             <!--
-                                Dynamic domain: only Sub Jails that are
-                                children of the selected District Jail.
+                                If District Jail selected → shows Sub Jails under that DJ.
+                                If only Central selected → shows Sub Jails directly under that Central.
                             -->
                             <field name="requested_sub_jail"
                                    readonly="state != 'pending'"
-                                   domain="requested_district_jail and [('jail_type', '=', 'sub_jail'), ('parent_id', '=', requested_district_jail), ('active', '=', True)] or [('jail_type', '=', 'sub_jail'), ('active', '=', True)]"
+                                   domain="requested_district_jail and [('jail_type', '=', 'sub_jail'), ('parent_id', '=', requested_district_jail), ('active', '=', True)] or requested_central_prison and [('jail_type', '=', 'sub_jail'), ('parent_id', '=', requested_central_prison), ('active', '=', True)] or [('jail_type', '=', 'sub_jail'), ('active', '=', True)]"
                                    options="{'no_create': True, 'no_quick_create': True}"
                                    required="True"/>
                         </group>
@@ -192,7 +190,7 @@
                         string="My Pending Approvals"
                         domain="[('approval_user_id', '=', uid), ('state', '=', 'pending')]"/>
 
-                <group expand="0" string="Group By">
+                <group>
                     <filter name="group_state"
                             string="State"
                             context="{'group_by': 'state'}"/>

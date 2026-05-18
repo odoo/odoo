@@ -106,7 +106,13 @@
                         </group>
                     </group>
 
-                    <!-- Step 1: Central Jail -->
+                    <!-- Cascading Jail selection:
+                         Central → District Jail (only DJs under that Central)
+                                 → Sub Jail (DJs under selected DJ; or if no DJ,
+                                   Sub Jails directly under the Central Prison)
+                         District Jail is optional — some Central Prisons (e.g. Vellore,
+                         Tiruchirappalli) have no District Jails and their Sub Jails
+                         are administered directly by the Central Prison. -->
                     <group string="Present Station — Jail Assignment">
                         <group string="Central Jail">
                             <field name="x_central_jail_id"
@@ -114,17 +120,15 @@
                                    options="{'no_create': True, 'no_quick_create': True}"
                                    placeholder="Select Central Jail…"/>
                         </group>
-                        <!-- Step 2: District Jail (filtered by central selection) -->
-                        <group string="District Jail">
+                        <group string="District Jail (if applicable)">
                             <field name="x_district_jail_id"
                                    domain="x_central_jail_id and [('jail_type', '=', 'district_jail'), ('parent_id', '=', x_central_jail_id), ('active', '=', True)] or [('jail_type', '=', 'district_jail'), ('active', '=', True)]"
                                    options="{'no_create': True, 'no_quick_create': True}"
-                                   placeholder="Select District Jail…"/>
+                                   placeholder="Select District Jail… (optional)"/>
                         </group>
-                        <!-- Step 3: Sub Jail (filtered by district selection) -->
                         <group string="Sub Jail">
                             <field name="x_sub_jail_id"
-                                   domain="x_district_jail_id and [('jail_type', '=', 'sub_jail'), ('parent_id', '=', x_district_jail_id), ('active', '=', True)] or [('jail_type', '=', 'sub_jail'), ('active', '=', True)]"
+                                   domain="x_district_jail_id and [('jail_type', '=', 'sub_jail'), ('parent_id', '=', x_district_jail_id), ('active', '=', True)] or x_central_jail_id and [('jail_type', '=', 'sub_jail'), ('parent_id', '=', x_central_jail_id), ('active', '=', True)] or [('jail_type', '=', 'sub_jail'), ('active', '=', True)]"
                                    options="{'no_create': True, 'no_quick_create': True}"
                                    placeholder="Select Sub Jail…"/>
                         </group>
