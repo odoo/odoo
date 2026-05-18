@@ -63,6 +63,42 @@ test("should apply font-size to completely selected multiple list items", async 
     });
 });
 
+test("should apply font size to a fully selected list item with trailing empty line (1)", async () => {
+    await testEditor({
+        contentBefore: "<ul><li>[abc</li><li>]<br></li></ul>",
+        stepFunction: setFontSize("56px"),
+        contentAfter:
+            '<ul style="padding-inline-start: 38px;"><li style="font-size: 56px;">[abc</li><li style="font-size: 56px;">]<br></li></ul>',
+    });
+});
+
+test("should apply font size to a fully selected list item with trailing empty line (2)", async () => {
+    await testEditor({
+        contentBefore: "<ul><li>[abc</li><li><br>]<br></li></ul>",
+        stepFunction: setFontSize("56px"),
+        contentAfter:
+            '<ul style="padding-inline-start: 38px;"><li style="font-size: 56px;">[abc</li><li style="font-size: 56px;"><br>]<br></li></ul>',
+    });
+});
+
+test("should apply font size to a fully selected list item with trailing empty line (3)", async () => {
+    await testEditor({
+        contentBefore: "<ul><li>[abc</li><li>abcd<br>]<br></li></ul>",
+        stepFunction: setFontSize("56px"),
+        contentAfter:
+            '<ul style="padding-inline-start: 38px;"><li style="font-size: 56px;">[abc</li><li style="font-size: 56px;">abcd<br>]<br></li></ul>',
+    });
+});
+
+test("should not apply font size to list item when selection excludes trailing empty line", async () => {
+    await testEditor({
+        contentBefore: "<ul><li>[abc</li><li>abcd]<br><br></li></ul>",
+        stepFunction: setFontSize("56px"),
+        contentAfter:
+            '<ul style="padding-inline-start: 38px;"><li style="font-size: 56px;">[abc</li><li><span style="font-size: 56px;">abcd]</span><br><br></li></ul>',
+    });
+});
+
 test("should apply font-size to completely selected and partially selected list items", async () => {
     await testEditor({
         contentBefore: "<ol><li>[abc</li><li>def</li><li>gh]i</li></ol>",
