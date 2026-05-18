@@ -46,6 +46,7 @@ import { debounce } from "@web/core/utils/timing";
 import DevicesSynchronisation from "./devices_synchronisation";
 import { openCustomerDisplay } from "@point_of_sale/customer_display/utils";
 import { initLNA } from "../utils/init_lna";
+import { unaccent } from "@web/core/utils/strings";
 
 const { DateTime } = luxon;
 
@@ -386,6 +387,7 @@ export class PosStore extends Reactive {
         const productByTmplId = {};
 
         for (const product of products) {
+            product.searchStringNormalized = unaccent(product.searchString.toLowerCase(), false);
             if (product.raw?.product_template_variant_value_ids?.length > 0) {
                 productTmplIds.add(product.raw.product_tmpl_id);
                 productIds.add(product.id);
