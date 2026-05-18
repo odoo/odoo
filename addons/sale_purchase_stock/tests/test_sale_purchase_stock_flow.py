@@ -244,3 +244,32 @@ class TestSalePurchaseStockFlow(TransactionCase):
         self.assertRecordValues(new_delivery.move_ids, [
             {'product_id': self.mto_product.id, 'product_uom_qty': 1.0},
         ])
+
+    def test_mto_po_double_quantity_update(self):
+        """
+        Confirm an SO for an MTO + Buy product. Increase and then decrease the quantity on the PO.
+        The quantity of the receipt should be adapted accodingly.
+        """
+        so = self.env['sale.order'].create({
+            'partner_id': self.customer.id,
+            'order_line': [
+                Command.create({
+                    'name': self.mto_product.name,
+                    'product_id': self.mto_product.id,
+                    'product_uom_qty': 1,
+                    'product_uom': self.mto_product.uom_id.id,
+                    'price_unit': 10,
+                }),
+            ],
+        })
+        so.action_confirm()
+        delivery = so.picking_ids
+        self.assertRecordValues(delivery.move_ids, [
+            {'product_id': self.mto_product.id, 'product_uom_qty': 1.0},
+        ])
+        po = so._get_purchase_orders()
+        po.button_confirm()
+        po.order_line.product_qty = 10.0
+        self.assertEqual(po.picking_ids.move_ids.quantity, 10.0)
+        po.order_line.product_qty = 5.0
+        self.assertEqual(po.picking_ids.move_ids.quantity, 5.0)
