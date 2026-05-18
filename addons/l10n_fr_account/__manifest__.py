@@ -3,7 +3,7 @@
     'name': 'France - Accounting',
     'website': 'https://www.odoo.com/documentation/latest/applications/finance/fiscal_localizations/france.html',
     'icon': '/account/static/description/l10n.png',
-    'version': '2.3',
+    'version': '2.4',
     'countries': ['fr'],
     'category': 'Accounting/Localizations/Account Charts',
     'description': """
