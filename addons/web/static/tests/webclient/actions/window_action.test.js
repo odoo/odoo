@@ -703,7 +703,7 @@ test("domain is kept when switching between views", async () => {
 });
 
 test.tags("desktop");
-test("A new form view can be reloaded after a failed one", async () => {
+test("A deleted form view can be shown when history back", async () => {
     expect.errors(1);
     await mountWithCleanup(WebClient);
 
@@ -739,16 +739,10 @@ test("A new form view can be reloaded after a failed one", async () => {
     // Go back to the previous (now deleted) record
     browser.history.back();
     await animationFrame();
-    await animationFrame(); // double rendering as the form is on error (record has been deleted)
-    // As the previous one is deleted, we go back to the list
-    expect(".o_list_view").toHaveCount(1, { message: "should still display the list view" });
-    expect(browser.location.pathname).toBe("/odoo/action-3");
-    // Click on the first record
-    await contains(".o_list_view .o_data_row .o_data_cell").click();
-    expect(".o_form_view").toHaveCount(1, {
-        message: "The form view should still load after a previous failed update | reload",
-    });
-    expect(".o_last_breadcrumb_item").toHaveText("Second record");
+
+    expect(".o_form_view").toHaveCount(1, { message: "The form view should be displayed" });
+    expect(".o_last_breadcrumb_item").toHaveText("First record");
+    expect(browser.location.pathname).toBe("/odoo/action-3/1");
 
     expect.verifyErrors([
         "It seems the records with IDs 1 cannot be found. They might have been deleted.",
@@ -2748,8 +2742,13 @@ test("click on breadcrumb of a deleted record", async () => {
     await contains(".breadcrumb .dropdown-toggle").click();
     await contains(".o-overlay-container .dropdown-menu a:contains(First record)").click();
     await animationFrame();
-    expect(".o_list_view").toHaveCount(1);
-    expect(queryAllTexts(".breadcrumb-item a, .o_breadcrumb .active")).toEqual(["Partners"]);
+
+    expect(".o_form_view").toHaveCount(1);
+    expect(queryAllTexts(".breadcrumb-item a, .o_breadcrumb .active")).toEqual([
+        "Partners",
+        "First record",
+    ]);
+
     expect.verifyErrors([
         "It seems the records with IDs 1 cannot be found. They might have been deleted.",
     ]);

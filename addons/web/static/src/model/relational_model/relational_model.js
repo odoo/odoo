@@ -4,7 +4,7 @@ import { EventBus, markRaw, toRaw } from "@odoo/owl";
 import { makeContext } from "@web/core/context";
 import { Domain } from "@web/core/domain";
 import { WarningDialog } from "@web/core/errors/error_dialogs";
-import { ConnectionLostError, rpcBus } from "@web/core/network/rpc";
+import { ConnectionLostError } from "@web/core/network/rpc";
 import { shallowEqual } from "@web/core/utils/arrays";
 import { KeepLast, Mutex } from "@web/core/utils/concurrency";
 import { deepCopy, pick } from "@web/core/utils/objects";
@@ -110,12 +110,6 @@ const DEFAULT_HOOKS = {
     /** @type {(changes: Object, validRecords: RelationalRecord[]) => any} */
     onAskMultiSaveConfirmation: () => true,
 };
-
-rpcBus.addEventListener("RPC:RESPONSE", (ev) => {
-    if (ev.detail.data.params?.method === "unlink" && !ev.detail.error) {
-        rpcBus.trigger("CLEAR-CACHES", ["web_read", "web_search_read", "web_read_group"]);
-    }
-});
 
 export class RelationalModel extends Model {
     static services = ["action", "dialog", "notification", "orm", "offline"];
