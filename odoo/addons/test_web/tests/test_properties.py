@@ -1117,6 +1117,45 @@ class PropertiesGroupByCase(TestPropertiesMixin):
         self.assertEqual(result[0]['__count'], 4)
         self._check_domains_count(result)
 
+    @mute_logger("odoo.fields")
+    def test_properties_field_web_read_group_selection_sorted_by_label(self):
+        Model = self.env["test_orm.message"]
+
+        self.messages.discussion = self.discussion_1
+        self.message_1.attributes = [
+            {
+                "name": "myselection",
+                "type": "selection",
+                "selection": [
+                    ["d8f31f7a", "Charlie"],
+                    ["a91b2c44", "Alpha"],
+                    ["f3e9aa11", "Bravo"],
+                ],
+                "value": "d8f31f7a",
+                "definition_changed": True,
+            }
+        ]
+        self.message_2.attributes = {"myselection": "f3e9aa11"}
+        self.message_3.attributes = {"myselection": "a91b2c44"}
+        self.message_4.attributes = {"myselection": False}
+
+        result = Model.web_read_group(
+            domain=[],
+            aggregates=["__count"],
+            groupby=["attributes.myselection"],
+        )
+        groups = result["groups"]
+
+        self.assertEqual(
+            [group["attributes.myselection"] for group in groups],
+            [
+                "a91b2c44",
+                "f3e9aa11",
+                "d8f31f7a",
+                False,
+            ],
+        )
+
     @mute_logger('odoo.fields')
     def test_properties_field_read_group_tags(self):
         Model = self.env['test_orm.message']

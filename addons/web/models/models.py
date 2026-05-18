@@ -710,6 +710,26 @@ class Base(models.AbstractModel):
                 for subgroup in group.get('__groups', {}).get('groups', ())
             ]
 
+    def sort_property_selection_groups(
+        self,
+        groups: list,
+        groupby: list[str],
+        definition: dict | None,
+    ) -> None:
+        if not definition or definition.get("type") != "selection":
+            return
+
+        field_name = groupby[0].split(":", 1)[0]
+        labels = {
+            value: str(label) for value, label in (definition.get("selection") or [])
+        }
+        groups.sort(
+            key=lambda group: (
+                group.get(field_name) in (False, None),
+                labels.get(group.get(field_name), ""),
+            )
+        )
+
     def _get_read_group_order(self, dict_order: dict[str, str], groupby: list[str], aggregates: Sequence[str]) -> str:
         if not dict_order:
             return ", ".join(groupby)
@@ -1295,9 +1315,12 @@ class Base(models.AbstractModel):
         if not groups:
             return result
         column_iterator = zip(*groups)
+        definition = None
 
         for groupby_spec, values in zip(groupby, column_iterator):
             formatter = self._web_read_group_groupby_formatter(groupby_spec, values)
+            if groupby and groupby_spec == groupby[0] and hasattr(formatter, "definition"):
+                definition = formatter.definition
             for value, dict_group in zip(values, result, strict=True):
                 dict_group[groupby_spec], additional_domain = formatter(value)
                 dict_group['__extra_domains'].append(additional_domain)
@@ -1318,6 +1341,9 @@ class Base(models.AbstractModel):
         for aggregate_spec, values in zip(aggregates, column_iterator, strict=True):
             for value, dict_group in zip(values, result, strict=True):
                 dict_group[aggregate_spec] = value
+
+        # Sort property selection groups by label
+        self.sort_property_selection_groups(result, list(groupby), definition)
 
         return result
 
@@ -1444,6 +1470,7 @@ class Base(models.AbstractModel):
                     return value, ['|', (fullname, '=', False), (fullname, 'not in', options)]
                 return value, Domain(fullname, '=', value)
 
+            formatter_property_selection.definition = definition
             return formatter_property_selection
 
         if property_type == 'many2one':
