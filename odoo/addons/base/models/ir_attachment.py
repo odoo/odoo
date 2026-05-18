@@ -271,7 +271,7 @@ class IrAttachment(models.Model):
             if attach.store_fname:
                 attach.raw = attach._file_read(attach.store_fname)
             else:
-                attach.raw = attach.db_datas
+                attach.raw = attach.db_datas or b''
 
     def _get_pdf_raw(self):
         self.ensure_one()
