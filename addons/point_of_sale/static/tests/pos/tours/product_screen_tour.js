@@ -1105,6 +1105,35 @@ registry.category("web_tour.tours").add("test_preset_timing_retail", {
             TicketScreen.nthRowContains(2, "Delivery", false),
             TicketScreen.nthRowContains(1, "002"),
             TicketScreen.nthRowContains(1, "Dine in", false),
+            TicketScreen.selectOrder("002"),
+            TicketScreen.loadSelectedOrder(),
+            ProductScreen.selectPreset("Dine in", "Delivery", false),
+            PartnerList.clickPartner("A simple PoS man!"),
+            Chrome.presetTimingSlotHourNotExists("9:00am"),
+            Chrome.selectPresetTimingSlotHour({ title: "delivery", hour: "5:00pm" }),
+            Chrome.presetTimingSlotIs("5:00pm"),
+            Chrome.clickOrders(),
+            TicketScreen.nthRowContains(2, "002"),
+            TicketScreen.nthRowContains(2, "Delivery", false),
+            {
+                content:
+                    "Simulate order cancellation from backend and check that the order is removed from the PoS",
+                trigger: "body",
+                run: async () => {
+                    const latestOrder = posmodel.models["pos.order"].getAll()[0];
+                    await posmodel.data.call(
+                        "pos.order",
+                        "action_pos_order_cancel",
+                        [latestOrder.id],
+                        {
+                            context: {
+                                active_ids: [latestOrder.id],
+                            },
+                        }
+                    );
+                },
+            },
+            negateStep(...TicketScreen.nthRowContains(2, "002")),
         ].flat(),
 });
 
