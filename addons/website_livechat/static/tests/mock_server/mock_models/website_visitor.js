@@ -84,7 +84,12 @@ export class WebsiteVisitor extends websiteModels.WebsiteVisitor {
                 WebsiteTrack.browse(track_records.map((t) => t.id)),
                 makeKwArgs({
                     fields: [mailDataHelpers.Store.one("page_id", ["name"]), "visit_datetime"],
-                    sort: (a, b) => (a.visit_datetime < b.visit_datetime ? 1 : -1),
+                    sort: (a, b) => {
+                        if (a.visit_datetime === b.visit_datetime) {
+                            return a.id - b.id;
+                        }
+                        return a.visit_datetime < b.visit_datetime ? 1 : -1;
+                    },
                 })
             );
             store._add_record_fields(visitor_model, data);

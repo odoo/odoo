@@ -29,7 +29,17 @@ registry.category("command_provider").add("im_livechat.channel_join_leave", {
         );
         // Show live chat channels with ongoing conversations first
         return Object.values(store["im_livechat.channel"].records)
-            .sort((c) => (activeChannels.has(c.id) ? -1 : 1))
+            .sort((c1, c2) => {
+                const c1IsActive = activeChannels.has(c1.id);
+                const c2IsActive = activeChannels.has(c2.id);
+                if (c1IsActive && !c2IsActive) {
+                    return -1;
+                }
+                if (!c1IsActive && c2IsActive) {
+                    return 1;
+                }
+                return c1.id - c2.id;
+            })
             .map((c) => ({
                 action: c.are_you_inside ? c.leave.bind(c) : c.join.bind(c),
                 Component: LivechatChannelCommand,

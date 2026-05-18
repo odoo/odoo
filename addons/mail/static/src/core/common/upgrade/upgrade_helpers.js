@@ -1,5 +1,5 @@
 import { getCurrentLocalStorageVersion, LocalStorageEntry } from "@mail/utils/common/local_storage";
-import { parseVersion } from "@mail/utils/common/misc";
+import { compareVersion, parseVersion } from "@mail/utils/common/misc";
 import { registry } from "@web/core/registry";
 
 /**
@@ -60,7 +60,7 @@ export function upgradeFrom(version) {
                 !parseVersion(v).isLowerThan(version) &&
                 !parseVersion(getCurrentLocalStorageVersion()).isLowerThan(v)
         )
-        .sort(([v1], [v2]) => (parseVersion(v1).isLowerThan(v2) ? -1 : 1));
+        .sort(([v1], [v2]) => compareVersion(v1, v2));
     for (const [, keyMap] of orderedUpgradeList) {
         const allKeys = [];
         if (keyMap.values().some((i) => i.key instanceof RegExp)) {
