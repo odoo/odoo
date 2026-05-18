@@ -1,7 +1,7 @@
 import { proxy } from "@odoo/owl";
 import { Plugin } from "@html_editor/plugin";
 import { unwrapContents } from "@html_editor/utils/dom";
-import { isRedundantElement, isStylable } from "@html_editor/utils/dom_info";
+import { isRedundantElement } from "@html_editor/utils/dom_info";
 import { selectElements } from "@html_editor/utils/dom_traversal";
 import {
     convertNumericToUnit,
@@ -13,7 +13,6 @@ import {
 import { _t } from "@web/core/l10n/translation";
 import { READ, withSequence } from "@html_editor/utils/resource";
 import { FontSizeSelector, MAX_FONT_SIZE } from "./font_size_selector";
-import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { closestBlock } from "@html_editor/utils/blocks";
 
 /** @typedef {import("plugins").LazyTranslatedString} LazyTranslatedString */
@@ -38,9 +37,23 @@ export class FontSizePlugin extends Plugin {
     static dependencies = ["format", "selection"];
     /** @type {import("plugins").EditorResources} */
     resources = {
+        user_commands: [
+            {
+                id: "formatFontSize",
+                run: (sizeOrClass) => {
+                    const formatName = sizeOrClass.className ? "setFontSizeClassName" : "fontSize";
+                    this.dependencies.format.requestFormat(formatName, {
+                        applyStyle: true,
+                        formatProps: sizeOrClass,
+                    });
+                },
+                isAvailable: this.dependencies.format.canFormatContent,
+            },
+        ],
         toolbar_items: [
             withSequence(20, {
                 id: "font-size",
+                commandId: "formatFontSize",
                 groupId: "font",
                 namespaces: ["compact", "expanded"],
                 description: _t("Select font size"),
@@ -79,8 +92,6 @@ export class FontSizePlugin extends Plugin {
                     document: this.document,
                     maxFontSize: this.config.maxFontSize,
                 },
-                isAvailable: isHtmlContentSupported,
-                isDisabled: (sel, nodes) => nodes.some((node) => !isStylable(node)),
             }),
         ],
 
