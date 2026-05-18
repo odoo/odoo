@@ -12,7 +12,7 @@ class MrpProduction(models.Model):
 
     extra_cost = fields.Float(copy=False, string='Extra Unit Cost')
     show_valuation = fields.Boolean(compute='_compute_show_valuation')
-    wip_move_ids = fields.Many2many('account.move', 'wip_move_production_rel', 'production_id', 'move_id')
+    wip_move_ids = fields.Many2many('account.move', 'wip_move_production_rel', 'production_id', 'move_id', copy=False)
     wip_move_count = fields.Integer("WIP Journal Entry Count", compute='_compute_wip_move_count')
 
     def _compute_show_valuation(self):
