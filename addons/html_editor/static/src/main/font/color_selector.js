@@ -43,7 +43,11 @@ export class ColorSelector extends Component {
         applyColorPreview: Function,
         applyColorResetPreview: Function,
         focusEditable: Function,
+        useDefaultThemeColors: { type: Boolean, optional: true },
         ...toolbarButtonProps,
+    };
+    static defaultProps = {
+        useDefaultThemeColors: true,
     };
 
     setup() {
