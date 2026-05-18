@@ -3,5 +3,11 @@ export function execCommand(editor, commandId, params) {
     if (!command) {
         throw new Error(`Unknown user command id: ${commandId}`);
     }
-    return command.run(params);
+    if (
+        command.isAvailable &&
+        !command.isAvailable(editor.shared.selection.getSelectionData().editableSelection)
+    ) {
+        return;
+    }
+    command.run(params);
 }

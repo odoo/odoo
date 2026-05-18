@@ -262,7 +262,7 @@ export function setFontSize(size) {
     return (editor) => execCommand(editor, "formatFontSize", { size });
 }
 export function setFontSizeClassName(className) {
-    return (editor) => execCommand(editor, "formatFontSizeClassName", { className });
+    return (editor) => execCommand(editor, "formatFontSize", { className });
 }
 export function setFontFamily(fontFamily) {
     return (editor) => {

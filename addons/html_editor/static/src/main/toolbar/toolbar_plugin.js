@@ -315,7 +315,12 @@ export class ToolbarPlugin extends Plugin {
         };
         /** @type {(item: ToolbarComponentItem) => ToolbarComponentButton} */
         const componentItemToButton = (item) => ({
-            isAvailable: () => true,
+            isAvailable: (selection) => {
+                const command = item.commandId
+                    ? this.dependencies.userCommand.getCommand(item.commandId)
+                    : null;
+                return command?.isAvailable ? command.isAvailable(selection) : true;
+            },
             ...item,
             description:
                 item.description instanceof Function ? item.description : () => item.description,

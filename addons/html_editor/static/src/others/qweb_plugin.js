@@ -2,7 +2,7 @@ import { Plugin } from "@html_editor/plugin";
 import { closestElement, descendants, selectElements } from "@html_editor/utils/dom_traversal";
 import { leftPos, rightPos } from "@html_editor/utils/position";
 import { QWebPicker } from "./qweb_picker";
-import { isElement, PROTECTED_QWEB_SELECTOR } from "@html_editor/utils/dom_info";
+import { QWEB_STYLE_ATTRS, isElement } from "@html_editor/utils/dom_info";
 import { withSequence } from "@html_editor/utils/resource";
 import { formatsSpecs } from "@html_editor/utils/formatting";
 
@@ -28,6 +28,9 @@ const QWEB_DATA_ATTRIBUTES = [
     "data-oe-t-group-active",
 ];
 const dataAttributesSelector = QWEB_DATA_ATTRIBUTES.map((attr) => `[${attr}]`).join(", ");
+
+// Selector for QWeb-specific attributes
+const PROTECTED_QWEB_SELECTOR = "[t-esc], [t-raw], [t-out], [t-field]";
 
 export const isUnremovableQWebElement = (node) =>
     node.getAttribute?.("t-set") || node.getAttribute?.("t-call");
@@ -73,6 +76,22 @@ export class QWebPlugin extends Plugin {
         },
         is_formattable_node_predicates: (node) => {
             if (node.matches?.(PROTECTED_QWEB_SELECTOR)) {
+                return true;
+            }
+        },
+        can_format_content_predicates: (selection) => {
+            const targetedNodes = new Set(
+                this.dependencies.selection.getTargetedNodes().map((n) => closestElement(n))
+            );
+            if (
+                QWEB_STYLE_ATTRS.some((att) =>
+                    [...targetedNodes].some((node) => node.hasAttribute(att))
+                )
+            ) {
+                return false;
+            }
+            const { anchorNode, focusNode } = selection;
+            if (anchorNode === focusNode && closestElement(anchorNode, PROTECTED_QWEB_SELECTOR)) {
                 return true;
             }
         },

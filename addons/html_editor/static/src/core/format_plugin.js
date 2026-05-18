@@ -14,12 +14,10 @@ import {
     isEmpty,
     isPhrasingContent,
     isSelfClosingElement,
-    isStylable,
     isTextNode,
     isVisibleTextNode,
     isZWS,
     previousLeaf,
-    PROTECTED_QWEB_SELECTOR,
 } from "../utils/dom_info";
 import { isFakeLineBreak } from "../utils/dom_state";
 import { childNodes, closestElement, descendants, selectElements } from "../utils/dom_traversal";
@@ -32,6 +30,7 @@ const NOT_A_NUMBER = /[^\d]/g;
 
 /**
  * @typedef {Object} FormatShared
+ * @property { FormatPlugin['canFormatContent'] } canFormatContent
  * @property { FormatPlugin['getOrCreateZws'] } getOrCreateZws
  * @property { FormatPlugin['mergeAdjacentInlines'] } mergeAdjacentInlines
  * @property { FormatPlugin['requestFormat'] } requestFormat
@@ -48,6 +47,7 @@ const NOT_A_NUMBER = /[^\d]/g;
  * @typedef {((root: Node) => void)[]} on_will_merge_adjacent_siblings_handlers
  * @typedef {((root: Node) => void)[]} on_merged_adjacent_siblings_handlers
  *
+ * @typedef {((selection: EditorSelection) => boolean | undefined)[]} can_format_content_predicates
  * @typedef {((className: string) => boolean | undefined)[]} is_format_class_predicates
  * @typedef {((node: Node) => boolean | undefined)[]} is_formattable_node_predicates
  * @typedef {((node: Node) => boolean | undefined)[]} has_format_predicates
@@ -66,6 +66,7 @@ export class FormatPlugin extends Plugin {
     // TODO ABD: refactor to handle Knowledge comments inside this plugin without sharing mergeAdjacentInlines.
     static shared = [
         "areSimilarElements",
+        "canFormatContent",
         "getOrCreateZws",
         "mergeAdjacentInlines",
         "requestFormat",
@@ -103,24 +104,6 @@ export class FormatPlugin extends Plugin {
                 isAvailable: this.canFormatContent.bind(this),
             },
             {
-                id: "formatFontSize",
-                run: ({ size }) =>
-                    this.requestFormat("fontSize", {
-                        applyStyle: true,
-                        formatProps: { size },
-                    }),
-                isAvailable: this.canFormatContent.bind(this),
-            },
-            {
-                id: "formatFontSizeClassName",
-                run: ({ className }) =>
-                    this.requestFormat("setFontSizeClassName", {
-                        applyStyle: true,
-                        formatProps: { className },
-                    }),
-                isAvailable: this.canFormatContent.bind(this),
-            },
-            {
                 id: "removeFormat",
                 description: (sel, nodes) =>
                     nodes && this.hasAnyFormat(nodes)
@@ -148,7 +131,6 @@ export class FormatPlugin extends Plugin {
                 commandId: "formatBold",
                 isActive: () =>
                     this.activeFormats["bold"]?.applyStyle ?? this.isFormatActive("bold"),
-                isDisabled: (sel, nodes) => nodes.some((node) => !isStylable(node)),
             },
             {
                 id: "italic",
@@ -158,7 +140,6 @@ export class FormatPlugin extends Plugin {
                 commandId: "formatItalic",
                 isActive: () =>
                     this.activeFormats["italic"]?.applyStyle ?? this.isFormatActive("italic"),
-                isDisabled: (sel, nodes) => nodes.some((node) => !isStylable(node)),
             },
             {
                 id: "underline",
@@ -168,7 +149,6 @@ export class FormatPlugin extends Plugin {
                 commandId: "formatUnderline",
                 isActive: () =>
                     this.activeFormats["underline"]?.applyStyle ?? this.isFormatActive("underline"),
-                isDisabled: (sel, nodes) => nodes.some((node) => !isStylable(node)),
             },
             {
                 id: "strikethrough",
@@ -178,14 +158,12 @@ export class FormatPlugin extends Plugin {
                 isActive: () =>
                     this.activeFormats["strikeThrough"]?.applyStyle ??
                     this.isFormatActive("strikeThrough"),
-                isDisabled: (sel, nodes) => nodes.some((node) => !isStylable(node)),
             },
             withSequence(20, {
                 id: "remove_format",
                 groupId: "decoration",
                 commandId: "removeFormat",
-                isDisabled: (sel, nodes) =>
-                    !this.hasAnyFormat(nodes) || nodes.some((node) => !isStylable(node)),
+                isDisabled: (sel, nodes) => !this.hasAnyFormat(nodes),
             }),
         ],
         /** Handlers */
@@ -421,16 +399,6 @@ export class FormatPlugin extends Plugin {
 
     // @todo phoenix: refactor this method.
     _formatSelection(formatName, { applyStyle, formatProps } = {}) {
-        const deepSelection = this.dependencies.selection.getSelectionData().deepEditableSelection;
-        const anchorElement = deepSelection.anchorNode;
-        const focusElement = deepSelection.focusNode;
-        if (
-            anchorElement === focusElement &&
-            !isContentEditable(anchorElement) &&
-            !closestElement(anchorElement, PROTECTED_QWEB_SELECTOR)
-        ) {
-            return;
-        }
         this.dependencies.selection.selectAroundNonEditable();
         // note: does it work if selection is in opposite direction?
         this.dependencies.split.splitSelection();
@@ -840,10 +808,15 @@ export class FormatPlugin extends Plugin {
     }
 
     canFormatContent(selection) {
-        return (
-            isHtmlContentSupported(selection) &&
-            this.dependencies.selection.getTargetedNodes().every((node) => isStylable(node))
-        );
+        const predicatesResult = this.checkPredicates("can_format_content_predicates", selection);
+        if (predicatesResult !== undefined) {
+            return predicatesResult && isHtmlContentSupported(selection);
+        }
+        const { anchorNode, focusNode } = selection;
+        if (anchorNode === focusNode && !isContentEditable(anchorNode)) {
+            return false;
+        }
+        return isHtmlContentSupported(selection);
     }
 }
 
