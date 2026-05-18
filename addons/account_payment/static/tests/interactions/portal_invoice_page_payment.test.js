@@ -142,7 +142,7 @@ test("portal_invoice_page_payment is started with #portal_pay", async () => {
                                     <iframe id="invoice_html" class="position-relative my-2" width="100%" height="100%" frameborder="0" scrolling="no" data-oe-model="ir.ui.view" data-oe-id="789" data-oe-field="arch" data-oe-xpath="/data/xpath/div/div[1]/div[1]/iframe[1]" src="/my/invoices/2?access_token=48b81433-0b2f-4ebd-847b-980120176bb6&amp;report_type=html" style="height: 0px;"></iframe>
                                 </div>
                                 <div id="invoice_communication" class="mt-4">
-                                    <h3 data-oe-model="ir.ui.view" data-oe-id="789" data-oe-field="arch" data-oe-xpath="/data/xpath/div/div[1]/div[2]/h3[1]">Communication history</h3>
+                                    <h3 data-oe-model="ir.ui.view" data-oe-id="789" data-oe-field="arch" data-oe-xpath="/data/xpath/div/div[1]/div[2]/h3[1]">Communication History</h3>
                                     <div id="discussion" data-anchor="true" class="d-print-none o_portal_chatter o_not_editable p-0" data-oe-model="ir.ui.view" data-oe-id="559" data-oe-field="arch" data-oe-xpath="/t[1]/div[1]" data-token="48b81433-0b2f-4ebd-847b-980120176bb6" data-res_model="account.move" data-res_id="2" data-pager_step="10" data-allow_composer="1" data-two_columns="false">
                                         <div id="chatterRoot"></div>
                                     </div>

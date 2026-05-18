@@ -56,7 +56,7 @@ registry.category("web_tour.tours").add("course_review_modification", {
                 "#chatterRoot:shadow .o-mail-Chatter:not(:has(.o_website_rating_card_container))",
         },
         {
-            trigger: "#chatterRoot:shadow .o-mail-Thread:contains(The conversation is empty.)",
+            trigger: "#chatterRoot:shadow .o-mail-Thread:contains(No messages yet.)",
         },
         {
             trigger: ".o_wslides_course_header .o_website_rating_static[title='0 stars on 5']",
