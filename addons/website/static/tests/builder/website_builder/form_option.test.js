@@ -21,7 +21,11 @@ import {
 } from "@website/../tests/builder/website_helpers";
 import { formSelectXml } from "@website/../tests/interactions/snippets/helpers";
 import { BuilderList } from "@html_builder/core/building_blocks/builder_list";
-import { unfoldAllOptionsGroups } from "@html_builder/../tests/helpers";
+import {
+    getDragHelper,
+    unfoldAllOptionsGroups,
+    waitForEndOfOperation,
+} from "@html_builder/../tests/helpers";
 
 class HrJob extends models.Model {
     _name = "hr.job";
@@ -1200,4 +1204,45 @@ test("builderList re-renders when the field type changes (existing fields)", asy
     await contains(".options-container [data-label='Type'] button").click();
     await contains(".o_popover [data-action-value='country_id']").click();
     expect.verifySteps(["setup"]);
+});
+
+test("inner snippets are individually wrapped in a div when dropped in forms", async () => {
+    await setupWebsiteBuilderWithSnippet(["s_website_form"]);
+
+    // Check that the wrapping happens
+    const dragUtils = await contains("#snippet_content [name='Alert'] .o_snippet_thumbnail").drag();
+    await dragUtils.moveTo(":iframe .s_website_form_rows > .oe_drop_zone");
+    await dragUtils.drop(getDragHelper());
+    await waitForEndOfOperation();
+    expect(
+        ":iframe .s_website_form_rows > div.s_website_form_inner_content > .s_alert"
+    ).toHaveCount(1);
+
+    // Check that no dropzones appear as direct children of the wrapper
+    await contains("#snippet_content [name='Alert'] .o_snippet_thumbnail").drag();
+    expect(":iframe div.s_website_form_inner_content > .oe_drop_zone").toHaveCount(0);
+});
+
+test("snippets that can't be dropped in forms", async () => {
+    await setupWebsiteBuilderWithSnippet(["s_website_form"]);
+
+    // First, drop an inner snippet, so the test will cover also for dropzones
+    // generated around or inside the inner snippet wrapper.
+    let dragUtils = await contains("#snippet_content [name='Alert'] .o_snippet_thumbnail").drag();
+    await dragUtils.moveTo(":iframe .s_website_form_rows > .oe_drop_zone");
+    await dragUtils.drop(getDragHelper());
+    await waitForEndOfOperation();
+
+    // Check that snippet can't be dropped.
+    dragUtils = await contains(
+        "#snippet_groups [data-snippet-group='intro'] .o_snippet_thumbnail"
+    ).drag();
+    expect(":iframe .s_website_form .oe_drop_zone").toHaveCount(0);
+    await dragUtils.cancel();
+
+    // Certain inner snippets are blocked too. The blocking logic is the same
+    // for all of them, so we just test one.
+    dragUtils = await contains("#snippet_content [name='Countdown'] .o_snippet_thumbnail").drag();
+    expect(":iframe .s_website_form_rows .oe_drop_zone").toHaveCount(0);
+    await dragUtils.cancel();
 });
