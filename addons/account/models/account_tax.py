@@ -4968,7 +4968,8 @@ class AccountTax(models.Model):
             tax_domain = (
                Domain('amount_type', '=', tax_values['amount_type']) &
                Domain('type_tax_use', '=', tax_values['type_tax_use']) &
-               Domain('amount', '=', tax_values['amount'])
+               Domain('amount', '=', tax_values['amount']) &
+               Domain([*([('country_id', '=', tax_values['invoice_predictive']['invoice'].tax_country_id.id)] if 'invoice_predictive' in tax_values else [])])
             )
             orders = ['sequence', 'id']
             if name := tax_values.get('name'):
