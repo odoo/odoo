@@ -443,6 +443,18 @@ test("remove background image removes color filter", async () => {
     expect(":iframe section .o_we_bg_filter").not.toHaveCount();
 });
 
+test("remove background image removes gradient color filter", async () => {
+    await setupWebsiteBuilder(`
+        <section style="background-image: url('/web/image/123/transparent.png');">
+            <div class="o_we_bg_filter"
+                style="background-image: linear-gradient(135deg, red, blue);"></div>
+            AAAA
+        </section>`);
+    await contains(":iframe section").click();
+    await contains("[data-action-id='toggleBgImage']").click();
+    expect(":iframe section .o_we_bg_filter").not.toHaveCount();
+});
+
 test("change background size", async () => {
     const { waitSidebarUpdated } = await setupWebsiteBuilder(`
         <section class="o_bg_img_opt_repeat" style="background-image: url('/web/image/123/transparent.png'); width: 500px; height:500px; background-size: 100px;">
