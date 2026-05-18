@@ -11,8 +11,8 @@ class StockMove(models.Model):
         res = super()._is_purchase_return()
         return res or self._is_subcontract_return()
 
-    def _get_value_from_account_move(self, quantity, at_date=None):
-        valuation_data = super()._get_value_from_account_move(quantity, at_date=at_date)
+    def _get_value_from_account_move(self, quantity):
+        valuation_data = super()._get_value_from_account_move(quantity)
         last_subcontract_done_receipt = self.move_dest_ids.filtered(
             lambda m: m.state == 'done' and m.is_subcontract and m.purchase_line_id
         ).sorted('create_date', reverse=True)[:1]

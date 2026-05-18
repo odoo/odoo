@@ -8,11 +8,11 @@ from odoo import models
 class StockMove(models.Model):
     _inherit = "stock.move"
 
-    def _get_value_from_production(self, quantity, at_date=None):
+    def _get_value_from_production(self, quantity):
         # TODO: Maybe move _cal_price here
         self.ensure_one()
         if not self.production_id:
-            return super()._get_value_from_production(quantity, at_date)
+            return super()._get_value_from_production(quantity)
         value = quantity * self.price_unit
         return {
             'value': value,
