@@ -664,10 +664,12 @@
                      the message will be posted with the identity of the partner_id of the object
             :hash : signed token with the partner_id using `_sign_token` method (on mail.thread)
             :pid : identifier of the partner signing the token
+            :hide_header bool (optional) : hide the chatter header
 
         NOTE: for standard portal flows, _get_page_view_values should be used to properly setup the template parameters
     -->
     <template id="message_thread">
+        <h3 t-if="not hide_header">Communication History</h3>
         <div id="discussion" data-anchor="true"
             class="d-print-none o_portal_chatter o_not_editable p-0"
             t-att-data-token="token"

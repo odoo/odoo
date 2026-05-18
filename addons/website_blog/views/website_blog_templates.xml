@@ -312,7 +312,7 @@ list of filtered posts (by date or tag).
                     <div groups="base.group_public" class="small mb-4">
                         <a t-attf-href="/web/login?redirect=/blog/{{slug(blog_post.blog_id)}}/{{slug(blog_post)}}#discussion" class="btn btn-sm btn-primary"><b>Sign in</b></a> to leave a comment
                     </div>
-                    <t t-call="portal.message_thread" object="blog_post"/>
+                    <t t-call="portal.message_thread" object="blog_post" hide_header="True"/>
                 </div>
             </div>
         </div>

@@ -367,6 +367,7 @@
                 </t>
                 <t t-if="enable_slide_comments" t-call="portal.message_thread"
                     object="slide"
+                    hide_header="True"
                     disable_composer="not (slide.channel_id.can_comment and slide.channel_id.allow_comment)"
                     display_rating="False"/>
             </div>
