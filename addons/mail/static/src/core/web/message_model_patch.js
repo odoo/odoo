@@ -15,7 +15,7 @@ const messagePatch = {
         }
         return (
             !["discuss.channel", "mail.box"].includes(thread.model) &&
-            ["comment", "email"].includes(this.message_type)
+            ["comment", "email", "email_outgoing"].includes(this.message_type)
         );
     },
 };

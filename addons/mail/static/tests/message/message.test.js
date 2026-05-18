@@ -2118,6 +2118,31 @@ test("Show email_from of message without author for not email message", async ()
     await contains(".o-mail-Message-author:text('md@oilcompany.fr')");
 });
 
+test("Message actions for 'email_outgoing' messages", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "TestPartner" });
+    pyEnv["mail.message"].create({
+        body: "Mass-sent email message",
+        message_type: "email_outgoing",
+        model: "res.partner",
+        res_id: partnerId,
+    });
+    await start();
+    await openFormView("res.partner", partnerId);
+    await contains(".o-mail-Message-actions button", { count: 4 });
+    await contains(".o-mail-Message-actions button[title='Add a Reaction']");
+    await contains(".o-mail-Message-actions button[title='Forward']");
+    await contains(".o-mail-Message-actions button[title='Copy Text']");
+    await contains(".o-mail-Message-actions button[title='Expand']");
+    await click(".o-mail-Message [title='Expand']");
+    await contains(".o-dropdown-item", { count: 5 });
+    await contains(".o-dropdown-item:has(:text('Reply All'))");
+    await contains(".o-dropdown-item:has(:text('Pin'))");
+    await contains(".o-dropdown-item:has(:text('Bookmark'))");
+    await contains(".o-dropdown-item:has(:text('Copy Link'))");
+    await contains(".o-dropdown-item:has(:text('Translate'))");
+});
+
 test("Message should display attachments in order", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
