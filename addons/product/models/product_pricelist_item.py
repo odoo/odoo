@@ -593,7 +593,7 @@ class ProductPricelistItem(models.Model):
 
         return res
 
-    def _compute_price(self, product, quantity, uom, *, currency=None, **kwargs):
+    def _compute_price(self, product, quantity, uom, **kwargs):
         """Compute the unit price of a product in the context of a pricelist application.
 
         Note: self and self.ensure_one()
@@ -613,9 +613,6 @@ class ProductPricelistItem(models.Model):
         product.ensure_one()
         uom.ensure_one()
 
-        currency = currency or self.currency_id or self.env.company.currency_id
-        currency.ensure_one()
-
         # Pricelist specific values are specified according to product UoM
         # and must be multiplied according to the factor between uoms
         product_uom = product.uom_id
@@ -627,10 +624,10 @@ class ProductPricelistItem(models.Model):
         if self.compute_price == 'fixed':
             price = convert(self.fixed_price)
         elif self.compute_price == 'percentage':
-            base_price = self._compute_base_price(product, quantity, uom, currency, **kwargs)
+            base_price = self._compute_base_price(product, quantity, uom, **kwargs)
             price = (base_price - (base_price * (self.percent_price / 100))) or 0.0
         elif self.compute_price == 'formula':
-            base_price = self._compute_base_price(product, quantity, uom, currency, **kwargs)
+            base_price = self._compute_base_price(product, quantity, uom, **kwargs)
             # complete formula
             price_limit = base_price
             discount = self.price_discount if self.base != 'standard_price' else -self.price_markup
@@ -647,12 +644,12 @@ class ProductPricelistItem(models.Model):
             if self.price_max_margin:
                 price = min(price, price_limit + convert(self.price_max_margin))
         else:  # empty self, or extended pricelist price computation logic
-            price = self._compute_base_price(product, quantity, uom, currency, **kwargs)
+            price = self._compute_base_price(product, quantity, uom, **kwargs)
 
         return price
 
     def _compute_base_price(
-        self, product, quantity, uom, currency, *, date=False, depth=0, **kwargs
+        self, product, quantity, uom, *, currency=None, date=False, depth=0, **kwargs
     ):
         """Compute the base price for a given rule.
 
@@ -666,8 +663,6 @@ class ProductPricelistItem(models.Model):
         :returns: base price, expressed in provided pricelist currency
         :rtype: float
         """
-        currency.ensure_one()
-
         rule_base = self.base or 'list_price'
         if rule_base == 'pricelist' and self.base_pricelist_id:
             price = self.base_pricelist_id._get_product_price(
@@ -687,6 +682,8 @@ class ProductPricelistItem(models.Model):
             src_currency = product.currency_id
             price = product._price_compute(rule_base, uom=uom)[product.id]
 
+        currency = currency or self.currency_id or self.env.company.currency_id
+        currency.ensure_one()
         if src_currency != currency:
             price = src_currency._convert(price, currency, date=date, round=False)
 
