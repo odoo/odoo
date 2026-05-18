@@ -307,8 +307,90 @@ class TestCompanyBranch(AccountTestInvoicingCommon):
                 'currency_id': self.env.ref('base.EUR').id,
             })
 
+<<<<<<< 0fbeffcf8fd8fcddfeda398950af62ee101bd664
     def test_set_fiscalyear_last_day_to_negative_value(self):
         """Test that ensure that fiscalyear_last_day raises ValidationError when set
            to negative value."""
         with self.assertRaises(ValidationError):
             self.root_company.fiscalyear_last_day = -1
+||||||| 592072ca4763eae461c0bd3b465c969c5d1676a5
+    def test_branch_user_bank_statement_foreign_currency(self):
+        # Create a user that only belongs to branch a
+        user = self.env['res.users'].create({
+            'name': "User A",
+            'login': "user_a@example.com",
+            'email': "user_a@example.com",
+            'company_id': self.branch_a.id,
+            'company_ids': [Command.set([self.branch_a.id])],
+            'groups_id': [Command.set([
+                self.env.ref('base.group_system').id,
+                self.env.ref('base.group_erp_manager').id,
+                self.env.ref('account.group_account_manager').id,
+            ])],
+        })
+
+        # self.branch_user.write({"company_ids": self.branch_a.ids, "groups_id": [Command.link(self.env.ref('account.group_account_manager').id)]})
+
+        journal = self.env['account.journal'].create({
+            'name': "Bank (EUR)",
+            'code': "EBNK",
+            'type': "bank",
+            'company_id': self.root_company.id,
+            'currency_id': self.other_currency.id,
+        })
+
+        statement_line = self.env['account.bank.statement.line'].with_user(user.id).create({
+            'date': '2019-01-01',
+            'journal_id': journal.id,
+            'payment_ref': 'line_1',
+            'partner_id': False,
+            'foreign_currency_id': False,
+            'amount': 25,
+            'amount_currency': 0,
+            'company_id': self.branch_a.id
+        })
+
+        self.assertRecordValues(statement_line, [{
+            'amount_total_in_currency_signed': 25,
+            'amount_total_signed': 12.5,
+        }])
+=======
+    def test_branch_user_bank_statement_foreign_currency(self):
+        # Create a user that only belongs to branch a
+        user = self.env['res.users'].create({
+            'name': "User A",
+            'login': "user_a@example.com",
+            'email': "user_a@example.com",
+            'company_id': self.branch_a.id,
+            'company_ids': [Command.set([self.branch_a.id])],
+            'groups_id': [Command.set([
+                self.env.ref('base.group_system').id,
+                self.env.ref('base.group_erp_manager').id,
+                self.env.ref('account.group_account_user').id,
+            ])],
+        })
+
+        journal = self.env['account.journal'].create({
+            'name': "Bank (EUR)",
+            'code': "EBNK",
+            'type': "bank",
+            'company_id': self.root_company.id,
+            'currency_id': self.other_currency.id,
+        })
+
+        statement_line = self.env['account.bank.statement.line'].with_user(user.id).create({
+            'date': '2019-01-01',
+            'journal_id': journal.id,
+            'payment_ref': 'line_1',
+            'partner_id': False,
+            'foreign_currency_id': False,
+            'amount': 25,
+            'amount_currency': 0,
+            'company_id': self.branch_a.id
+        })
+
+        self.assertRecordValues(statement_line, [{
+            'amount_total_in_currency_signed': 25,
+            'amount_total_signed': 12.5,
+        }])
+>>>>>>> b68b890fc9a0dea98d34914fb3fe05b4eaac509c
