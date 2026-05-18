@@ -853,7 +853,7 @@ class StockMoveLine(models.Model):
                 'move_orig_ids': [Command.clear()]
             })
         move_line_to_unlink.unlink()
-        move_to_reassign._action_assign()
+        move_to_reassign[::-1]._action_assign()
 
     def _get_aggregated_properties(self, move_line=False, move=False):
         move = move or move_line.move_id
