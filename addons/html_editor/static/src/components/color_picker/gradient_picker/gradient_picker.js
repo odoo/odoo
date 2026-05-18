@@ -1,6 +1,6 @@
 import { useRef } from "@web/owl2/utils";
 import { Component, proxy } from "@odoo/owl";
-import { CustomColorPicker as ColorPicker } from "@web/core/color_picker/custom_color_picker/custom_color_picker";
+import { CustomColorPicker as ColorPicker } from "@html_editor/components/color_picker/custom_color_picker/custom_color_picker";
 import {
     isColorGradient,
     standardizeGradient,

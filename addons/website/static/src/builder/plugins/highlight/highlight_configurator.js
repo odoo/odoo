@@ -1,5 +1,5 @@
 import { Component, onWillStart, proxy } from "@odoo/owl";
-import { ColorPicker } from "@web/core/color_picker/color_picker";
+import { ColorPicker } from "@html_editor/components/color_picker/color_picker";
 import { HighlightPicker } from "./highlight_picker";
 import { normalizeColor } from "@html_builder/utils/utils_css";
 import { getHtmlStyle } from "@html_editor/utils/formatting";

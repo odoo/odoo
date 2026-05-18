@@ -2,10 +2,10 @@ import { Component } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { isColorGradient } from "@web/core/utils/colors";
-import { CustomColorPicker } from "../custom_color_picker/custom_color_picker";
+import { CustomColorPicker } from "../../custom_color_picker/custom_color_picker";
 
 export class ColorPickerCustomTab extends Component {
-    static template = "web.ColorPickerCustomTab";
+    static template = "html_editor.ColorPickerCustomTab";
     static components = { CustomColorPicker };
     static props = {
         applyColor: Function,
@@ -38,8 +38,12 @@ export class ColorPickerCustomTab extends Component {
     }
 }
 
-registry.category("color_picker_tabs").add("web.custom", {
-    id: "custom",
-    name: _t("Custom"),
-    component: ColorPickerCustomTab,
-});
+registry.category("color_picker_tabs").add(
+    "html_editor.custom",
+    {
+        id: "custom",
+        name: _t("Custom"),
+        component: ColorPickerCustomTab,
+    },
+    { sequence: 50 }
+);

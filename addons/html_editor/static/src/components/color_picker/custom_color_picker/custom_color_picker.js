@@ -20,7 +20,7 @@ const SLIDER_KEYS = [...ARROW_KEYS, "pageup", "pagedown", "home", "end"];
 const DEFAULT_COLOR = "#FF0000";
 
 export class CustomColorPicker extends Component {
-    static template = "web.CustomColorPicker";
+    static template = "html_editor.CustomColorPicker";
     props = props({
         document: t.any().optional(window.document),
         defaultColor: t.string().optional(DEFAULT_COLOR),

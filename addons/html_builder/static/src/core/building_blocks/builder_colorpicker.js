@@ -5,7 +5,7 @@ import {
     useColorPicker,
     DEFAULT_COLORS,
     DEFAULT_THEME_COLOR_VARS,
-} from "@web/core/color_picker/color_picker";
+} from "@html_editor/components/color_picker/color_picker";
 import { BuilderComponent } from "./builder_component";
 import {
     getAllActionsAndOperations,

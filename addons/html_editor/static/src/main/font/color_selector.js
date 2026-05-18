@@ -5,7 +5,7 @@ import {
     useColorPicker,
     DEFAULT_COLORS,
     DEFAULT_THEME_COLOR_VARS,
-} from "@web/core/color_picker/color_picker";
+} from "@html_editor/components/color_picker/color_picker";
 import { getCSSVariableValue, getHtmlStyle } from "@html_editor/utils/formatting";
 import { useChildRef } from "@web/core/utils/hooks";
 import { useDropdownAutoVisibility } from "@html_editor/toolbar_dropdown_hook";

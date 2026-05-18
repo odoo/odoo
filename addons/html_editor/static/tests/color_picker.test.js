@@ -9,8 +9,8 @@ import {
 } from "@odoo/hoot-dom";
 import { Component, xml, proxy } from "@odoo/owl";
 import { defineStyle, mountWithCleanup } from "@web/../tests/web_test_helpers";
-import { ColorPicker, DEFAULT_COLORS } from "@web/core/color_picker/color_picker";
-import { CustomColorPicker } from "@web/core/color_picker/custom_color_picker/custom_color_picker";
+import { ColorPicker, DEFAULT_COLORS } from "@html_editor/components/color_picker/color_picker";
+import { CustomColorPicker } from "@html_editor/components/color_picker/custom_color_picker/custom_color_picker";
 import { registry } from "@web/core/registry";
 
 test("basic rendering", async () => {
@@ -153,7 +153,7 @@ class AdditionalTab extends Component {
 
 test.tags("desktop");
 test("should trigger color preview callbacks only once when hovering button having nested elements", async () => {
-    registry.category("color_picker_tabs").add("web.test", {
+    registry.category("color_picker_tabs").add("html_editor.test", {
         id: "test",
         name: "Test",
         component: AdditionalTab,
@@ -317,7 +317,7 @@ class ExtraTab extends Component {
 }
 
 test("can register an extra tab", async () => {
-    registry.category("color_picker_tabs").add("web.extra", {
+    registry.category("color_picker_tabs").add("html_editor.extra", {
         id: "extra",
         name: "Extra",
         component: ExtraTab,
@@ -337,7 +337,7 @@ test("can register an extra tab", async () => {
     await animationFrame();
     expect("button.extra-tab").toHaveClass("active");
     expect(".o_font_color_selector>p:last-child").toHaveText("Color picker extra tab");
-    registry.category("color_picker_tabs").remove("web.extra");
+    registry.category("color_picker_tabs").remove("html_editor.extra");
 });
 
 test("should mark default color as selected when it is selected", async () => {

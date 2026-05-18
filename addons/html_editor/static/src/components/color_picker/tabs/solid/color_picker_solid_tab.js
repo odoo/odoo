@@ -3,7 +3,7 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 
 export class ColorPickerSolidTab extends Component {
-    static template = "web.ColorPickerSolidTab";
+    static template = "html_editor.ColorPickerSolidTab";
     static props = {
         colorPickerNavigation: Function,
         onColorClick: Function,
@@ -20,8 +20,12 @@ export class ColorPickerSolidTab extends Component {
     };
 }
 
-registry.category("color_picker_tabs").add("web.solid", {
-    id: "solid",
-    name: _t("Solid"),
-    component: ColorPickerSolidTab,
-});
+registry.category("color_picker_tabs").add(
+    "html_editor.solid",
+    {
+        id: "solid",
+        name: _t("Solid"),
+        component: ColorPickerSolidTab,
+    },
+    { sequence: 40 }
+);
