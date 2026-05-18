@@ -24,6 +24,10 @@ export class ColorSelector extends Component {
         getUsedCustomColors: Function,
         colorPrefix: { type: String },
         onClose: Function,
+        useDefaultThemeColors: { type: Boolean, optional: true },
+    };
+    static defaultProps = {
+        useDefaultThemeColors: true,
     };
 
     setup() {
@@ -57,6 +61,7 @@ export class ColorSelector extends Component {
                 applyColorPreview: this.props.applyColorPreview,
                 applyColorResetPreview: this.props.applyColorResetPreview,
                 getUsedCustomColors: this.props.getUsedCustomColors,
+                useDefaultThemeColors: this.props.useDefaultThemeColors,
                 colorPrefix: this.props.colorPrefix,
             },
             {

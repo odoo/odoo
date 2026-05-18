@@ -52,9 +52,11 @@ export class ColorPicker extends Component {
         applyColorResetPreview: Function,
         colorPrefix: { type: String },
         close: { type: Function, optional: true },
+        useDefaultThemeColors: { type: Boolean, optional: true },
     };
     static defaultProps = {
         close: () => {},
+        useDefaultThemeColors: true,
     };
 
     setup() {
