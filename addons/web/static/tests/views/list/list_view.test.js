@@ -5046,6 +5046,31 @@ test(`aggregates monetary (different currencies)`, async () => {
     expect(".o_multi_currency_popover").toHaveText("2,800.00 € at $ 0.50 on Jun 13");
 });
 
+test(`aggregates monetary (different currencies and empty rate)`, async () => {
+    Currency._records[1].rate_date = false;
+    Currency._records[1].inverse_rate = 1;
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        arch: `
+            <list>
+                <field name="amount" widget="monetary" sum="Sum"/>
+                <field name="currency_id"/>
+            </list>
+        `,
+    });
+    expect(queryAllTexts(`tbody .o_monetary_cell`)).toEqual([
+        "1,200.00 €",
+        "$ 500.00",
+        "$ 300.00",
+        "$ 0.00",
+    ]);
+    expect(`tfoot`).toHaveText("$ 2,000.00?");
+    await toggleMultiCurrencyPopover("tfoot span sup");
+    expect(".o_multi_currency_popover").toHaveCount(1);
+    expect(".o_multi_currency_popover").toHaveText("2,000.00 € at $ 1.00");
+});
+
 test(`aggregates monetary (currency field not in view)`, async () => {
     Foo._fields.currency_test = fields.Many2one({ relation: "res.currency", default: 1 });
 
