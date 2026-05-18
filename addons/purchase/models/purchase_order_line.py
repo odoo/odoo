@@ -682,7 +682,7 @@ class PurchaseOrderLine(models.Model):
             price_unit = 0
         if price_unit and seller and po.currency_id and seller.currency_id != po.currency_id:
             price_unit = seller.currency_id._convert(
-                price_unit, po.currency_id, po.company_id, po.date_order or fields.Date.context_today(self))
+                price_unit, po.currency_id, po.company_id, po.date_order)
 
         product_lang = product_id.with_prefetch().with_context(
             lang=partner_id.lang,

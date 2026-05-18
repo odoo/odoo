@@ -1297,7 +1297,7 @@ class SaleOrderLine(models.Model):
                     invoice_line.move_id.state == "posted"
                     or invoice_line.move_id.payment_state == "invoicing_legacy"
                 ):
-                    invoice_date = invoice_line.move_id.invoice_date or fields.Date.context_today(self)
+                    invoice_date = invoice_line.move_id.invoice_date
                     if invoice_line.move_id.move_type == "out_invoice":
                         amount_invoiced += invoice_line.currency_id._convert(
                             invoice_line.price_subtotal,
@@ -1324,9 +1324,8 @@ class SaleOrderLine(models.Model):
                     invoice.state == "posted"
                     or invoice_line.move_id.payment_state == "invoicing_legacy"
                 ):
-                    invoice_date = invoice.invoice_date or fields.Date.context_today(self)
                     amount_invoiced_unsigned = invoice_line.currency_id._convert(
-                        invoice_line.price_total, line.currency_id, line.company_id, invoice_date
+                        invoice_line.price_total, line.currency_id, line.company_id, invoice.invoice_date,
                     )
                     amount_invoiced += amount_invoiced_unsigned * -invoice.direction_sign
             line.amount_invoiced = amount_invoiced
@@ -1386,7 +1385,7 @@ class SaleOrderLine(models.Model):
                                     aml.price_unit,
                                     line.currency_id,
                                     line.company_id,
-                                    aml.date or fields.Date.context_today(self),
+                                    aml.date,
                                     round=False,
                                 )
                                 * aml.quantity
@@ -1397,7 +1396,7 @@ class SaleOrderLine(models.Model):
                                     aml.price_unit,
                                     line.currency_id,
                                     line.company_id,
-                                    aml.date or fields.Date.context_today(self),
+                                    aml.date,
                                     round=False,
                                 )
                                 * aml.quantity
@@ -2015,7 +2014,7 @@ class SaleOrderLine(models.Model):
         self.ensure_one()
         to_currency = self.currency_id or self.order_id.currency_id
         if currency and to_currency and currency != to_currency:
-            conversion_date = self.order_id.date_order or fields.Date.context_today(self)
+            conversion_date = self.order_id.date_order
             company = self.company_id or self.order_id.company_id or self.env.company
             return currency._convert(
                 from_amount=amount,

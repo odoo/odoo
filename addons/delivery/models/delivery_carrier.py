@@ -561,7 +561,7 @@ class DeliveryCarrier(models.Model):
         if from_currency.id == to_currency.id:
             return price
         return from_currency._convert(
-            price, to_currency, order.company_id, order.date_order or fields.Date.context_today(self),
+            price, to_currency, order.company_id, order.date_order,
         )
 
     def _get_price_available(self, order):

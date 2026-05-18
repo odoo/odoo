@@ -282,7 +282,6 @@ class WebsiteSnippetFilter(models.Model):
                             record[field_name],
                             website_currency,
                             Website.get_current_website().company_id,
-                            fields.Date.today()
                         )
                     else:
                         data[field_name] = record[field_name]

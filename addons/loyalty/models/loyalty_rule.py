@@ -166,5 +166,4 @@ class LoyaltyRule(models.Model):
             self.minimum_amount,
             currency_to,
             self.company_id or self.env.company,
-            fields.Date.context_today(self),
         )

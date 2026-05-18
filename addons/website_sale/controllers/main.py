@@ -1055,7 +1055,6 @@ class WebsiteSale(payment_portal.PaymentPortal):
                             min_price,
                             pricelist.currency_id,
                             request.website.company_id,
-                            fields.Date.today(),
                             round=False,
                         )
                     )
@@ -1068,7 +1067,6 @@ class WebsiteSale(payment_portal.PaymentPortal):
                             max_price,
                             pricelist.currency_id,
                             request.website.company_id,
-                            fields.Date.today(),
                             round=False,
                         )
                     )

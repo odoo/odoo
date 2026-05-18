@@ -113,6 +113,6 @@ class ResPartner(models.Model):
         ).items():
             amount_to_invoice_sum = sum(orders.mapped("amount_to_invoice"))
             credit_company_currency = currency._convert(
-                amount_to_invoice_sum, company.currency_id, company, fields.Date.context_today(self)
+                amount_to_invoice_sum, company.currency_id, company,
             )
             partner.commercial_partner_id.credit_to_invoice += credit_company_currency

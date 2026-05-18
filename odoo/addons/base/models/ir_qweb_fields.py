@@ -535,7 +535,7 @@ class IrQwebFieldMonetary(models.AbstractModel):
         fmt = "%.{0}f".format(options.get('decimal_places', display_currency.decimal_places))
 
         if options.get('from_currency'):
-            date = options.get('date') or fields.Date.context_today(self)
+            date = options.get('date')
             company_id = options.get('company_id')
             if company_id:
                 company = self.env['res.company'].browse(company_id)

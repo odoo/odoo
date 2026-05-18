@@ -257,7 +257,6 @@ class AccountMove(models.Model):
                 max(order_amount, 0),
                 self.company_id.currency_id,
                 self.company_id,
-                fields.Date.context_today(self),
             )
             exclude_amount += order_amount_company
         return exclude_amount

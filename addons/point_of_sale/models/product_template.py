@@ -260,8 +260,8 @@ class ProductTemplate(models.Model):
         for currency_id, product_templates in different_currency.items():
             currency = self.env['res.currency'].browse(currency_id)
             for product in product_templates:
-                product['list_price'] = currency._convert(product['list_price'], config_id.currency_id, self.env.company, fields.Date.context_today(self))
-                product['standard_price'] = currency._convert(product['standard_price'], config_id.currency_id, self.env.company, fields.Date.context_today(self))
+                product['list_price'] = currency._convert(product['list_price'], config_id.currency_id, self.env.company)
+                product['standard_price'] = currency._convert(product['standard_price'], config_id.currency_id, self.env.company)
 
         for product in products:
             product['image_128'] = bool(product['image_128'])

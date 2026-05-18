@@ -202,7 +202,7 @@ class PosOrderLine(models.Model):
                 from_amount=product_cost,
                 to_currency=line.currency_id,
                 company=line.company_id or self.env.company,
-                date=line.order_id.date_order or fields.Date.context_today(self),
+                date=line.order_id.date_order,
                 round=False,
             )
             line.is_total_cost_computed = True
