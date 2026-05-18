@@ -1,1 +1,6 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_tnpd_prison_master_user,tnpd.prison.master (user read),model_tnpd_prison_master,base.group_user,1,0,0,0
+access_tnpd_prison_master_hr_user,tnpd.prison.master (hr user),model_tnpd_prison_master,hr.group_hr_user,1,1,1,0
+access_tnpd_prison_master_hr_manager,tnpd.prison.master (hr manager),model_tnpd_prison_master,hr.group_hr_manager,1,1,1,1
+access_transfer_approval_request_user,transfer.approval.request (user),model_transfer_approval_request,base.group_user,1,1,1,0
+access_transfer_approval_request_hr_manager,transfer.approval.request (hr manager),model_transfer_approval_request,hr.group_hr_manager,1,1,1,1
