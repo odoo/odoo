@@ -426,6 +426,13 @@
                                 </setting>
                             </block>
 
+                            <block id="pos_localization_section" title="Fiscalization" help="Those settings are used to comply with legal requirements in specific countries." invisible="country_code not in ('AT')">
+                                <setting id="austria_pos_localization" string="Austria Fiskaly" documentation="/applications/finance/fiscal_localizations/austria.html#point-of-sale" company_dependent="1" invisible="country_code != 'AT'"
+                                    help="Configure Fiskaly credentials required for Austrian RKSV fiscalization">
+                                    <field name="module_l10n_at_pos"/>
+                                </setting>
+                            </block>
+
                             <block title="Payment Terminals" help="Those settings are common to all PoS." id="pos_payment_terminals_section">
                                 <setting id="adyen_payment_terminal_setting" title="The transactions are processed by Adyen. Set your Adyen credentials on the related payment method." string="Adyen" help="Accept payments with an Adyen payment terminal"
                                         documentation="/applications/sales/point_of_sale/payment_methods/terminals/adyen.html">
