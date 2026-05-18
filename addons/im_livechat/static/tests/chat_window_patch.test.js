@@ -1,6 +1,7 @@
 import {
     click,
     contains,
+    onRpcBefore,
     openDiscuss,
     openFormView,
     setupChatHub,
@@ -217,7 +218,7 @@ test("livechat: non-member can close immediately", async () => {
 });
 
 test.tags("desktop", "focus required");
-test("Can mark as read a livechat that has ended", async () => {
+test("Opening ended livechat and seeing last messages automatically marks it as read", async () => {
     const pyEnv = await startServer();
     const guestId = pyEnv["mail.guest"].create({ name: "Visitor" });
     const channelId = pyEnv["discuss.channel"].create({
@@ -226,6 +227,7 @@ test("Can mark as read a livechat that has ended", async () => {
             Command.create({ guest_id: guestId, livechat_member_type: "visitor" }),
         ],
         channel_type: "livechat",
+        livechat_end_dt: serializeDate(today()),
     });
     for (let i = 0; i < 2; i++) {
         pyEnv["mail.message"].create({
@@ -236,13 +238,15 @@ test("Can mark as read a livechat that has ended", async () => {
             res_id: channelId,
         });
     }
+    const { promise, resolve } = Promise.withResolvers();
+    onRpcBefore("/discuss/channel/mark_as_read", async () => await promise);
+    setupChatHub({ folded: [channelId] });
     await start();
-    setupChatHub({ opened: [channelId] });
+    await click(".o-mail-ChatBubble[name='Visitor']");
     await contains(".o-mail-ChatWindow .o-mail-Message", { count: 2 });
-    await contains(".o-mail-Thread-banner:has(:text('2 new messages'))");
-    await withGuest(guestId, () =>
-        rpc("/im_livechat/visitor_leave_session", { channel_id: channelId })
-    );
     await contains("span:text('This livechat conversation has ended.')");
+    await contains(".o-mail-ChatWindow .o-mail-Thread.o-focused");
+    await contains(".o-mail-Thread-banner:has(:text('2 new messages'))");
+    resolve();
     await contains(".o-mail-Thread-banner", { count: 0 });
 });
