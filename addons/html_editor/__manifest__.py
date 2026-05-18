@@ -46,6 +46,7 @@ This addon provides an extensible, maintainable editor.
             ('include', 'html_editor.assets_media_dialog'),
             ('include', 'html_editor.assets_readonly'),
             'html_editor/static/src/*',
+            'html_editor/static/src/components/color_picker/**/*',
             'html_editor/static/src/components/history_dialog/**/*',
             'html_editor/static/src/components/suggestion/**/*',
             'html_editor/static/src/core/**/*',

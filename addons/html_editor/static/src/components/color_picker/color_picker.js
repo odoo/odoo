@@ -1,15 +1,15 @@
 import { useExternalListener, useLayoutEffect, useRef } from "@web/owl2/utils";
 import { Component, props, proxy, t } from "@odoo/owl";
-import { CustomColorPicker } from "@web/core/color_picker/custom_color_picker/custom_color_picker";
+import { CustomColorPicker } from "@html_editor/components/color_picker/custom_color_picker/custom_color_picker";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { isCSSColor, isColorGradient, normalizeCSSColor } from "@web/core/utils/colors";
 import { cookie } from "@web/core/browser/cookie";
-import { POSITION_BUS } from "../position/position_hook";
-import { registry } from "../registry";
+import { POSITION_BUS } from "@web/core/position/position_hook";
+import { registry } from "@web/core/registry";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { isMobileOS } from "@web/core/browser/feature_detection";
-import { getActiveHotkey } from "../hotkeys/hotkey_service";
+import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 
 // These colors are already normalized as per normalizeCSSColor in @web/legacy/js/widgets/colorpicker
 export const DEFAULT_COLORS = [
@@ -38,7 +38,7 @@ export const DEFAULT_THEME_COLOR_VARS = [
 ];
 
 export class ColorPicker extends Component {
-    static template = "web.ColorPicker";
+    static template = "html_editor.ColorPicker";
     static components = { CustomColorPicker, Dropdown, DropdownItem };
     props = props({
         state: t.object({
