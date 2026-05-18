@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+from lxml import etree
 from psycopg2 import OperationalError
 from pytz import timezone
 from werkzeug.urls import url_quote_plus, url_encode
@@ -140,6 +141,22 @@ class L10nEsEdiVerifactuDocument(models.Model):
         string="JSON Filename",
         compute='_compute_json_attachment_filename',
     )
+    xml_attachment_id = fields.Many2one(
+        string="XML Attachment",
+        comodel_name='ir.attachment',
+        readonly=True,
+        copy=False,
+    )
+    # To use the binary widget in the form view to download the attachment
+    xml_attachment_raw = fields.Binary(
+        string="XML",
+        compute="_compute_xml_attachment_raw",
+        readonly=True,
+    )
+    xml_attachment_filename = fields.Char(
+        string="XML Filename",
+        compute='_compute_xml_attachment_filename',
+    )
     errors = fields.Html(
         string="Errors",
         copy=False,
@@ -170,12 +187,19 @@ class L10nEsEdiVerifactuDocument(models.Model):
         for document in self:
             document.display_name = _("Veri*Factu Document %s", document.id)
 
-    @api.depends('chain_index', 'document_type')
-    def _compute_json_attachment_filename(self):
+    def _compute_attachment_filename(self, extension):
         for document in self:
             document_type = 'anulacion' if document.document_type == 'cancellation' else 'alta'
-            name = f"verifactu_registro_{document.chain_index}_{document_type}.json"
-            document.json_attachment_filename = name
+            document[
+                f'{extension}_attachment_filename'] = f'verifactu_registro_{document.chain_index}_{document_type}.{extension}'
+
+    @api.depends('chain_index', 'document_type')
+    def _compute_json_attachment_filename(self):
+        self._compute_attachment_filename('json')
+
+    @api.depends('chain_index', 'document_type')
+    def _compute_xml_attachment_filename(self):
+        self._compute_attachment_filename('xml')
 
     @api.ondelete(at_uninstall=False)
     def _never_unlink_chained_documents(self):
@@ -427,6 +451,7 @@ class L10nEsEdiVerifactuDocument(models.Model):
         """
         document_vals = record_values['document_vals']
         error_title = _("The Veri*Factu document could not be created")
+        xml_content = None
 
         if not record_values['errors']:
             record_values['errors'] = self._check_record_values(record_values)
@@ -445,7 +470,7 @@ class L10nEsEdiVerifactuDocument(models.Model):
             # Otherwise this may happen at sending. But then the issue may be hard to resolve:
             # - Each generated document should also be sent to the AEAT.
             # - Documents must not be altered after generation.
-            # The created XML (`create_message`) is just discarded.
+            # The created XML (`create_message`) is stored in an attachment.
             create_message = None
             try:
                 # We only generate the XML; nothing is sent at this point.
@@ -459,7 +484,9 @@ class L10nEsEdiVerifactuDocument(models.Model):
             if create_message:
                 batch_dict = self.with_company(record_values['company'])._get_batch_dict([document_dict])
                 try:
-                    _xml_node = create_message(batch_dict['Cabecera'], batch_dict['RegistroFactura'])
+                    xml_node = create_message(batch_dict['Cabecera'], batch_dict['RegistroFactura'])
+                    # Serialize the XML node to bytes
+                    xml_content = etree.tostring(xml_node, encoding='utf-8', xml_declaration=True, pretty_print=True)
                 except zeep.exceptions.ValidationError as error:
                     errors = [_("Validation error: %s", error)]
                     document_vals['errors'] = self._format_errors(error_title, errors)
@@ -481,19 +508,30 @@ class L10nEsEdiVerifactuDocument(models.Model):
                     # to prevent different transactions from chaining documents at the same time.
                     errors = [_("Error while chaining the document: %s", e)]
                     document_vals['errors'] = self._format_errors(error_title, errors)
-                    _logger.error("%s\n%s\n%s", error_title, errors[0], json.dumps(batch_dict, indent=4))
+                    _logger.error("%s\n%s\n%s", error_title, errors[0], json.dumps(document_dict, indent=4))
 
         document = self.sudo().create(document_vals)
 
         if document.chain_index:
-            attachment = self.env['ir.attachment'].sudo().create({
+            # Create JSON attachment
+            json_attachment = self.env['ir.attachment'].sudo().create({
                 'raw': json.dumps(document_dict, indent=4).encode(),
                 'name': document.json_attachment_filename,
                 'res_id': document.id,
                 'res_model': document._name,
                 'mimetype': 'application/json',
             })
-            document.sudo().json_attachment_id = attachment
+            document.sudo().json_attachment_id = json_attachment
+            # Create XML attachment if available
+            if xml_content:
+                xml_attachment = self.env['ir.attachment'].sudo().create({
+                    'raw': xml_content,
+                    'name': document.xml_attachment_filename,
+                    'res_id': document.id,
+                    'res_model': document._name,
+                    'mimetype': 'application/xml',
+                })
+                document.sudo().xml_attachment_id = xml_attachment
             # Remove (previously generated) documents that failed to generate a (valid) JSON
             record_values['documents'].filtered(lambda rd: not rd.json_attachment_id).sudo().unlink()
 
@@ -1211,3 +1249,9 @@ class L10nEsEdiVerifactuDocument(models.Model):
                 except UserError as error:
                     _logger.error("Error while canceling journal entry %(name)s (id %(record_id)s) after Veri*Factu cancellation:\n%(error)s",
                                   record_id=invoice.id, name=invoice.name, error=error)
+
+    def _compute_xml_attachment_raw(self):
+        for record in self:
+            record.xml_attachment_raw = (
+                record.xml_attachment_id.raw if record.xml_attachment_id else False
+            )
