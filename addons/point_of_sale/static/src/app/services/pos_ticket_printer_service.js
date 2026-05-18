@@ -84,7 +84,14 @@ export class PosTicketPrinterService {
         }
 
         iframe.contentWindow.focus();
-        iframe.contentWindow.print();
+        this._print(iframe.contentWindow);
+    }
+
+    /**
+        Proxy method so we can patch it.
+     */
+    _print(window) {
+        window.print();
     }
 
     showPrinterErrorDialog(message, retryFunction, fallbackFunction = undefined) {
