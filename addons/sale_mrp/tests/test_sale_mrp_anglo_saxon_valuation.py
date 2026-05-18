@@ -659,6 +659,70 @@ class TestSaleMRPAngloSaxonValuation(ValuationReconciliationTestCommon):
         self.assertAlmostEqual(cogs_aml.debit, 8.00, msg="Should include include the components from all subkits, with the price adapted for 1 Main kit")
         self.assertEqual(cogs_aml.credit, 0)
 
+    def test_anglo_saxon_kit_with_archived_component(self):
+        """Check invoice COGS amls computation for a Kit BoM correctly includes
+        the cost of components that were archived after the BoM creation but before the sale/delivery
+        """
+
+        # ----------------------------------------------
+        # BoM of Main kit:
+        #   - BoM Type: Kit
+        #   - Quantity: 1
+        #   - Components:
+        #     * 1 x Component A (Cost: $10, Storable)
+        #     * 1 x Component B (Cost: $6, Storable, Archived)
+        # ----------------------------------------------
+
+        component_a = self._create_product(name='Component A', is_storable=True, standard_price=10.00)
+        component_b = self._create_product(name='Component B', is_storable=True, standard_price=6.00)
+        main_kit = self._create_product(name='Main kit', is_storable=True, standard_price=0.00)
+
+        main_kit.write({
+            'property_account_expense_id': self.company_data['default_account_expense'].id,
+            'property_account_income_id': self.company_data['default_account_revenue'].id,
+        })
+
+        self.env['mrp.bom'].create({
+            'product_id': main_kit.id,
+            'product_tmpl_id': main_kit.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'type': 'phantom',
+            'bom_line_ids': [
+                Command.create({'product_id': component_a.id, 'product_qty': 1.0}),
+                Command.create({'product_id': component_b.id, 'product_qty': 1.0}),
+            ],
+        })
+
+        # Archived products inside of BoM can still be used in SO, so it still impact valuation
+        component_b.active = False
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                Command.create({
+                    'name': main_kit.name,
+                    'product_id': main_kit.id,
+                    'product_uom_qty': 1.0,
+                    'price_unit': 1,
+                    'tax_id': False,
+                })],
+        })
+        so.action_confirm()
+        for move in so.picking_ids.move_ids:
+            move.quantity = move.product_uom_qty
+        so.picking_ids.button_validate()
+
+        invoice = so.with_context(default_journal_id=self.company_data['default_journal_sale'].id)._create_invoices()
+        invoice.action_post()
+
+        # Check the resulting accounting entries
+        amls = invoice.line_ids
+        self.assertEqual(len(amls), 4)
+        cogs_amls = amls.filtered(lambda aml: aml.display_type == 'cogs')
+        self.assertRecordValues(cogs_amls.sorted('debit'), [
+            {'debit': 0.0, 'credit': 16.0, 'account_id': self.company_data['default_account_stock_out'].id},
+            {'debit': 16.0, 'credit': 0.0, 'account_id': self.company_data['default_account_expense'].id},
+        ])
+
     def test_sell_kit_invoice_before_delivery(self):
         """ When a kit product is invoiced prior to delivery, we want to make sure to reconcile all
         the AMLs from its explosion together, else we risk re-reconciliation attempts (which will
