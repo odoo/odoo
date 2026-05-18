@@ -9,12 +9,14 @@ import { MeetingChat } from "@mail/discuss/call/common/meeting_chat";
 export const threadActionsRegistry = registry.category("mail.thread/actions");
 
 /** @typedef {import("@odoo/owl").Component} Component */
-/** @typedef {import("@mail/core/common/action").ActionDefinition} ActionDefinition */
 /** @typedef {import("models").Thread} Thread */
-
 /**
- * @typedef {ActionDefinition} ThreadActionDefinition
+ * @typedef {Object} ThreadActionSpecificParams
+ * @property {import("models").DiscussChannel} channel
+ * @property {Thread} thread
  */
+/** @typedef {import("@mail/core/common/action").ActionParams<ThreadAction, UseThreadActions_Def> & ThreadActionSpecificParams} ThreadActionParams */
+/** @typedef {import("@mail/core/common/action").ActionDefinition<ThreadActionParams, ThreadAction>} ThreadActionDefinition */
 
 /**
  * @param {string} id
@@ -116,13 +118,15 @@ export class ThreadAction extends Action {
     }
 }
 
+/** @typedef {UseActions<ThreadActionParams, ThreadAction>} UseThreadActions_Def */
 class UseThreadActions extends UseActions {
     ActionClass = ThreadAction;
 }
 
 /**
  * @param {Object} [params0={}]
- * @param {Thread|() => Thread} thread
+ * @param {Thread|() => Thread} params0.thread
+ * @returns {UseThreadActions_Def}
  */
 export function useThreadActions({ thread } = {}) {
     return useAction(threadActionsRegistry, UseThreadActions, ThreadAction, { thread });
