@@ -1,3 +1,4 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from . import demo_utils
+from . import peppol_errors
