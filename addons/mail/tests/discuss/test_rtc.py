@@ -54,7 +54,7 @@ class TestChannelRTC(MailCommon, HttpCase):
             cls.env["discuss.channel"]
             .with_user(cls.user_employee)
             ._create_group(
-                partners_to=(cls.user_employee.partner_id + cls.test_user.partner_id).ids,
+                users_to=cls.user_employee + cls.test_user,
                 name="A group with user_employee, test_user and guest inside",
             )
         )
@@ -70,7 +70,7 @@ class TestChannelRTC(MailCommon, HttpCase):
             cls.env["discuss.channel"]
             .with_user(cls.user_employee)
             ._create_group(
-                partners_to=cls.user_employee.partner_id.ids,
+                users_to=cls.user_employee,
                 name="A group with only user_employee inside",
             )
         )

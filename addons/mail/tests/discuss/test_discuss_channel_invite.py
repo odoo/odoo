@@ -13,7 +13,7 @@ class TestDiscussChannelInvite(HttpCase, MailCommon):
         bob = new_test_user(self.env, "bob", groups="base.group_user", email="bob@test.com")
         john = new_test_user(self.env, "john", groups="base.group_user", email="john@test.com")
         group_chat = (
-            self.env["discuss.channel"].with_user(bob)._create_group(partners_to=bob.partner_id.ids)
+            self.env["discuss.channel"].with_user(bob)._create_group(users_to=bob)
         )
         with self.mock_mail_gateway():
             self.start_tour(
@@ -44,7 +44,7 @@ class TestDiscussChannelInvite(HttpCase, MailCommon):
     def test_02_invite_by_email_excludes_member_emails(self):
         bob = new_test_user(self.env, "bob", groups="base.group_user", email="bob@test.com")
         group_chat = (
-            self.env["discuss.channel"].with_user(bob)._create_group(partners_to=bob.partner_id.ids)
+            self.env["discuss.channel"].with_user(bob)._create_group(users_to=bob)
         )
         alfred_guest = self.env["mail.guest"].create({"email": "alfred@test.com", "name": "Alfred"})
         group_chat._add_members(guests=alfred_guest)
@@ -70,7 +70,7 @@ class TestDiscussChannelInvite(HttpCase, MailCommon):
         group_chat = (
             self.env["discuss.channel"]
             .with_user(bob)
-            ._create_group(partners_to=john.partner_id.ids)
+            ._create_group(users_to=john)
         )
         public_channel = self.env["discuss.channel"].create(
             {"name": "public community", "group_public_id": False}
@@ -102,7 +102,7 @@ class TestDiscussChannelInvite(HttpCase, MailCommon):
     def test_04_guest_email_updated_when_invited_from_email(self):
         bob = new_test_user(self.env, "bob", groups="base.group_user", email="bob@test.com")
         group_chat = (
-            self.env["discuss.channel"].with_user(bob)._create_group(partners_to=bob.partner_id.ids)
+            self.env["discuss.channel"].with_user(bob)._create_group(users_to=bob)
         )
         # Guest email is filled at create
         self.url_open(
@@ -144,7 +144,7 @@ class TestDiscussChannelInvite(HttpCase, MailCommon):
         group_chat = (
             self.env["discuss.channel"]
             .with_user(bob)
-            ._create_group(partners_to=john.partner_id.ids)
+            ._create_group(users_to=john)
         )
         group_chat._add_members(guests=alfred_guest)
         public_channel = self.env["discuss.channel"].create(
@@ -191,7 +191,7 @@ class TestDiscussChannelInvite(HttpCase, MailCommon):
 
     @users("employee")
     def test_06_invite_by_email_posts_user_notification(self):
-        group_chat = self.env["discuss.channel"]._create_group(partners_to=self.user_employee.partner_id.ids)
+        group_chat = self.env["discuss.channel"]._create_group(users_to=self.user_employee)
         with self.mock_mail_gateway():
             group_chat.invite_by_email(["alfred@test.com"])
         last_message = group_chat._get_last_messages()

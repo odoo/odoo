@@ -223,7 +223,17 @@ export class ChannelInvitation extends Component {
                 partnerIds.unshift(this.props.channel.correspondent.partner_id.id);
             }
             if (this.state.selectedEmails.length) {
-                const group = await this.store.createGroupChat({ partners_to: partnerIds });
+                const users_to = [
+                    ...new Set([
+                        ...partnerIds
+                            .map(
+                                (partnerId) =>
+                                    this.store["res.partner"].get(partnerId)?.main_user_id?.id
+                            )
+                            .filter(Boolean),
+                    ]),
+                ];
+                const group = await this.store.createGroupChat({ users_to });
                 channelId = group.id;
             } else {
                 await this.store.startChat(partnerIds);

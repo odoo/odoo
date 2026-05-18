@@ -494,34 +494,31 @@ export class DiscussChannel extends models.ServerModel {
      * @param {string} name
      */
     /**
-     * @param {number[]} partners_to
+     * @param {number[]} users_to
      * @param {string} [default_display_mode=undefined]
      * @param {string} name
      * */
-    _create_group(partners_to, default_display_mode, name) {
-        const kwargs = getKwArgs(arguments, "partners_to", "default_display_mode", "name");
-        partners_to = kwargs.partners_to || [];
+    _create_group(users_to, default_display_mode, name) {
+        const kwargs = getKwArgs(arguments, "users_to", "default_display_mode", "name");
+        users_to = kwargs.users_to || [];
         default_display_mode = kwargs.default_display_mode;
         name = kwargs.name || "";
 
         /** @type {import("mock_models").DiscussChannel} */
         const DiscussChannel = this.env["discuss.channel"];
-        /** @type {import("mock_models").ResPartner} */
-        const ResPartner = this.env["res.partner"];
+        /** @type {import("mock_models").ResUsers} */
+        const ResUsers = this.env["res.users"];
 
-        const partners = ResPartner.browse(partners_to);
+        const users = ResUsers.browse(users_to);
         const id = this.create({
             channel_type: "group",
-            channel_member_ids: partners.map((partner) =>
-                Command.create({ partner_id: partner.id })
+            channel_member_ids: users.map((user) =>
+                Command.create({ partner_id: user.partner_id })
             ),
             default_display_mode,
             name,
         });
-        this._broadcast(
-            [id],
-            partners.flatMap((partner) => partner.user_ids)
-        );
+        this._broadcast([id], users);
         return DiscussChannel.browse(id);
     }
 

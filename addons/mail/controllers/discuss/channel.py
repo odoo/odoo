@@ -163,13 +163,14 @@ class DiscussChannelWebclientController(WebclientController):
     def store_create_group(
         self,
         store: Store,
-        partners_to,
+        *,
+        users_to,
         default_display_mode=False,
         name="",
     ):
         if resolve_channel := request.env["discuss.channel"]._create_group(
+            users_to=request.env["res.users"].with_context(active_test=False).search_fetch([("id", "in", users_to)]),
             name=name,
-            partners_to=partners_to,
             default_display_mode=default_display_mode,
         ):
             store.resolve_data_request(
