@@ -1474,6 +1474,13 @@ class Many2many(_RelationalMulti):
 
         # determine new relation {x: ys}
         old_relation = {record.id: set(record[self.name]._ids) for record in records.sudo()}
+        if records.env.context.get('active_test', True):
+            old_inactive_relation = {
+                record.id: set(record[self.name]._ids) - old_relation[record.id]
+                for record in records.sudo().with_context(active_test=False)
+            }
+        else:
+            old_inactive_relation = None
         new_relation = {x: set(ys) for x, ys in old_relation.items()}
         inaccessible_coids = set() if model.env.su else set(records.sudo()[self.name]._ids) - set(records[self.name]._ids)
         added_ids = set()
@@ -1551,7 +1558,10 @@ class Many2many(_RelationalMulti):
 
         # update the cache of self
         for record in records:
-            self._update_cache(record, tuple(new_relation[record.id]))
+            new_ids = tuple(new_relation[record.id])
+            if old_inactive_relation is not None:
+                new_ids += tuple(old_inactive_relation[record.id])
+            self._update_cache(record, new_ids)
 
         # determine the corecords for which the relation has changed
         modified_corecord_ids = set()
@@ -1651,6 +1661,14 @@ class Many2many(_RelationalMulti):
         # determine old and new relation {x: ys}
         set = OrderedSet
         old_relation = {record.id: set(record[self.name]._ids) for records, _ in records_commands_list for record in records}
+        if model.env.context.get('active_test', True):
+            old_inactive_relation = {
+                record.id: set(record[self.name]._ids) - old_relation[record.id]
+                for records, _ in records_commands_list
+                for record in records.with_context(active_test=False)
+            }
+        else:
+            old_inactive_relation = None
         new_relation = {x: set(ys) for x, ys in old_relation.items()}
 
         for recs, commands in records_commands_list:
@@ -1690,7 +1708,10 @@ class Many2many(_RelationalMulti):
 
         # update the cache of self
         for record in records:
-            self._update_cache(record, tuple(new_relation[record.id]))
+            new_ids = tuple(new_relation[record.id])
+            if old_inactive_relation is not None:
+                new_ids += tuple(old_inactive_relation[record.id])
+            self._update_cache(record, new_ids)
 
         # determine the corecords for which the relation has changed
         modified_corecord_ids = set()

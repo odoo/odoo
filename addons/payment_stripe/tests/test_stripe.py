@@ -40,6 +40,7 @@ class StripeTest(StripeCommon, PaymentHttpCommon):
 
     @mute_logger("odoo.addons.payment_stripe.models.payment_transaction")
     def test_tx_state_after_send_capture_request(self):
+        self.provider.payment_method_ids.active = False  # deactivate default payment methods
         self.provider.capture_manually = True
         tx = self._create_transaction("direct", state="authorized")
 
@@ -58,6 +59,7 @@ class StripeTest(StripeCommon, PaymentHttpCommon):
 
     @mute_logger("odoo.addons.payment_stripe.models.payment_transaction")
     def test_tx_state_after_send_void_request(self):
+        self.provider.payment_method_ids.active = False  # deactivate default payment methods
         self.provider.capture_manually = True
         tx = self._create_transaction("redirect", state="authorized")
 
