@@ -31,6 +31,7 @@ import { FieldChangeReplicationPlugin } from "./field_change_replication_plugin"
 import { BuilderContentEditablePlugin } from "./builder_content_editable_plugin";
 import { ImageFieldPlugin } from "@html_builder/plugins/image_field_plugin";
 import { MonetaryFieldPlugin } from "@html_builder/plugins/monetary_field_plugin";
+import { DateTimeFieldPlugin } from "@html_builder/plugins/date_time_field_plugin";
 import { Many2OneOptionPlugin } from "@html_builder/plugins/many2one_option_plugin";
 
 const mainEditorPluginsToRemove = [
@@ -82,5 +83,6 @@ export const CORE_PLUGINS = [
     BuilderContentEditablePlugin,
     ImageFieldPlugin,
     MonetaryFieldPlugin,
+    DateTimeFieldPlugin,
     Many2OneOptionPlugin,
 ];
