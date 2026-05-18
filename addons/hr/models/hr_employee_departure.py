@@ -108,9 +108,11 @@ class HrEmployeeDeparture(models.Model):
     def create(self, vals_list):
         res = super().create(vals_list)
         for departure in res:
-            departure.employee_id._get_version(departure.departure_date).write({
-                'departure_id': departure.id,
-            })
+            version = departure.employee_id._get_version(departure.departure_date)
+            departure.employee_id.version_ids.filtered(
+                lambda v: v.contract_date_start == version.contract_date_start
+                and v.contract_date_end == version.contract_date_end,
+            ).write({"departure_id": departure.id})
         return res
 
     def _cron_apply_departure(self):
