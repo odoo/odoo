@@ -90,6 +90,9 @@ export class BarcodeVideoScanner extends Component {
             if (!ready) {
                 return;
             }
+            if (this.videoPreviewRef.el.paused) {
+                await this.videoPreviewRef.el.play();
+            }
             const { height, width } = getComputedStyle(this.videoPreviewRef.el);
             const divWidth = width.slice(0, -2);
             const divHeight = height.slice(0, -2);
