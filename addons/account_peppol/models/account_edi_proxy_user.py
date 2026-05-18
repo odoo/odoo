@@ -7,6 +7,7 @@ from lxml import etree
 from odoo import _, api, fields, models, tools
 from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
 from odoo.addons.account_peppol.tools.demo_utils import handle_demo
+from odoo.addons.account_peppol.tools.peppol_errors import render_peppol_errors
 from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
@@ -281,7 +282,7 @@ class AccountEdiProxyClientUser(models.Model):
                         continue
 
                     move.peppol_move_state = 'error'
-                    move._message_log(body=_("Peppol error: %s", content['error'].get('data', {}).get('message') or content['error']['message']))
+                    move._message_log(body=render_peppol_errors(content['error'], move))
                     continue
 
                 move.peppol_move_state = content['state']
