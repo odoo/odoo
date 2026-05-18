@@ -851,7 +851,7 @@ class SaleOrder(models.Model):
             points_per_coupon[line.coupon_id] -= line.points_cost
         return points_per_coupon
 
-    def _get_real_points_for_coupon(self, coupon, _post_confirm=False):
+    def _get_real_points_for_coupon(self, coupon, post_confirm=False):  # noqa: ARG002
         """Return the actual points usable for this coupon for this order.
 
         Set `pos_confirm` to True to include points for future orders.
