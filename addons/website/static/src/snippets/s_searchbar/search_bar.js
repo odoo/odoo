@@ -27,7 +27,7 @@ export class SearchBar extends Interaction {
         ".o_search_result_item a": {
             "t-on-keydown": this.onKeydown,
         },
-        ".o_search_input_group, a[title='Search']": {
+        ".o_search_input_group, .o_search_btn": {
             "t-on-click": this.switchInputToModal,
         },
     };
