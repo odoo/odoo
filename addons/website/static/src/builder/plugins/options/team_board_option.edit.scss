@@ -1,0 +1,57 @@
+.s_team_board {
+
+    &.s_team_layout_grid {
+
+        .row {
+            row-gap: 1.5rem;
+        }
+
+        [data-name="Team Member"] {
+            display: block;
+        }
+
+        .card {
+            height: 100%;
+        }
+    }
+
+    &.s_team_layout_list {
+
+        .row {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        [data-name="Team Member"] {
+            width: 75%;
+            max-width: 100%;
+            flex: 0 0 100%;
+        }
+
+        .card {
+            flex-direction: row;
+            align-items: center;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        .o_card_img_wrapper {
+            width: 120px;
+            height: 150px;
+            flex-shrink: 0;
+            margin: 0;
+        }
+
+        .o_card_img {
+            border-radius: 0.3rem 0.3rem 0 0.3rem;
+            object-fit: cover;
+        }
+
+        .card-body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+    }
+}
