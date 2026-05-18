@@ -250,7 +250,7 @@ class MrpUnbuild(models.Model):
         for unbuild in self:
             if unbuild.mo_id:
                 finished_moves = unbuild.mo_id.move_finished_ids.filtered(lambda move: move.state == 'done')
-                factor = unbuild.product_qty / unbuild.mo_id.product_uom_id._compute_quantity(unbuild.mo_id.qty_produced, unbuild.product_uom_id)
+                factor = unbuild.product_qty / unbuild.mo_id.product_uom_id._compute_quantity(unbuild.mo_id.qty_produced or 1, unbuild.product_uom_id)
                 for finished_move in finished_moves:
                     moves += unbuild._generate_move_from_existing_move(finished_move, factor, unbuild.location_id, finished_move.location_id)
             else:
@@ -268,7 +268,7 @@ class MrpUnbuild(models.Model):
         for unbuild in self:
             if unbuild.mo_id:
                 raw_moves = unbuild.mo_id.move_raw_ids.filtered(lambda move: move.state == 'done')
-                factor = unbuild.product_qty / unbuild.mo_id.product_uom_id._compute_quantity(unbuild.mo_id.qty_produced, unbuild.product_uom_id)
+                factor = unbuild.product_qty / unbuild.mo_id.product_uom_id._compute_quantity(unbuild.mo_id.qty_produced or 1, unbuild.product_uom_id)
                 for raw_move in raw_moves:
                     moves += unbuild._generate_move_from_existing_move(raw_move, factor, raw_move.location_dest_id, self.location_dest_id)
             else:
