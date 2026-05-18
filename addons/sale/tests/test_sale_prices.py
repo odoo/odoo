@@ -469,18 +469,14 @@ class TestSalePrices(SaleCommon):
         # company currency = so currency
         # product_1.currency != so currency
         # product_2.cost_currency_id = so currency
-        sales_order = (
-            product_1_ctxt
-            .env["sale.order"]
-            .create({
-                "partner_id": user_in_other_company.partner_id.id,
-                "pricelist_id": pricelist.id,
-                "order_line": [
-                    Command.create({"product_id": product_1.id, "product_uom_qty": 1.0}),
-                    Command.create({"product_id": product_2.id, "product_uom_qty": 1.0}),
-                ],
-            })
-        )
+        sales_order = product_1_ctxt.env["sale.order"].create({
+            "partner_id": user_in_other_company.partner_id.id,
+            "pricelist_id": pricelist.id,
+            "order_line": [
+                Command.create({"product_id": product_1.id, "product_uom_qty": 1.0}),
+                Command.create({"product_id": product_2.id, "product_uom_qty": 1.0}),
+            ],
+        })
 
         so_line_1 = sales_order.order_line[0]
         so_line_2 = sales_order.order_line[1]
@@ -494,19 +490,15 @@ class TestSalePrices(SaleCommon):
         # product_1.currency == so currency
         # product_2.cost_currency_id != so currency
         pricelist.currency_id = main_curr
-        sales_order = (
-            product_1_ctxt
-            .env["sale.order"]
-            .create({
-                "partner_id": user_in_other_company.partner_id.id,
-                "pricelist_id": pricelist.id,
-                "order_line": [
-                    # Verify discount is considered in create hack
-                    Command.create({"product_id": product_1.id, "product_uom_qty": 1.0}),
-                    Command.create({"product_id": product_2.id, "product_uom_qty": 1.0}),
-                ],
-            })
-        )
+        sales_order = product_1_ctxt.env["sale.order"].create({
+            "partner_id": user_in_other_company.partner_id.id,
+            "pricelist_id": pricelist.id,
+            "order_line": [
+                # Verify discount is considered in create hack
+                Command.create({"product_id": product_1.id, "product_uom_qty": 1.0}),
+                Command.create({"product_id": product_2.id, "product_uom_qty": 1.0}),
+            ],
+        })
 
         so_line_1 = sales_order.order_line[0]
         so_line_2 = sales_order.order_line[1]
@@ -1284,3 +1276,70 @@ class TestSalePrices(SaleCommon):
             100.0,
             "Wrong subtotal price computed after tax mapping applied",
         )
+
+    def test_combo_product_extra_price_currency(self):
+        """Ensure that the extra price for combo products and their no_variant attribute is
+        correctly converted according to the sale order pricelist's currency."""
+        no_variant_attribute = self.env["product.attribute"].create({
+            "name": "Test No Variant Attribute",
+            "create_variant": "no_variant",
+            "value_ids": [Command.create({"name": "A"})],
+        })
+        product_template = self.env["product.template"].create({
+            "name": "Test Product Template with no_variant attribute",
+            "categ_id": self.product_category.id,
+            "attribute_line_ids": [
+                Command.create({
+                    "attribute_id": no_variant_attribute.id,
+                    "value_ids": [Command.set(no_variant_attribute.value_ids.ids)],
+                })
+            ],
+            "taxes_id": False,
+        })
+        ptav = product_template.attribute_line_ids.product_template_value_ids
+        ptav.price_extra = 10.0
+        combo = self.env["product.combo"].create([
+            {
+                "name": "Test Combo",
+                "combo_item_ids": [
+                    Command.create({
+                        "product_id": product_template.product_variant_id.id,
+                        "extra_price": 50,
+                    })
+                ],
+            }
+        ])
+        combo_product_template = self.env["product.template"].create({
+            "name": "Test Combo Product Template",
+            "list_price": 100.0,
+            "type": "combo",
+            "combo_ids": [Command.set(combo.ids)],
+            "categ_id": self.product_category.id,
+            "taxes_id": False,
+        })
+
+        order = self.env["sale.order"].create({"partner_id": self.partner.id})
+        combo_line = self.env["sale.order.line"].create({
+            "order_id": order.id,
+            "product_id": combo_product_template.product_variant_id.id,
+        })
+        self.env["sale.order.line"].create([
+            {
+                "order_id": order.id,
+                "product_id": product_template.product_variant_id.id,
+                "product_no_variant_attribute_value_ids": [Command.link(ptav.id)],
+                "combo_item_id": combo.combo_item_ids.id,
+                "linked_line_id": combo_line.id,
+            }
+        ])
+
+        self.assertAlmostEqual(order.amount_total, (100 + 50 + 10), 2)
+
+        eur_curr = self._enable_currency("EUR")
+        eur_pricelist = self.env["product.pricelist"].create({
+            "name": "EUR Pricelist",
+            "currency_id": eur_curr.id,
+        })
+        order.pricelist_id = eur_pricelist
+        order.action_update_prices()
+        self.assertAlmostEqual(order.amount_total, (100 + 50 + 10) * eur_curr.rate, 2)
