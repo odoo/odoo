@@ -31,7 +31,7 @@
         <t t-if="this.env.isSmall and this.state.embeddedInfos.embeddedActions?.length">
             <Dropdown menuClass="'o_combined_mobile_dropdown'">
                 <button class="btn btn-secondary">
-                    <i class="fa fa-sliders" />
+                    <i class="fa fa-sliders" t-att-data-tooltip="this.taskOptionsTitle" />
                 </button>
                 <t t-set-slot="content">
                     <DropdownItem
