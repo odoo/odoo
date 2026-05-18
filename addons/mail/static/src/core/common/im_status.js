@@ -20,6 +20,6 @@ export class ImStatus extends Component {
     }
 
     get showTypingIndicator() {
-        return this.props.withIsTyping && this.props.member?.isTyping;
+        return this.props.withIsTyping && this.props.member?.isTypingUi;
     }
 }

@@ -178,6 +178,9 @@ export class DiscussChannel extends Record {
     hasOtherMembersTyping = fields.Attr(false, {
         /** @this {import("models").DiscussChannel} */
         compute() {
+            if (this.self_member_id?.mute_until_dt) {
+                return false;
+            }
             return this.otherTypingMembers.length > 0;
         },
     });
