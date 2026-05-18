@@ -8,7 +8,7 @@ patch(MailComposerTemplateSelector.prototype, {
     async fetchTemplates() {
         if (this.props.record.resModel === 'sms.composer') {
             const fields = ["display_name"];
-            const domain = [["model", "=", this.props.record.data.render_model]];
+            const domain = [["model", "=", this.props.record.data.res_model]];
             
             const templates = await this.orm.searchRead("sms.template", domain, fields, { limit: this.limit });
             this.state.templates = templates;
@@ -24,7 +24,7 @@ patch(MailComposerTemplateSelector.prototype, {
                 title: this.env._t("Select a Template"),
                 multiSelect: false,
                 noCreate: true,
-                domain: [["model", "=", this.props.record.data.render_model]],
+                domain: [["model", "=", this.props.record.data.res_model]],
                 onSelected: async templateIds => {
                     await this.props.record.update({
                         template_id: { id: templateIds[0] },

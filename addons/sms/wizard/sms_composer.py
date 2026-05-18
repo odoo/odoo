@@ -3,6 +3,7 @@
 
 from ast import literal_eval
 from uuid import uuid4
+import json
 
 from odoo import api, fields, models, _
 from odoo.addons.sms.tools.sms_tools import sms_content_to_rendered_html
@@ -72,10 +73,11 @@ class SmsComposer(models.TransientModel):
     body = fields.Text(
         'Message', compute='_compute_body',
         precompute=True, readonly=False, store=True, required=True)
-    scheduled_date = fields.Char('Scheduled Date', compute='_compute_scheduled_date', readonly=False, store=True, compute_sudo=False)
-    can_edit_body = fields.Boolean(default=True)
-    render_model = fields.Char(compute='_compute_render_model', string='Rendering Model')
-    model = fields.Char(related='res_model', string='Technical Model')
+    scheduled_date = fields.Char(
+        'Scheduled Date',
+        compute='_compute_scheduled_date', readonly=False, store=True, compute_sudo=False)
+    render_model = fields.Char(compute='_compute_render_model', store=False)
+    can_edit_body = fields.Boolean(default=True, store=False)
     template_name = fields.Char(string='Template Name')
 
     @api.depends('res_ids_count')
@@ -184,7 +186,7 @@ class SmsComposer(models.TransientModel):
             elif record.template_id:
                 record.body = record.template_id.body
 
-    @api.depends('composition_mode', 'template_id')
+    @api.depends('composition_mode', 'res_model', 'res_ids', 'template_id')
     def _compute_scheduled_date(self):
         for composer in self:
             if composer.template_id and 'scheduled_date' in composer.template_id._fields:
@@ -232,7 +234,23 @@ class SmsComposer(models.TransientModel):
         return self.action_send_sms()
 
     def action_schedule_message(self):
-        self._action_schedule_message()
+        scheduled_msg_id = self.env.context.get('mail_scheduled_message_id')
+
+        if scheduled_msg_id:
+            self.ensure_one()
+            scheduled_msg = self.env['mail.scheduled.message'].browse(scheduled_msg_id)
+
+            post_values = {
+                'body': self.body,
+                'scheduled_date': self.scheduled_date,
+            }
+            vals = self._prepare_schedule_message_post_values(post_values)
+            vals.pop('model', False)
+            vals.pop('res_id', False)
+            scheduled_msg.write(vals)
+        else:
+            self._action_schedule_message()
+
         return {'type': 'ir.actions.act_window_close'}
 
     def action_sms_template_dropdown(self):
@@ -260,33 +278,57 @@ class SmsComposer(models.TransientModel):
         })
         return {'type': 'ir.actions.act_window_close'}
 
-    def _prepare_sms_scheduled_values(self, res_id):
+    def _prepare_schedule_message_post_values(self, post_values):
         self.ensure_one()
-        vals = {
-            'body': self.body,
-            'number': self.recipient_single_number_itf or self.recipient_single_number,
-            'scheduled_date': self.scheduled_date,
-            'state': 'outgoing',
+
+        return {
+            'attachment_ids': post_values.pop('attachment_ids', []),
+            'author_id': self.env.user.partner_id.id,
+            'body': post_values.pop('body', self.body),
+            'composition_comment_option': False,
+            'is_note': False,
+            'model': self.res_model,
+            'partner_ids': post_values.pop('partner_ids', []),
+            'res_id': self.res_id,
+            'scheduled_date': post_values.pop('scheduled_date'),
+            'notification_parameters': json.dumps(post_values),
+            'send_context': {'is_sms': True},
         }
-
-        if self.res_model == 'res.partner':
-            vals['partner_id'] = res_id
-
-        return vals
 
     def _action_schedule_message(self):
         if any(wizard.composition_mode != 'comment' for wizard in self):
-            raise UserError(_("A message can only be scheduled in monocomment mode"))
+            raise UserError(_("A message can only be scheduled in comment mode"))
 
-        create_values = []
-        for wizard in self:
-            if not wizard.scheduled_date:
-                raise UserError(_("A scheduled date is needed to schedule a message"))
+        scheduled_msg_id = self.env.context.get('mail_scheduled_message_id')
 
-            res_id = wizard.res_id
-            create_values.append(wizard._prepare_sms_scheduled_values(res_id))
+        if scheduled_msg_id:
+            self.ensure_one()
+            scheduled_msg = self.env['mail.scheduled.message'].browse(scheduled_msg_id)
 
-        return self.env['sms.sms'].sudo().create(create_values)
+            post_values = {
+                'body': self.body,
+                'scheduled_date': self.scheduled_date,
+                'attachment_ids': [],
+                'partner_ids': [],
+            }
+            vals = self._prepare_schedule_message_post_values(post_values)
+            scheduled_msg.write(vals)
+            return scheduled_msg
+        else:
+            create_values = []
+            for wizard in self:
+                if not wizard.scheduled_date:
+                    raise UserError(_("A scheduled date is needed to schedule a message"))
+
+                post_values = {
+                    'body': wizard.body,
+                    'scheduled_date': wizard.scheduled_date,
+                    'attachment_ids': [],
+                    'partner_ids': [],
+                }
+                create_values.append(wizard._prepare_schedule_message_post_values(post_values))
+
+            return self.env['mail.scheduled.message'].create(create_values)
 
     def _action_send_sms(self):
         records = self._get_records()
@@ -307,15 +349,13 @@ class SmsComposer(models.TransientModel):
             {
                 'body': self.body,
                 'number': number,
-                'scheduled_date': self.scheduled_date,
             } for number in (
                 self.sanitized_numbers.split(',') if self.sanitized_numbers else [self.recipient_single_number_itf or self.recipient_single_number or '']
             )
         ]
         sms_su = self.env['sms.sms'].sudo().create(sms_values)
 
-        if not self.scheduled_date:
-            sms_su.send()
+        sms_su.send()
 
         return sms_su
 
