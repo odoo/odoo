@@ -8,6 +8,7 @@ from . import hr_employee
 from . import hr_employee_public
 from . import hr_version
 from . import ir_http
+from . import ir_ui_menu
 from . import ir_websocket
 from . import res_company
 from . import res_users

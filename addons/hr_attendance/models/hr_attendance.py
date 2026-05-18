@@ -81,6 +81,8 @@ class HrAttendance(models.Model):
     expected_hours = fields.Float(string="Theoretical Hours", compute="_compute_expected_hours", store=True, aggregator="sum")
     device_tracking_enabled = fields.Boolean(related="employee_id.company_id.attendance_device_tracking")
     linked_overtime_ids = fields.Many2many('hr.attendance.overtime.line', compute='_compute_linked_overtime_ids', readonly=False)
+    check_in_different_day = fields.Boolean(compute='_compute_check_in_different_day', store=True)
+    check_out_different_day = fields.Boolean(compute='_compute_check_out_different_day', store=True)
     day_of_date = fields.Selection(
         compute='_compute_day_of_date',
         store=True,
@@ -146,6 +148,28 @@ class HrAttendance(models.Model):
         overtimes_by_attendance = self._linked_overtimes().grouped(lambda ot: (ot.employee_id, ot.time_start))
         for attendance in self:
             attendance.linked_overtime_ids = overtimes_by_attendance.get((attendance.employee_id, attendance.check_in), False)
+
+    @api.depends('check_in', 'write_date', 'employee_id')
+    def _compute_check_in_different_day(self):
+        for attendance in self:
+            if not attendance.check_in or not attendance.write_date:
+                attendance.check_in_different_day = False
+                continue
+            tz = ZoneInfo(attendance.employee_id._get_tz())
+            check_in_day = attendance.check_in.replace(tzinfo=UTC).astimezone(tz).date()
+            write_day = attendance.write_date.replace(tzinfo=UTC).astimezone(tz).date()
+            attendance.check_in_different_day = check_in_day != write_day
+
+    @api.depends('check_out', 'write_date', 'employee_id')
+    def _compute_check_out_different_day(self):
+        for attendance in self:
+            if not attendance.check_out or not attendance.write_date:
+                attendance.check_out_different_day = False
+                continue
+            tz = ZoneInfo(attendance.employee_id._get_tz())
+            check_out_day = attendance.check_out.replace(tzinfo=UTC).astimezone(tz).date()
+            write_day = attendance.write_date.replace(tzinfo=UTC).astimezone(tz).date()
+            attendance.check_out_different_day = check_out_day != write_day
 
     @api.depends('employee_id', 'check_in', 'check_out')
     def _compute_display_name(self):
