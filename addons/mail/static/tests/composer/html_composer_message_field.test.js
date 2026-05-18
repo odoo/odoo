@@ -172,7 +172,7 @@ test("mention a partner", async () => {
     setSelection({ anchorNode, anchorOffset: 0 });
     await insertText(htmlEditor, "@");
     await animationFrame();
-    expect(".overlay .search input[placeholder='Search for a user...']").toBeFocused();
+    expect(".overlay .o-mail-MentionList input[placeholder='Search for a user...']").toBeFocused();
     expect(".overlay .o-mail-NavigableList .o-mail-NavigableList-item").toHaveCount(0);
 
     await press("a");
@@ -207,7 +207,7 @@ test("mention a channel", async () => {
     setSelection({ anchorNode, anchorOffset: 0 });
     await insertText(htmlEditor, "#");
     await animationFrame();
-    expect(".overlay .search input[placeholder='Search for a channel...']").toBeFocused();
+    expect(".overlay .o-mail-MentionList input[placeholder='Search for a channel...']").toBeFocused();
     expect(".overlay .o-mail-NavigableList .o-mail-NavigableList-item").toHaveCount(0);
 
     await press("a");

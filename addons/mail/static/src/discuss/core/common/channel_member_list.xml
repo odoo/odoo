@@ -4,29 +4,7 @@
     <t t-name="discuss.ChannelMemberList">
         <ActionPanel close="this.props.close" title.translate="Members" minWidth="200" initialWidth="this.env.inMeetingView ? 400 : 250" icon="'oi oi-users'">
             <div class="o-discuss-ChannelMemberList-search input-group input-group-sm flex-nowrap">
-                <div class="position-relative flex-grow-1">
-                    <label
-                        t-att-id="`${this.uniqueId}-searchStatusIcon`"
-                        t-att-for="`${this.uniqueId}-search`"
-                        class="position-absolute top-50 px-2 translate-middle-y smaller opacity-50"
-                        role="status"
-                    >
-                        <t t-if="this.search.loading">
-                            <i class="fa fa-spin fa-circle-o-notch" title="Loading..." aria-hidden="true"/>
-                            <p class="visually-hidden">Member search is loading...</p>
-                        </t>
-                        <i t-else="" class="oi oi-search" aria-hidden="true"/>
-                    </label>
-                    <input
-                        t-att-id="`${this.uniqueId}-search`"
-                        type="text"
-                        class="form-control bg-view ps-4"
-                        placeholder="Search members"
-                        aria-label="Search members"
-                        t-custom-model="this.search.searchTerm"
-                        autocomplete="off"
-                    />
-                </div>
+                <SearchInput search="this.search" placeholder.translate="Search members"/>
                 <button name="inviteButton" t-on-click="() => this.onClickInviteButton()" class="btn btn-outline-secondary" title="Invite People" aria-label="Invite People"><i class="oi oi-user-plus"/></button>
             </div>
             <t t-foreach="this.categories" t-as="category" t-key="category_index">

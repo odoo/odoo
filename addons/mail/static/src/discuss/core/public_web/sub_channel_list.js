@@ -1,9 +1,10 @@
 import { NotificationItem } from "@mail/core/public_web/notification_item";
+import { SearchInput } from "@mail/core/common/search_input";
 import { ActionPanel } from "@mail/discuss/core/common/action_panel";
 import { SubChannelPreview } from "@mail/discuss/core/public_web/sub_channel_preview";
 import { useSearch, useVisible } from "@mail/utils/common/hooks";
 import { Component } from "@odoo/owl";
-import { useAutofocus, useService } from "@web/core/utils/hooks";
+import { useService } from "@web/core/utils/hooks";
 import { fuzzyLookup } from "@web/core/utils/search";
 
 /**
@@ -14,7 +15,7 @@ import { fuzzyLookup } from "@web/core/utils/search";
  */
 export class SubChannelList extends Component {
     static template = "mail.SubChannelList";
-    static components = { ActionPanel, NotificationItem, SubChannelPreview };
+    static components = { ActionPanel, NotificationItem, SearchInput, SubChannelPreview };
 
     static props = ["channel", "close?"];
 
@@ -26,7 +27,6 @@ export class SubChannelList extends Component {
             filter: (term) =>
                 fuzzyLookup(term, this.props.channel.sub_channel_ids, ({ name }) => name),
         });
-        useAutofocus({ refName: "search" });
         this.loadMoreState = useVisible("load-more", (isVisible) => {
             if (isVisible) {
                 this.props.channel.loadMoreSubChannels({

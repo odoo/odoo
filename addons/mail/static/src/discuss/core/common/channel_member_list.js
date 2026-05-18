@@ -2,6 +2,7 @@ import { ActionPanel } from "@mail/discuss/core/common/action_panel";
 import { ChannelMember } from "@mail/discuss/core/common/channel_member";
 import { ChannelActionDialog } from "@mail/discuss/core/common/channel_action_dialog";
 import { ChannelInvitation } from "@mail/discuss/core/common/channel_invitation";
+import { SearchInput } from "@mail/core/common/search_input";
 
 import { Component, onWillRender, onWillUpdateProps, onWillStart } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
@@ -9,7 +10,6 @@ import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { useSearch } from "@mail/utils/common/hooks";
 
-let nextId = 0;
 const SEARCH_RESULT_LIMIT = 100;
 
 /**
@@ -36,13 +36,12 @@ export const MEMBER_CATEGORIES = [
  * @extends {Component<Props, Env>}
  */
 export class ChannelMemberList extends Component {
-    static components = { ActionPanel, ChannelActionDialog, ChannelMember };
+    static components = { ActionPanel, ChannelActionDialog, ChannelMember, SearchInput };
     static props = ["channel", "close?", "openChannelInvitePanel", "className?"];
     static template = "discuss.ChannelMemberList";
 
     setup() {
         super.setup();
-        this.uniqueId = `discuss.ChannelMemberList.${nextId++}`;
         this.store = useService("mail.store");
         this.dialogService = useService("dialog");
         this.search = useSearch({
