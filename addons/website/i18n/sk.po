@@ -28,7 +28,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-24 17:35+0000\n"
-"PO-Revision-Date: 2026-05-16 19:05+0000\n"
+"PO-Revision-Date: 2026-05-16 19:55+0000\n"
 "Last-Translator: Tomáš Píšek <Tomas.Pisek@seznam.cz>\n"
 "Language-Team: Slovak <https://translate.odoo.com/projects/odoo-19/website/"
 "sk/>\n"
@@ -12812,6 +12812,7 @@ msgid ""
 "One and only one of the two fields 'page_view_id' and 'module_id' should be "
 "set"
 msgstr ""
+"Malo by byť nastavené iba jedno z dvoch polí „page_view_id“ a „module_id“"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_kanban
@@ -12824,30 +12825,32 @@ msgid ""
 "Online Members<br/>\n"
 "                        <span class=\"h1-fs\">235,403</span>"
 msgstr ""
+"Počet online členov<br/>\n"
+"                        <span class=\"h1-fs\">235 403</span>"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/components/resource_editor/resource_editor.js:0
 msgid "Only Custom SCSS Files"
-msgstr ""
+msgstr "Iba vlastné súbory SCSS"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/components/resource_editor/resource_editor.js:0
 msgid "Only Page SCSS Files"
-msgstr ""
+msgstr "Iba súbory SCSS stránok"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/components/resource_editor/resource_editor.js:0
 msgid "Only Views"
-msgstr ""
+msgstr "Iba zobrazenia"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/xml/website.cookies_bar.xml:0
 msgid "Only allow essential cookies"
-msgstr ""
+msgstr "Povoliť len nevyhnutné súbory cookie"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website_controller_page__mode
@@ -12865,64 +12868,64 @@ msgid ""
 "(<xpath/>) are applied, and the result is used as if it were this view's\n"
 "actual arch.\n"
 msgstr ""
-"Použije sa iba v prípade, že toto zobrazenie zdedí od iného (inherit_id nie "
-"je False / Null).\n"
+"Platí len v prípade, ak tento zobrazenie dedí z iného (inherit_id nie je "
+"False/Null).\n"
 "\n"
-"* ak je rozšírenie (predvolené), ak sa požaduje toto zobrazenie, najbližšie "
-"primárne zobrazenie\n"
-"sa vyhľadá (prostredníctvom inherit_id), potom sa z toho dedia všetky "
-"zobrazenia\n"
-"použije sa model zobrazenia\n"
-"* ak je primárne, najbližšie primárne zobrazenie je úplne vyriešené (aj keď "
-"používa\n"
-"iný model ako tento), potom špecifikácie pôvodného\n"
-"(<xpath/>) sa použijú a výsledok sa použije, akoby išlo o toto zobrazenie\n"
-"aktuálny.\n"
+"* ak je rozšírením (predvolené), potom ak je toto zobrazenie vyžiadané, "
+"vyhľadá sa najbližší primárne zobrazenie\n"
+"(prostredníctvom inherit_id), potom sa uplatnia všetky zdedené zobrazenia s "
+"rovnakým modelom\n"
+"* ak je primárnym zobrazením, potom sa plne zostaví najbližšie primárne "
+"zobrazenie pohľad (aj keď používa\n"
+"iný model ako tento), a následne sa uplatnia (<xpath/>) špecifikácie "
+"dedičnosti tohto zobrazenia \n"
+"a výsledok sa použije, ako keby to bola pôvodná architektúra tohto "
+"zobrazenia.\n"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/xml/website.cookies_bar.xml:0
 #: model_terms:ir.ui.view,arch_db:website.cookies_bar
 msgid "Only essentials"
-msgstr ""
+msgstr "Iba základné"
 
 #. module: website
 #: model:ir.actions.client,name:website.open_custom_menu
 msgid "Open Custom Menu"
-msgstr ""
+msgstr "Otvoriť vlastné menu"
 
 #. module: website
 #: model:ir.actions.client,name:website.action_open_website_configurator
 msgid "Open Website Configurator"
-msgstr ""
+msgstr "Otvoriť konfigurátor webovej stránky"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/carousel_slides_option.xml:0
 msgid "Open in New Tab"
-msgstr ""
+msgstr "Otvoriť v novej karte"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/header/header_top_option.xml:0
 msgid "Open menu editor"
-msgstr ""
+msgstr "Otvorte editor menu"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Opening Hours"
-msgstr ""
+msgstr "Otváracie hodiny"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/header/header_navigation_option.xml:0
 msgid "Opening behavior of dropdown menus"
-msgstr ""
+msgstr "Správanie roletových menu pri otvorení"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_company_team_detail
 msgid "Operations Manager"
-msgstr ""
+msgstr "Manažér prevádzky"
 
 #. module: website
 #. odoo-javascript
@@ -12935,25 +12938,25 @@ msgstr "Optimalizujte SEO"
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/form/utils.js:0
 msgid "Option 1"
-msgstr ""
+msgstr "Možnosť 1"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/form/utils.js:0
 msgid "Option 2"
-msgstr ""
+msgstr "Možnosť 2"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/form/utils.js:0
 msgid "Option 3"
-msgstr ""
+msgstr "Možnosť 3"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/form/form_option_plugin.js:0
 msgid "Option List"
-msgstr ""
+msgstr "Zoznam možností"
 
 #. module: website
 #. odoo-javascript
@@ -12964,13 +12967,13 @@ msgstr "Voliteľné"
 #. module: website
 #: model:ir.model.fields,help:website.field_website_snippet_filter__help
 msgid "Optional help text describing the filter usage and/or purpose."
-msgstr ""
+msgstr "Voliteľný pomocný text opisujúci použitie a/alebo účel filtra."
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/searchbar_option.xml:0
 msgid "Order by"
-msgstr ""
+msgstr "Zoradiť podľa"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_showcase
@@ -12978,6 +12981,8 @@ msgid ""
 "Organizing and presenting key information effectively increases the "
 "likelihood of turning your visitors into customers."
 msgstr ""
+"Efektívne usporiadanie a prezentácia kľúčových informácií zvyšuje "
+"pravdepodobnosť, že sa z vašich návštevníkov stanú zákazníci."
 
 #. module: website
 #. odoo-python
@@ -12989,12 +12994,12 @@ msgstr "Ďalšie informácie: "
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/social_media_option_plugin.js:0
 msgid "Other social network"
-msgstr ""
+msgstr "Iné sociálne siete"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_landing_s_text_image
 msgid "Our Approach"
-msgstr ""
+msgstr "Náš prístup"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_services_0_s_three_columns
@@ -13002,6 +13007,9 @@ msgid ""
 "Our Coaching combines personalized fitness plans with mindfulness practices, "
 "ensuring you achieve harmony in your body and peace in your mind."
 msgstr ""
+"Naše koučovanie kombinuje personalizované fitness plány s praktikami pre "
+"zlepšenie všímavosti, čím zabezpečuje, že dosiahnete harmóniu vo vašom tele "
+"a pokoj vo vašej mysli."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_links
@@ -13011,70 +13019,70 @@ msgstr "Naša spoločnosť"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_about_full_s_text_image
 msgid "Our Goals"
-msgstr ""
+msgstr "Naše ciele"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_pricelist_boxed
 #: model_terms:ir.ui.view,arch_db:website.s_product_catalog
 msgid "Our Menu"
-msgstr ""
+msgstr "Naše menu"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_pricing_5_s_text_block_h1
 msgid "Our Menus"
-msgstr ""
+msgstr "Naše menu"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_about_s_three_columns
 msgid "Our Mission"
-msgstr ""
+msgstr "Naše poslanie"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_landing_3_s_text_block_h2
 msgid "Our Offer"
-msgstr ""
+msgstr "Naša ponuka"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_about_map_s_text_block_h2
 msgid "Our Offices"
-msgstr ""
+msgstr "Naše kancelárie"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons_horizontal
 msgid "Our Pricing"
-msgstr ""
+msgstr "Naše ceny"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_landing_2_s_text_block_h2
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_services_s_text_block_h1
 msgid "Our Services"
-msgstr ""
+msgstr "Naše služby"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_about_full_s_image_text
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_about_mini_s_text_block_h2
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_about_s_three_columns
 msgid "Our Story"
-msgstr ""
+msgstr "Náš príbeh"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_about_s_picture
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_team_s_text_block_h1
 #: model_terms:ir.ui.view,arch_db:website.s_company_team_card
 msgid "Our Team"
-msgstr ""
+msgstr "Náš tím"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_about_s_three_columns
 msgid "Our Values"
-msgstr ""
+msgstr "Naše hodnoty"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_mega
 #: model_terms:ir.ui.view,arch_db:website.template_footer_mega_columns
 #: model_terms:ir.ui.view,arch_db:website.template_footer_mega_links
 msgid "Our company"
-msgstr ""
+msgstr "Naša spoločnosť"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_accordion
@@ -13083,12 +13091,16 @@ msgid ""
 "support. We tailor our services to fit the unique needs of businesses across "
 "various sectors, helping them grow and succeed in a competitive market."
 msgstr ""
+"Naša spoločnosť sa špecializuje na poradenstvo, vývoj produktov a zákaznícku "
+"podporu. Naše služby prispôsobujeme jedinečným potrebám spoločností v "
+"rôznych odvetviach a pomáhame im rásť a uspieť na konkurenčnom trhu."
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/interactions/cookies/cookies_bar.js:0
 msgid "Our cookies bar was blocked by your browser or an extension."
 msgstr ""
+"Naša lišta s cookies bola zablokovaná vaším prehliadačom alebo rozšírením."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_cards_soft
@@ -13097,6 +13109,9 @@ msgid ""
 "innovative solutions that make your project stand out while maintaining a "
 "balance between originality and functionality."
 msgstr ""
+"Naša kreativita je v popredí všetkého, čo robíme, a prináša inovatívne "
+"riešenia, ktoré váš projekt odlíšia od ostatných, pričom zachovávajú "
+"rovnováhu medzi originalitou a funkčnosťou."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_table_of_content
@@ -13107,6 +13122,12 @@ msgid ""
 "themes and an intuitive system, you can design with ease and precision, "
 "ensuring a polished, responsive result."
 msgstr ""
+"Naše dizajnové funkcie ponúkajú rad nástrojov na vytváranie vizuálne "
+"pôsobivých webových stránok. Využite editory WYSIWYG, stavebné bloky s "
+"funkciou drag-and-drop a šablóny založené na Bootstrap pre jednoduché "
+"prispôsobenie. Vďaka profesionálnym témam a intuitívnemu systému môžete "
+"navrhovať s ľahkosťou a presnosťou, čím zabezpečíte dokonalý a responzívny "
+"výsledok."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_faq_horizontal
@@ -13115,6 +13136,8 @@ msgid ""
 "security, and functionality, ensuring it remains at the cutting edge of "
 "innovation."
 msgstr ""
+"Náš vývojový tím neúnavne pracuje na zlepšovaní výkonu, bezpečnosti a "
+"funkčnosti platformy, aby zostala na špici inovácií."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_landing_2_s_three_columns
@@ -13122,11 +13145,13 @@ msgid ""
 "Our experienced fitness coaches design workouts that align with your goals, "
 "fitness level, and preferences."
 msgstr ""
+"Naši skúsení fitness tréneri navrhujú tréningy, ktoré sú v súlade s vašimi "
+"cieľmi, úrovňou kondície a preferenciami."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_product_list
 msgid "Our finest selection"
-msgstr ""
+msgstr "Náš najlepší výber"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_table_of_content
@@ -13136,6 +13161,10 @@ msgid ""
 "complete. With tooltips and contextual help, users quickly become "
 "productive, enjoying a smooth and efficient experience."
 msgstr ""
+"Náš intuitívny systém zaisťuje jednoduchú navigáciu pre užívateľov všetkých "
+"úrovní zručností. Jeho prehľadné rozhranie a logická organizácia uľahčujú "
+"vykonávanie úloh. Vďaka nápovedám a kontextovej pomoci sa užívatelia rýchlo "
+"stanú produktívnymi a budú si užívať plynulý a efektívny zážitok."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_numbers_charts
@@ -13144,11 +13173,14 @@ msgid ""
 "expansion, highlight our strategic prowess and commitment to sustainable "
 "business success."
 msgstr ""
+"Naše kľúčové ukazovatele, od rastu tržieb po udržanie zákazníkov a expanziu "
+"na trhu, zdôrazňujú našu strategickú zdatnosť a odhodlanie dosiahnuť trvalo "
+"udržateľný obchodný úspech."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_dynamic_snippet_template
 msgid "Our latest content"
-msgstr ""
+msgstr "Náš najnovší obsah"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.new_page_template_about_s_three_columns
@@ -13157,23 +13189,27 @@ msgid ""
 "driven by a relentless pursuit of innovation and a commitment to exceeding "
 "expectations."
 msgstr ""
+"Našou misiou je vytvárať transformatívne zážitky a podporovať rast, poháňaný "
+"neúnavným úsilím o inovácie a záväzkom prekračovať očakávania."
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/google_maps_option/google_maps_option.xml:0
 msgid "Our office is located in the northeast of Brussels. TEL (555) 432 2365"
 msgstr ""
+"Naša kancelária sa nachádza v severovýchodnej časti Bruselu. TEL (555) 432 "
+"2365"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/builder/plugins/options/map_option_plugin.js:0
 msgid "Our office is open Monday – Friday 8:30 a.m. – 4:00 p.m."
-msgstr ""
+msgstr "Naša kancelária je otvorená od pondelka do piatku od 8:30 do 16:00."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_process_steps
 msgid "Our process in four easy steps"
-msgstr ""
+msgstr "Náš proces v štyroch jednoduchých krokoch"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_mega_links
