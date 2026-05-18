@@ -77,7 +77,6 @@ class SmsSms(models.Model):
         'unique(uuid)',
         'UUID must be unique',
     )
-    scheduled_date = fields.Datetime('Scheduled Date')
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -155,7 +154,7 @@ class SmsSms(models.Model):
     @api.model
     def _process_queue(self):
         """ CRON job to send queued SMS messages. """
-        domain = [('state', '=', 'outgoing'), ('to_delete', '!=', True), '|', ('scheduled_date', '<=', fields.Datetime.now()), ('scheduled_date', '=', False)]
+        domain = [('state', '=', 'outgoing'), ('to_delete', '!=', True)]
 
         batch_size = self._get_send_batch_size()
         records = self.search(domain, limit=batch_size, order='id').try_lock_for_update()
