@@ -40,11 +40,13 @@
                                 t-on-mouseover="onColorHover"
                                 t-on-mouseout="onColorHoverOut">
                                 <div class="o_colorpicker_section">
-                                    <button data-color="o-color-1" t-attf-style="background-color: var(--o-color-1)" class="btn o_color_button"/>
-                                    <button data-color="o-color-3" t-attf-style="background-color: var(--o-color-3)" class="btn o_color_button"/>
-                                    <button data-color="o-color-2" t-attf-style="background-color: var(--o-color-2)" class="btn o_color_button"/>
-                                    <button data-color="o-color-4" t-attf-style="background-color: var(--o-color-4)" class="ms-2 btn o_color_button"/>
-                                    <button data-color="o-color-5" t-attf-style="background-color: var(--o-color-5)" class="btn o_color_button"/>
+                                    <t t-if="props.useDefaultThemeColors">
+                                        <button data-color="o-color-1" t-attf-style="background-color: var(--o-color-1)" class="btn o_color_button"/>
+                                        <button data-color="o-color-3" t-attf-style="background-color: var(--o-color-3)" class="btn o_color_button"/>
+                                        <button data-color="o-color-2" t-attf-style="background-color: var(--o-color-2)" class="btn o_color_button"/>
+                                        <button data-color="o-color-4" t-attf-style="background-color: var(--o-color-4)" class="ms-2 btn o_color_button"/>
+                                        <button data-color="o-color-5" t-attf-style="background-color: var(--o-color-5)" class="btn o_color_button"/>
+                                    </t>
                                 </div>
 
                                 <t t-foreach="DEFAULT_COLORS" t-as="line" t-key="line_index">
