@@ -2630,9 +2630,9 @@ class SaleOrder(models.Model):
             raise UserError(
                 self.env._(
                     "The following sale orders %(invalid_orders)s can't be delivered. Cancelled all"
-                    " deliveries."
-                ),
-                invalid_orders=", ".join(invalid_targets.mapped("name")),
+                    " deliveries.",
+                    invalid_orders=", ".join(invalid_targets.mapped("name")),
+                )
             )
         for order in self:
             for line in order.order_line:
