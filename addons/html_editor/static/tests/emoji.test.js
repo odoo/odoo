@@ -128,3 +128,17 @@ describe("Emoji list picker", () => {
         await expectElementCount(".o-we-SuggestionList", 1);
     });
 });
+
+describe("Emoji shortcuts", () => {
+    test("should not open the powerbox when an emoji shortcut replaces '/'", async () => {
+        const { el, editor } = await setupEditor("<p>[]</p>");
+        await expectElementCount(".o-we-powerbox", 0);
+        expect(getContent(el)).toBe(
+            `<p o-we-hint-text='Type "/" for commands' class="o-we-hint">[]</p>`
+        );
+        await insertText(editor, ":/");
+        await animationFrame();
+        expect(getContent(el)).toBe(`<p>😕[]</p>`);
+        await expectElementCount(".o-we-powerbox", 0);
+    });
+});
