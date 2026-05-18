@@ -122,7 +122,9 @@ class ResourceMixin(models.AbstractModel):
             resources_per_tz = calendar_resources._get_resources_per_tz()
             # actual hours per day
             if compute_leaves:
-                intervals = calendar._work_intervals_batch(from_datetime, to_datetime, resources_per_tz, domain)
+                intervals = calendar.with_context(
+                    compute_leave_duration=self.env.context.get('compute_leave_duration', False)
+                )._work_intervals_batch(from_datetime, to_datetime, resources_per_tz, domain)
             else:
                 intervals = calendar._attendance_intervals_batch(from_datetime, to_datetime, resources_per_tz)
 
