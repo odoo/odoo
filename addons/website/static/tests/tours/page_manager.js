@@ -162,7 +162,7 @@ const duplicateSinglePage = [
     },
     {
         content: "Click on Action button",
-        trigger: ".o_cp_action_menus button",
+        trigger: ".o_cp_action_menus button:text(actions)",
         run: "click",
     },
     {
@@ -201,7 +201,7 @@ const duplicateMultiplePage = [
     },
     {
         content: "Click on Action button",
-        trigger: ".o_cp_action_menus button",
+        trigger: ".o_cp_action_menus button:text(actions)",
         run: "click",
     },
     {
@@ -305,26 +305,20 @@ registry.category("web_tour.tours").add("website_page_manager_direct_access", {
     ],
 });
 
-registerWebsitePreviewTour(
-    "website_clone_pages",
+registerWebsitePreviewTour("website_clone_pages", {}, () => [
     {
-        undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
+        content: "Click on Site",
+        trigger: 'button.dropdown-toggle[data-menu-xmlid="website.menu_site"]',
+        run: "click",
     },
-    () => [
-        {
-            content: "Click on Site",
-            trigger: 'button.dropdown-toggle[data-menu-xmlid="website.menu_site"]',
-            run: "click",
-        },
-        {
-            content: "Click on Pages",
-            trigger: 'a.dropdown-item[data-menu-xmlid="website.menu_website_pages_list"]',
-            run: "click",
-        },
-        ...duplicateSinglePage,
-        ...duplicateMultiplePage,
-        {
-            trigger: "td:contains('/test-duplicate-2-1')",
-        },
-    ]
-);
+    {
+        content: "Click on Pages",
+        trigger: 'a.dropdown-item[data-menu-xmlid="website.menu_website_pages_list"]',
+        run: "click",
+    },
+    ...duplicateSinglePage,
+    ...duplicateMultiplePage,
+    {
+        trigger: "td:contains('/test-duplicate-2-1')",
+    },
+]);
