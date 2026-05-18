@@ -1090,3 +1090,29 @@ class TestL10nPlEdi(AccountTestInvoicingCommon, CronMixinCase):
         self.assertEqual(self._get_xml_value(xml, "//ns:DaneFaKorygowanej/ns:NrKSeF"), '1')
         self.assertEqual(self._get_xml_value(xml, "//ns:DaneFaKorygowanej/ns:NrKSeFFaKorygowanej"), fake_ksef_number)
         self.assertFalse(self._get_xml_nodes(xml, "//ns:DaneFaKorygowanej/ns:NrKSeFN"))
+
+    def test_mpp_value(self):
+        invoice = self._create_invoice(
+            partner_id=self.partner_pl,
+            invoice_date='2025-05-27',
+            post=True
+        )
+
+        xml = invoice._l10n_pl_edi_render_xml()
+        self.assertEqual(
+            self._get_xml_value(xml, "//ns:Fa/ns:Adnotacje/ns:P_18A"),
+            '2',
+        )
+
+        invoice = self._create_invoice(
+            partner_id=self.partner_pl,
+            invoice_date='2025-05-27',
+            l10n_pl_mpp=True,
+            post=True
+        )
+
+        xml = invoice._l10n_pl_edi_render_xml()
+        self.assertEqual(
+            self._get_xml_value(xml, "//ns:Fa/ns:Adnotacje/ns:P_18A"),
+            '1',
+        )
