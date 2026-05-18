@@ -9,6 +9,9 @@ class AccountMove(models.Model):
 
     @api.depends('country_code')
     def _compute_taxable_supply_date(self):
+        if hasattr(super(), '_compute_taxable_supply_date'):
+            super()._compute_taxable_supply_date()
+
         for move in self.filtered(lambda m: m.country_code == 'CZ' and not m.taxable_supply_date):
             move.taxable_supply_date = fields.Date.context_today(move)
 
