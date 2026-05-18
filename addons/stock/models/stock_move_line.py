@@ -846,7 +846,7 @@ class StockMoveLine(models.Model):
                 'move_orig_ids': [Command.clear()]
             })
         move_line_to_unlink.unlink()
-        move_to_reassign._action_assign()
+        move_to_reassign[::-1]._action_assign()
 
     def _get_aggregated_description(self, move):
         return move.description_picking or ""
