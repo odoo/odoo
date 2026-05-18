@@ -332,6 +332,19 @@ class TestUiTranslate(odoo.tests.HttpCase):
 
         self.start_tour(self.env['website'].get_client_action_url('/', True), 'translate_select_element', login='admin')
 
+    def test_searchbar_in_translated_website(self):
+        lang_fr = self.env.ref('base.lang_fr')
+        self.env["base.language.install"].create({
+            'overwrite': True,
+            'lang_ids': [(6, 0, [lang_fr.id])],
+        }).lang_install()
+        self.env.ref('website.default_website').write({
+            'default_lang_id': lang_fr.id,
+            'language_ids': [Command.link(lang_fr.id)],
+        })
+
+        self.start_tour('/fr', 'searchbar_in_translated_website', login='admin')
+
 
 @odoo.tests.common.tagged('post_install', '-at_install')
 class TestUi(HttpCaseWithWebsiteUser):
