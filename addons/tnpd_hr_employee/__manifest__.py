@@ -20,11 +20,12 @@ No core Odoo files are modified.
     'website': '',
     'license': 'LGPL-3',
 
-    'depends': ['hr'],
+    'depends': ['hr', 'prison_jail_master'],
 
     'data': [
         'security/ir.model.access.csv',
         'views/hr_employee_views.xml',
+        'views/transfer_approval_views.xml',
     ],
 
     'installable': True,

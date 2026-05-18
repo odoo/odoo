@@ -1,7 +1,8 @@
 # Part of TNPD Prison HR Employee Extension.
 # License: LGPL-3
 
-from odoo import fields, models
+from odoo import api, fields, models
+from odoo.exceptions import ValidationError
 
 
 class HrEmployee(models.Model):
@@ -191,6 +192,9 @@ class HrEmployee(models.Model):
         groups='hr.group_hr_user',
     )
 
+    # Legacy Char fields — kept for backward compatibility with existing data
+    # and the prison-master lookup helpers. New code should use the *_jail_id
+    # Many2one fields below which enforce the prison.jail hierarchy.
     x_central_prison = fields.Char(
         string='Controlling Central Prison (Present Station)',
         help='Name of the Central Prison that exercises administrative control '
@@ -198,18 +202,86 @@ class HrEmployee(models.Model):
         index=True,
         groups='hr.group_hr_user',
     )
-
+    x_district_jail = fields.Char(
+        string='District Jail (Present Station)',
+        help='Name of the District Jail at the employee\'s current posting, if applicable.',
+        groups='hr.group_hr_user',
+    )
     x_sub_jail = fields.Char(
         string='Sub Jail (Present Station)',
         help='Name of the Sub Jail at the employee\'s current posting, if applicable.',
         groups='hr.group_hr_user',
     )
 
-    x_district_jail = fields.Char(
-        string='District Jail (Present Station)',
-        help='Name of the District Jail at the employee\'s current posting, if applicable.',
+    # ── Hierarchy-aware jail assignment (uses prison.jail master) ─────────
+    # Architecture: three separate Many2one fields (Option A) chosen over a
+    # single jail_id because:
+    #   • Direct ORM filtering on any tier: domain=[('x_central_jail_id','=',id)]
+    #   • No traversal overhead in reporting queries
+    #   • Explicit cascade validation at write time
+    #   • Transfer approval can update each tier independently
+
+    x_central_jail_id = fields.Many2one(
+        comodel_name='prison.jail',
+        string='Central Jail (Present Station)',
+        domain=[('jail_type', '=', 'central_jail'), ('active', '=', True)],
+        ondelete='restrict',
+        index=True,
+        tracking=True,
         groups='hr.group_hr_user',
+        help='Central Jail that exercises administrative control over this employee.',
     )
+    x_district_jail_id = fields.Many2one(
+        comodel_name='prison.jail',
+        string='District Jail (Present Station)',
+        domain="[('jail_type', '=', 'district_jail'), ('active', '=', True), ('parent_id', '=', x_central_jail_id)]",
+        ondelete='restrict',
+        index=True,
+        tracking=True,
+        groups='hr.group_hr_user',
+        help='District Jail under which the employee is currently posted.',
+    )
+    x_sub_jail_id = fields.Many2one(
+        comodel_name='prison.jail',
+        string='Sub Jail (Present Station)',
+        domain="[('jail_type', '=', 'sub_jail'), ('active', '=', True), ('parent_id', '=', x_district_jail_id)]",
+        ondelete='restrict',
+        index=True,
+        tracking=True,
+        groups='hr.group_hr_user',
+        help='Sub Jail at the employee\'s current posting, if applicable.',
+    )
+
+    # ── Onchange: reset dependents when parent changes ────────────────────
+
+    @api.onchange('x_central_jail_id')
+    def _onchange_x_central_jail_id(self):
+        self.x_district_jail_id = False
+        self.x_sub_jail_id = False
+
+    @api.onchange('x_district_jail_id')
+    def _onchange_x_district_jail_id(self):
+        self.x_sub_jail_id = False
+
+    # ── Hierarchy integrity constraint ────────────────────────────────────
+
+    @api.constrains('x_central_jail_id', 'x_district_jail_id', 'x_sub_jail_id')
+    def _check_employee_jail_hierarchy(self):
+        for emp in self:
+            if emp.x_district_jail_id and emp.x_central_jail_id:
+                if emp.x_district_jail_id.parent_id != emp.x_central_jail_id:
+                    raise ValidationError(
+                        f'District Jail "{emp.x_district_jail_id.name}" does not belong '
+                        f'to Central Jail "{emp.x_central_jail_id.name}". '
+                        'Select a District Jail that is under the chosen Central Jail.'
+                    )
+            if emp.x_sub_jail_id and emp.x_district_jail_id:
+                if emp.x_sub_jail_id.parent_id != emp.x_district_jail_id:
+                    raise ValidationError(
+                        f'Sub Jail "{emp.x_sub_jail_id.name}" does not belong '
+                        f'to District Jail "{emp.x_district_jail_id.name}". '
+                        'Select a Sub Jail that is under the chosen District Jail.'
+                    )
 
     # ── Section 6: Disciplinary Record ───────────────────────────────────
 

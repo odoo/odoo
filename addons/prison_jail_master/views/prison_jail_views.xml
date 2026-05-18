@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Prison Jail Master — Views
+    Provides: List, Form, and Search views for prison.jail.
+    Filters cover jail type; Group By covers type, parent, district, and state.
+-->
+<odoo>
+<data>
+
+    <!-- ====================================================================
+         LIST VIEW
+    ==================================================================== -->
+    <record id="prison_jail_view_list" model="ir.ui.view">
+        <field name="name">prison.jail.list</field>
+        <field name="model">prison.jail</field>
+        <field name="arch" type="xml">
+            <list string="Jails"
+                  default_order="sequence, jail_type, name"
+                  decoration-info="jail_type == 'central_jail'"
+                  decoration-warning="jail_type == 'district_jail'"
+                  decoration-success="jail_type == 'sub_jail'">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="code" optional="show"/>
+                <field name="jail_type"/>
+                <field name="parent_id" string="Parent" optional="show"/>
+                <field name="central_jail_id" string="Central Jail" optional="show"
+                       invisible="jail_type == 'central_jail'"/>
+                <field name="district" optional="show"/>
+                <field name="state_id" optional="show"/>
+                <field name="child_count" string="Sub-units"/>
+                <field name="active" column_invisible="True"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ====================================================================
+         FORM VIEW
+    ==================================================================== -->
+    <record id="prison_jail_view_form" model="ir.ui.view">
+        <field name="name">prison.jail.form</field>
+        <field name="model">prison.jail</field>
+        <field name="arch" type="xml">
+            <form string="Jail">
+                <sheet>
+                    <widget name="web_ribbon" title="Archived"
+                            bg_color="text-bg-danger"
+                            invisible="active"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name"
+                                   placeholder="e.g. Central Prison, Chennai"
+                                   style="width: 100%"/>
+                        </h1>
+                    </div>
+
+                    <group>
+                        <!-- Left column: Classification -->
+                        <group string="Classification">
+                            <field name="jail_type"/>
+                            <field name="code"
+                                   placeholder="e.g. CP-CHN"/>
+                            <field name="external_ref"
+                                   placeholder="Legacy system reference"/>
+                            <field name="sequence"/>
+                            <field name="active"/>
+                        </group>
+
+                        <!-- Right column: Hierarchy
+                             parent_id domain is dynamic:
+                             • district_jail → show only central jails
+                             • sub_jail      → show only district jails
+                             • central_jail  → field hidden (no valid parent)
+                        -->
+                        <group string="Hierarchy">
+                            <field name="parent_id"
+                                   string="Parent Jail"
+                                   invisible="jail_type == 'central_jail'"
+                                   domain="jail_type == 'sub_jail' and [('jail_type', '=', 'district_jail'), ('active', '=', True)] or [('jail_type', '=', 'central_jail'), ('active', '=', True)]"
+                                   options="{'no_create': True, 'no_quick_create': True}"/>
+                            <field name="central_jail_id"
+                                   readonly="True"
+                                   invisible="jail_type == 'central_jail'"/>
+                            <field name="child_count"
+                                   string="Sub-units"
+                                   readonly="True"
+                                   invisible="jail_type == 'sub_jail'"/>
+                        </group>
+                    </group>
+
+                    <group>
+                        <!-- Left: Location -->
+                        <group string="Location">
+                            <field name="district"
+                                   placeholder="e.g. Chennai"/>
+                            <field name="state_id"
+                                   options="{'no_create': True}"/>
+                        </group>
+                        <!-- Right: Notes -->
+                        <group string="Notes">
+                            <field name="notes"
+                                   nolabel="1"
+                                   placeholder="Additional administrative notes…"
+                                   colspan="2"/>
+                        </group>
+                    </group>
+
+                    <!-- Sub-unit list (visible for central and district jails) -->
+                    <notebook invisible="jail_type == 'sub_jail'">
+                        <page name="child_jails" string="Sub-units">
+                            <field name="child_ids"
+                                   context="{'default_parent_id': active_id}"
+                                   readonly="True">
+                                <list>
+                                    <field name="name"/>
+                                    <field name="code"/>
+                                    <field name="jail_type"/>
+                                    <field name="district"/>
+                                    <field name="active" column_invisible="True"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- ====================================================================
+         SEARCH VIEW
+    ==================================================================== -->
+    <record id="prison_jail_view_search" model="ir.ui.view">
+        <field name="name">prison.jail.search</field>
+        <field name="model">prison.jail</field>
+        <field name="arch" type="xml">
+            <search string="Search Jails">
+                <field name="name" string="Jail Name"/>
+                <field name="code" string="Jail Code"/>
+                <field name="district"/>
+                <field name="parent_id" string="Parent Jail"/>
+                <field name="central_jail_id" string="Central Jail"/>
+
+                <!-- ── Filters by type ── -->
+                <filter name="filter_central"
+                        string="Central Jails"
+                        domain="[('jail_type', '=', 'central_jail')]"/>
+                <filter name="filter_district"
+                        string="District Jails"
+                        domain="[('jail_type', '=', 'district_jail')]"/>
+                <filter name="filter_sub"
+                        string="Sub Jails"
+                        domain="[('jail_type', '=', 'sub_jail')]"/>
+                <separator/>
+                <filter name="filter_inactive"
+                        string="Archived"
+                        domain="[('active', '=', False)]"/>
+
+                <!-- ── Group By ── -->
+                <group expand="0" string="Group By">
+                    <filter name="group_type"
+                            string="Jail Type"
+                            context="{'group_by': 'jail_type'}"/>
+                    <filter name="group_parent"
+                            string="Parent Jail"
+                            context="{'group_by': 'parent_id'}"/>
+                    <filter name="group_central"
+                            string="Central Jail"
+                            context="{'group_by': 'central_jail_id'}"/>
+                    <filter name="group_district"
+                            string="District"
+                            context="{'group_by': 'district'}"/>
+                    <filter name="group_state"
+                            string="State"
+                            context="{'group_by': 'state_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- ====================================================================
+         ACTIONS
+    ==================================================================== -->
+
+    <!-- All Jails -->
+    <record id="action_prison_jail_all" model="ir.actions.act_window">
+        <field name="name">All Jails</field>
+        <field name="res_model">prison.jail</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="prison_jail_view_search"/>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No jails configured yet.
+            </p>
+            <p>
+                Create your first Central Jail, then add District Jails and
+                Sub Jails under it to build the prison hierarchy.
+            </p>
+        </field>
+    </record>
+
+    <!-- Central Jails only -->
+    <record id="action_prison_jail_central" model="ir.actions.act_window">
+        <field name="name">Central Jails</field>
+        <field name="res_model">prison.jail</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('jail_type', '=', 'central_jail')]</field>
+        <field name="search_view_id" ref="prison_jail_view_search"/>
+        <field name="context">{'default_jail_type': 'central_jail'}</field>
+    </record>
+
+    <!-- District Jails only -->
+    <record id="action_prison_jail_district" model="ir.actions.act_window">
+        <field name="name">District Jails</field>
+        <field name="res_model">prison.jail</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('jail_type', '=', 'district_jail')]</field>
+        <field name="search_view_id" ref="prison_jail_view_search"/>
+        <field name="context">{'default_jail_type': 'district_jail'}</field>
+    </record>
+
+    <!-- Sub Jails only -->
+    <record id="action_prison_jail_sub" model="ir.actions.act_window">
+        <field name="name">Sub Jails</field>
+        <field name="res_model">prison.jail</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('jail_type', '=', 'sub_jail')]</field>
+        <field name="search_view_id" ref="prison_jail_view_search"/>
+        <field name="context">{'default_jail_type': 'sub_jail'}</field>
+    </record>
+
+</data>
+</odoo>

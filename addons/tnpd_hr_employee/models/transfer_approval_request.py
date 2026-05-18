@@ -4,15 +4,33 @@
 import logging
 
 from odoo import api, fields, models
+from odoo.exceptions import ValidationError
 
 _logger = logging.getLogger(__name__)
 
 
 class TransferApprovalRequest(models.Model):
+    """
+    Transfer Approval Request workflow model.
+
+    Jail selection follows a strict three-tier cascade:
+        Central Jail  →  District Jail  →  Sub Jail
+
+    Onchange methods reset dependent fields when a parent changes; the
+    ``_check_requested_jail_hierarchy`` constraint enforces the same rules
+    at save time (covers API / batch writes that bypass onchange).
+
+    State machine:
+        pending  →  approved  (updates employee jail posting)
+        pending  →  rejected
+    """
+
     _name = 'transfer.approval.request'
     _description = 'Transfer Approval Request'
     _rec_name = 'employee_id'
     _order = 'create_date desc'
+
+    # ── Employee ──────────────────────────────────────────────────────────────
 
     employee_id = fields.Many2one(
         comodel_name='hr.employee',
@@ -22,45 +40,60 @@ class TransferApprovalRequest(models.Model):
         index=True,
     )
 
-    # Snapshot of the employee's current posting at request time (read-only)
+    # ── Current posting (read-only snapshot at request time) ──────────────────
+
     current_central_prison = fields.Many2one(
-        comodel_name='tnpd.prison.master',
-        string='Current Central Prison',
-        domain=[('prison_type', '=', 'central')],
+        comodel_name='prison.jail',
+        string='Current Central Jail',
+        domain=[('jail_type', '=', 'central_jail')],
         readonly=True,
     )
     current_district_jail = fields.Many2one(
-        comodel_name='tnpd.prison.master',
+        comodel_name='prison.jail',
         string='Current District Jail',
-        domain=[('prison_type', '=', 'district')],
+        domain=[('jail_type', '=', 'district_jail')],
         readonly=True,
     )
     current_sub_jail = fields.Many2one(
-        comodel_name='tnpd.prison.master',
+        comodel_name='prison.jail',
         string='Current Sub Jail',
-        domain=[('prison_type', '=', 'sub')],
+        domain=[('jail_type', '=', 'sub_jail')],
         readonly=True,
     )
 
-    # Requested transfer destination
+    # ── Requested transfer destination (cascading selection) ──────────────────
+
     requested_central_prison = fields.Many2one(
-        comodel_name='tnpd.prison.master',
-        string='Requested Central Prison',
-        domain=[('prison_type', '=', 'central')],
+        comodel_name='prison.jail',
+        string='Requested Central Jail',
+        domain=[('jail_type', '=', 'central_jail'), ('active', '=', True)],
         required=True,
+        index=True,
+        ondelete='restrict',
+        tracking=True,
     )
     requested_district_jail = fields.Many2one(
-        comodel_name='tnpd.prison.master',
+        comodel_name='prison.jail',
         string='Requested District Jail',
-        domain=[('prison_type', '=', 'district')],
+        # Domain is enforced in Python; XML view adds the parent_id filter
+        # for a cascading dropdown effect.
+        domain=[('jail_type', '=', 'district_jail'), ('active', '=', True)],
         required=True,
+        index=True,
+        ondelete='restrict',
+        tracking=True,
     )
     requested_sub_jail = fields.Many2one(
-        comodel_name='tnpd.prison.master',
+        comodel_name='prison.jail',
         string='Requested Sub Jail',
-        domain=[('prison_type', '=', 'sub')],
+        domain=[('jail_type', '=', 'sub_jail'), ('active', '=', True)],
         required=True,
+        index=True,
+        ondelete='restrict',
+        tracking=True,
     )
+
+    # ── Workflow ──────────────────────────────────────────────────────────────
 
     approval_user_id = fields.Many2one(
         comodel_name='res.users',
@@ -78,6 +111,7 @@ class TransferApprovalRequest(models.Model):
         default='pending',
         required=True,
         index=True,
+        tracking=True,
     )
     requested_by = fields.Many2one(
         comodel_name='res.users',
@@ -94,36 +128,98 @@ class TransferApprovalRequest(models.Model):
     remarks = fields.Text(string='Remarks')
     active = fields.Boolean(default=True)
 
-    # ------------------------------------------------------------------
-    # Internal helpers
-    # ------------------------------------------------------------------
+    # ── Onchange: cascading reset ─────────────────────────────────────────────
 
-    @api.model
-    def _lookup_prison(self, prison_type, name):
-        """Return the tnpd.prison.master id matching *name* and *prison_type*, or False."""
-        if not name:
-            return False
-        record = self.env['tnpd.prison.master'].search(
-            [('name', '=', name), ('prison_type', '=', prison_type)],
-            limit=1,
-        )
-        return record.id if record else False
+    @api.onchange('requested_central_prison')
+    def _onchange_requested_central_prison(self):
+        """Reset district and sub when central changes; tighten district domain."""
+        self.requested_district_jail = False
+        self.requested_sub_jail = False
+        if self.requested_central_prison:
+            return {
+                'domain': {
+                    'requested_district_jail': [
+                        ('jail_type', '=', 'district_jail'),
+                        ('parent_id', '=', self.requested_central_prison.id),
+                        ('active', '=', True),
+                    ]
+                }
+            }
+
+    @api.onchange('requested_district_jail')
+    def _onchange_requested_district_jail(self):
+        """Reset sub when district changes; tighten sub domain."""
+        self.requested_sub_jail = False
+        if self.requested_district_jail:
+            return {
+                'domain': {
+                    'requested_sub_jail': [
+                        ('jail_type', '=', 'sub_jail'),
+                        ('parent_id', '=', self.requested_district_jail.id),
+                        ('active', '=', True),
+                    ]
+                }
+            }
+
+    # ── Constraints: hierarchy integrity ─────────────────────────────────────
+
+    @api.constrains(
+        'requested_central_prison',
+        'requested_district_jail',
+        'requested_sub_jail',
+    )
+    def _check_requested_jail_hierarchy(self):
+        """Ensure district belongs to central and sub belongs to district."""
+        for rec in self:
+            if rec.requested_district_jail and rec.requested_central_prison:
+                if rec.requested_district_jail.parent_id != rec.requested_central_prison:
+                    raise ValidationError(
+                        f'District Jail "{rec.requested_district_jail.name}" does not '
+                        f'belong to Central Jail "{rec.requested_central_prison.name}".\n'
+                        'Select a District Jail that falls under the chosen Central Jail.'
+                    )
+            if rec.requested_sub_jail and rec.requested_district_jail:
+                if rec.requested_sub_jail.parent_id != rec.requested_district_jail:
+                    raise ValidationError(
+                        f'Sub Jail "{rec.requested_sub_jail.name}" does not belong to '
+                        f'District Jail "{rec.requested_district_jail.name}".\n'
+                        'Select a Sub Jail that falls under the chosen District Jail.'
+                    )
+
+    # ── Internal helpers ─────────────────────────────────────────────────────
 
     @api.model
     def _current_prison_vals_from_employee(self, employee):
         """
-        Build a dict of current_* prison field values sourced from the
-        employee's Char fields.  Resolves each value against prison.master;
-        unmatched values are left as False (no record found).
+        Build current_* field values from the employee's jail Many2one fields.
+        Falls back to the legacy Char-field lookup if the Many2one fields are
+        not yet populated (migration period).
         """
+        # Prefer the new Many2one jail fields
+        if employee.x_central_jail_id or employee.x_district_jail_id or employee.x_sub_jail_id:
+            return {
+                'current_central_prison': employee.x_central_jail_id.id or False,
+                'current_district_jail':  employee.x_district_jail_id.id or False,
+                'current_sub_jail':       employee.x_sub_jail_id.id or False,
+            }
+
+        # Legacy fallback: resolve the old Char fields against prison.jail
         return {
-            'current_central_prison': self._lookup_prison(
-                'central', employee.x_central_prison
-            ),
-            'current_district_jail': self._lookup_prison(
-                'district', employee.x_district_jail
-            ),
-            'current_sub_jail': self._lookup_prison(
-                'sub', employee.x_sub_jail
-            ),
+            'current_central_prison': self._lookup_jail('central_jail', employee.x_central_prison),
+            'current_district_jail':  self._lookup_jail('district_jail', employee.x_district_jail),
+            'current_sub_jail':       self._lookup_jail('sub_jail', employee.x_sub_jail),
         }
+
+    @api.model
+    def _lookup_jail(self, jail_type, name):
+        """
+        Return the prison.jail id matching *name* and *jail_type*, or False.
+        Used as a legacy bridge during the Char → Many2one migration period.
+        """
+        if not name:
+            return False
+        record = self.env['prison.jail'].search(
+            [('name', '=', name), ('jail_type', '=', jail_type)],
+            limit=1,
+        )
+        return record.id if record else False

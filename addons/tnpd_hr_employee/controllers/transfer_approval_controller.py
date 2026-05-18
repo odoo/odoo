@@ -53,10 +53,6 @@ class TransferApprovalController(http.Controller):
         """
         Validate that the caller has an active Odoo session.
 
-        request.session.uid is set by Odoo's session middleware whenever
-        the session_id cookie corresponds to a valid, authenticated
-        session.  It is None / 0 for public / unauthenticated requests.
-
         Returns (uid, None) on success or (None, error_response) on failure.
         """
         uid = request.session.uid
@@ -85,34 +81,43 @@ class TransferApprovalController(http.Controller):
     # SERIALIZER
     # ==================================================================
 
+    def _format_jail(self, jail_record):
+        """Serialize a prison.jail Many2one value."""
+        if not jail_record:
+            return {'id': None, 'name': ''}
+        return {'id': jail_record.id, 'name': jail_record.name}
+
     def _format_request(self, rec):
         """Serialize a transfer.approval.request record for API responses."""
-
-        def _m2o(field):
-            return field.name if field else ''
-
         return {
-            'request_id':              rec.id,
-            'employee_id':             rec.employee_id.id,
-            'employee_name':           rec.employee_id.name or '',
-            'current_central_prison':  _m2o(rec.current_central_prison),
-            'current_district_jail':   _m2o(rec.current_district_jail),
-            'current_sub_jail':        _m2o(rec.current_sub_jail),
-            'requested_central_prison': _m2o(rec.requested_central_prison),
-            'requested_district_jail': _m2o(rec.requested_district_jail),
-            'requested_sub_jail':      _m2o(rec.requested_sub_jail),
-            'state':                   rec.state,
-            'requested_by':            rec.requested_by.name or '',
-            'approval_user':           _m2o(rec.approval_user_id),
-            'approved_by':             rec.approved_by.name or '',
-            'approved_date':           str(rec.approved_date) if rec.approved_date else '',
-            'remarks':                 rec.remarks or '',
-            'create_date':             str(rec.create_date) if rec.create_date else '',
+            'request_id':               rec.id,
+            'employee_id':              rec.employee_id.id,
+            'employee_name':            rec.employee_id.name or '',
+            # Current posting snapshot
+            'current_central_prison':   self._format_jail(rec.current_central_prison),
+            'current_district_jail':    self._format_jail(rec.current_district_jail),
+            'current_sub_jail':         self._format_jail(rec.current_sub_jail),
+            # Requested destination
+            'requested_central_prison': self._format_jail(rec.requested_central_prison),
+            'requested_district_jail':  self._format_jail(rec.requested_district_jail),
+            'requested_sub_jail':       self._format_jail(rec.requested_sub_jail),
+            # Workflow
+            'state':          rec.state,
+            'requested_by':   rec.requested_by.name or '',
+            'approval_user':  {'id': rec.approval_user_id.id, 'name': rec.approval_user_id.name or ''},
+            'approved_by':    rec.approved_by.name or '',
+            'approved_date':  str(rec.approved_date) if rec.approved_date else '',
+            'remarks':        rec.remarks or '',
+            'create_date':    str(rec.create_date) if rec.create_date else '',
         }
 
     # ==================================================================
-    # API 0 – Prison Master Lookup
+    # API 0 – Prison / Jail Master Lookup
     # GET /api/transfer/prison-master
+    #
+    # Legacy endpoint — returns all jails grouped by type.
+    # New clients should use the prison_jail_master module's dedicated
+    # endpoints: /api/jails/central, /api/jails/district, /api/jails/sub
     # ==================================================================
 
     @http.route(
@@ -124,39 +129,41 @@ class TransferApprovalController(http.Controller):
     )
     def get_prison_master(self, **_kwargs):
         """
-        Return all active prison / jail master records grouped by type.
+        Return all active jail records grouped by type.
 
-        No authentication required — this is a public reference endpoint
-        used by clients to build dropdowns before submitting a transfer
-        request.
+        No authentication required — used by clients to seed dropdowns.
 
         Response
         --------
         {
             "success": true,
             "data": {
-                "central_prisons": [{"id": 1, "name": "MADURAI"}, ...],
-                "district_jails":  [{"id": 5, "name": "MADURAI DISTRICT JAIL"}, ...],
-                "sub_jails":       [{"id": 8, "name": "ARUPPUKOTTAI"}, ...]
+                "central_jails":  [{"id": 1, "name": "...", "code": "..."}, ...],
+                "district_jails": [...],
+                "sub_jails":      [...]
             }
         }
         """
         try:
-            PrisonMaster = request.env['tnpd.prison.master'].sudo()
+            Jail = request.env['prison.jail'].sudo()
 
-            def _fetch(prison_type):
-                records = PrisonMaster.search(
-                    [('prison_type', '=', prison_type), ('active', '=', True)],
-                    order='name asc',
+            def _fetch(jail_type):
+                records = Jail.search(
+                    [('jail_type', '=', jail_type), ('active', '=', True)],
+                    order='sequence, name asc',
                 )
-                return [{'id': r.id, 'name': r.name} for r in records]
+                return [
+                    {'id': r.id, 'name': r.name, 'code': r.code or '',
+                     'parent_id': r.parent_id.id if r.parent_id else None}
+                    for r in records
+                ]
 
             return self._json_response({
                 'success': True,
                 'data': {
-                    'central_prisons': _fetch('central'),
-                    'district_jails':  _fetch('district'),
-                    'sub_jails':       _fetch('sub'),
+                    'central_jails':  _fetch('central_jail'),
+                    'district_jails': _fetch('district_jail'),
+                    'sub_jails':      _fetch('sub_jail'),
                 },
             })
 
@@ -182,12 +189,17 @@ class TransferApprovalController(http.Controller):
 
         Body (JSON)
         -----------
-        employee_id              int  required
-        requested_central_prison int  required  (tnpd.prison.master id, type=central)
-        requested_district_jail  int  required  (tnpd.prison.master id, type=district)
-        requested_sub_jail       int  required  (tnpd.prison.master id, type=sub)
-        approval_user_id         int  required
-        remarks                  str  optional
+        employee_id               int  required
+        requested_central_prison  int  required  (prison.jail id, jail_type=central_jail)
+        requested_district_jail   int  required  (prison.jail id, jail_type=district_jail)
+        requested_sub_jail        int  required  (prison.jail id, jail_type=sub_jail)
+        approval_user_id          int  required
+        remarks                   str  optional
+
+        Hierarchy validation
+        --------------------
+        • district jail must be a child of the given central jail
+        • sub jail must be a child of the given district jail
         """
         try:
             uid, err = self._require_auth()
@@ -198,7 +210,7 @@ class TransferApprovalController(http.Controller):
             if err:
                 return err
 
-            # --- Required field presence ------------------------------------
+            # --- Required field presence -----------------------------------
             required = [
                 'employee_id',
                 'requested_central_prison',
@@ -208,49 +220,55 @@ class TransferApprovalController(http.Controller):
             ]
             missing = [f for f in required if not data.get(f)]
             if missing:
-                return self._err(
-                    f'Missing required fields: {", ".join(missing)}'
-                )
+                return self._err(f'Missing required fields: {", ".join(missing)}')
 
             env = request.env(user=uid)
 
-            # --- Validate employee ------------------------------------------
+            # --- Validate employee -----------------------------------------
             employee = env['hr.employee'].sudo().browse(int(data['employee_id']))
             if not employee.exists():
                 return self._err('Employee not found', status=404)
 
-            # --- Validate approval user -------------------------------------
-            approval_user = env['res.users'].sudo().browse(
-                int(data['approval_user_id'])
-            )
+            # --- Validate approval user ------------------------------------
+            approval_user = env['res.users'].sudo().browse(int(data['approval_user_id']))
             if not approval_user.exists():
                 return self._err('Approval user not found', status=404)
 
-            # --- Validate requested prison records --------------------------
-            PrisonMaster = env['tnpd.prison.master'].sudo()
+            # --- Validate jail records and hierarchy -----------------------
+            Jail = env['prison.jail'].sudo()
 
-            central = PrisonMaster.browse(int(data['requested_central_prison']))
-            if not central.exists() or central.prison_type != 'central':
+            central = Jail.browse(int(data['requested_central_prison']))
+            if not central.exists() or central.jail_type != 'central_jail':
                 return self._err(
-                    'Invalid requested_central_prison id '
-                    '(must be a tnpd.prison.master record with type=central)'
+                    'Invalid requested_central_prison: must be a prison.jail record '
+                    'with jail_type=central_jail'
                 )
 
-            district = PrisonMaster.browse(int(data['requested_district_jail']))
-            if not district.exists() or district.prison_type != 'district':
+            district = Jail.browse(int(data['requested_district_jail']))
+            if not district.exists() or district.jail_type != 'district_jail':
                 return self._err(
-                    'Invalid requested_district_jail id '
-                    '(must be a tnpd.prison.master record with type=district)'
+                    'Invalid requested_district_jail: must be a prison.jail record '
+                    'with jail_type=district_jail'
+                )
+            if district.parent_id != central:
+                return self._err(
+                    f'District Jail "{district.name}" does not belong to '
+                    f'Central Jail "{central.name}".'
                 )
 
-            sub = PrisonMaster.browse(int(data['requested_sub_jail']))
-            if not sub.exists() or sub.prison_type != 'sub':
+            sub = Jail.browse(int(data['requested_sub_jail']))
+            if not sub.exists() or sub.jail_type != 'sub_jail':
                 return self._err(
-                    'Invalid requested_sub_jail id '
-                    '(must be a tnpd.prison.master record with type=sub)'
+                    'Invalid requested_sub_jail: must be a prison.jail record '
+                    'with jail_type=sub_jail'
+                )
+            if sub.parent_id != district:
+                return self._err(
+                    f'Sub Jail "{sub.name}" does not belong to '
+                    f'District Jail "{district.name}".'
                 )
 
-            # --- Prevent duplicate pending requests -------------------------
+            # --- Prevent duplicate pending requests -----------------------
             existing = env['transfer.approval.request'].sudo().search([
                 ('employee_id', '=', employee.id),
                 ('state', '=', 'pending'),
@@ -262,11 +280,11 @@ class TransferApprovalController(http.Controller):
                     f'(id={existing.id})'
                 )
 
-            # --- Auto-populate current prison details -----------------------
+            # --- Auto-populate current posting snapshot -------------------
             TransferRequest = env['transfer.approval.request']
             current_vals = TransferRequest._current_prison_vals_from_employee(employee)
 
-            # --- Create record ----------------------------------------------
+            # --- Create record ---------------------------------------------
             new_request = TransferRequest.sudo().with_context(
                 mail_notrack=True
             ).create({
@@ -372,7 +390,15 @@ class TransferApprovalController(http.Controller):
     )
     def accept_approval_request(self, **_kwargs):
         """
-        Approve a pending transfer request and update the employee's prison details.
+        Approve a pending transfer request and update the employee's jail posting.
+
+        On approval:
+        • Employee's x_central_jail_id / x_district_jail_id / x_sub_jail_id
+          (Many2one) fields are updated to the requested jail records.
+        • Legacy Char fields (x_central_prison / x_district_jail / x_sub_jail)
+          are also synced for backward compatibility.
+        • x_date_present_station is set to today.
+        • A dated entry is prepended to x_service_history.
 
         Body (JSON)
         -----------
@@ -409,11 +435,11 @@ class TransferApprovalController(http.Controller):
                     f'Request is already {tar.state} and cannot be approved'
                 )
 
-            # --- Snapshot old posting before overwriting --------------------
+            # --- Snapshot old posting before overwriting ------------------
             emp = tar.employee_id.sudo()
-            old_central  = emp.x_central_prison  or '-'
-            old_district = emp.x_district_jail   or '-'
-            old_sub      = emp.x_sub_jail         or '-'
+            old_central  = emp.x_central_jail_id.name  or emp.x_central_prison  or '-'
+            old_district = emp.x_district_jail_id.name or emp.x_district_jail   or '-'
+            old_sub      = emp.x_sub_jail_id.name      or emp.x_sub_jail         or '-'
 
             new_central  = tar.requested_central_prison.name
             new_district = tar.requested_district_jail.name
@@ -422,10 +448,7 @@ class TransferApprovalController(http.Controller):
             approved_date_now = fields.Datetime.now()
             approved_date_str = approved_date_now.strftime('%d-%b-%Y')
 
-            # --- Build service history entry --------------------------------
-            # x_service_history is a free-text field (Section 7 in the model).
-            # Each transfer approval prepends a dated line so the latest
-            # posting always appears at the top.
+            # --- Build service history entry ------------------------------
             history_line = (
                 f"[{approved_date_str}] Transfer Approved | "
                 f"From: {old_central} / {old_district} / {old_sub} "
@@ -434,14 +457,19 @@ class TransferApprovalController(http.Controller):
                 f"Ref: TRF/{tar.id}"
             )
             existing_history = emp.x_service_history or ''
-            updated_history  = (
+            updated_history = (
                 history_line + '\n' + existing_history
                 if existing_history.strip()
                 else history_line
             )
 
-            # --- Update employee prison fields + station date + history -----
+            # --- Update employee — Many2one jail fields + legacy Char sync ---
             emp.write({
+                # New hierarchy-aware Many2one fields (primary)
+                'x_central_jail_id':      tar.requested_central_prison.id,
+                'x_district_jail_id':     tar.requested_district_jail.id,
+                'x_sub_jail_id':          tar.requested_sub_jail.id,
+                # Legacy Char fields kept in sync for backward compatibility
                 'x_central_prison':       new_central,
                 'x_district_jail':        new_district,
                 'x_sub_jail':             new_sub,
@@ -449,7 +477,7 @@ class TransferApprovalController(http.Controller):
                 'x_service_history':      updated_history,
             })
 
-            # --- Mark request as approved -----------------------------------
+            # --- Mark request as approved ---------------------------------
             tar.sudo().write({
                 'state':         'approved',
                 'approved_by':   uid,
@@ -458,7 +486,7 @@ class TransferApprovalController(http.Controller):
 
             _logger.info(
                 'Transfer request %d approved by user=%d; '
-                'employee=%d → central=%s district=%s sub=%s | history updated',
+                'employee=%d → central=%s district=%s sub=%s',
                 tar.id, uid, emp.id,
                 new_central, new_district, new_sub,
             )

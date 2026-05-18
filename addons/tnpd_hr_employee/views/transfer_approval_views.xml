@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Transfer Approval Request — Views
+
+    Cascading jail selection in the form view:
+        1. User picks a Central Jail.
+        2. District Jail dropdown is filtered to children of that central jail.
+        3. Sub Jail dropdown is filtered to children of that district jail.
+
+    Both the XML domain (for initial render) and the Python onchange methods
+    (for interactive reset) enforce this cascade.
+-->
+<odoo>
+<data>
+
+    <!-- ====================================================================
+         LIST VIEW
+    ==================================================================== -->
+    <record id="transfer_approval_request_view_list" model="ir.ui.view">
+        <field name="name">transfer.approval.request.list</field>
+        <field name="model">transfer.approval.request</field>
+        <field name="arch" type="xml">
+            <list string="Transfer Requests"
+                  default_order="create_date desc"
+                  decoration-warning="state == 'pending'"
+                  decoration-success="state == 'approved'"
+                  decoration-danger="state == 'rejected'">
+                <field name="create_date" string="Date"/>
+                <field name="employee_id"/>
+                <field name="current_central_prison" string="From (Central)" optional="show"/>
+                <field name="requested_central_prison" string="To (Central)"/>
+                <field name="requested_district_jail" string="To (District)"/>
+                <field name="requested_sub_jail" string="To (Sub Jail)"/>
+                <field name="approval_user_id" string="Approver"/>
+                <field name="state"
+                       widget="badge"
+                       decoration-warning="state == 'pending'"
+                       decoration-success="state == 'approved'"
+                       decoration-danger="state == 'rejected'"/>
+                <field name="requested_by" string="Raised By" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ====================================================================
+         FORM VIEW
+    ==================================================================== -->
+    <record id="transfer_approval_request_view_form" model="ir.ui.view">
+        <field name="name">transfer.approval.request.form</field>
+        <field name="model">transfer.approval.request</field>
+        <field name="arch" type="xml">
+            <form string="Transfer Approval Request">
+                <!-- Status bar -->
+                <header>
+                    <field name="state"
+                           widget="statusbar"
+                           statusbar_visible="pending,approved,rejected"/>
+                </header>
+
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="employee_id"
+                                   placeholder="Select Employee"
+                                   readonly="state != 'pending'"
+                                   options="{'no_create': True}"/>
+                        </h1>
+                    </div>
+
+                    <!-- ════════════════════════════════════════════
+                         CURRENT POSTING  (read-only snapshot)
+                    ════════════════════════════════════════════ -->
+                    <group string="Current Posting (at time of request)">
+                        <group>
+                            <field name="current_central_prison"
+                                   readonly="True"
+                                   options="{'no_open': True}"/>
+                            <field name="current_district_jail"
+                                   readonly="True"
+                                   options="{'no_open': True}"/>
+                        </group>
+                        <group>
+                            <field name="current_sub_jail"
+                                   readonly="True"
+                                   options="{'no_open': True}"/>
+                        </group>
+                    </group>
+
+                    <!-- ════════════════════════════════════════════
+                         REQUESTED DESTINATION  (cascading dropdowns)
+
+                         Step 1 – Central Jail
+                             → Step 2 – District Jail (filtered by central)
+                                 → Step 3 – Sub Jail (filtered by district)
+
+                         The domain on each field uses the current form
+                         record's field value so Odoo's OWL frontend
+                         dynamically narrows the choices as the user
+                         selects each level.
+                    ════════════════════════════════════════════ -->
+                    <group string="Requested Transfer Destination">
+                        <group string="Step 1 — Central Jail">
+                            <field name="requested_central_prison"
+                                   readonly="state != 'pending'"
+                                   domain="[('jail_type', '=', 'central_jail'), ('active', '=', True)]"
+                                   options="{'no_create': True, 'no_quick_create': True}"
+                                   required="True"/>
+                        </group>
+                        <group string="Step 2 — District Jail">
+                            <!--
+                                Dynamic domain: only District Jails that are
+                                children of the selected Central Jail.
+                                Falls back to all district jails if central is
+                                not yet chosen.
+                            -->
+                            <field name="requested_district_jail"
+                                   readonly="state != 'pending'"
+                                   domain="requested_central_prison and [('jail_type', '=', 'district_jail'), ('parent_id', '=', requested_central_prison), ('active', '=', True)] or [('jail_type', '=', 'district_jail'), ('active', '=', True)]"
+                                   options="{'no_create': True, 'no_quick_create': True}"
+                                   required="True"/>
+                        </group>
+                        <group string="Step 3 — Sub Jail">
+                            <!--
+                                Dynamic domain: only Sub Jails that are
+                                children of the selected District Jail.
+                            -->
+                            <field name="requested_sub_jail"
+                                   readonly="state != 'pending'"
+                                   domain="requested_district_jail and [('jail_type', '=', 'sub_jail'), ('parent_id', '=', requested_district_jail), ('active', '=', True)] or [('jail_type', '=', 'sub_jail'), ('active', '=', True)]"
+                                   options="{'no_create': True, 'no_quick_create': True}"
+                                   required="True"/>
+                        </group>
+                    </group>
+
+                    <!-- ════════════════════════════════════════════
+                         APPROVAL
+                    ════════════════════════════════════════════ -->
+                    <group string="Approval">
+                        <group>
+                            <field name="approval_user_id"
+                                   readonly="state != 'pending'"
+                                   options="{'no_create': True}"/>
+                            <field name="requested_by" readonly="True"/>
+                        </group>
+                        <group>
+                            <field name="approved_by"
+                                   readonly="True"
+                                   invisible="state == 'pending'"/>
+                            <field name="approved_date"
+                                   readonly="True"
+                                   invisible="state == 'pending'"/>
+                        </group>
+                    </group>
+
+                    <group string="Remarks">
+                        <field name="remarks"
+                               nolabel="1"
+                               placeholder="Optional remarks or reason for transfer…"
+                               colspan="2"
+                               readonly="state != 'pending'"/>
+                    </group>
+
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- ====================================================================
+         SEARCH VIEW
+    ==================================================================== -->
+    <record id="transfer_approval_request_view_search" model="ir.ui.view">
+        <field name="name">transfer.approval.request.search</field>
+        <field name="model">transfer.approval.request</field>
+        <field name="arch" type="xml">
+            <search string="Search Transfer Requests">
+                <field name="employee_id"/>
+                <field name="requested_central_prison" string="Requested Central Jail"/>
+                <field name="requested_district_jail" string="Requested District Jail"/>
+                <field name="approval_user_id" string="Approver"/>
+
+                <filter name="filter_pending"
+                        string="Pending"
+                        domain="[('state', '=', 'pending')]"/>
+                <filter name="filter_approved"
+                        string="Approved"
+                        domain="[('state', '=', 'approved')]"/>
+                <filter name="filter_rejected"
+                        string="Rejected"
+                        domain="[('state', '=', 'rejected')]"/>
+                <separator/>
+                <filter name="filter_my_approvals"
+                        string="My Pending Approvals"
+                        domain="[('approval_user_id', '=', uid), ('state', '=', 'pending')]"/>
+
+                <group expand="0" string="Group By">
+                    <filter name="group_state"
+                            string="State"
+                            context="{'group_by': 'state'}"/>
+                    <filter name="group_central"
+                            string="Requested Central Jail"
+                            context="{'group_by': 'requested_central_prison'}"/>
+                    <filter name="group_approver"
+                            string="Approver"
+                            context="{'group_by': 'approval_user_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- ====================================================================
+         ACTIONS
+    ==================================================================== -->
+
+    <record id="action_transfer_approval_request_all" model="ir.actions.act_window">
+        <field name="name">Transfer Requests</field>
+        <field name="res_model">transfer.approval.request</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="transfer_approval_request_view_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No transfer requests yet.</p>
+            <p>Raise a new transfer request to move an employee between jails.</p>
+        </field>
+    </record>
+
+    <record id="action_transfer_approval_request_pending" model="ir.actions.act_window">
+        <field name="name">Pending Approvals</field>
+        <field name="res_model">transfer.approval.request</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('approval_user_id', '=', uid), ('state', '=', 'pending')]</field>
+        <field name="search_view_id" ref="transfer_approval_request_view_search"/>
+    </record>
+
+    <!-- ====================================================================
+         MENUS  (added to the Prison Management root from prison_jail_master)
+    ==================================================================== -->
+
+    <menuitem id="menu_prison_transfers_group"
+              name="Transfers"
+              parent="prison_jail_master.menu_prison_management_root"
+              sequence="20"/>
+
+    <menuitem id="menu_transfer_all"
+              name="All Transfer Requests"
+              parent="menu_prison_transfers_group"
+              action="action_transfer_approval_request_all"
+              sequence="10"/>
+
+    <menuitem id="menu_transfer_pending"
+              name="My Pending Approvals"
+              parent="menu_prison_transfers_group"
+              action="action_transfer_approval_request_pending"
+              sequence="20"/>
+
+</data>
+</odoo>
