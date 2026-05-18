@@ -152,23 +152,17 @@ var owl = (() => {
   }
   var batchProcessEffects = batched(processEffects);
   function processEffects() {
-    for (let i = 0; i < observers.length; i++) {
-      updateComputation(observers[i]);
+    const pending = observers;
+    observers = [];
+    for (let i = 0; i < pending.length; i++) {
+      updateComputation(pending[i]);
     }
-    observers.length = 0;
   }
   function getCurrentComputation() {
     return currentComputation;
   }
   function setComputation(computation) {
     currentComputation = computation;
-    // FIXME AAB: this fixes the main memory leak spotted in the test suite
-    // Find where currentComputation isn't properly reset and fix the leak properly
-    Promise.resolve().then(() => {
-      if (currentComputation === computation) {
-        currentComputation = void 0;
-      }
-    })
   }
   function updateComputation(computation) {
     const state = computation.state;
@@ -176,19 +170,18 @@ var owl = (() => {
       return;
     }
     if (state === 2) {
-      if (computation.isDerived) {
-        for (const source of computation.sources) {
-          if (!("compute" in source)) {
-            continue;
-          }
-          updateComputation(source);
+      for (const source of computation.sources) {
+        if (!("compute" in source)) {
+          continue;
         }
-        if (computation.state !== 1) {
-          computation.state = 0;
-          return;
+        updateComputation(source);
+        if (computation.state === 1) {
+          break;
         }
-      } else {
-        computation.state = 1;
+      }
+      if (computation.state !== 1) {
+        computation.state = 0;
+        return;
       }
     }
     removeSources(computation);
@@ -227,11 +220,10 @@ var owl = (() => {
         if (observer.state) {
           continue;
         }
+        observer.state = 2;
         if (observer.isDerived) {
-          observer.state = 2;
           stack.push(observer);
         } else {
-          observer.state = 1;
           observers.push(observer);
         }
       }
@@ -3084,8 +3076,9 @@ ${issueStrings}`);
           this.bdom = node.renderFn();
         } catch (e) {
           handleError({ node, error: e });
+        } finally {
+          setComputation(c);
         }
-        setComputation(c);
         const newCounter = root.counter - 1;
         root.counter = newCounter;
         if (newCounter === 0) {
@@ -3291,7 +3284,6 @@ ${issueStrings}`);
         setComputation(prev);
         await Promise.all(promises);
       } catch (e) {
-        setComputation(prev);
         if (isAbortError(e) && this.status > STATUS.MOUNTED) {
           return;
         }
@@ -4419,8 +4411,8 @@ ${issueStrings}`);
   };
   var __info__ = {
     version: App.version,
-    date: "2026-05-11T11:49:14.861Z",
-    hash: "dacdb591",
+    date: "2026-05-18T12:47:45.249Z",
+    hash: "af0e1a30",
     url: "https://github.com/odoo/owl"
   };
 
@@ -4568,12 +4560,18 @@ ${issueStrings}`);
   var isLeftSeparator = (token) => token && (token.type === "LEFT_BRACE" || token.type === "COMMA");
   var isRightSeparator = (token) => token && (token.type === "RIGHT_BRACE" || token.type === "COMMA");
   var paddedValues = /* @__PURE__ */ new Map([["in ", " in "]]);
-  function processExpr(expr) {
-    const localVars = /* @__PURE__ */ new Set();
+  function processExpr(expr, seededLocals) {
+    const scopeStack2 = [];
+    if (seededLocals?.size) {
+      scopeStack2.push({ vars: seededLocals, depth: -Infinity });
+    }
     const tokens = tokenize(expr);
     let i = 0;
     let stack = [];
     let topLevelArrowIndex = -1;
+    function isLocal(name) {
+      return scopeStack2.some((s) => s.vars.has(name));
+    }
     while (i < tokens.length) {
       let token = tokens[i];
       let prevToken = tokens[i - 1];
@@ -4589,6 +4587,10 @@ ${issueStrings}`);
         case "RIGHT_BRACKET":
         case "RIGHT_PAREN":
           stack.pop();
+          while (scopeStack2.length > 0 && stack.length < scopeStack2[scopeStack2.length - 1].depth) {
+            scopeStack2.pop();
+          }
+          break;
       }
       let isVar = token.type === "SYMBOL" && !RESERVED_WORDS.includes(token.value);
       if (isVar) {
@@ -4607,9 +4609,14 @@ ${issueStrings}`);
         }
       }
       if (token.type === "TEMPLATE_STRING") {
-        token.value = token.replace((expr2) => compileExpr(expr2));
+        const currentLocals = /* @__PURE__ */ new Set();
+        for (const scope of scopeStack2) {
+          for (const v of scope.vars) currentLocals.add(v);
+        }
+        token.value = token.replace((expr2) => compileExpr(expr2, currentLocals));
       }
       if (nextToken && nextToken.type === "OPERATOR" && nextToken.value === "=>") {
+        const newScope = /* @__PURE__ */ new Set();
         if (stack.length === 0) {
           topLevelArrowIndex = i + 1;
         }
@@ -4617,30 +4624,28 @@ ${issueStrings}`);
           let j = i - 1;
           while (j > 0 && tokens[j].type !== "LEFT_PAREN") {
             if (tokens[j].type === "SYMBOL" && tokens[j].originalValue) {
-              tokens[j].value = tokens[j].originalValue;
-              localVars.add(tokens[j].value);
+              newScope.add(tokens[j].originalValue);
+              tokens[j].value = `_${tokens[j].originalValue}`;
+              tokens[j].isLocal = true;
             }
             j--;
           }
         } else {
-          localVars.add(token.value);
+          newScope.add(token.value);
         }
+        scopeStack2.push({ vars: newScope, depth: stack.length });
       }
       if (isVar) {
         token.varName = token.value;
-        if (!localVars.has(token.value)) {
+        if (!isLocal(token.value)) {
           token.originalValue = token.value;
           token.value = `ctx['${token.value}']`;
+        } else {
+          token.value = `_${token.value}`;
+          token.isLocal = true;
         }
       }
       i++;
-    }
-    for (const token of tokens) {
-      if (token.type === "SYMBOL" && token.varName && localVars.has(token.value)) {
-        token.originalValue = token.value;
-        token.value = `_${token.value}`;
-        token.isLocal = true;
-      }
     }
     let freeVariables = null;
     if (topLevelArrowIndex !== -1) {
@@ -4657,8 +4662,8 @@ ${issueStrings}`);
     const compiled = tokens.map((t) => paddedValues.get(t.value) || t.value).join("");
     return { expr: compiled, freeVariables };
   }
-  function compileExpr(expr) {
-    return processExpr(expr).expr;
+  function compileExpr(expr, seededLocals) {
+    return processExpr(expr, seededLocals).expr;
   }
   var INTERP_REGEXP = /\{\{.*?\}\}|\#\{.*?\}/g;
   function replaceDynamicParts(s, replacer) {
