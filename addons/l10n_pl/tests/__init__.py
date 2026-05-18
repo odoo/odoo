@@ -1,2 +1,3 @@
 from . import test_bank_account_verification
+from . import test_mpp
 from . import test_taxable_supply_date_with_lock_dates
