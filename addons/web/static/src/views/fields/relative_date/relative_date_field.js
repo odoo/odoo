@@ -10,7 +10,7 @@ import { formatDate } from "../formatters";
 
 const { DateTime } = luxon;
 
-export class RemainingDaysField extends Component {
+export class RelativeDateField extends Component {
     static components = { DateTimeField };
 
     static props = {
@@ -26,7 +26,7 @@ export class RemainingDaysField extends Component {
         },
     };
 
-    static template = "web.RemainingDaysField";
+    static template = "web.RelativeDateField";
 
     get diffDays() {
         const { record, name } = this.props;
@@ -89,8 +89,8 @@ export class RemainingDaysField extends Component {
     }
 }
 
-export const remainingDaysField = {
-    component: RemainingDaysField,
+export const relativeDateField = {
+    component: RelativeDateField,
     displayName: _t("Remaining Days"),
     supportedTypes: ["date", "datetime"],
     extractProps: ({ options }) => ({
@@ -98,4 +98,4 @@ export const remainingDaysField = {
     }),
 };
 
-registry.category("fields").add("remaining_days", remainingDaysField);
+registry.category("fields").add("relative_date", relativeDateField);

@@ -47,7 +47,7 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='create_date']" position="after">
                 <field name="product_qty" column_invisible="True"/>
-                <field name="alert_date" optional="hide" widget='remaining_days' invisible="product_qty &lt;= 0"/>
+                <field name="alert_date" optional="hide" widget='relative_date' invisible="product_qty &lt;= 0"/>
                 <field name="use_date" optional="hide"/>
                 <field name="removal_date" optional="hide"/>
                 <field name="expiration_date" optional="hide"/>
@@ -68,7 +68,7 @@
                 <div>
                     <span title="Alert" class="fa fa-exclamation-triangle text-danger me-2"
                           invisible="product_qty &lt;= 0 or not product_expiry_alert or not expiration_date"/>
-                    <field name="alert_date" widget='remaining_days' class="d-inline-block"/>
+                    <field name="alert_date" widget='relative_date' class="d-inline-block"/>
                 </div>
             </xpath>
             <xpath expr="//field[@name='product_id']" position="after">

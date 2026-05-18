@@ -71,7 +71,7 @@
                         class="oe_inline text-danger">Inactive</span>
                     <span invisible="not l10n_in_gstin_verified_date and not l10n_in_gstin_verified_status" class="text-muted">
                         (
-                        <field name="l10n_in_gstin_verified_date" widget="remaining_days" class="oe_inline" readonly="1" />
+                        <field name="l10n_in_gstin_verified_date" widget="relative_date" class="oe_inline" readonly="1" />
                         <button name="action_l10n_in_verify_gstin_status" type="object" icon="fa-refresh"
                             class="oe_link p-0 ps-2" title="Reverify GSTIN status" />
                         )

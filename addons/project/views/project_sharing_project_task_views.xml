@@ -51,7 +51,7 @@
                         <field t-if="record.partner_id.value" name="partner_id" class="text-truncate text-muted d-block"/>
                     </div>
                     <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}" context="{'project_id': project_id}"/>
-                    <field t-if="record.date_deadline.raw_value" name="date_deadline" invisible="state in ['1_done', '1_canceled']" widget="remaining_days"/>
+                    <field t-if="record.date_deadline.raw_value" name="date_deadline" invisible="state in ['1_done', '1_canceled']" widget="relative_date"/>
                     <field t-if="record.displayed_image_id.value" groups="base.group_user" name="displayed_image_id" widget="attachment_image"/>
                     <footer t-if="!selection_mode">
                         <field name="priority" class="pt-1" widget="priority"/>
