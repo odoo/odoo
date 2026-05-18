@@ -1,5 +1,6 @@
 import { Plugin } from "@html_editor/plugin";
 import { baseContainerGlobalSelector } from "@html_editor/utils/base_container";
+import { isBlock } from "@html_editor/utils/blocks";
 import { isEmptyBlock } from "@html_editor/utils/dom_info";
 import { childNodes } from "@html_editor/utils/dom_traversal";
 import { withSequence } from "@html_editor/utils/resource";
@@ -107,8 +108,33 @@ export class MailComposerPlugin extends Plugin {
             }
         };
         [...sanitizedFragment.childNodes].forEach(removeStyle);
+        flattenStructuralDivWrappers(sanitizedFragment);
         this.dependencies.dom.insert(sanitizedFragment);
         this.dependencies.history.addStep();
         return true;
+    }
+}
+
+/**
+ * Unwrap plain `<div>` wrappers that carry no attributes after sanitization
+ * and contain only block-level children. Pasted content from Discuss/Owl UI
+ * often produces deeply nested structural wrappers (each `<div>` only wraps
+ * other blocks); they are pure noise and prevent operations like
+ * backspace-merge from working across them.
+ */
+function flattenStructuralDivWrappers(root) {
+    let changed = true;
+    while (changed) {
+        changed = false;
+        for (const div of [...root.querySelectorAll("div")]) {
+            if (
+                div.attributes.length === 0 &&
+                div.childNodes.length > 0 &&
+                [...div.childNodes].every((child) => isBlock(child))
+            ) {
+                div.replaceWith(...div.childNodes);
+                changed = true;
+            }
+        }
     }
 }
