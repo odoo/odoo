@@ -8,7 +8,18 @@
                         <img t-att-class="{ 'bill-guide-img': this.props.largeIcons }" src="/web/static/img/folder.svg"/>
                     </div>
                     <div class="text-center mt-2">
-                        <span class="btn account_drag_drop_btn pe-none" t-att-class="{ 'btn-lg': this.props.largeIcons }">Drag &amp; drop</span>
+                        <t t-if="!this.isMobileDevice">
+                            <span class="btn account_drag_drop_btn pe-none" t-att-class="{ 'btn-lg': this.props.largeIcons }">Drag &amp; drop</span>
+                        </t>
+                        <t t-else="">
+                            <AccountFileUploader>
+                                <t t-set-slot="toggler">
+                                    <button type="button" class="btn btn-primary o_button_upload_bill" data-hotkey="shift+i">
+                                        Upload
+                                    </button>
+                                </t>
+                            </AccountFileUploader>
+                        </t>
                         <div t-if="this.showSampleAction">
                             <span class="btn pe-none px-1 fw-normal">or</span>
                             <a class="btn btn-link px-0 fw-normal"
