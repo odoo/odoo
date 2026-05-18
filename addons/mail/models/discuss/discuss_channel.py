@@ -1501,35 +1501,35 @@ class DiscussChannel(models.Model):
         return new_channel
 
     @api.model
-    def _create_group(self, partners_to, default_display_mode=False, name=''):
+    def _create_group(self, users_to, default_display_mode=False, name=''):
         """ Creates a group channel.
 
-            :param partners_to : list of res.partner ids to add to the conversation
+            :param users_to: res.users recordset to add to the conversation
             :param str default_display_mode: how the channel will be displayed by default
             :param str name: group name. default name is computed client side from the list of members if no name is set
             :returns: channel_info of the created channel
             :rtype: dict
         """
-        partners_to = OrderedSet(partners_to)
+        partners = users_to.partner_id
         channel = self.create(
             {
                 "channel_member_ids": [
                     Command.create(
                         {
-                            "partner_id": partner_id,
+                            "partner_id": partner.id,
                             "channel_role": "owner"
-                            if partner_id == self.env.user.partner_id.id and not self.env.user._is_public()
+                            if partner == self.env.user.partner_id and not self.env.user._is_public()
                             else None,
                         }
                     )
-                    for partner_id in partners_to
+                    for partner in partners
                 ],
                 "channel_type": "group",
                 "default_display_mode": default_display_mode,
                 "name": name,
             }
         )
-        channel._broadcast(channel.channel_member_ids.partner_id.user_ids)
+        channel._broadcast(users_to)
         return channel
 
     def _create_sub_channel(self, from_message_id=None, name=None):

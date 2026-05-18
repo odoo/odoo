@@ -33,7 +33,7 @@ class TestUi(HttpCaseWithUserDemo):
                 self.env["discuss.channel"]
                 .with_user(bob)
                 ._create_group(
-                    partners_to=john.partner_id.ids,
+                    users_to=john,
                     default_display_mode="video_full_screen",
                 )
             )

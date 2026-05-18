@@ -662,7 +662,7 @@ class TestChannelInternals(MailCommon, HttpCase):
         """ Test that a partner can leave a channel/group but not a chat."""
         group_restricted_channel = self.env['discuss.channel']._create_channel(name='Channel for Groups', group_id=self.env.ref('base.group_user').id)
         public_channel = self.env['discuss.channel']._create_channel(name='Channel for Everyone', group_id=None)
-        private_group = self.env['discuss.channel']._create_group(partners_to=self.user_employee.partner_id.ids, name="Group")
+        private_group = self.env['discuss.channel']._create_group(users_to=self.user_employee, name="Group")
         chat_user_current = self.env['discuss.channel']._get_or_create_chat(self.env.user.partner_id.ids)
         self.assertEqual(len(group_restricted_channel.channel_member_ids), 1)
         self.assertEqual(len(public_channel.channel_member_ids), 1)
@@ -737,7 +737,7 @@ class TestChannelInternals(MailCommon, HttpCase):
 
     def test_channel_should_generate_correct_default_avatar(self):
         test_channel = self.env['discuss.channel']._create_channel(name='Channel', group_id=self.env.ref('base.group_user').id)
-        private_group = self.env['discuss.channel']._create_group(partners_to=self.user_employee.partner_id.ids)
+        private_group = self.env['discuss.channel']._create_group(users_to=self.user_employee)
         bgcolor_channel = html_escape(get_random_ui_color_from_seed(str(test_channel.id)))
         bgcolor_group = html_escape(get_random_ui_color_from_seed(str(private_group.id)))
         expected_avatar_channel = (channel_avatar.replace('fill="#875a7b"', f'fill="{bgcolor_channel}"')).encode()
