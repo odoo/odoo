@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="l10n_pl_pkwiu_code_view_tree" model="ir.ui.view">
+            <field name="name">l10n_pl.pkwiu.code.list</field>
+            <field name="model">l10n_pl.pkwiu.code</field>
+            <field name="arch" type="xml">
+                <list string="PKWiU Codes">
+                    <field name="code"/>
+                    <field name="name"/>
+                    <field name="start_date" optional="hide"/>
+                    <field name="expiry_date" optional="hide"/>
+                    <field name="l10n_pl_split_payment" optional="hide"/>
+                </list>
+            </field>
+        </record>
+        <record id="l10n_pl_pkwiu_code_view_search" model="ir.ui.view">
+            <field name="name">l10n_pl.pkwiu.code.search</field>
+            <field name="model">l10n_pl.pkwiu.code</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                    <field name="code"/>
+                    <filter string="Active" domain="[
+                        '|',
+                        ('expiry_date', '&gt;', 'today'),
+                        ('expiry_date', '=', None),
+                        '|',
+                        ('start_date', '&lt;=', 'today'),
+                        ('start_date', '=', None)
+                    ]" name="in_use"/>
+                    <filter string="Split Payment" domain="[('l10n_pl_split_payment', '=', True)]" name="split_payment"/>
+                </search>
+            </field>
+        </record>
+        <record id="l10n_pl_pkwiu_code_view_form" model="ir.ui.view">
+            <field name="name">l10n_pl.pkwiu.code.form</field>
+            <field name="model">l10n_pl.pkwiu.code</field>
+            <field name="arch" type="xml">
+                <form string="PKWiU Codes">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="code"/>
+                            <field name="start_date"/>
+                            <field name="expiry_date"/>
+                            <field name="l10n_pl_split_payment"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="l10n_pl_pkwiu_code_action" model="ir.actions.act_window">
+            <field name="name">PKWiU Code</field>
+            <field name="res_model">l10n_pl.pkwiu.code</field>
+            <field name="context">{'search_default_in_use':1}</field>
+            <field name="view_mode">list,form</field>
+        </record>
+
+        <menuitem action="l10n_pl_pkwiu_code_action" id="l10n_pl_pkwiu_code_menu"
+                  parent="account.account_invoicing_menu" sequence="50" groups="account.group_account_manager"/>
+    </data>
+</odoo>
