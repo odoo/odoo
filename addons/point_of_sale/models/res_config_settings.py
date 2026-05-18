@@ -30,6 +30,7 @@ class ResConfigSettings(models.TransientModel):
 
     pos_config_id = fields.Many2one('pos.config', string="Point of Sale", default=lambda self: self._default_pos_config())
     sale_tax_id = fields.Many2one('account.tax', string="Default Sale Tax", related='company_id.account_sale_tax_id', readonly=False, check_company=True)
+    module_l10n_at_pos = fields.Boolean(string="Austria Fiscalization", help="Configure Fiskaly credentials required for Austrian RKSV fiscalization")
     module_pos_adyen = fields.Boolean(string="Adyen Payment Terminal", help="The transactions are processed by Adyen. Set your Adyen credentials on the related payment method.")
     module_pos_stripe = fields.Boolean(string="Stripe Payment Terminal", help="The transactions are processed by Stripe. Set your Stripe credentials on the related payment method.")
     module_pos_viva_com = fields.Boolean(string="Viva.com Payment Terminal", help="The transactions are processed by Viva.com on terminal or tap on phone.")
