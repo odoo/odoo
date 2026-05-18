@@ -855,15 +855,20 @@ class SaleOrderLine(models.Model):
             for combo_id in combo_line.product_template_id.sudo().combo_ids
         }
         total_combo_base_price = sum(combo_base_prices.values())
-        # Compute the prorated combo prices.
-        combo_prices = {
-            combo_id: self.currency_id.round(
-                # Don't divide by total_combo_base_price if it's 0. This will make the prorating
-                # wrong, but the delta will be fixed by combo_price_delta below.
-                base_price * combo_product_price / (total_combo_base_price or 1)
-            )
-            for (combo_id, base_price) in combo_base_prices.items()
-        }
+        # Compute the prorated combo prices. When all combos have a zero base price, prorating by
+        # base price would assign the whole combo product's price to a single combo (via
+        # combo_price_delta below), making one combo item show the full price while the others
+        # show 0. Distribute the price evenly instead.
+        if total_combo_base_price:
+            combo_prices = {
+                combo_id: self.currency_id.round(
+                    base_price * combo_product_price / total_combo_base_price
+                )
+                for (combo_id, base_price) in combo_base_prices.items()
+            }
+        else:
+            even_share = self.currency_id.round(combo_product_price / len(combo_base_prices))
+            combo_prices = {combo_id: even_share for combo_id in combo_base_prices}
         # Compute the delta between the combo product's price and the sum of its combo prices.
         # Ideally, this should be 0, but division in python isn't perfect, so we may need to adjust
         # the combo prices to make the delta 0.
