@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_users_tree_project_template" model="ir.ui.view">
+        <field name="name">res.users.tree.project.template.assignees</field>
+        <field name="model">res.users</field>
+        <field name="arch" type="xml">
+            <list string="Users">
+                <field name="avatar_128" widget="image" options="{'size': [24, 24], 'img_class': 'o_avatar rounded'}" width="30" nolabel="1"/>
+                <field name="name"/>
+                <field name="login" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_users_search_project_template" model="ir.ui.view">
+        <field name="name">res.users.search.project.template.assignees</field>
+        <field name="model">res.users</field>
+        <field name="arch" type="xml">
+            <search string="Users">
+                <field name="name" filter_domain="['|', '|', ('name', 'ilike', self), ('login', 'ilike', self), ('email', 'ilike', self)]" string="Name"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_users_kanban_project_template" model="ir.ui.view">
+        <field name="name">res.users.kanban.project.template.assignees</field>
+        <field name="model">res.users</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile">
+                <field name="active"/>
+                <templates>
+                    <t t-name="card" class="flex-row">
+                        <aside class="w-25 p-1">
+                            <field name="avatar_128" widget="image" alt="Avatar"/>
+                        </aside>
+                        <main class="w-100 ps-2 pt-1">
+                            <div name="project_template_assignee_identity">
+                                <div t-if="record.active.raw_value" class="text-success float-end">
+                                    <i class="fa fa-circle" role="img" aria-label="Ok" title="Ok"></i>
+                                </div>
+                                <div t-else="" class="text-danger float-end">
+                                    <i class="fa fa-circle" role="img" aria-label="Invalid" title="Invalid"></i>
+                                </div>
+                                <field class="fw-bold" name="name"/>
+                            </div>
+                        </main>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_users_tree_project_template_inherit_hr_skills" model="ir.ui.view">
+        <field name="name">res.users.tree.project.template.assignees.inherit.hr.skills</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="project.view_users_tree_project_template"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='login']" position="after">
+                <field name="job_id" string="Job Position" optional="show"/>
+                <field name="skill_ids" string="Skills" widget="many2many_tags" options="{'color_field': 'color'}" optional="show"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_users_search_project_template_inherit_hr_skills" model="ir.ui.view">
+        <field name="name">res.users.search.project.template.assignees.inherit.hr.skills</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="project.view_users_search_project_template"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="job_id" string="Job Position"/>
+                <field name="skill_ids" string="Skills"/>
+            </xpath>
+            <xpath expr="//search" position="inside">
+                <filter name="group_job"
+                        string="Job Position"
+                        context="{'group_by': 'job_id'}"/>
+                <filter name="group_skills"
+                        string="Skills"
+                        context="{'group_by': 'skill_ids'}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_users_kanban_project_template_inherit_hr_skills" model="ir.ui.view">
+        <field name="name">res.users.kanban.project.template.assignees.inherit.hr.skills</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="project.view_users_kanban_project_template"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='active']" position="after">
+                <field name="job_id"/>
+                <field name="skill_ids"/>
+            </xpath>
+            <xpath expr="//div[@name='project_template_assignee_identity']" position="after">
+                <div>
+                    <field name="job_id" class="small mb-1"/>
+                    <field name="skill_ids" widget="many2many_tags" options="{'color_field': 'color'}" class="mb-2"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

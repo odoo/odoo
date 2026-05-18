@@ -7,7 +7,7 @@
                 <activity string="Project" js_class="project_project_activity">
                     <templates>
                         <div t-name="activity-box" class="d-flex">
-                            <field name="user_id" widget="many2one_avatar_user"/>
+                            <field name="user_id" widget="many2one_avatar_user" context="{'list_view_ref': 'project.view_users_tree_project_template', 'search_view_ref': 'project.view_users_search_project_template', 'kanban_view_ref': 'project.view_users_kanban_project_template'}"/>
                             <field name="name" string="Project Name" class="flex-grow-1 o_text_block"/>
                         </div>
                     </templates>
@@ -128,7 +128,7 @@
                         </group>
                         <group>
                             <field name="active" invisible="1"/>
-                            <field name="user_id" string="Project Manager" widget="many2one_avatar_user" readonly="not active" domain="[('share', '=', False)]"/>
+                            <field name="user_id" string="Project Manager" widget="many2one_avatar_user" readonly="not active" domain="[('share', '=', False)]" context="{'list_view_ref': 'project.view_users_tree_project_template', 'search_view_ref': 'project.view_users_search_project_template', 'kanban_view_ref': 'project.view_users_kanban_project_template'}"/>
                             <field name="date_start" string="Planned Date" widget="daterange" options='{"end_date_field": "date", "always_range": True}' required="date_start or date" />
                             <field name="date" invisible="1" required="date_start"/>
                         </group>
@@ -282,7 +282,7 @@
                         optional="hide"
                         invisible="not allow_milestones or is_template"
                     />
-                    <field name="user_id" optional="show" string="Project Manager" widget="many2one_avatar_user" options="{'no_open':True, 'no_create': True}"/>
+                    <field name="user_id" optional="show" string="Project Manager" widget="many2one_avatar_user" options="{'no_open':True, 'no_create': True}" context="{'list_view_ref': 'project.view_users_tree_project_template', 'search_view_ref': 'project.view_users_search_project_template', 'kanban_view_ref': 'project.view_users_kanban_project_template'}"/>
                     <field name="last_update_color" column_invisible="True"/>
                     <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'on_tag_click': 'edit_color'}" optional="hide"/>
                     <field name="last_update_status" string="Status" nolabel="1" width="20px" optional="show" widget="project_state_selection" invisible="is_template"/>
@@ -370,7 +370,7 @@
                             <field name="name" class="fw-bolder" string="Project Name"/>
                             <div class="d-flex">
                                 <field name="partner_id" string="Contact"/>
-                                <field name="user_id" class="ms-auto" widget="many2one_avatar_user"/>
+                                <field name="user_id" class="ms-auto" widget="many2one_avatar_user" context="{'list_view_ref': 'project.view_users_tree_project_template', 'search_view_ref': 'project.view_users_search_project_template', 'kanban_view_ref': 'project.view_users_kanban_project_template'}"/>
                             </div>
                         </t>
                     </templates>
@@ -547,7 +547,7 @@
                                     <field name="activity_ids" widget="kanban_activity" class="ms-2"/>
                                 </div>
                                 <div class="d-flex ms-auto align-items-center">
-                                    <field name="user_id" widget="many2one_avatar_user" domain="[('share', '=', False)]" class="me-1"/>
+                                    <field name="user_id" widget="many2one_avatar_user" domain="[('share', '=', False)]" class="me-1" context="{'list_view_ref': 'project.view_users_tree_project_template', 'search_view_ref': 'project.view_users_search_project_template', 'kanban_view_ref': 'project.view_users_kanban_project_template'}"/>
                                     <field t-if="record.last_update_status.value &amp;&amp; widget.editable &amp;&amp; !record.is_template.raw_value" name="last_update_status" widget="project_state_selection"/>
                                     <span t-if="record.last_update_status.value &amp;&amp; !widget.editable" t-att-class="'o_status_bubble mx-0 o_color_bubble_' + record.last_update_color.value" t-att-title="record.last_update_status.value"></span>
                                 </div>
@@ -646,7 +646,7 @@
                     color="color"
                     js_class="project_project_calendar">
                     <field name="partner_id" invisible="not partner_id"/>
-                    <field name="user_id" widget="many2one_avatar_user" invisible="not user_id"/>
+                    <field name="user_id" widget="many2one_avatar_user" invisible="not user_id" context="{'list_view_ref': 'project.view_users_tree_project_template', 'search_view_ref': 'project.view_users_search_project_template', 'kanban_view_ref': 'project.view_users_kanban_project_template'}"/>
                     <field name="is_favorite" widget="project_is_favorite" nolabel="1" string="Favorite"/>
                     <field name="color" invisible="1"/>
                     <field name="stage_id" groups="project.group_project_stages" invisible="not stage_id"/>
