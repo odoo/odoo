@@ -105,6 +105,8 @@ class PaymentPortal(payment_portal.PaymentPortal):
         kwargs = {
             'pos_order_id': pos_order_sudo.id,
         }
+        if pos_order_sudo.source == 'kiosk':
+            exit_route = None
         rendering_context = {
             **kwargs,
             'exit_route': exit_route,
