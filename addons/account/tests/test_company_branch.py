@@ -324,11 +324,9 @@ class TestCompanyBranch(AccountTestInvoicingCommon):
             'groups_id': [Command.set([
                 self.env.ref('base.group_system').id,
                 self.env.ref('base.group_erp_manager').id,
-                self.env.ref('account.group_account_manager').id,
+                self.env.ref('account.group_account_user').id,
             ])],
         })
-
-        # self.branch_user.write({"company_ids": self.branch_a.ids, "groups_id": [Command.link(self.env.ref('account.group_account_manager').id)]})
 
         journal = self.env['account.journal'].create({
             'name': "Bank (EUR)",
