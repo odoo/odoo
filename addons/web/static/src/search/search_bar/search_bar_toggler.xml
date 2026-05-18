@@ -3,7 +3,7 @@
 
     <t t-name="web.SearchBar.Toggler">
         <button t-if="this.props.isSmall" t-attf-class="btn btn-secondary {{ this.props.showSearchBar ? 'active' : '' }}" t-on-click="this.props.toggleSearchBar">
-            <i class="fa fa-fw fa-search"/>
+            <i class="fa fa-fw fa-search" data-tooltip="Display search bar"/>
         </button>
     </t>
 

@@ -16,7 +16,7 @@ registry.category("web_tour.tours").add("change_expense_product_price_tour", {
         },
         {
             content: "Open the product A",
-            trigger: ".o_data_row .o_data_cell[data-tooltip='product_a']",
+            trigger: ".o_data_row .o_data_cell:text(product_a)",
             run: "click",
         },
         {
@@ -51,7 +51,7 @@ registry.category("web_tour.tours").add("change_expense_product_price_tour", {
         },
         {
             content: "Open the product B",
-            trigger: ".o_data_row .o_data_cell[data-tooltip='product_b']",
+            trigger: ".o_data_row .o_data_cell:text(product_b)",
             run: "click",
         },
         {
@@ -85,7 +85,7 @@ registry.category("web_tour.tours").add("change_expense_product_price_tour", {
         },
         {
             content: "Open the product C",
-            trigger: ".o_data_row .o_data_cell[data-tooltip='product_c with no cost']",
+            trigger: ".o_data_row .o_data_cell:text(product_c with no cost)",
             run: "click",
         },
         {
@@ -122,7 +122,7 @@ registry.category("web_tour.tours").add("change_expense_product_price_tour", {
         },
         {
             content: "Wait until we are back to the list view",
-            trigger: ".o_data_row .o_data_cell[data-tooltip='product_c with no cost']",
+            trigger: ".o_data_row .o_data_cell:text(product_c with no cost)",
         },
     ],
 });

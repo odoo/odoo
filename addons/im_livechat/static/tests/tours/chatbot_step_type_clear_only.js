@@ -6,7 +6,7 @@ registry.category("web_tour.tours").add("change_chatbot_step_type", {
     steps: () => [
         {
             content: "Open an existing script",
-            trigger: ".o_field_cell[data-tooltip='Clear Answer Test Bot']",
+            trigger: ".o_field_cell:text(Clear Answer Test Bot)",
             run: "click",
         },
         {

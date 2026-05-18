@@ -60,7 +60,7 @@ registry.category("web_tour.tours").add("do_not_create_zero_amount_expense", {
         },
         {
             content: "Go to an expense",
-            trigger: '.o_data_row .o_data_cell[data-tooltip="expense_for_tour"]',
+            trigger: '.o_data_row .o_data_cell:text(expense_for_tour)',
             run: "click",
         },
         {

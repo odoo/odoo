@@ -97,7 +97,7 @@ registry.category("web_tour.tours").add("hr_expense_access_rights_test_tour", {
         },
         {
             content: "Go to First Expense for employee",
-            trigger: 'td[data-tooltip="First Expense for employee"]',
+            trigger: '.o_data_cell:text(First Expense for employee)',
             run: "click",
         },
         {

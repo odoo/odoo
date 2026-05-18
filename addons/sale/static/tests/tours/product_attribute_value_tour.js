@@ -15,14 +15,14 @@ const openProductAttribute = (product_attribute) => [
     },
     {
         content: `Navigate to ${product_attribute}`,
-        trigger: `.o_data_cell[data-tooltip=${product_attribute}]`,
+        trigger: `.o_data_cell:text(${product_attribute})`,
         run: "click",
     },
 ];
 const deletePAV = (product_attribute_value, message) => [
     {
         content: 'Click delete button',
-        trigger: `.o_data_cell[data-tooltip=${product_attribute_value}] ~ .o_list_record_remove`,
+        trigger: `.o_data_cell:text(${product_attribute_value}) ~ .o_list_record_remove`,
         run: "click",
     },
     {

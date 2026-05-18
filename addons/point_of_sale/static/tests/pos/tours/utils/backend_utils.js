@@ -9,7 +9,7 @@ export function editShopConfiguration(shop) {
             run: "click",
         },
         {
-            trigger: `.o_data_cell[data-tooltip=${shop}]`,
+            trigger: `.o_data_cell:text(${shop})`,
             run: "click",
         },
     ];
