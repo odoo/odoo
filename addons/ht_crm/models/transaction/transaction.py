@@ -19,13 +19,13 @@ class Transaction(models.Model):
         default=lambda self: self.env.company.currency_id,
     )
 
-    employee_id = fields.Many2one('sale.employee', string="Sales", domain=[('role_ids.code', '=', 'sales')])
-    customer_id = fields.Many2one("sale.customer", string="Khách hàng")
+    employee_id = fields.Many2one('sale.employee', string="Sales", domain=[('role_ids.code', '=', 'sales')], required=True)
+    customer_id = fields.Many2one("sale.customer", string="Khách hàng", required=True)
     
     date = fields.Date(default=fields.Date.today, string="Ngày giao dịch")
 
     # Thông tiên liên quan về SP
-    product_id = fields.Many2one('estate.property.unit', string="Tên SP", domain=[('state', 'in', ['available', 'resale'])])
+    product_id = fields.Many2one('estate.property.unit', string="Tên SP", domain=[('state', 'in', ['available', 'resale'])], required=True)
     net_area = fields.Float(
         related="product_id.net_area",
         string="DTTT (m²)",
@@ -198,6 +198,13 @@ class Transaction(models.Model):
                 'total_value': new_value,
                 'total_deals': new_deals,
             })
+
+    def action_print_transaction(self):
+        self.ensure_one()
+
+        return self.env.ref(
+            'ht_crm.action_report_transaction'
+        ).report_action(self)
 
     def action_confirm_deposit(self):
         for rec in self:
