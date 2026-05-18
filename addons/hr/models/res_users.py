@@ -155,6 +155,8 @@ class ResUsers(models.Model):
     birthday = fields.Date(**related_employee_field('birthday'), user_writeable=True)
     birthday_public_display = fields.Boolean(**related_employee_field('birthday_public_display'), user_writeable=True)
 
+    job_id = fields.Many2one('hr.job', **related_employee_field('job_id'))
+    skill_ids = fields.Many2many('hr.skill', **related_employee_field('skill_ids'))
     current_employee_skill_ids = fields.One2many('hr.employee.skill', compute='_compute_current_employee_skill_ids',
         readonly=False, user_writeable=True)
     can_edit_skills = fields.Boolean(compute='_compute_can_edit_skills')
