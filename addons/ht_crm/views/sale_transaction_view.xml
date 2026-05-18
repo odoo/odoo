@@ -111,27 +111,43 @@
 
                     <!-- Price Section -->
                     <group string="Thông tin tài chính" col="4">
+                        <field name="currency_id" invisible="1"/>
 
-                        <field name="listed_price"
-                            readonly="1"
-                            class="oe_inline"/>
+                        <!-- Giá niêm yết -->
+                        <field name="listed_price" readonly="1" class="oe_inline" widget="monetary"/>
 
-                        <field name="discount"/>
+                        <!-- % CK -->
+                        <field name="discount_percent"/>
 
-                        <field name="price_total"
-                            readonly="1"
-                            class="oe_inline"/>
+                        <!-- Tiền CK -->
+                        <field name="discount_amount" readonly="1" widget="monetary"/>
 
-                        <label for="price_total"/>
+                        <!-- Giá sau CK -->
+                        <field name="price_subtotal" readonly="1" widget="monetary"/>
+
+                        <!-- VAT % -->
+                        <field name="vat_percent"/>
+
+                        <!-- Tiền VAT -->
+                        <field name="vat_amount" readonly="1" widget="monetary"/>
+
+                        <!-- Tổng cuối -->
+                        <field name="price_total" readonly="1" class="oe_inline" widget="monetary"/>
+
+                        <!-- Ghi chú -->
+                        <label for="price_total" widget="monetary"/>
                         <div class="text-muted">
-                            Giá cuối cùng sau VAT và chiết khấu
+                            Tổng thanh toán cuối cùng sau chiết khấu và VAT
                         </div>
 
                     </group>
 
                     <!-- Notebook -->
                     <notebook>
-
+                        <page string="Tài liệu">
+                            <field name="attachment_ids" widget="many2many_binary"/>
+                        </page>
+                        
                         <page string="Lịch sử">
                             <group>
                                 <field name="create_uid" readonly="1"/>
@@ -145,9 +161,6 @@
 
                 </sheet>
 
-                <!-- Chatter -->
-                <chatter/>
-
             </form>
         </field>
     </record>
@@ -158,6 +171,7 @@
         <field name="arch" type="xml">
 
             <kanban default_group_by="state">
+                <field name="currency_id" invisible="1"/>
 
                 <field name="name"/>
                 <field name="customer_id"/>

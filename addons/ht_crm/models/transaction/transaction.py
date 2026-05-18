@@ -15,7 +15,8 @@ class Transaction(models.Model):
 
     currency_id = fields.Many2one(
         'res.currency',
-        default=lambda self: self.env.company.currency_id
+        string="Đơn vị tiền tệ",
+        default=lambda self: self.env.company.currency_id,
     )
 
     employee_id = fields.Many2one('sale.employee', string="Sales", domain=[('role_ids.code', '=', 'sales')])
@@ -39,20 +40,50 @@ class Transaction(models.Model):
         readonly=True
     )
 
+    # % VAT
+    vat_percent = fields.Float(
+        string="VAT (%)",
+        default=0,
+        digits=(16, 1)
+    )
+
+    # Tiền VAT
+    vat_amount = fields.Monetary(
+        string="Tiền VAT",
+        currency_field="currency_id",
+        compute="_compute_amount",
+        store=True
+    )
+
     # % chiết khấu
-    discount = fields.Float(
+    discount_percent = fields.Float(
         string="Chiết khấu (%)",
         default=0,
         digits=(16, 1)
     )
 
-    # Giá cuối cùng sau CK
-    price_total = fields.Monetary(
-        string="Giá sau VAT",
+    # Tiền chiết khấu
+    discount_amount = fields.Monetary(
+        string="Tiền chiết khấu",
         currency_field="currency_id",
-        compute="_compute_final_price",
-        store=True,
-        digits=(16, 0)
+        compute="_compute_amount",
+        store=True
+    )
+
+    # Giá sau chiết khấu (chưa VAT)
+    price_subtotal = fields.Monetary(
+        string="Giá sau chiết khấu",
+        currency_field="currency_id",
+        compute="_compute_amount",
+        store=True
+    )
+
+    # Tổng thanh toán cuối
+    price_total = fields.Monetary(
+        string="Tổng thanh toán",
+        currency_field="currency_id",
+        compute="_compute_amount",
+        store=True
     )
 
     # Trường bổ sung
@@ -61,8 +92,7 @@ class Transaction(models.Model):
         related="product_id.price",
         string="Giá niêm yết",
         store=True,
-        readonly=True,
-        digits=(16, 0)
+        readonly=True
     )
 
     state = fields.Selection([
@@ -72,17 +102,60 @@ class Transaction(models.Model):
         ('cancel', 'Hủy'),
     ], default='draft')
 
+    attachment_ids = fields.Many2many(
+        'ir.attachment',
+        string='Hồ sơ hợp đồng'
+    )
+
     @api.constrains('discount')
     def _check_discount(self):
         for record in self:
             if record.discount < 0 or record.discount > 100:
                 raise exceptions.ValidationError("Chiết khấu phải nằm trong khoảng từ 0 đến 100%.")
 
+    @api.depends(
+        'listed_price',
+        'discount_percent',
+        'vat_percent'
+    )
+    def _compute_amount(self):
+
+        for rec in self:
+
+            # Chiết khấu
+            rec.discount_amount = (
+                rec.listed_price *
+                rec.discount_percent / 100
+            )
+
+            # Giá sau CK
+            rec.price_subtotal = (
+                rec.listed_price -
+                rec.discount_amount
+            )
+
+            # VAT
+            rec.vat_amount = (
+                rec.price_subtotal *
+                rec.vat_percent / 100
+            )
+
+            # Tổng cuối
+            rec.price_total = (
+                rec.price_subtotal +
+                rec.vat_amount
+            )
+
     @api.depends('listed_price', 'discount')
     def _compute_final_price(self):
         for rec in self:
             discount_amount = rec.listed_price * (rec.discount / 100)
             rec.price_total = rec.listed_price - discount_amount
+
+    @api.depends('tax')
+    def _compute_final_price(self):
+        for rec in self:
+            rec.tax_amount = rec.listed_price * (rec.discount / 100)
 
     def _get_kpi(self, employee_id, month, year):
         return self.env['sale.employee.kpi'].search([
@@ -249,4 +322,5 @@ class Transaction(models.Model):
                     rec.price_total
                 )
         return res
+    
 

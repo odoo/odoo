@@ -140,8 +140,7 @@
         <field name="name">estate.property.unit.list</field>
         <field name="model">estate.property.unit</field>
         <field name="arch" type="xml">
-            <list>
-
+            <list>              
                 <field name="name"/>
                 <field name="project_id"/>
                 <field name="block"/>
@@ -152,9 +151,10 @@
                 <field name="net_area"/>
                 <field name="gross_area"/>
 
-                <field name="price"/>
+                <field name="price" widget="monetary"/>
                 <field name="state"/>
 
+                <field name="currency_id" optional="1"/>
             </list>
         </field>
     </record>

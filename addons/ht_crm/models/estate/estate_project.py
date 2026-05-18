@@ -15,6 +15,7 @@ class EstatePropertyUnit(models.Model):
 
     currency_id = fields.Many2one(
         'res.currency',
+        string="Đơn vị tiền tệ",
         default=lambda self: self.env.company.currency_id
     )
 
