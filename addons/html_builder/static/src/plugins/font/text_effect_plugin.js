@@ -14,6 +14,7 @@ import {
 } from "@html_editor/utils/dom_traversal";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { TextEffectUtil } from "./text_effect_util";
+import { getDeepestEditablePosition } from "@html_editor/utils/dom_info";
 
 export class TextEffectPlugin extends Plugin {
     static id = "textEffect";
@@ -201,19 +202,28 @@ export class TextEffectPlugin extends Plugin {
             span.dataset.textEffect = JSON.stringify({});
         }
         TextEffectUtil.applyConfiguredEffects(span);
+        // Select the deepest editable positions instead of the text-effect wrapper itself.
+        // The wrapper can contain block elements (<p>, headings, etc.), and later formatting
+        // operations (like font size) may introduce nested inline spans inside those blocks.
+        // Keeping the selection on the wrapper boundaries causes selection restoration issues
+        // when the text-effect wrapper is removed/unwrapped.
+        const [selectionStart, selectionEnd] = [
+            getDeepestEditablePosition(span, 0),
+            getDeepestEditablePosition(span, nodeSize(span)),
+        ];
         this.dependencies.selection.setSelection(
             direction === DIRECTIONS.RIGHT
                 ? {
-                      anchorNode: span,
-                      anchorOffset: 0,
-                      focusNode: span,
-                      focusOffset: nodeSize(span),
+                      anchorNode: selectionStart[0],
+                      anchorOffset: selectionStart[1],
+                      focusNode: selectionEnd[0],
+                      focusOffset: selectionEnd[1],
                   }
                 : {
-                      anchorNode: span,
-                      anchorOffset: nodeSize(span),
-                      focusNode: span,
-                      focusOffset: 0,
+                      anchorNode: selectionEnd[0],
+                      anchorOffset: selectionEnd[1],
+                      focusNode: selectionStart[0],
+                      focusOffset: selectionStart[1],
                   }
         );
         return { element: span, didRemoveOtherTextEffect };
