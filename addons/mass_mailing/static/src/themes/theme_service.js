@@ -46,9 +46,6 @@ export class ThemeModel extends Reactive {
                 nowrap: hasDataOption(theme, "nowrap"),
                 title: theme.getAttribute("title") || "",
             };
-            if (!themeOptions.layoutStyles.includes("background-color")) {
-                themeOptions.layoutStyles += "background-color: #F7F7F7;";
-            }
             if (hasDataOption(theme, "images-info")) {
                 const imagesInfo = Object.assign(
                     { all: {} },

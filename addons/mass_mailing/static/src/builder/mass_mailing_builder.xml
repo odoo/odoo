@@ -5,9 +5,15 @@
         <t t-set-slot="extraActions">
             <button t-if="this.props.toggleCodeView" t-on-click="this.props.toggleCodeView"
                 class="o-hb-btn btn d-flex align-items-center o_codeview_btn" title="Code View" accesskey="d"><i class="fa fa-code"/></button>
-            <button t-on-click="this.props.toggleFullScreen"
-                class="o-hb-btn btn btn-primary d-flex align-items-center" title="Fullscreen" accesskey="f">
-                <span t-attf-class="fa fa-expand"/>
+            <button t-on-click="this.props.saveAndClose"
+                class="o-hb-btn btn btn-primary d-flex align-items-center" title="Save &amp; Quit" accesskey="s"
+            >
+                <span>Save</span>
+            </button>
+            <button t-on-click="this.props.discardAndClose"
+                class="o-hb-btn btn btn-secondary d-flex align-items-center" title="Discard"
+            >
+                <span>Discard</span>
             </button>
         </t>
     </Builder>

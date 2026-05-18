@@ -7,9 +7,26 @@
                 [this.props.extraClass]: this.props.extraClass,
             }">
             <div class="d-flex w-100 h-100">
-                <div class="flex-grow-1" t-att-class="{'align-self-center': this.state.isMobile}">
+                <div class="flex-grow-1 position-relative" t-att-class="{'align-self-center': this.state.isMobile}">
                     <LocalOverlayContainer localOverlay="this.overlayRef" identifier="this.env.localOverlayContainerKey"/>
-                    <div t-att-class="{ 'o_is_mobile': this.state.isMobile, 'h-100': !this.state.isMobile }">
+                    <div class="o_mass_mailing_can_edit_overlay position-absolute h-100 w-100" t-on-click="() => this.toggleFullScreen(true)"
+                        t-if="this.state.editorReady and
+                            !this.props.readonly and
+                            this.props.withBuilder and
+                            !this.props.showThemeSelector and
+                            !this.props.showCodeView and
+                            !this.state.showFullscreen and
+                            !this.state.isSmall"
+                    >
+                        <div t-attf-class="h-100 w-100 #{this.state.emptyBody ? 'bg_empty_body' : ''}">
+                            <div class="h-100 w-100 opacity_on_hover">
+                                <div class="o_mass_mailing_iframe_fullscreen_label position-absolute translate-middle start-50 btn btn-primary btn-lg"
+                                    t-out="this.state.fullscreenButtonLabel"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="o_mass_mailing_iframe_container"
+                        t-att-class="{ 'o_is_mobile': this.state.isMobile, 'h-100': !this.state.isMobile }">
                         <iframe t-att-sandbox="this.isBrowserSafari ? 'allow-same-origin allow-scripts' : 'allow-same-origin'"
                             t-att-scrolling="this.state.isMobile ? '' : 'no'"
                             t-att-class="{ 'd-none': this.props.showThemeSelector or this.props.showCodeView }"
@@ -18,12 +35,13 @@
                 </div>
                 <div t-if="!this.props.readonly and this.props.withBuilder and !this.props.showThemeSelector and !this.props.showCodeView">
                     <div class="position-sticky o_mass_mailing-builder_sidebar o_builder_sidebar_open"
-                        t-att-class="{ 'd-none': this.env.isSmall }" t-custom-ref="sidebarRef">
+                        t-att-class="{ 'd-none': this.env.isSmall or !this.state.showFullscreen }" t-custom-ref="sidebarRef">
                         <LazyComponent t-if="this.state.ready" Component="'mass_mailing.MassMailingBuilder'"
                             props="() => ({
                                 builderProps: this.getBuilderProps(),
                                 toggleCodeView: this.props.toggleCodeView,
-                                toggleFullScreen: () => this.toggleFullScreen(),
+                                saveAndClose: () => this.saveAndClose(),
+                                discardAndClose: () => this.discardAndClose(),
                             })"
                             bundle="'mass_mailing.assets_builder'"/>
                     </div>

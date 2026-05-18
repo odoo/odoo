@@ -28,7 +28,8 @@ export class MassMailingBuilder extends Component {
     static props = {
         builderProps: { type: Object },
         toggleCodeView: { type: Function, optional: true },
-        toggleFullScreen: { type: Function },
+        saveAndClose: { type: Function },
+        discardChanges: { type: Function },
     };
 
     get builderProps() {
