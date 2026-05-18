@@ -113,6 +113,11 @@ export class DomPlugin extends Plugin {
         },
         clipboard_content_processors: this.removeEmptyClassAndStyleAttributes.bind(this),
         functional_empty_node_predicates: [isSelfClosingElement, isEditorTab],
+        normalize_handlers: (root) => {
+            root.querySelectorAll(".o_cursor_placeholder").forEach((el) => {
+                unwrapContents(el);
+            });
+        },
     };
 
     setup() {
