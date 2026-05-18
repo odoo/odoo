@@ -23,3 +23,16 @@ class ProductTemplate(models.Model):
         ],
         help='Codes for specific types of products, needed for VAT declaration'
     )
+    l10n_pl_subject_to_split_payment = fields.Boolean(
+        string='Subject to Split Payment',
+        help="Indicates if this product is subject to split payment",
+    )
+
+
+class ProductCategory(models.Model):
+    _inherit = 'product.category'
+
+    l10n_pl_subject_to_split_payment = fields.Boolean(
+        string='Subject to Split Payment',
+        help="Indicates if this product category is subject to split payment",
+    )

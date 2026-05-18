@@ -1,6 +1,7 @@
 from collections import defaultdict
 
 from odoo import api, fields, models
+from odoo.exceptions import RedirectWarning
 
 
 class L10nPlAccountPaymentRegister(models.TransientModel):
@@ -97,3 +98,17 @@ class L10nPlAccountPaymentRegister(models.TransientModel):
             return self.env['res.partner.bank'].browse(partner_bank_id)
         partner = self.env['res.partner'].browse(batch['payment_values']['partner_id'])
         return partner.bank_ids[:1]
+
+    def action_create_payments(self):
+        if (
+                self.payment_method_code == 'iso20022_pl' and
+                self.currency_id == self.env.ref("base.PLN") and
+                any(move_line.l10n_pl_mpp for move_line in self.line_ids) and
+                not self.partner_id.vat
+        ):
+            raise RedirectWarning(
+                message=self.env._("For the payment of MPP-flagged invoices, please configure the partner's VAT"),
+                action=self.partner_id._get_records_action(),
+                button_text=self.env._("Go to partner")
+            )
+        return super().action_create_payments()
