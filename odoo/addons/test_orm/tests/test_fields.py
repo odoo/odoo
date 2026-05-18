@@ -3541,6 +3541,21 @@ class TestX2many(TransactionExpressionCase):
         self.assertIn(parent, self._search(Model, [('all_relatives_ids', 'child_of', child_b.id)]))
         self.assertIn(parent, self._search(Model, [('all_relatives_ids', 'child_of', 'B')]))
 
+    def test_13_active_test_many2many_write(self):
+        Model = self.env['test_orm.model_active_field']
+        parent = Model.create({
+            'relatives_ids': [
+                Command.create({'name': 'A', 'active': True}),
+                Command.create({'name': 'B', 'active': False}),
+            ],
+        })
+        child_a, child_b = parent.with_context(active_test=False).relatives_ids
+
+        # parent has active_test=True
+        self.assertEqual(parent.relatives_ids, child_a)
+        parent.relatives_ids = child_a  # should leave the ids unchanged
+        self.assertEqual(parent.with_context(active_test=False).relatives_ids, child_a + child_b)
+
     def test_search_many2many(self):
         """ Tests search on many2many fields. """
         tags = self.env['test_orm.multi.tag']
