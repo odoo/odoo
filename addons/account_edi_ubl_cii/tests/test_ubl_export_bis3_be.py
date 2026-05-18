@@ -955,10 +955,12 @@ class TestBeExport(TestUblExportBis3BE):
     def test_invoice_cocontractant_tax_exemption_reason(self):
 
         co_contractant = self.env['account.chart.template'].ref('fiscal_position_template_4', raise_if_not_found=False)
+        valid_tax = self.env['account.chart.template'].ref('attn_VAT-OUT-00-CC', raise_if_not_found=False)
         co_contractant.note = "Test note"
         invoice = self._create_invoice_one_line(
             product_id=self.product_a,
             partner_id=self.partner_be,
+            tax_ids=valid_tax
         )
         invoice.fiscal_position_id = co_contractant
         invoice.action_post()

@@ -1,4 +1,5 @@
 from odoo import models, _
+from odoo.exceptions import UserError
 
 TAX_EXEMPTION_MAPPING = {
     'VATEX-EU-79-C': 'Exempt based on article 79, point c of Council Directive 2006/112/EC',
@@ -103,6 +104,8 @@ class AccountEdiCommon(models.AbstractModel):
     def _get_tax_exemption_reason(self, customer, supplier, tax):
         if tax and (code := tax.ubl_cii_tax_exemption_reason_code):
             if (cocontractant_note := self._get_belgian_cocontractant_note(customer, supplier)):
+                if not self._is_valid_cocontracant_tax_extension(tax):
+                    raise UserError(_("Invalid Tax Setup for Co-Contractor fiscal position. Please apply the standard co-contractor tax, or ensure your custom tax uses Reason Code 'AE' and Exemption Reason Code 'VATEX-EU-AE' "))
                 tax_exemption_reason = TAX_EXEMPTION_MAPPING.get(code)
                 tax_exemption_reason = f"{tax_exemption_reason} - {cocontractant_note}" if tax_exemption_reason else cocontractant_note
             else:
@@ -112,3 +115,6 @@ class AccountEdiCommon(models.AbstractModel):
                 'tax_exemption_reason': tax_exemption_reason,
             }
         return super()._get_tax_exemption_reason(customer, supplier, tax)
+
+    def _is_valid_cocontracant_tax_extension(self, tax):
+        return not tax.amount and tax.ubl_cii_tax_category_code == "AE" and tax.ubl_cii_tax_exemption_reason_code == "VATEX-EU-AE"
