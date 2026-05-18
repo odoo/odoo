@@ -83,6 +83,15 @@ registry.category("web_tour.tours").add('mailing_editor_theme', {
             run: "click",
         },
         {
+            content: "Make sure the snippets menu is hidden",
+            trigger: "html:not(:has(.o-snippets-menu))",
+        },
+        {
+            content: "Open the mailing in full-screen mode",
+            trigger: ":iframe .o_mail_wrapper",
+            run: "click",
+        },
+        {
             content: "Make sure the snippets menu is displayed",
             trigger: ".o-snippets-menu",
         },

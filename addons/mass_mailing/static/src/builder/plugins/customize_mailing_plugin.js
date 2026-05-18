@@ -48,6 +48,11 @@ export class CustomizeMailingPlugin extends Plugin {
         }
         this.setupMailingVariables();
         this.document.adoptedStyleSheets = [...this.document.adoptedStyleSheets, this.styleSheet];
+        this._cleanups.push(() => {
+            this.document.adoptedStyleSheets = this.document.adoptedStyleSheets.filter(
+                (styleSheet) => this.styleSheet !== styleSheet
+            );
+        });
     }
 
     cleanForSave(clone) {
