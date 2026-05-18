@@ -69,7 +69,7 @@ export class BackgroundImageOptionPlugin extends Plugin {
         oldEditingEl.classList.remove("o_bg_img_opt_repeat");
         oldEditingEl.style.removeProperty("background-size");
         const filterColorAction = this.dependencies.builderActions.getAction("selectFilterColor");
-        const editingElement = this.getResource("target_element_providers")[0](oldEditingEl);
+        const editingElement = this.getTargetElement(oldEditingEl);
         const filter = filterColorAction.getValue({ editingElement });
         this.setImageBackground(oldEditingEl, "");
         if (filter) {
@@ -123,7 +123,7 @@ export class BackgroundImageOptionPlugin extends Plugin {
         if (backgroundURL) {
             el.classList.add("oe_img_bg", "o_bg_img_center", "o_bg_img_origin_border_box");
         } else {
-            const editingElement = this.getResource("target_element_providers")[0](el);
+            const editingElement = this.getTargetElement(el);
             this.dependencies.builderActions
                 .getAction("selectFilterColor")
                 .apply({ editingElement });
@@ -148,6 +148,7 @@ export class BackgroundImageOptionPlugin extends Plugin {
      * @param {Object} [context.params]
      */
     removeBackgroundImage({ editingElement, params }) {
+        this.getTargetElement(editingElement).querySelector(":scope > .o_we_bg_filter")?.remove();
         this.applyReplaceBackgroundImage({
             editingElement,
             imageEl: "",
@@ -158,6 +159,15 @@ export class BackgroundImageOptionPlugin extends Plugin {
         editingElement.classList.remove("o_bg_img_opt_repeat");
         editingElement.style.removeProperty("background-size");
         this.trigger("on_bg_image_hidden_handlers", editingElement);
+    }
+
+    getTargetElement(el) {
+        for (const fn of this.getResource("target_element_providers")) {
+            const targetEl = fn(el);
+            if (targetEl) {
+                return targetEl;
+            }
+        }
     }
 }
 
