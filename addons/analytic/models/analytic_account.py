@@ -167,7 +167,6 @@ class AccountAnalyticAccount(models.Model):
                 from_amount=amount,
                 to_currency=self.env.company.currency_id,
                 company=self.env.company,
-                date=fields.Date.context_today(self),
             )
 
         domain = [('company_id', 'in', [False] + self.env.companies.ids)]

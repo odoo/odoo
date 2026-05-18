@@ -503,7 +503,7 @@ class AccountMove(models.Model):
                 line.price_unit,
                 line.company_currency_id,
                 line.company_id,
-                line.date or fields.Date.context_today(self)
+                line.date,
             )
         else:
             unit_price_in_inr = ((sign * line.balance) / (1 - (line.discount / 100))) / quantity

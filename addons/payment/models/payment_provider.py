@@ -647,8 +647,7 @@ class PaymentProvider(models.Model):
         currency = self.env["res.currency"].browse(currency_id).exists()
         if not is_validation and currency:  # The currency is required to convert the amount.
             company = self.env["res.company"].browse(company_id).exists()
-            date = fields.Date.context_today(self)
-            converted_amount = currency._convert(amount, company.currency_id, company, date)
+            converted_amount = currency._convert(amount, company.currency_id, company)
             unfiltered_providers = providers
             providers = providers.filtered(
                 lambda p: (

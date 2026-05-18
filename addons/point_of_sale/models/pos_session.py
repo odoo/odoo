@@ -750,7 +750,7 @@ class PosSession(models.Model):
         # `imbalance_amount` from company currency to the session currency.
         imbalance_amount_session = 0
         if (not self.is_in_company_currency):
-            imbalance_amount_session = self.company_id.currency_id._convert(imbalance_amount, self.currency_id, self.company_id, fields.Date.context_today(self))
+            imbalance_amount_session = self.company_id.currency_id._convert(imbalance_amount, self.currency_id, self.company_id)
         return self._credit_amounts(partial_vals, imbalance_amount_session, imbalance_amount)
 
     def _get_balancing_account(self):

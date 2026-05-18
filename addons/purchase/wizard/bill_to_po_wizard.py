@@ -50,7 +50,7 @@ class BillToPoWizard(models.TransientModel):
             })
         po_currency = self.purchase_order_id.currency_id
         company = self.purchase_order_id.company_id
-        date = self.purchase_order_id.date_order or fields.Date.context_today(self)
+        date = self.purchase_order_id.date_order
         line_vals = [
             {
                 'name': _("Down Payment (ref: %(ref)s)", ref=aml.display_name),

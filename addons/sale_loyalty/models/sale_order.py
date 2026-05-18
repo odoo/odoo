@@ -623,7 +623,7 @@ class SaleOrder(models.Model):
             raise UserError(self.env._("There is nothing to discount"))
 
         max_discount = reward_currency._convert(
-            reward.discount_max_amount, self.currency_id, self.company_id, fields.Date.today()
+            reward.discount_max_amount, self.currency_id, self.company_id,
         ) or float("inf")
         # discount should never surpass the order's current total amount
         max_discount = min(self.amount_total, max_discount)
@@ -635,14 +635,14 @@ class SaleOrder(models.Model):
             max_discount = min(
                 max_discount,
                 reward_currency._convert(
-                    reward.discount * points, self.currency_id, self.company_id, fields.Date.today()
+                    reward.discount * points, self.currency_id, self.company_id,
                 ),
             )
         elif reward.discount_mode == "per_order":
             max_discount = min(
                 max_discount,
                 reward_currency._convert(
-                    reward.discount, self.currency_id, self.company_id, fields.Date.today()
+                    reward.discount, self.currency_id, self.company_id,
                 ),
             )
         elif reward.discount_mode == "percent":
@@ -660,7 +660,6 @@ class SaleOrder(models.Model):
                 min(max_discount, discountable),
                 reward_currency,
                 self.company_id,
-                fields.Date.today(),
             )
             point_cost = coupon.currency_id.round(converted_discount / reward.discount)
 
@@ -1003,7 +1002,6 @@ class SaleOrder(models.Model):
                 from_amount=reward.discount,
                 to_currency=self.currency_id,
                 company=self.company_id,
-                date=fields.Date.today(),
             )
         if reward.discount_mode == "percent":
             return discountable * (reward.discount / 100)

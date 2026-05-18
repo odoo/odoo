@@ -29,7 +29,7 @@ class GamificationGoal(models.Model):
         related='line_id.challenge_id', store=True, readonly=True, index=True,
         help="Challenge that generated the goal, assign challenge to users "
              "to generate goals with a value in this field.")
-    start_date = fields.Date("Start Date", default=fields.Date.context_today)
+    start_date = fields.Date("Start Date", default=fields.Date.today)
     end_date = fields.Date("End Date")  # no start and end = always active
     target_goal = fields.Float('To Reach', required=True)
 # no goal = global index

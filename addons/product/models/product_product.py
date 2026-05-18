@@ -1181,7 +1181,7 @@ class ProductProduct(models.Model):
                     record.price_discounted,
                     record.env.company.currency_id,
                     record.env.company,
-                    date or fields.Date.context_today(self),
+                    date,
                     round=False,
                 ),
             }

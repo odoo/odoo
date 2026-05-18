@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import itertools
 
-from odoo import fields, models
+from odoo import models
 
 
 class ProductTemplate(models.Model):
@@ -82,6 +82,6 @@ class ProductTemplateAttributeValue(models.Model):
         if extra_price:
             header_cell["currency_id"] = to_currency.id
             header_cell["price"] = fro_currency._convert(
-                extra_price, to_currency, company, fields.Date.today()
+                extra_price, to_currency, company,
             )
         return header_cell

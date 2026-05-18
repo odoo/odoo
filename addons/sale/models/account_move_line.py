@@ -278,7 +278,7 @@ class AccountMoveLine(models.Model):
                 price_unit,
                 order.currency_id,
                 order.company_id,
-                order.date_order or fields.Date.context_today(self),
+                order.date_order,
             )
         return price_unit
 

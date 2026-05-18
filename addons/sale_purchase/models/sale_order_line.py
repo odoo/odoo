@@ -150,7 +150,6 @@ class SaleOrderLine(models.Model):
                     price_unit,
                     purchase_order.currency_id,
                     purchase_order.company_id,
-                    fields.Date.context_today(self)
                 )
         else:
             price_unit = 0.0
