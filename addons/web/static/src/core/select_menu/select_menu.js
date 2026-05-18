@@ -1,5 +1,5 @@
 import { useLayoutEffect, useRef, useState } from "@web/owl2/utils";
-import { Component, onWillUpdateProps } from "@odoo/owl";
+import { Component, onPatched, onWillUpdateProps } from "@odoo/owl";
 import { hasTouch } from "@web/core/browser/feature_detection";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useDropdownState } from "@web/core/dropdown/dropdown_hooks";
@@ -170,6 +170,11 @@ export class SelectMenu extends Component {
             },
             () => [this.props.choices, this.props.groups]
         );
+        onPatched(() => {
+            if (this.pendingValue && this.inputRef.el.value !== this.pendingValue) {
+                this.inputRef.el.value = this.pendingValue;
+            }
+        });
 
         const navigationCallback = (navigator) => {
             if (navigator.activeItem) {
