@@ -50,6 +50,9 @@ patch(Store.prototype, {
                         return result;
                     }
                 }
+                if (thread1.localId === thread2.localId) {
+                    return 0;
+                }
                 return thread2.localId > thread1.localId ? 1 : -1;
             },
         });

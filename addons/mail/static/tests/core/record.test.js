@@ -558,7 +558,15 @@ test("record list sort should be manually observable", async () => {
     ]);
     function sortMessages() {
         // minimal access through observed variables to reduce unexpected observing
-        observedMessages.sort((m1, m2) => (m1.body < m2.body ? -1 : 1));
+        observedMessages.sort((m1, m2) => {
+            if (m1.body < m2.body) {
+                return -1;
+            }
+            if (m1.body > m2.body) {
+                return 1;
+            }
+            return m1.id - m2.id;
+        });
         expect.step(`sortMessages`);
     }
     const observedMessages = reactive(thread.messages, sortMessages);
@@ -589,7 +597,15 @@ test("relation field sort should be automatically observed", async () => {
         id;
         messages = fields.Many("Message", {
             inverse: "thread",
-            sort: (m1, m2) => (m1.body < m2.body ? -1 : 1),
+            sort: (m1, m2) => {
+                if (m1.body < m2.body) {
+                    return -1;
+                }
+                if (m1.body > m2.body) {
+                    return 1;
+                }
+                return m1.id - m2.id;
+            },
         });
     }).register(localRegistry);
     (class Message extends Record {
@@ -624,7 +640,15 @@ test("reading of lazy compute relation field should recompute", async () => {
         id;
         messages = fields.Many("Message", {
             inverse: "thread",
-            sort: (m1, m2) => (m1.body < m2.body ? -1 : 1),
+            sort: (m1, m2) => {
+                if (m1.body < m2.body) {
+                    return -1;
+                }
+                if (m1.body > m2.body) {
+                    return 1;
+                }
+                return m1.id - m2.id;
+            },
         });
         messages2 = fields.Many("Message", {
             compute() {

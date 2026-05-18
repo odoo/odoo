@@ -75,7 +75,7 @@ export class MailThread extends models.ServerModel {
             // not implemented for simplicity
         }
         const followers = MailFollowers._filter(domain).sort(
-            (f1, f2) => (f1.id < f2.id ? -1 : 1) // sorted from lowest ID to highest ID (i.e. from oldest to youngest)
+            (f1, f2) => f1.id - f2.id // sorted from lowest ID to highest ID (i.e. from oldest to youngest)
         );
         followers.length = Math.min(followers.length, limit);
         store.add(

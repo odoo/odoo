@@ -71,7 +71,15 @@ export class Store extends BaseStore {
          * @param {import("models").Failure} f1
          * @param {import("models").Failure} f2
          */
-        sort: (f1, f2) => f2.lastMessage?.id - f1.lastMessage?.id,
+        sort: (f1, f2) => {
+            if (f1.lastMessage?.id && !f2.lastMessage?.id) {
+                return -1;
+            }
+            if (!f1.lastMessage?.id && f2.lastMessage?.id) {
+                return 1;
+            }
+            return f2.lastMessage?.id - f1.lastMessage?.id || f2.id - f1.id;
+        },
     });
     settings = fields.One("Settings");
 

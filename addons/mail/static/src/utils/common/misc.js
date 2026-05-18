@@ -143,7 +143,7 @@ export function compareDatetime(date1, date2) {
  * @param {string} v2 - The second version string to compare.
  * @return {number} -1 if v1 is less than v2, 1 if v1 is greater than v2, and 0 if they are equal.
  */
-function compareVersion(v1, v2) {
+export function compareVersion(v1, v2) {
     const parts1 = v1.split(".");
     const parts2 = v2.split(".");
 
