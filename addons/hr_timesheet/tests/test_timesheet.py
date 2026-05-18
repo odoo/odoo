@@ -72,6 +72,12 @@ class TestCommonTimesheet(TransactionCase):
             'email': 'useremployee2@test.com',
             'group_ids': [(6, 0, [cls.env.ref('hr_timesheet.group_hr_timesheet_user').id])],
         })
+        cls.user_approver = cls.env['res.users'].create({
+            'name': 'User Approver',
+            'login': 'user_timesheet_approver',
+            'email': 'userapprover@test.com',
+            'group_ids': [(6, 0, [cls.env.ref('hr_timesheet.group_hr_timesheet_approver').id])],
+        })
         cls.user_manager = cls.env['res.users'].create({
             'name': 'User Officer',
             'login': 'user_manager',
@@ -196,6 +202,10 @@ class TestTimesheet(TestCommonTimesheet):
             'employee_id': self.empl_employee2.id,
         })
         self.assertEqual(timesheet1.user_id, self.user_employee2, 'Changing timesheet employee should change the related user')
+
+    def test_timesheet_search_rights_on_version_fields(self):
+        """ Check that a user with no rights on Employee can still search on hr.version fields. """
+        self.env['account.analytic.line'].with_user(self.user_approver).search([('employee_id.department_id', '!=', False)])
 
     def test_create_unlink_project(self):
         """ Check project creation, and if necessary the analytic account generated when project should track time. """
