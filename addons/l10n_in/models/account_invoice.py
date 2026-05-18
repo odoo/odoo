@@ -157,8 +157,8 @@ class AccountMove(models.Model):
 
     @api.depends('l10n_in_state_id', 'l10n_in_gst_treatment')
     def _compute_fiscal_position_id(self):
-
-        foreign_state = self.env['res.country.state'].search([('code', '!=', 'IN')], limit=1)
+        foreign_country = self.env['res.country'].new({'name': 'Not India', 'code': '!!'})
+        foreign_state = self.env['res.country.state'].new({'country_id': foreign_country})
 
         def _get_fiscal_state(move):
             """
