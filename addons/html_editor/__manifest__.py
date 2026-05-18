@@ -48,6 +48,7 @@ This addon provides an extensible, maintainable editor.
             'html_editor/static/src/*',
             'html_editor/static/src/components/color_picker/**/*',
             'html_editor/static/src/components/history_dialog/**/*',
+            'html_editor/static/src/components/iframe_input/**/*',
             'html_editor/static/src/components/suggestion/**/*',
             'html_editor/static/src/core/**/*',
             'html_editor/static/src/main/**/*',
