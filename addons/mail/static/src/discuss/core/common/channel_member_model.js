@@ -95,6 +95,12 @@ export class ChannelMember extends Record {
             }
         },
     });
+    get isTypingUi() {
+        if (this.channel_id.self_member_id?.mute_until_dt) {
+            return false;
+        }
+        return this.isTyping;
+    }
     is_typing_dt = fields.Datetime({
         onUpdate() {
             browser.clearTimeout(this.typingTimeoutId);

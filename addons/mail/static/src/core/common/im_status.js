@@ -46,7 +46,7 @@ export class ImStatus extends Component {
     }
 
     get showTypingIndicator() {
-        return this.props.typing && this.props.member?.isTyping;
+        return this.props.typing && this.props.member?.isTypingUi;
     }
 
     get class() {
