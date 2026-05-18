@@ -53,6 +53,7 @@ class TestRefundFlows(StripeCommon, PaymentHttpCommon):
         "odoo.addons.payment_stripe.models.payment_transaction",
     )
     def test_void_webhook_notification_does_not_trigger_processing(self):
+        self.provider.payment_method_ids.active = False  # deactivate default payment methods
         self.provider.capture_manually = True
         tx = self._create_transaction("direct", state="authorized")
         url = self._build_url(StripeController._webhook_url)
