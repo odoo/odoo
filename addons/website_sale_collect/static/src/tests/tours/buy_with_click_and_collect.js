@@ -70,6 +70,10 @@ registry.category('web_tour.tours').add(
                 content: "Check the pickup address is set.",
                 trigger: 'b[name="o_pickup_location_name"]:contains("Shop 1")',
             },
+            {
+                content: "Wait for delivery method RPC to complete",
+                trigger: '[name="website_sale_main_button"]:not(.disabled):not([disabled])',
+            },
             tourUtils.confirmOrder(),
             {
                 content: "Select `Pay on site`  payment method",
