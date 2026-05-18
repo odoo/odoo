@@ -4,6 +4,7 @@ import logging
 import re
 from datetime import timedelta
 from lxml import etree
+from markupsafe import Markup
 
 from odoo import _, api, fields, models, modules, tools
 from odoo.exceptions import UserError
@@ -11,6 +12,7 @@ from odoo.tools import format_list
 from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
 from odoo.addons.account_peppol.exceptions import get_ebms_message, get_exception_message
 from odoo.addons.account_peppol.tools.demo_utils import handle_demo
+from odoo.addons.account_peppol.tools.peppol_errors import render_peppol_errors
 
 _logger = logging.getLogger(__name__)
 BATCH_SIZE = 50
@@ -419,7 +421,10 @@ class Account_Edi_Proxy_ClientUser(models.Model):
 
     def _peppol_get_message_status_error_body(self, move, error):
         self.ensure_one()
-        return self._get_peppol_error_message(error)
+        header_peppol_error_msg = Markup('<strong>%s</strong>') % self._get_peppol_error_message(error)
+        body_peppol_error_msg_markup = render_peppol_errors(move, error)
+
+        return header_peppol_error_msg + body_peppol_error_msg_markup
 
     def _peppol_get_message_status_update_body(self, move, content):
         self.ensure_one()
