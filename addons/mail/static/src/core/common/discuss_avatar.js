@@ -99,7 +99,7 @@ export class DiscussAvatar extends Component {
             return this.channel.hasOtherMembersTyping;
         }
         if (this.channelMember) {
-            return this.channelMember.isTyping;
+            return this.channelMember.isTypingUi;
         }
         return false;
     }

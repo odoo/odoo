@@ -688,6 +688,71 @@ test("[text composer] chat: correspondent is typing", async () => {
     await contains(".o-mail-DiscussSidebarChannel .o-mail-ThreadIcon.fa-circle.text-success");
 });
 
+test("Do not show typing indicator when channel is muted", async () => {
+    const pyEnv = await startServer();
+    const [userId1, userId2] = pyEnv["res.users"].create([
+        { name: "Demo", im_status: "online" },
+        { name: "Demo2", im_status: "online" },
+    ]);
+    const [partnerId1, partnerId2] = pyEnv["res.partner"].create([
+        { name: "Demo", user_ids: [userId1] },
+        { name: "Demo2", user_ids: [userId2] },
+    ]);
+    const [channelId1, channelId2] = pyEnv["discuss.channel"].create([
+        {
+            channel_member_ids: [
+                Command.create({ partner_id: serverState.partnerId }),
+                Command.create({ partner_id: partnerId1 }),
+            ],
+            channel_type: "chat",
+        },
+        {
+            channel_member_ids: [
+                Command.create({ partner_id: serverState.partnerId }),
+                Command.create({ partner_id: partnerId2 }),
+            ],
+            channel_type: "chat",
+        },
+    ]);
+    pyEnv["mail.message"].create([
+        {
+            author_id: serverState.partnerId,
+            body: "some message",
+            model: "discuss.channel",
+            res_id: channelId1,
+        },
+        {
+            author_id: serverState.partnerId,
+            body: "some message",
+            model: "discuss.channel",
+            res_id: channelId1,
+        },
+    ]);
+    await start();
+    await openDiscuss(channelId1);
+    await contains(".o-mail-Message", { count: 2 });
+    await rpc("/discuss/settings/mute", { minutes: -1, channel_id: channelId2 });
+    withUser(userId2, () =>
+        rpc("/discuss/channel/notify_typing", {
+            channel_id: channelId2,
+            is_typing: true,
+        })
+    );
+    withUser(userId1, () =>
+        rpc("/discuss/channel/notify_typing", {
+            channel_id: channelId1,
+            is_typing: true,
+        })
+    );
+    await contains(
+        ".o-mail-DiscussSidebarChannel-itemMain[title='Demo'] .o-discuss-Typing-icon[title='Demo is typing...']"
+    );
+    await contains(
+        ".o-mail-DiscussSidebarChannel-itemMain[title='Demo2'] .o-discuss-Typing-icon[title='Demo is typing...']",
+        { count: 0 }
+    );
+});
+
 test.tags("html composer");
 test("chat: correspondent is typing", async () => {
     const pyEnv = await startServer();
