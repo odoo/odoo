@@ -59,7 +59,9 @@ class ProductTemplate(models.Model):
         help="Optional Products are suggested "
              "whenever the customer hits *Add to Cart* (cross-sell strategy, "
              "e.g. for computers: warranty, software, etc.).",
-        check_company=True)
+        check_company=True,
+        domain=lambda self: [("id", "!=", self.id)],
+    )
 
     @api.depends('invoice_policy', 'sale_ok', 'service_tracking')
     def _compute_product_tooltip(self):

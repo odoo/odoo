@@ -32,3 +32,10 @@ class TestSaleProductTemplate(SaleCommon):
         )
 
         self.assertEqual(configurator_data, {})
+
+    def test_restrict_optional_product_on_same_product_template(self):
+        """Test that a product template cannot be added as an optional product on itself."""
+        product_template = self.product.product_tmpl_id
+        product_template.optional_product_ids = product_template
+        self.env.invalidate_all()
+        self.assertEqual(product_template.optional_product_ids, self.env["product.template"])
