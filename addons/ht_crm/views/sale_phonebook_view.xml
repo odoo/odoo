@@ -125,32 +125,5 @@
         <field name="active">True</field>
     </record> -->
 
-    <record id="view_phonebook_batch_form" model="ir.ui.view">
-        <field name="name">sale.phonebook.batch.form</field>
-        <field name="model">sale.phonebook.batch</field>
-        <field name="arch" type="xml">
-            <form string="Tập Phonebook">
-                <sheet>
-
-                    <group>
-                        <field name="name"/>
-                        <field name="code"/>
-                        <field name="group_key_date"/>
-                        <field name="project_id"/>
-                    </group>
-
-                    <notebook>
-                        <page string="Danh sách số điện thoại">
-                            <field name="phonebook_id"/>
-                        </page>
-
-                        <page string="Sales phụ trách">
-                            <field name="sales_ids" domain="[('project_ids', 'in', [project_id])]"/>
-                        </page>                       
-                    </notebook>
-
-                </sheet>
-            </form>
-        </field>
-    </record>
+    
 </odoo>
