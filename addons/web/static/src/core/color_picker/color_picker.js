@@ -75,6 +75,7 @@ export class ColorPicker extends Component {
         noTransparency: { type: Boolean, optional: true },
         close: { type: Function, optional: true },
         className: { type: String, optional: true },
+        useDefaultThemeColors: { type: Boolean, optional: true },
     };
     static defaultProps = {
         close: () => {},
@@ -82,6 +83,7 @@ export class ColorPicker extends Component {
         enabledTabs: ["solid", "gradient", "custom"],
         showRgbaField: false,
         themeColorPrefix: "",
+        useDefaultThemeColors: true,
     };
     applyOpacityToGradient = applyOpacityToGradient;
 
@@ -90,7 +92,9 @@ export class ColorPicker extends Component {
         this.DEFAULT_GRADIENT_COLORS = DEFAULT_GRADIENT_COLORS;
         this.grayscales = Object.assign({}, DEFAULT_GRAYSCALES);
         this.grayscales = Object.assign(this.grayscales, this.props.grayscales);
-        this.DEFAULT_THEME_COLOR_VARS = DEFAULT_THEME_COLOR_VARS;
+        this.DEFAULT_THEME_COLOR_VARS = this.props.useDefaultThemeColors
+            ? DEFAULT_THEME_COLOR_VARS
+            : [];
         this.defaultColorSet = this.getDefaultColorSet();
         this.root = useRef("root");
 
