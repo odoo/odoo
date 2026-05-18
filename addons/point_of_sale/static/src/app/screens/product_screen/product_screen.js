@@ -272,6 +272,10 @@ export class ProductScreen extends Component {
         }
         this.sound.play("beep");
 
+        if (!(await this.pos.canAddProductToCurrentOrder(product.product_tmpl_id))) {
+            return;
+        }
+
         await this.pos.addLineToCurrentOrder(
             { product_id: product, product_tmpl_id: product.product_tmpl_id },
             { code },
@@ -325,6 +329,11 @@ export class ProductScreen extends Component {
             return;
         }
         this.sound.play("beep");
+
+        if (!(await this.pos.canAddProductToCurrentOrder(product.product_tmpl_id))) {
+            return;
+        }
+
         const vals = { product_id: product, product_tmpl_id: product.product_tmpl_id };
         if (
             qty &&
@@ -414,6 +423,9 @@ export class ProductScreen extends Component {
     }
 
     async addProductToOrder(product) {
+        if (!(await this.pos.canAddProductToCurrentOrder(product))) {
+            return;
+        }
         const options = {};
         if (this.searchWord && product.isConfigurable()) {
             const barcode = this.searchWord;

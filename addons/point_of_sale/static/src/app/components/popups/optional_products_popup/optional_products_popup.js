@@ -25,6 +25,13 @@ export class OptionalProductPopup extends Component {
 
     async changeQuantity(optional_product, increase) {
         if (
+            increase &&
+            optional_product.qty === 0 &&
+            !(await this.pos.canAddProductToCurrentOrder(optional_product.product_tmpl_id))
+        ) {
+            return;
+        }
+        if (
             optional_product.product_tmpl_id.isConfigurable() &&
             !Object.keys(optional_product.payload).length
         ) {

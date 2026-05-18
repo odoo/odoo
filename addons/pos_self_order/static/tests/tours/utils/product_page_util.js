@@ -206,3 +206,10 @@ export function isShown() {
         trigger: ".o_self_product_list_page",
     };
 }
+
+export function checkProductIsShown(productName) {
+    return {
+        content: `Check if product '${productName}' is displayed`,
+        trigger: `.o_self_product_box:has(span:contains('${productName}'))`,
+    };
+}

@@ -17,12 +17,6 @@ test("selectProduct", async () => {
     expect(store.currentOrder.lines).toHaveLength(1);
     expect(store.currentOrder.lines[0].product_id.id).toBe(5);
 
-    // unavailable Product
-    const unavailableProduct = models["product.template"].get(6);
-    unavailableProduct.self_order_available = false;
-    comp.selectProduct(unavailableProduct);
-    expect(store.currentOrder.lines).toHaveLength(1);
-
     // Combo Product
     const comboProduct = models["product.template"].get(7);
     comboProduct.combo_ids = [2];

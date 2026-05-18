@@ -51,7 +51,7 @@
                                     <t t-set="itemState" t-value="getItemState(comboItem)"/>
                                     <t t-set="itemSelected" t-value="itemState.selected"/>
                                     <t t-set="itemQty" t-value="itemState.qty || 0"/>
-                                    <t t-set="isOutOfStock" t-value="!product.self_order_available"/>
+                                    <t t-set="isOutOfStock" t-value="this.selfOrder.isProductSnoozed(product.product_tmpl_id)"/>
                                     <t t-set="extraPrice" t-value="comboItem.extra_price"/>
                                     <t t-if="selectedChoice.qty_free == 0" t-set="extraPrice" t-value="comboItem.extra_price + selectedChoice.base_price"/>
                                     <div t-on-click="() => this.selectItem(comboItem)"
@@ -75,9 +75,7 @@
                                                     Extra: <t t-out="selfOrder.formatMonetary(extraPriceSelected)"/>
                                                 </span>
                                             </div>
-                                            <div t-if="isOutOfStock " class="d-flex flex-grow-0 mt-2">
-                                                <div class="p-1 px-3 fs-lighter bg-secondary rounded">Out of stock</div>
-                                            </div>
+                                            <div t-if="isOutOfStock" class="badge mt-2 my-1 rounded-pill text-bg-danger w-auto me-auto mx-lg-auto">Out of stock</div>
                                             <div t-elif="hasMultiItemSelection "  class="item_qty_container d-flex flex-grow-1 align-items-end mt-2">
                                                 <t t-set="addItemEnabled" t-value="canAddMoreItems()"/>
                                                 <div t-if="!itemQty" class="btn btn-secondary" t-att-class="{'opacity-50':!addItemEnabled}">

@@ -67,7 +67,9 @@ export class ComboPage extends Component {
     }
 
     get comboItems() {
-        return this.selectedChoice.combo_item_ids;
+        return this.selectedChoice.combo_item_ids.filter(
+            (item) => item.product_id.self_order_available
+        );
     }
 
     get currentChoiceState() {
@@ -85,7 +87,7 @@ export class ComboPage extends Component {
 
     selectItem(item) {
         const product = item.product_id;
-        if (!product.self_order_available) {
+        if (this.selfOrder.isProductSnoozed(product.product_tmpl_id)) {
             return;
         }
 

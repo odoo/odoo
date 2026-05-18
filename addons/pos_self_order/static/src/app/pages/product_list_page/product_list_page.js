@@ -157,7 +157,11 @@ export class ProductListPage extends Component {
     }
 
     getProducts(category) {
-        return category.associatedProducts || this.selfOrder.productByCategIds[category.id] || [];
+        return (
+            category.associatedProducts ||
+            this.selfOrder.productByCategIds[category.id] ||
+            []
+        ).filter((product) => product.self_order_available);
     }
 
     toggleSubCategoryPanel() {
@@ -193,7 +197,7 @@ export class ProductListPage extends Component {
     }
 
     selectProduct(product, target) {
-        if (!product.self_order_available || !this.isProductAvailable(product)) {
+        if (!this.isProductAvailable(product)) {
             return;
         }
         if (product.isCombo()) {

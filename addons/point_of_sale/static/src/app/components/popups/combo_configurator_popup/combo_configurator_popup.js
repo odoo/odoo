@@ -208,6 +208,13 @@ export class ComboConfiguratorPopup extends Component {
     async onClickProduct(product, combo_item) {
         const productTmpl = product.product_tmpl_id;
         const combo = combo_item.combo_id;
+        if (
+            !this.state.qty[combo.id][combo_item.id] &&
+            this.pos.isProductSnoozed(productTmpl) &&
+            !(await this.pos.canAddProductToCurrentOrder(productTmpl))
+        ) {
+            return;
+        }
         if (productTmpl.needToConfigure()) {
             this.onClickConfigurableProduct(product, combo_item, combo);
         } else {

@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+from datetime import datetime, timedelta
 import odoo.tests
 from odoo.addons.point_of_sale.tests.common_setup_methods import setup_product_combo_items
 from odoo.addons.pos_self_order.tests.self_order_common_test import SelfOrderCommonTest
@@ -102,5 +102,11 @@ class TestSelfOrderCommon(SelfOrderCommonTest):
         # --- Mobile Mode Tour ---
         self.pos_config.write({
             'self_ordering_mode': 'mobile',
+        })
+        self.env["pos.product.template.snooze"].create({
+            "product_template_id": self.combo_product_2.product_tmpl_id.id,
+            "pos_config_id": self.pos_config.id,
+            "start_time": datetime.now(),
+            "end_time": datetime.now() + timedelta(hours=1),
         })
         self.start_tour(self.pos_config._get_self_order_route(floor.table_ids[0].id), "test_self_order_product_availability")
