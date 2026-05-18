@@ -367,6 +367,8 @@ class TestOrmRelated(models.Model):
     message = fields.Many2one('test_orm.message')
     message_name = fields.Text(related="message.body", related_sudo=False, string='Message Body')
     message_currency = fields.Many2one(related="message.author", string='Message Author')
+    stored_message_currency = fields.Many2one(related="message.author", string='(Saved) Message Author', store=True)
+    uncopyable_stored_message_currency = fields.Many2one(related="message.author", string='(New) Message Author', store=True, copy=False)
 
     foo_id = fields.Many2one('test_orm.related_foo')
     foo_ids = fields.Many2many('test_orm.related_foo', string='Foos')
