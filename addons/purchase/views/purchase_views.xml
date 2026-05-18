@@ -622,7 +622,7 @@
                     <field name="date_order"
                         invisible="state == 'purchase' or state == 'cancel'"
                         column_invisible="not context.get('quotation_only', False)"
-                        readonly="state in ['cancel', 'purchase']" widget="remaining_days" optional="show"/>
+                        readonly="state in ['cancel', 'purchase']" widget="relative_date" optional="show"/>
                     <field name="activity_ids" widget="list_activity" optional="show"/>
                     <field name="origin" optional="hide"/>
                     <field name="amount_untaxed" sum="Total Untaxed amount" string="Untaxed" widget="monetary" optional="hide"/>

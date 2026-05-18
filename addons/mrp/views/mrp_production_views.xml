@@ -53,9 +53,9 @@
                     <field name="priority" optional="show" widget="priority" nolabel="1" width="20px"/>
                     <field name="message_needaction" column_invisible="True"/>
                     <field name="name" decoration-bf="1"/>
-                    <field name="date_start" optional="show" widget="remaining_days"/>
-                    <field name="date_finished" optional="hide" widget="remaining_days"/>
-                    <field name="date_deadline" widget="mrp_remaining_days_unformatted" invisible="state in ['done', 'cancel']" optional="hide"
+                    <field name="date_start" optional="show" widget="relative_date"/>
+                    <field name="date_finished" optional="hide" widget="relative_date"/>
+                    <field name="date_deadline" widget="mrp_relative_date_unformatted" invisible="state in ['done', 'cancel']" optional="hide"
                         decoration-danger="is_delayed"
                         decoration-bf="is_delayed"/>
                     <field name="product_id" readonly="1" optional="show"/>
@@ -103,9 +103,9 @@
                     </header>
                     <field name="priority" optional="show" widget="priority" nolabel="1" width="20px"/>
                     <field name="name" decoration-bf="1"/>
-                    <field name="date_start" optional="show" widget="remaining_days"/>
-                    <field name="date_finished" optional="hide" widget="remaining_days"/>
-                    <field name="date_deadline" widget="mrp_remaining_days_unformatted" invisible="state in ['done', 'cancel']" optional="hide" decoration-danger="is_delayed" decoration-bf="is_delayed"/>
+                    <field name="date_start" optional="show" widget="relative_date"/>
+                    <field name="date_finished" optional="hide" widget="relative_date"/>
+                    <field name="date_deadline" widget="mrp_relative_date_unformatted" invisible="state in ['done', 'cancel']" optional="hide" decoration-danger="is_delayed" decoration-bf="is_delayed"/>
                     <field name="product_id" readonly="1" optional="show"/>
                     <field name="lot_producing_ids" optional="hide" widget="many2many_tags"/>
                     <field name="bom_id" readonly="1" optional="hide"/>

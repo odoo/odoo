@@ -129,7 +129,7 @@
                 <field name="user_id" optional="show" widget='many2one_avatar_user'/>
                 <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" optional="show"/>
                 <field name="date_start" optional="show"/>
-                <field name="date_end" optional="show" widget='remaining_days' decoration-danger="date_end and date_end&lt;current_date" invisible="state in ('done', 'cancel')"/>
+                <field name="date_end" optional="show" widget='relative_date' decoration-danger="date_end and date_end&lt;current_date" invisible="state in ('done', 'cancel')"/>
                 <field name="reference" optional="show"/>
                 <field name="state" optional="show" widget='badge' decoration-success="state == 'done'" decoration-info="state not in ('done', 'cancel')"/>
                 <field name="activity_exception_decoration" widget="activity_exception"/>

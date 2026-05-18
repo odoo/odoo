@@ -274,7 +274,7 @@
                 <field name="res_name" string="Linked to"/>
                 <field name="activity_type_id" optional="hide"/>
                 <field name="user_id" widget="many2one_avatar_user" optional="hide" options="{'no_create': True}"/>
-                <field name="date_deadline" widget="remaining_days"/>
+                <field name="date_deadline" widget="relative_date"/>
                 <field name="date_done" string="Done Date" optional="hide"/>
                 <field name="feedback" optional="hide"/>
                 <widget name="mail_activity_list_reschedule_dropdown"/>
@@ -342,7 +342,7 @@
                             <field class="text-truncate" name="summary" invisible="not res_name"/>
                             <footer class="align-items-center">
                                 <field name="user_id" widget="many2one_avatar_user" />
-                                <field name="date_deadline" widget="remaining_days" class="ms-2"/>
+                                <field name="date_deadline" widget="relative_date" class="ms-2"/>
                                 <button type="object" name="action_done" class="btn btn-link btn-sm ms-auto me-1" invisible="active == False">
                                     <i class="fa fa-check" /> Done
                                 </button>

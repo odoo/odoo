@@ -27,7 +27,7 @@
                     <field name="name" decoration-bf="1" decoration-danger="made_sequence_gap and state == 'posted'" widget="char_with_placeholder_field" placeholder="/"/>
                     <field name="partner_id" string="Partner" optional="show" readonly="True"/>
                     <field name="date" optional="show" string="Accounting Date" readonly="state in ['cancel', 'posted']"/>
-                    <field name="invoice_date_due" widget="remaining_days" optional="show" invisible="payment_state in ('paid', 'in_payment', 'reversed') or state == 'cancel'"/>
+                    <field name="invoice_date_due" widget="relative_date" optional="show" invisible="payment_state in ('paid', 'in_payment', 'reversed') or state == 'cancel'"/>
                     <field name="invoice_origin" optional="hide" string="Source Document"/>
                     <field name="payment_reference" optional="hide"/>
                     <field name="ref" optional="show"/>
