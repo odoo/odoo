@@ -11,16 +11,23 @@ export const callActionsRegistry = registry.category("discuss.call/actions");
 export const CALL_ICON_DEAFEN = "fa fa-deaf";
 export const CALL_ICON_MUTED = "fa fa-microphone-slash";
 
-/** @typedef {import("@mail/core/common/action").ActionDefinition} ActionDefinition */
+/** @typedef {import("models").DiscussChannel} DiscussChannel */
+/**
+ * @typedef {Object} CallActionSpecificParams
+ * @property {DiscussChannel} channel
+ */
+/** @typedef {import("@mail/core/common/action").ActionParams<CallAction, UseCallActions_Def> & CallActionSpecificParams} CallActionParams */
+/** @typedef {import("@mail/core/common/action").ActionDefinition<CallActionParams, CallAction>} CallActionDefinition */
 
 /**
  * @param {string} id
- * @param {ActionDefinition} definition
+ * @param {CallActionDefinition} definition
  */
 export function registerCallAction(id, definition) {
     callActionsRegistry.add(id, definition);
 }
 
+/** @type {CallActionDefinition} */
 export const muteAction = {
     badge: ({ owner, store }) => store.rtc.microphonePermission !== "granted",
     badgeIcon: "fa fa-exclamation",
@@ -50,6 +57,7 @@ export const muteAction = {
     },
 };
 registerCallAction("mute", muteAction);
+/** @type {CallActionDefinition} */
 export const quickActionSettings = {
     condition: ({ owner, channel }) =>
         !owner.env.inCallMenu && channel?.isSelfInCall && !owner.env.pipWindow,
@@ -78,6 +86,7 @@ registerCallAction("deafen", {
         action.isActive ? ACTION_TAGS.DANGER : undefined,
     ],
 });
+/** @type {CallActionDefinition} */
 export const cameraOnAction = {
     badge: ({ owner, store, channel }) =>
         !owner.env.inCallMenu &&
@@ -112,6 +121,7 @@ export const cameraOnAction = {
     },
 };
 registerCallAction("camera-on", cameraOnAction);
+/** @type {CallActionDefinition} */
 export const quickVideoSettings = {
     condition: ({ owner, channel }) =>
         !owner.env.inCallMenu && channel?.isSelfInCall && !owner.env.pipWindow,
@@ -125,6 +135,7 @@ export const quickVideoSettings = {
     sequenceGroup: 120,
 };
 registerCallAction("quick-video-settings", quickVideoSettings);
+/** @type {CallActionDefinition} */
 export const switchCameraAction = {
     condition: ({ channel, store }) =>
         channel?.isSelfInCall && isMobileOS() && store.rtc.selfSession?.is_camera_on,
@@ -209,6 +220,7 @@ registerCallAction("picture-in-picture", {
     sequence: 70,
     tags: ACTION_TAGS.CALL_LAYOUT,
 });
+/** @type {CallActionDefinition} */
 export const acceptWithCamera = {
     condition: ({ channel }) =>
         channel?.self_member_id?.rtc_inviting_session_id?.is_camera_on &&
@@ -254,6 +266,7 @@ registerCallAction("join-with-camera", {
     sequenceGroup: 300,
     tags: [ACTION_TAGS.JOIN_LEAVE_CALL, ACTION_TAGS.SUCCESS],
 });
+/** @type {CallActionDefinition} */
 export const joinAction = {
     condition: ({ channel }) =>
         !channel?.isSelfInCall && typeof channel?.useCameraByDefault !== "boolean",
@@ -266,6 +279,7 @@ export const joinAction = {
     tags: [ACTION_TAGS.JOIN_LEAVE_CALL, ACTION_TAGS.SUCCESS],
 };
 registerCallAction("join", joinAction);
+/** @type {CallActionDefinition} */
 export const rejectAction = {
     btnClass: ({ owner, channel }) =>
         attClassObjectToString({
@@ -322,13 +336,15 @@ export class CallAction extends Action {
     }
 }
 
+/** @typedef {UseActions<CallActionParams, CallAction>} UseCallActions_Def */
 class UseCallActions extends UseActions {
     ActionClass = CallAction;
 }
 
 /**
  * @param {Object} [params0={}]
- * @param {DiscussChannel|() => DiscussChannel} channel
+ * @param {DiscussChannel|() => DiscussChannel} params0.channel
+ * @return {UseCallActions_Def}
  */
 export function useCallActions({ channel } = {}) {
     return useAction(callActionsRegistry, UseCallActions, CallAction, { channel });

@@ -8,16 +8,17 @@ import { markup } from "@odoo/owl";
 export const channelMemberActionsRegistry = registry.category("discuss.channel.member/actions");
 
 /** @typedef {import("@odoo/owl").Component} Component */
-/** @typedef {import("@mail/core/common/action").ActionDefinition} ActionDefinition */
 /** @typedef {import("models").ChannelMember} ChannelMember */
-
 /**
- * @typedef {ActionDefinition} ChannelActionDefinition
+ * @typedef {Object} ChannelMemberActionSpecificParams
+ * @property {ChannelMember} member
  */
+/** @typedef {import("@mail/core/common/action").ActionParams<ChannelMemberAction, UseChannelMemberActions_Def> & ChannelMemberActionSpecificParams} ChannelMemberActionParams */
+/** @typedef {import("@mail/core/common/action").ActionDefinition<ChannelMemberActionParams, ChannelMemberAction>} ChannelMemberActionDefinition */
 
 /**
  * @param {string} id
- * @param {ChannelActionDefinition} definition
+ * @param {ChannelMemberActionDefinition} definition
  */
 export function registerChannelMemberAction(id, definition) {
     channelMemberActionsRegistry.add(id, definition);
@@ -91,13 +92,15 @@ export class ChannelMemberAction extends Action {
     }
 }
 
+/** @typedef {UseActions<ChannelMemberActionParams, ChannelMemberAction>} UseChannelMemberActions_Def */
 class UseChannelMemberActions extends UseActions {
     ActionClass = ChannelMemberAction;
 }
 
 /**
  * @param {Object} [params0={}]
- * @param {ChannelMember|() => ChannelMember} member
+ * @param {ChannelMember|() => ChannelMember} params0.member
+ * @returns {UseChannelMemberActions_Def}
  */
 export function useChannelMemberActions({ member } = {}) {
     return useAction(channelMemberActionsRegistry, UseChannelMemberActions, ChannelMemberAction, {

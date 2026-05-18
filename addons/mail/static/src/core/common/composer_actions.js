@@ -14,11 +14,13 @@ import { usePopover } from "@web/core/popover/popover_hook";
 export const composerActionsRegistry = registry.category("mail.composer/actions");
 
 /** @typedef {import("@odoo/owl").Component} Component */
-/** @typedef {import("@mail/core/common/action").ActionDefinition} ActionDefinition */
 /** @typedef {import("models").Composer} Composer */
 /**
- * @typedef {ActionDefinition} ComposerActionDefinition
+ * @typedef {Object} ComposerActionSpecificParams
+ * @property {Composer} composer
  */
+/** @typedef {import("@mail/core/common/action").ActionParams<ComposerAction, UseComposerActions_Def> & ComposerActionSpecificParams} ComposerActionParams */
+/** @typedef {import("@mail/core/common/action").ActionDefinition<ComposerActionParams, ComposerAction>} ComposerActionDefinition */
 
 /**
  * @param {string} id
@@ -201,13 +203,15 @@ export class ComposerAction extends Action {
     }
 }
 
+/** @typedef {UseActions<ComposerActionParams, ComposerAction>} UseComposerActions_Def */
 class UseComposerActions extends UseActions {
     ActionClass = ComposerAction;
 }
 
 /**
  * @param {Object} [params0={}]
- * @param {Composer|() => Composer} composer
+ * @param {Composer|() => Composer} params0.composer
+ * @returns {UseComposerActions_Def}
  */
 export function useComposerActions({ composer } = {}) {
     return useAction(composerActionsRegistry, UseComposerActions, ComposerAction, {

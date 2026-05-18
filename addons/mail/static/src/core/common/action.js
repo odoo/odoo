@@ -22,59 +22,74 @@ export const ACTION_TAGS = Object.freeze({
 /** @typedef {Component|Record} ActionOwner */
 
 /**
+ * @template Action_T
  * @typedef {Object} ActionPanelCloseSpecificParams
- * @property {Action} nextActiveAction
+ * @property {Action_T} nextActiveAction
  */
 
 /**
- * @typedef {{actionPanels: Action[], quick: Action[], group: Array<Action[]>, other: Action[]}} PartitionedActions
+ * @template Action_T
+ * @typedef {{actionPanels: Action_T[], quick: Action_T[], group: Array<Action_T[]>, other: Action_T[]}} PartitionedActions
  */
 
 /**
+ * @template Action_T
+ * @template UseActions_T
+ * @typedef {Object} ActionParams
+ * @property {UseActions_T} actions
+ * @property {Action_T} action
+ * @property {import("models").Store} store
+ * @property {ActionOwner} owner
+ */
+
+/**
+ * @template ActionParams_T
+ * @template Action_T
  * @typedef {Object} ActionDefinition
- * @property {(params: Action & ActionPanelCloseSpecificParams) => void} [actionPanelClose]
+ * @property {(params: ActionParams_T & ActionPanelCloseSpecificParams<Action_T>) => void} [actionPanelClose]
  * @property {Component} [actionPanelComponent]
- * @property {(action: Action) => Object} [actionPanelComponentProps]
- * @property {(action: Action) => string} [actionPanelName]
- * @property {(action: Action) => void} [actionPanelOpen]
- * @property {(action: Action) => string} [actionPanelOuterClass]
- * @property {boolean|(action: Action) => boolean} [badge]
- * @property {string|(action: Action) => string} [badgeIcon]
- * @property {string|(action: Action) => string} [badgeText]
- * @property {Object|(action: Action) => Object} [btnAttrs]
- * @property {string|(action: Action) => string} [btnClass]
+ * @property {(params: ActionParams_T) => Object} [actionPanelComponentProps]
+ * @property {(params: ActionParams_T) => string} [actionPanelName]
+ * @property {(params: ActionParams_T) => void} [actionPanelOpen]
+ * @property {string|(params: ActionParams_T) => string} [actionPanelOuterClass]
+ * @property {boolean|(params: ActionParams_T) => boolean} [badge]
+ * @property {string|(params: ActionParams_T) => string} [badgeIcon]
+ * @property {string|(params: ActionParams_T) => string} [badgeText]
+ * @property {Object|(params: ActionParams_T) => Object} [btnAttrs]
+ * @property {string|(params: ActionParams_T) => string} [btnClass]
  * @property {Component} [component]
- * @property {boolean|(action: Action) => boolean} [componentCondition=true]
- * @property {(action: Action) => Component<Props, Env>} [componentProps]
- * @property {boolean|(action: Action) => boolean} [condition=true]
- * @property {boolean|(action: Action) => boolean} [disabledCondition]
+ * @property {boolean|(params: ActionParams_T) => boolean} [componentCondition=true]
+ * @property {(params: ActionParams_T) => Component<Props, Env>} [componentProps]
+ * @property {boolean|(params: ActionParams_T) => boolean} [condition=true]
+ * @property {boolean|(params: ActionParams_T) => boolean} [disabledCondition]
  * @property {boolean} [dropdown]
- * @property {Component|(action: Action) => Component} [dropdownComponent]
- * @property {Object|(action: Action) => Object} [dropdownComponentProps]
- * @property {string|(action: Action) => string} [dropdownMenuClass]
- * @property {string|(action: Action) => string} [dropdownPosition]
- * @property {DropdownState|(action: Action) => DropdownState} [dropdownState]
- * @property {string|(action: Action) => string} [dropdownTemplate]
- * @property {Object|(action: Action) => Object} [dropdownTemplateParams]
- * @property {boolean|(action: Action) => boolean} [hasBtnBg]
- * @property {string|(action: Action) => string} [hotkey]
- * @property {string|(action: Action) => string} [icon]
- * @property {boolean|(action: Action) => boolean} [inlineName=false]
- * @property {boolean|(action: Action) => boolean} [isActive]
- * @property {string|(action: Action) => string} [name]
- * @property {string|(action: Action) => string} [nameClass]
- * @property {(action: Action, ev: Event) => void} [onSelected]
- * @property {number|(action: Action) => number} [sequence]
- * @property {boolean|(action: Action) => boolean} [sequenceGroup]
- * @property {boolean|(action: Action) => boolean} [sequenceQuick]
- * @property {() => void} [setup]
- * @property {string|string[]|(action: Action) => string|string[]} [tags]
+ * @property {Component|(params: ActionParams_T) => Component} [dropdownComponent]
+ * @property {Object|(params: ActionParams_T) => Object} [dropdownComponentProps]
+ * @property {string|(params: ActionParams_T) => string} [dropdownMenuClass]
+ * @property {string|(params: ActionParams_T) => string} [dropdownPosition]
+ * @property {DropdownState|(params: ActionParams_T) => DropdownState} [dropdownState]
+ * @property {string|(params: ActionParams_T) => string} [dropdownTemplate]
+ * @property {Object|(params: ActionParams_T) => Object} [dropdownTemplateParams]
+ * @property {boolean|(params: ActionParams_T) => boolean} [hasBtnBg]
+ * @property {string|(params: ActionParams_T) => string} [hotkey]
+ * @property {string|(params: ActionParams_T) => string} [icon]
+ * @property {boolean|(params: ActionParams_T) => boolean} [inlineName=false]
+ * @property {boolean|(params: ActionParams_T) => boolean} [isActive]
+ * @property {string|(params: ActionParams_T) => string} [name]
+ * @property {string|(params: ActionParams_T) => string} [nameClass]
+ * @property {(params: ActionParams_T, ev: Event) => void} [onSelected]
+ * @property {number|(params: ActionParams_T) => number} [sequence]
+ * @property {boolean|(params: ActionParams_T) => boolean} [sequenceGroup]
+ * @property {boolean|(params: ActionParams_T) => boolean} [sequenceQuick]
+ * @property {(params: ActionParams_T) => void} [setup]
+ * @property {string|string[]|(params: ActionParams_T) => string|string[]} [tags]
  */
 
+/** @template ActionParams_T */
 export class Action {
     /** @type {UseActions} */
     actions;
-    /** @type {ActionDefinition}  User-defined explicit definition of this action */
+    /** @type {ActionDefinition<ActionParams_T>}  User-defined explicit definition of this action */
     definition;
     /** @type {ActionOwner} Entity that is using this action */
     owner;
@@ -90,7 +105,16 @@ export class Action {
     /** @type {import("models").Store} */
     store;
 
-    /** param `store` is required for actions made with new Action() by hand in components and outside component.setup() */
+    /**
+     * param `store` is required for actions made with new Action() by hand in components and outside component.setup()
+     *
+     * @param {Object} params0
+     * @param {UseActionClass_T} [params0.actions]
+     * @param {ActionOwner} params0.owner
+     * @param {string} params0.id
+     * @param {ActionDefinition<ActionParams, Action>} params0.definition
+     * @param {import("models").Store} [params0.store]
+     */
     constructor({ actions, owner, id, definition, store }) {
         this.actions = actions;
         this.definition = definition;
@@ -574,21 +598,31 @@ export class Action {
     }
 }
 
+/**
+ * @template ActionParams_T
+ * @template Action_T
+ */
 export class UseActions extends Reactive {
+    /** @type {Action_T} */
     ActionClass = Action;
     /** @type {Component} */
     component;
-    /** @type {Map<string, Action>} */
+    /** @type {Map<string, Action_T>} */
     moreActions = new Map();
-    /** @type {Action[]} */
+    /** @type {Action<ActionParams_T>[]} */
     transformedActions;
     /** @type {import("models").Store} */
     store;
-    /** @type {Action[]} */
+    /** @type {Action_T[]} */
     actionStack = [];
-    /** @type {Action} */
+    /** @type {Action_T} */
     activeAction = null;
 
+    /**
+     * @param {Component} component
+     * @param {import("models").Store} store
+     * @param {Action_T[]} transformedActions
+     */
     constructor(component, store, transformedActions) {
         super();
         this.component = component;
@@ -598,10 +632,13 @@ export class UseActions extends Reactive {
 
     /**
      * @typedef {Object} MoreActionSpecificDefinition
-     * @property {Action[]|Array<Action[]>} actions
+     * @property {Action_T[]|Array<Action_T[]>} actions
      */
-    /** @typedef {ActionDefinition & MoreActionSpecificDefinition} MoreActionDefinition */
-    /** @param {MoreActionDefinition} [data] */
+    /** @typedef {ActionDefinition<ActionParams_T, Action_T> & MoreActionSpecificDefinition} MoreActionDefinition */
+    /**
+     * @param {MoreActionDefinition} [data]
+     * @returns {Action_T}
+     */
     more(actionsParams = {}, data = {}, id) {
         let moreAction = toRaw(this).moreActions.get(id);
         if (moreAction) {
@@ -628,6 +665,7 @@ export class UseActions extends Reactive {
         return moreAction;
     }
 
+    /** @returns {Action_T[]} */
     get actions() {
         const actions = this.transformedActions
             .filter((action) => action.condition)
@@ -635,7 +673,7 @@ export class UseActions extends Reactive {
         return actions;
     }
 
-    /** @return {PartitionedActions} */
+    /** @return {PartitionedActions<Action_T>} */
     get partition() {
         const actions = this.transformedActions.filter((action) => action.condition);
         const quick = actions
@@ -672,9 +710,35 @@ export class UseActions extends Reactive {
     }
 }
 
+/**
+ * @template {typeof UseActions} UseActionClass_T
+ * @param {Object} param0
+ * @param {typeof UseActionClass_T} param0.UseActionClass
+ * @param {Component} params0.component
+ * @returns {InstanceType<UseActionClass_T>}
+ */
+function _useActionState({ UseActionClass, component }) {
+    return new UseActionClass(component, useService("mail.store"));
+}
+
+/** @returns {ReturnType<_useActionState>} */
+function useActionState({ UseActionClass, component }) {
+    return useState(_useActionState({ UseActionClass, component }));
+}
+
+/**
+ * @template ActionParams_T
+ * @template Action_T
+ * @param {import("@web/core/registry").Registry<ActionDefinition<ActionParams_T, Action_T>>} actionRegistry
+ * @param {typeof UseActionClass_T} UseActionClass
+ * @param {typeof Action_T} ActionClass
+ * @param {ActionParams_T} actionClassParams
+ * @returns {InstanceType<UseActionClass_T>}
+ */
 export function useAction(actionRegistry, UseActionClass, ActionClass, actionClassParams) {
     const component = useComponent();
-    const actions = useState(new UseActionClass(component, useService("mail.store")));
+    const actions = useActionState({ UseActionClass, component });
+    /** @type {Action_T[]} */
     const transformedActions = actionRegistry.getEntries().map(
         ([id, definition]) =>
             new ActionClass({

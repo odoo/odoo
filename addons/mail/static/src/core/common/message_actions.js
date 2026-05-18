@@ -15,12 +15,16 @@ const { DateTime } = luxon;
 export const messageActionsRegistry = registry.category("mail.message/actions");
 
 /** @typedef {import("@odoo/owl").Component} Component */
-/** @typedef {import("@mail/core/common/action").ActionDefinition} ActionDefinition */
 /** @typedef {import("models").Message} Message */
 /** @typedef {import("models").Thread} Thread */
 /**
- * @typedef {ActionDefinition} MessageActionDefinition
+ * @typedef {Object} MessageActionSpecificParams
+ * @property {Message} message
+ * @property {Thread} thread when set, the thread the message is being viewed
  */
+/** @typedef {import("@mail/core/common/action").ActionParams<MessageAction, UseMessageActions_Def> & MessageActionSpecificParams} MessageActionParams */
+/** @typedef {import("@mail/core/common/action").ActionDefinition<MessageActionParams, MessageAction>} MessageActionDefinition */
+
 /**
  * @param {string} id
  * @param {MessageActionDefinition} definition
@@ -238,14 +242,16 @@ export class MessageAction extends Action {
     }
 }
 
+/** @typedef {UseActions<MessageActionParams, MessageAction>} UseMessageActions_Def */
 class UseMessageActions extends UseActions {
     ActionClass = MessageAction;
 }
 
 /**
  * @param {Object} [params0={}]
- * @param {Message|() => Message} [message]
- * @param {Thread|() => Thread} [thread] when set, the thread the message is being viewed
+ * @param {Message|() => Message} [params0.message]
+ * @param {Thread|() => Thread} [params0.thread] when set, the thread the message is being viewed
+ * @returns {UseMessageActions_Def}
  */
 export function useMessageActions({ message, thread } = {}) {
     return useAction(messageActionsRegistry, UseMessageActions, MessageAction, { message, thread });
