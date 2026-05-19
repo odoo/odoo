@@ -459,6 +459,7 @@ export class CalendarCommonRenderer extends Component {
         return res;
     }
     onEventDragStart(info) {
+        this.popover.close();
         this.props.cleanSquareSelection();
         info.el.classList.add(info.view.type);
         this.fc.api.unselect();

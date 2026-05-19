@@ -1505,6 +1505,7 @@ test(`week numbering`, async () => {
 
 test.tags("desktop");
 test(`render popover`, async () => {
+    onRpc("write", () => expect.step("write"));
     await mountView({
         resModel: "event",
         type: "calendar",
@@ -1567,6 +1568,13 @@ test(`render popover`, async () => {
     ).toBeLessThan(35);
 
     await contains(`.o_cw_popover .o_cw_popover_close`).click();
+    expect(`.o_cw_popover`).toHaveCount(0);
+
+    // Drag and drop with opened popover should work and close popover
+    await clickEvent(2);
+    expect(`.o_cw_popover`).toHaveCount(1);
+    await moveEventToTime(2, "2016-12-13 08:00:00");
+    expect.verifySteps(["write"]);
     expect(`.o_cw_popover`).toHaveCount(0);
 });
 
