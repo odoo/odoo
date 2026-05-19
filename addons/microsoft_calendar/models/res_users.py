@@ -124,20 +124,20 @@ class ResUsers(models.Model):
                 _logger.exception("[%s] Calendar Synchro - Exception : %s!", user, exception_to_unicode(e))
                 self.env.cr.rollback()
 
+    @api.model
     def stop_microsoft_synchronization(self):
-        self.ensure_one()
-        self.sudo().microsoft_synchronization_stopped = True
-        self.sudo().microsoft_last_sync_date = None
-        self.user_id._set_microsoft_auth_tokens(False, False, 0)
-        self.user_id.sudo().write({
+        self.env.user.microsoft_synchronization_stopped = True
+        self.env.user.microsoft_last_sync_date = None
+        self.env.user._set_microsoft_auth_tokens(False, False, 0)
+        self.env.user.sudo().write({
             'microsoft_calendar_sync_token': False,
             'microsoft_last_sync_date': False
         })
 
+    @api.model
     def restart_microsoft_synchronization(self):
-        self.ensure_one()
-        self.sudo().microsoft_last_sync_date = datetime.now()
-        self.sudo().microsoft_synchronization_stopped = False
+        self.env.user.microsoft_last_sync_date = datetime.now()
+        self.env.user.microsoft_synchronization_stopped = False
         self.env['calendar.recurrence']._restart_microsoft_sync()
         self.env['calendar.event']._restart_microsoft_sync()
 

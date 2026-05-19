@@ -162,17 +162,17 @@ class ResUsers(models.Model):
         self.ensure_one()
         return self.sudo().google_calendar_token and self._get_google_sync_status() == 'sync_active'
 
+    @api.model
     def stop_google_synchronization(self):
-        self.ensure_one()
-        self.sudo().google_synchronization_stopped = True
-        self.user_id.res_users_settings_id._set_google_auth_tokens(False, False, 0)
-        self.user_id.res_users_settings_id.sudo().write({
+        self.env.user.google_synchronization_stopped = True
+        self.env.user.res_users_settings_id._set_google_auth_tokens(False, False, 0)
+        self.env.user.res_users_settings_id.write({
             'google_calendar_sync_token': False,
         })
 
+    @api.model
     def restart_google_synchronization(self):
-        self.ensure_one()
-        self.sudo().google_synchronization_stopped = False
+        self.env.user.google_synchronization_stopped = False
         self.env['calendar.recurrence']._restart_google_sync()
         self.env['calendar.event']._restart_google_sync()
 
