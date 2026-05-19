@@ -69,7 +69,7 @@
                                             <span>Unavailable</span>
                                         </div>
                                         <span t-out="this.selfOrder.formatMonetary(this.selfOrder.getProductDisplayPrice(product))" class="o-so-tabular-nums fs-4 fw-bold text-primary"/>
-                                        <div class="product_descr d-lg-none mt-1 text-ellipsis text-muted small" t-if="product.public_description" t-out="product.productDescriptionMarkup"/>
+                                        <div class="product_descr o_line_clamp d-lg-none mt-1 text-muted small" t-if="product.public_description" t-out="product.productDescriptionMarkup"/>
                                     </div>
                                     <t t-set="qty" t-value="this.state.quantityByProductTmplId[product.id]" />
                                     <span t-if="qty" t-out="qty" class="badge position-absolute top-0 end-0 m-0 m-lg-2 rounded-4 fs-5 text-bg-primary fw-bold"/>
