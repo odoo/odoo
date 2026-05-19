@@ -24,14 +24,16 @@ export class AttendeeCalendarModel extends CalendarModel {
     async load() {
         const res = await super.load(...arguments);
         if (!this._loaded) {
-            const [credentialStatus, syncStatus, defaultDuration] = await Promise.all([
+            const [credentialStatus, syncStatus, syncEmail, defaultDuration] = await Promise.all([
                 rpc("/calendar/check_credentials"),
                 this.orm.call("res.users", "check_synchronization_status", [[user.userId]]),
+                this.orm.call("res.users", "get_calendar_email", [[user.userId]]),
                 this.orm.call("calendar.event", "get_default_duration"),
             ]);
             this.syncStatus = syncStatus;
             this.credentialStatus = credentialStatus;
             this.defaultDuration = defaultDuration;
+            this.syncEmail = syncEmail;
             this._loaded = true;
         }
         return res;
@@ -141,10 +143,7 @@ export class AttendeeCalendarModel extends CalendarModel {
             let duplicatedRecordIdx = -1;
             for (const event of Object.values(data.records)) {
                 const eventData = event.rawRecord;
-                const attendees =
-                    eventData.partner_ids && eventData.partner_ids.length
-                        ? eventData.partner_ids
-                        : [eventData.partner_id[0]];
+                const attendees = [...new Set([...eventData.partner_ids, ...eventData.partner_id])]
                 let duplicatedRecords = 0;
                 for (const attendee of attendees) {
                     if (!activeAttendeeIds.has(attendee)) {

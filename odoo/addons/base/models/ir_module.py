@@ -649,6 +649,12 @@ class IrModuleModule(models.Model):
             assert request.env.transaction is self.env.transaction, "request on another transaction than the model"
             request.registry = request.env.registry
 
+        if self.env.context.get('force_refresh_only', False):
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'reload',
+            }
+
         # pylint: disable=next-method-called
         config = self.env['ir.module.module'].next() or {}
         if config.get('type') not in ('ir.actions.act_window_close',):

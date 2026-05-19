@@ -15,12 +15,10 @@ patch(AttendeeCalendarController.prototype, {
     },
 
     async onGoogleSyncCalendar() {
-        await this.orm.call(
-            "res.users",
-            "restart_google_synchronization",
-            [[user.userId]],
-        );
-        const syncResult = await this.model.syncGoogleCalendar();
+        /* Force auth, to offer the user the choice of an account to synchronize.
+        If the authorization is successful, it will set the necessary configuration
+        in `oauth2callback` */
+        const syncResult = await this.model.syncGoogleCalendar(false, true);
         if (syncResult.status === "need_auth") {
             window.location.assign(syncResult.url);
         } else if (syncResult.status === "need_config_from_admin") {
@@ -38,20 +36,11 @@ patch(AttendeeCalendarController.prototype, {
                     body: _t("An administrator needs to configure Google Synchronization before you can use it!"),
                 });
             }
-        } else {
-            await this.model.load();
-            render(this, true);
         }
     },
 
     async onStopGoogleSynchronization() {
-        await this.orm.call(
-            "res.users",
-            "stop_google_synchronization",
-            [[user.userId]],
-        );
-        await this.model.load();
-        render(this, true);
+        await this.actionService.doAction("google_calendar.google_calendar_reset_account_action");
     },
 
     async onUnpauseGoogleSynchronization() {
@@ -60,7 +49,6 @@ patch(AttendeeCalendarController.prototype, {
             "unpause_google_synchronization",
             [[user.userId]],
         );
-        await this.onStopGoogleSynchronization();
         render(this, true);
     }
 });
