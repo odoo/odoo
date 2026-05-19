@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import exceptions
 from odoo.addons.iap.tools import iap_tools
+from odoo.exceptions import UserError
 from odoo.tools.translate import _, LazyTranslate
 
 _lt = LazyTranslate(__name__)
@@ -67,12 +67,12 @@ class SmsApi(SmsApiBase):  # TODO RIGR in master: rename SmsApi to SmsApiIAP, an
 
     def _contact_iap(self, local_endpoint, params, timeout=15):
         if not self.env.registry.ready:  # Don't reach IAP servers during module installation
-            raise exceptions.AccessError("Unavailable during module installation.")  # pylint: disable=missing-gettext
+            raise UserError("Unavailable during module installation.")  # pylint: disable=missing-gettext
 
         params['account_token'] = self.account.sudo().account_token
         params['dbuuid'] = self.env['ir.config_parameter'].sudo().get_str('database.uuid')
         endpoint = self.env['ir.config_parameter'].sudo().get_str('sms.endpoint') or self.DEFAULT_ENDPOINT
-        return iap_tools.iap_jsonrpc(endpoint + local_endpoint, params=params, timeout=timeout)
+        return iap_tools.iap_jsonrpc(endpoint + local_endpoint, params=params, timeout=timeout, raise_user_error=True)
 
     def _send_sms_batch(self, messages, delivery_reports_url=False):  # TODO RIGR: switch to kwargs in master
         """ Send SMS using IAP in batch mode

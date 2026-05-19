@@ -1,8 +1,9 @@
 import datetime
 from zoneinfo import ZoneInfo
 
+from requests import RequestException
+
 from odoo import api, fields, models, _
-from odoo.exceptions import AccessError, ValidationError
 
 
 class ResCompany(models.Model):
@@ -57,7 +58,7 @@ class ResCompany(models.Model):
                 "/iap/l10n_in_edi/1/authenticate",
                 "l10n_in_edi.endpoint"
             )
-        except AccessError as e:
+        except RequestException:
             return {
                 "error": [{
                     "code": "404",

@@ -5,9 +5,10 @@ from collections import defaultdict
 
 
 from markupsafe import Markup
+from requests import RequestException
 
 from odoo import Command, _, api, fields, models
-from odoo.exceptions import AccessError, LockError, UserError
+from odoo.exceptions import LockError, UserError
 from odoo.tools import float_is_zero, float_compare
 
 from odoo.addons.l10n_in.models.account_invoice import EDI_CANCEL_REASON
@@ -814,7 +815,7 @@ class AccountMove(models.Model):
                 f"/iap/l10n_in_edi/1/{url_end_point}",
                 'l10n_in_edi.endpoint'
             )
-        except AccessError as e:
+        except RequestException as e:
             _logger.warning("Connection error: %s", e.args[0])
             return {
                 'error': [{

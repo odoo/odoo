@@ -2,8 +2,10 @@ import logging
 import re
 from stdnum.in_ import pan
 
+from requests import RequestException
+
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError, AccessError, ValidationError
+from odoo.exceptions import UserError, ValidationError
 from odoo.addons.l10n_in.models.iap_account import IAP_SERVICE_NAME
 from odoo.tools.misc import clean_context
 
@@ -146,7 +148,7 @@ class ResPartner(models.Model):
                 '/iap/l10n_in_reports/1/public/search',
                 "l10n_in.endpoint"
             )
-        except AccessError:
+        except RequestException:
             raise UserError(_("Unable to connect with GST network"))
         if response.get('error') and any(e.get('code') == 'no-credit' for e in response['error']):
             return self.env.user._bus_send("iap_notification",

@@ -7,10 +7,11 @@ from reportlab.lib.units import mm
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.pdfgen.canvas import Canvas
+from requests import RequestException
 
 from odoo import fields, models, api, _
 from odoo.addons.iap.tools import iap_tools
-from odoo.exceptions import AccessError, UserError
+from odoo.exceptions import UserError
 from odoo.tools import BinaryBytes
 from odoo.tools.pdf import PdfFileReader, PdfFileWriter
 from odoo.tools.safe_eval import safe_eval
@@ -386,12 +387,12 @@ class SnailmailLetter(models.Model):
         params = self._snailmail_create('print')
         try:
             response = iap_tools.iap_jsonrpc(endpoint + PRINT_ENDPOINT, params=params, timeout=timeout)
-        except AccessError as ae:
+        except RequestException:
             for doc in params['documents']:
                 letter = self.browse(doc['letter_id'])
                 letter.state = 'error'
                 letter.error_code = 'UNKNOWN_ERROR'
-            raise ae
+            raise
         for doc in response['request']['documents']:
             if doc.get('sent') and response['request_code'] == 200:
                 self.env['iap.account']._send_success_notification(

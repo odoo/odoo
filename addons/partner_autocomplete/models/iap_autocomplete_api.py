@@ -5,7 +5,7 @@ import logging
 
 from odoo import api, exceptions, models, modules, _, release
 from odoo.addons.iap.tools import iap_tools
-from requests.exceptions import HTTPError
+from requests.exceptions import RequestException
 
 _logger = logging.getLogger(__name__)
 
@@ -44,7 +44,7 @@ class IapAutocompleteApi(models.AbstractModel):
             results = self._contact_iap('/api/dnb/1', action, params, timeout=timeout)
         except exceptions.ValidationError:
             return False, 'Insufficient Credit'
-        except (ConnectionError, HTTPError, exceptions.AccessError, exceptions.UserError) as exception:
+        except RequestException as exception:
             _logger.warning('Autocomplete API error: %s', str(exception))
             return False, str(exception)
         except iap_tools.InsufficientCreditError as exception:
