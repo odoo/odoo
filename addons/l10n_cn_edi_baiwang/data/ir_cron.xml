@@ -1,14 +1,15 @@
 <?xml version="1.0" ?>
 <odoo>
-    <data>
-        <record id="ir_cron_myinvois_document_sync" model="ir.cron">
-            <field name="name">MyInvois: Document Synchronization</field>
-            <field name="model_id" ref="l10n_my_edi.model_myinvois_document"/>
+    <data noupdate="1">
+        <record id="ir_cron_baiwang_red_form_status" model="ir.cron">
+            <field name="name">Baiwang: Check Pending Red Forms</field>
+            <field name="model_id" ref="model_l10n_cn_edi_document"/>
             <field name="state">code</field>
-            <field name="code">model._myinvois_statuses_update_cron()</field>
+            <field name="code">model._cron_check_red_form_status()</field>
             <field name="interval_number">1</field>
             <field name="interval_type">hours</field>
-            <field name="nextcall" eval="(DateTime.now() + timedelta(hours=1))"/>
+            <field name="numbercall">-1</field>
+            <field name="active" eval="True"/>
         </record>
     </data>
 </odoo>

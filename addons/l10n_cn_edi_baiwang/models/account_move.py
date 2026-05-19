@@ -61,3 +61,56 @@ class AccountMove(models.Model):
                 "goodsTaxRate": str(line.tax_ids[0].amount / 100) if line.tax_ids else "0", 
             })
         return lines
+
+    def action_request_baiwang_red_form(self):
+        """ Triggered by user on a Draft Credit Note to request a Red Form. """
+        self.ensure_one()
+
+        # 1. Create the EDI Document link
+        edi_doc = self.env['l10n_cn_edi.document'].create({
+            'move_id': self.id,
+            'state': 'draft'
+        })
+
+        # 2. Setup Client
+        client = BaiwangClient(
+            app_key=self.company_id.l10n_cn_baiwang_app_key,
+            app_secret=self.company_id.l10n_cn_baiwang_app_secret,
+            salt=self.company_id.l10n_cn_baiwang_salt,
+        )
+
+        # 3. Payload (Mapping from your 'Field & Parameter - redform - add.csv')
+        payload = {
+            "taxNo": self.company_id.vat,
+            # ... map the original invoice details here ...
+        }
+
+        response = client.call_api("baiwang.output.redinvoice.add", payload, self.company_id.l10n_cn_baiwang_cached_token)
+
+        if response.get("success"):
+            # Save the UUID and set to pending!
+            edi_doc.write({
+                'baiwang_uuid': response.get("response", {}).get("redConfirmUuid"),
+                'state': 'red_form_pending'
+            })
+            self.message_post(body="Red Form Requested. Waiting for counterpart confirmation.")
+        else:
+            edi_doc.write({'state': 'failed', 'error_message': response.get("errorResponse", {}).get("message")})
+
+    def unlink(self):
+        """ Prevent deletion of Credit Notes that have pending Red Forms. """
+        for move in self:
+            # Look for any EDI documents attached to this move that are pending
+            pending_docs = self.env['l10n_cn_edi.document'].search([
+                ('move_id', '=', move.id),
+                ('state', '=', 'red_form_pending')
+            ], limit=1)
+
+            if pending_docs:
+                raise UserError(
+                    "You cannot delete this Credit Note because a Red Form Request is "
+                    "currently pending on the Golden Tax system.\n\n"
+                    "If you need to cancel it, please revoke the Red Form on the Baiwang portal first."
+                )
+
+        return super(AccountMove, self).unlink()
