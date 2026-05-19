@@ -214,7 +214,13 @@ class BasePartnerMergeAutomaticWizard(models.TransientModel):
             update_records('mail.followers', src=record, field_model='res_model')
             update_records('mail.activity', src=record, field_model='res_model')
             update_records('mail.message', src=record)
-            update_records('ir.model.data', src=record)
+
+        # Redirecting src XML IDs to dst would give dst multiple XML IDs,
+        # so we delete them instead of merging them.
+        self.env['ir.model.data'].sudo().search([
+            ('model', '=', referenced_model),
+            ('res_id', 'in', src_records.ids),
+        ]).unlink()
 
         additional_update_records = additional_update_records or []
         for update_record in additional_update_records:

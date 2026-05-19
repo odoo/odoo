@@ -163,10 +163,17 @@ class AccountMergeWizard(models.TransientModel):
         wiz = self.env['base.partner.merge.automatic.wizard'].new()
         wiz._update_foreign_keys_generic('account.account', accounts_to_remove, account_to_merge_into)
 
-        # 3.2: Update Reference and Many2OneReference fields that reference account.account
+        # 3.2: Redirect the merged accounts XML IDs onto the master.
+        # `_update_reference_fields_generic` would otherwise delete them.
+        self.env['ir.model.data'].sudo().search([
+            ('model', '=', 'account.account'),
+            ('res_id', 'in', accounts_to_remove.ids),
+        ]).res_id = account_to_merge_into.id
+
+        # 3.3: Update Reference and Many2OneReference fields that reference account.account
         wiz._update_reference_fields_generic('account.account', accounts_to_remove, account_to_merge_into)
 
-        # 3.3: Merge translations
+        # 3.4: Merge translations
         account_names = self.env.execute_query(SQL(
             """
                  SELECT id, name
