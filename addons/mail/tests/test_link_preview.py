@@ -233,6 +233,7 @@ class TestLinkPreview(MailCommon):
             patch.object(requests.Session, "get", self._patch_with_og_properties),
             patch.object(requests.Session, "head", self._patch_head_html),
         ):
+            # TDE: seems weird (ctrl usage ?)
             message = self.test_partner.message_post(
                 body=Markup(
                     '<a href="https://www.odoo.com/odoo-experience">Nothing link</a> <a href="https://www.odoo.com/odoo-experience-2025">Other Nothing link</a>'

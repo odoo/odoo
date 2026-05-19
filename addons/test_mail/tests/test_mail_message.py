@@ -183,7 +183,7 @@ class TestMessageValues(MailCommon):
             message_type='comment',
             subtype_id=note_subtype.id,
         )
-        message.write({'bookmarked_partner_ids': [(4, self.partner_admin.id)]})
+        message.sudo().write({'bookmarked_partner_ids': [(4, self.partner_admin.id)]})
 
         # check content
         self.assertEqual(len(message.attachment_ids), 1)

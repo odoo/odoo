@@ -1105,8 +1105,8 @@ class DiscussChannel(models.Model):
                 self._action_unfollow(p)
         return super()._message_receive_bounce(email, partner)
 
-    def _get_allowed_message_params(self):
-        return super()._get_allowed_message_params() | {"special_mentions", "parent_id"}
+    def _get_allowed_message_post_params(self):
+        return super()._get_allowed_message_post_params() | {"special_mentions", "parent_id"}
 
     def _get_allowed_message_partner_ids(self, partner_ids):
         """Ensure only partners having access to the channel can be mentioned."""
@@ -1176,15 +1176,10 @@ class DiscussChannel(models.Model):
             self._add_members(partners=to_invite)
         return super()._message_post_after_hook(message)
 
-    def _message_update_content(self, message, /, *, partner_ids=None, **kwargs):
+    def _message_update_content(self, message, *, partner_ids=None, **kwargs):
         if partner_ids:
-            kwargs["partner_ids"] = self._get_allowed_message_partner_ids(partner_ids)
-        super()._message_update_content(message, **kwargs)
-
-    def _check_can_update_message_content(self, message):
-        # Don't call super in this override as we want to ignore the mail.thread behavior completely
-        if not message.message_type == 'comment':
-            raise UserError(_("Only messages type comment can have their content updated on model 'discuss.channel'"))
+            partner_ids = self._get_allowed_message_partner_ids(partner_ids)
+        super()._message_update_content(message, partner_ids=partner_ids, **kwargs)
 
     def _mail_get_operation_for_mail_message_operation(self, message_operation):
         """Override to ensure create is not allowed in read-only channels."""

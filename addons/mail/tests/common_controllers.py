@@ -2,6 +2,7 @@
 
 import json
 
+from contextlib import nullcontext
 from freezegun import freeze_time
 from markupsafe import Markup
 from requests.exceptions import HTTPError
@@ -303,17 +304,13 @@ class MailControllerUpdateCommon(MailControllerCommon):
             route_kw = args[0] if args else {}
             user, guest = self._authenticate_pseudo_user(data_user)
             with self.subTest(user=user.name, guest=guest.name, route_kw=route_kw):
+                raiseIfCannotUpdate = self.assertRaises(JsonRpcException) if not allowed else nullcontext()
+                # update message content should raise NotFound
+                with raiseIfCannotUpdate, freeze_time('2025-04-08 12:00:00'):
+                    self._update_content(message.id, self.alter_message_body, route_kw)
                 if allowed:
-                    with freeze_time('2025-04-08 12:00:00'):
-                        self._update_content(message.id, self.alter_message_body, route_kw)
                     self.assertEqual(message.body,
                                      Markup('<p>Altered message body<span class="o-mail-Message-edited" data-o-datetime="2025-04-08 12:00:00"></span></p>'))
-                else:
-                    with self.assertRaises(
-                        JsonRpcException,
-                        msg="update message content should raise NotFound",
-                    ):
-                        self._update_content(message.id, self.alter_message_body, route_kw)
 
     def _update_content(self, message_id, body, route_kw):
         self.make_jsonrpc_request(

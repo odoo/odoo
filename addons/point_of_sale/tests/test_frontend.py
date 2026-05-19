@@ -681,7 +681,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             message = self.env['mail.message'].search([('model', '=', 'pos.order'), ('res_id', '=', order.id)], limit=1)
             self.assertEqual(len(message.attachment_ids), 1, "Should have 1 attachment when basic receipt is False")
 
-            message.unlink()
+            message.sudo().unlink()
 
             self.main_pos_config.basic_receipt = True
             order.action_send_receipt('test2@example.com')

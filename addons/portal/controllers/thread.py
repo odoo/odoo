@@ -22,13 +22,13 @@ class PortalThreadController(ThreadController):
         return post_data
 
     @classmethod
-    def _can_edit_message(cls, message, hash=None, pid=None, token=None, **kwargs):
-        if message.model and message.res_id and message.env.user._is_public():
-            thread = request.env[message.model].browse(message.res_id)
-            partner = get_portal_partner(thread, _hash=hash, pid=pid, token=token)
-            if partner and message.author_id == partner:
-                return True
-        return super()._can_edit_message(message, hash=hash, pid=pid, token=token, **kwargs)
+    def _can_edit_message(cls, message, thread, hash=None, pid=None, token=None, **kwargs):
+        if (hash or pid or token) and request.env.user._is_public():
+            portal_partner = get_portal_partner(thread, _hash=hash, pid=pid, token=token)
+            request.update_context(
+                portal_data={"portal_partner": portal_partner, "portal_thread": thread.sudo()},
+            )
+        return super()._can_edit_message(message, thread, hash=hash, pid=pid, token=token, **kwargs)
 
 
 class PortalWebClientController(WebclientController):

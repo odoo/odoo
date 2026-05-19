@@ -4,7 +4,8 @@
 import lxml
 from datetime import datetime
 
-from odoo import http
+from odoo import exceptions
+from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.test_mail_full.tests.common import TestMailFullCommon
 from odoo.addons.test_mail_sms.tests.common import TestSMSRecipients
 from odoo.tests import tagged
@@ -16,7 +17,7 @@ class TestRatingCommon(TestMailFullCommon, TestSMSRecipients):
 
     @classmethod
     def setUpClass(cls):
-        super(TestRatingCommon, cls).setUpClass()
+        super().setUpClass()
 
         cls.record_rating = cls.env['mail.test.rating'].create({
             'customer_id': cls.partner_1.id,
@@ -28,6 +29,17 @@ class TestRatingCommon(TestMailFullCommon, TestSMSRecipients):
             'name': 'Test rating without rating mixin',
             'user_id': cls.user_admin.id,
         })
+
+        cls.user_employee_2 = mail_new_test_user(
+            cls.env,
+            company_id=cls.company_admin.id,
+            country_id=cls.env.ref('base.us').id,
+            groups='base.group_user,mail.group_mail_template_editor',
+            login='employee_2',
+            name='Arthur Employee 2',
+            notification_type='email',
+            signature='--\nArthur'
+        )
 
 
 @tagged('rating')
@@ -63,6 +75,10 @@ class TestRatingFlow(TestRatingCommon):
     @users('employee')
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_rating_rating_apply(self):
+        # set employee as customer, so that they are allowed to update their own message
+        self.record_rating_thread.write({'customer_id': self.env.user.partner_id})
+        self.record_rating.write({'customer_id': self.env.user.partner_id})
+
         for record_rating, expected_subtype, is_rating_mixin_test in (
             (self.record_rating_thread, self.env.ref('mail.mt_comment'), False),
             (self.record_rating, self.env.ref('test_mail_full.mt_mail_test_rating_rating_done'), True),
@@ -84,7 +100,7 @@ class TestRatingFlow(TestRatingCommon):
                 self.assertEqual(record_rating.message_ids, record_messages + message)
                 self.assertIn('Top Feedback', message.body)
                 self.assertIn('/rating/static/src/img/rating_5.png', message.body)
-                self.assertEqual(message.author_id, self.partner_1)
+                self.assertEqual(message.author_id, self.partner_employee)
                 self.assertEqual(message.rating_ids, rating)
                 self.assertFalse(message.notified_partner_ids)
                 self.assertEqual(message.subtype_id, expected_subtype)
@@ -107,7 +123,7 @@ class TestRatingFlow(TestRatingCommon):
                 self.assertEqual(record_rating.message_ids, record_messages + update_message)
                 self.assertIn('Bad Feedback', update_message.body)
                 self.assertIn('/rating/static/src/img/rating_1.png', update_message.body)
-                self.assertEqual(update_message.author_id, self.partner_1)
+                self.assertEqual(update_message.author_id, self.partner_employee)
                 self.assertEqual(update_message.rating_ids, rating)
                 self.assertEqual(update_message.notified_partner_ids, self.partner_admin)
                 self.assertEqual(update_message.subtype_id, expected_subtype)
@@ -121,6 +137,12 @@ class TestRatingFlow(TestRatingCommon):
                 self.assertEqual(new_rating.rating, 1)
                 if is_rating_mixin_test:
                     self.assertEqual(record_rating.rating_last_value, 1)
+
+                # try to update with another user: fails, cannot update message content
+                with self.assertRaises(exceptions.UserError):
+                    record_rating.with_user(self.user_employee_2).rating_apply(2, token=access_token, feedback='Hijacking Feedback')
+                with self.assertRaises(exceptions.UserError):
+                    record_rating.with_user(self.user_employee_2).rating_apply(2, rating=new_rating, feedback='Hijacking Feedback')
 
 
 @tagged('rating')

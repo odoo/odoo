@@ -924,12 +924,12 @@ class TestChannelInternals(MailCommon, HttpCase):
         })
 
         test_group_own_message = test_group.with_user(self.user_employee.id).message_post(body='TestingMessage')
-        test_group_own_message.write({'bookmarked_partner_ids': [(6, 0, self.partner_employee.ids)]})
+        test_group_own_message.sudo().write({'bookmarked_partner_ids': [(6, 0, self.partner_employee.ids)]})
         data = self.make_jsonrpc_request("/mail/store", {"fetch_params": ["init_messaging"]})
         self.assertEqual(data["Store"]["bookmarkBox"]["counter"], 1)
 
         test_group_message = test_group.message_post(body='TestingMessage')
-        test_group_message.write({'bookmarked_partner_ids': [(6, 0, self.partner_employee.ids)]})
+        test_group_message.sudo().write({'bookmarked_partner_ids': [(6, 0, self.partner_employee.ids)]})
         data = self.make_jsonrpc_request("/mail/store", {"fetch_params": ["init_messaging"]})
         self.assertEqual(data["Store"]["bookmarkBox"]["counter"], 2)
 
