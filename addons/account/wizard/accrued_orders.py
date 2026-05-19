@@ -294,7 +294,7 @@ class AccountAccruedOrdersWizard(models.TransientModel):
                                 stock_moves = order_line.move_ids.filtered(lambda m:
                                     m.state == 'done' and m.is_out
                                 )
-                                delivered_value = sum(m.value for m in stock_moves)
+                                delivered_value = -sum(m.value for m in stock_moves)
                                 # Then, compute the already invoiced value.
                                 invoiced_value = sum(expense_invoice_lines.mapped('balance'))
                                 # The amount to invoice is equal to the delivered value minus the already invoiced value.

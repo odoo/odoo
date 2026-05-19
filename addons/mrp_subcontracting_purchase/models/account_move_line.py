@@ -13,7 +13,7 @@ class AccountMoveLine(models.Model):
             subcontract_production = self.purchase_line_id.move_ids._get_subcontract_production()
             valuation_date = subcontract_production.move_raw_ids and max(subcontract_production.move_raw_ids.mapped('date')) or self.date
             components_cost = self.company_currency_id._convert(
-                sum(subcontract_production.move_raw_ids.mapped('value')),
+                -sum(subcontract_production.move_raw_ids.mapped('value')),
                 self.currency_id, self.company_id, valuation_date, round=False
             )
             qty = sum(mo.uom_id._compute_quantity(mo.qty_producing, self.product_uom_id) for mo in subcontract_production if mo.state == 'done')

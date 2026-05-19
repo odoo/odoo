@@ -550,8 +550,8 @@ class TestSalePurchaseStockFlow(TransactionCase):
         deliveries.button_validate()
 
         self.assertRecordValues(deliveries.move_ids, [
-            {'sale_line_id': so1.order_line.id, 'value': 10.0},
-            {'sale_line_id': so2.order_line.id, 'value': 20.0},
+            {'sale_line_id': so1.order_line.id, 'value': -10.0},
+            {'sale_line_id': so2.order_line.id, 'value': -20.0},
         ])
 
     def test_mto_sale_order_propagates_analytic_distribution_to_purchase_line(self):

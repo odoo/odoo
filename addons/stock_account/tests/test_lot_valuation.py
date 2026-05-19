@@ -71,7 +71,7 @@ class TestLotValuation(TestStockValuationCommon):
         # The out move uses lot3.standard_price = 10, not the current product price
         self.assertEqual(self.product.qty_available, 8)
         self.assertEqual(self.lot3.product_qty, -2)
-        self.assertEqual(out_move.value / out_move.quantity, 10)
+        self.assertEqual(out_move.value / out_move.quantity, -10)
 
     def test_lot_normal_3(self):
         """ Test lot valuation and dropship"""
@@ -459,10 +459,9 @@ class TestLotValuation(TestStockValuationCommon):
             self.product.standard_price = 9
         move = self._make_out_move(self.product, 3, create_picking=True, lot_ids=[self.lot1, self.lot2, self.lot3])
         self.assertEqual(self.product.total_value, -27)
-        self.assertEqual(move.value, 27)
+        self.assertEqual(move.value, -27)
         return_move = self._make_return(move, 2)
         self.assertEqual(return_move.state, 'done')
-        # Return move has positive value (in move restoring 2 lots)
         self.assertEqual(return_move.value, 18)
         self.assertEqual(self.product.total_value, -9)
 

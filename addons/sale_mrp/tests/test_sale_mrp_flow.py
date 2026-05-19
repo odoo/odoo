@@ -3036,7 +3036,7 @@ class TestSaleMrpFlow(TestSaleMrpFlowCommon):
         delivery.button_validate()
         self.assertEqual(delivery.state, 'done')
         # Delivery must be valued at lot2's FIFO cost: 20$
-        self.assertAlmostEqual(delivery.move_ids.value, 20.0, places=2)
+        self.assertAlmostEqual(delivery.move_ids.value, -20.0, places=2)
         # Invoice and confirm COGS uses lot2's valuation
         invoice = so._create_invoices()
         invoice.action_post()
