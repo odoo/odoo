@@ -142,6 +142,7 @@ class HrEmployee(models.Model):
     work_contact_id = fields.Many2one('res.partner', 'Work Contact', copy=False, index='btree_not_null')
     # private info
     legal_name = fields.Char(compute='_compute_legal_name', store=True, readonly=False, groups="hr.group_hr_user", help="The employee's official name as per government-issued or legal documents.")
+    split_legal_name = fields.Boolean(compute='_compute_split_legal_name', groups="hr.group_hr_user", help="Indicates whether the legal name is split into first and last name fields based on the employee's country.")
     is_user_active = fields.Boolean(related='user_id.active', string="User's active", groups="hr.group_hr_user")
     private_phone = fields.Char(string="Private Phone", groups="hr.group_hr_user")
     private_email = fields.Char(string="Private Email", groups="hr.group_hr_user")
@@ -612,6 +613,15 @@ class HrEmployee(models.Model):
         for employee in self:
             if not employee.legal_name:
                 employee.legal_name = employee.name
+
+    @api.model
+    def _get_splitting_legal_name_countries(self):
+        return []
+
+    def _compute_split_legal_name(self):
+        splitting_country_codes = self._get_splitting_legal_name_countries()
+        for employee in self:
+            employee.split_legal_name = employee.company_country_code in splitting_country_codes
 
     @api.depends('current_version_id')
     @api.depends_context('version_id')
