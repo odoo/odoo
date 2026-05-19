@@ -332,11 +332,34 @@ class ProductProduct(models.Model):
         return domain
 
     def _build_duplicate_barcode_error_string(self, barcode, duplicate_products):
-        """Returns a single line for one duplicated barcode. Override to customise the message."""
+        """Returns a single line for one duplicated barcode. Override to customise the message.
+
+        When the duplicate is a *variant* with a distinguishing attribute combination
+        (e.g. "Ariel"), the product name and variant name are shown as separate labelled
+        parts. When it's a *template*, or a variant without a combination to distinguish,
+        only the plain product name is shown.
+        """
+        if duplicate_products._name == 'product.product':
+            product_list = []
+            for product in duplicate_products:
+                variant_name = product.product_template_attribute_value_ids._get_combination_name()
+                if variant_name:
+                    product_list.append(_(
+                        "product: %(product_name)s with variant: %(variant_name)s",
+                        product_name=product.product_tmpl_id.name,
+                        variant_name=variant_name,
+                    ))
+                else:
+                    product_list.append(_("product: %(product_name)s", product_name=product.name))
+        else:
+            product_list = [
+                _("product: %(name)s", name=product.name)
+                for product in duplicate_products
+            ]
         return _(
-            "- Barcode \"%(barcode)s\" already assigned to product(s): %(product_list)s",
+            "- Barcode \"%(barcode)s\" already assigned to %(product_list)s",
             barcode=barcode,
-            product_list=duplicate_products.mapped('display_name'),
+            product_list=product_list,
         )
 
     def _build_duplicate_barcode_error_note(self):
@@ -350,8 +373,37 @@ class ProductProduct(models.Model):
         )
 
         duplicates_as_str = "\n".join(
-            self._build_duplicate_barcode_error_string(barcode, duplicate_products._filtered_access('read'))
+            self._build_duplicate_barcode_error_string(barcode, ((duplicate_products - self) or duplicate_products)._filtered_access('read'))
             for barcode, duplicate_products in products_by_barcode
+        )
+
+        if duplicates_as_str:
+            duplicates_as_str += "\n\n" + self._build_duplicate_barcode_error_note()
+            raise ValidationError(_("Barcode(s) already assigned:\n\n%s", duplicates_as_str))
+
+    def _check_duplicated_template_barcodes(self, barcodes_within_company, company_id):
+        """Check that no *template* shares this variant's barcode, unless it is the
+        variant's own template mirroring it.
+
+        Only a template that has exactly this one variant is excluded: that's the one
+        case where `barcode` is intentionally identical on both records, kept in sync by
+        `product.template._compute_barcode`/`_set_barcode`. As soon as the template has
+        several variants, its `barcode` is independent, manually-set data, so this variant
+        sharing that barcode is a genuine duplicate and must still be reported.
+        """
+        domain = Domain(self._get_barcode_search_domain(barcodes_within_company, company_id))
+        mirrored_template_ids = self.product_tmpl_id.filtered(
+            lambda template: len(template.product_variant_ids) == 1
+        ).ids
+        domain &= Domain('id', 'not in', mirrored_template_ids)
+
+        templates_by_barcode = self.env['product.template'].sudo()._read_group(
+            domain, ['barcode'], ['id:recordset'],
+        )
+
+        duplicates_as_str = "\n".join(
+            self._build_duplicate_barcode_error_string(barcode, duplicate_templates._filtered_access('read'))
+            for barcode, duplicate_templates in templates_by_barcode
         )
 
         if duplicates_as_str:
@@ -363,14 +415,19 @@ class ProductProduct(models.Model):
         if self.env['product.uom'].sudo().search_count(packaging_domain, limit=1):
             raise ValidationError(_("A packaging already uses the barcode"))
 
-    @api.constrains('barcode')
     def _check_barcode_uniqueness(self):
         """ With GS1 nomenclature, products and packagings use the same pattern. Therefore, we need
-        to ensure the uniqueness between products' barcodes and packagings' ones"""
+        to ensure the uniqueness between products' barcodes and packagings' ones.
+        """
+        if self.env.context.get('skip_barcode_uniqueness_check'):
+            return
         # Barcodes should only be unique within a company
-        self_ctx = self.with_context(skip_preprocess_gs1=True)
+        self_ctx = self.with_context(skip_preprocess_gs1=True, skip_barcode_uniqueness_check=True)
+        self_ctx.flush_model()
+        self_ctx.env['product.template'].flush_model()
         for company_id, barcodes_within_company in self_ctx._get_barcodes_by_company():
             self_ctx._check_duplicated_product_barcodes(barcodes_within_company, company_id)
+            self_ctx._check_duplicated_template_barcodes(barcodes_within_company, company_id)
             self_ctx._check_duplicated_packaging_barcodes(barcodes_within_company, company_id)
 
     @api.constrains('company_id')
@@ -824,7 +881,16 @@ class ProductProduct(models.Model):
             vals_list
         )
         # Make sure the `create_product_product` context is not kept, unless it was already set.
-        return products.with_env(self.env)
+        products = products.with_env(self.env)
+        if any('barcode' in vals or 'company_id' in vals for vals in vals_list):
+            products._check_barcode_uniqueness()
+        return products
+
+    def write(self, vals):
+        res = super().write(vals)
+        if 'barcode' in vals or 'company_id' in vals:
+            self._check_barcode_uniqueness()
+        return res
 
     def action_archive(self):
         records = self.filtered('active')
