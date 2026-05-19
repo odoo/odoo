@@ -94,6 +94,7 @@ class ResConfigSettings(models.TransientModel):
     module_account_bank_statement_import_qif = fields.Boolean("Import .qif files")
     module_currency_rate_live = fields.Boolean(string="Automatic Currency Rates")
     module_account_intrastat = fields.Boolean(string='Intrastat')
+    module_account_avatax = fields.Boolean(string='AvaTax')
     module_product_margin = fields.Boolean(string="Allow Product Margin")
     module_account_extract = fields.Boolean(string="Document Digitization")
     module_account_invoice_extract = fields.Boolean("Invoice Digitization", compute='_compute_module_account_invoice_extract', readonly=False, store=True)

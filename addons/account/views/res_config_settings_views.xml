@@ -65,6 +65,11 @@
                                                                                                                                                                                - A rounding per line is advised if your prices are tax-included. That way, the sum of line subtotal equals the total with taxes.">
                                 <field name="tax_calculation_rounding_method" class="o_light_label mt16" widget="radio"/>
                             </setting>
+                            <setting id="avatax_settings" string="AvaTax" help="Automatically compute US and Canadian tax rates."
+                                     documentation="/applications/finance/accounting/taxation/taxes/avatax.html"
+                                     invisible="country_code not in ('US', 'CA')" company_dependent="1">
+                                <field name="module_account_avatax" widget="upgrade_boolean"/>
+                            </setting>
                             <setting id="eu_service" title="If you sell goods and services to customers in a
                                 foreign EU country, you must charge VAT based on the delivery address.
                                 This rule applies regardless of where you are located."
