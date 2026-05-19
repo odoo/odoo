@@ -44,13 +44,6 @@ PEPPOL_MAILING_COUNTRIES = [
     'BE', 'LU', 'NL', 'SE', 'NO',
 ]
 
-# List of countries where Peppol is accessible.
-PEPPOL_LIST = PEPPOL_DEFAULT_COUNTRIES + [
-    'AD', 'AL', 'AX', 'BA', 'BG', 'BL', 'GB', 'GF', 'GP', 'HR', 'HU', 'LI', 'MC', 'ME',
-    'MF', 'MK', 'MQ', 'NC', 'PF', 'PM', 'RE', 'RS', 'SK', 'SM', 'TF', 'TR', 'VA', 'WF',
-    'YT',
-]
-
 STORNO_MANDATORY_COUNTRIES = {'BA', 'CN', 'CZ', 'HR', 'PL', 'RO', 'RS', 'RU', 'SI', 'SK', 'UA'}
 STORNO_OPTIONAL_COUNTRIES = {'AT', 'CH', 'DE', 'IT'}
 

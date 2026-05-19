@@ -11,6 +11,7 @@
     'version': '1.2',
     'countries': [
         # !!! KEEP ALIGNED WITH ACCOUNT/MODELS/COMPANY.PEPPOL_DEFAULT_COUNTRIES
+        # !!! MAKE SURE TO INCLUDE IN ACCOUNT/DATA/RES_COUNTRY_GROUP.PEPPOL COUNTRY GROUP
         'at', 'be', 'ch', 'cy', 'cz', 'de', 'dk', 'ee', 'es', 'fi',
         'fr', 'gr', 'ie', 'is', 'it', 'lt', 'lu', 'lv', 'mt', 'nl',
         'no', 'pl', 'pt', 'ro', 'se', 'si',

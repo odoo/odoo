@@ -4,7 +4,6 @@ from datetime import timedelta
 from odoo import api, fields, models, _
 from odoo.tools import BinaryBytes
 
-from odoo.addons.account.models.company import PEPPOL_LIST
 from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
 from odoo.addons.account_peppol.exceptions import get_peppol_error_message
 
@@ -119,7 +118,11 @@ class AccountMoveSend(models.AbstractModel):
     def _is_applicable_to_company(self, method, company):
         # EXTENDS 'account'
         if method == 'peppol':
-            return company.country_code in PEPPOL_LIST and company.account_peppol_proxy_state not in ('not_registered', 'in_verification', 'rejected')
+            return (
+                company.country_id
+                and 'PEPPOL' in company.country_id.country_group_codes
+                and company.account_peppol_proxy_state not in ('not_registered', 'in_verification', 'rejected')
+            )
         else:
             return super()._is_applicable_to_company(method, company)
 
@@ -131,7 +134,7 @@ class AccountMoveSend(models.AbstractModel):
             if partner.peppol_verification_state == 'not_verified':
                 partner.button_account_peppol_check_partner_endpoint(company=move.company_id)
             return all([
-                partner.country_code in PEPPOL_LIST,
+                partner.country_id and 'PEPPOL' in partner.country_id.country_group_codes,
                 self._is_applicable_to_company(method, move.company_id),
                 partner.peppol_verification_state == 'valid',
                 move.company_id.account_peppol_proxy_state != 'rejected',

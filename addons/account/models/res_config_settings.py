@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, api, fields, models
-from odoo.addons.account.models.company import PEPPOL_LIST
 
 
 class ResConfigSettings(models.TransientModel):
@@ -206,12 +205,6 @@ class ResConfigSettings(models.TransientModel):
     )
     account_discount_expense_allocation_active = fields.Boolean(related='account_discount_expense_allocation_id.active', string="Customer Invoices Discounts Account Active")
 
-    # PEPPOL
-    is_account_peppol_eligible = fields.Boolean(
-        string='PEPPOL eligible',
-        compute='_compute_is_account_peppol_eligible',
-    ) # technical field used for showing the Peppol settings conditionally
-
     # Audit trail
     restrictive_audit_trail = fields.Boolean(string='Restricted Audit Trail', related='company_id.restrictive_audit_trail', readonly=False)
     force_restrictive_audit_trail = fields.Boolean(string='Forced Audit Trail', related='company_id.force_restrictive_audit_trail', readonly=False)
@@ -222,13 +215,6 @@ class ResConfigSettings(models.TransientModel):
     income_account_active = fields.Boolean(related='income_account_id.active', string="Income Account Active")
     expense_account_id = fields.Many2one(related='company_id.expense_account_id', readonly=False, check_company=True)
     expense_account_active = fields.Boolean(related='expense_account_id.active', string="Expense Account Active")
-
-    @api.depends('country_code')
-    def _compute_is_account_peppol_eligible(self):
-        # we want to show Peppol settings only to customers that are eligible for Peppol,
-        # except countries that are not in Europe
-        for config in self:
-            config.is_account_peppol_eligible = config.country_code in PEPPOL_LIST
 
     def set_values(self):
         super().set_values()
