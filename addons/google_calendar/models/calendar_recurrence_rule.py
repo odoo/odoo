@@ -2,6 +2,7 @@
 
 import re
 import logging
+from zoneinfo import ZoneInfo
 
 from odoo import api, models
 from odoo.fields import Command, Domain
@@ -84,14 +85,16 @@ class CalendarRecurrence(models.Model):
 
     def _write_from_google(self, gevent, vals):
         current_rrule = self.rrule
-        current_parsed_rrule = self._rrule_parse(current_rrule, self.dtstart)
+        current_tz = ZoneInfo(self.event_tz) if self.event_tz else None
+        current_parsed_rrule = self._rrule_parse(current_rrule, self.dtstart, until_tz=current_tz)
         # event_tz is written on event in Google but on recurrence in Odoo
         vals['event_tz'] = gevent.start.get('timeZone')
         super()._write_from_google(gevent, vals)
 
         base_event_time_fields = ['start', 'stop', 'allday']
         new_event_values = self.env["calendar.event"]._odoo_values(gevent)
-        new_parsed_rrule = self._rrule_parse(self.rrule, self.dtstart)
+        new_tz = ZoneInfo(self.event_tz) if self.event_tz else None
+        new_parsed_rrule = self._rrule_parse(self.rrule, self.dtstart, until_tz=new_tz)
         # We update the attendee status for all events in the recurrence
         google_attendees = gevent.attendees or []
         emails = [a.get('email') for a in google_attendees]
