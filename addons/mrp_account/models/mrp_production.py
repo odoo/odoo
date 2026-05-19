@@ -71,11 +71,11 @@ class MrpProduction(models.Model):
             quantity = finished_move.uom_id._compute_quantity(
                 finished_move.quantity, finished_move.product_id.uom_id)
             extra_cost = self.extra_cost * quantity
-            total_cost = sum(move.value for move in consumed_moves) + work_center_cost + extra_cost
 
+            total_cost = abs(sum(consumed_moves.mapped('value'))) + work_center_cost + extra_cost
             byproduct_moves = self.move_byproduct_ids.filtered(
                 lambda m: m.state not in ('done', 'cancel')
-                and m.uom_id.compare(m.quantity, 0) > 0)
+                          and m.uom_id.compare(m.quantity, 0) > 0)
             byproduct_cost_share = 0
             for byproduct in byproduct_moves:
                 byproduct_cost_share += byproduct.cost_share

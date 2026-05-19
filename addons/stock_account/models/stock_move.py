@@ -264,7 +264,10 @@ class StockMove(models.Model):
 
     def _get_aml_value(self):
         self.ensure_one()
-        return self.value
+        if self.is_in:
+            return self.value
+        else:
+            return -self.value
 
     def _get_analytic_distribution(self):
         return {}
@@ -274,7 +277,7 @@ class StockMove(models.Model):
         if len(self.product_id) > 1:
             return 0
         total_value = sum(self.mapped('value'))
-        total_qty = sum(m._get_valued_qty() for m in self)
+        total_qty = sum(m._get_valued_qty(signed=True) for m in self)
         return total_value / total_qty if total_qty else 0
 
     def _get_cogs_price_unit(self, quantity=0):
@@ -283,13 +286,12 @@ class StockMove(models.Model):
 
         if len(self.product_id) > 1:
             return 0
-        total_qty = sum(m._get_valued_qty() * (-1 if m.is_in else 1) for m in self)
+        total_qty = sum(m._get_valued_qty(signed=True) for m in self)
         valued_consigned_qty = self._get_valued_consigned_qty()
-        total_valued_qty = total_qty + valued_consigned_qty
+        total_valued_qty = total_qty - valued_consigned_qty
         if total_valued_qty and (self.product_id.cost_method == 'fifo' or valued_consigned_qty or
             (self.product_id.lot_valuated and self.product_id.cost_method == 'average')):
-            total_value = sum(m.value * (-1 if m.is_in else 1) for m in self)
-            return total_value / total_valued_qty
+            return sum(self.mapped('value')) / total_valued_qty
         else:
             return self.product_id.standard_price
 
@@ -309,7 +311,6 @@ class StockMove(models.Model):
 
         for move in self:
             move = move.with_company(move.company_id)
-            # Incoming moves
             if move.is_dropship or move.is_in:
                 products_to_recompute.add(move.product_id.id)
                 if move.product_id.lot_valuated:
@@ -337,15 +338,15 @@ class StockMove(models.Model):
                         value += move_line.lot_id.standard_price * move_line.quantity_product_uom
                     else:
                         value += move.product_id.standard_price * move_line.quantity_product_uom
-                move.value = value
+                move.value = - value
                 continue
 
             if move.product_id.cost_method == 'fifo':
                 valued_qty = move._get_valued_qty()
-                move.value = move.product_id.with_context(fifo_qty_already_processed=fifo_qty_processed[move.product_id])._run_fifo(valued_qty)
+                move.value = - move.product_id.with_context(fifo_qty_already_processed=fifo_qty_processed[move.product_id])._run_fifo(valued_qty)
                 fifo_qty_processed[move.product_id] += valued_qty
             else:
-                move.value = move.product_id.standard_price * move._get_valued_qty()
+                move.value = - move.product_id.standard_price * move._get_valued_qty()
 
         # Recompute the standard price
         self.env['product.product'].browse(products_to_recompute)._update_standard_price()
@@ -439,12 +440,16 @@ class StockMove(models.Model):
             'description': '\n'.join(descriptions),
         }
 
-    def _get_valued_qty(self, lot=None):
+    def _get_valued_qty(self, lot=None, signed=False):
+        """ When `signed` is True, the quantity is negative for out moves, so it
+        stays consistent with `value` (also negative for out moves) and value/qty
+        ratios stay positive without needing abs(). """
         self.ensure_one()
         if self._is_in():
             return sum(self._get_in_move_lines(lot).mapped('quantity_product_uom'))
         if self._is_out():
-            return sum(self._get_out_move_lines(lot).mapped('quantity_product_uom'))
+            qty = sum(self._get_out_move_lines(lot).mapped('quantity_product_uom'))
+            return -qty if signed else qty
         if self.is_dropship:
             if lot:
                 return sum(self.move_line_ids.filtered(lambda ml: ml.lot_id == lot).mapped('quantity_product_uom'))
@@ -481,7 +486,7 @@ class StockMove(models.Model):
             origin_move = self.origin_returned_move_id
             origin_valued_qty = origin_move._get_valued_qty()
             return {
-                'value': 0 if self.uom_id.is_zero(origin_valued_qty) else origin_move.value * quantity / origin_valued_qty,
+                'value': 0 if self.uom_id.is_zero(origin_valued_qty) else abs(origin_move.value * quantity / origin_valued_qty),
                 'quantity': quantity,
                 'description': _('Value based on original move %(reference)s', reference=origin_move.reference),
             }
@@ -615,14 +620,13 @@ class StockMove(models.Model):
                 # Falsy in FIFO but since it's an estimation we don't require exact correct cost. Otherwise
                 # we would have to recompute all the analytic estimation at each out.
                 amount = unit_amount * self.product_id.standard_price
+                if self._is_out():
+                    amount = -amount
             else:
                 return False
         else:
             amount = self.value
             unit_amount = self._get_valued_qty()
-
-        if self._is_out():
-            amount = -amount
 
         if self.analytic_account_line_ids and amount == 0 and unit_amount == 0:
             self.analytic_account_line_ids.unlink()

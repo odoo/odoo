@@ -107,7 +107,7 @@ class TestMrpAccount(TestBomPriceCommon):
                 {'remaining_qty': 0.0, 'value': 718.75, 'quantity': 1.0},
                 {'remaining_qty': 1.0, 'value': 918.75, 'quantity': 1.0},
                 # Unbuild move value is derived from MO_2, as precised on the unbuild form
-                {'remaining_qty': 0.0, 'value': 718.75, 'quantity': 1.0},
+                {'remaining_qty': 0.0, 'value': -718.75, 'quantity': 1.0},
             ],
         )
         self._make_out_move(self.dining_table, 1)
@@ -116,9 +116,9 @@ class TestMrpAccount(TestBomPriceCommon):
             [
                 {'remaining_qty': 0.0, 'value': 718.75, 'quantity': 1.0},
                 {'remaining_qty': 0.0, 'value': 918.75, 'quantity': 1.0},
-                {'remaining_qty': 0.0, 'value': 718.75, 'quantity': 1.0},
+                {'remaining_qty': 0.0, 'value': -718.75, 'quantity': 1.0},
                 # Out move value is derived from MO_1, the only candidate origin with some `remaining_qty`
-                {'remaining_qty': 0.0, 'value': 918.75, 'quantity': 1.0},
+                {'remaining_qty': 0.0, 'value': -918.75, 'quantity': 1.0},
             ],
         )
 

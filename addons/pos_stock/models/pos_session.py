@@ -218,7 +218,7 @@ class PosSession(models.Model):
                 product_accounts = product_ctx._get_product_accounts()
                 expense_account = product_accounts['expense']
                 stock_account = product_accounts['stock_valuation']
-                balance = stock_move.value if stock_move.is_out else -stock_move.value
+                balance = -stock_move.value
 
                 reverse_move_lines.append(Command.create({
                     'name': _("Stock variation for %s", stock_move.product_id.name),

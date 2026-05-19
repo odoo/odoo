@@ -87,7 +87,7 @@ class TestStockValuation(TestStockValuationCommon):
         move3 = self._make_out_move(product, 3)
 
         # stock_account values for move3
-        self.assertEqual(move3.value, 30.0)  # took 3 items from move 1 @ 10.00 per unit
+        self.assertEqual(move3.value, -30.0)  # took 3 items from move 1 @ 10.00 per unit
 
         # ---------------------------------------------------------------------
         # Increase received quantity of move1 from 10 to 12, it should create
@@ -107,7 +107,7 @@ class TestStockValuation(TestStockValuationCommon):
         move4 = self._make_out_move(product, 9)
 
         # stock_account values for move4
-        self.assertEqual(move4.value, 90.0)  # took 9 items from move 1 @ 10.00 per unit
+        self.assertEqual(move4.value, -90.0)  # took 9 items from move 1 @ 10.00 per unit
 
         # ---------------------------------------------------------------------
         # Sale 20 units, we fall in negative stock for 10 units. Theses are
@@ -116,7 +116,7 @@ class TestStockValuation(TestStockValuationCommon):
         move5 = self._make_out_move(product, 20)
 
         # stock_account values for move5
-        self.assertEqual(move5.value, 160.0)
+        self.assertEqual(move5.value, -160.0)
         closing_move = self._close()
         valuation_aml = closing_move.line_ids.filtered(lambda l: l.account_id == self.account_stock_valuation)
         variation_aml = closing_move.line_ids.filtered(lambda l: l.account_id == self.account_stock_variation)
@@ -187,7 +187,7 @@ class TestStockValuation(TestStockValuationCommon):
 
         # note: it' ll have to get 68 units from the first batch and 26 from the second one
         # so its value should be -((68*15) + (26*15.5)) = -1423
-        self.assertEqual(move3.value, 1423.0)
+        self.assertEqual(move3.value, -1423.0)
 
         self.assertEqual(move1.remaining_qty, 0)
         self.assertEqual(move2.remaining_qty, 114)
@@ -219,7 +219,7 @@ class TestStockValuation(TestStockValuationCommon):
 
         # note: it' ll have to get 114 units from the move2 and 2 from move4
         # so its value should be -((114*15.5) + (2*16)) = 1735
-        self.assertEqual(move6.value, 1799.0)
+        self.assertEqual(move6.value, -1799.0)
 
         self.assertEqual(move1.remaining_qty, 0)
         self.assertEqual(move2.remaining_qty, 0)
@@ -233,7 +233,7 @@ class TestStockValuation(TestStockValuationCommon):
 
         # note: it' ll have to get 38 units from the move4 and 24 from move5
         # so its value should be -((38*16) + (24*16.5)) = 608 + 396
-        self.assertEqual(move7.value, 1004.0)
+        self.assertEqual(move7.value, -1004.0)
 
         self.assertEqual(move1.remaining_qty, 0)
         self.assertEqual(move2.remaining_qty, 0)
@@ -279,7 +279,7 @@ class TestStockValuation(TestStockValuationCommon):
 
         # note: it' ll have to get 10 units from move5 so its value should
         # be -(10*16.50) = -165
-        self.assertEqual(move9.value, 165.0)
+        self.assertEqual(move9.value, -165.0)
 
         self.assertEqual(move1.remaining_qty, 0)
         self.assertEqual(move2.remaining_qty, 0)
@@ -318,7 +318,7 @@ class TestStockValuation(TestStockValuationCommon):
         move1 = self._make_out_move(product, 50)
 
         # stock values for move1
-        self.assertEqual(move1.value, 400.0)
+        self.assertEqual(move1.value, -400.0)
         self.assertEqual(move1.remaining_qty, 0.0)  # normally unused in out moves, but as it moved negative stock we mark it
 
         closing_move = self._close()
@@ -414,7 +414,7 @@ class TestStockValuation(TestStockValuationCommon):
         move2 = self._make_out_move(product, 10, 10)
 
         # stock values for move2
-        self.assertEqual(move2.value, 100.0)
+        self.assertEqual(move2.value, -100.0)
         self.assertEqual(move1.remaining_qty, 0.0)
 
         with self.assertRaises(UserError):
@@ -426,7 +426,7 @@ class TestStockValuation(TestStockValuationCommon):
         move3 = self._make_out_move(product, 21)
 
         # stock values for move3
-        self.assertEqual(move3.value, 210.0)
+        self.assertEqual(move3.value, -210.0)
 
         # account values for move3
         closing_move = self._close()
@@ -545,7 +545,7 @@ class TestStockValuation(TestStockValuationCommon):
         # ---------------------------------------------------------------------
         move3 = self._make_out_move(product2, 11, create_picking=True)
 
-        self.assertEqual(move3.value, 220.0)
+        self.assertEqual(move3.value, -220.0)
         self.assertEqual(move3.remaining_qty, 0.0)
         self.assertEqual(product2.standard_price, 20.0)
         self.assertEqual(product2.qty_available, 0)
@@ -655,7 +655,7 @@ class TestStockValuation(TestStockValuationCommon):
         move3 = self._make_out_move(product, 8)
 
         # stock values for move3
-        self.assertEqual(move3.value, 80.0)
+        self.assertEqual(move3.value, -80.0)
         self.assertEqual(move3.remaining_qty, 0.0)
         self.assertAlmostEqual(product.qty_available, 12.0)
         self.assertAlmostEqual(product.qty_available, 12.0)
@@ -680,7 +680,7 @@ class TestStockValuation(TestStockValuationCommon):
         # old value: -80 -(8@10)
         # real value: -148 => -(10@10 + 4@12)
         # estimated value: -140 => -(14@10)
-        self.assertEqual(move3.value, 140)
+        self.assertEqual(move3.value, -140)
 
         self.assertEqual(product.total_value, 72)
         closing_move = self._close()
@@ -723,7 +723,7 @@ class TestStockValuation(TestStockValuationCommon):
         move2 = self._make_out_move(product, 10)
 
         # stock values for move2
-        self.assertEqual(move2.value, 100.0)
+        self.assertEqual(move2.value, -100.0)
         self.assertEqual(move2.remaining_qty, 0.0)
 
         # ---------------------------------------------------------------------
@@ -731,7 +731,7 @@ class TestStockValuation(TestStockValuationCommon):
         # ---------------------------------------------------------------------
         move2.quantity = 8
 
-        self.assertEqual(move2.value, 80.0)  # the move actually sent 8@10
+        self.assertEqual(move2.value, -80.0)  # the move actually sent 8@10
 
         self.assertEqual(product.qty_available, 2)
 
@@ -740,7 +740,7 @@ class TestStockValuation(TestStockValuationCommon):
         # ---------------------------------------------------------------------
         move2.quantity = 10
 
-        self.assertEqual(move2.value, 100.0)  # the move actually sent 10@10
+        self.assertEqual(move2.value, -100.0)  # the move actually sent 10@10
         self.assertEqual(product.qty_available, 0)
         self.assertEqual(product.total_value, 0)
 
@@ -894,7 +894,7 @@ class TestStockValuation(TestStockValuationCommon):
         move3.picked = True
         move3._action_done()
 
-        self.assertEqual(move3.value, 2916.5)
+        self.assertEqual(move3.value, -2916.5)
 
         # Purchase 70 units @ $16.00 per unit
         move4 = self.env['stock.move'].create({
@@ -928,7 +928,7 @@ class TestStockValuation(TestStockValuationCommon):
         move5.picked = True
         move5._action_done()
 
-        self.assertEqual(move5.value, 477.56)
+        self.assertEqual(move5.value, -477.56)
 
         # Receives 10 units but assign them to an owner, the valuation should not be impacted.
         move6 = self.env['stock.move'].create({
@@ -963,7 +963,7 @@ class TestStockValuation(TestStockValuationCommon):
         move7.picked = True
         move7._action_done()
 
-        self.assertEqual(move7.value, 795.94)
+        self.assertEqual(move7.value, -795.94)
         self.assertAlmostEqual(product.qty_available, 10)
         self.assertAlmostEqual(product.total_value, 0.0)
 
@@ -1355,7 +1355,7 @@ class TestStockValuation(TestStockValuationCommon):
         # send 10 units that we do not have
         self.assertEqual(self.env['stock.quant']._get_available_quantity(product, self.stock_location), 0)
         move1 = self._make_out_move(product, 10, force_assign=True)
-        self.assertEqual(move1.value, 990)
+        self.assertEqual(move1.value, -990)
         self.assertEqual(product.qty_available, -10)
         self.assertEqual(product.total_value, -990.0)
 
@@ -1378,7 +1378,7 @@ class TestStockValuation(TestStockValuationCommon):
         # send 10 products
         move2 = self._make_out_move(product, 10)
 
-        self.assertEqual(move2.value, 100.0)
+        self.assertEqual(move2.value, -100.0)
         self.assertEqual(move2.remaining_qty, 0.0)  # unused in average move
         product._invalidate_cache()
 
@@ -1386,7 +1386,7 @@ class TestStockValuation(TestStockValuationCommon):
         move3 = self._make_out_move(product, 10)
         move3._action_done()
 
-        self.assertEqual(move3.value, 100.0)
+        self.assertEqual(move3.value, -100.0)
 
     def test_average_negative_4(self):
         product = self.product_avco
@@ -1466,7 +1466,7 @@ class TestStockValuation(TestStockValuationCommon):
         move3.picked = True
         move3._action_done()
 
-        self.assertEqual(move3.value, 75.0)
+        self.assertEqual(move3.value, -75.0)
         self.assertEqual(product.standard_price, 15)
 
         # send 30
@@ -1482,7 +1482,7 @@ class TestStockValuation(TestStockValuationCommon):
         move4.picked = True
         move4._action_done()
 
-        self.assertEqual(move4.value, 450.0)
+        self.assertEqual(move4.value, -450.0)
         self.assertEqual(product.standard_price, 15)
 
         # in 20 @ 20
@@ -1505,7 +1505,7 @@ class TestStockValuation(TestStockValuationCommon):
         # Move 4 is now fixed, it initially sent 30@15 but the 5 last units were negative and estimated
         # at 15 (1125). The new receipt made these 5 units sent at 20 (1500), so a 450 value is added
         # to move4.
-        self.assertEqual(move4.value, 450)
+        self.assertEqual(move4.value, -450)
 
         # So we have 5@20 in stock.
         self.assertEqual(product.qty_available, 5)
@@ -1525,7 +1525,7 @@ class TestStockValuation(TestStockValuationCommon):
         move6.picked = True
         move6._action_done()
 
-        self.assertEqual(move6.value, 100.0)
+        self.assertEqual(move6.value, -100.0)
         self.assertEqual(product.standard_price, 20)
 
         # in 10 @ 10, the new average price should be 10
@@ -1557,7 +1557,7 @@ class TestStockValuation(TestStockValuationCommon):
         move1 = self._make_out_move(product, 10, force_assign=True)
 
         self.assertAlmostEqual(product.qty_available, -10.0)
-        self.assertEqual(move1.value, 1000.0)
+        self.assertEqual(move1.value, -1000.0)
         self.assertAlmostEqual(product.total_value, -1000.0)
 
         # Step2: Change product cost from 100 to 10 -> Nothing should appear in inventory
@@ -1833,7 +1833,7 @@ class TestStockValuation(TestStockValuationCommon):
         ]})
         move2.picked = True
         move2._action_done()
-        self.assertEqual(move2.value, 10)
+        self.assertEqual(move2.value, -10)
         self.assertEqual(move1.remaining_qty, 0)
         self.assertAlmostEqual(product.qty_available, 0.0)
         self.assertEqual(product.total_value, 0)
@@ -2054,7 +2054,6 @@ class TestStockValuation(TestStockValuationCommon):
 
         self.assertEqual(product.qty_available, 85)
         self.assertEqual(product.total_value, 1275)
-
         self.assertEqual(product.with_context(to_date=Datetime.to_string(date1)).qty_available, 10)
         self.assertEqual(product.with_context(to_date=Datetime.to_string(date1)).total_value, 100)
         self.assertEqual(product.with_context(to_date=Datetime.to_string(date2)).qty_available, 20)
@@ -2073,16 +2072,16 @@ class TestStockValuation(TestStockValuationCommon):
         self.assertEqual(product.qty_available, 95)
         self.assertEqual(product.total_value, 1425)
 
-        self.assertEqual(product.with_context(to_date=Datetime.to_string(date1)).qty_available, 10)
-        self.assertEqual(product.with_context(to_date=Datetime.to_string(date1)).total_value, 50)
-        self.assertEqual(product.with_context(to_date=Datetime.to_string(date2)).qty_available, 20)
-        self.assertEqual(product.with_context(to_date=Datetime.to_string(date2)).total_value, 170)
-        self.assertEqual(product.with_context(to_date=Datetime.to_string(date3)).qty_available, 5)
-        self.assertEqual(product.with_context(to_date=Datetime.to_string(date3)).total_value, 60)
-        self.assertEqual(product.with_context(to_date=Datetime.to_string(date4)).qty_available, -15)
-        self.assertEqual(product.with_context(to_date=Datetime.to_string(date4)).total_value, -180)
-        self.assertEqual(product.with_context(to_date=Datetime.to_string(date5)).qty_available, 85)
-        self.assertEqual(product.with_context(to_date=Datetime.to_string(date5)).total_value, 1275)
+        self.assertEqual(product.with_context(to_date=Datetime.to_string(date1)).qty_available, 20)
+        self.assertEqual(product.with_context(to_date=Datetime.to_string(date1)).total_value, 200)
+        self.assertEqual(product.with_context(to_date=Datetime.to_string(date2)).qty_available, 30)
+        self.assertEqual(product.with_context(to_date=Datetime.to_string(date2)).total_value, 320)
+        self.assertEqual(product.with_context(to_date=Datetime.to_string(date3)).qty_available, 15)
+        self.assertEqual(product.with_context(to_date=Datetime.to_string(date3)).total_value, 170)
+        self.assertEqual(product.with_context(to_date=Datetime.to_string(date4)).qty_available, -5)
+        self.assertEqual(product.with_context(to_date=Datetime.to_string(date4)).total_value, -60)
+        self.assertEqual(product.with_context(to_date=Datetime.to_string(date5)).qty_available, 95)
+        self.assertEqual(product.with_context(to_date=Datetime.to_string(date5)).total_value, 1425)
 
     def test_at_date_fifo_stable_after_std_price_drift(self):
         """ Historical FIFO valuation must remain stable when standard_price
@@ -2836,7 +2835,7 @@ class TestStockValuation(TestStockValuationCommon):
             all_moves,
             [
                 {'quantity': 10.0, 'remaining_qty': 8.0, 'value': 150.0, 'remaining_value': 120.0},
-                {'quantity': 2.0, 'remaining_qty': 0.0, 'value': 30.0, 'remaining_value': 0.0},
+                {'quantity': 2.0, 'remaining_qty': 0.0, 'value': -30.0, 'remaining_value': 0.0},
             ]
         )
 

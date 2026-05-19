@@ -7,10 +7,11 @@ const formatters = registry.category("formatters");
 /**
  * Custom list renderer for stock.move in the context of stock_account.
  *
- * The `quantity` and `value` fields are always stored as positive numbers.
- * This renderer overrides `computeAggregates` to produce a signed total at the
- * bottom of the list: outgoing moves (internal/transit → external) are counted
- * negatively, so the footer shows the net quantity/value (incoming − outgoing).
+ * The `quantity` field is always stored as a positive number (`value` is already
+ * signed: negative for outgoing moves). This renderer overrides `computeAggregates`
+ * to produce a signed quantity total at the bottom of the list: outgoing moves
+ * (internal/transit → external) are counted negatively, so the footer shows the
+ * net quantity (incoming − outgoing).
  */
 export class StockMoveListRenderer extends ListRenderer {
     computeAggregates() {
@@ -29,7 +30,6 @@ export class StockMoveListRenderer extends ListRenderer {
 
         this._recomputeSignedAggregate(aggregates, records, "quantity");
         this._recomputeSignedAggregate(aggregates, records, "product_uom_qty");
-        this._recomputeSignedAggregate(aggregates, records, "value");
 
         return aggregates;
     }

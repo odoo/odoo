@@ -109,9 +109,9 @@ class TestMrpValuationStandard(TestBomPriceCommon):
         moves = self.env['stock.move'].search([('product_id', '=', self.dining_table.id)])
         self.assertRecordValues(moves, [
             {'value': PRICE + 10, 'quantity': 1.0, 'is_in': True, 'remaining_value': 0.0, 'remaining_qty': 0.0},
-            {'value': PRICE + 10, 'quantity': 1.0, 'is_in': False, 'remaining_value': 0.0, 'remaining_qty': 0.0},
+            {'value': -(PRICE + 10), 'quantity': 1.0, 'is_in': False, 'remaining_value': 0.0, 'remaining_qty': 0.0},
             {'value': PRICE + 10, 'quantity': 1.0, 'is_in': True, 'remaining_value': 0.0, 'remaining_qty': 0.0},
-            {'value': PRICE + 10, 'quantity': 1.0, 'is_in': False, 'remaining_value': 0.0, 'remaining_qty': 0.0},
+            {'value': -(PRICE + 10), 'quantity': 1.0, 'is_in': False, 'remaining_value': 0.0, 'remaining_qty': 0.0},
         ])
 
     def test_fifo_avco_1(self):

@@ -1053,7 +1053,7 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
         # Sell and Deliver product at $10
         so = self._so_deliver(self.product_fifo_auto, 1, 50)
         delivery_1 = so.picking_ids
-        self.assertEqual(delivery_1.move_ids.value, 10)
+        self.assertEqual(delivery_1.move_ids.value, -10)
 
         # Return
         return_picking = delivery_1._create_return()
@@ -1069,7 +1069,7 @@ class TestAngloSaxonValuation(TestStockValuationCommon, TestSaleStockCommon):
         delivery_2.action_confirm()
         delivery_2.move_ids.write({'quantity': 1, 'picked': True})
         delivery_2.button_validate()
-        self.assertEqual(delivery_2.move_ids.value, 20)
+        self.assertEqual(delivery_2.move_ids.value, -20)
 
         # Invoice the sale orders
         invoice = so._create_invoices()
