@@ -572,10 +572,10 @@ registry.category("web_tour.tours").add("PosRewardProductScan", {
 });
 
 registry.category("web_tour.tours").add("PosRewardProductScanGS1", {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             Chrome.startPoS(),
+            ProductScreen.isShown(),
             scan_barcode("0195412427100283"),
             ProductScreen.selectedOrderlineHas("product_a", "1", "1,150.00"),
             PosLoyalty.hasRewardLine("50% on your order", "-575.00"),

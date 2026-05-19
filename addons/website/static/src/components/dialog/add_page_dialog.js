@@ -126,7 +126,11 @@ class AddPageTemplatePreview extends Component {
                 });
             }
             // Apply styles.
-            for (const cssLinkEl of await this.env.getCssLinkEls()) {
+            const cssLinkEls = await this.env.getCssLinkEls();
+            if (status(this) === "destroyed") {
+                return;
+            }
+            for (const cssLinkEl of cssLinkEls) {
                 const preloadLinkEl = document.createElement("link");
                 preloadLinkEl.setAttribute("rel", "preload");
                 preloadLinkEl.setAttribute("href", cssLinkEl.getAttribute("href"));

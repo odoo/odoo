@@ -22,13 +22,7 @@ export const stepUtils = {
             },
             {
                 trigger,
-                async run({ queryFirst }) {
-                    const input = queryFirst(trigger);
-                    input.focus();
-                    input.value = value;
-                    input.dispatchEvent(new Event("input", { bubbles: true }));
-                    input.dispatchEvent(new Event("change", { bubbles: true }));
-                },
+                run: `edit ${value}`,
             },
         ];
     },

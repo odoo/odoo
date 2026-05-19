@@ -2,11 +2,8 @@ import { _t } from "@web/core/l10n/translation";
 import {
     registerBackendAndFrontendTour,
 } from '@website/js/tours/tour_utils';
-import { stepUtils } from "@web_tour/tour_utils";
 
-registerBackendAndFrontendTour("question_tour", {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
-}, () => [{
+registerBackendAndFrontendTour("question_tour", {}, () => [{
     trigger: ".o_wforum_ask_btn",
     tooltipPosition: "left",
     content: _t("Create a new post in this forum by clicking on the button."),
@@ -36,7 +33,17 @@ registerBackendAndFrontendTour("question_tour", {
     tooltipPosition: "top",
     run: "click",
 },
-...stepUtils.editSelectMenuInput(".o_select_menu_input", "Test"),
+{
+    content: "Make sure a SelectMenu has been opened",
+    trigger: ".o_select_menu_menu",
+},
+{
+    trigger: ".o_select_menu_input",
+    run: "edit Test && press Tab",
+},
+{
+    trigger: ".o_select_menu_input:value(Test)",
+},
 {
     content: "Select found select menu item",
     trigger: ".o_popover.o_select_menu_menu .o_select_menu_item:contains('Test')",
