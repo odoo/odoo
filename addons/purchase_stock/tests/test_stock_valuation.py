@@ -69,7 +69,8 @@ class TestPurchaseStockValuation(PurchaseTestCommon):
 
         self.assertEqual(self.product_avco.total_value, 120)
         self.assertEqual(self.product_avco.with_context(to_date="2025-01-01").total_value, 0)
-        self.assertEqual(self.product_avco.with_context(to_date="2025-01-02").total_value, 80)
+        # There is no recomputation for the move's value at_date.
+        self.assertEqual(self.product_avco.with_context(to_date="2025-01-02").total_value, 120)
         self.assertEqual(self.product_avco.with_context(to_date="2025-01-03").total_value, 120)
 
     def test_move_value_with_small_decimals(self):
@@ -95,6 +96,7 @@ class TestPurchaseStockValuation(PurchaseTestCommon):
 
         with freeze_time('2025-01-03'):
             self._receive(purchase_order=po)
+            self.assertEqual(self.product_avco.total_value, 66.7)
 
         with freeze_time('2025-01-05'):
             self._create_bill(purchase_order=po)
@@ -102,7 +104,7 @@ class TestPurchaseStockValuation(PurchaseTestCommon):
         self.assertEqual(self.product_avco.total_value, 50)
         self.assertEqual(self.product_avco.with_context(to_date="2025-01-02").total_value, 0)
         # It takes the rate from the delivery date (inverse of 1.5 = 0.666666667)
-        self.assertEqual(self.product_avco.with_context(to_date="2025-01-03").total_value, 66.7)
+        self.assertEqual(self.product_avco.with_context(to_date="2025-01-03").total_value, 50.0)
         # Bill date rate
         self.assertEqual(self.product_avco.with_context(to_date="2025-01-05").total_value, 50)
 
