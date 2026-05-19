@@ -1,6 +1,36 @@
-from datetime import datetime
+from datetime import datetime, date
 
 from odoo.tests.common import TransactionCase
+
+
+class TestRruleUntilTimezone(TransactionCase):
+
+    def test_until_conversion(self):
+        cases = [
+            # (label, rule, event_tz, expected_date)
+            # UNTIL=20231026T025959Z = Oct 26 02:59:59 UTC
+            ('UTC-3: Oct 25 local',     'FREQ=WEEKLY;BYDAY=TH;UNTIL=20231026T025959Z', 'America/Argentina/Buenos_Aires', date(2023, 10, 25)),
+            ('UTC: Oct 26',             'FREQ=WEEKLY;BYDAY=TH;UNTIL=20231026T025959Z', 'UTC',                            date(2023, 10, 26)),
+            ('UTC+5:30: Oct 26',        'FREQ=WEEKLY;BYDAY=TH;UNTIL=20231026T025959Z', 'Asia/Kolkata',                   date(2023, 10, 26)),
+            # UNTIL=20231025T185959Z: crosses midnight in UTC+5:30 -> Oct 26 local
+            ('UTC+5:30 cross midnight', 'FREQ=WEEKLY;BYDAY=TH;UNTIL=20231025T185959Z', 'Asia/Kolkata',                   date(2023, 10, 26)),
+            # UNTIL without Z is naive: stored as-is, no timezone conversion
+            ('naive UNTIL',             'FREQ=WEEKLY;BYDAY=TH;UNTIL=20231026T025959',  'America/Argentina/Buenos_Aires', date(2023, 10, 26)),
+        ]
+        for label, rule, event_tz, expected_date in cases:
+            with self.subTest(label):
+                event = self.env['calendar.event'].create({
+                    'name': 'Weekly Thursday',
+                    'start': datetime(2023, 10, 5, 15, 0),
+                    'stop': datetime(2023, 10, 5, 16, 0),
+                })
+                recurrence = self.env['calendar.recurrence'].create({
+                    'base_event_id': event.id,
+                    'calendar_event_ids': [(4, event.id)],
+                    'event_tz': event_tz,
+                    'rrule': rule,
+                })
+                self.assertEqual(recurrence.until, expected_date)
 
 
 class TestRecurrenceRule(TransactionCase):
