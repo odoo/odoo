@@ -20,6 +20,7 @@ partnerCompareRegistry.add(
         if (!p2active && p1active) {
             return -1;
         }
+        return undefined;
     },
     { sequence: 5 }
 );
@@ -35,6 +36,7 @@ partnerCompareRegistry.add(
         if (!isSelf1 && isSelf2) {
             return -1;
         }
+        return undefined;
     },
     { sequence: 7 }
 );
@@ -53,6 +55,7 @@ partnerCompareRegistry.add(
         if (p1MessageId !== undefined && p2MessageId !== undefined && p1MessageId !== p2MessageId) {
             return p2MessageId - p1MessageId;
         }
+        return undefined;
     },
     { sequence: 10 }
 );
@@ -68,6 +71,7 @@ partnerCompareRegistry.add(
         if (!isAInternalUser && isBInternalUser) {
             return 1;
         }
+        return undefined;
     },
     { sequence: 35 }
 );
@@ -75,20 +79,22 @@ partnerCompareRegistry.add(
 partnerCompareRegistry.add(
     "mail.followers",
     function followers(p1, p2, { thread }) {
-        if (thread) {
-            const followerList = [...thread.followers];
-            if (thread.selfFollower) {
-                followerList.push(thread.selfFollower);
-            }
-            const isFollower1 = followerList.some((follower) => p1.eq(follower.partner_id));
-            const isFollower2 = followerList.some((follower) => p2.eq(follower.partner_id));
-            if (isFollower1 && !isFollower2) {
-                return -1;
-            }
-            if (!isFollower1 && isFollower2) {
-                return 1;
-            }
+        if (!thread) {
+            return undefined;
         }
+        const followerList = [...thread.followers];
+        if (thread.selfFollower) {
+            followerList.push(thread.selfFollower);
+        }
+        const isFollower1 = followerList.some((follower) => p1.eq(follower.partner_id));
+        const isFollower2 = followerList.some((follower) => p2.eq(follower.partner_id));
+        if (isFollower1 && !isFollower2) {
+            return -1;
+        }
+        if (!isFollower1 && isFollower2) {
+            return 1;
+        }
+        return undefined;
     },
     { sequence: 25 }
 );
@@ -110,6 +116,7 @@ partnerCompareRegistry.add(
         if (cleanedName1 > cleanedName2) {
             return 1;
         }
+        return undefined;
     },
     { sequence: 50 }
 );
@@ -131,6 +138,7 @@ partnerCompareRegistry.add(
         if (cleanedEmail1 > cleanedEmail2) {
             return 1;
         }
+        return undefined;
     },
     { sequence: 55 }
 );
