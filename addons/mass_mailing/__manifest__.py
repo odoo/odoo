@@ -189,6 +189,7 @@
             'mass_mailing/static/tests/mass_mailing_link_plugin.test.js',
         ],
     },
+    'post_init_hook': '_update_demo_data',
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }
