@@ -1,23 +1,34 @@
 import { registry } from "@web/core/registry";
 import { redirect } from "@web/core/utils/urls";
-import { stepUtils } from "@web_tour/tour_utils";
+
+function getMenu(inputID) {
+    return `.o_website_links_utm_forms div#${inputID} .o_select_menu_toggler`;
+}
 
 function fillSelectMenu(inputID, search) {
+    const trigger = getMenu(inputID);
     return [
         {
-            content: "Click selectMenu form item",
-            trigger: `.o_website_links_utm_forms div#${inputID} .o_select_menu_toggler`,
-            run: "click",
+            content: "Fill selectMenu input",
+            trigger,
+            run: `edit ${search}`,
         },
-        ...stepUtils.editSelectMenuInput(`.o_website_links_utm_forms div#${inputID} .o_select_menu_input`, search),
         {
             content: "Select found selectMenu item",
-            trigger: `.o_popover .o_select_menu_item:contains("${search}")`,
+            trigger: `.o_popover .o_select_menu_item:contains(${search})`,
             run: "click",
         },
         {
             content: "Check that selectMenu is properly filled",
-            trigger: `#${inputID} .o_select_menu_toggler:value('${search}')`,
+            trigger: `${trigger}:value(${search})`,
+        },
+        {
+            content: "blur the form",
+            trigger: ".o_page_header",
+            run: "click",
+        },
+        {
+            trigger: "body:not(:has(.o_popover))",
         },
     ];
 }
@@ -27,8 +38,14 @@ const mediumValue = 'Super Specific Medium';
 const sourceValue = 'Super Specific Source';
 
 registry.category("web_tour.tours").add('website_links_tour', {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () => [
+        {
+            trigger:
+                `body` +
+                `:has(${getMenu("campaign-select-wrapper")})` +
+                `:has(${getMenu("channel-select-wrapper")})` +
+                `:has(${getMenu("source-select-wrapper")})`,
+        },
         // 1. Create a tracked URL
         {
             content: "check that existing links are shown",

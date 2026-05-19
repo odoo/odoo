@@ -7,10 +7,20 @@ import { range } from "@web/core/utils/numbers";
 import { patch } from "@web/core/utils/patch";
 import { effect } from "@web/core/utils/reactive";
 
-let loadMoreDisappearedPromise;
+let waitForLoadMoreToDisappear;
 let resolveLoadMoreDisappeared;
+let subChannelLoadMoreState;
+
+function newLoadMoreDef() {
+    waitForLoadMoreToDisappear = new Promise((resolve) => {
+        resolveLoadMoreDisappeared = resolve;
+    });
+    if (!subChannelLoadMoreState?.isVisible) {
+        resolveLoadMoreDisappeared();
+    }
+}
+
 registry.category("web_tour.tours").add("test_discuss_sub_channel_search", {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () => [
         {
             trigger: "body",
@@ -18,6 +28,7 @@ registry.category("web_tour.tours").add("test_discuss_sub_channel_search", {
                 patch(SubChannelList.prototype, {
                     setup() {
                         super.setup(...arguments);
+                        subChannelLoadMoreState = this.loadMoreState;
                         effect(
                             (state) => {
                                 if (status(this) === "destroyed") {
@@ -50,10 +61,8 @@ registry.category("web_tour.tours").add("test_discuss_sub_channel_search", {
         {
             trigger:
                 ".o-mail-SubChannelList .o-mail-SubChannelPreview:count(1):contains(Sub Channel 10)",
-            async run() {
-                loadMoreDisappearedPromise = new Promise(
-                    (resolve) => (resolveLoadMoreDisappeared = resolve)
-                );
+            run() {
+                newLoadMoreDef();
             },
         },
         {
@@ -74,10 +83,8 @@ registry.category("web_tour.tours").add("test_discuss_sub_channel_search", {
                 ".o-mail-SubChannelPreview .o-mail-SubChannelPreview-name:text(Sub Channel 10)",
             async run() {
                 // Ensure lazy loading is still working after a search.
-                await loadMoreDisappearedPromise;
-                loadMoreDisappearedPromise = new Promise(
-                    (resolve) => (resolveLoadMoreDisappeared = resolve)
-                );
+                await waitForLoadMoreToDisappear;
+                newLoadMoreDef();
             },
         },
         {
@@ -94,10 +101,8 @@ registry.category("web_tour.tours").add("test_discuss_sub_channel_search", {
         {
             trigger: "body",
             async run() {
-                await loadMoreDisappearedPromise;
-                loadMoreDisappearedPromise = new Promise(
-                    (resolve) => (resolveLoadMoreDisappeared = resolve)
-                );
+                await waitForLoadMoreToDisappear;
+                newLoadMoreDef();
             },
         },
         {
@@ -114,7 +119,7 @@ registry.category("web_tour.tours").add("test_discuss_sub_channel_search", {
         {
             trigger: "body",
             async run() {
-                await loadMoreDisappearedPromise;
+                await waitForLoadMoreToDisappear;
             },
         },
         {

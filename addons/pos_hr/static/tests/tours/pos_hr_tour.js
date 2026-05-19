@@ -265,24 +265,26 @@ registry.category("web_tour.tours").add("test_cost_and_margin_visibility", {
 });
 
 registry.category("web_tour.tours").add("pos_hr_go_backend_closed_registered", {
-    undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
     steps: () =>
         [
             // Admin --> 403: not the one that opened the session
             Chrome.clickBtn("Backend"),
             CashierSelectionPopup.has("Mitchell Admin", { run: "click" }),
             PosHr.loginScreenIsShown(),
+            Dialog.isNot({ title: "Select Cashier" }),
 
             // Employee with user --> 403
             Chrome.clickBtn("Backend"),
             CashierSelectionPopup.has("Pos Employee1", { run: "click" }),
             PosHr.enterPin("2580"),
             PosHr.loginScreenIsShown(),
+            Dialog.isNot({ title: "Select Cashier" }),
 
             // Employee without user --> 403
             Chrome.clickBtn("Backend"),
             CashierSelectionPopup.has("Test Employee 3", { run: "click" }),
             PosHr.loginScreenIsShown(),
+            Dialog.isNot({ title: "Select Cashier" }),
 
             // Manager without user --> 403
             Chrome.clickBtn("Backend"),
@@ -290,6 +292,7 @@ registry.category("web_tour.tours").add("pos_hr_go_backend_closed_registered", {
             CashierSelectionPopup.has("Test Manager 2", { run: "click" }),
             PosHr.enterPin("5652"),
             PosHr.loginScreenIsShown(),
+            Dialog.isNot({ title: "Select Cashier" }),
 
             // Manager that opened the session --> access granted
             Chrome.clickBtn("Backend"),

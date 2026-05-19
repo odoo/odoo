@@ -14,7 +14,6 @@ const VIDEO_URL = "https://www.youtube.com/watch?v=Dpq87YCHmJc";
 registerWebsitePreviewTour(
     "test_replace_media",
     {
-        undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
         edition: true,
     },
     () => [
@@ -59,6 +58,9 @@ registerWebsitePreviewTour(
             run: "click",
         },
         {
+            trigger: ".o_select_media_dialog .o_load_done_msg",
+        },
+        {
             content: "select svg",
             trigger: ".o_select_media_dialog .o_button_area[aria-label='sample.svg']",
             run: "click",
@@ -70,6 +72,9 @@ registerWebsitePreviewTour(
         {
             content: "ensure image size is displayed",
             trigger: ".o_customize_tab [data-container-title='Image'] span[title='Size']",
+        },
+        {
+            trigger: ".o-hb-image-size-info[title=Size]:contains(0.5 kB)",
         },
         {
             content: "replace image",
