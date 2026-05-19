@@ -7,7 +7,9 @@
             <field name="arch" type="xml">
                 <form>
                     <group>
-                        <field name="employee_journal_id" string="Journal"/>
+                        <field name="employee_journal_id"
+                               string="Journal"
+                               context="{'default_type': 'purchase', 'from_expense_employee_journal': True}"/>
                         <field name="accounting_date" string="Accounting date"/>
                     </group>
                     <footer>
