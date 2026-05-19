@@ -168,7 +168,7 @@ formatFloatFactor.extractOptions = ({ attrs, options }) => ({
 });
 
 /**
- * Returns a string representing a time value, from a float or a Duration object.
+ * Returns a string representing a time value, from a Duration object.
  * The idea is that we sometimes want to display something like 1h 45m instead of 1.75,
  * or 0:15 instead of 0.25.
  *
@@ -176,10 +176,10 @@ formatFloatFactor.extractOptions = ({ attrs, options }) => ({
  * @param {Object} [options]
  * @param {boolean} [options.showSeconds] if true, format like 1h 30m 20s otherwise, format like 1h 30m
  * @param {boolean} [options.numeric] if true, show the duration in the format set on the language
- * @param {import("./parsers").UnitOfTime} [options.unit="hours"] The unit of mesure for the duration
+ * @param {import("./parsers").UnitOfTime} [options.unit="hours"] The unit of measure for the duration
  * @returns {string}
  */
-function formatDuration(value, options = {}) {
+export function formatDuration(value, options = {}) {
     if (value === false) {
         return "";
     }
