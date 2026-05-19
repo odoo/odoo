@@ -87,9 +87,6 @@ def migrate(cr, version):
             *[Command.unlink(old_tag_id) for old_tag_id in old_tag_ids],
         ]
 
-    # Remove the existing account groups.
-    env['account.group'].search([('company_id', 'in', dk_companies.ids)]).unlink()
-
     deprecated_account_names = [f'{company.id}_{account}' for account in deprecated_accounts for company in dk_companies]
     deprecated_account_ids = set(env['ir.model.data'].search([
         ('model', '=', 'account.account'),
