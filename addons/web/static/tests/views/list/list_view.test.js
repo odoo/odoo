@@ -5735,6 +5735,23 @@ test(`groups can be sorted on non-aggregable fields if a group isn't folded with
     expect.verifySteps(["web_read_group: foo ASC"]);
 });
 
+test(`groups are formatted according to field widget with options`, async () => {
+    await mountView({
+        resModel: "foo",
+        type: "list",
+        groupBy: ["foo"],
+        arch: `
+            <list>
+                <field name="foo"/>
+                <field name="qux" widget="float_time" sum="Sum" options="{'unit': 'minutes', 'show_seconds': true}"/>
+            </list>
+        `,
+    });
+    expect(`.o_list_number:eq(0)`).toHaveText("22m 0s", {
+        message: "total should be formatted as a float_time",
+    });
+});
+
 test(`properly apply onchange in simple case`, async () => {
     Foo._onChanges = {
         foo(record) {

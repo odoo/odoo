@@ -836,7 +836,9 @@ export class ListRenderer extends Component {
             };
         }
         const formatter = formatters.get(widget, false) || formatters.get(field.type, false);
+        const options = formatter.extractOptions && formatter.extractOptions(column);
         const formatOptions = {
+            ...options,
             digits: attrs.digits ? JSON.parse(attrs.digits) : field.digits,
             escape: true,
         };
