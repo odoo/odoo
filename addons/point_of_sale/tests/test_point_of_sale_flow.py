@@ -85,6 +85,8 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         self.pos_config.open_ui()
         current_session = self.pos_config.current_session_id
         # I create a new PoS order with 2 lines
+        untax1, atax1 = self.compute_tax(self.product3, 450 * (1 - 5 / 100.0), 2)
+        untax2, atax2 = self.compute_tax(self.product4, 300 * (1 - 5 / 100.0), 3)
         order = self.PosOrder.create({
             'company_id': self.env.company.id,
             'session_id': current_session.id,
@@ -97,8 +99,8 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
                 'discount': 5.0,
                 'qty': 2.0,
                 'tax_ids': [(6, 0, self.product3.taxes_id.filtered(lambda t: t.company_id.id == self.env.company.id).ids)],
-                'price_subtotal': 450 * (1 - 5/100.0) * 2,
-                'price_subtotal_incl': 450 * (1 - 5/100.0) * 2,
+                'price_subtotal': untax1,
+                'price_subtotal_incl': untax1 + atax1,
             }), (0, 0, {
                 'name': "OL/0002",
                 'product_id': self.product4.id,
@@ -106,11 +108,11 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
                 'discount': 5.0,
                 'qty': 3.0,
                 'tax_ids': [(6, 0, self.product4.taxes_id.filtered(lambda t: t.company_id.id == self.env.company.id).ids)],
-                'price_subtotal': 300 * (1 - 5/100.0) * 3,
-                'price_subtotal_incl': 300 * (1 - 5/100.0) * 3,
+                'price_subtotal': untax2,
+                'price_subtotal_incl': untax2 + atax2,
             })],
-            'amount_total': 1710.0,
-            'amount_tax': 0.0,
+            'amount_total': untax1 + atax1 + untax2 + atax2,
+            'amount_tax': atax1 + atax2,
             'amount_paid': 0.0,
             'amount_return': 0.0,
             'last_order_preparation_change': '{}'
@@ -247,9 +249,9 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
                 Command.create({
                     'product_id': self.product_b.id,
                     'qty': 1,
+                    'price_unit': 16.0,
                     'price_subtotal': 16.0,
                     'price_subtotal_incl': 16.0,
-                    'price_unit': 16.0,
                 }),
             ],
             'amount_tax': 0.0,
@@ -3118,3 +3120,57 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
                     {'account_id': self.bank_payment_method.outstanding_account_id.id},
                     {'account_id': self.bank_payment_method.receivable_account_id.id},
                 ])
+
+    def test_order_partial_refund_amount(self):
+        """This test make sure that line prices and total price of an order are correctly updated according to the quantity refunded
+           even when the order is refunded in multiple times.
+        """
+        self.pos_config.open_ui()
+        current_session = self.pos_config.current_session_id
+        # I create a new PoS order with 2 lines
+        order = self.PosOrder.create({
+            'company_id': self.env.company.id,
+            'session_id': current_session.id,
+            'partner_id': self.partner1.id,
+            'pricelist_id': self.partner1.property_product_pricelist.id,
+            'lines': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'qty': 3,
+                    'price_unit': 12.0,
+                    'price_subtotal': 36.0,
+                    'price_subtotal_incl': 36.0,
+                }),
+            ],
+            'amount_tax': 0.0,
+            'amount_total': 36.0,
+            'amount_paid': 0.0,
+            'amount_return': 0.0,
+        })
+        payment_context = {"active_ids": order.ids, "active_id": order.id}
+        order_payment = self.PosMakePayment.with_context(**payment_context).create({
+            'amount': order.amount_total,
+            'payment_method_id': self.cash_payment_method.id
+        })
+        order_payment.with_context(**payment_context).check()
+
+        # Make a first refund for 1 quantity of the product
+        refund_action = order.refund()
+        refund = self.PosOrder.browse(refund_action['res_id'])
+        with Form(refund) as refund_form:
+            with refund_form.lines.edit(0) as line:
+                line.qty = -1
+        refund = refund_form.save()
+        payment_context = {"active_ids": refund.ids, "active_id": refund.id}
+        refund_payment = self.PosMakePayment.with_context(**payment_context).create({
+            'amount': refund.amount_total,
+            'payment_method_id': self.cash_payment_method.id,
+        })
+        refund_payment.with_context(**payment_context).check()
+
+        # Make a second refund for the 2 remaining quantities of the product
+        refund_action = order.refund()
+        refund = self.PosOrder.browse(refund_action['res_id'])
+        self.assertEqual(refund.amount_total, -24.0)
+        self.assertEqual(refund.lines.qty, -2)
+        self.assertEqual(refund.lines[0].price_subtotal, -24.0)
