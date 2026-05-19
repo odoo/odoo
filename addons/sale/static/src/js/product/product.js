@@ -13,6 +13,7 @@ import { _t } from "@web/core/l10n/translation";
 export const productProps = {
     id: t.or([t.number(), t.literal(false)]).optional(),
     product_tmpl_id: t.number(),
+    product_type: t.string(),
     display_name: t.string(),
     // backend sends 'false' when there is no description
     description_sale: t.or([t.boolean(), t.string()]),
