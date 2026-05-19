@@ -2170,7 +2170,7 @@ class AccountEdiUBL(models.AbstractModel):
 
         # Peppol EAS/Endpoint.
         if (node := party_node.find(".//{*}EndpointID")) is not None:
-            customer_values['peppol_endpoint'] = node.text
+            customer_values['peppol_endpoint'] = node.text.strip()
             if peppol_eas := node.attrib.get('schemeID'):
                 customer_values['peppol_eas'] = peppol_eas
 
