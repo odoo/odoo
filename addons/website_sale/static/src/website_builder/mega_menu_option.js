@@ -10,7 +10,9 @@ patch(MegaMenuOption.prototype, {
         this.productCategories = [];
 
         onWillStart(async () => {
-            this.productCategories = await this.orm.call("product.public.category", "search", [[]]);
+            this.productCategories = await this.orm.call("product.public.category", "search", [[
+                ["has_published_products", "=", true],
+            ]]);
         });
     },
 });
