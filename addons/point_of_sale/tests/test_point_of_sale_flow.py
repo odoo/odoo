@@ -2631,3 +2631,70 @@ class TestPointOfSaleFlow(CommonPosTest):
                     {'account_id': self.bank_payment_method.outstanding_account_id.id},
                     {'account_id': self.bank_payment_method.receivable_account_id.id},
                 ])
+
+    def test_pricelist_item_date_loading(self):
+        """Pricelist items respect date_start/date_end on full and incremental loads."""
+        pricelist = self.env['product.pricelist'].create({'name': 'Date Test Pricelist'})
+        self.pos_config_usd.write({
+            'use_pricelist': True,
+            'available_pricelist_ids': [(6, 0, pricelist.ids)],
+            'pricelist_id': pricelist.id,
+        })
+        self.pos_config_usd.open_ui()
+        session = self.pos_config_usd.current_session_id
+
+        now = fields.Datetime.now()
+        item_data = {'pricelist_id': pricelist.id, 'compute_price': 'fixed', 'fixed_price': 10}
+
+        item_no_dates = self.env['product.pricelist.item'].create(item_data)
+        item_past_start = self.env['product.pricelist.item'].create({
+            **item_data, 'date_start': now - timedelta(days=5),
+        })
+        item_future_start = self.env['product.pricelist.item'].create({
+            **item_data, 'date_start': now + timedelta(days=5),
+        })
+        item_expired = self.env['product.pricelist.item'].create({
+            **item_data, 'date_end': now - timedelta(days=1),
+        })
+        # date_start just became valid; will be fetched via the date_start window check.
+        item_just_activated = self.env['product.pricelist.item'].create({
+            **item_data, 'date_start': now - timedelta(days=3),
+        })
+        # Will be modified after last_server_date to bump its write_date.
+        item_to_modify = self.env['product.pricelist.item'].create(item_data)
+
+        # Backdate write_date for items that must appear stale during incremental load.
+        old_date = now - timedelta(days=30)
+        stale_items = item_future_start | item_just_activated | item_to_modify
+        stale_items.flush_model()
+        self.env.cr.execute(
+            "UPDATE product_pricelist_item SET write_date = %s WHERE id IN %s",
+            (old_date, tuple(stale_items.ids)),
+        )
+        stale_items.invalidate_recordset(['write_date'])
+
+        # --- Full load ---
+        data = session.load_data([])
+        loaded_ids = {i['id'] for i in data['product.pricelist.item']}
+        self.assertIn(item_no_dates.id, loaded_ids)
+        self.assertIn(item_past_start.id, loaded_ids)
+        self.assertIn(item_just_activated.id, loaded_ids)
+        self.assertNotIn(item_future_start.id, loaded_ids)
+        self.assertNotIn(item_expired.id, loaded_ids)
+
+        # --- Incremental load ---
+        # last_server_date = 10 days ago; item_just_activated has write_date = 30 days ago
+        # so write_date < last_server_date, but date_start (3 days ago) > last_server_date
+        last_server_date = fields.Datetime.to_string(now - timedelta(days=10))
+
+        # Modify item_to_modify now (write_date = now > last_server_date).
+        item_to_modify.write({'fixed_price': 99})
+
+        data = session.with_context(pos_last_server_date=last_server_date).load_data([])
+        loaded_ids = {i['id'] for i in data['product.pricelist.item']}
+        self.assertIn(item_just_activated.id, loaded_ids,
+            "item whose date_start fell inside the sync window must be fetched on incremental load")
+        self.assertIn(item_to_modify.id, loaded_ids,
+            "item modified after last_server_date must be fetched on incremental load")
+        self.assertNotIn(item_future_start.id, loaded_ids,
+            "item with date_start still in the future must not be fetched")
