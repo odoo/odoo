@@ -274,8 +274,8 @@ def add_banner(pdf_stream: io.BytesIO, text: str, logo: bool = False, thickness:
         if '/Annots' in new_page:
             del new_page['/Annots']
         new_page.merge_page(wm_page)
-        new_page.compress_content_streams()
         new_pdf.add_page(new_page)
+        new_pdf.pages[-1].compress_content_streams()
 
     # Write the new pdf into a new output stream
     output = io.BytesIO()
