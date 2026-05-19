@@ -3273,8 +3273,7 @@ Sitemap: <t t-out="url_root"/>sitemap.xml
                         <t t-if="result.get('tags')" t-out="result['tags']"/>
                         <p
                             t-elif="result.get('description')"
-                            class="o_line_clamp mb-0 small"
-                            style="--lines-clamp: 1;"
+                            class="o_line_clamp o_line_clamp_1 mb-0 small"
                             t-out="result['description']"
                         />
                     </div>

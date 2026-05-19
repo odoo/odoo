@@ -9,10 +9,10 @@
 
     <t t-name="mail.LinkPreviewCard.content">
         <span t-if="this.linkPreview.og_site_name" class="text-muted smaller" t-out="this.linkPreview.og_site_name"/>
-        <p class="o-mail-LinkPreviewCard-title mb-0" t-att-class="{ 'me-4': !this.linkPreview.og_site_name }">
+        <p class="o-mail-LinkPreviewCard-title o_line_clamp mb-0" t-att-class="{ 'me-4': !this.linkPreview.og_site_name }">
             <a t-att-href="this.linkPreview.source_url" target="_blank" t-out="this.linkPreview.og_title"/>
         </p>
-        <p t-if="this.linkPreview.og_description" class="o-mail-LinkPreviewCard-description mt-1 mb-0 text-muted smaller" t-out="this.linkPreview.og_description"/>
+        <p t-if="this.linkPreview.og_description" class="o-mail-LinkPreviewCard-description o_line_clamp o_line_clamp_3 mt-1 mb-0 text-muted smaller" t-out="this.linkPreview.og_description"/>
     </t>
     <t t-name="mail.LinkPreviewCard">
         <div class="o-mail-LinkPreviewCard card mb-1 rounded bg-view shadow-sm overflow-hidden" t-att-class="{ 'o-mail-LinkPreviewCard-noImage': !this.linkPreview.og_image, 'w-100': this.ui.isSmall or this.env.inChatWindow }" t-attf-class="{{ this.className }}">
@@ -73,10 +73,10 @@
                 <div class="col min-w-0" t-att-class="{ 'd-flex align-items-center': !this.linkPreview.og_description }">
                     <div class="d-flex flex-column gap-1 px-3 py-1 bg-view">
                         <p t-if="this.linkPreview.og_site_name" class="mb-0 card-text text-muted smaller overflow-hidden" t-out="this.linkPreview.og_site_name"></p>
-                        <h6 class="o-mail-LinkPreviewVideo-title card-title mb-0 me-2" t-attf-class="{{ this.linkPreview.og_description ? 'text-truncate' : 'o-mail-LinkPreviewVideo-hasDescription overflow-hidden' }}">
+                        <h6 class="o-mail-LinkPreviewVideo-title card-title mb-0 me-2" t-attf-class="{{ this.linkPreview.og_description ? 'text-truncate' : 'o-mail-LinkPreviewVideo-hasDescription o_line_clamp o_line_clamp_3' }}">
                             <a t-att-href="this.linkPreview.source_url" target="_blank" t-out="this.linkPreview.og_title"/>
                         </h6>
-                        <p t-if="this.linkPreview.og_description" class="o-mail-LinkPreviewVideo-description o-mail-LinkPreviewVideo-hasDescription card-text mb-0 text-muted small overflow-hidden" t-out="this.linkPreview.og_description"></p>
+                        <p t-if="this.linkPreview.og_description" class="o-mail-LinkPreviewVideo-description o-mail-LinkPreviewVideo-hasDescription o_line_clamp card-text mb-0 text-muted small" t-out="this.linkPreview.og_description"></p>
                     </div>
                 </div>
                 <div t-if="!this.linkPreview.videoURL" class="col-4 d-block">

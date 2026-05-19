@@ -189,7 +189,7 @@
                     </div>
                     <div t-if="this.state.urlDescription" class="d-flex">
                         <i class="fa fa-align-right align-content-center"></i>
-                        <span class="ms-1 o_we_description_link_preview" style="display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; font-size: 12px;color: gray; overflow: hidden;" t-attf-title="{{this.state.urlDescription}}">
+                        <span class="ms-1 o_we_description_link_preview o_line_clamp" style="font-size: 12px; color: gray;" t-attf-title="{{this.state.urlDescription}}">
                             <t t-out="this.state.urlDescription"/>
                         </span>
                     </div>
