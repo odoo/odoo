@@ -735,6 +735,22 @@ class TestL10nPlEdi(AccountTestInvoicingCommon, CronMixinCase):
             },
         ])
 
+    def test_import_invoice_with_zero_value_line_missing_unit_prices(self):
+        self._assert_import_invoice('invoice_with_zero_value_line_missing_unit_prices.xml', [
+            {
+                'name': '[FURN_0006] Podstawka pod monitor',
+                'price_unit': 3.19,
+                'price_total': 3.92,
+                'tax_ids': self.env['account.chart.template'].ref('vz_kraj_23').ids,
+            },
+            {
+                'name': '[ZERO] Transport',
+                'price_unit': 0.0,
+                'price_total': 0.0,
+                'tax_ids': self.env['account.chart.template'].ref('vz_kraj_zw').ids,
+            },
+        ])
+
     def test_import_invoice_from_foreign_country_retrieve_correct_partner(self):
         partner = self.env["res.partner"].create({
             'name': "LU Company",
