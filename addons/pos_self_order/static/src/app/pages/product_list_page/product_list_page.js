@@ -30,6 +30,15 @@ export class ProductListPage extends Component {
         if (initCategories) {
             this.selfOrder.computeAvailableCategories();
         }
+
+        if (
+            this.selfOrder.hasPresets() &&
+            !this.selfOrder.currentOrder.preset_id &&
+            this.selfOrder.config.self_ordering_mode !== "kiosk"
+        ) {
+            this.router.navigate("location");
+            return;
+        }
         const availableCategories = this.selfOrder.availableCategories;
         const topCategories = availableCategories.filter((category) => !category.parent_id);
         const selectedCategory =
