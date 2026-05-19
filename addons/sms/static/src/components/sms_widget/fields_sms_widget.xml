@@ -23,4 +23,9 @@
             </div>
         </xpath>
     </t>
+    <t t-name="sms.SmsCharCounter">
+        <div t-if="state.nbrChar > 0" class="ms-auto text-muted d-flex align-items-center" style="font-size: 14px;">
+            <t t-out="state.nbrChar"/>/<t t-out="state.maxChar"/> | <t t-out="state.nbrSMS"/> SMS (<t t-out="state.encoding"/>) <i class="fa fa-info-circle text-info ms-1" title="SMS length info"/>
+        </div>
+    </t>
 </templates>
