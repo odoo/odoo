@@ -622,6 +622,19 @@ class Registry(Mapping[str, type["BaseModel"]]):
         return result
 
     @functools.cached_property
+    def many2one_references(self) -> tuple[Field, ...]:
+        """ All the stored many2one_reference fields that may refer to records. """
+        return tuple(
+            field
+            for Model in self.models.values()
+            if not (Model._abstract or not Model._auto)
+            for field in Model._fields.values()
+            if field.type == 'many2one_reference'
+            and field.store
+            and field._module not in self.uninstalling_modules
+        )
+
+    @functools.cached_property
     def many2one_targeting(self) -> dict[str, tuple[Field, ...]]:
         """ Maps each model name to the stored many2one fields having that model
         as comodel. """
