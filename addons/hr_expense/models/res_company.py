@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import api, fields, models
+from odoo.exceptions import ValidationError
 
 
 class ResCompany(models.Model):
@@ -19,3 +20,11 @@ class ResCompany(models.Model):
         check_company=True,
         domain="[('payment_type', '=', 'outbound'), ('journal_id', '!=', False), ('journal_id.active', '=', True)]",
     )
+
+    @api.constrains('expense_journal_id')
+    def _check_expense_journal_id_type(self):
+        for company in self:
+            if company.expense_journal_id and company.expense_journal_id.type != 'purchase':
+                raise ValidationError(
+                    self.env._("The employee expense journal must be a purchase journal.")
+                )
