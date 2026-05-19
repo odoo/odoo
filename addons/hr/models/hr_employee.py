@@ -223,7 +223,6 @@ class HrEmployee(models.Model):
                                     help="The date of the first contract of the employee in the company.")
     contract_date_start = fields.Date(readonly=False, related="version_id.contract_date_start", inherited=True, groups="hr.group_hr_manager")
     contract_date_end = fields.Date(readonly=False, related="version_id.contract_date_end", inherited=True, groups="hr.group_hr_manager")
-    fixed_term = fields.Boolean(readonly=False, related="version_id.fixed_term", inherited=True, groups="hr.group_hr_manager")
     trial_date_end = fields.Date(readonly=False, related="version_id.trial_date_end", inherited=True, groups="hr.group_hr_manager")
     date_start = fields.Date(related='version_id.date_start', inherited=True, groups="hr.group_hr_manager")
     date_end = fields.Date(related='version_id.date_end', inherited=True, groups="hr.group_hr_manager")

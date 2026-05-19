@@ -157,7 +157,6 @@ class HrVersion(models.Model):
     contract_date_end = fields.Date(
         'Contract End Date', tracking=1, help="End date of the contract (if it's a fixed-term contract).",
         groups="hr.group_hr_manager")
-    fixed_term = fields.Boolean('Fixed Term', tracking=1, groups='hr.group_hr_manager')
     trial_date_end = fields.Date('End of Trial Period', help="End date of the trial period (if there is one).",
                                  groups="hr.group_hr_manager", tracking=1)
     date_start = fields.Date(compute='_compute_dates', groups="hr.group_hr_manager", search="_search_start_date")
