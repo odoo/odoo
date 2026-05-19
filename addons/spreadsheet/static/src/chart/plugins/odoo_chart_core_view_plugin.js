@@ -12,6 +12,7 @@ export class OdooChartCoreViewPlugin extends OdooUIPlugin {
         super(config);
 
         this.custom = config.custom;
+        this._pendingAddDomains = false;
 
         /** @type {Record<string, ChartDataSource>} */
         this.charts = {};
@@ -23,10 +24,6 @@ export class OdooChartCoreViewPlugin extends OdooUIPlugin {
                 for (const chartId of this.getters.getOdooChartIds()) {
                     this._setupChartDataSource(chartId);
                 }
-
-                // make sure the domains are correctly set before
-                // any evaluation
-                this._addDomains();
                 break;
             case "UPDATE_CHART": {
                 if (cmd.definition.dataSource?.type === "odoo") {
@@ -69,7 +66,7 @@ export class OdooChartCoreViewPlugin extends OdooUIPlugin {
             case "EDIT_GLOBAL_FILTER":
             case "REMOVE_GLOBAL_FILTER":
             case "SET_GLOBAL_FILTER_VALUE":
-                this._addDomains();
+                this._pendingAddDomains = true;
                 break;
             case "UNDO":
             case "REDO": {
@@ -101,6 +98,13 @@ export class OdooChartCoreViewPlugin extends OdooUIPlugin {
             case "REFRESH_ALL_DATA_SOURCES":
                 this._refreshOdooCharts();
                 break;
+        }
+    }
+
+    finalize() {
+        if (this._pendingAddDomains) {
+            this._addDomains();
+            this._pendingAddDomains = false;
         }
     }
 
