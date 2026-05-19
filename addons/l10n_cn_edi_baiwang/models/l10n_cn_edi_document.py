@@ -1,9 +1,12 @@
 # models/l10n_cn_edi_document.py
-from odoo import fields, models, api
-from .baiwang_client import BaiwangClient
 import logging
 
+from odoo import api, fields, models
+
+from .baiwang_client import BaiwangClient
+
 _logger = logging.getLogger(__name__)
+
 
 class L10nCnEdiDocument(models.Model):
     _name = 'l10n_cn_edi.document'
@@ -15,7 +18,7 @@ class L10nCnEdiDocument(models.Model):
         ('draft', 'Draft'),
         ('red_form_pending', 'Pending Counterpart Confirmation'),
         ('red_form_confirmed', 'Red Form Confirmed'),
-        ('failed', 'Failed/Rejected')
+        ('failed', 'Failed/Rejected'),
     ], default='draft', tracking=True)
 
     baiwang_uuid = fields.Char(string="Red Form UUID", copy=False)
@@ -49,7 +52,7 @@ class L10nCnEdiDocument(models.Model):
             # (Note: Using operate or query endpoint depending on exact Baiwang specs, assuming redforminfo here)
             payload = {
                 "taxNo": company.vat,
-                "redConfirmUuid": doc.baiwang_uuid
+                "redConfirmUuid": doc.baiwang_uuid,
             }
 
             try:
@@ -58,14 +61,14 @@ class L10nCnEdiDocument(models.Model):
                 if response.get("success"):
                     resp_data = response.get("response", {})
                     # Get the confirmState from the response
-                    confirm_state = resp_data.get("confirmState") 
+                    confirm_state = resp_data.get("confirmState")
 
                     if confirm_state in ('01', '04'):
                         # 01-无需确认, 04-购销双方已确认
                         red_form_no = resp_data.get("redConfirmNo", "")
                         doc.write({
                             'state': 'red_form_confirmed',
-                            'baiwang_red_form_number': red_form_no
+                            'baiwang_red_form_number': red_form_no,
                         })
                         # Log success on the invoice chatter
                         doc.move_id.message_post(body=f"Red Form Confirmed by counterpart! Red Form No: {red_form_no}. You may now confirm this Credit Note.")
@@ -79,7 +82,7 @@ class L10nCnEdiDocument(models.Model):
                         # Various rejected/cancelled/expired states
                         doc.write({
                             'state': 'failed',
-                            'error_message': f"Rejected/Cancelled by Baiwang. State Code: {confirm_state}"
+                            'error_message': f"Rejected/Cancelled by Baiwang. State Code: {confirm_state}",
                         })
                         doc.move_id.message_post(body=f"Red Form Request Failed/Rejected. State code: {confirm_state}.")
                 else:
@@ -89,4 +92,4 @@ class L10nCnEdiDocument(models.Model):
 
             except Exception as e:
                 # Catch network errors so the cron job doesn't completely crash for other records
-                _logger.error(f"Baiwang EDI: Network error while polling UUID {doc.baiwang_uuid}. Error: {str(e)}")
+                _logger.error(f"Baiwang EDI: Network error while polling UUID {doc.baiwang_uuid}. Error: {e!s}")

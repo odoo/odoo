@@ -1,35 +1,25 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
-    'name': 'Malaysia - E-invoicing',
-    'countries': ['my'],
+    'name': 'China - E-invoicing',
+    'countries': ['cn'],
     'category': 'Accounting/Localizations/EDI',
     'icon': '/account/static/description/l10n.png',
     "summary": "E-invoicing using MyInvois",
     'description': """
     This modules allows the user to send their invoices to the MyInvois system.
     """,
-    # The export does not depend on the pint format, but we need to reuse the fields defined there.
-    'depends': ['l10n_my', 'l10n_my_ubl_pint', 'account_edi_proxy_client'],
-    'auto_install': ['l10n_my'],
+    'depends': ['l10n_cn'],
+    'auto_install': ['l10n_cn'],
     'data': [
         'data/ir_cron.xml',
-        "data/res_partner.xml",
 
-        'security/ir.model.access.csv',
-        'security/myinvois_security.xml',
+        # 'security/ir.model.access.csv',
 
-        'views/account_journal_dashboard_view.xml',
         'views/account_move_view.xml',
-        'views/account_tax_view.xml',
         'views/product_template_view.xml',
-        'views/report_invoice.xml',
-        'views/res_company_view.xml',
-        'views/res_config_settings_view.xml',
-        'views/res_partner_view.xml',
-        'views/account_portal_templates.xml',
 
-        # 'wizard/myinvois_consolidate_invoice_wizard.xml',
+        # 'wizard/cninvois_consolidate_invoice_wizard.xml',
     ],
     'author': 'Odoo S.A.',
-    'license': 'LGPL-3'
+    'license': 'LGPL-3',
 }

@@ -1,14 +1,22 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import time
+
 from odoo import fields, models
 from odoo.exceptions import UserError
+
 from .baiwang_client import BaiwangClient
-import time
+
 
 class AccountMove(models.Model):
     _inherit = 'account.move'
 
     l10n_cn_fapiao_number = fields.Char(string="Fapiao Number", copy=False)
     l10n_cn_fapiao_date = fields.Date(string="Fapiao Date", copy=False)
+    l10n_cn_edi_document_ids = fields.One2many(
+        'l10n_cn_edi.document',
+        'move_id',
+        string="Baiwang Documents",
+    )
 
     def _l10n_cn_issue_fapiao(self):
         self.ensure_one()
@@ -27,11 +35,11 @@ class AccountMove(models.Model):
         payload = {
             "taxNo": company.vat,
             "serialNo": serial_no,
-            "invoiceTypeCode": "02", # e.g., 02 for normal digital invoice
-            "priceTaxMark": "0", # 0 for tax exclusive based on your CSV note
+            "invoiceTypeCode": "02",  # e.g., 02 for normal digital invoice
+            "priceTaxMark": "0",  # 0 for tax exclusive based on your CSV note
             "buyerTaxNo": self.partner_id.vat or "",
             "buyerName": self.partner_id.name,
-            "invoiceDetailsList": self._l10n_cn_prepare_baiwang_lines()
+            "invoiceDetailsList": self._l10n_cn_prepare_baiwang_lines(),
         }
 
         # Make the call
@@ -58,7 +66,7 @@ class AccountMove(models.Model):
                 "goodsPrice": str(line.price_unit),
                 "goodsTotalPrice": str(line.price_subtotal),
                 # If you have taxes, map the percentage here
-                "goodsTaxRate": str(line.tax_ids[0].amount / 100) if line.tax_ids else "0", 
+                "goodsTaxRate": str(line.tax_ids[0].amount / 100) if line.tax_ids else "0",
             })
         return lines
 
@@ -69,7 +77,7 @@ class AccountMove(models.Model):
         # 1. Create the EDI Document link
         edi_doc = self.env['l10n_cn_edi.document'].create({
             'move_id': self.id,
-            'state': 'draft'
+            'state': 'draft',
         })
 
         # 2. Setup Client
@@ -91,7 +99,7 @@ class AccountMove(models.Model):
             # Save the UUID and set to pending!
             edi_doc.write({
                 'baiwang_uuid': response.get("response", {}).get("redConfirmUuid"),
-                'state': 'red_form_pending'
+                'state': 'red_form_pending',
             })
             self.message_post(body="Red Form Requested. Waiting for counterpart confirmation.")
         else:
@@ -103,14 +111,17 @@ class AccountMove(models.Model):
             # Look for any EDI documents attached to this move that are pending
             pending_docs = self.env['l10n_cn_edi.document'].search([
                 ('move_id', '=', move.id),
-                ('state', '=', 'red_form_pending')
+                ('state', '=', 'red_form_pending'),
             ], limit=1)
 
             if pending_docs:
-                raise UserError(
+                msg = (
                     "You cannot delete this Credit Note because a Red Form Request is "
                     "currently pending on the Golden Tax system.\n\n"
                     "If you need to cancel it, please revoke the Red Form on the Baiwang portal first."
                 )
+                raise UserError(
+                    msg,
+                )
 
-        return super(AccountMove, self).unlink()
+        return super().unlink()

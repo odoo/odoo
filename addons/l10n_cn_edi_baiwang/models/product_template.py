@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import fields, models
-from odoo import models, fields, api
 from odoo.exceptions import UserError
+
 from .baiwang_client import BaiwangClient
 
 
@@ -19,7 +19,7 @@ class ProductTemplate(models.Model):
     l10n_cn_tax_category_code = fields.Char(
         string="Tax Category Code",
         help="19-digit official Golden Tax classification code.",
-        copy=False
+        copy=False,
     )
 
     def action_fetch_baiwang_tax_code(self):
@@ -27,7 +27,8 @@ class ProductTemplate(models.Model):
         self.ensure_one()
 
         if not self.name:
-            raise UserError("Product must have a name to search for a tax category.")
+            msg = "Product must have a name to search for a tax category."
+            raise UserError(msg)
 
         company = self.env.company
 
@@ -35,7 +36,8 @@ class ProductTemplate(models.Model):
         token = company.l10n_cn_baiwang_cached_token
 
         if not token:
-            raise UserError("Baiwang API Token is missing. Please authenticate first.")
+            msg = "Baiwang API Token is missing. Please authenticate first."
+            raise UserError(msg)
 
         client = BaiwangClient(
             app_key=company.l10n_cn_baiwang_app_key,
@@ -45,7 +47,7 @@ class ProductTemplate(models.Model):
 
         # Construct the payload for bizinfo.search
         request_data = {
-            "keyword": self.name
+            "keyword": self.name,
         }
 
         # Execute the call
@@ -68,10 +70,9 @@ class ProductTemplate(models.Model):
                         'message': f'Assigned Code: {self.l10n_cn_tax_category_code} (Prob: {best_match.get("prob", "N/A")})',
                         'type': 'success',
                         'sticky': False,
-                    }
+                    },
                 }
-            else:
-                raise UserError("Baiwang could not find any matching tax codes for this product name.")
-        else:
-            error_msg = response.get("errorResponse", {}).get("message", "Unknown API Error")
-            raise UserError(f"Baiwang API Rejected Request: {error_msg}")
+            msg = "Baiwang could not find any matching tax codes for this product name."
+            raise UserError(msg)
+        error_msg = response.get("errorResponse", {}).get("message", "Unknown API Error")
+        raise UserError(f"Baiwang API Rejected Request: {error_msg}")
