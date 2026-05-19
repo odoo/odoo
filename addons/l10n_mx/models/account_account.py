@@ -13,9 +13,12 @@ class AccountAccount(models.Model):
         credit_tag = self.env.ref('l10n_mx.tag_credit_balance_account', raise_if_not_found=False)
         if not debit_tag or not credit_tag:
             return accounts
-        mx_account_no_tags = accounts.filtered(lambda a: 'MX' in a.company_ids.mapped('country_code') and not a.tag_ids & (credit_tag + debit_tag))
-        DEBIT_CODES = ['1', '5', '6', '7']  # all other codes are considered "credit"
+        mx_account_no_tags = accounts.filtered(
+            lambda a: 'MX' in a.company_ids.mapped('country_code') and a.internal_group != 'off'
+            and not a.tag_ids & (credit_tag + debit_tag)
+        )
+        DEBIT_GROUPS = ('asset', 'expense')  # remaining groups are considered "credit"
         for account in mx_account_no_tags:
-            tag_id = debit_tag.id if account.code[0] in DEBIT_CODES else credit_tag.id
+            tag_id = debit_tag.id if account.internal_group in DEBIT_GROUPS else credit_tag.id
             account.tag_ids = [Command.link(tag_id)]
         return accounts
