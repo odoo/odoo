@@ -98,7 +98,7 @@ export class Notification extends Record {
     }
 
     get isFollowerNotification() {
-        return this.mail_message_id.thread.followers.some(
+        return this.res_partner_id && this.mail_message_id.thread.followers.some(
             (follower) => follower.partner_id.id === this.res_partner_id.id
         );
     }
