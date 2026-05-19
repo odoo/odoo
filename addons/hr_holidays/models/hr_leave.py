@@ -455,7 +455,9 @@ class HrLeave(models.Model):
             It happens if a leave is correctly created (not across multiple contracts) but
             contracts are later modifed/created in the middle of the leave.
         """
-        for holiday in self.filtered('employee_id'):
+        if self.env.context.get('skip_leave_version_check'):
+            return
+        for holiday in self.filtered(lambda h: h.employee_id and not h.is_time_rule_output):
             versions = holiday._get_overlapping_contracts()
             if len(versions.resource_calendar_id) > 1:
                 raise ValidationError(
@@ -1125,14 +1127,14 @@ class HrLeave(models.Model):
             if any(leave.state == 'cancel' for leave in self):
                 raise UserError(_('Only a manager can modify a canceled leave.'))
 
-        # If a leave changes state from validated or if the dates of a validated leave change
+        # If a leave changes state from validated
         # unlink the corresponding resource calendar leave
 
         date_fields = {'date_from', 'date_to', 'request_date_from', 'request_date_to'}
         validated_leaves = self.filtered(lambda l: l.state == 'validate')
         dates_changed = bool(date_fields.intersection(values))
         state_unvalidated = 'state' in values and values['state'] != 'validate'
-        if validated_leaves and (state_unvalidated or dates_changed):
+        if validated_leaves and state_unvalidated:
             validated_leaves._remove_resource_leave()
 
         employee_id = values.get('employee_id', False)
@@ -1150,10 +1152,24 @@ class HrLeave(models.Model):
             if 'date_to' in values:
                 values['request_date_to'] = values['date_to']
 
+        skip_leave_version_check = False
+        if {'date_from', 'date_to'} & values.keys():
+            new_df = values.get('date_from')
+            new_dt = values.get('date_to')
+            skip_leave_version_check = all(
+                r.date_from and r.date_to
+                and (not new_df or new_df.date() >= r.date_from.date())
+                and (not new_dt or new_dt.date() <= r.date_to.date())
+                for r in self
+            )
+
+        write_self = self.with_context(skip_leave_version_check=True) if skip_leave_version_check else self
+        result = super(HrLeave, write_self).write(values)
         result = super().write(values)
 
         if validated_leaves and dates_changed and not state_unvalidated:
-            validated_leaves._create_resource_leave()
+            if not self.env.context.get('skip_create_resource_leave'):
+                validated_leaves._create_resource_leave()
         if any(field in values for field in ['request_date_from', 'date_from', 'request_date_from', 'date_to', 'work_entry_type_id', 'employee_id', 'state']):
             if not values.get('state') or values.get('state') not in ('refuse', 'cancel'):
                 self.filtered(lambda leave: leave.work_entry_type_id.time_off_selectable)._check_validity()
@@ -1254,30 +1270,27 @@ class HrLeave(models.Model):
         if not rules:
             return all_excess, all_deficit
 
+        by_range = defaultdict(list)
         for employee, (date_from, date_to) in ranges_by_employee.items():
             start_dt = datetime.combine(date_from, time.min).replace(tzinfo=UTC)
             end_dt = datetime.combine(date_to, time.max).replace(tzinfo=UTC)
+            by_range[(start_dt, end_dt)].append(employee)
 
-            source_leaves = self._get_source_leaves_for_time_rules(employee, start_dt, end_dt)
-            if not source_leaves:
+        for (start_dt, end_dt), employees in by_range.items():
+            employee_rs = self.env['hr.employee'].browse([e.id for e in employees])
+            all_source_leaves = self._get_source_leaves_for_time_rules(employee_rs, start_dt, end_dt)
+
+            if not all_source_leaves:
                 continue
 
             self.env['hr.leave'].sudo().search([
-                ('source_leave_id', 'in', source_leaves.ids),
+                ('source_leave_id', 'in', all_source_leaves.ids),
                 '|',
                 ('time_rule_id', '=', False),
                 ('time_rule_id', 'in', rules.ids),
             ]).with_context(skip_time_rules=True).unlink()
 
-            source_types = source_leaves.work_entry_type_id
-            applicable_rules = rules.filtered(
-                lambda r: employee in r._get_applicable_employees(employee)
-                and r.condition_work_entry_type_ids & source_types
-            )
-            if not applicable_rules:
-                continue
-
-            excess, deficit = applicable_rules._evaluate_rules(source_leaves, start_dt, end_dt)
+            excess, deficit = rules._evaluate_rules(all_source_leaves, start_dt, end_dt)
             for emp, by_leave in excess.items():
                 for lv, items in by_leave.items():
                     all_excess[emp][lv].extend(items)
@@ -1295,8 +1308,8 @@ class HrLeave(models.Model):
                     merged[emp][lv].extend(items)
         return merged
 
-    def _get_source_leaves_for_time_rules(self, employee, start_dt, end_dt):
-        """Return validated source leaves for the given employee and date range.
+    def _get_source_leaves_for_time_rules(self, employees, start_dt, end_dt):
+        """Return validated source leaves for the given employees and date range.
 
         Called from _process_time_rules_for after weekly scope expansion.
         Override to pre-process source leaves before time rule evaluation.
@@ -1304,7 +1317,7 @@ class HrLeave(models.Model):
         source_leaves = self.env['hr.leave'].sudo().search([
             ('is_time_rule_output', '=', False),
             ('source_leave_id', '=', False),
-            ('employee_id', '=', employee.id),
+            ('employee_id', 'in', employees.ids),
             ('date_from', '<=', end_dt.replace(tzinfo=None)),
             ('date_to', '>=', start_dt.replace(tzinfo=None)),
             ('state', '=', 'validate'),
@@ -1314,36 +1327,52 @@ class HrLeave(models.Model):
         children = self.env['hr.leave'].sudo().search([
             ('source_leave_id', 'in', source_leaves.ids),
         ])
-        if children:
-            bounds = defaultdict(lambda: [None, None])
-            for child in children:
-                src_id = child.source_leave_id.id
-                if bounds[src_id][0] is None or child.date_from < bounds[src_id][0]:
-                    bounds[src_id][0] = child.date_from
-                if bounds[src_id][1] is None or child.date_to > bounds[src_id][1]:
-                    bounds[src_id][1] = child.date_to
-            auto_ctx = dict(
-                skip_time_rules=True,
-                leave_fast_create=True,
-                leave_skip_date_check=True,
-                leave_skip_state_check=True,
-                tracking_disable=True,
-                mail_activity_automation_skip=True,
-            )
-            for source in source_leaves:
-                if source.id not in bounds:
-                    continue
-                new_df = min(source.date_from, bounds[source.id][0])
-                new_dt = max(source.date_to, bounds[source.id][1])
-                if new_df == source.date_from and new_dt == source.date_to:
-                    continue
-                source.with_context(**auto_ctx).write({
-                    'date_from': new_df,
-                    'date_to': new_dt,
-                    'request_date_from': new_df.date(),
-                    'request_date_to': new_dt.date(),
-                })
+        self._restore_source_leave_bounds(source_leaves, children)
         return source_leaves
+
+    def _restore_source_leave_bounds(self, source_leaves, children):
+        """Expand each source leave to the bounding box of itself and its children.
+
+        Override to adjust which leaves are restored and how, e.g. to merge with
+        attendance-time synchronisation so each leave is written at most once.
+        """
+        # deficit outputs extend beyond the source's original range
+        restore_children = children.filtered(
+            lambda c: not c.time_rule_id or c.time_rule_id.threshold_operator != 'less_than'
+        )
+        if not restore_children:
+            return
+        bounds = defaultdict(lambda: [None, None])
+        for child in restore_children:
+            src_id = child.source_leave_id.id
+            if bounds[src_id][0] is None or child.date_from < bounds[src_id][0]:
+                bounds[src_id][0] = child.date_from
+            if bounds[src_id][1] is None or child.date_to > bounds[src_id][1]:
+                bounds[src_id][1] = child.date_to
+        auto_ctx = dict(
+            skip_time_rules=True,
+            leave_fast_create=True,
+            leave_skip_date_check=True,
+            leave_skip_state_check=True,
+            tracking_disable=True,
+            mail_activity_automation_skip=True,
+        )
+        writes = defaultdict(list)
+        for source in source_leaves:
+            if source.id not in bounds:
+                continue
+            new_df = min(source.date_from, bounds[source.id][0])
+            new_dt = max(source.date_to, bounds[source.id][1])
+            if new_df == source.date_from and new_dt == source.date_to:
+                continue
+            writes[(new_df, new_dt)].append(source.id)
+        for (new_df, new_dt), ids in writes.items():
+            self.env['hr.leave'].sudo().browse(ids).with_context(**auto_ctx).write({
+                'date_from': new_df,
+                'date_to': new_dt,
+                'request_date_from': new_df.date(),
+                'request_date_to': new_dt.date(),
+            })
 
     def copy_data(self, default=None):
         vals_list = super().copy_data(default=default)
@@ -1379,7 +1408,9 @@ class HrLeave(models.Model):
         :returns: created `resource.calendar.leaves`
         """
         self.env['resource.calendar.leaves'].sudo().search([('holiday_id', 'in', self.ids)]).unlink()
-        vals_list = [leave._prepare_resource_leave_vals() for leave in self]
+        # skip zero-duration leaves (zeroed-out source leaves replaced by outputs)
+        active = self.filtered(lambda l: l.date_from != l.date_to)
+        vals_list = [leave._prepare_resource_leave_vals() for leave in active]
         return self.env['resource.calendar.leaves'].sudo().create(vals_list)
 
     def _remove_resource_leave(self):

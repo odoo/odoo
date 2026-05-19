@@ -304,11 +304,12 @@ class HrTimeRule(models.Model):
         }
         empty_resource = self.env['resource.resource']
         sched_cache = {}
+        # (leave_cal_id, p_dt_start, p_dt_end) -> [(emp, rid, tz, leave_cal, period)]
+        leave_requests = defaultdict(list)
 
         for emp, periods in version_periods_by_employee.items():
             tz = ZoneInfo(emp.tz or 'UTC')
             rid = emp.resource_id.id
-            emp_resources_per_tz = {tz: emp.resource_id}
 
             for p_start, p_stop, version in periods:
                 p_dt_start = datetime.combine(p_start, time.min, tzinfo=UTC)
@@ -338,10 +339,23 @@ class HrTimeRule(models.Model):
                 result['schedule'][emp] |= att_intervals & period
                 result['public_leave'][emp] |= ph_intervals & period
 
-                leave_batch = leave_cal._leave_intervals_batch(
-                    p_dt_start, p_dt_end, resources_per_tz=emp_resources_per_tz,
-                    domain=[('resource_id', '!=', False), ('count_as', '=', 'absence')],
+                leave_requests[(leave_cal.id, p_dt_start, p_dt_end)].append(
+                    (emp, rid, tz, leave_cal, period)
                 )
+
+        for (_, p_dt_start, p_dt_end), items in leave_requests.items():
+            leave_cal = items[0][3]
+            resources_per_tz = {}
+            for emp, _rid, tz, _, _ in items:
+                if tz not in resources_per_tz:
+                    resources_per_tz[tz] = emp.resource_id
+                else:
+                    resources_per_tz[tz] = resources_per_tz[tz] | emp.resource_id
+            leave_batch = leave_cal._leave_intervals_batch(
+                p_dt_start, p_dt_end, resources_per_tz=resources_per_tz,
+                domain=[('resource_id', '!=', False), ('count_as', '=', 'absence')],
+            )
+            for emp, rid, _, _, period in items:
                 result['leave'][emp] |= _naivify(leave_batch.get(rid, [])) & period
 
         return result
@@ -503,7 +517,8 @@ class HrTimeRule(models.Model):
         if not leaves:
             return excess, deficit
 
-        work_intervals_by_calendar = self._build_work_intervals_by_calendar(leaves.employee_id, start_dt, end_dt)
+        employees = leaves.employee_id
+        work_intervals_by_calendar = self._build_work_intervals_by_calendar(employees, start_dt, end_dt)
         min_date = min(lv.date_from for lv in leaves).date()
         max_date = max(lv.date_to for lv in leaves).date()
 
@@ -512,61 +527,61 @@ class HrTimeRule(models.Model):
             start_local, stop_local = self._get_localized_leave_interval(leave)
             leave_intervals_by_employee[leave.employee_id].append((start_local, stop_local, leave))
 
-        employee = leaves.employee_id
         for rule in self:
             work_intervals = work_intervals_by_calendar[rule._get_schedule_calendar().id or False]
-            rule_intervals = rule._build_rule_day_intervals(min_date, max_date, employee, work_intervals)
+            rule_intervals = rule._build_rule_day_intervals(min_date, max_date, employees, work_intervals)
             has_threshold = bool(rule.calendar_source or rule.expected_hours)
 
-            emp_raw = [
-                (s, e, lv) for s, e, lv in leave_intervals_by_employee[employee]
-                if lv.work_entry_type_id in rule.condition_work_entry_type_ids
-            ]
-            if not emp_raw:
-                continue
-            clipped = Intervals(emp_raw, keep_distinct=True) & rule_intervals[employee]
-            if not clipped:
-                continue
+            for employee in rule._get_applicable_employees(employees):
+                emp_raw = [
+                    (s, e, lv) for s, e, lv in leave_intervals_by_employee[employee]
+                    if lv.work_entry_type_id in rule.condition_work_entry_type_ids
+                ]
+                if not emp_raw:
+                    continue
+                clipped = Intervals(emp_raw, keep_distinct=True) & rule_intervals[employee]
+                if not clipped:
+                    continue
 
-            if not has_threshold:
-                by_leave = defaultdict(list)
-                for start, stop, leave in clipped:
-                    by_leave[leave].append((start, stop, rule))
-                for leave, items in by_leave.items():
-                    excess[employee][leave].extend(items)
-            else:
-                schedule = work_intervals['schedule'][employee] - work_intervals['leave'][employee]
-                fully_flex = work_intervals['fully_flexible'][employee]
-                period = rule.quantity_period or 'day'
+                if not has_threshold:
+                    by_leave = defaultdict(list)
+                    for start, stop, leave in clipped:
+                        by_leave[leave].append((start, stop, rule))
+                    for leave, items in by_leave.items():
+                        excess[employee][leave].extend(items)
+                else:
+                    schedule = work_intervals['schedule'][employee] - work_intervals['leave'][employee]
+                    fully_flex = work_intervals['fully_flexible'][employee]
+                    period = rule.quantity_period or 'day'
 
-                by_period = defaultdict(list)
-                for start, stop, leave in clipped:
-                    day = start.date()
-                    if period == 'week':
-                        week_start = int(rule.week_start or '0')
-                        end_weekday = (week_start - 1) % 7
-                        days_to_end = (end_weekday - day.weekday()) % 7
-                        period_key = day + relativedelta(days=days_to_end)
-                    else:
-                        period_key = day
-                    by_period[period_key].append((start, stop, leave))
+                    by_period = defaultdict(list)
+                    for start, stop, leave in clipped:
+                        day = start.date()
+                        if period == 'week':
+                            week_start = int(rule.week_start or '0')
+                            end_weekday = (week_start - 1) % 7
+                            days_to_end = (end_weekday - day.weekday()) % 7
+                            period_key = day + relativedelta(days=days_to_end)
+                        else:
+                            period_key = day
+                        by_period[period_key].append((start, stop, leave))
 
-                for period_date, period_items in sorted(by_period.items()):
-                    period_stop = datetime.combine(period_date, datetime.max.time())
-                    period_start = (
-                        datetime.combine(period_date, datetime.min.time()) - relativedelta(days=6)
-                        if period == 'week' else
-                        datetime.combine(period_date, datetime.min.time())
-                    )
-                    period_window = Intervals([(period_start, period_stop, self.env['resource.calendar'])])
-                    if not (period_window - fully_flex):
-                        continue
-                    schedule_in_window = schedule & rule_intervals[employee] & period_window
-                    ex, df = rule._evaluate_period(period_start, period_stop, period_items, schedule_in_window)
-                    for lv, items in ex.items():
-                        excess[employee][lv].extend(items)
-                    for lv, items in df.items():
-                        deficit[employee][lv].extend(items)
+                    for period_date, period_items in sorted(by_period.items()):
+                        period_stop = datetime.combine(period_date, datetime.max.time())
+                        period_start = (
+                            datetime.combine(period_date, datetime.min.time()) - relativedelta(days=6)
+                            if period == 'week' else
+                            datetime.combine(period_date, datetime.min.time())
+                        )
+                        period_window = Intervals([(period_start, period_stop, self.env['resource.calendar'])])
+                        if not (period_window - fully_flex):
+                            continue
+                        schedule_in_window = schedule & rule_intervals[employee] & period_window
+                        ex, df = rule._evaluate_period(period_start, period_stop, period_items, schedule_in_window)
+                        for lv, items in ex.items():
+                            excess[employee][lv].extend(items)
+                        for lv, items in df.items():
+                            deficit[employee][lv].extend(items)
 
         return excess, deficit
 
@@ -579,6 +594,7 @@ class HrTimeRule(models.Model):
             'request_date_from': date_from.date(),
             'request_date_to': date_to.date(),
             'source_leave_id': source_leave.id,
+            'resource_calendar_id': source_leave.resource_calendar_id.id,
             'state': 'validate',
         }
 
@@ -592,6 +608,7 @@ class HrTimeRule(models.Model):
             'request_date_to': date_to.date(),
             'time_rule_id': rule.id,
             'source_leave_id': source_leave.id,
+            'resource_calendar_id': source_leave.resource_calendar_id.id,
             'state': 'validate',
         }
 
@@ -612,8 +629,11 @@ class HrTimeRule(models.Model):
             leave_skip_state_check=True,
             tracking_disable=True,
             mail_activity_automation_skip=True,
+            skip_leave_version_check=True,
+            skip_create_resource_leave=True,
         )
 
+        leave_create_vals = []
         for employee, by_leave in deficit.items():
             tz = ZoneInfo(employee._get_tz())
             for source_leave, intervals in by_leave.items():
@@ -642,7 +662,7 @@ class HrTimeRule(models.Model):
                         continue
                     date_from = start_local.replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
                     date_to = stop_local.replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
-                    Leave.with_context(**auto_ctx).create(
+                    leave_create_vals.append(
                         self._get_output_leave_vals(employee, rule, date_from, date_to, source_leave, all_rules=all_rules)
                     )
 
@@ -656,6 +676,10 @@ class HrTimeRule(models.Model):
                         ], limit=1)
                         if allocation:
                             allocation.number_of_days = max(0, allocation.number_of_days - deduct_days)
+
+        # accumulate source_leave writes to batch them after the loop
+        remainder_writes = defaultdict(list)
+        zeroout_writes = defaultdict(list)
 
         for employee, by_leave in excess.items():
             tz = ZoneInfo(employee._get_tz())
@@ -683,25 +707,19 @@ class HrTimeRule(models.Model):
                     first_start, first_stop, _ = remainder[0]
                     first_date_from = first_start.replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
                     first_date_to = first_stop.replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
-                    source_leave.with_context(**auto_ctx).write({
-                        'date_from': first_date_from,
-                        'date_to': first_date_to,
-                        'request_date_from': first_date_from.date(),
-                        'request_date_to': first_date_to.date(),
-                    })
+                    remainder_writes[(first_date_from, first_date_to)].append(source_leave.id)
                     for seg_start, seg_stop, _ in remainder[1:]:
                         seg_date_from = seg_start.replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
                         seg_date_to = seg_stop.replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
-                        Leave.with_context(**auto_ctx).create(
+                        leave_create_vals.append(
                             self._get_remainder_leave_vals(employee, source_leave, seg_date_from, seg_date_to)
                         )
                 else:
-                    # zero out source so no work entry is generated for it
-                    source_leave.with_context(**auto_ctx).write({
-                        'date_to': source_leave.date_from,
-                        'request_date_to': source_leave.date_from.date(),
-                    })
+                    # zero out source so no work entry is generated for it;
+                    # capture date_from now before any write mutates the cache
+                    zeroout_writes[source_leave.date_from].append(source_leave.id)
 
+                alloc_create_vals = []
                 for start_local, stop_local, rules in output_slices:
                     alloc_rules = rules.filtered(
                         lambda r: r.leave_compensation_rate > 0 and r.allocation_type_id
@@ -719,13 +737,16 @@ class HrTimeRule(models.Model):
                         if allocation:
                             allocation.number_of_days += alloc_days
                         else:
-                            allocation = self.env['hr.leave.allocation'].sudo().with_context(skip_time_rules=True).create({
+                            alloc_create_vals.append({
                                 'employee_id': employee.id,
                                 'work_entry_type_id': alloc_rule.allocation_type_id.id,
                                 'number_of_days': alloc_days,
                                 'state': 'confirm',
                             })
-                            allocation.action_approve()
+
+                if alloc_create_vals:
+                    new_allocs = self.env['hr.leave.allocation'].sudo().with_context(skip_time_rules=True).create(alloc_create_vals)
+                    new_allocs.action_approve()
 
                 # merged_slices entries: [start, stop, all_rules, effective_rule, merge_key]
                 merged_slices = []
@@ -741,6 +762,22 @@ class HrTimeRule(models.Model):
                 for start_local, stop_local, all_rules, rule, _merge_key in merged_slices:
                     date_from = start_local.replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
                     date_to = stop_local.replace(tzinfo=tz).astimezone(UTC).replace(tzinfo=None)
-                    Leave.with_context(**auto_ctx).create(
+                    leave_create_vals.append(
                         self._get_output_leave_vals(employee, rule, date_from, date_to, source_leave, all_rules=all_rules)
                     )
+
+        all_modified_source_ids = []
+        for (df, dt), ids in remainder_writes.items():
+            Leave.browse(ids).with_context(**auto_ctx).write({
+                'date_from': df,
+                'date_to': dt,
+            })
+            all_modified_source_ids.extend(ids)
+        for date_from, ids in zeroout_writes.items():
+            Leave.browse(ids).with_context(**auto_ctx).write({'date_to': date_from})
+            all_modified_source_ids.extend(ids)
+        if all_modified_source_ids:
+            resource_leave_ctx = {k: v for k, v in auto_ctx.items() if k != 'skip_create_resource_leave'}
+            Leave.browse(all_modified_source_ids).with_context(**resource_leave_ctx)._create_resource_leave()
+
+        Leave.with_context(**auto_ctx).create(leave_create_vals)

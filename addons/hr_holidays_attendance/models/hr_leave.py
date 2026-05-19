@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import defaultdict
 from datetime import UTC
 from zoneinfo import ZoneInfo
 
@@ -70,32 +71,26 @@ class HrLeave(models.Model):
                 leave.date_to = att.check_out.replace(tzinfo=None) if att.check_out.tzinfo else att.check_out
         super(HrLeave, self - att_leaves)._compute_date_from_to()
 
-    def _get_source_leaves_for_time_rules(self, employee, start_dt, end_dt):
-        source_leaves = super()._get_source_leaves_for_time_rules(employee, start_dt, end_dt)
-        tz = ZoneInfo(employee.tz or 'UTC')
+    def _restore_source_leave_bounds(self, source_leaves, children):
+        att_sources = source_leaves.filtered('attendance_id')
         auto_ctx = dict(
-            skip_time_rules=True,
-            leave_fast_create=True,
-            leave_skip_date_check=True,
-            leave_skip_state_check=True,
-            tracking_disable=True,
-            mail_activity_automation_skip=True,
+            skip_time_rules=True, leave_fast_create=True, leave_skip_date_check=True,
+            leave_skip_state_check=True, tracking_disable=True, mail_activity_automation_skip=True,
         )
-        for leave in source_leaves.filtered('attendance_id'):
-            att = leave.attendance_id
-            if not att.check_out:
+        writes = defaultdict(list)
+        for source in att_sources:
+            att = source.attendance_id
+            new_df = att.check_in.replace(tzinfo=None) if att.check_in.tzinfo else att.check_in
+            new_dt = att.check_out.replace(tzinfo=None) if att.check_out.tzinfo else att.check_out
+            if new_df == source.date_from and new_dt == source.date_to:
                 continue
-            check_in = att.check_in.replace(tzinfo=None) if att.check_in.tzinfo else att.check_in
-            check_out = att.check_out.replace(tzinfo=None) if att.check_out.tzinfo else att.check_out
-            if leave.date_from == check_in and leave.date_to == check_out:
-                continue
-            leave.with_context(**auto_ctx).write({
-                'date_from': check_in,
-                'date_to': check_out,
-                'request_date_from': att.check_in.replace(tzinfo=UTC).astimezone(tz).date(),
-                'request_date_to': att.check_out.replace(tzinfo=UTC).astimezone(tz).date(),
+            writes[(new_df, new_dt)].append(source.id)
+        for (new_df, new_dt), ids in writes.items():
+            self.env['hr.leave'].sudo().browse(ids).with_context(**auto_ctx).write({
+                'date_from': new_df, 'date_to': new_dt,
+                'request_date_from': new_df.date(), 'request_date_to': new_dt.date(),
             })
-        return source_leaves
+        super()._restore_source_leave_bounds(source_leaves - att_sources, children)
 
     def _force_cancel(self, *args, **kwargs):
         super()._force_cancel(*args, **kwargs)
