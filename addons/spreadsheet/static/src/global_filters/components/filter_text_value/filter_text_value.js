@@ -24,6 +24,7 @@ export class TextFilterValue extends Component {
                 optional: true,
             },
         },
+        placeholder: { type: String, optional: true },
     };
     static defaultProps = {
         value: [],
@@ -55,6 +56,10 @@ export class TextFilterValue extends Component {
                 this.props.onValueChanged(this.props.value.filter((v) => v !== value));
             },
         }));
+    }
+
+    get placeholder() {
+        return this.tags.length ? "" : this.props.placeholder;
     }
 
     get sources() {

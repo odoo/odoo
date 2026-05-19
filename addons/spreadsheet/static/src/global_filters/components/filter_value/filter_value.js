@@ -16,6 +16,7 @@ import {
     isTextualOperator,
     isSetOperator,
     getDefaultValue,
+    getFilterValuePlaceholder,
 } from "@spreadsheet/global_filters/helpers";
 import { NumericFilterValue } from "../numeric_filter_value/numeric_filter_value";
 
@@ -102,6 +103,11 @@ export class FilterValue extends Component {
                 model,
             }
         );
+    }
+
+    get placeholder() {
+        const operator = this.filterValue?.operator || this.getDefaultOperator();
+        return getFilterValuePlaceholder(this.filter, operator);
     }
 
     getDefaultOperator() {

@@ -10,6 +10,7 @@ export class NumericFilterValue extends Component {
     static props = {
         onValueChanged: Function,
         value: { type: [Number, String], optional: true },
+        placeholder: { type: String, optional: true },
     };
 
     setup() {
