@@ -2234,6 +2234,7 @@ test("Can set a value to a relation filter from the SET_MANY_GLOBAL_FILTER_VALUE
     await addGlobalFilter(model, {
         id: "42",
         type: "relation",
+        label: "relational filter",
     });
     model.dispatch("SET_MANY_GLOBAL_FILTER_VALUE", {
         filters: [{ filterId: "42", value: { operator: "in", ids: [31] } }],
@@ -2251,6 +2252,7 @@ test("Can set a value to a date filter from the SET_MANY_GLOBAL_FILTER_VALUE com
     await addGlobalFilter(model, {
         id: "42",
         type: "date",
+        label: "This month",
         defaultValue: "this_month",
     });
     const newValue = { type: "month", year: 2016, month: 5 };
@@ -2262,6 +2264,72 @@ test("Can set a value to a date filter from the SET_MANY_GLOBAL_FILTER_VALUE com
         filters: [{ filterId: "42" }],
     });
     expect(model.getters.getGlobalFilterValue("42")).toBe(undefined);
+});
+
+test("SET_GLOBAL_FILTER_VALUE dispatched multiple times -> multiple RPC calls", async function () {
+    const { model } = await createSpreadsheetWithList({
+        mockRPC: function (_, { model: m, method }) {
+            if (m === "partner" && method === "web_search_read") {
+                expect.step("web_search_read");
+            }
+        },
+    });
+    await addGlobalFilter(
+        model,
+        { id: "f1", type: "date", label: "Filter 1" },
+        { list: { 1: { chain: "date", type: "date" } } }
+    );
+    await addGlobalFilter(
+        model,
+        { id: "f2", type: "relation", label: "Filter 2" },
+        { list: { 1: { chain: "product_id", type: "many2one" } } }
+    );
+    expect.verifySteps(["web_search_read"]);
+
+    model.dispatch("SET_GLOBAL_FILTER_VALUE", {
+        id: "f1",
+        value: { type: "year", year: 2024 },
+    });
+    model.dispatch("SET_GLOBAL_FILTER_VALUE", {
+        id: "f2",
+        value: { operator: "in", ids: [1] },
+    });
+    await waitForDataLoaded(model);
+
+    // 2 separate reloads: one per SET_GLOBAL_FILTER_VALUE dispatch
+    expect.verifySteps(["web_search_read", "web_search_read"]);
+});
+
+test("SET_MANY_GLOBAL_FILTER_VALUE -> batched updates trigger single RPC call", async function () {
+    const { model } = await createSpreadsheetWithList({
+        mockRPC: function (_, { model: m, method }) {
+            if (m === "partner" && method === "web_search_read") {
+                expect.step("web_search_read");
+            }
+        },
+    });
+    await addGlobalFilter(
+        model,
+        { id: "f1", type: "date", label: "Filter 1" },
+        { list: { 1: { chain: "date", type: "date" } } }
+    );
+    await addGlobalFilter(
+        model,
+        { id: "f2", type: "relation", label: "Filter 2" },
+        { list: { 1: { chain: "product_id", type: "many2one" } } }
+    );
+    expect.verifySteps(["web_search_read"]);
+
+    model.dispatch("SET_MANY_GLOBAL_FILTER_VALUE", {
+        filters: [
+            { filterId: "f1", value: { type: "year", year: 2024 } },
+            { filterId: "f2", value: { operator: "in", ids: [1] } },
+        ],
+    });
+    await waitForDataLoaded(model);
+
+    // only 1 reload for both filters changed together
+    expect.verifySteps(["web_search_read"]);
 });
 
 test("getFiltersMatchingPivot return correctly matching filter according to cell formula", async function () {
