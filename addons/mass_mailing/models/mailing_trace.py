@@ -76,7 +76,7 @@ class MailingTrace(models.Model):
     source_id = fields.Many2one(related='mass_mailing_id.source_id')
     # document
     model = fields.Char(string='Document model', required=True, index=True)
-    res_id = fields.Many2oneReference(string='Document ID', model_field='model', index=True)
+    res_id = fields.Many2oneReference(string='Document ID', model_field='model', index=True, ondelete='ignore')
     # campaign data
     mass_mailing_id = fields.Many2one('mailing.mailing', string='Mailing', index=True, ondelete='cascade')
     campaign_id = fields.Many2one(
