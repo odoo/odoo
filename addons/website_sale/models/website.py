@@ -6,9 +6,10 @@ import re
 from urllib.parse import parse_qsl, urlencode, urlsplit
 
 from lxml import etree
+from requests import RequestException
 
 from odoo import SUPERUSER_ID, api, fields, models
-from odoo.exceptions import AccessError, MissingError
+from odoo.exceptions import MissingError
 from odoo.fields import Domain
 from odoo.http import request
 from odoo.tools import BinaryBytes, file_open, ormcache
@@ -515,7 +516,7 @@ class Website(models.Model):
                     "/api/olg/1/chat",
                     {"prompt": prompt, "conversation_history": [], "database_id": database_id},
                 )
-            except AccessError:
+            except RequestException:
                 logger.warning("API is unreachable for the category generation")
                 return None
 

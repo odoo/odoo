@@ -15,6 +15,7 @@ import werkzeug.routing
 from collections import defaultdict
 from lxml import etree, html
 from markupsafe import Markup
+from requests import RequestException
 from urllib.parse import urlparse, urlsplit
 from werkzeug import urls
 
@@ -695,7 +696,7 @@ class Website(models.CachedModel):
         try:
             result = self._website_api_rpc('/api/website/1/configurator/industries', {'lang': self.env.context.get('lang')})
             r['industries'] = result['industries']
-        except AccessError as e:
+        except RequestException as e:
             logger.warning(e.args[0])
             r['industries'] = []
         return r
@@ -953,7 +954,7 @@ class Website(models.CachedModel):
                 for key in generated_content:
                     if response.get(key):
                         generated_content[key] = (name_replace_parser.sub(website_name, response[key], 0))
-            except AccessError:
+            except RequestException:
                 # If IAP is broken continue normally (without generating text)
                 pass
         else:

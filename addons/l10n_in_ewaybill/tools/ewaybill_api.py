@@ -5,9 +5,9 @@ import contextlib
 
 from datetime import timedelta
 from markupsafe import Markup
+from requests import RequestException
 
 from odoo import fields
-from odoo.exceptions import AccessError
 from odoo.addons.l10n_in_ewaybill.models.error_codes import ERROR_CODES
 from odoo.tools import _, LazyTranslate
 
@@ -67,7 +67,7 @@ class EWayBillApi:
             )
             if response.get('error'):
                 raise EWayBillError(response)
-        except AccessError as e:
+        except RequestException as e:
             _logger.warning("Connection error: %s", e.args[0])
             raise EWayBillError({
                 "error": [{

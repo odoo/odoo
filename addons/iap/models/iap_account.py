@@ -5,10 +5,11 @@ import logging
 import secrets
 import uuid
 import werkzeug.urls
+from requests import RequestException
 
 from odoo import api, fields, models, _
 from odoo.addons.iap.tools import iap_tools
-from odoo.exceptions import AccessError, UserError
+from odoo.exceptions import UserError
 from odoo.modules import module
 from odoo.tools import get_lang
 from odoo.tools.urls import urljoin as url_join
@@ -113,7 +114,7 @@ class IapAccount(models.Model):
                 }
                 try:
                     iap_tools.iap_jsonrpc(url=url, params=data)
-                except AccessError as e:
+                except RequestException as e:
                     _logger.warning("Update of the warning email configuration has failed: %s", str(e))
         if (
             not self.env.context.get('disable_iap_update')
@@ -133,7 +134,7 @@ class IapAccount(models.Model):
                     response = iap_tools.iap_jsonrpc(url=url, params=data)
                     if response.get("status") != "success":
                         _logger.warning("IAP Auto-Refill failed. Error: %s", response.get("error"))
-                except AccessError as e:
+                except RequestException as e:
                     _logger.warning("Update of the auto-refill configuration has failed: %s", str(e))
         return res
 
@@ -153,7 +154,7 @@ class IapAccount(models.Model):
         }
         try:
             accounts_information = iap_tools.iap_jsonrpc(url=url, params=params)
-        except AccessError as e:
+        except RequestException as e:
             _logger.warning("Fetch of the IAP accounts information has failed: %s", str(e))
             raise UserError(self.env._("The IAP server is unreachable and the information may not be up to date.\nPlease try again later."))
 
@@ -350,7 +351,7 @@ class IapAccount(models.Model):
             }
             try:
                 credit = iap_tools.iap_jsonrpc(url=url, params=params)
-            except AccessError as e:
+            except RequestException as e:
                 _logger.info('Get credit error : %s', str(e))
                 credit = -1
 

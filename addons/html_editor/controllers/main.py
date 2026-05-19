@@ -764,8 +764,8 @@ class HTML_Editor(Controller):
                 raise UserError(_("You have reached the maximum number of requests for this service. Try again later."))
             else:
                 raise UserError(_("Sorry, we could not generate a response. Please try again later."))
-        except AccessError:
-            raise AccessError(_("Oops, it looks like our AI is unreachable!"))
+        except requests.RequestException:
+            raise UserError(_("Oops, it looks like our AI is unreachable!"))
 
     @route(["/web_editor/google_translate", "/html_editor/google_translate"], type="jsonrpc", auth="user")
     def google_translate(self, originalText, targetLang):
@@ -786,8 +786,8 @@ class HTML_Editor(Controller):
             if response['status'] == 'text_too_long':
                 raise UserError(_("The text you are trying to translate is too long. Please select less text and try it again."))
             raise UserError(_("Sorry, we could not translate the text. Please try again later."))
-        except AccessError:
-            raise AccessError(_("Oops, it looks like google translation service is unreachable!"))
+        except requests.RequestException:
+            raise UserError(_("Oops, it looks like google translation service is unreachable!"))
 
     @route(["/web_editor/get_ice_servers", "/html_editor/get_ice_servers"], type='jsonrpc', auth="user")
     def get_ice_servers(self):
