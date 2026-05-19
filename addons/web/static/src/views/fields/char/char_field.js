@@ -1,12 +1,13 @@
 import { useExternalListener, useLayoutEffect, useRef } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
+import { localization } from "@web/core/l10n/localization";
 import { registry } from "@web/core/registry";
 import { exprToBoolean } from "@web/core/utils/strings";
 import { useDynamicPlaceholder } from "../dynamic_placeholder_hook";
 import { formatChar } from "../formatters";
 import { useInputField } from "../input_field_hook";
 import { standardFieldProps } from "../standard_field_props";
-import { TranslationButton } from "../translation_button";
+import { TranslationButton, useTranslationDialog } from "../translation_button";
 
 import { Component } from "@odoo/owl";
 
@@ -40,6 +41,7 @@ export class CharField extends Component {
             getValue: () => this.props.record.data[this.props.name] || "",
             parse: (v) => this.parse(v),
         });
+        this.translationDialog = useTranslationDialog();
 
         this.selectionStart = this.props.record.data[this.props.name]?.length || 0;
     }
@@ -67,6 +69,13 @@ export class CharField extends Component {
             return value.trim();
         }
         return value;
+    }
+
+    onFocus() {
+        if (this.isTranslatable && localization.multiLang && this.props.record.resId) {
+            this.input.el.blur();
+            this.translationDialog({ record: this.props.record, fieldName: this.props.name });
+        }
     }
 
     onBlur() {
