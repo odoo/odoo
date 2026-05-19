@@ -263,3 +263,24 @@ registry
                 FeedbackScreen.clickNextOrder(),
             ].flat(),
     });
+
+registry.category("web_tour.tours").add("test_to_pay_section_rounded", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.addOrderline("random_product", "1"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.remainingIs("0.0"),
+            PaymentScreen.clickValidate(),
+            FeedbackScreen.checkTicketData({ to_pay_amount: "20.00" }),
+            FeedbackScreen.clickNextOrder(),
+            ProductScreen.addOrderline("Whiteboard Pen", "4"),
+            ProductScreen.clickPayButton(),
+            PaymentScreen.clickPaymentMethod("Cash"),
+            PaymentScreen.remainingIs("0.0"),
+            PaymentScreen.clickValidate(),
+            FeedbackScreen.checkTicketData({ to_pay_amount: "10.00" }),
+        ].flat(),
+});

@@ -160,6 +160,9 @@ export class PosOrderAccounting extends Base {
     get priceIncl() {
         return this.prices.taxDetails.total_amount_no_rounding;
     }
+    get roundedPriceIncl() {
+        return this.prices.taxDetails.total_amount_currency;
+    }
     get priceExcl() {
         return this.prices.taxDetails.base_amount;
     }
