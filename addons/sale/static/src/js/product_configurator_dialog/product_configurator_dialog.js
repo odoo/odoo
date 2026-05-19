@@ -51,6 +51,7 @@ export class ProductConfiguratorDialog extends Component {
         },
         save: Function,
         discard: Function,
+        configureComboProduct: { type: Function, optional: true },
         close: Function, // This is the close from the env of the Dialog Component
     };
     static defaultProps = {
@@ -213,6 +214,16 @@ export class ProductConfiguratorDialog extends Component {
             p => p.product_tmpl_id === productTmplId
         );
         if (index >= 0) {
+            const optionalProduct = this.state.optionalProducts[index];
+            if (optionalProduct.product_type === 'combo' && this.props.configureComboProduct) {
+                const comboData = await this.props.configureComboProduct(optionalProduct);
+                if (!comboData) {
+                    return;
+                }
+                optionalProduct.quantity = comboData.quantity;
+                optionalProduct.price = comboData.price;
+                optionalProduct.selectedComboItems = comboData.selectedComboItems;
+            }
             this.state.products.push(...this.state.optionalProducts.splice(index, 1));
             // Fetch optional product from the server with the parent combination.
             const product = this._findProduct(productTmplId);
