@@ -59,13 +59,13 @@
                                             <img class="object-fit-scale" t-attf-src="/web/image/product.product/{{ product.id }}/image_512?unique=#{product.write_date}" loading="lazy"/>
                                         </div>
                                         <span t-if="extraPrice" class="d-none d-md-block badge position-absolute top-0 end-0 m-1 px-2 py-1 rounded-3 text-bg-primary fw-medium">
-                                        + <t t-out="selfOrder.formatMonetary(extraPrice)"/>
+                                            <t t-esc="extraPrice > 0 ? '+ ' : '- '"/><t t-out="selfOrder.formatMonetary(Math.abs(extraPrice))"/>
                                         </span>
                                         <div class="d-flex flex-column flex-grow-1 py-0 py-md-3 px-md-2 align-item-start align-items-md-center">
                                             <div class="text-md-center">
                                                 <ProductNameWidget product="product"/>
                                                  <span t-if="extraPrice" class="d-md-none badge top-0 ms-2 px-2 py-1 rounded-3 text-bg-primary small">
-                                                     + <t t-out="selfOrder.formatMonetary(extraPrice)"/>
+                                                     <t t-esc="extraPrice > 0 ? '+ ' : '- '"/><t t-out="selfOrder.formatMonetary(Math.abs(extraPrice))"/>
                                                  </span>
                                             </div>
                                             <div t-if="isOutOfStock " class="d-flex flex-grow-0 mt-2">
