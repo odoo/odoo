@@ -7,10 +7,10 @@
     [data-snippet="s_carousel_multiple"] {
         &.s_carousel_multiple_wrapper {
             .s_carousel_multiple {
-                .carousel-inner:has(.carousel-item-next) .carousel-item,
-                .carousel-inner:has(.carousel-item-prev) .carousel-item {
-                    // As the interval doesn't work we need to slow down this transition to achieve the right result.
-                    transition-duration: .5s;
+                .carousel-inner:has(.carousel-item-next, .carousel-item-next) .carousel-item {
+                    // As the interval doesn't work we need to slow down this
+                    // transition to achieve the right result.
+                    transition-duration: .75s;
                 }
             }
         }

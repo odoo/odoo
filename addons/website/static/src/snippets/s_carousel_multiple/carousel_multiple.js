@@ -1,7 +1,8 @@
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { CarouselSlider } from "@website/interactions/carousel/carousel_slider";
+import { Interaction } from "@web/public/interaction";
 
-export class CarouselMultiple extends CarouselSlider {
+export class CarouselMultiple extends Interaction {
     static selector = ".s_carousel_multiple";
 
     dynamicContent = {
@@ -9,49 +10,65 @@ export class CarouselMultiple extends CarouselSlider {
         _root: {
             "t-on-slid.bs.carousel": this.onSlidCarousel,
         },
+        ".carousel-indicators > *": {
+            "t-att-aria-label": setAriaLabelOnCarouselMultipleIndicator,
+        },
     };
-    start() {
-        super.start();
-        this.displayedSlidesCount = Number(
-            getComputedStyle(this.el).getPropertyValue("--o-carousel-multiple-items")
+
+    setup() {
+        this.carouselInnerEl = this.el.querySelector(".carousel-inner");
+        this.nbItems = this.el.querySelectorAll(".carousel-item").length;
+        this.nbDisplayedSlides = Number(
+            getComputedStyle(this.el).getPropertyValue("--carousel-multiple-items-per-slide")
         );
+        this.carouselInstance = window.Carousel.getOrCreateInstance(this.el);
+    }
+
+    destroy() {
+        this.carouselInstance.to(0);
+        this.el.style.setProperty("--carousel-multiple-current-index", 0);
     }
 
     onSlidCarousel(event) {
-        super.onSlidCarousel();
-        const displayedSlidesCount = Number(
-            getComputedStyle(this.el).getPropertyValue("--o-carousel-multiple-items")
-        );
-        const itemsLength = this.el.querySelectorAll(".carousel-item").length;
-        if (itemsLength <= displayedSlidesCount) {
+        const lastIndicator = this.nbItems - this.nbDisplayedSlides;
+        if (lastIndicator <= 0) {
             return;
         }
-        if (event.to >= itemsLength - displayedSlidesCount + 1 && event.direction === "left") {
-            // When we are at the last slide and we click to next
-            window.Carousel.getOrCreateInstance(this.el).to(0);
+        // If we are on the last slide and go to the next one, go to the
+        // first one instead.
+        if (event.from === lastIndicator && event.to > lastIndicator) {
+            this.carouselInstance.to(0);
         }
-        if (event.to === itemsLength - 1 && event.direction === "right") {
-            // When we are at the first slide and we click to previous slide : go to the last one
-            window.Carousel.getOrCreateInstance(this.el).to(itemsLength - displayedSlidesCount);
+        // If we are on the first slide and go to the previous one, go to the
+        // last one instead.
+        if (event.from === 0 && event.to === this.nbItems - 1) {
+            this.carouselInstance.to(lastIndicator);
         }
-        this.carouselInnerEl.style.transform =
-            "translateX(calc(((100% - (var(--o-carousel-multiple-items-gap) * (var(--o-carousel-multiple-items) - 1))) / var(--o-carousel-multiple-items) + var(--o-carousel-multiple-items-gap)) * " +
-            event.to +
-            " * -1)";
+        this.el.style.setProperty("--carousel-multiple-current-index", event.to);
     }
 
     onResize() {
         const currentDisplaySlides = Number(
-            getComputedStyle(this.el).getPropertyValue("--o-carousel-multiple-items")
+            getComputedStyle(this.el).getPropertyValue("--carousel-multiple-items-per-slide")
         );
         if (this.env.isSmall) {
             this.carouselInnerEl.removeAttribute("style");
-        } else if (currentDisplaySlides !== this.displayedSlidesCount) {
+        } else if (currentDisplaySlides !== this.nbDisplayedSlides) {
             // Reset the slider when the number of displayed slides changes.
-            window.Carousel.getOrCreateInstance(this.el).to(0);
+            this.carouselInstance.to(0);
+            this.el.style.setProperty("--carousel-multiple-current-index", 0);
         }
-        this.displayedSlidesCount = currentDisplaySlides;
+        this.nbDisplayedSlides = currentDisplaySlides;
     }
+}
+
+export function setAriaLabelOnCarouselMultipleIndicator(indicatorEl) {
+    const siblingEls = [...indicatorEl.parentElement.children];
+    const visibleSiblingEls = siblingEls.filter((el) => getComputedStyle(el).display !== "none");
+    return _t("Slide %(itemIndex)s of %(total)s", {
+        itemIndex: [...visibleSiblingEls].indexOf(indicatorEl) + 1,
+        total: visibleSiblingEls.length,
+    });
 }
 
 registry.category("public.interactions").add("website.carousel_multiple", CarouselMultiple);

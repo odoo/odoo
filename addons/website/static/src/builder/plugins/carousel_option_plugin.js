@@ -5,61 +5,52 @@ import { CarouselItemHeaderMiddleButtons } from "./carousel_item_header_buttons"
 import { renderToElement } from "@web/core/utils/render";
 import { BuilderAction } from "@html_builder/core/builder_action";
 import { selectElements } from "@html_editor/utils/dom_traversal";
-import { StyleAction } from "@html_builder/core/core_builder_action_plugin";
 
 /**
  * @typedef { Object } CarouselOptionShared
  * @property { CarouselOptionPlugin['addSlide'] } addSlide
+ * @property { CarouselOptionPlugin['assignUniqueID'] } assignUniqueID
+ * @property { CarouselOptionPlugin['getTitleExtraInfo'] } getTitleExtraInfo
  * @property { CarouselOptionPlugin['removeSlide'] } removeSlide
  * @property { CarouselOptionPlugin['slideCarousel'] } slideCarousel
  */
 
 const carouselWrapperSelector =
-    ".s_carousel_wrapper, .s_carousel_intro_wrapper, .s_carousel_cards_wrapper, .s_quotes_carousel_wrapper, .s_carousel_multiple_wrapper";
-const carouselControlsSelector =
+    ".s_carousel_wrapper, .s_carousel_intro_wrapper, .s_carousel_cards_wrapper, .s_quotes_carousel_wrapper";
+export const carouselControlsSelector =
     ".carousel-control-prev, .carousel-control-next, .carousel-indicators";
 
-const carouselClassicItemOptionSelector =
-    ".s_carousel .carousel-item, .s_quotes_carousel .carousel-item, .s_carousel_intro .carousel-item, .s_carousel_cards .carousel-item";
-const carouselMultipleItemOptionSelector = ".s_carousel_multiple .carousel-item";
 const carouselItemOptionSelector =
-    carouselClassicItemOptionSelector + ", " + carouselMultipleItemOptionSelector;
+    ".s_carousel .carousel-item, .s_quotes_carousel .carousel-item, .s_carousel_intro .carousel-item, .s_carousel_cards .carousel-item";
 
 export class CarouselOptionPlugin extends Plugin {
     static id = "carouselOption";
-    static dependencies = [
-        "clone",
-        "builderOptions",
-        "builderActions",
-        "builderOverlay",
-        "history",
+    static dependencies = ["clone", "builderOptions", "builderActions"];
+    static shared = [
+        "addSlide",
+        "assignUniqueID",
+        "getTitleExtraInfo",
+        "removeSlide",
+        "slideCarousel",
     ];
-    static shared = ["addSlide", "removeSlide", "slideCarousel"];
 
     /** @type {import("plugins").WebsiteResources} */
     resources = {
-        builder_header_middle_buttons: [
-            {
-                Component: CarouselItemHeaderMiddleButtons,
-                selector: carouselItemOptionSelector,
-                props: {
-                    addSlide: this.addSlide.bind(this),
-                    removeSlide: async (editingElement) => {
-                        // Check if the slide is still in the DOM
-                        // TODO: find a more general way to handle target element already removed by an option
-                        if (editingElement.parentElement) {
-                            const elementToRemove = editingElement.matches(
-                                carouselMultipleItemOptionSelector
-                            )
-                                ? editingElement
-                                : editingElement.closest(".carousel");
-                            await this.removeSlide(elementToRemove);
-                        }
-                    },
-                    applyAction: this.dependencies.builderActions.applyAction,
+        builder_header_middle_buttons: {
+            Component: CarouselItemHeaderMiddleButtons,
+            selector: carouselItemOptionSelector,
+            props: {
+                addSlide: (editingElement) => this.addSlide(editingElement),
+                removeSlide: async (editingElement) => {
+                    // Check if the slide is still in the DOM
+                    // TODO: find a more general way to handle target element already removed by an option
+                    if (editingElement.parentElement) {
+                        await this.removeSlide(editingElement.closest(".carousel"));
+                    }
                 },
+                applyAction: this.dependencies.builderActions.applyAction,
             },
-        ],
+        },
         container_title: {
             selector: carouselItemOptionSelector,
             getTitleExtraInfo: (editingElement) => this.getTitleExtraInfo(editingElement),
@@ -73,8 +64,6 @@ export class CarouselOptionPlugin extends Plugin {
             SetCarouselTypeAction,
             SetCarouselTimespanAction,
             SetCarouselDurationAction,
-            ChangeSlidesToDisplayAction,
-            SetSpacingStyleAction,
         },
         on_cloned_handlers: this.onCloned.bind(this),
         on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
@@ -82,10 +71,6 @@ export class CarouselOptionPlugin extends Plugin {
         reorder_items_processors: this.reorderCarouselItems.bind(this),
         on_will_save_handlers: this.restoreCarousels.bind(this),
         is_unremovable_selectors: carouselItemOptionSelector,
-        // the carousel itself should be not contenteditable,
-        // while its card items should
-        content_not_editable_selectors: [".s_carousel_multiple"],
-        content_editable_selectors: [".s_carousel_multiple .carousel-item"],
     };
 
     /**
@@ -93,7 +78,7 @@ export class CarouselOptionPlugin extends Plugin {
      */
     restoreCarousels(rootEl = this.editable) {
         // Set the first slide as the active one.
-        for (const carouselEl of selectElements(rootEl, ".carousel")) {
+        for (const carouselEl of selectElements(rootEl, ".carousel:not(.s_carousel_multiple)")) {
             carouselEl.querySelectorAll(".carousel-item").forEach((itemEl, i) => {
                 itemEl.classList.remove("next", "prev", "left", "right");
                 itemEl.classList.toggle("active", i === 0);
@@ -119,36 +104,22 @@ export class CarouselOptionPlugin extends Plugin {
     /**
      * Adds a slide.
      *
-     * @param {HTMLElement} editingElement the current carousel-item element.
+     * @param {HTMLElement} editingElement the carousel element.
      */
     async addSlide(editingElement) {
-        const carouselEl = editingElement.closest(".carousel");
-        const isMultipleCarousel = carouselEl.classList.contains("s_carousel_multiple");
-        const itemEls = [...carouselEl.querySelectorAll(".carousel-item")];
-        const editingEl = isMultipleCarousel ? editingElement : editingElement.closest(".carousel");
-        const newLength = itemEls.length + 1;
-        const displayedSlides = Number(
-            getComputedStyle(carouselEl).getPropertyValue("--o-carousel-multiple-items")
-        );
-        const minimumSlideToDisplay = isMultipleCarousel ? displayedSlides : 1;
-
-        // Clone the active or current item and remove the "active" class.
-        const activeItemEl = isMultipleCarousel
-            ? editingElement
-            : editingEl.querySelector(".carousel-item.active");
+        // Clone the active item and remove the "active" class.
+        const activeItemEl = editingElement.querySelector(".carousel-item.active");
         const newItemEl = await this.dependencies.clone.cloneElement(activeItemEl, {
             activateClone: false,
         });
         newItemEl.classList.remove("active");
         newItemEl.id = `${editingElement.id}_${Date.now().toString(36)}`;
 
-        if (newLength > minimumSlideToDisplay) {
-            // Show the controllers (now that there are enough slides).
-            const controlEls = carouselEl.querySelectorAll(carouselControlsSelector);
-            controlEls.forEach((controlEl) => {
-                controlEl.classList.remove("d-none");
-            });
-        }
+        // Show the controllers (now that there is always more than one item).
+        const controlEls = editingElement.querySelectorAll(carouselControlsSelector);
+        controlEls.forEach((controlEl) => {
+            controlEl.classList.remove("d-none");
+        });
 
         // Add the new indicator.
         const activeIndicatorEl = editingElement.querySelector(
@@ -160,64 +131,34 @@ export class CarouselOptionPlugin extends Plugin {
         activeIndicatorEl.after(newIndicatorEl);
         this.updateIndicatorsLabels(editingElement);
 
-        // Slide to the next item.
-        if (isMultipleCarousel) {
-            await this.slide(carouselEl, "next", newItemEl);
-        } else {
-            await this.slide(carouselEl, "next");
-        }
+        // Slide to the new item.
+        await this.slide(editingElement, "next");
     }
 
     /**
      * Removes the current slide.
      *
-     * @param {HTMLElement} editingElement the current carousel-item element.
+     * @param {HTMLElement} editingElement the carousel element.
      */
     async removeSlide(editingElement) {
-        const carouselEl = editingElement.closest(".carousel");
-        const isMultipleCarousel = carouselEl.classList.contains("s_carousel_multiple");
-        const itemEls = [...carouselEl.querySelectorAll(".carousel-item")];
-        const editingEl = isMultipleCarousel ? editingElement : editingElement.closest(".carousel");
+        const itemEls = [...editingElement.querySelectorAll(".carousel-item")];
         const newLength = itemEls.length - 1;
-        const displayedSlides = getComputedStyle(carouselEl).getPropertyValue(
-            "--o-carousel-multiple-items"
-        );
-        const minimumSlideToDisplay = isMultipleCarousel ? displayedSlides : 1;
-
         if (newLength > 0) {
-            const activeItemEl = isMultipleCarousel
-                ? editingEl
-                : editingEl.querySelector(".carousel-item.active");
+            const activeItemEl = editingElement.querySelector(".carousel-item.active");
+            const activeIndicatorEl = editingElement.querySelector(
+                ".carousel-indicators > .active"
+            );
+            // Slide to the previous item.
+            await this.slide(editingElement, "prev");
 
-            if (isMultipleCarousel) {
-                const newSelectedItemEl =
-                    activeItemEl.previousElementSibling || activeItemEl.nextElementSibling;
-                const hasActiveClassItemIndex = itemEls.findIndex((item) =>
-                    item.classList.contains("active")
-                );
-                const countAfter = itemEls.length - hasActiveClassItemIndex - 1;
-                if (activeItemEl.classList.contains("active")) {
-                    newSelectedItemEl.classList.add("active");
-                }
-                if (countAfter < displayedSlides && newLength >= displayedSlides) {
-                    await this.slide(carouselEl, "prev", newSelectedItemEl);
-                } else {
-                    await this.dependencies["builderOptions"].setNextTarget(newSelectedItemEl);
-                }
-            } else {
-                // Slide to the previous item.
-                await this.slide(carouselEl, "prev");
-            }
-
-            // Remove the carousel item and the last not active indicator.
+            // Remove the carousel item and the indicator.
             activeItemEl.remove();
-            const indicatorEls = carouselEl.querySelectorAll(".carousel-indicators :not(.active)");
-            Array.from(indicatorEls).at(-1)?.remove();
+            activeIndicatorEl.remove();
 
             // Hide the controllers if there is only one slide left.
-            const controlEls = carouselEl.querySelectorAll(carouselControlsSelector);
+            const controlEls = editingElement.querySelectorAll(carouselControlsSelector);
             controlEls.forEach((controlEl) =>
-                controlEl.classList.toggle("d-none", newLength <= minimumSlideToDisplay)
+                controlEl.classList.toggle("d-none", newLength === 1)
             );
         }
         this.updateIndicatorsLabels(editingElement);
@@ -228,10 +169,9 @@ export class CarouselOptionPlugin extends Plugin {
      *
      * @param {HTMLElement} editingElement the carousel element.
      * @param {String} direction "prev" or "next".
-     * @param {Element} nextTargetElement the next targeted carousel element (optional).
      */
-    async slideCarousel(editingElement, direction, nextTargetElement) {
-        await this.slide(editingElement, direction, nextTargetElement);
+    async slideCarousel(editingElement, direction) {
+        await this.slide(editingElement, direction);
     }
 
     /**
@@ -242,45 +182,14 @@ export class CarouselOptionPlugin extends Plugin {
      *     - "next": the next slide;
      *     - number: a slide number.
      * @param {Element} editingElement the carousel element.
-     * @param {Element} nextTargetElement the next targeted carousel element (optional).
      * @returns {Promise}
      */
-    slide(editingElement, direction, nextTargetElement) {
-        const isMultipleCarousel = editingElement.classList.contains("s_carousel_multiple");
-        editingElement.addEventListener(
-            "slide.bs.carousel",
-            () => {
-                if (isMultipleCarousel) {
-                    this.dependencies.builderOverlay.toggleOverlaysVisibility(false);
-                }
-                this.slideTimestamp = window.performance.now();
-            },
-            { once: true }
-        );
+    slide(editingElement, direction) {
+        editingElement.addEventListener("slide.bs.carousel", () => {
+            this.slideTimestamp = window.performance.now();
+        });
 
         return new Promise((resolve) => {
-            const itemsEls = editingElement.querySelectorAll(".carousel-item");
-            const activeItemEl = editingElement.querySelector(".carousel-item.active");
-            const displayedSlides = Number(
-                getComputedStyle(editingElement).getPropertyValue("--o-carousel-multiple-items")
-            );
-            const currentIndex = activeItemEl ? Array.from(itemsEls).indexOf(activeItemEl) : -1;
-            let newIndex;
-
-            const setNextTarget = () => {
-                const activeItemEl = editingElement.querySelector(".carousel-item.active");
-                const targetElement = nextTargetElement || activeItemEl;
-                if (this.dependencies.history.getIsCurrentStepModified()) {
-                    this.dependencies["builderOptions"].setNextTarget(targetElement);
-                } else {
-                    // if we don't have any modifications at the current step, we need to
-                    // force the update of the containers
-                    this.dependencies["builderOptions"].updateContainers(targetElement, {
-                        forceUpdate: true,
-                    });
-                }
-            };
-
             editingElement.addEventListener(
                 "slid.bs.carousel",
                 () => {
@@ -312,50 +221,15 @@ export class CarouselOptionPlugin extends Plugin {
                 { once: true }
             );
 
-            // For multiple carousel, wait for the carousel-inner transition to complete
-            // before refreshing overlays to avoid misalignment during the slide animation
-            if (isMultipleCarousel) {
-                const carouselInner = editingElement.querySelector(".carousel-inner");
-                carouselInner.addEventListener("transitionend", setNextTarget, { once: true });
-            }
-
             const carouselInstance = window.Carousel.getOrCreateInstance(editingElement, {
                 ride: false,
                 pause: true,
                 keyboard: false,
             });
             if (typeof direction === "number") {
-                if (direction !== currentIndex) {
-                    carouselInstance.to(direction);
-                } else {
-                    // No slide needed, directly activate the next target
-                    setNextTarget();
-                    resolve();
-                }
+                carouselInstance.to(direction);
             } else {
-                if (isMultipleCarousel) {
-                    if (displayedSlides >= itemsEls.length) {
-                        setNextTarget();
-                        resolve();
-                        return;
-                    }
-                    if (direction === "prev") {
-                        if (currentIndex <= 0) {
-                            newIndex = itemsEls.length - displayedSlides;
-                        } else {
-                            newIndex = currentIndex - 1;
-                        }
-                    } else if (direction === "next") {
-                        if (currentIndex >= itemsEls.length - displayedSlides) {
-                            newIndex = 0;
-                        } else {
-                            newIndex = currentIndex + 1;
-                        }
-                    }
-                    carouselInstance.to(newIndex);
-                } else {
-                    carouselInstance[direction]();
-                }
+                carouselInstance[direction]();
             }
         });
     }
@@ -417,27 +291,19 @@ export class CarouselOptionPlugin extends Plugin {
      * @param {String} optionName
      */
     reorderCarouselItems(activeItemEl, itemEls, optionName) {
-        if (optionName === "Carousel") {
+        if (optionName === "Carousel" && activeItemEl.matches(carouselItemOptionSelector)) {
             const carouselEl = activeItemEl.closest(".carousel");
-            const isMultipleCarousel = carouselEl.classList.contains("s_carousel_multiple");
 
             // Replace the content with the new slides.
             const carouselInnerEl = carouselEl.querySelector(".carousel-inner");
             const newCarouselInnerEl = document.createElement("div");
-            if (isMultipleCarousel) {
-                // We need to keep the current ".carousel-inner" element to avoid glitch with
-                // the translateX transform.
-                carouselInnerEl.querySelectorAll(".carousel-item").forEach((item) => item.remove());
-                carouselInnerEl.append(...itemEls);
-            } else {
-                carouselInnerEl.replaceWith(newCarouselInnerEl);
-                newCarouselInnerEl.append(...itemEls);
-                newCarouselInnerEl.classList.add("carousel-inner");
+            newCarouselInnerEl.classList.add("carousel-inner");
+            newCarouselInnerEl.append(...itemEls);
+            carouselInnerEl.replaceWith(newCarouselInnerEl);
 
-                // Update the indicators.
-                const newPosition = itemEls.indexOf(activeItemEl);
-                updateCarouselIndicators(carouselEl, newPosition);
-            }
+            // Update the indicators.
+            const newPosition = itemEls.indexOf(activeItemEl);
+            updateCarouselIndicators(carouselEl, newPosition);
 
             // Activate the active slide.
             this.dependencies.builderOptions.setNextTarget(activeItemEl);
@@ -515,12 +381,8 @@ export class SlideCarouselAction extends BuilderAction {
         this.preview = false;
         this.withLoadingEffect = false;
     }
-    async apply({ editingElement, params: { direction, nextTargetElement } }) {
-        await this.dependencies.carouselOption.slideCarousel(
-            editingElement,
-            direction,
-            nextTargetElement
-        );
+    async apply({ editingElement, params: { direction } }) {
+        await this.dependencies.carouselOption.slideCarousel(editingElement, direction);
     }
 }
 
@@ -656,48 +518,6 @@ export class SetCarouselDurationAction extends BuilderAction {
     getValue({ editingElement }) {
         const duration = getTransitionDuration(editingElement);
         return duration;
-    }
-}
-
-export class ChangeSlidesToDisplayAction extends BuilderAction {
-    static id = "changeSlidesToDisplay";
-    static dependencies = ["carouselOption"];
-
-    load({ editingElement: el }) {
-        const displayedNumberClass = [...el.classList].find((className) =>
-            className.startsWith("o_displayed_items_")
-        );
-        return (displayedNumberClass && parseInt(displayedNumberClass?.split("_").at(-1))) || 1;
-    }
-
-    async apply({ editingElement: el, value, loadResult: displayedItemsNumber }) {
-        if (displayedItemsNumber === parseInt(value)) {
-            return;
-        }
-
-        // Restart the slider when we change the number of displayed slides.
-        const itemsEls = el.querySelectorAll(".carousel-item");
-        const activeItemEl = el.querySelector(".carousel-item.active");
-        const activeItemIndex = Array.from(itemsEls).indexOf(activeItemEl);
-        if (activeItemIndex != 0) {
-            await this.dependencies.carouselOption.slideCarousel(el, 0, itemsEls[0]);
-        }
-    }
-}
-
-export class SetSpacingStyleAction extends StyleAction {
-    static id = "setSpacingStyle";
-
-    applyCssStyle({ editingElement, params = {}, value }) {
-        const carouselInner = editingElement.querySelector(".carousel-inner");
-        const computedStyle = getComputedStyle(carouselInner);
-        const transition = computedStyle.transition;
-        const transform = computedStyle.transform;
-        carouselInner.style.transition = "none";
-        super.applyCssStyle({ editingElement, params, value });
-        carouselInner.style.transform = transform;
-        void carouselInner.offsetWidth;
-        carouselInner.style.transition = transition;
     }
 }
 

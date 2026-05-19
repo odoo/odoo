@@ -1,43 +1,48 @@
 .s_carousel_multiple_wrapper {
     .s_carousel_multiple {
-        --o-carousel-multiple-items: 1;
-        --o-carousel-multiple-duration: .6s;
+        --carousel-multiple-items-per-slide: 1;
+        --carousel-multiple-duration: .6s;
+        --carousel-multiple-current-index: 0;
+        --carousel-multiple-items-gap: 16px;
+
+        --carousel-multiple-item-width: calc((100% - var(--carousel-multiple-items-gap) * (var(--carousel-multiple-items) - 1)) / var(--carousel-multiple-items)); // (100% - gap * (n - 1)) / n
 
         @extend %s_carousel_variants;
 
         scroll-snap-type: x mandatory;
+        display: flex;
+        flex-direction: column;
 
-        &.carousel-dark {
-            --IndicatorsNumbers__Scrollbar-color: #{rgba($carousel-dark-indicator-active-bg, .15)};
+        // Keep controls before the content in DOM for keyboard focus order,
+        // but display them after the carousel content.
+        > .carousel-inner {
+            order: 1;
+        }
 
-            &:hover {
-                --IndicatorsNumbers__Scrollbar-color: #{$carousel-dark-indicator-active-bg};
-            }
+        > .o_horizontal_controllers {
+            order: 2;
         }
 
         .carousel-inner {
-            gap: var(--o-carousel-multiple-items-gap);
-            transition: transform var(--o-carousel-multiple-duration) ease;
+            gap: var(--carousel-multiple-items-gap);
+            transition: transform var(--carousel-multiple-duration) ease;
+            transform: translateX(calc(-1 * var(--carousel-multiple-current-index) * (var(--carousel-multiple-item-width) + var(--carousel-multiple-items-gap))));
             overflow: visible;
-
-            &:has(.carousel-item-next) .carousel-item, &:has(.carousel-item-prev) .carousel-item {
-                // We need to remove these transform/transition to have a smooth slide
-                transform: none;
-                transition: none;
-            }
         }
 
         .carousel-item {
-            width: calc(100% / var(--o-carousel-multiple-items) - (var(--o-carousel-multiple-items-gap) * (var(--o-carousel-multiple-items) - 1)/var(--o-carousel-multiple-items)));
+            width: var(--carousel-multiple-item-width);
             scroll-snap-align: center;
-
+            // We need to remove these transform/transition to have a smooth slide
+            transform: none;
+            transition: none;
         }
 
         @for $i from 2 through 5 {
             &.o_displayed_items_#{$i} {
                 @include media-breakpoint-between(md,xl) {
                     $-display-on-tablet: $i - 1;
-                    --o-carousel-multiple-items: #{$-display-on-tablet};
+                    --carousel-multiple-items-per-slide: #{$-display-on-tablet};
 
                     .carousel-indicators button:nth-last-child(-n + #{$-display-on-tablet - 1}) {
                         display: none;
@@ -45,7 +50,7 @@
                 }
 
                 @include media-breakpoint-up(xl) {
-                    --o-carousel-multiple-items: #{$i};
+                    --carousel-multiple-items-per-slide: #{$i};
 
                     .carousel-indicators button:nth-last-child(-n + #{$i - 1}) {
                         display: none;
@@ -56,6 +61,7 @@
 
         // Scroll snap on mobile
         @include media-breakpoint-down(md) {
+            --carousel-multiple-items-per-slide: 1 !important;
             overflow-x: scroll;
             overflow-y: hidden;
             scrollbar-color: var(--IndicatorsNumbers__Scrollbar-color, #{rgba($carousel-indicator-active-bg, .15)}) transparent;

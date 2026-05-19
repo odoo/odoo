@@ -1,5 +1,6 @@
 declare module "plugins" {
     import { CarouselOptionShared } from "@website/builder/plugins/carousel_option_plugin";
+    import { CarouselMultipleOptionShared } from "@website/builder/plugins/carousel_multiple_option_plugin";
     import { CustomizeWebsiteShared } from "@website/builder/plugins/customize_website_plugin";
     import { on_content_manually_updated_handlers, EditInteractionShared } from "@website/builder/plugins/edit_interaction_plugin";
     import { WebsiteFontShared } from "@website/builder/plugins/font/font_plugin";
@@ -39,6 +40,7 @@ declare module "plugins" {
     interface SharedMethods {
         animateOption: AnimateOptionShared;
         carouselOption: CarouselOptionShared;
+        carouselMultipleOption: CarouselMultipleOptionShared;
         cardImageOption: CardImageOptionShared;
         chartOptionPlugin: ChartOptionShared;
         CookiesBarOptionPlugin: CookiesBarOptionShared;
