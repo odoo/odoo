@@ -63,6 +63,7 @@ class StockQuant(models.Model):
     warehouse_id = fields.Many2one('stock.warehouse', related='location_id.warehouse_id')
     storage_category_id = fields.Many2one(related='location_id.storage_category_id')
     cyclic_inventory_frequency = fields.Integer(related='location_id.cyclic_inventory_frequency')
+    lot_name = fields.Char(string="Lot or Serial Number", compute="_compute_lot_name", readonly=False)
     lot_id = fields.Many2one(
         'stock.lot', 'Lot/Serial Number', index=True,
         ondelete='restrict', check_company=True,
@@ -70,6 +71,7 @@ class StockQuant(models.Model):
     lot_properties = fields.Properties(related='lot_id.lot_properties', definition='product_id.lot_properties_definition', readonly=True)
     sn_duplicated = fields.Boolean(string="Duplicated Serial Number", compute='_compute_sn_duplicated',
         search='_search_sn_duplicated', help="If the same SN is in another Quant")
+    package_name = fields.Char(string="Package Name", compute="_compute_package_name", readonly=False)
     package_id = fields.Many2one(
         'stock.package', 'Package',
         ui_domain="['|', ('location_id', '=', location_id), '&', ('location_id', '=', False), ('quant_ids', '=', False)]",
@@ -275,6 +277,16 @@ class StockQuant(models.Model):
         duplicated_sn_ids = [duplicated_sn.id for [duplicated_sn] in duplicated_serial_numbers]
         return [('lot_id', 'in', duplicated_sn_ids)]
 
+    @api.depends('lot_id')
+    def _compute_lot_name(self):
+        for quant in self:
+            quant.lot_name = quant.lot_id.name
+
+    @api.depends('package_id')
+    def _compute_package_name(self):
+        for quant in self:
+            quant.package_name = quant.package_id.name
+
     def _set_inventory_quantity(self):
         """ Inverse method to create stock move when `inventory_quantity` is set
         (`inventory_quantity` is only accessible in inventory mode).
@@ -309,14 +321,16 @@ class StockQuant(models.Model):
         """
         def _add_to_cache(quant):
             if 'quants_cache' in self.env.context:
-                self.env.context['quants_cache'][
-                    quant.product_id.id, quant.location_id.id, quant.lot_id.id, quant.package_id.id, quant.owner_id.id
-                ] |= quant
+                self.env.context['quants_cache'][quant.product_id.id, quant.location_id.id, quant.lot_id.id, quant.package_id.id, quant.owner_id.id] |= quant
+
+        if any(vals.get('lot_name') or vals.get('package_name') for vals in vals_list):
+            self._create_missing_packages_and_lots(vals_list)
 
         quants = self.env['stock.quant']
         is_inventory_mode = self._is_inventory_mode()
         allowed_fields = self._get_inventory_fields_create()
         quants_to_apply = self.env['stock.quant']
+        quants_to_create = []
         for vals in vals_list:
             if is_inventory_mode and any(f in vals for f in ['inventory_quantity', 'inventory_quantity_auto_apply']):
                 if any(field for field in vals if not field.startswith('x_') and field not in allowed_fields):
@@ -326,23 +340,11 @@ class StockQuant(models.Model):
                     'inventory_quantity', False) or 0
                 # Create an empty quant or write on a similar one.
                 product = self.env['product.product'].browse(vals['product_id'])
-                location = self.env['stock.location'].browse(vals['location_id'])
+                location = self.env['stock.location'].browse(vals.get('location_id'))
                 lot_id = self.env['stock.lot'].browse(vals.get('lot_id'))
                 package_id = self.env['stock.package'].browse(vals.get('package_id'))
                 owner_id = self.env['res.partner'].browse(vals.get('owner_id'))
-                quant = self.env['stock.quant']
-                if not self.env.context.get('import_quant_lines'):
-                    # Merge quants later, to make sure one line = one record during batch import
-                    quant = self._gather(product, location, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=True)
-                if lot_id:
-                    if self.env.context.get('import_file') and lot_id.product_id != product:
-                        lot_name = lot_id.name
-                        lot_id = self.env['stock.lot'].search([('product_id', '=', product.id), ('name', '=', lot_name)], limit=1)
-                        if not lot_id:
-                            company_id = location.company_id or self.env.company
-                            lot_id = self.env['stock.lot'].create({'name': lot_name, 'product_id': product.id, 'company_id': company_id.id})
-                        vals['lot_id'] = lot_id.id
-                    quant = quant.filtered(lambda q: q.lot_id)
+                quant = self._gather(product, location, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=True, lot_strict=True)
                 if quant:
                     quant = quant[0]
                 else:
@@ -361,7 +363,9 @@ class StockQuant(models.Model):
             else:
                 if 'inventory_quantity' not in vals:
                     vals['inventory_quantity_set'] = vals.get('inventory_quantity_set', False)
-                quant = super().create(vals)
+                quants_to_create.append(vals)
+        if quants_to_create:
+            for quant in super().create(quants_to_create):
                 _add_to_cache(quant)
                 quants |= quant
                 if self._is_inventory_mode() and quant.company_id:
@@ -369,6 +373,72 @@ class StockQuant(models.Model):
         if quants_to_apply:
             quants_to_apply.filtered(lambda q: not q.is_outdated).action_apply_inventory()
         return quants
+
+    def _create_missing_packages_and_lots(self, vals_list):
+        # Iterating over values to gather all information for a batched lot and package lookup
+        lot_tuples, package_tuples, package_names, lot_names, product_ids = set(), set(), set(), set(), set()
+        company_id_by_location_id = {
+            None: self.env.company.id,
+        }
+        for vals in vals_list:
+            location_id = vals.get('location_id')
+            company_id = self.env['stock.location'].browse(location_id).company_id.id
+            company_id_by_location_id[location_id] = company_id
+            product_id = vals.get('product_id')
+            lot_name = vals.get('lot_name')
+            if product_id and lot_name:
+                lot_tuples.add((lot_name, product_id, company_id))
+                product_ids.add(product_id)
+                lot_names.add(lot_name)
+
+            package_name = vals.get('package_name')
+            if package_name:
+                package_tuples.add((package_name, company_id))
+                package_names.add(package_name)
+
+        existing_lot_ids = self.env['stock.lot'].search(Domain.AND([Domain('product_id', 'in', product_ids), Domain('name', 'in', lot_names)]))
+        lot_id_by_tuple = {(lot.name, lot.product_id.id, lot.company_id.id): lot for lot in existing_lot_ids}
+        existing_packages = self.env['stock.package'].search(Domain.AND([Domain('name', 'in', package_names)]))
+        package_id_by_tuple = {(package.name, package.company_id.id): package for package in existing_packages}
+
+        # Creating the missing lots and packages
+        lot_create_list = []
+        for lot_name, product_id, company_id in lot_tuples:
+            if (lot_name, product_id, company_id) not in lot_id_by_tuple and (lot_name, product_id, False) not in lot_id_by_tuple:
+                product = self.env['product.product'].browse(product_id)
+                if not product.tracking:
+                    raise UserError(_('You cannot create a lot number for untracked products. (%(product_name)s)', product_name=product.name))
+                lot_create_list.append({
+                    'name': lot_name,
+                    'product_id': product_id,
+                    'company_id': company_id
+                })
+        new_lot_ids = self.env['stock.lot'].create(lot_create_list)
+        lot_id_by_tuple |= {(lot.name, lot.product_id.id, lot.company_id.id): lot for lot in new_lot_ids}
+
+        package_create_list = []
+        for name, company_id in package_tuples:
+            if (name, company_id) not in package_id_by_tuple and (name, False) not in package_id_by_tuple:
+                package_create_list.append({
+                    'name': name,
+                    'company_id': company_id,
+                })
+        new_packages = self.env['stock.package'].create(package_create_list)
+        package_id_by_tuple |= {(package.name, package.company_id.id): package for package in new_packages}
+
+        # Updating the vals to include the correct lot_id and package_id
+        for vals in vals_list:
+            company_id = company_id_by_location_id.get(vals.get('location_id'), self.env.company.id)
+            product_id = vals.get('product_id')
+            lot_name = vals.get('lot_name')
+            if lot_name and product_id:
+                lot_id = lot_id_by_tuple.get((lot_name, product_id, company_id)) or lot_id_by_tuple.get((lot_name, product_id, False))
+                vals['lot_id'] = lot_id.id
+
+            package_name = vals.get('package_name')
+            if package_name:
+                package_id = package_id_by_tuple.get((package_name, company_id)) or package_id_by_tuple.get((package_name, False))
+                vals['package_id'] = package_id.id
 
     def _load_records_create(self, values):
         """ Add default location if import file did not fill it, and keep one quant
@@ -378,9 +448,7 @@ class StockQuant(models.Model):
         for value in values:
             if 'location_id' not in value:
                 value['location_id'] = warehouse.lot_stock_id.id
-        return super(StockQuant, self.with_context(
-            inventory_mode=True, import_quant_lines=self.env.context.get('import_file'),
-        ))._load_records_create(values)
+        return super(StockQuant, self.with_context(inventory_mode=True))._load_records_create(values)
 
     def _load_records_write(self, values):
         """ Only allowed fields should be modified """
@@ -401,7 +469,7 @@ class StockQuant(models.Model):
     def get_import_templates(self):
         return [{
             'label': _('Template for Inventory Adjustments'),
-            'template': '/stock/static/xlsx/stock_quant.xlsx'
+            'template': '/stock/xlsx/import_template',
         }]
 
     @api.model
@@ -469,6 +537,8 @@ class StockQuant(models.Model):
         ctx = dict(self.env.context or {})
         if self.env.user.has_group('stock.group_stock_user') and not self.env.user.has_group('stock.group_stock_manager'):
             ctx['search_default_my_count'] = True
+        if template := self.env.ref('stock.stock_quant_export_template', raise_if_not_found=False):
+            ctx['stock_export_template_id'] = template.id
         view_id = self.env.ref('stock.view_stock_quant_tree_inventory_editable').id
         action = {
             'name': _('Physical Inventory'),
@@ -807,7 +877,7 @@ class StockQuant(models.Model):
             return False
         raise UserError(_('Removal strategy %s not implemented.', removal_strategy))
 
-    def _get_gather_domain(self, product_id, location_id, lot_id=None, package_id=None, owner_id=None, strict=False):
+    def _get_gather_domain(self, product_id, location_id, lot_id=None, package_id=None, owner_id=None, strict=False, lot_strict=False):
         domains = [Domain('product_id', '=', product_id.id)]
         if not strict:
             if lot_id:
@@ -818,8 +888,11 @@ class StockQuant(models.Model):
                 domains.append(Domain('owner_id', '=', owner_id.id))
             domains.append(Domain('location_id', 'child_of', location_id.id))
         else:
+            lot_ids = [lot_id.id if lot_id else False]
+            if not lot_strict and lot_id:
+                lot_ids.append(False)
             domains.extend((
-                Domain('lot_id', 'in', [False, lot_id.id if lot_id else False]),
+                Domain('lot_id', 'in', lot_ids),
                 Domain('package_id', '=', package_id.id if package_id else False),
                 Domain('owner_id', '=', owner_id.id if owner_id else False),
                 Domain('location_id', '=', location_id.id),
@@ -828,12 +901,12 @@ class StockQuant(models.Model):
             domains.append(Domain('removal_date', '>=', self.env.context['with_expiration']) | Domain('removal_date', '=', False))
         return Domain.AND(domains)
 
-    def _gather(self, product_id, location_id, lot_id=None, package_id=None, owner_id=None, strict=False, qty=0):
+    def _gather(self, product_id, location_id, lot_id=None, package_id=None, owner_id=None, strict=False, lot_strict=False, qty=0):
         """ if records in self, the records are filtered based on the wanted characteristics passed to this function
             if not, a search is done with all the characteristics passed.
         """
         removal_strategy = self._get_removal_strategy(product_id, location_id)
-        domain = self._get_gather_domain(product_id, location_id, lot_id, package_id, owner_id, strict)
+        domain = self._get_gather_domain(product_id, location_id, lot_id, package_id, owner_id, strict, lot_strict)
         if removal_strategy == 'least_packages' and qty:
             domain = self._run_least_packages_removal_strategy_astar(domain, qty)
         order = self._get_removal_strategy_order(removal_strategy)
@@ -1308,7 +1381,7 @@ class StockQuant(models.Model):
     def _get_inventory_fields_create(self):
         """ Returns a list of fields user can edit when he want to create a quant in `inventory_mode`.
         """
-        return ['product_id', 'owner_id'] + self._get_inventory_fields_write()
+        return ['product_id', 'owner_id', 'lot_name', 'package_name'] + self._get_inventory_fields_write()
 
     @api.model
     def _get_inventory_fields_write(self):
