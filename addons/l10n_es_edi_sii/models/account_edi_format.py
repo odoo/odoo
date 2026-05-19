@@ -1,5 +1,6 @@
 import json
 import math
+import base64
 from collections import defaultdict
 
 import requests
@@ -9,6 +10,9 @@ from odoo.tools import html_escape, zeep
 from odoo.tools.float_utils import float_round
 
 from odoo.addons.certificate.tools import CertificateAdapter
+
+from lxml import etree
+from zeep.plugins import HistoryPlugin
 
 # Custom patches to perform the WSDL requests.
 # Avoid failure on servers where the DH key is too small
@@ -451,7 +455,8 @@ class AccountEdiFormat(models.Model):
         session.cert = company.l10n_es_sii_certificate_id
         session.mount('https://', CertificateAdapter(ciphers=EUSKADI_CIPHERS))
 
-        client = zeep.Client(connection_vals['url'], operation_timeout=60, timeout=60, session=session)
+        history = HistoryPlugin()
+        client = zeep.Client(connection_vals['url'], operation_timeout=60, timeout=60, session=session, plugins=[history])
 
         if connection_vals.get('custom_navarra'):
             # We Inject the namespaces directly in the header dictionary
@@ -498,6 +503,24 @@ class AccountEdiFormat(models.Model):
                 'blocking_level': 'warning',
             } for inv in invoices}
 
+        try:
+            xml_data = etree.tostring(history.last_sent['envelope'], encoding='utf-8', xml_declaration=True, pretty_print=True)
+        except (IndexError, KeyError):
+            xml_data = None
+
+        xml_attachments = {}
+        if xml_data:
+            for inv in invoices:
+                attachment = self.env['ir.attachment'].create({
+                    'type': 'binary',
+                    'name': f"SII_{inv.name.replace('/', '_')}.xml",
+                    'datas': base64.b64encode(xml_data),
+                    'mimetype': 'application/xml',
+                    'res_model': inv._name,
+                    'res_id': inv.id,
+                })
+                xml_attachments[inv.id] = attachment
+
         # Process response.
 
         if not res or not res.RespuestaLinea:
@@ -511,7 +534,7 @@ class AccountEdiFormat(models.Model):
 
         if resp_state == 'Correcto':
             invoices.write({'l10n_es_edi_csv': l10n_es_edi_csv})
-            return {inv: {'success': True} for inv in invoices}
+            return {inv: {'success': True, 'attachment': xml_attachments.get(inv.id, False)} for inv in invoices}
 
         results = {}
         for respl in res.RespuestaLinea:
@@ -558,7 +581,7 @@ class AccountEdiFormat(models.Model):
             respl_dict = dict(respl)
             if resp_line_state in ('Correcto', 'AceptadoConErrores'):
                 inv.l10n_es_edi_csv = l10n_es_edi_csv
-                results[inv] = {'success': True}
+                results[inv] = {'success': True, 'attachment': xml_attachments.get(inv.id, False)}
                 if resp_line_state == 'AceptadoConErrores':
                     inv.message_post(body=_("This was accepted with errors: ") + html_escape(respl.DescripcionErrorRegistro))
             elif (
@@ -566,7 +589,7 @@ class AccountEdiFormat(models.Model):
                 or
                 (cancel and respl_dict.get('CodigoErrorRegistro') == 3001)
             ):
-                results[inv] = {'success': True}
+                results[inv] = {'success': True, 'attachment': xml_attachments.get(inv.id, False)}
                 inv.message_post(body=_("We saw that this invoice was sent correctly before, but we did not treat "
                                         "the response.  Make sure it is not because of a wrong configuration."))
 
@@ -670,7 +693,7 @@ class AccountEdiFormat(models.Model):
                 'blocking_level': 'error',
             } for inv in invoices}
 
-        # Generate the JSON.
+        # Build the invoice data to send to the AEAT.
         info_list = self._l10n_es_edi_get_invoices_info(invoices)
 
         # Call the web service.
@@ -681,15 +704,17 @@ class AccountEdiFormat(models.Model):
 
         for inv in invoices:
             if res.get(inv, {}).get('success'):
-                attachment = self.env['ir.attachment'].create({
-                    'type': 'binary',
-                    'name': 'jsondump.json',
-                    'raw': json.dumps(info_list),
-                    'mimetype': 'application/json',
-                    'res_model': inv._name,
-                    'res_id': inv.id,
-                })
-                res[inv]['attachment'] = attachment
+                attachment = res[inv].get('attachment')
+                if not attachment:
+                    attachment = self.env['ir.attachment'].create({
+                        'type': 'binary',
+                        'name': 'jsondump.json',
+                        'raw': json.dumps(info_list),
+                        'mimetype': 'application/json',
+                        'res_model': inv._name,
+                        'res_id': inv.id,
+                    })
+                    res[inv]['attachment'] = attachment
                 if cancel:
                     inv.l10n_es_edi_csv = False
         return res
