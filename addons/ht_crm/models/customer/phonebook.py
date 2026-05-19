@@ -3,77 +3,145 @@ import datetime
 import random
 
 class PhonebookBatch(models.Model):
-    _name = 'sale.phonebook.batch'
-    _description = 'Tập dữ liệu Phonebook'
+    _name = "sale.phonebook.batch"
+    _description = "Phone Dataset"
 
-    phonebook_id = fields.One2many(
-        'sale.phonebook',
-        'group_id',
-        string="SĐT thuộc tập",
-        domain=[('status', '!=', 'invalid')]
-    )
-    name = fields.Char(required=True)
-    group_key_date = fields.Date(string="Ngày tạo", default=fields.Date.today, groups="ht_crm.group_ht_executive")
-    code = fields.Char()
+    # Trường chính
+    name = fields.Char(string="Tên tập", required=True)
+    date = fields.Date(string="Ngày tạo", default=fields.Date.today)
 
-    # Trường bổ sung
-    project_id = fields.Many2one('estate.project', required=True, ondelete='cascade')
-    sales_ids = fields.Many2many(
-        'sale.employee',
-        string="Sales trong tập",
+    # Trường liên kết
+    project_id = fields.Many2one('estate.project')
+
+    phone_ids = fields.One2many(
+        "sale.phonebook",
+        "batch_id",
+        string="Danh sách số"
     )
 
-    @api.onchange('project_id')
-    def _onchange_project_id(self):
-        if self.project_id:
-            self.write({'sales_ids': [(6, 0, self.project_id.sales_ids.ids)]})
-        else:
-            self.write({'sales_ids': [(5, 0, 0)]})
+    e_p_rel_ids = fields.One2many(
+        'employee.project.rel',
+        'batch_id',
+        string="Nhân viên phụ trách",
+        domain=[('sales_id.role_ids.code', '=', 'sales')]
+    )
 
-    @api.constrains('sales_ids', 'project_id')
-    def _check_sales_in_project(self):
+    # Trường phụ
+    chunk_size = fields.Integer(string="Chia tối đa", default=3)
+    state = fields.Selection([
+        ('draft', 'Nháp'),
+        ('processing', 'Đang phân'),
+        ('done', 'Hoàn tất'),
+        ('failed', 'Lỗi')
+    ], default='draft')
+    distribute_at = fields.Datetime(string="Phân phát lúc", compute='_compute_distribute_at', store=True)
+    rest = fields.Integer(
+        string="Nghỉ (phút)",
+        default=2
+    )
+
+    @api.depends("rest")
+    def _compute_distribute_at(self):
+        now = fields.Datetime.now()
+
         for rec in self:
-            if rec.sales_ids and rec.project_id:
-                if not rec.project_id.sales_ids:
-                    rec.write({
-                        'sales_ids': [(5, 0, 0)]
-                    })
-                    return
+            if not rec.rest:
+                rec.distribute_at = False
+                continue
 
-                invalid = rec.sales_ids - rec.project_id.sales_ids
-                if invalid:
-                    raise exceptions.ValidationError(
-                        "Sales phải thuộc project!"
-                    )
+            rec.distribute_at = now + datetime.timedelta(
+                minutes=rec.rest
+            )
 
-    @api.model_create_multi
-    def create(self, vals_list):
-        for vals in vals_list:
-            if vals.get('project_id') and not vals.get('sales_ids'):
-                project = self.env['estate.project'].browse(vals['project_id'])
+    @api.model
+    def cron_distribute(self):
+        now = fields.Datetime.now()
 
-                vals['sales_ids'] = [(6, 0, project.sales_ids.ids)]
+        # Data quảng cáo
+        batches = self.search([
+            ("state", "!=", "draft"),
+            ("distribute_at", "<=", now)
+        ])
 
-        return super().create(vals_list)
-    
-    def write(self, vals):
-        res = super().write(vals)
+        for batch in batches:
+            if batch.state in ('failed'):
+                return
 
-        if vals.get('project_id'):
-            for rec in self:
-                project = rec.project_id
+            if batch.state in ('done'):
+                batch.action_clean_invalid()
 
-                # chỉ update nếu sales_ids chưa bị user override
-                rec.sales_ids = [(6, 0, project.sales_ids.ids)]
+            batch.action_distribute()
 
-        return res
+            if batch.rest:
+                batch.distribute_at = now + datetime.timedelta(
+                    minutes=batch.rest
+                )
+
+
+    def action_clean_invalid(self):
+        invalid_phones = self.phone_ids.filtered(lambda p: p.is_hot and p.status == 'invalid')
+
+        for phone in invalid_phones:
+            phone.unlink()
+
+    def action_remove_sales(self):
+        available_phones = self.phone_ids.filtered(lambda p: p.is_hot)
+        
+        for phone in available_phones:
+            phone.write({'salesperson_id': False})
+        
+
+    def action_distribute(self):
+        self.ensure_one()
+        
+        employees = self.e_p_rel_ids.mapped('sales_id')
+        phones = self.phone_ids.filtered(lambda p: p.is_hot)
+
+        if not employees or not phones:
+            return
+
+        quota = {emp.id: 0 for emp in employees}
+
+        self.action_clean_invalid()
+        self.action_remove_sales()
+
+        phone_ids = phones.ids
+        random.shuffle(phone_ids)
+
+        all_blocked = True
+        for phone in self.env['sale.phonebook'].browse(phone_ids):
+            filtered = employees.filtered(
+                lambda u: u not in phone.previous_salesperson_ids
+            )
+
+            if not filtered:
+                continue
+
+            available_emps = [
+                e for e in filtered
+                if quota[e.id] < self.chunk_size
+            ]
+            
+            if not available_emps:
+                break  # tất cả full quota
+
+            employee = random.choice(available_emps)
+
+            phone.write({'salesperson_id': employee.id})
+            phone.write({'previous_salesperson_ids': [(4, employee.id)]})
+            quota[employee.id] += 1
+            
+            all_blocked = False
+
+        if all_blocked:
+            self.write({'state': 'done'})
 
 class PhoneBook(models.Model):
     _name = 'sale.phonebook'
     _description = 'DATA danh bạ'
 
     # Định danh
-    group_id = fields.Many2one(
+    batch_id = fields.Many2one(
         'sale.phonebook.batch',
         string="Tập dữ liệu",
         groups="ht_crm.group_ht_executive"
@@ -89,6 +157,8 @@ class PhoneBook(models.Model):
     )
     
     # Trường bổ sung
+    project_id = fields.Many2one(related='batch_id.project_id')
+
     salesperson_id = fields.Many2one(
         'sale.employee',
         string="Sales phụ trách",
@@ -108,13 +178,8 @@ class PhoneBook(models.Model):
         ('invalid', 'Không hợp lệ / Hủy')
     ], string="Trạng thái", default='new', store=True)
 
-    # Trường xử lý số nóng.    
+    # Trường xử lý số nóng.
     is_hot = fields.Boolean(string="Nóng?", default=False)
-    hot_until = fields.Datetime(string="Hết hạn lúc", compute='_compute_hot_until', store=True)
-    hot_duration = fields.Integer(
-        string="Thời hạn (phút)",
-        default=2
-    )
 
     def write(self, vals):
         if not self.env.user.has_group('base.group_system') and not self.env.user.has_group('ht_crm.group_ht_executive'):
@@ -129,21 +194,6 @@ class PhoneBook(models.Model):
                 raise exceptions.UserError(
                     "Bạn chỉ được sửa ghi chú và trạng thái."
                 )
-
-        now = fields.Datetime.now()
-
-        for rec in self:
-
-            # Khi bật HOT
-            if vals.get('is_hot') and not rec.is_hot:
-
-                duration = vals.get('hot_duration') or rec.hot_duration or 0
-
-                vals['hot_until'] = now + datetime.timedelta(minutes=duration)
-
-            # Khi tắt HOT
-            if 'is_hot' in vals and not vals['is_hot']:
-                vals['hot_until'] = False
 
         return super().write(vals)
 
@@ -164,120 +214,11 @@ class PhoneBook(models.Model):
                     f"trong dự án: {existing.project_id.name}"
                 )
 
-    @api.depends("hot_duration")
-    def _compute_hot_until(self):
-        now = fields.Datetime.now()
+    def action_reset_number(self):
+        self.ensure_one()
+        self.write({'salesperson_id': ""})
+        self.write({'previous_salesperson_ids': [(5, 0, 0)]})
 
-        for rec in self:
-            if not rec.hot_duration:
-                rec.hot_until = False
-                continue
-
-            rec.hot_until = now + datetime.timedelta(
-                minutes=rec.hot_duration
-            )
-
-    def get_user_count(self, user_id):
-        return self.search_count([
-            ('salesperson_id', '=', user_id)
-        ])
-
-    def get_available_users(self):
-        users = self.env['sale.employee'].search([])
-
-        available = []
-
-        for u in users:
-            count = self.search_count([
-                ('salesperson_id', '=', u.id)
-            ])
-
-            if count < 5:
-                available.append(u)
-
-        return available
-
-    @api.model
-    def cron_distribute(self):
-        now = fields.Datetime.now()
-
-        # Data quảng cáo
-        expired = self.search([
-            ("status", "!=", "invalid"),
-            ("hot_until", "<=", now)
-        ])
-
-        for rec in expired:
-            rec.auto_distribute_numbers()
-
-            if rec.hot_duration:
-                rec.hot_until = now + datetime.timedelta(
-                    minutes=rec.hot_duration
-                )
-
-    def auto_distribute_numbers(self):    
-        # User phụ trách dự án
-        eligible_users = self.project_id.sales_ids
-
-        if not self.hot_duration:
-            return
-
-        # loại user đã từng được assign record này
-        available = eligible_users.filtered(
-            lambda u: u not in self.previous_salesperson_ids
-        )
-
-        if not available:
-            self.write({'salesperson_id': False})
-            self.write({'previous_salesperson_ids': [(5, 0, 0)]})
-            return
-
-        # ================================
-        # 🔥 FILTER: user chưa full slot (max 5)
-        # ================================
-        valid_users = available.filtered(
-            lambda u: self.get_user_count(u.id) < 5
-        )
-
-        if not valid_users:
-            return exceptions.ValidationError("user")
-            self.write({'salesperson_id': False})
-            return
-
-        assigned_user = random.choice(valid_users)
-
-        self.salesperson_id = assigned_user.id
-        self.previous_salesperson_ids = [(4, assigned_user.id)]
-
-    # Hàm phân KH (ngẫu nhiên)
-    def action_distribute_numbers(self):
-        # Với mọi record đang được chọn.
-        for record in self:
-            if record.status == 'invalid':
-                continue
-
-            eligible_users = record.project_id.sales_ids
-
-            if not eligible_users:
-                record.write({
-                    'salesperson_id': False
-                })
-                continue
-
-            available = eligible_users.filtered(
-                lambda u: u not in record.previous_salesperson_ids
-            )
-
-            if not available:
-                record.write({'salesperson_id': ""})
-                record.write({'previous_salesperson_ids': [(5, 0, 0)]})
-                continue
-
-            assigned_user = random.choice(available)
-
-            record.salesperson_id = assigned_user.id
-            record.previous_salesperson_ids = [(4, assigned_user.id)]
-    
 
 class PhoneBookLog(models.Model):
     _name = "sale.phonebook.log"

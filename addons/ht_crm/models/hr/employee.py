@@ -16,11 +16,9 @@ class Employee(models.Model):
         string="Roles"
     )
 
-    project_ids = fields.Many2many(
-        'estate.project',
-        'estate_project_employee_rel',
-        'employee_id',
-        'project_id',
+    project_ids = fields.One2many(
+        'employee.project.rel',
+        'sales_id',
         string="Dự án phụ trách"
     )
 

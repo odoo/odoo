@@ -132,7 +132,7 @@ class EstateProject(models.Model):
 
     # Các trường liên kết
     phonebook_ids = fields.One2many(
-        "sale.phonebook.batch",
+        "sale.phonebook",
         "project_id",
         string="Data thuộc dự án"
     )
@@ -153,13 +153,10 @@ class EstateProject(models.Model):
         string="Khách hàng quan tâm"
     )
 
-    sales_ids = fields.Many2many(
-        'sale.employee',
-        'estate_project_employee_rel',
+    sales_ids = fields.One2many(
+        'employee.project.rel',
         'project_id',
-        'employee_id',
-        string="Sales phụ trách",
-        domain=[('role_ids.code', '=', 'sales')]
+        string="Sales phụ trách"
     )
 
     unit_ids = fields.One2many(
@@ -177,4 +174,28 @@ class EstateProject(models.Model):
     def action_clear_purchased_customers(self):
         for rec in self:
             rec.purchased_customer_ids = [(5, 0, 0)]
-        
+
+class EmployeeProjectRel(models.Model):
+    _name='employee.project.rel'
+
+    sales_id = fields.Many2one('sale.employee', required=True, domain=[('role_ids.code', '=', 'sales')], string="Sales phụ trách", ondelete='cascade')
+    project_id = fields.Many2one(
+        related='batch_id.project_id'
+    )
+
+    batch_id = fields.Many2one('sale.phonebook.batch', required=True, string="Tập dữ liệu", ondelete='cascade')
+
+    @api.constrains('sales_id', 'project_id', 'batch_id')
+    def _check_unique_combination(self):
+        for rec in self:
+            duplicate = self.search([
+                ('sales_id', '=', rec.sales_id.id),
+                ('project_id', '=', rec.project_id.id),
+                ('batch_id', '=', rec.batch_id.id),
+                ('id', '!=', rec.id),
+            ], limit=1)
+
+            if duplicate:
+                raise exceptions.ValidationError(
+                    "Thông tin phẩn bổ này đã tồn tại!"
+                )

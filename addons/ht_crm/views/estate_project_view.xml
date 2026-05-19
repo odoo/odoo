@@ -59,7 +59,7 @@
                                 <field name="phonebook_ids" string="">
                                     <list editable="bottom" limit="20">
                                         <field name="name"/>
-                                        <field name="phonebook_id"/>
+                                        <field name="phone"/>
                                     </list>
                                 </field>
                             </group>
@@ -100,7 +100,8 @@
                             <group>
                                 <field name="sales_ids" string="">
                                     <list editable="bottom" limit="5">
-                                        <field name="name"/>
+                                        <field name="sales_id" />
+                                        <field name="batch_id"/>
                                     </list>
                                 </field>
                             </group>
@@ -172,4 +173,18 @@
             </list>
         </field>
     </record>
+
+    <record id="view_employee_project_rel_list" model="ir.ui.view">
+        <field name="name">employee.project.rel.list</field>
+        <field name="model">employee.project.rel</field>
+        <field name="arch" type="xml">
+            <list editable="bottom">
+                <field name="sales_id"/>
+                <field name="project_id" readonly="1"/>
+                <field name="batch_id"/>
+            </list>
+        </field>
+    </record>
+
+    
 </odoo>
