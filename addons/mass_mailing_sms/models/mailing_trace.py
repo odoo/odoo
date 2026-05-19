@@ -21,6 +21,7 @@ class MailingTrace(models.Model):
         string='SMS ID',
         index='btree_not_null',
         model_field='sms_id_model',
+        ondelete='ignore',
         # Reference because the related sms.sms can be deleted separately from its statistics.
         # However, the ID is needed for several action and controllers.
     )
