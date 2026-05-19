@@ -185,7 +185,7 @@ export class ShortCutPlugin extends Plugin {
         if (matchedShortcut) {
             const command = this.dependencies.userCommand.getCommand(matchedShortcut.commandId);
             if (command && (!command.isAvailable || command.isAvailable(selection))) {
-                if (lineBreak) {
+                if (lineBreak && !matchedShortcut.inline) {
                     this.dependencies.split.splitBlockSegments();
                 }
                 // Set selection to the matched string with space
