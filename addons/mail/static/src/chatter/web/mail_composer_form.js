@@ -80,6 +80,10 @@ export class MailComposerFormRenderer extends formView.Renderer {
         };
 
         onCloseWizardModal(async () => {
+            if (this.props.record.data.subtype_is_log) {
+                // otherwise will remove all suggested recipients since there are no recipients
+                return;
+            }
             const selectedPartnerIds = this.props.record.data.partner_ids.currentIds;
             const selectedPartners = await this.orm.searchRead(
                 "res.partner",
