@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from uuid import uuid4
+
 from odoo import api, fields, models
 from odoo.exceptions import UserError
 
@@ -87,3 +89,11 @@ Time type "%(name)s" of code "%(code)s", with no country assigned, already exist
                 name=duplicate.name,
                 code=duplicate.code,
             ))
+
+    def copy_data(self, default=None):
+        default = default or {}
+        data_list = super().copy_data(default)
+        for record, data in zip(self, data_list):
+            if 'code' not in default:
+                data['code'] = f"{record.code}_{uuid4().hex[:6]}"
+        return data_list
