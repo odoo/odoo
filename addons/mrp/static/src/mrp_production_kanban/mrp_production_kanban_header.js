@@ -9,7 +9,7 @@ export class MrpProductionKanbanHeader extends KanbanHeader {
     };
     get groupAggregate() {
         const value = this.props.group.list.records.reduce(
-            (sum, record) => sum + record.data.remaining_time,
+            (sum, record) => sum + Math.max(0, record.data.remaining_time),
             0
         );
         return { value, title: _t("Total Remaining Time")};
