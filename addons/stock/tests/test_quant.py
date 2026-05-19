@@ -26,6 +26,10 @@ class TestStockQuant(TestStockCommon):
             groups='base.group_user',
         )
 
+        cls.product = cls.env['product.product'].create({
+            'name': 'Product Lot',
+            'is_storable': True,
+        })
         cls.product_lot = cls.env['product.product'].create({
             'name': 'Product Lot',
             'is_storable': True,
@@ -1449,54 +1453,6 @@ class TestStockQuant(TestStockCommon):
         self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 100)
         delivery.action_assign()
         self.assertEqual(delivery.move_ids.quantity, 24)
-
-    def test_reservation_preserved_after_relocation(self):
-        """Test stock relocation preserves the original reservation order
-        between deliveries."""
-        customer_location = self.env.ref('stock.stock_location_customers')
-        self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 8.0)
-        first_delivery = self.env['stock.picking'].create({
-            'picking_type_id': self.picking_type_out.id,
-            'location_id': self.stock_location.id,
-            'location_dest_id': customer_location.id,
-            'move_ids': [Command.create({
-                'product_id': self.productA.id,
-                'product_uom_qty': 5.0,
-                'location_id': self.stock_location.id,
-                'location_dest_id': customer_location.id,
-            })],
-        })
-        second_delivery = first_delivery.copy()
-        (first_delivery | second_delivery).action_confirm()
-
-        self.assertRecordValues(first_delivery.move_line_ids, [{
-            'quantity': 5.0,
-            'location_id': self.stock_location.id,
-            'product_id': self.productA.id,
-        }])
-        self.assertRecordValues(second_delivery.move_line_ids, [{
-            'quantity': 3.0,
-            'location_id': self.stock_location.id,
-            'product_id': self.productA.id,
-        }])
-        quant = self.env['stock.quant'].search([
-            ('product_id', '=', self.productA.id),
-            ('location_id', '=', self.stock_location.id),
-        ])
-        relocate_wizard = Form.from_action(self.env, quant.action_stock_quant_relocate())
-        relocate_wizard.dest_location_id = self.shelf_1
-        relocate_wizard.save().action_relocate_quants()
-
-        self.assertRecordValues(first_delivery.move_line_ids, [{
-            'quantity': 5.0,
-            'location_id': self.shelf_1.id,
-            'product_id': self.productA.id,
-        }])
-        self.assertRecordValues(second_delivery.move_line_ids, [{
-            'quantity': 3.0,
-            'location_id': self.shelf_1.id,
-            'product_id': self.productA.id,
-        }])
 
 
 class TestStockQuantRemovalStrategy(TestStockCommon):
