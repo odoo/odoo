@@ -3149,11 +3149,11 @@ class AccountEdiUBL(models.AbstractModel):
                 if tax_data['tax'].price_include:
                     base_line['price_unit'] += tax_data['raw_tax_amount_currency']
 
-        # Remove lines having a zero amount.
+        # Remove lines having a zero amount except 100% discounts
         collected_values['base_lines'] = [
             base_line
             for base_line in collected_values['base_lines']
-            if not base_line['currency_id'].is_zero(base_line['tax_details']['total_included_currency'])
+            if (not base_line['currency_id'].is_zero(base_line['tax_details']['total_included_currency']) or base_line.get('discount'))
         ]
 
     def _import_ubl_invoice_write_collected_values(self, collected_values):
