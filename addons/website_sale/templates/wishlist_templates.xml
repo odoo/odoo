@@ -167,9 +167,19 @@
 
     <!-- Wishlist button -->
     <template id="website_sale.wishlist_button">
+        <t t-if="product_variant">
+            <!-- If the variant is known, check whether that specific variant is in wishlist -->
+            <t
+                t-if="products_in_wishlist is not None"
+                t-set="in_wish"
+                t-value="product_variant in products_in_wishlist"
+            />
+            <t t-else="" t-set="in_wish" t-value="product_variant._is_in_wishlist()"/>
+        </t>
+        <!-- If not, check whether any variant of its template is in wishlist -->
         <t
-            t-set="in_wish"
-            t-value="product_variant and product_variant._is_in_wishlist()"
+            t-else=""
+            t-set="in_wish" t-value="templates_in_wishlist and product in templates_in_wishlist"
         />
         <t t-set="btnTitle">Add to wishlist</t>
         <t t-set="btnTitleActive">Handle your wishlist from the menu icon.</t>
