@@ -25,6 +25,7 @@ class ResConfigSettings(models.TransientModel):
         check_company=True,
         related='company_id.company_expense_allowed_payment_method_line_ids',
         readonly=False,
+        domain="[('payment_type', '=', 'outbound'), ('journal_id.active', '=', True)]",
     )
 
     @api.model
