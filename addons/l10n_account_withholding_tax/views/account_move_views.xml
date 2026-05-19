@@ -9,12 +9,6 @@
             <xpath expr="//sheet" position="before">
                 <div class="d-flex alert alert-warning w-100 d-flex align-items-center gap-1" invisible="not l10n_withholding_applicable_section_names"  role="alert">
                         <span>It's advisable to deduct Withhold tax u/s <field name="l10n_withholding_applicable_section_names" class="oe_inline"/> on this transaction.</span>
-                        <button name="%(l10n_account_withholding_entry_form_action)d"
-                                type="action"
-                                string="Deduct Withhold Tax"
-                                invisible="withhold_only_on_payment or state != 'posted'"
-                                class="text-primary text-bg-secondary ms-auto d-flex align-items-center gap-1">
-                        </button>
                     </div>
             </xpath>
             <xpath expr="//div[@name='button_box']" position="inside">
@@ -44,7 +38,7 @@
                     class="oe_highlight col-2 ms-auto me-3" invisible="not amount_residual or withhold_only_on_payment or state != 'posted'"/>
             </xpath>
             <xpath expr="//notebook/page[@id='aml_tab']" position="after">
-                <page name="withholding_tab" string="Withhold Tax Lines" invisible="not l10n_withholding_line_ids">
+                <page name="withholding_tab" string="Withhold Tax Lines" invisible="not l10n_withholding_line_ids or move_type != 'entry'">
                     <field name="l10n_withholding_line_ids" nolabel="1" colspan="4">
                         <list editable="bottom" string="Withhold Tax Lines">
                             <field name="tax_ids" string="Tax" widget="many2many_tax_tags"/>

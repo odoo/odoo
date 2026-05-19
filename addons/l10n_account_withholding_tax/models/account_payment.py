@@ -180,12 +180,18 @@ class AccountPayment(models.Model):
             })
 
     def _synchronize_to_moves(self, changed_fields, skip_withholding_lines=False):
-        if self.move_id and not self.withholding_entry_id:
-            return super()._synchronize_to_moves(changed_fields, skip_withholding_lines=False)
-        super()._synchronize_to_moves(changed_fields, skip_withholding_lines=True)
-        for pay in self:
-            if pay.company_id.withhold_applicable_on != 'payment_bill':
-                continue
+        regular_sync_payments = self.filtered(
+            lambda p: p.company_id.withhold_applicable_on != 'payment_bill' or (p.move_id and not p.withholding_entry_id)
+        )
+        if regular_sync_payments:
+            super(AccountPayment, regular_sync_payments)._synchronize_to_moves(changed_fields, skip_withholding_lines=False)
+
+        payment_bill_sync_payments = self - regular_sync_payments
+        if not payment_bill_sync_payments:
+            return
+
+        super(AccountPayment, payment_bill_sync_payments)._synchronize_to_moves(changed_fields, skip_withholding_lines=True)
+        for pay in payment_bill_sync_payments:
 
             if not pay.withholding_entry_id or pay.withholding_entry_id.state == 'posted':
                 continue

@@ -205,3 +205,9 @@ class AccountMove(models.Model):
         if self.l10n_withholding_ref_move_id:
             reverse_moves.write({'l10n_withholding_ref_move_id': self.l10n_withholding_ref_move_id.id})
         return reverse_moves
+
+    def js_assign_outstanding_line(self, line_id):
+        super().js_assign_outstanding_line(line_id)
+        line = self.env['account.move.line'].browse(line_id)
+        if line.is_withhold_line:
+            self.l10n_withholding_move_ids += line.move_id

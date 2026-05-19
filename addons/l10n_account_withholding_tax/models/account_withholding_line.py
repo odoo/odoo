@@ -474,6 +474,12 @@ class AccountWithholdingLine(models.AbstractModel):
             'currency_id': self.source_currency_id.id,
         })
 
+    @api.onchange('tax_id')
+    def _onchange_tax_id(self):
+        for line in self:
+            line.source_tax_amount_currency = abs(line.source_base_amount_currency * line.tax_id.amount / 100)
+            line.source_tax_amount = abs(line.source_base_amount * line.tax_id.amount / 100)
+
     def _prepare_withholding_lines_commands(self, base_lines, company):
         """
         Calculate the withholding tax amounts by using the provided tax base lines, and then compare the resulting values
@@ -530,12 +536,12 @@ class AccountWithholdingLine(models.AbstractModel):
             tax = self.env['account.tax'].browse(grouping_key['tax_id'])
             base_amount = values['base_amount']
             base_amount_currency = values['base_amount_currency']
-            for base_line in new_base_lines:
-                for tax_data in base_line.get('tax_details', {}).get('taxes_data', []):
+            for base_line, taxes_data in values['base_line_x_taxes_data']:
+                for tax_data in taxes_data:
 
                     if tax_data['tax'].include_base_amount:
-                        base_amount += tax_data['tax_amount']  # or -= depending on sign
-                        base_amount_currency += tax_data['tax_amount_currency']  # or -= depending on sign
+                        base_amount += tax_data['tax_amount']
+                        base_amount_currency += tax_data['tax_amount_currency']
 
             values['base_amount'] = base_amount
             values['base_amount_currency'] = base_amount_currency
