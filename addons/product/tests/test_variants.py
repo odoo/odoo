@@ -306,6 +306,100 @@ class TestVariants(ProductVariantsCommon):
         variant.lst_price = 500
         self.assertEqual(variant._get_attributes_extra_price(), 480)
 
+    def test_manual_lst_price_preserved_on_single_value_attribute(self):
+        """Adding a single-value attribute to a template with existing variants
+        must not reset manually-set lst_price on those variants.
+        """
+        template = self.env['product.template'].create({
+            'name': 'Cable',
+            'list_price': 1.0,
+            'attribute_line_ids': [Command.create({
+                'attribute_id': self.size_attribute.id,
+                'value_ids': [Command.set([
+                    self.size_attribute_s.id,
+                    self.size_attribute_m.id,
+                    self.size_attribute_l.id,
+                ])],
+            })],
+        })
+        variants = template.product_variant_ids
+        self.assertEqual(len(variants), 3)
+        for variant, price in zip(variants, [10.0, 20.0, 30.0]):
+            variant.lst_price = price
+        variant_ids_before = set(variants.ids)
+        prices_before = {v.id: v.lst_price for v in variants}
+
+        brand_attribute = self.env['product.attribute'].create({
+            'name': 'Brand',
+            'value_ids': [Command.create({'name': 'Acme'})],
+        })
+        template.write({
+            'attribute_line_ids': [Command.create({
+                'attribute_id': brand_attribute.id,
+                'value_ids': [Command.set(brand_attribute.value_ids.ids)],
+            })],
+        })
+
+        variants_after = template.product_variant_ids
+        self.assertEqual(set(variants_after.ids), variant_ids_before)
+        self.assertDictEqual(
+            {v.id: v.lst_price for v in variants_after},
+            prices_before,
+        )
+
+    def test_lst_price_on_single_value_attribute_with_price_extra(self):
+        """When the added single-value attribute has a non-zero price_extra,
+        overridden variants must keep their override, while non-overridden
+        variants must pick up the new price_extra via the recompute.
+        """
+        # Template with two size variants. price_extra(M)=2.0 to distinguish
+        # overridden vs computed cases.
+        template = self.env['product.template'].create({
+            'name': 'Cable',
+            'list_price': 1.0,
+            'attribute_line_ids': [Command.create({
+                'attribute_id': self.size_attribute.id,
+                'value_ids': [Command.set([
+                    self.size_attribute_s.id,
+                    self.size_attribute_m.id,
+                ])],
+            })],
+        })
+        ptav_m = template.attribute_line_ids.product_template_value_ids.filtered(
+            lambda ptav: ptav.product_attribute_value_id == self.size_attribute_m,
+        )
+        ptav_m.price_extra = 2.0
+        variant_s = template.product_variant_ids.filtered(
+            lambda v: v.product_template_attribute_value_ids.product_attribute_value_id == self.size_attribute_s,
+        )
+        variant_m = template.product_variant_ids.filtered(
+            lambda v: v.product_template_attribute_value_ids.product_attribute_value_id == self.size_attribute_m,
+        )
+        # S gets a manual override; M is left at the computed value (1 + 2 = 3).
+        variant_s.lst_price = 100.0
+        self.assertEqual(variant_m.lst_price, 3.0)
+
+        # Add a single-value Brand attribute that itself carries a price_extra.
+        # `default_extra_price` propagates to the ptav at creation time, so the
+        # extra is set atomically with the line write — before _create_variant_ids
+        # runs and the snapshot is taken.
+        brand_attribute = self.env['product.attribute'].create({
+            'name': 'Brand',
+            'value_ids': [Command.create({'name': 'Acme', 'default_extra_price': 5.0})],
+        })
+        template.write({
+            'attribute_line_ids': [Command.create({
+                'attribute_id': brand_attribute.id,
+                'value_ids': [Command.set(brand_attribute.value_ids.ids)],
+            })],
+        })
+
+        # Override is preserved verbatim.
+        self.assertEqual(variant_s.lst_price, 100.0)
+        # Non-overridden variant correctly picks up the new ptav's price_extra:
+        # list_price (1) + size_M extra (2) + Brand extra (5) = 8.
+        self.assertEqual(variant_m.lst_price, 8.0)
+
     @mute_logger('odoo.models.unlink')
     def test_archive_variant(self):
         template = self.env['product.template'].create({
