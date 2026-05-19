@@ -1768,3 +1768,17 @@ test("toolbar should not be displayed when only invisible nodes are selected", a
     setContent(el, `<div><p>abc</p><h1 class="d-none">[I'm not displayed]</h1></div>`);
     await expectElementCount(".o-we-toolbar", 0);
 });
+
+test("formats should be enabled when inline code selected", async () => {
+    await setupEditor(`<div class="o-paragraph">[ab<code class="o_inline_code">code</code>]</div>`);
+    await expectElementCount(".o-we-toolbar", 1);
+    await click(`[name="bold"]`);
+    await waitFor(`[name="bold"].active`);
+
+    expect("strong").toHaveCount(1);
+
+    await click(`[name="bold"].active`);
+    await waitFor(`[name="bold"]:not(.active)`);
+
+    expect("strong").toHaveCount(0);
+});
