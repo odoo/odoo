@@ -396,7 +396,7 @@ class PosEdiXmlUBL21Jo(models.AbstractModel):
             'cbc:ChargeIndicator': {'_text': 'false'},
             'cbc:AllowanceChargeReason': {'_text': 'DISCOUNT'},
             'cbc:Amount': {
-                '_text': self.format_float(vals[f'discount_amount{currency_suffix}'], vals['currency_dp']),
+                '_text': self.format_float(abs(vals[f'discount_amount{currency_suffix}']), vals['currency_dp']),
                 'currencyID': vals['currency_name'],
             },
         }
