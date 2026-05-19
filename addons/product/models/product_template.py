@@ -187,7 +187,12 @@ class ProductTemplate(models.Model):
     show_qty_update_button = fields.Boolean(compute='_compute_show_qty_update_button')
 
     # related to display product product information if is_product_variant
-    barcode = fields.Char('Barcode', compute='_compute_barcode', inverse='_set_barcode', search='_search_barcode')
+    barcode = fields.Char(
+        string="Barcode",
+        compute="_compute_barcode",
+        inverse="_set_barcode",
+        store=True,
+    )
     default_code = fields.Char(
         'Internal Reference', compute='_compute_default_code',
         inverse='_set_default_code', store=True)
@@ -463,16 +468,13 @@ class ProductTemplate(models.Model):
 
     @api.depends('product_variant_ids.barcode')
     def _compute_barcode(self):
-        self._compute_template_field_from_variant_field('barcode')
-
-    def _search_barcode(self, operator, value):
-        subquery = self.with_context(active_test=False)._search([
-            ('product_variant_ids.barcode', operator, value),
-        ])
-        return [('id', 'in', subquery)]
-
+        for template in self:
+            if len(template.product_variant_ids) == 1:
+                template.barcode = template.product_variant_ids.barcode
     def _set_barcode(self):
-        self._set_product_variant_field('barcode')
+        for template in self:
+            if len(template.product_variant_ids) == 1:
+                template.product_variant_ids.barcode = template.barcode
 
     @api.depends('sale_ok')
     def _compute_show_sales_price_page(self):
@@ -566,10 +568,14 @@ class ProductTemplate(models.Model):
 
     @api.depends('product_variant_ids.default_code')
     def _compute_default_code(self):
-        self._compute_template_field_from_variant_field('default_code')
+        for template in self:
+            if len(template.product_variant_ids) == 1:
+                template.default_code = template.product_variant_ids.default_code
 
     def _set_default_code(self):
-        self._set_product_variant_field('default_code')
+        for template in self:
+            if len(template.product_variant_ids) == 1:
+                template.product_variant_ids.default_code = template.default_code
 
     @api.depends('type')
     def _compute_product_tooltip(self):

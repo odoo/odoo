@@ -11,7 +11,7 @@ from odoo.http import request
 from odoo.tools import float_round, is_html_empty, lazy
 from odoo.tools.sql import SQL, column_exists, create_column
 from odoo.tools.translate import adapt_translated_field_value, html_translate
-
+from werkzeug.urls import url_encode
 from odoo.addons.website.models import ir_http
 from odoo.addons.website.tools import text_from_html
 
@@ -1248,6 +1248,8 @@ class ProductTemplate(models.Model):
         search_fields = [
             "name",
             "default_code",
+            "barcode",
+            "product_variant_ids.barcode",
             "variants_default_code",
             "description_ecommerce",
             "attribute_line_ids.value_ids.name",
@@ -1295,8 +1297,15 @@ class ProductTemplate(models.Model):
             "sequence": 20,
         }
 
+    def _search_fetch(self, search_detail, search, offset, limit, order):
+        results, count = super()._search_fetch(search_detail, search, offset, limit, order)
+        return results.with_context(search_term=search), count
+
     def _search_render_results(self, fetch_fields, mapping, icon, limit):
         results_data = super()._search_render_results(fetch_fields, mapping, icon, limit)
+        search_term = self.env.context.get("search_term", "")
+        search_words = search_term.lower().split() if search_term else []
+
         for product, data in zip(self, results_data):
             combination_info = product._get_combination_info(only_template=True)
             values = product.mapped("attribute_line_ids.value_ids")
@@ -1306,6 +1315,40 @@ class ProductTemplate(models.Model):
             if price:
                 data["price"] = price
             data["image_url"] = "/web/image/product.template/%s/image_128" % data["id"]
+            attribute_value_ids = []
+            # redirect by matching attribute value name.
+            if search_words and values:
+                matched_values = values.filtered(
+                    lambda attribute_value: any(
+                        word in (attribute_value.name or "").lower()
+                        for word in search_words
+                    )
+                )
+                attribute_value_ids = matched_values.ids
+
+            # redirect by matching variant barcode.
+            if search_term:
+                matched_variant = product.product_variant_ids.filtered(
+                    lambda variant: variant.barcode == search_term
+                )[:1]
+
+                if matched_variant:
+                    attribute_value_ids = (
+                        matched_variant.product_template_attribute_value_ids
+                        .product_attribute_value_id
+                        .ids
+                    )
+
+            if attribute_value_ids:
+                data["website_url"] = "%s?%s" % (
+                    data["website_url"].split("?")[0],
+                    url_encode({
+                        "attribute_values": ",".join(
+                            str(value_id) for value_id in sorted(attribute_value_ids)
+                        )
+                    }),
+                )
+
         return results_data
 
     def _search_render_results_prices(self, mapping, combination_info):
