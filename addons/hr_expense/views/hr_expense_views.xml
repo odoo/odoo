@@ -141,6 +141,9 @@
                 <div class="alert alert-warning oe_edit_only" role="alert" name="warning_duplicate_receipt_expense" invisible="not same_receipt_expense_ids">
                     An <a type="object" name="action_show_same_receipt_expense_ids">expense</a> with the same receipt already exists.
                 </div>
+                <div class="alert alert-warning oe_edit_only" role="alert" name="warning_duplicate_expense" invisible="not duplicate_expense_ids">
+                    An <a type="object" name="action_show_duplicate_expense_ids">expense</a> with the same category, date, amount, and employee already exists.
+                </div>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
                         <button name="action_open_split_expense"
