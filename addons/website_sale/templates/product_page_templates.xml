@@ -762,7 +762,7 @@
             <a
                 t-foreach="visible_tags"
                 t-as="tag"
-                t-att-href="is_view_active('website_sale.filter_products_tags') and '/shop?tags=%s' % tag.id or None"
+                t-att-href="is_view_active('website_sale.filter_products_tags') and '/shop?tags=%s' % slug(tag) or None"
                 class="text-decoration-none d-inline-block"
             >
                 <span t-if="tag.image"

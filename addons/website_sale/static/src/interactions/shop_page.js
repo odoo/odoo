@@ -58,7 +58,7 @@ export class ShopPage extends Interaction {
         const attributeValueSlugs = Array.from(filters).filter(
             filter => filter.name === 'attribute_value' && filter.value
         ).map(filter => filter.value);
-        const tagIds = Array.from(filters).filter(
+        const tagSlugs = Array.from(filters).filter(
             filter => filter.name === 'tags' && filter.value
         ).map(filter => filter.value);
         const attributeValueParams = wSaleUtils.getAttributeValueParams(attributeValueSlugs);
@@ -68,8 +68,8 @@ export class ShopPage extends Interaction {
             ...Object.fromEntries(attributeValueParams),
         });
         // Aggregate all tags into a single `tags` search param, with duplicates removed.
-        if (tagIds.length) {
-            searchParams.set('tags', [...new Set(tagIds)].join(','));
+        if (tagSlugs.length) {
+            searchParams.set('tags', [...new Set(tagSlugs)].join(','));
         }
         redirect(`${url.pathname}?${searchParams.toString()}`);
     }
