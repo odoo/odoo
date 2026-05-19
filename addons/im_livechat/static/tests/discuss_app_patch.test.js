@@ -175,3 +175,30 @@ test("Conversation description works in livechat", async () => {
         "input.o-mail-DiscussContent-threadDescription:value(Yup, that customer again...)"
     );
 });
+
+test("reply to message composer should disappear when livechat conversation ends", async () => {
+    const pyEnv = await startServer();
+    const guestId = pyEnv["mail.guest"].create({ name: "Visitor" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: serverState.partnerId, livechat_member_type: "agent" }),
+            Command.create({ guest_id: guestId, livechat_member_type: "visitor" }),
+        ],
+        channel_type: "livechat",
+    });
+    pyEnv["mail.message"].create({
+        author_guest_id: guestId,
+        body: "Hello, I need help!",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    await start();
+    await openDiscuss(channelId);
+    await click(".o-mail-Message:has(:text('Hello, I need help!')) [title='Reply']");
+    await contains(".o-mail-Composer:has(:text('Replying to Visitor'))");
+    await withGuest(guestId, () =>
+        rpc("/im_livechat/visitor_leave_session", { channel_id: channelId })
+    );
+    await contains("span:text('This live chat conversation has ended.')");
+    await contains(".o-mail-Composer", { count: 0 });
+});

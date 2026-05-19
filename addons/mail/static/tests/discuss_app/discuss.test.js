@@ -2657,6 +2657,12 @@ test("Read-only channel member has bottom banner instead of composer", async () 
             Command.create({ partner_id: memberPartnerId, channel_role: "member" }),
         ],
     });
+    pyEnv["mail.message"].create({
+        author_id: serverState.partnerId,
+        body: "Welcome to the read-only channel!",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
 
     await start({
         authenticateAs: { login: "test_member", password: "test_member" },
@@ -2669,6 +2675,9 @@ test("Read-only channel member has bottom banner instead of composer", async () 
     await contains(".o-mail-DiscussContent-core span:text('This channel is read-only.')", {
         count: 0,
     });
+    // reply to message composer should disappear when channel becomes read-only again
+    await click(".o-mail-Message:has(:text('Welcome to the read-only channel!')) [title='Reply']");
+    await contains(".o-mail-Composer:has(:text('Replying to Mitchell Admin'))");
     pyEnv["discuss.channel"].write([channelId], { is_readonly: true });
     await contains(".o-mail-DiscussContent-core span:text('This channel is read-only.')");
     await contains(".o-mail-Composer", { count: 0 });
