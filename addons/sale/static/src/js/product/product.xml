@@ -50,8 +50,8 @@
                 >
                     <t t-call="sale.product_price" name="sale_product_configurator_price"/>
                 </div>
-                <t t-set="isComboProduct" t-value="isMainProduct &amp;&amp; this.props.selectedComboItems.length"/>
-                <t t-if="env.showQuantity &amp;&amp; !isComboProduct">
+                <t t-set="isComboProduct" t-value="!!this.props.selectedComboItems?.length"/>
+                <t t-if="env.showQuantity &amp;&amp; !(isMainProduct &amp;&amp; isComboProduct)">
                     <QuantityButtons
                         quantity="this.props.quantity"
                         setQuantity="quantity => this.env.setQuantity(this.props.product_tmpl_id, quantity)"
@@ -59,7 +59,7 @@
                     />
                 </t>
                 <span
-                    t-elif="env.showQuantity &amp;&amp; isComboProduct"
+                    t-elif="env.showQuantity &amp;&amp; isMainProduct &amp;&amp; isComboProduct"
                     t-out="this.props.quantity"
                     class="h5"
                 />

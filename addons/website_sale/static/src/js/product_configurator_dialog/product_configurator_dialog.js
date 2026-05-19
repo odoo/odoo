@@ -29,6 +29,7 @@ patch(ProductConfiguratorDialog.prototype, {
             this.createProductUrl = '/website_sale/product_configurator/create_product';
             this.updateCombinationUrl = '/website_sale/product_configurator/update_combination';
             this.getOptionalProductsUrl = '/website_sale/product_configurator/get_optional_products';
+            this.getComboDataUrl = '/website_sale/combo_configurator/get_data';
             this.title = _t("Configure");
         }
 
@@ -72,6 +73,14 @@ patch(ProductConfiguratorDialog.prototype, {
             return _t("Total: %s", this.getFormattedTotal());
         }
         return super.totalMessage(...arguments);
+    },
+
+    _getAdditionalDialogProps() {
+        const props = super._getAdditionalDialogProps();
+        if (this.props.isFrontend) {
+            props.isFrontend = this.props.isFrontend;
+        }
+        return props;
     },
 
 });
