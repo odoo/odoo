@@ -30,7 +30,7 @@ class HrOrgChartController(http.Controller):
             job_name=job.name or '',
             direct_sub_count=len(employee.child_ids - employee),
             indirect_sub_count=employee.child_all_count,
-            write_date=int(employee.write_date.timestamp()) * 1000,  # to have it in milliseconds for js
+            write_date=int(employee.write_date.timestamp() * 1000) if employee.write_date else 0,  # ms for js; 0 when missing
         )
 
     @http.route('/hr/get_redirect_model', type='jsonrpc', auth='user')
