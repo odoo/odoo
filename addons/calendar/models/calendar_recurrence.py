@@ -217,6 +217,11 @@ class RecurrenceRule(models.Model):
         for recurrence in self:
             if recurrence.rrule:
                 values = self._rrule_parse(recurrence.rrule, recurrence.dtstart)
+                until = values.get('until')
+                if until and until.tzinfo:
+                    # UNTIL=...Z is parsed as an aware UTC datetime; convert it to the
+                    # recurrence timezone so the stored date is the right local boundary day.
+                    values['until'] = until.astimezone(recurrence._get_timezone())
                 recurrence.with_context(dont_notify=True).write(values)
 
     def _reconcile_events(self, ranges):
