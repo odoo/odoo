@@ -89,6 +89,21 @@ class QueryURL:
 
 class Website(Home):
 
+    def _replace_configurator_preview_response_images(self, response, industry=False, theme_name=False):
+        if not response or not industry or not theme_name:
+            return response
+        if isinstance(response, str):
+            return request.env['website']._replace_configurator_preview_images(response, industry, theme_name)
+        if getattr(response, 'mimetype', None) != 'text/html':
+            return response
+        if hasattr(response, 'flatten'):
+            response.flatten()
+        body = response.get_data(as_text=True)
+        if not body:
+            return response
+        response.set_data(request.env['website']._replace_configurator_preview_images(body, industry, theme_name))
+        return response
+
     def sitemap_index(env, rule, qs):
         Website = env['website'].get_current_website()
         homepage_url = Website.homepage_url
@@ -404,6 +419,54 @@ class Website(Home):
         if step > 1:
             action_url += '&step=' + str(step)
         return request.redirect(action_url)
+
+    @http.route('/website/configurator/preview', type='http', auth="public", website=True, sitemap=False, multilang=False, readonly=True)
+    def website_configurator_preview(self, path=None, **kwargs):
+        preview_industry = kwargs.get('industry')
+        preview_theme_name = request.website.sudo().theme_id.name or 'theme_default'
+        preview_values = request.env['website']._get_configurator_preview_values({
+            **{
+                f'configurator_preview_color_{index}': kwargs.get(f'color{index}') or kwargs.get(f'color_{index}')
+                for index in range(1, 6)
+            },
+            'configurator_preview_font': kwargs.get('body_font') or kwargs.get('font'),
+            'configurator_preview_headings_font': kwargs.get('heading_font') or kwargs.get('headings_font'),
+        })
+        if not all(f'configurator_preview_color_{index}' in preview_values for index in range(1, 6)):
+            raise NotFound()
+
+        target_url = path or request.website.homepage_url or '/'
+        target_path, _, _, target_query, _ = urllib.parse.urlsplit(target_url)
+        target_query = target_query or None
+        if not target_path.startswith('/'):
+            target_path = f'/{target_path}'
+        if target_path.startswith('/website/configurator/preview'):
+            target_path = '/'
+            target_query = None
+
+        for key, value in preview_values.items():
+            setattr(request, key, value)
+        request.update_context(**preview_values)
+        request.reroute(target_path, target_query)
+
+        website_page = request.env['ir.http']._serve_page()
+        if website_page:
+            return self._replace_configurator_preview_response_images(
+                website_page,
+                industry=preview_industry,
+                theme_name=preview_theme_name,
+            )
+
+        try:
+            rule, args = request.env['ir.http']._match(target_path)
+            response = serve_ir_http(request, rule, args)
+            return self._replace_configurator_preview_response_images(
+                response,
+                industry=preview_industry,
+                theme_name=preview_theme_name,
+            )
+        except (AccessError, NotFound, SessionExpiredException):
+            raise request.not_found()
 
     @http.route('/website/get_suggested_links', type='jsonrpc', auth="user", website=True, readonly=True)
     def get_suggested_link(self, needle, limit=10):

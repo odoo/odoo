@@ -35,6 +35,68 @@ from odoo.tools.translate import _
 
 logger = logging.getLogger(__name__)
 
+CONFIGURATOR_PREVIEW_FONT_MAX_LENGTH = 200
+CONFIGURATOR_PREVIEW_COLOR_KEYS = tuple(
+    f'configurator_preview_color_{index}' for index in range(1, 6)
+)
+CONFIGURATOR_PREVIEW_KEYS = CONFIGURATOR_PREVIEW_COLOR_KEYS + (
+    'configurator_preview_font',
+    'configurator_preview_headings_font',
+)
+CONFIGURATOR_PREVIEW_COLOR_PATTERN = re.compile(r'^#?(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$')
+CONFIGURATOR_FALLBACK_IMAGE_NAMES = (
+    ('s_intro_pill_default_image', 'library_image_10'),
+    ('s_intro_pill_default_image_2', 'library_image_14'),
+    ('s_banner_default_image_2', 's_image_text_default_image'),
+    ('s_banner_default_image_3', 's_product_list_default_image_1'),
+    ('s_striped_top_default_image', 's_picture_default_image'),
+    ('s_text_cover_default_image', 's_cover_default_image'),
+    ('s_showcase_default_image', 's_image_text_default_image'),
+    ('s_image_hexagonal_default_image', 's_cover_default_image'),
+    ('s_image_hexagonal_default_image_1', 's_company_team_image_1'),
+    ('s_accordion_image_default_image', 's_image_text_default_image'),
+    ('s_pricelist_boxed_default_background', 's_product_catalog_default_image'),
+    ('s_image_title_default_image', 's_cover_default_image'),
+    ('s_key_images_default_image_1', 's_media_list_default_image_1'),
+    ('s_key_images_default_image_2', 's_image_text_default_image'),
+    ('s_key_images_default_image_3', 's_media_list_default_image_2'),
+    ('s_key_images_default_image_4', 's_text_image_default_image'),
+    ('s_kickoff_default_image', 's_cover_default_image'),
+    ('s_quadrant_default_image_1', 'library_image_03'),
+    ('s_quadrant_default_image_2', 'library_image_10'),
+    ('s_quadrant_default_image_3', 'library_image_13'),
+    ('s_quadrant_default_image_4', 'library_image_05'),
+    ('s_sidegrid_default_image_1', 'library_image_03'),
+    ('s_sidegrid_default_image_2', 'library_image_10'),
+    ('s_sidegrid_default_image_3', 'library_image_13'),
+    ('s_sidegrid_default_image_4', 'library_image_05'),
+    ('s_cta_box_default_image', 'library_image_02'),
+    ('s_image_punchy_default_image', 's_cover_default_image'),
+    ('s_image_frame_default_image', 's_carousel_default_image_2'),
+    ('s_carousel_intro_default_image_1', 's_cover_default_image'),
+    ('s_carousel_intro_default_image_2', 's_image_text_default_image'),
+    ('s_carousel_intro_default_image_3', 's_text_image_default_image'),
+    ('s_website_form_overlay_default_image', 's_cover_default_image'),
+    ('s_website_form_cover_default_image', 's_cover_default_image'),
+    ('s_split_intro_default_image', 's_cover_default_image'),
+    ('s_framed_intro_default_image', 's_cover_default_image'),
+    ('s_splash_intro_default_image', 's_cover_default_image'),
+    ('s_wavy_grid_default_image_1', 's_cover_default_image'),
+    ('s_wavy_grid_default_image_2', 's_image_text_default_image'),
+    ('s_wavy_grid_default_image_3', 's_text_image_default_image'),
+    ('s_wavy_grid_default_image_4', 's_carousel_default_image_1'),
+    ('s_timeline_images_default_image_1', 's_media_list_default_image_1'),
+    ('s_timeline_images_default_image_2', 's_media_list_default_image_2'),
+    ('s_carousel_cards_default_image_1', 's_carousel_default_image_1'),
+    ('s_carousel_cards_default_image_2', 's_carousel_default_image_2'),
+    ('s_carousel_cards_default_image_3', 's_carousel_default_image_3'),
+    ('s_banner_connected_default_image', 's_cover_default_image'),
+)
+
+
+def _escape_scss_string(value):
+    return value.replace('\\', '\\\\').replace("'", "\\'")
+
 
 DEFAULT_CDN_FILTERS = [
     "^/[^/]+/static/",
@@ -666,6 +728,173 @@ class Website(models.CachedModel):
         ]
 
     @api.model
+    def _sanitize_configurator_color(self, color_value):
+        if not isinstance(color_value, str):
+            return False
+        color_value = color_value.strip()
+        if not CONFIGURATOR_PREVIEW_COLOR_PATTERN.fullmatch(color_value):
+            return False
+        return color_value.lstrip('#').lower()
+
+    @api.model
+    def _sanitize_configurator_font_name(self, font_name):
+        if not isinstance(font_name, str):
+            return False
+        font_name = font_name.strip()
+        if not font_name or font_name.lower() == 'null':
+            return False
+        if len(font_name) > CONFIGURATOR_PREVIEW_FONT_MAX_LENGTH:
+            return False
+        if any(char in font_name for char in '\r\n\x00'):
+            return False
+        return font_name
+
+    @api.model
+    def _get_configurator_preview_values(self, values):
+        preview_values = {}
+        for key in CONFIGURATOR_PREVIEW_COLOR_KEYS:
+            if color_value := self._sanitize_configurator_color(values.get(key)):
+                preview_values[key] = color_value
+        for key in ('configurator_preview_font', 'configurator_preview_headings_font'):
+            if font_name := self._sanitize_configurator_font_name(values.get(key)):
+                preview_values[key] = font_name
+        return preview_values
+
+    @api.model
+    def _get_request_configurator_preview_values(self):
+        if not request:
+            return {}
+        values = {}
+        for key in CONFIGURATOR_PREVIEW_KEYS:
+            values[key] = (
+                self.env.context.get(key)
+                or getattr(request, key, None)
+                or request.httprequest.args.get(key)
+            )
+        return self._get_configurator_preview_values(values)
+
+    @api.model
+    def _get_configurator_preview_scss(self, values):
+        preview_values = self._get_configurator_preview_values(values)
+        preview_blocks = []
+        preview_color_lines = [
+            f"    'o-color-{index}': #{preview_values[f'configurator_preview_color_{index}']},"
+            for index in range(1, 6)
+            if f'configurator_preview_color_{index}' in preview_values
+        ]
+        if preview_color_lines:
+            preview_blocks.extend([
+                '$o-user-color-palette: o-map-omit((',
+                *preview_color_lines,
+                '));',
+            ])
+
+        preview_website_values = {}
+        if preview_color_lines:
+            preview_website_values.update({
+                'menu-gradient': 'null',
+                'menu-secondary-gradient': 'null',
+                'footer-gradient': 'null',
+                'copyright-gradient': 'null',
+                'breadcrumb-gradient': 'null',
+                'o-cc1-bg-gradient': 'null',
+                'o-cc2-bg-gradient': 'null',
+                'o-cc3-bg-gradient': 'null',
+                'o-cc4-bg-gradient': 'null',
+                'o-cc5-bg-gradient': 'null',
+            })
+        for key, website_key in (
+            ('configurator_preview_font', 'font'),
+            ('configurator_preview_headings_font', 'headings-font'),
+        ):
+            if font_name := preview_values.get(key):
+                preview_website_values[website_key] = f"'{_escape_scss_string(font_name)}'"
+        if preview_website_values:
+            preview_blocks.extend([
+                '$o-user-website-values: map-merge($o-user-website-values, (',
+                *[f"    '{key}': {value}," for key, value in preview_website_values.items()],
+                '));',
+            ])
+        if not preview_blocks:
+            return False
+        return '\n'.join(preview_blocks)
+
+    @api.model
+    def _get_configurator_industry_id(self, industry):
+        if isinstance(industry, int):
+            return industry if industry > 0 else False
+        if not isinstance(industry, str):
+            return False
+        industry = industry.strip()
+        if not industry or industry.lower() == 'null':
+            return False
+        try:
+            industry_id = int(industry)
+        except ValueError:
+            return False
+        return industry_id if industry_id > 0 else False
+
+    @api.model
+    def _get_configurator_industry_image_urls(self, industry, theme_name):
+        industry_id = self._get_configurator_industry_id(industry)
+        if not industry_id or not theme_name:
+            return {}
+        try:
+            custom_resources = self._website_api_rpc(
+                '/api/website/2/configurator/custom_resources/%s' % industry_id,
+                {'theme': theme_name},
+            )
+        except AccessError as e:
+            logger.warning(e.args[0])
+            return {}
+        images_map = dict(custom_resources.get('images', {}))
+        for image_name, fallback_image_name in CONFIGURATOR_FALLBACK_IMAGE_NAMES:
+            images_map.setdefault(
+                f'website.{image_name}',
+                images_map.get(f'website.{fallback_image_name}'),
+            )
+        images_map = {
+            image_name: image_url
+            for image_name, image_url in images_map.items()
+            if image_url
+        }
+        return images_map
+
+    @api.model
+    def _replace_configurator_preview_images(self, html_value, industry, theme_name):
+        if not html_value:
+            return html_value
+        images_map = self._get_configurator_industry_image_urls(industry, theme_name)
+        if not images_map:
+            return html_value
+        try:
+            html_value = html.tostring(html.fromstring(html_value), encoding='unicode')
+        except (etree.ParserError, ValueError):
+            pass
+        image_urls = set(re.findall(r'(?<=["\'])\/web\/image\/[^"\']+(?=["\'])', html_value))
+        shape_urls = set(re.findall(r'(?<=["\'])/(html_editor|web_editor)/image_shape/([^/"\']+)/([^"\']+)(?=["\'])', html_value))
+        for image_url in image_urls:
+            mapped_image_url = images_map.get(urlsplit(image_url).path.replace('/web/image/', '', 1))
+            if mapped_image_url:
+                html_value = html_value.replace(image_url, mapped_image_url)
+
+        for editor, image_name, shape_path in shape_urls:
+            mapped_image_url = images_map.get(image_name)
+            if not mapped_image_url:
+                continue
+            shape_src = f'/{editor}/image_shape/{image_name}/{shape_path}'
+            shape_file_path, _, shape_query = shape_path.partition('?')
+            module, _, shape_filename = shape_file_path.partition('/')
+            if not shape_filename:
+                continue
+            shaped_url = f'/{editor}/image_shape_url/{module}/{shape_filename}'
+            image_query = urls.url_encode({'image_url': mapped_image_url})
+            shaped_url = f'{shaped_url}?{shape_query}&{image_query}' if shape_query else f'{shaped_url}?{image_query}'
+            html_value = html_value.replace(shape_src, shaped_url)
+
+        return html_value
+
+    @api.model
     def configurator_init(self):
         r = dict()
         current_website = self.get_current_website()
@@ -1084,52 +1313,8 @@ class Website(models.CachedModel):
         try:
             # TODO: Remove this try/except, safety net because it was merged
             #       to close to OXP.
-            fallback_create_missing_industry_image('s_intro_pill_default_image', 'library_image_10')
-            fallback_create_missing_industry_image('s_intro_pill_default_image_2', 'library_image_14')
-            fallback_create_missing_industry_image('s_banner_default_image_2', 's_image_text_default_image')
-            fallback_create_missing_industry_image('s_banner_default_image_3', 's_product_list_default_image_1')
-            fallback_create_missing_industry_image('s_striped_top_default_image', 's_picture_default_image')
-            fallback_create_missing_industry_image('s_text_cover_default_image', 's_cover_default_image')
-            fallback_create_missing_industry_image('s_showcase_default_image', 's_image_text_default_image')
-            fallback_create_missing_industry_image('s_image_hexagonal_default_image', 's_cover_default_image')
-            fallback_create_missing_industry_image('s_image_hexagonal_default_image_1', 's_company_team_image_1')
-            fallback_create_missing_industry_image('s_accordion_image_default_image', 's_image_text_default_image')
-            fallback_create_missing_industry_image('s_pricelist_boxed_default_background', 's_product_catalog_default_image')
-            fallback_create_missing_industry_image('s_image_title_default_image', 's_cover_default_image')
-            fallback_create_missing_industry_image('s_key_images_default_image_1', 's_media_list_default_image_1')
-            fallback_create_missing_industry_image('s_key_images_default_image_2', 's_image_text_default_image')
-            fallback_create_missing_industry_image('s_key_images_default_image_3', 's_media_list_default_image_2')
-            fallback_create_missing_industry_image('s_key_images_default_image_4', 's_text_image_default_image')
-            fallback_create_missing_industry_image('s_kickoff_default_image', 's_cover_default_image')
-            fallback_create_missing_industry_image('s_quadrant_default_image_1', 'library_image_03')
-            fallback_create_missing_industry_image('s_quadrant_default_image_2', 'library_image_10')
-            fallback_create_missing_industry_image('s_quadrant_default_image_3', 'library_image_13')
-            fallback_create_missing_industry_image('s_quadrant_default_image_4', 'library_image_05')
-            fallback_create_missing_industry_image('s_sidegrid_default_image_1', 'library_image_03')
-            fallback_create_missing_industry_image('s_sidegrid_default_image_2', 'library_image_10')
-            fallback_create_missing_industry_image('s_sidegrid_default_image_3', 'library_image_13')
-            fallback_create_missing_industry_image('s_sidegrid_default_image_4', 'library_image_05')
-            fallback_create_missing_industry_image('s_cta_box_default_image', 'library_image_02')
-            fallback_create_missing_industry_image('s_image_punchy_default_image', 's_cover_default_image')
-            fallback_create_missing_industry_image('s_image_frame_default_image', 's_carousel_default_image_2')
-            fallback_create_missing_industry_image('s_carousel_intro_default_image_1', 's_cover_default_image')
-            fallback_create_missing_industry_image('s_carousel_intro_default_image_2', 's_image_text_default_image')
-            fallback_create_missing_industry_image('s_carousel_intro_default_image_3', 's_text_image_default_image')
-            fallback_create_missing_industry_image('s_website_form_overlay_default_image', 's_cover_default_image')
-            fallback_create_missing_industry_image('s_website_form_cover_default_image', 's_cover_default_image')
-            fallback_create_missing_industry_image('s_split_intro_default_image', 's_cover_default_image')
-            fallback_create_missing_industry_image('s_framed_intro_default_image', 's_cover_default_image')
-            fallback_create_missing_industry_image('s_splash_intro_default_image', 's_cover_default_image')
-            fallback_create_missing_industry_image('s_wavy_grid_default_image_1', 's_cover_default_image')
-            fallback_create_missing_industry_image('s_wavy_grid_default_image_2', 's_image_text_default_image')
-            fallback_create_missing_industry_image('s_wavy_grid_default_image_3', 's_text_image_default_image')
-            fallback_create_missing_industry_image('s_wavy_grid_default_image_4', 's_carousel_default_image_1')
-            fallback_create_missing_industry_image('s_timeline_images_default_image_1', 's_media_list_default_image_1')
-            fallback_create_missing_industry_image('s_timeline_images_default_image_2', 's_media_list_default_image_2')
-            fallback_create_missing_industry_image('s_carousel_cards_default_image_1', 's_carousel_default_image_1')
-            fallback_create_missing_industry_image('s_carousel_cards_default_image_2', 's_carousel_default_image_2')
-            fallback_create_missing_industry_image('s_carousel_cards_default_image_3', 's_carousel_default_image_3')
-            fallback_create_missing_industry_image('s_banner_connected_default_image', 's_cover_default_image')
+            for image_name, fallback_img_name in CONFIGURATOR_FALLBACK_IMAGE_NAMES:
+                fallback_create_missing_industry_image(image_name, fallback_img_name)
 
         except Exception:
             pass

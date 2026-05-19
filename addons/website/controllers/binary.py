@@ -9,4 +9,6 @@ class WebsiteBinary(Binary):
     def content_assets_website(self, website_id=None, **kwargs):
         if not request.env['website'].browse(website_id).exists():
             raise request.not_found()
-        return super().content_assets(**kwargs, assets_params={'website_id': website_id})
+        assets_params = {'website_id': website_id}
+        assets_params.update(request.env['website']._get_request_configurator_preview_values())
+        return super().content_assets(**kwargs, assets_params=assets_params)
