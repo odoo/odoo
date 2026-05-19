@@ -7,6 +7,7 @@ from odoo.tests import Form
 from odoo.tests.common import tagged, TransactionCase
 from odoo import fields
 from datetime import timedelta
+from odoo.exceptions import ValidationError
 
 
 class TestEquipmentCommon(TransactionCase):
@@ -190,3 +191,33 @@ class TestEquipmentPostInstall(TestEquipmentCommon):
         self.assertGreaterEqual(maintenance.schedule_date, before)
         self.assertLessEqual(maintenance.schedule_date, after)
         self.assertEqual(maintenance.schedule_end, maintenance.schedule_date + timedelta(hours=1))
+
+    def test_schedule_date_and_end_must_be_set_together(self):
+        request = self.maintenance_request.create({
+            'name': 'Valid maintenance request',
+            'user_ids': [self.user.id],
+            'owner_user_id': self.user.id,
+            'maintenance_team_id': self.ref('maintenance.equipment_team_maintenance'),
+            'equipment_id': self.env['maintenance.equipment'].create({
+                'name': 'Samsung Monitor "17',
+                'category_id': self.equipment_monitor.id,
+            }).id,
+            'schedule_date': fields.Datetime.now(),
+        })
+
+        with self.assertRaises(ValidationError):
+            self.maintenance_request.create({
+                'name': 'Invalid maintenance request',
+                'user_ids': [self.user.id],
+                'owner_user_id': self.user.id,
+                'maintenance_team_id': self.ref('maintenance.equipment_team_maintenance'),
+                'equipment_id': request.equipment_id.id,
+                'schedule_date': False,
+                'schedule_end': fields.Datetime.now(),
+            })
+
+        with self.assertRaises(ValidationError):
+            request.write({
+                'schedule_date': False,
+                'schedule_end': fields.Datetime.now(),
+            })
