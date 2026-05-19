@@ -23,7 +23,8 @@ class TestFuzzy(ProductVariantsCommon):
         website = self.env.ref("base.default_website")
         product_tmpl = self.env['product.template']
         expected_fields = [
-            'name', 'variants_default_code',
+            'name', 'variants_default_code', 'barcode',
+            'product_variant_ids.barcode',
             'description_ecommerce', 'attribute_line_ids.value_ids.name',
             'product_tag_ids.name', 'public_categ_ids.name', 'description_sale',
         ]
@@ -174,7 +175,7 @@ class TestFuzzy(ProductVariantsCommon):
                 'name': 'Some fiscal postion'
             })
             results = website._search_render_results(results, 5)
-            badges = results[0]['results_data'][0]['badges']
+            badges = results[0]['results_data'][0]['product_tag_ids']
             badge_names = [badge['name'] for badge in badges]
             self.assertIn('Some tag1', badge_names)
             self.assertNotIn('Some tag2', badge_names)

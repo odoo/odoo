@@ -75,9 +75,9 @@ class TestProductBarcode(TransactionCase):
         try:
             self.env['product.product'].create(batch)
         except ValidationError as exc:
-            assert 'Barcode "3" already assigned to product(s): BC3 and BC4' in exc.args[0]
-            assert 'Barcode "4" already assigned to product(s): BC5 and BC6' in exc.args[0]
-            assert 'Barcode "1" already assigned to product(s): BC1' in exc.args[0]
+            assert 'Barcode "3" already assigned to product: BC3 and product: BC4' in exc.args[0]
+            assert 'Barcode "4" already assigned to product: BC5 and product: BC6' in exc.args[0]
+            assert 'Barcode "1" already assigned to product: BC1' in exc.args[0]
 
     def test_delete_packaging_and_use_its_barcode_in_product(self):
         """ Test that the barcode of the packaging can be used when the packaging is removed from the product."""
