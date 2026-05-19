@@ -89,6 +89,10 @@ class PaymentProvider(models.Model):
         """
         return ["wire_transfer"]
 
+    def _get_custom_qr_bank_account(self):
+        """Return the bank account used to generate QR codes for custom providers."""
+        return self._get_custom_bank_account() or self.company_id.partner_id.bank_ids[:1]
+
     # === SETUP METHODS === #
 
     @api.model

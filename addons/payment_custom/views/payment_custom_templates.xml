@@ -16,8 +16,13 @@
     <template id="custom_state_header" inherit_id="payment.state_header">
 
         <xpath expr="//div[@name='o_payment_status_alert']" position="inside">
-            <t t-set="qr_code"
-               t-value="tx.provider_id.sudo().qr_code and tx.company_id.sudo().partner_id.bank_ids[:1].build_qr_code_base64(tx.amount, tx._get_communication(), None, tx.currency_id, tx.partner_id)"
+            <t
+                t-set="qr_bank_account"
+                t-value="tx.provider_id.sudo().qr_code and tx.provider_id.sudo()._get_custom_qr_bank_account()"
+            />
+            <t
+                t-set="qr_code"
+                t-value="qr_bank_account and qr_bank_account.build_qr_code_base64(tx.amount, tx._get_communication(), None, tx.currency_id, tx.partner_id)"
             />
             <t t-if="tx.provider_id.sudo().code == 'custom' and qr_code">
                 <div class="position-relative order-2 d-flex flex-md-column justify-content-center align-items-center align-items-md-stretch w-100 w-md-auto">

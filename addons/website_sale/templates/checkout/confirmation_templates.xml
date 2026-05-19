@@ -132,10 +132,13 @@
                     <div id="o_custom_payment_details" class="mt-2 mb-3">
                         <t t-call="payment_custom.custom_payment_transfer_details" tx="tx_sudo"/>
                     </div>
-                    <div t-if="tx_sudo.provider_id.sudo().qr_code">
-                        <t t-set="qr_code" t-value="tx_sudo.company_id.partner_id.bank_ids[:1].build_qr_code_base64(order.amount_total,tx_sudo.reference, None, tx_sudo.currency_id, tx_sudo.partner_id)"/>
-                    <div t-if="tx_sudo.provider_id.sudo().qr_code">
-                        <t t-set="qr_code" t-value="tx_sudo.company_id.partner_id.bank_ids[:1].build_qr_code_base64(order.amount_total,tx_sudo.reference, None, tx_sudo.currency_id, tx_sudo.partner_id)"/>
+                    <t t-set="provider_sudo" t-value="tx_sudo.provider_id.sudo()"/>
+                    <div t-if="provider_sudo.qr_code">
+                        <t t-set="qr_bank_account" t-value="provider_sudo._get_custom_qr_bank_account()"/>
+                        <t
+                            t-set="qr_code"
+                            t-value="qr_bank_account and qr_bank_account.build_qr_code_base64(order.amount_total, tx_sudo.reference, None, tx_sudo.currency_id, tx_sudo.partner_id)"
+                        />
                         <div class="mt-2" t-if="qr_code">
                             <h3>Or scan me with your banking app.</h3>
                             <img class="border border-dark rounded" t-att-src="qr_code"/>
