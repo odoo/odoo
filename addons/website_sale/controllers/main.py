@@ -355,11 +355,8 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if filter_by_tags_enabled:
             if tags:
                 post["tags"] = tags
-                tags = {
-                    tag_id
-                    for tag in tags.split(",")
-                    if (tag_id := self.env["ir.http"]._unslug(tag)[1])
-                }
+                unslug = self.env["ir.http"]._unslug
+                tags = {tag_id for tag in tags.split(",") if (tag_id := unslug(tag)[1])}
             else:
                 post["tags"] = None
                 tags = {}

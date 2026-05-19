@@ -1532,7 +1532,7 @@
                        name="tags"
                        class="form-check-input"
                        t-attf-id="tag_#{tag.id}"
-                       t-att-value="tag.id"
+                       t-att-value="slug(tag)"
                        t-att-checked="'checked' if tag.id in tags else None"
                 />
                 <label class="form-check-label fw-normal" t-attf-for="tag_#{tag.id}" t-field="tag.name"/>
