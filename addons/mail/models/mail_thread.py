@@ -514,15 +514,20 @@ class MailThread(models.AbstractModel):
 
     def _check_can_update_message_content(self, messages):
         """" Checks that the current user can update the content of the message.
-        Current heuristic is
-
-          * if no tracking;
-          * only for user generated content;
-        """
-        if any(message.message_type == 'tracking' for message in messages):
-            raise exceptions.UserError(_("Messages with tracking values cannot be modified"))
-        if any(message.message_type != 'comment' for message in messages):
-            raise exceptions.UserError(_("Only messages type comment can have their content updated"))
+        Current heuristic is: limited to comments of current user, if no
+        notification was send. """
+        messages_su = messages.sudo()
+        # own messages only
+        if any(not message_su.is_current_user_or_guest_author for message_su in messages_su):
+            raise exceptions.AccessError(_("You cannot modify messages beloging to other people."))
+        # do not modify messages sent by email/sms/whatsapp, as otherwise displayed
+        # content would not match sent content
+        if messages_su.notification_ids.filtered(lambda n: n.notification_type != 'inbox'):
+            raise exceptions.AccessError(_("You cannot modify messages already sent to external people."))
+        # message_type: 'comment' (user input) and 'notification' (generated messages
+        # from current author like rating messages, ...)
+        if any(message_su.message_type not in ('comment', 'notification') for message_su in messages_su):
+            raise exceptions.AccessError(_("Only 'comment' or 'notification' messagess can be updated."))
 
     # ------------------------------------------------------
     # TRACKING / LOG
@@ -3204,6 +3209,17 @@ class MailThread(models.AbstractModel):
             'subtype_id',
         }
 
+    def _get_message_update_valid_field_names(self):
+        """ Subset of valid message fields (or quasi-fields) that users are
+        allowed to update. Access to message is granted via '_check_can_update_message_content'
+        . """
+        return {
+            'attachment_ids',
+            'body',
+            'partner_ids',
+            'scheduled_date',  # not a field, but used for mail.message.schedule
+        }
+
     def _get_message_create_ignore_field_names(self):
         """Some fields should be silently ignored when creating a mail.message,
         without raising an exception. Those fields are generally handled in
@@ -5021,8 +5037,8 @@ class MailThread(models.AbstractModel):
         (non_generic_messages - messages_with_description).sudo().write(msg_vals)
         return True
 
-    def _message_update_content(self, message, /, *, body, attachment_ids=None, partner_ids=None,
-                                strict=True, **kwargs):
+    def _message_update_content(self, message, *, body=None, attachment_ids=None, partner_ids=None,
+                                **kwargs):
         """ Update message content. Currently does not support attachments
         specific code (see ``_process_attachments_for_post``), to be added
         when necessary.
@@ -5036,7 +5052,7 @@ class MailThread(models.AbstractModel):
         :param str body: new body (None to skip its update);
         :param list attachment_ids: list of new attachments IDs, replacing old one (None
           to skip its update);
-        :param list attachment_ids: list of new partner IDs that are mentioned;
+        :param list partner_ids: list of new partner IDs that are mentioned;
         :param bool strict: whether to check for allowance before updating
           content. This should be skipped only when really necessary as it
           creates issues with already-sent notifications, lack of content
@@ -5046,8 +5062,22 @@ class MailThread(models.AbstractModel):
         See content of this method for more details about supported keys.
         """
         self.ensure_one()
-        if strict:
-            self._check_can_update_message_content(message.sudo())
+        try:
+            self._check_can_update_message_content(message)
+        except exceptions.AccessError as e:
+            if not self.env.su:
+                raise exceptions.UserError(str(e)) from e
+            else:
+                _logger.warning(
+                    'Bypassed security on thread (%s-%s) for message (ID %s) update content (user %s-%s): \n%s',
+                    self._name, self.id, message.id, self.env.user.name, self.env.uid, e,
+                )
+
+        # preliminary value safety check
+        self._raise_for_invalid_parameters(
+            {'attachment_ids', 'body', 'partner_ids'} | set(kwargs.keys()),
+            restricting_names=self._get_message_update_valid_field_names(),
+        )
 
         msg_values = {}
         if body is not None:
@@ -5085,8 +5115,11 @@ class MailThread(models.AbstractModel):
             msg_values.update({"partner_ids": [int(pid) for pid in partner_ids] or False})
         if "subject" in kwargs:
             msg_values["subject"] = kwargs["subject"]
+
         if msg_values:
-            message.write(msg_values)
+            # sudo: access check done above
+            message.sudo().write(msg_values)
+
         if message._filter_empty():
             self._clean_empty_message(message)
 
@@ -5266,11 +5299,11 @@ class MailThread(models.AbstractModel):
     # CONTROLLERS SECURITY HELPERS
     # ------------------------------------------------------
 
-    def _get_allowed_message_params(self):
-        """Set of parameters that are forwarded without control to sudo().message_post() and
-        sudo()._message_update_content(), which means these parameters should be either inoffensive
-        or safely handled by these methods. Parameters requiring special processing need to be
-        manually handled in _prepare_message_data."""
+    def _get_allowed_message_post_params(self):
+        """Set of parameters that are forwarded without control to sudo().message_post()
+        which means these parameters should be either inoffensive or safely handled by
+        these methods. Parameters requiring special processing need to be manually
+        handled in '_prepare_message_data'."""
         return {"email_add_signature", "message_type", "subject", "subtype_xmlid"}
 
     @api.model
@@ -5284,12 +5317,10 @@ class MailThread(models.AbstractModel):
         if invalid := (set((kwargs or {}).keys()) - allowed_params):
             _logger.warning("Invalid access parameters to _get_thread_with_access: %s", invalid)
 
-        thread = self.browse(thread_id)
-        if thread.exists() and thread.sudo(False).with_context(
-            allowed_company_ids=[]
-        ).has_access(mode):
+        thread = self.browse(thread_id).exists()
+        if thread and thread.sudo(False).with_context(allowed_company_ids=[]).has_access(mode):
             return thread
-        return self.browse()
+        return self.browse().sudo(False)
 
     def _get_customer_portal_message_types(self):
         """Return a list of message types visible in a shared context.

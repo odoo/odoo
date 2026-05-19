@@ -2,6 +2,7 @@
 
 from odoo import Command
 from odoo.addons.crm_livechat.tests import chatbot_common
+from odoo.tools import mute_logger
 
 
 class CrmChatbotCase(chatbot_common.CrmChatbotCase):
@@ -93,6 +94,7 @@ class CrmChatbotCase(chatbot_common.CrmChatbotCase):
         self.assertEqual(discuss_channel.chatbot_current_step_id, self.step_create_lead)
         return discuss_channel
 
+    @mute_logger('odoo.http')
     def test_create_lead_from_chatbot(self):
         chatbot_script = self.env["chatbot.script"].create({"title": "Create lead bot"})
         self.env["chatbot.script.step"].create(

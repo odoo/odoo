@@ -20,6 +20,7 @@ class MailMessage(models.Model):
 
     def _get_with_access(self, mode="read", **kwargs):
         """Override to allow users/guests to edit their own messages in channels."""
+        # TDE: to move directly in base _update_content check
         res = super()._get_with_access(mode=mode, **kwargs)
         if not res and mode == "write" and self.channel_id and self.is_current_user_or_guest_author:
             return self

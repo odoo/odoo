@@ -2,13 +2,9 @@ id,name,model_id,group_id/id,operation,domain
 access_fetchmail_server,fetchmail.server,fetchmail.server,base.group_system,crud,
 mail_message_rule_access_read,read res_model,mail.message,base.group_public,r,"[('res_access_read', '=', True)]"
 mail_message_rule_access_read_1,read res_model,mail.message,base.group_portal,r,"[('res_access_read', '=', True)]"
-mail_message_rule_access_write,write res_model,mail.message,base.group_portal,u,"[('res_access_write', '=', True)]"
 mail_message_rule_access_create,create res_model,mail.message,base.group_portal,c,"[('res_access_create', '=', True)]"
-mail_message_rule_access_unlink,unlink res_model,mail.message,base.group_portal,d,"[('res_access_unlink', '=', True)]"
 mail_message_rule_access_read_2,read res_model,mail.message,base.group_user,r,"[('res_access_read', '=', True)]"
-mail_message_rule_access_write_1,write res_model,mail.message,base.group_user,u,"[('res_access_write', '=', True)]"
 mail_message_rule_access_create_1,create res_model,mail.message,base.group_user,c,"[('res_access_create', '=', True)]"
-mail_message_rule_access_unlink_1,unlink res_model,mail.message,base.group_user,d,"[('res_access_unlink', '=', True)]"
 access_mail_message_scheduled_system,mail.message.scheduled.system,mail.message.schedule,base.group_system,crud,
 access_mail_mail_system,mail.mail.system,mail.mail,base.group_system,crud,
 access_mail_followers_user,mail.followers.user,mail.followers,base.group_user,r,

@@ -90,7 +90,7 @@ class MailThread(models.AbstractModel):
     def _get_thread_with_access(self, thread_id, *, hash=None, pid=None, token=None, **kwargs):
         if thread := super()._get_thread_with_access(thread_id, hash=hash, pid=pid, token=token, **kwargs):
             return thread
-        thread = self.browse(thread_id).sudo()
-        if validate_thread_with_hash_pid(thread, hash, pid) or validate_thread_with_token(thread, token):
-            return thread
+        thread_su = self.browse(thread_id).sudo()
+        if validate_thread_with_hash_pid(thread_su, hash, pid) or validate_thread_with_token(thread_su, token):
+            return thread_su
         return self.browse()
