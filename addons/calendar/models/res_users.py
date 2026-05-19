@@ -195,6 +195,15 @@ class ResUsers(models.Model):
         """Meant to be overridden by a specific calendar provider"""
         return False
 
+    @api.model
+    def get_calendar_model_data(self):
+        return {
+            'credential_status': self.env.user.check_calendar_credentials(),
+            'sync_status': self.env.user.check_synchronization_status(),
+            'sync_email': self.env.user.get_calendar_sync_email(),
+            'default_duration': self.env['calendar.event'].get_default_duration(),
+        }
+
     def _has_any_active_synchronization(self):
         """
         Overridable method for checking if user has any synchronization active in inherited modules.
