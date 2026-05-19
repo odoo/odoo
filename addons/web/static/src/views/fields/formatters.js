@@ -425,9 +425,10 @@ export function formatPercentage(value, options = {}) {
     const formatted = formatFloatNumber(value * 100, options);
     return `${formatted}${options.noSymbol ? "" : "%"}`;
 }
-formatPercentage.extractOptions = ({ attrs, options }) => ({
+formatPercentage.extractOptions = ({attrs, options}) => ({
     ...formatFloat.extractOptions({ attrs, options }),
     noSymbol: options.no_symbol,
+    trailingZeros: !(options.hide_trailing_zeros ?? true),
 });
 
 /**
