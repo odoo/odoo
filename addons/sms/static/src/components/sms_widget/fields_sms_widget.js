@@ -5,7 +5,43 @@ import {
 } from "@mail/views/web/fields/emojis_text_field/emojis_text_field";
 import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
-import { useEffect } from "@odoo/owl";
+import { Component, useState } from "@odoo/owl";
+import { useRecordObserver } from "@web/model/relational_model/utils";
+import { debounce } from "@web/core/utils/timing";
+import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
+
+/**
+ * Count the number of SMS of the content
+ * @returns {integer} Number of SMS
+ */
+function countSMS(nbrChar, encoding) {
+    if (nbrChar === 0) {
+        return 0;
+    }
+    if (encoding === 'UNICODE') {
+        if (nbrChar <= 70) {
+            return 1;
+        }
+        return Math.ceil(nbrChar / 67);
+    }
+    if (nbrChar <= 160) {
+        return 1;
+    }
+    return Math.ceil(nbrChar / 153);
+}
+
+/**
+ * Extract the encoding depending on the characters in the content
+ * @param {String} content Content of the SMS
+ * @returns {String} Encoding of the content (GSM7 or UNICODE)
+ */
+function extractEncoding(content) {
+    if (String(content).match(RegExp("^[@£$¥èéùìòÇ\\nØø\\rÅåΔ_ΦΓΛΩΠΨΣΘΞÆæßÉ !\\\"#¤%&'()*+,-./0123456789:;<=>?¡ABCDEFGHIJKLMNOPQRSTUVWXYZÄÖÑÜ§¿abcdefghijklmnopqrstuvwxyzäöñüà]*$"))) {
+        return 'GSM7';
+    }
+    return 'UNICODE';
+}
+
 
 /**
  * SmsWidget is a widget to display a textarea (the body) and a text representing
@@ -18,17 +54,10 @@ export class SmsWidget extends EmojisTextField {
         super.setup();
         this._emojiAdded = () => this.props.record.update({ [this.props.name]: this.targetEditElement.el.value });
         this.notification = useService('notification');
-
-        useEffect(
-            (val) => {
-                this._updateFooter(val);
-            },
-            () => [this.props.record.data[this.props.name]]
-        );
     }
 
     get encoding() {
-        return this._extractEncoding(this.props.record.data[this.props.name] || '');
+        return extractEncoding(this.props.record.data[this.props.name] || '');
     }
     get nbrChar() {
         const content = this._getValueForSmsCounts(this.props.record.data[this.props.name] || "");
@@ -38,71 +67,12 @@ export class SmsWidget extends EmojisTextField {
         return "";
     }
     get nbrSMS() {
-        return this._countSMS(this.nbrChar, this.encoding);
-    }
-
-    _updateFooter(currentValue = null) {
-        const footer = document.querySelector('.o_sms_footer_stats');
-        if (!footer) return;
-
-        const content = currentValue || "";
-        const charCount = content.length + (content.match(/\n/g) || []).length;
-        const encoding = this._extractEncoding(content);
-        const nbrSMS = this._countSMS(charCount, encoding);
-
-        if (charCount > 0) {
-            footer.classList.remove('d-none');
-            
-            let maxChar = (encoding === 'UNICODE') 
-                ? (charCount <= 70 ? 70 : 67 * nbrSMS)
-                : (charCount <= 160 ? 160 : 153 * nbrSMS);
-
-            footer.querySelector('.o_sms_char_count').textContent = charCount;
-            footer.querySelector('.o_sms_max_char').textContent = maxChar;
-            footer.querySelector('.o_sms_count').textContent = nbrSMS;
-            footer.querySelector('.o_sms_encoding').textContent = encoding;
-        } else {
-            footer.classList.add('d-none');
-        }
+        return countSMS(this.nbrChar, this.encoding);
     }
 
     //--------------------------------------------------------------------------
     // Private: SMS
     //--------------------------------------------------------------------------
-
-    /**
-     * Count the number of SMS of the content
-     * @private
-     * @returns {integer} Number of SMS
-     */
-    _countSMS(nbrChar, encoding) {
-        if (nbrChar === 0) {
-            return 0;
-        }
-        if (encoding === 'UNICODE') {
-            if (nbrChar <= 70) {
-                return 1;
-            }
-            return Math.ceil(nbrChar / 67);
-        }
-        if (nbrChar <= 160) {
-            return 1;
-        }
-        return Math.ceil(nbrChar / 153);
-    }
-
-    /**
-     * Extract the encoding depending on the characters in the content
-     * @private
-     * @param {String} content Content of the SMS
-     * @returns {String} Encoding of the content (GSM7 or UNICODE)
-     */
-    _extractEncoding(content) {
-        if (String(content).match(RegExp("^[@£$¥èéùìòÇ\\nØø\\rÅåΔ_ΦΓΛΩΠΨΣΘΞÆæßÉ !\\\"#¤%&'()*+,-./0123456789:;<=>?¡ABCDEFGHIJKLMNOPQRSTUVWXYZÄÖÑÜ§¿abcdefghijklmnopqrstuvwxyzäöñüà]*$"))) {
-            return 'GSM7';
-        }
-        return 'UNICODE';
-    }
 
     /**
      * Implement if more characters are going to be sent then those appearing in
@@ -143,10 +113,17 @@ export class SmsWidget extends EmojisTextField {
      * @override
      * @private
      */
-    async onInput(ev) {
+    onInput(ev) {
         super.onInput(...arguments);
-        await this.props.record.update({ [this.props.name]: this.targetEditElement.el.value });
+        const value = ev.target.value;
+        this.debouncedUpdate(value);
     }
+
+    debouncedUpdate = debounce((value) => {
+            this.props.record.model.updateRecord(this.props.record, {
+                [this.props.name]: value
+            });
+        }, 300);
 }
 
 export const smsWidget = {
@@ -160,3 +137,56 @@ export const smsWidget = {
 };
 
 registry.category("fields").add("sms_widget", smsWidget);
+
+
+export class SmsCharCounter extends Component {
+    static template = "sms.SmsCharCounter";
+    static props = {
+        ...standardWidgetProps,
+    };
+
+    setup() {
+        this.state = useState({
+            nbrChar: 0,
+            nbrSMS: 0,
+            encoding: "GSM7",
+            maxChar: 160
+        });
+        useRecordObserver((record) => {
+            const bodyValue = record.data.body || "";
+            const nbrChar = bodyValue.length + (bodyValue.match(/\n/g) || []).length;
+            const encoding = extractEncoding(bodyValue);
+            const nbrSMS = countSMS(nbrChar, encoding);
+            
+            this.state.nbrChar = nbrChar;
+            this.state.nbrSMS = nbrSMS;
+            this.state.encoding = encoding;
+            this.state.maxChar = encoding === "UNICODE" ? 70 : 160;
+        });
+    }
+
+    get nbrChar() {
+        return this.state.nbrChar;
+    }
+
+    get nbrSMS() {
+        return this.state.nbrSMS;
+    }
+
+    get encoding() {
+        return this.state.encoding;
+    }
+
+    get maxChar() {
+        return this.state.maxChar;
+    }
+
+}
+
+export const smsCharCounter = {
+    component: SmsCharCounter,
+};
+
+registry.category("view_widgets").add("sms_char_counter", {
+    component: SmsCharCounter,
+});

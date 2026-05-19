@@ -1,33 +1,50 @@
-from odoo import models, _
+from odoo import fields, models, modules, _
 from odoo.tools import html2plaintext
-from odoo.tools.misc import clean_context
 
 
 class MailScheduledMessage(models.Model):
     _inherit = 'mail.scheduled.message'
 
+    send_method = fields.Selection(
+        selection=[
+            ('email', 'Email'),
+            ('sms', 'SMS'),
+        ],
+        string="Send Method",
+        default='email',
+        required=True
+    )
+
     def _post_message(self, raise_exception=True):
-        sms_scheduled = self.filtered(lambda m: m.send_context and m.send_context.get('is_sms'))
+        sms_scheduled = self.filtered(lambda m: m.send_method == 'sms')
         mail_scheduled = self - sms_scheduled
 
+        auto_commit = not modules.module.current_test
+
         for scheduled_message in sms_scheduled:
+            try:
+                with self.env.cr.savepoint():
+                    record = self.env[scheduled_message.model].browse(scheduled_message.res_id)
+                    if not record.exists():
+                        continue
 
-            ctx = dict(self.env.context,
-                       default_res_model=scheduled_message.model,
-                       default_res_id=scheduled_message.res_id,
-                       default_composition_mode='comment')
-            ctx.update(clean_context(scheduled_message.send_context or {}))
+                    subtype_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note')
+                    record.with_context(message_type='sms')._message_sms(
+                        body=html2plaintext(scheduled_message.body, include_references=False),
+                        subtype_id=subtype_id,
+                    )
+                    scheduled_message.unlink()
 
-            composer = self.env['sms.composer'].with_user(scheduled_message.create_uid).with_context(ctx).create({
-                'body': html2plaintext(scheduled_message.body),
-                'res_model': scheduled_message.model,
-                'res_id': scheduled_message.res_id,
-                'composition_mode': 'comment',
-                'mass_keep_log': True,
-            })
+                    if auto_commit and not raise_exception:
+                        self.env.cr.commit()
 
-            composer.action_send_sms()
-            scheduled_message.unlink()
+            except Exception as e:
+                if auto_commit and not raise_exception:
+                    self.env.cr.rollback()
+
+                if raise_exception:
+                    raise e
+                continue
 
         if mail_scheduled:
             return super(MailScheduledMessage, mail_scheduled)._post_message(raise_exception=raise_exception)
@@ -35,7 +52,7 @@ class MailScheduledMessage(models.Model):
     def open_edit_form(self):
         self.ensure_one()
 
-        if self.send_context and self.send_context.get('is_sms'):
+        if self.send_method == 'sms':
 
             view = self.env.ref('sms.sms_composer_view_form', raise_if_not_found=False)
             view_id = view.id if view else False
@@ -48,12 +65,7 @@ class MailScheduledMessage(models.Model):
                 'views': [[view_id, 'form']],
                 'target': 'new',
                 'context': {
-                    'default_res_model': self.model,
-                    'default_res_id': self.res_id,
-                    'default_body': html2plaintext(self.body),
-                    'default_composition_mode': 'comment',
-                    'default_scheduled_date': self.scheduled_date,
-                    'mail_scheduled_message_id': self.id,
+                    'default_mail_scheduled_message_id': self.id,
                     'dialog_size': 'medium',
                 },
             }

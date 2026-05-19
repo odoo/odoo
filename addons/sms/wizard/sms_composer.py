@@ -7,6 +7,8 @@ import json
 
 from odoo import api, fields, models, _
 from odoo.addons.sms.tools.sms_tools import sms_content_to_rendered_html
+from odoo.tools import html2plaintext, plaintext2html
+from odoo.addons.mail.tools.discuss import Store
 from odoo.exceptions import UserError
 
 
@@ -17,6 +19,21 @@ class SmsComposer(models.TransientModel):
     @api.model
     def default_get(self, fields):
         result = super().default_get(fields)
+
+        scheduled_message_id = self.env.context.get('default_mail_scheduled_message_id')
+        if scheduled_message_id:
+            
+            scheduled_message = self.env['mail.scheduled.message'].browse(scheduled_message_id)
+            if scheduled_message.exists():
+                result.update({
+                    'res_model': scheduled_message.model,
+                    'res_id': scheduled_message.res_id,
+                    'body': html2plaintext(scheduled_message.body),
+                    'composition_mode': 'comment',
+                    'scheduled_date': scheduled_message.scheduled_date,
+                    'mail_scheduled_message_id': scheduled_message.id,
+                })
+                return result
 
         result['res_model'] = result.get('res_model') or self.env.context.get('active_model')
 
@@ -76,6 +93,10 @@ class SmsComposer(models.TransientModel):
     scheduled_date = fields.Char(
         'Scheduled Date',
         compute='_compute_scheduled_date', readonly=False, store=True, compute_sudo=False)
+    mail_scheduled_message_id = fields.Many2one(
+        'mail.scheduled.message',
+        string='Scheduled Message'
+    )
     render_model = fields.Char(compute='_compute_render_model', store=False)
     can_edit_body = fields.Boolean(default=True, store=False)
     template_name = fields.Char(string='Template Name')
@@ -191,11 +212,6 @@ class SmsComposer(models.TransientModel):
         for composer in self:
             if composer.template_id and 'scheduled_date' in composer.template_id._fields:
                 composer.scheduled_date = composer.template_id.scheduled_date
-            else:
-                if composer.scheduled_date:
-                    composer.scheduled_date = composer.scheduled_date
-                else:
-                    composer.scheduled_date = False
 
     @api.depends('res_model')
     def _compute_render_model(self):
@@ -234,14 +250,14 @@ class SmsComposer(models.TransientModel):
         return self.action_send_sms()
 
     def action_schedule_message(self):
-        scheduled_msg_id = self.env.context.get('mail_scheduled_message_id')
+        scheduled_msg_id = self.mail_scheduled_message_id.id or self.env.context.get('mail_scheduled_message_id')
 
         if scheduled_msg_id:
             self.ensure_one()
             scheduled_msg = self.env['mail.scheduled.message'].browse(scheduled_msg_id)
 
             post_values = {
-                'body': self.body,
+                'body': plaintext2html(self.body),
                 'scheduled_date': self.scheduled_date,
             }
             vals = self._prepare_schedule_message_post_values(post_values)
@@ -249,7 +265,28 @@ class SmsComposer(models.TransientModel):
             vals.pop('res_id', False)
             scheduled_msg.write(vals)
         else:
-            self._action_schedule_message()
+            scheduled_msg = self._action_schedule_message()
+
+        if self.res_model and self.res_id and scheduled_msg:
+            self.env.cr.flush()
+            thread = self.env[self.res_model].browse(self.res_id)
+            if thread.exists():
+                thread.invalidate_recordset()
+
+            close_action = {'type': 'ir.actions.act_window_close'}
+
+            store = Store()
+            store.add (
+                thread,
+                '_store_thread_fields',
+                as_thread=True,
+                fields_params={
+                    'request_list': ['scheduledMessages'],
+                    'scheduledMessages': True,
+                }
+            )
+
+            return store.get_client_action(next_action=close_action)
 
         return {'type': 'ir.actions.act_window_close'}
 
@@ -268,13 +305,13 @@ class SmsComposer(models.TransientModel):
     def action_create_sms_template(self):
         self.ensure_one()
 
-        ir_model_record = self.env['ir.model'].search([('model', '=', self.res_model)], limit=1)
-        if not ir_model_record:
+        model_id = self.env['ir.model']._get_id(self.res_model)
+        if not model_id:
             raise UserError(_("Impossible to determine the model for the template."))
         self.env['sms.template'].create({
             'name': self.template_name,
             'body': self.body,
-            'model_id': ir_model_record.id,
+            'model_id': model_id,
         })
         return {'type': 'ir.actions.act_window_close'}
 
@@ -288,47 +325,40 @@ class SmsComposer(models.TransientModel):
             'composition_comment_option': False,
             'is_note': False,
             'model': self.res_model,
+            'notification_parameters': json.dumps(post_values),
             'partner_ids': post_values.pop('partner_ids', []),
             'res_id': self.res_id,
             'scheduled_date': post_values.pop('scheduled_date'),
-            'notification_parameters': json.dumps(post_values),
-            'send_context': {'is_sms': True},
+
+            'send_method': 'sms',
         }
 
     def _action_schedule_message(self):
-        if any(wizard.composition_mode != 'comment' for wizard in self):
+        self.ensure_one()
+
+        if self.composition_mode != 'comment':
             raise UserError(_("A message can only be scheduled in comment mode"))
 
-        scheduled_msg_id = self.env.context.get('mail_scheduled_message_id')
+        scheduled_msg_id = self.mail_scheduled_message_id.id or self.env.context.get('mail_scheduled_message_id')
+
+        post_values = {
+            'body': plaintext2html(self.body),
+            'scheduled_date': self.scheduled_date,
+            'attachment_ids': [],
+            'partner_ids': [],
+        }
 
         if scheduled_msg_id:
-            self.ensure_one()
             scheduled_msg = self.env['mail.scheduled.message'].browse(scheduled_msg_id)
-
-            post_values = {
-                'body': self.body,
-                'scheduled_date': self.scheduled_date,
-                'attachment_ids': [],
-                'partner_ids': [],
-            }
             vals = self._prepare_schedule_message_post_values(post_values)
             scheduled_msg.write(vals)
             return scheduled_msg
         else:
-            create_values = []
-            for wizard in self:
-                if not wizard.scheduled_date:
-                    raise UserError(_("A scheduled date is needed to schedule a message"))
+            if not self.scheduled_date:
+                raise UserError(_("A scheduled date is needed to schedule a message"))
 
-                post_values = {
-                    'body': wizard.body,
-                    'scheduled_date': wizard.scheduled_date,
-                    'attachment_ids': [],
-                    'partner_ids': [],
-                }
-                create_values.append(wizard._prepare_schedule_message_post_values(post_values))
-
-            return self.env['mail.scheduled.message'].create(create_values)
+            vals = self._prepare_schedule_message_post_values(post_values)
+            return self.env['mail.scheduled.message'].create(vals)
 
     def _action_send_sms(self):
         records = self._get_records()

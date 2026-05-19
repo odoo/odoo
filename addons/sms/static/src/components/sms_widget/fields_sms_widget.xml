@@ -13,14 +13,10 @@
                 </button>
             </div>
         </xpath>
-        <xpath expr="/*[last()]/*[last()]" position="after">
-            <div class="o_sms_container mt-3">
-                <span class="text-muted o_sms_count me-1" t-if="this.nbrChar != 0">
-                    <t t-out="this.nbrChar"/>/<t t-out="160 * this.nbrSMS" /> <t t-out="this.nbrCharExplanation" /> | <t t-out="this.nbrSMS"/> SMS (<t t-out="this.encoding"/>)
-                    <a href="https://iap-services.odoo.com/iap/sms/pricing" target="_blank"
-                        title="SMS Pricing" aria-label="SMS Pricing" class="fa fa-lg fa-info-circle align-middle"/>
-                </span>
-            </div>
-        </xpath>
+    </t>
+    <t t-name="sms.SmsCharCounter">
+        <div t-if="this.nbrChar > 0" class="ms-auto text-muted d-flex align-items-center fs-6">
+            <t t-out="this.nbrChar"/>/<t t-out="this.maxChar"/> | <t t-out="this.nbrSMS"/> SMS (<t t-out="this.encoding"/>) <i class="fa fa-info-circle text-info ms-1" title="SMS length info"/>
+        </div>
     </t>
 </templates>
