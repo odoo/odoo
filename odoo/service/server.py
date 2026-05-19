@@ -1399,6 +1399,7 @@ class Worker:
 
     def start(self):
         self.pid = os.getpid()
+        self.setproctitle()
         self.logger.info("Alive")
         # Reseed the random number generator
         random.seed()
