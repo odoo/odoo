@@ -1010,3 +1010,57 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         pos.picking_ids.button_validate()
         dashboard = self.env['purchase.order'].retrieve_dashboard()
         self.assertEqual(dashboard['global']['otd'], '67 %')
+
+    def test_cogs_no_taxes(self):
+        """Taxes should not be set on COGS lines."""
+        vendor = self.env['res.partner'].create({
+            'name': 'Test Vendor',
+            'is_company': True,
+        })
+
+        self.product_a.is_storable = True
+        self.product_a.categ_id.property_cost_method = 'standard'
+        self.product_a.categ_id.property_price_difference_account_id = self.company_data['default_account_revenue'].id
+
+        stock_location = self.env['stock.warehouse'].search([
+            ('company_id', '=', self.env.company.id),
+        ], limit=1).lot_stock_id
+        customer_location = self.env.ref('stock.stock_location_customers')
+
+        po = self.env['purchase.order'].create({
+            'partner_id': vendor.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'product_qty': 10,
+                    'price_unit': 10,
+                })
+            ],
+        })
+        po.button_confirm()
+
+        receipt = po.picking_ids[0]
+        receipt.button_validate()
+
+        move_out = self.env['stock.move'].create({
+            'product_id': self.product_a.id,
+            'uom_id': self.product_a.uom_id.id,
+            'product_uom_qty': 6,
+            'location_id': stock_location.id,
+            'location_dest_id': customer_location.id,
+        })
+        move_out._action_confirm()
+        move_out.quantity = 6
+        move_out.picked = True
+        move_out._action_done()
+
+        action = po.action_create_invoice()
+        bill = self.env['account.move'].browse(action['res_id'])
+        for line in bill.invoice_line_ids:
+            if line.product_id == self.product_a:
+                line.price_unit = 20
+        bill.invoice_date = fields.Date.today()
+        bill.action_post()
+
+        cogs_lines = bill.line_ids.filtered(lambda l: l.display_type == 'cogs')
+        self.assertRecordValues(cogs_lines, [{'tax_ids': []} for _ in cogs_lines])
