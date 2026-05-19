@@ -34,12 +34,6 @@ def check_git_branch():
 
     try:
         target_branch = get_last_stable_odoo_version()
-        if not target_branch:
-            _logger.warning("Could not get latest stable Odoo branch, will update following the local branch")
-            target_branch = git('symbolic-ref', '-q', '--short', 'HEAD')
-            if not git('ls-remote', 'origin', target_branch):
-                _logger.warning("'%s' does not exist on remote, assuming 'master'", target_branch)
-                target_branch = "master"
 
         # Repository updates
         shallow_lock = path_file("odoo/.git/shallow.lock")
