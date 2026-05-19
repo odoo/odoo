@@ -10,7 +10,7 @@ class TestOrmCourse(models.Model):
     author_id = fields.Many2one('test_orm.person')
     private_field = fields.Char(groups="base.group_no_one")
     reference = fields.Reference(string='reference to lesson', selection='_selection_reference_model')
-    m2o_reference_id = fields.Many2oneReference(string='reference to lesson too', model_field='m2o_reference_model')
+    m2o_reference_id = fields.Many2oneReference(string='reference to lesson too', model_field='m2o_reference_model', ondelete=None)
     m2o_reference_model = fields.Char(string='reference to the model for m2o_reference')
 
     def _selection_reference_model(self):

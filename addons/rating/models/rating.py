@@ -26,7 +26,7 @@ class RatingRating(models.Model):
     res_name = fields.Char(string='Resource name', compute='_compute_res_name', store=True)
     res_model_id = fields.Many2one('ir.model', 'Related Document Model', index=True, ondelete='cascade')
     res_model = fields.Char(string='Document Model', related='res_model_id.model', store=True, index=True, readonly=True)
-    res_id = fields.Many2oneReference(string='Document', model_field='res_model', required=True, index=True)
+    res_id = fields.Many2oneReference(string='Document', model_field='res_model', required=True, index=True, ondelete='cascade')
     resource_ref = fields.Reference(
         string='Resource Ref', selection='_selection_target_model',
         compute='_compute_resource_ref', readonly=True)
@@ -60,6 +60,10 @@ class RatingRating(models.Model):
 
     _consumed_idx = models.Index('(res_model, res_id, write_date) WHERE consumed IS TRUE')
     _parent_consumed_idx = models.Index('(parent_res_model, parent_res_id, write_date) WHERE consumed IS TRUE')
+
+    def _res_model_check_model(self, model_name):
+        registry = self.env.registry
+        return model_name in registry and issubclass(registry[model_name], registry['mail.thread'])
 
     @api.depends('res_model', 'res_id')
     def _compute_res_name(self):

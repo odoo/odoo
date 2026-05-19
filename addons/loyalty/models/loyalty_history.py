@@ -56,6 +56,7 @@ class LoyaltyHistory(models.Model):
 
     order_model = fields.Char(readonly=True)
     order_id = fields.Many2oneReference(model_field="order_model", readonly=True)
+    # TODO replace order_id with sale_order_id and pos_order_id
 
     _issued_or_used = models.Constraint(
         "CHECK (issued = 0 OR used = 0)",
@@ -65,6 +66,9 @@ class LoyaltyHistory(models.Model):
         "CHECK (issued >= 0 AND used >= 0)",
         "A history line cannot award or consume a negative amount of points.",
     )
+
+    def _res_model_check_model(self, model_name):
+        return False
 
     # === CRUD METHODS === #
 

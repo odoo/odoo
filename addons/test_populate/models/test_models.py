@@ -156,7 +156,7 @@ class TestPopulateReference(models.Model):
 
     name = fields.Char("Reference Name", required=True)
     res_model = fields.Char("Model", required=True)
-    res_id = fields.Many2oneReference("Record", model_field='res_model')
+    res_id = fields.Many2oneReference("Record", model_field='res_model', ondelete=None)
     reference = fields.Reference(
         selection=[
             ('test_populate.product', 'A Product'),

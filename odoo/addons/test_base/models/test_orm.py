@@ -329,7 +329,7 @@ class TestOrmCreativeworkEdition(models.Model):
     _description = 'Test ORM Creative Work Edition'
 
     name = fields.Char()
-    res_id = fields.Many2oneReference(model_field='res_model')
+    res_id = fields.Many2oneReference(model_field='res_model', ondelete=None)
     res_model_id = fields.Many2one('ir.model', required=True, ondelete='cascade')
     res_model = fields.Char(related='res_model_id.model', store=True, readonly=False)
 
@@ -1148,7 +1148,7 @@ class TestOrmAttachment(models.Model):
     _access_domain_heavy = True
 
     res_model = fields.Char(required=True)
-    res_id = fields.Many2oneReference(model_field='res_model')
+    res_id = fields.Many2oneReference(model_field='res_model', ondelete=None)
     name = fields.Char(compute='_compute_name', compute_sudo=True, store=True)
 
     @api.depends('res_model', 'res_id')
@@ -1300,7 +1300,7 @@ class TestOrmModel_Many2one_Reference(models.Model):
     _description = 'dummy m2oref model'
 
     res_model = fields.Char('Resource Model')
-    res_id = fields.Many2oneReference('Resource ID', model_field='res_model')
+    res_id = fields.Many2oneReference('Resource ID', model_field='res_model', ondelete=None)
     const = fields.Boolean(default=True)
 
 
