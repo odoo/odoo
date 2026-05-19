@@ -301,8 +301,8 @@ def add_banner(pdf_stream, text=None, logo=False, thickness=SENTINEL):
         if '/Annots' in new_page:
             del new_page['/Annots']
         new_page.mergePage(watermark_pdf.getPage(p))
-        new_page.compressContentStreams()
         new_pdf.addPage(new_page)
+        new_pdf.getPage(-1).compressContentStreams()
 
     # Write the new pdf into a new output stream
     output = io.BytesIO()
