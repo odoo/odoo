@@ -245,8 +245,8 @@ class ResCompany(models.Model):
     # Multivat
     fiscal_position_ids = fields.One2many(comodel_name="account.fiscal.position", inverse_name="company_id")
     multi_vat_foreign_country_ids = fields.Many2many(
-        string="Foreign VAT countries",
-        help="Countries for which the company has a VAT number",
+        string="Foreign Tax ID countries",
+        help="Countries for which the company has a Tax ID",
         comodel_name='res.country',
         compute='_compute_multi_vat_foreign_country',
     )
