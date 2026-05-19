@@ -1399,9 +1399,17 @@ class PosOrder(models.Model):
                 PosPackOperationLot = self.env['pos.pack.operation.lot']
                 for pack_lot in line.pack_lot_ids:
                     PosPackOperationLot += pack_lot.copy()
+<<<<<<< 42e3058475ae75fd23fb0133700eb9486adbb969
                 refund_line = line.copy(line._prepare_refund_data(refund_order, PosPackOperationLot))
                 refund_line._onchange_amount_line_all()
             refund_order._compute_prices()
+||||||| 9fa48d9474cac4535df7baf258bdc4a0a9f20174
+                line.copy(line._prepare_refund_data(refund_order, PosPackOperationLot))
+=======
+                line_copy = line.copy(line._prepare_refund_data(refund_order, PosPackOperationLot))
+                line_copy._onchange_amount_line_all()
+            refund_order._onchange_amount_all()
+>>>>>>> 71dcf03155c7d02cca6936e0e43d7e39e4728e37
             refund_orders |= refund_order
             refund_order.config_id.notify_synchronisation(current_session.id, 0)
         refund_orders._compute_prices()
