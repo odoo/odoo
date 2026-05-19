@@ -181,15 +181,15 @@ class TestImportFiles(TransactionCase):
     def test_import_product_reuses_existing_attribute(self):
         """Importing a product referencing an existing attribute with no values
         should reuse it, not crash or duplicate."""
-        attribute = self.env['product.attribute'].create({'name': 'Fabric'})
+        attr_name = 'TestImportFabric'
+        attribute = self.env['product.attribute'].create({'name': attr_name})
         self.assertFalse(attribute.value_ids)
 
         self.env['product.product']._load_records_create([{
             'name': 'Test Product',
-            'import_attribute_values': 'Fabric:Cotton',
+            'import_attribute_values': f'{attr_name}:Cotton',
         }])
 
-        fabric_attrs = self.env['product.attribute'].search([('name', '=', 'Fabric')])
-        self.assertEqual(len(fabric_attrs), 1)
-        self.assertEqual(fabric_attrs, attribute)
-        self.assertIn('Cotton', fabric_attrs.value_ids.mapped('name'))
+        found = self.env['product.attribute'].search([('name', '=', attr_name)])
+        self.assertEqual(found, attribute)
+        self.assertIn('Cotton', found.value_ids.mapped('name'))
