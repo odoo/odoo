@@ -29,6 +29,11 @@ class RecurrenceRule(models.Model):
         # modified in Odoo but computed from other fields).
         for recurrence in self.filtered('rrule'):
             values = self._rrule_parse(recurrence.rrule, recurrence.dtstart)
+            until = values.get('until')
+            if until and until.tzinfo:
+                # UNTIL=...Z is parsed as an aware UTC datetime; convert it to the
+                # recurrence timezone so the stored date is the right local boundary day.
+                values['until'] = until.astimezone(recurrence._get_timezone())
             recurrence.with_context(dont_notify=True).write(dict(values, need_sync_m=False))
 
     def _apply_recurrence(self, specific_values_creation=None, no_send_edit=False, generic_values_creation=None):
