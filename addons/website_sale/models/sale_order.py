@@ -362,8 +362,16 @@ class SaleOrder(models.Model):
         self.ensure_one()
         self = self.with_company(self.company_id)
 
-        if not uom_id:
-            uom_id = self.env['product.product'].browse(product_id).uom_id.id  # type: ignore
+        product = self.env['product.product'].browse(product_id)
+        if not uom_id or not product.product_tmpl_id._has_multiple_uoms():
+            # Fall back on product uom if uom is not specified or if multi-uom is not
+            # allowed/supported for that product.
+            uom_id = product.uom_id.id  # type: ignore
+        elif uom_id not in product.product_tmpl_id._get_available_uoms().ids:
+            raise ValidationError(
+                _("This product is not available (anymore) in this unit of measure.")
+            )
+
         if existing_sol := self._cart_find_product_line(product_id, uom_id=uom_id, **kwargs)[:1]:
             # If a matching line is found, update the existing line instead.
             return self._cart_update_line_quantity(
