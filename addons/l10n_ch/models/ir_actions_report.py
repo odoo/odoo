@@ -76,10 +76,10 @@ class IrActionsReport(models.Model):
 
                         page = header_pdf.getPage(0)
                         page.mergePage(qr_pdf.getPage(0))
-                        page.compressContentStreams()
 
                         output_pdf = OdooPdfFileWriter()
                         output_pdf.addPage(page)
+                        output_pdf.getPage(-1).compressContentStreams()
                         new_pdf_stream = io.BytesIO()
                         output_pdf.write(new_pdf_stream)
                         streams_to_append[invoice_id] = {'stream': new_pdf_stream}
