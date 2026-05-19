@@ -275,7 +275,8 @@ export class FormatPlugin extends Plugin {
             (node) =>
                 isTextNode(node) &&
                 !isNonFormattedWhiteSpaces(node) &&
-                this.dependencies.selection.isNodeEditable(node)
+                this.dependencies.selection.isNodeEditable(node) &&
+                (this.checkPredicates("is_formattable_node_predicates", node) ?? true)
         );
         return (
             targetedTextNodes.length &&
