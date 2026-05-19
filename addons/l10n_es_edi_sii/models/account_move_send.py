@@ -37,13 +37,18 @@ class AccountMoveSend(models.AbstractModel):
     def _call_web_service_before_invoice_pdf_render(self, invoices_data):
         super()._call_web_service_before_invoice_pdf_render(invoices_data)
 
-        for invoice, invoice_data in invoices_data.items():
-            if 'es_edi_sii' in invoice_data['extra_edis'] or 'es_edi_sii_resend' in invoice_data['extra_edis']:
-                invoice._send_l10n_es_sii_document()
+        sii_move_ids = [
+            invoice.id
+            for invoice, invoice_data in invoices_data.items()
+            if 'es_edi_sii' in invoice_data['extra_edis'] or 'es_edi_sii_resend' in invoice_data['extra_edis']
+        ]
+        sii_moves = self.env['account.move'].browse(sii_move_ids)
+
+        if sii_moves:
+            sii_moves.action_l10n_es_sii_send_in_batch()
+            for invoice in sii_moves:
                 if invoice.l10n_es_edi_sii_error:
-                    invoice_data['error'] = {
+                    invoices_data[invoice]['error'] = {
                         'error_title': self.env._("Error while sending the invoice to SII"),
                         'errors': [invoice.l10n_es_edi_sii_error],
                     }
-                if self._can_commit():
-                    self.env.cr.commit()
