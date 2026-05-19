@@ -181,9 +181,11 @@ export class ComboConfiguratorPopup extends Component {
     }
 
     formattedComboPrice(comboItem) {
-        if (this.pos.currency.isZero(comboItem.extra_price)) {
+        const extraPrice = comboItem.extra_price;
+        if (this.pos.currency.isZero(extraPrice)) {
             return "";
         }
+<<<<<<< 0e0fd493a15c519b5cfa812635ed1d316567126e
         const priceSign = comboItem.extra_price > 0 ? "+" : "-";
         return (
             priceSign +
@@ -192,6 +194,19 @@ export class ComboConfiguratorPopup extends Component {
                 trailingZeros: false,
             })
         );
+||||||| 98b642e3a3973dcc7d38682268f8e37ac4015bfe
+        const priceSign = comboItem.extra_price > 0 ? "+" : "-";
+        return (
+            priceSign +
+            " " +
+            formatCurrency(comboItem.extra_price, this.pos.currency.id, { trailingZeros: false })
+        );
+=======
+        const formattedPrice = formatCurrency(Math.abs(extraPrice), this.pos.currency.id, {
+            trailingZeros: false,
+        });
+        return extraPrice > 0 ? `+ ${formattedPrice}` : `- ${formattedPrice}`;
+>>>>>>> 323ce75a73aafc1ad35bb8c7064e6af8f343ea78
     }
 
     getSelectedComboItems() {

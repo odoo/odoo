@@ -26,7 +26,13 @@
                                         class="this.getProductCardClasses(itemState)"
                                     >
                                         <span t-if="extraPrice" class="badge position-absolute top-0 end-0 m-1 px-2 py-1 rounded-3 text-bg-primary fw-medium">
+<<<<<<< 0e0fd493a15c519b5cfa812635ed1d316567126e
                                             + <t t-out="this.selfOrder.formatMonetary(extraPrice)"/>
+||||||| 98b642e3a3973dcc7d38682268f8e37ac4015bfe
+                                        + <t t-out="this.selfOrder.formatMonetary(extraPrice)"/>
+=======
+                                            <t t-out="extraPrice > 0 ? '+ ' : '- '"/><t t-out="this.selfOrder.formatMonetary(Math.abs(extraPrice))"/>
+>>>>>>> 323ce75a73aafc1ad35bb8c7064e6af8f343ea78
                                         </span>
                                         <t t-set="extraPriceSelected" t-value="this.getExtraPriceForItem(comboItem)"/>
                                         <div t-if="extraPriceSelected" class="badge px-2 py-1 rounded-3 text-bg-primary fw-medium">
