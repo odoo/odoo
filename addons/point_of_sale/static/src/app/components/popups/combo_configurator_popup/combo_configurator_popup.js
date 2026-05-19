@@ -178,11 +178,12 @@ export class ComboConfiguratorPopup extends Component {
     }
 
     formattedComboPrice(comboItem) {
-        if (this.pos.currency.isZero(comboItem.extra_price)) {
+        const extraPrice = comboItem.extra_price;
+        if (this.pos.currency.isZero(extraPrice)) {
             return "";
         }
-        const priceSign = comboItem.extra_price > 0 ? "+" : "-";
-        return priceSign + " " + this.env.utils.formatCurrency(comboItem.extra_price);
+        const formattedPrice = this.env.utils.formatCurrency(Math.abs(extraPrice));
+        return extraPrice > 0 ? `+ ${formattedPrice}` : `- ${formattedPrice}`;
     }
 
     getSelectedComboItems() {
