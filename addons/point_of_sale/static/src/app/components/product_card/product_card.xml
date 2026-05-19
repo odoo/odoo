@@ -25,9 +25,7 @@
                     t-att-class="{'text-danger': props.productCartQty lt 0}"/>
             </div>
             <div t-if="props.comboExtraPrice" class="d-flex px-2 pb-1">
-                <span class="price-extra px-2 py-0 rounded-pill text-bg-info">
-                    + <t t-esc="props.comboExtraPrice"/>
-                </span>
+                <span class="price-extra px-2 py-0 rounded-pill text-bg-info" t-esc="props.comboExtraPrice"/>
             </div>
         </article>
     </t>
