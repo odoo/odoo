@@ -177,6 +177,34 @@ class BaseGeocoder(models.AbstractModel):
             return None
 
     @api.model
+    def _call_googlemap_reverse(self, latitude, longitude):
+        """ Use Google Maps Reverse Geocoding API to get address components from coordinates.
+        :return: dict with address components or None
+        """
+        apikey = get_google_map_api_key(self.env)
+        if not apikey:
+            return None
+
+        params = {'latlng': f"{latitude},{longitude}", 'key': apikey}
+
+        import requests  # noqa: PLC0415
+        try:
+            result = requests.get("https://maps.googleapis.com/maps/api/geocode/json", params, timeout=10).json()
+        except Exception as e:  # noqa: BLE001
+            _logger.warning('Google Maps Reverse Geocoding query failed: %s', e)
+            return None
+
+        try:
+            if result['status'] != 'OK':
+                _logger.debug('Invalid Gmaps Reverse call: %s - %s',
+                              result['status'], result.get('error_message', ''))
+                return None
+            return result['results'][0]['address_components']
+        except (KeyError, ValueError, IndexError):
+            _logger.debug('Unexpected Gmaps Reverse API answer %s', result.get('error_message', ''))
+            return None
+
+    @api.model
     def _geo_query_address_default(self, street=None, zip=None, city=None, state=None, country=None):
         address_list = [
             street,
@@ -199,11 +227,22 @@ class BaseGeocoder(models.AbstractModel):
         raise UserError(_('Error with geolocation server: %s', error))
 
     def _get_localisation(self, latitude, longitude):
-        # try to get city and/or country from request.geoip first
-        # if not possible, get them from latitude and longitude
         city = request.geoip.city.name
         country_code = request.geoip.country_code
         postcode = False
+
+        # Try Google Maps if API key exists
+        if gmaps_address_components := self._call_googlemap_reverse(latitude, longitude):
+            for component in gmaps_address_components:
+                types = component.get('types', [])
+                if 'locality' in types or 'sublocality' in types:
+                    city = component.get('long_name')
+                elif 'country' in types:
+                    country_code = component.get('short_name')
+                elif 'postal_code' in types:
+                    postcode = component.get('long_name')
+
+        # Fallback to OpenStreetMap
         if not (city and country_code):
             # for now, we use openstreetmap, if needed, we will add a setting like "partner geolocation" that let the
             # user decide wich provider to use to localise the partner.
