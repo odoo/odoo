@@ -427,8 +427,32 @@ class MailMessage(models.Model):
             return super()._search(domain, offset, limit, order, bypass_access=True, **kwargs)
         if self.env.context.get('_generating_sql_for_fields'):
             raise ValueError("Cannot generate SQL for whole mail.message")
+        if limit is None or 0 < len(condition_values(self, 'model', domain) or ()) <= MAX_COMODELS_FOR_DOMAIN:
+            return super()._search(domain, offset, limit, order, bypass_access=bypass_access, **kwargs)
 
-        return super()._search(domain, offset, limit, order, bypass_access=bypass_access, **kwargs)
+        self_sudo = self.sudo().with_context(active_test=kwargs.get('active_test', self.env.context.get('active_test', True)))
+        ordered = bool(order)
+        # Fetch by small batches
+        looping_offset = 0
+        limit += offset
+        result = []
+        if not ordered:
+            # By default, order by model to batch access checks.
+            order = 'model nulls first, id'
+        while len(result) < limit:
+            records = self_sudo.search_fetch(
+                domain,
+                [],
+                offset=looping_offset,
+                limit=PREFETCH_MAX,
+                order=order,
+            ).sudo(False)
+            result.extend(records._filtered_access('read')._ids)
+            if len(records) < PREFETCH_MAX:
+                # There are no more records
+                break
+            looping_offset += PREFETCH_MAX
+        return self.browse(result[offset:limit])._as_query(ordered)
 
     def _compute_res_access(self, operation: str):
         assert self.env.su
