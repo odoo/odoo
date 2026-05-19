@@ -473,7 +473,7 @@ class IrAttachment(models.Model):
     res_name = fields.Char('Resource Name', compute='_compute_res_name')
     res_model = fields.Char('Resource Model')
     res_field = fields.Char('Resource Field')
-    res_id = fields.Many2oneReference('Resource ID', model_field='res_model')
+    res_id = fields.Many2oneReference('Resource ID', model_field='res_model', ondelete='cascade')
     company_id = fields.Many2one('res.company', string='Company', change_default=True,
                                  default=lambda self: self.env.company)
     type = fields.Selection([('url', 'URL'), ('binary', 'File')],

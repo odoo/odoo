@@ -422,12 +422,6 @@ class MailThread(models.AbstractModel):
     def _delete_track_discard(self):
         self._track_discard()
 
-    def _delete_collect_extra(self):
-        yield from super()._delete_collect_extra()
-        yield self.message_follower_ids
-        yield self.env['mail.message'].search([('model', '=', self._name), ('res_id', 'in', self.ids)])
-        yield self.env['mail.scheduled.message'].search([('model', '=', self._name), ('res_id', 'in', self.ids)])
-
     @api.model
     def get_empty_list_help(self, help_message):
         """ Override of BaseModel.get_empty_list_help() to generate an help message

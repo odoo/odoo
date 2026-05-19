@@ -48,7 +48,7 @@ class MailScheduledMessage(models.Model):
         string='Comment Options')  # mainly used for view in specific comment modes
     # related document
     model = fields.Char('Related Document Model', required=True)
-    res_id = fields.Many2oneReference('Related Document Id', model_field='model', required=True)
+    res_id = fields.Many2oneReference('Related Document Id', model_field='model', required=True, ondelete='cascade')
     # origin
     author_id = fields.Many2one('res.partner', 'Author', required=True)
     # recipients

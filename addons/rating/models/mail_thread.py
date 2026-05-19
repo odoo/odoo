@@ -15,11 +15,6 @@ class MailThread(models.AbstractModel):
     # MAIL OVERRIDES
     # --------------------------------------------------
 
-    def _delete_collect_extra(self):
-        """ When removing a record, its rating should be deleted too. """
-        yield from super()._delete_collect_extra()
-        yield self.env['rating.rating'].search([('res_model', '=', self._name), ('res_id', 'in', self.ids)], order='id')
-
     def _get_message_create_ignore_field_names(self):
         return super()._get_message_create_ignore_field_names() | {"rating_id"}
 

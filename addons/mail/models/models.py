@@ -39,20 +39,6 @@ class Base(models.AbstractModel):
         return super().with_user(user).with_context(guest=None)
 
     # ------------------------------------------------------------
-    # CRUD
-    # ------------------------------------------------------------
-
-    def _delete_collect_extra(self):
-        yield from super()._delete_collect_extra()
-        record_ids = self.ids if (not self._abstract and not self._transient) else []
-        # during uninstallation of module mail, the search below will crash
-        if record_ids and 'mail' not in self.pool.uninstalling_modules:
-            yield self.env['mail.activity'].search(
-                [('res_model', '=', self._name), ('res_id', 'in', record_ids)],
-                order='id',
-            )
-
-    # ------------------------------------------------------------
     # CHECK ACCESS
     # ------------------------------------------------------------
 

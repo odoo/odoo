@@ -3672,20 +3672,37 @@ class BaseModel(metaclass=MetaModel):
             yield (field, records_impacted)
 
     def _delete_collect_extra(self) -> Iterator[BaseModel]:
-        env = self.env
+        assert self.env.su and not self.env.context['active_test']
+        env = self.with_context(skip_res_field_check=True).env
         ids = self.ids
-        # Removing the ir_model_data reference if the record being deleted
+        # Removing the many2one_reference if the record being deleted
         # is a record created by xml/csv file, as these are not connected
         # with real database foreign keys, and would be dangling references.
-        yield env['ir.model.data'].with_context({}).search(
-            [('model', '=', self._name), ('res_id', 'in', ids)], order='id')
+        for ref_field in env.registry.many2one_references:
+            if ref_field.ondelete is None:
+                continue
+            if ref_field._module in self.pool.uninstalling_modules:
+                # the module of the field is being uninstalled, skip it
+                continue
+            records = env[ref_field.model_name].search(
+                [(ref_field.model_field, '=', self._name), (ref_field.name, 'in', ids)], order='id')
+            match ref_field.ondelete:
+                case 'cascade':
+                    yield records
+                case 'set null':
+                    records.write({
+                        ref_field.name: False,
+                        ref_field.model_name: False,
+                    })
+                case 'restrict':
+                    if records:
+                        raise ValidationError(self.env._("Cannot remove %s referenced by %s", self, records))
+
         # Simulate discard_records behavior.
         yield env['ir.default'].search([
             ('field_id.ttype', '=', 'many2one'), ('field_id.relation', '=', self._name),
             ('json_value', 'in', tuple(json.dumps(id_) for id_ in ids)),
         ], order='id')
-        yield env['ir.attachment'].with_context(skip_res_field_check=True).search(
-            [('res_model', '=', self._name), ('res_id', 'in', ids)], order='id')
 
     def unlink(self) -> typing.Literal[True]:
         """ Delete the records in ``self``.

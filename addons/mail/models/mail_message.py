@@ -188,7 +188,7 @@ class MailMessage(models.Model):
     child_ids = fields.One2many('mail.message', 'parent_id', 'Child Messages')
     # related document
     model = fields.Char('Related Document Model')
-    res_id = fields.Many2oneReference('Related Document ID', model_field='model')
+    res_id = fields.Many2oneReference('Related Document ID', model_field='model', ondelete='cascade')
     res_access_read = fields.Boolean(
         groups=fields.NO_ACCESS,
         compute=lambda self: self._compute_res_access('read'),
