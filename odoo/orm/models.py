@@ -3631,6 +3631,16 @@ class BaseModel(metaclass=MetaModel):
         many2one_targeting = env.registry.many2one_targeting
         many2many_targeting = env.registry.many2many_targeting
 
+        def many2one_references(referenced_model, ondelete):
+            return [
+                field
+                for field in env.registry.many2one_references
+                if field.ondelete == ondelete or (
+                    callable(field.ondelete)
+                    and field.ondelete(env[field.model_name], referenced_model) == ondelete
+                )
+            ]
+
         while todo:
             model_name, ids = todo.popitem()
             ids = ids - done[model_name]
@@ -3639,6 +3649,12 @@ class BaseModel(metaclass=MetaModel):
 
             done[model_name].update(ids)
             records = env[model_name].browse(ids)
+
+            # records that will be cascade-delete from 'records' by the ORM
+            for field in many2one_references(records, 'cascade'):
+                if corecords := records._get_records_linked_by(field):
+                    explicit_deletions[corecords._name].update(corecords._ids)
+                    todo[corecords._name].update(corecords._ids)
 
             # get the records that will be cascade-deleted from 'records'
             for field in many2one_targeting.get(model_name, ()):
@@ -3698,6 +3714,22 @@ class BaseModel(metaclass=MetaModel):
                 if corecords:
                     nullify_many2one.append((field, corecords))
 
+        # add hooks for many2one_reference fields to remove references
+        nullify_many2one_ref: list[tuple[Field, BaseModel]] = []
+        for records in all_deleted_records:
+            for field in many2one_references(records, 'restrict'):
+                corecords = records._get_records_linked_by(field)
+                if ids := all_deletions.get(corecords._name):
+                    corecords -= corecords.browse(ids)
+                if corecords:
+                    raise ValidationError(self.env._("Cannot remove %(records)s referenced by %(corecords)s", records=records, corecords=corecords))
+            for field in many2one_references(records, 'set null'):
+                corecords = records._get_records_linked_by(field)
+                if ids := all_deletions.get(corecords._name):
+                    corecords -= corecords.browse(ids)
+                if corecords:
+                    nullify_many2one_ref.append((field, corecords))
+
         # collect all the many2many fields that contain deleted records
         discard_many2many: list[tuple[Field, BaseModel]] = []
         for records in all_deleted_records:
@@ -3720,6 +3752,8 @@ class BaseModel(metaclass=MetaModel):
                 records.modified([field.name], before=True)
             for field, records in discard_many2many:
                 records.modified([field.name], before=True)
+            for field, records in nullify_many2one_ref:
+                records.modified([field.name, field.model_field], before=True)
 
             # delete the records that must be deleted from database
             for model_name, ids in explicit_deletions.items():
@@ -3742,6 +3776,11 @@ class BaseModel(metaclass=MetaModel):
                 # update parent_path if necessary
                 if records._parent_store and field.name == records._parent_name:
                     records._parent_store_update()
+
+            for field, records in nullify_many2one_ref:
+                field._update_cache(records, None, dirty=field.store)
+                model_field = records._fields[field.model_field]
+                model_field._update_cache(records, None, dirty=model_field.store)
 
             # invalidate many2many fields that contained deleted records
             for field, records in discard_many2many:
@@ -3775,26 +3814,25 @@ class BaseModel(metaclass=MetaModel):
         This method is aimed at being overridden by models, instead of overriding
         :meth:`unlink`.
         """
-        # Removing the ir_model_data reference if the record being deleted
-        # is a record created by xml/csv file, as these are not connected
-        # with real database foreign keys, and would be dangling references.
-        yield self.env['ir.model.data'].with_context({}).search(
-            [('model', '=', self._name), ('res_id', 'in', self._ids)], order='id')
+        env = self.env
+        assert env.su and not env.context['active_test']
+
         # Simulate discard_records behavior.
-        yield self.env['ir.default'].search([
+        yield env['ir.default'].search([
             ('field_id.ttype', '=', 'many2one'), ('field_id.relation', '=', self._name),
-            ('json_value', 'in', tuple(json.dumps(id_) for id_ in self._ids)),
+            ('json_value', 'in', list(map(json.dumps, self._ids))),
         ], order='id')
-        yield self.env['ir.attachment'].with_context(skip_res_field_check=True).search(
-            [('res_model', '=', self._name), ('res_id', 'in', self._ids)], order='id')
 
     @typing.final
     def _get_records_linked_by(self, field: Field) -> BaseModel:
         """ Return the records linked to ``self`` by ``field``, i.e., the ones
         such that ``records[field.name] <= self``.
         """
-        assert field.type in ('many2one', 'many2many')
-        env = self.with_context(active_test=False).sudo().env
+        assert field.type in ('many2one', 'many2one_reference', 'many2many')
+        # TODO remove skip_res_field_check needed for ir.attachment
+        env = self.with_context(active_test=False, skip_res_field_check=True).sudo().env
+        if field.type == 'many2one_reference':
+            return env[field.model_name].search(Domain(field.name, 'in', self.ids) & Domain(field.model_field, '=', self._name), order='id')
         # use an inverse field to avoid a search query when possible
         if not self.env.registry.uninstalling_modules:
             for invf in self.env.registry.field_inverses[field]:
