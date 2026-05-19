@@ -2019,7 +2019,7 @@ class ProjectTask(models.Model):
         # as it is a computed field. personal_stage_type_ids behaves like a M2O from the point
         # of view of the user, we therefore use this field instead.
         if 'personal_stage_type_id' in groupby:
-            # limitation: problem when both personal_stage_type_id and personal_stage_type_ids 
+            # limitation: problem when both personal_stage_type_id and personal_stage_type_ids
             # appear in read_group, but this has no functional utility
             groupby = ['personal_stage_type_ids' if fname == 'personal_stage_type_id' else fname for fname in groupby]
             if order:
