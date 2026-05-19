@@ -1194,7 +1194,7 @@ test("open author avatar card", async () => {
     await contains(".o_card_user_infos > a:text('+5646548')");
 });
 
-test("add and remove bookmark from message", async () => {
+test("add message to bookmark", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "general" });
     const messageId = pyEnv["mail.message"].create({
@@ -1202,9 +1202,7 @@ test("add and remove bookmark from message", async () => {
         model: "discuss.channel",
         res_id: channelId,
     });
-    listenStoreFetch(["add_bookmark", "remove_bookmark"], {
-        logParams: ["add_bookmark", "remove_bookmark"],
-    });
+    listenStoreFetch("add_bookmark", { logParams: ["add_bookmark"] });
     await start();
     await openDiscuss(channelId);
     await contains(".o-mail-Message");
@@ -1215,6 +1213,22 @@ test("add and remove bookmark from message", async () => {
     await click(".o-dropdown-item:text('Bookmark')");
     await contains("button:has(:text('Bookmarks'))", { contains: [".badge:text('1')"] });
     await waitStoreFetch([["add_bookmark", { message_id: messageId }]]);
+    await contains(".o-mail-Message [title='Bookmarked']");
+});
+
+test("remove bookmark from message", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "general" });
+    const messageId = pyEnv["mail.message"].create({
+        body: "not empty",
+        bookmarked_partner_ids: [serverState.partnerId],
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    listenStoreFetch("remove_bookmark", { logParams: ["remove_bookmark"] });
+    await start();
+    await openDiscuss(channelId);
+    await contains("button:has(:text('Bookmarks'))", { contains: [".badge:text('1')"] });
     await contains(".o-mail-Message [title='Bookmarked']");
     await rightClick(".o-mail-Message");
     await contains(".o-dropdown-item:text('Remove from Bookmarks') i.fa-bookmark");
