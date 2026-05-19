@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import api, fields, models
+from odoo.fields import Domain
 
 
 class ProductPricelist(models.Model):
@@ -28,19 +29,35 @@ class ProductPricelistItem(models.Model):
 
     @api.model
     def _load_pos_data_domain(self, data, config):
-        product_tmpl_ids = [p['product_tmpl_id'] for p in data['product.product']]
-        product_ids = [p['id'] for p in data['product.product']]
-        product_categ = [c['id'] for c in data['product.category']]
         pricelist_ids = [p['id'] for p in data['product.pricelist']]
-        now = fields.Datetime.now()
-        return [
-            ('pricelist_id', 'in', pricelist_ids),
-            '|', ('product_tmpl_id', '=', False), ('product_tmpl_id', 'in', product_tmpl_ids),
-            '|', ('product_id', '=', False), ('product_id', 'in', product_ids),
-            '|', ('date_start', '=', False), ('date_start', '<=', now),
-            '|', ('date_end', '=', False), ('date_end', '>=', now),
-            '|', ('categ_id', '=', False), ('categ_id', 'in', product_categ),
-        ]
+        domain = [('pricelist_id', 'in', pricelist_ids)]
+
+        if not self._last_server_date_to_load():
+            product_tmpl_ids = [p['product_tmpl_id'] for p in data['product.product']]
+            product_ids = [p['id'] for p in data['product.product']]
+            product_categ = [c['id'] for c in data['product.category']]
+            now = fields.Datetime.now()
+            domain += [
+                '|', ('product_tmpl_id', '=', False), ('product_tmpl_id', 'in', product_tmpl_ids),
+                '|', ('product_id', '=', False), ('product_id', 'in', product_ids),
+                '|', ('categ_id', '=', False), ('categ_id', 'in', product_categ),
+                '|', ('date_start', '=', False), ('date_start', '<=', now),
+                '|', ('date_end', '=', False), ('date_end', '>', now),
+            ]
+        return domain
+
+    @api.model
+    def _server_date_to_domain(self, domain):
+        if last_server_date := self._last_server_date_to_load():
+            now = fields.Datetime.now()
+            domain = Domain.AND([
+                domain,
+                Domain.OR([
+                    [('write_date', '>', last_server_date)],
+                    ['&', ('date_start', '>', last_server_date), ('date_start', '<=', now)],
+                ]),
+            ])
+        return domain
 
     @api.model
     def _load_pos_data_fields(self, config):

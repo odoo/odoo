@@ -1,6 +1,8 @@
 import { registry } from "@web/core/registry";
 import { Base } from "./related_models";
 
+const { DateTime } = luxon;
+
 export class ProductPricelist extends Base {
     static pythonModel = "product.pricelist";
 
@@ -87,8 +89,15 @@ export class ProductPricelist extends Base {
     }
 
     findBestRule(rules, quantity) {
+        const now = DateTime.now();
         let bestRule = null;
         for (const rule of rules) {
+            if (rule.date_start && rule.date_start > now) {
+                continue;
+            }
+            if (rule.date_end && rule.date_end < now) {
+                continue;
+            }
             if (!rule.min_quantity || rule.min_quantity <= quantity) {
                 if (!bestRule || rule.min_quantity > bestRule.min_quantity) {
                     bestRule = rule;
