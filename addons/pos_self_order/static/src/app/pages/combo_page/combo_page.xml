@@ -26,7 +26,7 @@
                                         class="this.getProductCardClasses(itemState)"
                                     >
                                         <span t-if="extraPrice" class="badge position-absolute top-0 end-0 m-1 px-2 py-1 rounded-3 text-bg-primary fw-medium">
-                                            + <t t-out="this.selfOrder.formatMonetary(extraPrice)"/>
+                                            <t t-out="extraPrice > 0 ? '+ ' : '- '"/><t t-out="this.selfOrder.formatMonetary(Math.abs(extraPrice))"/>
                                         </span>
                                         <t t-set="extraPriceSelected" t-value="this.getExtraPriceForItem(comboItem)"/>
                                         <div t-if="extraPriceSelected" class="badge px-2 py-1 rounded-3 text-bg-primary fw-medium">
