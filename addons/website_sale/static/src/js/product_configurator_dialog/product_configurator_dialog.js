@@ -23,6 +23,7 @@ patch(ProductConfiguratorDialog.prototype, {
             this.updateCombinationUrl = "/website_sale/product_configurator/update_combination";
             this.getOptionalProductsUrl =
                 "/website_sale/product_configurator/get_optional_products";
+            this.getComboDataUrl = "/website_sale/combo_configurator/get_data";
             this.title = _t("Configure");
         }
 
@@ -94,5 +95,13 @@ patch(ProductConfiguratorDialog.prototype, {
         // `product` may be a props object, which always exposes every declared key (including the
         // optional `free_qty`), so the presence of the key can't be used to detect stock tracking.
         return product.free_qty === undefined || product.free_qty >= quantity;
+    },
+
+    _getAdditionalDialogProps() {
+        const props = super._getAdditionalDialogProps();
+        if (this.websiteSaleProps.isFrontend) {
+            props.isFrontend = this.websiteSaleProps.isFrontend;
+        }
+        return props;
     },
 });

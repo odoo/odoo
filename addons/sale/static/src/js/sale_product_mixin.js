@@ -3,8 +3,15 @@ import { serializeDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { x2ManyCommands } from "@web/core/orm_plugin";
+import { uuid } from "@web/core/utils/strings";
 import { ProductConfiguratorDialog } from "./product_configurator_dialog/product_configurator_dialog";
-import { getCustomPtavs, getNoVariantPtavIds, getSelectedComboItems, getSelectedCustomPtav } from "./sale_utils";
+import {
+    getCustomPtavs,
+    getNoVariantPtavIds,
+    getSelectedComboItems,
+    getSelectedCustomPtav,
+    serializeComboItem,
+} from "./sale_utils";
 import { openComboConfigurator } from "./combo_configurator_utils";
 
 async function applyProduct(record, product) {
@@ -43,6 +50,12 @@ async function applyProduct(record, product) {
         // only update uom field if uom are enabled (uom_data provided), otherwise we don't have the display_name
         // and the value isn't expected to change anyway.
         update_values.product_uom_id = product.uom;
+    }
+    if (product.product_type === "combo" && product.selectedComboItems?.length) {
+        update_values.selected_combo_items = JSON.stringify(
+            product.selectedComboItems.map(serializeComboItem)
+        );
+        update_values.virtual_id = product.virtual_id || uuid();
     }
     await record._update(update_values);
 }
@@ -225,11 +238,8 @@ export const saleProductMixin = () => ({
             additionalDialogProps: this._getAdditionalDialogProps(),
             onSave: async (comboProductData, selectedItems) => {
                 if (!edit && data.has_optional_products) {
-                    const selectedComboProducts = selectedItems.map(
-                        item => ({ name: item.product.display_name })
-                    );
                     await this._openProductConfigurator({
-                        selectedComboItems: selectedComboProducts,
+                        selectedComboItems: selectedItems,
                         data,
                     });
                 }
