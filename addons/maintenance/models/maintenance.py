@@ -261,9 +261,11 @@ class MaintenanceRequest(models.Model):
         first_stage_obj = self.env['maintenance.stage'].search([], order="sequence asc", limit=1)
         self.write({'state': 'normal', 'stage_id': first_stage_obj.id})
 
-    @api.constrains('schedule_end')
-    def _check_schedule_end(self):
+    @api.constrains('schedule_date', 'schedule_end')
+    def _check_schedule_interval(self):
         for request in self:
+            if bool(request.schedule_date) != bool(request.schedule_end):
+                raise ValidationError(self.env._("Scheduled Date and Scheduled End must either both be set or both be empty."))
             if request.schedule_date and request.schedule_end and request.schedule_date > request.schedule_end:
                 raise ValidationError(self.env._("End date cannot be earlier than start date."))
 
