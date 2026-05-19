@@ -247,3 +247,28 @@ test("suggested recipients should not be added as follower when posting a messag
     await contains(".o-mail-Message");
     await contains(".o-mail-Followers-counter:text('0')");
 });
+
+test("closing full composer in 'log note' mode should preserve suggested recipients", async () => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({
+        name: "John Jane",
+        email: "john@jane.be",
+    });
+    const fakeId = pyEnv["res.fake"].create({
+        email_cc: "john@test.be",
+        partner_ids: [partnerId],
+    });
+    registerArchs(archs);
+    await start();
+    await openFormView("res.fake", fakeId);
+    await click("button:text('Log note')");
+    await click("button[title='Open Full Composer']");
+    await contains(".o_dialog .o_form_view");
+    // close the full composer dialog
+    await click(".o_dialog header .btn-close");
+    await contains(".o_dialog", { count: 0 });
+    // suggested recipients should still be present when clicking on send message
+    await click("button:text('Send message')");
+    await contains(".o-mail-RecipientsInput .o_tag_badge_text:contains(John Jane)");
+    await contains(".o-mail-RecipientsInput .o_tag_badge_text:contains(john@test.be)");
+});
