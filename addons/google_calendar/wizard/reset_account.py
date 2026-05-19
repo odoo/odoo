@@ -28,4 +28,4 @@ class GoogleCalendarAccountReset(models.TransientModel):
             recurrences.with_context(skip_event_permission=True).google_id = False
             events.unlink()
 
-        self.user_id.stop_google_synchronization()
+        self.user_id.with_user(self.user_id).stop_google_synchronization()

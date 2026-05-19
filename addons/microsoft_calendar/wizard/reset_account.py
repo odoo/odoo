@@ -23,4 +23,4 @@ class MicrosoftCalendarAccountReset(models.TransientModel):
             events.with_context(dont_notify=True).microsoft_id = False
             events.unlink()
 
-        self.user_id.stop_microsoft_synchronization()
+        self.user_id.with_user(self.user_id).stop_microsoft_synchronization()

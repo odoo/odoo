@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import json
+from urllib.parse import urlencode
 from werkzeug.exceptions import BadRequest
 
 from odoo import http
@@ -27,7 +28,7 @@ class MicrosoftAuth(http.Controller):
                 redirect_uri=f'{base_url}/microsoft_account/authentication'
             )
             request.env.user._set_microsoft_auth_tokens(access_token, refresh_token, ttl)
-            return request.redirect(url_return)
+            return request.redirect("%s?%s" % (url_return, urlencode({"auth_success": "True"})))
         elif kw.get('error'):
             return request.redirect("%s%s%s" % (url_return, "?error=", kw['error']))
         else:

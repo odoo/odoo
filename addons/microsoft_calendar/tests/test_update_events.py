@@ -1413,7 +1413,7 @@ class TestUpdateEvents(TestCommon):
     def test_restart_sync_with_synced_recurrence(self, _mock_patch):
         """ Ensure that sync restart is not blocked when there are recurrence outliers in Odoo database. """
         # Stop synchronization, set recurrent events as outliers and restart sync with Outlook.
-        self.organizer_user.stop_microsoft_synchronization()
+        self.organizer_user.with_user(self.organizer_user).stop_microsoft_synchronization()
         self.recurrent_events.with_user(self.organizer_user).write({
             'microsoft_id': False,
             'ms_universal_event_id': False,
