@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
+from odoo.exceptions import ValidationError
 
 
 class ProductSupplierinfo(models.Model):
@@ -90,6 +91,14 @@ class ProductSupplierinfo(models.Model):
         """Clear product variant if it no longer matches the product template."""
         if self.product_id and self.product_id not in self.product_tmpl_id.product_variant_ids:
             self.product_id = False
+
+    @api.constrains('date_start', 'date_end')
+    def _check_dates(self):
+        invalid_suppliers = self.filtered(lambda r: r.date_end and r.date_start and r.date_end < r.date_start)
+        if invalid_suppliers:
+            raise ValidationError(_(
+                "End date can't be earlier than the start date. Please check dates for vendor pricelist: %s", ', '.join(invalid_suppliers.mapped('partner_id.name'))
+            ))
 
     @api.model
     def get_import_templates(self):
