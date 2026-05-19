@@ -448,10 +448,15 @@ export class SplitPlugin extends Plugin {
             // Now let's split at the line break.
             const cursors = this.dependencies.selection.preserveSelection();
             let { anchorNode, anchorOffset, focusNode, focusOffset } = getEditableSelection();
-            const brIndex = childNodeIndex(br);
+            const isVisibleEmptyLine = br.previousSibling && isLineBreak(br.previousSibling);
+            const brIndex = childNodeIndex(br) + (isVisibleEmptyLine ? 1 : 0);
             const oldParent = br.parentElement;
             const [before, after] = this.splitElementUntil(oldParent, brIndex, block.parentElement);
-            br.remove();
+            // If the `br` if after another it means it is showing an empty like break
+            // so we don't remove it.
+            if (!isVisibleEmptyLine) {
+                br.remove();
+            }
             [before, after].forEach(fillEmpty);
 
             // Restore the selection.
