@@ -2648,7 +2648,7 @@ class AccountEdiUBL(models.AbstractModel):
 
         # Line level.
         if (
-            line_extension_amount
+            line_extension_amount is not None
             and not invoiced_quantity
         ):
             price_unit = subtotal
@@ -2670,7 +2670,7 @@ class AccountEdiUBL(models.AbstractModel):
                 discount_amount += price_discount_amount * quantity / price_quantity
 
         elif (
-            line_extension_amount
+            line_extension_amount is not None
             and invoiced_quantity
         ):
             quantity = invoiced_quantity
