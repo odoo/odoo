@@ -29,14 +29,6 @@ patch(ComboConfiguratorDialog.prototype, {
         return super.totalMessage(...arguments);
     },
 
-    get _comboProductData() {
-        const comboProductData = super._comboProductData;
-        if (this.websiteSaleProps.isFrontend) {
-            Object.assign(comboProductData, { price: this._comboPrice });
-        }
-        return comboProductData;
-    },
-
     _getAdditionalDialogProps() {
         const props = super._getAdditionalDialogProps();
         if (this.websiteSaleProps.isFrontend) {
