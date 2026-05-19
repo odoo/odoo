@@ -118,7 +118,7 @@ class HrLeaveGenerateMultiWizard(models.TransientModel):
             # date_from and date_to are computed based on the employee tz
             # If _compute_date_from_to is used instead, it will trigger _compute_number_of_days
             # and create a conflict on the number of days calculation between the different leaves
-            leave_compute_date_from_to=True,
+            leave_compute_date_from_to=True,  # TODO To check this flag
             multi_leave_request=True,
         ).create(vals_list)
         leaves._validate_leave_request()

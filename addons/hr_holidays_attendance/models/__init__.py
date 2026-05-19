@@ -1,11 +1,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from . import hr_attendance_overtime_rule
-from . import hr_attendance_overtime
+from . import res_company
+from . import res_config_settings
 from . import hr_leave_allocation
 from . import hr_leave_accrual_plan_level
-from . import hr_work_entry_type
 from . import hr_leave
+from . import hr_time_rule
 from . import ir_ui_menu
 from . import hr_employee
-from . import resource_calendar_leaves
+from . import hr_attendance
+from . import hr_version
