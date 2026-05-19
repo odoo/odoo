@@ -1314,7 +1314,9 @@ class PosOrder(models.Model):
                 PosPackOperationLot = self.env['pos.pack.operation.lot']
                 for pack_lot in line.pack_lot_ids:
                     PosPackOperationLot += pack_lot.copy()
-                line.copy(line._prepare_refund_data(refund_order, PosPackOperationLot))
+                line_copy = line.copy(line._prepare_refund_data(refund_order, PosPackOperationLot))
+                line_copy._onchange_amount_line_all()
+            refund_order._onchange_amount_all()
             refund_orders |= refund_order
         refund_orders._compute_prices()
         return refund_orders
