@@ -119,3 +119,51 @@ class TestWorkEntryType(TransactionCase):
                 'country_id': country_be.id,
             },
         ])
+
+    def test_copy_work_entry_type_generates_unique_code(self):
+        """
+        Test that copying a work entry type generates a unique code automatically
+        """
+        country_us = self.env.ref('base.us')
+        work_entry_us = self.env['hr.work.entry.type'].create({
+            'code': "MYTEST",
+            'name': "My Test",
+            'country_id': country_us.id,
+        })
+
+        copies = work_entry_us.copy()
+        self.assertNotEqual(copies.code, work_entry_us.code)
+        self.assertTrue(copies.code.startswith("MYTEST_"))
+        self.assertEqual(self.env['hr.work.entry.type'].search_count([('code', '=', copies.code)]), 1)
+
+    def test_copy_work_entry_type_different_countries(self):
+        """
+        Test that copying work entry types with different countries generates unique codes
+        """
+        country_us = self.env.ref('base.us')
+        country_be = self.env.ref('base.be')
+
+        work_entry_us, work_entry_be = self.env['hr.work.entry.type'].create([
+            {
+                'code': "MYTEST",
+                'name': "My Test US",
+                'country_id': country_us.id,
+            },
+            {
+                'code': "MYTEST",
+                'name': "My Test BE",
+                'country_id': country_be.id,
+            }
+        ])
+
+        work_entry_us_copy = work_entry_us.copy()
+        work_entry_be_copy = work_entry_be.copy()
+
+        self.assertEqual(work_entry_us_copy.country_id, country_us)
+        self.assertEqual(work_entry_be_copy.country_id, country_be)
+
+        self.assertNotEqual(work_entry_us_copy.code, work_entry_us.code)
+        self.assertNotEqual(work_entry_be_copy.code, work_entry_be.code)
+
+        self.assertEqual(self.env['hr.work.entry.type'].search_count([('code', '=', work_entry_us_copy.code)]), 1)
+        self.assertEqual(self.env['hr.work.entry.type'].search_count([('code', '=', work_entry_be_copy.code)]), 1)
