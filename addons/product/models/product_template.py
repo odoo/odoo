@@ -938,17 +938,28 @@ class ProductTemplate(models.Model):
             # write this attribute on every product to make sure we don't lose them
             single_value_lines = lines_without_no_variants.filtered(lambda ptal: len(ptal.product_template_value_ids._only_active()) == 1)
             if single_value_lines:
-                for variant in all_variants:
-                    combination = variant.product_template_attribute_value_ids | single_value_lines.product_template_value_ids._only_active()
-                    # Do not add single value if the resulting combination would
-                    # be invalid anyway.
-                    if (
-                        len(combination) == len(lines_without_no_variants)
-                        and combination.attribute_line_id == lines_without_no_variants
-                        # Update only if necessary to prevent a cache invalidation
-                        and variant.product_template_attribute_value_ids != combination
-                    ):
-                        variant.product_template_attribute_value_ids = combination
+                # Writing product_template_attribute_value_ids below invalidates
+                # price_extra, which triggers recompute of the stored lst_price
+                # and wipes user-set overrides. Protect lst_price on variants
+                # whose value diverges from the computed one (= manual override);
+                # non-overridden variants are left to the recompute so they
+                # correctly pick up the new ptav's price_extra.
+                overridden = all_variants.filtered(
+                    lambda v: v.lst_price != v.list_price + v.price_extra,
+                )
+                lst_price_field = self.env['product.product']._fields['lst_price']
+                with self.env.protecting([lst_price_field], overridden):
+                    for variant in all_variants:
+                        combination = variant.product_template_attribute_value_ids | single_value_lines.product_template_value_ids._only_active()
+                        # Do not add single value if the resulting combination would
+                        # be invalid anyway.
+                        if (
+                            len(combination) == len(lines_without_no_variants)
+                            and combination.attribute_line_id == lines_without_no_variants
+                            # Update only if necessary to prevent a cache invalidation
+                            and variant.product_template_attribute_value_ids != combination
+                        ):
+                            variant.product_template_attribute_value_ids = combination
 
             # Set containing existing `product.template.attribute.value` combination
             existing_variants = {
