@@ -106,18 +106,24 @@ export class DashboardSearchBarMenu extends Component {
     }
 
     onConfirm() {
+        const filters = [];
         for (const node of this.state.filtersAndValues) {
             const { globalFilter, value } = node;
             const originalValue = this.props.model.getters.getGlobalFilterValue(globalFilter.id);
+            const currentValue = isEmptyFilterValue(globalFilter, value) ? undefined : value;
 
-            if (deepEqual(originalValue, value)) {
+            if (deepEqual(originalValue, currentValue)) {
                 continue;
             }
-            this.props.model.dispatch("SET_GLOBAL_FILTER_VALUE", {
-                id: globalFilter.id,
-                value: isEmptyFilterValue(globalFilter, value) ? undefined : value,
+            filters.push({
+                filterId: globalFilter.id,
+                value: currentValue,
             });
         }
+        if (!filters.length) {
+            return;
+        }
+        this.props.model.dispatch("SET_MANY_GLOBAL_FILTER_VALUE", { filters });
         this.props.close();
     }
 
