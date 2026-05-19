@@ -1295,3 +1295,33 @@ registry.category("web_tour.tours").add("test_default_fiscal_position_allowed", 
             Chrome.endTour(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_barcode_scan_preselect_always_variant", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+
+            scan_barcode("VAR_RED_001"),
+
+            ProductConfiguratorPopup.pickRadio("Large"),
+            Dialog.confirm("Add"),
+            ProductScreen.selectedOrderlineHas(
+                "Variant Barcode Product",
+                "1.0",
+                "10.0",
+                "Red, Large"
+            ),
+
+            scan_barcode("VAR_BLUE_001"),
+            Dialog.confirm("Add"),
+            ProductScreen.selectedOrderlineHas(
+                "Variant Barcode Product",
+                "1.0",
+                "10.0",
+                "Blue, Small"
+            ),
+
+            Chrome.endTour(),
+        ].flat(),
+});

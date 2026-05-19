@@ -762,6 +762,7 @@ export class PosStore extends WithLazyGetterTrap {
             (attr) => attr.attribute_id?.id in attrById
         );
         let attributeLinesValues = attributeLines.map((attr) => attr.product_template_value_ids);
+        let variantProduct = null;
         if (opts.code || opts.presetVariant) {
             let product;
             if (opts.code) {
@@ -779,6 +780,7 @@ export class PosStore extends WithLazyGetterTrap {
             } else {
                 product = opts.presetVariant;
             }
+            variantProduct = product;
 
             const attrValueIds = new Set(
                 product?.product_template_attribute_value_ids?.map((v) => v.id) || []
@@ -791,10 +793,22 @@ export class PosStore extends WithLazyGetterTrap {
             );
         }
         if (attributeLinesValues.some((values) => values.length > 1 || values[0].is_custom)) {
+            const forceVariantValue =
+                (opts.forceVariantValue
+                    ? Object.fromEntries(opts.forceVariantValue.map((value) => [value.id, value]))
+                    : undefined) ||
+                (variantProduct
+                    ? Object.fromEntries(
+                          variantProduct.product_template_attribute_value_ids.map((value) => [
+                              value.id,
+                              value,
+                          ])
+                      )
+                    : undefined);
             return await makeAwaitable(this.dialog, ProductConfiguratorPopup, {
                 productTemplate: pTemplate,
                 hideAlwaysVariants: opts.hideAlwaysVariants,
-                forceVariantValue: opts.forceVariantValue,
+                forceVariantValue,
                 line: opts.line,
             });
         }
