@@ -2156,3 +2156,57 @@ class TestPointOfSaleFlow(CommonPosTest):
                     {'account_id': self.bank_payment_method.outstanding_account_id.id},
                     {'account_id': self.bank_payment_method.receivable_account_id.id},
                 ])
+
+    def test_order_partial_refund_amount(self):
+        """This test make sure that line prices and total price of an order are correctly updated according to the quantity refunded
+           even when the order is refunded in multiple times.
+        """
+        self.pos_config_eur.open_ui()
+        current_session = self.pos_config_eur.current_session_id
+        # I create a new PoS order with 2 lines
+        order = self.env['pos.order'].create({
+            'company_id': self.env.company.id,
+            'session_id': current_session.id,
+            'partner_id': self.partner_jcb.id,
+            'pricelist_id': self.partner_jcb.property_product_pricelist.id,
+            'lines': [
+                Command.create({
+                    'product_id': self.product_a.id,
+                    'qty': 3,
+                    'price_unit': 12.0,
+                    'price_subtotal': 36.0,
+                    'price_subtotal_incl': 36.0,
+                }),
+            ],
+            'amount_tax': 0.0,
+            'amount_total': 36.0,
+            'amount_paid': 0.0,
+            'amount_return': 0.0,
+        })
+        payment_context = {"active_ids": order.ids, "active_id": order.id}
+        order_payment = self.env['pos.make.payment'].with_context(**payment_context).create({
+            'amount': order.amount_total,
+            'payment_method_id': self.bank_payment_method.id
+        })
+        order_payment.with_context(**payment_context).check()
+
+        # Make a first refund for 1 quantity of the product
+        refund_action = order.refund()
+        refund = self.env['pos.order'].browse(refund_action['res_id'])
+        with Form(refund) as refund_form:
+            with refund_form.lines.edit(0) as line:
+                line.qty = -1
+        refund = refund_form.save()
+        payment_context = {"active_ids": refund.ids, "active_id": refund.id}
+        refund_payment = self.env['pos.make.payment'].with_context(**payment_context).create({
+            'amount': refund.amount_total,
+            'payment_method_id': self.bank_payment_method.id,
+        })
+        refund_payment.with_context(**payment_context).check()
+
+        # Make a second refund for the 2 remaining quantities of the product
+        refund_action = order.refund()
+        refund = self.env['pos.order'].browse(refund_action['res_id'])
+        self.assertEqual(refund.amount_total, -24.0)
+        self.assertEqual(refund.lines.qty, -2)
+        self.assertEqual(refund.lines[0].price_subtotal, -24.0)
