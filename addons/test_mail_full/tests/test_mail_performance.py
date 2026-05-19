@@ -75,7 +75,7 @@ class TestMailPerformance(FullBaseMailPerformance):
         self.push_to_end_point_mocked.reset_mock()  # reset as executed twice
         self.flush_tracking()
 
-        with self.assertQueryCount(employee=83):  # test_mail_full: 83
+        with self.assertQueryCount(employee=92):  # test_mail_full: 92
             new_message = record_ticket.message_post(
                 attachment_ids=attachments.ids,
                 body=Markup('<p>Test Content</p>'),

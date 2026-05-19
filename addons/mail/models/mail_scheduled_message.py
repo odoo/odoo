@@ -48,7 +48,9 @@ class MailScheduledMessage(models.Model):
         string='Comment Options')  # mainly used for view in specific comment modes
     # related document
     model = fields.Char('Related Document Model', required=True)
-    res_id = fields.Many2oneReference('Related Document Id', model_field='model', required=True)
+    res_id = fields.Many2oneReference('Related Document Id', model_field='model', required=True,
+        ondelete=lambda self, model: 'cascade' if self._is_mail_thread(model) else 'ignore',
+    )
     # origin
     author_id = fields.Many2one('res.partner', 'Author', required=True)
     # recipients
@@ -69,8 +71,11 @@ class MailScheduledMessage(models.Model):
 
     @api.constrains('model')
     def _check_model(self):
-        if not all(model in self.pool and issubclass(self.pool[model], self.pool['mail.thread']) for model in self.mapped("model")):
+        if not all(self._is_mail_thread(model) for msg in self if (model := self.env.get(msg.model)) is not None):
             raise ValidationError(_("A message cannot be scheduled on a model that does not have a mail thread."))
+
+    def _is_mail_thread(self, model):
+        return isinstance(model, model.env.registry['mail.thread'])
 
     @api.constrains('scheduled_date')
     def _check_scheduled_date(self):
