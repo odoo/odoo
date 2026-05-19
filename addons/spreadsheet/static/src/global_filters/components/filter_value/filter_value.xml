@@ -28,22 +28,25 @@
             <div t-elif="this.filter.type === 'numeric'" class="w-100 d-flex align-items-center"
                  t-att-class="this.filterValue?.operator === 'between' ? 'justify-content-between' : ''">
                 <t t-if="this.filterValue?.operator === 'between'">
-                    <NumericFilterValue
-                        value="this.filterValue?.minimumValue"
-                        onValueChanged="(value) => this.onMinimumValueNumericInput(this.filter.id, value)"
+                    <NumberInput
+                        class="'o-global-filter-numeric-value'"
+                        value="this.filterValue?.minimumValue || ''"
+                        onChange="(value) => this.onMinimumValueNumericInput(this.filter.id, value)"
                         placeholder="this.placeholder"
                     />
                     <i class="fa fa-long-arrow-right mx-2"/>
-                    <NumericFilterValue
-                        value="this.filterValue?.maximumValue"
-                        onValueChanged="(value) => this.onMaximumValueNumericInput(this.filter.id, value)"
+                    <NumberInput
+                        class="'o-global-filter-numeric-value'"
+                        value="this.filterValue?.maximumValue || ''"
+                        onChange="(value) => this.onMaximumValueNumericInput(this.filter.id, value)"
                         placeholder="this.placeholder"
                     />
                 </t>
                 <t t-else="">
-                    <NumericFilterValue
-                        value="this.filterValue?.targetValue"
-                        onValueChanged="(value) => this.onTargetValueNumericInput(this.filter.id, value)"
+                    <NumberInput
+                        class="'o-global-filter-numeric-value'"
+                        value="this.filterValue?.targetValue || ''"
+                        onChange="(value) => this.onTargetValueNumericInput(this.filter.id, value)"
                         placeholder="this.placeholder"
                     />
                 </t>

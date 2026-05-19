@@ -18,9 +18,8 @@ import {
     getDefaultValue,
     getFilterValuePlaceholder,
 } from "@spreadsheet/global_filters/helpers";
-import { NumericFilterValue } from "../numeric_filter_value/numeric_filter_value";
 
-const { ValidationMessages } = components;
+const { ValidationMessages, NumberInput } = components;
 
 export class FilterValue extends Component {
     static template = "spreadsheet.FilterValue";
@@ -30,7 +29,7 @@ export class FilterValue extends Component {
         MultiRecordSelector,
         SelectionFilterValue,
         ValidationMessages,
-        NumericFilterValue,
+        NumberInput,
     };
     static props = {
         filter: Object,
@@ -131,7 +130,7 @@ export class FilterValue extends Component {
         const operator = this.filterValue?.operator ?? this.getDefaultOperator();
         const newFilterValue = {
             operator,
-            targetValue: value,
+            targetValue: value === "" ? undefined : parseFloat(value),
         };
         this.props.setGlobalFilterValue(id, newFilterValue);
     }
@@ -149,7 +148,10 @@ export class FilterValue extends Component {
         const operator = this.filterValue?.operator ?? this.getDefaultOperator();
         const newFilterValue = {
             operator,
-            ...this.reorderValues(value, this.filterValue?.maximumValue),
+            ...this.reorderValues(
+                value === "" ? undefined : parseFloat(value),
+                this.filterValue?.maximumValue
+            ),
         };
         this.props.setGlobalFilterValue(id, newFilterValue);
     }
@@ -158,7 +160,10 @@ export class FilterValue extends Component {
         const operator = this.filterValue?.operator ?? this.getDefaultOperator();
         const newFilterValue = {
             operator,
-            ...this.reorderValues(this.filterValue?.minimumValue, value),
+            ...this.reorderValues(
+                this.filterValue?.minimumValue,
+                value === "" ? undefined : parseFloat(value)
+            ),
         };
         this.props.setGlobalFilterValue(id, newFilterValue);
     }
