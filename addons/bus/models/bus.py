@@ -47,29 +47,61 @@ NOTIFY_PAYLOAD_MAX_LENGTH = get_notify_payload_max_length()
 SKIP_NOTIFICATION = object()
 
 
-def fetch_bus_notifications(cr, min_id_by_channel, ignore_ids=None):
-    """Fetch notifications from the bus table.
+def get_current_pg_snapshot(cr):
+    cr.execute("SELECT pg_current_snapshot()")
+    return cr.fetchone()[0]
 
-    :param cr: Database cursor.
-    :param min_id_by_channel: Dictionary mapping channels to the ID of the last fully
-        processed id. See `Websocket._notif_history`.
-    :param ignore_ids: IDs to exclude.
-    :return: List of notifications.
+
+def fetch_bus_notifications(
+    cr,
+    active_channels,
+    stream_position,
+    waiting_channels_to_stream_position=None,
+):
+    """Fetch bus notifications committed since the given stream positions.
+
+    A stream position is the text form of a PostgreSQL transaction snapshot that acts as a
+    bookmark identifying the client's last known database state so only notifications
+    committed after that snapshot are returned.
+
+    See :attr:`~bus.websocket.Websocket._stream_position` for details.
+
+    :param Cursor cr: Database cursor.
+    :param list[str] active_channels: Channels the client is subscribed to.
+    :param str stream_position: Snapshot bookmark for ``active_channels``.
+    :param dict[str, str] waiting_channels_to_stream_position: Newly subscribed channels
+        mapped to their starting snapshots (or ``None``).
+    :return: Tuple ``(new_stream_position, notifications)`` where ``new_stream_position``
+        continues the stream and ``notifications`` is a list of dicts sorted by ascending
+        id.
+    :rtype: tuple[str, list[dict]]
 
     """
-    threshold = fields.Datetime.now() - datetime.timedelta(seconds=TIMEOUT)
-    channels_by_id = defaultdict(list)
-    for channel, min_id in min_id_by_channel.items():
-        channels_by_id[min_id].append(json_dump(channel))
-    channel_conditions = []
-    for min_id, channels in channels_by_id.items():
-        since = SQL("create_date > %s", threshold) if min_id == 0 else SQL("id > %s", min_id)
-        channel_conditions.append(SQL("(channel IN %s AND %s)", tuple(channels), since))
-    where = SQL(" OR ").join(channel_conditions)
-    if ignore_ids:
-        where = SQL("(%s) AND id NOT IN %s", where, tuple(ignore_ids))
-    cr.execute(SQL("SELECT id, message FROM bus_bus WHERE %s ORDER BY id", where))
-    return [{"id": r[0], "message": orjson.loads(r[1])} for r in cr.fetchall()]
+    position_to_channels = defaultdict(list)
+    if active_channels:
+        position_to_channels[stream_position].extend(active_channels)
+    for channel, position in (waiting_channels_to_stream_position or {}).items():
+        position_to_channels[position].append(channel)
+    if not position_to_channels:
+        return get_current_pg_snapshot(cr), []
+    where_parts = []
+    for position, channels in position_to_channels.items():
+        _, str_xmax, str_xip = position.split(":")
+        where_parts.append(
+            SQL(
+                "(channel IN %(channels)s AND (create_tx_id >= %(xmax)s OR create_tx_id = ANY(%(xip)s)))",
+                channels=tuple(json_dump(c) for c in channels),
+                xmax=int(str_xmax),
+                xip=[int(x) for x in str_xip.split(",")] if str_xip else [],
+            ),
+        )
+    query = SQL(
+        "SELECT id, message FROM bus_bus WHERE %(where)s ORDER BY id ASC",
+        where=SQL(" OR ").join(where_parts),
+    )
+    cr.execute(query)
+    notifications = [{"id": r[0], "message": orjson.loads(r[1])} for r in cr.fetchall()]
+    return get_current_pg_snapshot(cr), notifications
 
 
 # ---------------------------------------------------------
@@ -122,6 +154,25 @@ class BusBus(models.Model):
 
     channel = fields.Char('Channel')
     message = fields.Char('Message')
+    create_tx_id = fields.Float(
+        string="Creation Transaction ID",
+        help=(
+            "PostgreSQL transaction id (xid8) assigned when this notification row is "
+            "inserted. Used internally as part of the notification streaming mechanism."
+        ),
+        digits=(0, False),
+    )
+
+    _channel_create_tx_id_idx = models.Index("(channel, create_tx_id)")
+
+    def init(self):
+        super().init()
+        # Set the default at the DB level so the xid is assigned with the INSERT, avoiding
+        # a separate `pg_current_xact_id()` round-trip.
+        self.env.cr.execute("""
+            ALTER TABLE bus_bus ALTER COLUMN create_tx_id
+            SET DEFAULT pg_current_xact_id()::text::numeric
+        """)
 
     @api.autovacuum
     def _gc_messages(self):
@@ -205,10 +256,6 @@ class BusBus(models.Model):
                             )
                         )
 
-    @api.model
-    def _poll(self, channels, last=0, ignore_ids=None):
-        return fetch_bus_notifications(self.env.cr, {c: last for c in channels}, ignore_ids)
-
     def _bus_last_id(self):
         last = self.env['bus.bus'].search([], order='id desc', limit=1)
         return last.id if last else 0
@@ -223,7 +270,7 @@ class ImDispatch(threading.Thread):
         super().__init__(daemon=True, name=f'{__name__}.Bus')
         self._channels_to_ws = {}
 
-    def subscribe(self, channels, last, websocket):
+    def subscribe(self, channels, stream_position, websocket):
         """
         Subcribe to bus notifications. Every notification related to the
         given channels will be sent through the websocket. If a subscription
@@ -231,15 +278,15 @@ class ImDispatch(threading.Thread):
         """
         for channel in channels:
             self._channels_to_ws.setdefault(channel, set()).add(websocket)
-        outdated_channels = websocket._min_id_by_channel.keys() - channels
+        outdated_channels = websocket.channels - channels
         self._clear_outdated_channels(websocket, outdated_channels)
-        websocket.subscribe(channels, last)
+        websocket.subscribe(channels, stream_position)
         with contextlib.suppress(RuntimeError):
             if not self.is_alive():
                 self.start()
 
     def unsubscribe(self, websocket):
-        self._clear_outdated_channels(websocket, websocket._min_id_by_channel.keys())
+        self._clear_outdated_channels(websocket, websocket.channels)
 
     def _clear_outdated_channels(self, websocket, outdated_channels):
         """ Remove channels from channel to websocket map. """

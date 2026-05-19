@@ -27,8 +27,116 @@ from odoo.tests.common import (
     release_test_lock,
 )
 
-from odoo.addons.bus.models.bus import channel_with_db, json_dump
+from odoo.addons.bus.models.bus import BusBus, channel_with_db, json_dump
 from odoo.addons.bus.websocket import CloseCode, Websocket, WebsocketConnectionHandler
+
+
+class MockBusTransaction:
+    """A simulated bus transaction handed out by :class:`MockBusTransactions`.
+
+    Use as a context manager (commits on __exit__) or manually via :meth:`commit` to hold
+    several transactions open concurrently and commit them in a controlled order.
+    """
+
+    def __init__(self, parent: "MockBusTransactions", xid: int, cr):
+        self._parent = parent
+        self._xid = xid
+        self._cr = cr
+        self._pending = []
+
+    def __enter__(self):
+        assert self._parent._current_tx is None, "Nested bus transactions are not allowed."
+        self._parent._current_tx = self
+        return self
+
+    def __exit__(self, exc_type, *args):
+        try:
+            if not exc_type:
+                self.commit()
+        finally:
+            self._parent._current_tx = None
+
+    def send(self, channel, type_, payload=None, *, subchannel=None):
+        assert self._xid in self._parent._active_xids, "Cannot send on a committed transaction."
+        self._pending.append((channel, type_, payload, subchannel))
+        return self
+
+    def commit(self):
+        assert self._xid in self._parent._active_xids, "Transaction cannot be committed twice."
+        assert self._parent._current_tx in (None, self), "Nested transactions are forbidden."
+        bus = self._cr.transaction.default_env["bus.bus"]
+        for channel, type_, payload, subchannel in self._pending:
+            actual_channel = (channel, subchannel) if subchannel else channel
+            bus._sendone(actual_channel, type_, payload)
+        self._pending.clear()
+        self._parent._current_tx = self
+        self._parent._active_xids.remove(self._xid)
+        self._cr.precommit.run()
+        self._cr.postcommit.run()
+        self._parent._current_tx = None
+
+
+class MockBusTransactions:
+    """Simulate PostgreSQL MVCC behavior the bus relies on.
+
+    Real bus dispatching depends on transaction xids and visibility snapshots to decide
+    which notification should be delivered to subscribers. Testing that logic with the
+    actual database would require multiple concurrent connections. This class fakes it
+    instead by handing out :class:`MockBusTransaction` objects with controlled xids and
+    serving a matching `pg_current_snapshot`.
+
+    The bus dispatching code itself (:meth:`~models.bus.fetch_bus_notifications` Websocket
+    state) remains intact.
+    """
+
+    def __init__(self, initial_xid: int):
+        self._next_xid = initial_xid
+        self._active_xids = []
+        self._current_tx = None
+
+    def snapshot(self):
+        xmin = min(self._active_xids) if self._active_xids else self._next_xid
+        xip = ",".join(map(str, sorted(self._active_xids)))
+        return f"{xmin}:{self._next_xid}:{xip}"
+
+    def tx(self, cr):
+        xid = self._next_xid
+        self._next_xid += 1
+        self._active_xids.append(xid)
+        return MockBusTransaction(self, xid, cr)
+
+
+@contextlib.contextmanager
+def mock_bus_transactions(cr):
+    """Patch bus snapshot/xid to use a :class:`MockBusTransactions` mock.
+
+    Yields the :class:`MockBusTransactions` instance controlling the simulated MVCC state.
+    Bus rows get their ``create_tx_id`` from a SQL DEFAULT (``pg_current_xact_id()``). The
+    wrapped ``create`` injects the simulated xid so the fixture controls the value instead
+    of Postgres.
+    """
+    cr.execute("SELECT pg_current_xact_id()")
+    bus_tx_mock = MockBusTransactions(int(cr.fetchone()[0]) + 1)
+    original_create = BusBus.create
+
+    def _mocked_create(records, vals_list):
+        if (tx := bus_tx_mock._current_tx) is not None:
+            for vals in vals_list:
+                vals["create_tx_id"] = tx._xid
+        return original_create(records, vals_list)
+
+    with (
+        patch(
+            "odoo.addons.bus.models.bus.get_current_pg_snapshot",
+            side_effect=lambda _: bus_tx_mock.snapshot(),
+        ),
+        patch(
+            "odoo.addons.bus.models.ir_http.get_current_pg_snapshot",
+            side_effect=lambda _: bus_tx_mock.snapshot(),
+        ),
+        patch("odoo.addons.bus.models.bus.BusBus.create", _mocked_create),
+    ):
+        yield bus_tx_mock
 
 
 class BusResult:
@@ -133,6 +241,8 @@ class BusResult:
 class BusCase(BaseCase):
     def _reset_bus(self):
         self.env.cr.precommit.data.get("bus.bus.values", []).clear()
+        if channel_set := self.env.cr.postcommit.data.get("bus.bus.channels"):
+            channel_set.clear()
         self.env["bus.bus"].sudo().search([]).unlink()
 
     @contextlib.contextmanager
@@ -261,6 +371,7 @@ class WebsocketCase(HttpCase, BusCase):
         self.startPatcher(self._serve_forever_patch)
         self.enterContext(release_test_lock())  # Release the lock during websocket tests
         self.http_request_key = 'websocket'
+        self.bus_tx_mock = self.enterContext(mock_bus_transactions(self.env.cr))
 
     def tearDown(self):
         self._close_websockets()
@@ -318,14 +429,22 @@ class WebsocketCase(HttpCase, BusCase):
         self._websockets.add(ws)
         return ws
 
-    def subscribe(self, websocket, channels=None, last=None, check_outdated=False, wait_for_dispatch=True):
+    def subscribe(
+        self,
+        websocket,
+        channels=None,
+        check_outdated=False,
+        stream_position=None,
+        wait_for_dispatch=True,
+    ):
         """ Subscribe the websocket to the given channels.
 
         :param websocket: The websocket of the client.
         :param channels: The list of channels to subscribe to.
         :param last: The last notification id the client received.
-        :param check_outdated: Whether the websocket should check if the last_id matches a
-            known notification.
+        :param check_outdated: Whether the websocket should check if the stream_position still
+            exists in the bus table. Used to detect GC of the bus table during disconnect.
+        :param stream_position: The starting point of the event stream for the added channels.
         :param wait_for_dispatch: Whether to wait for the notification
             dispatching trigerred by the subscription.
         """
@@ -341,15 +460,12 @@ class WebsocketCase(HttpCase, BusCase):
                 'channels': channels or [],
                 'check_outdated': check_outdated,
             }}
-            if last is not None:
-                sub['data']['last'] = last
+            if not stream_position:
+                stream_position = self.bus_tx_mock.snapshot()
+            sub["data"]["stream_position"] = stream_position
             websocket.send(json.dumps(sub))
             if wait_for_dispatch:
                 dispatch_bus_notification_done.wait(timeout=5)
-
-    def trigger_notification_dispatching(self):
-        self.env.cr.precommit.run()  # Trigger the creation of bus.bus records
-        self.env.cr.postcommit.run()  # PostgreSQL NOTIFY happens after commit
 
     def wait_remaining_websocket_connections(self):
         """ Wait for the websocket connections to terminate. """
@@ -361,8 +477,10 @@ class WebsocketCase(HttpCase, BusCase):
         Assert that the websocket is closed with the expected_code.
         """
         opcode, payload = websocket.recv_data()
-        # ensure it's a close frame
-        self.assertEqual(opcode, 8)
+        if opcode != 8:
+            opcode_txt = {0: "continuation", 1: "text", 2: "binary", 9: "ping", 0xA: "pong"}[opcode]
+            details = f": {payload.decode('utf-8', errors='replace')}" if opcode == 1 else ""
+            self.fail(f"Expected close frame, got {opcode_txt} frame{details}")
         code = struct.unpack('!H', payload[:2])[0]
         # ensure the close code is the one we expected
         self.assertEqual(code, expected_code)

@@ -6,6 +6,7 @@ import {
 import { Command, makeKwArgs, serverState } from "@web/../tests/web_test_helpers";
 import { loadBundle } from "@web/core/assets";
 import { patch } from "@web/core/utils/patch";
+import { session } from "@web/session";
 
 /**
  * @template [T={}]
@@ -67,7 +68,7 @@ async function get_session(request) {
                 makeKwArgs({ fields: ["avatar_128", "user_livechat_username"] })
             ),
         });
-        return { store_data: store.get_result(), channel_id: -1 };
+        return { bus_info: session.bus_info, channel_id: -1, store_data: store.get_result() };
     }
     const channelVals = LivechatChannel._get_livechat_discuss_channel_vals(channel_id, {
         agent: agent,
@@ -81,7 +82,7 @@ async function get_session(request) {
         isLoaded: true,
         scrollUnread: false,
     });
-    return { store_data: store.get_result(), channel_id: channelId };
+    return { bus_info: session.bus_info, channel_id: channelId, store_data: store.get_result() };
 }
 
 registerRoute("/im_livechat/visitor_leave_session", visitor_leave_session);

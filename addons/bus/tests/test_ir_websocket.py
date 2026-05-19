@@ -14,7 +14,7 @@ class TestIrWebsocket(WebsocketCase):
     def test_only_allow_string_channels_from_frontend(self):
         with self.assertLogs("odoo.addons.bus.websocket", level="ERROR") as log:
             ws = self.websocket_connect()
-            self.subscribe(ws, [("odoo", "discuss.channel", 5)], self.env["bus.bus"]._bus_last_id())
+            self.subscribe(ws, [("odoo", "discuss.channel", 5)])
         self.assertIn("bus.Bus only string channels are allowed.", log.output[0])
 
     def test_build_bus_channel_list(self):

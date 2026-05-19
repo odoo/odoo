@@ -83,7 +83,7 @@ test("notification event is broadcasted", async () => {
     });
     await expect.waitForSteps(["broadcast BUS:CONNECT"]);
     for (const serverWs of MockServer.current._websockets) {
-        serverWs.send(JSON.stringify(notifications));
+        serverWs.send(JSON.stringify({ notifications }));
     }
     await expect.waitForSteps(["broadcast BUS:NOTIFICATION"]);
 });
@@ -135,7 +135,7 @@ test("check connection health during inactivity", async () => {
     await expect.waitForSteps(["broadcast BUS:CONNECT", "_restartConnectionCheckInterval"]);
     worker.websocket.dispatchEvent(
         new MessageEvent("message", {
-            data: JSON.stringify([{ id: 70, message: { type: "foo" } }]),
+            data: JSON.stringify({ notifications: [{ id: 70, message: { type: "foo" } }] }),
         })
     );
     await expect.waitForSteps(["_restartConnectionCheckInterval"]);

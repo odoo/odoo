@@ -4,7 +4,9 @@ import json
 
 from odoo.http import Controller, request, route
 from odoo.http.session import SessionExpiredException
+from odoo.tools.misc import OrderedSet
 
+from odoo.addons.bus.models.bus import channel_with_db, fetch_bus_notifications
 from odoo.addons.bus.websocket import WebsocketConnectionHandler
 
 
@@ -30,18 +32,29 @@ class WebsocketController(Controller):
         return request.make_response(data, headers)
 
     @route('/websocket/peek_notifications', type='jsonrpc', auth='public', cors='*')
-    def peek_notifications(self, channels, last, is_first_poll=False):
+    def peek_notifications(self, channels, stream_position, is_first_poll=False):
         if is_first_poll:
             # Used to detect when the current session is expired.
             request.session['is_websocket_session'] = True
         elif 'is_websocket_session' not in request.session:
             raise SessionExpiredException()
-        subscribe_data = request.env['ir.websocket']._prepare_subscribe_data(channels, last)
-        notifications = request.env['bus.bus']._poll(
-            subscribe_data['channels'],
-            subscribe_data['last'],
+        if not all(isinstance(c, str) for c in channels):
+            e = "bus.Bus only string channels are allowed."
+            raise ValueError(e)
+        channels_with_db = list(OrderedSet(
+            channel_with_db(request.db, c)
+            for c in self.env["ir.websocket"]._build_bus_channel_list(channels)
+        ))
+        snapshot, notifications = fetch_bus_notifications(
+            self.env.cr,
+            channels_with_db,
+            stream_position,
         )
-        return {'channels': list(subscribe_data['channels']), 'notifications': notifications}
+        return {
+            "channels": channels_with_db,
+            "notifications": notifications,
+            "stream_position": snapshot,
+        }
 
     @route("/websocket/on_closed", type="jsonrpc", auth="public", cors="*")
     def on_websocket_closed(self):

@@ -1,12 +1,15 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import logging
 
 from odoo import models
 from odoo.http import request
 from odoo.http.session import check
 from odoo.tools.misc import OrderedSet
 
-from odoo.addons.bus.models.bus import channel_with_db, dispatch
+from odoo.addons.bus.models.bus import channel_with_db, dispatch, get_current_pg_snapshot
 from odoo.addons.bus.websocket import wsrequest
+
+_logger = logging.getLogger(__name__)
 
 
 class IrWebsocket(models.AbstractModel):
@@ -37,45 +40,25 @@ class IrWebsocket(models.AbstractModel):
         route and Odoo.sh infrastructure should be updated to reflect it. On top of that, the
         event processing is very time, ressource and error sensitive."""
 
-    def _prepare_subscribe_data(self, channels, last):
-        """
-        Parse the data sent by the client and return the list of channels
-        and the last known notification id. This will be used both by the
-        websocket controller and the websocket request class when the
-        `subscribe` event is received.
-
-        :param typing.List[str] channels: List of channels to subscribe to sent
-            by the client.
-        :param int last: Last known notification sent by the client.
-
-        :return:
-            A dict containing the following keys:
-            - channels (set of str): The list of channels to subscribe to.
-            - last (int): The last known notification id.
-
-        :raise ValueError: If the list of channels is not a list of strings.
-        """
-        if not all(isinstance(c, str) for c in channels):
+    def _subscribe(self, data):
+        if not data.get("stream_position"):
+            _logger.warning(
+                "No `stream_position` provided on subscribe: notifications created between "
+                "page load and the first subscription may be missed. The client should pass the "
+                "snapshot captured at page load to avoid this gap. See `_get_bus_session_info`.",
+            )
+            data["stream_position"] = get_current_pg_snapshot(self.env.cr)
+        if not all(isinstance(c, str) for c in data["channels"]):
             e = "bus.Bus only string channels are allowed."
             raise ValueError(e)
-        # sudo - bus.bus: reading non-sensitive last bus id.
-        last = 0 if last > self.env["bus.bus"].sudo()._bus_last_id() else last
-        return {
-            "channels": OrderedSet(
-                channel_with_db(self.env.cr.dbname, c)
-                for c in self._build_bus_channel_list(list(channels))
-            ),
-            "last": last,
-        }
-
-    def _subscribe(self, og_data):
-        data = self._prepare_subscribe_data(og_data["channels"], og_data["last"])
-        dispatch.subscribe(data["channels"], data["last"], wsrequest.ws)
-        # sudo - bus.bus: checking if last received notification still exists is acceptable.
-        if og_data["check_outdated"] and not self.env["bus.bus"].sudo().search(
-            [("id", "=", og_data["last"])],
-        ):
-            wsrequest.ws.send_worker_internal_message("bus/subscription_outdated")
+        all_channels = OrderedSet(channel_with_db(self.env.cr.dbname, c) for c in self._build_bus_channel_list(data["channels"]))
+        dispatch.subscribe(all_channels, data["stream_position"], wsrequest.ws)
+        if data["check_outdated"]:
+            xmin = int(data["stream_position"].split(":")[0])
+            from_notif_domain = [("create_tx_id", "<=", xmin)]
+            # sudo - bus.bus: checking if last received notification still exists is acceptable.
+            if self.env["bus.bus"].sudo().search_count(from_notif_domain, limit=1) == 0:
+                wsrequest.ws.send_worker_internal_message("bus/subscription_outdated")
 
     def _on_websocket_closed(self, cookies):
         """Function invoked upon WebSocket termination.
