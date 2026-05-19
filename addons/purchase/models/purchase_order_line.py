@@ -775,3 +775,6 @@ class PurchaseOrderLine(models.Model):
     def _get_rounding(self):
         self.ensure_one()
         return self.uom_id.rounding
+
+    def _get_product_sellers(self):
+        return self.product_id.seller_ids
