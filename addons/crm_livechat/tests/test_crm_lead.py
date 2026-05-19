@@ -3,6 +3,7 @@
 from odoo import Command
 from odoo.addons.crm.tests.common import TestCrmCommon
 from odoo.addons.mail.tests.common import mail_new_test_user
+from odoo.addons.mail.tools.discuss import Store
 from odoo.tests.common import HttpCase, tagged, users
 
 
@@ -23,6 +24,13 @@ class TestLivechatLead(HttpCase, TestCrmCommon):
             company_id=cls.company_main.id,
             notification_type='email',
             groups='base.group_portal',
+        )
+        cls.user_visitor = mail_new_test_user(
+            cls.env, login="user_visitor",
+            name="Visitor Internal", email="user_visitor@test.example.com",
+            company_id=cls.company_main.id,
+            notification_type="email",
+            groups="base.group_user",
         )
 
     @users('user_sales_leads')
@@ -114,3 +122,24 @@ class TestLivechatLead(HttpCase, TestCrmCommon):
         self.assertFalse(channel.lead_ids)
         channel.with_user(bob_operator).execute_command_lead(body="/lead BobLead")
         self.assertEqual(channel.lead_ids.name, "BobLead")
+
+    @users("user_sales_leads")
+    def test_crm_lead_creation_internal_user(self):
+        self.authenticate("user_visitor", "user_visitor")
+        data = self.make_jsonrpc_request("/im_livechat/get_session", {
+            "channel_id": self.livechat_channel.id,
+            "persisted": True,
+        })
+        channel = self.env["discuss.channel"].browse(data["channel_id"])
+        with self.assertBus(
+            [
+                (self.cr.dbname, "discuss.channel", channel.id, "internal_users"),
+                (self.cr.dbname, "res.partner", self.env.user.partner_id.id),
+            ],
+        ):
+            channel.execute_command_lead(body="/lead TestLead command")
+        lead = channel.lead_ids
+        self.assertEqual(lead.type, "lead")
+        self.assertEqual(lead.partner_id, self.user_visitor.partner_id)
+        store = Store().add(channel, fields=channel._get_livechat_session_fields_to_store())
+        self.assertEqual(store.get_result()["crm.lead"], [{"id": lead.id, "name": lead.name}])
