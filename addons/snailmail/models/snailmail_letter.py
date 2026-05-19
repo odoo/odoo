@@ -554,6 +554,7 @@ class SnailmailLetter(models.Model):
         for page in curr_pdf.pages:
             page.mergePage(new_pdf.getPage(0))
             out.addPage(page)
+            out.getPage(-1).compressContentStreams()
         out_stream = io.BytesIO()
         out.write(out_stream)
         out_bin = out_stream.getvalue()
