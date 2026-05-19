@@ -37,7 +37,14 @@ export class CalendarCommonPopover extends Component {
         this.date = null;
         this.dateDuration = null;
 
-        useExternalListener(window, "pointerdown", (e) => e.preventDefault(), { capture: true });
+        useExternalListener(window, "pointerdown", (e) => {
+            // Prevent the default behavior so the pointer down event only triggers the click-away callback (closing the popover).
+            // If the clicked element is the popover target, allow the default click and drag-&-drop events,
+            // which will also close the popover.
+            if (!e.target.closest(`.fc-event[data-event-id="${this.props.record.id}"]`)) {
+                e.preventDefault();
+            }
+        }, { capture: true });
 
         this.computeDateTimeAndDuration();
     }
