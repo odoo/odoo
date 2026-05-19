@@ -483,8 +483,8 @@ class ProductProduct(models.Model):
                     if move.is_in or move.is_dropship:
                         in_qty = move._get_valued_qty()
                         in_value = move.value
-                        if at_date or move.is_dropship:
-                            in_value = move._get_value(at_date=at_date, forced_std_price=average_cost)
+                        if move.is_dropship:
+                            in_value = move._get_value(forced_std_price=average_cost)
                         if lot:
                             lot_qty = move._get_valued_qty(lot)
                             in_value = (in_value * lot_qty / in_qty) if in_qty else 0
@@ -550,8 +550,6 @@ class ProductProduct(models.Model):
             move = fifo_stack.pop(0)
             last_move = move
             move_value = move.value
-            if at_date:
-                move_value = move._get_value(at_date=at_date)
             if qty_on_first_move:
                 valued_qty = move._get_valued_qty()
                 in_qty = qty_on_first_move
