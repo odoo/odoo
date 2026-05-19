@@ -9,7 +9,7 @@
                 preview="this.preview"
                 value="this.state.value"
                 classes="'o-hb-input-field-text'"
-                inputClasses="'o-hb-input-text'"
+                inputClasses="this.props.inputClasses ? `o-hb-input-text ${this.props.inputClasses}` : 'o-hb-input-text'"
         />
     </BuilderComponent>
 </t>
