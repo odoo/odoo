@@ -3806,7 +3806,10 @@ class MailThread(models.AbstractModel):
         ), reverse=True)  # False before True unless reverse
         # order from oldest to newest
         ancestors = history_ancestors[:3].sorted('id')
-        references = ' '.join(m.message_id for m in (ancestors + message_sudo))
+        if message_sudo.reply_to_force_new:
+            references = message_sudo.message_id
+        else:
+            references = ' '.join(m.message_id for m in (ancestors + message_sudo))
         # prepare notification mail values
         base_mail_values = {
             'mail_message_id': message.id,
