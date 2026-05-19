@@ -347,9 +347,6 @@ test("cropper should not open for external image", async () => {
     await setupEditor(
         `<p>[<img src="https://download.odoocdn.com/icons/website/static/description/icon.png">]</p>`
     );
-    const imageTransform = await waitFor('button[name="image_transform"]');
-    imageTransform.click();
-
     const imageCrop = await waitFor('.btn[name="image_crop"]');
     imageCrop.click();
 
@@ -389,25 +386,4 @@ test("Image cropper disappear on backspace", async () => {
     press("backspace");
     await waitForNone(".o_we_crop_widget", { timeout: 1500 });
     expect("img.o_we_cropper_img").toHaveCount(0);
-});
-
-test("shape remain present in cropper preview", async () => {
-    const base64Image =
-        "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII=";
-    // Mock backend image RPCs
-    onRpc("/html_editor/get_image_info", async () => ({
-        original: { image_src: base64Image },
-    }));
-
-    await setupEditor(`
-        <p>[<img src="${base64Image}">]</p>
-    `);
-    await waitFor(".o-we-toolbar");
-    await click(".o-we-toolbar button[name='shape_rounded']");
-    await expectElementCount(".o-we-toolbar button[name='shape_rounded'].active", 1);
-    expect("img").toHaveClass("rounded");
-
-    await click('.btn[name="image_crop"]');
-    await waitFor(".cropper-face.cropper-move.rounded");
-    expect(".cropper-face.cropper-move.rounded").toHaveCount(1);
 });
