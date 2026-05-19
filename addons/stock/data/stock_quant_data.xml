@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="stock_quant_export_template" model="ir.exports">
+        <field name="name">Template for Inventory Adjustments</field>
+        <field name="resource">stock.quant</field>
+    </record>
+
+    <record id="stock_quant_export_template_line_location_id" model="ir.exports.line">
+        <field name="export_id" ref="stock_quant_export_template"/>
+        <field name="name">location_id</field>
+    </record>
+
+    <record id="stock_quant_export_template_line_product_id" model="ir.exports.line">
+        <field name="export_id" ref="stock_quant_export_template"/>
+        <field name="name">product_id/id</field>
+    </record>
+
+    <record id="stock_quant_export_template_line_product_reference" model="ir.exports.line">
+        <field name="export_id" ref="stock_quant_export_template"/>
+        <field name="name">product_id/display_name</field>
+    </record>
+
+    <record id="stock_quant_export_template_line_lot_name" model="ir.exports.line">
+        <field name="export_id" ref="stock_quant_export_template"/>
+        <field name="name">lot_name</field>
+    </record>
+
+    <record id="stock_quant_export_template_line_package_id" model="ir.exports.line">
+        <field name="export_id" ref="stock_quant_export_template"/>
+        <field name="name">package_id</field>
+    </record>
+
+    <record id="stock_quant_export_template_line_inventory_quantity_auto_apply" model="ir.exports.line">
+        <field name="export_id" ref="stock_quant_export_template"/>
+        <field name="name">inventory_quantity_auto_apply</field>
+    </record>
+
+    <record id="stock_quant_export_template_line_inventory_date" model="ir.exports.line">
+        <field name="export_id" ref="stock_quant_export_template"/>
+        <field name="name">inventory_date</field>
+    </record>
+
+    <record id="stock_quant_export_template_line_user_id" model="ir.exports.line">
+        <field name="export_id" ref="stock_quant_export_template"/>
+        <field name="name">user_id</field>
+    </record>
+
+</odoo>
