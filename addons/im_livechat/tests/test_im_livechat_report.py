@@ -94,6 +94,14 @@ class TestImLivechatReport(TestImLivechatCommon):
             100.0,
             "Rating percentage should be 100%, excluding unrated sessions",
         )
+        result = self.env["im_livechat.report.channel"].formatted_read_group(
+            [], aggregates=["rating:avg"],
+        )
+        self.assertEqual(
+            result[0]["rating:avg"],
+            5.0,
+            "Legacy rating average should remain supported for existing dashboards",
+        )
 
     @classmethod
     def _create_message(cls, channel, author, date):

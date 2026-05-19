@@ -98,6 +98,11 @@ class Im_LivechatReportChannel(models.Model):
     def _table_query(self):
         return SQL("%s %s %s", self._select(), self._from(), self._where())
 
+    def _read_group_select(self, table: TableSQL, aggregate_spec: str) -> SQL:
+        if aggregate_spec == "rating:avg":
+            return SQL("AVG((%s)::numeric)", table["rating"])
+        return super()._read_group_select(table, aggregate_spec)
+
     def _select(self) -> SQL:
         return SQL(
             """
