@@ -75,7 +75,6 @@
                     action="'promptSaveRedirect'" actionParam="field.createAction"
                 />
             </BuilderRow>
-            <!-- TODO className="'o_we_large'" -->
             <BuilderRow t-if="field.type === 'char'" label="field.string" tooltip="field.help">
                 <BuilderTextInput actionParam="{ fieldName: field.name }" action="'addActionField'" default="''"/>
             </BuilderRow>
