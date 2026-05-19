@@ -6,7 +6,12 @@ import time
 from odoo.tests import Form
 from odoo.tests.common import tagged, TransactionCase
 from odoo import fields
+<<<<<<< 3c006aa5f3fdcbf4d9c2128adb7a491e5c4d85b6
 from datetime import timedelta
+||||||| 9b73e503cd063443f18e663faefe7d949ce591de
+=======
+from odoo.exceptions import ValidationError
+>>>>>>> 0533e3709f962fa223b137a9d6623a6600ddc86d
 
 
 class TestEquipmentCommon(TransactionCase):
@@ -166,6 +171,7 @@ class TestEquipmentPostInstall(TestEquipmentCommon):
 
         maintenance.close_date = False
         form = Form(equipment)
+<<<<<<< 3c006aa5f3fdcbf4d9c2128adb7a491e5c4d85b6
 
     def test_maintenance_request_default_schedule_dates(self):
         """
@@ -190,3 +196,35 @@ class TestEquipmentPostInstall(TestEquipmentCommon):
         self.assertGreaterEqual(maintenance.schedule_date, before)
         self.assertLessEqual(maintenance.schedule_date, after)
         self.assertEqual(maintenance.schedule_end, maintenance.schedule_date + timedelta(hours=1))
+||||||| 9b73e503cd063443f18e663faefe7d949ce591de
+=======
+
+    def test_schedule_date_and_end_must_be_set_together(self):
+        request = self.maintenance_request.create({
+            'name': 'Valid maintenance request',
+            'user_id': self.user.id,
+            'owner_user_id': self.user.id,
+            'maintenance_team_id': self.ref('maintenance.equipment_team_maintenance'),
+            'equipment_id': self.env['maintenance.equipment'].create({
+                'name': 'Samsung Monitor "17',
+                'category_id': self.equipment_monitor.id,
+            }).id,
+            'schedule_date': fields.Datetime.now(),
+        })
+
+        with self.assertRaises(ValidationError):
+            self.maintenance_request.create({
+                'name': 'Invalid maintenance request',
+                'user_id': self.user.id,
+                'owner_user_id': self.user.id,
+                'maintenance_team_id': self.ref('maintenance.equipment_team_maintenance'),
+                'equipment_id': request.equipment_id.id,
+                'schedule_end': fields.Datetime.now(),
+            })
+
+        with self.assertRaises(ValidationError):
+            request.write({
+                'schedule_date': False,
+                'schedule_end': fields.Datetime.now(),
+            })
+>>>>>>> 0533e3709f962fa223b137a9d6623a6600ddc86d
