@@ -1307,6 +1307,8 @@ class ProductTemplate(models.Model):
         search_fields = [
             "name",
             "default_code",
+            "barcode",
+            "product_variant_ids.barcode",
             "variants_default_code",
             "description_ecommerce",
             "attribute_line_ids.value_ids.name",
@@ -1374,6 +1376,7 @@ class ProductTemplate(models.Model):
         search_words = search_term.lower().split() if search_term else []
 
         for product, data in zip(self, results_data):
+            attribute_value_ids = []
             combination_info = product._get_combination_info(only_template=True)
             values = product.mapped("attribute_line_ids.value_ids")
             data["attribute_value_ids"] = values.read(["id", "name"])
@@ -1395,6 +1398,26 @@ class ProductTemplate(models.Model):
                     data["website_url"] = product._get_product_url(
                         grouped_attributes_values=matched_values.grouped("attribute_id")
                     )
+
+            # Redirect by matching variant barcode.
+            if search_term:
+                matched_variant = product.product_variant_ids.filtered(
+                    lambda variant: variant.barcode == search_term
+                )[:1]
+
+                if matched_variant:
+                    attribute_value_ids = (
+                        matched_variant.product_template_attribute_value_ids
+                        .product_attribute_value_id
+                        .ids
+                    )
+
+            if attribute_value_ids:
+                data["website_url"] = "%s?attribute_values=%s" % (
+                    data["website_url"].split("?")[0],
+                    ",".join(str(v) for v in sorted(attribute_value_ids)),
+                )
+
         return results_data
 
     def _search_render_results_prices(self, mapping, combination_info):

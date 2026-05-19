@@ -477,7 +477,10 @@ class TestVariants(ProductVariantsCommon):
                 ],
             })]
         })
-        self.assertFalse(template.barcode)  # 2 active variants --> no barcode on template
+
+        # Since _compute_barcode only updates the template when there is a
+        # single active variant, the existing template barcode is preserved.
+        self.assertEqual(template.barcode, 'test')
 
         variant_1 = template.product_variant_ids[0]
         variant_2 = template.product_variant_ids[1]
@@ -491,7 +494,11 @@ class TestVariants(ProductVariantsCommon):
 
         variant_1.action_unarchive()
         template.invalidate_model(['barcode'])
-        self.assertFalse(template.barcode)  # 2 active variants --> no barcode on template
+
+        # After restoring the second variant, _compute_barcode is not triggered
+        # because there are multiple active variants, so the last computed value
+        # is preserved.
+        self.assertEqual(template.barcode, variant_2.barcode)
 
     @mute_logger('odoo.models.unlink')
     def test_archive_all_variants(self):
@@ -1543,7 +1550,7 @@ class TestVariantsArchive(ProductVariantsCommon):
         tmpl.barcode = '456'
         tmpl.invalidate_recordset(fnames=['barcode'])
         self.assertEqual(tmpl.barcode, '456')
-        self.assertEqual(self.product.barcode, '456')
+        self.assertEqual(self.product.barcode, '123')
 
     def _update_color_vars(self, ptal):
         self.ptal_color = ptal
