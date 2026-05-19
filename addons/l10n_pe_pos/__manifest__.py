@@ -17,7 +17,9 @@ Install this if you are using the Point of Sale app in Peru.
         "views/templates.xml",
     ],
     "assets": {
-        "point_of_sale._assets_pos": ["l10n_pe_pos/static/src/**/*"],
+        "point_of_sale._assets_pos": [
+            "l10n_pe_pos/static/src/**/*",
+        ],
     },
     "installable": True,
     "auto_install": True,
