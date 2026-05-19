@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_attendance_tree_inherit_holidays" model="ir.ui.view">
+        <field name="name">hr.attendance.list.holidays</field>
+        <field name="model">hr.attendance</field>
+        <field name="inherit_id" ref="hr_attendance.view_attendance_tree"/>
+        <field name="arch" type="xml">
+            <field name="worked_hours" position="after">
+                <field name="overtime_leave_ids" widget="many2many_tags" optional="show" string="Time"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>

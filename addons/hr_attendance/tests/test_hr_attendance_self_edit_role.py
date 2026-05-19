@@ -64,22 +64,3 @@ class TestHrAttendanceSelfEdit(TransactionCase):
             attendance_other.with_user(self.user_self_edit).write({
                 'check_out': datetime(2023, 1, 1, 18, 0)
             })
-
-    def test_03_approved_restriction(self):
-        """ Test a user with 'own' group cannot edit if status is approved and validation is manager_validation """
-        self.company.attendance_overtime_validation = 'by_manager'
-        attendance = self.env['hr.attendance'].with_user(self.user_self_edit).create({
-            'employee_id': self.emp_self_edit.id,
-            'check_in': datetime(2023, 1, 1, 8, 0),
-            'check_out': datetime(2023, 1, 1, 17, 0),
-        })
-        attendance.with_user(self.user_self_edit)._compute_can_edit()
-        self.assertTrue(attendance.can_edit, "User should be able to edit while not yet approved")
-
-        attendance.with_user(self.admin).write({
-            'overtime_status': 'approved'
-        })
-        attendance_as_user = attendance.with_user(self.user_self_edit)
-        attendance_as_user._compute_can_edit()
-        self.assertEqual(attendance.overtime_status, 'approved', "Status should be approved")
-        self.assertFalse(attendance_as_user.can_edit, "Employee should NOT be able to edit once manager has approved")

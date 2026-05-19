@@ -3,7 +3,6 @@
 import uuid
 
 from odoo import fields, models, api
-from odoo.fields import Domain
 from odoo.tools.urls import urljoin as url_join
 
 
@@ -80,22 +79,7 @@ class ResCompany(models.Model):
             self.env.cr.execute_values(query, values_args)
 
     def write(self, vals):
-        search_domain = Domain.FALSE  # Overtime to generate
-        # Also recompute if the threshold have changed
-        if 'overtime_company_threshold' in vals or 'overtime_employee_threshold' in vals:
-            # If we modify the thresholds only
-            search_domain = Domain.OR(
-                Domain('employee_id.company_id', '=', company.id)
-                for company in self
-                if (vals.get('overtime_company_threshold') != company.overtime_company_threshold)
-                or (vals.get('overtime_employee_threshold') != company.overtime_employee_threshold)
-            )
-
-        res = super().write(vals)
-        if not search_domain.is_false():
-            self.env['hr.attendance'].search(search_domain)._update_overtime()
-
-        return res
+        return super().write(vals)
 
     def _regenerate_attendance_kiosk_key(self):
         self.ensure_one()

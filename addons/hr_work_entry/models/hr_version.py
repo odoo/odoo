@@ -12,6 +12,43 @@ from odoo.tools import float_is_zero
 from odoo.tools.intervals import Intervals
 
 
+class IntervalPayload:
+    """
+    wrapper of work_entry_type and original record (rcl or rca) through the interval pipeline.
+    to use as the third element of every leave/absence interval is an IntervalPayload.
+
+    when merging intervals, the __or__ operator of the payload is used to determine which one has priority (i.e., which work entry type should be chosen in case of overlap).
+    """
+
+    __slots__ = ('work_entry_type', 'record', 'all_records')
+
+    def __init__(self, work_entry_type, record=None):
+        self.work_entry_type = work_entry_type
+        self.record = record  # resource.calendar.leaves or resource.calendar.attendance
+        self.all_records = [record] if record is not None else []
+
+    def __or__(self, other):
+        if other is None:
+            return self
+        winner, loser = (self, other) if self.work_entry_type.sequence <= other.work_entry_type.sequence else (other, self)
+        merged = IntervalPayload(winner.work_entry_type, winner.record)
+        merged.all_records = winner.all_records + [r for r in loser.all_records if r not in winner.all_records]
+        return merged
+
+    def __ror__(self, other):
+        if other is None:
+            return self
+        return other.__or__(self)
+
+    def __lt__(self, other):
+        if not isinstance(other, IntervalPayload):
+            return NotImplemented
+        return self.work_entry_type.sequence < other.work_entry_type.sequence
+
+    def __bool__(self):
+        return bool(self.work_entry_type)
+
+
 class HrVersion(models.Model):
     _inherit = 'hr.version'
 
@@ -35,24 +72,33 @@ class HrVersion(models.Model):
         return []
 
     # Is used to add more values, for example leave_id (in hr_holidays)
-    def _get_more_vals_leave_interval(self, interval, leaves):
+    def _get_more_vals_leave_interval(self, interval, leaves, work_entry_type):
         return []
 
-    def _get_bypassing_work_entry_type_codes(self):
-        return []
+    def _split_intervals(self, intervals_list):
+        # sweep through all payload boundaries to produce proper non-overlapping sub-intervals.
+        # keep_distinct=True only prevents adjacent merging, not overlapping.
+        if not intervals_list:
+            return []
+        times = sorted({t for s, e, _ in intervals_list for t in (s, e)})
+        result = []
+        for t0, t1 in zip(times, times[1:]):
+            active = None
+            for start, end, payload in intervals_list:
+                if start <= t0 and t1 <= end:
+                    active = payload if active is None else (active | payload)
+            if active is not None:
+                result.append((t0, t1, active))
+        return result
 
-    def _get_interval_leave_work_entry_type(self, interval, leaves, bypassing_codes):
-        # returns the work entry time related to the leave that
-        # includes the whole interval.
-        # Overriden in hr_work_entry_holiday to select the
-        # global time off first (eg: Public Holiday > Home Working)
+    def _get_interval_leave_work_entry_type(self, interval):
         self.ensure_one()
-        for leave in leaves:
-            if interval[0] >= leave[0] and interval[1] <= leave[1] and leave[2]:
-                interval_start = interval[0].astimezone(UTC).replace(tzinfo=None)
-                interval_stop = interval[1].astimezone(UTC).replace(tzinfo=None)
-                return self._get_leave_work_entry_type_dates(leave[2], interval_start, interval_stop, self.employee_id)
-        return self.env.ref('hr_work_entry.generic_work_entry_type_leave')
+        payload = interval[2]
+        if not payload:
+            return self.env.ref('hr_work_entry.generic_work_entry_type_leave')
+        interval_start = interval[0].astimezone(UTC).replace(tzinfo=None)
+        interval_stop = interval[1].astimezone(UTC).replace(tzinfo=None)
+        return self._get_leave_work_entry_type_dates(payload.record, interval_start, interval_stop, self.employee_id)
 
     def _get_sub_leave_domain(self):
         return Domain('calendar_id', 'in', [False] + self.resource_calendar_id.ids)
@@ -99,7 +145,7 @@ class HrVersion(models.Model):
         return [interval]
 
     def _get_no_wet_or_wet_match(self, leave, leave_entry_type):
-        return not leave[2].work_entry_type_id or leave[2].work_entry_type_id.id == leave_entry_type.id
+        return not leave[2] or leave[2].work_entry_type == leave_entry_type
 
     # Meant for behavior override
     def _get_real_attendance_work_entry_vals(self, intervals):
@@ -123,17 +169,20 @@ class HrVersion(models.Model):
         start_dt = date_start.replace(tzinfo=UTC) if not date_start.tzinfo else date_start
         end_dt = date_stop.replace(tzinfo=UTC) if not date_stop.tzinfo else date_stop
         version_vals = []
-        bypassing_work_entry_type_codes = self._get_bypassing_work_entry_type_codes()
-
         expected_attendances_by_resource = self.sudo()._get_attendance_intervals(start_dt, end_dt)
-
         resource_calendar_leaves = self._get_resource_calendar_leaves(start_dt, end_dt)
-        # {resource: resource_calendar_leaves}
         all_leaves_by_resource = defaultdict(lambda: self.env['resource.calendar.leaves'])
         for leave in resource_calendar_leaves:
             all_leaves_by_resource[leave.resource_id.id] |= leave
 
         tz_dates = {}
+
+        def _localize(dt):
+            key = (tz, dt)
+            if key not in tz_dates:
+                tz_dates[key] = dt.astimezone(tz)
+            return tz_dates[key]
+
         for version in self:
             employee = version.employee_id
             calendar = version.resource_calendar_id
@@ -152,34 +201,26 @@ class HrVersion(models.Model):
                     if resource and leave.calendar_id and leave.calendar_id != calendar and not leave.resource_id:
                         continue
                     tz = tz if tz else ZoneInfo((resource or version).tz)
-                    if (tz, start_dt) in tz_dates:
-                        start = tz_dates[tz, start_dt]
-                    else:
-                        start = start_dt.astimezone(tz)
-                        tz_dates[tz, start_dt] = start
-                    if (tz, end_dt) in tz_dates:
-                        end = tz_dates[tz, end_dt]
-                    else:
-                        end = end_dt.astimezone(tz)
-                        tz_dates[tz, end_dt] = end
+                    start = _localize(start_dt)
+                    end = _localize(end_dt)
                     dt0 = leave.date_from.astimezone(tz)
                     dt1 = leave.date_to.astimezone(tz)
                     leave_start_dt = max(start, dt0)
                     leave_end_dt = min(end, dt1)
-                    leave_interval = (leave_start_dt, leave_end_dt, leave)
+                    leave_interval = (leave_start_dt, leave_end_dt, IntervalPayload(leave.work_entry_type_id, leave))
                     leave_interval = version._get_valid_leave_intervals(expected_attendances, leave_interval)
                     if leave_interval:
                         if leave.count_as == 'absence':
                             leave_result[resource.id] += leave_interval
                         else:
                             work_result[resource.id] += leave_interval
-            leaves_by_resource = {r.id: Intervals(leave_result[r.id], keep_distinct=True) for r in resources_list}
-            worked_leaves_by_resource = {r.id: Intervals(work_result[r.id], keep_distinct=True) for r in resources_list}
+            leaves_by_resource = {r.id: Intervals(version._split_intervals(leave_result[r.id]), keep_distinct=True) for r in resources_list}
+            worked_leaves_by_resource = {r.id: Intervals(version._split_intervals(work_result[r.id]), keep_distinct=True) for r in resources_list}
 
             leaves = leaves_by_resource[resource.id]
             worked_leaves = worked_leaves_by_resource[resource.id]
 
-            real_attendances = expected_attendances - leaves - worked_leaves
+            # clip absence leaves to scheduled time; leaves on non-working days don't appear on payslip
             if version.is_fully_flexible:
                 real_leaves = leaves
             elif version.is_flexible:
@@ -192,17 +233,18 @@ class HrVersion(models.Model):
                 resources_per_tz = version._get_resources_per_tz()
                 static_attendances = calendar._attendance_intervals_batch(
                     start_dt, end_dt, resources_per_tz=resources_per_tz)[resource.id]
-                real_leaves = (static_attendances & multi_day_leaves) | one_day_leaves
+                real_leaves = (multi_day_leaves & static_attendances) | one_day_leaves
             elif version.has_static_work_entries() or not leaves:
-                real_leaves = version._get_real_leaves_static(leaves, expected_attendances)
+                real_leaves = expected_attendances & leaves
             else:
+                # intersect with static calendar, not badge records, so leave duration is schedule-driven
                 resources_per_tz = version._get_resources_per_tz()
                 static_attendances = calendar._attendance_intervals_batch(
                     start_dt, end_dt, resources_per_tz=resources_per_tz)[resource.id]
-                real_leaves = version._get_real_leaves_static_attendance(leaves, static_attendances)
+                real_leaves = static_attendances & leaves
 
-            real_worked_leaves = version._get_real_worked_leaves(worked_leaves, real_leaves)
-            real_attendances = version._get_real_attendances(expected_attendances, leaves, worked_leaves)
+            real_worked_leaves = worked_leaves - real_leaves
+            real_attendances = self._get_real_attendances(expected_attendances, leaves, worked_leaves)
 
             # A leave period can be linked to several resource.calendar.leave
             split_leaves = []
@@ -225,8 +267,7 @@ class HrVersion(models.Model):
             version_vals += version._get_real_attendance_work_entry_vals(real_attendances)
 
             for interval in real_worked_leaves:
-                work_entry_type = version._get_interval_leave_work_entry_type(interval, worked_leaves, bypassing_work_entry_type_codes)
-                # All benefits generated here are using datetimes converted from the employee's timezone
+                work_entry_type = version._get_interval_leave_work_entry_type(interval)
                 version_vals += [dict([
                     ('date_start', interval[0].astimezone(UTC).replace(tzinfo=None)),
                     ('date_stop', interval[1].astimezone(UTC).replace(tzinfo=None)),
@@ -234,21 +275,16 @@ class HrVersion(models.Model):
                     ('employee_id', employee),
                     ('version_id', version),
                     ('company_id', version.company_id),
-                ] + version._get_more_vals_leave_interval(interval, worked_leaves))]
+                ] + version._get_more_vals_leave_interval(interval, worked_leaves, work_entry_type))]
 
-            leaves_over_attendances = Intervals(leaves, keep_distinct=True) & real_leaves
             for interval in real_leaves:
-                # Could happen when a leave is configured on the interface on a day for which the
-                # employee is not supposed to work, i.e. no attendance_ids on the calendar.
-                # In that case, do try to generate an empty work entry, as this would raise a
-                # sql constraint error
                 if interval[0] == interval[1]:  # if start == stop
                     continue
                 leaves_over_interval = [l for l in leaves_over_attendances if l[0] >= interval[0] and l[1] <= interval[1]]
                 for leave_interval in [(l[0], l[1], interval[2]) for l in leaves_over_interval]:
                     leave_entry_type = version._get_interval_leave_work_entry_type(leave_interval, leaves, bypassing_work_entry_type_codes)
                     # leaves don't have work_entry_type_id set if you create them before having hr_work_entry_installed
-                    interval_leaves = [leave for leave in leaves if version._get_no_wet_or_wet_match(leave, leave_entry_type)]
+                    interval_leaves = [leave for leave in leaves if self._get_no_wet_or_wet_match(leave, leave_entry_type)]
                     interval_start = leave_interval[0].astimezone(UTC).replace(tzinfo=None)
                     interval_stop = leave_interval[1].astimezone(UTC).replace(tzinfo=None)
                     version_vals += [dict([
@@ -261,7 +297,6 @@ class HrVersion(models.Model):
                     ] + version._get_more_vals_leave_interval(interval, interval_leaves))]
         return version_vals
 
-    # will override in attendance bridge to add overtime vals
     def _get_real_attendances(self, attendances, leaves, worked_leaves):
         return attendances - leaves - worked_leaves
 
@@ -296,7 +331,7 @@ class HrVersion(models.Model):
 
     def has_static_work_entries(self):
         # True means this is calendar based, False it is attendance based.
-        # This function gets overridden in hr_work_entry_attendance to correctly check if it's attendance based
+        # This function gets overridden in hr_holidays_attendance to correctly check if it's attendance based
         self.ensure_one()
         return True
 
@@ -477,7 +512,8 @@ class HrVersion(models.Model):
             calendar = version.resource_calendar_id
             if not calendar and not version.hours_per_week and not version.hours_per_day:
                 vals['date'] = date_start.astimezone(tz).date()
-                vals['duration'] = 0.0
+                dt = date_stop - date_start
+                vals['duration'] = round(dt.total_seconds()) / 3600
                 continue
             employee = version.employee_id
             mapped_periods[date_start, date_stop][calendar] |= employee

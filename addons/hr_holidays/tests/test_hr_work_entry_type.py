@@ -56,23 +56,22 @@ class TestHrWorkEntryType(TestHrHolidaysCommon):
             self.assertEqual(employee.leave_date_from, leave_0.request_date_from)
             self.assertEqual(employee.leave_date_to, employee._get_first_working_interval_batch({employee.id: leave_0.date_to}).get(employee.id).date())
 
-        with self.assertRaises(ValidationError):
-            leave_1 = self.env['hr.leave'].create({
+        # leaves overlap between time on and time off is allowed even without allow_request_on_top
+        leave_1 = self.env['hr.leave'].create({
                 'name': 'Doctor Appointment',
                 'employee_id': employee.id,
                 'work_entry_type_id': work_entry_type.id,
                 'request_date_from': '2025-09-03',
                 'request_date_to': '2025-09-03',
         })
-
-        worked_work_entry_type.allow_request_on_top = True
-        leave_1 = self.env['hr.leave'].create({
-            'name': 'Doctor Appointment',
-            'employee_id': employee.id,
-            'work_entry_type_id': work_entry_type.id,
-            'request_date_from': '2025-09-03',
-            'request_date_to': '2025-09-03',
-        })
+        with self.assertRaises(ValidationError):
+            leave_2 = self.env['hr.leave'].create({
+                'name': 'Doctor Appointment',
+                'employee_id': employee.id,
+                'work_entry_type_id': work_entry_type.id,
+                'request_date_from': '2025-09-03',
+                'request_date_to': '2025-09-03',
+            })
 
         self.assertEqual(
             self.env['resource.calendar.leaves'].search([('holiday_id', '=', leave_1.id)]).count_as,

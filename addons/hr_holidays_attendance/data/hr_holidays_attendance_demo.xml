@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <function model="hr.version" name="write">
+        <value model="hr.version" search="[('employee_id', '=', ref('hr.employee_hne'))]"/>
+        <value eval="{'attendance_based': True}"/>
+    </function>
+</odoo>

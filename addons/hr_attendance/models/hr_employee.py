@@ -51,13 +51,31 @@ class HrEmployee(models.Model):
         groups="hr_attendance.group_hr_attendance_own,hr_attendance.group_hr_attendance_officer,hr.group_hr_user")
     hours_last_month_display = fields.Char(
         compute='_compute_hours_last_month', groups="hr.group_hr_user")
-    overtime_ids = fields.One2many(
-        'hr.attendance.overtime.line', 'employee_id', groups="hr_attendance.group_hr_attendance_own,hr_attendance.group_hr_attendance_officer,hr.group_hr_user")
     total_overtime = fields.Float(compute='_compute_total_overtime')
     display_extra_hours = fields.Boolean(related='company_id.hr_attendance_display_overtime')
     display_attendances = fields.Boolean(compute="_compute_display_attendances")
 
-    ruleset_id = fields.Many2one(readonly=False, related="version_id.ruleset_id", inherited=True, groups="hr.group_hr_manager")
+    def get_attendace_data_by_employee(self, date_start, date_stop):
+        attendance_data = {
+            employee_id: {
+                'worked_hours': 0,
+                'overtime_hours': 0,
+            }
+            for employee_id in self.ids
+        }
+        all_attendances = self.env['hr.attendance']._read_group(
+            domain=[
+                ('employee_id', 'in', self.ids),
+                ('check_in', '<', date_stop),
+                ('check_out', '>', date_start),
+            ],
+            groupby=['employee_id'],
+            aggregates=['worked_hours:sum'],
+        )
+        for employee, worked_hours in all_attendances:
+            attendance_data[employee.id]['worked_hours'] += worked_hours
+
+        return attendance_data
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -112,20 +130,9 @@ class HrEmployee(models.Model):
             })
         return res
 
-    @api.depends('overtime_ids.manual_duration', 'overtime_ids', 'overtime_ids.status')
     def _compute_total_overtime(self):
-        mapped_validated_overtimes = dict(
-            self.env['hr.attendance.overtime.line']._read_group(
-            domain=[
-                ('status', '=', 'approved'),
-                ('employee_id', 'in', self.ids),
-            ],
-            groupby=['employee_id'],
-            aggregates=['manual_duration:sum']
-        ))
-
         for employee in self:
-            employee.total_overtime = mapped_validated_overtimes.get(employee, 0)
+            employee.total_overtime = 0.0
 
     def _compute_hours_last_month(self):
         """
@@ -145,20 +152,10 @@ class HrEmployee(models.Model):
                 current_month_attendances = employee.attendance_ids.filtered(
                     lambda att: att.check_in >= start_naive and att.check_out and att.check_out <= end_naive
                 )
-                hours = 0
-                overtime_hours = 0
-                for att in current_month_attendances:
-                    hours += att.worked_hours or 0
-                    overtime_hours += att.validated_overtime_hours or 0
+                hours = sum(att.worked_hours or 0 for att in current_month_attendances)
                 employee.hours_last_month = round(hours, 2)
                 employee.hours_last_month_display = "%g" % employee.hours_last_month
-                # overtime_adjustments = sum(
-                #     ot.duration or 0
-                #     for ot in employee.overtime_ids.filtered(
-                #         lambda ot: ot.date >= start_tz.date() and ot.date <= end_tz.date() and ot.adjustment
-                #     )
-                # )
-                employee.hours_last_month_overtime = round(overtime_hours, 2)
+                employee.hours_last_month_overtime = 0.0
 
     def _compute_hours_today(self):
         now = fields.Datetime.now()
@@ -356,7 +353,7 @@ class HrEmployee(models.Model):
         """
         return Domain.TRUE
 
-    def _get_schedules_by_employee_by_work_type(self, start, stop, version_periods_by_employee):
+    def _get_work_intervals_by_type(self, start, stop, version_periods_by_employee):
         employees_by_calendar = defaultdict(lambda: self.env['hr.employee'])
         leave_intervals_by_cal_by_resource = defaultdict(lambda: defaultdict(Intervals))
         public_leave_intervals_by_cal_by_resource = defaultdict(lambda: defaultdict(Intervals))
@@ -412,7 +409,7 @@ class HrEmployee(models.Model):
                     i_model
                 ) for (i_start, i_stop, i_model) in cal_attendance_intervals_by_resource[employee.resource_id.id]])
 
-        full_schedule_by_employee = {
+        work_intervals_by_type = {
             'leave': defaultdict(Intervals),
             'schedule': defaultdict(Intervals),
             'fully_flexible': defaultdict(Intervals),
@@ -423,36 +420,13 @@ class HrEmployee(models.Model):
             for (p_start, p_stop, version) in intervals:
                 interval = Intervals([(p_start.replace(tzinfo=None), p_stop.replace(tzinfo=None), self.env['resource.calendar'])])
                 if version.is_fully_flexible:
-                    full_schedule_by_employee['fully_flexible'][employee] |= interval
+                    work_intervals_by_type['fully_flexible'][employee] |= interval
                     continue
                 calendar = version.resource_calendar_id
                 employee_leaves = leave_intervals_by_cal_by_resource[calendar][employee.resource_id.id]
                 employee_public_leaves = public_leave_intervals_by_cal_by_resource[calendar][employee.resource_id.id]
-                full_schedule_by_employee['public_leave'][employee] |= employee_public_leaves & interval
-                full_schedule_by_employee['leave'][employee] |= employee_leaves & interval
-                full_schedule_by_employee['schedule'][employee] |= employee_attendances & interval
+                work_intervals_by_type['public_leave'][employee] |= employee_public_leaves & interval
+                work_intervals_by_type['leave'][employee] |= employee_leaves & interval
+                work_intervals_by_type['schedule'][employee] |= employee_attendances & interval
 
-        return full_schedule_by_employee
-
-    def get_attendace_data_by_employee(self, date_start, date_stop):
-        attendance_data = {
-            employee_id: {
-                'worked_hours': 0,
-                'overtime_hours': 0,
-            }
-            for employee_id in self.ids
-        }
-        all_attendances = self.env['hr.attendance']._read_group(
-            domain=[
-                ('employee_id', 'in', self.ids),
-                ('check_in', '<', date_stop),
-                ('check_out', '>', date_start),
-            ],
-            groupby=['employee_id'],
-            aggregates=['worked_hours:sum', 'overtime_hours:sum'],
-        )
-        for employee, worked_hours, overtime_hours in all_attendances:
-            attendance_data[employee.id]['worked_hours'] += worked_hours
-            attendance_data[employee.id]['overtime_hours'] += overtime_hours
-
-        return attendance_data
+        return work_intervals_by_type

@@ -1,36 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, models, fields
-from odoo.fields import Domain
+from odoo import api, models
 
 
 class HrVersion(models.Model):
     _name = 'hr.version'
     _inherit = 'hr.version'
-
-    def _default_ruleset_id(self):
-        company_ruleset = self.env['hr.attendance.overtime.ruleset'].sudo().search([
-            ('company_id', '=', self.env.company.id),
-        ], limit=1).sudo(False)
-        if company_ruleset:
-            return company_ruleset
-        default_ruleset = self.env.ref('hr_attendance.hr_attendance_default_ruleset', raise_if_not_found=False)
-        return default_ruleset if default_ruleset and default_ruleset.sudo().active else False
-
-    ruleset_id = fields.Many2one(
-         "hr.attendance.overtime.ruleset",
-         groups="hr.group_hr_manager",
-         tracking=True,
-         index='btree_not_null',
-         default=_default_ruleset_id,
-    )
-
-    has_ruleset_id = fields.Boolean(compute="_compute_has_ruleset_id", groups="hr.group_hr_user")
-
-    @api.depends("ruleset_id")
-    def _compute_has_ruleset_id(self):
-        for version in self:
-            version.has_ruleset_id = version.ruleset_id
 
     @api.model
     def _get_versions_by_employee_and_date(self, employee_dates):
@@ -44,7 +19,6 @@ class HrVersion(models.Model):
         all_versions = self.env['hr.version'].search([
             ('employee_id', 'in', employees.ids),
             ('date_version', '<=', date_to),
-            # note: no check on date_from because we don't store the version date end
         ])
         versions_by_employee = all_versions.grouped('employee_id')
         version_by_employee_and_date = {employee: {} for employee in employees}
@@ -58,20 +32,3 @@ class HrVersion(models.Model):
                     version_index += 1
                 version_by_employee_and_date[employee][date] = versions[version_index]
         return version_by_employee_and_date
-
-    def action_open_version_selector(self):
-        action = self.env['ir.actions.act_window']._for_xml_id('hr_attendance.hr_version_list_view_add')
-        ruleset_id = self.env.context.get('default_ruleset_id', False)
-        action['domain'] = Domain.AND([[("ruleset_id", "!=", ruleset_id)], self.env["hr.version"]._get_current_versions_domain()])
-        action['context'] = {'default_ruleset_id': ruleset_id}
-        return action
-
-    def action_unassign_ruleset(self):
-        self.ruleset_id = False
-
-    def action_assign_ruleset(self):
-        ruleset_id = self.env.context.get('default_ruleset_id', False)
-        if not ruleset_id:
-            return
-
-        self.ruleset_id = ruleset_id

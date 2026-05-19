@@ -1,71 +1,101 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from collections import defaultdict
-from datetime import timedelta
+from datetime import UTC
+from zoneinfo import ZoneInfo
 
-from odoo import api, fields, models, _
-from odoo.exceptions import ValidationError
+from odoo import api, fields, models
+from odoo.fields import Domain
 from odoo.tools import float_round
+from odoo.addons.resource.models.utils import HOURS_PER_DAY
 
 
 class HrLeave(models.Model):
     _inherit = 'hr.leave'
 
-    employee_overtime = fields.Float(compute='_compute_employee_overtime', groups='base.group_user')
-    overtime_deductible = fields.Boolean(compute='_compute_overtime_deductible')
+    attendance_id = fields.Many2one(
+        'hr.attendance',
+        string="Source Attendance",
+        ondelete='cascade',
+        index=True,
+        copy=False,
+        help="The attendance record that generated this leave.",
+    )
 
-    @api.depends('work_entry_type_id')
-    def _compute_overtime_deductible(self):
-        for leave in self:
-            leave.overtime_deductible = leave.work_entry_type_id.overtime_deductible and not leave.work_entry_type_id.requires_allocation
+    def _get_generated_leave_domain(self):
+        return super()._get_generated_leave_domain() | Domain('attendance_id', '!=', False)
 
-    @api.model_create_multi
-    def create(self, vals_list):
-        res = super().create(vals_list)
-        self._check_overtime_deductible(res)
-        return res
+    def _compute_display_name(self):
+        super()._compute_display_name()
+        for leave in self.filtered('is_time_rule_output'):
+            if not (leave.date_from and leave.date_to):
+                continue
+            total_seconds = (leave.date_to - leave.date_from).total_seconds()
+            h, rem = divmod(int(total_seconds), 3600)
+            m = rem // 60
+            duration = f'{h}h{m:02d}' if m else f'{h}h'
+            leave.display_name = f'{leave.work_entry_type_id.name} {duration}'.strip()
 
-    def write(self, vals):
-        res = super().write(vals)
-        fields_to_check = {'number_of_days', 'request_date_from', 'request_date_to', 'state', 'employee_id', 'work_entry_type_id'}
-        if not any(field for field in fields_to_check if field in vals):
-            return res
-        self._check_overtime_deductible(self)
-        return res
+    def _get_durations(self, check_work_entry_type=True, resource_calendar=None, additional_domain=None):
+        raw = self.filtered(lambda l: l.attendance_id and l.date_from and l.date_to)
+        result = super(HrLeave, self - raw)._get_durations(
+            check_work_entry_type=check_work_entry_type,
+            resource_calendar=resource_calendar,
+            additional_domain=additional_domain,
+        )
+        for leave in raw:
+            hours = (leave.date_to - leave.date_from).total_seconds() / 3600
+            calendar = resource_calendar or leave.resource_calendar_id
+            hours_per_day = calendar.hours_per_day if calendar else HOURS_PER_DAY
+            result[leave.id] = (hours / hours_per_day, hours)
+        return result
 
-    @api.depends('number_of_hours', 'employee_id', 'work_entry_type_id')
-    def _compute_employee_overtime(self):
-        diff_by_employee = self.employee_id._get_deductible_employee_overtime()
-        for leave in self:
-            leave.employee_overtime = diff_by_employee[leave.employee_id]
+    @api.depends('attendance_id', 'date_from', 'date_to')
+    def _compute_request_hour_from_to(self):
+        att_leaves = self.filtered('attendance_id')
+        for leave in att_leaves:
+            tz = ZoneInfo(leave.employee_id.tz or 'UTC')
+            check_in = leave.date_from.replace(tzinfo=UTC).astimezone(tz)
+            check_out = leave.date_to.replace(tzinfo=UTC).astimezone(tz)
+            leave.request_hour_from = check_in.hour + check_in.minute / 60
+            leave.request_hour_to = check_out.hour + check_out.minute / 60
+        super(HrLeave, self - att_leaves)._compute_request_hour_from_to()
 
-    def _check_overtime_deductible(self, leaves):
-        # If the type of leave is overtime deductible, we have to check that the employee has enough extra hours
-        hours = leaves.employee_id._get_deductible_employee_overtime()
-        for leave in leaves.filtered('overtime_deductible'):
-            if hours[leave.employee_id] < 0:
-                if leave.employee_id.user_id == self.env.user:
-                    raise ValidationError(_('You do not have enough extra hours to request this leave'))
-                raise ValidationError(_('The employee does not have enough extra hours to request this leave.'))
+    @api.depends('attendance_id', 'attendance_id.check_in', 'attendance_id.check_out')
+    def _compute_date_from_to(self):
+        att_leaves = self.filtered(lambda l: l.attendance_id and not l.source_leave_id)
+        for leave in att_leaves:
+            if not leave.date_from or not leave.date_to:
+                att = leave.attendance_id
+                leave.date_from = att.check_in.replace(tzinfo=None) if att.check_in.tzinfo else att.check_in
+                leave.date_to = att.check_out.replace(tzinfo=None) if att.check_out.tzinfo else att.check_out
+        super(HrLeave, self - att_leaves)._compute_date_from_to()
 
-    def action_reset_confirm(self):
-        self._check_overtime_deductible(self)
-        res = super().action_reset_confirm()
-        return res
-
-    def action_approve(self, check_state=True):
-        res = super().action_approve(check_state)
-        self._check_overtime_deductible(self)
-        return res
-
-    def _update_leaves_overtime(self):  # TODO: Remove in master, since its no longer used.
-        date_from, date_to = self.mapped('date_from'), self.mapped('date_to')
-        if date_from and date_to:
-            self.env['hr.attendance'].sudo().search([
-                ('check_in', '<=', max(date_to)),
-                ('check_out', '>=', min(date_from)),
-                ('employee_id', 'in', self.employee_id.ids),
-            ])._update_overtime()
+    def _get_source_leaves_for_time_rules(self, employee, start_dt, end_dt):
+        source_leaves = super()._get_source_leaves_for_time_rules(employee, start_dt, end_dt)
+        tz = ZoneInfo(employee.tz or 'UTC')
+        auto_ctx = dict(
+            skip_time_rules=True,
+            leave_fast_create=True,
+            leave_skip_date_check=True,
+            leave_skip_state_check=True,
+            tracking_disable=True,
+            mail_activity_automation_skip=True,
+        )
+        for leave in source_leaves.filtered('attendance_id'):
+            att = leave.attendance_id
+            if not att.check_out:
+                continue
+            check_in = att.check_in.replace(tzinfo=None) if att.check_in.tzinfo else att.check_in
+            check_out = att.check_out.replace(tzinfo=None) if att.check_out.tzinfo else att.check_out
+            if leave.date_from == check_in and leave.date_to == check_out:
+                continue
+            leave.with_context(**auto_ctx).write({
+                'date_from': check_in,
+                'date_to': check_out,
+                'request_date_from': att.check_in.replace(tzinfo=UTC).astimezone(tz).date(),
+                'request_date_to': att.check_out.replace(tzinfo=UTC).astimezone(tz).date(),
+            })
+        return source_leaves
 
     def _force_cancel(self, *args, **kwargs):
         super()._force_cancel(*args, **kwargs)

@@ -22,7 +22,6 @@ class TestHrAttendance(TransactionCase):
             'name': "François Russie",
             'user_id': cls.user.id,
             'pin': '1234',
-            'ruleset_id': False,
         })
         cls.employee_kiosk = cls.env['hr.employee'].create({
             'name': "Machiavel",
@@ -174,3 +173,107 @@ class TestHrAttendance(TransactionCase):
             self.test_employee.with_user(self.hr_user).action_archive()
             self.assertTrue(not self.test_employee.active, "Employee should be archived successfully with sudo()")
             self.assertEqual(test_attendance.check_out, fields.Datetime.now(), "Attendance should be checked out at the time of archiving")
+
+    @freeze_time("2026-02-26 07:00:00")
+    def test_auto_check_out_specific_time(self):
+        """Test various check-in times with 06:00 cutoff"""
+        self.company.write({
+            'auto_check_out': True,
+            'auto_check_out_mode': 'specific_time',
+            'auto_check_out_specific_time': 6.0,
+        })
+        night_shift, before_cutoff, one_min_before, midnight, just_after_midnight, already_checked, flexible = self.env['hr.attendance'].create([
+            {'employee_id': self.employee.id, 'check_in': datetime(2026, 2, 25, 22, 0)},
+            {'employee_id': self.other_employee.id, 'check_in': datetime(2026, 2, 26, 1, 0)},
+            {'employee_id': self.jpn_employee.id, 'check_in': datetime(2026, 2, 25, 15, 0)},
+            {'employee_id': self.honolulu_employee.id, 'check_in': datetime(2026, 2, 25, 12, 0)},
+            {'employee_id': self.no_contract_employee.id, 'check_in': datetime(2026, 2, 25, 23, 1)},
+            {'employee_id': self.future_contract_employee.id, 'check_in': datetime(2026, 2, 26, 1, 0), 'check_out': datetime(2026, 2, 26, 4, 30)},
+            {'employee_id': self.flexible_employee.id, 'check_in': datetime(2026, 2, 26, 1, 0)},
+        ])
+        initial_checkout = already_checked.check_out
+        self.assertEqual(night_shift.check_out, False)
+        self.env['hr.attendance']._cron_auto_check_out_specific_time()
+        self.assertEqual(night_shift.check_out, datetime(2026, 2, 26, 6, 0))
+        self.assertEqual(night_shift.out_mode, 'auto_check_out')
+        self.assertEqual(before_cutoff.check_out, datetime(2026, 2, 26, 6, 0))
+        # 06:00 JST = 21:00 UTC previous day (JST = UTC+09:00)
+        self.assertEqual(one_min_before.check_out, datetime(2026, 2, 25, 21, 0))
+        # 06:00 HST = 16:00 UTC (HST = UTC-10:00)
+        self.assertEqual(midnight.check_out, datetime(2026, 2, 25, 16, 0))
+        self.assertEqual(just_after_midnight.check_out, datetime(2026, 2, 26, 6, 0))
+        self.assertEqual(already_checked.check_out, initial_checkout)
+        self.assertEqual(flexible.check_out, datetime(2026, 2, 26, 6, 0))
+
+    @freeze_time("2026-02-27 13:00:00")
+    def test_auto_check_out_specific_time_old_attendances(self):
+        """Test multiday forgotten and backdated attendances"""
+        self.company.write({
+            'auto_check_out': True,
+            'auto_check_out_mode': 'specific_time',
+            'auto_check_out_specific_time': 6.0,
+        })
+        multiday, backdated, very_old = self.env['hr.attendance'].create([
+            {'employee_id': self.employee.id, 'check_in': datetime(2026, 2, 24, 1, 0)},
+            {'employee_id': self.other_employee.id, 'check_in': datetime(2026, 2, 25, 2, 0)},
+            {'employee_id': self.jpn_employee.id, 'check_in': datetime(2026, 2, 25, 16, 0)},
+        ])
+        self.env['hr.attendance']._cron_auto_check_out_specific_time()
+        self.assertEqual(multiday.check_out, datetime(2026, 2, 24, 6, 0))
+        self.assertEqual(backdated.check_out, datetime(2026, 2, 25, 6, 0))
+        self.assertEqual(very_old.check_out, datetime(2026, 2, 25, 21, 0))
+
+    @freeze_time("2026-02-27 00:30:00")
+    def test_auto_check_out_specific_time_edge_times(self):
+        """Test cutoff times at start and end of day"""
+        self.company.write({
+            'auto_check_out': True,
+            'auto_check_out_mode': 'specific_time',
+            'auto_check_out_specific_time': 23.98,
+        })
+        end_of_day = self.env['hr.attendance'].create({
+            'employee_id': self.employee.id,
+            'check_in': datetime(2026, 2, 26, 4, 30),
+        })
+        self.env['hr.attendance']._cron_auto_check_out_specific_time()
+        self.assertEqual(end_of_day.check_out, datetime(2026, 2, 26, 23, 59))
+        with freeze_time("2026-02-26 07:00:00"):
+            self.company.write({'auto_check_out_specific_time': 0.0})
+            start_of_day = self.env['hr.attendance'].create({
+                'employee_id': self.other_employee.id,
+                'check_in': datetime(2026, 2, 25, 16, 30),
+            })
+            self.env['hr.attendance']._cron_auto_check_out_specific_time()
+            self.assertEqual(start_of_day.check_out, datetime(2026, 2, 26, 0, 0))
+
+    def test_auto_check_out_two_weeks_calendar(self):
+        """Test case: two weeks calendar with different attendances depending on the week. No morning attendance on
+        wednesday of the first week."""
+        self.company.write({
+            'auto_check_out': True,
+            'auto_check_out_tolerance': 0
+        })
+        self.employee.resource_calendar_id.write({
+            'calendar_type': 'variable',
+            'attendance_ids': [(5, 0, 0),
+                               (0, 0, {'date': datetime(2025, 3, 5), 'hour_from': 12, 'hour_to': 16}),
+                               (0, 0, {'date': datetime(2025, 3, 12), 'hour_from': 8, 'hour_to': 16})],
+        })
+
+        with freeze_time("2025-03-05 22:00:00"):
+            att = self.env['hr.attendance'].create({
+                'employee_id': self.employee.id,
+                'check_in': datetime(2025, 3, 5, 8, 0)
+            })
+            self.env['hr.attendance']._cron_auto_check_out()
+            self.assertEqual(att.worked_hours, 4)
+            self.assertEqual(att.check_out, datetime(2025, 3, 5, 12, 0))
+
+        with freeze_time("2025-03-12 22:00:00"):
+            att = self.env['hr.attendance'].create({
+                'employee_id': self.employee.id,
+                'check_in': datetime(2025, 3, 12, 8, 0),
+            })
+            self.env['hr.attendance']._cron_auto_check_out()
+            self.assertEqual(att.worked_hours, 8)
+            self.assertEqual(att.check_out, datetime(2025, 3, 12, 16, 0))

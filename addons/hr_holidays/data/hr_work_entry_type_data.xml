@@ -65,6 +65,12 @@
         }"/>
     </function>
 
+<!-- Attendance (WORK100) -->
+    <function model="hr.work.entry.type" name="write">
+        <value model="hr.work.entry.type" eval="obj().sudo().search([('code', '=', 'WORK100')]).ids"/>
+        <value eval="{'requires_allocation': False}"/>
+    </function>
+
 <!-- BE : Belgium -->
     <record id="hr_work_entry.l10n_be_work_entry_type_small_unemployment" model="hr.work.entry.type">
         <field name="requires_allocation">True</field>

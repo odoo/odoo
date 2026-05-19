@@ -48,12 +48,6 @@
                 <button name="open_barcode_scanner" string="Read a badge" type="object" class="btn btn-link" invisible="barcode"/>
             </xpath>
             <!-- identification_group -->
-            <group name="identification_group" position="inside">
-                <field 
-                    name="ruleset_id" string="Overtime Ruleset"
-                    placeholder="Select a ruleset to manage overtime."
-                    />
-            </group>
         </field>
     </record>
 
@@ -126,7 +120,6 @@
                 js_class="attendance_calendar_view"
                 date_start="check_in"
                 date_stop="check_out"
-                color="overtime_status"
                 create="0"
                 delete="0"
                 edit="0"
@@ -142,9 +135,6 @@
         <field name="mode">primary</field>
         <field name="inherit_id" ref="hr_attendance.hr_attendance_view_form"/>
         <field name="arch" type="xml">
-            <field name="overtime_status" position="attributes">
-                <attribute name="readonly">1</attribute>
-            </field>
             <xpath expr="//field[@id='employee_no_manager']" position="replace"/>
             <xpath expr="//field[@id='employee_manager']" position="replace"/>
             <xpath expr="//field[@id='employee_no_officer']" position="attributes">
@@ -156,15 +146,6 @@
             <field name="check_out" position="attributes">
                 <attribute name="readonly">1</attribute>
             </field>
-            <field name="validated_overtime_hours" position="attributes">
-                <attribute name="readonly">1</attribute>
-            </field>
-            <button name="action_approve_overtime" position="attributes">
-                <attribute name="invisible">1</attribute>
-            </button>
-            <button name="action_refuse_overtime" position="attributes">
-                <attribute name="invisible">1</attribute>
-            </button>
         </field>
     </record>
 
