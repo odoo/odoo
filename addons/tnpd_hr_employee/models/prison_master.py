@@ -23,10 +23,7 @@ class TnpdPrisonMaster(models.Model):
     )
     active = fields.Boolean(default=True)
 
-    _sql_constraints = [
-        (
-            'uniq_name_type',
-            'UNIQUE(name, prison_type)',
-            'A prison/jail with this name already exists for the selected type.',
-        ),
-    ]
+    _uniq_name_type = models.Constraint(
+        'UNIQUE (name, prison_type)',
+        'A prison/jail with this name already exists for the selected type.',
+    )

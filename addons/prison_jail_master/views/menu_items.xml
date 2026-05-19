@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Prison Jail Master — Menu Structure
+
+    Prison Management  (root, sequence=50)
+    └── Jail Master
+        ├── All Jails
+        ├── Central Jails
+        ├── District Jails
+        └── Sub Jails
+
+    The "Prison Management" root menu is defined here so that dependent
+    modules (tnpd_hr_employee, etc.) can add their own sub-menus to it
+    by referencing menu_prison_management_root.
+-->
+<odoo>
+<data>
+
+    <!-- ── Root menu ────────────────────────────────────────────────────── -->
+    <menuitem id="menu_prison_management_root"
+              name="Prison Management"
+              sequence="50"
+              web_icon="prison_jail_master,static/description/icon.png"/>
+
+    <!-- ── Jail Master group ─────────────────────────────────────────────── -->
+    <menuitem id="menu_prison_jail_master_group"
+              name="Jail Master"
+              parent="menu_prison_management_root"
+              sequence="10"/>
+
+    <menuitem id="menu_prison_jail_all"
+              name="All Jails"
+              parent="menu_prison_jail_master_group"
+              action="action_prison_jail_all"
+              sequence="10"/>
+
+    <menuitem id="menu_prison_jail_central"
+              name="Central Jails"
+              parent="menu_prison_jail_master_group"
+              action="action_prison_jail_central"
+              sequence="20"/>
+
+    <menuitem id="menu_prison_jail_district"
+              name="District Jails"
+              parent="menu_prison_jail_master_group"
+              action="action_prison_jail_district"
+              sequence="30"/>
+
+    <menuitem id="menu_prison_jail_sub"
+              name="Sub Jails"
+              parent="menu_prison_jail_master_group"
+              action="action_prison_jail_sub"
+              sequence="40"/>
+
+</data>
+</odoo>

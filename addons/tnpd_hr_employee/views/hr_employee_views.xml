@@ -90,18 +90,47 @@
                     <!-- ═══════════════════════════════════════════════════
                          4. PRESENT STATION
                          Current posting details.
+
+                         Hierarchy-aware Many2one fields (x_*_jail_id) are the
+                         primary fields. The legacy Char fields (x_central_prison,
+                         x_district_jail, x_sub_jail) are kept for backward
+                         compatibility and are shown in a collapsed section.
+
+                         Cascading domain logic:
+                           Central Jail → District Jail (filtered by central)
+                                        → Sub Jail (filtered by district)
                     ════════════════════════════════════════════════════ -->
                     <group string="Present Station">
                         <group>
                             <field name="x_date_present_station"/>
-                            <field name="x_central_prison"
-                                   placeholder="e.g. Central Prison, Chennai"/>
                         </group>
-                        <group>
-                            <field name="x_district_jail"
-                                   placeholder="e.g. District Jail, Coimbatore"/>
-                            <field name="x_sub_jail"
-                                   placeholder="e.g. Sub Jail, Pollachi"/>
+                    </group>
+
+                    <!-- Cascading Jail selection:
+                         Central → District Jail (only DJs under that Central)
+                                 → Sub Jail (DJs under selected DJ; or if no DJ,
+                                   Sub Jails directly under the Central Prison)
+                         District Jail is optional — some Central Prisons (e.g. Vellore,
+                         Tiruchirappalli) have no District Jails and their Sub Jails
+                         are administered directly by the Central Prison. -->
+                    <group string="Present Station — Jail Assignment">
+                        <group string="Central Jail">
+                            <field name="x_central_jail_id"
+                                   domain="[('jail_type', '=', 'central_jail'), ('active', '=', True)]"
+                                   options="{'no_create': True, 'no_quick_create': True}"
+                                   placeholder="Select Central Jail…"/>
+                        </group>
+                        <group string="District Jail (if applicable)">
+                            <field name="x_district_jail_id"
+                                   domain="x_central_jail_id and [('jail_type', '=', 'district_jail'), ('parent_id', '=', x_central_jail_id), ('active', '=', True)] or [('jail_type', '=', 'district_jail'), ('active', '=', True)]"
+                                   options="{'no_create': True, 'no_quick_create': True}"
+                                   placeholder="Select District Jail… (optional)"/>
+                        </group>
+                        <group string="Sub Jail">
+                            <field name="x_sub_jail_id"
+                                   domain="x_district_jail_id and [('jail_type', '=', 'sub_jail'), ('parent_id', '=', x_district_jail_id), ('active', '=', True)] or x_central_jail_id and [('jail_type', '=', 'sub_jail'), ('parent_id', '=', x_central_jail_id), ('active', '=', True)] or [('jail_type', '=', 'sub_jail'), ('active', '=', True)]"
+                                   options="{'no_create': True, 'no_quick_create': True}"
+                                   placeholder="Select Sub Jail…"/>
                         </group>
                     </group>
 
