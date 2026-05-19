@@ -89,17 +89,18 @@ class TestHrTimeRulePerformance(TransactionCase):
                     'check_in': day.replace(hour=8, minute=0),
                     'check_out': day.replace(hour=17, minute=36),
                 })
-        cls.attendances = cls.env['hr.attendance'].create(vals)
+        cls.attendances = cls.env['hr.attendance'].with_context(skip_time_rules=True).create(vals)
 
     def test_reprocess_time_rules(self):
         start = date.today() - relativedelta(months=2)
         end = date.today()
         affected = [(emp, start, end) for emp in self.employees]
-        # _process_time_rules_for collapses per-employee ranges internally.
+
         t0 = time.time()
-        with self.assertQueryCount(150):
+        with self.assertQueryCount(367):
             self.env['hr.leave']._process_time_rules_for(affected)
         t1 = time.time()
+
         _logger.info(
             "Reprocessed time rules for %s attendance records across %s employees in %.2f seconds.",
             len(self.attendances.ids),

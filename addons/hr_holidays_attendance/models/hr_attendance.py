@@ -86,8 +86,7 @@ class HrAttendance(models.Model):
                     to_create.append(vals)
 
             if to_create:
-                new_leaves = Leave.with_context(**auto_ctx).create(to_create)
-                new_leaves
+                Leave.with_context(**auto_ctx).create(to_create)
 
     # -------------------------------------------------------------------------
     # create / write / unlink hooks
