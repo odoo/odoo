@@ -10,6 +10,7 @@ import { CarouselMultipleItemHeaderMiddleButtons } from "./carousel_multiple_ite
  * @property { CarouselMultipleOptionPlugin['addSlide'] } addSlide
  * @property { CarouselMultipleOptionPlugin['removeSlide'] } removeSlide
  * @property { CarouselOptionPlugin['slideCarousel'] } slideCarousel
+ * @property { CarouselOptionPlugin['updateControllers'] } updateControllers
  */
 
 export class CarouselMultipleOptionPlugin extends Plugin {
@@ -47,8 +48,8 @@ export class CarouselMultipleOptionPlugin extends Plugin {
         },
         builder_actions: {
             AddCarouselMultipleSlideAction,
-            ChangeSlidesToDisplayAction,
             SlideCarouselMultipleAction,
+            ChangeSlidesToDisplayAction,
         },
         on_cloned_handlers: this.onCloned.bind(this),
         on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
@@ -293,30 +294,11 @@ export class ChangeSlidesToDisplayAction extends BuilderAction {
     static id = "changeSlidesToDisplay";
     static dependencies = ["carouselMultipleOption"];
 
-    setup() {
-        this.preview = false;
-    }
-
-    load({ editingElement: el }) {
-        const displayedNumberClass = [...el.classList].find((className) =>
-            className.startsWith("o_displayed_items_")
-        );
-        return (displayedNumberClass && parseInt(displayedNumberClass?.split("_").at(-1))) || 1;
-    }
-
-    async apply({ editingElement: el, value, loadResult: displayedItemsNumber }) {
-        if (displayedItemsNumber === parseInt(value)) {
-            return;
-        }
-
+    async apply({ editingElement: el }) {
+        // When changing the number of slides to display, we also need to
+        // update carousel controllers, because they may have been shown/hidden
+        // when we added/removed cards.
         this.dependencies.carouselMultipleOption.updateControllers(el);
-        // Restart the slider when we change the number of displayed slides.
-        const itemsEls = el.querySelectorAll(".carousel-item");
-        const activeItemEl = el.querySelector(".carousel-item.active");
-        const activeItemIndex = Array.from(itemsEls).indexOf(activeItemEl);
-        if (activeItemIndex != 0) {
-            await this.dependencies.carouselMultipleOption.slideCarousel(el, 0, itemsEls[0]);
-        }
     }
 }
 

@@ -5,7 +5,7 @@
         --carousel-multiple-current-index: 0;
         --carousel-multiple-items-gap: 16px;
 
-        --carousel-multiple-item-width: calc((100% - var(--carousel-multiple-items-gap) * (var(--carousel-multiple-items) - 1)) / var(--carousel-multiple-items)); // (100% - gap * (n - 1)) / n
+        --carousel-multiple-item-width: calc((100% - var(--carousel-multiple-items-gap) * (var(--carousel-multiple-items-per-slide) - 1)) / var(--carousel-multiple-items-per-slide)); // (100% - gap * (n - 1)) / n
 
         @extend %s_carousel_variants;
 
@@ -32,40 +32,42 @@
 
         .carousel-item {
             width: var(--carousel-multiple-item-width);
-            scroll-snap-align: center;
             // We need to remove these transform/transition to have a smooth slide
             transform: none;
             transition: none;
         }
 
-        @for $i from 2 through 5 {
+        @for $i from 1 through 5 {
             &.o_displayed_items_#{$i} {
-                @include media-breakpoint-between(md,xl) {
-                    $-display-on-tablet: $i - 1;
-                    --carousel-multiple-items-per-slide: #{$-display-on-tablet};
-
-                    .carousel-indicators button:nth-last-child(-n + #{$-display-on-tablet - 1}) {
-                        display: none;
-                    }
-                }
-
-                @include media-breakpoint-up(xl) {
+                @if $i == 1 {
                     --carousel-multiple-items-per-slide: #{$i};
+                } @else {
+                    @include media-breakpoint-up(xl) {
+                        --carousel-multiple-items-per-slide: #{$i};
+                        $-hidden-indicators: $i - 1;
 
-                    .carousel-indicators button:nth-last-child(-n + #{$i - 1}) {
-                        display: none;
+                        .carousel-indicators button:nth-last-child(-n + #{$-hidden-indicators}) {
+                            display: none;
+                        }
                     }
                 }
             }
         }
 
-        // Scroll snap on mobile
+        // Display 2 slides on tablet except when 1 is selected
+        @include media-breakpoint-between(md, xl) {
+            &:not(.o_displayed_items_1) {
+                --carousel-multiple-items-per-slide: 2;
+
+                .carousel-indicators button:nth-last-child(-n + 1) {
+                    display: none;
+                }
+            }
+        }
+
         @include media-breakpoint-down(md) {
-            --carousel-multiple-items-per-slide: 1 !important;
-            overflow-x: scroll;
-            overflow-y: hidden;
-            scrollbar-color: var(--IndicatorsNumbers__Scrollbar-color, #{rgba($carousel-indicator-active-bg, .15)}) transparent;
-            scrollbar-width: thin;
+            // Always display 1 slide on mobile
+            --carousel-multiple-items-per-slide: 1;
 
             #wrap &.container {
                 &::before, &::after {
@@ -77,6 +79,10 @@
                 // Keep the padding right after scrolling to the last item.
                 flex-shrink: 0;
                 width: calc(var(--gutter-x) * .5);
+            }
+
+            .o_horizontal_controllers {
+                padding-top: calc(var(--CarouselControllers-size, 3rem) + 1rem);
             }
         }
     }

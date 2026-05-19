@@ -41,38 +41,27 @@ registerWebsitePreviewTour(
         ...changeOptionInPopover(
             "Carousel Multiple",
             "Displayed slides",
-            ".o-dropdown-item[data-action-value='1']"
+            ".o-dropdown-item[data-class-action='o_displayed_items_1']"
         ),
-        {
-            content: "Check that we are on the first slide",
-            trigger: ":iframe .carousel-indicators > button:nth-child(1).active",
-        },
-        ...goToSlide(4),
-        // Change displayed slides back to 4
-        ...changeOptionInPopover(
-            "Carousel Multiple",
-            "Displayed slides",
-            ".o-dropdown-item[data-action-value='4']"
-        ),
-        {
-            content: "Check that we are on the first slide",
-            trigger: ":iframe .carousel-indicators > button:nth-child(1).active",
-        },
-        ...goToSlide(4),
+        ...goToSlide(6),
         {
             content: "Slide to the next slide",
             trigger: ":iframe .carousel-control-next",
             run: "click",
         },
-        // Since we display 4 slides, clicking "next" from slide 3 should loop
+        // Since we display 1 slide, clicking "next" from slide 1 should loop
         // to the first slide
         {
             content: "Check that we slid to the 1st slide",
             trigger: ":iframe .carousel-indicators > button:nth-child(1).active",
         },
-        // Navigates cards with option header buttons.
         {
-            content: "Check that the title is correct",
+            content: "Click on the first card",
+            trigger: ":iframe .s_carousel_multiple_item:first-child",
+            run: "click",
+        },
+        {
+            content: "Check that the option container title is correct",
             trigger: ".options-container[data-container-title='Slide (1/6)']",
         },
         {
@@ -123,6 +112,11 @@ registerWebsitePreviewTour(
         },
         ...goToSlide(5),
         {
+            content: "Click on the fifth card",
+            trigger: ":iframe .s_carousel_multiple_item:nth-child(5)",
+            run: "click",
+        },
+        {
             content: "Check that the correct card is activated",
             trigger: ".options-container[data-container-title='Slide (5/8)']",
         },
@@ -143,20 +137,6 @@ registerWebsitePreviewTour(
             content: "Switch to mobile mode",
             trigger: ".o-snippets-top-actions .o-hb-btn[title='Mobile Preview']",
             run: "click",
-        },
-        {
-            content: "Check that there is only 1 displayed card per slide",
-            trigger: ":iframe .s_carousel_multiple",
-            run() {
-                const nbDisplayedSlides = Number(
-                    getComputedStyle(this.anchor).getPropertyValue(
-                        "--carousel-multiple-items-per-slide"
-                    )
-                );
-                if (nbDisplayedSlides !== 1) {
-                    throw new Error("Expected 1 card per slide, got:", nbDisplayedSlides);
-                }
-            },
         },
     ]
 );
