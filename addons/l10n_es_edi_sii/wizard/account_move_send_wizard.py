@@ -10,7 +10,9 @@ class AccountMoveSendWizard(models.TransientModel):
         super()._compute_extra_edi_checkboxes()
 
         for wizard in self:
-            if wizard.extra_edi_checkboxes and 'es_edi_sii_resend' in wizard.extra_edi_checkboxes:
+            if wizard.extra_edi_checkboxes:
                 checkboxes = dict(wizard.extra_edi_checkboxes)
-                checkboxes['es_edi_sii_resend']['checked'] = False
+                for key in ('es_edi_sii', 'es_edi_sii_resend'):
+                    if key in checkboxes:
+                        checkboxes[key]['checked'] = False
                 wizard.extra_edi_checkboxes = checkboxes

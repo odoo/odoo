@@ -33,8 +33,70 @@ class TestEdiXmls(TestEsEdiCommon):
 
         return json.loads(attachment.raw.content)['Cuerpo'][0]
 
-    def _mock_sii_webservice(self, document_instance, header, info_list):
-        return True, {'csv': 'MOCK_CSV', 'response_message': 'Correcto'}
+    def _mock_sii_webservice(self, document_instance, communication_type, info_list):
+        return {doc: (True, {'csv': 'MOCK_CSV', 'response_message': 'Correcto'}) for doc in document_instance}
+
+    def _mock_sii_webservice_batch(self, document, communication_type, info_list):
+        return {doc: (True, {'csv': 'MOCK_CSV', 'response_message': 'Correcto'}) for doc in document}
+
+    def test_sii_send_batches_multiple_documents(self):
+        invoice_1 = self._create_invoice_es(
+            partner_id=self.partner_b.id,
+            invoice_line_ids=[{'tax_ids': [Command.set(self._get_tax_by_xml_id('s_iva21b').ids)]}],
+        )
+        invoice_2 = self._create_invoice_es(
+            partner_id=self.partner_b.id,
+            invoice_line_ids=[{'tax_ids': [Command.set(self._get_tax_by_xml_id('s_iva21b').ids)]}],
+        )
+        invoices = invoice_1 | invoice_2
+        invoices.action_post()
+
+        with patch('odoo.addons.l10n_es_edi_sii.models.l10n_es_edi_sii_document.L10nEsEdiSiiDocument._post_to_agency', autospec=True, side_effect=self._mock_sii_webservice_batch):
+            self.env.ref('l10n_es_edi_sii.action_l10n_es_send_sii').with_context(
+                active_model='account.move', active_ids=invoices.ids,
+            ).run()
+
+        self.assertEqual(invoices.mapped('l10n_es_edi_sii_state'), ['sent', 'sent'])
+        self.assertEqual(len(invoices.l10n_es_edi_sii_document_ids.attachment_id), 1)
+
+    def test_sii_send_batches_invoice_and_refund(self):
+        invoice = self._create_invoice_es(
+            partner_id=self.partner_b.id,
+            invoice_line_ids=[{'tax_ids': [Command.set(self._get_tax_by_xml_id('s_iva21b').ids)]}],
+        )
+        refund = self._create_invoice_es(
+            move_type='out_refund', partner_id=self.partner_b.id,
+            invoice_line_ids=[{'tax_ids': [Command.set(self._get_tax_by_xml_id('s_iva21b').ids)]}],
+        )
+        moves = invoice | refund
+        moves.action_post()
+
+        with patch('odoo.addons.l10n_es_edi_sii.models.l10n_es_edi_sii_document.L10nEsEdiSiiDocument._post_to_agency', autospec=True, side_effect=self._mock_sii_webservice_batch):
+            self.env.ref('l10n_es_edi_sii.action_l10n_es_send_sii').with_context(
+                active_model='account.move', active_ids=moves.ids,
+            ).run()
+
+        self.assertEqual(moves.mapped('l10n_es_edi_sii_state'), ['sent', 'sent'])
+
+    def test_sii_send_server_action_multiple_vendor_bills(self):
+        bill_1 = self._create_invoice_es(
+            move_type='in_invoice', ref='BILL-1', partner_id=self.partner_b.id,
+            invoice_line_ids=[{'tax_ids': [Command.set(self._get_tax_by_xml_id('p_iva21_bc').ids)]}],
+        )
+        bill_2 = self._create_invoice_es(
+            move_type='in_invoice', ref='BILL-2', partner_id=self.partner_b.id,
+            invoice_line_ids=[{'tax_ids': [Command.set(self._get_tax_by_xml_id('p_iva21_bc').ids)]}],
+        )
+        bills = bill_1 | bill_2
+        bills.action_post()
+
+        with patch('odoo.addons.l10n_es_edi_sii.models.l10n_es_edi_sii_document.L10nEsEdiSiiDocument._post_to_agency', autospec=True, side_effect=self._mock_sii_webservice_batch):
+            self.env.ref('l10n_es_edi_sii.action_l10n_es_send_sii').with_context(
+                active_model='account.move', active_ids=bills.ids,
+            ).run()
+
+        self.assertEqual(bills.mapped('l10n_es_edi_sii_state'), ['sent', 'sent'])
+        self.assertEqual(len(bills.l10n_es_edi_sii_document_ids.attachment_id), 1)
 
     def test_010_out_invoice_s_iva10b_s_iva21s(self):
         """ Invoice with goods and services as they need to be reported in different sections for customer invoices. """

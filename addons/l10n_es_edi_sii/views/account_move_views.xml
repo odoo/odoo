@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
+        <record id="action_l10n_es_send_sii" model="ir.actions.server">
+            <field name="name">Send to SII</field>
+            <field name="model_id" ref="account.model_account_move"/>
+            <field name="binding_model_id" ref="account.model_account_move"/>
+            <field name="binding_view_types">list</field>
+            <field name="state">code</field>
+            <field name="code">records.action_l10n_es_sii_send_in_batch()</field>
+        </record>
+
         <record id="view_move_form_inherit_l10n_es_edi" model="ir.ui.view">
             <field name="name">account.move.form.inherit.l10n_es_edi</field>
             <field name="model">account.move</field>
