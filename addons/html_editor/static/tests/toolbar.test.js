@@ -1387,3 +1387,17 @@ describe("toolbar visibility on contenteditable false elements", () => {
         expect(".o-we-toolbar").toHaveCount(0);
     });
 });
+
+test("formats should be enabled when inline code selected", async () => {
+    await setupEditor(`<div class="o-paragraph">[ab<code class="o_inline_code">code</code>]</div>`);
+    await expectElementCount(".o-we-toolbar", 1);
+    await click(`[name="bold"]`);
+    await waitFor(`[name="bold"].active`);
+
+    expect("strong").toHaveCount(1);
+
+    await click(`[name="bold"].active`);
+    await waitFor(`[name="bold"]:not(.active)`);
+
+    expect("strong").toHaveCount(0);
+});
