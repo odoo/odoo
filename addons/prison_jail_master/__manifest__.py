@@ -31,6 +31,7 @@ Features
         'security/ir.model.access.csv',
         'views/prison_jail_views.xml',
         'views/menu_items.xml',
+        'data/prison_jail_data.xml',
     ],
 
     'installable': True,

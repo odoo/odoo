@@ -1,0 +1,941 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Tamil Nadu Prison Hierarchy Master Data
+    Loaded once on module install (noupdate="1").
+
+    Tier 1 — 8 Central Prisons
+    Tier 2 — 49 District-level entities
+               36 geographic district groupings
+               13 explicit District Jail buildings (prefix D.J.)
+    Tier 3 — 82 Sub Jails
+
+    parent_path and central_jail_id are computed — Odoo fills them automatically.
+-->
+<odoo>
+<data noupdate="1">
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     TIER 1 — CENTRAL PRISONS  (8 records)
+══════════════════════════════════════════════════════════════════════ -->
+
+<record id="jail_central_chennai" model="prison.jail">
+    <field name="name">Central Prison-I &amp; II, Chennai</field>
+    <field name="jail_type">central_jail</field>
+    <field name="sequence">10</field>
+</record>
+<record id="jail_central_vellore" model="prison.jail">
+    <field name="name">Central Prison, Vellore</field>
+    <field name="jail_type">central_jail</field>
+    <field name="sequence">20</field>
+</record>
+<record id="jail_central_cuddalore" model="prison.jail">
+    <field name="name">Central Prison, Cuddalore</field>
+    <field name="jail_type">central_jail</field>
+    <field name="sequence">30</field>
+</record>
+<record id="jail_central_trichy" model="prison.jail">
+    <field name="name">Central Prison, Tiruchirappalli</field>
+    <field name="jail_type">central_jail</field>
+    <field name="sequence">40</field>
+</record>
+<record id="jail_central_salem" model="prison.jail">
+    <field name="name">Central Prison, Salem</field>
+    <field name="jail_type">central_jail</field>
+    <field name="sequence">50</field>
+</record>
+<record id="jail_central_coimbatore" model="prison.jail">
+    <field name="name">Central Prison, Coimbatore</field>
+    <field name="jail_type">central_jail</field>
+    <field name="sequence">60</field>
+</record>
+<record id="jail_central_madurai" model="prison.jail">
+    <field name="name">Central Prison, Madurai</field>
+    <field name="jail_type">central_jail</field>
+    <field name="sequence">70</field>
+</record>
+<record id="jail_central_palayamkottai" model="prison.jail">
+    <field name="name">Central Prison, Palayamkottai</field>
+    <field name="jail_type">central_jail</field>
+    <field name="sequence">80</field>
+</record>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     TIER 2 — DISTRICT-LEVEL ENTITIES  (49 records)
+══════════════════════════════════════════════════════════════════════ -->
+
+<!-- ── Under Chennai ─────────────────────────────────────────────────── -->
+<record id="jail_dist_chennai" model="prison.jail">
+    <field name="name">Chennai District</field>
+    <field name="jail_type">district_jail</field>
+    <field name="parent_id" ref="jail_central_chennai"/>
+    <field name="sequence">10</field>
+</record>
+<record id="jail_dist_kancheepuram" model="prison.jail">
+    <field name="name">Kancheepuram District</field>
+    <field name="jail_type">district_jail</field>
+    <field name="parent_id" ref="jail_central_chennai"/>
+    <field name="sequence">20</field>
+</record>
+<record id="jail_dist_thiruvallur" model="prison.jail">
+    <field name="name">Thiruvallur District</field>
+    <field name="jail_type">district_jail</field>
+    <field name="parent_id" ref="jail_central_chennai"/>
+    <field name="sequence">30</field>
+</record>
+<record id="jail_dj_chengalpattu" model="prison.jail">
+    <field name="name">D.J. Chengalpattu</field>
+    <field name="jail_type">district_jail</field>
+    <field name="parent_id" ref="jail_central_chennai"/>
+    <field name="sequence">40</field>
+</record>
+
+<!-- ── Under Vellore ─────────────────────────────────────────────────── -->
+<record id="jail_dist_vellore" model="prison.jail">
+    <field name="name">Vellore District</field>
+    <field name="jail_type">district_jail</field>
+    <field name="parent_id" ref="jail_central_vellore"/>
+    <field name="sequence">10</field>
+</record>
+<record id="jail_dist_tirupattur" model="prison.jail">
+    <field name="name">Tirupattur District</field>
+    <field name="jail_type">district_jail</field>
+    <field name="parent_id" ref="jail_central_vellore"/>
+    <field name="sequence">20</field>
+</record>
+<record id="jail_dist_ranipet" model="prison.jail">
+    <field name="name">Ranipet District</field>
+    <field name="jail_type">district_jail</field>
+    <field name="parent_id" ref="jail_central_vellore"/>
+    <field name="sequence">30</field>
+</record>
+<record id="jail_dist_thiruvannamalai" model="prison.jail">
+    <field name="name">Thiruvannamalai District</field>
+    <field name="jail_type">district_jail</field>
+    <field name="parent_id" ref="jail_central_vellore"/>
+    <field name="sequence">40</field>
+</record>
+
+<!-- ── Under Cuddalore ───────────────────────────────────────────────── -->
+<record id="jail_dist_cuddalore" model="prison.jail">
+    <field name="name">Cuddalore District</field>
+    <field name="jail_type">district_jail</field>
+    <field name="parent_id" ref="jail_central_cuddalore"/>
+    <field name="sequence">10</field>
+</record>
+<record id="jail_dist_villupuram" model="prison.jail">
+    <field name="name">Villupuram District</field>
+    <field name="jail_type">district_jail</field>
+    <field name="parent_id" ref="jail_central_cuddalore"/>
+    <field name="sequence">20</field>
+</record>
+<record id="jail_dist_kallakurichi" model="prison.jail">
+    <field name="name">Kallakurichi District</field>
+    <field name="jail_type">district_jail</field>
+    <field name="parent_id" ref="jail_central_cuddalore"/>
+    <field name="sequence">30</field>
+</record>
+<record id="jail_dj_villuppuram" model="prison.jail">
+    <field name="name">D.J. Villuppuram</field>
+    <field name="jail_type">district_jail</field>
+    <field name="parent_id" ref="jail_central_cuddalore"/>
+    <field name="sequence">40</field>
+</record>
+
+<!-- ── Under Tiruchirappalli ─────────────────────────────────────────── -->
+<record id="jail_dist_trichy" model="prison.jail">
+    <field name="name">Tiruchirappalli District</field>
+    <field name="jail_type">district_jail</field>
+    <field name="parent_id" ref="jail_central_trichy"/>
+    <field name="sequence">10</field>
+</record>
+<record id="jail_dist_perambalur" model="prison.jail">
+    <field name="name">Perambalur District</field>
+    <field name="jail_type">district_jail</field>
+    <field name="parent_id" ref="jail_central_trichy"/>
+    <field name="sequence">20</field>
+</record>
+<record id="jail_dist_karur" model="prison.jail">
+    <field name="name">Karur District</field>
+    <field name="jail_type">district_jail</field>
+    <field name="parent_id" ref="jail_central_trichy"/>
+    <field name="sequence">30</field>
+</record>
+<record id="jail_dist_ariyalur" model="prison.jail">
+    <field name="name">Ariyalur District</field>
+    <field name="jail_type">district_jail</field>
+    <field name="parent_id" ref="jail_central_trichy"/>
+    <field name="sequence">40</field>
+</record>
+
+<!-- ── Under Salem ───────────────────────────────────────────────────── -->
+<record id="jail_dist_salem" model="prison.jail">
+    <field name="name">Salem District</field>
+    <field name="jail_type">district_jail</field>
+    <field name="parent_id" ref="jail_central_salem"/>
+    <field name="sequence">10</field>
+</record>
+<record id="jail_dist_namakkal" model="prison.jail">
+    <field name="name">Namakkal District</field>
+    <field name="jail_type">district_jail</field>
+    <field name="parent_id" ref="jail_central_salem"/>
+    <field name="sequence">20</field>
+</record>
+<record id="jail_dist_dharmapuri" model="prison.jail">
+    <field name="name">Dharmapuri District</field>
+    <field name="jail_type">district_jail</field>
+    <field name="parent_id" ref="jail_central_salem"/>
+    <field name="sequence">30</field>
+</record>
+<record id="jail_dist_krishnagiri" model="prison.jail">
+    <field name="name">Krishnagiri District</field>
+    <field name="jail_type">district_jail</field>
+    <field name="parent_id" ref="jail_central_salem"/>
+    <field name="sequence">40</field>
+</record>
+<record id="jail_dj_dharmapuri" model="prison.jail">
+    <field name="name">D.J. Dharmapuri</field>
+    <field name="jail_type">district_jail</field>
+    <field name="parent_id" ref="jail_central_salem"/>
+    <field name="sequence">50</field>
+</record>
+
+<!-- ── Under Coimbatore ──────────────────────────────────────────────── -->
+<record id="jail_dist_erode" model="prison.jail">
+    <field name="name">Erode District</field>
+    <field name="jail_type">district_jail</field>
+    <field name="parent_id" ref="jail_central_coimbatore"/>
+    <field name="sequence">10</field>
+</record>
+<record id="jail_dist_tiruppur" model="prison.jail">
+    <field name="name">Tiruppur District</field>
+    <field name="jail_type">district_jail</field>
+    <field name="parent_id" ref="jail_central_coimbatore"/>
+    <field name="sequence">20</field>
+</record>
+<record id="jail_dist_nilgiris" model="prison.jail">
+    <field name="name">Nilgiris District</field>
+    <field name="jail_type">district_jail</field>
+    <field name="parent_id" ref="jail_central_coimbatore"/>
+    <field name="sequence">30</field>
+</record>
+<record id="jail_dist_coimbatore" model="prison.jail">
+    <field name="name">Coimbatore District</field>
+    <field name="jail_type">district_jail</field>
+    <field name="parent_id" ref="jail_central_coimbatore"/>
+    <field name="sequence">40</field>
+</record>
+<record id="jail_dj_erode" model="prison.jail">
+    <field name="name">D.J. Erode @ Gobichettipalayam</field>
+    <field name="jail_type">district_jail</field>
+    <field name="parent_id" ref="jail_central_coimbatore"/>
+    <field name="sequence">50</field>
+</record>
+<record id="jail_dj_tiruppur" model="prison.jail">
+    <field name="name">D.J. Tiruppur</field>
+    <field name="jail_type">district_jail</field>
+    <field name="parent_id" ref="jail_central_coimbatore"/>
+    <field name="sequence">60</field>
+</record>
+
+<!-- ── Under Madurai ─────────────────────────────────────────────────── -->
+<record id="jail_dist_dindigul" model="prison.jail">
+    <field name="name">Dindigul District</field>
+    <field name="jail_type">district_jail</field>
+    <field name="parent_id" ref="jail_central_madurai"/>
+    <field name="sequence">10</field>
+</record>
+<record id="jail_dist_theni" model="prison.jail">
+    <field name="name">Theni District</field>
+    <field name="jail_type">district_jail</field>
+    <field name="parent_id" ref="jail_central_madurai"/>
+    <field name="sequence">20</field>
+</record>
+<record id="jail_dist_madurai" model="prison.jail">
+    <field name="name">Madurai District</field>
+    <field name="jail_type">district_jail</field>
+    <field name="parent_id" ref="jail_central_madurai"/>
+    <field name="sequence">30</field>
+</record>
+<record id="jail_dist_sivagangai" model="prison.jail">
+    <field name="name">Sivagangai District</field>
+    <field name="jail_type">district_jail</field>
+    <field name="parent_id" ref="jail_central_madurai"/>
+    <field name="sequence">40</field>
+</record>
+<record id="jail_dist_ramanathapuram" model="prison.jail">
+    <field name="name">Ramanathapuram District</field>
+    <field name="jail_type">district_jail</field>
+    <field name="parent_id" ref="jail_central_madurai"/>
+    <field name="sequence">50</field>
+</record>
+<record id="jail_dist_virudhunagar" model="prison.jail">
+    <field name="name">Virudhunagar District</field>
+    <field name="jail_type">district_jail</field>
+    <field name="parent_id" ref="jail_central_madurai"/>
+    <field name="sequence">60</field>
+</record>
+<record id="jail_dj_dindigul" model="prison.jail">
+    <field name="name">D.J. Dindigul</field>
+    <field name="jail_type">district_jail</field>
+    <field name="parent_id" ref="jail_central_madurai"/>
+    <field name="sequence">70</field>
+</record>
+<record id="jail_dj_theni" model="prison.jail">
+    <field name="name">D.J. Theni</field>
+    <field name="jail_type">district_jail</field>
+    <field name="parent_id" ref="jail_central_madurai"/>
+    <field name="sequence">80</field>
+</record>
+<record id="jail_dj_ramanathapuram" model="prison.jail">
+    <field name="name">D.J. Ramanathapuram</field>
+    <field name="jail_type">district_jail</field>
+    <field name="parent_id" ref="jail_central_madurai"/>
+    <field name="sequence">90</field>
+</record>
+<record id="jail_dj_virudhunagar" model="prison.jail">
+    <field name="name">D.J. Virudhunagar</field>
+    <field name="jail_type">district_jail</field>
+    <field name="parent_id" ref="jail_central_madurai"/>
+    <field name="sequence">100</field>
+</record>
+
+<!-- ── Under Palayamkottai ───────────────────────────────────────────── -->
+<record id="jail_dist_tirunelveli" model="prison.jail">
+    <field name="name">Tirunelveli District</field>
+    <field name="jail_type">district_jail</field>
+    <field name="parent_id" ref="jail_central_palayamkottai"/>
+    <field name="sequence">10</field>
+</record>
+<record id="jail_dist_tenkasi" model="prison.jail">
+    <field name="name">Tenkasi District</field>
+    <field name="jail_type">district_jail</field>
+    <field name="parent_id" ref="jail_central_palayamkottai"/>
+    <field name="sequence">20</field>
+</record>
+<record id="jail_dist_thoothukudi" model="prison.jail">
+    <field name="name">Thoothukudi District</field>
+    <field name="jail_type">district_jail</field>
+    <field name="parent_id" ref="jail_central_palayamkottai"/>
+    <field name="sequence">30</field>
+</record>
+<record id="jail_dist_kanniyakumari" model="prison.jail">
+    <field name="name">Kanniyakumari District</field>
+    <field name="jail_type">district_jail</field>
+    <field name="parent_id" ref="jail_central_palayamkottai"/>
+    <field name="sequence">40</field>
+</record>
+<record id="jail_dj_thoothukudi" model="prison.jail">
+    <field name="name">D.J. Thoothukudi @ Perurani</field>
+    <field name="jail_type">district_jail</field>
+    <field name="parent_id" ref="jail_central_palayamkottai"/>
+    <field name="sequence">50</field>
+</record>
+<record id="jail_dj_kanniyakumari" model="prison.jail">
+    <field name="name">D.J. Kanniyakumari @ Nagercoil</field>
+    <field name="jail_type">district_jail</field>
+    <field name="parent_id" ref="jail_central_palayamkottai"/>
+    <field name="sequence">60</field>
+</record>
+
+<!-- ── Standalone (Pudukkottai / Delta region — no Central parent) ────── -->
+<record id="jail_dist_pudukkottai" model="prison.jail">
+    <field name="name">Pudukkottai District</field>
+    <field name="jail_type">district_jail</field>
+    <field name="sequence">10</field>
+</record>
+<record id="jail_dist_thanjavur" model="prison.jail">
+    <field name="name">Thanjavur District</field>
+    <field name="jail_type">district_jail</field>
+    <field name="sequence">20</field>
+</record>
+<record id="jail_dist_mayiladuthurai" model="prison.jail">
+    <field name="name">Mayiladuthurai District</field>
+    <field name="jail_type">district_jail</field>
+    <field name="sequence">30</field>
+</record>
+<record id="jail_dist_thiruvarur" model="prison.jail">
+    <field name="name">Thiruvarur District</field>
+    <field name="jail_type">district_jail</field>
+    <field name="sequence">40</field>
+</record>
+<record id="jail_dj_nagapattinam" model="prison.jail">
+    <field name="name">D.J. Nagapattinam</field>
+    <field name="jail_type">district_jail</field>
+    <field name="sequence">50</field>
+</record>
+<record id="jail_dj_pudukkottai" model="prison.jail">
+    <field name="name">D.J. Pudukkottai</field>
+    <field name="jail_type">district_jail</field>
+    <field name="sequence">60</field>
+</record>
+
+<!-- ══════════════════════════════════════════════════════════════════════
+     TIER 3 — SUB JAILS  (82 records)
+══════════════════════════════════════════════════════════════════════ -->
+
+<!-- ── Chennai District ──────────────────────────────────────────────── -->
+<record id="jail_sj_saidapet" model="prison.jail">
+    <field name="name">S.J. Saidapet</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="jail_dist_chennai"/>
+    <field name="sequence">10</field>
+</record>
+<record id="jail_sj_transit_puzhal" model="prison.jail">
+    <field name="name">Transit Yard Puzhal</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="jail_dist_chennai"/>
+    <field name="sequence">20</field>
+</record>
+
+<!-- ── Kancheepuram District ─────────────────────────────────────────── -->
+<record id="jail_sj_kanchipuram" model="prison.jail">
+    <field name="name">S.J. Kanchipuram</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="jail_dist_kancheepuram"/>
+    <field name="sequence">10</field>
+</record>
+
+<!-- ── Thiruvallur District ───────────────────────────────────────────── -->
+<record id="jail_sj_tiruttani" model="prison.jail">
+    <field name="name">S.J. Tiruttani</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="jail_dist_thiruvallur"/>
+    <field name="sequence">10</field>
+</record>
+<record id="jail_sj_thiruvallur" model="prison.jail">
+    <field name="name">S.J. Thiruvallur</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="jail_dist_thiruvallur"/>
+    <field name="sequence">20</field>
+</record>
+<record id="jail_sj_ponneri" model="prison.jail">
+    <field name="name">S.J. Ponneri</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="jail_dist_thiruvallur"/>
+    <field name="sequence">30</field>
+</record>
+
+<!-- ── Vellore District ───────────────────────────────────────────────── -->
+<record id="jail_sj_ambur" model="prison.jail">
+    <field name="name">S.J. Ambur</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="jail_dist_vellore"/>
+    <field name="sequence">10</field>
+</record>
+<record id="jail_sj_vellore_annex" model="prison.jail">
+    <field name="name">Vellore Annex</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="jail_dist_vellore"/>
+    <field name="sequence">20</field>
+</record>
+<record id="jail_sj_gudiyatham" model="prison.jail">
+    <field name="name">S.J. Gudiyatham</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="jail_dist_vellore"/>
+    <field name="sequence">30</field>
+</record>
+
+<!-- ── Tirupattur District ───────────────────────────────────────────── -->
+<record id="jail_sj_tirupattur" model="prison.jail">
+    <field name="name">S.J. Tirupattur</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="jail_dist_tirupattur"/>
+    <field name="sequence">10</field>
+</record>
+<record id="jail_sj_vaniyambadi" model="prison.jail">
+    <field name="name">S.J. Vaniyambadi</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="jail_dist_tirupattur"/>
+    <field name="sequence">20</field>
+</record>
+
+<!-- ── Ranipet District ───────────────────────────────────────────────── -->
+<record id="jail_sj_walaja" model="prison.jail">
+    <field name="name">S.J. Walaja</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="jail_dist_ranipet"/>
+    <field name="sequence">10</field>
+</record>
+<record id="jail_sj_arakkonam" model="prison.jail">
+    <field name="name">S.J. Arakkonam</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="jail_dist_ranipet"/>
+    <field name="sequence">20</field>
+</record>
+
+<!-- ── Thiruvannamalai District ───────────────────────────────────────── -->
+<record id="jail_sj_chengam" model="prison.jail">
+    <field name="name">S.J. Chengam</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="jail_dist_thiruvannamalai"/>
+    <field name="sequence">10</field>
+</record>
+<record id="jail_sj_polur" model="prison.jail">
+    <field name="name">S.J. Polur</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="jail_dist_thiruvannamalai"/>
+    <field name="sequence">20</field>
+</record>
+<record id="jail_sj_thiruvannamalai" model="prison.jail">
+    <field name="name">S.J. Thiruvannamalai</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="jail_dist_thiruvannamalai"/>
+    <field name="sequence">30</field>
+</record>
+<record id="jail_sj_vandavasi" model="prison.jail">
+    <field name="name">S.J. Vandavasi</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="jail_dist_thiruvannamalai"/>
+    <field name="sequence">40</field>
+</record>
+
+<!-- ── Cuddalore District ─────────────────────────────────────────────── -->
+<record id="jail_sj_chidambaram" model="prison.jail">
+    <field name="name">S.J. Chidambaram</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="jail_dist_cuddalore"/>
+    <field name="sequence">10</field>
+</record>
+<record id="jail_sj_virudhachalam" model="prison.jail">
+    <field name="name">S.J. Virudhachalam</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="jail_dist_cuddalore"/>
+    <field name="sequence">20</field>
+</record>
+<record id="jail_sj_panruti" model="prison.jail">
+    <field name="name">S.J. Panruti</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="jail_dist_cuddalore"/>
+    <field name="sequence">30</field>
+</record>
+
+<!-- ── Villupuram District ───────────────────────────────────────────── -->
+<record id="jail_sj_tindivanam" model="prison.jail">
+    <field name="name">S.J. Tindivanam</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="jail_dist_villupuram"/>
+    <field name="sequence">10</field>
+</record>
+<record id="jail_sj_gingee" model="prison.jail">
+    <field name="name">S.J. Gingee</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="jail_dist_villupuram"/>
+    <field name="sequence">20</field>
+</record>
+
+<!-- ── Kallakurichi District ─────────────────────────────────────────── -->
+<record id="jail_sj_kallakurichi" model="prison.jail">
+    <field name="name">S.J. Kallakurichi</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="jail_dist_kallakurichi"/>
+    <field name="sequence">10</field>
+</record>
+<record id="jail_sj_ulundurpet" model="prison.jail">
+    <field name="name">S.J. Ulundurpet</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="jail_dist_kallakurichi"/>
+    <field name="sequence">20</field>
+</record>
+<record id="jail_sj_thirukovilur" model="prison.jail">
+    <field name="name">S.J. Thirukovilur</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="jail_dist_kallakurichi"/>
+    <field name="sequence">30</field>
+</record>
+
+<!-- ── Tiruchirappalli District ───────────────────────────────────────── -->
+<record id="jail_sj_lalgudi" model="prison.jail">
+    <field name="name">S.J. Lalgudi</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="jail_dist_trichy"/>
+    <field name="sequence">10</field>
+</record>
+<record id="jail_sj_thuraiyur" model="prison.jail">
+    <field name="name">S.J. Thuraiyur</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="jail_dist_trichy"/>
+    <field name="sequence">20</field>
+</record>
+
+<!-- ── Perambalur District ───────────────────────────────────────────── -->
+<record id="jail_sj_perambalur" model="prison.jail">
+    <field name="name">S.J. Perambalur</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="jail_dist_perambalur"/>
+    <field name="sequence">10</field>
+</record>
+
+<!-- ── Karur District ────────────────────────────────────────────────── -->
+<record id="jail_sj_karur" model="prison.jail">
+    <field name="name">S.J. Karur</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="jail_dist_karur"/>
+    <field name="sequence">10</field>
+</record>
+<record id="jail_sj_kulithalai" model="prison.jail">
+    <field name="name">S.J. Kulithalai</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="jail_dist_karur"/>
+    <field name="sequence">20</field>
+</record>
+
+<!-- ── Ariyalur District ─────────────────────────────────────────────── -->
+<record id="jail_sj_ariyalur" model="prison.jail">
+    <field name="name">S.J. Ariyalur</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="jail_dist_ariyalur"/>
+    <field name="sequence">10</field>
+</record>
+<record id="jail_sj_jayamkondam" model="prison.jail">
+    <field name="name">S.J. Jayamkondam</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="jail_dist_ariyalur"/>
+    <field name="sequence">20</field>
+</record>
+
+<!-- ── Salem District ────────────────────────────────────────────────── -->
+<record id="jail_sj_omalur" model="prison.jail">
+    <field name="name">S.J. Omalur</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="jail_dist_salem"/>
+    <field name="sequence">10</field>
+</record>
+<record id="jail_sj_sankagiri" model="prison.jail">
+    <field name="name">S.J. Sankagiri</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="jail_dist_salem"/>
+    <field name="sequence">20</field>
+</record>
+
+<!-- ── Namakkal District ─────────────────────────────────────────────── -->
+<record id="jail_sj_namakkal" model="prison.jail">
+    <field name="name">S.J. Namakkal</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="jail_dist_namakkal"/>
+    <field name="sequence">10</field>
+</record>
+<record id="jail_sj_thiruchengodu" model="prison.jail">
+    <field name="name">S.J. Thiruchengodu</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="jail_dist_namakkal"/>
+    <field name="sequence">20</field>
+</record>
+
+<!-- ── Dharmapuri District ───────────────────────────────────────────── -->
+<record id="jail_sj_harur" model="prison.jail">
+    <field name="name">S.J. Harur</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="jail_dist_dharmapuri"/>
+    <field name="sequence">10</field>
+</record>
+<record id="jail_sj_hosur" model="prison.jail">
+    <field name="name">S.J. Hosur</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="jail_dist_dharmapuri"/>
+    <field name="sequence">20</field>
+</record>
+
+<!-- ── Krishnagiri District ──────────────────────────────────────────── -->
+<record id="jail_sj_krishnagiri" model="prison.jail">
+    <field name="name">S.J. Krishnagiri</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="jail_dist_krishnagiri"/>
+    <field name="sequence">10</field>
+</record>
+<record id="jail_sj_uthangarai" model="prison.jail">
+    <field name="name">S.J. Uthangarai</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="jail_dist_krishnagiri"/>
+    <field name="sequence">20</field>
+</record>
+
+<!-- ── Erode District ────────────────────────────────────────────────── -->
+<record id="jail_sj_erode" model="prison.jail">
+    <field name="name">S.J. Erode</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="jail_dist_erode"/>
+    <field name="sequence">10</field>
+</record>
+<record id="jail_sj_perundurai" model="prison.jail">
+    <field name="name">S.J. Perundurai</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="jail_dist_erode"/>
+    <field name="sequence">20</field>
+</record>
+<record id="jail_sj_bhavani" model="prison.jail">
+    <field name="name">S.J. Bhavani</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="jail_dist_erode"/>
+    <field name="sequence">30</field>
+</record>
+<record id="jail_sj_sathyamangalam" model="prison.jail">
+    <field name="name">S.J. Sathyamangalam</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="jail_dist_erode"/>
+    <field name="sequence">40</field>
+</record>
+
+<!-- ── Tiruppur District ─────────────────────────────────────────────── -->
+<record id="jail_sj_avinashi" model="prison.jail">
+    <field name="name">S.J. Avinashi</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="jail_dist_tiruppur"/>
+    <field name="sequence">10</field>
+</record>
+<record id="jail_sj_udumalaipet" model="prison.jail">
+    <field name="name">S.J. Udumalaipet</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="jail_dist_tiruppur"/>
+    <field name="sequence">20</field>
+</record>
+<record id="jail_sj_dharapuram" model="prison.jail">
+    <field name="name">S.J. Dharapuram</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="jail_dist_tiruppur"/>
+    <field name="sequence">30</field>
+</record>
+<record id="jail_sj_palladam" model="prison.jail">
+    <field name="name">S.J. Palladam</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="jail_dist_tiruppur"/>
+    <field name="sequence">40</field>
+</record>
+
+<!-- ── Nilgiris District ─────────────────────────────────────────────── -->
+<record id="jail_sj_ooty" model="prison.jail">
+    <field name="name">S.J. Ooty</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="jail_dist_nilgiris"/>
+    <field name="sequence">10</field>
+</record>
+<record id="jail_sj_coonoor" model="prison.jail">
+    <field name="name">S.J. Coonoor</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="jail_dist_nilgiris"/>
+    <field name="sequence">20</field>
+</record>
+<record id="jail_sj_gudalur" model="prison.jail">
+    <field name="name">S.J. Gudalur</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="jail_dist_nilgiris"/>
+    <field name="sequence">30</field>
+</record>
+
+<!-- ── Coimbatore District ───────────────────────────────────────────── -->
+<record id="jail_sj_pollachi" model="prison.jail">
+    <field name="name">S.J. Pollachi</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="jail_dist_coimbatore"/>
+    <field name="sequence">10</field>
+</record>
+
+<!-- ── Dindigul District ─────────────────────────────────────────────── -->
+<record id="jail_sj_vedasandur" model="prison.jail">
+    <field name="name">S.J. Vedasandur</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="jail_dist_dindigul"/>
+    <field name="sequence">10</field>
+</record>
+<record id="jail_sj_palani" model="prison.jail">
+    <field name="name">S.J. Palani</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="jail_dist_dindigul"/>
+    <field name="sequence">20</field>
+</record>
+
+<!-- ── Theni District ────────────────────────────────────────────────── -->
+<record id="jail_sj_uthamapalayam" model="prison.jail">
+    <field name="name">S.J. Uthamapalayam</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="jail_dist_theni"/>
+    <field name="sequence">10</field>
+</record>
+<record id="jail_sj_periyakulam" model="prison.jail">
+    <field name="name">S.J. Periyakulam</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="jail_dist_theni"/>
+    <field name="sequence">20</field>
+</record>
+
+<!-- ── Madurai District ───────────────────────────────────────────────── -->
+<record id="jail_sj_usilampatti" model="prison.jail">
+    <field name="name">S.J. Usilampatti</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="jail_dist_madurai"/>
+    <field name="sequence">10</field>
+</record>
+<record id="jail_sj_melur" model="prison.jail">
+    <field name="name">S.J. Melur</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="jail_dist_madurai"/>
+    <field name="sequence">20</field>
+</record>
+<record id="jail_sj_thirumangalam" model="prison.jail">
+    <field name="name">S.J. Thirumangalam</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="jail_dist_madurai"/>
+    <field name="sequence">30</field>
+</record>
+
+<!-- ── Sivagangai District ───────────────────────────────────────────── -->
+<record id="jail_sj_sivagangai" model="prison.jail">
+    <field name="name">S.J. Sivagangai</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="jail_dist_sivagangai"/>
+    <field name="sequence">10</field>
+</record>
+<record id="jail_sj_tiruppattur_sivagangai" model="prison.jail">
+    <field name="name">S.J. Tiruppattur</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="jail_dist_sivagangai"/>
+    <field name="sequence">20</field>
+</record>
+
+<!-- ── Ramanathapuram District ───────────────────────────────────────── -->
+<record id="jail_sj_mudukulathur" model="prison.jail">
+    <field name="name">S.J. Mudukulathur</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="jail_dist_ramanathapuram"/>
+    <field name="sequence">10</field>
+</record>
+
+<!-- ── Virudhunagar District ─────────────────────────────────────────── -->
+<record id="jail_sj_aruppukottai" model="prison.jail">
+    <field name="name">S.J. Aruppukottai</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="jail_dist_virudhunagar"/>
+    <field name="sequence">10</field>
+</record>
+<record id="jail_sj_srivilliputhur" model="prison.jail">
+    <field name="name">S.J. Srivilliputhur</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="jail_dist_virudhunagar"/>
+    <field name="sequence">20</field>
+</record>
+
+<!-- ── Tirunelveli District ───────────────────────────────────────────── -->
+<record id="jail_sj_ambasamudram" model="prison.jail">
+    <field name="name">S.J. Ambasamudram</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="jail_dist_tirunelveli"/>
+    <field name="sequence">10</field>
+</record>
+
+<!-- ── Tenkasi District ───────────────────────────────────────────────── -->
+<record id="jail_sj_tenkasi" model="prison.jail">
+    <field name="name">S.J. Tenkasi</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="jail_dist_tenkasi"/>
+    <field name="sequence">10</field>
+</record>
+<record id="jail_sj_sankarankoil" model="prison.jail">
+    <field name="name">S.J. Sankarankoil</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="jail_dist_tenkasi"/>
+    <field name="sequence">20</field>
+</record>
+
+<!-- ── Thoothukudi District ───────────────────────────────────────────── -->
+<record id="jail_sj_kovilpatti" model="prison.jail">
+    <field name="name">S.J. Kovilpatti</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="jail_dist_thoothukudi"/>
+    <field name="sequence">10</field>
+</record>
+<record id="jail_sj_srivaikundam" model="prison.jail">
+    <field name="name">S.J. Srivaikundam</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="jail_dist_thoothukudi"/>
+    <field name="sequence">20</field>
+</record>
+
+<!-- ── Kanniyakumari District ────────────────────────────────────────── -->
+<record id="jail_sj_kuzhithurai" model="prison.jail">
+    <field name="name">S.J. Kuzhithurai</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="jail_dist_kanniyakumari"/>
+    <field name="sequence">10</field>
+</record>
+
+<!-- ── Pudukkottai District (standalone) ─────────────────────────────── -->
+<record id="jail_sj_thirumayam" model="prison.jail">
+    <field name="name">S.J. Thirumayam</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="jail_dist_pudukkottai"/>
+    <field name="sequence">10</field>
+</record>
+
+<!-- ── Thanjavur District (standalone) ───────────────────────────────── -->
+<record id="jail_sj_aranthangi" model="prison.jail">
+    <field name="name">S.J. Aranthangi</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="jail_dist_thanjavur"/>
+    <field name="sequence">10</field>
+</record>
+<record id="jail_sj_papanasam" model="prison.jail">
+    <field name="name">S.J. Papanasam</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="jail_dist_thanjavur"/>
+    <field name="sequence">20</field>
+</record>
+<record id="jail_sj_thiruvidaimaruthur" model="prison.jail">
+    <field name="name">S.J. Thiruvidaimaruthur</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="jail_dist_thanjavur"/>
+    <field name="sequence">30</field>
+</record>
+<record id="jail_sj_kumbakonam" model="prison.jail">
+    <field name="name">S.J. Kumbakonam</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="jail_dist_thanjavur"/>
+    <field name="sequence">40</field>
+</record>
+<record id="jail_sj_thanjavur" model="prison.jail">
+    <field name="name">S.J. Thanjavur</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="jail_dist_thanjavur"/>
+    <field name="sequence">50</field>
+</record>
+
+<!-- ── Mayiladuthurai District (standalone) ──────────────────────────── -->
+<record id="jail_sj_sirkali" model="prison.jail">
+    <field name="name">S.J. Sirkali</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="jail_dist_mayiladuthurai"/>
+    <field name="sequence">10</field>
+</record>
+<record id="jail_sj_mayiladuthurai" model="prison.jail">
+    <field name="name">S.J. Mayiladuthurai</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="jail_dist_mayiladuthurai"/>
+    <field name="sequence">20</field>
+</record>
+<record id="jail_sj_tharangambadi" model="prison.jail">
+    <field name="name">S.J. Tharangambadi</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="jail_dist_mayiladuthurai"/>
+    <field name="sequence">30</field>
+</record>
+
+<!-- ── Thiruvarur District (standalone) ──────────────────────────────── -->
+<record id="jail_sj_thiruturaipoondi" model="prison.jail">
+    <field name="name">S.J. Thiruturaipoondi</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="jail_dist_thiruvarur"/>
+    <field name="sequence">10</field>
+</record>
+<record id="jail_sj_nannilam" model="prison.jail">
+    <field name="name">S.J. Nannilam</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="jail_dist_thiruvarur"/>
+    <field name="sequence">20</field>
+</record>
+<record id="jail_sj_mannarkudi" model="prison.jail">
+    <field name="name">S.J. Mannarkudi</field>
+    <field name="jail_type">sub_jail</field>
+    <field name="parent_id" ref="jail_dist_thiruvarur"/>
+    <field name="sequence">30</field>
+</record>
+
+</data>
+</odoo>
