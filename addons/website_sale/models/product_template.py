@@ -1581,7 +1581,7 @@ class ProductTemplate(models.Model):
             product_or_template, date, currency, pricelist, **kwargs
         )
 
-        if (website := ir_http.get_request_website()) and product_or_template.is_product_variant:
+        if (website := self.env['website'].get_request_website()) and product_or_template.is_product_variant:
             max_quantity = product_or_template._get_max_quantity(website, request.cart, **kwargs)
             if max_quantity is not None:
                 if uom:
