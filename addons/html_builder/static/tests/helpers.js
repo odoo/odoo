@@ -1,3 +1,4 @@
+import { useRef, useState, useSubEnv } from "@web/owl2/utils";
 import { Builder } from "@html_builder/builder";
 import { CORE_PLUGINS } from "@html_builder/core/core_plugins";
 import { Image } from "@html_builder/core/img";
@@ -13,7 +14,7 @@ import { Plugin } from "@html_editor/plugin";
 import { defineMailModels } from "@mail/../tests/mail_test_helpers";
 import { after, click, queryAll, queryFirst } from "@odoo/hoot";
 import { animationFrame, waitForNone, queryOne, waitFor, advanceTime, tick } from "@odoo/hoot-dom";
-import { Component, onMounted, useRef, useState, useSubEnv, xml } from "@odoo/owl";
+import { Component, onMounted, xml } from "@odoo/owl";
 import {
     contains,
     defineModels,

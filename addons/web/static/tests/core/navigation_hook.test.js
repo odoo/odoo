@@ -1,4 +1,5 @@
-import { Component, onMounted, useRef, useState, xml } from "@odoo/owl";
+import { useRef, useState } from "@web/owl2/utils";
+import { Component, onMounted, xml } from "@odoo/owl";
 import { ACTIVE_ELEMENT_CLASS, Navigator, useNavigation } from "@web/core/navigation/navigation";
 import { useAutofocus } from "@web/core/utils/hooks";
 import { describe, destroy, expect, test } from "@odoo/hoot";

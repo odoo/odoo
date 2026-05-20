@@ -1,7 +1,8 @@
+import { useRef, useState } from "@web/owl2/utils";
 import { destroy, expect, getFixture, onError, test } from "@odoo/hoot";
 import { keyDown, keyUp, press, queryAllTexts, queryOne } from "@odoo/hoot-dom";
 import { animationFrame, mockUserAgent, tick } from "@odoo/hoot-mock";
-import { Component, useRef, useState, xml } from "@odoo/owl";
+import { Component, xml } from "@odoo/owl";
 import {
     contains,
     getService,

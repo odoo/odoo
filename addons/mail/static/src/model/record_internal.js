@@ -1,4 +1,3 @@
-import { reactive } from "@web/owl2/utils";
 /** @typedef {import("./record").Record} Record */
 /** @typedef {import("./record_list").RecordList} RecordList */
 
@@ -11,7 +10,7 @@ import {
     makeRecordFieldLocalId,
 } from "./misc";
 import { RecordList } from "./record_list";
-import { toRaw } from "@odoo/owl";
+import { immediateEffect, toRaw, untrack } from "@odoo/owl";
 import { RecordUses } from "./record_uses";
 import { LocalStorageEntry } from "@mail/utils/common/local_storage";
 

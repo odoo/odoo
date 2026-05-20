@@ -1,8 +1,8 @@
-import { useLayoutEffect, useRef, useState } from "@web/owl2/utils";
+import { useRef, useState } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
-import { Component } from "@odoo/owl";
+import { Component, useEffect } from "@odoo/owl";
 
 export class SurveyQuestionTriggerWidget extends Component {
     static template = "survey.surveyQuestionTrigger";

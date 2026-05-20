@@ -1,4 +1,5 @@
-import { expect, test } from "@odoo/hoot";
+import { before, expect, test } from "@odoo/hoot";
+import { xml } from "@odoo/owl";
 import { ForecastedDetails } from "@stock/stock_forecasted/forecasted_details";
 
 test("forecast detail sameDocument receipt date", async () => {

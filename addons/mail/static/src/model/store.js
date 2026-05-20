@@ -2,7 +2,7 @@ import { reactive } from "@web/owl2/utils";
 import { PgSnapshot } from "@mail/model/field_version";
 import { Record } from "./record";
 import { STORE_SYM, modelRegistry } from "./misc";
-import { toRaw } from "@odoo/owl";
+import { immediateEffect, toRaw, untrack } from "@odoo/owl";
 
 /** @typedef {import("./record_list").RecordList} RecordList */
 

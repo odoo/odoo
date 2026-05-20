@@ -1,3 +1,4 @@
+import { useState } from "@web/owl2/utils";
 import {
     animationFrame,
     expect,
@@ -7,7 +8,7 @@ import {
     test,
 } from "@odoo/hoot";
 import { click, edit, press, queryAllTexts, queryOne, queryAll } from "@odoo/hoot-dom";
-import { Component, useState, xml } from "@odoo/owl";
+import { Component, xml } from "@odoo/owl";
 import {
     contains,
     editSelectMenu,

@@ -15,7 +15,7 @@ import { useService } from "@web/core/utils/hooks";
 import { ResourceEditorWarningOverlay } from "./resource_editor_warning";
 import { checkSCSS, checkXML, formatXML } from "./utils";
 
-import { Component, onWillUnmount, onWillStart } from "@odoo/owl";
+import { Component, onWillUnmount, onWillStart, useEffect } from "@odoo/owl";
 
 const BUNDLES_RESTRICTION = [
     "web.assets_frontend",

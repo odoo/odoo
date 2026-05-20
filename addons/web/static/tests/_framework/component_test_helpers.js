@@ -1,5 +1,5 @@
 import { after, destroy, getFixture, queryFirst, queryOne } from "@odoo/hoot";
-import { App, Component, xml } from "@odoo/owl";
+import { App, Component, onWillDestroy, xml } from "@odoo/owl";
 import { appTranslateFn } from "@web/core/l10n/translation";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { getPopoverForTarget } from "@web/core/popover/popover";

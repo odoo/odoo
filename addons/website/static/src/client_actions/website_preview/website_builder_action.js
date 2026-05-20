@@ -1,6 +1,15 @@
 import { useComponent, useLayoutEffect, useRef, useState, useSubEnv } from "@web/owl2/utils";
 import { LocalOverlayContainer } from "@html_editor/local_overlay_container";
-import { Component, onMounted, onWillDestroy, onWillStart, onWillUnmount, status } from "@odoo/owl";
+import {
+    Component,
+    useEffect,
+    onMounted,
+    onWillDestroy,
+    onWillStart,
+    onWillUnmount,
+    status,
+    immediateEffect,
+} from "@odoo/owl";
 import { loadBundle } from "@web/core/assets";
 import { LazyComponent } from "@web/core/lazy_component";
 import { browser } from "@web/core/browser/browser";

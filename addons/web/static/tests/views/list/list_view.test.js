@@ -1,3 +1,4 @@
+import { onRendered, useRef } from "@web/owl2/utils";
 import {
     animationFrame,
     clear,
@@ -29,7 +30,7 @@ import {
     unload,
     waitFor,
 } from "@odoo/hoot";
-import { Component, markup, onRendered, onWillStart, useRef, xml } from "@odoo/owl";
+import { Component, markup, onWillStart, xml } from "@odoo/owl";
 import { getPickerCell } from "@web/../tests/core/datetime/datetime_test_helpers";
 import {
     clickFieldDropdown,

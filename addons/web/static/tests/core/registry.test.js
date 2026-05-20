@@ -1,5 +1,5 @@
 import { describe, expect, test } from "@odoo/hoot";
-import { Component } from "@odoo/owl";
+import { Component, types as t } from "@odoo/owl";
 import { serverState } from "@web/../tests/web_test_helpers";
 
 import { Registry } from "@web/core/registry";

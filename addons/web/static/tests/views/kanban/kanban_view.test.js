@@ -26,8 +26,9 @@ import {
     mockTouch,
     runAllTimers,
     tick,
-} from "@odoo/hoot-mock";
-import { Component, onRendered, onWillRender, xml } from "@odoo/owl";
+} from "@odoo/hoot";
+import { Component, xml } from "@odoo/owl";
+import { addNewRule } from "@web/../tests/core/tree_editor/condition_tree_editor_test_helpers";
 import {
     MockServer,
     clickKanbanLoadMore,
@@ -76,7 +77,7 @@ import {
     webModels,
     editSearch,
 } from "@web/../tests/web_test_helpers";
-import { addNewRule } from "@web/../tests/core/tree_editor/condition_tree_editor_test_helpers";
+import { onRendered, onWillRender } from "@web/owl2/utils";
 
 import { FileInput } from "@web/core/file_input/file_input";
 import { browser } from "@web/core/browser/browser";

@@ -1,4 +1,4 @@
-import { onWillRender, useLayoutEffect, useRef, useState } from "@web/owl2/utils";
+import { onWillRender, useRef, useState } from "@web/owl2/utils";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { useTrackedAsync } from "@point_of_sale/app/hooks/hooks";
@@ -7,7 +7,7 @@ import { useBarcodeReader } from "@point_of_sale/app/hooks/barcode_reader_hook";
 import { _t } from "@web/core/l10n/translation";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
 import { user } from "@web/core/user";
-import { Component, onMounted, onWillUnmount } from "@odoo/owl";
+import { Component, onMounted, onWillUnmount, computed } from "@odoo/owl";
 import { CategorySelector } from "@point_of_sale/app/components/category_selector/category_selector";
 import { Input } from "@point_of_sale/app/components/inputs/input/input";
 import {

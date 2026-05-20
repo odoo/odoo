@@ -1,3 +1,4 @@
+import { useLayoutEffect } from "@web/owl2/utils";
 import { before, describe, expect, test } from "@odoo/hoot";
 import {
     animationFrame,
@@ -7,7 +8,6 @@ import {
     setInputFiles,
     waitFor,
 } from "@odoo/hoot-dom";
-import { useEffect } from "@odoo/owl";
 import {
     contains,
     defineActions,

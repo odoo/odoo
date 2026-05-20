@@ -1,7 +1,6 @@
-import { useState } from "@web/owl2/utils";
 import { _t } from "@web/core/l10n/translation";
 
-import { Component } from "@odoo/owl";
+import { Component, proxy } from "@odoo/owl";
 
 import { useService } from "@web/core/utils/hooks";
 import { useModel } from "@web/model/model";

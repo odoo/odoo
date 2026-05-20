@@ -1,5 +1,4 @@
-import { validate } from "@web/owl2/utils";
-import { EventBus } from "@odoo/owl";
+import { EventBus, validateType } from "@odoo/owl";
 
 // -----------------------------------------------------------------------------
 // Errors

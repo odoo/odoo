@@ -1,4 +1,4 @@
-import { reactive } from "@odoo/owl";
+import { effect, proxy } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { getOrigin } from "@web/core/utils/urls";
 

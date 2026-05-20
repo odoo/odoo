@@ -1,5 +1,4 @@
-import { effect } from "@web/core/utils/reactive";
-import { getDisabler } from "./proxy_trap";
+import { computed } from "@odoo/owl";
 
 function getAllGetters(proto) {
     const getters = new Map();

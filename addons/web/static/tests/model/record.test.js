@@ -1,7 +1,8 @@
+import { useState } from "@web/owl2/utils";
 import { expect, test } from "@odoo/hoot";
 import { queryAllTexts, queryFirst } from "@odoo/hoot-dom";
 import { runAllTimers } from "@odoo/hoot-mock";
-import { Component, onError, useState, xml } from "@odoo/owl";
+import { Component, onError, xml } from "@odoo/owl";
 import {
     contains,
     defineModels,

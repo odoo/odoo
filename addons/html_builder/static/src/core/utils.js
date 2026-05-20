@@ -8,7 +8,15 @@ import {
     useSubEnv,
 } from "@web/owl2/utils";
 import { isElement, isTextNode } from "@html_editor/utils/dom_info";
-import { onMounted, onWillDestroy, onWillStart, onWillUpdateProps, status, toRaw } from "@odoo/owl";
+import {
+    onMounted,
+    onWillDestroy,
+    onWillStart,
+    onWillUpdateProps,
+    status,
+    toRaw,
+    useEffect,
+} from "@odoo/owl";
 import { convertNumericToUnit, getHtmlStyle } from "@html_editor/utils/formatting";
 import { localization } from "@web/core/l10n/localization";
 import { useBus } from "@web/core/utils/hooks";

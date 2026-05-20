@@ -1,7 +1,16 @@
-import { beforeEach, expect, getFixture, test } from "@odoo/hoot";
-import { queryOne, queryRect, resize, scroll, waitFor } from "@odoo/hoot-dom";
-import { animationFrame, runAllTimers } from "@odoo/hoot-mock";
-import { Component, useRef, useState, xml } from "@odoo/owl";
+import {
+    animationFrame,
+    expect,
+    getFixture,
+    queryOne,
+    queryRect,
+    resize,
+    runAllTimers,
+    scroll,
+    test,
+    waitFor,
+} from "@odoo/hoot";
+import { Component, htmlEscape, props, signal, xml } from "@odoo/owl";
 import {
     contains,
     defineStyle,

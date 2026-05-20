@@ -1,4 +1,4 @@
-import { useExternalListener, useRef, useState } from "@web/owl2/utils";
+import { onWillRender, useExternalListener, useRef, useState } from "@web/owl2/utils";
 import { useAutofocus, useForwardRefToParent, useService } from "@web/core/utils/hooks";
 import { isScrollableY, scrollTo } from "@web/core/utils/scrolling";
 import { useDebounced } from "@web/core/utils/timing";
