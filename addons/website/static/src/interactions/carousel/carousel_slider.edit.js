@@ -23,6 +23,18 @@ const CarouselSliderEdit = I => class extends I {
     onContentChanged() {
         this.computeMaxHeight();
     }
+
+    start() {
+        super.start();
+        // Monitor carousel size changes to update maxHeight
+        const resizeObserver = new ResizeObserver(
+            this.debounced(() => {
+                this.computeMaxHeight();
+            }, 250)
+        );
+        resizeObserver.observe(this.el);
+        this.registerCleanup(() => resizeObserver.unobserve(this.el));
+    }
 };
 
 registry
