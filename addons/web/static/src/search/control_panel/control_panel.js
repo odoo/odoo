@@ -19,8 +19,6 @@ import { Breadcrumbs } from "../breadcrumbs/breadcrumbs";
 
 import { Component, onMounted, proxy } from "@odoo/owl";
 
-const STICKY_CLASS = "o_mobile_sticky";
-
 /**
  * @typedef EmbeddedAction
  * @property {number} id
@@ -168,6 +166,7 @@ export class ControlPanel extends Component {
                     ) || [],
                 currentEmbeddedAction: this.currentEmbeddedAction,
             },
+            isSticky: false,
         });
 
         this.onScrollThrottledBound = this.onScrollThrottled.bind(this);
@@ -387,7 +386,7 @@ export class ControlPanel extends Component {
 
         if (scrollTop > this.initialScrollTop) {
             // Beneath initial position => sticky display
-            this.root.el.classList.add(STICKY_CLASS);
+            this.state.isSticky = true;
             if (delta <= 0) {
                 // Going up | not moving
                 this.lastScrollTop = Math.min(0, this.lastScrollTop - delta);
@@ -401,7 +400,7 @@ export class ControlPanel extends Component {
             this.root.el.style.top = `${this.lastScrollTop}px`;
         } else {
             // Above initial position => standard display
-            this.root.el.classList.remove(STICKY_CLASS);
+            this.state.isSticky = false;
             this.lastScrollTop = 0;
         }
 
