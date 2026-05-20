@@ -24,7 +24,13 @@ export class PortalCardVisibilityOption extends BaseOptionComponent {
         onWillStart(async () => {
             this.entries = await this.cachedModel.ormSearchRead(
                 "portal.entry",
-                ["&", ["is_config_card", "!=", true], ["category", "!=", "alert"]],
+                [
+                    "&",
+                    ["category", "!=", "alert"],
+                    "|",
+                    ["is_config_card", "!=", true],
+                    ["placeholder_count", "!=", false],
+                ],
                 ["name", "id"]
             );
         });
