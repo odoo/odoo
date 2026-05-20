@@ -334,7 +334,7 @@ test("[Old Tour] test_cash_rounding_only_cash_method_with_change", async () => {
     expect(order2.change).toBe(4.3);
 });
 
-test(["[Old Tour] test_cash_rounding_up_with_change"], async () => {
+test("[Old Tour] test_cash_rounding_up_with_change", async () => {
     const store = await setupPosEnv();
     const { cashPm } = prepareRoundingVals(store, 1, "UP", true);
     const order = store.addNewOrder();
