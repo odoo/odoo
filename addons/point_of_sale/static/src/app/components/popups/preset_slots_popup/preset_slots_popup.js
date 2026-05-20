@@ -24,10 +24,28 @@ export class PresetSlotsPopup extends Component {
         });
 
         onWillStart(async () => {
-            for (const preset of this.timedPresets) {
-                await this.pos.syncPresetSlotAvaibility(preset);
-            }
+            await Promise.all(
+                this.timedPresets.map((preset) => this.pos.syncPresetSlotAvaibility(preset))
+            );
+            this.selectPreset(this.state.selectedPresetId, false);
         });
+    }
+
+    selectPreset(presetId, forceFirstAvail = true) {
+        this.state.selectedPresetId = presetId;
+        const preset = this.pos.models["pos.preset"].get(presetId);
+        if (!preset?.availabilities) {
+            return;
+        }
+        const hasAvailableSlot = (date) =>
+            Object.values(preset.availabilities[date]).some((s) => !s.isFull);
+        if (!forceFirstAvail && hasAvailableSlot(this.state.selectedDate)) {
+            return;
+        }
+        const firstAvailDate = Object.keys(preset.availabilities).find(hasAvailableSlot);
+        if (firstAvailDate) {
+            this.state.selectedDate = firstAvailDate;
+        }
     }
 
     get timedPresets() {
@@ -83,6 +101,9 @@ export class PresetSlotsPopup extends Component {
     }
 
     confirm(slot, preset) {
+        if (slot.isFull) {
+            return;
+        }
         this.props.getPayload({ slot, presetId: preset.id });
         this.props.close();
     }

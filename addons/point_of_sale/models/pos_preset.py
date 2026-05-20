@@ -1,5 +1,7 @@
 from odoo import fields, models, api, _
 from odoo.exceptions import ValidationError, UserError
+from odoo.tools.date_utils import float_to_time
+import pytz
 from datetime import datetime, timedelta
 from collections import defaultdict
 
@@ -67,6 +69,37 @@ class PosPreset(models.Model):
     def get_available_slots(self):
         self.ensure_one()
         usage = self._compute_slots_usage()
+        if self.use_timing and self.resource_calendar_id:
+            tz = pytz.timezone(self.env.context.get('tz') or self.resource_calendar_id.tz or self.env.user.tz or 'UTC')
+            now_tz = datetime.now(tz)
+            start_utc = now_tz.astimezone(pytz.utc).replace(tzinfo=None)
+            end_utc = (now_tz + timedelta(days=8)).astimezone(pytz.utc).replace(tzinfo=None)
+            leaves = self.env['resource.calendar.leaves'].search([
+                '|',
+                ('calendar_id', '=', self.resource_calendar_id.id),
+                ('resource_id.calendar_id', '=', self.resource_calendar_id.id),
+                ('date_from', '<=', end_utc),
+                ('date_to', '>=', start_utc),
+            ])
+            interval = timedelta(minutes=self.interval_time)
+            capacity = max(1, self.slots_per_interval)
+            dummy_usage = [-x for x in range(1, capacity + 1)]
+            attendances_by_day = defaultdict(list)
+            for att in self.attendance_ids.filtered(lambda a: not a.display_type):
+                attendances_by_day[att.dayofweek].append(att)
+
+            for i in range(8):
+                day = now_tz + timedelta(days=i)
+                for att in attendances_by_day.get(str(day.weekday()), []):
+                    opening = tz.localize(datetime.combine(day.date(), float_to_time(att.hour_from)))
+                    closing = tz.localize(datetime.combine(day.date(), float_to_time(att.hour_to)))
+                    slot = max(opening, now_tz)
+                    while slot <= closing:
+                        slot_utc = slot.astimezone(pytz.utc).replace(tzinfo=None)
+                        slot_end_utc = (slot + interval).astimezone(pytz.utc).replace(tzinfo=None)
+                        if any(slot_utc < leave.date_to and slot_end_utc > leave.date_from for leave in leaves):
+                            usage[fields.Datetime.to_string(slot_utc)] = dummy_usage
+                        slot += interval
         return {
             'usage_utc': usage,
         }
