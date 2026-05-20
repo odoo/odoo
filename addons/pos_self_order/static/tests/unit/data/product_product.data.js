@@ -18,7 +18,7 @@ ProductProduct._records = [
         product_tag_ids: [],
         barcode: false,
         default_code: false,
-        product_template_attribute_value_ids: [],
+        product_template_attribute_value_ids: [101],
         product_template_variant_value_ids: [101],
     },
     {
@@ -30,7 +30,7 @@ ProductProduct._records = [
         product_tag_ids: [],
         barcode: false,
         default_code: false,
-        product_template_attribute_value_ids: [],
+        product_template_attribute_value_ids: [102],
         product_template_variant_value_ids: [102],
     },
     {
@@ -54,7 +54,7 @@ ProductProduct._records = [
         product_tag_ids: [],
         barcode: false,
         default_code: false,
-        product_template_attribute_value_ids: [],
+        product_template_attribute_value_ids: [101],
         product_template_variant_value_ids: [101],
     },
     {
@@ -66,7 +66,7 @@ ProductProduct._records = [
         product_tag_ids: [],
         barcode: false,
         default_code: false,
-        product_template_attribute_value_ids: [],
+        product_template_attribute_value_ids: [102],
         product_template_variant_value_ids: [102],
     },
 ].map((record) => ({
