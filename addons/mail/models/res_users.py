@@ -18,7 +18,14 @@ class ResUsers(models.Model):
         - add a welcome message
         - add suggestion preference
     """
-    _inherit = 'res.users'
+    _name = "res.users"
+    _inherit = ['mail.thread', 'mail.activity.mixin', 'res.users']
+    _mail_post_access = 'read'
+
+    name = fields.Char(tracking=1)
+    email = fields.Char(tracking=2)
+    phone = fields.Char(tracking=3)
+    login = fields.Char(tracking=4)
 
     role_ids = fields.Many2many(
         "res.role",
@@ -191,9 +198,9 @@ class ResUsers(models.Model):
             for user in users:
                 if user._is_portal():
                     body = user._get_portal_access_update_body(True)
-                    user.partner_id.message_post(
+                    user.message_post(
                         body=body,
-                        message_type='notification',
+                        message_type='tracking',
                         subtype_xmlid='mail.mt_note'
                     )
         return users
@@ -224,9 +231,9 @@ class ResUsers(models.Model):
                 portal_access_changed = user_has_group != user_portal_access_dict[user.id]
                 if portal_access_changed:
                     body = user._get_portal_access_update_body(user_has_group)
-                    user.partner_id.message_post(
+                    user.message_post(
                         body=body,
-                        message_type='notification',
+                        message_type='tracking',
                         subtype_xmlid='mail.mt_note'
                     )
 

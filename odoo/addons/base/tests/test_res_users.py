@@ -530,9 +530,11 @@ class TestUsers2(UsersCommonCase):
     def test_write_group_ids_performance(self):
         contact_creation_group = self.env.ref("base.group_partner_manager")
         self.assertNotIn(contact_creation_group, self.user_internal.group_ids)
+        # Process any tracking message at flush for cleaner queryCount
+        self.flush_tracking()
 
-        # all modules: 24, base: 9; nightly: +1
-        with self.assertQueryCount(25):
+        # all modules: 37, base: 9; nightly: +1
+        with self.assertQueryCount(38):
             self.user_internal.write({
                 "group_ids": [Command.link(contact_creation_group.id)],
             })
@@ -616,6 +618,10 @@ class TestUsers2(UsersCommonCase):
         portal.partner_id.with_user(user).write({
             'name': 'New name for you'
         })
+
+    def flush_tracking(self):
+        self.env.flush_all()
+        self.cr.flush()
 
 
 @tagged('at_install', '-post_install')  # LEGACY at_install
