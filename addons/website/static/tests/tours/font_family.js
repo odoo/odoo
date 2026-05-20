@@ -80,7 +80,7 @@ registerWebsitePreviewTour(
         },
         {
             content: "Check that the 3 previews are correctly set in the modal",
-            trigger: `.modal div[style="font-family: 'Second test font';"]:count(3)`,
+            trigger: `.modal div[style='font-family: "Second test font";']:count(3)`,
         },
     ]
 );

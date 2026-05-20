@@ -63,15 +63,10 @@ function loadAnchors(url, body) {
  * @param {HTMLInputElement} input
  */
 function autocompleteWithPages(input, options = {}, env = undefined) {
-    const owlApp = new App(UrlAutoComplete, {
+    const owlApp = new App({
         env: env || Component.env,
         dev: env ? env.debug : Component.env.debug,
         getTemplate,
-        props: {
-            options,
-            loadAnchors,
-            targetDropdown: input,
-        },
         translatableAttributes: ["data-tooltip"],
         translateFn: appTranslateFn,
     });
@@ -79,7 +74,15 @@ function autocompleteWithPages(input, options = {}, env = undefined) {
     const container = document.createElement("div");
     container.classList.add("ui-widget", "ui-autocomplete", "ui-widget-content", "border-0");
     document.body.appendChild(container);
-    owlApp.mount(container);
+    owlApp
+        .createRoot(UrlAutoComplete, {
+            props: {
+                options,
+                loadAnchors,
+                targetDropdown: input,
+            },
+        })
+        .mount(container);
     return () => {
         owlApp.destroy();
         container.remove();

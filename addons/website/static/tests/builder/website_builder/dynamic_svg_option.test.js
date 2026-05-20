@@ -27,26 +27,26 @@ test("Change dynamic SVG colors", async () => {
         '[data-label="Illustration Colors"] button.o_we_color_preview',
         { timeout: 1000 }
     );
-    const expectColors = async (expectedHex, expectedRgb, expectedParam) => {
+    const expectColors = async (expectedRgb, expectedParam) => {
         await waitFor(
-            `[data-label="Illustration Colors"] button.o_we_color_preview[style="background-color: ${expectedHex}"]`,
+            `[data-label="Illustration Colors"] button.o_we_color_preview[style="background-color: ${expectedRgb};"]`,
             { timeout: 1000 }
         );
         expect(svg).toHaveAttribute("src", `${imgPath}?c1=${expectedParam}`);
         expect(colorPreviewButton).toHaveStyle({ backgroundColor: expectedRgb });
     };
-    await expectColors("#000000", "rgb(0, 0, 0)", "%23000000");
+    await expectColors("rgb(0, 0, 0)", "%23000000");
 
     await contains(colorPreviewButton).click();
     await contains(".o_colorpicker_section button[data-color='o-color-1']").click();
-    await expectColors("#111111", "rgb(17, 17, 17)", "o-color-1");
+    await expectColors("rgb(17, 17, 17)", "o-color-1");
 
     await contains(colorPreviewButton).click();
     await contains(".o_color_section button[data-color='#FF0000']").click();
-    await expectColors("#FF0000", "rgb(255, 0, 0)", "%23FF0000");
+    await expectColors("rgb(255, 0, 0)", "%23FF0000");
 
     await contains(colorPreviewButton).click();
     await contains(".o_font_color_selector .btn-tab:not(.active)").click();
     await contains(".o_colorpicker_section button[data-color='white']").click();
-    await expectColors("#FFFFFF", "rgb(255, 255, 255)", "%23FFFFFF");
+    await expectColors("rgb(255, 255, 255)", "%23FFFFFF");
 });
