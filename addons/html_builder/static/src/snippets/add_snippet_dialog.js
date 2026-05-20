@@ -217,5 +217,10 @@ export class AddSnippetDialog extends Component {
 
     toggleMobilePreview() {
         this.state.isMobilePreviewMode = !this.state.isMobilePreviewMode;
+        // Hack to apply the new styles immediately, so that the content of the
+        // iframe (SnippetViewer) properly computes the matrix navigation.
+        // Ideally, it would be handled by OWL onPatched, but it doesn't work
+        // because both components are within different windows.
+        this.iframeRef.el.classList.toggle("o_is_mobile_preview");
     }
 }
