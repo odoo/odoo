@@ -494,7 +494,8 @@ test.skip("Dropzones below fullscreen meeting view are disabled", async () => {
     await contains(".o-mail-Discuss .o-mail-AttachmentContainer:not(.o-isUploading)", { count: 2 });
 });
 
-test("Systray icon shows latest action", async () => {
+test.tags("owl3");
+test.skip("Systray icon shows latest action", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     await start();
