@@ -4,7 +4,7 @@
 import logging
 
 from odoo import api, fields, models
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError, ValidationError
 
 _logger = logging.getLogger(__name__)
 
@@ -231,6 +231,43 @@ class TransferApprovalRequest(models.Model):
             'current_district_jail':  self._lookup_jail('district_jail', employee.x_district_jail),
             'current_sub_jail':       self._lookup_jail('sub_jail', employee.x_sub_jail),
         }
+
+    # ── Actions: Approve / Reject ─────────────────────────────────────────
+
+    def action_approve(self):
+        self.ensure_one()
+        if self.approval_user_id != self.env.user:
+            raise UserError(
+                'Only the designated approver (%s) can approve this request.'
+                % self.approval_user_id.name
+            )
+        if self.state != 'pending':
+            raise UserError('Only pending requests can be approved.')
+        self.employee_id.write({
+            'x_central_jail_id': self.requested_central_prison.id or False,
+            'x_district_jail_id': self.requested_district_jail.id or False,
+            'x_sub_jail_id': self.requested_sub_jail.id or False,
+        })
+        self.write({
+            'state': 'approved',
+            'approved_by': self.env.user.id,
+            'approved_date': fields.Datetime.now(),
+        })
+
+    def action_reject(self):
+        self.ensure_one()
+        if self.approval_user_id != self.env.user:
+            raise UserError(
+                'Only the designated approver (%s) can reject this request.'
+                % self.approval_user_id.name
+            )
+        if self.state != 'pending':
+            raise UserError('Only pending requests can be rejected.')
+        self.write({
+            'state': 'rejected',
+            'approved_by': self.env.user.id,
+            'approved_date': fields.Datetime.now(),
+        })
 
     @api.model
     def _lookup_jail(self, jail_type, name):
