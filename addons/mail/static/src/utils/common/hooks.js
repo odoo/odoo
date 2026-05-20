@@ -242,7 +242,7 @@ export function useHover(refNames, { onHover, onAway, stateObserver, onHovering 
 
 export class UseHoverOverlay extends Component {
     static props = ["slots", "hover"];
-    static template = xml`<div t-custom-ref="root"><t t-slot="default"/></div>`;
+    static template = xml`<div t-custom-ref="root"><t t-call-slot="default"/></div>`;
 
     setup() {
         super.setup();

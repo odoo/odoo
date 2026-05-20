@@ -1,9 +1,8 @@
 import { useState } from "@web/owl2/utils";
 import { SearchState } from "@mail/utils/common/hooks";
 import { getInnerHtml } from "@mail/utils/common/html";
-import { onMounted, onWillUnmount } from "@odoo/owl";
+import { effect, onMounted, onWillDestroy, onWillUnmount } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
-import { effect } from "@web/core/utils/reactive";
 import { createDocumentFragmentFromContent } from "@web/core/utils/html";
 import { escapeRegExp } from "@web/core/utils/strings";
 
@@ -85,18 +84,17 @@ export class MessageSearchState extends SearchState {
         this.store = useService("mail.store");
         this.thread = initialThread;
         this.fetch = this.fetchMessages.bind(this);
+        let disposeEffect = () => {};
         onMounted(() => {
-            effect(
-                (state) => {
-                    if (state.isActive) {
-                        this.run();
-                    } else if (state.searched) {
-                        state.clear();
-                    }
-                },
-                [this]
-            );
+            disposeEffect = effect(() => {
+                if (this.isActive) {
+                    this.run();
+                } else if (this.searched) {
+                    this.clear();
+                }
+            });
         });
+        onWillDestroy(disposeEffect);
         onWillUnmount(() => this.clear());
     }
 

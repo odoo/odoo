@@ -112,21 +112,22 @@ export const mailPopoutService = {
                 pollClosedWindow(id);
             }
             await reset(id, { useAlternativeAssets });
-            popout.app = new App(component, {
+            const rootEnv = Object.assign({}, env, {
+                /**
+                 * Some sub components may need a reference to the external window to
+                 * access window information such as its dimensions, or to attach event listeners.
+                 */
+                pipWindow: externalWindow,
+            });
+            popout.app = new App({
                 name: "Popout",
-                env: Object.assign({}, env, {
-                    /**
-                     * Some sub components may need a reference to the external window to
-                     * access window information such as its dimensions, or to attach event listeners.
-                     */
-                    pipWindow: externalWindow,
-                }),
-                props,
                 getTemplate,
                 translatableAttributes: ["data-tooltip"],
                 translateFn: appTranslateFn,
             });
-            popout.app.mount(externalWindow.document.body);
+            popout.app
+                .createRoot(component, { env: rootEnv, props })
+                .mount(externalWindow.document.body);
             return externalWindow;
         }
 
@@ -150,15 +151,13 @@ export const mailPopoutService = {
                 pollClosedWindow(id);
             }
             reset(id);
-            popout.app = new App(component, {
+            popout.app = new App({
                 name: "Popout",
-                env,
-                props,
                 getTemplate,
                 translatableAttributes: ["data-tooltip"],
                 translateFn: appTranslateFn,
             });
-            popout.app.mount(externalWindow.document.body);
+            popout.app.createRoot(component, { env, props }).mount(externalWindow.document.body);
             return externalWindow;
         }
 

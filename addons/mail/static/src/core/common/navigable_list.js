@@ -38,7 +38,6 @@ export class NavigableList extends Component {
         });
         this.hotkey = useService("hotkey");
         this.hotkeysToRemove = [];
-
         useExternalListener(window, "keydown", this.onKeydown, true);
         onExternalClick("root", async (ev) => {
             // Let event be handled by bubbling handlers first.
@@ -54,7 +53,7 @@ export class NavigableList extends Component {
             () => {
                 this.open();
             },
-            () => [this.props]
+            () => [this.props?.options]
         );
         useLayoutEffect(
             () => {

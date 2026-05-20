@@ -26,9 +26,8 @@
                             <img t-custom-ref="image" class="o-mail-LinkPreviewCardImage-squarish rounded object-fit-contain" t-att-src="this.linkPreview.og_image" t-att-alt="this.linkPreview.og_title" t-on-load="this.onImageLoaded"/>
                         </a>
                     </div>
-                    <t t-call="mail.LinkPreview.aside">
-                        <t t-set="className" t-value="'btn btn-dark btn-sm mt-1 me-1 rounded opacity-75 opacity-100-hover py-0 px-1'"/>
-                    </t>
+                    <t t-call="mail.LinkPreview.aside"
+                        className="'btn btn-dark btn-sm mt-1 me-1 rounded opacity-75 opacity-100-hover py-0 px-1'"/>
                 </div>
             </t>
             <t t-elif="this.linkPreview.og_image">
@@ -42,16 +41,14 @@
                         </a>
                     </div>
                 </div>
-                <t t-call="mail.LinkPreview.aside">
-                    <t t-set="className" t-value="'fa fa-stack p-0 opacity-75 opacity-100-hover'"/>
-                </t>
+                <t t-call="mail.LinkPreview.aside"
+                    className="'fa fa-stack p-0 opacity-75 opacity-100-hover'"/>
             </t>
             <t t-else="">
                 <div class="border-start border-4 px-2 py-1">
                     <t t-call="mail.LinkPreviewCard.content"/>
-                    <t t-call="mail.LinkPreview.aside">
-                        <t t-set="className" t-value="'fa fa-stack p-0 opacity-75 opacity-100-hover'"/>
-                    </t>
+                    <t t-call="mail.LinkPreview.aside"
+                        className="'fa fa-stack p-0 opacity-75 opacity-100-hover'"/>
                 </div>
             </t>
         </div>
@@ -64,9 +61,8 @@
                     <Gif t-if="this.linkPreview.isGif" paused="this.props.messageLinkPreview.gifPaused" class="'h-auto w-auto rounded'" src="this.linkPreview.imageUrl" onLoad.bind="this.onImageLoaded"/>
                     <img t-else="" class="h-auto w-auto rounded" t-att-src="this.linkPreview.imageUrl" t-on-load="this.onImageLoaded"/>
                 </a>
-                <t t-call="mail.LinkPreview.aside">
-                    <t t-set="className" t-value="'btn btn-sm btn-dark mt-2 me-2 rounded opacity-75 opacity-100-hover'"/>
-                </t>
+                <t t-call="mail.LinkPreview.aside"
+                    className="'btn btn-sm btn-dark mt-2 me-2 rounded opacity-75 opacity-100-hover'"/>
             </div>
         </div>
     </t>
@@ -91,9 +87,8 @@
                 <div t-if="!this.state.videoLoaded" class="o-mail-LinkPreviewVideo-videoWrap h-100 w-100" t-on-click="() => this.state.startVideo = true"><t t-call="mail.LinkPreviewVideo.preview"/></div>
                 <iframe t-if="this.state.startVideo" t-att-src="this.linkPreview.videoURL" class="h-100 w-100 rounded" t-att-class="{'d-none': !this.state.videoLoaded}" allow="autoplay" frameborder="0" allowFullScreen="true" t-custom-ref="video"/>
             </div>
-            <t t-call="mail.LinkPreview.aside">
-                <t t-set="className" t-value="'fa fa-stack p-0 opacity-75 opacity-100-hover'"/>
-            </t>
+            <t t-call="mail.LinkPreview.aside"
+                className="'fa fa-stack p-0 opacity-75 opacity-100-hover'"/>
         </div>
     </t>
 

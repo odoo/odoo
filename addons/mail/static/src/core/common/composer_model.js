@@ -17,7 +17,11 @@ export class Composer extends Record {
         this.attachments.length = 0;
         this.replyToMessage = undefined;
         this.restoredFromFullComposer = false;
-        this.composerHtml = markup("<div class='o-paragraph'><br></div>");
+        if (this.updateFrom === "html") {
+            this.composerHtml = markup("<div class='o-paragraph'><br></div>");
+        } else {
+            this.composerText = "";
+        }
         Object.assign(this.selection, {
             start: 0,
             end: 0,
@@ -67,6 +71,7 @@ export class Composer extends Record {
             const prettifiedHtml = prettifyMessageText(this.composerText, {
                 validMentions,
                 thread: this.targetThread,
+                trim: false,
             });
             if (this.composerHtml.toString() !== prettifiedHtml.toString()) {
                 this.updateFrom = "text";
@@ -91,7 +96,7 @@ export class Composer extends Record {
             }
             const prettifiedText = isHtmlEmpty(this.composerHtml)
                 ? ""
-                : convertBrToLineBreak(this.composerHtml);
+                : convertBrToLineBreak(this.composerHtml, { trim: false });
             if (this.composerText !== prettifiedText) {
                 this.updateFrom = "html";
                 this.composerText = prettifiedText;

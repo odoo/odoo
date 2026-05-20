@@ -220,7 +220,7 @@ registry.category("web_tour.tours").add("mail_template_dynamic_field_tour", {
         },
         {
             content: "Ensure the editable contain the dynamic field t tag",
-            trigger: `.note-editable.odoo-editor-editable t[t-out="format_datetime(object.create_date) or 'localTime'"]:contains("localTime")`,
+            trigger: `.note-editable.odoo-editor-editable t[t-out="format_datetime(object.create_date, tz=object.partner_id.tz) or 'localTime'"]:contains("localTime")`,
         },
         {
             content: "Discard form changes",

@@ -5,7 +5,6 @@ import { useEffect } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { range } from "@web/core/utils/numbers";
 import { patch } from "@web/core/utils/patch";
-import { effect } from "@web/core/utils/reactive";
 
 let waitForLoadMoreToDisappear;
 let resolveLoadMoreDisappeared;
@@ -28,18 +27,12 @@ registry.category("web_tour.tours").add("test_discuss_sub_channel_search", {
                 patch(SubChannelList.prototype, {
                     setup() {
                         super.setup(...arguments);
-                        subChannelLoadMoreState = this.loadMoreState;
-                        effect(
-                            (state) => {
-                                if (status(this) === "destroyed") {
-                                    return;
-                                }
-                                if (!state.isVisible) {
-                                    resolveLoadMoreDisappeared?.();
-                                }
-                            },
-                            [this.loadMoreState]
-                        );
+                        useEffect(() => {
+                            subChannelLoadMoreState = this.loadMoreState;
+                            if (!this.loadMoreState.isVisible) {
+                                resolveLoadMoreDisappeared?.();
+                            }
+                        });
                     },
                 });
             },

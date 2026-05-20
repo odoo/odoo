@@ -9,10 +9,11 @@ import {
     Component,
     onMounted,
     onWillDestroy,
-    onWillPatch,
     onWillUnmount,
     onWillUpdateProps,
     toRaw,
+    untrack,
+    useEffect,
 } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 
@@ -67,7 +68,11 @@ export class Thread extends Component {
         this.saveScroll = this.saveScroll.bind(this);
         this.onScroll = this.onScroll.bind(this);
         this.onWheel = this.onWheel.bind(this);
-        this.messageRefs = reactive(useChildRefs(), () => this.scrollToHighlighted());
+        this.messageRefs = useChildRefs();
+        useEffect(() => {
+            this.messageRefs.size; // trigger effect only when messageRefs changes
+            untrack(() => this.scrollToHighlighted());
+        });
         this.store = useService("mail.store");
         this.ui = useService("ui");
         this.state = useState({
@@ -354,7 +359,7 @@ export class Thread extends Component {
             }
         });
         onWillDestroy(() => stopOnChange());
-        onWillPatch(() => {
+        onRendered(() => {
             if (!this.loadedAndPatched) {
                 return;
             }
