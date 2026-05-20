@@ -48,6 +48,7 @@ export class WebsitePreview extends Component {
     static props = { ...standardActionServiceProps };
     setup() {
         this.websiteService = useService('website');
+        this.companyService = useService('company');
         this.dialogService = useService('dialog');
         this.title = useService('title');
         this.action = useService('action');
@@ -79,6 +80,11 @@ export class WebsitePreview extends Component {
                 this.websiteService.fetchUserGroups(),
             ]);
             this.backendWebsiteId = unslugHtmlDataObject(backendWebsiteRepr).id;
+            const currentWebsite = this.websiteService.websites.find(w => w.id === this.websiteId);
+            const websiteCompanyId = currentWebsite.company_id[0];
+            if (this.companyService.activeCompanyIds[0] !== websiteCompanyId) {
+                await this.companyService.setCompanies([websiteCompanyId]);
+            }
 
             const encodedPath = encodeURIComponent(this.path);
             if (!session.website_bypass_domain_redirect // Used by the Odoo support (bugs to be expected)
