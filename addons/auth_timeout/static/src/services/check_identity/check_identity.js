@@ -23,7 +23,7 @@ export class CheckIdentityTimeout {
             this.busService.addEventListener("connect", () => this.updatePresence(), { once: true });
 
             this.presenceService.bus.addEventListener("presence", () => {
-                if (!this.checkIdentityService.started) {
+                if (!this.checkIdentityService.identityCheckPromise) {
                     clearTimeout(this.inactivityTimer);
                     this.startInactivityTimer();
                 }
