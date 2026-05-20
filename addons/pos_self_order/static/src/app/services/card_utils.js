@@ -34,14 +34,7 @@ export function computeTotalComboPrice(selfOrder, productTemplate, comboValues, 
 }
 
 export function getProductVariantByAttributes(models, productTemplate, selectedAttributes) {
-    return models["product.product"].find(
-        (prd) =>
-            prd.product_tmpl_id.id === productTemplate.id &&
-            prd.product_template_variant_value_ids.length &&
-            prd.product_template_variant_value_ids.every((ptav) =>
-                Object.values(selectedAttributes).some((value) => ptav.id == value)
-            )
-    );
+    return productTemplate.getVariantForCombination(getAttributeValues(selectedAttributes, models));
 }
 
 export function getBestMatchingVariant(models, productTemplate, selectedAttributes) {
