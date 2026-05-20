@@ -260,7 +260,7 @@ class Test2WeeksCalendar(TransactionCase):
             datetime(2018, 4, 2, 0, 0, 0, tzinfo=jules_tz),
             datetime(2018, 4, 6, 23, 59, 59, tzinfo=jules_tz),
         )[self.jules.id]
-        self.assertEqual(data, {'days': 4, 'hours': 30})
+        self.assertEqual(data, {'days': 3.782, 'hours': 30})
 
         # Jules with 2 weeks calendar
         # 02-04-2018 00:00:00 - 14-04-2018 23:59:59
@@ -268,7 +268,7 @@ class Test2WeeksCalendar(TransactionCase):
             datetime(2018, 4, 2, 0, 0, 0, tzinfo=jules_tz),
             datetime(2018, 4, 14, 23, 59, 59, tzinfo=jules_tz),
         )[self.jules.id]
-        self.assertEqual(data, {'days': 6, 'hours': 46})
+        self.assertEqual(data, {'days': 5.782, 'hours': 46})
 
         # Jules with 2 weeks calendar
         # 12-29-2014 00:00:00 - 27-12-2019 23:59:59 => 261 weeks
@@ -278,4 +278,4 @@ class Test2WeeksCalendar(TransactionCase):
             datetime(2014, 12, 29, 0, 0, 0, tzinfo=jules_tz),
             datetime(2019, 12, 27, 23, 59, 59, tzinfo=jules_tz),
         )[self.jules.id]
-        self.assertEqual(data, {'days': 784, 'hours': 6010})
+        self.assertEqual(data, {'days': 755.477, 'hours': 6010})

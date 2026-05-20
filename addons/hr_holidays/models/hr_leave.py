@@ -645,7 +645,11 @@ class HrLeave(models.Model):
                     hours = sum(map(lambda t: t[1], work_time_per_day_list))
                 else:
                     work_days_data = work_days_data_mapped[leave.date_from, leave.date_to, leave.work_entry_type_id.include_public_holidays_in_duration, calendar][leave.employee_id.id]
-                    hours, days = work_days_data['hours'], work_days_data['days']
+                    hours = work_days_data['hours']
+                    if leave.work_entry_type_request_unit == "half_day":
+                        days = float_round(work_days_data['days'], precision_rounding=0.5, rounding_method='HALF-UP')
+                    else:
+                        days = work_days_data['days']
             else:
                 today_hours = calendar.get_work_hours_count(
                     datetime.combine(leave.date_from.date(), time.min),

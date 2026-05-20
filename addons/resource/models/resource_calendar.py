@@ -593,11 +593,8 @@ class ResourceCalendar(models.Model):
             day_hours[start.date()] += interval_hours
 
         for day, hours in day_hours.items():
-            if len(self) == 1 and self._is_duration_based_on_date(day):
-                hours_per_day = self._get_duration_based_work_hours_on_date(day)
-                day_days[start.date()] += hours / hours_per_day if hours_per_day else 0
-            else:
-                day_days[day] = 0.5 if hours <= self.hours_per_day * 3 / 4 else 1
+            hours_per_day = max(self._get_duration_based_work_hours_on_date(day), self.hours_per_day)
+            day_days[day] += hours / hours_per_day if hours_per_day else 0
 
         return {
             # Round the number of days to the closest 16th of a day.
@@ -891,11 +888,12 @@ class ResourceCalendar(models.Model):
         return bool(self.attendance_ids.filtered(lambda a: a.duration_based and int(a.dayofweek) == date.weekday() and a.week_type == week_type))
 
     def _get_duration_based_work_hours_on_date(self, date):
-        attendances_per_week_type = self.attendance_ids.filtered(lambda a: int(a.dayofweek) == date.weekday()).grouped('week_type')
-        week_type = False
         if self.two_weeks_calendar:
+            attendances_per_week_type = self.attendance_ids.filtered(lambda a: int(a.dayofweek) == date.weekday()).grouped('week_type')
             week_type = str(self.env['resource.calendar.attendance'].get_week_type(date))
-        return sum(attendances_per_week_type[week_type].mapped('duration_hours'))
+            return sum(attendances_per_week_type[week_type].mapped('duration_hours'))
+        else:
+            return sum(self.attendance_ids.filtered(lambda a: int(a.dayofweek) == date.weekday()).mapped('duration_hours'))
 
     @ormcache('self.id')
     def _get_working_hours(self):
