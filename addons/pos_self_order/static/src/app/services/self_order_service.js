@@ -721,7 +721,10 @@ export class SelfOrder extends Reactive {
     isValidSelection(slot, partner) {
         const preset = this.currentOrder.preset_id || {};
         const { id, name, email, phone, street, city, country_id, zip } = partner || {};
-        const partnerInfo = name && phone && street && city && country_id && zip;
+        const partnerInfo = this.config._has_google_places_api_key
+            ? name && phone && street && city && country_id && zip
+            : name && phone && street;
+
         const selectedPartner = typeof id === "number" && !isNaN(id);
         const validPartnerInfos = partnerInfo || selectedPartner;
 

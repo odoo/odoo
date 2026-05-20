@@ -209,6 +209,7 @@ class TestSelfOrderController(SelfOrderCommonTest):
         self.pos_config.self_ordering_mode = 'mobile'
         self.pos_config.with_user(self.pos_user).open_ui()
         self.pos_config.current_session_id.set_opening_control(0, '')
+        self.env['ir.config_parameter'].sudo().set_str('google_address_autocomplete.google_places_api_key', 'test_api_key')
 
         with patch('odoo.addons.base_geolocalize.models.base_geocoder.BaseGeocoder.geo_find', return_value=(50.0, 4.0)):
             self.delivery_preset.write({
@@ -253,6 +254,7 @@ class TestSelfOrderController(SelfOrderCommonTest):
         self.pos_config.self_ordering_mode = 'mobile'
         self.pos_config.with_user(self.pos_user).open_ui()
         self.pos_config.current_session_id.set_opening_control(0, '')
+        self.env['ir.config_parameter'].sudo().set_str('google_address_autocomplete.google_places_api_key', 'test_api_key')
 
         with patch('odoo.addons.base_geolocalize.models.base_geocoder.BaseGeocoder.geo_find', return_value=(0.0, 0.0)):
             self.delivery_preset.write({

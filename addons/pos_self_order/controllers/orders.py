@@ -106,9 +106,10 @@ class PosSelfOrderController(http.Controller):
         pos_config = self._verify_pos_config(access_token)
         preset = pos_config.env['pos.preset'].browse(int(preset_id)) if preset_id else False
         existing_partner = pos_config.env['res.partner'].sudo().browse(int(partner_id)) if partner_id else False
+        google_places_api_key = request.env['ir.config_parameter'].sudo().get_str('google_address_autocomplete.google_places_api_key') or None
 
         if existing_partner and existing_partner.exists():
-            if preset and preset.exists() and preset.service_at == 'delivery':
+            if google_places_api_key and preset and preset.exists() and preset.service_at == 'delivery':
                 error = self._check_delivery_address_for_partner(preset, existing_partner)
                 if error:
                     return {'error': error}
@@ -129,7 +130,7 @@ class PosSelfOrderController(http.Controller):
             'state_id': state_id.id if state_id else False,
             'company_id': pos_config.company_id.id,
         })
-        if preset and preset.exists() and preset.service_at == 'delivery':
+        if google_places_api_key and preset and preset.exists() and preset.service_at == 'delivery':
             error = self._check_delivery_address_for_partner(preset, partner_sudo)
             if error:
                 return {'error': error}
@@ -280,18 +281,18 @@ class PosSelfOrderController(http.Controller):
     @http.route('/pos-self/autocomplete/address', methods=['POST'], type='jsonrpc', auth='public', website=True)
     def pos_self_order_autocomplete_address(self, access_token, partial_address, **kwargs):
         self._verify_pos_config(access_token)
-        api_key = request.env['ir.config_parameter'].sudo().get_str('google_address_autocomplete.google_places_api_key') or None
-        if not api_key:
+        google_places_api_key = request.env['ir.config_parameter'].sudo().get_str('google_address_autocomplete.google_places_api_key') or None
+        if not google_places_api_key:
             return {'results': []}
-        return AutoCompleteController()._perform_place_search(partial_address, api_key=api_key)
+        return AutoCompleteController()._perform_place_search(partial_address, api_key=google_places_api_key)
 
     @http.route('/pos-self/autocomplete/address_full', methods=['POST'], type='jsonrpc', auth='public', website=True)
     def pos_self_order_autocomplete_address_full(self, access_token, address, google_place_id=None, **kwargs):
         self._verify_pos_config(access_token)
-        api_key = request.env['ir.config_parameter'].sudo().get_str('google_address_autocomplete.google_places_api_key') or None
-        if not api_key:
+        google_places_api_key = request.env['ir.config_parameter'].sudo().get_str('google_address_autocomplete.google_places_api_key') or None
+        if not google_places_api_key:
             return {'address': None}
-        return AutoCompleteController()._perform_complete_place_search(address, api_key=api_key, google_place_id=google_place_id)
+        return AutoCompleteController()._perform_complete_place_search(address, api_key=google_places_api_key, google_place_id=google_place_id)
 
     def _verify_pos_config(self, access_token, check_active_session=True):
         """
