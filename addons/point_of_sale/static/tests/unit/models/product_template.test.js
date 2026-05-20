@@ -24,3 +24,14 @@ test("product with single 'multi' display_type attr with single choice is config
     expect(line.attribute_id.display_type).toBe("multi");
     expect(!!product.isConfigurable()).toBe(true);
 });
+
+test("variant lookup includes single-value attribute lines", async () => {
+    const store = await setupPosEnv();
+    // "Single attribute": its only variant attribute line has a single value ("Male").
+    const product = store.models["product.template"].get(152);
+    const variant = store.models["product.product"].get(153);
+    variant.update({ product_tmpl_id: product });
+    const value = store.models["product.template.attribute.value"].get(12);
+
+    expect(product.getVariantForCombination([value])).toBe(variant);
+});

@@ -101,6 +101,40 @@ export class ProductTemplate extends ProductTemplateAccounting {
         return `/web/image?model=product.template&field=image_128&id=${this.id}&unique=${this.write_date}`;
     }
 
+    hasDynamicAttributes() {
+        return this.attribute_line_ids.some(
+            (line) => line.attribute_id.create_variant === "dynamic"
+        );
+    }
+
+    getVariantForCombination(attributeValues) {
+        const valueIds = attributeValues
+            .filter((value) => value.attribute_id.create_variant !== "no_variant")
+            .map(({ id }) => id);
+        if (!valueIds.length) {
+            return false;
+        }
+
+        return (
+            this.product_variant_ids.find((variant) => {
+                // Not product_template_variant_value_ids: its domain drops values from
+                // single-value attribute lines, which are part of the combination.
+                const variantValueIds = variant.product_template_attribute_value_ids.map(
+                    ({ id }) => id
+                );
+                return valueIds.every((id) => variantValueIds.includes(id));
+            }) || false
+        );
+    }
+
+    isDeletedCombination(attributeValues) {
+        return (
+            !this.hasDynamicAttributes() &&
+            attributeValues.some((value) => value.attribute_id.create_variant !== "no_variant") &&
+            !this.getVariantForCombination(attributeValues)
+        );
+    }
+
     _isArchivedCombination(attributeValueIds) {
         if (!this._archived_combinations) {
             return false;

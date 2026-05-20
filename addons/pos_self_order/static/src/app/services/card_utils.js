@@ -35,14 +35,7 @@ export function computeTotalComboPrice(selfOrder, productTemplate, comboValues, 
 }
 
 export function getProductVariantByAttributes(models, productTemplate, selectedAttributes) {
-    return models["product.product"].find(
-        (prd) =>
-            prd.product_tmpl_id.id === productTemplate.id &&
-            prd.product_template_variant_value_ids.length &&
-            prd.product_template_variant_value_ids.every((ptav) =>
-                Object.values(selectedAttributes).some((value) => ptav.id == value)
-            )
-    );
+    return productTemplate.getVariantForCombination(getAttributeValues(selectedAttributes, models));
 }
 
 export function getAttributeValues(selectedValues, models) {
@@ -93,11 +86,8 @@ export function getOrderLineValues(
     };
 
     if (Object.entries(selectedValues).length > 0) {
-        const productVariant = getProductVariantByAttributes(
-            models,
-            productTemplate,
-            selectedValues
-        );
+        const attributeValues = getAttributeValues(selectedValues, models);
+        const productVariant = productTemplate.getVariantForCombination(attributeValues);
 
         if (productVariant) {
             const productVariantPrice = selfOrder.getProductPriceInfo(
@@ -112,7 +102,7 @@ export function getOrderLineValues(
             });
         }
 
-        values.attribute_value_ids = getAttributeValues(selectedValues, models);
+        values.attribute_value_ids = attributeValues;
         values.price_extra += getAttributeValuesExtraPrice(values.attribute_value_ids);
 
         if (Object.values(customValues).length > 0) {
