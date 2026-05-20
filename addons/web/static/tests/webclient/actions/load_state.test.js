@@ -1410,6 +1410,55 @@ describe(`new urls`, () => {
         ]);
     });
 
+    test("properly reload dynamic actions from sessionStorage (form view)", async () => {
+        patchWithCleanup(browser.sessionStorage, {
+            setItem(key, value) {
+                expect.step(`set ${key}-${value}`);
+                super.setItem(key, value);
+            },
+            getItem(key) {
+                const res = super.getItem(key);
+                expect.step(`get ${key}-${res}`);
+                return res;
+            },
+        });
+
+        await mountWebClient();
+
+        await getService("action").doAction(
+            {
+                type: "ir.actions.act_window",
+                res_model: "partner",
+                views: [
+                    [false, "list"],
+                    [666, "form"],
+                ],
+            },
+            { props: { resId: 1 }, viewType: "form" }
+        );
+        await animationFrame();
+
+        expect(`.o_form_view`).toHaveCount(1);
+
+        expect.verifySteps([
+            "get menu_id-null",
+            'set current_action-{"type":"ir.actions.act_window","res_model":"partner","views":[[false,"list"],[666,"form"]]}',
+        ]);
+
+        expect(browser.location.href).toBe("http://example.com/odoo/m-partner/1");
+
+        // Emulate a Reload
+        routerBus.trigger("ROUTE_CHANGE");
+        await animationFrame();
+        await animationFrame();
+        expect(`.o_form_view`).toHaveCount(1);
+        expect.verifySteps([
+            "get menu_id-null",
+            'get current_action-{"type":"ir.actions.act_window","res_model":"partner","views":[[false,"list"],[666,"form"]]}',
+            'set current_action-{"type":"ir.actions.act_window","res_model":"partner","views":[[false,"list"],[666,"form"]]}',
+        ]);
+    });
+
     test("menu jumping fix: multiple menus sharing same action", async () => {
         // Test case for menu jumping issue when multiple menus share the same action
         // Scenario: User navigates to Sale->Customers, then F5 reload should stay in Sale, not jump to Account
@@ -1417,9 +1466,12 @@ describe(`new urls`, () => {
             {
                 id: 9001,
                 name: "Partners",
-                res_model: "partner", 
+                res_model: "partner",
                 type: "ir.actions.act_window",
-                views: [[false, "list"], [false, "form"]],
+                views: [
+                    [false, "list"],
+                    [false, "form"],
+                ],
             },
         ]);
 
@@ -1428,7 +1480,7 @@ describe(`new urls`, () => {
             // Sale App
             { id: 100, name: "Sale", appID: 100, children: [101] },
             { id: 101, name: "Customers", appID: 100, actionID: 9001, parent_id: 100 },
-            // Account App  
+            // Account App
             { id: 200, name: "Accounting", appID: 200, children: [201] },
             { id: 201, name: "Customers", appID: 200, actionID: 9001, parent_id: 200 }, // Same action!
         ]);
@@ -1469,7 +1521,6 @@ describe(`new urls`, () => {
             "Update the state without updating URL, nextState: actionStack,action",
         ]);
     });
-
 });
 
 describe(`legacy urls`, () => {
