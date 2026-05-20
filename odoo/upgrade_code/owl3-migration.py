@@ -3,13 +3,26 @@ from odoo.upgrade_code.tools_etree import update_etree
 from odoo.upgrade_code.tools_js_expressions import update_template, VariableAggregator
 
 EXCLUDED_PATH = (
+    'web/static/lib/hoot',
     'spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js',
     'spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml',
     'iot_drivers/static/src/',
     'web/static/src/owl2',
     'addons/web/static/lib/owl/owl.js',
-    '/node_modules/'
+    'html_builder/static/tests/custom_tab/builder_components/builder_list.test.js',  # Test has weird string formatting syntax easier to skip
+    'html_builder/static/tests/custom_tab/builder_components/builder_row.test.js',  # Test has weird string formatting syntax easier to skip
+    'web_studio/static/src/client_action/report_editor/report_editor_xml/translate_xml.js',  # Weird inline xml, easier to do by hand
+    '/node_modules/',
+    'test_assetsbundle/static/invalid_src',
+    'test_assetsbundle/static/accessible.xml',
 )
+
+
+CHECKSUM_FILES = (
+    'pos_blackbox_be/static/src/pos/overrides/navbar/navbar.xml',
+    'iot_drivers/iot_handlers/drivers/serial_scale_driver.py',
+)
+
 
 # Templates that are called by:
 # - this.renderAt   (Interaction)
@@ -17,6 +30,7 @@ EXCLUDED_PATH = (
 # - renderToFragment
 # - renderToElement
 EXCLUDED_TEMPLATES = (
+    'point_of_sale.Navbar',  # Inherited from checksum file, to remove from list when checksum is recertified
     'Appointment.appointment_info_no_capacity',
     'Appointment.appointment_info_no_slot',
     'Appointment.appointment_info_no_slot_month',
@@ -317,7 +331,7 @@ class JSTooling:
             prefix = match.group(1)
             xml_content = match.group(2)
             suffix = match.group(3)
-            return f"{prefix}{transform_func(xml_content)}{suffix}"
+            return f"{prefix}{transform_func("<t>" + xml_content + "</t>")[3:][:-4]}{suffix}"
 
         return pattern.sub(replacer, content)
 
@@ -411,34 +425,33 @@ class JSTooling:
     @staticmethod
     def get_js_files(file_manager, include_test_files=False):
         """Gets all static js files. Include .test.js files if include_test_files is True."""
-        path_pattern = re.compile('|'.join(EXCLUDED_PATH))
-        target_dir = '/static/' if include_test_files else '/static/src'
+        path_pattern = re.compile('|'.join(EXCLUDED_PATH + CHECKSUM_FILES))
 
         return [
             f for f in file_manager
-            if f.path.suffix == '.js'
-            and target_dir in f.path._str
-            and not path_pattern.search(f.path._str)
+            if str(f.path).endswith('.js')
+            and '/static/' in str(f.path)
+            and not path_pattern.search(str(f.path))
         ]
 
     @staticmethod
     def get_template_files(file_manager):
-        excluded_path_pattern = re.compile('|'.join(EXCLUDED_PATH))
+        excluded_path_pattern = re.compile('|'.join(EXCLUDED_PATH + CHECKSUM_FILES))
         return [
             file for file in file_manager
-            if '/static/src/' in file.path._str
-            and file.path.suffix in ['.xml', '.js']
-            and not re.search(excluded_path_pattern, file.path._str)
+            if '/static/' in str(file.path)
+            and (str(file.path).endswith('.js') or str(file.path).endswith('.xml'))
+            and not re.search(excluded_path_pattern, str(file.path))
         ]
 
     @staticmethod
     def get_xml_files(file_manager):
-        path_pattern = re.compile('|'.join(EXCLUDED_PATH))
+        path_pattern = re.compile('|'.join(EXCLUDED_PATH + CHECKSUM_FILES))
         return [
             file for file in file_manager
-            if '/static/src/' in file.path._str
-            and file.path.suffix == '.xml'
-            and not re.search(path_pattern, file.path._str)
+            if '/static/' in str(file.path)
+            and str(file.path).endswith('.xml')
+            and not re.search(path_pattern, str(file.path))
         ]
 
 
@@ -648,13 +661,7 @@ def upgrade_use_external_listener(file_manager, log_info, log_error):
 
 def upgrade_tportal(file_manager, log_info, log_error):
     """Sub-task: Migrate t-portal, ignoring comments."""
-    path_pattern = re.compile('|'.join(EXCLUDED_PATH))
-    files = [
-        file for file in file_manager
-        if '/static/src/' in file.path._str
-        and file.path.suffix in ['.xml', '.js']
-        and not re.search(path_pattern, file.path._str)
-    ]
+    files = JSTooling.get_template_files(file_manager)
     if not files:
         return
 
@@ -681,11 +688,7 @@ def upgrade_tportal(file_manager, log_info, log_error):
 
 def upgrade_t_esc(file_manager, log_info, log_error):
     """Replaces the t-esc directive in xml templates with the t-out directive"""
-    excluded_path_pattern = re.compile('|'.join(EXCLUDED_PATH))
-    files = [
-        file for file in file_manager
-        if file.path.suffix in ['.xml', '.js'] and not re.search(excluded_path_pattern, file.path._str)
-    ]
+    files = JSTooling.get_template_files(file_manager)
     if not files:
         return
 
@@ -783,8 +786,9 @@ WEB_WHITELIST = {
     "web.CalendarFilterSection.filter": {'filter', 'filterId'},  # dynamic t-call
     "web.CalendarYearPopover.record": {'record'},  # t-for-each above dynamic t-call
     "web.FieldTooltip": {'field', 'debug', 'resModel'},  # JSON stringify context
-    "web.ListRenderer.RecordRow": {'record', 'group', 'groupId', '_canSelectRecord'},  # dynamic t-call I guess,
-    "web.ListRenderer.GroupRow": {'group', 'group_index'},  # dynamic t-call I guess
+    "web.ListRenderer.RecordRow": {'record', 'group', 'groupId', '_canSelectRecord'},  # dynamic t-call
+    'web.ListRenderer.Rows': {'list'},  # dynamic t-call
+    "web.ListRenderer.GroupRow": {'group', 'group_index'},  # dynamic t-call from loop
     "web.ListHeaderTooltip": {'field'},  # JSON stringify context
     "web.Many2ManyBinaryField.attachment_preview": {'file'},  # t-for-each above t-call
     "web.Many2ManyTagsAvatarField.option": {'autoCompleteItemScope'},  # t-slot-scope above dynamic t-call
@@ -792,7 +796,7 @@ WEB_WHITELIST = {
     "web.PivotMeasure": {'cell'},  # for each + t-call
     "web.SearchPanelContent": {'section'},  # dynamic t-call
     "web.SearchPanel.Small": {'section'},  # dynamic t-call
-    "web.SearchPanel.Category": {'section'},  # dynamic t-call
+    "web.SearchPanel.Category": {'isChildList', 'section', 'values'},  # dynamic t-call
     "web.SearchPanel.FiltersGroup": {'values', 'section', 'group', 'isChildList'},  # dynamic t-call
     "web.SectionMenu": {'subMenu_index', 'apps'},  # dynamic t-call in t-foreach
     "web.SelectMenu.ChoiceItem": {'choice', 'choice_index'},  # dynamic t-call
@@ -807,7 +811,8 @@ WEB_WHITELIST = {
     "web.TreeEditor.complex_condition": {'node'},  # Nested inherit
 }
 WEB_EXT_WHITELIST = {
-    "web_map.MapRenderer.PinListItems": {'records'},  # dynamic t-call
+    "web_map.MapRenderer.PinListItems": {'records', 'renderer'},  # dynamic t-call
+    'web_map.MapRenderer.PinListContainer': {'renderer'},  # dynamic t-call
     "web_gantt.GanttRenderer.RowHeader": {'row'},  # dynamic t-calls from loops
     "web_gantt.GanttRenderer.RowContent": {'row'},  # dynamic t-calls from loops
     "web_gantt.GanttRenderer.Pill": {'pill', 'row'},  # dynamic t-calls from loops
@@ -817,6 +822,7 @@ WEB_EXT_WHITELIST = {
     "web_grid.Row": {'row', 'section'},  # dynamic t-calls from loops
     "web_grid.AddLine": {'row'},  # dynamic t-calls from loops
     "web_studio.Form.InnerGroup": {'row_index'},  # dynamic t-calls from loops
+    'web_studio.ViewEditor.InteractiveEditorProperties.PythonExpressionCheckbox': {'name'},
     "web_studio.ViewEditor.View": {'scope'},  # dynamic t-call
     "web_studio.property.subOptions": {'attribute'},  # dynamic t-call
     "web_studio.property.defaultInput": {'attribute'},  # dynamic t-call
@@ -830,6 +836,7 @@ WEB_EXT_WHITELIST = {
     "web_studio.StudioHomeMenu": {'app_index'},  # xpath on a t-foreach
     "web_studio.ViewEditorSidebar.ApprovalRule": {'rule'},  # dynamic t-call
     "web_gantt.ConnectorStrokeHead": {'xmlAttributes'},  # dynamic t-call
+    'web_studio.ViewSelector.ChoiceItemRecursive': {'choice'}  # dynamic t-call
 }
 MAIL_WHITELIST = {
     "discuss.GifPicker.gif": {'gif_value'},  # for-each above t-call
@@ -855,20 +862,20 @@ MAIL_WHITELIST = {
 MISC_WHITELIST = {
     "account.MoveStatusBarSecuredField.ItemLabel": {'item'},  # dynamic t-call
     "account_disallowed_expenses.warning_multi_rate": {'warningParams'},  # dynamic t-call
+    'account_fiscal_categories.warning_multi_rate': {'warningParams'},  # dynamic t-call
     "account_fiscal_categories_fleet.warning_missing_fiscal_category": {'warningParams'},  # dynamic t-call
-    "account_fiscal_categories.warning_multi_rate": {'warningParams'},  # dynamic t-call
-    "account_intrastat.intrastat_warning_expired_trans": {'warningParams'},  # dynamic t-call
-    "account_intrastat.intrastat_warning_premature_trans": {'warningParams'},  # dynamic t-call
-    "account_intrastat.intrastat_warning_missing_trans": {'warningParams'},  # dynamic t-call
-    "account_intrastat.intrastat_warning_expired_goods": {'warningParams'},  # dynamic t-call
-    "account_intrastat.intrastat_warning_premature_goods": {'warningParams'},  # dynamic t-call
-    "account_intrastat.intrastat_warning_missing_goods": {'warningParams'},  # dynamic t-call
-    "account_intrastat.intrastat_warning_expired_services": {'warningParams'},  # dynamic t-call
-    "account_intrastat.intrastat_warning_premature_services": {'warningParams'},  # dynamic t-call
-    "account_intrastat.intrastat_warning_missing_services": {'warningParams'},  # dynamic t-call
-    "account_intrastat.intrastat_warning_missing_weight": {'warningParams'},  # dynamic t-call
-    "account_intrastat.intrastat_warning_missing_unit": {'warningParams'},  # dynamic t-call
-    "account_intrastat.intrastat_warning_missing_product": {'warningParams'},  # dynamic t-call
+    'account_intrastat.intrastat_warning_expired_trans': {'warningParams'},  # dynamic t-call
+    'account_intrastat.intrastat_warning_premature_trans': {'warningParams'},  # dynamic t-call
+    'account_intrastat.intrastat_warning_missing_trans': {'warningParams'},  # dynamic t-call
+    'account_intrastat.intrastat_warning_expired_goods': {'warningParams'},  # dynamic t-call
+    'account_intrastat.intrastat_warning_premature_goods': {'warningParams'},  # dynamic t-call
+    'account_intrastat.intrastat_warning_missing_goods': {'warningParams'},  # dynamic t-call
+    'account_intrastat.intrastat_warning_expired_services': {'warningParams'},  # dynamic t-call
+    'account_intrastat.intrastat_warning_premature_services': {'warningParams'},  # dynamic t-call
+    'account_intrastat.intrastat_warning_missing_services': {'warningParams'},  # dynamic t-call
+    'account_intrastat.intrastat_warning_missing_weight': {'warningParams'},  # dynamic t-call
+    'account_intrastat.intrastat_warning_missing_unit': {'warningParams'},  # dynamic t-call
+    'account_intrastat.intrastat_warning_missing_product': {'warningParams'},  # dynamic t-call
     "account_reports.has_bank_miscellaneous_move_lines": {'warningParams'},  # dynamic t-call
     "account_reports.journal_balance": {'warningParams'},  # dynamic t-call
     "account_reports.inconsistent_statement_warning": {'warningParams'},  # dynamic t-call
@@ -891,22 +898,23 @@ MISC_WHITELIST = {
     "hr_payroll.ActionableWarningLine": {'warning'},  # Didn't check
     "hr_skills.SkillsListRenderer.Rows": {'list'},  # dynamic t-call I guess
     "lunch.LunchDashboardOrder": {'currency'},  # Var above t-call
-    "l10n_ae_faf.company_data_warning": {'warningParams'},  # dynamic t-call
-    "l10n_be_reports.partner_vat_listing_missing_partners_warning": {'warningParams'},  # dynamic t-call
-    "l10n_be_reports.duplicate_partner_vat": {'warningParams'},  # dynamic t-call
-    "l10n_be_reports.tax_report_warning_checks": {'warningParams'},  # dynamic t-call
-    "l10n_ee_reports.kmd_inf_listing_missing_partners_warning": {'warningParams'},  # dynamic t-call
-    "l10n_fr_reports.tax_report_warning_checks": {'warningParams'},  # dynamic t-call
-    "l10n_in_reports.invalid_intra_state_warning": {'warningParams'},  # dynamic t-call
-    "l10n_in_reports.invalid_inter_state_warning": {'warningParams'},  # dynamic t-call
-    "l10n_in_reports.missing_hsn_warning": {'warningParams'},  # dynamic t-call
-    "l10n_in_reports.invalid_uqc_code_warning": {'warningParams'},  # dynamic t-call
-    "l10n_in_reports.unlinked_reversed_moves_warning": {'warningParams'},  # dynamic t-call
-    "l10n_in_reports.missing_pan_tds_tcs_warning": {'warningParams'},  # dynamic t-call
-    "l10n_lu_reports.annual_tax_report_warning_checks": {'warningParams'},  # dynamic t-call
-    "l10n_ng_reports.tax_report_period_check": {'warningParams'},  # dynamic t-call
-    "l10n_tr_reports.waiting_nilvera_status_warning": {'warningParams'},  # dynamic t-call
-    "l10n_uk_reports_cis.warning_cis_unregistered_partner": {'warningParams'},  # dynamic t-call
+    'l10n_ae_faf.company_data_warning': {'warningParams'},  # dynamic t-call
+    'l10n_be_reports.partner_vat_listing_missing_partners_warning': {'warningParams'},  # dynamic t-call
+    'l10n_be_reports.duplicate_partner_vat': {'warningParams'},  # dynamic t-call
+    'l10n_be_reports.tax_report_warning_checks': {'warningParams'},  # dynamic t-call
+    'l10n_ee_reports.kmd_inf_listing_missing_partners_warning': {'warningParams'},  # dynamic t-call
+    'l10n_fr_reports.tax_report_warning_checks': {'warningParams'},  # dynamic t-call
+    'l10n_in_reports.invalid_intra_state_warning': {'warningParams'},  # dynamic t-call
+    'l10n_in_reports.invalid_inter_state_warning': {'warningParams'},  # dynamic t-call
+    'l10n_in_reports.missing_hsn_warning': {'warningParams'},  # dynamic t-call
+    'l10n_in_reports.invalid_uqc_code_warning': {'warningParams'},  # dynamic t-call
+    'l10n_in_reports.unlinked_reversed_moves_warning': {'warningParams'},  # dynamic t-call
+    'l10n_in_reports.missing_pan_tds_tcs_warning': {'warningParams'},  # dynamic t-call
+    'l10n_lu_reports.annual_tax_report_warning_checks': {'warningParams'},  # dynamic t-call
+    'l10n_ng_reports.tax_report_period_check': {'warningParams'},  # dynamic t-call
+    'l10n_ph_reports.warning_partner_without_vat': {'warningParams'},  # dynamic t-call
+    'l10n_tr_reports.waiting_nilvera_status_warning': {'warningParams'},  # dynamic t-call
+    'l10n_uk_reports_cis.warning_cis_unregistered_partner': {'warningParams'},  # dynamic t-call
     "mrp_workorder.ProductCatalogKanbanRenderer": {'groupOrRecord'},  # Nested t-call or inherit
     "planning.PlanningCalendarCommonPopover.body": {'slot'},  # dynamic t-calls from loops
     "point_of_sale.ScenarioCard": {'item'},  # dynamic t-call
@@ -931,13 +939,35 @@ MISC_WHITELIST = {
     "stock_barcode.LineQuantity": {'lowerButtons'},  # dynamic t-call
     "stock_barcode.LineTitle": {'upperButtons'},  # dynamic t-call
     "views.ViewButtonTooltip": {'debug', 'button', 'model'},  # JSON stringify context
-    "web_map.MapRenderer.PinListContainer": {'rendered'},  # t-set before t-call
     "website.dialog.addFont.singlePreview": {'previewFontName'},  # Nested t-call
+    'website.dialog.addFont.preview': {'previewFontName'},  # Recursive t-call
     "website.form_field": {'fieldTypeClasses', 'form_checkbox'},  # dynamic t-call
     "website.form_radio": {'record_index', 'record'},  # dynamic t-calls from loops
     "website.form_checkbox": {'record_index', 'record'},  # dynamic t-calls from loops
     "website_sale.DynamicSnippetProductsOption": {'filteredTemplates', 'isSingleMode'},  # dynamic t-calls from loops
 }
+
+
+def upgrade_parametric_tcall(file_manager, log_info, log_error):
+    """Converts parametric t-call children (t-set nodes) into inline t-call attributes.
+    """
+    xml_files = JSTooling.get_xml_files(file_manager)
+    for fileno, file in enumerate(xml_files, start=1):
+        if not file.content or not file.content.strip():
+            continue
+        try:
+            res, warnings = update_template(
+                file.path._str, file.content, [], None, None,
+                apply_tcall_param=True, apply_this=False,
+            )
+            if res != file.content:
+                file.content = res
+            for warning in warnings:
+                print(warning)  # noqa: T201
+        except Exception as e:  # noqa: BLE001
+            log_error(file.path, e)
+
+        file_manager.print_progress(fileno, len(xml_files))
 
 
 def upgrade_this(file_manager, log_info, log_error, targets=[]):
@@ -1014,6 +1044,9 @@ def upgrade_this_in_js(file_manager, log_info, log_error, targets=[]):
                 raw_xml = match.group(2)  # The content inside backticks
                 suffix = match.group(3)   # The closing "`"
 
+                if re.search(r'\$\{', raw_xml):
+                    return match.group(0)  # Just skip test with dynamic JS interpolation
+
                 wrapped_xml = f"<t t-name='xyz'>{raw_xml}</t>"
 
                 aggregator = VariableAggregator(is_testing=True)
@@ -1031,6 +1064,33 @@ def upgrade_this_in_js(file_manager, log_info, log_error, targets=[]):
 
         except Exception as e:  # noqa: BLE001
             log_error(file.path, e)
+
+
+def upgrade_t_slot(file_manager, log_info, log_error):
+    files = JSTooling.get_template_files(file_manager)
+    reg_t_slot = re.compile(r'\b(?<!-)t-slot(\s*=)')
+
+    def apply_transformations(text):
+        text = reg_t_slot.sub(r't-call-slot\1', text)
+        return text
+
+    for fileno, file in enumerate(files, start=1):
+        try:
+            raw_content = file.path.read_bytes()
+            content = raw_content.decode("utf-8", errors="ignore")
+
+            if file.path.suffix == ".js":
+                new_content = JSTooling.transform_xml_literals(content, apply_transformations)
+            else:
+                new_content = apply_transformations(content)
+
+            if new_content != content:
+                file.content = new_content
+
+        except Exception as e:  # noqa: BLE001
+            log_error(file.path, e)
+
+        file_manager.print_progress(fileno, len(files))
 
 
 def upgrade(file_manager) -> str:
@@ -1054,5 +1114,7 @@ def upgrade(file_manager) -> str:
     collector.run_sub("Migrating t-model", upgrade_t_model)
     collector.run_sub("Migrating this. in xml templates", upgrade_this, targets=[])
     collector.run_sub("Migrating this. in test.js xml fragments", upgrade_this_in_js, targets=[])
+    collector.run_sub("Migrating t-slot", upgrade_t_slot)
+    collector.run_sub("Migrating parametric t-call", upgrade_parametric_tcall)
 
     collector.finalize()

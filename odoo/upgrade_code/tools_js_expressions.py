@@ -1,4 +1,4 @@
-from odoo.upgrade_code.tools_etree import update_etree
+from odoo.upgrade_code.tools_etree import get_indentation, update_etree
 from lxml import etree
 from collections import defaultdict
 
@@ -191,6 +191,8 @@ TEMPLATE_EXPR = re.compile(r"\$\{([^}]+)\}")
 INTERP_RE = re.compile(r"(#\{(.*?)\}|\{\{(.*?)\}\})")
 LEADING_WHITESPACE_RE = re.compile(r'^\s*')
 TRAILING_WHITESPACE_RE = re.compile(r'\s*$')
+_AUTO_CLOSE_T = re.compile(r'(<t\b[^>]*\bt-(?:call|snippet-call)\s*=[^>]*[^/>])>\s*</t>', flags=re.MULTILINE)
+_XPATH_TCALL_REG = re.compile(r'\[@(t-call)=[^\]]+\]$')
 
 
 def next_non_whitespace(tokens, i):
@@ -224,7 +226,7 @@ class ExpressionCompiler:
         self.template_name = template_name
         self.node_vars = node_vars
         self.warning_vars = warning_vars
-        self.outer_vars = outer_vars
+        self.outer_vars = outer_vars.get(template_name, set())
 
     def compile_expr(self, expr: str) -> str:
         leading_ws = re.search(LEADING_WHITESPACE_RE, expr)[0]
@@ -298,11 +300,8 @@ class ExpressionCompiler:
                     and next_tok.type == "COLON"
                 )
             ):
-                if tok.value in self.outer_vars:
-                    i += 1
-                    continue
-                elif tok.value in self.warning_vars:
-                    self.warnings.append(f"WARNING in template '{self.template_name}' : variable '{tok.value}' also defined in a far parent.")
+                # if tok.value in self.warning_vars:
+                # self.warnings.append(f"WARNING in template '{self.template_name}' : variable '{tok.value}' also defined in a far parent.")
 
                 if (
                     group_type == "LEFT_BRACE"
@@ -503,6 +502,14 @@ class VariableAggregator:
                 if var_name:
                     self.t_call_vars[template_name].add(var_name)
 
+            # Collect inline parameters on t-call (OWL 3 syntax: <t t-call="x" param="val"/>)
+            # Skip when t-call is a direct child of t-inherit (attrs are xpath directives)
+            parent = call_node.getparent()
+            if parent is None or 't-inherit' not in parent.attrib:
+                for attr in call_node.attrib:
+                    if not attr.startswith("t-") and attr not in SKIP_XPATH_ATTRS:
+                        self.t_call_vars[template_name].add(attr.replace('.translate', ''))
+
             scope_nodes = call_node.xpath("ancestor::* | ancestor-or-self::*/preceding-sibling::*")
             self.t_call_outer_vars[template_name].update(self._extract_vars_from_nodes(scope_nodes))
 
@@ -680,8 +687,10 @@ class TemplateCompiler:
                 if self._should_skip_template(self.current_template):
                     continue
 
+                # Bound vars are variables that are valid for the entire template
                 bound_variables = self._collect_bound_variables(template)
                 bound_variables |= set(self.t_call_vars.get(self.current_template, {}))
+                bound_variables |= set(self.t_call_outer_vars.get(self.current_template, {}))  # We initially separated outer t-call vars and vars inside a t-call
                 bound_variables |= set(self.all_vars.get(self.current_template, {}))
 
                 self.fix_template(template, bound_variables)
@@ -727,6 +736,13 @@ class TemplateCompiler:
                     self._process_dynamic_attribute(node, attr)
                 if attr in ('t-call', 't-ref', 't-custom-ref', 't-slot', 't-call-slot'):
                     self._process_dynamic_attribute(node, attr)
+
+            if 't-call' in node.attrib:
+                parent = node.getparent()
+                if parent is None or 't-inherit' not in parent.attrib:
+                    for attr, value in node.attrib.items():
+                        if not attr.startswith('t-') and attr not in SKIP_XPATH_ATTRS and not attr.endswith('.translate') and value:
+                            node.set(attr, self.expr_compiler.compile_expr(value))
 
             if 't-slot' in node.attrib or 't-call-slot' in node.attrib or 't-set-slot' in node.attrib:
                 for attr, value in node.attrib.items():
@@ -815,7 +831,7 @@ class TemplateCompiler:
         # Now set warning vars
         if self.full_inherit_and_call_map.get(self.current_template):
             for parent in self.full_inherit_and_call_map.get(self.current_template):
-                self.warning_vars |= self.all_vars.get(parent, set())
+                self.node_vars |= self.all_vars.get(parent, set())
 
         self.expr_compiler.set_context(
             template_name=self.current_template,
@@ -932,12 +948,215 @@ class TemplateCompiler:
         return is_component_xpath_expr(xp_expr)
 
 
-def update_template(path: str, content: str, modules: list[str], aggregator: VariableAggregator, excluded_templates: set[str]):
-    compiler = TemplateCompiler(path, modules, aggregator, excluded_templates)
+# ------------------------------------------------------------------------------
+# Parametric t-call transformation helpers
+# ------------------------------------------------------------------------------
+
+
+def _detach_node_tail(node):
+    if (prev := node.getprevious()) is not None:
+        prev.tail = (prev.tail or '').rstrip() + (node.tail or '')
+    else:
+        parent = node.getparent()
+        parent.text = (parent.text or '').rstrip() + (node.tail or '')
+
+
+def _move_tset_before_tcall(tset, tcall):
+    parent = tcall.getparent()
+    previous_indent = get_indentation(tset)
+    indent = get_indentation(tcall)
+
+    _detach_node_tail(tset)
+    tset.tail = indent
+
+    tset.set('__need_dedent__', str(len(previous_indent) - len(indent)))
+
+    parent.insert(parent.index(tcall), tset)
+
+
+def _remove_tset_add_attribute(tset, tcall):
+    _detach_node_tail(tset)
+
+    if 't-value' in tset.attrib:
+        value = tset.get('t-value')
+        tcall.set(tset.get('t-set'), value)
+    else:
+        tcall.set(f"{tset.get('t-set')}.translate", (tset.text or '').strip())
+
+    tset.getparent().remove(tset)
+
+
+def _is_not_direct_children_of(tset, tcall):
+    closest_tcall = tset.xpath('ancestor::t[@t-call or @t-if or @t-elif or @t-else or @t-set or @t-foreach]')
+    return closest_tcall and closest_tcall[-1] != tcall
+
+
+def _varname_is_used_inside(tset, tcall):
+    n = tset
+    while (skip_to := n.getnext()) is None and n != tcall:
+        n = n.getparent()
+    if skip_to is None:
+        return set()
+    return __varname_is_used_inside(tset, tcall, skip_to)
+
+
+def __varname_is_used_inside(tset, container, skip_to):
+    used = set()
+    varname = tset.get('t-set')
+    REG = re.compile(rf"(^|[,({{ /*+-]){varname}([\[\] .()}}/*+-]|$)")
+
+    for el in container.iter():
+        if skip_to is not None and el is not skip_to:
+            continue
+        skip_to = None
+        if not el.tag:
+            continue
+
+        for attr, value in el.attrib.items():
+            if not attr.startswith('t-'):
+                if el.attrib.get('t-call') and REG.search(value):
+                    used.add('used')
+            elif attr == 't-set' or attr == 't-as':
+                if value == varname:
+                    closest_tcall = el.xpath('ancestor::t[@t-call]')
+                    if closest_tcall and closest_tcall[-1] == container:
+                        used.add('rewrite')
+            elif REG.search(value):
+                used.add('current-used')
+
+        is_tset = el.get('t-set')
+        if is_tset:
+            if len(el) and __varname_is_used_inside(tset, el, el[0]):
+                used.add('current-used')
+            skip_to = el.getnext()
+
+        if 'current-used' in used:
+            used.remove('current-used')
+            if is_tset:
+                sub_used = _varname_is_used_inside(el, container) - {'rewrite'}
+                if sub_used:
+                    used.update(sub_used)
+                else:
+                    if _is_not_direct_children_of(tset, container):
+                        used.add('used')
+                    else:
+                        used.add('t-set')
+            else:
+                used.add('used')
+
+    return used
+
+
+def _remove_tset_add_inherit_attribute(tset, container):
+    attribute = etree.Element('attribute')
+    if len(container):
+        container[-1].tail = container.text  # indent
+    container.append(attribute)
+
+    if 't-value' in tset.attrib:
+        value = tset.get('t-value')
+        attribute.attrib['name'] = tset.get('t-set')
+        attribute.text = value
+    elif not len(tset):
+        attribute.attrib['name'] = f"{tset.get('t-set')}.translate"
+        attribute.text = (tset.text or '').strip()
+    else:
+        raise ValueError('Wrong conversion')
+
+    if tset.getparent() is not None:
+        tset.getparent().remove(tset)
+
+
+def _apply_parametric_tcall(tree, path, warnings):
+    for tcall in tree.xpath('//*[@t-call or @t-snippet-call][not(@position="inside")]'):
+
+        if any(not att.startswith('t-') for att in tcall.attrib):
+            continue
+
+        for tset in tcall.xpath('.//*[@t-set]'):
+            if _is_not_direct_children_of(tset, tcall):
+                continue
+
+            used = _varname_is_used_inside(tset, tcall)
+
+            if 'used' in used:
+                continue
+
+            if 'rewrite' in used:
+                warnings.append(
+                    f"Can not determine the position of the rewrited t-set: '{tset.get('t-set')}' in '{path}'"
+                )
+                break
+
+            if ('t-set' in used or (len(tset) or tset.get('t-if'))):
+                _move_tset_before_tcall(tset, tcall)
+                tcall.set(tset.get('t-set'), tset.get('t-set'))
+            else:
+                _remove_tset_add_attribute(tset, tcall)
+
+    # inherit t-call
+    inherit_tcalls = (
+        tree.xpath('//*[@t-call][@position="inside"]') +
+        [
+            tcall for tcall in tree.xpath('//xpath[contains(@expr, "@t-call")][@position="inside"]')
+            if _XPATH_TCALL_REG.search(tcall.get('expr'))
+        ]
+    )
+    for tcall in inherit_tcalls:
+        parent = tcall.getparent()
+        index = parent.index(tcall)
+        indent = get_indentation(tcall)
+        before = None
+        attributes = None
+        for tset in tcall.xpath('t[@t-set]'):
+            _detach_node_tail(tset)
+
+            if attributes is None:
+                attributes = etree.Element(tcall.tag, tcall.attrib)
+                attributes.attrib['position'] = 'attributes'
+                attributes.text = indent + ' ' * 4
+                attributes.tail = indent
+                parent.insert(index, attributes)
+
+            t_set_key = tset.get('t-set')
+            if len(tset) or _varname_is_used_inside(tset, tcall):
+                if before is None:
+                    before = etree.Element(tcall.tag, tcall.attrib)
+                    before.attrib['position'] = 'before'
+                    before.text = indent + ' ' * 4
+                    before.tail = indent
+                    parent.insert(index, before)
+
+                before.append(tset)
+                tset = etree.Element('t', {'t-set': t_set_key, 't-value': t_set_key})
+
+            _remove_tset_add_inherit_attribute(tset, attributes)
+
+        if before is not None:
+            before[-1].tail = indent
+        if attributes is not None:
+            attributes[-1].tail = indent
+
+        if not len(tcall):
+            _detach_node_tail(tcall)
+            parent.remove(tcall)
+
+
+def update_template(path: str, content: str, modules: list[str], aggregator: VariableAggregator, excluded_templates: set[str], *,
+                    apply_tcall_param: bool = False, apply_this: bool = True):
+    warnings = []
+    compiler = None
+    if apply_this:
+        compiler = TemplateCompiler(path, modules, aggregator, excluded_templates)
+        warnings = compiler.warnings
+
     content = mask_xml_entities(content)
 
     def callback(tree):
-        compiler.fix_rendering_context(tree)
+        if apply_tcall_param:
+            _apply_parametric_tcall(tree, path, warnings)
+        if apply_this:
+            compiler.fix_rendering_context(tree)
 
     result = update_etree(content, callback)
     result = unmask_xml_entities(result)
@@ -945,7 +1164,8 @@ def update_template(path: str, content: str, modules: list[str], aggregator: Var
     result = result.replace("\u200b", "&#8203;")
     result = result.replace("&&", "&amp;&amp;")
     result = result.replace(") =&gt;", ") =>")
-    return result, compiler.warnings
+    result = _AUTO_CLOSE_T.sub(r"\g<1>/>", result)
+    return result, warnings
 
 # ------------------------------------------------------------------------------
 # TESTS
@@ -954,6 +1174,11 @@ def update_template(path: str, content: str, modules: list[str], aggregator: Var
 
 def run_tests_main(test):
     res, _ = update_template("", test["content"], [], VariableAggregator(is_testing=True), {})
+    return res
+
+
+def run_tests_tcall_param(test):
+    res, _ = update_template("", test["content"], [], None, None, apply_tcall_param=True, apply_this=False)
     return res
 
 
@@ -1394,6 +1619,49 @@ tests = [
             <t>
                 <t t-set="b" t-value="'b'"/>
                 <t t-call-slot="default" a="this.a" b="b"/>
+            </t>
+        """,
+    },
+    {
+        "name": "t-call inline params",
+        "content": """
+            <t>
+                <t t-call="web.SectionMenu" section="subSection" isNested="true"/>
+            </t>
+        """,
+        "expected": """
+            <t>
+                <t t-call="web.SectionMenu" section="this.subSection" isNested="true"/>
+            </t>
+        """,
+    },
+    {
+        "name": "t-call inline params with .translate",
+        "content": """
+            <t>
+                <t t-call="web.SectionMenu" section="subSection" title.translate="Open leads"/>
+            </t>
+        """,
+        "expected": """
+            <t>
+                <t t-call="web.SectionMenu" section="this.subSection" title.translate="Open leads"/>
+            </t>
+        """,
+    },
+    {
+        "name": "t-call inside t-inherit (xpath directives)",
+        "content": """
+            <t t-name="account.ProductCatalogSearchPanel" t-inherit="web.SearchPanel" t-inherit-mode="primary">
+                <t t-call="web.SearchPanel.Regular" position="attributes">
+                    <attribute name="t-call">account.ProductCatalogSearchPanelContent</attribute>
+                </t>
+            </t>
+        """,
+        "expected": """
+            <t t-name="account.ProductCatalogSearchPanel" t-inherit="web.SearchPanel" t-inherit-mode="primary">
+                <t t-call="web.SearchPanel.Regular" position="attributes">
+                    <attribute name="t-call">account.ProductCatalogSearchPanelContent</attribute>
+                </t>
             </t>
         """,
     },
@@ -2047,6 +2315,65 @@ tests = [
     },
 ]
 
+tcall_param_tests = [
+    {
+        "name": "tcall-param basic",
+        "content": """<t t-call="my.Template">
+    <t t-set="foo" t-value="bar"/>
+</t>""",
+        "expected": """<t t-call="my.Template" foo="bar"/>""",
+    },
+    {
+        "name": "tcall-param translate",
+        "content": """<t t-call="my.Template">
+    <t t-set="title">Hello World</t>
+</t>""",
+        "expected": """<t t-call="my.Template" title.translate="Hello World"/>""",
+    },
+    {
+        "name": "tcall-param used-inside",
+        "content": """<div>
+    <t t-call="my.Template">
+        <t t-set="foo" t-value="bar"/>
+        <t t-out="foo"/>
+    </t>
+</div>""",
+        # foo is used inside call body → stays in place; no transformation applied
+        "expected": """<div>
+    <t t-call="my.Template">
+        <t t-set="foo" t-value="bar"/>
+        <t t-out="foo"/>
+    </t>
+</div>""",
+    },
+    {
+        "name": "tcall-param only t-directives",
+        # t-call with non-t- attributes is skipped; inner t-set stays
+        "content": """<div>
+    <t t-call="my.Template">
+        <t t-set="x" t-value="v"/>
+    </t>
+    <t t-call="other.Template" class="extra">
+        <t t-set="y" t-value="w"/>
+    </t>
+</div>""",
+        "expected": """<div>
+    <t t-call="my.Template" x="v"/>
+    <t t-call="other.Template" class="extra">
+        <t t-set="y" t-value="w"/>
+    </t>
+</div>""",
+    },
+    {
+        "name": "tcall-param auto-close",
+        "content": """<t t-call="my.Template">
+    <t t-set="foo" t-value="bar">
+    </t>
+</t>""",
+        "expected": """<t t-call="my.Template" foo="bar"/>""",
+    },
+]
+
 # ------------------------------------------------------------------------------
 
 
@@ -2278,9 +2605,18 @@ test_exclude_templates = [
 
 def run_test_vars(test):
     aggregator = VariableAggregator(is_testing=True)
-    aggregator.all_vars = test["all_vars"]
-    aggregator.t_call_vars = test["outside_vars"]
-    aggregator.t_call_outer_vars_vars = {"web.ListView": "notitem"}
+    if "all_vars" in test or "outside_vars" in test:
+        aggregator.all_vars = test.get("all_vars", {})
+        aggregator.t_call_vars = test.get("outside_vars", defaultdict(set))
+        aggregator.full_inherit_and_call_map = test.get("full_inherit_and_call_map", defaultdict(str))
+    else:
+        # If vars not specified replicate the real process of using aggregator to map
+        def agg_callback(tree):
+            aggregator.aggregate_inside_vars(tree)
+            aggregator.aggregate_call_vars(tree)
+            aggregator.link_templates(tree)
+        update_etree(test["content"], agg_callback)
+        aggregator.map_inherits_and_calls()
 
     res, _ = update_template("", test["content"], False, aggregator, {})
     return res
@@ -2391,6 +2727,14 @@ test_vars = [
         """,
     },
     {
+        "name": "t-call outer vars (t-set before t-call)",
+        "all_vars": defaultdict(set),
+        "outside_vars": defaultdict(set),
+        "t_call_outer_vars": {"web.Department": {"dept", "hideTree"}},
+        "content": '<t t-name="web.Department"><t t-out="dept"/><t t-out="other"/></t>',
+        "expected": '<t t-name="web.Department"><t t-out="dept"/><t t-out="this.other"/></t>',
+    },
+    {
         "name": "t-custom-ref xpath",
         "all_vars": defaultdict(set),
         "outside_vars": defaultdict(set),
@@ -2453,6 +2797,66 @@ test_vars = [
                 </t>
             </templates>
         """,
+    },
+    {
+        "name": "t-set before t-call inside component",
+        "content": """
+<templates>
+    <t t-name="web.Caller">
+        <Dialog>
+            <t t-set="passedVar" t-value="compVar"/>
+            <t t-call="web.Callee"/>
+        </Dialog>
+    </t>
+    <t t-name="web.Callee">
+        <div t-att-class="passedVar"/>
+    </t>
+</templates>
+""",
+        "expected": """
+<templates>
+    <t t-name="web.Caller">
+        <Dialog>
+            <t t-set="passedVar" t-value="this.compVar"/>
+            <t t-call="web.Callee"/>
+        </Dialog>
+    </t>
+    <t t-name="web.Callee">
+        <div t-att-class="passedVar"/>
+    </t>
+</templates>
+""",
+    },
+    {
+        "name": "inherited vars from parent not prefixed with this.",
+        "content": """
+<templates>
+    <t t-name="web.Parent">
+        <t t-set="parentVar" t-value="someValue"/>
+        <t t-out="parentVar"/>
+    </t>
+    <t t-name="web.Child" t-inherit="web.Parent" t-inherit-mode="primary">
+        <xpath expr="//t[@t-set='parentVar']" position="after">
+            <t t-out="parentVar"/>
+            <t t-out="otherVar"/>
+        </xpath>
+    </t>
+</templates>
+""",
+        "expected": """
+<templates>
+    <t t-name="web.Parent">
+        <t t-set="parentVar" t-value="this.someValue"/>
+        <t t-out="parentVar"/>
+    </t>
+    <t t-name="web.Child" t-inherit="web.Parent" t-inherit-mode="primary">
+        <xpath expr="//t[@t-set='parentVar']" position="after">
+            <t t-out="parentVar"/>
+            <t t-out="this.otherVar"/>
+        </xpath>
+    </t>
+</templates>
+""",
     },
 ]
 
@@ -2544,6 +2948,20 @@ test_vars_collection = [
         },
     },
     {
+        "name": "t-call with inline params",
+        "content": """
+<t t-name="web.xyz" >
+    <t t-call="web.SectionMenu" section="subSection" isNested="true"/>
+</t>
+        """,
+        "expected": {
+            "all_vars": {'web.xyz': set()},
+            "t_call_inner": {'web.SectionMenu': {'section', 'isNested'}},
+            "t_call_outer": {'web.SectionMenu': set()},
+            'full_inherit_and_call_map': {'web.xyz': [], 'web.SectionMenu': ['web.xyz']}
+        },
+    },
+    {
         "name": "t-slot-scope",
         "content": """
 <t t-name="web.xyz">
@@ -2624,13 +3042,14 @@ test_warning_vars = [
         "content": '<t t-name="web.xyz" t-inherit="web.a" t-inherit-mode="primary"> <t t-out="b"/> </t>',
         "expected": [],
     },
-    {
-        "name": "Far away parent warning",
-        "all_vars": {'web.a': {"b"}},
-        "full_inherit_and_call_map": {'web.xyz': {'web.a', 'web.b', 'web.c'}},
-        "content": '<t t-name="web.xyz"> <t t-out="b"/> </t>',
-        "expected": ["WARNING in template 'web.xyz' : variable 'b' also defined in a far parent."]
-    },
+    #  Deprecated because we now automatically use full inherit chain to set `this`
+    # {
+    #     "name": "Far away parent warning",
+    #     "all_vars": {'web.a': {"b"}},
+    #     "full_inherit_and_call_map": {'web.xyz': {'web.a', 'web.b', 'web.c'}},
+    #     "content": '<t t-name="web.xyz"> <t t-out="b"/> </t>',
+    #     "expected": ["WARNING in template 'web.xyz' : variable 'b' also defined in a far parent."]
+    # },
     #  Deprecated because we now automatically discard outer t-call varsY
     # {
     #     "name": "Outer t-call warning",
@@ -2684,6 +3103,7 @@ if __name__ == "__main__":
 
     for name, test_group, func in [
         ("main", tests, run_tests_main),
+        ("tcall_param", tcall_param_tests, run_tests_tcall_param),
         ("xpaths", test_external_xpath, run_test_specific_modules),
         ("excluded templates", test_exclude_templates, run_test_exclude_modules),
         ("external vars", test_vars, run_test_vars),
