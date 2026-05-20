@@ -1,5 +1,6 @@
 from odoo import fields, models, api, _
 from odoo.exceptions import ValidationError, UserError
+import pytz
 from datetime import datetime, timedelta
 from collections import defaultdict
 
@@ -66,10 +67,23 @@ class PosPreset(models.Model):
     # information we can deduce the maximum occupancy per slot.
     def get_available_slots(self):
         self.ensure_one()
-        usage = self._compute_slots_usage()
         return {
-            'usage_utc': usage,
+            'usage_utc': self._compute_slots_usage(),
+            'leaves_utc': self._get_slots_leaves(),
         }
+
+    def _get_slots_leaves(self):
+        if not (self.use_timing and self.resource_calendar_id):
+            return []
+        start = datetime.now(pytz.utc)
+        end = start + timedelta(days=7)
+        company = self.resource_calendar_id.company_id or self.env.company
+        domain = [('time_type', '=', 'leave'), ('company_id', '=', company.id)]
+        leaves = self.resource_calendar_id._leave_intervals_batch(start, end, domain=domain, tz=pytz.utc)[False]
+        return [
+            (fields.Datetime.to_string(date_from), fields.Datetime.to_string(date_to))
+            for date_from, date_to, _leave in leaves
+        ]
 
     def _compute_slots_usage(self):
         usage = defaultdict(int)

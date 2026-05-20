@@ -1,4 +1,7 @@
+from datetime import date, datetime, time, timedelta
+
 import odoo.tests
+from odoo import fields
 from odoo.addons.pos_self_order.tests.self_order_common_test import SelfOrderCommonTest
 
 
@@ -89,3 +92,37 @@ class TestSelfOrderPreset(SelfOrderCommonTest):
         last_order = self.env["pos.order"].search([], limit=1, order="id desc")
         self.assertEqual(last_order.floating_order_name, 'Dr Dre')
         self.assertNotEqual(last_order.preset_time, False)
+
+    def test_slot_time_off(self):
+        resource_calendar = self.env['resource.calendar'].create({'name': 'Takeaway', 'tz': 'UTC'})
+        self.preset_takeaway.write({
+            'use_timing': True,
+            'resource_calendar_id': resource_calendar.id,
+        })
+        employee = self.env['resource.resource'].create({
+            'name': 'Employee',
+            'calendar_id': resource_calendar.id,
+        })
+        tomorrow = datetime.combine(date.today() + timedelta(days=1), time())
+
+        def interval(hour_from, hour_to):
+            return (
+                fields.Datetime.to_string(tomorrow.replace(hour=hour_from)),
+                fields.Datetime.to_string(tomorrow.replace(hour=hour_to)),
+            )
+
+        self.env['resource.calendar.leaves'].create([
+            {'name': 'Time Off', 'date_from': date_from, 'date_to': date_to, **vals}
+            for (date_from, date_to), vals in [
+                (interval(10, 12), {'calendar_id': resource_calendar.id}),
+                (interval(14, 15), {}),
+                (interval(16, 18), {'resource_id': employee.id}),
+                (interval(18, 19), {'calendar_id': resource_calendar.id, 'time_type': 'other'}),
+            ]
+        ])
+
+        leaves = self.preset_takeaway.get_available_slots()['leaves_utc']
+        self.assertIn(interval(10, 12), leaves, "The calendar's time off should block the slots")
+        self.assertIn(interval(14, 15), leaves, "Public holidays should block the slots")
+        self.assertNotIn(interval(16, 18), leaves, "An employee's time off should not block the slots")
+        self.assertNotIn(interval(18, 19), leaves, "Only time off entries should block the slots")
