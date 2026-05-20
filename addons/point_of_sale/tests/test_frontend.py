@@ -3881,6 +3881,46 @@ class TestUi(TestPointOfSaleHttpCommon):
         })
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'test_product_configurator_price', login="pos_user")
 
+    def test_product_configurator_deleted_variant(self):
+        """ Test that the product configurator blocks combinations whose variant was deleted,
+        but not the existing variant of a single-valued attribute. """
+        size_attribute, fit_attribute, sauce_attribute = self.env['product.attribute'].create([{
+            'name': 'Size',
+            'create_variant': 'always',
+            'value_ids': [(0, 0, {'name': 'Small'}), (0, 0, {'name': 'Large'})],
+        }, {
+            'name': 'Fit',
+            'create_variant': 'always',
+            'value_ids': [(0, 0, {'name': 'One Fit'})],
+        }, {
+            'name': 'Sauce',
+            'create_variant': 'no_variant',
+            'value_ids': [(0, 0, {'name': 'Ketchup'}), (0, 0, {'name': 'Mayo'})],
+        }])
+        products = self.env['product.template'].create([{
+            'name': 'Deleted Variant Product',
+            'available_in_pos': True,
+            'attribute_line_ids': [(0, 0, {
+                'attribute_id': size_attribute.id,
+                'value_ids': [(6, 0, size_attribute.value_ids.ids)],
+            })],
+        }, {
+            'name': 'Single Value Product',
+            'available_in_pos': True,
+            'attribute_line_ids': [(0, 0, {
+                'attribute_id': fit_attribute.id,
+                'value_ids': [(6, 0, fit_attribute.value_ids.ids)],
+            }), (0, 0, {
+                'attribute_id': sauce_attribute.id,
+                'value_ids': [(6, 0, sauce_attribute.value_ids.ids)],
+            })],
+        }])
+        products.product_variant_ids.filtered(
+            lambda p: p.product_template_attribute_value_ids.name == 'Large'
+        ).unlink()
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_pos_tour('test_product_configurator_deleted_variant')
+
     def test_combo_no_free_item(self):
         """ Test a product combo with no free item allowed. """
         setup_product_combo_items(self)

@@ -278,3 +278,28 @@ registry.category("web_tour.tours").add("test_product_configurator_price", {
             Chrome.endTour(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_product_configurator_deleted_variant", {
+    steps: () =>
+        [
+            Chrome.startPoS(),
+            Dialog.confirm("Open Register"),
+            ProductScreen.clickDisplayedProduct("Deleted Variant Product"),
+            ProductConfigurator.pickRadio("Large"),
+            ProductConfigurator.isAddDisabled(),
+            {
+                content: "unavailable combination banner is shown",
+                trigger: ".modal .alert-warning:contains('not available')",
+            },
+            ProductConfigurator.pickRadio("Small"),
+            ProductConfigurator.isAddEnabled(),
+            Dialog.confirm(),
+            ProductScreen.selectedOrderlineHas("Deleted Variant Product", "1"),
+            ProductScreen.clickDisplayedProduct("Single Value Product"),
+            ProductConfigurator.pickRadio("Mayo"),
+            ProductConfigurator.isAddEnabled(),
+            Dialog.confirm(),
+            ProductScreen.selectedOrderlineHas("Single Value Product", "1"),
+            Chrome.endTour(),
+        ].flat(),
+});
