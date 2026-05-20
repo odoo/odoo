@@ -7,7 +7,7 @@ from odoo.tests.common import TransactionCase
 
 
 @tagged('-at_install', 'post_install', 'work_entry_pipeline')
-class TestWorkEntryPipeline(TransactionCase):
+class TestTimeRulePipeline(TransactionCase):
 
     @classmethod
     def setUpClass(cls):
@@ -202,18 +202,11 @@ class TestWorkEntryPipeline(TransactionCase):
         ])
 
     def test_overtime_with_public_holiday_full_day_attendance(self):
-        """14h attendance (06:00-20:00) on a public holiday.
+        """14h attendance (06:00-20:00) on a full-day public holiday.
 
-        The time rule compares against the 8h schedule (public holidays do NOT reduce
-        the expected hours in hr.time.rule) -> 6h overtime.
-        The attendance covers the entire scheduled slot (08:00-17:00),
-        so the public-holiday absence is trimmed
-        to zero by the worked time -> no public-holiday work entry.
-
-        this might seem counter-intuitive, that the employee worked 14 hours on a public holiday day,
-        and he gets paid for 8 hours WORK100 and 6 OVERTIME.
-        TODO: might need improving, but to achieve the intuitive flow for public holidays,
-        we could use non-calendar based time rule (next test).
+        The PH covers the full 8h schedule, so expected hours drop to 0h.
+        All 14h attendance becomes overtime; the PH absence is fully trimmed
+        by the worked time -> no public-holiday work entry.
         """
         public_type = self.env['hr.work.entry.type'].create({
             'name': 'Public Holiday', 'code': 'PUBTEST2', 'count_as': 'absence',
@@ -228,8 +221,7 @@ class TestWorkEntryPipeline(TransactionCase):
         })
         vals = self.cal_version.generate_work_entries(date(2022, 12, 26), date(2022, 12, 26))
         self._check_work_entries(vals, [
-            (date(2022, 12, 26), 8, self.att_type),
-            (date(2022, 12, 26), 6, self.overtime_type),
+            (date(2022, 12, 26), 14, self.overtime_type),
         ])
 
     def test_public_holiday_intuitive_with_timing_rule(self):
@@ -280,26 +272,25 @@ class TestWorkEntryPipeline(TransactionCase):
         ])
 
     def test_public_holiday_partial_attendance(self):
-        """3h attendance within the schedule on a public holiday: no overtime (3h < 8h),
-        public-holiday work entry covers the unworked schedule slots."""
+        """3h attendance (09:00-12:00) on a full-day public holiday -> 3h overtime + 5h PH.
+
+        PH covers the full 8h schedule -> expected hours = 0h -> all 3h attendance is overtime.
+        PH trimmed by time_on (09:00-12:00): remaining PH in schedule = 08:00-09:00 (1h) + 13:00-17:00 (4h) = 5h.
+        """
         public_type = self.env['hr.work.entry.type'].create({
             'name': 'Public Holiday', 'code': 'PUBTEST3', 'count_as': 'absence',
         })
         self._make_public_holiday(
             datetime(2022, 12, 26, 0, 0, 0), datetime(2022, 12, 26, 23, 59, 59), public_type,
         )
-        # Attendance 09:00-12:00 UTC (within the morning slot 08:00-12:00)
         self.env['hr.attendance'].create({
             'employee_id': self.cal_emp.id,
             'check_in': datetime(2022, 12, 26, 9),
             'check_out': datetime(2022, 12, 26, 12),
         })
         vals = self.cal_version.generate_work_entries(date(2022, 12, 26), date(2022, 12, 26))
-        # 3h worked < 8h expected -> no overtime.
-        # Public-holiday trimmed by time_on (09:00-12:00): leaves 00:00-09:00 + 12:00-23:59.
-        # Intersected with schedule (08:00-12:00 + 13:00-17:00): 08:00-09:00 (1h) + 13:00-17:00 (4h) = 5h.
         self._check_work_entries(vals, [
-            (date(2022, 12, 26), 3, self.att_type),
+            (date(2022, 12, 26), 3, self.overtime_type),
             (date(2022, 12, 26), 5, public_type),
         ])
 
@@ -414,12 +405,11 @@ class TestWorkEntryPipeline(TransactionCase):
         vals = flex_emp.version_id.generate_work_entries(date(2024, 9, 1), date(2024, 9, 30))
         self.assertEqual(len(vals), 3)
 
-    def test_public_holiday_preshift_attendance_no_overtime(self):
-        """5h attendance 06:00-11:00 on a public holiday -> 5h att + 5h public, no overtime.
+    def test_public_holiday_preshift_attendance(self):
+        """5h attendance 06:00-11:00 on a full-day public holiday -> 5h overtime + 5h PH.
 
-        time_on trims the public holiday inside the schedule:
-          (11:00-12:00) + (13:00-17:00) = 5h public remain.
-        5h worked < 8h expected -> no overtime output.
+        PH reduces expected hours to 0h -> all 5h attendance is overtime.
+        PH trimmed by time_on (06:00-11:00): remaining PH in schedule = 11:00-12:00 (1h) + 13:00-17:00 (4h) = 5h.
         """
         public_type = self.env['hr.work.entry.type'].create({
             'name': 'Public Holiday', 'code': 'PUBTPH', 'count_as': 'absence',
@@ -434,16 +424,16 @@ class TestWorkEntryPipeline(TransactionCase):
         })
         vals = self.cal_version.generate_work_entries(date(2022, 12, 26), date(2022, 12, 26))
         self._check_work_entries(vals, [
-            (date(2022, 12, 26), 5, self.att_type),
+            (date(2022, 12, 26), 5, self.overtime_type),
             (date(2022, 12, 26), 5, public_type),
         ])
 
-    def test_public_holiday_small_attendance_no_overtime(self):
-        """1h attendance 10:00-11:00 on a public holiday -> 1h att + 7h public, no overtime.
+    def test_public_holiday_small_attendance(self):
+        """1h attendance 10:00-11:00 on a full-day public holiday -> 1h overtime + 7h PH.
 
-        time_on = 10:00-11:00; remaining public holiday in schedule:
-          (08:00-10:00) + (11:00-12:00) + (13:00-17:00) = 7h.
-        1h worked < 8h expected -> no overtime.
+        PH reduces expected hours to 0h -> the 1h attendance is overtime.
+        PH trimmed by time_on (10:00-11:00): remaining PH in schedule =
+          08:00-10:00 (2h) + 11:00-12:00 (1h) + 13:00-17:00 (4h) = 7h.
         """
         public_type = self.env['hr.work.entry.type'].create({
             'name': 'Public Holiday', 'code': 'PUBTPH2', 'count_as': 'absence',
@@ -458,7 +448,7 @@ class TestWorkEntryPipeline(TransactionCase):
         })
         vals = self.cal_version.generate_work_entries(date(2022, 12, 26), date(2022, 12, 26))
         self._check_work_entries(vals, [
-            (date(2022, 12, 26), 1, self.att_type),
+            (date(2022, 12, 26), 1, self.overtime_type),
             (date(2022, 12, 26), 7, public_type),
         ])
 
@@ -1536,6 +1526,153 @@ class TestWorkEntryPipeline(TransactionCase):
             (date(2022, 12, 12), 9, wt_type),
             (date(2022, 12, 12), 3, self.overtime_type),
         ])
+
+    def _ot_hours_on_day(self, employee, day):
+        """Sum of output-leave hours whose date_from falls on `day` (datetime.date)."""
+        leaves = self.env['hr.leave'].search([
+            ('employee_id', '=', employee.id),
+            ('is_time_rule_output', '=', True),
+            ('date_from', '>=', datetime(day.year, day.month, day.day)),
+            ('date_from', '<', datetime(day.year, day.month, day.day + 1)),
+        ])
+        return sum((l.date_to - l.date_from).total_seconds() / 3600 for l in leaves)
+
+    def test_public_holiday_create_clears_overtime(self):
+        """Adding a PH on a worked day removes OT when the rule excludes public holidays.
+
+        Employee works 14h (06:00-20:00) on Mon 2022-12-12 (8h schedule) -> 6h OT.
+        A PH is then created on the same day.  Because apply_on_public_holidays=False
+        the rule no longer fires for that day -> output leave deleted.
+        """
+        self.time_rule.apply_on_public_holidays = False
+        public_type = self.env['hr.work.entry.type'].create({
+            'name': 'Public Holiday', 'code': 'PHCLEAR', 'count_as': 'absence',
+        })
+        self.env['hr.attendance'].create({
+            'employee_id': self.cal_emp.id,
+            'check_in': datetime(2022, 12, 12, 6),
+            'check_out': datetime(2022, 12, 12, 20),
+        })
+        self.assertAlmostEqual(
+            self._ot_hours_on_day(self.cal_emp, date(2022, 12, 12)), 6.0, places=5,
+            msg="6h OT before PH is added",
+        )
+        self._make_public_holiday(
+            datetime(2022, 12, 12, 0, 0, 0), datetime(2022, 12, 12, 23, 59, 59), public_type,
+        )
+        self.assertAlmostEqual(
+            self._ot_hours_on_day(self.cal_emp, date(2022, 12, 12)), 0.0, places=5,
+            msg="OT cleared after PH added (rule excludes PHs)",
+        )
+
+    def test_public_holiday_unlink_restores_overtime(self):
+        """Deleting a PH on a worked day restores OT when the rule excludes public holidays.
+
+        A PH exists first -> rule excluded -> 14h attendance produces no OT.
+        Deleting the PH triggers re-evaluation -> 6h OT output created.
+        """
+        self.time_rule.apply_on_public_holidays = False
+        public_type = self.env['hr.work.entry.type'].create({
+            'name': 'Public Holiday', 'code': 'PHRESTORE', 'count_as': 'absence',
+        })
+        ph = self._make_public_holiday(
+            datetime(2022, 12, 12, 0, 0, 0), datetime(2022, 12, 12, 23, 59, 59), public_type,
+        )
+        self.env['hr.attendance'].create({
+            'employee_id': self.cal_emp.id,
+            'check_in': datetime(2022, 12, 12, 6),
+            'check_out': datetime(2022, 12, 12, 20),
+        })
+        self.assertAlmostEqual(
+            self._ot_hours_on_day(self.cal_emp, date(2022, 12, 12)), 0.0, places=5,
+            msg="No OT while PH active and rule excludes PHs",
+        )
+        ph.unlink()
+        self.assertAlmostEqual(
+            self._ot_hours_on_day(self.cal_emp, date(2022, 12, 12)), 6.0, places=5,
+            msg="6h OT restored after PH deleted",
+        )
+
+    def test_public_holiday_write_date_shifts_overtime(self):
+        """Moving a PH from one worked day to another shifts which OT is suppressed.
+
+        Both Mon 2022-12-12 and Tue 2022-12-13 have 14h attendance (6h OT each).
+        Step 1: create PH on Mon -> Mon OT disappears, Tue OT stays.
+        Step 2: move PH to Tue -> Mon OT restored, Tue OT disappears.
+        """
+        self.time_rule.apply_on_public_holidays = False
+        public_type = self.env['hr.work.entry.type'].create({
+            'name': 'Public Holiday', 'code': 'PHSHIFT', 'count_as': 'absence',
+        })
+        for day in (12, 13):
+            self.env['hr.attendance'].create({
+                'employee_id': self.cal_emp.id,
+                'check_in': datetime(2022, 12, day, 6),
+                'check_out': datetime(2022, 12, day, 20),
+            })
+        self.assertAlmostEqual(
+            self._ot_hours_on_day(self.cal_emp, date(2022, 12, 12)), 6.0, places=5,
+            msg="Mon: 6h OT before PH",
+        )
+        self.assertAlmostEqual(
+            self._ot_hours_on_day(self.cal_emp, date(2022, 12, 13)), 6.0, places=5,
+            msg="Tue: 6h OT before PH",
+        )
+
+        ph = self._make_public_holiday(
+            datetime(2022, 12, 12, 0, 0, 0), datetime(2022, 12, 12, 23, 59, 59), public_type,
+        )
+        self.assertAlmostEqual(
+            self._ot_hours_on_day(self.cal_emp, date(2022, 12, 12)), 0.0, places=5,
+            msg="Mon OT cleared by PH",
+        )
+        self.assertAlmostEqual(
+            self._ot_hours_on_day(self.cal_emp, date(2022, 12, 13)), 6.0, places=5,
+            msg="Tue OT unaffected by Mon PH",
+        )
+
+        ph.write({
+            'date_from': datetime(2022, 12, 13, 0, 0, 0),
+            'date_to': datetime(2022, 12, 13, 23, 59, 59),
+        })
+        self.assertAlmostEqual(
+            self._ot_hours_on_day(self.cal_emp, date(2022, 12, 12)), 6.0, places=5,
+            msg="Mon OT restored after PH moved to Tue",
+        )
+        self.assertAlmostEqual(
+            self._ot_hours_on_day(self.cal_emp, date(2022, 12, 13)), 0.0, places=5,
+            msg="Tue OT cleared after PH moved there",
+        )
+
+    def test_public_holiday_update_after_time_rule_output(self):
+        """Updating a public holiday must not crash when time-rule output leaves exist.
+
+        Regression: _reevaluate_leaves searched for ALL hr.leave records in the
+        affected date range, including time-rule output leaves.  Writing state='confirm'
+        on the source leave triggered _process_time_rules which deleted the output leave,
+        then the loop tried to access the now-deleted record and raised
+        "Record does not exist or has been deleted".
+        """
+        public_type = self.env['hr.work.entry.type'].create({
+            'name': 'Public Holiday', 'code': 'PHUPDATE', 'count_as': 'absence',
+        })
+        # Monday 2022-12-12: employee works 14h -> 6h overtime output leave created
+        self.env['hr.attendance'].create({
+            'employee_id': self.cal_emp.id,
+            'check_in': datetime(2022, 12, 12, 6),
+            'check_out': datetime(2022, 12, 12, 20),
+        })
+        output_before = self.env['hr.leave'].search([
+            ('employee_id', '=', self.cal_emp.id),
+            ('is_time_rule_output', '=', True),
+        ])
+        self.assertEqual(len(output_before), 1, "Overtime output leave should exist before PH update")
+
+        # Create a public holiday on that same day, then update it
+        ph = self._make_public_holiday(
+            datetime(2022, 12, 12, 0, 0, 0), datetime(2022, 12, 12, 23, 59, 59), public_type,
+        )
+        ph.write({'name': 'Updated Holiday'})   # this must not raise
 
     def test_attendance_before_working_time_leave_overlapping(self):
         """

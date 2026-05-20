@@ -36,6 +36,8 @@ class ResourceCalendarLeaves(models.Model):
                     raise ValidationError(self.env._('Two public holidays cannot overlap each other for the same working hours.'))
 
     def _get_domain(self, time_domain_dict):
+        # exclude remainder and output leaves (source_leave_id set): managed by the time rule
+        # engine, which re-runs automatically when their parent source leave is restored
         return Domain.OR(
             [
                 ('employee_company_id', '=', date['company_id']),
@@ -43,7 +45,7 @@ class ResourceCalendarLeaves(models.Model):
                 ('date_from', '<', date['date_to']),
             ]
             for date in time_domain_dict
-        ) & Domain('state', 'not in', ['refuse', 'cancel'])
+        ) & Domain('state', 'not in', ['refuse', 'cancel']) & Domain('source_leave_id', '=', False)
 
     def _get_time_domain_dict(self):
         return [{
