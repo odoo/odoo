@@ -2,6 +2,7 @@ import { markup, toRaw } from "@odoo/owl";
 import {
     IS_DELETED_SYM,
     OR_SYM,
+    STORE_SYM,
     isCommandList,
     isMany,
     isOne,
@@ -11,6 +12,7 @@ import {
     technicalKeysOnRecords,
 } from "./misc";
 import { serializeDate, serializeDateTime } from "@web/core/l10n/dates";
+import { onChange } from "@mail/utils/common/misc";
 
 /** @typedef {import("./misc").FieldDefinition} FieldDefinition */
 /** @typedef {import("./record_list").RecordList} RecordList */
@@ -404,6 +406,28 @@ export class Record {
     }
 
     /**
+     * Register an `onChange()`. Equivalent to `onChange` but auto-saves the disposeFn in the record and store,
+     * so that this is automatically disposed on record deletion or in-between tests.
+     *
+     * @param  {...any} args
+     */
+    registerOnChange(...args) {
+        const disposeFn = onChange(...args);
+        this._registerDisposeFn(disposeFn);
+    }
+
+    /**
+     * Register a `Record.onChange()`. Equivalent to `Record.onChange` but auto-saves the disposeFn in the record and store,
+     * so that this is automatically disposed on record deletion or in-between tests.
+     *
+     * @param  {...any} args
+     */
+    registerRecordOnChange(...args) {
+        const disposeFn = Record.onChange(...args);
+        this._registerDisposeFn(disposeFn);
+    }
+
+    /**
      * Converts the current record and its related data into Store insert-able data.
      * @param {Array<string> | { depth: boolean }} options Configuration options or an array of field names.
      * @returns {Object} A data object grouped by model names.
@@ -425,6 +449,29 @@ export class Record {
 
     _cleanupData(data) {
         technicalKeysOnRecords.forEach((field) => delete data[field]);
+    }
+
+    /** @param {Function} disposeFn */
+    _registerDisposeFn(disposeFn) {
+        this._.disposeFns.add(disposeFn);
+        if (!this[STORE_SYM]) {
+            this.store._.disposeFns.add(disposeFn);
+        }
+    }
+
+    /** @param {Function} f */
+    _runDisposeFn(f) {
+        f();
+        this._.disposeFns.delete(f);
+        if (!this[STORE_SYM]) {
+            this.store._.disposeFns.delete(f);
+        }
+    }
+
+    _runDisposeFns() {
+        for (const f of this._.disposeFns) {
+            this._runDisposeFn(f);
+        }
     }
 
     /**

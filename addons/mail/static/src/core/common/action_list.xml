@@ -29,9 +29,8 @@
             <t t-call="mail.Action.main"/>
             <t t-set-slot="content">
                 <t t-if="this.action.dropdownComponent" t-component="this.action.dropdownComponent" t-props="this.action.dropdownComponentProps"/>
-                <t t-elif="this.action.dropdownTemplate" t-call="{{ this.action.dropdownTemplate }}">
-                    <t t-set="templateParams" t-value="this.action.dropdownTemplateParams"/>
-                </t>
+                <t t-elif="this.action.dropdownTemplate" t-call="{{ this.action.dropdownTemplate }}"
+                    templateParams="this.action.dropdownTemplateParams"/>
                 <t t-elif="this.action.definition?.isMoreAction">
                     <t t-component="this.ActionList" actions="this.action.definition.actions" dropdown="true"/>
                 </t>
@@ -116,16 +115,14 @@
     </DropdownItem>
     <button t-else="" t-att-class="btnClass" t-att="Object.assign(attrs, { 'title': this.action.name })" t-on-click="(ev) => this.onSelected(this.action, ev)" t-att-data-hotkey="this.action.hotkey" t-att-style="this.props.style">
         <t t-call="mail.Action.content"/>
-        <t t-if="this.action.badge" t-call="mail.Action.badge">
-            <t t-set="extraBadgeClass" t-value="'position-absolute me-n1 mt-n1 end-0'"/>
-        </t>
+        <t t-if="this.action.badge" t-call="mail.Action.badge"
+            extraBadgeClass="'position-absolute me-n1 mt-n1 end-0'"/>
     </button>
 </t>
 
 <t t-name="mail.Action.content">
-    <t t-if="this.action.icon?.template" t-call="{{ this.action.icon.template }}">
-        <t t-set="templateParams" t-value="this.action.icon.params"/>
-    </t>
+    <t t-if="this.action.icon?.template" t-call="{{ this.action.icon.template }}"
+        templateParams="this.action.icon.params"/>
     <i t-elif="this.action.icon" t-attf-class="{{ this.action.icon }}" t-att-class="{ 'o-fs-small': this.props.dropdown, 'fa-fw': this.props.fw, 'fa-lg': inMeetingViewCallButtonsFullscreen }"/>
     <i t-elif="this.props.dropdown" class="fa-question fa-fw opacity-0" t-att-class="this.props.fw ? 'fa-fw' : ''"/>
     <span t-if="this.action.name and (this.props.dropdown or (this.props.inline and (!this.action.icon or this.action.inlineName)))" class="o-mail-ActionList-actionLabel" t-attf-class="{{ this.action.nameClass }}" t-att-class="{ 'mx-1': this.props.dropdown }" t-out="(this.props.inline and this.action.inlineName) or this.action.name"/>

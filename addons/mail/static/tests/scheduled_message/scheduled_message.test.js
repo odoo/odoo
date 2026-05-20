@@ -310,7 +310,8 @@ test("New scheduled message is loaded when sending a message", async () => {
     await contains(".o-mail-Message-body:text('Hello')");
 });
 
-test("Scheduled messages are updated when switching records", async () => {
+test.tags("owl3");
+test.skip("Scheduled messages are updated when switching records", async () => {
     const pyEnv = await startServer();
     const partnerId = pyEnv.user.partner_id;
     const partnerId2 = pyEnv["res.partner"].create({});

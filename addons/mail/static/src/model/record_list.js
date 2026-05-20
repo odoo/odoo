@@ -2,6 +2,8 @@ import { reactive } from "@web/owl2/utils";
 import { markRaw, toRaw } from "@odoo/owl";
 import { isRecord } from "./misc";
 
+/** @typedef {import("./record").Record} Record */
+
 /** @param {RecordList} reclist */
 function getInverse(reclist) {
     return reclist._.owner.Model._.fieldsInverse.get(reclist._.name);
@@ -49,12 +51,12 @@ function isSortOnNeed(reclist) {
 
 /** @param {RecordList} reclist */
 function computeField(reclist) {
-    reclist._.owner._.compute(reclist._.owner, reclist._.name);
+    reclist._.owner._.compute(reclist._.owner, reclist._.name, { fromInNeed: true });
 }
 
 /** @param {RecordList} reclist */
 function sortField(reclist) {
-    reclist._.owner._.sort(reclist._.owner, reclist._.name);
+    reclist._.owner._.sort(reclist._.owner, reclist._.name, { fromInNeed: true });
 }
 
 /** @param {RecordList} reclist */
@@ -67,6 +69,11 @@ export class RecordListInternal {
     name;
     /** @type {Record} */
     owner;
+    /**
+     * @type {boolean} Technical flag to immediately read attribute.
+     * Useful to read `data` while passing to owl's proxy getter again to register observer.
+     */
+    gettingField = false;
 
     /**
      * Version of add() that does not update the inverse.
@@ -184,17 +191,6 @@ export class RecordListInternal {
         }
     }
     /**
-     * The internal reactive is only necessary to trigger outer reactives when
-     * writing on it. As it has no callback, reading through it has no effect,
-     * except slowing down performance and complexifying the stack.
-     *
-     * @param {RecordList} recordList
-     * @param {RecordList} fullProxy
-     */
-    downgradeProxy(recordList, fullProxy) {
-        return recordList._proxy === fullProxy ? recordList._proxyInternal : fullProxy;
-    }
-    /**
      * @param {RecordList} recordList
      * @param {R|any} val
      * @param {(R) => void} [fn] function that is called in-between preinsert and
@@ -273,8 +269,14 @@ export class RecordList extends Array {
         const recordListProxyInternal = new Proxy(recordList, {
             /** @param {RecordList<R>} receiver */
             get(recordList, name, recordListFullProxy) {
-                recordListFullProxy = recordList._.downgradeProxy(recordList, recordListFullProxy);
+                if (name === "data" && !recordList._.gettingField) {
+                    recordList._.gettingField = true;
+                    const res = recordList._proxy.data;
+                    recordList._.gettingField = false;
+                    return res;
+                }
                 if (
+                    recordList._.gettingField ||
                     typeof name === "symbol" ||
                     Object.keys(recordList).includes(name) ||
                     Object.prototype.hasOwnProperty.call(recordList.constructor.prototype, name)
@@ -382,7 +384,7 @@ export class RecordList extends Array {
     /** @param {R[]} records */
     push(...records) {
         const recordList = toRaw(this)._raw;
-        const recordListFullProxy = recordList._.downgradeProxy(recordList, this);
+        const recordListFullProxy = this;
         const store = recordList._store;
         return store.MAKE_UPDATE(function recordListPush() {
             for (const val of records) {
@@ -407,7 +409,7 @@ export class RecordList extends Array {
     /** @returns {R} */
     pop() {
         const recordList = toRaw(this)._raw;
-        const recordListFullProxy = recordList._.downgradeProxy(recordList, this);
+        const recordListFullProxy = this;
         const store = recordList._store;
         return store.MAKE_UPDATE(function recordListPop() {
             /** @type {R} */
@@ -421,7 +423,7 @@ export class RecordList extends Array {
     /** @returns {R} */
     shift() {
         const recordList = toRaw(this)._raw;
-        const recordListFullProxy = recordList._.downgradeProxy(recordList, this);
+        const recordListFullProxy = this;
         const store = recordList._store;
         return store.MAKE_UPDATE(function recordListShift() {
             const recordProxy = recordListFullProxy._store.recordByLocalId.get(
@@ -444,7 +446,7 @@ export class RecordList extends Array {
     /** @param {R[]} records */
     unshift(...records) {
         const recordList = toRaw(this)._raw;
-        const recordListFullProxy = recordList._.downgradeProxy(recordList, this);
+        const recordListFullProxy = this;
         const store = recordList._store;
         return store.MAKE_UPDATE(function recordListUnshift() {
             for (let i = records.length - 1; i >= 0; i--) {
@@ -464,8 +466,7 @@ export class RecordList extends Array {
     }
     /** @param {R} recordProxy */
     indexOf(recordProxy) {
-        const recordList = toRaw(this)._raw;
-        const recordListFullProxy = recordList._.downgradeProxy(recordList, this);
+        const recordListFullProxy = this;
         return recordListFullProxy.data.indexOf(toRaw(recordProxy)?._raw.localId);
     }
     /**
@@ -475,7 +476,7 @@ export class RecordList extends Array {
      */
     splice(start, deleteCount, ...newRecordsProxy) {
         const recordList = toRaw(this)._raw;
-        const recordListFullProxy = recordList._.downgradeProxy(recordList, this);
+        const recordListFullProxy = this;
         const store = recordList._store;
         return store.MAKE_UPDATE(function recordListSplice() {
             const oldRecordLocalIds = recordList.data.slice(start, start + deleteCount);
@@ -521,7 +522,7 @@ export class RecordList extends Array {
     /** @param {(a: R, b: R) => boolean} func */
     sort(func) {
         const recordList = toRaw(this)._raw;
-        const recordListFullProxy = recordList._.downgradeProxy(recordList, this);
+        const recordListFullProxy = this;
         const store = recordList._store;
         return store.MAKE_UPDATE(function recordListSort() {
             recordList._store._.sortRecordList(recordListFullProxy, func);
@@ -530,8 +531,7 @@ export class RecordList extends Array {
     }
     /** @param {...R[]|...RecordList[R]} collections */
     concat(...collections) {
-        const recordList = toRaw(this)._raw;
-        const recordListFullProxy = recordList._.downgradeProxy(recordList, this);
+        const recordListFullProxy = this;
         return recordListFullProxy.data
             .map((localId) => recordListFullProxy._store.recordByLocalId.get(localId))
             .concat(...collections.map((c) => [...c]));
@@ -609,8 +609,7 @@ export class RecordList extends Array {
     }
     /** @yields {R} */
     *[Symbol.iterator]() {
-        const recordList = toRaw(this)._raw;
-        const recordListFullProxy = recordList._.downgradeProxy(recordList, this);
+        const recordListFullProxy = this;
         for (const localId of recordListFullProxy.data) {
             yield recordListFullProxy._store.recordByLocalId.get(localId);
         }
@@ -618,8 +617,7 @@ export class RecordList extends Array {
     /** @param {number} index */
     at(index) {
         // this custom implement of "at" is slightly faster than auto-calling unimplement array method
-        const recordList = toRaw(this)._raw;
-        const recordListFullProxy = recordList._.downgradeProxy(recordList, this);
+        const recordListFullProxy = this;
         return recordListFullProxy._store.recordByLocalId.get(recordListFullProxy.data.at(index));
     }
 }

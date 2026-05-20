@@ -350,22 +350,24 @@ export class Composer extends Component {
         onWillUnmount(() => {
             this.props.composer.isFocused = false;
         });
-        const composerProxy = reactive(this.props.composer, () => {
-            if (this.status === 2 /* DESTROYED */) {
-                return;
-            }
-            const composerHtml = composerProxy.composerHtml;
-            if (this.updateFromEditor) {
-                return;
-            }
-            if (!this.editor?.editable) {
-                return;
-            }
-            setElementContent(this.editor.editable, composerHtml);
-            this.setEditorCursorEnd();
-            this.editor.shared.history.addStep();
-        });
-        void composerProxy.composerHtml; // start observing
+        const composerProxy = reactive(this.props.composer);
+        onWillDestroy(
+            immediateEffect(() => {
+                if (this.status === 2 /* DESTROYED */) {
+                    return;
+                }
+                const composerHtml = composerProxy.composerHtml;
+                if (this.updateFromEditor) {
+                    return;
+                }
+                if (!this.editor?.editable) {
+                    return;
+                }
+                setElementContent(this.editor.editable, composerHtml);
+                this.setEditorCursorEnd();
+                this.editor.shared.history.addStep();
+            })
+        );
     }
 
     setEditorCursorEnd() {
@@ -547,6 +549,7 @@ export class Composer extends Component {
     }
 
     get navigableListProps() {
+        const { loading, searchTerm, results } = this.suggestion.search;
         const props = {
             anchorRef: this.inputContainerRef.el,
             position: this.env.inChatter ? "bottom-fit" : "top-fit",
@@ -554,7 +557,7 @@ export class Composer extends Component {
                 this.suggestion.insert(option);
                 markEventHandled(ev, "composer.selectSuggestion");
             },
-            isLoading: !!this.suggestion.search.searchTerm && this.suggestion.search.loading,
+            isLoading: !!searchTerm && loading,
             options: [],
         };
         if (!this.hasSuggestions) {
@@ -562,11 +565,9 @@ export class Composer extends Component {
         }
         return {
             ...props,
-            ...mapSuggestionsToOptions(
-                this.suggestion.search.results.type,
-                this.suggestion.search.results.suggestions,
-                { thread: this.thread }
-            ),
+            ...mapSuggestionsToOptions(results.type, results.suggestions, {
+                thread: this.thread,
+            }),
         };
     }
 

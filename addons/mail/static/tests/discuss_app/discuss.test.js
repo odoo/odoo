@@ -2429,6 +2429,7 @@ test("Correct breadcrumb when open discuss from chat window then see settings as
     await contains("[title='Open Actions Menu']");
     await click("[title='Open Actions Menu']");
     await click(".o-dropdown-item:text('Open in Discuss')");
+    await contains(".o-mail-DiscussSidebarChannel:has(:text('General'))");
     await click("[title='Channel Actions']", {
         parent: [".o-mail-DiscussSidebarChannel:has(:text('General'))"],
     });

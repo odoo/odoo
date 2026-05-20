@@ -6,7 +6,7 @@ import { CALL_PROMOTE_FULLSCREEN } from "@mail/discuss/call/common/discuss_chann
 import { monitorAudio } from "@mail/utils/common/media_monitoring";
 import { CallPermissionDeniedDialog } from "@mail/discuss/call/common/call_permission_denied_dialog";
 import { rpc } from "@web/core/network/rpc";
-import { assignDefined, closeStream, onChange } from "@mail/utils/common/misc";
+import { assignDefined, closeStream } from "@mail/utils/common/misc";
 
 import { toRaw } from "@odoo/owl";
 
@@ -435,6 +435,7 @@ export class Rtc extends Record {
                 .map(([id, definition]) => new CallAction({ owner: this, id, definition }));
             for (const action of transformedActions) {
                 action.setup();
+                void action.isActive;
             }
             return transformedActions;
         },
@@ -485,31 +486,39 @@ export class Rtc extends Record {
          * @type {import("@mail/discuss/call/common/peer_to_peer").PeerToPeer}
          */
         this.p2pService = services["discuss.p2p"];
-        onChange(this.store.settings, "useBlur", () => {
+        this.registerOnChange(this.store.settings, "useBlur", () => {
             if (this.isSendingCamera) {
                 this.toggleVideo("camera", { force: true });
             }
         });
-        onChange(this.store.settings, ["edgeBlurAmount", "backgroundBlurAmount"], () => {
-            if (this.blurManager) {
-                this.blurManager.edgeBlur = this.store.settings.edgeBlurAmount;
-                this.blurManager.backgroundBlur = this.store.settings.backgroundBlurAmount;
+        this.registerOnChange(
+            this.store.settings,
+            ["edgeBlurAmount", "backgroundBlurAmount"],
+            () => {
+                if (this.blurManager) {
+                    this.blurManager.edgeBlur = this.store.settings.edgeBlurAmount;
+                    this.blurManager.backgroundBlur = this.store.settings.backgroundBlurAmount;
+                }
             }
-        });
-        onChange(this.store.settings, ["voiceActivationThreshold", "usePushToTalk"], () => {
-            this.linkVoiceActivationDebounce();
-        });
-        onChange(this.store.settings, "audioInputDeviceId", async () => {
+        );
+        this.registerOnChange(
+            this.store.settings,
+            ["voiceActivationThreshold", "usePushToTalk"],
+            () => {
+                this.linkVoiceActivationDebounce();
+            }
+        );
+        this.registerOnChange(this.store.settings, "audioInputDeviceId", async () => {
             if (this.localSession) {
                 await this.resetMicAudioTrack({ force: true });
             }
         });
-        onChange(this.store.settings, "audioOutputDeviceId", async () => {
+        this.registerOnChange(this.store.settings, "audioOutputDeviceId", async () => {
             if (this.localSession) {
                 await this.setOutputDevice(this.store.settings.audioOutputDeviceId);
             }
         });
-        onChange(this.store.settings, "cameraInputDeviceId", async () => {
+        this.registerOnChange(this.store.settings, "cameraInputDeviceId", async () => {
             if (this.localSession && this.cameraTrack) {
                 await this.toggleVideo("camera", { force: true, refreshStream: true });
             }
@@ -2417,7 +2426,7 @@ export const rtcService = {
         const store = env.services["mail.store"];
         const rtc = store.rtc;
         rtc.pipService = services["discuss.pip_service"];
-        onChange(rtc.pipService.state, "active", () => {
+        rtc.registerOnChange(rtc.pipService.state, "active", () => {
             const isPipMode = rtc.pipService.state.active;
             if (!isPipMode) {
                 if (rtc.hadFullscreen && rtc.channel) {
@@ -2433,7 +2442,7 @@ export const rtcService = {
             });
         });
         rtc.fullscreen = services["mail.fullscreen"];
-        onChange(rtc.fullscreen, "id", () => {
+        rtc.registerOnChange(rtc.fullscreen, "id", () => {
             const wasFullscreen = rtc.isFullscreen;
             rtc.isFullscreen = rtc.fullscreen.id === CALL_FULLSCREEN_ID;
             if (
