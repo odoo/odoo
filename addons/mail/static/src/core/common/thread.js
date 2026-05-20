@@ -458,8 +458,11 @@ export class Thread extends Component {
                           thread.scrollTop -
                           this.scrollableRef.el.clientHeight;
             }
+            const targetEl = this.viewportEl ?? this.scrollableRef.el;
             if (
-                (this.lastSetValue === undefined || Math.abs(this.lastSetValue - value) > 1) &&
+                (this.lastSetValue === undefined ||
+                    Math.abs(this.lastSetValue - value) > 1 ||
+                    Math.abs(targetEl.scrollTop - value) > 1) &&
                 !this.isSmoothScrolling
             ) {
                 this.setScroll(value, {
