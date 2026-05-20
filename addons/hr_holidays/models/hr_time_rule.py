@@ -70,6 +70,7 @@ class HrTimeRule(models.Model):
     sequence = fields.Integer(default=10)
 
     country_id = fields.Many2one('res.country')
+    country_code = fields.Char(related='country_id.code')
     company_id = fields.Many2one('res.company')
     employee_domain = fields.Char(string="Employees", default='[]')
 

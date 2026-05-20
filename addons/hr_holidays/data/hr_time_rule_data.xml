@@ -67,7 +67,7 @@
             <field name="name">Workdays Overtime</field>
             <field name="sequence">10</field>
             <field name="country_id" ref="base.sa"/>
-            <field name="employee_domain">[('company_id.country_id.code', '=', 'SA')]</field>
+            <field name="employee_domain">[('company_id.partner_id.country_id.code', '=', 'SA')]</field>
             <field name="calendar_source">employee</field>
             <field name="quantity_period">day</field>
             <field name="apply_monday" eval="True"/>
@@ -89,7 +89,7 @@
             <field name="name">Public Holidays Overtime</field>
             <field name="sequence">10</field>
             <field name="country_id" ref="base.jo"/>
-            <field name="employee_domain">[('company_id.country_id.code', '=', 'JO')]</field>
+            <field name="employee_domain">[('company_id.partner_id.country_id.code', '=', 'JO')]</field>
             <field name="apply_monday" eval="False"/>
             <field name="apply_tuesday" eval="False"/>
             <field name="apply_wednesday" eval="False"/>
@@ -108,7 +108,7 @@
             <field name="name">Rest Days Overtime</field>
             <field name="sequence">20</field>
             <field name="country_id" ref="base.jo"/>
-            <field name="employee_domain">[('company_id.country_id.code', '=', 'JO')]</field>
+            <field name="employee_domain">[('company_id.partner_id.country_id.code', '=', 'JO')]</field>
             <field name="apply_monday" eval="False"/>
             <field name="apply_tuesday" eval="False"/>
             <field name="apply_wednesday" eval="False"/>
@@ -127,7 +127,7 @@
             <field name="name">Week Days Overtime</field>
             <field name="sequence">30</field>
             <field name="country_id" ref="base.jo"/>
-            <field name="employee_domain">[('company_id.country_id.code', '=', 'JO')]</field>
+            <field name="employee_domain">[('company_id.partner_id.country_id.code', '=', 'JO')]</field>
             <field name="calendar_source">employee</field>
             <field name="quantity_period">day</field>
             <field name="apply_monday" eval="True"/>
@@ -150,7 +150,7 @@
             <field name="name">Week Days — Daytime</field>
             <field name="sequence">10</field>
             <field name="country_id" ref="base.eg"/>
-            <field name="employee_domain">[('company_id.country_id.code', '=', 'EG')]</field>
+            <field name="employee_domain">[('company_id.partner_id.country_id.code', '=', 'EG')]</field>
             <field name="apply_monday" eval="True"/>
             <field name="apply_tuesday" eval="True"/>
             <field name="apply_wednesday" eval="True"/>
@@ -169,7 +169,7 @@
             <field name="name">Week Days — Nighttime (Evening)</field>
             <field name="sequence">20</field>
             <field name="country_id" ref="base.eg"/>
-            <field name="employee_domain">[('company_id.country_id.code', '=', 'EG')]</field>
+            <field name="employee_domain">[('company_id.partner_id.country_id.code', '=', 'EG')]</field>
             <field name="apply_monday" eval="True"/>
             <field name="apply_tuesday" eval="True"/>
             <field name="apply_wednesday" eval="True"/>
@@ -188,7 +188,7 @@
             <field name="name">Week Days — Nighttime (Early Morning)</field>
             <field name="sequence">30</field>
             <field name="country_id" ref="base.eg"/>
-            <field name="employee_domain">[('company_id.country_id.code', '=', 'EG')]</field>
+            <field name="employee_domain">[('company_id.partner_id.country_id.code', '=', 'EG')]</field>
             <field name="apply_monday" eval="True"/>
             <field name="apply_tuesday" eval="True"/>
             <field name="apply_wednesday" eval="True"/>
@@ -207,7 +207,7 @@
             <field name="name">Public Holidays</field>
             <field name="sequence">40</field>
             <field name="country_id" ref="base.eg"/>
-            <field name="employee_domain">[('company_id.country_id.code', '=', 'EG')]</field>
+            <field name="employee_domain">[('company_id.partner_id.country_id.code', '=', 'EG')]</field>
             <field name="apply_monday" eval="False"/>
             <field name="apply_tuesday" eval="False"/>
             <field name="apply_wednesday" eval="False"/>
@@ -226,7 +226,7 @@
             <field name="name">Rest Days</field>
             <field name="sequence">50</field>
             <field name="country_id" ref="base.eg"/>
-            <field name="employee_domain">[('company_id.country_id.code', '=', 'EG')]</field>
+            <field name="employee_domain">[('company_id.partner_id.country_id.code', '=', 'EG')]</field>
             <field name="apply_monday" eval="False"/>
             <field name="apply_tuesday" eval="False"/>
             <field name="apply_wednesday" eval="False"/>
@@ -250,7 +250,7 @@
             <field name="name">Day Time Overtime (Morning)</field>
             <field name="sequence">10</field>
             <field name="country_id" ref="base.iq"/>
-            <field name="employee_domain">[('company_id.country_id.code', '=', 'IQ')]</field>
+            <field name="employee_domain">[('company_id.partner_id.country_id.code', '=', 'IQ')]</field>
             <field name="apply_monday" eval="True"/>
             <field name="apply_tuesday" eval="True"/>
             <field name="apply_wednesday" eval="True"/>
@@ -269,7 +269,7 @@
             <field name="name">Day Time Overtime (Evening)</field>
             <field name="sequence">20</field>
             <field name="country_id" ref="base.iq"/>
-            <field name="employee_domain">[('company_id.country_id.code', '=', 'IQ')]</field>
+            <field name="employee_domain">[('company_id.partner_id.country_id.code', '=', 'IQ')]</field>
             <field name="apply_monday" eval="True"/>
             <field name="apply_tuesday" eval="True"/>
             <field name="apply_wednesday" eval="True"/>
@@ -288,7 +288,7 @@
             <field name="name">Night Time Overtime (Late)</field>
             <field name="sequence">30</field>
             <field name="country_id" ref="base.iq"/>
-            <field name="employee_domain">[('company_id.country_id.code', '=', 'IQ')]</field>
+            <field name="employee_domain">[('company_id.partner_id.country_id.code', '=', 'IQ')]</field>
             <field name="apply_monday" eval="True"/>
             <field name="apply_tuesday" eval="True"/>
             <field name="apply_wednesday" eval="True"/>
@@ -307,7 +307,7 @@
             <field name="name">Night Time Overtime (Early Morning)</field>
             <field name="sequence">40</field>
             <field name="country_id" ref="base.iq"/>
-            <field name="employee_domain">[('company_id.country_id.code', '=', 'IQ')]</field>
+            <field name="employee_domain">[('company_id.partner_id.country_id.code', '=', 'IQ')]</field>
             <field name="apply_monday" eval="True"/>
             <field name="apply_tuesday" eval="True"/>
             <field name="apply_wednesday" eval="True"/>
@@ -331,7 +331,7 @@
             <field name="name">Day Time Overtime</field>
             <field name="sequence">10</field>
             <field name="country_id" ref="base.ae"/>
-            <field name="employee_domain">[('company_id.country_id.code', '=', 'AE')]</field>
+            <field name="employee_domain">[('company_id.partner_id.country_id.code', '=', 'AE')]</field>
             <field name="calendar_source">employee</field>
             <field name="quantity_period">day</field>
             <field name="apply_monday" eval="True"/>
@@ -349,7 +349,7 @@
             <field name="name">Night Time Overtime (Late)</field>
             <field name="sequence">20</field>
             <field name="country_id" ref="base.ae"/>
-            <field name="employee_domain">[('company_id.country_id.code', '=', 'AE')]</field>
+            <field name="employee_domain">[('company_id.partner_id.country_id.code', '=', 'AE')]</field>
             <field name="apply_monday" eval="True"/>
             <field name="apply_tuesday" eval="True"/>
             <field name="apply_wednesday" eval="True"/>
@@ -368,7 +368,7 @@
             <field name="name">Night Time Overtime (Early Morning)</field>
             <field name="sequence">30</field>
             <field name="country_id" ref="base.ae"/>
-            <field name="employee_domain">[('company_id.country_id.code', '=', 'AE')]</field>
+            <field name="employee_domain">[('company_id.partner_id.country_id.code', '=', 'AE')]</field>
             <field name="apply_monday" eval="True"/>
             <field name="apply_tuesday" eval="True"/>
             <field name="apply_wednesday" eval="True"/>
@@ -387,7 +387,7 @@
             <field name="name">Off Days Overtime</field>
             <field name="sequence">40</field>
             <field name="country_id" ref="base.ae"/>
-            <field name="employee_domain">[('company_id.country_id.code', '=', 'AE')]</field>
+            <field name="employee_domain">[('company_id.partner_id.country_id.code', '=', 'AE')]</field>
             <field name="apply_monday" eval="False"/>
             <field name="apply_tuesday" eval="False"/>
             <field name="apply_wednesday" eval="False"/>
