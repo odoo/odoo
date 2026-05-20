@@ -222,6 +222,9 @@ export class Analysis {
     }
 }
 
+/**
+ * TODO EGGMAIL: need explanation
+ */
 export function renderEmailNode(emailNode, context = {}) {
     return emailNode.layout.renderToFragment({
         ...context,

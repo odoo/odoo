@@ -1,10 +1,12 @@
-import { paragraphRelatedElements } from "@html_editor/utils/dom_info";
 import { Plugin } from "../plugin";
 import { registry } from "@web/core/registry";
 import { Rules } from "../core/rules_models";
 import { DIRECTION_VARIANTS } from "../core/utils";
 import { withSequence } from "@html_editor/utils/resource";
 import { DIMENSIONS } from "../hooks";
+import { StyleInfo } from "../core/style_models";
+import { paragraphRelatedElements } from "@html_editor/utils/dom_info";
+import { parseCssValue } from "../css_parsers";
 
 const BLOCKED_PSEUDO_CLASSES = new Set([
     "active",
@@ -35,7 +37,12 @@ export class FilterContentPlugin extends Plugin {
         "style",
         "referenceNode",
     ];
-    static shared = ["getBodyGlobalStyleInfo", "getBodyTextStyleInfo", "isInvisible"];
+    static shared = [
+        "getBodyGlobalStyleInfo",
+        "getBodyTextStyleInfo",
+        "getSpacingStyleInfo",
+        "isInvisible",
+    ];
     resources = {
         attribute_rules_processors: [
             [this.provideAttributeRules.bind(this), FilterContentPlugin.id],
@@ -44,12 +51,15 @@ export class FilterContentPlugin extends Plugin {
         style_rules_processors: [[this.provideStyleRules.bind(this), FilterContentPlugin.id]],
         is_blocked_rule_selector_predicates: this.blockUserContextSelectors.bind(this),
         should_discard_reference_node_predicates: this.isInvisible.bind(this),
+        reference_node_tag_name_processors: this.defineEffectiveTagName.bind(this),
     };
 
     setup() {
         this.bodyTextStyleRules = new Rules();
         this.bodyGlobalStyleRules = new Rules();
         this.provideBodyStyleRules();
+        this.spacingStyleRules = new Rules();
+        this.provideSpacingStyleRules();
     }
 
     analyzeElementLayout({ analysis }, { referenceNode, parentEmailNode }) {
@@ -79,6 +89,15 @@ export class FilterContentPlugin extends Plugin {
         }
     }
 
+    defineEffectiveTagName(tagName) {
+        // TODO EGGMAIL: apply a stricter conversion:
+        // keep an allowed block tagNames list (eg, table, tr, td, ...)
+        // and convert anything that is not in that table into "DIV"
+        if (tagName === "SECTION") {
+            return "DIV";
+        }
+    }
+
     provideBodyStyleRules() {
         const textRules = this.bodyTextStyleRules.forPlugin(FilterContentPlugin.id);
         textRules.allow("font-size");
@@ -86,6 +105,66 @@ export class FilterContentPlugin extends Plugin {
         textRules.allow("line-height");
         const globalRules = this.bodyGlobalStyleRules.forPlugin(FilterContentPlugin.id);
         globalRules.allow("direction");
+    }
+
+    provideSpacingStyleRules() {
+        const spacingRules = this.spacingStyleRules.forPlugin(FilterContentPlugin.id);
+        // TODO EGGMAIL: support more spacing cases?
+        spacingRules.allow(/^padding(-(top|right|bottom|left))?$/);
+        spacingRules.allow(/^margin(-(top|right|bottom|left))?$/);
+    }
+
+    /**
+     * Returns a normalized spacing styleInfo containing only longhand css
+     * properties. Only support simple padding/margin variants.
+     * @see spacingStyleRules
+     *
+     * @returns {StyleInfo}
+     */
+    getSpacingStyleInfo(referenceNode, layoutDimensions = undefined) {
+        const rawSpacingStyleInfo = this.filterStyleInfo(
+            this.getRawStyleInfo(referenceNode, layoutDimensions),
+            referenceNode,
+            this.spacingStyleRules
+        );
+        // TODO EGGMAIL: this is incomplete CSS value parsing, would be unnecessary
+        // if we have a complete value parser.
+        const longhandStyleInfo = new StyleInfo();
+        const shorthandStyleInfo = new StyleInfo();
+        const suffixes = ["top", "right", "bottom", "left"];
+        const setShorthandPropertyValues = (propertyName, values, priority, sequence) => {
+            suffixes.forEach((suffix, index) => {
+                const name = `${propertyName}-${suffix}`;
+                shorthandStyleInfo.setProperty(name, values[index], priority, sequence);
+            });
+        };
+        for (const [
+            propertyName,
+            { value, priority, sequence },
+        ] of rawSpacingStyleInfo.getSortedEntries()) {
+            if (propertyName === "padding" || propertyName === "margin") {
+                const values = this.decomposeShorthandPropertyValue(value);
+                setShorthandPropertyValues(propertyName, values, priority, sequence);
+            } else {
+                longhandStyleInfo.setProperty(propertyName, value, priority, sequence);
+            }
+        }
+        return shorthandStyleInfo.merge(longhandStyleInfo);
+    }
+
+    decomposeShorthandPropertyValue(value) {
+        const splitValue = value.split(" ");
+        let values;
+        if (splitValue.length === 1) {
+            values = Array(4).fill(value, 0, 4);
+        } else if (splitValue.length === 2) {
+            values = [splitValue[0], splitValue[1], splitValue[0], splitValue[1]];
+        } else if (splitValue.length === 3) {
+            values = [splitValue[0], splitValue[1], splitValue[1], splitValue[2]];
+        } else {
+            values = splitValue;
+        }
+        return values;
     }
 
     /**
@@ -188,16 +267,25 @@ export class FilterContentPlugin extends Plugin {
     }
 
     genericSpacingStyleRules(rules) {
-        // TODO EGGMAIL: maybe not restrictive enough (margin not well supported)
-        // check if spacing should be handled by geometry only
-        // consider box-sizing for paddings&margins -> use values from band/cluster computations
-        rules.allow(/^padding(-.*)?$/);
-        rules.allow(/^margin(-.*)?$/, {
+        // Allow paragraph-related elements to keep their top/bottom margins
+        rules.allow(/^margin(-(top|bottom))?$/, {
             when: [
                 ({ referenceNode }) => paragraphRelatedElements.includes(referenceNode.nodeName),
-                ({ attributeValue }) => attributeValue !== "auto",
+                ({ propertyName, propertyValue }) => {
+                    if (propertyName === "margin" || propertyName === "padding") {
+                        const values = this.decomposeShorthandPropertyValue(propertyValue);
+                        return values.every((value) => {
+                            const { number, unit } = parseCssValue(value);
+                            return number !== undefined && (number === 0 || unit === "px");
+                        });
+                    } else {
+                        const { number, unit } = parseCssValue(propertyValue);
+                        return number === 0 || unit === "px";
+                    }
+                },
             ],
         });
+
         rules.allow(/^border(-.*)?$/);
         rules.allow(/^border-(collapse|spacing)$/);
         // TODO EGGMAIL: some strategies require that children don't keep their

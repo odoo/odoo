@@ -66,7 +66,7 @@ export class RulesPlugin extends Plugin {
 
     filterAttributes(attributes, referenceNode, rules = this.attributeRules) {
         let attributesMap = attributes;
-        if (attributes instanceof Array) {
+        if (Array.isArray(attributes)) {
             attributesMap = new Map(attributes);
         } else if (!(attributes instanceof Map)) {
             attributesMap = new Map(Object.entries(attributes));

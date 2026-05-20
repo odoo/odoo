@@ -1,3 +1,4 @@
+import { DIMENSIONS } from "../hooks";
 import { Plugin } from "../plugin";
 import { registry } from "@web/core/registry";
 import {
@@ -7,6 +8,9 @@ import {
     renderEmailNode,
     TextNodeLayout,
 } from "./render_models";
+import { paragraphRelatedElements } from "@html_editor/utils/dom_info";
+
+const { DESKTOP, MOBILE } = DIMENSIONS;
 
 /**
  * This plugin handles 4 conversion phases, leading to the ability to render the email html:
@@ -24,10 +28,19 @@ import {
  */
 export class RenderPlugin extends Plugin {
     static id = "render";
-    static dependencies = ["measurementSnapshot", "referenceNode", "rules"];
+    static dependencies = [
+        "filterContent",
+        "measurementSnapshot",
+        "referenceNode",
+        "rules",
+        "responsiveBlock",
+        "style",
+    ];
     resources = {
         on_build_render_tree_handlers: this.buildRenderTree.bind(this),
         on_render_email_template_handlers: this.renderEmailHtml.bind(this),
+        on_parse_layout_with_dimensions_handlers: this.cacheSpacingStyleInfo.bind(this),
+        refine_layout_processors: this.applyDefaultSpacing.bind(this),
     };
 
     setup() {
@@ -83,7 +96,7 @@ export class RenderPlugin extends Plugin {
                 parent: parentEmailNode,
             });
         } else {
-            const { layout, analysis } = this.processElementLayout(referenceNode, parentEmailNode);
+            const { layout, analysis } = this.getEmailNodeArguments(referenceNode, parentEmailNode);
             const parentParsingFacts = parentEmailNode?.analysis.parsingFacts;
             if (parentEmailNode && !analysis.parsingFacts.canParentMerge) {
                 parentParsingFacts.canMerge = false;
@@ -181,19 +194,10 @@ export class RenderPlugin extends Plugin {
 
     // TODO EGGMAIL: search and replace all usages of:
     // apply_layout_strategy_overrides
-    processElementLayout(referenceNode, parentEmailNode) {
+    getEmailNodeArguments(referenceNode, parentEmailNode) {
         const { layout, analysis } = this.processThrough(
             "element_layout_analysis_processors",
-            {
-                layout: new ElementLayout({
-                    tag: referenceNode.tagName,
-                    attributes: this.getAttributes(referenceNode),
-                    style: this.getStyleInfo(referenceNode),
-                }),
-                analysis: new Analysis({
-                    parsingFacts: { canParentMerge: true, canMerge: true },
-                }),
-            },
+            this.getDefaultEmailNodeArguments(referenceNode),
             { referenceNode, parentEmailNode }
         );
         if (layout.pluginIds.size === 0) {
@@ -201,6 +205,63 @@ export class RenderPlugin extends Plugin {
         }
         console.log(Array.from(layout.pluginIds).join(", "), referenceNode);
         return { layout, analysis };
+    }
+
+    getDefaultEmailNodeArguments(referenceNode) {
+        const layout = new ElementLayout({
+            tag: this.getTagName(referenceNode),
+            attributes: this.getAttributes(referenceNode),
+            style: this.getStyleInfo(referenceNode),
+        });
+        const analysis = new Analysis({
+            facts: this.getSpacingFacts(referenceNode),
+            parsingFacts: { canParentMerge: true, canMerge: true },
+        });
+        return { layout, analysis };
+    }
+
+    getSpacingFacts(referenceNode) {
+        return {
+            desktopSpacingStyleInfo: this.getSpacingStyleInfo(referenceNode, DESKTOP),
+            desktopBlock: this.getLayoutBlock(referenceNode, DESKTOP),
+            mobileSpacingStyleInfo: this.getSpacingStyleInfo(referenceNode, MOBILE),
+            mobileBlock: this.getLayoutBlock(referenceNode, MOBILE),
+        };
+    }
+
+    applyDefaultSpacing(layout, { emailNode }) {
+        if (
+            layout.constructor !== ElementLayout ||
+            !emailNode.analysis.facts.desktopBlock ||
+            paragraphRelatedElements.includes(layout.tag)
+        ) {
+            return;
+        }
+        // how to apply the related table the best way on the layout?
+        // include a container slot and a childContainer slot in LayoutModel, so that we can
+        // still access the main info easily, but we also have easy access to padding/margin structures?
+
+        // padding handling
+
+        // margin handling
+    }
+
+    getTagName(referenceNode) {
+        return this.processThrough("reference_node_tag_name_processors", referenceNode.tagName, {
+            referenceNode,
+        });
+    }
+
+    cacheSpacingStyleInfo() {
+        const treeWalker = this.createReferenceTreeWalker((node) =>
+            node.nodeType === Node.ELEMENT_NODE
+                ? NodeFilter.FILTER_ACCEPT
+                : NodeFilter.FILTER_REJECT
+        );
+        let element = treeWalker.root;
+        do {
+            this.getRawStyleInfo(element);
+        } while ((element = treeWalker.nextNode()));
     }
 
     /**

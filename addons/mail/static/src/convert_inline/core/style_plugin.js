@@ -10,7 +10,7 @@ export class StylePlugin extends Plugin {
     static shared = ["getRawStyleInfo"];
     resources = {
         on_layout_dimensions_updated_handlers: this.onLayoutDimensionsUpdated.bind(this),
-        on_parse_layout_with_dimensions_handlers: this.registerCSSRule.bind(this),
+        on_parse_layout_with_dimensions_handlers: this.registerCSSRules.bind(this),
     };
 
     setup() {
