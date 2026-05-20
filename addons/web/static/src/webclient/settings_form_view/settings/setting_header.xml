@@ -6,8 +6,8 @@
                 <t t-out="this.labelString"/>
             </label>
             <div class="input-group align-items-baseline w-auto o_field_highlight">
-                <t t-slot="fieldSlot"/>
-                <t t-slot="default"/>
+                <t t-call-slot="fieldSlot"/>
+                <t t-call-slot="default"/>
             </div>
         </div>
     </t>

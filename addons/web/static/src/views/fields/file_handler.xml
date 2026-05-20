@@ -5,9 +5,9 @@
         <div class="d-contents" t-on-click.stop="">
             <t t-if="this.state.isUploading and this.props.showUploadingText">Uploading...</t>
             <span t-else="" t-on-click.prevent="this.onSelectFileButtonClick" style="display:contents">
-                <t t-slot="toggler"/>
+                <t t-call-slot="toggler"/>
             </span>
-            <t t-slot="default"/>
+            <t t-call-slot="default"/>
             <input
                 type="file"
                 t-att-name="this.props.inputName"

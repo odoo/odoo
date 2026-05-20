@@ -6,7 +6,7 @@
             <div class="d-flex flex-column flex-grow-1 overflow-hidden">
                 <div t-custom-ref="scrollable" class="order-container d-flex flex-column flex-grow-1 overflow-y-auto text-start">
                     <t t-foreach="lines" t-as="line" t-key="line_index">
-                        <t t-if="this.props.slots.default" t-slot="default" line="line" />
+                        <t t-if="this.props.slots.default" t-call-slot="default" line="line" />
                         <Orderline t-else="" line="line" mode="this.props.mode" />
                     </t>
                     <div t-if="this.order.general_customer_note"
@@ -46,13 +46,13 @@
                     </div>
                 </div>
             </div>
-            <t t-slot="details"/>
+            <t t-call-slot="details"/>
         </t>
         <t t-elif="this.props.mode !== 'receipt'">
             <div t-if="!this.props.slots?.emptyCart" class="d-flex flex-column align-items-center justify-content-center flex-grow-1 rounded-3 gap-3">
-                <t t-slot="details"/>
+                <t t-call-slot="details"/>
             </div>
-            <t t-else="" t-slot="emptyCart" />
+            <t t-else="" t-call-slot="emptyCart" />
         </t>
     </t>
 </templates>
