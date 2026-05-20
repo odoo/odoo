@@ -59,7 +59,7 @@ export class AnimateText extends Component {
             services: this.props.config.editor.services,
         });
         this.popover = usePopover(AnimateTextPopover, {
-            env: this.__owl__.childEnv,
+            env: useChildEnv(),
             onClose: () => {
                 if (!this.props.config.editor.isDestroyed) {
                     this.updateState();

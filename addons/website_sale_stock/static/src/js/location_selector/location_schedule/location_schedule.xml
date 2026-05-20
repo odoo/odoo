@@ -3,10 +3,9 @@
     <t t-name="website_sale_stock.locationSelector.schedule">
         <span t-attf-class="o_location_selector_schedule d-grid gap-1 #{this.props.wrapClass}">
             <t t-foreach="this.props.openingHours" t-as="openingHour" t-key="openingHour_index">
-                <t t-call="website_sale_stock.locationSelector.dailySchedule">
-                    <t t-set="weekday" t-value="openingHour_index"/>
-                    <t t-set="openingPeriods" t-value="openingHour_value"/>
-                </t>
+                <t t-call="website_sale_stock.locationSelector.dailySchedule"
+                    weekday="openingHour_index"
+                    openingPeriods="openingHour_value"/>
             </t>
         </span>
     </t>

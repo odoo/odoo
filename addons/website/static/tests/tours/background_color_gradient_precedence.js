@@ -34,7 +34,7 @@ registerWebsitePreviewTour(
         },
         {
             content: "Verify custom color is selected in picker",
-            trigger: ".o_we_color_preview[style='background-color: #000000']",
+            trigger: `.o_we_color_preview[style*="rgb(0, 0, 0)"]`,
         },
         {
             content: "Verify custom color is applied to Header",

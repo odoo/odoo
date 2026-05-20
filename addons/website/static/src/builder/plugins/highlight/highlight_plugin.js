@@ -310,7 +310,7 @@ class HighlightToolbarButton extends Component {
             ...this.props.highlightConfiguratorProps,
         });
         this.configuratorPopover = usePopover(StackingComponent, {
-            env: this.__owl__.childEnv,
+            env: useChildEnv(),
             onClose: () => {
                 while (this.componentStack.stack.length > 1) {
                     this.componentStack.pop();

@@ -35,7 +35,7 @@ registerWebsitePreviewTour(
         {
             content: "Check the preview of the gray 900 after hue change",
             trigger:
-                ".o_we_gray_preview span[variable='900'][style='background-color: #242921 !important']",
+                ".o_we_gray_preview span[variable='900'][style='background-color: rgb(36, 41, 33) !important;']",
         },
         {
             content: "Drag the saturation slider",
@@ -46,7 +46,7 @@ registerWebsitePreviewTour(
         {
             content: "Check the preview of the gray 900 after saturation change",
             trigger:
-                ".o_we_gray_preview span[variable='900'][style='background-color: #222F1B !important']",
+                ".o_we_gray_preview span[variable='900'][style='background-color: rgb(34, 47, 27) !important;']",
         },
         ...clickOnSave(),
         {

@@ -92,7 +92,8 @@ export class ResourceEditor extends Component {
         });
 
         let showErrorInterval;
-        this.errors = reactive([], () => {
+        this.errors = reactive([]);
+        useEffect(() => {
             clearInterval(showErrorInterval);
             if (this.errors.length) {
                 this.showErrorLine();
