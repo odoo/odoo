@@ -426,7 +426,6 @@ class JSTooling:
     def get_js_files(file_manager, include_test_files=False):
         """Gets all static js files. Include .test.js files if include_test_files is True."""
         path_pattern = re.compile('|'.join(EXCLUDED_PATH + CHECKSUM_FILES))
-        target_dir = '/static/' if include_test_files else '/static/src'
 
         return [
             f for f in file_manager
@@ -942,7 +941,6 @@ MISC_WHITELIST = {
     "views.ViewButtonTooltip": {'debug', 'button', 'model'},  # JSON stringify context
     "website.dialog.addFont.singlePreview": {'previewFontName'},  # Nested t-call
     'website.dialog.addFont.preview': {'previewFontName'},  # Recursive t-call
-    "website.form_checkbox": {'record_index'},  # dynamic t-calls from loops
     "website.form_field": {'fieldTypeClasses', 'form_checkbox'},  # dynamic t-call
     "website.form_radio": {'record_index', 'record'},  # dynamic t-calls from loops
     "website.form_checkbox": {'record_index', 'record'},  # dynamic t-calls from loops
