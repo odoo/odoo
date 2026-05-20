@@ -1710,7 +1710,7 @@ class AccountMove(models.Model):
         :return: A list of base lines representing the non deductible lines.
         """
         self.ensure_one()
-        non_deductible_product_lines = base_lines.filtered(lambda line: line.display_type == 'product' and float_compare(line.deductible_amount, 100, precision_digits=2))
+        non_deductible_product_lines = base_lines.filtered(lambda line: line.display_type == 'product' and float_compare(line.deductible_amount, 100, precision_digits=2) != 0)
         if not non_deductible_product_lines:
             return []
 
