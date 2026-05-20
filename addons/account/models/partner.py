@@ -811,16 +811,19 @@ class ResPartner(models.Model):
 
     def write(self, vals):
         self._clean_additional_identifiers(vals)
-
+        parent_write = self.env["res.partner"]
         if 'parent_id' in vals:
-            partner2move_lines = self.sudo().env['account.move.line'].search([('partner_id', 'in', self.ids)]).grouped('partner_id')
+            parent_write = self.filtered(lambda partner: partner.parent_id.id != vals["parent_id"])
+
+        if parent_write:
+            partner2move_lines = self.sudo().env['account.move.line'].search([('partner_id', 'in', parent_write.ids)]).grouped('partner_id')
             parent_vat = self.env['res.partner'].browse(vals['parent_id']).vat
-            if partner2move_lines and vals['parent_id'] and any((partner.vat or '') != (parent_vat or '') for partner in self):
+            if partner2move_lines and vals['parent_id'] and any((partner.vat or '') != (parent_vat or '') for partner in parent_write):
                 raise UserError(_("You cannot set a partner as an invoicing address of another if they have a different %(vat_label)s.", vat_label=self.vat_label))
 
         res = super().write(vals)
 
-        if 'parent_id' in vals:
+        if parent_write:
             for partner, move_lines in partner2move_lines.items():
                 partner._compute_commercial_partner()
                 # Make sure to write on all the lines at the same time to avoid breaking the reconciliation check
