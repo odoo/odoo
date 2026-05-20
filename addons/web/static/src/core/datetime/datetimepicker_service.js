@@ -231,6 +231,10 @@ export const datetimePickerService = {
                     switch (ev.key) {
                         case "Enter":
                         case "Escape": {
+                            const abort = updateValueFromInputs();
+                            if (abort) {
+                                return;
+                            }
                             return saveAndClose();
                         }
                         case "Tab": {
@@ -329,17 +333,12 @@ export const datetimePickerService = {
                 function setup() {
                     dateTimeManagerList.add(dateTimeManager);
 
-                    let firstTime = true;
                     disposeEffect = immediateEffect(() => {
-                        // read values
-                        JSON.stringify(pickerProps);
-
-                        if (firstTime) {
-                            firstTime = false;
-                            return;
+                        const nextStrPickerProps = JSON.stringify(pickerProps);
+                        if (strPickerProps !== nextStrPickerProps) {
+                            strPickerProps = nextStrPickerProps;
+                            updateInputsFromValue();
                         }
-
-                        updateInputsFromValue();
                     });
                 }
 
@@ -504,6 +503,7 @@ export const datetimePickerService = {
                 /** @type {boolean[]} */
                 let inputsChanged = [];
                 let lastAppliedStringValue = "";
+                let strPickerProps = JSON.stringify(pickerProps);
                 /** @type {(() => void) | null} */
                 let restoreTargetMargin = null;
                 let shouldFocus = false;
