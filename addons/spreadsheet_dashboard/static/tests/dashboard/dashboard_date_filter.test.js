@@ -21,7 +21,7 @@ test("Can display the input as a button", async function () {
         update: () => {},
     });
     expect("button").toHaveCount(3);
-    expect(".o-date-filter-value").toHaveText("January 1 – 31, 2023");
+    expect(".o-date-filter-value").toHaveText(/January 1\s–\s31, 2023/);
 });
 
 test("Can navigate with buttons to select the next period", async function () {
