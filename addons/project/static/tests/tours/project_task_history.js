@@ -26,6 +26,15 @@ function changeDescriptionContentAndSave(newContent) {
         {
             trigger: `div.note-editable.odoo-editor-editable .o-paragraph:contains(${newText})`,
         },
+        {
+            content: "focus out to force blur on the html_field",
+            trigger: '.o_form_renderer',
+            run: "click",
+        },
+        {
+            content: "wait for record to be flagged dirty",
+            trigger: ".o_form_dirty",
+        },
         ...stepUtils.saveForm(),
     ];
 }
