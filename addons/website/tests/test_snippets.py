@@ -193,3 +193,6 @@ class TestSnippets(HttpCase):
         # Should redirect to default /cookie-policy page
         self.assertEqual(res.status_code, 303)
         self.assertTrue(res.headers['Location'].endswith('/cookie-policy'))
+
+    def test_clickable_card(self):
+        self.start_tour(self.env['website'].get_client_action_url('/', True), 'clickable_card', login='admin')

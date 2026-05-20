@@ -3617,3 +3617,9 @@ in a huge font size since it isn’t redefined for the frontend.
 .modal .modal-content .modal-header .modal-title.fs-3 {
     font-size: 1.35rem !important;
 }
+
+*:has(> .stretched-link:focus-visible) {
+    outline: auto;
+    outline-color: black;
+    outline-offset: 2px;
+}

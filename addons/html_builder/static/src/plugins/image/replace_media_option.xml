@@ -15,15 +15,17 @@
             action="'setLink'"
             title.translate="Redirect the user elsewhere when he clicks on the media."/>
     </BuilderRow>
-    <BuilderRow label.translate="Your URL" level="1" t-if="this.isActiveItem('media_link_opt')" >
-        <BuilderUrlPicker title.translate="Your URL"
-        action="'setUrl'"
-        inputClasses="'o_we_large'"
-        placeholder.translate="www.example.com"/>
-    </BuilderRow>
-    <BuilderRow label.translate="Open in New Window" level="1" t-if="this.state.hasHref" >
-        <BuilderCheckbox action="'setNewWindow'"/>
-    </BuilderRow>
+    <t t-if="this.isActiveItem('media_link_opt')">
+        <BuilderRow label.translate="Your URL" level="1">
+            <BuilderUrlPicker title.translate="Your URL"
+                action="'setUrl'"
+                inputClasses="'o_we_large'"
+                placeholder.translate="e.g. /page or URL"/>
+        </BuilderRow>
+        <BuilderRow label.translate="Open in New Window" level="1" t-if="this.state.hasHref">
+            <BuilderCheckbox action="'setNewWindow'"/>
+        </BuilderRow>
+    </t>
 </t>
 
 </templates>
