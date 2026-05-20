@@ -578,9 +578,9 @@ class StockPickingType(models.Model):
         action["display_name"] = _("%(picking_type)s : Detailed Moves", picking_type=self.name)
         return action
 
-    def _get_action(self, action_xmlid):
+    def _get_action(self, action_xmlid, filter_name=None):
         action = self.env["ir.actions.actions"]._for_xml_id(action_xmlid)
-        context = {}
+        context = literal_eval(action['context'])
 
         if self:
             action['display_name'] = self.display_name
@@ -595,30 +595,24 @@ class StockPickingType(models.Model):
                     'default_company_id': allowed_company_ids[0],
                 })
 
-        action_context = literal_eval(action['context'])
-        context = {**action_context, **context}
+        if filter_name:
+            context[f'search_default_{filter_name}'] = 1
         action['context'] = context
         action['domain'] = [('picking_type_id', '=', self.id)]
-
-        action['help'] = self.env['ir.ui.view']._render_template(
-            'stock.help_message_template', {
-                'picking_type_code': context.get('restricted_picking_type_code') or self.code,
-            }
-        )
-
+        self.env['stock.picking']._set_action_help_message(action)
         return action
 
     def get_action_picking_tree_late(self):
-        return self._get_action('stock.action_picking_tree_late')
+        return self.get_stock_picking_action_picking_type('late')
 
     def get_action_picking_tree_backorder(self):
-        return self._get_action('stock.action_picking_tree_backorder')
+        return self.get_stock_picking_action_picking_type('backorder')
 
     def get_action_picking_tree_waiting(self):
-        return self._get_action('stock.action_picking_tree_waiting')
+        return self.get_stock_picking_action_picking_type('waiting')
 
     def get_action_picking_tree_ready(self):
-        return self._get_action('stock.action_picking_tree_ready')
+        return self.get_stock_picking_action_picking_type('ready')
 
     def get_action_picking_type_moves_analysis(self):
         action = self.env["ir.actions.actions"]._for_xml_id('stock.stock_move_action')
@@ -627,14 +621,14 @@ class StockPickingType(models.Model):
         ])
         return action
 
-    def get_stock_picking_action_picking_type(self):
+    def get_stock_picking_action_picking_type(self, filter_name=None):
         if self.code == 'incoming':
-            return self._get_action('stock.action_picking_tree_incoming')
+            return self._get_action('stock.action_picking_tree_incoming', filter_name)
         if self.code == 'outgoing':
-            return self._get_action('stock.action_picking_tree_outgoing')
+            return self._get_action('stock.action_picking_tree_outgoing', filter_name)
         if self.code == 'internal':
-            return self._get_action('stock.action_picking_tree_internal')
-        return self._get_action('stock.stock_picking_action_picking_type')
+            return self._get_action('stock.action_picking_tree_internal', filter_name)
+        return self._get_action('stock.stock_picking_action_picking_type', filter_name)
 
     def _get_aggregated_records_by_date(self):
         """

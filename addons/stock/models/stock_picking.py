@@ -615,11 +615,9 @@ class StockPicking(models.Model):
 
     @api.model
     def get_empty_list_help(self, help_message):
-        return self.env['ir.ui.view']._render_template(
-            'stock.help_message_template', {
-                'picking_type_code': self.env.context.get('restricted_picking_type_code') or self.picking_type_code,
-            }
-        )
+        if not help_message:
+            help_message = self._get_action_default_help_message()
+        return super().get_empty_list_help(help_message)
 
     @api.model
     def _search_delay_alert_date(self, operator, value):
@@ -1605,13 +1603,30 @@ class StockPicking(models.Model):
         context = dict(self.env.context)
         context.update(literal_eval(action['context']))
         action['context'] = context
+        self._set_action_help_message(action)
+        return action
 
-        action['help'] = self.env['ir.ui.view']._render_template(
-            'stock.help_message_template', {
-                'picking_type_code': context.get('restricted_picking_type_code') or self.picking_type_code,
-            }
-        )
+    @api.model
+    def _get_action_default_help_message(self):
+        return Markup('<p class="o_view_nocontent_smiling_face o_view_nocontent_stock">%s </p> <p class="text-muted">%s</p>') \
+                % (
+                    self.env._("No transfer found. Let's create one!"),
+                    self.env._("Transfers allow you to move products from one location to another."),
+                )
 
+    @api.model
+    def _get_action_help_footer(self):
+        return Markup('<p class="text-muted pt-3">%s <a class="btn-link" name="stock.action_install_barcode" type="action">%s</a> %s</p>') \
+                % (
+                    self.env._("Want to speed up operations?"),
+                    self.env._("Install"),
+                    self.env._("the barcode app")
+                )
+
+    @api.model
+    def _set_action_help_message(self, action):
+        help_message = action.get('help')
+        action['help'] = help_message + self._get_action_help_footer()
         return action
 
     @api.model
