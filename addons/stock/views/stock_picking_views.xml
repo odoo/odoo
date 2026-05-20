@@ -666,14 +666,6 @@
             <field name="context">{'contact_display': 'partner_address'}</field>
         </record>
 
-        <record id="action_picking_tree_ready" model="ir.actions.act_window">
-            <field name="name">To Do</field>
-            <field name="res_model">stock.picking</field>
-            <field name="view_mode">list,kanban,form,calendar</field>
-            <field name="domain"></field>
-            <field name="context">{'contact_display': 'partner_address', 'search_default_available': 1}</field>
-       </record>
-
         <record id="action_picking_tree_graph" model="ir.actions.act_window">
             <field name="name">To Do</field>
             <field name="res_model">stock.picking</field>
@@ -682,31 +674,7 @@
             <field name="context">{'contact_display': 'partner_address', 'search_default_available': 1, 'search_default_waiting': 1}</field>
        </record>
 
-        <record id="action_picking_tree_waiting" model="ir.actions.act_window">
-            <field name="name">Waiting Transfers</field>
-            <field name="res_model">stock.picking</field>
-            <field name="view_mode">list,kanban,form,calendar</field>
-            <field name="domain"></field>
-            <field name="context">{'contact_display': 'partner_address', 'search_default_waiting': 1}</field>
-        </record>
-
-        <record id="action_picking_tree_late" model="ir.actions.act_window">
-            <field name="name">Late Transfers</field>
-            <field name="res_model">stock.picking</field>
-            <field name="view_mode">list,kanban,form,calendar</field>
-            <field name="domain"></field>
-            <field name="context">{'contact_display': 'partner_address', 'search_default_late': 1}</field>
-        </record>
-
-        <record id="action_picking_tree_backorder" model="ir.actions.act_window">
-            <field name="name">Backorders</field>
-            <field name="res_model">stock.picking</field>
-            <field name="view_mode">list,kanban,form,calendar</field>
-            <field name="domain"></field>
-            <field name="context">{'contact_display': 'partner_address', 'search_default_backorder': 1}</field>
-        </record>
-
-        <template id="help_message_template" name="Help Message" groups="base.group_user">
+       <template id="help_message_template" name="Help Message" groups="base.group_user">
             <p name="top_help_message" class="o_view_nocontent_smiling_face o_view_nocontent_stock">
                 <t name="receipt_message">
                     <t t-if="picking_type_code == 'incoming'">
