@@ -59,7 +59,7 @@ export const sortableService = {
 
                 // Setup hookParam
                 const setupHooks = {
-                    wrapState: reactive,
+                    wrapState: proxy,
                     throttle: throttleForAnimation,
                     addListener: (el, type, listener) => {
                         el.addEventListener(type, listener);

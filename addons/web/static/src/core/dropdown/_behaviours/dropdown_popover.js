@@ -10,7 +10,7 @@ export class DropdownPopover extends Component {
                 <DropdownItem class="item.class" onSelected="() => item.onSelected()" t-out="item.label"/>
             </t>
         </t>
-        <t t-slot="content" />
+        <t t-call-slot="content" />
     `;
     static props = {
         // Popover service

@@ -12394,7 +12394,7 @@ test(`discard has to wait for changes in each field in multi edit`, async () => 
     const def = new Deferred();
 
     class CustomField extends Component {
-        static template = xml`<input t-ref="input" t-att-value="this.value" t-on-blur="this.onBlur" t-on-input="this.onInput"/>`;
+        static template = xml`<input t-custom-ref="input" t-att-value="this.value" t-on-blur="this.onBlur" t-on-input="this.onInput"/>`;
         static props = {
             ...standardFieldProps,
         };
@@ -20534,7 +20534,7 @@ test(`multi edition: edit date with operation`, async () => {
     async function checkOperation(operation) {
         await contains(`tr:eq(1) .o_data_cell[name=datetime]`).click();
         await contains(`tr:eq(1) .o_data_cell[name=datetime] input`).edit(operation.op);
-        await animationFrame();
+        await waitFor(".modal");
         expect(`.modal .o_modal_changes [name=datetime]`).toHaveText(`Datetime ${operation.text}`);
         expect(`.modal .alert`).toHaveCount(1);
         await contains(`.modal-dialog button:contains(Discard)`).click();

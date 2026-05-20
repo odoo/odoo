@@ -1,5 +1,9 @@
 import { render, useRef, useState } from "@web/owl2/utils";
 import {
+    after,
+    before,
+    expect,
+    test,
     clear,
     click,
     hover,
@@ -9,17 +13,15 @@ import {
     queryAllAttributes,
     queryAllTexts,
     queryFirst,
-    setInputFiles,
-    waitFor,
-} from "@odoo/hoot-dom";
-import {
     animationFrame,
     Deferred,
     mockTimeZone,
     mockTouch,
     runAllTimers,
     tick,
-} from "@odoo/hoot-mock";
+    setInputFiles,
+    waitFor,
+} from "@odoo/hoot";
 import {
     Component,
     EventBus,
@@ -28,8 +30,6 @@ import {
     onWillStart,
     onWillUpdateProps,
     useEffect,
-    useRef,
-    useState,
     xml,
 } from "@odoo/owl";
 import {
@@ -5295,7 +5295,7 @@ test(`discard changes on a new (dirty) form view`, async () => {
 test(`discard has to wait for changes in each field`, async () => {
     const def = new Deferred();
     class CustomField extends Component {
-        static template = xml`<input t-ref="input" t-att-value="this.value" t-on-blur="this.onBlur" t-on-input="this.onInput" />`;
+        static template = xml`<input t-custom-ref="input" t-att-value="this.value" t-on-blur="this.onBlur" t-on-input="this.onInput" />`;
         static props = {
             ...standardFieldProps,
         };
@@ -11180,7 +11180,7 @@ test(`fieldDependencies support for fields`, async () => {
     fieldsRegistry.add("custom_field", {
         component: class CustomField extends Component {
             static props = ["*"];
-            static template = xml`<span t-esc="this.props.record.data.int_field"/>`;
+            static template = xml`<span t-out="this.props.record.data.int_field"/>`;
         },
         fieldDependencies: [{ name: "int_field", type: "integer" }],
     });
@@ -11200,7 +11200,7 @@ test(`fieldDependencies support for fields: dependence on a relational field`, a
     registry.category("fields").add("custom_field", {
         component: class CustomField extends Component {
             static props = ["*"];
-            static template = xml`<span t-esc="this.props.record.data.product_id.display_name"/>`;
+            static template = xml`<span t-out="this.props.record.data.product_id.display_name"/>`;
         },
         fieldDependencies: [{ name: "product_id", type: "many2one", relation: "product" }],
     });
@@ -11748,7 +11748,7 @@ test(`don't exec a valid save with onWillSaveRecord in a form view`, async () =>
 });
 
 test(`Can't use FormRenderer implementation details in arch`, async () => {
-    // using t-esc in form view archs isn't accepted, so it displays a warning
+    // using t-out in form view archs isn't accepted, so it displays a warning
     // in the console
     patchWithCleanup(console, {
         warn: () => expect.step("warn"),

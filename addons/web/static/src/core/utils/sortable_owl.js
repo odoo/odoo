@@ -19,7 +19,7 @@ export function useSortable(params) {
             setup: useLayoutEffect,
             teardown: onWillUnmount,
             throttle: useThrottleForAnimation,
-            wrapState: reactive,
+            wrapState: proxy,
         },
     });
 }

@@ -59,7 +59,7 @@ export class FormRenderer extends Component {
         this.templates = useViewCompiler(Compiler || FormCompiler, templates);
         useSubEnv({ model: record.model });
         this.uiService = useService("ui");
-        this.onResize = useDebounced(this.render, 200);
+        this.onResize = useDebounced(() => render(this), 200);
         this.onScrollThrottled = useThrottleForAnimation(this.onScroll);
         onMounted(() => browser.addEventListener("resize", this.onResize));
         onWillUnmount(() => browser.removeEventListener("resize", this.onResize));

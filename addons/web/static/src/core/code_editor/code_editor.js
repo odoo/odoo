@@ -1,5 +1,5 @@
 import { useLayoutEffect, useRef, useState } from "@web/owl2/utils";
-import { Component, onWillStart, markRaw, status } from "@odoo/owl";
+import { Component, onWillStart, markRaw, props, status, types as t } from "@odoo/owl";
 import { loadBundle } from "@web/core/assets";
 import { useDebounced } from "../utils/timing";
 import { Reactive } from "../utils/reactive";
@@ -57,43 +57,40 @@ export function useCodeEditorState() {
 export class CodeEditor extends Component {
     static template = "web.CodeEditor";
     static components = {};
-    static props = {
-        mode: {
-            type: String,
-            optional: true,
-            validate: (mode) => CodeEditor.MODES.includes(mode),
-        },
-        modeOptions: { type: Object, optional: true },
-        value: { validate: (v) => typeof v === "string", optional: true },
-        readonly: { type: Boolean, optional: true },
-        onChange: { type: Function, optional: true },
-        onBlur: { type: Function, optional: true },
-        onCursorPositionChange: { type: Function, optional: true },
-        class: { type: String, optional: true },
-        theme: {
-            type: String,
-            optional: true,
-            validate: (theme) => CodeEditor.THEMES.includes(theme),
-        },
-        maxLines: { type: Number, optional: true },
-        sessionId: { type: [Number, String], optional: true },
-        cursorPosition: { type: Object, optional: true },
-        showLineNumbers: { type: Boolean, optional: true },
-        lineWrapping: { type: Boolean, optional: true },
-        editorState: { type: CodeEditorState, optional: true },
-    };
-    static defaultProps = {
-        readonly: false,
-        value: "",
-        onChange: () => {},
-        class: "",
-        theme: "",
-        sessionId: 1,
-        showLineNumbers: true,
-    };
-
     static MODES = ["javascript", "xml", "qweb", "scss", "python", "json", "bash"];
     static THEMES = ["", "monokai"];
+
+    props = props(
+        {
+            "mode?": t.selection(CodeEditor.MODES),
+            "modeOptions?": t.object(),
+            "value?": t.string(),
+            "readonly?": t.boolean(),
+            "onChange?": t.function(),
+            "onBlur?": t.function(),
+            "class?": t.string(),
+            "theme?": t.selection(CodeEditor.THEMES),
+            "maxLines?": t.number(),
+            "sessionId?": t.or([t.number(), t.string()]),
+            "cursorPosition?": t.object({
+                "column?": t.number(),
+                "row?": t.number(),
+            }),
+            "onCursorPositionChange?": t.function(),
+            "showLineNumbers?": t.boolean(),
+            "lineWrapping?": t.boolean(),
+            "editorState?": t.instanceOf(CodeEditorState),
+        },
+        {
+            readonly: false,
+            value: "",
+            onChange: () => {},
+            class: "",
+            theme: "",
+            sessionId: 1,
+            showLineNumbers: true,
+        }
+    );
 
     setup() {
         this.editorRef = useRef("editorRef");

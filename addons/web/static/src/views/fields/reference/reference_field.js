@@ -75,7 +75,7 @@ export class ReferenceField extends Component {
             useRecordObserver(async (record, props) => {
                 if (
                     record.data[props.name]?.resModel &&
-                    this.state.currentRelation !== record.data[props.name].resModel
+                    untrack(() => this.state.currentRelation) !== record.data[props.name].resModel
                 ) {
                     this.state.currentRelation = record.data[props.name].resModel;
                 }

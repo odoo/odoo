@@ -75,7 +75,7 @@ export class ListController extends Component {
         this.onOpenFormView = this.openRecord.bind(this);
         this.editable = (!this.props.readonly && this.archInfo.editable) || false;
         this.hasOpenFormViewButton = this.editable ? this.archInfo.openFormView : false;
-        this.model = useState(
+        this.model = proxy(
             useModelWithSampleData(this.props.Model, this.modelParams, this.modelOptions)
         );
 
@@ -131,20 +131,21 @@ export class ListController extends Component {
 
         useLayoutEffect(
             (isReady) => {
-                if (isReady) {
-                    if (this.env.isSmall) {
-                        setScrollFromState();
-                    } else {
-                        const { rendererScrollPositions } = this.props.state || {};
-                        if (rendererScrollPositions) {
-                            const renderer = this.rootRef.el.querySelector(".o_list_renderer");
-                            renderer.scrollLeft = rendererScrollPositions.left;
-                            renderer.scrollTop = rendererScrollPositions.top;
-                        }
+                if (!isReady) {
+                    return;
+                }
+                if (this.env.isSmall) {
+                    setScrollFromState();
+                } else {
+                    const { rendererScrollPositions } = this.props.state || {};
+                    if (rendererScrollPositions) {
+                        const renderer = this.rootRef.el.querySelector(".o_list_renderer");
+                        renderer.scrollLeft = rendererScrollPositions.left;
+                        renderer.scrollTop = rendererScrollPositions.top;
                     }
                 }
             },
-            () => [this.model.isReady]
+            () => [this.model.isReady()]
         );
 
         usePager(() => {
@@ -328,7 +329,7 @@ export class ListController extends Component {
     async onWillSaveRecord(record) {}
 
     async createRecord({ group } = {}) {
-        if (!this.model.isReady && !this.model.config.groupBy.length && this.editable) {
+        if (!this.model.isReady() && !this.model.config.groupBy.length && this.editable) {
             // If the view isn't grouped and the list is editable, a new record row will be added,
             // in edition. In this situation, we must wait for the model to be ready.
             await this.model.whenReady.promise;

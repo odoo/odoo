@@ -42,7 +42,6 @@ import {
     proxy,
 } from "@odoo/owl";
 import { FetchRecordError } from "@web/model/relational_model/errors";
-import { effect } from "@web/core/utils/reactive";
 
 const viewRegistry = registry.category("views");
 
@@ -150,6 +149,7 @@ export class FormController extends Component {
         offlineId: { type: String, optional: true },
     };
     static defaultProps = {
+        onSave: () => {},
         preventCreate: false,
         preventEdit: false,
         readonly: false,
@@ -212,23 +212,21 @@ export class FormController extends Component {
             this.model.config.activeFields = activeFields;
             this.model.config.fields = fields;
         };
-        this.model = useState(useModel(this.props.Model, this.modelParams, { beforeFirstLoad }));
+        this.model = proxy(useModel(this.props.Model, this.modelParams, { beforeFirstLoad }));
         useSubEnv({ model: this.model });
+
+        let disposeEffect = () => {};
         onMounted(() => {
-            effect(
-                (model) => {
-                    if (status(this) === "mounted") {
-                        this.props.updateActionState({ resId: model.root.resId });
-                    }
-                },
-                [this.model]
-            );
+            disposeEffect = effect(() => {
+                this.props.updateActionState({ resId: this.model.root.resId });
+            });
         });
+        onWillDestroy(disposeEffect);
 
         onError((error) => {
-            const suggestedCompany = error.cause?.data?.context?.suggested_company;
+            const suggestedCompany = error.data?.context?.suggested_company;
             if (
-                error.cause?.data?.name === "odoo.exceptions.AccessError" &&
+                error.data?.name === "odoo.exceptions.AccessError" &&
                 suggestedCompany &&
                 !this.env.inDialog
             ) {
@@ -312,10 +310,6 @@ export class FormController extends Component {
             }
         });
 
-        onRendered(() => {
-            this.env.config.setDisplayName(this.displayName());
-        });
-
         const { disableAutofocus } = this.archInfo;
         if (!disableAutofocus) {
             useLayoutEffect(
@@ -388,6 +382,7 @@ export class FormController extends Component {
                 onRecordSaved: this.onRecordSaved.bind(this),
                 onWillDisplayOnchangeWarning: this.onWillDisplayOnchangeWarning.bind(this),
                 onRootLoaded: this.onRootLoaded.bind(this),
+                onRootUpdated: this.onRootUpdated.bind(this),
             },
             useSendBeaconToSaveUrgently: true,
         };
@@ -407,8 +402,13 @@ export class FormController extends Component {
         }
     }
 
-    onRootLoaded() {
-        return this.model.root.setOfflineChanges(this.props.offlineId);
+    async onRootLoaded() {
+        await this.model.root.setOfflineChanges(this.props.offlineId);
+        this.env.config.setDisplayName(this.displayName());
+    }
+
+    onRootUpdated() {
+        this.env.config.setDisplayName(this.displayName());
     }
 
     onRecordChanged() {
@@ -511,6 +511,7 @@ export class FormController extends Component {
             } else {
                 await this.model.load({ resId: resIds[offset] });
             }
+            this.env.config.setDisplayName(this.displayName());
         } catch (e) {
             if (e instanceof FetchRecordError) {
                 this.model.load({
@@ -695,7 +696,8 @@ export class FormController extends Component {
                 const params = { reload: !(this.env.inDialog && clickParams.close) };
                 saved = await record.save(params);
             }
-            if (saved !== false && this.props.onSave) {
+            if (saved !== false) {
+                this.env.config.setDisplayName(this.displayName());
                 this.props.onSave(record, clickParams);
             }
             return saved;
@@ -729,7 +731,8 @@ export class FormController extends Component {
                 ...params,
             });
         }
-        if (saved && this.props.onSave) {
+        if (saved) {
+            this.env.config.setDisplayName(this.displayName());
             this.props.onSave(record, params);
         }
         return saved;

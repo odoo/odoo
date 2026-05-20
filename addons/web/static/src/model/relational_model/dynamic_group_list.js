@@ -7,11 +7,15 @@ import { getGroupServerValue } from "./utils";
 export const MOVABLE_RECORD_TYPES = ["char", "boolean", "integer", "selection", "many2one"];
 
 /**
+ * @typedef {import("./group").Group} Group
  * @typedef {import("./record").Record} RelationalRecord
  */
 
 export class DynamicGroupList extends DynamicList {
     static type = "DynamicGroupList";
+
+    /** @readonly */
+    isGrouped = true;
 
     /**
      * @type {DynamicList["setup"]}
@@ -19,7 +23,7 @@ export class DynamicGroupList extends DynamicList {
     setup(_config, data) {
         super.setup(...arguments);
 
-        this.isGrouped = true;
+        this.groups = [];
         this._nbRecordsMatchingDomain = null;
         this._setData(data);
     }
@@ -28,7 +32,7 @@ export class DynamicGroupList extends DynamicList {
      * @param {Record<string, unknown>} data
      */
     _setData(data) {
-        /** @type {import("./group").Group[]} */
+        /** @type {Group[]} */
         this.groups = data.groups.map((g) => this._createGroupDatapoint(g));
         this.count = data.length;
         this._selectDomain(this.isDomainSelected);
@@ -59,10 +63,7 @@ export class DynamicGroupList extends DynamicList {
      * @returns {RelationalRecord[]}
      */
     get records() {
-        return this.groups
-            .filter((group) => !group.isFolded)
-            .map((group) => group.records)
-            .flat();
+        return this.groups.filter((group) => !group.isFolded).flatMap((group) => group.records);
     }
 
     /**

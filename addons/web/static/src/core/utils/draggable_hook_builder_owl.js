@@ -19,7 +19,7 @@ export function makeDraggableHook(params) {
             setup: useLayoutEffect,
             teardown: onWillUnmount,
             throttle: useThrottleForAnimation,
-            wrapState: reactive,
+            wrapState: proxy,
         },
     });
 }

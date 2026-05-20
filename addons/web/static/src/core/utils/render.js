@@ -37,7 +37,7 @@ let app;
 Object.defineProperty(renderToString, "app", {
     get: () => {
         if (!app) {
-            app = new App(Component, {
+            app = new App({
                 name: "renderToString",
                 getTemplate,
                 translatableAttributes: ["data-tooltip"],

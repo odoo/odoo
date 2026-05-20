@@ -1,5 +1,8 @@
-import { animationFrame, expect, queryAll, queryAllTexts, queryOne, test } from "@odoo/hoot";
-import { Component, markup, props, proxy, signal, xml } from "@odoo/owl";
+import { reactive, useState } from "@web/owl2/utils";
+import { expect, test } from "@odoo/hoot";
+import { queryAll, queryAllTexts, queryOne } from "@odoo/hoot-dom";
+import { animationFrame } from "@odoo/hoot-mock";
+import { Component, markup, xml } from "@odoo/owl";
 import {
     contains,
     editAce,
@@ -106,8 +109,7 @@ test("CodeEditor shouldn't accepts markup values", async () => {
     codeEditor.state.value = textMarkup;
     await animationFrame();
 
-    expect.verifyErrors(["Invalid props for component 'CodeEditor': 'value' is not valid"]);
-    expect.verifySteps(["[Owl] Unhandled error. Destroying the root component"]);
+    expect.verifyErrors(["value is not a string"]);
 });
 
 test("onChange props called when code is edited", async () => {

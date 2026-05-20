@@ -29,8 +29,8 @@ export class LoadingIndicator extends Component {
         });
         this.rpcIds = new Set();
         this.startShowTimer = null;
-        useBus(rpcBus, "RPC:REQUEST", this.requestCall);
-        useBus(rpcBus, "RPC:RESPONSE", this.responseCall);
+        useBus(rpcBus, "RPC:REQUEST", (ev) => untrack(() => this.requestCall(ev)));
+        useBus(rpcBus, "RPC:RESPONSE", (ev) => untrack(() => this.responseCall(ev)));
     }
 
     requestCall({ detail }) {

@@ -81,6 +81,12 @@ export class AutoComplete extends Component {
             activeSourceOption: null,
             value: this.props.value,
         });
+        onWillRender(() => {
+            // FIXME : We should read every part of the state
+            // to actually subscribe the component
+            // this is roughly equivalent to what owl2 did
+            [...Object.entries(this.state)];
+        });
 
         this.inputRef = useForwardRefToParent("input");
         this.listRef = useRef("sourcesList");
@@ -302,7 +308,8 @@ export class AutoComplete extends Component {
             return;
         }
 
-        const defaultSourceOption = step < 0 ? navigableOptions[navigableOptions.length - 1] : navigableOptions[0];
+        const defaultSourceOption =
+            step < 0 ? navigableOptions[navigableOptions.length - 1] : navigableOptions[0];
 
         if (!step || !this.state.activeSourceOption) {
             this.state.activeSourceOption = defaultSourceOption;

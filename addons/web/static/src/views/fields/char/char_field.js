@@ -70,7 +70,9 @@ export class CharField extends Component {
     }
 
     onBlur() {
-        this.selectionStart = this.input.el.selectionStart;
+        if (this.input.el) {
+            this.selectionStart = this.input.el.selectionStart;
+        }
     }
 
     async onDynamicPlaceholderOpen() {
