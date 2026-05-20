@@ -37,6 +37,7 @@
                 <field name="current_livechat_agent_ids"/>
             </field>
             <xpath expr="//div[hasclass('w_visitor_kanban_actions')]" position="before">
+            <t groups="im_livechat.im_livechat_group_user">
                 <div class="col-lg col-sm-4 col-6 py-0 my-2">
                     <span t-att-class="record.session_count.raw_value ? 'fw-bold' : 'text-muted'">
                         <field name="session_count"/>
@@ -48,10 +49,12 @@
                     <field name="current_livechat_agent_ids" widget="many2many_avatar_user" options="{'no_open': True}" class="rounded-circle" alt="Operator Avatar"/>
                 </div>
                 <div t-else="" class="col-lg d-none d-lg-block"/>
+            </t>
             </xpath>
             <xpath expr="//div[hasclass('w_visitor_kanban_actions')]" position="inside">
                 <button name="action_send_chat_request" type="object"
                         class="btn btn-secondary"
+                        groups="im_livechat.im_livechat_group_user"
                         invisible="current_livechat_agent_ids or not is_connected">
                     Chat
                 </button>
@@ -65,11 +68,11 @@
         <field name="inherit_id" ref="website.website_visitor_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//header" position="inside">
-                <button name="action_send_chat_request" string="Send chat request" type="object" class="oe_highlight"
+                <button name="action_send_chat_request" string="Send chat request" type="object" class="oe_highlight" groups="im_livechat.im_livechat_group_user"
                 invisible="current_livechat_agent_ids or not is_connected"/>
             </xpath>
             <xpath expr="//group[@id='general_info']" position="before">
-                <group id="livechat_info" invisible="not current_livechat_agent_ids">
+                <group id="livechat_info" groups="im_livechat.im_livechat_group_user" invisible="not current_livechat_agent_ids">
                     <field name="current_livechat_agent_ids" widget="many2many_avatar_user"/>
                 </group>
             </xpath>
@@ -91,7 +94,7 @@
                 <field name="current_livechat_agent_ids" optional="hide"
                        options="{'no_open': True}" widget="many2many_avatar_user"/>
                 <button name="action_send_chat_request" string="Chat" type="object" icon="fa-comments"
-                        invisible="current_livechat_agent_ids or not is_connected"/>
+                        groups="im_livechat.im_livechat_group_user" invisible="current_livechat_agent_ids or not is_connected"/>
             </xpath>
         </field>
     </record>
