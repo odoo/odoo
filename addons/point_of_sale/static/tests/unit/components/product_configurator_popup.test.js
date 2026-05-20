@@ -145,6 +145,13 @@ const setupAndAssertExcludedValuesConfigurator = async (displayType, selector) =
 
     choco.update({ excluded_value_ids: [m] });
     vanilla.update({ excluded_value_ids: [s] });
+    // The exclusions leave only these two variants.
+    store.models["product.product"].get(51).update({
+        product_template_attribute_value_ids: [choco, s],
+    });
+    store.models["product.product"].get(52).update({
+        product_template_attribute_value_ids: [vanilla, m],
+    });
     store.processProductAttributes();
 
     await mountWithCleanup(ProductConfiguratorPopup, {
@@ -252,4 +259,44 @@ test("Archived attribute line does not open the configurator", async () => {
     });
     const payload = await store.openConfigurator(productTemplate);
     expect(payload.attribute_value_ids).toEqual([10]);
+});
+
+test("Deleted variant combination cannot be added", async () => {
+    const store = await setupPosEnv();
+    // "Leather Belt" with a "size" line (S/M) creating variants and a `no_variant`
+    // "Customization" line, whose "M" variant has been deleted.
+    const productTemplate = store.models["product.template"].get(60);
+    productTemplate.update({
+        attribute_line_ids: store.models["product.template.attribute.line"].readMany([5, 4]),
+    });
+    store.models["product.product"].get(61).delete();
+    const order = store.addNewOrder();
+
+    const popup = await mountWithCleanup(ProductConfiguratorPopup, {
+        props: {
+            productTemplate: productTemplate,
+            getPayload: () => {},
+            close: () => {},
+        },
+    });
+
+    expect(".modal .alert-warning").toHaveCount(0);
+    expect(".modal-footer .btn-primary").not.toHaveClass("disabled");
+
+    await contains("input[id='7_9']").click(); // size "M"
+    expect(".modal .alert-warning").toHaveText(
+        "This option or combination of options is not available"
+    );
+    expect(".modal-footer .btn-primary").toHaveClass("disabled");
+
+    let alertProps;
+    patchWithCleanup(store.dialog, {
+        add: (component, props) => (alertProps = props),
+    });
+    await store.addLineToCurrentOrder({
+        product_tmpl_id: productTemplate,
+        payload: popup.computePayload(),
+    });
+    expect(alertProps.title).toBe("Variant does not exist");
+    expect(order.lines).toHaveLength(0);
 });
