@@ -14,6 +14,7 @@
                 t-attf-class="{{msg_value.isError ? 'o-message-error border-danger bg-danger' : ''}} {{this.state.selectedMessageId === msg ? 'o-translate-selected' : 'o-translate'}}
                 {{msg_value.translator === 'Google Translate' ? 'o-google-translate' : ''}} {{msg_value.translator === 'ChatGPT' ? 'o-chatgpt-translate' : ''}}"
                 class="o-translator-translated rounded-2 ms-3 mb-1 border-0 p-2"
+                t-attf-style="{{ this.state.isRTL ? `direction: rtl` : '' }};"
                 t-on-click="() => { this.state.selectedMessageId = msg; }">
                 <t t-out="this.formatContent(msg_value.translatedText)" />
             </button>
