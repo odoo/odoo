@@ -18,7 +18,7 @@ import {
     orderUsageUTCtoLocalUtil,
     getTimeUtil,
 } from "@point_of_sale/utils";
-import { getOrderLineValues } from "./card_utils";
+import { getAttributeValues, getOrderLineValues } from "./card_utils";
 import { initLNA } from "@point_of_sale/app/utils/init_lna";
 import { GeneratePrinterData } from "@point_of_sale/app/utils/printer/generate_printer_data";
 import { SnoozedProductTracker } from "@point_of_sale/app/models/utils/snooze_tracker";
@@ -301,6 +301,9 @@ export class SelfOrder extends Reactive {
         customValues = {},
         comboValues = {}
     ) {
+        if (productTemplate.isDeletedCombination(getAttributeValues(selectedValues, this.models))) {
+            return;
+        }
         const product = productTemplate.product_variant_ids[0];
         const values = getOrderLineValues(
             this,
