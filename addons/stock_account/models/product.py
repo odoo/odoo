@@ -162,6 +162,8 @@ class ProductTemplate(models.Model):
 class ProductProduct(models.Model):
     _inherit = 'product.product'
 
+    account_move_line_ids = fields.One2many('account.move.line', 'product_id')
+
     avg_cost = fields.Monetary(
         string="Average Cost", compute='_compute_value',
         compute_sudo=True, currency_field='company_currency_id')

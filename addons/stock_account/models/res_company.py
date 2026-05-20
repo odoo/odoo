@@ -144,7 +144,17 @@ class ResCompany(models.Model):
             company.action_close_stock_valuation(auto_post=True)
 
     def _get_valuation_product_domain(self):
-        return [('is_storable', '=', True)]
+        return [
+            ('is_storable', '=', True),
+            '|',
+            ('stock_move_ids', 'any', [
+                ('company_id', '=', self.id),
+                ('state', '=', 'done'),
+            ]),
+            ('account_move_line_ids', 'any', [
+                ('company_id', '=', self.id),
+            ]),
+        ]
 
     def _get_accounts_by_product(self, products=None):
         if not products:
