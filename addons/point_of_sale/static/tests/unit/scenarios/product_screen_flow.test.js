@@ -8,9 +8,16 @@ import {
     createTestProduct,
     createConfigurableChair,
     createPosTestTax,
+    createComboTemplate,
 } from "@point_of_sale/../tests/unit/utils";
 import { definePosModels } from "@point_of_sale/../tests/unit/data/generate_model_definitions";
 import * as Utils from "@point_of_sale/../tests/unit/ui_utils";
+import {
+    renderReceipt,
+    renderOrderChangeReceipt,
+    expectTicketData,
+    expectOrderChangeTicket,
+} from "@point_of_sale/../tests/unit/receipt_utils";
 
 definePosModels();
 
@@ -374,4 +381,82 @@ test("test_delete_line: delete line through popup when disallowLineQuantityChang
     await press("Enter");
     await animationFrame();
     expect(order.lines).toHaveLength(0);
+});
+
+test("group by category: cart, receipt and preparation ticket are sorted by category", async () => {
+    const store = await setupAndMountPosApp();
+    const order = store.getOrder();
+    // Both are preparation categories; Drinks comes first despite its higher id
+    const food = store.models["pos.category"].get(1);
+    const drinks = store.models["pos.category"].get(2);
+    Object.assign(food, { name: "Food", sequence: 3 });
+    drinks.name = "Drinks";
+    const { template: lemonade } = createTestProduct(store, {
+        name: "Lemonade",
+        categoryId: drinks.id,
+    });
+    const { template: napkins } = createTestProduct(store, { name: "Napkins", categoryId: false });
+    const { variant: cheeseburger } = createTestProduct(store, {
+        name: "Cheeseburger",
+        categoryId: food.id,
+    });
+    const { variant: cola } = createTestProduct(store, { name: "Cola", categoryId: drinks.id });
+    const { template: fries } = createTestProduct(store, { name: "Fries", categoryId: food.id });
+    const { template: burgerMenu, combos } = createComboTemplate(store, {
+        name: "Burger Menu",
+        categoryId: food.id,
+        combos: [
+            { name: "Burgers", items: [{ product: cheeseburger }] },
+            { name: "Drinks", items: [{ product: cola }] },
+        ],
+    });
+
+    await store.addLineToOrder({ product_tmpl_id: lemonade, qty: 1 }, order);
+    await store.addLineToOrder({ product_tmpl_id: napkins, qty: 1 }, order);
+    await store.addLineToOrder(
+        {
+            product_tmpl_id: burgerMenu,
+            payload: [combos.map((combo) => ({ combo_item_id: combo.combo_item_ids[0], qty: 1 }))],
+            qty: 1,
+        },
+        order
+    );
+    await store.addLineToOrder({ product_tmpl_id: fries, qty: 1 }, order);
+
+    store.config.iface_group_by_categ = false;
+    await animationFrame();
+    expect(Utils.getOrderlineNames()).toEqual([
+        "Lemonade",
+        "Napkins",
+        "Burger Menu",
+        "Cheeseburger",
+        "Cola",
+        "Fries",
+    ]);
+
+    // Combo children follow their parent, uncategorized products come last
+    store.config.iface_group_by_categ = true;
+    await animationFrame();
+    const sortedNames = ["Lemonade", "Burger Menu", "Cheeseburger", "Cola", "Fries", "Napkins"];
+    expect(Utils.getOrderlineNames()).toEqual(sortedNames);
+
+    const { ticket } = renderReceipt(store, order);
+    expectTicketData(ticket, { orderlines: sortedNames.map((name) => ({ name })) });
+
+    // Combo children are split by their own category, under a repeated combo header
+    const { changes, tickets } = renderOrderChangeReceipt(store, order);
+    expect(
+        changes[0].changes.groupedData.map((group) => [
+            group.name,
+            group.data.map((line) => line.basic_name),
+        ])
+    ).toEqual([
+        ["Drinks", ["Burger Menu", "Cola", "Lemonade"]],
+        ["Food", ["Burger Menu", "Cheeseburger", "Fries"]],
+    ]);
+    expectOrderChangeTicket(tickets[0], {
+        orderlines: ["Burger Menu", "Cola", "Lemonade", "Burger Menu", "Cheeseburger", "Fries"].map(
+            (name) => ({ name })
+        ),
+    });
 });

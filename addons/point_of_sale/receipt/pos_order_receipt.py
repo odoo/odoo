@@ -162,7 +162,7 @@ class PosOrderReceipt(models.AbstractModel):
         service_fee_product = preset_id.service_fee_product_id if preset_id else None
 
         lines = []
-        for line in self.lines:
+        for line in self._get_receipt_lines():
             data = line.read(lines_fields, load=False)[0]
             display_price_incl = line.order_id.config_id.iface_tax_included == 'total'
 
@@ -430,15 +430,36 @@ class PosOrderReceipt(models.AbstractModel):
     def _prepare_preparation_grouped_data(self, changes):
         data_changes = changes.get("data") or []
         if data_changes and any(c.get("group") for c in data_changes):
+            combo_parents = {c["uuid"]: c for c in data_changes if c.get("combo_line_ids")}
+            child_parent_uuids = {
+                c["combo_parent_uuid"]
+                for c in data_changes
+                if c.get("combo_parent_uuid")
+            }
+
             grouped_data = {}
             for c in data_changes:
+                if c.get("combo_line_ids") and c.get("uuid") in child_parent_uuids:
+                    continue
                 group = c.get("group") or {}
                 name = group.get("name", "")
-                index = group.get("index", -1)
+                index = group.get("index", float("inf"))
                 if name not in grouped_data:
                     grouped_data[name] = {"name": name, "index": index, "data": []}
                 grouped_data[name]["data"].append(c)
-            changes["grouped_data"] = sorted(
+
+            for group in grouped_data.values():
+                seen_parents = set()
+                new_data = []
+                for line in group["data"]:
+                    parent_uuid = line.get("combo_parent_uuid")
+                    if parent_uuid and parent_uuid not in seen_parents and parent_uuid in combo_parents:
+                        seen_parents.add(parent_uuid)
+                        new_data.append(dict(combo_parents[parent_uuid]))
+                    new_data.append(line)
+                group["data"] = new_data
+
+            changes["groupedData"] = sorted(
                 grouped_data.values(), key=lambda g: g["index"]
             )
         return changes
@@ -576,6 +597,8 @@ class PosOrderReceipt(models.AbstractModel):
         group = False
         if is_restaurant and line.course_id:
             group = {"name": line.course_id.name, "index": line.course_id.index}
+        elif self.config_id.iface_group_by_categ:
+            group = self._get_line_category_group(line)
 
         return {
             "uuid": line.uuid,
@@ -592,6 +615,45 @@ class PosOrderReceipt(models.AbstractModel):
             "combo_parent_uuid": line.combo_parent_id.uuid,
             "uom_is_base_unit": line.product_id.uom_id.id == self.env.ref('uom.product_uom_unit').id
         }
+
+    def _get_line_category_group(self, line):
+        categs = line.product_id.pos_categ_ids
+        if not categs and line.combo_parent_id:
+            categs = line.combo_parent_id.product_id.pos_categ_ids
+        if categs:
+            best_categ = min(categs, key=lambda c: (c.sequence or 0, c.id))
+            return {
+                "name": best_categ.name,
+                "index": best_categ.sequence or 0,
+                "categ_id": best_categ.id,
+            }
+        return False
+
+    def _get_receipt_lines(self):
+        if not self.config_id.iface_group_by_categ:
+            return self.lines
+        service_fee_product_id = self.preset_id.service_fee_product_id.id if self.preset_id and self.preset_id.service_fee else False
+
+        def get_line_sort_key(line):
+            target = line.combo_parent_id or line
+            group = self._get_line_category_group(target)
+            if group:
+                return (group["index"], group.get("categ_id", 0))
+            if target.combo_line_ids:
+                keys = []
+                for child in target.combo_line_ids:
+                    child_group = self._get_line_category_group(child)
+                    if child_group:
+                        keys.append((child_group["index"], child_group.get("categ_id", 0)))
+                if keys:
+                    return min(keys)
+            return (float("inf"), float("inf"))
+
+        return self.lines.sorted(key=lambda l: (
+            l.product_id.id == service_fee_product_id,
+            get_line_sort_key(l),
+            l.id,
+        ))
 
     # Preparation ticket generation
     def _order_change_receipts_generate_html(self):

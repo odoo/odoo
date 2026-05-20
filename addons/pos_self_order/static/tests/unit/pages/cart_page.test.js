@@ -1,5 +1,5 @@
 import { test, expect, mockUserAgent } from "@odoo/hoot";
-import { animationFrame } from "@odoo/hoot-dom";
+import { animationFrame, queryAllTexts } from "@odoo/hoot-dom";
 import { contains, mountWithCleanup, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { CartPage } from "@pos_self_order/app/pages/cart_page/cart_page";
 import { EatingLocationPage } from "@pos_self_order/app/pages/eating_location_page/eating_location_page";
@@ -8,6 +8,7 @@ import { definePosSelfModels } from "../data/generate_model_definitions";
 import { ChooseComboPopup } from "@pos_self_order/app/components/choose_combo_popup/choose_combo_popup";
 import { NumberPopup } from "@pos_self_order/app/components/number_popup/number_popup";
 import * as Utils from "@pos_self_order/../tests/unit/ui_utils";
+import { createTestProduct } from "@point_of_sale/../tests/unit/utils";
 
 definePosSelfModels();
 
@@ -526,4 +527,28 @@ test("sendDraftOrderToServer syncs tip even when order.changes is empty (extra s
     expect(tipLine.id).toBeOfType("number"); // synced to server
     expect(order.lines.some((l) => l.isTipLine())).toBe(true);
     expect(store.models["pos.order"].length).toBe(1);
+});
+
+test("group by category: cart is sorted by category", async () => {
+    const store = await setupSelfPosEnv();
+    store.config.iface_group_by_categ = true;
+    // Drinks comes first despite its higher id
+    const food = store.models["pos.category"].get(1);
+    const drinks = store.models["pos.category"].get(2);
+    food.sequence = 3;
+    const { template: napkins } = createTestProduct(store, { name: "Napkins", categoryId: false });
+    const { template: fries } = createTestProduct(store, { name: "Fries", categoryId: food.id });
+    const { template: cola } = createTestProduct(store, { name: "Cola", categoryId: drinks.id });
+
+    await store.addToCart(napkins, 1);
+    await store.addToCart(fries, 1);
+    await store.addToCart(cola, 1);
+    await mountWithCleanup(CartPage, {});
+
+    // Uncategorized products come last
+    expect(queryAllTexts(".product-cart-item .text-break.fs-4")).toEqual([
+        "Cola",
+        "Fries",
+        "Napkins",
+    ]);
 });
