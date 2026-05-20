@@ -199,8 +199,16 @@
                 <button type="button" class="btn-close" aria-label="Close" tabindex="-1" t-on-click="this.props.close"/>
             </t>
             <ProductInfoBanner t-if="this.showInfoBanner" productTemplate="this.props.productTemplate" product="this.product" />
+<<<<<<< d3c2acb75e7fd9f31d8e41071cde3fd1bf5ee74b
             <div>
                 <div t-if="this.isArchivedCombination()" class="alert alert-warning mt-3">
+||||||| 1c1b833663ed2a47485b14255a7e1b462f4d3487
+            <div t-custom-ref="input-area">
+                <div t-if="this.isArchivedCombination()" class="alert alert-warning mt-3">
+=======
+            <div t-custom-ref="input-area">
+                <div t-if="this.isArchivedCombination() or this.isDeletedCombination()" class="alert alert-warning mt-3">
+>>>>>>> 7655a937f09c6e4d30b2e62adf6fcd832ebeaa4b
                     <span>This option or combination of options is not available</span>
                 </div>
                 <div t-foreach="this.validAttributeLineIds" t-as="attribute" t-key="attribute.id" class="attribute mb-3">
@@ -234,8 +242,16 @@
             <t t-set-slot="footer">
                 <div class="d-flex flex-row gap-2 w-100">
                     <button
+<<<<<<< d3c2acb75e7fd9f31d8e41071cde3fd1bf5ee74b
                             class="btn btn-primary w-50"
                             t-att-class="{'disabled': this.isArchivedCombination() or !this.isValidCombination()}"
+||||||| 1c1b833663ed2a47485b14255a7e1b462f4d3487
+                            class="btn btn-primary btn-lg lh-lg w-50"
+                            t-att-class="{'disabled': this.isArchivedCombination() or !this.isValidCombination()}"
+=======
+                            class="btn btn-primary btn-lg lh-lg w-50"
+                            t-att-class="{'disabled': this.isArchivedCombination() or this.isDeletedCombination() or !this.isValidCombination()}"
+>>>>>>> 7655a937f09c6e4d30b2e62adf6fcd832ebeaa4b
                             t-on-click="this.confirm">
                             Add
                         </button>
