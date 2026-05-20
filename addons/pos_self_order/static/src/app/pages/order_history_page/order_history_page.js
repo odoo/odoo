@@ -17,8 +17,8 @@ export class OrdersHistoryPage extends Component {
             .sort((a, b) => b.id - a.id);
     }
 
-    get lines() {
-        return this.order.lines;
+    getLines(order) {
+        return order.getOrderlines();
     }
 
     getPrice(line) {

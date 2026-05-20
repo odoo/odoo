@@ -214,7 +214,7 @@ class PosOrderReceipt(models.AbstractModel):
 
         return {
             **self._get_common_record_data(),
-            'lines': self._order_receipt_generate_line_data(),
+            'lines': self._order_receipt_sort_line_data(self._order_receipt_generate_line_data()),
             'payments': self._order_receipt_generate_payment_data(),
             'image': {
                 'logo': config_logo,
@@ -334,19 +334,45 @@ class PosOrderReceipt(models.AbstractModel):
         return changes
 
     def _prepare_preparation_grouped_data(self, changes):
+        # Split receipts are built with {**receipt}, so drop any group computed for the parent receipt.
+        changes.pop("groupedData", None)
         data_changes = changes.get("data") or []
         if data_changes and any(c.get("group") for c in data_changes):
+            combo_parents = {c["uuid"]: c for c in data_changes if c.get("isCombo")}
+            child_parent_uuids = {
+                c["combo_parent_uuid"]
+                for c in data_changes
+                if c.get("combo_parent_uuid")
+            }
+
             grouped_data = {}
             for c in data_changes:
+                if c.get("isCombo") and c.get("uuid") in child_parent_uuids:
+                    continue
                 group = c.get("group") or {}
                 name = group.get("name", "")
-                index = group.get("index", -1)
-                if name not in grouped_data:
-                    grouped_data[name] = {"name": name, "index": index, "data": []}
-                grouped_data[name]["data"].append(c)
-            changes["grouped_data"] = sorted(
+                index = group.get("index", float("inf"))
+                key = group.get("categ_id") or name
+                if key not in grouped_data:
+                    grouped_data[key] = {"name": name, "index": index, "data": []}
+                grouped_data[key]["data"].append(c)
+
+            for group in grouped_data.values():
+                seen_parents = set()
+                i = 0
+                while i < len(group["data"]):
+                    line = group["data"][i]
+                    parent_uuid = line.get("combo_parent_uuid")
+                    if parent_uuid and parent_uuid not in seen_parents and parent_uuid in combo_parents:
+                        seen_parents.add(parent_uuid)
+                        group["data"].insert(i, dict(combo_parents[parent_uuid]))
+                        i += 1
+                    i += 1
+
+            sorted_groups = sorted(
                 grouped_data.values(), key=lambda g: g["index"]
             )
+            changes["groupedData"] = sorted_groups
         return changes
 
     def _split_receipts_per_product(self, receipts_data):
@@ -482,6 +508,8 @@ class PosOrderReceipt(models.AbstractModel):
         group = False
         if is_restaurant and line.course_id:
             group = {"name": line.course_id.name, "index": line.course_id.index}
+        elif self.config_id.iface_group_by_categ:
+            group = self._get_line_category_group(line)
 
         return {
             "uuid": line.uuid,
@@ -494,10 +522,56 @@ class PosOrderReceipt(models.AbstractModel):
             "pos_categ_id": first_categ.id,
             "pos_categ_sequence": first_categ.sequence,
             "group": group,
+            "isCombo": bool(line.combo_line_ids),
             "combo_line_ids": line.combo_line_ids.ids,
             "combo_parent_uuid": line.combo_parent_id.uuid,
             "uom_is_base_unit": line.product_id.uom_id.id == self.env.ref('uom.product_uom_unit').id
         }
+
+    def _get_line_category_group(self, line):
+        categs = line.product_id.pos_categ_ids
+        if not categs and line.combo_parent_id:
+            categs = line.combo_parent_id.product_id.pos_categ_ids
+        if categs:
+            best_categ = min(categs, key=lambda c: (c.sequence or 0, c.id))
+            return {
+                "name": best_categ.name,
+                "index": best_categ.sequence or 0,
+                "categ_id": best_categ.id,
+            }
+        return False
+
+    def _get_receipt_lines(self):
+        if not self.config_id.iface_group_by_categ:
+            return self.lines
+        service_fee_product_id = self.preset_id.service_fee_product_id.id if self.preset_id else False
+
+        def get_line_sort_key(line):
+            target = line.combo_parent_id or line
+            group = self._get_line_category_group(target)
+            if group:
+                return (group["index"], group.get("categ_id", 0))
+            if target.combo_line_ids:
+                keys = []
+                for child in target.combo_line_ids:
+                    child_group = self._get_line_category_group(child)
+                    if child_group:
+                        keys.append((child_group["index"], child_group.get("categ_id", 0)))
+                if keys:
+                    return min(keys)
+            return (float("inf"), float("inf"))
+
+        return self.lines.sorted(key=lambda l: (
+            l.product_id.id == service_fee_product_id,
+            get_line_sort_key(l),
+            l.id,
+        ))
+
+    def _order_receipt_sort_line_data(self, lines_data):
+        if not self.config_id.iface_group_by_categ:
+            return lines_data
+        position = {line.id: index for index, line in enumerate(self._get_receipt_lines())}
+        return sorted(lines_data, key=lambda data: position.get(data.get('id'), len(position)))
 
     # Preparation ticket generation
     def _order_change_receipts_generate_html(self):
