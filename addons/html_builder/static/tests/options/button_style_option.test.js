@@ -1,6 +1,6 @@
 import { contains } from "@web/../tests/web_test_helpers";
 import { setupHTMLBuilder } from "@html_builder/../tests/helpers";
-import { expect, test, queryOne, describe } from "@odoo/hoot";
+import { animationFrame, expect, test, queryOne, describe } from "@odoo/hoot";
 
 describe.current.tags("desktop");
 
@@ -156,6 +156,7 @@ test("border works even if current border style is none", async () => {
     expect("[data-label=Border] .o-hb-input-number").toHaveValue("0");
 
     await contains("[data-label=Border] .o-hb-input-number").edit("4");
+    await animationFrame();
 
     expect("[data-label=Border] .o-hb-input-number").toHaveValue("4");
     expect("[data-label=Border] .o-hb-select-toggle .o-hb-border-preview").toHaveStyle(
@@ -166,12 +167,7 @@ test("border works even if current border style is none", async () => {
         "background-color: rgba(0, 0, 0, 0)",
         { inline: true }
     );
-    expect(":iframe p > a").toHaveStyle(
-        {
-            border: "4px solid rgba(0, 0, 0, 0)",
-        },
-        { inline: true }
-    );
+    expect(":iframe p > a").toHaveStyle(/border: 4px solid rgba(0, 0, 0, 0)/, { inline: true });
 
     await contains("[data-label=Border] .o_we_color_preview").click();
     await contains(".o_color_button[data-color='#0000FF']").click();
@@ -179,10 +175,5 @@ test("border works even if current border style is none", async () => {
     await contains("[data-label=Border] .o-hb-select-toggle").click();
     await contains(".o_popover .dropdown-item[data-action-value=dotted]").click();
 
-    expect(":iframe p > a").toHaveStyle(
-        {
-            border: "4px dotted rgb(0, 0, 255)",
-        },
-        { inline: true }
-    );
+    expect(":iframe p > a").toHaveStyle(/border: 4px dotted rgb(0, 0, 255)/, { inline: true });
 });

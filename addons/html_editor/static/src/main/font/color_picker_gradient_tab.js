@@ -42,7 +42,7 @@ export class ColorPickerGradientTab extends Component {
         this.applyOpacityToGradient = applyOpacityToGradient;
         this.DEFAULT_GRADIENT_COLORS = DEFAULT_GRADIENT_COLORS;
         this.customGradientButton = useRef("customGradientButton");
-        useEffect(
+        useLayoutEffect(
             () => {
                 if (this.state.showGradientPicker) {
                     this.customGradientButton.el.focus();

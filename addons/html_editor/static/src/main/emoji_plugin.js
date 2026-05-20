@@ -44,8 +44,15 @@ export class EmojiPlugin extends Plugin {
     /** @type {string | null} */
     match = null;
 
+    /**
+     * Used for aborting emoji loading
+     * TODO: use 'useLoadEmoji' instead when this becomes an Owl 3 plugin
+     * @private
+     */
+    _abortController = new AbortController();
+
     setup() {
-        this.loadEmojiPromise = emojiLoader.load();
+        emojiLoader.load(this._abortController.signal);
 
         this.overlay = this.dependencies.overlay.createOverlay(EmojiPicker, {
             hasAutofocus: true,
@@ -59,7 +66,7 @@ export class EmojiPlugin extends Plugin {
     }
 
     destroy() {
-        this.loadEmojiPromise.abort();
+        this._abortController.abort();
     }
 
     handleDeleteBackward() {

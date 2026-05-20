@@ -74,7 +74,7 @@ export class Toolbar extends Component {
                 ),
         });
 
-        useEffect(
+        useLayoutEffect(
             () => {
                 // When toolbar expands, focus the first button
                 if (this.state.namespace == "expanded") {

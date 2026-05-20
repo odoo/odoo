@@ -55,7 +55,7 @@ export function useNativeDraggable(hookParams, initialParams) {
     const cleanupFunctions = [];
     const currentParams = { ...initialParams };
     const setupHooks = {
-        wrapState: reactive,
+        wrapState: proxy,
         throttle: throttleForAnimation,
         addListener: (el, type, callback, options) => {
             el.addEventListener(type, callback, options);
