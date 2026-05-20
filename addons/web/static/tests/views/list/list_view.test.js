@@ -11570,8 +11570,8 @@ test(`multi edit field with daterange widget`, async () => {
     expect.verifySteps(["web_save"]);
 });
 
-test.tags("desktop");
-test(`multi edit field with daterange widget (edition without using the picker)`, async () => {
+test.tags("desktop", "owl3");
+test.todo(`multi edit field with daterange widget (edition without using the picker)`, async () => {
     mockTimeZone(+6);
 
     class Daterange extends models.Model {

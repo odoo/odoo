@@ -22,34 +22,6 @@ function getDomValue() {
         .join("\n");
 }
 
-function getFakeAceEditor() {
-    return {
-        session: {
-            on: () => {},
-            setMode: () => {},
-            setUseWorker: () => {},
-            setOptions: () => {},
-            getValue: () => {},
-            setValue: () => {},
-        },
-        renderer: {
-            setOptions: () => {},
-            $cursorLayer: { element: { style: {} } },
-        },
-        setOptions: () => {},
-        setValue: () => {},
-        getValue: () => "",
-        setTheme: () => {},
-        resize: () => {},
-        destroy: () => {},
-        setSession: () => {},
-        getSession() {
-            return this.session;
-        },
-        on: () => {},
-    };
-}
-
 /*
 A custom implementation to dispatch keyboard events for ace specifically
 It is very naive and simple, and could extended
@@ -73,48 +45,41 @@ test("Can be rendered", async () => {
     class Parent extends Component {
         static components = { CodeEditor };
         static template = xml`<CodeEditor maxLines="10" mode="'xml'" />`;
-        static props = ["*"];
     }
     await mountWithCleanup(Parent);
     expect(".ace_editor").toHaveCount(1);
 });
 
-test("CodeEditor shouldn't accepts markup values", async () => {
+test("CodeEditor shouldn't accept markup values", async () => {
     expect.errors(1);
-
-    patchWithCleanup(console, {
-        warn: (msg) => expect.step(msg),
-    });
 
     class Parent extends Component {
         static components = { CodeEditor };
         static template = xml`<CodeEditor value="this.props.value" />`;
-        static props = ["*"];
+
+        props = props();
     }
     class GrandParent extends Component {
         static components = { Parent };
-        static template = xml`<Parent value="this.state.value"/>`;
-        static props = ["*"];
-        setup() {
-            this.state = useState({ value: `<div>Some Text</div>` });
-        }
+        static template = xml`<Parent value="this.value()"/>`;
+
+        value = signal(`<div>Some Text</div>`);
     }
 
-    const codeEditor = await mountWithCleanup(GrandParent);
+    const grandParent = await mountWithCleanup(GrandParent);
     const textMarkup = markup`<div>Some Text</div>`;
 
-    codeEditor.state.value = textMarkup;
+    grandParent.value.set(textMarkup);
     await animationFrame();
 
-    expect.verifyErrors(["Invalid props for component 'CodeEditor': 'value' is not valid"]);
-    expect.verifySteps(["[Owl] Unhandled error. Destroying the root component"]);
+    expect.verifyErrors(["value is not a string"]);
 });
 
 test("onChange props called when code is edited", async () => {
     class Parent extends Component {
         static components = { CodeEditor };
         static template = xml`<CodeEditor maxLines="10" onChange.bind="this.onChange" />`;
-        static props = ["*"];
+
         onChange(value) {
             expect.step(value);
         }
@@ -130,22 +95,23 @@ test("onChange props not called when value props is updated", async () => {
         static components = { CodeEditor };
         static template = xml`
             <CodeEditor
-                value="this.state.value"
+                value="this.value()"
                 maxLines="10"
                 onChange.bind="this.onChange"
             />
         `;
-        static props = ["*"];
-        state = useState({ value: "initial value" });
+
+        value = signal("initial value");
+
         onChange(value) {
-            expect.step(value || "__emptystring__");
+            expect.step(value);
         }
     }
 
     const parent = await mountWithCleanup(Parent);
     expect(".ace_line").toHaveText("initial value");
 
-    parent.state.value = "new value";
+    parent.value.set("new value");
     await animationFrame();
     await animationFrame();
     expect(".ace_line").toHaveText("new value");
@@ -163,17 +129,16 @@ test("Default value correctly set and updates", async () => {
         static template = xml`
             <CodeEditor
                 mode="'xml'"
-                value="this.state.value"
+                value="this.value()"
                 onChange.bind="this.onChange"
                 maxLines="200"
             />
         `;
-        static props = ["*"];
-        setup() {
-            this.state = useState({ value: textA });
-            this.onChange = debounce(this.onChange.bind(this));
-        }
-        onChange(value) {
+
+        onChange = debounce(this._onChange.bind(this));
+        value = signal(textA);
+
+        _onChange(value) {
             // Changing the value of the textarea manualy triggers an Ace "remove" event
             // of the whole text (the value is thus empty), then an "add" event with the
             // actual value, this isn't ideal but we ignore the remove.
@@ -182,12 +147,9 @@ test("Default value correctly set and updates", async () => {
             }
             expect.step(value);
         }
-        changeValue(newValue) {
-            this.state.value = newValue;
-        }
     }
 
-    const codeEditor = await mountWithCleanup(Parent);
+    const parent = await mountWithCleanup(Parent);
     expect(getDomValue()).toBe(textA);
 
     // Disable XML autocompletion for xml end tag.
@@ -201,7 +163,7 @@ test("Default value correctly set and updates", async () => {
     await editAce(textB);
     expect(getDomValue()).toBe(textB);
 
-    codeEditor.changeValue(textC);
+    parent.value.set(textC);
     await animationFrame();
     await animationFrame();
     expect(getDomValue()).toBe(textC);
@@ -209,70 +171,53 @@ test("Default value correctly set and updates", async () => {
 });
 
 test("Mode props update imports the mode", async () => {
-    const fakeAceEditor = getFakeAceEditor();
-    fakeAceEditor.session.setMode = (mode) => {
-        expect.step(mode);
-    };
-
-    patchWithCleanup(window.ace, {
-        edit: () => fakeAceEditor,
+    patchWithCleanup(window.ace.EditSession.prototype, {
+        setMode(mode) {
+            // Called once with 'undefined' at startup
+            if (mode) {
+                expect.step(mode);
+            }
+            return super.setMode(...arguments);
+        },
     });
 
     class Parent extends Component {
         static components = { CodeEditor };
-        static template = xml`<CodeEditor maxLines="10" mode="this.state.mode" />`;
-        static props = ["*"];
-        setup() {
-            this.state = useState({ mode: "xml" });
-        }
-        setMode(newMode) {
-            this.state.mode = newMode;
-        }
+        static template = xml`<CodeEditor maxLines="10" mode="this.mode()" />`;
+
+        mode = signal("xml");
     }
 
-    const codeEditor = await mountWithCleanup(Parent);
-    expect.verifySteps([
-        {
-            path: "ace/mode/xml",
-        },
-    ]);
+    const parent = await mountWithCleanup(Parent);
+    expect.verifySteps([{ path: "ace/mode/xml" }]);
 
-    await codeEditor.setMode("javascript");
+    parent.mode.set("javascript");
     await animationFrame();
-    expect.verifySteps([
-        {
-            path: "ace/mode/javascript",
-        },
-    ]);
+
+    expect.verifySteps([{ path: "ace/mode/javascript" }]);
 });
 
 test("Theme props updates imports the theme", async () => {
-    const fakeAceEditor = getFakeAceEditor();
-    fakeAceEditor.setTheme = (theme) => {
-        expect.step(theme ? theme : "default");
-    };
-
-    patchWithCleanup(window.ace, {
-        edit: () => fakeAceEditor,
+    patchWithCleanup(window.ace.Editor.prototype, {
+        setTheme(theme) {
+            expect.step(theme ? theme : "default");
+            return super.setTheme(...arguments);
+        },
     });
 
     class Parent extends Component {
         static components = { CodeEditor };
-        static template = xml`<CodeEditor maxLines="10" theme="this.state.theme" />`;
-        static props = ["*"];
-        setup() {
-            this.state = useState({ theme: "" });
-        }
-        setTheme(newTheme) {
-            this.state.theme = newTheme;
-        }
+        static template = xml`<CodeEditor maxLines="10" theme="this.theme()" />`;
+
+        theme = signal("");
     }
 
-    const codeEditor = await mountWithCleanup(Parent);
+    const parent = await mountWithCleanup(Parent);
     expect.verifySteps(["default"]);
 
-    await codeEditor.setTheme("monokai");
+    parent.theme.set("monokai");
     await animationFrame();
+
     expect.verifySteps(["ace/theme/monokai"]);
 });
 
@@ -280,7 +225,6 @@ test("initial value cannot be undone", async () => {
     class Parent extends Component {
         static components = { CodeEditor };
         static template = xml`<CodeEditor mode="'xml'" value="'some value'" class="'h-100'" />`;
-        static props = ["*"];
     }
     await mountWithCleanup(Parent);
     await animationFrame();
@@ -312,7 +256,6 @@ test("code editor can take an initial cursor position", async () => {
     class Parent extends Component {
         static components = { CodeEditor };
         static template = xml`<CodeEditor maxLines="2" value="this.value" initialCursorPosition="this.initialPosition" onChange="this.onChange"/>`;
-        static props = ["*"];
 
         setup() {
             this.value = `
@@ -363,8 +306,17 @@ test("code editor can take an initial cursor position", async () => {
 test("qweb mode readonly attributes", async () => {
     class Parent extends Component {
         static components = { CodeEditor };
-        static template = xml`<CodeEditor maxLines="10" mode="this.props.state.mode" value="this.props.state.value" modeOptions="this.props.state.modeOptions" initialCursorPosition="this.props.state.initialCursorPosition"/>`;
-        static props = ["*"];
+        static template = xml`
+            <CodeEditor
+                maxLines="10"
+                mode="this.props.state.mode"
+                value="this.props.state.value"
+                modeOptions="this.props.state.modeOptions"
+                initialCursorPosition="this.props.state.initialCursorPosition"
+            />
+        `;
+
+        props = props();
     }
 
     const initialValue = `
@@ -373,7 +325,7 @@ test("qweb mode readonly attributes", async () => {
         </form>
         `.replace(/^\s*/gm, ""); // simple dedent;
 
-    const state = reactive({
+    const state = proxy({
         value: initialValue,
         mode: "qweb",
         modeOptions: {
