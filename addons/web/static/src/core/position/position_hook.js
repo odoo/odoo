@@ -89,6 +89,10 @@ export function usePosition(refName, getTarget, options = {}) {
                     // In case the scroll event occurs inside the popper, do not reposition
                     return;
                 }
+                if (!e.target.contains(getTarget())) {
+                    // the position target isn't inside the scrolled area, no need to reposition
+                    return;
+                }
                 throttledUpdate();
             };
             // Get the ownerDocument of the target, and the topmost document

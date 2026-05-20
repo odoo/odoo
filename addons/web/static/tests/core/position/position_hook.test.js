@@ -271,6 +271,44 @@ test("reposition popper when a scroll event occurs", async () => {
     expect.verifySteps(["onPositioned called"]);
 });
 
+test("does not reposition when scroll is in an unrelated container", async () => {
+    class TestComp extends Component {
+        static template = xml`
+            <div style="display: flex">
+                <div id="target-scroll-container" style="overflow: auto; height: 200px; width: 200px">
+                    <div id="target" t-custom-ref="target" style="width: 50px; height: 50px; margin-top: 500px"/>
+                </div>
+                <div id="unrelated-scroll-container" style="overflow: auto; height: 200px; width: 200px">
+                    <div style="height: 1000px"/>
+                </div>
+                <div id="popper" t-custom-ref="popper" style="width: 100px; height: 100px"/>
+            </div>
+        `;
+        static props = ["*"];
+        setup() {
+            const target = useRef("target");
+            usePosition("popper", () => target.el, {
+                onPositioned: () => {
+                    expect.step("onPositioned called");
+                },
+            });
+        }
+    }
+
+    await mountWithCleanup(TestComp);
+    expect.verifySteps(["onPositioned called"]);
+
+    await scroll(queryOne("#unrelated-scroll-container"), { y: 10 });
+    await animationFrame();
+    // target is not inside the unrelated container, no reposition needed
+    expect.verifySteps([]);
+
+    await scroll(queryOne("#target-scroll-container"), { y: 10 });
+    await animationFrame();
+    // target is inside this container, reposition is needed
+    expect.verifySteps(["onPositioned called"]);
+});
+
 test("is positioned relative to its containing block", async () => {
     const fixtureBox = getFixture().getBoundingClientRect();
     // offset the container
