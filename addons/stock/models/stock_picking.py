@@ -1667,7 +1667,7 @@ class StockPicking(models.Model):
             'target': 'new',
             'context': dict(
                 self.env.context,
-                default_picking_ids=[self.id],
+                default_picking_ids=self.ids,
             ),
         }
 
