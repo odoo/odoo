@@ -1486,6 +1486,56 @@ describe(`new urls`, () => {
         ]);
     });
 
+    test("properly reload dynamic actions from sessionStorage (form view)", async () => {
+        patchWithCleanup(browser.sessionStorage, {
+            setItem(key, value) {
+                expect.step(`set ${key}-${value}`);
+                super.setItem(key, value);
+            },
+            getItem(key) {
+                const res = super.getItem(key);
+                expect.step(`get ${key}-${res}`);
+                return res;
+            },
+        });
+
+        await mountWebClient();
+
+        await getService("action").doAction(
+            {
+                type: "ir.actions.act_window",
+                res_model: "partner",
+                views: [
+                    [false, "list"],
+                    [666, "form"],
+                ],
+            },
+            { props: { resId: 1 }, viewType: "form" }
+        );
+        await animationFrame();
+
+        expect(`.o_form_view`).toHaveCount(1);
+
+        expect.verifySteps([
+            "get menu_id-null",
+            "get current_action-null",
+            'set current_action-{"type":"ir.actions.act_window","res_model":"partner","views":[[false,"list"],[666,"form"]]}',
+        ]);
+
+        expect(browser.location.href).toBe("http://example.com/odoo/m-partner/1");
+
+        // Emulate a Reload
+        routerBus.trigger("ROUTE_CHANGE");
+        await animationFrame();
+        await animationFrame();
+        expect(`.o_form_view`).toHaveCount(1);
+        expect.verifySteps([
+            "get menu_id-null",
+            'get current_action-{"type":"ir.actions.act_window","res_model":"partner","views":[[false,"list"],[666,"form"]]}',
+            'set current_action-{"type":"ir.actions.act_window","res_model":"partner","views":[[false,"list"],[666,"form"]]}',
+        ]);
+    });
+
     test("menu jumping fix: multiple menus sharing same action", async () => {
         // Test case for menu jumping issue when multiple menus share the same action
         // Scenario: User navigates to Sale->Customers, then F5 reload should stay in Sale, not jump to Account
