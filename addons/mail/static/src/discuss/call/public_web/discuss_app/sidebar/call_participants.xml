@@ -6,9 +6,7 @@
                 <t t-call="mail.DiscussSidebarCallParticipants.main"/>
                 <t t-set-slot="content">
                     <div class="p-2" t-custom-ref="floating">
-                        <t t-call="mail.DiscussSidebarCallParticipants.list">
-                            <t t-set="isCompact" t-value="false"/>
-                        </t>
+                        <t t-call="mail.DiscussSidebarCallParticipants.list" isCompact="false"/>
                     </div>
                 </t>
             </Dropdown>
@@ -57,9 +55,7 @@
     <t t-name="mail.DiscussSidebarCallParticipants.list">
         <div class="d-flex flex-column gap-1 flex-grow-1 overflow-hidden" style="padding: 1.5px;">
             <t t-foreach="this.sessions" t-as="session" t-key="session.localId">
-                <t t-call="mail.DiscussSidebarCallParticipants.participant">
-                    <t t-set="session" t-value="session"/>
-                </t>
+                <t t-call="mail.DiscussSidebarCallParticipants.participant" session="session"/>
             </t>
         </div>
     </t>

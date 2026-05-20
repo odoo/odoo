@@ -41,10 +41,7 @@
                         <t t-set="category" t-value="this.recentCategory"/>
                     </t>
                     <t t-foreach="_recentEmojis" t-as="emoji" t-key="'recent_' + emoji_index">
-                        <t t-call="web.EmojiPicker.emoji">
-                            <t t-set="inRecent" t-value="true"/>
-                            <t t-set="emoji" t-value="emoji"/>
-                        </t>
+                        <t t-call="web.EmojiPicker.emoji" inRecent="true" emoji="emoji"/>
                         <t t-set="itemIndex" t-value="itemIndex + 1"/>
                     </t>
                 </t>
@@ -52,14 +49,10 @@
                 <t t-foreach="currentEmojis" t-as="emoji" t-key="emoji_index">
                     <t t-if="!this.searchTerm and current !== emoji.category">
                         <t t-set="current" t-value="emoji.category"/>
-                        <t t-call="web.EmojiPicker.section">
-                            <t t-set="category" t-value="current"/>
-                        </t>
+                        <t t-call="web.EmojiPicker.section" category="current"/>
                     </t>
                     <t t-elif="this.searchTerm" t-set="categorySortId" t-value="null"/>
-                    <t t-call="web.EmojiPicker.emoji">
-                        <t t-set="emoji" t-value="emoji"/>
-                    </t>
+                    <t t-call="web.EmojiPicker.emoji"/>
                     <t t-set="itemIndex" t-value="itemIndex + 1"/>
                 </t>
             </div>

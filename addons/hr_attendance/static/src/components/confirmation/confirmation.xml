@@ -20,9 +20,7 @@
                                     </div>
                                 </t>
                                 <t t-else="">
-                                    <t t-call="hr_attendance.EmployeeBadge">
-                                        <t t-set="employeeAvatar" t-value="this.employeeAvatar"/>
-                                    </t>
+                                    <t t-call="hr_attendance.EmployeeBadge" employeeAvatar="this.employeeAvatar"/>
                                 </t>
                             </div>
                             <h5 class="text-muted mb-2">

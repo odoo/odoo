@@ -6,16 +6,12 @@
 
     <section t-if="employee_type == 'self'" t-attf-class="o_org_chart_entry_self_container #{this.managers.length &gt; 0 ? 'o_org_chart_has_managers' : ''}">
         <div t-attf-class="o_org_chart_entry o_org_chart_entry_#{employee_type} position-relative d-flex align-items-center overflow-visible #{this.managers.length &gt; 0 ? 'o_treeEntry' : ''}">
-            <t t-call="hr.hr_org_chart_employee_content">
-                <t t-set="is_self" t-value="is_self"/>
-            </t>
+            <t t-call="hr.hr_org_chart_employee_content" is_self="is_self"/>
         </div>
     </section>
 
     <div t-else="" t-attf-class="o_org_chart_entry o_org_chart_entry_#{employee_type} o_treeEntry position-relative d-flex align-items-center overflow-visible">
-        <t t-call="hr.hr_org_chart_employee_content">
-            <t t-set="is_self" t-value="is_self"/>
-        </t>
+        <t t-call="hr.hr_org_chart_employee_content" is_self="is_self"/>
     </div>
 </t>
 
@@ -36,14 +32,10 @@
 
 <t t-name="hr.hr_org_chart_employee_content">
     <a t-if="!is_self" t-att-href="employee.link" class="o_employee_redirect d-flex w-100 me-auto opacity-trigger-hover" t-att-data-employee-id="employee.id" t-on-click.prevent="() => this._onEmployeeRedirect(employee.id)">
-        <t t-call="hr.hr_org_chart_employee_informations">
-            <t t-set="is_self" t-value="is_self"/>
-        </t>
+        <t t-call="hr.hr_org_chart_employee_informations" is_self="is_self"/>
     </a>
     <div t-if="is_self" class="d-flex w-100 me-auto">
-        <t t-call="hr.hr_org_chart_employee_informations">
-            <t t-set="is_self" t-value="is_self"/>
-        </t>
+        <t t-call="hr.hr_org_chart_employee_informations" is_self="is_self"/>
     </div>
     <button t-if="employee.indirect_sub_count &gt; 0"
             class="btn btn-secondary btn-sm d-flex ms-2 rounded-pill"
@@ -79,9 +71,7 @@
 
         <t t-foreach="this.managers" t-as="employee" t-key="employee_index">
             <t t-set="emp_count" t-value="emp_count + 1"/>
-            <t t-call="hr.hr_org_chart_employee">
-                <t t-set="employee_type" t-value="'manager'"/>
-            </t>
+            <t t-call="hr.hr_org_chart_employee" employee_type="'manager'"/>
         </t>
     </div>
 
@@ -135,9 +125,7 @@
         <t t-foreach="this.children" t-as="employee" t-key="employee_index">
             <t t-set="emp_count" t-value="emp_count + 1"/>
             <t t-if="emp_count &lt; 20">
-                <t t-call="hr.hr_org_chart_employee">
-                    <t t-set="employee_type" t-value="'sub'"/>
-                </t>
+                <t t-call="hr.hr_org_chart_employee" employee_type="'sub'"/>
             </t>
         </t>
 

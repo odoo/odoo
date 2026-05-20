@@ -119,9 +119,7 @@
                 <t t-call="web.TreeEditor.controls" />
             </t>
         </div>
-        <t t-call="web.TreeEditor.connector.children">
-            <t t-set="addPadding" t-value="true" />
-        </t>
+        <t t-call="web.TreeEditor.connector.children" addPadding="true"/>
     </t>
 
     <t t-name="web.TreeEditor.condition">
