@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { reactive, useState } from "@odoo/owl";
+import { effect, signal, types as t } from "@odoo/owl";
 import { getAllColors, getPreferredColorScheme } from "../../hoot-dom/hoot_dom_utils";
 import { STORAGE, storageGet, storageSet } from "../hoot_utils";
 
@@ -32,27 +32,11 @@ if (!COLOR_SCHEMES.includes(defaultScheme)) {
 
 const colorChangedCallbacks = [
     () => {
-        const { classList } = current.root;
+        const { classList } = colorRoot();
         classList.remove(...COLOR_SCHEMES);
-        classList.add(current.scheme);
+        classList.add(colorScheme());
     },
 ];
-const current = reactive(
-    {
-        /** @type {HTMLElement | null} */
-        root: null,
-        scheme: defaultScheme,
-    },
-    () => {
-        if (!current.root) {
-            return;
-        }
-        for (const callback of colorChangedCallbacks) {
-            callback(current.scheme);
-        }
-    }
-);
-current.root;
 
 //-----------------------------------------------------------------------------
 // Exports
@@ -71,10 +55,6 @@ export function generateStyleSheets() {
     return styles;
 }
 
-export function getColorScheme() {
-    return current.scheme;
-}
-
 /**
  * @param {(scheme: ColorScheme) => any} callback
  */
@@ -82,18 +62,19 @@ export function onColorSchemeChange(callback) {
     colorChangedCallbacks.push(callback);
 }
 
-/**
- * @param {HTMLElement | null} element
- */
-export function setColorRoot(element) {
-    current.root = element;
-}
-
 export function toggleColorScheme() {
-    current.scheme = COLOR_SCHEMES.at(COLOR_SCHEMES.indexOf(current.scheme) - 1);
-    storageSet(STORAGE.scheme, current.scheme);
+    colorScheme.set(COLOR_SCHEMES.at(COLOR_SCHEMES.indexOf(colorScheme()) - 1));
+    storageSet(STORAGE.scheme, colorScheme());
 }
 
-export function useColorScheme() {
-    return useState(current);
-}
+export const colorRoot = signal(null, { type: t.ref(HTMLElement) });
+export const colorScheme = signal(defaultScheme, { type: t.selection(["dark", "light"]) });
+
+effect(() => {
+    if (!colorRoot()) {
+        return;
+    }
+    for (const callback of colorChangedCallbacks) {
+        callback(colorScheme());
+    }
+});

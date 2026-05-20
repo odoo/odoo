@@ -1,22 +1,18 @@
 /** @odoo-module */
 
-import { mount, reactive } from "@odoo/owl";
+import { mount } from "@odoo/owl";
 import { HootFixtureElement } from "../core/fixture";
 import { waitForDocument } from "../hoot_utils";
-import { getRunner } from "../main_runner";
 import { patchWindow } from "../mock/window";
-import {
-    generateStyleSheets,
-    getColorScheme,
-    onColorSchemeChange,
-    setColorRoot,
-} from "./hoot_colors";
+import { colorRoot, colorScheme, generateStyleSheets, onColorSchemeChange } from "./hoot_colors";
 import { HootMain } from "./hoot_main";
+import { RunnerPlugin } from "./runner_plugin";
+import { UiPlugin } from "./ui_plugin";
 
 /**
- * @typedef {"failed" | "passed" | "skipped" | "todo"} StatusFilter
+ * @typedef {import("../core/runner").Runner} Runner
  *
- * @typedef {ReturnType<typeof makeUiState>} UiState
+ * @typedef {"failed" | "passed" | "skipped" | "todo"} StatusFilter
  */
 
 //-----------------------------------------------------------------------------
@@ -55,7 +51,7 @@ function createStyleElement(content) {
 }
 
 function getPrismStyleUrl() {
-    const theme = getColorScheme() === "dark" ? "okaida" : "default";
+    const theme = colorScheme() === "dark" ? "okaida" : "default";
     return `/web/static/lib/prismjs/themes/${theme}.css`;
 }
 
@@ -99,11 +95,11 @@ class HootContainer extends HTMLElement {
     }
 
     connectedCallback() {
-        setColorRoot(this);
+        colorRoot.set(this);
     }
 
     disconnectedCallback() {
-        setColorRoot(null);
+        colorRoot.set(null);
     }
 }
 
@@ -113,31 +109,15 @@ customElements.define("hoot-container", HootContainer);
 // Exports
 //-----------------------------------------------------------------------------
 
-export function makeUiState() {
-    return reactive({
-        resultsPage: 0,
-        resultsPerPage: 40,
-        /** @type {string | null} */
-        selectedSuiteId: null,
-        /** @type {"asc" | "desc" | false} */
-        sortResults: false,
-        /** @type {StatusFilter | null} */
-        statusFilter: null,
-        totalResults: 0,
-    });
-}
-
 /**
  * Appends the main Hoot UI components in a container, which itself will be appended
  * on the current document body.
  *
- * @returns {Promise<void>}
+ * @param {Runner} runner
  */
-export async function setupHootUI() {
+export async function setupHootUI(runner) {
     // - Patch window before code from other modules is executed
     patchWindow();
-
-    const runner = getRunner();
 
     const container = document.createElement("hoot-container");
     container.style.display = "contents";
@@ -150,11 +130,9 @@ export async function setupHootUI() {
     const promises = [
         // Mount main container
         mount(HootMain, container.shadowRoot, {
-            env: {
-                runner,
-                ui: makeUiState(),
-            },
             name: "HOOT",
+            plugins: [RunnerPlugin, UiPlugin],
+            config: { runner },
         }),
     ];
 

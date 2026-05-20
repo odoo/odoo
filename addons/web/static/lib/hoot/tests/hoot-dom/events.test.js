@@ -42,7 +42,7 @@ import { mountForTest, parseUrl } from "../local_helpers";
 /**
  * @param {Event} ev
  */
-const formatEvent = (ev) => {
+function formatEvent(ev) {
     const { currentTarget, type } = ev;
     const id = currentTarget.id ? `#${currentTarget.id}` : currentTarget.tagName.toLowerCase();
     let formatted = "";
@@ -78,14 +78,14 @@ const formatEvent = (ev) => {
     }
 
     return `${type}${formatted}@${id}`;
-};
+}
 
 /**
  * @param {import("../../helpers/dom").Target} target
  * @param {(ev: Event) => string} [formatStep]
  */
-const monitorEvents = (target, formatStep) => {
-    const handleEvent = (element, type) =>
+function monitorEvents(target, formatStep) {
+    function handleEvent(element, type) {
         after(
             on(element, type, (ev) => {
                 const formattedStep = formatStep(ev);
@@ -94,6 +94,7 @@ const monitorEvents = (target, formatStep) => {
                 }
             })
         );
+    }
 
     formatStep ||= formatEvent;
 
@@ -109,7 +110,7 @@ const monitorEvents = (target, formatStep) => {
             handleEvent(element, type);
         }
     }
-};
+}
 
 const ADDITIONAL_EVENT_TYPES = ["focusin", "focusout"];
 const BLACK_LISTED_EVENT_TYPES = ["selectionchange"];
@@ -2101,7 +2102,6 @@ describe(parseUrl(import.meta.url), () => {
     test("can trigger synthetic event handlers", async () => {
         await mountForTest(
             class extends Component {
-                static props = {};
                 static template = xml`
                     <button t-on-click.synthetic="this.onClick">Click me</button>
                 `;
@@ -2120,7 +2120,6 @@ describe(parseUrl(import.meta.url), () => {
     test("synthetic event handlers are not cleaned up between tests", async () => {
         await mountForTest(
             class extends Component {
-                static props = {};
                 static template = xml`
                     <button t-on-click.synthetic="this.onClick">Click me</button>
                 `;
