@@ -9,25 +9,26 @@
         <xpath expr="//t[@t-if='this.props.showRemainingButtons']/div/t[@name='o_pricelist_button']" position="before">
             <!-- All these buttons will only be displayed in a dialog -->
             <t t-if="this.pos.config.module_pos_restaurant">
-                <t t-call="point_of_sale.controlButton">
-                    <t t-set="iconClasses" t-value="'fa fa-user d-md-none'"/>
-                    <t t-set="badge">
-                        <span t-out="this.currentOrder?.getCustomerCount() || 0" class="o_guests_number order-last order-md-first rounded-5 text-bg-500 d-md-block ms-auto me-md-auto px-2"/>
-                    </t>
-                    <t t-set="btnText">
-                        <t t-if="this.currentOrder?.getCustomerCount() === 1">Guest</t>
-                        <t t-else="">Guests</t>
-                    </t>
-                    <t t-set="btnClasses" t-value="'o_guests_button btn-secondary '"/>
-                    <t t-set="onClick" t-value="this.clickTableGuests"/>
+                <t t-set="badge">
+                    <span t-out="this.currentOrder?.getCustomerCount() || 0" class="o_guests_number order-last order-md-first rounded-5 text-bg-500 d-md-block ms-auto me-md-auto px-2"/>
                 </t>
+                <t t-set="btnText">
+                    <t t-if="this.currentOrder?.getCustomerCount() === 1">Guest</t>
+                    <t t-else="">Guests</t>
+                </t>
+                <t t-call="point_of_sale.controlButton"
+                    iconClasses="'fa fa-user d-md-none'"
+                    badge="badge"
+                    btnText="btnText"
+                    btnClasses="'o_guests_button btn-secondary '"
+                    onClick="this.clickTableGuests"/>
                 <!-- Split Button -->
-                <t t-call="point_of_sale.controlButton">
-                    <t t-set="iconClasses" t-value="'fa fa-files-o'"/>
-                    <t t-set="btnText">Split</t>
-                    <t t-set="btnClasses" t-value="'btn-secondary '"/>
-                    <t t-set="onClick" t-value="this.openSplitPage"/>
-                    <t t-set="disabled" t-value="this.pos.getOrder()?.getOrderlines()?.filter((line) => line.isGlobalDiscountApplicable()).reduce((sum, line) => sum + line.qty, 0) lt 2"/>
+                <t t-call="point_of_sale.controlButton"
+                    iconClasses="'fa fa-files-o'"
+                    btnText.translate="Split"
+                    btnClasses="'btn-secondary '"
+                    onClick="this.openSplitPage"
+                    disabled="this.pos.getOrder()?.getOrderlines()?.filter((line) => line.isGlobalDiscountApplicable()).reduce((sum, line) => sum + line.qty, 0) lt 2">
                 </t>
                 <!-- Transfer / Merge Button -->
                 <!-- No t-call controlButton because of t-on-click.stop -->
@@ -50,11 +51,11 @@
                     </span>
                 </button>
                 <!-- Edit Order Name Button -->
-                <t t-if="!this.pos.getOrder()?.table_id" t-call="point_of_sale.controlButton">
-                    <t t-set="iconClasses" t-value="'fa fa-pencil-square-o'"/>
-                    <t t-set="btnText">Set Order Name</t>
-                    <t t-set="btnClasses" t-value="'btn-secondary '"/>
-                    <t t-set="onClick" t-value="() => this.pos.editFloatingOrderName(this.pos.getOrder())"/>
+                <t t-if="!this.pos.getOrder()?.table_id" t-call="point_of_sale.controlButton"
+                    iconClasses="'fa fa-pencil-square-o'"
+                    btnText.translate="Set Order Name"
+                    btnClasses="'btn-secondary '"
+                    onClick="() => this.pos.editFloatingOrderName(this.pos.getOrder())">
                 </t>
             </t>
         </xpath>

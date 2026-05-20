@@ -8,7 +8,6 @@ import { CustomerDisplayPosAdapter } from "@point_of_sale/app/customer_display/c
 import { useIdleTimer } from "./utils/use_idle_timer";
 import useTours from "./hooks/use_tours";
 import { init as initDebugFormatters } from "./utils/debug-formatter";
-import { effect } from "@web/core/utils/reactive";
 import { debounce } from "@web/core/utils/timing";
 /**
  * Chrome is the root component of the PoS App.
@@ -48,12 +47,13 @@ export class Chrome extends Component {
         }
 
         onMounted(this.props.disableLoader);
-        effect(
-            debounce((pos, routerState) => {
-                this.sendOrderToCustomerDisplay(pos, routerState);
-            }),
-            [this.pos, this.router.state]
-        );
+
+        const debouncedSendOrderToCustomerDisplay = debounce((pos, routerState) => {
+            this.sendOrderToCustomerDisplay(pos, routerState);
+        });
+        useEffect(() => {
+            debouncedSendOrderToCustomerDisplay(this.pos, this.router.state);
+        });
     }
 
     sendOrderToCustomerDisplay({ selectedOrder }, routerState) {

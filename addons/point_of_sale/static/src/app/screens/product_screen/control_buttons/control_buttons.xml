@@ -45,59 +45,61 @@
                     icon="'fa fa-sticky-note'"/>
                 <!-- Bill Button -->
                 <t t-if="this.pos.config.iface_printbill"> 
-                    <t t-call="point_of_sale.controlButton">
-                        <t t-set="iconClasses" t-value="'fa fa-print'"/>
-                        <t t-set="btnText">Bill</t>
-                        <t t-set="btnClasses" t-value="'btn-secondary '"/>
-                        <t t-set="disabled" t-value="!this.pos.getOrder()?.getOrderlines()?.length"/>
-                        <t t-set="onClick" t-value="this.clickPrintBill"/>
-                    </t>
+                    <t t-call="point_of_sale.controlButton"
+                        iconClasses="'fa fa-print'"
+                        btnText.translate="Bill"
+                        btnClasses="'btn-secondary '"
+                        disabled="!this.pos.getOrder()?.getOrderlines()?.length"
+                        onClick="this.clickPrintBill"/>
                 </t>
                 <!-- Pricelist Button -->
-                <t t-if="this.pos.cashier._role != 'minimal'" t-call="point_of_sale.controlButton" name="o_pricelist_button">
-                    <t t-set="iconClasses" t-value="'fa fa-th-list'"/>
-                    <t t-set="btnText">Pricelist</t>
-                    <t t-set="btnClasses" t-value="'o_pricelist_button btn-secondary '"/>
-                    <t t-set="onClick" t-value="() => this.clickPricelist()"/>
-                    <t t-set="subText">
-                        <t t-if="this.currentOrder?.pricelist_id">
-                            <small t-out="this.currentOrder.pricelist_id.display_name" class="ms-auto ms-md-0 text-truncate text-muted text-end text-md-center"/>  
-                        </t>
+                <t t-set="subText">
+                    <t t-if="this.currentOrder?.pricelist_id">
+                        <small t-out="this.currentOrder.pricelist_id.display_name" class="ms-auto ms-md-0 text-truncate text-muted text-end text-md-center"/>  
                     </t>
+                </t>
+                <t t-if="this.pos.cashier._role != 'minimal'" t-call="point_of_sale.controlButton"
+                    name="o_pricelist_button"
+                    iconClasses="'fa fa-th-list'"
+                    btnText.translate="Pricelist"
+                    btnClasses="'o_pricelist_button btn-secondary '"
+                    onClick="() => this.clickPricelist()"
+                    subText="subText">
                 </t>
                 <!-- Tax Button -->
-                <t t-if="this.pos.config.fiscal_position_ids.length and this.pos.cashier._role != 'minimal'" t-call="point_of_sale.controlButton">
-                    <t t-set="iconClasses" t-value="'fa fa-book'"/>
-                    <t t-set="btnText">Tax</t>
-                    <t t-set="btnClasses" t-value="'o_fiscal_position_button btn-secondary '"/>
-                    <t t-set="onClick" t-value="() => this.clickFiscalPosition()"/>
-                    <t t-set="subText">
-                        <t t-if="this.currentOrder?.fiscal_position_id">
-                            <small t-out="this.currentOrder.fiscal_position_id.display_name" class="ms-auto ms-md-0 text-truncate text-muted text-end text-md-center"/>
-                        </t>
+                <t t-set="subText">
+                    <t t-if="this.currentOrder?.fiscal_position_id">
+                        <small t-out="this.currentOrder.fiscal_position_id.display_name" class="ms-auto ms-md-0 text-truncate text-muted text-end text-md-center"/>
                     </t>
                 </t>
+                <t t-if="this.pos.config.fiscal_position_ids.length and this.pos.cashier._role != 'minimal'" t-call="point_of_sale.controlButton"
+                    iconClasses="'fa fa-book'"
+                    btnText.translate="Tax"
+                    btnClasses="'o_fiscal_position_button btn-secondary '"
+                    onClick="() => this.clickFiscalPosition()"
+                    subText="subText">
+                </t>
                 <!-- Product Info Button -->
-                <t t-if="this.displayProductInfoBtn()" t-call="point_of_sale.controlButton">
-                    <t t-set="iconClasses" t-value="'fa fa-info-circle'"/>
-                    <t t-set="btnText">Info</t>
-                    <t t-set="btnClasses" t-value="'btn-secondary '"/>
-                    <t t-set="onClick" t-value="() => this.pos.onProductInfoClick(this.currentOrder.getSelectedOrderline().product_id.product_tmpl_id, this.currentOrder.getSelectedOrderline().product_id)"/>
+                <t t-if="this.displayProductInfoBtn()" t-call="point_of_sale.controlButton"
+                    iconClasses="'fa fa-info-circle'"
+                    btnText.translate="Info"
+                    btnClasses="'btn-secondary '"
+                    onClick="() => this.pos.onProductInfoClick(this.currentOrder.getSelectedOrderline().product_id.product_tmpl_id, this.currentOrder.getSelectedOrderline().product_id)">
                 </t>
                 <!-- Break Combo Button -->
-                <t t-if="this.pos.isSelectedLineCombo" t-call="point_of_sale.controlButton">
-                    <t t-set="iconClasses" t-value="'fa fa-outdent'"/>
-                    <t t-set="btnText">Break Combo</t>
-                    <t t-set="btnClasses" t-value="'break-combo-button btn-secondary '"/>
-                    <t t-set="onClick" t-value="() => this.breakSelectedCombo()"/>
+                <t t-if="this.pos.isSelectedLineCombo" t-call="point_of_sale.controlButton"
+                    iconClasses="'fa fa-outdent'"
+                    btnText.translate="Break Combo"
+                    btnClasses="'break-combo-button btn-secondary '"
+                    onClick="() => this.breakSelectedCombo()">
                 </t>
                 <!-- Cancel Order Button -->
-                <t t-if="this.pos.cashier._role != 'minimal'" t-call="point_of_sale.controlButton">
-                    <t t-set="iconClasses" t-value="'fa fa-trash'"/>
-                    <t t-set="btnText">Cancel Order</t>
-                    <t t-set="btnClasses" t-value="'btn-danger '"/>
-                    <t t-set="onClick" t-value="() => this.pos.onDeleteOrder(this.pos.getOrder())"/>
-                    <t t-set="disabled" t-value="!this.pos.getOrder()?.getOrderlines()?.length"/>
+                <t t-if="this.pos.cashier._role != 'minimal'" t-call="point_of_sale.controlButton"
+                    iconClasses="'fa fa-trash'"
+                    btnText.translate="Cancel Order"
+                    btnClasses="'btn-danger '"
+                    onClick="() => this.pos.onDeleteOrder(this.pos.getOrder())"
+                    disabled="!this.pos.getOrder()?.getOrderlines()?.length">
                 </t>
             </div>
         </t>

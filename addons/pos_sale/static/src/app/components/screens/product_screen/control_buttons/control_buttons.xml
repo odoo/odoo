@@ -2,11 +2,11 @@
 <templates id="template" xml:space="preserve">
     <t t-name="pos_sale.ControlButtons" t-inherit="point_of_sale.ControlButtons" t-inherit-mode="extension">
         <xpath expr="//t[@t-if='this.props.showRemainingButtons']/div/t[@name='o_pricelist_button']" position="before">
-            <t t-if="this.pos.cashier._role != 'minimal'" t-call="point_of_sale.controlButton">
-                <t t-set="iconClasses" t-value="'fa fa-link'"/>
-                <t t-set="btnText">Quotation / Order</t>
-                <t t-set="btnClasses" t-value="'btn-secondary '"/>
-                <t t-set="onClick" t-value="() =>   this.onClickQuotation()"/>
+            <t t-if="this.pos.cashier._role != 'minimal'" t-call="point_of_sale.controlButton"
+                iconClasses="'fa fa-link'"
+                btnText.translate="Quotation / Order"
+                btnClasses="'btn-secondary '"
+                onClick="() =>   this.onClickQuotation()">
             </t>
         </xpath>
     </t>

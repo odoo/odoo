@@ -100,6 +100,9 @@ export class PosOrderlineAccounting extends Base {
      * This is the preferred way to get prices of an orderline since its rounded globally.
      */
     get prices() {
+        if (!this.order_id) {
+            return undefined;
+        }
         const data = this.order_id.prices.baseLineByLineUuids[this.uuid];
         return data.tax_details;
     }

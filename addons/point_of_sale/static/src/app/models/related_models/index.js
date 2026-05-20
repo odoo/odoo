@@ -1,6 +1,5 @@
 import { reactive } from "@web/owl2/utils";
 import { uuidv4 } from "@point_of_sale/utils";
-import { TrapDisabler } from "@point_of_sale/proxy_trap";
 import { RecordStore } from "./record_store";
 import {
     RELATION_TYPES,
@@ -37,7 +36,6 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
     function getFields(model) {
         return processedModelDefs[model];
     }
-    const disabler = new TrapDisabler();
 
     // A cache for the backlink indexed maps: Map<RelationName, Map<ParentId, Record[]>>
     const backlinkIndexes = new Map();
@@ -70,7 +68,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
         }
 
         create(vals) {
-            return disabler.call((...args) => this._create(...args), vals);
+            return this._create(vals);
         }
 
         deserialize(vals) {
@@ -86,13 +84,13 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
         }
 
         update(record, vals, opts = {}) {
-            return disabler.call((...args) => this._update(...args), record, vals, {
+            return this._update(record, vals, {
                 ...opts,
             });
         }
 
         delete(record, opts = {}) {
-            return disabler.call((...args) => this._delete(...args), record, opts);
+            return this._delete(record, opts);
         }
 
         deleteMany(toDelete, opts = {}) {
@@ -704,7 +702,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
          * @returns {Array<Base>} - The list of loaded records.
          */
         loadConnectedData(data, modelsToLoad = [], opts = {}) {
-            return disabler.call((...args) => this._loadData(...args), data, modelsToLoad, {
+            return this._loadData(data, modelsToLoad, {
                 connectRecords: false,
                 serverData: true,
                 ...opts,
@@ -721,7 +719,7 @@ export function createRelatedModels(modelDefs, modelClasses = {}, opts = {}) {
          * @returns {Array<Base>} - The list of loaded records.
          */
         connectNewData(data, serverData = true) {
-            return disabler.call((...args) => this._loadData(...args), data, [], {
+            return this._loadData(data, [], {
                 connectRecords: true,
                 serverData: serverData,
             });
