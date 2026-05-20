@@ -23,6 +23,7 @@ from odoo.addons.website.controllers.main import QueryURL
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.addons.website_sale.const import MAX_EXPANDED_FILTER_SECTIONS, SHOP_PATH
 from odoo.addons.website_sale.models.website import (
+    PRICELIST_SELECTED_COUNTRY_SESSION_CACHE_KEY,
     PRICELIST_SELECTED_SESSION_CACHE_KEY,
     PRICELIST_SESSION_CACHE_KEY,
 )
@@ -1081,12 +1082,13 @@ class WebsiteSale(payment_portal.PaymentPortal):
         website=True,
         sitemap=False,
     )
-    def pricelist_change(self, pricelist, **_post):
+    def pricelist_change(self, pricelist, **post):
         website = self.env.website
         redirect_url = request.httprequest.referrer
         prev_pricelist = request.pricelist
+        applied_pricelist = self._apply_selectable_pricelist(pricelist.id)
         if (
-            self._apply_selectable_pricelist(pricelist.id)
+            applied_pricelist
             and redirect_url
             and website.is_view_active("website_sale.filter_products_price")
             and prev_pricelist != pricelist
@@ -1116,6 +1118,9 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 except (ValueError, TypeError):
                     pass
             redirect_url = decoded_url.replace(query=url_encode(args)).to_url()
+
+        if applied_pricelist and (country_id := post.get("country_id")):
+            request.session[PRICELIST_SELECTED_COUNTRY_SESSION_CACHE_KEY] = int(country_id)
 
         return request.redirect(redirect_url or SHOP_PATH)
 

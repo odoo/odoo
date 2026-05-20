@@ -90,3 +90,37 @@ class Website(main.Website):
                 cart.order_line._fields["name"], cart.order_line.with_context(lang=lang)
             )
         return super().change_lang(lang, **kwargs)
+
+    @route(
+        "/shop/selectable_pricelists", type="jsonrpc", auth="public", website=True, readonly=True
+    )
+    def get_selectable_pricelists_info(self):
+        website = request.website
+        selectable_pricelists = website.get_pricelist_available(show_visible=True)
+        response = {
+            "pricelist_ids": {
+                data["id"]: {**data, "selected": request.pricelist == pricelist}
+                for pricelist, data in zip(
+                    selectable_pricelists,
+                    selectable_pricelists.web_read({
+                        "name": {},
+                        "currency_id": {"fields": {"name": {}}},
+                    }),
+                )
+            },
+            "country_ids": {},
+        }
+
+        country_ids_info = response["country_ids"]
+        for pricelist in selectable_pricelists:
+            for country in pricelist.country_group_ids.country_ids or website.company_id.country_id:
+                if country.id not in country_ids_info:
+                    country_ids_info[country.id] = {
+                        **country.web_read({"name": {}})[0],
+                        "pricelist_ids": [],
+                        "selected": website.selected_pricelist_country_id == country,
+                    }
+
+                country_ids_info[country.id]["pricelist_ids"].append(pricelist.id)
+
+        return response

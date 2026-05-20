@@ -24,6 +24,7 @@ CART_SESSION_CACHE_KEY = "sale_order_id"
 FISCAL_POSITION_SESSION_CACHE_KEY = "fiscal_position_id"
 PRICELIST_SESSION_CACHE_KEY = "website_sale_current_pl"
 PRICELIST_SELECTED_SESSION_CACHE_KEY = "website_sale_selected_pl_id"
+PRICELIST_SELECTED_COUNTRY_SESSION_CACHE_KEY = "website_sale_selected_pl_country_id"
 
 
 class Website(models.Model):
@@ -287,6 +288,13 @@ class Website(models.Model):
         check_company=True,
     )
 
+    selected_pricelist_id = fields.Many2one(
+        "product.pricelist", compute="_compute_selected_pricelist_info", compute_sudo=True
+    )
+    selected_pricelist_country_id = fields.Many2one(
+        "res.country", compute="_compute_selected_pricelist_info", compute_sudo=True
+    )
+
     # === COMPUTE METHODS ===#
 
     def _compute_pricelist_ids(self):
@@ -318,6 +326,19 @@ class Website(models.Model):
     def _compute_show_line_subtotals_tax_selection(self):
         for website in self:
             website.show_line_subtotals_tax_selection = "tax_excluded"
+
+    @api.depends("company_id")
+    def _compute_selected_pricelist_info(self):
+        session_pricelist = request and hasattr(request, "pricelist") and request.pricelist
+        session_country = self.env["res.country"].browse(
+            request and request.session.get(PRICELIST_SELECTED_COUNTRY_SESSION_CACHE_KEY)
+        )
+        for website in self:
+            if session_pricelist:
+                website.selected_pricelist_id = session_pricelist.id
+            website.selected_pricelist_country_id = session_country or (
+                website.company_id.country_id
+            )
 
     # === SELECTION METHODS ===#
 

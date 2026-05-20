@@ -227,15 +227,6 @@
                 </section>
             </div>
         </div>
-
-        <xpath expr="//span[hasclass('o_footer_copyright_name')]" position="replace">
-            <span class="small">
-                &amp;copy;
-                <span class="o_footer_copyright_name align-baseline">Company name</span>
-                 - <a href="#">Terms &amp; Conditions</a>
-                 - <a href="#">Privacy Policy</a>
-            </span>
-        </xpath>
     </template>
 
     <template id="website_sale.template_header_mobile" inherit_id="website.template_header_mobile">
@@ -428,6 +419,75 @@
                 class="o_line_clamp o_line_clamp_1 mb-0 small"
                 t-out="result['description_sale']"/>
         </xpath>
+    </template>
+
+    <template id="website_sale.footer_pricelist_selector" inherit_id="website.footer_copyright_company_name">
+        <xpath expr="//span[hasclass('o_footer_copyright_name')]" position="after">
+            <t t-call="website_sale.pricelist_selector"/>
+        </xpath>
+
+    </template>
+
+    <template id="website_sale.pricelist_selector" name="Pricelist Selector">
+           <!-- The pricelist form loads options on user interaction. `align-self-start` keeps the
+                form at its content width to reduce hover area and avoid unnecessary RPC calls. -->
+        <form name="pricelist_selector" class="row">
+            <t t-set="country" t-value="request.website.selected_pricelist_country_id"/>
+            <t t-set="pricelist" t-value="request.website.selected_pricelist_id"/>
+            <t t-set="currency" t-value="request.website.currency_id"/>
+            <input name="country_id" hidden=""/>
+            <input name="pricelist_id" hidden=""/>
+            <div class="col-auto">
+                <div class="dropdown">
+                    <button
+                        class="btn btn-light dropdown-toggle"
+                        type="button"
+                        data-bs-toggle="dropdown"
+                        data-bs-auto-close="true"
+                        aria-expanded="false"
+                    >
+                        <span
+                            name="country_flag"
+                            t-field="country.image_url"
+                            t-options='{"widget": "image_url", "style": "width: 36px;"}'
+                            class="me-2"
+                        />
+                        <span name="country_name" t-out="country.name"/>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li class="dropdown-item">
+                            <div class="d-flex justify-content-center">
+                                <div class="spinner-border" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-auto">
+                <div class="dropdown">
+                    <button
+                        class="btn btn-light dropdown-toggle"
+                        type="button"
+                        data-bs-toggle="dropdown"
+                        data-bs-auto-close="true"
+                        aria-expanded="false"
+                    >
+                        <span name="currency_name" t-out="currency.name"/>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li class="dropdown-item">
+                            <div class="d-flex justify-content-center">
+                                <div class="spinner-border" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </form>
     </template>
 
 </odoo>
