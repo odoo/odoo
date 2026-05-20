@@ -2,12 +2,12 @@
 <templates>
 
     <t t-name="mrp.WorkorderPlanningStatus">
-        <i t-if="props.record.data.has_conflicts"
+        <i t-if="this.props.record.data.has_conflicts"
            class="fa fa-exclamation-triangle text-danger"
            title="Conflict: this work order overlaps with another one on the same work center"
            aria-hidden="true"
         />
-        <i t-if="props.record.data.has_planning_issues"
+        <i t-if="this.props.record.data.has_planning_issues"
            class="fa fa-exclamation-triangle text-warning"
            title="Planning issue: this work order is scheduled before a dependency"
            aria-hidden="true"

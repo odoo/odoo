@@ -15,7 +15,7 @@
         <p t-if="this.linkPreview.og_description" class="o-mail-LinkPreviewCard-description mt-1 mb-0 text-muted smaller" t-out="this.linkPreview.og_description"/>
     </t>
     <t t-name="mail.LinkPreviewCard">
-        <div class="o-mail-LinkPreviewCard card mb-1 rounded bg-view shadow-sm overflow-hidden" t-att-class="{ 'o-mail-LinkPreviewCard-noImage': !this.linkPreview.og_image, 'w-100': this.ui.isSmall or this.env.inChatWindow }" t-attf-class="{{ className }}">
+        <div class="o-mail-LinkPreviewCard card mb-1 rounded bg-view shadow-sm overflow-hidden" t-att-class="{ 'o-mail-LinkPreviewCard-noImage': !this.linkPreview.og_image, 'w-100': this.ui.isSmall or this.env.inChatWindow }" t-attf-class="{{ this.className }}">
             <t t-if="this.linkPreview.og_image and this.linkPreview.hasSquarishCardImage and this.linkPreview.og_description">
                 <div class="d-flex align-items-center px-2 o-pt-0_5 pb-1 w-100">
                     <div class="flex-grow-1 pe-1">
@@ -58,7 +58,7 @@
     </t>
 
     <t t-name="mail.LinkPreviewImage">
-        <div class="o-mail-LinkPreviewImage mb-2 rounded" t-att-class="{ 'me-2': this.env.inChatter }" t-attf-class="{{ className }}">
+        <div class="o-mail-LinkPreviewImage mb-2 rounded" t-att-class="{ 'me-2': this.env.inChatter }" t-attf-class="{{ this.className }}">
             <div class="position-relative d-inline-block">
                 <a t-if="this.linkPreview.imageUrl" t-att-href="this.linkPreview.imageUrl" target="_blank">
                     <Gif t-if="this.linkPreview.isGif" paused="this.props.messageLinkPreview.gifPaused" class="'h-auto w-auto rounded'" src="this.linkPreview.imageUrl" onLoad.bind="this.onImageLoaded"/>
@@ -72,7 +72,7 @@
     </t>
 
     <t t-name="mail.LinkPreviewVideo">
-        <div class="o-mail-LinkPreviewVideo card position-relative w-100 mb-2 rounded bg-view shadow-sm overflow-hidden" t-att-data-provider="this.linkPreview.videoProvider" t-att-class="{ 'me-2': this.env.inChatter, 'o-mail-LinkPreviewVideo-embed': this.linkPreview.videoURL, 'o-mail-LinkPreviewVideo-started': this.state.startVideo }" t-attf-class="{{ className }}">
+        <div class="o-mail-LinkPreviewVideo card position-relative w-100 mb-2 rounded bg-view shadow-sm overflow-hidden" t-att-data-provider="this.linkPreview.videoProvider" t-att-class="{ 'me-2': this.env.inChatter, 'o-mail-LinkPreviewVideo-embed': this.linkPreview.videoURL, 'o-mail-LinkPreviewVideo-started': this.state.startVideo }" t-attf-class="{{ this.className }}">
             <div class="row g-0 flex-row-reverse">
                 <div class="col min-w-0" t-att-class="{ 'd-flex align-items-center': !this.linkPreview.og_description }">
                     <div class="d-flex flex-column gap-1 px-3 py-1 bg-view">

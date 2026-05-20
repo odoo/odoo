@@ -28,7 +28,7 @@
                     <t t-call="web.StatusBarField.Dropdown" items="this.items.after"/>
                 </t>
             </Dropdown>
-            <t t-foreach="items.inline" t-as="item" t-key="item.value">
+            <t t-foreach="this.items.inline" t-as="item" t-key="item.value">
                 <button
                     type="button"
                     class="btn btn-secondary o_arrow_button"

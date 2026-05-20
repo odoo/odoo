@@ -17,7 +17,7 @@
     <t t-name="website.s_dynamic_snippet.carousel.base">
         <t t-set="slideSize" t-value="rowSize * this.rowPerSlide" />
         <t t-set="slideIndexGenerator" t-value="Array(Math.ceil(this.data.length/slideSize))"/>
-        <div t-att-id="unique_id" t-attf-class="carousel slide #{extraCarouselClass || ''}"
+        <div t-att-id="this.unique_id" t-attf-class="carousel slide #{extraCarouselClass || ''}"
              t-att-style="extraCarouselStyle"
              t-att-data-bs-interval="slideIndexGenerator.length > minControlValue ? this.interval : 0"
              t-att-data-bs-ride="slideIndexGenerator.length > minControlValue and 'carousel'">

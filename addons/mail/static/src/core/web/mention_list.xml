@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.MentionList">
-        <SearchInput classNames="'o-mail-MentionList'" search="this.search" placeholder="this.placeholder" autofocus="{ mobile: true }" inputRef="this.ref" onKeydown.bind="onKeydown"/>
+        <SearchInput classNames="'o-mail-MentionList'" search="this.search" placeholder="this.placeholder" autofocus="{ mobile: true }" inputRef="this.ref" onKeydown.bind="this.onKeydown"/>
         <NavigableList class="'o-mail-MentionList-suggestionList'" t-props="this.navigableListProps"/>
     </t>
 </templates>
