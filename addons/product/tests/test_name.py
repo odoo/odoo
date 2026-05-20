@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import Command
 from odoo.tests import tagged, TransactionCase
 
 
@@ -29,6 +30,18 @@ class TestName(TransactionCase):
         res = self.env['product.template'].name_search(name='PTN', operator='not ilike')
         res_ids = [r[0] for r in res]
         self.assertNotIn(self.product.id, res_ids)
+
+    def test_search_unpuchasable_with_vendor_code(self):
+        """Ensure non-purchasable products are excluded from vendor code searches."""
+        partner = self.env['res.partner'].create({'name': 'Jhon'})
+        self.product.write({
+            'purchase_ok': False,
+            'seller_ids': [Command.create({'partner_id': partner.id, 'product_code': 'CODE'})],
+        })
+
+        domain = [('purchase_ok', '=', True)]
+        products = self.env['product.template'].with_context(partner_id=partner.id).name_search(name='CODE', args=domain)
+        self.assertEqual(products, [])
 
     def test_product_template_search_name_no_product_product(self):
         # To be able to test dynamic variant "variants" feature must be set up

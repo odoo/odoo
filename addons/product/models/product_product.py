@@ -585,7 +585,7 @@ class ProductProduct(models.Model):
                     ('product_code', operator, name),
                     ('product_name', operator, name)])
                 if suppliers_ids:
-                    product_ids = self._search([('product_tmpl_id.seller_ids', 'in', suppliers_ids)], limit=limit, order=order)
+                    product_ids = self._search(expression.AND([domain, [('product_tmpl_id.seller_ids', 'in', suppliers_ids)]]), limit=limit, order=order)
         else:
             product_ids = self._search(domain, limit=limit, order=order)
         return product_ids
