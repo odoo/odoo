@@ -378,10 +378,12 @@ class PurchaseOrder(models.Model):
             if any(product.type == 'consu' for product in order.order_line.product_id):
                 order = order.with_company(order.company_id)
                 pickings = order.picking_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
+                created_picking = False
                 if not pickings:
                     res = order._prepare_picking()
                     picking = StockPicking.with_user(SUPERUSER_ID).create(res)
                     pickings = picking
+                    created_picking = True
                 else:
                     picking = pickings[0]
                 moves = order.order_line._create_stock_moves(picking)
@@ -393,12 +395,16 @@ class PurchaseOrder(models.Model):
                 moves._action_assign()
                 # Get following pickings (created by push rules) to confirm them as well.
                 forward_pickings = self.env['stock.picking']._get_impacted_pickings(moves)
+                if created_picking and not picking.move_ids:
+                    picking.unlink()
+                    pickings -= picking
                 (pickings | forward_pickings).action_confirm()
-                picking.message_post_with_source(
-                    'mail.message_origin_link',
-                    render_values={'self': picking, 'origin': order},
-                    subtype_xmlid='mail.mt_note',
-                )
+                if picking.exists():
+                    picking.message_post_with_source(
+                        'mail.message_origin_link',
+                        render_values={'self': picking, 'origin': order},
+                        subtype_xmlid='mail.mt_note',
+                    )
         return True
 
     def _add_picking_info(self, activity):
