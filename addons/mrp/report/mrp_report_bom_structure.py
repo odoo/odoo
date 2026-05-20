@@ -25,6 +25,10 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
         return warehouses
 
     @api.model
+    def _get_component_available_qty(self, bom_data, component):
+        return component['free_to_manufacture_qty']
+
+    @api.model
     def _compute_current_production_capacity(self, bom_data):
         # Get the maximum amount producible product of the selected bom given each component's stock levels.
         components_qty_to_produce = defaultdict(lambda: 0)
@@ -33,7 +37,7 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
             if not comp['product'].is_storable or comp['uom'].is_zero(comp['base_bom_line_qty']):
                 continue
             components_qty_to_produce[comp['product_id']] += comp['base_bom_line_qty']
-            components_qty_available[comp['product_id']] = comp['free_to_manufacture_qty']
+            components_qty_available[comp['product_id']] = self._get_component_available_qty(bom_data, comp)
         producibles = [float_round(components_qty_available[p_id] / qty, precision_digits=0, rounding_method='DOWN') for p_id, qty in components_qty_to_produce.items()]
         return min(producibles) * bom_data['bom']['product_qty'] if producibles else 0
 
@@ -107,6 +111,10 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
         }
 
     @api.model
+    def _get_component_forecast_available_qty(self, quantities_info, parent_bom=False):
+        return quantities_info.get("free_qty", 0)
+
+    @api.model
     def _get_components_closest_forecasted(self, lines, line_quantities, parent_bom, product_info, parent_product, ignore_stock=False):
         """
             Returns a dict mapping products to a dict of their corresponding BoM lines,
@@ -132,7 +140,7 @@ class ReportMrpReport_Bom_Structure(models.AbstractModel):
             product_info[product.id]['consumptions'][stock_loc] += line_quantity
             product_quantities_info[product.id][line.id] = product_info[product.id]['consumptions'][stock_loc]
             if (not product.is_storable or
-                    product.uom_id.compare(product_info[product.id]['consumptions'][stock_loc], quantities_info['free_qty']) <= 0):
+                    product.uom_id.compare(product_info[product.id]['consumptions'][stock_loc], self._get_component_forecast_available_qty(quantities_info, parent_bom)) <= 0):
                 # Use date.min as a sentinel value for _get_stock_availability
                 closest_forecasted[product.id][line.id] = date.min
             elif stock_loc != 'in_stock' or quantities_info['forecasted_qty'] < line_quantity:

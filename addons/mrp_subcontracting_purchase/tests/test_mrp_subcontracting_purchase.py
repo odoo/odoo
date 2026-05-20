@@ -96,7 +96,7 @@ class MrpSubcontractingPurchaseTest(TestAccountSubcontractingFlows):
 
         self.assertTrue(bom_data['lines']['components_available'])
         for component in bom_data['lines']['components']:
-            self.assertEqual(component['quantity_on_hand'], 4)
+            self.assertEqual(component['subcontract_qty_on_hand'], 4)
             self.assertEqual(component['availability_state'], 'available')
 
         # Generate a report for 5 products: only 4 products should be ready for production
@@ -104,7 +104,7 @@ class MrpSubcontractingPurchaseTest(TestAccountSubcontractingFlows):
 
         self.assertFalse(bom_data['lines']['components_available'])
         for component in bom_data['lines']['components']:
-            self.assertEqual(component['quantity_on_hand'], 4)
+            self.assertEqual(component['subcontract_qty_on_hand'], 4)
             self.assertEqual(component['availability_state'], 'unavailable')
 
     def test_count_smart_buttons(self):
@@ -773,11 +773,11 @@ class MrpSubcontractingPurchaseTest(TestAccountSubcontractingFlows):
         self.assertEqual(quantity_after_move, quantity_before_move + moved_quantity_to_subcontractor)
 
         report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom.id, searchQty=search_qty_less_than_or_equal_moved, searchVariant=False)
-        self.assertEqual(report_values['lines']['components'][0]['quantity_available'], moved_quantity_to_subcontractor)
-        self.assertEqual(report_values['lines']['components'][0]['quantity_on_hand'], moved_quantity_to_subcontractor)
+        self.assertEqual(report_values['lines']['components'][0]['subcontract_free_qty'], moved_quantity_to_subcontractor)
+        self.assertEqual(report_values['lines']['components'][0]['subcontract_qty_on_hand'], moved_quantity_to_subcontractor)
         self.assertEqual(report_values['lines']['quantity_available'], 0)
         self.assertEqual(report_values['lines']['quantity_on_hand'], 0)
-        self.assertEqual(report_values['lines']['producible_qty'], moved_quantity_to_subcontractor)
+        self.assertEqual(report_values['lines']['producible_qty'], component.qty_available + moved_quantity_to_subcontractor)
         self.assertEqual(report_values['lines']['stock_avail_state'], 'unavailable')
 
         self.assertEqual(report_values['lines']['components'][0]['stock_avail_state'], 'available')
@@ -821,7 +821,7 @@ class MrpSubcontractingPurchaseTest(TestAccountSubcontractingFlows):
 
         self.assertTrue(bom_data['lines']['components_available'])
         for component in bom_data['lines']['components']:
-            self.assertEqual(component['quantity_on_hand'], 4)
+            self.assertEqual(component['subcontract_qty_on_hand'], 4)
             self.assertEqual(component['availability_state'], 'available')
 
         # Generate a report for 5 products: only 4 products should be ready for production
@@ -829,7 +829,7 @@ class MrpSubcontractingPurchaseTest(TestAccountSubcontractingFlows):
 
         self.assertFalse(bom_data['lines']['components_available'])
         for component in bom_data['lines']['components']:
-            self.assertEqual(component['quantity_on_hand'], 4)
+            self.assertEqual(component['subcontract_qty_on_hand'], 4)
             self.assertEqual(component['availability_state'], 'unavailable')
 
     def test_location_after_dest_location_update_backorder_production(self):
