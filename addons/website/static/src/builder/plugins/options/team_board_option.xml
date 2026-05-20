@@ -14,6 +14,16 @@
             <BuilderSelectItem classAction="'o_team_board_compact'">Compact</BuilderSelectItem>
         </BuilderSelect>
     </BuilderRow>
+    <BuilderRow label.translate="Members">
+        <BuilderButton action="'addTeamMember'" preview="false">
+            Add member
+        </BuilderButton>
+    </BuilderRow>
+    <BuilderRow label.translate="Sort">
+        <BuilderButton action="'sortTeamMembersAlphabetically'" preview="false">
+            Sort alphabetically
+        </BuilderButton>
+    </BuilderRow>
 </t>
 
 <t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
