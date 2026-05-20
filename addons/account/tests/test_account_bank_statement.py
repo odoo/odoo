@@ -114,6 +114,13 @@ class TestAccountBankStatementLine(AccountTestInvoicingCommon):
                                     ).id
         return self.env['account.bank.statement.line'].create(values)
 
+    def set_counterpart_account(self, st_line, account):
+        _liquidity, suspense, _other = st_line._seek_for_lines()
+        st_line.move_id.button_draft()
+        suspense.account_id = account
+        st_line.move_id.action_post()
+        return suspense
+
     # -------------------------------------------------------------------------
     # TESTS about the statement line model.
     # -------------------------------------------------------------------------
@@ -1473,3 +1480,59 @@ class TestAccountBankStatementLine(AccountTestInvoicingCommon):
         reversed_move = self.env['account.move'].browse(reversal['res_id'])
 
         self.assertEqual(reversed_move.partner_id, partner)
+
+    def test_default_amls_matching_domain_keeps_transfer_account_lines(self):
+        transfer_account = self.env['account.account'].create({
+            'name': 'Liquidity Transfer Test',
+            'code': 'TRNF',
+            'account_type': 'asset_current',
+            'reconcile': True,
+        })
+
+        st_line_a = self.env['account.bank.statement.line'].create({
+            'journal_id': self.bank_journal_1.id,
+            'date': '2026-01-01',
+            'payment_ref': 'TRNFR-A',
+            'amount': 1000.0,
+        })
+        transfer_aml = self.set_counterpart_account(st_line_a, transfer_account)
+        self.assertTrue(st_line_a.is_reconciled)
+        self.assertEqual(transfer_aml.statement_line_id, st_line_a)
+
+        st_line_b = self.env['account.bank.statement.line'].create({
+            'journal_id': self.bank_journal_1.id,
+            'date': '2026-01-02',
+            'payment_ref': 'TRNFR-B',
+            'amount': -1000.0,
+        })
+
+        candidates = self.env['account.move.line'].search(
+            st_line_b._get_default_amls_matching_domain(),
+        )
+        self.assertIn(transfer_aml, candidates)
+
+    def test_default_amls_matching_domain_excludes_reconciled_receivable(self):
+        receivable_account = self.company_data['default_account_receivable']
+
+        st_line_a = self.env['account.bank.statement.line'].create({
+            'journal_id': self.bank_journal_1.id,
+            'date': '2026-01-01',
+            'payment_ref': 'AR-A',
+            'partner_id': self.partner_a.id,
+            'amount': 500.0,
+        })
+        receivable_aml = self.set_counterpart_account(st_line_a, receivable_account)
+        self.assertTrue(st_line_a.is_reconciled)
+
+        st_line_b = self.env['account.bank.statement.line'].create({
+            'journal_id': self.bank_journal_1.id,
+            'date': '2026-01-02',
+            'payment_ref': 'AR-B',
+            'partner_id': self.partner_a.id,
+            'amount': -500.0,
+        })
+
+        candidates = self.env['account.move.line'].search(
+            st_line_b._get_default_amls_matching_domain(),
+        )
+        self.assertNotIn(receivable_aml, candidates)
