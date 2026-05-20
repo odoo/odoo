@@ -18,4 +18,4 @@ class PortalEntry(models.Model):
 
     # Override me to add custom logic
     def _filter_visible_portal_cards(self):
-        return self.filtered('is_config_card')
+        return self.filtered(lambda entry: entry.is_config_card and not entry.placeholder_count)
