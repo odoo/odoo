@@ -15,12 +15,9 @@ Features include:
     'data': [
         'data/cron.xml',
         'data/res_partner_category_data.xml',
-        'data/l10n_tr_nilvera_einvoice.tax.office.csv',
         'data/account_incoterms_data.xml',
         'data/ubl_tr_templates.xml',
-        'views/res_company_views.xml',
         'views/l10n_tr_nilvera_einvoice_account_tax_code_views.xml',
-        'views/l10n_tr_nilvera_einvoice_tax_office_views.xml',
         'views/res_partner_views.xml',
         'views/account_move_views.xml',
         'views/account_tax_views.xml',
