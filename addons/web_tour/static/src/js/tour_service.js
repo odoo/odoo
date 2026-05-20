@@ -166,7 +166,8 @@ export class TourService {
         if (options.mode === "manual") {
             const tour = await this.orm.call("web_tour.tour", "get_tour_json_by_name", [name]);
             if (!tour) {
-                throw new Error(`Tour '${name}' is not found in the database.`);
+                console.error(`Tour '${name}' is not found in the database.`);
+                return;
             }
             if (!tour.steps.length && tourRegistry.contains(tour.name)) {
                 tour.steps = tourRegistry.get(tour.name).steps;
@@ -177,8 +178,8 @@ export class TourService {
                     typeof tour.steps === "function"
                         ? tour.steps()
                         : Array.isArray(tour.steps)
-                        ? tour.steps
-                        : [],
+                          ? tour.steps
+                          : [],
             };
         }
         // Automatic tour (come from registry)
@@ -186,7 +187,8 @@ export class TourService {
             await this.waitUntilTourRegistered(name);
             const tour = tourRegistry.get(name, null);
             if (!tour) {
-                throw new Error(`Tour '${name}' is not found in registry 'web_tour.tours'.`);
+                console.error(`Tour '${name}' is not found in registry 'web_tour.tours'.`);
+                return;
             }
             return {
                 ...tour,
