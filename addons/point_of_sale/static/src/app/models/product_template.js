@@ -127,6 +127,11 @@ export class ProductTemplate extends ProductTemplateAccounting {
         return this.active && this.available_in_pos;
     }
 
+    get showProductImageInSelf() {
+        const config = this.models["pos.config"].getFirst();
+        return config.self_ordering_mode === "kiosk" || this.image_128;
+    }
+
     get searchString() {
         return this.cacheValues("searchString", () => {
             const fields = ["name", "default_code", "barcode"];
