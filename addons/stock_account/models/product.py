@@ -484,7 +484,8 @@ class ProductProduct(models.Model):
                         in_qty = move._get_valued_qty()
                         in_value = move.value
                         if at_date or move.is_dropship:
-                            in_value = move._get_value(at_date=at_date, forced_std_price=average_cost)
+                            move_std_price = move.value / in_qty if in_qty else average_cost
+                            in_value = move._get_value(at_date=at_date, forced_std_price=move_std_price)
                         if lot:
                             lot_qty = move._get_valued_qty(lot)
                             in_value = (in_value * lot_qty / in_qty) if in_qty else 0

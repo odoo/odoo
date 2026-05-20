@@ -2205,6 +2205,41 @@ class TestStockValuation(TestStockValuationCommon):
         self.assertEqual(product.with_context(to_date=Datetime.to_string(now)).total_value, 300)
         self.assertEqual(product.with_context(to_date=Datetime.to_string(now)).avg_cost, 15)
 
+    def test_at_date_average_backdated_inventory_adjustments(self):
+        """
+        Backdated inventory adjustment at different prices and no product.value <= at_date:
+        the historical AVCO must be based on each moves own stored value, not freeze
+        on the first one's price.
+        """
+        now = Datetime.now()
+        past = now - timedelta(days=5)
+        at_date = Datetime.to_string(now - timedelta(days=1))
+        product = self.product_avco
+        product.standard_price = 10
+        inv_loc = product.property_stock_inventory
+        inv_loc.company_id = self.env.company.id
+
+        def _create_inventory_adjustment(src, dst):
+            m = self.env['stock.move'].create({
+                'location_id': src.id, 'location_dest_id': dst.id,
+                'product_id': product.id, 'product_uom': self.uom.id,
+                'product_uom_qty': 1.0,
+            })
+            m._action_confirm()
+            m._action_assign()
+            m.move_line_ids.quantity = 1.0
+            m.picked = True
+            m._action_done()
+            m.date = past
+
+        _create_inventory_adjustment(inv_loc, self.stock_location)  # +1, price at 10
+        _create_inventory_adjustment(self.stock_location, inv_loc)  # -1
+        product.standard_price = 20  # product.value created at now > at_date
+        _create_inventory_adjustment(inv_loc, self.stock_location)   # +1 price at 20
+
+        p = product.with_context(to_date=at_date)
+        self.assertEqual((p.qty_available, p.avg_cost, p.total_value), (1, 20, 20))
+
     def test_forecast_report_value(self):
         """ Create a SVL for two companies using different currency, and open
         the forecast report. Checks the forecast report use the good currency to
