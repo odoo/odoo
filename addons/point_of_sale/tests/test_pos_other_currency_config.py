@@ -301,7 +301,7 @@ class TestPoSOtherCurrencyConfig(TestPoSCommon):
             'journal_entries_after_closing': {
                 'session_journal_entry': {
                     'line_ids': [
-                        {'account_id': self.tax_received_account.id, 'partner_id': False, 'debit': 0, 'credit': 3.43, 'reconciled': False, 'amount_currency': -1.715, 'tax_base_amount': 49},
+                        {'account_id': self.tax_received_account.id, 'partner_id': False, 'debit': 0, 'credit': 3.43, 'reconciled': False, 'amount_currency': -1.715, 'tax_base_amount': -49},
                         {'account_id': self.sales_account.id, 'partner_id': False, 'debit': 0, 'credit': 49, 'reconciled': False, 'amount_currency': -24.5, 'tax_base_amount': 0},
                         {'account_id': self.cash_pm2.receivable_account_id.id, 'partner_id': False, 'debit': 52.43, 'credit': 0, 'reconciled': True, 'amount_currency': 26.215, 'tax_base_amount': 0},
                     ],
