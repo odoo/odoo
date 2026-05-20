@@ -3,7 +3,7 @@
 import { after, beforeEach, describe, expect, test } from "@odoo/hoot";
 import { queryFirst, waitFor, press, Deferred, waitForNone } from "@odoo/hoot-dom";
 import { advanceTime, animationFrame } from "@odoo/hoot-mock";
-import { Component, useState, xml } from "@odoo/owl";
+import { Component, onWillRender, reactive, useState, xml } from "@odoo/owl";
 import {
     contains,
     getService,
@@ -20,6 +20,7 @@ import { registry } from "@web/core/registry";
 import { session } from "@web/session";
 import { WebClient } from "@web/webclient/webclient";
 import { TourInteractive } from "@web_tour/js/tour_interactive/tour_interactive";
+import { TourPointer } from "@web_tour/js/tour_pointer/tour_pointer";
 
 describe.current.tags("desktop");
 
@@ -769,4 +770,44 @@ test("pointer hidden when trigger is behind overlay", async () => {
     await waitFor(".o_tour_pointer");
     // Finalize the dummy tour to avoid leaving in a dirty state
     await contains("button.foo").click();
+});
+
+test("avoid rendering loop of pointer", async () => {
+    registry.category("web_tour.tours").add("tour1", {
+        steps: () => [{ trigger: "button.foo", run: "click" }],
+    });
+    let renderingCount = 0;
+    patchWithCleanup(TourPointer.prototype, {
+        setup() {
+            super.setup();
+            onWillRender(() => {
+                renderingCount++;
+            });
+        },
+    });
+    const state = reactive({ hasFoo: true });
+    class Dummy extends Component {
+        static props = ["*"];
+        static components = {};
+        static template = xml`
+            <div class="o_home_menu">Dummy menu to allow pointer to disappear</div>
+            <button t-if="this.state.hasFoo" class="foo w-100">Foo</button>
+        `;
+        setup() {
+            this.state = useState(state);
+        }
+    }
+    await mountWithCleanup(Dummy);
+    await getService("tour_service").startTour("tour1", { mode: "manual" });
+    await waitFor(".o_tour_pointer");
+    // one initial rendering + one rendering for usePosition
+    expect(renderingCount).toBe(2);
+    await animationFrame();
+    expect(renderingCount).toBe(2);
+
+    state.hasFoo = false;
+    await waitForNone(".o_tour_pointer");
+    expect(renderingCount).toBe(3);
+    await animationFrame();
+    expect(renderingCount).toBe(3);
 });
