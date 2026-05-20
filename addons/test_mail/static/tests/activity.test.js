@@ -547,10 +547,19 @@ test("activity view: activity widget", async () => {
 test("activity widget: delete an activity from the widget", async () => {
     const [mailActivityId] = pyEnv["mail.activity"].search([["state", "=", "planned"]]);
     const [mailActivityTypeId] = pyEnv["mail.activity.type"].search([["name", "=", "Email"]]);
-    pyEnv["res.users"].write([serverState.userId], {
+    const testRecordId =
+        pyEnv["mail.test.activity"].search([])[0] || pyEnv["mail.test.activity"].create({});
+    pyEnv["mail.activity"].write([mailActivityId], {
+        res_model: "mail.test.activity",
+        res_id: testRecordId,
+    });
+    pyEnv["mail.test.activity"].write([testRecordId], {
         activity_ids: [mailActivityId],
         activity_type_id: mailActivityTypeId,
+        activity_state: "planned",
     });
+    pyEnv["mail.test.activity"]._applyComputesAndValidate();
+
     onRpc("mail.activity", "unlink", ({ args, route }) => {
         expect(args).toEqual([[mailActivityId]]);
         expect(route).toInclude("mail.activity");

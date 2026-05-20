@@ -122,6 +122,7 @@ class TestKarmaGain(common.SlidesCase):
     @mute_logger('odoo.models')
     def test_karma_gain_multiple_course_multiple_users(self):
         users = self.user_emp | self.user_portal
+        self.flush_tracking()
         users.write({'karma': 0})
 
         (self.channel | self.channel_2)._action_add_members(users.partner_id)

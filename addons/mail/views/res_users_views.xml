@@ -55,6 +55,9 @@
             <field name="inherit_id" ref="base.view_users_form"/>
             <field name="arch" type="xml">
                 <data>
+                    <xpath expr="//sheet" position="after">
+                        <chatter reload_on_follower="True"/>
+                    </xpath>
                     <xpath expr="//group[@name='other_preferences']" position="inside">
                         <field name="notification_type" widget="radio" invisible="share" options="{'horizontal': true}"/>
                         <field name="outgoing_mail_server_id" invisible="1"/> <!-- Used by the mail_server_configurator_selection widget -->

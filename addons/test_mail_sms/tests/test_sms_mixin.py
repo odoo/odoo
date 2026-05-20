@@ -112,4 +112,4 @@ class TestSMSNoThread(SMSCommon, TestSMSRecipients):
                         composer._action_send_sms()
 
                     # even if the stored number is correct, fall back on the computed number
-                    self.assertSMS(self.env['res.partner'], '+32455135790', 'pending')
+                    self.assertSMS(self.user_admin.partner_id, '+32455135790', 'pending')
