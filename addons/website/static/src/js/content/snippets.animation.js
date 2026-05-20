@@ -452,14 +452,14 @@ var registry = publicWidget.registry;
 registry.slider = publicWidget.Widget.extend({
     selector: '.carousel',
     disabledInEditableMode: false,
-    edit_events: {
-        'content_changed': '_onContentChanged',
-    },
 
     /**
      * @override
      */
     start: function () {
+        if (this.editableMode) {
+            window.top.$(this.$el[0]).on('content_changed', () => this._onContentChanged());
+        }
         this.$('img').on('load.slider', () => this._computeHeights());
         this._computeHeights();
         // Initialize carousel and pause if in edit mode.
