@@ -31,3 +31,23 @@ registry.category("web_tour.tours").add("test_post_login_default_screen_is_regis
             ProductScreen.isShown(),
         ].flat(),
 });
+
+registry.category("web_tour.tours").add("test_employee_chatter_with_tracked_order", {
+    steps: () =>
+        [
+            Chrome.clickBtn("Open Register"),
+            PosHr.clickLoginButton(),
+            SelectionPopup.has("Mitchell Admin", { run: "click" }),
+            Dialog.confirm("Open Register"),
+            FloorScreen.clickTable("5"),
+            ProductScreen.addOrderline("Water", "3"),
+            Chrome.clickPlanButton(),
+            PosHr.clickCashierName(),
+            SelectionPopup.has("Test Employee 3", { run: "click" }),
+            FloorScreen.clickTable("5"),
+            ProductScreen.clickOrderline("Water", "3"),
+            ProductScreen.clickNumpad("⌫"),
+            ProductScreen.clickNumpad("2"),
+            Chrome.clickPlanButton(),
+        ].flat(),
+});
