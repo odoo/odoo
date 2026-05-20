@@ -44,24 +44,32 @@
                         <p t-if="!this.checkPhoneFormat()" class="text-danger">Enter a valid phone number</p>
                     </t>
                     <t t-if="this.preset.needsPartner">
-                        <div t-att-class="'o_field_widget o_field_google_address_autocomplete' + (this.state.validationError?.type === 'delivery' ? ' address-delivery-error' : '')">
-                            <AddressAutoComplete t-props="this.addressAutoCompleteProps" />
-                            <div class="d-flex justify-content-end mt-1">
-                                <img src="/google_address_autocomplete/static/src/img/powered_by_google_on_white.png"
-                                    alt="Powered by Google"
-                                    style="height: 18px;"/>
+                        <t t-if="this.selfOrder.config._has_google_places_api_key">
+                            <div t-att-class="'o_field_widget o_field_google_address_autocomplete' + (this.state.validationError?.type === 'delivery' ? ' address-delivery-error' : '')">
+                                <AddressAutoComplete t-props="this.addressAutoCompleteProps" />
+                                <div class="d-flex justify-content-end mt-1">
+                                    <img src="/google_address_autocomplete/static/src/img/powered_by_google_on_white.png"
+                                        alt="Powered by Google"
+                                        style="height: 18px;"/>
+                                </div>
                             </div>
-                        </div>
-                        <t t-if="this.state.validationError">
-                            <p class="text-danger mb-0" t-out="this.state.validationError.message"/>
-                            <div t-if="this.state.validationError.type === 'delivery' and this.otherPresets.length" class="d-flex gap-2 flex-wrap justify-content-center">
-                                <button t-foreach="this.otherPresets" t-as="altPreset" t-key="altPreset.id"
-                                    type="button"
-                                    class="btn btn-light btn-sm"
-                                    t-on-click="() => this.selectPreset(altPreset)"
-                                    t-out="altPreset.name"
-                                />
-                            </div>
+                            <t t-if="this.state.validationError">
+                                <p class="text-danger mb-0" t-out="this.state.validationError.message"/>
+                                <div t-if="this.state.validationError.type === 'delivery' and this.otherPresets.length" class="d-flex gap-2 flex-wrap justify-content-center">
+                                    <button t-foreach="this.otherPresets" t-as="altPreset" t-key="altPreset.id"
+                                        type="button"
+                                        class="btn btn-light btn-sm"
+                                        t-on-click="() => this.selectPreset(altPreset)"
+                                        t-out="altPreset.name"
+                                    />
+                                </div>
+                            </t>
+                        </t>
+                        <t t-else="">
+                            <input type="text"
+                                class="form-control form-control-lg"
+                                placeholder="Address"
+                                t-custom-model="this.state.street"/>
                         </t>
                     </t>
                 </div>
