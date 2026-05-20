@@ -13,7 +13,7 @@ patch(PosOrder.prototype, {
         };
     },
     get unsentLines() {
-        return this.lines.filter(
+        return this.getOrderlines().filter(
             (l) =>
                 !l.isTipLine() &&
                 (!Object.keys(this.uiState.lineChanges).includes(l.uuid) ||

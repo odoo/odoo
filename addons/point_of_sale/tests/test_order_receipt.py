@@ -437,6 +437,57 @@ class TestPosOrderReceipt(TestPointOfSaleHttpCommon, CommonPosTest):
             product_ids = [d['product_id'] for d in ticket['changes']['data']]
             self.assertEqual(product_ids, [product_a.id], "Standalone ticket should only have product A")
 
+    def test_group_by_categ_receipts(self):
+        """Customer receipt lines and preparation ticket groups follow the PoS category sequence."""
+        food, drinks = self.env['pos.category'].create([
+            {'name': 'Food', 'sequence': 2},
+            {'name': 'Drinks', 'sequence': 1},
+        ])
+        lemonade, napkins, cheeseburger, cola, fries = self.env['product.product'].create([
+            {'name': name, 'available_in_pos': True, 'pos_categ_ids': categ.ids}
+            for name, categ in [
+                ('Lemonade', drinks),
+                ('Napkins', self.env['pos.category']),
+                ('Cheeseburger', food),
+                ('Cola', drinks),
+                ('Fries', food),
+            ]
+        ])
+        burger_menu = self.env['product.product'].create({
+            'name': 'Burger Menu',
+            'type': 'combo',
+            'available_in_pos': True,
+            'combo_ids': [Command.create({
+                'name': 'Menu Combo',
+                'combo_item_ids': [Command.create({'product_id': p.id}) for p in cheeseburger | cola],
+            })],
+            'pos_categ_ids': food.ids,
+        })
+        self.main_pos_config.iface_group_by_categ = True
+
+        order, _ = self.create_backend_pos_order({
+            'pos_config': self.main_pos_config,
+            'line_data': [
+                {'product_id': product.id, 'qty': 1}
+                for product in [lemonade, napkins, burger_menu, cheeseburger, cola, fries]
+            ],
+        })
+        menu_line = order.lines.filtered(lambda l: l.product_id == burger_menu)
+        order.lines.filtered(lambda l: l.product_id in cheeseburger | cola).combo_parent_id = menu_line
+
+        receipt_lines = order.order_receipt_generate_data()['lines']
+        self.assertEqual(
+            [line['product_data']['display_name'] for line in receipt_lines],
+            ['Lemonade', 'Burger Menu', 'Cheeseburger', 'Cola', 'Fries', 'Napkins'],
+        )
+
+        changes = order._generate_preparation_change_for_categories(set((food | drinks).ids))
+        groups = order._generate_preparation_receipt_data(changes)[0]['changes']['groupedData']
+        self.assertEqual(
+            [(group['name'], [line['basic_name'] for line in group['data']]) for group in groups],
+            [('Drinks', ['Lemonade', 'Burger Menu', 'Cola']), ('Food', ['Burger Menu', 'Cheeseburger', 'Fries'])],
+        )
+
     def test_total_item_count(self):
         setup_product_combo_items(self)
         self.weighted_product = self.env['product.template'].create({

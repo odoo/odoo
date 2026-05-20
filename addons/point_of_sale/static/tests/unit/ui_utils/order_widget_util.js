@@ -24,7 +24,7 @@ export function getOrderTax() {
 }
 
 export function getOrderlineNames() {
-    return queryAll(".orderline .product-name").map((el) => el.textContent.trim());
+    return queryAll(".orderline .product-name .text-wrap").map((el) => el.textContent.trim());
 }
 
 export function hasOrderline({
