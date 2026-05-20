@@ -1300,7 +1300,7 @@ ${issueStrings}`);
   }
 
   // ../owl-runtime/dist/owl-runtime.es.js
-  var version = "3.0.0-alpha.31";
+  var version = "3.0.0-alpha.29";
   var fibersInError = /* @__PURE__ */ new WeakMap();
   var nodeErrorHandlers = /* @__PURE__ */ new WeakMap();
   function invokeErrorHandlers(node, error, finalize, markFibers) {
@@ -4152,22 +4152,18 @@ ${issueStrings}`);
     return constructorType(Component);
   }
   var types2 = { ...types, component: componentType };
-  function validateDefaults(schema) {
-    const validation = {};
-    if (Array.isArray(schema)) {
-      for (const key of schema) {
-        if (key.endsWith("?")) {
-          validation[key] = types2.any();
-        }
+  function validateObjectWithDefaults(schema, defaultValues) {
+    const keys = Array.isArray(schema) ? schema : Object.keys(schema);
+    const mandatoryDefaultedKeys = keys.filter((key) => !key.endsWith("?") && key in defaultValues);
+    return (context) => {
+      if (mandatoryDefaultedKeys.length) {
+        context.addIssue({
+          message: "props have default values on mandatory keys",
+          keys: mandatoryDefaultedKeys
+        });
       }
-    } else {
-      for (const key in schema) {
-        if (key.endsWith("?")) {
-          validation[key] = schema[key];
-        }
-      }
-    }
-    return types2.strictObject(validation);
+      context.validate(types2.object(schema));
+    };
   }
   function props(type, defaults) {
     const node = getComponentScope();
@@ -4196,10 +4192,7 @@ ${issueStrings}`);
       );
       applyPropGetters(keys);
       if (app.dev) {
-        if (defaults) {
-          assertType(defaults, validateDefaults(type), `Invalid component default props (${componentName})`);
-        }
-        const validation = types2.object(type);
+        const validation = defaults ? validateObjectWithDefaults(type, defaults) : types2.object(type);
         assertType(node.props, validation, `Invalid component props (${componentName})`);
         node.willUpdateProps.push((np) => {
           assertType(np, validation, `Invalid component props (${componentName})`);
@@ -4421,8 +4414,8 @@ ${issueStrings}`);
   };
   var __info__ = {
     version: App.version,
-    date: "2026-05-21T09:26:06.769Z",
-    hash: "64885dbf",
+    date: "2026-05-19T07:45:07.034Z",
+    hash: "adcfd6de",
     url: "https://github.com/odoo/owl"
   };
 
@@ -5229,7 +5222,7 @@ ${"-".repeat(columnIndex - 1)}^`;
       if (defaultContent && !slots.default) {
         slots.default = {
           content: defaultContent,
-          on: null,
+          on,
           attrs: null,
           attrsTranslationCtx: null,
           scope: defaultSlotScope
