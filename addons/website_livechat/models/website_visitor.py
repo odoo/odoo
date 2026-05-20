@@ -14,6 +14,7 @@ class WebsiteVisitor(models.Model):
     current_livechat_agent_ids = fields.Many2many(
         "res.partner",
         compute="_compute_current_livechat_agent_ids",
+        groups="im_livechat.im_livechat_group_user",
         string="Speaking with",
     )
     discuss_channel_ids = fields.One2many('discuss.channel', 'livechat_visitor_id',
