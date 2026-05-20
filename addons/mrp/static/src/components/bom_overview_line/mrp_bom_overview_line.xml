@@ -22,7 +22,7 @@
             <t t-else="" t-out="this.formatFloat(this.data.quantity, {'digits': [false, this.precision]})"/>
         </td>
          <td t-if="this.showUom" class="text-start" t-out="this.data.uom_name"/>
-         <td t-if="this.forecastMode" class="text-center">
+         <td name="td_mrp_bom_free_to_use" t-if="this.forecastMode" class="text-center">
             <t t-if="this.hasQuantity">
                 <t t-out="this.formatFloat(this.data.quantity_available, {'digits': [false, this.precision]})"/> /
                 <t t-out="this.formatFloat(this.data.quantity_on_hand, {'digits': [false, this.precision]})"/>

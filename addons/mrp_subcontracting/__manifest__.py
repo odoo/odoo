@@ -22,6 +22,7 @@
         'views/mrp_production_views.xml',
         'views/subcontracting_portal_views.xml',
         'views/subcontracting_portal_templates.xml',
+        'report/mrp_report_bom_structure.xml',
     ],
     'demo': [
         'data/mrp_subcontracting_demo.xml',

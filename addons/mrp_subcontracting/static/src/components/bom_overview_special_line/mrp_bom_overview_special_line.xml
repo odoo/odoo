@@ -14,6 +14,10 @@
             <span t-if="this.showUom &amp;&amp; this.props.type == 'subcontracting'" t-out="this.subcontracting.uom"/>
         </xpath>
 
+        <xpath expr="//td[@name='free_to_use']" position="after">
+            <td name="free_to_use_subcontract" t-if="this.forecastMode and this.env.isSubcontract"/>
+        </xpath>
+
         <xpath expr="//td[@name='bom_cost']" position="inside">
             <span t-if="this.props.type == 'subcontracting'" t-out="this.formatMonetary(this.subcontracting.bom_cost)"/>
         </xpath>

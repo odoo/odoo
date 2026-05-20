@@ -10,7 +10,7 @@
                             <th name="th_mrp_bom_h">Product</th>
                             <th t-attf-class="{{ this.showUom ? 'text-center' : 'text-end' }}" t-attf-style="text-indent:{{ this.showUom ? (this.forecastMode ? -10 : -50) : 0 }}px"
                                 t-attf-colspan="{{ this.showUom ? 2 : 1 }}">Quantity</th>
-                            <th t-if="this.forecastMode" class="text-center" title="Availabilities on products.">Free to Use / On Hand</th>
+                            <th name="th_mrp_bom_free_to_use" t-if="this.forecastMode" class="text-center" title="Availabilities on products.">Free to Use / On Hand</th>
                             <th t-if="this.forecastMode" class="text-center">Status</th>
                             <th t-if="this.forecastMode" class="text-center" title="Resupply lead time.">Lead Time</th>
                             <th t-if="this.forecastMode">Route</th>
