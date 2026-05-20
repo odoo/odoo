@@ -70,13 +70,8 @@
                                         <field name="parent_id" placeholder="Root account"/>
                                         <field name="company_ids" widget="many2many_tags" options="{'no_create': True}" groups="base.group_multi_company"/>
                                     </group>
-                                    <group>
-                                        <div colspan="2">
-                                            <div class="o_horizontal_separator mb-3">
-                                                <label for="description" string="Description" class="fs-4 fw-bolder"/>
-                                            </div>
-                                            <field name="description" no_label="1" placeholder="Enter description here..."/>
-                                        </div>
+                                    <group string="Description">
+                                        <field name="description" nolabel="1" colspan="2" placeholder="Enter description here..."/>
                                     </group>
                                 </group>
                             </page>
