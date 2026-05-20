@@ -10,7 +10,7 @@
 
     <t t-name="discuss.CallSettings.content">
         <div class="o-discuss-CallSettings d-flex flex-column">
-            <Tabs direction="'h'" initialTabId="'voice'">
+            <Tabs direction="'h'" initialTabId="this.props.initialTab or 'voice'">
                 <t t-set-slot="headers">
                     <TabHeader id="'voice'" title.translate="Voice &amp; Audio">
                         <div class="py-1 px-2"><i class="fa fa-microphone me-2"/>Voice &amp; Audio</div>

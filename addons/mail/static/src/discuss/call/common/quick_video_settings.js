@@ -19,6 +19,6 @@ export class QuickVideoSettings extends Component {
     }
 
     onClickVideoSettings() {
-        this.dialogService.add(CallSettingsDialog, {});
+        this.dialogService.add(CallSettingsDialog, { initialTab: "video" });
     }
 }

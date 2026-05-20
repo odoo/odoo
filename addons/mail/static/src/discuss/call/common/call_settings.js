@@ -13,7 +13,7 @@ import { Dialog } from "@web/core/dialog/dialog";
 
 export class CallSettings extends Component {
     static template = "discuss.CallSettings";
-    static props = ["close?", "withActionPanel?", "isCompact?"];
+    static props = ["close?", "initialTab?", "isCompact?", "withActionPanel?"];
     static defaultProps = {
         withActionPanel: true,
     };
@@ -128,9 +128,9 @@ export class CallSettings extends Component {
 export class CallSettingsDialog extends Component {
     static template = xml`
         <Dialog size="'medium'" footer="false" title.translate="Voice &amp; Video Settings">
-            <CallSettings withActionPanel="false"/>
+            <CallSettings initialTab="this.props.initialTab" withActionPanel="false"/>
         </Dialog>
     `;
-    static props = [];
+    static props = ["initialTab?"];
     static components = { CallSettings, Dialog };
 }

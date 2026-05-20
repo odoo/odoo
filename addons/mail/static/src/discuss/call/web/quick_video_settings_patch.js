@@ -13,6 +13,7 @@ patch(QuickVideoSettings.prototype, {
             context: {
                 dialog_size: "medium",
                 footer: false,
+                initialTab: "video",
             },
             name: _t("Voice & Video Settings"),
             tag: "mail.discuss_call_settings_action",
