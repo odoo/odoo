@@ -1,8 +1,9 @@
 /* global owl */
 
-const { useState, useEnv } = owl;
+import Store from "../store.js";
+
+const { plugin } = owl;
 
 export default function useStore() {
-    const env = useEnv();
-    return useState(env.store);
+    return plugin(Store);
 }

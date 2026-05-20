@@ -4,43 +4,40 @@ import useStore from "../../hooks/store_hook.js";
 import { Dialog } from "./dialog.js";
 import { LoadingFullScreen } from "../loading_full_screen.js";
 
-const { Component, xml, useState } = owl;
+const { Component, xml, signal } = owl;
 
 export class WifiDialog extends Component {
-    static props = {};
     static components = { Dialog, LoadingFullScreen };
 
-    setup() {
-        this.store = useStore();
-        this.state = useState({
-            scanning: true,
-            waitRestart: false,
-            status: "",
-            availableWiFi: [],
-            isPasswordVisible: false,
-        });
-        this.form = useState({
-            essid: "",
-            password: "",
-        });
-    }
+    store = useStore();
+
+    scanning = signal(true);
+    waitRestart = signal(false);
+    status = signal("");
+    availableWiFi = signal([]);
+    isPasswordVisible = signal(false);
+
+    form = {
+        essid: signal(""),
+        password: signal(""),
+    };
 
     onClose() {
-        this.state.availableWiFi = [];
-        this.state.scanning = true;
-        this.form.essid = "";
-        this.form.password = "";
+        this.availableWiFi.set([]);
+        this.scanning.set(true);
+        this.form.essid.set("");
+        this.form.password.set("");
     }
 
     isCurrentlyConnectedToWifi() {
         return (
-            !this.store.base.is_access_point_up &&
-            this.store.base.network_interfaces.some((netInterface) => netInterface.is_wifi)
+            !this.store.base().is_access_point_up &&
+            this.store.base().network_interfaces.some((netInterface) => netInterface.is_wifi)
         );
     }
 
     isCurrentlyConnectedToEthernet() {
-        return this.store.base.network_interfaces.some((netInterface) => !netInterface.is_wifi);
+        return this.store.base().network_interfaces.some((netInterface) => !netInterface.is_wifi);
     }
 
     async getWiFiNetworks() {
@@ -48,53 +45,56 @@ export class WifiDialog extends Component {
             const data = await this.store.rpc({
                 url: "/iot_drivers/wifi",
             });
-            this.form.essid = data.currentWiFi || "Select Network...";
-            this.state.availableWiFi = data.availableWiFi;
+            this.form.essid.set(data.currentWiFi || "Select Network...");
+            this.availableWiFi.set(data.availableWiFi);
 
-            this.state.scanning = false;
+            this.scanning.set(false);
         } catch {
             console.warn("Error while fetching data");
         }
     }
 
     async connectToWiFi() {
-        if (!this.form.essid || !this.form.password) {
+        if (!this.form.essid() || !this.form.password()) {
             return;
         }
 
-        this.state.waitRestart = true;
+        this.waitRestart.set(true);
         const responsePromise = this.store.rpc({
             url: "/iot_drivers/update_wifi",
             method: "POST",
-            params: this.form,
+            params: {
+                essid: this.form.essid(),
+                password: this.form.password(),
+            },
         });
         if (this.isCurrentlyConnectedToEthernet()) {
             const data = await responsePromise;
             if (data.status !== "success") {
-                this.state.waitRestart = false;
+                this.waitRestart.set(false);
             }
         } else {
             // The IoT box is no longer reachable, so we can't await the response.
-            this.state.status = "connecting";
-            this.state.waitRestart = false;
+            this.status.set("connecting");
+            this.waitRestart.set(false);
         }
     }
 
     async clearConfiguration() {
         try {
-            this.state.waitRestart = true;
+            this.waitRestart.set(true);
             const responsePromise = this.store.rpc({
                 url: "/iot_drivers/wifi_clear",
             });
             if (this.isCurrentlyConnectedToEthernet()) {
                 const data = await responsePromise;
                 if (data.status !== "success") {
-                    this.state.waitRestart = false;
+                    this.waitRestart.set(false);
                 }
             } else {
                 // The IoT box is no longer reachable, so we can't await the response.
-                this.state.status = "disconnecting";
-                this.state.waitRestart = false;
+                this.status.set("disconnecting");
+                this.waitRestart.set(false);
             }
         } catch {
             console.warn("Error while clearing configuration");
@@ -102,21 +102,21 @@ export class WifiDialog extends Component {
     }
 
     togglePasswordVisibility() {
-        this.state.isPasswordVisible = !this.state.isPasswordVisible;
+        this.isPasswordVisible.set(!this.isPasswordVisible());
     }
 
     static template = xml`
     <t t-translation="off">
-        <LoadingFullScreen t-if="this.state.waitRestart">
+        <LoadingFullScreen t-if="this.waitRestart()">
             <t t-set-slot="body">
                 Updating Wi-Fi configuration, please wait...
             </t>
         </LoadingFullScreen>
 
-        <div t-if="state.status" class="position-fixed top-0 start-0 bg-white vh-100 w-100 justify-content-center align-items-center d-flex always-on-top">
+        <div t-if="this.status()" class="position-fixed top-0 start-0 bg-white vh-100 w-100 justify-content-center align-items-center d-flex always-on-top">
             <div class="alert alert-success mx-4">
-                <t t-if="state.status === 'connecting'">
-                    The IoT Box will now attempt to connect to <t t-out="form.essid"/>. The next step is to find your <b>pairing code</b>:
+                <t t-if="this.status() === 'connecting'">
+                    The IoT Box will now attempt to connect to <t t-out="this.form.essid()"/>. The next step is to find your <b>pairing code</b>:
                     <ul>
                         <li>You will need a screen or a compatible USB printer connected.</li>
                         <li>In a few seconds, the pairing code should display on your screen and/or print from your printer.</li>
@@ -125,7 +125,7 @@ export class WifiDialog extends Component {
                     In the event that the pairing code does not appear, it may be because the IoT Box failed to connect to the Wi-Fi network.
                     In this case you will need to reconnect to the Wi-Fi hotspot and try again.
                 </t>
-                <t t-if="state.status === 'disconnecting'">
+                <t t-if="this.status() === 'disconnecting'">
                     The IoT Box Wi-Fi configuration has been cleared. You will need to connect to the IoT Box hotspot or connect an ethernet cable.
                 </t>
             </div>
@@ -135,10 +135,10 @@ export class WifiDialog extends Component {
             name="'Configure Wi-Fi'"
             help="'https://www.odoo.com/documentation/latest/applications/general/iot/iot_box.html#iot-iot-box-network-wifi'"
             btnName="'Configure'"
-            onOpen.bind="getWiFiNetworks"
-            onClose.bind="onClose">
+            onOpen.bind="this.getWiFiNetworks"
+            onClose.bind="this.onClose">
             <t t-set-slot="body">
-                <div t-if="this.state.scanning" class="position-absolute top-0 start-0 bg-white h-100 w-100 justify-content-center align-items-center d-flex flex-column gap-3 always-on-top">
+                <div t-if="this.scanning()" class="position-absolute top-0 start-0 bg-white h-100 w-100 justify-content-center align-items-center d-flex flex-column gap-3 always-on-top">
                     <div class="spinner-border" role="status">
                         <span class="visually-hidden">Loading...</span>
                     </div>
@@ -153,23 +153,23 @@ export class WifiDialog extends Component {
                     <div class="mb-3">
                         <select name="essid" class="form-control" id="wifi-ssid" t-model="this.form.essid">
                             <option>Select Network...</option>
-                            <option t-foreach="this.state.availableWiFi.filter((wifi) => wifi)" t-as="wifi" t-key="wifi" t-att-value="wifi">
-                                <t t-esc="wifi"/>
+                            <option t-foreach="this.availableWiFi().filter((wifi) => wifi)" t-as="wifi" t-key="wifi" t-att-value="wifi">
+                                <t t-out="wifi"/>
                             </option>
                         </select>
                     </div>
 
                     <div class="mb-3 d-flex gap-1">
-                        <input name="password" t-att-type="state.isPasswordVisible ? '' : 'password'" class="form-control" aria-label="Username" aria-describedby="basic-addon1" t-model="this.form.password" placeholder="Wi-Fi password"/>
-                        <button class="btn btn-secondary" type="button" t-on-click="togglePasswordVisibility">
-                            <i t-att-class="'fa fa-eye' + (state.isPasswordVisible ? '-slash' : '')"></i>
+                        <input name="password" t-att-type="this.isPasswordVisible() ? '' : 'password'" class="form-control" aria-label="Username" aria-describedby="basic-addon1" t-model="this.form.password" placeholder="Wi-Fi password"/>
+                        <button class="btn btn-secondary" type="button" t-on-click="this.togglePasswordVisibility">
+                            <i t-att-class="'fa fa-eye' + (this.isPasswordVisible() ? '-slash' : '')"></i>
                         </button>
                     </div>
                 </div>
             </t>
             <t t-set-slot="footer">
-                <button type="submit" class="btn btn-primary btn-sm" t-att-disabled="form.essid === 'Select Network...'" t-on-click="connectToWiFi">Connect</button>
-                <button t-if="this.isCurrentlyConnectedToWifi()" type="submit" class="btn btn-secondary btn-sm" t-on-click="clearConfiguration">
+                <button type="submit" class="btn btn-primary btn-sm" t-att-disabled="this.form.essid() === 'Select Network...'" t-on-click="this.connectToWiFi">Connect</button>
+                <button t-if="this.isCurrentlyConnectedToWifi()" type="submit" class="btn btn-secondary btn-sm" t-on-click="this.clearConfiguration">
                     Disconnect From Current
                 </button>
                 <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>

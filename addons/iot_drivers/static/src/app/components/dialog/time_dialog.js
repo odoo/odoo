@@ -3,21 +3,20 @@
 import useStore from "../../hooks/store_hook.js";
 import { Dialog } from "./dialog.js";
 
-const { Component, useState, xml } = owl;
+const { Component, signal, xml } = owl;
 
 export class TimeDialog extends Component {
-    static props = {};
     static components = { Dialog };
 
+    store = useStore();
+
+    odooUptimeSeconds = signal(this.store.base().odoo_uptime_seconds);
+    systemUptimeSeconds = signal(this.store.base().system_uptime_seconds);
+
     setup() {
-        this.store = useStore();
-        this.state = useState({
-            odooUptimeSeconds: this.store.base.odoo_uptime_seconds,
-            systemUptimeSeconds: this.store.base.system_uptime_seconds,
-        });
         setInterval(() => {
-            this.state.odooUptimeSeconds += 1;
-            this.state.systemUptimeSeconds += 1;
+            this.odooUptimeSeconds.set(this.odooUptimeSeconds() + 1);
+            this.systemUptimeSeconds.set(this.systemUptimeSeconds() + 1);
         }, 1000);
     }
 
@@ -53,13 +52,13 @@ export class TimeDialog extends Component {
                 <div class="d-flex flex-column gap-4">
                   <div>
                     <h5>Odoo Service</h5>
-                    <div>Running for <b t-out="secondsToHumanReadable(state.odooUptimeSeconds)"/></div>
-                    <div class="text-secondary">Started at <b t-out="startDateFromSeconds(state.odooUptimeSeconds)"/></div>
+                    <div>Running for <b t-out="this.secondsToHumanReadable(this.odooUptimeSeconds())"/></div>
+                    <div class="text-secondary">Started at <b t-out="this.startDateFromSeconds(this.odooUptimeSeconds())"/></div>
                   </div>
-                  <div t-if="store.isLinux">
+                  <div t-if="this.store.isLinux()">
                     <h5>Operating System</h5>
-                    <div>Running for <b t-out="secondsToHumanReadable(state.systemUptimeSeconds)"/></div>
-                    <div class="text-secondary">Started at <b t-out="startDateFromSeconds(state.systemUptimeSeconds)"/></div>
+                    <div>Running for <b t-out="this.secondsToHumanReadable(this.systemUptimeSeconds())"/></div>
+                    <div class="text-secondary">Started at <b t-out="this.startDateFromSeconds(this.systemUptimeSeconds())"/></div>
                   </div>
                 </div>
             </t>
