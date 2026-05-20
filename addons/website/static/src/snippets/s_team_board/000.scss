@@ -1,0 +1,76 @@
+.s_team_board {
+    .s_card {
+        cursor: pointer;
+        transition: transform 120ms ease, box-shadow 120ms ease;
+
+        &:hover,
+        &:focus-visible {
+            transform: translateY(-2px);
+            box-shadow: $box-shadow;
+        }
+
+        &:focus-visible {
+            outline: 2px solid var($primary);
+            outline-offset: 2px;
+        }
+    }
+
+    .s_team_board_modal {
+
+        .s_team_board_modal_aside {
+            flex: 0 0 14rem;
+        }
+
+        .s_team_board_modal_img {
+            aspect-ratio: 1 / 1;
+            object-fit: cover;
+            width: 100%;
+        }
+
+        .s_team_board_modal_bio {
+            min-height: 4rem;
+        }
+    }
+
+    &.o_team_board_list {
+        > .container > .row > [data-name="Team Member"] {
+            flex: 0 0 100%;
+        }
+
+        .s_card {
+            flex-direction: row;
+        }
+
+        .o_card_img_wrapper {
+            flex: 0 0 auto;
+            width: 33%;
+            max-width: 14rem;
+            margin: 0;
+
+            &::before {
+                content: none;
+            }
+        }
+
+        .o_card_img.card-img-top {
+            border-top-right-radius: 0;
+            border-bottom-left-radius: var(--card-inner-border-radius, inherit);
+        }
+
+        .card-body {
+            flex: 1 1 auto;
+        }
+    }
+
+    &.o_team_board_compact {
+        .card-body {
+            padding: 0.8rem 1rem;
+
+            >p {
+                font-size: 0.875rem;
+                margin-bottom: 0.25rem;
+                line-height: 1.4;
+            }
+        }
+    }
+}

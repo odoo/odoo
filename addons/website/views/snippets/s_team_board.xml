@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-<template id="s_team_board" name="Team Detail">
+<template id="s_team_board" name="Team Board">
     <section class="s_team_board o_cc o_cc1 pt64 pb64">
         <div class="container">
             <h2 class="h3-fs">Meet our team</h2>
             <p class="lead">The people building the experience you rely on every day.</p>
             <div class="row">
                 <div data-name="Team Member" class="col-6 col-lg-3">
-                    <div class="s_card o_card_img_top card o_cc o_cc1" data-vxml="001" data-snippet="s_card" data-name="Card">
+                    <div class="s_card o_card_img_top card o_cc o_cc1" data-name="Card" data-snippet="s_card" data-vxml="001" tabindex="0" role="button" aria-haspopup="dialog">
                         <figure class="o_card_img_wrapper ratio ratio-1x1 mb-0">
                             <img class="o_card_img card-img-top" src="/web/image/website.s_company_team_image_1"/>
                         </figure>
@@ -20,7 +20,7 @@
                     </div>
                 </div>
                 <div data-name="Team Member" class="col-6 col-lg-3">
-                    <div class="s_card o_card_img_top card o_cc o_cc1" data-vxml="001" data-snippet="s_card" data-name="Card">
+                    <div class="s_card o_card_img_top card o_cc o_cc1" data-name="Card" data-snippet="s_card" data-vxml="001" tabindex="0" role="button" aria-haspopup="dialog">
                         <figure class="o_card_img_wrapper ratio ratio-1x1 mb-0">
                             <img class="o_card_img card-img-top" src="/web/image/website.s_company_team_image_2"/>
                         </figure>
@@ -32,7 +32,7 @@
                     </div>
                 </div>
                 <div data-name="Team Member" class="col-6 col-lg-3">
-                    <div class="s_card o_card_img_top card o_cc o_cc1" data-vxml="001" data-snippet="s_card" data-name="Card">
+                    <div class="s_card o_card_img_top card o_cc o_cc1" data-name="Card" data-snippet="s_card" data-vxml="001" tabindex="0" role="button" aria-haspopup="dialog">
                         <figure class="o_card_img_wrapper ratio ratio-1x1 mb-0">
                             <img class="o_card_img card-img-top" src="/web/image/website.s_company_team_image_3"/>
                         </figure>
@@ -45,7 +45,41 @@
                 </div>
             </div>
         </div>
+        <div class="modal fade s_team_board_modal"
+             tabindex="-1" role="dialog" aria-modal="true"
+             aria-labelledby="s_team_board_modal_title" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg">
+                <div class="modal-content">
+                    <div class="modal-body p-4">
+                        <button type="button" class="btn-close s_team_board_modal_close position-absolute top-0 end-0 m-3"
+                                data-bs-dismiss="modal" aria-label="Close"/>
+                        <div class="d-flex flex-column flex-md-row align-items-start gap-4">
+                            <div class="s_team_board_modal_aside">
+                                <img class="s_team_board_modal_img rounded mb-3" alt=""/>
+                                <button type="button" class="btn btn-primary s_team_board_modal_send"
+                                        data-default-label="Send a message">Send a message</button>
+                            </div>
+                            <div class="s_team_board_modal_text flex-grow-1">
+                                <h3 class="modal-title h3-fs s_team_board_modal_name" id="s_team_board_modal_title">&#8203;</h3>
+                                <p class="s_team_board_modal_role text-muted mb-2"/>
+                                <p class="s_team_board_modal_bio"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </section>
 </template>
+
+<asset id="website.s_team_board_000_scss" name="Team Board 000 SCSS">
+    <bundle>web.assets_frontend</bundle>
+    <path>website/static/src/snippets/s_team_board/000.scss</path>
+</asset>
+
+<asset id="website.s_team_board_000_edit_scss" name="Team Board 000 Edit SCSS">
+    <bundle>website.assets_inside_builder_iframe</bundle>
+    <path>website/static/src/snippets/s_team_board/000.edit.scss</path>
+</asset>
 
 </odoo>
