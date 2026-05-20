@@ -1303,7 +1303,7 @@ class PosSession(models.Model):
             'name': tax.name,
             'account_id': account_id,
             'move_id': self.move_id.id,
-            'tax_base_amount': abs(base_amount_converted),
+            'tax_base_amount': base_amount_converted,
             'tax_repartition_line_id': repartition_line_id,
             'tax_tag_ids': [(6, 0, tag_ids)],
             'display_type': 'tax',
