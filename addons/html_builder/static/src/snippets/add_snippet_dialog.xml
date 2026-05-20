@@ -7,7 +7,8 @@
                 t-on-click="this.toggleMobilePreview"
                 t-att-class="{ 'text-success': this.state.isMobilePreviewMode }"
                 title="Toggle Mobile Preview"
-                aria-label="Toggle Mobile Preview">
+                aria-label="Toggle Mobile Preview"
+                data-hotkey="M">
             <i class="fa fa-mobile fa-2x"/>
         </button>
     </xpath>
@@ -27,7 +28,7 @@
             <div class="d-flex w-100 h-100 vertical flex-row">
                 <aside class="border-end overflow-auto">
                     <div class="d-block position-relative p-2 border-bottom">
-                        <input type="search" class="o_add_snippet_dialog_search form-control pe-4" placeholder="Search for a block"
+                        <input type="search" data-hotkey="S" class="o_add_snippet_dialog_search form-control pe-4" placeholder="Search for a block"
                             aria-label="Search for a block" t-custom-model="this.state.search" t-custom-ref="autofocus"/>
                         <span class="input-group-text position-absolute top-50 end-0 translate-middle-y me-2 border-0 bg-transparent text-muted">
                             <i class="oi oi-search" aria-hidden="true"></i>

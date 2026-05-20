@@ -8,7 +8,7 @@ import { localization } from "@web/core/l10n/localization";
 import { _t } from "@web/core/l10n/translation";
 import { getFirstAndLastTabableElements } from "@web/core/ui/ui_service";
 import { cookie } from "@web/core/browser/cookie";
-import { useAutofocus, useChildRef } from "@web/core/utils/hooks";
+import { useAutofocus, useChildRef, useService } from "@web/core/utils/hooks";
 import { SnippetViewer } from "./snippet_viewer";
 
 /**
@@ -35,6 +35,7 @@ export class AddSnippetDialog extends Component {
 
     setup() {
         useAutofocus();
+        this.hotkeyService = useService("hotkey");
         this.iframeRef = useRef("iframe");
         this.modalRef = useChildRef();
         this.state = proxy({
@@ -83,6 +84,8 @@ export class AddSnippetDialog extends Component {
             iframeDocument.body.style.setProperty("direction", localization.direction);
             iframeDocument.body.tabIndex = "-1";
             iframeDocument.addEventListener("keydown", this.onIframeDocumentKeydown.bind(this));
+
+            this.hotkeyService.registerIframe(this.iframeRef.el);
 
             root = this.__owl__.app.createRoot(SnippetViewer, {
                 env: Object.create(this.env),
@@ -196,9 +199,6 @@ export class AddSnippetDialog extends Component {
      */
     onIframeDocumentKeydown(ev) {
         const hotkey = getActiveHotkey(ev);
-        if (hotkey === "escape") {
-            this.env.dialogData.close({ dismiss: true });
-        }
         if (!["tab", "shift+tab"].includes(hotkey)) {
             return;
         }
