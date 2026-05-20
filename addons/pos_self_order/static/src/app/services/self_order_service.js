@@ -21,7 +21,7 @@ import {
     isValidEmail,
     orderUsageUTCtoLocalUtil,
 } from "@point_of_sale/utils";
-import { getOrderLineValues } from "./card_utils";
+import { getAttributeValues, getOrderLineValues } from "./card_utils";
 import { EpsonPrinter } from "@point_of_sale/app/utils/printer/epson_printer";
 import { initLNA } from "@point_of_sale/app/utils/init_lna";
 
@@ -287,6 +287,9 @@ export class SelfOrder extends Reactive {
         customValues = {},
         comboValues = {}
     ) {
+        if (productTemplate.isDeletedCombination(getAttributeValues(selectedValues, this.models))) {
+            return;
+        }
         const product = productTemplate.product_variant_ids[0];
         const values = getOrderLineValues(
             this,

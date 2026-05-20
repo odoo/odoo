@@ -229,7 +229,7 @@ export class ProductProduct extends models.ServerModel {
             product_tag_ids: [],
             barcode: false,
             default_code: false,
-            product_template_attribute_value_ids: [],
+            product_template_attribute_value_ids: [5],
             product_template_variant_value_ids: [5],
         },
         {
@@ -241,7 +241,7 @@ export class ProductProduct extends models.ServerModel {
             product_tag_ids: [],
             barcode: false,
             default_code: false,
-            product_template_attribute_value_ids: [],
+            product_template_attribute_value_ids: [6],
             product_template_variant_value_ids: [6],
         },
         {

@@ -1210,24 +1210,11 @@ export class PosStore extends WithLazyGetterTrap {
                 // Find candidate based on instantly created variants.
                 const attributeValues = this.models["product.template.attribute.value"]
                     .readMany(payload.attribute_value_ids)
-                    .filter((value) => value.attribute_id.create_variant !== "no_variant")
-                    .map((value) => value.id);
+                    .filter((value) => value.attribute_id.create_variant !== "no_variant");
 
-                let candidate = productTemplate.product_variant_ids.find((variant) => {
-                    const attributeIds = variant.product_template_attribute_value_ids.map(
-                        (value) => value.id
-                    );
-                    return (
-                        attributeValues.every((id) => attributeIds.includes(id)) &&
-                        attributeValues.length
-                    );
-                });
+                let candidate = productTemplate.getVariantForCombination(attributeValues);
 
-                const isDynamic = productTemplate.attribute_line_ids.some(
-                    (line) => line.attribute_id.create_variant === "dynamic"
-                );
-
-                if (!candidate && isDynamic) {
+                if (!candidate && productTemplate.hasDynamicAttributes()) {
                     // Need to create the new product.
                     const result = await this.data.callRelated(
                         "product.template",
@@ -1235,6 +1222,14 @@ export class PosStore extends WithLazyGetterTrap {
                         [productTemplate.id, payload.attribute_value_ids, this.config.id]
                     );
                     candidate = result["product.product"][0];
+                }
+
+                if (!candidate && attributeValues.length) {
+                    this.dialog.add(AlertDialog, {
+                        title: _t("Variant does not exist"),
+                        body: _t("This option or combination of options is not available"),
+                    });
+                    return false;
                 }
 
                 Object.assign(values, {

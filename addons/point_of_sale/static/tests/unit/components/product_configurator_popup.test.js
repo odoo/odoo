@@ -1,5 +1,5 @@
 import { test, expect } from "@odoo/hoot";
-import { mountWithCleanup } from "@web/../tests/web_test_helpers";
+import { contains, mountWithCleanup, patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { setupPosEnv } from "../utils";
 import { ProductConfiguratorPopup } from "@point_of_sale/app/components/popups/product_configurator_popup/product_configurator_popup";
 import { definePosModels } from "../data/generate_model_definitions";
@@ -125,4 +125,44 @@ test("Same attribute on two lines keeps one selection per line", async () => {
         false
     );
     expect(Object.keys(line.selectedAttributes).length).toBe(2);
+});
+
+test("Deleted variant combination cannot be added", async () => {
+    const store = await setupPosEnv();
+    // "Leather Belt" with a "size" line (S/M) creating variants and a `no_variant`
+    // "Customization" line, whose "M" variant has been deleted.
+    const productTemplate = store.models["product.template"].get(60);
+    productTemplate.update({
+        attribute_line_ids: store.models["product.template.attribute.line"].readMany([5, 4]),
+    });
+    store.models["product.product"].get(61).delete();
+    const order = store.addNewOrder();
+
+    const popup = await mountWithCleanup(ProductConfiguratorPopup, {
+        props: {
+            productTemplate: productTemplate,
+            getPayload: () => {},
+            close: () => {},
+        },
+    });
+
+    expect(".modal .alert-warning").toHaveCount(0);
+    expect(".modal-footer .btn-primary").not.toHaveClass("disabled");
+
+    await contains("input[id='7_9']").click(); // size "M"
+    expect(".modal .alert-warning").toHaveText(
+        "This option or combination of options is not available"
+    );
+    expect(".modal-footer .btn-primary").toHaveClass("disabled");
+
+    let alertProps;
+    patchWithCleanup(store.dialog, {
+        add: (component, props) => (alertProps = props),
+    });
+    await store.addLineToCurrentOrder({
+        product_tmpl_id: productTemplate,
+        payload: popup.computePayload(),
+    });
+    expect(alertProps.title).toBe("Variant does not exist");
+    expect(order.lines).toHaveLength(0);
 });
