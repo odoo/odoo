@@ -248,11 +248,13 @@ export class WebsiteSale extends Interaction {
         // be able to be edited depending on if this is done loading before
         // or after the editor is ready.
         if (images && !this._isEditorEnabled() && newImages ) {
+            this.services["public.interactions"].stopInteractions(images);
             images.insertAdjacentHTML('beforebegin', markup(newImages));
             images.remove();
 
             // Re-query the latest images.
             images = productContainer.querySelector(this._getProductImageContainerSelector());
+            this.services["public.interactions"].startInteractions(images);
             // Update the sharable image (only work for Pinterest).
             const shareImageSrc = images.querySelector('img').src;
             document.querySelector('meta[property="og:image"]')
