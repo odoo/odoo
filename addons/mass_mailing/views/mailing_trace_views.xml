@@ -38,19 +38,17 @@
         <field name="name">mailing.trace.view.list</field>
         <field name="model">mailing.trace</field>
         <field name="arch" type="xml">
-            <list string="Mailing Traces" create="0">
-                <field name="mass_mailing_id"/>
+            <list string="Mailing Traces" create="0" action="action_view_contact" type="object">
+                <field name="mass_mailing_id" optional="show"/>
                 <field name="email"/>
                 <field name="message_id"/>
-                <field name="sent_datetime"/>
-                <field name="links_click_datetime"/>
                 <field name="trace_status" widget="badge"/>
-                <field name="failure_type" optional="show"/>
+                <field name="sent_datetime"/>
                 <field name="open_datetime" optional="hide"/>
+                <field name="links_click_datetime"/>
                 <field name="reply_datetime" optional="hide"/>
+                <field name="failure_type" optional="show"/>
                 <field name="is_test_trace" optional="hide"/>
-                <button name="action_view_contact" type="object"
-                        string="Open Recipient" icon="fa-user"/>
             </list>
         </field>
     </record>
@@ -60,24 +58,22 @@
         <field name="model">mailing.trace</field>
         <field name="priority">20</field>
         <field name="arch" type="xml">
-            <list string="Mail Traces" create="0">
+            <list string="Mail Traces" create="0" action="action_view_contact" type="object">
                 <header>
                     <button name="action_retry_failed" string="Retry" type="object"/>
                 </header>
-                <field name="mass_mailing_id"/>
+                <field name="mass_mailing_id" optional="hide"/>
                 <field name="model" column_invisible="True"/>
                 <field name="res_id" string="Recipient" widget="many2one_reference" options="{'no_open': True}"/>
                 <field name="email"/>
                 <field name="message_id" optional="hide"/>
                 <field name="sent_datetime"/>
-                <field name="links_click_datetime"/>
                 <field name="trace_status" widget="badge"/>
                 <field name="failure_type" optional="show"/>
-                <field name="open_datetime" optional="hide"/>
-                <field name="reply_datetime" optional="hide"/>
+                <field name="open_datetime" optional="show"/>
+                <field name="links_click_datetime"/>
+                <field name="reply_datetime" optional="show"/>
                 <field name="is_test_trace" optional="hide"/>
-                <button name="action_view_contact" type="object"
-                        string="Open Recipient" icon="fa-user"/>
             </list>
         </field>
     </record>
