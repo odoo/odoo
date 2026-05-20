@@ -49,23 +49,11 @@ export class CustomColorPicker extends Component {
         this.pickerFlag = false;
         this.sliderFlag = false;
         this.opacitySliderFlag = false;
-        if (this.props.defaultOpacity > 0 && this.props.defaultOpacity <= 1) {
-            this.props.defaultOpacity *= 100;
-        }
-        if (this.props.defaultColor.length <= 7) {
-            const opacityHex = Math.round((this.props.defaultOpacity / 100) * 255)
-                .toString(16)
-                .padStart(2, "0");
-            this.props.defaultColor += opacityHex;
-        }
         this.colorComponents = {};
         this.uniqueId = uniqueId("colorpicker");
         this.selectedHexValue = "";
         this.shouldSetSelectedColor = false;
         this.lastFocusedSliderEl = undefined;
-        if (!this.props.selectedColor) {
-            this.props.selectedColor = this.props.defaultColor;
-        }
         this.elRef = useRef("el");
         this.colorPickerAreaRef = useRef("colorPickerArea");
         this.colorPickerPointerRef = useRef("colorPickerPointer");
@@ -125,8 +113,8 @@ export class CustomColorPicker extends Component {
         });
         onMounted(async () => {
             const rgba =
-                convertCSSColorToRgba(this.props.selectedColor) ||
-                convertCSSColorToRgba(this.props.defaultColor);
+                convertCSSColorToRgba(this.selectedColor) ||
+                convertCSSColorToRgba(this.defaultColor);
             if (rgba) {
                 this._updateRgba(rgba.red, rgba.green, rgba.blue, rgba.opacity);
             }
@@ -142,6 +130,30 @@ export class CustomColorPicker extends Component {
                 this.setSelectedColor(newSelectedColor);
             }
         });
+    }
+
+    get defaultOpacity() {
+        if (this.props.defaultOpacity > 0 && this.props.defaultOpacity <= 1) {
+            return this.props.defaultOpacity * 100;
+        }
+        return this.props.defaultOpacity;
+    }
+
+    get defaultColor() {
+        if (this.props.defaultColor.length <= 7) {
+            const opacityHex = Math.round((this.defaultOpacity / 100) * 255)
+                .toString(16)
+                .padStart(2, "0");
+            this.props.defaultColor + opacityHex;
+        }
+        return this.props.defaultColor;
+    }
+
+    get selectedColor() {
+        if (!this.props.selectedColor) {
+            return this.defaultColor;
+        }
+        return this.props.selectedColor;
     }
 
     /**
@@ -319,7 +331,7 @@ export class CustomColorPicker extends Component {
         // Remove full transparency in case some lightness is added
         const opacity = a || this.colorComponents.opacity;
         if (opacity < 0.1 && (r > 0.1 || g > 0.1 || b > 0.1)) {
-            a = this.props.defaultOpacity;
+            a = this.defaultOpacity;
         }
 
         const hex = convertRgbaToCSSColor(r, g, b, a);
@@ -356,7 +368,7 @@ export class CustomColorPicker extends Component {
         // Remove full transparency in case some lightness is added
         let a = this.colorComponents.opacity;
         if (a < 0.1 && l > 0.1) {
-            a = this.props.defaultOpacity;
+            a = this.defaultOpacity;
         }
 
         const rgb = convertHslToRgb(h, s, l);

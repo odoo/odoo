@@ -174,6 +174,12 @@ export class DateTimeField extends Component {
             () => [this.startDate.el?.tagName, this.endDate.el?.tagName, this.picker.activeInput]
         );
 
+        useLayoutEffect(() => {
+            return effect(() => {
+                this.state.value = this.getRecordValue();
+            })
+        }, () => []);
+
         onWillRender(() => this.triggerIsDirty());
 
         this.futureWarningMsg = _t("This date is in the future");

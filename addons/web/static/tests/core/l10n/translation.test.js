@@ -37,8 +37,8 @@ class TestComponent extends Component {
     static get template() {
         return xml`${this._template}<div id="${id++}"/>`;
     }
+
     static _template = "";
-    static props = ["*"];
 }
 
 /**
@@ -252,7 +252,6 @@ test("[cache] update the cache if hash are different - js", async () => {
     });
     class MyTestComponent extends Component {
         static template = xml`<div id="main" t-translation-context="web"><t t-out="this.otherText"/></div>`;
-        static props = ["*"];
 
         get otherText() {
             return _t("Hi");
@@ -303,7 +302,7 @@ test("[cache] update the cache if hash are different - js", async () => {
 test("can lazy translate", async () => {
     // Can't use patchWithCleanup cause it doesn't support Symbol
     translatedTerms[translationLoaded] = false;
-    TestComponent._template = `<div id="main" t-translation-context="web"><t t-out="constructor.someLazyText" /></div>`;
+    TestComponent._template = `<div id="main" t-translation-context="web"><t t-out="this.constructor.someLazyText" /></div>`;
     TestComponent.someLazyText = _t("Hello");
     expect(() => TestComponent.someLazyText.toString()).toThrow();
     expect(() => TestComponent.someLazyText.valueOf()).toThrow();

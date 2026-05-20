@@ -8,11 +8,13 @@ export class DynamicRecordList extends DynamicList {
     static type = "DynamicRecordList";
 
     /**
-     * @param {import("./relational_model").Config} config
+     * @param {import("./relational_model").Config} _config
      * @param {Object} data
      */
-    setup(config, data) {
-        super.setup(config);
+    setup(_config, data) {
+        super.setup(...arguments);
+
+        this.records = [];
         this._setData(data);
     }
 
@@ -38,7 +40,7 @@ export class DynamicRecordList extends DynamicList {
     /**
      * @param {number} resId
      * @param {boolean} [atFirstPosition]
-     * @returns {Promise<Record>} the newly created record
+     * @returns {Promise<RelationalRecord>} the newly created record
      */
     addExistingRecord(resId, atFirstPosition) {
         return this.model.mutex.exec(async () => {
@@ -51,7 +53,7 @@ export class DynamicRecordList extends DynamicList {
 
     /**
      * @param {boolean} [atFirstPosition=false]
-     * @returns {Promise<Record>}
+     * @returns {Promise<RelationalRecord>}
      */
     addNewRecord(atFirstPosition = false) {
         return this.model.mutex.exec(async () => {

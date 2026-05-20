@@ -1170,7 +1170,9 @@ test("many2one with no_create_edit and no_quick_create options should show no re
 
     await contains(".o_field_many2one[name='product_id'] input").click();
     expect(".o_field_many2one[name='product_id'] .dropdown-menu li.o_m2o_no_result").toHaveCount(0);
-    await contains(".o_field_many2one[name='product_id'] input").edit("aze", { confirm: false });
+    await contains(".o_field_many2one[name='product_id'] input").edit("aze", {
+        confirm: false,
+    });
     await runAllTimers();
     expect(".o_field_many2one[name='product_id'] .dropdown-menu li.o_m2o_no_result").toHaveCount(1);
 });
@@ -3107,7 +3109,9 @@ test("pressing enter in a m2o in an editable list", async () => {
     await animationFrame();
 
     expect("tr.o_data_row:nth-child(1) [name=product_id] input").toBeFocused();
-    expect("tr.o_data_row:nth-child(1) [name=product_id] .o-autocomplete--dropdown-menu").toHaveCount(0);
+    expect(
+        "tr.o_data_row:nth-child(1) [name=product_id] .o-autocomplete--dropdown-menu"
+    ).toHaveCount(0);
 
     // we now trigger again ENTER to make sure we can move to next line
     await press("Enter");
@@ -3128,7 +3132,9 @@ test("pressing enter in a m2o in an editable list", async () => {
     await animationFrame();
 
     expect("tr.o_data_row:nth-child(2) [name=product_id] input").toBeFocused();
-    expect("tr.o_data_row:nth-child(2) [name=product_id] .o-autocomplete--dropdown-menu").toHaveCount(0);
+    expect(
+        "tr.o_data_row:nth-child(2) [name=product_id] .o-autocomplete--dropdown-menu"
+    ).toHaveCount(0);
 
     await press("Enter");
     await animationFrame();
@@ -4216,7 +4222,7 @@ test("custom many2one field with write_date as related field", async () => {
         static template = xml`
             <div>
                 <Many2OneField t-props="this.props"/>
-                <span class="date" t-esc="this.writeDate"/>
+                <span class="date" t-out="this.writeDate"/>
             </div>`;
         get writeDate() {
             return this.props.record.data[this.props.name].write_date.toFormat("dd/MM/y");

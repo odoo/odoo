@@ -193,7 +193,8 @@ test(`mountComponent creates an env and sets the application as root when no env
     });
     const { env } = app;
     expect(env.services).toEqual({ my_service: "a" });
-    expect(odoo.__WOWL_DEBUG__).toEqual({ root: app.root.component });
+    const [firstRoot] = app.roots;
+    expect(odoo.__WOWL_DEBUG__).toEqual({ root: firstRoot.node.component });
     expect(getFixture()).toHaveText("Root");
 });
 
@@ -223,7 +224,7 @@ test(`mountComponent uses the env when provided and doesn't start the services`,
 
 test(`mountComponent: can pass props to the root component`, async () => {
     class Root extends Component {
-        static template = xml`<t t-esc="this.props.text"/>`;
+        static template = xml`<t t-out="this.props.text"/>`;
         static props = ["*"];
     }
 

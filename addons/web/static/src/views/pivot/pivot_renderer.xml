@@ -23,11 +23,10 @@
                     </thead>
                     <tbody>
                         <tr t-foreach="this.table.rows" t-as="row" t-key="'row_' + row_index">
-                            <t t-call="web.PivotHeader.title">
-                                <t t-set="cell" t-value="row"/>
-                                <t t-set="isXAxis" t-value="false"/>
-                                <t t-set="isInHead" t-value="false"/>
-                            </t>
+                            <t t-call="web.PivotHeader.title"
+                                cell="row"
+                                isXAxis="false"
+                                isInHead="false"/>
                             <t t-foreach="row.subGroupMeasurements" t-as="cell" t-key="'row_cell_' + cell_index">
                                 <td class="o_pivot_cell_value bg-100" t-att-class="{
                                         o_empty: cell.value === undefined,

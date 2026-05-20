@@ -114,7 +114,7 @@ test("only one drag sequence is allowed at a time", async () => {
             static components = {};
             static props = {};
             static template = xml`
-                <ul t-ref="list">
+                <ul t-custom-ref="list">
                     <li>First item</li>
                     <li>Second item</li>
                 </ul>

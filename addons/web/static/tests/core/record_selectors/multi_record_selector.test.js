@@ -327,13 +327,19 @@ test("Quick search dialog uses 1000 records limit when clicking search more", as
     await contains(".o-autocomplete input").edit("Partner", { confirm: false });
     await runAllTimers();
     expect.verifySteps(["name_search"]);
-    expect(searchLimit).toBe(8, { message: "The name_search should have been called with a limit of 8" });
+    expect(searchLimit).toBe(8, {
+        message: "The name_search should have been called with a limit of 8",
+    });
 
     await click(".o_multi_record_selector .o_m2o_dropdown_option");
     await animationFrame();
     expect.verifySteps(["name_search"]);
-    expect(searchLimit).toBe(1000, { message: "The name_search should have been called with a limit of 1000" });
+    expect(searchLimit).toBe(1000, {
+        message: "The name_search should have been called with a limit of 1000",
+    });
 
     expect(".modal .modal-dialog").toHaveCount(1);
-    expect(".modal .modal-dialog .o_data_row").toHaveCount(10, { message: "should contain 10 records" });
+    expect(".modal .modal-dialog .o_data_row").toHaveCount(10, {
+        message: "should contain 10 records",
+    });
 });

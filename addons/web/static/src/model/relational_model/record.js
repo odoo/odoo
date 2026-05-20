@@ -1,10 +1,12 @@
 import { markRaw, markup, toRaw } from "@odoo/owl";
 import { serializeDate, serializeDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
+import { ConnectionLostError, RPCError } from "@web/core/network/rpc";
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
+import { pick } from "@web/core/utils/objects";
 import { DataPoint } from "./datapoint";
-import { Operation } from "./operation";
 import { FetchRecordError } from "./errors";
+import { Operation } from "./operation";
 import {
     createPropertyActiveField,
     getBasicEvalContext,
@@ -14,8 +16,6 @@ import {
     getScheduleORMExtras,
     parseServerValue,
 } from "./utils";
-import { RPCError, ConnectionLostError } from "@web/core/network/rpc";
-import { pick } from "@web/core/utils/objects";
 
 /**
  * Redefine default 'Record' type
@@ -59,9 +59,10 @@ export class Record extends DataPoint {
         // be false even though there are changes in a field. Consider calling "isDirty()" instead.
         this.dirty = false;
         this.selected = false;
-
-        /** @type {Set<string>} */
+        this.evalContext = {};
+        this.evalContextWithVirtualIds = {};
         this._invalidFields = new Set();
+
         /** @type {Set<string>} */
         this._unsetRequiredFields = markRaw(new Set());
         this._closeInvalidFieldsNotification = () => {};
@@ -78,9 +79,6 @@ export class Record extends DataPoint {
                     return parentRecord.evalContextWithVirtualIds;
                 },
             };
-        } else {
-            this.evalContext = {};
-            this.evalContextWithVirtualIds = {};
         }
         const missingFields = this.fieldNames.filter((fieldName) => !(fieldName in data));
         data = { ...this._getDefaultValues(missingFields), ...data };
@@ -715,6 +713,7 @@ export class Record extends DataPoint {
         this._closeInvalidFieldsNotification();
         this._closeInvalidFieldsNotification = () => {};
         this._restoreActiveFields();
+        this.model.hooks.onRecordDiscarded(this);
     }
 
     _displayInvalidFieldNotification() {
@@ -1211,6 +1210,7 @@ export class Record extends DataPoint {
             if (nextId) {
                 return this.model.load({ resId: nextId });
             }
+            // toRaw to prevent effect
             this._changes = markRaw({});
             this.data = { ...this._values };
             this.dirty = false;

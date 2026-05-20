@@ -13734,7 +13734,7 @@ test("one2many custom which can clear the relation", async () => {
         static props = ["*"];
         static template = xml`
             <div>
-                <span t-esc="this.props.record.data[this.props.name].count"/>
+                <span t-out="this.props.record.data[this.props.name].count"/>
                 <button t-on-click="this.clear">Clear</button>
             </div>`;
 
@@ -13771,7 +13771,7 @@ test("one2many custom which can set the relation", async () => {
         static props = ["*"];
         static template = xml`
             <div>
-                <span t-esc="this.props.record.data[this.props.name].count"/>
+                <span t-out="this.props.record.data[this.props.name].count"/>
                 <button t-on-click="this.set">Set</button>
             </div>`;
 

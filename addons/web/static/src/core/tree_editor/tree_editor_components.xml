@@ -16,44 +16,44 @@
 
     <t t-name="web.TreeEditor.Range">
         <div class="d-flex align-items-center">
-            <t t-call="web.TreeEditor.Editor">
-                <t t-set="_classes" t-value="'overflow-hidden'"/>
-                <t t-set="info" t-value="this.props.editorInfo" />
-                <t t-set="value" t-value="this.props.value[0]" />
-                <t t-set="update" t-value="(val) => this.update(0, val)" />
+            <t t-call="web.TreeEditor.Editor"
+                _classes="'overflow-hidden'"
+                info="this.props.editorInfo"
+                value="this.props.value[0]"
+                update="(val) => this.update(0, val)">
             </t>
             <i class="fa fa-long-arrow-right mx-2" aria-label="Arrow icon" title="Arrow" />
-            <t t-call="web.TreeEditor.Editor">
-                <t t-set="_classes" t-value="'overflow-hidden'"/>
-                <t t-set="info" t-value="this.props.editorInfo" />
-                <t t-set="value" t-value="this.props.value[1]" />
-                <t t-set="update" t-value="(val) => this.update(1, val)" />
+            <t t-call="web.TreeEditor.Editor"
+                _classes="'overflow-hidden'"
+                info="this.props.editorInfo"
+                value="this.props.value[1]"
+                update="(val) => this.update(1, val)">
             </t>
         </div>
     </t>
 
     <t t-name="web.TreeEditor.InRange">
         <div class="d-flex gap-4">
-            <t t-call="web.TreeEditor.Editor">
-                <t t-set="_classes" t-value="'overflow-hidden'"/>
-                <t t-set="info" t-value="this.props.valueTypeEditorInfo" />
-                <t t-set="value" t-value="this.props.value[1]" />
-                <t t-set="update" t-value="(val) => this.updateValueType(val)" />
+            <t t-call="web.TreeEditor.Editor"
+                _classes="'overflow-hidden'"
+                info="this.props.valueTypeEditorInfo"
+                value="this.props.value[1]"
+                update="(val) => this.updateValueType(val)">
             </t>
             <t t-if="this.props.value[1] === 'dateRange'">
-                <t t-call="web.TreeEditor.Editor">
-                    <t t-set="_classes" t-value="'overflow-hidden'"/>
-                    <t t-set="info" t-value="this.props.betweenEditorInfo" />
-                    <t t-set="value" t-value="this.props.value.slice(2)" />
-                    <t t-set="update" t-value="(val) => this.updateValues(val)" />
+                <t t-call="web.TreeEditor.Editor"
+                    _classes="'overflow-hidden'"
+                    info="this.props.betweenEditorInfo"
+                    value="this.props.value.slice(2)"
+                    update="(val) => this.updateValues(val)">
                 </t>
             </t>
             <t t-if="this.props.value[1] === 'relativeRange'">
-                <t t-call="web.TreeEditor.Editor">
-                    <t t-set="_classes" t-value="'overflow-hidden'"/>
-                    <t t-set="info" t-value="this.props.relativeEditorInfo" />
-                    <t t-set="value" t-value="this.props.value.slice(2)" />
-                    <t t-set="update" t-value="(val) => this.updateValues(val)" />
+                <t t-call="web.TreeEditor.Editor"
+                    _classes="'overflow-hidden'"
+                    info="this.props.relativeEditorInfo"
+                    value="this.props.value.slice(2)"
+                    update="(val) => this.updateValues(val)">
                 </t>
             </t>
         </div>
@@ -62,17 +62,17 @@
     <t t-name="web.TreeEditor.relativeRange">
         <div class="d-flex gap-4">
             <div style="width: 60px;">
-                <t t-call="web.TreeEditor.Editor">
-                    <t t-set="info" t-value="this.props.relativeInput" />
-                    <t t-set="value" t-value="this.props.value[0]" />
-                    <t t-set="update" t-value="(val) => this.update(0, val)" />
+                <t t-call="web.TreeEditor.Editor"
+                    info="this.props.relativeInput"
+                    value="this.props.value[0]"
+                    update="(val) => this.update(0, val)">
                 </t>
             </div>
-            <t t-call="web.TreeEditor.Editor">
-                <t t-set="_classes" t-value="'overflow-hidden'"/>
-                <t t-set="info" t-value="this.props.relativeSelect" />
-                <t t-set="value" t-value="this.props.value[1]" />
-                <t t-set="update" t-value="(val) => this.update(1, val)" />
+            <t t-call="web.TreeEditor.Editor"
+                _classes="'overflow-hidden'"
+                info="this.props.relativeSelect"
+                value="this.props.value[1]"
+                update="(val) => this.update(1, val)">
             </t>
         </div>
     </t>
@@ -83,11 +83,11 @@
                 <BadgeTag t-props="tag"/>
             </t>
             <div class="flex-grow-1">
-                <t t-call="web.TreeEditor.Editor">
-                    <t t-set="info" t-value="this.props.editorInfo" />
-                    <t t-set="value" t-value="this.props.editorInfo.defaultValue()" />
-                    <t t-set="update" t-value="(val) => this.update(val)" />
-                    <t t-set="displayPlaceholder" t-value="!this.tags.length" />
+                <t t-call="web.TreeEditor.Editor"
+                    info="this.props.editorInfo"
+                    value="this.props.editorInfo.defaultValue()"
+                    update="(val) => this.update(val)"
+                    displayPlaceholder="!this.tags.length">
                 </t>
             </div>
         </div>

@@ -19,7 +19,7 @@ const mountInput = async (setup) => {
 
 class Root extends Component {
     static components = { DateTimeInput };
-    static template = xml`<input type="text" class="datetime_hook_input" t-ref="start-date"/>`;
+    static template = xml`<input type="text" class="datetime_hook_input" t-custom-ref="start-date"/>`;
     static props = ["*"];
 
     setup() {
@@ -146,13 +146,13 @@ test("value is not updated if it did not change", async () => {
     expect.verifySteps(["2023-07-07"]);
 });
 
-test("close popover when owner component is unmounted", async() => {
+test("close popover when owner component is unmounted", async () => {
     class Child extends Component {
         static components = { DateTimeInput };
         static props = [];
         static template = xml`
             <div>
-                <input type="text" class="datetime_hook_input" t-ref="start-date"/>
+                <input type="text" class="datetime_hook_input" t-custom-ref="start-date"/>
             </div>
         `;
 
@@ -163,7 +163,7 @@ test("close popover when owner component is unmounted", async() => {
                     value: [false, false],
                     type: "date",
                     range: true,
-                }
+                },
             });
         }
     }

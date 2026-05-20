@@ -19,11 +19,11 @@ test("close popover when component is unmounted", async () => {
         }
     }
 
-    const comp1 = await mountWithCleanup(CompWithPopover);
+    const comp1 = await mountWithCleanup(CompWithPopover, { noMainContainer: true });
     comp1.popover.open(target, { id: "comp1" });
     await animationFrame();
 
-    const comp2 = await mountWithCleanup(CompWithPopover, { noMainContainer: true });
+    const comp2 = await mountWithCleanup(CompWithPopover);
     comp2.popover.open(target, { id: "comp2" });
     await animationFrame();
 

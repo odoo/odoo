@@ -25,7 +25,7 @@ class OverlayItem extends Component {
         });
 
         if (this.props.env) {
-            this.__owl__.childEnv = this.props.env;
+            provideEnv(this.props.env);
         }
 
         useChildSubEnv({

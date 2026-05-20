@@ -62,6 +62,7 @@ export class ActionSwiper extends Component {
     static animationLength = 400;
 
     setup() {
+        super.setup();
         this.actionTimeoutId = null;
         this.resetTimeoutId = null;
         this.root = useRef("root");

@@ -86,17 +86,14 @@
         <span><t t-out="section.errorMsg"/></span>
     </div>
     <ul t-else="" class="list-group d-block o_search_panel_field">
-        <t t-if="section.type === 'category'" t-call="{{ this.constructor.subTemplates.category }}">
-            <t t-set="values" t-value="section.rootIds"/>
-        </t>
+        <t t-if="section.type === 'category'" t-call="{{ this.constructor.subTemplates.category }}"
+            values="section.rootIds"/>
         <t t-elif="section.groups">
             <li
                 t-foreach="section.sortedGroupIds" t-as="groupId" t-key="groupId"
                 class="o_search_panel_filter_group list-group-item p-0 border-0"
                 t-att-class="groupId_last? 'mb-0' : 'mb-3'"
                 >
-                <!-- TODO: this is a workaround for issue https://github.com/odoo/owl/issues/695 (remove when solved) -->
-                <t t-set="_section" t-value="section"/>
                 <t t-set="group" t-value="section.groups.get(groupId)"/>
                 <header class="o_search_panel_group_header pb-1">
                     <div class="form-check w-100">
@@ -122,26 +119,25 @@
                     </div>
                 </header>
                 <ul class="list-group d-block">
-                    <t t-call="{{ this.constructor.subTemplates.filtersGroup }}">
-                        <t t-set="values" t-value="group.values"/>
-                        <t t-set="isChildList" t-value="true"/>
-                        <!-- TODO: this is a workaround for issue https://github.com/odoo/owl/issues/695 (remove when solved) -->
-                        <t t-set="section" t-value="_section"/>
-                    </t>
+                    <t t-call="{{ this.constructor.subTemplates.filtersGroup }}"
+                        values="group.values"
+                        isChildList="true"
+                        section="section"
+                    />
                 </ul>
             </li>
             <ul t-if="section.groups.get(false)" class="list-group d-block">
-                <t t-call="{{ this.constructor.subTemplates.filtersGroup }}">
-                    <t t-set="group" t-value="section.groups.get(false)"/>
-                    <t t-set="values" t-value="group.values"/>
-                    <!-- TODO: this is a workaround for issue https://github.com/odoo/owl/issues/695 (remove when solved) -->
-                    <t t-set="section" t-value="section"/>
-                </t>
+                <t t-set="group" t-value="section.groups.get(false)"/>
+                <t t-call="{{ this.constructor.subTemplates.filtersGroup }}"
+                    group="group"
+                    values="group.values"
+                    section="section"
+                />
             </ul>
         </t>
-        <t t-else="" t-call="{{ this.constructor.subTemplates.filtersGroup }}">
-            <t t-set="values" t-value="section.values"/>
-        </t>
+        <t t-else="" t-call="{{ this.constructor.subTemplates.filtersGroup }}"
+            values="section.values"
+        />
     </ul>
 </t>
 
@@ -227,10 +223,10 @@
             <ul t-if="value.childrenIds.length and this.state.expanded[section.id][valueId]"
                 class="list-group d-block"
                 >
-                <t t-call="{{ this.constructor.subTemplates.category }}">
-                    <t t-set="values" t-value="value.childrenIds"/>
-                    <t t-set="isChildList" t-value="true"/>
-                </t>
+                <t t-call="{{ this.constructor.subTemplates.category }}"
+                    values="value.childrenIds"
+                    isChildList="true"
+                />
             </ul>
         </li>
     </t>

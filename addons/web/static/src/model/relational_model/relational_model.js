@@ -6,12 +6,13 @@ import { Domain } from "@web/core/domain";
 import { WarningDialog } from "@web/core/errors/error_dialogs";
 import { ConnectionLostError, rpcBus } from "@web/core/network/rpc";
 import { shallowEqual } from "@web/core/utils/arrays";
-import { deepCopy, pick } from "@web/core/utils/objects";
 import { KeepLast, Mutex } from "@web/core/utils/concurrency";
+import { deepCopy, pick } from "@web/core/utils/objects";
 import { orderByToString } from "@web/search/utils/order_by";
 import { Model } from "../model";
 import { DynamicGroupList } from "./dynamic_group_list";
 import { DynamicRecordList } from "./dynamic_record_list";
+import { FetchRecordError } from "./errors";
 import { Group } from "./group";
 import { Record as RelationalRecord } from "./record";
 import { StaticList } from "./static_list";
@@ -24,7 +25,6 @@ import {
     getId,
     makeActiveField,
 } from "./utils";
-import { FetchRecordError } from "./errors";
 
 /**
  * @typedef {import("@web/core/context").Context} Context
@@ -89,6 +89,8 @@ const DEFAULT_HOOKS = {
     onWillLoadRoot: () => {},
     /** @type {(root: DataPoint) => any} */
     onRootLoaded: () => {},
+    /** @type {(root: DataPoint) => any} */
+    onRootUpdated: () => {},
     /** @type {(record: RelationalRecord) => any} */
     onWillSaveRecord: () => {},
     /** @type {(record: RelationalRecord) => any} */
@@ -101,6 +103,8 @@ const DEFAULT_HOOKS = {
     onWillSetInvalidField: () => {},
     /** @type {(record: RelationalRecord) => any} */
     onRecordChanged: () => {},
+    /** @type {(record: RelationalRecord) => any} */
+    onRecordDiscarded: () => {},
     /** @type {(warning: Object) => any} */
     onWillDisplayOnchangeWarning: () => {},
     /** @type {(changes: Object, validRecords: RelationalRecord[]) => any} */
@@ -140,6 +144,9 @@ export class RelationalModel extends Model {
 
         this.keepLast = markRaw(new KeepLast());
         this.mutex = markRaw(new Mutex());
+
+        /** @type {DataPoint | null} */
+        this.root = null;
 
         /** @type {RelationalModelConfig} */
         this.config = {
@@ -199,7 +206,7 @@ export class RelationalModel extends Model {
             this.orm.setGroups(this.initialSampleGroups);
         }
         const config = this._getNextConfig(this.config, params);
-        if (!this.isReady) {
+        if (!this.isReady()) {
             // We want the control panel to be displayed directly, without waiting for data to be
             // loaded, for instance to be able to interact with the search view. For that reason, we
             // create an empty root, without data, s.t. controllers can make the assumption that the
@@ -342,7 +349,7 @@ export class RelationalModel extends Model {
         if (!this.withCache) {
             return;
         }
-        const firstLoad = !this.isReady;
+        const firstLoad = !this.isReady();
         // Do not use a cached result if we're online and this isn't the first load of the model,
         // except if we're loading another record (form view) or creating a new record (onchange).
         const noCache =
@@ -375,6 +382,7 @@ export class RelationalModel extends Model {
                             result = await this._postprocessReadGroup(this.root.config, result);
                         }
                         this.root._setData(result);
+                        this.hooks.onRootUpdated(this.root);
                     }
                     return;
                 }
@@ -385,14 +393,18 @@ export class RelationalModel extends Model {
                 if (root.config.isMonoRecord) {
                     if (!root.config.resId) {
                         // result is the response of the onchange rpc
-                        return root._setData(result.value, { keepChanges: true });
+                        root._setData(result.value, { keepChanges: true });
+                        this.hooks.onRootUpdated(this.root);
+                        return;
                     }
                     // result is the response of a web_read rpc
                     if (!result.length) {
                         // we read a record that no longer exists
                         throw new FetchRecordError([root.config.resId]);
                     }
-                    return root._setData(result[0], { keepChanges: true });
+                    root._setData(result[0], { keepChanges: true });
+                    this.hooks.onRootUpdated(this.root);
+                    return;
                 }
 
                 // multi record case: either grouped or ungrouped
@@ -407,6 +419,7 @@ export class RelationalModel extends Model {
                     result = await this._postprocessReadGroup(root.config, result);
                 }
                 root._setData(result);
+                this.hooks.onRootUpdated(this.root);
             },
         };
     }

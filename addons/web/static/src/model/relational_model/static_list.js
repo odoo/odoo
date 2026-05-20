@@ -87,7 +87,6 @@ export class StaticList extends DataPoint {
     setup(_config, data, options = {}) {
         this._parent = options.parent;
         this._onUpdate = options.onUpdate;
-
         this._cache = markRaw({});
         this._commands = [];
         this._initialCommands = [];
@@ -103,14 +102,15 @@ export class StaticList extends DataPoint {
         // config to add the form view's fields in activeFields.
         this._extendedRecords = new Set();
 
-        /** @type {RelationalRecord[]} */
-        this.records = data
-            .slice(this.offset, this.limit)
-            .map((r) => this._createRecordDatapoint(r));
         this.count = this.resIds.length;
         this.handleField = Object.keys(this.activeFields).find(
             (fieldName) => this.activeFields[fieldName].isHandle
         );
+
+        /** @type {RelationalRecord[]} */
+        this.records = data
+            .slice(this.offset, this.limit)
+            .map((r) => this._createRecordDatapoint(r));
     }
 
     // -------------------------------------------------------------------------

@@ -164,7 +164,7 @@ test("form view in dialog shows wrong company error", async () => {
         resId: 1,
     });
     await animationFrame();
-    expect.verifyErrors(['Error: The following error occurred in onWillStart: "Wrong Company"']);
+    expect.verifyErrors(["RPC_ERROR: Wrong Company"]);
     expect(cookie.get("cids")).toBe("1"); // cookies were not modified
     expect.verifySteps([]); // don't reload
 });
