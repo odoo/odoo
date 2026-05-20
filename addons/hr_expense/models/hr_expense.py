@@ -1630,6 +1630,7 @@ class HrExpense(models.Model):
                 'balance': to_update['balance'],
                 'currency_id': base_line['currency_id'].id,
                 'partner_id': self.vendor_id.id,
+                'quantity': self.quantity,
             }
             move_lines.append(base_move_line)
 
