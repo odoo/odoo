@@ -111,7 +111,7 @@ class HrLeave(models.Model):
         linked_after = self.env["hr.leave"]
 
         for leave in self:
-            public_holiday_dates = public_holidays_date_by_company.get(leave.company_id, {})
+            public_holiday_dates = leave._l10n_in_get_public_holiday_dates(public_holidays_date_by_company)
             leaves_by_date = leaves_dates_by_employee.get(leave.employee_id, {})
             linked_before |= self._l10n_in_find_linked_leave(
                 leave.request_date_from, public_holiday_dates, leave.resource_calendar_id, leaves_by_date, reverse=True
@@ -208,7 +208,7 @@ class HrLeave(models.Model):
 
         date_from = self.request_date_from
         date_to = self.request_date_to
-        public_holiday_dates = public_holidays_date_by_company.get(self.company_id, {})
+        public_holiday_dates = self._l10n_in_get_public_holiday_dates(public_holidays_date_by_company)
         is_non_working_from = not self._l10n_in_is_working(date_from, public_holiday_dates, self.resource_calendar_id)
         is_non_working_to = not self._l10n_in_is_working(date_to, public_holiday_dates, self.resource_calendar_id)
 
@@ -271,6 +271,11 @@ class HrLeave(models.Model):
             else:
                 leave.l10n_in_contains_sandwich_leaves = False
         return result
+
+    def _l10n_in_get_public_holiday_dates(self, public_holidays_date_by_company):
+        if self.work_entry_type_id.include_public_holidays_in_duration:
+            return {}
+        return public_holidays_date_by_company.get(self.company_id, {})
 
     def _l10n_in_update_neighbors_duration_after_change(self):
         indian_leaves, leaves_dates_by_employee, public_holidays_dates_by_company = self._l10n_in_prepare_sandwich_context()
