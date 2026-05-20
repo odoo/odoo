@@ -3,7 +3,7 @@
 import { after, beforeEach, describe, expect, test } from "@odoo/hoot";
 import { queryFirst, waitFor, press, Deferred, waitForNone } from "@odoo/hoot-dom";
 import { advanceTime, animationFrame } from "@odoo/hoot-mock";
-import { Component, xml, proxy } from "@odoo/owl";
+import { Component, onMounted, onPatched, proxy, xml } from "@odoo/owl";
 import {
     contains,
     getService,
@@ -21,6 +21,7 @@ import { session } from "@web/session";
 import { WebClient } from "@web/webclient/webclient";
 import { TourInteractive } from "@web_tour/js/tour_interactive/tour_interactive";
 import { Tour, TourStep } from "./tour_models";
+import { TourPointer } from "@web_tour/js/tour_pointer/tour_pointer";
 
 describe.current.tags("desktop");
 
@@ -827,4 +828,48 @@ test("start a tour that no longer exist should clear tourstate", async () => {
     registry.category("web_tour.tours").remove("tour69");
     await getService("tour_service").startTour("tour69", { mode: "manual" });
     expect(browser.localStorage.getItem("current_tour")).toBe(null);
+});
+
+test("avoid rendering loop of pointer", async () => {
+    registry.category("web_tour.tours").add("tour1", {
+        steps: () => [{ trigger: "button.foo", run: "click" }],
+    });
+    Tour._records = [{ name: "tour1" }];
+    let patchCount = 0;
+    patchWithCleanup(TourPointer.prototype, {
+        setup() {
+            super.setup();
+            onMounted(() => {
+                patchCount++;
+            });
+            onPatched(() => {
+                patchCount++;
+            });
+        },
+    });
+    const state = proxy({ hasFoo: true });
+    class Dummy extends Component {
+        static props = ["*"];
+        static components = {};
+        static template = xml`
+            <div class="o_home_menu">Dummy menu to allow pointer to disappear</div>
+            <button t-if="this.state.hasFoo" class="foo w-100">Foo</button>
+        `;
+
+        state = state;
+    }
+    await mountWithCleanup(Dummy);
+    await getService("tour_service").startTour("tour1", { mode: "manual" });
+    await waitFor(".o_tour_pointer");
+    expect(patchCount).toBe(1);
+    await animationFrame();
+    expect(patchCount).toBe(2);
+    await animationFrame();
+    expect(patchCount).toBe(2);
+
+    state.hasFoo = false;
+    await waitForNone(".o_tour_pointer");
+    expect(patchCount).toBe(3);
+    await animationFrame();
+    expect(patchCount).toBe(3);
 });

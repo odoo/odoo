@@ -120,7 +120,7 @@ test("scrolling to next step should update the pointer's height", async (assert)
     // now the scroller pointer should be shown
     expect(".o_tour_pointer_tip").toHaveCount(1);
     await contains(".o_tour_pointer_tip").hover();
-    await animationFrame();
+    await waitFor(".o_tour_pointer_content span");
     expect(".o_tour_pointer span").toHaveText("Scroll up to reach the next step.");
     await contains(".o_tour_pointer_content").click();
 
