@@ -44,13 +44,10 @@ export class BuilderDateTimePicker extends Component {
         });
         this.domState = state;
         this.state = useState({});
-        effect(
-            ({ value }) => {
-                // State to display in the input.
-                this.state.value = value;
-            },
-            [state]
-        );
+        useEffect(() => {
+            // State to display in the input.
+            this.state.value = state.value;
+        });
 
         this.commit = (userInputValue) => {
             this.isPreviewing = false;

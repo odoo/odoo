@@ -2,7 +2,7 @@
 <template xml:space="preserve">
 
 <t t-name="html_builder.BuilderList">
-    <BuilderComponent>
+    <BuilderComponent><SortableContainer setupLayoutEffect.bind="this.setupSortable">
         <div class="w-100 p-2 py-0">
             <t t-set="isMany2X" t-value="this.allRecords and this.allRecords.length"/>
             <t t-if="this.state.value?.length > 2">
@@ -87,7 +87,7 @@
                 </div>
             </t>
         </div>
-    </BuilderComponent>
+    </SortableContainer></BuilderComponent>
 </t>
 
 </template>

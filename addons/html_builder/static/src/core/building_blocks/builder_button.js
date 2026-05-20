@@ -78,7 +78,7 @@ export class BuilderButtonInternal extends Component {
 export class BuilderButton extends BuilderSelectableWrapperComponent {
     static template = xml`
         <BuilderButtonInternal t-props="this.forwardedProps">
-            <t t-slot="default"/>
+            <t t-call-slot="default"/>
         </BuilderButtonInternal>
         `;
     static components = { BuilderButtonInternal };

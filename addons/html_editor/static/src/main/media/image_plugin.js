@@ -3,7 +3,6 @@ import { Plugin } from "../../plugin";
 import { _t } from "@web/core/l10n/translation";
 import { isImageUrl } from "@html_editor/utils/url";
 import { ImageToolbarDropdown } from "./image_toolbar_dropdown";
-import { createFileViewer } from "@web/core/file_viewer/file_viewer_hook";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
 import { boundariesOut } from "@html_editor/utils/position";
 import { READ, withSequence } from "@html_editor/utils/resource";
@@ -179,7 +178,7 @@ export class ImagePlugin extends Plugin {
                 this.setSelectionAroundImage(e.target);
             }
         });
-        this.fileViewer = createFileViewer();
+        this.fileViewer = this.services.fileViewer();
     }
 
     destroy() {

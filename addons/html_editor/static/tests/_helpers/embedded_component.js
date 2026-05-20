@@ -11,7 +11,7 @@ import { Component, xml } from "@odoo/owl";
 export class Counter extends Component {
     static props = ["*"];
     static template = xml`
-        <span t-ref="root" class="counter" t-on-click="this.increment">Counter:<t t-out="this.state.value"/></span>`;
+        <span t-custom-ref="root" class="counter" t-on-click="this.increment">Counter:<t t-out="this.state.value"/></span>`;
 
     state = useState({ value: 0 });
     ref = useRef("root");
@@ -24,7 +24,7 @@ export class Counter extends Component {
 export const EmbeddedWrapperMixin = (editableDescendantName) =>
     class extends Component {
         static props = ["*"];
-        static template = xml`<t><div class="${editableDescendantName}" t-ref="${editableDescendantName}"/></t>`;
+        static template = xml`<t><div class="${editableDescendantName}" t-custom-ref="${editableDescendantName}"/></t>`;
 
         setup() {
             useEditableDescendants(this.props.host);
@@ -35,13 +35,13 @@ export class EmbeddedWrapper extends Component {
     static props = ["*"];
     static template = xml`
         <t>
-            <div t-if="this.editableDescendants.shallow" class="shallow" t-ref="shallow"/>
+            <div t-if="this.editableDescendants.shallow" class="shallow" t-custom-ref="shallow"/>
             <div t-if="!this.state.switch">
-                <div class="deep" t-ref="deep"/>
+                <div class="deep" t-custom-ref="deep"/>
             </div>
             <div t-else="">
                 <div class="switched">
-                    <div class="deep" t-ref="deep"/>
+                    <div class="deep" t-custom-ref="deep"/>
                 </div>
             </div>
         </t>`;

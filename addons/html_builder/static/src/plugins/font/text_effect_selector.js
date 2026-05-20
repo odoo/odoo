@@ -279,7 +279,7 @@ export class TextEffectSelector extends Component {
             services: this.props.config.editor.services,
         });
         this.popover = usePopover(TextEffectOption, {
-            env: this.__owl__.childEnv,
+            env: useChildEnv(), // owl3 migration, this should be replaced
             onClose: () => {
                 if (this.activeElement && this.activeElement.dataset.textEffect) {
                     const json = JSON.parse(this.activeElement.dataset.textEffect);

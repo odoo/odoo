@@ -100,6 +100,11 @@ export class FontSizeSelector extends Component {
                 this.fontSizeInput.addEventListener("click", () => {
                     if (!this.dropdown.isOpen) {
                         this.dropdown.open();
+                        requestAnimationFrame(() => {
+                            if (this.menuRef.el?.closest(".o_bottom_sheet")) {
+                                this.props.onBlur?.();
+                            }
+                        });
                     }
                 });
                 this.fontSizeInput.addEventListener("input", this.debouncedCustomFontSizeInput);
@@ -125,6 +130,7 @@ export class FontSizeSelector extends Component {
         );
         useLayoutEffect(
             () => {
+                // blur on close
                 if (this.fontSizeInput) {
                     // Focus input on dropdown open, blur on close.
                     if (this.dropdown.isOpen) {
