@@ -95,10 +95,10 @@ class TestGetCurrentWebsite(HttpCaseWithUserDemo):
         website1.sequence = 10
         website2.sequence = 20
 
-        self.assertEqual(Website._get_current_website_id(''), website1.id)
+        self.assertEqual(Website._get_current_website_id_from_domain(''), website1.id)
 
         website2.sequence = 5
-        self.assertEqual(Website._get_current_website_id(''), website2.id)
+        self.assertEqual(Website._get_current_website_id_from_domain(''), website2.id)
 
     def test_02_signup_user_website_id(self):
         website = self.website
