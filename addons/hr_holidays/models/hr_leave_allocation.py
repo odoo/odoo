@@ -1071,10 +1071,27 @@ class HrLeaveAllocation(models.Model):
     # Messaging methods
     ####################################################
 
+    def _track_template_parameters(self, tracked_fields):
+        res = super()._track_template_parameters(tracked_fields)
+        allocation = self[0]
+        if 'state' in tracked_fields and allocation.state == 'validate':
+            subtype = allocation.work_entry_type_id.allocation_notif_subtype_id or self.env.ref('hr_holidays.mt_leave_allocation')
+            recipient_partners = []
+            if allocation.employee_id:
+                partner = allocation.employee_id.work_contact_id or allocation.employee_id.user_id.partner_id
+                if partner:
+                    recipient_partners.append(partner.id)
+            res['state'] = (self.env.ref('hr_holidays.mail_template_allocation_confirmed'), {
+                'auto_delete_keep_log': False,
+                'subtype_id': subtype.id,
+                'email_layout_xmlid': 'mail.mail_notification_layout',
+                'partner_ids': recipient_partners,
+            })
+        return res
+
     def _track_log_get_default_subtype(self, track_init_values):
         if 'state' in track_init_values and self.state == 'validate':
-            allocation_notif_subtype_id = self.work_entry_type_id.allocation_notif_subtype_id
-            return allocation_notif_subtype_id or self.env.ref('hr_holidays.mt_leave_allocation')
+            return self.env.ref('mail.mt_note')
         return super()._track_log_get_default_subtype(track_init_values)
 
     def message_subscribe(self, partner_ids=None, subtype_ids=None):
