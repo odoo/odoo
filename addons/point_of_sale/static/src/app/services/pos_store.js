@@ -2413,7 +2413,15 @@ export class PosStore extends WithLazyGetterTrap {
         }
     }
     // There for override to do something before adding partner to current order from partner list
-    setPartnerToCurrentOrder(partner) {
+    async setPartnerToCurrentOrder(partner) {
+        const pricelistId = partner?.property_product_pricelist_id;
+        if (
+            pricelistId &&
+            typeof pricelistId === "number" &&
+            !this.models["product.pricelist"].get(pricelistId)
+        ) {
+            await this.data.read("product.pricelist", [pricelistId]);
+        }
         this.getOrder().setPartner(partner);
     }
     async selectPartner(currentOrder = this.getOrder()) {
@@ -2436,7 +2444,7 @@ export class PosStore extends WithLazyGetterTrap {
             partner: currentPartner,
         });
 
-        this.setPartnerToCurrentOrder(payload || false);
+        await this.setPartnerToCurrentOrder(payload || false);
 
         return payload;
     }
