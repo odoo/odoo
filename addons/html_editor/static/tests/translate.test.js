@@ -94,6 +94,30 @@ test("Translate should be disabled if selection spans across non editable conten
     await expandToolbar();
     expect(".o-we-toolbar .btn[name='translate']").toHaveAttribute("disabled");
 });
+
+test("text should align to the start for RTL language", async () => {
+    loadLanguages.installedLanguages = false;
+    onRpc("res.lang", "get_installed", () => [
+        ["en_US", "English (US)"],
+        ["ar_SA", "Arabic (SA) / العربية (SA)"],
+    ]);
+    await setupEditor("<p>[Hello]</p>", {
+        config: { Plugins: [...MAIN_PLUGINS, TranslatePlugin] },
+    });
+    onRpc("/html_editor/google_translate", () => ({ translated_text: "أهلاً", isError: false }));
+
+    // Select Translate button in the toolbar.
+    await expandToolbar();
+    await translateButtonFromToolbar();
+    await waitFor(".dropdown-menu");
+    await contains(".lang:contains('Arabic (SA) / العربية (SA)')").click();
+
+    // Insert the response.
+    await waitFor(".o-translator-translated");
+    expect("button.o-translator-translated").toHaveStyle("text-align: start");
+    expect("button.o-translator-translated").toHaveStyle("direction: rtl");
+});
+
 test("insert the response from Google translate", async () => {
     loadLanguages.installedLanguages = false;
     onRpc("res.lang", "get_installed", () => [
