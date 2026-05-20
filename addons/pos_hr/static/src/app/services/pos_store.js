@@ -95,6 +95,14 @@ patch(PosStore.prototype, {
      * If pos_hr is activated, return {name: string, id: int, barcode: string, pin: string, user_id: int}
      * @returns {null|*}
      */
+    getSyncAllOrdersContext(orders, options = {}) {
+        const context = super.getSyncAllOrdersContext(orders, options);
+        const cashier = this.getCashier();
+        if (cashier?.id) {
+            context.current_cashier_id = cashier.id;
+        }
+        return context;
+    },
     getCashier() {
         if (this.config.module_pos_hr) {
             return this.cashier;
