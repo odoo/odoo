@@ -197,9 +197,7 @@
 
 <t t-name="website_sale.ProductsDesignPanel">
     <BuilderRow label="this.props.label">
-        <t t-call="website_sale.ProductsDesignPanelPresets">
-            <t t-set="showImages" t-value="false"/>
-        </t>
+        <t t-call="website_sale.ProductsDesignPanelPresets" showImages="false"/>
         <BuilderSlidingPanel
             label.translate="Design"
             extraClasses="'btn-primary fa fa-paint-brush'"

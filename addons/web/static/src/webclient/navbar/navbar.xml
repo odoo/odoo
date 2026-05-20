@@ -8,9 +8,7 @@
         data-command-category="disabled"
       >
         <!-- Apps Menu -->
-        <t t-call="web.NavBar.AppsMenu">
-          <t t-set="apps" t-value="this.menuService.getApps()" />
-        </t>
+        <t t-call="web.NavBar.AppsMenu" apps="this.menuService.getApps()"/>
 
         <!-- App Brand -->
         <DropdownItem
@@ -55,10 +53,7 @@
             t-att-data-menu-xmlid="section.xmlid" t-out="section.name"/>
         <ul class="list-unstyled ps-0">
             <t t-foreach="section.childrenTree" t-as="subSection" t-key="subSection_index">
-                <t t-call="web.SectionMenu">
-                    <t t-set="section" t-value="subSection"/>
-                    <t t-set="isNested" t-value="true"/>
-                </t>
+                <t t-call="web.SectionMenu" section="subSection" isNested="true"/>
             </t>
         </ul>
     </li>
@@ -121,9 +116,7 @@
                 <ul class="list-unstyled py-2 ps-0 mb-0">
                     <t t-if="!this.state.isAllAppsMenuOpened">
                       <t t-foreach="this.currentAppSections" t-as="subMenu" t-key="subMenu_index">
-                        <t t-call="web.SectionMenu">
-                            <t t-set="section" t-value="subMenu" />
-                        </t>
+                        <t t-call="web.SectionMenu" section="subMenu"/>
                       </t>
                     </t>
 

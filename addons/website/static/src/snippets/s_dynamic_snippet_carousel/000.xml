@@ -50,9 +50,7 @@
             <!-- Controls -->
             <t t-if='slideIndexGenerator.length > minControlValue'>
                 <div class="s_dynamic_snippet_arrows d-flex gap-2 w-100 pe-none z-1">
-                    <t t-call="website.s_dynamic_snippet.carousel.arrows">
-                        <t t-set="unique_id" t-value="unique_id" />
-                    </t>
+                    <t t-call="website.s_dynamic_snippet.carousel.arrows" unique_id="this.unique_id"/>
                 </div>
             </t>
         </div>
