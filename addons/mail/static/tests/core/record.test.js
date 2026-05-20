@@ -1,7 +1,8 @@
+import { reactive } from "@web/owl2/utils";
 import { toRawValue } from "@mail/utils/common/local_storage";
 import { defineMailModels, start as start2 } from "@mail/../tests/mail_test_helpers";
-import { afterEach, beforeEach, describe, expect, test, tick } from "@odoo/hoot";
-import { markup, reactive, toRaw } from "@odoo/owl";
+import { after, afterEach, beforeEach, describe, expect, test, tick } from "@odoo/hoot";
+import { immediateEffect, markup, toRaw } from "@odoo/owl";
 import { mockService, patchWithCleanup } from "@web/../tests/web_test_helpers";
 
 import { Record, Store, makeStore } from "@mail/model/export";

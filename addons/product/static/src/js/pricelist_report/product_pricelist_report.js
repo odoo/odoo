@@ -1,5 +1,5 @@
-import { onRendered, useState } from "@web/owl2/utils";
-import { Component, markup, onWillStart } from "@odoo/owl";
+import { useState } from "@web/owl2/utils";
+import { Component, markup, onMounted, onWillStart } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { download } from "@web/core/network/download";
 import { registry } from "@web/core/registry";

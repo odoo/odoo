@@ -1,7 +1,7 @@
 // ! WARNING: this module cannot depend on modules not ending with ".hoot" (except libs) !
 
 import { after, before, beforeEach, createJobScopedGetter } from "@odoo/hoot";
-import { validateType } from "@odoo/owl";
+import { types as t, validateType } from "@odoo/owl";
 
 const { view_info } = odoo.__session_info__ || {};
 delete odoo.__session_info__;

@@ -4,7 +4,7 @@ import { ProfilingItem } from "./profiling_item";
 import { session } from "@web/session";
 import { profilingSystrayItem } from "./profiling_systray_item";
 
-import { EventBus } from "@odoo/owl";
+import { effect, EventBus } from "@odoo/owl";
 
 const systrayRegistry = registry.category("systray");
 

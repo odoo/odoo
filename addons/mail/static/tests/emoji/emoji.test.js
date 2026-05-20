@@ -18,7 +18,7 @@ import {
 } from "@mail/../tests/mail_test_helpers";
 import { describe, getFixture, test } from "@odoo/hoot";
 
-import { queryFirst } from "@odoo/hoot-dom";
+import { signal } from "@odoo/owl";
 import { emojiLoader } from "@web/core/emoji_picker/emoji_loader";
 
 describe.current.tags("desktop");

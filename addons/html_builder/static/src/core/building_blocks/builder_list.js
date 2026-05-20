@@ -7,7 +7,7 @@ import {
     useInputBuilderComponent,
 } from "@html_builder/core/utils";
 import { isSmallInteger } from "@html_builder/utils/utils";
-import { Component, onWillUpdateProps, onPatched } from "@odoo/owl";
+import { Component, onWillUpdateProps, onPatched, props, types as t, xml } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { SelectMenu } from "@web/core/select_menu/select_menu";
 import { useSortable } from "@web/core/utils/sortable_owl";

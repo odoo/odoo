@@ -1,3 +1,4 @@
+import { onRendered } from "@web/owl2/utils";
 import { addBusMessageHandler, busModels } from "@bus/../tests/bus_test_helpers";
 import {
     after,
@@ -32,7 +33,7 @@ import { CHAT_HUB_KEY } from "@mail/core/common/chat_hub_model";
 import { click, contains } from "./mail_test_helpers_contains";
 
 import { closeStream, mailGlobal } from "@mail/utils/common/misc";
-import { Component, onMounted, onPatched, onWillDestroy, status } from "@odoo/owl";
+import { Component, onWillDestroy, status } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { emojiLoader } from "@web/core/emoji_picker/emoji_loader";
 import { registry } from "@web/core/registry";

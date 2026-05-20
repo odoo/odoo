@@ -8,6 +8,7 @@ import {
 } from "../utils";
 import { definePosModels } from "../data/generate_model_definitions";
 import { PaymentScreenPaymentLines } from "@point_of_sale/app/screens/payment_screen/payment_lines/payment_lines";
+import { proxy } from "@odoo/owl";
 
 definePosModels();
 

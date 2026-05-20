@@ -1,5 +1,4 @@
-import { render } from "@web/owl2/utils";
-import { after, before, expect, test } from "@odoo/hoot";
+import { render, useRef, useState } from "@web/owl2/utils";
 import {
     clear,
     click,

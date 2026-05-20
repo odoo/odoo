@@ -1,6 +1,6 @@
-import { onWillRender, reactive, useLayoutEffect, useRef } from "@web/owl2/utils";
-import { markRaw, onPatched } from "@odoo/owl";
+import { immediateEffect, markRaw, onMounted, onPatched, onWillDestroy, proxy } from "@odoo/owl";
 import { hasTouch } from "@web/core/browser/feature_detection";
+import { onWillRender, useLayoutEffect, useRef } from "@web/owl2/utils";
 import { areDatesEqual, formatDate, formatDateTime, parseDate, parseDateTime } from "../l10n/dates";
 import { makePopover } from "../popover/popover_hook";
 import { registry } from "../registry";

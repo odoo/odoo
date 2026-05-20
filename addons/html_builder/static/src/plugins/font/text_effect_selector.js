@@ -1,4 +1,4 @@
-import { useChildSubEnv, useRef, useState } from "@web/owl2/utils";
+import { useChildEnv, useChildSubEnv, useRef, useState } from "@web/owl2/utils";
 import { Component } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { usePopover } from "@web/core/popover/popover_hook";

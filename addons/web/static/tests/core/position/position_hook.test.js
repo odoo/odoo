@@ -1,3 +1,4 @@
+import { useRef } from "@web/owl2/utils";
 import { before, destroy, expect, getFixture, test } from "@odoo/hoot";
 import {
     manuallyDispatchProgrammaticEvent,
@@ -7,7 +8,7 @@ import {
     scroll,
 } from "@odoo/hoot-dom";
 import { Deferred, animationFrame } from "@odoo/hoot-mock";
-import { Component, onMounted, useRef, xml } from "@odoo/owl";
+import { Component, onMounted, xml } from "@odoo/owl";
 import { defineParams, defineStyle, mountWithCleanup } from "@web/../tests/web_test_helpers";
 
 import { usePosition } from "@web/core/position/position_hook";

@@ -1,6 +1,7 @@
-import { describe, expect, test } from "@odoo/hoot";
-import { EventBus, reactive } from "@odoo/owl";
-import { Reactive, effect, withComputedProperties } from "@web/core/utils/reactive";
+import { reactive } from "@web/owl2/utils";
+import { after, describe, expect, microTick, test } from "@odoo/hoot";
+import { EventBus, effect } from "@odoo/owl";
+import { Reactive } from "@web/core/utils/reactive";
 
 describe.current.tags("headless");
 

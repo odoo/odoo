@@ -1,5 +1,6 @@
+import { useRef } from "@web/owl2/utils";
 import { after, expect, test } from "@odoo/hoot";
-import { Component, useRef, xml } from "@odoo/owl";
+import { Component, xml } from "@odoo/owl";
 import { mountWithCleanup, patchTranslations } from "@web/../tests/web_test_helpers";
 import { registerTemplate, registerTemplateExtension, setUrlFilters } from "@web/core/templates";
 

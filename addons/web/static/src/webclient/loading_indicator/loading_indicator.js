@@ -5,7 +5,7 @@ import { registry } from "@web/core/registry";
 import { useBus } from "@web/core/utils/hooks";
 import { Transition } from "@web/core/transition";
 
-import { Component } from "@odoo/owl";
+import { Component, untrack } from "@odoo/owl";
 
 /**
  * Loading Indicator

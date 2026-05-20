@@ -1,3 +1,4 @@
+import { reactive } from "@web/owl2/utils";
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { keyDown, press, queryAllTexts } from "@odoo/hoot-dom";
 import {
@@ -15,7 +16,7 @@ import {
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
 
-import { Component, reactive, xml } from "@odoo/owl";
+import { Component, xml } from "@odoo/owl";
 
 import { useCommand } from "@web/core/commands/command_hook";
 import { HotkeyCommandItem } from "@web/core/commands/default_providers";

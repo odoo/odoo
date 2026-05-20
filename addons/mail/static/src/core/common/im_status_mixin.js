@@ -1,3 +1,5 @@
+import { effect } from "@odoo/owl";
+
 import { AWAY_DELAY } from "@mail/core/common/im_status_service";
 import { fields } from "@mail/model/misc";
 import { Record } from "@mail/model/record";

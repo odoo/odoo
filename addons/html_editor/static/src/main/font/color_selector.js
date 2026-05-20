@@ -1,6 +1,6 @@
-import { useRef, useState } from "@web/owl2/utils";
+import { useChildEnv, useRef, useState } from "@web/owl2/utils";
 import { isColorGradient } from "@web/core/utils/colors";
-import { Component } from "@odoo/owl";
+import { Component, useEffect } from "@odoo/owl";
 import {
     useColorPicker,
     DEFAULT_COLORS,

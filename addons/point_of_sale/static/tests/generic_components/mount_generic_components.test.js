@@ -1,6 +1,7 @@
+import { useState } from "@web/owl2/utils";
 import { expect, test } from "@odoo/hoot";
 import { mountWithCleanup } from "@web/../tests/web_test_helpers";
-import { Component, useState, xml } from "@odoo/owl";
+import { Component, xml } from "@odoo/owl";
 import { OdooLogo } from "@point_of_sale/app/components/odoo_logo/odoo_logo";
 import { CenteredIcon } from "@point_of_sale/app/components/centered_icon/centered_icon";
 import { Input } from "@point_of_sale/app/components/inputs/input/input";

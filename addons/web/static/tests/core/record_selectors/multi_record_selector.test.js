@@ -1,6 +1,7 @@
+import { useState } from "@web/owl2/utils";
 import { test, expect } from "@odoo/hoot";
 import { MultiRecordSelector } from "@web/core/record_selectors/multi_record_selector";
-import { Component, useState, xml } from "@odoo/owl";
+import { Component, xml } from "@odoo/owl";
 import {
     contains,
     defineModels,

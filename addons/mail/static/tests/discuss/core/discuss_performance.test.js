@@ -1,3 +1,4 @@
+import { onRendered } from "@web/owl2/utils";
 import {
     click,
     contains,
@@ -13,7 +14,6 @@ import {
 import { Composer } from "@mail/core/common/composer";
 import { Message } from "@mail/core/common/message";
 import { describe, expect, rightClick, test } from "@odoo/hoot";
-import { onMounted, onPatched } from "@odoo/owl";
 import { patchWithCleanup } from "@web/../tests/web_test_helpers";
 import { range } from "@web/core/utils/numbers";
 

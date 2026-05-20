@@ -1,4 +1,4 @@
-import { reactive, useRef, useState } from "@web/owl2/utils";
+import { reactive, useChildEnv, useRef, useState } from "@web/owl2/utils";
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { Component, xml } from "@odoo/owl";

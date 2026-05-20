@@ -1,4 +1,5 @@
-import { expect, getFixture, test } from "@odoo/hoot";
+import { useRef, useState } from "@web/owl2/utils";
+import { expect, getFixture, queryRect, test } from "@odoo/hoot";
 import {
     click,
     hover,
@@ -12,7 +13,7 @@ import {
     resize,
 } from "@odoo/hoot-dom";
 import { Deferred, animationFrame, runAllTimers, tick } from "@odoo/hoot-mock";
-import { Component, onMounted, onPatched, useRef, useState, xml } from "@odoo/owl";
+import { Component, onMounted, onPatched, xml } from "@odoo/owl";
 
 import { getPickerCell } from "@web/../tests/core/datetime/datetime_test_helpers";
 import {

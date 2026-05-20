@@ -1,3 +1,4 @@
+import { useSubEnv } from "@web/owl2/utils";
 import {
     insertText as htmlInsertText,
     pasteText,
@@ -41,7 +42,6 @@ import {
 import { Composer } from "@mail/core/common/composer";
 import { edit, press, queryFirst } from "@odoo/hoot-dom";
 import { MailComposerFormController } from "@mail/chatter/web/mail_composer_form";
-import { useSubEnv } from "@odoo/owl";
 import { getIndexedDB } from "../mail_test_helpers";
 import { waitNotifications } from "@bus/../tests/bus_test_helpers";
 

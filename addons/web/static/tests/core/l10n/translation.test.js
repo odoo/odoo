@@ -1,7 +1,7 @@
 /* eslint no-restricted-syntax: 0 */
-import { render } from "@web/owl2/utils";
 import { after, describe, expect, test } from "@odoo/hoot";
 import { animationFrame, Deferred } from "@odoo/hoot-mock";
+import { Component, markup, xml } from "@odoo/owl";
 import {
     defineParams,
     makeMockEnv,
@@ -13,9 +13,9 @@ import {
 } from "@web/../tests/web_test_helpers";
 import { _t as basic_t, translatedTerms, translationLoaded } from "@web/core/l10n/translation";
 import { IndexedDB } from "@web/core/utils/indexed_db";
+import { render } from "@web/owl2/utils";
 import { session } from "@web/session";
 
-import { Component, markup, xml } from "@odoo/owl";
 const { DateTime } = luxon;
 
 function _t() {

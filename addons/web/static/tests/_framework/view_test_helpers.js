@@ -1,3 +1,4 @@
+import { useSubEnv } from "@web/owl2/utils";
 import {
     after,
     animationFrame,
@@ -12,7 +13,7 @@ import {
     runAllTimers,
     tick,
 } from "@odoo/hoot";
-import { Component, onMounted, useSubEnv, xml } from "@odoo/owl";
+import { Component, onMounted, xml } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { View } from "@web/views/view";

@@ -1,3 +1,4 @@
+import { useState } from "@web/owl2/utils";
 import { expect, test } from "@odoo/hoot";
 import {
     Deferred,
@@ -15,7 +16,7 @@ import {
     queryRect,
     runAllTimers,
 } from "@odoo/hoot-dom";
-import { Component, useState, xml } from "@odoo/owl";
+import { Component, xml } from "@odoo/owl";
 
 import { contains, mountWithCleanup } from "@web/../tests/web_test_helpers";
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";

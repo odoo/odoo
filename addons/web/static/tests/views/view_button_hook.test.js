@@ -1,7 +1,8 @@
+import { useRef } from "@web/owl2/utils";
 import { expect, test } from "@odoo/hoot";
 import { contains, mockService, mountWithCleanup } from "@web/../tests/web_test_helpers";
 
-import { Component, useRef, xml } from "@odoo/owl";
+import { Component, xml } from "@odoo/owl";
 
 import { ViewButton } from "@web/views/view_button/view_button";
 import { useViewButtons } from "@web/views/view_button/view_button_hook";

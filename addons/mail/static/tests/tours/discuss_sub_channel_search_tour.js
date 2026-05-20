@@ -1,6 +1,6 @@
 import { SubChannelList } from "@mail/discuss/core/public_web/sub_channel_list";
 
-import { status } from "@odoo/owl";
+import { useEffect } from "@odoo/owl";
 
 import { registry } from "@web/core/registry";
 import { range } from "@web/core/utils/numbers";

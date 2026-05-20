@@ -1,3 +1,4 @@
+import { onRendered } from "@web/owl2/utils";
 import { beforeEach, expect, test } from "@odoo/hoot";
 import {
     Deferred,
@@ -13,7 +14,7 @@ import {
     runAllTimers,
 } from "@odoo/hoot-dom";
 import { mockDate, mockTimeZone, mockTouch } from "@odoo/hoot-mock";
-import { Component, onRendered, onWillStart, xml } from "@odoo/owl";
+import { Component, onMounted, onPatched, onWillStart, xml } from "@odoo/owl";
 import {
     MockServer,
     contains,

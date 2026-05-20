@@ -1,5 +1,5 @@
 import { useRef, useState } from "@web/owl2/utils";
-import { Component, onMounted, onWillStart, onWillUnmount, status } from "@odoo/owl";
+import { Component, onMounted, onWillStart, onWillUnmount, status, useEffect } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { FavoritePreview } from "./favorite_preview";
 import { useThrottleForAnimation } from "@web/core/utils/timing";

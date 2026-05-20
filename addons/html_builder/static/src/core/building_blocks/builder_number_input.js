@@ -1,6 +1,5 @@
 import { useState } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
-import { effect } from "@web/core/utils/reactive";
+import { Component, useEffect } from "@odoo/owl";
 import {
     basicContainerBuilderComponentProps,
     useInputBuilderComponent,

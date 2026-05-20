@@ -1,5 +1,14 @@
-import { onRendered, reactive, useLayoutEffect } from "@web/owl2/utils";
-import { Component, onMounted, onWillUpdateProps, status, xml } from "@odoo/owl";
+import { onRendered, reactive, useChildEnv, useLayoutEffect } from "@web/owl2/utils";
+import {
+    Component,
+    immediateEffect,
+    onMounted,
+    onWillDestroy,
+    onWillUpdateProps,
+    status,
+    untrack,
+    xml,
+} from "@odoo/owl";
 import { useDropdownGroup } from "@web/core/dropdown/_behaviours/dropdown_group_hook";
 import { useDropdownNesting } from "@web/core/dropdown/_behaviours/dropdown_nesting";
 import { DropdownPopover } from "@web/core/dropdown/_behaviours/dropdown_popover";
