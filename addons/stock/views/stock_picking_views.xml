@@ -431,6 +431,14 @@
             <field name="domain"></field>
             <field name="context">{'contact_display': 'partner_address', 'restricted_picking_type_code': 'incoming', 'search_default_reception': 1}</field>
             <field name="search_view_id" ref="view_picking_internal_search"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face o_view_nocontent_stock">
+                    No receipt yet! Create a new one.
+                </p>
+                <p class="text-muted">
+                    Reduce stockouts with alerts, barcode app, replenishment propositions, etc.
+                </p>
+            </field>
         </record>
 
         <record id="action_picking_tree_outgoing" model="ir.actions.act_window">
@@ -441,6 +449,11 @@
             <field name="domain"></field>
             <field name="context">{'contact_display': 'partner_address', 'restricted_picking_type_code': 'outgoing', 'search_default_delivery': 1}</field>
             <field name="search_view_id" ref="view_picking_internal_search"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face o_view_nocontent_stock">
+                    No delivery to do!
+                </p>
+            </field>
         </record>
 
         <record id="action_picking_tree_internal" model="ir.actions.act_window">
@@ -559,14 +572,6 @@
             <field name="context">{'contact_display': 'partner_address'}</field>
         </record>
 
-        <record id="action_picking_tree_ready" model="ir.actions.act_window">
-            <field name="name">To Do</field>
-            <field name="res_model">stock.picking</field>
-            <field name="view_mode">list,kanban,form,calendar</field>
-            <field name="domain"></field>
-            <field name="context">{'contact_display': 'partner_address', 'search_default_available': 1}</field>
-       </record>
-
         <record id="action_picking_tree_graph" model="ir.actions.act_window">
             <field name="name">To Do</field>
             <field name="res_model">stock.picking</field>
@@ -574,70 +579,6 @@
             <field name="domain"></field>
             <field name="context">{'contact_display': 'partner_address', 'search_default_available': 1, 'search_default_waiting': 1}</field>
        </record>
-
-        <record id="action_picking_tree_waiting" model="ir.actions.act_window">
-            <field name="name">Waiting Transfers</field>
-            <field name="res_model">stock.picking</field>
-            <field name="view_mode">list,kanban,form,calendar</field>
-            <field name="domain"></field>
-            <field name="context">{'contact_display': 'partner_address', 'search_default_waiting': 1}</field>
-        </record>
-
-        <record id="action_picking_tree_late" model="ir.actions.act_window">
-            <field name="name">Late Transfers</field>
-            <field name="res_model">stock.picking</field>
-            <field name="view_mode">list,kanban,form,calendar</field>
-            <field name="domain"></field>
-            <field name="context">{'contact_display': 'partner_address', 'search_default_late': 1}</field>
-        </record>
-
-        <record id="action_picking_tree_backorder" model="ir.actions.act_window">
-            <field name="name">Backorders</field>
-            <field name="res_model">stock.picking</field>
-            <field name="view_mode">list,kanban,form,calendar</field>
-            <field name="domain"></field>
-            <field name="context">{'contact_display': 'partner_address', 'search_default_backorder': 1}</field>
-        </record>
-
-        <template id="help_message_template" name="Help Message" groups="base.group_user">
-            <p name="top_help_message" class="o_view_nocontent_smiling_face o_view_nocontent_stock">
-                <t name="receipt_message">
-                    <t t-if="picking_type_code == 'incoming'">
-                        No receipt yet! Create a new one.
-                    </t>
-                </t>
-                <t name="delivery_message">
-                    <t t-if="picking_type_code == 'outgoing'">
-                        No delivery to do!
-                    </t>
-                </t>
-                <t name="transfer_message">
-                    <t t-if="picking_type_code not in ['incoming', 'outgoing']">
-                        No transfer found. Let's create one!
-                    </t>
-                </t>
-            </p>
-            <p name="bottom_help_message" class="text-muted">
-                <t name="receipt_message">
-                    <t t-if="picking_type_code == 'incoming'">
-                        Reduce stockouts with alerts, barcode app, replenishment propositions,
-                        locations management traceability, quality control, etc.
-                    </t>
-                </t>
-                <t name="delivery_message">
-                    <t t-if="picking_type_code == 'outgoing'"></t>
-                </t>
-                <t name="transfer_message">
-                    <t t-if="picking_type_code not in ['incoming', 'outgoing']">
-                        Transfers allow you to move products from one location to another.
-                    </t>
-                </t>
-            </p>
-            <p name="footer_help_message" class="text-muted">
-                <br/>
-                Want to speed up operations? <a class="btn-link" name="stock.action_install_barcode" type="action">Install</a> the barcode app
-            </p>
-        </template>
 
         <record id="action_install_barcode" model="ir.actions.server">
             <field name="name">Install Barcode</field>

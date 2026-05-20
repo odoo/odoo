@@ -21,8 +21,15 @@
         <field name="search_view_id" ref="stock.view_picking_internal_search"/>
     </record>
 
+    <record id="method_action_picking_tree_dropship" model="ir.actions.server">
+        <field name="name">stock.method_action_picking_tree_dropship</field>
+        <field name="model_id" ref="stock.model_stock_picking"/>
+        <field name="state">code</field>
+        <field name="code">action = model.get_action_picking_tree_dropship()</field>
+    </record>
+
     <menuitem id="dropship_picking" name="Dropships" parent="stock.menu_stock_transfers"
-        action="action_picking_tree_dropship" sequence="30"
+        action="stock_dropshipping.method_action_picking_tree_dropship" sequence="30"
         groups="stock.group_stock_manager,stock.group_stock_user"/>
 
     <!-- Picking Type Views -->

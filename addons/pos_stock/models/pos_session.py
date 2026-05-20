@@ -21,7 +21,7 @@ class PosSession(models.Model):
 
     def action_stock_picking(self):
         self.ensure_one()
-        action = self.env['ir.actions.act_window']._for_xml_id('stock.action_picking_tree_ready')
+        action = self.picking_ids.picking_type_id.get_action_picking_tree_ready()
         action['display_name'] = self.env._('Pickings')
         action['context'] = {}
         action['domain'] = [('id', 'in', self.picking_ids.ids)]

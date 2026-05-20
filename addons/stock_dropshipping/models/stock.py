@@ -44,6 +44,14 @@ class StockPicking(models.Model):
         self.ensure_one()
         return super()._is_to_external_location() or self.is_dropship
 
+    @api.model
+    def get_action_picking_tree_dropship(self):
+        # Here we can't directly call _get_action(), because the literal_eval will
+        # fail since the context sent by the xml here is not hardcoded
+        action = self.env['ir.actions.actions']._for_xml_id('stock_dropshipping.action_picking_tree_dropship')
+        self._set_action_help_message(action)
+        return action
+
 
 class StockPickingType(models.Model):
     _inherit = 'stock.picking.type'
