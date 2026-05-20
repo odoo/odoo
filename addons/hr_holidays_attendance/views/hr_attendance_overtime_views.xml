@@ -32,7 +32,7 @@
         <field name="model">res.config.settings</field>
         <field name="inherit_id" ref="hr_attendance.res_config_settings_view_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//block[@name='attendance_rules']" position="inside">
+            <xpath expr="//block[@name='overtime_settings']" position="inside">
                 <setting string="Attendance Work Entry Type" company_dependent="1"
                          help="Work entry type assigned to leaves generated from attendance records. Used by the time rule engine.">
                     <field name="attendance_work_entry_type_id" options="{'no_create': True}"/>

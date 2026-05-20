@@ -70,6 +70,7 @@ class HrTimeRule(models.Model):
     sequence = fields.Integer(default=10)
 
     country_id = fields.Many2one('res.country')
+    country_code = fields.Char(related='country_id.code')
     company_id = fields.Many2one('res.company')
     employee_domain = fields.Char(string="Employees", default='[]')
 
@@ -550,7 +551,7 @@ class HrTimeRule(models.Model):
                     for leave, items in by_leave.items():
                         excess[employee][leave].extend(items)
                 else:
-                    schedule = work_intervals['schedule'][employee] - work_intervals['leave'][employee]
+                    schedule = work_intervals['schedule'][employee] - work_intervals['leave'][employee] - work_intervals['public_leave'][employee]
                     fully_flex = work_intervals['fully_flexible'][employee]
                     period = rule.quantity_period or 'day'
 

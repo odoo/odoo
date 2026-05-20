@@ -3,12 +3,21 @@ from datetime import UTC
 from zoneinfo import ZoneInfo
 
 from odoo import fields, models
-
+from odoo.fields import Domain
 
 class HrEmployee(models.Model):
     _inherit = "hr.employee"
 
     attendance_based = fields.Boolean(readonly=False, related="version_id.attendance_based", inherited=True, groups="hr.group_hr_user")
+
+    def _get_calendar_attendance_domain(self):
+        return Domain.AND([
+            super()._get_calendar_attendance_domain(),
+            Domain.OR([
+                Domain("work_entry_type_id", "=", False),
+                Domain("work_entry_type_id.count_as", "!=", "absence")
+            ]),
+        ])
 
     def _compute_total_overtime(self):
         overtime_by_employee = dict(self.env['hr.leave']._read_group(

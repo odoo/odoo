@@ -110,9 +110,15 @@
         <field name="time_off_selectable">False</field>
     </record>
 
-<!-- Attendance (WORK100) -->
+    <!-- Attendance (WORK100) -->
     <function model="hr.work.entry.type" name="write">
         <value model="hr.work.entry.type" eval="obj().sudo().search([('code', '=', 'WORK100')]).ids"/>
+        <value eval="{'requires_allocation': False}"/>
+    </function>
+
+    <!-- Working time types -->
+    <function model="hr.work.entry.type" name="write">
+        <value model="hr.work.entry.type" eval="obj().sudo().search([('count_as', '=', 'working_time')]).ids"/>
         <value eval="{'requires_allocation': False}"/>
     </function>
 

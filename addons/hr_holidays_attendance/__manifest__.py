@@ -6,6 +6,7 @@
     'description': """
 Convert employee's extra hours to leave allocations.
     """,
+    'version': '1.1',
     'depends': ['hr_attendance', 'hr_holidays'],
     'auto_install': True,
     'data': [
@@ -29,7 +30,6 @@ Convert employee's extra hours to leave allocations.
             'hr_holidays_attendance/static/src/**/*',
         ],
     },
-    'post_init_hook': '_assign_compensable_as_leave_to_overtime',
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
 }

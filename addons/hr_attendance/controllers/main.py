@@ -5,7 +5,7 @@ import binascii
 import re
 from datetime import UTC
 from zoneinfo import ZoneInfo
-
+import datetime
 from requests.exceptions import RequestException
 
 import odoo.release

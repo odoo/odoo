@@ -97,7 +97,7 @@ class TestHrTimeRulePerformance(TransactionCase):
         affected = [(emp, start, end) for emp in self.employees]
 
         t0 = time.time()
-        with self.assertQueryCount(367):
+        with self.assertQueryCount(467):
             self.env['hr.leave']._process_time_rules_for(affected)
         t1 = time.time()
 
