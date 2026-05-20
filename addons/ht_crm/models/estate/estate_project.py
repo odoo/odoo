@@ -220,15 +220,6 @@ class EstateProject(models.Model):
         string="Ưu đãi"
     )
 
-    def action_clear_interested_customers(self):
-        for rec in self:
-            rec.interested_customer_ids = [(5, 0, 0)]
-
-
-    def action_clear_purchased_customers(self):
-        for rec in self:
-            rec.purchased_customer_ids = [(5, 0, 0)]
-
     @api.depends('sales_ids.sales_id')
     def _compute_unique_sales(self):
         for rec in self:

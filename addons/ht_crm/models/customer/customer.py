@@ -9,7 +9,7 @@ class Customer(models.Model):
 
     # Các trường cơ bản
     partner_platform = fields.Char(string="Sàn Liên Kết")
-    name = fields.Char(string="Tên Khách")
+    name = fields.Char(string="Tên Khách", required=True)
     date_of_birth = fields.Date(string="Ngày Sinh")
     id_number = fields.Char(string="CMND / Passport", size=20)
     issue_date = fields.Date(string="Ngày cấp")
@@ -17,7 +17,7 @@ class Customer(models.Model):
     permanent_address = fields.Text(string="Địa chỉ thường trú")
     contact_address = fields.Text(string="Địa chỉ liên lạc")
 
-    phone = fields.Char(string="Số điện thoại", size=15)
+    phone = fields.Char(string="Số điện thoại", size=15, required=True)
     email = fields.Char(string="Email")
 
     # Nhân viên đang phụ trách (có thể thay)
@@ -26,14 +26,6 @@ class Customer(models.Model):
         string="Nhân viên phụ trách",
         domain=[('role_ids.code', '=', 'sales')]
     )
-
-    source = fields.Selection([
-        ('facebook', 'Facebook'),
-        ('zalo', 'Zalo'),
-        ('website', 'Website'),
-        ('referral', 'Giới thiệu'),
-        ('other', 'Khác'),
-    ], string="Nguồn khách")
 
     type = fields.Selection([
         ('individual', 'Cá nhân'),
@@ -44,20 +36,15 @@ class Customer(models.Model):
 
     status = fields.Selection([
         ('new', 'Khách mới'),
-        ('consulting', 'Đang tư vấn'),
-        ('followup', 'Follow-up'),
-        ('paused', 'Tạm dừng'),
-        ('transacting', 'Đã tạo giao dịch'),
-        ('lost', 'Mất khách'),
-    ], default='new')
+        ('active', 'Đang tương tác'),
+        ('inactive', 'Không còn tương tác'),
+        ('blacklist', 'Blacklist'),
+    ], default='new', string="Trạng thái")
 
-    # Đánh dấu khách chăm sóc không thành công
-    ignore = fields.Boolean(
-        string="Chăm sóc không thành",
-        default=False,
-        store=True,
-        groups="base.group_system,ht_crm.group_ht_leader,ht_crm.group_ht_executive"
-    )
+    tier = fields.Selection([
+        ('normal', 'Thông thường'),
+        ('vip', 'Thân thiết'),
+    ], default='normal', string="Phân hạng")
 
     # Dự án khách hàng quan tâm
     project_ids = fields.Many2many(
@@ -73,9 +60,4 @@ class Customer(models.Model):
         'customer_id',
         string='Giao dịch'
     )
-    
 
-    @api.onchange('ignore')
-    def _onchange_field_a(self):
-        if self.ignore:
-            self.previous_salesperson_ids = [(5, 0, 0)]

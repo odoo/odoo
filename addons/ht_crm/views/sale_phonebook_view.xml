@@ -1,4 +1,30 @@
 <odoo>
+    <record id="view_phonebook_status_wizard" model="ir.ui.view">
+        <field name="name">sale.phonebook.status.wizard.form</field>
+        <field name="model">sale.phonebook.status.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Đổi trạng thái">
+
+                <group>
+                    <field name="status"/>
+                </group>
+
+                <footer>
+
+                    <button name="action_confirm"
+                            type="object"
+                            string="Xác nhận"
+                            class="btn-primary"/>
+
+                    <button string="Hủy"
+                            special="cancel"/>
+
+                </footer>
+
+            </form>
+        </field>
+    </record>
+    
     <record id="view_phonebook_list" model="ir.ui.view">
         <field name="name">sale.phonebook.list</field>
         <field name="model">sale.phonebook</field>
@@ -6,15 +32,83 @@
             <list>
                 <field name="batch_id" groups="ht_crm.group_ht_board_of_directors,ht_crm.group_ht_executive"/>
 
-                <field name="created_on" readonly="True"/>
-                <field name="name" readonly="True"/>
-                <field name="phone" widget="phone"/>
-                <field name="status"/>
-                <field name="note"/>
+                <field name="created_on" optional="1" readonly="True"/>
+                <field name="name" readonly="True" class="col-name"/>
+                <field name="phone" widget="phone" class="col-phone"/>
+                <field name="status" class="col-status"/>
+                <field name="note" class="col-note"/>
 
                 <!-- Trường bổ sung -->
                 <field name="salesperson_id" optional="1" groups="ht_crm.group_ht_executive,ht_crm.group_ht_general_admin,ht_crm.group_ht_leader"/>
+                
             </list>  
+        </field>
+    </record>
+
+    <record id="view_phonebook_kanban" model="ir.ui.view">
+        <field name="name">sale.phonebook.kanban</field>
+        <field name="model">sale.phonebook</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="status">
+                <templates>
+                    <t t-name="card">
+
+                        <div class="oe_kanban_card rounded-4 shadow-sm p-3">
+                            <!-- Header -->
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+
+                            
+                                <div>
+
+                                    <!-- Customer Name -->
+                                    <div class="fw-semibold text-dark fs-6">
+                                        <field name="name"/>
+                                    </div>
+
+                                    <!-- Phone -->
+                                    <div class="fw-bold fs-4 text-primary">
+                                        <field name="phone" widget="phone"/>
+                                    </div>
+
+                                </div>
+
+                                <!-- Status -->
+                                <div>
+                                    <field name="status" widget="badge"/>
+                                </div>
+                            </div>
+                            
+
+                            <!-- Note -->
+                            <div class="bg-light rounded-3 px-2 py-2 small text-secondary mb-3">
+
+                                <div class="fw-semibold text-dark mb-1">
+                                    Ghi chú
+                                </div>
+
+                                <field name="note_preview"/>
+
+                            </div>
+
+                            <!-- Action -->
+                            <footer>
+
+                                <button name="action_open_status_wizard"
+                                        type="object"
+                                        icon="fa-refresh"
+                                        string="Đổi trạng thái"
+                                        class="btn btn-primary btn-sm w-100"
+                                        groups="ht_crm.group_ht_board_of_directors,ht_crm.group_ht_executive"
+
+                                />
+
+                            </footer>
+
+                        </div>
+
+                    </t>
+                </templates>
+            </kanban>
         </field>
     </record>
 
@@ -61,8 +155,7 @@
                             <field name="batch_id" groups="ht_crm.group_ht_board_of_directors,ht_crm.group_ht_executive"/>
                             <field name="created_on" readonly="1"/>
 
-                            <field name="salesperson_id"
-                                options="{'no_create': False}"/>
+                            <field name="salesperson_id" options="{'no_create': False}" groups="ht_crm.group_ht_executive,ht_crm.group_ht_general_admin"/>
                             <field name="project_id"/>
                             <field name="previous_salesperson_ids" groups="base.group_system,ht_crm.group_ht_general_admin,ht_crm.group_ht_executive,ht_crm.group_ht_leader"/>
 

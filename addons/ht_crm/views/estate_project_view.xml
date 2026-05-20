@@ -66,29 +66,16 @@
                         </page>
                         
                         <page string="Khách Hàng">
-                            <header>
-                                <button name="action_clear_interested_customers"
-                                        type="object"
-                                        string="Xóa KH quan tâm"
-                                        class="btn-secondary"/>
-
-                                <button name="action_clear_purchased_customers"
-                                        type="object"
-                                        string="Xóa KH đã mua"
-                                        class="btn-danger"/>
-                            </header>
                             <group>
                                 <field name="interested_customer_ids">
                                     <list editable="bottom" limit="10">
                                         <field name="name"/>
-                                        <field name="source"/>
                                         <field name="type"/>
                                     </list>
                                 </field>
                                 <field name="purchased_customer_ids">
                                     <list editable="bottom" limit="10">
                                         <field name="name"/>
-                                        <field name="source"/>
                                         <field name="type"/>
                                     </list>
                                 </field>

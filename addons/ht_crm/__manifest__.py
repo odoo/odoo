@@ -17,6 +17,12 @@
     # any module necessary for this one to work correctly
     'depends': ['base', 'web'],
 
+    'assets': {
+        'web.assets_backend': [
+            'ht_crm/static/src/css/phonebook.css',
+        ],
+    },
+
     # always loaded
     'data': [
         'views/groups.xml',

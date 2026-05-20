@@ -13,13 +13,17 @@ class CustomerReport(models.Model):
         ('company', 'Doanh nghiệp'),
     ], string="Phân loại khách")
 
-    source = fields.Selection([
-        ('facebook', 'Facebook'),
-        ('zalo', 'Zalo'),
-        ('website', 'Website'),
-        ('referral', 'Giới thiệu'),
-        ('other', 'Khác'),
-    ], string="Nguồn khách")
+    status = fields.Selection([
+        ('new', 'Khách mới'),
+        ('active', 'Đang tương tác'),
+        ('inactive', 'Không còn tương tác'),
+        ('blacklist', 'Blacklist'),
+    ], default='new', string="Trạng thái")
+
+    tier = fields.Selection([
+        ('normal', 'Thông thường'),
+        ('vip', 'Thân thiết'),
+    ], default='normal', string="Phân hạng")
 
     customer_count = fields.Integer(string="Số khách hàng")
 
@@ -32,7 +36,8 @@ class CustomerReport(models.Model):
                 SELECT
                     row_number() OVER () AS id,
 
-                    c.source AS source,
+                    c.status AS status,
+                    c.tier AS tier,
                     c.type AS type,
 
                     COUNT(c.id) AS customer_count
@@ -40,7 +45,8 @@ class CustomerReport(models.Model):
                 FROM sale_customer c
 
                 GROUP BY
-                    c.source,
+                    c.status,
+                    c.tier,
                     c.type
             )
         """)

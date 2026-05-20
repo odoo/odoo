@@ -24,7 +24,8 @@ class Transaction(models.Model):
     
     date = fields.Date(default=fields.Date.today, string="Ngày giao dịch")
 
-    # Thông tiên liên quan về SP
+    # Thông tin liên quan về SP
+    project_id = fields.Many2one(related='product_id.project_id', string="Dự án")
     product_id = fields.Many2one('estate.property.unit', string="Tên SP", domain=[('state', 'in', ['available', 'resale'])], required=True)
     net_area = fields.Float(
         related="product_id.net_area",

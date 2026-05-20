@@ -159,18 +159,24 @@ class PhoneBook(models.Model):
     name = fields.Char(string="Chủ thuê bao")
     phone = fields.Char(string="Số điện thoại", size=15, required=True)
     note = fields.Text(string="Ghi chú")
+    note_preview = fields.Char(
+        string="Ghi chú",
+        compute="_compute_note_preview",
+        store=False
+    )
     created_on = fields.Datetime(
         string="Ngày tạo số",
         default=fields.Datetime.now
     )
     
     # Trường bổ sung
-    project_id = fields.Many2one(related='batch_id.project_id')
+    project_id = fields.Many2one(related='batch_id.project_id', string="Dự án")
 
     salesperson_id = fields.Many2one(
         'sale.employee',
         string="Sales phụ trách",
-        domain=[('role_ids.code', '=', 'sales')]
+        domain=[('role_ids.code', '=', 'sales')],
+        groups="ht_crm.group_ht_executive, ht_crm.group_ht_general_admin"
     )
 
     previous_salesperson_ids = fields.Many2many(
@@ -184,7 +190,7 @@ class PhoneBook(models.Model):
         ('callback', 'Gọi lại'),
         ('contacted', 'Đã liên hệ'),
         ('invalid', 'Không hợp lệ / Hủy')
-    ], string="Trạng thái", default='new', store=True)
+    ], string="Trạng thái", default='new', store=True, group_expand='_group_expand_status')
 
     # Trường xử lý số nóng.
     is_hot = fields.Boolean(string="Nóng?", default=False)
@@ -216,6 +222,35 @@ class PhoneBook(models.Model):
 
         return super().write(vals)
 
+    @api.depends('note')
+    def _compute_note_preview(self):
+        for rec in self:
+            if rec.note:
+                rec.note_preview = (
+                    rec.note[:30] + '...'
+                    if len(rec.note) > 30
+                    else rec.note
+                )
+            else:
+                rec.note_preview = False
+
+    def action_open_status_wizard(self):
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Đổi trạng thái',
+            'res_model': 'sale.phonebook.status.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {
+                'default_phonebook_id': self.id,
+                'default_status': self.status,
+            }
+        }
+
+    @api.model
+    def _group_expand_status(self, statuses, domain):
+        return [key for key, val in type(self).status.selection]
+
     @api.constrains('phone')
     def _check_phone_unique(self):
         for rec in self:
@@ -237,3 +272,20 @@ class PhoneBook(models.Model):
         self.ensure_one()
         self.write({'salesperson_id': ""})
         self.write({'previous_salesperson_ids': [(5, 0, 0)]})
+
+
+class PhonebookStatusWizard(models.TransientModel):
+    _name = 'sale.phonebook.status.wizard'
+    _description = 'Đổi trạng thái'
+
+    phonebook_id = fields.Many2one('sale.phonebook')
+
+    status = fields.Selection([
+        ('new', 'Chưa liên hệ'),
+        ('callback', 'Gọi lại'),
+        ('contacted', 'Đã liên hệ'),
+        ('invalid', 'Không hợp lệ / Hủy')
+    ], string="Trạng thái", default='new')
+
+    def action_confirm(self):
+        self.phonebook_id.status = self.status

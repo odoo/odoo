@@ -175,17 +175,7 @@
         <field name="model">sale.transaction</field>
         <field name="arch" type="xml">
 
-            <kanban default_group_by="state">
-                <field name="currency_id" invisible="1"/>
-
-                <field name="name"/>
-                <field name="customer_id"/>
-                <field name="employee_id"/>
-                <field name="product_id"/>
-                <field name="price_total"/>
-                <field name="state"/>
-
-
+            <kanban default_group_by="project_id">
                 <progressbar field="state"
                         colors='{
                         "draft": "info",
