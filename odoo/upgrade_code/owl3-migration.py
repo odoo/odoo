@@ -426,11 +426,12 @@ class JSTooling:
     def get_js_files(file_manager, include_test_files=False):
         """Gets all static js files. Include .test.js files if include_test_files is True."""
         path_pattern = re.compile('|'.join(EXCLUDED_PATH + CHECKSUM_FILES))
+        target_dir = '/static/' if include_test_files else '/static/src'
 
         return [
             f for f in file_manager
             if str(f.path).endswith('.js')
-            and '/static/' in str(f.path)
+            and target_dir in str(f.path)
             and not path_pattern.search(str(f.path))
         ]
 
@@ -941,6 +942,7 @@ MISC_WHITELIST = {
     "views.ViewButtonTooltip": {'debug', 'button', 'model'},  # JSON stringify context
     "website.dialog.addFont.singlePreview": {'previewFontName'},  # Nested t-call
     'website.dialog.addFont.preview': {'previewFontName'},  # Recursive t-call
+    "website.form_checkbox": {'record_index'},  # dynamic t-calls from loops
     "website.form_field": {'fieldTypeClasses', 'form_checkbox'},  # dynamic t-call
     "website.form_radio": {'record_index', 'record'},  # dynamic t-calls from loops
     "website.form_checkbox": {'record_index', 'record'},  # dynamic t-calls from loops
@@ -1097,24 +1099,24 @@ def upgrade(file_manager) -> str:
     """Main upgrade_code entry point."""
     collector = MigrationCollector(file_manager)
 
-    collector.run_sub("Migrating useEffect", upgrade_useeffect)
-    collector.run_sub("Migrating onWillRender", upgrade_onwillrender)
-    collector.run_sub("Migrating onRendered", upgrade_onrendered)
-    collector.run_sub("Migrating useComponent", upgrade_usecomponent)
-    collector.run_sub("Migrating useEnv", upgrade_useenv)
-    collector.run_sub("Migrating useSubEnv", upgrade_usesubenv)
-    collector.run_sub("Migrating useChildSubEnv", upgrade_usechildsubenv)
-    collector.run_sub("Migrating useRef", upgrade_useref)
-    collector.run_sub("Migrating useState", upgrade_usestate)
-    collector.run_sub("Migrating reactive", upgrade_reactive)
-    collector.run_sub("Migrating useExternalListener", upgrade_use_external_listener)
-    collector.run_sub("Migrating t-portal", upgrade_tportal)
-    collector.run_sub("Migrating t-esc", upgrade_t_esc)
-    collector.run_sub("Migrating t-ref", upgrade_t_ref)
-    collector.run_sub("Migrating t-model", upgrade_t_model)
-    collector.run_sub("Migrating this. in xml templates", upgrade_this, targets=[])
-    collector.run_sub("Migrating this. in test.js xml fragments", upgrade_this_in_js, targets=[])
-    collector.run_sub("Migrating t-slot", upgrade_t_slot)
+    # collector.run_sub("Migrating useEffect", upgrade_useeffect)
+    # collector.run_sub("Migrating onWillRender", upgrade_onwillrender)
+    # collector.run_sub("Migrating onRendered", upgrade_onrendered)
+    # collector.run_sub("Migrating useComponent", upgrade_usecomponent)
+    # collector.run_sub("Migrating useEnv", upgrade_useenv)
+    # collector.run_sub("Migrating useSubEnv", upgrade_usesubenv)
+    # collector.run_sub("Migrating useChildSubEnv", upgrade_usechildsubenv)
+    # collector.run_sub("Migrating useRef", upgrade_useref)
+    # collector.run_sub("Migrating useState", upgrade_usestate)
+    # collector.run_sub("Migrating reactive", upgrade_reactive)
+    # collector.run_sub("Migrating useExternalListener", upgrade_use_external_listener)
+    # collector.run_sub("Migrating t-portal", upgrade_tportal)
+    # collector.run_sub("Migrating t-esc", upgrade_t_esc)
+    # collector.run_sub("Migrating t-ref", upgrade_t_ref)
+    # collector.run_sub("Migrating t-model", upgrade_t_model)
+    # collector.run_sub("Migrating this. in xml templates", upgrade_this, targets=[])
+    # collector.run_sub("Migrating this. in test.js xml fragments", upgrade_this_in_js, targets=[])
+    # collector.run_sub("Migrating t-slot", upgrade_t_slot)
     collector.run_sub("Migrating parametric t-call", upgrade_parametric_tcall)
 
     collector.finalize()
