@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
 	<t t-name="website.WhatsappOption">
-		<t t-if="!state.whatsappNumber">
+		<t t-if="!this.state.whatsappNumber">
 			<div class="alert alert-info">
                 A Contact Number is essential, as WhatsApp chat redirection depends on a valid number.
             </div>
@@ -21,7 +21,7 @@
 		</BuilderRow>
 
 		<BuilderRow label.translate="Contact Number">
-			<BuilderTextInput action="'whatsappNumber'" default="state.whatsappNumber"/>
+			<BuilderTextInput action="'whatsappNumber'" default="this.state.whatsappNumber"/>
 		</BuilderRow>
 
 		<BuilderRow label.translate="Avatar">
