@@ -58,10 +58,56 @@ class CalendarEvent(models.Model):
     def create(self, vals_list):
         description_context = self.env.context.get('skip_contact_description', False)
         notify_context = self.env.context.get('dont_notify', False)
-        return super(CalendarEvent, self.with_context(dont_notify=notify_context, skip_contact_description=description_context)).create([
+
+        events = super(CalendarEvent, self.with_context(dont_notify=notify_context, skip_contact_description=description_context)).create([
             dict(vals, need_sync=False) if vals.get('recurrence_id') or vals.get('recurrency') else vals
             for vals in vals_list
         ])
+        self._create_calendar_filters_for_duplicate_email_partners(events)
+        return events
+
+    def _create_calendar_filters_for_duplicate_email_partners(self, events):
+        """
+        Create missing calendar.filters for users with multiple partners
+        sharing the same email to ensure all their Google Calendar events
+        are displayed by default.
+        """
+        CalendarFilters = self.env['calendar.filters']
+        partners_without_user = events.mapped('attendee_ids').mapped('partner_id').filtered(
+            lambda a: not a.user_ids
+        )
+        if not partners_without_user:
+            return CalendarFilters
+        # Only check users with google calendar sync
+        duplicates_from_user = self.env['res.users'].sudo().search([
+            ('email', 'in', partners_without_user.mapped('email')),
+            ('google_calendar_rtoken', '!=', False),
+        ])
+        if not duplicates_from_user:
+            return CalendarFilters
+        existing_filters = CalendarFilters.search([
+            ('user_id', 'in', duplicates_from_user.ids),
+            ('partner_id', 'in', partners_without_user.ids),
+        ])
+
+        filters_to_create = []
+        for partner in partners_without_user:
+            matching_user = duplicates_from_user.filtered(lambda u: u.email == partner.email)
+            if not matching_user:
+                continue
+            has_filter = existing_filters.filtered(
+                lambda f: f.user_id == matching_user[0] and f.partner_id == partner
+            )
+            if not has_filter:
+                filters_to_create.append({
+                    'user_id': matching_user[0].id,
+                    'partner_id': partner.id,
+                    'active': True,
+                    'partner_checked': True,
+                })
+        if filters_to_create:
+            return CalendarFilters.create(filters_to_create)
+        return CalendarFilters
 
     @api.model
     def _check_values_to_sync(self, values):
