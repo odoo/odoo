@@ -43,18 +43,16 @@
         <field name="model">mailing.trace</field>
         <field name="priority">20</field>
         <field name="arch" type="xml">
-            <list string="SMS Traces" create="0">
-                <field name="mass_mailing_id"/>
+            <list string="SMS Traces" create="0" action="action_view_contact" type="object">
+                <field name="mass_mailing_id" optional="hide"/>
                 <field name="sms_number"/>
                 <field name="sent_datetime"/>
-                <field name="links_click_datetime"/>
                 <field name="trace_status" widget="badge"/>
                 <field name="failure_type" optional="show"/>
-                <field name="open_datetime" optional="hide"/>
-                <field name="reply_datetime" optional="hide"/>
+                <field name="open_datetime" optional="show"/>
+                <field name="links_click_datetime"/>
+                <field name="reply_datetime" optional="show"/>
                 <field name="is_test_trace" optional="hide"/>
-                <button name="action_view_contact" type="object"
-                        string="Open Recipient" icon="fa-user"/>
             </list>
         </field>
     </record>
