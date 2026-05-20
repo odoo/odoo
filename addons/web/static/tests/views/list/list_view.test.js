@@ -17532,8 +17532,8 @@ test(`list view with default_group_by`, async () => {
     if (getMockEnv().isSmall) {
         await contains(".o_control_panel_navigation > button").click();
     }
-    expect(`.o_searchview_facet`).toHaveCount(1);
-    expect(`.o_searchview_facet`).toHaveText("Bar");
+    // The default_group_by should not create any facet
+    expect(`.o_searchview_facet`).toHaveCount(0);
     expect.verifySteps(["web_read_group1"]);
 
     await selectGroup("m2m");
@@ -17544,13 +17544,12 @@ test(`list view with default_group_by`, async () => {
 
     await toggleMenuItem("M2m");
     expect(`.o_group_header`).toHaveCount(2);
-    expect(`.o_searchview_facet`).toHaveCount(1);
-    expect(`.o_searchview_facet`).toHaveText("Bar");
+    expect(`.o_searchview_facet`).toHaveCount(0);
     expect.verifySteps(["web_read_group3"]);
 
     await toggleMenuItem("My Filter");
-    expect(`.o_searchview_facet`).toHaveCount(2);
-    expect(queryAllTexts(`.o_searchview_facet`)).toEqual(["Bar", "My Filter"]);
+    expect(`.o_searchview_facet`).toHaveCount(1);
+    expect(queryAllTexts(`.o_searchview_facet`)).toEqual(["My Filter"]);
     expect.verifySteps(["web_read_group4"]);
 });
 
@@ -17586,8 +17585,8 @@ test(`list view with multi-fields default_group_by`, async () => {
     if (getMockEnv().isSmall) {
         await contains(".o_control_panel_navigation > button").click();
     }
-    expect(`.o_searchview_facet`).toHaveCount(1);
-    expect(`.o_searchview_facet`).toHaveText("Foo\n>\nBar");
+    // The default_group_by should not create any facet
+    expect(`.o_searchview_facet`).toHaveCount(0);
     expect.verifySteps(["web_read_group1"]);
     await contains(`.o_group_header`).click();
     expect(`.o_group_header`).toHaveCount(5);
