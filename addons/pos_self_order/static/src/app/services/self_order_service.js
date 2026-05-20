@@ -19,7 +19,7 @@ import {
     isValidEmail,
     orderUsageUTCtoLocalUtil,
 } from "@point_of_sale/utils";
-import { getOrderLineValues } from "./card_utils";
+import { getAttributeValues, getOrderLineValues } from "./card_utils";
 import {
     changesToOrder,
     filterChangeByCategories,
@@ -298,6 +298,9 @@ export class SelfOrder extends Reactive {
         customValues = {},
         comboValues = {}
     ) {
+        if (productTemplate.isDeletedCombination(getAttributeValues(selectedValues, this.models))) {
+            return;
+        }
         const product = productTemplate.product_variant_ids[0];
         const values = getOrderLineValues(
             this,
