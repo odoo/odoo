@@ -1563,10 +1563,11 @@ class ResUsersApikeys(models.Model):
 
     def _generate(self, scope, name, expiration_date):
         """Generates an api key.
-        :param str scope: the scope of the key. If None, the key will give access to any rpc.
+        :param str|None scope: the scope of the key. If None, the key will give access to any rpc.
         :param str name: the name of the key, mainly intended to be displayed in the UI.
-        :param date expiration_date: the expiration date of the key.
-        :return: str: the key.
+        :param datetime.datetime expiration_date: the expiration date of the key.
+        :returns: the key.
+        :rtype: str
 
         Note:
         This method must be called in sudo to use a duration
@@ -1614,6 +1615,15 @@ class ResUsersApikeys(models.Model):
         The `expiration_date` must be allowed for the user's group.
 
         To renew a key, generate the new one, store it, and then call `revoke` on the previous one.
+
+        :param str key: an active API key belonging to the current user
+        :param str|None scope: the scope of the key. If None, the key will give access to any rpc.
+        :param str name: the name of the key, mainly intended to be displayed in the UI.
+        :param str|datetime.datetime expiration_date: the expiration date of the key. String values
+            may be either ISO 8601 dates (``"2026-12-30"``) or space-separated datetimes
+            (``"2026-12-30 14:30:00"``).
+        :returns: the key.
+        :rtype: str
         """
         self._ensure_can_manage_keys_programmatically()
 
@@ -1652,6 +1662,8 @@ class ResUsersApikeys(models.Model):
         """
         Revoke an existing API key.
         If it exists, the `key` will be removed from the server.
+
+        :param str key: the API key that has to be revoked
         """
         self._ensure_can_manage_keys_programmatically()
         assert key, "key required"
