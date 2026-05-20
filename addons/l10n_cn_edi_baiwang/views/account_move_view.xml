@@ -15,13 +15,13 @@
             </xpath>
 
             <xpath expr="//notebook" position="inside">
-                <page string="China E-Fapiao" 
+                <page string="Baiwang E-Fapiao" 
                       name="china_e_fapiao" 
                       invisible="country_code != 'CN' or move_type not in ('out_invoice', 'out_refund')">
                     
                     <group invisible="move_type != 'out_invoice'">
-                        <group string="Standard Fapiao Details">
-                            <field name="l10n_cn_fapiao_number" readonly="1"/>
+                        <group string="E-Fapiao">
+                            <field name="fapiao" position="move"/>
                             <field name="l10n_cn_fapiao_date" readonly="1"/>
                         </group>
                     </group>
@@ -41,6 +41,10 @@
                     </group>
 
                 </page>
+            </xpath>
+
+            <xpath expr="//field[@name='fapiao']" position="attributes">
+                <attribute name="readonly">1</attribute>
             </xpath>
 
         </field>

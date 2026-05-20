@@ -12,6 +12,9 @@ class ResConfigSettings(models.TransientModel):
     l10n_cn_edi_mode = fields.Selection(related="company_id.l10n_cn_edi_mode", readonly=False)
     l10n_cn_edi_company_vat = fields.Char(related="company_id.vat")
     l10n_cn_accept_processing = fields.Boolean()
+    l10n_cn_baiwang_app_key = fields.Char(related="company_id.l10n_cn_baiwang_app_key", readonly=False)
+    l10n_cn_baiwang_app_secret = fields.Char(related="company_id.l10n_cn_baiwang_app_secret", readonly=False)
+    l10n_cn_baiwang_salt = fields.Char(related="company_id.l10n_cn_baiwang_salt", readonly=False)
 
     # ----------------
     # Onchange methods

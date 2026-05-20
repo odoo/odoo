@@ -13,10 +13,11 @@
     'data': [
         'data/ir_cron.xml',
 
-        # 'security/ir.model.access.csv',
+        'security/ir.model.access.csv',
 
         'views/account_move_view.xml',
         'views/product_template_view.xml',
+        'views/res_config_settings_view.xml',
 
         # 'wizard/cninvois_consolidate_invoice_wizard.xml',
     ],

@@ -30,9 +30,17 @@ class AccountMoveSend(models.AbstractModel):
                 wizard.checkbox_l10n_cn_baiwang = False
 
     def _call_web_service_before_invoice_pdf_render(self, invoices_data):
+        """ Hook to trigger the API call before Odoo generates the PDF. """
+        # Let Odoo do its standard processing first (like Peppol or standard EDI)
         super()._call_web_service_before_invoice_pdf_render(invoices_data)
 
-        if self.checkbox_l10n_cn_baiwang:
-            for move, data in invoices_data.items():
+        for move, data in invoices_data.items():
+            # Check if Baiwang is the selected sending method for this customer
+            # OR if our specific wizard checkbox was ticked.
+            is_baiwang_method = move.partner_id.invoice_sending_method == 'baiwang'
+            is_checkbox_ticked = getattr(self, 'checkbox_l10n_cn_baiwang', False)
+
+            if is_baiwang_method or is_checkbox_ticked:
+                # Execute only if it's a CN invoice and hasn't been issued yet
                 if move.country_code == 'CN' and not move.l10n_cn_fapiao_number:
                     move._l10n_cn_issue_fapiao()

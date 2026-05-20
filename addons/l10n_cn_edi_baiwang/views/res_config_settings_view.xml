@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_inherit_l10n_cn_baiwang" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.l10n_cn_baiwang</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//block[@id='invoicing_settings']" position="inside">
+                <setting id="l10n_cn_baiwang_setting" 
+                         title="China Golden Tax - Baiwang API" 
+                         string="China E-Fapiao (Baiwang)" 
+                         company_dependent="1" 
+                         help="Configure credentials for direct Golden Tax integration.">
+                    
+                    <div class="content-group">
+                        <div class="row mt16">
+                            <label for="l10n_cn_baiwang_app_key" class="col-lg-4 o_light_label"/>
+                            <field name="l10n_cn_baiwang_app_key"/>
+                        </div>
+                        <div class="row mt8">
+                            <label for="l10n_cn_baiwang_app_secret" class="col-lg-4 o_light_label"/>
+                            <field name="l10n_cn_baiwang_app_secret" password="True"/>
+                        </div>
+                        <div class="row mt8">
+                            <label for="l10n_cn_baiwang_salt" class="col-lg-4 o_light_label"/>
+                            <field name="l10n_cn_baiwang_salt" password="True"/>
+                        </div>
+                        </div>
+                </setting>
+            </xpath>
+        </field>
+    </record>
+</odoo>
