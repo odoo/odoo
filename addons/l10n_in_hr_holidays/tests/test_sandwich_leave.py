@@ -594,3 +594,42 @@ class TestSandwichLeave(TransactionCase):
         wed_leave.action_approve()
         self.assertEqual(fri_mon_leave.number_of_days, 4)
         self.assertEqual(wed_leave.number_of_days, 2)
+
+    @freeze_time('2026-05-01')
+    def test_sandwich_leave_public_holiday_as_working_day(self):
+        leave_type_ph_as_working = self.env['hr.leave.type'].create({
+            'name': 'Leave Type With Public Holiday As Working Day',
+            'request_unit': 'day',
+            'requires_allocation': 'no',
+            'l10n_in_is_sandwich_leave': True,
+            'company_id': self.indian_company.id,
+            'include_public_holidays_in_duration': True,
+        })
+        self.env['resource.calendar.leaves'].create({
+            'name': 'Friday Public Holiday',
+            'date_from': '2026-05-15 00:00:00',
+            'date_to': '2026-05-15 23:59:59',
+            'resource_id': False,
+            'company_id': self.indian_company.id,
+        })
+        # With include_public_holidays_in_duration = True → 4 days
+        holiday_leave = self.env['hr.leave'].create({
+            'name': 'Test Leave',
+            'employee_id': self.rahul_emp.id,
+            'holiday_status_id': leave_type_ph_as_working.id,
+            'request_date_from': '2026-05-15',
+            'request_date_to': '2026-05-18',
+        })
+        self.assertTrue(holiday_leave.l10n_in_contains_sandwich_leaves)
+        self.assertEqual(holiday_leave.number_of_days, 4)
+
+        # With include_public_holidays_in_duration = False → 1 day
+        holiday_leave_without_ph = self.env['hr.leave'].create({
+            'name': 'Test Leave Without PH As Working',
+            'employee_id': self.demo_employee.id,
+            'holiday_status_id': self.leave_type_day.id,
+            'request_date_from': '2026-05-15',
+            'request_date_to': '2026-05-18',
+        })
+        self.assertFalse(holiday_leave_without_ph.l10n_in_contains_sandwich_leaves)
+        self.assertEqual(holiday_leave_without_ph.number_of_days, 1)
