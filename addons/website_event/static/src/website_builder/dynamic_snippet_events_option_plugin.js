@@ -1,4 +1,3 @@
-import { setDatasetIfUndefined } from "@website/builder/plugins/options/dynamic_snippet_option_plugin";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 
@@ -15,7 +14,6 @@ export class DynamicSnippetEventsOptionPlugin extends Plugin {
     }
     async onSnippetDropped({ snippetEl }) {
         if (snippetEl.matches(".s_event_upcoming_snippet")) {
-            setDatasetIfUndefined(snippetEl, "numberOfRecords", 3);
             await this.dependencies.dynamicSnippetOption.setOptionsDefaultValues(
                 snippetEl,
                 this.modelNameFilter
