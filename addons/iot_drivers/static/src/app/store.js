@@ -1,14 +1,12 @@
-export default class Store {
-    constructor() {
-        this.setup();
-    }
-    setup() {
-        this.url = "";
-        this.base = {};
-        this.update = 0;
-        this.isLinux = false;
-        this.advanced = false;
-    }
+/* global owl */
+
+const { Plugin, signal } = owl;
+
+export default class Store extends Plugin {
+    base = signal({});
+    update = signal(0);
+    isLinux = signal(false);
+    advanced = signal(false);
 
     async rpc({ url, method = "GET", params = {} }) {
         if (method === "POST") {
