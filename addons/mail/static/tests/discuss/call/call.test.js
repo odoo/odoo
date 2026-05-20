@@ -971,7 +971,7 @@ test("dynamic focus switches to talking participant", async () => {
     await contains(".o-discuss-CallParticipantCard[aria-label='Bob']");
     await click("button[aria-label='Video Settings']");
     await click(".o-discuss-QuickVideoSettings button:has(:text('Advanced Settings'))");
-    await click("button[title='Video']");
+    await contains(".o-discuss-CallSettings .o-mail-TabHeader.o-active:has(:text('Video'))");
     await click("input[title='Auto-focus speaker']:checked");
 });
 
