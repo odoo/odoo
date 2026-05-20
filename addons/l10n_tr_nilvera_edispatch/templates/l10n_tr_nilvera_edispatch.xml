@@ -33,7 +33,7 @@
         </cac:PostalAddress>
         <cac:PartyTaxScheme t-if="tax_office_required">
             <cac:TaxScheme>
-                <cbc:Name t-out="partner._get_tax_office_for_edispatch()"/>
+                <cbc:Name t-out="partner._get_tax_office_name()"/>
             </cac:TaxScheme>
         </cac:PartyTaxScheme>
         <cac:Contact>

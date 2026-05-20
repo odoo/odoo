@@ -1,8 +1,8 @@
 from odoo import fields, models
 
 
-class L10nTrNilveraEinvoiceTaxOffice(models.Model):
-    _name = "l10n_tr_nilvera_einvoice.tax.office"
+class L10nTrTaxOffice(models.Model):
+    _name = "l10n_tr.tax.office"
     _description = "Turkish Tax Office"
     _translate = False
 

@@ -13,8 +13,8 @@ class TestUBLTR(TestUBLTRCommon):
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.company_data['company'].partner_id.write({'l10n_tr_tax_office_id': cls.env.ref("l10n_tr_nilvera_einvoice.tax_office_1009").id})
-        cls.einvoice_partner.write({'l10n_tr_tax_office_id': cls.env.ref("l10n_tr_nilvera_einvoice.tax_office_1009").id})
+        cls.company_data['company'].partner_id.write({'l10n_tr_tax_office_id': cls.env.ref("l10n_tr.tax_office_1009").id})
+        cls.einvoice_partner.write({'l10n_tr_tax_office_id': cls.env.ref("l10n_tr.tax_office_1009").id})
 
         cls.tax_0 = cls.env['account.chart.template'].ref('tr_s_0_ex')
         cls.tax_20 = cls.env['account.chart.template'].ref('tr_s_20')
