@@ -217,7 +217,7 @@
 </t>
 
 <t t-name="mail.Message.pendingStatus">
-    <button t-if="this.message.postFailRedo" class="btn p-0" title="Failed to post the message. Click to retry" t-on-click="() => this.message.postFailRedo?.()"><i class="fa fa-fw fa-warning text-warning"/></button>
+    <button t-if="this.message.postFailRedo" class="btn p-0" t-att-title="this.message.postFailMessage" t-on-click="() => this.message.postFailRedo?.()"><i class="fa fa-fw fa-warning text-warning"/></button>
     <span t-else="" class="o-mail-Message-pendingProgress"><i class="fa fa-fw fa-circle-o-notch fa-spin opacity-50"/></span>
 </t>
 
