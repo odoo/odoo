@@ -25,6 +25,7 @@ export class CrmColumnProgress extends RottingColumnProgress {
     }
 
     getColumnProgressTooltip(bar) {
-        return typeof bar.value === 'symbol' ? _t('No activities scheduled') : `${bar.count} ${bar.string}`
+        const barString = typeof bar.value === 'symbol' ? _t('Without activities scheduled') : bar.string;
+        return `${bar.count} ${barString}`;
     }
 }
