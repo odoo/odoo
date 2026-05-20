@@ -66,7 +66,7 @@
                                         t-att-class="{ 'ui-state-active': this.isActiveSourceOption([source_index, option_index]) }"
                                         t-att-aria-selected="this.isActiveSourceOption([source_index, option_index]) ? 'true' : 'false'"
                                     >
-                                        <t t-slot="{{ source.optionSlot }}" label="option.label" data="option.data">
+                                        <t t-call-slot="{{ source.optionSlot }}" label="option.label" data="option.data">
                                             <t t-if="!option.labelTermOrder" t-out="option.label"/>
                                             <t t-else="">
                                                 <t t-foreach="option.labelTermOrder.labelBits" t-as="bit" t-key="bit.id">

@@ -10,7 +10,7 @@
             <button class="o-mail-ActivityButton btn btn-link btn-dark p-0 w-100 text-start text-truncate"
                 t-on-click.prevent.stop="this.onClick" t-custom-ref="button" t-att-aria-label="this.title" t-att-title="this.title">
                 <i class="fa fa-fw fa-lg" t-att-class="this.buttonClass" role="img"/>
-                <t t-slot="default"/>
+                <t t-call-slot="default"/>
             </button>
         </xpath>
     </t>

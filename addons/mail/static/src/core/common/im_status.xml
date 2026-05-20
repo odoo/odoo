@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.ImStatus">
-        <t t-slot="pre_icon"/>
+        <t t-call-slot="pre_icon"/>
         <t name="icon">
             <i t-if="(!this.props.member or !this.showTypingIndicator) and this.persona" t-att-class="this.class" t-att-style="this.props.style" t-att-title="this.title" role="img" t-att-aria-label="this.title"/>
             <div t-if="this.showTypingIndicator" class="o-mail-ImStatus-typingContainer rounded-pill" t-att-class="this.class">

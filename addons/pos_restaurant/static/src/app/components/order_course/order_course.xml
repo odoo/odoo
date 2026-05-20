@@ -12,7 +12,7 @@
                 <span t-if="this.course.fired" class="rounded text-bg-info fs-6 px-2 ms-auto">Fired</span>
             </div>
             <t t-foreach="this.comboSortedLines" t-as="line" t-key="line_index">
-                <t t-slot="default" line="line" />
+                <t t-call-slot="default" line="line" />
             </t>
         </div>
     </t>

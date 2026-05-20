@@ -21,7 +21,7 @@
                             <span><span t-if="!this.props.isSubTree">Match </span><strong>no records</strong></span>
                         </t>
                     </div>
-                    <t t-slot="default"/>
+                    <t t-call-slot="default"/>
                 </div>
                 <t t-if="node.children.length" t-call="web.TreeEditor.connector.children" />
                 <t t-if="!this.props.readonly">

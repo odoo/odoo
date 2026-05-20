@@ -4,7 +4,7 @@
     <t t-name="web.FileInput">
         <span class="o_file_input" t-att-class="{ 'd-none': this.props.hidden, 'show opacity-50 pe-none': this.state.isDisable}" aria-atomic="true">
             <span t-if="!this.props.hidden" class="o_file_input_trigger" t-on-click.prevent="this.onTriggerClicked">
-                <t t-slot="default">
+                <t t-call-slot="default">
                     <button class="btn btn-primary">Choose File</button>
                 </t>
             </span>
