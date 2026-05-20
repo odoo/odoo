@@ -198,9 +198,19 @@
                 <span class="me-2" t-if="this.defaultCode" t-esc="'[' + defaultCode + ']'"/>
                 <button type="button" class="btn-close" aria-label="Close" tabindex="-1" t-on-click="this.props.close"/>
             </t>
+<<<<<<< 0eb66d421410aa1186438fcb8e665decb39281d8
             <ProductInfoBanner t-if="this.showInfoBanner" productTemplate="this.props.productTemplate" product="this.product" />
             <div t-custom-ref="input-area">
                 <div t-if="this.isArchivedCombination()" class="alert alert-warning mt-3">
+||||||| 859c06f83a80b0b39e2ced68b3547961312d66bf
+            <ProductInfoBanner t-if="showInfoBanner" productTemplate="props.productTemplate" product="this.product" />
+            <div t-ref="input-area">
+                <div t-if="isArchivedCombination()" class="alert alert-warning mt-3">
+=======
+            <ProductInfoBanner t-if="showInfoBanner" productTemplate="props.productTemplate" product="this.product" />
+            <div t-ref="input-area">
+                <div t-if="isArchivedCombination() or isDeletedCombination()" class="alert alert-warning mt-3">
+>>>>>>> 86e5e325d0422680a31a11bdfb50a9984e6d1b59
                     <span>This option or combination of options is not available</span>
                 </div>
                 <div t-foreach="this.validAttributeLineIds" t-as="attribute" t-key="attribute.id" class="attribute mb-3">
@@ -235,8 +245,16 @@
                 <div class="d-flex flex-row gap-2 w-100">
                     <button
                             class="btn btn-primary btn-lg lh-lg w-50"
+<<<<<<< 0eb66d421410aa1186438fcb8e665decb39281d8
                             t-att-class="{'disabled': this.isArchivedCombination() or !this.isValidCombination()}"
                             t-on-click="this.confirm">
+||||||| 859c06f83a80b0b39e2ced68b3547961312d66bf
+                            t-att-class="{'disabled': isArchivedCombination() or !this.isValidCombination()}"
+                            t-on-click="confirm">
+=======
+                            t-att-class="{'disabled': isArchivedCombination() or isDeletedCombination() or !this.isValidCombination()}"
+                            t-on-click="confirm">
+>>>>>>> 86e5e325d0422680a31a11bdfb50a9984e6d1b59
                             Add
                         </button>
                     <button class="btn btn-secondary btn-lg lh-lg w-50" t-on-click="this.props.close">Discard</button>
