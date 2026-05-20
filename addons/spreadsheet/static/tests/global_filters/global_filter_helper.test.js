@@ -217,7 +217,7 @@ test("dateFilterValueToString > year", function () {
 
 test("dateFilterValueToString > range", function () {
     expect(valueToString({ type: "range", from: "2022-01-01", to: "2022-12-31" })).toBe(
-        "January 1 – December 31, 2022"
+        "January 1 – December 31, 2022"
     );
     expect(valueToString({ type: "range", from: "2022-01-01", to: "2022-01-01" })).toBe(
         "January 1, 2022"
@@ -524,7 +524,7 @@ test("getFacetInfo for date values", async () => {
         id: "1",
         separator: "or",
         operator: "",
-        values: ["January 1 – December 31, 2022"],
+        values: ["January 1 – December 31, 2022"],
     });
     expect(await getFacetInfo(env, filter, { type: "range", from: "2022-01-01" })).toEqual({
         title: "Date Filter",
