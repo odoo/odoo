@@ -37,7 +37,7 @@ registry.category("web_tour.tours").add('sale_product_configurator_edition_tour'
         },
         {
             trigger:
-                'tr:has(div[name="o_sale_product_configurator_name"]:contains("Customizable Desk")) label[style="background-color:#000000"] input:not(:visible)',
+                'tr:has(div[name="o_sale_product_configurator_name"]:contains("Customizable Desk")) label[style*="rgb(0, 0, 0)"] input:not(:visible)',
             run: "click",
         },
         {

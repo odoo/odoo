@@ -25,13 +25,13 @@ export const livechatBootService = {
         const root = makeRoot(target);
         makeShadow(root).then((shadow) => {
             env.services["discuss.rtc"].rootEl = shadow;
-            new App(LivechatRoot, {
-                env,
+            const app = new App({
                 getTemplate,
                 translatableAttributes: ["data-tooltip"],
                 translateFn: appTranslateFn,
                 dev: env.debug,
-            }).mount(shadow);
+            });
+            app.createRoot(LivechatRoot, { env }).mount(shadow);
         });
     },
 };

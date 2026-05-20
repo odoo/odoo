@@ -75,10 +75,9 @@
         </t>
     </div>
 
-    <t t-if="this.children.length || this.managers.length" t-call="hr.hr_org_chart_employee">
-        <t t-set="employee_type" t-value="'self'"/>
-        <t t-set="employee" t-value="this.self"/>
-    </t>
+    <t t-if="this.children.length || this.managers.length" t-call="hr.hr_org_chart_employee"
+        employee_type="'self'"
+        employee="this.self"/>
 
     <t t-if="!this.children.length &amp;&amp; !this.managers.length">
         <p class="mb-3 text-muted fst-italic">Set a manager or reports to show in org chart.</p>

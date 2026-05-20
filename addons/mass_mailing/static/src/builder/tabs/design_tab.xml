@@ -54,29 +54,28 @@
 </t>
 
 <t t-name="mass_mailing.DesignHeadingsOption">
-    <t t-call="mass_mailing.DesignTextOption">
-        <t t-set="label">Heading 1</t>
-        <t t-set="prefix" t-value="`--h1-`"/>
-        <t t-set="marginPrefix" t-value="prefix"/>
-    </t>
-    <t t-call="mass_mailing.DesignTextOption">
-        <t t-set="label">Heading 2</t>
-        <t t-set="prefix" t-value="`--h2-`"/>
-        <t t-set="marginPrefix" t-value="prefix"/>
-    </t>
-    <t t-call="mass_mailing.DesignTextOption">
-        <t t-set="label">Heading 3</t>
-        <t t-set="prefix" t-value="`--h3-`"/>
-        <t t-set="marginPrefix" t-value="prefix"/>
-    </t>
+    <t t-set="prefix" t-value="`--h1-`"/>
+    <t t-call="mass_mailing.DesignTextOption"
+        label.translate="Heading 1"
+        prefix="prefix"
+        marginPrefix="prefix"/>
+    <t t-set="prefix" t-value="`--h2-`"/>
+    <t t-call="mass_mailing.DesignTextOption"
+        label.translate="Heading 2"
+        prefix="prefix"
+        marginPrefix="prefix"/>
+    <t t-set="prefix" t-value="`--h3-`"/>
+    <t t-call="mass_mailing.DesignTextOption"
+        label.translate="Heading 3"
+        prefix="prefix"
+        marginPrefix="prefix"/>
 </t>
 
 <t t-name="mass_mailing.DesignParagraphOption">
-    <t t-call="mass_mailing.DesignTextOption">
-        <t t-set="label">Text</t>
-        <t t-set="prefix" t-value="`--text-`"/>
-        <t t-set="marginPrefix" t-value="`--text-container-`"/>
-    </t>
+    <t t-call="mass_mailing.DesignTextOption"
+        label.translate="Text"
+        prefix="`--text-`"
+        marginPrefix="`--text-container-`"/>
 </t>
 
 <t t-name="mass_mailing.DesignLinkOption">
@@ -150,14 +149,12 @@
 </t>
 
 <t t-name="mass_mailing.DesignButtonOption">
-    <t t-call="mass_mailing.DesignGenericButtonOption">
-        <t t-set="prefix" t-value="`--btn-primary-`"/>
-        <t t-set="label">Primary Button</t>
-    </t>
-    <t t-call="mass_mailing.DesignGenericButtonOption">
-        <t t-set="prefix" t-value="`--btn-secondary-`"/>
-        <t t-set="label">Secondary Button</t>
-    </t>
+    <t t-call="mass_mailing.DesignGenericButtonOption"
+        prefix="`--btn-primary-`"
+        label.translate="Primary Button"/>
+    <t t-call="mass_mailing.DesignGenericButtonOption"
+        prefix="`--btn-secondary-`"
+        label.translate="Secondary Button"/>
 </t>
 
 <t t-name="mass_mailing.DesignSeparatorOption">

@@ -6,7 +6,7 @@ export class DocLoadingIndicator extends Component {
             <div class="o-doc-load-activity position-absolute h-100"></div>
         </div>
         <div t-else="" t-att-class="this.props.class">
-            <t t-slot="default"/>
+            <t t-call-slot="default"/>
         </div>
     `;
 

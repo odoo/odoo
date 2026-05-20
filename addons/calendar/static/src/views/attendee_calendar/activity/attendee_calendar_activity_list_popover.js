@@ -28,9 +28,11 @@ export class AttendeeCalendarActivityListPopover extends Component {
         this.store = useService("mail.store");
         this.limit = this.env.isSmall ? false : 5;
 
+        this.activityIds = this.props.activityIds;
+
         onWillStart(async () => {
             const data = await this.orm.silent.call("mail.activity", "activity_format", [
-                this.props.activityIds,
+                this.activityIds,
             ]);
             this.store.insert(data);
         });
@@ -42,7 +44,7 @@ export class AttendeeCalendarActivityListPopover extends Component {
      */
     get activities() {
         /** @type {import("models").Activity[]} */
-        return (this.limit ? this.props.activityIds.slice(0, this.limit) : this.props.activityIds)
+        return (this.limit ? this.activityIds.slice(0, this.limit) : this.activityIds)
             .map((id) => this.store["mail.activity"].get(id))
             .filter(Boolean); // Do not consider activities removed from the store
     }
@@ -53,7 +55,7 @@ export class AttendeeCalendarActivityListPopover extends Component {
     async onClickViewAll() {
         const action = await this.action.loadAction("mail.mail_activity_action_my");
         action.context = { force_search_count: 1 }; // remove default search
-        action.domain = [["id", "in", this.props.activityIds]];
+        action.domain = [["id", "in", this.activityIds]];
         this.props.close();
         this.action.doAction(action);
     }
@@ -64,8 +66,8 @@ export class AttendeeCalendarActivityListPopover extends Component {
      * automatically close the popover when there's no activity left.
      */
     onRemoveActivityItem(activityId) {
-        this.props.activityIds = this.props.activityIds.filter((id) => id !== activityId);
-        if (!this.props.activityIds.length) {
+        this.activityIds = this.activityIds.filter((id) => id !== activityId);
+        if (!this.activityIds.length) {
             this.props.close();
         }
     }

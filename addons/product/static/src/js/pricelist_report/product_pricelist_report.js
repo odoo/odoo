@@ -63,7 +63,7 @@ export class ProductPricelistReport extends Component {
             this.renderHtml();
         });
 
-        onRendered(() => {
+        onMounted(() => {
             this.env.config.setDisplayName(_t("Pricelist Report"));
         });
 

@@ -7,11 +7,13 @@ import { browser } from "@web/core/browser/browser";
 class CopyableCodeEditor extends CodeEditor {
     static template = "web.DocRequest.CodeEditor";
 
+    copied = signal(false);
+
     copyToClipboard() {
         navigator?.clipboard?.writeText(this.aceEditor.getValue());
-        this.state.copied = true;
+        this.copied.set(true);
         setTimeout(() => {
-            this.state.copied = false;
+            this.copied.set(false);
         }, 1000);
     }
 }
