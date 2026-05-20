@@ -8,6 +8,7 @@ import { registry } from "@web/core/registry";
 import { cookie } from "@web/core/browser/cookie";
 import { formatDateTime, serializeDateTime } from "@web/core/l10n/dates";
 import { OrderReceipt } from "@point_of_sale/app/screens/receipt_screen/receipt/order_receipt";
+import { receiptLineGrouper } from "@point_of_sale/app/models/utils/order_change";
 import { HWPrinter } from "@point_of_sale/app/utils/printer/hw_printer";
 import { renderToElement } from "@web/core/utils/render";
 import { TimeoutPopup } from "@pos_self_order/app/components/timeout_popup/timeout_popup";
@@ -537,7 +538,7 @@ export class SelfOrder extends Reactive {
             }
             return product.parentPosCategIds.some((id) => prepCategoryIds.has(id));
         };
-        return order.lines.filter((line) => {
+        return order.getOrderlines().filter((line) => {
             if (line.combo_line_ids?.length) {
                 return line.combo_line_ids.some((line) => hasPreparationCategory(line.product_id));
             }
@@ -561,8 +562,58 @@ export class SelfOrder extends Reactive {
                 Object.values(printer.config.product_categories_ids)
             );
             if (orderlines.length > 0) {
+                let groupedData = null;
+                if (this.config.iface_group_by_categ) {
+                    const groups = {};
+                    for (const line of orderlines) {
+                        const group = receiptLineGrouper.getGroup(line);
+                        const { name = "", index = Infinity } = group || {};
+                        if (!groups[name]) {
+                            groups[name] = { name, index, data: [] };
+                        }
+                        groups[name].data.push(line);
+                    }
+
+                    const comboParents = {};
+                    for (const line of orderlines) {
+                        if (line.combo_line_ids?.length) {
+                            comboParents[line.uuid] = line;
+                        }
+                    }
+                    for (const group of Object.values(groups)) {
+                        const seenParents = new Set(group.data.map((l) => l.uuid));
+                        for (let i = 0; i < group.data.length; i++) {
+                            const line = group.data[i];
+                            const parentUuid = line.combo_parent_id?.uuid;
+                            if (
+                                parentUuid &&
+                                !seenParents.has(parentUuid) &&
+                                comboParents[parentUuid]
+                            ) {
+                                seenParents.add(parentUuid);
+                                group.data.splice(i, 0, comboParents[parentUuid]);
+                                i++;
+                            }
+                        }
+                    }
+
+                    for (const group of Object.values(groups)) {
+                        group.data = group.data.filter((line) => {
+                            if (line.combo_line_ids?.length) {
+                                return group.data.some(
+                                    (l) => l.combo_parent_id?.uuid === line.uuid
+                                );
+                            }
+                            return true;
+                        });
+                    }
+
+                    const nonEmptyGroups = Object.values(groups).filter((g) => g.data.length > 0);
+                    groupedData = nonEmptyGroups.sort((a, b) => a.index - b.index);
+                }
                 const printingChanges = {
                     new: orderlines,
+                    groupedData,
                     tracker: order.table_stand_number,
                     trackingNumber: order.tracking_number || "unknown number",
                     name: order.pos_reference || "unknown order",
