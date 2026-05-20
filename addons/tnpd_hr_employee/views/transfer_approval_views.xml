@@ -31,13 +31,27 @@
                 <field name="requested_central_prison" string="To (Central)"/>
                 <field name="requested_district_jail" string="To (District)"/>
                 <field name="requested_sub_jail" string="To (Sub Jail)"/>
-                <field name="approval_user_id" string="Approver"/>
+                <field name="approval_user_id" string="Approver" column_invisible="True"/>
                 <field name="state"
                        widget="badge"
                        decoration-warning="state == 'pending'"
                        decoration-success="state == 'approved'"
                        decoration-danger="state == 'rejected'"/>
                 <field name="requested_by" string="Raised By" optional="show"/>
+                <button name="action_approve"
+                        string="Approve"
+                        type="object"
+                        icon="fa-check"
+                        class="btn-success"
+                        invisible="state != 'pending' or approval_user_id != uid"
+                        confirm="Approve this transfer request? The employee's jail posting will be updated."/>
+                <button name="action_reject"
+                        string="Reject"
+                        type="object"
+                        icon="fa-times"
+                        class="btn-danger"
+                        invisible="state != 'pending' or approval_user_id != uid"
+                        confirm="Reject this transfer request?"/>
             </list>
         </field>
     </record>
