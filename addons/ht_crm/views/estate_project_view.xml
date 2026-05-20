@@ -54,7 +54,7 @@
                     <!-- RELATIONS -->
                     <notebook>
 
-                        <page string="Data">
+                        <page string="Data" groups="ht_crm.group_ht_board_of_directors,ht_crm.group_ht_executive">
                             <group>
                                 <field name="phonebook_ids" string="">
                                     <list editable="bottom" limit="20">
@@ -96,14 +96,9 @@
                         </page>
 
 
-                        <page string="Sales phụ trách">
+                        <page string="Sales phụ trách" groups="ht_crm.group_ht_board_of_directors,ht_crm.group_ht_executive">
                             <group>
-                                <field name="sales_ids" string="">
-                                    <list editable="bottom" limit="5">
-                                        <field name="sales_id" />
-                                        <field name="batch_id"/>
-                                    </list>
-                                </field>
+                                <field name="unique_sales_ids" string=""/>
                             </group>
                         </page>
 
@@ -125,6 +120,17 @@
                                         <field name="priority"/>
                                         <field name="booking_code"/>
 
+                                    </list>
+                                </field>
+                            </group>
+                        </page>
+
+                        <page string="Ưu đãi">
+                            <group>
+                                <field name="promotion_ids" string="">
+                                    <list limit="5" editable="bottom">
+                                        <field name="name"/>
+                                        <field name="promotion_type"/>
                                     </list>
                                 </field>
                             </group>

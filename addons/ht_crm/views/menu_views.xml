@@ -18,13 +18,6 @@
         <field name="view_mode">list,form</field>
     </record>
 
-    
-    <record id="action_phone_log" model="ir.actions.act_window">
-        <field name="name">Phone Log</field>
-        <field name="res_model">sale.phonebook.log</field>
-        <field name="view_mode">list,form</field>
-    </record>
-
     <record id="action_customer" model="ir.actions.act_window">
         <field name="name">Khách hàng</field>
         <field name="res_model">sale.customer</field>
@@ -41,6 +34,12 @@
     <record id="action_estate_project" model="ir.actions.act_window">
         <field name="name">Dự án bất động sản</field>
         <field name="res_model">estate.project</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="action_estate_project_promotion" model="ir.actions.act_window">
+        <field name="name">Ưu đãi dự án</field>
+        <field name="res_model">estate.project.promotion</field>
         <field name="view_mode">list,form</field>
     </record>
 
@@ -118,13 +117,13 @@
             <menuitem id="menu_phonebook" action="action_phonebook"/>
             <menuitem id="menu_phonebook_batch" action="action_phonebook_batch"/>
             <menuitem id="menu_employee_project_rel" action="action_employee_project_rel"/>
-            <menuitem id="menu_phonebook_log" action="action_phone_log"/>
         </menuitem>
 
         <menuitem id="menu_project_root" name="Dự Án" sequence="20">
             <menuitem id="menu_project" action="action_estate_project"/>
+            <menuitem id="menu_project_promotion" action="action_estate_project_promotion"/>
             <menuitem id="menu_property_unit" action="action_estate_property_unit"/>
-            <menuitem id="menu_property_unit_type" action="action_estate_property_unit_type"/>
+            <menuitem id="menu_property_unit_type" action="action_estate_property_unit_type"/>   
         </menuitem>
 
         <!-- SALES -->

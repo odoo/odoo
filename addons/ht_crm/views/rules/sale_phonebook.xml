@@ -10,7 +10,14 @@
         <field name="name">Hệ Thống (Phonebook)</field>
         <field name="model_id" ref="model_sale_phonebook"/>
         <field name="domain_force">[(1, '=', 1)]</field>
-        <field name="groups" eval="[(4, ref('group_ht_executive'))]"/>
+        <field name="groups" eval="[(4, ref('base.group_system'))]"/>
+    </record>
+
+    <record id="rule_phonebook_bod" model="ir.rule">
+        <field name="name">Ban Lãnh Đạo (Phonebook)</field>
+        <field name="model_id" ref="model_sale_phonebook"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('group_ht_board_of_directors'))]"/>
     </record>
 
     <record id="rule_phonebook_exec" model="ir.rule">

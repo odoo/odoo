@@ -35,22 +35,22 @@ class PhonebookBatch(models.Model):
         ('failed', 'Lỗi')
     ], default='draft')
     distribute_at = fields.Datetime(string="Phân phát lúc", compute='_compute_distribute_at', store=True)
-    rest = fields.Integer(
+    rest_time = fields.Integer(
         string="Nghỉ (phút)",
         default=2
     )
 
-    @api.depends("rest")
+    @api.depends("rest_time")
     def _compute_distribute_at(self):
         now = fields.Datetime.now()
 
         for rec in self:
-            if not rec.rest:
+            if not rec.rest_time:
                 rec.distribute_at = False
                 continue
 
             rec.distribute_at = now + datetime.timedelta(
-                minutes=rec.rest
+                minutes=rec.rest_time
             )
 
     @api.model
@@ -72,11 +72,19 @@ class PhonebookBatch(models.Model):
 
             batch.action_distribute()
 
-            if batch.rest:
+            if batch.rest_time:
                 batch.distribute_at = now + datetime.timedelta(
-                    minutes=batch.rest
+                    minutes=batch.rest_time
                 )
 
+
+    def action_redistribute(self):
+        self.write({'state': 'processing'})
+        available_phones = self.phone_ids.filtered(lambda p: p.is_hot)
+        
+        for phone in available_phones:
+            phone.write({'salesperson_id': False})
+            phone.write({'previous_salesperson_ids': False})
 
     def action_clean_invalid(self):
         invalid_phones = self.phone_ids.filtered(lambda p: p.is_hot and p.status == 'invalid')
@@ -90,7 +98,6 @@ class PhonebookBatch(models.Model):
         for phone in available_phones:
             phone.write({'salesperson_id': False})
         
-
     def action_distribute(self):
         self.ensure_one()
         
@@ -139,12 +146,13 @@ class PhonebookBatch(models.Model):
 class PhoneBook(models.Model):
     _name = 'sale.phonebook'
     _description = 'DATA danh bạ'
+    _order = "status"
 
     # Định danh
     batch_id = fields.Many2one(
         'sale.phonebook.batch',
         string="Tập dữ liệu",
-        groups="ht_crm.group_ht_executive"
+        groups="ht_crm.group_ht_board_of_directors,ht_crm.group_ht_executive"
     )
 
     # Trường cơ bản
@@ -194,6 +202,17 @@ class PhoneBook(models.Model):
                 raise exceptions.UserError(
                     "Bạn chỉ được sửa ghi chú và trạng thái."
                 )
+            
+        if self.env.user.has_group('ht_crm.group_ht_user'):
+            person = vals.get('salesperson_id')
+
+            if person:
+                salesperson = self.env['sale.employee'].browse(person)
+
+                if self.env.user != salesperson.user_id:
+                    raise exceptions.UserError(
+                        "Số này đã bị thu hồi."
+                    )
 
         return super().write(vals)
 
@@ -218,24 +237,3 @@ class PhoneBook(models.Model):
         self.ensure_one()
         self.write({'salesperson_id': ""})
         self.write({'previous_salesperson_ids': [(5, 0, 0)]})
-
-
-class PhoneBookLog(models.Model):
-    _name = "sale.phonebook.log"
-    _description = "Log thao tác"
-    _order = "create_date desc"
-
-    phonebook_id = fields.Many2one(
-        "sale.phonebook",
-        required=True,
-        ondelete="cascade"
-    )
-
-    user_id = fields.Many2one(
-        "res.users",
-        default=lambda self: self.env.user
-    )
-
-    action = fields.Char(required=True)
-
-    note = fields.Text()
