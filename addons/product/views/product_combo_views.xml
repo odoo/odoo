@@ -27,17 +27,21 @@
                         class="oe_inline"
                     />
                 </group>
-                <field name="combo_item_ids">
-                    <list editable="bottom">
-                        <field name="currency_id" column_invisible="True"/>
-                        <field name="product_id"/>
-                        <field
-                            name="extra_price"
-                            widget="monetary"
-                            options="{'field_digits': True}"
-                        />
-                    </list>
-                </field>
+                <notebook>
+                    <page string="Options">
+                        <field name="combo_item_ids">
+                            <list editable="bottom">
+                                <field name="currency_id" column_invisible="True"/>
+                                <field name="product_id" nolabel="1"/>
+                                <field
+                                    name="extra_price"
+                                    widget="monetary"
+                                    options="{'field_digits': True}"
+                                />
+                            </list>
+                        </field>
+                    </page>
+                </notebook>
             </form>
         </field>
     </record>

@@ -58,16 +58,23 @@
                             <ProductCard
                                 product="this.getSelectedOrProvidedComboItem(combo.id, comboItem).product"
                                 extraPrice="comboItem.extra_price"
-                                onClick="() => this.setItemQuantity(combo.id, comboItem, this.state.qty[combo.id][comboItem.id] + 1)"
+                                onClick="() => this.setItemQuantity(
+                                    combo.id,
+                                    comboItem,
+                                    this.state.qty[combo.id][comboItem.id] + 1
+                                )"
                                 isSelected="this.state.qty[combo.id][comboItem.id] > 0"
                                 isConfigurable="comboItem.is_configurable"
-                            />
-                            <t t-if="combo.qty_free > 1">
-                                <QuantityButtons
-                                    quantity="this.state.qty[combo.id][comboItem.id]"
-                                    setQuantity="(qty) => this.setItemQuantity(combo.id, comboItem, qty)"
-                                />
+                            >
+                            <t t-if="combo.qty_free > 1" t-set-slot="quantityButtons">
+                                <div t-on-click.stop="() => {}">
+                                    <QuantityButtons
+                                        quantity="this.state.qty[combo.id][comboItem.id]"
+                                        setQuantity="(qty) => this.setItemQuantity(combo.id, comboItem, qty)"
+                                    />
+                                </div>
                             </t>
+                            </ProductCard>
                         </div>
                     </t>
                 </div>
