@@ -115,18 +115,17 @@ export class ProductScreen extends Component {
         this.longPressHandlers = useLongPress((product) => this.pos.onProductInfoClick(product));
         this.onScroll = debounce(this.longPressHandlers.onScroll, 200, { leading: true });
 
-        useLayoutEffect(
-            () => {
-                this.state.quantityByProductTmplId = this.currentOrder?.lines?.reduce((acc, ol) => {
+        Object.defineProperty(this.state, "quantityByProductTmplId", {
+            get: computed(() =>
+                this.currentOrder?.lines?.reduce((acc, ol) => {
                     if (!ol.combo_parent_id) {
                         const productTmplId = ol.product_id.product_tmpl_id.id;
                         acc[productTmplId] = (acc[productTmplId] || 0) + ol.qty;
                     }
                     return acc;
-                }, {});
-            },
-            () => [this.currentOrder, this.currentOrder.totalQuantity]
-        );
+                }, {})
+            ),
+        });
 
         this.canReorderProducts = false;
         Promise.resolve(user.checkAccessRight("product.template", "write")).then((hasAccess) => {
