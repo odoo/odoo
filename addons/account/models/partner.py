@@ -13,6 +13,7 @@ from odoo.fields import Domain
 from odoo.tools import SQL, unique
 from odoo.tools.translate import LazyGettext
 from odoo.addons.account.models.account_move import BYPASS_LOCK_CHECK
+from odoo.addons.account.tools.country_groups import FR_AND_DOM_TOM
 from odoo.addons.account.tools.partner_identifiers import (
     get_additional_identifiers_metadata_of_country,
     get_deduced_identifiers,
@@ -702,6 +703,13 @@ class ResPartner(models.Model):
                 for key, entry in metadata.items()
             }
 
+    @api.depends('country_id')
+    def _compute_additional_identifiers(self):
+        for partner in self:
+            updated_additional_identifiers = {'additional_identifiers': self.additional_identifiers}
+            self._clean_additional_identifiers(updated_additional_identifiers)
+            self.additional_identifiers = updated_additional_identifiers['additional_identifiers']
+
     @api.depends('additional_identifiers')
     def _compute_global_location_number(self):
         for partner in self:
@@ -943,6 +951,10 @@ class ResPartner(models.Model):
     def _get_additional_identifier(self, identifier_type):
         """Convenience getter for an entry of the JSON."""
         self.ensure_one()
+        partner = self.commercial_partner_id
+        if 'FR_SIREN' not in (self.additional_identifiers or {}) and partner.country_code in FR_AND_DOM_TOM:
+            self.additional_identifiers = (self.additional_identifiers or {}) | {'FR_SIREN': ''}
+
         return (self.additional_identifiers or {}).get(identifier_type)
 
     def _set_additional_identifier(self, identifier_type, value):
@@ -1022,6 +1034,8 @@ class ResPartner(models.Model):
                 _logger.warning(" Skipped %s: identifier %s is not in supported identifiers.", value, key)
                 continue
             if not value:
+                if key == 'FR_SIREN' and self.country_code in FR_AND_DOM_TOM:
+                    cleaned[key] = ''
                 continue
             result = validate_identifier(key, value)
             if not result['valid']:
