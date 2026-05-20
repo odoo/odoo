@@ -1430,17 +1430,26 @@ class ResCompany(models.Model):
 
     def get_inventory_accounting_value(self, at_date=None):
         self.ensure_one()
-        accounts_by_product = self._get_accounts_by_product(at_date)
-        stock_valuation_accounts_ids = {accounts['valuation'].id for accounts in accounts_by_product.values() if accounts['valuation']}
-        stock_valuation_accounts = self.env['account.account'].browse(stock_valuation_accounts_ids)
+        categ_accounts = self.env['product.category'].with_company(self).search_fetch(
+            domain=[('property_stock_valuation_account_id', '!=', False)],
+            field_names=['property_stock_valuation_account_id'],
+        ).property_stock_valuation_account_id
+        stock_valuation_accounts = self.account_stock_valuation_id | categ_accounts
+        if not stock_valuation_accounts:
+            return {}
         domain = Domain([
             ('account_id', 'in', stock_valuation_accounts.ids),
             ('company_id', '=', self.id),
             ('parent_state', '=', 'posted'),
         ])
         if at_date:
-            domain = domain & Domain([('date', '<=', at_date)])
-        return dict(self.env['account.move.line']._read_group(domain, ['account_id'], ['balance:sum']))
+            domain &= Domain([('date', '<=', at_date)])
+        return dict(self.env['account.move.line']._read_group(
+            domain,
+            ['account_id'],
+            ['balance:sum'],
+            having=[('balance:sum', '!=', 0.0)],
+        ))
 
     def _action_close_stock_valuation(self, at_date=None):
         aml_vals_list = self._get_closing_move_extra_aml_vals(at_date)
