@@ -142,7 +142,7 @@ class TestPortalTimesheet(TestProjectSharingCommon):
             'allocated_hours': 25.0,
         })
 
-        employee = self.env['hr.employee'].create({'name': 'Test Employee'})
+        employee = self.env['hr.employee'].create({'name': 'Test Employee', 'work_email': 'test@email_employee.com'})
         self.env['account.analytic.line'].create([
             {'name': 'Time on parent', 'project_id': self.project_portal.id, 'task_id': parent_task.id, 'unit_amount': 50, 'employee_id': employee.id},
             {'name': 'Time on sub-task 1', 'project_id': self.project_portal.id, 'task_id': sub_task_1.id, 'unit_amount': 25, 'employee_id': employee.id},

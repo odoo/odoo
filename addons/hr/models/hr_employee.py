@@ -356,6 +356,8 @@ class HrEmployee(models.Model):
         help='This is the exceptional, non-weekly, location set for today.', groups="hr.group_hr_user")
     today_location_name = fields.Char()
 
+    user_state = fields.Selection(related='user_id.state', string='User State')
+
     _barcode_uniq = models.Constraint(
         'unique (barcode)',
         'The Badge ID must be unique, this one is already assigned to another employee.',
@@ -1611,13 +1613,13 @@ class HrEmployee(models.Model):
     def create(self, vals_list):
         vals_per_company = defaultdict(list)
         for idx, vals in enumerate(vals_list):
-            User = self.env['res.users']
+            user = self.env['res.users']
             if vals.get('user_id'):
-                user = User.browse(vals['user_id'])
+                user = user.browse(vals['user_id'])
                 vals.update(self._sync_user(user, bool(vals.get('image_1920'))))
                 vals['name'] = vals.get('name', user.name)
                 self._remove_work_contact_id(user, vals.get('company_id'))
-            else:
+            elif not self.env.context.get('salary_simulation'):
                 # TODO DBE: this is ugly as hell. make a _find_or_create_user_from_vals (or from employuee but do it after employee creation)
                 #  can use inspiration from _find_internal_users_from_address_mail and maybe _partner_find_from_emails
                 # the thing is to prioritize work email, except if work contact is given and has an email address.
@@ -1629,31 +1631,38 @@ class HrEmployee(models.Model):
                     resource = self.env['resource.resource'].browse(vals['resource_id'])
                     vals['name'] = vals.get('name', resource.name)
                     vals['work_email'] = vals.get('work_email', resource.email)
-                user_name = vals['name']
-                work_email = vals.get('work_email')
-                email_normalized = tools.mail.email_normalize_all(work_email)
-                work_contact_id = self.env['res.partner'].browse(vals.get('work_contact_id')).exists()
-                user = work_contact_id.user_id
-                if not work_contact_id and not user and email_normalized:
-                    user = User.sudo().search([("login", "=", email_normalized[0])])
-                    if user and user.employee_id:
-                        raise ValidationError(_("A user already exists with this e-mail address: %s", vals.get('work_email')))
-                if not user and not self.env.context.get('no_employee_user'):
-                    if not self.has_access('create'):
-                        raise AccessError(_('You cannot create an employee.'))
-                    email_from_contact = work_contact_id.email if work_contact_id else False
-                    if work_email and not email_from_contact and not email_normalized:
-                        raise ValidationError(_('Invalid e-mail address ({work_email}) for {user_name}'))
-                    user = User.sudo().create({
-                        'name': user_name,
-                        'phone': vals.get('work_phone') or vals.get('mobile_phone') or (work_contact_id.phone if work_contact_id else False),
-                        'login': email_normalized[0] if email_normalized else email_from_contact,
-                        'partner_id': vals.get('work_contact_id'),
-                        'role': 'group_user_lite',
-                        'group_ids': [self.env.ref('base.group_user_lite').id]
-                    })
-                    if work_contact_id:
-                        work_contact_id.user_id = user
+                    user = resource.user_id
+                if not user or user.share:
+                    user_name = vals['name']
+                    work_email = vals.get('work_email')
+                    email_normalized = tools.mail.email_normalize_all(work_email)
+                    work_contact_id = self.env['res.partner'].browse(vals.get('work_contact_id')).exists()
+                    user = work_contact_id.user_id
+                    if not work_contact_id and not user and email_normalized:
+                        user = user.sudo().search([("login", "=", email_normalized[0])])
+                        if user and user.employee_id:
+                            raise ValidationError(self.env._("A user already exists with this e-mail address: %s", vals.get('work_email')))
+                    if user.share:  # if portal user is already linked to the email, archive it and create a lite user instead.
+                        user.archive()
+                        user = self.env['res.users']
+                    if not user and not self.env.context.get('no_employee_user'):
+                        if not self.has_access('create'):
+                            raise AccessError(self.env._('You cannot create an employee.'))
+                        email_from_contact = work_contact_id.email if work_contact_id else False
+                        if work_email and not email_from_contact and not email_normalized:
+                            raise ValidationError(f'Invalid e-mail address ({work_email}) for {user_name}')
+                        user = user.sudo().create({
+                            'name': user_name,
+                            'phone': vals.get('work_phone') or vals.get('mobile_phone') or (work_contact_id.phone if work_contact_id else False),
+                            'login': email_normalized[0] if email_normalized else email_from_contact,
+                            'partner_id': work_contact_id.id,
+                            'role': 'group_user_lite',
+                            'group_ids': [self.env.ref('base.group_user_lite').id],
+                            # 'company_id': vals.get('company_id') or self.env.context.get('company_id', self.env.company.id),
+                        })
+                        if work_contact_id and not work_contact_id.user_id:
+                            work_contact_id.user_id = user
+                        user.partner_id.user_id = user  # WTF.. Why do I have to do this ?
                 vals['user_id'] = user.id
                 vals['work_contact_id'] = user.partner_id.id
             # Having one create per company is necessary to pass the company in the context to correctly set it in

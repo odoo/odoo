@@ -112,6 +112,19 @@
                             groups="hr.group_hr_user" invisible="not active or not id" context="{'sort_by_responsible': True}"/>
                         <button name="action_cancel_departure" string="Cancel End of Collaboration" type="object"
                             groups="hr.group_hr_user" invisible="not id or not departure_id or departure_apply_date"/>
+                        <field name="user_state" invisible="not id" widget="employee_user_status"
+                            options="{
+                                'new': {'decoration': 'success', 'display': False},
+                                'active': {'decoration': 'secondary', 'display': False},
+                                'inactive': {'decoration': 'danger', 'display': False},
+
+                                'action_resend': {'icon': 'fa fa-paper-plane', 'text': 'Resend Invitation', 'action': 'sendInvitation'},
+                                'action_copy': {'icon': 'fa fa-clipboard', 'text': 'Copy Invitation Link', 'action': 'copyInvitationLink'},
+                                'action_reset_password': {'icon': 'fa fa-key', 'text': 'Change Password', 'action': 'resetPassword'},
+                                'reactivate': {'decoration': 'secondary', 'icon': 'fa fa-unlock', 'text': 'Reactivate', 'action': 'reactivate'},
+                                'deactivate': {'decoration': 'danger', 'icon': 'fa fa-times', 'text': 'Deactivate', 'action': 'deactivate'},
+                                'action_send': {'icon': 'fa fa-paper-plane', 'text': 'Send Invitation', 'action': 'sendInvitation'}
+                            }"/>
                         <field name="version_id" widget="versions_timeline" context="{'version_revision': version_revision}" invisible="not id" options="{'clickable': True}" readonly="False"/>
                         <field name="version_revision" invisible="1"/>
                     </header>
@@ -444,11 +457,12 @@
                             </page>
                             <page name="hr_settings" string="Settings" groups="hr.group_hr_user">
                                 <group name="settings_group">
-                                    <group string="User" name="user">
+                                    <group string="User" name="user" groups="base.group_no_one">
                                         <label for="user_id"/>
                                         <div class="o_row align-items-center">
+<!--                                            TODO DBE: Why twice the same field ?-->
                                             <field name="user_id" string="User" placeholder="No user linked"
-                                                domain="[('company_ids', 'in', company_id)]"
+                                                required="active" domain="[('company_ids', 'in', company_id)]"
                                                 context="{
                                                     'default_create_employee_id': id,
                                                     'default_name': name,
@@ -474,11 +488,8 @@
                                                 widget="many2one_avatar_user"
                                                 groups="!base.group_erp_manager"
                                                 options="{'no_open': True}"/>
-                                            <span invisible="not user_id or is_user_active">
-                                                (User is Inactive)
-                                            </span>
-                                            <field name="tz" required="id" placeholder="User Timezone"/>
                                         </div>
+                                        <field name="tz" required="id" placeholder="User Timezone"/>
                                     </group>
                                     <group name="managers" string="Approvers">
                                         <field name="hr_responsible_id" widget="many2one_avatar_user"/>

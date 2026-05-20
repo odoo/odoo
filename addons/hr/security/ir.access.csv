@@ -43,7 +43,7 @@ mail_plan_templates_rule_group_hr_manager,Manager can edit employee plan templat
 access_hr_payroll_structure_type_hr_contract_manager,hr.payroll.structure.type.contract.manager,hr.payroll.structure.type,hr.group_hr_manager,crud,
 ir_rule_hr_payroll_structure_type_multi_company,HR Payroll Structure Type: Multi Company,hr.payroll.structure.type,,crud,"['|', ('country_id', '=', False), ('country_id', 'in', user.env.companies.mapped('country_id').ids)]"
 access_hr_resource_calendar_user,hr.employee.resource.calendar.user,resource.calendar,hr.group_hr_user,crud,
-access_hr_resource_calendar_attendance_user_lite,hr.employee.resource.calendar.attendance.user.lite,resource.calendar.attendance,hr.group_user_lite,crud,
+access_hr_resource_calendar_attendance_user_lite,hr.employee.resource.calendar.attendance.user.lite,resource.calendar.attendance,base.group_user_lite,crud,
 access_hr_resource_calendar_attendance_user,hr.employee.resource.calendar.attendance.user,resource.calendar.attendance,hr.group_hr_user,crud,
 homeworking_admin_rule,homeworking: admin,hr.employee.location,hr.group_hr_user,crud,
 homeworking_own_rule,homeworking: own,hr.employee.location,base.group_user_lite,crud,"[

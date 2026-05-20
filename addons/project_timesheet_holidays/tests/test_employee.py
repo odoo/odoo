@@ -155,6 +155,7 @@ class TestEmployee(TransactionCase):
             'name': 'Test Employee',
             'resource_calendar_id': self.company.resource_calendar_id.id,
             'company_id': self.company.id,
+            'work_email': 'work_email@employee.com',
         })
         old_timesheet_count = len(self.env['account.analytic.line'].search([
             ('employee_id', '=', employee.id)]))

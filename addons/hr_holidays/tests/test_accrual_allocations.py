@@ -4952,10 +4952,12 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         employees = self.env['hr.employee'].create([
             {
                 'name': 'Test Department Employee',
+                'work_email': 'department_test@employee.com',
                 'company_id': self.company.id,
             },
             {
                 'name': 'Department Employee 1',
+                'work_email': 'department_test1@employee.com',
                 'company_id': self.company.id,
             },
         ])

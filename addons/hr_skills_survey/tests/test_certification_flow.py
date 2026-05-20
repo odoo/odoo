@@ -17,6 +17,7 @@ class TestCertificationFlow(common.TestSurveyCommon, HttpCase):
         super().setUpClass()
         cls.employee_emp = cls.env['hr.employee'].create({
             'name': 'test employee',
+            'work_email': 'test_email@employee.com',
         })
         cls.certification = cls.env['survey.survey'].create({
             'access_mode': 'public',

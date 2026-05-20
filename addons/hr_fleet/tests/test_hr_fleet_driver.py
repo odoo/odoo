@@ -212,6 +212,7 @@ class TestHrFleetDriver(common.TransactionCase):
             'name': 'New Employee',
             'date_version': date(2025, 1, 1),
             'contract_date_start': date(2025, 1, 1),
+            'work_email': 'new@employee.com'
         })
         self.car.driver_id = self.new_employee.work_contact_id.id
         self.assertEqual(self.car.driver_employee_id, self.new_employee, "Car is not assign to the employee")
