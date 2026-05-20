@@ -313,6 +313,8 @@ class PosConfig(models.Model):
         record['_self_ordering_image_background_ids'] = config.self_ordering_image_background_ids.ids
         record['_pos_special_products_ids'] = config._get_special_products().ids
         record['_self_order_pos'] = True
+        google_places_api_key = self.env['ir.config_parameter'].sudo().get_str('google_address_autocomplete.google_places_api_key')
+        record['_has_google_places_api_key'] = bool(google_places_api_key)
         return read_records
 
     def load_self_data(self):
