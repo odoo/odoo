@@ -1,25 +1,11 @@
 /** @odoo-module */
 
-import { Component, xml } from "@odoo/owl";
+import { Component, props, types as t, xml } from "@odoo/owl";
 import { Tag } from "../core/tag";
 import { HootLink } from "./hoot_link";
 
-/**
- * @typedef {{
- *  inert?: boolean;
- *  tag: Tag;
- * }} HootTagButtonProps
- */
-
-/** @extends {Component<HootTagButtonProps, import("../hoot").Environment>} */
 export class HootTagButton extends Component {
     static components = { HootLink };
-
-    static props = {
-        inert: { type: Boolean, optional: true },
-        tag: Tag,
-    };
-
     static template = xml`
         <t t-if="this.props.inert">
             <span
@@ -42,6 +28,12 @@ export class HootTagButton extends Component {
             </HootLink>
         </t>
     `;
+
+    // Props & plugins
+    props = props({
+        "inert?": t.boolean(),
+        tag: t.instanceOf(Tag),
+    });
 
     get style() {
         return `background-color: ${this.props.tag.color[0]}; color: ${this.props.tag.color[1]};`;

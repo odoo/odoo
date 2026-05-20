@@ -1,26 +1,12 @@
 /** @odoo-module */
 
-import { Component, xml } from "@odoo/owl";
+import { Component, props, types as t, xml } from "@odoo/owl";
 import { Job } from "../core/job";
 import { Test } from "../core/test";
 import { HootLink } from "./hoot_link";
 
-/**
- * @typedef {{
- *  hidden?: boolean;
- *  job: Job;
- * }} HootJobButtonsProps
- */
-
-/** @extends {Component<HootJobButtonsProps, import("../hoot").Environment>} */
 export class HootJobButtons extends Component {
     static components = { HootLink };
-
-    static props = {
-        hidden: { type: Boolean, optional: true },
-        job: Job,
-    };
-
     static template = xml`
         <t t-set="type" t-value="this.getType()" />
         <div class="${HootJobButtons.name} items-center gap-1" t-att-class="this.props.hidden ? 'hidden' : 'flex'">
@@ -51,6 +37,12 @@ export class HootJobButtons extends Component {
             </HootLink>
         </div>
     `;
+
+    // Props & plugins
+    props = props({
+        "hidden?": t.boolean(),
+        job: t.instanceOf(Job),
+    });
 
     getType() {
         return this.props.job instanceof Test ? "test" : "suite";
