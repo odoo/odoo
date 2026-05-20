@@ -96,7 +96,7 @@ export function useHierarchyNodeDraggable(params) {
         setup: useLayoutEffect,
         teardown: onWillUnmount,
         throttle: useThrottleForAnimation,
-        wrapState: reactive,
+        wrapState: proxy,
     }
     return makeDraggableHook({ ...hookParams, setupHooks })(params);
 }

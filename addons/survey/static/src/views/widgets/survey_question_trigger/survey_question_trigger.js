@@ -17,8 +17,8 @@ export class SurveyQuestionTriggerWidget extends Component {
             surveyIconWarning: false,
             triggerTooltip: "",
         });
-        useLayoutEffect(() => {
-            if (this.button?.el && this.props.record.data.triggering_question_ids.records?.length !== 0) {
+        useEffect(() => {
+            if (this.props.record.data.triggering_question_ids.records?.length !== 0) {
                 const { triggerError, misplacedTriggerQuestionRecords } = this.surveyQuestionTriggerError;
                 if (triggerError === "MISPLACED_TRIGGER_WARNING") {
                     this.state.surveyIconWarning = true;

@@ -30,11 +30,11 @@ class Counter extends Component {
     static template = xml/*html*/ `
         <div class="counter">
             <div class="interval">
-                <input type="number" t-model.number="state.interval" />
+                <input type="number" t-custom-model.number="this.state.interval" />
             </div>
             <div class="counter">
-                <span class="value" t-out="state.value" />
-                <button class="inc" t-on-click="onIncrement">+</button>
+                <span class="value" t-out="this.state.value" />
+                <button class="inc" t-on-click="this.onIncrement">+</button>
             </div>
         </div>
     `;
@@ -301,8 +301,8 @@ test("next step with new anchor at same position", async () => {
         static props = ["*"];
         state = useState({ bool: true });
         static template = xml/*html*/ `
-            <button class="foo w-100" t-if="state.bool" t-on-click="() => { state.bool = false; }">Foo</button>
-            <button class="bar w-100" t-if="!state.bool">Bar</button>
+            <button class="foo w-100" t-if="this.state.bool" t-on-click="() => { this.state.bool = false; }">Foo</button>
+            <button class="bar w-100" t-if="!this.state.bool">Bar</button>
         `;
     }
     class Root extends Component {

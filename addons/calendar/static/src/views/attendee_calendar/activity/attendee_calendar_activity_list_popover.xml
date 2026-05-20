@@ -25,10 +25,10 @@
                     onRemoveActivityItem.bind="this.onRemoveActivityItem"
                     onViewMeeting.bind="this.props.onViewMeeting"/>
             </div>
-            <button t-if="this.limit and this.props.activityIds.length > this.limit"
+            <button t-if="this.limit and this.activityIds.length > this.limit"
                 class="btn btn-secondary p-3 text-center text-primary border-top"
                 t-on-click="this.onClickViewAll">
-                ...and <t t-out="this.props.activityIds.length - this.limit"/> more
+                ...and <t t-out="this.activityIds.length - this.limit"/> more
             </button>
         </div>
     </t>

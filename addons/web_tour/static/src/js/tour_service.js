@@ -24,40 +24,32 @@ class OnboardingItem extends Component {
 }
 
 const stepSchema = {
-    id: { type: [String], optional: true },
-    content: { type: [String, Object], optional: true }, //allow object(_t && markup)
-    debugHelp: { type: String, optional: true },
-    isActive: { type: Array, element: String, optional: true },
-    run: { type: [String, Function, Boolean], optional: true },
-    timeout: {
-        optional: true,
-        validate(value) {
-            return value >= 0 && value <= 60000;
-        },
-    },
-    tooltipPosition: {
-        optional: true,
-        validate(value) {
-            return ["top", "bottom", "left", "right"].includes(value);
-        },
-    },
-    trigger: { type: String },
-    expectUnloadPage: { type: Boolean, optional: true },
+    "id?": t.string(),
+    "content?": t.or([t.string(), t.object()]), //allow object(_t && markup)
+    "debugHelp?": t.string(),
+    "isActive?": t.array(t.string()),
+    "run?": t.or([t.string(), t.function(), t.boolean()]),
+    "timeout?": t.customValidator(t.number(), (value) => value >= 0 && value <= 60000),
+    "tooltipPosition?": t.customValidator(t.string(), (value) =>
+        ["top", "bottom", "left", "right"].includes(value)
+    ),
+    trigger: t.string(),
+    "expectUnloadPage?": t.boolean(),
 };
 
 const stepSchemaDebug = {
     ...stepSchema,
-    pause: { type: Boolean, optional: true },
-    break: { type: Boolean, optional: true },
+    "pause?": t.boolean(),
+    "break?": t.boolean(),
 };
 
 const tourSchema = {
-    steps: Function,
-    undeterministicTour_doNotCopy: { type: Boolean, optional: true },
+    steps: t.function(),
+    "undeterministicTour_doNotCopy?": t.boolean(),
 };
 
 const tourRegistry = registry.category("web_tour.tours");
-tourRegistry.addValidation(tourSchema);
+tourRegistry.addValidation(t.strictObject(tourSchema));
 
 export class TourService {
     /**
@@ -338,11 +330,13 @@ export class TourService {
     validateStep(step) {
         const tourConfig = tourState.getCurrentConfig();
         try {
-            validate(step, tourConfig.debug ? stepSchemaDebug : stepSchema);
-        } catch (error) {
-            console.error(
-                `Error in schema for TourStep ${JSON.stringify(step, null, 4)}\n${error.message}`
+            assertType(
+                step,
+                tourConfig.debug ? t.strictObject(stepSchemaDebug) : t.strictObject(stepSchema),
+                "Error in schema for TourStep"
             );
+        } catch (error) {
+            console.error(error.message);
         }
     }
 }

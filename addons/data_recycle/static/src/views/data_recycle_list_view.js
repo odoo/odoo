@@ -6,7 +6,7 @@ import { listView } from '@web/views/list/list_view';
 export class DataRecycleListController extends DataCleaningCommonListController {
     setup() {
         super.setup();
-        useEffect(() => {
+        useLayoutEffect(() => {
             const selectedRecords = this.model.root.selection;
 
             // Check the active state of selected records

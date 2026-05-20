@@ -7,9 +7,8 @@
                role="image"
                title="Relevant to your expertise"
             />
-            <t t-else="" t-call="im_livechat.LivechatStatusLabelOfThread">
-                <t t-set="templateParams" t-value="{ livechatThread: this.props.channel.thread, small: true }"/>
-            </t>
+            <t t-else="" t-call="im_livechat.LivechatStatusLabelOfThread"
+                templateParams="{ livechatThread: this.props.channel.thread, small: true }"/>
         </xpath>
     </t>
 

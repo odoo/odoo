@@ -21,10 +21,10 @@
                         </div>
                     </t>
                     <t t-else="">
-                        <t t-call="hr_attendance.EmployeeBadge">
-                            <t t-set="employeeAvatar" t-value="this.props.employeeData.employee_avatar"/>
-                            <t t-set="employeeAvatarHeight" t-value="'60'"/>
-                        </t>
+                        <t t-call="hr_attendance.EmployeeBadge"
+                            employeeAvatar="this.props.employeeData.employee_avatar"
+                            employeeAvatarHeight="'60'"
+                        />
                     </t>
                     <h3 class="mt-2 mb-1"><t t-out="this.props.employeeData.employee_name"/></h3>
                     <h5 class="text-muted my-0">

@@ -1026,7 +1026,7 @@ describe("Import view", () => {
         patchWithCleanup(ImportDataProgress.prototype, {
             setup() {
                 super.setup();
-                useEffect(
+                useLayoutEffect(
                     () => {
                         if (this.props.importProgress.step === 1) {
                             // Trigger a pause at this step to resume later from the view
@@ -1106,7 +1106,7 @@ describe("Import view", () => {
         patchWithCleanup(ImportDataProgress.prototype, {
             setup() {
                 super.setup();
-                useEffect(
+                useLayoutEffect(
                     () => {
                         if (this.props.importProgress.step === 1) {
                             // Trigger a pause at this step to resume later from the view
