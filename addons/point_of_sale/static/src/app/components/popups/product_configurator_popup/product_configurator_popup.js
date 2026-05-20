@@ -129,22 +129,7 @@ export class ProductConfiguratorPopup extends Component {
     }
 
     get product() {
-        let product = null;
-        const hasVariants = this.attributes.some(
-            (line) => line.attribute_id.create_variant !== "no_variant"
-        );
-
-        if (hasVariants) {
-            const selectedAttributeValuesIds = this.selectedValues.map(({ id }) => id);
-            product = this.props.productTemplate.product_variant_ids.find(
-                (product) =>
-                    product.product_template_variant_value_ids?.length > 0 &&
-                    product.product_template_variant_value_ids.every(({ id }) =>
-                        selectedAttributeValuesIds.includes(id)
-                    )
-            );
-        }
-        return product;
+        return this.props.productTemplate.getVariantForCombination(this.selectedValues);
     }
 
     initAttributes() {
@@ -241,6 +226,10 @@ export class ProductConfiguratorPopup extends Component {
             selectedValuesIds.length > 0 &&
             this.props.productTemplate._isArchivedCombination(selectedValuesIds)
         );
+    }
+
+    isDeletedCombination() {
+        return this.props.productTemplate.isDeletedCombination(this.selectedValues);
     }
 
     isValidCombination() {
