@@ -92,6 +92,12 @@ export class EditorOverlay extends Component {
         const resizeObserver = new ResizeObserver(() => position.unlock());
         resizeObserver.observe(container);
         onWillDestroy(() => resizeObserver.disconnect());
+        if (scrollContainer === editable) {
+            // rangeElement is a sibling of the editable, so position_hook's scroll
+            // listener won't detect editable.contains(rangeElement) as true. Listen
+            // directly so scrolling within the editable still triggers repositioning.
+            useExternalListener(editable, "scroll", () => position.unlock());
+        }
         const positionOptions = {
             position: "bottom-start",
             container: container,
