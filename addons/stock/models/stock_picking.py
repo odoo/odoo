@@ -1637,7 +1637,7 @@ class StockPicking(models.Model):
                     ('move_orig_ids', '=', False),
                     ('picking_id', 'not in', pickings_show_report.ids),
                     ('product_id', 'in', moves.product_id.ids)], limit=1):
-                action = pickings_show_report.action_view_reception_report()
+                action = pickings_show_report.action_view_allocation_report()
                 action['context'] = {'default_picking_ids': pickings_show_report.ids}
                 if not report_actions:
                     return action
@@ -2211,9 +2211,6 @@ class StockPicking(models.Model):
 
     def action_view_allocation_report(self):
         return self.env["ir.actions.actions"]._for_xml_id("stock.allocation_report_action")
-
-    def action_view_reception_report(self):
-        return self.env["ir.actions.actions"]._for_xml_id("stock.stock_reception_action")
 
     def action_open_label_layout(self):
         return self.move_ids.action_open_label_layout()

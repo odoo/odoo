@@ -301,11 +301,6 @@ class StockPickingBatch(models.Model):
     def action_view_allocation_report(self):
         return self.env["ir.actions.actions"]._for_xml_id("stock.allocation_report_action")
 
-    def action_view_reception_report(self):
-        action = self.picking_ids[0].action_view_reception_report()
-        action['context'] = {'default_picking_ids': self.picking_ids.ids}
-        return action
-
     def action_open_label_layout(self):
         if self.env.user.has_group('stock.group_production_lot') and self.move_line_ids.lot_id:
             view = self.env.ref('stock.picking_label_type_form')
