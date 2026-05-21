@@ -19,7 +19,6 @@ import {
     isZWS,
     previousLeaf,
 } from "../utils/dom_info";
-import { isFakeLineBreak } from "../utils/dom_state";
 import { childNodes, closestElement, descendants, selectElements } from "../utils/dom_traversal";
 import { formatsSpecs, FORMATTABLE_TAGS } from "../utils/formatting";
 import { boundariesIn, leftPos, rightPos } from "../utils/position";
@@ -296,13 +295,27 @@ export class FormatPlugin extends Plugin {
      * @returns {Node[]} Subset of targetedNodes that are formattable.
      */
     getFormattableNodes(targetedNodes = this.dependencies.selection.getTargetedNodes()) {
-        return targetedNodes.filter(
-            (node) =>
-                this.checkPredicates("is_formattable_node_predicates", node) ??
-                (isTextNode(node) &&
-                    (isVisibleTextNode(node) || isZWS(node)) &&
-                    this.dependencies.selection.isNodeEditable(node))
-        );
+        const systemNodesSelector = this.getResource("system_node_selectors").join(", ");
+        return targetedNodes.filter((node) => {
+            const predicatesResult = this.checkPredicates("is_formattable_node_predicates", node);
+            if (predicatesResult !== undefined) {
+                return predicatesResult;
+            }
+            if (systemNodesSelector && closestElement(node, systemNodesSelector)) {
+                return false;
+            }
+            if (!this.dependencies.selection.isNodeEditable(node)) {
+                return false;
+            }
+            if (isTextNode(node)) {
+                return isVisibleTextNode(node) || isZWS(node);
+            }
+            if (node.nodeName === "BR") {
+                const prevLeaf = previousLeaf(node, closestBlock(node));
+                return !prevLeaf || prevLeaf.nodeName === "BR";
+            }
+            return false;
+        });
     }
 
     /**
@@ -411,24 +424,8 @@ export class FormatPlugin extends Plugin {
         }
 
         const cursor = this.dependencies.selection.preserveSelection();
-        const systemNodesSelector = this.getResource("system_node_selectors").join(", ");
-        const selectedTextNodes = /** @type { Text[] } **/ (
-            this.dependencies.selection
-                .getTargetedNodes()
-                .filter(
-                    (n) =>
-                        (!systemNodesSelector || !closestElement(n, systemNodesSelector)) &&
-                        ((isTextNode(n) && (isVisibleTextNode(n) || isZWS(n))) ||
-                            (n.nodeName === "BR" &&
-                                (isFakeLineBreak(n) ||
-                                    previousLeaf(n, closestBlock(n))?.nodeName === "BR"))) &&
-                        isContentEditable(n)
-                )
-        );
-        const unformattedTextNodes = selectedTextNodes.filter(
-            (n) =>
-                !formattedNodes.has(n) &&
-                (this.checkPredicates("is_formattable_node_predicates", n) ?? true)
+        const unformattedTextNodes = this.getFormattableNodes().filter(
+            (n) => !formattedNodes.has(n)
         );
         const formatSpec = formatsSpecs[formatName];
         for (const node of unformattedTextNodes) {
