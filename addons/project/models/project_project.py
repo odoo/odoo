@@ -758,7 +758,7 @@ class ProjectProject(models.Model):
             analytic_account_to_update = self.env['account.analytic.account'].browse([
                 analytic_account.id for [analytic_account] in projects_read_group
             ])
-            analytic_account_to_update.write({'name': self.name})
+            analytic_account_to_update.write({'name': vals['name']})
         return res
 
     def unlink(self):

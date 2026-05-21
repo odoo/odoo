@@ -5487,6 +5487,7 @@ class TestWriteOverrideTranslatedFields(TransactionCase):
         'web_studio': ['ir.ui.menu.name'],
         'website_sale': ['product.template.description_ecommerce'],
         'point_of_sale': ['product.template.public_description', 'product.tag.pos_description'],
+        'project': ['project.project.name'],
         'account': ['account.journal.name'],
         'documents': ['documents.document.name'],
         'im_livechat': ['chatbot.script.title'],
@@ -5502,7 +5503,7 @@ class TestWriteOverrideTranslatedFields(TransactionCase):
             ('state', '=', 'installed'),
         ]).mapped('name'))
         checked_field_names = {
-            module_name: field_names
+            module_name: field_names.copy()
             for module_name, field_names in self.CHECKED_FIELD_NAMES.items()
             if module_name in modules_to_check
         }
