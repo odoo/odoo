@@ -581,6 +581,7 @@
           <field name="url">/default-main-menu</field>
         </record>
         <record id="menu_home" model="website.menu">
+            <field name="website_id" eval="False"/>
             <field name="name">Home</field>
             <field name="url">/</field>
             <field name="page_id" ref="website.homepage_page"/>
