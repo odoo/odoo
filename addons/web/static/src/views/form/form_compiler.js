@@ -564,6 +564,7 @@ export class FormCompiler extends ViewCompiler {
             }
 
             if (child.getAttribute("autofocus") === "autofocus") {
+                pageSlot.setAttribute("isDefault", "true");
                 noteBook.setAttribute(
                     "defaultPage",
                     `__comp__.props.record.isNew ? "${pageId}" : (__comp__.props.activeNotebookPages[${noteBookId}] || "${pageId}")`

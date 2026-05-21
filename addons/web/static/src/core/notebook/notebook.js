@@ -76,7 +76,7 @@ export class Notebook extends Component {
         this.pages = this.computePages(this.props);
         this.invalidPages = new Set();
         this.state = useState({ currentPage: null });
-        this.state.currentPage = this.computeActivePage(this.props.defaultPage, true);
+        this.state.currentPage = this.computeActivePage(this.props.defaultPage);
         this.keepLastPageTransition = new KeepLast();
         useLayoutEffect(
             () => {
@@ -89,10 +89,8 @@ export class Notebook extends Component {
             this.computeInvalidPages();
         });
         onWillUpdateProps((nextProps) => {
-            const activateDefault =
-                this.props.defaultPage !== nextProps.defaultPage || !this.defaultVisible;
             this.pages = this.computePages(nextProps);
-            this.state.currentPage = this.computeActivePage(nextProps.defaultPage, activateDefault);
+            this.state.currentPage = this.computeActivePage(nextProps.defaultPage);
         });
     }
 
@@ -112,6 +110,7 @@ export class Notebook extends Component {
             if (canProceed !== false) {
                 this.activePane.el?.classList.remove("show");
                 this.state.currentPage = pageIndex;
+                this.manuallySelectedPage = pageIndex;
             }
         }
     }
@@ -145,25 +144,29 @@ export class Notebook extends Component {
         return pages;
     }
 
-    computeActivePage(defaultPage, activateDefault) {
+    computeActivePage(defaultPage) {
         if (!this.pages.length) {
             return null;
         }
-        const pages = this.pages.filter((e) => e[1].isVisible).map((e) => e[0]);
-
-        if (defaultPage) {
-            if (!pages.includes(defaultPage)) {
-                this.defaultVisible = false;
-            } else {
-                this.defaultVisible = true;
-                if (activateDefault) {
-                    return defaultPage;
+        const visiblePages = [];
+        const defaultVisiblePages = [];
+        this.pages.forEach((p) => {
+            if (p[1].isVisible) {
+                const pageId = p[0];
+                visiblePages.push(pageId);
+                if (p[1].isDefault) {
+                    defaultVisiblePages.push(pageId);
                 }
+            }
+        });
+        for (const pageId of [this.manuallySelectedPage, defaultPage, defaultVisiblePages.at(-1)]) {
+            if (pageId && visiblePages.includes(pageId)) {
+                return pageId;
             }
         }
         const current = this.state.currentPage;
-        if (!current || (current && !pages.includes(current))) {
-            return pages[0];
+        if (!current || (current && !visiblePages.includes(current))) {
+            return visiblePages[0];
         }
 
         return current;

@@ -271,10 +271,10 @@ export class FormController extends Component {
         });
 
         const state = this.props.state || {};
-        const activeNotebookPages = { ...state.activeNotebookPages };
+        this.activeNotebookPages = { ...state.activeNotebookPages };
         this.onNotebookPageChange = (notebookId, page) => {
             if (page) {
-                activeNotebookPages[notebookId] = page;
+                this.activeNotebookPages[notebookId] = page;
             }
         };
 
@@ -284,7 +284,7 @@ export class FormController extends Component {
             beforeLeave: (options) => this.beforeLeave(options),
             beforeUnload: (ev) => this.beforeUnload(ev),
             getLocalState: () => ({
-                activeNotebookPages: !this.model.root.isNew ? activeNotebookPages : {},
+                activeNotebookPages: !this.model.root.isNew ? this.activeNotebookPages : {},
                 modelState: this.model.exportState(),
                 resId: this.model.root.resId,
             }),
