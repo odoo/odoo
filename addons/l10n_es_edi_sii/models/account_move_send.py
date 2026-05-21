@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import api, models
+from odoo import api, models, tools
 
 
 class AccountMoveSend(models.AbstractModel):
@@ -50,5 +50,5 @@ class AccountMoveSend(models.AbstractModel):
                 if invoice.l10n_es_edi_sii_error:
                     invoices_data[invoice]['error'] = {
                         'error_title': self.env._("Error while sending the invoice to SII"),
-                        'errors': [invoice.l10n_es_edi_sii_error],
+                        'errors': [tools.html2plaintext(invoice.l10n_es_edi_sii_error)],
                     }

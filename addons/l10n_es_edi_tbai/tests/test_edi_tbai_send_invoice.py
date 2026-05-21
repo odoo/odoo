@@ -215,7 +215,6 @@ class TestSendAndPrintEdiGipuzkoa(TestEsEdiTbaiCommonGipuzkoa):
                 active_model="account.move", active_ids=invoice.ids
             ).create({
                 'journal_id': invoice.journal_id.id,
-                'l10n_es_tbai_refund_reason': 'R4',
             })
             credit_note = self.env['account.move'].browse(reversal.refund_moves()['res_id'])
             credit_note.l10n_es_original_invoice_credited = invoice.name or "INV/2026/00001"

@@ -1,4 +1,5 @@
 from odoo import fields, models
+from odoo.addons.l10n_es_edi_verifactu.const import VERIFACTU_REGIME_CODES_IGIC, VERIFACTU_REGIME_CODES_IVA
 
 
 class ResCompany(models.Model):
@@ -17,15 +18,6 @@ class ResCompany(models.Model):
         string="Veri*Factu Test Environment",
         default=True,
         copy=False,
-    )
-    l10n_es_edi_verifactu_special_vat_regime = fields.Selection(
-        string="Veri*Factu VAT Regime",
-        selection=[
-            ('simplified', "Simplified Regime"),
-            ('reagyp', "REAGYP (Special Regime for Agriculture, Livestock and Fisheries)"),
-            ('recargo', "Recargo de Equivalencia"),
-        ],
-        help="Leave empty for the normal regimen.",
     )
 
     def _l10n_es_edi_verifactu_get_endpoints(self):
@@ -61,3 +53,14 @@ class ResCompany(models.Model):
             order='date_end desc',
             limit=1,
         )
+
+    def _l10n_es_regime_available_codes(self, use, applicability=None):
+        # EXTENDS 'l10n_es'
+        self.ensure_one()
+        # VeriFactu only applies to sale taxes; purchase taxes always fall back to the
+        # generic catalog, even on a VeriFactu company.
+        if self.l10n_es_edi_verifactu_required and use == 'sale':
+            if applicability == '03':  # IGIC
+                return VERIFACTU_REGIME_CODES_IGIC
+            return VERIFACTU_REGIME_CODES_IVA  # IVA ('01'), IPSI ('02') and unset/"Other" default here
+        return super()._l10n_es_regime_available_codes(use, applicability=applicability)

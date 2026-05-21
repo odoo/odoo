@@ -28,13 +28,6 @@
                         invisible="l10n_es_tbai_state != 'sent'"
                     />
                 </xpath>
-                <xpath expr="//group[@id='header_right_group']" position='inside'>
-                    <field
-                        name="l10n_es_tbai_refund_reason"
-                        invisible="move_type not in ('in_refund', 'out_refund') or not l10n_es_tbai_is_required"
-                        readonly="state != 'draft'"
-                    />
-                </xpath>
                 <xpath expr="//page[@id='other_tab_entry']" position='after'>
                     <page
                         id="ticketbai_tab"
@@ -52,10 +45,6 @@
                             <field name="reversed_entry_id" invisible="move_type != 'in_refund'"/>
                         </group>
                     </page>
-                </xpath>
-                <xpath expr="//page[@name='other_info']//group[@name='l10n_es_electronic_invoicing']"
-                       position="attributes">
-                    <attribute name="invisible">country_code != 'ES'</attribute>
                 </xpath>
                 <xpath expr="//page[@name='other_info']//group[@name='l10n_es_electronic_invoicing']"
                        position="inside">

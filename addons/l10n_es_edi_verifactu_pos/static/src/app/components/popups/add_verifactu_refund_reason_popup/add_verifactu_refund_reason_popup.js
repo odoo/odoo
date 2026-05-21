@@ -9,8 +9,7 @@ export class AddVerifactuRefundReasonPopup extends Component {
     setup() {
         this.pos = usePos();
         this.state = proxy({
-            l10n_es_edi_verifactu_refund_reason:
-                this.props.order.l10n_es_edi_verifactu_refund_reason || "R4",
+            l10n_es_invoice_type: this.props.order.l10n_es_invoice_type || "R4",
         });
     }
     confirm() {

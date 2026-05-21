@@ -33,7 +33,6 @@ You need to configure your certificate and the tax agency.
         'views/l10n_es_edi_sii_certificate_views.xml',
         'views/res_config_settings_views.xml',
         'security/ir.access.csv',
-        'wizard/account_move_reversal_views.xml',
     ],
     'demo': [
         'demo/demo_certificate.xml',

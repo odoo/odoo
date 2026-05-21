@@ -10,14 +10,6 @@ from markupsafe import Markup
 
 L10N_ES_SII_MAX_BATCH_SIZE = 1000
 
-SII_REFUND_REASONS = [
-    ('R1', "R1: Art. 80.1, 80.2, 80.6 and rights founded error"),
-    ('R2', "R2: Art. 80.3"),
-    ('R3', "R3: Art. 80.4"),
-    ('R4', "R4: Art. 80 - other"),
-    ('R5', "R5: Factura rectificativa en facturas simplificadas"),
-]
-
 
 class AccountMove(models.Model):
     _inherit = 'account.move'
@@ -58,14 +50,6 @@ class AccountMove(models.Model):
         string="SII Error",
         compute='_compute_l10n_es_edi_sii_data',
     )
-    l10n_es_sii_refund_reason = fields.Selection(
-        selection=SII_REFUND_REASONS,
-        string="Invoice Refund Reason Code (SII)",
-        help="BOE-A-1992-28740. Ley 37/1992, de 28 de diciembre, del Impuesto sobre el "
-        "Valor Añadido. Artículo 80. Modificación de la base imponible.",
-        copy=False,
-    )
-
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
     # -------------------------------------------------------------------------
@@ -122,7 +106,7 @@ class AccountMove(models.Model):
     def _compute_show_reset_to_draft_button(self):
         super()._compute_show_reset_to_draft_button()
         for move in self:
-            if move.l10n_es_edi_is_required and move.l10n_es_edi_sii_state == 'sent':
+            if move.l10n_es_edi_is_required and move.l10n_es_edi_sii_state == 'sent' and move.state != 'draft':
                 move.show_reset_to_draft_button = True
 
     def button_request_cancel(self):
@@ -291,14 +275,6 @@ class AccountMove(models.Model):
                 )
             )
 
-        if self.is_refund():
-            if not self.l10n_es_sii_refund_reason:
-                errors.append(self.env._("You must set a Refund Reason for this credit note (SII)."))
-            elif self.l10n_es_is_simplified and self.l10n_es_sii_refund_reason != 'R5':
-                errors.append(self.env._("Refund reason must be R5 for simplified invoices (SII)."))
-            elif not self.l10n_es_is_simplified and self.l10n_es_sii_refund_reason == 'R5':
-                errors.append(self.env._("Refund reason cannot be R5 for non-simplified invoices (SII)."))
-
         return errors
 
     def _l10n_es_edi_get_period(self):
@@ -325,7 +301,7 @@ class AccountMove(models.Model):
             }
 
             com_partner = move.commercial_partner_id
-            is_simplified = move.l10n_es_is_simplified
+            is_simplified = move.l10n_es_invoice_type in ('F2', 'R5')
 
             if move.is_sale_document():
                 invoice_node = info['FacturaExpedida'] = {}
@@ -342,7 +318,9 @@ class AccountMove(models.Model):
             else:
                 invoice_node['DescripcionOperacion'] = 'manual'
 
-            reagyp = move.invoice_line_ids.tax_ids.filtered(lambda t: t.l10n_es_type == 'sujeto_agricultura')
+            AccountTax = self.env['account.tax']
+            regime_code = AccountTax._l10n_es_regime_code_aeat(move.l10n_es_regime_code) or '01'
+            regime_code_additional = AccountTax._l10n_es_regime_code_aeat(move.l10n_es_regime_code_additional)
 
             if move.is_sale_document():
                 if move.company_id.vat and move.company_id.vat.startswith('ES'):
@@ -359,7 +337,9 @@ class AccountMove(models.Model):
                         'NombreRazon': com_partner.name[:120]
                     }
 
-                invoice_node['ClaveRegimenEspecialOTrascendencia'] = move.invoice_line_ids.tax_ids._l10n_es_get_regime_code()
+                invoice_node['ClaveRegimenEspecialOTrascendencia'] = regime_code
+                if regime_code_additional:
+                    invoice_node['ClaveRegimenEspecialOTrascendenciaAdicional1'] = regime_code_additional
 
             else:
                 if move._l10n_es_is_dua():
@@ -376,31 +356,11 @@ class AccountMove(models.Model):
                     }
 
                 invoice_node['FechaRegContable'] = move.l10n_es_registration_date.strftime('%d-%m-%Y')
+                invoice_node['ClaveRegimenEspecialOTrascendencia'] = regime_code
 
-                mod_303_10 = move.env.ref('l10n_es.mod_303_casilla_10_balance')._get_matching_tags()
-                mod_303_11 = move.env.ref('l10n_es.mod_303_casilla_11_balance')._get_matching_tags()
-                tax_tags = move.invoice_line_ids.tax_ids.repartition_line_ids.tag_ids
-                intracom = bool(tax_tags & (mod_303_10 + mod_303_11))
-
-                if intracom:
-                    invoice_node['ClaveRegimenEspecialOTrascendencia'] = '09'
-                elif reagyp:
-                    invoice_node['ClaveRegimenEspecialOTrascendencia'] = '02'
-                else:
-                    invoice_node['ClaveRegimenEspecialOTrascendencia'] = '01'
-
-            if move.move_type == 'out_invoice':
-                invoice_node['TipoFactura'] = 'F2' if is_simplified else 'F1'
-            elif move.is_refund():
-                invoice_node['TipoFactura'] = move.l10n_es_sii_refund_reason
+            invoice_node['TipoFactura'] = move.l10n_es_invoice_type
+            if move.is_refund():
                 invoice_node['TipoRectificativa'] = 'I'
-            elif move.move_type == 'in_invoice':
-                if reagyp:
-                    invoice_node['TipoFactura'] = 'F6'
-                elif move._l10n_es_is_dua():
-                    invoice_node['TipoFactura'] = 'F5'
-                else:
-                    invoice_node['TipoFactura'] = 'F1'
 
             sign = -1 if move.is_refund() else 1
 
@@ -415,6 +375,11 @@ class AccountMove(models.Model):
                         - tax_details_info_vals['tax_amount_retention']
                     )
                     invoice_node['ImporteTotal'] = float_round(sign * total_amount, 2)
+
+                    if 'l10n_es_real_estate_id' in move._fields and move.l10n_es_real_estate_id:
+                        real_estate_details = invoice_node.setdefault('DatosInmueble', {}).setdefault('DetalleInmueble', {})
+                        real_estate_details['SituacionInmueble'] = move.l10n_es_real_estate_id.real_estate_location
+                        real_estate_details['ReferenciaCatastral'] = move.l10n_es_real_estate_id.cadastral_reference
                 else:
                     tax_details_info_service_vals = move._l10n_es_edi_get_invoices_tax_details_info(
                         filter_invl_to_apply=lambda x: any(t.tax_scope == 'service' for t in x.tax_ids)

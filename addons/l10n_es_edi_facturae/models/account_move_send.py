@@ -15,7 +15,7 @@ class AccountMoveSend(models.AbstractModel):
         return bool(
                 not move.invoice_pdf_report_id
                 and not move.l10n_es_edi_facturae_xml_id
-                and not move.l10n_es_is_simplified
+                and move.l10n_es_invoice_type not in ('F2', 'R5')
                 and move.is_invoice(include_receipts=True)
                 and move.country_code == 'ES'
                 and move.company_id.sudo().l10n_es_edi_facturae_certificate_ids
