@@ -4989,6 +4989,24 @@ class TestStockMove(TestStockCommon):
         warning = scrap.action_scrap()
         self.assertEqual(warning.get('res_model'), 'stock.warn.insufficient.qty.scrap', "Should trigger the warning as no qty in location")
 
+    def test_scrap_13_lot_qty_not_reset_on_lot_change(self):
+        """ Checks that setting a lot on a draft scrap move does not reset the quantity to 1. """
+        prod_lot_a = self.env['product.product'].create({
+            'name': 'Lot A',
+            'tracking': 'lot',
+            'is_storable': True,
+        })
+        lot = self.env['stock.lot'].create({
+            'name': 'Lotty',
+            'product_id': prod_lot_a.id,
+        })
+        self.env['stock.quant']._update_available_quantity(prod_lot_a, self.stock_location, 20, lot_id=lot)
+        with Form(self.env['stock.move'].with_context(default_is_scrap=True), view='stock.view_scrap_move_form') as move_form:
+            move_form.product_id = prod_lot_a
+            move_form.quantity = 5
+            move_form.lot_ids.add(lot)
+            self.assertEqual(move_form.quantity, 5, "Quantity should not be reset when adding a lot to a lot-tracked scrap move")
+
     def test_in_date_1(self):
         """ Check that moving a tracked quant keeps the incoming date.
         """
