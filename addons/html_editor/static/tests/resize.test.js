@@ -1114,4 +1114,39 @@ describe("column resize", () => {
         expect(Math.abs(actualColWidth - expectedColWidth) <= TOLERANCE).toBe(true);
         expect(Math.abs(actualRowWidth - expectedRowWidth) <= TOLERANCE).toBe(true);
     });
+
+    test.tags("desktop");
+    test("should not allow column resizing when allowTextColumnResize is disabled", async () => {
+        const { el } = await setupEditor(
+            unformat(`
+                <div class="container o_text_columns o-contenteditable-false" contenteditable="false">
+                    <div class="row">
+                        <div class="col-4 o-contenteditable-true" contenteditable="true">
+                            <p o-we-hint-text="Empty column" class="o-we-hint">[]</p>
+                        </div>
+                    </div>
+                </div>
+            `),
+            {
+                config: {
+                    allowTextColumnResize: false,
+                }
+            }
+        );
+
+        const row = el.querySelector(".o_text_columns .row");
+        const targetColumn = row.firstChild;
+        const targetRect = targetColumn.getBoundingClientRect();
+        const startX = targetRect.right;
+        const startY = targetRect.top + targetRect.height / 2;
+
+        // Simulate hovering the right edge of the column where the resize
+        // handle would normally appear.
+        manuallyDispatchProgrammaticEvent(targetColumn, "mousemove", {
+            clientX: startX,
+            clientY: startY,
+        });
+        await animationFrame();
+        expect(targetColumn).not.toHaveClass("o_resize_handle");
+    });
 });
