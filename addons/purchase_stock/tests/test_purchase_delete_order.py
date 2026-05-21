@@ -69,7 +69,7 @@ class TestDeleteOrder(PurchaseTestCommon):
         })
         purchase_order.button_confirm()
 
-        self.env['report.stock.report_reception'].action_assign(move.ids, [1], purchase_order.order_line.move_ids.ids)
+        self.env['stock.allocation.report'].action_assign(purchase_order.order_line.move_ids.ids, move.ids, 1)
         self.assertEqual(move.state, 'waiting', 'Move should be waiting for the linked purchase')
         purchase_order.button_cancel()
         # Check purchase order and related move are canceled while linked move state is not

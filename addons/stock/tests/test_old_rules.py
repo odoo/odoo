@@ -390,9 +390,12 @@ class TestOldRules(TestStockCommon):
             move_line.product_uom_qty = 15
         receipt = receipt_form.save()
 
-        report = self.env['report.stock.report_reception']
-        report_values = report._get_report_values(docids=[receipt.id])
-        self.assertEqual(len(report_values['sources_to_lines']), 1, "There should only be 1 line (pick move)")
+        report = self.env['stock.allocation.report']
+        report_values = report._get_report_values('stock.picking', receipt.id)
+        product_lines = report_values['product_lines']
+        self.assertEqual(len(product_lines), 1, "There should only be 1 in line (product receipt)")
+        needs = product_lines[0]['needs']
+        self.assertEqual(len(needs), 1, "There should only be 1 out line (pick move)")
 
     def test_update_picking_origin(self):
         """ Check that adding new moves to a picking updates its origin without duplicate nor order mismatch
