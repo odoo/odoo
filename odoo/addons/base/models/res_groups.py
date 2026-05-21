@@ -267,6 +267,11 @@ class ResGroups(models.Model):
         return groups
 
     def unlink(self):
+        for group in self:
+            all_users = group.user_ids | group.all_implied_by_ids.user_ids
+            commands = [Command.link(user.id) for user in all_users]
+            for child in group.implied_ids:
+                child.write({'user_ids': commands})
         res = super().unlink()
         self.env.registry.clear_cache('groups')
         return res
