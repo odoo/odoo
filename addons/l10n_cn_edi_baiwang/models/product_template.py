@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import _, fields, models
-from odoo.exceptions import RedirectWarning, UserError
+from odoo import fields, models
+from odoo.exceptions import UserError
 
 from .baiwang_client import BaiwangClient
 
@@ -23,11 +23,11 @@ class ProductTemplate(models.Model):
         self.ensure_one()
 
         if not self.name:
-            raise UserError(_("Product must have a name to search for a tax category."))
+            raise UserError(self.env._("Product must have a name to search for a tax category."))
 
         company = self.env.company
         if not company.l10n_cn_baiwang_app_key:
-            raise UserError(_("Baiwang API credentials are not configured. Go to Settings > Accounting > China EDI."))
+            raise UserError(self.env._("Baiwang API credentials are not configured. Go to Settings > Accounting > China EDI."))
 
         client = BaiwangClient(company)
 
@@ -40,7 +40,7 @@ class ProductTemplate(models.Model):
         try:
             response = client.call_api('baiwang.bizinfo.search', body, version='6.0')
         except Exception as e:
-            raise UserError(_("API error: %s", str(e)))
+            raise UserError(self.env._("API error: %s", str(e)))
 
         if response.get('success'):
             recommendations = response.get('response', [])
@@ -51,13 +51,13 @@ class ProductTemplate(models.Model):
                     'type': 'ir.actions.client',
                     'tag': 'display_notification',
                     'params': {
-                        'title': _('Success'),
-                        'message': _('Assigned Code: %s', self.l10n_cn_tax_category_code),
+                        'title': self.env._('Success'),
+                        'message': self.env._('Assigned Code: %s', self.l10n_cn_tax_category_code),
                         'type': 'success',
                         'sticky': False,
                     },
                 }
-            raise UserError(_("Baiwang could not find any matching tax codes for this product name."))
+            raise UserError(self.env._("Baiwang could not find any matching tax codes for this product name."))
         else:
             err = response.get('errorResponse', {})
-            raise UserError(_("Baiwang API error: %s", err.get('message', 'Unknown')))
+            raise UserError(self.env._("Baiwang API error: %s", err.get('message', 'Unknown')))

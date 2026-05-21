@@ -2,8 +2,8 @@
 import logging
 import time
 
-from odoo import _, api, fields, models
-from odoo.exceptions import RedirectWarning, UserError
+from odoo import api, fields, models
+from odoo.exceptions import UserError
 
 from .baiwang_client import BaiwangClient
 
@@ -103,17 +103,12 @@ class AccountMove(models.Model):
         company = self.company_id
 
         if not company.l10n_cn_baiwang_app_key:
-            action = self.env.ref('account.action_account_config')
-            raise RedirectWarning(
-                _("Baiwang API credentials are not configured."),
-                action.id,
-                _("Go to Accounting Settings"),
-            )
+            raise UserError(self.env._("Baiwang API credentials are not configured. Please go to Settings > Accounting > China EDI."))
 
         client = BaiwangClient(company)
 
+
         # Generate unique serial number (idempotent per invoice)
-        serial_no = self.l10n_cn_baiwang_serial_no or f"{self.name}_{int(time.time())}"
         self.l10n_cn_baiwang_serial_no = serial_no
 
         # Build invoice payload
@@ -141,7 +136,7 @@ class AccountMove(models.Model):
                     'l10n_cn_baiwang_qr_code': invoice_resp.get('invoiceQrCode'),
                     'l10n_cn_baiwang_error_message': False,
                 })
-                self.message_post(body=_(
+                self.message_post(body=self.env._(
                     "E-Fapiao issued successfully. Invoice No: %(no)s",
                     no=invoice_resp.get('invoiceNo'),
                 ))
@@ -151,7 +146,7 @@ class AccountMove(models.Model):
             if fail_list:
                 error_msg = fail_list[0].get('failCause', 'Unknown error')
             else:
-                error_msg = _("Unexpected response format from Baiwang")
+                error_msg = self.env._("Unexpected response format from Baiwang")
         else:
             err = result.get('errorResponse', {})
             error_msg = f"[{err.get('subCode', err.get('code', ''))}] {err.get('subMessage', err.get('message', 'Unknown error'))}"
@@ -253,27 +248,22 @@ class AccountMove(models.Model):
         self.ensure_one()
 
         if self.move_type != 'out_refund':
-            raise UserError(_("Red Form can only be requested for Credit Notes."))
+            raise UserError(self.env._("Red Form can only be requested for Credit Notes."))
         if self.state != 'posted':
-            raise UserError(_("Credit Note must be posted before requesting a Red Form."))
+            raise UserError(self.env._("Credit Note must be posted before requesting a Red Form."))
         if not self.l10n_cn_baiwang_red_form_type:
-            raise UserError(_("Please select a Red Form Reason before requesting."))
+            raise UserError(self.env._("Please select a Red Form Reason before requesting."))
 
         company = self.company_id
         if not company.l10n_cn_baiwang_app_key:
-            action = self.env.ref('account.action_account_config')
-            raise RedirectWarning(
-                _("Baiwang API credentials are not configured."),
-                action.id,
-                _("Go to Accounting Settings"),
-            )
+            raise UserError(self.env._("Baiwang API credentials are not configured. Please go to Settings > Accounting > China EDI."))
 
         client = BaiwangClient(company)
 
         # Find original blue invoice
         original_move = self.l10n_cn_baiwang_original_invoice_id or self.reversed_entry_id
         if not original_move or not original_move.l10n_cn_baiwang_invoice_no:
-            raise UserError(_(
+            raise UserError(self.env._(
                 "Cannot find the original invoice number. Please link the original invoice "
                 "or ensure it was issued via Baiwang first."
             ))
@@ -294,7 +284,7 @@ class AccountMove(models.Model):
             result = client.add_red_confirmation(red_form_data)
         except Exception as e:
             edi_doc.write({'state': 'failed', 'error_message': str(e)})
-            raise UserError(_("Network error: %s", str(e)))
+            raise UserError(self.env._("Network error: %s", str(e)))
 
         if result.get('success'):
             resp_list = result.get('response', [])
@@ -311,12 +301,12 @@ class AccountMove(models.Model):
 
                 confirm_state = resp.get('confirmState')
                 if confirm_state in ('01', '04'):
-                    self.message_post(body=_(
+                    self.message_post(body=self.env._(
                         "Red Form confirmed (auto-approved). No: %(no)s",
                         no=resp.get('redConfirmNo'),
                     ))
                 else:
-                    self.message_post(body=_(
+                    self.message_post(body=self.env._(
                         "Red Form submitted. Waiting for counterpart confirmation. UUID: %(uuid)s",
                         uuid=resp.get('redConfirmUuid'),
                     ))
@@ -329,7 +319,7 @@ class AccountMove(models.Model):
                 'l10n_cn_baiwang_state': 'failed',
                 'l10n_cn_baiwang_error_message': error_msg,
             })
-            raise UserError(_("Baiwang Red Form failed: %s", error_msg))
+            raise UserError(self.env._("Baiwang Red Form failed: %s", error_msg))
 
     def _l10n_cn_baiwang_prepare_red_form_data(self, original_move, serial_no: str) -> dict:
         """Build red letter confirmation form payload from credit note + original invoice."""
@@ -434,7 +424,7 @@ class AccountMove(models.Model):
                 lambda d: d.state == 'red_form_pending'
             )
             if pending_docs:
-                raise UserError(_(
+                raise UserError(self.env._(
                     "You cannot delete this record because a Red Form Request is "
                     "currently pending on the Baiwang platform.\n\n"
                     "Please revoke the Red Form first."
