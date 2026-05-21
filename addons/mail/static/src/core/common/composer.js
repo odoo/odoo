@@ -598,6 +598,7 @@ export class Composer extends Component {
             clicked_on_full_composer: true,
             body_contains_signature_only: !body || body.trim().length === 0,
             // Changed in 18.2+: finally get rid of autofollow, following should be done manually
+            is_thread_composer: true,
         };
         const action = {
             name: this.props.type === "note" ? _t("Log note") : _t("Compose Email"),
