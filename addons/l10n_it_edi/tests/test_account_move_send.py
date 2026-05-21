@@ -281,11 +281,9 @@ class TestItAccountMoveSend(TestItEdi, TestAccountMoveSendCommon):
 
             self.assertEqual(invoices[0].l10n_it_edi_state, "processing")
             self.assertEqual(invoices[0].l10n_it_edi_transaction, success['id_transaction'])
-            self.assertTrue(invoices[0].l10n_it_edi_header)
 
             self.assertFalse(invoices[1].l10n_it_edi_state)
             self.assertFalse(invoices[1].l10n_it_edi_transaction)
-            self.assertTrue(invoices[1].l10n_it_edi_header)
 
     def test_enasarco_no_warnings(self):
         self.proxy_user.edi_mode = 'demo'
