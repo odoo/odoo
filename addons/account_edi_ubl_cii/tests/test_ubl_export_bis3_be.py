@@ -664,6 +664,7 @@ class TestUblExportBis3BE(TestUblBis3Common, TestUblCiiBECommon):
 
         self._assert_invoice_ubl_file(invoice, 'test_invoice_send_and_print_additional_documents')
 
+<<<<<<< c59cb872a724d2d9df451fc01d3a30920e59d1ec
     def test_invoice_negative_discount_upsell(self):
         """ Ensure a negative discount (upsell) is correctly handled as a Charge
         with the appropriate UNCL 7161 reason code (ADK) instead of an Allowance.
@@ -939,6 +940,23 @@ class TestUblExportBis3BE(TestUblBis3Common, TestUblCiiBECommon):
         self._generate_invoice_ubl_file(invoice)
         self._assert_invoice_ubl_file(invoice, 'test_invoice_tax_out_of_scope')
 
+||||||| bd095fe286930acc54d85bdf7f92af15569f5b82
+=======
+    def test_invoice_small_unit_price(self):
+
+        self.env['decimal.precision'].search([('name', '=', 'Product Price')]).digits = 5
+        tax_21 = self.percent_tax(21.0)
+        product = self._create_product(lst_price=0.00003, taxes_id=tax_21)
+        invoice = self._create_invoice_one_line(
+            product_id=product,
+            quantity=50000,
+            partner_id=self.partner_be,
+            post=True,
+        )
+        self._generate_invoice_ubl_file(invoice)
+        self._assert_invoice_ubl_file(invoice, 'test_invoice_small_unit_price')
+
+>>>>>>> a2e42a96abc818f7552725d64757c339e78e6db5
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestBeExport(TestUblExportBis3BE):

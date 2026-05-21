@@ -1,6 +1,7 @@
 from collections import defaultdict
 from lxml import etree
 
+<<<<<<< c59cb872a724d2d9df451fc01d3a30920e59d1ec
 from odoo import _, models, Command
 from odoo.tools import html2plaintext, cleanup_xml_node, float_is_zero, float_repr, float_round
 from odoo.addons.account.tools import dict_to_xml
@@ -8,6 +9,14 @@ from odoo.addons.account_edi_ubl_cii.models.account_edi_common import EAS_MAPPIN
 from odoo.addons.account_edi_ubl_cii.tools import Invoice, CreditNote, DebitNote
 from odoo.addons.account_edi_ubl_cii.tools.ubl_20_optional_fields import PEPPOL_INVOICE_OPTIONAL_FIELDS, PEPPOL_INVOICE_OPTIONAL_LINE_FIELDS, PEPPOL_CREDIT_NOTE_OPTIONAL_FIELDS, PEPPOL_CREDIT_NOTE_OPTIONAL_LINE_FIELDS
 
+||||||| bd095fe286930acc54d85bdf7f92af15569f5b82
+from odoo import models, _
+from odoo.tools import html2plaintext, cleanup_xml_node
+=======
+from odoo import models, _
+from odoo.tools import html2plaintext, cleanup_xml_node
+from odoo.addons.account_edi_ubl_cii.models.account_edi_common import FloatFmt
+>>>>>>> a2e42a96abc818f7552725d64757c339e78e6db5
 
 UBL_NAMESPACES = {
     'cbc': "urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2",
@@ -518,13 +527,14 @@ class AccountEdiXmlUBL20(models.AbstractModel):
 
         uom = self._get_uom_unece_code(line.product_uom_id)
 
+        product_price_dp = self.env['decimal.precision'].precision_get('Product Price')
         return {
             'currency': line.currency_id,
             'currency_dp': self._get_currency_decimal_places(line.currency_id),
 
             # The price of an item, exclusive of VAT, after subtracting item price discount.
-            'price_amount': round(gross_price_unit, 10),
-            'product_price_dp': self.env['decimal.precision'].precision_get('Product Price'),
+            'price_amount': FloatFmt(gross_price_unit, 1, 10),
+            'product_price_dp': product_price_dp,
 
             # The number of item units to which the price applies.
             # setting to None -> the xml will not comprise the BaseQuantity (it's not mandatory)
