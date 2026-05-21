@@ -526,3 +526,9 @@ class TestProjectBase(TestProjectCommon):
         })
         parent_task.child_ids.active = False
         self.assertFalse(parent_task.copy().child_ids, "Archived subtask should not be copied")
+
+    def test_rename_multiple_projects_updates_analytic_account_names(self):
+        projects = self.project_pigs + self.project_goats
+        projects._create_analytic_account()
+        projects.write({'name': 'sheeps'})
+        self.assertEqual(projects.account_id.mapped('name'), ['sheeps', 'sheeps'])
