@@ -3,18 +3,25 @@ import { loadBundle } from "@web/core/assets";
 import { registry } from "@web/core/registry";
 import { browser } from "@web/core/browser/browser";
 
-export async function startClickEverywhere(xmlId, light, currentState) {
-    await loadBundle("web.assets_clickbot");
-    window.clickEverywhere(xmlId, light, currentState);
+async function _waitForEnv() {
+    while (!odoo.__WOWL_DEBUG__?.root?.env) {
+        await new Promise((resolve) => browser.setTimeout(resolve, 50));
+    }
+    return odoo.__WOWL_DEBUG__.root.env;
 }
 
-export function runClickTestItem({ env }) {
+export async function startClickEverywhere(xmlId, light, currentState) {
+    await loadBundle("web.assets_clickbot");
+    const { Clickbot } = odoo.loader.modules.get("@web/webclient/clickbot/clickbot");
+    const env = await _waitForEnv();
+    return new Clickbot(env, { xmlId, light, currentState }).start();
+}
+
+export function runClickTestItem() {
     return {
         type: "item",
         description: _t("Run Click Everywhere"),
-        callback: () => {
-            startClickEverywhere();
-        },
+        callback: () => startClickEverywhere(),
         sequence: 460,
         section: "testing",
     };
@@ -24,10 +31,5 @@ const currentState = JSON.parse(browser.localStorage.getItem("running.clickbot")
 if (currentState) {
     startClickEverywhere(currentState.xmlId, currentState.light, currentState);
 }
-
-export default {
-    startClickEverywhere,
-    runClickTestItem,
-};
 
 registry.category("debug").category("default").add("runClickTestItem", runClickTestItem);
