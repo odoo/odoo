@@ -103,7 +103,7 @@ class AccountMove(models.Model):
         company = self.company_id
 
         if not company.l10n_cn_baiwang_app_key:
-            raise UserError(self.env._("Baiwang API credentials are not configured. Please go to Settings > Accounting > China EDI."))
+            raise UserError(self.env._("Baiwang API credentials are not configured. Please go to Settings > Invoicing > China Electronic Invoicing (Baiwang)."))
 
         client = BaiwangClient(company)
 
@@ -256,7 +256,7 @@ class AccountMove(models.Model):
 
         company = self.company_id
         if not company.l10n_cn_baiwang_app_key:
-            raise UserError(self.env._("Baiwang API credentials are not configured. Please go to Settings > Accounting > China EDI."))
+            raise UserError(self.env._("Baiwang API credentials are not configured. Please go to Settings > Invoicing > China Electronic Invoicing (Baiwang)."))
 
         client = BaiwangClient(company)
 

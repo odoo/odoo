@@ -27,7 +27,7 @@ class ProductTemplate(models.Model):
 
         company = self.env.company
         if not company.l10n_cn_baiwang_app_key:
-            raise UserError(self.env._("Baiwang API credentials are not configured. Go to Settings > Accounting > China EDI."))
+            raise UserError(self.env._("Baiwang API credentials are not configured. Go to Settings > Invoicing > China Electronic Invoicing (Baiwang)."))
 
         client = BaiwangClient(company)
 
