@@ -377,13 +377,6 @@
                     t-out="vals.get('line_quantity')"/>
             </t>
         </xpath>
-        <xpath expr="//*[local-name()='LineExtensionAmount']" position="after">
-            <cac:InvoicePeriod t-foreach="vals.get('invoice_period_vals_list', [])" t-as="invoice_period">
-                <t t-call="account_edi_ubl_cii.ubl_20_InvoicePeriod">
-                    <t t-set="vals" t-value="invoice_period"/>
-                </t>
-            </cac:InvoicePeriod>
-        </xpath>
         <xpath expr="//*[local-name()='TaxTotal']" position="before">
             <t xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">
                 <cac:AllowanceCharge t-foreach="vals.get('allowance_charge_vals', [])" t-as="foreach_vals">
