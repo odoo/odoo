@@ -158,8 +158,8 @@ EOF
 echo iotbox | tee /etc/hostname
 sed -i 's/\braspberrypi/iotbox/g' /etc/hosts
 
-# Prevent Wi-Fi blocking and remove man pages
-apt-get -y -qq purge rfkill man-db
+# Remove man pages
+apt-get -y -qq purge man-db
 
 # add Tailscale apt repository
 curl -fsSL https://pkgs.tailscale.com/stable/raspbian/bullseye.noarmor.gpg | tee /usr/share/keyrings/tailscale-archive-keyring.gpg > /dev/null
@@ -231,6 +231,7 @@ systemctl enable \
     ssh \
     labwc.service \
     odoo.service \
+    odoo-bluetooth.service \
     odoo-led-manager.service \
     sos.service
 
