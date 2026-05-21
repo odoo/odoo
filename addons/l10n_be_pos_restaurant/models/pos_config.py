@@ -33,9 +33,11 @@ class PosConfig(models.Model):
                     'record': takeout_tax,
                     'noupdate': True,
                 }])
-            takeaway_preset = self.env.ref('pos_restaurant.pos_takeout_preset', raise_if_not_found=False)
-            if takeaway_preset:
-                takeaway_preset.write({'fiscal_position_id': fp.id})
+            presets = self.env['pos.preset']
+            presets |= self.env.ref('pos_restaurant.pos_takeout_preset', raise_if_not_found=False) or presets
+            presets |= self.env.ref('pos_restaurant.pos_delivery_preset', raise_if_not_found=False) or presets
+            if presets:
+                presets.write({'fiscal_position_id': fp.id})
 
     def _load_bar_demo_data(self, with_demo_data=True):
         super()._load_bar_demo_data(with_demo_data)
