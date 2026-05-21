@@ -783,6 +783,15 @@
         <field name="color">5</field>
         <field name="country_id" ref="base.lu"/>
     </record>
+    <record id="hr_work_entry.l10n_lu_work_entry_type_sick_leave_paid_by_CNS" model="hr.work.entry.type">
+        <field name="requires_allocation" eval="False"/>
+        <field name="leave_validation_type">no_validation</field>
+        <field name="request_unit">half_day</field>
+        <field name="unit_of_measure">day</field>
+        <field name="leave_notif_subtype_id" ref="hr_holidays.mt_leave"/>
+        <field name="color">10</field>
+        <field name="country_id" ref="base.lu"/>
+    </record>
 
 <!-- MX : Mexico -->
     <record id="hr_work_entry.l10n_mx_work_entry_type_work_risk_imss" model="hr.work.entry.type">

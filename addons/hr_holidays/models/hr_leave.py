@@ -2,7 +2,7 @@ import logging
 
 from collections import defaultdict
 
-from datetime import datetime, timedelta, time, UTC
+from datetime import date, datetime, timedelta, time, UTC
 from zoneinfo import ZoneInfo
 
 from dateutil import rrule
@@ -1862,3 +1862,43 @@ class HrLeave(models.Model):
             if exceeding_duration <= excess_limit:
                 continue
             leave._force_cancel(reason, 'mail.mt_note')
+
+    def _get_calendar_days_between_leaves(self, leave_from, leave_to):
+        date_from = leave_from.date_to.astimezone(ZoneInfo(leave_from.tz)).date()
+        date_to = leave_to.date_from.astimezone(ZoneInfo(leave_to.tz)).date()
+        full_days = (date_to - date_from).days + 1
+
+        from_period = (
+            leave_from.request_date_to_period
+            if leave_from.work_entry_type_request_unit == "half_day"
+            else "pm"
+        )
+        to_period = (
+            leave_to.request_date_from_period
+            if leave_to.work_entry_type_request_unit == "half_day"
+            else "am"
+        )
+
+        half_days_correction = -2.0
+        if from_period == "am":
+            half_days_correction += 0.5
+        if to_period == "pm":
+            half_days_correction += 0.5
+
+        return full_days + half_days_correction
+
+    def _get_calendar_days(self, date_min=date.min, date_max=date.max):
+        self.ensure_one()
+        leave_tz = ZoneInfo(self.tz)
+        date_from = max(date_min, self.date_from.astimezone(leave_tz).date())
+        date_to = min(date_max, self.date_to.astimezone(leave_tz).date())
+        days = (date_to - date_from).days + 1
+        if self.work_entry_type_request_unit == "half_day":
+            if self.request_date_from_period == self.request_date_to_period:
+                return days - 0.5
+            elif (
+                self.request_date_from_period == "pm"
+                and self.request_date_to_period == "am"
+            ):
+                return days - 1
+        return days
