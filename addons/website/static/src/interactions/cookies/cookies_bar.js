@@ -21,7 +21,9 @@ export class CookiesBar extends Popup {
             "t-on-cookiesBar.show": this.onShowCookiesBar,
             "t-on-cookiesBar.toggle": this.onToggleCookiesBar,
         },
-        "#cookies-consent-essential, #cookies-consent-all": { "t-on-click": this.onAcceptClick },
+        "#cookies-consent-essential, #cookies-consent-all, .o_cookies_bar_close": {
+            "t-on-click": this.onAcceptClick,
+        },
         // Override to avoid side effects on hide.
         ".js_close_popup": { "t-on-click": () => {} },
         ".btn-primary": { "t-on-click": () => {} },

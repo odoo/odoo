@@ -17,7 +17,7 @@ const cookiesBarTemplate = `
             <div class="modal-dialog d-flex s_popup_size_full">
                 <div class="modal-content oe_structure">
 
-                    <section class="o_colored_level o_cc o_cc1">
+                    <section class="o_colored_level o_cc o_cc1 pe-5">
                         <div class="container">
                             <div class="row">
                                 <div class="col-lg-8 pt16">
@@ -33,6 +33,7 @@ const cookiesBarTemplate = `
                             </div>
                         </div>
                     </section>
+                    <button type="button" class="btn-close btn-close-white o_cookies_bar_close position-absolute top-0 end-0 mt-3 me-3 o_we_no_overlay o_not_editable" aria-label="Close" contenteditable="false"></button>
                 </div>
             </div>
         </div>
