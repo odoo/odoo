@@ -94,9 +94,9 @@ class WebclientController(ThreadController):
         store.add(user, "_store_user_fields")
 
     @store_handler("/mail/poll_option/votes", audience="everyone")
-    def store_poll_option_votes(self, store: Store, pull_option_id):
+    def store_poll_option_votes(self, store: Store, poll_option_id):
         # sudo - mail.poll.option: validated by "_get_thread_with_access" afterwards.
-        if opt_sudo := request.env["mail.poll.option"].sudo().search([("id", "=", pull_option_id)]):
+        if opt_sudo := request.env["mail.poll.option"].sudo().search([("id", "=", poll_option_id)]):
             message = opt_sudo.poll_id.start_message_id
             if self._get_thread_with_access(message.model, message.res_id, mode="read"):
                 store.add(opt_sudo.vote_ids, "_store_vote_fields")
