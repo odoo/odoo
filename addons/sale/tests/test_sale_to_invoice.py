@@ -670,6 +670,65 @@ class TestSaleToInvoice(TestSaleCommon):
             },
         ])
 
+    def test_combo_parent_qty_delivered_follows_components(self):
+        """Combo parent line is delivered once every combo item line is fully delivered."""
+        product_a = self._create_product(name="Horse-meat burger", invoice_policy='delivery')
+        product_b = self._create_product(name="French fries", invoice_policy='delivery')
+        combo_a, combo_b = self.env['product.combo'].create([
+            {'name': "Burger", 'combo_item_ids': [Command.create({'product_id': product_a.id})]},
+            {'name': "Side", 'combo_item_ids': [Command.create({'product_id': product_b.id})]},
+        ])
+        product_combo = self._create_product(
+            name="Meal Menu",
+            list_price=10.0,
+            type='combo',
+            combo_ids=[Command.link(combo_a.id), Command.link(combo_b.id)],
+        )
+
+        sale_order = self.env['sale.order'].with_context(tracking_disable=True).create({
+            'partner_id': self.partner_a.id,
+            'order_line': [Command.create({
+                'product_id': product_combo.id,
+                'product_uom_qty': 3,
+                'price_unit': 0,
+                'tax_ids': [],
+            })],
+        })
+        sale_order.order_line = [Command.create({
+            'product_id': product.id,
+            'product_uom_qty': 3,
+            'price_unit': 5.0,
+            'tax_ids': [],
+            'combo_item_id': combo.combo_item_ids.id,
+            'linked_line_id': sale_order.order_line.id,
+        }) for product, combo in zip(product_a + product_b, combo_a + combo_b)]
+        sale_order.action_confirm()
+        combo_parent = sale_order.order_line.filtered(lambda l: l.product_id.type == 'combo')
+        combo_items = sale_order.order_line - combo_parent
+
+        self.assertEqual(combo_parent.qty_delivered, 0.0)
+
+        combo_items[0].qty_delivered = 3
+        combo_items.flush_recordset()
+        self.assertEqual(
+            combo_parent.qty_delivered, 0.0,
+            "Combo parent should stay undelivered while any combo item is not fully delivered.",
+        )
+
+        combo_items[1].qty_delivered = 3
+        combo_items.flush_recordset()
+        self.assertEqual(
+            combo_parent.qty_delivered, 3.0,
+            "Combo parent should be fully delivered once every combo item is fully delivered.",
+        )
+
+        combo_items[0].qty_delivered = 1
+        combo_items.flush_recordset()
+        self.assertEqual(
+            combo_parent.qty_delivered, 0.0,
+            "Combo parent should revert to undelivered when a combo item drops below its ordered quantity.",
+        )
+
     def test_qty_invoiced(self):
         """Verify uom rounding is correctly considered during qty_invoiced compute"""
         sale_order = self.env['sale.order'].with_context(tracking_disable=True).create({

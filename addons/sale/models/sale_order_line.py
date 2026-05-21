@@ -232,7 +232,7 @@ class SaleOrderLine(models.Model):
         compute='_compute_qty_delivered',
         default=0.0,
         digits='Product Unit',
-        store=True, readonly=False, copy=False)
+        store=True, readonly=False, copy=False, recursive=True)
 
     # Analytic & Invoicing fields
     qty_invoiced = fields.Float(
@@ -888,7 +888,9 @@ class SaleOrderLine(models.Model):
         'qty_delivered_method',
         'analytic_line_ids.so_line',
         'analytic_line_ids.unit_amount',
-        'analytic_line_ids.product_uom_id')
+        'analytic_line_ids.product_uom_id',
+        'linked_line_ids.qty_delivered',
+        'linked_line_ids.product_uom_qty')
     def _compute_qty_delivered(self):
         """ This method compute the delivered quantity of the SO lines: it covers the case provide by sale module, aka
             expense/vendor bills (sum of unit_amount of AAL), and manual case.
@@ -920,6 +922,27 @@ class SaleOrderLine(models.Model):
         mapping = lines_by_analytic._get_delivered_quantity_by_analytic([('amount', '<=', 0.0)])
         for so_line in lines_by_analytic:
             delivered_qties[so_line] = mapping.get(so_line.id or so_line._origin.id, 0.0)
+        # Combo parent lines have no delivery mechanism of their own (no analytic line, no stock
+        # move for the parent's product). Derive their delivered quantity from their combo item
+        # children: the bundle is delivered once every combo item line is fully delivered. This
+        # mirrors `_compute_qty_to_invoice`, which already treats the combo parent's invoiceable
+        # quantity as a function of its children.
+        precision = self.env['decimal.precision'].precision_get('Product Unit')
+        for line in self:
+            if line.product_id.type == 'combo':
+                item_lines = line.linked_line_ids.filtered('combo_item_id')
+                if not item_lines:
+                    continue
+                if all(
+                    float_compare(
+                        item_line.qty_delivered, item_line.product_uom_qty,
+                        precision_digits=precision,
+                    ) >= 0
+                    for item_line in item_lines
+                ):
+                    delivered_qties[line] = line.product_uom_qty
+                else:
+                    delivered_qties[line] = 0.0
         return delivered_qties
 
     def _get_downpayment_state(self):
