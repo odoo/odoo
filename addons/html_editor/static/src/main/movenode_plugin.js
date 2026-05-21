@@ -512,13 +512,15 @@ export class MoveNodePlugin extends Plugin {
 
             const isFocusInsideList = ["UL", "OL"].includes(focusElelement?.parentElement?.tagName);
             for (const i in movableElements) {
-                if (movableElements[i].tagName === "LI" && !isFocusInsideList) {
+                if (movableElements[i].tagName === "LI") {
                     // If LI is moved outside a list, wrap it in UL/OL (previous parent)
                     const previousParent = movableElements[i].parentElement;
                     previousParents.add(previousParent);
-                    const wrapperList = previousParent.cloneNode(false);
-                    wrapperList.appendChild(movableElements[i]);
-                    movableElements[i] = wrapperList;
+                    if (!isFocusInsideList) {
+                        const wrapperList = previousParent.cloneNode(false);
+                        wrapperList.appendChild(movableElements[i]);
+                        movableElements[i] = wrapperList;
+                    }
                 } else if (movableElements[i].tagName !== "LI" && isFocusInsideList) {
                     // If non-LI element is moved into a list, wrap it in a LI
                     const wrapperLI = this.document.createElement("LI");
