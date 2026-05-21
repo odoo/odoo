@@ -29,14 +29,14 @@ class Transaction(models.Model):
     product_id = fields.Many2one('estate.property.unit', string="Tên SP", domain=[('state', 'in', ['available', 'resale'])], required=True)
     net_area = fields.Float(
         related="product_id.net_area",
-        string="DTTT (m²)",
+        string="Diện tích thông thủy (m²)",
         store=True,
         readonly=True
     )
 
     gross_area = fields.Float(
         related="product_id.gross_area",
-        string="DTLL (m²)",
+        string="Diện tích tim tường (m²)",
         store=True,
         readonly=True
     )
@@ -56,19 +56,15 @@ class Transaction(models.Model):
         store=True
     )
 
-    # % chiết khấu
-    discount_percent = fields.Float(
-        string="Chiết khấu (%)",
-        default=0,
-        digits=(16, 1)
+    hot_money = fields.Monetary(
+        string="Thưởng nóng",
+        currency_field="currency_id",
     )
 
-    # Tiền chiết khấu
+    # Nhập tay
     discount_amount = fields.Monetary(
         string="Tiền chiết khấu",
-        currency_field="currency_id",
-        compute="_compute_amount",
-        store=True
+        currency_field="currency_id"
     )
 
     # Giá sau chiết khấu (chưa VAT)
@@ -116,18 +112,11 @@ class Transaction(models.Model):
 
     @api.depends(
         'listed_price',
-        'discount_percent',
+        'discount_amount',
         'vat_percent'
     )
     def _compute_amount(self):
-
         for rec in self:
-
-            # Chiết khấu
-            rec.discount_amount = (
-                rec.listed_price *
-                rec.discount_percent / 100
-            )
 
             # Giá sau CK
             rec.price_subtotal = (
@@ -147,7 +136,7 @@ class Transaction(models.Model):
                 rec.vat_amount
             )
 
-    @api.depends('listed_price', 'discount')
+    @api.depends('listed_price', 'discount_amount')
     def _compute_final_price(self):
         for rec in self:
             discount_amount = rec.listed_price * (rec.discount / 100)
@@ -207,52 +196,7 @@ class Transaction(models.Model):
             'ht_crm.action_report_transaction'
         ).report_action(self)
 
-    def action_confirm_deposit(self):
-        for rec in self:
 
-            if rec.product_id.state not in ['available', 'reserved']:
-                raise exceptions.ValidationError(
-                    "Sản phẩm không khả dụng."
-                )
-
-            rec.write({
-                'state': 'deposit'
-            })
-
-            rec.product_id.write({
-                'state': 'sold'
-            })
-
-    def action_confirm_booking(self):
-        for rec in self:
-
-            if rec.product_id.state not in ['available', 'reserved']:
-                raise exceptions.ValidationError(
-                    "Sản phẩm không khả dụng."
-                )
-
-            rec.write({
-                'state': 'booking'
-            })
-
-            rec.product_id.write({
-                'state': 'reserved'
-            })
-
-    def action_cancel(self):
-        for rec in self:
-
-            if rec.state == 'cancel':
-                continue
-
-            rec.write({
-                'state': 'cancel'
-            })
-
-            # Mở bán lại sản phẩm
-            rec.product_id.write({
-                'state': 'available'
-            })
     # ================= CREATE =================
     @api.model_create_multi
     def create(self, vals_list):
@@ -332,3 +276,127 @@ class Transaction(models.Model):
         return res
     
 
+# class PaymentPlanLine(models.Model):
+#     _name = "sale.transaction.payment"
+#     _description = "Chi Tiết Đợt TT"
+#     _order = "sequence, id"
+
+#     currency_id = fields.Many2one(
+#         'res.currency',
+#         string="Đơn vị tiền tệ",
+#         default=lambda self: self.env.company.currency_id,
+#     )
+    
+#     sequence = fields.Integer(default=10) 
+
+#     transaction_id = fields.Many2one("sale.transaction", string="Mã giao dịch")
+
+#     name = fields.Char(
+#         required=True,
+#         help="Ví dụ: Đợt 1, Đợt 2..."
+#     )
+
+#     payment_type = fields.Selection([
+#         ("deposit", "Đặt cọc"),
+#         ("installment", "Thanh toán"),
+#         ("handover", "Bàn giao"),
+#         ("ownership", "Ra sổ"),
+#     ], default="installment", string="Loại")
+
+#     due_date = fields.Date(
+#         string="Ngày đến hạn"
+#     )
+
+#     payment_method = fields.Selection([
+#         ("fixed", "Số tiền cố định"),
+#         ("percent", "Theo tỷ lệ"),
+#     ], default="percent", string="Hình thức thanh toán")
+
+#     fixed_amount = fields.Monetary(
+#         string="Số tiền cố định",
+#         currency_field="currency_id"
+#     )
+
+#     amount = fields.Monetary(
+#         string="Số tiền phải trả",
+#         currency_field="currency_id",
+#         compute="_compute_amount",
+#         store=True
+#     )
+
+#     paid_amount = fields.Monetary(
+#         string="Đã trả",
+#         currency_field="currency_id",
+#     )
+
+#     percent = fields.Float(
+#         string="Tỷ lệ (%)"
+#     )
+
+#     status = fields.Selection([
+#         ('pending', 'Chờ thanh toán'),
+#         ('paid', 'Đã thanh toán'),
+#         ('overdue', 'Quá hạn')
+#     ], compute="_compute_status", store=True, string="Trạng thái")
+
+#     @api.depends(
+#         'payment_method',
+#         'percent',
+#         'fixed_amount',
+#         'transaction_id.product_id.price'
+#     )
+#     def _compute_amount(self):
+#         for rec in self:
+
+#             if rec.payment_method == 'percent':
+
+#                 product_price = rec.transaction_id.price_subtotal or 0.0
+
+#                 rec.fixed_amount = 0
+
+#                 rec.amount = (
+#                     product_price * rec.percent / 100
+#                 )
+
+#             else:
+#                 rec.amount = rec.fixed_amount
+
+#     @api.depends('amount', 'paid_amount', 'due_date')
+#     def _compute_status(self):
+#         today = fields.Date.today()
+
+#         for rec in self:
+#             # Đã thanh toán đủ
+#             if rec.amount > 0 and rec.paid_amount >= rec.amount:
+#                 rec.status = 'paid'
+
+#             # Quá hạn
+#             elif (
+#                 rec.due_date
+#                 and rec.due_date < today
+#                 and rec.paid_amount < rec.amount
+#             ):
+#                 rec.status = 'overdue'
+
+#             # Chờ thanh toán
+#             else:
+#                 rec.status = 'pending'
+
+
+#     @api.constrains('amount', 'paid_amount', 'status')
+#     def _check_payment_amount(self):
+#         for rec in self:
+#             # Không âm
+#             if rec.amount < 0:
+#                 raise exceptions.ValidationError("Số tiền phải trả không được âm.")
+
+#             if rec.paid_amount < 0:
+#                 raise exceptions.ValidationError("Số tiền đã trả không được âm.")
+
+#             # Không trả vượt
+#             if rec.paid_amount > rec.amount:
+#                 raise exceptions.ValidationError("Số tiền đã trả không được lớn hơn số tiền phải trả.")
+
+#             # Status paid thì phải trả đủ
+#             if rec.status == 'paid' and rec.paid_amount < rec.amount:
+#                 raise exceptions.ValidationError("Không thể chuyển sang Đã thanh toán khi chưa trả đủ.")

@@ -35,23 +35,6 @@
                         string="In phiếu"
                         class="btn-primary"
                         icon="fa-print"/>
-                    <button name="action_confirm_booking"
-                        string="Giữ chỗ"
-                        type="object"
-                        class="btn-secondary"
-                        invisible="state != 'draft'"/>
-
-                    <button name="action_confirm_deposit"
-                            string="Đặt cọc"
-                            type="object"
-                            class="btn-primary"
-                            invisible="state != 'booking'"/>
-
-                    <button name="action_cancel"
-                            string="Hủy"
-                            type="object"
-                            class="btn-danger"
-                            invisible="state == 'cancel'"/>
 
                     <field name="state"
                         widget="statusbar"
@@ -97,8 +80,9 @@
                             <field name="employee_id"
                                 options="{'no_create': False}"/>
 
-                            <field name="customer_id"
-                                options="{'no_create': False}"/>
+                            <field name="customer_id" options="{'no_create': False}"/>
+
+                            <field name="hot_money"/>
 
                         </group>
 
@@ -121,11 +105,8 @@
                         <!-- Giá niêm yết -->
                         <field name="listed_price" readonly="1" class="oe_inline" widget="monetary"/>
 
-                        <!-- % CK -->
-                        <field name="discount_percent"/>
-
                         <!-- Tiền CK -->
-                        <field name="discount_amount" readonly="1" widget="monetary"/>
+                        <field name="discount_amount" widget="monetary"/>
 
                         <!-- Giá sau CK -->
                         <field name="price_subtotal" readonly="1" widget="monetary"/>

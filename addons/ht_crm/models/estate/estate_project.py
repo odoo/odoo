@@ -19,12 +19,12 @@ class EstatePropertyUnit(models.Model):
         default=lambda self: self.env.company.currency_id
     )
 
-    name = fields.Char(string="Tên căn", size=50)
-
     product_code = fields.Char(
         string="Mã sản phẩm",
         compute="_compute_product_code",
-        store=True
+        inverse="_inverse_product_code",
+        store=True,
+        required=True,
     )
     project_id = fields.Many2one(
         'estate.project',
@@ -33,21 +33,21 @@ class EstatePropertyUnit(models.Model):
         ondelete='cascade'
     )
 
+    name = fields.Char(related="product_code")
+
     block = fields.Char(string="Block", size=20)
     floor = fields.Integer(string="Tầng")
-    unit_number = fields.Integer(string="Căn hộ số", required=True)
+    unit_number = fields.Integer(string="Căn hộ số")
 
     unit_type_id = fields.Many2one(
         'estate.property.unit.type',
         string="Loại căn hộ"
     )
 
-    net_area = fields.Float(string="DTTT (m²)")   # diện tích thông thủy
-    gross_area = fields.Float(string="DTLL (m²)") # diện tích tim tường
+    net_area = fields.Float(string="Diện tích thông thủy (m²)")   # diện tích thông thủy
+    gross_area = fields.Float(string="Diện tích tim tường (m²)") # diện tích tim tường
 
     priority = fields.Integer(string="Ưu tiên", default=1)
-
-    booking_code = fields.Char(string="Mã VBTT đặt mua")
 
     # Trường bổ sung
     price = fields.Monetary(string="Giá bán", currency_field="currency_id")
@@ -60,7 +60,7 @@ class EstatePropertyUnit(models.Model):
     ], default='available', string="Trạng thái")
 
 
-    @api.depends('unit_type_id', 'unit_number')
+    @api.depends('block', 'floor', 'unit_number')
     def _compute_product_code(self):
         for rec in self:
             unit_block = rec.block or ""
@@ -69,9 +69,19 @@ class EstatePropertyUnit(models.Model):
             unit_no = f"{rec.unit_number:02d}"
 
             if unit_block and unit_floor and unit_no:
-                rec.product_code = f"{unit_block}{unit_floor}{unit_no}"
+                rec.product_code = f"{unit_block}-{unit_floor}-{unit_no}"
             else:
                 rec.product_code = ""
+    
+    def _inverse_product_code(self):
+        for rec in self:
+            if rec.product_code:
+                parts = rec.product_code.split("-")
+
+                if len(parts) == 3:
+                    rec.block = parts[0]
+                    rec.floor = int(parts[1])
+                    rec.unit_number = int(parts[2])
 
     # Ràng buộc
     @api.constrains('floor')
@@ -171,6 +181,8 @@ class EstateProject(models.Model):
     note = fields.Text(string="Ghi chú")
 
     # Các trường liên kết
+    payment_plans = fields.One2many("estate.payment.plan", "project_id", string="Phương thức thanh toán")
+
     phonebook_ids = fields.One2many(
         "sale.phonebook",
         "project_id",

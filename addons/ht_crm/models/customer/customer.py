@@ -9,8 +9,8 @@ class Customer(models.Model):
 
     # Các trường cơ bản
     partner_platform = fields.Char(string="Sàn Liên Kết")
-    name = fields.Char(string="Tên Khách", required=True)
-    date_of_birth = fields.Date(string="Ngày Sinh")
+    name = fields.Char(string="Tên khách hàng", required=True)
+    date_of_birth = fields.Date(string="Ngày sinh")
     id_number = fields.Char(string="CMND / Passport", size=20)
     issue_date = fields.Date(string="Ngày cấp")
     issue_place = fields.Char(string="Nơi cấp")

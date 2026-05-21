@@ -43,6 +43,18 @@
         <field name="view_mode">list,form</field>
     </record>
 
+    <record id="action_estate_payment_plan" model="ir.actions.act_window">
+        <field name="name">Phương thức thanh toán</field>
+        <field name="res_model">estate.payment.plan</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <record id="action_estate_payment_plan_line" model="ir.actions.act_window">
+        <field name="name">Chi tiết thanh toán</field>
+        <field name="res_model">estate.payment.plan.line</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
     <record id="action_estate_property_unit" model="ir.actions.act_window">
         <field name="name">Căn hộ / Sản phẩm bất động sản</field>
         <field name="res_model">estate.property.unit</field>
@@ -130,6 +142,8 @@
         <menuitem id="menu_sales_root" name="Sales" sequence="30">
             <menuitem id="menu_transaction" action="action_transaction"/>
             <menuitem id="menu_kpi" action="action_employee_kpi"/>
+            <menuitem id="menu_payment_plan" action="action_estate_payment_plan"/>
+            <menuitem id="menu_payment_plan_line" action="action_estate_payment_plan_line"/>   
         </menuitem>
 
         <!-- ORGANIZATION -->
