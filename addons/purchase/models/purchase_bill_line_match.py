@@ -146,9 +146,16 @@ class PurchaseBillLineMatch(models.Model):
     @api.model
     def _action_create_bill_from_po_lines(self, partner, po_lines):
         """ Create a new vendor bill with the selected PO lines and returns an action to open it """
+        if len(po_lines.currency_id) == 1:
+            currency = po_lines.currency_id
+        elif len(po_lines.company_id) == 1:
+            currency = po_lines.company_id.currency_id
+        else:
+            currency = self.env.company.currency_id
         bill = self.env['account.move'].create({
             'move_type': 'in_invoice',
             'partner_id': partner.id,
+            'currency_id': currency.id,
         })
         bill._add_purchase_order_lines(po_lines)
         return bill._get_records_action()
