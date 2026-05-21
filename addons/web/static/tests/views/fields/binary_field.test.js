@@ -13,7 +13,6 @@ import {
     pagerNext,
 } from "@web/../tests/web_test_helpers";
 
-import { toBase64Length } from "@web/core/utils/binary";
 import { MAX_FILENAME_SIZE_BYTES } from "@web/views/fields/binary/binary_field";
 
 const BINARY_FILE =
@@ -259,8 +258,8 @@ test("file name field is not defined", async () => {
         arch: `<form><field name="document" filename="foo"/></form>`,
     });
     queryOne(".o_select_file_button").focus();
-    expect(`.o_field_binary`).toHaveText("", {
-        message: "there should be no text since the name field is not in the view",
+    expect(`.o_field_binary`).toHaveText("Replace current file", {
+        message: "there should be no file name since the name field is not in the view",
     });
     expect(`.o_field_binary .fa-download`).toBeVisible({
         message: "download icon should be visible",
@@ -413,9 +412,9 @@ test("filename doesn't exceed 255 bytes", async () => {
         arch: `<form><field name="document"/></form>`,
     });
     expect(queryValue(`.o_field_binary input[type=text]`)).toHaveLength(
-        toBase64Length(MAX_FILENAME_SIZE_BYTES),
+        MAX_FILENAME_SIZE_BYTES,
         {
-            message: "The filename shouldn't exceed the maximum size in bytes in base64",
+            message: "The filename shouldn't exceed the maximum size in bytes",
         }
     );
 });
