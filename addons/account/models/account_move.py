@@ -6051,7 +6051,7 @@ class AccountMove(models.Model):
     def action_print_pdf(self):
         self.ensure_one()
         invoice_template = self.env['account.move.send']._get_default_pdf_report_id(self)
-        report_action = invoice_template.report_action(self.id, config=False)
+        report_action = invoice_template.with_context(proforma_invoice=not self.invoice_pdf_report_id).report_action(self.id, config=False)
         return self._get_action_with_base_document_layout_configurator(report_action)
 
     def preview_invoice(self):
