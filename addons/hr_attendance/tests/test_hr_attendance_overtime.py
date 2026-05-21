@@ -644,7 +644,7 @@ class TestHrAttendanceOvertime(HttpCase):
             })
             Attendance._cron_auto_check_out()
             self.assertEqual(att.worked_hours, 8)
-            self.assertEqual(att.check_out, datetime(2025, 3, 12, 17, 0))
+            self.assertEqual(att.check_out, datetime(2025, 3, 12, 17, 0))   
 
     # @freeze_time("2024-02-01 14:00:00")
     # def test_absence_management(self):

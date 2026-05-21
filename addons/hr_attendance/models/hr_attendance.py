@@ -615,10 +615,14 @@ class HrAttendance(models.Model):
 
                 # Attendances where Last open attendance time + previously worked time on that day + tolerance greater than the attendances hours (including lunch) in his calendar
                 if (current_attendance_duration + previous_attendances_duration - max_tol) > expected_worked_hours:
-                    att.check_out = att.check_in.replace(hour=23, minute=59, second=59)
-                    excess_hours = att.worked_hours - (expected_worked_hours + max_tol - previous_attendances_duration)
+                    temp_check_out = att.check_in.replace(hour=23, minute=59, second=59)
+                    worked_hours = ((temp_check_out - att.check_in).total_seconds() / 3600)
+                    start_dt_tz = utc.localize(att.check_in).astimezone(employee_timezone)
+                    end_dt_tz = utc.localize(temp_check_out).astimezone(employee_timezone)
+                    lunch_intervals = att.employee_id._employee_attendance_intervals(start_dt_tz, end_dt_tz, lunch=True)
+                    excess_hours = (worked_hours - sum_intervals(lunch_intervals)) - (expected_worked_hours + max_tol - previous_attendances_duration)
                     att.write({
-                        "check_out": max(att.check_out - relativedelta(hours=excess_hours), att.check_in + relativedelta(seconds=1)),
+                        "check_out": max(temp_check_out - relativedelta(hours=excess_hours), att.check_in + relativedelta(seconds=1)),
                         "out_mode": "auto_check_out"
                     })
                     att.message_post(
