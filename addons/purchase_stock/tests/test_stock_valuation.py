@@ -47,6 +47,27 @@ class TestPurchaseStockValuation(PurchaseTestCommon):
         self._create_bill(purchase_order=po, price_unit=30)
         self.assertEqual(move_in.value, 150)
 
+    def test_avco_unit_cost_after_return_then_credit_note(self):
+        """Test that an AVCO product's average cost stays at the bill price
+        when a return is followed by a credit note covering exactly the
+        returned quantity at the billed unit price. (Buy 35 @ 20, bill 35 @ 15,
+        return 20, credit note 20 @ 15 -> avg_cost must remain 15.)"""
+        po = self._create_purchase(self.product_avco, 35, 20)
+        self._receive(po)
+        self.assertEqual(self.product_avco.avg_cost, 20)
+        receipt_move = po.picking_ids.move_ids
+
+        bill = self._create_bill(purchase_order=po, price_unit=15, quantity=35)
+        self.assertEqual(self.product_avco.avg_cost, 15)
+
+        self._make_return(po.picking_ids.move_ids, 20)
+        self.assertEqual(self.product_avco.avg_cost, 15)
+
+        credit_note = self._refund(bill, quantity=20)
+        self.assertEqual(self.product_avco.avg_cost, 15)
+        self.assertIn(bill.display_name, receipt_move.value_justification)
+        self.assertNotIn(credit_note.display_name, receipt_move.value_justification)
+
     def test_move_value_extra_quantity(self):
         po = self._create_purchase(self.product_avco, 5, 10)
         move_in = self._receive(po, 7)
