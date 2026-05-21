@@ -835,20 +835,17 @@ test("unique in url does not change on record change if reload option is set to 
 });
 
 test("convert image to webp", async () => {
-    onRpc("ir.attachment", "create_unique", ({ args }) => {
-        // This RPC call is done two times - once for storing webp and once for storing jpeg
-        // This handles first RPC call to store webp
-        if (!args[0][0].res_id) {
-            // Here we check the image data we pass and generated data.
-            // Also we check the file type
-            expect(args[0][0].raw).not.toBe(imageData);
-            expect(args[0][0].mimetype).toBe("image/webp");
-            return [1];
+    onRpc("ir.attachment", "web_create_image_variants", ({ args }) => {
+        const variants = args[0];
+        const attachments = variants.flatMap((variant) => variant.images);
+        const webpAttachments = attachments.filter((att) => att.mimetype === "image/webp");
+        const jpegAttachments = attachments.filter((att) => att.mimetype === "image/jpeg");
+        expect(webpAttachments.length).toBeGreaterThan(0);
+        expect(jpegAttachments.length).toBeGreaterThan(0);
+        for (const att of attachments) {
+            expect(att.raw).not.toBe(imageData);
         }
-        // This handles second RPC call to store jpeg
-        expect(args[0][0].raw).not.toBe(imageData);
-        expect(args[0][0].mimetype).toBe("image/jpeg");
-        return true;
+        return attachments.map((_, i) => i + 1);
     });
 
     const imageData = Uint8Array.from([...atob(MY_IMAGE)].map((c) => c.charCodeAt(0)));

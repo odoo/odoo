@@ -47,6 +47,71 @@ export async function saveMultipleAttachments(
     }
 }
 
+/**
+ * Generates WebP and JPEG variants of an image at multiple resolutions.
+ *
+ * @param {Object} params
+ * @param {Object} params.source Image source: `{ url }` or `{ data, mimetype }`
+ * @param {string} params.name Base filename; extension is replaced with `.webp` / `.jpg`
+ * @param {number[]} [params.sizes=[1920,1024,512,256,128]] Max dimensions to generate
+ * @param {false|"low"|"medium"|"high"} [params.smoothing=false] Canvas interpolation quality
+ * @returns {Promise<Object[]>} Variant objects suitable for `ir.attachment.web_create_image_variants`
+ */
+export async function generateImageVariants({
+    source,
+    name,
+    sizes = [1920, 1024, 512, 256, 128],
+    smoothing = false,
+}) {
+    const { url, data, mimetype } = source || {};
+    const webpName = name.replace(/\.[^/.]+$/, ".webp");
+    const jpegName = name.replace(/\.[^/.]+$/, ".jpg");
+    const image = document.createElement("img");
+    image.src = url || `data:${mimetype};base64,${data}`;
+    await new Promise((resolve) => image.addEventListener("load", resolve));
+
+    const originalSize = Math.max(image.width, image.height);
+    const smallerSizes = sizes.filter((size) => size < originalSize);
+    const variants = [];
+    for (const size of [originalSize, ...smallerSizes]) {
+        const ratio = size / originalSize;
+        const canvas = document.createElement("canvas");
+        canvas.width = image.width * ratio;
+        canvas.height = image.height * ratio;
+        const ctx = canvas.getContext("2d");
+        ctx.fillStyle = "transparent";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.imageSmoothingEnabled = !!smoothing;
+        if (smoothing) {
+            ctx.imageSmoothingQuality = smoothing;
+        }
+        ctx.drawImage(image, 0, 0, image.width, image.height, 0, 0, canvas.width, canvas.height);
+
+        const isOriginalSize = size === originalSize;
+        const sizePrefix = isOriginalSize ? "" : `resize: ${size}`;
+        variants.push({
+            images: [
+                {
+                    name: webpName,
+                    description: `${sizePrefix}`,
+                    raw:
+                        isOriginalSize && mimetype === "image/webp"
+                            ? data
+                            : canvas.toDataURL("image/webp", 0.75).split(",")[1],
+                    mimetype: "image/webp",
+                },
+                {
+                    name: jpegName,
+                    description: `${sizePrefix} - format: jpeg`,
+                    raw: canvas.toDataURL("image/jpeg", 0.75).split(",")[1],
+                    mimetype: "image/jpeg",
+                },
+            ],
+        });
+    }
+    return variants;
+}
+
 async function retrieveAttachmentRecords(env, { attachmentIds }) {
     return await env.services.orm.searchRead(
         "ir.attachment",
@@ -72,61 +137,13 @@ async function convertToWebpFormat(env, { attachmentRecord }) {
     // Upon change, make sure to verify whether the same change needs
     // to be applied on both sides.
     // Generate alternate sizes and format for reports.
-    const image = document.createElement("img");
-    image.src = `data:${attachmentRecord.mimetype};base64,${attachmentRecord.raw}`;
-    await new Promise((resolve) => image.addEventListener("load", resolve));
-
-    const originalSize = Math.max(image.width, image.height);
-    const smallerSizes = [1024, 512, 256, 128].filter((size) => size < originalSize);
-    let referenceId = undefined;
-
-    for (const size of [originalSize, ...smallerSizes]) {
-        const ratio = size / originalSize;
-        const canvas = document.createElement("canvas");
-        canvas.width = image.width * ratio;
-        canvas.height = image.height * ratio;
-        const ctx = canvas.getContext("2d");
-        ctx.drawImage(image, 0, 0, image.width, image.height, 0, 0, canvas.width, canvas.height);
-
-        // WebP format
-        const webpData = canvas.toDataURL("image/webp", 0.75).split(",")[1];
-        const [resizedId] = await env.services.orm.call("ir.attachment", "create_unique", [
-            [
-                {
-                    name: attachmentRecord.name.replace(/\.[^/.]+$/, ".webp"),
-                    description: size === originalSize ? "" : `resize: ${size}`,
-                    raw: webpData,
-                    res_id: referenceId,
-                    res_model: "ir.attachment",
-                    mimetype: "image/webp",
-                },
-            ],
-        ]);
-
-        referenceId = referenceId || resizedId;
-
-        // JPEG format for compatibility
-        const jpegData = canvas.toDataURL("image/jpeg", 0.75).split(",")[1];
-        await env.services.orm.call("ir.attachment", "create_unique", [
-            [
-                {
-                    name: attachmentRecord.name.replace(/\.[^/.]+$/, ".jpg"),
-                    description: `resize: ${size} - format: jpeg`,
-                    raw: jpegData,
-                    res_id: resizedId,
-                    res_model: "ir.attachment",
-                    mimetype: "image/jpeg",
-                },
-            ],
-        ]);
-    }
-    const canvas = document.createElement("canvas");
-    canvas.width = image.width;
-    canvas.height = image.height;
-    const ctx = canvas.getContext("2d");
-    ctx.drawImage(image, 0, 0, image.width, image.height);
-
-    const webpData = canvas.toDataURL("image/webp", 0.75).split(",")[1];
+    const variants = await generateImageVariants({
+        source: { data: attachmentRecord.raw, mimetype: attachmentRecord.mimetype },
+        name: attachmentRecord.name,
+        sizes: [1024, 512, 256, 128],
+    });
+    await env.services.orm.call("ir.attachment", "web_create_image_variants", [variants]);
+    const webpData = variants[0]?.images?.[0]?.raw;
     attachmentRecord.raw = webpData;
     attachmentRecord.mimetype = "image/webp";
     attachmentRecord.name = attachmentRecord.name.replace(/\.[^/.]+$/, ".webp");
