@@ -33,11 +33,6 @@ class ProductTemplate(models.Model):
         compute='_compute_lot_valuated', store=True, readonly=False,
         help="If checked, the valuation will be specific by Lot/Serial number.",
     )
-    # TODO remove in master
-    property_price_difference_account_id = fields.Many2one(
-        'account.account', 'Price Difference Account', company_dependent=True, ondelete='restrict',
-        check_company=True,
-        help="""With perpetual valuation, this account will hold the price difference between the standard price and the bill price.""")
 
     def _search_valuation(self, operator, value):
         if operator != '=':

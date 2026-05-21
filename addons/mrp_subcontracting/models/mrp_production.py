@@ -16,7 +16,6 @@ class MrpProduction(models.Model):
         'stock.move.line', string="Detail Component", readonly=False,
         inverse='_inverse_move_line_raw_ids', compute='_compute_move_line_raw_ids'
     )
-    subcontracting_has_been_recorded = fields.Boolean("Has been recorded?", copy=False)  # TODO: remove in master
     subcontractor_id = fields.Many2one('res.partner', string="Subcontractor", help="Used to restrict access to the portal user through Record Rules")
     bom_product_ids = fields.Many2many('product.product', compute="_compute_bom_product_ids", help="List of Products used in the BoM, used to filter the list of products in the subcontracting portal view")
 

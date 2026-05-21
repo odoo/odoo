@@ -44,11 +44,6 @@ class StockLot(models.Model):
                 lot.total_value = valuated_product.with_context(warehouse_id=False)._run_fifo(qty_available, at_date=at_date, lot=lot.with_context(warehouse_id=False)) * qty_valued / qty_available
             lot.avg_cost = lot.total_value / qty_valued if qty_valued else 0.0
 
-    # TODO: remove avg cost column in master and merge the two compute methods
-    def _compute_avg_cost(self):
-        # DEPRECATED: This method is no longer used.
-        self.avg_cost = 0.0
-
     @api.model_create_multi
     def create(self, vals_list):
         lots = super().create(vals_list)

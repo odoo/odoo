@@ -992,10 +992,6 @@ class PurchaseOrder(models.Model):
     def _merge_po_post_process(self, rfqs):
         pass
 
-    # TODO: remove in master
-    def _merge_alternative_po(self, rfqs):
-        pass
-
     def _prepare_grouped_data(self, rfq):
         return (rfq.partner_id.id, rfq.currency_id.id, rfq.dest_address_id.id)
 
