@@ -6,6 +6,7 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useFileUploader } from "@web/core/utils/files";
 import { useService } from "@web/core/utils/hooks";
+import { localization } from "@web/core/l10n/localization";
 import { Layout } from "@web/search/layout";
 import { DocumentationLink } from "@web/views/widgets/documentation_link/documentation_link";
 import { standardActionServiceProps } from "@web/webclient/actions/action_service";
@@ -211,6 +212,11 @@ export class ImportAction extends Component {
         this.env.config.setDisplayName(_t("Import") + ` ${this.state.filename}`);
         this.state.importMessages = [];
 
+        const extension = this.state.filename.split(".").pop();
+        this.model.formattingOptionsValues.float_thousand_separator.value =
+            extension === "csv" ? localization.thousandsSep : ",";
+        this.model.formattingOptionsValues.float_decimal_separator.value =
+            extension === "csv" ? localization.decimalPoint : ".";
         this.model.block(_t("Loading file..."));
         const { res, error } = await this.model.updateData(true);
 

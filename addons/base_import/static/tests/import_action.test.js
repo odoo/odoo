@@ -23,6 +23,7 @@ import {
     serverState,
 } from "@web/../tests/web_test_helpers";
 import { browser } from "@web/core/browser/browser";
+import { localization } from "@web/core/l10n/localization";
 import { redirect } from "@web/core/utils/urls";
 import { ImportAction } from "../src/import_action/import_action";
 import { ImportBlockUI } from "../src/import_block_ui";
@@ -1628,6 +1629,70 @@ test("field selection has a clear button", async () => {
 
     await contains(".o_select_menu_toggler_clear").click();
     expect("tr:nth-child(2) .o_select_menu").toHaveText("To import, select a field...");
+});
+
+test("locale separators only apply to CSV, not to other formats", async () => {
+    let importCount = 0;
+    onRpc("base_import.import", "execute_import", ({ args }) => {
+        importCount++;
+        expect.step(`import_${importCount}`);
+        if (importCount === 1) {
+            expect(args[3].float_thousand_separator).toBe(".", {
+                message: "CSV uses locale thousands separator",
+            });
+            expect(args[3].float_decimal_separator).toBe(",", {
+                message: "CSV uses locale decimal separator",
+            });
+        } else if (importCount === 2) {
+            expect(args[3].float_thousand_separator).toBe(",", {
+                message: "XLSX ignores locale and uses English thousands separator",
+            });
+            expect(args[3].float_decimal_separator).toBe(".", {
+                message: "XLSX ignores locale and uses English decimal separator",
+            });
+        } else {
+            expect(args[3].float_thousand_separator).toBe(".", {
+                message: "re-uploaded CSV restores locale thousands separator",
+            });
+            expect(args[3].float_decimal_separator).toBe(",", {
+                message: "re-uploaded CSV restores locale decimal separator",
+            });
+        }
+    });
+
+    await mountWebClient();
+    patchWithCleanup(localization, { thousandsSep: ".", decimalPoint: "," });
+    await getService("action").doAction(1);
+
+    const csvFile = new File(["fake_file"], "data.csv", { type: "text/plain" });
+    await contains(".o_control_panel_main_buttons .o_import_file").click();
+    await setInputFiles([csvFile]);
+    await animationFrame();
+    await contains(".o_control_panel_main_buttons button:first-child").click();
+    expect.verifySteps(["import_1"]);
+
+    const xlsxFile = new File(["fake_file"], "data.xlsx", { type: "text/plain" });
+    if (getMockEnv().isSmall) {
+        await contains(".o_control_panel_main_buttons button > .oi-ellipsis-v").click();
+        await contains(".o-dropdown--menu .o_file_input_trigger").click();
+    } else {
+        await contains(".o_control_panel_main_buttons .o_file_input button").click();
+    }
+    await setInputFiles([xlsxFile]);
+    await animationFrame();
+    await contains(".o_control_panel_main_buttons button:first-child").click();
+    expect.verifySteps(["import_2"]);
+
+    const csvFile2 = new File(["fake_file"], "data.csv", { type: "text/plain" });
+    if (getMockEnv().isSmall) {
+        await contains(".o-dropdown--menu .o_file_input_trigger").click();
+    } else {
+        await contains(".o_control_panel_main_buttons .o_file_input button").click();
+    }
+    await setInputFiles([csvFile2]);
+    await animationFrame();
+    await contains(".o_control_panel_main_buttons button:first-child").click();
+    expect.verifySteps(["import_3"]);
 });
 
 describe("Import a CSV", () => {
