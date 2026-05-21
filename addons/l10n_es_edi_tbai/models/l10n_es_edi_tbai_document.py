@@ -137,10 +137,8 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
                 )
             if values['is_refund']:
                 refunded_doc = values['refunded_doc']
-                refund_reason = values['refund_reason']
                 refunded_doc_invoice_date = values['refunded_doc_invoice_date']
                 refunded_name = values['refunded_name']
-                is_simplified = values['is_simplified']
 
                 if refunded_doc and refunded_doc.state == 'to_send':
                     return _("TicketBAI: Cannot post a reversal document while the source document has not been posted")
@@ -157,12 +155,6 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
                     invoice_sent_before_original = self.search(domain, order="date", limit=1)
                     if invoice_sent_before_original:  # No error if the original invoice was imported from a previous system
                         return _("TicketBAI: Cannot post a reversal document while the source document has not been posted")
-                if not refund_reason:
-                    return _('Refund reason must be specified (TicketBAI)')
-                if is_simplified and refund_reason != 'R5':
-                    return _('Refund reason must be R5 for simplified invoices (TicketBAI)')
-                if not is_simplified and refund_reason == 'R5':
-                    return _('Refund reason cannot be R5 for non-simplified invoices (TicketBAI)')
 
     # -------------------------------------------------------------------------
     # WEB SERVICE CALLS
@@ -444,7 +436,7 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
     def _get_sale_values(self, values):
         sale_values = {
             'chain_prev_document': self.company_id._get_l10n_es_tbai_last_chained_document(),
-            **self._get_regime_code_value(values['taxes'], values['is_simplified']),
+            **self._get_regime_code_value(values['regime_code']),
             **self._get_refunded_values(values),
         }
         # Regime key override for Canarias/Ceuta/Melilla and no_sujeto_loc
@@ -459,8 +451,8 @@ class L10n_Es_Edi_TbaiDocument(models.Model):
 
         return sale_values
 
-    def _get_regime_code_value(self, taxes, is_simplified):
-        return {'regime_key': [taxes._l10n_es_get_regime_code()]}
+    def _get_regime_code_value(self, regime_code):
+        return {'regime_key': [regime_code]}
 
     @api.model
     def _add_base_lines_tax_amounts(self, base_lines, company, tax_lines=None):

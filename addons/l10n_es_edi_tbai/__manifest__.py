@@ -34,7 +34,6 @@ You need to configure your certificate and the tax agency.
         'views/res_config_settings_views.xml',
         'views/res_company_views.xml',
 
-        'wizards/account_move_reversal_views.xml',
         'security/ir.access.csv',
     ],
     'demo': [

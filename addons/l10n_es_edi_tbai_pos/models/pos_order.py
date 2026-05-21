@@ -1,5 +1,4 @@
 from odoo import api, fields, models
-from odoo.addons.l10n_es_edi_tbai.models.account_move import TBAI_REFUND_REASONS
 from odoo.exceptions import UserError
 
 
@@ -38,13 +37,17 @@ class PosOrder(models.Model):
         related="company_id.l10n_es_tbai_is_enabled",
     )
 
-    l10n_es_tbai_refund_reason = fields.Selection(
-        selection=TBAI_REFUND_REASONS,
+    l10n_es_invoice_type = fields.Selection(
+        selection="_l10n_es_refund_reason_selection",
         string="Invoice Refund Reason Code (TicketBai)",
-        help="BOE-A-1992-28740. Ley 37/1992, de 28 de diciembre, del Impuesto sobre el "
-        "Valor Añadido. Artículo 80. Modificación de la base imponible.",
+        help="BOE-A-1992-28740. Law 37/1992, of 28 December, on Value Added Tax. Article "
+        "80. Modification of the taxable base.",
         copy=False,
     )
+
+    @api.model
+    def _l10n_es_refund_reason_selection(self):
+        return self.env['account.move']._l10n_es_refund_reason_selection()
 
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
@@ -104,10 +107,10 @@ class PosOrder(models.Model):
         if len(set(mapped_tbai_req)) > 1:
             raise UserError(self.env._("You cannot mix orders that require TicketBAI with those that don't."))
         if mapped_tbai_req[0]:
-            refund_reasons = set(self.mapped('l10n_es_tbai_refund_reason'))
+            refund_reasons = set(self.mapped('l10n_es_invoice_type'))
             if len(refund_reasons) > 1:
                 raise UserError(self.env._("You cannot consolidate orders with different TicketBAI refund reasons."))
-            vals['l10n_es_tbai_refund_reason'] = refund_reasons.pop()
+            vals['l10n_es_invoice_type'] = refund_reasons.pop()
 
         return vals
 
@@ -170,6 +173,19 @@ class PosOrder(models.Model):
     # XML VALUES
     # -------------------------------------------------------------------------
 
+    def _l10n_es_tbai_get_regime_code(self):
+        # No own `l10n_es_regime_code` on POS orders: read it off the first tax that has one,
+        # falling back to the company's special VAT regime (default '01').
+        self.ensure_one()
+        AccountTax = self.env['account.tax']
+        taxes = self.lines.tax_ids.flatten_taxes_hierarchy()
+        for tax in taxes:
+            if tax.l10n_es_regime_code:
+                return AccountTax._l10n_es_regime_code_aeat(tax.l10n_es_regime_code)
+        special_regime_code = self.company_id._l10n_es_special_vat_regime_codes().get(
+            self.company_id.l10n_es_special_vat_regime, '01')
+        return AccountTax._l10n_es_regime_code_aeat(special_regime_code)
+
     def _l10n_es_tbai_get_values(self):
         self.ensure_one()
 
@@ -193,6 +209,7 @@ class PosOrder(models.Model):
             **self._l10n_es_tbai_get_credit_note_values(),
             'origin': 'manual',
             'taxes': self.lines.tax_ids,
+            'regime_code': self._l10n_es_tbai_get_regime_code(),
             'rate': self.currency_rate,
             'base_lines': base_lines,
         }

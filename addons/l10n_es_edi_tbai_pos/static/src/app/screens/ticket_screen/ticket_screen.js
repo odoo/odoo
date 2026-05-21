@@ -11,7 +11,7 @@ patch(TicketScreen.prototype, {
                 order: destinationOrder,
             });
             if (payload) {
-                destinationOrder.l10n_es_tbai_refund_reason = payload.l10n_es_tbai_refund_reason;
+                destinationOrder.l10n_es_invoice_type = payload.l10n_es_invoice_type;
                 destinationOrder.to_invoice = true;
             }
         }

@@ -40,4 +40,17 @@
         <value model="res.company" eval="obj().env.ref('base.demo_company_es')"/>
         <value name="install_demo" eval="True"/>
     </function>
+
+    <record id="partner_demo_bilbao_es" model="res.partner">
+        <field name="name">Ayuntamiento De Bilbao</field>
+        <field name="street">Plaza Ernesto Erkoreka, 1</field>
+        <field name="city">Bilbao</field>
+        <field name="country_id" ref="base.es"/>
+        <field name="state_id" ref="base.state_es_bi"/>
+        <field name="zip">48007</field>
+        <field name="vat">P4802400D</field>
+        <field name="email">info@bilbao.example.com</field>
+        <field name="website">www.bilbao.eus</field>
+        <field name="customer_rank" eval="1"/>
+    </record>
 </odoo>
