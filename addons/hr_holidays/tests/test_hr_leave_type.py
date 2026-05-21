@@ -121,6 +121,7 @@ class TestHrLeaveType(TestHrHolidaysCommon):
 
         self.assertFalse(leave_types, "Got valid leaves outside vaild period")
 
+    @freeze_time('2026-09-03')
     def test_allocation_stats_with_duplicate_leave_type_names(self):
         """ Test that allocation stats do not clash when multiple leave types share the same name """
         employee_id = self.employee_emp_id
