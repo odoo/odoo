@@ -73,6 +73,10 @@ export class HtmlField extends Component {
     app = useApp();
     props = props(htmlFieldProps);
 
+    get classList() {
+        return ["o-html-field"];
+    }
+
     setup() {
         this.htmlUpgradeManager = new HtmlUpgradeManager();
         this.mutex = new Mutex();
@@ -336,6 +340,8 @@ export class HtmlField extends Component {
             },
             ...this.props.editorConfig,
         };
+
+        config.classList = [...(this.classList || []), ...(config.classList || [])];
 
         if (!("baseContainers" in config)) {
             config.baseContainers = ["DIV", "P"];
