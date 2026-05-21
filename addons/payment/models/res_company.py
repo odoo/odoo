@@ -56,9 +56,6 @@ class ResCompany(models.Model):
             ])
         )
         for company in companies:
-            if company.parent_id:  # The company is a branch.
-                continue  # Only consider top-level companies for provider duplication.
-
             for provider_sudo in providers_sudo:
                 provider_sudo.copy({"company_id": company.id})
 
