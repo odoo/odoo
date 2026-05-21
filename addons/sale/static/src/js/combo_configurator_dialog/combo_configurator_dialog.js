@@ -68,16 +68,22 @@ export class ComboConfiguratorDialog extends Component {
         onWillUnmount(() => this.env.bus.trigger("FORM-CONTROLLER:FORM-IN-DIALOG:REMOVE"));
     }
 
+    /**
+     * Fills selectedItemsList and the quantity object in case of Edit Configuration
+     *
+     */
     _initSelectedComboItems() {
         for (const combo of this.props.combos) {
-            const comboItem = combo.selectedComboItem;
-            if (comboItem) {
-                this.state.selectedItemsList.push({
-                    comboId: combo.id,
-                    comboItemId: comboItem.id,
-                    item: comboItem.deepCopy()
-                });
-                this.state.qty[combo.id][comboItem.id] = 1;
+            const comboItems = combo.selectedComboItems;
+            for(const comboItem of comboItems) {
+                for(let i = 0; i < comboItem.saved_quantity; i++){
+                    this.state.selectedItemsList.push({
+                        comboId: combo.id,
+                        comboItemId: comboItem.id,
+                        item: comboItem.deepCopy()
+                    });
+                }
+                this.state.qty[combo.id][comboItem.id] = comboItem.saved_quantity;
             }
         }
     }
@@ -113,9 +119,17 @@ export class ComboConfiguratorDialog extends Component {
         });
     }
 
+    /**
+     * Sets the quantity of a specific combo item.
+     *
+     * @param {Number} comboId The id of the sub-combo
+     * @param {ProductComboItem} comboItem The combo item to set the quantity.
+     * @param {Number} quantity The new quantity to be assigned to the item
+     * @param {ProductComboItem} configuredItem The combo item to set the quantity with the configuration done
+     */
     async setItemQuantity(comboId, comboItem, quantity, configuredItem = null) {
         const combo = this.props.combos.find(c => c.id === comboId);
-        let currentQty = this.state.qty[comboId][comboItem.id];
+        let currentTotalForProduct = this.state.qty[comboId][comboItem.id];
         if (combo.qty_free === 1 && quantity > 0) {
             for (const item of combo.combo_items) {
                 this.state.qty[comboId][item.id] = 0;
@@ -123,17 +137,17 @@ export class ComboConfiguratorDialog extends Component {
             this.state.selectedItemsList = this.state.selectedItemsList.filter(
                 selection => selection.comboId !== comboId
             );
-            currentQty = 0;
+            currentTotalForProduct = 0;
         }
-        if (quantity > currentQty && comboItem.is_configurable && !configuredItem) {
+        if (quantity > currentTotalForProduct && comboItem.is_configurable && !configuredItem) {
             await this.handleConfigurableItem(comboId, comboItem);
             return;
         }
         const currentTotalForCombo = this.totalQuantityForCombo(comboId);
-        const maxAvailable = combo.qty_free - currentTotalForCombo + currentQty;
+        const maxAvailable = combo.qty_free - currentTotalForCombo + currentTotalForProduct;
         const newQty = Math.max(0, Math.min(quantity, maxAvailable));
 
-        const qtyToBeAdded = newQty - currentQty;
+        const qtyToBeAdded = newQty - currentTotalForProduct;
         if (qtyToBeAdded > 0) {
             for (let i = 0; i < qtyToBeAdded; i++) {
                 this.state.selectedItemsList.push({
@@ -191,6 +205,11 @@ export class ComboConfiguratorDialog extends Component {
         await this.setItemQuantity(comboId, comboItem, currentQty + 1, selectedComboItem);
     }
 
+    /**
+     * Returns the total amount of selected products inside this specific sub-combo
+     *
+     * @param {Number} comboId The id of the sub-combo to be checked
+     */
     totalQuantityForCombo(comboId) {
         return Object.values(this.state.qty[comboId]).reduce((acc, q) => acc + q, 0);
     }
@@ -290,7 +309,18 @@ export class ComboConfiguratorDialog extends Component {
      * @return {ProductComboItem[]} The sorted selected combo items.
      */
     get _selectedComboItems() {
-        return this.state.selectedItemsList.map(selection => selection.item);
+        const groupedItems = {};
+        for (const selection of this.state.selectedItemsList) {
+            const item = selection.item;
+            const key = item.id;
+            if (!groupedItems[key]) {
+                groupedItems[key] = item.deepCopy();
+                groupedItems[key].quantity = 1;
+            } else {
+                groupedItems[key].quantity += 1;
+            }
+        }
+        return Object.values(groupedItems);
     }
 
     /**

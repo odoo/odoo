@@ -19,8 +19,8 @@ export class ProductCombo {
      *
      * @return {ProductComboItem|undefined} The selected combo item, if any.
      */
-    get selectedComboItem() {
-        return this.combo_items.find(item => item.is_selected);
+    get selectedComboItems() {
+        return this.combo_items.filter(item => item.is_selected);
     }
 
     /**
