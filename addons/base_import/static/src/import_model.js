@@ -1,5 +1,4 @@
 import { useState } from "@web/owl2/utils";
-import { localization } from "@web/core/l10n/localization";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { sortBy } from "@web/core/utils/arrays";
@@ -829,7 +828,7 @@ export class BaseImportModel {
             float_thousand_separator: {
                 label: _t("Thousands Separator"),
                 type: "select",
-                value: localization.thousandsSep,
+                value: ",",
                 options: [
                     { value: ",", label: _t("Comma") },
                     { value: ".", label: _t("Dot") },
@@ -839,7 +838,7 @@ export class BaseImportModel {
             float_decimal_separator: {
                 label: _t("Decimals Separator"),
                 type: "select",
-                value: localization.decimalPoint,
+                value: ".",
                 options: [
                     { value: ",", label: _t("Comma") },
                     { value: ".", label: _t("Dot") },
