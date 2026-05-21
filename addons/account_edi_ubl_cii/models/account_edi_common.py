@@ -8,7 +8,7 @@ from odoo.tools.zeep import Client
 
 from collections import defaultdict
 from markupsafe import Markup
-
+from types import NoneType
 # -------------------------------------------------------------------------
 # UNIT OF MEASURE
 # -------------------------------------------------------------------------
@@ -102,6 +102,45 @@ COCONTRACTANT_DEFAULT_NOTE = _('Reverse charge: In the absence of a written obje
                               'the customer is deemed to acknowledge that they are a taxable person required to file periodic returns. '
                               'If this condition is not met, the customer will be liable for the payment of the tax, interest, '
                               'and penalties due in relation to this condition.')
+
+
+class FloatFmt(float):
+    """ A float with a given precision.
+    The precision is used when formatting the float.
+    """
+    def __new__(cls, value, min_dp=2, max_dp=None):
+        return super().__new__(cls, value)
+
+    def __init__(self, value, min_dp=2, max_dp=None):
+        self.min_dp = min_dp
+        self.max_dp = max_dp
+
+    def __str__(self):
+        if not isinstance(self.min_dp, int) or not isinstance(self.max_dp, (int, NoneType)):
+            return "<FloatFmt()>"
+        # why do we round ?
+        # imagine we have: 0.499 and max_dp = 2.
+        # The best representation for 0.499 with max_dp = 2 is 0.50 not 0.49
+        # rounding with max_dp precision ensure we have the best representation with max_dp decimal places.
+        self_float = float_round(float(self), self.min_dp if self.max_dp is None else self.max_dp)
+        if self.max_dp is None:
+            return float_repr(self_float, self.min_dp)
+        else:
+            # Format the float to between self.min_dp and self.max_dp decimal places.
+            # We start by formatting to self.max_dp, and then remove trailing zeros,
+            # but always keep at least self.min_dp decimal places.
+            amount_max_dp = float_repr(self_float, self.max_dp)
+            num_trailing_zeros = len(amount_max_dp) - len(amount_max_dp.rstrip('0'))
+            return float_repr(self_float, max(self.max_dp - num_trailing_zeros, self.min_dp))
+
+    def __repr__(self):
+        if not isinstance(self.min_dp, int) or not isinstance(self.max_dp, (int, NoneType)):
+            return "<FloatFmt()>"
+        self_float = float(self)
+        if self.max_dp is None:
+            return f"FloatFmt({self_float!r}, {self.min_dp!r})"
+        else:
+            return f"FloatFmt({self_float!r}, {self.min_dp!r}, {self.max_dp!r})"
 
 
 class AccountEdiCommon(models.AbstractModel):

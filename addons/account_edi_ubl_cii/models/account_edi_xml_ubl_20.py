@@ -4,6 +4,7 @@ from lxml import etree
 
 from odoo import models, _
 from odoo.tools import html2plaintext, cleanup_xml_node
+from odoo.addons.account_edi_ubl_cii.models.account_edi_common import FloatFmt
 
 UBL_NAMESPACES = {
     'cbc': "urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2",
@@ -493,13 +494,14 @@ class AccountEdiXmlUBL20(models.AbstractModel):
 
         uom = super()._get_uom_unece_code(line)
 
+        product_price_dp = self.env['decimal.precision'].precision_get('Product Price')
         return {
             'currency': line.currency_id,
             'currency_dp': self._get_currency_decimal_places(line.currency_id),
 
             # The price of an item, exclusive of VAT, after subtracting item price discount.
-            'price_amount': round(gross_price_unit, 10),
-            'product_price_dp': self.env['decimal.precision'].precision_get('Product Price'),
+            'price_amount': FloatFmt(gross_price_unit, 1, 10),
+            'product_price_dp': product_price_dp,
 
             # The number of item units to which the price applies.
             # setting to None -> the xml will not comprise the BaseQuantity (it's not mandatory)
