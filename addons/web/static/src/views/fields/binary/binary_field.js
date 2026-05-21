@@ -1,6 +1,6 @@
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { isBinarySize, toBase64Length } from "@web/core/utils/binary";
+import { isBinarySize } from "@web/core/utils/binary";
 import { download } from "@web/core/network/download";
 import { standardFieldProps } from "../standard_field_props";
 import { FileUploader } from "../file_handler";
@@ -32,17 +32,12 @@ export class BinaryField extends Component {
     }
 
     get fileName() {
-        let value = this.props.record.data[this.props.name];
-        value =
-            value && typeof value === "string"
-                ? this.props.useReplaceButton
-                    ? false
-                    : value
-                : false;
-        return (this.props.record.data[this.props.fileNameField] || value || "").slice(
-            0,
-            toBase64Length(MAX_FILENAME_SIZE_BYTES)
-        );
+        let fileName = this.props.record.data[this.props.fileNameField] || "";
+        const value = this.props.record.data[this.props.name];
+        if (!fileName && !(value && !this.props.useReplaceButton)) {
+            return false;
+        }
+        return fileName.slice(0, MAX_FILENAME_SIZE_BYTES);
     }
 
     update({ data, name }) {
