@@ -302,6 +302,9 @@ export class SearchModel extends EventBus {
             this.__legacyParseSearchPanelArchAnyway(searchViewDescription, searchViewFields);
             this.display = this._getDisplay(config.display);
             this._reconciliateFavorites();
+            if (config.activateSearchDefaults) {
+                await this._activateSearchDefaults(searchDefaults);
+            }
             if (!this.searchPanelInfo.loaded) {
                 return this._reloadSections();
             }
@@ -1452,6 +1455,34 @@ export class SearchModel extends EventBus {
                         this.toggleSearchItem(f.id);
                     }
                 });
+        }
+    }
+
+    /** Additively activate search defaults on an already-imported state. */
+    async _activateSearchDefaults(searchDefaults) {
+        const { labels, preSearchItems } = new SearchArchParser(
+            { arch: this.searchViewArch }, this.searchViewFields, searchDefaults
+        ).parse();
+        await Promise.all(labels.map((cb) => cb(this.orm)));
+        const searchItems = Object.values(this.searchItems);
+        for (const preItem of preSearchItems.flat().filter((p) => p.isDefault)) {
+            const searchItem = searchItems.find(
+                (si) =>
+                    (preItem.name && si.name === preItem.name) ||
+                    (si.type === "field" && si.fieldName === preItem.fieldName)
+            );
+            if (!searchItem) continue;
+            const av = preItem.defaultAutocompleteValue;
+            const isDuplicate = this.query.some(
+                (q) =>
+                    q.searchItemId === searchItem.id &&
+                    q.autocompleteValue?.value === av?.value &&
+                    q.autocompleteValue?.operator === av?.operator
+            );
+            if (isDuplicate) continue;
+            const queryElem = { searchItemId: searchItem.id };
+            if (av) queryElem.autocompleteValue = av;
+            this.query.push(queryElem);
         }
     }
 
