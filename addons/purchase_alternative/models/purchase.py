@@ -164,12 +164,9 @@ class PurchaseOrder(models.Model):
 
     def _merge_po_post_process(self, rfqs):
         super()._merge_po_post_process(rfqs)
-        self._merge_alternative_po(rfqs)
-
-    def _merge_alternative_po(self, rfqs):
+        # Merge alternative purchase orders.
         if self.alternative_po_ids:
-            super()._merge_alternative_po(rfqs)
-            self.alternative_po_ids += rfqs.mapped('alternative_po_ids')
+            self.alternative_po_ids += rfqs.alternative_po_ids
 
 
 class PurchaseOrderLine(models.Model):
