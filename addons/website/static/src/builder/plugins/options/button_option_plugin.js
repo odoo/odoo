@@ -27,8 +27,50 @@ class ButtonOptionPlugin extends Plugin {
         on_snippet_dropped_handlers: this.onSnippetDropped.bind(this),
     };
 
+    removeAdjacentWhitespace(buttonEl) {
+        if (
+            buttonEl.previousSibling?.nodeType === Node.TEXT_NODE &&
+            !buttonEl.previousSibling.textContent.trim()
+        ) {
+            buttonEl.previousSibling.remove();
+        }
+        if (
+            buttonEl.nextSibling?.nodeType === Node.TEXT_NODE &&
+            !buttonEl.nextSibling.textContent.trim()
+        ) {
+            buttonEl.nextSibling.remove();
+        }
+    }
+
+    ensureButtonParagraph(buttonEl) {
+        const parentEl = buttonEl.parentElement;
+        if (!parentEl) {
+            return;
+        }
+        const hasButtonSibling = [...parentEl.children].some(
+            (childEl) =>
+                childEl !== buttonEl && childEl.matches(selector) && !childEl.matches(exclude)
+        );
+        if (!hasButtonSibling) {
+            return;
+        }
+
+        if (parentEl.tagName === "P") {
+            this.removeAdjacentWhitespace(buttonEl);
+            const paragraphEl = parentEl.cloneNode(false);
+            parentEl.insertAdjacentElement("afterend", paragraphEl);
+            paragraphEl.appendChild(buttonEl);
+        } else {
+            this.removeAdjacentWhitespace(buttonEl);
+            const paragraphEl = document.createElement("p");
+            buttonEl.before(paragraphEl);
+            paragraphEl.appendChild(buttonEl);
+        }
+    }
+
     onCloned({ cloneEl }) {
         if (cloneEl.matches(selector) && !cloneEl.matches(exclude)) {
+            this.ensureButtonParagraph(cloneEl);
             this.adaptButtons(cloneEl, { adaptAppearance: false });
         }
     }
@@ -96,6 +138,7 @@ class ButtonOptionPlugin extends Plugin {
     onSnippetDropped({ snippetEl }) {
         if (snippetEl.matches(selector) && !snippetEl.matches(exclude)) {
             this.adaptButtons(snippetEl, {});
+            this.ensureButtonParagraph(snippetEl);
         }
     }
 
@@ -168,9 +211,6 @@ class ButtonOptionPlugin extends Plugin {
             } else if (!siblingButtonEl) {
                 // To align with the editor's behavior, we need to enclose the
                 // button in a <p> tag if it's not dropped within a <p> tag. We
-                // only put the dropped button in a <p> if it's not next to
-                // another button, because some snippets have buttons that are
-                // not inside a <p> (e.g. s_text_cover).
                 // TODO: this definitely needs to be fixed at web_editor level.
                 // Nothing should prevent adding buttons outside of a paragraph.
                 const btnContainerEl = editingElement.closest("p");

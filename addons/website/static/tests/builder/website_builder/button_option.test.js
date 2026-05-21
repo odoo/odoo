@@ -37,7 +37,7 @@ test("Drag & drop a 'Button' snippet in a <div> should put it inside a <p>", asy
     expect(".o-website-builder_sidebar .fa-undo").toBeEnabled();
 });
 
-test("Drag & drop a 'Button' snippet should align the button style with the button before it", async () => {
+test("Drag & drop a 'Button' snippet near another button should put it inside a p", async () => {
     const { getEditableContent } = await setupWebsiteBuilder(
         `<div><a href="http://test.com" class="btn btn-fill-secondary" style="line-height: 50px;">ButtonStyled</a></div>`
     );
@@ -61,7 +61,7 @@ test("Drag & drop a 'Button' snippet should align the button style with the butt
     await drop(getDragHelper());
     await waitForEndOfOperation();
     expect(contentEl).toHaveInnerHTML(
-        `<div><a href="http://test.com" class="btn btn-fill-secondary mb-2" style="line-height: 50px;"> ButtonStyled </a> <a class="btn mb-2 btn-fill-secondary o_translate_inline" href="/contactus"> Button </a></div>`
+        `<div><a href="http://test.com" class="btn btn-fill-secondary mb-2" style="line-height: 50px;"> ButtonStyled </a><p><a class="btn mb-2 btn-fill-secondary o_translate_inline" href="/contactus"> Button </a></p></div>`
     );
     expect(".o-website-builder_sidebar .fa-undo").toBeEnabled();
 });
@@ -105,7 +105,7 @@ test("Drag & drop a 'Button' snippet over a dropzone should preview it correctly
     expect(".o-website-builder_sidebar .fa-undo").toBeEnabled();
 });
 
-test("Custom button is not wrapped in <p> when dropped near sibling button", async () => {
+test("Custom button is wrapped in <p> when dropped near sibling button", async () => {
     const snippets = {
         snippet_content: [
             getInnerContent({
@@ -134,8 +134,25 @@ test("Custom button is not wrapped in <p> when dropped near sibling button", asy
     await waitForEndOfOperation();
     expect(getEditableContent()).toHaveInnerHTML(
         `<section class="o_colored_level">
-            <a class="btn btn-primary o_default_snippet_text s_custom_snippet mb-2 o_translate_inline" href="#" data-bs-original-title="" title="">Custom Button</a>
+            <p><a class="btn btn-primary o_default_snippet_text s_custom_snippet mb-2 o_translate_inline" href="#" data-bs-original-title="" title="">Custom Button</a></p>
             <a class="btn btn-primary mb-2" href="#">Button</a>
         </section>`
+    );
+});
+
+test("Duplicating a button creates a new paragraph for the clone", async () => {
+    const { getEditableContent } = await setupWebsiteBuilder(
+        `<div><p><a class="btn btn-primary o_translate_inline" href="#">Button</a></p></div>`
+    );
+
+    await contains(":iframe a.btn").click();
+    const cloneButtonSelector =
+        ".o_customize_tab .options-container > div:contains('Button') button.oe_snippet_clone";
+    expect(cloneButtonSelector).toHaveCount(1);
+    await contains(cloneButtonSelector).click();
+    await waitForEndOfOperation();
+
+    expect(getEditableContent()).toHaveInnerHTML(
+        `<div><p><a class="btn btn-primary o_translate_inline" href="#">Button</a></p><p><a class="btn btn-primary o_translate_inline" href="#">Button</a></p></div>`
     );
 });
