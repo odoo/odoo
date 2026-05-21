@@ -101,19 +101,6 @@ class AccountEdiXmlUBL21(models.AbstractModel):
                         })
                     )
 
-    def _add_invoice_line_period_nodes(self, line_node, vals):
-        base_line = vals['base_line']
-
-        # deferred_start_date & deferred_end_date are enterprise-only fields
-        if (
-            vals['document_type'] in {'invoice', 'credit_note'}
-            and (base_line.get('deferred_start_date') or base_line.get('deferred_end_date'))
-        ):
-            line_node['cac:InvoicePeriod'] = {
-                'cbc:StartDate': {'_text': base_line['deferred_start_date']},
-                'cbc:EndDate': {'_text': base_line['deferred_end_date']},
-            }
-
     def _add_document_line_allowance_charge_nodes(self, line_node, vals):
         line_node['cac:AllowanceCharge'] = [self._get_line_discount_allowance_charge_node(vals)]
         if vals['fixed_taxes_as_allowance_charges']:

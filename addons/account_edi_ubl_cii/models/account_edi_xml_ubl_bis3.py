@@ -397,7 +397,7 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
                 _("For intracommunity supply, the actual delivery date or the invoicing period should be included.")
             ) and self._check_required_fields(
                 vals['vals']['invoice_period_vals_list'][0], ['start_date', 'end_date'],
-                _("For intracommunity supply, the actual delivery date or the invoicing period should be included.")
+                _("For intracommunity supply, the actual delivery date or the invoicing period qshould be included.")
             ) if intracom_delivery else None,
         }
 
