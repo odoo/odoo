@@ -347,6 +347,20 @@ describe("drag", () => {
             )
         );
     });
+    test("should remove empty list element after dropping the list item into another list", async () => {
+        const { el } = await setupEditor("<ol><li>1[]</li></ol><p>abc</p><ol><li>2</li></ol>", {
+            styleContent: styles,
+        });
+        await animationFrame();
+        const firstLI = el.querySelector("li");
+        await hover(firstLI);
+        expect(".oe-dropzone-box-side").toHaveCount(0);
+        await tick();
+        const { drop } = await contains(".oe-sidewidget-move").drag();
+        expect(".oe-dropzone-box-side").toHaveCount(6);
+        await drop(".oe-dropzone-box-side:eq(5)");
+        expect(getContent(el)).toBe("<p>abc</p><ol><li>2</li><li>1[]</li></ol>");
+    });
     describe("multiple blocks", () => {
         test("should be able to drag and drop multiple selected blocks", async () => {
             const { el } = await setupEditor(`<p>[a</p><h1>b]</h1><p>c</p>`, {
