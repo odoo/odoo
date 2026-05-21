@@ -30,6 +30,8 @@ const notificationPatch = {
                 return _t("Not Delivered");
             case "sms_rejected":
                 return _t("Rejected");
+            case "sms_database_non_active":
+                return _t("Database non active");
             default:
                 return super.failureMessage;
         }

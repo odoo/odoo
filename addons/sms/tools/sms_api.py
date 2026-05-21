@@ -59,6 +59,7 @@ class SmsApi(SmsApiBase):  # TODO RIGR in master: rename SmsApi to SmsApiIAP, an
         'country_not_supported': 'sms_country_not_supported',
         'insufficient_credit': 'sms_credit',
         'unregistered': 'sms_acc',
+        'not_active_db': 'sms_database_non_active',
     }
 
     def __init__(self, env, account=None):
@@ -95,7 +96,7 @@ class SmsApi(SmsApiBase):  # TODO RIGR in master: rename SmsApi to SmsApiIAP, an
                   uuid: UUID of the request,
                   state: ONE of: {
                       'success', 'processing', 'server_error', 'unregistered', 'insufficient_credit',
-                      'wrong_number_format', 'duplicate_message', 'country_not_supported', 'registration_needed',
+                      'wrong_number_format', 'duplicate_message', 'country_not_supported', 'registration_needed', 'not_active_db',
                   },
                   credit: Optional: Credits spent to send SMS (provided if the actual price is known)
               }, ...
