@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_invoice_document" inherit_id="account.report_invoice_document">
+        <xpath expr="//t[@name='invoice_title']" position="replace">
+            <t t-if="o._l10n_lk_is_tax_invoice_company()" name="invoice_title">Tax Invoice</t>
+            <t t-else="" name="invoice_title">Invoice</t>
+        </xpath>
+
+        <xpath expr="//div[@name='delivery_date']/strong" position="replace">
+            <strong>
+                <t t-if="o._l10n_lk_is_tax_invoice_company()">Supply Date</t>
+                <t t-else="">Delivery Date</t>
+            </strong>
+        </xpath>
+
+        <xpath expr="//div[@name='delivery_date']" position="after">
+            <div class="col" name="l10n_lk_mode_of_payment"
+                 t-if="o._l10n_lk_is_tax_invoice_company() and o.preferred_payment_method_line_id">
+                <strong>Mode of Payment</strong>
+                <div t-field="o.preferred_payment_method_line_id"/>
+            </div>
+        </xpath>
+    </template>
+</odoo>
