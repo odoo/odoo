@@ -740,13 +740,18 @@ async function read_subscription_data(request) {
 
     const { follower_id } = await parseRequestParams(request);
     const [follower] = MailFollowers.browse(follower_id);
-    const subtypes = MailMessageSubtype.search([
+    const [partner] = this.env["res.partner"].browse(follower.partner_id);
+    const subtypeDomain = [
         "&",
         ["hidden", "=", false],
         "|",
         ["res_model", "=", follower.res_model],
         ["res_model", "=", false],
-    ]);
+    ];
+    if (partner.partner_share) {
+        subtypeDomain.unshift("&", ["internal", "=", false]);
+    }
+    const subtypes = MailMessageSubtype.search(subtypeDomain);
     return {
         store_data: new mailDataHelpers.Store(
             MailMessageSubtype.browse(subtypes),

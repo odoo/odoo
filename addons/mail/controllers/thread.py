@@ -124,6 +124,8 @@ class ThreadController(http.Controller):
         record.check_access("read")
         # find current model subtypes, add them to a dictionary
         subtypes = record._mail_get_message_subtypes()
+        if follower.partner_id.partner_share:
+            subtypes = subtypes.filtered(lambda subtype: not subtype.internal)
         store = Store().add(subtypes, ["name"]).add(follower, ["subtype_ids"])
         return {
             "store_data": store,

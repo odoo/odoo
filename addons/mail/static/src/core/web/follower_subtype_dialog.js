@@ -67,16 +67,15 @@ export class FollowerSubtypeDialog extends Component {
             if (this.store.mt_comment.notIn(selectedSubtypes)) {
                 this.props.follower.removeRecipient();
             }
-            this.env.services.notification.add(
-                _t("The subscription preferences were successfully applied."),
-                { type: "success" }
-            );
+            this.env.services.notification.add(_t("Notification preferences updated."), {
+                type: "success",
+            });
         }
         this.props.onFollowerChanged();
         this.props.close();
     }
 
     get title() {
-        return _t("Edit Subscription of %(name)s", { name: this.props.follower.displayName });
+        return _t("Notification Preferences");
     }
 }

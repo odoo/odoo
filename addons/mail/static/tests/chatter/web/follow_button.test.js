@@ -24,7 +24,7 @@ test("base rendering follow, edit subscription and unfollow button", async () =>
     await contains("[title='Show Followers'] .fa-user");
     await click("[title='Show Followers']");
     await contains(".o-mail-Followers-dropdown");
-    await click("[title='Edit subscription']");
+    await click("[title='Edit Notification Preferences']");
     await contains(".o-mail-Followers-dropdown", { count: 0 });
     await click("[title='Show Followers']");
     await click(".o-dropdown-item:text('Unfollow')");

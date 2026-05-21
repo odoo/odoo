@@ -28,7 +28,7 @@ test("simplest layout of a followed subtype", async () => {
     await start();
     await openFormView("res.partner", serverState.partnerId);
     await click(".o-mail-Followers-button");
-    await click("[title='Edit subscription']");
+    await click("[title='Edit Notification Preferences']");
     await contains(
         `.o-mail-FollowerSubtypeDialog-subtype[data-follower-subtype-id='${subtypeId}'] label:text('TestSubtype')`
     );
@@ -52,7 +52,7 @@ test("simplest layout of a not followed subtype", async () => {
     await start();
     await openFormView("res.partner", serverState.partnerId);
     await click(".o-mail-Followers-button");
-    await click("[title='Edit subscription']");
+    await click("[title='Edit Notification Preferences']");
     await contains(
         `.o-mail-FollowerSubtypeDialog-subtype[data-follower-subtype-id='${subtypeId}'] input[type='checkbox']:not(:checked)`
     );
@@ -73,7 +73,7 @@ test("toggle follower subtype checkbox", async () => {
     await start();
     await openFormView("res.partner", serverState.partnerId);
     await click(".o-mail-Followers-button");
-    await click("[title='Edit subscription']");
+    await click("[title='Edit Notification Preferences']");
     await contains(
         `.o-mail-FollowerSubtypeDialog-subtype[data-follower-subtype-id='${subtypeId}'] input[type='checkbox']:not(:checked)`
     );
@@ -111,7 +111,7 @@ test("follower subtype apply", async () => {
     await start();
     await openFormView("res.partner", serverState.partnerId);
     await click(".o-mail-Followers-button");
-    await click("[title='Edit subscription']");
+    await click("[title='Edit Notification Preferences']");
     await contains(
         `.o-mail-FollowerSubtypeDialog-subtype[data-follower-subtype-id='${subtypeId1}'] input[type='checkbox']:checked`
     );
@@ -130,8 +130,40 @@ test("follower subtype apply", async () => {
     await contains(
         `.o-mail-FollowerSubtypeDialog-subtype[data-follower-subtype-id='${subtypeId2}'] input[type='checkbox']:checked`
     );
-    await click(".modal-footer button:text('Apply')");
-    await contains(
-        ".o_notification:text('The subscription preferences were successfully applied.')"
-    );
+    await click(".modal-footer button:text('Update Notifications')");
+    await contains(".o_notification:text('Notification preferences updated.')");
+});
+
+test("internal subtypes are only listed for internal followers", async () => {
+    const pyEnv = await startServer();
+    const [threadId, customerId, employeeId] = pyEnv["res.partner"].create([
+        { name: "Thread" },
+        { name: "Customer", partner_share: true },
+        { name: "Employee", partner_share: false },
+    ]);
+    pyEnv["mail.followers"].create([
+        {
+            partner_id: employeeId,
+            res_model: "res.partner",
+            res_id: threadId,
+        },
+        {
+            partner_id: customerId,
+            res_model: "res.partner",
+            res_id: threadId,
+        },
+    ]);
+    await start();
+    await openFormView("res.partner", threadId);
+    await click(".o-mail-Followers-button");
+    await click(".o-mail-Follower:has(:text('Employee')) [title='Edit Notification Preferences']");
+    await contains(".o-mail-FollowerSubtypeDialog-subtype", { count: 3 });
+    await contains(".o-mail-FollowerSubtypeDialog-subtype:eq(0) label:text('Messages')");
+    await contains(".o-mail-FollowerSubtypeDialog-subtype:eq(1) label:text('Notes')");
+    await contains(".o-mail-FollowerSubtypeDialog-subtype:eq(2) label:text('Activities')");
+    await click(".o-mail-FollowerSubtypeDialog button:text('Discard')");
+    await click(".o-mail-Followers-button");
+    await click(".o-mail-Follower:has(:text('Customer')) [title='Edit Notification Preferences']");
+    await contains(".o-mail-FollowerSubtypeDialog-subtype", { count: 1 });
+    await contains(".o-mail-FollowerSubtypeDialog-subtype:eq(0) label:text('Messages')");
 });
