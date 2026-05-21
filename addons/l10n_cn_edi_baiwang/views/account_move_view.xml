@@ -5,35 +5,66 @@
         <field name="model">account.move</field>
         <field name="inherit_id" ref="account.view_move_form"/>
         <field name="arch" type="xml">
-            
+
+            <!-- Header button: Request Red Form for Credit Notes -->
             <xpath expr="//header" position="inside">
-                <button name="action_request_baiwang_red_form" 
-                        string="Request Baiwang Red Form" 
+                <button name="action_request_baiwang_red_form"
+                        string="Send Red Form"
                         type="object"
                         class="oe_highlight"
-                        invisible="state != 'draft' or move_type != 'out_refund' or country_code != 'CN'"/>
+                        invisible="state != 'posted' or move_type != 'out_refund' or country_code != 'CN' or l10n_cn_baiwang_state in ('sent', 'issued')"/>
             </xpath>
 
+            <!-- Baiwang E-Fapiao tab in notebook -->
             <xpath expr="//notebook" position="inside">
-                <page string="Baiwang E-Fapiao" 
-                      name="china_e_fapiao" 
+                <page string="Baiwang E-Fapiao"
+                      name="china_e_fapiao"
                       invisible="country_code != 'CN' or move_type not in ('out_invoice', 'out_refund')">
-                    
+
+                    <!-- Blue Invoice section -->
                     <group invisible="move_type != 'out_invoice'">
-                        <group string="E-Fapiao">
-                            <field name="fapiao" position="move"/>
-                            <field name="l10n_cn_fapiao_date" readonly="1"/>
+                        <group string="E-Fapiao Details">
+                            <field name="l10n_cn_baiwang_invoice_type_code"/>
+                            <field name="l10n_cn_baiwang_state" widget="badge"
+                                   decoration-success="l10n_cn_baiwang_state == 'issued'"
+                                   decoration-warning="l10n_cn_baiwang_state == 'sent'"
+                                   decoration-danger="l10n_cn_baiwang_state == 'failed'"/>
+                            <field name="l10n_cn_baiwang_invoice_no"/>
+                            <field name="l10n_cn_baiwang_invoice_date"/>
+                            <field name="l10n_cn_baiwang_serial_no" invisible="not l10n_cn_baiwang_serial_no"/>
+                        </group>
+                        <group string="Error" invisible="not l10n_cn_baiwang_error_message">
+                            <field name="l10n_cn_baiwang_error_message" nolabel="1" colspan="2"/>
                         </group>
                     </group>
 
-                    <group string="Red Form (Credit Note) Requests" invisible="move_type != 'out_refund'">
-                        <field name="l10n_cn_edi_document_ids" nolabel="1" readonly="1">
-                            <list decoration-success="state == 'red_form_confirmed'" 
-                                  decoration-warning="state == 'red_form_pending'" 
+                    <!-- Credit Note / Red Form section -->
+                    <group invisible="move_type != 'out_refund'">
+                        <group string="Red Form Configuration">
+                            <field name="l10n_cn_baiwang_red_form_type"/>
+                            <field name="l10n_cn_baiwang_original_invoice_id"
+                                   domain="[('move_type', '=', 'out_invoice'), ('l10n_cn_baiwang_invoice_no', '!=', False)]"/>
+                            <field name="l10n_cn_baiwang_state" widget="badge"
+                                   decoration-success="l10n_cn_baiwang_state == 'issued'"
+                                   decoration-warning="l10n_cn_baiwang_state == 'sent'"
+                                   decoration-danger="l10n_cn_baiwang_state == 'failed'"/>
+                        </group>
+                        <group string="Error" invisible="not l10n_cn_baiwang_error_message">
+                            <field name="l10n_cn_baiwang_error_message" nolabel="1" colspan="2"/>
+                        </group>
+                    </group>
+
+                    <!-- Red Form tracking list -->
+                    <group string="Red Form Requests" invisible="move_type != 'out_refund'">
+                        <field name="l10n_cn_edi_document_ids" nolabel="1" readonly="1" colspan="2">
+                            <list decoration-success="state == 'red_form_confirmed'"
+                                  decoration-warning="state == 'red_form_pending'"
                                   decoration-danger="state == 'failed'">
                                 <field name="create_date" string="Requested On"/>
                                 <field name="baiwang_uuid"/>
                                 <field name="baiwang_red_form_number"/>
+                                <field name="baiwang_confirm_state"/>
+                                <field name="baiwang_red_invoice_no"/>
                                 <field name="state" widget="badge"/>
                                 <field name="error_message" optional="hide"/>
                             </list>
@@ -41,10 +72,6 @@
                     </group>
 
                 </page>
-            </xpath>
-
-            <xpath expr="//field[@name='fapiao']" position="attributes">
-                <attribute name="readonly">1</attribute>
             </xpath>
 
         </field>

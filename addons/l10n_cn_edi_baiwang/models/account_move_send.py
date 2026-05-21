@@ -1,46 +1,51 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import fields, models
+from odoo import _, api, models
 
 
 class AccountMoveSend(models.AbstractModel):
     _inherit = 'account.move.send'
 
-    enable_l10n_cn_baiwang = fields.Boolean(compute='_compute_l10n_cn_baiwang_options')
-    checkbox_l10n_cn_baiwang = fields.Boolean(
-        string="Issue E-Fapiao (Baiwang)",
-        compute='_compute_l10n_cn_baiwang_options',
-        store=True,
-        readonly=False,
-    )
+    # ─── Extra EDI Registration ─────────────────────────────────────────
 
-    def _compute_l10n_cn_baiwang_options(self):
-        for wizard in self:
-            # Safely fetch the moves being processed regardless of single/batch wizard
-            active_ids = self.env.context.get('active_ids', [])
-            moves = self.env['account.move'].browse(active_ids)
+    @api.model
+    def _is_cn_baiwang_applicable(self, move):
+        """Check if Baiwang EDI is applicable for this move."""
+        return (
+            move.country_code == 'CN'
+            and move.move_type == 'out_invoice'
+            and move.state == 'posted'
+            and move.l10n_cn_baiwang_state not in ('issued', 'sent')
+            and move.company_id.l10n_cn_baiwang_app_key
+        )
 
-            is_cn_invoice = any(m.country_code == 'CN' for m in moves)
-            has_no_fapiao = any(not m.l10n_cn_fapiao_number for m in moves)
+    def _get_all_extra_edis(self) -> dict:
+        # EXTENDS 'account'
+        res = super()._get_all_extra_edis()
+        res.update({
+            'cn_baiwang': {
+                'label': _("Issue E-Fapiao (Baiwang)"),
+                'is_applicable': self._is_cn_baiwang_applicable,
+                'help': _("Submit the invoice to Baiwang for official Chinese e-Fapiao issuance."),
+            },
+        })
+        return res
 
-            if is_cn_invoice and has_no_fapiao:
-                wizard.enable_l10n_cn_baiwang = True
-                wizard.checkbox_l10n_cn_baiwang = True  # Checked by default
-            else:
-                wizard.enable_l10n_cn_baiwang = False
-                wizard.checkbox_l10n_cn_baiwang = False
+    # ─── Web Service Hook ───────────────────────────────────────────────
 
+    @api.model
     def _call_web_service_before_invoice_pdf_render(self, invoices_data):
-        """ Hook to trigger the API call before Odoo generates the PDF. """
-        # Let Odoo do its standard processing first (like Peppol or standard EDI)
+        # EXTENDS 'account'
         super()._call_web_service_before_invoice_pdf_render(invoices_data)
 
-        for move, data in invoices_data.items():
-            # Check if Baiwang is the selected sending method for this customer
-            # OR if our specific wizard checkbox was ticked.
-            is_baiwang_method = move.partner_id.invoice_sending_method == 'baiwang'
-            is_checkbox_ticked = getattr(self, 'checkbox_l10n_cn_baiwang', False)
+        for invoice, invoice_data in invoices_data.items():
+            if 'cn_baiwang' not in invoice_data.get('extra_edis', set()):
+                continue
 
-            if is_baiwang_method or is_checkbox_ticked:
-                # Execute only if it's a CN invoice and hasn't been issued yet
-                if move.country_code == 'CN' and not move.l10n_cn_fapiao_number:
-                    move._l10n_cn_issue_fapiao()
+            if error := invoice._l10n_cn_baiwang_issue_invoice():
+                invoice_data['error'] = {
+                    'error_title': _("Error when issuing e-Fapiao via Baiwang:"),
+                    'errors': [error],
+                }
+
+            if self._can_commit():
+                self.env.cr.commit()

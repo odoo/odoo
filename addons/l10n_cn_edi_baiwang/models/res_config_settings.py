@@ -14,7 +14,11 @@ class ResConfigSettings(models.TransientModel):
     l10n_cn_accept_processing = fields.Boolean()
     l10n_cn_baiwang_app_key = fields.Char(related="company_id.l10n_cn_baiwang_app_key", readonly=False)
     l10n_cn_baiwang_app_secret = fields.Char(related="company_id.l10n_cn_baiwang_app_secret", readonly=False)
+    l10n_cn_baiwang_username = fields.Char(related="company_id.l10n_cn_baiwang_username", readonly=False)
+    l10n_cn_baiwang_password = fields.Char(related="company_id.l10n_cn_baiwang_password", readonly=False)
     l10n_cn_baiwang_salt = fields.Char(related="company_id.l10n_cn_baiwang_salt", readonly=False)
+    l10n_cn_baiwang_tax_no = fields.Char(related="company_id.l10n_cn_baiwang_tax_no", readonly=False)
+    l10n_cn_baiwang_invoice_terminal_code = fields.Char(related="company_id.l10n_cn_baiwang_invoice_terminal_code", readonly=False)
 
     # ----------------
     # Onchange methods

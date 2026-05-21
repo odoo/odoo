@@ -1,15 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import fields, models
-from odoo.exceptions import UserError
+from odoo import _, fields, models
+from odoo.exceptions import RedirectWarning, UserError
 
 from .baiwang_client import BaiwangClient
 
 
 class ProductTemplate(models.Model):
-    """
-    These codes are required by the API. They represent the product classifications that are used in China.
-    As defined in the list of codes allowed here: https://sdk.myinvois.hasil.gov.my/codes/classification-codes/
-    """
     _inherit = "product.template"
 
     # ------------------
@@ -18,7 +14,7 @@ class ProductTemplate(models.Model):
 
     l10n_cn_tax_category_code = fields.Char(
         string="Tax Category Code",
-        help="19-digit official Golden Tax classification code.",
+        help="19-digit official Golden Tax classification code (税收分类编码).",
         copy=False,
     )
 
@@ -27,52 +23,41 @@ class ProductTemplate(models.Model):
         self.ensure_one()
 
         if not self.name:
-            msg = "Product must have a name to search for a tax category."
-            raise UserError(msg)
+            raise UserError(_("Product must have a name to search for a tax category."))
 
         company = self.env.company
+        if not company.l10n_cn_baiwang_app_key:
+            raise UserError(_("Baiwang API credentials are not configured. Go to Settings > Accounting > China EDI."))
 
-        # In a real scenario, you would retrieve this dynamically via the orgAuthCode
-        token = company.l10n_cn_baiwang_cached_token
+        client = BaiwangClient(company)
 
-        if not token:
-            msg = "Baiwang API Token is missing. Please authenticate first."
-            raise UserError(msg)
-
-        client = BaiwangClient(
-            app_key=company.l10n_cn_baiwang_app_key,
-            app_secret=company.l10n_cn_baiwang_app_secret,
-            salt=company.l10n_cn_baiwang_salt,
-        )
-
-        # Construct the payload for bizinfo.search
-        request_data = {
-            "keyword": self.name,
+        # Call bizinfo search API
+        body = {
+            'taxNo': client.tax_no,
+            'data': {'keyword': self.name},
         }
 
-        # Execute the call
-        response = client.call_api("baiwang.bizinfo.search", request_data, token)
+        try:
+            response = client.call_api('baiwang.bizinfo.search', body, version='6.0')
+        except Exception as e:
+            raise UserError(_("API error: %s", str(e)))
 
-        if response.get("success"):
-            # Baiwang returns a list of recommendations. We take the first (highest probability)
-            recommendations = response.get("response", [])
-
+        if response.get('success'):
+            recommendations = response.get('response', [])
             if recommendations:
                 best_match = recommendations[0]
-                self.l10n_cn_tax_category_code = best_match.get("taxCode")
-
-                # Optional: Show a quick success notification to the user
+                self.l10n_cn_tax_category_code = best_match.get('taxCode')
                 return {
                     'type': 'ir.actions.client',
                     'tag': 'display_notification',
                     'params': {
-                        'title': 'Success',
-                        'message': f'Assigned Code: {self.l10n_cn_tax_category_code} (Prob: {best_match.get("prob", "N/A")})',
+                        'title': _('Success'),
+                        'message': _('Assigned Code: %s', self.l10n_cn_tax_category_code),
                         'type': 'success',
                         'sticky': False,
                     },
                 }
-            msg = "Baiwang could not find any matching tax codes for this product name."
-            raise UserError(msg)
-        error_msg = response.get("errorResponse", {}).get("message", "Unknown API Error")
-        raise UserError(f"Baiwang API Rejected Request: {error_msg}")
+            raise UserError(_("Baiwang could not find any matching tax codes for this product name."))
+        else:
+            err = response.get('errorResponse', {})
+            raise UserError(_("Baiwang API error: %s", err.get('message', 'Unknown')))
