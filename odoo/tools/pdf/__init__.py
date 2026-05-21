@@ -181,15 +181,31 @@ def fill_form_fields_pdf(writer, form_fields):
         writer._root_object["/AcroForm"][NameObject("/NeedAppearances")] = BooleanObject(True)
 
     if pypdf_version >= parse_version('3.13.0'):
+        # pypdf 3.13+ requires /Fields in /AcroForm before update_page_form_field_values,
+        # otherwise it raises PyPdfError("No /Fields dictionary in PDF of PdfWriter Object").
+        # add_page() copies widget annotations onto the writer's pages but does not
+        # propagate /AcroForm from the source PDFs, so collect those widgets back into
+        # /Fields here, otherwise the values dict has nothing to match against.
         catalog = writer._root_object
-        if "/Fields" not in catalog.get('/AcroForm'):
-            catalog.update({
-                NameObject("/AcroForm"): writer._add_object(
-                    DictionaryObject({
-                        NameObject("/Fields"): ArrayObject()
-                    })
-                )
-            })
+        acro_form = catalog.get('/AcroForm')
+        if not isinstance(acro_form, DictionaryObject):
+            acro_form = DictionaryObject()
+            catalog[NameObject("/AcroForm")] = acro_form
+        fields = acro_form.get('/Fields')
+        if not isinstance(fields, ArrayObject):
+            fields = ArrayObject()
+            acro_form[NameObject("/Fields")] = fields
+        known = {f.idnum for f in fields if isinstance(f, IndirectObject)}
+        for page in writer.pages:
+            for annot_ref in page.get('/Annots') or []:
+                annot = annot_ref.get_object() if isinstance(annot_ref, IndirectObject) else annot_ref
+                if annot.get('/Subtype') != '/Widget' or '/T' not in annot:
+                    continue
+                if isinstance(annot_ref, IndirectObject):
+                    if annot_ref.idnum in known:
+                        continue
+                    known.add(annot_ref.idnum)
+                fields.append(annot_ref)
 
     nbr_pages = len(writer.pages) if pypdf_version >= parse_version('1.28.0') else writer.getNumPages()
 
