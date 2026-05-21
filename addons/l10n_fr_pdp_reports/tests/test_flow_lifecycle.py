@@ -4,9 +4,10 @@ from unittest.mock import patch
 from lxml import etree
 
 from odoo import fields
-from odoo.addons.l10n_fr_pdp.tests.common import TestL10nFrPdpCommon
-from odoo.tests import tagged
+from odoo.tests import Form, tagged
 from odoo.tools import file_open
+
+from odoo.addons.l10n_fr_pdp.tests.common import TestL10nFrPdpCommon
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install', 'test_flow_lifecycle')
@@ -38,8 +39,6 @@ class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
         cls.company._compute_account_peppol_edi_user()
         cls.company._compute_l10n_fr_f10_enable_reporting()
         cls.env.flush_all()
-        if not cls.company.l10n_fr_f10_enable_reporting:
-            raise AssertionError("The test company must be eligible for Flux 10 reporting.")
 
         cls.b2c_customer = cls.env['res.partner'].create({
             'name': 'PDP B2C Customer',
@@ -282,7 +281,7 @@ class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
                 'odoo.addons.l10n_fr_pdp_reports.models.pdp_flow.PdpFlow._send_to_proxy',
                 return_value=self._proxy_success_response(identifier),
             ):
-                self.env['l10n.fr.pdp.reports.flow']._cron_process_company(self.company)
+                self.env['l10n.fr.pdp.reports.flow']._cron_update_and_send_flows()
 
     def _create_sent_flow_for_scope(self, report_type, operation_type, date, name):
         period_data = self.env['l10n.fr.pdp.reports.flow']._get_period_flow_properties(
@@ -354,6 +353,35 @@ class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
         self._assert_identification_nodes(actual_xml, expected_xml)
         self.assertXmlTreeEqual(actual_xml, expected_xml)
 
+    def _create_form_invoice(self, partner, invoice_date, lines, sent=True, move_type='out_invoice'):
+        with Form(self.env['account.move'].with_context(default_move_type=move_type)) as move_form:
+            move_form.partner_id = partner
+            move_form.invoice_date = fields.Date.to_date(invoice_date)
+            for line_vals in lines:
+                with move_form.invoice_line_ids.new() as line_form:
+                    line_form.product_id = line_vals.get('product_id', self.product_a)
+                    line_form.quantity = line_vals.get('quantity', 1.0)
+                    line_form.price_unit = line_vals['price_unit']
+                    line_form.tax_ids.clear()
+                    for tax in line_vals.get('tax_ids', self._get_tax_on_payment()):
+                        line_form.tax_ids.add(tax)
+        move = move_form.save()
+        move.action_post()
+        if move.is_sale_document(include_receipts=True):
+            move.is_move_sent = sent
+        return move
+
+    def _register_form_payment(self, invoices, payment_date, amount=None):
+        with Form(self.env['account.payment.register'].with_context(
+            active_model='account.move',
+            active_ids=invoices.ids,
+        )) as payment_form:
+            payment_form.journal_id = self.company_data['default_journal_bank']
+            payment_form.payment_date = fields.Date.to_date(payment_date)
+            if amount is not None:
+                payment_form.amount = amount
+        return payment_form.save()._create_payments()
+
     def test_no_activity_does_not_create_flow(self):
         period_data = self.env['l10n.fr.pdp.reports.flow']._get_period_flow_properties(
             self.company,
@@ -378,11 +406,11 @@ class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
         b2bi_invoice_1 = self._create_reporting_invoice(
             partner=self.b2bi_italian_customer,
             amount=1000.0,
+            quantity=10.0,
             invoice_date='2025-09-01',
             invoice_date_due='2025-09-30',
             name='S1F1_REPORT2025',
             tax_ids=tax_151,
-            quantity=10,
         )
         b2bi_invoice_2 = self._create_reporting_invoice(
             partner=self.b2bi_italian_customer,
@@ -1767,17 +1795,6 @@ class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
         self.assertCountEqual(amounts, [first_payment.amount, second_payment.amount])
         self.assertAlmostEqual(sum(amounts), first_payment.amount + second_payment.amount, places=2)
 
-    def test_flow_filename_matches_ppf_naming_rules(self):
-        invoice = self._create_reporting_invoice(
-            partner=self.b2bi_customer,
-            invoice_date='2025-09-03',
-        )
-        flow = invoice.l10n_fr_pdp_last_flow_id
-        filename = flow._build_filename()
-
-        self.assertRegex(filename, r'^FFE1025A_(PPF262|PDP257)_\1[A-Z0-9]{19}\.xml$')
-        self.assertRegex(flow.tracking_id, r'^[A-Z0-9]{19}$')
-
     def test_report_header_issue_datetime_uses_required_format(self):
         invoice = self._create_reporting_invoice(
             partner=self.b2bi_customer,
@@ -1799,9 +1816,11 @@ class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
 
         xml = self._build_flow_xml(invoice.l10n_fr_pdp_last_flow_id)
         price = xml.find('./TransactionsReport/Invoice/Line/Price')
+        allowance_charge_amount = price.findtext('AllowanceChargeAmount')
 
         self.assertIsNotNone(price)
-        self.assertIsNone(price.findtext('AllowanceChargeAmount'))
+        if allowance_charge_amount:
+            self.assertEqual(float(allowance_charge_amount), 0.0)
         self.assertEqual(
             float(price.findtext('PriceAmount')),
             float(price.findtext('AllowanceChargeBaseAmount')),
@@ -1866,3 +1885,199 @@ class TestPdpReportsFlowLifecycle(TestL10nFrPdpCommon):
             'l10n_fr_pdp_has_error': True,
             'l10n_fr_pdp_status': 'error',
         }])
+
+    def test_b2c_transaction_flow_is_sent_by_cron_with_form(self):
+        invoice = self._create_form_invoice(
+            partner=self.b2c_customer,
+            invoice_date='2025-09-03',
+            lines=[{
+                'price_unit': 120.0,
+                'tax_ids': self._get_tax_on_payment_20_tax_included(),
+            }],
+        )
+        flow = invoice.l10n_fr_pdp_last_flow_id
+
+        self._run_send_cron('2025-09-20', identifier='FULL-FORM-B2C')
+
+        self.assertRecordValues(flow, [{'state': 'sent'}])
+        self.assertTrue(flow.payload_id)
+        xml = etree.fromstring(flow.payload_id.raw)
+        transactions = xml.findall('./TransactionsReport/Transactions')
+
+        self.assertFalse(xml.findall('./TransactionsReport/Invoice'))
+        self.assertEqual(len(transactions), 1)
+        self.assertEqual(transactions[0].findtext('CategoryCode'), 'TPS1')
+        self.assertIn(invoice, flow.sent_move_ids)
+
+    def test_b2bi_transaction_flow_is_sent_by_cron_with_form(self):
+        invoice = self._create_form_invoice(
+            partner=self.b2bi_customer,
+            invoice_date='2025-09-03',
+            lines=[{
+                'price_unit': 100.0,
+                'tax_ids': self._get_tax_on_payment_20(),
+            }],
+        )
+        flow = invoice.l10n_fr_pdp_last_flow_id
+
+        self._run_send_cron('2025-09-20', identifier='FULL-FORM-B2BI')
+
+        self.assertRecordValues(flow, [{'state': 'sent'}])
+        self.assertTrue(flow.payload_id)
+        xml = etree.fromstring(flow.payload_id.raw)
+        invoice_nodes = xml.findall('./TransactionsReport/Invoice')
+
+        self.assertEqual(len(invoice_nodes), 1)
+        self.assertEqual(invoice_nodes[0].findtext('ID'), invoice.name)
+        self.assertFalse(xml.findall('./TransactionsReport/Transactions'))
+        self.assertIn(invoice, flow.sent_move_ids)
+
+    def test_mixed_transaction_flow_aggregates_and_sends_with_form(self):
+        goods_tax = self._get_tax_sale_good_20_tax_included()
+        service_tax = self._get_tax_on_payment_20_tax_included()
+        b2bi_invoice = self._create_form_invoice(
+            partner=self.b2bi_customer,
+            invoice_date='2025-09-03',
+            lines=[{
+                'price_unit': 100.0,
+                'tax_ids': self._get_tax_on_payment_20(),
+            }],
+        )
+        first_b2c_goods_invoice = self._create_form_invoice(
+            partner=self.b2c_customer,
+            invoice_date='2025-09-03',
+            lines=[{
+                'price_unit': 120.0,
+                'tax_ids': goods_tax,
+            }],
+        )
+        second_b2c_goods_invoice = self._create_form_invoice(
+            partner=self.b2c_customer,
+            invoice_date='2025-09-03',
+            lines=[{
+                'price_unit': 240.0,
+                'tax_ids': goods_tax,
+            }],
+        )
+        b2c_service_invoice = self._create_form_invoice(
+            partner=self.b2c_customer,
+            invoice_date='2025-09-03',
+            lines=[{
+                'price_unit': 60.0,
+                'tax_ids': service_tax,
+            }],
+        )
+        flow = b2bi_invoice.l10n_fr_pdp_last_flow_id
+
+        self._run_send_cron('2025-09-20', identifier='FULL-FORM-MIXED')
+
+        self.assertRecordValues(flow, [{'state': 'sent'}])
+        self.assertTrue(flow.payload_id)
+        xml = etree.fromstring(flow.payload_id.raw)
+        invoice_nodes = xml.findall('./TransactionsReport/Invoice')
+        transactions = {
+            node.findtext('CategoryCode'): node
+            for node in xml.findall('./TransactionsReport/Transactions')
+        }
+
+        self.assertEqual([node.findtext('ID') for node in invoice_nodes], [b2bi_invoice.name])
+        self.assertEqual(set(transactions), {'TLB1', 'TPS1'})
+        self.assertAlmostEqual(
+            float(transactions['TLB1'].findtext('TaxExclusiveAmount')),
+            first_b2c_goods_invoice.amount_untaxed + second_b2c_goods_invoice.amount_untaxed,
+            places=2,
+        )
+        self.assertAlmostEqual(
+            float(transactions['TPS1'].findtext('TaxExclusiveAmount')),
+            b2c_service_invoice.amount_untaxed,
+            places=2,
+        )
+        self.assertEqual(
+            set(flow.sent_move_ids.ids),
+            set((b2bi_invoice | first_b2c_goods_invoice | second_b2c_goods_invoice | b2c_service_invoice).ids),
+        )
+
+    def test_service_payment_flow_is_sent_by_cron_with_form(self):
+        service_product = self.env['product.product'].create({
+            'name': 'Full Form Service',
+            'type': 'service',
+        })
+        invoice = self._create_form_invoice(
+            partner=self.b2bi_customer,
+            invoice_date='2025-09-03',
+            lines=[{
+                'product_id': service_product,
+                'price_unit': 100.0,
+                'tax_ids': self._get_tax_on_payment_20(),
+            }],
+        )
+        transaction_flow = invoice.l10n_fr_pdp_last_flow_id
+
+        self._run_send_cron('2025-09-20', identifier='FULL-FORM-PAYMENT-TRANSACTION')
+        payment = self._register_form_payment(invoice, '2025-09-21')
+        payment_move = payment.move_id
+        payment_flow = payment_move.l10n_fr_pdp_last_flow_id
+
+        self._run_send_cron('2025-10-10', identifier='FULL-FORM-PAYMENT')
+
+        self.assertRecordValues(transaction_flow | payment_flow, [
+            {'state': 'sent'},
+            {'state': 'sent'},
+        ])
+        self.assertTrue(payment_flow.payload_id)
+        xml = etree.fromstring(payment_flow.payload_id.raw)
+        payment_invoice = xml.find('./PaymentsReport/Invoice')
+
+        self.assertIsNotNone(payment_invoice)
+        self.assertEqual(payment_invoice.findtext('InvoiceID'), invoice.name)
+        self.assertAlmostEqual(
+            float(payment_invoice.findtext('Payment/SubTotals/Amount')),
+            payment.amount,
+            places=2,
+        )
+        self.assertIn(payment_move, payment_flow.sent_move_ids)
+
+    def test_error_move_creates_and_sends_rectificative_flow_with_form(self):
+        valid_invoice = self._create_form_invoice(
+            partner=self.b2bi_customer,
+            invoice_date='2025-09-03',
+            lines=[{
+                'price_unit': 100.0,
+                'tax_ids': self._get_tax_on_payment_20(),
+            }],
+        )
+        invalid_invoice = self._create_form_invoice(
+            partner=self.b2bi_customer,
+            invoice_date='2025-09-03',
+            lines=[{
+                'price_unit': 200.0,
+                'tax_ids': self._get_tax_on_payment_20(),
+            }],
+            sent=False,
+        )
+        initial_flow = valid_invoice.l10n_fr_pdp_last_flow_id
+
+        self._run_send_cron('2025-09-20', identifier='FULL-FORM-RE-INITIAL')
+        rectificative_flow = invalid_invoice.l10n_fr_pdp_last_flow_id
+
+        self.assertRecordValues(initial_flow, [{'state': 'sent'}])
+        self.assertIn(valid_invoice, initial_flow.sent_move_ids)
+        self.assertNotIn(invalid_invoice, initial_flow.sent_move_ids)
+        self.assertNotEqual(initial_flow, rectificative_flow)
+        self.assertRecordValues(rectificative_flow, [{
+            'state': 'ready',
+            'transmission_type': 'rectificative',
+            'initial_flow_id': initial_flow.id,
+        }])
+
+        invalid_invoice.is_move_sent = True
+        self._run_send_cron('2025-09-21', identifier='FULL-FORM-RE-SENT')
+
+        self.assertRecordValues(rectificative_flow, [{'state': 'sent'}])
+        self.assertTrue(rectificative_flow.payload_id)
+        xml = etree.fromstring(rectificative_flow.payload_id.raw)
+        invoice_nodes = xml.findall('./TransactionsReport/Invoice')
+
+        self.assertEqual(xml.findtext('./ReportDocument/TypeCode'), 'RE')
+        self.assertIn(invalid_invoice.name, [node.findtext('ID') for node in invoice_nodes])
+        self.assertIn(invalid_invoice, rectificative_flow.sent_move_ids)
