@@ -1,0 +1,44 @@
+# Keep the Docker build context small.
+.git
+.github
+.weblate.json
+
+# Local virtualenvs and build artefacts
+/bin/
+/build/
+/dist/
+/include/
+/lib/
+/man/
+/share/
+/src/
+*.egg-info
+__pycache__/
+*.py[co]
+
+# JS tooling artefacts (regenerated in-container if needed)
+node_modules
+package-lock.json
+package.json
+.husky
+
+# Editor / OS noise
+*~
+*.orig
+.DS_Store
+.idea/
+.vscode/
+
+# Docs build output
+doc/_build/
+
+# Local Odoo runtime state (should never be in the image)
+odoo/filestore
+odoo/addons/base/maintenance
+
+# Windows installer leftovers
+install/win32/*.bat
+install/win32/meta.py
+setup/win32/static/
+
+# Tests are kept because Odoo loads them as part of module discovery.
