@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
-import { animationFrame, Deferred, mockDate, runAllTimers, tick } from "@odoo/hoot-mock";
+import { animationFrame, mockDate, runAllTimers, tick } from "@odoo/hoot-mock";
 import {
     defineActions,
     defineMenus,
@@ -14,9 +14,8 @@ import {
 
 import { onWillStart, onWillUpdateProps } from "@odoo/owl";
 
-import { browser } from "@web/core/browser/browser";
 import { ListRenderer } from "@web/views/list/list_renderer";
-import { SUCCESS_SIGNAL } from "@web/webclient/clickbot/clickbot";
+import { Clickbot, FAILURE_SIGNAL, SUCCESS_SIGNAL } from "@web/webclient/clickbot/clickbot";
 import { WebClient } from "@web/webclient/webclient";
 
 class Foo extends models.Model {
@@ -90,21 +89,24 @@ beforeEach(() => {
 test("clickbot clickeverywhere test", async () => {
     onRpc("has_group", () => true);
     mockDate("2017-10-08T15:35:11.000");
-    const clickEverywhereDef = new Deferred();
-    patchWithCleanup(browser, {
-        console: {
-            log: (msg) => {
-                expect.step(msg);
-                if (msg === SUCCESS_SIGNAL) {
-                    clickEverywhereDef.resolve();
-                }
-            },
-            error: (msg) => {
-                expect.step(msg);
-                clickEverywhereDef.resolve();
-            },
+    const { promise, resolve } = Promise.withResolvers();
+    patchWithCleanup(console, {
+        log: (msg) => {
+            expect.step(msg);
+            if (msg === SUCCESS_SIGNAL) {
+                resolve();
+            }
+        },
+        error: (msg) => {
+            expect.step(msg);
+            resolve();
         },
     });
+
+    patchWithCleanup(performance, {
+        now: () => 43554.39999999106,
+    });
+
     defineMenus([
         { id: 1, name: "App1", appID: 1, actionID: 1001, xmlid: "app1" },
         {
@@ -132,16 +134,12 @@ test("clickbot clickeverywhere test", async () => {
         },
     ]);
     const webClient = await mountWithCleanup(WebClient);
-    patchWithCleanup(odoo, {
-        __WOWL_DEBUG__: { root: webClient },
-    });
-    window.clickEverywhere();
-    await clickEverywhereDef;
+    new Clickbot(webClient.env).start();
+    await promise;
     expect.verifySteps([
-        "Clicking on: apps menu toggle button",
-        "Testing app menu: app1",
-        "Testing menu App1 app1",
-        'Clicking on: menu item "App1"',
+        "Starting ClickEverywhere test",
+        "Testing app: App1 (app1)",
+        "Testing menu App1 (app1)",
         "Testing 2 filters",
         'Clicking on: filter "Not Bar"',
         'Clicking on: filter "Date"',
@@ -152,30 +150,23 @@ test("clickbot clickeverywhere test", async () => {
         'Clicking on: filter "Not Bar"',
         'Clicking on: filter "Date"',
         'Clicking on: filter option "October"',
-        "Clicking on: apps menu toggle button",
-        "Testing app menu: app2",
-        "Testing menu App2 app2",
-        'Clicking on: menu item "App2"',
+        "Testing app: App2 (app2)",
+        "Testing menu menu 1 (app2_menu1)",
         "Testing 2 filters",
         'Clicking on: filter "Not Bar"',
         'Clicking on: filter "Date"',
         'Clicking on: filter option "October"',
-        "Testing menu menu 1 app2_menu1",
-        'Clicking on: menu item "menu 1"',
+        "Testing menu menu 2 (app2_menu2)",
         "Testing 2 filters",
         'Clicking on: filter "Not Bar"',
         'Clicking on: filter "Date"',
         'Clicking on: filter option "October"',
-        "Testing menu menu 2 app2_menu2",
-        'Clicking on: menu item "menu 2"',
-        "Testing 2 filters",
-        'Clicking on: filter "Not Bar"',
-        'Clicking on: filter "Date"',
-        'Clicking on: filter option "October"',
+        "Test took 0 seconds",
         "Successfully tested 2 apps",
-        "Successfully tested 2 menus",
+        "Successfully tested 3 menus",
+        "Successfully tested 4 views",
         "Successfully tested 0 modals",
-        "Successfully tested 10 filters",
+        "Successfully tested 8 filters",
         SUCCESS_SIGNAL,
     ]);
 });
@@ -183,27 +174,28 @@ test("clickbot clickeverywhere test", async () => {
 test("only one app", async () => {
     onRpc("has_group", () => true);
     mockDate("2017-10-08T15:35:11.000");
-    const clickEverywhereDef = new Deferred();
-    patchWithCleanup(browser.localStorage, {
+    const { promise, resolve } = Promise.withResolvers();
+    patchWithCleanup(localStorage, {
         removeItem(key) {
             const savedState = super.getItem(key);
             expect.step("savedState: " + savedState);
             return super.removeItem(key);
         },
     });
-    patchWithCleanup(browser, {
-        console: {
-            log: (msg) => {
-                expect.step(msg);
-                if (msg === SUCCESS_SIGNAL) {
-                    clickEverywhereDef.resolve();
-                }
-            },
-            error: (msg) => {
-                expect.step(msg);
-                clickEverywhereDef.resolve();
-            },
+    patchWithCleanup(console, {
+        log: (msg) => {
+            expect.step(msg);
+            if (msg === SUCCESS_SIGNAL) {
+                resolve();
+            }
         },
+        error: (msg) => {
+            expect.step(msg);
+            resolve();
+        },
+    });
+    patchWithCleanup(performance, {
+        now: () => 43554.39999999106,
     });
     defineMenus([
         { id: 1, name: "App1", appID: 1, actionID: 1001, xmlid: "app1" },
@@ -232,16 +224,12 @@ test("only one app", async () => {
         },
     ]);
     const webClient = await mountWithCleanup(WebClient);
-    patchWithCleanup(odoo, {
-        __WOWL_DEBUG__: { root: webClient },
-    });
-    window.clickEverywhere("app1");
-    await clickEverywhereDef;
+    new Clickbot(webClient.env, { xmlId: "app1" }).start();
+    await promise;
     expect.verifySteps([
-        "Clicking on: apps menu toggle button",
-        "Testing app menu: app1",
-        "Testing menu App1 app1",
-        'Clicking on: menu item "App1"',
+        "Starting ClickEverywhere test",
+        "Testing app: App1 (app1)",
+        "Testing menu App1 (app1)",
         "Testing 2 filters",
         'Clicking on: filter "Not Bar"',
         'Clicking on: filter "Date"',
@@ -252,32 +240,35 @@ test("only one app", async () => {
         'Clicking on: filter "Not Bar"',
         'Clicking on: filter "Date"',
         'Clicking on: filter option "October"',
+        "Test took 0 seconds",
         "Successfully tested 1 apps",
-        "Successfully tested 0 menus",
+        "Successfully tested 1 menus",
+        "Successfully tested 2 views",
         "Successfully tested 0 modals",
         "Successfully tested 4 filters",
         SUCCESS_SIGNAL,
-        'savedState: {"light":false,"studioCount":0,"testedApps":["app1"],"testedMenus":["app1"],"testedFilters":4,"testedModals":0,"appIndex":0,"menuIndex":0,"subMenuIndex":0,"xmlId":"app1","app":"app1"}',
+        'savedState: {"studioCount":0,"testedApps":["app1"],"testedMenus":["app1"],"testedFilters":4,"testedModals":0,"testedViews":2,"appIndex":0,"menuIndex":0,"startTime":43554.39999999106,"xmlId":"app1"}',
     ]);
 });
 
 test("clickbot clickeverywhere test (with dropdown menu)", async () => {
     onRpc("has_group", () => true);
     mockDate("2017-10-08T15:35:11.000");
-    const clickEverywhereDef = new Deferred();
-    patchWithCleanup(browser, {
-        console: {
-            log: (msg) => {
-                expect.step(msg);
-                if (msg === SUCCESS_SIGNAL) {
-                    clickEverywhereDef.resolve();
-                }
-            },
-            error: (msg) => {
-                expect.step(msg);
-                clickEverywhereDef.resolve();
-            },
+    const { promise, resolve } = Promise.withResolvers();
+    patchWithCleanup(console, {
+        log: (msg) => {
+            expect.step(msg);
+            if (msg === SUCCESS_SIGNAL) {
+                resolve();
+            }
         },
+        error: (msg) => {
+            expect.step(msg);
+            resolve();
+        },
+    });
+    patchWithCleanup(performance, {
+        now: () => 43554.39999999106,
     });
     defineMenus(
         [
@@ -316,59 +307,46 @@ test("clickbot clickeverywhere test (with dropdown menu)", async () => {
         { mode: "replace" }
     );
     const webClient = await mountWithCleanup(WebClient);
-    patchWithCleanup(odoo, {
-        __WOWL_DEBUG__: { root: webClient },
-    });
     await runAllTimers();
     await animationFrame();
     expect(".o_menu_sections .dropdown-toggle").toHaveText("a dropdown");
-    window.clickEverywhere();
-    await clickEverywhereDef;
+    new Clickbot(webClient.env).start();
+    await promise;
     expect.verifySteps([
-        "Clicking on: apps menu toggle button",
-        "Testing app menu: app2",
-        "Testing menu App2 app2",
-        'Clicking on: menu item "App2"',
+        "Starting ClickEverywhere test",
+        "Testing app: App2 (app2)",
+        "Testing menu menu 1 (app2_menu1)",
         "Testing 2 filters",
         'Clicking on: filter "Not Bar"',
         'Clicking on: filter "Date"',
         'Clicking on: filter option "October"',
-        "Clicking on: menu toggler",
-        "Testing menu menu 1 app2_menu1",
-        'Clicking on: menu item "menu 1"',
+        "Testing menu menu 2 (app2_menu2)",
         "Testing 2 filters",
         'Clicking on: filter "Not Bar"',
         'Clicking on: filter "Date"',
         'Clicking on: filter option "October"',
-        "Clicking on: menu toggler",
-        "Testing menu menu 2 app2_menu2",
-        'Clicking on: menu item "menu 2"',
-        "Testing 2 filters",
-        'Clicking on: filter "Not Bar"',
-        'Clicking on: filter "Date"',
-        'Clicking on: filter option "October"',
+        "Test took 0 seconds",
         "Successfully tested 1 apps",
         "Successfully tested 2 menus",
+        "Successfully tested 2 views",
         "Successfully tested 0 modals",
-        "Successfully tested 6 filters",
+        "Successfully tested 4 filters",
         SUCCESS_SIGNAL,
     ]);
 });
 
 test("clickbot test waiting rpc after clicking filter", async () => {
-    const clickEverywhereDef = new Deferred();
+    const { promise, resolve } = Promise.withResolvers();
     let clickBotStarted = false;
-    patchWithCleanup(browser, {
-        console: {
-            log: (msg) => {
-                if (msg === SUCCESS_SIGNAL) {
-                    expect.step(msg);
-                    clickEverywhereDef.resolve();
-                }
-            },
-            error: () => {
-                clickEverywhereDef.resolve();
-            },
+    patchWithCleanup(console, {
+        log: (msg) => {
+            if (msg === SUCCESS_SIGNAL) {
+                expect.step(msg);
+                resolve();
+            }
+        },
+        error: () => {
+            resolve();
         },
     });
     onRpc("web_search_read", async () => {
@@ -396,14 +374,11 @@ test("clickbot test waiting rpc after clicking filter", async () => {
         },
     ]);
     const webClient = await mountWithCleanup(WebClient);
-    patchWithCleanup(odoo, {
-        __WOWL_DEBUG__: { root: webClient },
-    });
     await runAllTimers();
     await animationFrame();
     clickBotStarted = true;
-    window.clickEverywhere();
-    await clickEverywhereDef;
+    new Clickbot(webClient.env).start();
+    await promise;
     expect.verifySteps([
         "web_search_read called", // click on the App
         "response",
@@ -419,18 +394,26 @@ test("clickbot show rpc error when an error dialog is detected", async () => {
     expect.errors(1);
     onRpc("has_group", () => true);
     mockDate("2024-04-10T00:00:00.000");
-    const clickEverywhereDef = new Deferred();
+    const { promise, resolve } = Promise.withResolvers();
     let clickBotStarted = false;
     let id = 1;
-    patchWithCleanup(browser, {
-        console: {
-            log: (msg) => {
-                if (msg === "test successful") {
-                    expect.step(msg);
-                    clickEverywhereDef.resolve();
-                }
-            },
-            error: (msg) => {
+
+    patchWithCleanup(performance, {
+        now: () => 43554.39999999106,
+    });
+
+    patchWithCleanup(console, {
+        log: (msg) => {
+            expect.step(msg);
+            if (msg === SUCCESS_SIGNAL) {
+                resolve();
+            }
+        },
+        error: (msg) => {
+            if (msg === FAILURE_SIGNAL) {
+                expect.step(msg);
+                resolve();
+            } else {
                 // Replace msg with null id as JSON-RPC ids are not reset between two tests
                 expect.step(
                     msg
@@ -444,8 +427,7 @@ test("clickbot show rpc error when an error dialog is detected", async () => {
                         )
                         .replace(/<pre\b[^>]*>[\s\S]*?<\/pre>/i, "<pre>TRACEBACK</pre>")
                 );
-                clickEverywhereDef.resolve();
-            },
+            }
         },
     });
     onRpc("web_search_read", () => {
@@ -478,14 +460,11 @@ test("clickbot show rpc error when an error dialog is detected", async () => {
         },
     ]);
     const webClient = await mountWithCleanup(WebClient);
-    patchWithCleanup(odoo, {
-        __WOWL_DEBUG__: { root: webClient },
-    });
     await runAllTimers();
     await animationFrame();
     clickBotStarted = true;
-    window.clickEverywhere();
-    await clickEverywhereDef;
+    new Clickbot(webClient.env).start();
+    await promise;
     await tick();
 
     const expectedRpcData = JSON.stringify({
@@ -548,7 +527,7 @@ test("clickbot show rpc error when an error dialog is detected", async () => {
             <div role="alert">
                 <p> Something went wrong... If you really are stuck, share the report with your friendly support service </p>
                 <details>
-                    <summary class="mb-1 link-info"><span>See technical details</span><span class="ms-1 text-400 small">(10/Apr/2024 00:00:04)</span></summary>
+                    <summary class="mb-1 link-info"><span>See technical details</span><span class="ms-1 text-400 small">(10/Apr/2024 00:00:03)</span></summary>
                     <div class="text-bg-100 clearfix mt-2 position-relative o_error_detail pb-2">
                         <button class="btn position-absolute top-0 end-0 pt-2 btn-link link-body-emphasis" data-available-offline=""><span class="fa fa-clipboard"></span></button>
                         <div class="ps-1 pt-1 ps-md-3 pt-md-3">
@@ -570,27 +549,39 @@ test("clickbot show rpc error when an error dialog is detected", async () => {
 
     expect.verifyErrors(["This is a server Error"]);
     expect.verifySteps([
+        "Starting ClickEverywhere test",
+        "Testing app: App1 (app1)",
+        "Testing menu App1 (app1)",
+        "Testing 2 filters",
+        'Clicking on: filter "Not Bar"',
+        'Clicking on: filter "Date"',
+        'Clicking on: filter option "April"',
         `A RPC in error was detected, maybe it's related to the error dialog : ${expectedRpcData}`,
-        "Error while testing App1 app1",
+        "Error while testing App1 (app1)",
+        "Test took 0 seconds",
+        "Successfully tested 1 apps",
+        "Successfully tested 1 menus",
+        "Successfully tested 0 views",
+        "Successfully tested 0 modals",
+        "Successfully tested 2 filters",
         `Error: Error dialog detected${expectedModalHtml}`,
+        FAILURE_SIGNAL,
     ]);
 });
 
 test("clickbot test waiting render after clicking filter", async () => {
     onRpc("has_group", () => true);
-    const clickEverywhereDef = new Deferred();
+    const { promise, resolve } = Promise.withResolvers();
     let clickBotStarted = false;
-    patchWithCleanup(browser, {
-        console: {
-            log: (msg) => {
-                if (msg === SUCCESS_SIGNAL) {
-                    expect.step(msg);
-                    clickEverywhereDef.resolve();
-                }
-            },
-            error: () => {
-                clickEverywhereDef.resolve();
-            },
+    patchWithCleanup(console, {
+        log: (msg) => {
+            if (msg === SUCCESS_SIGNAL) {
+                expect.step(msg);
+                resolve();
+            }
+        },
+        error: () => {
+            resolve();
         },
     });
     patchWithCleanup(ListRenderer.prototype, {
@@ -627,14 +618,11 @@ test("clickbot test waiting render after clicking filter", async () => {
         },
     ]);
     const webClient = await mountWithCleanup(WebClient);
-    patchWithCleanup(odoo, {
-        __WOWL_DEBUG__: { root: webClient },
-    });
     await runAllTimers();
     await animationFrame();
     clickBotStarted = true;
-    window.clickEverywhere();
-    await clickEverywhereDef;
+    new Clickbot(webClient.env).start();
+    await promise;
     expect.verifySteps([
         "onWillStart called", // click on APP
         "response",
@@ -654,20 +642,21 @@ test("clickbot clickeverywhere menu modal", async () => {
             <field name="foo"/>
         </form>
     `;
-    const clickEverywhereDef = new Deferred();
-    patchWithCleanup(browser, {
-        console: {
-            log: (msg) => {
-                expect.step(msg);
-                if (msg === SUCCESS_SIGNAL) {
-                    clickEverywhereDef.resolve();
-                }
-            },
-            error: (msg) => {
-                expect.step(msg);
-                clickEverywhereDef.resolve();
-            },
+    const { promise, resolve } = Promise.withResolvers();
+    patchWithCleanup(console, {
+        log: (msg) => {
+            expect.step(msg);
+            if (msg === SUCCESS_SIGNAL) {
+                resolve();
+            }
         },
+        error: (msg) => {
+            expect.step(msg);
+            resolve();
+        },
+    });
+    patchWithCleanup(performance, {
+        now: () => 43554.39999999106,
     });
     defineActions([
         {
@@ -694,16 +683,12 @@ test("clickbot clickeverywhere menu modal", async () => {
         },
     ]);
     const webClient = await mountWithCleanup(WebClient);
-    patchWithCleanup(odoo, {
-        __WOWL_DEBUG__: { root: webClient },
-    });
-    window.clickEverywhere();
-    await clickEverywhereDef;
+    new Clickbot(webClient.env).start();
+    await promise;
     expect.verifySteps([
-        "Clicking on: apps menu toggle button",
-        "Testing app menu: app1",
-        "Testing menu App1 app1",
-        'Clicking on: menu item "App1"',
+        "Starting ClickEverywhere test",
+        "Testing app: App1 (app1)",
+        "Testing menu App1 (app1)",
         "Testing 2 filters",
         'Clicking on: filter "Not Bar"',
         'Clicking on: filter "Date"',
@@ -714,14 +699,14 @@ test("clickbot clickeverywhere menu modal", async () => {
         'Clicking on: filter "Not Bar"',
         'Clicking on: filter "Date"',
         'Clicking on: filter option "October"',
-        "Clicking on: apps menu toggle button",
-        "Testing app menu: test.modal",
-        "Testing menu App Modal test.modal",
-        'Clicking on: menu item "App Modal"',
-        "Modal detected: App Modal test.modal",
+        "Testing app: App Modal (test.modal)",
+        "Testing menu App Modal (test.modal)",
+        "Modal detected: App Modal (test.modal)",
         "Clicking on: modal close button",
+        "Test took 0 seconds",
         "Successfully tested 2 apps",
-        "Successfully tested 0 menus",
+        "Successfully tested 2 menus",
+        "Successfully tested 2 views",
         "Successfully tested 1 modals",
         "Successfully tested 4 filters",
         SUCCESS_SIGNAL,
