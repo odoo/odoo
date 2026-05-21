@@ -9,7 +9,6 @@ import { translationIsReady } from "@web/core/l10n/translation";
 registerWebsitePreviewTour(
     "translate_menu_name",
     {
-        undeterministicTour_doNotCopy: true, // Remove this key to make the tour failed. ( It removes delay between steps )
         edition: false,
     },
     () => [
