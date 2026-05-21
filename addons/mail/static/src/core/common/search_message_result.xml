@@ -5,16 +5,16 @@
             <p t-if="this.MESSAGE_FOUND" class="o-mail-SearchMessagesPanel-title py-1 mb-0 o-fw-600 text-center text-uppercase text-muted smaller">
                 <t t-out="this.MESSAGE_FOUND" />
             </p>
-            <MessageCardList 
-                messages="this.props.messageSearch.messages" 
-                thread="this.props.thread" 
-                mode="'search'" 
-                messageSearch="this.props.messageSearch" 
-                showEmpty="this.props.messageSearch.messages.length === 0 and this.props.messageSearch.searched" 
-                onClickJump="() => this.props.onClickJump?.()" 
-                loadMore="this.props.messageSearch.loadMore" 
-                onLoadMoreVisible.bind="this.onLoadMoreVisible" 
-            />    
+            <MessageCardList
+                messages="this.props.messageSearch.messages"
+                thread="this.props.thread"
+                mode="'search'"
+                messageSearch="this.props.messageSearch"
+                showEmpty="this.props.messageSearch.messages.length === 0 and this.props.messageSearch.searched"
+                onClickJump="() => this.props.onClickJump?.()"
+                loadMore="this.props.messageSearch.hasMore"
+                onLoadMoreVisible.bind="this.onLoadMoreVisible"
+            />
         </div>
     </t>
 </templates>

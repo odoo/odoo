@@ -7,6 +7,7 @@ import {
     useSubEnv,
 } from "@web/owl2/utils";
 import { Component, onMounted, onPatched, onWillUnmount, toRaw, xml } from "@odoo/owl";
+import { Reactive } from "@web/core/utils/reactive";
 
 import { CallPermissionDeniedDialog } from "@mail/discuss/call/common/call_permission_denied_dialog";
 import { monitorAudio } from "@mail/utils/common/media_monitoring";
@@ -610,121 +611,139 @@ export function useSelection({ refName, model, preserveOnClickAwayPredicate = ()
     };
 }
 
-function _useSearchState({ fetch, filter, initialResults, sequential, isActive }) {
-    // Most recent term whose `fetch` resolved to `false` (no results). Used to
-    // skip the fetch when the next term starts with it: a narrower query cannot
-    // have results when the broader one had none. Reset on `reset()` or when a
-    // fetch resolves to anything other than `false`.
-    let lastEmptyTerm;
-    return {
-        searchTerm: "",
-        searching: false,
-        loading: false,
-        results: initialResults,
-        reset() {
-            this.searchTerm = "";
-            this.searching = false;
-            this.loading = false;
-            this.results = initialResults;
-            lastEmptyTerm = undefined;
-        },
-        async run({ skipFetch = false } = {}) {
-            const active = isActive ?? (() => !!this.searchTerm);
-            if (!active()) {
-                this.reset();
-                return;
-            }
-            const term = this.searchTerm;
-            this.searching = true;
-            const narrowsEmpty = lastEmptyTerm !== undefined && term.startsWith(lastEmptyTerm);
-            if (narrowsEmpty) {
-                // Broader term already had no results, so the narrower term
-                // can't either — skip both the fetch and the local filter.
-                return;
-            }
-            const state = this;
-            if (fetch && !skipFetch) {
-                await sequential(async () => {
-                    state.loading = true;
-                    let result;
-                    try {
-                        result = await fetch(term);
-                    } finally {
-                        if (state.searchTerm === term) {
-                            state.loading = false;
-                        }
-                    }
-                    if (state.searchTerm === term) {
-                        if (filter) {
-                            state.results = filter(term);
-                        }
-                        lastEmptyTerm = result === false ? term : undefined;
-                    }
-                });
-            } else if (filter) {
-                this.results = filter(term);
-            }
-        },
-    };
-}
-
-/** @returns {ReturnType<typeof _useSearchState>} */
-function useSearchState(args) {
-    return useState(_useSearchState(args));
-}
-
 /**
  * Shared search state machine for components that combine an optional async
- * fetch (typically an RPC) with an optional sync local lookup. Returned object
- * exposes reactive fields (`searchTerm`, `searching`, `loading`, `results`) and
- * methods (`run`, `reset`). The hook auto-runs whenever `searchTerm` (or any
- * value returned by `deps`) changes, so callers do not normally need to invoke
- * `run` themselves. `run({ skipFetch: true })` re-applies the filter without
- * re-fetching, e.g. after the upstream data was mutated locally.
+ * fetch (typically an RPC) with an optional sync local lookup. Exposes reactive
+ * fields (`searchTerm`, `searching`, `loading`, `results`) and methods (`run`,
+ * `reset`). Subclass to add domain-specific fields while sharing the base logic.
  *
  * Narrow-dedup: if `fetch` resolves to `false` for some term, the next term
  * that starts with it skips the fetch (a narrower query cannot have results
  * when the broader one had none). Resolve to anything else to disable this for
  * the current bookmark; call `reset()` to drop it (e.g. on context change).
- *
- * @param {Object} [options]
- * @param {(term: string) => Promise<boolean | void>} [options.fetch] Async
- *  server call. Resolving to `false` signals "no results" for narrow-dedup.
- * @param {(term: string) => any} [options.filter] Sync local lookup that
- *  produces `results`. Runs once immediately on every term/deps change (so the
- *  UI reflects local data without waiting for the fetch) and again once
- *  `fetch` resolves (to pick up any data the fetch loaded).
- * @param {any[]} [options.initialResults] Value assigned to `results` on
- *  reset. Defaults to an empty array.
- * @param {() => any[]} [options.deps] External reactive values read inside
- *  `fetch` and/or `filter` (other than the term itself). Listing them here
- *  re-runs the search when they change. Omit when `fetch`/`filter` depend only
- *  on `term`.
- * @param {() => boolean} [options.isActive] Predicate the hook uses to decide
- *  whether a search is currently in progress. Defaults to "term is non-empty".
- *  Override when a non-empty term is not the right signal (e.g. a mention
- *  popover stays active for an empty term as long as a delimiter is set).
  */
-export function useSearch({ fetch, filter, initialResults = [], deps, isActive } = {}) {
-    const sequential = useSequential();
-    const state = useSearchState({ fetch, filter, initialResults, sequential, isActive });
-    const active = isActive ?? (() => !!state.searchTerm);
+export class SearchState extends Reactive {
+    searchTerm = "";
+    searching = false;
+    loading = false;
+    /** @type {any} */
+    results;
+    /** @type {string | undefined} */
+    lastEmptyTerm;
+    /** @type {Function | undefined} */
+    sequential;
+    initialResults;
+    /** @type {((term: string) => Promise<boolean | void>) | null} */
+    fetch = null;
+    /** @type {((term: string) => any) | null} */
+    filter = null;
+    /** @type {(() => boolean) | null} */
+    isActiveGetter = null;
+    /** @type {(() => any[]) | null} */
+    depsGetter = null;
 
-    useLayoutEffect(
-        () => {
-            if (!active()) {
-                state.reset();
-                return;
-            }
-            if (filter) {
-                state.results = filter(state.searchTerm);
-            }
-            state.run();
-        },
-        () => [state.searchTerm, ...(deps?.() ?? [])]
-    );
+    /**
+     * @param {Object} [options]
+     * @param {(term: string) => Promise<boolean | void>} [options.fetch] Async
+     *  server call. Resolving to `false` signals "no results" for narrow-dedup.
+     * @param {(term: string) => any} [options.filter] Sync local lookup that
+     *  produces `results`. Runs immediately on term/deps change and again after
+     *  `fetch` resolves (to pick up server-loaded data).
+     * @param {any} [options.initialResults] Value assigned to `results` on
+     *  reset. Defaults to an empty array.
+     * @param {() => any[]} [options.deps] Extra reactive values read inside
+     *  `fetch`/`filter`. Re-runs the search when they change.
+     * @param {() => boolean} [options.isActive] Predicate deciding whether a
+     *  search is active. Defaults to "term is non-empty". Override when a
+     *  non-empty term is not the right signal (e.g. a mention popover stays
+     *  active for an empty term as long as a delimiter is set).
+     */
+    constructor({ initialResults = [], fetch, filter, isActive, deps } = {}) {
+        super();
+        this.initialResults = initialResults;
+        this.results = initialResults;
+        if (fetch) this.fetch = fetch;
+        if (filter) this.filter = filter;
+        if (isActive) this.isActiveGetter = isActive;
+        if (deps) this.depsGetter = deps;
+        this.sequential = useSequential();
+        useLayoutEffect(
+            () => {
+                if (!this.isActive) {
+                    this.reset();
+                    return;
+                }
+                if (this.filter) {
+                    this.results = this.filter(this.searchTerm);
+                }
+                this.run();
+            },
+            () => [this.searchTerm, ...this.deps]
+        );
+        onWillUnmount(() => this.reset());
+    }
 
-    return state;
+    get isActive() {
+        return this.isActiveGetter ? this.isActiveGetter() : !!this.searchTerm;
+    }
+
+    get deps() {
+        return this.depsGetter?.() ?? [];
+    }
+
+    reset() {
+        this.searchTerm = "";
+        this.searching = false;
+        this.loading = false;
+        this.results = this.initialResults;
+        this.lastEmptyTerm = undefined;
+    }
+
+    async run({ skipFetch = false } = {}) {
+        if (!this.isActive) {
+            this.reset();
+            return;
+        }
+        const term = this.searchTerm;
+        this.searching = true;
+        if (this.lastEmptyTerm !== undefined && term.startsWith(this.lastEmptyTerm)) {
+            // Broader term already had no results, so the narrower term
+            // can't either — skip both the fetch and the local filter.
+            return;
+        }
+        if (this.fetch && !skipFetch) {
+            await this.sequential(async () => {
+                this.loading = true;
+                let result;
+                try {
+                    result = await this.fetch(term);
+                } finally {
+                    if (this.searchTerm === term) {
+                        this.loading = false;
+                    }
+                }
+                if (this.searchTerm === term) {
+                    if (this.filter) {
+                        this.results = this.filter(term);
+                    }
+                    this.lastEmptyTerm = result === false ? term : undefined;
+                }
+            });
+        } else if (this.filter) {
+            this.results = this.filter(term);
+        }
+    }
+}
+
+/**
+ * `run({ skipFetch: true })` re-applies the filter without re-fetching,
+ * e.g. after the upstream data was mutated locally.
+ *
+ * @param {ConstructorParameters<typeof SearchState>[0]} [options]
+ * @returns {SearchState}
+ */
+export function useSearch(options = {}) {
+    return useState(new SearchState(options));
 }
 
 export function useSequential() {

@@ -20,13 +20,25 @@
                 t-ref="inputRef"
                 type="text"
                 class="form-control bg-view ps-4"
+                t-att-class="{ 'pe-4': props.onClear }"
                 t-att-placeholder="props.placeholder"
                 t-att-aria-label="props.placeholder"
                 t-att-aria-describedby="`${this.uniqueId}-icon`"
                 t-custom-model="this.props.search.searchTerm"
+                t-att-accesskey="props.accesskey"
                 autocomplete="off"
                 t-on-keydown="(ev) => props.onKeydown?.(ev)"
             />
+            <button
+                t-if="this.props.onClear and this.props.search.searchTerm"
+                type="button"
+                class="btn btn-link text-reset p-0 border-0 shadow-none position-absolute top-0 bottom-0 end-0 me-2 d-flex align-items-center opacity-50 opacity-100-hover"
+                t-on-click="props.onClear"
+                aria-label="Clear"
+                title="Clear"
+            >
+                <i class="fa fa-times-circle" aria-hidden="true"/>
+            </button>
         </div>
     </t>
 

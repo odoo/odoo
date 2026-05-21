@@ -10,7 +10,6 @@ import {
     patchUiSize,
     start,
     startServer,
-    triggerHotkey,
 } from "@mail/../tests/mail_test_helpers";
 
 import { describe, expect, test } from "@odoo/hoot";
@@ -128,8 +127,8 @@ test("Display highlighted search in chatter", async () => {
     await start();
     await openFormView("res.partner", partnerId);
     await click("[title='Search Messages']");
-    await insertText(".o_searchview_input", "Groot");
-    triggerHotkey("Enter");
+    await contains(".o-mail-SearchMessageInput");
+    await insertText(".o-mail-SearchInput input", "Groot");
     await contains(
         `.o-mail-SearchMessageResult .o-mail-Message-author .${HIGHLIGHT_CLASS}:text('Groot')`
     );
@@ -150,8 +149,8 @@ test("Display multiple highlighted search in chatter", async () => {
     await start();
     await openFormView("res.partner", partnerId);
     await click("[title='Search Messages']");
-    await insertText(".o_searchview_input", "not empty");
-    triggerHotkey("Enter");
+    await contains(".o-mail-SearchMessageInput");
+    await insertText(".o-mail-SearchInput input", "not empty");
     await contains(`.o-mail-SearchMessageResult .o-mail-Message span.${HIGHLIGHT_CLASS}`, {
         count: 2,
     });
@@ -172,8 +171,8 @@ test("Display highlighted search in Discuss", async () => {
     await openDiscuss(channelId);
     await contains(".o-mail-Message");
     await click("button[title='Search Messages']");
-    await insertText(".o_searchview_input", "empty");
-    triggerHotkey("Enter");
+    await contains(".o-mail-SearchMessageInput");
+    await insertText(".o-mail-SearchInput input", "empty");
     await contains(`.o-mail-SearchMessagesPanel .o-mail-Message span.${HIGHLIGHT_CLASS}`);
 });
 
@@ -192,8 +191,8 @@ test("Display multiple highlighted search in Discuss", async () => {
     await openDiscuss(channelId);
     await contains(".o-mail-Message");
     await click("button[title='Search Messages']");
-    await insertText(".o_searchview_input", "not empty");
-    triggerHotkey("Enter");
+    await contains(".o-mail-SearchMessageInput");
+    await insertText(".o-mail-SearchInput input", "not empty");
     await contains(`.o-mail-SearchMessagesPanel .o-mail-Message span.${HIGHLIGHT_CLASS}`, {
         count: 2,
     });
@@ -214,12 +213,11 @@ test("Search update keeps embedded code block rendering in Discuss", async () =>
     await openDiscuss(channelId);
     await contains(".o-mail-Message");
     await click("button[title='Search Messages']");
-    await insertText(".o_searchview_input", "prefix");
-    triggerHotkey("Enter");
+    await contains(".o-mail-SearchMessageInput");
+    await insertText(".o-mail-SearchInput input", "prefix");
     await contains(`.o-mail-SearchMessagesPanel .o-mail-Message span.${HIGHLIGHT_CLASS}:text('prefix')`);
     await contains(".o-mail-SearchMessagesPanel pre[data-embedded='readonlySyntaxHighlighting']");
-    await insertText(".o_searchview_input", " suffix");
-    triggerHotkey("Enter");
+    await insertText(".o-mail-SearchInput input", " suffix");
     await contains(`.o-mail-SearchMessagesPanel .o-mail-Message span.${HIGHLIGHT_CLASS}:text('suffix')`);
     await contains(".o-mail-SearchMessagesPanel pre[data-embedded='readonlySyntaxHighlighting']");
 });
@@ -236,8 +234,8 @@ test("Display highlighted with escaped character must ignore them", async () => 
     await start();
     await openFormView("res.partner", partnerId);
     await click("[title='Search Messages']");
-    await insertText(".o_searchview_input", "test hello");
-    triggerHotkey("Enter");
+    await contains(".o-mail-SearchMessageInput");
+    await insertText(".o-mail-SearchInput input", "test hello");
     await contains(`.o-mail-SearchMessageResult .o-mail-Message span.${HIGHLIGHT_CLASS}`, {
         count: 2,
     });
