@@ -4,6 +4,7 @@ import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { imageUrl } from "@web/core/utils/urls";
 import { isBinarySize } from "@web/core/utils/binary";
+import { generateImageVariants } from "@web/core/utils/image_library";
 import { FileUploader } from "../file_handler";
 import { standardFieldProps } from "../standard_field_props";
 
@@ -179,63 +180,12 @@ export class ImageField extends Component {
         }
         if (info.type === "image/webp") {
             // Generate alternate sizes and format for reports.
-            const image = document.createElement("img");
-            image.src = `data:image/webp;base64,${info.data}`;
-            await new Promise((resolve) => image.addEventListener("load", resolve));
-            const originalSize = Math.max(image.width, image.height);
-            const smallerSizes = [1920, 1024, 512, 256, 128].filter((size) => size < originalSize);
-            let referenceId = undefined;
-            for (const size of [originalSize, ...smallerSizes]) {
-                const ratio = size / originalSize;
-                const canvas = document.createElement("canvas");
-                canvas.width = image.width * ratio;
-                canvas.height = image.height * ratio;
-                const ctx = canvas.getContext("2d");
-                ctx.fillStyle = "transparent";
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-                ctx.imageSmoothingEnabled = true;
-                ctx.imageSmoothingQuality = "high";
-                ctx.drawImage(
-                    image,
-                    0,
-                    0,
-                    image.width,
-                    image.height,
-                    0,
-                    0,
-                    canvas.width,
-                    canvas.height
-                );
-                const [resizedId] = await this.orm.call("ir.attachment", "create_unique", [
-                    [
-                        {
-                            name: info.name,
-                            description: size === originalSize ? "" : `resize: ${size}`,
-                            raw:
-                                size === originalSize
-                                    ? info.data
-                                    : canvas.toDataURL("image/webp").split(",")[1],
-                            res_id: referenceId,
-                            res_model: "ir.attachment",
-                            mimetype: "image/webp",
-                        },
-                    ],
-                ]);
-                referenceId = referenceId || resizedId; // Keep track of original.
-                // Converted to JPEG for use in PDF files, alpha values will default to white
-                await this.orm.call("ir.attachment", "create_unique", [
-                    [
-                        {
-                            name: info.name.replace(/\.webp$/, ".jpg"),
-                            description: "format: jpeg",
-                            raw: canvas.toDataURL("image/jpeg").split(",")[1],
-                            res_id: resizedId,
-                            res_model: "ir.attachment",
-                            mimetype: "image/jpeg",
-                        },
-                    ],
-                ]);
-            }
+            const variants = await generateImageVariants({
+                source: { data: info.data, mimetype: "image/webp" },
+                name: info.name,
+                smoothing: "high",
+            });
+            await this.orm.call("ir.attachment", "web_create_image_variants", [variants]);
         }
         const { fileNameField, record } = this.props;
         const changes = { [this.props.name]: info.data || false };
