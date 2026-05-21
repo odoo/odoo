@@ -106,6 +106,7 @@
         <record id="az" model="res.country">
             <field name="name">Azerbaijan</field>
             <field name="code">az</field>
+            <field eval="'%(street)s\n%(street2)s\n%(city)s %(state_name)s %(zip)s\n%(country_name)s'" name="address_format"/>
             <field name="currency_id" ref="AZN" />
             <field eval="994" name="phone_code" />
         </record>
