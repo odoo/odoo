@@ -446,10 +446,13 @@ class IrModuleModule(models.Model):
     def _get_modules_from_apps(self, fields, module_type, module_name, domain=None, limit=None, offset=None):
         if 'name' not in fields:
             fields = fields + ['name']
+        domain_obj = Domain(domain or []).optimize(self)
+        fields_from_domain = {cond.field_expr for cond in domain_obj.iter_conditions()}
+        fields_to_ask = list(set(fields) | fields_from_domain)
         payload = {
             'params': {
                 'series': major_version,
-                'module_fields': fields,
+                'module_fields': fields_to_ask,
                 'module_type': module_type,
                 'module_name': module_name,
                 'domain': domain,
@@ -461,27 +464,40 @@ class IrModuleModule(models.Model):
         try:
             resp = self._call_apps(json.dumps(payload))
             resp.raise_for_status()
-            modules_list = resp.json().get('result', [])
-            for mod in modules_list:
-                module_name = mod['name']
-                existing_mod = self.search([('name', '=', module_name), ('state', '=', 'installed')])
-                mod['id'] = existing_mod.id if existing_mod else -1
-                if 'icon' in fields:
-                    mod['icon'] = f"{APPS_URL}{mod['icon']}"
-                if 'state' in fields:
-                    if existing_mod:
-                        mod['state'] = 'installed'
-                    else:
-                        mod['state'] = 'uninstalled'
-                if 'module_type' in fields:
-                    mod['module_type'] = module_type
-                if 'website' in fields:
-                    mod['website'] = f"{APPS_URL}/apps/modules/{major_version}/{module_name}/"
-            return modules_list
         except requests.exceptions.HTTPError:
             raise UserError(_('The list of industry applications cannot be fetched. Please try again later'))
         except requests.exceptions.ConnectionError:
             raise UserError(_('Connection to %s failed The list of industry modules cannot be fetched') % APPS_URL)
+
+        modules_list = resp.json().get('result', [])
+        existing_modules = self.search_fetch(
+            [('name', 'in', [mod['name'] for mod in modules_list])], ['name']
+        )
+        existing_module_names = set(existing_modules.mapped('name'))
+        all_modules = existing_modules
+        appstore_ids = {}
+        for mod in modules_list:
+            module_name = mod['name']
+            if module_name in existing_module_names:
+                continue
+            mod['icon'] = f"{APPS_URL}{mod.get('icon')}"
+            mod['state'] = 'uninstalled'
+            mod['module_type'] = module_type
+            mod['website'] = f"{APPS_URL}/apps/modules/{major_version}/{module_name}/"
+            appstore_ids[mod['name']] = mod['id']
+            all_modules += self.env['ir.module.module'].new(mod)
+
+        # removes category from the domain, since it does not work (categories are different) and
+        # was already applied on appstore call
+        domain_without_category = domain_obj.map_conditions(
+            lambda c: Domain.TRUE if c.field_expr == 'category_id' else c
+        )
+        results = all_modules.filtered_domain(domain_without_category).read(fields)
+        for r in results:
+            # need to handle some fields that are not defined with new()
+            r['id'] = r['id'] if r['id'] in all_modules.ids else -appstore_ids[r['name']]
+            r['icon_image'] = mod.get('icon_image')
+        return results
 
     @api.model
     @ormcache('payload')
