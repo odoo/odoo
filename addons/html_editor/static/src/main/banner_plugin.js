@@ -146,7 +146,7 @@ export class BannerPlugin extends Plugin {
 
         const bannerClasses = `${containerClass}o_editor_banner user-select-none o-contenteditable-false ${
             emoji ? "lh-1 " : ""
-        }d-flex align-items-center alert alert-${alertClass} pb-0 pt-3`;
+        }d-flex align-items-center alert alert-${alertClass} pb-0 pt-3 ps-3 pe-3`;
         const bannerContentClasses = `${contentClass}o_editor_banner_content o-contenteditable-true w-100 px-3`;
         const emojiHtml = emoji
             ? `<i class="o_editor_banner_icon mb-3 fst-normal" data-oe-aria-label="${htmlEscape(
