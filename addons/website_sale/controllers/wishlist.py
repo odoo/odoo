@@ -82,8 +82,22 @@ class ProductWishlist(Controller):
         if is_public_user and partner.user_ids.exists():
             raise AccessError(self.env._("Please sign in to proceed."))
 
-        if not product._has_stock_notification(partner):
-            product.sudo().stock_notification_partner_ids += partner
+        website = self.env.website
+
+        already_registered = False
+        if is_public_user and int(product_id) in request.session.get(
+            "product_with_stock_notification_enabled", set()
+        ):
+            already_registered = True
+        else:
+            already_registered = product._has_stock_notification(partner, website)
+
+        if not already_registered:
+            self.env["product.stock.notification"].sudo().create({
+                "product_id": product.id,
+                "website_id": website.id,
+                "partner_id": partner.id,
+            })
 
         if is_public_user:
             request.session["product_with_stock_notification_enabled"] = list(

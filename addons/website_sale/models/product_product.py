@@ -27,12 +27,6 @@ class ProductProduct(models.Model):
         compute="_compute_product_website_url",
     )
 
-    stock_notification_partner_ids = fields.Many2many(
-        "res.partner",
-        relation="stock_notification_product_partner_rel",
-        string="Back in stock Notifications",
-    )
-
     # === COMPUTE METHODS ===#
 
     @api.depends_context("lang")
@@ -322,9 +316,21 @@ class ProductProduct(models.Model):
         free_qty = self.env.website._get_product_available_qty(self.sudo())
         return free_qty <= 0
 
-    def _has_stock_notification(self, partner):
+    def _has_stock_notification(self, partner, website):
         self.ensure_one()
-        return partner in self.stock_notification_partner_ids
+        return bool(
+            self
+            .env["product.stock.notification"]
+            .sudo()
+            .search_count(
+                [
+                    ("product_id", "=", self.id),
+                    ("website_id", "=", website.id),
+                    ("partner_id", "=", partner.id),
+                ],
+                limit=1,
+            )
+        )
 
     def _get_max_quantity(self, website, sale_order, **kwargs):
         """Return The max quantity of a product.
@@ -345,35 +351,53 @@ class ProductProduct(models.Model):
         return None
 
     def _send_availability_email(self):
-        products = self.search([("stock_notification_partner_ids", "!=", False)]).filtered(
-            lambda p: not p._is_sold_out()
-        )
-        self.env["ir.cron"]._commit_progress(remaining=len(products.stock_notification_partner_ids))
+        """Send back-in-stock emails to all subscribers whose product is now available.
+
+        For each (product, website) group that is no longer sold
+        out, sends one email per subscriber using the website-specific template, then
+        deletes the notification record.
+
+        The sender address is resolved in order:
+        - company partner email
+        - website salesperson email
+        - company email_formatted, which includes the mail alias domain catchall
+        """
         email_template = self.env.ref(
             "website_sale.email_template_back_in_stock", raise_if_not_found=False
         )
         if not email_template:
             return
-        for product_id in products.ids:
-            product = self.env["product.product"].browse(product_id)
-            for partner_id in product.with_context(
-                # Only fetch the ids, all the other fields will be invalidated either way
-                prefetch_fields=False
-            ).stock_notification_partner_ids.ids:
-                partner = self.env["res.partner"].browse(partner_id)
-                email_template.with_user(self.env.website.salesperson_id).with_context(
-                    customer_name=partner.name, lang=partner.lang
-                ).send_mail(
-                    product.id,
-                    force_send=True,
-                    email_values={
-                        "email_to": partner.email_formatted,
-                        "email_from": self.env.website.company_id.partner_id.email_formatted,
-                    },
-                )
+        grouped_notifications = self.env["product.stock.notification"]._read_group(
+            [], groupby=["product_id", "website_id"], aggregates=["id:recordset"]
+        )
+        notifications_to_send = [
+            notification
+            for product, website, notification in grouped_notifications
+            if not product
+            .with_company(website.company_id)
+            .with_context(website_id=website.id)
+            ._is_sold_out()
+        ]
+        self.env["ir.cron"]._commit_progress(remaining=len(notifications_to_send))
+        for notification in notifications_to_send:
+            website = notification.website_id
+            partner = notification.partner_id
+            product = notification.product_id
+            sender_email = (
+                website.company_id.partner_id.email_formatted
+                or website.salesperson_id.email_formatted
+                or website.company_id.email_formatted
+            )
+            email_template.with_user(website.salesperson_id).sudo().with_context(
+                customer_name=partner.name, lang=partner.lang, website_id=website.id
+            ).send_mail(
+                product.id,
+                force_send=True,
+                email_values={"email_to": partner.email_formatted, "email_from": sender_email},
+            )
 
-                product.stock_notification_partner_ids -= partner
-                self.env["ir.cron"]._commit_progress(1)
+            notification.sudo().unlink()
+            self.env["ir.cron"]._commit_progress(1)
 
     def _split_standard_from_custom_attributes(self):
         self.ensure_one()

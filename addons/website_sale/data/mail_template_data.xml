@@ -321,7 +321,7 @@
                     </div>
                     <div t-attf-style="margin-bottom: 22px; font-size: 14px;">
                         <a
-                            t-att-href="object.website_url"
+                            t-att-href="website.get_base_url() + object.website_url"
                             t-attf-style="background-color: {{website.company_id.email_secondary_color or '#875A7B'}}; padding: 8px 16px 8px 16px; text-decoration: none; color: {{website.company_id.email_primary_color or '#fff'}}; border-radius: 5px; font-size:14px;"
                         >
                             Order Now

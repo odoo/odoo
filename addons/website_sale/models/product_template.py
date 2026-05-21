@@ -970,7 +970,8 @@ class ProductTemplate(models.Model):
             stock_notification_email = ""
             if not website.is_public_user():
                 has_stock_notification = product_sudo._has_stock_notification(
-                    self.env.user.partner_id
+                    self.env.user.partner_id,
+                    website,
                 )
             elif request:
                 has_stock_notification = product_sudo.id in request.session.get(

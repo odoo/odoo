@@ -20,6 +20,7 @@ from . import (
     product_pricelist,
     product_pricelist_item,
     product_product,
+    product_stock_notification,
     product_public_category,
     product_ribbon,
     product_tag,
