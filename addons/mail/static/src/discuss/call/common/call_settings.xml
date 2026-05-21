@@ -114,14 +114,14 @@
                                                 <span>Intensity</span>
                                                 <span class="o-discuss-DiscussCallSettings-width-text-percentage"><t t-out="Math.floor(this.store.settings.backgroundBlurAmount * 5)"/>%</span>
                                             </span>
-                                            <input class="form-range" type="range" min="0" max="20" step="1" t-att-value="this.store.settings.backgroundBlurAmount" t-on-change="this.onChangeBackgroundBlurAmount"/>
+                                            <input class="form-range" type="range" min="0" max="20" step="1" t-att-value="this.store.settings.backgroundBlurAmount" t-on-input="this.onInputBackgroundBlurAmount"/>
                                         </div>
                                         <div class="d-flex flex-column flex-grow-1 gap-1" title="Edge blur intensity" aria-label="Edge blur intensity">
                                             <span class="flex-shrink-0 d-flex justify-content-between fw-bold text-muted small text-uppercase">
                                                 <span>Edge Softness</span>
                                                 <span class="o-discuss-DiscussCallSettings-width-text-percentage"><t t-out="Math.floor(this.store.settings.edgeBlurAmount * 5)"/>%</span>
                                             </span>
-                                            <input class="form-range" type="range" min="0" max="20" step="1" t-att-value="this.store.settings.edgeBlurAmount" t-on-change="this.onChangeEdgeBlurAmount"/>
+                                            <input class="form-range" type="range" min="0" max="20" step="1" t-att-value="this.store.settings.edgeBlurAmount" t-on-input="this.onInputEdgeBlurAmount"/>
                                         </div>
                                     </div>
                                 </t>
