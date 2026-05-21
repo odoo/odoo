@@ -261,7 +261,7 @@ export function useSelectableComponent(props, { onItemChange } = {}) {
             return;
         }
         let currentItem;
-        let itemPriority = 0;
+        let itemPriority = -Infinity;
         for (const selectableItem of selectableItems) {
             if (selectableItem.isApplied() && selectableItem.priority >= itemPriority) {
                 currentItem = selectableItem;
