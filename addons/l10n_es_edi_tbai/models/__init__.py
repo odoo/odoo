@@ -2,6 +2,7 @@
 
 from . import account_move
 from . import account_move_line
+from . import account_tax
 from . import certificate
 from . import account_move_send
 from . import l10n_es_edi_tbai_agencies

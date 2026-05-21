@@ -8,14 +8,6 @@ from markupsafe import Markup
 from odoo import _, api, fields, models
 from odoo.exceptions import LockError, UserError
 
-TBAI_REFUND_REASONS = [
-    ('R1', "R1: Art. 80.1, 80.2, 80.6 and rights founded error"),
-    ('R2', "R2: Art. 80.3"),
-    ('R3', "R3: Art. 80.4"),
-    ('R4', "R4: Art. 80 - other"),
-    ('R5', "R5: Factura rectificativa en facturas simplificadas"),
-]
-
 
 class AccountMove(models.Model):
     _inherit = 'account.move'
@@ -68,13 +60,6 @@ class AccountMove(models.Model):
         compute='_compute_l10n_es_tbai_is_required',
     )
 
-    l10n_es_tbai_refund_reason = fields.Selection(
-        selection=TBAI_REFUND_REASONS,
-        string="Invoice Refund Reason Code (TicketBai)",
-        help="BOE-A-1992-28740. Ley 37/1992, de 28 de diciembre, del Impuesto sobre el "
-        "Valor Añadido. Artículo 80. Modificación de la base imponible.",
-        copy=False,
-    )
     l10n_es_tbai_original_invoice_date = fields.Date(
         string="Original Invoice Date (TicketBAI)",
         copy=False,
@@ -273,7 +258,7 @@ class AccountMove(models.Model):
         values = {
             'is_sale': self.is_sale_document(),
             'partner': self.commercial_partner_id,
-            'is_simplified': self.l10n_es_is_simplified,
+            'is_simplified': self.l10n_es_invoice_type in ('F2', 'R5'),
             'delivery_date': self.delivery_date if self.delivery_date != fields.Datetime.today() else None,
             **self._l10n_es_tbai_get_attachment_values(cancel),
         }
@@ -307,15 +292,17 @@ class AccountMove(models.Model):
             base_line['discount_amount'] = sign * base_line['discount_amount']
             base_line['price_total'] = sign * base_line['price_total']
         taxes = self.invoice_line_ids.tax_ids.flatten_taxes_hierarchy()
-        is_oss = any(tax._l10n_es_get_regime_code() == '17' for tax in taxes)
+        regime_code = self.env['account.tax']._l10n_es_regime_code_aeat(self.l10n_es_regime_code) or '01'
+        is_oss_or_canary = regime_code in ('17', '54')
 
         return {
             **self._l10n_es_tbai_get_credit_note_values(),
             'origin': self.invoice_origin and self.invoice_origin[:250] or 'manual',
             'taxes': taxes,
+            'regime_code': regime_code,
             'rate': abs(self.amount_total / self.amount_total_signed) if self.amount_total else 1,
             'base_lines': base_lines,
-            'nosujeto_causa': 'IE' if is_oss else 'RL',
+            'nosujeto_causa': 'IE' if is_oss_or_canary else 'RL',
             **({'post_doc': self.l10n_es_tbai_post_document_id} if cancel else {}),
         }
 
@@ -324,7 +311,7 @@ class AccountMove(models.Model):
         fallback_refunded_name = self.l10n_es_original_invoice_credited
         return {
             'is_refund': self.move_type == 'out_refund',
-            'refund_reason': self.l10n_es_tbai_refund_reason,
+            'refund_reason': self.l10n_es_invoice_type,
             'refunded_doc': reversed_entry.l10n_es_tbai_post_document_id,
             'refunded_doc_invoice_date': reversed_entry.invoice_date if reversed_entry else self.l10n_es_tbai_original_invoice_date,
             'refunded_name': reversed_entry.name if reversed_entry else fallback_refunded_name,
@@ -338,28 +325,14 @@ class AccountMove(models.Model):
             'invoice_date': self.invoice_date,
             **self._l10n_es_tbai_get_vendor_bill_tax_values(),
         }
-        # Check if intracom
-        mod_303_10 = self.env.ref('l10n_es.mod_303_casilla_10_balance')._get_matching_tags()
-        mod_303_11 = self.env.ref('l10n_es.mod_303_casilla_11_balance')._get_matching_tags()
-        tax_tags = self.invoice_line_ids.tax_ids.flatten_taxes_hierarchy().repartition_line_ids.tag_ids
-        intracom = bool(tax_tags & (mod_303_10 + mod_303_11))
-        reagyp = self.invoice_line_ids.tax_ids.filtered(lambda t: t.l10n_es_type == 'sujeto_agricultura')
-        if intracom:
-            values['regime_key'] = ['09']
-        elif reagyp:
-            values['regime_key'] = ['02']
-        else:
-            values['regime_key'] = ['01']
+
+        regime_code = self.env['account.tax']._l10n_es_regime_code_aeat(self.l10n_es_regime_code) or '01'
+        values['regime_key'] = [regime_code]
         # Credit notes (factura rectificativa)
         if values['is_refund']:
-            values['refund_reason'] = self.l10n_es_tbai_refund_reason
+            values['refund_reason'] = self.l10n_es_invoice_type
             values['credit_note_invoices'] = self.reversed_entry_id | self.l10n_es_tbai_reversed_ids
-        if reagyp:
-            values['tipofactura'] = 'F6'
-        elif self._l10n_es_is_dua():
-            values['tipofactura'] = 'F5'
-        else:
-            values['tipofactura'] = 'F1'
+        values['tipofactura'] = self.l10n_es_invoice_type
         return values
 
     def _l10n_es_tbai_get_vendor_bill_tax_values(self):

@@ -41,6 +41,34 @@ class TestEdiXmls(TestEsEdiCommon):
     def _mock_sii_webservice_batch(self, document, communication_type, info_list):
         return {doc: (True, {'csv': 'MOCK_CSV', 'response_message': 'Correcto'}) for doc in document}
 
+    def test_invoice_type_reverts_to_f1_when_growing_past_simplified_limit(self):
+        """A simplified invoice (F2) for a VAT-registered EU customer must revert to F1 once it
+        grows past the simplified-invoice limit."""
+        invoice = self._create_invoice_es(
+            partner_id=self.partner_a.id,  # BE, has a VAT number
+            invoice_line_ids=[{'price_unit': 100.0, 'tax_ids': [Command.set(self._get_tax_by_xml_id('s_iva21b').ids)]}],
+            l10n_es_invoice_type='F2',
+        )
+        self.assertEqual(invoice.l10n_es_invoice_type, 'F2')
+
+        invoice.invoice_line_ids = [Command.create({
+            'product_id': self.product_a.id,
+            'price_unit': 1000.0,
+            'tax_ids': [Command.set(self._get_tax_by_xml_id('s_iva21b').ids)],
+        })]
+        self.assertEqual(invoice.l10n_es_invoice_type, 'F1')
+
+    def test_invoice_type_manual_value_not_overridden_without_country(self):
+        """A manually-set refund reason for a customer with no country set (so the VAT/amount
+        heuristic never applies at all) must not be touched, regardless of amount."""
+        refund = self._create_invoice_es(
+            move_type='out_refund',
+            partner_id=self.partner_b.id,  # has a VAT number but no country_id set
+            invoice_line_ids=[{'price_unit': 1000.0, 'tax_ids': [Command.set(self._get_tax_by_xml_id('s_iva21b').ids)]}],
+            l10n_es_invoice_type='R1',
+        )
+        self.assertEqual(refund.l10n_es_invoice_type, 'R1')
+
     def test_sii_send_batches_multiple_documents(self):
         invoice_1 = self._create_invoice_es(
             partner_id=self.partner_b.id,
@@ -69,7 +97,7 @@ class TestEdiXmls(TestEsEdiCommon):
         refund = self._create_invoice_es(
             move_type='out_refund', partner_id=self.partner_b.id,
             invoice_line_ids=[{'tax_ids': [Command.set(self._get_tax_by_xml_id('s_iva21b').ids)]}],
-            l10n_es_sii_refund_reason='R1',
+            l10n_es_invoice_type='R1',
         )
         moves = invoice | refund
         moves.action_post()
@@ -297,7 +325,7 @@ class TestEdiXmls(TestEsEdiCommon):
                 {'price_unit': 100.0, 'tax_ids': [(6, 0, self._get_tax_by_xml_id('s_iva10b').ids)]},
                 {'price_unit': 200.0, 'tax_ids': [(6, 0, self._get_tax_by_xml_id('s_iva21s').ids)]},
             ],
-            l10n_es_sii_refund_reason='R1'
+            l10n_es_invoice_type='R1'
         )
         with patch(
             'odoo.addons.l10n_es_edi_sii.models.l10n_es_edi_sii_document.L10nEsEdiSiiDocument._post_to_agency',
@@ -425,7 +453,7 @@ class TestEdiXmls(TestEsEdiCommon):
                 {'price_unit': 100.0, 'tax_ids': [(6, 0, self._get_tax_by_xml_id('s_iva0_sp_i').ids)]},
                 {'price_unit': 200.0, 'tax_ids': [(6, 0, self._get_tax_by_xml_id('s_iva0_g_i').ids)]},
             ],
-            l10n_es_sii_refund_reason='R1'
+            l10n_es_invoice_type='R1'
         )
         with patch(
             'odoo.addons.l10n_es_edi_sii.models.l10n_es_edi_sii_document.L10nEsEdiSiiDocument._post_to_agency',
@@ -538,7 +566,7 @@ class TestEdiXmls(TestEsEdiCommon):
                 {'price_unit': 100.0, 'tax_ids': [(6, 0, self._get_tax_by_xml_id('s_iva0_sp_i').ids)]},
                 {'price_unit': 200.0, 'tax_ids': [(6, 0, self._get_tax_by_xml_id('s_iva0_g_i').ids)]},
             ],
-            l10n_es_sii_refund_reason='R1'
+            l10n_es_invoice_type='R1'
         )
         with patch(
             'odoo.addons.l10n_es_edi_sii.models.l10n_es_edi_sii_document.L10nEsEdiSiiDocument._post_to_agency',
@@ -597,7 +625,7 @@ class TestEdiXmls(TestEsEdiCommon):
                 {'price_unit': 200.0, 'tax_ids': [(6, 0, self._get_tax_by_xml_id('s_iva0_sp_i').ids)]},
                 {'price_unit': 400.0, 'tax_ids': [(6, 0, self._get_tax_by_xml_id('s_iva0_g_i').ids)]},
             ],
-            l10n_es_sii_refund_reason='R1'
+            l10n_es_invoice_type='R1'
         )
         with patch(
             'odoo.addons.l10n_es_edi_sii.models.l10n_es_edi_sii_document.L10nEsEdiSiiDocument._post_to_agency',
@@ -706,7 +734,7 @@ class TestEdiXmls(TestEsEdiCommon):
             partner_id=self.partner_b.id,
             l10n_es_registration_date='2019-01-02',
             invoice_line_ids=[{'price_unit': 100.0, 'tax_ids': [(6, 0, self._get_tax_by_xml_id('p_iva10_bc').ids)]}],
-            l10n_es_sii_refund_reason='R4'
+            l10n_es_invoice_type='R4'
         )
         with patch(
             'odoo.addons.l10n_es_edi_sii.models.l10n_es_edi_sii_document.L10nEsEdiSiiDocument._post_to_agency',
@@ -1001,7 +1029,7 @@ class TestEdiXmls(TestEsEdiCommon):
                     'tax_ids': [(6, 0, (self._get_tax_by_xml_id('p_iva10_bc') + self._get_tax_by_xml_id('p_irpf1')).ids)],
                 },
             ],
-            l10n_es_sii_refund_reason='R4'
+            l10n_es_invoice_type='R4'
         )
         with patch(
             'odoo.addons.l10n_es_edi_sii.models.l10n_es_edi_sii_document.L10nEsEdiSiiDocument._post_to_agency',
@@ -1053,7 +1081,7 @@ class TestEdiXmls(TestEsEdiCommon):
                     'tax_ids': [(6, 0, (self._get_tax_by_xml_id('p_iva10_bc') + self._get_tax_by_xml_id('p_irpf1')).ids)],
                 },
             ],
-            l10n_es_sii_refund_reason='R4'
+            l10n_es_invoice_type='R4'
         )
         with patch(
             'odoo.addons.l10n_es_edi_sii.models.l10n_es_edi_sii_document.L10nEsEdiSiiDocument._post_to_agency',
@@ -1203,7 +1231,7 @@ class TestEdiXmls(TestEsEdiCommon):
                     'tax_ids': [(6, 0, self._get_tax_by_xml_id('p_iva21_ic_bc').ids)],
                 },
             ],
-            l10n_es_sii_refund_reason='R4'
+            l10n_es_invoice_type='R4'
         )
         with patch(
             'odoo.addons.l10n_es_edi_sii.models.l10n_es_edi_sii_document.L10nEsEdiSiiDocument._post_to_agency',

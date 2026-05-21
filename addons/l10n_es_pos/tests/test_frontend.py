@@ -35,14 +35,14 @@ class TestUi(TestPointOfSaleHttpCommon):
             'code': 'SIMP',
         })
         def get_number_of_regular_invoices():
-            return self.env['account.move'].search_count([('journal_id', '=', self.main_pos_config.journal_id.id), ('l10n_es_is_simplified', '=', False), ('pos_order_ids', '!=', False)])
+            return self.env['account.move'].search_count([('journal_id', '=', self.main_pos_config.journal_id.id), ('l10n_es_invoice_type', 'not in', ('F2', 'R5')), ('pos_order_ids', '!=', False)])
         initial_number_of_regular_invoices = get_number_of_regular_invoices()
         self.main_pos_config.l10n_es_simplified_invoice_journal_id = simp
         # this `limit` value is linked to the `SIMPLIFIED_INVOICE_LIMIT` const in the tour
         self._get_main_company().l10n_es_simplified_invoice_limit = 1000
         self.main_pos_config.with_user(self.pos_user).open_ui()
         self.start_pos_tour("spanish_pos_tour")
-        num_of_simp_invoices = self.env['account.move'].search_count([('journal_id', '=', simp.id), ('l10n_es_is_simplified', '=', True)])
+        num_of_simp_invoices = self.env['account.move'].search_count([('journal_id', '=', simp.id), ('l10n_es_invoice_type', 'in', ('F2', 'R5'))])
         num_of_regular_invoices = get_number_of_regular_invoices() - initial_number_of_regular_invoices
         self.assertEqual(num_of_simp_invoices, 3)
         self.assertEqual(num_of_regular_invoices, 2)

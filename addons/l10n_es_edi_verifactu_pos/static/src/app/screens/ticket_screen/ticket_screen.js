@@ -10,8 +10,7 @@ patch(TicketScreen.prototype, {
                 order: destinationOrder,
             });
             if (payload) {
-                destinationOrder.l10n_es_edi_verifactu_refund_reason =
-                    payload.l10n_es_edi_verifactu_refund_reason;
+                destinationOrder.l10n_es_invoice_type = payload.l10n_es_invoice_type;
             }
         }
         await super.addAdditionalRefundInfo(...arguments);

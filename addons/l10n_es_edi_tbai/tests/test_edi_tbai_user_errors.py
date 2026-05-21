@@ -142,7 +142,6 @@ class TestTbaiUserErrors(TestEsEdiTbaiCommonGipuzkoa):
             .with_context(active_model="account.move", active_ids=self.invoice_to_send.ids)
             .create({
                 'journal_id': self.invoice_to_send.journal_id.id,
-                'l10n_es_tbai_refund_reason': 'R4',
             })
         )
         credit_note_id = move_reversal.refund_moves()['res_id']
