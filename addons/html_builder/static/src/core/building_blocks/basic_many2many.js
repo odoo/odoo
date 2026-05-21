@@ -16,6 +16,7 @@ export class BasicMany2Many extends Component {
         setSelection: t.function(),
         create: t.function().optional(),
         displayNameField: t.string().optional("display_name"),
+        message: t.string().optional(),
     });
 
     select(entry) {

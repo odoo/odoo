@@ -21,6 +21,7 @@ export class BuilderMany2Many extends Component {
         domain: t.array().optional(),
         limit: t.number().optional(),
         displayNameField: t.string().optional("display_name"),
+        message: t.string().optional(),
     });
 
     setup() {
