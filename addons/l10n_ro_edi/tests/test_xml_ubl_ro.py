@@ -305,6 +305,43 @@ class TestUBLRO(TestUBLROCommon):
         with self.assertRaisesRegex(UserError, "city name must be 'SECTORX'"):
             invoice._generate_and_send(allow_fallback_pdf=False, template_id=self.move_template.id)
 
+    def test_export_invoice_characters_limit(self):
+        """ Test that 'Item name', 'Item description' and 'Note' don't exceed the limit accepted by the SPV:
+            - Item name: 100 characters limit
+            - Item description: 200 characters limit
+            - Note: 300 characters limit
+        """
+        self.env['ir.config_parameter'].set_param('account_edi_ubl_cii.use_new_dict_to_xml_helpers', 'True')
+        product = self._create_product(
+            name='A product name that is longer than 100 characters in order to trigger a rejection of the invoice by the SPV.'
+        )
+        invoice = self._generate_move(
+            self.env.company.partner_id,
+            self.partner_a,
+            send=True,
+            move_type="out_invoice",
+            currency_id=self.company.currency_id.id,
+            invoice_line_ids=[
+                {
+                    'name': (
+                        'A product description that is longer than 200 characters in order to trigger a rejection of the invoice by the SPV. '
+                        'The product description should be trimmed to 200 characters if it is too long in order to pass the validation from the SPV.'
+                    ),
+                    'product_id': product.id,
+                    'quantity': 1.0,
+                    'price_unit': 500.0,
+                    'tax_ids': [Command.set(self.tax_19.ids)],
+                },
+            ],
+            narration=(
+                'A note that is longer than 300 charracters in order to trigger a rejection of the invoice by the SPV. '
+                'With this extra line, this note will exceed the limit of 300 characters that are authorized by the SPV. '
+                'A note should be trimmed to 300 characters if it is too long in order to pass the validation from the SPV.'
+           ),
+        )
+        attachment = self.get_attachment(invoice)
+        self._assert_invoice_attachment(attachment, xpaths=None, expected_file_path='from_odoo/ciusro_out_invoice_characters_limit.xml')
+
     ####################################################
     # Testing of the bill synchronization with SPV
     ####################################################
