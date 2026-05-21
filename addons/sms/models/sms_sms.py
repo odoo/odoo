@@ -62,6 +62,7 @@ class SmsSms(models.Model):
         ('sms_blacklist', 'Blacklisted'),
         ('sms_duplicate', 'Duplicate'),
         ('sms_optout', 'Opted Out'),
+        ('sms_database_non_active', 'Database non active'),
     ], copy=False)
     sms_tracker_id = fields.Many2one('sms.tracker', string='SMS trackers', compute='_compute_sms_tracker_id')
     to_delete = fields.Boolean(
