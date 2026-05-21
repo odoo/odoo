@@ -226,7 +226,7 @@ class StockPicking(models.Model):
             if not delivery_lines:
                 delivery_lines = sale_order._create_delivery_line(self.carrier_id, self.carrier_price)
             vals = self._prepare_sale_delivery_line_vals()
-            delivery_lines[0].write(vals)
+            delivery_lines[0].with_context(allow_delivery_cost_update=True).write(vals)
 
     def open_website_url(self):
         self.ensure_one()
