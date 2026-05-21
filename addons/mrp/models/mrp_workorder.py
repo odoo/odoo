@@ -533,6 +533,8 @@ class MrpWorkorder(models.Model):
                     if values.get('date_start') and values.get('date_finished'):
                         computed_finished_time = workorder._calculate_date_finished(date_start=date_start, new_workcenter=new_workcenter)
                         values['date_finished'] = computed_finished_time
+                    elif 'date_start' in values and date_start and date_finished:
+                        values['date_finished'] = workorder._calculate_date_finished(date_start=date_start, new_workcenter=new_workcenter)
                     elif date_start and date_finished:
                         computed_duration = workorder._calculate_duration_expected(date_start=date_start, date_finished=date_finished)
                         values['duration_expected'] = computed_duration
