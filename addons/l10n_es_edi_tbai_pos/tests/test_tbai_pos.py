@@ -1,7 +1,8 @@
 from unittest.mock import patch
 
-from odoo import Command
+from odoo import Command, fields
 from odoo.addons.l10n_es_edi_tbai.tests.common import TestEsEdiTbaiCommonGipuzkoa
+from odoo.addons.l10n_es_edi_tbai.models.xml_utils import NS_MAP
 from odoo.addons.point_of_sale.tests.common import TestPointOfSaleCommon
 from odoo.exceptions import UserError
 from odoo.tests import tagged
@@ -150,3 +151,76 @@ class TestPosEdi(TestEsEdiTbaiCommonGipuzkoa, TestPointOfSaleCommon):
         # the second order should retry the unposted chain head
         self.assertEqual(pos_order.l10n_es_tbai_state, 'sent')
         self.assertEqual(pos_order2.l10n_es_tbai_state, 'sent')
+
+    def test_tbai_xml_order_and_refund_line_amounts_with_discount(self):
+        if self.env['ir.module.module']._get('pos_discount').state != 'installed':
+            self.skipTest("pos_discount module is required for this test")
+
+        def get_edi_doc_in_xml(order):
+            edi_document = order._l10n_es_tbai_create_edi_document(cancel=False)
+            edi_document._generate_xml(order._l10n_es_tbai_get_values())
+            xml_doc = edi_document._get_xml()
+            xml_doc.remove(xml_doc.find("Signature", namespaces=NS_MAP))
+            return xml_doc
+
+        def assert_order_line(line, cantidad, unitario, total):
+            self.assertEqual(line.find("Cantidad").text, cantidad)
+            self.assertEqual(line.find("ImporteUnitario").text, unitario)
+            self.assertEqual(line.find("ImporteTotal").text, total)
+
+        self.pos_config.module_pos_discount = True
+        discount_product = self.env.ref("pos_discount.product_product_consumable", raise_if_not_found=False)
+        self.pos_config.discount_product_id = discount_product
+
+        self.pos_config.open_ui()
+        product_price, discount = 100, -10
+        pos_order = {
+            "amount_tax": 0.21 * (product_price + discount),
+            "amount_total": 1.21 * (product_price + discount),
+            "amount_paid": 0.0,
+            "amount_return": 0.0,
+            "session_id": self.pos_config.current_session_id.id,
+            "lines": [
+                Command.create({
+                        "product_id": self.product_a.id,
+                        "price_unit": product_price,
+                        "qty": 1,
+                        "tax_ids": self._get_tax_by_xml_id("s_iva21b").ids,
+                        "price_subtotal": product_price,
+                        "price_subtotal_incl": product_price * 1.21,
+                }),
+                Command.create({
+                        "product_id": discount_product.id,
+                        "price_unit": discount,
+                        "qty": 1,
+                        "tax_ids": self._get_tax_by_xml_id("s_iva21b").ids,
+                        "price_subtotal": discount,
+                        "price_subtotal_incl": discount * 1.21,
+                }),
+            ],
+            "payment_ids": [
+                Command.create({
+                        "amount": 1.21 * (product_price + discount),
+                        "name": fields.Datetime.now(),
+                        "payment_method_id": self.pos_config.payment_method_ids[0].id,
+                }),
+            ],
+            "uuid": "00044-003-0014",
+        }
+        results = self.PosOrder.sync_from_ui([pos_order])
+        pos_order = self.PosOrder.browse(results['pos.order'][0]['id'])
+
+        refund_action = pos_order.refund()
+        pos_refund = self.PosOrder.browse(refund_action['res_id'])
+
+        xml_doc = get_edi_doc_in_xml(pos_order)
+        order_lines = xml_doc.find("Factura/DatosFactura/DetallesFactura")
+        assert_order_line(order_lines[0], "1.00000000", "100.00000000", "121.00000000")
+        assert_order_line(order_lines[1], "1.00000000", "-10.00000000", "-12.10000000")
+        self.assertEqual(xml_doc.find("Factura/DatosFactura/ImporteTotalFactura").text, "108.90")
+
+        xml_doc = get_edi_doc_in_xml(pos_refund)
+        order_lines = xml_doc.find("Factura/DatosFactura/DetallesFactura")
+        assert_order_line(order_lines[0], "1.00000000", "-100.00000000", "-121.00000000")
+        assert_order_line(order_lines[1], "1.00000000", "10.00000000", "12.10000000")
+        self.assertEqual(xml_doc.find("Factura/DatosFactura/ImporteTotalFactura").text, "-108.90")
