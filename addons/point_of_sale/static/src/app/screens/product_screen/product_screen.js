@@ -171,6 +171,9 @@ export class ProductScreen extends Component {
         while (next) {
             if (next == element) {
                 next = next.nextElementSibling;
+                if (!next) {
+                    break;
+                }
             }
             const nextSeq = Number(next.dataset.pos_sequence);
             if (nextSeq > currentSeq) {
