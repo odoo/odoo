@@ -93,6 +93,7 @@ class TestHrLeaveType(TestHrHolidaysCommon):
             'holiday_status_id': leave_type_no_comp.id,
             'employee_id': employee_id,
             'number_of_days': 10,
+            'date_from': date.today(),
         }).action_validate()
         self.assertEqual(leave_type_comp.with_context(employee_id=employee_id).max_leaves, 0)
         self.assertEqual(leave_type_no_comp.with_context(employee_id=employee_id).max_leaves, 10)
