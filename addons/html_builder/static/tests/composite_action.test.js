@@ -215,3 +215,23 @@ test("composite action's isApplied returns true if at least one action defined i
     await contains("[data-action-id='composite']").click();
     expect("[data-action-id='composite']").toHaveClass("active");
 });
+
+test("applied composite action's with no getPriority implementation is considered the applied option", async () => {
+    addBuilderOption({
+        selector: ".s_test",
+        template: xml`
+            <BuilderSelect>
+                <BuilderSelectItem
+                    action="'composite'"
+                    actionParam="[
+                        { action: 'dataAttributeAction', actionParam: { mainParam: 'test' } },
+                    ]"
+                    actionValue="'something'">
+                    The Test Option
+                </BuilderSelectItem>
+            </BuilderSelect>`,
+    });
+    await setupHTMLBuilder(`<section class="s_test" data-test="something">Test</section>`);
+    await contains(":iframe .s_test").click();
+    expect(".o-hb-select-wrapper button").toHaveText("The Test Option");
+});
