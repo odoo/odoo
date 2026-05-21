@@ -187,7 +187,7 @@ test('Show "Add follower" and subtypes edition/removal buttons on all followers 
     await click(".o-mail-Followers-button");
     await contains("a:text('Add Followers')");
     await contains(":nth-child(1 of .o-mail-Follower)", {
-        contains: [["[title='Edit subscription']"], ["[title='Remove this follower']"]],
+        contains: [["[title='Edit Notification Preferences']"], ["[title='Remove this follower']"]],
     });
 });
 
