@@ -4,8 +4,12 @@
     <t t-name="web.ImageField">
         <div class="d-inline-block position-relative opacity-trigger-hover">
             <div t-if="!this.props.readonly and this.fieldType !== 'many2one'" class="o_image_uploader_container" t-att-class="containerClass" aria-atomic="true" t-att-style="this.sizeStyle">
+                <!--
+                    dummy/allowAndroidCamera is an invalid mimetype used to force android to sugest "Camera" option
+                    Otherwise, in recent Android (>13) it will open the gallery directly which is not what we want.
+                -->
                 <FileUploader
-                    acceptedFileExtensions="this.props.acceptedFileExtensions"
+                    acceptedFileExtensions="`${this.props.acceptedFileExtensions ? this.props.acceptedFileExtensions + ',' : ''}dummy/allowAndroidCamera`"
                     t-key="this.props.record.resId"
                     onUploaded.bind="this.onFileUploaded"
                 >
