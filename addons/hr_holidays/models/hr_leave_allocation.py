@@ -868,6 +868,18 @@ class HolidaysAllocation(models.Model):
             if allocation.employee_id == current_employee:
                 raise UserError(_('Only a time off Administrator can approve their own requests.'))
 
+    def _get_initialize_accrual_plan_values(self, date_from):
+        return {
+            'lastcall': date_from,
+            'nextcall': False,
+            'number_of_days': 0.0,
+            'number_of_days_display': 0.0,
+            'number_of_hours_display': 0.0,
+            'already_accrued': False,
+            'carried_over_days_expiration_date': False,
+            'expiring_carryover_days': 0
+        }
+
     @api.onchange('allocation_type')
     def _onchange_allocation_type(self):
         if self.allocation_type == 'accrual':
@@ -885,14 +897,8 @@ class HolidaysAllocation(models.Model):
         if not self.date_from or self.allocation_type != 'accrual' or self.state == 'validate' or not self.accrual_plan_id\
            or not self.employee_id:
             return
-        self.lastcall = self.date_from
-        self.nextcall = False
-        self.number_of_days_display = 0.0
-        self.number_of_hours_display = 0.0
-        self.number_of_days = 0.0
-        self.already_accrued = False
-        self.carried_over_days_expiration_date = False
-        self.expiring_carryover_days = 0
+        update_vals = self._get_initialize_accrual_plan_values(self.date_from)
+        self.update(update_vals)
         date_to = min(self.date_to, date.today()) if self.date_to else False
         self._process_accrual_plans(date_to)
 
