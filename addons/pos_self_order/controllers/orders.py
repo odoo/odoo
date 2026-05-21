@@ -4,6 +4,7 @@ from odoo import http
 from odoo.addons.google_address_autocomplete.controllers.google_address_autocomplete import AutoCompleteController
 from odoo.fields import Domain
 from odoo.http import request
+from odoo.http.stream import content_disposition
 from odoo.service.model import call_kw
 from werkzeug.exceptions import Forbidden, NotFound, BadRequest, Unauthorized
 from odoo.exceptions import MissingError
@@ -211,6 +212,27 @@ class PosSelfOrderController(http.Controller):
             # Remove orders that no longer exist on the server but are still shown in the self-order UI
             pos_config._notify('REMOVE_ORDERS', {'deleted_order_tokens': deleted_order_tokens})
         return self._generate_return_values(orders, pos_config) if orders else {}
+
+    @http.route('/pos-self-order/receipt/<int:order_id>', auth='public', type='http')
+    def pos_self_order_receipt(self, order_id, access_token=None):
+        pos_order_sudo = request.env['pos.order'].sudo().browse(order_id)
+
+        if not pos_order_sudo.exists() or not pos_order_sudo.access_token or pos_order_sudo.state not in ('paid', 'done', 'invoiced'):
+            return request.not_found()
+
+        if not access_token or not consteq(pos_order_sudo.access_token, access_token):
+            return request.not_found()
+
+        image = pos_order_sudo.with_company(pos_order_sudo.company_id).order_receipt_generate_image()
+        if not image:
+            return request.not_found()
+
+        return request.make_response(image, [
+            ('Content-Type', 'image/png'),
+            ('Content-Length', len(image)),
+            ('Content-Security-Policy', "default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:"),
+            ('Content-Disposition', content_disposition(f'Receipt-{pos_order_sudo.name}.png')),
+        ])
 
     @http.route('/kiosk/payment/<int:pos_config_id>/<device_type>', auth='public', type='jsonrpc', website=True)
     def pos_self_order_kiosk_payment(self, pos_config_id, order, payment_method_id, access_token, device_type):
