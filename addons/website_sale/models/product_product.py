@@ -27,10 +27,8 @@ class ProductProduct(models.Model):
         compute="_compute_product_website_url",
     )
 
-    stock_notification_partner_ids = fields.Many2many(
-        "res.partner",
-        relation="stock_notification_product_partner_rel",
-        string="Back in stock Notifications",
+    stock_notification_ids = fields.One2many(
+        "product.stock.notification", "product_id", string="Back in stock Notifications"
     )
 
     # === COMPUTE METHODS ===#
@@ -41,10 +39,14 @@ class ProductProduct(models.Model):
         slug = self.env["ir.http"]._slug
         for product in self:
             url = urlparse(product.product_tmpl_id.website_url)
+            query_params = {}
+            if website_id := self.env.context.get("website_url_website_id"):
+                query_params["website"] = website_id
             if pavs := product.product_template_attribute_value_ids.product_attribute_value_id:
                 # There's no need to group the PAVs by attribute since a product variant can have
                 # only one PAV per attribute.
-                query_params = {slug(pav.attribute_id): slug(pav) for pav in pavs}
+                query_params.update({slug(pav.attribute_id): slug(pav) for pav in pavs})
+            if query_params:
                 url = url._replace(query=urlencode(query_params))
             product.website_url = url.geturl()
 
@@ -309,7 +311,7 @@ class ProductProduct(models.Model):
         # Unpublished, sudo to allow public users to read it
         return self.sudo().product_tmpl_id._is_donation()
 
-    def _is_sold_out(self):
+    def _is_sold_out(self, website=None):
         """Return whether the product is sold out (no available quantity).
 
         If a product inventory is not tracked, or if it's allowed to be sold regardless
@@ -321,12 +323,23 @@ class ProductProduct(models.Model):
         self.ensure_one()
         if not self.is_storable or self.allow_out_of_stock_order:
             return False
-        free_qty = self.env.website._get_product_available_qty(self.sudo())
+        website = website or self.env["website"].get_current_website()
+        free_qty = website._get_product_available_qty(self.sudo())
         return free_qty <= 0
 
-    def _has_stock_notification(self, partner):
+    def _has_stock_notification(self, partner, website):
         self.ensure_one()
-        return partner in self.stock_notification_partner_ids
+        return (
+            self
+            .env["product.stock.notification"]
+            .sudo()
+            .search_count([
+                ("product_id", "=", self.id),
+                ("website_id", "=", website.id),
+                ("partner_id", "=", partner.id),
+            ])
+            > 0
+        )
 
     def _get_max_quantity(self, website, sale_order, **kwargs):
         """Return The max quantity of a product.
@@ -347,35 +360,51 @@ class ProductProduct(models.Model):
         return None
 
     def _send_availability_email(self):
-        products = self.search([("stock_notification_partner_ids", "!=", False)]).filtered(
-            lambda p: not p._is_sold_out()
-        )
-        self.env["ir.cron"]._commit_progress(remaining=len(products.stock_notification_partner_ids))
+        """Send back-in-stock emails to all subscribers whose product is now available.
+
+        For each (product, website) group that is no longer sold
+        out, sends one email per subscriber using the website-specific template, then
+        deletes the notification record.
+
+        The sender address is resolved in order:
+        - company partner email
+        - website salesperson email
+        - company email_formatted, which includes the mail alias domain catchall
+        - current user email
+        """
+        notifications_to_send = self.env["product.stock.notification"]
+        for _, _, notifications in filter(
+            lambda g: not g[0].with_company(g[1].company_id)._is_sold_out(website=g[1]),
+            self.env["product.stock.notification"]._read_group(
+                [], groupby=["product_id", "website_id"], aggregates=["id:recordset"]
+            ),
+        ):
+            notifications_to_send |= notifications
+        self.env["ir.cron"]._commit_progress(remaining=len(notifications_to_send))
         email_template = self.env.ref(
             "website_sale.email_template_back_in_stock", raise_if_not_found=False
         )
         if not email_template:
             return
-        for product_id in products.ids:
-            product = self.env["product.product"].browse(product_id)
-            for partner_id in product.with_context(
-                # Only fetch the ids, all the other fields will be invalidated either way
-                prefetch_fields=False
-            ).stock_notification_partner_ids.ids:
-                partner = self.env["res.partner"].browse(partner_id)
-                email_template.with_user(self.env.website.salesperson_id).with_context(
-                    customer_name=partner.name, lang=partner.lang
-                ).send_mail(
-                    product.id,
-                    force_send=True,
-                    email_values={
-                        "email_to": partner.email_formatted,
-                        "email_from": self.env.website.company_id.partner_id.email_formatted,
-                    },
-                )
+        for notification in notifications_to_send:
+            website = notification.website_id
+            partner = notification.partner_id
+            sender_email = (
+                website.company_id.partner_id.email_formatted
+                or website.salesperson_id.email_formatted
+                or website.company_id.email_formatted
+                or self.env.user.email_formatted
+            )
+            email_template.with_user(website.salesperson_id).sudo().with_context(
+                customer_name=partner.name, lang=partner.lang
+            ).send_mail(
+                notification.id,
+                force_send=True,
+                email_values={"email_to": partner.email_formatted, "email_from": sender_email},
+            )
 
-                product.stock_notification_partner_ids -= partner
-                self.env["ir.cron"]._commit_progress(1)
+            notification.sudo().unlink()
+            self.env["ir.cron"]._commit_progress(1)
 
     def _split_standard_from_custom_attributes(self):
         self.ensure_one()

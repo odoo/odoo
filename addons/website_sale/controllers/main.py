@@ -722,6 +722,14 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if not self.env.website.has_ecommerce_access():
             return request.redirect(f"/web/login?redirect={request.httprequest.path}")
 
+        if website_id := kwargs.pop("website", kwargs.pop("website_id", None)):
+            if website := request.env["website"].browse(int(website_id)).exists():
+                # We cannot simply use the domain URL for the redirect because,
+                # although in practice we usually have one domain per website,
+                # an admin can create multiple websites that share the same default domain.
+                request.update_context(website_id=website.id)
+                website._force()
+
         if pricelist is not None:
             try:
                 pricelist_id = int(pricelist)
