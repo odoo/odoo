@@ -197,7 +197,10 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
             run: "click",
         },
         {
-            trigger: ".o_searchview_input",
+            trigger: ".o-mail-SearchMessageInput",
+        },
+        {
+            trigger: ".o-mail-SearchInput input",
             run: "edit text.txt",
         },
         {

@@ -1,4 +1,5 @@
-import { Component, useEffect, useState } from "@odoo/owl";
+import { Component, useEffect } from "@odoo/owl";
+import { useState } from "@web/owl2/utils";
 import { useAutofocus, useForwardRefToParent } from "@web/core/utils/hooks";
 
 let nextId = 0;
@@ -31,10 +32,12 @@ export class SearchInput extends Component {
     static template = "mail.SearchInput";
     static props = {
         search: { type: Object },
+        accesskey: { type: String, optional: true },
         autofocus: { type: [Boolean, Object], optional: true },
         classNames: { type: String, optional: true },
         inputRef: { type: Function, optional: true },
         loadingDelay: { type: Number, optional: true },
+        onClear: { type: Function, optional: true },
         onKeydown: { type: Function, optional: true },
         placeholder: { type: String, optional: true },
     };
@@ -61,7 +64,7 @@ export class SearchInput extends Component {
         this.inputRef = useForwardRefToParent("inputRef");
         if (this.props.autofocus) {
             const opts = typeof this.props.autofocus === "object" ? this.props.autofocus : {};
-            useAutofocus({ ...opts, refName: "input" });
+            useAutofocus({ ...opts, refName: "inputRef" });
         }
     }
 }
