@@ -20,8 +20,6 @@ import { uuid } from "@web/core/utils/strings";
 
 const { DateTime } = luxon;
 
-const WEBSOCKET_PORT = browser.location.protocol === "https:" ? 3001 : 3000;
-const WEBSOCKET_PROTOCOL = browser.location.protocol === "https:" ? "wss:" : "ws:";
 const WEBSOCKET_URL = "/socket.io/?transport=websocket&EIO=3";
 
 const convertObjectValuesToInt = (object) =>
@@ -74,12 +72,16 @@ export class GloryService {
      * @param {string} ip
      * @param {string} [username]
      * @param {string} [password]
+     * @param {boolean} [forceHttp]
      */
-    connect(ip, username, password) {
+    connect(ip, username, password, forceHttp = false) {
         this._resetState();
         this.username = username;
         this.password = password;
-        const websocketEndpoint = `${WEBSOCKET_PROTOCOL}//${ip}:${WEBSOCKET_PORT}${WEBSOCKET_URL}`;
+        const protocol = browser.location.protocol === "https:" && !forceHttp ? "wss:" : "ws:";
+        const port = protocol === "wss:" ? 3001 : 3000;
+
+        const websocketEndpoint = `${protocol}//${ip}:${port}${WEBSOCKET_URL}`;
         this.socketIo.connect(websocketEndpoint);
     }
 
