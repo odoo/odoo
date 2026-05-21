@@ -891,7 +891,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         original_category = category
         category = (
             category
-            or product.public_categ_ids.filtered(lambda c: c.can_access_from_current_website())[:1]
+            or product.public_categ_ids.filtered(lambda c: c.website_id == website)[:1]
         )
         markup_data = [
             website._prepare_ecommerce_store_markup_data(),
@@ -2150,9 +2150,10 @@ class WebsiteSale(payment_portal.PaymentPortal):
             and not str(category).isdigit()
         ):
             raise ValidationError(request.env._("Invalid category."))
+        website = request.env["website"].get_current_website()
         if (
             category := ProductCategory.browse(category and int(category)).exists()
-        ) and category.can_access_from_current_website():
+        ) and category.website_id == website:
             return category
         return ProductCategory
 

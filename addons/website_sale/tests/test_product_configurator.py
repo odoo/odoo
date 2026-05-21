@@ -504,7 +504,7 @@ class TestWebsiteSaleProductConfigurator(HttpCase, WebsiteSaleCommon):
         })
 
         # On website 1, the category from website 1 should be selected.
-        with MockRequest(self.env, website=self.website):
+        with MockRequest(self.website.env, website=self.website):
             values = self.pc_controller._prepare_product_values(
                 product_tmpl,
                 category=None,
@@ -512,7 +512,7 @@ class TestWebsiteSaleProductConfigurator(HttpCase, WebsiteSaleCommon):
         self.assertEqual(values['category'], categ_website_1)
 
         # On website 2, the category from website 2 should be selected.
-        with MockRequest(self.env, website=second_website):
+        with MockRequest(second_website.env, website=second_website):
             values = self.pc_controller._prepare_product_values(
                 product_tmpl,
                 category=None,

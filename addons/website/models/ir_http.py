@@ -216,11 +216,11 @@ class IrHttp(models.AbstractModel):
     @classmethod
     def _pre_dispatch(cls, rule, args):
         super()._pre_dispatch(rule, args)
-
+        website_id = request.env.context.get('website_id') or request.env.context.get('fallback_website_id')
         for record in args.values():
-            if isinstance(record, models.BaseModel) and hasattr(record, 'can_access_from_current_website'):
+            if isinstance(record, models.BaseModel) and 'website_id' in record._fields:
                 try:
-                    if not record.can_access_from_current_website():
+                    if record.website_id.id != website_id:
                         raise werkzeug.exceptions.NotFound()
                 except AccessError:
                     # record.website_id might not be readable as
