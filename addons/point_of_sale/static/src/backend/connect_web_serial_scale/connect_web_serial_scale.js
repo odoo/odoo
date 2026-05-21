@@ -50,6 +50,7 @@ export class ConnectWebSerialScale extends Component {
                 this.notification.add(_t("Your scale is not compatible with Odoo."), {
                     type: "danger",
                 });
+                await port.forget();
             }
         } catch {
             this.notification.add(_t("No device was selected."), { type: "warning" });
