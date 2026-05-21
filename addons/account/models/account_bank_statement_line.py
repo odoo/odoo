@@ -487,9 +487,10 @@ class AccountBankStatementLine(models.Model):
             ('payment_id', '=', False),
             # Special domain for statement lines.
             ('statement_line_id', '!=', self.id),
-            '|',
+            '|', '|',
             ('statement_line_id', '=', False),
             ('statement_line_id.is_reconciled', '=', False),
+            ('account_id', '=', self.company_id.transfer_account_id.id),
         ]
 
     @api.model
