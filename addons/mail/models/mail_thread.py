@@ -5085,7 +5085,7 @@ class MailThread(models.AbstractModel):
                 })
             )
         elif attachment_ids is not None:  # None means "no update"
-            message.attachment_ids._delete_and_notify()
+            message.attachment_ids._remove_and_notify()
         if partner_ids is not None:
             msg_values.update({"partner_ids": [int(pid) for pid in partner_ids] or False})
         if "subject" in kwargs:
