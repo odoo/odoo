@@ -105,6 +105,11 @@ test("clickbot clickeverywhere test", async () => {
             },
         },
     });
+
+    patchWithCleanup(performance, {
+        now: () => 43554.39999999106,
+    });
+
     defineMenus([
         { id: 1, name: "App1", appID: 1, actionID: 1001, xmlid: "app1" },
         {
@@ -138,10 +143,9 @@ test("clickbot clickeverywhere test", async () => {
     window.clickEverywhere();
     await clickEverywhereDef;
     expect.verifySteps([
-        "Clicking on: apps menu toggle button",
-        "Testing app menu: app1",
-        "Testing menu App1 app1",
-        'Clicking on: menu item "App1"',
+        "Starting ClickEverywhere test",
+        "Testing app: App1 (app1)",
+        "Testing menu App1 (app1)",
         "Testing 2 filters",
         'Clicking on: filter "Not Bar"',
         'Clicking on: filter "Date"',
@@ -152,30 +156,22 @@ test("clickbot clickeverywhere test", async () => {
         'Clicking on: filter "Not Bar"',
         'Clicking on: filter "Date"',
         'Clicking on: filter option "October"',
-        "Clicking on: apps menu toggle button",
-        "Testing app menu: app2",
-        "Testing menu App2 app2",
-        'Clicking on: menu item "App2"',
+        "Testing app: App2 (app2)",
+        "Testing menu menu 1 (app2_menu1)",
         "Testing 2 filters",
         'Clicking on: filter "Not Bar"',
         'Clicking on: filter "Date"',
         'Clicking on: filter option "October"',
-        "Testing menu menu 1 app2_menu1",
-        'Clicking on: menu item "menu 1"',
+        "Testing menu menu 2 (app2_menu2)",
         "Testing 2 filters",
         'Clicking on: filter "Not Bar"',
         'Clicking on: filter "Date"',
         'Clicking on: filter option "October"',
-        "Testing menu menu 2 app2_menu2",
-        'Clicking on: menu item "menu 2"',
-        "Testing 2 filters",
-        'Clicking on: filter "Not Bar"',
-        'Clicking on: filter "Date"',
-        'Clicking on: filter option "October"',
+        "Test took 0 seconds",
         "Successfully tested 2 apps",
-        "Successfully tested 2 menus",
+        "Successfully tested 3 menus",
         "Successfully tested 0 modals",
-        "Successfully tested 10 filters",
+        "Successfully tested 8 filters",
         SUCCESS_SIGNAL,
     ]);
 });
@@ -204,6 +200,9 @@ test("only one app", async () => {
                 clickEverywhereDef.resolve();
             },
         },
+    });
+    patchWithCleanup(performance, {
+        now: () => 43554.39999999106,
     });
     defineMenus([
         { id: 1, name: "App1", appID: 1, actionID: 1001, xmlid: "app1" },
@@ -238,10 +237,9 @@ test("only one app", async () => {
     window.clickEverywhere("app1");
     await clickEverywhereDef;
     expect.verifySteps([
-        "Clicking on: apps menu toggle button",
-        "Testing app menu: app1",
-        "Testing menu App1 app1",
-        'Clicking on: menu item "App1"',
+        "Starting ClickEverywhere test",
+        "Testing app: App1 (app1)",
+        "Testing menu App1 (app1)",
         "Testing 2 filters",
         'Clicking on: filter "Not Bar"',
         'Clicking on: filter "Date"',
@@ -252,12 +250,13 @@ test("only one app", async () => {
         'Clicking on: filter "Not Bar"',
         'Clicking on: filter "Date"',
         'Clicking on: filter option "October"',
+        "Test took 0 seconds",
         "Successfully tested 1 apps",
-        "Successfully tested 0 menus",
+        "Successfully tested 1 menus",
         "Successfully tested 0 modals",
         "Successfully tested 4 filters",
         SUCCESS_SIGNAL,
-        'savedState: {"light":false,"studioCount":0,"testedApps":["app1"],"testedMenus":["app1"],"testedFilters":4,"testedModals":0,"appIndex":0,"menuIndex":0,"subMenuIndex":0,"xmlId":"app1","app":"app1"}',
+        'savedState: {"light":false,"studioCount":0,"testedApps":["app1"],"testedMenus":["app1"],"testedFilters":4,"testedModals":0,"appIndex":0,"menuIndex":0,"xmlId":"app1"}',
     ]);
 });
 
@@ -278,6 +277,9 @@ test("clickbot clickeverywhere test (with dropdown menu)", async () => {
                 clickEverywhereDef.resolve();
             },
         },
+    });
+    patchWithCleanup(performance, {
+        now: () => 43554.39999999106,
     });
     defineMenus(
         [
@@ -325,32 +327,23 @@ test("clickbot clickeverywhere test (with dropdown menu)", async () => {
     window.clickEverywhere();
     await clickEverywhereDef;
     expect.verifySteps([
-        "Clicking on: apps menu toggle button",
-        "Testing app menu: app2",
-        "Testing menu App2 app2",
-        'Clicking on: menu item "App2"',
+        "Starting ClickEverywhere test",
+        "Testing app: App2 (app2)",
+        "Testing menu menu 1 (app2_menu1)",
         "Testing 2 filters",
         'Clicking on: filter "Not Bar"',
         'Clicking on: filter "Date"',
         'Clicking on: filter option "October"',
-        "Clicking on: menu toggler",
-        "Testing menu menu 1 app2_menu1",
-        'Clicking on: menu item "menu 1"',
+        "Testing menu menu 2 (app2_menu2)",
         "Testing 2 filters",
         'Clicking on: filter "Not Bar"',
         'Clicking on: filter "Date"',
         'Clicking on: filter option "October"',
-        "Clicking on: menu toggler",
-        "Testing menu menu 2 app2_menu2",
-        'Clicking on: menu item "menu 2"',
-        "Testing 2 filters",
-        'Clicking on: filter "Not Bar"',
-        'Clicking on: filter "Date"',
-        'Clicking on: filter option "October"',
+        "Test took 0 seconds",
         "Successfully tested 1 apps",
         "Successfully tested 2 menus",
         "Successfully tested 0 modals",
-        "Successfully tested 6 filters",
+        "Successfully tested 4 filters",
         SUCCESS_SIGNAL,
     ]);
 });
@@ -571,7 +564,7 @@ test("clickbot show rpc error when an error dialog is detected", async () => {
     expect.verifyErrors(["This is a server Error"]);
     expect.verifySteps([
         `A RPC in error was detected, maybe it's related to the error dialog : ${expectedRpcData}`,
-        "Error while testing App1 app1",
+        "Error while testing App1 (app1)",
         `Error: Error dialog detected${expectedModalHtml}`,
     ]);
 });
@@ -669,6 +662,9 @@ test("clickbot clickeverywhere menu modal", async () => {
             },
         },
     });
+    patchWithCleanup(performance, {
+        now: () => 43554.39999999106,
+    });
     defineActions([
         {
             id: 1099,
@@ -700,10 +696,9 @@ test("clickbot clickeverywhere menu modal", async () => {
     window.clickEverywhere();
     await clickEverywhereDef;
     expect.verifySteps([
-        "Clicking on: apps menu toggle button",
-        "Testing app menu: app1",
-        "Testing menu App1 app1",
-        'Clicking on: menu item "App1"',
+        "Starting ClickEverywhere test",
+        "Testing app: App1 (app1)",
+        "Testing menu App1 (app1)",
         "Testing 2 filters",
         'Clicking on: filter "Not Bar"',
         'Clicking on: filter "Date"',
@@ -714,14 +709,13 @@ test("clickbot clickeverywhere menu modal", async () => {
         'Clicking on: filter "Not Bar"',
         'Clicking on: filter "Date"',
         'Clicking on: filter option "October"',
-        "Clicking on: apps menu toggle button",
-        "Testing app menu: test.modal",
-        "Testing menu App Modal test.modal",
-        'Clicking on: menu item "App Modal"',
-        "Modal detected: App Modal test.modal",
+        "Testing app: App Modal (test.modal)",
+        "Testing menu App Modal (test.modal)",
+        "Modal detected: App Modal (test.modal)",
         "Clicking on: modal close button",
+        "Test took 0 seconds",
         "Successfully tested 2 apps",
-        "Successfully tested 0 menus",
+        "Successfully tested 2 menus",
         "Successfully tested 1 modals",
         "Successfully tested 4 filters",
         SUCCESS_SIGNAL,

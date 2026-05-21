@@ -7,12 +7,11 @@ import { reactive } from "@web/owl2/utils";
 import { App, effect } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { rpcBus } from "@web/core/network/rpc";
-import { getPopoverForTarget } from "@web/core/popover/popover";
 
 export const SUCCESS_SIGNAL = "clickbot test succeeded";
 
 const MOUSE_EVENTS = ["mouseover", "mouseenter", "mousedown", "mouseup", "click"];
-const BLACKLISTED_MENUS = [
+const BLACKLISTED_MENUS = new Set([
     "base.menu_theme_store", // Open a new tab
     "base.menu_third_party", // Open a new tab
     "event.menu_event_registration_desk", // there's no way to come back from this menu (tablet mode)
@@ -20,18 +19,16 @@ const BLACKLISTED_MENUS = [
     "hr_attendance.menu_hr_attendance_onboarding", // same here (tablet mode)
     "mrp_workorder.menu_mrp_workorder_root", // same here (tablet mode)
     "pos_enterprise.menu_point_kitchen_display_root", // conditional menu that may leads to frontend
-    "mail.menu_settings", // menut that leads to another App
-];
+    "mail.menu_settings", // menu that leads to another App
+]);
 // If you change this selector, adapt Studio test "Studio icon matches the clickbot selector"
 const STUDIO_SYSTRAY_ICON_SELECTOR = ".o_web_studio_navbar_item:not(.o_disabled) i";
 
-let isEnterprise;
 let state;
 let calledRPC;
 let errorRPC;
 let actionCount;
 let env;
-let apps;
 let disposeEffect = () => {};
 
 /**
@@ -53,7 +50,6 @@ function setup(light, currentState) {
     env.bus.addEventListener("ACTION_MANAGER:UI-UPDATED", uiUpdate);
     rpcBus.addEventListener("RPC:REQUEST", onRPCRequest);
     rpcBus.addEventListener("RPC:RESPONSE", onRPCResponse);
-    isEnterprise = odoo.info && odoo.info.isEnterprise;
 
     state = reactive(
         currentState || {
@@ -65,7 +61,6 @@ function setup(light, currentState) {
             testedModals: 0,
             appIndex: 0,
             menuIndex: 0,
-            subMenuIndex: 0,
         }
     );
     disposeEffect = effect(() => {
@@ -74,7 +69,6 @@ function setup(light, currentState) {
 
     actionCount = 0;
     calledRPC = {};
-    apps = null;
     errorRPC = undefined;
 }
 
@@ -121,12 +115,11 @@ async function waitForNextAnimationFrame() {
  * @returns {Promise} resolved after next animation frame
  */
 async function triggerClick(target, elDescription) {
-    if (target) {
-        if (elDescription) {
-            browser.console.log(`Clicking on: ${elDescription}`);
-        }
-    } else {
+    if (!target) {
         throw new Error(`No element "${elDescription}" found.`);
+    }
+    if (elDescription) {
+        browser.console.log(`Clicking on: ${elDescription}`);
     }
     MOUSE_EVENTS.forEach((type) => {
         const event = new MouseEvent(type, { bubbles: true, cancelable: true, view: window });
@@ -200,98 +193,6 @@ async function waitForCondition(stopCondition) {
 }
 
 /**
- * Make sure the home menu is open (enterprise only)
- */
-async function ensureHomeMenu() {
-    const homeMenu = document.querySelector("div.o_home_menu");
-    if (!homeMenu) {
-        let menuToggle = document.querySelector("nav.o_main_navbar > a.o_menu_toggle");
-        if (!menuToggle) {
-            // In the Barcode application, there is no navbar. So you have to click
-            // on the o_stock_barcode_home_menu button which is the equivalent
-            // of the o_menu_toggle button in the navbar.
-            menuToggle = document.querySelector(".o_stock_barcode_home_menu");
-        }
-        await triggerClick(menuToggle, "home menu toggle button");
-        await waitForCondition(() => document.querySelector("div.o_home_menu"));
-    }
-}
-
-/**
- * Make sure the apps menu is open (community only)
- */
-async function ensureAppsMenu() {
-    const apps = document.querySelectorAll(".o-dropdown--menu .o_app");
-    if (!apps || !apps.length) {
-        const toggler = document.querySelector(".o_navbar_apps_menu .dropdown-toggle");
-        await triggerClick(toggler, "apps menu toggle button");
-        await waitForCondition(() => document.querySelector(".o-dropdown--menu .o_app"));
-    }
-}
-
-/**
- * Return the next menu to test, and update the internal counters.
- *
- * @returns {DomElement}
- */
-async function getNextMenu() {
-    const menuToggles = document.querySelectorAll(
-        ".o_menu_sections > .dropdown-toggle, .o_menu_sections > .dropdown-item"
-    );
-    if (state.menuIndex === menuToggles.length) {
-        state.menuIndex = 0;
-        return; // all menus done
-    }
-    let menuToggle = menuToggles[state.menuIndex];
-    if (menuToggle.classList.contains("dropdown-toggle")) {
-        // the current menu is a dropdown toggler -> open it and pick a menu inside the dropdown
-        let dropdownMenu = getPopoverForTarget(menuToggle);
-        if (!dropdownMenu) {
-            await triggerClick(menuToggle, "menu toggler");
-            dropdownMenu = getPopoverForTarget(menuToggle);
-        }
-        if (!dropdownMenu) {
-            state.menuIndex = 0; // empty More menu has no dropdown (FIXME?)
-            return;
-        }
-        const items = dropdownMenu.querySelectorAll(".dropdown-item");
-        menuToggle = items[state.subMenuIndex];
-        if (state.subMenuIndex === items.length - 1) {
-            // this is the last item, so go to the next menu
-            state.menuIndex++;
-            state.subMenuIndex = 0;
-        } else {
-            // this isn't the last item, so increment the index inside this dropdown
-            state.subMenuIndex++;
-        }
-    } else {
-        // the current menu isn't a dropdown, so go to the next menu
-        state.menuIndex++;
-    }
-    return menuToggle;
-}
-
-/**
- * Return the next app to test, and update the internal counter.
- *
- * @returns {DomElement}
- */
-async function getNextApp() {
-    if (!apps || !apps.length) {
-        if (isEnterprise) {
-            await ensureHomeMenu();
-            apps = document.querySelectorAll(".o_apps .o_app");
-        } else {
-            await ensureAppsMenu();
-            apps = document.querySelectorAll(".o-dropdown--menu .o_app");
-        }
-    }
-    const appName = apps[state.appIndex]?.dataset?.menuXmlid;
-    state.appIndex++;
-    return appName;
-}
-
-/**
  * Test Studio
  * Click on the Studio systray item to enter Studio, and simply leave it once loaded.
  */
@@ -300,7 +201,6 @@ async function testStudio() {
     if (!studioIcon) {
         return;
     }
-    // Open the filter menu dropdown
     await triggerClick(studioIcon, "entering studio");
     await waitForCondition(() => document.querySelector(".o_in_studio"));
     await triggerClick(document.querySelector(".o_web_studio_leave"), "leaving studio");
@@ -312,7 +212,7 @@ async function testStudio() {
 
 /**
  * Test filters
- * Click on each filter in the control pannel
+ * Click on each filter in the control panel
  */
 async function testFilters() {
     if (state.light === true) {
@@ -332,7 +232,7 @@ async function testFilters() {
         return;
     }
 
-    // Avoid the "Custom Filter" menu item (it don't have the class .o_menu_item)
+    // Avoid the "Custom Filter" menu item (it doesn't have the class .o_menu_item)
     const simpleFilterSel = ".o_filter_menu > .dropdown-item.o_menu_item:not(.o_add_custom_filter)";
     const dateFilterSel = ".o_filter_menu > .o_accordion";
     const filterMenuItems = document.querySelectorAll(`${simpleFilterSel},${dateFilterSel}`);
@@ -341,13 +241,11 @@ async function testFilters() {
     for (const filter of filterMenuItems) {
         // Date filters
         if (filter.classList.contains("o_accordion")) {
-            // If a fitler has options, it will simply unfold and show all options.
             await triggerClick(
                 filter.querySelector(".o_accordion_toggle"),
                 `filter "${filter.innerText.trim()}"`
             );
-
-            // If a fitler has options, it will simply unfold and show all options.
+            // If a filter has options, it will simply unfold and show all options.
             // We then click on the first one.
             const firstOption = filter.querySelector(
                 ".o_accordion > .o_accordion_values > .dropdown-item"
@@ -400,35 +298,30 @@ async function testViews() {
 }
 
 /**
- * Test a menu item by:
- *  1 - clikcing on the menuItem
- *  2 - Orchestrate the view switch
+ * Navigate to a menu via the menu service and test the resulting view.
  *
- *  @param {DomElement} element: the menu item
- *  @returns {Promise}
+ * @param {Object} menu menu object from env.services.menu
+ * @returns {Promise}
  */
-async function testMenuItem(element) {
-    const menu = element.dataset.menuXmlid;
-    const menuDescription = element.innerText.trim() + " " + menu;
-    if (BLACKLISTED_MENUS.includes(menu)) {
-        browser.console.log(`Skipping blacklisted menu ${menuDescription}`);
-        return Promise.resolve(); // Skip black listed menus
+async function testMenuItem(menu) {
+    if (BLACKLISTED_MENUS.has(menu.xmlid)) {
+        browser.console.log(`Skipping blacklisted menu ${menu.name} (${menu.xmlid})`);
+        return;
     }
-    browser.console.log(`Testing menu ${menuDescription}`);
-    state.testedMenus.push(menu);
+    browser.console.log(`Testing menu ${menu.name} (${menu.xmlid})`);
+    state.testedMenus.push(menu.xmlid);
     const startActionCount = actionCount;
-    await triggerClick(element, `menu item "${element.innerText.trim()}"`);
+    await env.services.menu.selectMenu(menu);
     try {
         let isModal = false;
         await waitForCondition(() => {
             if (document.querySelector(".o_dialog:not(.o_error_dialog)")) {
                 isModal = true;
-                browser.console.log(`Modal detected: ${menuDescription}`);
+                browser.console.log(`Modal detected: ${menu.name} (${menu.xmlid})`);
                 state.testedModals++;
                 return true;
-            } else {
-                return startActionCount !== actionCount;
             }
+            return startActionCount !== actionCount;
         });
         if (isModal) {
             await triggerClick(
@@ -441,52 +334,41 @@ async function testMenuItem(element) {
             await testViews();
         }
     } catch (err) {
-        browser.console.error(`Error while testing ${menuDescription}`);
+        browser.console.error(`Error while testing ${menu.name} (${menu.xmlid})`);
         throw err;
     }
 }
 
 /**
- * Test an "App" menu item by orchestrating the following actions:
- *  1 - clicking on its menuItem
- *  2 - clicking on each view
- *  3 - clicking on each menu
- *  3.1  - clicking on each view
+ * Test an app and all its leaf menus.
+ *
+ * @param {Object} app app menu object from env.services.menu.getApps()
  * @returns {Promise}
  */
-async function testApp() {
-    let element;
-
-    if (!state.testedApps.includes(state.app)) {
-        if (isEnterprise) {
-            await ensureHomeMenu();
-            element = document.querySelector(`a.o_app.o_menuitem[data-menu-xmlid="${state.app}"]`);
-        } else {
-            await ensureAppsMenu();
-            element = document.querySelector(
-                `.o-dropdown--menu .dropdown-item[data-menu-xmlid="${state.app}"]`
-            );
-        }
-        if (!element) {
-            throw new Error(`No app found for xmlid ${state.app}`);
-        }
-        browser.console.log(`Testing app menu: ${state.app}`);
-        state.testedApps.push(state.app);
-        await testMenuItem(element);
-    } else {
-        browser.console.log(`already tested app ${state.app}`);
+async function testApp(app) {
+    browser.console.log(`Testing app: ${app.name} (${app.xmlid})`);
+    if (!state.testedApps.includes(app.xmlid)) {
+        state.testedApps.push(app.xmlid);
     }
 
-    if (state.light === true) {
+    if (state.light || !app.children.length) {
+        await testMenuItem(app);
         return;
     }
-    state.menuIndex = 0;
-    state.subMenuIndex = 0;
-    let menu = await getNextMenu();
-    while (menu) {
-        await testMenuItem(menu);
-        menu = await getNextMenu();
+
+    const flatten = (node) => {
+        if (!node.childrenTree?.length) {
+            return node.actionID ? [node] : [];
+        }
+        return node.childrenTree.flatMap(flatten);
+    };
+    const menus = env.services.menu.getMenuAsTree(app.id).childrenTree.flatMap(flatten);
+
+    while (state.menuIndex < menus.length) {
+        await testMenuItem(menus[state.menuIndex]);
+        state.menuIndex++;
     }
+    state.menuIndex = 0;
 }
 
 /**
@@ -494,29 +376,27 @@ async function testApp() {
  */
 async function _clickEverywhere(xmlId, light, currentState) {
     setup(light, currentState);
-    console.log("Starting ClickEverywhere test");
-    console.log(`Odoo flavor: ${isEnterprise ? "Enterprise" : "Community"}`);
+    browser.console.log("Starting ClickEverywhere test");
     const startTime = performance.now();
     try {
         if (xmlId) {
             state.xmlId = xmlId;
-            state.app = xmlId;
-            await testApp();
-        } else {
-            if (state.app) {
-                // This is needed to test the last app after a reload
-                await testApp();
+            const app = env.services.menu.getApps().find((a) => a.xmlid === xmlId);
+            if (!app) {
+                throw new Error(`No app found for xmlid ${xmlId}`);
             }
-            while ((state.app = await getNextApp())) {
-                await testApp();
+            await testApp(app);
+        } else {
+            const apps = env.services.menu.getApps();
+            while (state.appIndex < apps.length) {
+                await testApp(apps[state.appIndex]);
+                state.appIndex++;
             }
         }
 
-        console.log(`Test took ${(performance.now() - startTime) / 1000} seconds`);
+        browser.console.log(`Test took ${(performance.now() - startTime) / 1000} seconds`);
         browser.console.log(`Successfully tested ${state.testedApps.length} apps`);
-        browser.console.log(
-            `Successfully tested ${state.testedMenus.length - state.testedApps.length} menus`
-        );
+        browser.console.log(`Successfully tested ${state.testedMenus.length} menus`);
         browser.console.log(`Successfully tested ${state.testedModals} modals`);
         browser.console.log(`Successfully tested ${state.testedFilters} filters`);
         if (state.studioCount > 0) {
@@ -524,7 +404,7 @@ async function _clickEverywhere(xmlId, light, currentState) {
         }
         browser.console.log(SUCCESS_SIGNAL);
     } catch (err) {
-        console.log(`Test took ${(performance.now() - startTime) / 1000} seconds`);
+        browser.console.log(`Test took ${(performance.now() - startTime) / 1000} seconds`);
         browser.console.error(err || "test failed");
     } finally {
         cleanup();
