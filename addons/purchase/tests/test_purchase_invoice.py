@@ -1009,9 +1009,11 @@ class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
         self.assertEqual(len(match_lines), 0)
 
     def test_manual_matching_create_bill(self):
-        """ Selecting POL without AML will create bill with the selected POL as the lines """
+        """ Selecting POL without AML will create bill with the selected POL as the lines (and same currency as the POLs)
+        """
         prev_moves = self.env['account.move'].search([])
-        self.init_purchase(confirm=True, products=[self.product_order, self.product_order_var_name])
+        po = self.init_purchase(confirm=True, products=[self.product_order, self.product_order_var_name])
+        po.currency_id = self.other_currency
         self.env['purchase.order.line'].flush_model()
         self.env['purchase.order'].flush_model()
 
@@ -1019,6 +1021,7 @@ class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
         match_lines.action_match_lines()
 
         new_move = self.env['account.move'].search([]) - prev_moves
+        self.assertEqual(new_move.currency_id, self.other_currency)
         self.assertEqual(new_move.partner_id, self.partner_a)
         self.assertRecordValues(new_move.invoice_line_ids, [
             {'product_id': self.product_order.id},
