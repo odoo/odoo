@@ -50,9 +50,6 @@ class ResCompany(models.Model):
             [('company_id', '=', self.env.user.company_id.id), ('module_state', '=', 'installed')]
         )
         for company in companies:
-            if company.parent_id:  # The company is a branch.
-                continue  # Only consider top-level companies for provider duplication.
-
             for provider_sudo in providers_sudo:
                 provider_sudo.copy({'company_id': company.id})
 
