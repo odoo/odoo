@@ -332,6 +332,9 @@ class TestWithholdingAndPensionFundTaxes(TestItEdi):
             ))
 
     def test_pension_fund_taxes_import_zero_vat_rate(self):
+        """ Test that pension fund taxes with a 0.00% VAT rate are correctly imported."""
+
+        self.inps_purchase_tax.write({'l10n_it_exempt_reason': 'N2.1'})
         invoice = self._assert_import_invoice('IT00470550013_pfun3.xml', [{
             'invoice_date': datetime.date(2022, 3, 24),
             'invoice_date_due': datetime.date(2022, 3, 24),
