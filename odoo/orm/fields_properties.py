@@ -624,7 +624,7 @@ class Properties(Field):
 
         if operator in ('in', 'not in'):
             assert isinstance(value, COLLECTION_TYPES)
-            if len(value) == 1 and True in value:
+            if len(value) == 1 and any(v is True for v in value):
                 # inverse the condition
                 check_null_op_false = "!=" if operator == 'in' else "="
                 value = []
