@@ -11,6 +11,7 @@ class SettingRecord extends formView.Model.Record {
     _update(changes) {
         const changedFields = Object.keys(changes);
         let dirty = true;
+        // XXX saving binary fields???
         if (intersection(changedFields, this.model._headerFields).length === changedFields.length) {
             dirty = this.dirty;
             if (this.dirty) {
