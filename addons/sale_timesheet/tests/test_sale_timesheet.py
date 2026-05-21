@@ -1217,6 +1217,18 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
         self.assertFalse(timesheet1.timesheet_invoice_id, "Timesheet1 should be cleared after partial refund of its task")
         self.assertEqual(timesheet2.timesheet_invoice_id, invoice2, "Timesheet2 should still be linked to the original invoice")
 
+        # Make sure only the refunded line is invoiced again
+        context = {
+            'active_model': 'sale.order',
+            'active_ids': sale_order2.ids,
+            'default_journal_id': self.company_data['default_journal_sale'].id
+        }
+        wizard = self.env['sale.advance.payment.inv'].with_context(context).create({})
+        invoice_dict = wizard.create_invoices()
+        new_invoice = self.env['account.move'].browse(invoice_dict.get('res_id', []))
+        self.assertEqual(len(new_invoice.invoice_line_ids), 1, "Only the refunded line should be invoiced again")
+        self.assertEqual(new_invoice.invoice_line_ids.sale_line_ids, so_line1, "The invoiced line should be the refunded line")
+
     def test_invoice_with_already_invoiced_timesheets(self):
         """Checks that when an invoice is created, the hours that have already been invoiced aren't taken into
         account."""

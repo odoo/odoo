@@ -156,7 +156,11 @@ class SaleOrderLine(models.Model):
             :param start_date: the start date of the period
             :param end_date: the end date of the period
         """
-        lines_by_timesheet = self.filtered(lambda sol: sol.product_id and sol.product_id._is_delivered_timesheet())
+        lines_by_timesheet = self.filtered(
+            lambda sol:
+            sol.product_id
+            and sol.product_id._is_delivered_timesheet()
+            and sol.invoice_status == 'to invoice')
         domain = lines_by_timesheet._timesheet_compute_delivered_quantity_domain()
         refund_account_moves = self.order_id.invoice_ids.filtered(lambda am: am.state == 'posted' and am.move_type == 'out_refund').reversed_entry_id
         timesheet_domain = [
