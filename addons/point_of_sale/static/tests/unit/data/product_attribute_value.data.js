@@ -3,6 +3,10 @@ import { models } from "@web/../tests/web_test_helpers";
 export class ProductAttributeValue extends models.ServerModel {
     _name = "product.attribute.value";
 
+    _load_pos_data_fields() {
+        return ["name", "attribute_id"];
+    }
+
     _records = [
         {
             id: 1,

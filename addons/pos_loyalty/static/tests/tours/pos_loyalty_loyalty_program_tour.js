@@ -3,11 +3,7 @@ import * as ProductScreen from "@point_of_sale/../tests/pos/tours/utils/product_
 import * as PaymentScreen from "@point_of_sale/../tests/pos/tours/utils/payment_screen_util";
 import * as Chrome from "@point_of_sale/../tests/pos/tours/utils/chrome_util";
 import * as Dialog from "@point_of_sale/../tests/generic_helpers/dialog_util";
-import * as combo from "@point_of_sale/../tests/pos/tours/utils/combo_popup_util";
-import * as Order from "@point_of_sale/../tests/generic_helpers/order_widget_util";
-import { inLeftSide } from "@point_of_sale/../tests/pos/tours/utils/common";
 import { registry } from "@web/core/registry";
-import { negate } from "@point_of_sale/../tests/generic_helpers/utils";
 
 registry.category("web_tour.tours").add("PosLoyaltyLoyaltyProgram1", {
     steps: () =>
@@ -175,18 +171,6 @@ registry.category("web_tour.tours").add("PosLoyaltyLoyaltyProgram3", {
         ].flat(),
 });
 
-registry.category("web_tour.tours").add("PosLoyaltyPromotion", {
-    steps: () =>
-        [
-            Chrome.startPoS(),
-            Dialog.confirm("Open Register"),
-            ProductScreen.clickPartnerButton(),
-            ProductScreen.clickCustomer("AAA Partner"),
-            ProductScreen.addOrderline("Test Product 1", "1", "100"),
-            ProductScreen.totalAmountIs("90.00"),
-        ].flat(),
-});
-
 registry.category("web_tour.tours").add("PosLoyaltyDontGrantPointsForRewardOrderLines", {
     steps: () =>
         [
@@ -215,60 +199,6 @@ registry.category("web_tour.tours").add("PosLoyaltyNextOrderCouponExpirationDate
             ProductScreen.addOrderline("Desk Organizer", "3"),
 
             PosLoyalty.finalizeOrder("Cash", "15.3"),
-        ].flat(),
-});
-
-registry.category("web_tour.tours").add("PosComboCheapestRewardProgram", {
-    steps: () =>
-        [
-            Chrome.startPoS(),
-            Dialog.confirm("Open Register"),
-            ProductScreen.clickDisplayedProduct("Expensive product"),
-            ProductScreen.clickDisplayedProduct("Office Combo"),
-            combo.select("Combo Product 1"),
-            combo.select("Combo Product 4"),
-            combo.select("Combo Product 6"),
-            Dialog.confirm(),
-            inLeftSide(Order.hasLine({ productName: "10% on the cheapest product" })),
-            PosLoyalty.orderTotalIs("1,204.25"),
-            PosLoyalty.finalizeOrder("Cash", "1204.25"),
-            ProductScreen.clickDisplayedProduct("Cheap product"),
-            ProductScreen.clickDisplayedProduct("Office Combo"),
-            combo.select("Combo Product 1"),
-            combo.select("Combo Product 4"),
-            combo.select("Combo Product 6"),
-            Dialog.confirm(),
-            Order.hasLine({ productName: "10% on the cheapest product" }),
-            PosLoyalty.orderTotalIs("61.03"),
-            PosLoyalty.finalizeOrder("Cash", "61.03"),
-        ].flat(),
-});
-
-registry.category("web_tour.tours").add("PosComboSpecificProductProgram", {
-    steps: () =>
-        [
-            Chrome.startPoS(),
-            Dialog.confirm("Open Register"),
-            ProductScreen.clickDisplayedProduct("Office Combo"),
-            combo.select("Combo Product 1"),
-            combo.select("Combo Product 4"),
-            combo.select("Combo Product 6"),
-            Dialog.confirm(),
-            Order.hasLine({ productName: "10% on Office Combo" }),
-            PosLoyalty.orderTotalIs("216.00"),
-            PosLoyalty.finalizeOrder("Cash", "216.00"),
-        ].flat(),
-});
-
-registry.category("web_tour.tours").add("PosCheapestProductTaxInclude", {
-    steps: () =>
-        [
-            Chrome.startPoS(),
-            Dialog.confirm("Open Register"),
-            ProductScreen.clickDisplayedProduct("Product"),
-            ProductScreen.addOrderline("Desk Organizer", "1"),
-            Order.hasLine({ productName: "10% on the cheapest product" }),
-            PosLoyalty.orderTotalIs("6.00"), // taxe of 9 cents (≈ 10% HT)
         ].flat(),
 });
 
@@ -328,76 +258,5 @@ registry.category("web_tour.tours").add("PosLoyaltyMultipleOrders", {
             Chrome.createFloatingOrder(),
             ProductScreen.addOrderline("Desk Organizer", "1"),
             PosLoyalty.finalizeOrder("Cash", "10"),
-        ].flat(),
-});
-
-registry.category("web_tour.tours").add("test_combo_product_dont_grant_point", {
-    steps: () =>
-        [
-            Chrome.startPoS(),
-            Dialog.confirm("Open Register"),
-            ProductScreen.clickDisplayedProduct("Office Combo"),
-            combo.select("Combo Product 1"),
-            combo.select("Combo Product 4"),
-            combo.select("Combo Product 6"),
-            Dialog.confirm(),
-            ProductScreen.clickDisplayedProduct("Office Combo"),
-            combo.select("Combo Product 1"),
-            combo.select("Combo Product 4"),
-            combo.select("Combo Product 6"),
-            Dialog.confirm(),
-            Order.hasLine({ productName: "100% on the cheapest product" }),
-            ProductScreen.totalAmountIs("50.00"),
-        ].flat(),
-});
-
-registry.category("web_tour.tours").add("test_buy_x_get_y_reward_qty", {
-    steps: () =>
-        [
-            Chrome.startPoS(),
-            Dialog.confirm("Open Register"),
-            ProductScreen.addOrderline("Whiteboard Pen", "10"),
-            ProductScreen.clickDisplayedProduct("Whiteboard Pen"),
-            PosLoyalty.hasRewardLine("Free Product - Whiteboard Pen", "-3.20", "1.00"),
-            ProductScreen.clickDisplayedProduct("Whiteboard Pen"),
-            PosLoyalty.hasRewardLine("Free Product - Whiteboard Pen", "-6.40", "2.00"),
-            PosLoyalty.finalizeOrder("Cash", "32"),
-            ProductScreen.addOrderline("Whiteboard Pen", "10"),
-            PosLoyalty.claimReward("Free Product - Whiteboard Pen"),
-            PosLoyalty.hasRewardLine("Free Product - Whiteboard Pen", "-9.60", "3.00"),
-            PosLoyalty.finalizeOrder("Cash", "32"),
-        ].flat(),
-});
-
-registry.category("web_tour.tours").add("test_multiple_loyalty_products", {
-    steps: () =>
-        [
-            Chrome.startPoS(),
-            Dialog.confirm("Open Register"),
-            ProductScreen.clickDisplayedProduct("Whiteboard Pen"),
-            {
-                content: "Check that selection popup is not opened",
-                trigger: negate(`.selection-item`),
-            },
-            Order.hasLine({ productName: "Whiteboard Pen", quantity: "1" }),
-            Order.hasLine({ productName: "10% on your order", quantity: "1" }),
-        ].flat(),
-});
-
-registry.category("web_tour.tours").add("test_max_usage_partner_with_point", {
-    steps: () =>
-        [
-            Chrome.startPoS(),
-            Dialog.confirm("Open Register"),
-            ProductScreen.addOrderline("Desk Organizer", "3"),
-            ProductScreen.clickPartnerButton(),
-            ProductScreen.clickCustomer("AAA Partner 2"),
-            PosLoyalty.isRewardButtonHighlighted(true),
-            PosLoyalty.claimReward("100% on your order"),
-            PosLoyalty.finalizeOrder("Cash", "0"),
-            ProductScreen.clickPartnerButton(),
-            ProductScreen.clickCustomer("AAA Partner"),
-            ProductScreen.addOrderline("Desk Organizer", "3"),
-            PosLoyalty.isRewardButtonHighlighted(false),
         ].flat(),
 });

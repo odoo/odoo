@@ -123,6 +123,10 @@
             'web/static/src/core/errors/error_handlers.js',
             'web/static/src/core/dialog/dialog.scss',
             'point_of_sale/static/src/backend/views/**/*',
+
+            'point_of_sale/static/src/customer_display/**/*',
+            ('remove', 'point_of_sale/static/src/customer_display/root.js'),
+            ('remove', 'point_of_sale/static/src/customer_display/styles.scss'),
         ],
         'web.assets_unit_tests': [
             'point_of_sale/static/tests/unit/**/*',
