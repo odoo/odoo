@@ -956,3 +956,70 @@ class TestItEdiImport(TestItEdi):
                 }
             ],
         }])
+
+    def test_import_pension_fund_specific_natura(self):
+        """ Ensure that the pension fund tax is only applied to lines matching the VAT rate and the exemption reason (Natura) """
+
+        self.env = self.env['base'].with_company(self.company_data_2['company']).env
+        pension_tax = self.env['account.tax'].search([
+            ('amount', '=', 4.0),
+            ('type_tax_use', '=', 'purchase'),
+        ], limit=1)
+        pension_tax.write({'l10n_it_exempt_reason': 'N2.1'})
+
+        applied_xml = """
+            <xpath expr="//FatturaElettronicaBody/DatiBeniServizi" position="replace">
+                <DatiBeniServizi>
+                    <DettaglioLinee>
+                        <NumeroLinea>1</NumeroLinea>
+                        <Descrizione>Compenso professionale</Descrizione>
+                        <Quantita>1.00</Quantita>
+                        <PrezzoUnitario>750.00</PrezzoUnitario>
+                        <PrezzoTotale>750.00</PrezzoTotale>
+                        <AliquotaIVA>0.00</AliquotaIVA>
+                        <Natura>N2.1</Natura>
+                    </DettaglioLinee>
+                    <DettaglioLinee>
+                        <NumeroLinea>2</NumeroLinea>
+                        <Descrizione>Imposta di bollo</Descrizione>
+                        <Quantita>1.00</Quantita>
+                        <PrezzoUnitario>2.00</PrezzoUnitario>
+                        <PrezzoTotale>2.00</PrezzoTotale>
+                        <AliquotaIVA>0.00</AliquotaIVA>
+                        <Natura>N1</Natura>
+                    </DettaglioLinee>
+                    <DatiRiepilogo>
+                        <AliquotaIVA>0.00</AliquotaIVA>
+                        <Natura>N2.1</Natura>
+                        <ImponibileImporto>750.00</ImponibileImporto>
+                        <Imposta>0.00</Imposta>
+                    </DatiRiepilogo>
+                    <DatiRiepilogo>
+                        <AliquotaIVA>0.00</AliquotaIVA>
+                        <Natura>N1</Natura>
+                        <ImponibileImporto>2.00</ImponibileImporto>
+                        <Imposta>0.00</Imposta>
+                    </DatiRiepilogo>
+                </DatiBeniServizi>
+            </xpath>
+            <xpath expr="//FatturaElettronicaBody/DatiGenerali/DatiGeneraliDocumento/ImportoTotaleDocumento" position="replace">
+                <ImportoTotaleDocumento>782.00</ImportoTotaleDocumento>
+            </xpath>
+            <xpath expr="//FatturaElettronicaBody/DatiPagamento/DettaglioPagamento/ImportoPagamento" position="replace">
+                <ImportoPagamento>782.00</ImportoPagamento>
+            </xpath>
+        """
+
+        invoices = self._assert_import_invoice('IT00470550013_pfun3.xml', [{
+            'move_type': 'in_invoice',
+            'amount_untaxed': 752.00,
+            'amount_tax': 30.00,
+            'invoice_line_ids': [
+                {'quantity': 1.0, 'price_unit': 750.00},
+                {'quantity': 1.0, 'price_unit': 2.00},
+            ],
+        }], applied_xml)
+        line_1 = invoices.invoice_line_ids[0]
+        line_2 = invoices.invoice_line_ids[1]
+        self.assertIn(pension_tax.id, line_1.tax_ids.ids)
+        self.assertNotIn(pension_tax.id, line_2.tax_ids.ids)
