@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 
 from .baiwang_client import BaiwangClient
 
@@ -76,7 +76,7 @@ class L10nCnEdiDocument(models.Model):
                                     'baiwang_red_invoice_no': resp_data.get('redInvoiceNo', ''),
                                 })
                                 doc.move_id.l10n_cn_baiwang_state = 'issued'
-                                doc.move_id.message_post(body=_(
+                                doc.move_id.message_post(body=self.env._(
                                     "Red Form confirmed! No: %(no)s. Red Invoice: %(inv)s",
                                     no=resp_data.get('redConfirmNo', ''),
                                     inv=resp_data.get('redInvoiceNo', 'pending'),
@@ -90,10 +90,10 @@ class L10nCnEdiDocument(models.Model):
                                 # Rejected/cancelled/expired
                                 doc.write({
                                     'state': 'failed',
-                                    'error_message': _("Red Form rejected/cancelled. State code: %s", confirm_state),
+                                    'error_message': self.env._("Red Form rejected/cancelled. State code: %s", confirm_state),
                                 })
                                 doc.move_id.l10n_cn_baiwang_state = 'failed'
-                                doc.move_id.message_post(body=_(
+                                doc.move_id.message_post(body=self.env._(
                                     "Red Form rejected/cancelled. State code: %(state)s",
                                     state=confirm_state,
                                 ))

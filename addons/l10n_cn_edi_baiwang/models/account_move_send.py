@@ -1,5 +1,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import _, api, models
+from odoo import api, models
 
 
 class AccountMoveSend(models.AbstractModel):
@@ -23,9 +23,9 @@ class AccountMoveSend(models.AbstractModel):
         res = super()._get_all_extra_edis()
         res.update({
             'cn_baiwang': {
-                'label': _("Issue E-Fapiao (Baiwang)"),
+                'label': self.env._("Issue E-Fapiao (Baiwang)"),
                 'is_applicable': self._is_cn_baiwang_applicable,
-                'help': _("Submit the invoice to Baiwang for official Chinese e-Fapiao issuance."),
+                'help': self.env._("Submit the invoice to Baiwang for official Chinese e-Fapiao issuance."),
             },
         })
         return res
@@ -43,7 +43,7 @@ class AccountMoveSend(models.AbstractModel):
 
             if error := invoice._l10n_cn_baiwang_issue_invoice():
                 invoice_data['error'] = {
-                    'error_title': _("Error when issuing e-Fapiao via Baiwang:"),
+                    'error_title': self.env._("Error when issuing e-Fapiao via Baiwang:"),
                     'errors': [error],
                 }
 
