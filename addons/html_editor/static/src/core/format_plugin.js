@@ -19,7 +19,13 @@ import {
     isZWS,
     previousLeaf,
 } from "../utils/dom_info";
-import { childNodes, closestElement, descendants, selectElements } from "../utils/dom_traversal";
+import {
+    childNodes,
+    closestElement,
+    descendants,
+    findUpTo,
+    selectElements,
+} from "../utils/dom_traversal";
 import { formatsSpecs, FORMATTABLE_TAGS } from "../utils/formatting";
 import { boundariesIn, leftPos, rightPos } from "../utils/position";
 import { isHtmlContentSupported } from "@html_editor/core/selection_plugin";
@@ -429,7 +435,7 @@ export class FormatPlugin extends Plugin {
         );
         const formatSpec = formatsSpecs[formatName];
         for (const node of unformattedTextNodes) {
-            const inlineAncestors = [];
+            let inlineAncestor;
             /** @type { Node } */
             let currentNode = node;
             let parentNode = node.parentElement;
@@ -442,38 +448,39 @@ export class FormatPlugin extends Plugin {
                         this.checkPredicates("is_format_class_predicates", className) ?? false
                 );
 
-            // Special case: if the parent node is unsplittable and fully selected,
-            // we should make sure the span is applied outside of it.
-            if (
-                parentNode &&
-                !isBlock(parentNode) &&
-                this.dependencies.split.isUnsplittable(parentNode) &&
-                this.dependencies.selection.areNodeContentsFullySelected(parentNode)
-            ) {
-                inlineAncestors.push(parentNode);
-            }
+            while (parentNode && !isBlock(parentNode)) {
+                const splittable =
+                    (!this.dependencies.split.isUnsplittable(parentNode) ||
+                        parentNode.dataset.textEffect) &&
+                    (parentNode.classList.length === 0 ||
+                        isClassListSplittable(parentNode.classList));
 
-            while (
-                parentNode &&
-                !isBlock(parentNode) &&
-                (!this.dependencies.split.isUnsplittable(parentNode) ||
-                    parentNode.dataset.textEffect) &&
-                (parentNode.classList.length === 0 || isClassListSplittable(parentNode.classList))
-            ) {
-                const newLastAncestorInlineFormat = this.dependencies.split.splitAroundUntil(
-                    currentNode,
-                    parentNode
-                );
-                removeFormat(newLastAncestorInlineFormat, formatSpec, cursor);
-                if (["setFontSizeClassName", "fontSize"].includes(formatName) && applyStyle) {
-                    removeClass(newLastAncestorInlineFormat, "o_default_font_size");
+                if (splittable) {
+                    const newLastAncestorInlineFormat = this.dependencies.split.splitAroundUntil(
+                        currentNode,
+                        parentNode
+                    );
+                    removeFormat(newLastAncestorInlineFormat, formatSpec, cursor);
+                    if (["setFontSizeClassName", "fontSize"].includes(formatName) && applyStyle) {
+                        removeClass(newLastAncestorInlineFormat, "o_default_font_size");
+                    }
+                    if (newLastAncestorInlineFormat.isConnected) {
+                        inlineAncestor = newLastAncestorInlineFormat;
+                        currentNode = newLastAncestorInlineFormat;
+                    }
+                    parentNode = currentNode.parentElement;
+                } else if (
+                    this.dependencies.split.isUnsplittable(parentNode) &&
+                    this.dependencies.selection.areNodeContentsFullySelected(parentNode)
+                ) {
+                    // Special case: if the parent node is unsplittable and
+                    // fully selected, we should make sure the span is applied
+                    // outside of it.
+                    inlineAncestor = parentNode;
+                    break;
+                } else {
+                    break;
                 }
-                if (newLastAncestorInlineFormat.isConnected) {
-                    inlineAncestors.push(newLastAncestorInlineFormat);
-                    currentNode = newLastAncestorInlineFormat;
-                }
-
-                parentNode = currentNode.parentElement;
             }
 
             const firstBlockOrClassHasFormat = formatSpec.isFormatted(parentNode, formatProps);
@@ -490,7 +497,7 @@ export class FormatPlugin extends Plugin {
                     }
                 } else {
                     formatSpec.addNeutralStyle &&
-                        formatSpec.addNeutralStyle(getOrCreateSpan(node, inlineAncestors, cursor));
+                        formatSpec.addNeutralStyle(getOrCreateSpan(node, inlineAncestor, cursor));
                 }
             } else if (
                 (!firstBlockOrClassHasFormat || parentNode.nodeName === "LI") &&
@@ -508,15 +515,12 @@ export class FormatPlugin extends Plugin {
                         tag.after(node);
                         tag.remove();
                         formatSpec.addStyle(
-                            getOrCreateSpan(node, inlineAncestors, cursor),
+                            getOrCreateSpan(node, inlineAncestor, cursor),
                             formatProps
                         );
                     }
                 } else if (formatName !== "fontSize" || formatProps.size !== undefined) {
-                    formatSpec.addStyle(
-                        getOrCreateSpan(node, inlineAncestors, cursor),
-                        formatProps
-                    );
+                    formatSpec.addStyle(getOrCreateSpan(node, inlineAncestor, cursor), formatProps);
                 }
             }
         }
@@ -810,34 +814,25 @@ export class FormatPlugin extends Plugin {
     }
 }
 
-function getOrCreateSpan(node, ancestors, cursor) {
+function getOrCreateSpan(node, ancestor, cursor) {
     const document = node.ownerDocument;
-    const span = ancestors.find(
-        (element) =>
-            element.tagName === "SPAN" && element.isConnected && !element.dataset.textEffect
-    );
-    const lastInlineAncestor = ancestors.findLast(
-        (element) => !isBlock(element) && element.isConnected
-    );
-    if (span) {
-        return span;
-    } else {
-        const span = document.createElement("span");
-        // Apply font span above current inline top ancestor so that
-        // the font style applies to the other style tags as well.
-        if (lastInlineAncestor) {
-            cursor?.update(callbacksForCursorUpdate.after(lastInlineAncestor, span));
-            lastInlineAncestor.after(span);
-            cursor?.update(callbacksForCursorUpdate.append(span, lastInlineAncestor));
-            span.append(lastInlineAncestor);
-        } else {
-            cursor?.update(callbacksForCursorUpdate.after(node, span));
-            node.after(span);
-            cursor?.update(callbacksForCursorUpdate.append(span, node));
-            span.append(node);
+    if (ancestor) {
+        const reusableSpan = findUpTo(
+            node,
+            ancestor.parentElement,
+            (el) => el.tagName === "SPAN" && !el.dataset.textEffect
+        );
+        if (reusableSpan) {
+            return reusableSpan;
         }
-        return span;
     }
+    const span = document.createElement("span");
+    const wrapTarget = ancestor ?? node;
+    cursor.update(callbacksForCursorUpdate.after(wrapTarget, span));
+    wrapTarget.after(span);
+    cursor.update(callbacksForCursorUpdate.append(span, wrapTarget));
+    span.append(wrapTarget);
+    return span;
 }
 function removeFormat(node, formatSpec, cursor) {
     const document = node.ownerDocument;
