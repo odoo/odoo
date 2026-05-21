@@ -3,7 +3,7 @@ import { BuilderAction } from "@html_builder/core/builder_action";
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
 
-const MEMBER_SELECTOR = ".container > .row > [data-name='Team Member']";
+const MEMBER_SELECTOR = '.container > .row > [data-name="Team Member"]';
 
 export class TeamBoardOptionPlugin extends Plugin {
     static id = "teamBoardOption";
