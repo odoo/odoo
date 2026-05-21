@@ -29,6 +29,10 @@ export class MassMailingHtmlField extends HtmlField {
         filterTemplates: t.boolean().optional(),
     });
 
+    get classList() {
+        return this.withBuilder ? [] : ["o-html-field"];
+    }
+
     setup() {
         // Keep track of the next props before other `onWillUpdateProps`
         // callbacks in super can be executed, to be able to compute the next
@@ -252,6 +256,7 @@ export class MassMailingHtmlField extends HtmlField {
         return {
             ...config,
             allowChecklist: false,
+            allowTextColumnResize: false,
             record: this.props.record,
             mobileBreakpoint: "md",
             defaultImageMimetype: "image/png",

@@ -206,6 +206,7 @@ export class Builder extends Component {
                 updateInvisibleElementsPanel: () => this.updateInvisibleEls(),
                 hideStylingInLinkPopover: true,
                 allowTargetBlank: true,
+                allowTextColumnResize: false,
                 dropImageAsAttachment: true,
                 getAnimateTextConfig: () => ({ editor: this.editor, editorBus: this.editorBus }),
                 baseContainers: ["P"],
