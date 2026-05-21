@@ -115,10 +115,14 @@ export class Message extends Component {
         });
         this.rightClickDropdownState = useDropdownState({
             onClose: async () => {
+                if (this.isRightClickDropdownOngoingClose) {
+                    return; // onClose can be called more than once. Limiting to a single onClose to prevent race-condition in tests.
+                }
                 this.props.messageSelection?.clearSelected();
                 this.isRightClickDropdownOngoingClose = true;
                 await new Promise((resolve) => setTimeout(() => requestAnimationFrame(resolve)));
                 this.isRightClickDropdownOngoingClose = false;
+                delete this.root.el.dataset.rightClicking;
             },
         });
         this.rightClickAnchor = useChildRef("rightClickAnchor");
@@ -502,6 +506,7 @@ export class Message extends Component {
     }
 
     showRightClickMessageActions(ev) {
+        this.root.el.dataset.rightClicking = true;
         const el = this.rightClickAnchor.el;
         el.style.left = ev.clientX + "px";
         el.style.top = ev.clientY + "px";
@@ -534,7 +539,7 @@ export class Message extends Component {
         return this.renderEmbeddedCodeBlocks(bodyEl);
     }
 
-     /** @param {HTMLElement} bodyEl */
+    /** @param {HTMLElement} bodyEl */
     renderEmbeddedCodeBlocks(bodyEl) {
         const { name, Component, getProps } = readonlySyntaxHighlightingEmbedding;
         const selector = `[data-embedded='${name}']`;

@@ -1216,8 +1216,7 @@ test("add message to bookmark", async () => {
     await contains(".o-mail-Message [title='Bookmarked']");
 });
 
-test.tags("owl3");
-test.skip("remove bookmark from message", async () => {
+test("remove message from bookmarks", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "general" });
     const messageId = pyEnv["mail.message"].create({
@@ -1232,12 +1231,15 @@ test.skip("remove bookmark from message", async () => {
     await contains("button:has(:text('Bookmarks'))", { contains: [".badge:text('1')"] });
     await contains(".o-mail-Message [title='Bookmarked']");
     await rightClick(".o-mail-Message");
+    await contains(".o-mail-Message[data-right-clicking]");
     await contains(".o-dropdown-item:text('Remove from Bookmarks') i.fa-bookmark");
     await click(".o-dropdown-item:text('Remove from Bookmarks')");
     await contains("button:has(:text('Bookmarks'))", { contains: [".badge", { count: 0 }] });
     await waitStoreFetch([["remove_bookmark", { message_id: messageId }]]);
     await contains(".o-mail-Message:not(:has([title='Bookmarked']))");
+    await contains(".o-mail-Message:not([data-right-clicking])");
     await rightClick(".o-mail-Message");
+    await contains(".o-mail-Message[data-right-clicking]");
     await contains(".o-dropdown-item:text('Bookmark') i.fa-bookmark-o");
 });
 
