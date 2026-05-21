@@ -425,9 +425,17 @@ export function formatPercentage(value, options = {}) {
     const formatted = formatFloatNumber(value * 100, options);
     return `${formatted}${options.noSymbol ? "" : "%"}`;
 }
+<<<<<<< c9586b9f7e8898b25a2b4d24b897940d9b13517b
 formatPercentage.extractOptions = ({attrs, options}) => ({
     ...formatFloat.extractOptions({ attrs, options }),
     noSymbol: options.no_symbol,
+||||||| c3d0086109371bfe9506dca83b869e3c5f0c14f8
+formatPercentage.extractOptions = ({options}) => ({
+    ...formatFloat.extractOptions,
+=======
+formatPercentage.extractOptions = ({attrs, options}) => ({
+    ...formatFloat.extractOptions({ attrs, options }),
+>>>>>>> 66bfa9cd1bb1d49d393a5ed04feeb4916f496fb6
     trailingZeros: !(options.hide_trailing_zeros ?? true),
 });
 
