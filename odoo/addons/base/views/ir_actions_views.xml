@@ -381,7 +381,8 @@
                                 </div>
                             </button>
                         </div>
-                        <h1 class="oe_title">
+                        <h1 class="oe_title o_outlined">
+                            <label for="name" class="d-md-none"/>
                             <field name="automated_name" invisible="1"/> <!-- needed for name compute -->
                             <field name="name" placeholder="Set an explicit name"/>
                         </h1>
@@ -405,41 +406,47 @@
                             <div class="alert alert-warning" role="alert" invisible="not warning">
                                 <i class="fa fa-warning pe-2" title="Warning"/><field class="d-inline" name="warning" nolabel="1"/>
                             </div>
-                            <div class="d-flex flex-row flex-wrap gap-2" invisible="state != 'object_write'">
+
+                            <label for="evaluation_type" class="d-md-none" invisible="state != 'object_write'" string="Update method"/>
+                            <div class="d-flex flex-row flex-wrap gap-2 o_outlined" invisible="state != 'object_write'">
                                 <field name="evaluation_type" class="oe_inline"/>
-                                <label for="update_path" string="Select Field:" class="fw-bold ps-2"/>
-                                <field name="update_path" widget="field_selector" class="oe_inline" options="{'model': 'model_name', 'allow_properties': False}" required="state == 'object_write'"/>
+                                <field
+                                    name="update_path"
+                                    placeholder="Select a field..."
+                                    widget="field_selector"
+                                    class="oe_inline mw-50 flex-basis-25"
+                                    options="{'model': 'model_name', 'allow_properties': False}"
+                                    required="state == 'object_write'"/>
                                 <field name="update_field_id" invisible="True"/>  <!-- The field is store=True and readonly=False, in this view we want to save the value from compute/onchange -->
                                 <field name="update_related_model_id" invisible="True"/> <!-- This field is required for 'resource_ref' to compute possible m2m and m2o values -->
-                                <span invisible="evaluation_type != 'value' or update_field_type not in ['one2many', 'many2many']">by</span>
-                                <field name="update_m2m_operation" class="oe_inline" invisible="evaluation_type != 'value' or update_field_type not in ['one2many', 'many2many']" required="update_field_type in ['one2many', 'many2many']"/>
-                                <span invisible="evaluation_type != 'value' or update_field_type in ['one2many', 'many2many']">to</span>
-                                <span invisible="evaluation_type != 'sequence'">with</span>
-                                <field name="value" class="oe_inline" placeholder="Set a value..." invisible="update_field_id == False or value_field_to_show != 'value' or evaluation_type != 'value'" string="Custom Value"/>
-                                <field name="html_value" class="w-100" placeholder="Set a value..." invisible="update_field_id == False or value_field_to_show != 'html_value' or evaluation_type != 'value'" string="Custom Value"/>
-                                <field name="sequence_id" class="oe_inline" placeholder="Select a sequence..." invisible="evaluation_type != 'sequence'" required="evaluation_type == 'sequence'"/>
-                                <field name="resource_ref" class="oe_inline" placeholder="Choose a value..." string="Custom Value" options="{'model_field': 'update_related_model_id', 'no_create': True, 'no_open': True}" invisible="update_field_id == False or value_field_to_show != 'resource_ref' or evaluation_type == 'equation' or update_m2m_operation == 'clear'"/>
-                                <field name="selection_value" class="oe_inline" placeholder="Choose a value..." options="{'no_create': True, 'no_open': True}" invisible="update_field_id == False or value_field_to_show != 'selection_value' or evaluation_type == 'equation'"/>
-                                <field name="update_boolean_value" class="oe_inline" invisible="evaluation_type != 'value' or value_field_to_show != 'update_boolean_value'" required="value_field_to_show == 'update_boolean_value'"/>
-                                <span invisible="update_field_id != False or evaluation_type != 'value'" class="o_actions_server_set_a_value text-muted">Set a value...</span>
-                                <span invisible="evaluation_type != 'equation'">
-                                    to this Python expression:
-                                </span>
-                                <div class="w-100 d-flex flex-row gap-3" invisible="evaluation_type != 'equation'">
-                                    <field name="value" class="w-50" widget="code" options="{'mode': 'python'}" string="Expression"/>
-                                    <div class="w-50 opacity-75">
-                                        <span colspan="2" class="text-muted"> Available variables: </span>
-                                            <ul colspan="2" class="text-muted">
-                                                <li><code>env</code>: environment on which the action is triggered</li>
-                                                <li><code>model</code>: model of the record on which the action is triggered; is a void recordset</li>
-                                                <li><code>record</code>: record on which the action is triggered</li>
-                                                <li><code>records</code>: recordset of all records on which the action is triggered in multi mode</li>
-                                                <li><code>time</code>, <code>datetime</code>, <code>dateutil</code>, <code>timezone</code>: useful Python libraries</li>
-                                                <li><code>float_compare()</code>: utility function to compare floats based on a specific precision</li>
-                                            </ul>
+
+                                <t invisible="not update_path">
+                                    <div class="d-flex flex-row gap-2 flex-grow-1">
+                                        <span invisible="evaluation_type != 'value' or update_field_type not in ['one2many', 'many2many']">by</span>
+                                        <field name="update_m2m_operation" class="oe_inline" invisible="evaluation_type != 'value' or update_field_type not in ['one2many', 'many2many']" required="update_field_type in ['one2many', 'many2many']"/>
+                                        <span invisible="evaluation_type != 'value' or update_field_type in ['one2many', 'many2many']">to</span>
+                                        <span invisible="evaluation_type != 'sequence'">with</span>
+                                        <field name="value" placeholder="Set a value..." invisible="update_field_id == False or value_field_to_show != 'value' or evaluation_type != 'value'" string="Custom Value"/>
+                                        <field name="sequence_id" placeholder="Select a sequence..." invisible="evaluation_type != 'sequence'" required="evaluation_type == 'sequence'"/>
+                                        <field name="resource_ref" placeholder="Choose a value..." string="Custom Value" options="{'model_field': 'update_related_model_id', 'no_create': True, 'no_open': True}" invisible="update_field_id == False or value_field_to_show != 'resource_ref' or evaluation_type == 'equation' or update_m2m_operation == 'clear'"/>
+                                        <field name="selection_value" placeholder="Choose a value..." options="{'no_create': True, 'no_open': True}" invisible="update_field_id == False or value_field_to_show != 'selection_value' or evaluation_type == 'equation'"/>
+                                        <field name="update_boolean_value" invisible="evaluation_type != 'value' or value_field_to_show != 'update_boolean_value'" required="value_field_to_show == 'update_boolean_value'"/>
+                                        <span invisible="update_field_id != False or evaluation_type != 'value'" class="o_actions_server_set_a_value text-muted">Set a value...</span>
+                                        <span invisible="evaluation_type != 'equation'">
+                                            to this Python expression:
+                                        </span>
                                     </div>
-                                </div>
+
+                                    <!-- python and html editor that should take full width-->
+                                    <div class="w-100 d-flex flex-row gap-3" invisible="evaluation_type != 'equation'">
+                                        <field name="value" class="w-100" widget="code" options="{'mode': 'python'}" string="Expression"/>
+                                    </div>
+                                    <div class="w-100 d-flex flex-row gap-3" invisible="update_field_id == False or value_field_to_show != 'html_value' or evaluation_type != 'value'">
+                                        <field name="html_value" class="w-100" placeholder="Set a value..." string="Custom Value"/>
+                                    </div>
+                                </t>
                             </div>
+
                             <group invisible="state not in ['object_create', 'object_copy']">
                                 <group>
                                     <field name="crud_model_id"
@@ -456,6 +463,7 @@
                                         context="{'default_model_id': model_id, 'default_relation': crud_model_name}"/>
                                 </group>
                             </group>
+
                             <group invisible="state != 'webhook'">
                                 <group>
                                     <field name="webhook_url" string="URL" placeholder="e.g. https://maker.ifttt.com/use/..."/>
@@ -466,16 +474,30 @@
                                     <field name="webhook_sample_payload" string="Sample Payload" nolabel="1" colspan="2" readonly="1" widget="code" options="{'mode': 'javascript'}" />
                                 </group>
                             </group>
+
                             <t invisible="state != 'multi'">
                                 <field name="child_ids" widget="many2many" mode="kanban" context="{
                                     'is_modal': 1,
                                     'default_model_id': model_id,
                                 }"/>
                             </t>
+
                             <notebook>
-                                <page string="Code" invisible="state != 'code'">
-                                    <field name="code" invisible="state != 'code'" widget="code" options="{'mode': 'python'}" placeholder="Enter Python code here. Help about Python expression is available in the help tab of this document."/>
+                                <page string="Code" invisible="state != 'code'" autofocus="autofocus">
+                                    <field name="code"
+                                        invisible="state != 'code'" widget="code" options="{'mode': 'python'}"
+                                        placeholder="Enter Python code here. Help about Python expression is available in the help tab of this document."/>
                                 </page>
+
+                                <page string="Usage" name="usage" invisible="1"/>
+
+                                <page string="Notes" name="explanation">
+                                    <field name="explanation"
+                                        nolabel="1"
+                                        class="oe-bordered-editor"
+                                        placeholder="Keep track of what this action does and why it exists..."/>
+                                </page>
+
                                 <page string="Help" invisible="state != 'code'" name="ir_actions_server_code_help">
                                     <p>The following variables can be used:</p>
                                     <ul>
@@ -505,10 +527,18 @@ env['res.partner'].create({'name': partner_name})
     </pre>
                                     </div>
                                 </page>
-                                <page string="Explanation" name="explanation">
-                                    <field name="explanation" nolabel="1" class="oe-bordered-editor"/>
+
+                                <page string="Help" invisible="state != 'object_write' or evaluation_type != 'equation'" name="ir_actions_server_compute_field_help">
+                                    <span> Available variables: </span>
+                                    <ul>
+                                        <li><code>env</code>: environment on which the action is triggered</li>
+                                        <li><code>model</code>: model of the record on which the action is triggered; is a void recordset</li>
+                                        <li><code>record</code>: record on which the action is triggered</li>
+                                        <li><code>records</code>: recordset of all records on which the action is triggered in multi mode</li>
+                                        <li><code>time</code>, <code>datetime</code>, <code>dateutil</code>, <code>timezone</code>: useful Python libraries</li>
+                                        <li><code>float_compare()</code>: utility function to compare floats based on a specific precision</li>
+                                    </ul>
                                 </page>
-                                <page string="Usage" name="usage" invisible="1"/>
                             </notebook>
                         </t>
                     </sheet>

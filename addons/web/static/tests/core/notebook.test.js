@@ -2,8 +2,8 @@ import { render } from "@web/owl2/utils";
 import { expect, test } from "@odoo/hoot";
 import { animationFrame } from "@odoo/hoot-mock";
 import { click, queryFirst } from "@odoo/hoot-dom";
-import { Component, xml } from "@odoo/owl";
-import { mountWithCleanup } from "@web/../tests/web_test_helpers";
+import { Component, xml, reactive, useState } from "@odoo/owl";
+import { contains, mountWithCleanup } from "@web/../tests/web_test_helpers";
 
 import { Notebook } from "@web/core/notebook/notebook";
 
@@ -415,4 +415,59 @@ test("switch notebook page after async work", async () => {
     // async work resolved with false, preventing the page change
     const h3Capture5 = queryFirst("h3");
     expect(h3Capture5).toBe(h3Capture3);
+});
+
+test.only("multiple default pages", async () => {
+    const state = reactive({});
+    class Parent extends Component {
+        static components = { Notebook };
+        static template = xml`
+            <Notebook defaultPage="'3'">
+                <t t-set-slot="1" title="'page1'" isVisible="this.isVisible(1)">
+                    <div class="page1" />
+                </t>
+                <t t-set-slot="2" title="'page2'" isVisible="this.isVisible(2)" isDefault="true">
+                    <div class="page2" />
+                </t>
+                <t t-set-slot="3" title="'page3'" isVisible="this.isVisible(3)" isDefault="true">
+                    <div class="page3" />
+                </t>
+
+                <t t-set-slot="4" title="'page4'" isVisible="this.isVisible(4)">
+                    <div class="page4" />
+                </t>
+                <t t-set-slot="5" title="'page5'" isVisible="this.isVisible(5)">
+                    <div class="page5" />
+                </t>
+            </Notebook>`;
+        static props = ["*"];
+
+        state = useState(state);
+
+        isVisible(page) {
+            return this.state[page] ?? true;
+        }
+    }
+    await mountWithCleanup(Parent);
+    expect(".o_notebook_headers .nav-link.active").toHaveText("page3");
+
+    state[3] = false;
+    await animationFrame();
+    expect(".o_notebook_headers .nav-link.active").toHaveText("page2");
+
+    state[3] = true;
+    await animationFrame();
+    expect(".o_notebook_headers .nav-link.active").toHaveText("page3");
+
+    await contains(".o_notebook_headers .nav-link:contains(page1)").click();
+    expect(".o_notebook_headers .nav-link.active").toHaveText("page1");
+
+    state[1] = false;
+    state[3] = false;
+    await animationFrame();
+    expect(".o_notebook_headers .nav-link.active").toHaveText("page2");
+
+    state[1] = true;
+    await animationFrame();
+    expect(".o_notebook_headers .nav-link.active").toHaveText("page1");
 });
