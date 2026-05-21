@@ -718,17 +718,6 @@ class AccountEdiUBL(models.AbstractModel):
             'currencyID': currency.name,
         }
 
-    def _ubl_add_line_period_nodes(self, vals):
-        nodes = vals['line_node']['cac:InvoicePeriod'] = []
-
-        if self._is_document(vals, 'invoice', 'credit_note', 'self_invoice', 'self_credit_note'):
-            base_line = vals['line_vals']['base_line']
-            if base_line.get('deferred_start_date') or base_line.get('deferred_end_date'):
-                nodes.append({
-                    'cbc:StartDate': {'_text': base_line['deferred_start_date']},
-                    'cbc:EndDate': {'_text': base_line['deferred_end_date']},
-                })
-
     def _ubl_add_line_pricing_reference_node(self, vals):
         vals['line_node']['cac:PricingReference'] = {}
 
@@ -1054,7 +1043,6 @@ class AccountEdiUBL(models.AbstractModel):
         self._ubl_add_line_invoiced_quantity_node(vals)
         self._ubl_add_line_allowance_charge_nodes(vals)
         self._ubl_add_line_extension_amount_node(vals)
-        self._ubl_add_line_period_nodes(vals)
         self._ubl_add_line_pricing_reference_node(vals)
         self._ubl_add_line_tax_totals_nodes(vals)
         self._ubl_add_line_item_node(vals)
@@ -1072,7 +1060,6 @@ class AccountEdiUBL(models.AbstractModel):
         self._ubl_add_line_credited_quantity_node(vals)
         self._ubl_add_line_allowance_charge_nodes(vals)
         self._ubl_add_line_extension_amount_node(vals)
-        self._ubl_add_line_period_nodes(vals)
         self._ubl_add_line_pricing_reference_node(vals)
         self._ubl_add_line_tax_totals_nodes(vals)
         self._ubl_add_line_item_node(vals)
@@ -1090,7 +1077,6 @@ class AccountEdiUBL(models.AbstractModel):
         self._ubl_add_line_debited_quantity_node(vals)
         self._ubl_add_line_allowance_charge_nodes(vals)
         self._ubl_add_line_extension_amount_node(vals)
-        self._ubl_add_line_period_nodes(vals)
         self._ubl_add_line_pricing_reference_node(vals)
         self._ubl_add_line_tax_totals_nodes(vals)
         self._ubl_add_line_item_node(vals)
@@ -2607,20 +2593,6 @@ class AccountEdiUBL(models.AbstractModel):
     def _import_ubl_invoice_line_add_account_values(self, collected_values):
         collected_values['account_values'] = {}
 
-    def _import_ubl_invoice_line_add_deferred_dates(self, collected_values):
-        if not self.module_installed('account_accountant'):
-            return
-
-        line_tree = collected_values['line_tree']
-        start_date_str = line_tree.findtext('./{*}InvoicePeriod/{*}StartDate')
-        end_date_str = line_tree.findtext('./{*}InvoicePeriod/{*}EndDate')
-        if start_date_str and end_date_str:
-            to_write = collected_values['to_write']
-            if "deferred_start_date" in self.env["account.move.line"]._fields:
-                # only checking the existence of the first of the enterprise fields
-                to_write['deferred_start_date'] = fields.Date.from_string(start_date_str)
-                to_write['deferred_end_date'] = fields.Date.from_string(end_date_str)
-
     def _import_ubl_invoice_line_prepare_classified_tax_category_tax_values(self, collected_values, tax_category_tree):
         percentage = tax_category_tree.findtext('./{*}Percent')
         category_code = tax_category_tree.findtext('./{*}ID')
@@ -2723,10 +2695,9 @@ class AccountEdiUBL(models.AbstractModel):
                 # Extract information about allowance / charges.
                 self._import_ubl_invoice_line_add_allowance_charges_values(line_collected_values)
 
-                # name / quantity / price_unit / discount / deferred_start_date / deferred_end_date
+                # name / quantity / price_unit / discount
                 self._import_ubl_invoice_line_add_name(line_collected_values)
                 self._import_ubl_invoice_line_add_price_unit_quantity_discount(line_collected_values)
-                self._import_ubl_invoice_line_add_deferred_dates(line_collected_values)
 
                 # vehicle
 

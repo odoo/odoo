@@ -1024,10 +1024,6 @@ class AccountEdiXmlUblTr(models.AbstractModel):
         # No InvoiceLine/Item/ClassifiedTaxCategory in Turkey
         pass
 
-    def _add_invoice_line_period_nodes(self, line_node, vals):
-        # Start and End Dates on Invoice Lines is not allowed in Turkey
-        pass
-
     @api.model
     def tax_grouping_function(self, base_line, tax_data):
         """Build a grouping key for tax aggregation, extended for Turkish (TR) withholding taxes.
