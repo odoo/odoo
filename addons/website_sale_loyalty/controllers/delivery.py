@@ -38,7 +38,7 @@ class WebsiteSaleLoyaltyDelivery(Delivery):
             lambda line: line.reward_id.reward_type == 'discount'
         )
         groupable_lines = discount_lines.filtered(
-            lambda line: line.reward_id.discount_mode == 'percent'
+            lambda line: line.reward_id.program_type not in ['ewallet', 'gift_card']
         )
         res['discount_reward_amounts'] = [
             to_html(sum(lines.mapped('price_subtotal')))
