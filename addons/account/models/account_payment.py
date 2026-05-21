@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 from itertools import zip_longest
-from odoo import models, fields, api, _, Command
+
 from odoo.exceptions import UserError, ValidationError
-from odoo.tools.misc import format_date, formatLang
-from odoo.tools import create_index
-from odoo.tools import SQL
-from itertools import zip_longest
+from odoo.tools import SQL, create_index
+
+from odoo import Command, _, api, fields, models
+
 
 class AccountPayment(models.Model):
     _name = "account.payment"
@@ -1068,6 +1068,12 @@ class AccountPayment(models.Model):
                     line_ids_commands.append(Command.unlink(liquidity_line.id))
 
             counterpart_line_vals = [x for x in line_vals_list if x['account_id'] == pay.company_id.transfer_account_id.id or self.env['account.account'].browse(x['account_id']).account_type in valid_account_types]
+            if not counterpart_line_vals:
+                raise UserError(_(
+                    "Could not find a receivable or payable account to post the payment counterpart. "
+                    "Please make sure the partner '%(partner)s' has a valid receivable or payable account configured.",
+                    partner=pay.partner_id.display_name or _('(no partner)'),
+                ))
             line_ids_commands.append(
                 Command.update(counterpart_lines.id, counterpart_line_vals[0]) if counterpart_lines else Command.create(counterpart_line_vals[0])
             )
