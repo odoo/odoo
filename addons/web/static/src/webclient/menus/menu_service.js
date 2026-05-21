@@ -61,7 +61,9 @@ export const menuService = {
                 return Object.values(menusData);
             },
             getApps() {
-                return this.getMenu("root").children.map((mid) => this.getMenu(mid));
+                return this.getMenu("root").children
+                    .map((mid) => this.getMenu(mid))
+                    .sort((a, b) => a.name.localeCompare(b.name));
             },
             getMenu: _getMenu,
             getCurrentApp() {
