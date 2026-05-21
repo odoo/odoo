@@ -27,6 +27,7 @@ export class BuilderMany2Many extends Component {
         fields: t.array(t.string()).optional(),
         domain: t.array().optional(),
         limit: t.number().optional(),
+        message: t.string().optional(),
     });
     static components = { BuilderComponent, BasicMany2Many };
 
