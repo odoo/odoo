@@ -17,17 +17,20 @@
         </p>
     </t>
     <t t-name="website.cookies_bar.text_button_all">
-        <a href="#" id="cookies-consent-all" role="button"
-           class="js_close_popup o_cookies_bar_accept_all o_cookies_bar_text_button btn btn-outline-primary rounded-circle mb-2 px-2 py-1 me-1">Allow all cookies</a>
+        <a href="#" id="cookies-consent-all" role="button" data-name="Accept all cookies"
+           class="js_close_popup o_cookies_bar_accept_all o_cookies_bar_text_button btn btn-outline-primary rounded-circle mb-2 px-2 py-1 me-1 oe_unremovable">Allow all cookies</a>
     </t>
     <t t-name="website.cookies_bar.text_button_essential">
-        <a href="#" id="cookies-consent-essential" role="button"
-           class="js_close_popup o_cookies_bar_accept_essential o_cookies_bar_text_button_essential btn btn-outline-primary rounded-circle mb-2 px-2 py-1 me-1">Only allow essential cookies</a>
+        <a href="#" id="cookies-consent-essential" role="button" data-name="Refuse optional cookies"
+           class="js_close_popup o_cookies_bar_accept_essential o_cookies_bar_text_button_essential btn btn-outline-primary rounded-circle mb-2 px-2 py-1 me-1 oe_unremovable">Only allow essential cookies</a>
+    </t>
+    <t t-name="website.cookies_bar.close_button">
+        <button type="button" class="s_popup_close o_cookies_bar_close border-0 p-0 o_we_no_overlay o_not_editable shadow-none" aria-label="Close">×</button>
     </t>
     <t t-name="website.cookies_bar.discrete">
         <!-- When updating this template, do not forget to also update the
              backend `website.cookies_bar` template -->
-        <section class="o_colored_level o_cc o_cc1">
+        <section class="o_colored_level o_cc o_cc1 pe-5 oe_unremovable">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-8 pt16">
@@ -36,18 +39,19 @@
                             <a href="/website/cookie-policy" class="o_cookies_bar_text_policy small o_translate_inline">Cookie Policy</a>
                         </p>
                     </div>
-                    <div class="col-lg-4 text-end pt16 pb16">
-                        <a href="#" id="cookies-consent-essential" role="button"
-                           class="js_close_popup btn btn-outline-primary rounded-circle btn-sm px-2 me-1 mb-2">Only essentials</a>
-                        <a href="#" id="cookies-consent-all" role="button"
-                           class="js_close_popup btn btn-outline-primary rounded-circle btn-sm me-1 mb-2">I agree</a>
+                    <div class="col-lg-4 text-end pt16 pb16 oe_unremovable">
+                        <a href="#" id="cookies-consent-essential" role="button" data-name="Refuse optional cookies"
+                           class="js_close_popup btn btn-outline-primary rounded-circle btn-sm px-2 me-1 mb-2 oe_unremovable">Only essentials</a>
+                        <a href="#" id="cookies-consent-all" role="button" data-name="Accept all cookies"
+                           class="js_close_popup btn btn-outline-primary rounded-circle btn-sm me-1 mb-2 oe_unremovable">I agree</a>
                     </div>
                 </div>
             </div>
+            <t t-call="website.cookies_bar.close_button"/>
         </section>
     </t>
     <t t-name="website.cookies_bar.classic">
-        <section class="o_colored_level o_cc o_cc1 pt32 pb16">
+        <section class="o_colored_level o_cc o_cc1 pt32 pb16 oe_unremovable">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-6">
@@ -55,25 +59,26 @@
                         <t t-call="website.cookies_bar.text_primary"/>
                         <t t-call="website.cookies_bar.text_secondary"/>
                     </div>
-                    <div class="col-lg-3 d-flex align-items-center">
+                    <div class="col-lg-3 d-flex align-items-center oe_unremovable">
                         <div class="row">
-                            <div class="col-lg-12 d-flex align-items-center">
+                            <div class="col-lg-12 d-flex align-items-center oe_unremovable">
                                 <t t-call="website.cookies_bar.text_button_all"/>
                             </div>
-                            <div class="col-lg-12 d-flex align-items-center">
+                            <div class="col-lg-12 d-flex align-items-center oe_unremovable">
                                 <t t-call="website.cookies_bar.text_button_essential"/>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+            <t t-call="website.cookies_bar.close_button"/>
         </section>
     </t>
     <t t-name="website.cookies_bar.popup">
-        <section class="o_colored_level o_cc o_cc1 p-5">
+        <section class="o_colored_level o_cc o_cc1 p-5 oe_unremovable">
             <div class="container text-center">
                 <div class="row">
-                    <div class="col-lg-12">
+                    <div class="col-lg-12 oe_unremovable">
                         <img t-attf-src="/web/image/website/#{websiteId}/logo/250x250" class="img img-fluid mb-4" alt="Website Logo"/>
                         <t t-call="website.cookies_bar.text_title"/>
                         <t t-call="website.cookies_bar.text_primary"/>
@@ -83,6 +88,7 @@
                     </div>
                 </div>
             </div>
+            <t t-call="website.cookies_bar.close_button"/>
         </section>
     </t>
 </templates>

@@ -35,13 +35,14 @@ function getCookiesBarTemplate(withToggleButton = false) {
                         aria-modal="true" role="dialog">
                     <div class="modal-dialog s_popup_size_full">
                         <div class="modal-content oe_structure">
-                            <section>
+                            <section class="o_colored_level o_cc o_cc1 pe-5">
                                 <div class="container">
                                     <p>
                                         <a href="#" id="cookies-consent-essential" role="button" class="js_close_popup btn btn-outline-primary">Only essentials</a>
                                         <a href="#" id="cookies-consent-all" role="button" class="js_close_popup btn btn-outline-primary">I agree</a>
                                     </p>
                                 </div>
+                                <button type="button" class="s_popup_close o_cookies_bar_close border-0 p-0 o_we_no_overlay o_not_editable shadow-none" aria-label="Close">×</button>
                             </section>
                         </div>
                     </div>
@@ -51,6 +52,19 @@ function getCookiesBarTemplate(withToggleButton = false) {
     `;
 }
 
+async function refuseOptionalCookies(clickSelector) {
+    const { core } = await startInteractions(getCookiesBarTemplate());
+    expect(core.interactions).toHaveLength(1);
+    expect(cookie.get("website_cookies_bar")).toBe(undefined);
+    const cookiesBarEl = queryOne("#website_cookies_bar .modal");
+    await waitFor(cookiesBarEl, { visible: true });
+    await click(clickSelector);
+    expect(cookiesBarEl).not.toBeVisible();
+    expect(cookie.get("website_cookies_bar")).toMatch(
+        /^\{"required": true, "optional": false, "ts": \d+\}$/
+    );
+}
+
 const cookiesApprovalTemplate = `
     <div data-need-cookies-approval="true">
         <iframe src="about:blank" data-nocookie-src="/"></iframe>
@@ -58,16 +72,11 @@ const cookiesApprovalTemplate = `
 `;
 
 test("consent for optional cookies not given if click on #cookies-consent-essential", async () => {
-    const { core } = await startInteractions(getCookiesBarTemplate());
-    expect(core.interactions).toHaveLength(1);
-    expect(cookie.get("website_cookies_bar")).toBe(undefined);
-    const cookiesBarEl = queryOne("#website_cookies_bar .modal");
-    await waitFor(cookiesBarEl, { visible: true });
-    await click("#cookies-consent-essential");
-    expect(cookiesBarEl).not.toBeVisible();
-    expect(cookie.get("website_cookies_bar")).toMatch(
-        /^\{"required": true, "optional": false, "ts": \d+\}$/
-    );
+    await refuseOptionalCookies("#cookies-consent-essential");
+});
+
+test("closing the cookies bar refuses optional cookies, like #cookies-consent-essential", async () => {
+    await refuseOptionalCookies(".o_cookies_bar_close");
 });
 
 test("consent for optional cookies not given if no click", async () => {
