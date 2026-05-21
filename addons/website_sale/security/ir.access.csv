@@ -69,3 +69,6 @@ access_product_attribute_category_public_public,product.attribute.category publi
 access_product_attribute_category_public_portal,product.attribute.category public,product.attribute.category,base.group_portal,r,
 access_product_attribute_category_public_employee,product.attribute.category public,product.attribute.category,base.group_user,r,
 access_product_attribute_category_public_saleman,product.attribute.category sale manager,product.attribute.category,sales_team.group_sale_manager,crud,
+product_stock_notification_rule,See own stock notifications,product.stock.notification,base.group_portal,crud,"[('partner_id','=', user.partner_id.id)]"
+product_stock_notification_rule_1,See own stock notifications,product.stock.notification,base.group_user,crud,"[('partner_id','=', user.partner_id.id)]"
+all_product_stock_notification_rule,See all stock notifications,product.stock.notification,sales_team.group_sale_manager,crud,

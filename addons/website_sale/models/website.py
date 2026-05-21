@@ -217,6 +217,10 @@ class Website(models.Model):
     )
     product_page_grid_columns = fields.Integer(default=2)
 
+    stock_notification_ids = fields.One2many(
+        "product.stock.notification", "website_id", string="Back in stock Notifications"
+    )
+
     wishlist_opt_products_design_classes = fields.Char(
         string="Wishlist Page Design Class",
         help="CSS class for wishlist page design",

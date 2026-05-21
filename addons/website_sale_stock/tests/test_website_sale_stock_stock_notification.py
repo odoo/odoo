@@ -23,7 +23,7 @@ class TestStockNotificationProduct(WebsiteSaleStockCommon, HttpCase):
         partner = self.env["mail.thread"]._partner_find_from_emails_single(
             ["test@test.test"], no_create=True
         )
-        self.assertTrue(self.macbook._has_stock_notification(partner))
+        self.assertTrue(self.macbook._has_stock_notification(partner, self.website))
 
         with self.setup_cron_env() as env:
             env["product.product"]._send_availability_email()
@@ -39,7 +39,7 @@ class TestStockNotificationProduct(WebsiteSaleStockCommon, HttpCase):
 
         emails = self.env["mail.mail"].search([("email_to", "=", partner.email_formatted)])
         self.assertEqual(emails[0].subject, "Macbook Pro is back in stock")
-        self.assertFalse(self.macbook._has_stock_notification(partner))
+        self.assertFalse(self.macbook._has_stock_notification(partner, self.website))
 
     @contextmanager
     def setup_cron_env(self):
