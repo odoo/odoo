@@ -84,7 +84,22 @@
             <field name="status_in_payment" position="before">
                 <field name="l10n_it_edi_transaction" optional="hide"/>
                 <field name="l10n_it_edi_attachment_name" optional="hide"/>
-                <field name="l10n_it_edi_state" optional="hide"/>
+                <field name="l10n_it_edi_state"
+                       optional="show"
+                       invisible="not l10n_it_edi_state"
+                       widget="account_review_state_selection_badge"
+                       options="{
+                           'false': {'can_edit': false},
+                           'being_sent': {'decoration': 'muted', 'icon': 'fa fa-paper-plane-o', 'fill': true},
+                           'processing': {'decoration': 'muted', 'icon': 'fa fa-refresh', 'fill': true},
+                           'forward_attempt': {'decoration': 'success', 'icon': 'fa fa-check-circle', 'fill': true},
+                           'forwarded': {'decoration': 'success', 'icon': 'fa fa-check-circle', 'fill': true},
+                           'accepted_by_pa_partner': {'decoration': 'success', 'icon': 'fa fa-check', 'fill': true},
+                           'forward_failed': {'decoration': 'success', 'icon': 'fa fa-check-circle', 'fill': true},
+                           'accepted_by_pa_partner_after_expiry': {'decoration': 'success', 'icon': 'fa fa-check', 'fill': true},
+                           'rejected': {'decoration': 'danger', 'icon': 'fa fa-times-circle', 'fill': true},
+                           'rejected_by_pa_partner': {'decoration': 'danger', 'icon': 'fa fa-times', 'fill': true},
+                       }"/>
             </field>
         </field>
     </record>
@@ -118,13 +133,6 @@
                 </xpath>
                 <xpath expr="//sheet" position="before">
                     <field name="l10n_it_edi_is_self_invoice" invisible="1"/>
-                    <div class="alert alert-warning" role="alert"
-                        invisible="not l10n_it_edi_header
-                                   or state == 'draft'
-                                   or l10n_it_edi_state in ('forwarded', 'accepted_by_pa_partner', 'accepted_by_pa_partner_after_expiry', 'forward_failed')">
-                        <div class="p-0 m-0"><i class='fa fa-warning' role="img" title="EDI (Italy)"/><span class="mx-1">E-invoicing (Italy)</span></div>
-                        <field name="l10n_it_edi_header"/>
-                    </div>
                 </xpath>
                 <xpath expr="//button[@name='action_invoice_sent']" position="before">
                     <button
@@ -141,37 +149,34 @@
                     <!-- Make it clear in the button text when we are not in production (e.g., 'Send (Demo)') -->
                     <field name="l10n_it_edi_button_label" widget="char"/>
                 </xpath>
+                <xpath expr="//sheet/field[@name='id']" position="before">
+                    <widget name="web_ribbon" title="Rejected" bg_color="text-bg-danger"
+                        invisible="l10n_it_edi_state not in ['rejected_by_pa_partner', 'rejected']"/>
+                </xpath>
                 <xpath expr="//page[@name='other_info']" position="after">
-                    <page string="Electronic Invoicing"
+                    <page string="SDI"
                         name="electronic_invoicing"
                         invisible="move_type not in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund') or country_code != 'IT'">
                         <group>
-                            <group>
+                            <group string="Sistema di interscambio">
                                 <field name="l10n_it_edi_attachment_name" invisible="1"/>
-                                <field name="l10n_it_edi_transaction" groups="base.group_no_one" readonly="1"/>
                                 <field name="l10n_it_edi_attachment_file" widget="binary" filename="l10n_it_edi_attachment_name" groups="base.group_no_one" readonly="1"/>
-                                <field name="l10n_it_stamp_duty" readonly="state != 'draft'"/>
-                                <field name="l10n_it_ddt_id" readonly="state != 'draft'" invisible="move_type not in ('out_invoice', 'out_refund')"/>
+                                <field name="l10n_it_edi_transaction" string="Transaction ID" groups="base.group_no_one" readonly="1"/>
                                 <field name="l10n_it_document_type" string="Document Type"/>
                                 <field name="l10n_it_payment_method" string="Payment Method"/>
+                                <field name="l10n_it_stamp_duty" widget="monetary" options="{'currency_field': 'currency_id'}" readonly="state != 'draft'"/>
+                                <field name="l10n_it_ddt_id" readonly="state != 'draft'" invisible="move_type not in ('out_invoice', 'out_refund')"/>
                             </group>
-                            <field name="l10n_it_partner_pa" invisible="1"/>
-                            <group invisible="not l10n_it_partner_pa">
-                                <field name="l10n_it_origin_document_type" readonly="state != 'draft'"/>
-                                <field name="l10n_it_origin_document_name" readonly="state != 'draft'"/>
-                                <field name="l10n_it_origin_document_date" readonly="state != 'draft'"/>
+                            <group string="Reference Document">
+                                <field name="l10n_it_origin_document_name" string="Number" readonly="state != 'draft'"/>
+                                <field name="l10n_it_origin_document_type" string="Type" readonly="state != 'draft'"/>
+                                <field name="l10n_it_origin_document_date" string="Issue Date" readonly="state != 'draft'"/>
                                 <field name="l10n_it_convention_code" readonly="state != 'draft'"/>
                                 <field name="l10n_it_cig" readonly="state != 'draft'"/>
                                 <field name="l10n_it_cup" readonly="state != 'draft'"/>
                             </group>
                         </group>
                     </page>
-                </xpath>
-                <xpath expr="//div[@name='journal_div']" position="after">
-                    <label for="l10n_it_edi_state" invisible="not l10n_it_edi_state"/>
-                    <div name="l10n_it_edi_div" class="d-flex" invisible="not l10n_it_edi_state">
-                        <field name="l10n_it_edi_state" class="oe_inline"/>
-                    </div>
                 </xpath>
             </data>
         </field>

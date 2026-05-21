@@ -63,44 +63,38 @@ class AccountMove(models.Model):
     l10n_it_edi_state = fields.Selection(
         string="SDI State",
         selection=[
-            ('being_sent', 'Being Sent To SdI'),
-            ('requires_user_signature', 'Requires user signature'),  # TODO: remove in master
-            ('processing', 'SdI Processing'),
-            ('rejected', 'SdI Rejected'),
-            ('forwarded', 'SdI Accepted, Forwarded to Partner'),
-            ('forward_failed', 'SdI Accepted, Forward to Partner Failed'),
-            ('forward_attempt', 'SdI Accepted, Forwarding to Partner'),
-            ('accepted_by_pa_partner', 'SdI Accepted, Accepted by the PA Partner'),
-            ('rejected_by_pa_partner', 'SdI Accepted, Rejected by the PA Partner'),
-            ('accepted_by_pa_partner_after_expiry', 'SdI Accepted, PA Partner Expired Terms'),
+            ('being_sent', 'Sending'),
+            ('processing', 'Processing'),
+            ('forward_attempt', 'Forwarding to Partner'),
+            ('forwarded', 'Forwarded to Partner'),
+            ('accepted_by_pa_partner', 'Accepted by Partner'),
+            ('forward_failed', 'Forwarding Failed'),
+            ('accepted_by_pa_partner_after_expiry', 'Accepted without reply'),
+            ('rejected', 'Rejected'),
+            ('rejected_by_pa_partner', 'Rejected by Partner'),
         ],
         copy=False, tracking=True,
         inverse="_inverse_l10n_it_edi_state",
         help="This state is updated by default, but you can force the value. ",
     )
-    l10n_it_edi_header = fields.Html(
-        help='User description of the current state, with hints to make the flow progress',
-        readonly=True,
-        copy=False,
-    )
-    l10n_it_edi_transaction = fields.Char(copy=False, string="FatturaPA Transaction")
-    l10n_it_edi_attachment_file = fields.Binary(copy=False, attachment=True)
-    l10n_it_edi_attachment_name = fields.Char(string="FatturaPA Attachment")
+    l10n_it_edi_transaction = fields.Char(string="SDI Transaction ID", copy=False)
+    l10n_it_edi_attachment_file = fields.Binary(string="Attachment File", copy=False, attachment=True)
+    l10n_it_edi_attachment_name = fields.Char(string="FatturaPA Attachment Name")
     l10n_it_edi_proxy_mode = fields.Selection(related="company_id.l10n_it_edi_proxy_user_id.edi_mode", depends=['company_id'])
     l10n_it_edi_button_label = fields.Char(compute="_compute_l10n_it_edi_button_label")
     l10n_it_edi_is_self_invoice = fields.Boolean(compute="_compute_l10n_it_edi_is_self_invoice")
-    l10n_it_stamp_duty = fields.Float(string="Dati Bollo")
+    l10n_it_stamp_duty = fields.Float(string="Stamp Duty")
     l10n_it_ddt_id = fields.Many2one('l10n_it.ddt', string='DDT', copy=False)
 
     l10n_it_origin_document_type = fields.Selection(
-        string="Origin Document Type",
+        string="Italian SDI Origin Document Type",
         selection=[('purchase_order', 'Purchase Order'), ('contract', 'Contract'), ('agreement', 'Agreement')],
         copy=False)
     l10n_it_origin_document_name = fields.Char(
-        string="Origin Document Name",
+        string="Italian SDI Origin Document Number",
         copy=False)
     l10n_it_origin_document_date = fields.Date(
-        string="Origin Document Date",
+        string="Document Issue Date",
         copy=False)
     l10n_it_cig = fields.Char(
         string="CIG",
@@ -352,11 +346,6 @@ class AccountMove(models.Model):
             }
         return super()._get_edi_decoder(file_data, new)
 
-    def _post(self, soft=True):
-        # EXTENDS 'account'
-        self.with_context(skip_is_manually_modified=True).write({'l10n_it_edi_header': False})
-        return super()._post(soft)
-
     def _inverse_l10n_it_edi_state(self):
         for move in self:
             if move.is_move_sent and move.l10n_it_edi_state in ('rejected', 'rejected_by_pa_partner'):
@@ -398,13 +387,8 @@ class AccountMove(models.Model):
                         message = f"{message} - {', '.join(records.mapped('display_name'))}"
                 messages.append(nl2br(message))
 
-            # Update the vendor bill's header with the warning messages,
-            # and force reload the view to make sure the header is loaded
-            self.l10n_it_edi_header = Markup('<br/>').join(messages)
-            return {
-                'type': 'ir.actions.client',
-                'tag': 'reload',
-            }
+            body = Markup('<br/>').join(messages)
+            self.message_post(body=body)
 
         attachment_vals = self._l10n_it_edi_get_attachment_values(pdf_values=None)
         self.l10n_it_edi_attachment_file = BinaryBytes(attachment_vals['raw'])
@@ -2228,7 +2212,6 @@ class AccountMove(models.Model):
         results = {}
 
         for move in self:
-            move.l10n_it_edi_header = False
             attachment = attachments_vals[move]
             filename = attachment['name']
             content = base64.b64encode(attachment['raw']).decode()
@@ -2260,17 +2243,15 @@ class AccountMove(models.Model):
                         message = _("The e-invoice file %s was sent to the SdI for processing.", filename)
 
                     header = nl2br(message)
-                    move.sudo().message_post(body=header)
+                move.sudo().message_post(body=header)
 
                 results[filename] = response
-                move.l10n_it_edi_header = header
 
             except AccountEdiProxyError as e:
                 move.l10n_it_edi_state = False
                 error_message = _("Error uploading the e-invoice file %(file)s.\n%(error)s", file=filename, error=e.message)
                 header = nl2br(error_message)
                 move.sudo().message_post(body=header)
-                move.l10n_it_edi_header = header
                 results[filename] = {'error_message': error_message}
 
         return results
@@ -2448,7 +2429,6 @@ class AccountMove(models.Model):
         self.write({
             'l10n_it_edi_state': new_state,
             'l10n_it_edi_transaction': transformed_notification['l10n_it_edi_transaction'],
-            'l10n_it_edi_header': message or False,
         })
 
         if message and old_state != new_state:
