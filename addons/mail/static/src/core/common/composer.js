@@ -632,6 +632,7 @@ export class Composer extends Component {
             clicked_on_full_composer: true,
             body_contains_signature_only: !this.props.composer.composerText || this.props.composer.composerText.trim().length === 0,
             // Changed in 18.2+: finally get rid of autofollow, following should be done manually
+            is_thread_composer: true,
             ...this.fullComposerAdditionalContext,
         };
         const action = {
