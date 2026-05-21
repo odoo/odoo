@@ -2,6 +2,7 @@ import { patch } from "@web/core/utils/patch";
 import { CONSOLE_COLOR, PosStore } from "@point_of_sale/app/services/pos_store";
 import { ConnectionLostError } from "@web/core/network/rpc";
 import { _t } from "@web/core/l10n/translation";
+import { formatList } from "@web/core/l10n/utils/format_list";
 import { EditOrderNamePopup } from "@pos_restaurant/app/components/popup/edit_order_name_popup/edit_order_name_popup";
 import { NumberPopup } from "@point_of_sale/app/components/popups/number_popup/number_popup";
 import { SelectionPopup } from "@point_of_sale/app/components/popups/selection_popup/selection_popup";
@@ -114,10 +115,9 @@ patch(PosStore.prototype, {
         const result = await super.sendOrderInPreparation(order, opts);
 
         if (this.config.module_pos_restaurant && categoryCount.length) {
-            const categorySummary = categoryCount
-                .map((cat) => `${cat.count} ${cat.name}`)
-                .join(_t(", "))
-                .replace(/, ([^,]*)$/, _t(" and $1"));
+            const categorySummary = formatList(
+                categoryCount.map((cat) => `${cat.count} ${cat.name}`)
+            );
             this.notification.add(_t("%s, sent to the kitchen", categorySummary), {
                 type: "success",
             });
