@@ -101,6 +101,37 @@ QUnit.module("spreadsheet_account > Accounting", { beforeEach }, () => {
         );
     });
 
+    QUnit.test(
+        "string company_id is converted to integer before server request",
+        async (assert) => {
+            const model = await createModelWithDataSource({
+                mockRPC: async function (_route, args) {
+                    if (args.method === "spreadsheet_fetch_debit_credit") {
+                        for (const blob of args.args[0]) {
+                            assert.strictEqual(
+                                typeof blob.company_id,
+                                "number",
+                                "company_id must be a number, not a string"
+                            );
+                            assert.strictEqual(blob.company_id, 1);
+                        }
+                        assert.step("spreadsheet_fetch_debit_credit");
+                        return [{ debit: 10, credit: 5 }];
+                    }
+                },
+            });
+            // passing company_id as the string "1" — server must receive integer 1, not the string
+            setCellContent(model, "A1", `=ODOO.CREDIT("100", "2022", 0, "1")`);
+            setCellContent(model, "A2", `=ODOO.DEBIT("100", "2022", 0, "1")`);
+            setCellContent(model, "A3", `=ODOO.BALANCE("100", "2022", 0, "1")`);
+            await waitForDataSourcesLoaded(model);
+            assert.equal(getCellValue(model, "A1"), 5);
+            assert.equal(getCellValue(model, "A2"), 10);
+            assert.equal(getCellValue(model, "A3"), 5);
+            assert.verifySteps(["spreadsheet_fetch_debit_credit"]);
+        }
+    );
+
     QUnit.test("formula with invalid date", async (assert) => {
         const model = await createModelWithDataSource();
         setCellContent(model, "A1", `=ODOO.CREDIT("100",)`);
@@ -258,7 +289,7 @@ QUnit.module("spreadsheet_account > Accounting", { beforeEach }, () => {
             ),
             JSON.stringify(
                 camelToSnakeObject({
-                    dateRange: parseAccountingDate({value: "2019" }, locale),
+                    dateRange: parseAccountingDate({ value: "2019" }, locale),
                     codes: ["33"],
                     companyId: null,
                     includeUnposted: false,
