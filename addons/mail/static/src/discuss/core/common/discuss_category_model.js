@@ -20,8 +20,6 @@ export class DiscussCategory extends Record {
         return category;
     }
 
-    busChannelSubscribed = false;
-
     /** @type {string} */
     bus_channel_access_token;
     get busChannel() {

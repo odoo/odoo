@@ -16,7 +16,7 @@ import { LocalStorageEntry } from "@mail/utils/common/local_storage";
 export class RecordInternal {
     [IS_RECORD_SYM] = true;
     /**
-     * All dispose functions for this records.
+     * All dispose functions for this record.
      * For the store, this stores the dispose functions of all records.
      * Useful to automatically call the dispose functions when the record is deleted or in-between each tests.
      *
@@ -72,7 +72,7 @@ export class RecordInternal {
      */
     fieldsComputeStop = new Map();
     /**
-     * Fields that have an `onUpdate` defined. Key is fieldName, Value is function of ongoing `onChange` that allow to stop it.
+     * Fields that have an `onUpdate` defined. Key is fieldName, Value is function of ongoing `onChange` that can be disposed.
      * Useful to prevent any ongoing onChange and restart if need be.
      *
      * @type {Map<string, Function>}
