@@ -17,6 +17,10 @@ class PaymentWizardCopyButton extends CopyButton {
 
 class PaymentWizardCopyClipboardButtonField extends CopyClipboardButtonField {
     static components = { CopyButton: PaymentWizardCopyButton };
+
+    get copyButtonClassName() {
+        return `${super.copyButtonClassName} w-100`;
+    }
 }
 
 const paymentWizardCopyClipboardButtonField = {
