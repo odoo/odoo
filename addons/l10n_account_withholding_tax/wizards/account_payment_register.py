@@ -62,7 +62,19 @@ class AccountPaymentRegister(models.TransientModel):
         """
         for wizard in self:
             if wizard.can_edit_wizard:
-                wizard.withholding_net_amount = wizard.amount - sum(wizard.withholding_line_ids.mapped('amount'))
+                # wizard.amount is in currency_id, but withholding_line_ids are in comodel_currency_id
+                withhold_amount = 0.0
+                for line in wizard.withholding_line_ids:
+                    if line.comodel_currency_id != wizard.currency_id:
+                        withhold_amount += line.comodel_currency_id._convert(
+                            from_amount=line.amount,
+                            to_currency=wizard.currency_id,
+                            company=wizard.company_id,
+                            date=wizard.payment_date,
+                        )
+                    else:
+                        withhold_amount += line.amount
+                wizard.withholding_net_amount = wizard.amount - withhold_amount
             else:
                 wizard.withholding_net_amount = 0.0
 

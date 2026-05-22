@@ -5,11 +5,6 @@ from odoo.addons.account.models.chart_template import template
 class AccountChartTemplate(models.AbstractModel):
     _inherit = 'account.chart.template'
 
-    # ar base
-    @template('ar_base', 'account.account')
-    def _get_ar_base_withholding_account_account(self):
-        return self._parse_csv('ar_base', 'account.account', module='l10n_ar_withholding')
-
     # ri chart
     @template('ar_ri', 'account.tax.group')
     def _get_ar_ri_withholding_account_tax_group(self):
@@ -35,5 +30,8 @@ class AccountChartTemplate(models.AbstractModel):
     @template('ar_base', 'res.company')
     def _get_ar_base_res_company(self):
         res = super()._get_ar_base_res_company()
-        res[self.env.company.id].update({'l10n_ar_tax_base_account_id': 'base_tax_account'})
+        company = self.env.company
+        res.setdefault(company.id, {})['withholding_tax_base_account_id'] = (
+            company.withholding_tax_base_account_id.id or 'base_tax_account'
+        )
         return res
