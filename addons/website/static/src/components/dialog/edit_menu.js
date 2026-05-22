@@ -3,7 +3,7 @@ import { useService, useAutofocus } from "@web/core/utils/hooks";
 import { useNestedSortable } from "@web/core/utils/nested_sortable";
 import wUtils from "@website/js/utils";
 import { WebsiteDialog } from "./dialog";
-import { Component, onWillStart } from "@odoo/owl";
+import { Component, onWillStart, useEffect } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { rpc } from "@web/core/network/rpc";
 import { isEmail } from "@web/core/utils/strings";
@@ -11,7 +11,6 @@ import { AddPageDialog } from "@website/components/dialog/add_page_dialog";
 import { isAbsoluteURLInCurrentDomain } from "@html_editor/utils/url";
 import { useDebounced } from "@web/core/utils/timing";
 import { KeepLast } from "@web/core/utils/concurrency";
-import { effect } from "@web/core/utils/reactive";
 
 function urlToCheck(url) {
     let relativeUrl = false;
@@ -90,7 +89,7 @@ export class MenuDialog extends Component {
         const updatePageNotFound = (url) =>
             keepLast.add(checkUrlExists(url)).then((exists) => (this.state.pageNotFound = !exists));
         const debouncedUpdatePageNotFound = useDebounced(updatePageNotFound, 500);
-        effect(({ url }) => debouncedUpdatePageNotFound(url), [this.state]);
+        useEffect(() => debouncedUpdatePageNotFound(this.state.url));
 
         useLayoutEffect(
             (input) => {
@@ -119,12 +118,7 @@ export class MenuDialog extends Component {
         );
     }
 
-    onClickOk() {
-        this.state.invalidName = !this.state.name;
-        if (this.state.invalidName) {
-            return;
-        }
-
+    getUrl() {
         let url = this.state.url;
         if (!this.props.isMegaMenu) {
             try {
@@ -133,7 +127,16 @@ export class MenuDialog extends Component {
                 // Do nothing if URL is invalid.
             }
         }
-        this.props.save(this.state.name, url);
+        return url;
+    }
+
+    onClickOk() {
+        this.state.invalidName = !this.state.name;
+        if (this.state.invalidName) {
+            return;
+        }
+
+        this.props.save(this.state.name, this.getUrl());
         this.props.close();
     }
 

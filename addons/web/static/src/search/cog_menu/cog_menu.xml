@@ -10,7 +10,7 @@
                     </button>
 
                     <t t-set-slot="content">
-                        <t t-slot="default"/>
+                        <t t-call-slot="default"/>
                         <t t-if="this.state.printItems.length">
                             <Dropdown t-if="this.state.printItems.length > 1">
                                 <button>
@@ -35,6 +35,7 @@
                             </DropdownItem>
                         </t>
 
+                        <t t-set="currentGroup" t-value="null"/>
                         <t t-foreach="this.cogItems" t-as="item" t-key="item.key">
                             <t t-if="currentGroup !== null and currentGroup !== item.groupNumber">
                                 <div role="separator" class="dropdown-divider"/>

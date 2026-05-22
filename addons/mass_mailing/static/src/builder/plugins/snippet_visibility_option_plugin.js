@@ -1,7 +1,7 @@
 import { Plugin } from "@html_editor/plugin";
 import { registry } from "@web/core/registry";
-import { effect } from "@web/core/utils/reactive";
 import { DataAttributeAction } from "@html_builder/core/core_builder_action_plugin";
+import { effect } from "@odoo/owl";
 
 class DataAttributeChangeAction extends DataAttributeAction {
     static id = "dataAttributeChangeAction";
@@ -28,18 +28,16 @@ export class SnippetVisibilityPlugin extends Plugin {
     };
     setup() {
         this.mailingModelId = this.config.record.data.mailing_model_id.id;
-        effect(
-            (record) => {
-                if (this.isDestroyed) {
-                    return;
-                }
-                if (record.data.mailing_model_id.id !== this.mailingModelId) {
-                    this.mailingModelId = record.data.mailing_model_id.id;
-                    this.resetFilterDomains();
-                }
-            },
-            [this.config.record]
-        );
+        const disposeEffect = effect(() => {
+            if (this.isDestroyed) {
+                return;
+            }
+            if (this.config.record.data.mailing_model_id.id !== this.mailingModelId) {
+                this.mailingModelId = this.config.record.data.mailing_model_id.id;
+                this.resetFilterDomains();
+            }
+        });
+        this._cleanups.push(disposeEffect);
     }
 
     getModel() {

@@ -7,7 +7,7 @@
             t-att-class="this.getRecordClasses()"
             t-att-data-id="this.props.record.id"
             t-att-tabindex="this.props.record.model.useSampleModel ? -1 : 0"
-            t-custom-click="onGlobalClick"
+            t-custom-click="this.onGlobalClick"
             t-on-touchstart="this.onTouchStart"
             t-on-touchmove="this.onTouchMoveOrCancel"
             t-on-touchcancel="this.onTouchMoveOrCancel"

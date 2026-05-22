@@ -1,5 +1,6 @@
 /** @odoo-module */
 
+import { types as t } from "@odoo/owl";
 import { isInstanceOf } from "../../hoot-dom/hoot_dom_utils";
 import {
     createMock,
@@ -10,10 +11,6 @@ import {
     setSyncValue,
 } from "../hoot_utils";
 import { ensureTest } from "../main_runner";
-
-/**
- * @typedef {"android" | "ios" | "linux" | "mac" | "windows"} Platform
- */
 
 //-----------------------------------------------------------------------------
 // Global
@@ -28,6 +25,12 @@ const {
     TypeError,
 } = globalThis;
 const { userAgent: $userAgent } = navigator;
+
+//-----------------------------------------------------------------------------
+// Types
+//-----------------------------------------------------------------------------
+
+export const T_PLATFORM = t.selection(["android", "ios", "linux", "mac", "windows"]);
 
 //-----------------------------------------------------------------------------
 // Internal
@@ -141,7 +144,7 @@ function getUserAgentBrowser() {
 }
 
 /**
- * @param {Platform} platform
+ * @param {typeof T_PLATFORM} platform
  */
 function makeUserAgent(platform) {
     const userAgent = ["Mozilla/5.0"];
@@ -238,7 +241,7 @@ export class MockPermissions {
     async query({ name }) {
         if (!(name in currentPermissions)) {
             throw new TypeError(
-                `The provided value '${name}' is not a valid enum value of type PermissionName`,
+                `The provided value '${name}' is not a valid enum value of type PermissionName`
             );
         }
         return new MockPermissionStatus(name);
@@ -437,7 +440,7 @@ export function mockPermission(name, value) {
     ensureTest("mockPermission");
     if (!(name in currentPermissions)) {
         throw new TypeError(
-            `The provided value '${name}' is not a valid enum value of type PermissionName`,
+            `The provided value '${name}' is not a valid enum value of type PermissionName`
         );
     }
 
@@ -459,7 +462,7 @@ export function mockSendBeacon(callback) {
 }
 
 /**
- * @param {Platform} platform
+ * @param {typeof T_PLATFORM} platform
  */
 export function mockUserAgent(platform = "linux") {
     ensureTest("mockUserAgent");

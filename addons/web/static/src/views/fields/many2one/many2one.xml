@@ -4,7 +4,7 @@
     <t t-name="web.KanbanMany2One">
         <div>
             <t t-if="this.props.value">
-                <t t-slot="avatar"/>
+                <t t-call-slot="avatar"/>
             </t>
             <t t-elif="!this.props.readonly">
                 <span class="o_avatar o_m2o_avatar d-flex">

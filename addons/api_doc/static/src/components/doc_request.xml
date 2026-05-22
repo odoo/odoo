@@ -82,13 +82,13 @@
 
 <t t-name="web.DocRequest.CodeEditor">
     <div class="o-doc-code-editor position-relative p-2 rounded w-100">
-        <t t-call="web.CodeEditor"></t>
+        <t t-call="web.CodeEditor"/>
         <button
             class="position-absolute p-1 top-0 end-0 d-flex align-items-center cursor-pointer"
             t-on-click="this.copyToClipboard"
             type="button"
         >
-            <i t-if="!this.state.copied" class="fa fa-clipboard fs-6 text-light"/>
+            <i t-if="!this.copied()" class="fa fa-clipboard fs-6 text-light"/>
             <span t-else="" class="fs-6 text-light">Copied!</span>
         </button>
     </div>

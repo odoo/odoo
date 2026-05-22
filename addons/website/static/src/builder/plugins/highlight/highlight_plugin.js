@@ -1,4 +1,4 @@
-import { reactive, useRef, useState } from "@web/owl2/utils";
+import { reactive, useChildEnv, useRef, useState } from "@web/owl2/utils";
 import { Plugin } from "@html_editor/plugin";
 import { withSequence } from "@html_editor/utils/resource";
 import { Component, xml } from "@odoo/owl";
@@ -310,7 +310,7 @@ class HighlightToolbarButton extends Component {
             ...this.props.highlightConfiguratorProps,
         });
         this.configuratorPopover = usePopover(StackingComponent, {
-            env: this.__owl__.childEnv,
+            env: useChildEnv(),
             onClose: () => {
                 while (this.componentStack.stack.length > 1) {
                     this.componentStack.pop();

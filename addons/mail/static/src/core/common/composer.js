@@ -24,7 +24,16 @@ import { isEventHandled, markEventHandled } from "@web/core/utils/misc";
 import { browser } from "@web/core/browser/browser";
 import { useDebounced } from "@web/core/utils/timing";
 
-import { Component, markup, onMounted, onWillUnmount, toRaw, EventBus } from "@odoo/owl";
+import {
+    Component,
+    markup,
+    onMounted,
+    onWillUnmount,
+    toRaw,
+    EventBus,
+    immediateEffect,
+    onWillDestroy,
+} from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
@@ -341,22 +350,24 @@ export class Composer extends Component {
         onWillUnmount(() => {
             this.props.composer.isFocused = false;
         });
-        const composerProxy = reactive(this.props.composer, () => {
-            if (this.status === 2 /* DESTROYED */) {
-                return;
-            }
-            const composerHtml = composerProxy.composerHtml;
-            if (this.updateFromEditor) {
-                return;
-            }
-            if (!this.editor?.editable) {
-                return;
-            }
-            setElementContent(this.editor.editable, composerHtml);
-            this.setEditorCursorEnd();
-            this.editor.shared.history.addStep();
-        });
-        void composerProxy.composerHtml; // start observing
+        const composerProxy = reactive(this.props.composer);
+        onWillDestroy(
+            immediateEffect(() => {
+                if (this.status === 2 /* DESTROYED */) {
+                    return;
+                }
+                const composerHtml = composerProxy.composerHtml;
+                if (this.updateFromEditor) {
+                    return;
+                }
+                if (!this.editor?.editable) {
+                    return;
+                }
+                setElementContent(this.editor.editable, composerHtml);
+                this.setEditorCursorEnd();
+                this.editor.shared.history.addStep();
+            })
+        );
     }
 
     setEditorCursorEnd() {
@@ -538,6 +549,7 @@ export class Composer extends Component {
     }
 
     get navigableListProps() {
+        const { loading, searchTerm, results } = this.suggestion.search;
         const props = {
             anchorRef: this.inputContainerRef.el,
             position: this.env.inChatter ? "bottom-fit" : "top-fit",
@@ -545,7 +557,7 @@ export class Composer extends Component {
                 this.suggestion.insert(option);
                 markEventHandled(ev, "composer.selectSuggestion");
             },
-            isLoading: !!this.suggestion.search.searchTerm && this.suggestion.search.loading,
+            isLoading: !!searchTerm && loading,
             options: [],
         };
         if (!this.hasSuggestions) {
@@ -553,11 +565,9 @@ export class Composer extends Component {
         }
         return {
             ...props,
-            ...mapSuggestionsToOptions(
-                this.suggestion.search.results.type,
-                this.suggestion.search.results.suggestions,
-                { thread: this.thread }
-            ),
+            ...mapSuggestionsToOptions(results.type, results.suggestions, {
+                thread: this.thread,
+            }),
         };
     }
 

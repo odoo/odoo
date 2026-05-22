@@ -3,10 +3,10 @@
 
 <t t-name="web.Form.OuterGroup">
     <div class="o_group row align-items-start" t-attf-class="{{ this.allClasses }}" t-att-style="this.props.style">
-        <t t-slot="title" t-if="this.props.slots and this.props.slots.title" />
+        <t t-call-slot="title" t-if="this.props.slots and this.props.slots.title" />
         <t t-foreach="this.getItems()" t-as="item" t-key="item_index">
             <span class="o_newline" t-if="item.newline" />
-            <t t-slot="{{ item.name }}" className="item.colspan !== this.props.maxCols ? 'col-lg-' + item.size : ''"/>
+            <t t-call-slot="{{ item.name }}" className="item.colspan !== this.props.maxCols ? 'col-lg-' + item.size : ''"/>
         </t>
     </div>
 </t>
@@ -14,16 +14,13 @@
 <t t-name="web.Form.InnerGroup">
     <div t-attf-class="{{ this.allClasses }}" class="o_inner_group grid" t-att-style="this.props.style">
         <div t-if="this.props.slots and this.props.slots.title" t-attf-class="g-col-sm-{{ this.props.maxCols }}">
-            <t t-slot="title" />
+            <t t-call-slot="title" />
         </div>
         <t t-foreach="this.getRows()" t-as="row" t-key="row_index" t-if="row.isVisible">
             <t t-foreach="row" t-as="cell" t-key="cell_index">
                 <t t-set="marginOnSmallScreen" t-value="cell_last ? 'mb-3 mb-sm-0' : ''"/>
                 <t t-if="cell.subType === 'item_component'">
-                    <t t-call="web.Form.InnerGroup.ItemComponent">
-                        <t t-set="cell" t-value="cell" />
-                        <t t-set="marginOnSmallScreen" t-value="marginOnSmallScreen" />
-                    </t>
+                    <t t-call="web.Form.InnerGroup.ItemComponent" cell="cell" marginOnSmallScreen="marginOnSmallScreen"/>
                 </t>
 
                 <t t-else="">
@@ -33,7 +30,7 @@
                         t-attf-style="{{ cell.itemSpan > 1 ? '--o-grid-column-span: ' + cell.itemSpan + ';' : '' }}"
                         t-attf-class="{{ cell.subType === 'label' ? 'o_wrap_label text-break text-900' : '' }} {{ marginOnSmallScreen }}"
                         t-if="cell.isVisible">
-                        <t t-slot="{{ cell.name }}" />
+                        <t t-call-slot="{{ cell.name }}" />
                     </div>
                 </t>
 
@@ -51,7 +48,7 @@
         class="o_cell o_wrap_input text-break"
         t-attf-class="{{ marginOnSmallScreen }}"
         t-attf-style="{{ cell.itemSpan -1 > 1 ? 'grid-column: span ' + (cell.itemSpan -1) + ';' : '' }}">
-            <t t-slot="{{ cell.name }}"/>
+            <t t-call-slot="{{ cell.name }}"/>
         </div>
     </t>
     <t t-else="">
@@ -61,7 +58,7 @@
             </div>
             <div class="o_cell o_no_box o_wrap_input ms-auto ms-md-0"
                 t-attf-style="{{ cell.itemSpan -1 > 1 ? 'grid-column: span ' + (cell.itemSpan -1) + ';' : '' }}">
-                <t t-slot="{{ cell.name }}" />
+                <t t-call-slot="{{ cell.name }}" />
             </div>
         </div>
     </t>

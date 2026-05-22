@@ -1,5 +1,6 @@
+import { useState } from "@web/owl2/utils";
 import { expect, test } from "@odoo/hoot";
-import { Component, useState, xml } from "@odoo/owl";
+import { Component, xml } from "@odoo/owl";
 import {
     defineModels,
     getPagerLimit,

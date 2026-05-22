@@ -15,10 +15,7 @@
         <t t-else="">
             <div class="o-EmojiPicker-search d-flex align-items-center mx-2 mt-2 rounded">
                 <span class="o-EmojiPicker-searchContour d-flex mx-1 w-100 rounded o-active align-items-center justify-content-center border border-secondary bg-view">
-                    <t t-call="web.EmojiPicker.searchInput">
-                        <t t-if="this.props.state" t-set="localState" t-value="this.props.state" />
-                        <t t-else="" t-set="localState" t-value="this.state" />
-                    </t>
+                    <t t-call="web.EmojiPicker.searchInput" localState="this.props.state ? this.props.state : this.state"/>
                     <i class="oi oi-search px-2 py-1 fs-7 rounded-start-0 rounded-3 o-active opacity-50" title="Search..." role="img" aria-label="Search..."/>
                 </span>
             </div>
@@ -37,14 +34,9 @@
                     <span>No emojis match your search</span>
                 </t>
                 <t t-if="_recentEmojis.length > 0">
-                    <t t-if="!this.searchTerm" t-call="web.EmojiPicker.section">
-                        <t t-set="category" t-value="this.recentCategory"/>
-                    </t>
+                    <t t-if="!this.searchTerm" t-call="web.EmojiPicker.section" category="this.recentCategory"/>
                     <t t-foreach="_recentEmojis" t-as="emoji" t-key="'recent_' + emoji_index">
-                        <t t-call="web.EmojiPicker.emoji">
-                            <t t-set="inRecent" t-value="true"/>
-                            <t t-set="emoji" t-value="emoji"/>
-                        </t>
+                        <t t-call="web.EmojiPicker.emoji" inRecent="true" emoji="emoji"/>
                         <t t-set="itemIndex" t-value="itemIndex + 1"/>
                     </t>
                 </t>
@@ -52,14 +44,10 @@
                 <t t-foreach="currentEmojis" t-as="emoji" t-key="emoji_index">
                     <t t-if="!this.searchTerm and current !== emoji.category">
                         <t t-set="current" t-value="emoji.category"/>
-                        <t t-call="web.EmojiPicker.section">
-                            <t t-set="category" t-value="current"/>
-                        </t>
+                        <t t-call="web.EmojiPicker.section" category="current"/>
                     </t>
                     <t t-elif="this.searchTerm" t-set="categorySortId" t-value="null"/>
-                    <t t-call="web.EmojiPicker.emoji">
-                        <t t-set="emoji" t-value="emoji"/>
-                    </t>
+                    <t t-call="web.EmojiPicker.emoji"/>
                     <t t-set="itemIndex" t-value="itemIndex + 1"/>
                 </t>
             </div>
@@ -77,9 +65,7 @@
                         <t t-elif="typeof navbarItemId === 'string' and navbarItemId.startsWith('empty')" t-call="web.EmojiPicker.tabEmpty"/>
                         <t t-else="">
                             <t t-set="category" t-value="allCategories.find(cat => cat.sortId === navbarItemId)"/>
-                            <t t-if="category" t-call="web.EmojiPicker.tab">
-                                <t t-set="category" t-value="category"/>
-                            </t>
+                            <t t-if="category" t-call="web.EmojiPicker.tab"/>
                         </t>
                     </t>
                 </t>

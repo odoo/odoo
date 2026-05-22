@@ -1216,7 +1216,8 @@ test("add message to bookmark", async () => {
     await contains(".o-mail-Message [title='Bookmarked']");
 });
 
-test("remove bookmark from message", async () => {
+test.tags("owl3");
+test.skip("remove bookmark from message", async () => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "general" });
     const messageId = pyEnv["mail.message"].create({

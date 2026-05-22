@@ -331,7 +331,7 @@
             <BuilderSelectItem id="'no_requirement_opt'" dataAttributeActionValue="''">None</BuilderSelectItem>
             <BuilderSelectItem dataAttributeActionValue="'substring'">Contains</BuilderSelectItem>
             <BuilderSelectItem dataAttributeActionValue="'!substring'">Doesn't contain</BuilderSelectItem>
-            <BuilderSelectItem t-if="domStateCurrentFieldInput.type === 'email'" dataAttributeActionValue="'domain'">Matches domain</BuilderSelectItem>
+            <BuilderSelectItem t-if="this.domStateCurrentFieldInput.type === 'email'" dataAttributeActionValue="'domain'">Matches domain</BuilderSelectItem>
         </BuilderSelect>
         <BuilderSelect id="'require_condition_num_opt'"
                 t-elif="this.domStateCurrentFieldInput.type === 'number'"

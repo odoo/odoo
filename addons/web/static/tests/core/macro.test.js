@@ -1,6 +1,7 @@
+import { useState } from "@web/owl2/utils";
 import { beforeEach, expect, test } from "@odoo/hoot";
 import { advanceTime, animationFrame, click, edit, queryOne, queryText } from "@odoo/hoot-dom";
-import { Component, useState, xml } from "@odoo/owl";
+import { Component, xml } from "@odoo/owl";
 import { mountWithCleanup, patchWithCleanup } from "@web/../tests/web_test_helpers";
 
 import { Macro } from "@web/core/macro";

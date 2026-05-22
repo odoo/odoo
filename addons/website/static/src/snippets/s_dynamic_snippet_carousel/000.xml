@@ -17,7 +17,7 @@
     <t t-name="website.s_dynamic_snippet.carousel.base">
         <t t-set="slideSize" t-value="rowSize * this.rowPerSlide" />
         <t t-set="slideIndexGenerator" t-value="Array(Math.ceil(this.data.length/slideSize))"/>
-        <div t-att-id="unique_id" t-attf-class="carousel slide #{extraCarouselClass || ''}"
+        <div t-att-id="this.unique_id" t-attf-class="carousel slide #{extraCarouselClass || ''}"
              t-att-style="extraCarouselStyle"
              t-att-data-bs-interval="slideIndexGenerator.length > minControlValue ? this.interval : 0"
              t-att-data-bs-ride="slideIndexGenerator.length > minControlValue and 'carousel'">
@@ -50,33 +50,27 @@
             <!-- Controls -->
             <t t-if='slideIndexGenerator.length > minControlValue'>
                 <div class="s_dynamic_snippet_arrows d-flex gap-2 w-100 pe-none z-1">
-                    <t t-call="website.s_dynamic_snippet.carousel.arrows">
-                        <t t-set="unique_id" t-value="unique_id" />
-                    </t>
+                    <t t-call="website.s_dynamic_snippet.carousel.arrows" unique_id="this.unique_id"/>
                 </div>
             </t>
         </div>
     </t>
     <t t-name="website.s_dynamic_snippet.carousel.page_scroll">
-        <t t-call="website.s_dynamic_snippet.carousel.base">
-            <t t-set="rowSize" t-value="this.chunkSize"/>
-            <t t-set="extraCarouselStyle"
-               t-value="'--o-carousel-chunk-size: ' + this.chunkSize"/>
-            <t t-set="colClass"
-               t-value="'d-flex flex-grow-0 flex-shrink-0 col-' + Math.trunc(12 / rowSize).toString()"/>
-            <t t-set="minControlValue" t-value="1"/>
-        </t>
+        <t t-set="rowSize" t-value="this.chunkSize"/>
+        <t t-call="website.s_dynamic_snippet.carousel.base"
+            rowSize="rowSize"
+            extraCarouselStyle="'--o-carousel-chunk-size: ' + this.chunkSize"
+            colClass="'d-flex flex-grow-0 flex-shrink-0 col-' + Math.trunc(12 / rowSize).toString()"
+            minControlValue="1"/>
     </t>
     <t t-name="website.s_dynamic_snippet.carousel.single_scroll">
-        <t t-call="website.s_dynamic_snippet.carousel.base">
-            <t t-set="rowSize" t-value="1"/>
-            <t t-set="extraCarouselClass" t-value="'o_carousel_multi_items'"/>
-            <t t-set="extraCarouselStyle"
-               t-value="'--o-carousel-chunk-size: ' + this.chunkSize"/>
-            <t t-set="extraRowClass" t-value="'h-100 mx-0 mt-0'"/>
-            <t t-set="colClass" t-value="'d-flex flex-grow-1 flex-shrink-0 mt-0 px-0'"/>
-            <t t-set="minControlValue" t-value="this.chunkSize"/>
-        </t>
+        <t t-call="website.s_dynamic_snippet.carousel.base"
+            rowSize="1"
+            extraCarouselClass="'o_carousel_multi_items'"
+            extraCarouselStyle="'--o-carousel-chunk-size: ' + this.chunkSize"
+            extraRowClass="'h-100 mx-0 mt-0'"
+            colClass="'d-flex flex-grow-1 flex-shrink-0 mt-0 px-0'"
+            minControlValue="this.chunkSize"/>
     </t>
     <t t-name="website.s_dynamic_snippet.carousel">
         <t t-if="scrollMode === 'single'"

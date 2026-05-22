@@ -1,22 +1,6 @@
 /** @odoo-module */
 
 /**
- * @typedef {ArgumentPrimitive | `${ArgumentPrimitive}[]` | null} ArgumentType
- *
- * @typedef {"any"
- *  | "bigint"
- *  | "boolean"
- *  | "error"
- *  | "function"
- *  | "integer"
- *  | "node"
- *  | "number"
- *  | "object"
- *  | "regex"
- *  | "string"
- *  | "symbol"
- *  | "undefined"} ArgumentPrimitive
- *
  * @typedef {[string, string | undefined, any[], any]} InteractionDetails
  *
  * @typedef {"interaction" | "query" | "server" | "time"} InteractionType

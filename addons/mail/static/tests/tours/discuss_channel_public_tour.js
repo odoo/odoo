@@ -1,4 +1,4 @@
-import { reactive } from "@odoo/owl";
+import { effect, proxy } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { getOrigin } from "@web/core/utils/urls";
 
@@ -94,16 +94,19 @@ registry.category("web_tour.tours").add("discuss_channel_public_tour.js", {
                         throw new Error(`Attachment was not found from src: ${src}`);
                     }
                     if (!attachment.raw_access_token) {
+                        let disposeEffect;
                         await new Promise((resolve) => {
-                            const proxy = reactive(attachment, () => {
+                            const proxifiedAttachment = proxy(attachment);
+                            disposeEffect = effect(() => {
                                 if (attachment.raw_access_token) {
                                     resolve();
                                 } else {
-                                    void proxy.raw_access_token; // keep observing until a value is received
+                                    void proxifiedAttachment.raw_access_token; // keep observing until a value is received
                                 }
                             });
-                            void proxy.raw_access_token; // start observing
+                            void proxifiedAttachment.raw_access_token; // start observing
                         });
+                        disposeEffect();
                     }
                     await waitFor(
                         `.o-mail-AttachmentContainer[title="image.png"] img[src="${getOrigin()}/web/image/${

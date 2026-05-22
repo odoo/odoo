@@ -1,6 +1,15 @@
 import { useComponent, useLayoutEffect, useRef, useState, useSubEnv } from "@web/owl2/utils";
 import { LocalOverlayContainer } from "@html_editor/local_overlay_container";
-import { Component, onMounted, onWillDestroy, onWillStart, onWillUnmount, status } from "@odoo/owl";
+import {
+    Component,
+    useEffect,
+    onMounted,
+    onWillDestroy,
+    onWillStart,
+    onWillUnmount,
+    status,
+    immediateEffect,
+} from "@odoo/owl";
 import { loadBundle } from "@web/core/assets";
 import { LazyComponent } from "@web/core/lazy_component";
 import { browser } from "@web/core/browser/browser";
@@ -11,7 +20,6 @@ import { ResizablePanel } from "@web/core/resizable_panel/resizable_panel";
 import { RPCError } from "@web/core/network/rpc";
 import { uniqueId } from "@web/core/utils/functions";
 import { useChildRef, useService, useBus } from "@web/core/utils/hooks";
-import { effect } from "@web/core/utils/reactive";
 import { redirect } from "@web/core/utils/urls";
 import { standardActionServiceProps } from "@web/webclient/actions/action_service";
 import { AddPageDialog } from "@website/components/dialog/add_page_dialog";
@@ -88,19 +96,19 @@ export class WebsiteBuilderClientAction extends Component {
             () => (this.state.is404 = this.websiteService.is404)
         );
 
+        let disposeToggleMobileEffect = () => {};
         onMounted(() => {
             // You can't wait for rendering because the Builder depends on the
             // page style synchronously.
-            effect(
-                (websiteContext) => {
-                    if (status(this.component) === "destroyed") {
-                        return;
-                    }
-                    this.toggleIsMobile(websiteContext.isMobile);
-                },
-                [this.websiteContext]
-            );
+            disposeToggleMobileEffect = immediateEffect(() => {
+                this.websiteContext.isMobile; // consume signal
+                if (status(this.component) !== "mounted") {
+                    return;
+                }
+                this.toggleIsMobile(this.websiteContext.isMobile);
+            });
         });
+        onWillDestroy(disposeToggleMobileEffect);
 
         this.overlayRef = useChildRef();
         useSubEnv({
@@ -164,15 +172,12 @@ export class WebsiteBuilderClientAction extends Component {
             websiteSystrayRegistry.trigger("EDIT-WEBSITE");
         });
 
-        effect(
-            (state) => {
-                this.websiteContext.edition = state.isEditing;
-                if (!state.isEditing) {
-                    this.addSystrayItems();
-                }
-            },
-            [this.state]
-        );
+        useEffect(() => {
+            this.websiteContext.edition = this.state.isEditing;
+            if (!this.state.isEditing) {
+                this.addSystrayItems();
+            }
+        });
         useLayoutEffect(
             (isEditing) => {
                 document.querySelector("body").classList.toggle("o_builder_open", isEditing);

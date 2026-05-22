@@ -260,7 +260,7 @@ export class DomainField extends Component {
         if (domain.isInvalid) {
             return false;
         }
-        return rpc("/web/domain/validate", { model: resModel, domain });
+        return rpc("/web/domain/validate", { model: resModel, domain }, { cache: true });
     }
 
     update(domain, isDebugEdited = false) {

@@ -1,8 +1,9 @@
+import { reactive } from "@web/owl2/utils";
 import { addBuilderOption, setupHTMLBuilder } from "@html_builder/../tests/helpers";
 import { BaseOptionComponent } from "@html_builder/core/base_option_component";
 import { describe, expect, test } from "@odoo/hoot";
 import { advanceTime, animationFrame } from "@odoo/hoot-mock";
-import { reactive, xml } from "@odoo/owl";
+import { xml } from "@odoo/owl";
 import { contains, defineModels, fields, models, onRpc } from "@web/../tests/web_test_helpers";
 import { delay } from "@web/core/utils/concurrency";
 

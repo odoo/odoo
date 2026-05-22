@@ -1,4 +1,4 @@
-import { useChildSubEnv, useLayoutEffect, useRef, useState } from "@web/owl2/utils";
+import { provideEnv, useChildSubEnv, useLayoutEffect, useRef, useState } from "@web/owl2/utils";
 import { Component, onWillDestroy } from "@odoo/owl";
 import { sortBy } from "@web/core/utils/arrays";
 import { ErrorHandler } from "@web/core/utils/components";
@@ -25,7 +25,7 @@ class OverlayItem extends Component {
         });
 
         if (this.props.env) {
-            this.__owl__.childEnv = this.props.env;
+            provideEnv(this.props.env);
         }
 
         useChildSubEnv({

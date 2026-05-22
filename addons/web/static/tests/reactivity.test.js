@@ -1,5 +1,6 @@
+import { reactive } from "@web/owl2/utils";
 import { describe, expect, test } from "@odoo/hoot";
-import { reactive, toRaw } from "@odoo/owl";
+import { toRaw } from "@odoo/owl";
 
 const {
     DateTime,

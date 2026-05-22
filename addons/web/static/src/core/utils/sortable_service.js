@@ -1,7 +1,7 @@
 import { registry } from "../registry";
 import { useSortable } from "@web/core/utils/sortable";
 import { throttleForAnimation } from "@web/core/utils/timing";
-import { reactive } from "@odoo/owl";
+import { proxy } from "@odoo/owl";
 
 /**
  * @typedef SortableServiceHookParams
@@ -59,7 +59,7 @@ export const sortableService = {
 
                 // Setup hookParam
                 const setupHooks = {
-                    wrapState: reactive,
+                    wrapState: proxy,
                     throttle: throttleForAnimation,
                     addListener: (el, type, listener) => {
                         el.addEventListener(type, listener);

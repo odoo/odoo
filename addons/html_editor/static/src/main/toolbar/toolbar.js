@@ -1,5 +1,5 @@
-import { useRef, useState, validate } from "@web/owl2/utils";
-import { Component, useEffect } from "@odoo/owl";
+import { useLayoutEffect, useRef, useState, validate } from "@web/owl2/utils";
+import { Component } from "@odoo/owl";
 import { omit, pick } from "@web/core/utils/objects";
 import { trapFocus } from "@html_editor/utils/dom_traversal";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
@@ -74,7 +74,7 @@ export class Toolbar extends Component {
                 ),
         });
 
-        useEffect(
+        useLayoutEffect(
             () => {
                 // When toolbar expands, focus the first button
                 if (this.state.namespace == "expanded") {

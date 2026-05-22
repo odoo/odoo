@@ -24,10 +24,10 @@
                         <span class="fs-3">Global questions</span>
                         <hr class="hr mt-1" />
                     </div>
-                    <t t-set="questions" t-value="this.questionsOncePerOrder"/>
-                    <t t-set="stateObject" t-value="this.state.byOrder"/>
-                    <t t-set="ticketIndex" t-value="null"/>
-                    <t t-call="pos_event.QuestionInputs" />
+                    <t t-call="pos_event.QuestionInputs"
+                        questions="this.questionsOncePerOrder"
+                        stateObject="this.state.byOrder"
+                        ticketIndex="null"/>
                 </div>
                 <t t-if="this.questionsByRegistration.length">
                     <div t-foreach="this.dataInQty" t-as="data" t-key="data_index" class="ticket_question mb-4">
@@ -37,10 +37,10 @@
                             </span>
                             <hr class="hr mt-1" />
                         </div>
-                        <t t-set="questions" t-value="this.questionsByRegistration"/>
-                        <t t-set="stateObject" t-value="this.state.byRegistration[data_index].questions"/>
-                        <t t-set="ticketIndex" t-value="data_index"/>
-                        <t t-call="pos_event.QuestionInputs" />
+                        <t t-call="pos_event.QuestionInputs"
+                            questions="this.questionsByRegistration"
+                            stateObject="this.state.byRegistration[data_index].questions"
+                            ticketIndex="data_index"/>
                     </div>
                 </t>
             </div>

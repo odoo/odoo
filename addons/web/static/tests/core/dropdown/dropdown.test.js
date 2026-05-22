@@ -1,4 +1,5 @@
-import { expect, getFixture, test } from "@odoo/hoot";
+import { useRef, useState } from "@web/owl2/utils";
+import { expect, getFixture, queryRect, test } from "@odoo/hoot";
 import {
     click,
     hover,
@@ -12,7 +13,7 @@ import {
     resize,
 } from "@odoo/hoot-dom";
 import { Deferred, animationFrame, runAllTimers, tick } from "@odoo/hoot-mock";
-import { Component, onMounted, onPatched, useRef, useState, xml } from "@odoo/owl";
+import { Component, onMounted, onPatched, xml } from "@odoo/owl";
 
 import { getPickerCell } from "@web/../tests/core/datetime/datetime_test_helpers";
 import {
@@ -30,6 +31,7 @@ import { CheckboxItem } from "@web/core/dropdown/checkbox_item";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { useActiveElement } from "@web/core/ui/ui_service";
+import { DropdownPopover } from "@web/core/dropdown/_behaviours/dropdown_popover";
 
 const DROPDOWN_TOGGLE = ".o-dropdown.dropdown-toggle";
 const DROPDOWN_MENU = ".o-dropdown--menu.dropdown-menu";
@@ -185,7 +187,7 @@ test("close on click outside an active element", async () => {
         static props = [];
         static template = xml`
             <div class="outside">outside</div>
-            <div t-ref="active">
+            <div t-custom-ref="active">
                 <Dropdown>
                     <button>Dropdown</button>
                     <t t-set-slot="content">
@@ -221,7 +223,7 @@ test("close on click outside when the opening active element was removed", async
         static props = [];
         static template = xml`
             <div class="outside">outside</div>
-            <div t-if="this.state.showActive" t-ref="active">
+            <div t-if="this.state.showActive" t-custom-ref="active">
                 <button class="active-button">Active</button>
             </div>
             <Dropdown>
@@ -269,7 +271,7 @@ test("close on outside click in shadow dom", async () => {
     class ShadowDom extends Component {
         static components = { Dropdown, DropdownItem };
         static props = [];
-        static template = xml`<div class="shadow-root" t-ref="shadow-root-ref" />`;
+        static template = xml`<div class="shadow-root" t-custom-ref="shadow-root-ref" />`;
         setup() {
             const shadowRootRef = useRef("shadow-root-ref");
             onMounted(() => {
@@ -1127,7 +1129,7 @@ test("multi-level dropdown: parent closing modes on item selection", async () =>
 
 test("multi-level dropdown: recursive template can be rendered", async () => {
     class Parent extends Component {
-        static template = "recursive.Template";
+        static template = xml`<t t-call="recursive.Template" name="this.name" items="this.items"/>`;
         static props = [];
         static components = { Dropdown, DropdownItem };
         setup() {
@@ -1166,7 +1168,7 @@ test("multi-level dropdown: recursive template can be rendered", async () => {
     await mountWithCleanup(Parent, {
         templates: {
             ["recursive.Template"]: /* xml */ `
-                <Dropdown state="dropdown">
+                <Dropdown state="this.dropdown">
                     <button><t t-out="name" /></button>
                     <t t-set-slot="content">
                         <t t-foreach="items" t-as="item" t-key="item_index">
@@ -1175,10 +1177,7 @@ test("multi-level dropdown: recursive template can be rendered", async () => {
                                 <DropdownItem><t t-out="item.name"/></DropdownItem>
                             </t>
 
-                            <t t-else="" t-call="recursive.Template">
-                                <t t-set="name" t-value="item.name" />
-                                <t t-set="items" t-value="item.children" />
-                            </t>
+                            <t t-else="" t-call="recursive.Template" name="item.name" items="item.children"/>
                         </t>
                     </t>
                 </Dropdown>
@@ -1395,7 +1394,7 @@ test("multi-level dropdown: keynav when rtl direction", async () => {
 
 test.tags("desktop");
 test("multi-level dropdown: submenu keeps position when patched", async () => {
-    expect.assertions(6);
+    expect.assertions(9);
 
     patchWithCleanup(Dropdown.prototype, {
         setup() {
@@ -1404,19 +1403,22 @@ test("multi-level dropdown: submenu keeps position when patched", async () => {
                 onMounted(() => {
                     expect.step(`submenu mounted`);
                 });
-                let previousMenuRect;
-                onPatched(() => {
-                    expect.step(`submenu patched`);
-                    if (this.state.isOpen && this.menuRef.el) {
-                        const subMenuRect = this.menuRef.el.getBoundingClientRect();
-                        if (previousMenuRect) {
-                            expect(subMenuRect.top).toBe(previousMenuRect.top);
-                            expect(subMenuRect.left).toBe(previousMenuRect.left);
-                        }
-                        previousMenuRect = subMenuRect;
-                    }
-                });
             }
+        },
+    });
+
+    patchWithCleanup(DropdownPopover.prototype, {
+        setup() {
+            let previousMenuRect;
+            onPatched(() => {
+                expect.step(`submenu dropdown patched`);
+                const subMenuRect = queryRect(".o-dropdown--menu-submenu");
+                if (previousMenuRect) {
+                    expect(subMenuRect.top).toBe(previousMenuRect.top);
+                    expect(subMenuRect.left).toBe(previousMenuRect.left);
+                }
+                previousMenuRect = subMenuRect;
+            });
         },
     });
 
@@ -1431,7 +1433,7 @@ test("multi-level dropdown: submenu keeps position when patched", async () => {
                         <Dropdown>
                             <button class="two">two</button>
                             <t t-set-slot="content">
-                                <DropdownItem t-if="this.state.foo" class="this.three">three</DropdownItem>
+                                <DropdownItem t-if="this.state.foo" class="'three'">three</DropdownItem>
                             </t>
                         </Dropdown>
                     </t>
@@ -1450,6 +1452,7 @@ test("multi-level dropdown: submenu keeps position when patched", async () => {
     await click(".one");
     await animationFrame();
     expect.verifySteps(["submenu mounted"]);
+    expect(".three").toHaveCount(0);
 
     // Open the submenu
     await click(".two");
@@ -1457,12 +1460,14 @@ test("multi-level dropdown: submenu keeps position when patched", async () => {
     // Change submenu content
     parentState.foo = true;
     await animationFrame();
-    expect.verifySteps(["submenu patched"]);
+    expect.verifySteps(["submenu dropdown patched"]);
+    expect(".three").toHaveCount(1);
 
     // Change submenu content
     parentState.foo = false;
     await animationFrame();
-    expect.verifySteps(["submenu patched"]);
+    expect.verifySteps(["submenu dropdown patched"]);
+    expect(".three").toHaveCount(0);
 });
 
 test.tags("desktop");

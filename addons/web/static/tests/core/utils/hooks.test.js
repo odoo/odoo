@@ -1,3 +1,4 @@
+import { reactive, render, useState } from "@web/owl2/utils";
 import { describe, destroy, expect, getFixture, mockUserAgent, test } from "@odoo/hoot";
 import { click, queryOne } from "@odoo/hoot-dom";
 import { Deferred, animationFrame, mockTouch } from "@odoo/hoot-mock";
@@ -9,7 +10,7 @@ import {
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
 
-import { Component, onMounted, reactive, useState, xml } from "@odoo/owl";
+import { Component, onMounted, xml } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { CommandPalette } from "@web/core/commands/command_palette";
 import { registry } from "@web/core/registry";
@@ -33,7 +34,7 @@ describe("useAutofocus", () => {
             static props = ["*"];
             static template = xml`
                 <span>
-                    <input type="text" t-ref="autofocus" t-att-value="this.state.text" />
+                    <input type="text" t-custom-ref="autofocus" t-att-value="this.state.text" />
                 </span>
             `;
             setup() {
@@ -61,7 +62,7 @@ describe("useAutofocus", () => {
             static props = ["*"];
             static template = xml`
                 <span>
-                    <input type="number" t-ref="autofocus" t-att-value="this.state.counter" />
+                    <input type="number" t-custom-ref="autofocus" t-att-value="this.state.counter" />
                 </span>
             `;
             setup() {
@@ -89,7 +90,7 @@ describe("useAutofocus", () => {
             static props = ["*"];
             static template = xml`
                 <span>
-                    <input t-if="this.state.showInput" type="text" t-ref="autofocus" />
+                    <input t-if="this.state.showInput" type="text" t-custom-ref="autofocus" />
                 </span>
             `;
             setup() {
@@ -122,7 +123,7 @@ describe("useAutofocus", () => {
         class MyComponent extends Component {
             static template = xml`
                 <span>
-                    <input type="text" t-ref="autofocus" />
+                    <input type="text" t-custom-ref="autofocus" />
                 </span>
             `;
             static props = ["*"];
@@ -143,7 +144,7 @@ describe("useAutofocus", () => {
             static props = ["*"];
             static template = xml`
                 <span>
-                    <input type="text" t-ref="autofocus" />
+                    <input type="text" t-custom-ref="autofocus" />
                 </span>
             `;
             setup() {
@@ -173,8 +174,8 @@ describe("useAutofocus", () => {
             static props = ["*"];
             static template = xml`
                 <span>
-                    <input type="text" t-ref="first" />
-                    <input t-if="this.state.showSecond" type="text" t-ref="second" />
+                    <input type="text" t-custom-ref="first" />
+                    <input t-if="this.state.showSecond" type="text" t-custom-ref="second" />
                 </span>
             `;
             setup() {
@@ -208,7 +209,7 @@ describe("useAutofocus", () => {
             static props = ["*"];
             static template = xml`
                 <span>
-                    <input type="text" value="input content" t-ref="autofocus" />
+                    <input type="text" value="input content" t-custom-ref="autofocus" />
                 </span>
             `;
             setup() {
@@ -234,7 +235,7 @@ describe("useAutofocus", () => {
             static props = ["*"];
             static template = xml`
                     <div>
-                        <input type="text" t-ref="autofocus" t-att-value="this.state.text" />
+                        <input type="text" t-custom-ref="autofocus" t-att-value="this.state.text" />
                     </div>
                 `;
             setup() {
@@ -431,7 +432,7 @@ describe("useSpellCheck", () => {
         // To understand correctly the test, refer to the MDN documentation of spellcheck.
         class MyComponent extends Component {
             static props = ["*"];
-            static template = xml`<div><textarea t-ref="spellcheck" class="textArea"/></div>`;
+            static template = xml`<div><textarea t-custom-ref="spellcheck" class="textArea"/></div>`;
             setup() {
                 useSpellCheck();
             }
@@ -462,7 +463,7 @@ describe("useSpellCheck", () => {
     test("use a different refName", async () => {
         class MyComponent extends Component {
             static props = ["*"];
-            static template = xml`<div><textarea t-ref="myreference" class="textArea"/></div>`;
+            static template = xml`<div><textarea t-custom-ref="myreference" class="textArea"/></div>`;
             setup() {
                 useSpellCheck({ refName: "myreference" });
             }
@@ -489,7 +490,7 @@ describe("useSpellCheck", () => {
         class MyComponent extends Component {
             static props = ["*"];
             static template = xml`
-                <div t-ref="spellcheck">
+                <div t-custom-ref="spellcheck">
                     <textarea class="textArea"/>
                     <div contenteditable="true" class="editableDiv"/>
                 </div>`;
@@ -542,7 +543,7 @@ describe("useSpellCheck", () => {
         class MyComponent extends Component {
             static props = ["*"];
             static template = xml`
-                <div t-ref="spellcheck">
+                <div t-custom-ref="spellcheck">
                     <textarea class="textArea"/>
                     <div contenteditable="true" spellcheck="false" class="editableDiv"/>
                 </div>`;
@@ -595,7 +596,7 @@ describe("useSpellCheck", () => {
         class MyComponent extends Component {
             static props = ["*"];
             static template = xml`
-                <div t-ref="spellcheck"  contenteditable="true" class="editableDiv" />`;
+                <div t-custom-ref="spellcheck"  contenteditable="true" class="editableDiv" />`;
             setup() {
                 useSpellCheck();
             }
@@ -618,7 +619,7 @@ describe("useChildRef and useForwardRefToParent", () => {
 
         class Child extends Component {
             static props = ["*"];
-            static template = xml`<span t-ref="someRef" class="my_span">Hello</span>`;
+            static template = xml`<span t-custom-ref="someRef" class="my_span">Hello</span>`;
             setup() {
                 childRef = useForwardRefToParent("someRef");
             }
@@ -642,7 +643,7 @@ describe("useChildRef and useForwardRefToParent", () => {
     test("in a conditional child", async () => {
         class Child extends Component {
             static props = ["*"];
-            static template = xml`<span t-ref="someRef" class="my_span">Hello</span>`;
+            static template = xml`<span t-custom-ref="someRef" class="my_span">Hello</span>`;
             setup() {
                 useForwardRefToParent("someRef");
             }
@@ -703,14 +704,14 @@ describe("useBackButton", () => {
     test.tags("mobile");
     test("`shouldEnable` callback function pushes/clears trap history entry", async () => {
         mockUserAgent("android");
+        let backBtnAvailable = false;
         class DummyComponent extends Component {
             static props = ["*"];
             static template = xml`<div/>`;
             setup() {
-                this.state = useState({ available: false });
                 useBackButton(
                     () => null,
-                    () => this.state.available
+                    () => backBtnAvailable
                 );
             }
         }
@@ -719,10 +720,12 @@ describe("useBackButton", () => {
         history.pushState({ sentinel: 2 }, "", "/other");
         const dummy = await mountWithCleanup(DummyComponent);
         expect(history.state.sentinel).toBe(2);
-        dummy.state.available = true;
+        backBtnAvailable = true;
+        render(dummy);
         await animationFrame();
         expect(history.state.trapState).toBe(true);
-        dummy.state.available = false;
+        backBtnAvailable = false;
+        render(dummy);
         await animationFrame();
         expect(history.state.sentinel).toBe(2);
     });

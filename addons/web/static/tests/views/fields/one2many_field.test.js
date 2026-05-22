@@ -1,3 +1,4 @@
+import { reactive, useState } from "@web/owl2/utils";
 import { expect, getFixture, test } from "@odoo/hoot";
 import {
     click,
@@ -10,7 +11,7 @@ import {
 } from "@odoo/hoot-dom";
 import { Deferred, animationFrame, mockTimeZone, runAllTimers } from "@odoo/hoot-mock";
 
-import { Component, onWillDestroy, onWillStart, reactive, useState, xml } from "@odoo/owl";
+import { Component, onWillDestroy, onWillStart, xml } from "@odoo/owl";
 import { getPickerCell } from "@web/../tests/core/datetime/datetime_test_helpers";
 import {
     clickFieldDropdown,
@@ -13733,7 +13734,7 @@ test("one2many custom which can clear the relation", async () => {
         static props = ["*"];
         static template = xml`
             <div>
-                <span t-esc="this.props.record.data[this.props.name].count"/>
+                <span t-out="this.props.record.data[this.props.name].count"/>
                 <button t-on-click="this.clear">Clear</button>
             </div>`;
 
@@ -13770,7 +13771,7 @@ test("one2many custom which can set the relation", async () => {
         static props = ["*"];
         static template = xml`
             <div>
-                <span t-esc="this.props.record.data[this.props.name].count"/>
+                <span t-out="this.props.record.data[this.props.name].count"/>
                 <button t-on-click="this.set">Set</button>
             </div>`;
 

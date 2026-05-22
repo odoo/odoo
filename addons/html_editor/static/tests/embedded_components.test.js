@@ -1,3 +1,4 @@
+import { useRef, useState } from "@web/owl2/utils";
 import {
     Counter,
     embedding,
@@ -27,8 +28,6 @@ import {
     onWillDestroy,
     onWillStart,
     onWillUnmount,
-    useRef,
-    useState,
     xml,
 } from "@odoo/owl";
 import { EmbeddedComponentPlugin } from "../src/others/embedded_component_plugin";
@@ -311,7 +310,7 @@ describe("Mount and Destroy embedded components", () => {
             static template = xml`
                 <div>
                     <div t-on-click="this.increment" t-att-class="'click count-' + this.props.index">Count:<t t-out="this.state.value"/></div>
-                    <div t-ref="innerEditable" t-att-class="'innerEditable-' + this.props.index"/>
+                    <div t-custom-ref="innerEditable" t-att-class="'innerEditable-' + this.props.index"/>
                 </div>
             `;
             static props = {
@@ -775,8 +774,8 @@ describe("Mount processing", () => {
         const delayedWillStart = new Deferred();
         class LabeledCounter extends Counter {
             static template = xml`
-                <span t-ref="root" class="counter" t-on-click="this.increment">
-                    <span t-ref="label"/>:<t t-out="this.state.value"/>
+                <span t-custom-ref="root" class="counter" t-on-click="this.increment">
+                    <span t-custom-ref="label"/>:<t t-out="this.state.value"/>
                 </span>
             `;
             static props = {
@@ -1368,9 +1367,9 @@ describe("editable descendants", () => {
                 </div>
             `)
         );
-        addStep(editor);
         // Set the selection before the component is mounted
         plugins.get("selection").setCursorStart(el.querySelector("[data-embedded-editable] p"));
+        addStep(editor);
         expect(getContent(el)).toBe(
             unformat(`
                 <p data-selection-placeholder=""><br></p>

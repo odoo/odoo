@@ -1,12 +1,12 @@
+import { useLayoutEffect } from "@web/owl2/utils";
 import { DataCleaningCommonListController } from "@data_recycle/views/data_cleaning_common_list";
 import { registry } from '@web/core/registry';
 import { listView } from '@web/views/list/list_view';
-import { useEffect } from "@odoo/owl";
 
 export class DataRecycleListController extends DataCleaningCommonListController {
     setup() {
         super.setup();
-        useEffect(() => {
+        useLayoutEffect(() => {
             const selectedRecords = this.model.root.selection;
 
             // Check the active state of selected records

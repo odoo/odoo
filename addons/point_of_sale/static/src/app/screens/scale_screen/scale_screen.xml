@@ -14,7 +14,7 @@
                 </t>
             </t>
             <div class="d-flex flex-column">
-                <t t-if="!scale.hardwareTare">
+                <t t-if="!this.scale.hardwareTare">
                     <div class="d-flex gap-2 align-items-center mb-2">
                         <div class="w-60 fs-3 me-2">Gross Weight:</div>
                         <div class="gross-weight fs-3 px-5 text-end form-control-plaintext" t-out="this.scale.grossWeightString"/>

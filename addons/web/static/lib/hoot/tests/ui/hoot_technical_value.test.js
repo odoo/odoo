@@ -1,35 +1,34 @@
 /** @odoo-module */
 
-import { after, describe, expect, test } from "@odoo/hoot";
-import { animationFrame, click, Deferred } from "@odoo/hoot-dom";
-import { Component, reactive, useState, xml } from "@odoo/owl";
+import { after, animationFrame, click, describe, expect, test } from "@odoo/hoot";
+import { Component, signal, xml } from "@odoo/owl";
 import { mountForTest, parseUrl } from "../local_helpers";
 
 import { logger } from "../../core/logger";
 import { HootTechnicalValue } from "../../ui/hoot_technical_value";
 
-const mountTechnicalValue = async (defaultValue) => {
-    const updateValue = async (value) => {
-        state.value = value;
-        await animationFrame();
-    };
+async function mountTechnicalValue(defaultValue) {
+    function updateValue(newValue) {
+        value.set(newValue);
+        keyCounter.set(keyCounter() + 1);
+        return animationFrame();
+    }
 
-    const state = reactive({ value: defaultValue });
+    const value = signal(defaultValue);
+    const keyCounter = signal(0);
 
     class TechnicalValueParent extends Component {
         static components = { HootTechnicalValue };
-        static props = {};
-        static template = xml`<HootTechnicalValue value="this.state.value" />`;
+        static template = xml`<HootTechnicalValue t-key="this.keyCounter()" value="this.value()" />`;
 
-        setup() {
-            this.state = useState(state);
-        }
+        value = value;
+        keyCounter = keyCounter;
     }
 
     await mountForTest(TechnicalValueParent);
 
     return updateValue;
-};
+}
 
 describe(parseUrl(import.meta.url), () => {
     test("technical value with primitive values", async () => {
@@ -90,7 +89,7 @@ describe(parseUrl(import.meta.url), () => {
         expect(".hoot-technical:first").toHaveText(
             `Object(2){\na\n:\ntrue\n,\nsub\n:\nObject(1)\n}`
         );
-        expect.verifySteps([]);
+        expect.verifySteps([{ a: true }, { a: true, sub: { key: "oui" } }]);
 
         await click(".hoot-object:last");
         await animationFrame();
@@ -108,13 +107,13 @@ describe(parseUrl(import.meta.url), () => {
         await updateValue(/ab[c]/gi);
         expect(".hoot-technical").toHaveText(`/ab[c]/gi`);
 
-        const def = new Deferred(() => {});
-        await updateValue(def);
-        expect(".hoot-technical").toHaveText(`Deferred<\npending\n>`);
+        const def = Promise.withResolvers();
+        await updateValue(def.promise);
+        expect(".hoot-technical").toHaveText(`Promise<\npending\n>`);
 
         def.resolve("oui");
         await animationFrame();
-        expect(".hoot-technical").toHaveText(`Deferred<\nfulfilled\n:\n"oui"\n>`);
+        expect(".hoot-technical").toHaveText(`Promise<\nfulfilled\n:\n"oui"\n>`);
     });
 
     test("evaluation of unsafe value does not crash", async () => {

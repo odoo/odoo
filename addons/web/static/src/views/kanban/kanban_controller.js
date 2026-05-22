@@ -1,4 +1,4 @@
-import { render, useLayoutEffect, useRef, useState, useSubEnv } from "@web/owl2/utils";
+import { render, useLayoutEffect, useRef, useSubEnv } from "@web/owl2/utils";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
@@ -25,9 +25,8 @@ import { KanbanRenderer } from "./kanban_renderer";
 import { useProgressBar } from "./progress_bar_hook";
 import { SelectionBox } from "@web/views/view_components/selection_box";
 
-import { Component, onMounted, onWillStart } from "@odoo/owl";
+import { Component, onMounted, onWillStart, proxy, useEffect } from "@odoo/owl";
 import { QuickCreateState } from "./kanban_record_quick_create";
-import { effect } from "@web/core/utils/reactive";
 
 const QUICK_CREATE_FIELD_TYPES = ["char", "boolean", "many2one", "selection", "many2many"];
 
@@ -101,7 +100,7 @@ export class KanbanController extends Component {
             }
         }
 
-        this.model = useState(
+        this.model = proxy(
             useModelWithSampleData(KanbanSampleModel, this.modelParams, this.modelOptions)
         );
         if (archInfo.progressAttributes) {
@@ -116,15 +115,12 @@ export class KanbanController extends Component {
         this.headerButtons = archInfo.headerButtons;
 
         this.quickCreateState = new QuickCreateState(archInfo.quickCreateView);
-        effect(
-            ({ isOpen }) => {
-                if (isOpen && this.model.useSampleModel) {
-                    this.model.removeSampleDataInGroups();
-                    this.model.useSampleModel = false;
-                }
-            },
-            [this.quickCreateState]
-        );
+        useEffect(() => {
+            if (this.quickCreateState.isOpen && this.model.useSampleModel) {
+                this.model.removeSampleDataInGroups();
+                this.model.useSampleModel = false;
+            }
+        });
 
         this.rootRef = useRef("root");
         useViewButtons(this.rootRef, {
@@ -183,7 +179,7 @@ export class KanbanController extends Component {
                     }
                 }
             },
-            () => [this.model.isReady]
+            () => [this.model.isReady()]
         );
         usePager(() => {
             const root = this.model.root;
@@ -475,7 +471,7 @@ export class KanbanController extends Component {
         const { createGroup } = this.props.archInfo.activeActions;
         const list = this.model.root;
         return (
-            this.model.isReady &&
+            this.model.isReady() &&
             list.isGrouped &&
             list.groupByField.type === "many2one" &&
             list.groups.length === 0 &&
@@ -488,7 +484,7 @@ export class KanbanController extends Component {
         if (!activeActions.quickCreate) {
             return false;
         }
-        if (!this.model.isReady) {
+        if (!this.model.isReady()) {
             return false;
         }
 

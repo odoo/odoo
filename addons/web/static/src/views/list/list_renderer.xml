@@ -116,9 +116,7 @@
                     </tr>
                 </thead>
                 <tbody class="ui-sortable">
-                    <t t-call="{{ this.constructor.rowsTemplate }}">
-                        <t t-set="list" t-value="this.props.list"/>
-                    </t>
+                    <t t-call="{{ this.constructor.rowsTemplate }}" list="this.props.list"/>
                 </tbody>
                 <tfoot t-on-click="() => this.props.list.leaveEditMode()" class="o_list_footer cursor-default" t-att-class="{o_sample_data_disabled: this.props.list.model.useSampleModel}">
                     <tr>
@@ -211,10 +209,7 @@
             <t t-foreach="list.groups" t-as="group" t-key="group.id">
                 <t t-call="{{ this.constructor.groupRowTemplate }}"/>
                 <t t-if="!group.isFolded">
-                    <t t-call="{{ this.constructor.rowsTemplate }}">
-                        <t t-set="list" t-value="group.list"/>
-                        <t t-set="groupId" t-value="group.id"/>
-                    </t>
+                    <t t-call="{{ this.constructor.rowsTemplate }}" list="group.list" groupId="group.id"/>
                     <tr t-if="!group.list.isGrouped and this.props.editable and this.canCreate">
                         <td t-if="this.hasSelectors"/>
                         <td
@@ -410,7 +405,7 @@
             <t t-if="this.hasOpenFormViewColumn">
                 <td class="o_list_record_open_form_view w-print-0 p-print-0 text-center"
                     t-on-keydown="(ev) => this.onCellKeydown(ev, group, record)"
-                    t-custom-click.stop="(ev, newWindow) => props.onOpenFormView(record, { force: true, newWindow })"
+                    t-custom-click.stop="(ev, newWindow) => this.props.onOpenFormView(record, { force: true, newWindow })"
                     tabindex="-1"
                 >
                     <button class="btn btn-link align-top text-end"

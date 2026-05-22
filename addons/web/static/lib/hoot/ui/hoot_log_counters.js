@@ -1,25 +1,8 @@
 /** @odoo-module */
 
-import { Component, xml } from "@odoo/owl";
+import { Component, props, types as t, xml } from "@odoo/owl";
 
-/**
- * @typedef {{
- *  logs: { error: number, warn: number };
- * }} HootLogCountersProps
- */
-
-/** @extends {Component<HootLogCountersProps, import("../hoot").Environment>} */
 export class HootLogCounters extends Component {
-    static components = {};
-    static props = {
-        logs: {
-            type: Object,
-            shape: {
-                error: Number,
-                warn: Number,
-            },
-        },
-    };
     static template = xml`
         <t t-if="this.props.logs.error">
             <span
@@ -40,4 +23,12 @@ export class HootLogCounters extends Component {
             </span>
         </t>
     `;
+
+    // Props & plugins
+    props = props({
+        logs: t.object({
+            error: t.number(),
+            warn: t.number(),
+        }),
+    });
 }

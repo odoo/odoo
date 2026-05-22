@@ -2,9 +2,9 @@
 
 import { logger } from "./core/logger";
 import { Runner } from "./core/runner";
-import { urlParams } from "./core/url";
-import { copyAndBind, makeRuntimeHook } from "./hoot_utils";
-import { setRunner } from "./main_runner";
+import { bindConfigToUrl, urlParams } from "./core/url";
+import { copyAndBind, exposeMethod } from "./hoot_utils";
+import { mainRunner, setMainRunner } from "./main_runner";
 import { setupHootUI } from "./ui/setup_hoot_ui";
 
 /**
@@ -25,11 +25,6 @@ import { setupHootUI } from "./ui/setup_hoot_ui";
  * @typedef {import("../hoot-dom/helpers/events").PointerOptions} PointerOptions
  *
  * @typedef {import("./mock/network").ServerWebSocket} ServerWebSocket
- *
- * @typedef {{
- *  runner: Runner;
- *  ui: import("./ui/setup_hoot_ui").UiState
- * }} Environment
  */
 
 //-----------------------------------------------------------------------------
@@ -38,42 +33,43 @@ import { setupHootUI } from "./ui/setup_hoot_ui";
 
 const runner = new Runner(urlParams);
 
-setRunner(runner);
+bindConfigToUrl(runner.config);
+setMainRunner(runner);
 
 //-----------------------------------------------------------------------------
 // Exports
 //-----------------------------------------------------------------------------
 
-// Main test API
+// Main test API (already configurable & bound to the runner)
 export const describe = runner.describe;
 export const expect = runner.expect;
 export const test = runner.test;
 
 // Test hooks
-export const after = makeRuntimeHook("after");
-export const afterEach = makeRuntimeHook("afterEach");
-export const before = makeRuntimeHook("before");
-export const beforeEach = makeRuntimeHook("beforeEach");
-export const onError = makeRuntimeHook("onError");
+export const after = runner.exposeRuntimeHook("after");
+export const afterEach = runner.exposeRuntimeHook("afterEach");
+export const before = runner.exposeRuntimeHook("before");
+export const beforeEach = runner.exposeRuntimeHook("beforeEach");
+export const onError = runner.exposeRuntimeHook("onError");
 
 // Fixture
-export const getFixture = runner.fixture.get;
+export const getFixture = exposeMethod(runner.fixture, "getFixture");
 
 // Other test runner functions
-export const definePreset = runner.exportFn(runner.definePreset);
-export const dryRun = runner.exportFn(runner.dryRun);
-export const getCurrent = runner.exportFn(runner.getCurrent);
-export const start = runner.exportFn(runner.start);
-export const stop = runner.exportFn(runner.stop);
+export const createJobScopedGetter = exposeMethod(runner, "createJobScopedGetter");
+export const definePreset = exposeMethod(runner, "definePreset");
+export const dryRun = exposeMethod(runner, "dryRun");
+export const getCurrent = exposeMethod(runner, "getCurrent");
+export const start = exposeMethod(runner, "start");
+export const stop = exposeMethod(runner, "stop");
 
 export { makeExpect } from "./core/expect";
-export { destroy } from "./core/fixture";
 export { defineTags } from "./core/tag";
-export { createJobScopedGetter } from "./hoot_utils";
+export { destroy } from "./hoot_utils";
 
 // Constants
 export const globals = copyAndBind(globalThis);
-export const isHootReady = setupHootUI();
+export const isHootReady = setupHootUI(runner);
 
 // Mock
 export { disableAnimations, enableTransitions } from "./mock/animation";
@@ -91,79 +87,11 @@ export {
 } from "./mock/window";
 
 // HOOT-DOM
-export {
-    advanceFrame,
-    advanceTime,
-    animationFrame,
-    cancelAllTimers,
-    check,
-    clear,
-    click,
-    dblclick,
-    Deferred,
-    delay,
-    drag,
-    edit,
-    fill,
-    formatXml,
-    freezeTime,
-    getActiveElement,
-    getFocusableElements,
-    getNextFocusableElement,
-    getParentFrame,
-    getPreviousFocusableElement,
-    hover,
-    isDisplayed,
-    isEditable,
-    isFocusable,
-    isInDOM,
-    isInViewPort,
-    isScrollable,
-    isVisible,
-    keyDown,
-    keyUp,
-    leave,
-    manuallyDispatchProgrammaticEvent,
-    matches,
-    microTick,
-    middleClick,
-    on,
-    pointerDown,
-    pointerUp,
-    press,
-    queryAll,
-    queryAllAttributes,
-    queryAllProperties,
-    queryAllRects,
-    queryAllTexts,
-    queryAllValues,
-    queryAny,
-    queryAttribute,
-    queryFirst,
-    queryOne,
-    queryRect,
-    queryText,
-    queryValue,
-    resize,
-    rightClick,
-    runAllTimers,
-    scroll,
-    select,
-    setFrameRate,
-    setInputFiles,
-    setInputRange,
-    tick,
-    uncheck,
-    unfreezeTime,
-    unload,
-    waitFor,
-    waitForNone,
-    waitUntil,
-} from "@odoo/hoot-dom";
+export * from "@odoo/hoot-dom";
 
 // Debug
 export { exposeHelpers } from "../hoot-dom/hoot_dom_utils";
-export const __debug__ = runner;
+export const __debug__ = mainRunner;
 
 /**
  * @param {...unknown} values

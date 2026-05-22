@@ -1,4 +1,4 @@
-import { expect, test } from "@odoo/hoot";
+import { animationFrame, expect, test } from "@odoo/hoot";
 import {
     clickSave,
     contains,
@@ -8,7 +8,6 @@ import {
     mountView,
     onRpc,
 } from "@web/../tests/web_test_helpers";
-import { animationFrame } from "@odoo/hoot-mock";
 
 class Partner extends models.Model {
     product_id = fields.Many2one({ relation: "product" });
@@ -141,6 +140,7 @@ test("BadgesMany2OneField: with domain and badge_limit option", async () => {
     expect(".dropdown-menu").toHaveCount(0);
 
     await contains(".o_field_widget[name=product_min_id] input").edit("0", { confirm: "enter" });
+    await animationFrame();
 
     expect("span.o_selection_badge").toHaveCount(3);
     expect(".o_selection_badge.o-dropdown-caret").toHaveText("+1");
@@ -208,8 +208,5 @@ test("[Offline] BadgesMany2OneField: verify badges are displayed in offline mode
     expect(".o_selection_badge").toHaveCount(1);
     expect(".o_selection_badge:contains(xphone)").toHaveCount(1);
 
-    expect.verifySteps([
-        "name_search", // initial rendering
-        "name_search", // re-rendered because we switched offline (due to the first name_search)
-    ]);
+    expect.verifySteps(["name_search"]);
 });

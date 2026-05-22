@@ -7,12 +7,21 @@ import { useSetupAction } from "@web/search/action_hook";
 import { SEARCH_KEYS } from "@web/search/with_search/with_search";
 import { buildSampleORM } from "./sample_server";
 
-import { EventBus, onWillStart, onWillUnmount, onWillUpdateProps, status } from "@odoo/owl";
+import { EventBus, onWillStart, onWillUnmount, onWillUpdateProps, signal, status } from "@odoo/owl";
 
 /**
  * @typedef {import("@web/env").OdooEnv} OdooEnv
  * @typedef {import("@web/search/search_model").SearchParams} SearchParams
  * @typedef {import("services").ServiceFactories} Services
+ *
+ * @typedef {{
+ *  beforeFirstLoad?: () => any;
+ * }} UseModelOptions
+ *
+ * @typedef {{
+ *  lazy?: boolean;
+ *  onLoad?: (searchParams: SearchParams) => any;
+ * }} UseModelWithSampleDataOptions
  */
 
 export class Model {
@@ -27,13 +36,20 @@ export class Model {
         this.env = env;
         this.orm = services.orm;
         this.bus = new EventBus();
-        this.isReady = false;
+        this.isReady = signal(false);
+        this._useSampleModel = signal(false);
         this.whenReady = Promise.withResolvers();
         this.whenReady.promise.then(() => {
-            this.isReady = true;
-            this.notify();
+            this.isReady.set(true);
         });
         this.setup(params, services);
+    }
+
+    get useSampleModel() {
+        return this._useSampleModel();
+    }
+    set useSampleModel(value) {
+        this._useSampleModel.set(value);
     }
 
     /**
@@ -90,13 +106,15 @@ function getSearchParams(props) {
 /**
  * @template {typeof Model} T
  * @param {T} ModelClass
- * @param {Object} params
- * @param {Object} [options]
- * @param {Function} [options.beforeFirstLoad]
+ * @param {SearchParams} params
+ * @param {UseModelOptions} [options]
  * @returns {InstanceType<T>}
  */
 export function useModel(ModelClass, params, options = {}) {
     const component = useComponent();
+    if (!(ModelClass.prototype instanceof Model)) {
+        throw new Error(`the model class should extend Model`);
+    }
     const services = {};
     for (const key of ModelClass.services) {
         services[key] = useService(key);
@@ -115,9 +133,7 @@ export function useModel(ModelClass, params, options = {}) {
 /**
  * @template {typeof Model} T
  * @param {T} ModelClass
- * @param {Object} params
- * @param {Object} [options]
- * @param {Function} [options.lazy=false]
+ * @param {UseModelWithSampleDataOptions} [options]
  * @returns {InstanceType<T>}
  */
 export function useModelWithSampleData(ModelClass, params, options = {}) {
@@ -181,7 +197,7 @@ export function useModelWithSampleData(ModelClass, params, options = {}) {
             model.useSampleModel = useSampleModel;
         }
         model.whenReady.resolve(); // resolve after the first successful load
-        if (status(component) === "mounted") {
+        if (status(component) === "mounted" && !options.blockingWillUpdateProps) {
             model.notify();
         }
     }
@@ -203,7 +219,11 @@ export function useModelWithSampleData(ModelClass, params, options = {}) {
     });
     onWillUpdateProps((nextProps) => {
         useSampleModel = false;
-        load(nextProps);
+        const loadProm = load(nextProps);
+        if (options.blockingWillUpdateProps) {
+            // FIXME owl3: added for studio
+            return loadProm;
+        }
     });
 
     useSetupAction({

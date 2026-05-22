@@ -25,12 +25,10 @@
                     ...
                 </button>
                 <t t-set-slot="content">
-                    <t t-call="web.StatusBarField.Dropdown">
-                        <t t-set="items" t-value="items.after" />
-                    </t>
+                    <t t-call="web.StatusBarField.Dropdown" items="this.items.after"/>
                 </t>
             </Dropdown>
-            <t t-foreach="items.inline" t-as="item" t-key="item.value">
+            <t t-foreach="this.items.inline" t-as="item" t-key="item.value">
                 <button
                     type="button"
                     class="btn btn-secondary o_arrow_button"
@@ -59,9 +57,7 @@
                     ...
                 </button>
                 <t t-set-slot="content">
-                    <t t-call="web.StatusBarField.Dropdown">
-                        <t t-set="items" t-value="items.before" />
-                    </t>
+                    <t t-call="web.StatusBarField.Dropdown" items="this.items.before"/>
                 </t>
             </Dropdown>
             <Dropdown position="'bottom-end'">
@@ -77,9 +73,7 @@
                     <t t-out="this.getCurrentLabel()" />
                 </button>
                 <t t-set-slot="content">
-                    <t t-call="web.StatusBarField.Dropdown">
-                        <t t-set="items" t-value="this.getAllItems()" />
-                    </t>
+                    <t t-call="web.StatusBarField.Dropdown" items="this.getAllItems()"/>
                 </t>
             </Dropdown>
         </div>

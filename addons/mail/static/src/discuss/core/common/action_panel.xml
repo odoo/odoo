@@ -18,15 +18,15 @@
                 </button>
                 <i t-if="this.props.icon" class="text-muted fa-fw" t-att-class="this.props.icon"/>
                 <p t-if="this.props.title" class="fw-bold text-uppercase m-0 flex-grow-1" t-out="this.props.title"/>
-                <t t-slot="header-extra"/>
+                <t t-call-slot="header-extra"/>
                 <button t-if="this.props.close and this.env.inMeetingView" class="btn p-1 opacity-75 opacity-100-hover ms-auto" title="Close panel" t-on-click.stop="this.props.close">
                     <i class="oi oi-close fa-fw"/>
                 </button>
             </div>
-            <t t-slot="header"/>
+            <t t-call-slot="header"/>
         </div>
         <div class="o-mail-ActionPanel-content px-1 d-flex flex-column flex-grow-1 bg-inherit o-min-height-0" t-custom-ref="contentRef">
-            <t t-slot="default"/>
+            <t t-call-slot="default"/>
         </div>
     </t>
 

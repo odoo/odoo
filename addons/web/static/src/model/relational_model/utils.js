@@ -1,5 +1,5 @@
 import { useComponent } from "@web/owl2/utils";
-import { markup, onWillDestroy, onWillStart, onWillUpdateProps } from "@odoo/owl";
+import { effect, markup, onWillDestroy, onWillStart, onWillUpdateProps } from "@odoo/owl";
 import { evalPartialContext, makeContext } from "@web/core/context";
 import { Domain } from "@web/core/domain";
 import {
@@ -11,12 +11,9 @@ import {
 import { x2ManyCommands } from "@web/core/orm_service";
 import { evaluateExpr } from "@web/core/py_js/py";
 import { omit } from "@web/core/utils/objects";
-import { effect } from "@web/core/utils/reactive";
-import { batched } from "@web/core/utils/timing";
 import { orderByToString } from "@web/search/utils/order_by";
 import { _t } from "@web/core/l10n/translation";
 import { user } from "@web/core/user";
-import { uniqueId } from "@web/core/utils/functions";
 import { unique } from "@web/core/utils/arrays";
 
 const granularityToInterval = {
@@ -767,49 +764,23 @@ export function isRelational(field) {
  */
 export function useRecordObserver(callback) {
     const component = useComponent();
-    let currentId;
-    const observeRecord = (props) => {
-        currentId = uniqueId();
-        if (!props.record) {
-            return;
-        }
-        const { promise, resolve, reject } = Promise.withResolvers();
-        const effectId = currentId;
-        let firstCall = true;
-        effect(
-            (record) => {
-                if (firstCall) {
-                    firstCall = false;
-                    return Promise.resolve(callback(record, props)).then(resolve).catch(reject);
-                } else {
-                    return batched(
-                        (record) => {
-                            if (effectId !== currentId) {
-                                // effect doesn't clean up when the component is unmounted.
-                                // We must do it manually.
-                                return;
-                            }
-                            return Promise.resolve(callback(record, props))
-                                .then(resolve)
-                                .catch(reject);
-                        },
-                        () => new Promise((res) => window.requestAnimationFrame(res))
-                    )(record);
-                }
-            },
-            [props.record]
-        );
-        return promise;
+    let prom;
+    let props = component.props;
+    const observeRecord = () => {
+        prom = Promise.resolve(callback(props.record, props)).then(() => component.render());
+        return prom;
     };
-    onWillDestroy(() => {
-        currentId = uniqueId();
-    });
-    onWillStart(() => observeRecord(component.props));
+    let cleanup = effect(() => observeRecord());
+    onWillStart(() => prom);
     onWillUpdateProps((nextProps) => {
         if (nextProps.record !== component.props.record) {
-            return observeRecord(nextProps);
+            props = nextProps;
+            cleanup();
+            cleanup = effect(() => observeRecord());
+            return prom;
         }
     });
+    onWillDestroy(cleanup);
 }
 
 /**

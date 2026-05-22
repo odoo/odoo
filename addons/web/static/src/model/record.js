@@ -23,7 +23,7 @@ class StandaloneRelationalModel extends RelationalModel {
 }
 
 class _Record extends Component {
-    static template = xml`<t t-slot="default" record="this.model.root"/>`;
+    static template = xml`<t t-call-slot="default" record="this.model.root"/>`;
     static props = ["slots", "info", "fields", "values?"];
     setup() {
         this.orm = useService("orm");
@@ -165,7 +165,7 @@ class _Record extends Component {
 }
 
 export class Record extends Component {
-    static template = xml`<_Record fields="fields" slots="props.slots" values="props.values" info="props" />`;
+    static template = xml`<_Record fields="this.fields" slots="this.props.slots" values="this.props.values" info="this.props" />`;
     static components = { _Record };
     static props = [
         "slots",

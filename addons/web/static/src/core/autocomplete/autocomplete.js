@@ -1,4 +1,4 @@
-import { useExternalListener, useRef, useState } from "@web/owl2/utils";
+import { onWillRender, useExternalListener, useRef, useState } from "@web/owl2/utils";
 import { useAutofocus, useForwardRefToParent, useService } from "@web/core/utils/hooks";
 import { isScrollableY, scrollTo } from "@web/core/utils/scrolling";
 import { useDebounced } from "@web/core/utils/timing";
@@ -80,6 +80,12 @@ export class AutoComplete extends Component {
             open: false,
             activeSourceOption: null,
             value: this.props.value,
+        });
+        onWillRender(() => {
+            // FIXME : We should read every part of the state
+            // to actually subscribe the component
+            // this is roughly equivalent to what owl2 did
+            [...Object.entries(this.state)];
         });
 
         this.inputRef = useForwardRefToParent("input");
@@ -302,7 +308,8 @@ export class AutoComplete extends Component {
             return;
         }
 
-        const defaultSourceOption = step < 0 ? navigableOptions[navigableOptions.length - 1] : navigableOptions[0];
+        const defaultSourceOption =
+            step < 0 ? navigableOptions[navigableOptions.length - 1] : navigableOptions[0];
 
         if (!step || !this.state.activeSourceOption) {
             this.state.activeSourceOption = defaultSourceOption;

@@ -1,6 +1,5 @@
 import { useState } from "@web/owl2/utils";
-import { Component } from "@odoo/owl";
-import { effect } from "@web/core/utils/reactive";
+import { Component, useEffect } from "@odoo/owl";
 import {
     basicContainerBuilderComponentProps,
     useInputBuilderComponent,
@@ -56,12 +55,9 @@ export class BuilderNumberInput extends Component {
         this.preview = preview;
         this.domState = state;
         this.state = useState({});
-        effect(
-            ({ value }) => {
-                this.state.showUnit = value?.length > 0;
-            },
-            [state]
-        );
+        useEffect(() => {
+            this.state.showUnit = state.value?.length > 0;
+        });
         this.inputRef = useChildRef();
         this.debouncedCommitValue = useInputDebouncedCommit(this.inputRef);
     }

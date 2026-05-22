@@ -60,46 +60,62 @@ export class CallPreview extends Component {
             ]
         );
         if (this.hasRtcSupport) {
-            onChange(this.rtc, "microphonePermission", () => {
-                if (this.rtc.microphonePermission !== "granted") {
-                    this.disableMicrophone();
-                }
-            });
-            onChange(this.rtc, "cameraPermission", () => {
-                if (this.rtc.cameraPermission !== "granted") {
-                    this.disableCamera();
-                }
-            });
-            onChange(this.store.settings, "audioInputDeviceId", () => {
-                if (this.state.audioStream) {
-                    closeStream(this.state.audioStream);
-                    this.enableMicrophone();
-                }
-            });
-            onChange(this.store.settings, "cameraInputDeviceId", () => {
-                if (this.state.videoStream) {
-                    closeStream(this.state.videoStream);
-                    this.enableCamera();
-                }
-            });
-            onChange(this.store.settings, "audioOutputDeviceId", (deviceId) => {
-                this.audioRef.el?.setSinkId?.(deviceId).catch(() => {});
-            });
-            onChange(this.store.settings, "useBlur", () => {
-                if (this.store.settings.useBlur) {
-                    this.enableBlur();
-                } else {
-                    this.disableBlur();
-                }
-            });
-            onChange(this.store.settings, ["edgeBlurAmount", "backgroundBlurAmount"], () => {
-                if (this.state.blurManager) {
-                    this.state.blurManager.edgeBlur = this.store.settings.edgeBlurAmount;
-                    this.state.blurManager.backgroundBlur =
-                        this.store.settings.backgroundBlurAmount;
-                }
-            });
+            const disposeFns = [];
+            disposeFns.push(
+                onChange(this.rtc, "microphonePermission", () => {
+                    if (this.rtc.microphonePermission !== "granted") {
+                        this.disableMicrophone();
+                    }
+                })
+            );
+            disposeFns.push(
+                onChange(this.rtc, "cameraPermission", () => {
+                    if (this.rtc.cameraPermission !== "granted") {
+                        this.disableCamera();
+                    }
+                })
+            );
+            disposeFns.push(
+                onChange(this.store.settings, "audioInputDeviceId", () => {
+                    if (this.state.audioStream) {
+                        closeStream(this.state.audioStream);
+                        this.enableMicrophone();
+                    }
+                })
+            );
+            disposeFns.push(
+                onChange(this.store.settings, "cameraInputDeviceId", () => {
+                    if (this.state.videoStream) {
+                        closeStream(this.state.videoStream);
+                        this.enableCamera();
+                    }
+                })
+            );
+            disposeFns.push(
+                onChange(this.store.settings, "audioOutputDeviceId", (deviceId) => {
+                    this.audioRef.el?.setSinkId?.(deviceId).catch(() => {});
+                })
+            );
+            disposeFns.push(
+                onChange(this.store.settings, "useBlur", () => {
+                    if (this.store.settings.useBlur) {
+                        this.enableBlur();
+                    } else {
+                        this.disableBlur();
+                    }
+                })
+            );
+            disposeFns.push(
+                onChange(this.store.settings, ["edgeBlurAmount", "backgroundBlurAmount"], () => {
+                    if (this.state.blurManager) {
+                        this.state.blurManager.edgeBlur = this.store.settings.edgeBlurAmount;
+                        this.state.blurManager.backgroundBlur =
+                            this.store.settings.backgroundBlurAmount;
+                    }
+                })
+            );
             onWillDestroy(() => {
+                disposeFns.forEach((f) => f());
                 closeStream(this.state.audioStream);
                 closeStream(this.state.videoStream);
             });

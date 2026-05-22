@@ -17,9 +17,8 @@
                 t-attf-class="#{this.props.isSelected ? 'ms-0' : 'ms-n1' }"
             />
             <span t-attf-class="o_location_selector_number d-none d-md-block position-absolute {{ this.props.isSelected ? 'o_location_selector_marker_icon_selected' : 'o_location_selector_marker_icon' }}">
-                <t t-call="website_sale_stock.locationSelector.map.pinIndicator">
-                    <t t-set="number" t-value="this.props.number"/>
-                </t>
+                <t t-call="website_sale_stock.locationSelector.map.pinIndicator"
+                    number="this.props.number"/>
             </span>
             <span class="d-flex flex-column w-100">
                 <span class="d-flex flex-column mb-1 mb-md-0">

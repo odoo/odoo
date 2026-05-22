@@ -66,7 +66,10 @@ export class FormCompiler extends ViewCompiler {
     compile(key, params = {}) {
         const compiled = super.compile(...arguments);
         if (!params.isSubView) {
-            compiled.children[0].setAttribute("t-ref", "compiled_view_root");
+            compiled.children[0].setAttribute(
+                "t-ref",
+                "__globals__.createRefSignal(__comp__, 'compiled_view_root', 1)"
+            );
         }
         return compiled;
     }
@@ -268,7 +271,7 @@ export class FormCompiler extends ViewCompiler {
             footer.append(
                 createElement("t", {
                     "t-call": "web.DefaultButtonsSlot",
-                    "t-call-context": "{ props: __comp__.props }",
+                    "t-call-context": "{ __owl__: __comp__.__owl__ }",
                 })
             );
         }

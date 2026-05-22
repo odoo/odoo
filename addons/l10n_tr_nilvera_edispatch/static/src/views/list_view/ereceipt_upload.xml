@@ -9,7 +9,7 @@
             onUploadComplete.bind="this.onEreceiptUploadComplete"
             >
             <t t-set-slot="toggler">
-                <t t-slot="toggler"/>
+                <t t-call-slot="toggler"/>
             </t>
         </FileUploader>
     </t>

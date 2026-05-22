@@ -85,6 +85,7 @@ export class AddSnippetDialog extends Component {
             iframeDocument.addEventListener("keydown", this.onIframeDocumentKeydown.bind(this));
 
             root = this.__owl__.app.createRoot(SnippetViewer, {
+                env: Object.create(this.env),
                 props: this.snippetViewerProps,
             });
             root.mount(iframeDocument.body);

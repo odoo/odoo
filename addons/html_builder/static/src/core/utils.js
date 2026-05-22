@@ -8,11 +8,18 @@ import {
     useSubEnv,
 } from "@web/owl2/utils";
 import { isElement, isTextNode } from "@html_editor/utils/dom_info";
-import { onMounted, onWillDestroy, onWillStart, onWillUpdateProps, status, toRaw } from "@odoo/owl";
+import {
+    onMounted,
+    onWillDestroy,
+    onWillStart,
+    onWillUpdateProps,
+    status,
+    toRaw,
+    useEffect,
+} from "@odoo/owl";
 import { convertNumericToUnit, getHtmlStyle } from "@html_editor/utils/formatting";
 import { localization } from "@web/core/l10n/localization";
 import { useBus } from "@web/core/utils/hooks";
-import { effect } from "@web/core/utils/reactive";
 import { useDebounced } from "@web/core/utils/timing";
 import { BuilderAction } from "./builder_action";
 
@@ -59,7 +66,7 @@ export function useDomState(getState, { checkEditingElement = true } = {}) {
         }
     };
     const state = useState({});
-    onWillStart(handler);
+    onWillStart(() => handler());
     useBus(env.editorBus, "DOM_UPDATED", handler);
     return state;
 }
@@ -400,14 +407,11 @@ export function useSelectableItemComponent(id, { getLabel = () => {} } = {}) {
         state = useState({
             isActive: false,
         });
-        effect(
-            ({ currentSelectedItem }) => {
-                state.isActive =
-                    toRaw(currentSelectedItem) === selectableItem ||
-                    (id && currentSelectedItem?.id === id);
-            },
-            [selectableState]
-        );
+        useEffect(() => {
+            state.isActive =
+                toRaw(selectableState.currentSelectedItem) === selectableItem ||
+                (id && selectableState.currentSelectedItem?.id === id);
+        });
         env.selectableContext.refreshCurrentItem();
         onMounted(env.selectableContext.update);
         onWillDestroy(() => {

@@ -4,7 +4,7 @@
 <t t-name="html_builder.AddSnippetDialog.header" t-inherit="web.Dialog.header" t-inherit-mode="primary">
     <xpath expr="//h4[hasclass('modal-title')]" position="after">
         <button class="btn border-0 d-flex align-items-center"
-                t-on-click="toggleMobilePreview"
+                t-on-click="this.toggleMobilePreview"
                 t-att-class="{ 'text-success': this.state.isMobilePreviewMode }"
                 title="Toggle Mobile Preview"
                 aria-label="Toggle Mobile Preview">
@@ -21,9 +21,7 @@
         size="'xl'"
         modalRef="this.modalRef">
         <t t-set-slot="header" t-slot-scope="scope">
-            <t t-call="html_builder.AddSnippetDialog.header">
-                <t t-set="dismiss" t-value="scope.close"/>
-            </t>
+            <t t-call="html_builder.AddSnippetDialog.header" dismiss="scope.close"/>
         </t>
         <div class="overflow-hidden w-100">
             <div class="d-flex w-100 h-100 vertical flex-row">

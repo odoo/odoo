@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useState, useSubEnv } from "@web/owl2/utils";
+import { render, useLayoutEffect, useRef, useState, useSubEnv } from "@web/owl2/utils";
 import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { Notebook } from "@web/core/notebook/notebook";
 import { Setting } from "./setting/setting";
@@ -59,7 +59,7 @@ export class FormRenderer extends Component {
         this.templates = useViewCompiler(Compiler || FormCompiler, templates);
         useSubEnv({ model: record.model });
         this.uiService = useService("ui");
-        this.onResize = useDebounced(this.render, 200);
+        this.onResize = useDebounced(() => render(this), 200);
         this.onScrollThrottled = useThrottleForAnimation(this.onScroll);
         onMounted(() => browser.addEventListener("resize", this.onResize));
         onWillUnmount(() => browser.removeEventListener("resize", this.onResize));

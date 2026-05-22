@@ -8,6 +8,7 @@ import {
 } from "../utils";
 import { definePosModels } from "../data/generate_model_definitions";
 import { PaymentScreenPaymentLines } from "@point_of_sale/app/screens/payment_screen/payment_lines/payment_lines";
+import { proxy } from "@odoo/owl";
 
 definePosModels();
 
@@ -16,18 +17,19 @@ test("getPaymentActionState", async () => {
     const order = await getFilledOrder(store);
     const card = store.models["pos.payment.method"].get(2);
     const paymentline = createPaymentLine(store, order, card);
+    const props = proxy({
+        paymentLines: [paymentline],
+        deleteLine: () => {},
+        selectLine: () => {},
+        sendForceDone: () => {},
+        sendForceCancel: () => {},
+        sendPaymentCancel: () => {},
+        sendPaymentRequest: () => {},
+        updateSelectedPaymentline: () => {},
+        isRefundOrder: false,
+    });
     const comp = await mountWithCleanup(PaymentScreenPaymentLines, {
-        props: {
-            paymentLines: [paymentline],
-            deleteLine: () => {},
-            selectLine: () => {},
-            sendForceDone: () => {},
-            sendForceCancel: () => {},
-            sendPaymentCancel: () => {},
-            sendPaymentRequest: () => {},
-            updateSelectedPaymentline: () => {},
-            isRefundOrder: false,
-        },
+        props,
     });
 
     // Helper
@@ -96,7 +98,7 @@ test("getPaymentActionState", async () => {
 
     // waitingCard - refund
     paymentline.payment_status = "waitingCard";
-    comp.props.isRefundOrder = true;
+    props.isRefundOrder = true;
     const stateWaitingCardRefund = comp.getPaymentActionState(paymentline);
     expect(normalizeActionState(stateWaitingCardRefund)).toEqual({
         id: "waiting_refund",
@@ -121,7 +123,7 @@ test("getPaymentActionState", async () => {
     });
 
     // waitingCard - no refund
-    comp.props.isRefundOrder = false;
+    props.isRefundOrder = false;
     const stateWaitingCardNoRefund = comp.getPaymentActionState(paymentline);
     expect(normalizeActionState(stateWaitingCardNoRefund)).toEqual({
         id: "waiting_card",
@@ -247,7 +249,7 @@ test("getPaymentActionState", async () => {
 
     // Done - refund
     paymentline.payment_status = "done";
-    comp.props.isRefundOrder = true;
+    props.isRefundOrder = true;
     const stateDoneRefund = comp.getPaymentActionState(paymentline);
     expect(normalizeActionState(stateDoneRefund)).toEqual({
         id: "refunded",
@@ -256,7 +258,7 @@ test("getPaymentActionState", async () => {
     });
 
     // Done - no refund
-    comp.props.isRefundOrder = false;
+    props.isRefundOrder = false;
     const stateDoneNoRefund = comp.getPaymentActionState(paymentline);
     expect(normalizeActionState(stateDoneNoRefund)).toEqual({
         id: "paid",
@@ -266,7 +268,7 @@ test("getPaymentActionState", async () => {
 
     // Refund available
     paymentline.payment_status = null;
-    comp.props.isRefundOrder = true;
+    props.isRefundOrder = true;
     card.payment_interface = true;
     const stateRefundAvailable = comp.getPaymentActionState(paymentline);
     expect(normalizeActionState(stateRefundAvailable)).toEqual({

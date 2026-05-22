@@ -78,7 +78,7 @@
                         </t>
                     </div>
                 </t>
-                <t t-component="this.props.Renderer" t-if="this.model.isReady"
+                <t t-component="this.props.Renderer" t-if="this.model.isReady()"
                     list="this.model.root"
                     activeActions="this.activeActions"
                     archInfo="this.archInfo"

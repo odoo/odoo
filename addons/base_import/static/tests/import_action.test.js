@@ -1,3 +1,4 @@
+import { useLayoutEffect } from "@web/owl2/utils";
 import { before, describe, expect, test } from "@odoo/hoot";
 import {
     animationFrame,
@@ -7,7 +8,6 @@ import {
     setInputFiles,
     waitFor,
 } from "@odoo/hoot-dom";
-import { useEffect } from "@odoo/owl";
 import {
     contains,
     defineActions,
@@ -1026,7 +1026,7 @@ describe("Import view", () => {
         patchWithCleanup(ImportDataProgress.prototype, {
             setup() {
                 super.setup();
-                useEffect(
+                useLayoutEffect(
                     () => {
                         if (this.props.importProgress.step === 1) {
                             // Trigger a pause at this step to resume later from the view
@@ -1106,7 +1106,7 @@ describe("Import view", () => {
         patchWithCleanup(ImportDataProgress.prototype, {
             setup() {
                 super.setup();
-                useEffect(
+                useLayoutEffect(
                     () => {
                         if (this.props.importProgress.step === 1) {
                             // Trigger a pause at this step to resume later from the view

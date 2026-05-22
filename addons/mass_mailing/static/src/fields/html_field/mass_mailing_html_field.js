@@ -6,13 +6,11 @@ import { MAIN_PLUGINS as MAIN_EDITOR_PLUGINS } from "@html_editor/plugin_sets";
 import { normalizeHTML, parseHTML } from "@html_editor/utils/html";
 import { MassMailingIframe } from "@mass_mailing/iframe/mass_mailing_iframe";
 import { ThemeSelectorIframe } from "@mass_mailing/themes/theme_selector/theme_selector_iframe";
-import { onWillUpdateProps, status, toRaw } from "@odoo/owl";
+import { onWillUpdateProps, status, toRaw, useEffect } from "@odoo/owl";
 import { loadBundle } from "@web/core/assets";
 import { Domain } from "@web/core/domain";
 import { registry } from "@web/core/registry";
-import { effect } from "@web/core/utils/reactive";
 import { useChildRef, useService } from "@web/core/utils/hooks";
-import { batched } from "@web/core/utils/timing";
 import { useEmailHtmlConverter } from "@mail/convert_inline/hooks";
 import { fixInvalidHTML } from "@html_editor/utils/sanitize";
 
@@ -59,6 +57,15 @@ export class MassMailingHtmlField extends HtmlField {
             loadBundle("mass_mailing.assets_builder");
         }
 
+        // useRecordObserver's callback now runs during setup() (via Owl's
+        // reactive effect), before this component's setup() continues. This
+        // means state.key is already incremented by the time we register the
+        // useEffect below, so updateThemeSelector would never be called on
+        // the first mount. Call them explicitly here to compute the correct
+        // initial state before the first render.
+        this.updateActiveTheme();
+        this.updateThemeSelector();
+
         this.iframeRef = useChildRef();
         this.iframeWrapperRef = useChildRef();
         this.codeViewButtonRef = useRef("codeViewButtonRef");
@@ -77,24 +84,21 @@ export class MassMailingHtmlField extends HtmlField {
         });
 
         let currentKey = this.state.key;
-        effect(
-            batched((state) => {
-                if (status(this) === "destroyed") {
-                    return;
-                }
-                if (state.key !== currentKey) {
-                    // html value may have been reset from the server:
-                    // - ensure that the activeTheme is up to date with the next
-                    //   record.
-                    this.updateActiveTheme(props.record);
-                    // - ensure that the themeSelector is displayed if necessary
-                    //   for the next props.
-                    this.updateThemeSelector(props);
-                    currentKey = state.key;
-                }
-            }),
-            [this.state]
-        );
+        useEffect(() => {
+            if (status(this) === "destroyed") {
+                return;
+            }
+            if (this.state.key !== currentKey) {
+                // html value may have been reset from the server:
+                // - ensure that the activeTheme is up to date with the next
+                //   record.
+                this.updateActiveTheme(props.record);
+                // - ensure that the themeSelector is displayed if necessary
+                //   for the next props.
+                this.updateThemeSelector(props);
+                currentKey = this.state.key;
+            }
+        });
 
         useLayoutEffect(
             () => {
@@ -340,7 +344,7 @@ export class MassMailingHtmlField extends HtmlField {
     async commitChanges({ urgent } = {}) {
         if (!urgent) {
             await this.mutex.exec(() => {
-                if (this.withBuilder && this.isEditorReady()) {
+                if (this.withBuilder && this.isEditorReady() && this.editor.shared.operation) {
                     return this.editor.shared.operation.getUnlockedDef();
                 }
             });

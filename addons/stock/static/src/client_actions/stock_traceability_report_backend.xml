@@ -27,10 +27,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <t t-call="stock.ReportMRPLines">
-                                        <t t-set="lines" t-value="this.state.lines"/>
-                                        <t t-set="hasUpDown" t-value="true"/>
-                                    </t>
+                                    <t t-call="stock.ReportMRPLines" lines="this.state.lines" hasUpDown="true"/>
                                 </tbody>
                             </table>
                         </div>
@@ -75,10 +72,9 @@
                 </t>
             </tr>
 
-            <t t-if="!line.isFolded and line.lines.length" t-call="stock.ReportMRPLines">
-                <t t-set="lines" t-value="line.lines"/>
-                <t t-set="hasUpDown" t-value="false"/>
-            </t>
+            <t t-if="!line.isFolded and line.lines.length" t-call="stock.ReportMRPLines"
+                lines="line.lines"
+                hasUpDown="false"/>
         </t>
     </t>
 

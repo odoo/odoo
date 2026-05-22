@@ -1,5 +1,5 @@
 import { after, destroy, getFixture, queryFirst, queryOne } from "@odoo/hoot";
-import { App, Component, xml } from "@odoo/owl";
+import { App, Component, onWillDestroy, xml } from "@odoo/owl";
 import { appTranslateFn } from "@web/core/l10n/translation";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { getPopoverForTarget } from "@web/core/popover/popover";
@@ -11,6 +11,7 @@ import {
     globalValues as defaultGlobalValues,
 } from "@web/env";
 import { getMockEnv, makeMockEnv } from "./env_test_helpers";
+import { patchWithCleanup } from "./patch_test_helpers";
 
 /**
  * @typedef {import("@odoo/hoot").Target} Target
@@ -26,23 +27,17 @@ import { getMockEnv, makeMockEnv } from "./env_test_helpers";
  * @typedef {import("@odoo/owl").ComponentConstructor<P, E>} ComponentConstructor
  */
 
-/**
- * @param {ComponentConstructor} ComponentClass
- * @param {HTMLElement | ShadowRoot} targetEl
- * @param {AppConfig} config
- */
-const mountComponentWithCleanup = (ComponentClass, targetEl, config) => {
-    const app = new App(ComponentClass, config);
-    after(() => destroy(app));
-    return app.mount(targetEl);
-};
-
 patch(MainComponentsContainer.prototype, {
     setup() {
         super.setup();
 
         hasMainComponent = true;
-        after(() => (hasMainComponent = false));
+        onWillDestroy(() => {
+            hasMainComponent = false;
+        });
+        after(() => {
+            hasMainComponent = false;
+        });
     },
 });
 
@@ -53,13 +48,19 @@ let hasMainComponent = false;
 //-----------------------------------------------------------------------------
 
 /**
- * @param {App | Component} parent
+ * @param {App | Component} appOrComponent
  * @param {(component: Component) => boolean} predicate
  * @returns {Component | null}
  */
-export function findComponent(parent, predicate) {
-    const rootNode = parent instanceof App ? parent.root : parent.__owl__;
-    const queue = [rootNode, ...Object.values(rootNode.children)];
+export function findComponent(appOrComponent, predicate) {
+    let compNode;
+    if (appOrComponent instanceof App) {
+        const [firstRoot] = appOrComponent.roots;
+        compNode = firstRoot?.node;
+    } else {
+        compNode = appOrComponent.__owl__;
+    }
+    const queue = [compNode, ...Object.values(compNode.children)];
     while (queue.length) {
         const { children, component } = queue.pop();
         if (predicate(component)) {
@@ -128,20 +129,6 @@ export async function mountWithCleanup(ComponentClass, options) {
         translateFn = appTranslateFn,
     } = options || {};
 
-    // Common component configuration
-    const commonConfig = {
-        customDirectives,
-        getTemplate,
-        globalValues,
-        templates,
-        translatableAttributes,
-        translateFn,
-        // The following keys are forced to ensure validation of all tested components
-        dev: false,
-        test: true,
-        warnIfNoStaticProps: true,
-    };
-
     // Fixture
     const fixture = getFixture();
     const targetEl = target ? queryOne(target) : fixture;
@@ -160,54 +147,65 @@ export async function mountWithCleanup(ComponentClass, options) {
     }
 
     const commonEnv = env || getMockEnv() || (await makeMockEnv());
-    const componentConfig = {
-        ...commonConfig,
-        env: Object.assign(Object.create(commonEnv), componentEnv),
-        name: `TEST: ${ComponentClass.name}`,
-        props,
-    };
 
+    const app = new App({
+        customDirectives,
+        getTemplate,
+        globalValues,
+        name: `TEST: ${ComponentClass.name}`,
+        templates,
+        translatableAttributes,
+        translateFn,
+        // The following keys are forced to ensure validation of all tested components
+        dev: false,
+        test: true,
+        warnIfNoStaticProps: true,
+    });
+    after(() => destroy(app));
+
+    const componentRoot = app.createRoot(ComponentClass, {
+        env: Object.assign(Object.create(commonEnv), componentEnv),
+        props,
+    });
     /** @type {InstanceType<C>} */
-    const component = await mountComponentWithCleanup(ComponentClass, targetEl, componentConfig);
+    const component = await componentRoot.mount(targetEl);
 
     if (!noMainContainer && !hasMainComponent) {
-        const containerConfig = {
-            ...commonConfig,
+        const mainContainerRoot = app.createRoot(MainComponentsContainer, {
             env: Object.assign(Object.create(commonEnv), containerEnv),
-            name: `TEST: ${ComponentClass.name} (main container)`,
             props: {},
-        };
-        await mountComponentWithCleanup(MainComponentsContainer, targetEl, containerConfig);
+        });
+        await mainContainerRoot.mount(targetEl);
     }
 
     return component;
 }
 
-export async function waitUntilIdle(apps = [...App.apps]) {
-    const isOwlIdle = () => apps.every((app) => app.scheduler.tasks.size === 0);
+/**
+ * @param {App | Component} appOrComponent
+ */
+export async function waitUntilIdle(appOrComponent) {
+    function isIdle() {
+        return scheduler.tasks.size === 0;
+    }
 
-    if (isOwlIdle()) {
-        return Promise.resolve();
+    const { scheduler } =
+        appOrComponent instanceof App ? appOrComponent : appOrComponent.__owl__.app;
+
+    if (isIdle()) {
+        return Promise.resolve(true);
     }
 
     return new Promise((resolve) => {
-        function cleanup() {
-            for (const cb of unpatch) {
-                cb();
-            }
-            unpatch = [];
-        }
-        after(cleanup);
-        let unpatch = apps.map((app) =>
-            patch(app.scheduler, {
-                processTasks() {
-                    super.processTasks();
-                    if (isOwlIdle()) {
-                        cleanup();
-                        resolve();
-                    }
-                },
-            })
-        );
+        const unpatch = patchWithCleanup(scheduler, {
+            processTasks() {
+                const result = super.processTasks(...arguments);
+                if (isIdle()) {
+                    unpatch();
+                    resolve(true);
+                }
+                return result;
+            },
+        });
     });
 }

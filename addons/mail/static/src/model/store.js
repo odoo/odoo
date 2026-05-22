@@ -2,7 +2,7 @@ import { reactive } from "@web/owl2/utils";
 import { PgSnapshot } from "@mail/model/field_version";
 import { Record } from "./record";
 import { STORE_SYM, modelRegistry } from "./misc";
-import { toRaw } from "@odoo/owl";
+import { immediateEffect, toRaw, untrack } from "@odoo/owl";
 
 /** @typedef {import("./record_list").RecordList} RecordList */
 
@@ -181,6 +181,7 @@ export class Store extends Record {
                     // effectively delete the record
                     /** @type {Record} */
                     const record = RHD_QUEUE.keys().next().value;
+                    record._runDisposeFns();
                     RHD_QUEUE.delete(record);
                     deletingRecordsByLocalId.delete(record.localId);
                 }
@@ -255,11 +256,13 @@ export class Store extends Record {
         return this._onChange(record, name, (observe) => {
             const fn = () => {
                 observe();
-                try {
-                    cb();
-                } catch (err) {
-                    this.handleError(err);
-                }
+                untrack(() => {
+                    try {
+                        cb();
+                    } catch (err) {
+                        this.handleError(err);
+                    }
+                });
             };
             if (this._.UPDATE !== 0) {
                 if (!this._.RO_QUEUE.has(fn)) {
@@ -294,21 +297,31 @@ export class Store extends Record {
             }
         }
         if (Array.isArray(key)) {
+            /** @type {Function[]} */
+            const arrayDisposeFns = [];
+            arrayDisposeFns.forEach((f) => f());
+            arrayDisposeFns.length = 0;
             for (const k of key) {
-                this._onChange(record, k, callback);
+                arrayDisposeFns.push(this._onChange(record, k, callback));
             }
-            return;
+            return () => {
+                arrayDisposeFns.forEach((f) => f());
+                arrayDisposeFns.length = 0;
+            };
         }
-        let ready = true;
-        proxy = reactive(record, () => {
-            if (ready) {
-                callback(_observe);
-            }
-        });
-        _observe();
-        return () => {
-            ready = false;
-        };
+        let running = false;
+        proxy = reactive(record);
+        const disposeFn = untrack(() =>
+            immediateEffect(() => {
+                if (!running) {
+                    _observe();
+                } else {
+                    callback(_observe);
+                }
+            })
+        );
+        running = true;
+        return disposeFn;
     }
     _cleanupData(data) {
         super._cleanupData(data);

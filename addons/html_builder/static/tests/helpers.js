@@ -1,3 +1,4 @@
+import { useRef, useState, useSubEnv } from "@web/owl2/utils";
 import { Builder } from "@html_builder/builder";
 import { CORE_PLUGINS } from "@html_builder/core/core_plugins";
 import { Image } from "@html_builder/core/img";
@@ -13,7 +14,7 @@ import { Plugin } from "@html_editor/plugin";
 import { defineMailModels } from "@mail/../tests/mail_test_helpers";
 import { after, click, queryAll, queryFirst } from "@odoo/hoot";
 import { animationFrame, waitForNone, queryOne, waitFor, advanceTime, tick } from "@odoo/hoot-dom";
-import { Component, onMounted, useRef, useState, useSubEnv, xml } from "@odoo/owl";
+import { Component, onMounted, xml } from "@odoo/owl";
 import {
     contains,
     defineModels,
@@ -100,10 +101,10 @@ export function getSnippetStructure({
 
 class BuilderContainer extends Component {
     static template = xml`
-        <div class="d-flex h-100 w-100" t-ref="container">
-            <div class="o_website_preview flex-grow-1" t-ref="website_preview">
+        <div class="d-flex h-100 w-100" t-custom-ref="container">
+            <div class="o_website_preview flex-grow-1" t-custom-ref="website_preview">
                 <div class="o_iframe_container">
-                    <iframe class="h-100 w-100" t-ref="iframe" t-on-load="this.onLoad"/>
+                    <iframe class="h-100 w-100" t-custom-ref="iframe" t-on-load="this.onLoad"/>
                     <div t-if="this.state.isMobile" class="o_mobile_preview_layout">
                         <img alt="phone" src="/html_builder/static/img/phone.svg"/>
                     </div>
@@ -271,7 +272,7 @@ export async function setupHTMLBuilder(
         await tick();
         await lastUpdatePromise;
         await animationFrame();
-        await waitUntilIdle([comp.__owl__.app]);
+        await waitUntilIdle(comp);
     };
     patchWithCleanup(Builder.prototype, {
         setup() {

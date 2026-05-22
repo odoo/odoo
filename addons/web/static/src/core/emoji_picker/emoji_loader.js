@@ -1,5 +1,4 @@
-import { reactive } from "@web/owl2/utils";
-import { markRaw, onWillDestroy } from "@odoo/owl";
+import { signal, useScope } from "@odoo/owl";
 import { loadBundle } from "@web/core/assets";
 
 /**
@@ -57,17 +56,15 @@ function processEmojiData() {
 }
 
 class EmojiLoader {
-    // Main emoji data
-    /** @type {EmojiCategory[]} */
-    categories = [];
-    /** @type {Emoji[]} */
-    emojis = [];
-
-    // Derived emoji data
-    get loaded() {
-        return this.emojis.length > 0;
+    get categories() {
+        return this._categories();
     }
-
+    get emojis() {
+        return this._emojis();
+    }
+    get loaded() {
+        return this._emojis().length > 0;
+    }
     /**
      * Mapping to emojis from:
      * - codepoints
@@ -80,8 +77,8 @@ class EmojiLoader {
             return DEFAULT_EMOJI_MAP;
         }
         if (!this._map) {
-            this._map = markRaw(new Map());
-            for (const emoji of this.emojis) {
+            this._map = new Map();
+            for (const emoji of this._emojis()) {
                 this._map.set(emoji.codepoints, emoji);
                 for (const emoticon of emoji.emoticons) {
                     this._map.set(emoticon, emoji);
@@ -94,10 +91,19 @@ class EmojiLoader {
         return this._map;
     }
 
-    // Loader metadata
     /**
      * @private
-     * @type {Promise<EmojiLoader> & { abort: () => void } | null}
+     * @type {import("@odoo/owl").Signal<EmojiCategory[]>}
+     */
+    _categories = signal.Array([]);
+    /**
+     * @private
+     * @type {import("@odoo/owl").Signal<Emoji[]>}
+     */
+    _emojis = signal.Array([]);
+    /**
+     * @private
+     * @type {Promise<EmojiLoader>}
      */
     _loadingPromise = null;
     /**
@@ -125,18 +131,18 @@ class EmojiLoader {
      * If the promise fails (e.g. by being aborted, or because it was run in a tour
      * that has ended), it is left pending forever, and the promise kept by the
      * loader is reset to allow retrying to fetch emoji data.
+     * @param {AbortSignal} [abortSignal]
      */
-    load() {
+    load(abortSignal) {
         if (!this._loadingPromise) {
-            let aborted = false;
             this._loadingPromise = this.loadEmojiBundle()
                 .then(() => {
-                    if (aborted) {
+                    if (abortSignal?.aborted) {
                         return Promise.reject("loading aborted");
                     }
                     const { categories, emojis } = processEmojiData();
-                    this.categories = markRaw(categories);
-                    this.emojis = markRaw(emojis);
+                    this._categories.set(categories);
+                    this._emojis.set(emojis);
                     return this;
                 })
                 .catch(() => {
@@ -145,9 +151,6 @@ class EmojiLoader {
                     this._loadingPromise = null;
                     return new Promise(() => {});
                 });
-            this._loadingPromise.abort = function abort() {
-                aborted = true;
-            };
         }
         return this._loadingPromise;
     }
@@ -160,17 +163,14 @@ class EmojiLoader {
     }
 }
 
-/** @type {Map<string, Emoji> | null} */
-const DEFAULT_EMOJI_MAP = markRaw(new Map());
+/** @type {Map<string, Emoji>} */
+const DEFAULT_EMOJI_MAP = new Map();
 
 export function useLoadEmoji() {
-    let abort = null;
-    onWillDestroy(() => abort?.());
+    const { abortSignal } = useScope();
     return function loadEmoji() {
-        const promise = emojiLoader.load();
-        abort = promise.abort;
-        return promise;
+        return emojiLoader.load(abortSignal);
     };
 }
 
-export const emojiLoader = reactive(new EmojiLoader());
+export const emojiLoader = new EmojiLoader();

@@ -4,8 +4,9 @@ import { ChannelActionDialog } from "@mail/discuss/core/common/channel_action_di
 import { ChannelInvitation } from "@mail/discuss/core/common/channel_invitation";
 import { SearchInput } from "@mail/core/common/search_input";
 
-import { Component, onWillRender, onWillUpdateProps, onWillStart } from "@odoo/owl";
+import { Component, onWillUpdateProps, onWillStart } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
+import { onWillRender } from "@web/owl2/utils";
 
 import { useService } from "@web/core/utils/hooks";
 import { useSearch } from "@mail/utils/common/hooks";

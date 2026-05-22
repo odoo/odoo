@@ -1,13 +1,12 @@
 <templates xml:space="preserve">
     <t t-name="html_editor.LanguageSelector">
         <t t-if="this.state.languages.length === 1">
-            <t t-call="html_editor.translateButton">
-                <t t-set="onClick" t-value="() => this.onSelected({languageCode: this.state.languages[0][0], languageName: this.state.languages[0][1]})"/>
+            <t t-call="html_editor.translateButton"
+                onClick="() => this.onSelected({languageCode: this.state.languages[0][0], languageName: this.state.languages[0][1]})">
             </t>
         </t>
         <Dropdown t-else="" menuRef="this.menuRef">
-            <t t-call="html_editor.translateButton">
-                <t t-set="onClick" t-value="() => {}"/>
+            <t t-call="html_editor.translateButton" onClick="() => {}">
             </t>
             <t t-set-slot="content">
                 <div data-prevent-closing-overlay="true">

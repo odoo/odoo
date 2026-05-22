@@ -1,3 +1,4 @@
+import { onRendered } from "@web/owl2/utils";
 import { beforeEach, expect, test } from "@odoo/hoot";
 import {
     Deferred,
@@ -13,7 +14,7 @@ import {
     runAllTimers,
 } from "@odoo/hoot-dom";
 import { mockDate, mockTimeZone, mockTouch } from "@odoo/hoot-mock";
-import { Component, onRendered, onWillStart, xml } from "@odoo/owl";
+import { Component, onMounted, onPatched, onWillStart, xml } from "@odoo/owl";
 import {
     MockServer,
     contains,
@@ -5965,7 +5966,8 @@ test(`calendar renderer is rendered once after search refresh`, async () => {
     patchWithCleanup(CalendarRenderer.prototype, {
         setup() {
             super.setup();
-            onRendered(() => expect.step("rendered"));
+            onMounted(() => expect.step("mounted"));
+            onPatched(() => expect.step("patched"));
         },
     });
     patchWithCleanup(CalendarModel.prototype, {
@@ -5984,11 +5986,11 @@ test(`calendar renderer is rendered once after search refresh`, async () => {
             </calendar>
         `,
     });
-    expect.verifySteps(["before load", "after load", "rendered"], {
+    expect.verifySteps(["before load", "after load", "mounted"], {
         message: "no additional notify",
     });
     await validateSearch();
-    expect.verifySteps(["before load", "after load", "rendered"], {
+    expect.verifySteps(["before load", "after load", "patched"], {
         message: "no additional notify",
     });
 });
@@ -6020,7 +6022,8 @@ test(`calendar renderer is rendered once after event drag and drop`, async () =>
         message: "no additional notify",
     });
     await moveEventToTime(1, "2016-12-12 08:00:00");
-    expect.verifySteps(["before load", "after load", "rendered"], {
+    expect.verifySteps(["before load", "rendered", "after load"], {
+        // render is trigger sync before load ends
         message: "no additional notify",
     });
 });
@@ -6053,7 +6056,8 @@ test(`calendar renderer is rendered twice after date change`, async () => {
         message: "no additional notify",
     });
     await contains(".o_calendar_button_next").click();
-    expect.verifySteps(["before load", "rendered", "after load", "rendered"], {
+    expect.verifySteps(["before load", "rendered", "rendered", "after load"], {
+        // render is trigger sync before load ends
         message: "additional notify is called to prerender the view and avoid flickering",
     });
 });

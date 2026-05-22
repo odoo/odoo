@@ -1,12 +1,21 @@
-import { after, beforeEach, expect, getFixture, resize, test } from "@odoo/hoot";
 import {
+    Deferred,
+    advanceFrame,
+    advanceTime,
+    after,
+    animationFrame,
+    beforeEach,
     click,
+    disableAnimations,
     drag,
     edit,
+    expect,
+    getFixture,
     hover,
     keyDown,
     keyUp,
     leave,
+    mockTouch,
     pointerDown,
     press,
     queryAll,
@@ -15,19 +24,14 @@ import {
     queryOne,
     queryRect,
     queryText,
-    setInputFiles,
-} from "@odoo/hoot-dom";
-import {
-    Deferred,
-    advanceFrame,
-    advanceTime,
-    animationFrame,
-    disableAnimations,
-    mockTouch,
+    resize,
     runAllTimers,
+    setInputFiles,
+    test,
     tick,
-} from "@odoo/hoot-mock";
-import { Component, onRendered, onWillRender, xml } from "@odoo/owl";
+} from "@odoo/hoot";
+import { Component, xml } from "@odoo/owl";
+import { addNewRule } from "@web/../tests/core/tree_editor/condition_tree_editor_test_helpers";
 import {
     MockServer,
     clickKanbanLoadMore,
@@ -39,6 +43,7 @@ import {
     discardKanbanRecord,
     editKanbanColumnName,
     editKanbanRecordQuickCreateInput,
+    editSearch,
     fields,
     getDropdownMenu,
     getFacetTexts,
@@ -50,8 +55,8 @@ import {
     getPagerValue,
     getService,
     makeServerError,
-    mockService,
     mockOffline,
+    mockService,
     models,
     mountView,
     mountWithCleanup,
@@ -74,13 +79,12 @@ import {
     validateKanbanRecord,
     validateSearch,
     webModels,
-    editSearch,
 } from "@web/../tests/web_test_helpers";
-import { addNewRule } from "@web/../tests/core/tree_editor/condition_tree_editor_test_helpers";
+import { onRendered, onWillRender } from "@web/owl2/utils";
 
-import { FileInput } from "@web/core/file_input/file_input";
 import { browser } from "@web/core/browser/browser";
 import { currencies } from "@web/core/currency";
+import { FileInput } from "@web/core/file_input/file_input";
 import { registry } from "@web/core/registry";
 import { user } from "@web/core/user";
 import { RelationalModel } from "@web/model/relational_model/relational_model";
@@ -90,9 +94,9 @@ import { KanbanController } from "@web/views/kanban/kanban_controller";
 import { KanbanRecord } from "@web/views/kanban/kanban_record";
 import { KanbanRenderer } from "@web/views/kanban/kanban_renderer";
 import { kanbanView } from "@web/views/kanban/kanban_view";
+import { TOUCH_SELECTION_THRESHOLD } from "@web/views/utils";
 import { ViewButton } from "@web/views/view_button/view_button";
 import { AnimatedNumber } from "@web/views/view_components/animated_number";
-import { TOUCH_SELECTION_THRESHOLD } from "@web/views/utils";
 import { WebClient } from "@web/webclient/webclient";
 
 const { IrAttachment } = webModels;
@@ -5590,7 +5594,7 @@ test("resequence a record twice", async () => {
 
 test("basic support for widgets (being Owl Components)", async () => {
     class MyComponent extends Component {
-        static template = xml`<div t-att-class="this.props.class" t-esc="this.value"/>`;
+        static template = xml`<div t-att-class="this.props.class" t-out="this.value"/>`;
         static props = ["*"];
         get value() {
             return JSON.stringify(this.props.record.data);
@@ -6478,7 +6482,7 @@ test("kanban view with monetary and currency fields without widget", async () =>
 
 test("kanban widget can extract props from attrs", async () => {
     class TestWidget extends Component {
-        static template = xml`<div class="o-test-widget-option" t-esc="this.props.title"/>`;
+        static template = xml`<div class="o-test-widget-option" t-out="this.props.title"/>`;
         static props = ["*"];
     }
     const testWidget = {
@@ -6586,7 +6590,7 @@ test("Missing t-key is automatically filled with a warning", async () => {
                 <templates>
                     <t t-name="card">
                         <div>
-                            <span t-foreach="[1, 2, 3]" t-as="i" t-esc="i" />
+                            <span t-foreach="[1, 2, 3]" t-as="i" t-out="i" />
                         </div>
                     </t>
                 </templates>
@@ -6864,7 +6868,7 @@ test("can use JSON in kanban template", async () => {
                 <templates>
                     <t t-name="card">
                         <div>
-                            <span t-foreach="JSON.parse(record.foo.raw_value)" t-as="v" t-key="v_index" t-esc="v"/>
+                            <span t-foreach="JSON.parse(record.foo.raw_value)" t-as="v" t-key="v_index" t-out="v"/>
                         </div>
                     </t>
                 </templates>
@@ -7067,7 +7071,7 @@ test("no leak of TransactionInProgress (not grouped case)", async () => {
 test("fieldDependencies support for fields", async () => {
     const customField = {
         component: class CustomField extends Component {
-            static template = xml`<span t-esc="this.props.record.data.int_field"/>`;
+            static template = xml`<span t-out="this.props.record.data.int_field"/>`;
             static props = ["*"];
         },
         fieldDependencies: [{ name: "int_field", type: "integer" }],
@@ -7094,7 +7098,7 @@ test("fieldDependencies support for fields", async () => {
 test("fieldDependencies support for fields: dependence on a relational field", async () => {
     const customField = {
         component: class CustomField extends Component {
-            static template = xml`<span t-esc="this.props.record.data.product_id.display_name"/>`;
+            static template = xml`<span t-out="this.props.record.data.product_id.display_name"/>`;
             static props = ["*"];
         },
         fieldDependencies: [{ name: "product_id", type: "many2one", relation: "product" }],

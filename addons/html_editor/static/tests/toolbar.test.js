@@ -737,6 +737,7 @@ test("should not create empty extra nodes while changing format of link on mobil
     const inputEl = iframeEl.contentWindow.document?.querySelector("input");
     await contains(".o-we-toolbar [name='font_size']").click();
     // In mobile the toolbar is hidden while o_bottom_sheet is opened.
+    await animationFrame();
     expect(inputEl).not.toBeFocused();
     await waitFor(".o_font_size_selector_menu .dropdown-item:contains('80')");
     await contains(".o_font_size_selector_menu .dropdown-item:contains('80')").click();

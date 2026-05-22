@@ -1,11 +1,4 @@
-import {
-    render,
-    useComponent,
-    useEnv,
-    useLayoutEffect,
-    useState,
-    useSubEnv,
-} from "@web/owl2/utils";
+import { render, useComponent, useEnv, useLayoutEffect, useState, useSubEnv } from "@web/owl2/utils";
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { makeContext } from "@web/core/context";
 import { Dialog } from "@web/core/dialog/dialog";

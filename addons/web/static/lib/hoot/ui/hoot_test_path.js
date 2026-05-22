@@ -1,33 +1,14 @@
 /** @odoo-module */
 
-import { Component, useState, xml } from "@odoo/owl";
+import { Component, plugin, props, types as t, xml } from "@odoo/owl";
 import { Test } from "../core/test";
 import { HootCopyButton } from "./hoot_copy_button";
 import { HootLink } from "./hoot_link";
 import { HootTagButton } from "./hoot_tag_button";
+import { UiPlugin } from "./ui_plugin";
 
-/**
- * @typedef {{
- *  canCopy?: boolean;
- *  full?: boolean;
- *  inert?: boolean;
- *  showStatus?: boolean;
- *  test: Test;
- * }} HootTestPathProps
- */
-
-/** @extends {Component<HootTestPathProps, import("../hoot").Environment>} */
 export class HootTestPath extends Component {
     static components = { HootCopyButton, HootLink, HootTagButton };
-
-    static props = {
-        canCopy: { type: Boolean, optional: true },
-        full: { type: Boolean, optional: true },
-        inert: { type: Boolean, optional: true },
-        showStatus: { type: Boolean, optional: true },
-        test: Test,
-    };
-
     static template = xml`
         <t t-set="statusInfo" t-value="this.getStatusInfo()" />
         <div class="flex items-center gap-1 whitespace-nowrap overflow-hidden">
@@ -38,7 +19,7 @@ export class HootTestPath extends Component {
                 />
             </t>
             <span class="flex items-center overflow-hidden">
-                <t t-if="this.uiState.selectedSuiteId and !this.props.full">
+                <t t-if="this.ui.selectedSuiteId() and !this.props.full">
                     <span class="text-gray font-bold p-1 select-none hidden md:inline">...</span>
                     <span class="select-none hidden md:inline">/</span>
                 </t>
@@ -73,9 +54,10 @@ export class HootTestPath extends Component {
                 <t t-if="this.props.canCopy">
                     <HootCopyButton text="this.props.test.name" altText="this.props.test.id" />
                 </t>
-                <t t-if="this.results.length > 1">
+                <t t-set="results" t-value="this.props.test.results()" />
+                <t t-if="results.length > 1">
                     <strong class="text-amber whitespace-nowrap mx-1">
-                        x<t t-out="this.results.length" />
+                        x<t t-out="results.length" />
                     </strong>
                 </t>
             </span>
@@ -91,13 +73,18 @@ export class HootTestPath extends Component {
         </div>
     `;
 
-    setup() {
-        this.results = useState(this.props.test.results);
-        this.uiState = useState(this.env.ui);
-    }
+    // Props & plugins
+    props = props({
+        "canCopy?": t.boolean(),
+        "full?": t.boolean(),
+        "inert?": t.boolean(),
+        "showStatus?": t.boolean(),
+        test: t.instanceOf(Test),
+    });
+    ui = plugin(UiPlugin);
 
     getStatusInfo() {
-        switch (this.props.test.status) {
+        switch (this.props.test.status()) {
             case Test.ABORTED: {
                 return { className: "amber", text: "aborted" };
             }
@@ -147,7 +134,7 @@ export class HootTestPath extends Component {
     }
 
     getTestPath() {
-        const { selectedSuiteId } = this.uiState;
+        const selectedSuiteId = this.ui.selectedSuiteId();
         const { test } = this.props;
         const path = test.path.slice(0, -1);
         if (this.props.full || !selectedSuiteId) {

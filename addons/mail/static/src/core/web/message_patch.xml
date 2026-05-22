@@ -36,9 +36,7 @@
         <t t-out="this.body"/>
         <br/>
         <div t-if="this.signature" data-o-mail-quote="1">
-            <t t-call="html_editor.Signature">
-                <t t-set="signatureClass" t-value="'o-signature-container'"/>
-            </t>
+            <t t-call="html_editor.Signature" signatureClass="'o-signature-container'"/>
         </div>
     </t>
 
@@ -54,9 +52,7 @@
         </div>
         <br/>
         <div t-if="this.signature" data-o-mail-quote="1">
-            <t t-call="html_editor.Signature">
-                <t t-set="signatureClass" t-value="'o-signature-container'"/>
-            </t>
+            <t t-call="html_editor.Signature" signatureClass="'o-signature-container'"/>
         </div>
     </t>
 </templates>

@@ -1,5 +1,5 @@
-import { useLayoutEffect, useRef, useState } from "@web/owl2/utils";
-import { Component, onMounted, onWillUnmount } from "@odoo/owl";
+import { useRef, useState } from "@web/owl2/utils";
+import { Component, onMounted, onWillUnmount, computed } from "@odoo/owl";
 import { useSelfOrder } from "@pos_self_order/app/services/self_order_service";
 import { useService } from "@web/core/utils/hooks";
 
@@ -62,10 +62,9 @@ export class ProductListPage extends Component {
         useDraggableScroll(this.categoryListRef);
         useHorizontalScrollShadow(this.categoryListRef, useRef("category_container"));
         useDraggableScroll(this.subCategoryListRef);
-
-        useLayoutEffect(
-            (lines) => {
-                this.state.quantityByProductTmplId = lines
+        Object.defineProperty(this.state, "quantityByProductTmplId", {
+            get: computed(() =>
+                this.selfOrder.currentOrder.lines
                     .filter((line) => !line.combo_parent_id)
                     .reduce((acc, { product_id, changes: { qty } }) => {
                         const tmplId = product_id.product_tmpl_id.id;
@@ -73,10 +72,9 @@ export class ProductListPage extends Component {
                             acc[tmplId] = (acc[tmplId] || 0) + qty;
                         }
                         return acc;
-                    }, {});
-            },
-            () => [this.selfOrder.currentOrder.lines]
-        );
+                    }, {})
+            ),
+        });
 
         onMounted(() => {
             this.toggleSubCategoryPanel();

@@ -1,7 +1,7 @@
 <templates xml:space="preserve">
     <t t-name="html_editor.ListSelector">
-        <Dropdown state="dropdown" menuClass="'o-we-toolbar-dropdown'" menuRef="this.menuRef" focusToggleOnClosed="false">
-            <button t-ref="listSelector" class="btn btn-light fa fa-list-ul" t-att-title="this.props.title" name="list_selector"/>
+        <Dropdown state="this.dropdown" menuClass="'o-we-toolbar-dropdown'" menuRef="this.menuRef" focusToggleOnClosed="false">
+            <button t-custom-ref="listSelector" class="btn btn-light fa fa-list-ul" t-att-title="this.props.title" name="list_selector"/>
             <t t-set-slot="content">
                 <div data-prevent-closing-overlay="true">
                     <t t-set="activeMode" t-value="this.getActiveMode()"/>

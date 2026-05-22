@@ -1,5 +1,14 @@
-import { onRendered, reactive, useLayoutEffect } from "@web/owl2/utils";
-import { Component, onMounted, onWillUpdateProps, status, xml } from "@odoo/owl";
+import { onRendered, reactive, useChildEnv, useLayoutEffect } from "@web/owl2/utils";
+import {
+    Component,
+    immediateEffect,
+    onMounted,
+    onWillDestroy,
+    onWillUpdateProps,
+    status,
+    untrack,
+    xml,
+} from "@odoo/owl";
 import { useDropdownGroup } from "@web/core/dropdown/_behaviours/dropdown_group_hook";
 import { useDropdownNesting } from "@web/core/dropdown/_behaviours/dropdown_nesting";
 import { DropdownPopover } from "@web/core/dropdown/_behaviours/dropdown_popover";
@@ -9,7 +18,6 @@ import { usePopover } from "@web/core/popover/popover_hook";
 import { mergeClasses } from "@web/core/utils/classname";
 import { useChildRef, useService } from "@web/core/utils/hooks";
 import { deepMerge } from "@web/core/utils/objects";
-import { effect } from "@web/core/utils/reactive";
 import { utils } from "@web/core/ui/ui_service";
 import { hasTouch } from "@web/core/browser/feature_detection";
 
@@ -43,7 +51,7 @@ export function getFirstElementOfNode(node) {
  * dropdown menus.
  */
 export class Dropdown extends Component {
-    static template = xml`<t t-slot="default"/>`;
+    static template = xml`<t t-call-slot="default"/>`;
     static components = {};
     static props = {
         menuClass: { optional: true },
@@ -144,7 +152,7 @@ export class Dropdown extends Component {
             arrow: false,
             closeOnClickAway: (target) => this.popoverCloseOnClickAway(target),
             closeOnEscape: false, // Handled via navigation and prevents closing root of nested dropdown
-            env: this.__owl__.childEnv,
+            env: useChildEnv(),
             holdOnHover: this.props.holdOnHover,
             onClose: () => this.state.close(),
             onPositioned: (el, { direction }) => this.setTargetDirectionClass(direction),
@@ -171,10 +179,24 @@ export class Dropdown extends Component {
 
         // As the popover is in another context we need to force
         // its re-rendering when the dropdown re-renders
-        onRendered(() => (this.popoverRefresher ? this.popoverRefresher.token++ : null));
+        onRendered(() =>
+            untrack(() => (this.popoverRefresher ? this.popoverRefresher.token++ : null))
+        );
 
-        onMounted(() => this.onStateChanged(this.state));
-        effect((state) => this.onStateChanged(state), [this.state]);
+        let mounted = false;
+        onMounted(() => {
+            mounted = true;
+            this.onStateChanged(this.state);
+        });
+        onWillDestroy(
+            immediateEffect(() => {
+                if (!mounted) {
+                    this.state.isOpen; // subscribe to signal
+                    return;
+                }
+                this.onStateChanged(this.state);
+            })
+        );
 
         useLayoutEffect(
             (target) => this.setTargetElement(target),

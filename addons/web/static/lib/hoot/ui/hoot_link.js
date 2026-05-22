@@ -1,22 +1,10 @@
 /** @odoo-module */
 
-import { Component, useState, xml } from "@odoo/owl";
+import { Component, props, signal, types as t, xml } from "@odoo/owl";
 import { FILTER_SCHEMA } from "../core/config";
 import { createUrlFromId } from "../core/url";
 import { ensureArray, INCLUDE_LEVEL } from "../hoot_utils";
-
-/**
- * @typedef {{
- *  class?: string;
- *  ids?: Record<import("../core/config").SearchFilter, string[]>;
- *  onClick?: (event: PointerEvent) => any;
- *  options?: import("../core/url").CreateUrlFromIdOptions;
- *  slots: { default: any };
- *  style?: string;
- *  target?: string;
- *  title?: string;
- * }} HootLinkProps
- */
+import { getRunnerPlugin } from "./runner_plugin";
 
 //-----------------------------------------------------------------------------
 // Global
@@ -32,14 +20,12 @@ const {
 
 /**
  * Link component which computes its href lazily (i.e. on focus or pointerenter).
- *
- * @extends {Component<HootLinkProps, import("../hoot").Environment>}
  */
 export class HootLink extends Component {
     static template = xml`
         <a
             t-att-class="this.props.class"
-            t-att-href="this.state.href"
+            t-att-href="this.href()"
             t-att-target="this.props.target"
             t-att-title="this.props.title"
             t-att-style="this.props.style"
@@ -47,38 +33,29 @@ export class HootLink extends Component {
             t-on-focus="this.updateHref"
             t-on-pointerenter="this.updateHref"
         >
-            <t t-slot="default" />
+            <t t-call-slot="default" />
         </a>
     `;
-    static props = {
-        class: { type: String, optional: true },
-        ids: {
-            type: Object,
-            values: [String, { type: Array, element: String }],
-            optional: true,
-        },
-        options: {
-            type: Object,
-            shape: {
-                debug: { type: Boolean, optional: true },
-                ignore: { type: Boolean, optional: true },
-            },
-            optional: true,
-        },
-        slots: {
-            type: Object,
-            shape: {
-                default: { type: Object, optional: true },
-            },
-        },
-        style: { type: String, optional: true },
-        target: { type: String, optional: true },
-        title: { type: String, optional: true },
-    };
 
-    setup() {
-        this.state = useState({ href: "#" });
-    }
+    // Props & plugins
+    props = props({
+        "class?": t.string(),
+        "ids?": t.record(t.or([t.string(), t.array(t.string())])),
+        "onClick?": t.function([t.instanceOf(PointerEvent)]),
+        "options?": t.object({
+            "debug?": t.boolean(),
+            "ignore?": t.boolean(),
+        }),
+        slots: t.object(["default"]),
+        "style?": t.string(),
+        "target?": t.string(),
+        "title?": t.string(),
+    });
+
+    runner = getRunnerPlugin();
+
+    // Reactive values
+    href = signal("#", { type: t.string() });
 
     /**
      * @param {PointerEvent} ev
@@ -86,7 +63,7 @@ export class HootLink extends Component {
     onClick(ev) {
         const { ids, options } = this.props;
         if (ids && ev.altKey) {
-            const { includeSpecs } = this.env.runner.state;
+            const { includeSpecs } = this.runner;
             let appliedFilter = false;
             for (const [type, idOrIds] of $entries(ids)) {
                 if (!(type in FILTER_SCHEMA)) {
@@ -95,7 +72,7 @@ export class HootLink extends Component {
                 const targetValue = options?.ignore ? -INCLUDE_LEVEL.url : +INCLUDE_LEVEL.url;
                 for (const id of ensureArray(idOrIds)) {
                     const finalValue = includeSpecs[type][id] === targetValue ? 0 : targetValue;
-                    this.env.runner.include(type, id, finalValue);
+                    this.runner.include(type, id, finalValue);
                     appliedFilter = true;
                 }
             }
@@ -110,7 +87,7 @@ export class HootLink extends Component {
 
     updateHref() {
         const { ids, options } = this.props;
-        const simplifiedIds = this.env.runner.simplifyUrlIds(ids);
-        this.state.href = createUrlFromId(simplifiedIds, options);
+        const simplifiedIds = this.runner.simplifyUrlIds(ids);
+        this.href.set(createUrlFromId(simplifiedIds, options));
     }
 }

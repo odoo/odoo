@@ -1,16 +1,12 @@
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
+import { ConnectionLostError } from "@web/core/network/rpc";
 import { x2ManyCommands } from "@web/core/orm_service";
 import { unique } from "@web/core/utils/arrays";
 import { DataPoint } from "./datapoint";
 import { Operation } from "./operation";
 import { Record as RelationalRecord } from "./record";
 import { getFieldsSpec, getScheduleORMExtras, resequence } from "./utils";
-import { ConnectionLostError } from "@web/core/network/rpc";
-
-/**
- * @typedef {import("./record").Record} RelationalRecord
- */
 
 const DEFAULT_HANDLE_FIELD = "sequence";
 
@@ -23,12 +19,15 @@ export class DynamicList extends DataPoint {
      */
     setup() {
         super.setup(...arguments);
+
         this.handleField = Object.keys(this.activeFields).find(
             (fieldName) => this.activeFields[fieldName].isHandle
         );
         if (!this.handleField && DEFAULT_HANDLE_FIELD in this.fields) {
             this.handleField = DEFAULT_HANDLE_FIELD;
         }
+
+        this.count = 0;
         this.isDomainSelected = false;
         this.evalContext = this.context;
     }

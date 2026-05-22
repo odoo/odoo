@@ -1,6 +1,6 @@
-import { reactive, useRef, useState } from "@web/owl2/utils";
+import { useRef, useState } from "@web/owl2/utils";
 import { Wysiwyg } from "@html_editor/wysiwyg";
-import { Component, markup, onMounted, onWillStart } from "@odoo/owl";
+import { Component, markup, onMounted, onWillStart, proxy, useEffect } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 import { localization } from "@web/core/l10n/localization";
 import { _t } from "@web/core/l10n/translation";
@@ -50,6 +50,16 @@ export class ProfileDialog extends Component {
         const websiteDescriptionClass = "website_profile_profile_dialog_website_description";
         useAutofocus({ refName: "name" });
 
+        this.user = proxy({});
+        let isUserInitialized = false;
+        useEffect(() => {
+            this.user; // trigger effect when user is updated
+            if (!isUserInitialized) {
+                return;
+            }
+            this.validate();
+        });
+
         onWillStart(async () => {
             const [users, countries] = await Promise.all([
                 this.orm.read(
@@ -70,7 +80,8 @@ export class ProfileDialog extends Component {
             const userData = users[0];
             userData.country_id = userData.country_id && userData.country_id[0]; // keep only id
             userData.website_description = markup(userData.website_description || "");
-            this.user = reactive(userData, () => this.validate());
+            isUserInitialized = true;
+            Object.assign(this.user, userData);
             this.countries = countries;
             const isInternalUser = await user.hasGroup("base.group_user");
             this.descriptionWysiwygConfig = {

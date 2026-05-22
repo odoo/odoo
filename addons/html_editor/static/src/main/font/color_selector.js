@@ -1,12 +1,11 @@
-import { useRef, useState } from "@web/owl2/utils";
+import { useChildEnv, useRef, useState } from "@web/owl2/utils";
 import { isColorGradient } from "@web/core/utils/colors";
-import { Component } from "@odoo/owl";
+import { Component, useEffect } from "@odoo/owl";
 import {
     useColorPicker,
     DEFAULT_COLORS,
     DEFAULT_THEME_COLOR_VARS,
 } from "@web/core/color_picker/color_picker";
-import { effect } from "@web/core/utils/reactive";
 import { toolbarButtonProps } from "../toolbar/toolbar";
 import { getCSSVariableValue, getHtmlStyle } from "@html_editor/utils/formatting";
 import { useChildRef } from "@web/core/utils/hooks";
@@ -48,17 +47,13 @@ export class ColorSelector extends Component {
             getCSSVariableValue("body-color", htmlStyle), // Default applied color
             "#00000000", //Default Background color
         ];
-        effect(
-            (selectedColors) => {
-                this.state.selectedColor = selectedColors[this.props.mode];
-                this.state.defaultTab = "solid";
-                this.state.selectedTab = this.getCorrespondingColorTab(
-                    selectedColors[this.props.mode]
-                );
-                this.state.getTargetedElements = this.props.getTargetedElements;
-            },
-            [this.props.getSelectedColors()]
-        );
+        useEffect(() => {
+            const selectedColors = this.props.getSelectedColors();
+            this.state.selectedColor = selectedColors[this.props.mode];
+            this.state.defaultTab = "solid";
+            this.state.selectedTab = this.getCorrespondingColorTab(selectedColors[this.props.mode]);
+            this.state.getTargetedElements = this.props.getTargetedElements;
+        });
 
         const colorPickerRef = useChildRef();
         this.colorSelectorBtn = useRef("root");
@@ -77,7 +72,7 @@ export class ColorSelector extends Component {
                 onEscape: () => this.colorSelectorBtn.el?.focus(),
             },
             {
-                env: this.__owl__.childEnv,
+                env: useChildEnv(),
                 onClose: (...args) => {
                     this.props.applyColorResetPreview();
                     this.props.onClose(...args);

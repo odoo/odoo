@@ -1,10 +1,10 @@
-import { reactive } from "@web/owl2/utils";
 /**
  * The purpose of this test is to click on every installed App and then open each
  * view. On each view, click on each filter.
  */
 
-import { App } from "@odoo/owl";
+import { reactive } from "@web/owl2/utils";
+import { App, effect } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { rpcBus } from "@web/core/network/rpc";
 import { getPopoverForTarget } from "@web/core/popover/popover";
@@ -32,6 +32,7 @@ let errorRPC;
 let actionCount;
 let env;
 let apps;
+let disposeEffect = () => {};
 
 /**
  * Hook on specific activities of the webclient to detect when to move forward.
@@ -65,10 +66,11 @@ function setup(light, currentState) {
             appIndex: 0,
             menuIndex: 0,
             subMenuIndex: 0,
-        },
-        () => browser.localStorage.setItem("running.clickbot", JSON.stringify(state))
+        }
     );
-    browser.localStorage.setItem("running.clickbot", JSON.stringify(state));
+    disposeEffect = effect(() => {
+        browser.localStorage.setItem("running.clickbot", JSON.stringify(state));
+    });
 
     actionCount = 0;
     calledRPC = {};
@@ -92,6 +94,7 @@ function uiUpdate() {
 }
 
 function cleanup() {
+    disposeEffect();
     browser.localStorage.removeItem("running.clickbot");
     env.bus.removeEventListener("ACTION_MANAGER:UI-UPDATED", uiUpdate);
     rpcBus.removeEventListener("RPC:REQUEST", onRPCRequest);

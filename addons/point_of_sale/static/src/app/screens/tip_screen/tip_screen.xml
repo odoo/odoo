@@ -44,7 +44,7 @@
                                     <span class="input-group-text bg-secondary">Tip Amount</span>
                                     <input type="number"
                                            class="item form-control fs-3"
-                                           t-model="this.state.inputTipAmount"
+                                           t-custom-model="this.state.inputTipAmount"
                                            t-att-data-amount="this.state.inputTipAmount"
                                            t-on-input="() => { this.state.selectedPercentage = null; }"/>
                                     <span class="input-group-text" t-out="this.pos.currency.symbol"/>

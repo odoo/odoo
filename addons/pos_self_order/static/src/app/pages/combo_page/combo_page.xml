@@ -43,7 +43,7 @@
                         <div class="d-flex flex-column w-100">
                             <div t-if="this.selectedChoice.qty_free &gt; 0 and this.selectedChoice.qty_free  &lt; this.selectedChoice.qty_max" class="d-flex align-items-center gap-1 mb-3 mb-lg-4">
                                 <h2 class="mb-1" t-out="this.selectedChoice.name"/>
-                                <h4 class="text-muted"><t t-esc="this.selectedChoice.qty_free"/> included &amp; <t t-out="this.selfOrder.formatMonetary(this.selectedChoice.base_price)"/> per extra unit</h4>
+                                <h4 class="text-muted"><t t-out="this.selectedChoice.qty_free"/> included &amp; <t t-out="this.selfOrder.formatMonetary(this.selectedChoice.base_price)"/> per extra unit</h4>
                             </div>
                             <div class="o_self_combo_products row  justify-content-center" t-att-class="{ 'small-item-nb': this.comboItems.length &lt; 3}">
                                 <div class="d-flex col-12 col-md-4 col-lg-3 col-kiosk-p-3" t-att-class="{'col-kiosk-p-4 ': this.comboItems.length &lt; 4}" t-foreach="this.comboItems" t-as="comboItem" t-key="comboItem.id" t-if="comboItem.product_id">
@@ -53,7 +53,7 @@
                                     <t t-set="itemQty" t-value="itemState.qty || 0"/>
                                     <t t-set="isOutOfStock" t-value="!product.self_order_available"/>
                                     <t t-set="extraPrice" t-value="comboItem.extra_price"/>
-                                    <t t-if="selectedChoice.qty_free == 0" t-set="extraPrice" t-value="comboItem.extra_price + selectedChoice.base_price"/>
+                                    <t t-if="this.selectedChoice.qty_free == 0" t-set="extraPrice" t-value="comboItem.extra_price + this.selectedChoice.base_price"/>
                                     <div t-on-click="() => this.selectItem(comboItem)"
                                             role="button"
                                             class="combo_product_box btn btn-light position-relative d-flex flex-row-reverse flex-md-column align-items-center w-100 py-2 px-3 p-md-0 rounded-4 shadow-sm overflow-hidden border-2 text-start"

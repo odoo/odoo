@@ -1,28 +1,15 @@
 /** @odoo-module */
 
-import { Component, useState, xml } from "@odoo/owl";
+import { Component, props, signal, types as t, xml } from "@odoo/owl";
 import { copy, hasClipboard } from "../hoot_utils";
 
-/**
- * @typedef {{
- *  altText?: string;
- *  text: string;
- * }} HootCopyButtonProps
- */
-
-/** @extends {Component<HootCopyButtonProps, import("../hoot").Environment>} */
 export class HootCopyButton extends Component {
-    static props = {
-        altText: { type: String, optional: true },
-        text: String,
-    };
-
     static template = xml`
         <t t-if="this.hasClipboard()">
             <button
                 type="button"
                 class="text-gray-400 hover:text-gray-500"
-                t-att-class="{ 'text-emerald': this.state.copied }"
+                t-att-class="{ 'text-emerald': this.copied() }"
                 title="copy to clipboard"
                 t-on-click.stop="this.onClick"
             >
@@ -31,11 +18,17 @@ export class HootCopyButton extends Component {
         </t>
     `;
 
-    hasClipboard = hasClipboard;
+    // Props & plugins
+    props = props({
+        "altText?": t.string(),
+        text: t.string(),
+    });
 
-    setup() {
-        this.state = useState({ copied: false });
-    }
+    // Reactive values
+    copied = signal(false, { type: t.boolean() });
+
+    // Other members
+    hasClipboard = hasClipboard;
 
     /**
      * @param {PointerEvent} ev
@@ -43,6 +36,6 @@ export class HootCopyButton extends Component {
     async onClick(ev) {
         const text = ev.altKey && this.props.altText ? this.props.altText : this.props.text;
         await copy(text);
-        this.state.copied = true;
+        this.copied.set(true);
     }
 }

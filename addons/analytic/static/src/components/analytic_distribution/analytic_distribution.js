@@ -68,7 +68,6 @@ export class AnalyticDistribution extends Component {
         this.initialFormattedData = [];
 
         onWillStart(this.willStart);
-        useRecordObserver(this.willUpdateRecord.bind(this));
         onPatched(this.patched);
 
         useExternalListener(window, "click", this.onWindowClick, true);
@@ -101,6 +100,7 @@ export class AnalyticDistribution extends Component {
         this.planIdToColumn = {};
         this.lastAccount = this.props.account_field && this.props.record.data[this.props.account_field] || false;
         this.lastProduct = this.props.product_field && this.props.record.data[this.props.product_field] || false;
+        useRecordObserver(this.willUpdateRecord.bind(this));
     }
 
     // Lifecycle
@@ -152,6 +152,7 @@ export class AnalyticDistribution extends Component {
      * @returns {Object}
      */
     accountTotalsByPlan() {
+        this.state.formattedData; // consume signal
         const accountTotals = {};
         const formattedData = this.props.multi_edit ? this.initialFormattedData : this.state.formattedData;
         formattedData.map((line) => {

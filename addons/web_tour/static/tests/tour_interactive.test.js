@@ -1,9 +1,10 @@
 /** @odoo-module **/
 
+import { useState } from "@web/owl2/utils";
 import { after, beforeEach, describe, expect, test } from "@odoo/hoot";
 import { queryFirst, waitFor, press, Deferred, waitForNone } from "@odoo/hoot-dom";
 import { advanceTime, animationFrame } from "@odoo/hoot-mock";
-import { Component, useState, xml } from "@odoo/owl";
+import { Component, xml } from "@odoo/owl";
 import {
     contains,
     getService,
@@ -51,11 +52,11 @@ class Counter extends Component {
     static template = xml/*html*/ `
         <div class="counter">
             <div class="interval">
-                <input type="number" t-model.number="state.interval" />
+                <input type="number" t-custom-model.number="this.state.interval" />
             </div>
             <div class="counter">
-                <span class="value" t-out="state.value" />
-                <button class="inc" t-on-click="onIncrement">+</button>
+                <span class="value" t-out="this.state.value" />
+                <button class="inc" t-on-click="this.onIncrement">+</button>
             </div>
         </div>
     `;

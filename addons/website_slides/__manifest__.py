@@ -119,6 +119,7 @@ Featuring
             'web/static/lib/luxon/luxon.js',
             'web/static/src/libs/luxon.js',
             'web/static/lib/owl/owl.js',
+            'web/static/src/owl2/owl3_compatibility_layer.js',
             'web/static/src/owl2/utils.js',
             'web/static/lib/owl/odoo_module.js',
 

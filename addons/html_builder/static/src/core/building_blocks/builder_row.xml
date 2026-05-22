@@ -45,7 +45,7 @@
                     t-custom-ref="content"
                     t-on-click="this.onRowContentClick"
                     >
-                    <t t-slot="default"/>
+                    <t t-call-slot="default"/>
                 </div>
             </t>
             <div
@@ -54,11 +54,11 @@
                 style="flex-grow: 1; flex-basis: 0; min-width: 0; gap: 4px;"
                 t-custom-ref="content"
                 >
-                <t t-slot="default" toggleCollapseContent="() => this.toggleCollapseContent()"/>
+                <t t-call-slot="default" toggleCollapseContent="() => this.toggleCollapseContent()"/>
             </div>
         </div>
         <div t-if="this.displayCollapseContent" t-att-class="this.collapseContentClass" t-custom-ref="collapse-content" t-att-id="this.collapseContentId">
-            <t t-slot="collapse"/>
+            <t t-call-slot="collapse"/>
         </div>
     </BuilderComponent>
 </t>

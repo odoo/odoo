@@ -1,7 +1,7 @@
 /* eslint no-restricted-syntax: 0 */
-import { render } from "@web/owl2/utils";
 import { after, describe, expect, test } from "@odoo/hoot";
 import { animationFrame, Deferred } from "@odoo/hoot-mock";
+import { Component, markup, xml } from "@odoo/owl";
 import {
     defineParams,
     makeMockEnv,
@@ -13,9 +13,9 @@ import {
 } from "@web/../tests/web_test_helpers";
 import { _t as basic_t, translatedTerms, translationLoaded } from "@web/core/l10n/translation";
 import { IndexedDB } from "@web/core/utils/indexed_db";
+import { render } from "@web/owl2/utils";
 import { session } from "@web/session";
 
-import { Component, markup, xml } from "@odoo/owl";
 const { DateTime } = luxon;
 
 function _t() {
@@ -37,8 +37,8 @@ class TestComponent extends Component {
     static get template() {
         return xml`${this._template}<div id="${id++}"/>`;
     }
+
     static _template = "";
-    static props = ["*"];
 }
 
 /**
@@ -252,7 +252,6 @@ test("[cache] update the cache if hash are different - js", async () => {
     });
     class MyTestComponent extends Component {
         static template = xml`<div id="main" t-translation-context="web"><t t-out="this.otherText"/></div>`;
-        static props = ["*"];
 
         get otherText() {
             return _t("Hi");
@@ -303,7 +302,7 @@ test("[cache] update the cache if hash are different - js", async () => {
 test("can lazy translate", async () => {
     // Can't use patchWithCleanup cause it doesn't support Symbol
     translatedTerms[translationLoaded] = false;
-    TestComponent._template = `<div id="main" t-translation-context="web"><t t-out="constructor.someLazyText" /></div>`;
+    TestComponent._template = `<div id="main" t-translation-context="web"><t t-out="this.constructor.someLazyText" /></div>`;
     TestComponent.someLazyText = _t("Hello");
     expect(() => TestComponent.someLazyText.toString()).toThrow();
     expect(() => TestComponent.someLazyText.valueOf()).toThrow();

@@ -1,3 +1,4 @@
+import { reactive } from "@web/owl2/utils";
 import { beforeEach, describe, expect, test } from "@odoo/hoot";
 import { keyDown, press, queryAllTexts } from "@odoo/hoot-dom";
 import {
@@ -15,7 +16,7 @@ import {
     patchWithCleanup,
 } from "@web/../tests/web_test_helpers";
 
-import { Component, reactive, xml } from "@odoo/owl";
+import { Component, xml } from "@odoo/owl";
 
 import { useCommand } from "@web/core/commands/command_hook";
 import { HotkeyCommandItem } from "@web/core/commands/default_providers";
@@ -111,7 +112,7 @@ test("useCommand hook when the activeElement change", async () => {
     }
 
     class OtherComponent extends Component {
-        static template = xml`<div t-ref="active"><div tabindex="1">visible</div></div>`;
+        static template = xml`<div t-custom-ref="active"><div tabindex="1">visible</div></div>`;
         static props = ["*"];
         setup() {
             useActiveElement("active");
@@ -188,7 +189,7 @@ test("global command with hotkey", async () => {
     expect.verifySteps([hotkey]);
 
     class MyComponent extends Component {
-        static template = xml`<div t-ref="active"><button>visible</button></div>`;
+        static template = xml`<div t-custom-ref="active"><button>visible</button></div>`;
         static props = ["*"];
         setup() {
             useActiveElement("active");

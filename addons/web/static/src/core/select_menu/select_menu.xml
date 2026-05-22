@@ -53,7 +53,7 @@
                     <button type="button" t-attf-class="o_select_menu_toggler d-flex border btn btn-light w-100 bg-light {{ this.props.togglerClass }}" t-att-disabled="this.props.disabled">
                         <span class="o_select_menu_toggler_slot text-start text-truncate">
                             <span t-if="this.props.placeholder and !this.props.value" class="text-muted" t-out="this.props.placeholder"/>
-                            <t t-slot="default" />
+                            <t t-call-slot="default" />
                         </span>
                         <span t-if="this.canDeselect" t-on-click.stop="this.onInputClear" class="o_select_menu_toggler_clear position-absolute top-50 end-0 me-3">
                             <i class="fa fa-times"></i>
@@ -74,12 +74,11 @@
                             <p class="text-muted fst-italic mx-4 my-1">No results</p>
                         </t>
                         <t t-foreach="this.state.displayedOptions" t-as="choice" t-key="choice_index">
-                            <t t-call="{{ this.constructor.choiceItemTemplate }}">
-                                <t t-set="choice" t-value="choice" />
-                                <t t-set="choice_index" t-value="choice_index" />
-                            </t>
+                            <t t-call="{{ this.constructor.choiceItemTemplate }}"
+                                choice="choice"
+                                choice_index="choice_index"/>
                         </t>
-                        <t t-if="this.props.slots and this.props.slots.bottomArea" t-slot="bottomArea" data="this.state"/>
+                        <t t-if="this.props.slots and this.props.slots.bottomArea" t-call-slot="bottomArea" data="this.state"/>
                     </div>
                 </t>
             </Dropdown>
@@ -101,7 +100,7 @@
             class="this.getItemClass(choice)"
             attrs="{ 'data-choice-index': choice_index }"
         >
-            <t t-if="this.props.slots and this.props.slots.choice" t-slot="choice" data="choice"/>
+            <t t-if="this.props.slots and this.props.slots.choice" t-call-slot="choice" data="choice"/>
             <t t-else="">
                 <div t-out="choice.label" />
             </t>

@@ -8,9 +8,9 @@
             onUploaded.bind="this.onFileUploaded"
             onUploadComplete.bind="this.onUploadComplete">
             <t t-set-slot="toggler">
-                <t t-slot="toggler"/>
+                <t t-call-slot="toggler"/>
             </t>
-            <t t-slot="default"/>
+            <t t-call-slot="default"/>
         </FileUploader>
     </t>
 
