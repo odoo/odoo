@@ -479,7 +479,7 @@ class HrAttendanceOvertimeRule(models.Model):
                 for (start, stop, attendance) in intersetion_interval_for_attendance:
                     overtime_interval_list[attendance].append((start, stop, rules))
                 for attendance, attendance_intervals_list in overtime_interval_list.items():
-                    overtime_by_employee_by_attendance[employee][attendance] |= Intervals(attendance_intervals_list)
+                    overtime_by_employee_by_attendance[employee][attendance].extend(attendance_intervals_list)
 
         def _build_day_rule_intervals(employees, rule, intervals):
             timing_intervals_by_employee = defaultdict(Intervals)
@@ -507,7 +507,7 @@ class HrAttendanceOvertimeRule(models.Model):
             schedules_intervals_by_employee
         )
         attendances_intervals_by_employee = defaultdict()
-        overtime_by_employee_by_attendance = defaultdict(lambda: defaultdict(Intervals))
+        overtime_by_employee_by_attendance = defaultdict(lambda: defaultdict(list))
 
         attendances_by_employee = attendances.grouped('employee_id')
         for employee, emp_attendance in attendances_by_employee.items():
