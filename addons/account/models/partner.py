@@ -1025,7 +1025,7 @@ class ResPartner(models.Model):
                         full_domain = Domain.AND([static_domain, domain])
                         partner = self.search(
                             full_domain,
-                            order='company_id, parent_id DESC, id DESC',
+                            order='is_company DESC, supplier_rank DESC, company_id, parent_id DESC, id DESC',
                             limit=1,
                         )
                     elif search_method:
