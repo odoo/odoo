@@ -1,4 +1,3 @@
-import { DIMENSIONS } from "../hooks";
 import { Plugin } from "../plugin";
 import { registry } from "@web/core/registry";
 import {
@@ -8,9 +7,6 @@ import {
     renderEmailNode,
     TextNodeLayout,
 } from "./render_models";
-import { paragraphRelatedElements } from "@html_editor/utils/dom_info";
-
-const { DESKTOP, MOBILE } = DIMENSIONS;
 
 /**
  * This plugin handles 4 conversion phases, leading to the ability to render the email html:
@@ -28,19 +24,10 @@ const { DESKTOP, MOBILE } = DIMENSIONS;
  */
 export class RenderPlugin extends Plugin {
     static id = "render";
-    static dependencies = [
-        "filterContent",
-        "measurementSnapshot",
-        "referenceNode",
-        "rules",
-        "responsiveBlock",
-        "style",
-    ];
+    static dependencies = ["measurementSnapshot", "referenceNode", "rules"];
     resources = {
         on_build_render_tree_handlers: this.buildRenderTree.bind(this),
         on_render_email_template_handlers: this.renderEmailHtml.bind(this),
-        on_parse_layout_with_dimensions_handlers: this.cacheSpacingStyleInfo.bind(this),
-        refine_layout_processors: this.applyDefaultSpacing.bind(this),
     };
 
     setup() {
@@ -214,54 +201,20 @@ export class RenderPlugin extends Plugin {
             style: this.getStyleInfo(referenceNode),
         });
         const analysis = new Analysis({
-            facts: this.getSpacingFacts(referenceNode),
+            facts: this.getReferenceNodeFacts(referenceNode),
             parsingFacts: { canParentMerge: true, canMerge: true },
         });
         return { layout, analysis };
     }
 
-    getSpacingFacts(referenceNode) {
-        return {
-            desktopSpacingStyleInfo: this.getSpacingStyleInfo(referenceNode, DESKTOP),
-            desktopBlock: this.getLayoutBlock(referenceNode, DESKTOP),
-            mobileSpacingStyleInfo: this.getSpacingStyleInfo(referenceNode, MOBILE),
-            mobileBlock: this.getLayoutBlock(referenceNode, MOBILE),
-        };
-    }
-
-    applyDefaultSpacing(layout, { emailNode }) {
-        if (
-            layout.constructor !== ElementLayout ||
-            !emailNode.analysis.facts.desktopBlock ||
-            paragraphRelatedElements.includes(layout.tag)
-        ) {
-            return;
-        }
-        // how to apply the related table the best way on the layout?
-        // include a container slot and a childContainer slot in LayoutModel, so that we can
-        // still access the main info easily, but we also have easy access to padding/margin structures?
-
-        // padding handling
-
-        // margin handling
+    getReferenceNodeFacts(referenceNode) {
+        return this.processThrough("reference_node_facts_processors", {}, { referenceNode });
     }
 
     getTagName(referenceNode) {
         return this.processThrough("reference_node_tag_name_processors", referenceNode.tagName, {
             referenceNode,
         });
-    }
-
-    cacheSpacingStyleInfo() {
-        const treeWalker = this.createReferenceTreeWalker((node) =>
-            node.nodeType === Node.ELEMENT_NODE
-                ? NodeFilter.FILTER_ACCEPT
-                : NodeFilter.FILTER_REJECT
-        );
-        let element = treeWalker.root;
-        do {
-            this.getRawStyleInfo(element);
-        } while ((element = treeWalker.nextNode()));
     }
 
     /**
