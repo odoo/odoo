@@ -34,6 +34,7 @@ export class PropertiesField extends Component {
         },
         editMode: { type: Boolean, optional: true },
     };
+    static hasCreatedProperty = false;
 
     setup() {
         this.notification = useService("notification");
@@ -85,7 +86,8 @@ export class PropertiesField extends Component {
                 const isInEditMode = canChangeDefinition && !this.props.readonly;
                 this.state.canChangeDefinition = !!canChangeDefinition;
                 this.state.isInEditMode = isInEditMode;
-                if (isInEditMode && this.propertiesList.length === 0) {
+                if (isInEditMode && this.propertiesList.length === 0 && !PropertiesField.hasCreatedProperty) {
+                    PropertiesField.hasCreatedProperty = true;
                     this.onPropertyCreate();
                 }
             });
