@@ -413,8 +413,7 @@ test("'New Meeting' in mobile", async () => {
     await contains(".o-discuss-ChannelMember:text('Partner 2')");
 });
 
-test.tags("owl3");
-test.skip("Dropzones below fullscreen meeting view are disabled", async () => {
+test("Dropzones below fullscreen meeting view are disabled", async () => {
     const popoutIframe = document.createElement("iframe");
     const outsideArea = document.createElement("div");
     getFixture().appendChild(outsideArea);
