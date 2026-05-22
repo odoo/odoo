@@ -4,6 +4,7 @@ import uuid
 
 from odoo import fields, models, api
 from odoo.fields import Domain
+from odoo.tools import SQL
 from odoo.tools.urls import urljoin as url_join
 
 
@@ -29,7 +30,7 @@ class ResCompany(models.Model):
         ('back', 'Back Camera'),
     ], string='Barcode Source', default='front')
     attendance_kiosk_delay = fields.Integer(default=10)
-    attendance_kiosk_key = fields.Char(default=lambda s: uuid.uuid4().hex, copy=False, groups='hr_attendance.group_hr_attendance_user')
+    attendance_kiosk_key = fields.Char(default=lambda s: uuid.uuid4().hex, copy=False, groups='hr_attendance.group_hr_attendance_user', init_column='_auto_init_attendance_kiosk_key')
     attendance_kiosk_url = fields.Char(compute="_compute_attendance_kiosk_url")
     attendance_kiosk_use_pin = fields.Boolean(string='Employee PIN Identification')
     attendance_from_systray = fields.Boolean(string='Attendance From Systray', default=True)
@@ -59,25 +60,13 @@ class ResCompany(models.Model):
     # ---------------------------------------------------------
     # ORM Overrides
     # ---------------------------------------------------------
-    def _init_column(self, column_name):
-        """ Initialize the value of the given column for existing rows.
-            Overridden here because we need to generate different access tokens
-            and by default _init_column calls the default method once and applies
-            it for every record.
-        """
-        if column_name != 'attendance_kiosk_key':
-            super(ResCompany, self)._init_column(column_name)
-        else:
-            self.env.cr.execute("SELECT id FROM %s WHERE attendance_kiosk_key IS NULL" % self._table)
-            attendance_ids = self.env.cr.dictfetchall()
-            values_args = [(attendance_id['id'], self._default_company_token()) for attendance_id in attendance_ids]
-            query = """
-                UPDATE {table}
-                SET attendance_kiosk_key = vals.token
-                FROM (VALUES %s) AS vals(id, token)
-                WHERE {table}.id = vals.id
-            """.format(table=self._table)
-            self.env.cr.execute_values(query, values_args)
+    def _auto_init_attendance_kiosk_key(self):
+        """ Generate different access tokens. """
+        self.env.execute_query(SQL("""
+            UPDATE %s
+            SET attendance_kiosk_key = gen_random_uuid()
+            WHERE attendance_kiosk_key IS NULL
+        """, SQL.identifier(self._table)))
 
     def write(self, vals):
         search_domain = Domain.FALSE  # Overtime to generate

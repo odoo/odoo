@@ -95,7 +95,7 @@ class SlideChannel(models.Model):
         copy=False,
     )
     promoted_slide_id = fields.Many2one('slide.slide', string='Promoted Slide', copy=False)
-    access_token = fields.Char("Security Token", copy=False, default=_default_access_token)
+    access_token = fields.Char("Security Token", copy=False, default=_default_access_token, init_column='_init_access_token')
     nbr_document = fields.Integer('Documents', compute='_compute_slides_statistics', store=True)
     nbr_video = fields.Integer('Videos', compute='_compute_slides_statistics', store=True)
     nbr_infographic = fields.Integer('Infographics', compute='_compute_slides_statistics', store=True)
@@ -473,21 +473,14 @@ class SlideChannel(models.Model):
     # ORM Overrides
     # ---------------------------------------------------------
 
-    def _init_column(self, column_name):
-        """ Initialize the value of the given column for existing rows.
-            Overridden here because we need to generate different access tokens
-            and by default _init_column calls the default method once and applies
-            it for every record.
-        """
-        if column_name != 'access_token':
-            super()._init_column(column_name)
-        else:
-            query = """
-                UPDATE %(table_name)s
-                SET access_token = md5(md5(random()::varchar || id::varchar) || clock_timestamp()::varchar)::uuid::varchar
-                WHERE access_token IS NULL
-            """ % {'table_name': self._table}
-            self.env.cr.execute(query)
+    def _init_access_token(self):
+        """ Generate different access tokens for all records. """
+        query = """
+            UPDATE %(table_name)s
+            SET access_token = md5(md5(random()::varchar || id::varchar) || clock_timestamp()::varchar)::uuid::varchar
+            WHERE access_token IS NULL
+        """ % {'table_name': self._table}
+        self.env.cr.execute(query)
 
     def _populate_description_short(self, vals):
         """ Populate the empty ``vals['description_short']`` with the non-empty ``vals['description']`` for the ``self``

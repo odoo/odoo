@@ -4,6 +4,7 @@ import logging
 
 from odoo import api, fields, models
 from odoo.addons.product.models.product_template import PRICE_CONTEXT_KEYS
+from odoo.tools import SQL
 
 _logger = logging.getLogger(__name__)
 
@@ -19,7 +20,9 @@ class EventTypeTicket(models.Model):
     # product
     product_id = fields.Many2one(
         'product.product', string='Product', required=True, index=True,
-        domain=[("service_tracking", "=", "event")], default=_default_product_id)
+        domain=[("service_tracking", "=", "event")], default=_default_product_id,
+        init_column='_auto_init_product_id',
+    )
     currency_id = fields.Many2one(related="product_id.currency_id", string="Currency")
     price = fields.Float(
         string='Ticket Price', compute='_compute_price',
@@ -74,39 +77,26 @@ class EventTypeTicket(models.Model):
                 total_additional_products_price_reduce += (1.0 - contextual_discount) * product.lst_price
             ticket.total_price_reduce = ticket.price_reduce + total_additional_products_price_reduce
 
-    def _init_column(self, column_name):
-        if column_name != "product_id":
-            return super()._init_column(column_name)
-
-        # fetch void columns
-        self.env.cr.execute("SELECT id FROM %s WHERE product_id IS NULL" % self._table)
-        ticket_type_ids = self.env.cr.fetchall()
-        if not ticket_type_ids:
-            return
-
-        # update existing columns
-        _logger.debug("Table '%s': setting default value of new column %s to unique values for each row",
-                      self._table, column_name)
-        default_event_product = self.env.ref('event_product.product_product_event', raise_if_not_found=False)
-        if default_event_product:
-            product_id = default_event_product.id
-        else:
-            product_id = self.env['product.product'].create({
+    def _auto_init_product_id(self):
+        product = self._default_product_id()
+        if not product:
+            # need to create it during installation (data files not yet loaded)
+            product = self.env['product.product'].create({
                 'name': 'Generic Registration Product',
                 'list_price': 0,
                 'standard_price': 0,
                 'type': 'service',
-            }).id
+            })
             self.env['ir.model.data'].create({
                 'name': 'product_product_event',
                 'module': 'event_product',
                 'model': 'product.product',
-                'res_id': product_id,
+                'res_id': product.id,
             })
-        self.env.cr._obj.execute(
-            f'UPDATE {self._table} SET product_id = %s WHERE id IN %s;',
-            (product_id, tuple(ticket_type_ids))
-        )
+        self.env.execute_query(SQL(
+            "UPDATE %s SET product_id = %s WHERE product_id IS NULL",
+            SQL.identifier(self._table), product.id
+        ))
 
     @api.model
     def _get_event_ticket_fields_whitelist(self):

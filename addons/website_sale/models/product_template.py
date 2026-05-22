@@ -131,6 +131,7 @@ class ProductTemplate(models.Model):
         string="Website Sequence",
         help="Determine the display order in the Website E-commerce",
         default=_default_website_sequence,
+        init_column='_auto_init_website_sequence',
         copy=False,
         index=True,
     )
@@ -1125,30 +1126,27 @@ class ProductTemplate(models.Model):
             return "image_512"
         return "image_1024"
 
-    def _init_column(self, column_name):
+    def _auto_init_website_sequence(self):
         # to avoid generating a single default website_sequence when installing the module,
         # we need to set the default row by row for this column
-        if column_name == "website_sequence":
-            _logger.debug(
-                "Table '%s': setting default value of new column %s to unique values for each row",
-                self._table,
-                column_name,
-            )
-            self.env.cr.execute("SELECT id FROM %s WHERE website_sequence IS NULL" % self._table)
-            prod_tmpl_ids = self.env.cr.dictfetchall()
-            max_seq = self._default_website_sequence()
-            query = f"""
-                UPDATE {self._table}
-                SET website_sequence = p.web_seq
-                FROM (VALUES %s) AS p(p_id, web_seq)
-                WHERE id = p.p_id
-            """
-            values_args = [
-                (prod_tmpl["id"], max_seq + i * 5) for i, prod_tmpl in enumerate(prod_tmpl_ids)
-            ]
-            self.env.cr.execute_values(query, values_args)
-        else:
-            super()._init_column(column_name)
+        _logger.debug(
+            "Table '%s': setting default value of new column %s to unique values for each row",
+            self._table,
+            'website_sequence',
+        )
+        self.env.cr.execute("SELECT id FROM %s WHERE website_sequence IS NULL" % self._table)
+        prod_tmpl_ids = self.env.cr.dictfetchall()
+        max_seq = self._default_website_sequence()
+        query = f"""
+            UPDATE {self._table}
+            SET website_sequence = p.web_seq
+            FROM (VALUES %s) AS p(p_id, web_seq)
+            WHERE id = p.p_id
+        """
+        values_args = [
+            (prod_tmpl["id"], max_seq + i * 5) for i, prod_tmpl in enumerate(prod_tmpl_ids)
+        ]
+        self.env.cr.execute_values(query, values_args)
 
     def set_sequence_top(self):
         min_sequence = self.sudo().search([], order="website_sequence ASC", limit=1)
