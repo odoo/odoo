@@ -1,4 +1,3 @@
-import { reactive } from "@web/owl2/utils";
 import { toRawValue } from "@mail/utils/common/local_storage";
 import { defineMailModels, start as start2 } from "@mail/../tests/mail_test_helpers";
 import { after, afterEach, beforeEach, describe, expect, test, tick } from "@odoo/hoot";
@@ -561,7 +560,7 @@ test("record list sort should be manually observable", async () => {
     ]);
     function sortMessages() {
         // minimal access through observed variables to reduce unexpected observing
-        observedMessages.sort((m1, m2) => {
+        thread.messages.sort((m1, m2) => {
             if (m1.body < m2.body) {
                 return -1;
             }
@@ -572,7 +571,6 @@ test("record list sort should be manually observable", async () => {
         });
         expect.step(`sortMessages`);
     }
-    const observedMessages = reactive(thread.messages);
     expect(`${thread.messages.map((m) => m.id)}`).toBe("1,2");
     const disposeFn = immediateEffect(() => {
         sortMessages();
@@ -698,9 +696,8 @@ test("lazy compute should re-compute while they are observed", async () => {
     }).register(localRegistry);
     const store = await start();
     const channel = store.Channel.insert(1);
-    const reactiveChannel = reactive(channel);
     function render() {
-        expect.step(`render ${reactiveChannel.multiplicity}`);
+        expect.step(`render ${channel.multiplicity}`);
     }
     const disposeFn1 = immediateEffect(() => {
         render();
@@ -753,9 +750,8 @@ test("lazy sort should re-sort while they are observed", async () => {
     thread.messages.push({ id: 1, sequence: 1 }, { id: 2, sequence: 2 });
     expect(`${thread.messages.map((m) => m.id)}`).toBe("1,2");
     function render() {
-        expect.step(`render ${reactiveChannel.messages.map((m) => m.id)}`);
+        expect.step(`render ${thread.messages.map((m) => m.id)}`);
     }
-    const reactiveChannel = reactive(thread);
     const disposeFn1 = immediateEffect(() => {
         render();
     });
@@ -807,9 +803,8 @@ test("sort works on fields.Attr()", async () => {
     thread.messages.push({ id: 1, sequence: 1 }, { id: 2, sequence: 2 });
     expect(`${thread.messages.map((m) => m.id)}`).toBe("1,2");
     function render() {
-        expect.step(`render ${reactiveChannel.messages.map((m) => m.id)}`);
+        expect.step(`render ${thread.messages.map((m) => m.id)}`);
     }
-    const reactiveChannel = reactive(thread);
     const disposeFn1 = immediateEffect(() => {
         render();
     });
@@ -847,10 +842,9 @@ test("sort works on fields.Attr()", async () => {
 test("store updates can be observed", async () => {
     const store = await start();
     function onUpdate() {
-        expect.step(`abc:${reactiveStore.abc}`);
+        expect.step(`abc:${store.abc}`);
     }
     const rawStore = toRaw(store)._raw;
-    const reactiveStore = reactive(store);
     const disposeFn = immediateEffect(() => {
         onUpdate();
     });
