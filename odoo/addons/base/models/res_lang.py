@@ -326,9 +326,13 @@ class Lang(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         self.env.registry.clear_cache()
+
+        default_url_codes = {vals['iso_code'] for vals in vals_list if not vals.get('url_code') and vals.get('iso_code')}
+        conflicting_url_codes = set(self.search_fetch([('url_code', 'in', list(default_url_codes))], ['url_code']).mapped('url_code'))
         for vals in vals_list:
             if not vals.get('url_code'):
-                vals['url_code'] = vals.get('iso_code') or vals['code']
+                can_use_iso = vals.get('iso_code') and vals['iso_code'] not in conflicting_url_codes
+                vals['url_code'] = vals['iso_code'] if can_use_iso else vals['code']
         return super(Lang, self).create(vals_list)
 
     def write(self, vals):
