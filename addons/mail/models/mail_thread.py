@@ -387,7 +387,8 @@ class MailThread(models.AbstractModel):
                 bodies = dict(
                     (thread.id, thread._creation_message())
                     for thread in threads_no_subtype)
-                threads_no_subtype._message_log_batch(bodies=bodies)
+                # sudo: mail.message right not granted while create is possible (e.g. public users)
+                threads_no_subtype.sudo()._message_log_batch(bodies=bodies)
 
         # post track template if a tracked field changed
         threads._track_discard()
