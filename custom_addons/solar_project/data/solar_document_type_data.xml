@@ -1,3 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
-<odoo>
+<odoo noupdate="1">
+  <record id="solar_dtype_bill_electricity" model="solar.document.type">
+    <field name="name">Electricity Bill</field>
+    <field name="code">bill_electricity</field>
+    <field name="sequence">10</field>
+    <field name="description">Monthly or annual electricity consumption bill</field>
+  </record>
+
+  <record id="solar_dtype_roof_measurement" model="solar.document.type">
+    <field name="name">Roof Measurement Report</field>
+    <field name="code">roof_measurement</field>
+    <field name="sequence">20</field>
+  </record>
+
+  <record id="solar_dtype_site_plan" model="solar.document.type">
+    <field name="name">Site Plan / BTI Scheme</field>
+    <field name="code">site_plan_bti</field>
+    <field name="sequence">30</field>
+  </record>
+
+  <record id="solar_dtype_topographic" model="solar.document.type">
+    <field name="name">Topographic Survey</field>
+    <field name="code">topographic_survey</field>
+    <field name="sequence">40</field>
+  </record>
+
+  <record id="solar_dtype_client_brief" model="solar.document.type">
+    <field name="name">Client Brief / Technical Requirements</field>
+    <field name="code">client_brief</field>
+    <field name="sequence">50</field>
+  </record>
+
+  <record id="solar_dtype_equipment_spec" model="solar.document.type">
+    <field name="name">Equipment Specification</field>
+    <field name="code">equipment_spec</field>
+    <field name="sequence">60</field>
+  </record>
+
+  <record id="solar_dtype_single_line_diagram" model="solar.document.type">
+    <field name="name">Single-Line Electrical Diagram</field>
+    <field name="code">single_line_diagram</field>
+    <field name="sequence">70</field>
+  </record>
+
+  <record id="solar_dtype_permit" model="solar.document.type">
+    <field name="name">Building / Connection Permit</field>
+    <field name="code">permit</field>
+    <field name="sequence">80</field>
+  </record>
+
+  <record id="solar_dtype_handover_act" model="solar.document.type">
+    <field name="name">Handover Act</field>
+    <field name="code">handover_act</field>
+    <field name="sequence">90</field>
+  </record>
+
+  <record id="solar_dtype_commissioning_report" model="solar.document.type">
+    <field name="name">Commissioning Test Report</field>
+    <field name="code">commissioning_report</field>
+    <field name="sequence">100</field>
+  </record>
+
+  <record id="solar_dtype_structural_calculation" model="solar.document.type">
+    <field name="name">Structural Calculation</field>
+    <field name="code">structural_calculation</field>
+    <field name="sequence">110</field>
+  </record>
+
+  <record id="solar_dtype_grid_connection_agreement" model="solar.document.type">
+    <field name="name">Grid Connection Agreement</field>
+    <field name="code">grid_connection_agreement</field>
+    <field name="sequence">120</field>
+  </record>
 </odoo>

@@ -18,11 +18,11 @@ class TestSolarDocumentType(TransactionCase):
     def test_document_type_created(self):
         doc_type = self.env["solar.document.type"].create(
             {
-                "name": "Electricity Bill",
-                "code": "bill_electricity",
+                "name": "Test Doc Type",
+                "code": "test_doc_type_a",
             },
         )
-        self.assertEqual(doc_type.code, "bill_electricity")
+        self.assertEqual(doc_type.code, "test_doc_type_a")
 
     def test_document_type_code_unique(self):
         self.env["solar.document.type"].create({"name": "T1", "code": "unique_code"})
@@ -69,7 +69,7 @@ class TestSolarDocument(TransactionCase):
         super().setUpClass()
         cls.project = cls.env["project.project"].create({"name": "Doc Test Project"})
         cls.doc_type = cls.env["solar.document.type"].create(
-            {"name": "Electricity Bill", "code": "bill_electricity"},
+            {"name": "Test Doc Type", "code": "test_doc_type_for_docs"},
         )
 
     def test_document_creation(self):
@@ -149,3 +149,21 @@ class TestSolarChecklist(TransactionCase):
         )
         item.is_done = True
         self.assertTrue(item.is_done)
+
+
+@tagged("solar_project", "post_install", "-at_install")
+class TestSolarDocumentTypeData(TransactionCase):
+    def test_demo_types_loaded(self):
+        bill_type = self.env.ref(
+            "solar_project.solar_dtype_bill_electricity",
+            raise_if_not_found=False,
+        )
+        self.assertIsNotNone(
+            bill_type,
+            "Demo document type solar_dtype_bill_electricity not loaded",
+        )
+        self.assertEqual(bill_type.code, "bill_electricity")
+
+    def test_at_least_10_types(self):
+        types = self.env["solar.document.type"].search([])
+        self.assertGreaterEqual(len(types), 10)
