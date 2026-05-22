@@ -124,3 +124,28 @@ class TestSolarDocument(TransactionCase):
                 },
             )
         self.assertEqual(self.project.solar_document_count, 3)
+
+
+@tagged("solar_project", "post_install", "-at_install")
+class TestSolarChecklist(TransactionCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.project = cls.env["project.project"].create({"name": "Checklist Project"})
+        cls.task = cls.env["project.task"].create(
+            {"name": "Site Survey", "project_id": cls.project.id},
+        )
+
+    def test_checklist_item_created(self):
+        item = self.env["solar.checklist.item"].create(
+            {"name": "Measure roof pitch", "task_id": self.task.id, "sequence": 1},
+        )
+        self.assertFalse(item.is_done)
+        self.assertEqual(item.task_id, self.task)
+
+    def test_checklist_completion(self):
+        item = self.env["solar.checklist.item"].create(
+            {"name": "Take photo of meter", "task_id": self.task.id},
+        )
+        item.is_done = True
+        self.assertTrue(item.is_done)
