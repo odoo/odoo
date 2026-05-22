@@ -408,6 +408,23 @@ class TestChannelInternals(MailCommon, HttpCase):
             "Last message id should stay the same after mark channel as seen with an older message",
         )
 
+    @users("employee")
+    def test_channel_unpin_marks_as_read(self):
+        pids = (self.partner_employee | self.user_admin.partner_id).ids
+        chat = self.env["discuss.channel"].with_user(self.user_admin)._get_or_create_chat(pids)
+        chat = chat.with_user(self.env.user)
+        chat.channel_pin(True)
+        msg = self._add_messages(chat, "Unread body", author=self.user_admin.partner_id)
+        self_member = chat.channel_member_ids.filtered(lambda m: m.partner_id == self.partner_employee)
+        self.assertEqual(self_member.message_unread_counter, 1)
+
+        chat.channel_pin(False)
+
+        self.assertEqual(self_member.message_unread_counter, 0)
+        self.assertEqual(self_member.seen_message_id, msg)
+        self.assertEqual(self_member.new_message_separator, msg.id + 1)
+        self.assertFalse(self_member.is_pinned)
+
     @users('employee')
     def test_set_last_seen_message_should_always_send_notification(self):
         chat = self.env['discuss.channel'].with_user(self.user_admin)._get_or_create_chat((self.partner_employee | self.user_admin.partner_id).ids)
