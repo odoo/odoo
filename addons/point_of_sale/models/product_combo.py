@@ -25,15 +25,12 @@ class ProductCombo(models.Model):
     def _onchange_is_upsell(self):
         for record in self:
             if record.is_upsell:
-                record.qty_free = 0
                 record.upsell_warning = _(
                         "⚠️ This item is configured as Upsell. "
                         "Go to Point of Sale to disable Upsell if you want to modify 'Includes'."
                     )
             else:
                 record.upsell_warning = False
-                if record.qty_free == 0:
-                    record.qty_free = 1
 
     @api.constrains('qty_max')
     def _check_qty_max(self):
