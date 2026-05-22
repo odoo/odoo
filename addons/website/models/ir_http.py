@@ -220,7 +220,7 @@ class IrHttp(models.AbstractModel):
         for record in args.values():
             if isinstance(record, models.BaseModel) and 'website_id' in record._fields:
                 try:
-                    if record.website_id.id != website_id:
+                    if record.website_id and record.website_id.id != website_id:
                         raise werkzeug.exceptions.NotFound()
                 except AccessError:
                     # record.website_id might not be readable as

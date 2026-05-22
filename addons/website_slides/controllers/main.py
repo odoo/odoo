@@ -991,7 +991,7 @@ class WebsiteSlides(WebsiteProfile):
     @http.route('/slides/slide/<model("slide.slide"):slide>', type='http', auth="public",
                 website=True, sitemap=sitemap_slide_view, handle_params_access_error=handle_wslide_error)
     def slide_view(self, slide, **kwargs):
-        if slide.channel_id.website_id.id != self.env.context['website_id'] or not slide.active:
+        if slide.channel_id.website_id and slide.channel_id.website_id.id != self.env.context['website_id'] or not slide.active:
             raise werkzeug.exceptions.NotFound()
         # redirection to channel's homepage for category slides
         if slide.is_category:
