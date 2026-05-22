@@ -86,7 +86,7 @@ class DiscussChannelWebclientController(WebclientController):
             return
         domain = Domain("channel_id", "=", channel.id)
         if known_member_ids:
-            domain &= Domain("id", "in", known_member_ids)
+            domain &= Domain("id", "not in", known_member_ids)
         if search_term:
             domain &= (
                 Domain("partner_id.name", "ilike", search_term)
