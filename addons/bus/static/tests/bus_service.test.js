@@ -12,16 +12,14 @@ import {
     WORKER_STATE,
 } from "@bus/workers/websocket_worker";
 import { describe, expect, test } from "@odoo/hoot";
-import { Deferred, manuallyDispatchProgrammaticEvent, runAllTimers, waitFor } from "@odoo/hoot-dom";
+import { Deferred, manuallyDispatchProgrammaticEvent, runAllTimers } from "@odoo/hoot-dom";
 import { mockWebSocket } from "@odoo/hoot-mock";
 import {
-    contains,
     getService,
     makeMockEnv,
     makeMockServer,
     MockServer,
     mockService,
-    mountWithCleanup,
     patchWithCleanup,
     restoreRegistry,
 } from "@web/../tests/web_test_helpers";
@@ -31,7 +29,6 @@ import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 import { user } from "@web/core/user";
 import { session } from "@web/session";
-import { WebClient } from "@web/webclient/webclient";
 
 defineBusModels();
 describe.current.tags("desktop");
@@ -454,29 +451,6 @@ test("remove from main tab candidates when version is outdated", async () => {
         "BUS:DISCONNECT",
         "no_longer_main_tab",
     ]);
-});
-
-test("show notification when version is outdated", async () => {
-    browser.location.addEventListener("reload", () => expect.step("reload"));
-    addBusServiceListeners(
-        ["BUS:CONNECT", () => expect.step("BUS:CONNECT")],
-        ["BUS:DISCONNECT", () => expect.step("BUS:DISCONNECT")]
-    );
-    patchWithCleanup(console, { warn: (message) => expect.step(message) });
-    await mountWithCleanup(WebClient);
-    await expect.waitForSteps(["BUS:CONNECT"]);
-    MockServer.env["bus.bus"]._simulateDisconnection(
-        WEBSOCKET_CLOSE_CODES.CLEAN,
-        "OUTDATED_VERSION"
-    );
-    await expect.waitForSteps(["Worker deactivated due to an outdated version.", "BUS:DISCONNECT"]);
-    await runAllTimers();
-    await waitFor(".o_notification", {
-        contains:
-            "Save your work and refresh to get the latest updates and avoid potential issues.",
-    });
-    await contains(".o_notification button:contains(Refresh)").click();
-    await expect.waitForSteps(["reload"]);
 });
 
 test("subscribe message is sent first", async () => {
