@@ -52,6 +52,7 @@ export class DynamicFieldPlugin extends Plugin {
             withSequence(20, {
                 categoryId: "dynamic_field_tools",
                 commandId: "insertField",
+                keywords: [_t("dynamic placeholder")],
             }),
         ],
         selectionchange_handlers: withSequence(9, this.onSelectionChanged.bind(this)),
