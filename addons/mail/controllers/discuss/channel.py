@@ -78,6 +78,14 @@ class DiscussChannelWebclientController(WebclientController):
             if member := request.env["discuss.channel.member"].search_fetch(
                 [("channel_id", "=", params["channel_id"]), ("is_self", "=", True)],
             ):
+                if not params["pinned"]:
+                    last_message = request.env["mail.message"].search(
+                        [("model", "=", "discuss.channel"), ("res_id", "=", member.channel_id.id)],
+                        order="id DESC",
+                        limit=1,
+                    )
+                    if last_message:
+                        member._mark_as_read(last_message.id)
                 member.unpin_dt = False if params["pinned"] else fields.Datetime.now()
             self._add_has_unpinned_channels_to_store(store)
         if name == "/discuss/get_or_create_chat":

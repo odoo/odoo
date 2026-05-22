@@ -244,6 +244,16 @@ export class DiscussChannelMember extends models.ServerModel {
 
         const members = this.browse(ids);
         for (const member of members) {
+            if (member && !pinned) {
+                const messages = this.env["mail.message"]._filter([
+                    ["model", "=", "discuss.channel"],
+                    ["res_id", "=", member.channel_id],
+                ]);
+                const lastMessageId = Math.max(0, ...messages.map(({ id }) => id));
+                if (lastMessageId) {
+                    DiscussChannelMember._mark_as_read([member.id], lastMessageId);
+                }
+            }
             if (member && member.is_pinned !== pinned) {
                 DiscussChannelMember.write([member.id], {
                     unpin_dt: pinned ? false : serializeDateTime(today()),
