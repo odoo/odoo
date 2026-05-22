@@ -12,8 +12,8 @@
                 <div class="alert alert-info" role="alert" invisible="state != 'draft' or l10n_tr_nilvera_send_status != 'error' or not l10n_tr_nilvera_uuid">
                     To preserve accounting integrity and comply with legal requirements, invoices cannot be reused once an error occurs. Please create a new invoice to continue.
                 </div>
-                <div invisible="l10n_tr_gib_invoice_scenario != 'TICARIFATURA' or l10n_tr_nilvera_send_status not in ('succeed', 'commercial_approved', 'commercial_answered_automatically', 'commercial_rejected')">
-                    <div class="alert alert-info w-100 d-flex align-items-center gap-1" role="alert" invisible="l10n_tr_nilvera_send_status != 'succeed'">
+                <div invisible="l10n_tr_gib_invoice_scenario != 'TICARIFATURA' or l10n_tr_nilvera_send_status != 'waiting'">
+                    <div class="alert alert-info w-100 d-flex align-items-center gap-1" role="alert" invisible="l10n_tr_nilvera_send_status != 'waiting'">
                         <span>Pending: Awaiting response from </span>
                         <field invisible="move_type != 'out_invoice' or not partner_id" name="partner_id" readonly="True"/>
                         <span invisible="move_type != 'out_invoice' or partner_id">Customer</span>
@@ -60,6 +60,7 @@
                      class="d-flex gap-2 align-items-baseline"
                      invisible="country_code != 'TR' or state == 'draft' or move_type not in ['out_invoice', 'out_refund']">
                     <field name="l10n_tr_nilvera_send_status" class="oe_inline"/>
+                     <!-- widget="l10n_tr_nilvera_send_status" -->
                     <button
                         name="l10n_tr_nilvera_fetch_move_status"
                         type="object"
@@ -67,16 +68,16 @@
                         invisible="l10n_tr_nilvera_send_status not in ['sent', 'waiting']"
                         title="Synchronize with Nilvera"
                         icon="fa-refresh"/>
-                    </div>
                     <button
                         name="l10n_tr_action_fetch_ticarifatura_response"
                         type="object"
                         class="o_icon_button text-primary"
-                        invisible="move_type != 'out_invoice' or l10n_tr_nilvera_send_status != 'succeed' or l10n_tr_gib_invoice_scenario != 'TICARIFATURA'"
+                        invisible="l10n_tr_nilvera_send_status != 'succeed' or l10n_tr_gib_invoice_scenario != 'TICARIFATURA'"
                         title="Synchronize response"
                         icon="fa-refresh"/>
+                </div>
                 <field name="l10n_tr_is_export_invoice"
-                       invisible="l10n_tr_nilvera_customer_status not in ('einvoice', 'earchive')"
+                       invisible="l10n_tr_nilvera_customer_status not in ('einvoice', 'earchive') or (state == 'posted' and l10n_tr_nilvera_send_status != 'not_sent' and not l10n_tr_is_export_invoice)"
                        readonly="state in ['cancel', 'posted']"/>
                 <div class="o_td_label"
                      invisible="l10n_tr_is_export_invoice
@@ -96,7 +97,7 @@
                     <field name="l10n_tr_gib_invoice_scenario"
                            invisible="l10n_tr_nilvera_customer_status != 'einvoice'"
                            readonly="state in ['cancel', 'posted']"/>
-                    <span class="o_form_label mx-3" invisible="l10n_tr_nilvera_customer_status != 'einvoice'">is</span>
+                    <label class="o_form_label mx-3" invisible="l10n_tr_nilvera_customer_status != 'einvoice'" for="l10n_tr_gib_invoice_type" string="is"/>
                     <field name="l10n_tr_gib_invoice_type"
                            required="l10n_tr_nilvera_customer_status == 'einvoice' and l10n_tr_gib_invoice_scenario"
                            invisible="l10n_tr_nilvera_customer_status not in ['einvoice', 'earchive']"
@@ -128,9 +129,9 @@
             </xpath>
             <xpath expr="//header/field[@name='state']" position="before">
                 <button name="l10n_tr_nilvera_get_pdf"
-                        string="Fetch Nilvera PDF"
+                        string="Fetch Nilvera e-invoice PDF"
                         type="object"
-                        invisible="move_type not in ['out_invoice', 'out_refund'] or l10n_tr_nilvera_send_status != 'succeed'"/>
+                        invisible="move_type not in ['out_invoice', 'out_refund'] or l10n_tr_nilvera_send_status != 'succeed' or l10n_tr_nilvera_pdf_file"/>
             </xpath>
             <xpath expr="//group[@name='sale_info_group']/field[@name='ref']" position="attributes">
                 <attribute name="required">country_code == 'TR' and not reversed_entry_id and move_type == 'out_refund'</attribute>
@@ -153,6 +154,19 @@
         </field>
     </record>
 
+    <record id="l10n_tr_nilvera_einvoice_action_print_einvoice_pdf" model="ir.actions.server">
+        <field name="name">e-Invoice PDF</field>
+        <field name="model_id" ref="account.model_account_move"/>
+        <field name="binding_model_id" ref="account.model_account_move"/>
+        <field name="binding_type">report</field>
+        <field name="binding_view_types">form,list</field>
+        <field name="state">code</field>
+        <field name="code">
+if records:
+    action = records.action_l10n_tr_print_einvoice_pdf()
+        </field>
+    </record>
+
     <record id="account_nilvera_view_account_invoice_filter" model="ir.ui.view">
         <field name="name">account.nilvera.invoice.select</field>
         <field name="model">account.move</field>
@@ -160,6 +174,7 @@
         <field name="arch" type="xml">
             <xpath expr="//filter[@name='accounting_date']" position="after">
                 <filter string="Nilvera Status" name="nilvera_status" context="{'group_by': 'l10n_tr_nilvera_send_status'}"/>
+                <filter string="Invoice Scenarios" name="invoice_scenarios" context="{'group_by': 'l10n_tr_invoice_scenario_group'}"/>
             </xpath>
         </field>
     </record>
@@ -170,7 +185,7 @@
         <field name="inherit_id" ref="account.view_invoice_tree"/>
         <field name="arch" type="xml">
             <button name="action_force_register_payment" position="after">
-                <button name="l10n_tr_nilvera_get_pdf" type="object" string="Fetch Nilvera PDF"/>
+                <button name="l10n_tr_nilvera_get_pdf" type="object" string="Fetch Nilvera e-Invoice PDF"/>
             </button>
             <xpath expr="//field[@name='abnormal_date_warning']" position="after">
                 <field name="l10n_tr_nilvera_send_status"

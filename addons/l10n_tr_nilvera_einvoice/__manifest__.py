@@ -32,6 +32,11 @@ Features include:
     'demo': [
         'demo/demo_company.xml',
     ],
+    'assets': {
+        'web.assets_backend': [
+            'l10n_tr_nilvera_einvoice/static/src/components/nilvera_send_status/nilvera_send_status_field.js',
+        ],
+    },
     'auto_install': ['l10n_tr_nilvera'],
     'author': 'Odoo S.A.',
     'license': 'LGPL-3',
