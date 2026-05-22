@@ -20,7 +20,7 @@
   <template id="portal_my_purchase_rfqs" name="My Requests For Quotation">
       <t t-call="portal.portal_layout" breadcrumbs_searchbar="True">
 
-          <t t-call="portal.portal_searchbar" title.translate="Requests For Quotation"/>
+          <t t-call="portal.portal_searchbar" breadcrumbs_searchbar="True" title.translate="Requests For Quotation"/>
           <t t-if="not rfqs">
               <p class="alert alert-warning">There are currently no requests for quotation for your account.</p>
           </t>
@@ -50,7 +50,7 @@
   <template id="portal_my_purchase_orders" name="My Purchase Orders">
       <t t-call="portal.portal_layout" breadcrumbs_searchbar="True">
 
-          <t t-call="portal.portal_searchbar" title.translate="Purchase Orders"/>
+          <t t-call="portal.portal_searchbar" breadcrumbs_searchbar="True" title.translate="Purchase Orders"/>
           <t t-if="not orders">
               <p class="alert alert-warning">There are currently no purchase orders for your account.</p>
           </t>
