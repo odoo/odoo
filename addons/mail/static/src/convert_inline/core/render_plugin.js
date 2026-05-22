@@ -134,8 +134,8 @@ export class RenderPlugin extends Plugin {
         const mergedLayout = new ElementLayout({
             tag: childLayout.ancestorTag || parentLayout.ancestorTag || "DIV",
         });
-        mergedLayout.setAttributes(parentLayout.refs.root);
-        mergedLayout.setAttributes(childLayout.refs.root);
+        mergedLayout.setAttributes(parentLayout.getRef());
+        mergedLayout.setAttributes(childLayout.getRef());
         return mergedLayout;
     }
 

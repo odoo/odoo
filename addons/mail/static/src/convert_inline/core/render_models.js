@@ -93,8 +93,6 @@ export class LayoutModel {
      * @param {Object<string, ElementOptions>} [options.refs={}] assign ElementOptions to named template refs
      */
     constructor({ refs = {} } = {}) {
-        this.refs = refs;
-
         for (const [ref, options] of Object.entries(refs)) {
             this.setAttributes(options, ref);
         }
@@ -125,12 +123,28 @@ export class LayoutModel {
         this.refToClassNames.union(classNames, ref);
     }
 
-    renderAttributes(ref = "root") {
-        return renderAttributes({
+    getRefNames() {
+        return new Set(this.refToAttributes.keys())
+            .union(new Set(this.refToClassNames.keys()))
+            .union(new Set(this.refToStyleInfo.keys()));
+    }
+
+    /**
+     * Returns a ref description compatible with `setAttributes` and
+     * `renderAttributes`.
+     */
+    getRef(ref = "root") {
+        const styleInfo = this.refToStyleInfo.get(ref);
+        return {
             attributes: this.refToAttributes.get(ref),
             classNames: this.refToClassNames.get(ref),
-            styleInfo: this.refToStyleInfo.get(ref),
-        });
+            styleInfo,
+            style: styleInfo,
+        };
+    }
+
+    renderAttributes(ref = "root") {
+        return renderAttributes(this.getRef(ref));
     }
 
     renderContext(context = {}) {
@@ -178,13 +192,6 @@ export class ElementLayout extends LayoutModel {
 
 export class SpacingLayout extends LayoutModel {
     static template = "mail.SpacingLayout";
-
-    constructor(options = {}) {
-        super(options);
-        this.setAttributes({
-            classNames: "o-ci-spacing-wrapper",
-        });
-    }
 
     get ancestorTag() {
         return "TABLE";
@@ -329,18 +336,21 @@ export class EmailNode {
                 renderChildren = [this];
             } else if (layoutContainer === this && this.paddingNode) {
                 renderChildren = [this.paddingNode];
-            } else {
-                renderChildren = this.children;
+            }
+            let renderPositionedNodes = (positionContext = {}) =>
+                renderChildren.map((child) =>
+                    render(child, renderChildren, {
+                        ...extraPositionContext,
+                        ...positionContext,
+                    })
+                );
+            if (!renderChildren) {
+                renderPositionedNodes = (positionContext = {}) =>
+                    this.children.map((child) => child.render(positionContext));
             }
             return layoutContainer.layout.renderToFragment({
                 ...renderContext,
-                renderPositionedNodes: (positionContext = {}) =>
-                    renderChildren.map((child) =>
-                        render(child, renderChildren, {
-                            ...extraPositionContext,
-                            ...positionContext,
-                        })
-                    ),
+                renderPositionedNodes,
             });
         };
         if (this.marginNode) {
@@ -362,8 +372,12 @@ export class SpacingNode {
     }
 
     isRelevant() {
-        return Object.keys(this.layout.refs).some(
+        const result = [...this.layout.getRefNames()].some(
             (ref) => Object.entries(this.layout.renderAttributes(ref)).length > 0
         );
+        if (result) {
+            console.log("coucou");
+        }
+        return result;
     }
 }

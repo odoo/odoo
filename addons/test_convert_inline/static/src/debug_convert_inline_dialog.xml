@@ -18,14 +18,14 @@
             </div>
             <div class="d-flex">
                 <div>
-                    <iframe t-ref="outputIframe" t-att-sandbox="this.isBrowserSafari() ? 'allow-same-origin allow-scripts' : 'allow-same-origin'"
+                    <iframe t-custom-ref="outputIframe" t-att-sandbox="this.isBrowserSafari() ? 'allow-same-origin allow-scripts' : 'allow-same-origin'"
                         t-attf-style="
                             display: block !important;
                             width: {{ this.state.width }}px !important;
                             height: {{ this.state.height }}px !important;
                         "/>
                 </div>
-                <div t-ref="referenceIframe"/>
+                <div t-custom-ref="referenceIframe"/>
             </div>
         </Dialog>
     </t>

@@ -13,7 +13,7 @@ const PADDINGS = ["padding-top", "padding-right", "padding-bottom", "padding-lef
 
 export class SpacingPlugin extends Plugin {
     static id = "spacing";
-    static dependencies = ["referenceNode", "responsiveBlock", "style"];
+    static dependencies = ["referenceNode", "responsiveBlock", "rules", "style"];
     resources = {
         on_parse_layout_with_dimensions_handlers: this.cacheSpacingStyleInfo.bind(this),
         reference_node_facts_processors: this.addSpacingFacts.bind(this),
@@ -39,26 +39,28 @@ export class SpacingPlugin extends Plugin {
         // TODO EGGMAIL: discard negative paddings
         // for % values, use computed value in px (desktop mode) instead
         const marginNode = new SpacingNode();
+        const marginLayout = marginNode.layout;
         const styleInfo = facts.desktopSpacingStyleInfo;
         if (
             styleInfo.getPropertyValue("margin-left") === "auto" &&
             styleInfo.getPropertyValue("margin-right") === "auto"
         ) {
-            marginNode.setAttributes({ attributes: { align: "center" } });
-            marginNode.setAttributes({ attributes: { align: "center" } }, "cell");
+            marginLayout.setAttributes({ attributes: { align: "center" } });
+            marginLayout.setAttributes({ attributes: { align: "center" } }, "cell");
         } else if (styleInfo.getPropertyValue("margin-left") === "auto") {
             // TODO EGGMAIL: consider RTL
-            marginNode.setAttributes({ attributes: { align: "right" } });
-            marginNode.setAttributes({ attributes: { align: "right" } }, "cell");
+            marginLayout.setAttributes({ attributes: { align: "right" } });
+            marginLayout.setAttributes({ attributes: { align: "right" } }, "cell");
         } else if (styleInfo.getPropertyValue("margin-right") === "auto") {
             // TODO EGGMAIL: consider RTL
-            marginNode.setAttributes({ attributes: { align: "left" } });
-            marginNode.setAttributes({ attributes: { align: "left" } }, "cell");
+            marginLayout.setAttributes({ attributes: { align: "left" } });
+            marginLayout.setAttributes({ attributes: { align: "left" } }, "cell");
         }
         for (const margin of MARGINS) {
             const value = styleInfo.getPropertyValue(margin);
-            if (this.isPxSpacing(value)) {
-                marginNode.setAttributes({ style: { [margin]: value } });
+            const { number, unit } = parseCssValue(value);
+            if (number > 0 && unit === "px") {
+                marginLayout.setAttributes({ style: { [margin]: value } }, "cell");
             }
         }
         return marginNode;
@@ -66,11 +68,13 @@ export class SpacingPlugin extends Plugin {
 
     buildPaddingNode(facts) {
         const paddingNode = new SpacingNode();
+        const paddingLayout = paddingNode.layout;
         const styleInfo = facts.desktopSpacingStyleInfo;
         for (const padding of PADDINGS) {
             const value = styleInfo.getPropertyValue(padding);
-            if (this.isPxSpacing(value)) {
-                paddingNode.setAttributes({ style: { [padding]: value } });
+            const { number, unit } = parseCssValue(value);
+            if (number > 0 && unit === "px") {
+                paddingLayout.setAttributes({ style: { [padding]: value } }, "cell");
             }
         }
         return paddingNode;
@@ -166,11 +170,6 @@ export class SpacingPlugin extends Plugin {
         spacingRules.allow(/^margin(-(top|right|bottom|left))?$/);
     }
 
-    isPxSpacing(propertyValue) {
-        const { number, unit } = parseCssValue(propertyValue);
-        return number === 0 || unit === "px";
-    }
-
     provideStyleRules(rules) {
         // Allow paragraph-related elements to keep their top/bottom margins
         rules.allow(/^margin(-(top|bottom))?$/, {
@@ -184,7 +183,8 @@ export class SpacingPlugin extends Plugin {
                             return number !== undefined && (number === 0 || unit === "px");
                         });
                     } else {
-                        return this.isPxSpacing(propertyValue);
+                        const { number, unit } = parseCssValue(propertyValue);
+                        return number === 0 || unit === "px";
                     }
                 },
             ],
