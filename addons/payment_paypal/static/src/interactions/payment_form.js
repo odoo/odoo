@@ -93,35 +93,101 @@ patch(PaymentForm.prototype, {
         if (currentPayPalData && this.selectedOptionId !== paymentOptionId) {
             const paypalSDKURL = this.paypalData[paymentOptionId]['sdkURL']
             await this.waitFor(this._paypalLoadSDK(paypalSDKURL));
-            this.paypalData[this.selectedOptionId]['enabledButtons'].forEach(btn => btn.show());
-            this.paypalData[this.selectedOptionId]['disabledButtons'].forEach(btn => btn.show());
+            this.paypalData[paymentOptionId]['enabledButtons'].forEach(btn => btn.show());
+            this.paypalData[paymentOptionId]['disabledButtons'].forEach(btn => btn.show());
         }
         else if (!currentPayPalData) {
             this.paypalData[paymentOptionId] = {};
             const radio = document.querySelector('input[name="o_payment_radio"]:checked');
             let inlineFormValues;
-            let paypalColor = 'blue';
+            let paypalColor = 'default';
             if (radio) {
                 inlineFormValues = JSON.parse(radio.dataset['paypalInlineFormValues']);
                 paypalColor = radio.dataset['paypalColor'];
             }
 
             // https://developer.paypal.com/sdk/js/configuration/#link-queryparameters
-            const { client_id, currency_code } = inlineFormValues;
-            const paypalSDKURL = `https://www.paypal.com/sdk/js?client-id=${
-                client_id}&components=buttons&currency=${currency_code}&intent=capture`;
+            const { client_id, currency_code, country_code } = inlineFormValues;
+            const paypalSDKURL =
+            `https://www.paypal.com/sdk/js?client-id=${client_id}` +
+            `&components=buttons,payment-fields,funding-eligibility` +
+            `&buyer-country=${country_code}` +
+            `&currency=${currency_code}` +
+            `&enable-funding=`+
+            `paypal,paylater,bancontact,blik,eps,ideal,multibanco,mybank,p24,trustly,venmo` +
+            `&intent=capture`;
             this.paypalData[paymentOptionId]['sdkURL'] = paypalSDKURL;
             await this.waitFor(this._paypalLoadSDK(paypalSDKURL));
 
-            // Create the two sets of PayPal buttons.
+            // Create the two sets of standard PayPal buttons.
             // See https://developer.paypal.com/sdk/js/reference.
+            const METHOD_CONFIG = {
+                'paypal': {
+                    fundingSource: paypal.FUNDING.PAYPAL,
+                    label: 'paypal',
+                    color: paypalColor
+                },
+                'paypal_paylater': {
+                    fundingSource: paypal.FUNDING.PAYLATER,
+                    label: 'pay',
+                    color: 'gold'
+                },
+                'bancontact': {
+                    fundingSource: paypal.FUNDING.BANCONTACT,
+                    label: 'pay',
+                    color: 'default'
+                },
+                'blik': {
+                    fundingSource: paypal.FUNDING.BLIK,
+                    label: 'pay',
+                    color: 'default'
+                },
+                'eps': {
+                    fundingSource: paypal.FUNDING.EPS,
+                    label: 'pay',
+                    color: 'default'
+                },
+                'ideal': {
+                    fundingSource: paypal.FUNDING.IDEAL,
+                    label: 'pay',
+                    color: 'default'
+                },
+                'mybank': {
+                    fundingSource: paypal.FUNDING.MYBANK,
+                    label: 'pay',
+                    color: 'default'
+                },
+                'multibanco': {
+                    fundingSource: paypal.FUNDING.MULTIBANCO,
+                    label: 'pay',
+                    color: 'default'
+                },
+                'p24': {
+                    fundingSource: paypal.FUNDING.P24,
+                    label: 'pay',
+                    color: 'default'
+                },
+                'trustly': {
+                    fundingSource: paypal.FUNDING.TRUSTLY,
+                    label: 'pay',
+                    color: 'default'
+                },
+                'venmo': {
+                    fundingSource: paypal.FUNDING.VENMO,
+                    label: 'pay',
+                    color: 'default'
+                },
+            };
+            const activeConfig = METHOD_CONFIG[paymentMethodCode] || METHOD_CONFIG['paypal'];
+
             this.paypalData[paymentOptionId]['enabledButtons'] = [];
             document.querySelectorAll('[id^="o_paypal_enabled_button"]').forEach(domButton => {
                 const enabledButton = paypal.Buttons({
-                    fundingSource: paypal.FUNDING.PAYPAL,
+                    fundingSource: activeConfig.fundingSource,
                     style: { // https://developer.paypal.com/sdk/js/reference/#link-style
-                        color: paypalColor,
-                        label: 'paypal',
+                        layout: 'vertical',
+                        label: activeConfig.label,
+                        color: activeConfig.color,
                         disableMaxWidth: true,
                         borderRadius: 6,
                     },
@@ -137,10 +203,11 @@ patch(PaymentForm.prototype, {
             this.paypalData[paymentOptionId]['disabledButtons'] = [];
             document.querySelectorAll('[id^="o_paypal_disabled_button"]').forEach(domButton => {
                 const disabledButton = paypal.Buttons({
-                    fundingSource: paypal.FUNDING.PAYPAL,
+                    fundingSource: activeConfig.fundingSource,
                     style: { // https://developer.paypal.com/sdk/js/reference/#link-style
-                        color: 'silver',
-                        label: 'paypal',
+                        layout: 'vertical',
+                        color: 'white',
+                        label: activeConfig.label,
                         disableMaxWidth: true,
                         borderRadius: 6,
                     },

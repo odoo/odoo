@@ -132,7 +132,7 @@ class PaymentProvider(models.Model):
 
     # === BUSINESS METHODS === #
 
-    def _paypal_get_inline_form_values(self, currency=None):
+    def _paypal_get_inline_form_values(self, currency=None, partner_id=None):
         """Return a serialized JSON of the required values to render the inline form.
 
         Note: `self.ensure_one()`
@@ -141,10 +141,12 @@ class PaymentProvider(models.Model):
         :return: The JSON serial of the required values to render the inline form.
         :rtype: str
         """
+        partner = self.env["res.partner"].browse(partner_id)
         inline_form_values = {
             "provider_id": self.id,
             "client_id": self.paypal_client_id,
             "currency_code": currency and currency.name,
+            "country_code": partner.country_code,
         }
         return json.dumps(inline_form_values)
 

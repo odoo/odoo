@@ -10,4 +10,221 @@
         <field name="image" type="bytes" file="payment/static/img/paypal.png"/>
     </record>
 
+    <record id="payment_method_bancontact" model="payment.method">
+        <field name="name">Bancontact</field>
+        <field name="code">bancontact</field>
+        <field name="provider_id" ref="payment.payment_provider_paypal"/>
+        <field name="image" type="bytes" file="payment/static/img/bancontact.png"/>
+        <field 
+            name="supported_country_ids"
+            eval="[Command.set([
+                        ref('base.be'),
+                    ])]"
+        />
+        <field 
+            name="supported_currency_ids"
+            eval="[Command.set([
+                        ref('base.EUR'),
+                    ])]"
+        />
+    </record>
+
+    <record id="payment_method_blik" model="payment.method">
+        <field name="name">BLIK</field>
+        <field name="code">blik</field>
+        <field name="provider_id" ref="payment.payment_provider_paypal"/>
+        <field name="image" type="bytes" file="payment/static/img/blik.png"/>
+        <field 
+            name="supported_country_ids"
+            eval="[Command.set([
+                        ref('base.pl'),
+                    ])]"
+        />
+        <field 
+            name="supported_currency_ids"
+            eval="[Command.set([
+                        ref('base.PLN'),
+                    ])]"
+        />
+    </record>
+
+    <record id="payment_method_eps" model="payment.method">
+        <field name="name">EPS</field>
+        <field name="code">eps</field>
+        <field name="provider_id" ref="payment.payment_provider_paypal"/>
+        <field name="image" type="bytes" file="payment/static/img/eps.png"/>
+        <field 
+            name="supported_country_ids"
+            eval="[Command.set([
+                        ref('base.at'),
+                    ])]"
+        />
+        <field 
+            name="supported_currency_ids"
+            eval="[Command.set([
+                        ref('base.EUR'),
+                    ])]"
+        />
+    </record>
+
+    <record id="payment_method_ideal" model="payment.method">
+        <field name="name">iDEAL</field>
+        <field name="code">ideal</field>
+        <field name="provider_id" ref="payment.payment_provider_paypal"/>
+        <field name="image" type="bytes" file="payment/static/img/ideal.png"/>
+        <field 
+            name="supported_country_ids"
+            eval="[Command.set([
+                        ref('base.nl'),
+                    ])]"
+        />
+        <field
+            name="supported_currency_ids"
+            eval="[Command.set([
+                        ref('base.EUR'),
+                    ])]"
+        />
+    </record>
+
+    <record id="payment_method_multibanco" model="payment.method">
+        <field name="name">Multibanco</field>
+        <field name="code">multibanco</field>
+        <field name="provider_id" ref="payment.payment_provider_paypal"/>
+        <field name="image" type="bytes" file="payment/static/img/multibanco.png"/>
+        <field
+            name="supported_country_ids"
+            eval="[Command.set([
+                        ref('base.pt'),
+                    ])]"
+        />
+        <field
+            name="supported_currency_ids"
+            eval="[Command.set([
+                        ref('base.EUR'),
+                    ])]"
+        />
+    </record>
+
+     <record id="payment_method_mybank" model="payment.method">
+        <field name="name">MyBank</field>
+        <field name="code">mybank</field>
+        <field name="provider_id" ref="payment.payment_provider_paypal"/>
+        <field name="image" type="bytes" file="payment/static/img/mybank.png"/>
+        <field 
+            name="supported_country_ids"
+            eval="[Command.set([
+                        ref('base.it'),
+                    ])]"
+        />
+        <field 
+            name="supported_currency_ids"
+            eval="[Command.set([
+                        ref('base.EUR'),
+                    ])]"
+        />
+    </record>
+
+    <record id="payment_method_paypal_paylater" model="payment.method">
+        <field name="name">Pay Later by PayPal</field>
+        <field name="code">paypal_paylater</field>
+        <field name="provider_id" ref="payment.payment_provider_paypal"/>
+        <field name="image" type="bytes" file="payment/static/img/paypal_paylater.png"/>
+        <field 
+            name="supported_country_ids"
+            eval="[Command.set([
+                        ref('base.us'),
+                        ref('base.au'),
+                        ref('base.ca'),
+                        ref('base.fr'),
+                        ref('base.de'),
+                        ref('base.it'),
+                        ref('base.es'),
+                        ref('base.uk'),
+                    ])]"
+        />
+        <field 
+            name="supported_currency_ids"
+            eval="[Command.set([
+                        ref('base.USD'),
+                        ref('base.AUD'),
+                        ref('base.CAD'),
+                        ref('base.EUR'),
+                        ref('base.GBP'),
+                    ])]"
+    />
+    </record>
+
+    <record id="payment_method_p24" model="payment.method">
+        <field name="name">P24</field>
+        <field name="code">p24</field>
+        <field name="provider_id" ref="payment.payment_provider_paypal"/>
+        <field name="image" type="bytes" file="payment/static/img/p24.png"/>
+        <field
+            name="supported_country_ids"
+            eval="[Command.set([
+                        ref('base.pl'),
+                    ])]"
+        />
+        <field
+            name="supported_currency_ids"
+            eval="[Command.set([
+                        ref('base.EUR'),
+                        ref('base.PLN'),
+                    ])]"
+        />
+    </record>
+
+    <record id="payment_method_trustly" model="payment.method">
+        <field name="name">Trustly</field>
+        <field name="code">trustly</field>
+        <field name="provider_id" ref="payment.payment_provider_paypal"/>
+        <field name="image" type="bytes" file="payment/static/img/trustly.png"/>
+        <field 
+            name="supported_country_ids"
+            eval="[Command.set([
+                        ref('base.at'),
+                        ref('base.de'),
+                        ref('base.dk'),
+                        ref('base.ee'),
+                        ref('base.es'),
+                        ref('base.fi'),
+                        ref('base.uk'),
+                        ref('base.lv'),
+                        ref('base.lt'),
+                        ref('base.nl'),
+                        ref('base.no'),
+                        ref('base.se'),
+                    ])]"
+        />
+        <field
+            name="supported_currency_ids"
+            eval="[Command.set([
+                        ref('base.GBP'),
+                        ref('base.DKK'),
+                        ref('base.SEK'),
+                        ref('base.NOK'),
+                        ref('base.EUR'),
+                    ])]"
+        />
+    </record>
+
+    <record id="payment_method_venmo" model="payment.method">
+        <field name="name">Venmo</field>
+        <field name="code">venmo</field>
+        <field name="provider_id" ref="payment.payment_provider_paypal"/>
+        <field name="image" type="bytes" file="payment/static/img/venmo.png"/>
+        <field 
+            name="supported_country_ids"
+            eval="[Command.set([
+                        ref('base.us'),
+                    ])]"
+        />
+        <field
+            name="supported_currency_ids"
+            eval="[Command.set([
+                        ref('base.USD'),
+                    ])]"
+        />
+    </record>
+
 </odoo>
