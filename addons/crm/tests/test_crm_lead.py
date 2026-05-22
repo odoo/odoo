@@ -6,6 +6,7 @@ from freezegun import freeze_time
 from unittest.mock import patch
 
 from odoo import fields
+from odoo.fields import Domain
 from odoo.addons.base.tests.test_res_partner_addresses import FormatAddressCase
 from odoo.addons.crm.models.crm_lead import PARTNER_FIELDS_TO_SYNC, PARTNER_ADDRESS_FIELDS_TO_SYNC
 from odoo.addons.crm.tests.common import TestCrmCommon, INCOMING_EMAIL
@@ -1169,10 +1170,25 @@ class TestCRMLeadRotting(TestCrmCommon):
 class TestLeadFormTools(FormatAddressCase):
 
     def test_action_open_unassigned_opportunities(self):
+        """The Unassigned button on the team kanban must count both unassigned
+        leads and opportunities, and open a view whose effective filter returns
+        the same set, so the destination matches the counter."""
         sales_team = self.env['crm.team'].create({'name': 'Test Sales Team'})
+        unassigned_lead, unassigned_opp, _assigned_opp = self.env['crm.lead'].create([
+            {'name': 'unassigned lead', 'type': 'lead', 'team_id': sales_team.id, 'user_id': False},
+            {'name': 'unassigned opp', 'type': 'opportunity', 'team_id': sales_team.id, 'user_id': False},
+            {'name': 'assigned opp', 'type': 'opportunity', 'team_id': sales_team.id, 'user_id': self.env.user.id},
+        ])
+        self.assertEqual(sales_team.lead_unassigned_count, 2)
         action = sales_team.action_open_unassigned_opportunities()
-        self.assertEqual(action['context']['search_default_team_id'], [sales_team.id])
-        self.assertEqual(action['context']['default_team_id'], sales_team.id)
+        self.assertEqual(action['res_model'], 'crm.lead')
+        action_domain = action.get('domain') or []
+        effective_domain = Domain(action_domain) & Domain([
+            ('team_id', '=', sales_team.id), ('user_id', '=', False),
+        ])
+        found = self.env['crm.lead'].search(effective_domain)
+        self.assertEqual(found, unassigned_opp + unassigned_lead, 'Shows both unassigned lead and opportunity')
+        self.assertEqual(len(found), sales_team.lead_unassigned_count)
 
     def test_address_view(self):
         self.env.company.country_id = self.env.ref('base.us')
