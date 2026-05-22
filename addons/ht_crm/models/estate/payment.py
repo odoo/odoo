@@ -13,6 +13,7 @@ class PaymentPlan(models.Model):
     note = fields.Text()
 
     project_id = fields.Many2one("estate.project", string="Dự án")
+    transaction_ids = fields.One2many("sale.transaction", "plan_id", string="Giao dịch")
 
     installment_ids = fields.One2many(
         "estate.payment.plan.line",
@@ -22,6 +23,8 @@ class PaymentPlan(models.Model):
 
 class PaymentPlanLine(models.Model):
     _name = "estate.payment.plan.line"
+    _description = "Chi Tiết TT"
+    _order = "plan_id, sequence"
 
     currency_id = fields.Many2one(
         'res.currency',
@@ -32,7 +35,7 @@ class PaymentPlanLine(models.Model):
     plan_id = fields.Many2one("estate.payment.plan")
 
     sequence = fields.Integer()
-    name = fields.Char()
+    name = fields.Char(string="Đợt thanh toán", help="VD: đợt 1, đợt 2, đợt...")
 
     payment_method = fields.Selection([
         ("fixed", "Số tiền cố định"),
@@ -46,20 +49,12 @@ class PaymentPlanLine(models.Model):
         currency_field="currency_id"
     )
 
-    base_date = fields.Date(string="Ngày gốc")
-
     due_type = fields.Selection([
         ("day", "Theo ngày"),
         ("month", "Theo tháng"),
     ], default="day")
 
     due_value = fields.Integer(string="Sau bao lâu")
-
-    due_date = fields.Date(
-        string="Ngày đến hạn",
-        compute="_compute_due_date",
-        store=True,
-    )
 
     @api.depends("base_date", "due_type", "due_value")
     def _compute_due_date(self):

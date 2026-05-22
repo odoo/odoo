@@ -84,6 +84,8 @@
 
                             <field name="hot_money"/>
 
+                            <field name="plan_id"/>
+
                         </group>
 
                         <group string="Thông tin sản phẩm">
@@ -140,6 +142,20 @@
                                 <field name="create_date" readonly="1"/>
                                 <field name="write_uid" readonly="1"/>
                                 <field name="write_date" readonly="1"/>
+                            </group>
+                        </page>
+
+                        <page string="Thanh toán">
+                            <group>
+                                <field name="payment_ids">
+                                    <list>
+                                        <field name="name"/>
+                                        <field name="due_date"/>
+                                        <field name="amount" widget="monetary"/>
+                                        <field name="paid_amount" widget="monetary"/>
+                                        <field name="status"/>
+                                    </list>
+                                </field>
                             </group>
                         </page>
 
@@ -231,6 +247,68 @@
 
             </kanban>
 
+        </field>
+    </record>
+
+
+    <record id="view_sale_transaction_payment_form" model="ir.ui.view">
+        <field name="name">sale.transaction.payment.form</field>
+        <field name="model">sale.transaction.payment</field>
+        <field name="arch" type="xml">
+            <form string="Chi Tiết Thanh Toán">
+                <sheet>
+
+                    <!-- Header -->
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                        <h2>
+                            <field name="transaction_id"/>
+                        </h2>
+                    </div>
+
+                    <!-- Status -->
+                    <group>
+                        <field name="status" widget="statusbar"
+                            statusbar_visible="pending,paid,overdue"/>
+                    </group>
+
+                    <!-- Main Info -->
+                    <group col="2">
+                        <group string="Thông tin đợt thanh toán">
+
+                            <field name="plan_line_id"/>
+
+                            <field name="sequence" readonly="1"/>
+
+                            <field name="amount"
+                                widget="monetary"
+                                options="{'currency_field': 'currency_id'}"/>
+
+                            <field name="paid_amount"
+                                widget="monetary"
+                                options="{'currency_field': 'currency_id'}"/>
+
+                        </group>
+
+                        <group string="Thông tin thời gian">
+
+                            <field name="due_type" readonly="1"/>
+
+                            <field name="due_value" readonly="1"/>
+
+                            <field name="prev_date"/>
+
+                            <field name="base_date"/>
+
+                            <field name="due_date" readonly="1"/>
+
+                        </group>
+                    </group>
+
+                </sheet>
+            </form>
         </field>
     </record>
 </odoo>

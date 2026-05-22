@@ -1,5 +1,6 @@
 from odoo import models, fields, api, exceptions
-from datetime import date
+import datetime
+from dateutil.relativedelta import relativedelta
 
 class Transaction(models.Model):
     _name = 'sale.transaction'
@@ -23,6 +24,8 @@ class Transaction(models.Model):
     customer_id = fields.Many2one("sale.customer", string="Khách hàng", required=True)
     
     date = fields.Date(default=fields.Date.today, string="Ngày giao dịch")
+    plan_id = fields.Many2one('estate.payment.plan', string="Phương thức thanh toán")
+    payment_ids = fields.One2many('sale.transaction.payment', "transaction_id", string="Chi tiết thanh toán")
 
     # Thông tin liên quan về SP
     project_id = fields.Many2one(related='product_id.project_id', string="Dự án")
@@ -104,17 +107,51 @@ class Transaction(models.Model):
         string='Hồ sơ hợp đồng'
     )
 
-    @api.constrains('discount')
-    def _check_discount(self):
-        for record in self:
-            if record.discount < 0 or record.discount > 100:
-                raise exceptions.ValidationError("Chiết khấu phải nằm trong khoảng từ 0 đến 100%.")
 
-    @api.depends(
-        'listed_price',
-        'discount_amount',
-        'vat_percent'
-    )
+    def _generate_payment_lines(self):
+        for rec in self:
+
+            lines = [(5, 0, 0)]
+
+            if not rec.plan_id:
+                rec.payment_ids = lines
+                continue
+
+            for installment in rec.plan_id.installment_ids.sorted(
+                key=lambda x: x.sequence
+            ):
+
+                lines.append((0, 0, {
+                    "plan_line_id": installment.id,
+                }))
+
+            rec.payment_ids = lines
+
+
+    @api.onchange("plan_id")
+    def _onchange_plan_id(self):
+        for rec in self:
+
+            if not rec.plan_id:
+                rec.payment_ids = [(5, 0, 0)]
+                continue
+
+            # tránh generate lại nếu đã đúng plan
+            if rec.payment_ids:
+                continue
+
+            lines = []
+
+            for installment in rec.plan_id.installment_ids.sorted(
+                key=lambda x: x.sequence
+            ):
+                lines.append((0, 0, {
+                    "plan_line_id": installment.id,
+                }))
+
+            rec.payment_ids = lines
+
+    @api.depends('listed_price', 'discount_amount','vat_percent')
     def _compute_amount(self):
         for rec in self:
 
@@ -206,8 +243,10 @@ class Transaction(models.Model):
                 vals['name'] = self.env['ir.sequence'].next_by_code(
                     'sale.transaction'
                 ) or 'New'
-
+            
+        
         records = super().create(vals_list)
+        records.filtered("plan_id")._generate_payment_lines()
 
         for record in records:
             if record.employee_id and record.date:
@@ -252,6 +291,9 @@ class Transaction(models.Model):
         # 🔹 Step 2: write
         res = super().write(vals)
 
+        if "plan_id" in vals:
+            self.filtered("plan_id")._generate_payment_lines()
+
         # 🔹 Step 3: trừ KPI cũ
         for rec in self:
             old = old_data.get(rec.id)
@@ -276,127 +318,166 @@ class Transaction(models.Model):
         return res
     
 
-# class PaymentPlanLine(models.Model):
-#     _name = "sale.transaction.payment"
-#     _description = "Chi Tiết Đợt TT"
-#     _order = "sequence, id"
+class TransactionPayment(models.Model):
+    _name = "sale.transaction.payment"
+    _description = "Chi Tiết TT Mẫu"
+    _order = "sequence, id"
 
-#     currency_id = fields.Many2one(
-#         'res.currency',
-#         string="Đơn vị tiền tệ",
-#         default=lambda self: self.env.company.currency_id,
-#     )
+    currency_id = fields.Many2one(
+        'res.currency',
+        string="Đơn vị tiền tệ",
+        default=lambda self: self.env.company.currency_id,
+    )
     
-#     sequence = fields.Integer(default=10) 
+    sequence = fields.Integer(related='plan_line_id.sequence') 
 
-#     transaction_id = fields.Many2one("sale.transaction", string="Mã giao dịch")
+    transaction_id = fields.Many2one("sale.transaction", string="Mã giao dịch")
+    plan_line_id = fields.Many2one(
+        "estate.payment.plan.line",
+        string="Đợt mẫu"
+    )
 
-#     name = fields.Char(
-#         required=True,
-#         help="Ví dụ: Đợt 1, Đợt 2..."
-#     )
+    name = fields.Char(related="plan_line_id.name")
 
-#     payment_type = fields.Selection([
-#         ("deposit", "Đặt cọc"),
-#         ("installment", "Thanh toán"),
-#         ("handover", "Bàn giao"),
-#         ("ownership", "Ra sổ"),
-#     ], default="installment", string="Loại")
+    # Chỉ đọc
+    due_type = fields.Selection(related="plan_line_id.due_type", string="Xét theo")
+    due_value = fields.Integer(related="plan_line_id.due_value", string="Sau bao lâu")
 
-#     due_date = fields.Date(
-#         string="Ngày đến hạn"
-#     )
+    # === #
+    prev_date = fields.Date(
+        compute="_compute_prev_date",
+        store=True,
+    )
+    base_date = fields.Date(
+        string="Ngày gốc",
+        compute="_compute_base_date",
+        inverse="_inverse_base_date",
+        store=True,
+    )
+            
+    due_date = fields.Date(
+        string="Ngày đến hạn",
+        compute="_compute_due_date",
+        store=True,
+    )
 
-#     payment_method = fields.Selection([
-#         ("fixed", "Số tiền cố định"),
-#         ("percent", "Theo tỷ lệ"),
-#     ], default="percent", string="Hình thức thanh toán")
+    amount = fields.Monetary(currency_field='currency_id', string="Số tiền phải trả", compute="_compute_amount", store=True)
+    paid_amount = fields.Monetary(currency_field='currency_id', string="Đã trả")
 
-#     fixed_amount = fields.Monetary(
-#         string="Số tiền cố định",
-#         currency_field="currency_id"
-#     )
-
-#     amount = fields.Monetary(
-#         string="Số tiền phải trả",
-#         currency_field="currency_id",
-#         compute="_compute_amount",
-#         store=True
-#     )
-
-#     paid_amount = fields.Monetary(
-#         string="Đã trả",
-#         currency_field="currency_id",
-#     )
-
-#     percent = fields.Float(
-#         string="Tỷ lệ (%)"
-#     )
-
-#     status = fields.Selection([
-#         ('pending', 'Chờ thanh toán'),
-#         ('paid', 'Đã thanh toán'),
-#         ('overdue', 'Quá hạn')
-#     ], compute="_compute_status", store=True, string="Trạng thái")
-
-#     @api.depends(
-#         'payment_method',
-#         'percent',
-#         'fixed_amount',
-#         'transaction_id.product_id.price'
-#     )
-#     def _compute_amount(self):
-#         for rec in self:
-
-#             if rec.payment_method == 'percent':
-
-#                 product_price = rec.transaction_id.price_subtotal or 0.0
-
-#                 rec.fixed_amount = 0
-
-#                 rec.amount = (
-#                     product_price * rec.percent / 100
-#                 )
-
-#             else:
-#                 rec.amount = rec.fixed_amount
-
-#     @api.depends('amount', 'paid_amount', 'due_date')
-#     def _compute_status(self):
-#         today = fields.Date.today()
-
-#         for rec in self:
-#             # Đã thanh toán đủ
-#             if rec.amount > 0 and rec.paid_amount >= rec.amount:
-#                 rec.status = 'paid'
-
-#             # Quá hạn
-#             elif (
-#                 rec.due_date
-#                 and rec.due_date < today
-#                 and rec.paid_amount < rec.amount
-#             ):
-#                 rec.status = 'overdue'
-
-#             # Chờ thanh toán
-#             else:
-#                 rec.status = 'pending'
+    status = fields.Selection([
+        ('pending', 'Chờ thanh toán'),
+        ('paid', 'Đã thanh toán'),
+        ('overdue', 'Quá hạn')
+    ], compute="_compute_status", store=True, string="Trạng thái")
 
 
-#     @api.constrains('amount', 'paid_amount', 'status')
-#     def _check_payment_amount(self):
-#         for rec in self:
-#             # Không âm
-#             if rec.amount < 0:
-#                 raise exceptions.ValidationError("Số tiền phải trả không được âm.")
+    @api.depends(
+        "transaction_id.payment_ids.due_date",
+        "transaction_id.payment_ids.sequence",
+    )
+    def _compute_prev_date(self):
 
-#             if rec.paid_amount < 0:
-#                 raise exceptions.ValidationError("Số tiền đã trả không được âm.")
+        for rec in self:
 
-#             # Không trả vượt
-#             if rec.paid_amount > rec.amount:
-#                 raise exceptions.ValidationError("Số tiền đã trả không được lớn hơn số tiền phải trả.")
+            rec.prev_date = False
 
-#             # Status paid thì phải trả đủ
-#             if rec.status == 'paid' and rec.paid_amount < rec.amount:
-#                 raise exceptions.ValidationError("Không thể chuyển sang Đã thanh toán khi chưa trả đủ.")
+            if not rec.transaction_id:
+                continue
+
+            previous_line = rec.transaction_id.payment_ids.filtered(
+                lambda x: x.sequence < rec.sequence
+            ).sorted("sequence")
+
+            if previous_line:
+                rec.prev_date = previous_line[-1].due_date
+                rec.base_date = rec.prev_date
+
+    def _inverse_base_date(self):
+        pass
+
+    @api.depends(
+        "prev_date",
+        "transaction_id.date",
+    )
+    def _compute_base_date(self):
+        for rec in self:
+
+            if rec.prev_date:
+                rec.base_date = rec.prev_date
+            else:
+                rec.base_date = rec.transaction_id.date
+
+    @api.depends(
+        "base_date",
+        "due_type",
+        "due_value",
+    )
+    def _compute_due_date(self):
+        for rec in self:
+
+            rec.due_date = False
+
+            if not rec.base_date:
+                continue
+
+            if rec.due_type == "day":
+                rec.due_date = rec.base_date + datetime.timedelta(days=rec.due_value)
+
+            elif rec.due_type == "month":
+                rec.due_date = rec.base_date + relativedelta(months=rec.due_value)
+
+    @api.depends("plan_line_id")
+    def _compute_amount(self):
+        for rec in self:
+
+            if rec.plan_line_id.payment_method == 'percent':
+
+                product_price = rec.transaction_id.price_subtotal or 0.0
+
+                rec.amount = (
+                    product_price * (rec.plan_line_id.percent / 100)
+                )
+
+            else:
+                rec.amount = rec.plan_line_id.amount
+            
+
+
+    @api.constrains('amount', 'paid_amount', 'status')
+    def _check_payment_amount(self):
+        for rec in self:
+            # Không âm
+            if rec.amount < 0:
+                raise exceptions.ValidationError("Số tiền phải trả không được âm.")
+
+            if rec.paid_amount < 0:
+                raise exceptions.ValidationError("Số tiền đã trả không được âm.")
+
+            # Không trả vượt
+            if rec.paid_amount > rec.amount:
+                raise exceptions.ValidationError("Số tiền đã trả không được lớn hơn số tiền phải trả.")
+
+            # Status paid thì phải trả đủ
+            if rec.status == 'paid' and rec.paid_amount < rec.amount:
+                raise exceptions.ValidationError("Không thể chuyển sang Đã thanh toán khi chưa trả đủ.")
+            
+    @api.depends('amount', 'paid_amount', 'due_date')
+    def _compute_status(self):
+        today = fields.Date.today()
+
+        for rec in self:
+            # Đã thanh toán đủ
+            if rec.amount > 0 and rec.paid_amount >= rec.amount:
+                rec.status = 'paid'
+
+            # Quá hạn
+            elif (
+                rec.due_date
+                and rec.due_date < today
+                and rec.paid_amount < rec.amount
+            ):
+                rec.status = 'overdue'
+
+            # Chờ thanh toán
+            else:
+                rec.status = 'pending'
