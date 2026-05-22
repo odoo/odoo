@@ -12,10 +12,20 @@ import {
     test,
 } from "@odoo/hoot";
 import { setupEditor } from "./_helpers/editor";
-import { insertText, undo, simulateArrowKeyPress } from "./_helpers/user_actions";
+import {
+    insertText,
+    undo,
+    simulateArrowKeyPress,
+    bold,
+    italic,
+    underline,
+    strikeThrough,
+    setColor,
+} from "./_helpers/user_actions";
 import { contains, defineModels, fields, models, mountView } from "@web/../tests/web_test_helpers";
 import { expectElementCount } from "./_helpers/ui_expectations";
 import { getContent } from "./_helpers/selection";
+import { execCommand } from "./_helpers/userCommands";
 
 const { DateTime } = luxon;
 
@@ -247,5 +257,44 @@ describe("date command", () => {
         expect(getContent(el)).toBe(
             `<p>abc</p><p>\uFEFF${embeddedDate}\uFEFF</p><p>def\uFEFF${embeddedDate}[]\uFEFF</p>`
         );
+    });
+    describe("formattings", () => {
+        const dateUTC = DateTime.now().toUTC().toISO();
+        test("should be able to apply and remove formattings on date nodes", async () => {
+            const { el, editor } = await setupEditor(
+                `<p>[<span data-embedded="date" data-embedded-props='{"date":"${dateUTC}","type":"date"}'></span>]</p>`,
+                {
+                    config: configWithEmbeddings,
+                }
+            );
+            bold(editor);
+            italic(editor);
+            underline(editor);
+            strikeThrough(editor);
+            expect(getContent(el)).toBe(
+                `<p>\ufeff[<span data-embedded="date" data-embedded-props='{"date":"${dateUTC}","type":"date"}' data-oe-protected="true" contenteditable="false" style="font-weight: bolder; font-style: italic; text-decoration-line: underline line-through;"><span class="cursor-pointer">March 11, 2019</span></span>\ufeff]</p>`
+            );
+            execCommand(editor, "removeFormat");
+            expect(getContent(el)).toBe(
+                `<p>\ufeff[<span data-embedded="date" data-embedded-props='{"date":"${dateUTC}","type":"date"}' data-oe-protected="true" contenteditable="false"><span class="cursor-pointer">March 11, 2019</span></span>\ufeff]</p>`
+            );
+        });
+        test("should be able to apply and remove colors on date nodes", async () => {
+            const { el, editor } = await setupEditor(
+                `<p>[<span data-embedded="date" data-embedded-props='{"date":"${dateUTC}","type":"date"}'></span>]</p>`,
+                {
+                    config: configWithEmbeddings,
+                }
+            );
+            setColor("rgb(206, 198, 206)", "color")(editor);
+            setColor("rgb(255, 0, 0)", "backgroundColor")(editor);
+            expect(getContent(el)).toBe(
+                `<p>\ufeff[<span data-embedded="date" data-embedded-props='{"date":"${dateUTC}","type":"date"}' data-oe-protected="true" contenteditable="false" style="color: rgb(206, 198, 206); background-color: rgb(255, 0, 0);"><span class="cursor-pointer">March 11, 2019</span></span>\ufeff]</p>`
+            );
+            execCommand(editor, "removeFormat");
+            expect(getContent(el)).toBe(
+                `<p>\ufeff[<span data-embedded="date" data-embedded-props='{"date":"${dateUTC}","type":"date"}' data-oe-protected="true" contenteditable="false"><span class="cursor-pointer">March 11, 2019</span></span>\ufeff]</p>`
+            );
+        });
     });
 });

@@ -1,4 +1,5 @@
 import { Plugin } from "@html_editor/plugin";
+import { closestElement } from "@html_editor/utils/dom_traversal";
 import { parseHTML } from "@html_editor/utils/html";
 import { withSequence } from "@html_editor/utils/resource";
 import { proxy } from "@odoo/owl";
@@ -11,7 +12,7 @@ const EMBEDDED_DATE_SELECTOR = 'span[data-embedded="date"]';
 
 export class DatePlugin extends Plugin {
     static id = "date";
-    static dependencies = ["history", "overlay", "dom", "embeddedComponents"];
+    static dependencies = ["history", "overlay", "dom", "embeddedComponents", "selection", "color"];
 
     resources = {
         user_commands: [
@@ -76,6 +77,17 @@ export class DatePlugin extends Plugin {
 
         /** Providers */
         selectors_for_feff_providers: () => EMBEDDED_DATE_SELECTOR,
+        color_target_providers: (node) => closestElement(node, EMBEDDED_DATE_SELECTOR),
+
+        /** Overrides */
+        apply_color_overrides: this.applyColorToDateNodes.bind(this),
+
+        /** Predicates */
+        is_formattable_node_predicates: (node) => {
+            if (node.matches?.(EMBEDDED_DATE_SELECTOR)) {
+                return true;
+            }
+        },
     };
 
     setup() {
@@ -127,5 +139,18 @@ export class DatePlugin extends Plugin {
 
         this.dependencies.dom.insert(dateEl);
         this.dependencies.history.commit();
+    }
+
+    applyColorToDateNodes(color, mode, coloredNodes) {
+        const dateNodes = new Set(
+            this.dependencies.selection
+                .getTargetedNodes()
+                .map((n) => closestElement(n, EMBEDDED_DATE_SELECTOR))
+                .filter(Boolean)
+        );
+        for (const dateNode of dateNodes) {
+            this.dependencies.color.colorElement(dateNode, color, mode);
+            coloredNodes.add(dateNode);
+        }
     }
 }
