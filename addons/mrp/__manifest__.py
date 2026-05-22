@@ -17,6 +17,7 @@
         'data/mail_message_subtype_data.xml',
         'wizard/change_production_qty_views.xml',
         'wizard/mrp_workcenter_block_view.xml',
+        'wizard/mrp_workcenter_unblock.xml',
         'wizard/stock_warn_insufficient_qty_views.xml',
         'wizard/mrp_production_backorder.xml',
         'wizard/mrp_consumption_warning_views.xml',
