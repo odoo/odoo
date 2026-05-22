@@ -5,7 +5,7 @@
       "id": "cf4e83c3-9ba8",
       "name": "Dashboard",
       "colNumber": 28,
-      "rowNumber": 204,
+      "rowNumber": 143,
       "rows": {
         "0": { "size": 32 },
         "1": { "size": 103 },
@@ -257,13 +257,13 @@
         "A131": "=PIVOT.HEADER(9,\"#country_id\",3)",
         "A132": "=PIVOT.HEADER(9,\"#country_id\",4)",
         "A133": "=PIVOT.HEADER(9,\"#country_id\",5)",
-        "A135": "[Top Expertises](odoo://view/{\"viewType\":\"graph\",\"action\":{\"xmlId\":\"im_livechat.im_livechat_report_channel_action\",\"domain\":[],\"context\":{\"group_by\":[\"session_expertises\"],\"graph_measure\":\"__count\",\"graph_mode\":\"bar\",\"graph_groupbys\":[\"session_expertises\"],\"graph_order\":null,\"graph_stacked\":true},\"modelName\":\"im_livechat.report.channel\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Top Expertises\"})",
+        "A135": "[Top Expertise](odoo://view/{\"viewType\":\"graph\",\"action\":{\"xmlId\":\"im_livechat.im_livechat_report_channel_action\",\"domain\":[],\"context\":{\"group_by\":[\"session_expertise_ids\"],\"graph_measure\":\"__count\",\"graph_mode\":\"bar\",\"graph_groupbys\":[\"session_expertise_ids\"],\"graph_order\":null,\"graph_stacked\":true},\"modelName\":\"im_livechat.report.channel\",\"views\":[[false,\"graph\"],[false,\"pivot\"],[false,\"search\"]]},\"threshold\":0,\"name\":\"Top Expertise\"})",
         "A137": "=_t(\"Expertise\")",
-        "A138": "=PIVOT.HEADER(11,\"#session_expertises\", 1)",
-        "A139": "=PIVOT.HEADER(11,\"#session_expertises\",2)",
-        "A140": "=PIVOT.HEADER(11,\"#session_expertises\",3)",
-        "A141": "=PIVOT.HEADER(11,\"#session_expertises\",4)",
-        "A142": "=PIVOT.HEADER(11,\"#session_expertises\",5)",
+        "A138": "=PIVOT.HEADER(11,\"#session_expertise_ids\", 1)",
+        "A139": "=PIVOT.HEADER(11,\"#session_expertise_ids\",2)",
+        "A140": "=PIVOT.HEADER(11,\"#session_expertise_ids\",3)",
+        "A141": "=PIVOT.HEADER(11,\"#session_expertise_ids\",4)",
+        "A142": "=PIVOT.HEADER(11,\"#session_expertise_ids\",5)",
         "I34": "=_t(\"Sessions\")",
         "I35": "=PIVOT.VALUE(3,  \"__count\", \"#partner_id\", 1)",
         "I36": "=PIVOT.VALUE(3,\"__count\",\"#partner_id\",2)",
@@ -293,11 +293,11 @@
         "K132": "=PIVOT.VALUE(9,\"__count\",\"#country_id\",4)",
         "K133": "=PIVOT.VALUE(9,\"__count\",\"#country_id\",5)",
         "K137": "=_t(\"Sessions\")",
-        "K138": "=PIVOT.VALUE(11,\"__count\",\"#session_expertises\", 1)",
-        "K139": "=PIVOT.VALUE(11,\"__count\",\"#session_expertises\",2)",
-        "K140": "=PIVOT.VALUE(11,\"__count\",\"#session_expertises\",3)",
-        "K141": "=PIVOT.VALUE(11,\"__count\",\"#session_expertises\",4)",
-        "K142": "=PIVOT.VALUE(11,\"__count\",\"#session_expertises\",5)",
+        "K138": "=PIVOT.VALUE(11,\"__count\",\"#session_expertise_ids\", 1)",
+        "K139": "=PIVOT.VALUE(11,\"__count\",\"#session_expertise_ids\",2)",
+        "K140": "=PIVOT.VALUE(11,\"__count\",\"#session_expertise_ids\",3)",
+        "K141": "=PIVOT.VALUE(11,\"__count\",\"#session_expertise_ids\",4)",
+        "K142": "=PIVOT.VALUE(11,\"__count\",\"#session_expertise_ids\",5)",
         "M34": "=_t(\"Session Duration (min)\")",
         "M35": "=PIVOT.VALUE(3,\"duration:avg\",\"#partner_id\",1)",
         "M36": "=PIVOT.VALUE(3,\"duration:avg\",\"#partner_id\",2)",
@@ -963,7 +963,98 @@
           }
         }
       ],
-      "tables": [],
+      "tables": [
+        {
+          "range": "A34:AB44",
+          "type": "static",
+          "config": {
+            "hasFilters": false,
+            "totalRow": false,
+            "firstColumn": false,
+            "lastColumn": false,
+            "numberOfHeaders": 1,
+            "bandedRows": true,
+            "bandedColumns": false,
+            "automaticAutofill": true,
+            "styleId": "None"
+          }
+        },
+        {
+          "range": "A54:T64",
+          "type": "static",
+          "config": {
+            "hasFilters": false,
+            "totalRow": false,
+            "firstColumn": false,
+            "lastColumn": false,
+            "numberOfHeaders": 1,
+            "bandedRows": true,
+            "bandedColumns": false,
+            "automaticAutofill": true,
+            "styleId": "None"
+          }
+        },
+        {
+          "range": "A128:M133",
+          "type": "static",
+          "config": {
+            "hasFilters": false,
+            "totalRow": false,
+            "firstColumn": false,
+            "lastColumn": false,
+            "numberOfHeaders": 1,
+            "bandedRows": true,
+            "bandedColumns": false,
+            "automaticAutofill": true,
+            "styleId": "None"
+          }
+        },
+        {
+          "range": "A137:M142",
+          "type": "static",
+          "config": {
+            "hasFilters": false,
+            "totalRow": false,
+            "firstColumn": false,
+            "lastColumn": false,
+            "numberOfHeaders": 1,
+            "bandedRows": true,
+            "bandedColumns": false,
+            "automaticAutofill": true,
+            "styleId": "None"
+          }
+        },
+        {
+          "range": "P128:AB133",
+          "type": "static",
+          "config": {
+            "hasFilters": false,
+            "totalRow": false,
+            "firstColumn": false,
+            "lastColumn": false,
+            "numberOfHeaders": 1,
+            "bandedRows": true,
+            "bandedColumns": false,
+            "automaticAutofill": true,
+            "styleId": "None"
+          }
+        },
+        {
+          "range": "P137:AB142",
+          "type": "static",
+          "config": {
+            "hasFilters": false,
+            "totalRow": false,
+            "firstColumn": false,
+            "lastColumn": false,
+            "numberOfHeaders": 1,
+            "bandedRows": true,
+            "bandedColumns": false,
+            "automaticAutofill": true,
+            "styleId": "None"
+          }
+        }
+      ],
       "areGridLinesVisible": true,
       "isVisible": true,
       "headerGroups": {
@@ -1469,7 +1560,7 @@
         { "id": "__count", "fieldName": "__count", "aggregator": "sum" }
       ],
       "model": "im_livechat.report.channel",
-      "name": "Top Expertises",
+      "name": "Top Expertise",
       "sortedColumn": {
         "domain": [],
         "order": "desc",
@@ -1478,7 +1569,7 @@
       "formulaId": "11",
       "columns": [],
       "rows": [
-        { "fieldName": "session_expertises" }
+        { "fieldName": "session_expertise_ids" }
       ],
       "collapsedDomains": {
         "COL": [],
