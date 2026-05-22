@@ -337,6 +337,10 @@ class ProductTemplate(models.Model):
             tax_to_use = self.taxes_id.filtered(lambda tax: tax.company_id.id == company.id)
             if not tax_to_use:
                 company = company.sudo().parent_id
+        fiscal_position_id = self.env.context.get('fiscal_position_id')
+        if fiscal_position_id:
+            fiscal_position = self.env['account.fiscal.position'].browse(fiscal_position_id)
+            tax_to_use = fiscal_position.map_tax(tax_to_use)
         taxes = tax_to_use.compute_all(price, config.currency_id, quantity, self)
         grouped_taxes = {}
         for tax in taxes['taxes']:

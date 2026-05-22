@@ -1609,15 +1609,25 @@ export class PosStore extends WithLazyGetterTrap {
         const order = this.getOrder();
         // check back-end method `get_product_info_pos` to see what it returns
         // We do this so it's easier to override the value returned and use it in the component template later
-        const productInfo = await this.data.call("product.template", "get_product_info_pos", [
-            [productTemplate?.id],
-            productTemplate.getPrice(order.pricelist_id, quantity, priceExtra, false),
-            quantity,
-            this.config.id,
-            productProduct?.id,
-        ]);
+        const productInfo = await this.data.call(
+            "product.template",
+            "get_product_info_pos",
+            [
+                [productTemplate?.id],
+                productTemplate.getPrice(order.pricelist_id, quantity, priceExtra, false),
+                quantity,
+                this.config.id,
+                productProduct?.id,
+            ],
+            { context: { fiscal_position_id: order.fiscal_position_id?.id ?? false } }
+        );
 
-        const productTaxDetails = productTemplate.getTaxDetails();
+        const productTaxDetails = productTemplate.getTaxDetails({
+            overridedValues: {
+                pricelist: order.pricelist_id,
+                fiscalPosition: order.fiscal_position_id,
+            },
+        });
         const priceWithoutTax = productTaxDetails.total_excluded;
         const margin = priceWithoutTax - productTemplate.standard_price;
         const orderPriceWithoutTax = order.priceExcl;
@@ -1632,7 +1642,10 @@ export class PosStore extends WithLazyGetterTrap {
         const taxAmount = this.env.utils.formatCurrency(
             productTaxDetails.taxes_data.reduce((sum, d) => sum + d.tax_amount_currency, 0)
         );
-        const taxName = productTemplate.taxes_id.map((t) => t.name)?.join(", ");
+        const taxes = order.fiscal_position_id
+            ? order.fiscal_position_id.getTaxesAfterFiscalPosition(productTemplate.taxes_id)
+            : productTemplate.taxes_id;
+        const taxName = taxes.map((t) => t.name)?.join(", ");
 
         const costCurrency = this.env.utils.formatCurrency(productTemplate.standard_price);
         const marginCurrency = this.env.utils.formatCurrency(margin);
