@@ -1611,3 +1611,51 @@ class TestHrAttendanceOvertime(HttpCase):
         ])
         self.ruleset.action_regenerate_overtimes()
         self.assertEqual(sum(attendances.mapped('overtime_hours')), 10)
+
+    def test_overtime_rule_timing_adjacent_intervals(self):
+        """ Test that adjacent overtime timing rules are not prematurely merged.
+            Daytime: 17:00 -> 21:00 (4h)
+            Nighttime: 21:00 -> 24:00 (3h)
+            Attendance: 17:00 -> 24:00
+            Expected: 4h Daytime, 3h Nighttime
+        """
+        ruleset = self.env['hr.attendance.overtime.ruleset'].create({
+            'name': 'Day and Night Ruleset',
+            'rule_ids': [
+                Command.create({
+                    'name': 'Daytime',
+                    'base_off': 'timing',
+                    'timing_type': 'work_days',
+                    'timing_start': 17.0,
+                    'timing_stop': 21.0,
+                }),
+                Command.create({
+                    'name': 'Nighttime',
+                    'base_off': 'timing',
+                    'timing_type': 'work_days',
+                    'timing_start': 21.0,
+                    'timing_stop': 24.0,
+                }),
+            ],
+        })
+        self.employee.ruleset_id = ruleset
+
+        # Create an attendance from 17:00 to midnight
+        self.env['hr.attendance'].create({
+            'employee_id': self.employee.id,
+            'check_in': datetime(2021, 1, 4, 17, 0, 0),
+            'check_out': datetime(2021, 1, 4, 23, 59, 59),
+        })
+
+        overtimes = self.env['hr.attendance.overtime.line'].search([
+            ('employee_id', '=', self.employee.id),
+            ('date', '=', date(2021, 1, 4))
+        ])
+
+        self.assertEqual(len(overtimes), 2, "There should be exactly two distinct overtime lines generated.")
+
+        daytime_ot = overtimes.filtered(lambda ot: 'Daytime' in ot.rule_ids.mapped('name'))
+        nighttime_ot = overtimes.filtered(lambda ot: 'Nighttime' in ot.rule_ids.mapped('name'))
+
+        self.assertAlmostEqual(daytime_ot.duration, 4.0, 2, "Daytime overtime should be exactly 4 hours.")
+        self.assertAlmostEqual(nighttime_ot.duration, 3.0, 2, "Nighttime overtime should be exactly 3 hours.")
