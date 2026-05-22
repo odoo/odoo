@@ -166,17 +166,27 @@ class CustomerPortal(Controller):
             if fallback_sales_user and not fallback_sales_user._is_public():
                 sales_user_sudo = fallback_sales_user
 
+        PortalEntry = request.env['portal.entry']
         portal_entries = dict(
-            request.env['portal.entry']._read_group(
+            PortalEntry._read_group(
                 [('show_in_portal', '=', True)],
                 groupby=["category"],
                 aggregates=['id:recordset']
             )
         )
+        portal_cards = PortalEntry.concat(
+            entries for category, entries in portal_entries.items() if category != 'alert'
+        ).sorted()
+        portal_hidden_cards = PortalEntry.search([
+            ('category', '!=', 'alert'),
+            ('show_in_portal', '=', False),
+        ])
         return {
             'sales_user': sales_user_sudo,
             'page_name': 'home',
             'portal_entries': portal_entries,
+            'portal_cards': portal_cards,
+            'portal_hidden_cards': portal_hidden_cards,
         }
 
     def _prepare_home_portal_values(self, counters):

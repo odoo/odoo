@@ -12,19 +12,28 @@
                     nullValue: 'NULL',
                 }"/>
         </BuilderRow>
+        <BuilderRow label.translate="Gap">
+            <BuilderRange
+                action="'setPortalCardGap'"
+                unit="'px'"
+                saveUnit="'rem'"
+                min="0"
+                max="60"
+                step="1"
+                withNumberInput="true"/>
+        </BuilderRow>
         <BorderConfigurator label.translate="Border" withBSClass="false" action="'setStylePortalCard'"/>
     </t>
-    <t t-name="website.PortalCardVisibilityOption">
-            <BuilderRow t-if="this.entries.length" label.translate="Cards Design">
-                    Global options for all inner cards.
-            </BuilderRow>
-        <t t-foreach="this.entries" t-as="entry" t-key="entry.id">
-            <BuilderRow label="entry.name" level="1">
-                <BuilderCheckbox action="'cardVisibilityOption'" actionValue="entry.id"/>
-            </BuilderRow>
-        </t>
+
+    <t t-name="website.PortalCardDisplayOption">
+        <BuilderList
+            action="'updatePortalCardList'"
+            itemShape="{ id: 'number', name: 'text', show_in_portal: 'boolean' }"
+            hiddenProperties="['id']"
+            isEditable="false"
+            withScrollbar="false"/>
     </t>
-    
+
     <t t-inherit="website.BuilderOptions" t-inherit-mode="extension">
         <xpath expr="//t[@id='snippet_specific_options']" position="after">
             <portal_option
@@ -32,8 +41,9 @@
                 selector=".o_portal_index_card > a"
                 editableOnly="false"
                 groups='["website.group_website_designer"]'/>
-            <portal_card_visibility_option
-                selector=".o_portal_wrap"
+            <portal_card_display_option
+                template="website.PortalCardDisplayOption"
+                selector="main:has(.o_portal_wrap)"
                 editableOnly="false"
                 reloadTarget="true"
                 groups='["website.group_website_designer"]'/>

@@ -12,6 +12,11 @@ table .visually-hidden {
         border-collapse: separate;
         border-spacing: $o-hb-row-spacing $o-hb-row-spacing;
     }
+
+    &.no_scrollbar {
+        max-height: none;
+        overflow-y: visible;
+    }
 }
 
 .bl-dropdown-toggle:disabled {

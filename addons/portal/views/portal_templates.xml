@@ -219,9 +219,9 @@
         <t t-call="portal.portal_layout" my_details="True">
             <div class="o_portal_my_home">
                 <div class="oe_structure" id="oe_structure_portal_my_home_1"/>
-                <div class="o_portal_docs row g-2">
+                <div class="o_portal_docs">
                     <div t-if="portal_entries.get('alert', [])"
-                        class="o_portal_category row g-2 mt-3 o_not_editable" id="portal_alert_category">
+                        class="o_portal_category d-flex flex-wrap gap-2 mt-3 o_not_editable" id="portal_alert_category">
                         <t t-foreach="portal_entries.get('alert', [])" t-as="entry">
                             <t t-call="portal.portal_docs_entry"
                                 bg_color.f="alert alert-primary align-items-center"
@@ -229,28 +229,15 @@
                                 placeholder_count="entry.placeholder_count"/>
                         </t>
                     </div>
-                    <div t-if="portal_entries.get('client_category', [])"
-                        class="o_portal_category row g-2 mt-3" id="portal_client_category">
-                        <t t-foreach="portal_entries.get('client_category', [])" t-as="entry">
+                    <div t-if="portal_cards or (editable and portal_hidden_cards)"
+                        class="o_portal_cards d-grid mt-3" id="portal_cards">
+                        <t t-foreach="portal_cards" t-as="entry">
                             <t t-call="portal.portal_docs_entry" placeholder_count="entry.placeholder_count"/>
                         </t>
-                    </div>
-                    <div t-if="portal_entries.get('service_category', [])"
-                        class="o_portal_category row g-2 mt-3" id="portal_service_category">
-                        <t t-foreach="portal_entries.get('service_category', [])" t-as="entry">
-                            <t t-call="portal.portal_docs_entry" placeholder_count="entry.placeholder_count"/>
-                        </t>
-                    </div>
-                    <div t-if="portal_entries.get('vendor_category', [])"
-                        class="o_portal_category row g-2 mt-3" id="portal_vendor_category">
-                        <t t-foreach="portal_entries.get('vendor_category', [])" t-as="entry">
-                            <t t-call="portal.portal_docs_entry" placeholder_count="entry.placeholder_count"/>
-                        </t>
-                    </div>
-                    <div t-if="portal_entries.get('common_category', [])"
-                        class="o_portal_category row g-2 mt-3" id="portal_common_category">
-                        <t t-foreach="portal_entries.get('common_category', [])" t-as="entry">
-                            <t t-call="portal.portal_docs_entry" placeholder_count="entry.placeholder_count"/>
+                        <t t-if="editable">
+                            <t t-foreach="portal_hidden_cards" t-as="entry">
+                                <t t-call="portal.portal_docs_entry" placeholder_count="entry.placeholder_count"/>
+                            </t>
                         </t>
                     </div>
                     <div class="o_portal_doc_spinner spinner-border text-o-color-2 align-self-center mt-5"/>
@@ -262,7 +249,11 @@
 
     <template id="portal_docs_entry" name="My Portal Docs Entry">
         <t t-set="force_show" t-value="placeholder_count and request.session.get('portal_counters', {}).get(placeholder_count) and not show_count"/>
-        <div t-att-data-id="entry.id" t-att-class="'o_portal_index_card ' +  ('' if force_show or entry.should_show_portal_card() else 'd-none ') + ('col-12 order-0' if show_count else 'col-md-6 order-2')">
+        <t t-set="show_portal_card" t-value="force_show or entry.should_show_portal_card()"/>
+        <div t-att-data-id="entry.id"
+            t-att-data-show-in-portal="'true' if entry.show_in_portal else 'false'"
+            t-att-data-hidden-by-business-rule="'1' if not show_portal_card and not entry.placeholder_count else None"
+            t-att-class="'o_portal_index_card ' +  ('' if entry.show_in_portal and show_portal_card else 'd-none ') + ('w-100 order-0' if show_count else 'order-2')">
             <a t-att-href="entry.url" data-name="Portal Cards" t-att-title="entry.name" t-attf-class="d-flex gap-2 gap-md-3 py-3 pe-2 px-md-3 h-100 rounded text-decoration-none #{bg_color if bg_color else ''}">
                 <div t-if="entry.image" class="o_portal_icon d-none">
                     <span t-field="entry.image"
