@@ -34,6 +34,28 @@
         </field>
     </record>
 
+    <record id="l10n_fr_pdp_view_in_invoice_refund_tree_inherit" model="ir.ui.view">
+        <field name="name">account.move.list.inherit</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_in_invoice_refund_tree" />
+        <field name="arch" type="xml">
+            <field name="status_in_payment" position="before">
+                <field name="peppol_move_state" optional="hide"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="l10n_fr_pdp_view_in_bill_tree_inherit" model="ir.ui.view">
+        <field name="name">account.move.tree.inherit</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_in_invoice_bill_tree" />
+        <field name="arch" type="xml">
+            <field name="status_in_payment" position="before">
+                <field name="peppol_move_state" optional="hide"/>
+            </field>
+        </field>
+    </record>
+
     <record id="l10n_fr_pdp_view_move_form" model="ir.ui.view">
         <field name="name">l10n.fr.pdp.view.move.form</field>
         <field name="model">account.move</field>

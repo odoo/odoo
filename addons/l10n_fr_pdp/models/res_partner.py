@@ -243,3 +243,7 @@ class ResPartner(models.Model):
         if peppol_eas == '0225':
             proxy_type = 'pdp'
         return proxy_type, identifier
+
+    @handle_demo
+    def button_account_peppol_check_partner_endpoint(self, company=None):
+        return super().button_account_peppol_check_partner_endpoint(company=company)
