@@ -59,3 +59,53 @@ class PaypalCommon(PaymentCommon):
                 }
             ],
         }
+
+        # The `payer-action` URL the customer is redirected to for alternative payment methods.
+        cls.payer_action_url = (
+            f"https://www.sandbox.paypal.com/payment/bancontact?token={cls.order_id}"
+        )
+        cls.apm_order_data = {
+            "id": cls.order_id,
+            "status": "PAYER_ACTION_REQUIRED",
+            "links": [
+                {
+                    "href": f"https://api-m.sandbox.paypal.com/v2/checkout/orders/{cls.order_id}",
+                    "rel": "self",
+                    "method": "GET",
+                },
+                {"href": cls.payer_action_url, "rel": "payer-action", "method": "GET"},
+            ],
+        }
+
+        cls.capture_notification = {
+            "event_type": "PAYMENT.CAPTURE.COMPLETED",
+            "resource": {
+                "id": "8SS60826HT082593F",
+                "status": "COMPLETED",
+                "custom_id": cls.reference,
+                "amount": {"currency_code": cls.currency.name, "value": str(cls.amount)},
+                "supplementary_data": {"related_ids": {"order_id": cls.order_id}},
+            },
+        }
+
+        cls.declined_notification = {
+            "event_type": "CHECKOUT.ORDER.DECLINED",
+            "resource": {
+                "id": cls.order_id,
+                "intent": "CAPTURE",
+                "status": "PAYER_ACTION_REQUIRED",
+                "payment_source": {"bancontact": {"name": "John Doe", "country_code": "BE"}},
+                "purchase_units": [
+                    {
+                        "reference_id": cls.reference,
+                        "amount": {"currency_code": cls.currency.name, "value": str(cls.amount)},
+                        "most_recent_errors": [
+                            {
+                                "issue": "PAYMENT_SOURCE_CANNOT_BE_USED",
+                                "description": "The provided payment source cannot be used.",
+                            }
+                        ],
+                    }
+                ],
+            },
+        }

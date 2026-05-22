@@ -809,11 +809,13 @@ class PaymentProvider(models.Model):
         force_tokenization=False,
         is_express_checkout=False,
         report=None,
+        amount=0.0,  # noqa: ARG002
         **_kwargs,
     ):
         """Find the providers' payment methods available for the given payment context.
 
         :param int partner_id: The partner making the payment, as a `res.partner` id
+        :param float amount: The amount to pay (`0` for validation transactions)
         :param int currency_id: The payment currency, as a `res.currency` id
         :param bool force_tokenization: Whether payment methods must support tokenization
         :param bool is_express_checkout: Whether payment methods must support express checkout

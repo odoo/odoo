@@ -7,6 +7,41 @@ import { patch } from '@web/core/utils/patch';
 
 import { PaymentForm } from '@payment/interactions/payment_form';
 
+const PAYPAL_SDK_METHODS = ['venmo', 'paypal_paylater', 'card'];
+const CARD_FIELDS_STYLE = {
+    "body": {
+        "padding": "0",
+        "border-radius": "0.4rem"
+    },
+    "input": {
+        "font-family": '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Ubuntu, "Noto Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
+        "font-size": "1rem",
+        "height": "38px",
+        "font-weight": "400",
+        "line-height": "1.5",
+        "color": "#212529",
+        "background": "#FFFFFF",
+
+        "appearance": "none",
+        "-webkit-appearance": "none",
+        "-moz-appearance": "none",
+
+        "border": "1px solid color-mix(in srgb, currentcolor 15%, transparent)",
+        "border-radius": "0.4rem",
+        "transition": "background-color 0.05s ease-in-out, border-color 0.05s ease-in-out, box-shadow 0.05s ease-in-out"
+    },
+    ":focus": {
+        "color": "#212529",
+        "background": "#FFFFFF",
+        "border": "2px solid #b8a5b3",
+        "outline": "0",
+        "box-shadow": "0 0 0 0.1rem rgba(113, 75, 103, 0.25)"
+    },
+    ".invalid": {
+        "color": "#dc3545"
+    }
+};
+
 patch(PaymentForm.prototype, {
 
     setup() {
@@ -75,87 +110,158 @@ patch(PaymentForm.prototype, {
             return;
         }
 
-        this._hideInputs();
+        // If the selected payment method isn't handled by the Paypal SDK, hide the PayPal button so
+        // the default redirect flow applies instead.
+        if (!PAYPAL_SDK_METHODS.includes(paymentMethodCode)) {
+            for (const buttonContainer of document.querySelectorAll('#o_paypal_button_container')) {
+                buttonContainer.classList.add('d-none');
+            }
+            this.selectedOptionId = paymentOptionId;
+            return;
+        }
+
         this._setPaymentFlow('direct');
+        const isCard = paymentMethodCode === 'card';
         const paypalLoadingList = document.querySelectorAll('#o_paypal_loading');
-        for (const paypalLoading of paypalLoadingList) {
-            paypalLoading.classList.remove('d-none');
+        if (!isCard) {
+            this._hideInputs();
+            for (const paypalLoading of paypalLoadingList) {
+                paypalLoading.classList.remove('d-none');
+            }
         }
 
         // Check if instantiation of the component is needed.
         if (this.selectedOptionId && this.selectedOptionId !== paymentOptionId) {
             Object.entries(this.paypalData).forEach(([_key, value]) => {
-                value.enabledButtons.forEach(btn => btn.hide());
-                value.disabledButtons.forEach(btn => btn.hide());
+                value.enabledButtons?.forEach(btn => btn.hide());
+                value.disabledButtons?.forEach(btn => btn.hide());
             });
         }
         const currentPayPalData = this.paypalData[paymentOptionId];
         if (currentPayPalData && this.selectedOptionId !== paymentOptionId) {
-            const paypalSDKURL = this.paypalData[paymentOptionId]['sdkURL']
+            const paypalSDKURL = this.paypalData[paymentOptionId]['sdkURL'];
             await this.waitFor(this._paypalLoadSDK(paypalSDKURL));
-            this.paypalData[this.selectedOptionId]['enabledButtons'].forEach(btn => btn.show());
-            this.paypalData[this.selectedOptionId]['disabledButtons'].forEach(btn => btn.show());
+            this.paypalData[paymentOptionId]['enabledButtons']?.forEach(btn => btn.show());
+            this.paypalData[paymentOptionId]['disabledButtons']?.forEach(btn => btn.show());
         }
         else if (!currentPayPalData) {
             this.paypalData[paymentOptionId] = {};
             const radio = document.querySelector('input[name="o_payment_radio"]:checked');
             let inlineFormValues;
-            let paypalColor = 'blue';
+            let paypalColor = 'default';
             if (radio) {
                 inlineFormValues = JSON.parse(radio.dataset['paypalInlineFormValues']);
                 paypalColor = radio.dataset['paypalColor'];
             }
 
             // https://developer.paypal.com/sdk/js/configuration/#link-queryparameters
-            const { client_id, currency_code } = inlineFormValues;
-            const paypalSDKURL = `https://www.paypal.com/sdk/js?client-id=${
-                client_id}&components=buttons&currency=${currency_code}&intent=capture`;
+            const { client_id, currency_code, country_code } = inlineFormValues;
+            const paypalSDKParams = new URLSearchParams({
+                "client-id": client_id,
+                "components": "buttons,card-fields,payment-fields,funding-eligibility",
+                "buyer-country": country_code,
+                "currency": currency_code,
+                "enable-funding": "paypal,paylater,venmo",
+                "intent": "capture",
+            });
+            const paypalSDKURL = `https://www.paypal.com/sdk/js?${paypalSDKParams}`;
             this.paypalData[paymentOptionId]['sdkURL'] = paypalSDKURL;
             await this.waitFor(this._paypalLoadSDK(paypalSDKURL));
 
-            // Create the two sets of PayPal buttons.
-            // See https://developer.paypal.com/sdk/js/reference.
-            this.paypalData[paymentOptionId]['enabledButtons'] = [];
-            document.querySelectorAll('[id^="o_paypal_enabled_button"]').forEach(domButton => {
-                const enabledButton = paypal.Buttons({
-                    fundingSource: paypal.FUNDING.PAYPAL,
-                    style: { // https://developer.paypal.com/sdk/js/reference/#link-style
-                        color: paypalColor,
-                        label: 'paypal',
-                        disableMaxWidth: true,
-                        borderRadius: 6,
+            if (isCard && paypal.CardFields !== undefined) {
+                const cardFields = paypal.CardFields({
+                    style: CARD_FIELDS_STYLE,
+                    createOrder: () => {
+                        return this.paypalData[paymentOptionId].paypalOrderId;
                     },
-                    createOrder: this._paypalOnClick.bind(this),
                     onApprove: this._paypalOnApprove.bind(this),
-                    onCancel: this._paypalOnCancel.bind(this),
-                    onError: this._paypalOnError.bind(this),
                 });
-                enabledButton.render(`#${domButton.id}`);
-                this.paypalData[paymentOptionId]['enabledButtons'].push(enabledButton);
-            });
 
-            this.paypalData[paymentOptionId]['disabledButtons'] = [];
-            document.querySelectorAll('[id^="o_paypal_disabled_button"]').forEach(domButton => {
-                const disabledButton = paypal.Buttons({
-                    fundingSource: paypal.FUNDING.PAYPAL,
-                    style: { // https://developer.paypal.com/sdk/js/reference/#link-style
-                        color: 'silver',
+                this.paypalData[paymentOptionId].cardFields = cardFields;
+
+                const radio = document.querySelector('input[name="o_payment_radio"]:checked');
+                const inlineForm = this._getInlineForm(radio);
+                const paypalInlineForm = inlineForm.querySelector('[name="o_paypal_form"]');
+                this.paypalData[paymentOptionId].inlineForm = paypalInlineForm;
+
+                cardFields
+                  .NameField({ placeholder: "" })
+                  .render(inlineForm.querySelector(".paypal-card-name-field"));
+                cardFields
+                  .NumberField({ placeholder: "" })
+                  .render(inlineForm.querySelector(".paypal-card-number-field"));
+                cardFields
+                  .ExpiryField({ placeholder: "" })
+                  .render(inlineForm.querySelector(".paypal-card-expiry-field"));
+                cardFields
+                  .CVVField({ placeholder: "" })
+                  .render(inlineForm.querySelector(".paypal-card-cvv-field"));
+            } else {
+                // Create the two sets of standard PayPal buttons.
+                // See https://developer.paypal.com/sdk/js/reference.
+                const METHOD_CONFIG = {
+                    'paypal': {
+                        fundingSource: paypal.FUNDING.PAYPAL,
                         label: 'paypal',
-                        disableMaxWidth: true,
-                        borderRadius: 6,
+                        color: paypalColor
                     },
-                    onInit: (data, actions) => actions.disable(),  // Permanently disable the button.
-                });
-                disabledButton.render(`#${domButton.id}`);
-                this.paypalData[paymentOptionId]['disabledButtons'].push(disabledButton);
-            });
-        }
+                    'paypal_paylater': {
+                        fundingSource: paypal.FUNDING.PAYLATER,
+                        label: 'pay',
+                        color: 'gold'
+                    },
+                    'venmo': {
+                        fundingSource: paypal.FUNDING.VENMO,
+                        label: 'paypal',
+                        color: 'blue'
+                    },
+                };
+                const activeConfig = METHOD_CONFIG[paymentMethodCode] || METHOD_CONFIG['paypal'];
 
+                this.paypalData[paymentOptionId]['enabledButtons'] = [];
+                document.querySelectorAll('[id^="o_paypal_enabled_button"]').forEach(domButton => {
+                    const enabledButton = paypal.Buttons({
+                        fundingSource: activeConfig.fundingSource,
+                        style: { // https://developer.paypal.com/sdk/js/reference/#link-style
+                            layout: 'vertical',
+                            label: activeConfig.label,
+                            color: activeConfig.color,
+                            disableMaxWidth: true,
+                            borderRadius: 6,
+                        },
+                        createOrder: this._paypalOnClick.bind(this),
+                        onApprove: this._paypalOnApprove.bind(this),
+                        onCancel: this._paypalOnCancel.bind(this),
+                        onError: this._paypalOnError.bind(this),
+                    });
+                    enabledButton.render(`#${domButton.id}`);
+                    this.paypalData[paymentOptionId]['enabledButtons'].push(enabledButton);
+                });
+
+                this.paypalData[paymentOptionId]['disabledButtons'] = [];
+                document.querySelectorAll('[id^="o_paypal_disabled_button"]').forEach(domButton => {
+                    const disabledButton = paypal.Buttons({
+                        fundingSource: activeConfig.fundingSource,
+                        style: {
+                            // https://developer.paypal.com/sdk/js/reference/#link-style
+                            layout: "vertical",
+                            color: "white",
+                            label: activeConfig.label,
+                            disableMaxWidth: true,
+                            borderRadius: 6,
+                        },
+                        onInit: (data, actions) => actions.disable(), // Permanently disable the button.
+                    });
+                    disabledButton.render(`#${domButton.id}`);
+                    this.paypalData[paymentOptionId]['disabledButtons'].push(disabledButton);
+                });
+            }
+        }
         for (const paypalLoading of paypalLoadingList) {
             paypalLoading.classList.add('d-none');
         }
         for (const buttonContainer of document.querySelectorAll('#o_paypal_button_container')) {
-            buttonContainer.classList.remove('d-none');
+            buttonContainer.classList.toggle('d-none', isCard);
         }
         this.selectedOptionId = paymentOptionId;
     },
@@ -196,6 +302,16 @@ patch(PaymentForm.prototype, {
         }
         this.paypalData[paymentOptionId].paypalOrderId = processingValues['order_id'];
         this.paypalData[paymentOptionId].paypalTxRef = processingValues['reference'];
+
+        if (paymentMethodCode === 'card') {
+            const currentPayPalData = this.paypalData[paymentOptionId];
+            if (currentPayPalData && currentPayPalData.cardFields) {
+                currentPayPalData.cardFields.submit().catch((error) => {
+                    this._displayErrorDialog("Validation Error", error.message);
+                    this._enableButton();
+                });
+            }
+        }
     },
 
     /**
@@ -213,8 +329,12 @@ patch(PaymentForm.prototype, {
                 'reference': this.paypalData[this.selectedOptionId].paypalTxRef,
             }));
             // Close the PayPal buttons that were rendered
-            for (const enabledButton of this.paypalData[this.selectedOptionId]['enabledButtons']) {
-                enabledButton.close();
+            const enabledButtons = this.paypalData[this.selectedOptionId]['enabledButtons'];
+            if (enabledButtons) {
+                for (const enabledButton of enabledButtons) {
+                    enabledButton.close();
+                }
+
             }
             window.location = '/payment/status';
         } catch (error) {
