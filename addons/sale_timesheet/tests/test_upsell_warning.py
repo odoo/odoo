@@ -248,3 +248,86 @@ class TestUpsellWarning(TestCommonSaleTimesheet):
 
         # 9) Check if the SO has an 'sale.mail_act_sale_upsell' activity
         self.assertEqual(len(so.activity_search(['sale.mail_act_sale_upsell'])), 1, 'A upsell warning should appear in the SO.')
+
+    def test_display_upsell_warning_incremental_timesheets(self):
+        """ Test to display an upsell warning when threshold is exceeded through multiple incremental timesheets.
+
+            When timesheets are added incrementally (e.g., 4h + 3h = 7h), the upsell warning should still be triggered
+            when the total exceeds the threshold, even if the invoice_status becomes 'upselling' after the first timesheet.
+
+            Test Case:
+            =========
+            1) Configure the upsell warning in prepaid service product with threshold 6.0
+            2) Create and confirm SO with a SOL containing this product (qty=1),
+            3) Create and confirm invoice for the SO,
+            4) Create Project and Task,
+            5) Create first timesheet of 4h (below threshold of 6h),
+            6) Verify no upsell activity is created,
+            7) Create second timesheet of 3h (total 7h exceeds threshold of 6h),
+            8) Check if the SO has a 'sale.mail_act_sale_upsell' activity.
+        """
+        # 1) Configure the upsell warning in prepaid service product
+        self.product_order_timesheet1.write({
+            'service_upsell_threshold': 6.0,  # Threshold = 1 unit x 6.0 = 6 hours
+        })
+
+        # 2) Create SO with a SOL containing this updated product (qty=1)
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'partner_invoice_id': self.partner_a.id,
+            'partner_shipping_id': self.partner_a.id,
+        })
+
+        sol = self.env['sale.order.line'].create({
+            'order_id': so.id,
+            'product_id': self.product_order_timesheet1.id,
+            'product_uom_qty': 1,  # 1 unit
+        })
+        so.action_confirm()
+
+        # 3) Create and confirm invoice
+        invoice = so._create_invoices()
+        invoice.action_post()
+
+        # 4) Create Project and Task
+        project = self.env['project.project'].create({
+            'name': 'Project',
+            'allow_timesheets': True,
+            'allow_billable': True,
+            'partner_id': self.partner_a.id,
+            'analytic_account_id': self.analytic_account_sale.id,
+        })
+        task = self.env['project.task'].create({
+            'name': 'Task Test',
+            'project_id': project.id,
+        })
+        task._compute_sale_line()
+
+        # 5) Create first timesheet of 4h (below threshold of 6h)
+        self.env['account.analytic.line'].create({
+            'name': 'Timesheet 1',
+            'unit_amount': 4,
+            'employee_id': self.employee_manager.id,
+            'project_id': project.id,
+            'task_id': task.id,
+        })
+        so._compute_field_value(so._fields['invoice_status'])
+
+        # 6) Verify no upsell activity is created (4h < 6h threshold)
+        self.assertEqual(len(so.activity_search(['sale.mail_act_sale_upsell'])), 0, 'No upsell warning should appear yet (4h < 6h).')
+        self.assertFalse(sol.has_displayed_warning_upsell, 'Warning flag should not be set yet.')
+        self.assertEqual(so.invoice_status, 'upselling', 'Invoice status should be upselling (delivered > invoiced).')
+
+        # 7) Create second timesheet of 3h (total 7h exceeds threshold of 6h)
+        self.env['account.analytic.line'].create({
+            'name': 'Timesheet 2',
+            'unit_amount': 3,
+            'employee_id': self.employee_manager.id,
+            'project_id': project.id,
+            'task_id': task.id,
+        })
+        so._compute_field_value(so._fields['invoice_status'])
+
+        # 8) Check if the SO has a 'sale.mail_act_sale_upsell' activity
+        self.assertEqual(len(so.activity_search(['sale.mail_act_sale_upsell'])), 1, 'An upsell warning should appear after incremental timesheets exceed threshold (7h > 6h).')
+        self.assertTrue(sol.has_displayed_warning_upsell)
