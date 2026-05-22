@@ -1364,6 +1364,7 @@ class SaleOrder(models.Model):
                         "product_id": combo_item["product_id"],
                         "product_uom_qty": line.product_uom_qty * combo_item["quantity"],
                         "combo_item_id": combo_item["combo_item_id"],
+                        "combo_item_ratio": combo_item.get("quantity", 1),
                         "product_no_variant_attribute_value_ids": [
                             Command.set(combo_item["no_variant_attribute_value_ids"])
                         ],
@@ -1399,10 +1400,11 @@ class SaleOrder(models.Model):
                 # Only update the combo item lines if the line's combo choices haven't changed.
                 and combo_item_lines.combo_item_id.combo_id == line.product_template_id.combo_ids
             ):
-                combo_item_lines.update({
-                    "product_uom_qty": line.product_uom_qty,
-                    "discount": line.discount,
-                })
+                for combo_item_line in combo_item_lines:
+                    combo_item_line.update({
+                        "product_uom_qty": line.product_uom_qty * combo_item_line.combo_item_ratio,
+                        "discount": line.discount,
+                    })
 
     # === CRUD METHODS ===#
 

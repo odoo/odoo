@@ -58,10 +58,9 @@
                             <ProductCard
                                 product="this.getSelectedOrProvidedComboItem(combo.id, comboItem).product"
                                 extraPrice="comboItem.extra_price"
-                                onClick="() => this.setItemQuantity(
+                                onClick="() => this.selectComboItem(
                                     combo.id,
                                     comboItem,
-                                    this.state.qty[combo.id][comboItem.id] + 1
                                 )"
                                 isSelected="this.state.qty[combo.id][comboItem.id] > 0"
                                 isConfigurable="comboItem.is_configurable"

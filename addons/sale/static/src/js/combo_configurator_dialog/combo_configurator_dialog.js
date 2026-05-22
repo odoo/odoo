@@ -76,21 +76,20 @@ export class ComboConfiguratorDialog extends Component {
         for (const combo of this.props.combos) {
             const comboItems = combo.selectedComboItems;
             for(const comboItem of comboItems) {
-                for(let i = 0; i < comboItem.saved_quantity; i++){
+                for(let i = 0; i < comboItem.saved_quantity/this.state.quantity; i++){
                     this.state.selectedItemsList.push({
                         comboId: combo.id,
                         comboItemId: comboItem.id,
                         item: comboItem.deepCopy()
                     });
                 }
-                this.state.qty[combo.id][comboItem.id] = comboItem.saved_quantity;
+                this.state.qty[combo.id][comboItem.id] = comboItem.saved_quantity/this.state.quantity;
             }
         }
     }
 
     /**
-     * Select the provided combo item, and open the product configurator iff the combo item's
-     * product is configurable.
+     * Select the provided combo item, and increase it's quantity by 1
      *
      * @param {Number} comboId The id of the combo to which the combo item belongs.
      * @param {ProductComboItem} comboItem The combo item to select.
