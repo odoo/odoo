@@ -365,3 +365,12 @@ class TestPrintCheck(AccountTestInvoicingCommon):
             self.journal.check_next_number = check_number_too_big
         self.journal.check_next_number = check_number_normal
         self.assertEqual(self.journal.check_sequence_id.number_next_actual, int(check_number_normal), "The check sequence should be updated correctly")
+
+    def test_set_non_numeric_check_next_number_on_journal(self):
+        """
+        Test that setting a non-numeric value as the journal's
+        Next Check Number raises a ValidationError.
+        """
+        bank_journal = self.company_data['default_journal_bank']
+        with self.assertRaisesRegex(ValidationError, "Next Check Number should only contains numbers."):
+            bank_journal.check_next_number = "F1234"
