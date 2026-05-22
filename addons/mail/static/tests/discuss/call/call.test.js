@@ -283,7 +283,7 @@ test("Camera video stream stays in focus when on/off", async () => {
 });
 
 test("Create a direct message channel when clicking on start a meeting", async () => {
-    mockDate("2026-01-01 10:00:00");
+    mockDate("2026-01-01 10:00:00", "Asia/Kolkata");
     const pyEnv = await startServer();
     pyEnv["res.partner"].write([serverState.partnerId], { tz: "Europe/Brussels" });
     const channelId = pyEnv["discuss.channel"].create({ name: "Slytherin" });
@@ -302,6 +302,7 @@ test("Create a direct message channel when clicking on start a meeting", async (
     await contains(".o-mail-DiscussSidebarChannel-itemName:text('Meeting - Jan 1, 2026')");
     await contains(".o-discuss-Call");
     await contains(".o-mail-Meeting .o-mail-ActionPanel:contains('Invite people')");
+    await contains(".o-mail-Meeting-clock:text('3:30 PM')[title='Jan 1, 2026, 3:30 PM']");
     await contains(".o-mail-MeetingSideActions button", { count: 4 });
     await contains(".o-mail-MeetingSideActions button[title='Picture in Picture']");
     await contains(".o-mail-MeetingSideActions button[title='Exit Fullscreen']");
