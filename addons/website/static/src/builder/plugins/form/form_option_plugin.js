@@ -284,7 +284,7 @@ export class FormOptionPlugin extends Plugin {
             if (field.name === "state_id" && formEl) {
                 // if there's a country_id field on the form, fetch country_id
                 const cachedFields = await this.authorizedFieldsCache.read(getFormCacheKey(formEl));
-                if (cachedFields?.country_id) {
+                if (cachedFields?.country_id || field.linkStateToCountry) {
                     fieldNames.push("country_id");
                 }
             }
