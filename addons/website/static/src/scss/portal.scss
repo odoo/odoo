@@ -1,3 +1,12 @@
+.o_portal_cards {
+    gap: var(--portal-card-gap, #{o-website-value('portal-card-gap')});
+    grid-template-columns: 1fr;
+
+    @include media-breakpoint-up(lg) {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
 .o_portal_index_card > a:not(.alert) {
     @include o-apply-colors('portal-card');
     @include o-apply-colors('portal-card-custom');

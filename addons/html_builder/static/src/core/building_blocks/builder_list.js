@@ -88,6 +88,7 @@ export class BuilderList extends Component {
         isEditable: t.boolean().optional(true),
         limit: t.number().optional(50),
         disableLastCheckedCheckbox: t.boolean().optional(false),
+        withScrollbar: t.boolean().optional(true),
     });
 
     setup() {

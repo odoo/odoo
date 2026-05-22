@@ -41,7 +41,10 @@ export class PortalHomeCounters extends Interaction {
                     documentsCountersData[counterName] !== 0 ||
                     countersAlwaysDisplayed.includes(counterName)
                 ) {
-                    documentsCounterEl.closest(".o_portal_index_card").classList.remove("d-none");
+                    const cardEl = documentsCounterEl.closest(".o_portal_index_card");
+                    if (cardEl.dataset.showInPortal !== "false") {
+                        cardEl.classList.remove("d-none");
+                    }
                 }
             });
             return documentsCountersData;
