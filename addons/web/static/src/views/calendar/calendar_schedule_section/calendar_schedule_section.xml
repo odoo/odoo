@@ -19,7 +19,7 @@
                 t-on-click="() => this.openRecord(event)"
             >
                 <i class="oi oi-draggable o_event_to_schedule_handle"/>
-                <span class="ps-1" t-out="event.display_name" t-att-title="event.display_name"/>
+                <span class="ps-1 min-w-0 text-truncate" t-out="event.display_name" t-att-title="event.display_name"/>
             </div>
         </div>
         <button t-if="this.displayLoadMoreButton" class="btn btn-link" t-on-click="() => this.props.model.loadMoreEventsToSchedule()">
