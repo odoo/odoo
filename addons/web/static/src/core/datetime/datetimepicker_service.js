@@ -1,5 +1,4 @@
 import { immediateEffect, markRaw, onMounted, onPatched, onWillDestroy, proxy } from "@odoo/owl";
-import { hasTouch } from "@web/core/browser/feature_detection";
 import { onWillRender, useLayoutEffect, useRef } from "@web/owl2/utils";
 import { areDatesEqual, formatDate, formatDateTime, parseDate, parseDateTime } from "../l10n/dates";
 import { makePopover } from "../popover/popover_hook";
@@ -8,6 +7,7 @@ import { ensureArray, zip, zipWith } from "../utils/arrays";
 import { shallowEqual } from "../utils/objects";
 import { DateTimePicker } from "./datetime_picker";
 import { DateTimePickerPopover } from "./datetime_picker_popover";
+import { utils } from "@web/core/ui/ui_service";
 
 /**
  * @typedef {luxon["DateTime"]["prototype"]} DateTime
@@ -64,7 +64,7 @@ export const datetimePickerService = {
         }
 
         function useBottomSheet() {
-            return ui.isSmall && hasTouch();
+            return utils.useBottomSheet();
         }
 
         return {

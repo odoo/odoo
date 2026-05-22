@@ -4,7 +4,7 @@ import { registry } from "@web/core/registry";
 import { SelectMenu } from "@web/core/select_menu/select_menu";
 import { getFieldDomain } from "@web/model/relational_model/utils";
 import { useSpecialData } from "@web/views/fields/relational_utils";
-import { hasTouch } from "@web/core/browser/feature_detection";
+import { utils } from "@web/core/ui/ui_service";
 import { standardFieldProps } from "../standard_field_props";
 import { ConnectionLostError } from "@web/core/network/rpc";
 
@@ -59,8 +59,8 @@ export class SelectionField extends Component {
 
         return choices;
     }
-    get isBottomSheet() {
-        return this.env.isSmall && hasTouch();
+    get useBottomSheet() {
+        return utils.useBottomSheet();
     }
     get options() {
         switch (this.type) {
