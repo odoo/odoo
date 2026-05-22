@@ -22,6 +22,29 @@ const BLACKLISTED_MENUS = new Set([
     "pos_enterprise.menu_point_kitchen_display_root", // conditional menu that may leads to frontend
     "mail.menu_settings", // menu that leads to another App
 ]);
+
+// Actions that don't open a form view when clicking on list/kanban
+const BLACKLISTED_FORM = new Set([
+    "mail.menu_channel", // list/kanban opens a channel not a form
+    "mail.discuss_channel_menu_settings", // list/kanban opens a channel not a form
+    // TO CHECK: WHY :
+    "ai_app.ai_agent_menu_action",
+    "documents.dashboard",
+    "project.menu_projects",
+    "website.menu_website_pages_list",
+    "mass_mailing.menu_email_mass_mailing_lists",
+    "mass_mailing_sms.mailing_list_menu_sms",
+
+    "appointment.appointment_menu_calendar",
+    "appointment.appointment_type_menu",
+    "frontdesk.frontdesk_menu_stations", // weird ... why ?
+    "account.menu_action_account_moves_all", // Action without "form" (why we havec a "hand" icon in list view ?? Maybe if we don't have a form view, we don't need a hand icon)
+    "sale_project_margin.analytic_projected_margins_menu_project", // Action without "form" (idem as above but on kanban view)
+    "hr_timesheet.menu_hr_activity_analysis", // Action without "form", weird, it only have Pivot/Graph but we have a list in the view ...
+    "hr_timesheet.timesheet_menu_report_timesheet_by_project", // Idem as above
+    "hr_timesheet.timesheet_menu_report_timesheet_by_task", // Idem as above
+]);
+
 // If you change this selector, adapt Studio test "Studio icon matches the clickbot selector"
 const STUDIO_SYSTRAY_ICON_SELECTOR = ".o_web_studio_navbar_item:not(.o_disabled) i";
 
@@ -30,6 +53,9 @@ let calledRPC;
 let errorRPC;
 let actionCount;
 let env;
+let formviewTested;
+let menu;
+
 let disposeEffect = () => {};
 let removeOverlay = () => {};
 
@@ -52,6 +78,8 @@ function setup(light, currentState) {
             testedMenus: [],
             testedFilters: 0,
             testedModals: 0,
+            testedViews: 0,
+            testedFormsViews: 0,
             appIndex: 0,
             menuIndex: 0,
             totalApps: 0,
@@ -190,8 +218,9 @@ async function waitForCondition(stopCondition) {
                 msg += ` * ${scheduleTasks} scheduled tasks\n`;
             }
             if (!stopCondition()) {
-                msg += ` * stopCondition: ${stopCondition.toString()}`;
+                msg += ` * stopCondition: ${stopCondition.toString()}\n`;
             }
+            msg += ` on testing menu: ${menu.name} (${menu.xmlid})`;
             throw new Error(msg);
         }
         await new Promise((resolve) => setTimeout(resolve, interval));
@@ -269,12 +298,104 @@ async function testFilters() {
 }
 
 /**
+ * Test the currently displayed view.
+ * @returns {Promise}
+ */
+async function testView() {
+    await testForm();
+    await testStudio();
+    await testFilters();
+}
+
+/**
+ * Test a form view record in list or kanban view
+ * @returns {Promise}
+ */
+
+async function testForm() {
+    if (formviewTested) {
+        return;
+    }
+    if (BLACKLISTED_FORM.has(menu.xmlid)) {
+        browser.console.log(`Skipping blacklisted form menu ${menu.name} (${menu.xmlid})`);
+        return;
+    }
+    const switchButton = document.querySelector(
+        "nav.o_cp_switch_buttons > button.o_switch_view.active"
+    );
+    if (!switchButton) {
+        return;
+    }
+    // Only way to get the viewType from the switchButton
+    const viewType = [...switchButton.classList]
+        .find((cls) => cls !== "o_switch_view" && cls.startsWith("o_"))
+        .slice(2);
+    if (!["list", "kanban"].includes(viewType)) {
+        return;
+    }
+    if (viewType === "list") {
+        if (document.querySelector("table.o_list_table.o_list_editable")) {
+            return;
+        }
+        const records = document.querySelector(".o_view_sample_data")
+            ? false
+            : Boolean(document.querySelectorAll(".o_data_row").length);
+        if (records) {
+            const row = document.querySelectorAll(".o_data_row")[0];
+            // Open the first record in the list
+            if (document.querySelector(".o_list_record_open_form_view")) {
+                await triggerClick(row.querySelector(".o_list_record_open_form_view"));
+            } else {
+                await triggerClick(row.querySelector(".o_data_cell"));
+            }
+            formviewTested = true;
+            await waitForCondition(() => document.querySelector(`.o_form_view`) !== null);
+            state.testedFormsViews++;
+
+            // FIXME:: Check why there is sometimes that we don't open the view !!!
+            if (document.querySelector(".o_back_button")) {
+                // Go back to the list
+                await triggerClick(document.querySelector(".o_back_button"));
+                await waitForCondition(() => document.querySelector(`.o_list_view`) !== null);
+            }
+        }
+    } else {
+        const records = document.querySelector(".o_view_sample_data")
+            ? false
+            : Boolean(
+                  document.querySelectorAll(".o_kanban_record:not(.o_kanban_ghost).cursor-pointer")
+                      .length
+              );
+        if (records) {
+            const card = document.querySelectorAll(
+                ".o_kanban_record:not(.o_kanban_ghost).cursor-pointer"
+            )[0];
+            formviewTested = true;
+            // Open the first record in the kanban
+            await triggerClick(card);
+            await waitForCondition(() => document.querySelector(`.o_form_view`) !== null);
+            state.testedFormsViews++;
+
+            // Mayube the click does nothing !!!
+            // FIXME: Check why there is sometimes that we don't open the view !!!
+            if (document.querySelector(".o_back_button")) {
+                // Go back to the kanban
+                await triggerClick(document.querySelector(".o_back_button"));
+                await waitForCondition(() => document.querySelector(`.o_kanban_view`) !== null);
+            }
+        }
+    }
+}
+/**
  * Orchestrate the test of views
  * This function finds the buttons that permit to switch views and orchestrate
  * the click on each of them
  * @returns {Promise}
  */
 async function testViews() {
+    formviewTested = false;
+    await testView();
+    state.testedViews++;
     if (state.light === true) {
         return;
     }
@@ -299,8 +420,8 @@ async function testViews() {
         await waitForCondition(
             () => document.querySelector(`.o_switch_view.o_${viewType}.active`) !== null
         );
-        await testStudio();
-        await testFilters();
+        await testView();
+        state.testedViews++;
     }
 }
 
@@ -310,7 +431,8 @@ async function testViews() {
  * @param {Object} menu menu object from env.services.menu
  * @returns {Promise}
  */
-async function testMenuItem(menu) {
+async function testMenuItem(_menu) {
+    menu = _menu;
     state.currentMenu = menu.name;
     if (BLACKLISTED_MENUS.has(menu.xmlid)) {
         browser.console.log(`Skipping blacklisted menu ${menu.name} (${menu.xmlid})`);
@@ -337,8 +459,6 @@ async function testMenuItem(menu) {
                 "modal close button"
             );
         } else {
-            await testStudio();
-            await testFilters();
             await testViews();
         }
     } catch (err) {
@@ -415,6 +535,8 @@ async function _clickEverywhere(xmlId, light, currentState) {
         browser.console.log(`Test took ${state.timeTaken} seconds`);
         browser.console.log(`Successfully tested ${state.testedApps.length} apps`);
         browser.console.log(`Successfully tested ${state.testedMenus.length} menus`);
+        browser.console.log(`Successfully tested ${state.testedViews} views`);
+        browser.console.log(`Successfully tested ${state.testedFormsViews} form views`);
         browser.console.log(`Successfully tested ${state.testedModals} modals`);
         browser.console.log(`Successfully tested ${state.testedFilters} filters`);
         if (state.studioCount > 0) {
