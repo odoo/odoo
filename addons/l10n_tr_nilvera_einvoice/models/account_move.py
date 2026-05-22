@@ -8,6 +8,7 @@ from markupsafe import Markup
 
 from odoo import _, Command, api, fields, models
 from odoo.exceptions import UserError, ValidationError
+from odoo.tools import SQL
 
 from odoo.addons.l10n_tr_nilvera.lib.nilvera_client import _get_nilvera_client
 
@@ -65,22 +66,24 @@ class AccountMove(models.Model):
             ('succeed', "Successful"),
             ('waiting', "Waiting"),
             ('unknown', "Unknown"),
-            ('commercial_approved', "Approved (Commercial)"),
-            ('commercial_answered_automatically', "Approved Automatically (Commercial)"),
-            ('commercial_rejected', "Rejected (Commercial)"),
+            ('commercial_approved', "Approved"),
+            ('commercial_answered_automatically', "Approved"),
+            ('commercial_rejected', "Rejected"),
         ],
         string="Nilvera Status",
         readonly=True,
         copy=False,
         default='not_sent',
-        help="Tracks the real-time submission status of this invoice to the Nilvera. It is updated automatically based on"
+        help="Tracks the real-time submission status of this invoice to Nilvera. It is updated automatically based on "
              "responses from Nilvera and GİB. \n"
-             "This field is read-only as it is updated automatically by the system "
-             "based on responses from Nilvera and GİB. \n"
+             "This field is read-only as it is updated automatically by the system based on responses from Nilvera and GİB. \n"
              "- Not sent: Default state before processing. \n"
              "- Sent and waiting response: Sent to Nilvera, awaiting GİB confirmation. \n"
              "- Successful: GİB has accepted the invoice. \n"
-             "- Error: The submission failed (check chatter for details).",
+             "- Error: The submission failed (check chatter for details). \n"
+             "- Approved: Commercial Invoice is approved by recipient.\n"
+             "- Approved: Commercial Invoice is automatically approved after 8 days without a response.\n"
+             "- Rejected: Commercial Invoice is rejected by recipient.",
     )
     l10n_tr_gib_invoice_scenario = fields.Selection(
         selection=[
@@ -92,8 +95,9 @@ class AccountMove(models.Model):
         string="Invoice Scenario",
         help="Defines the official GİB (Turkish Revenue Administration) e-invoice "
         "scenario. \n"
-        "Basic: Standard e-invoice that cannot be rejected by the recipient via the GİB portal. \n"
-        "Public Sector: Used specifically for invoices issued to public (government) institutions.",
+        "- Basic: Standard e-invoice that cannot be rejected by the recipient via the GİB portal. \n"
+        "- Public Sector: Used specifically for invoices issued to public (government) institutions.\n"
+        "- Commercial: Allows the recipient to accept or reject the invoice via GİB.",
     )
     l10n_tr_gib_invoice_type = fields.Selection(
         compute='_compute_l10n_tr_gib_invoice_type',
@@ -111,13 +115,15 @@ class AccountMove(models.Model):
         ],
         help="Specifies the official GİB classification for the e-invoice/e-archive, which "
         "determines its tax treatment and validation rules. \n"
-        "Sales: A standard sales invoice. \n"
+        "- Sales: A standard sales invoice. \n"
         "Withholding: An invoice where the buyer is responsible for "
-        "paying a portion of the VAT. \n"
+        "- paying a portion of the VAT. \n"
         "Registered for Export: Invoice for goods that will later be exported."
-        "If selected, an 'Exemption Reason' is required. \n"
-        "Tax Exempt: An invoice for goods/services exempt from VAT. "
-        "If selected, an 'Exemption Reason' is required.",
+        "- If selected, an 'Exemption Reason' is required. \n"
+        "- Tax Exempt: An invoice for goods/services exempt from VAT. "
+        "If selected, an 'Exemption Reason' is required.\n"
+        "- Return: Reverses a previously issued sales invoice for returned or canceled goods/services.\n"
+        "- Withholding Return: Reverses a previously issued withholding invoice.\n",
     )
     l10n_tr_is_export_invoice = fields.Boolean(
         string="GİB Product Export Invoice",
@@ -181,6 +187,53 @@ class AccountMove(models.Model):
         readonly=False,
         compute='_compute_l10n_tr_public_spending_unit_id',
     )
+    l10n_tr_invoice_scenario_group = fields.Selection(
+        selection=[
+            ('basic', "Basic Scenario"),
+            ('public', "Public Scenario"),
+            ('commercial', "Commercial Scenario"),
+            ('earchive', "e-Archive"),
+            ('export', "Export Invoice"),
+        ],
+        string="Invoice Scenario Group",
+        compute='_compute_l10n_tr_invoice_scenario_group',
+        compute_sql='_compute_sql_invoice_scenario_group',
+        compute_sudo=True,
+    )
+
+    @api.depends('l10n_tr_is_export_invoice', 'partner_id.l10n_tr_nilvera_customer_status', 'l10n_tr_gib_invoice_scenario')
+    def _compute_l10n_tr_invoice_scenario_group(self):
+        for record in self:
+            if record.l10n_tr_is_export_invoice:
+                record.l10n_tr_invoice_scenario_group = 'export'
+            elif record.l10n_tr_nilvera_customer_status == 'earchive':
+                record.l10n_tr_invoice_scenario_group = 'earchive'
+            elif record.l10n_tr_gib_invoice_scenario == 'TEMELFATURA':
+                record.l10n_tr_invoice_scenario_group = 'basic'
+            elif record.l10n_tr_gib_invoice_scenario == 'KAMU':
+                record.l10n_tr_invoice_scenario_group = 'public'
+            elif record.l10n_tr_gib_invoice_scenario == 'TICARIFATURA':
+                record.l10n_tr_invoice_scenario_group = 'commercial'
+            else:
+                record.l10n_tr_invoice_scenario_group = False
+
+    def _compute_sql_invoice_scenario_group(self, table):
+        partner_table = table._join('partner_id')
+        return SQL(
+            """
+            CASE
+                WHEN %(export)s = TRUE               THEN 'export'
+                WHEN %(partner_status)s = 'earchive' THEN 'earchive'
+                WHEN %(scenario)s = 'TEMELFATURA'    THEN 'basic'
+                WHEN %(scenario)s = 'KAMU'           THEN 'public'
+                WHEN %(scenario)s = 'TICARIFATURA'   THEN 'commercial'
+                ELSE NULL
+            END
+            """,
+            export=table['l10n_tr_is_export_invoice'],
+            partner_status=partner_table['l10n_tr_nilvera_customer_status'],
+            scenario=table['l10n_tr_gib_invoice_scenario'],
+        )
 
     @api.depends('move_type', 'l10n_tr_gib_invoice_scenario')
     def _compute_l10n_tr_public_spending_unit_id(self):
@@ -217,6 +270,20 @@ class AccountMove(models.Model):
     def _compute_l10n_tr_exemption_code_id(self):
         for record in self:
             record.l10n_tr_exemption_code_id = False
+
+    @api.onchange("partner_id")
+    def _onchange_partner_id(self):
+        # Fill scenario and type based on the latest invoice.
+        if self.partner_id and (invoice := self.env['account.move'].search([
+            ('id', 'not in', self.ids),
+            ('move_type', '=', self.move_type),
+            ('partner_id', '=', self.partner_id.id),
+            ('state', '=', 'posted'),
+        ], limit=1)):
+            self.l10n_tr_gib_invoice_scenario = invoice.l10n_tr_gib_invoice_scenario
+            self.l10n_tr_gib_invoice_type = invoice.l10n_tr_gib_invoice_type if not self.l10n_tr_is_export_invoice else 'ISTISNA'
+
+        super()._onchange_partner_id()
 
     def _get_import_file_type(self, file_data):
         """ Identify Nilvera UBL files. """
@@ -556,8 +623,7 @@ class AccountMove(models.Model):
         if len(self) > 1:
             notification_type = 'account_notification'
             payload['message'] = self.env._(
-                "Some PDFs could not be retrieved because the Nilvera Status is not successful yet or is in error. "
-                "Please try again once the status becomes successful."
+                "Some PDFs are not yet available from Nilvera. Please try again later.",
             )
             payload['action_button'] = {
                 'name': self.env._('View Invoice(s)'),
@@ -567,8 +633,7 @@ class AccountMove(models.Model):
             }
         else:
             payload['message'] = self.env._(
-                "The PDF could not be retrieved because the Nilvera Status is not successful yet or is in error. "
-                "Please try again once the status becomes successful."
+                "The PDF is not yet available from Nilvera. Please try again later.",
             )
         self.env.user._bus_send(notification_type, payload)
 
@@ -577,7 +642,44 @@ class AccountMove(models.Model):
         Fetches and attaches the Nilvera PDF to invoices that have been sent successfully but do not have a PDF downloaded yet.
         The method will also try to update the status of the pending invoices to make sure we don't miss any PDFs.
         """
-        # Sort invoices by status into buckets. Invoices with existing PDFs or invalid types are skipped.
+        failed_invoices = self._l10n_tr_nilvera_do_fetch_pdfs()
+        self._l10n_tr_nilvera_notify_failed_pdf(failed_invoices)
+
+    def _l10n_tr_nilvera_notify_pdf_not_yet_available(self, unavailable_invoices):
+        """ Shows a notification when PDFs have not yet been retrieved from Nilvera. """
+        if not unavailable_invoices:
+            return
+
+        notification_type = 'simple_notification'
+        payload = {
+            'type': 'warning',
+            'sticky': True,
+        }
+        if len(self) > 1:
+            notification_type = 'account_notification'
+            payload['message'] = self.env._(
+                "Some PDFs could not be retrieved because they have not yet been retrieved from Nilvera. "
+                "Please try again once the PDFs have been received."
+            )
+            payload['action_button'] = {
+                'name': self.env._('View Invoice(s)'),
+                'action_name': self.env._('Pending e-Invoice PDFs'),
+                'model': 'account.move',
+                'res_ids': unavailable_invoices.ids,
+            }
+        else:
+            payload['message'] = self.env._(
+                "The PDF is not yet available from Nilvera. Please ry again later.",
+            )
+        self.env.user._bus_send(notification_type, payload)
+
+    def _l10n_tr_nilvera_do_fetch_pdfs(self):
+        """ Fetch and attach Nilvera PDFs for eligible invoices that don't have one yet.
+
+        Skips invoices that already have a PDF, have an invalid status, or lack a Nilvera
+        customer status. Refreshes status of pending invoices before attempting the fetch.
+        Returns the set of invoices whose fetch failed due to error/pending status.
+        """
         successful_invoice_ids = []
         pending_invoices_ids = []
         failed_invoices_ids = []
@@ -616,7 +718,47 @@ class AccountMove(models.Model):
                     invoice_channel=invoice.l10n_tr_nilvera_customer_status,
                 )
 
-        self._l10n_tr_nilvera_notify_failed_pdf(failed_invoices)
+        return failed_invoices
+
+    def action_l10n_tr_print_einvoice_pdf(self):
+        """ Print action for the e-Invoice PDF from the Print menu.
+
+        Auto-fetches the PDF from Nilvera when not yet downloaded, then triggers a
+        browser download. Shows a warning notification for invoices whose PDF is not
+        yet available on Nilvera.
+        """
+        if self.env.company.country_id.code != 'TR':
+            return False
+        nilvera_invoices = self.filtered('l10n_tr_nilvera_uuid')
+        if not nilvera_invoices:
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'message': _("No e-invoice documents found for the selected invoices."),
+                    'type': 'warning',
+                },
+            }
+
+        # Auto-fetch PDFs that are not yet cached locally.
+        to_fetch = nilvera_invoices.filtered(lambda inv: not inv.l10n_tr_nilvera_pdf_id)
+        if to_fetch:
+            to_fetch._l10n_tr_nilvera_do_fetch_pdfs()
+
+        invoices_with_pdf = nilvera_invoices.filtered('l10n_tr_nilvera_pdf_id')
+        invoices_without_pdf = nilvera_invoices - invoices_with_pdf
+
+        nilvera_invoices._l10n_tr_nilvera_notify_pdf_not_yet_available(invoices_without_pdf)
+
+        if not invoices_with_pdf:
+            return False
+
+        attachment_ids = ','.join(str(inv.l10n_tr_nilvera_pdf_id.id) for inv in invoices_with_pdf)
+        return {
+            'type': 'ir.actions.act_url',
+            'url': f'/account/download_invoice_attachments/{attachment_ids}',
+            'target': 'download',
+        }
 
     def _l10n_tr_nilvera_einvoice_check_negative_lines(self):
         return any(
@@ -629,8 +771,7 @@ class AccountMove(models.Model):
         # Allows overriding the default customer alias with a custom one.
         self.ensure_one()
         return (
-            self.l10n_tr_is_export_invoice
-            and self.company_id.l10n_tr_nilvera_export_alias
+            (self.l10n_tr_is_export_invoice and self.env['ir.config_parameter'].sudo().get_str('l10n_tr_nilvera_einvoice.export_alias'))
             or self.partner_id.l10n_tr_nilvera_customer_alias_id.name
         )
 

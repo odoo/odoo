@@ -80,7 +80,7 @@ class ResPartner(models.Model):
         # we want to skip records whose status is already set, unless we want to
         # purposefully retry them
         retry_existing = self.env.context.get('retry_existing', False)
-        for record in self.filtered(lambda p: p.vat and (retry_existing or p.l10n_tr_nilvera_customer_status == 'not_checked')):
+        for record in self.filtered(lambda p: p.vat and p.invoice_edi_format and (retry_existing or p.l10n_tr_nilvera_customer_status == 'not_checked')):
             if record._check_nilvera_customer():
                 if len(record.l10n_tr_nilvera_customer_alias_ids) > 1:
                     results['multi_alias'] |= record
