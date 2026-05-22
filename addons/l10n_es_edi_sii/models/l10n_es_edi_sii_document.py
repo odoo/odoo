@@ -107,8 +107,9 @@ class L10nEsEdiSiiDocument(models.Model):
         }
 
     def _get_agency_urls(self):
-        agency = self.company_id.l10n_es_sii_tax_agency
-        is_sale = self.move_id.is_sale_document()
+        document = self[:1]
+        agency = document.company_id.l10n_es_sii_tax_agency
+        is_sale = document.move_id.is_sale_document()
         BASE_URLS = {
             "aeat":     (AEAT_BASE_URL, AEAT_TEST_BASE_URL),
             "bizkaia":  (BIZKAIA_BASE_URL, BIZKAIA_TEST_BASE_URL),
@@ -132,7 +133,8 @@ class L10nEsEdiSiiDocument(models.Model):
     # -------------------------------------------------------------------------
 
     def _get_web_service_header(self, communication_type):
-        company = self.company_id
+        document = self[:1]
+        company = document.company_id
         return {
             'IDVersionSii': '1.1',
             'Titular': {
@@ -143,62 +145,82 @@ class L10nEsEdiSiiDocument(models.Model):
         }
 
     def _post_to_web_service(self, info_list, communication_type='A0'):
-        self.ensure_one()
-        success, response_data = self._post_to_agency(communication_type, info_list)
+        response_results = self._post_to_agency(communication_type, info_list)
+        if len(self) == 1:
+            response_results = {self: response_results}
 
-        if response_data.get('error_1117'):
-            return {'error_1117': True}
+        results = {}
+        full_payload = {
+            'Cabecera': self._get_web_service_header(communication_type),
+            'Cuerpo': info_list,
+        }
+        attachment = self.env['ir.attachment']
 
-        if success:
-            state = 'cancelled' if self.state == 'to_cancel' else 'accepted'
-            if response_data.get('accepted_with_errors'):
-                state = 'accepted_with_errors'
+        for document, (success, response_data) in response_results.items():
+            if response_data.get('error_1117'):
+                results[document] = {'error_1117': True}
+                continue
 
-            response_msg = response_data.get('response_message', self.env._('Success'))
+            if success:
+                state = 'cancelled' if document.state == 'to_cancel' else 'accepted'
+                if response_data.get('accepted_with_errors'):
+                    state = 'accepted_with_errors'
 
-            self.sudo().write({
-                'state': state,
-                'csv': response_data.get('csv'),
-                'response_message': response_msg,
-            })
+                response_msg = response_data.get('response_message', self.env._('Success'))
 
-            messages = {
-                'accepted': self.env._("The document was accepted by SII."),
-                'accepted_with_errors': self.env._("The document was accepted by SII with the following error: %s") % response_msg,
-                'cancelled': self.env._("The document was cancelled by SII."),
-            }
-            self.move_id.message_post(body=messages[state])
-
-            if self.state in ('accepted', 'accepted_with_errors'):
-                full_payload = {
-                    'Cabecera': self._get_web_service_header(communication_type),
-                    'Cuerpo': info_list,
-                }
-                attachment = self.env['ir.attachment'].sudo().create({
-                    'name': self._get_attachment_name(),
-                    'raw': json.dumps(full_payload, indent=4).encode('utf-8'),
-                    'mimetype': 'application/json',
-                    'res_model': 'account.move',
-                    'res_id': self.move_id.id,
+                document.sudo().write({
+                    'state': state,
+                    'csv': response_data.get('csv'),
+                    'response_message': response_msg,
                 })
-                self.sudo().write({'attachment_id': attachment.id})
-        else:
-            response_msg = response_data.get('response_message', self.env._('Unknown Error'))
 
-            self.sudo().write({
-                'response_message': response_msg,
-            })
+                messages = {
+                    'accepted': self.env._("The document was accepted by SII."),
+                    'accepted_with_errors': self.env._(
+                        "The document was accepted by SII with the following error: %s",
+                        response_msg,
+                    ),
+                    'cancelled': self.env._("The document was cancelled by SII."),
+                }
+                document.move_id.message_post(body=messages[state])
 
-            self.move_id.message_post(
-                body=self.env._("The document was rejected by SII with the following error: %s") % response_msg
-            )
+                if document.state in ('accepted', 'accepted_with_errors'):
+                    if not attachment:
+                        attachment = self.env['ir.attachment'].sudo().create({
+                            'name': document._get_attachment_name(),
+                            'raw': json.dumps(full_payload, indent=4).encode('utf-8'),
+                            'mimetype': 'application/json',
+                            'res_model': 'account.move',
+                            'res_id': document.move_id.id,
+                        })
+                    document.sudo().write({'attachment_id': attachment.id})
+            else:
+                response_msg = response_data.get('response_message', self.env._('Unknown Error'))
 
-        return {'success': success, 'state': self.state}
+                document.sudo().write({
+                    'response_message': response_msg,
+                })
+
+                document.move_id.message_post(
+                    body=self.env._(
+                        "The document was rejected by SII with the following error: %s",
+                        response_msg,
+                    )
+                )
+
+            results[document] = {'success': success, 'state': document.state}
+
+        return results[self] if len(self) == 1 else results
 
     def _post_to_agency(self, communication_type, info_list):
-        self.ensure_one()
-        company = self.company_id
+        document = self[:1]
+        company = document.company_id
         connection_vals = self._get_agency_urls()
+
+        def response_for_documents(success, response_data):
+            if len(self) == 1:
+                return success, response_data
+            return {document: (success, response_data) for document in self}
 
         with requests.Session() as session:
             try:
@@ -207,7 +229,7 @@ class L10nEsEdiSiiDocument(models.Model):
 
                 client = zeep.Client(connection_vals['url'], operation_timeout=30, timeout=30, session=session)
 
-                is_sale = self.move_id.is_sale_document()
+                is_sale = document.move_id.is_sale_document()
                 service_name = 'SuministroFactEmitidas' if is_sale else 'SuministroFactRecibidas'
                 header = self._get_web_service_header(communication_type)
                 if company.l10n_es_sii_test_env and not connection_vals.get('test_url'):
@@ -217,7 +239,7 @@ class L10nEsEdiSiiDocument(models.Model):
                 if company.l10n_es_sii_test_env and connection_vals.get('test_url'):
                     serv._binding_options['address'] = connection_vals['test_url']
 
-                if self.state == 'to_cancel':
+                if document.state == 'to_cancel':
                     if is_sale:
                         res = serv.AnulacionLRFacturasEmitidas(header, info_list)
                     else:
@@ -229,56 +251,115 @@ class L10nEsEdiSiiDocument(models.Model):
                         res = serv.SuministroLRFacturasRecibidas(header, info_list)
 
             except requests.exceptions.SSLError:
-                return False, {'response_message': self.env._("The SSL certificate could not be validated.")}
+                return response_for_documents(
+                    False,
+                    {'response_message': self.env._("The SSL certificate could not be validated.")},
+                )
             except (zeep.exceptions.Error, requests.exceptions.ConnectionError) as error:
-                return False, {'response_message': self.env._("Networking error:\n%s", error)}
+                return response_for_documents(
+                    False,
+                    {'response_message': self.env._("Networking error:\n%s", error)},
+                )
             except Exception as error:  # noqa: BLE001
-                return False, {'response_message': str(error)}
+                return response_for_documents(False, {'response_message': str(error)})
 
         if not res or not res.RespuestaLinea:
-            return False, {'response_message': self.env._("The web service is not responding")}
+            return response_for_documents(
+                False,
+                {'response_message': self.env._("The web service is not responding")},
+            )
 
         return self._process_response(res)
 
     def _process_response(self, res):
+        def response_for_documents(success, response_data):
+            if len(self) == 1:
+                return success, response_data
+            return {document: (success, response_data) for document in self}
+
         resp_state = res["EstadoEnvio"]
         csv_number = res['CSV']
 
         if resp_state == 'Correcto':
-            return True, {'csv': csv_number, 'response_message': 'Correcto'}
+            return response_for_documents(True, {'csv': csv_number, 'response_message': 'Correcto'})
+
+        results = {}
+        document = self[:1]
+        is_sale = document.move_id.is_sale_document()
+
+        def find_document(respl):
+            invoice_number = respl.IDFactura.NumSerieFacturaEmisor
+            if is_sale:
+                return self.filtered(lambda document: document.move_id.name[:60] == invoice_number)[:1]
+
+            candidates = self.filtered(lambda document: (document.move_id.ref or '')[:60] == invoice_number)
+            if len(candidates) <= 1:
+                return candidates
+
+            respl_partner_info = respl.IDFactura.IDEmisorFactura
+            respl_partner_info_dict = dict(respl_partner_info)
+            for candidate in candidates:
+                partner = (
+                    candidate.move_id.company_id.partner_id
+                    if candidate.move_id._l10n_es_is_dua()
+                    else candidate.move_id.commercial_partner_id
+                )
+                partner_info = partner._l10n_es_edi_get_partner_info()
+                if partner_info.get('NIF') == respl_partner_info.NIF:
+                    return candidate
+                if (
+                    partner_info.get('IDOtro')
+                    and respl_partner_info_dict.get('IDOtro')
+                    and all(
+                        respl_partner_info_dict['IDOtro'][key] == value
+                        for key, value in partner_info['IDOtro'].items()
+                    )
+                ):
+                    return candidate
+
+            return candidates[:1]
 
         for respl in res.RespuestaLinea:
+            document = find_document(respl)
+            if not document:
+                continue
+
             resp_line_state = respl.EstadoRegistro
             respl_dict = dict(respl)
 
             if resp_line_state == 'Correcto':
-                return True, {'csv': csv_number, 'response_message': 'Correcto'}
+                results[document] = True, {'csv': csv_number, 'response_message': 'Correcto'}
 
             elif resp_line_state == 'AceptadoConErrores':
-                return True, {
+                results[document] = True, {
                     'csv': csv_number,
                     'accepted_with_errors': True,
-                    'response_message': self.env._("Accepted with errors: %s", html_escape(respl.DescripcionErrorRegistro))
+                    'response_message': self.env._(
+                        "Accepted with errors: %s", html_escape(respl.DescripcionErrorRegistro)
+                    )
                 }
 
             elif (
                 (respl_dict.get('RegistroDuplicado') and respl.RegistroDuplicado.EstadoRegistro == 'Correcta')
                 or
-                (self.state == 'to_cancel' and respl_dict.get('CodigoErrorRegistro') == 3001)
+                (document.state == 'to_cancel' and respl_dict.get('CodigoErrorRegistro') == 3001)
             ):
-                return True, {
-                    'csv': csv_number or self.move_id.l10n_es_edi_csv,
+                results[document] = True, {
+                    'csv': csv_number or document.move_id.l10n_es_edi_csv,
                     'response_message': self.env._("Duplicated/Already processed.")
                 }
 
             elif respl.CodigoErrorRegistro == 1117 and not self.env.context.get('error_1117'):
-                return False, {'error_1117': True}
+                return response_for_documents(False, {'error_1117': True})
 
             else:
-                return False, {
+                results[document] = False, {
                     'response_message': self.env._("[%(error_code)s] %(error_message)s",
                                         error_code=respl.CodigoErrorRegistro,
                                         error_message=respl.DescripcionErrorRegistro)
                 }
 
-        return False, {'response_message': self.env._("Unknown response state")}
+        for document in self:
+            results.setdefault(document, (False, {'response_message': self.env._("Unknown response state")}))
+
+        return next(iter(results.values())) if len(self) == 1 else results
