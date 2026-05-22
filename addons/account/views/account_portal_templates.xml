@@ -15,7 +15,7 @@
     <template id="portal_my_invoices" name="My Invoices and Payments">
       <t t-call="portal.portal_layout" breadcrumbs_searchbar="True">
 
-        <t t-call="portal.portal_searchbar" title.translate="Invoices"/>
+        <t t-call="portal.portal_searchbar" breadcrumbs_searchbar="True" title.translate="Invoices"/>
         <t t-if="not invoices">
             <p class="alert alert-warning">There are currently no invoices and payments for your account.</p>
         </t>
@@ -83,7 +83,7 @@
 
     <template id="portal_my_journal_mail_notifications" name="My journal email notification settings">
         <t t-call="portal.portal_layout" breadcrumbs_searchbar="True">
-            <t t-call="portal.portal_searchbar" title.translate="Email Notifications"/>
+            <t t-call="portal.portal_searchbar" breadcrumbs_searchbar="True" title.translate="Email Notifications"/>
             <div class="row">
                 <div class="col-12">
                     <div class="card">

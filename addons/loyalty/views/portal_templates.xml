@@ -48,7 +48,7 @@
 
     <template id="loyalty_card_history_template" name="My Loyalty History">
         <t t-call="portal.portal_layout" breadcrumbs_searchbar="True">
-            <t t-call="portal.portal_searchbar" title.translate="Loyalty Transaction"/>
+            <t t-call="portal.portal_searchbar" breadcrumbs_searchbar="True" title.translate="Loyalty Transaction"/>
             <t t-if="not history_lines">
                 <p class="alert alert-warning">
                     There are currently no transaction lines for this card.

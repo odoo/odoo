@@ -18,7 +18,7 @@
     <template id="portal_my_productions" name="My Productions">
         <t t-call="portal.portal_layout" breadcrumbs_searchbar="True">
 
-            <t t-call="portal.portal_searchbar" title.translate="Productions"/>
+            <t t-call="portal.portal_searchbar" breadcrumbs_searchbar="True" title.translate="Productions"/>
 
             <t t-if="not pickings">
                 <p class="alert alert-warning">There are currently no productions for your account.</p>
