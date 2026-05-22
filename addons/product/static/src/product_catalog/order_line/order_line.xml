@@ -3,14 +3,13 @@
     <t t-name="product.ProductCatalogOrderLine">
         <!-- Replace the element found using the css selector by the content of the portalled
              template.  -->
-        <!-- OWL3 this does not work with t-custom portal (maybe because destroy + rerender with same props ??) -->
-        <t t-portal="`#product-${this.props.productId}-price`">
+        <Portal target="this.portalTarget" t-key="this.rev">
             <div class="d-inline-flex align-items-baseline">
                 <span t-if="this.showPrice" t-out="this.price" class="o_product_catalog_price fw-bold me-4"/>
                 <span t-if="this.props.code" t-out="this.props.code" class="text-muted"/>
             </div>
             <span t-if="this.displayPriceByProductUoM" class="d-flex text-muted small" t-out="`${this.productUnitPrice}/${this.props.productUomDisplayName}`"/>
-        </t>
+        </Portal>
         <div 
             t-if="this.props.readOnly and this.props.warning"
             class="text-danger text-truncate my-2 pt-3 border-top">
