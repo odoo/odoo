@@ -658,27 +658,39 @@ class AccountMove(models.Model):
 
         for invoice_nr in to_process:
             response = service.get_invoice_by_ksef_number(invoice_nr)
-            if response.get('error'):
-                blocking_error = handle_download_bills_from_ksef_error(response['error'])
-                break
-            bill_data = self.l10n_pl_edi_get_ksef_bill_vals_from_xml(response['xml_content'])
+            error_msg = False
+            try:
+                if response.get('error'):
+                    blocking_error = handle_download_bills_from_ksef_error(response['error'])
+                    break
+                bill_data = self.l10n_pl_edi_get_ksef_bill_vals_from_xml(response['xml_content'])
+            except UserError as e:
+                bill_data = {'move_type': 'in_invoice'}
+                error_msg = str(e)
             bill_data['l10n_pl_edi_number'] = invoice_nr
             bills_to_create[invoice_nr] = {
                 'vals': bill_data,
-                'xml_content': response['xml_content'],
+                'xml_content': response.get('xml_content'),
+                'error_msg': error_msg,
             }
 
         created_moves = self.create([bill['vals'] for bill in bills_to_create.values()])
 
         for created_move in created_moves:
-            self.env['ir.attachment'].sudo().create({
-                'description': self.env._('KSeF Fetched Invoice XML'),
-                'name': f"KSeF-{created_move.l10n_pl_edi_number.replace('/', '_')}.xml",
-                'type': 'binary',
-                'mimetype': 'application/xml',
-                'raw': bills_to_create[created_move.l10n_pl_edi_number]['xml_content'],
-                'res_id': created_move.id,
-                'res_model': created_move._name,
-            })
+            if content := bills_to_create[created_move.l10n_pl_edi_number].get('xml_content'):
+                self.env['ir.attachment'].sudo().create({
+                    'description': self.env._('KSeF Fetched Invoice XML'),
+                    'name': f"KSeF-{created_move.l10n_pl_edi_number.replace('/', '_')}.xml",
+                    'type': 'binary',
+                    'mimetype': 'application/xml',
+                    'raw': content,
+                    'res_id': created_move.id,
+                    'res_model': created_move._name,
+                })
+
+            if error_msg := bills_to_create[created_move.l10n_pl_edi_number].get('error_msg'):
+                created_move.message_post(
+                    body=self.env._("KSeF XML failed. The bill was created empty. Reason: %s", error_msg)
+                )
 
         return blocking_error
