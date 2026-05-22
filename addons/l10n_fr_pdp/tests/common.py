@@ -16,7 +16,8 @@ from odoo.addons.account_edi_ubl_cii.tests.common import TestUblCiiCommon
 ID_CLIENT = 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'
 FAKE_UUID = [
     'yyyyyyyy-yyyy-yyyy-yyyy-yyyyyyyyyyyy',
-    'zzzzzzzz-zzzz-zzzz-zzzz-zzzzzzzzzzzz'
+    'zzzzzzzz-zzzz-zzzz-zzzz-zzzzzzzzzzzz',
+    'aaaaaaaa-bbbb-cccc-dddd-dddddddddddd',
 ]
 FILE_PATH = 'l10n_fr_pdp/tests/test_files/assets'
 
@@ -157,7 +158,7 @@ class TestL10nFrPdpCommon(TestUblCiiCommon, TestAccountMoveSendCommon):
     # ACCOUNTING HELPERS
     # -------------------------------------------------------------------------
 
-    def _create_french_invoice(self, move_type='out_invoice'):
+    def _create_french_invoice(self, move_type='out_invoice', **kwargs):
         tax_1 = self.env['account.chart.template'].ref('tva_acq_normale')
         tax_2 = self.env['account.chart.template'].ref('tva_acq_specifique')
         return self.env["account.move"].create({
@@ -183,6 +184,7 @@ class TestL10nFrPdpCommon(TestUblCiiCommon, TestAccountMoveSendCommon):
                     'tax_ids': [Command.set(tax_2.ids)],
                 }),
             ],
+            **kwargs,
         })
 
     @classmethod

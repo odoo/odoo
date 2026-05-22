@@ -3,6 +3,8 @@ import logging
 
 from odoo import api, fields, models
 
+from odoo.addons.l10n_fr_pdp.tools.demo_utils import handle_demo
+
 PDP_identifier_re = re.compile(r'^([0-9]{9})(_[0-9]{14})?(_.+)?$')
 
 _logger = logging.getLogger(__name__)
@@ -91,6 +93,7 @@ class ResCompany(models.Model):
             'urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100::CrossIndustryInvoice##urn:cen.eu:en16931:2017#conformant#urn:peppol:france:billing:extended:1.0::D22B': "UN/CEFACT EN16931 French CTC Extended",
         }
 
+    @handle_demo
     def _l10n_fr_pdp_update_pilot_phase(self, value):
         self.ensure_one()
         pdp_user = self.account_edi_proxy_client_ids.filtered(lambda u: u.proxy_type == 'pdp')[:1]

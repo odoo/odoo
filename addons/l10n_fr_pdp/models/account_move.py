@@ -8,6 +8,8 @@ from odoo.addons.l10n_fr_pdp.models.account_edi_proxy_user import STATUS_TO_PROC
 from odoo.addons.l10n_fr_pdp.models.account_edi_xml_ubl_21_fr import PDP_CUSTOMIZATION_ID
 from odoo.addons.l10n_fr_pdp.models.account_peppol_response import NEW_STATUSES
 
+PAID_CODES = frozenset({'ESC', 'RAB', 'REM', 'MPA', 'MEN'})
+
 
 class AccountMove(models.Model):
     _inherit = 'account.move'
@@ -27,10 +29,15 @@ class AccountMove(models.Model):
             ('done', 'Done'),
             ('error', 'Error'),
         ],
-        compute='_compute_ppf_state',
+        compute='_compute_pdp_ppf_state',
         store=True,
         string='PPF Invoice Status',
         copy=False,
+    )
+    pdp_lifecycle_residual = fields.Monetary(
+        string='Lifecycle Residual',
+        compute='_compute_pdp_lifecycle_residual', store=True,
+        help="Technical field indicating the amount of collected money we have still to report to the PPF via a lifecycle."
     )
     pdp_ppf_lifecycle_state = fields.Selection(
         selection=[
@@ -39,7 +46,7 @@ class AccountMove(models.Model):
             ('done', 'Done'),
             ('error', 'Error'),
         ],
-        compute='_compute_ppf_state',
+        compute='_compute_pdp_ppf_state',
         store=True,
         string='PPF Lifeycle Status',
         copy=False,
@@ -52,7 +59,33 @@ class AccountMove(models.Model):
     def _compute_show_reset_to_draft_button(self):
         # EXTEND 'account' to hide the reset to draft button for sent PDP invoices
         super()._compute_show_reset_to_draft_button()
-        self.filtered(lambda m: m.pdp_is_sent).show_reset_to_draft_button = False
+        relevant_moves = self.filtered(lambda move: move.pdp_is_sent and move.is_sale_document(include_receipts=True))
+        relevant_moves.show_reset_to_draft_button = False
+
+    @api.depends(
+        'line_ids.matched_debit_ids.debit_move_id',
+        'line_ids.matched_credit_ids.credit_move_id',
+        'peppol_message_uuid',
+        'peppol_response_ids',
+        'pdp_ppf_move_state',
+        'payment_state',
+    )
+    def _compute_pdp_lifecycle_residual(self):
+        for move in self:
+            already_sent = move._pdp_get_paid_lifecycle_total_amount()
+            is_relevant = already_sent or (
+                (move.pdp_ppf_move_state in ['sent', 'done'] or move.pdp_is_sent)
+                and move.is_sale_document(include_receipts=True)
+                and move.payment_state in ['paid', 'partial']
+                and move.currency_id.name == 'EUR'
+            )
+            amount = 0
+            if is_relevant:
+                counterpart_move_type = 'out_invoice' if move.move_type == 'out_refund' else 'out_refund'
+                reconciled_amls = move._get_reconciled_amls().filtered(lambda l: l.move_id.move_type != counterpart_move_type)
+                paid_amount = move.direction_sign * sum(reconciled_amls.mapped('balance'))
+                amount = paid_amount - already_sent
+            move.pdp_lifecycle_residual = amount
 
     @api.depends('peppol_response_ids', 'peppol_response_ids.peppol_state')
     def _compute_peppol_move_state(self):
@@ -63,7 +96,7 @@ class AccountMove(models.Model):
                 move.peppol_move_state = response_status
 
     @api.depends('peppol_response_ids', 'peppol_response_ids.peppol_state', 'peppol_response_ids.response_code')
-    def _compute_ppf_state(self):
+    def _compute_pdp_ppf_state(self):
         for move in self:
             processed = move.peppol_move_state and move.peppol_move_state not in ('ready', 'to_send', 'processing', 'error')
             move.pdp_ppf_move_state = move._pdp_get_tax_extract_state() if processed and move.is_sale_document(include_receipts=False) else False
@@ -72,7 +105,12 @@ class AccountMove(models.Model):
     @api.depends('peppol_move_state', 'peppol_message_uuid')
     def _compute_pdp_can_send_response(self):
         for move in self:
-            move.pdp_can_send_response = bool(move.peppol_message_uuid) and move.peppol_is_sent and move.company_id._get_peppol_proxy_type() == 'pdp'
+            move.pdp_can_send_response = (
+                bool(move.peppol_message_uuid)
+                and move.peppol_is_sent
+                and move.company_id._get_peppol_proxy_type() == 'pdp'
+                and move.partner_id._get_pdp_receiver_identification_info()[0] == 'pdp'
+            )
 
     @api.depends('company_id')
     def _compute_pdp_uses_pdp(self):
@@ -82,7 +120,18 @@ class AccountMove(models.Model):
     @api.depends('peppol_is_sent', 'pdp_uses_pdp', 'move_type')
     def _compute_pdp_is_sent(self):
         for move in self:
-            move.pdp_is_sent = move.peppol_is_sent and move.pdp_uses_pdp and move.is_sale_document(include_receipts=True)
+            move.pdp_is_sent = move.peppol_is_sent and move.pdp_uses_pdp
+
+    def _pdp_get_paid_lifecycle_total_amount(self):
+        self.ensure_one()
+        paid_responses = self.peppol_response_ids.filtered(
+            lambda r: r.response_code == 'PD' and r.pdp_flow_number == '2' and r.pdp_ppf_state != 'error'
+        )
+        payment_infos = [
+            payment_info for response in paid_responses for payment_info in (response.pdp_payment_info or [])
+            if payment_info.get('type_code') in PAID_CODES and payment_info.get('currency', '').upper() == 'EUR'
+        ]
+        return sum(float(info.get('amount', '0')) for info in payment_infos)
 
     def _pdp_get_response_status(self):
         """Return the PDP response status of the message"""
@@ -92,12 +141,19 @@ class AccountMove(models.Model):
             return None
 
         # Take the latest response status if we have any
-        response_message = self.peppol_response_ids.filtered(lambda l: l.pdp_flow_number == '2' and l.peppol_state == 'done')
+        response_message = self.peppol_response_ids.filtered(lambda r: r.pdp_flow_number == '2' and r.peppol_state == 'done')
         latest_response = response_message.sorted(
             lambda l: (STATUS_TO_PROCESS_CONDITION_CODE_PDP.get(l.response_code, '0'), l.pdp_issue_date or datetime.min, l.id), reverse=True
         )[:1]
         if latest_response:
-            return latest_response.response_code if latest_response.response_code != 'PD' or latest_response.pdp_fully_paid else 'partially_paid'
+            is_paid_response = latest_response.response_code == 'PD'
+            # 'PD' (paid) lifecycles with partial payments are possible
+            # Thus we use the 'partially_paid' state except if the sum of the amounts in the lifecycles reaches the total of the move.
+            # Decide whether we should toggle 'partially_paid' to 'PD' (paid)
+            eur = self.currency_id.filtered(lambda c: c.name == 'EUR')
+            if eur and is_paid_response and eur.compare_amounts(self._pdp_get_paid_lifecycle_total_amount(), self.amount_total) >= 0.0:
+                return 'PD'
+            return latest_response.response_code if not is_paid_response else 'partially_paid'
 
         return None
 
@@ -154,8 +210,25 @@ class AccountMove(models.Model):
                 return self.env['account.edi.xml.ubl_21_fr']
         return super()._get_ubl_cii_builder_from_xml_tree(tree)
 
-    def action_pdp_open_response_wizard(self):
+    def action_pdp_open_response_wizard(self, **wizard_kwargs):
         if not (pdp_moves := self.filtered('pdp_can_send_response')):
             raise UserError(self.env._("Cannot send response for any of the journal entries."))
-        wizard = self.env['pdp.response.wizard'].create({'move_ids': pdp_moves.ids})
+        wizard = self.env['pdp.response.wizard'].create({'move_ids': pdp_moves.ids, **wizard_kwargs})
         return wizard._get_records_action(name=self.env._("Send Response Message"), target='new')
+
+    def _post(self, soft=True):
+        res = super()._post(soft)
+        for company, moves in self.filtered('pdp_can_send_response').grouped('company_id').items():
+            company.account_peppol_edi_user._pdp_send_response(moves, 'AP')
+        return res
+
+    def button_cancel(self):
+        res = super().button_cancel()
+        status = None
+        if all(move.is_sale_document(include_receipts=True) for move in self):
+            status = 'cancelled'
+        if all(move.is_purchase_document(include_receipts=True) for move in self):
+            status = 'refused'
+        if status and self.filtered('pdp_can_send_response') and (action := self.action_pdp_open_response_wizard(status=status)):
+            return action
+        return res
