@@ -41,7 +41,7 @@
     <template id="portal_my_projects" name="My Projects">
         <t t-call="portal.portal_layout" breadcrumbs_searchbar="True">
 
-            <t t-call="portal.portal_searchbar" title.translate="Projects"/>
+            <t t-call="portal.portal_searchbar" breadcrumbs_searchbar="True" title.translate="Projects"/>
             <t t-if="not projects">
                 <div class="alert alert-warning" role="alert">
                     There are no projects.

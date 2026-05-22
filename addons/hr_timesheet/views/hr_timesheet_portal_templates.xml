@@ -11,7 +11,7 @@
     <template id="portal_my_timesheets" name="My Timesheets">
         <t t-call="portal.portal_layout" breadcrumbs_searchbar="True">
 
-            <t t-call="portal.portal_searchbar" title.translate="Timesheets"/>
+            <t t-call="portal.portal_searchbar" breadcrumbs_searchbar="True" title.translate="Timesheets"/>
             <t t-if="not grouped_timesheets">
                 <div class="alert alert-warning" role="alert">
                     There are no timesheets.
