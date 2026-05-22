@@ -36,6 +36,7 @@ class TestUBLDKOIOUBL21(TestUBLCommon, TestAccountMoveSendCommon):
 
         cls.partner_a.write({
             'name': 'SUPER DANISH PARTNER',
+            'is_company': True,
             'city': 'Aalborg',
             'zip': '9430',
             'vat': 'DK12345674',
