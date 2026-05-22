@@ -351,7 +351,7 @@ class ProductProduct(models.Model):
         if name:
             return {'criteria': [
                 {'domain': [('name', '=', name)]},
-                {'search_method': find_product_by_name_similarity},
+                {'search_method': find_product_by_name_similarity, 'cache_key': str([('name', '=', name)])},
             ]}
 
     @api.model
